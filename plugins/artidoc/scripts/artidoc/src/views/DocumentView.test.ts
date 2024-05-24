@@ -23,7 +23,6 @@ import EmptyState from "@/views/EmptyState.vue";
 import DocumentLayout from "@/components/DocumentLayout.vue";
 import ArtidocSectionFactory from "@/helpers/artidoc-section.factory";
 import NoAccessState from "@/views/NoAccessState.vue";
-import { ref } from "vue";
 import DocumentView from "@/views/DocumentView.vue";
 import * as sectionsStore from "@/stores/useSectionsStore";
 import { InjectedSectionsStoreStub } from "@/helpers/InjectSectionsStoreStub";
@@ -40,6 +39,7 @@ describe("DocumentView", () => {
             expect(wrapper.findComponent(DocumentLayout).exists()).toBe(false);
         });
     });
+
     describe("when sections found", () => {
         it("should display document content view", () => {
             vi.spyOn(sectionsStore, "useInjectSectionsStore").mockReturnValue(
@@ -51,22 +51,22 @@ describe("DocumentView", () => {
             expect(wrapper.findComponent(NoAccessState).exists()).toBe(false);
         });
     });
+
     describe("when sections are loading", () => {
         it("should display document content view", () => {
             vi.spyOn(sectionsStore, "useInjectSectionsStore").mockReturnValue(
                 InjectedSectionsStoreStub.withLoadingSections(),
             );
-            vi.spyOn(sectionsStore, "useInjectSectionsStore").mockReturnValue({
-                loadSections: vi.fn(),
-                is_sections_loading: ref(true),
-                sections: ref([]),
-            });
+            vi.spyOn(sectionsStore, "useInjectSectionsStore").mockReturnValue(
+                InjectedSectionsStoreStub.withLoadingSections(),
+            );
             const wrapper = shallowMount(DocumentView);
             expect(wrapper.findComponent(DocumentLayout).exists()).toBe(true);
             expect(wrapper.findComponent(EmptyState).exists()).toBe(false);
             expect(wrapper.findComponent(NoAccessState).exists()).toBe(false);
         });
     });
+
     describe("when the user is not allowed to access the document", () => {
         it("should display no access state view", () => {
             vi.spyOn(sectionsStore, "useInjectSectionsStore").mockReturnValue(

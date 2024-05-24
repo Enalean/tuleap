@@ -31,6 +31,7 @@ use Tuleap\Docman\ServiceDocman;
 use Tuleap\NeverThrow\Result;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\REST\Artifact\ArtifactFieldValueFullRepresentation;
 use Tuleap\Tracker\REST\Artifact\ArtifactReference;
 use Tuleap\Tracker\REST\Artifact\ArtifactTextFieldValueRepresentation;
 
@@ -45,7 +46,7 @@ final class ArtidocSectionRepresentationBuilderTest extends TestCase
         $section_representation = new ArtidocSectionRepresentation(
             self::SECTION_ID,
             $this->createMock(ArtifactReference::class),
-            'title 4',
+            $this->createMock(ArtifactFieldValueFullRepresentation::class),
             $this->createMock(ArtifactTextFieldValueRepresentation::class),
             true,
         );
@@ -125,7 +126,7 @@ final class ArtidocSectionRepresentationBuilderTest extends TestCase
         $section_representation = new ArtidocSectionRepresentation(
             self::SECTION_ID,
             $this->createMock(ArtifactReference::class),
-            'title 4',
+            $this->createMock(ArtifactFieldValueFullRepresentation::class),
             $this->createMock(ArtifactTextFieldValueRepresentation::class),
             true,
         );

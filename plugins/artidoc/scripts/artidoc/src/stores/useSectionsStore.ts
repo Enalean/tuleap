@@ -29,20 +29,22 @@ export interface SectionsStore {
     sections: Ref<readonly ArtidocSection[] | undefined>;
     is_sections_loading: Ref<boolean>;
     loadSections: (item_id: number) => void;
+    updateSection: (section: ArtidocSection) => void;
 }
+
 export function useSectionsStore(): SectionsStore {
     const skeleton_data = [
         ArtidocSectionFactory.create(),
         ArtidocSectionFactory.create(),
         ArtidocSectionFactory.create(),
     ];
-    const sections: Ref<readonly ArtidocSection[] | undefined> = ref(skeleton_data);
+    const sections: Ref<ArtidocSection[] | undefined> = ref(skeleton_data);
     const is_sections_loading = ref(true);
 
     function loadSections(item_id: number): void {
         getAllSections(item_id).match(
             (artidoc_sections: readonly ArtidocSection[]) => {
-                sections.value = artidoc_sections;
+                sections.value = [...artidoc_sections];
                 is_sections_loading.value = false;
             },
             () => {
@@ -52,24 +54,43 @@ export function useSectionsStore(): SectionsStore {
         );
     }
 
+    function updateSection(section: ArtidocSection): void {
+        if (sections.value === undefined) {
+            throw Error("Unexpected call to updateSection while there is no section");
+        }
+
+        const length = sections.value.length;
+        for (let i = 0; i < length; i++) {
+            if (sections.value[i].id === section.id) {
+                sections.value[i] = section;
+            }
+        }
+    }
+
     return {
-        sections: sections,
-        is_sections_loading: is_sections_loading,
+        sections,
+        is_sections_loading,
         loadSections,
+        updateSection,
     };
 }
+
 let sectionsStore: SectionsStore | null = null;
+
 export function provideSectionsStore(): SectionsStore {
     if (!sectionsStore) {
         sectionsStore = useSectionsStore();
     }
     provide(sectionsStoreKey, sectionsStore);
+
     return sectionsStore;
 }
+
 export function useInjectSectionsStore(): SectionsStore {
     const store = strictInject<SectionsStore>(sectionsStoreKey);
     if (!store) {
         throw new Error("No sections store provided!");
     }
+
     return store;
 }

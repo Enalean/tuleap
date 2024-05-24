@@ -27,7 +27,7 @@
             <li v-for="section in sections" v-bind:key="section.artifact.id">
                 <span v-if="is_sections_loading" class="tlp-skeleton-text"></span>
                 <a v-else v-bind:href="`#${section.artifact.id}`" class="section-title">
-                    {{ section.title }}
+                    {{ section.display_title }}
                 </a>
             </li>
         </ol>

@@ -33,6 +33,7 @@ use Tuleap\Docman\ServiceDocman;
 use Tuleap\NeverThrow\Result;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\REST\Artifact\ArtifactFieldValueFullRepresentation;
 use Tuleap\Tracker\REST\Artifact\ArtifactReference;
 use Tuleap\Tracker\REST\Artifact\ArtifactTextFieldValueRepresentation;
 
@@ -45,28 +46,28 @@ final class PaginatedArtidocSectionRepresentationCollectionBuilderTest extends T
                 new ArtidocSectionRepresentation(
                     'uuid',
                     $this->createMock(ArtifactReference::class),
-                    'title 1',
+                    $this->createMock(ArtifactFieldValueFullRepresentation::class),
                     $this->createMock(ArtifactTextFieldValueRepresentation::class),
                     true,
                 ),
                 new ArtidocSectionRepresentation(
                     'uuid',
                     $this->createMock(ArtifactReference::class),
-                    'title 2',
+                    $this->createMock(ArtifactFieldValueFullRepresentation::class),
                     $this->createMock(ArtifactTextFieldValueRepresentation::class),
                     true,
                 ),
                 new ArtidocSectionRepresentation(
                     'uuid',
                     $this->createMock(ArtifactReference::class),
-                    'title 3',
+                    $this->createMock(ArtifactFieldValueFullRepresentation::class),
                     $this->createMock(ArtifactTextFieldValueRepresentation::class),
                     true,
                 ),
                 new ArtidocSectionRepresentation(
                     'uuid',
                     $this->createMock(ArtifactReference::class),
-                    'title 4',
+                    $this->createMock(ArtifactFieldValueFullRepresentation::class),
                     $this->createMock(ArtifactTextFieldValueRepresentation::class),
                     true,
                 ),

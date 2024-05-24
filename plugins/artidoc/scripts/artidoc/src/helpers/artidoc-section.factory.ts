@@ -37,7 +37,13 @@ const ArtidocSectionFactory = {
                 },
             },
         },
-        title: "Technologies section",
+        display_title: "Technologies section",
+        title: {
+            field_id: 110,
+            type: "string",
+            label: "Summary",
+            value: "Technologies section",
+        },
         description: {
             field_id: 111,
             type: "text",

@@ -39,6 +39,7 @@ use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\REST\Artifact\ArtifactFieldValueCommonmarkRepresentation;
+use Tuleap\Tracker\REST\Artifact\ArtifactFieldValueFullRepresentation;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetValueTextTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
@@ -107,6 +108,19 @@ final class RawSectionsToRepresentationTransformerTest extends TestCase
         );
     }
 
+    private function getTitleValue(Artifact $artifact): ArtifactFieldValueFullRepresentation
+    {
+        $representation = new ArtifactFieldValueFullRepresentation();
+        $representation->build(
+            200 * $artifact->getId(),
+            'string',
+            'Summary',
+            "Title for #{$artifact->getId()}",
+        );
+
+        return $representation;
+    }
+
     /**
      * @testWith [false, false, false]
      *           [false, true, false]
@@ -144,6 +158,14 @@ final class RawSectionsToRepresentationTransformerTest extends TestCase
         $art2 = $this->getArtifact(2, $title, $user);
         $art3 = $this->getArtifact(3, $title, $user);
         $art4 = $this->getArtifact(4, $title, $user);
+
+        $title->method('getFullRESTValue')
+            ->willReturnCallback(fn (PFUser $user, Tracker_Artifact_Changeset $changeset) => match ($changeset) {
+                $art1->getLastChangeset() => $this->getTitleValue($art1),
+                $art2->getLastChangeset() => $this->getTitleValue($art2),
+                $art3->getLastChangeset() => $this->getTitleValue($art3),
+                $art4->getLastChangeset() => $this->getTitleValue($art4),
+            });
 
         $description->method('getFullRESTValue')
             ->willReturnCallback(fn (PFUser $user, Tracker_Artifact_Changeset $changeset) => match ($changeset) {
@@ -194,7 +216,8 @@ final class RawSectionsToRepresentationTransformerTest extends TestCase
             $expected,
             static function (array $expected, int $index) use ($result, $expected_can_user_edit_section) {
                 self::assertSame($expected['id'], $result->value->sections[$index]->artifact->id);
-                self::assertSame($expected['title'], $result->value->sections[$index]->title);
+                self::assertInstanceOf(ArtifactFieldValueFullRepresentation::class, $result->value->sections[$index]->title);
+                self::assertSame($expected['title'], $result->value->sections[$index]->title->value);
                 self::assertInstanceOf(ArtifactFieldValueCommonmarkRepresentation::class, $result->value->sections[$index]->description);
                 self::assertSame($expected['description'], $result->value->sections[$index]->description->value);
                 self::assertSame($expected['can_user_edit_section'], $result->value->sections[$index]->can_user_edit_section);
@@ -231,6 +254,14 @@ final class RawSectionsToRepresentationTransformerTest extends TestCase
         $art2 = $this->getArtifact(2, $title, $user);
         $art3 = $this->getArtifact(3, $title, $user);
         $art4 = $this->getArtifact(4, $title, $user);
+
+        $title->method('getFullRESTValue')
+            ->willReturnCallback(fn (PFUser $user, Tracker_Artifact_Changeset $changeset) => match ($changeset) {
+                $art1->getLastChangeset() => $this->getTitleValue($art1),
+                $art2->getLastChangeset() => $this->getTitleValue($art2),
+                $art3->getLastChangeset() => $this->getTitleValue($art3),
+                $art4->getLastChangeset() => $this->getTitleValue($art4),
+            });
 
         $description->method('getFullRESTValue')
             ->willReturnCallback(fn (PFUser $user, Tracker_Artifact_Changeset $changeset) => match ($changeset) {
@@ -281,7 +312,8 @@ final class RawSectionsToRepresentationTransformerTest extends TestCase
             $expected,
             static function (array $expected, int $index) use ($result) {
                 self::assertSame($expected['id'], $result->value->sections[$index]->artifact->id);
-                self::assertSame($expected['title'], $result->value->sections[$index]->title);
+                self::assertInstanceOf(ArtifactFieldValueFullRepresentation::class, $result->value->sections[$index]->title);
+                self::assertSame($expected['title'], $result->value->sections[$index]->title->value);
                 self::assertInstanceOf(ArtifactFieldValueCommonmarkRepresentation::class, $result->value->sections[$index]->description);
                 self::assertSame($expected['description'], $result->value->sections[$index]->description->value);
             }
@@ -445,6 +477,14 @@ final class RawSectionsToRepresentationTransformerTest extends TestCase
         $art3 = $this->getArtifact(3, $title, $user);
         $art4 = $this->getArtifact(4, $title, $user);
 
+        $title->method('getFullRESTValue')
+            ->willReturnCallback(fn (PFUser $user, Tracker_Artifact_Changeset $changeset) => match ($changeset) {
+                $art1->getLastChangeset() => $this->getTitleValue($art1),
+                $art2->getLastChangeset() => $this->getTitleValue($art2),
+                $art3->getLastChangeset() => $this->getTitleValue($art3),
+                $art4->getLastChangeset() => $this->getTitleValue($art4),
+            });
+
         $description->method('getFullRESTValue')
             ->willReturnCallback(fn (PFUser $user, Tracker_Artifact_Changeset $changeset) => match ($changeset) {
                 $art1->getLastChangeset() => $this->getDescriptionValue($art1),
@@ -509,6 +549,14 @@ final class RawSectionsToRepresentationTransformerTest extends TestCase
         $art2 = $this->getArtifact(2, $title, $user);
         $art3 = $this->getArtifact(3, $title, $user);
         $art4 = $this->getArtifact(4, $title, $user);
+
+        $title->method('getFullRESTValue')
+            ->willReturnCallback(fn (PFUser $user, Tracker_Artifact_Changeset $changeset) => match ($changeset) {
+                $art1->getLastChangeset() => $this->getTitleValue($art1),
+                $art2->getLastChangeset() => $this->getTitleValue($art2),
+                $art3->getLastChangeset() => $this->getTitleValue($art3),
+                $art4->getLastChangeset() => $this->getTitleValue($art4),
+            });
 
         $description->method('getFullRESTValue')
             ->willReturnCallback(fn (PFUser $user, Tracker_Artifact_Changeset $changeset) => match ($changeset) {

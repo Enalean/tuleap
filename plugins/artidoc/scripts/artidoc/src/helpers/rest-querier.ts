@@ -20,20 +20,18 @@
 import type { ResultAsync } from "neverthrow";
 import { getAllJSON, put, uri, getJSON } from "@tuleap/fetch-result";
 import type { Fault } from "@tuleap/fault";
+import TurndownService from "turndown";
 import type { ArtidocSection } from "@/helpers/artidoc-section.type";
+import { isCommonmark, isTitleAString } from "@/helpers/artidoc-section.type";
 
-export function getAllSections(document_id: number): ResultAsync<readonly ArtidocSection[], Fault> {
-    return getAllJSON(uri`/api/artidoc/${document_id}/sections`, {
-        params: {
-            limit: 50,
-        },
-    });
-}
+type ArtidocSectionFromRest = Omit<ArtidocSection, "display_title">;
 
-export function putArtifactDescription(
+export function putArtifact(
     artifact_id: number,
+    new_title: string,
+    title: ArtidocSection["title"],
     new_description: string,
-    description_id: number,
+    description_field_id: number,
 ): ResultAsync<Response, Fault> {
     return put(
         uri`/api/artifacts/${artifact_id}`,
@@ -41,17 +39,52 @@ export function putArtifactDescription(
         {
             values: [
                 {
-                    field_id: description_id,
+                    field_id: description_field_id,
                     value: {
                         content: new_description,
                         format: "html",
                     },
+                },
+                {
+                    field_id: title.field_id,
+                    ...(isTitleAString(title)
+                        ? { value: new_title }
+                        : { value: { content: new_title, format: "text" } }),
                 },
             ],
         },
     );
 }
 
+export function getAllSections(document_id: number): ResultAsync<readonly ArtidocSection[], Fault> {
+    return getAllJSON<ArtidocSectionFromRest>(uri`/api/artidoc/${document_id}/sections`, {
+        params: {
+            limit: 50,
+        },
+    }).map((sections: readonly ArtidocSectionFromRest[]) => sections.map(injectDisplayTitle));
+}
+
 export function getSection(section_id: string): ResultAsync<ArtidocSection, Fault> {
-    return getJSON(uri`/api/artidoc_sections/${section_id}`);
+    return getJSON<ArtidocSectionFromRest>(uri`/api/artidoc_sections/${section_id}`).map(
+        injectDisplayTitle,
+    );
+}
+
+const turndown_service = new TurndownService({ emDelimiter: "*" });
+
+function injectDisplayTitle(section: ArtidocSectionFromRest): ArtidocSection {
+    const title = section.title;
+
+    const display_title = isTitleAString(title)
+        ? title.value
+        : isCommonmark(title)
+          ? title.commonmark
+          : title.format === "text"
+            ? title.value
+            : turndown_service.turndown(title.value);
+
+    return {
+        ...section,
+        display_title: display_title.replace(/([\r\n]+)/g, " "),
+    };
 }
