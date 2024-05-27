@@ -37,6 +37,36 @@ import SectionContent from "@/components/SectionContent.vue";
 const { sections } = useInjectSectionsStore();
 </script>
 
+<style lang="scss">
+@keyframes blink-section {
+    0% {
+        background: var(--tlp-info-color-transparent-90);
+    }
+
+    50% {
+        background: var(--tlp-white-color);
+    }
+
+    100% {
+        background: var(--tlp-info-color-transparent-90);
+    }
+}
+
+@keyframes pulse-section {
+    0% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.05);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+</style>
+
 <style lang="scss" scoped>
 ol {
     padding: 0;
@@ -50,6 +80,7 @@ li {
     margin: 0 0 var(--tlp-medium-spacing);
     padding: var(--tlp-medium-spacing) var(--tlp-jumbo-spacing) var(--tlp-medium-spacing)
         $section-horizontal-padding;
+    transition: background-color 75ms ease-in-out;
     counter-increment: item-without-dot;
 
     &:first-child {
@@ -64,6 +95,21 @@ li {
         --ck-color-base-background: var(--tlp-main-color-lighter-90);
 
         background: var(--ck-color-base-background);
+
+        &:has(.document-section-is-in-error) {
+            --ck-color-base-background: var(--tlp-danger-color-lighter-90);
+
+            background: var(--ck-color-base-background);
+        }
+    }
+
+    &:has(.document-section-is-being-saved) {
+        animation: blink-section 1200ms ease-in-out alternate infinite;
+    }
+
+    &:has(.document-section-is-just-saved) {
+        animation: pulse-section 500ms ease-in-out;
+        background: var(--tlp-success-color-lighter-90);
     }
 }
 

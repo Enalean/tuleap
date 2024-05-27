@@ -22,9 +22,10 @@ import useSectionEditor from "@/composables/useSectionEditor";
 import * as rest_querier from "@/helpers/rest-querier";
 import ArtidocSectionFactory from "@/helpers/artidoc-section.factory";
 import * as tuleap_strict_inject from "@tuleap/vue-strict-inject";
-import { okAsync } from "neverthrow";
+import { errAsync, okAsync } from "neverthrow";
 import { flushPromises } from "@vue/test-utils";
 import * as on_before_unload from "@/helpers/on-before-unload";
+import { Fault } from "@tuleap/fault";
 
 const default_section = ArtidocSectionFactory.create();
 
@@ -116,11 +117,11 @@ describe("useSectionEditor", () => {
     describe("enableEditor", () => {
         it("should enable edit mode", () => {
             const store = useSectionEditor(section);
-            expect(store.getIsEditMode().value).toBe(false);
+            expect(store.isSectionInEditMode().value).toBe(false);
 
             store.editor_actions.enableEditor();
 
-            expect(store.getIsEditMode().value).toBe(true);
+            expect(store.isSectionInEditMode().value).toBe(true);
         });
     });
 
@@ -128,13 +129,13 @@ describe("useSectionEditor", () => {
         it("should cancel edit mode", () => {
             const store = useSectionEditor(section);
             store.editor_actions.enableEditor();
-            expect(store.getIsEditMode().value).toBe(true);
+            expect(store.isSectionInEditMode().value).toBe(true);
             store.inputCurrentDescription("the description changed");
             expect(store.getEditableDescription().value).toBe("the description changed");
 
             store.editor_actions.cancelEditor();
 
-            expect(store.getIsEditMode().value).toBe(false);
+            expect(store.isSectionInEditMode().value).toBe(false);
             expect(store.getEditableDescription().value).toBe("the original description");
         });
     });
@@ -155,18 +156,22 @@ describe("useSectionEditor", () => {
         });
 
         describe("when the description is different from the original description", () => {
-            it("should put artifact description", () => {
+            it("should ends in error in case of... error", async () => {
                 const store = useSectionEditor(section);
-                const mock_put_artifact_description = vi.spyOn(
-                    rest_querier,
-                    "putArtifactDescription",
-                );
+                const mock_put_artifact_description = vi
+                    .spyOn(rest_querier, "putArtifactDescription")
+                    .mockReturnValue(errAsync(Fault.fromMessage("An error occurred.")));
                 store.inputCurrentDescription("new description");
                 expect(store.getEditableDescription().value).toBe("new description");
+                expect(store.isInError().value).toBe(false);
 
                 store.editor_actions.saveEditor();
 
+                await flushPromises();
+
                 expect(mock_put_artifact_description).toHaveBeenCalledOnce();
+
+                expect(store.isInError().value).toBe(true);
             });
 
             it("should get updated section", async () => {
@@ -231,7 +236,7 @@ describe("useSectionEditor", () => {
 
             const store = useSectionEditor(section);
             store.clearGlobalNumberOfOpenEditorForTests();
-            expect(store.getIsEditMode().value).toBe(false);
+            expect(store.isSectionInEditMode().value).toBe(false);
 
             store.editor_actions.enableEditor();
 
@@ -243,7 +248,7 @@ describe("useSectionEditor", () => {
 
             const store = useSectionEditor(section);
             store.clearGlobalNumberOfOpenEditorForTests();
-            expect(store.getIsEditMode().value).toBe(false);
+            expect(store.isSectionInEditMode().value).toBe(false);
 
             store.editor_actions.enableEditor();
             store.editor_actions.cancelEditor();
@@ -272,17 +277,17 @@ describe("useSectionEditor", () => {
                 }),
             );
 
-            expect(first_store.getIsEditMode().value).toBe(false);
-            expect(second_store.getIsEditMode().value).toBe(false);
+            expect(first_store.isSectionInEditMode().value).toBe(false);
+            expect(second_store.isSectionInEditMode().value).toBe(false);
 
             first_store.editor_actions.enableEditor();
             second_store.editor_actions.enableEditor();
-            expect(first_store.getIsEditMode().value).toBe(true);
-            expect(second_store.getIsEditMode().value).toBe(true);
+            expect(first_store.isSectionInEditMode().value).toBe(true);
+            expect(second_store.isSectionInEditMode().value).toBe(true);
 
             first_store.editor_actions.cancelEditor();
-            expect(first_store.getIsEditMode().value).toBe(false);
-            expect(second_store.getIsEditMode().value).toBe(true);
+            expect(first_store.isSectionInEditMode().value).toBe(false);
+            expect(second_store.isSectionInEditMode().value).toBe(true);
 
             expect(allowPageLeave).not.toHaveBeenCalled();
         });
