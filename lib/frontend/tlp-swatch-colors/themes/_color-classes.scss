@@ -27,6 +27,6 @@
         --border-color: #{map.get($colors, "border")};
         --text-color: #{map.get($colors, "text")};
         --text-on-dark-color: #{map.get($colors, "text-on-dark")};
-        --accessibility-pattern: "#{map.get($colors, "pattern")}";
+        --accessibility-pattern: url("#{map.get($colors, "pattern")}");
     }
 }

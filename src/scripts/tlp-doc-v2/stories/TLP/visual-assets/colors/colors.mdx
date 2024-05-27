@@ -1,0 +1,532 @@
+import { Story, Meta } from '@storybook/blocks';
+import * as ColorsStories from "./colors.stories";
+import "./colors.scss";
+
+<Meta of={ColorsStories}/>
+<Story of={ColorsStories.EmptyStory}></Story>
+
+# Colors
+
+## UI Colors
+
+<code>--tlp-ui-[type]</code>
+
+These colors change depending on the selected theme color.
+
+<table className="tlp-table">
+    <thead>
+    <tr>
+        <th>Name</th>
+        <th>Variable</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td>
+            <span className="doc-color doc-color-info"></span>Info
+        </td>
+        <td><code className="code-inline">--tlp-info-color</code></td>
+    </tr>
+    <tr>
+        <td>
+            <span className="doc-color doc-color-success"></span>Success
+        </td>
+        <td><code className="code-inline">--tlp-success-color</code></td>
+    </tr>
+    <tr>
+        <td>
+            <span className="doc-color doc-color-warning"></span>Warning
+        </td>
+        <td><code className="code-inline">--tlp-warning-color</code></td>
+    </tr>
+    <tr>
+        <td>
+            <span className="doc-color doc-color-danger"></span>Danger
+        </td>
+        <td><code className="code-inline">--tlp-danger-color</code></td>
+    </tr>
+    </tbody>
+</table>
+
+## Theme Colors
+
+<code>$tlp-theme[-background]-[name]</code>
+
+<table className="tlp-table">
+    <thead>
+    <tr>
+        <th>Name</th>
+        <th>Variable</th>
+        <th>Hexa code</th>
+        <th>Background hexa code</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td>
+            <span className="doc-color doc-color-orange"></span>Orange
+        </td>
+        <td><code className="code-inline">$tlp-theme[-background]-orange</code></td>
+        <td><code className="code-inline">#f79514</code></td>
+        <td><code className="code-inline">#fafafa</code></td>
+    </tr>
+    <tr>
+        <td>
+            <span className="doc-color doc-color-blue"></span>Blue
+        </td>
+        <td><code className="code-inline">$tlp-theme[-background]-blue</code></td>
+        <td><code className="code-inline">#1593c4</code></td>
+        <td><code className="code-inline">#f3f4fa</code></td>
+    </tr>
+    <tr>
+        <td>
+            <span className="doc-color doc-color-green"></span>Green
+        </td>
+        <td><code className="code-inline">$tlp-theme[-background]-green</code></td>
+        <td><code className="code-inline">#67af45</code></td>
+        <td><code className="code-inline">#fafafa</code></td>
+    </tr>
+    <tr>
+        <td>
+            <span className="doc-color doc-color-grey"></span>Grey
+        </td>
+        <td><code className="code-inline">$tlp-theme[-background]-grey</code></td>
+        <td><code className="code-inline">#5b6c79</code></td>
+        <td><code className="code-inline">#f4f5f8</code></td>
+    </tr>
+    <tr>
+        <td>
+            <span className="doc-color doc-color-purple"></span>Purple
+        </td>
+        <td><code className="code-inline">$tlp-theme[-background]-purple</code></td>
+        <td><code className="code-inline">#79558a</code></td>
+        <td><code className="code-inline">#f3f4fa</code></td>
+    </tr>
+    <tr>
+        <td>
+            <span className="doc-color doc-color-red"></span>Red
+        </td>
+        <td><code className="code-inline">$tlp-theme[-background]-red</code></td>
+        <td><code className="code-inline">#bd2626</code></td>
+        <td><code className="code-inline">#fafafa</code></td>
+    </tr>
+    </tbody>
+</table>
+
+## Business Colors
+
+<code>$tlp-swatch-[name]</code>
+
+To use those colors, use the following CSS class:
+
+```HTML
+<span class="tlp-swatch-inca-silver my-colored-element"></span>
+```
+```scss
+.my-colored-element {
+  color: var(--text-color);
+  background: var(--primary-color);
+}
+/* The following CSS custom properties are set:
+    --primary-color
+    --secondary-color
+    --border-color
+    --text-color
+    --text-on-dark-color
+    --accessibility-pattern
+*/
+```
+Only in cases where you need to modify those colors, use the following SCSS snippet:
+
+```scss
+@use "@tuleap/tlp-swatch-colors";
+@use "sass:map";
+@use "sass:color";
+
+@each $color-name, $colors in tlp-swatch-colors.$color-map {
+    // This will create classes like .inca-silver, .deep-blue, etc.
+    .#{$color-name} {
+        border-bottom-color: #{color.adjust(map.get($colors, "border"), $lightness: - 20%)}
+        // The following variants are available in the map:
+        // "primary", "secondary", "border", "text", "text-on-dark"
+        // and "pattern" which is an image pattern to help with accessibility
+    }
+}
+```
+
+<table className="tlp-table">
+    <thead>
+    <tr>
+        <th>Name</th>
+        <th>Variable</th>
+        <th>Primary hexa code</th>
+        <th>Secondary hexa code</th>
+        <th>Border hexa code</th>
+        <th>Text hexa code</th>
+        <th>Text on dark background</th>
+        <th>Accessibility pattern image</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr className="tlp-swatch-inca-silver">
+        <td>
+            <span className="doc-color doc-color-swatch"></span>
+            Inca silver
+        </td>
+        <td><code>$tlp-swatch-inca-silver[-variant]</code></td>
+        <td><code className="doc-color-swatch-primary dark">#5d5d5d</code></td>
+        <td><code className="doc-color-swatch-secondary">#ededed</code></td>
+        <td><code className="doc-color-swatch-border">#8f8f8f</code></td>
+        <td><code className="doc-color-swatch-text">#525252</code></td>
+        <td><code className="doc-color-swatch-text-on-dark">text</code></td>
+        <td>
+            <div className="doc-color-swatch-pattern"></div>
+        </td>
+    </tr>
+    <tr className="tlp-swatch-chrome-silver">
+        <td>
+            <span className="doc-color doc-color-swatch"></span>
+            Chrome silver
+        </td>
+        <td><code className="code-inline">$tlp-swatch-chrome-silver[-variant]</code></td>
+        <td><code className="doc-color-swatch-primary dark">#8f8f8f</code></td>
+        <td><code className="doc-color-swatch-secondary">#f4f4f4</code></td>
+        <td><code className="doc-color-swatch-border">#8f8f8f</code></td>
+        <td><code className="doc-color-swatch-text">#5f5f5f</code></td>
+        <td><code className="doc-color-swatch-text-on-dark">text</code></td>
+        <td>
+            <div className="doc-color-swatch-pattern"></div>
+        </td>
+    </tr>
+    <tr className="tlp-swatch-firemist-silver">
+        <td>
+            <span className="doc-color doc-color-swatch"></span>
+            Firemist silver
+        </td>
+        <td><code className="code-inline">$tlp-swatch-firemist-silver[-variant]</code></td>
+        <td><code className="doc-color-swatch-primary">#c5c5c5</code></td>
+        <td><code className="doc-color-swatch-secondary">#fafafa</code></td>
+        <td><code className="doc-color-swatch-border">#8f8f8f</code></td>
+        <td><code className="doc-color-swatch-text">#6f6f6f</code></td>
+        <td><code className="doc-color-swatch-text-on-dark">text</code></td>
+        <td>
+            <div className="doc-color-swatch-pattern"></div>
+        </td>
+    </tr>
+    <tr className="tlp-swatch-red-wine">
+        <td>
+            <span className="doc-color doc-color-swatch"></span>
+            Red wine
+        </td>
+        <td><code className="code-inline">$tlp-swatch-red-wine[-variant]</code></td>
+        <td><code className="doc-color-swatch-primary dark">#a10202</code></td>
+        <td><code className="doc-color-swatch-secondary">#f4dbdb</code></td>
+        <td><code className="doc-color-swatch-border">#f02727</code></td>
+        <td><code className="doc-color-swatch-text">#842f2f</code></td>
+        <td><code className="doc-color-swatch-text-on-dark">text</code></td>
+        <td>
+            <div className="doc-color-swatch-pattern"></div>
+        </td>
+    </tr>
+    <tr className="tlp-swatch-fiesta-red">
+        <td>
+            <span className="doc-color doc-color-swatch"></span>
+            Fiesta red
+        </td>
+        <td><code className="code-inline">$tlp-swatch-fiesta-red[-variant]</code></td>
+        <td><code className="doc-color-swatch-primary">#f02727</code></td>
+        <td><code className="doc-color-swatch-secondary">#ffe5e5</code></td>
+        <td><code className="doc-color-swatch-border">#f02727</code></td>
+        <td><code className="doc-color-swatch-text">#b70d0d</code></td>
+        <td><code className="doc-color-swatch-text-on-dark">text</code></td>
+        <td>
+            <div className="doc-color-swatch-pattern"></div>
+        </td>
+    </tr>
+    <tr className="tlp-swatch-coral-pink">
+        <td>
+            <span className="doc-color doc-color-swatch"></span>
+            Coral pink
+        </td>
+        <td><code className="code-inline">$tlp-swatch-coral-pink[-variant]</code></td>
+        <td><code className="doc-color-swatch-primary">#ff8a8a</code></td>
+        <td><code className="doc-color-swatch-secondary">#fff2f2</code></td>
+        <td><code className="doc-color-swatch-border">#f02727</code></td>
+        <td><code className="doc-color-swatch-text">#bf4747</code></td>
+        <td><code className="doc-color-swatch-text-on-dark">text</code></td>
+        <td>
+            <div className="doc-color-swatch-pattern"></div>
+        </td>
+    </tr>
+    <tr className="tlp-swatch-teddy-brown">
+        <td>
+            <span className="doc-color doc-color-swatch"></span>
+            Teddy brown
+        </td>
+        <td><code className="code-inline">$tlp-swatch-teddy-brown[-variant]</code></td>
+        <td><code className="doc-color-swatch-primary dark">#9a600d</code></td>
+        <td><code className="doc-color-swatch-secondary">#f8eccc</code></td>
+        <td><code className="doc-color-swatch-border">#f18e06</code></td>
+        <td><code className="doc-color-swatch-text">#774a0a</code></td>
+        <td><code className="doc-color-swatch-text-on-dark">text</code></td>
+        <td>
+            <div className="doc-color-swatch-pattern"></div>
+        </td>
+    </tr>
+    <tr className="tlp-swatch-clockwork-orange">
+        <td>
+            <span className="doc-color doc-color-swatch"></span>
+            Clockwork orange
+        </td>
+        <td><code className="code-inline">$tlp-swatch-clockwork-orange[-variant]</code></td>
+        <td><code className="doc-color-swatch-primary">#f18e06</code></td>
+        <td><code className="doc-color-swatch-secondary">#fff5db</code></td>
+        <td><code className="doc-color-swatch-border">#f18e06</code></td>
+        <td><code className="doc-color-swatch-text">#945600</code></td>
+        <td><code className="doc-color-swatch-text-on-dark">text</code></td>
+        <td>
+            <div className="doc-color-swatch-pattern"></div>
+        </td>
+    </tr>
+    <tr className="tlp-swatch-graffiti-yellow">
+        <td>
+            <span className="doc-color doc-color-swatch"></span>
+            Graffiti yellow
+        </td>
+        <td><code className="code-inline">$tlp-swatch-graffiti-yellow[-variant]</code></td>
+        <td><code className="doc-color-swatch-primary">#ffd300</code></td>
+        <td><code className="doc-color-swatch-secondary">#fffbe7</code></td>
+        <td><code className="doc-color-swatch-border">#f18e06</code></td>
+        <td><code className="doc-color-swatch-text">#8a6c00</code></td>
+        <td><code className="doc-color-swatch-text-on-dark">text</code></td>
+        <td>
+            <div className="doc-color-swatch-pattern"></div>
+        </td>
+    </tr>
+    <tr className="tlp-swatch-army-green">
+        <td>
+            <span className="doc-color doc-color-swatch"></span>
+            Army green
+        </td>
+        <td><code className="code-inline">$tlp-swatch-army-green[-variant]</code></td>
+        <td><code className="doc-color-swatch-primary dark">#5f8347</code></td>
+        <td><code className="doc-color-swatch-secondary">#edf3db</code></td>
+        <td><code className="doc-color-swatch-border">#6abf1d</code></td>
+        <td><code className="doc-color-swatch-text">#385f1e</code></td>
+        <td><code className="doc-color-swatch-text-on-dark">text</code></td>
+        <td>
+            <div className="doc-color-swatch-pattern"></div>
+        </td>
+    </tr>
+    <tr className="tlp-swatch-neon-green">
+        <td>
+            <span className="doc-color doc-color-swatch"></span>
+            Neon green
+        </td>
+        <td><code className="code-inline">$tlp-swatch-neon-green[-variant]</code></td>
+        <td><code className="doc-color-swatch-primary">#6abf1d</code></td>
+        <td><code className="doc-color-swatch-secondary">#f4f8e9</code></td>
+        <td><code className="doc-color-swatch-border">#6abf1d</code></td>
+        <td><code className="doc-color-swatch-text">#137900</code></td>
+        <td><code className="doc-color-swatch-text-on-dark">text</code></td>
+        <td>
+            <div className="doc-color-swatch-pattern"></div>
+        </td>
+    </tr>
+    <tr className="tlp-swatch-acid-green">
+        <td>
+            <span className="doc-color doc-color-swatch"></span>
+            Acid green
+        </td>
+        <td><code className="code-inline">$tlp-swatch-acid-green[-variant]</code></td>
+        <td><code className="doc-color-swatch-primary">#b9e45d</code></td>
+        <td><code className="doc-color-swatch-secondary">#f8fbf3</code></td>
+        <td><code className="doc-color-swatch-border">#6abf1d</code></td>
+        <td><code className="doc-color-swatch-text">#567d00</code></td>
+        <td><code className="doc-color-swatch-text-on-dark">text</code></td>
+        <td>
+            <div className="doc-color-swatch-pattern"></div>
+        </td>
+    </tr>
+    <tr className="tlp-swatch-sherwood-green">
+        <td>
+            <span className="doc-color doc-color-swatch"></span>
+            Sherwood green
+        </td>
+        <td><code className="code-inline">$tlp-swatch-sherwood-green[-variant]</code></td>
+        <td><code className="doc-color-swatch-primary dark">#009465</code></td>
+        <td><code className="doc-color-swatch-secondary">#e3f6f0</code></td>
+        <td><code className="doc-color-swatch-border">#28c4a0</code></td>
+        <td><code className="doc-color-swatch-text">#006545</code></td>
+        <td><code className="doc-color-swatch-text-on-dark">text</code></td>
+        <td>
+            <div className="doc-color-swatch-pattern"></div>
+        </td>
+    </tr>
+    <tr className="tlp-swatch-ocean-turquoise">
+        <td>
+            <span className="doc-color doc-color-swatch"></span>
+            Ocean turquoise
+        </td>
+        <td><code className="code-inline">$tlp-swatch-ocean-turquoise[-variant]</code></td>
+        <td><code className="doc-color-swatch-primary">#28c4a0</code></td>
+        <td><code className="doc-color-swatch-secondary">#ecfaf6</code></td>
+        <td><code className="doc-color-swatch-border">#28c4a0</code></td>
+        <td><code className="doc-color-swatch-text">#00775c</code></td>
+        <td><code className="doc-color-swatch-text-on-dark">text</code></td>
+        <td>
+            <div className="doc-color-swatch-pattern"></div>
+        </td>
+    </tr>
+    <tr className="tlp-swatch-surf-green">
+        <td>
+            <span className="doc-color doc-color-swatch"></span>
+            Surf green
+        </td>
+        <td><code className="code-inline">$tlp-swatch-surf-green[-variant]</code></td>
+        <td><code className="doc-color-swatch-primary">#75e4bf</code></td>
+        <td><code className="doc-color-swatch-secondary">#f5fffc</code></td>
+        <td><code className="doc-color-swatch-border">#28c4a0</code></td>
+        <td><code className="doc-color-swatch-text">#1b805e</code></td>
+        <td><code className="doc-color-swatch-text-on-dark">text</code></td>
+        <td>
+            <div className="doc-color-swatch-pattern"></div>
+        </td>
+    </tr>
+    <tr className="tlp-swatch-deep-blue">
+        <td>
+            <span className="doc-color doc-color-swatch"></span>
+            Deep blue
+        </td>
+        <td><code className="code-inline">$tlp-swatch-deep-blue[-variant]</code></td>
+        <td><code className="doc-color-swatch-primary dark">#0480bf</code></td>
+        <td><code className="doc-color-swatch-secondary">#e1f2fa</code></td>
+        <td><code className="doc-color-swatch-border">#1ebade</code></td>
+        <td><code className="doc-color-swatch-text">#005f90</code></td>
+        <td><code className="doc-color-swatch-text-on-dark">text</code></td>
+        <td>
+            <div className="doc-color-swatch-pattern"></div>
+        </td>
+    </tr>
+    <tr className="tlp-swatch-lake-placid-blue">
+        <td>
+            <span className="doc-color doc-color-swatch"></span>
+            Lake placid blue
+        </td>
+        <td><code className="code-inline">$tlp-swatch-lake-placid-blue[-variant]</code></td>
+        <td><code className="doc-color-swatch-primary">#1ebade</code></td>
+        <td><code className="doc-color-swatch-secondary">#eef7fb</code></td>
+        <td><code className="doc-color-swatch-border">#1ebade</code></td>
+        <td><code className="doc-color-swatch-text">#007792</code></td>
+        <td><code className="doc-color-swatch-text-on-dark">text</code></td>
+        <td>
+            <div className="doc-color-swatch-pattern"></div>
+        </td>
+    </tr>
+    <tr className="tlp-swatch-daphne-blue">
+        <td>
+            <span className="doc-color doc-color-swatch"></span>
+            Daphne blue
+        </td>
+        <td><code className="code-inline">$tlp-swatch-daphne-blue[-variant]</code></td>
+        <td><code className="doc-color-swatch-primary">#87dbef</code></td>
+        <td><code className="doc-color-swatch-secondary">#f4fcff</code></td>
+        <td><code className="doc-color-swatch-border">#1ebade</code></td>
+        <td><code className="doc-color-swatch-text">#007a96</code></td>
+        <td><code className="doc-color-swatch-text-on-dark">text</code></td>
+        <td>
+            <div className="doc-color-swatch-pattern"></div>
+        </td>
+    </tr>
+    <tr className="tlp-swatch-plum-crazy">
+        <td>
+            <span className="doc-color doc-color-swatch"></span>
+            Plum crazy
+        </td>
+        <td><code className="code-inline">$tlp-swatch-plum-crazy[-variant]</code></td>
+        <td><code className="doc-color-swatch-primary dark">#7c2db3</code></td>
+        <td><code className="doc-color-swatch-secondary">#f1e9f8</code></td>
+        <td><code className="doc-color-swatch-border">#a44ee1</code></td>
+        <td><code className="doc-color-swatch-text">#6a14a7</code></td>
+        <td><code className="doc-color-swatch-text-on-dark">text</code></td>
+        <td>
+            <div className="doc-color-swatch-pattern"></div>
+        </td>
+    </tr>
+    <tr className="tlp-swatch-ultra-violet">
+        <td>
+            <span className="doc-color doc-color-swatch"></span>
+            Ultra violet
+        </td>
+        <td><code className="code-inline">$tlp-swatch-ultra-violet[-variant]</code></td>
+        <td><code className="doc-color-swatch-primary">#a44ee1</code></td>
+        <td><code className="doc-color-swatch-secondary">#f6f3f9</code></td>
+        <td><code className="doc-color-swatch-border">#a44ee1</code></td>
+        <td><code className="doc-color-swatch-text">#8b21d6</code></td>
+        <td><code className="doc-color-swatch-text-on-dark">text</code></td>
+        <td>
+            <div className="doc-color-swatch-pattern"></div>
+        </td>
+    </tr>
+    <tr className="tlp-swatch-lilac-purple">
+        <td>
+            <span className="doc-color doc-color-swatch"></span>
+            Lilac purple
+        </td>
+        <td><code className="code-inline">$tlp-swatch-lilac-purple[-variant]</code></td>
+        <td><code className="doc-color-swatch-primary">#ce91fa</code></td>
+        <td><code className="doc-color-swatch-secondary">#faf7fd</code></td>
+        <td><code className="doc-color-swatch-border">#a44ee1</code></td>
+        <td><code className="doc-color-swatch-text">#8e4cbd</code></td>
+        <td><code className="doc-color-swatch-text-on-dark">text</code></td>
+        <td>
+            <div className="doc-color-swatch-pattern"></div>
+        </td>
+    </tr>
+    <tr className="tlp-swatch-panther-pink">
+        <td>
+            <span className="doc-color doc-color-swatch"></span>
+            Panther pink
+        </td>
+        <td><code className="code-inline">$tlp-swatch-panther-pink[-variant]</code></td>
+        <td><code className="doc-color-swatch-primary dark">#c42887</code></td>
+        <td><code className="doc-color-swatch-secondary">#feeaf1</code></td>
+        <td><code className="doc-color-swatch-border">#e560b2</code></td>
+        <td><code className="doc-color-swatch-text">#9a1d69</code></td>
+        <td><code className="doc-color-swatch-text-on-dark">text</code></td>
+        <td>
+            <div className="doc-color-swatch-pattern"></div>
+        </td>
+    </tr>
+    <tr className="tlp-swatch-peggy-pink">
+        <td>
+            <span className="doc-color doc-color-swatch"></span>
+            Peggy pink
+        </td>
+        <td><code className="code-inline">$tlp-swatch-peggy-pink[-variant]</code></td>
+        <td><code className="doc-color-swatch-primary">#e560b2</code></td>
+        <td><code className="doc-color-swatch-secondary">#fff1f6</code></td>
+        <td><code className="doc-color-swatch-border">#e560b2</code></td>
+        <td><code className="doc-color-swatch-text">#c5007a</code></td>
+        <td><code className="doc-color-swatch-text-on-dark">text</code></td>
+        <td>
+            <div className="doc-color-swatch-pattern"></div>
+        </td>
+    </tr>
+    <tr className="tlp-swatch-flamingo-pink">
+        <td>
+            <span className="doc-color doc-color-swatch"></span>
+            Flamingo pink
+        </td>
+        <td><code className="code-inline">$tlp-swatch-flamingo-pink[-variant]</code></td>
+        <td><code className="doc-color-swatch-primary">#edacd4</code></td>
+        <td><code className="doc-color-swatch-secondary">#fff7fa</code></td>
+        <td><code className="doc-color-swatch-border">#e560b2</code></td>
+        <td><code className="doc-color-swatch-text">#b7438a</code></td>
+        <td><code className="doc-color-swatch-text-on-dark">text</code></td>
+        <td>
+            <div className="doc-color-swatch-pattern"></div>
+        </td>
+    </tr>
+    </tbody>
+</table>
