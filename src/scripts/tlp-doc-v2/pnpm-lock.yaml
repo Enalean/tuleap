@@ -8,6 +8,9 @@ dependencies:
   '@tuleap/core-constants':
     specifier: workspace:*
     version: link:../../../lib/frontend/constants
+  '@tuleap/list-picker':
+    specifier: workspace:^
+    version: link:../../../lib/frontend/list-picker
   '@tuleap/tlp':
     specifier: workspace:*
     version: link:../tlp
