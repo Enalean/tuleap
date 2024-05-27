@@ -17,55 +17,107 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Tracker\Report\Query\Advanced\Grammar;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use ForgeConfig;
+use Tuleap\ForgeConfigSandbox;
+use Tuleap\Test\PHPUnit\TestCase;
 
-final class ParserTest extends \Tuleap\Test\PHPUnit\TestCase
+final class ParserTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
+    use ForgeConfigSandbox;
 
     public function testItThrowsASyntaxErrorIfQueryIsEmpty(): void
     {
-        $this->expectException(\Tuleap\Tracker\Report\Query\Advanced\Grammar\SyntaxError::class);
-
+        self::expectException(SyntaxError::class);
         $parser = new Parser();
-
         $parser->parse('');
     }
 
     public function testItParsesASimpleQuery(): void
     {
-        $parser = new Parser();
-
-        $result = $parser->parse('field = "value"');
-
-        $expected = new OrExpression(
+        $parser   = new Parser();
+        $result   = $parser->parse('field = "value"');
+        $expected = new Query([], new OrExpression(
             new AndExpression(
                 new EqualComparison(new Field('field'), new SimpleValueWrapper('value')),
                 null
             ),
             null
-        );
+        ));
 
-        $this->assertEquals($expected, $result);
+        self::assertEquals($expected, $result);
     }
 
     public function testItDoesNotFailIfFieldNameContainsDigits(): void
     {
+        self::expectNotToPerformAssertions();
         $parser = new Parser();
-
         $parser->parse('field_1 = "value"');
-
-        $this->addToAssertionCount(1);
     }
 
     public function testItDoesNotFailIfFieldNameContainsHyphen(): void
     {
+        self::expectNotToPerformAssertions();
         $parser = new Parser();
-
         $parser->parse('field-name = "value"');
+    }
 
-        $this->addToAssertionCount(1);
+    public function testItFailIfSelectIsNotEnabled(): void
+    {
+        ForgeConfig::setFeatureFlag(Query::ENABLE_SELECT, 0);
+
+        $parser = new Parser();
+        self::expectExceptionMessage('SELECT syntax cannot be used');
+        $parser->parse('SELECT field WHERE field = "value"');
+    }
+
+    public function testItDoesNotFailIfSelectIsEnabled(): void
+    {
+        ForgeConfig::setFeatureFlag(Query::ENABLE_SELECT, 1);
+
+        $parser   = new Parser();
+        $result   = $parser->parse('SELECT field WHERE field = "value"');
+        $expected = new Query(
+            [new Field('field')],
+            new OrExpression(
+                new AndExpression(
+                    new EqualComparison(new Field('field'), new SimpleValueWrapper('value')),
+                    null
+                ),
+                null
+            )
+        );
+        self::assertEquals($expected, $result);
+    }
+
+    public function testSelectAcceptMultipleField(): void
+    {
+        ForgeConfig::setFeatureFlag(Query::ENABLE_SELECT, 1);
+
+        $parser   = new Parser();
+        $result   = $parser->parse('SELECT @id, @title, category WHERE @status = OPEN()');
+        $expected = new Query(
+            [new Metadata('id'), new Metadata('title'), new Field('category')],
+            new OrExpression(
+                new AndExpression(
+                    new EqualComparison(new Metadata('status'), new StatusOpenValueWrapper()),
+                    null
+                ),
+                null
+            )
+        );
+        self::assertEquals($expected, $result);
+    }
+
+    public function testItFailIfSelectEndWithComma(): void
+    {
+        ForgeConfig::setFeatureFlag(Query::ENABLE_SELECT, 1);
+
+        $parser = new Parser();
+        self::expectException(SyntaxError::class);
+        $parser->parse('SELECT field, WHERE field = "value"');
     }
 }

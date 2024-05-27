@@ -2516,6 +2516,7 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
         $event->addConfigClass(ColorpickerMountPointPresenterBuilder::class);
         $event->addConfigClass(PromotedTrackerConfiguration::class);
         $event->addConfigClass(TrackersPermissionsRetriever::class);
+        $event->addConfigClass(\Tuleap\Tracker\Report\Query\Advanced\Grammar\Query::class);
     }
 
     private function getMailNotificationBuilder(): MailNotificationBuilder

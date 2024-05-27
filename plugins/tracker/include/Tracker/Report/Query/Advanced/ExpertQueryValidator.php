@@ -29,18 +29,18 @@ final class ExpertQueryValidator
     }
 
     /**
-     * @param string $expert_query
      * @throws SearchablesAreInvalidException
      * @throws SearchablesDoNotExistException
      */
     public function validateExpertQuery(
-        $expert_query,
+        string $expert_query,
         IBuildInvalidSearchablesCollection $invalid_searchables_collection_builder,
-    ) {
-        $parsed_expert_query = $this->parser->parse($expert_query);
-        $this->size_validator->checkSizeOfTree($parsed_expert_query);
+    ): void {
+        $query     = $this->parser->parse($expert_query);
+        $condition = $query->getCondition();
+        $this->size_validator->checkSizeOfTree($condition);
 
-        $invalid_searchables_collection = $invalid_searchables_collection_builder->buildCollectionOfInvalidSearchables($parsed_expert_query);
+        $invalid_searchables_collection = $invalid_searchables_collection_builder->buildCollectionOfInvalidSearchables($condition);
 
         $nonexistent_searchables    = $invalid_searchables_collection->getNonexistentSearchables();
         $nb_nonexistent_searchables = count($nonexistent_searchables);

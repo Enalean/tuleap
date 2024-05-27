@@ -35,6 +35,31 @@ summary = 'ありがとう' or
     AND WITHOUT PARENT
 */
 
+query
+    = query_with_only_condition
+        / query_with_select
+
+query_with_only_condition
+    = condition:or_expression {
+        return new Query([], $condition);
+    }
+
+query_with_select
+    = select:select _ "where"i _ condition:or_expression {
+        return new Query($select, $condition);
+    }
+
+select
+    = "select"i _ first:Selectable _ list:(SelectableList *) {
+        array_unshift($list, $first);
+        return $list;
+    }
+
+SelectableList
+    = "," _ selectable:Selectable { return $selectable; }
+
+Selectable = Field / Metadata
+
 or_expression
     = _ expression:and_expression _ tail:or? {
         return new OrExpression($expression, $tail);
