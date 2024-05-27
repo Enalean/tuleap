@@ -23,14 +23,14 @@ declare(strict_types=1);
 namespace Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Field;
 
 use ParagonIE\EasyDB\EasyStatement;
-use Tuleap\CrossTracker\Report\Query\Advanced\DuckTypedField\DuckTypedField;
+use Tuleap\CrossTracker\Report\Query\Advanced\DuckTypedField\Where\DuckTypedFieldWhere;
 use Tuleap\Tracker\Report\Query\IProvideParametrizedFromAndWhereSQLFragments;
 use Tuleap\Tracker\Report\Query\ParametrizedFromWhere;
 
 final readonly class ListFromWhereBuilder
 {
     public function getComposedFromWhere(
-        DuckTypedField $duck_typed_field,
+        DuckTypedFieldWhere $duck_typed_field,
         string $tracker_field_alias,
         string $filter_alias,
         ParametrizedListFromWhere $bind_from_where,

@@ -43,6 +43,8 @@ use Tuleap\CrossTracker\Permission\CrossTrackerUnauthorizedException;
 use Tuleap\CrossTracker\Report\CrossTrackerArtifactReportFactory;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSearchableCollectorVisitor;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSearchablesCollectionBuilder;
+use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSelectablesCollectionBuilder;
+use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSelectablesCollectorVisitor;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidTermCollectorVisitor;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\ArtifactLink\ForwardLinkFromWhereBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\ArtifactLink\ReverseLinkFromWhereBuilder;
@@ -78,9 +80,9 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\SyntaxError;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ArtifactLink\ArtifactLinkTypeChecker;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Date\DateFieldChecker;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\File\FileFieldChecker;
-use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\InvalidFieldChecker;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\FloatFields\FloatFieldChecker;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Integer\IntegerFieldChecker;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\InvalidFieldChecker;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ListFields\ArtifactSubmitterChecker;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ListFields\CollectionOfNormalizedBindLabelsExtractor;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ListFields\CollectionOfNormalizedBindLabelsExtractorForOpenList;
@@ -92,6 +94,8 @@ use Tuleap\Tracker\Report\Query\Advanced\ParserCacheProxy;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\DateTimeValueRounder;
 use Tuleap\Tracker\Report\Query\Advanced\SearchablesAreInvalidException;
 use Tuleap\Tracker\Report\Query\Advanced\SearchablesDoNotExistException;
+use Tuleap\Tracker\Report\Query\Advanced\SelectablesAreInvalidException;
+use Tuleap\Tracker\Report\Query\Advanced\SelectablesDoNotExistException;
 use Tuleap\Tracker\Report\Query\Advanced\SizeValidatorVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\UgroupLabelConverter;
 use Tuleap\Tracker\Report\TrackerDuplicateException;
@@ -141,6 +145,7 @@ class CrossTrackerReportsResource extends AuthenticatedResource
     private $validator;
     /** @var InvalidTermCollectorVisitor */
     private $invalid_comparisons_collector;
+    private InvalidSelectablesCollectorVisitor $invalid_selectables_collector;
     private ArtifactRepresentationFactory $representation_factory;
 
     public function __construct()
@@ -179,6 +184,34 @@ class CrossTrackerReportsResource extends AuthenticatedResource
         );
 
         $form_element_factory                = Tracker_FormElementFactory::instance();
+        $duck_typed_field_checker            = new DuckTypedFieldChecker(
+            $form_element_factory,
+            $form_element_factory,
+            new InvalidFieldChecker(
+                new FloatFieldChecker(),
+                new IntegerFieldChecker(),
+                new TextFieldChecker(),
+                new DateFieldChecker(),
+                new FileFieldChecker(),
+                new ListFieldChecker(
+                    $list_field_bind_value_normalizer,
+                    $bind_labels_extractor,
+                    $ugroup_label_converter
+                ),
+                new ListFieldChecker(
+                    $list_field_bind_value_normalizer,
+                    new CollectionOfNormalizedBindLabelsExtractorForOpenList(
+                        $bind_labels_extractor,
+                        new OpenListValueDao(),
+                        $list_field_bind_value_normalizer,
+                    ),
+                    $ugroup_label_converter
+                ),
+                new ArtifactSubmitterChecker($this->user_manager),
+                true,
+            ),
+            TrackersPermissionsRetriever::build(),
+        );
         $this->invalid_comparisons_collector = new InvalidTermCollectorVisitor(
             new InvalidSearchableCollectorVisitor(
                 new MetadataChecker(
@@ -200,33 +233,7 @@ class CrossTrackerReportsResource extends AuthenticatedResource
                         new ArtifactIdMetadataChecker(),
                     )
                 ),
-                new DuckTypedFieldChecker(
-                    $form_element_factory,
-                    $form_element_factory,
-                    new InvalidFieldChecker(
-                        new FloatFieldChecker(),
-                        new IntegerFieldChecker(),
-                        new TextFieldChecker(),
-                        new DateFieldChecker(),
-                        new FileFieldChecker(),
-                        new ListFieldChecker(
-                            $list_field_bind_value_normalizer,
-                            $bind_labels_extractor,
-                            $ugroup_label_converter
-                        ),
-                        new ListFieldChecker(
-                            $list_field_bind_value_normalizer,
-                            new CollectionOfNormalizedBindLabelsExtractorForOpenList(
-                                $bind_labels_extractor,
-                                new OpenListValueDao(),
-                                $list_field_bind_value_normalizer,
-                            ),
-                            $ugroup_label_converter
-                        ),
-                        new ArtifactSubmitterChecker($this->user_manager),
-                        true,
-                    )
-                ),
+                $duck_typed_field_checker,
             ),
             new ArtifactLinkTypeChecker(
                 new TypePresenterFactory(
@@ -235,6 +242,7 @@ class CrossTrackerReportsResource extends AuthenticatedResource
                 ),
             )
         );
+        $this->invalid_selectables_collector = new InvalidSelectablesCollectorVisitor($duck_typed_field_checker);
 
         $date_time_value_rounder = new DateTimeValueRounder();
         $artifact_factory        = Tracker_ArtifactFactory::instance();
@@ -276,7 +284,8 @@ class CrossTrackerReportsResource extends AuthenticatedResource
             $query_builder_visitor,
             $parser,
             new CrossTrackerExpertQueryReportDao(),
-            $this->invalid_comparisons_collector
+            $this->invalid_comparisons_collector,
+            $this->invalid_selectables_collector,
         );
         $trackers_permissions_retriever       = TrackersPermissionsRetriever::build();
         $this->cross_tracker_permission_gate  = new CrossTrackerPermissionGate(
@@ -345,12 +354,12 @@ class CrossTrackerReportsResource extends AuthenticatedResource
      * @url GET {id}/content
      * @access hybrid
      *
-     * @param int    $id Id of the report
+     * @param int $id Id of the report
      * @param string $query
      *                      With a property "trackers_id" to search artifacts presents in given trackers.
      *                      With a property "expert_query" to customize the search. {@required false}
-     * @param int    $limit Number of elements displayed per page {@from path}{@min 1}{@max 50}
-     * @param int    $offset Position of the first element to display {@from path}{@min 0}
+     * @param int $limit Number of elements displayed per page {@from path}{@min 1}{@max 50}
+     * @param int $offset Position of the first element to display {@from path}{@min 0}
      *
      * @throws RestException 404
      */
@@ -400,9 +409,9 @@ class CrossTrackerReportsResource extends AuthenticatedResource
                 ),
                 ]
             );
-        } catch (SearchablesDoNotExistException $exception) {
-            throw new RestException(400, null, ['i18n_error_message' => $exception->getMessage()]);
-        } catch (SearchablesAreInvalidException $exception) {
+        } catch (SearchablesDoNotExistException | SelectablesDoNotExistException $exception) {
+            throw new RestException(400, null, ['i18n_error_message' => $exception->getI18NExceptionMessage()]);
+        } catch (SearchablesAreInvalidException | SelectablesAreInvalidException $exception) {
             throw new RestException(400, null, ['i18n_error_message' => $exception->getMessage()]);
         }
 
@@ -426,7 +435,7 @@ class CrossTrackerReportsResource extends AuthenticatedResource
      *
      * @param int $id Id of the report
      * @param array {@max 25}  $trackers_id  Tracker id to link to report
-     * @param string           $expert_query The TQL query saved with the report
+     * @param string $expert_query The TQL query saved with the report
      *
      * @status 201
      * @access hybrid
@@ -477,7 +486,8 @@ class CrossTrackerReportsResource extends AuthenticatedResource
         try {
             $this->validator->validateExpertQuery(
                 $expert_query,
-                new InvalidSearchablesCollectionBuilder($this->invalid_comparisons_collector, $trackers, $user)
+                new InvalidSearchablesCollectionBuilder($this->invalid_comparisons_collector, $trackers, $user),
+                new InvalidSelectablesCollectionBuilder($this->invalid_selectables_collector, $trackers, $user),
             );
         } catch (SearchablesDoNotExistException $exception) {
             throw new RestException(400, $exception->getMessage());
@@ -510,9 +520,9 @@ class CrossTrackerReportsResource extends AuthenticatedResource
     /**
      * @param                    $query
      *
+     * @return array
      * @throws RestException 400
      *
-     * @return array
      */
     private function getTrackersFromRoute($query, CrossTrackerReport $report)
     {

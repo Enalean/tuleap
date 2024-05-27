@@ -22,8 +22,10 @@ declare(strict_types=1);
 
 namespace Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\DuckTypedField;
 
+use BaseLanguageFactory;
 use Tuleap\CrossTracker\Report\Query\Advanced\DuckTypedField\FieldNotFoundInAnyTrackerFault;
 use Tuleap\CrossTracker\Report\Query\Advanced\DuckTypedField\FieldTypesAreIncompatibleFault;
+use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSelectableCollectorParameters;
 use Tuleap\CrossTracker\Tests\Builders\InvalidSearchableCollectorParametersBuilder;
 use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
@@ -39,16 +41,18 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\Field;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\SimpleValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Date\DateFieldChecker;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\File\FileFieldChecker;
-use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\InvalidFieldChecker;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\FloatFields\FloatFieldChecker;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Integer\IntegerFieldChecker;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\InvalidFieldChecker;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ListFields\ArtifactSubmitterChecker;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ListFields\CollectionOfNormalizedBindLabelsExtractor;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ListFields\CollectionOfNormalizedBindLabelsExtractorForOpenList;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ListFields\ListFieldChecker;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Text\TextFieldChecker;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidSelectablesCollection;
 use Tuleap\Tracker\Report\Query\Advanced\ListFieldBindValueNormalizer;
 use Tuleap\Tracker\Report\Query\Advanced\UgroupLabelConverter;
+use Tuleap\Tracker\Test\Builders\Fields\DateFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\ExternalFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\FloatFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\IntFieldBuilder;
@@ -58,6 +62,8 @@ use Tuleap\Tracker\Test\Builders\Fields\StringFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\RetrieveFieldTypeStub;
 use Tuleap\Tracker\Test\Stub\RetrieveUsedFieldsStub;
+use Tuleap\Tracker\Test\Stub\Tracker\Permission\RetrieveUserPermissionOnFieldsStub;
+use UserManager;
 
 final class DuckTypedFieldCheckerTest extends TestCase
 {
@@ -88,28 +94,19 @@ final class DuckTypedFieldCheckerTest extends TestCase
         );
     }
 
-    /**
-     * @return Ok<null>|Err<Fault>
-     */
-    private function check(Comparison $comparison): Ok|Err
+    private function buildChecker(): DuckTypedFieldChecker
     {
-        $visitor_parameters = InvalidSearchableCollectorParametersBuilder::aParameter()
-            ->withUser($this->user)
-            ->onTrackers($this->first_tracker, $this->second_tracker)
-            ->withComparison($comparison)
-            ->build();
-
         $list_field_bind_value_normalizer = new ListFieldBindValueNormalizer();
         $ugroup_label_converter           = new UgroupLabelConverter(
             $list_field_bind_value_normalizer,
-            new \BaseLanguageFactory()
+            new BaseLanguageFactory()
         );
         $bind_labels_extractor            = new CollectionOfNormalizedBindLabelsExtractor(
             $list_field_bind_value_normalizer,
             $ugroup_label_converter
         );
 
-        $checker = new DuckTypedFieldChecker(
+        return new DuckTypedFieldChecker(
             $this->fields_retriever,
             RetrieveFieldTypeStub::withDetectionOfType(),
             new InvalidFieldChecker(
@@ -132,25 +129,53 @@ final class DuckTypedFieldCheckerTest extends TestCase
                     ),
                     $ugroup_label_converter
                 ),
-                new ArtifactSubmitterChecker(\UserManager::instance()),
+                new ArtifactSubmitterChecker(UserManager::instance()),
                 true,
-            )
+            ),
+            RetrieveUserPermissionOnFieldsStub::build(),
         );
-        return $checker->checkFieldIsValid(
+    }
+
+    /**
+     * @return Ok<null>|Err<Fault>
+     */
+    private function checkForSearch(Comparison $comparison): Ok|Err
+    {
+        $visitor_parameters = InvalidSearchableCollectorParametersBuilder::aParameter()
+            ->withUser($this->user)
+            ->onTrackers($this->first_tracker, $this->second_tracker)
+            ->withComparison($comparison)
+            ->build();
+        return $this->buildChecker()->checkFieldIsValidForSearch(
             new Field(self::FIELD_NAME),
             $visitor_parameters
         );
     }
 
-    public function testCheckWhenAllFieldsAreIntOrFloat(): void
+    /**
+     * @return Ok<null>|Err<Fault>
+     */
+    private function checkForSelect(): Ok|Err
     {
-        self::assertTrue(Result::isOk($this->check(new EqualComparison(
+        return $this->buildChecker()->checkFieldIsValidForSelect(
+            new Field(self::FIELD_NAME),
+            new InvalidSelectableCollectorParameters(
+                new InvalidSelectablesCollection(),
+                [$this->first_tracker, $this->second_tracker],
+                $this->user,
+            ),
+        );
+    }
+
+    public function testSearchCheckWhenAllFieldsAreIntOrFloat(): void
+    {
+        self::assertTrue(Result::isOk($this->checkForSearch(new EqualComparison(
             new Field(self::FIELD_NAME),
             new SimpleValueWrapper(12)
         ))));
     }
 
-    public function testCheckFailsWhenFieldsAreIncompatible(): void
+    public function testSearchCheckFailsWhenFieldsAreIncompatible(): void
     {
         $this->fields_retriever = RetrieveUsedFieldsStub::withFields(
             IntFieldBuilder::anIntField(308)
@@ -165,7 +190,7 @@ final class DuckTypedFieldCheckerTest extends TestCase
                 ->build()
         );
 
-        $result = $this->check(new EqualComparison(
+        $result = $this->checkForSearch(new EqualComparison(
             new Field(self::FIELD_NAME),
             new SimpleValueWrapper(12)
         ));
@@ -173,7 +198,7 @@ final class DuckTypedFieldCheckerTest extends TestCase
         self::assertInstanceOf(FieldTypesAreIncompatibleFault::class, $result->error);
     }
 
-    public function testCheckFailsWhenFirstFieldIsNotSupported(): void
+    public function testSearchCheckFailsWhenFirstFieldIsNotSupported(): void
     {
         $this->fields_retriever = RetrieveUsedFieldsStub::withFields(
             ExternalFieldBuilder::anExternalField(569)
@@ -188,7 +213,7 @@ final class DuckTypedFieldCheckerTest extends TestCase
                 ->build(),
         );
 
-        $result = $this->check(new EqualComparison(
+        $result = $this->checkForSearch(new EqualComparison(
             new Field(self::FIELD_NAME),
             new SimpleValueWrapper(12)
         ));
@@ -196,7 +221,7 @@ final class DuckTypedFieldCheckerTest extends TestCase
         self::assertInstanceOf(Fault::class, $result->error);
     }
 
-    public function testCheckFailsWhenUserCannotReadFieldInAnyTracker(): void
+    public function testSearchCheckFailsWhenUserCannotReadFieldInAnyTracker(): void
     {
         $this->fields_retriever = RetrieveUsedFieldsStub::withFields(
             IntFieldBuilder::anIntField(841)
@@ -211,7 +236,7 @@ final class DuckTypedFieldCheckerTest extends TestCase
                 ->build()
         );
 
-        $result = $this->check(new EqualComparison(
+        $result = $this->checkForSearch(new EqualComparison(
             new Field(self::FIELD_NAME),
             new SimpleValueWrapper(12)
         ));
@@ -219,7 +244,7 @@ final class DuckTypedFieldCheckerTest extends TestCase
         self::assertInstanceOf(FieldNotFoundInAnyTrackerFault::class, $result->error);
     }
 
-    public function testCheckGoodWhenLabelMissingOnlyInOneField(): void
+    public function testSearchCheckGoodWhenLabelMissingOnlyInOneField(): void
     {
         $this->fields_retriever = RetrieveUsedFieldsStub::withFields(
             ListStaticBindBuilder::aStaticBind(
@@ -244,14 +269,14 @@ final class DuckTypedFieldCheckerTest extends TestCase
             ])->build()->getField()
         );
 
-        $result = $this->check(new EqualComparison(
+        $result = $this->checkForSearch(new EqualComparison(
             new Field(self::FIELD_NAME),
             new SimpleValueWrapper('a')
         ));
         self::assertTrue(Result::isOk($result));
     }
 
-    public function testCheckFailsWhenLabelMissingInAllField(): void
+    public function testSearchCheckFailsWhenLabelMissingInAllField(): void
     {
         $this->fields_retriever = RetrieveUsedFieldsStub::withFields(
             ListStaticBindBuilder::aStaticBind(
@@ -276,12 +301,31 @@ final class DuckTypedFieldCheckerTest extends TestCase
             ])->build()->getField()
         );
 
-        $result = $this->check(new EqualComparison(
+        $result = $this->checkForSearch(new EqualComparison(
             new Field(self::FIELD_NAME),
             new SimpleValueWrapper('e')
         ));
         self::assertTrue(Result::isErr($result));
         self::assertInstanceOf(Fault::class, $result->error);
         self::assertEquals("The value 'e' doesn't exist for the list field '" . self::FIELD_NAME . "'.", (string) $result->error);
+    }
+
+    public function testSelectCheckAcceptDateAndDateTime(): void
+    {
+        $this->fields_retriever = RetrieveUsedFieldsStub::withFields(
+            DateFieldBuilder::aDateField(156)
+                ->withName(self::FIELD_NAME)
+                ->inTracker($this->first_tracker)
+                ->withReadPermission($this->user, true)
+                ->build(),
+            DateFieldBuilder::aDateField(189)
+                ->withTime()
+                ->withName(self::FIELD_NAME)
+                ->inTracker($this->second_tracker)
+                ->withReadPermission($this->user, true)
+                ->build(),
+        );
+
+        self::assertTrue(Result::isOk($this->checkForSelect()));
     }
 }

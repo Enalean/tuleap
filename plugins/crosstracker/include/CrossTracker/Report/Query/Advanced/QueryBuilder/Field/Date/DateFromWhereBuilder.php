@@ -24,7 +24,7 @@ namespace Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Field\Date;
 
 use LogicException;
 use ParagonIE\EasyDB\EasyStatement;
-use Tuleap\CrossTracker\Report\Query\Advanced\DuckTypedField\DuckTypedField;
+use Tuleap\CrossTracker\Report\Query\Advanced\DuckTypedField\Where\DuckTypedFieldWhere;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Field\FieldValueWrapperParameters;
 use Tuleap\CrossTracker\Report\Query\ParametrizedWhere;
 use Tuleap\Tracker\Report\Query\Advanced\DateFormat;
@@ -51,7 +51,7 @@ final readonly class DateFromWhereBuilder implements ValueWrapperVisitor
     }
 
     public function getFromWhere(
-        DuckTypedField $duck_typed_field,
+        DuckTypedFieldWhere $duck_typed_field,
         Comparison $comparison,
     ): IProvideParametrizedFromAndWhereSQLFragments {
         $suffix = spl_object_hash($comparison);

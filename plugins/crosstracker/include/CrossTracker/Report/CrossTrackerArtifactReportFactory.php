@@ -28,14 +28,19 @@ use Tracker;
 use Tuleap\CrossTracker\CrossTrackerArtifactReportDao;
 use Tuleap\CrossTracker\CrossTrackerReport;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSearchablesCollectionBuilder;
+use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSelectablesCollectionBuilder;
+use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSelectablesCollectorVisitor;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidTermCollectorVisitor;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\CrossTrackerExpertQueryReportDao;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilderVisitor;
 use Tuleap\Tracker\Artifact\RetrieveArtifact;
 use Tuleap\Tracker\Report\Query\Advanced\ExpertQueryValidator;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\SyntaxError;
 use Tuleap\Tracker\Report\Query\Advanced\ParserCacheProxy;
 use Tuleap\Tracker\Report\Query\Advanced\SearchablesAreInvalidException;
 use Tuleap\Tracker\Report\Query\Advanced\SearchablesDoNotExistException;
+use Tuleap\Tracker\Report\Query\Advanced\SelectablesAreInvalidException;
+use Tuleap\Tracker\Report\Query\Advanced\SelectablesDoNotExistException;
 use Tuleap\Tracker\REST\v1\ArtifactMatchingReportCollection;
 
 final readonly class CrossTrackerArtifactReportFactory
@@ -47,13 +52,17 @@ final readonly class CrossTrackerArtifactReportFactory
         private QueryBuilderVisitor $query_builder,
         private ParserCacheProxy $parser,
         private CrossTrackerExpertQueryReportDao $expert_query_dao,
-        private InvalidTermCollectorVisitor $collector,
+        private InvalidTermCollectorVisitor $term_collector,
+        private InvalidSelectablesCollectorVisitor $selectables_collector,
     ) {
     }
 
     /**
      * @throws SearchablesAreInvalidException
      * @throws SearchablesDoNotExistException
+     * @throws SelectablesAreInvalidException
+     * @throws SelectablesDoNotExistException
+     * @throws SyntaxError
      */
     public function getArtifactsMatchingReport(
         CrossTrackerReport $report,
@@ -96,6 +105,9 @@ final readonly class CrossTrackerArtifactReportFactory
     /**
      * @throws SearchablesAreInvalidException
      * @throws SearchablesDoNotExistException
+     * @throws SyntaxError
+     * @throws SelectablesDoNotExistException
+     * @throws SelectablesAreInvalidException
      */
     private function getArtifactsMatchingExpertQuery(
         CrossTrackerReport $report,
@@ -107,7 +119,8 @@ final readonly class CrossTrackerArtifactReportFactory
         $expert_query = $report->getExpertQuery();
         $this->expert_query_validator->validateExpertQuery(
             $expert_query,
-            new InvalidSearchablesCollectionBuilder($this->collector, $trackers, $current_user)
+            new InvalidSearchablesCollectionBuilder($this->term_collector, $trackers, $current_user),
+            new InvalidSelectablesCollectionBuilder($this->selectables_collector, $trackers, $current_user),
         );
         $query                 = $this->parser->parse($expert_query);
         $condition             = $query->getCondition();

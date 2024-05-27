@@ -23,7 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Field\Numeric;
 
 use ParagonIE\EasyDB\EasyStatement;
-use Tuleap\CrossTracker\Report\Query\Advanced\DuckTypedField\DuckTypedField;
+use Tuleap\CrossTracker\Report\Query\Advanced\DuckTypedField\Where\DuckTypedFieldWhere;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Field\FieldValueWrapperParameters;
 use Tuleap\CrossTracker\Report\Query\ParametrizedWhere;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\BetweenValueWrapper;
@@ -44,7 +44,7 @@ use Tuleap\Tracker\Report\Query\ParametrizedFromWhere;
 final class NumericFromWhereBuilder implements ValueWrapperVisitor
 {
     public function getFromWhere(
-        DuckTypedField $duck_typed_field,
+        DuckTypedFieldWhere $duck_typed_field,
         Comparison $comparison,
     ): IProvideParametrizedFromAndWhereSQLFragments {
         $suffix = spl_object_hash($comparison);

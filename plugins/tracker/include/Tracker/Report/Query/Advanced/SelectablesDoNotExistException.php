@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2024-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,27 +18,29 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Tracker\Report\Query\Advanced;
 
 use Exception;
 
-final class SearchablesDoNotExistException extends Exception
+final class SelectablesDoNotExistException extends Exception
 {
     private string $i18n_message;
 
     /**
-     * @param string[] $non_existing_searchables
+     * @param string[] $non_existing_selectables
      */
-    public function __construct(array $non_existing_searchables)
+    public function __construct(array $non_existing_selectables)
     {
-        $string_list = implode("', '", $non_existing_searchables);
-        parent::__construct(sprintf("We cannot search on '%s', we don't know what they refer to. Please refer to the documentation for the allowed comparisons.", $string_list));
+        $string_list = implode("', '", $non_existing_selectables);
+        parent::__construct(sprintf("We cannot select on '%s', we don't know what they refer to. Please refer to the documentation for the allowed selectables.", $string_list));
         $this->i18n_message = sprintf(
             dngettext(
                 'tuleap-tracker',
-                "We cannot search on '%s', we don't know what it refers to. Please refer to the documentation for the allowed comparisons.",
-                "We cannot search on '%s', we don't know what they refer to. Please refer to the documentation for the allowed comparisons.",
-                count($non_existing_searchables)
+                "We cannot select on '%s', we don't know what it refers to. Please refer to the documentation for the allowed selectables.",
+                "We cannot select on '%s', we don't know what they refer to. Please refer to the documentation for the allowed selectables.",
+                count($non_existing_selectables)
             ),
             $string_list
         );

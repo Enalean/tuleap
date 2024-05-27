@@ -52,6 +52,7 @@ use Tuleap\Tracker\Report\Query\Advanced\InvalidMetadata;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidSearchableCollectorVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidSearchablesCollection;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidSearchablesCollectionBuilder;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidSelectablesCollectionBuilder;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidTermCollectorVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\LimitSizeIsExceededException;
 use Tuleap\Tracker\Report\Query\Advanced\ListFieldBindValueNormalizer;
@@ -60,6 +61,8 @@ use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilderVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\SearchablesAreInvalidException;
 use Tuleap\Tracker\Report\Query\Advanced\SearchablesDoNotExistException;
+use Tuleap\Tracker\Report\Query\Advanced\SelectablesAreInvalidException;
+use Tuleap\Tracker\Report\Query\Advanced\SelectablesDoNotExistException;
 use Tuleap\Tracker\Report\Query\Advanced\SizeValidatorVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\UgroupLabelConverter;
 use Tuleap\Tracker\Report\Query\CommentFromWhereBuilder;
@@ -1595,12 +1598,12 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
                 if ($this->is_in_expert_mode && $this->expert_query) {
                     try {
                         $this->validateExpertQuery();
-                    } catch (SearchablesDoNotExistException $exception) {
+                    } catch (SearchablesDoNotExistException | SelectablesDoNotExistException $exception) {
                         $GLOBALS['Response']->addFeedback(
                             Feedback::ERROR,
-                            $exception->getMessage()
+                            $exception->getI18NExceptionMessage()
                         );
-                    } catch (SearchablesAreInvalidException $exception) {
+                    } catch (SearchablesAreInvalidException | SelectablesAreInvalidException $exception) {
                         foreach ($exception->getErrorMessages() as $message) {
                             $GLOBALS['Response']->addFeedback(
                                 Feedback::ERROR,
@@ -1900,8 +1903,11 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
     /**
      * @throws SearchablesAreInvalidException
      * @throws SearchablesDoNotExistException
+     * @throws SyntaxError
+     * @throws SelectablesAreInvalidException
+     * @throws SelectablesDoNotExistException
      */
-    public function validateExpertQuery()
+    public function validateExpertQuery(): void
     {
         $validator = new ExpertQueryValidator(
             $this->parser,
@@ -1909,7 +1915,8 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
         );
         $validator->validateExpertQuery(
             $this->expert_query,
-            new InvalidSearchablesCollectionBuilder($this->getCollector())
+            new InvalidSearchablesCollectionBuilder($this->getCollector()),
+            new InvalidSelectablesCollectionBuilder(),
         );
     }
 

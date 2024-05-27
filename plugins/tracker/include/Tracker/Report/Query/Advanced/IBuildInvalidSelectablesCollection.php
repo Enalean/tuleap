@@ -20,16 +20,14 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\Report\Query\Advanced\Grammar;
+namespace Tuleap\Tracker\Report\Query\Advanced;
 
-interface Selectable
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\Selectable;
+
+interface IBuildInvalidSelectablesCollection
 {
     /**
-     * @template ReturnType
-     * @template Parameters of VisitorParameters
-     * @param SelectableVisitor<Parameters, ReturnType> $visitor
-     * @param Parameters $parameters
-     * @return ReturnType
+     * @param Selectable[] $selectables
      */
-    public function acceptSelectableVisitor(SelectableVisitor $visitor, $parameters);
+    public function buildCollectionOfInvalidSelectables(array $selectables): InvalidSelectablesCollection;
 }

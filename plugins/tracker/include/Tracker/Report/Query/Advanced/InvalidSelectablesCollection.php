@@ -20,16 +20,36 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\Report\Query\Advanced\Grammar;
+namespace Tuleap\Tracker\Report\Query\Advanced;
 
-interface Selectable
+final class InvalidSelectablesCollection
 {
     /**
-     * @template ReturnType
-     * @template Parameters of VisitorParameters
-     * @param SelectableVisitor<Parameters, ReturnType> $visitor
-     * @param Parameters $parameters
-     * @return ReturnType
+     * @var string[]
      */
-    public function acceptSelectableVisitor(SelectableVisitor $visitor, $parameters);
+    private array $non_existent_selectables = [];
+    /**
+     * @var string[]
+     */
+    private array $invalid_selectables_errors = [];
+
+    public function addNonExistentSelectable(string $selectable_name): void
+    {
+        $this->non_existent_selectables[] = $selectable_name;
+    }
+
+    public function addInvalidSelectableError(string $error_message): void
+    {
+        $this->invalid_selectables_errors[] = $error_message;
+    }
+
+    public function getNonExistentSelectables(): array
+    {
+        return $this->non_existent_selectables;
+    }
+
+    public function getInvalidSelectablesErrors(): array
+    {
+        return $this->invalid_selectables_errors;
+    }
 }

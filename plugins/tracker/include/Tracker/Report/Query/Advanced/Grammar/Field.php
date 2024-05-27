@@ -37,4 +37,9 @@ final readonly class Field implements Searchable, Selectable
     {
         return $visitor->visitField($this, $parameters);
     }
+
+    public function acceptSelectableVisitor(SelectableVisitor $visitor, $parameters)
+    {
+        return $visitor->visitField($this, $parameters);
+    }
 }

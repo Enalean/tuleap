@@ -25,7 +25,7 @@ namespace Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Field\Text;
 use LogicException;
 use ParagonIE\EasyDB\EasyDB;
 use ParagonIE\EasyDB\EasyStatement;
-use Tuleap\CrossTracker\Report\Query\Advanced\DuckTypedField\DuckTypedField;
+use Tuleap\CrossTracker\Report\Query\Advanced\DuckTypedField\Where\DuckTypedFieldWhere;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Field\FieldValueWrapperParameters;
 use Tuleap\CrossTracker\Report\Query\ParametrizedWhere;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\BetweenValueWrapper;
@@ -50,7 +50,7 @@ final readonly class TextFromWhereBuilder implements ValueWrapperVisitor
     }
 
     public function getFromWhere(
-        DuckTypedField $duck_typed_field,
+        DuckTypedFieldWhere $duck_typed_field,
         Comparison $comparison,
     ): IProvideParametrizedFromAndWhereSQLFragments {
         $suffix = spl_object_hash($comparison);

@@ -18,48 +18,80 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Tracker\Report\Query\Advanced;
 
-final class ExpertQueryValidator
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\Logical;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\Selectable;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\SyntaxError;
+
+final readonly class ExpertQueryValidator
 {
     public function __construct(
-        private readonly ParserCacheProxy $parser,
-        private readonly SizeValidatorVisitor $size_validator,
+        private ParserCacheProxy $parser,
+        private SizeValidatorVisitor $size_validator,
     ) {
     }
 
     /**
      * @throws SearchablesAreInvalidException
      * @throws SearchablesDoNotExistException
+     * @throws SyntaxError
+     * @throws SelectablesDoNotExistException
+     * @throws SelectablesAreInvalidException
      */
     public function validateExpertQuery(
         string $expert_query,
         IBuildInvalidSearchablesCollection $invalid_searchables_collection_builder,
+        IBuildInvalidSelectablesCollection $invalid_selectables_collection_builder,
     ): void {
         $query     = $this->parser->parse($expert_query);
         $condition = $query->getCondition();
         $this->size_validator->checkSizeOfTree($condition);
 
+        $this->checkSearchables($condition, $invalid_searchables_collection_builder);
+        $this->checkSelectables($query->getSelect(), $invalid_selectables_collection_builder);
+    }
+
+    /**
+     * @throws SearchablesDoNotExistException
+     * @throws SearchablesAreInvalidException
+     */
+    private function checkSearchables(
+        Logical $condition,
+        IBuildInvalidSearchablesCollection $invalid_searchables_collection_builder,
+    ): void {
         $invalid_searchables_collection = $invalid_searchables_collection_builder->buildCollectionOfInvalidSearchables($condition);
 
         $nonexistent_searchables    = $invalid_searchables_collection->getNonexistentSearchables();
         $nb_nonexistent_searchables = count($nonexistent_searchables);
         if ($nb_nonexistent_searchables > 0) {
-            $message = sprintf(
-                dngettext(
-                    'tuleap-tracker',
-                    "We cannot search on '%s', we don't know what it refers to. Please refer to the documentation for the allowed comparisons.",
-                    "We cannot search on '%s', we don't know what they refer to. Please refer to the documentation for the allowed comparisons.",
-                    $nb_nonexistent_searchables
-                ),
-                implode("', '", $nonexistent_searchables)
-            );
-            throw new SearchablesDoNotExistException($message);
+            throw new SearchablesDoNotExistException($nonexistent_searchables);
         }
 
         $invalid_searchable_errors = $invalid_searchables_collection->getInvalidSearchableErrors();
         if ($invalid_searchable_errors) {
             throw new SearchablesAreInvalidException($invalid_searchable_errors);
+        }
+    }
+
+    /**
+     * @param Selectable[] $selectables
+     * @throws SelectablesDoNotExistException
+     * @throws SelectablesAreInvalidException
+     */
+    private function checkSelectables(
+        array $selectables,
+        IBuildInvalidSelectablesCollection $invalid_selectables_collection_builder,
+    ): void {
+        $invalid_selectables_collection = $invalid_selectables_collection_builder->buildCollectionOfInvalidSelectables($selectables);
+        if ($invalid_selectables_collection->getNonExistentSelectables() !== []) {
+            throw new SelectablesDoNotExistException($invalid_selectables_collection->getNonExistentSelectables());
+        }
+
+        if ($invalid_selectables_collection->getInvalidSelectablesErrors() !== []) {
+            throw new SelectablesAreInvalidException($invalid_selectables_collection->getInvalidSelectablesErrors());
         }
     }
 }

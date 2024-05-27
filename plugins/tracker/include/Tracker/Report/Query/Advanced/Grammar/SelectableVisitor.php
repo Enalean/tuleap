@@ -22,14 +22,23 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Report\Query\Advanced\Grammar;
 
-interface Selectable
+/**
+ * @template Parameters of VisitorParameters
+ * @template ReturnType
+ */
+interface SelectableVisitor
 {
     /**
-     * @template ReturnType
-     * @template Parameters of VisitorParameters
-     * @param SelectableVisitor<Parameters, ReturnType> $visitor
      * @param Parameters $parameters
+     *
      * @return ReturnType
      */
-    public function acceptSelectableVisitor(SelectableVisitor $visitor, $parameters);
+    public function visitField(Field $field, $parameters);
+
+    /**
+     * @param Parameters $parameters
+     *
+     * @return ReturnType
+     */
+    public function visitMetaData(Metadata $metadata, $parameters);
 }

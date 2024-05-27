@@ -22,15 +22,21 @@ declare(strict_types=1);
 
 namespace Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\DuckTypedField;
 
-use Tuleap\CrossTracker\Report\Query\Advanced\DuckTypedField\DuckTypedField;
+use Tracker_FormElement_Field;
 use Tuleap\CrossTracker\Report\Query\Advanced\DuckTypedField\FieldTypeRetrieverWrapper;
+use Tuleap\CrossTracker\Report\Query\Advanced\DuckTypedField\Select\DuckTypedFieldSelect;
+use Tuleap\CrossTracker\Report\Query\Advanced\DuckTypedField\Where\DuckTypedFieldWhere;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSearchableCollectorParameters;
+use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSelectableCollectorParameters;
 use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
 use Tuleap\Tracker\FormElement\Field\RetrieveUsedFields;
 use Tuleap\Tracker\FormElement\RetrieveFieldType;
+use Tuleap\Tracker\Permission\FieldPermissionType;
+use Tuleap\Tracker\Permission\RetrieveUserPermissionOnFields;
+use Tuleap\Tracker\Permission\TrackersPermissionsRetriever;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Field;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\InvalidFieldChecker;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\InvalidFieldException;
@@ -41,13 +47,14 @@ final readonly class DuckTypedFieldChecker
         private RetrieveUsedFields $retrieve_used_fields,
         private RetrieveFieldType $retrieve_field_type,
         private InvalidFieldChecker $field_checker,
+        private RetrieveUserPermissionOnFields $user_permission_on_fields,
     ) {
     }
 
     /**
      * @return Ok<null>|Err<Fault>
      */
-    public function checkFieldIsValid(
+    public function checkFieldIsValidForSearch(
         Field $field,
         InvalidSearchableCollectorParameters $collector_parameters,
     ): Ok|Err {
@@ -71,7 +78,47 @@ final readonly class DuckTypedFieldChecker
             return Result::err(Fault::fromThrowable($exception_collector[0]));
         }
 
-        return DuckTypedField::build(
+        return DuckTypedFieldWhere::build(
+            new FieldTypeRetrieverWrapper($this->retrieve_field_type),
+            $field->getName(),
+            $fields_user_can_read,
+            $tracker_ids,
+        )->map(static fn() => null);
+    }
+
+    /**
+     * @return Ok<null>|Err<Fault>
+     */
+    public function checkFieldIsValidForSelect(
+        Field $field,
+        InvalidSelectableCollectorParameters $collector_parameters,
+    ): Ok|Err {
+        $tracker_ids = $collector_parameters->getTrackersIds();
+        $user        = $collector_parameters->user;
+
+        if (TrackersPermissionsRetriever::isEnabled()) {
+            $fields = array_filter(
+                array_map(
+                    fn(int $tracker_id) => $this->retrieve_used_fields->getUsedFieldByName($tracker_id, $field->getName()),
+                    $tracker_ids,
+                ),
+                static fn(?Tracker_FormElement_Field $field) => $field !== null,
+            );
+
+            $fields_user_can_read = $this->user_permission_on_fields
+                ->retrieveUserPermissionOnFields($user, $fields, FieldPermissionType::PERMISSION_READ)
+                ->allowed;
+        } else {
+            $fields_user_can_read = [];
+            foreach ($tracker_ids as $tracker_id) {
+                $used_field = $this->retrieve_used_fields->getUsedFieldByName($tracker_id, $field->getName());
+                if ($used_field && $used_field->userCanRead($user)) {
+                    $fields_user_can_read[] = $used_field;
+                }
+            }
+        }
+
+        return DuckTypedFieldSelect::build(
             new FieldTypeRetrieverWrapper($this->retrieve_field_type),
             $field->getName(),
             $fields_user_can_read,
