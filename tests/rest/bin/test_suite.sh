@@ -10,5 +10,5 @@ run_testsuite() {
     $PHPUNIT --configuration /usr/share/tuleap/tests/rest/phpunit.xml --do-not-cache-result --log-junit /output/rest_tests.xml $1
 }
 
-ulimit -n 409600
+ulimit -n 409600 || true
 run_testsuite $1
