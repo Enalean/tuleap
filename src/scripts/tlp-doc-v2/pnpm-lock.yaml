@@ -19,6 +19,9 @@ dependencies:
   '@tuleap/core-constants':
     specifier: workspace:*
     version: link:../../../lib/frontend/constants
+  '@tuleap/lazybox':
+    specifier: workspace:^
+    version: link:../../../lib/frontend/lazybox
   '@tuleap/list-picker':
     specifier: workspace:^
     version: link:../../../lib/frontend/list-picker

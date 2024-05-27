@@ -1,0 +1,293 @@
+import { Meta, Controls, Canvas } from '@storybook/blocks';
+import * as LazyboxStories from "./lazybox.stories";
+
+<Meta of={LazyboxStories}/>
+
+# Lazybox
+
+Lazybox displays groups of items that can be fetched separately from each other and lets users select items among them. It is &quot;lazy&quot; because you need to tell it what to do. If you don't call any of the methods, it will stay a blank box with an empty dropdown. It is a toolkit to build an auto-completer.
+
+If you need an auto-completer, a way to search among a lot of values fetched asynchronously, if each group of items can be fetched separately from the others, if you need to add new values dynamically, you should use it.
+It has no built-in <code>&lt;select&gt;</code> element, it is not linked to <code>&lt;form&gt;</code> validation / submit. If you need that, please use <a href="/?path=/docs/tlp-forms-list-picker--docs">List picker</a> or add the values to a hidden <code >&lt;input&gt;</code> by yourself.
+
+## Options
+- <code>is_multiple: boolean</code>: Single value selection when set to false, multiple values selection when set to true.
+- <code>placeholder: string</code>: A (translated) text that will be shown when there is no selection in the Lazybox. Its purpose is to tell the user what kind of items they will search using this field. For example "Search for an artifact…"
+- <code>search_input_placeholder: string</code>: A (translated) text that will be shown inside the search input. It is only available when <code>is_multiple = false</code>. It is shown when the user didn't write anything yet in the search input. Its purpose is to tell the user the kind of input they are supposed to write, so that their search yields results. For example "Id, title…"
+- <code>templating_callback: (html: HTMLTemplateStringProcessor, item: LazyboxItem) => HTMLTemplateResult</code>: A callback function returning a hybrids update function to customize item templates.
+    - It takes two parameters:
+        - <code>html: HTMLTemplateStringProcessor</code> The hybrids tag function to help the developer build a secure HTMLTemplateResult.
+        - <code>item: LazyboxItem</code> The item for which to build the template. See below for its definition.
+- <code>selection_callback: (selected_value: unknown[]) => void</code>: A callback function to be executed each time the user selects a value or clears the selection.
+    - It takes one parameter:
+        - <code>selected_value</code>.
+    - When <code>is_multiple = false</code>, it is an array containing the value of the selected item or an empty array <code>[]</code>.
+    - When <code>is_multiple = true</code>, it is an array of the values of the selected items or an empty array <code>[]</code>.
+- <code>search_input_callback: (query: string) => void</code>: A callback to be executed each time the user types a query in the search input.
+    - It takes one parameter:
+        - <code>query: string</code>: The query typed by the user.
+- <code>new_item_clicked_callback: (item_name: string) => void</code>: An optional callback to be executed when the user clicks on the &quot;Create new item&quot; button. If not given, the &quot;Create new item&quot; button will not appear.
+    - It takes one parameter:
+        - <code>item_name: string</code>: The query typed by the user when the "Create new item" button was clicked.
+- <code>new_item_label_callback: (item_name: string) => string</code>: A callback that should return the (translated) label for the &quot;Create new item&quot; button. It is only available when <code>new_item_clicked_callback</code> is defined.
+- <code>selection_badge_callback: (item: LazyboxItem) => SelectionBadge &amp; HTMLElement</code>: An optional callback function returning an instance of custom element representing a selected item badge. It is only available when <code>is_multiple = true</code>. The custom element has a <code>&lt;slot&gt;</code>, you can pass any content in it to be rendered inside the badge.
+    - It has two properties:
+        - <code>outline: boolean</code>: when true, the badge will have outline style. Defaults to false.
+        - <code>color: ColorVariant</code>: when given, the badge will have this color. Defaults to &quot;primary&quot;.
+    - It takes one parameter:
+        - <code>item: LazyboxItem</code>: The item for which to build the template.
+
+## Methods
+
+##### <code>replaceDropdownContent(groups: GroupsOfItems[]) => void</code>
+
+Replaces the contents of the dropdown with the given list of <code>GroupOfItems</code>.
+
+Each<code>GroupOfItems</code> has these properties:
+    - <code>label: string</code>: The label of the group. Think of it as the text content of an &lt;optgroup&gt;.
+    - <code>empty_message: string</code>: The translated message that will be shown when there are no items. It is the "empty state" of the group.
+    - <code>is_loading: boolean</code>: Show a spinner next to the group's label if true.
+    - <code>items: LazyboxItem[]</code>: the items of the group.
+    - <code>footer_message: string</code>: a message to display below the group of items.
+
+Each <code>LazyboxItem</code> has these properties:
+    - <code>value: unknown</code>: The value that will be passed to <code>selection_callback</code>. It can be any type, usually it's an object.
+    - <code>is_disabled: boolean</code>: the item cannot be selected if it's true.
+
+##### <code>clearSelection() => void</code>
+
+Empties the current selection.
+
+##### <code>replaceSelection(selection: LazyboxItem[]) => void</code>
+
+Replace the current selection with the given one.
+
+## Single item picker
+
+In this live example, type `105` in the search field to simulate some content fetched from a remote endpoint.
+
+Focus buttons or items in the dropdown with the <kbd>⇆</kbd> Tabulation key. Cycle through the dropdown items with the <kbd>↑</kbd> up and <kbd>↓</kbd> down arrow keys.
+
+<Canvas withToolbar={true}  of={LazyboxStories.SingleItemPicker}></Canvas>
+
+
+<Controls></Controls>
+
+#### Typescript example
+
+```typescript
+import type { GroupOfItems, HTMLTemplateResult, LazyboxItem } from "@tuleap/lazybox";
+import { createLazybox } from "@tuleap/lazybox";
+
+const ADDITIONAL_ITEM_ID = 105;
+
+const item_105: LazyboxItem = {
+    value: {
+        id: ADDITIONAL_ITEM_ID,
+        color: "graffiti-yellow",
+        xref: "story #105",
+        title: "Do more stuff",
+    },
+    is_disabled: false,
+};
+
+const items = [
+    {
+        value: { id: 101, color: "acid-green", xref: "story #101", title: "Do this" },
+        is_disabled: false,
+    },
+    {
+        value: { id: 102, color: "fiesta-red", xref: "story #102", title: "Do that" },
+        is_disabled: false,
+    },
+    {
+        value: {
+            id: 103,
+            color: "deep-blue",
+            xref: "story #103",
+            title: "And that too",
+        },
+        is_disabled: true,
+    },
+];
+
+const items_group: GroupOfItems = {
+    label: "✅ Matching items",
+    empty_message: "No matching item",
+    is_loading: false,
+    items,
+    footer_message: "",
+};
+
+const recent_items = [
+    {
+        value: {
+            id: 106,
+            color: "lake-placid-blue",
+            xref: "request #106",
+            title: "Please fix",
+        },
+        is_disabled: false,
+    },
+    {
+        value: {
+            id: 107,
+            color: "ocean-turquoise",
+            xref: "request #107",
+            title: "It does not work",
+        },
+        is_disabled: false,
+    },
+];
+
+const recent_group = {
+    label: "Recent items",
+    empty_message: "No recent item",
+    is_loading: false,
+    items: recent_items,
+    footer_message: "",
+};
+
+const lazybox = createLazybox(document);
+lazybox.id = `lazybox-single-link-selector`;
+lazybox.options = {
+    is_multiple: false,
+    placeholder: "Please select an item to link",
+    search_input_placeholder: "Type a number",
+    new_item_label_callback: (item_name) =>
+        item_name !== "" ? `→ Create a new item "${item_name}"…` : "→ Create a new item…",
+    new_item_clicked_callback: (item_name): void => {
+        lazybox.replaceSelection([
+            {
+                value: {
+                    id: 108,
+                    color: "firemist-silver",
+                    xref: "story #108",
+                    title: item_name !== "" ? item_name : "New item",
+                },
+                is_disabled: false,
+            },
+        ]);
+    },
+    templating_callback: (html, item): HTMLTemplateResult => {
+        return html`<span class="tlp-badge-${item.value.color} doc-lazybox-badge"
+                >${item.value.xref}</span
+            >
+            ${item.value.title}`;
+    },
+    selection_callback: (): void => {
+        // Do nothing
+    },
+    search_input_callback: (query): void => {
+        if (query === "") {
+            lazybox.replaceDropdownContent([items_group, recent_group]);
+            return;
+        }
+        const lowercase_query = query.toLowerCase();
+
+        if (lowercase_query === String(ADDITIONAL_ITEM_ID)) {
+            lazybox.replaceDropdownContent([{ ...items_group, items: [item_105] }]);
+            return;
+        }
+        const matching_items = items.filter(
+            (item) =>
+                String(item.value.id).includes(lowercase_query) ||
+                item.value.title.toLowerCase().includes(lowercase_query),
+        );
+        const matching_recent = recent_items.filter((item) =>
+            item.value.title.toLowerCase().includes(lowercase_query),
+        );
+        const matching_items_group = { ...items_group, items: matching_items };
+        const matching_recent_group = { ...recent_group, items: matching_recent };
+        lazybox.replaceDropdownContent([matching_items_group, matching_recent_group]);
+    },
+};
+lazybox.replaceDropdownContent([items_group, recent_group]);
+```
+
+## Multiple items picker
+
+In this live example, start to type `jo` in the search field to simulate some content fetched from a remote endpoint.
+
+<Canvas withToolbar={true}  of={LazyboxStories.MultipleItemsPicker}></Canvas>
+
+#### Typescript example
+
+```typescript
+import type { GroupOfItems, HTMLTemplateResult } from "@tuleap/lazybox";
+import { createLazybox } from "@tuleap/lazybox";
+
+const users = [
+    {
+        value: { id: 102, display_name: "Johnny Cash (jocash)" },
+        is_disabled: false,
+    },
+    {
+        value: { id: 102, display_name: "Joe l'Asticot (jolasti)" },
+        is_disabled: false,
+    },
+    {
+        value: { id: 103, display_name: "John doe (jdoe)" },
+        is_disabled: false,
+    },
+    {
+        value: { id: 104, display_name: "Joe the hobo (johobo)" },
+        is_disabled: true,
+    },
+];
+
+const users_group: GroupOfItems = {
+    label: "Matching users",
+    empty_message: "No user found",
+    is_loading: false,
+    items: [],
+    footer_message: "",
+};
+
+const recent_users = [
+    { value: { id: 105, display_name: "Jon Snow (jsnow)" }, is_disabled: false },
+    { value: { id: 106, display_name: "Joe Dalton (jdalton)" }, is_disabled: false },
+];
+
+const recent_group = {
+    label: "Recent users",
+    empty_message: "No user found",
+    is_loading: false,
+    items: [],
+    footer_message: "",
+};
+
+const lazybox = createLazybox(document);
+lazybox.id = `lazybox-multiple-link-selector`;
+lazybox.options = {
+    is_multiple: true,
+    placeholder: "Search users by names",
+    templating_callback: (html, item): HTMLTemplateResult => {
+        return html`<span class="doc-multiple-lazybox-user-with-avatar">
+            <div class="tlp-avatar-mini"></div>
+            ${item.value.display_name}
+        </span>`;
+    },
+    selection_callback: (): void => {
+        // Do nothing
+    },
+    search_input_callback: (query): void => {
+        if (query === "") {
+            lazybox.replaceDropdownContent([users_group]);
+            return;
+        }
+        const lowercase_query = query.toLowerCase();
+        const matching_users = users.filter((user) =>
+            user.value.display_name.toLowerCase().includes(lowercase_query),
+        );
+        const matching_recent = recent_users.filter((user) =>
+            user.value.display_name.toLowerCase().includes(lowercase_query),
+        );
+        const matching_users_group = { ...users_group, items: matching_users };
+        const matching_recent_group = { ...recent_group, items: matching_recent };
+        lazybox.replaceDropdownContent([matching_users_group, matching_recent_group]);
+    },
+};
+lazybox.replaceDropdownContent([users_group]);
+lazybox.replaceSelection([users[0]]);
+```

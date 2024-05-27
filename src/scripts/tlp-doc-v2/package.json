@@ -6,6 +6,7 @@
   "private": true,
   "dependencies": {
     "@tuleap/core-constants": "workspace:*",
+    "@tuleap/lazybox": "workspace:^",
     "@tuleap/list-picker": "workspace:^",
     "@tuleap/tlp": "workspace:*",
     "@tuleap/tlp-badge": "workspace:*",
