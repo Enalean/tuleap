@@ -25,6 +25,7 @@
     "@tuleap/plugin-timetracking-constants": "workspace:*",
     "@tuleap/plugin-timetracking-rest-api-types": "workspace:*",
     "@tuleap/plugin-timetracking-time-formatters": "workspace:*",
+    "@tuleap/plugin-timetracking-predefined-time-periods": "workspace:*",
     "@tuleap/po-gettext-plugin": "workspace:*",
     "@vitejs/plugin-vue": "^4.2.3",
     "@vue/test-utils": "^2.2.10"

@@ -31,8 +31,8 @@ import {
 } from "@tuleap/plugin-timetracking-constants";
 import { updateEvent } from "../TimetrackingEvents";
 import type { PersonalTime } from "@tuleap/plugin-timetracking-rest-api-types";
-import type { PredefinedTimePeriod } from "../helper/predefined-time-periods";
-import { LAST_7_DAYS } from "../helper/predefined-time-periods";
+import type { PredefinedTimePeriod } from "@tuleap/plugin-timetracking-predefined-time-periods";
+import { LAST_7_DAYS } from "@tuleap/plugin-timetracking-predefined-time-periods";
 import { Option } from "@tuleap/option";
 
 const a_week_ago: Date = new Date();
