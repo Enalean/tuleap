@@ -26,7 +26,7 @@
     >
         <div class="tlp-modal-header">
             <h1 class="tlp-modal-title" id="create-repository-modal-title">
-                <translate>Add GitLab repository</translate>
+                {{ $gettext("Add GitLab repository") }}
             </h1>
             <button
                 class="tlp-modal-close"

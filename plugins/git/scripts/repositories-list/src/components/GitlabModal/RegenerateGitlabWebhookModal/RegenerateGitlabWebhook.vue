@@ -20,8 +20,8 @@
 <template>
     <div role="dialog" aria-labelledby="regenerate-gitlab-webhook" class="tlp-modal">
         <div class="tlp-modal-header">
-            <h1 class="tlp-modal-title">
-                <translate id="regenerate-gitlab-webhook">Regenerate the GitLab webhook</translate>
+            <h1 class="tlp-modal-title" id="regenerate-gitlab-webhook">
+                {{ $gettext("Regenerate the GitLab webhook") }}
             </h1>
             <button
                 class="tlp-modal-close"
@@ -42,23 +42,15 @@
             </div>
         </div>
         <div class="tlp-modal-body" v-if="repository !== null">
-            <translate tag="p">
-                Regenerate the GitLab webhook will invalidate the previous webhook, and create a new
-                one with a new secret. Webhook is used to allow GitLab to securely communicate with
-                Tuleap whenever something happen in the repository (e.g. push commits, new merge
-                requests, ...).
-            </translate>
-            <translate
-                tag="p"
-                v-bind:translate-params="{
-                    label: repository.normalized_path,
-                    instance_url: instance_url,
-                }"
-            >
-                You are about to regenerate the webhook for %{ label } repository located at %{
-                instance_url }.
-            </translate>
-            <translate tag="p">Please confirm your action.</translate>
+            <p>
+                {{
+                    $gettext(
+                        "Regenerate the GitLab webhook will invalidate the previous webhook, and create a new one with a new secret. Webhook is used to allow GitLab to securely communicate with Tuleap whenever something happen in the repository (e.g. push commits, new merge requests, ...).",
+                    )
+                }}
+            </p>
+            <p>{{ you_are_about_to_regenerate_the_webhook_for_repository_located_at_message }}</p>
+            <p>{{ $gettext("Please confirm your action.") }}</p>
         </div>
         <div class="tlp-modal-footer">
             <button
@@ -67,7 +59,7 @@
                 data-dismiss="modal"
                 data-test="regenerate-gitlab-webhook-cancel"
             >
-                <translate>Cancel</translate>
+                {{ $gettext("Cancel") }}
             </button>
             <button
                 type="submit"
@@ -81,7 +73,7 @@
                     class="fas fa-spin fa-circle-notch tlp-button-icon"
                     data-test="icon-spin"
                 ></i>
-                <translate>Regenerate webhook</translate>
+                {{ $gettext("Regenerate webhook") }}
             </button>
         </div>
     </div>
@@ -199,6 +191,16 @@ export default class RegenerateGitlabWebhook extends Vue {
         } finally {
             this.is_updating_webhook = false;
         }
+    }
+
+    get you_are_about_to_regenerate_the_webhook_for_repository_located_at_message() {
+        let translated = this.$gettext(
+            `You are about to regenerate the webhook for %{ label } repository located at %{ instance_url }.`,
+        );
+        return this.$gettextInterpolate(translated, {
+            label: this.repository?.normalized_path,
+            instance_url: this.instance_url,
+        });
     }
 }
 </script>

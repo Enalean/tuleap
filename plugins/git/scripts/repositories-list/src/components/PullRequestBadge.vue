@@ -23,14 +23,7 @@
         class="git-pullrequest-badge-link"
         v-if="numberPullRequest > 0"
     >
-        <span class="tlp-badge-primary">
-            <translate
-                v-bind:translate-n="numberPullRequest"
-                translate-plural="%{ numberPullRequest } pull requests"
-            >
-                %{ numberPullRequest } pull request
-            </translate>
-        </span>
+        <span class="tlp-badge-primary">{{ pull_requests }}</span>
     </a>
 </template>
 <script lang="ts">
@@ -49,6 +42,17 @@ export default class PullRequestBadge extends Vue {
 
     pullrequest_url(): string {
         return String(getPullRequestsHomepageUrl(location, getProjectId(), this.repositoryId));
+    }
+
+    get pull_requests() {
+        return this.$gettextInterpolate(
+            this.$ngettext(
+                "%{ numberPullRequest } pull request",
+                "%{ numberPullRequest } pull requests",
+                this.numberPullRequest,
+            ),
+            { numberPullRequest: this.numberPullRequest },
+        );
     }
 }
 </script>

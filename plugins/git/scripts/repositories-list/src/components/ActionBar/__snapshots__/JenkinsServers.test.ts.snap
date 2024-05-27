@@ -1,18 +1,14 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`JenkinsServer displays the badge and a basic popover 1`] = `
-<div><span class="tlp-badge-secondary tlp-badge-outline git-repository-list-header-badge"><translate-stub tag="span" translaten="1" translateplural="%{ countJenkinsServers } Jenkins servers setup" translateparams="[object Object]">
-            %{ countJenkinsServers } Jenkins server setup
-        </translate-stub></span>
+<div><span class="tlp-badge-secondary tlp-badge-outline git-repository-list-header-badge"><span>1 Jenkins server setup</span></span>
   <section class="tlp-popover git-repository-list-header-popover">
     <div class="tlp-popover-arrow"></div>
     <div class="tlp-popover-header">
-      <h1 class="tlp-popover-title" data-msgid="Jenkins servers" data-current-language="en_US">Jenkins servers</h1>
+      <h1 class="tlp-popover-title">Jenkins servers</h1>
     </div>
     <div class="tlp-popover-body">
-      <p data-msgid="
-                Theses servers are triggered at each push in any repository of the project:
-            " data-current-language="en_US">
+      <p>
         Theses servers are triggered at each push in any repository of the project:
       </p>
       <ul>

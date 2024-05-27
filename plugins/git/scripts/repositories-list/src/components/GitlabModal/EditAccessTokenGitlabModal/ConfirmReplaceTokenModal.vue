@@ -31,7 +31,7 @@
                 <p>
                     {{ confirmation_message }}
                 </p>
-                <translate tag="p">Please confirm your action.</translate>
+                <p>{{ $gettext("Please confirm your action.") }}</p>
             </div>
         </div>
         <div class="tlp-modal-footer">
@@ -42,7 +42,7 @@
                 v-on:click="onBackToEdit"
             >
                 <i class="fas fa-long-arrow-alt-left tlp-button-icon" aria-hidden="true"></i>
-                <translate>Back</translate>
+                {{ $gettext("Back") }}
             </button>
             <button
                 type="submit"
@@ -57,7 +57,7 @@
                     data-test="icon-spin"
                     aria-hidden="true"
                 ></i>
-                <translate>Save new token</translate>
+                {{ $gettext("Save new token") }}
             </button>
         </div>
     </div>

@@ -38,7 +38,7 @@
                 <thead>
                     <tr>
                         <th></th>
-                        <th colspan="2"><translate>Repository</translate></th>
+                        <th colspan="2">{{ $gettext("Repository") }}</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -127,13 +127,14 @@
             <div class="tlp-form-element">
                 <label class="tlp-label tlp-checkbox">
                     <input type="checkbox" v-model="allow_artifact_closure" value="true" />
-                    <translate>Allow artifact closure</translate>
+                    {{ $gettext("Allow artifact closure") }}
                 </label>
                 <p class="tlp-text-info">
-                    <translate>
-                        If selected, artifacts of this project can be closed with GitLab commit
-                        messages from the selected repository.
-                    </translate>
+                    {{
+                        $gettext(
+                            "If selected, artifacts of this project can be closed with GitLab commit messages from the selected repository.",
+                        )
+                    }}"
                 </p>
             </div>
         </div>
@@ -148,7 +149,7 @@
                     class="fas fa-long-arrow-alt-left tlp-button-icon"
                     data-test="icon-back-button"
                 ></i>
-                <translate>Back</translate>
+                {{ $gettext("Back") }}
             </button>
             <button
                 type="submit"
@@ -164,7 +165,7 @@
                         'fa-long-arrow-alt-right': !is_loading,
                     }"
                 ></i>
-                <translate>Integrate selected repository</translate>
+                {{ $gettext("Integrate selected repository") }}
             </button>
         </div>
     </form>

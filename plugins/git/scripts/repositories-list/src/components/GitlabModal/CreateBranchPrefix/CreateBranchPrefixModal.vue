@@ -26,7 +26,7 @@
                     class="far fa-fw fa-times-circle tlp-dropdown-menu-item-icon"
                     aria-hidden="true"
                 ></i>
-                <translate>Create GitLab branch prefix</translate>
+                {{ $gettext("Create GitLab branch prefix") }}
             </h1>
             <button
                 class="tlp-modal-close"
@@ -47,13 +47,16 @@
             </div>
         </div>
         <div class="tlp-modal-body">
-            <p v-translate>
-                If set, this prefix will be automatically added to the branch name in the create
-                GitLab branch action
+            <p>
+                {{
+                    $gettext(
+                        "If set, this prefix will be automatically added to the branch name in the create GitLab branch action",
+                    )
+                }}
             </p>
             <div class="tlp-form-element">
                 <label class="tlp-label" for="create_branch_prefix_input">
-                    <translate>Prefix of the branch name</translate>
+                    {{ $gettext("Prefix of the branch name") }}
                 </label>
                 <input
                     type="text"
@@ -83,7 +86,7 @@
                     class="fas fa-spin fa-circle-notch tlp-button-icon"
                     data-test="create-branch-prefix-modal-icon-spin"
                 ></i>
-                <translate>Save prefix</translate>
+                {{ $gettext("Save prefix") }}
             </button>
         </div>
     </div>

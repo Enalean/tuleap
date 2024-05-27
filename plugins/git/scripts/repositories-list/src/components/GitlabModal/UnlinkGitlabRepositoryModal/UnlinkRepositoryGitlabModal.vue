@@ -27,7 +27,7 @@
     >
         <div class="tlp-modal-header">
             <h1 class="tlp-modal-title" id="create-repository-modal-title">
-                <translate>Unlink GitLab repository?</translate>
+                {{ $gettext("Unlink GitLab repository?") }}
             </h1>
             <button
                 class="tlp-modal-close"
@@ -60,7 +60,7 @@
                 data-dismiss="modal"
                 data-test="gitlab-unlink-cancel"
             >
-                <translate>Cancel</translate>
+                {{ $gettext("Cancel") }}
             </button>
             <button
                 type="submit"
@@ -77,7 +77,7 @@
                     }"
                     data-test="icon-spin"
                 ></i>
-                <translate>Unlink the repository</translate>
+                {{ $gettext("Unlink the repository") }}
             </button>
         </div>
     </div>

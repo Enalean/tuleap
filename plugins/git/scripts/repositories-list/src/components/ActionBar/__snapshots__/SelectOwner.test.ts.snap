@@ -2,9 +2,9 @@
 
 exports[`SelectOwner displays a dropdown with user forks 1`] = `
 <div class="git-repository-actions-select-owners"><label for="git-repository-select-owner" class="tlp-label">
-    <translate-stub tag="span">Forks:</translate-stub>
+    Forks:
   </label> <select id="git-repository-select-owner" class="tlp-select tlp-select-adjusted">
-    <option value="project" data-msgid="Project repositories" data-current-language="en_US">Project repositories</option>
+    <option value="project">Project repositories</option>
     <optgroup label="Users forks">
       <option value="1">
         Fork A

@@ -25,8 +25,8 @@
         data-test="edit-access-token-gitlab-modal-form"
     >
         <div class="tlp-modal-header">
-            <h1 class="tlp-modal-title">
-                <translate id="edit-access-token-gitlab-modal-title">Edit access token</translate>
+            <h1 class="tlp-modal-title" id="edit-access-token-gitlab-modal-title">
+                {{ $gettext("Edit access token") }}
             </h1>
             <button
                 class="tlp-modal-close"

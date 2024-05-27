@@ -23,7 +23,7 @@
         v-bind:class="{ 'git-repository-list-create-repository-button': !is_empty_state }"
     >
         <button class="tlp-button-primary" ref="dropdownButton" type="button">
-            <translate>New repository</translate>
+            {{ $gettext("New repository") }}
             <i class="fas fa-caret-down tlp-button-icon-right" aria-hidden="true"></i>
         </button>
         <div class="tlp-dropdown-menu" role="menu">
@@ -34,7 +34,7 @@
                 data-test="create-repository-button"
             >
                 <i class="fa fa-plus tlp-button-icon"></i>
-                <translate class="git-add-action-button">Create a repository</translate>
+                <span class="git-add-action-button">{{ $gettext("Create a repository") }}</span>
             </button>
             <add-gitlab-repository-action-button />
         </div>

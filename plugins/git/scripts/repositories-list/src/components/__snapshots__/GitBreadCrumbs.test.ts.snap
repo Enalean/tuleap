@@ -8,11 +8,13 @@ exports[`GitBreadcrumbs displays breadcrumbs 1`] = `
         🐹 Guinea Pig
       </a></div>
     <div class="breadcrumb-switchable breadcrumb-item"><a href="/repositories/url" title="Repository list" class="breadcrumb-link">
-        <translate-stub tag="span">Git repositories</translate-stub>
+        Git repositories
       </a>
       <div class="breadcrumb-switch-menu-container">
         <nav class="breadcrumb-switch-menu">
-          <!----> <span class="breadcrumb-dropdown-item"><a href="/fork/url" title="Fork repositories" class="breadcrumb-dropdown-link"><i class="fas fa-code-branch fa-fw"></i> <translate-stub tag="span">Fork repositories</translate-stub></a></span>
+          <!----> <span class="breadcrumb-dropdown-item"><a href="/fork/url" title="Fork repositories" class="breadcrumb-dropdown-link"><i class="fas fa-code-branch fa-fw"></i>
+                            Fork repositories
+                        </a></span>
         </nav>
       </div>
     </div>

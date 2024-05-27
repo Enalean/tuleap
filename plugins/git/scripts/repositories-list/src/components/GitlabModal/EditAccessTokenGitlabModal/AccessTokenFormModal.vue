@@ -32,13 +32,13 @@
             </div>
             <div class="tlp-property">
                 <label class="tlp-label">
-                    <translate>GitLab server URL</translate>
+                    {{ $gettext("GitLab server URL") }}
                 </label>
                 <p>{{ instance_url }}</p>
             </div>
             <div class="tlp-property">
                 <label class="tlp-label">
-                    <translate>GitLab repository</translate>
+                    {{ $gettext("GitLab repository") }}
                 </label>
                 <p>{{ repository.normalized_path }}</p>
             </div>
@@ -48,7 +48,7 @@
                 v-bind:class="{ 'tlp-form-element-error': error_message.length > 0 }"
             >
                 <label class="tlp-label" for="gitlab_new_token">
-                    <translate>GitLab access token (personal or project)</translate>
+                    {{ $gettext("GitLab access token (personal or project)") }}
                     <i class="fas fa-asterisk" aria-hidden="true"></i>
                 </label>
                 <input
@@ -62,7 +62,7 @@
                 />
                 <p class="tlp-text-info">
                     <i class="fas fa-info-circle" aria-hidden="true"></i>
-                    <translate>GitLab access token scope must contain at least: api.</translate>
+                    {{ $gettext("GitLab access token scope must contain at least: api.") }}
                 </p>
             </div>
         </div>
@@ -74,7 +74,7 @@
                 v-on:click="cancelButton"
                 data-test="button-cancel-new-token-gitlab-repository"
             >
-                <translate>Cancel</translate>
+                {{ $gettext("Cancel") }}
             </button>
             <button
                 type="submit"
@@ -88,7 +88,7 @@
                     data-test="icon-spin"
                     aria-hidden="true"
                 ></i>
-                <translate>Check new token validity</translate>
+                {{ $gettext("Check new token validity") }}
                 <i class="fas tlp-button-icon-right fa-long-arrow-alt-right" aria-hidden="true"></i>
             </button>
         </div>

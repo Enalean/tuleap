@@ -36,7 +36,7 @@
                     v-bind:href="repository_list_url()"
                     v-bind:title="$gettext('Repository list')"
                 >
-                    <translate>Git repositories</translate>
+                    {{ $gettext("Git repositories") }}
                 </a>
                 <div class="breadcrumb-switch-menu-container">
                     <nav class="breadcrumb-switch-menu">
@@ -47,7 +47,7 @@
                                 v-bind:title="$gettext('Administration')"
                             >
                                 <i class="fa fa-cog fa-fw"></i>
-                                <translate>Administration</translate>
+                                {{ $gettext("Administration") }}
                             </a>
                         </span>
                         <span class="breadcrumb-dropdown-item">
@@ -57,7 +57,7 @@
                                 v-bind:title="$gettext('Fork repositories')"
                             >
                                 <i class="fas fa-code-branch fa-fw"></i>
-                                <translate>Fork repositories</translate>
+                                {{ $gettext("Fork repositories") }}
                             </a>
                         </span>
                     </nav>

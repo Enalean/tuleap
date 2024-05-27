@@ -23,13 +23,7 @@
             class="tlp-badge-secondary tlp-badge-outline git-repository-list-header-badge"
             ref="jenkins_server_badge"
         >
-            <translate
-                v-bind:translate-params="{ countJenkinsServers: servers.length }"
-                v-bind:translate-n="servers.length"
-                translate-plural="%{ countJenkinsServers } Jenkins servers setup"
-            >
-                %{ countJenkinsServers } Jenkins server setup
-            </translate>
+            <span>{{ jenkins_servers_setup }}</span>
         </span>
         <section
             class="tlp-popover git-repository-list-header-popover"
@@ -37,11 +31,15 @@
         >
             <div class="tlp-popover-arrow"></div>
             <div class="tlp-popover-header">
-                <h1 class="tlp-popover-title" v-translate>Jenkins servers</h1>
+                <h1 class="tlp-popover-title">{{ $gettext("Jenkins servers") }}</h1>
             </div>
             <div class="tlp-popover-body">
-                <p v-translate>
-                    Theses servers are triggered at each push in any repository of the project:
+                <p>
+                    {{
+                        $gettext(
+                            "Theses servers are triggered at each push in any repository of the project:",
+                        )
+                    }}
                 </p>
                 <ul>
                     <li v-for="value in servers" v-bind:key="value.url">
@@ -82,6 +80,17 @@ export default class JenkinsServer extends Vue {
             placement: "right",
             trigger: "click",
         });
+    }
+
+    get jenkins_servers_setup() {
+        return this.$gettextInterpolate(
+            this.$ngettext(
+                "%{ countJenkinsServers } Jenkins server setup",
+                "%{ countJenkinsServers } Jenkins servers setup",
+                this.servers.length,
+            ),
+            { countJenkinsServers: this.servers.length },
+        );
     }
 }
 </script>
