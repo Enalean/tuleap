@@ -42,9 +42,8 @@
                 class="tlp-button-primary tlp-button-outline reading-mode-actions-cancel"
                 v-on:click="cancelReport()"
                 data-test="cross-tracker-cancel-report"
-                v-translate
             >
-                Cancel
+                {{ $gettext("Cancel") }}
             </button>
             <button
                 class="tlp-button-primary"
@@ -60,7 +59,7 @@
                         'fa-save': !is_loading,
                     }"
                 ></i>
-                <translate>Save report</translate>
+                {{ $gettext("Save report") }}
             </button>
         </div>
     </div>

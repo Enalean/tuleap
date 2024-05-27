@@ -25,27 +25,27 @@
         <table class="tlp-table">
             <thead>
                 <tr>
-                    <th v-translate>Artifact</th>
-                    <th v-translate>Project</th>
-                    <th v-translate>Status</th>
-                    <th v-translate>Last update date</th>
-                    <th v-translate>Submitted by</th>
-                    <th v-translate>Assigned to</th>
+                    <th>{{ $gettext("Artifact") }}</th>
+                    <th>{{ $gettext("Project") }}</th>
+                    <th>{{ $gettext("Status") }}</th>
+                    <th>{{ $gettext("Last update date") }}</th>
+                    <th>{{ $gettext("Submitted by") }}</th>
+                    <th>{{ $gettext("Assigned to") }}</th>
                 </tr>
             </thead>
-            <tbody v-if="is_loading === true">
+            <tbody v-if="is_loading" key="loading">
                 <tr>
                     <td colspan="6"><div class="cross-tracker-loader"></div></td>
                 </tr>
             </tbody>
-            <tbody v-if="is_table_empty" data-test="cross-tracker-no-results">
+            <tbody v-if="is_table_empty" key="empty" data-test="cross-tracker-no-results">
                 <tr>
-                    <td colspan="6" class="tlp-table-cell-empty" v-translate>
-                        No matching artifacts found
+                    <td colspan="6" class="tlp-table-cell-empty">
+                        {{ $gettext("No matching artifacts found") }}
                     </td>
                 </tr>
             </tbody>
-            <tbody v-else data-test="cross-tracker-results">
+            <tbody v-else key="loaded" data-test="cross-tracker-results">
                 <artifact-table-row
                     v-for="artifact of artifacts"
                     v-bind:artifact="artifact"
@@ -57,7 +57,7 @@
             <button
                 class="tlp-button-primary tlp-button-outline tlp-button-small"
                 type="button"
-                v-if="is_load_more_displayed === true"
+                v-if="is_load_more_displayed"
                 v-on:click="loadMoreArtifacts()"
                 v-bind:disabled="is_loading_more"
                 data-test="load-more"
@@ -67,7 +67,7 @@
                     v-if="is_loading_more"
                     class="tlp-button-icon fa-solid fa-circle-notch fa-spin"
                 ></i>
-                <translate>Load more</translate>
+                {{ $gettext("Load more") }}
             </button>
         </div>
     </div>

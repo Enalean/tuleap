@@ -22,13 +22,13 @@
         class="tlp-alert-danger cross-tracker-report-error"
         v-if="has_invalid_trackers && is_user_admin"
     >
-        <translate>The initial query contains trackers from inactive projects:</translate>
+        {{ $gettext("The initial query contains trackers from inactive projects:") }}
         <ul>
             <li v-for="tracker in invalid_trackers" v-bind:key="tracker.id">
                 {{ tracker.label }} ({{ tracker.project.label }})
             </li>
         </ul>
-        <translate>If you update the query these trackers will be removed from it.</translate>
+        {{ $gettext("If you update the query these trackers will be removed from it.") }}
     </div>
 </template>
 

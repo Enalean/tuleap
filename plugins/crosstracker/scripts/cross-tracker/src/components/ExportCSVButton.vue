@@ -31,7 +31,7 @@
             class="tlp-button-icon fa-solid"
             v-bind:class="{ 'fa-spin fa-circle-notch': is_loading, 'fa-download': !is_loading }"
         ></i>
-        <translate>Export CSV</translate>
+        {{ $gettext("Export CSV") }}
     </button>
 </template>
 <script lang="ts">

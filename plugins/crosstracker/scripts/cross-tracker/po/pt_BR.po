@@ -57,7 +57,7 @@ msgstr ""
 msgid "No trackers selected"
 msgstr ""
 
-msgid "Please choose..."
+msgid "Please choose…"
 msgstr ""
 
 msgid "Project"
