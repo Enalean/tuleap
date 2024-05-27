@@ -1,0 +1,25 @@
+import { Canvas, Meta } from '@storybook/blocks';
+import * as IllustrationStories from "./illustration.stories";
+
+<Meta of={IllustrationStories}/>
+
+# Illustrations
+
+<code>--tlp-illustration-[name]</code>
+
+SVG illustrations should use CSS variables to adapt colors to current theme.
+
+- Main color, to reflect the current theme: `--tlp-illustration-main-color`
+- Background color, depending on context:
+    - On regular background: `--tlp-illustration-grey-on-background`
+    - On white background: `--tlp-illustration-grey-on-white`
+- Accent colors: `--tlp-illustration-yellow` or `--tlp-illustration-red`
+
+<div className="tlp-alert-warning">
+        <b>Deprecations:</b> The following are deprecated, do not use them anymore for new illustrations:
+</div>
+
+- CSS class names `tlp-illustration-*`
+- CSS variables `--tlp-legacy-illustration-`
+
+<Canvas withToolbar={true} of={IllustrationStories.Illustration}></Canvas>
