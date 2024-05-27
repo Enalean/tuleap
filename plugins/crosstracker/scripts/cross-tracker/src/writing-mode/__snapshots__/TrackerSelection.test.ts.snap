@@ -12,12 +12,9 @@ exports[`TrackerSelection loadProjects() Displays the projects in selectbox 1`] 
       class="tlp-label"
       for="project"
     >
-      <translate-stub
-        tag="span"
-      >
-        Project
-      </translate-stub>
-       
+      
+            Project
+            
       <i
         aria-hidden="true"
         class="fa-solid fa-asterisk"
@@ -54,12 +51,9 @@ exports[`TrackerSelection loadProjects() Displays the projects in selectbox 1`] 
       class="tlp-label"
       for="tracker"
     >
-      <translate-stub
-        tag="span"
-      >
-        Tracker
-      </translate-stub>
-       
+      
+            Tracker
+            
       <i
         aria-hidden="true"
         class="fa-solid fa-asterisk"
@@ -78,14 +72,10 @@ exports[`TrackerSelection loadProjects() Displays the projects in selectbox 1`] 
       >
         <option
           class="cross-tracker-please-choose-option"
-          data-current-language="en_US"
-          data-msgid="
-                    Please choose...
-                "
           value=""
         >
           
-                    Please choose...
+                    Please choose…
                 
         </option>
          
@@ -102,12 +92,9 @@ exports[`TrackerSelection loadProjects() Displays the projects in selectbox 1`] 
           class="tlp-button-icon fa-solid fa-circle-notch fa-spin"
           data-test="tracker-loader"
         />
-         
-        <translate-stub
-          tag="span"
-        >
-          Add
-        </translate-stub>
+        
+                Add
+            
       </button>
     </div>
   </div>

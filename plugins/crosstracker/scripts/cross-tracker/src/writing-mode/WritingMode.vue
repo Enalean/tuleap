@@ -36,9 +36,8 @@
                 class="tlp-button-primary tlp-button-outline writing-mode-actions-cancel"
                 v-on:click="cancel"
                 data-test="writing-mode-cancel-button"
-                v-translate
             >
-                Cancel
+                {{ $gettext("Cancel") }}
             </button>
             <button
                 class="tlp-button-primary writing-mode-actions-search"
@@ -46,7 +45,7 @@
                 data-test="search-report-button"
             >
                 <i aria-hidden="true" class="fa-solid fa-search tlp-button-icon"></i>
-                <translate>Search</translate>
+                {{ $gettext("Search") }}
             </button>
         </div>
     </div>

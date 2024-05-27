@@ -25,7 +25,7 @@
             data-test="cross-tracker-selector-global"
         >
             <label class="tlp-label" for="project">
-                <translate>Project</translate>
+                {{ $gettext("Project") }}
                 <i aria-hidden="true" class="fa-solid fa-asterisk"></i>
             </label>
             <select
@@ -46,7 +46,7 @@
             v-bind:class="{ 'tlp-form-element-disabled': is_tracker_select_disabled }"
         >
             <label class="tlp-label" for="tracker">
-                <translate>Tracker</translate>
+                {{ $gettext("Tracker") }}
                 <i aria-hidden="true" class="fa-solid fa-asterisk"></i>
             </label>
             <div class="tlp-form-element tlp-form-element-append">
@@ -58,12 +58,8 @@
                     v-model="selected_tracker"
                     data-test="cross-tracker-selector-tracker"
                 >
-                    <option
-                        v-bind:value="null"
-                        class="cross-tracker-please-choose-option"
-                        v-translate
-                    >
-                        Please choose...
+                    <option v-bind:value="null" class="cross-tracker-please-choose-option">
+                        {{ $gettext("Please choose…") }}
                     </option>
                     <option
                         v-for="tracker of tracker_options"
@@ -90,7 +86,7 @@
                         }"
                         data-test="tracker-loader"
                     ></i>
-                    <translate>Add</translate>
+                    {{ $gettext("Add") }}
                 </button>
             </div>
         </div>

@@ -55,15 +55,15 @@
                 multiple
                 v-on:click.prevent="insertSelectedField"
             >
-                <option value="@id">{{ artifact_id_label }}</option>
-                <option value="@title">{{ title_semantic_label }}</option>
-                <option value="@description">{{ description_semantic_label }}</option>
-                <option value="@status">{{ status_semantic_label }}</option>
-                <option value="@submitted_on">{{ submitted_on_label }}</option>
-                <option value="@last_update_date">{{ lud_label }}</option>
-                <option value="@submitted_by">{{ submitted_by_label }}</option>
-                <option value="@last_update_by">{{ luby_label }}</option>
-                <option value="@assigned_to">{{ assigned_to_label }}</option>
+                <option value="@id">{{ $gettext("Artifact id") }}</option>
+                <option value="@title">{{ $gettext("Title") }}</option>
+                <option value="@description">{{ $gettext("Description") }}</option>
+                <option value="@status">{{ $gettext("Status") }}</option>
+                <option value="@submitted_on">{{ $gettext("Submitted on") }}</option>
+                <option value="@last_update_date">{{ $gettext("Last update date") }}</option>
+                <option value="@submitted_by">{{ $gettext("Submitted by") }}</option>
+                <option value="@last_update_by">{{ $gettext("Last update by") }}</option>
+                <option value="@assigned_to">{{ $gettext("Assigned to") }}</option>
             </select>
         </div>
     </div>
@@ -122,34 +122,6 @@ export default class QueryEditor extends Vue {
             }
             this.writingCrossTrackerReport.expert_query = this.code_mirror_instance.getValue();
         });
-    }
-
-    get title_semantic_label(): string {
-        return this.$gettext("Title");
-    }
-    get description_semantic_label(): string {
-        return this.$gettext("Description");
-    }
-    get status_semantic_label(): string {
-        return this.$gettext("Status");
-    }
-    get submitted_on_label(): string {
-        return this.$gettext("Submitted on");
-    }
-    get lud_label(): string {
-        return this.$gettext("Last update date");
-    }
-    get submitted_by_label(): string {
-        return this.$gettext("Submitted by");
-    }
-    get luby_label(): string {
-        return this.$gettext("Last update by");
-    }
-    get assigned_to_label(): string {
-        return this.$gettext("Assigned to");
-    }
-    get artifact_id_label(): string {
-        return this.$gettext("Artifact id");
     }
 
     get placeholder(): string {

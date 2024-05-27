@@ -38,10 +38,9 @@
         <div
             class="cross-tracker-reading-mode-trackers-empty"
             v-if="no_trackers_in_report"
-            v-translate
             data-test="empty-state"
         >
-            No trackers selected
+            {{ $gettext("No trackers selected") }}
         </div>
     </div>
 </template>
