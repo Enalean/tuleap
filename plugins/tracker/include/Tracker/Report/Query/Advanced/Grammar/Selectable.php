@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2024-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,24 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Report\Query\Advanced\Grammar;
 
-final readonly class Metadata implements Searchable, Selectable
+interface Selectable
 {
-    public const PREFIX = '@';
-
-    private string $name;
-
-    public function __construct(string $name)
-    {
-        $this->name = self::PREFIX . $name;
-    }
-
-    public function getName(): string
-    {
-        return $this->name;
-    }
-
-    public function acceptSearchableVisitor(SearchableVisitor $visitor, $parameters)
-    {
-        return $visitor->visitMetadata($this, $parameters);
-    }
 }

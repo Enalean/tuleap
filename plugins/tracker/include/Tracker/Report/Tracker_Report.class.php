@@ -2048,11 +2048,12 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
         }
 
         try {
-            $expression = $this->parser->parse($expert_query);
+            $query     = $this->parser->parse($expert_query);
+            $condition = $query->getCondition();
 
-            if ($this->canExecuteExpertQuery($expression)) {
+            if ($this->canExecuteExpertQuery($condition)) {
                 $from_where = Option::fromValue(
-                    $this->getQueryBuilder()->buildFromWhere($expression, $this->getTracker(), $this->getCurrentUser())
+                    $this->getQueryBuilder()->buildFromWhere($condition, $this->getTracker(), $this->getCurrentUser())
                 );
 
                 $this->matching_ids = $this->getMatchingIdsInDb($from_where);
