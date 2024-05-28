@@ -6,8 +6,7 @@
   "private": true,
   "type": "module",
   "dependencies": {
-    "@ckeditor/ckeditor5-build-classic": "^41.3.1",
-    "@ckeditor/ckeditor5-vue": "^5.1.0",
+    "@tuleap/ckeditor-config": "workspace:*",
     "@tuleap/fault": "workspace:*",
     "@tuleap/fetch-result": "workspace:*",
     "@tuleap/project-background": "workspace:^",
@@ -22,14 +21,14 @@
     "vue3-gettext": "^2.4.0"
   },
   "devDependencies": {
+    "@types/ckeditor4": "^4.20.7",
     "@tuleap/build-system-configurator": "workspace:*",
     "@tuleap/burningparrot-theme": "workspace:^",
     "@tuleap/po-gettext-plugin": "workspace:*",
     "@types/marked": "^3.0.2",
     "@types/turndown": "^5.0.0",
     "@vitejs/plugin-vue": "^4.2.3",
-    "@vue/test-utils": "^2.3.2",
-    "vite-plugin-dynamic-import": "^1.5.0"
+    "@vue/test-utils": "^2.3.2"
   },
   "scripts": {
     "build": "vite build",

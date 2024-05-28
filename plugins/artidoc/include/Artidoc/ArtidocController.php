@@ -61,6 +61,9 @@ final readonly class ArtidocController implements DispatchableWithRequest, Dispa
     {
         ServiceInstrumentation::increment('artidoc');
 
+        $core_assets = new \Tuleap\Layout\IncludeCoreAssets();
+        $layout->includeFooterJavascriptFile($core_assets->getFileURL('ckeditor.js'));
+
         $this->retrieve_artidoc->retrieveArtidoc((int) $variables['id'], $request->getCurrentUser())
             ->match(
                 fn (ArtidocDocumentInformation $document_information) => $this->renderPage($document_information, $layout, $request->getCurrentUser()),

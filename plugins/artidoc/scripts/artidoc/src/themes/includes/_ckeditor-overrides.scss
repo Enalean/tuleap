@@ -20,27 +20,17 @@
 @use "@tuleap/burningparrot-theme/css/includes/global-variables";
 
 /* stylelint-disable-next-line selector-class-pattern */
-.ck-rounded-corners .ck.ck-editor__top.ck-reset_all {
+.cke_top.cke_reset_all {
     position: sticky;
 
     // Do not display the toolbar under the images in the content
     z-index: 3;
-    top: global-variables.$navbar-height;
-    background: var(--tlp-ui-white);
+
+    // important to override inline style that want to set top to 0px
+    top: global-variables.$navbar-height !important;
     box-shadow: var(--tlp-sticky-header-shadow);
 }
 
-.ck.ck-editor.ck-reset {
+.cke.ck-reset {
     border-top: 1px solid var(--ck-color-base-border);
-}
-
-/* stylelint-disable-next-line selector-class-pattern */
-.ck-rounded-corners .ck.ck-editor__top .ck-sticky-panel .ck-sticky-panel__content {
-    border-top: 0;
-
-    /* stylelint-disable-next-line selector-class-pattern */
-    &.ck-sticky-panel__content_sticky {
-        // important to override inline style that want to set top to 0px
-        top: global-variables.$navbar-height !important;
-    }
 }

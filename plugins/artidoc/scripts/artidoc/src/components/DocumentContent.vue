@@ -77,7 +77,6 @@ $section-horizontal-padding: calc(var(--tlp-jumbo-spacing) + var(--tlp-large-spa
 
 li {
     --tuleap-artidoc-section-background: var(--tlp-white-color);
-    --ck-color-base-background: var(--tuleap-artidoc-section-background);
 
     position: relative;
     margin: 0 0 var(--tlp-medium-spacing);
@@ -95,7 +94,7 @@ li {
         margin: 0;
     }
 
-    &:has(.ck-editor) {
+    &:has(.cke) {
         --tuleap-artidoc-section-background: var(--tlp-main-color-lighter-90);
 
         &:has(.document-section-is-in-error) {
