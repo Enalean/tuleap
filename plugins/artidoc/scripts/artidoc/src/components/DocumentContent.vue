@@ -76,11 +76,15 @@ ol {
 $section-horizontal-padding: calc(var(--tlp-jumbo-spacing) + var(--tlp-large-spacing));
 
 li {
+    --tuleap-artidoc-section-background: var(--tlp-white-color);
+    --ck-color-base-background: var(--tuleap-artidoc-section-background);
+
     position: relative;
     margin: 0 0 var(--tlp-medium-spacing);
     padding: var(--tlp-medium-spacing) var(--tlp-jumbo-spacing) var(--tlp-medium-spacing)
         $section-horizontal-padding;
     transition: background-color 75ms ease-in-out;
+    background: var(--tuleap-artidoc-section-background);
     counter-increment: item-without-dot;
 
     &:first-child {
@@ -92,14 +96,10 @@ li {
     }
 
     &:has(.ck-editor) {
-        --ck-color-base-background: var(--tlp-main-color-lighter-90);
-
-        background: var(--ck-color-base-background);
+        --tuleap-artidoc-section-background: var(--tlp-main-color-lighter-90);
 
         &:has(.document-section-is-in-error) {
-            --ck-color-base-background: var(--tlp-danger-color-lighter-90);
-
-            background: var(--ck-color-base-background);
+            --tuleap-artidoc-section-background: var(--tlp-danger-color-lighter-90);
         }
     }
 
@@ -108,8 +108,13 @@ li {
     }
 
     &:has(.document-section-is-just-saved) {
+        --tuleap-artidoc-section-background: var(--tlp-success-color-lighter-90);
+
         animation: pulse-section 500ms ease-in-out;
-        background: var(--tlp-success-color-lighter-90);
+    }
+
+    &:has(.document-section-is-outdated) {
+        --tuleap-artidoc-section-background: var(--tlp-alert-warning-background);
     }
 }
 

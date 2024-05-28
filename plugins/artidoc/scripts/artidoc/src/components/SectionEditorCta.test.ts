@@ -27,7 +27,9 @@ const default_props = {
     editor_actions: {
         enableEditor: vi.fn(),
         saveEditor: vi.fn(),
+        forceSaveEditor: vi.fn(),
         cancelEditor: vi.fn(),
+        refreshSection: vi.fn(),
     },
     is_section_editable: true,
 };

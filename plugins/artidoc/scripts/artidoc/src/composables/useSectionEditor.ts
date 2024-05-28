@@ -19,24 +19,32 @@
 import { computed, ref } from "vue";
 import type { Ref, ComputedRef } from "vue";
 import { getSection, putArtifact } from "@/helpers/rest-querier";
-import { parse } from "marked";
 import type { ArtidocSection } from "@/helpers/artidoc-section.type";
-import { isCommonmark } from "@/helpers/artidoc-section.type";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import { CAN_USER_EDIT_DOCUMENT } from "@/can-user-edit-document-injection-key";
 import { preventPageLeave, allowPageLeave } from "@/helpers/on-before-unload";
+import { convertDescriptionToHtml } from "@/helpers/convert-description-to-html";
+import {
+    isOutdatedSectionFault,
+    isSectionInItsLatestVersion,
+} from "@/helpers/is-section-in-its-latest-version";
+import type { Fault } from "@tuleap/fault";
 
 export type use_section_editor_actions_type = {
     enableEditor: () => void;
     saveEditor: () => void;
+    forceSaveEditor: () => void;
     cancelEditor: () => void;
+    refreshSection: () => void;
 };
+
 export type use_section_editor_type = {
     is_section_editable: ComputedRef<boolean>;
     isSectionInEditMode: () => Ref<boolean>;
     isBeeingSaved: () => Ref<boolean>;
     isJustSaved: () => Ref<boolean>;
     isInError: () => Ref<boolean>;
+    isOutdated: () => Ref<boolean>;
     editor_actions: use_section_editor_actions_type;
     inputCurrentTitle: (new_value: string) => void;
     inputCurrentDescription: (new_value: string) => void;
@@ -54,14 +62,10 @@ function useSectionEditor(
 ): use_section_editor_type {
     const current_section: Ref<ArtidocSection> = ref(section);
     const is_edit_mode = ref(false);
-    const original_description = ref(
-        isCommonmark(current_section.value.description)
-            ? parse(current_section.value.description.commonmark)
-            : current_section.value.description.format === "text"
-              ? parse(current_section.value.description.value)
-              : current_section.value.description.value,
+    const original_description = computed(() =>
+        convertDescriptionToHtml(current_section.value.description),
     );
-    const original_title = ref(current_section.value.display_title);
+    const original_title = computed(() => current_section.value.display_title);
     const editable_title = ref(original_title.value);
     const editable_description = ref(original_description.value);
     const readonly_description = computed(
@@ -74,6 +78,7 @@ function useSectionEditor(
     const is_being_saved = ref(false);
     const is_just_saved = ref(false);
     const is_in_error = ref(false);
+    const is_outdated = ref(false);
 
     const setEditMode = (new_value: boolean): void => {
         is_edit_mode.value = new_value;
@@ -93,6 +98,9 @@ function useSectionEditor(
 
     const saveEditor = (): void => {
         is_in_error.value = false;
+        is_outdated.value = false;
+        is_being_saved.value = true;
+
         if (
             editable_description.value === original_description.value &&
             editable_title.value === original_title.value
@@ -102,7 +110,40 @@ function useSectionEditor(
             return;
         }
 
-        original_description.value = editable_description.value;
+        isSectionInItsLatestVersion(current_section.value)
+            .andThen(() =>
+                putArtifact(
+                    current_section.value.artifact.id,
+                    editable_title.value,
+                    current_section.value.title,
+                    editable_description.value,
+                    current_section.value.description.field_id,
+                ),
+            )
+            .andThen(() => getSection(current_section.value.id))
+            .match(
+                (artidoc_section: ArtidocSection) => {
+                    current_section.value = artidoc_section;
+                    update_section_callback(artidoc_section);
+                    cancelEditor();
+                    is_being_saved.value = false;
+                    addTemporaryJustSavedFlag();
+                },
+                (fault: Fault) => {
+                    if (isOutdatedSectionFault(fault)) {
+                        is_outdated.value = true;
+                    } else {
+                        is_in_error.value = true;
+                    }
+                    is_being_saved.value = false;
+                },
+            );
+    };
+
+    function forceSaveEditor(): void {
+        is_outdated.value = false;
+        is_being_saved.value = true;
+
         putArtifact(
             current_section.value.artifact.id,
             editable_title.value,
@@ -115,7 +156,7 @@ function useSectionEditor(
                 (artidoc_section: ArtidocSection) => {
                     current_section.value = artidoc_section;
                     update_section_callback(artidoc_section);
-                    setEditMode(false);
+                    cancelEditor();
                     is_being_saved.value = false;
                     addTemporaryJustSavedFlag();
                 },
@@ -124,7 +165,23 @@ function useSectionEditor(
                     is_being_saved.value = false;
                 },
             );
-    };
+    }
+
+    function refreshSection(): void {
+        getSection(current_section.value.id).match(
+            (artidoc_section: ArtidocSection) => {
+                current_section.value = artidoc_section;
+                update_section_callback(artidoc_section);
+                cancelEditor();
+                addTemporaryJustSavedFlag();
+                is_outdated.value = false;
+            },
+            () => {
+                is_in_error.value = true;
+                is_outdated.value = false;
+            },
+        );
+    }
 
     function addTemporaryJustSavedFlag(): void {
         is_just_saved.value = true;
@@ -137,10 +194,11 @@ function useSectionEditor(
         setEditMode(true);
     };
 
-    const cancelEditor = (): void => {
+    function cancelEditor(): void {
         editable_description.value = original_description.value;
+        editable_title.value = original_title.value;
         setEditMode(false);
-    };
+    }
 
     const inputCurrentDescription = (new_value: string): void => {
         editable_description.value = new_value;
@@ -155,6 +213,7 @@ function useSectionEditor(
     const isBeeingSaved = (): Ref<boolean> => is_being_saved;
     const isJustSaved = (): Ref<boolean> => is_just_saved;
     const isInError = (): Ref<boolean> => is_in_error;
+    const isOutdated = (): Ref<boolean> => is_outdated;
 
     const getEditableDescription = (): Ref<string> => {
         return editable_description;
@@ -165,10 +224,12 @@ function useSectionEditor(
         return readonly_description;
     };
 
-    const editor_actions = {
+    const editor_actions: use_section_editor_actions_type = {
         enableEditor,
         saveEditor,
+        forceSaveEditor,
         cancelEditor,
+        refreshSection,
     };
 
     return {
@@ -180,6 +241,7 @@ function useSectionEditor(
         isBeeingSaved,
         isJustSaved,
         isInError,
+        isOutdated,
         editor_actions,
         inputCurrentTitle,
         inputCurrentDescription,
