@@ -1,0 +1,39 @@
+lockfileVersion: '6.0'
+
+settings:
+  autoInstallPeers: false
+  excludeLinksFromLockfile: false
+
+dependencies:
+  '@tuleap/fault':
+    specifier: workspace:*
+    version: link:../fault
+  '@tuleap/fetch-result':
+    specifier: workspace:*
+    version: link:../fetch-result
+  '@tuleap/gettext':
+    specifier: workspace:*
+    version: link:../gettext
+  '@tuleap/lazybox':
+    specifier: workspace:*
+    version: link:../lazybox
+  neverthrow:
+    specifier: ^6.0.0
+    version: 6.0.0
+
+devDependencies:
+  '@tuleap/build-system-configurator':
+    specifier: workspace:*
+    version: link:../build-system-configurator
+  '@tuleap/core-rest-api-types':
+    specifier: workspace:*
+    version: link:../rest-api-types
+  '@tuleap/po-gettext-plugin':
+    specifier: workspace:*
+    version: link:../po-gettext-plugin
+
+packages:
+
+  /neverthrow@6.0.0:
+    resolution: {integrity: sha512-kPZKRs4VkdloCGQXPoP84q4sT/1Z+lYM61AXyV8wWa2hnuo5KpPBF2S3crSFnMrOgUISmEBP8Vo/ngGZX60NhA==}
+    dev: false

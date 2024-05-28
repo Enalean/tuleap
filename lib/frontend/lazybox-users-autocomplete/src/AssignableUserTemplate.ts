@@ -18,47 +18,46 @@
  */
 
 import type { HTMLTemplateStringProcessor, LazyboxItem, HTMLTemplateResult } from "@tuleap/lazybox";
-import type { User } from "@tuleap/plugin-pullrequest-rest-api-types";
+import type { User } from "@tuleap/core-rest-api-types";
 
-const isAssignableReviewer = (item_value: unknown): item_value is User =>
+const isAssignableUser = (item_value: unknown): item_value is User =>
     typeof item_value === "object" && item_value !== null && "id" in item_value;
 
-export const getAssignableReviewer = (item_value: unknown): User | null => {
-    if (!isAssignableReviewer(item_value)) {
+export const getAssignableUser = (item_value: unknown): User | null => {
+    if (!isAssignableUser(item_value)) {
         return null;
     }
     return item_value;
 };
 
-export const getSelectedReviewers = (selected_users: unknown): User[] => {
+export const getSelectedUsers = (selected_users: unknown): User[] => {
     if (!Array.isArray(selected_users)) {
         return [];
     }
-
     return selected_users.reduce((acc: User[], user) => {
-        const reviewer = getAssignableReviewer(user);
-        if (reviewer) {
-            acc.push(reviewer);
+        const assignableUser = getAssignableUser(user);
+        if (assignableUser) {
+            acc.push(assignableUser);
         }
         return acc;
     }, []);
 };
 
-export const getAssignableReviewerTemplate = (
+export const getAssignableUserTemplate = (
     lit_html: typeof HTMLTemplateStringProcessor,
     item: LazyboxItem,
 ): HTMLTemplateResult => {
-    const reviewer = getAssignableReviewer(item.value);
-    if (!reviewer) {
+    const user = getAssignableUser(item.value);
+    if (!user) {
         return lit_html``;
     }
 
     return lit_html`
-        <span class="pull-request-reviewers-badge">
+        <span class="lazybox-users-autocomplete-template">
             <div class="tlp-avatar-mini">
-                <img src="${reviewer.avatar_url}" />
+                <img src="${user.avatar_url}" />
             </div>
-            ${reviewer.display_name}
+            ${user.display_name}
         </span>
     `;
 };

@@ -93,16 +93,6 @@ export const abandonPullRequest = (pull_request_id: number): ResultAsync<PullReq
     });
 };
 
-export const fetchMatchingUsers = (query: string): ResultAsync<User[], Fault> => {
-    return getJSON(uri`/api/v1/users`, {
-        params: {
-            query,
-            limit: 10,
-            offset: 0,
-        },
-    });
-};
-
 export const putReviewers = (
     pull_request_id: number,
     reviewers: ReadonlyArray<User>,

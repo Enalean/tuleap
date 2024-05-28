@@ -17,20 +17,26 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { fetchMatchingUsers } from "../../../api/tuleap-rest-querier";
+import { fetchMatchingUsers } from "./api/rest-querier";
 import type { Lazybox } from "@tuleap/lazybox";
-import type { User } from "@tuleap/plugin-pullrequest-rest-api-types";
-import type { BuildGroupOfReviewers } from "./GroupOfReviewersBuilder";
+import type { User } from "@tuleap/core-rest-api-types";
+import type { BuildGroupOfUsers } from "./GroupOfUsersBuilder";
 
-export interface AutocompleteReviewers {
-    autocomplete(lazybox: Lazybox, currently_selected_users: User[], query: string): void;
+export interface AutocompleteUsers {
+    autocomplete(
+        lazybox: Lazybox,
+        currently_selected_users: ReadonlyArray<User>,
+        query: string,
+    ): void;
 }
 
-export const ReviewersAutocompleter = (
-    group_builder: BuildGroupOfReviewers,
-): AutocompleteReviewers => {
+export const UsersAutocompleter = (group_builder: BuildGroupOfUsers): AutocompleteUsers => {
     return {
-        autocomplete(lazybox: Lazybox, currently_selected_users: User[], query: string): void {
+        autocomplete(
+            lazybox: Lazybox,
+            currently_selected_users: ReadonlyArray<User>,
+            query: string,
+        ): void {
             if (query.length <= 2) {
                 lazybox.replaceDropdownContent([group_builder.buildEmptyNotEnoughCharacters()]);
                 return;

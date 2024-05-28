@@ -21,24 +21,22 @@ import { describe, it, expect, beforeEach, vi } from "vitest";
 import { okAsync, errAsync } from "neverthrow";
 import type { GroupOfItems } from "@tuleap/lazybox";
 import { Fault } from "@tuleap/fault";
-import type { User } from "@tuleap/plugin-pullrequest-rest-api-types";
-import { LazyboxStub } from "../../../../tests/stubs/LazyboxStub";
-import * as tuleap_api from "../../../api/tuleap-rest-querier";
-import { ReviewersAutocompleter } from "./ReviewersAutocompleter";
-import type { AutocompleteReviewers } from "./ReviewersAutocompleter";
-import { GroupOfReviewersBuilder } from "./GroupOfReviewersBuilder";
+import type { User } from "@tuleap/core-rest-api-types";
+import { LazyboxStub } from "../tests/stubs/LazyboxStub";
+import * as tuleap_api from "./api/rest-querier";
+import { UsersAutocompleter } from "./UsersAutocompleter";
+import type { AutocompleteUsers } from "./UsersAutocompleter";
+import { GroupOfUsersBuilder } from "./GroupOfUsersBuilder";
 import { UsersToLazyboxItemsTransformer } from "./UsersToLazyboxItemsTransformer";
+import { GettextProviderStub } from "../tests/stubs/GettextProviderStub";
 
-describe("ReviewersAutocompleter", () => {
-    let lazybox: LazyboxStub, autocompleter: AutocompleteReviewers;
+describe("UsersAutocompleter", () => {
+    let lazybox: LazyboxStub, autocompleter: AutocompleteUsers;
 
     beforeEach(() => {
         lazybox = LazyboxStub.build();
-        autocompleter = ReviewersAutocompleter(
-            GroupOfReviewersBuilder(
-                UsersToLazyboxItemsTransformer(),
-                (msgid: string): string => msgid,
-            ),
+        autocompleter = UsersAutocompleter(
+            GroupOfUsersBuilder(UsersToLazyboxItemsTransformer(), GettextProviderStub),
         );
     });
 

@@ -18,15 +18,16 @@
  */
 
 import { describe, it, expect } from "vitest";
-import type { User } from "@tuleap/plugin-pullrequest-rest-api-types";
-import type { BuildGroupOfReviewers } from "./GroupOfReviewersBuilder";
-import { GroupOfReviewersBuilder } from "./GroupOfReviewersBuilder";
+import type { User } from "@tuleap/core-rest-api-types";
+import type { BuildGroupOfUsers } from "./GroupOfUsersBuilder";
+import { GroupOfUsersBuilder } from "./GroupOfUsersBuilder";
 import { UsersToLazyboxItemsTransformer } from "./UsersToLazyboxItemsTransformer";
+import { GettextProviderStub } from "../tests/stubs/GettextProviderStub";
 
-const getGroupBuilder = (): BuildGroupOfReviewers =>
-    GroupOfReviewersBuilder(UsersToLazyboxItemsTransformer(), (msgid: string): string => msgid);
+const getGroupBuilder = (): BuildGroupOfUsers =>
+    GroupOfUsersBuilder(UsersToLazyboxItemsTransformer(), GettextProviderStub);
 
-describe("GroupOfReviewersBuilder", () => {
+describe("GroupOfUsersBuilder", () => {
     it("buildEmpty() should build an empty group", () => {
         const group = getGroupBuilder().buildEmpty();
 

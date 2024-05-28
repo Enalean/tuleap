@@ -90,17 +90,12 @@ import type { Lazybox } from "@tuleap/lazybox";
 import type { Modal } from "@tuleap/tlp-modal";
 import { createModal, EVENT_TLP_MODAL_HIDDEN } from "@tuleap/tlp-modal";
 import type { User } from "@tuleap/plugin-pullrequest-rest-api-types";
-import { DISPLAY_TULEAP_API_ERROR, PULL_REQUEST_ID_KEY } from "../../constants";
+import { DISPLAY_TULEAP_API_ERROR, PULL_REQUEST_ID_KEY, USER_LOCALE_KEY } from "../../constants";
 import { putReviewers } from "../../api/tuleap-rest-querier";
-import { UsersToLazyboxItemsTransformer } from "./autocomplete/UsersToLazyboxItemsTransformer";
-import { GroupOfReviewersBuilder } from "./autocomplete/GroupOfReviewersBuilder";
-import { ReviewersAutocompleter } from "./autocomplete/ReviewersAutocompleter";
-import {
-    getAssignableReviewerTemplate,
-    getSelectedReviewers,
-} from "./autocomplete/AssignableReviewerTemplate";
+import { initUsersAutocompleter } from "@tuleap/lazybox-users-autocomplete";
 
 const { $gettext } = useGettext();
+const user_locale: string = strictInject(USER_LOCALE_KEY);
 
 const pull_request_id = strictInject(PULL_REQUEST_ID_KEY);
 const displayTuleapAPIFault = strictInject(DISPLAY_TULEAP_API_ERROR);
@@ -120,10 +115,6 @@ const has_no_user_selected = computed(
     () => props.reviewers_list.length > 0 && currently_selected_users.value.length === 0,
 );
 
-const users_transformer = UsersToLazyboxItemsTransformer();
-const group_builder = GroupOfReviewersBuilder(users_transformer, $gettext);
-const autocompleter = ReviewersAutocompleter(group_builder);
-
 const cancel = (): void => {
     props.on_cancel_callback();
 };
@@ -141,7 +132,14 @@ onMounted((): void => {
     modal_instance.value.show();
     modal_instance.value.addEventListener(EVENT_TLP_MODAL_HIDDEN, cancel);
 
-    initReviewersAutocompleter(reviewer_input.value);
+    initUsersAutocompleter(
+        reviewer_input.value,
+        props.reviewers_list,
+        (selected_users: ReadonlyArray<User>): void => {
+            currently_selected_users.value = [...selected_users];
+        },
+        user_locale,
+    );
 });
 
 onBeforeUnmount(() => {
@@ -149,22 +147,6 @@ onBeforeUnmount(() => {
         modal_instance.value.removeEventListener(EVENT_TLP_MODAL_HIDDEN, cancel);
     }
 });
-
-function initReviewersAutocompleter(lazybox: Lazybox): void {
-    lazybox.options = {
-        is_multiple: true,
-        placeholder: $gettext("Search users by their names"),
-        templating_callback: getAssignableReviewerTemplate,
-        search_input_callback: (query): void => {
-            autocompleter.autocomplete(lazybox, currently_selected_users.value, query);
-        },
-        selection_callback: (selected_users): void => {
-            currently_selected_users.value = getSelectedReviewers(selected_users);
-        },
-    };
-    lazybox.replaceDropdownContent([group_builder.buildEmpty()]);
-    lazybox.replaceSelection(users_transformer.buildForSelection(props.reviewers_list));
-}
 
 function saveReviewers(): void {
     is_saving.value = true;
@@ -184,11 +166,7 @@ function saveReviewers(): void {
 </script>
 
 <style lang="scss">
-.pull-request-reviewers-badge {
-    display: flex;
-    gap: var(--tlp-small-spacing);
-    align-items: center;
-}
+@use "@tuleap/lazybox-users-autocomplete/style";
 
 .pull-request-manage-reviewers-modal-footer {
     align-items: center;

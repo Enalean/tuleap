@@ -23,6 +23,9 @@ dependencies:
   '@tuleap/lazybox':
     specifier: workspace:*
     version: link:../../../../lib/frontend/lazybox
+  '@tuleap/lazybox-users-autocomplete':
+    specifier: workspace:*
+    version: link:../../../../lib/frontend/lazybox-users-autocomplete
   '@tuleap/option':
     specifier: workspace:*
     version: link:../../../../lib/frontend/option

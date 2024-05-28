@@ -99,9 +99,6 @@ msgstr "Gérer les relecteurs de la pull-request"
 msgid "Manage reviewers"
 msgstr "Gérer les relecteurs"
 
-msgid "Matching users"
-msgstr "Utilisateurs correspondant"
-
 msgid "Merge"
 msgstr "Intégrer"
 
@@ -127,9 +124,6 @@ msgstr "Aucun label n'a été encore assigné"
 
 msgid "No matching labels found"
 msgstr "Aucun label correspondant trouvé"
-
-msgid "No matching users found"
-msgstr "Aucun utilisateur correspondant trouvé"
 
 msgid "Nobody is reviewing the pull request"
 msgstr "Personne ne revoit la pull request"
@@ -209,9 +203,6 @@ msgstr "SSH"
 msgid "Save changes"
 msgstr "Sauvegarder les changements"
 
-msgid "Search users by their names"
-msgstr "Rechercher des utilisateurs par leurs noms"
-
 msgid "Select labels"
 msgstr "Sélectionner des labels"
 
@@ -239,9 +230,6 @@ msgstr "Plus aucun relecteur ne sera assigné à cette pull request."
 
 msgid "Title"
 msgstr "Titre"
-
-msgid "Type at least 3 characters"
-msgstr "Tapez au moins 3 caractères"
 
 msgid "Unknown"
 msgstr "Inconnu"

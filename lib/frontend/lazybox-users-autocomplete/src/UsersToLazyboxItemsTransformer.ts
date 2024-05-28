@@ -18,7 +18,7 @@
  */
 
 import type { LazyboxItem } from "@tuleap/lazybox";
-import type { User } from "@tuleap/plugin-pullrequest-rest-api-types";
+import type { User } from "@tuleap/core-rest-api-types";
 
 export interface TransformUsersToLazyboxItems {
     buildForDropdown(
@@ -49,7 +49,7 @@ export const UsersToLazyboxItemsTransformer = (): TransformUsersToLazyboxItems =
             users,
             (user: User) =>
                 currently_selected_users.findIndex(
-                    (selected_user) => selected_user.id === user.id,
+                    (selected_user: User) => selected_user.id === user.id,
                 ) !== -1,
         );
     },
