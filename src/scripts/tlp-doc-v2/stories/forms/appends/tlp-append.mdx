@@ -1,0 +1,22 @@
+import { Canvas, Meta, Controls } from '@storybook/blocks';
+import * as AppendsStories from "./tlp-append.stories";
+
+<Meta of={AppendsStories}/>
+
+# Appends
+
+<code>.tlp-append</code>
+
+## Append with icon
+
+<Canvas withToolbar={true} of={AppendsStories.WithIcon}></Canvas>
+
+<Controls></Controls>
+
+## Multiple appends
+
+<Canvas withToolbar={true} of={AppendsStories.MultipleAppends}></Canvas>
+
+## Prepend and append
+
+<Canvas withToolbar={true} of={AppendsStories.PrependAndAppend}></Canvas>
