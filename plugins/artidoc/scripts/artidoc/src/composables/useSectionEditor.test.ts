@@ -27,6 +27,8 @@ import { flushPromises } from "@vue/test-utils";
 import * as on_before_unload from "@/helpers/on-before-unload";
 import { Fault } from "@tuleap/fault";
 import type { ArtidocSection } from "@/helpers/artidoc-section.type";
+import * as latest from "@/helpers/is-section-in-its-latest-version";
+import { OutdatedSectionFault } from "@/helpers/is-section-in-its-latest-version";
 
 const default_section = ArtidocSectionFactory.create();
 
@@ -170,6 +172,8 @@ describe("useSectionEditor", () => {
 
         describe("when the description is different from the original description", () => {
             it("should ends in error in case of... error", async () => {
+                vi.spyOn(latest, "isSectionInItsLatestVersion").mockReturnValue(okAsync(true));
+
                 const store = useSectionEditor(section, update_section_callback);
                 const mock_put_artifact_description = vi
                     .spyOn(rest_querier, "putArtifact")
@@ -187,7 +191,31 @@ describe("useSectionEditor", () => {
                 expect(store.isInError().value).toBe(true);
             });
 
+            it("should not perform the update if the section is outdated", async () => {
+                vi.spyOn(latest, "isSectionInItsLatestVersion").mockReturnValue(
+                    errAsync(OutdatedSectionFault.build()),
+                );
+
+                const store = useSectionEditor(section, update_section_callback);
+                const mock_put_artifact_description = vi.spyOn(rest_querier, "putArtifact");
+
+                store.inputCurrentDescription("new description");
+                expect(store.getEditableDescription().value).toBe("new description");
+                expect(store.getReadonlyDescription().value).toBe("the description");
+
+                expect(store.isOutdated().value).toBe(false);
+
+                store.editor_actions.saveEditor();
+
+                await flushPromises();
+
+                expect(mock_put_artifact_description).not.toHaveBeenCalled();
+                expect(store.isOutdated().value).toBe(true);
+            });
+
             it("should get updated section", async () => {
+                vi.spyOn(latest, "isSectionInItsLatestVersion").mockReturnValue(okAsync(true));
+
                 const store = useSectionEditor(section, update_section_callback);
                 const mock_put_artifact_description = vi
                     .spyOn(rest_querier, "putArtifact")
@@ -219,6 +247,93 @@ describe("useSectionEditor", () => {
                 );
                 expect(update_section_callback).toHaveBeenCalled();
             });
+        });
+    });
+
+    describe("forceSaveEditor", () => {
+        it("should ends in error in case of... error", async () => {
+            const store = useSectionEditor(section, update_section_callback);
+            const mock_put_artifact_description = vi
+                .spyOn(rest_querier, "putArtifact")
+                .mockReturnValue(errAsync(Fault.fromMessage("An error occurred.")));
+            store.inputCurrentDescription("new description");
+            expect(store.getEditableDescription().value).toBe("new description");
+            expect(store.isInError().value).toBe(false);
+
+            store.editor_actions.forceSaveEditor();
+
+            await flushPromises();
+
+            expect(mock_put_artifact_description).toHaveBeenCalledOnce();
+
+            expect(store.isInError().value).toBe(true);
+        });
+
+        it("should get updated section", async () => {
+            const store = useSectionEditor(section, update_section_callback);
+            const mock_put_artifact_description = vi
+                .spyOn(rest_querier, "putArtifact")
+                .mockReturnValue(okAsync(new Response()));
+            const mock_get_section = vi.spyOn(rest_querier, "getSection").mockReturnValue(
+                okAsync(
+                    ArtidocSectionFactory.override({
+                        description: {
+                            ...default_section.description,
+                            value: "the original description",
+                            post_processed_value: "the updated post_processed_value",
+                        },
+                    }),
+                ),
+            );
+
+            store.inputCurrentDescription("new description");
+            expect(store.getEditableDescription().value).toBe("new description");
+            expect(store.getReadonlyDescription().value).toBe("the description");
+
+            store.editor_actions.forceSaveEditor();
+
+            await flushPromises();
+
+            expect(mock_put_artifact_description).toHaveBeenCalled();
+            expect(mock_get_section).toHaveBeenCalled();
+            expect(store.getReadonlyDescription().value).toBe("the updated post_processed_value");
+            expect(update_section_callback).toHaveBeenCalled();
+        });
+    });
+
+    describe("refreshSection", () => {
+        it("should refresh the section", async () => {
+            const store = useSectionEditor(section, update_section_callback);
+            vi.spyOn(rest_querier, "getSection").mockReturnValue(
+                okAsync(
+                    ArtidocSectionFactory.override({
+                        display_title: "concurrently edited title",
+                        description: {
+                            ...section.description,
+                            value: "concurrently edited description",
+                            post_processed_value: "concurrently edited description",
+                        },
+                    }),
+                ),
+            );
+
+            store.editor_actions.enableEditor();
+
+            store.inputCurrentDescription("new description");
+            expect(store.getEditableDescription().value).toBe("new description");
+            expect(store.getReadonlyDescription().value).toBe("the description");
+
+            store.inputCurrentTitle("new title");
+            expect(store.getEditableTitle().value).toBe("new title");
+
+            store.editor_actions.refreshSection();
+
+            await flushPromises();
+
+            expect(store.isSectionInEditMode().value).toBe(false);
+            expect(store.getEditableDescription().value).toBe("concurrently edited description");
+            expect(store.getReadonlyDescription().value).toBe("concurrently edited description");
+            expect(store.getEditableTitle().value).toBe("concurrently edited title");
         });
     });
 

@@ -15,8 +15,21 @@ msgstr ""
 msgid "Cancel"
 msgstr "Annuler"
 
+msgid ""
+"Do you want to continue to force save your modification, or discard it and "
+"load the new one?"
+msgstr ""
+"Voulez-vous continuer en forçant la sauvegarde de vos modifications, ou "
+"annuler et charger la nouvelle section ?"
+
 msgid "Edit"
 msgstr "Éditer"
+
+msgid "Force save"
+msgstr "Forcer la sauvegarde"
+
+msgid "Load new section"
+msgstr "Charger la nouvelle section"
 
 msgid "Save"
 msgstr "Sauvegarder"
@@ -26,6 +39,9 @@ msgstr "Table des matières"
 
 msgid "This document is empty"
 msgstr "Ce document est vide"
+
+msgid "This section has been edited by someone else."
+msgstr "Cette section a été mise à jour par quelqu'un d'autre."
 
 msgid "You can read this document, it's just empty for now"
 msgstr "Vous pouvez lire ce document, mais celui-ci est vide pour l'instant"
