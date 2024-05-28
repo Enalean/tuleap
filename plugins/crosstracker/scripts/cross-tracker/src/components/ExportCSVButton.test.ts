@@ -38,7 +38,7 @@ describe("ExportCSVButton", () => {
         addBOM = jest.spyOn(bom_helper, "addBOM");
     });
 
-    async function instantiateComponent(): Promise<Wrapper<ExportCSVButton>> {
+    async function instantiateComponent(): Promise<Wrapper<Vue, Element>> {
         const store_options = {
             state: { report_id: 1 },
             getters: { should_display_export_button: true },
@@ -61,16 +61,14 @@ describe("ExportCSVButton", () => {
             getCSVReport.mockResolvedValue(csv);
             addBOM.mockImplementation((csv) => csv);
 
-            wrapper.find("[data-test=export-cvs-button]").trigger("click");
+            wrapper.find("[data-test=export-csv-button]").trigger("click");
 
-            expect(wrapper.vm.$data.is_loading).toBe(true);
             await wrapper.vm.$nextTick();
             await wrapper.vm.$nextTick();
 
             expect(wrapper.vm.$store.commit).toHaveBeenCalledWith("resetFeedbacks");
             expect(getCSVReport).toHaveBeenCalledWith(36);
             expect(download).toHaveBeenCalledWith(csv, "export-36.csv", "text/csv;encoding:utf-8");
-            expect(wrapper.vm.$data.is_loading).toBe(false);
         });
 
         it("When there is a REST error, then it will be shown", async () => {
@@ -84,11 +82,10 @@ describe("ExportCSVButton", () => {
                 ),
             );
 
-            wrapper.find("[data-test=export-cvs-button]").trigger("click");
+            wrapper.find("[data-test=export-csv-button]").trigger("click");
             await wrapper.vm.$nextTick();
             await wrapper.vm.$nextTick();
 
-            expect(wrapper.vm.$data.is_loading).toBe(false);
             expect(wrapper.vm.$store.commit).toHaveBeenCalledWith(
                 "setErrorMessage",
                 "Report with id 90 not found",
@@ -98,13 +95,6 @@ describe("ExportCSVButton", () => {
         it("When there is a 50x REST error, then a generic error message will be shown", async () => {
             const wrapper = await instantiateComponent();
             getCSVReport.mockImplementation(() =>
-                Promise.reject({
-                    response: {
-                        status: 503,
-                    },
-                }),
-            );
-            getCSVReport.mockImplementation(() =>
                 Promise.reject(
                     new FetchWrapperError("Forbidden", {
                         status: 503,
@@ -112,11 +102,10 @@ describe("ExportCSVButton", () => {
                 ),
             );
 
-            wrapper.find("[data-test=export-cvs-button]").trigger("click");
+            wrapper.find("[data-test=export-csv-button]").trigger("click");
             await wrapper.vm.$nextTick();
             await wrapper.vm.$nextTick();
 
-            expect(wrapper.vm.$data.is_loading).toBe(false);
             expect(wrapper.vm.$store.commit).toHaveBeenCalledWith(
                 "setErrorMessage",
                 expect.any(String),

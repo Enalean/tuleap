@@ -29,12 +29,8 @@ export default class ReadingCrossTrackerReport {
         this.expert_query = "";
     }
 
-    getTrackers(): IterableIterator<TrackerAndProject> {
-        return this.trackers.values();
-    }
-
-    getTrackerIds(): number[] {
-        return [...this.trackers.keys()];
+    getTrackers(): ReadonlyArray<TrackerAndProject> {
+        return Array.from(this.trackers.values());
     }
 
     areTrackersEmpty(): boolean {

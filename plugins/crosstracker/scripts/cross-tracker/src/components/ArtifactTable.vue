@@ -73,126 +73,115 @@
     </div>
 </template>
 
-<script lang="ts">
-import Vue from "vue";
+<script setup lang="ts">
+import type { Ref } from "vue";
+import { computed, onMounted, ref, watch } from "vue";
+import { useMutations, useState } from "vuex-composition-helpers";
+import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
 import moment from "moment";
 import ArtifactTableRow from "./ArtifactTableRow.vue";
 import ExportButton from "./ExportCSVButton.vue";
-import { getReportContent, getQueryResult } from "../api/rest-querier";
+import { getQueryResult, getReportContent } from "../api/rest-querier";
 import { getUserPreferredDateFormat } from "../user-service";
 import type WritingCrossTrackerReport from "../writing-mode/writing-cross-tracker-report";
-import { Component, Prop, Watch } from "vue-property-decorator";
-import type { Artifact, ArtifactsCollection } from "../type";
-import { State } from "vuex-class";
+import type { Artifact, ArtifactsCollection, State } from "../type";
 import { FetchWrapperError } from "@tuleap/tlp-fetch";
 
-@Component({ components: { ArtifactTableRow, ExportButton } })
-export default class ArtifactTable extends Vue {
-    @Prop({ required: true })
-    readonly writingCrossTrackerReport!: WritingCrossTrackerReport;
+const props = defineProps<{ writingCrossTrackerReport: WritingCrossTrackerReport }>();
 
-    @State
-    private readonly reading_mode!: boolean;
-    @State
-    private readonly is_report_saved!: boolean;
-    @State
-    private readonly report_id!: number;
+const { reading_mode, is_report_saved, report_id } = useState<
+    Pick<State, "reading_mode" | "is_report_saved" | "report_id">
+>(["reading_mode", "is_report_saved", "report_id"]);
+const { setErrorMessage } = useMutations(["setErrorMessage"]);
+const gettext_provider = useGettext();
 
-    is_loading = true;
-    artifacts: Artifact[] = [];
-    is_load_more_displayed = false;
-    is_loading_more = false;
+const is_loading = ref(true);
+let artifacts: Ref<Artifact[]> = ref([]);
+const is_load_more_displayed = ref(false);
+const is_loading_more = ref(false);
+let current_offset = 0;
+const limit = 30;
+
+const is_table_empty = computed(() => !is_loading.value && artifacts.value.length === 0);
+
+const should_show_export_button = computed(
+    () => reading_mode.value === true && is_report_saved.value === true && !is_table_empty.value,
+);
+
+watch(
+    () => [reading_mode.value, is_report_saved.value],
+    () => {
+        if (reading_mode.value === true) {
+            refreshArtifactList();
+        }
+    },
+);
+
+onMounted(() => {
+    is_loading.value = true;
+    loadArtifacts();
+});
+
+function loadMoreArtifacts(): void {
+    is_loading_more.value = true;
+    loadArtifacts();
+}
+
+function refreshArtifactList(): void {
+    artifacts.value = [];
     current_offset = 0;
-    limit = 30;
+    is_loading.value = true;
+    is_load_more_displayed.value = false;
 
-    get report_state(): Array<boolean> {
-        // We just need to react to certain changes in this
-        return [this.reading_mode, this.is_report_saved];
-    }
-    get is_table_empty(): boolean {
-        return !this.is_loading && this.artifacts.length === 0;
-    }
-    get should_show_export_button(): boolean {
-        return this.reading_mode && this.is_report_saved && !this.is_table_empty;
-    }
+    loadArtifacts();
+}
 
-    @Watch("report_state")
-    report_state_value() {
-        if (this.reading_mode) {
-            this.refreshArtifactList();
-        }
-    }
+async function loadArtifacts(): Promise<void> {
+    try {
+        const result = await getArtifactsFromReportOrUnsavedQuery();
 
-    mounted(): void {
-        this.is_loading = true;
-        this.loadArtifacts();
-    }
+        current_offset += limit;
+        is_load_more_displayed.value = current_offset < parseInt(result.total, 10);
 
-    loadMoreArtifacts(): void {
-        this.is_loading_more = true;
-        this.loadArtifacts();
-    }
-
-    refreshArtifactList(): void {
-        this.artifacts = [];
-        this.current_offset = 0;
-        this.is_loading = true;
-        this.is_load_more_displayed = false;
-
-        this.loadArtifacts();
-    }
-
-    async loadArtifacts(): Promise<void> {
-        try {
-            const { artifacts, total } = await this.getArtifactsFromReportOrUnsavedQuery();
-
-            this.current_offset += this.limit;
-            this.is_load_more_displayed = this.current_offset < parseInt(total, 10);
-
-            const new_artifacts = this.formatArtifacts(artifacts);
-            this.artifacts = this.artifacts.concat(new_artifacts);
-        } catch (error) {
-            this.is_load_more_displayed = false;
-            if (error instanceof FetchWrapperError) {
-                const error_json = await error.response.json();
-                if (
-                    error_json &&
-                    Object.prototype.hasOwnProperty.call(error_json, "error") &&
-                    Object.prototype.hasOwnProperty.call(error_json.error, "i18n_error_message")
-                ) {
-                    this.$store.commit("setErrorMessage", error_json.error.i18n_error_message);
-                } else {
-                    this.$store.commit("setErrorMessage", this.$gettext("An error occurred"));
-                }
+        const new_artifacts = formatArtifacts(result.artifacts);
+        artifacts.value = artifacts.value.concat(new_artifacts);
+    } catch (error) {
+        is_load_more_displayed.value = false;
+        if (error instanceof FetchWrapperError) {
+            const error_json = await error.response.json();
+            if (error_json && "error" in error_json && "i18n_error_message" in error_json.error) {
+                setErrorMessage(error_json.error.i18n_error_message);
+            } else {
+                setErrorMessage(gettext_provider.$gettext("An error occurred"));
             }
-        } finally {
-            this.is_loading = false;
-            this.is_loading_more = false;
         }
+    } finally {
+        is_loading.value = false;
+        is_loading_more.value = false;
+    }
+}
+
+function getArtifactsFromReportOrUnsavedQuery(): Promise<ArtifactsCollection> {
+    if (is_report_saved.value === true) {
+        return getReportContent(report_id.value, limit, current_offset);
     }
 
-    getArtifactsFromReportOrUnsavedQuery(): Promise<ArtifactsCollection> {
-        if (this.is_report_saved) {
-            return getReportContent(this.report_id, this.limit, this.current_offset);
-        }
+    return getQueryResult(
+        report_id.value,
+        props.writingCrossTrackerReport.getTrackerIds(),
+        props.writingCrossTrackerReport.expert_query,
+        limit,
+        current_offset,
+    );
+}
 
-        return getQueryResult(
-            this.report_id,
-            this.writingCrossTrackerReport.getTrackerIds(),
-            this.writingCrossTrackerReport.expert_query,
-            this.limit,
-            this.current_offset,
+function formatArtifacts(artifacts: Array<Artifact>): Array<Artifact> {
+    return artifacts.map((artifact) => {
+        artifact.formatted_last_update_date = moment(artifact.last_update_date).format(
+            getUserPreferredDateFormat(),
         );
-    }
 
-    formatArtifacts(artifacts: Array<Artifact>): Array<Artifact> {
-        return artifacts.map((artifact) => {
-            artifact.formatted_last_update_date = moment(artifact.last_update_date).format(
-                getUserPreferredDateFormat(),
-            );
-
-            return artifact;
-        });
-    }
+        return artifact;
+    });
 }
 </script>

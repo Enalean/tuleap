@@ -20,43 +20,37 @@
 <template>
     <tr>
         <td data-test="cross-tracker-results-artifact">
-            <a class="direct-link-to-artifact" v-bind:href="artifact.badge.uri">
-                <span class="cross-ref-badge link-to-tracker-badge" v-bind:class="badge_color">
-                    {{ artifact.badge.cross_ref }}
-                </span>
-                {{ artifact.title }}
+            <a class="direct-link-to-artifact" v-bind:href="props.artifact.badge.uri">
+                <span class="cross-ref-badge link-to-tracker-badge" v-bind:class="badge_color">{{
+                    props.artifact.badge.cross_ref
+                }}</span
+                >{{ props.artifact.title }}
             </a>
         </td>
         <td>
-            <a v-bind:href="'/' + artifact.project.uri" class="cross-tracker-project">
-                {{ artifact.project.label }}
-            </a>
+            <a v-bind:href="'/' + props.artifact.project.uri" class="cross-tracker-project">{{
+                props.artifact.project.label
+            }}</a>
         </td>
-        <td>{{ artifact.status }}</td>
-        <td class="cross-tracker-last-update-date">{{ artifact.formatted_last_update_date }}</td>
-        <td><list-bind-user v-bind:user="artifact.submitted_by" /></td>
+        <td>{{ props.artifact.status }}</td>
+        <td class="cross-tracker-last-update-date">
+            {{ props.artifact.formatted_last_update_date }}
+        </td>
+        <td><list-bind-user v-bind:user="props.artifact.submitted_by" /></td>
         <td>
             <list-bind-user
-                v-for="user in artifact.assigned_to"
+                v-for="user in props.artifact.assigned_to"
                 v-bind:user="user"
                 v-bind:key="user.id"
             />
         </td>
     </tr>
 </template>
-<script lang="ts">
-import Vue from "vue";
-import { Component, Prop } from "vue-property-decorator";
+<script setup lang="ts">
+import { computed } from "vue";
 import type { Artifact } from "../type";
 import ListBindUser from "./ListBindUser.vue";
 
-@Component({ components: { ListBindUser } })
-export default class ArtifactTableRow extends Vue {
-    @Prop({ required: true })
-    readonly artifact!: Artifact;
-
-    get badge_color(): string {
-        return "tlp-swatch-" + this.artifact.badge.color;
-    }
-}
+const props = defineProps<{ artifact: Artifact }>();
+const badge_color = computed(() => `tlp-swatch-${props.artifact.badge.color}`);
 </script>

@@ -44,35 +44,26 @@
         </div>
     </div>
 </template>
-<script lang="ts">
-import { Component, Prop } from "vue-property-decorator";
-import Vue from "vue";
+<script setup lang="ts">
+import { computed } from "vue";
 import type ReadingCrossTrackerReport from "./reading-cross-tracker-report";
 
 interface TrackerWithProject {
-    id: number;
-    tracker_label: string;
-    project_label: string;
+    readonly id: number;
+    readonly tracker_label: string;
+    readonly project_label: string;
 }
 
-@Component
-export default class TrackerListReadingMode extends Vue {
-    @Prop({ required: true })
-    readonly readingCrossTrackerReport!: ReadingCrossTrackerReport;
+const props = defineProps<{ readingCrossTrackerReport: ReadingCrossTrackerReport }>();
 
-    get no_trackers_in_report(): boolean {
-        return this.readingCrossTrackerReport.areTrackersEmpty();
-    }
-
-    get trackers(): TrackerWithProject[] {
-        const trackers = [...this.readingCrossTrackerReport.getTrackers()];
-        return trackers.map(({ tracker, project }) => {
-            return {
-                id: tracker.id,
-                tracker_label: tracker.label,
-                project_label: project.label,
-            };
-        });
-    }
-}
+const no_trackers_in_report = computed(() => props.readingCrossTrackerReport.areTrackersEmpty());
+const trackers = computed((): ReadonlyArray<TrackerWithProject> => {
+    return props.readingCrossTrackerReport.getTrackers().map(({ tracker, project }) => {
+        return {
+            id: tracker.id,
+            tracker_label: tracker.label,
+            project_label: project.label,
+        };
+    });
+});
 </script>

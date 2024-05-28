@@ -18,19 +18,12 @@
   -->
 
 <template>
-    <a v-bind:href="user.user_url" class="cross-tracker-list-bind-user">
-        {{ user.display_name }}
-    </a>
+    <a v-bind:href="props.user.user_url" class="cross-tracker-list-bind-user">{{
+        props.user.display_name
+    }}</a>
 </template>
-<script lang="ts">
-import Vue from "vue";
-import { Prop } from "vue-property-decorator";
-import Component from "vue-class-component";
+<script setup lang="ts">
 import type { User } from "../type";
 
-@Component({})
-export default class ListBindUser extends Vue {
-    @Prop({ required: true })
-    readonly user!: User;
-}
+const props = defineProps<{ user: User }>();
 </script>

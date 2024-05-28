@@ -14,6 +14,9 @@ dependencies:
   '@tuleap/tlp-fetch':
     specifier: workspace:*
     version: link:../../../../lib/frontend/tlp-fetch
+  '@tuleap/vue2-gettext-composition-helper':
+    specifier: workspace:^
+    version: link:../../../../lib/frontend/vue2-gettext-composition-helpers
   '@tuleap/vue2-gettext-init':
     specifier: workspace:*
     version: link:../../../../lib/frontend/vue2-gettext-init
@@ -32,6 +35,9 @@ dependencies:
   vuex-class:
     specifier: ^0.3.2
     version: 0.3.2(vue-class-component@7.2.6)(vue@2.7.8)(vuex@3.6.2)
+  vuex-composition-helpers:
+    specifier: ^2.0.1
+    version: 2.0.3(vue@2.7.8)(vuex@3.6.2)
 
 devDependencies:
   '@tuleap/build-system-configurator':
@@ -357,6 +363,16 @@ packages:
     dependencies:
       vue: 2.7.8
       vue-class-component: 7.2.6(vue@2.7.8)
+      vuex: 3.6.2(vue@2.7.8)
+    dev: false
+
+  /vuex-composition-helpers@2.0.3(vue@2.7.8)(vuex@3.6.2):
+    resolution: {integrity: sha512-tIkGHfUqA3dzq8ePBXUXfZldqgZOXr6hb6TF6M5bhR/5ls2fsqhPJiOygC40UKZe4w6pP7cJ1HiLrZaYckz4nw==}
+    peerDependencies:
+      vue: '>= 3.0.5'
+      vuex: '>= 4.0.0'
+    dependencies:
+      vue: 2.7.8
       vuex: 3.6.2(vue@2.7.8)
     dev: false
 

@@ -38,8 +38,11 @@ describe("ReadingMode", () => {
         readingCrossTrackerReport = new ReadingCrossTrackerReport();
     });
 
-    async function instantiateComponent(): Promise<Wrapper<ReadingMode>> {
-        const store_options = { state: { is_user_admin: true } };
+    async function instantiateComponent(): Promise<Wrapper<Vue, Element>> {
+        const store_options = {
+            state: { is_user_admin: true },
+            getters: { has_error_message: false },
+        };
         const store = createStoreMock(store_options);
 
         return shallowMount(ReadingMode, {
@@ -49,7 +52,7 @@ describe("ReadingMode", () => {
                 readingCrossTrackerReport,
             },
             mocks: {
-                $store: createStoreMock(store),
+                $store: store,
             },
         });
     }
@@ -61,10 +64,8 @@ describe("ReadingMode", () => {
             wrapper.get("[data-test=cross-tracker-reading-mode]").trigger("click");
 
             const emitted = wrapper.emitted()["switch-to-writing-mode"];
-            if (!emitted) {
-                throw new Error("Event has not been emitted");
-            }
-            expect(wrapper.find("[data-test=tracker-list-reading-mode]").exists()).toBeTruthy();
+            expect(emitted).toBeDefined();
+            expect(wrapper.find("[data-test=tracker-list-reading-mode]").exists()).toBe(true);
         });
 
         it(`Given I am browsing as project member,
@@ -75,10 +76,8 @@ describe("ReadingMode", () => {
             wrapper.get("[data-test=cross-tracker-reading-mode]").trigger("click");
 
             const emitted = wrapper.emitted()["switch-to-writing-mode"];
-            if (emitted) {
-                throw new Error("Event have been emitted");
-            }
-            expect(wrapper.find("[data-test=tracker-list-reading-mode]").exists()).toBeTruthy();
+            expect(emitted).toBeUndefined();
+            expect(wrapper.find("[data-test=tracker-list-reading-mode]").exists()).toBe(true);
         });
     });
 
@@ -105,9 +104,7 @@ describe("ReadingMode", () => {
             expect(updateReport).toHaveBeenCalled();
             expect(initBackend).toHaveBeenCalledWith(trackers, expert_query);
             const emitted = wrapper.emitted().saved;
-            if (!emitted) {
-                throw new Error("Event has not been emitted");
-            }
+            expect(emitted).toBeDefined();
         });
 
         it("Given the report is in error, then nothing will happen", async () => {

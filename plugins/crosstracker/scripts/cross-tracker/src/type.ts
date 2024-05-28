@@ -78,7 +78,7 @@ export type Artifact = {
 };
 
 export type User = {
-    id: number;
-    display_name: string;
-    user_url: string;
+    readonly id: number;
+    readonly display_name: string;
+    readonly user_url: string;
 };
