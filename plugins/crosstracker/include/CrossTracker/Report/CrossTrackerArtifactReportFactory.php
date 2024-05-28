@@ -33,8 +33,10 @@ use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSelectablesCollectorVisitor
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidTermCollectorVisitor;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\CrossTrackerExpertQueryReportDao;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilderVisitor;
+use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilderVisitor;
 use Tuleap\Tracker\Artifact\RetrieveArtifact;
 use Tuleap\Tracker\Report\Query\Advanced\ExpertQueryValidator;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\Query;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\SyntaxError;
 use Tuleap\Tracker\Report\Query\Advanced\ParserCacheProxy;
 use Tuleap\Tracker\Report\Query\Advanced\SearchablesAreInvalidException;
@@ -50,6 +52,7 @@ final readonly class CrossTrackerArtifactReportFactory
         private RetrieveArtifact $artifact_factory,
         private ExpertQueryValidator $expert_query_validator,
         private QueryBuilderVisitor $query_builder,
+        private SelectBuilderVisitor $select_builder,
         private ParserCacheProxy $parser,
         private CrossTrackerExpertQueryReportDao $expert_query_dao,
         private InvalidTermCollectorVisitor $term_collector,
@@ -77,7 +80,16 @@ final readonly class CrossTrackerArtifactReportFactory
                 $offset
             );
         } else {
-            return $this->getArtifactsMatchingExpertQuery(
+            if (! Query::isSelectEnabled()) {
+                return $this->getArtifactsMatchingExpertQuery(
+                    $report,
+                    $current_user,
+                    $limit,
+                    $offset
+                );
+            }
+
+            return $this->getArtifactsMatchingExpertQueryWithSelect(
                 $report,
                 $current_user,
                 $limit,
@@ -115,14 +127,8 @@ final readonly class CrossTrackerArtifactReportFactory
         int $limit,
         int $offset,
     ): ArtifactMatchingReportCollection {
-        $trackers     = $this->getOnlyActiveTrackersInActiveProjects($report->getTrackers());
-        $expert_query = $report->getExpertQuery();
-        $this->expert_query_validator->validateExpertQuery(
-            $expert_query,
-            new InvalidSearchablesCollectionBuilder($this->term_collector, $trackers, $current_user),
-            new InvalidSelectablesCollectionBuilder($this->selectables_collector, $trackers, $current_user),
-        );
-        $query                 = $this->parser->parse($expert_query);
+        $trackers              = $this->getOnlyActiveTrackersInActiveProjects($report->getTrackers());
+        $query                 = $this->getQueryFromReport($report, $current_user, $trackers);
         $condition             = $query->getCondition();
         $additional_from_where = $this->query_builder->buildFromWhere($condition, $trackers, $current_user);
         $results               = $this->expert_query_dao->searchArtifactsMatchingQuery(
@@ -133,6 +139,61 @@ final readonly class CrossTrackerArtifactReportFactory
         );
         $total_size            = $this->expert_query_dao->foundRows();
         return $this->buildCollectionOfArtifacts($results, $total_size);
+    }
+
+    /**
+     * @throws SearchablesAreInvalidException
+     * @throws SearchablesDoNotExistException
+     * @throws SelectablesAreInvalidException
+     * @throws SyntaxError
+     * @throws SelectablesDoNotExistException
+     */
+    private function getArtifactsMatchingExpertQueryWithSelect(
+        CrossTrackerReport $report,
+        PFUser $current_user,
+        int $limit,
+        int $offset,
+    ): ArtifactMatchingReportCollection {
+        $trackers = $this->getOnlyActiveTrackersInActiveProjects($report->getTrackers());
+        $query    = $this->getQueryFromReport($report, $current_user, $trackers);
+
+        $additional_from_where = $this->query_builder->buildFromWhere($query->getCondition(), $trackers, $current_user);
+        $artifact_ids          = $this->expert_query_dao->searchArtifactsIdsMatchingQuery(
+            $additional_from_where,
+            $this->getTrackersId($trackers),
+            $limit,
+            $offset
+        );
+
+        $additional_select_from = $this->select_builder->buildSelectFrom($query->getSelect(), $trackers, $current_user);
+        $temp_results           = $this->expert_query_dao->searchArtifactsColumnsMatchingIds(
+            $additional_select_from,
+            array_map(static fn(array $row) => $row['id'], $artifact_ids),
+        );
+
+        return $this->buildCollectionOfArtifacts($temp_results, 0);
+    }
+
+    /**
+     * @param Tracker[] $trackers
+     * @throws SearchablesDoNotExistException
+     * @throws SearchablesAreInvalidException
+     * @throws SelectablesAreInvalidException
+     * @throws SyntaxError
+     * @throws SelectablesDoNotExistException
+     */
+    private function getQueryFromReport(
+        CrossTrackerReport $report,
+        PFUser $current_user,
+        array $trackers,
+    ): Query {
+        $expert_query = $report->getExpertQuery();
+        $this->expert_query_validator->validateExpertQuery(
+            $expert_query,
+            new InvalidSearchablesCollectionBuilder($this->term_collector, $trackers, $current_user),
+            new InvalidSelectablesCollectionBuilder($this->selectables_collector, $trackers, $current_user),
+        );
+        return $this->parser->parse($expert_query);
     }
 
     /**
