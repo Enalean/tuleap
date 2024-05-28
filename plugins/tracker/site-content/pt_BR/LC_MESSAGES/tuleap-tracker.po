@@ -4388,6 +4388,12 @@ msgstr "para"
 msgid "total"
 msgstr ""
 
+msgid "trigger already exists for field value"
+msgstr ""
+
+msgid "triggering fields must be unique"
+msgstr ""
+
 msgid "type can't be deleted because it is or has been already used."
 msgstr ""
 

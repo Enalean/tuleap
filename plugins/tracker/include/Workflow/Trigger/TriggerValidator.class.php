@@ -53,7 +53,7 @@ class Tracker_Workflow_Trigger_TriggerValidator
 
         foreach ($existing_rules as $rule) {
             if ($rule->getTarget()->getValue()->getId() == $json->target->field_value_id) {
-                throw new Tracker_Workflow_Trigger_Exception_TriggerInvalidTargetException('trigger already exists for field value');
+                throw new Tracker_Workflow_Trigger_Exception_TriggerInvalidTargetException(dgettext('tuleap-tracker', 'trigger already exists for field value'));
             }
         }
     }
@@ -103,7 +103,7 @@ class Tracker_Workflow_Trigger_TriggerValidator
         $hash = $json->field_id . '###' . $json->field_value_id;
 
         if (in_array($hash, $this->triggering_fields)) {
-            throw new Tracker_Workflow_Trigger_Exception_AddRuleJsonFormatException('triggering fields must be unique');
+            throw new Tracker_Workflow_Trigger_Exception_AddRuleJsonFormatException(dgettext('tuleap-tracker', 'triggering fields must be unique'));
         }
 
         $this->triggering_fields[] = $hash;
