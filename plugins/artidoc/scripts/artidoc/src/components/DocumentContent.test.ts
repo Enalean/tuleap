@@ -34,11 +34,11 @@ describe("DocumentContent", () => {
         vi.spyOn(sectionsStore, "useInjectSectionsStore").mockReturnValue(
             InjectedSectionsStoreStub.withLoadedSections([
                 ArtidocSectionFactory.override({
-                    title: "Title 1",
+                    title: { ...defaultSection.title, value: "Title 1" },
                     artifact: { ...defaultSection.artifact, id: 1 },
                 }),
                 ArtidocSectionFactory.override({
-                    title: "Title 2",
+                    title: { ...defaultSection.title, value: "Title 2" },
                     artifact: { ...defaultSection.artifact, id: 2 },
                 }),
             ]),

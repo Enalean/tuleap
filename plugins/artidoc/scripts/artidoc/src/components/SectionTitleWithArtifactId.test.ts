@@ -17,36 +17,62 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { beforeAll, describe, expect, it } from "vitest";
+import { beforeAll, describe, expect, it, vi } from "vitest";
 import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import SectionTitleWithArtifactId from "./SectionTitleWithArtifactId.vue";
 import type { ComponentPublicInstance } from "vue";
-const default_props = {
-    title: "expected title",
-    artifact_id: 555,
-};
-const default_slots = {
-    "header-cta": "<div><button>edit</button></div>",
-};
+
 describe("SectionTitleWithArtifactId", () => {
     describe("when the sections are loaded", () => {
         let wrapper: VueWrapper<ComponentPublicInstance>;
         beforeAll(() => {
             wrapper = shallowMount(SectionTitleWithArtifactId, {
-                propsData: default_props,
-                slots: default_slots,
+                propsData: {
+                    title: "expected title",
+                    artifact_id: 555,
+                    is_edit_mode: false,
+                    input_current_title: (): void => {},
+                },
+                slots: {
+                    "header-cta": "<div><button>edit</button></div>",
+                },
             });
         });
+
         it("should display the title", () => {
             expect(wrapper.find("h1").text()).toContain("expected title");
         });
+
         it("should display the artifact id with artifact page link", () => {
             expect(wrapper.find("a").text()).toContain("#555");
             expect(wrapper.find("a").attributes().href).toBe("/plugins/tracker/?aid=555");
         });
+
         it("should display the edit button", () => {
             expect(wrapper.find("div button").text()).toBe("edit");
+        });
+
+        it("should display title in edit mode", () => {
+            const input_current_title: (value: string) => void = vi.fn();
+
+            const wrapper = shallowMount(SectionTitleWithArtifactId, {
+                propsData: {
+                    title: "expected title",
+                    artifact_id: 555,
+                    is_edit_mode: true,
+                    input_current_title,
+                },
+            });
+
+            const input = wrapper.find("input");
+            expect(input.exists()).toBe(true);
+            expect(input.element.value).toBe("expected title");
+
+            input.element.value = "new title";
+            input.trigger("input");
+
+            expect(input_current_title).toHaveBeenCalledWith("new title");
         });
     });
 });

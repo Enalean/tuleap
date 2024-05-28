@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { describe, expect, it, vi } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import useSectionEditor from "@/composables/useSectionEditor";
 import * as rest_querier from "@/helpers/rest-querier";
 import ArtidocSectionFactory from "@/helpers/artidoc-section.factory";
@@ -26,6 +26,7 @@ import { errAsync, okAsync } from "neverthrow";
 import { flushPromises } from "@vue/test-utils";
 import * as on_before_unload from "@/helpers/on-before-unload";
 import { Fault } from "@tuleap/fault";
+import type { ArtidocSection } from "@/helpers/artidoc-section.type";
 
 const default_section = ArtidocSectionFactory.create();
 
@@ -42,25 +43,34 @@ const section = ArtidocSectionFactory.override({
 });
 
 describe("useSectionEditor", () => {
+    let update_section_callback: (section: ArtidocSection) => void;
+
+    beforeEach(() => {
+        update_section_callback = vi.fn();
+    });
+
     describe("getReadonlyDescription", () => {
         it("should return the post processed value", () => {
-            const store = useSectionEditor(section);
+            const store = useSectionEditor(section, update_section_callback);
             expect(store.getReadonlyDescription().value).toBe("the description");
         });
     });
 
     describe("getEditableDescription", () => {
         it("should return the value when format is html", () => {
-            const store = useSectionEditor({
-                ...section,
-                description: {
-                    ...default_section.description,
-                    value: "<p>the original description see art #1</p>",
-                    format: "html",
-                    post_processed_value:
-                        "<p>the original description see <a href=''>art #1</a></p>",
+            const store = useSectionEditor(
+                {
+                    ...section,
+                    description: {
+                        ...default_section.description,
+                        value: "<p>the original description see art #1</p>",
+                        format: "html",
+                        post_processed_value:
+                            "<p>the original description see <a href=''>art #1</a></p>",
+                    },
                 },
-            });
+                update_section_callback,
+            );
 
             expect(store.getEditableDescription().value).toBe(
                 "<p>the original description see art #1</p>",
@@ -68,16 +78,19 @@ describe("useSectionEditor", () => {
         });
 
         it("should return the value converted as html when format is text", () => {
-            const store = useSectionEditor({
-                ...section,
-                description: {
-                    ...default_section.description,
-                    value: "the original description see art #1",
-                    format: "text",
-                    post_processed_value:
-                        "<p>the original description see <a href=''>art #1</a></p>",
+            const store = useSectionEditor(
+                {
+                    ...section,
+                    description: {
+                        ...default_section.description,
+                        value: "the original description see art #1",
+                        format: "text",
+                        post_processed_value:
+                            "<p>the original description see <a href=''>art #1</a></p>",
+                    },
                 },
-            });
+                update_section_callback,
+            );
 
             expect(store.getEditableDescription().value).toBe(
                 "<p>the original description see art #1</p>\n",
@@ -85,17 +98,20 @@ describe("useSectionEditor", () => {
         });
 
         it("should return the value converted as html when format is markdown", () => {
-            const store = useSectionEditor({
-                ...section,
-                description: {
-                    ...default_section.description,
-                    value: "<p>the original description see <a href=''>art #1</a></p>",
-                    format: "html",
-                    commonmark: "the original description see art #1",
-                    post_processed_value:
-                        "<p>the original description see <a href=''>art #1</a></p>",
+            const store = useSectionEditor(
+                {
+                    ...section,
+                    description: {
+                        ...default_section.description,
+                        value: "<p>the original description see <a href=''>art #1</a></p>",
+                        format: "html",
+                        commonmark: "the original description see art #1",
+                        post_processed_value:
+                            "<p>the original description see <a href=''>art #1</a></p>",
+                    },
                 },
-            });
+                update_section_callback,
+            );
 
             expect(store.getEditableDescription().value).toBe(
                 "<p>the original description see art #1</p>\n",
@@ -105,7 +121,7 @@ describe("useSectionEditor", () => {
 
     describe("inputCurrentDescription", () => {
         it("should input current description", () => {
-            const store = useSectionEditor(section);
+            const store = useSectionEditor(section, update_section_callback);
             expect(store.getEditableDescription().value).toBe("the original description");
 
             store.inputCurrentDescription("new description");
@@ -116,7 +132,7 @@ describe("useSectionEditor", () => {
 
     describe("enableEditor", () => {
         it("should enable edit mode", () => {
-            const store = useSectionEditor(section);
+            const store = useSectionEditor(section, update_section_callback);
             expect(store.isSectionInEditMode().value).toBe(false);
 
             store.editor_actions.enableEditor();
@@ -127,7 +143,7 @@ describe("useSectionEditor", () => {
 
     describe("cancelEditor", () => {
         it("should cancel edit mode", () => {
-            const store = useSectionEditor(section);
+            const store = useSectionEditor(section, update_section_callback);
             store.editor_actions.enableEditor();
             expect(store.isSectionInEditMode().value).toBe(true);
             store.inputCurrentDescription("the description changed");
@@ -143,11 +159,8 @@ describe("useSectionEditor", () => {
     describe("saveEditor", () => {
         describe("when the description is the same as the original description", () => {
             it("should not put artifact description", () => {
-                const store = useSectionEditor(section);
-                const mock_put_artifact_description = vi.spyOn(
-                    rest_querier,
-                    "putArtifactDescription",
-                );
+                const store = useSectionEditor(section, update_section_callback);
+                const mock_put_artifact_description = vi.spyOn(rest_querier, "putArtifact");
 
                 store.editor_actions.saveEditor();
 
@@ -157,9 +170,9 @@ describe("useSectionEditor", () => {
 
         describe("when the description is different from the original description", () => {
             it("should ends in error in case of... error", async () => {
-                const store = useSectionEditor(section);
+                const store = useSectionEditor(section, update_section_callback);
                 const mock_put_artifact_description = vi
-                    .spyOn(rest_querier, "putArtifactDescription")
+                    .spyOn(rest_querier, "putArtifact")
                     .mockReturnValue(errAsync(Fault.fromMessage("An error occurred.")));
                 store.inputCurrentDescription("new description");
                 expect(store.getEditableDescription().value).toBe("new description");
@@ -175,9 +188,9 @@ describe("useSectionEditor", () => {
             });
 
             it("should get updated section", async () => {
-                const store = useSectionEditor(section);
+                const store = useSectionEditor(section, update_section_callback);
                 const mock_put_artifact_description = vi
-                    .spyOn(rest_querier, "putArtifactDescription")
+                    .spyOn(rest_querier, "putArtifact")
                     .mockReturnValue(okAsync(new Response()));
                 const mock_get_section = vi.spyOn(rest_querier, "getSection").mockReturnValue(
                     okAsync(
@@ -204,6 +217,7 @@ describe("useSectionEditor", () => {
                 expect(store.getReadonlyDescription().value).toBe(
                     "the updated post_processed_value",
                 );
+                expect(update_section_callback).toHaveBeenCalled();
             });
         });
     });
@@ -223,7 +237,10 @@ describe("useSectionEditor", () => {
                     can_user_edit_document,
                 );
 
-                const store = useSectionEditor({ ...section, can_user_edit_section });
+                const store = useSectionEditor(
+                    { ...section, can_user_edit_section },
+                    update_section_callback,
+                );
 
                 expect(store.is_section_editable.value).toBe(expected);
             },
@@ -234,7 +251,7 @@ describe("useSectionEditor", () => {
         it("should prevent page leave when section is in edit mode", () => {
             const preventPageLeave = vi.spyOn(on_before_unload, "preventPageLeave");
 
-            const store = useSectionEditor(section);
+            const store = useSectionEditor(section, update_section_callback);
             store.clearGlobalNumberOfOpenEditorForTests();
             expect(store.isSectionInEditMode().value).toBe(false);
 
@@ -246,7 +263,7 @@ describe("useSectionEditor", () => {
         it("should allow page leave when section is not anymore in edit mode", () => {
             const allowPageLeave = vi.spyOn(on_before_unload, "allowPageLeave");
 
-            const store = useSectionEditor(section);
+            const store = useSectionEditor(section, update_section_callback);
             store.clearGlobalNumberOfOpenEditorForTests();
             expect(store.isSectionInEditMode().value).toBe(false);
 
@@ -266,6 +283,7 @@ describe("useSectionEditor", () => {
                         id: 1,
                     },
                 }),
+                update_section_callback,
             );
             first_store.clearGlobalNumberOfOpenEditorForTests();
             const second_store = useSectionEditor(
@@ -275,6 +293,7 @@ describe("useSectionEditor", () => {
                         id: 2,
                     },
                 }),
+                update_section_callback,
             );
 
             expect(first_store.isSectionInEditMode().value).toBe(false);

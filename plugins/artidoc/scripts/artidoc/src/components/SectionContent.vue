@@ -29,8 +29,10 @@
         <section-title-with-artifact-id
             class="section-header"
             v-if="!is_sections_loading"
-            v-bind:title="section.title"
+            v-bind:title="title"
             v-bind:artifact_id="section.artifact.id"
+            v-bind:input_current_title="inputCurrentTitle"
+            v-bind:is_edit_mode="is_edit_mode"
         >
             <template #header-cta>
                 <section-editor-cta
@@ -62,23 +64,27 @@ import SectionTitleWithArtifactIdSkeleton from "@/components/SectionTitleWithArt
 
 const props = defineProps<{ section: ArtidocSection }>();
 
+const { is_sections_loading, updateSection } = useInjectSectionsStore();
+
 const {
     isSectionInEditMode,
+    getEditableTitle,
     getEditableDescription,
     getReadonlyDescription,
     isBeeingSaved,
     isJustSaved,
     isInError,
     editor_actions,
+    inputCurrentTitle,
     inputCurrentDescription,
     is_section_editable,
-} = useSectionEditor(props.section);
+} = useSectionEditor(props.section, updateSection);
 
-const { is_sections_loading } = useInjectSectionsStore();
 const is_edit_mode = isSectionInEditMode();
 const is_being_saved = isBeeingSaved();
 const is_just_saved = isJustSaved();
 const is_in_error = isInError();
+const title = getEditableTitle();
 const editable_description = getEditableDescription();
 const readonly_description = getReadonlyDescription();
 </script>

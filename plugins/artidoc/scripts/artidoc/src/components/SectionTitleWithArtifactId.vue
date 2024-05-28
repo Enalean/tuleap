@@ -19,29 +19,46 @@
   -->
 <template>
     <h1>
-        {{ title }}
+        <input type="text" v-if="is_edit_mode" v-bind:value="title" v-on:input="onTitleChange" />
+        <template v-else>
+            {{ title }}
+        </template>
         <a v-bind:href="artifact_url">#{{ artifact_id }}</a>
         <span class="editor-cta"><slot name="header-cta"></slot></span>
     </h1>
 </template>
+
 <script setup lang="ts">
 import { onMounted } from "vue";
 import useScrollToAnchor from "@/composables/useScrollToAnchor";
+import type { use_section_editor_type } from "@/composables/useSectionEditor";
 
 const props = defineProps<{
     artifact_id: number;
     title: string;
+    is_edit_mode: boolean;
+    input_current_title: use_section_editor_type["inputCurrentTitle"];
 }>();
 const artifact_url = `/plugins/tracker/?aid=${props.artifact_id}`;
 
 const { scrollToAnchor } = useScrollToAnchor();
+
 onMounted(() => {
     const hash = window.location.hash.slice(1);
     if (hash) {
         scrollToAnchor(hash);
     }
 });
+
+function onTitleChange(event: Event): void {
+    if (!(event.target instanceof HTMLInputElement)) {
+        return;
+    }
+
+    props.input_current_title(event.target.value);
+}
 </script>
+
 <style lang="scss" scoped>
 h1 {
     align-items: center;
@@ -58,5 +75,11 @@ a {
     margin: 0 0 0 var(--tlp-medium-spacing);
     font-size: 1rem;
     font-weight: 400;
+}
+
+input {
+    font-size: 36px;
+    font-weight: 600;
+    line-height: 40px;
 }
 </style>

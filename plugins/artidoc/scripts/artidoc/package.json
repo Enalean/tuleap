@@ -16,6 +16,7 @@
     "@tuleap/vue3-gettext-init": "workspace:*",
     "marked": "^4.0.10",
     "neverthrow": "6.0.0",
+    "turndown": "^7.0.0",
     "vue": "^3.3.4",
     "vue-dompurify-html": "^5.0.1",
     "vue3-gettext": "^2.4.0"
@@ -25,6 +26,7 @@
     "@tuleap/burningparrot-theme": "workspace:^",
     "@tuleap/po-gettext-plugin": "workspace:*",
     "@types/marked": "^3.0.2",
+    "@types/turndown": "^5.0.0",
     "@vitejs/plugin-vue": "^4.2.3",
     "@vue/test-utils": "^2.3.2",
     "vite-plugin-dynamic-import": "^1.5.0"

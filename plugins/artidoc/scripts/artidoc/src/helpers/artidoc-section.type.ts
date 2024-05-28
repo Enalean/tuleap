@@ -17,10 +17,18 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-interface ArtifactFieldValueTextRepresentation {
+interface ArtifactFieldValueRepresentation {
     readonly field_id: number;
-    readonly type: string;
     readonly label: string;
+}
+
+interface ArtifactFieldValueStringRepresentation extends ArtifactFieldValueRepresentation {
+    readonly type: "string";
+    readonly value: string;
+}
+
+interface ArtifactFieldValueTextRepresentation extends ArtifactFieldValueRepresentation {
+    readonly type: "text";
     readonly value: string;
     readonly format: string;
     readonly post_processed_value: string;
@@ -52,7 +60,20 @@ export type ArtidocSection = {
             };
         };
     };
-    title: string;
+    title: ArtifactFieldValueStringRepresentation | ArtifactTextFieldValueRepresentation;
+    display_title: string;
     description: ArtifactTextFieldValueRepresentation;
     can_user_edit_section: boolean;
 };
+
+export function isTitleAString(
+    title: ArtidocSection["title"],
+): title is ArtifactFieldValueStringRepresentation {
+    return title.type === "string";
+}
+
+export function isCommonmark(
+    value: ArtifactTextFieldValueRepresentation,
+): value is ArtifactFieldValueCommonmarkRepresentation {
+    return "commonmark" in value;
+}

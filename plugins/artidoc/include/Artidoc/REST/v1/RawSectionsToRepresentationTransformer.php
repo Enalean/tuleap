@@ -31,6 +31,7 @@ use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\REST\Artifact\ArtifactFieldValueFullRepresentation;
 use Tuleap\Tracker\REST\Artifact\ArtifactReference;
 use Tuleap\Tracker\REST\Artifact\ArtifactTextFieldValueRepresentation;
 
@@ -117,10 +118,10 @@ final readonly class RawSectionsToRepresentationTransformer implements Transform
                 return Result::err(Fault::fromMessage("User cannot read title of artifact #{$artifact->getId()} of artidoc #{$raw_sections->id}"));
             }
 
-            $title_field_value = $last_changeset->getValue($title_field);
-            $title             = $title_field_value instanceof \Tracker_Artifact_ChangesetValue_Text
-                ? $title_field_value->getContentAsText()
-                : '';
+            $title = $title_field->getFullRESTValue($user, $last_changeset);
+            if (! $title instanceof ArtifactFieldValueFullRepresentation && ! $title instanceof ArtifactTextFieldValueRepresentation) {
+                return Result::err(Fault::fromMessage("There is no title data for artifact #{$artifact->getId()} of artidoc #{$raw_sections->id}"));
+            }
 
             $description_field = Tracker_Semantic_Description::load($artifact->getTracker())->getField();
             if (! $description_field) {
