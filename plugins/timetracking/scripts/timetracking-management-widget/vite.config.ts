@@ -19,6 +19,7 @@
 
 import { vite } from "@tuleap/build-system-configurator";
 import * as path from "node:path";
+import POGettextPlugin from "@tuleap/po-gettext-plugin";
 import vue from "@vitejs/plugin-vue";
 import { viteExternalsPlugin } from "vite-plugin-externals";
 
@@ -28,7 +29,7 @@ export default vite.defineAppConfig(
         sub_app_name: path.basename(__dirname),
     },
     {
-        plugins: [vue(), viteExternalsPlugin({ tlp: "tlp" })],
+        plugins: [viteExternalsPlugin({ tlp: "tlp" }), vue(), POGettextPlugin.vite()],
         build: {
             rollupOptions: {
                 input: {
