@@ -97,6 +97,10 @@ pipeline {
                     steps { script { actions.runDBTests('mysql84', '82') } }
                     post { always { junit 'results/db/*/db_tests.xml' } }
                 }
+                stage('REST') {
+                    steps { script { actions.runRESTTests('mysql84', '82') } }
+                    post { always { junit 'results/api-rest/*/*' } }
+                }
             }
         }
     }

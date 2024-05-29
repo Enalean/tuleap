@@ -133,12 +133,11 @@ class ComputedFieldDao extends SpecificPropertiesDao
     {
         $source_ids  = $this->da->escapeIntImplode($source_ids);
         $target_name = $this->da->quoteSmart($target_name);
-        $field_id    = $this->da->escapeInt($field_id);
 
         $manual_selection = 'null';
         $manual_condition = '';
         if ($stop_on_manual_value) {
-            $manual_selection = 'manual.value';
+            $manual_selection = 'manual_value.value';
 
             $manual_condition = "
                 LEFT JOIN tracker_field manual_field
@@ -148,12 +147,12 @@ class ComputedFieldDao extends SpecificPropertiesDao
                     AND manual_field.use_it = 1
                 )
                 LEFT JOIN (
-                    tracker_changeset_value value
-                    INNER JOIN tracker_changeset_value_computedfield_manual_value manual
-                        ON (manual.changeset_value_id = value.id )
+                    tracker_changeset_value AS changeset_value
+                    INNER JOIN tracker_changeset_value_computedfield_manual_value AS manual_value
+                        ON (manual_value.changeset_value_id = changeset_value.id )
                 ) ON (
-                    value.changeset_id  = parent_art.last_changeset_id
-                 AND value.field_id  = manual_field.id
+                    changeset_value.changeset_id  = parent_art.last_changeset_id
+                 AND changeset_value.field_id  = manual_field.id
                 )";
         }
 
