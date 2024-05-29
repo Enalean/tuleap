@@ -43,7 +43,7 @@ describe("ArtifactTable", () => {
         getQueryResult = jest.spyOn(rest_querier, "getQueryResult");
     });
 
-    async function instantiateComponent(state: State): Promise<Wrapper<ArtifactTable>> {
+    async function instantiateComponent(state: State): Promise<Wrapper<Vue, Element>> {
         const store_options = { state: state };
         store = createStoreMock(store_options);
 

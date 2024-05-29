@@ -9,18 +9,20 @@
     "@tuleap/date-helper": "workspace:*",
     "@tuleap/plugin-tracker-tql-codemirror": "workspace:*",
     "@tuleap/tlp-fetch": "workspace:*",
+    "@tuleap/vue2-gettext-composition-helper": "workspace:^",
     "@tuleap/vue2-gettext-init": "workspace:*",
     "extendable-error": "^0.1.7",
     "moment": "^2.29.4",
     "vue": "^2.7.8",
     "vuex": "^3.6.2",
-    "vuex-class": "^0.3.2"
+    "vuex-class": "^0.3.2",
+    "vuex-composition-helpers": "^2.0.1"
   },
   "devDependencies": {
     "@tuleap/build-system-configurator": "workspace:*",
-    "@tuleap/po-gettext-plugin": "workspace:*",
     "@tuleap/core-rest-api-types": "workspace:*",
     "@tuleap/plugin-tracker-rest-api-types": "workspace:*",
+    "@tuleap/po-gettext-plugin": "workspace:*",
     "@tuleap/vuex-store-wrapper-jest": "workspace:*",
     "@vitejs/plugin-vue2": "^2.0.0",
     "@vue/test-utils": "^1.3",

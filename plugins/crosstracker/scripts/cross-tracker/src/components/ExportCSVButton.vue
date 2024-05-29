@@ -24,7 +24,7 @@
         v-bind:disabled="is_loading"
         v-if="should_display_export_button"
         v-on:click="exportCSV()"
-        data-test="export-cvs-button"
+        data-test="export-csv-button"
     >
         <i
             aria-hidden="true"
@@ -34,45 +34,40 @@
         {{ $gettext("Export CSV") }}
     </button>
 </template>
-<script lang="ts">
+<script setup lang="ts">
+import { ref } from "vue";
+import { useGetters, useMutations, useState } from "vuex-composition-helpers";
+import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
 import { download } from "../helpers/download-helper";
 import { addBOM } from "../helpers/bom-helper";
 import { getCSVReport } from "../api/rest-querier";
-import Vue from "vue";
-import Component from "vue-class-component";
-import { State, Getter } from "vuex-class";
 import { FetchWrapperError } from "@tuleap/tlp-fetch";
 
-@Component
-export default class ExportCSVButton extends Vue {
-    @State
-    private readonly report_id!: number;
+const is_loading = ref(false);
+const { report_id } = useState(["report_id"]);
+const { should_display_export_button } = useGetters(["should_display_export_button"]);
+const { resetFeedbacks, setErrorMessage } = useMutations(["resetFeedbacks", "setErrorMessage"]);
+const gettext_provider = useGettext();
 
-    @Getter
-    readonly should_display_export_button!: boolean;
-
-    is_loading = false;
-
-    async exportCSV(): Promise<void> {
-        this.is_loading = true;
-        this.$store.commit("resetFeedbacks");
-        try {
-            const report = await getCSVReport(this.report_id);
-            const report_with_bom = addBOM(report);
-            download(report_with_bom, `export-${this.report_id}.csv`, "text/csv;encoding:utf-8");
-        } catch (error) {
-            if (!(error instanceof FetchWrapperError)) {
-                throw error;
-            }
-            if (error.response.status.toString().substring(0, 2) === "50") {
-                this.$store.commit("setErrorMessage", this.$gettext("An error occurred"));
-                return;
-            }
-            const message = await error.response.text();
-            this.$store.commit("setErrorMessage", message);
-        } finally {
-            this.is_loading = false;
+async function exportCSV(): Promise<void> {
+    is_loading.value = true;
+    resetFeedbacks();
+    try {
+        const report = await getCSVReport(report_id.value);
+        const report_with_bom = addBOM(report);
+        download(report_with_bom, `export-${report_id.value}.csv`, "text/csv;encoding:utf-8");
+    } catch (error) {
+        if (!(error instanceof FetchWrapperError)) {
+            throw error;
         }
+        if (error.response.status.toString().substring(0, 2) === "50") {
+            setErrorMessage(gettext_provider.$gettext("An error occurred"));
+            return;
+        }
+        const message = await error.response.text();
+        setErrorMessage(message);
+    } finally {
+        is_loading.value = false;
     }
 }
 </script>

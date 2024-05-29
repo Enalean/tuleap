@@ -26,7 +26,7 @@
             data-test="cross-tracker-reading-mode"
         >
             <tracker-list-reading-mode
-                v-bind:reading-cross-tracker-report="readingCrossTrackerReport"
+                v-bind:reading-cross-tracker-report="props.readingCrossTrackerReport"
                 data-test="tracker-list-reading-mode"
             />
             <div
@@ -34,11 +34,12 @@
                 v-if="is_expert_query_not_empty"
                 data-test="tql-reading-mode-query"
             >
-                {{ readingCrossTrackerReport.expert_query }}
+                {{ props.readingCrossTrackerReport.expert_query }}
             </div>
         </div>
         <div class="reading-mode-actions" v-if="!is_report_saved">
             <button
+                type="button"
                 class="tlp-button-primary tlp-button-outline reading-mode-actions-cancel"
                 v-on:click="cancelReport()"
                 data-test="cross-tracker-cancel-report"
@@ -46,6 +47,7 @@
                 {{ $gettext("Cancel") }}
             </button>
             <button
+                type="button"
                 class="tlp-button-primary"
                 v-on:click="saveReport()"
                 v-bind:class="{ disabled: is_save_disabled }"
@@ -64,86 +66,85 @@
         </div>
     </div>
 </template>
-<script lang="ts">
+<script setup lang="ts">
+import { computed, ref } from "vue";
+import { useGetters, useMutations, useState } from "vuex-composition-helpers";
 import TrackerListReadingMode from "./TrackerListReadingMode.vue";
 import { updateReport } from "../api/rest-querier";
 import type ReadingCrossTrackerReport from "./reading-cross-tracker-report";
-import Component from "vue-class-component";
-import { Prop } from "vue-property-decorator";
-import { State } from "vuex-class";
+import type { State } from "../type";
 import type BackendCrossTrackerReport from "../backend-cross-tracker-report";
-import Vue from "vue";
 import { FetchWrapperError } from "@tuleap/tlp-fetch";
 
-@Component({
-    components: { TrackerListReadingMode },
-})
-export default class ReadingMode extends Vue {
-    @Prop({ required: true })
-    readonly readingCrossTrackerReport!: ReadingCrossTrackerReport;
+const props = defineProps<{
+    readingCrossTrackerReport: ReadingCrossTrackerReport;
+    backendCrossTrackerReport: BackendCrossTrackerReport;
+}>();
 
-    @Prop({ required: true })
-    readonly backendCrossTrackerReport!: BackendCrossTrackerReport;
+const emit = defineEmits<{
+    (e: "switch-to-writing-mode"): void;
+    (e: "saved"): void;
+}>();
 
-    @State
-    readonly is_report_saved!: boolean;
+const { is_report_saved, report_id, is_user_admin } = useState<
+    Pick<State, "is_report_saved" | "report_id" | "is_user_admin">
+>(["is_report_saved", "report_id", "is_user_admin"]);
 
-    @State
-    private readonly report_id!: number;
+const { has_error_message } = useGetters(["has_error_message"]);
 
-    @State
-    readonly is_user_admin!: boolean;
+const { setErrorMessage, discardUnsavedReport } = useMutations([
+    "setErrorMessage",
+    "discardUnsavedReport",
+]);
 
-    is_loading = false;
+const is_loading = ref(false);
 
-    get is_save_disabled(): boolean {
-        return this.is_loading || this.$store.getters.has_error_message;
+const is_save_disabled = computed(
+    () => is_loading.value === true || has_error_message.value === true,
+);
+
+const is_expert_query_not_empty = computed(
+    () => props.readingCrossTrackerReport.expert_query !== "",
+);
+
+function switchToWritingMode(): void {
+    if (!is_user_admin.value) {
+        return;
+    }
+    emit("switch-to-writing-mode");
+}
+
+async function saveReport(): Promise<void> {
+    if (is_save_disabled.value) {
+        return;
     }
 
-    get is_expert_query_not_empty(): boolean {
-        return this.readingCrossTrackerReport.expert_query !== "";
-    }
+    is_loading.value = true;
 
-    switchToWritingMode(): void {
-        if (!this.is_user_admin) {
-            return;
+    props.backendCrossTrackerReport.duplicateFromReport(props.readingCrossTrackerReport);
+    const tracker_ids = props.backendCrossTrackerReport.getTrackerIds();
+    const new_expert_query = props.backendCrossTrackerReport.getExpertQuery();
+    try {
+        const { trackers, expert_query } = await updateReport(
+            report_id.value,
+            tracker_ids,
+            new_expert_query,
+        );
+        props.backendCrossTrackerReport.init(trackers, expert_query);
+
+        emit("saved");
+    } catch (error) {
+        if (error instanceof FetchWrapperError) {
+            const error_json = await error.response.json();
+            setErrorMessage(error_json.error.message);
         }
-
-        this.$emit("switch-to-writing-mode");
+    } finally {
+        is_loading.value = false;
     }
+}
 
-    async saveReport(): Promise<void> {
-        if (this.is_save_disabled) {
-            return;
-        }
-
-        this.is_loading = true;
-
-        this.backendCrossTrackerReport.duplicateFromReport(this.readingCrossTrackerReport);
-        const tracker_ids = this.backendCrossTrackerReport.getTrackerIds();
-        const new_expert_query = this.backendCrossTrackerReport.getExpertQuery();
-        try {
-            const { trackers, expert_query } = await updateReport(
-                this.report_id,
-                tracker_ids,
-                new_expert_query,
-            );
-            this.backendCrossTrackerReport.init(trackers, expert_query);
-
-            this.$emit("saved");
-        } catch (error) {
-            if (error instanceof FetchWrapperError) {
-                const error_json = await error.response.json();
-                this.$store.commit("setErrorMessage", error_json.error.message);
-            }
-        } finally {
-            this.is_loading = false;
-        }
-    }
-
-    cancelReport(): void {
-        this.readingCrossTrackerReport.duplicateFromReport(this.backendCrossTrackerReport);
-        this.$store.commit("discardUnsavedReport");
-    }
+function cancelReport(): void {
+    props.readingCrossTrackerReport.duplicateFromReport(props.backendCrossTrackerReport);
+    discardUnsavedReport();
 }
 </script>
