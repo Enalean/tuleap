@@ -20,26 +20,21 @@
 <template>
     <div class="cross-tracker-form-trackers-selected">
         <span
-            class="tlp-badge-primary tlp-badge-outline cross-tracker-selected-tracker"
             v-for="tracker of trackers"
+            class="tlp-badge-primary tlp-badge-outline"
             v-bind:key="tracker.tracker_id"
         >
-            <span>
-                <i
-                    aria-hidden="false"
-                    class="fa-solid fa-times tlp-badge-icon cross-tracker-remove-tracker"
-                    v-on:click="removeTracker(tracker)"
-                    v-bind:data-test="`remove-tracker-${tracker.tracker_id}`"
-                ></i>
-                {{ tracker.tracker_label }}
-            </span>
-            <span>
-                <i
-                    aria-hidden="true"
-                    class="fa-solid fa-archive cross-tracker-report-archive-icon"
-                ></i>
-                {{ tracker.project_label }}
-            </span>
+            <button
+                type="button"
+                class="tlp-badge-remove-button"
+                v-on:click="removeTracker(tracker)"
+                data-test="remove-tracker"
+            >
+                ×
+            </button>
+            {{ tracker.tracker_label }}
+            <i aria-hidden="true" class="fa-solid fa-archive cross-tracker-report-archive-icon"></i>
+            {{ tracker.project_label }}
         </span>
     </div>
 </template>

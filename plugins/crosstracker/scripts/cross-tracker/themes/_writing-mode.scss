@@ -16,7 +16,9 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-@import "query-edition";
+
+@use "./query-edition";
+@use "@tuleap/tlp-badge/badge-with-remove-button";
 
 .cross-tracker-writing-mode {
     padding: var(--tlp-medium-spacing);
@@ -40,24 +42,15 @@
     color: var(--tlp-dimmed-color);
 }
 
-.cross-tracker-selected-tracker {
-    margin: 0 10px 10px 0;
-
-    &:last-child {
-        margin: 0 0 10px;
-    }
-
-    .cross-tracker-report-archive-icon {
-        margin: 0 3px 0 5px;
-    }
-}
-
-.cross-tracker-remove-tracker {
-    cursor: pointer;
-}
-
 .cross-tracker-form-trackers-selected {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
     margin: 0 0 var(--tlp-small-spacing);
+}
+
+.cross-tracker-report-archive-icon {
+    margin: 0 3px 0 5px;
 }
 
 .writing-mode-actions {

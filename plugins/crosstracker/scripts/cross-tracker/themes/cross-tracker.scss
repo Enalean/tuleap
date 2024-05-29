@@ -16,8 +16,9 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-@import "reading-mode";
-@import "writing-mode";
+
+@use "./reading-mode";
+@use "./writing-mode";
 
 .dashboard-widget-content-crosstrackersearch {
     margin: 0 calc(-1 * var(--tlp-medium-spacing));

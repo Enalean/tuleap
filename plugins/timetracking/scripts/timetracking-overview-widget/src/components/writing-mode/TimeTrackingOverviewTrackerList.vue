@@ -24,24 +24,21 @@
 <template>
     <div class="timetracking-overview-form-trackers-selected">
         <span
-            class="tlp-badge-primary tlp-badge-outline timetracking-overview-selected-tracker"
+            class="tlp-badge-primary tlp-badge-outline"
             v-for="tracker of overview_store.selected_trackers"
             v-bind:key="tracker.id"
         >
-            <span>
-                <i
-                    class="fa fa-times tlp-badge-icon cross-tracker-remove-tracker"
-                    v-on:click="removeTracker(tracker)"
-                ></i>
-                {{ tracker.tracker_label }}
-            </span>
-            <span>
-                {{ tracker.label }}
-            </span>
-            <span>
-                <i class="fa fa-archive timetracking-archive"></i>
-                {{ tracker.project.label }}
-            </span>
+            <button
+                type="button"
+                class="tlp-badge-remove-button"
+                v-on:click="removeTracker(tracker)"
+                data-test="remove-tracker"
+            >
+                ×
+            </button>
+            {{ tracker.label }}
+            <i class="fa-solid fa-archive timetracking-archive" aria-hidden="true"></i>
+            {{ tracker.project.label }}
         </span>
     </div>
 </template>
