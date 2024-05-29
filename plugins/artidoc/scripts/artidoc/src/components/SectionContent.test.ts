@@ -26,7 +26,7 @@ import SectionTitleWithArtifactId from "@/components/SectionTitleWithArtifactId.
 import SectionDescription from "@/components/SectionDescription.vue";
 import * as sectionsStore from "@/stores/useSectionsStore";
 import SectionTitleWithArtifactIdSkeleton from "@/components/SectionTitleWithArtifactIdSkeleton.vue";
-import { InjectedSectionsStoreStub } from "@/helpers/InjectSectionsStoreStub";
+import { InjectedSectionsStoreStub } from "@/helpers/stubs/InjectSectionsStoreStub";
 
 describe("SectionContent", () => {
     describe("when the sections are loaded", () => {

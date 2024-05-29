@@ -25,7 +25,7 @@ import ArtidocSectionFactory from "@/helpers/artidoc-section.factory";
 import NoAccessState from "@/views/NoAccessState.vue";
 import DocumentView from "@/views/DocumentView.vue";
 import * as sectionsStore from "@/stores/useSectionsStore";
-import { InjectedSectionsStoreStub } from "@/helpers/InjectSectionsStoreStub";
+import { InjectedSectionsStoreStub } from "@/helpers/stubs/InjectSectionsStoreStub";
 
 describe("DocumentView", () => {
     describe("when sections not found", () => {

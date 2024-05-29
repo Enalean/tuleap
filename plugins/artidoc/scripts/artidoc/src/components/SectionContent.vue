@@ -27,6 +27,7 @@
             'document-section-is-outdated': is_outdated,
         }"
     >
+        <not-found-error v-if="is_not_found_error" />
         <outdated-section-warning v-if="is_outdated" v-bind:editor_actions="editor_actions" />
         <section-title-with-artifact-id
             class="section-header"
@@ -64,6 +65,7 @@ import SectionEditorCta from "@/components/SectionEditorCta.vue";
 import { useInjectSectionsStore } from "@/stores/useSectionsStore";
 import SectionTitleWithArtifactIdSkeleton from "@/components/SectionTitleWithArtifactIdSkeleton.vue";
 import OutdatedSectionWarning from "@/components/OutdatedSectionWarning.vue";
+import NotFoundError from "@/components/NotFoundError.vue";
 
 const props = defineProps<{ section: ArtidocSection }>();
 
@@ -77,6 +79,7 @@ const {
     isBeeingSaved,
     isJustSaved,
     isInError,
+    isNotFoundError,
     isOutdated,
     editor_actions,
     inputCurrentTitle,
@@ -88,6 +91,7 @@ const is_edit_mode = isSectionInEditMode();
 const is_being_saved = isBeeingSaved();
 const is_just_saved = isJustSaved();
 const is_in_error = isInError();
+const is_not_found_error = isNotFoundError();
 const is_outdated = isOutdated();
 const title = getEditableTitle();
 const editable_description = getEditableDescription();

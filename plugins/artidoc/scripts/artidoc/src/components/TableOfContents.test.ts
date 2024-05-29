@@ -25,7 +25,7 @@ import type { ComponentPublicInstance } from "vue";
 import TableOfContents from "@/components/TableOfContents.vue";
 import ArtidocSectionFactory from "@/helpers/artidoc-section.factory";
 import * as sectionsStore from "@/stores/useSectionsStore";
-import { InjectedSectionsStoreStub } from "@/helpers/InjectSectionsStoreStub";
+import { InjectedSectionsStoreStub } from "@/helpers/stubs/InjectSectionsStoreStub";
 
 describe("TableOfContents", () => {
     describe("when the sections are loading", () => {

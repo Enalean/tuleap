@@ -22,7 +22,7 @@ import { shallowMount } from "@vue/test-utils";
 import SectionDescription from "@/components/SectionDescription.vue";
 import SectionDescriptionSkeleton from "@/components/SectionDescriptionSkeleton.vue";
 import * as sectionsStore from "@/stores/useSectionsStore";
-import { InjectedSectionsStoreStub } from "@/helpers/InjectSectionsStoreStub";
+import { InjectedSectionsStoreStub } from "@/helpers/stubs/InjectSectionsStoreStub";
 import SectionDescriptionReadOnly from "@/components/description/SectionDescriptionReadOnly.vue";
 
 const default_props = {

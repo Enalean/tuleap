@@ -45,6 +45,7 @@ export type use_section_editor_type = {
     isJustSaved: () => Ref<boolean>;
     isInError: () => Ref<boolean>;
     isOutdated: () => Ref<boolean>;
+    isNotFoundError: () => Ref<boolean>;
     editor_actions: use_section_editor_actions_type;
     inputCurrentTitle: (new_value: string) => void;
     inputCurrentDescription: (new_value: string) => void;
@@ -79,6 +80,7 @@ function useSectionEditor(
     const is_just_saved = ref(false);
     const is_in_error = ref(false);
     const is_outdated = ref(false);
+    const is_not_found = ref(false);
 
     const setEditMode = (new_value: boolean): void => {
         is_edit_mode.value = new_value;
@@ -130,11 +132,7 @@ function useSectionEditor(
                     addTemporaryJustSavedFlag();
                 },
                 (fault: Fault) => {
-                    if (isOutdatedSectionFault(fault)) {
-                        is_outdated.value = true;
-                    } else {
-                        is_in_error.value = true;
-                    }
+                    handleError(fault);
                     is_being_saved.value = false;
                 },
             );
@@ -160,8 +158,8 @@ function useSectionEditor(
                     is_being_saved.value = false;
                     addTemporaryJustSavedFlag();
                 },
-                () => {
-                    is_in_error.value = true;
+                (fault: Fault) => {
+                    handleError(fault);
                     is_being_saved.value = false;
                 },
             );
@@ -176,11 +174,27 @@ function useSectionEditor(
                 addTemporaryJustSavedFlag();
                 is_outdated.value = false;
             },
-            () => {
-                is_in_error.value = true;
+            (fault: Fault) => {
+                handleError(fault);
                 is_outdated.value = false;
             },
         );
+    }
+
+    function handleError(fault: Fault): void {
+        if (isOutdatedSectionFault(fault)) {
+            is_outdated.value = true;
+            return;
+        }
+
+        is_in_error.value = true;
+        if (isNotFound(fault)) {
+            is_not_found.value = true;
+        }
+    }
+
+    function isNotFound(fault: Fault): boolean {
+        return "isNotFound" in fault && fault.isNotFound() === true;
     }
 
     function addTemporaryJustSavedFlag(): void {
@@ -214,6 +228,7 @@ function useSectionEditor(
     const isJustSaved = (): Ref<boolean> => is_just_saved;
     const isInError = (): Ref<boolean> => is_in_error;
     const isOutdated = (): Ref<boolean> => is_outdated;
+    const isNotFoundError = (): Ref<boolean> => is_not_found;
 
     const getEditableDescription = (): Ref<string> => {
         return editable_description;
@@ -242,6 +257,7 @@ function useSectionEditor(
         isJustSaved,
         isInError,
         isOutdated,
+        isNotFoundError,
         editor_actions,
         inputCurrentTitle,
         inputCurrentDescription,
