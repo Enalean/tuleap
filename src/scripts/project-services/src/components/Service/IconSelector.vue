@@ -79,6 +79,7 @@ export default {
                 `;
                 return template;
             },
+            locale: document.body.dataset.userLocale ?? "en_US",
         });
     },
     beforeDestroy() {
