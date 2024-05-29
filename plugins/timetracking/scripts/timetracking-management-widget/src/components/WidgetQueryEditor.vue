@@ -34,6 +34,7 @@
                     id="timetracking-management-query-editor-start-date"
                     ref="start_date_input"
                     size="11"
+                    v-on:change="resetSelectedOption"
                     data-test="start-date-input"
                 />
             </div>
@@ -53,8 +54,48 @@
                     id="timetracking-management-query-editor-end-date"
                     ref="end_date_input"
                     size="11"
+                    v-on:change="resetSelectedOption"
                     data-test="end-date-input"
                 />
+            </div>
+        </div>
+        <div class="tlp-form-element">
+            <label for="timetracking-management-query-editor-predefined-periods" class="tlp-label">
+                {{ $gettext("Predefined periods") }}
+            </label>
+            <div class="tlp-form-element tlp-form-element-prepend">
+                <span class="tlp-prepend">
+                    <i class="fa-solid fa-calendar-days" aria-hidden="true"></i>
+                </span>
+                <select
+                    class="tlp-select tlp-input"
+                    id="period"
+                    v-model="selected_option"
+                    v-on:change="applyDatesPreset"
+                    data-test="predefined-periods-select"
+                >
+                    <option value="">
+                        {{ $gettext("Please choose...") }}
+                    </option>
+                    <option v-bind:value="TODAY">
+                        {{ $gettext("Today") }}
+                    </option>
+                    <option v-bind:value="YESTERDAY">
+                        {{ $gettext("Yesterday") }}
+                    </option>
+                    <option v-bind:value="LAST_7_DAYS">
+                        {{ $gettext("Last 7 days") }}
+                    </option>
+                    <option v-bind:value="CURRENT_WEEK">
+                        {{ $gettext("Current week") }}
+                    </option>
+                    <option v-bind:value="LAST_WEEK">
+                        {{ $gettext("Last week") }}
+                    </option>
+                    <option v-bind:value="LAST_MONTH">
+                        {{ $gettext("Last month") }}
+                    </option>
+                </select>
             </div>
         </div>
     </div>
@@ -83,12 +124,29 @@ import { datePicker, type DatePickerInstance } from "tlp";
 import { useGettext } from "vue3-gettext";
 import type { Ref } from "vue";
 import { onBeforeUnmount, onMounted, ref } from "vue";
+import {
+    getTodayPeriod,
+    getYesterdayPeriod,
+    getCurrentWeekPeriod,
+    getLastSevenDaysPeriod,
+    getLastWeekPeriod,
+    getLastMonthPeriod,
+    TODAY,
+    YESTERDAY,
+    CURRENT_WEEK,
+    LAST_7_DAYS,
+    LAST_WEEK,
+    LAST_MONTH,
+    type Period,
+    type PredefinedTimePeriod,
+} from "@tuleap/plugin-timetracking-predefined-time-periods";
 
 const { $gettext } = useGettext();
 
 const props = defineProps<{
     start_date: string;
     end_date: string;
+    predefined_time_selected: PredefinedTimePeriod | "";
 }>();
 
 const start_date_input: Ref<HTMLInputElement | undefined> = ref();
@@ -97,8 +155,15 @@ const end_date_input: Ref<HTMLInputElement | undefined> = ref();
 let start_date_picker: DatePickerInstance;
 let end_date_picker: DatePickerInstance;
 
+let selected_option = ref<PredefinedTimePeriod | "">(props.predefined_time_selected);
+
 const emit = defineEmits<{
-    (e: "setDates", start_date: string, end_date: string): void;
+    (
+        e: "setDates",
+        start_date: string,
+        end_date: string,
+        selected_option: PredefinedTimePeriod | "",
+    ): void;
     (e: "closeEditMode"): void;
 }>();
 
@@ -123,8 +188,41 @@ onBeforeUnmount((): void => {
 });
 
 const setDatesAndCloseEditMode = (): void => {
-    emit("setDates", String(start_date_input.value?.value), String(end_date_input.value?.value));
+    emit(
+        "setDates",
+        String(start_date_input.value?.value),
+        String(end_date_input.value?.value),
+        selected_option.value,
+    );
     emit("closeEditMode");
+};
+
+const resetSelectedOption = (): void => {
+    selected_option.value = "";
+};
+
+const applyDatesPreset = (): void => {
+    const setDatePickersValues = (period: Period): void => {
+        start_date_picker.setDate(period.start);
+        end_date_picker.setDate(period.end);
+    };
+
+    switch (selected_option.value) {
+        case TODAY:
+            return setDatePickersValues(getTodayPeriod());
+        case YESTERDAY:
+            return setDatePickersValues(getYesterdayPeriod());
+        case LAST_7_DAYS:
+            return setDatePickersValues(getLastSevenDaysPeriod());
+        case CURRENT_WEEK:
+            return setDatePickersValues(getCurrentWeekPeriod());
+        case LAST_WEEK:
+            return setDatePickersValues(getLastWeekPeriod());
+        case LAST_MONTH:
+            return setDatePickersValues(getLastMonthPeriod());
+        default:
+            return resetSelectedOption();
+    }
 };
 </script>
 

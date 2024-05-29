@@ -1,11 +1,35 @@
 msgid "Cancel"
 msgstr "Annuler"
 
+msgid "Current week"
+msgstr "Cette semaine"
+
 msgid "From"
 msgstr "Du"
+
+msgid "Last 7 days"
+msgstr "7 derniers jours"
+
+msgid "Last month"
+msgstr "Mois dernier"
+
+msgid "Last week"
+msgstr "Semaine dernière"
+
+msgid "Please choose..."
+msgstr "Veuillez choisir..."
+
+msgid "Predefined periods"
+msgstr "Périodes prédéfinies"
 
 msgid "Search"
 msgstr "Rechercher"
 
 msgid "To"
 msgstr "Au"
+
+msgid "Today"
+msgstr "Aujourd'hui"
+
+msgid "Yesterday"
+msgstr "Hier"
