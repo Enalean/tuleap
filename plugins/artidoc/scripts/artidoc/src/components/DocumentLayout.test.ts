@@ -25,7 +25,7 @@ import DocumentLayout from "@/components/DocumentLayout.vue";
 import DocumentContent from "@/components/DocumentContent.vue";
 import TableOfContents from "@/components/TableOfContents.vue";
 import * as sectionsStore from "@/stores/useSectionsStore";
-import { InjectedSectionsStoreStub } from "@/helpers/InjectSectionsStoreStub";
+import { InjectedSectionsStoreStub } from "@/helpers/stubs/InjectSectionsStoreStub";
 
 describe("DocumentLayout", () => {
     let wrapper: VueWrapper<ComponentPublicInstance>;

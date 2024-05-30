@@ -22,7 +22,7 @@ import { shallowMount } from "@vue/test-utils";
 import App from "@/App.vue";
 import DocumentView from "@/views/DocumentView.vue";
 import * as sectionsStore from "@/stores/useSectionsStore";
-import { InjectedSectionsStoreStub } from "@/helpers/InjectSectionsStoreStub";
+import { InjectedSectionsStoreStub } from "@/helpers/stubs/InjectSectionsStoreStub";
 
 describe("App", () => {
     it("should display the document view", () => {

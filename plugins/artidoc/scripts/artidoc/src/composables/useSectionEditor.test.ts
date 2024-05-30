@@ -25,7 +25,7 @@ import * as tuleap_strict_inject from "@tuleap/vue-strict-inject";
 import { errAsync, okAsync } from "neverthrow";
 import { flushPromises } from "@vue/test-utils";
 import * as on_before_unload from "@/helpers/on-before-unload";
-import { Fault } from "@tuleap/fault";
+import { TuleapAPIFaultStub } from "@/helpers/stubs/TuleapAPIFaultStub";
 import type { ArtidocSection } from "@/helpers/artidoc-section.type";
 import * as latest from "@/helpers/is-section-in-its-latest-version";
 import { OutdatedSectionFault } from "@/helpers/is-section-in-its-latest-version";
@@ -171,13 +171,16 @@ describe("useSectionEditor", () => {
         });
 
         describe("when the description is different from the original description", () => {
-            it("should ends in error in case of... error", async () => {
+            it("should end in error in case of... error", async () => {
                 vi.spyOn(latest, "isSectionInItsLatestVersion").mockReturnValue(okAsync(true));
 
                 const store = useSectionEditor(section, update_section_callback);
                 const mock_put_artifact_description = vi
                     .spyOn(rest_querier, "putArtifact")
-                    .mockReturnValue(errAsync(Fault.fromMessage("An error occurred.")));
+                    .mockReturnValue(
+                        errAsync(TuleapAPIFaultStub.fromCodeAndMessage(400, "An error occurred.")),
+                    );
+
                 store.inputCurrentDescription("new description");
                 expect(store.getEditableDescription().value).toBe("new description");
                 expect(store.isInError().value).toBe(false);
@@ -189,6 +192,31 @@ describe("useSectionEditor", () => {
                 expect(mock_put_artifact_description).toHaveBeenCalledOnce();
 
                 expect(store.isInError().value).toBe(true);
+            });
+
+            it("should end in NotFound error", async () => {
+                vi.spyOn(latest, "isSectionInItsLatestVersion").mockReturnValue(okAsync(true));
+
+                const store = useSectionEditor(section, update_section_callback);
+                const mock_put_artifact_description = vi
+                    .spyOn(rest_querier, "putArtifact")
+                    .mockReturnValue(
+                        errAsync(TuleapAPIFaultStub.fromCodeAndMessage(404, "Not found")),
+                    );
+
+                store.inputCurrentDescription("new description");
+                expect(store.getEditableDescription().value).toBe("new description");
+                expect(store.isInError().value).toBe(false);
+                expect(store.isNotFoundError().value).toBe(false);
+
+                store.editor_actions.saveEditor();
+
+                await flushPromises();
+
+                expect(mock_put_artifact_description).toHaveBeenCalledOnce();
+
+                expect(store.isInError().value).toBe(true);
+                expect(store.isNotFoundError().value).toBe(true);
             });
 
             it("should not perform the update if the section is outdated", async () => {
@@ -251,11 +279,14 @@ describe("useSectionEditor", () => {
     });
 
     describe("forceSaveEditor", () => {
-        it("should ends in error in case of... error", async () => {
+        it("should end in error in case of... error", async () => {
             const store = useSectionEditor(section, update_section_callback);
             const mock_put_artifact_description = vi
                 .spyOn(rest_querier, "putArtifact")
-                .mockReturnValue(errAsync(Fault.fromMessage("An error occurred.")));
+                .mockReturnValue(
+                    errAsync(TuleapAPIFaultStub.fromCodeAndMessage(400, "An error occurred.")),
+                );
+
             store.inputCurrentDescription("new description");
             expect(store.getEditableDescription().value).toBe("new description");
             expect(store.isInError().value).toBe(false);

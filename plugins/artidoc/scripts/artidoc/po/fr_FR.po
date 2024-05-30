@@ -31,11 +31,21 @@ msgstr "Forcer la sauvegarde"
 msgid "Load new section"
 msgstr "Charger la nouvelle section"
 
+msgid "Reload page"
+msgstr "Recharger la page"
+
 msgid "Save"
 msgstr "Sauvegarder"
 
 msgid "Table of contents"
 msgstr "Table des matières"
+
+msgid ""
+"The section you are trying to update does not exist or you don't have "
+"anymore access to it."
+msgstr ""
+"La section que vous êtes en train d'éditer n'existe pas ou vous n'y avez "
+"plus accès."
 
 msgid "This document is empty"
 msgstr "Ce document est vide"
@@ -51,3 +61,10 @@ msgstr "Vous ne pouvez pas lire ou éditer ce document"
 
 msgid "You don't have access to this document"
 msgstr "Vous n'avez pas les droits d'accès à ce document"
+
+msgid ""
+"You should reload the page to have a clean state (you will loose your "
+"modifications though)."
+msgstr ""
+"Vous devriez recharger la page afin de retrouver un état correct (cependant "
+"vous allez perdre vos modifications)."

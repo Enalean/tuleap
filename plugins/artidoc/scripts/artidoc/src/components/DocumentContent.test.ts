@@ -25,7 +25,7 @@ import DocumentContent from "@/components/DocumentContent.vue";
 import ArtidocSectionFactory from "@/helpers/artidoc-section.factory";
 import SectionContent from "@/components/SectionContent.vue";
 import * as sectionsStore from "@/stores/useSectionsStore";
-import { InjectedSectionsStoreStub } from "@/helpers/InjectSectionsStoreStub";
+import { InjectedSectionsStoreStub } from "@/helpers/stubs/InjectSectionsStoreStub";
 
 describe("DocumentContent", () => {
     let wrapper: VueWrapper<ComponentPublicInstance>;
