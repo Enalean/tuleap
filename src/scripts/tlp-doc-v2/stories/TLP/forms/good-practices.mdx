@@ -1,0 +1,20 @@
+import { Story, Meta } from '@storybook/blocks';
+import * as GoodPracticeStories from "./good-practices.stories";
+
+<Meta of={GoodPracticeStories}/>
+<Story of={GoodPracticeStories.EmptyStory}></Story>
+
+# Forms
+
+<code>.tlp-form-element</code>
+
+## Good practices:
+
+- When it is suitable, use the right input type (<code>password</code>, <code>number</code>, <code>email</code>, <code>search</code>, <code>url</code>, …).
+- To disable a form element, use <code>.tlp-form-element-disabled</code> and <code>disabled</code> attribute.
+- To set a form element <code>required</code>, use required attribute and add <code>&lt;i class="fa-solid fa-asterisk" aria-hidden="true"&gt;&lt;/i&gt;</code> in the label.
+- To put a form element in error, use <code>.tlp-form-element-error</code>.
+- By default, form elements are displayed using <code>width: 100%</code>. You can override this by setting a custom width in css or by adding:
+    - the <code>size</code> attribute on inputs when it makes sense (e.g. <code>size="4"</code> for a year)
+    - the <code>cols</code> attribute on textarea when it makes sense (you can also play with <code>rows</code> attribute)
+    - the <code>.tlp-select-adjusted</code> class on selects and multi-selects
