@@ -404,14 +404,6 @@
       <code><![CDATA[postSaveNewChangeset]]></code>
     </MissingReturnType>
   </file>
-  <file src="plugins/agiledashboard/include/AgileDashboard/FormElement/Burnup/CountElementsCacheDao.php">
-    <LessSpecificReturnStatement>
-      <code><![CDATA[$this->getDB()->safeQuery($sql, [$artifact_id])]]></code>
-    </LessSpecificReturnStatement>
-    <MoreSpecificReturnType>
-      <code><![CDATA[list<array{timestamp:int}>]]></code>
-    </MoreSpecificReturnType>
-  </file>
   <file src="plugins/agiledashboard/include/AgileDashboard/FormElement/Burnup/CountElementsCalculator.php">
     <RedundantCastGivenDocblockType>
       <code><![CDATA[(int) $artifact->getId()]]></code>
@@ -430,7 +422,6 @@
             $sql,
             [$artifact_id, $start_timestamp]
         )]]></code>
-      <code><![CDATA[$this->getDB()->safeQuery($sql, [$artifact_id])]]></code>
     </LessSpecificReturnStatement>
     <MoreSpecificReturnType>
       <code><![CDATA[list<array{
@@ -438,16 +429,7 @@
      *     team_effort: ?float,
      *     total_effort: ?float,
      * }>]]></code>
-      <code><![CDATA[list<array{timestamp:int}>]]></code>
     </MoreSpecificReturnType>
-  </file>
-  <file src="plugins/agiledashboard/include/AgileDashboard/FormElement/BurnupCacheDateRetriever.php">
-    <MissingReturnType>
-      <code><![CDATA[addOneDayToDateTime]]></code>
-      <code><![CDATA[getFirstDayToCache]]></code>
-      <code><![CDATA[getLastDayToCache]]></code>
-      <code><![CDATA[getYesterday]]></code>
-    </MissingReturnType>
   </file>
   <file src="plugins/agiledashboard/include/AgileDashboard/FormElement/BurnupCacheGenerator.php">
     <MissingReturnType>
@@ -813,11 +795,6 @@
       <code><![CDATA[$is_inconsistent]]></code>
       <code><![CDATA[$redirect_to_self]]></code>
     </MissingParamType>
-  </file>
-  <file src="plugins/agiledashboard/include/AgileDashboard/Milestone/Backlog/TopBacklogElementsToAddChecker.php">
-    <MissingReturnType>
-      <code><![CDATA[checkAddedIdsBelongToTheProjectTopBacklogTrackers]]></code>
-    </MissingReturnType>
   </file>
   <file src="plugins/agiledashboard/include/AgileDashboard/Milestone/Criterion/Status/ISearchOnStatus.php">
     <MissingReturnType>
@@ -2416,7 +2393,6 @@
   </file>
   <file src="plugins/agiledashboard/include/agiledashboardPlugin.php">
     <DeprecatedMethod>
-      <code><![CDATA[addHook]]></code>
       <code><![CDATA[addHook]]></code>
       <code><![CDATA[addHook]]></code>
       <code><![CDATA[addHook]]></code>
@@ -5657,6 +5633,11 @@
     <MissingParamType>
       <code><![CDATA[$value]]></code>
     </MissingParamType>
+  </file>
+  <file src="plugins/crosstracker/include/CrossTracker/Report/Query/Advanced/QueryValidation/DuckTypedField/DuckTypedFieldChecker.php">
+    <ArgumentTypeCoercion>
+      <code><![CDATA[$fields_user_can_read]]></code>
+    </ArgumentTypeCoercion>
   </file>
   <file src="plugins/crosstracker/include/CrossTracker/Report/SimilarField/BindNameVisitor.php">
     <MissingReturnType>
@@ -34165,7 +34146,6 @@
       <code><![CDATA[optionsReports]]></code>
       <code><![CDATA[processWorkflowTransitionPatchQuery]]></code>
       <code><![CDATA[sendAllowHeaderForTracker]]></code>
-      <code><![CDATA[validateExpertQuery]]></code>
     </MissingReturnType>
     <PossiblyInvalidArgument>
       <code><![CDATA[$user->getId()]]></code>
@@ -37704,16 +37684,6 @@
       <code><![CDATA[$value]]></code>
     </MissingParamType>
   </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/BurndownCacheDateRetriever.php">
-    <MissingReturnType>
-      <code><![CDATA[addOneDayToDateTime]]></code>
-      <code><![CDATA[getFirstDayToCache]]></code>
-      <code><![CDATA[getLastDayToCache]]></code>
-      <code><![CDATA[getWorkedDaysToCacheForPeriod]]></code>
-      <code><![CDATA[getYesterday]]></code>
-      <code><![CDATA[removeLastSecondOfCachedDayForJPGraph]]></code>
-    </MissingReturnType>
-  </file>
   <file src="plugins/tracker/include/Tracker/FormElement/BurndownCalculator.php">
     <MissingParamType>
       <code><![CDATA[$timestamp]]></code>
@@ -38441,7 +38411,6 @@
   <file src="plugins/tracker/include/Tracker/FormElement/Field/Computed/ComputedFieldDao.php">
     <DeprecatedMethod>
       <code><![CDATA[escapeFloat]]></code>
-      <code><![CDATA[escapeInt]]></code>
       <code><![CDATA[escapeInt]]></code>
       <code><![CDATA[escapeInt]]></code>
       <code><![CDATA[escapeInt]]></code>
@@ -43988,11 +43957,6 @@
       <code><![CDATA[! $value]]></code>
     </RiskyTruthyFalsyComparison>
   </file>
-  <file src="plugins/tracker/include/Tracker/Report/Query/Advanced/ExpertQueryValidator.php">
-    <MissingReturnType>
-      <code><![CDATA[validateExpertQuery]]></code>
-    </MissingReturnType>
-  </file>
   <file src="plugins/tracker/include/Tracker/Report/Query/Advanced/Grammar/CurrentDateTimeValueWrapper.php">
     <RiskyTruthyFalsyComparison>
       <code><![CDATA[$period]]></code>
@@ -45088,7 +45052,6 @@
       <code><![CDATA[toggleQueryDisplay]]></code>
       <code><![CDATA[updateAdditionalCriteriaValues]]></code>
       <code><![CDATA[updateCriteriaValues]]></code>
-      <code><![CDATA[validateExpertQuery]]></code>
     </MissingReturnType>
     <PossiblyNullArgument>
       <code><![CDATA[$grandchild]]></code>
@@ -76003,21 +75966,12 @@
   </file>
   <file src="src/www/admin/index.php">
     <DeprecatedFunction>
-      <code><![CDATA[db_fetch_array($res_count)]]></code>
       <code><![CDATA[db_fetch_array()]]></code>
-      <code><![CDATA[db_numrows($res_count)]]></code>
       <code><![CDATA[db_query("SELECT count(*) AS count FROM user WHERE status='V' OR status='W'")]]></code>
-      <code><![CDATA[db_query("SELECT count(*) AS count FROM user_access WHERE last_access_date> $time_totest ")]]></code>
     </DeprecatedFunction>
     <InvalidGlobal>
       <code><![CDATA[global $feedback;]]></code>
     </InvalidGlobal>
-    <MissingParamType>
-      <code><![CDATA[$since]]></code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code><![CDATA[stats_getactiveusers]]></code>
-    </MissingReturnType>
     <PossiblyUndefinedGlobalVariable>
       <code><![CDATA[$wProject]]></code>
       <code><![CDATA[$wUser]]></code>

@@ -20,60 +20,62 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\CrossTracker\Report\Query\Advanced\DuckTypedField;
+namespace Tuleap\CrossTracker\Report\Query\Advanced\DuckTypedField\Select;
 
 use Tracker_FormElementFactory;
+use Tuleap\CrossTracker\Report\Query\Advanced\DuckTypedField\FieldTypeIsNotSupportedFault;
+use Tuleap\CrossTracker\Report\Query\Advanced\DuckTypedField\FieldTypeRetrieverWrapper;
 use Tuleap\NeverThrow\Result;
 use Tuleap\Test\PHPUnit\TestCase;
 
-final class DuckTypedFieldTypeTest extends TestCase
+final class DuckTypedFieldTypeSelectTest extends TestCase
 {
     public function testIntBecomesNumeric(): void
     {
-        $result = DuckTypedFieldType::fromString(Tracker_FormElementFactory::FIELD_INTEGER_TYPE);
-        self::assertSame(DuckTypedFieldType::NUMERIC, $result->unwrapOr(null));
+        $result = DuckTypedFieldTypeSelect::fromString(Tracker_FormElementFactory::FIELD_INTEGER_TYPE);
+        self::assertSame(DuckTypedFieldTypeSelect::NUMERIC, $result->unwrapOr(null));
     }
 
     public function testFloatBecomesNumeric(): void
     {
-        $result = DuckTypedFieldType::fromString(Tracker_FormElementFactory::FIELD_FLOAT_TYPE);
-        self::assertSame(DuckTypedFieldType::NUMERIC, $result->unwrapOr(null));
+        $result = DuckTypedFieldTypeSelect::fromString(Tracker_FormElementFactory::FIELD_FLOAT_TYPE);
+        self::assertSame(DuckTypedFieldTypeSelect::NUMERIC, $result->unwrapOr(null));
     }
 
     public function testStringBecomesText(): void
     {
-        $result = DuckTypedFieldType::fromString(Tracker_FormElementFactory::FIELD_STRING_TYPE);
-        self::assertSame(DuckTypedFieldType::TEXT, $result->unwrapOr(null));
+        $result = DuckTypedFieldTypeSelect::fromString(Tracker_FormElementFactory::FIELD_STRING_TYPE);
+        self::assertSame(DuckTypedFieldTypeSelect::TEXT, $result->unwrapOr(null));
     }
 
     public function testTextBecomesText(): void
     {
-        $result = DuckTypedFieldType::fromString(Tracker_FormElementFactory::FIELD_TEXT_TYPE);
-        self::assertSame(DuckTypedFieldType::TEXT, $result->unwrapOr(null));
+        $result = DuckTypedFieldTypeSelect::fromString(Tracker_FormElementFactory::FIELD_TEXT_TYPE);
+        self::assertSame(DuckTypedFieldTypeSelect::TEXT, $result->unwrapOr(null));
     }
 
     public function testDateBecomesDate(): void
     {
-        $result = DuckTypedFieldType::fromString(Tracker_FormElementFactory::FIELD_DATE_TYPE);
-        self::assertSame(DuckTypedFieldType::DATE, $result->unwrapOr(null));
+        $result = DuckTypedFieldTypeSelect::fromString(Tracker_FormElementFactory::FIELD_DATE_TYPE);
+        self::assertSame(DuckTypedFieldTypeSelect::DATE, $result->unwrapOr(null));
     }
 
-    public function testDatetimeBecomesDatetime(): void
+    public function testDatetimeBecomesDate(): void
     {
-        $result = DuckTypedFieldType::fromString(FieldTypeRetrieverWrapper::FIELD_DATETIME_TYPE);
-        self::assertSame(DuckTypedFieldType::DATETIME, $result->unwrapOr(null));
+        $result = DuckTypedFieldTypeSelect::fromString(FieldTypeRetrieverWrapper::FIELD_DATETIME_TYPE);
+        self::assertSame(DuckTypedFieldTypeSelect::DATE, $result->unwrapOr(null));
     }
 
     public function testStaticListBecomesStaticList(): void
     {
-        $result = DuckTypedFieldType::fromString(FieldTypeRetrieverWrapper::FIELD_STATIC_LIST_TYPE);
-        self::assertSame(DuckTypedFieldType::STATIC_LIST, $result->unwrapOr(null));
+        $result = DuckTypedFieldTypeSelect::fromString(FieldTypeRetrieverWrapper::FIELD_STATIC_LIST_TYPE);
+        self::assertSame(DuckTypedFieldTypeSelect::STATIC_LIST, $result->unwrapOr(null));
     }
 
     public function testUGroupListBecomesUGroupList(): void
     {
-        $result = DuckTypedFieldType::fromString(FieldTypeRetrieverWrapper::FIELD_UGROUP_LIST_TYPE);
-        self::assertSame(DuckTypedFieldType::UGROUP_LIST, $result->unwrapOr(null));
+        $result = DuckTypedFieldTypeSelect::fromString(FieldTypeRetrieverWrapper::FIELD_UGROUP_LIST_TYPE);
+        self::assertSame(DuckTypedFieldTypeSelect::UGROUP_LIST, $result->unwrapOr(null));
     }
 
     public static function generateTypes(): iterable
@@ -107,7 +109,7 @@ final class DuckTypedFieldTypeTest extends TestCase
      */
     public function testOtherTypesReturnAnError(string $type_name): void
     {
-        $result = DuckTypedFieldType::fromString($type_name);
+        $result = DuckTypedFieldTypeSelect::fromString($type_name);
         self::assertTrue(Result::isErr($result));
         self::assertInstanceOf(FieldTypeIsNotSupportedFault::class, $result->error);
     }

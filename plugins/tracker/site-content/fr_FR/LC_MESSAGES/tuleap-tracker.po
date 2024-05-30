@@ -4446,6 +4446,22 @@ msgstr[1] ""
 "fait référence. Veuillez consulter la documentation pour les comparaisons "
 "autorisées."
 
+#, php-format
+msgid ""
+"We cannot select on '%s', we don't know what it refers to. Please refer to "
+"the documentation for the allowed selectables."
+msgid_plural ""
+"We cannot select on '%s', we don't know what they refer to. Please refer to "
+"the documentation for the allowed selectables."
+msgstr[0] ""
+"Nous ne pouvons pas sélectionner dans '%s', nous ne savons pas à quoi cela "
+"fait référence. Veuillez consulter la documentation pour les sélections "
+"autorisées."
+msgstr[1] ""
+"Nous ne pouvons pas sélectionner dans '%s', nous ne savons pas à quoi cela "
+"fait référence. Veuillez consulter la documentation pour les sélections "
+"autorisées."
+
 msgid "Webhook sucessfully created"
 msgstr "Le webhook a été créé"
 

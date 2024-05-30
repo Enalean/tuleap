@@ -3910,6 +3910,16 @@ msgid_plural ""
 msgstr[0] ""
 msgstr[1] ""
 
+#, php-format
+msgid ""
+"We cannot select on '%s', we don't know what it refers to. Please refer to "
+"the documentation for the allowed selectables."
+msgid_plural ""
+"We cannot select on '%s', we don't know what they refer to. Please refer to "
+"the documentation for the allowed selectables."
+msgstr[0] ""
+msgstr[1] ""
+
 msgid "Webhook sucessfully created"
 msgstr ""
 

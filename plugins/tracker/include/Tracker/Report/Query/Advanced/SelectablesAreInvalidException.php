@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2024-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,16 +20,22 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\Report\Query\Advanced\Grammar;
+namespace Tuleap\Tracker\Report\Query\Advanced;
 
-interface Selectable
+use Exception;
+
+final class SelectablesAreInvalidException extends Exception
 {
     /**
-     * @template ReturnType
-     * @template Parameters of VisitorParameters
-     * @param SelectableVisitor<Parameters, ReturnType> $visitor
-     * @param Parameters $parameters
-     * @return ReturnType
+     * @param string[] $error_messages
      */
-    public function acceptSelectableVisitor(SelectableVisitor $visitor, $parameters);
+    public function __construct(private readonly array $error_messages)
+    {
+        parent::__construct(implode("\n", $error_messages));
+    }
+
+    public function getErrorMessages(): array
+    {
+        return $this->error_messages;
+    }
 }

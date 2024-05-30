@@ -20,15 +20,17 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\CrossTracker\Report\Query\Advanced\DuckTypedField;
+namespace Tuleap\CrossTracker\Report\Query\Advanced\DuckTypedField\Where;
 
 use Tracker_FormElementFactory;
+use Tuleap\CrossTracker\Report\Query\Advanced\DuckTypedField\FieldTypeIsNotSupportedFault;
+use Tuleap\CrossTracker\Report\Query\Advanced\DuckTypedField\FieldTypeRetrieverWrapper;
 use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
 
-enum DuckTypedFieldType
+enum DuckTypedFieldTypeWhere
 {
     case NUMERIC;
     case TEXT;

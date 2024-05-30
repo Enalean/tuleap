@@ -30,6 +30,7 @@ use Tuleap\CrossTracker\Report\CSV\Format\BindToValueVisitor;
 use Tuleap\CrossTracker\Report\CSV\Format\CSVFormatterVisitor;
 use Tuleap\CrossTracker\Report\CSV\SimilarFieldsFormatter;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSearchableCollectorVisitor;
+use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSelectablesCollectorVisitor;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidTermCollectorVisitor;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\ArtifactLink\ForwardLinkFromWhereBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\ArtifactLink\ReverseLinkFromWhereBuilder;
@@ -189,6 +190,34 @@ class crosstrackerPlugin extends Plugin
             $ugroup_label_converter
         );
 
+        $duck_typed_field_checker      = new DuckTypedFieldChecker(
+            $form_element_factory,
+            $form_element_factory,
+            new InvalidFieldChecker(
+                new FloatFieldChecker(),
+                new IntegerFieldChecker(),
+                new TextFieldChecker(),
+                new DateFieldChecker(),
+                new FileFieldChecker(),
+                new ListFieldChecker(
+                    $list_field_bind_value_normalizer,
+                    $bind_labels_extractor,
+                    $ugroup_label_converter
+                ),
+                new ListFieldChecker(
+                    $list_field_bind_value_normalizer,
+                    new CollectionOfNormalizedBindLabelsExtractorForOpenList(
+                        $bind_labels_extractor,
+                        new OpenListValueDao(),
+                        $list_field_bind_value_normalizer,
+                    ),
+                    $ugroup_label_converter
+                ),
+                new ArtifactSubmitterChecker($user_manager),
+                true,
+            ),
+            TrackersPermissionsRetriever::build(),
+        );
         $invalid_comparisons_collector = new InvalidTermCollectorVisitor(
             new InvalidSearchableCollectorVisitor(
                 new MetadataChecker(
@@ -210,33 +239,7 @@ class crosstrackerPlugin extends Plugin
                         new ArtifactIdMetadataChecker(),
                     )
                 ),
-                new DuckTypedFieldChecker(
-                    $form_element_factory,
-                    $form_element_factory,
-                    new InvalidFieldChecker(
-                        new FloatFieldChecker(),
-                        new IntegerFieldChecker(),
-                        new TextFieldChecker(),
-                        new DateFieldChecker(),
-                        new FileFieldChecker(),
-                        new ListFieldChecker(
-                            $list_field_bind_value_normalizer,
-                            $bind_labels_extractor,
-                            $ugroup_label_converter
-                        ),
-                        new ListFieldChecker(
-                            $list_field_bind_value_normalizer,
-                            new CollectionOfNormalizedBindLabelsExtractorForOpenList(
-                                $bind_labels_extractor,
-                                new OpenListValueDao(),
-                                $list_field_bind_value_normalizer,
-                            ),
-                            $ugroup_label_converter
-                        ),
-                        new ArtifactSubmitterChecker($user_manager),
-                        true,
-                    )
-                ),
+                $duck_typed_field_checker,
             ),
             new ArtifactLinkTypeChecker(
                 new TypePresenterFactory(
@@ -245,6 +248,7 @@ class crosstrackerPlugin extends Plugin
                 ),
             )
         );
+        $invalid_selectables_collector = new InvalidSelectablesCollectorVisitor($duck_typed_field_checker);
 
         $date_time_value_rounder = new DateTimeValueRounder();
         $list_from_where_builder = new Field\ListFromWhereBuilder();
@@ -285,7 +289,8 @@ class crosstrackerPlugin extends Plugin
             $query_builder_visitor,
             $parser,
             new CrossTrackerExpertQueryReportDao(),
-            $invalid_comparisons_collector
+            $invalid_comparisons_collector,
+            $invalid_selectables_collector,
         );
 
         $report_dao = new CrossTrackerReportDao();

@@ -43,6 +43,8 @@ use Tuleap\Request\NotFoundException;
 use Tuleap\REST\Header;
 use Tuleap\Tracker\Report\Query\Advanced\SearchablesAreInvalidException;
 use Tuleap\Tracker\Report\Query\Advanced\SearchablesDoNotExistException;
+use Tuleap\Tracker\Report\Query\Advanced\SelectablesAreInvalidException;
+use Tuleap\Tracker\Report\Query\Advanced\SelectablesDoNotExistException;
 use URLVerification;
 
 class CSVExportController implements DispatchableWithRequest
@@ -156,10 +158,10 @@ class CSVExportController implements DispatchableWithRequest
             throw new NotFoundException(
                 sprintf(dgettext('tuleap-crosstracker', 'Report with id %d not found'), $report_id)
             );
-        } catch (SearchablesAreInvalidException $e) {
+        } catch (SearchablesAreInvalidException | SelectablesAreInvalidException $e) {
             throw new BadRequestException($e->getMessage());
-        } catch (SearchablesDoNotExistException $e) {
-            throw new BadRequestException($e->getMessage());
+        } catch (SearchablesDoNotExistException | SelectablesDoNotExistException $e) {
+            throw new BadRequestException($e->getI18NExceptionMessage());
         }
     }
 

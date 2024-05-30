@@ -24,9 +24,9 @@ namespace Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Field;
 
 use PFUser;
 use Tracker;
-use Tuleap\CrossTracker\Report\Query\Advanced\DuckTypedField\DuckTypedField;
-use Tuleap\CrossTracker\Report\Query\Advanced\DuckTypedField\DuckTypedFieldType;
 use Tuleap\CrossTracker\Report\Query\Advanced\DuckTypedField\FieldTypeRetrieverWrapper;
+use Tuleap\CrossTracker\Report\Query\Advanced\DuckTypedField\Where\DuckTypedFieldTypeWhere;
+use Tuleap\CrossTracker\Report\Query\Advanced\DuckTypedField\Where\DuckTypedFieldWhere;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Field\Date\DateFromWhereBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Field\Datetime\DatetimeFromWhereBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Field\Numeric\NumericFromWhereBuilder;
@@ -75,29 +75,29 @@ final readonly class FieldFromWhereBuilder
                 $fields_user_can_read[] = $used_field;
             }
         }
-        return DuckTypedField::build(
+        return DuckTypedFieldWhere::build(
             new FieldTypeRetrieverWrapper($this->retrieve_field_type),
             $field->getName(),
             $fields_user_can_read,
             $tracker_ids,
         )->match(
-            fn(DuckTypedField $duck_typed_field) => $this->matchTypeToBuilder($duck_typed_field, $comparison),
+            fn(DuckTypedFieldWhere $duck_typed_field) => $this->matchTypeToBuilder($duck_typed_field, $comparison),
             static fn() => new ParametrizedFromWhere('', '', [], [])
         );
     }
 
     private function matchTypeToBuilder(
-        DuckTypedField $field,
+        DuckTypedFieldWhere $field,
         Comparison $comparison,
     ): IProvideParametrizedFromAndWhereSQLFragments {
         return match ($field->type) {
-            DuckTypedFieldType::NUMERIC     => $this->numeric_builder->getFromWhere($field, $comparison),
-            DuckTypedFieldType::TEXT        => $this->text_builder->getFromWhere($field, $comparison),
-            DuckTypedFieldType::DATE        => $this->date_builder->getFromWhere($field, $comparison),
-            DuckTypedFieldType::DATETIME    => $this->datetime_builder->getFromWhere($field, $comparison),
-            DuckTypedFieldType::STATIC_LIST => $this->static_list_builder->getFromWhere($field, $comparison),
-            DuckTypedFieldType::UGROUP_LIST => $this->ugroup_list_builder->getFromWhere($field, $comparison),
-            DuckTypedFieldType::USER_LIST   => $this->user_list_builder->getFromWhere($field, $comparison),
+            DuckTypedFieldTypeWhere::NUMERIC     => $this->numeric_builder->getFromWhere($field, $comparison),
+            DuckTypedFieldTypeWhere::TEXT        => $this->text_builder->getFromWhere($field, $comparison),
+            DuckTypedFieldTypeWhere::DATE        => $this->date_builder->getFromWhere($field, $comparison),
+            DuckTypedFieldTypeWhere::DATETIME    => $this->datetime_builder->getFromWhere($field, $comparison),
+            DuckTypedFieldTypeWhere::STATIC_LIST => $this->static_list_builder->getFromWhere($field, $comparison),
+            DuckTypedFieldTypeWhere::UGROUP_LIST => $this->ugroup_list_builder->getFromWhere($field, $comparison),
+            DuckTypedFieldTypeWhere::USER_LIST   => $this->user_list_builder->getFromWhere($field, $comparison),
         };
     }
 }

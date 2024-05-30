@@ -25,7 +25,7 @@ namespace Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Field\UGroupLis
 use LogicException;
 use ParagonIE\EasyDB\EasyStatement;
 use Tracker_FormElement_Field_List;
-use Tuleap\CrossTracker\Report\Query\Advanced\DuckTypedField\DuckTypedField;
+use Tuleap\CrossTracker\Report\Query\Advanced\DuckTypedField\Where\DuckTypedFieldWhere;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Field\FieldValueWrapperParameters;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Field\ListFromWhereBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Field\ParametrizedListFromWhere;
@@ -70,7 +70,7 @@ final readonly class UGroupListFromWhereBuilder implements ValueWrapperVisitor
     }
 
     public function getFromWhere(
-        DuckTypedField $duck_typed_field,
+        DuckTypedFieldWhere $duck_typed_field,
         Comparison $comparison,
     ): IProvideParametrizedFromAndWhereSQLFragments {
         $suffix              = spl_object_hash($comparison);

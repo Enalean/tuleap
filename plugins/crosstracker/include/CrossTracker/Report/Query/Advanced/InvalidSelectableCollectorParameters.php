@@ -20,31 +20,35 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\Report\Query\Advanced\Grammar;
+namespace Tuleap\CrossTracker\Report\Query\Advanced;
 
-final readonly class Metadata implements Searchable, Selectable
+use PFUser;
+use Tracker;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\VisitorParameters;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidSelectablesCollection;
+
+final readonly class InvalidSelectableCollectorParameters implements VisitorParameters
 {
-    public const PREFIX = '@';
-
-    private string $name;
-
-    public function __construct(string $name)
-    {
-        $this->name = self::PREFIX . $name;
+    /**
+     * @param Tracker[] $trackers
+     */
+    public function __construct(
+        public InvalidSelectablesCollection $invalid_selectables_collection,
+        public array $trackers,
+        public PFUser $user,
+    ) {
     }
 
-    public function getName(): string
+    /**
+     * @return int[]
+     */
+    public function getTrackersIds(): array
     {
-        return $this->name;
-    }
-
-    public function acceptSearchableVisitor(SearchableVisitor $visitor, $parameters)
-    {
-        return $visitor->visitMetadata($this, $parameters);
-    }
-
-    public function acceptSelectableVisitor(SelectableVisitor $visitor, $parameters)
-    {
-        return $visitor->visitMetaData($this, $parameters);
+        return array_map(
+            function (Tracker $tracker) {
+                return $tracker->getId();
+            },
+            $this->trackers
+        );
     }
 }

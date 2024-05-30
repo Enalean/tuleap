@@ -47,7 +47,7 @@ final readonly class InvalidSearchableCollectorVisitor implements SearchableVisi
      */
     public function visitField(Field $searchable_field, $parameters)
     {
-        $this->field_checker->checkFieldIsValid($searchable_field, $parameters)
+        $this->field_checker->checkFieldIsValidForSearch($searchable_field, $parameters)
             ->match(
                 static function () {
                     // Do nothing

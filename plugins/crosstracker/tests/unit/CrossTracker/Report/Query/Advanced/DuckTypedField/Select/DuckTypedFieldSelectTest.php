@@ -20,8 +20,12 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\CrossTracker\Report\Query\Advanced\DuckTypedField;
+namespace Tuleap\CrossTracker\Report\Query\Advanced\DuckTypedField\Select;
 
+use Tuleap\CrossTracker\Report\Query\Advanced\DuckTypedField\FieldNotFoundInAnyTrackerFault;
+use Tuleap\CrossTracker\Report\Query\Advanced\DuckTypedField\FieldTypeIsNotSupportedFault;
+use Tuleap\CrossTracker\Report\Query\Advanced\DuckTypedField\FieldTypeRetrieverWrapper;
+use Tuleap\CrossTracker\Report\Query\Advanced\DuckTypedField\FieldTypesAreIncompatibleFault;
 use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
@@ -34,7 +38,7 @@ use Tuleap\Tracker\Test\Builders\Fields\StringFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\RetrieveFieldTypeStub;
 
-final class DuckTypedFieldTest extends TestCase
+final class DuckTypedFieldSelectTest extends TestCase
 {
     private const FIELD_NAME        = 'initial_effort';
     private const FIRST_TRACKER_ID  = 14;
@@ -64,11 +68,11 @@ final class DuckTypedFieldTest extends TestCase
     }
 
     /**
-     * @return Ok<DuckTypedField>|Err<Fault>
+     * @return Ok<DuckTypedFieldSelect>|Err<Fault>
      */
     private function build(): Ok|Err
     {
-        return DuckTypedField::build(
+        return DuckTypedFieldSelect::build(
             new FieldTypeRetrieverWrapper(RetrieveFieldTypeStub::withDetectionOfType()),
             self::FIELD_NAME,
             $this->fields,
@@ -82,9 +86,9 @@ final class DuckTypedFieldTest extends TestCase
 
         self::assertTrue(Result::isOk($result));
         $field = $result->value;
-        self::assertInstanceOf(DuckTypedField::class, $field);
+        self::assertInstanceOf(DuckTypedFieldSelect::class, $field);
         self::assertSame(self::FIELD_NAME, $field->name);
-        self::assertSame(DuckTypedFieldType::NUMERIC, $field->type);
+        self::assertSame(DuckTypedFieldTypeSelect::NUMERIC, $field->type);
         self::assertSame([self::INT_FIELD_ID, self::FLOAT_FIELD_ID], $field->field_ids);
     }
 

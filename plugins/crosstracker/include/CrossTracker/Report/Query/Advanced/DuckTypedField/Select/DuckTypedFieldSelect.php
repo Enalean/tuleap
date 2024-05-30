@@ -20,9 +20,11 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\CrossTracker\Report\Query\Advanced\DuckTypedField;
+namespace Tuleap\CrossTracker\Report\Query\Advanced\DuckTypedField\Select;
 
 use Tracker_FormElement_Field;
+use Tuleap\CrossTracker\Report\Query\Advanced\DuckTypedField\FieldNotFoundInAnyTrackerFault;
+use Tuleap\CrossTracker\Report\Query\Advanced\DuckTypedField\FieldTypesAreIncompatibleFault;
 use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
@@ -32,7 +34,7 @@ use Tuleap\Tracker\FormElement\RetrieveFieldType;
 /**
  * @psalm-immutable
  */
-final readonly class DuckTypedField
+final readonly class DuckTypedFieldSelect
 {
     /**
      * @param list<int> $field_ids
@@ -40,7 +42,7 @@ final readonly class DuckTypedField
     private function __construct(
         public string $name,
         public array $field_ids,
-        public DuckTypedFieldType $type,
+        public DuckTypedFieldTypeSelect $type,
     ) {
     }
 
@@ -60,20 +62,20 @@ final readonly class DuckTypedField
         }
         $field_identifiers = [];
         foreach ($fields as $field) {
-            $field_identifiers[] = DuckTypedFieldType::fromString($retrieve_field_type->getType($field))
-                ->map(static fn(DuckTypedFieldType $type) => new FieldIdentifierProperties($field->getId(), $type));
+            $field_identifiers[] = DuckTypedFieldTypeSelect::fromString($retrieve_field_type->getType($field))
+                ->map(static fn(DuckTypedFieldTypeSelect $type) => new FieldIdentifierPropertiesSelect($field->getId(), $type));
         }
 
         $other_results = array_slice($field_identifiers, 1);
 
         return $field_identifiers[0]->andThen(
-            static function (FieldIdentifierProperties $first_field) use ($field_name, $tracker_ids, $other_results) {
+            static function (FieldIdentifierPropertiesSelect $first_field) use ($field_name, $tracker_ids, $other_results) {
                 $field_ids = [$first_field->id];
                 foreach ($other_results as $other_result) {
                     if (Result::isErr($other_result)) {
                         return Result::err(FieldTypesAreIncompatibleFault::build($field_name, $tracker_ids));
                     }
-                    if ($other_result->value->type !== $first_field->type) {
+                    if ($first_field->type !== $other_result->value->type) {
                         return Result::err(FieldTypesAreIncompatibleFault::build($field_name, $tracker_ids));
                     }
                     $field_ids[] = $other_result->value->id;

@@ -32,6 +32,7 @@ use Tracker_Semantic_TitleDao;
 use Tuleap\CrossTracker\CrossTrackerArtifactReportDao;
 use Tuleap\CrossTracker\Report\CrossTrackerArtifactReportFactory;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSearchableCollectorVisitor;
+use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSelectablesCollectorVisitor;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidTermCollectorVisitor;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\ArtifactLink\ForwardLinkFromWhereBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\ArtifactLink\ReverseLinkFromWhereBuilder;
@@ -54,14 +55,15 @@ use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
 use Tuleap\Tracker\FormElement\Field\ListFields\OpenListValueDao;
+use Tuleap\Tracker\Permission\TrackersPermissionsRetriever;
 use Tuleap\Tracker\Report\Query\Advanced\ExpertQueryValidator;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Parser;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ArtifactLink\ArtifactLinkTypeChecker;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Date\DateFieldChecker;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\File\FileFieldChecker;
-use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\InvalidFieldChecker;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\FloatFields\FloatFieldChecker;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Integer\IntegerFieldChecker;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\InvalidFieldChecker;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ListFields\ArtifactSubmitterChecker;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ListFields\CollectionOfNormalizedBindLabelsExtractor;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ListFields\CollectionOfNormalizedBindLabelsExtractorForOpenList;
@@ -105,6 +107,34 @@ final class ArtifactReportFactoryInstantiator
         );
 
         $form_element_factory          = Tracker_FormElementFactory::instance();
+        $duck_typed_field_checker      = new DuckTypedFieldChecker(
+            $form_element_factory,
+            $form_element_factory,
+            new InvalidFieldChecker(
+                new FloatFieldChecker(),
+                new IntegerFieldChecker(),
+                new TextFieldChecker(),
+                new DateFieldChecker(),
+                new FileFieldChecker(),
+                new ListFieldChecker(
+                    $list_field_bind_value_normalizer,
+                    $bind_labels_extractor,
+                    $ugroup_label_converter
+                ),
+                new ListFieldChecker(
+                    $list_field_bind_value_normalizer,
+                    new CollectionOfNormalizedBindLabelsExtractorForOpenList(
+                        $bind_labels_extractor,
+                        new OpenListValueDao(),
+                        $list_field_bind_value_normalizer,
+                    ),
+                    $ugroup_label_converter
+                ),
+                new ArtifactSubmitterChecker($user_manager),
+                true,
+            ),
+            TrackersPermissionsRetriever::build(),
+        );
         $invalid_comparisons_collector = new InvalidTermCollectorVisitor(
             new InvalidSearchableCollectorVisitor(
                 new MetadataChecker(
@@ -126,33 +156,7 @@ final class ArtifactReportFactoryInstantiator
                         new ArtifactIdMetadataChecker(),
                     )
                 ),
-                new DuckTypedFieldChecker(
-                    $form_element_factory,
-                    $form_element_factory,
-                    new InvalidFieldChecker(
-                        new FloatFieldChecker(),
-                        new IntegerFieldChecker(),
-                        new TextFieldChecker(),
-                        new DateFieldChecker(),
-                        new FileFieldChecker(),
-                        new ListFieldChecker(
-                            $list_field_bind_value_normalizer,
-                            $bind_labels_extractor,
-                            $ugroup_label_converter
-                        ),
-                        new ListFieldChecker(
-                            $list_field_bind_value_normalizer,
-                            new CollectionOfNormalizedBindLabelsExtractorForOpenList(
-                                $bind_labels_extractor,
-                                new OpenListValueDao(),
-                                $list_field_bind_value_normalizer,
-                            ),
-                            $ugroup_label_converter
-                        ),
-                        new ArtifactSubmitterChecker($user_manager),
-                        true,
-                    )
-                ),
+                $duck_typed_field_checker,
             ),
             new ArtifactLinkTypeChecker(
                 new TypePresenterFactory(
@@ -161,6 +165,7 @@ final class ArtifactReportFactoryInstantiator
                 ),
             )
         );
+        $invalid_selectables_collector = new InvalidSelectablesCollectorVisitor($duck_typed_field_checker);
 
         $date_time_value_rounder  = new DateTimeValueRounder();
         $artifact_factory         = Tracker_ArtifactFactory::instance();
@@ -202,7 +207,8 @@ final class ArtifactReportFactoryInstantiator
             $query_builder_visitor,
             $parser,
             new CrossTrackerExpertQueryReportDao(),
-            $invalid_comparisons_collector
+            $invalid_comparisons_collector,
+            $invalid_selectables_collector,
         );
     }
 }

@@ -20,16 +20,16 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\Report\Query\Advanced\Grammar;
+namespace Tuleap\CrossTracker\Report\Query\Advanced\DuckTypedField\Select;
 
-interface Selectable
+/**
+ * @psalm-immutable
+ */
+final readonly class FieldIdentifierPropertiesSelect
 {
-    /**
-     * @template ReturnType
-     * @template Parameters of VisitorParameters
-     * @param SelectableVisitor<Parameters, ReturnType> $visitor
-     * @param Parameters $parameters
-     * @return ReturnType
-     */
-    public function acceptSelectableVisitor(SelectableVisitor $visitor, $parameters);
+    public function __construct(
+        public int $id,
+        public DuckTypedFieldTypeSelect $type,
+    ) {
+    }
 }

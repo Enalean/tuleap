@@ -20,16 +20,16 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\CrossTracker\Report\Query\Advanced\DuckTypedField;
+namespace Tuleap\CrossTracker\Report\Query\Advanced\DuckTypedField\Where;
 
 /**
  * @psalm-immutable
  */
-final class FieldIdentifierProperties
+final readonly class FieldIdentifierPropertiesWhere
 {
     public function __construct(
-        public readonly int $id,
-        public readonly DuckTypedFieldType $type,
+        public int $id,
+        public DuckTypedFieldTypeWhere $type,
     ) {
     }
 }

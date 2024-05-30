@@ -20,16 +20,22 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\Report\Query\Advanced\Grammar;
+namespace Tuleap\Tracker\Report\Query\Advanced;
 
-interface Selectable
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\SyntaxError;
+
+final class InvalidSelectablesCollectionBuilder implements IBuildInvalidSelectablesCollection
 {
     /**
-     * @template ReturnType
-     * @template Parameters of VisitorParameters
-     * @param SelectableVisitor<Parameters, ReturnType> $visitor
-     * @param Parameters $parameters
-     * @return ReturnType
+     * @throws SyntaxError
      */
-    public function acceptSelectableVisitor(SelectableVisitor $visitor, $parameters);
+    public function buildCollectionOfInvalidSelectables(array $selectables): InvalidSelectablesCollection
+    {
+        if ($selectables !== []) {
+            // This way user think its query is not valid tql
+            throw new SyntaxError('', '', '', 0, 0, 0);
+        }
+
+        return new InvalidSelectablesCollection();
+    }
 }
