@@ -7,8 +7,8 @@
     "classmap": ["include/"]
   },
   "require": {
-    "smarty/smarty": "^4.3",
-    "smarty-gettext/smarty-gettext": "^1.5"
+    "smarty-gettext/smarty-gettext": "^1.5",
+    "smarty/smarty": "^5.2"
   },
   "autoload-dev": {
     "psr-4": {
