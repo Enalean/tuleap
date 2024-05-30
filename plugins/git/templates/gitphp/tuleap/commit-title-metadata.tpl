@@ -71,7 +71,7 @@
                         {/if}
 
                         <span class="tlp-text-muted git-repository-commit-metadata-date">
-                            <i class="far fa-clock"></i> {$commit->GetAuthorEpoch()|date_format:"%Y-%m-%d %H:%M"}
+                            <i class="fa-regular fa-clock" aria-hidden="true"></i> {$commit->GetAuthorEpoch()|date_format:"%Y-%m-%d %H:%M"}
                         </span>
                     </div>
                 </div>
@@ -94,7 +94,7 @@
                         {/if}
 
                         <span class="tlp-text-muted git-repository-commit-metadata-date">
-                            <i class="far fa-clock"></i> {$commit->GetCommitterEpoch()|date_format:"%Y-%m-%d %H:%M"}
+                            <i class="fa-regular fa-clock" aria-hidden="true"></i> {$commit->GetCommitterEpoch()|date_format:"%Y-%m-%d %H:%M"}
                         </span>
                     </div>
                 </div>

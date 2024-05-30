@@ -59,7 +59,7 @@
                                     {/if}
 
                                     <span class="tlp-text-muted git-repository-tag-metadata-date">
-                                        <i class="far fa-clock"></i> {$tag->GetTaggerEpoch()|date_format:"%Y-%m-%d %H:%M"}
+                                        <i class="fa-regular fa-clock" aria-hidden="true"></i> {$tag->GetTaggerEpoch()|date_format:"%Y-%m-%d %H:%M"}
                                     </span>
                                 </div>
                             </div>

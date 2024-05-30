@@ -23,7 +23,7 @@
         <form method="get" class="tlp-pane-container">
             <div class="tlp-pane-header">
                 <h1 class="tlp-pane-title">
-                    <i class="tlp-pane-title-icon fa fa-search"></i>
+                    <i class="tlp-pane-title-icon fa-solid fa-search" aria-hidden="true"></i>
                     {t domain="gitphp"}Search{/t}
                 </h1>
             </div>
@@ -55,7 +55,7 @@
 
                 <div class="tlp-pane-section-submit">
                     <button type="submit" class="tlp-button-primary tlp-button-wide">
-                        <i class="fa fa-search tlp-button-icon"></i> {t domain="gitphp"}Search{/t}
+                        <i class="fa-solid fa-search tlp-button-icon" aria-hidden="true"></i> {t domain="gitphp"}Search{/t}
                     </button>
                 </div>
             </section>
@@ -81,7 +81,7 @@
                                class="tlp-button-primary tlp-button-outline tlp-pagination-button"
                                title="{t domain="gitphp"}Previous{/t}"
                             >
-                                <i class="fa fa-angle-left"></i>
+                                <i class="fa-solid fa-angle-left" aria-hidden="true"></i>
                             </a>
                         {else}
                             <button type="button"
@@ -89,7 +89,7 @@
                                     title="{t domain="gitphp"}Previous{/t}"
                                     disabled
                             >
-                                <i class="fa fa-angle-left"></i>
+                                <i class="fa-solid fa-angle-left" aria-hidden="true"></i>
                             </button>
                         {/if}
                         {if isset($hasmorerevs) && $hasmorerevs }
@@ -97,7 +97,7 @@
                                class="tlp-button-primary tlp-button-outline tlp-pagination-button"
                                title="{t domain="gitphp"}Next{/t}"
                             >
-                                <i class="fa fa-angle-right"></i>
+                                <i class="fa-solid fa-angle-right" aria-hidden="true"></i>
                             </a>
                         {else}
                             <button type="button"
@@ -105,7 +105,7 @@
                                     title="{t domain="gitphp"}Next{/t}"
                                     disabled
                             >
-                                <i class="fa fa-angle-right"></i>
+                                <i class="fa-solid fa-angle-right" aria-hidden="true"></i>
                             </button>
                         {/if}
                     </div>

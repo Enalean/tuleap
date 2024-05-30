@@ -240,6 +240,9 @@ msgstr "Tipo"
 msgid "Unknown object"
 msgstr ""
 
+msgid "View file"
+msgstr ""
+
 #, php-format
 msgid "You must enter search text of at least %1$d character"
 msgid_plural "You must enter search text of at least %1$d characters"
