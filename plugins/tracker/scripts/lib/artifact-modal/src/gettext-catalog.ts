@@ -159,3 +159,5 @@ export const getSubmitDisabledForLinkableArtifactCreationReason = (): string =>
     gettextCatalog.getString("New artifact to link is being created");
 export const getConfirmClosingModal = (): string =>
     gettextCatalog.getString("Changes you made may not be saved. Close the modal?");
+export const getPleaseSelectAListItem = (): string =>
+    gettextCatalog.getString("Please select an item in the list");

@@ -44,6 +44,8 @@ export * from "./file-field";
 export interface BaseFieldStructure {
     readonly field_id: number;
     readonly name: string;
+    readonly required: boolean;
+    readonly label: string;
 }
 
 export interface UnknownFieldStructure extends BaseFieldStructure {
@@ -60,9 +62,7 @@ export interface ReadonlyDateFieldStructure extends CommonDateFieldStructure {
 
 export interface EditableDateFieldStructure extends CommonDateFieldStructure {
     readonly type: DateFieldIdentifier;
-    readonly label: string;
     readonly permissions: ReadonlyArray<Permission>;
-    readonly required: boolean;
 }
 
 export type DateFieldStructure = ReadonlyDateFieldStructure | EditableDateFieldStructure;
