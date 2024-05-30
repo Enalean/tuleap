@@ -188,13 +188,17 @@ function useSectionEditor(
         }
 
         is_in_error.value = true;
-        if (isNotFound(fault)) {
+        if (isNotFound(fault) || isForbidden(fault)) {
             is_not_found.value = true;
         }
     }
 
     function isNotFound(fault: Fault): boolean {
         return "isNotFound" in fault && fault.isNotFound() === true;
+    }
+
+    function isForbidden(fault: Fault): boolean {
+        return "isForbidden" in fault && fault.isForbidden() === true;
     }
 
     function addTemporaryJustSavedFlag(): void {
