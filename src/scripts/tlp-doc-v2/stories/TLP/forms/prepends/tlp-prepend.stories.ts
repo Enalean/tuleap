@@ -25,6 +25,8 @@ type PrependProps = {
     story: "icon" | "multiple-prepends" | "with-badge";
     size: string;
     placeholder: string;
+    with_label: boolean;
+    label: string;
 };
 
 const SIZES = ["default", "large", "small"];
@@ -39,27 +41,39 @@ function getClasses(args: PrependProps, element: string): string {
 
 function getPrepends(args: PrependProps): TemplateResult {
     // prettier-ignore
-    const prepend: TemplateResult = html`
+    const prepend: TemplateResult = !args.with_label ? html`
     <span class=${getClasses(args, "prepend")}>
         <i class="fa-solid fa-tags" aria-hidden="true"></i>
-    </span>`;
+    </span>` : html`
+        <span class=${getClasses(args, "prepend")}>
+            <i class="fa-solid fa-tags" aria-hidden="true"></i>
+        </span>`;
     if (args.story === "with-badge") {
         // prettier-ignore
         return html`${prepend}
     <span class=${getClasses(args, "prepend")}>
         <span class="tlp-badge-primary">Read-only</span>
-    </span>`
+    </span>`;
     }
     if (args.story === "multiple-prepends") {
         // prettier-ignore
         return html`${prepend}
-    <span class=${getClasses(args, "prepend")}>https://</span>`
+    <span class=${getClasses(args, "prepend")}>https://</span>`;
     }
-    // prettier-ignore
     return prepend;
 }
 
 function getTemplate(args: PrependProps): TemplateResult {
+    if (args.with_label) {
+        //prettier-ignore
+        return html`
+<div class="tlp-form-element">
+    <label class="tlp-label" for=${args.story}>${args.label}</label>
+    <div class="tlp-form-element tlp-form-element-prepend">${getPrepends(args)}
+        <input type="text" class=${getClasses(args, "input")} id="${args.story}" name="${args.story}" placeholder=${args.placeholder}>
+    </div>
+</div>`;
+    }
     //prettier-ignore
     return html`
 <div class="tlp-form-element tlp-form-element-prepend">${getPrepends(args)}
@@ -80,6 +94,8 @@ const meta: Meta<PrependProps> = {
     args: {
         placeholder: "placeholder",
         size: "default",
+        with_label: false,
+        label: "Tags",
     },
     argTypes: {
         placeholder: {
@@ -93,6 +109,17 @@ const meta: Meta<PrependProps> = {
             table: {
                 type: { summary: ".tlp-input-[size] .tlp-prepend-[size]" },
             },
+        },
+        with_label: {
+            name: "With label",
+            description: "Add a label",
+            table: {
+                type: { summary: undefined },
+            },
+        },
+        label: {
+            name: "Label",
+            if: { arg: "with_label" },
         },
     },
 };
