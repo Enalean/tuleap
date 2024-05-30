@@ -21,13 +21,17 @@ import * as getters from "./getters";
 import type { State, TrackerInfo } from "../type";
 
 describe("Store getters", () => {
+    let invalid_trackers: ReadonlyArray<TrackerInfo>;
+    beforeEach(() => {
+        invalid_trackers = [];
+    });
+
     describe("shouldDisplayExportButton", () => {
         it("Given that user is not widget administrator, then he should be able to export results", () => {
-            const invalid_trackers: Array<TrackerInfo> = [];
             const state: State = {
                 is_user_admin: false,
                 error_message: null,
-                invalid_trackers: invalid_trackers,
+                invalid_trackers,
             } as State;
 
             const result = getters.should_display_export_button(state);
@@ -36,10 +40,9 @@ describe("Store getters", () => {
         });
 
         it("Given user is widget administrator and no trackers of query are invalid, then he should be able to export results", () => {
-            const invalid_trackers: Array<TrackerInfo> = [];
             const state: State = {
                 is_user_admin: true,
-                invalid_trackers: invalid_trackers,
+                invalid_trackers,
                 error_message: null,
             } as State;
 
@@ -49,16 +52,11 @@ describe("Store getters", () => {
         });
 
         it("Given user is widget administrator and at least one tracker is invalid, then he should not be able to export results", () => {
-            const invalid_trackers: Array<TrackerInfo> = [
-                {
-                    id: 1,
-                    label: "My invalid tracker",
-                },
-            ];
+            invalid_trackers = [{ id: 1, label: "My invalid tracker" }];
             const state: State = {
                 is_user_admin: true,
                 error_message: null,
-                invalid_trackers: invalid_trackers,
+                invalid_trackers,
             } as State;
 
             const result = getters.should_display_export_button(state);

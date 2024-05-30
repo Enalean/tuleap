@@ -33,6 +33,7 @@
         />
         <div class="writing-mode-actions">
             <button
+                type="button"
                 class="tlp-button-primary tlp-button-outline writing-mode-actions-cancel"
                 v-on:click="cancel"
                 data-test="writing-mode-cancel-button"
@@ -40,7 +41,8 @@
                 {{ $gettext("Cancel") }}
             </button>
             <button
-                class="tlp-button-primary writing-mode-actions-search"
+                type="button"
+                class="tlp-button-primary"
                 v-on:click="search"
                 data-test="search-report-button"
             >
@@ -50,76 +52,79 @@
         </div>
     </div>
 </template>
-<script lang="ts">
+<script setup lang="ts">
+import { onMounted, ref } from "vue";
+import { useMutations } from "vuex-composition-helpers";
+import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
 import QueryEditor from "./QueryEditor.vue";
+import type { AddTrackerToSelectionCommand } from "./TrackerSelection.vue";
 import TrackerSelection from "./TrackerSelection.vue";
 import TrackerListWritingMode from "./TrackerListWritingMode.vue";
 import type WritingCrossTrackerReport from "./writing-cross-tracker-report";
 import { TooManyTrackersSelectedError } from "./writing-cross-tracker-report";
-import Vue from "vue";
-import { Component, Prop } from "vue-property-decorator";
-import type { TrackerInfo, TrackerToUpdate, ProjectInfo } from "../type";
+import type { TrackerToUpdate } from "../type";
 
-interface SelectTrackerAndProject {
-    selected_project: ProjectInfo;
-    selected_tracker: TrackerInfo;
+export type SaveEvent = { readonly saved_state: boolean };
+
+const gettext_provider = useGettext();
+
+const props = defineProps<{ writingCrossTrackerReport: WritingCrossTrackerReport }>();
+const emit = defineEmits<{
+    (e: "switch-to-reading-mode", payload: SaveEvent): void;
+}>();
+const { setErrorMessage, resetFeedbacks } = useMutations(["setErrorMessage", "resetFeedbacks"]);
+
+const selected_trackers = ref<ReadonlyArray<TrackerToUpdate>>([]);
+
+function cancel(): void {
+    emit("switch-to-reading-mode", { saved_state: true });
 }
 
-@Component({
-    components: { QueryEditor, TrackerListWritingMode, TrackerSelection },
-})
-export default class WritingMode extends Vue {
-    @Prop({ required: true })
-    readonly writingCrossTrackerReport!: WritingCrossTrackerReport;
+function search(): void {
+    emit("switch-to-reading-mode", { saved_state: false });
+}
 
-    selected_trackers: TrackerToUpdate[] = [];
+function updateSelectedTrackers(): void {
+    const trackers = props.writingCrossTrackerReport.getTrackers();
 
-    mounted(): void {
-        this.updateSelectedTrackers();
-    }
+    selected_trackers.value = trackers.map(({ tracker, project }): TrackerToUpdate => {
+        return {
+            tracker_id: tracker.id,
+            tracker_label: tracker.label,
+            project_label: project.label,
+        };
+    });
+}
 
-    cancel(): void {
-        this.$emit("switch-to-reading-mode", { saved_state: true });
-    }
-    search(): void {
-        this.$emit("switch-to-reading-mode", { saved_state: false });
-    }
+onMounted(() => {
+    updateSelectedTrackers();
+});
 
-    addTrackerToSelection(payload: SelectTrackerAndProject): void {
-        try {
-            this.writingCrossTrackerReport.addTracker(
-                payload.selected_project,
-                payload.selected_tracker,
+function addTrackerToSelection(payload: AddTrackerToSelectionCommand): void {
+    try {
+        props.writingCrossTrackerReport.addTracker(
+            payload.selected_project,
+            payload.selected_tracker,
+        );
+        updateSelectedTrackers();
+    } catch (error) {
+        if (error instanceof TooManyTrackersSelectedError) {
+            setErrorMessage(
+                gettext_provider.$gettext("Tracker selection is limited to 25 trackers"),
             );
-            this.updateSelectedTrackers();
-        } catch (error) {
-            if (error instanceof TooManyTrackersSelectedError) {
-                this.$store.commit(
-                    "setErrorMessage",
-                    this.$gettext("Tracker selection is limited to 25 trackers"),
-                );
-            } else {
-                throw error;
-            }
+        } else {
+            throw error;
         }
     }
-
-    removeTrackerFromSelection(tracker: TrackerToUpdate): void {
-        this.writingCrossTrackerReport.removeTracker(tracker.tracker_id);
-        this.updateSelectedTrackers();
-        this.$store.commit("resetFeedbacks");
-    }
-
-    updateSelectedTrackers(): void {
-        const trackers = Array.from(this.writingCrossTrackerReport.getTrackers());
-
-        this.selected_trackers = trackers.map(({ tracker, project }): TrackerToUpdate => {
-            return {
-                tracker_id: tracker.id,
-                tracker_label: tracker.label,
-                project_label: project.label,
-            };
-        });
-    }
 }
+
+function removeTrackerFromSelection(tracker: TrackerToUpdate): void {
+    props.writingCrossTrackerReport.removeTracker(tracker.tracker_id);
+    updateSelectedTrackers();
+    resetFeedbacks();
+}
+
+defineExpose({
+    selected_trackers,
+});
 </script>

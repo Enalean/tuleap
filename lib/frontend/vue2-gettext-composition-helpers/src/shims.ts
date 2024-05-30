@@ -17,8 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars -- Used to propagate the base interface
-import type Vue from "vue/types/vue";
+export {};
 
 declare module "vue/types/vue" {
     interface Vue {

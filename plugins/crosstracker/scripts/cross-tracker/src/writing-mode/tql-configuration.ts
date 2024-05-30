@@ -19,7 +19,7 @@
 
 import { buildModeDefinition } from "@tuleap/plugin-tracker-tql-codemirror";
 
-const TQL_cross_tracker_autocomplete_keywords = [
+export const TQL_cross_tracker_autocomplete_keywords = [
     "AND",
     "OR",
     "OPEN()",
@@ -85,6 +85,6 @@ const cross_tracker_allowed_keywords = {
         "@id",
     ],
 };
-const TQL_cross_tracker_mode_definition = buildModeDefinition(cross_tracker_allowed_keywords);
-
-export { TQL_cross_tracker_autocomplete_keywords, TQL_cross_tracker_mode_definition };
+export const TQL_cross_tracker_mode_definition = buildModeDefinition(
+    cross_tracker_allowed_keywords,
+);

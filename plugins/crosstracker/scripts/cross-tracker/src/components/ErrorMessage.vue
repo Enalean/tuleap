@@ -22,17 +22,10 @@
         {{ error_message }}
     </div>
 </template>
-<script lang="ts">
-import Vue from "vue";
-import Component from "vue-class-component";
-import { State, Getter } from "vuex-class";
+<script setup lang="ts">
+import { useGetters, useState } from "vuex-composition-helpers";
+import type { State } from "../type";
 
-@Component
-export default class ErrorMessage extends Vue {
-    @State
-    readonly error_message!: string;
-
-    @Getter
-    readonly has_error_message!: boolean;
-}
+const { has_error_message } = useGetters(["has_error_message"]);
+const { error_message } = useState<Pick<State, "error_message">>(["error_message"]);
 </script>

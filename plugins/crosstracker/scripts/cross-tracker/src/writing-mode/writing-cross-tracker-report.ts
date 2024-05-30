@@ -52,11 +52,15 @@ export default class WritingCrossTrackerReport {
     }
 
     getTrackerIds(): Array<number> {
-        return [...this.trackers.keys()];
+        return Array.from(this.trackers.keys());
     }
 
-    getTrackers(): IterableIterator<TrackerAndProject> {
-        return this.trackers.values();
+    getTrackers(): ReadonlyArray<TrackerAndProject> {
+        return Array.from(this.trackers.values());
+    }
+
+    setExpertQuery(expert_query: string): void {
+        this.expert_query = expert_query;
     }
 }
 

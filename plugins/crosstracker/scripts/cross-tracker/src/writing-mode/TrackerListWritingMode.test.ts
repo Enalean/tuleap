@@ -23,7 +23,7 @@ import type { TrackerToUpdate } from "../type";
 import TrackerListWritingMode from "./TrackerListWritingMode.vue";
 
 describe("TrackerListWritingMode", () => {
-    function instantiateComponent(): Wrapper<TrackerListWritingMode> {
+    function instantiateComponent(): Wrapper<Vue, Element> {
         return shallowMount(TrackerListWritingMode, {
             propsData: {
                 trackers: [

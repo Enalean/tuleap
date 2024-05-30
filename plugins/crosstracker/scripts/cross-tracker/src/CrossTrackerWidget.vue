@@ -33,13 +33,13 @@
             v-if="is_reading_mode_shown"
             v-bind:backend-cross-tracker-report="backendCrossTrackerReport"
             v-bind:reading-cross-tracker-report="readingCrossTrackerReport"
-            v-on:switch-to-writing-mode="switchToWritingMode"
+            v-on:switch-to-writing-mode="handleSwitchWriting"
             v-on:saved="reportSaved"
         />
         <writing-mode
             v-if="!reading_mode"
             v-bind:writing-cross-tracker-report="writingCrossTrackerReport"
-            v-on:switch-to-reading-mode="switchToReadingMode"
+            v-on:switch-to-reading-mode="handleSwitchReading"
         />
         <artifact-table
             v-if="!is_loading"
@@ -47,119 +47,106 @@
         />
     </div>
 </template>
-<script lang="ts">
-import Vue from "vue";
+<script setup lang="ts">
+import { computed, onMounted, ref } from "vue";
+import { useGetters, useMutations, useState } from "vuex-composition-helpers";
+import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
 import ArtifactTable from "./components/ArtifactTable.vue";
 import ReadingMode from "./reading-mode/ReadingMode.vue";
+import type { SaveEvent } from "./writing-mode/WritingMode.vue";
 import WritingMode from "./writing-mode/WritingMode.vue";
 import ErrorMessage from "./components/ErrorMessage.vue";
 import ErrorInactiveProjectMessage from "./components/ErrorInactiveProjectMessage.vue";
 import { getReport } from "./api/rest-querier";
-import ArtifactTableRow from "./components/ArtifactTableRow.vue";
-import ExportButton from "./components/ExportCSVButton.vue";
-import { Component, Prop } from "vue-property-decorator";
-import { Getter, State } from "vuex-class";
 import type WritingCrossTrackerReport from "./writing-mode/writing-cross-tracker-report";
 import type BackendCrossTrackerReport from "./backend-cross-tracker-report";
 import type ReadingCrossTrackerReport from "./reading-mode/reading-cross-tracker-report";
 import { FetchWrapperError } from "@tuleap/tlp-fetch";
+import type { State } from "./type";
 
-export interface SaveEvent {
-    saved_state: boolean;
+const gettext_provider = useGettext();
+
+const { reading_mode, report_id, success_message, is_user_admin } = useState<
+    Pick<State, "reading_mode" | "report_id" | "success_message" | "is_user_admin">
+>(["reading_mode", "report_id", "success_message", "is_user_admin"]);
+
+const { has_success_message } = useGetters(["has_success_message"]);
+const {
+    setInvalidTrackers,
+    setErrorMessage,
+    switchToWritingMode,
+    switchToReadingMode,
+    resetInvalidTrackerList,
+    switchReportToSaved,
+} = useMutations([
+    "setInvalidTrackers",
+    "setErrorMessage",
+    "switchToWritingMode",
+    "switchToReadingMode",
+    "resetInvalidTrackerList",
+    "switchReportToSaved",
+]);
+
+const props = defineProps<{
+    backendCrossTrackerReport: BackendCrossTrackerReport;
+    readingCrossTrackerReport: ReadingCrossTrackerReport;
+    writingCrossTrackerReport: WritingCrossTrackerReport;
+}>();
+
+const is_loading = ref(true);
+
+const is_reading_mode_shown = computed(() => reading_mode.value === true && !is_loading.value);
+
+function initReports(): void {
+    props.readingCrossTrackerReport.duplicateFromReport(props.backendCrossTrackerReport);
+    props.writingCrossTrackerReport.duplicateFromReport(props.readingCrossTrackerReport);
 }
 
-@Component({
-    components: {
-        ArtifactTable,
-        ReadingMode,
-        WritingMode,
-        ErrorMessage,
-        ErrorInactiveProjectMessage,
-        ArtifactTableRow,
-        ExportButton,
-    },
-})
-export default class CrossTrackerWidget extends Vue {
-    @Prop({ required: true })
-    readonly backendCrossTrackerReport!: BackendCrossTrackerReport;
-    @Prop({ required: true })
-    readonly readingCrossTrackerReport!: ReadingCrossTrackerReport;
-    @Prop({ required: true })
-    readonly writingCrossTrackerReport!: WritingCrossTrackerReport;
+async function loadBackendReport(): Promise<void> {
+    is_loading.value = true;
+    try {
+        const { trackers, expert_query, invalid_trackers } = await getReport(report_id.value);
+        props.backendCrossTrackerReport.init(trackers, expert_query);
+        initReports();
 
-    @State
-    readonly reading_mode!: boolean;
-    @State
-    private readonly report_id!: number;
-    @State
-    readonly success_message!: string;
-    @State
-    private readonly is_user_admin!: boolean;
-
-    @Getter
-    readonly has_success_message!: boolean;
-
-    is_loading = true;
-
-    get is_reading_mode_shown(): boolean {
-        return this.reading_mode && !this.is_loading;
-    }
-    mounted(): void {
-        this.loadBackendReport();
-    }
-
-    switchToWritingMode(): void {
-        if (!this.is_user_admin) {
-            return;
+        if (invalid_trackers.length > 0) {
+            setInvalidTrackers(invalid_trackers);
         }
-
-        this.writingCrossTrackerReport.duplicateFromReport(this.readingCrossTrackerReport);
-        this.$store.commit("switchToWritingMode");
-    }
-
-    switchToReadingMode(event: SaveEvent): void {
-        if (event.saved_state) {
-            this.writingCrossTrackerReport.duplicateFromReport(this.readingCrossTrackerReport);
-        } else {
-            this.readingCrossTrackerReport.duplicateFromWritingReport(
-                this.writingCrossTrackerReport,
-            );
+    } catch (error) {
+        if (error instanceof FetchWrapperError) {
+            const error_json = await error.response.json();
+            setErrorMessage(error_json.error.message);
         }
-        this.$store.commit("switchToReadingMode", event.saved_state);
+    } finally {
+        is_loading.value = false;
+    }
+}
+
+onMounted(() => {
+    loadBackendReport();
+});
+
+function handleSwitchWriting(): void {
+    if (!is_user_admin.value) {
+        return;
     }
 
-    async loadBackendReport(): Promise<void> {
-        this.is_loading = true;
-        try {
-            const { trackers, expert_query, invalid_trackers } = await getReport(this.report_id);
-            this.backendCrossTrackerReport.init(trackers, expert_query);
-            this.initReports();
+    props.writingCrossTrackerReport.duplicateFromReport(props.readingCrossTrackerReport);
+    switchToWritingMode();
+}
 
-            if (invalid_trackers.length > 0) {
-                this.$store.commit("setInvalidTrackers", invalid_trackers);
-            }
-        } catch (error) {
-            if (error instanceof FetchWrapperError) {
-                const error_json = await error.response.json();
-                this.$store.commit("setErrorMessage", error_json.error.message);
-            }
-        } finally {
-            this.is_loading = false;
-        }
+function handleSwitchReading(event: SaveEvent): void {
+    if (event.saved_state) {
+        props.writingCrossTrackerReport.duplicateFromReport(props.readingCrossTrackerReport);
+    } else {
+        props.readingCrossTrackerReport.duplicateFromWritingReport(props.writingCrossTrackerReport);
     }
+    switchToReadingMode(event.saved_state);
+}
 
-    initReports(): void {
-        this.readingCrossTrackerReport.duplicateFromReport(this.backendCrossTrackerReport);
-        this.writingCrossTrackerReport.duplicateFromReport(this.readingCrossTrackerReport);
-    }
-
-    reportSaved(): void {
-        this.initReports();
-        this.$store.commit("resetInvalidTrackerList");
-        this.$store.commit(
-            "switchReportToSaved",
-            this.$gettext("Report has been successfully saved"),
-        );
-    }
+function reportSaved(): void {
+    initReports();
+    resetInvalidTrackerList();
+    switchReportToSaved(gettext_provider.$gettext("Report has been successfully saved"));
 }
 </script>

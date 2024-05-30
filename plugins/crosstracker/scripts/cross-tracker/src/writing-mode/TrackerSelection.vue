@@ -55,7 +55,7 @@
                     id="tracker"
                     name="tracker"
                     v-bind:disabled="is_tracker_select_disabled"
-                    v-model="selected_tracker"
+                    v-model="tracker_to_add"
                     data-test="cross-tracker-selector-tracker"
                 >
                     <option v-bind:value="null" class="cross-tracker-please-choose-option">
@@ -92,101 +92,110 @@
         </div>
     </div>
 </template>
-<script lang="ts">
-import Vue from "vue";
-import { Component, Prop, Watch } from "vue-property-decorator";
+<script setup lang="ts">
+import { computed, onMounted, ref, watch } from "vue";
+import { useMutations } from "vuex-composition-helpers";
+import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
 import { getSortedProjectsIAmMemberOf } from "./projects-cache";
 import { getTrackersOfProject } from "../api/rest-querier";
 import type { ProjectInfo, SelectedTracker, TrackerInfo } from "../type";
 
 type TrackerSelectOption = TrackerInfo & {
-    disabled: boolean;
+    readonly disabled: boolean;
 };
 
-@Component({})
-export default class TrackerSelection extends Vue {
-    @Prop({ required: true })
-    private readonly selectedTrackers!: SelectedTracker[];
+export type AddTrackerToSelectionCommand = {
+    readonly selected_project: ProjectInfo;
+    readonly selected_tracker: TrackerInfo;
+};
 
-    private trackers: TrackerInfo[] = [];
+const gettext_provider = useGettext();
 
-    selected_project: ProjectInfo | null = null;
-    selected_tracker: TrackerInfo | null = null;
-    projects: ProjectInfo[] = [];
-    is_loader_shown = false;
+const props = defineProps<{ selectedTrackers: ReadonlyArray<SelectedTracker> }>();
+const emit = defineEmits<{
+    (e: "tracker-added", add: AddTrackerToSelectionCommand): void;
+}>();
+const { setErrorMessage } = useMutations(["setErrorMessage"]);
 
-    get is_project_select_disabled(): boolean {
-        return this.projects.length === 0;
-    }
-    get is_tracker_select_disabled(): boolean {
-        return this.trackers.length === 0;
-    }
-    get is_add_button_disabled(): boolean {
-        return this.selected_tracker === null;
-    }
+const projects = ref<ReadonlyArray<ProjectInfo>>([]);
+const trackers = ref<ReadonlyArray<TrackerInfo>>([]);
+const selected_project = ref<ProjectInfo | null>(null);
+const tracker_to_add = ref<TrackerInfo | null>(null);
+const is_loader_shown = ref(false);
 
-    get tracker_options(): TrackerSelectOption[] {
-        return this.trackers.map(({ id, label }) => {
-            const is_already_selected = this.selectedTrackers.find(
-                ({ tracker_id }) => tracker_id === id,
-            );
-            return {
-                id,
-                label,
-                disabled: is_already_selected !== undefined,
-            };
-        });
-    }
+const is_project_select_disabled = computed(() => projects.value.length === 0);
+const is_tracker_select_disabled = computed(() => trackers.value.length === 0);
+const is_add_button_disabled = computed(() => tracker_to_add.value === null);
+const tracker_options = computed<ReadonlyArray<TrackerSelectOption>>(() => {
+    return trackers.value.map((tracker: TrackerInfo) => {
+        const is_already_selected = props.selectedTrackers.some(
+            ({ tracker_id }) => tracker_id === tracker.id,
+        );
+        return {
+            id: tracker.id,
+            label: tracker.label,
+            disabled: is_already_selected,
+        };
+    });
+});
 
-    @Watch("selected_project")
-    selected_project_value(new_value: TrackerInfo | null) {
-        this.selected_tracker = null;
-        this.trackers = [];
-        if (new_value) {
-            this.loadTrackers(new_value.id);
-        }
-    }
+async function loadProjects(): Promise<void> {
+    is_loader_shown.value = true;
+    try {
+        projects.value = await getSortedProjectsIAmMemberOf();
 
-    mounted(): void {
-        this.loadProjects();
-    }
-
-    async loadProjects(): Promise<void> {
-        this.is_loader_shown = true;
-        try {
-            this.projects = await getSortedProjectsIAmMemberOf();
-
-            this.selected_project = this.projects[0];
-        } catch (error) {
-            this.$store.commit(
-                "setErrorMessage",
-                this.$gettext("Error while fetching the list of projects you are member of"),
-            );
-        } finally {
-            this.is_loader_shown = false;
-        }
-    }
-
-    async loadTrackers(project_id: number): Promise<void> {
-        this.is_loader_shown = true;
-        try {
-            this.trackers = await getTrackersOfProject(project_id);
-        } catch (error) {
-            this.$store.commit(
-                "setErrorMessage",
-                this.$gettext("Error while fetching the list of trackers of this project"),
-            );
-        } finally {
-            this.is_loader_shown = false;
-        }
-    }
-
-    addTrackerToSelection(): void {
-        this.$emit("tracker-added", {
-            selected_project: this.selected_project,
-            selected_tracker: this.selected_tracker,
-        });
-        this.selected_tracker = null;
+        selected_project.value = projects.value[0];
+    } catch (error) {
+        setErrorMessage(
+            gettext_provider.$gettext(
+                "Error while fetching the list of projects you are member of",
+            ),
+        );
+    } finally {
+        is_loader_shown.value = false;
     }
 }
+
+async function loadTrackers(project_id: number): Promise<void> {
+    is_loader_shown.value = true;
+    try {
+        trackers.value = await getTrackersOfProject(project_id);
+    } catch (error) {
+        setErrorMessage(
+            gettext_provider.$gettext("Error while fetching the list of trackers of this project"),
+        );
+    } finally {
+        is_loader_shown.value = false;
+    }
+}
+
+watch(selected_project, (new_value: ProjectInfo | null) => {
+    tracker_to_add.value = null;
+    trackers.value = [];
+    if (new_value) {
+        loadTrackers(new_value.id);
+    }
+});
+
+onMounted(() => {
+    loadProjects();
+});
+
+function addTrackerToSelection(): void {
+    if (!selected_project.value || !tracker_to_add.value) {
+        return;
+    }
+    emit("tracker-added", {
+        selected_project: selected_project.value,
+        selected_tracker: tracker_to_add.value,
+    });
+    tracker_to_add.value = null;
+}
+
+defineExpose({
+    selected_project,
+    tracker_to_add,
+    projects,
+    trackers,
+});
 </script>

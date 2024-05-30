@@ -32,21 +32,12 @@
     </div>
 </template>
 
-<script lang="ts">
-import Vue from "vue";
-import Component from "vue-class-component";
-import { State, Getter } from "vuex-class";
-import type { InvalidTracker } from "../type";
+<script setup lang="ts">
+import { useGetters, useState } from "vuex-composition-helpers";
+import type { State } from "../type";
 
-@Component
-export default class ErrorInactiveProjectMessage extends Vue {
-    @State
-    readonly invalid_trackers!: InvalidTracker[];
-
-    @State
-    readonly is_user_admin!: boolean;
-
-    @Getter
-    readonly has_invalid_trackers!: boolean;
-}
+const { has_invalid_trackers } = useGetters(["has_invalid_trackers"]);
+const { is_user_admin, invalid_trackers } = useState<
+    Pick<State, "is_user_admin" | "invalid_trackers">
+>(["is_user_admin", "invalid_trackers"]);
 </script>

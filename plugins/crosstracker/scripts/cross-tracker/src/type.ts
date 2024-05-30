@@ -28,7 +28,7 @@ export type ProjectInfo = Pick<ProjectReference, "id" | "uri" | "label">;
 export type State = {
     error_message: string | null;
     success_message: string | null;
-    invalid_trackers: InvalidTracker[];
+    invalid_trackers: ReadonlyArray<InvalidTracker>;
     reading_mode: boolean;
     is_report_saved: boolean;
     is_user_admin: boolean;
@@ -40,41 +40,41 @@ export type SelectedTracker = {
 };
 
 export type TrackerAndProject = {
-    project: Pick<ProjectInfo, "id" | "label">;
-    tracker: TrackerInfo;
+    readonly project: Pick<ProjectInfo, "id" | "label">;
+    readonly tracker: TrackerInfo;
 };
 
 export type TrackerToUpdate = {
-    tracker_id: number;
-    tracker_label: string;
-    project_label: string;
+    readonly tracker_id: number;
+    readonly tracker_label: string;
+    readonly project_label: string;
 };
 
 export type Report = {
-    trackers: Map<number, TrackerForInit>;
-    expert_query: string;
-    invalid_trackers: InvalidTracker[];
+    readonly trackers: Map<number, TrackerForInit>;
+    readonly expert_query: string;
+    readonly invalid_trackers: ReadonlyArray<InvalidTracker>;
 };
 
 export type ArtifactsCollection = {
-    artifacts: Artifact[];
-    total: string;
+    readonly artifacts: ReadonlyArray<Artifact>;
+    readonly total: string;
 };
 
 export type Artifact = {
-    id: number;
-    title: string;
-    badge: {
-        uri: string;
-        cross_ref: string;
-        color: string;
+    readonly id: number;
+    readonly title: string;
+    readonly badge: {
+        readonly uri: string;
+        readonly cross_ref: string;
+        readonly color: string;
     };
     formatted_last_update_date: string;
-    last_update_date: string;
-    status: string;
-    submitted_by: User;
-    assigned_to: User[];
-    project: ProjectReference;
+    readonly last_update_date: string;
+    readonly status: string;
+    readonly submitted_by: User;
+    readonly assigned_to: ReadonlyArray<User>;
+    readonly project: ProjectReference;
 };
 
 export type User = {

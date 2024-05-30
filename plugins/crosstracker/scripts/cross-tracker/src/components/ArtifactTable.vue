@@ -175,7 +175,7 @@ function getArtifactsFromReportOrUnsavedQuery(): Promise<ArtifactsCollection> {
     );
 }
 
-function formatArtifacts(artifacts: Array<Artifact>): Array<Artifact> {
+function formatArtifacts(artifacts: ReadonlyArray<Artifact>): ReadonlyArray<Artifact> {
     return artifacts.map((artifact) => {
         artifact.formatted_last_update_date = moment(artifact.last_update_date).format(
             getUserPreferredDateFormat(),
