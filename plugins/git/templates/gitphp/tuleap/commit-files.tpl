@@ -19,28 +19,28 @@
 
 <section class="tlp-pane-header git-repository-commit-diff-header">
     <h2 class="tlp-pane-title">
-        <i class="tlp-pane-title-icon fa fa-copy"></i> {t domain="gitphp"}Modified Files{/t}
+        <i class="tlp-pane-title-icon fa-regular fa-copy" aria-hidden="true"></i> {t domain="gitphp"}Modified Files{/t}
     </h2>
     <div class="git-repository-commit-diff-actions">
         <div class="tlp-button-bar">
             <div class="tlp-button-bar-item">
                 <input type="radio" class="tlp-button-bar-checkbox" checked>
                 <label class="tlp-button-primary tlp-button-outline tlp-button-small">
-                    <i class="fa fa-list"></i>  {t domain="gitphp"}List{/t}
+                    <i class="fa-solid fa-list-ul tlp-button-icon" aria-hidden="true"></i> {t domain="gitphp"}List{/t}
                 </label>
             </div>
             <div class="tlp-button-bar-item">
                 <a href="{$commit_presenter->getCommitDiffSideBySideLink()}"
                    class="tlp-button-primary tlp-button-outline tlp-button-small"
                 >
-                    <i class="far fa-copy tlp-button-icon"></i> {t domain="gitphp"}Side by side diff{/t}
+                    <i class="fa-regular fa-copy tlp-button-icon" aria-hidden="true"></i> {t domain="gitphp"}Side by side diff{/t}
                 </a>
             </div>
             <div class="tlp-button-bar-item">
                 <a href="{$commit_presenter->getCommitDiffLink()}"
                    class="tlp-button-primary tlp-button-outline tlp-button-small"
                 >
-                    <i class="far fa-file tlp-button-icon"></i> {t domain="gitphp"}Inline diff{/t}
+                    <i class="fa-regular fa-file tlp-button-icon" aria-hidden="true"></i> {t domain="gitphp"}Inline diff{/t}
                 </a>
             </div>
         </div>
@@ -83,12 +83,12 @@
                     <a href="{$commit_presenter->getDiffLink($diffline)}"
                        class="tlp-table-cell-actions-button tlp-button-primary tlp-button-outline tlp-button-small"
                     >
-                        <i class="fas fa-long-arrow-alt-right tlp-button-icon"></i> {t domain="gitphp"}Go to diff{/t}
+                        <i class="fa-solid fa-long-arrow-alt-right tlp-button-icon" aria-hidden="true"></i> {t domain="gitphp"}Go to diff{/t}
                     </a>
                     <a href="?a=blob&amp;h={$diffline->GetToHash()|urlencode}&amp;hb={$commit->GetHash()|urlencode}&amp;f={$diffline->GetToFile()}"
                        class="tlp-table-cell-actions-button tlp-button-primary tlp-button-outline tlp-button-small"
                     >
-                        <i class="far fa-file-alt tlp-button-icon"></i> {t}View file{/t}
+                        <i class="fa-regular fa-file-alt tlp-button-icon" aria-hidden="true"></i> {t domain="gitphp"}View file{/t}
                     </a>
                 </td>
             </tr>

@@ -24,7 +24,7 @@
             <div class="tlp-pane-header">
                     {if $commit && $tree->GetName()}
                         <h1 class="git-repository-files-title">
-                            <i class="tlp-pane-title-icon far fa-copy"></i>
+                            <i class="tlp-pane-title-icon fa-regular fa-copy" aria-hidden="true"></i>
                             {assign var=treecommit value=$tree->GetCommit()}
                             {assign var=treecommittree value=$treecommit->GetTree()}
                             <a href="?a=tree&amp;hb={$treecommit->GetHash()|urlencode}&amp;h={$treecommittree->GetHash()|urlencode}">{$project->GetProject()|escape}</a>/<!--
@@ -36,7 +36,7 @@
                         </h1>
                     {else}
                         <h1 class="tlp-pane-title">
-                            <i class="tlp-pane-title-icon far fa-copy"></i>
+                            <i class="tlp-pane-title-icon fa-regular fa-copy" aria-hidden="true"></i>
                             {t domain="gitphp"}Files{/t}
                         </h1>
                     {/if}
@@ -55,17 +55,17 @@
                                     {if $treeitem->isBlob() }
                                         <td>
                                             <a href="?a=blob&amp;hb={$commit->GetHash()|urlencode}&amp;h={$treeitem->GetHash()|urlencode}&amp;f={$treeitem->GetFullPath()|urlencode}">
-                                                <i class="far fa-file-alt fa-fw git-repository-tree-icon"></i>{$treeitem->GetName()|escape}
+                                                <i class="fa-regular fa-file-alt fa-fw git-repository-tree-icon" aria-hidden="true"></i>{$treeitem->GetName()|escape}
                                             </a>
                                         </td>
                                     {elseif $treeitem->isTree() }
                                         <td>
                                             <a href="?a=tree&amp;hb={$commit->GetHash()|urlencode}&amp;f={$treeitem->GetFullPath()|urlencode}">
-                                                <i class="fa fa-folder fa-fw git-repository-tree-icon"></i>{$treeitem->GetName()|escape}
+                                                <i class="fa-regular fa-folder fa-fw git-repository-tree-icon" aria-hidden="true"></i>{$treeitem->GetName()|escape}
                                             </a>
                                         </td>
                                     {elseif $treeitem->isSubmodule() }
-                                        <td><i class="far fa-folder fa-fw git-repository-tree-icon"></i>{$treeitem->GetName()|escape} @ {$treeitem->GetHash()|escape}</td>
+                                        <td><i class="fa-regular fa-folder fa-fw git-repository-tree-icon" aria-hidden="true"></i>{$treeitem->GetName()|escape} @ {$treeitem->GetHash()|escape}</td>
                                     {/if}
                                 </tr>
                             {/foreach}
@@ -83,7 +83,7 @@
             <div class="tlp-pane-container">
                 <div class="tlp-pane-header">
                     <h1 class="tlp-pane-title">
-                        <i class="far fa-file-alt tlp-pane-title-icon"></i> {$readme_content->GetName()|escape}
+                        <i class="fa-regular fa-file-alt tlp-pane-title-icon" aria-hidden="true"></i> {$readme_content->GetName()|escape}
                     </h1>
                 </div>
                 <section class="tlp-pane-section git-repository-readme-content">

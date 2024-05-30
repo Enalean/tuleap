@@ -25,7 +25,7 @@
         <section class="tlp-pane-section-for-cards" id="git-repository-shortlog">
             {foreach from=$shortlog_presenter->commits item=commits_per_day}
                 <h2 class="tlp-pane-subtitle git-repository-shortlog-day">
-                    <i class="fas fa-calendar-alt tlp-pane-title-icon"></i>
+                    <i class="fa-solid fa-calendar-alt tlp-pane-title-icon" aria-hidden="true"></i>
                     {$commits_per_day->day|escape}
                 </h2>
 
@@ -41,7 +41,7 @@
                                class="tlp-button-primary tlp-button-outline tlp-pagination-button"
                                title="{t domain="gitphp"}Previous{/t}"
                             >
-                                <i class="fa fa-angle-left"></i>
+                                <i class="fa-solid fa-angle-left" aria-hidden="true"></i>
                             </a>
                         {else}
                             <button type="button"
@@ -49,7 +49,7 @@
                                     title="{t domain="gitphp"}Previous{/t}"
                                     disabled
                             >
-                                <i class="fa fa-angle-left"></i>
+                                <i class="fa-solid fa-angle-left" aria-hidden="true"></i>
                             </button>
                         {/if}
                         {if (isset($hasmorerevs) && $hasmorerevs) }
@@ -57,7 +57,7 @@
                                class="tlp-button-primary tlp-button-outline tlp-pagination-button"
                                title="{t domain="gitphp"}Next{/t}"
                             >
-                                <i class="fa fa-angle-right"></i>
+                                <i class="fa-solid fa-angle-right" aria-hidden="true"></i>
                             </a>
                         {else}
                             <button type="button"
@@ -65,7 +65,7 @@
                                     title="{t domain="gitphp"}Next{/t}"
                                     disabled
                             >
-                                <i class="fa fa-angle-right"></i>
+                                <i class="fa-solid fa-angle-right" aria-hidden="true"></i>
                             </button>
                         {/if}
                     </div>

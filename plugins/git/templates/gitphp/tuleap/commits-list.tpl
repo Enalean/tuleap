@@ -77,7 +77,7 @@
                 </span>
 
                 <span class="git-repository-commit-card-info-metadata-date">
-                    <i class="far fa-clock git-repository-commit-card-info-metadata-date-icon"></i>{if $commit_presenter->commit->GetAge() > 60*60*24*7*2}{$commit_presenter->commit_date|escape}{else}{$commit_presenter->commit->GetAge()|agestring|escape}{/if}
+                    <i class="fa-regular fa-clock git-repository-commit-card-info-metadata-date-icon" aria-hidden="true"></i>{if $commit_presenter->commit->GetAge() > 60*60*24*7*2}{$commit_presenter->commit_date|escape}{else}{$commit_presenter->commit->GetAge()|agestring|escape}{/if}
                 </span>
 
                 {include file='tuleap/refs-badges.tpl' commit=$commit_presenter->commit}
@@ -135,8 +135,8 @@
                 <button type="button"
                         class="commit-more-actions tlp-button-primary tlp-button-small tlp-button-outline"
                 >
-                    <i class="fa fa-ellipsis-h tlp-button-icon"></i>
-                    <i class="fa fa-caret-down tlp-button-icon-right"></i>
+                    <i class="fa-solid fa-ellipsis tlp-button-icon" aria-hidden="true"></i>
+                    <i class="fa-solid fa-caret-down tlp-button-icon-right" aria-hidden="true"></i>
                 </button>
                 <div class="tlp-dropdown-menu" role="menu">
                     {if isset($mark) && $mark}

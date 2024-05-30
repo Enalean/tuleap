@@ -20,7 +20,7 @@
 
 {foreach from=$shortlog_presenter->commits item=commits_per_day}
     <h2 class="tlp-pane-subtitle git-repository-shortlog-day">
-        <i class="fas fa-calendar-alt tlp-pane-title-icon"></i>
+        <i class="fa-solid fa-calendar-alt tlp-pane-title-icon" aria-hidden="true"></i>
         {$commits_per_day->day|escape}
     </h2>
 
