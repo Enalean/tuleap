@@ -8,6 +8,12 @@
 
 namespace Tuleap\Git\GitPHP;
 
+use Smarty\Smarty;
+use Tuleap\Git\GitPHP\SmartyPlugins\AgeString;
+use Tuleap\Git\GitPHP\SmartyPlugins\Highlight;
+
+require_once __DIR__ . '/../../../vendor/smarty-gettext/smarty-gettext/block.t.php';
+
 /**
  * ControllerBase class
  *
@@ -68,16 +74,15 @@ abstract class ControllerBase
      */
     public function __construct()
     {
-        $this->tpl = new \Smarty();
-        $this->tpl->addPluginsDir([
-            __DIR__ . '/../smartyplugins',
-            __DIR__ . '/../../../vendor/smarty-gettext/smarty-gettext',
-        ]);
+        $this->tpl = new Smarty();
+        $this->tpl->registerPlugin(Smarty::PLUGIN_MODIFIER, AgeString::MODIFIER, AgeString::callback(...));
+        $this->tpl->registerPlugin(Smarty::PLUGIN_MODIFIER, Highlight::MODIFIER, Highlight::callback(...));
+        $this->tpl->registerPlugin(Smarty::PLUGIN_BLOCK, 't', smarty_block_t(...));
         $this->tpl->setTemplateDir(__DIR__ . '/../../../templates/gitphp/');
-        $this->tpl->registerPlugin('modifier', 'urlencode', fn(string $param): string => urlencode($param));
-        $this->tpl->registerPlugin('modifier', 'substr', fn (string $string, int $offset, int $length): string => substr($string, $offset, $length));
+        $this->tpl->registerPlugin(Smarty::PLUGIN_MODIFIER, 'urlencode', fn(string $param): string => urlencode($param));
+        $this->tpl->registerPlugin(Smarty::PLUGIN_MODIFIER, 'substr', fn (string $string, int $offset, int $length): string => substr($string, $offset, $length));
         $this->tpl->registerPlugin(
-            'function',
+            Smarty::PLUGIN_FUNCTION,
             'display_potentially_dangerous_bidirectional_text_warning',
             function (array $params): string {
                 if (! isset($params['diff']) || ! is_array($params['diff'])) {
