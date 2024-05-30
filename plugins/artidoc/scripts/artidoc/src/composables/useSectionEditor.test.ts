@@ -194,7 +194,7 @@ describe("useSectionEditor", () => {
                 expect(store.isInError().value).toBe(true);
             });
 
-            it("should end in NotFound error", async () => {
+            it("should end in NotFound error in case of 404", async () => {
                 vi.spyOn(latest, "isSectionInItsLatestVersion").mockReturnValue(okAsync(true));
 
                 const store = useSectionEditor(section, update_section_callback);
@@ -202,6 +202,31 @@ describe("useSectionEditor", () => {
                     .spyOn(rest_querier, "putArtifact")
                     .mockReturnValue(
                         errAsync(TuleapAPIFaultStub.fromCodeAndMessage(404, "Not found")),
+                    );
+
+                store.inputCurrentDescription("new description");
+                expect(store.getEditableDescription().value).toBe("new description");
+                expect(store.isInError().value).toBe(false);
+                expect(store.isNotFoundError().value).toBe(false);
+
+                store.editor_actions.saveEditor();
+
+                await flushPromises();
+
+                expect(mock_put_artifact_description).toHaveBeenCalledOnce();
+
+                expect(store.isInError().value).toBe(true);
+                expect(store.isNotFoundError().value).toBe(true);
+            });
+
+            it("should end in NotFound error in case of 403", async () => {
+                vi.spyOn(latest, "isSectionInItsLatestVersion").mockReturnValue(okAsync(true));
+
+                const store = useSectionEditor(section, update_section_callback);
+                const mock_put_artifact_description = vi
+                    .spyOn(rest_querier, "putArtifact")
+                    .mockReturnValue(
+                        errAsync(TuleapAPIFaultStub.fromCodeAndMessage(403, "Forbidden")),
                     );
 
                 store.inputCurrentDescription("new description");
