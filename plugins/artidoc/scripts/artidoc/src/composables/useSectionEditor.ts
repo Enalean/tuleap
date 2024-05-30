@@ -43,6 +43,7 @@ export type use_section_editor_type = {
     isSectionInEditMode: () => Ref<boolean>;
     isBeeingSaved: () => Ref<boolean>;
     isJustSaved: () => Ref<boolean>;
+    isJustRefreshed: () => Ref<boolean>;
     isInError: () => Ref<boolean>;
     isOutdated: () => Ref<boolean>;
     isNotFoundError: () => Ref<boolean>;
@@ -52,10 +53,13 @@ export type use_section_editor_type = {
     getEditableTitle: () => Ref<string>;
     getEditableDescription: () => Ref<string>;
     getReadonlyDescription: () => Ref<string>;
+    getErrorMessage: () => Ref<string>;
     clearGlobalNumberOfOpenEditorForTests: () => void;
 };
 
 let nb_active_edit_mode = 0;
+
+const TEMPORARY_FLAG_DURATION_IN_MS = 1000;
 
 function useSectionEditor(
     section: ArtidocSection,
@@ -74,13 +78,15 @@ function useSectionEditor(
     );
     const is_section_editable = computed(() => {
         const can_user_edit_document = strictInject<boolean>(CAN_USER_EDIT_DOCUMENT);
-        return section.can_user_edit_section && can_user_edit_document;
+        return current_section.value.can_user_edit_section && can_user_edit_document;
     });
     const is_being_saved = ref(false);
     const is_just_saved = ref(false);
+    const is_just_refreshed = ref(false);
     const is_in_error = ref(false);
     const is_outdated = ref(false);
     const is_not_found = ref(false);
+    const error_message = ref("");
 
     const setEditMode = (new_value: boolean): void => {
         is_edit_mode.value = new_value;
@@ -101,7 +107,6 @@ function useSectionEditor(
     const saveEditor = (): void => {
         is_in_error.value = false;
         is_outdated.value = false;
-        is_being_saved.value = true;
 
         if (
             editable_description.value === original_description.value &&
@@ -111,6 +116,8 @@ function useSectionEditor(
             addTemporaryJustSavedFlag();
             return;
         }
+
+        is_being_saved.value = true;
 
         isSectionInItsLatestVersion(current_section.value)
             .andThen(() =>
@@ -171,8 +178,7 @@ function useSectionEditor(
                 current_section.value = artidoc_section;
                 update_section_callback(artidoc_section);
                 cancelEditor();
-                addTemporaryJustSavedFlag();
-                is_outdated.value = false;
+                addTemporaryJustRefreshedFlag();
             },
             (fault: Fault) => {
                 handleError(fault);
@@ -191,6 +197,7 @@ function useSectionEditor(
         if (isNotFound(fault) || isForbidden(fault)) {
             is_not_found.value = true;
         }
+        error_message.value = String(fault);
     }
 
     function isNotFound(fault: Fault): boolean {
@@ -205,7 +212,14 @@ function useSectionEditor(
         is_just_saved.value = true;
         setTimeout(() => {
             is_just_saved.value = false;
-        }, 1000);
+        }, TEMPORARY_FLAG_DURATION_IN_MS);
+    }
+
+    function addTemporaryJustRefreshedFlag(): void {
+        is_just_refreshed.value = true;
+        setTimeout(() => {
+            is_just_refreshed.value = false;
+        }, TEMPORARY_FLAG_DURATION_IN_MS);
     }
 
     const enableEditor = (): void => {
@@ -216,6 +230,13 @@ function useSectionEditor(
         editable_description.value = original_description.value;
         editable_title.value = original_title.value;
         setEditMode(false);
+        resetErrorStates();
+    }
+
+    function resetErrorStates(): void {
+        is_outdated.value = false;
+        is_in_error.value = false;
+        is_not_found.value = false;
     }
 
     const inputCurrentDescription = (new_value: string): void => {
@@ -230,9 +251,11 @@ function useSectionEditor(
 
     const isBeeingSaved = (): Ref<boolean> => is_being_saved;
     const isJustSaved = (): Ref<boolean> => is_just_saved;
+    const isJustRefreshed = (): Ref<boolean> => is_just_refreshed;
     const isInError = (): Ref<boolean> => is_in_error;
     const isOutdated = (): Ref<boolean> => is_outdated;
     const isNotFoundError = (): Ref<boolean> => is_not_found;
+    const getErrorMessage = (): Ref<string> => error_message;
 
     const getEditableDescription = (): Ref<string> => {
         return editable_description;
@@ -256,9 +279,11 @@ function useSectionEditor(
         getEditableTitle,
         getEditableDescription,
         getReadonlyDescription,
+        getErrorMessage,
         isSectionInEditMode,
         isBeeingSaved,
         isJustSaved,
+        isJustRefreshed,
         isInError,
         isOutdated,
         isNotFoundError,

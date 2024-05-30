@@ -23,12 +23,19 @@
         v-bind:class="{
             'document-section-is-being-saved': is_being_saved,
             'document-section-is-just-saved': is_just_saved,
+            'document-section-is-just-refreshed': is_just_refreshed,
             'document-section-is-in-error': is_in_error,
             'document-section-is-outdated': is_outdated,
         }"
     >
         <not-found-error v-if="is_not_found_error" />
-        <outdated-section-warning v-if="is_outdated" v-bind:editor_actions="editor_actions" />
+        <generic-error
+            v-else-if="is_in_error"
+            v-bind:section="section"
+            v-bind:error_message="error_message"
+        />
+        <outdated-section-warning v-else-if="is_outdated" v-bind:editor_actions="editor_actions" />
+
         <section-title-with-artifact-id
             class="section-header"
             v-if="!is_sections_loading"
@@ -66,6 +73,7 @@ import { useInjectSectionsStore } from "@/stores/useSectionsStore";
 import SectionTitleWithArtifactIdSkeleton from "@/components/SectionTitleWithArtifactIdSkeleton.vue";
 import OutdatedSectionWarning from "@/components/OutdatedSectionWarning.vue";
 import NotFoundError from "@/components/NotFoundError.vue";
+import GenericError from "@/components/GenericError.vue";
 
 const props = defineProps<{ section: ArtidocSection }>();
 
@@ -76,8 +84,10 @@ const {
     getEditableTitle,
     getEditableDescription,
     getReadonlyDescription,
+    getErrorMessage,
     isBeeingSaved,
     isJustSaved,
+    isJustRefreshed,
     isInError,
     isNotFoundError,
     isOutdated,
@@ -90,12 +100,14 @@ const {
 const is_edit_mode = isSectionInEditMode();
 const is_being_saved = isBeeingSaved();
 const is_just_saved = isJustSaved();
+const is_just_refreshed = isJustRefreshed();
 const is_in_error = isInError();
 const is_not_found_error = isNotFoundError();
 const is_outdated = isOutdated();
 const title = getEditableTitle();
 const editable_description = getEditableDescription();
 const readonly_description = getReadonlyDescription();
+const error_message = getErrorMessage();
 </script>
 
 <style lang="scss" scoped>

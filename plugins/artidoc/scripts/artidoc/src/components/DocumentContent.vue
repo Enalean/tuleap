@@ -113,6 +113,12 @@ li {
         animation: pulse-section 500ms ease-in-out;
     }
 
+    &:has(.document-section-is-just-refreshed) {
+        --tuleap-artidoc-section-background: var(--tlp-info-color-lighter-90);
+
+        animation: pulse-section 500ms ease-in-out;
+    }
+
     &:has(.document-section-is-outdated) {
         --tuleap-artidoc-section-background: var(--tlp-alert-warning-background);
     }

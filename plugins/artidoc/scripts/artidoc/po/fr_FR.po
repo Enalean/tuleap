@@ -12,6 +12,9 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Generator: Poedit 3.0.1\n"
 
+msgid "An error occurred while trying to update the section."
+msgstr "Une erreur est survenue lors de la mise à jour de la section."
+
 msgid "Cancel"
 msgstr "Annuler"
 
@@ -25,11 +28,17 @@ msgstr ""
 msgid "Edit"
 msgstr "Éditer"
 
+msgid "Error details"
+msgstr "Détails de l'erreur"
+
 msgid "Force save"
 msgstr "Forcer la sauvegarde"
 
 msgid "Load new section"
 msgstr "Charger la nouvelle section"
+
+msgid "Open artifact"
+msgstr "Ouvrir l'artéfact"
 
 msgid "Reload page"
 msgstr "Recharger la page"
@@ -52,6 +61,12 @@ msgstr "Ce document est vide"
 
 msgid "This section has been edited by someone else."
 msgstr "Cette section a été mise à jour par quelqu'un d'autre."
+
+msgid ""
+"You can open the corresponding artifact in a new tab to fix the situation."
+msgstr ""
+"Vous pouvez ouvrir l'artéfact correspondant dans un nouvel onglet pour "
+"corriger la situation."
 
 msgid "You can read this document, it's just empty for now"
 msgstr "Vous pouvez lire ce document, mais celui-ci est vide pour l'instant"

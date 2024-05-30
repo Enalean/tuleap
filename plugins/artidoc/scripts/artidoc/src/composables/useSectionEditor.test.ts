@@ -167,11 +167,12 @@ describe("useSectionEditor", () => {
                 store.editor_actions.saveEditor();
 
                 expect(mock_put_artifact_description).not.toHaveBeenCalled();
+                expect(store.isBeeingSaved().value).toBe(false);
             });
         });
 
         describe("when the description is different from the original description", () => {
-            it("should end in error in case of... error", async () => {
+            it("should end in error in case of 400", async () => {
                 vi.spyOn(latest, "isSectionInItsLatestVersion").mockReturnValue(okAsync(true));
 
                 const store = useSectionEditor(section, update_section_callback);
@@ -184,6 +185,7 @@ describe("useSectionEditor", () => {
                 store.inputCurrentDescription("new description");
                 expect(store.getEditableDescription().value).toBe("new description");
                 expect(store.isInError().value).toBe(false);
+                expect(store.getErrorMessage().value).toBe("");
 
                 store.editor_actions.saveEditor();
 
@@ -192,6 +194,7 @@ describe("useSectionEditor", () => {
                 expect(mock_put_artifact_description).toHaveBeenCalledOnce();
 
                 expect(store.isInError().value).toBe(true);
+                expect(store.getErrorMessage().value).toBe("An error occurred.");
             });
 
             it("should end in NotFound error in case of 404", async () => {
@@ -381,6 +384,7 @@ describe("useSectionEditor", () => {
 
             store.inputCurrentTitle("new title");
             expect(store.getEditableTitle().value).toBe("new title");
+            store.isInError().value = true;
 
             store.editor_actions.refreshSection();
 
@@ -390,6 +394,7 @@ describe("useSectionEditor", () => {
             expect(store.getEditableDescription().value).toBe("concurrently edited description");
             expect(store.getReadonlyDescription().value).toBe("concurrently edited description");
             expect(store.getEditableTitle().value).toBe("concurrently edited title");
+            expect(store.isInError().value).toBe(false);
         });
     });
 
