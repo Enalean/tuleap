@@ -18,36 +18,45 @@
  */
 
 import { shallowMount } from "@vue/test-utils";
-import type { Wrapper } from "@vue/test-utils";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
+import type { VueWrapper } from "@vue/test-utils";
 import ExportCSVButton from "./ExportCSVButton.vue";
 import * as rest_querier from "../api/rest-querier";
 import * as download_helper from "../helpers/download-helper";
 import * as bom_helper from "../helpers/bom-helper";
-import { createCrossTrackerLocalVue } from "../helpers/local-vue-for-test";
+import { getGlobalTestOptions } from "../helpers/global-options-for-tests";
 import { FetchWrapperError } from "@tuleap/tlp-fetch";
+import type { State } from "../type";
 
+const REPORT_ID = 36;
 describe("ExportCSVButton", () => {
-    let download: jest.SpyInstance, getCSVReport: jest.SpyInstance, addBOM: jest.SpyInstance;
-    let store = {};
+    let download: jest.SpyInstance,
+        getCSVReport: jest.SpyInstance,
+        addBOM: jest.SpyInstance,
+        resetSpy: jest.Mock,
+        errorSpy: jest.Mock;
+
     beforeEach(() => {
         download = jest.spyOn(download_helper, "download").mockImplementation(() => {
-            //nothing to mock
+            //Do nothing
         });
         getCSVReport = jest.spyOn(rest_querier, "getCSVReport");
         addBOM = jest.spyOn(bom_helper, "addBOM");
+        resetSpy = jest.fn();
+        errorSpy = jest.fn();
     });
 
-    async function instantiateComponent(): Promise<Wrapper<Vue, Element>> {
+    function instantiateComponent(): VueWrapper<InstanceType<typeof ExportCSVButton>> {
         const store_options = {
-            state: { report_id: 1 },
-            getters: { should_display_export_button: true },
+            state: { report_id: REPORT_ID } as State,
+            getters: { should_display_export_button: () => true },
+            mutations: {
+                resetFeedbacks: resetSpy,
+                setErrorMessage: errorSpy,
+            },
         };
-        store = createStoreMock(store_options);
 
         return shallowMount(ExportCSVButton, {
-            localVue: await createCrossTrackerLocalVue(),
-            mocks: { $store: store },
+            global: { ...getGlobalTestOptions(store_options) },
         });
     }
 
@@ -55,24 +64,20 @@ describe("ExportCSVButton", () => {
         it(`When the server responds,
             then it will hide feedbacks,
             show a spinner and offer to download a CSV file with the results`, async () => {
-            const wrapper = await instantiateComponent();
-            wrapper.vm.$store.state.report_id = 36;
+            const wrapper = instantiateComponent();
             const csv = `"id"\r\n72\r\n17\r\n`;
             getCSVReport.mockResolvedValue(csv);
             addBOM.mockImplementation((csv) => csv);
 
-            wrapper.find("[data-test=export-csv-button]").trigger("click");
+            await wrapper.find("[data-test=export-csv-button]").trigger("click");
 
-            await wrapper.vm.$nextTick();
-            await wrapper.vm.$nextTick();
-
-            expect(wrapper.vm.$store.commit).toHaveBeenCalledWith("resetFeedbacks");
-            expect(getCSVReport).toHaveBeenCalledWith(36);
+            expect(resetSpy).toHaveBeenCalled();
+            expect(getCSVReport).toHaveBeenCalledWith(REPORT_ID);
             expect(download).toHaveBeenCalledWith(csv, "export-36.csv", "text/csv;encoding:utf-8");
         });
 
         it("When there is a REST error, then it will be shown", async () => {
-            const wrapper = await instantiateComponent();
+            const wrapper = instantiateComponent();
             getCSVReport.mockImplementation(() =>
                 Promise.reject(
                     new FetchWrapperError("Not found", {
@@ -82,18 +87,16 @@ describe("ExportCSVButton", () => {
                 ),
             );
 
-            wrapper.find("[data-test=export-csv-button]").trigger("click");
-            await wrapper.vm.$nextTick();
-            await wrapper.vm.$nextTick();
+            await wrapper.find("[data-test=export-csv-button]").trigger("click");
 
-            expect(wrapper.vm.$store.commit).toHaveBeenCalledWith(
-                "setErrorMessage",
+            expect(errorSpy).toHaveBeenCalledWith(
+                expect.any(Object),
                 "Report with id 90 not found",
             );
         });
 
         it("When there is a 50x REST error, then a generic error message will be shown", async () => {
-            const wrapper = await instantiateComponent();
+            const wrapper = instantiateComponent();
             getCSVReport.mockImplementation(() =>
                 Promise.reject(
                     new FetchWrapperError("Forbidden", {
@@ -102,14 +105,9 @@ describe("ExportCSVButton", () => {
                 ),
             );
 
-            wrapper.find("[data-test=export-csv-button]").trigger("click");
-            await wrapper.vm.$nextTick();
-            await wrapper.vm.$nextTick();
+            await wrapper.find("[data-test=export-csv-button]").trigger("click");
 
-            expect(wrapper.vm.$store.commit).toHaveBeenCalledWith(
-                "setErrorMessage",
-                expect.any(String),
-            );
+            expect(errorSpy).toHaveBeenCalledWith(expect.any(Object), expect.any(String));
         });
     });
 });

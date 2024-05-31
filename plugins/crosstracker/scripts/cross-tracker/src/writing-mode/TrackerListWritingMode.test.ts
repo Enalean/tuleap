@@ -18,14 +18,14 @@
  */
 
 import { shallowMount } from "@vue/test-utils";
-import type { Wrapper } from "@vue/test-utils";
+import type { VueWrapper } from "@vue/test-utils";
 import type { TrackerToUpdate } from "../type";
 import TrackerListWritingMode from "./TrackerListWritingMode.vue";
 
 describe("TrackerListWritingMode", () => {
-    function instantiateComponent(): Wrapper<Vue, Element> {
+    function instantiateComponent(): VueWrapper<InstanceType<typeof TrackerListWritingMode>> {
         return shallowMount(TrackerListWritingMode, {
-            propsData: {
+            props: {
                 trackers: [
                     { tracker_label: "fake_tracker", tracker_id: 1 } as TrackerToUpdate,
                     { tracker_label: "bugs", tracker_id: 2 } as TrackerToUpdate,

@@ -18,48 +18,47 @@
  */
 
 import { shallowMount } from "@vue/test-utils";
-import type { Wrapper } from "@vue/test-utils";
-import { createCrossTrackerLocalVue } from "../helpers/local-vue-for-test";
+import type { VueWrapper } from "@vue/test-utils";
+import { getGlobalTestOptions } from "../helpers/global-options-for-tests";
 import TrackerSelection from "./TrackerSelection.vue";
 import * as project_cache from "./projects-cache";
 import * as rest_querier from "../api/rest-querier";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import type { ProjectInfo, SelectedTracker, State, TrackerInfo } from "../type";
 
-type TrackerSelectionExposed = {
-    selected_project: ProjectInfo | null;
-    tracker_to_add: TrackerInfo | null;
-    projects: ProjectInfo[];
-    trackers: TrackerInfo[];
-};
+jest.useFakeTimers();
 
 describe("TrackerSelection", () => {
-    let store = {
-        commit: jest.fn(),
-    };
+    let errorSpy: jest.Mock;
 
-    async function instantiateComponent(
+    beforeEach(() => {
+        errorSpy = jest.fn();
+    });
+
+    function instantiateComponent(
         selectedTrackers: Array<SelectedTracker> = [],
-    ): Promise<Wrapper<Vue & TrackerSelectionExposed, Element>> {
-        const store_options = { state: { is_user_admin: true } as State, commit: jest.fn() };
-        store = createStoreMock(store_options);
+    ): VueWrapper<InstanceType<typeof TrackerSelection>> {
+        const store_options = {
+            state: { is_user_admin: true } as State,
+            mutations: {
+                setErrorMessage: errorSpy,
+            },
+        };
 
         return shallowMount(TrackerSelection, {
-            localVue: await createCrossTrackerLocalVue(),
-            propsData: {
+            props: {
                 selectedTrackers,
             },
-            mocks: { $store: store },
-        }) as Wrapper<Vue & TrackerSelectionExposed, Element>;
+            global: { ...getGlobalTestOptions(store_options) },
+        });
     }
 
     describe("mounted()", () => {
-        it("on init, the projects will be loaded", async () => {
+        it("on init, the projects will be loaded", () => {
             const loadProjects = jest
                 .spyOn(rest_querier, "getSortedProjectsIAmMemberOf")
                 .mockResolvedValue([]);
 
-            await instantiateComponent();
+            instantiateComponent();
 
             expect(loadProjects).toHaveBeenCalled();
         });
@@ -73,11 +72,10 @@ describe("TrackerSelection", () => {
         it("Displays an error when rest route fail", async () => {
             jest.spyOn(project_cache, "getSortedProjectsIAmMemberOf").mockRejectedValue([]);
 
-            const wrapper = await instantiateComponent();
-            await wrapper.vm.$nextTick(); // for the promise
-            await wrapper.vm.$nextTick(); // for the finally
+            const wrapper = instantiateComponent();
+            await jest.runOnlyPendingTimersAsync();
 
-            expect(store.commit).toHaveBeenCalledWith("setErrorMessage", expect.anything());
+            expect(errorSpy).toHaveBeenCalledWith(expect.any(Object), expect.any(String));
 
             expect(wrapper.find("[data-test=tracker-loader]").attributes("class")).not.toContain(
                 "fa-spin",
@@ -93,11 +91,11 @@ describe("TrackerSelection", () => {
                 second_project,
             ]);
 
-            const wrapper = await instantiateComponent();
-            await wrapper.vm.$nextTick();
+            const wrapper = instantiateComponent();
+            await jest.runOnlyPendingTimersAsync();
 
             expect(wrapper.element).toMatchSnapshot();
-            expect(wrapper.vm.selected_project).toBe(first_project);
+            expect(wrapper.vm.selected_project).toStrictEqual(first_project);
             expect(wrapper.vm.projects).toStrictEqual([first_project, second_project]);
         });
     });
@@ -112,11 +110,9 @@ describe("TrackerSelection", () => {
             const second_tracker = { id: 26, label: "unfruitfully" } as TrackerInfo;
             const trackers = [first_tracker, second_tracker];
             jest.spyOn(rest_querier, "getTrackersOfProject").mockResolvedValue(trackers);
-            const wrapper = await instantiateComponent([{ tracker_id: 26 } as SelectedTracker]);
 
-            await wrapper.vm.$nextTick(); // for the promise of project
-            await wrapper.vm.$nextTick(); // for the promise of tracker
-            await wrapper.vm.$nextTick(); // for the finally
+            const wrapper = instantiateComponent([{ tracker_id: 26 } as SelectedTracker]);
+            await jest.runOnlyPendingTimersAsync();
 
             expect(wrapper.vm.trackers).toStrictEqual(trackers);
         });
@@ -126,12 +122,10 @@ describe("TrackerSelection", () => {
             jest.spyOn(project_cache, "getSortedProjectsIAmMemberOf").mockResolvedValue([project]);
             jest.spyOn(rest_querier, "getTrackersOfProject").mockRejectedValue([]);
 
-            const wrapper = await instantiateComponent();
-            await wrapper.vm.$nextTick(); // for the promise of project
-            await wrapper.vm.$nextTick(); // for the promise of tracker
-            await wrapper.vm.$nextTick(); // for the finally
+            instantiateComponent();
+            await jest.runOnlyPendingTimersAsync();
 
-            expect(store.commit).toHaveBeenCalledWith("setErrorMessage", expect.anything());
+            expect(errorSpy).toHaveBeenCalledWith(expect.any(Object), expect.any(String));
         });
     });
 
@@ -151,11 +145,8 @@ describe("TrackerSelection", () => {
                 tracker_to_add,
             ]);
 
-            const wrapper = await instantiateComponent();
-
-            await wrapper.vm.$nextTick(); // for the promise of project
-            await wrapper.vm.$nextTick(); // for the promise of tracker
-            await wrapper.vm.$nextTick(); // for the finally
+            const wrapper = instantiateComponent();
+            await jest.runOnlyPendingTimersAsync();
 
             wrapper.vm.selected_project = selected_project;
             wrapper.vm.tracker_to_add = tracker_to_add;
@@ -163,9 +154,9 @@ describe("TrackerSelection", () => {
             wrapper
                 .find("[data-test=cross-tracker-selector-tracker-button]")
                 .element.removeAttribute("disabled");
-            wrapper.get("[data-test=cross-tracker-selector-tracker-button]").trigger("click");
+            await wrapper.get("[data-test=cross-tracker-selector-tracker-button]").trigger("click");
 
-            const emitted = wrapper.emitted()["tracker-added"];
+            const emitted = wrapper.emitted("tracker-added");
             if (!emitted) {
                 throw new Error("Event has not been emitted");
             }

@@ -69,12 +69,15 @@
 <script setup lang="ts">
 import { computed, ref } from "vue";
 import { useGetters, useMutations, useState } from "vuex-composition-helpers";
+import { useGettext } from "vue3-gettext";
 import TrackerListReadingMode from "./TrackerListReadingMode.vue";
 import { updateReport } from "../api/rest-querier";
 import type ReadingCrossTrackerReport from "./reading-cross-tracker-report";
 import type { State } from "../type";
 import type BackendCrossTrackerReport from "../backend-cross-tracker-report";
 import { FetchWrapperError } from "@tuleap/tlp-fetch";
+
+const { $gettext } = useGettext();
 
 const props = defineProps<{
     readingCrossTrackerReport: ReadingCrossTrackerReport;

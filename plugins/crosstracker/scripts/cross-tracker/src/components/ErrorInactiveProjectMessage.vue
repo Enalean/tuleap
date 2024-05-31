@@ -34,8 +34,10 @@
 
 <script setup lang="ts">
 import { useGetters, useState } from "vuex-composition-helpers";
+import { useGettext } from "vue3-gettext";
 import type { State } from "../type";
 
+const { $gettext } = useGettext();
 const { has_invalid_trackers } = useGetters(["has_invalid_trackers"]);
 const { is_user_admin, invalid_trackers } = useState<
     Pick<State, "is_user_admin" | "invalid_trackers">

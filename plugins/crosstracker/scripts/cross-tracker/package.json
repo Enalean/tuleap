@@ -10,12 +10,12 @@
     "@tuleap/plugin-tracker-tql-codemirror": "workspace:*",
     "@tuleap/tlp-badge": "workspace:^",
     "@tuleap/tlp-fetch": "workspace:*",
-    "@tuleap/vue2-gettext-composition-helper": "workspace:^",
-    "@tuleap/vue2-gettext-init": "workspace:*",
+    "@tuleap/vue3-gettext-init": "workspace:^",
     "extendable-error": "^0.1.7",
     "moment": "^2.29.4",
-    "vue": "^2.7.8",
-    "vuex": "^3.6.2",
+    "vue": "^3.3.4",
+    "vue3-gettext": "2.4.0",
+    "vuex": "^4.1.0",
     "vuex-composition-helpers": "^2.0.1"
   },
   "devDependencies": {
@@ -23,9 +23,8 @@
     "@tuleap/core-rest-api-types": "workspace:*",
     "@tuleap/plugin-tracker-rest-api-types": "workspace:*",
     "@tuleap/po-gettext-plugin": "workspace:*",
-    "@tuleap/vuex-store-wrapper-jest": "workspace:*",
-    "@vitejs/plugin-vue2": "^2.0.0",
-    "@vue/test-utils": "^1.3"
+    "@vitejs/plugin-vue": "4.2.3",
+    "@vue/test-utils": "^2.4.1"
   },
   "scripts": {
     "typecheck": "vue-tsc --noEmit",

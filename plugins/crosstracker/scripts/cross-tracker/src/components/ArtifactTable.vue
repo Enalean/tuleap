@@ -77,7 +77,7 @@
 import type { Ref } from "vue";
 import { computed, onMounted, ref, watch } from "vue";
 import { useMutations, useState } from "vuex-composition-helpers";
-import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
+import { useGettext } from "vue3-gettext";
 import moment from "moment";
 import ArtifactTableRow from "./ArtifactTableRow.vue";
 import ExportButton from "./ExportCSVButton.vue";
@@ -93,7 +93,7 @@ const { reading_mode, is_report_saved, report_id } = useState<
     Pick<State, "reading_mode" | "is_report_saved" | "report_id">
 >(["reading_mode", "is_report_saved", "report_id"]);
 const { setErrorMessage } = useMutations(["setErrorMessage"]);
-const gettext_provider = useGettext();
+const { $gettext } = useGettext();
 
 const is_loading = ref(true);
 let artifacts: Ref<Artifact[]> = ref([]);
@@ -152,7 +152,7 @@ async function loadArtifacts(): Promise<void> {
             if (error_json && "error" in error_json && "i18n_error_message" in error_json.error) {
                 setErrorMessage(error_json.error.i18n_error_message);
             } else {
-                setErrorMessage(gettext_provider.$gettext("An error occurred"));
+                setErrorMessage($gettext("An error occurred"));
             }
         }
     } finally {

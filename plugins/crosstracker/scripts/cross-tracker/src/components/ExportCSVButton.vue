@@ -37,7 +37,7 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { useGetters, useMutations, useState } from "vuex-composition-helpers";
-import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
+import { useGettext } from "vue3-gettext";
 import { download } from "../helpers/download-helper";
 import { addBOM } from "../helpers/bom-helper";
 import { getCSVReport } from "../api/rest-querier";

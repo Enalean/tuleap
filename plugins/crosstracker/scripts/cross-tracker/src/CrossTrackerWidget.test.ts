@@ -17,11 +17,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { createCrossTrackerLocalVue } from "./helpers/local-vue-for-test";
-import type { Wrapper } from "@vue/test-utils";
+import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
+import { getGlobalTestOptions } from "./helpers/global-options-for-tests";
 import { mockFetchError } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import CrossTrackerWidget from "./CrossTrackerWidget.vue";
 import BackendCrossTrackerReport from "./backend-cross-tracker-report";
 import ReadingCrossTrackerReport from "./reading-mode/reading-cross-tracker-report";
@@ -33,37 +32,58 @@ import WritingMode from "./writing-mode/WritingMode.vue";
 import type { ProjectReference } from "@tuleap/core-rest-api-types";
 import type { InvalidTracker, State } from "./type";
 
+const noop = (): void => {
+    //Do nothing
+};
+
+jest.useFakeTimers();
+
 describe("CrossTrackerWidget", () => {
     let backendCrossTrackerReport: BackendCrossTrackerReport,
         readingCrossTrackerReport: ReadingCrossTrackerReport,
         writingCrossTrackerReport: WritingCrossTrackerReport,
-        getReport: jest.SpyInstance;
+        getReport: jest.SpyInstance,
+        switchToWritingModeSpy: jest.Mock,
+        switchToReadingModeSpy: jest.Mock,
+        setErrorMessageSpy: jest.Mock,
+        switchReportToSavedSpy: jest.Mock;
 
     beforeEach(() => {
         backendCrossTrackerReport = new BackendCrossTrackerReport();
         readingCrossTrackerReport = new ReadingCrossTrackerReport();
         writingCrossTrackerReport = new WritingCrossTrackerReport();
+        switchToWritingModeSpy = jest.fn();
+        switchToReadingModeSpy = jest.fn();
+        setErrorMessageSpy = jest.fn();
+        switchReportToSavedSpy = jest.fn();
     });
 
-    async function instantiateComponent(state: Partial<State>): Promise<Wrapper<Vue, Element>> {
+    function instantiateComponent(
+        state: Partial<State>,
+    ): VueWrapper<InstanceType<typeof CrossTrackerWidget>> {
         const invalid_trackers: ReadonlyArray<InvalidTracker> = [];
         const store_options = {
             state: {
                 ...state,
                 invalid_trackers,
+            } as State,
+            getters: { has_success_message: () => false },
+            mutations: {
+                switchToWritingMode: switchToWritingModeSpy,
+                switchToReadingMode: switchToReadingModeSpy,
+                setErrorMessage: setErrorMessageSpy,
+                switchReportToSaved: switchReportToSavedSpy,
+                resetInvalidTrackerList: noop,
             },
-            getters: { has_success_message: false },
         };
-        const store = createStoreMock(store_options);
 
         return shallowMount(CrossTrackerWidget, {
-            localVue: await createCrossTrackerLocalVue(),
-            propsData: {
+            props: {
                 writingCrossTrackerReport,
                 backendCrossTrackerReport,
                 readingCrossTrackerReport,
             },
-            mocks: { $store: store },
+            global: { ...getGlobalTestOptions(store_options) },
         });
     }
 
@@ -74,32 +94,32 @@ describe("CrossTrackerWidget", () => {
                 { id: 102 } as ProjectReference,
             ]);
             const duplicate = jest.spyOn(writingCrossTrackerReport, "duplicateFromReport");
-            const wrapper = await instantiateComponent({
+            const wrapper = instantiateComponent({
                 is_user_admin: true,
                 reading_mode: true,
             });
-            await wrapper.vm.$nextTick(); // wait for component loaded
+            await jest.runOnlyPendingTimersAsync();
 
             wrapper.findComponent(ReadingMode).vm.$emit("switch-to-writing-mode");
 
             expect(duplicate).toHaveBeenCalledWith(readingCrossTrackerReport);
-            expect(wrapper.vm.$store.commit).toHaveBeenCalledWith("switchToWritingMode");
+            expect(switchToWritingModeSpy).toHaveBeenCalled();
         });
 
         it(`Given I am not admin,
             when I try to switch to writing mode, then nothing will happen`, async () => {
             jest.spyOn(rest_querier, "getSortedProjectsIAmMemberOf").mockResolvedValue([]);
             const duplicate = jest.spyOn(writingCrossTrackerReport, "duplicateFromReport");
-            const wrapper = await instantiateComponent({
+            const wrapper = instantiateComponent({
                 is_user_admin: false,
                 reading_mode: true,
             });
-            await wrapper.vm.$nextTick(); // wait for component loaded
+            await jest.runOnlyPendingTimersAsync();
 
             wrapper.findComponent(ReadingMode).vm.$emit("switch-to-writing-mode");
 
             expect(duplicate).not.toHaveBeenCalled();
-            expect(wrapper.vm.$store.commit).not.toHaveBeenCalledWith("switchToWritingMode");
+            expect(switchToWritingModeSpy).not.toHaveBeenCalled();
         });
     });
 
@@ -107,36 +127,36 @@ describe("CrossTrackerWidget", () => {
         it(`When I switch to the reading mode with saved state,
             then the writing report will be updated and a mutation will be committed`, async () => {
             const duplicate = jest.spyOn(writingCrossTrackerReport, "duplicateFromReport");
-            const wrapper = await instantiateComponent({
+            const wrapper = instantiateComponent({
                 is_user_admin: true,
                 reading_mode: false,
             });
-            await wrapper.vm.$nextTick(); // wait for component loaded
+            await jest.runOnlyPendingTimersAsync();
 
             wrapper
                 .findComponent(WritingMode)
                 .vm.$emit("switch-to-reading-mode", { saved_state: true });
 
             expect(duplicate).toHaveBeenCalledWith(readingCrossTrackerReport);
-            expect(wrapper.vm.$store.commit).toHaveBeenCalledWith("switchToReadingMode", true);
+            expect(switchToReadingModeSpy).toHaveBeenCalledWith(expect.any(Object), true);
         });
 
         it(`When I switch to the reading mode with unsaved state,
             then a batch of artifacts will be loaded,
             the reading report will be updated and a mutation will be committed`, async () => {
             const duplicate = jest.spyOn(readingCrossTrackerReport, "duplicateFromWritingReport");
-            const wrapper = await instantiateComponent({
+            const wrapper = instantiateComponent({
                 is_user_admin: true,
                 reading_mode: false,
             });
-            await wrapper.vm.$nextTick(); // wait for component loaded
+            await jest.runOnlyPendingTimersAsync();
 
             wrapper
                 .findComponent(WritingMode)
                 .vm.$emit("switch-to-reading-mode", { saved_state: false });
 
             expect(duplicate).toHaveBeenCalledWith(writingCrossTrackerReport);
-            expect(wrapper.vm.$store.commit).toHaveBeenCalledWith("switchToReadingMode", false);
+            expect(switchToReadingModeSpy).toHaveBeenCalledWith(expect.any(Object), false);
         });
     });
 
@@ -154,9 +174,8 @@ describe("CrossTrackerWidget", () => {
             });
             const duplicateReading = jest.spyOn(readingCrossTrackerReport, "duplicateFromReport");
             const duplicateWriting = jest.spyOn(writingCrossTrackerReport, "duplicateFromReport");
-            await instantiateComponent({
-                is_user_admin: true,
-            });
+            instantiateComponent({ is_user_admin: true });
+            await jest.runOnlyPendingTimersAsync();
 
             expect(backendCrossTrackerReport.init).toHaveBeenCalledWith(trackers, expert_query);
             expect(duplicateReading).toHaveBeenCalledWith(backendCrossTrackerReport);
@@ -170,32 +189,30 @@ describe("CrossTrackerWidget", () => {
                     error: { message },
                 },
             });
-            const wrapper = await instantiateComponent({
-                is_user_admin: true,
-            });
-            await wrapper.vm.$nextTick();
+            instantiateComponent({ is_user_admin: true });
+            await jest.runOnlyPendingTimersAsync();
 
-            expect(wrapper.vm.$store.commit).toHaveBeenCalledWith("setErrorMessage", message);
+            expect(setErrorMessageSpy).toHaveBeenCalledWith(expect.any(Object), message);
         });
     });
 
     describe("reportSaved() -", () => {
         it(`when the report is saved,
             then the reports will be updated and a mutation will be committed`, async () => {
-            const wrapper = await instantiateComponent({
+            const wrapper = instantiateComponent({
                 is_user_admin: true,
                 reading_mode: true,
             });
             const duplicateReading = jest.spyOn(readingCrossTrackerReport, "duplicateFromReport");
             const duplicateWriting = jest.spyOn(writingCrossTrackerReport, "duplicateFromReport");
-            await wrapper.vm.$nextTick();
+            await jest.runOnlyPendingTimersAsync();
 
             wrapper.findComponent(ReadingMode).vm.$emit("saved");
 
             expect(duplicateReading).toHaveBeenCalledWith(backendCrossTrackerReport);
             expect(duplicateWriting).toHaveBeenCalledWith(readingCrossTrackerReport);
-            expect(wrapper.vm.$store.commit).toHaveBeenCalledWith(
-                "switchReportToSaved",
+            expect(switchReportToSavedSpy).toHaveBeenCalledWith(
+                expect.any(Object),
                 expect.any(String),
             );
         });

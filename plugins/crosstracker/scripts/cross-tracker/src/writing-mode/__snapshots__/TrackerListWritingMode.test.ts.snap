@@ -4,6 +4,7 @@ exports[`TrackerListWritingMode renders a list of trackers 1`] = `
 <div
   class="cross-tracker-form-trackers-selected"
 >
+  
   <span
     class="tlp-badge-primary tlp-badge-outline"
   >
@@ -12,20 +13,14 @@ exports[`TrackerListWritingMode renders a list of trackers 1`] = `
       data-test="remove-tracker"
       type="button"
     >
-      
-            ×
-        
+       × 
     </button>
-    
-        fake_tracker
-        
+     fake_tracker 
     <i
       aria-hidden="true"
       class="fa-solid fa-archive cross-tracker-report-archive-icon"
     />
-    
-        
-    
+     
   </span>
   <span
     class="tlp-badge-primary tlp-badge-outline"
@@ -35,20 +30,15 @@ exports[`TrackerListWritingMode renders a list of trackers 1`] = `
       data-test="remove-tracker"
       type="button"
     >
-      
-            ×
-        
+       × 
     </button>
-    
-        bugs
-        
+     bugs 
     <i
       aria-hidden="true"
       class="fa-solid fa-archive cross-tracker-report-archive-icon"
     />
-    
-        
-    
+     
   </span>
+  
 </div>
 `;

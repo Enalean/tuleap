@@ -55,7 +55,7 @@
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
 import { useMutations } from "vuex-composition-helpers";
-import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
+import { useGettext } from "vue3-gettext";
 import QueryEditor from "./QueryEditor.vue";
 import type { AddTrackerToSelectionCommand } from "./TrackerSelection.vue";
 import TrackerSelection from "./TrackerSelection.vue";
@@ -66,7 +66,7 @@ import type { TrackerToUpdate } from "../type";
 
 export type SaveEvent = { readonly saved_state: boolean };
 
-const gettext_provider = useGettext();
+const { $gettext } = useGettext();
 
 const props = defineProps<{ writingCrossTrackerReport: WritingCrossTrackerReport }>();
 const emit = defineEmits<{
@@ -109,9 +109,7 @@ function addTrackerToSelection(payload: AddTrackerToSelectionCommand): void {
         updateSelectedTrackers();
     } catch (error) {
         if (error instanceof TooManyTrackersSelectedError) {
-            setErrorMessage(
-                gettext_provider.$gettext("Tracker selection is limited to 25 trackers"),
-            );
+            setErrorMessage($gettext("Tracker selection is limited to 25 trackers"));
         } else {
             throw error;
         }
