@@ -81,7 +81,7 @@ final class TrackersPermissionsRetrieverTest extends TestCase
             RetrieveUserByIdStub::withNoUser(),
         );
         self::expectException(LogicException::class);
-        $permissions->retrieveUserPermissionOnFields(UserTestBuilder::buildWithDefaults(), [], FieldPermissionType::PERMISSION_READ);
+        $permissions->retrieveUserPermissionOnTrackers(UserTestBuilder::buildWithDefaults(), [], TrackerPermissionType::PERMISSION_VIEW);
     }
 
     public function testItReturnsAllowedFields(): void

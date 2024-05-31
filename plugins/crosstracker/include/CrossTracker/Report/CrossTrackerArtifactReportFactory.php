@@ -34,6 +34,7 @@ use Tuleap\CrossTracker\Report\Query\Advanced\InvalidTermCollectorVisitor;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\CrossTrackerExpertQueryReportDao;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilderVisitor;
 use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilderVisitor;
+use Tuleap\REST\RESTLogger;
 use Tuleap\Tracker\Artifact\RetrieveArtifact;
 use Tuleap\Tracker\Report\Query\Advanced\ExpertQueryValidator;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Query;
@@ -165,13 +166,19 @@ final readonly class CrossTrackerArtifactReportFactory
             $offset
         );
 
+        if ($artifact_ids === []) {
+            return new ArtifactMatchingReportCollection([], 0);
+        }
+
         $additional_select_from = $this->select_builder->buildSelectFrom($query->getSelect(), $trackers, $current_user);
         $temp_results           = $this->expert_query_dao->searchArtifactsColumnsMatchingIds(
             $additional_select_from,
             array_map(static fn(array $row) => $row['id'], $artifact_ids),
         );
 
-        return $this->buildCollectionOfArtifacts($temp_results, 0);
+        RESTLogger::getLogger()->debug(print_r($temp_results, true)); // Temporary for debugging
+
+        return $this->buildCollectionOfArtifacts($temp_results, $this->expert_query_dao->foundRows());
     }
 
     /**

@@ -92,7 +92,7 @@ final class CrossTrackerExpertQueryReportDao extends DataAccessObject
         $tracker_ids_statement = EasyStatement::open()->in('tracker_artifact.tracker_id IN (?*)', $tracker_ids);
 
         $sql = <<<EOSQL
-        SELECT DISTINCT tracker_artifact.id AS id
+        SELECT SQL_CALC_FOUND_ROWS DISTINCT tracker_artifact.id AS id
         FROM tracker_artifact
         INNER JOIN tracker ON (tracker_artifact.tracker_id = tracker.id)
         INNER JOIN tracker_changeset AS last_changeset ON (tracker_artifact.last_changeset_id = last_changeset.id)

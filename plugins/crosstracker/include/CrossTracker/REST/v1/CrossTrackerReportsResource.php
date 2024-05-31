@@ -40,6 +40,7 @@ use Tuleap\CrossTracker\CrossTrackerReportFactory;
 use Tuleap\CrossTracker\CrossTrackerReportNotFoundException;
 use Tuleap\CrossTracker\Permission\CrossTrackerPermissionGate;
 use Tuleap\CrossTracker\Report\CrossTrackerArtifactReportFactory;
+use Tuleap\CrossTracker\Report\Query\Advanced\DuckTypedField\FieldTypeRetrieverWrapper;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSearchableCollectorVisitor;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSearchablesCollectionBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSelectablesCollectionBuilder;
@@ -61,6 +62,7 @@ use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata\MetadataU
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata\StatusChecker;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata\SubmissionDateChecker;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata\TextSemanticChecker;
+use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Field\Date\DateSelectFromBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Field\FieldSelectFromBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilderVisitor;
 use Tuleap\DB\DBFactory;
@@ -234,13 +236,14 @@ class CrossTrackerReportsResource extends AuthenticatedResource
         $date_time_value_rounder = new DateTimeValueRounder();
         $artifact_factory        = Tracker_ArtifactFactory::instance();
         $list_from_where_builder = new Field\ListFromWhereBuilder();
+        $retrieve_field_type     = new FieldTypeRetrieverWrapper($form_element_factory);
         $query_builder_visitor   = new QueryBuilderVisitor(
             new FromWhereSearchableVisitor(),
             new ReverseLinkFromWhereBuilder($artifact_factory),
             new ForwardLinkFromWhereBuilder($artifact_factory),
             new Field\FieldFromWhereBuilder(
                 $form_element_factory,
-                $form_element_factory,
+                $retrieve_field_type,
                 new Field\Numeric\NumericFromWhereBuilder(),
                 new Field\Text\TextFromWhereBuilder($db),
                 new Field\Date\DateFromWhereBuilder($date_time_value_rounder),
@@ -266,7 +269,9 @@ class CrossTrackerReportsResource extends AuthenticatedResource
         $select_builder_visitor  = new SelectBuilderVisitor(
             new FieldSelectFromBuilder(
                 $form_element_factory,
-                $form_element_factory,
+                $retrieve_field_type,
+                TrackersPermissionsRetriever::build(),
+                new DateSelectFromBuilder(),
             ),
         );
 

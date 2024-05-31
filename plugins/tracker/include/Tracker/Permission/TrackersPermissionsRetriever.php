@@ -76,10 +76,6 @@ final readonly class TrackersPermissionsRetriever implements RetrieveUserPermiss
 
     public function retrieveUserPermissionOnFields(PFUser $user, array $fields, FieldPermissionType $permission): UserPermissionsOnItems
     {
-        if (! self::isEnabled()) {
-            throw new LogicException('Trackers permissions on tracker are disabled by feature flag.');
-        }
-
         if ($fields === []) {
             return new UserPermissionsOnItems($user, $permission, [], []);
         }

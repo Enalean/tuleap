@@ -5634,11 +5634,6 @@
       <code><![CDATA[$value]]></code>
     </MissingParamType>
   </file>
-  <file src="plugins/crosstracker/include/CrossTracker/Report/Query/Advanced/QueryValidation/DuckTypedField/DuckTypedFieldChecker.php">
-    <ArgumentTypeCoercion>
-      <code><![CDATA[$fields_user_can_read]]></code>
-    </ArgumentTypeCoercion>
-  </file>
   <file src="plugins/crosstracker/include/CrossTracker/Report/SimilarField/BindNameVisitor.php">
     <MissingReturnType>
       <code><![CDATA[visitListBindNull]]></code>
@@ -17897,17 +17892,6 @@
     <MissingTemplateParam>
       <code><![CDATA[\Iterator]]></code>
     </MissingTemplateParam>
-  </file>
-  <file src="plugins/git/include/GitPHP/smartyplugins/modifier.agestring.php">
-    <RedundantCastGivenDocblockType>
-      <code><![CDATA[(int) $age]]></code>
-    </RedundantCastGivenDocblockType>
-  </file>
-  <file src="plugins/git/include/GitPHP/smartyplugins/modifier.highlight.php">
-    <InvalidScalarArgument>
-      <code><![CDATA[$leftlen - ($leftremain - 3)]]></code>
-      <code><![CDATA[$rightremain - 3]]></code>
-    </InvalidScalarArgument>
   </file>
   <file src="plugins/git/include/GitPermissionsManager.class.php">
     <DeprecatedFunction>

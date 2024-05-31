@@ -24,6 +24,7 @@ namespace Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Field;
 
 use BaseLanguageFactory;
 use ParagonIE\EasyDB\EasyDB;
+use Tuleap\CrossTracker\Report\Query\Advanced\DuckTypedField\FieldTypeRetrieverWrapper;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\LegacyTabTranslationsSupport;
 use Tuleap\Test\PHPUnit\TestCase;
@@ -74,7 +75,7 @@ final class FieldFromWhereBuilderTest extends TestCase
         $field_from_where_builder = new ListFromWhereBuilder();
         $builder                  = new FieldFromWhereBuilder(
             $fields_retriever,
-            RetrieveFieldTypeStub::withDetectionOfType(),
+            new FieldTypeRetrieverWrapper(RetrieveFieldTypeStub::withDetectionOfType()),
             new Numeric\NumericFromWhereBuilder(),
             new Text\TextFromWhereBuilder($db),
             new Date\DateFromWhereBuilder($date_time_value_rounder),
