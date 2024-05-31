@@ -33,6 +33,7 @@ describe("TrackerListWritingMode", () => {
             },
         });
     }
+
     it("renders a list of trackers", () => {
         const wrapper = instantiateComponent();
         expect(wrapper.element).toMatchSnapshot();
@@ -42,7 +43,7 @@ describe("TrackerListWritingMode", () => {
         const wrapper = instantiateComponent();
         const tracker = { tracker_label: "fake_tracker", tracker_id: 1 } as TrackerToUpdate;
 
-        wrapper.get("[data-test=remove-tracker-1]").trigger("click");
+        wrapper.get("[data-test=remove-tracker]").trigger("click");
 
         const emitted = wrapper.emitted("tracker-removed");
         if (!emitted) {

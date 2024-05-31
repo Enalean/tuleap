@@ -11,6 +11,9 @@ dependencies:
   '@tuleap/plugin-tracker-tql-codemirror':
     specifier: workspace:*
     version: link:../../../tracker/scripts/lib/TQL-CodeMirror
+  '@tuleap/tlp-badge':
+    specifier: workspace:^
+    version: link:../../../../lib/frontend/tlp-badge
   '@tuleap/tlp-fetch':
     specifier: workspace:*
     version: link:../../../../lib/frontend/tlp-fetch

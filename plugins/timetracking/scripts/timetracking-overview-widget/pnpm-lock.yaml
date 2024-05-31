@@ -26,6 +26,9 @@ dependencies:
   '@tuleap/plugin-timetracking-time-formatters':
     specifier: workspace:*
     version: link:../lib/time-formatters
+  '@tuleap/tlp-badge':
+    specifier: workspace:^
+    version: link:../../../../lib/frontend/tlp-badge
   '@tuleap/vue2-gettext-init':
     specifier: workspace:*
     version: link:../../../../lib/frontend/vue2-gettext-init

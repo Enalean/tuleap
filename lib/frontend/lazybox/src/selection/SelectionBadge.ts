@@ -47,9 +47,7 @@ export const SelectionBadge = define<SelectionBadge>({
     render: (host) =>
         html`
             <span class="${getBadgeClasses(host)}">
-                <button type="button" class="lazybox-badge-remove-button" onclick=${onClick}>
-                    ×
-                </button>
+                <button type="button" class="tlp-badge-remove-button" onclick=${onClick}>×</button>
                 <slot></slot>
             </span>
         `.style(badge_style),

@@ -13,6 +13,7 @@
     "@tuleap/plugin-timetracking-constants": "workspace:*",
     "@tuleap/plugin-timetracking-rest-api-types": "workspace:*",
     "@tuleap/plugin-timetracking-time-formatters": "workspace:*",
+    "@tuleap/tlp-badge": "workspace:^",
     "@tuleap/vue2-gettext-init": "workspace:*",
     "neverthrow": "^6.0.0",
     "pinia": "^2.0.21",
