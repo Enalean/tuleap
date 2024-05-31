@@ -50,6 +50,8 @@ use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata\MetadataU
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata\StatusChecker;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata\SubmissionDateChecker;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata\TextSemanticChecker;
+use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Field\FieldSelectFromBuilder;
+use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilderVisitor;
 use Tuleap\DB\DBFactory;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
@@ -199,12 +201,19 @@ final class ArtifactReportFactoryInstantiator
                 $form_element_factory,
             ),
         );
+        $select_builder_visitor   = new SelectBuilderVisitor(
+            new FieldSelectFromBuilder(
+                $form_element_factory,
+                $form_element_factory,
+            ),
+        );
 
         return new CrossTrackerArtifactReportFactory(
             new CrossTrackerArtifactReportDao(),
             $artifact_factory,
             $validator,
             $query_builder_visitor,
+            $select_builder_visitor,
             $parser,
             new CrossTrackerExpertQueryReportDao(),
             $invalid_comparisons_collector,
