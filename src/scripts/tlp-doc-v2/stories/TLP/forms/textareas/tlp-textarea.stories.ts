@@ -76,18 +76,18 @@ function getTextarea(args: TextareaProps): TemplateResult {
     if (args.with_given_dimensions) {
         // prettier-ignore
         return html`
-    <textarea class=${getTextareaClasses(args)} id="commit-message" name="commit-message" cols=${args.cols} rows=${args.rows} placeholder=${args.placeholder} ?disabled=${args.disabled}></textarea>`;
+    <textarea class=${getTextareaClasses(args)} id="textarea-example" name="commit-message" cols=${args.cols} rows=${args.rows} placeholder=${args.placeholder} ?disabled=${args.disabled}></textarea>`;
     }
     // prettier-ignore
     return html`
-    <textarea class=${getTextareaClasses(args)} id="commit-message" name="commit-message" placeholder=${args.placeholder} ?disabled=${args.disabled}></textarea>`;
+    <textarea class=${getTextareaClasses(args)} id="textarea-example" name="commit-message" placeholder=${args.placeholder} ?disabled=${args.disabled}></textarea>`;
 }
 
 function getTemplate(args: TextareaProps): TemplateResult {
     //prettier-ignore
     return html`
 <div class=${getFormClasses(args)}>
-    <label class="tlp-label" for="${args.label.toLowerCase()}">${args.label} ${args.mandatory ? asterisk : ``}</label>${getTextarea(args)}${args.with_helper_text ? helper_text : ``}${args.with_error ? error : ``}
+    <label class="tlp-label" for="textarea-example">${args.label} ${args.mandatory ? asterisk : ``}</label>${getTextarea(args)}${args.with_helper_text ? helper_text : ``}${args.with_error ? error : ``}
 </div>`;
 }
 

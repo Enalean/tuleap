@@ -52,7 +52,7 @@ function getTemplate(args: ButtonBarProps): TemplateResult {
     // prettier-ignore
     return html`
 <div class="tlp-form-element">
-    <label class="tlp-label" for="toggle">Formula (based on input <code>type="${args.base}"</code>)</label>
+    <label class="tlp-label">Formula (based on input <code>type="${args.base}"</code>)</label>
     <div class="tlp-button-bar">
         <div class="tlp-button-bar-item">
             <input type=${args.base} id="button-bar-left" name="button-bar-${args.base}" class="tlp-button-bar-checkbox" checked ?disabled=${args.disabled}>

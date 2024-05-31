@@ -75,18 +75,18 @@ function getInput(args: InputProps): TemplateResult {
     if (args.size_attribute) {
         // prettier-ignore
         return html`
-    <input type="text" class=${getInputClasses(args)} id="username" name="username" size=${args.size_attribute} placeholder=${args.placeholder} ?disabled=${args.disabled}>`;
+    <input type="text" class=${getInputClasses(args)} id="input-example" name="username" size=${args.size_attribute} placeholder=${args.placeholder} ?disabled=${args.disabled}>`;
     }
     // prettier-ignore
     return html`
-    <input type="text" class=${getInputClasses(args)} id="username" name="username" placeholder=${args.placeholder} ?disabled=${args.disabled}>`;
+    <input type="text" class=${getInputClasses(args)} id="input-example" name="username" placeholder=${args.placeholder} ?disabled=${args.disabled}>`;
 }
 
 function getTemplate(args: InputProps): TemplateResult {
     //prettier-ignore
     return html`
 <div class=${getFormClasses(args)}>
-    <label class="tlp-label" for="${args.label.toLowerCase()}">${args.label} ${args.mandatory ? asterisk : ``}</label>${getInput(args)}${args.with_helper_text ? helper_text : ``}${args.with_error ? error : ``}
+    <label class="tlp-label" for="input-example">${args.label} ${args.mandatory ? asterisk : ``}</label>${getInput(args)}${args.with_helper_text ? helper_text : ``}${args.with_error ? error : ``}
 </div>`;
 }
 

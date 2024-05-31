@@ -47,12 +47,12 @@ const error: TemplateResult = html`
     </p>`;
 
 function getFormLabel(args: RadioProps): TemplateResult {
-    if (args.with_form_label) {
-        // prettier-ignore
-        return html`
-    <label class="tlp-label">${args.form_label}</label>`;
+    if (!args.with_form_label) {
+        return html``;
     }
-    return html``;
+    //prettier-ignore
+    return html`
+    <label class="tlp-label">${args.form_label}</label>`;
 }
 
 function getFormClasses(args: RadioProps): string {
@@ -69,7 +69,7 @@ function getFormClasses(args: RadioProps): string {
 function getTemplate(args: RadioProps): TemplateResult {
     //prettier-ignore
     return html`
-<div class=${getFormClasses(args)}>${args.with_form_label ? getFormLabel(args) : ``}
+<div class=${getFormClasses(args)}>${getFormLabel(args)}
     <label class="tlp-label tlp-radio">
         <input type="radio" name="shape" value="square" ?disabled=${args.disabled}> ${args.first_label}
     </label>
