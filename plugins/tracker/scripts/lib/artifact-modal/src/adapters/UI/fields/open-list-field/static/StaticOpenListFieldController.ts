@@ -22,6 +22,7 @@ import type { StaticValueModelItem } from "../../../../../domain/fields/static-o
 import type { StaticOpenListFieldType } from "../../../../../domain/fields/static-open-list-field/StaticOpenListFieldType";
 import type { InternalStaticOpenListField } from "./StaticOpenListField";
 import { StaticOpenListFieldPresenterBuilder } from "./StaticOpenListFieldPresenter";
+import type { Select2SelectionEvent, Select2Value } from "../Select2SelectionEvent";
 
 export type ControlStaticOpenListField = {
     init(host: InternalStaticOpenListField): void;
@@ -39,21 +40,8 @@ export type ControlStaticOpenListField = {
     ): NewSelect2StaticValue | null;
 };
 
-type Select2StaticValue = {
-    id: string;
-    text: string;
-};
-
-type NewSelect2StaticValue = Select2StaticValue & {
+type NewSelect2StaticValue = Select2Value & {
     isTag: true;
-};
-
-export type Select2SelectionEvent = {
-    params: {
-        args: {
-            data: Select2StaticValue;
-        };
-    };
 };
 
 export const StaticOpenListFieldController = (

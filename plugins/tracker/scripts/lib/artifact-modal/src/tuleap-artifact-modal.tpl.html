@@ -265,13 +265,13 @@
     controller="modal.getStaticOpenListFieldController(field)"
     ce-one-way
 ></tuleap-artifact-modal-static-open-list-field>
-<div
+<tuleap-artifact-modal-user-group-open-list-field
     ng-if="::field.bindings.type === 'ugroups'"
     class="field"
-    tuleap-artifact-modal-ugroups-open-list-field="field"
-    is-disabled="modal.isDisabled(field)"
-    value-model="modal.values[field.field_id]"
-></div>
+    disabled="modal.isDisabled(field)"
+    controller="modal.getUserGroupOpenListFieldController(field)"
+    ce-one-way
+></tuleap-artifact-modal-user-group-open-list-field>
 <div
     ng-if="::field.bindings.type === 'users'"
     class="field"

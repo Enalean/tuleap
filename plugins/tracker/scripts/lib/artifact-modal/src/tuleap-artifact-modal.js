@@ -30,7 +30,6 @@ import { setCatalog } from "./gettext-catalog";
 
 import ArtifactModalService from "./tuleap-artifact-modal-service.js";
 import ArtifactModalController from "./tuleap-artifact-modal-controller.js";
-import UgroupsOpenListFieldDirective from "./fields/open-list-field/ugroups-open-list-field-directive.js";
 import UsersOpenListFieldDirective from "./fields/open-list-field/users-open-list-field-directive.js";
 import AwkwardCreationFields from "./model/awkward-creation-fields-constant.js";
 
@@ -53,6 +52,7 @@ import "./adapters/UI/fields/permission-field/PermissionField";
 import "./adapters/UI/fields/checkbox-field/CheckboxField";
 import "./adapters/UI/fields/select-box-field/SelectBoxField";
 import "./adapters/UI/fields/open-list-field/static/StaticOpenListField";
+import "./adapters/UI/fields/open-list-field/user-groups/UserGroupOpenListField";
 import "./adapters/UI/feedback/ModalFeedback";
 import "./adapters/UI/footer/FileUploadQuota";
 import "./adapters/UI/comments/ModalCommentsSection";
@@ -74,7 +74,6 @@ export default angular
     .constant("TuleapArtifactModalAwkwardCreationFields", AwkwardCreationFields)
     .constant("TuleapArtifactModalStructuralFields", STRUCTURAL_FIELDS)
     .controller("TuleapArtifactModalController", ArtifactModalController)
-    .directive("tuleapArtifactModalUgroupsOpenListField", UgroupsOpenListFieldDirective)
     .directive("tuleapArtifactModalUsersOpenListField", UsersOpenListFieldDirective)
     .service("NewTuleapArtifactModalService", ArtifactModalService)
     .value("TuleapArtifactModalLoading", {
