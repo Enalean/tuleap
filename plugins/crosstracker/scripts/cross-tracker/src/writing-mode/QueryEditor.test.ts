@@ -22,11 +22,18 @@ import { shallowMount } from "@vue/test-utils";
 import { createCrossTrackerLocalVue } from "../helpers/local-vue-for-test";
 import QueryEditor from "./QueryEditor.vue";
 import WritingCrossTrackerReport from "./writing-cross-tracker-report";
+import type { TQLCodeMirrorEditor } from "@tuleap/plugin-tracker-tql-codemirror";
+
+type QueryEditorExposed = { value: string; code_mirror_instance: TQLCodeMirrorEditor };
+
+const noop = (): void => {
+    //Do nothing
+};
 
 describe("QueryEditor", () => {
     async function instantiateComponent(
         writingCrossTrackerReport: WritingCrossTrackerReport,
-    ): Promise<Wrapper<QueryEditor>> {
+    ): Promise<Wrapper<Vue & QueryEditorExposed, Element>> {
         return shallowMount(QueryEditor, {
             propsData: {
                 writingCrossTrackerReport,
@@ -40,33 +47,24 @@ describe("QueryEditor", () => {
         writingCrossTrackerReport.expert_query = "@title = 'foo'";
 
         const wrapper = await instantiateComponent(writingCrossTrackerReport);
-        expect(wrapper.vm.$data.value).toContain(writingCrossTrackerReport.expert_query);
+        expect(wrapper.vm.value).toBe(writingCrossTrackerReport.expert_query);
     });
 
-    it("Update the report chen query is updated", async () => {
-        // eslint-disable-next-line
-        document.createRange = (): any => {
+    it("Update the report when query is updated", async () => {
+        jest.spyOn(document, "createRange").mockImplementation(() => {
             return {
-                getBoundingClientRect: (): void => {
-                    // nothing
-                },
-                setEnd: (): void => {
-                    // nothing
-                },
-                setStart: (): void => {
-                    // nothing
-                },
-                getClientRects(): { length: number } {
-                    return { length: 0 };
-                },
-            };
-        };
+                getBoundingClientRect: noop,
+                setEnd: noop,
+                setStart: noop,
+                getClientRects: () => [],
+            } as unknown as Range;
+        });
 
         const writingCrossTrackerReport = new WritingCrossTrackerReport();
         writingCrossTrackerReport.expert_query = "@title = 'foo'";
         const wrapper = await instantiateComponent(writingCrossTrackerReport);
 
-        wrapper.vm.$data.code_mirror_instance.setValue("@title = 'bar'");
-        expect(writingCrossTrackerReport.expert_query).toContain("@title = 'bar'");
+        wrapper.vm.code_mirror_instance.setValue("@title = 'bar'");
+        expect(writingCrossTrackerReport.expert_query).toBe("@title = 'bar'");
     });
 });

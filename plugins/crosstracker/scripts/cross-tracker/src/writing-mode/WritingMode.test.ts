@@ -27,10 +27,14 @@ import {
 } from "./writing-cross-tracker-report";
 import * as rest_querier from "../api/rest-querier";
 import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
-import type { ProjectInfo, TrackerInfo, State } from "../type";
+import type { ProjectInfo, TrackerInfo, State, TrackerToUpdate } from "../type";
 import TrackerListWritingMode from "./TrackerListWritingMode.vue";
 import TrackerSelection from "./TrackerSelection.vue";
 import type { ProjectReference } from "@tuleap/core-rest-api-types";
+
+type WritingModeExposed = {
+    selected_trackers: ReadonlyArray<TrackerToUpdate>;
+};
 
 describe("WritingMode", () => {
     let store = {
@@ -45,7 +49,7 @@ describe("WritingMode", () => {
 
     async function instantiateComponent(
         writingCrossTrackerReport: WritingCrossTrackerReport,
-    ): Promise<Wrapper<WritingMode>> {
+    ): Promise<Wrapper<Vue & WritingModeExposed, Element>> {
         const store_options = { state: { is_user_admin: true } as State, commit: jest.fn() };
         store = createStoreMock(store_options);
 
@@ -55,7 +59,7 @@ describe("WritingMode", () => {
                 writingCrossTrackerReport,
             },
             mocks: { $store: store },
-        });
+        }) as Wrapper<Vue & WritingModeExposed, Element>;
     }
 
     describe("mounted()", () => {
@@ -72,7 +76,7 @@ describe("WritingMode", () => {
 
             const wrapper = await instantiateComponent(writingCrossTrackerReport);
 
-            expect(wrapper.vm.$data.selected_trackers).toStrictEqual([
+            expect(wrapper.vm.selected_trackers).toStrictEqual([
                 {
                     tracker_id: 29,
                     tracker_label: "charry",
@@ -137,7 +141,7 @@ describe("WritingMode", () => {
 
             expect(writingCrossTrackerReport.removeTracker).toHaveBeenCalledWith(46);
             expect(wrapper.vm.$store.commit).toHaveBeenCalledWith("resetFeedbacks");
-            expect(wrapper.vm.$data.selected_trackers).toStrictEqual([
+            expect(wrapper.vm.selected_trackers).toStrictEqual([
                 {
                     tracker_id: 61,
                     tracker_label: "Dipneumona",
@@ -164,7 +168,7 @@ describe("WritingMode", () => {
                 selected_project,
                 selected_tracker,
             );
-            expect(wrapper.vm.$data.selected_trackers).toStrictEqual([
+            expect(wrapper.vm.selected_trackers).toStrictEqual([
                 {
                     tracker_id: 53,
                     tracker_label: "observingly",

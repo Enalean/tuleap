@@ -26,6 +26,13 @@ import * as rest_querier from "../api/rest-querier";
 import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import type { ProjectInfo, SelectedTracker, State, TrackerInfo } from "../type";
 
+type TrackerSelectionExposed = {
+    selected_project: ProjectInfo | null;
+    tracker_to_add: TrackerInfo | null;
+    projects: ProjectInfo[];
+    trackers: TrackerInfo[];
+};
+
 describe("TrackerSelection", () => {
     let store = {
         commit: jest.fn(),
@@ -33,7 +40,7 @@ describe("TrackerSelection", () => {
 
     async function instantiateComponent(
         selectedTrackers: Array<SelectedTracker> = [],
-    ): Promise<Wrapper<TrackerSelection>> {
+    ): Promise<Wrapper<Vue & TrackerSelectionExposed, Element>> {
         const store_options = { state: { is_user_admin: true } as State, commit: jest.fn() };
         store = createStoreMock(store_options);
 
@@ -43,14 +50,14 @@ describe("TrackerSelection", () => {
                 selectedTrackers,
             },
             mocks: { $store: store },
-        });
+        }) as Wrapper<Vue & TrackerSelectionExposed, Element>;
     }
 
     describe("mounted()", () => {
         it("on init, the projects will be loaded", async () => {
             const loadProjects = jest
                 .spyOn(rest_querier, "getSortedProjectsIAmMemberOf")
-                .mockImplementation(() => Promise.resolve([]));
+                .mockResolvedValue([]);
 
             await instantiateComponent();
 
@@ -60,9 +67,7 @@ describe("TrackerSelection", () => {
 
     describe("loadProjects()", () => {
         beforeEach(() => {
-            jest.spyOn(rest_querier, "getTrackersOfProject").mockImplementation(() =>
-                Promise.resolve([]),
-            );
+            jest.spyOn(rest_querier, "getTrackersOfProject").mockResolvedValue([]);
         });
 
         it("Displays an error when rest route fail", async () => {
@@ -92,8 +97,8 @@ describe("TrackerSelection", () => {
             await wrapper.vm.$nextTick();
 
             expect(wrapper.element).toMatchSnapshot();
-            expect(wrapper.vm.$data.selected_project).toBe(first_project);
-            expect(wrapper.vm.$data.projects).toStrictEqual([first_project, second_project]);
+            expect(wrapper.vm.selected_project).toBe(first_project);
+            expect(wrapper.vm.projects).toStrictEqual([first_project, second_project]);
         });
     });
 
@@ -113,7 +118,7 @@ describe("TrackerSelection", () => {
             await wrapper.vm.$nextTick(); // for the promise of tracker
             await wrapper.vm.$nextTick(); // for the finally
 
-            expect(wrapper.vm.$data.trackers).toStrictEqual(trackers);
+            expect(wrapper.vm.trackers).toStrictEqual(trackers);
         });
 
         it("when there is a REST error, it will be displayed", async () => {
@@ -140,10 +145,10 @@ describe("TrackerSelection", () => {
             ]);
 
             const tracker = { id: 96, label: "simplus" } as TrackerInfo;
-            const selected_tracker = { id: 97, label: "acinus" } as TrackerInfo;
+            const tracker_to_add = { id: 97, label: "acinus" } as TrackerInfo;
             jest.spyOn(rest_querier, "getTrackersOfProject").mockResolvedValue([
                 tracker,
-                selected_tracker,
+                tracker_to_add,
             ]);
 
             const wrapper = await instantiateComponent();
@@ -152,8 +157,8 @@ describe("TrackerSelection", () => {
             await wrapper.vm.$nextTick(); // for the promise of tracker
             await wrapper.vm.$nextTick(); // for the finally
 
-            wrapper.vm.$data.selected_project = selected_project;
-            wrapper.vm.$data.selected_tracker = selected_tracker;
+            wrapper.vm.selected_project = selected_project;
+            wrapper.vm.tracker_to_add = tracker_to_add;
 
             wrapper
                 .find("[data-test=cross-tracker-selector-tracker-button]")
@@ -166,9 +171,9 @@ describe("TrackerSelection", () => {
             }
             expect(emitted[0][0]).toStrictEqual({
                 selected_project,
-                selected_tracker,
+                selected_tracker: tracker_to_add,
             });
-            expect(wrapper.vm.$data.selected_tracker).toBeNull();
+            expect(wrapper.vm.tracker_to_add).toBeNull();
         });
     });
 });

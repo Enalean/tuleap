@@ -38,9 +38,6 @@ describe("CrossTrackerWidget", () => {
         readingCrossTrackerReport: ReadingCrossTrackerReport,
         writingCrossTrackerReport: WritingCrossTrackerReport,
         getReport: jest.SpyInstance;
-    let store = {
-        commit: jest.fn(),
-    };
 
     beforeEach(() => {
         backendCrossTrackerReport = new BackendCrossTrackerReport();
@@ -48,9 +45,16 @@ describe("CrossTrackerWidget", () => {
         writingCrossTrackerReport = new WritingCrossTrackerReport();
     });
 
-    async function instantiateComponent(state: State): Promise<Wrapper<CrossTrackerWidget>> {
-        const store_options = { state: state, getters: { has_success_message: false } };
-        store = createStoreMock(store_options);
+    async function instantiateComponent(state: Partial<State>): Promise<Wrapper<Vue, Element>> {
+        const invalid_trackers: ReadonlyArray<InvalidTracker> = [];
+        const store_options = {
+            state: {
+                ...state,
+                invalid_trackers,
+            },
+            getters: { has_success_message: false },
+        };
+        const store = createStoreMock(store_options);
 
         return shallowMount(CrossTrackerWidget, {
             localVue: await createCrossTrackerLocalVue(),
@@ -69,13 +73,11 @@ describe("CrossTrackerWidget", () => {
             jest.spyOn(rest_querier, "getSortedProjectsIAmMemberOf").mockResolvedValue([
                 { id: 102 } as ProjectReference,
             ]);
-            const invalid_trackers: Array<InvalidTracker> = [];
             const duplicate = jest.spyOn(writingCrossTrackerReport, "duplicateFromReport");
             const wrapper = await instantiateComponent({
                 is_user_admin: true,
-                invalid_trackers: invalid_trackers,
                 reading_mode: true,
-            } as State);
+            });
             await wrapper.vm.$nextTick(); // wait for component loaded
 
             wrapper.findComponent(ReadingMode).vm.$emit("switch-to-writing-mode");
@@ -87,13 +89,11 @@ describe("CrossTrackerWidget", () => {
         it(`Given I am not admin,
             when I try to switch to writing mode, then nothing will happen`, async () => {
             jest.spyOn(rest_querier, "getSortedProjectsIAmMemberOf").mockResolvedValue([]);
-            const invalid_trackers: Array<InvalidTracker> = [];
             const duplicate = jest.spyOn(writingCrossTrackerReport, "duplicateFromReport");
             const wrapper = await instantiateComponent({
                 is_user_admin: false,
-                invalid_trackers: invalid_trackers,
                 reading_mode: true,
-            } as State);
+            });
             await wrapper.vm.$nextTick(); // wait for component loaded
 
             wrapper.findComponent(ReadingMode).vm.$emit("switch-to-writing-mode");
@@ -106,13 +106,11 @@ describe("CrossTrackerWidget", () => {
     describe("switchToReadingMode() -", () => {
         it(`When I switch to the reading mode with saved state,
             then the writing report will be updated and a mutation will be committed`, async () => {
-            const invalid_trackers: Array<InvalidTracker> = [];
             const duplicate = jest.spyOn(writingCrossTrackerReport, "duplicateFromReport");
             const wrapper = await instantiateComponent({
                 is_user_admin: true,
-                invalid_trackers: invalid_trackers,
                 reading_mode: false,
-            } as State);
+            });
             await wrapper.vm.$nextTick(); // wait for component loaded
 
             wrapper
@@ -126,13 +124,11 @@ describe("CrossTrackerWidget", () => {
         it(`When I switch to the reading mode with unsaved state,
             then a batch of artifacts will be loaded,
             the reading report will be updated and a mutation will be committed`, async () => {
-            const invalid_trackers: Array<InvalidTracker> = [];
             const duplicate = jest.spyOn(readingCrossTrackerReport, "duplicateFromWritingReport");
             const wrapper = await instantiateComponent({
                 is_user_admin: true,
-                invalid_trackers: invalid_trackers,
                 reading_mode: false,
-            } as State);
+            });
             await wrapper.vm.$nextTick(); // wait for component loaded
 
             wrapper
@@ -156,15 +152,12 @@ describe("CrossTrackerWidget", () => {
             jest.spyOn(backendCrossTrackerReport, "init").mockImplementation(() => {
                 // nothing to mock
             });
-            const invalid_trackers: Array<InvalidTracker> = [];
             const duplicateReading = jest.spyOn(readingCrossTrackerReport, "duplicateFromReport");
             const duplicateWriting = jest.spyOn(writingCrossTrackerReport, "duplicateFromReport");
-            const wrapper = await instantiateComponent({
+            await instantiateComponent({
                 is_user_admin: true,
-                invalid_trackers: invalid_trackers,
-            } as State);
+            });
 
-            expect(wrapper.vm.$data.is_loading).toBe(false);
             expect(backendCrossTrackerReport.init).toHaveBeenCalledWith(trackers, expert_query);
             expect(duplicateReading).toHaveBeenCalledWith(backendCrossTrackerReport);
             expect(duplicateWriting).toHaveBeenCalledWith(readingCrossTrackerReport);
@@ -177,11 +170,9 @@ describe("CrossTrackerWidget", () => {
                     error: { message },
                 },
             });
-            const invalid_trackers: Array<InvalidTracker> = [];
             const wrapper = await instantiateComponent({
                 is_user_admin: true,
-                invalid_trackers: invalid_trackers,
-            } as State);
+            });
             await wrapper.vm.$nextTick();
 
             expect(wrapper.vm.$store.commit).toHaveBeenCalledWith("setErrorMessage", message);
@@ -191,12 +182,10 @@ describe("CrossTrackerWidget", () => {
     describe("reportSaved() -", () => {
         it(`when the report is saved,
             then the reports will be updated and a mutation will be committed`, async () => {
-            const invalid_trackers: Array<InvalidTracker> = [];
             const wrapper = await instantiateComponent({
                 is_user_admin: true,
-                invalid_trackers: invalid_trackers,
                 reading_mode: true,
-            } as State);
+            });
             const duplicateReading = jest.spyOn(readingCrossTrackerReport, "duplicateFromReport");
             const duplicateWriting = jest.spyOn(writingCrossTrackerReport, "duplicateFromReport");
             await wrapper.vm.$nextTick();

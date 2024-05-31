@@ -18,7 +18,6 @@
  */
 
 import Vue from "vue";
-
 import { createStore } from "./store";
 import { init as initUser } from "./user-service";
 import ReadingCrossTrackerReport from "./reading-mode/reading-cross-tracker-report";
@@ -38,6 +37,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     const widget_cross_tracker_elements = document.getElementsByClassName(
         "dashboard-widget-content-cross-tracker",
     );
+
+    //eslint-disable-next-line @typescript-eslint/ban-ts-comment -- Temporary while we migrate to Vue 3
+    //@ts-ignore
     const Widget = Vue.extend(CrossTrackerWidget);
 
     await initVueGettext(

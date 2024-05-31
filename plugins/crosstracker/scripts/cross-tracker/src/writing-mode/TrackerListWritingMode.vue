@@ -20,8 +20,8 @@
 <template>
     <div class="cross-tracker-form-trackers-selected">
         <span
-            v-for="tracker of trackers"
             class="tlp-badge-primary tlp-badge-outline"
+            v-for="tracker of props.trackers"
             v-bind:key="tracker.tracker_id"
         >
             <button
@@ -38,18 +38,13 @@
         </span>
     </div>
 </template>
-<script lang="ts">
-import Vue from "vue";
-import { Prop, Component } from "vue-property-decorator";
+<script setup lang="ts">
 import type { TrackerToUpdate } from "../type";
 
-@Component
-export default class TrackerListWritingMode extends Vue {
-    @Prop({ required: true })
-    readonly trackers!: TrackerToUpdate[];
+const props = defineProps<{ trackers: ReadonlyArray<TrackerToUpdate> }>();
+const emit = defineEmits<{ (e: "tracker-removed", tracker: TrackerToUpdate): void }>();
 
-    removeTracker(tracker: TrackerToUpdate): void {
-        this.$emit("tracker-removed", tracker);
-    }
+function removeTracker(tracker: TrackerToUpdate): void {
+    emit("tracker-removed", tracker);
 }
 </script>

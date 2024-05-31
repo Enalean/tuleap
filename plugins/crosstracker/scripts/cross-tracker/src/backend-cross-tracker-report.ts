@@ -22,35 +22,31 @@ import type { TrackerAndProject, TrackerInfo } from "./type";
 import type ReadingCrossTrackerReport from "./reading-mode/reading-cross-tracker-report";
 
 export interface TrackerForInit extends TrackerInfo {
-    uri: string;
-    project: ProjectReference;
+    readonly uri: string;
+    readonly project: ProjectReference;
 }
 
 export default class BackendCrossTrackerReport {
     expert_query: string;
-    loaded: boolean;
     trackers: Map<number, TrackerAndProject>;
     constructor() {
-        this.loaded = false;
         this.trackers = new Map();
         this.expert_query = "";
     }
 
     init(trackers: Map<number, TrackerForInit>, expert_query: string): void {
-        if (trackers) {
-            this.clearTrackers();
-            for (const tracker_for_init of trackers.values()) {
-                const tracker = { id: tracker_for_init.id, label: tracker_for_init.label };
-                const light_project = {
-                    id: tracker_for_init.project.id,
-                    label: tracker_for_init.project.label,
-                    uri: tracker_for_init.project.uri,
-                };
-                this.trackers.set(tracker_for_init.id, {
-                    project: light_project,
-                    tracker: tracker,
-                });
-            }
+        this.clearTrackers();
+        for (const tracker_for_init of trackers.values()) {
+            const tracker = { id: tracker_for_init.id, label: tracker_for_init.label };
+            const light_project = {
+                id: tracker_for_init.project.id,
+                label: tracker_for_init.project.label,
+                uri: tracker_for_init.project.uri,
+            };
+            this.trackers.set(tracker_for_init.id, {
+                project: light_project,
+                tracker: tracker,
+            });
         }
 
         this.expert_query = expert_query;
@@ -66,7 +62,7 @@ export default class BackendCrossTrackerReport {
     }
 
     getTrackerIds(): Array<number> {
-        return [...this.trackers.keys()];
+        return Array.from(this.trackers.keys());
     }
 
     getExpertQuery(): string {

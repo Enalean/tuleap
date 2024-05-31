@@ -43,7 +43,7 @@ describe("ArtifactTable", () => {
         getQueryResult = jest.spyOn(rest_querier, "getQueryResult");
     });
 
-    async function instantiateComponent(state: State): Promise<Wrapper<Vue, Element>> {
+    async function instantiateComponent(state: Partial<State>): Promise<Wrapper<Vue, Element>> {
         const store_options = { state: state };
         store = createStoreMock(store_options);
 
@@ -59,13 +59,13 @@ describe("ArtifactTable", () => {
     describe("loadArtifacts() -", () => {
         it("Given report is saved, it loads artifacts of report", async () => {
             mockFetchSuccess(getReportContent);
-            await instantiateComponent({ is_report_saved: true } as State);
+            await instantiateComponent({ is_report_saved: true });
             expect(getReportContent).toHaveBeenCalled();
         });
 
         it("Given report is not saved, it loads artifacts of current selected trackers", async () => {
             mockFetchSuccess(getQueryResult);
-            await instantiateComponent({ is_report_saved: false } as State);
+            await instantiateComponent({ is_report_saved: false });
             expect(getQueryResult).toHaveBeenCalled();
         });
 
@@ -75,7 +75,7 @@ describe("ArtifactTable", () => {
                     error: { status: 500 },
                 },
             });
-            const wrapper = await instantiateComponent({ is_report_saved: true } as State);
+            const wrapper = await instantiateComponent({ is_report_saved: true });
             await wrapper.vm.$nextTick();
 
             expect(wrapper.vm.$store.commit).toHaveBeenCalledWith(
@@ -91,7 +91,7 @@ describe("ArtifactTable", () => {
                 },
             });
 
-            const wrapper = await instantiateComponent({ is_report_saved: true } as State);
+            const wrapper = await instantiateComponent({ is_report_saved: true });
             await wrapper.vm.$nextTick();
 
             expect(wrapper.vm.$store.commit).toHaveBeenCalledWith(
@@ -120,7 +120,7 @@ describe("ArtifactTable", () => {
                 }
                 throw Error("Unexpected offset " + offset);
             });
-            const wrapper = await instantiateComponent({ is_report_saved: true } as State);
+            const wrapper = await instantiateComponent({ is_report_saved: true });
 
             // Wait for artifacts to be retrieved
             await wrapper.vm.$nextTick();
