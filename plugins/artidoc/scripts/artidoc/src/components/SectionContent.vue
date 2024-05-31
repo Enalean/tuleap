@@ -28,28 +28,16 @@
             'document-section-is-outdated': is_outdated,
         }"
     >
-        <not-found-error v-if="is_not_found_error" />
-        <generic-error
-            v-else-if="is_in_error"
-            v-bind:section="section"
-            v-bind:error_message="error_message"
-        />
-        <outdated-section-warning v-else-if="is_outdated" v-bind:editor_actions="editor_actions" />
-
         <section-title-with-artifact-id
             class="section-header"
             v-if="!is_sections_loading"
             v-bind:title="title"
             v-bind:artifact_id="section.artifact.id"
-            v-bind:input_current_title="inputCurrentTitle"
+            v-bind:input_current_title="editor.inputCurrentTitle"
             v-bind:is_edit_mode="is_edit_mode"
         >
             <template #header-cta>
-                <section-editor-cta
-                    v-bind:editor_actions="editor_actions"
-                    v-bind:is_edit_mode="is_edit_mode"
-                    v-bind:is_section_editable="is_section_editable"
-                />
+                <section-editor-cta v-bind:editor="editor" />
             </template>
         </section-title-with-artifact-id>
         <section-title-with-artifact-id-skeleton v-else class="section-header" />
@@ -57,9 +45,11 @@
             v-bind:artifact_id="section.artifact.id"
             v-bind:editable_description="editable_description"
             v-bind:readonly_description="readonly_description"
-            v-bind:input_current_description="inputCurrentDescription"
+            v-bind:input_current_description="editor.inputCurrentDescription"
             v-bind:is_edit_mode="is_edit_mode"
         />
+
+        <section-footer v-bind:editor="editor" v-bind:section="section" />
     </article>
 </template>
 
@@ -71,46 +61,28 @@ import useSectionEditor from "@/composables/useSectionEditor";
 import SectionEditorCta from "@/components/SectionEditorCta.vue";
 import { useInjectSectionsStore } from "@/stores/useSectionsStore";
 import SectionTitleWithArtifactIdSkeleton from "@/components/SectionTitleWithArtifactIdSkeleton.vue";
-import OutdatedSectionWarning from "@/components/OutdatedSectionWarning.vue";
-import NotFoundError from "@/components/NotFoundError.vue";
-import GenericError from "@/components/GenericError.vue";
+import SectionFooter from "@/components/SectionFooter.vue";
 
 const props = defineProps<{ section: ArtidocSection }>();
 
 const { is_sections_loading, updateSection } = useInjectSectionsStore();
 
-const {
-    isSectionInEditMode,
-    getEditableTitle,
-    getEditableDescription,
-    getReadonlyDescription,
-    getErrorMessage,
-    isBeeingSaved,
-    isJustSaved,
-    isJustRefreshed,
-    isInError,
-    isNotFoundError,
-    isOutdated,
-    editor_actions,
-    inputCurrentTitle,
-    inputCurrentDescription,
-    is_section_editable,
-} = useSectionEditor(props.section, updateSection);
+const editor = useSectionEditor(props.section, updateSection);
 
-const is_edit_mode = isSectionInEditMode();
-const is_being_saved = isBeeingSaved();
-const is_just_saved = isJustSaved();
-const is_just_refreshed = isJustRefreshed();
-const is_in_error = isInError();
-const is_not_found_error = isNotFoundError();
-const is_outdated = isOutdated();
-const title = getEditableTitle();
-const editable_description = getEditableDescription();
-const readonly_description = getReadonlyDescription();
-const error_message = getErrorMessage();
+const is_edit_mode = editor.isSectionInEditMode();
+const is_being_saved = editor.isBeeingSaved();
+const is_just_saved = editor.isJustSaved();
+const is_just_refreshed = editor.isJustRefreshed();
+const is_in_error = editor.isInError();
+const is_outdated = editor.isOutdated();
+const title = editor.getEditableTitle();
+const editable_description = editor.getEditableDescription();
+const readonly_description = editor.getReadonlyDescription();
 </script>
 
 <style lang="scss" scoped>
+@use "@tuleap/burningparrot-theme/css/includes/global-variables";
+
 .document-section {
     display: flex;
     flex-direction: column;
@@ -118,7 +90,10 @@ const error_message = getErrorMessage();
 }
 
 .section-header {
+    position: sticky;
+    top: global-variables.$navbar-height;
     margin-bottom: var(--tlp-medium-spacing);
     border-bottom: 1px solid var(--tlp-neutral-normal-color);
+    background: var(--tuleap-artidoc-section-background);
 }
 </style>

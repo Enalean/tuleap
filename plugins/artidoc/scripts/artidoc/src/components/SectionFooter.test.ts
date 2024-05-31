@@ -16,46 +16,41 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
 import { describe, expect, it } from "vitest";
 import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
-import SectionEditorCta from "./SectionEditorCta.vue";
 import type { ComponentPublicInstance } from "vue";
 import { createGettext } from "vue3-gettext";
 import { SectionEditorStub } from "@/helpers/stubs/SectionEditorStub";
 import type { use_section_editor_type } from "@/composables/useSectionEditor";
+import SectionFooter from "@/components/SectionFooter.vue";
+import ArtidocSectionFactory from "@/helpers/artidoc-section.factory";
 
-describe("SectionEditorCta", () => {
+describe("SectionFooter", () => {
     function getWrapper(editor: use_section_editor_type): VueWrapper<ComponentPublicInstance> {
-        return shallowMount(SectionEditorCta, {
+        return shallowMount(SectionFooter, {
             propsData: {
                 editor,
+                section: ArtidocSectionFactory.create(),
             },
-            global: {
-                plugins: [createGettext({ silent: true })],
-            },
+            global: { plugins: [createGettext({ silent: true })] },
         });
     }
 
-    describe("when the edit mode is off", () => {
-        it("should display edit button", () => {
+    describe("when the section is not editable", () => {
+        it("should hide the footer", () => {
             expect(
-                getWrapper(SectionEditorStub.withEditableSection()).find("button").exists(),
-            ).toBe(true);
-        });
-    });
-
-    describe("when the edit mode is on", () => {
-        it("should hide edit button", () => {
-            expect(getWrapper(SectionEditorStub.inEditMode()).find("button").exists()).toBe(false);
-        });
-    });
-
-    describe("when the user is not allowed to edit the section", () => {
-        it("should display edit button", () => {
-            expect(
-                getWrapper(SectionEditorStub.withoutEditableSection()).find("button").exists(),
+                getWrapper(SectionEditorStub.withoutEditableSection()).find("div").exists(),
             ).toBe(false);
+        });
+    });
+
+    describe("when the section is editable", () => {
+        it("should display the footer", () => {
+            expect(getWrapper(SectionEditorStub.withEditableSection()).find("div").exists()).toBe(
+                true,
+            );
         });
     });
 });
