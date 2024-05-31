@@ -42,6 +42,7 @@ const error: TemplateResult = html`
 const asterisk: TemplateResult = html`<i class="fa-solid fa-asterisk" aria-hidden="true"></i>`;
 
 type ListPickerProps = {
+    story: "list-picker" | "list-picker-multiple" | "with-custom-items-template";
     locale: string;
     placeholder: string;
     is_filterable: boolean;
@@ -51,8 +52,8 @@ type ListPickerProps = {
     disabled: boolean;
     with_helper_text: boolean;
     with_error: boolean;
-    story: "list-picker" | "with-custom-items-template";
     items_template_formatter: ListPickerOptions["items_template_formatter"] | undefined;
+    multiple: boolean;
 };
 
 function getFormClasses(args: ListPickerProps): string {
@@ -116,7 +117,7 @@ function getTemplate(args: ListPickerProps): TemplateResult {
     return html`
 <div class=${getFormClasses(args)}>
     <label class="tlp-label" for="${args.story}-select">ListPicker ${args.mandatory ? asterisk : ``}</label>
-    <select id="${args.story}-select" name="list-value" ?disabled=${args.disabled}>${getOptions(args)}</select>${args.with_helper_text ? helper_text : ``}${args.with_error ? error : ``}
+    <select id="${args.story}-select" name="list-value" ?disabled=${args.disabled} ?multiple=${args.multiple}>${getOptions(args)}</select>${args.with_helper_text ? helper_text : ``}${args.with_error ? error : ``}
 </div>`;
 }
 
@@ -125,7 +126,7 @@ const meta: Meta<ListPickerProps> = {
     parameters: {
         layout: "padded",
         controls: {
-            exclude: ["story"],
+            exclude: ["story", "multiple"],
         },
     },
     render: (args) => {
@@ -140,6 +141,7 @@ const meta: Meta<ListPickerProps> = {
         disabled: false,
         with_helper_text: false,
         with_error: false,
+        multiple: false,
     },
     argTypes: {
         locale: {
@@ -227,6 +229,13 @@ export const ListPicker: Story = {
                 type: { summary: undefined },
             },
         },
+    },
+};
+
+export const ListPickerMultiple: Story = {
+    args: {
+        story: "list-picker-multiple",
+        multiple: true,
     },
 };
 
