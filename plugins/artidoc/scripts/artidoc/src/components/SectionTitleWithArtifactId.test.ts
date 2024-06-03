@@ -22,6 +22,7 @@ import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import SectionTitleWithArtifactId from "./SectionTitleWithArtifactId.vue";
 import type { ComponentPublicInstance } from "vue";
+import { createGettext } from "vue3-gettext";
 
 describe("SectionTitleWithArtifactId", () => {
     describe("when the sections are loaded", () => {
@@ -37,6 +38,7 @@ describe("SectionTitleWithArtifactId", () => {
                 slots: {
                     "header-cta": "<div><button>edit</button></div>",
                 },
+                global: { plugins: [createGettext({ silent: true })] },
             });
         });
 
@@ -63,14 +65,15 @@ describe("SectionTitleWithArtifactId", () => {
                     is_edit_mode: true,
                     input_current_title,
                 },
+                global: { plugins: [createGettext({ silent: true })] },
             });
 
-            const input = wrapper.find("input");
-            expect(input.exists()).toBe(true);
-            expect(input.element.value).toBe("expected title");
+            const textarea = wrapper.find("textarea");
+            expect(textarea.exists()).toBe(true);
+            expect(textarea.element.value).toBe("expected title");
 
-            input.element.value = "new title";
-            input.trigger("input");
+            textarea.element.value = "new title";
+            textarea.trigger("input");
 
             expect(input_current_title).toHaveBeenCalledWith("new title");
         });
