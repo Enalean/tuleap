@@ -98,6 +98,7 @@ use Tuleap\Tracker\Report\Query\Advanced\SearchablesAreInvalidException;
 use Tuleap\Tracker\Report\Query\Advanced\SearchablesDoNotExistException;
 use Tuleap\Tracker\Report\Query\Advanced\SelectablesAreInvalidException;
 use Tuleap\Tracker\Report\Query\Advanced\SelectablesDoNotExistException;
+use Tuleap\Tracker\Report\Query\Advanced\SelectablesMustBeUniqueException;
 use Tuleap\Tracker\Report\Query\Advanced\SizeValidatorVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\UgroupLabelConverter;
 use Tuleap\Tracker\Report\TrackerDuplicateException;
@@ -418,7 +419,7 @@ class CrossTrackerReportsResource extends AuthenticatedResource
                 ),
                 ]
             );
-        } catch (SearchablesDoNotExistException | SelectablesDoNotExistException $exception) {
+        } catch (SearchablesDoNotExistException | SelectablesDoNotExistException | SelectablesMustBeUniqueException $exception) {
             throw new RestException(400, null, ['i18n_error_message' => $exception->getI18NExceptionMessage()]);
         } catch (SearchablesAreInvalidException | SelectablesAreInvalidException $exception) {
             throw new RestException(400, null, ['i18n_error_message' => $exception->getMessage()]);

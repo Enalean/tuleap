@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 3.0.1\n"
+"X-Generator: Poedit 3.4.4\n"
 
 msgid "\"Attachment\" type field cannot be modified during artifact copy."
 msgstr ""
@@ -2717,6 +2717,9 @@ msgid "Selected values are invalid because some are not closed values anymore."
 msgstr ""
 "Certaines valeurs sélectionnées sont invalides car elles ne sont plus "
 "considérées comme fermées."
+
+msgid "Selection on same field multiple times is not allowed"
+msgstr "La sélection du même champs plusieurs fois n'est pas autorisée"
 
 #, php-format
 msgid "Semantic %s"
