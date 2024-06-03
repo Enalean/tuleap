@@ -46,6 +46,9 @@ msgstr "Recharger la page"
 msgid "Save"
 msgstr "Sauvegarder"
 
+msgid "Section without title"
+msgstr "Section sans titre"
+
 msgid "Table of contents"
 msgstr "Table des matières"
 

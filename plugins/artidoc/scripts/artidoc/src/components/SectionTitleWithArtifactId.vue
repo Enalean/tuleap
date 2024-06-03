@@ -21,13 +21,16 @@
     <div>
         <span class="editor-cta"><slot name="header-cta"></slot></span>
         <h1>
-            <input
+            <textarea
                 type="text"
-                class="tlp-input tlp-input-large"
+                class="tlp-textarea tlp-textarea-large"
                 v-if="is_edit_mode"
-                v-bind:value="title"
+                v-model="title_to_edit"
                 v-on:input="onTitleChange"
-            />
+                v-bind:placeholder="placeholder"
+                ref="textarea"
+                rows="1"
+            ></textarea>
             <template v-else>
                 {{ title }}
             </template>
@@ -37,9 +40,10 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted } from "vue";
+import { onMounted, ref, watch } from "vue";
 import useScrollToAnchor from "@/composables/useScrollToAnchor";
 import type { use_section_editor_type } from "@/composables/useSectionEditor";
+import { useGettext } from "vue3-gettext";
 
 const props = defineProps<{
     artifact_id: number;
@@ -50,6 +54,12 @@ const props = defineProps<{
 const artifact_url = `/plugins/tracker/?aid=${props.artifact_id}`;
 
 const { scrollToAnchor } = useScrollToAnchor();
+const { $gettext } = useGettext();
+
+const placeholder = $gettext("Section without title");
+
+const textarea = ref<HTMLTextAreaElement | undefined>(undefined);
+const title_to_edit = ref(props.title);
 
 onMounted(() => {
     const hash = window.location.hash.slice(1);
@@ -58,12 +68,31 @@ onMounted(() => {
     }
 });
 
+watch(
+    () => textarea.value,
+    () => {
+        if (textarea.value) {
+            adjustHeightOfTextareaToContent(textarea.value);
+        }
+    },
+);
+
 function onTitleChange(event: Event): void {
-    if (!(event.target instanceof HTMLInputElement)) {
+    if (!(event.target instanceof HTMLTextAreaElement)) {
         return;
     }
 
+    adjustHeightOfTextareaToContent(event.target);
+
     props.input_current_title(event.target.value);
+}
+
+function adjustHeightOfTextareaToContent(textarea: HTMLTextAreaElement): void {
+    const random_small_value_to_force_reset_scrollHeight = 5;
+    textarea.style.height = random_small_value_to_force_reset_scrollHeight + "px";
+
+    const extra_height_to_avoid_scrollbar = 5;
+    textarea.style.height = extra_height_to_avoid_scrollbar + textarea.scrollHeight + "px";
 }
 </script>
 
@@ -90,9 +119,11 @@ a {
     font-weight: 400;
 }
 
-.tlp-input-large {
-    font-size: 36px;
-    font-weight: 600;
-    line-height: 40px;
+textarea {
+    // inherit styles from the parent h1
+    font-size: inherit;
+    font-weight: inherit;
+    line-height: inherit;
+    resize: none;
 }
 </style>
