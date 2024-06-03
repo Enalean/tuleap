@@ -26,6 +26,7 @@ use PFUser;
 use Tracker;
 use Tuleap\Tracker\Report\Query\Advanced\IBuildInvalidSelectablesCollection;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidSelectablesCollection;
+use Tuleap\Tracker\Report\Query\Advanced\SelectablesMustBeUniqueException;
 
 final readonly class InvalidSelectablesCollectionBuilder implements IBuildInvalidSelectablesCollection
 {
@@ -39,8 +40,16 @@ final readonly class InvalidSelectablesCollectionBuilder implements IBuildInvali
     ) {
     }
 
+    /**
+     * @throws SelectablesMustBeUniqueException
+     */
     public function buildCollectionOfInvalidSelectables(array $selectables): InvalidSelectablesCollection
     {
+        $unique_selectables = array_unique($selectables, SORT_REGULAR);
+        if (count($unique_selectables) !== count($selectables)) {
+            throw new SelectablesMustBeUniqueException();
+        }
+
         $collection = new InvalidSelectablesCollection();
         foreach ($selectables as $selectable) {
             $this->collector_visitor->collectErrors(

@@ -2426,6 +2426,9 @@ msgstr ""
 msgid "Selected values are invalid because some are not closed values anymore."
 msgstr ""
 
+msgid "Selection on same field multiple times is not allowed"
+msgstr ""
+
 #, php-format
 msgid "Semantic %s"
 msgstr ""
