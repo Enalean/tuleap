@@ -23,27 +23,26 @@ declare(strict_types=1);
 namespace Tuleap\AgileDashboard\Milestone\Pane;
 
 use AgileDashboard_Pane;
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use Planning_NoMilestone;
+use Tuleap\AgileDashboard\Test\Builders\PlanningBuilder;
+use Tuleap\FRS\AgileDashboardPaneInfo;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Milestone\PaneInfo;
 
-final class PaneInfoCollectorTest extends \Tuleap\Test\PHPUnit\TestCase
+final class PaneInfoCollectorTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var PaneInfoCollector
-     */
-    private $collector;
+    private PaneInfoCollector $collector;
 
     protected function setUp(): void
     {
         $this->collector = new PaneInfoCollector(
-            Mockery::mock(\Planning_Milestone::class),
+            new Planning_NoMilestone(ProjectTestBuilder::aProject()->build(), PlanningBuilder::aPlanning(101)->build()),
             null,
             [],
             null,
-            Mockery::mock(\PFUser::class),
+            UserTestBuilder::buildWithDefaults(),
         );
     }
 
@@ -53,12 +52,7 @@ final class PaneInfoCollectorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->collector->addPaneAfter('cardwall', $pane);
 
-        $this->assertSame(
-            [
-                $pane,
-            ],
-            $this->collector->getPanes()
-        );
+        self::assertSame([$pane], $this->collector->getPanes());
     }
 
     public function testAddPaneAfterOneElement(): void
@@ -70,13 +64,10 @@ final class PaneInfoCollectorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->collector->addPaneAfter('cardwall', $pane_taskboard);
 
-        $this->assertSame(
-            [
-                $pane_cardwall,
-                $pane_taskboard,
-            ],
-            $this->collector->getPanes()
-        );
+        self::assertSame([
+            $pane_cardwall,
+            $pane_taskboard,
+        ], $this->collector->getPanes());
     }
 
     public function testAddPaneAfterTwoElements(): void
@@ -90,14 +81,11 @@ final class PaneInfoCollectorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->collector->addPaneAfter('cardwall', $pane_taskboard);
 
-        $this->assertSame(
-            [
-                $pane_frs,
-                $pane_cardwall,
-                $pane_taskboard,
-            ],
-            $this->collector->getPanes()
-        );
+        self::assertSame([
+            $pane_frs,
+            $pane_cardwall,
+            $pane_taskboard,
+        ], $this->collector->getPanes());
     }
 
     public function testAddPaneAfterInTheMiddle(): void
@@ -111,34 +99,28 @@ final class PaneInfoCollectorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->collector->addPaneAfter('cardwall', $pane_taskboard);
 
-        $this->assertSame(
-            [
-                $pane_cardwall,
-                $pane_taskboard,
-                $pane_frs,
-            ],
-            $this->collector->getPanes()
-        );
+        self::assertSame([
+            $pane_cardwall,
+            $pane_taskboard,
+            $pane_frs,
+        ], $this->collector->getPanes());
     }
 
     public function testItReturnsExternalPanesAtTheEnd(): void
     {
         $pane_taskboard = $this->getPaneInfo('taskboard');
         $pane_cardwall  = $this->getPaneInfo('cardwall');
-        $pane_frs       = $this->getExternalPaneInfo('frs');
+        $pane_frs       = new AgileDashboardPaneInfo(1);
 
         $this->collector->addPane($pane_cardwall);
         $this->collector->addPane($pane_frs);
         $this->collector->addPane($pane_taskboard);
 
-        $this->assertSame(
-            [
-                $pane_cardwall,
-                $pane_taskboard,
-                $pane_frs,
-            ],
-            $this->collector->getPanes()
-        );
+        self::assertSame([
+            $pane_cardwall,
+            $pane_taskboard,
+            $pane_frs,
+        ], $this->collector->getPanes());
     }
 
     public function testItReturnsNoActivePane(): void
@@ -146,77 +128,63 @@ final class PaneInfoCollectorTest extends \Tuleap\Test\PHPUnit\TestCase
         $active_pane = null;
 
         $collector = new PaneInfoCollector(
-            Mockery::mock(\Planning_Milestone::class),
+            new Planning_NoMilestone(ProjectTestBuilder::aProject()->build(), PlanningBuilder::aPlanning(101)->build()),
             null,
             [],
             $active_pane,
-            Mockery::mock(\PFUser::class),
+            UserTestBuilder::buildWithDefaults(),
         );
 
-        $this->assertNull($collector->getActivePane());
+        self::assertNull($collector->getActivePane());
     }
 
     public function testItReturnsDefaultActivePane(): void
     {
-        $active_pane = Mockery::mock(AgileDashboard_Pane::class)
-            ->shouldReceive(['getIdentifier' => 'ad'])
-            ->getMock();
+        $active_pane = $this->createMock(AgileDashboard_Pane::class);
+        $active_pane->method('getIdentifier')->willReturn('ad');
 
         $collector = new PaneInfoCollector(
-            Mockery::mock(\Planning_Milestone::class),
+            new Planning_NoMilestone(ProjectTestBuilder::aProject()->build(), PlanningBuilder::aPlanning(101)->build()),
             null,
             [],
             $active_pane,
-            Mockery::mock(\PFUser::class),
+            UserTestBuilder::buildWithDefaults(),
         );
 
-        $this->assertEquals($active_pane, $collector->getActivePane());
+        self::assertEquals($active_pane, $collector->getActivePane());
     }
 
     public function testItReturnsActivePaneProvidedByBuilder(): void
     {
-        $default_active_pane = Mockery::mock(AgileDashboard_Pane::class)
-            ->shouldReceive(['getIdentifier' => 'ad'])
-            ->getMock();
+        $default_active_pane = $this->createMock(AgileDashboard_Pane::class);
+        $default_active_pane->method('getIdentifier')->willReturn('ad');
 
         $collector = new PaneInfoCollector(
-            Mockery::mock(\Planning_Milestone::class),
+            new Planning_NoMilestone(ProjectTestBuilder::aProject()->build(), PlanningBuilder::aPlanning(101)->build()),
             null,
             [],
             $default_active_pane,
-            Mockery::mock(\PFUser::class),
+            UserTestBuilder::buildWithDefaults(),
         );
 
-        $collector->setActivePaneBuilder(
-            static function () {
-                return Mockery::mock(AgileDashboard_Pane::class)
-                    ->shouldReceive(['getIdentifier' => 'taskboard'])
-                    ->getMock();
-            }
-        );
+        $collector->setActivePaneBuilder(function () {
+            $pane = $this->createMock(AgileDashboard_Pane::class);
+            $pane->method('getIdentifier')->willReturn('taskboard');
+
+            return $pane;
+        });
 
 
         $default_active_pane = $collector->getActivePane();
-        $this->assertEquals('taskboard', $default_active_pane->getIdentifier());
+        self::assertEquals('taskboard', $default_active_pane->getIdentifier());
     }
 
     private function getPaneInfo(string $identifier): PaneInfo
     {
-        return Mockery::mock(PaneInfo::class)
-            ->shouldReceive([
-                'getIdentifier'  => $identifier,
-                'isExternalLink' => false,
-            ])
-            ->getMock();
-    }
+        $pane_info = $this->createMock(PaneInfo::class);
+        $pane_info->method('getIdentifier')->willReturn($identifier);
+        $pane_info->method('isExternalLink')->willReturn(false);
 
-    private function getExternalPaneInfo(string $identifier): PaneInfo
-    {
-        return Mockery::mock(PaneInfo::class)
-            ->shouldReceive([
-                'getIdentifier'  => $identifier,
-                'isExternalLink' => true,
-            ])
-            ->getMock();
+        return $pane_info;
     }
 }
