@@ -65,11 +65,9 @@ describe("PullRequestErrorModal", () => {
             expect.any(Function),
         );
 
-        wrapper.setProps({
+        await wrapper.setProps({
             fault: Fault.fromMessage("Something wrong has occurred."),
         });
-
-        await wrapper.vm.$nextTick();
 
         expect(modal_instance.show).toHaveBeenCalledOnce();
     });
@@ -79,11 +77,10 @@ describe("PullRequestErrorModal", () => {
         const wrapper = getWrapper(fault);
 
         expect(wrapper.find("[data-test=pullrequest-error-modal-details]").exists()).toBe(false);
-        wrapper
+        await wrapper
             .find<HTMLButtonElement>("[data-test=pullrequest-error-modal-show-details]")
             .trigger("click");
 
-        await wrapper.vm.$nextTick();
         expect(wrapper.find("[data-test=pullrequest-error-modal-details]").exists()).toBe(true);
         expect(
             wrapper.find("[data-test=pullrequest-error-modal-details-message]").text(),
@@ -95,11 +92,10 @@ describe("PullRequestErrorModal", () => {
 
         modal_instance.is_shown = true;
 
-        wrapper.setProps({
+        await wrapper.setProps({
             fault: Fault.fromMessage("Something wrong has occurred (again)."),
         });
 
-        await wrapper.vm.$nextTick();
         expect(modal_instance.show).not.toHaveBeenCalled();
     });
 });

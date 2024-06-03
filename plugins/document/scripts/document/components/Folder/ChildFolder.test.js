@@ -23,7 +23,8 @@ import { getGlobalTestOptions } from "../../helpers/global-options-for-test";
 import { createRouter, createWebHistory } from "vue-router";
 
 import { routes } from "../../router/router";
-import { nextTick } from "vue";
+
+jest.useFakeTimers();
 
 const router = createRouter({
     history: createWebHistory(),
@@ -88,8 +89,7 @@ describe("ChildFolder", () => {
 
         factory();
 
-        await nextTick();
-        await nextTick();
+        await jest.runOnlyPendingTimersAsync();
         expect(load_folder).toHaveBeenCalledWith(expect.anything(), 10);
     });
 

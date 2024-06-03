@@ -25,7 +25,8 @@ import * as tlp_modal from "@tuleap/tlp-modal";
 import { TYPE_FILE, TYPE_FOLDER } from "../../../../constants";
 import * as get_office_file from "../../../../helpers/office/get-empty-office-file";
 import { getGlobalTestOptions } from "../../../../helpers/global-options-for-test";
-import { nextTick } from "vue";
+
+jest.useFakeTimers();
 
 describe("NewItemModal", () => {
     let factory;
@@ -178,7 +179,7 @@ describe("NewItemModal", () => {
         emitter.emit("createItem", {
             item: current_folder,
         });
-        await nextTick();
+        await jest.runOnlyPendingTimersAsync();
 
         expect(wrapper.vm.item.properties).toStrictEqual(item_to_create.properties);
         wrapper.unmount();
@@ -259,9 +260,7 @@ describe("NewItemModal", () => {
             },
         });
 
-        await nextTick();
-        await nextTick();
-        await nextTick();
+        await jest.runOnlyPendingTimersAsync();
 
         emitter.emit("update-title-property", "Specs V1");
         expect(wrapper.vm.item.file_properties.file.name).toBe("Specs V1.docx");

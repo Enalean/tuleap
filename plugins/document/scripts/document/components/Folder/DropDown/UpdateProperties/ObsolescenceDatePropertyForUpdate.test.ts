@@ -93,14 +93,12 @@ describe("ObsolescenceDatePropertyForUpdate", () => {
         it(`Obsolescence date should be the current day + 3 months if the option "3months" is chosen by the user`, async () => {
             const wrapper = createWrapper(true);
 
-            const element = wrapper.findAll("option").at(1).element;
-            if (!(element instanceof HTMLOptionElement)) {
-                throw new Error("Can not select option");
-            }
+            const element = wrapper.findAll<HTMLOptionElement>("option").at(1).element;
             element.selected = true;
 
-            wrapper.get("[data-test=document-obsolescence-date-select-update]").trigger("change");
-            await nextTick();
+            await wrapper
+                .get("[data-test=document-obsolescence-date-select-update]")
+                .trigger("change");
 
             const current_date = moment().format("YYYY-MM-DD");
 

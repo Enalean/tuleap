@@ -23,10 +23,11 @@ import { TYPE_FILE, TYPE_FOLDER } from "../../../constants";
 import DragNDropHandler from "./DragNDropHandler.vue";
 import emitter from "../../../helpers/emitter";
 import { getGlobalTestOptions } from "../../../helpers/global-options-for-test";
-import { nextTick } from "vue";
 import { buildFakeItem } from "../../../helpers/item-builder";
 
 jest.mock("../../../helpers/emitter");
+
+jest.useFakeTimers();
 
 describe("DragNDropHandler", () => {
     let main, drop_event, drag_event, add_upload_file_mock, create_new_file_version_mock;
@@ -244,7 +245,7 @@ describe("DragNDropHandler", () => {
                 wrapper.setData({ highlighted_item_id: target_file.id });
 
                 await wrapper.vm.ondrop(drop_event);
-                await nextTick();
+                await jest.runOnlyPendingTimersAsync();
 
                 expect(create_new_file_version_mock).not.toHaveBeenCalled();
                 expect(wrapper.vm.error_modal_shown).toStrictEqual(wrapper.vm.EDITION_LOCKED);

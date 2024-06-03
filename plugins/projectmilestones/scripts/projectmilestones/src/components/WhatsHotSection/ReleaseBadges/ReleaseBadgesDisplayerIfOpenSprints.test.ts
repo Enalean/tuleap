@@ -29,6 +29,8 @@ import { createTestingPinia } from "@pinia/testing";
 import { defineStore } from "pinia";
 import { getGlobalTestOptions } from "../../../helpers/global-options-for-test";
 
+jest.useFakeTimers();
+
 describe("ReleaseBadgesDisplayerIfOpenSprints", () => {
     function getPersonalWidgetInstance(
         user_can_view_sub_milestones_planning: boolean,
@@ -222,8 +224,7 @@ describe("ReleaseBadgesDisplayerIfOpenSprints", () => {
         );
 
         expect(wrapper.findComponent(ReleaseBadgesClosedSprints).exists()).toBe(false);
-        await wrapper.vm.$nextTick();
-        await wrapper.vm.$nextTick();
+        await jest.runOnlyPendingTimersAsync();
         expect(wrapper.findComponent(ReleaseBadgesClosedSprints).exists()).toBe(true);
     });
 
@@ -248,12 +249,10 @@ describe("ReleaseBadgesDisplayerIfOpenSprints", () => {
             1,
         );
 
-        await wrapper.vm.$nextTick();
+        await jest.runOnlyPendingTimersAsync();
         expect(wrapper.find("[data-test=button-to-close]").exists()).toBe(true);
 
-        wrapper.get("[data-test=button-to-close]").trigger("click");
-        await wrapper.vm.$nextTick();
-        await wrapper.vm.$nextTick();
+        await wrapper.get("[data-test=button-to-close]").trigger("click");
 
         expect(wrapper.find("[data-test=button-to-close]").exists()).toBe(false);
     });
@@ -333,7 +332,7 @@ describe("ReleaseBadgesDisplayerIfOpenSprints", () => {
             1,
         );
 
-        await wrapper.vm.$nextTick();
+        await jest.runOnlyPendingTimersAsync();
         expect(wrapper.findComponent(ReleaseBadgesOpenSprint).exists()).toBe(true);
         expect(wrapper.findComponent(ReleaseBadgesAllSprints).exists()).toBe(false);
     });

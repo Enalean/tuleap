@@ -28,6 +28,8 @@ import type { GitlabDataWithPath, GitlabProject } from "../../../type";
 import { FetchWrapperError } from "@tuleap/tlp-fetch";
 import { createLocalVueForTests } from "../../../helpers/local-vue-for-tests";
 
+jest.useFakeTimers();
+
 describe("ListRepositoriesModal", () => {
     let store_options: {
             getters: { getGitlabRepositoriesIntegrated: GitlabDataWithPath[] };
@@ -99,20 +101,17 @@ describe("ListRepositoriesModal", () => {
 
         const wrapper = await instantiateComponent(repositories);
 
-        wrapper.setData({
+        await wrapper.setData({
             selected_repository: null,
         });
-        await wrapper.vm.$nextTick();
 
         expect(
             wrapper.find("[data-test=button-integrate-gitlab-repository]").attributes().disabled,
         ).toBeTruthy();
 
-        wrapper.setData({
+        await wrapper.setData({
             selected_repository: { id: 10, path_with_namespace: "My Path / Repository" },
         });
-
-        await wrapper.vm.$nextTick();
 
         expect(
             wrapper.find("[data-test=button-integrate-gitlab-repository]").attributes().disabled,
@@ -122,9 +121,8 @@ describe("ListRepositoriesModal", () => {
     it("When user clicks on back button, Then event is emitted", async () => {
         const wrapper = await instantiateComponent([]);
 
-        wrapper.find("[data-test=gitlab-button-back]").trigger("click");
+        await wrapper.find("[data-test=gitlab-button-back]").trigger("click");
 
-        await wrapper.vm.$nextTick();
         expect(wrapper.emitted("to-back-button")).toBeTruthy();
     });
 
@@ -138,15 +136,15 @@ describe("ListRepositoriesModal", () => {
             "fa-long-arrow-alt-right",
         );
 
-        wrapper.setData({
+        await wrapper.setData({
             selected_repository: { id: 1 },
             is_loading: false,
             message_error_rest: "",
         });
-        await wrapper.vm.$nextTick();
 
-        wrapper.find("[data-test=select-gitlab-repository-modal-form]").trigger("submit.prevent");
-        await wrapper.vm.$nextTick();
+        await wrapper
+            .find("[data-test=select-gitlab-repository-modal-form]")
+            .trigger("submit.prevent");
 
         expect(
             wrapper.find("[data-test=button-integrate-gitlab-repository]").attributes().disabled,
@@ -182,8 +180,7 @@ describe("ListRepositoriesModal", () => {
         });
 
         wrapper.find("[data-test=select-gitlab-repository-modal-form]").trigger("submit.prevent");
-        await wrapper.vm.$nextTick();
-        await wrapper.vm.$nextTick();
+        await jest.runOnlyPendingTimersAsync();
 
         expect(wrapper.find("[data-test=gitlab-fail-post-repositories]").text()).toBe(
             "404: Error during post",
@@ -317,13 +314,11 @@ describe("ListRepositoriesModal", () => {
 
         const wrapper = await instantiateComponent(repositories);
 
-        wrapper.find("[data-test=gitlab-avatar-1]").trigger("click");
-        await wrapper.vm.$nextTick();
+        await wrapper.find("[data-test=gitlab-avatar-1]").trigger("click");
 
         expect(wrapper.vm.$data.selected_repository.id).toBe(1);
 
-        wrapper.find("[data-test=gitlab-label-path-2]").trigger("click");
-        await wrapper.vm.$nextTick();
+        await wrapper.find("[data-test=gitlab-label-path-2]").trigger("click");
 
         expect(wrapper.vm.$data.selected_repository.id).toBe(2);
     });

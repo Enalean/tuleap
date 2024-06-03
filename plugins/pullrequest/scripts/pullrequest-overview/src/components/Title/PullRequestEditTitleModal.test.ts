@@ -39,6 +39,8 @@ vi.mock("@tuleap/tlp-modal", () => ({
     EVENT_TLP_MODAL_HIDDEN: "tlp-modal-hidden",
 }));
 
+vi.useFakeTimers();
+
 const pull_request_id = 1;
 const noop = (): void => {
     // do nothing
@@ -82,17 +84,15 @@ describe("PullRequestEditTitleModal", () => {
             .find<HTMLButtonElement>("[data-test=pull-request-open-title-modal-button]")
             .trigger("click");
 
-        await wrapper.vm.$nextTick();
+        await vi.runOnlyPendingTimersAsync();
 
         wrapper
             .find<HTMLInputElement>("[data-test=pull-request-edit-title-input]")
             .setValue("My updated title");
 
-        wrapper
+        await wrapper
             .find<HTMLButtonElement>("[data-test=pull-request-save-changes-button]")
             .trigger("click");
-
-        await wrapper.vm.$nextTick();
     };
 
     beforeEach(() => {
@@ -128,11 +128,9 @@ describe("PullRequestEditTitleModal", () => {
     it("When the user clicks on the [Edit title] button, it shows the modal", async () => {
         const wrapper = getWrapper();
 
-        wrapper
+        await wrapper
             .find<HTMLButtonElement>("[data-test=pull-request-open-title-modal-button]")
             .trigger("click");
-
-        await wrapper.vm.$nextTick();
 
         expect(tlp_modal.createModal).toHaveBeenCalledOnce();
         expect(modal_instance.addEventListener).toHaveBeenCalledWith(

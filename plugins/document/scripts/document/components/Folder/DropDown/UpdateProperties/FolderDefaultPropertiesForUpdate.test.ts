@@ -17,15 +17,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { getGlobalTestOptions } from "../../../../helpers/global-options-for-test";
-
 const emitMock = jest.fn();
-jest.mock("../../../../helpers/emitter", () => {
-    return {
-        emit: emitMock,
-    };
-});
 
+import { getGlobalTestOptions } from "../../../../helpers/global-options-for-test";
 import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import FolderDefaultPropertiesForUpdate from "./FolderDefaultPropertiesForUpdate.vue";
@@ -33,7 +27,12 @@ import { TYPE_FOLDER } from "../../../../constants";
 import type { Folder, Property, ListValue } from "../../../../type";
 import type { ConfigurationState } from "../../../../store/configuration";
 import type { PropertiesState } from "../../../../store/properties/module";
-import { nextTick } from "vue";
+
+jest.mock("../../../../helpers/emitter", () => {
+    return {
+        emit: emitMock,
+    };
+});
 
 describe("FolderDefaultPropertiesForUpdate", () => {
     let load_properties: jest.Mock;
@@ -93,14 +92,13 @@ describe("FolderDefaultPropertiesForUpdate", () => {
         });
 
         it(`Given custom component are loading
-            Then it displays spinner`, async () => {
+            Then it displays spinner`, () => {
             const item = {
                 properties: [] as Array<Property>,
                 type: TYPE_FOLDER,
                 title: "title",
             } as Folder;
             const wrapper = createWrapper(true, false, item, []);
-            await nextTick();
 
             expect(
                 wrapper.find("[data-test=document-folder-default-properties-container]").exists(),

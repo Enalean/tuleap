@@ -41,6 +41,8 @@ import { AuthorFilterStub } from "../../../tests/stubs/AuthorFilterStub";
 import { UserStub } from "../../../tests/stubs/UserStub";
 import { SORT_ASCENDANT, SORT_DESCENDANT } from "../../injection-symbols";
 
+vi.useFakeTimers();
+
 describe("PullRequestsList", () => {
     let filters_store: StoreListFilters;
 
@@ -71,7 +73,7 @@ describe("PullRequestsList", () => {
 
         const wrapper = getWrapper();
 
-        await wrapper.vm.$nextTick();
+        await vi.runOnlyPendingTimersAsync();
 
         expect(wrapper.findAll("[data-test=pull-request-card]").length).toBe(3);
     });
@@ -80,7 +82,7 @@ describe("PullRequestsList", () => {
         vi.spyOn(tuleap_api, "fetchAllPullRequests").mockReturnValue(okAsync([]));
 
         const wrapper = getWrapper();
-        await wrapper.vm.$nextTick();
+        await vi.runOnlyPendingTimersAsync();
 
         expect(tuleap_api.fetchAllPullRequests).toHaveBeenCalledOnce();
         expect(tuleap_api.fetchAllPullRequests).toHaveBeenCalledWith(
@@ -107,7 +109,7 @@ describe("PullRequestsList", () => {
         );
 
         filters_store.deleteFilter(filter);
-        await wrapper.vm.$nextTick();
+        await vi.runOnlyPendingTimersAsync();
 
         expect(tuleap_api.fetchAllPullRequests).toHaveBeenCalledTimes(3);
         expect(tuleap_api.fetchAllPullRequests).toHaveBeenLastCalledWith(
@@ -124,7 +126,7 @@ describe("PullRequestsList", () => {
         vi.spyOn(tuleap_api, "fetchAllPullRequests").mockReturnValue(okAsync([]));
 
         const wrapper = getWrapper();
-        await wrapper.vm.$nextTick();
+        await vi.runOnlyPendingTimersAsync();
 
         expect(tuleap_api.fetchAllPullRequests).toHaveBeenCalledOnce();
         expect(tuleap_api.fetchAllPullRequests).toHaveBeenCalledWith(
@@ -154,7 +156,7 @@ describe("PullRequestsList", () => {
         vi.spyOn(tuleap_api, "fetchAllPullRequests").mockReturnValue(okAsync([]));
 
         const wrapper = getWrapper();
-        await wrapper.vm.$nextTick();
+        await vi.runOnlyPendingTimersAsync();
 
         expect(tuleap_api.fetchAllPullRequests).toHaveBeenCalledOnce();
         expect(tuleap_api.fetchAllPullRequests).toHaveBeenCalledWith(
@@ -184,7 +186,7 @@ describe("PullRequestsList", () => {
         vi.spyOn(tuleap_api, "fetchAllPullRequests").mockReturnValue(okAsync([]));
 
         const wrapper = getWrapper();
-        await wrapper.vm.$nextTick();
+        await vi.runOnlyPendingTimersAsync();
 
         expect(tuleap_api.fetchAllPullRequests).toHaveBeenCalledOnce();
         expect(tuleap_api.fetchAllPullRequests).toHaveBeenCalledWith(
@@ -214,7 +216,7 @@ describe("PullRequestsList", () => {
         vi.spyOn(tuleap_api, "fetchAllPullRequests").mockReturnValue(okAsync([]));
 
         const wrapper = getWrapper();
-        await wrapper.vm.$nextTick();
+        await vi.runOnlyPendingTimersAsync();
 
         expect(wrapper.find("[data-test=empty-state]").exists()).toBe(true);
     });
@@ -230,8 +232,8 @@ describe("PullRequestsList", () => {
 
         vi.spyOn(tuleap_api, "fetchAllPullRequests").mockReturnValue(errAsync(tuleap_ap_fault));
 
-        const wrapper = getWrapper();
-        await wrapper.vm.$nextTick();
+        getWrapper();
+        await vi.runOnlyPendingTimersAsync();
 
         expect(tuleap_api_error_callback).toHaveBeenCalledOnce();
         expect(tuleap_api_error_callback).toHaveBeenCalledWith(tuleap_ap_fault);

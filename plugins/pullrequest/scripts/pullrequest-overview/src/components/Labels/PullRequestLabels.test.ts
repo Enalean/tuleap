@@ -48,6 +48,8 @@ const labels: ProjectLabel[] = [
 
 vi.mock("@tuleap/vue-strict-inject");
 
+vi.useFakeTimers();
+
 describe("PullRequestLabels", () => {
     let display_error_callback: SpyInstance,
         user_can_update_labels: boolean,
@@ -104,8 +106,7 @@ describe("PullRequestLabels", () => {
         await wrapper.vm.$nextTick();
         expect(wrapper.find("[data-test=pullrequest-property-skeleton]").exists()).toBe(true);
 
-        await wrapper.vm.$nextTick();
-        await wrapper.vm.$nextTick();
+        await vi.runOnlyPendingTimersAsync();
         const displayed_labels = wrapper.findAll("[data-test=pull-request-label]");
 
         expect(wrapper.find("[data-test=pullrequest-property-skeleton]").exists()).toBe(false);
@@ -128,9 +129,7 @@ describe("PullRequestLabels", () => {
 
         const wrapper = getWrapper();
 
-        await wrapper.vm.$nextTick();
-        await wrapper.vm.$nextTick();
-        await wrapper.vm.$nextTick();
+        await vi.runOnlyPendingTimersAsync();
 
         expect(wrapper.find("[data-test=no-labels-yet-text]").exists()).toBe(true);
     });
@@ -145,9 +144,7 @@ describe("PullRequestLabels", () => {
 
             const wrapper = getWrapper();
 
-            await wrapper.vm.$nextTick();
-            await wrapper.vm.$nextTick();
-            await wrapper.vm.$nextTick();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(wrapper.find("[data-test=manage-labels-button]").exists()).toBe(
                 can_update_labels,
@@ -164,9 +161,7 @@ describe("PullRequestLabels", () => {
 
         const wrapper = getWrapper();
 
-        await wrapper.vm.$nextTick();
-        await wrapper.vm.$nextTick();
-        await wrapper.vm.$nextTick();
+        await vi.runOnlyPendingTimersAsync();
 
         expect(wrapper.find("[data-test=manage-labels-button]").exists()).toBe(false);
     });
@@ -181,8 +176,8 @@ describe("PullRequestLabels", () => {
         it("When an error occurs while retrieving the project labels, then it should trigger the display error callback", async () => {
             vi.spyOn(tuleap_api, "fetchProjectLabels").mockReturnValue(errAsync(tuleap_api_fault));
             vi.spyOn(tuleap_api, "fetchPullRequestLabels").mockReturnValue(okAsync([]));
-            const wrapper = getWrapper();
-            await wrapper.vm.$nextTick();
+            getWrapper();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(display_error_callback).toHaveBeenCalledOnce();
             expect(display_error_callback).toHaveBeenCalledWith(tuleap_api_fault);
@@ -193,8 +188,8 @@ describe("PullRequestLabels", () => {
             vi.spyOn(tuleap_api, "fetchPullRequestLabels").mockReturnValue(
                 errAsync(tuleap_api_fault),
             );
-            const wrapper = getWrapper();
-            await wrapper.vm.$nextTick();
+            getWrapper();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(display_error_callback).toHaveBeenCalledOnce();
             expect(display_error_callback).toHaveBeenCalledWith(tuleap_api_fault);

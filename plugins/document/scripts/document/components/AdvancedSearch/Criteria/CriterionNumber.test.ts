@@ -21,7 +21,6 @@ const emitMock = jest.fn();
 
 import { shallowMount, mount } from "@vue/test-utils";
 import CriterionNumber from "./CriterionNumber.vue";
-import { nextTick } from "vue";
 
 jest.mock("../../../helpers/emitter", () => {
     return {
@@ -30,7 +29,7 @@ jest.mock("../../../helpers/emitter", () => {
 });
 
 describe("CriterionNumber", () => {
-    it("should render the component", async () => {
+    it("should render the component", () => {
         const wrapper = shallowMount(CriterionNumber, {
             props: {
                 criterion: {
@@ -40,8 +39,6 @@ describe("CriterionNumber", () => {
                 value: "123",
             },
         });
-
-        await nextTick();
 
         expect(wrapper.element).toMatchSnapshot();
     });

@@ -29,6 +29,8 @@ import UserStoryCard from "./UserStoryCard.vue";
 import type { Store } from "@tuleap/vuex-store-wrapper-jest";
 import type { UserStory } from "../../../type";
 
+jest.useFakeTimers();
+
 describe("IterationUserStoryList", () => {
     it("Displays the empty state when no user story is found", async () => {
         const store: Store = createStoreMock({
@@ -56,8 +58,7 @@ describe("IterationUserStoryList", () => {
 
         expect(wrapper.findComponent(BacklogElementSkeleton).exists()).toBe(true);
 
-        await wrapper.vm.$nextTick();
-        await wrapper.vm.$nextTick();
+        await jest.runOnlyPendingTimersAsync();
 
         expect(wrapper.find("[data-test=empty-state]").exists()).toBe(true);
         expect(wrapper.findComponent(BacklogElementSkeleton).exists()).toBe(false);
@@ -94,8 +95,7 @@ describe("IterationUserStoryList", () => {
 
         expect(wrapper.findComponent(BacklogElementSkeleton).exists()).toBe(true);
 
-        await wrapper.vm.$nextTick();
-        await wrapper.vm.$nextTick();
+        await jest.runOnlyPendingTimersAsync();
 
         const user_stories_card = wrapper.findAllComponents(UserStoryCard);
 
@@ -127,9 +127,7 @@ describe("IterationUserStoryList", () => {
             },
         });
 
-        await wrapper.vm.$nextTick();
-        await wrapper.vm.$nextTick();
-        await wrapper.vm.$nextTick();
+        await jest.runOnlyPendingTimersAsync();
 
         expect(wrapper.find("[data-test=iteration-content-error-message]").exists()).toBe(true);
         expect(wrapper.find("[data-test=empty-state]").exists()).toBe(false);
@@ -166,8 +164,7 @@ describe("IterationUserStoryList", () => {
 
         expect(wrapper.findComponent(BacklogElementSkeleton).exists()).toBe(false);
 
-        await wrapper.vm.$nextTick();
-        await wrapper.vm.$nextTick();
+        await jest.runOnlyPendingTimersAsync();
 
         const feature_cards = wrapper.findAllComponents(UserStoryCard);
 

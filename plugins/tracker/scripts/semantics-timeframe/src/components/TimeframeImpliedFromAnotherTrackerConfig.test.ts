@@ -41,11 +41,9 @@ describe("TimeframeImpliedFromAnotherTrackerConfig", () => {
             },
         });
 
-        const select_box = wrapper.find("[data-test=implied-from-tracker-select-box]").element;
-        if (!(select_box instanceof HTMLSelectElement)) {
-            throw new Error("<select> not found");
-        }
-
+        const select_box = wrapper.find<HTMLSelectElement>(
+            "[data-test=implied-from-tracker-select-box]",
+        ).element;
         await wrapper.vm.$nextTick();
 
         expect(select_box.value).toBe("150");

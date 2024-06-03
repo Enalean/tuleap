@@ -23,6 +23,8 @@ import * as tlp_fetch from "@tuleap/tlp-fetch";
 import type { Tag } from "../type";
 import { createBranchTagSelectorLocalVue } from "../helpers/local-vue-for-test";
 
+jest.useFakeTimers();
+
 describe("TagsSection", () => {
     it("Displays two tags referencing the same commit", async () => {
         const tlpRecursiveGetMock = jest.spyOn(tlp_fetch, "recursiveGet");
@@ -45,8 +47,7 @@ describe("TagsSection", () => {
             },
         });
 
-        await wrapper.vm.$nextTick(); // Init the component & load the tags
-        await wrapper.vm.$nextTick(); // Display the loaded tags
+        await jest.runOnlyPendingTimersAsync();
 
         expect(wrapper).toMatchInlineSnapshot(`
             <section class="git-repository-branch-tag-selector-refs">

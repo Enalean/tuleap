@@ -102,10 +102,7 @@ describe("CustomPropertyListSingleValue.vue", () => {
 
         expect(wrapper.find("[data-test=document-custom-list-select]").exists()).toBeTruthy();
 
-        const input = wrapper.get("[data-test=document-custom-list-select]");
-        if (!(input.element instanceof HTMLSelectElement)) {
-            throw new Error("Can not find list in DOM");
-        }
+        const input = wrapper.find<HTMLSelectElement>("[data-test=document-custom-list-select]");
         expect(input.element.required).toBe(true);
     });
 
@@ -158,13 +155,8 @@ describe("CustomPropertyListSingleValue.vue", () => {
         } as Property;
         const wrapper = createWrapper(currentlyUpdatedItemProperty);
 
-        const input = wrapper.get("[data-test=document-custom-list-select]");
-        if (!(input.element instanceof HTMLSelectElement)) {
-            throw new Error("Can not find list in DOM");
-        }
-
+        const input = wrapper.find<HTMLSelectElement>("[data-test=document-custom-list-select]");
         await nextTick();
-
         wrapper.get("[data-test=document-custom-list-value-102]").setSelected();
         input.element.dispatchEvent(new Event("input"));
 

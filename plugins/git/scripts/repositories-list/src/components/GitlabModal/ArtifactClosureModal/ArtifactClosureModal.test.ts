@@ -27,6 +27,8 @@ import * as gitlab_error_handler from "../../../gitlab/gitlab-error-handler";
 import { FetchWrapperError } from "@tuleap/tlp-fetch";
 import { createLocalVueForTests } from "../../../helpers/local-vue-for-tests";
 
+jest.useFakeTimers();
+
 describe("ArtifactClosureModal", () => {
     let store: Store;
 
@@ -51,8 +53,7 @@ describe("ArtifactClosureModal", () => {
         it("shows the error feedback if there is any REST error", async () => {
             const wrapper = await instantiateComponent();
 
-            wrapper.setData({ message_error_rest: "error" });
-            await wrapper.vm.$nextTick();
+            await wrapper.setData({ message_error_rest: "error" });
 
             expect(wrapper.find("[data-test=update-integration-fail]").exists()).toBe(true);
         });
@@ -60,8 +61,7 @@ describe("ArtifactClosureModal", () => {
         it("does not show the error feedback if there is no REST error", async () => {
             const wrapper = await instantiateComponent();
 
-            wrapper.setData({ message_error_rest: "" });
-            await wrapper.vm.$nextTick();
+            await wrapper.setData({ message_error_rest: "" });
 
             expect(wrapper.find("[data-test=update-integration-fail]").exists()).toBe(false);
         });
@@ -71,8 +71,7 @@ describe("ArtifactClosureModal", () => {
         it("disables the button and displays the spinner during the Gitlab integration", async () => {
             const wrapper = await instantiateComponent();
 
-            wrapper.setData({ is_updating_gitlab_repository: true, message_error_rest: "" });
-            await wrapper.vm.$nextTick();
+            await wrapper.setData({ is_updating_gitlab_repository: true, message_error_rest: "" });
 
             expect(
                 wrapper.find("[data-test=update-artifact-closure-modal-icon-spin]").exists(),
@@ -90,8 +89,10 @@ describe("ArtifactClosureModal", () => {
         it("disables the button but does NOT display the spinner if the update failed", async () => {
             const wrapper = await instantiateComponent();
 
-            wrapper.setData({ is_updating_gitlab_repository: false, message_error_rest: "error" });
-            await wrapper.vm.$nextTick();
+            await wrapper.setData({
+                is_updating_gitlab_repository: false,
+                message_error_rest: "error",
+            });
 
             expect(
                 wrapper.find("[data-test=update-artifact-closure-modal-icon-spin]").exists(),
@@ -109,8 +110,7 @@ describe("ArtifactClosureModal", () => {
         it("let enabled the button when everything are ok and there when is no update", async () => {
             const wrapper = await instantiateComponent();
 
-            wrapper.setData({ is_updating_gitlab_repository: false, message_error_rest: "" });
-            await wrapper.vm.$nextTick();
+            await wrapper.setData({ is_updating_gitlab_repository: false, message_error_rest: "" });
 
             expect(
                 wrapper.find("[data-test=update-artifact-closure-modal-icon-spin]").exists(),
@@ -135,17 +135,15 @@ describe("ArtifactClosureModal", () => {
             async (expected_keyword_message: string, allow_artifact_closure: boolean) => {
                 const wrapper = await instantiateComponent();
 
-                await wrapper.vm.$nextTick();
+                await jest.runOnlyPendingTimersAsync();
 
                 jest.spyOn(store, "dispatch").mockResolvedValue({
                     allow_artifact_closure,
                 });
 
-                wrapper
+                await wrapper
                     .find("[data-test=update-artifact-closure-modal-save-button]")
                     .trigger("click");
-                await wrapper.vm.$nextTick();
-                await wrapper.vm.$nextTick();
 
                 const success_message = `Artifact closure is now ${expected_keyword_message} for 'wow gitlab'!`;
                 expect(store.commit).toHaveBeenCalledWith("setSuccessMessage", success_message);
@@ -155,11 +153,9 @@ describe("ArtifactClosureModal", () => {
         it("set the message error and display this error in the console if there is error during the update", async () => {
             const wrapper = await instantiateComponent();
 
-            wrapper.setData({
+            await wrapper.setData({
                 allow_artifact_closure: true,
             });
-
-            await wrapper.vm.$nextTick();
 
             jest.spyOn(store, "dispatch").mockRejectedValue(
                 new FetchWrapperError("Not Found", {
@@ -174,9 +170,7 @@ describe("ArtifactClosureModal", () => {
             jest.spyOn(global.console, "error").mockImplementation();
 
             wrapper.find("[data-test=update-artifact-closure-modal-save-button]").trigger("click");
-            await wrapper.vm.$nextTick();
-            await wrapper.vm.$nextTick();
-            await wrapper.vm.$nextTick();
+            await jest.runOnlyPendingTimersAsync();
 
             expect(wrapper.vm.$data.message_error_rest).toBe("404 Error on server");
         });

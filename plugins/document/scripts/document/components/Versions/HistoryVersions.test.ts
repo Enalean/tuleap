@@ -45,8 +45,9 @@ import type {
     Link,
     LinkVersion,
 } from "../../type";
-import { nextTick } from "vue";
 import * as strict_inject from "@tuleap/vue-strict-inject";
+
+jest.useFakeTimers();
 
 describe("HistoryVersions", () => {
     beforeEach(() => {
@@ -79,8 +80,7 @@ describe("HistoryVersions", () => {
             global: { ...getGlobalTestOptions({}) },
         });
 
-        await nextTick();
-        await nextTick();
+        await jest.runOnlyPendingTimersAsync();
 
         expect(wrapper.findComponent(HistoryVersionsLoadingState).exists()).toBe(false);
         expect(wrapper.findComponent(HistoryVersionsErrorState).exists()).toBe(false);
@@ -98,8 +98,7 @@ describe("HistoryVersions", () => {
             global: { ...getGlobalTestOptions({}) },
         });
 
-        await nextTick();
-        await nextTick();
+        await jest.runOnlyPendingTimersAsync();
 
         expect(wrapper.findComponent(HistoryVersionsLoadingState).exists()).toBe(false);
         expect(wrapper.findComponent(HistoryVersionsErrorState).exists()).toBe(true);
@@ -117,8 +116,7 @@ describe("HistoryVersions", () => {
             global: { ...getGlobalTestOptions({}) },
         });
 
-        await nextTick();
-        await nextTick();
+        await jest.runOnlyPendingTimersAsync();
 
         expect(wrapper.findComponent(HistoryVersionsLoadingState).exists()).toBe(false);
         expect(wrapper.findComponent(HistoryVersionsErrorState).exists()).toBe(false);
@@ -136,8 +134,7 @@ describe("HistoryVersions", () => {
             global: { ...getGlobalTestOptions({}) },
         });
 
-        await nextTick();
-        await nextTick();
+        await jest.runOnlyPendingTimersAsync();
 
         expect(wrapper.findComponent(HistoryVersionsLoadingState).exists()).toBe(false);
         expect(wrapper.findComponent(HistoryVersionsErrorState).exists()).toBe(false);
@@ -155,8 +152,7 @@ describe("HistoryVersions", () => {
             global: { ...getGlobalTestOptions({}) },
         });
 
-        await nextTick();
-        await nextTick();
+        await jest.runOnlyPendingTimersAsync();
 
         expect(wrapper.findComponent(HistoryVersionsLoadingState).exists()).toBe(false);
         expect(wrapper.findComponent(HistoryVersionsErrorState).exists()).toBe(false);

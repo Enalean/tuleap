@@ -17,7 +17,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import Vue from "vue";
 import { shallowMount } from "@vue/test-utils";
 import { createPlanIterationsLocalVue } from "../../../helpers/local-vue-for-test";
 import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
@@ -28,6 +27,8 @@ import IterationsToBePlannedSection from "./IterationsToBePlannedSection.vue";
 import UserStoryCard from "../Iteration/UserStoryCard.vue";
 
 import type { Wrapper } from "@vue/test-utils";
+
+jest.useFakeTimers();
 
 describe("IterationsToBePlannedSection", () => {
     async function getWrapper(): Promise<Wrapper<IterationsToBePlannedSection>> {
@@ -55,8 +56,7 @@ describe("IterationsToBePlannedSection", () => {
 
         expect(wrapper.findComponent(BacklogElementSkeleton).exists()).toBe(true);
 
-        await Vue.nextTick();
-        await Vue.nextTick();
+        await jest.runOnlyPendingTimersAsync();
 
         expect(wrapper.find("[data-test=no-unplanned-elements-empty-state]").exists()).toBe(true);
         expect(wrapper.findComponent(BacklogElementSkeleton).exists()).toBe(false);
@@ -88,8 +88,7 @@ describe("IterationsToBePlannedSection", () => {
 
         expect(wrapper.findComponent(BacklogElementSkeleton).exists()).toBe(true);
 
-        await Vue.nextTick();
-        await Vue.nextTick();
+        await jest.runOnlyPendingTimersAsync();
 
         const unplanned_elements = wrapper.findAllComponents(UserStoryCard);
 
@@ -106,8 +105,7 @@ describe("IterationsToBePlannedSection", () => {
 
         expect(wrapper.findComponent(BacklogElementSkeleton).exists()).toBe(true);
 
-        await Vue.nextTick();
-        await Vue.nextTick();
+        await jest.runOnlyPendingTimersAsync();
 
         const unplanned_elements = wrapper.findAllComponents(UserStoryCard);
 

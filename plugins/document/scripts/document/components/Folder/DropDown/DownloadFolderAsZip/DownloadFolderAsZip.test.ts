@@ -17,8 +17,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { nextTick } from "vue";
-
 const emitMock = jest.fn();
 jest.mock("../../../../helpers/emitter", () => {
     return {
@@ -81,10 +79,7 @@ describe("DownloadFolderAsZip", () => {
             return Promise.resolve({ total_size: 2000000 });
         });
         const wrapper = getWrapper();
-        wrapper.trigger("click");
-
-        await nextTick();
-        await nextTick();
+        await wrapper.trigger("click");
 
         expect(load_properties).toHaveBeenCalledWith(expect.anything(), item);
         expect(emitMock).toHaveBeenCalledWith("show-max-archive-size-threshold-exceeded-modal", {
@@ -97,10 +92,7 @@ describe("DownloadFolderAsZip", () => {
             return Promise.resolve({ total_size: 600000, nb_files: 100000 });
         });
         const wrapper = getWrapper();
-        wrapper.trigger("click");
-
-        await nextTick();
-        await nextTick();
+        await wrapper.trigger("click");
 
         expect(load_properties).toHaveBeenCalledWith(expect.anything(), item);
         expect(emitMock).toHaveBeenCalledWith("show-archive-size-warning-modal", {
@@ -122,10 +114,7 @@ describe("DownloadFolderAsZip", () => {
 
         jest.spyOn(platform_detector, "isPlatformOSX").mockReturnValue(true);
 
-        wrapper.trigger("click");
-
-        await nextTick();
-        await nextTick();
+        await wrapper.trigger("click");
 
         expect(load_properties).toHaveBeenCalledWith(expect.anything(), item);
         expect(emitMock).toHaveBeenCalledWith("show-archive-size-warning-modal", {
@@ -146,11 +135,7 @@ describe("DownloadFolderAsZip", () => {
 
         jest.spyOn(platform_detector, "isPlatformOSX").mockReturnValue(true);
 
-        wrapper.trigger("click");
-
-        await nextTick();
-        await nextTick();
-        await nextTick();
+        await wrapper.trigger("click");
 
         expect(load_properties).toHaveBeenCalledWith(expect.anything(), item);
         expect(emitMock).toHaveBeenCalledWith("show-archive-size-warning-modal", {
@@ -173,10 +158,7 @@ describe("DownloadFolderAsZip", () => {
         });
         const wrapper = getWrapper();
 
-        wrapper.get("[data-test=download-as-zip-button]").trigger("click");
-        await nextTick();
-        await nextTick();
-        await nextTick();
+        await wrapper.get("[data-test=download-as-zip-button]").trigger("click");
 
         expect(load_properties).toHaveBeenCalledWith(expect.anything(), item);
         expect(emitMock).not.toHaveBeenCalled();

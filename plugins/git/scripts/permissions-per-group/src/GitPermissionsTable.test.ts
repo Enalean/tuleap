@@ -71,11 +71,9 @@ describe("GitPermissionsTable", () => {
                 plugins: [createGettext({ silent: true })],
             },
         });
-        wrapper
+        await wrapper
             .find("[data-test=git-permissions-table-repository-1]")
             .trigger("filtered", { hidden: true });
-
-        await wrapper.vm.$nextTick();
 
         expect(wrapper.find("[data-test=git-permission-table-empty-state]").text()).toBe(
             "There isn't any matching repository",

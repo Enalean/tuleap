@@ -79,9 +79,7 @@ describe("IterationCard", () => {
     it("Display the iteration with an open state", async () => {
         const wrapper = await getWrapper();
 
-        wrapper.get("[data-test=iteration-card-header]").trigger("click");
-
-        await wrapper.vm.$nextTick();
+        await wrapper.get("[data-test=iteration-card-header]").trigger("click");
 
         expect(
             wrapper.get("[data-test=planned-iteration-toggle-icon]").classes("fa-caret-right"),

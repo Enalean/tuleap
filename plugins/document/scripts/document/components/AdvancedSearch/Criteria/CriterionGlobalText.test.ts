@@ -22,7 +22,6 @@ const emitMock = jest.fn();
 import { shallowMount } from "@vue/test-utils";
 import CriterionGlobalText from "./CriterionGlobalText.vue";
 import { getGlobalTestOptions } from "../../../helpers/global-options-for-test";
-import { nextTick } from "vue";
 
 jest.mock("../../../helpers/emitter", () => {
     return {
@@ -31,13 +30,11 @@ jest.mock("../../../helpers/emitter", () => {
 });
 
 describe("CriterionGlobalText", () => {
-    it("should render the component", async () => {
+    it("should render the component", () => {
         const wrapper = shallowMount(CriterionGlobalText, {
             props: { value: "Lorem" },
             global: { ...getGlobalTestOptions({}) },
         });
-
-        await nextTick();
 
         expect(wrapper.element).toMatchSnapshot();
     });

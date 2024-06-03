@@ -22,7 +22,8 @@ import * as tlp_modal from "@tuleap/tlp-modal";
 import CreateNewVersionEmbeddedFileModal from "./CreateNewVersionEmbeddedFileModal.vue";
 import emitter from "../../../../helpers/emitter";
 import { getGlobalTestOptions } from "../../../../helpers/global-options-for-test";
-import { nextTick } from "vue";
+
+jest.useFakeTimers();
 
 describe("CreateNewVersionEmbeddedFileModal", () => {
     const add_event_listener = jest.fn();
@@ -80,7 +81,7 @@ describe("CreateNewVersionEmbeddedFileModal", () => {
         expect(wrapper.vm.$data.version.title).toBe("");
         emitter.emit("update-version-title", "A title");
 
-        await nextTick();
+        await jest.runOnlyPendingTimersAsync();
 
         expect(wrapper.vm.$data.version.title).toBe("A title");
     });
@@ -93,7 +94,7 @@ describe("CreateNewVersionEmbeddedFileModal", () => {
         expect(wrapper.vm.$data.version.changelog).toBe("");
         emitter.emit("update-changelog-property", "A changelog");
 
-        await nextTick();
+        await jest.runOnlyPendingTimersAsync();
 
         expect(wrapper.vm.$data.version.changelog).toBe("A changelog");
     });
@@ -103,12 +104,10 @@ describe("CreateNewVersionEmbeddedFileModal", () => {
             item: { id: 12, title: "Dacia", embedded_file_properties: {} },
         });
 
-        await nextTick();
-
         expect(wrapper.vm.$data.version.is_file_locked).toBe(true);
         emitter.emit("update-lock", false);
 
-        await nextTick();
+        await jest.runOnlyPendingTimersAsync();
 
         expect(wrapper.vm.$data.version.is_file_locked).toBe(false);
     });
@@ -117,7 +116,7 @@ describe("CreateNewVersionEmbeddedFileModal", () => {
         const wrapper = getWrapper({
             item: { id: 12, title: "Dacia", embedded_file_properties: { content: "Time or ..." } },
         });
-        await nextTick();
+        await jest.runOnlyPendingTimersAsync();
 
         expect(wrapper.vm.$data.embedded_item.embedded_file_properties.content).toBe("Time or ...");
     });
@@ -127,8 +126,7 @@ describe("CreateNewVersionEmbeddedFileModal", () => {
             item: { id: 12, title: "Dacia", embedded_file_properties: {} },
         });
 
-        await nextTick();
-        await nextTick();
+        await jest.runOnlyPendingTimersAsync();
 
         expect(wrapper.vm.$data.embedded_item.embedded_file_properties.content).toBe("VROOM VROOM");
     });

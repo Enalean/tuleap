@@ -26,6 +26,8 @@ import { createLocalVueForTests } from "../support/local-vue.js";
 import store_options from "../store/index.js";
 import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 
+jest.useFakeTimers();
+
 describe("TransitionDeleter", () => {
     let store, destroyPopover, transition, deleteTransition, is_transition_updated;
 
@@ -76,14 +78,14 @@ describe("TransitionDeleter", () => {
             const createPopover = jest.spyOn(tlp_popovers, "createPopover");
             const wrapper = await getWrapper();
             expect(wrapper.findComponent(TransitionDeletePopover).exists()).toBeTruthy();
-            await wrapper.vm.$nextTick();
+            await jest.runOnlyPendingTimersAsync();
             expect(createPopover).toHaveBeenCalled();
         });
 
         describe("on destroy", () => {
             it("will destroy its popover", async () => {
                 const wrapper = await getWrapper();
-                await wrapper.vm.$nextTick();
+                await jest.runOnlyPendingTimersAsync();
                 wrapper.destroy();
 
                 expect(destroyPopover).toHaveBeenCalled();
@@ -94,7 +96,7 @@ describe("TransitionDeleter", () => {
             it("will disable deleting the transition", async () => {
                 store.state.is_operation_running = true;
                 const wrapper = await getWrapper();
-                await wrapper.vm.$nextTick();
+                await jest.runOnlyPendingTimersAsync();
 
                 const confirm_button = wrapper.get(confirm_delete_transition_selector);
                 expect(confirm_button.classes()).toContain(
@@ -107,7 +109,7 @@ describe("TransitionDeleter", () => {
             it("shows an animation", async () => {
                 const wrapper = await getWrapper();
                 wrapper.setProps({ is_transition_updated: true });
-                await wrapper.vm.$nextTick();
+                await jest.runOnlyPendingTimersAsync();
 
                 const confirm_button = wrapper.get(confirm_delete_transition_selector);
                 expect(confirm_button.classes()).toContain(
@@ -139,14 +141,14 @@ describe("TransitionDeleter", () => {
                 const createPopover = jest.spyOn(tlp_popovers, "createPopover");
                 const wrapper = await getWrapper();
                 expect(wrapper.findComponent(TransitionDeletePopover).exists()).toBeTruthy();
-                await wrapper.vm.$nextTick();
+                await jest.runOnlyPendingTimersAsync();
                 expect(createPopover).toHaveBeenCalled();
             });
 
             describe("on destroy", () => {
                 it("will destroy its popover", async () => {
                     const wrapper = await getWrapper();
-                    await wrapper.vm.$nextTick();
+                    await jest.runOnlyPendingTimersAsync();
                     wrapper.destroy();
 
                     expect(destroyPopover).toHaveBeenCalled();

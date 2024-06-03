@@ -32,6 +32,8 @@ jest.mock("@tuleap/tlp-modal", () => {
     };
 });
 
+jest.useFakeTimers();
+
 describe("ErrorModal", () => {
     let local_vue: typeof Vue;
 
@@ -73,7 +75,7 @@ describe("ErrorModal", () => {
         const wrapper = createWrapper(error_message);
 
         wrapper.get("[data-test=show-details]").trigger("click");
-        await wrapper.vm.$nextTick();
+        await jest.runOnlyPendingTimersAsync();
 
         const details = wrapper.get("[data-test=details]");
         expect(details.text()).toEqual(error_message);

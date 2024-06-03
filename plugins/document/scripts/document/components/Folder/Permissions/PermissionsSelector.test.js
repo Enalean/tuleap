@@ -20,7 +20,6 @@
 import { shallowMount } from "@vue/test-utils";
 
 import PermissionsSelector from "./PermissionsSelector.vue";
-import { nextTick } from "vue";
 import emitter from "../../../helpers/emitter";
 import { CAN_WRITE } from "../../../constants";
 
@@ -87,12 +86,11 @@ describe("PermissionsSelector", () => {
             identifier: CAN_WRITE,
         });
 
-        wrapper.setProps({
+        await wrapper.setProps({
             label: "Permission label",
             project_ugroups: [ugroup_1, ugroup_2],
             selected_ugroups: [ugroup_2],
         });
-        await nextTick();
 
         wrapper.get("select").findAll("option");
         expect(wrapper.vm.$data.selected_ugroup_ids).toHaveLength(1);

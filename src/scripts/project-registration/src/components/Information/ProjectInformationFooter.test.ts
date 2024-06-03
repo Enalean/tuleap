@@ -55,15 +55,13 @@ describe("ProjectInformationFooter", () => {
     it(`reset the project creation error when the 'Back' button is clicked`, async () => {
         const wrapper = await getWrapper();
         const store = useStore();
-        wrapper.get("[data-test=project-registration-back-button]").trigger("click");
-        await wrapper.vm.$nextTick();
+        await wrapper.get("[data-test=project-registration-back-button]").trigger("click");
         expect(store.resetProjectCreationError).toHaveBeenCalled();
     });
 
     it(`Displays spinner when project is creating`, async () => {
         is_creating_project = true;
         const wrapper = await getWrapper();
-        await wrapper.vm.$nextTick();
 
         expect(wrapper.get("[data-test=project-submission-icon]").classes()).toEqual([
             "fa",

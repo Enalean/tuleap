@@ -21,7 +21,8 @@ import { shallowMount } from "@vue/test-utils";
 import SearchResultError from "./SearchResultError.vue";
 import { FetchWrapperError } from "@tuleap/tlp-fetch";
 import { getGlobalTestOptions } from "../../../helpers/global-options-for-test";
-import { nextTick } from "vue";
+
+jest.useFakeTimers();
 
 describe("SearchResultError", () => {
     it("should display error message", () => {
@@ -51,8 +52,7 @@ describe("SearchResultError", () => {
             global: { ...getGlobalTestOptions({}) },
         });
 
-        await nextTick();
-        await nextTick();
+        await jest.runOnlyPendingTimersAsync();
 
         expect(wrapper.text()).toContain("400 Bad request");
     });
@@ -74,8 +74,7 @@ describe("SearchResultError", () => {
             global: { ...getGlobalTestOptions({}) },
         });
 
-        await nextTick();
-        await nextTick();
+        await jest.runOnlyPendingTimersAsync();
 
         expect(wrapper.text()).toContain("Les paramètres ne sont pas corrects");
     });
@@ -90,8 +89,7 @@ describe("SearchResultError", () => {
             global: { ...getGlobalTestOptions({}) },
         });
 
-        await nextTick();
-        await nextTick();
+        await jest.runOnlyPendingTimersAsync();
 
         expect(wrapper.text()).toContain("Lorem ipsum");
     });
@@ -106,8 +104,7 @@ describe("SearchResultError", () => {
             global: { ...getGlobalTestOptions({}) },
         });
 
-        await nextTick();
-        await nextTick();
+        await jest.runOnlyPendingTimersAsync();
 
         expect(wrapper.text()).toContain("Lorem ipsum");
     });

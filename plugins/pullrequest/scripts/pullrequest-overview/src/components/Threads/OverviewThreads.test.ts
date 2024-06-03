@@ -54,7 +54,7 @@ import OverviewThreads from "./OverviewThreads.vue";
 vi.mock("@tuleap/vue-strict-inject");
 
 async function setWrapperProps(wrapper: VueWrapper): Promise<void> {
-    wrapper.setProps({
+    await wrapper.setProps({
         pull_request_info: {
             user_id: 102,
         },
@@ -62,8 +62,6 @@ async function setWrapperProps(wrapper: VueWrapper): Promise<void> {
             id: 102,
         },
     });
-
-    await wrapper.vm.$nextTick();
 }
 
 describe("OverviewThreads", () => {

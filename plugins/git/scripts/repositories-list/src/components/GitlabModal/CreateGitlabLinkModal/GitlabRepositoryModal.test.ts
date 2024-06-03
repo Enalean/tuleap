@@ -48,12 +48,10 @@ describe("GitlabRepositoryModal", () => {
     it("When a user displays the modal ,then the CredentialsFormModal is displayed", async () => {
         const wrapper = await instantiateComponent();
 
-        wrapper.setData({
+        await wrapper.setData({
             gitlab_projects: null,
             back_button_clicked: false,
         });
-
-        await wrapper.vm.$nextTick();
 
         expect(wrapper.findComponent(ListRepositoriesModal).exists()).toBeFalsy();
         expect(wrapper.findComponent(CredentialsFormModal).exists()).toBeTruthy();
@@ -62,12 +60,10 @@ describe("GitlabRepositoryModal", () => {
     it("When user have clicked on back button, Then CredentialsFormModal is displayed", async () => {
         const wrapper = await instantiateComponent();
 
-        wrapper.setData({
+        await wrapper.setData({
             gitlab_projects: [{ id: 10 }],
             back_button_clicked: true,
         });
-
-        await wrapper.vm.$nextTick();
 
         expect(wrapper.findComponent(ListRepositoriesModal).exists()).toBeFalsy();
         expect(wrapper.findComponent(CredentialsFormModal).exists()).toBeTruthy();
@@ -76,11 +72,9 @@ describe("GitlabRepositoryModal", () => {
     it("When repositories have been retrieved, Then ListRepositoriesModal is displayed", async () => {
         const wrapper = await instantiateComponent();
 
-        wrapper.setData({
+        await wrapper.setData({
             gitlab_projects: [{ id: 10 }],
         });
-
-        await wrapper.vm.$nextTick();
 
         expect(wrapper.findComponent(ListRepositoriesModal).exists()).toBeTruthy();
         expect(wrapper.findComponent(CredentialsFormModal).exists()).toBeFalsy();
@@ -89,10 +83,9 @@ describe("GitlabRepositoryModal", () => {
     it("When ListRepositoriesModal emit to-back-button, Then CredentialsFormModal is displayed", async () => {
         const wrapper = await instantiateComponent();
 
-        wrapper.setData({
+        await wrapper.setData({
             gitlab_projects: [{ id: 10 }],
         });
-        await wrapper.vm.$nextTick();
 
         expect(wrapper.findComponent(ListRepositoriesModal).exists()).toBeTruthy();
         expect(wrapper.findComponent(CredentialsFormModal).exists()).toBeFalsy();
@@ -127,15 +120,12 @@ describe("GitlabRepositoryModal", () => {
     it("When ListRepositoriesModal emits on-success-close-modal, Then success message is displayed", async () => {
         const wrapper = await instantiateComponent();
 
-        wrapper.setData({
+        await wrapper.setData({
             gitlab_projects: [
                 { id: 10, label: "My Project", path_with_namespace: "my-path/my-project" },
             ],
             back_button_clicked: false,
         });
-
-        await wrapper.vm.$nextTick();
-        await wrapper.vm.$nextTick();
 
         expect(wrapper.findComponent(ListRepositoriesModal).exists()).toBeTruthy();
         expect(wrapper.findComponent(CredentialsFormModal).exists()).toBeFalsy();
@@ -156,11 +146,9 @@ describe("GitlabRepositoryModal", () => {
     it("When CredentialsFormModal emits on-close-modal, Then form and list of repositories are reset", async () => {
         const wrapper = await instantiateComponent();
 
-        wrapper.setData({
+        await wrapper.setData({
             gitlab_projects: null,
         });
-
-        await wrapper.vm.$nextTick();
 
         const reset_credentials_form = jest.fn();
 
@@ -186,11 +174,9 @@ describe("GitlabRepositoryModal", () => {
     it("When ListRepositoriesModal emits on-close-modal, Then form and list of repositories are reset", async () => {
         const wrapper = await instantiateComponent();
 
-        wrapper.setData({
+        await wrapper.setData({
             gitlab_projects: null,
         });
-
-        await wrapper.vm.$nextTick();
 
         const reset_credentials_form = jest.fn();
 

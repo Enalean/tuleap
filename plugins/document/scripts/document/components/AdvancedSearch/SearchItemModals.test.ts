@@ -18,6 +18,14 @@
  */
 
 import type { Modal } from "@tuleap/tlp-modal";
+import type { VueWrapper } from "@vue/test-utils";
+import { shallowMount } from "@vue/test-utils";
+import SearchItemModals from "./SearchItemModals.vue";
+import OngoingUploadModal from "./OngoingUploadModal.vue";
+import emitter from "../../helpers/emitter";
+import { nextTick } from "vue";
+import { getGlobalTestOptions } from "../../helpers/global-options-for-test";
+import type { ItemFile, RootState, FakeItem } from "../../type";
 
 jest.mock("@tuleap/tlp-modal", () => {
     return {
@@ -29,15 +37,6 @@ jest.mock("@tuleap/tlp-modal", () => {
             }) as unknown as Modal,
     };
 });
-
-import type { VueWrapper } from "@vue/test-utils";
-import { shallowMount } from "@vue/test-utils";
-import SearchItemModals from "./SearchItemModals.vue";
-import OngoingUploadModal from "./OngoingUploadModal.vue";
-import emitter from "../../helpers/emitter";
-import { nextTick } from "vue";
-import { getGlobalTestOptions } from "../../helpers/global-options-for-test";
-import type { ItemFile, RootState, FakeItem } from "../../type";
 
 describe("SearchItemModals", () => {
     function getWrapper(): VueWrapper<InstanceType<typeof SearchItemModals>> {

@@ -78,9 +78,7 @@ describe("GitLabAdministration", () => {
     it("When repository is GitLab and user clicks to unlink, Then modal opens", async () => {
         const wrapper = await instantiateComponent();
 
-        wrapper.find("[data-test=unlink-gitlab-repository-1]").trigger("click");
-
-        await wrapper.vm.$nextTick();
+        await wrapper.find("[data-test=unlink-gitlab-repository-1]").trigger("click");
 
         expect(store.dispatch).toHaveBeenCalledWith(
             "gitlab/showDeleteGitlabRepositoryModal",
@@ -91,9 +89,7 @@ describe("GitLabAdministration", () => {
     it("When repository is GitLab and user clicks to edit token, Then modal opens", async () => {
         const wrapper = await instantiateComponent();
 
-        wrapper.find("[data-test=edit-access-token-gitlab-repository]").trigger("click");
-
-        await wrapper.vm.$nextTick();
+        await wrapper.find("[data-test=edit-access-token-gitlab-repository]").trigger("click");
 
         expect(store.dispatch).toHaveBeenCalledWith(
             "gitlab/showEditAccessTokenGitlabRepositoryModal",
@@ -104,9 +100,7 @@ describe("GitLabAdministration", () => {
     it("When repository is GitLab and user clicks to regenerate webhook, Then modal opens", async () => {
         const wrapper = await instantiateComponent();
 
-        wrapper.find("[data-test=regenerate-webhook-gitlab-repository]").trigger("click");
-
-        await wrapper.vm.$nextTick();
+        await wrapper.find("[data-test=regenerate-webhook-gitlab-repository]").trigger("click");
 
         expect(store.dispatch).toHaveBeenCalledWith(
             "gitlab/showRegenerateGitlabWebhookModal",
@@ -117,9 +111,7 @@ describe("GitLabAdministration", () => {
     it("When repository is GitLab and user clicks to update the allowing artifact closure value, Then modal opens", async () => {
         const wrapper = await instantiateComponent();
 
-        wrapper.find("[data-test=artifact-closure-gitlab-repository]").trigger("click");
-
-        await wrapper.vm.$nextTick();
+        await wrapper.find("[data-test=artifact-closure-gitlab-repository]").trigger("click");
 
         expect(store.dispatch).toHaveBeenCalledWith("gitlab/showArtifactClosureModal", repository);
     });

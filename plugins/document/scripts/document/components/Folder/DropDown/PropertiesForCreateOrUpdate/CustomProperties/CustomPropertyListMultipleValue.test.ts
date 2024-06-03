@@ -25,7 +25,6 @@ import emitter from "../../../../../helpers/emitter";
 import type { ListValue, Property } from "../../../../../type";
 import { getGlobalTestOptions } from "../../../../../helpers/global-options-for-test";
 import type { PropertiesState } from "../../../../../store/properties/module";
-import { nextTick } from "vue";
 
 jest.mock("../../../../../helpers/emitter");
 
@@ -66,7 +65,7 @@ describe("CustomPropertyListMultipleValue", () => {
     }
 
     it(`Given a list property
-        Then it renders only the possible values of this list property`, async () => {
+        Then it renders only the possible values of this list property`, () => {
         const currentlyUpdatedItemProperty = {
             short_name: "list",
             name: "custom list",
@@ -76,7 +75,6 @@ describe("CustomPropertyListMultipleValue", () => {
             is_multiple_value_allowed: true,
         } as unknown as Property;
         const wrapper = createWrapper(currentlyUpdatedItemProperty);
-        await nextTick();
 
         const all_options = wrapper
             .get("[data-test=document-custom-list-multiple-select]")
@@ -130,7 +128,7 @@ describe("CustomPropertyListMultipleValue", () => {
         ).toBeFalsy();
     });
 
-    it(`does not render the component when type does not match`, async () => {
+    it(`does not render the component when type does not match`, () => {
         const currentlyUpdatedItemProperty = {
             short_name: "text",
             name: "custom text",
@@ -141,13 +139,12 @@ describe("CustomPropertyListMultipleValue", () => {
         } as unknown as Property;
 
         const wrapper = createWrapper(currentlyUpdatedItemProperty);
-        await nextTick();
         expect(
             wrapper.find("[data-test=document-custom-property-list-multiple]").exists(),
         ).toBeFalsy();
     });
 
-    it(`throws an event when list value is changed`, async () => {
+    it(`throws an event when list value is changed`, () => {
         const currentlyUpdatedItemProperty = {
             short_name: "list",
             name: "custom list",
@@ -158,7 +155,6 @@ describe("CustomPropertyListMultipleValue", () => {
         } as unknown as Property;
 
         const wrapper = createWrapper(currentlyUpdatedItemProperty);
-        await nextTick();
         wrapper.get("[data-test=document-custom-list-multiple-value-102]").setSelected();
         wrapper.get("[data-test=document-custom-list-multiple-select]").trigger("change");
 

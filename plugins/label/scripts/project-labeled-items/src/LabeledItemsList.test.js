@@ -24,6 +24,8 @@ import { createProjectLabeledItemsLocalVue } from "./local-vue-for-test.js";
 import LabeledItemsList from "./LabeledItemsList.vue";
 import LabeledItem from "./LabeledItem.vue";
 
+vi.useFakeTimers();
+
 describe("LabeledItemsList", () => {
     let getLabeledItems;
 
@@ -36,8 +38,7 @@ describe("LabeledItemsList", () => {
             },
         });
 
-        await wrapper.vm.$nextTick();
-        await wrapper.vm.$nextTick();
+        await vi.runOnlyPendingTimersAsync();
 
         return wrapper;
     };

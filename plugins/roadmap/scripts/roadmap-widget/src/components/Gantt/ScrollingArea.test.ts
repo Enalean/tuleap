@@ -21,11 +21,12 @@ import type { Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import ScrollingArea from "./ScrollingArea.vue";
 import { TimePeriodMonth } from "../../helpers/time-period-month";
-import Vue from "vue";
 import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import type { RootState } from "../../store/type";
 import type { TimeperiodState } from "../../store/timeperiod/type";
 import { DateTime } from "luxon";
+
+jest.useFakeTimers();
 
 describe("ScrollingArea", () => {
     const windowIntersectionObserver = window.IntersectionObserver;
@@ -74,7 +75,7 @@ describe("ScrollingArea", () => {
 
         aScrollingArea();
 
-        await Vue.nextTick();
+        await jest.runOnlyPendingTimersAsync();
 
         expect(scrollTo).toHaveBeenNthCalledWith(1, {
             top: 0,
@@ -97,11 +98,10 @@ describe("ScrollingArea", () => {
         const scrollTo = jest.spyOn(Element.prototype, "scrollTo");
 
         const wrapper = aScrollingArea();
-        await Vue.nextTick();
+        await jest.runOnlyPendingTimersAsync();
 
-        wrapper.setProps({ timescale: "week" });
-        await Vue.nextTick();
-        await Vue.nextTick();
+        await wrapper.setProps({ timescale: "week" });
+        await jest.runOnlyPendingTimersAsync();
 
         expect(scrollTo).toHaveBeenNthCalledWith(2, {
             top: 0,

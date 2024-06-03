@@ -25,6 +25,8 @@ import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import type { Feature } from "../../../type";
 import type { Store } from "@tuleap/vuex-store-wrapper-jest";
 
+jest.useFakeTimers();
+
 describe("ToBePlanned", () => {
     it("Displays the empty state when no artifact are found", async () => {
         const store: Store = createStoreMock({
@@ -145,7 +147,7 @@ describe("ToBePlanned", () => {
             localVue: await createProgramManagementLocalVue(),
         });
 
-        await wrapper.vm.$nextTick();
+        await jest.runOnlyPendingTimersAsync();
 
         expect(wrapper.vm.$store.dispatch).toHaveBeenCalledWith("retrieveToBePlannedElement", 202);
     });

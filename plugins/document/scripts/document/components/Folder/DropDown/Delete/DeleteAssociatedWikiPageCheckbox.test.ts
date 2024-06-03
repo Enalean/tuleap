@@ -25,7 +25,6 @@ import type { Wiki } from "../../../../type";
 import type { ItemPath } from "../../../../store/actions-helpers/build-parent-paths";
 import { getGlobalTestOptions } from "../../../../helpers/global-options-for-test";
 import type { ConfigurationState } from "../../../../store/configuration";
-import { nextTick } from "vue";
 
 describe("ModalConfirmationDeletion", () => {
     function createWrapper(
@@ -67,15 +66,13 @@ describe("ModalConfirmationDeletion", () => {
             "[data-test=delete-associated-wiki-page-checkbox]",
         );
 
-        checkbox_input.trigger("click");
-        await nextTick();
+        await checkbox_input.trigger("click");
 
         expect(
             wiki_checkbox.find("[data-test=delete-associated-wiki-page-warning-message]").exists(),
         ).toBeTruthy();
 
-        checkbox_input.trigger("click");
-        await nextTick();
+        await checkbox_input.trigger("click");
 
         expect(
             wiki_checkbox.find("[data-test=delete-associated-wiki-page-warning-message]").exists(),
@@ -88,14 +85,13 @@ describe("ModalConfirmationDeletion", () => {
             "[data-test=delete-associated-wiki-page-checkbox]",
         );
 
-        checkbox_input.trigger("click");
-        await nextTick();
+        await checkbox_input.trigger("click");
 
         expect(
             wiki_checkbox.find("[data-test=delete-associated-wiki-page-warning-message]").exists(),
         ).toBeFalsy();
 
-        checkbox_input.trigger("click");
+        await checkbox_input.trigger("click");
 
         expect(
             wiki_checkbox.find("[data-test=delete-associated-wiki-page-warning-message]").exists(),
@@ -118,23 +114,22 @@ describe("ModalConfirmationDeletion", () => {
             "[data-test=delete-associated-wiki-page-checkbox]",
         );
 
-        checkbox_input.trigger("click");
-        await nextTick();
+        await checkbox_input.trigger("click");
 
         const links = wiki_checkbox.findAll("[data-test=wiki-page-referencer-link]");
 
         expect(links).toHaveLength(2);
 
-        expect(links.at(0).element.tagName).toBe("A");
-        expect(links.at(0).attributes("href")).toBe(
+        expect(links.at(0)?.element.tagName).toBe("A");
+        expect(links.at(0)?.attributes("href")).toBe(
             "/plugins/docman/?group_id=104&action=show&id=43",
         );
-        expect(links.at(0).text()).toBe("Project documentation/another wiki");
+        expect(links.at(0)?.text()).toBe("Project documentation/another wiki");
 
-        expect(links.at(1).element.tagName).toBe("A");
-        expect(links.at(1).attributes("href")).toBe(
+        expect(links.at(1)?.element.tagName).toBe("A");
+        expect(links.at(1)?.attributes("href")).toBe(
             "/plugins/docman/?group_id=104&action=show&id=44",
         );
-        expect(links.at(1).text()).toBe("Project documentation/some folder/another wiki");
+        expect(links.at(1)?.text()).toBe("Project documentation/some folder/another wiki");
     });
 });

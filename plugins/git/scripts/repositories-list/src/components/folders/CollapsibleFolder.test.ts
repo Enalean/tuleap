@@ -73,8 +73,7 @@ describe("CollapsibleFolder", () => {
             "Repositories",
         );
 
-        wrapper.find("[data-test=git-repository-list-folder-collapse]").trigger("click");
-        await wrapper.vm.$nextTick();
+        await wrapper.find("[data-test=git-repository-list-folder-collapse]").trigger("click");
 
         expect(wrapper.find("[data-test=git-repository-list-folder-icon]").classes()).toContain(
             "fa-caret-right",

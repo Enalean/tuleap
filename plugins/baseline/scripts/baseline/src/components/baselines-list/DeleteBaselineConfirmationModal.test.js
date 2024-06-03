@@ -25,6 +25,8 @@ import store_options from "../../store/store_options";
 import DeleteBaselineConfirmationModal from "./DeleteBaselineConfirmationModal.vue";
 import * as rest_querier from "../../api/rest-querier";
 
+jest.useFakeTimers();
+
 describe("DeleteBaselineConfirmationModal", () => {
     let deleteBaseline, deleteBaselineResolve, deleteBaselineReject;
 
@@ -64,7 +66,7 @@ describe("DeleteBaselineConfirmationModal", () => {
         describe("and deletion is successful", () => {
             beforeEach(async () => {
                 deleteBaselineResolve();
-                await wrapper.vm.$nextTick();
+                await jest.runOnlyPendingTimersAsync();
             });
             it("deletes baseline in store", () => {
                 expect($store.commit).toHaveBeenCalledWith("baselines/delete", baseline);
@@ -83,7 +85,7 @@ describe("DeleteBaselineConfirmationModal", () => {
         describe("and deletion failed", () => {
             beforeEach(async () => {
                 deleteBaselineReject();
-                await wrapper.vm.$nextTick();
+                await jest.runOnlyPendingTimersAsync();
             });
             it("does not delete baseline in store", () => {
                 expect($store.commit).not.toHaveBeenCalledWith(

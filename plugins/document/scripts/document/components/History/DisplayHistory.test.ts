@@ -29,13 +29,15 @@ import {
 } from "../../constants";
 import { getGlobalTestOptions } from "../../helpers/global-options-for-test";
 import type { RouteLocationNormalizedLoaded } from "vue-router";
-import { nextTick } from "vue";
 
 import * as router from "vue-router";
 import type { Item } from "../../type";
 import * as strict_inject from "@tuleap/vue-strict-inject";
 
 jest.mock("vue-router");
+
+jest.useFakeTimers();
+
 describe("DisplayHistory", () => {
     let load_document: jest.Mock;
 
@@ -63,8 +65,7 @@ describe("DisplayHistory", () => {
         });
 
         // wait for loadDocumentWithAscendentHierarchy() to be called
-        await nextTick();
-        await nextTick();
+        await jest.runOnlyPendingTimersAsync();
 
         expect(wrapper.html()).toContain("history-logs-stub");
     });
@@ -95,8 +96,7 @@ describe("DisplayHistory", () => {
             });
 
             // wait for loadDocumentWithAscendentHierarchy() to be called
-            await nextTick();
-            await nextTick();
+            await jest.runOnlyPendingTimersAsync();
 
             expect(wrapper.vm.item_has_versions).toBe(should_versions_link_be_displayed);
         },

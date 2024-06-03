@@ -26,10 +26,11 @@ import ModalConfirmDeletion from "./ModalConfirmDeletion.vue";
 import * as tlp_modal from "@tuleap/tlp-modal";
 import type { Modal } from "@tuleap/tlp-modal";
 import { getGlobalTestOptions } from "../../../../helpers/global-options-for-test";
-import { nextTick } from "vue";
 import * as router from "../../../../helpers/use-router";
 import type { Router } from "vue-router";
 import type { ConfigurationState } from "../../../../store/configuration";
+
+jest.useFakeTimers();
 
 describe("ModalConfirmDeletion", () => {
     let get_wikis: jest.Mock;
@@ -126,7 +127,7 @@ describe("ModalConfirmDeletion", () => {
                 } as Wiki,
             ];
             const deletion_modal = await createWrapper(item, null, wikis);
-            await nextTick();
+            await jest.runOnlyPendingTimersAsync();
 
             expect(get_wikis).toHaveBeenCalled();
             expect(deletion_modal.vm.can_wiki_checkbox_be_shown).toBeTruthy();
@@ -191,9 +192,9 @@ describe("ModalConfirmDeletion", () => {
 
             const deletion_modal = createWrapper(item, item, null);
 
-            deletion_modal.get("[data-test=document-confirm-deletion-button]").trigger("click");
-            await nextTick();
-            await nextTick();
+            await deletion_modal
+                .get("[data-test=document-confirm-deletion-button]")
+                .trigger("click");
 
             expect(delete_items).toHaveBeenCalled();
             expect(show_notifications).toHaveBeenCalled();
@@ -211,9 +212,9 @@ describe("ModalConfirmDeletion", () => {
 
             const deletion_modal = createWrapper(item, item, null);
 
-            deletion_modal.get("[data-test=document-confirm-deletion-button]").trigger("click");
-            await nextTick();
-            await nextTick();
+            await deletion_modal
+                .get("[data-test=document-confirm-deletion-button]")
+                .trigger("click");
 
             expect(delete_items).toHaveBeenCalled();
             expect(show_notifications).toHaveBeenCalled();

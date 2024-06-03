@@ -37,6 +37,7 @@ import { defineComponent, inject } from "vue";
 import * as strict_inject from "@tuleap/vue-strict-inject";
 
 vi.mock("@tuleap/vue-strict-inject");
+vi.useFakeTimers();
 
 describe("App", () => {
     it("should display list of servers by default", () => {
@@ -165,14 +166,14 @@ describe("App", () => {
         expect(wrapper.findComponent(RestrictServer).exists()).toBe(false);
 
         restrictServerAction();
-        await wrapper.vm.$nextTick();
+        await vi.runOnlyPendingTimersAsync();
 
         expect(wrapper.findComponent(ListOfServers).exists()).toBe(false);
         expect(wrapper.findComponent(RestrictServer).exists()).toBe(true);
         expect(pushState).toHaveBeenCalledWith({}, "", server_b.restrict_url);
 
         cancelRestrictionAction();
-        await wrapper.vm.$nextTick();
+        await vi.runOnlyPendingTimersAsync();
 
         expect(wrapper.findComponent(ListOfServers).exists()).toBe(true);
         expect(wrapper.findComponent(RestrictServer).exists()).toBe(false);

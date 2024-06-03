@@ -17,6 +17,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  *
  */
+
+import { shallowMount } from "@vue/test-utils";
+import FolderHeader from "./FolderHeader.vue";
+import { TYPE_EMPTY, TYPE_LINK } from "../../constants";
+import emitter from "../../helpers/emitter";
+import { getGlobalTestOptions } from "../../helpers/global-options-for-test";
+import { nextTick } from "vue";
+
 jest.mock("@tuleap/tlp-modal", () => {
     return {
         createModal: () => ({
@@ -25,13 +33,6 @@ jest.mock("@tuleap/tlp-modal", () => {
         }),
     };
 });
-
-import { shallowMount } from "@vue/test-utils";
-import FolderHeader from "./FolderHeader.vue";
-import { TYPE_EMPTY, TYPE_LINK } from "../../constants";
-import emitter from "../../helpers/emitter";
-import { getGlobalTestOptions } from "../../helpers/global-options-for-test";
-import { nextTick } from "vue";
 
 describe("FolderHeader", () => {
     function factory(is_loading_ascendant_hierarchy, is_folder_empty) {

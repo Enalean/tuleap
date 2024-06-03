@@ -57,6 +57,8 @@ vi.mock("@tuleap/tlp-modal", () => ({
     EVENT_TLP_MODAL_HIDDEN: "tlp-modal-hidden",
 }));
 
+vi.useFakeTimers();
+
 describe("PullRequestManageReviewersModal", () => {
     let on_save_callback: (reviewers: ReadonlyArray<User>) => void,
         on_cancel_callback: () => void,
@@ -132,7 +134,7 @@ describe("PullRequestManageReviewersModal", () => {
             Then an informative text should be displayed in the modal's footer`, async () => {
             const wrapper = getWrapper(reviewers);
 
-            await wrapper.vm.$nextTick();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(wrapper.find("[data-test=text-info-all-reviewers-cleared]").exists()).toBe(
                 false,

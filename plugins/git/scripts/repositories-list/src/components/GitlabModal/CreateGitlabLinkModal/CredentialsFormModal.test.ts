@@ -54,16 +54,15 @@ describe("CredentialsFormModal", () => {
             "fa-long-arrow-alt-right",
         );
 
-        wrapper.setData({
+        await wrapper.setData({
             is_loading: false,
             gitlab_server: "https://example.com",
             gitlab_token: "AFREZF546",
         });
 
-        await wrapper.vm.$nextTick();
-
-        wrapper.find("[data-test=fetch-gitlab-repository-modal-form]").trigger("submit.prevent");
-        await wrapper.vm.$nextTick();
+        await wrapper
+            .find("[data-test=fetch-gitlab-repository-modal-form]")
+            .trigger("submit.prevent");
 
         expect(
             wrapper.find("[data-test=button-add-gitlab-repository]").attributes().disabled,
@@ -79,14 +78,12 @@ describe("CredentialsFormModal", () => {
     it("When there is an error message, Then it's displayed", async () => {
         const wrapper = await instantiateComponent();
 
-        wrapper.setData({
+        await wrapper.setData({
             is_loading: false,
             gitlab_server: "https://example.com",
             gitlab_token: "AFREZF546",
             error_message: "Error message",
         });
-
-        await wrapper.vm.$nextTick();
 
         expect(wrapper.find("[data-test=gitlab-fail-load-repositories]").text()).toBe(
             "Error message",
@@ -97,17 +94,16 @@ describe("CredentialsFormModal", () => {
         const wrapper = await instantiateComponent();
         jest.spyOn(store, "dispatch").mockReturnValue(Promise.resolve([{ id: 10 }]));
 
-        wrapper.setData({
+        await wrapper.setData({
             is_loading: false,
             gitlab_server: "https://example.com",
             gitlab_token: "AFREZF546",
             gitlab_projects: null,
         });
 
-        await wrapper.vm.$nextTick();
-
-        wrapper.find("[data-test=fetch-gitlab-repository-modal-form]").trigger("submit.prevent");
-        await wrapper.vm.$nextTick();
+        await wrapper
+            .find("[data-test=fetch-gitlab-repository-modal-form]")
+            .trigger("submit.prevent");
 
         const on_get_gitlab_projects = wrapper.emitted()["on-get-gitlab-repositories"];
         if (!on_get_gitlab_projects) {
@@ -125,12 +121,11 @@ describe("CredentialsFormModal", () => {
 
     it("When there are no token and server url, Then submit button is disabled", async () => {
         const wrapper = await instantiateComponent();
-        wrapper.setData({
+        await wrapper.setData({
             is_loading: false,
             gitlab_server: "",
             gitlab_token: "",
         });
-        await wrapper.vm.$nextTick();
         expect(
             wrapper.find("[data-test=button-add-gitlab-repository]").attributes().disabled,
         ).toBeTruthy();
@@ -139,15 +134,13 @@ describe("CredentialsFormModal", () => {
     it("When there aren't any repositories in Gitlab, Then empty message is displayed", async () => {
         const wrapper = await instantiateComponent();
 
-        wrapper.setData({
+        await wrapper.setData({
             is_loading: false,
             gitlab_server: "",
             gitlab_token: "",
             gitlab_projects: [],
             empty_message: "No repository is available with your GitLab account",
         });
-
-        await wrapper.vm.$nextTick();
 
         expect(wrapper.find("[data-test=gitlab-empty-repositories]").text()).toBe(
             "No repository is available with your GitLab account",
@@ -158,17 +151,16 @@ describe("CredentialsFormModal", () => {
         const wrapper = await instantiateComponent();
         jest.spyOn(store, "dispatch").mockReturnValue(Promise.resolve([{ id: 10 }]));
 
-        wrapper.setData({
+        await wrapper.setData({
             is_loading: false,
             gitlab_server: "https://example.com",
             gitlab_token: "",
             gitlab_projects: null,
         });
 
-        await wrapper.vm.$nextTick();
-
-        wrapper.find("[data-test=fetch-gitlab-repository-modal-form]").trigger("submit.prevent");
-        await wrapper.vm.$nextTick();
+        await wrapper
+            .find("[data-test=fetch-gitlab-repository-modal-form]")
+            .trigger("submit.prevent");
 
         expect(wrapper.find("[data-test=gitlab-fail-load-repositories]").text()).toBe(
             "You must provide a valid GitLab server and user API token",
@@ -179,17 +171,16 @@ describe("CredentialsFormModal", () => {
         const wrapper = await instantiateComponent();
         jest.spyOn(store, "dispatch").mockReturnValue(Promise.resolve([{ id: 10 }]));
 
-        wrapper.setData({
+        await wrapper.setData({
             is_loading: false,
             gitlab_server: "htt://example.com",
             gitlab_token: "Azer789",
             gitlab_projects: null,
         });
 
-        await wrapper.vm.$nextTick();
-
-        wrapper.find("[data-test=fetch-gitlab-repository-modal-form]").trigger("submit.prevent");
-        await wrapper.vm.$nextTick();
+        await wrapper
+            .find("[data-test=fetch-gitlab-repository-modal-form]")
+            .trigger("submit.prevent");
 
         expect(wrapper.find("[data-test=gitlab-fail-load-repositories]").text()).toBe(
             "Server url is invalid",
@@ -200,7 +191,7 @@ describe("CredentialsFormModal", () => {
         const wrapper = await instantiateComponent();
         jest.spyOn(store, "dispatch").mockReturnValue(Promise.resolve([]));
 
-        wrapper.setData({
+        await wrapper.setData({
             is_loading: false,
             gitlab_server: "https://example.com",
             gitlab_token: "AFREZF546",
@@ -208,10 +199,9 @@ describe("CredentialsFormModal", () => {
             empty_message: "",
         });
 
-        await wrapper.vm.$nextTick();
-
-        wrapper.find("[data-test=fetch-gitlab-repository-modal-form]").trigger("submit.prevent");
-        await wrapper.vm.$nextTick();
+        await wrapper
+            .find("[data-test=fetch-gitlab-repository-modal-form]")
+            .trigger("submit.prevent");
 
         expect(wrapper.vm.$data.empty_message).toBe(
             "No repository is available with your GitLab account",

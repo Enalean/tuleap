@@ -31,6 +31,8 @@ let release_data: MilestoneData;
 let is_open = false;
 const get_enhanced_release_mock = jest.fn();
 
+jest.useFakeTimers();
+
 describe("ReleaseDisplayer", () => {
     function getPersonalWidgetInstance(): VueWrapper<InstanceType<typeof ReleaseDisplayer>> {
         const useStore = defineStore("root", {
@@ -68,8 +70,7 @@ describe("ReleaseDisplayer", () => {
     it("When the widget is rendered and it's the first release, Then toggle is open", async () => {
         is_open = true;
         const wrapper = getPersonalWidgetInstance();
-        await wrapper.vm.$nextTick();
-        await wrapper.vm.$nextTick();
+        await jest.runOnlyPendingTimersAsync();
         expect(wrapper.find("[data-test=toggle-open]").exists()).toBe(true);
     });
 
@@ -82,8 +83,7 @@ describe("ReleaseDisplayer", () => {
         is_open = true;
 
         const wrapper = getPersonalWidgetInstance();
-        await wrapper.vm.$nextTick();
-        await wrapper.vm.$nextTick();
+        await jest.runOnlyPendingTimersAsync();
         expect(wrapper.find("[data-test=toggle-open]").exists()).toBe(true);
 
         wrapper.findComponent(ReleaseHeader).vm.$emit("toggle-release-details");
@@ -101,8 +101,7 @@ describe("ReleaseDisplayer", () => {
 
         const wrapper = getPersonalWidgetInstance();
 
-        await wrapper.vm.$nextTick();
-        await wrapper.vm.$nextTick();
+        await jest.runOnlyPendingTimersAsync();
         expect(wrapper.find("[data-test=display-release-data]").exists()).toBe(true);
     });
 });

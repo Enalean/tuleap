@@ -73,8 +73,7 @@ describe("ErrorModal", () => {
         const error_message = "Full error message with details";
         const wrapper = createWrapper(error_message);
 
-        wrapper.get("[data-test=show-details]").trigger("click");
-        await wrapper.vm.$nextTick();
+        await wrapper.get("[data-test=show-details]").trigger("click");
 
         const details = wrapper.get("[data-test=details]");
         expect(details.text()).toEqual(error_message);

@@ -56,6 +56,8 @@ const reviewers: ReviewersCollection = {
 
 vi.mock("@tuleap/vue-strict-inject");
 
+vi.useFakeTimers();
+
 describe("PullRequestReviewerList", () => {
     let api_error_callback: SpyInstance;
 
@@ -96,7 +98,7 @@ describe("PullRequestReviewerList", () => {
         expect(wrapper.find("[data-test=pullrequest-property-skeleton]").exists()).toBe(true);
         expect(wrapper.find("[data-test=pullrequest-reviewer-info]").exists()).toBe(false);
 
-        await wrapper.vm.$nextTick();
+        await vi.runOnlyPendingTimersAsync();
 
         expect(wrapper.find("[data-test=pullrequest-property-skeleton]").exists()).toBe(false);
         expect(wrapper.find("[data-test=pullrequest-reviewer-info]").exists()).toBe(true);
@@ -119,7 +121,7 @@ describe("PullRequestReviewerList", () => {
         );
 
         const wrapper = getWrapper();
-        await wrapper.vm.$nextTick();
+        await vi.runOnlyPendingTimersAsync();
 
         expect(wrapper.find("[data-test=pullrequest-property-skeleton]").exists()).toBe(false);
         expect(wrapper.find("[data-test=pullrequest-reviewer-info]").exists()).toBe(true);
@@ -134,7 +136,7 @@ describe("PullRequestReviewerList", () => {
         expect(wrapper.find("[data-test=pullrequest-property-skeleton]").exists()).toBe(true);
         expect(wrapper.find("[data-test=pullrequest-reviewer-info]").exists()).toBe(false);
 
-        await wrapper.vm.$nextTick();
+        await vi.runOnlyPendingTimersAsync();
 
         expect(api_error_callback).toHaveBeenCalledWith(fault);
     });
@@ -153,7 +155,7 @@ describe("PullRequestReviewerList", () => {
                 user_can_merge: false,
                 status: PULL_REQUEST_STATUS_REVIEW,
             } as PullRequest);
-            await wrapper.vm.$nextTick();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(wrapper.find("[data-test=edit-reviewers-button]").exists()).toBe(false);
         });
@@ -164,7 +166,7 @@ describe("PullRequestReviewerList", () => {
                 status: PULL_REQUEST_STATUS_REVIEW,
                 is_git_reference_broken: true,
             } as PullRequest);
-            await wrapper.vm.$nextTick();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(wrapper.find("[data-test=edit-reviewers-button]").exists()).toBe(false);
         });
@@ -176,7 +178,7 @@ describe("PullRequestReviewerList", () => {
                     user_can_merge: true,
                     status: pull_request_status,
                 } as PullRequest);
-                await wrapper.vm.$nextTick();
+                await vi.runOnlyPendingTimersAsync();
 
                 expect(wrapper.find("[data-test=edit-reviewers-button]").exists()).toBe(false);
             },
@@ -187,7 +189,7 @@ describe("PullRequestReviewerList", () => {
                 user_can_merge: true,
                 status: PULL_REQUEST_STATUS_REVIEW,
             } as PullRequest);
-            await wrapper.vm.$nextTick();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(wrapper.find("[data-test=manage-reviewers-modal]").exists()).toBe(false);
 

@@ -148,8 +148,7 @@ describe("CardAssignees", () => {
         wrapper.vm.$store.getters["swimlane/assignable_users"] = (): UserForPeoplePicker[] =>
             [{ id: 1, display_name: "Steeve" }] as UserForPeoplePicker[];
 
-        wrapper.trigger("click");
-        await wrapper.vm.$nextTick();
+        await wrapper.trigger("click");
 
         expect(wrapper.vm.$store.dispatch).toHaveBeenCalledWith(
             "swimlane/loadPossibleAssignees",
@@ -176,7 +175,7 @@ describe("CardAssignees", () => {
             { assigned_to_field: { id: 123 } } as Tracker,
         );
 
-        wrapper.trigger("click");
+        await wrapper.trigger("click");
 
         expect(wrapper.classes()).toContain("taskboard-card-assignees");
         expect(wrapper.classes()).not.toContain("taskboard-card-edit-mode-assignees");

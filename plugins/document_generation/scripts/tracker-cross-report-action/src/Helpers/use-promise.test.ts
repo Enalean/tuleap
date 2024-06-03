@@ -17,9 +17,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, vi } from "vitest";
 import { usePromise } from "./use-promise";
-import { nextTick } from "vue";
+
+vi.useFakeTimers();
 
 describe("use-promise", () => {
     it("is in processing state when retrieving data", () => {
@@ -37,7 +38,7 @@ describe("use-promise", () => {
 
         resolve("success");
 
-        await movesEnoughTicksToCompletelyResolve();
+        await vi.runOnlyPendingTimersAsync();
 
         expect(is_processing.value).toBe(false);
         expect(data.value).toBe("success");
@@ -52,7 +53,7 @@ describe("use-promise", () => {
 
         reject(expected_error);
 
-        await movesEnoughTicksToCompletelyResolve();
+        await vi.runOnlyPendingTimersAsync();
 
         expect(is_processing.value).toBe(false);
         expect(data.value).toBe("");
@@ -79,9 +80,4 @@ function buildPromise(): {
         resolve: returned_resolve,
         reject: returned_reject,
     };
-}
-
-async function movesEnoughTicksToCompletelyResolve(): Promise<void> {
-    await nextTick();
-    await nextTick();
 }

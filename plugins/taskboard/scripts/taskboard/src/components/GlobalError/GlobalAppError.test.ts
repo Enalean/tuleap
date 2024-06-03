@@ -53,8 +53,7 @@ describe("GlobalAppError", () => {
             },
         });
 
-        wrapper.get("[data-test=show-details]").trigger("click");
-        await wrapper.vm.$nextTick();
+        await wrapper.get("[data-test=show-details]").trigger("click");
 
         expect(wrapper.text()).toMatch(error_message);
     });

@@ -16,15 +16,10 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-import type { LogEntry } from "../../api/log-rest-querier";
 
 const getLogs = jest.fn();
-jest.mock("../../api/log-rest-querier", () => {
-    return {
-        getLogs,
-    };
-});
 
+import type { LogEntry } from "../../api/log-rest-querier";
 import { errAsync, okAsync } from "neverthrow";
 import HistoryLogs from "./HistoryLogs.vue";
 import HistoryLogsLoadingState from "./HistoryLogsLoadingState.vue";
@@ -34,7 +29,14 @@ import HistoryLogsContent from "./HistoryLogsContent.vue";
 import { shallowMount } from "@vue/test-utils";
 import type { Embedded } from "../../type";
 import { getGlobalTestOptions } from "../../helpers/global-options-for-test";
-import { nextTick } from "vue";
+
+jest.mock("../../api/log-rest-querier", () => {
+    return {
+        getLogs,
+    };
+});
+
+jest.useFakeTimers();
 
 describe("HistoryLogs", () => {
     it("should display a loading state", () => {
@@ -63,8 +65,7 @@ describe("HistoryLogs", () => {
             global: { ...getGlobalTestOptions({}) },
         });
 
-        await nextTick();
-        await nextTick();
+        await jest.runOnlyPendingTimersAsync();
 
         expect(wrapper.findComponent(HistoryLogsLoadingState).exists()).toBe(false);
         expect(wrapper.findComponent(HistoryLogsErrorState).exists()).toBe(false);
@@ -82,8 +83,7 @@ describe("HistoryLogs", () => {
             global: { ...getGlobalTestOptions({}) },
         });
 
-        await nextTick();
-        await nextTick();
+        await jest.runOnlyPendingTimersAsync();
 
         expect(wrapper.findComponent(HistoryLogsLoadingState).exists()).toBe(false);
         expect(wrapper.findComponent(HistoryLogsErrorState).exists()).toBe(true);
@@ -101,8 +101,7 @@ describe("HistoryLogs", () => {
             global: { ...getGlobalTestOptions({}) },
         });
 
-        await nextTick();
-        await nextTick();
+        await jest.runOnlyPendingTimersAsync();
 
         expect(wrapper.findComponent(HistoryLogsLoadingState).exists()).toBe(false);
         expect(wrapper.findComponent(HistoryLogsErrorState).exists()).toBe(false);

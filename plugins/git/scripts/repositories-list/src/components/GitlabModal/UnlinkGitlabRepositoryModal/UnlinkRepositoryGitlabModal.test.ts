@@ -26,6 +26,8 @@ import { mockFetchError, mockFetchSuccess } from "@tuleap/tlp-fetch/mocks/tlp-fe
 import type { State } from "../../../type";
 import { createLocalVueForTests } from "../../../helpers/local-vue-for-tests";
 
+jest.useFakeTimers();
+
 describe("UnlinkRepositoryGitlabModal", () => {
     let store_options = {},
         store = {
@@ -56,14 +58,12 @@ describe("UnlinkRepositoryGitlabModal", () => {
     it("When the component is diplayed, Then confirmation message contains the label of repository", async () => {
         const wrapper = await instantiateComponent();
 
-        wrapper.setData({
+        await wrapper.setData({
             repository: {
                 id: 10,
                 normalized_path: "My project",
             },
         });
-
-        await wrapper.vm.$nextTick();
 
         expect(wrapper.find("[data-test=confirm-unlink-gitlab-message]").text()).toBe(
             "Wow, wait a minute. You are about to unlink the GitLab repository My project. Please confirm your action.",
@@ -83,11 +83,7 @@ describe("UnlinkRepositoryGitlabModal", () => {
 
         const success_message = "GitLab repository My project has been successfully unlinked!";
 
-        await wrapper.vm.$nextTick();
-
-        wrapper.find("[data-test=button-delete-gitlab-repository]").trigger("click");
-
-        await wrapper.vm.$nextTick();
+        await wrapper.find("[data-test=button-delete-gitlab-repository]").trigger("click");
 
         expect(store.commit).toHaveBeenCalledWith("removeRepository", {
             id: 10,
@@ -111,8 +107,7 @@ describe("UnlinkRepositoryGitlabModal", () => {
         });
 
         wrapper.find("[data-test=button-delete-gitlab-repository]").trigger("click");
-        await wrapper.vm.$nextTick();
-        await wrapper.vm.$nextTick();
+        await jest.runOnlyPendingTimersAsync();
 
         expect(wrapper.find("[data-test=gitlab-fail-delete-repository]").text()).toBe(
             "404 Error during delete",
@@ -135,8 +130,7 @@ describe("UnlinkRepositoryGitlabModal", () => {
             message_error_rest: "Error during delete",
         });
 
-        wrapper.find("[data-test=button-delete-gitlab-repository]").trigger("click");
-        await wrapper.vm.$nextTick();
+        await wrapper.find("[data-test=button-delete-gitlab-repository]").trigger("click");
 
         expect(api_delete).not.toHaveBeenCalled();
     });

@@ -42,15 +42,13 @@ describe("PullRequestAuthor", () => {
         expect(wrapper.find("[data-test=pullrequest-property-skeleton]").exists()).toBe(true);
         expect(wrapper.find("[data-test=pullrequest-author-info]").exists()).toBe(false);
 
-        wrapper.setProps({
+        await wrapper.setProps({
             pull_request_author: {
                 avatar_url: "/url/to/author_avatar.png",
                 user_url: "/url/to/author_profile_page.html",
                 display_name: "The Author",
             } as User,
         });
-
-        await wrapper.vm.$nextTick();
 
         expect(wrapper.find("[data-test=pullrequest-property-skeleton]").exists()).toBe(false);
         expect(wrapper.find("[data-test=pullrequest-author-info]").exists()).toBe(true);

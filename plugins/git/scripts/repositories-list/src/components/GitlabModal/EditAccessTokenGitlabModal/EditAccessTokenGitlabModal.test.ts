@@ -40,13 +40,11 @@ describe("EditAccessTokenGitlabModal", () => {
     it("When a user displays the modal ,then the AccessTokenFormModal is displayed", async () => {
         const wrapper = await instantiateComponent();
 
-        wrapper.setData({
+        await wrapper.setData({
             repository: {
                 id: 10,
             },
         });
-
-        await wrapper.vm.$nextTick();
 
         expect(wrapper.findComponent(AccessTokenFormModal).exists()).toBeTruthy();
     });
@@ -54,13 +52,11 @@ describe("EditAccessTokenGitlabModal", () => {
     it("When CredentialsFormModal emits on-close-modal, Then form is reset", async () => {
         const wrapper = await instantiateComponent();
 
-        wrapper.setData({
+        await wrapper.setData({
             repository: {
                 id: 10,
             },
         });
-
-        await wrapper.vm.$nextTick();
 
         expect(wrapper.vm.$data.repository).toEqual({ id: 10 });
 
@@ -73,13 +69,11 @@ describe("EditAccessTokenGitlabModal", () => {
     it("When CredentialsFormModal emits on-get-new-token-gitlab, Then ConfirmReplaceTokenModal is rendered", async () => {
         const wrapper = await instantiateComponent();
 
-        wrapper.setData({
+        await wrapper.setData({
             repository: {
                 id: 10,
             },
         });
-
-        await wrapper.vm.$nextTick();
 
         expect(wrapper.findComponent(AccessTokenFormModal).exists()).toBeTruthy();
         wrapper
@@ -97,7 +91,7 @@ describe("EditAccessTokenGitlabModal", () => {
     it("When ConfirmReplaceTokenModal emits on-success-edit-token, Then data are reset and success message is displayed", async () => {
         const wrapper = await instantiateComponent();
 
-        wrapper.setData({
+        await wrapper.setData({
             repository: {
                 gitlab_data: {
                     gitlab_repository_url: "https://example.com/my/repo",
@@ -107,8 +101,6 @@ describe("EditAccessTokenGitlabModal", () => {
             },
             gitlab_new_token: "azert123",
         });
-
-        await wrapper.vm.$nextTick();
 
         expect(wrapper.findComponent(AccessTokenFormModal).exists()).toBeFalsy();
         expect(wrapper.findComponent(ConfirmReplaceTokenModal).exists()).toBeTruthy();
@@ -136,12 +128,10 @@ describe("EditAccessTokenGitlabModal", () => {
             normalized_path: "my/repo",
         };
 
-        wrapper.setData({
+        await wrapper.setData({
             repository,
             gitlab_new_token: "azert123",
         });
-
-        await wrapper.vm.$nextTick();
 
         expect(wrapper.findComponent(AccessTokenFormModal).exists()).toBeFalsy();
         expect(wrapper.findComponent(ConfirmReplaceTokenModal).exists()).toBeTruthy();

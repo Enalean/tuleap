@@ -22,7 +22,6 @@ import { mount } from "@vue/test-utils";
 import { getGlobalTestOptions } from "../../../tests/helpers/global-options-for-tests";
 import type { PullRequest } from "@tuleap/plugin-pullrequest-rest-api-types";
 import PullRequestCheckoutButton from "./PullRequestCheckoutButton.vue";
-import { nextTick } from "vue";
 
 vi.mock("@tuleap/tlp-dropdown", () => ({
     createDropdown: (): void => {
@@ -68,7 +67,7 @@ describe("PullRequestCheckoutButton", () => {
             },
         });
 
-        wrapper.setProps({
+        await wrapper.setProps({
             pull_request_info: {
                 user_id: 102,
                 repository_dest: {
@@ -77,8 +76,6 @@ describe("PullRequestCheckoutButton", () => {
                 head_reference: "refs/tlpr/7/head",
             } as PullRequest,
         });
-
-        await nextTick();
 
         const commands = wrapper.find("[data-test=pull-request-commands]");
         expect(commands.html()).toContain("git fetch https://example.com refs/tlpr/7/head");

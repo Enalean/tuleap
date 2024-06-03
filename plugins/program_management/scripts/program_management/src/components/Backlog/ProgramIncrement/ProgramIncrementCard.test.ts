@@ -74,9 +74,7 @@ describe("ProgramIncrementCard", () => {
     it("Don't display update button if user doesn't have the permission", async () => {
         const wrapper = await getWrapper(false);
 
-        wrapper.get("[data-test=program-increment-toggle]").trigger("click");
-
-        await wrapper.vm.$nextTick();
+        await wrapper.get("[data-test=program-increment-toggle]").trigger("click");
 
         expect(wrapper.find("[data-test=program-increment-info]").exists()).toBe(false);
         expect(wrapper.find("[data-test=program-increment-content]").exists()).toBe(true);
@@ -93,9 +91,7 @@ describe("ProgramIncrementCard", () => {
     it("Display a card and its content", async () => {
         const wrapper = await getWrapper();
 
-        wrapper.get("[data-test=program-increment-toggle]").trigger("click");
-
-        await wrapper.vm.$nextTick();
+        await wrapper.get("[data-test=program-increment-toggle]").trigger("click");
 
         expect(
             wrapper.get("[data-test=program-increment-toggle-icon]").classes("fa-caret-right"),

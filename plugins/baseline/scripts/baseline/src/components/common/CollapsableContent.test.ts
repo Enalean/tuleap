@@ -53,8 +53,7 @@ describe("CollapsableContent", () => {
 
     describe("when toggle expand/collapse", () => {
         beforeEach(async () => {
-            wrapper.get(toggle_selector).trigger("click");
-            await wrapper.vm.$nextTick();
+            await wrapper.get(toggle_selector).trigger("click");
         });
 
         it("still shows header slot", () => {
@@ -71,8 +70,7 @@ describe("CollapsableContent", () => {
 
         describe("when toggle expand/collapse again", () => {
             beforeEach(async () => {
-                wrapper.get(toggle_selector).trigger("click");
-                await wrapper.vm.$nextTick();
+                await wrapper.get(toggle_selector).trigger("click");
             });
 
             it("shows default slot", () => {

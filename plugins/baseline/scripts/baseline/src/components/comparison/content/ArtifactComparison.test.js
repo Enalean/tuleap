@@ -64,7 +64,7 @@ describe("ArtifactComparison", () => {
 
     describe("when artifacts does not have linked artifact", () => {
         beforeEach(async () => {
-            wrapper.setProps({
+            await wrapper.setProps({
                 base: {
                     linked_artifact_ids: [],
                     linked_artifacts: [],
@@ -74,8 +74,6 @@ describe("ArtifactComparison", () => {
                     linked_artifacts: [],
                 },
             });
-
-            await wrapper.vm.$nextTick();
         });
 
         it("does not show depth limit message", () => {
@@ -90,12 +88,10 @@ describe("ArtifactComparison", () => {
     describe("when the current depth has reached the limit", () => {
         beforeEach(async () => {
             $store.getters["comparison/base/isLimitReachedOnArtifact"] = () => true;
-            wrapper.setProps({
+            await wrapper.setProps({
                 reference: { id: 1 },
                 compared_to: { id: 2 },
             });
-
-            await wrapper.vm.$nextTick();
         });
 
         it("shows depth limit message", () => {

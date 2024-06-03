@@ -23,7 +23,6 @@ import { shallowMount, mount } from "@vue/test-utils";
 import CriterionDate from "./CriterionDate.vue";
 import type { SearchDate } from "../../../type";
 import { getGlobalTestOptions } from "../../../helpers/global-options-for-test";
-import { nextTick } from "vue";
 
 jest.mock("../../../helpers/emitter", () => {
     return {
@@ -32,7 +31,7 @@ jest.mock("../../../helpers/emitter", () => {
 });
 
 describe("CriterionDate", () => {
-    it("should render the component when no date set", async () => {
+    it("should render the component when no date set", () => {
         const wrapper = shallowMount(CriterionDate, {
             props: {
                 criterion: {
@@ -44,12 +43,10 @@ describe("CriterionDate", () => {
             global: { ...getGlobalTestOptions({}) },
         });
 
-        await nextTick();
-
         expect(wrapper.element).toMatchSnapshot();
     });
 
-    it("should render the component when date is set", async () => {
+    it("should render the component when date is set", () => {
         const value: SearchDate = { date: "2022-01-01", operator: "=" };
         const wrapper = shallowMount(CriterionDate, {
             props: {
@@ -61,8 +58,6 @@ describe("CriterionDate", () => {
             },
             global: { ...getGlobalTestOptions({}) },
         });
-
-        await nextTick();
 
         expect(wrapper.element).toMatchSnapshot();
     });

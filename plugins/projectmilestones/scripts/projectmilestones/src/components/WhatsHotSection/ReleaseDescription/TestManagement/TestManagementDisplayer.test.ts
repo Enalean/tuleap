@@ -29,6 +29,8 @@ import { getGlobalTestOptions } from "../../../../helpers/global-options-for-tes
 let release_data: MilestoneData;
 const project_id = 100;
 
+jest.useFakeTimers();
+
 describe("TestManagementDisplayer", () => {
     function getPersonalWidgetInstance(
         getTestManagementCampaigns: jest.Mock,
@@ -90,7 +92,7 @@ describe("TestManagementDisplayer", () => {
         };
 
         const wrapper = getPersonalWidgetInstance(jest.fn());
-        await wrapper.vm.$nextTick();
+        await jest.runOnlyPendingTimersAsync();
         expect(wrapper.findComponent(TestManagement).exists()).toBe(true);
     });
 

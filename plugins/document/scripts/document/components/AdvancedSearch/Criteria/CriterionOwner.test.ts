@@ -25,9 +25,10 @@ import * as retrieve_selected_owner from "../../../helpers/owner/retrieve-select
 import type { RestUser } from "../../../api/rest-querier";
 import type { ConfigurationState } from "../../../store/configuration";
 import { getGlobalTestOptions } from "../../../helpers/global-options-for-test";
-import { nextTick } from "vue";
 
 jest.mock("tlp");
+
+jest.useFakeTimers();
 
 interface Select2Mock extends Select2Plugin {
     trigger(): this;
@@ -68,10 +69,7 @@ describe("CriterionOwner", () => {
                 }),
             },
         });
-        await nextTick();
-        await nextTick();
-        await nextTick();
-        await nextTick();
+        await jest.runOnlyPendingTimersAsync();
         expect(wrapper.element).toMatchSnapshot();
         expect(wrapper.vm.get_currently_selected_user).toStrictEqual(current_user);
     });

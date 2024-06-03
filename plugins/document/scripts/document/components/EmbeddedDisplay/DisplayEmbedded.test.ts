@@ -18,14 +18,9 @@
  *
  */
 
-import { okAsync } from "neverthrow";
-
 const getEmbeddedFileVersionContent = jest.fn();
-jest.mock("../../api/version-rest-querier", () => {
-    return {
-        getEmbeddedFileVersionContent,
-    };
-});
+
+import { okAsync } from "neverthrow";
 import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import DisplayEmbedded from "./DisplayEmbedded.vue";
@@ -33,8 +28,15 @@ import DisplayEmbeddedContent from "./DisplayEmbeddedContent.vue";
 import DisplayEmbeddedSpinner from "./DisplayEmbeddedSpinner.vue";
 import { getGlobalTestOptions } from "../../helpers/global-options-for-test";
 import type { ErrorState } from "../../store/error/module";
-import { nextTick } from "vue";
 import type { Embedded, Item } from "../../type";
+
+jest.mock("../../api/version-rest-querier", () => {
+    return {
+        getEmbeddedFileVersionContent,
+    };
+});
+
+jest.useFakeTimers();
 
 describe("DisplayEmbedded", () => {
     let loadDocument: () => Promise<Item>;
@@ -162,11 +164,7 @@ describe("DisplayEmbedded", () => {
         );
 
         const wrapper = getWrapper(null);
-        await nextTick();
-        await nextTick();
-        await nextTick();
-        await nextTick();
-        await nextTick();
+        await jest.runOnlyPendingTimersAsync();
 
         expect(wrapper.findComponent(DisplayEmbeddedContent).exists()).toBeTruthy();
         expect(wrapper.findComponent(DisplayEmbeddedContent).props().content_to_display).toBe(
@@ -187,11 +185,7 @@ describe("DisplayEmbedded", () => {
 
         const wrapper = getWrapper(3);
 
-        await nextTick();
-        await nextTick();
-        await nextTick();
-        await nextTick();
-        await nextTick();
+        await jest.runOnlyPendingTimersAsync();
 
         expect(wrapper.findComponent(DisplayEmbeddedContent).exists()).toBeTruthy();
         expect(wrapper.findComponent(DisplayEmbeddedContent).props().content_to_display).toBe(

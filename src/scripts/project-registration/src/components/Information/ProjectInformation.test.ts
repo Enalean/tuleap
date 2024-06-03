@@ -36,6 +36,8 @@ import type { ProjectArchiveTemplateData, TemplateData } from "../../type";
 import * as router from "../../helpers/use-router";
 import { ACCESS_PRIVATE, ACCESS_PUBLIC } from "../../constant";
 
+jest.useFakeTimers();
+
 let has_error = false;
 let are_restricted_users_allowed = false;
 let is_project_approval_required = false;
@@ -108,7 +110,6 @@ describe("ProjectInformation -", () => {
         has_error = true;
 
         const wrapper = await getWrapper();
-        await wrapper.vm.$nextTick();
 
         expect(wrapper.findComponent(ProjectInformationSvg).exists()).toBe(true);
         expect(wrapper.findComponent(ProjectInformationFooter).exists()).toBe(true);
@@ -172,14 +173,12 @@ describe("ProjectInformation -", () => {
             name: "this is a test",
         };
 
-        wrapper.get("[data-test=project-registration-form]").trigger("submit.prevent");
-        await wrapper.vm.$nextTick();
+        await wrapper.get("[data-test=project-registration-form]").trigger("submit.prevent");
 
         expect(store.createProject).toHaveBeenCalledWith(expected_project_properties);
         expect(store.createProjectFromArchive).not.toHaveBeenCalled();
 
-        await wrapper.vm.$nextTick();
-        await wrapper.vm.$nextTick();
+        await jest.runOnlyPendingTimersAsync();
 
         expect(redirect_to_url).toHaveBeenCalledWith(
             "/projects/this-is-a-test/?should-display-created-project-modal=true&xml-template-name=scrum",
@@ -193,9 +192,7 @@ describe("ProjectInformation -", () => {
         EventBus.$emit("update-project-visibility", { new_visibility: ACCESS_PRIVATE });
         wrapper.vm.$nextTick();
 
-        wrapper.get("[data-test=project-registration-form]").trigger("submit.prevent");
-
-        await wrapper.vm.$nextTick();
+        await wrapper.get("[data-test=project-registration-form]").trigger("submit.prevent");
 
         expect(push_route_spy).toHaveBeenCalledWith("approval");
     });
@@ -213,7 +210,7 @@ describe("ProjectInformation -", () => {
         EventBus.$emit("update-project-visibility", { new_visibility: ACCESS_PRIVATE });
         wrapper.vm.$nextTick();
 
-        wrapper.get("[data-test=project-registration-form]").trigger("submit.prevent");
+        await wrapper.get("[data-test=project-registration-form]").trigger("submit.prevent");
 
         expect(store.createProjectFromArchive).toHaveBeenCalled();
         expect(store.createProject).not.toHaveBeenCalled();

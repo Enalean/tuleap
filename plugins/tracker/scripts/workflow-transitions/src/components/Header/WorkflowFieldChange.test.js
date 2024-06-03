@@ -49,9 +49,7 @@ describe(`WorkflowFieldChange`, () => {
         const wrapper = await createWrapper(false);
 
         const change_remove_button = wrapper.get("[data-test=change-or-remove-button]");
-        change_remove_button.trigger("click");
-
-        await wrapper.vm.$nextTick();
+        await change_remove_button.trigger("click");
 
         expect(wrapper.find("[data-test=change-field-confirmation-modal]").exists()).toBe(true);
     });
