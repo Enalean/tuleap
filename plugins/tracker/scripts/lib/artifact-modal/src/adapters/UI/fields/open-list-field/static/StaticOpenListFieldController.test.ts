@@ -19,16 +19,14 @@
 
 import { describe, it, expect, beforeEach, jest } from "@jest/globals";
 import type { InternalStaticOpenListField } from "./StaticOpenListField";
-import type {
-    ControlStaticOpenListField,
-    Select2SelectionEvent,
-} from "./StaticOpenListFieldController";
+import type { ControlStaticOpenListField } from "./StaticOpenListFieldController";
 import { StaticOpenListFieldController } from "./StaticOpenListFieldController";
 import { StaticOpenListFieldPresenterBuilder } from "./StaticOpenListFieldPresenter";
 
 import * as tlp from "tlp";
 import type { StaticValueModelItem } from "../../../../../domain/fields/static-open-list-field/StaticOpenListValueModel";
 import type { StaticOpenListFieldType } from "../../../../../domain/fields/static-open-list-field/StaticOpenListFieldType";
+import type { Select2SelectionEvent } from "../Select2SelectionEvent";
 
 jest.mock("tlp");
 

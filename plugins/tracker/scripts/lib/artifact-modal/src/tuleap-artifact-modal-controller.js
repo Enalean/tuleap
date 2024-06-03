@@ -71,6 +71,7 @@ import { WillEnableSubmit } from "./domain/submit/WillEnableSubmit";
 import { ProjectsCache } from "./adapters/Memory/fields/link-field/ProjectsCache";
 import { LinkableArtifactCreator } from "./adapters/REST/fields/link-field/LinkableArtifactCreator";
 import { StaticOpenListFieldController } from "./adapters/UI/fields/open-list-field/static/StaticOpenListFieldController";
+import { UserGroupOpenListFieldController } from "./adapters/UI/fields/open-list-field/user-groups/UserGroupOpenListFieldController";
 
 export default ArtifactModalController;
 
@@ -256,6 +257,10 @@ function ArtifactModalController(
         getStaticOpenListFieldController: (field) => {
             const bind_value_objects = self.values[field.field_id].value.bind_value_objects;
             return StaticOpenListFieldController(field, bind_value_objects);
+        },
+        getUserGroupOpenListFieldController: (field) => {
+            const bind_value_objects = self.values[field.field_id].value.bind_value_objects;
+            return UserGroupOpenListFieldController(field, bind_value_objects);
         },
         hidden_fieldsets: extractHiddenFieldsets(modal_model.ordered_fields),
         formatColor,
