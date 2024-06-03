@@ -24,17 +24,20 @@ namespace Tuleap\Tracker\Test\Builders;
 
 use Project;
 use Tracker;
+use Tuleap\Tracker\Permission\VerifySubmissionPermissions;
+use Tuleap\Tracker\Test\Stub\VerifySubmissionPermissionStub;
 use Tuleap\Tracker\TrackerColor;
 
 final class TrackerTestBuilder
 {
-    private ?TrackerColor $color = null;
-    private string $name         = 'Irrelevant';
-    private string $short_name   = 'irrelevant';
-    private ?Project $project    = null;
-    private int $tracker_id      = 0;
-    private ?int $deletion_date  = null;
-    private ?\Workflow $workflow = null;
+    private ?TrackerColor $color  = null;
+    private string $name          = 'Irrelevant';
+    private string $short_name    = 'irrelevant';
+    private ?Project $project     = null;
+    private int $tracker_id       = 0;
+    private ?int $deletion_date   = null;
+    private ?\Workflow $workflow  = null;
+    private bool $user_can_submit = true;
 
     public static function aTracker(): self
     {
@@ -91,6 +94,13 @@ final class TrackerTestBuilder
         return $this;
     }
 
+    public function withUserCanSubmit(bool $user_can_submit): self
+    {
+        $this->user_can_submit = $user_can_submit;
+
+        return $this;
+    }
+
     private function getProjectId(): int
     {
         if (! $this->project) {
@@ -109,9 +119,9 @@ final class TrackerTestBuilder
         return $this->color;
     }
 
-    public function build(): \Tracker
+    public function build(): Tracker
     {
-        $tracker = new \Tracker(
+        $tracker = new class (
             $this->tracker_id,
             $this->getProjectId(),
             $this->name,
@@ -124,10 +134,39 @@ final class TrackerTestBuilder
             $this->deletion_date,
             true,
             false,
-            \Tracker::NOTIFICATIONS_LEVEL_DEFAULT,
+            Tracker::NOTIFICATIONS_LEVEL_DEFAULT,
             $this->getColor(),
-            false
-        );
+            false,
+            $this->user_can_submit,
+        ) extends Tracker {
+            public function __construct(
+                $id,
+                $group_id,
+                $name,
+                $description,
+                $item_name,
+                $allow_copy,
+                $submit_instructions,
+                $browse_instructions,
+                $status,
+                $deletion_date,
+                $instantiate_for_new_projects,
+                $log_priority_changes,
+                $notifications_level,
+                TrackerColor $color,
+                $enable_emailgateway,
+                private readonly bool $user_can_submit,
+            ) {
+                parent::__construct($id, $group_id, $name, $description, $item_name, $allow_copy, $submit_instructions, $browse_instructions, $status, $deletion_date, $instantiate_for_new_projects, $log_priority_changes, $notifications_level, $color, $enable_emailgateway);
+            }
+
+            protected function getTrackerArtifactSubmissionPermission(): VerifySubmissionPermissions
+            {
+                return $this->user_can_submit
+                    ? VerifySubmissionPermissionStub::withSubmitPermission()
+                    : VerifySubmissionPermissionStub::withoutSubmitPermission();
+            }
+        };
 
         if ($this->project) {
             $tracker->setProject($this->project);
