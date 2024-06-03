@@ -17,53 +17,52 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
-import type { Wrapper } from "@vue/test-utils";
-import { createCrossTrackerLocalVue } from "../helpers/local-vue-for-test";
+import { getGlobalTestOptions } from "../helpers/global-options-for-tests";
 import WritingMode from "./WritingMode.vue";
 import {
     default as WritingCrossTrackerReport,
     TooManyTrackersSelectedError,
 } from "./writing-cross-tracker-report";
 import * as rest_querier from "../api/rest-querier";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
-import type { ProjectInfo, TrackerInfo, State, TrackerToUpdate } from "../type";
+import type { ProjectInfo, State, TrackerInfo, TrackerToUpdate } from "../type";
 import TrackerListWritingMode from "./TrackerListWritingMode.vue";
 import TrackerSelection from "./TrackerSelection.vue";
 import type { ProjectReference } from "@tuleap/core-rest-api-types";
 
-type WritingModeExposed = {
-    selected_trackers: ReadonlyArray<TrackerToUpdate>;
-};
-
 describe("WritingMode", () => {
-    let store = {
-        commit: jest.fn(),
-    };
+    let resetSpy: jest.Mock, errorSpy: jest.Mock;
 
     beforeEach(() => {
         jest.spyOn(rest_querier, "getSortedProjectsIAmMemberOf").mockResolvedValue([
             { id: 102 } as ProjectReference,
         ]);
+        resetSpy = jest.fn();
+        errorSpy = jest.fn();
     });
 
-    async function instantiateComponent(
+    function instantiateComponent(
         writingCrossTrackerReport: WritingCrossTrackerReport,
-    ): Promise<Wrapper<Vue & WritingModeExposed, Element>> {
-        const store_options = { state: { is_user_admin: true } as State, commit: jest.fn() };
-        store = createStoreMock(store_options);
+    ): VueWrapper<InstanceType<typeof WritingMode>> {
+        const store_options = {
+            state: { is_user_admin: true } as State,
+            mutations: {
+                resetFeedbacks: resetSpy,
+                setErrorMessage: errorSpy,
+            },
+        };
 
         return shallowMount(WritingMode, {
-            localVue: await createCrossTrackerLocalVue(),
-            propsData: {
+            props: {
                 writingCrossTrackerReport,
             },
-            mocks: { $store: store },
-        }) as Wrapper<Vue & WritingModeExposed, Element>;
+            global: { ...getGlobalTestOptions(store_options) },
+        });
     }
 
     describe("mounted()", () => {
-        it("on init, the selected trackers will be formatted from the writing report", async () => {
+        it("on init, the selected trackers will be formatted from the writing report", () => {
             const writingCrossTrackerReport = new WritingCrossTrackerReport();
             writingCrossTrackerReport.addTracker(
                 { id: 804, label: "fanatical" } as ProjectInfo,
@@ -74,7 +73,7 @@ describe("WritingMode", () => {
                 { id: 51, label: "monodynamism" } as TrackerInfo,
             );
 
-            const wrapper = await instantiateComponent(writingCrossTrackerReport);
+            const wrapper = instantiateComponent(writingCrossTrackerReport);
 
             expect(wrapper.vm.selected_trackers).toStrictEqual([
                 {
@@ -92,12 +91,12 @@ describe("WritingMode", () => {
     });
 
     describe("cancel()", () => {
-        it("when I hit cancel, then an event will be emitted to switch the widget to reading mode in saved state", async () => {
+        it("when I hit cancel, then an event will be emitted to switch the widget to reading mode in saved state", () => {
             const writingCrossTrackerReport = new WritingCrossTrackerReport();
-            const wrapper = await instantiateComponent(writingCrossTrackerReport);
+            const wrapper = instantiateComponent(writingCrossTrackerReport);
 
             wrapper.find("[data-test=writing-mode-cancel-button]").trigger("click");
-            const emitted = wrapper.emitted()["switch-to-reading-mode"];
+            const emitted = wrapper.emitted("switch-to-reading-mode");
             if (!emitted) {
                 throw new Error("Event has not been emitted");
             }
@@ -107,12 +106,12 @@ describe("WritingMode", () => {
     });
 
     describe("search()", () => {
-        it("when I hit search, then an event will be emitted to switch the widget to reading mode in unsaved state", async () => {
+        it("when I hit search, then an event will be emitted to switch the widget to reading mode in unsaved state", () => {
             const writingCrossTrackerReport = new WritingCrossTrackerReport();
-            const wrapper = await instantiateComponent(writingCrossTrackerReport);
+            const wrapper = instantiateComponent(writingCrossTrackerReport);
 
             wrapper.find("[data-test=search-report-button]").trigger("click");
-            const emitted = wrapper.emitted()["switch-to-reading-mode"];
+            const emitted = wrapper.emitted("switch-to-reading-mode");
             if (!emitted) {
                 throw new Error("Event has not been emitted");
             }
@@ -122,7 +121,7 @@ describe("WritingMode", () => {
     });
 
     describe("removeTrackerFromSelection()", () => {
-        it("when I remove a tracker, then the writing report will be updated and the errors hidden", async () => {
+        it("when I remove a tracker, then the writing report will be updated and the errors hidden", () => {
             const writingCrossTrackerReport = new WritingCrossTrackerReport();
             writingCrossTrackerReport.addTracker(
                 { id: 172, label: "undiuretic" } as ProjectInfo,
@@ -133,14 +132,14 @@ describe("WritingMode", () => {
                 { id: 46, label: "knothorn" } as TrackerInfo,
             );
             jest.spyOn(writingCrossTrackerReport, "removeTracker");
-            const wrapper = await instantiateComponent(writingCrossTrackerReport);
+            const wrapper = instantiateComponent(writingCrossTrackerReport);
 
             wrapper
                 .findComponent(TrackerListWritingMode)
-                .vm.$emit("tracker-removed", { tracker_id: 46 });
+                .vm.$emit("tracker-removed", { tracker_id: 46 } as TrackerToUpdate);
 
             expect(writingCrossTrackerReport.removeTracker).toHaveBeenCalledWith(46);
-            expect(wrapper.vm.$store.commit).toHaveBeenCalledWith("resetFeedbacks");
+            expect(resetSpy).toHaveBeenCalled();
             expect(wrapper.vm.selected_trackers).toStrictEqual([
                 {
                     tracker_id: 61,
@@ -152,10 +151,10 @@ describe("WritingMode", () => {
     });
 
     describe("addTrackerToSelection()", () => {
-        it("when I add a tracker, then the writing report will be updated", async () => {
+        it("when I add a tracker, then the writing report will be updated", () => {
             const writingCrossTrackerReport = new WritingCrossTrackerReport();
             jest.spyOn(writingCrossTrackerReport, "addTracker");
-            const wrapper = await instantiateComponent(writingCrossTrackerReport);
+            const wrapper = instantiateComponent(writingCrossTrackerReport);
             const selected_project = { id: 656, label: "ergatogyne" } as ProjectInfo;
             const selected_tracker = { id: 53, label: "observingly" } as TrackerInfo;
 
@@ -177,12 +176,12 @@ describe("WritingMode", () => {
             ]);
         });
 
-        it("Given I had already added 25 trackers, when I try to add another, then an error will be shown", async () => {
+        it("Given I had already added 25 trackers, when I try to add another, then an error will be shown", () => {
             const writingCrossTrackerReport = new WritingCrossTrackerReport();
             jest.spyOn(writingCrossTrackerReport, "addTracker").mockImplementation(() => {
                 throw new TooManyTrackersSelectedError();
             });
-            const wrapper = await instantiateComponent(writingCrossTrackerReport);
+            const wrapper = instantiateComponent(writingCrossTrackerReport);
             const selected_project = { id: 656, label: "ergatogyne" } as ProjectInfo;
             const selected_tracker = { id: 53, label: "observingly" } as TrackerInfo;
 
@@ -191,10 +190,7 @@ describe("WritingMode", () => {
                 selected_tracker,
             });
 
-            expect(wrapper.vm.$store.commit).toHaveBeenCalledWith(
-                "setErrorMessage",
-                expect.any(String),
-            );
+            expect(errorSpy).toHaveBeenCalledWith(expect.any(Object), expect.any(String));
         });
     });
 });

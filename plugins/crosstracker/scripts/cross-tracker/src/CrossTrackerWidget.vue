@@ -50,7 +50,7 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from "vue";
 import { useGetters, useMutations, useState } from "vuex-composition-helpers";
-import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
+import { useGettext } from "vue3-gettext";
 import ArtifactTable from "./components/ArtifactTable.vue";
 import ReadingMode from "./reading-mode/ReadingMode.vue";
 import type { SaveEvent } from "./writing-mode/WritingMode.vue";

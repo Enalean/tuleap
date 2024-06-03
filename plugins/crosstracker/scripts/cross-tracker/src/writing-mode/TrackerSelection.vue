@@ -95,7 +95,7 @@
 <script setup lang="ts">
 import { computed, onMounted, ref, watch } from "vue";
 import { useMutations } from "vuex-composition-helpers";
-import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
+import { useGettext } from "vue3-gettext";
 import { getSortedProjectsIAmMemberOf } from "./projects-cache";
 import { getTrackersOfProject } from "../api/rest-querier";
 import type { ProjectInfo, SelectedTracker, TrackerInfo } from "../type";
@@ -109,7 +109,7 @@ export type AddTrackerToSelectionCommand = {
     readonly selected_tracker: TrackerInfo;
 };
 
-const gettext_provider = useGettext();
+const { $gettext } = useGettext();
 
 const props = defineProps<{ selectedTrackers: ReadonlyArray<SelectedTracker> }>();
 const emit = defineEmits<{
@@ -146,11 +146,7 @@ async function loadProjects(): Promise<void> {
 
         selected_project.value = projects.value[0];
     } catch (error) {
-        setErrorMessage(
-            gettext_provider.$gettext(
-                "Error while fetching the list of projects you are member of",
-            ),
-        );
+        setErrorMessage($gettext("Error while fetching the list of projects you are member of"));
     } finally {
         is_loader_shown.value = false;
     }
@@ -161,9 +157,7 @@ async function loadTrackers(project_id: number): Promise<void> {
     try {
         trackers.value = await getTrackersOfProject(project_id);
     } catch (error) {
-        setErrorMessage(
-            gettext_provider.$gettext("Error while fetching the list of trackers of this project"),
-        );
+        setErrorMessage($gettext("Error while fetching the list of trackers of this project"));
     } finally {
         is_loader_shown.value = false;
     }

@@ -71,6 +71,7 @@
 
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
+import { useGettext } from "vue3-gettext";
 import {
     TQL_cross_tracker_autocomplete_keywords,
     TQL_cross_tracker_mode_definition,
@@ -82,6 +83,8 @@ import {
     insertAllowedFieldInCodeMirror,
 } from "@tuleap/plugin-tracker-tql-codemirror";
 import type WritingCrossTrackerReport from "./writing-cross-tracker-report";
+
+const { $gettext } = useGettext();
 
 const props = defineProps<{ writingCrossTrackerReport: WritingCrossTrackerReport }>();
 const emit = defineEmits<{ (e: "trigger-search"): void }>();

@@ -17,16 +17,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import Vue from "vue";
-import Vuex from "vuex";
+import { createStore } from "vuex";
+import type { Store } from "vuex";
 import * as getters from "./getters";
 import * as mutations from "./mutations";
 import type { State } from "../type";
-import type { Store } from "vuex";
 
-Vue.use(Vuex);
-
-export function createStore(report_id: number, is_user_admin: boolean): Store<State> {
+export function createInitializedStore(report_id: number, is_user_admin: boolean): Store<State> {
     const state: State = {
         report_id,
         is_user_admin,
@@ -36,11 +33,9 @@ export function createStore(report_id: number, is_user_admin: boolean): Store<St
         success_message: null,
         invalid_trackers: [],
     };
-    return new Vuex.Store({
+    return createStore({
         getters,
         mutations,
-        state: {
-            ...state,
-        },
+        state,
     });
 }

@@ -17,55 +17,60 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { createCrossTrackerLocalVue } from "../helpers/local-vue-for-test";
-import type { Wrapper } from "@vue/test-utils";
+import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
+import { getGlobalTestOptions } from "../helpers/global-options-for-tests";
 import { mockFetchError, mockFetchSuccess } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import WritingCrossTrackerReport from "../writing-mode/writing-cross-tracker-report";
 import ArtifactTable from "./ArtifactTable.vue";
 import * as rest_querier from "../api/rest-querier";
-import type { ArtifactsCollection, Artifact, State } from "../type";
+import type { Artifact, ArtifactsCollection, State } from "../type";
 import ArtifactTableRow from "./ArtifactTableRow.vue";
+
+jest.useFakeTimers();
 
 describe("ArtifactTable", () => {
     let writingCrossTrackerReport: WritingCrossTrackerReport,
         getReportContent: jest.SpyInstance,
-        getQueryResult: jest.SpyInstance;
-    let store = {
-        commit: jest.fn(),
-    };
+        getQueryResult: jest.SpyInstance,
+        errorSpy: jest.Mock;
 
     beforeEach(() => {
         writingCrossTrackerReport = new WritingCrossTrackerReport();
 
         getReportContent = jest.spyOn(rest_querier, "getReportContent");
         getQueryResult = jest.spyOn(rest_querier, "getQueryResult");
+        errorSpy = jest.fn();
     });
 
-    async function instantiateComponent(state: Partial<State>): Promise<Wrapper<Vue, Element>> {
-        const store_options = { state: state };
-        store = createStoreMock(store_options);
-
+    function instantiateComponent(
+        state: Partial<State>,
+    ): VueWrapper<InstanceType<typeof ArtifactTable>> {
         return shallowMount(ArtifactTable, {
-            localVue: await createCrossTrackerLocalVue(),
-            propsData: {
+            global: {
+                ...getGlobalTestOptions({
+                    state: state as State,
+                    mutations: {
+                        setErrorMessage: errorSpy,
+                    },
+                }),
+            },
+            props: {
                 writingCrossTrackerReport,
             },
-            mocks: { $store: store },
         });
     }
 
     describe("loadArtifacts() -", () => {
-        it("Given report is saved, it loads artifacts of report", async () => {
+        it("Given report is saved, it loads artifacts of report", () => {
             mockFetchSuccess(getReportContent);
-            await instantiateComponent({ is_report_saved: true });
+            instantiateComponent({ is_report_saved: true });
             expect(getReportContent).toHaveBeenCalled();
         });
 
-        it("Given report is not saved, it loads artifacts of current selected trackers", async () => {
+        it("Given report is not saved, it loads artifacts of current selected trackers", () => {
             mockFetchSuccess(getQueryResult);
-            await instantiateComponent({ is_report_saved: false });
+            instantiateComponent({ is_report_saved: false });
             expect(getQueryResult).toHaveBeenCalled();
         });
 
@@ -75,13 +80,10 @@ describe("ArtifactTable", () => {
                     error: { status: 500 },
                 },
             });
-            const wrapper = await instantiateComponent({ is_report_saved: true });
-            await wrapper.vm.$nextTick();
+            instantiateComponent({ is_report_saved: true });
+            await jest.runOnlyPendingTimersAsync();
 
-            expect(wrapper.vm.$store.commit).toHaveBeenCalledWith(
-                "setErrorMessage",
-                "An error occurred",
-            );
+            expect(errorSpy).toHaveBeenCalledWith(expect.any(Object), "An error occurred");
         });
 
         it("when there is a translated REST error, it will be shown", async () => {
@@ -91,11 +93,11 @@ describe("ArtifactTable", () => {
                 },
             });
 
-            const wrapper = await instantiateComponent({ is_report_saved: true });
-            await wrapper.vm.$nextTick();
+            instantiateComponent({ is_report_saved: true });
+            await jest.runOnlyPendingTimersAsync();
 
-            expect(wrapper.vm.$store.commit).toHaveBeenCalledWith(
-                "setErrorMessage",
+            expect(errorSpy).toHaveBeenCalledWith(
+                expect.any(Object),
                 "Error while parsing the query",
             );
         });
@@ -120,18 +122,12 @@ describe("ArtifactTable", () => {
                 }
                 throw Error("Unexpected offset " + offset);
             });
-            const wrapper = await instantiateComponent({ is_report_saved: true });
-
-            // Wait for artifacts to be retrieved
-            await wrapper.vm.$nextTick();
-            await wrapper.vm.$nextTick();
+            const wrapper = instantiateComponent({ is_report_saved: true });
+            await jest.runOnlyPendingTimersAsync();
 
             expect(wrapper.findAllComponents(ArtifactTableRow)).toHaveLength(1);
 
             await wrapper.find("[data-test=load-more]").trigger("click");
-
-            // Wait for artifacts to be retrieved
-            await wrapper.vm.$nextTick();
 
             expect(wrapper.findAllComponents(ArtifactTableRow)).toHaveLength(2);
             expect(wrapper.find("[data-test=load-more]").exists()).toBe(false);

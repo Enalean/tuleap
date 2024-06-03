@@ -17,65 +17,72 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import ReadingMode from "./ReadingMode.vue";
-import BackendCrossTrackerReport from "../backend-cross-tracker-report";
 import type { TrackerForInit } from "../backend-cross-tracker-report";
+import BackendCrossTrackerReport from "../backend-cross-tracker-report";
 import ReadingCrossTrackerReport from "./reading-cross-tracker-report";
 import * as rest_querier from "../api/rest-querier";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
-import type { Wrapper } from "@vue/test-utils";
-import type { Report } from "../type";
-import { createCrossTrackerLocalVue } from "../helpers/local-vue-for-test";
+import type { Report, State } from "../type";
+import { getGlobalTestOptions } from "../helpers/global-options-for-tests";
 import { FetchWrapperError } from "@tuleap/tlp-fetch";
 
 describe("ReadingMode", () => {
     let backendCrossTrackerReport: BackendCrossTrackerReport,
-        readingCrossTrackerReport: ReadingCrossTrackerReport;
+        readingCrossTrackerReport: ReadingCrossTrackerReport,
+        is_user_admin: boolean,
+        has_error_message: boolean,
+        errorSpy: jest.Mock,
+        discardSpy: jest.Mock;
 
     beforeEach(() => {
         backendCrossTrackerReport = new BackendCrossTrackerReport();
         readingCrossTrackerReport = new ReadingCrossTrackerReport();
+        is_user_admin = true;
+        has_error_message = false;
+        errorSpy = jest.fn();
+        discardSpy = jest.fn();
     });
 
-    async function instantiateComponent(): Promise<Wrapper<Vue, Element>> {
+    function instantiateComponent(): VueWrapper<InstanceType<typeof ReadingMode>> {
         const store_options = {
-            state: { is_user_admin: true },
-            getters: { has_error_message: false },
+            state: { is_user_admin } as State,
+            getters: { has_error_message: () => has_error_message },
+            mutations: {
+                setErrorMessage: errorSpy,
+                discardUnsavedReport: discardSpy,
+            },
         };
-        const store = createStoreMock(store_options);
 
         return shallowMount(ReadingMode, {
-            localVue: await createCrossTrackerLocalVue(),
-            propsData: {
+            global: { ...getGlobalTestOptions(store_options) },
+            props: {
                 backendCrossTrackerReport,
                 readingCrossTrackerReport,
-            },
-            mocks: {
-                $store: store,
             },
         });
     }
 
     describe("switchToWritingMode()", () => {
-        it("When I switch to the writing mode, then an event will be emitted", async () => {
-            const wrapper = await instantiateComponent();
+        it("When I switch to the writing mode, then an event will be emitted", () => {
+            const wrapper = instantiateComponent();
 
             wrapper.get("[data-test=cross-tracker-reading-mode]").trigger("click");
 
-            const emitted = wrapper.emitted()["switch-to-writing-mode"];
+            const emitted = wrapper.emitted("switch-to-writing-mode");
             expect(emitted).toBeDefined();
             expect(wrapper.find("[data-test=tracker-list-reading-mode]").exists()).toBe(true);
         });
 
         it(`Given I am browsing as project member,
-            when I try to switch to writing mode, nothing will happen`, async () => {
-            const wrapper = await instantiateComponent();
-            wrapper.vm.$store.state.is_user_admin = false;
+            when I try to switch to writing mode, nothing will happen`, () => {
+            is_user_admin = false;
+            const wrapper = instantiateComponent();
 
             wrapper.get("[data-test=cross-tracker-reading-mode]").trigger("click");
 
-            const emitted = wrapper.emitted()["switch-to-writing-mode"];
+            const emitted = wrapper.emitted("switch-to-writing-mode");
             expect(emitted).toBeUndefined();
             expect(wrapper.find("[data-test=tracker-list-reading-mode]").exists()).toBe(true);
         });
@@ -94,26 +101,24 @@ describe("ReadingMode", () => {
             const report = { trackers, expert_query } as Report;
 
             const updateReport = jest.spyOn(rest_querier, "updateReport").mockResolvedValue(report);
-            const wrapper = await instantiateComponent();
+            const wrapper = instantiateComponent();
 
-            wrapper.get("[data-test=cross-tracker-save-report]").trigger("click");
-            await wrapper.vm.$nextTick(); // Component is rendered
-            await wrapper.vm.$nextTick(); // During rest call
+            await wrapper.get("[data-test=cross-tracker-save-report]").trigger("click");
 
             expect(duplicateBackend).toHaveBeenCalledWith(readingCrossTrackerReport);
             expect(updateReport).toHaveBeenCalled();
             expect(initBackend).toHaveBeenCalledWith(trackers, expert_query);
-            const emitted = wrapper.emitted().saved;
+            const emitted = wrapper.emitted("saved");
             expect(emitted).toBeDefined();
         });
 
         it("Given the report is in error, then nothing will happen", async () => {
-            const wrapper = await instantiateComponent();
-            wrapper.vm.$store.getters.has_error_message = true;
-
-            wrapper.get("[data-test=cross-tracker-save-report]").trigger("click");
-
+            has_error_message = true;
             const updateReport = jest.spyOn(rest_querier, "updateReport");
+
+            const wrapper = instantiateComponent();
+            await wrapper.get("[data-test=cross-tracker-save-report]").trigger("click");
+
             expect(updateReport).not.toHaveBeenCalled();
         });
 
@@ -125,31 +130,23 @@ describe("ReadingMode", () => {
                 } as Response),
             );
 
-            const wrapper = await instantiateComponent();
+            const wrapper = instantiateComponent();
 
-            wrapper.get("[data-test=cross-tracker-save-report]").trigger("click");
-            await wrapper.vm.$nextTick(); // Component is loaded and rendered
-            await wrapper.vm.$nextTick(); // During rest call
-            await wrapper.vm.$nextTick(); // During parse error
+            await wrapper.get("[data-test=cross-tracker-save-report]").trigger("click");
 
-            expect(wrapper.vm.$store.commit).toHaveBeenCalledWith(
-                "setErrorMessage",
-                "Report not found",
-            );
+            expect(errorSpy).toHaveBeenCalledWith(expect.any(Object), "Report not found");
         });
     });
 
     describe("cancelReport() -", () => {
         it("when I click on 'Cancel', then the reading report will be reset", async () => {
-            const duplicateReading = jest
-                .spyOn(readingCrossTrackerReport, "duplicateFromReport")
-                .mockImplementation(() => Promise.resolve());
-            const wrapper = await instantiateComponent();
+            const duplicateReading = jest.spyOn(readingCrossTrackerReport, "duplicateFromReport");
+            const wrapper = instantiateComponent();
 
-            wrapper.get("[data-test=cross-tracker-cancel-report]").trigger("click");
+            await wrapper.get("[data-test=cross-tracker-cancel-report]").trigger("click");
 
             expect(duplicateReading).toHaveBeenCalledWith(backendCrossTrackerReport);
-            expect(wrapper.vm.$store.commit).toHaveBeenCalledWith("discardUnsavedReport");
+            expect(discardSpy).toHaveBeenCalled();
         });
     });
 });
