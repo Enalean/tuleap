@@ -43,11 +43,11 @@ final readonly class ArtidocController implements DispatchableWithRequest, Dispa
 {
     #[FeatureFlagConfigKey(<<<'EOF'
     Feature flag to allow edition of artidoc documents.
-    0 to deactivate (default)
-    1 to activate
+    0 to deactivate
+    1 to activate (default)
     EOF
     )]
-    #[ConfigKeyString('0')]
+    #[ConfigKeyString('1')]
     public const EDIT_FEATURE_FLAG = 'enable_artidoc_edition';
 
     public function __construct(
