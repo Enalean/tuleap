@@ -105,8 +105,8 @@ msgid "Redirect endpoint"
 msgstr ""
 
 msgid ""
-"Redirect endpoint must use HTTPS. It must not include a fragment component "
-"(#anchor)"
+"Redirect endpoint must use HTTPS or http://localhost. It must not include a "
+"fragment component (#anchor)"
 msgstr ""
 
 msgid "Revoke access"

@@ -41,6 +41,7 @@ class OAuth2AppTest extends \Tuleap\Test\PHPUnit\TestCase
             'Throws when App name is empty'               => ['75', '', 'https://example.com/redirect'],
             'Throws when Redirect URI is empty'           => ['75', 'Jenkins', ''],
             'Throws when Redirect URI is not HTTPS'       => ['75', 'Jenkins', 'http://insecure.example.com'],
+            'Throws when Redirect URI is not localhost'   => ['75', 'Jenkins', 'http://localhost.example.com'],
             'Throws when Redirect URI contains an anchor' => ['75', 'Jenkins', 'https://example.com/redirect#fragment'],
         ];
     }
@@ -83,8 +84,10 @@ class OAuth2AppTest extends \Tuleap\Test\PHPUnit\TestCase
     public static function dataProviderValidData(): array
     {
         return [
-            'Valid data'                       => ['https://example.com/redirect', false],
-            'Valid with query in redirect URI' => ['https://example.com/redirect?key=value', true],
+            'Valid data'                         => ['https://example.com/redirect', false],
+            'Valid with query in redirect URI'   => ['https://example.com/redirect?key=value', true],
+            'Valid data with localhost'          => ['http://localhost', false],
+            'Valid data with localhost and port' => ['http://localhost:40000/redirect', false],
         ];
     }
 }

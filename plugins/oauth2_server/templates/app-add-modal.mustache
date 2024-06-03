@@ -42,11 +42,11 @@
                 id="oauth2-server-add-modal-redirect-uri"
                 name="redirect_uri"
                 placeholder="https://"
-                pattern="^https:\/\/[^#]*$"
+                pattern="(?:^https:\/\/[^#]*$)|(?:^http:\/\/localhost(?::\d+)?(?:\/[^#]*)?$)"
                 required
                 data-test="oauth2-new-app-redirect-uri"
             >
-            <p class="tlp-text-info"><i class="far fa-life-ring"></i> {{# dgettext }}tuleap-oauth2_server | Redirect endpoint must use HTTPS. It must not include a fragment component (#anchor){{/ dgettext}}</p>
+            <p class="tlp-text-info"><i class="far fa-life-ring"></i> {{# dgettext }}tuleap-oauth2_server | Redirect endpoint must use HTTPS or http://localhost. It must not include a fragment component (#anchor){{/ dgettext}}</p>
         </div>
         <div class="tlp-form-element">
             <label class="tlp-label tlp-checkbox">
