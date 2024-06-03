@@ -5029,6 +5029,12 @@ msgstr "à"
 msgid "total"
 msgstr "total"
 
+msgid "trigger already exists for field value"
+msgstr "un déclencheur existe déjà pour cette valeur de champ"
+
+msgid "triggering fields must be unique"
+msgstr "les champs entrainant un déclenchement doivent être unique"
+
 msgid "type can't be deleted because it is or has been already used."
 msgstr "la nature ne peut être supprimée car elle est ou a déjà été utilisée."
 

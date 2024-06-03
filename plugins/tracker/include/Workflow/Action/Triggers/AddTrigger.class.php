@@ -46,13 +46,14 @@ class Tracker_Workflow_Action_Triggers_AddTrigger
     {
         $validator = new Tracker_Workflow_Trigger_TriggerValidator($this->rule_manager);
 
+        $GLOBALS['Response']->setContentType('text/plain');
         try {
             $rules_factory = new Tracker_Workflow_Trigger_RulesFactory($this->formelement_factory, $validator);
             $rule          = $rules_factory->getRuleFromJson($this->tracker, $request->getJsonDecodedBody());
             $this->rule_manager->add($rule);
             echo $rule->getId();
         } catch (Tracker_Exception $exception) {
-            $GLOBALS['Response']->addFeedback(Feedback::ERROR, $exception->getMessage());
+            echo $exception->getMessage();
             $GLOBALS['Response']->sendStatusCode(400);
         }
     }
