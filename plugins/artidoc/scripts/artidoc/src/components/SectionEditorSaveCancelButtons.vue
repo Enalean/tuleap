@@ -18,33 +18,39 @@
 -
 -->
 <template>
-    <span class="section-editor-cta" v-if="is_section_editable && !is_edit_mode">
+    <div v-if="is_edit_mode">
         <button
-            v-on:click="enableEditor()"
+            v-on:click="cancelEditor"
             type="button"
-            class="tlp-button-primary tlp-button-mini"
+            class="tlp-button-primary tlp-button-outline tlp-button-large"
         >
-            <i class="fa-solid fa-pencil tlp-button-icon" aria-hidden="true"></i>
-            <span>{{ $gettext("Edit") }}</span>
+            <i class="fa-solid fa-xmark tlp-button-icon" aria-hidden="true"></i>
+            <span>{{ $gettext("Cancel") }}</span>
         </button>
-    </span>
+        <button v-on:click="saveEditor" type="button" class="tlp-button-primary tlp-button-large">
+            <i class="fa-solid fa-floppy-disk tlp-button-icon" aria-hidden="true"></i>
+            <span>{{ $gettext("Save") }}</span>
+        </button>
+    </div>
 </template>
 
 <script setup lang="ts">
 import type { use_section_editor_type } from "@/composables/useSectionEditor";
 import { useGettext } from "vue3-gettext";
 
-const { $gettext } = useGettext();
 const props = defineProps<{
     editor: use_section_editor_type;
 }>();
-const { enableEditor } = props.editor.editor_actions;
-const { is_section_editable } = props.editor;
+
+const { $gettext } = useGettext();
+const { cancelEditor, saveEditor } = props.editor.editor_actions;
 const is_edit_mode = props.editor.isSectionInEditMode();
 </script>
 
 <style lang="scss" scoped>
-.cancel-button {
-    margin-right: var(--tlp-small-spacing);
+div {
+    display: flex;
+    gap: var(--tlp-medium-spacing);
+    justify-content: center;
 }
 </style>

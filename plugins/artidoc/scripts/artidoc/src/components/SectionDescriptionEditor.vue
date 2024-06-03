@@ -108,3 +108,9 @@ onBeforeUnmount(() => {
     }
 });
 </script>
+
+<style lang="scss" scoped>
+div {
+    z-index: 1;
+}
+</style>

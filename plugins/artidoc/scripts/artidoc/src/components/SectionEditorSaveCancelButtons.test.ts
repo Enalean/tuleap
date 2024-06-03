@@ -16,46 +16,37 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
 import { describe, expect, it } from "vitest";
 import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
-import SectionEditorCta from "./SectionEditorCta.vue";
 import type { ComponentPublicInstance } from "vue";
 import { createGettext } from "vue3-gettext";
 import { SectionEditorStub } from "@/helpers/stubs/SectionEditorStub";
 import type { use_section_editor_type } from "@/composables/useSectionEditor";
+import SectionEditorSaveCancelButtons from "@/components/SectionEditorSaveCancelButtons.vue";
 
-describe("SectionEditorCta", () => {
+describe("SectionEditorSaveCancelButtons", () => {
     function getWrapper(editor: use_section_editor_type): VueWrapper<ComponentPublicInstance> {
-        return shallowMount(SectionEditorCta, {
+        return shallowMount(SectionEditorSaveCancelButtons, {
             propsData: {
                 editor,
             },
-            global: {
-                plugins: [createGettext({ silent: true })],
-            },
+            global: { plugins: [createGettext({ silent: true })] },
         });
     }
 
     describe("when the edit mode is off", () => {
-        it("should display edit button", () => {
+        it("should hide buttons", () => {
             expect(
                 getWrapper(SectionEditorStub.withEditableSection()).find("button").exists(),
-            ).toBe(true);
+            ).toBe(false);
         });
     });
 
     describe("when the edit mode is on", () => {
-        it("should hide edit button", () => {
-            expect(getWrapper(SectionEditorStub.inEditMode()).find("button").exists()).toBe(false);
-        });
-    });
-
-    describe("when the user is not allowed to edit the section", () => {
-        it("should display edit button", () => {
-            expect(
-                getWrapper(SectionEditorStub.withoutEditableSection()).find("button").exists(),
-            ).toBe(false);
+        it("should display buttons", () => {
+            expect(getWrapper(SectionEditorStub.inEditMode()).find("button").exists()).toBe(true);
         });
     });
 });

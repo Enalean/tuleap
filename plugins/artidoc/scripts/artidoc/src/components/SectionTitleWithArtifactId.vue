@@ -18,14 +18,22 @@
   -
   -->
 <template>
-    <h1>
-        <input type="text" v-if="is_edit_mode" v-bind:value="title" v-on:input="onTitleChange" />
-        <template v-else>
-            {{ title }}
-        </template>
-        <a v-bind:href="artifact_url">#{{ artifact_id }}</a>
+    <div>
         <span class="editor-cta"><slot name="header-cta"></slot></span>
-    </h1>
+        <h1>
+            <input
+                type="text"
+                class="tlp-input tlp-input-large"
+                v-if="is_edit_mode"
+                v-bind:value="title"
+                v-on:input="onTitleChange"
+            />
+            <template v-else>
+                {{ title }}
+            </template>
+            <a v-bind:href="artifact_url">#{{ artifact_id }}</a>
+        </h1>
+    </div>
 </template>
 
 <script setup lang="ts">
@@ -68,7 +76,12 @@ h1 {
 }
 
 .editor-cta {
-    margin-left: var(--tlp-medium-spacing);
+    margin: var(--tlp-small-spacing) 0 0 var(--tlp-small-spacing);
+    float: right;
+
+    &:empty {
+        display: none;
+    }
 }
 
 a {
@@ -77,7 +90,7 @@ a {
     font-weight: 400;
 }
 
-input {
+.tlp-input-large {
     font-size: 36px;
     font-weight: 600;
     line-height: 40px;
