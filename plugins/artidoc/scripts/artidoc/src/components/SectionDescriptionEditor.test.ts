@@ -31,6 +31,14 @@ describe("SectionDescriptionEditor", () => {
     let wrapper: VueWrapper<ComponentPublicInstance>;
 
     beforeAll(() => {
+        global.CKEDITOR = {
+            // @ts-expect-error: typescript check the type of global.CKEDITOR and the signature of mocked replace function is not accepted
+            replace: vi.fn(() => ({
+                on: vi.fn(),
+                getData: vi.fn(),
+            })),
+        };
+
         vi.spyOn(strict_inject, "strictInject").mockImplementation((key) => {
             if (key === CURRENT_LOCALE) {
                 return userLocale("fr_FR");
@@ -47,6 +55,6 @@ describe("SectionDescriptionEditor", () => {
     });
 
     it("should display the editor", () => {
-        expect(wrapper.find("ckeditor").exists()).toBe(true);
+        expect(wrapper.find("textarea").exists()).toBe(true);
     });
 });

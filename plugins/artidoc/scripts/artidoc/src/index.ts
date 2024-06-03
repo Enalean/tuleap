@@ -24,7 +24,6 @@ import { createApp } from "vue";
 import VueDOMPurifyHTML from "vue-dompurify-html";
 import { provideSectionsStore } from "@/stores/useSectionsStore";
 import { sectionsStoreKey } from "@/stores/sectionsStoreKey";
-import CKEditor from "@ckeditor/ckeditor5-vue";
 import { CURRENT_LOCALE } from "@/locale-injection-key";
 import { userLocale } from "@/helpers/user-locale";
 import { CAN_USER_EDIT_DOCUMENT } from "@/can-user-edit-document-injection-key";
@@ -43,12 +42,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
 
     const current_locale = userLocale(user_locale);
-    if (current_locale.language !== "en") {
-        /* eslint-disable no-unsanitized/method -- The imports are safe, they will be replaced by the bundler anyway */
-        await import(
-            `@ckeditor/ckeditor5-build-classic/build/translations/${current_locale.language}`
-        );
-    }
 
     const app = createApp(App, {
         item_id: Number.parseInt(vue_mount_point.dataset.itemId || "", 10),
@@ -59,7 +52,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     app.provide(CURRENT_LOCALE, current_locale);
     app.provide(CAN_USER_EDIT_DOCUMENT, Boolean(vue_mount_point.dataset.canUserEditDocument));
 
-    app.use(CKEditor);
     app.use(gettext);
     app.use(VueDOMPurifyHTML);
     app.mount(vue_mount_point);

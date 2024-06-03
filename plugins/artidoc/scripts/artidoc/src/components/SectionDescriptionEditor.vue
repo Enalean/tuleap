@@ -19,32 +19,92 @@
   -->
 <template>
     <div>
-        <ckeditor
-            v-bind:editor="editor"
-            v-bind:model-value="toValue(editable_description)"
-            v-bind:config="editorConfig"
-            v-on:input="input_current_description"
-        />
+        <textarea ref="area_editor" v-bind:value="toValue(editable_description)"></textarea>
     </div>
 </template>
 <script setup lang="ts">
-import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import type { use_section_editor_type } from "@/composables/useSectionEditor";
-import { toValue } from "vue";
-import { strictInject } from "@tuleap/vue-strict-inject";
+import type * as ckeditor from "ckeditor4";
+import { toValue, ref, onMounted, onBeforeUnmount } from "vue";
+import { config } from "@tuleap/ckeditor-config";
 import { CURRENT_LOCALE } from "@/locale-injection-key";
 import type { UserLocale } from "@/helpers/user-locale";
+import { strictInject } from "@tuleap/vue-strict-inject";
+// CKEDITOR is injected by the backend
+// eslint-disable-next-line
+import eventInfo = CKEDITOR.eventInfo;
+const { language } = strictInject<UserLocale>(CURRENT_LOCALE);
 
-defineProps<{
+const props = defineProps<{
     artifact_id: number;
     editable_description: string;
     input_current_description: use_section_editor_type["inputCurrentDescription"];
 }>();
 
-const { language } = strictInject<UserLocale>(CURRENT_LOCALE);
+const area_editor = ref<HTMLTextAreaElement | null>(null);
+const editor = ref<ckeditor.default.editor | null>(null);
 
-const editorConfig = {
-    language,
+const onChange = (editor_value: string | undefined): void => {
+    if (editor_value) {
+        props.input_current_description(editor_value);
+    }
 };
-const editor = ClassicEditor;
+
+const onInstanceReady = (event: eventInfo<ckeditor.default.eventDataTypes>): void => {
+    if (editor.value) {
+        editor.value.on("change", () => onChange(editor.value?.getData()));
+
+        editor.value.on("mode", (): void => {
+            if (editor.value && editor.value.mode === "source") {
+                const editable = editor.value.editable();
+                editable.attachListener(editable, "input", () => {
+                    onChange(editor.value?.getData());
+                });
+            }
+        });
+
+        // disable drag and drop
+        // @ts-expect-error: CKEDITOR is injected by the backend
+        // eslint-disable-next-line
+        CKEDITOR.plugins.clipboard.preventDefaultDropOnElement(event.editor.document);
+
+        // Ajust the height of the editor to the content. The timeout is required to load autogrow plugin correctly after editor initialization
+        setTimeout(() => {
+            if (editor.value) {
+                editor.value.execCommand("autogrow");
+            }
+        });
+        editor.value.document.getBody().setStyle("font-size", "16px");
+    }
+};
+
+onMounted(() => {
+    if (editor.value !== null) {
+        editor.value.destroy();
+    }
+
+    if (area_editor.value) {
+        // @ts-expect-error: CKEDITOR is injected by the backend
+        // eslint-disable-next-line
+        editor.value = CKEDITOR.replace(area_editor.value, {
+            ...config,
+            language,
+            extraPlugins: "autogrow",
+            autoGrow_minHeight: 200,
+            autoGrow_bottomSpace: 50,
+            height: "auto",
+            resize_enabled: false,
+        });
+
+        if (editor.value !== null) {
+            editor.value.on("instanceReady", onInstanceReady);
+        }
+    }
+});
+
+onBeforeUnmount(() => {
+    if (editor.value) {
+        editor.value.destroy();
+    }
+});
 </script>
