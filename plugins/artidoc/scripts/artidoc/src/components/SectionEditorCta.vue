@@ -31,12 +31,12 @@
 </template>
 
 <script setup lang="ts">
-import type { use_section_editor_type } from "@/composables/useSectionEditor";
+import type { SectionEditor } from "@/composables/useSectionEditor";
 import { useGettext } from "vue3-gettext";
 
 const { $gettext } = useGettext();
 const props = defineProps<{
-    editor: use_section_editor_type;
+    editor: SectionEditor;
 }>();
 const { enableEditor } = props.editor.editor_actions;
 const { is_section_editable } = props.editor;

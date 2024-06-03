@@ -1,6 +1,6 @@
 import { post, get } from "@tuleap/tlp-fetch";
 import { RealtimeMercure, RetriableError, FatalError } from "./realtime-mercure";
-import { buildEventDispatcher } from "./buildEventDispatcher";
+import { BuildEventDispatcher } from "./BuildEventDispatcher";
 import { resetError, setError } from "../feedback-state";
 export default MercureService;
 
@@ -51,7 +51,7 @@ function MercureService(
             realtime_mercure = new RealtimeMercure(
                 realtime_token,
                 "/.well-known/mercure?topic=Kanban/" + SharedPropertiesService.getKanban().id,
-                buildEventDispatcher(
+                BuildEventDispatcher(
                     listenKanbanItemUpdate,
                     listenKanbanItemMoved,
                     listenKanbanItemCreate,

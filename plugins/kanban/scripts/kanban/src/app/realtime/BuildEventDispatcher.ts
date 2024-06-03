@@ -1,11 +1,12 @@
-import type * as fetch from "@microsoft/fetch-event-source";
-export function buildEventDispatcher(
-    callback_item_update: (event: fetch.EventSourceMessage) => void,
-    callback_item_move: (event: fetch.EventSourceMessage) => void,
-    callback_item_create: (event: fetch.EventSourceMessage) => void,
+import type { EventSourceMessage } from "@microsoft/fetch-event-source";
+
+export function BuildEventDispatcher(
+    callback_item_update: (event: EventSourceMessage) => void,
+    callback_item_move: (event: EventSourceMessage) => void,
+    callback_item_create: (event: EventSourceMessage) => void,
     callback_structural_update: () => void,
-): (event: fetch.EventSourceMessage) => void {
-    return (event: fetch.EventSourceMessage): void => {
+): (event: EventSourceMessage) => void {
+    return (event: EventSourceMessage): void => {
         if (event.data === '"kanban_structure_update"') {
             callback_structural_update();
         } else {

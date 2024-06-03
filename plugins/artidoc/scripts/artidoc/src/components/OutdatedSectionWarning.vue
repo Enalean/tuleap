@@ -49,10 +49,10 @@
 
 <script setup lang="ts">
 import { useGettext } from "vue3-gettext";
-import type { use_section_editor_actions_type } from "@/composables/useSectionEditor";
+import type { SectionEditorActions } from "@/composables/useSectionEditor";
 
 defineProps<{
-    editor_actions: Pick<use_section_editor_actions_type, "refreshSection" | "forceSaveEditor">;
+    editor_actions: Pick<SectionEditorActions, "refreshSection" | "forceSaveEditor">;
 }>();
 
 const { $gettext } = useGettext();

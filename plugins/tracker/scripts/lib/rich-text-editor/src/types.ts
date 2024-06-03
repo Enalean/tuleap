@@ -21,27 +21,27 @@ import type { TextFieldFormat } from "@tuleap/plugin-tracker-constants";
 
 type EmptyObject = Record<string, never>;
 
-type additionalOptionsProvider = (textarea: HTMLTextAreaElement) => CKEDITOR.config | EmptyObject;
-type editorInitCallback = (ckeditor: CKEDITOR.editor, textarea: HTMLTextAreaElement) => void;
-type formatChangedCallback = (new_format: TextFieldFormat, new_content: string) => void;
-type dataReadyCallback = (ckeditor: CKEDITOR.editor) => void;
+type AdditionalOptionsProvider = (textarea: HTMLTextAreaElement) => CKEDITOR.config | EmptyObject;
+type EditorInitCallback = (ckeditor: CKEDITOR.editor, textarea: HTMLTextAreaElement) => void;
+type FormatChangedCallback = (new_format: TextFieldFormat, new_content: string) => void;
+type DataReadyCallback = (ckeditor: CKEDITOR.editor) => void;
 
 export interface InternalTextEditorOptions {
     locale: string;
-    getAdditionalOptions: additionalOptionsProvider;
-    onEditorInit: editorInitCallback;
-    onFormatChange: formatChangedCallback;
-    onEditorDataReady: dataReadyCallback;
+    getAdditionalOptions: AdditionalOptionsProvider;
+    onEditorInit: EditorInitCallback;
+    onFormatChange: FormatChangedCallback;
+    onEditorDataReady: DataReadyCallback;
 }
 
 export interface RichTextEditorOptions {
     format_selectbox_id: string;
     format_selectbox_name?: string;
     format_selectbox_value?: TextFieldFormat;
-    getAdditionalOptions?: additionalOptionsProvider;
-    onEditorInit?: editorInitCallback;
-    onFormatChange?: formatChangedCallback;
-    onEditorDataReady?: dataReadyCallback;
+    getAdditionalOptions?: AdditionalOptionsProvider;
+    onEditorInit?: EditorInitCallback;
+    onFormatChange?: FormatChangedCallback;
+    onEditorDataReady?: DataReadyCallback;
 }
 
 export interface HTMLToMarkdownConverterInterface {

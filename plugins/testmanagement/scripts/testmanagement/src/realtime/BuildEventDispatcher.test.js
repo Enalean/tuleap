@@ -16,9 +16,9 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-import { buildEventDispatcher } from "./buildEventDispatcher";
+import { BuildEventDispatcher } from "./BuildEventDispatcher";
 
-class eventSourceMessageMock {
+class EventSourceMessageMock {
     retry;
     data;
     event;
@@ -30,7 +30,7 @@ class eventSourceMessageMock {
         this.id = id;
     }
 }
-describe("buildEventDispatcher -", function () {
+describe("BuildEventDispatcher -", function () {
     let callback_execution_updated,
         callback_execution_deleted,
         callback_execution_created,
@@ -43,7 +43,7 @@ describe("buildEventDispatcher -", function () {
         callback_execution_deleted = jest.fn().mockImplementation();
         callback_execution_created = jest.fn().mockImplementation();
         callback_campaign_updated = jest.fn().mockImplementation();
-        build_event_dispatcher = buildEventDispatcher(
+        build_event_dispatcher = BuildEventDispatcher(
             callback_execution_created,
             callback_execution_updated,
             callback_execution_deleted,
@@ -52,35 +52,35 @@ describe("buildEventDispatcher -", function () {
         );
     });
     function mockExecutionUpdated() {
-        return new eventSourceMessageMock(
+        return new EventSourceMessageMock(
             '"{\\"cmd\\":\\"testmanagement_execution:update\\",\\"data\\":{}}"',
             "",
             1,
         );
     }
     function mockExecutionCreated() {
-        return new eventSourceMessageMock(
+        return new EventSourceMessageMock(
             '"{\\"cmd\\":\\"testmanagement_execution:create\\",\\"data\\":{}}"',
             "",
             1,
         );
     }
     function mockExecutionDeleted() {
-        return new eventSourceMessageMock(
+        return new EventSourceMessageMock(
             '"{\\"cmd\\":\\"testmanagement_execution:delete\\",\\"data\\":{}}"',
             "",
             1,
         );
     }
     function mockArtifactLinked() {
-        return new eventSourceMessageMock(
+        return new EventSourceMessageMock(
             '"{\\"cmd\\":\\"testmanagement_execution:link_artifact\\",\\"data\\":{}}"',
             "",
             1,
         );
     }
     function mockCampaignUpdated() {
-        return new eventSourceMessageMock(
+        return new EventSourceMessageMock(
             '"{\\"cmd\\":\\"testmanagement_campaign:update\\",\\"data\\":{}}"',
             "",
             1,

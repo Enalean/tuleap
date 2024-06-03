@@ -42,14 +42,14 @@
 <script setup lang="ts">
 import { onMounted, ref, watch } from "vue";
 import useScrollToAnchor from "@/composables/useScrollToAnchor";
-import type { use_section_editor_type } from "@/composables/useSectionEditor";
+import type { SectionEditor } from "@/composables/useSectionEditor";
 import { useGettext } from "vue3-gettext";
 
 const props = defineProps<{
     artifact_id: number;
     title: string;
     is_edit_mode: boolean;
-    input_current_title: use_section_editor_type["inputCurrentTitle"];
+    input_current_title: SectionEditor["inputCurrentTitle"];
 }>();
 const artifact_url = `/plugins/tracker/?aid=${props.artifact_id}`;
 

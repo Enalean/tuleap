@@ -23,10 +23,10 @@ import SectionEditorCta from "./SectionEditorCta.vue";
 import type { ComponentPublicInstance } from "vue";
 import { createGettext } from "vue3-gettext";
 import { SectionEditorStub } from "@/helpers/stubs/SectionEditorStub";
-import type { use_section_editor_type } from "@/composables/useSectionEditor";
+import type { SectionEditor } from "@/composables/useSectionEditor";
 
 describe("SectionEditorCta", () => {
-    function getWrapper(editor: use_section_editor_type): VueWrapper<ComponentPublicInstance> {
+    function getWrapper(editor: SectionEditor): VueWrapper<ComponentPublicInstance> {
         return shallowMount(SectionEditorCta, {
             propsData: {
                 editor,

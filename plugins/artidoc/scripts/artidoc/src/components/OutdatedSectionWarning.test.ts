@@ -21,12 +21,12 @@ import { describe, expect, it, vi } from "vitest";
 import { shallowMount } from "@vue/test-utils";
 import OutdatedSectionWarning from "@/components/OutdatedSectionWarning.vue";
 import { createGettext } from "vue3-gettext";
-import type { use_section_editor_actions_type } from "@/composables/useSectionEditor";
+import type { SectionEditorActions } from "@/composables/useSectionEditor";
 
 describe("OutdatedSectionWarning", () => {
     it("should force save", async () => {
-        const refreshSection: use_section_editor_actions_type["refreshSection"] = vi.fn();
-        const forceSaveEditor: use_section_editor_actions_type["forceSaveEditor"] = vi.fn();
+        const refreshSection: SectionEditorActions["refreshSection"] = vi.fn();
+        const forceSaveEditor: SectionEditorActions["forceSaveEditor"] = vi.fn();
 
         const wrapper = shallowMount(OutdatedSectionWarning, {
             global: { plugins: [createGettext({ silent: true })] },
@@ -45,8 +45,8 @@ describe("OutdatedSectionWarning", () => {
     });
 
     it("should refresh section", async () => {
-        const refreshSection: use_section_editor_actions_type["refreshSection"] = vi.fn();
-        const forceSaveEditor: use_section_editor_actions_type["forceSaveEditor"] = vi.fn();
+        const refreshSection: SectionEditorActions["refreshSection"] = vi.fn();
+        const forceSaveEditor: SectionEditorActions["forceSaveEditor"] = vi.fn();
 
         const wrapper = shallowMount(OutdatedSectionWarning, {
             global: { plugins: [createGettext({ silent: true })] },

@@ -23,7 +23,7 @@
     </div>
 </template>
 <script setup lang="ts">
-import type { use_section_editor_type } from "@/composables/useSectionEditor";
+import type { SectionEditor } from "@/composables/useSectionEditor";
 import type * as ckeditor from "ckeditor4";
 import { toValue, ref, onMounted, onBeforeUnmount } from "vue";
 import { config } from "@tuleap/ckeditor-config";
@@ -38,7 +38,7 @@ const { language } = strictInject<UserLocale>(CURRENT_LOCALE);
 const props = defineProps<{
     artifact_id: number;
     editable_description: string;
-    input_current_description: use_section_editor_type["inputCurrentDescription"];
+    input_current_description: SectionEditor["inputCurrentDescription"];
 }>();
 
 const area_editor = ref<HTMLTextAreaElement | null>(null);

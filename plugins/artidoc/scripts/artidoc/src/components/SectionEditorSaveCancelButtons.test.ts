@@ -23,11 +23,11 @@ import { shallowMount } from "@vue/test-utils";
 import type { ComponentPublicInstance } from "vue";
 import { createGettext } from "vue3-gettext";
 import { SectionEditorStub } from "@/helpers/stubs/SectionEditorStub";
-import type { use_section_editor_type } from "@/composables/useSectionEditor";
+import type { SectionEditor } from "@/composables/useSectionEditor";
 import SectionEditorSaveCancelButtons from "@/components/SectionEditorSaveCancelButtons.vue";
 
 describe("SectionEditorSaveCancelButtons", () => {
-    function getWrapper(editor: use_section_editor_type): VueWrapper<ComponentPublicInstance> {
+    function getWrapper(editor: SectionEditor): VueWrapper<ComponentPublicInstance> {
         return shallowMount(SectionEditorSaveCancelButtons, {
             propsData: {
                 editor,

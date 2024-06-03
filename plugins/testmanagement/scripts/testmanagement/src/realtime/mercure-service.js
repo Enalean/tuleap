@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 import { post } from "@tuleap/tlp-fetch";
-import { buildEventDispatcher } from "./buildEventDispatcher";
+import { BuildEventDispatcher } from "./BuildEventDispatcher";
 import { FatalError, RealtimeMercure, RetriableError } from "./realtime-mercure";
 
 export default MercureService;
@@ -73,7 +73,7 @@ function MercureService(
             realtime_mercure = new RealtimeMercure(
                 realtime_token,
                 "/.well-known/mercure?topic=TestManagement/" + campaign_id,
-                buildEventDispatcher(
+                BuildEventDispatcher(
                     executionCreated,
                     executionUpdated,
                     executionDeleted,

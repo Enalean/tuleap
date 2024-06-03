@@ -66,7 +66,7 @@ export const loadProjectProperties = async (
     }
 };
 
-interface updatePropertiesPayload {
+interface UpdatePropertiesPayload {
     item: Item;
     item_to_update: Item;
     current_folder: Folder;
@@ -74,7 +74,7 @@ interface updatePropertiesPayload {
 
 export const updateProperties = async (
     context: ActionContext<PropertiesState, RootState>,
-    payload: updatePropertiesPayload,
+    payload: UpdatePropertiesPayload,
 ): Promise<void> => {
     const item_to_update = payload.item_to_update;
     const custom_properties = getCustomProperties(item_to_update);
@@ -187,7 +187,7 @@ export const updateProperties = async (
     }
 };
 
-interface updateFolderPropertiesPayload {
+interface UpdateFolderPropertiesPayload {
     item: Folder;
     item_to_update: Folder;
     current_folder: Folder;
@@ -197,14 +197,14 @@ interface updateFolderPropertiesPayload {
 
 export const updateFolderProperties = async (
     context: ActionContext<PropertiesState, RootState>,
-    payload: updateFolderPropertiesPayload,
+    payload: UpdateFolderPropertiesPayload,
 ): Promise<void> => {
     const updated_item = formatCustomPropertiesForFolderUpdate(
         payload.item_to_update,
         payload.properties_to_update,
         payload.recursion_option,
     );
-    const update_payload: updatePropertiesPayload = {
+    const update_payload: UpdatePropertiesPayload = {
         item: payload.item,
         item_to_update: updated_item,
         current_folder: payload.current_folder,
