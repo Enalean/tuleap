@@ -24,8 +24,22 @@ namespace Tuleap\include;
 
 use PFUser;
 use Project;
+use Project_AccessDeletedException;
+use Project_AccessPrivateException;
+use Project_AccessProjectNotFoundException;
+use Project_AccessRestrictedException;
+use Tuleap\Project\AccessNotActiveException;
+use Tuleap\Project\ProjectAccessSuspendedException;
 
 interface CheckUserCanAccessProject
 {
+    /**
+     * @throws Project_AccessProjectNotFoundException
+     * @throws Project_AccessDeletedException
+     * @throws Project_AccessRestrictedException
+     * @throws Project_AccessPrivateException
+     * @throws ProjectAccessSuspendedException
+     * @throws AccessNotActiveException
+     */
     public function userCanAccessProject(PFUser $user, Project $project): bool;
 }
