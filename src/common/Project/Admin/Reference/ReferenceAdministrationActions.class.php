@@ -146,7 +146,7 @@ class ReferenceAdministrationActions extends Actions
             return;
         }
 
-        if (($ref->isSystemReference()) && ($ref->getGroupId() != 100)) {
+        if (($ref->isSystemReference()) && ($ref->getGroupId() != 100) || $ref->getServiceShortName() !== '') {
             // Only update is_active field
             if ($ref->isActive() != $request->get('is_used')) {
                 $reference_manager->updateIsActive($ref, $request->get('is_used'));
