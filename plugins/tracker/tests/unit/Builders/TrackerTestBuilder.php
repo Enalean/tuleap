@@ -38,6 +38,7 @@ final class TrackerTestBuilder
     private ?int $deletion_date   = null;
     private ?\Workflow $workflow  = null;
     private bool $user_can_submit = true;
+    private ?Tracker $parent      = Tracker::NO_PARENT;
 
     public static function aTracker(): self
     {
@@ -97,6 +98,13 @@ final class TrackerTestBuilder
     public function withUserCanSubmit(bool $user_can_submit): self
     {
         $this->user_can_submit = $user_can_submit;
+
+        return $this;
+    }
+
+    public function withParent(?Tracker $parent): self
+    {
+        $this->parent = $parent;
 
         return $this;
     }
@@ -176,7 +184,7 @@ final class TrackerTestBuilder
             $tracker->setWorkflow($this->workflow);
         }
 
-        $tracker->setParent(Tracker::NO_PARENT);
+        $tracker->setParent($this->parent);
 
         return $tracker;
     }

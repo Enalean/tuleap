@@ -18,191 +18,177 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\AgileDashboard\Milestone;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PFUser;
-use Planning;
-use Planning_Milestone;
+use PHPUnit\Framework\MockObject\MockObject;
+use Planning_VirtualTopMilestone;
 use PlanningFactory;
 use Tracker;
+use Tuleap\AgileDashboard\Test\Builders\PlanningBuilder;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
-final class ParentTrackerRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
+final class ParentTrackerRetrieverTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var ParentTrackerRetriever
-     */
-    private $retriever;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|PlanningFactory
-     */
-    private $planning_factory;
+    private ParentTrackerRetriever $retriever;
+    private PlanningFactory&MockObject $planning_factory;
 
     protected function setUp(): void
     {
-        $this->planning_factory = Mockery::spy(PlanningFactory::class);
+        $this->planning_factory = $this->createMock(PlanningFactory::class);
         $this->retriever        = new ParentTrackerRetriever($this->planning_factory);
     }
 
-    private function getMockedTracker(int $id, ?Tracker $parent): Tracker
+    private function getTracker(int $id, ?Tracker $parent): Tracker
     {
-        $tracker = Mockery::mock(Tracker::class);
-        $tracker->shouldReceive('getId')->andReturn($id);
-        $tracker->shouldReceive('getParent')->andReturn($parent);
-
-        return $tracker;
+        return TrackerTestBuilder::aTracker()
+            ->withId($id)
+            ->withParent($parent)
+            ->build();
     }
 
     public function testItRetrievesCreatableParentTrackersInTheLastPlanning(): void
     {
-        $epic_tracker       = $this->getMockedTracker(101, null);
-        $user_story_tracker = $this->getMockedTracker(102, $epic_tracker);
-        $bug_tracker        = $this->getMockedTracker(103, null);
+        $epic_tracker       = $this->getTracker(101, null);
+        $user_story_tracker = $this->getTracker(102, $epic_tracker);
+        $bug_tracker        = $this->getTracker(103, null);
 
-        $sprint_planning = Mockery::mock(Planning::class);
+        $sprint_planning = PlanningBuilder::aPlanning(101)->build();
+        $milestone       = new Planning_VirtualTopMilestone(
+            ProjectTestBuilder::aProject()->build(),
+            $sprint_planning,
+        );
 
-        $milestone = Mockery::mock(Planning_Milestone::class);
-        $milestone->shouldReceive('getPlanning')->andReturn($sprint_planning);
-
-        $user                        = Mockery::spy(PFUser::class);
+        $user                        = UserTestBuilder::buildWithDefaults();
         $descendant_backlog_trackers = [$user_story_tracker, $bug_tracker];
 
-        $this->planning_factory->shouldReceive('getSubPlannings')->with($sprint_planning, $user)->andReturns([]);
+        $this->planning_factory->method('getSubPlannings')->with($sprint_planning, $user)->willReturn([]);
 
         $trackers = $this->retriever->getCreatableParentTrackers($milestone, $user, $descendant_backlog_trackers);
 
-        $this->assertEquals($epic_tracker, $trackers[0]);
+        self::assertEquals($epic_tracker, $trackers[0]);
     }
 
     public function testItRetrievesCreatableParentTrackersInAPlanning(): void
     {
-        $theme_tracker      = $this->getMockedTracker(200, null);
-        $epic_tracker       = $this->getMockedTracker(101, $theme_tracker);
-        $user_story_tracker = $this->getMockedTracker(102, $epic_tracker);
-        $bug_tracker        = $this->getMockedTracker(103, null);
+        $theme_tracker      = $this->getTracker(200, null);
+        $epic_tracker       = $this->getTracker(101, $theme_tracker);
+        $user_story_tracker = $this->getTracker(102, $epic_tracker);
+        $bug_tracker        = $this->getTracker(103, null);
 
-        $release_planning = Mockery::mock(Planning::class);
-        $sprint_planning  = Mockery::mock(Planning::class);
-        $sprint_planning->shouldReceive('getBacklogTrackersIds')->andReturn([102, 103]);
+        $release_planning = PlanningBuilder::aPlanning(101)->build();
+        $sprint_planning  = PlanningBuilder::aPlanning(101)->withBacklogTrackers($user_story_tracker, $bug_tracker)->build();
 
-        $milestone = Mockery::mock(Planning_Milestone::class);
-        $milestone->shouldReceive('getPlanning')->andReturn($release_planning);
-        $user                        = Mockery::spy(PFUser::class);
+        $milestone                   = new Planning_VirtualTopMilestone(
+            ProjectTestBuilder::aProject()->build(),
+            $release_planning,
+        );
+        $user                        = UserTestBuilder::buildWithDefaults();
         $descendant_backlog_trackers = [$user_story_tracker, $bug_tracker];
 
-        $this->planning_factory->shouldReceive('getSubPlannings')->with($release_planning, $user)->andReturns(
-            [
-                $sprint_planning,
-            ]
-        );
+        $this->planning_factory->method('getSubPlannings')->with($release_planning, $user)->willReturn([$sprint_planning]);
 
         $trackers = $this->retriever->getCreatableParentTrackers($milestone, $user, $descendant_backlog_trackers);
 
-        $this->assertEquals($epic_tracker, $trackers[0]);
+        self::assertEquals($epic_tracker, $trackers[0]);
     }
 
     public function testItRetrievesParentTrackersIfItIsTrackerBacklogOfCurrentPlanning(): void
     {
-        $epic_tracker       = $this->getMockedTracker(101, null);
-        $user_story_tracker = $this->getMockedTracker(102, $epic_tracker);
-        $bug_tracker        = $this->getMockedTracker(103, null);
+        $epic_tracker       = $this->getTracker(101, null);
+        $user_story_tracker = $this->getTracker(102, $epic_tracker);
+        $bug_tracker        = $this->getTracker(103, null);
 
-        $release_planning = Mockery::mock(Planning::class);
-        $sprint_planning  = Mockery::mock(Planning::class);
-        $sprint_planning->shouldReceive('getBacklogTrackersIds')->andReturn([102, 103]);
+        $release_planning = PlanningBuilder::aPlanning(101)->build();
+        $sprint_planning  = PlanningBuilder::aPlanning(101)->withBacklogTrackers($user_story_tracker, $bug_tracker)->build();
+        $milestone        = new Planning_VirtualTopMilestone(
+            ProjectTestBuilder::aProject()->build(),
+            $release_planning,
+        );
 
-        $milestone = Mockery::mock(Planning_Milestone::class);
-        $milestone->shouldReceive('getPlanning')->andReturn($release_planning);
-
-        $user                        = Mockery::spy(PFUser::class);
+        $user                        = UserTestBuilder::buildWithDefaults();
         $descendant_backlog_trackers = [$user_story_tracker, $bug_tracker];
 
-        $this->planning_factory->shouldReceive('getSubPlannings')->with($release_planning, $user)->andReturns(
-            [
-                $sprint_planning,
-            ]
-        );
+        $this->planning_factory->method('getSubPlannings')->with($release_planning, $user)->willReturn([$sprint_planning]);
 
         $trackers = $this->retriever->getCreatableParentTrackers($milestone, $user, $descendant_backlog_trackers);
 
-        $this->assertEquals($epic_tracker, $trackers[0]);
+        self::assertEquals($epic_tracker, $trackers[0]);
     }
 
     public function testItDoesNotRetrieveParentTrackersIfItIsTrackerBacklogOfSubPlanning(): void
     {
-        $theme_tracker      = $this->getMockedTracker(200, null);
-        $epic_tracker       = $this->getMockedTracker(101, $theme_tracker);
-        $user_story_tracker = $this->getMockedTracker(102, $epic_tracker);
-        $bug_tracker        = $this->getMockedTracker(103, null);
+        $theme_tracker      = $this->getTracker(200, null);
+        $epic_tracker       = $this->getTracker(101, $theme_tracker);
+        $user_story_tracker = $this->getTracker(102, $epic_tracker);
+        $bug_tracker        = $this->getTracker(103, null);
 
-        $release_planning = Mockery::mock(Planning::class);
+        $release_planning    = PlanningBuilder::aPlanning(101)->build();
+        $sprint_planning     = PlanningBuilder::aPlanning(101)->withBacklogTrackers($user_story_tracker, $bug_tracker)->build();
+        $sub_sprint_planning = PlanningBuilder::aPlanning(101)->withBacklogTrackers($epic_tracker)->build();
+        $milestone           = new Planning_VirtualTopMilestone(
+            ProjectTestBuilder::aProject()->build(),
+            $release_planning,
+        );
 
-        $sprint_planning = Mockery::mock(Planning::class);
-        $sprint_planning->shouldReceive('getBacklogTrackersIds')->andReturn([102, 103]);
-
-        $sub_sprint_planning = Mockery::mock(Planning::class);
-        $sub_sprint_planning->shouldReceive('getBacklogTrackersIds')->andReturn([101]);
-
-        $milestone = Mockery::mock(Planning_Milestone::class);
-        $milestone->shouldReceive('getPlanning')->andReturn($release_planning);
-
-        $user                        = Mockery::spy(PFUser::class);
+        $user                        = UserTestBuilder::buildWithDefaults();
         $descendant_backlog_trackers = [$user_story_tracker, $bug_tracker];
 
-        $this->planning_factory->shouldReceive('getSubPlannings')->with($release_planning, $user)->andReturns(
-            [
-                $sprint_planning,
-                $sub_sprint_planning,
-            ]
-        );
+        $this->planning_factory->method('getSubPlannings')->with($release_planning, $user)->willReturn([
+            $sprint_planning,
+            $sub_sprint_planning,
+        ]);
 
         $trackers = $this->retriever->getCreatableParentTrackers($milestone, $user, $descendant_backlog_trackers);
 
-        $this->assertEmpty($trackers);
+        self::assertEmpty($trackers);
     }
 
     public function testItDoesNotRetrieveParentTrackersIfItIsTrackerBacklogOfPlanning(): void
     {
-        $epic_tracker       = $this->getMockedTracker(101, null);
-        $user_story_tracker = $this->getMockedTracker(102, $epic_tracker);
-        $bug_tracker        = $this->getMockedTracker(103, null);
+        $epic_tracker       = $this->getTracker(101, null);
+        $user_story_tracker = $this->getTracker(102, $epic_tracker);
+        $bug_tracker        = $this->getTracker(103, null);
 
-        $sprint_planning =  Mockery::mock(Planning::class);
-        $sprint_planning->shouldReceive('getBacklogTrackersIds')->andReturn([101, 102, 103]);
+        $sprint_planning = PlanningBuilder::aPlanning(101)
+            ->withBacklogTrackers($epic_tracker, $user_story_tracker, $bug_tracker)
+            ->build();
+        $milestone       = new Planning_VirtualTopMilestone(
+            ProjectTestBuilder::aProject()->build(),
+            $sprint_planning,
+        );
 
-        $milestone = Mockery::mock(Planning_Milestone::class);
-        $milestone->shouldReceive('getPlanning')->andReturn($sprint_planning);
-
-        $user                        = Mockery::spy(PFUser::class);
+        $user                        = UserTestBuilder::buildWithDefaults();
         $descendant_backlog_trackers = [$user_story_tracker, $bug_tracker, $epic_tracker];
 
-        $this->planning_factory->shouldReceive('getSubPlannings')->with($sprint_planning, $user)->andReturns([]);
+        $this->planning_factory->method('getSubPlannings')->with($sprint_planning, $user)->willReturn([]);
 
         $trackers = $this->retriever->getCreatableParentTrackers($milestone, $user, $descendant_backlog_trackers);
 
-        $this->assertEmpty($trackers);
+        self::assertEmpty($trackers);
     }
 
     public function testItGetsUniqueParentTrackerOfPlanning(): void
     {
-        $epic_tracker       = $this->getMockedTracker(101, null);
-        $release_tracker    = $this->getMockedTracker(102, null);
-        $user_story_tracker = $this->getMockedTracker(103, $epic_tracker);
-        $bug_tracker        = $this->getMockedTracker(104, $epic_tracker);
-        $activity_tracker   = $this->getMockedTracker(105, $release_tracker);
+        $epic_tracker       = $this->getTracker(101, null);
+        $release_tracker    = $this->getTracker(102, null);
+        $user_story_tracker = $this->getTracker(103, $epic_tracker);
+        $bug_tracker        = $this->getTracker(104, $epic_tracker);
+        $activity_tracker   = $this->getTracker(105, $release_tracker);
 
         $descendant_backlog_trackers = [$user_story_tracker, $bug_tracker, $activity_tracker];
 
-        $milestone = $this->createMock(Planning_Milestone::class);
-        $milestone->method('getPlanning')->willReturn($this->createMock(Planning::class));
-        $user = UserTestBuilder::aUser()->build();
+        $milestone = new Planning_VirtualTopMilestone(
+            ProjectTestBuilder::aProject()->build(),
+            PlanningBuilder::aPlanning(101)->build(),
+        );
+        $user      = UserTestBuilder::aUser()->build();
 
-        $this->planning_factory->shouldReceive('getSubPlannings')->andReturns([]);
+        $this->planning_factory->method('getSubPlannings')->willReturn([]);
 
         $trackers = $this->retriever->getCreatableParentTrackers($milestone, $user, $descendant_backlog_trackers);
 
