@@ -93,6 +93,14 @@ id = "GO-2024-2631" # CVE-2024-28180
 reason = "No JWE in Tuleap use case and upstreams need to sort out the issue in their dep trees."
 ignoreUntil = 2024-06-19
 
+# tlp-doc-v2
+## ip
+[[IgnoredVulns]]
+id = "GHSA-2p57-rm9w-gvfp" # CVE-2024-29415
+# https://github.com/storybookjs/storybook/issues/26014
+reason = "Waiting for storybook upstream to switch to fix the issue."
+ignoreUntil = 2024-07-03
+
 ## github.com/quic-go/quic-go
 [[IgnoredVulns]]
 id = "GHSA-c33x-xqrf-c478" # CVE-2024-22189
