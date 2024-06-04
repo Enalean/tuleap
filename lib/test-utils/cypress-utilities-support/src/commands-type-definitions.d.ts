@@ -59,7 +59,11 @@ declare global {
 
             getProjectId(project_shortname: string): Chainable<number>;
 
-            visitProjectService(project_unixname: string, service_label: string): void;
+            visitProjectService(
+                project_unixname: string,
+                service_label: string,
+                fail_on_status_code?: boolean,
+            ): void;
 
             visitProjectAdministration(project_unixname: string): void;
 

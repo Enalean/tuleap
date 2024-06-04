@@ -161,7 +161,10 @@ describe("MediaWiki Standalone", () => {
                 (number_of_attempts, max_attempts) => {
                     cy.log(`Refresh Main page (attempt ${number_of_attempts}/${max_attempts})`);
 
-                    cy.visitProjectService(project_name, "MediaWiki");
+                    // wait a little more to expect that events are processed and mediawiki created
+                    // eslint-disable-next-line cypress/no-unnecessary-waiting
+                    cy.wait(1000);
+                    cy.visitProjectService(project_name, "MediaWiki", false);
 
                     return cy
                         .title()
