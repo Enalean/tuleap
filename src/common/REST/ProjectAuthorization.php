@@ -21,6 +21,7 @@ namespace Tuleap\REST;
 
 use PFUser;
 use Project;
+use Tuleap\include\CheckUserCanAccessProject;
 use Tuleap\Project\AccessNotActiveException;
 use URLVerification;
 use Luracast\Restler\RestException;
@@ -30,7 +31,7 @@ use Project_AccessNotAdminException;
 
 final readonly class ProjectAuthorization
 {
-    public static function userCanAccessProject(PFUser $user, Project $project, URLVerification $url_verification): void
+    public static function userCanAccessProject(PFUser $user, Project $project, CheckUserCanAccessProject $url_verification): void
     {
         try {
             $url_verification->userCanAccessProject($user, $project);

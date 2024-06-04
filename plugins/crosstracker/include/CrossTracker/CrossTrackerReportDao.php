@@ -22,7 +22,7 @@ namespace Tuleap\CrossTracker;
 
 use Tuleap\DB\DataAccessObject;
 
-class CrossTrackerReportDao extends DataAccessObject
+class CrossTrackerReportDao extends DataAccessObject implements SearchCrossTrackerWidget
 {
     public function searchReportById($report_id)
     {

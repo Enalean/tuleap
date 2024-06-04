@@ -39,7 +39,6 @@ use Tuleap\CrossTracker\CrossTrackerReportDao;
 use Tuleap\CrossTracker\CrossTrackerReportFactory;
 use Tuleap\CrossTracker\CrossTrackerReportNotFoundException;
 use Tuleap\CrossTracker\Permission\CrossTrackerPermissionGate;
-use Tuleap\CrossTracker\Permission\CrossTrackerUnauthorizedException;
 use Tuleap\CrossTracker\Report\CrossTrackerArtifactReportFactory;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSearchableCollectorVisitor;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSearchablesCollectionBuilder;
@@ -68,7 +67,6 @@ use Tuleap\DB\DBFactory;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\REST\JsonDecoder;
-use Tuleap\REST\ProjectAuthorization;
 use Tuleap\REST\QueryParameterException;
 use Tuleap\REST\QueryParameterParser;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
@@ -117,10 +115,6 @@ class CrossTrackerReportsResource extends AuthenticatedResource
      */
     private $query_parser;
     /**
-     * @var ProjectManager
-     */
-    private $project_manager;
-    /**
      * @var CrossTrackerArtifactReportFactory
      */
     private $cross_tracker_artifact_factory;
@@ -129,10 +123,6 @@ class CrossTrackerReportsResource extends AuthenticatedResource
      */
     private $tracker_extractor;
     /**
-     * @var CrossTrackerReportDao
-     */
-    private $cross_tracker_dao;
-    /**
      * @var CrossTrackerReportFactory
      */
     private $report_factory;
@@ -140,10 +130,6 @@ class CrossTrackerReportsResource extends AuthenticatedResource
      * @var UserManager
      */
     private $user_manager;
-    /**
-     * @var CrossTrackerPermissionGate
-     */
-    private $cross_tracker_permission_gate;
     /** @var ExpertQueryValidator */
     private $validator;
     /** @var InvalidTermCollectorVisitor */
@@ -155,14 +141,12 @@ class CrossTrackerReportsResource extends AuthenticatedResource
     {
         $db = DBFactory::getMainTuleapDBConnection()->getDB();
 
-        $this->project_manager = ProjectManager::instance();
-        $this->user_manager    = UserManager::instance();
-        $this->report_factory  = new CrossTrackerReportFactory(
+        $this->user_manager   = UserManager::instance();
+        $this->report_factory = new CrossTrackerReportFactory(
             new CrossTrackerReportDao(),
             TrackerFactory::instance()
         );
 
-        $this->cross_tracker_dao = new CrossTrackerReportDao();
         $this->tracker_extractor = new TrackerReportExtractor(TrackerFactory::instance());
 
         $report_config = new TrackerReportConfig(
@@ -297,12 +281,6 @@ class CrossTrackerReportsResource extends AuthenticatedResource
             $this->invalid_comparisons_collector,
             $this->invalid_selectables_collector,
         );
-        $trackers_permissions_retriever       = TrackersPermissionsRetriever::build();
-        $this->cross_tracker_permission_gate  = new CrossTrackerPermissionGate(
-            new URLVerification(),
-            $trackers_permissions_retriever,
-            $trackers_permissions_retriever,
-        );
 
         $this->query_parser           = new QueryParameterParser(new JsonDecoder());
         $this->representation_factory = new ArtifactRepresentationFactory();
@@ -388,7 +366,7 @@ class CrossTrackerReportsResource extends AuthenticatedResource
             $expert_query    = $this->getExpertQueryFromRoute($query, $report);
             $expected_report = new CrossTrackerReport($report->getId(), $expert_query, $trackers);
 
-            $this->checkUserIsAllowedToSeeReport($current_user, $expected_report);
+            $this->getUserIsAllowedToSeeReportChecker()->checkUserIsAllowedToSeeReport($current_user, $expected_report);
 
             $artifacts       = $this->cross_tracker_artifact_factory->getArtifactsMatchingReport(
                 $expected_report,
@@ -468,9 +446,9 @@ class CrossTrackerReportsResource extends AuthenticatedResource
             $report          = $this->getReport($id);
             $expected_report = new CrossTrackerReport($report->getId(), $expert_query, $trackers);
 
-            $this->checkUserIsAllowedToSeeReport($current_user, $expected_report);
+            $this->getUserIsAllowedToSeeReportChecker()->checkUserIsAllowedToSeeReport($current_user, $expected_report);
 
-            $this->cross_tracker_dao->updateReport($id, $trackers, $expert_query);
+            $this->getCrossTrackerDao()->updateReport($id, $trackers, $expert_query);
         } catch (CrossTrackerReportNotFoundException $exception) {
             throw new RestException(404, "Report $id not found");
         } catch (TrackerNotFoundException $exception) {
@@ -564,41 +542,37 @@ class CrossTrackerReportsResource extends AuthenticatedResource
         }
     }
 
-    /**
-     *
-     * @throws RestException 403
-     */
-    private function checkUserIsAllowedToSeeReport(PFUser $user, CrossTrackerReport $report): void
+    private function getCrossTrackerDao(): CrossTrackerReportDao
     {
-        $widget = $this->cross_tracker_dao->searchCrossTrackerWidgetByCrossTrackerReportId($report->getId());
-        if ($widget !== null && $widget['dashboard_type'] === 'user' && $widget['user_id'] !== (int) $user->getId()) {
-            throw new RestException(403);
-        }
+        return new CrossTrackerReportDao();
+    }
 
-        if ($widget !== null && $widget['dashboard_type'] === 'project') {
-            $project = $this->project_manager->getProject($widget['project_id']);
-            ProjectAuthorization::userCanAccessProject($user, $project, new URLVerification());
-        }
+    private function getUserIsAllowedToSeeReportChecker(): UserIsAllowedToSeeReportChecker
+    {
+        $trackers_permissions_retriever = TrackersPermissionsRetriever::build();
+        $cross_tracker_permission_gate  = new CrossTrackerPermissionGate(
+            new URLVerification(),
+            $trackers_permissions_retriever,
+            $trackers_permissions_retriever,
+        );
 
-        try {
-            $this->cross_tracker_permission_gate->check($user, $report);
-        } catch (CrossTrackerUnauthorizedException $ex) {
-            throw new RestException(403, null, ['i18n_error_message' => $ex->getMessage()]);
-        }
+        return new UserIsAllowedToSeeReportChecker(
+            $this->getCrossTrackerDao(),
+            ProjectManager::instance(),
+            new URLVerification(),
+            $cross_tracker_permission_gate
+        );
     }
 
     /**
-     * @param $id
-     *
-     * @return CrossTrackerReport
      * @throws CrossTrackerReportNotFoundException
      * @throws RestException 403
      */
-    private function getReport($id)
+    private function getReport(int $id): CrossTrackerReport
     {
         $report       = $this->report_factory->getById($id);
         $current_user = $this->user_manager->getCurrentUser();
-        $this->checkUserIsAllowedToSeeReport($current_user, $report);
+        $this->getUserIsAllowedToSeeReportChecker()->checkUserIsAllowedToSeeReport($current_user, $report);
 
         return $report;
     }
