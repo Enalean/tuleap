@@ -23,7 +23,7 @@
         <h1>
             <textarea
                 type="text"
-                class="tlp-textarea tlp-textarea-large"
+                class="tlp-textarea"
                 v-if="is_edit_mode"
                 v-model="title_to_edit"
                 v-on:input="onTitleChange"
