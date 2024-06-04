@@ -75,7 +75,11 @@ interface CacheProjectUrls {
 const cache_service_urls: CacheProjectUrls = {};
 Cypress.Commands.add(
     "visitProjectService",
-    (project_unixname: string, service_label: string): void => {
+    (
+        project_unixname: string,
+        service_label: string,
+        fail_on_status_code: boolean = true,
+    ): void => {
         if (
             Object.prototype.hasOwnProperty.call(cache_service_urls, project_unixname) &&
             Object.prototype.hasOwnProperty.call(
@@ -87,7 +91,7 @@ Cypress.Commands.add(
             return;
         }
 
-        cy.visit("/projects/" + project_unixname);
+        cy.visit("/projects/" + project_unixname, { failOnStatusCode: fail_on_status_code });
         visitServiceInCurrentProject(service_label, (href) => {
             cache_service_urls[project_unixname] = cache_service_urls[project_unixname] || {};
             cache_service_urls[project_unixname][service_label] = href;
