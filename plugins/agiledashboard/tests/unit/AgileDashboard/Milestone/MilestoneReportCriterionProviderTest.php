@@ -18,63 +18,47 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+declare(strict_types=1);
+
+namespace Tuleap\AgileDashboard\Milestone;
+
+use AgileDashboard_Milestone_MilestoneReportCriterionOptionsProvider;
+use AgileDashboard_Milestone_MilestoneReportCriterionProvider;
+use AgileDashboard_Milestone_SelectedMilestoneProvider;
+use PFUser;
+use PHPUnit\Framework\MockObject\MockObject;
+use Tracker;
 use Tuleap\AgileDashboard\ExplicitBacklog\UnplannedCriterionOptionsProvider;
 use Tuleap\AgileDashboard\ExplicitBacklog\UnplannedReportCriterionChecker;
 use Tuleap\GlobalLanguageMock;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
-//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
-class MilestoneReportCriterionProviderTest extends \Tuleap\Test\PHPUnit\TestCase
+final class MilestoneReportCriterionProviderTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
     use GlobalLanguageMock;
 
-    /**
-     * @var AgileDashboard_Milestone_MilestoneReportCriterionProvider
-     */
-    private $provider;
-
-    /**
-     * @var AgileDashboard_Milestone_SelectedMilestoneProvider|\Mockery\LegacyMockInterface|\Mockery\MockInterface
-     */
-    private $milestone_id_provider;
-
-    /**
-     * @var AgileDashboard_Milestone_MilestoneReportCriterionOptionsProvider|\Mockery\LegacyMockInterface|\Mockery\MockInterface
-     */
-    private $options_provider;
-
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|UnplannedCriterionOptionsProvider
-     */
-    private $uplanned_criterion_provider;
-
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|UnplannedReportCriterionChecker
-     */
-    private $uplanned_criterion_checker;
-
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|PFUser
-     */
-    private $user;
-
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Tracker
-     */
-    private $task_tracker;
+    private AgileDashboard_Milestone_MilestoneReportCriterionProvider $provider;
+    private AgileDashboard_Milestone_SelectedMilestoneProvider&MockObject $milestone_id_provider;
+    private AgileDashboard_Milestone_MilestoneReportCriterionOptionsProvider&MockObject $options_provider;
+    private UnplannedCriterionOptionsProvider&MockObject $uplanned_criterion_provider;
+    private UnplannedReportCriterionChecker&MockObject $uplanned_criterion_checker;
+    private PFUser $user;
+    private Tracker $task_tracker;
 
     protected function setUp(): void
     {
-        parent::setUp();
+        $this->options_provider            = $this->createMock(AgileDashboard_Milestone_MilestoneReportCriterionOptionsProvider::class);
+        $this->milestone_id_provider       = $this->createMock(AgileDashboard_Milestone_SelectedMilestoneProvider::class);
+        $this->uplanned_criterion_provider = $this->createMock(UnplannedCriterionOptionsProvider::class);
+        $this->uplanned_criterion_checker  = $this->createMock(UnplannedReportCriterionChecker::class);
+        $this->task_tracker                = TrackerTestBuilder::aTracker()
+            ->withProject(ProjectTestBuilder::aProject()->build())
+            ->build();
 
-        $this->task_tracker                = Mockery::mock(Tracker::class);
-        $this->options_provider            = Mockery::mock(\AgileDashboard_Milestone_MilestoneReportCriterionOptionsProvider::class);
-        $this->milestone_id_provider       = Mockery::mock(\AgileDashboard_Milestone_SelectedMilestoneProvider::class);
-        $this->uplanned_criterion_provider = Mockery::mock(UnplannedCriterionOptionsProvider::class);
-        $this->uplanned_criterion_checker  = Mockery::mock(UnplannedReportCriterionChecker::class);
-
-        $this->user = Mockery::mock(PFUser::class);
+        $this->user = UserTestBuilder::buildWithDefaults();
 
         $this->provider = new AgileDashboard_Milestone_MilestoneReportCriterionProvider(
             $this->milestone_id_provider,
@@ -82,60 +66,54 @@ class MilestoneReportCriterionProviderTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->uplanned_criterion_provider,
             $this->uplanned_criterion_checker
         );
-
-        $this->task_tracker->shouldReceive('getProject')->andReturn(Mockery::mock(Project::class));
     }
 
     public function testItReturnsNullWhenNoOptions(): void
     {
-        $this->milestone_id_provider->shouldReceive('getMilestoneId')->andReturns('104');
+        $this->milestone_id_provider->method('getMilestoneId')->willReturn('104');
 
-        $this->options_provider->shouldReceive('getSelectboxOptions')
-            ->with($this->task_tracker, Mockery::any(), $this->user)
-            ->andReturns([]);
+        $this->options_provider->method('getSelectboxOptions')
+            ->with($this->task_tracker, self::anything(), $this->user)
+            ->willReturn([]);
 
-        $this->uplanned_criterion_checker->shouldReceive('isUnplannedValueSelected')
-            ->andReturnFalse();
+        $this->uplanned_criterion_checker->method('isUnplannedValueSelected')->willReturn(false);
 
-        $this->assertNull($this->provider->getCriterion($this->task_tracker, $this->user));
+        self::assertNull($this->provider->getCriterion($this->task_tracker, $this->user));
     }
 
     public function testItReturnsASelectBox(): void
     {
-        $this->milestone_id_provider->shouldReceive('getMilestoneId')->andReturns('104');
+        $this->milestone_id_provider->method('getMilestoneId')->willReturn('104');
 
-        $this->options_provider->shouldReceive('getSelectboxOptions')
-            ->with($this->task_tracker, Mockery::any(), $this->user)
-            ->andReturns(['<option>1', '<option>2']);
+        $this->options_provider->method('getSelectboxOptions')
+            ->with($this->task_tracker, self::anything(), $this->user)
+            ->willReturn(['<option>1', '<option>2']);
 
-        $this->uplanned_criterion_checker->shouldReceive('isUnplannedValueSelected')
-            ->andReturnFalse();
+        $this->uplanned_criterion_checker->method('isUnplannedValueSelected')->willReturn(false);
 
-        $this->uplanned_criterion_provider->shouldReceive('formatUnplannedAsSelectboxOption')
-            ->once()
-            ->andReturn('');
+        $this->uplanned_criterion_provider->expects(self::once())->method('formatUnplannedAsSelectboxOption')->willReturn('');
 
-        $this->assertMatchesRegularExpression('/<select name="additional_criteria\[agiledashboard_milestone\]"/', $this->provider->getCriterion($this->task_tracker, $this->user));
+        self::assertMatchesRegularExpression('/<select name="additional_criteria\[agiledashboard_milestone]"/', $this->provider->getCriterion($this->task_tracker, $this->user));
     }
 
     public function testItSelectsTheGivenMilestone(): void
     {
-        $this->milestone_id_provider->shouldReceive('getMilestoneId')->andReturns('104');
+        $this->milestone_id_provider->method('getMilestoneId')->willReturn('104');
 
-        $this->uplanned_criterion_checker->shouldReceive('isUnplannedValueSelected')->andReturnFalse();
+        $this->uplanned_criterion_checker->method('isUnplannedValueSelected')->willReturn(false);
 
-        $this->options_provider->shouldReceive('getSelectboxOptions')->with($this->task_tracker, '104', $this->user)->once();
+        $this->options_provider->expects(self::once())->method('getSelectboxOptions')->with($this->task_tracker, '104', $this->user);
 
         $this->provider->getCriterion($this->task_tracker, $this->user);
     }
 
     public function testItSelectsUnplannedOption(): void
     {
-        $this->milestone_id_provider->shouldReceive('getMilestoneId')->never();
+        $this->milestone_id_provider->expects(self::never())->method('getMilestoneId');
 
-        $this->uplanned_criterion_checker->shouldReceive('isUnplannedValueSelected')->andReturnTrue();
+        $this->uplanned_criterion_checker->method('isUnplannedValueSelected')->willReturn(true);
 
-        $this->options_provider->shouldReceive('getSelectboxOptions')->with($this->task_tracker, '-1', $this->user)->once();
+        $this->options_provider->expects(self::once())->method('getSelectboxOptions')->with($this->task_tracker, '-1', $this->user);
 
         $this->provider->getCriterion($this->task_tracker, $this->user);
     }
