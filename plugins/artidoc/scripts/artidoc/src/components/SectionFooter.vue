@@ -36,14 +36,14 @@
 </template>
 
 <script setup lang="ts">
-import type { use_section_editor_type } from "@/composables/useSectionEditor";
+import type { SectionEditor } from "@/composables/useSectionEditor";
 import SectionEditorSaveCancelButtons from "@/components/SectionEditorSaveCancelButtons.vue";
 import NotFoundError from "@/components/NotFoundError.vue";
 import OutdatedSectionWarning from "@/components/OutdatedSectionWarning.vue";
 import GenericError from "@/components/GenericError.vue";
 import type { ArtidocSection } from "@/helpers/artidoc-section.type";
 
-const props = defineProps<{ section: ArtidocSection; editor: use_section_editor_type }>();
+const props = defineProps<{ section: ArtidocSection; editor: SectionEditor }>();
 
 const error_message = props.editor.getErrorMessage();
 const is_outdated = props.editor.isOutdated();

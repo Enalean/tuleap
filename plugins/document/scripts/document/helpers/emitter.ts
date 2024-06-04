@@ -70,11 +70,11 @@ export interface UpdateMultipleListValueEvent {
     detail: { value: number[] | [] | ListValue[] | null; id: string };
 }
 
-export interface updateRecursionOptionEvent {
+export interface UpdateRecursionOptionEvent {
     recursion_option: string;
 }
 
-export interface updatePropertyListEvent {
+export interface UpdatePropertyListEvent {
     detail: { property_list: Array<string> };
 }
 
@@ -119,14 +119,14 @@ export type Events = {
     "item-is-being-uploaded": void;
     "update-lock": boolean;
     "update-custom-property": UpdateCustomEvent;
-    "properties-recursion-option": updateRecursionOptionEvent;
+    "properties-recursion-option": UpdateRecursionOptionEvent;
     "update-obsolescence-date-property": string;
     "update-link-properties": string;
     "update-wiki-properties": string;
     "update-embedded-properties": string;
     "update-recursion-option": string;
     "update-file-properties": { FileProperties: FileProperties };
-    "properties-recursion-list": updatePropertyListEvent;
+    "properties-recursion-list": UpdatePropertyListEvent;
 
     "update-permissions": string;
     "update-global-criteria": string;

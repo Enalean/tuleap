@@ -17,9 +17,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-type use_scroll_to_anchor_type = { scrollToAnchor: (anchor_id: string) => void };
+type ToAnchorScroller = { scrollToAnchor: (anchor_id: string) => void };
 
-function useScrollToAnchor(): use_scroll_to_anchor_type {
+function useScrollToAnchor(): ToAnchorScroller {
     const scrollToAnchor = (anchor_id: string): void => {
         const anchor_element = document.getElementById(anchor_id);
         if (anchor_element) {

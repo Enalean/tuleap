@@ -33,7 +33,7 @@
     <section-description-read-only v-else v-bind:readonly_value="readonly_description" />
 </template>
 <script setup lang="ts">
-import type { use_section_editor_type } from "@/composables/useSectionEditor";
+import type { SectionEditor } from "@/composables/useSectionEditor";
 import { defineAsyncComponent, onMounted } from "vue";
 import { loadTooltips } from "@tuleap/tooltip";
 import SectionDescriptionSkeleton from "@/components/SectionDescriptionSkeleton.vue";
@@ -45,7 +45,7 @@ defineProps<{
     editable_description: string;
     readonly_description: string;
     is_edit_mode: boolean;
-    input_current_description: use_section_editor_type["inputCurrentDescription"];
+    input_current_description: SectionEditor["inputCurrentDescription"];
 }>();
 
 const { is_sections_loading } = useInjectSectionsStore();

@@ -16,17 +16,17 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-import type * as fetch from "@microsoft/fetch-event-source";
+import type { EventSourceMessage } from "@microsoft/fetch-event-source";
 
-export function buildEventDispatcher(
-    callback_execution_created: (event: fetch.EventSourceMessage) => void,
-    callback_execution_updated: (event: fetch.EventSourceMessage) => void,
-    callback_execution_deleted: (event: fetch.EventSourceMessage) => void,
-    callback_artifact_linked: (event: fetch.EventSourceMessage) => void,
-    callback_campaign_updated: (event: fetch.EventSourceMessage) => void,
-    callback_presence_updated: (event: fetch.EventSourceMessage) => void,
-): (event: fetch.EventSourceMessage) => void {
-    return (event: fetch.EventSourceMessage): void => {
+export function BuildEventDispatcher(
+    callback_execution_created: (event: EventSourceMessage) => void,
+    callback_execution_updated: (event: EventSourceMessage) => void,
+    callback_execution_deleted: (event: EventSourceMessage) => void,
+    callback_artifact_linked: (event: EventSourceMessage) => void,
+    callback_campaign_updated: (event: EventSourceMessage) => void,
+    callback_presence_updated: (event: EventSourceMessage) => void,
+): (event: EventSourceMessage) => void {
+    return (event: EventSourceMessage): void => {
         const data_message = JSON.parse(JSON.parse(event.data));
         if (data_message.cmd === "testmanagement_execution:create") {
             callback_execution_created(data_message);

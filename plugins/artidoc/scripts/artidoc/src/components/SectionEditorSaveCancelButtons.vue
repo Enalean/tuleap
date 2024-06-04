@@ -35,11 +35,11 @@
 </template>
 
 <script setup lang="ts">
-import type { use_section_editor_type } from "@/composables/useSectionEditor";
+import type { SectionEditor } from "@/composables/useSectionEditor";
 import { useGettext } from "vue3-gettext";
 
 const props = defineProps<{
-    editor: use_section_editor_type;
+    editor: SectionEditor;
 }>();
 
 const { $gettext } = useGettext();

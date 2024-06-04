@@ -16,13 +16,13 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-import type { use_section_editor_type } from "@/composables/useSectionEditor";
+import type { SectionEditor } from "@/composables/useSectionEditor";
 import { ref, computed } from "vue";
 
 const noop = (): void => {};
 
 export const SectionEditorStub = {
-    withoutEditableSection: (): use_section_editor_type => ({
+    withoutEditableSection: (): SectionEditor => ({
         is_section_editable: computed(() => false),
         isSectionInEditMode: () => ref(false),
         isBeeingSaved: () => ref(false),
@@ -47,12 +47,12 @@ export const SectionEditorStub = {
         clearGlobalNumberOfOpenEditorForTests: noop,
     }),
 
-    withEditableSection: (): use_section_editor_type => ({
+    withEditableSection: (): SectionEditor => ({
         ...SectionEditorStub.withoutEditableSection(),
         is_section_editable: computed(() => true),
     }),
 
-    inEditMode: (): use_section_editor_type => ({
+    inEditMode: (): SectionEditor => ({
         ...SectionEditorStub.withEditableSection(),
         isSectionInEditMode: () => ref(true),
     }),

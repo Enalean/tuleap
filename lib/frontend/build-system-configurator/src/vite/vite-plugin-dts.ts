@@ -20,9 +20,9 @@
 import dts from "vite-plugin-dts";
 import type { Plugin } from "vite";
 
-type dts_plugin_options = Parameters<typeof dts>[0];
+type DTSPluginOptions = Parameters<typeof dts>[0];
 
-export function viteDtsPlugin(options?: dts_plugin_options): Plugin {
+export function viteDtsPlugin(options?: DTSPluginOptions): Plugin {
     return dts({
         insertTypesEntry: true,
         ...options,

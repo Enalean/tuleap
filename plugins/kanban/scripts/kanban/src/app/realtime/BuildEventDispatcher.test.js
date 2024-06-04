@@ -1,5 +1,5 @@
-import { buildEventDispatcher } from "./buildEventDispatcher";
-class eventSourceMessageMock {
+import { BuildEventDispatcher } from "./BuildEventDispatcher";
+class EventSourceMessageMock {
     retry;
     data;
     event;
@@ -17,21 +17,21 @@ describe("buildEventDispatcher -", function () {
         callback_item_update = jest.fn().mockImplementation();
         callback_item_create = jest.fn().mockImplementation();
         callback_item_moved = jest.fn().mockImplementation();
-        build_event_dispatcher = buildEventDispatcher(
+        build_event_dispatcher = BuildEventDispatcher(
             callback_item_update,
             callback_item_moved,
             callback_item_create,
         );
     });
     function mockEventItemMove() {
-        return new eventSourceMessageMock(
+        return new EventSourceMessageMock(
             '"{\\"cmd\\":\\"kanban_item:move\\",\\"data\\":{\\"ordered_destination_column_items_ids\\":[2,1],\\"artifact_id\\":1,\\"in_column\\":101,\\"from_column\\":\\"backlog\\"}}"',
             "",
             "1",
         );
     }
     function mockEventItemUpdate() {
-        return new eventSourceMessageMock(
+        return new EventSourceMessageMock(
             '"{\\"cmd\\":\\"kanban_item:update\\",\\"data\\":{\\"artifact_id\\":1}}"',
             "",
             "1",
@@ -39,7 +39,7 @@ describe("buildEventDispatcher -", function () {
     }
 
     function mockEventItemCreate() {
-        return new eventSourceMessageMock(
+        return new EventSourceMessageMock(
             '"{\\"cmd\\":\\"kanban_item:create\\",\\"data\\":{\\"artifact_id\\":4}}"',
             "",
             "",

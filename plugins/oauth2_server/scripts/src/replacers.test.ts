@@ -52,13 +52,13 @@ describe(`replacers`, () => {
         });
     });
 
-    type replacerFactory = (gettext_provider: GetText) => (clicked_button: HTMLElement) => string;
+    type ReplacerFactory = (gettext_provider: GetText) => (clicked_button: HTMLElement) => string;
 
     describe.each([
         ["buildDeletionReplaceCallback", buildDeletionReplaceCallback],
         ["buildRevocationReplaceCallback", buildRevocationReplaceCallback],
         ["buildRegenerationReplaceBallback", buildRegenerationReplaceBallback],
-    ])("%s", (name: string, factory: replacerFactory) => {
+    ])("%s", (name: string, factory: ReplacerFactory) => {
         it(`throws when the clicked button does not have a data-app-name attribute`, () => {
             const button = createAndAppendButton(doc);
             const callback = factory(gettext_provider);

@@ -30,7 +30,7 @@ import {
 } from "@/helpers/is-section-in-its-latest-version";
 import type { Fault } from "@tuleap/fault";
 
-export type use_section_editor_actions_type = {
+export type SectionEditorActions = {
     enableEditor: () => void;
     saveEditor: () => void;
     forceSaveEditor: () => void;
@@ -38,7 +38,7 @@ export type use_section_editor_actions_type = {
     refreshSection: () => void;
 };
 
-export type use_section_editor_type = {
+export type SectionEditor = {
     is_section_editable: ComputedRef<boolean>;
     isSectionInEditMode: () => Ref<boolean>;
     isBeeingSaved: () => Ref<boolean>;
@@ -47,7 +47,7 @@ export type use_section_editor_type = {
     isInError: () => Ref<boolean>;
     isOutdated: () => Ref<boolean>;
     isNotFoundError: () => Ref<boolean>;
-    editor_actions: use_section_editor_actions_type;
+    editor_actions: SectionEditorActions;
     inputCurrentTitle: (new_value: string) => void;
     inputCurrentDescription: (new_value: string) => void;
     getEditableTitle: () => Ref<string>;
@@ -64,7 +64,7 @@ const TEMPORARY_FLAG_DURATION_IN_MS = 1000;
 function useSectionEditor(
     section: ArtidocSection,
     update_section_callback: (section: ArtidocSection) => void,
-): use_section_editor_type {
+): SectionEditor {
     const current_section: Ref<ArtidocSection> = ref(section);
     const is_edit_mode = ref(false);
     const original_description = computed(() =>
@@ -266,7 +266,7 @@ function useSectionEditor(
         return readonly_description;
     };
 
-    const editor_actions: use_section_editor_actions_type = {
+    const editor_actions: SectionEditorActions = {
         enableEditor,
         saveEditor,
         forceSaveEditor,

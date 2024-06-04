@@ -19,11 +19,11 @@
 
 import type { UserStory, State } from "../type";
 
-interface storeIterationContentPayload {
+interface StoreIterationContentPayload {
     readonly iteration_id: number;
     readonly user_stories: UserStory[];
 }
 
-export function storeIterationContent(state: State, payload: storeIterationContentPayload): void {
+export function storeIterationContent(state: State, payload: StoreIterationContentPayload): void {
     state.iterations_content.set(payload.iteration_id, payload.user_stories);
 }
