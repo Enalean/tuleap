@@ -9,6 +9,7 @@
 **/node_modules/*
 **/vendor/*
 !src/scripts/tlp-doc-v2/.storybook
+src/scripts/tlp-doc-v2/storybook-static/
 src/common/wiki/phpwiki/
 src/scripts/FlamingParrot/keymaster-sequence/
 src/www/scripts/bootstrap/
