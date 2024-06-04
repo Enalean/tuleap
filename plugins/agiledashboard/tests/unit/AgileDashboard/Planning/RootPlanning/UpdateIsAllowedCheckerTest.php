@@ -22,39 +22,29 @@ declare(strict_types=1);
 
 namespace Tuleap\AgileDashboard\Planning\RootPlanning;
 
-use Mockery as M;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use Tracker;
+use PHPUnit\Framework\MockObject\MockObject;
+use PlanningFactory;
+use PlanningParameters;
+use TrackerFactory;
 use Tuleap\AgileDashboard\Test\Builders\PlanningBuilder;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Report\TrackerNotFoundException;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
-final class UpdateIsAllowedCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
+final class UpdateIsAllowedCheckerTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var UpdateIsAllowedChecker
-     */
-    private $checker;
-    /**
-     * @var M\LegacyMockInterface|M\MockInterface|\PlanningFactory
-     */
-    private $planning_factory;
-    /**
-     * @var M\LegacyMockInterface|M\MockInterface|BacklogTrackerRemovalChecker
-     */
-    private $backlog_tracker_removal_checker;
-    /**
-     * @var M\LegacyMockInterface|M\MockInterface|\TrackerFactory
-     */
-    private $tracker_factory;
+    private UpdateIsAllowedChecker $checker;
+    private PlanningFactory&MockObject $planning_factory;
+    private BacklogTrackerRemovalChecker&MockObject $backlog_tracker_removal_checker;
+    private TrackerFactory&MockObject $tracker_factory;
 
     protected function setUp(): void
     {
-        $this->planning_factory                = M::mock(\PlanningFactory::class);
-        $this->backlog_tracker_removal_checker = M::mock(BacklogTrackerRemovalChecker::class);
-        $this->tracker_factory                 = M::mock(\TrackerFactory::class);
+        $this->planning_factory                = $this->createMock(PlanningFactory::class);
+        $this->backlog_tracker_removal_checker = $this->createMock(BacklogTrackerRemovalChecker::class);
+        $this->tracker_factory                 = $this->createMock(TrackerFactory::class);
         $this->checker                         = new UpdateIsAllowedChecker(
             $this->planning_factory,
             $this->backlog_tracker_removal_checker,
@@ -66,41 +56,33 @@ final class UpdateIsAllowedCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $user     = UserTestBuilder::aUser()->build();
         $planning = PlanningBuilder::aPlanning(102)->withName('Not root planning')->build();
-        $this->planning_factory->shouldReceive('getRootPlanning')
-            ->once()
-            ->andReturnFalse();
+        $this->planning_factory->expects(self::once())->method('getRootPlanning')->willReturn(false);
 
-        $this->checker->checkUpdateIsAllowed($planning, \PlanningParameters::fromArray([]), $user);
+        $this->checker->checkUpdateIsAllowed($planning, PlanningParameters::fromArray([]), $user);
     }
 
     public function testItReturnsIfNotARootPlanning(): void
     {
         $user     = UserTestBuilder::aUser()->build();
         $planning = PlanningBuilder::aPlanning(102)->withId(15)->withName('Not root planning')->build();
-        $this->planning_factory->shouldReceive('getRootPlanning')
-            ->once()
-            ->andReturn(PlanningBuilder::aPlanning(102)->withId(1)->withName('Root planning')->build());
+        $this->planning_factory->expects(self::once())->method('getRootPlanning')
+            ->willReturn(PlanningBuilder::aPlanning(102)->withId(1)->withName('Root planning')->build());
 
-        $this->checker->checkUpdateIsAllowed($planning, \PlanningParameters::fromArray([]), $user);
+        $this->checker->checkUpdateIsAllowed($planning, PlanningParameters::fromArray([]), $user);
     }
 
     public function testItThrowsWhenNewMilestoneTrackerIDIsNotAValidTrackerID(): void
     {
         $user     = UserTestBuilder::aUser()->build();
         $planning = PlanningBuilder::aPlanning(102)->withName('Not root planning')->build();
-        $this->planning_factory->shouldReceive('getRootPlanning')
-            ->once()
-            ->andReturn($planning);
-        $this->backlog_tracker_removal_checker->shouldReceive('checkRemovedBacklogTrackersCanBeRemoved')
-            ->once();
-        $this->tracker_factory->shouldReceive('getTrackerById')
-            ->once()
-            ->andReturnNull();
+        $this->planning_factory->expects(self::once())->method('getRootPlanning')->willReturn($planning);
+        $this->backlog_tracker_removal_checker->expects(self::once())->method('checkRemovedBacklogTrackersCanBeRemoved');
+        $this->tracker_factory->expects(self::once())->method('getTrackerById')->willReturn(null);
 
-        $this->expectException(TrackerNotFoundException::class);
+        self::expectException(TrackerNotFoundException::class);
         $this->checker->checkUpdateIsAllowed(
             $planning,
-            \PlanningParameters::fromArray(['planning_tracker_id' => '404']),
+            PlanningParameters::fromArray(['planning_tracker_id' => '404']),
             $user
         );
     }
@@ -109,21 +91,17 @@ final class UpdateIsAllowedCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $user     = UserTestBuilder::aUser()->build();
         $planning = PlanningBuilder::aPlanning(102)->withName('Not root planning')->build();
-        $this->planning_factory->shouldReceive('getRootPlanning')
-            ->once()
-            ->andReturn($planning);
-        $this->backlog_tracker_removal_checker->shouldReceive('checkRemovedBacklogTrackersCanBeRemoved')
-            ->once();
-        $tracker = $this->createMock(Tracker::class);
-        $tracker->method('getGroupId')->willReturn('103');
-        $this->tracker_factory->shouldReceive('getTrackerById')
-            ->once()
-            ->andReturn($tracker);
+        $this->planning_factory->expects(self::once())->method('getRootPlanning')->willReturn($planning);
+        $this->backlog_tracker_removal_checker->expects(self::once())->method('checkRemovedBacklogTrackersCanBeRemoved');
+        $tracker = TrackerTestBuilder::aTracker()
+            ->withProject(ProjectTestBuilder::aProject()->withId(103)->build())
+            ->build();
+        $this->tracker_factory->expects(self::once())->method('getTrackerById')->willReturn($tracker);
 
-        $this->expectException(TrackerNotFoundException::class);
+        self::expectException(TrackerNotFoundException::class);
         $this->checker->checkUpdateIsAllowed(
             $planning,
-            \PlanningParameters::fromArray(['planning_tracker_id' => '404']),
+            PlanningParameters::fromArray(['planning_tracker_id' => '404']),
             $user
         );
     }
@@ -132,21 +110,18 @@ final class UpdateIsAllowedCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $user     = UserTestBuilder::aUser()->build();
         $planning = PlanningBuilder::aPlanning(102)->withName('Not root planning')->build();
-        $this->planning_factory->shouldReceive('getRootPlanning')
-            ->once()
-            ->andReturn($planning);
-        $this->backlog_tracker_removal_checker->shouldReceive('checkRemovedBacklogTrackersCanBeRemoved')
-            ->once();
-        $tracker = $this->createMock(Tracker::class);
-        $tracker->method('getGroupId')->willReturn('102');
-        $this->tracker_factory->shouldReceive('getTrackerById')
-            ->once()
+        $this->planning_factory->expects(self::once())->method('getRootPlanning')->willReturn($planning);
+        $this->backlog_tracker_removal_checker->expects(self::once())->method('checkRemovedBacklogTrackersCanBeRemoved');
+        $tracker = TrackerTestBuilder::aTracker()
+            ->withProject(ProjectTestBuilder::aProject()->withId(102)->build())
+            ->build();
+        $this->tracker_factory->expects(self::once())->method('getTrackerById')
             ->with(86)
-            ->andReturn($tracker);
+            ->willReturn($tracker);
 
         $this->checker->checkUpdateIsAllowed(
             $planning,
-            \PlanningParameters::fromArray(['planning_tracker_id' => '86']),
+            PlanningParameters::fromArray(['planning_tracker_id' => '86']),
             $user
         );
     }
