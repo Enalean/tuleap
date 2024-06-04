@@ -18,214 +18,184 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
+namespace Tuleap\AgileDashboard\Milestone;
+
+use AgileDashboard_BacklogItemDao;
+use AgileDashboard_Milestone_MilestoneStatusCounter;
+use PFUser;
+use PHPUnit\Framework\MockObject\MockObject;
+use TestHelper;
+use Tracker_ArtifactDao;
+use Tracker_ArtifactFactory;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 
-class AgileDashboard_Milestone_MilestoneStatusCounterTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+final class MilestoneStatusCounterTest extends TestCase
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
-    /**
-     * @var AgileDashboard_Milestone_MilestoneStatusCounter
-     */
-    private $counter;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|PFUser
-     */
-    private $user;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Tracker_ArtifactFactory
-     */
-    private $artifact_factory;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Tracker_ArtifactDao
-     */
-    private $artifact_dao;
-
-    /**
-     * @var AgileDashboard_BacklogItemDao|\Mockery\LegacyMockInterface|\Mockery\MockInterface
-     */
-    private $backlog_dao;
+    private AgileDashboard_Milestone_MilestoneStatusCounter $counter;
+    private PFUser $user;
+    private Tracker_ArtifactFactory&MockObject $artifact_factory;
+    private Tracker_ArtifactDao&MockObject $artifact_dao;
+    private AgileDashboard_BacklogItemDao&MockObject $backlog_dao;
 
     protected function setUp(): void
     {
-        $this->backlog_dao      = \Mockery::spy(\AgileDashboard_BacklogItemDao::class);
-        $this->artifact_dao     = \Mockery::spy(\Tracker_ArtifactDao::class);
-        $this->artifact_factory = \Mockery::spy(\Tracker_ArtifactFactory::class);
-        $this->user             = \Mockery::spy(PFUser::class);
+        $this->backlog_dao      = $this->createMock(AgileDashboard_BacklogItemDao::class);
+        $this->artifact_dao     = $this->createMock(Tracker_ArtifactDao::class);
+        $this->artifact_factory = $this->createMock(Tracker_ArtifactFactory::class);
+        $this->user             = UserTestBuilder::buildWithDefaults();
         $this->counter          = new AgileDashboard_Milestone_MilestoneStatusCounter(
             $this->backlog_dao,
             $this->artifact_dao,
             $this->artifact_factory
         );
 
-        $artifact = Mockery::mock(Artifact::class);
-        $artifact->shouldReceive('userCanView')->andReturnTrue();
-        $this->artifact_factory->shouldReceive('getArtifactById')->andReturns(
-            $artifact
-        );
+        $artifact = ArtifactTestBuilder::anArtifact(1)
+            ->userCanView($this->user)
+            ->build();
+        $this->artifact_factory->method('getArtifactById')->willReturn($artifact);
     }
 
     public function testItDoesntFetchAnythingWhenNoMilestoneId(): void
     {
-        $this->backlog_dao->shouldReceive('getBacklogArtifacts')->never();
+        $this->backlog_dao->expects(self::never())->method('getBacklogArtifacts');
         $result = $this->counter->getStatus($this->user, null);
-        $this->assertEquals(
-            [
-                Artifact::STATUS_OPEN   => 0,
-                Artifact::STATUS_CLOSED => 0,
-            ],
-            $result
-        );
+        $this->assertEquals([
+            Artifact::STATUS_OPEN   => 0,
+            Artifact::STATUS_CLOSED => 0,
+        ], $result);
     }
 
     public function testItReturnsZeroOpenClosedWhenNoArtifacts(): void
     {
-        $this->backlog_dao->shouldReceive('getBacklogArtifacts')->with(12)->andReturns(\TestHelper::emptyDar());
+        $this->backlog_dao->method('getBacklogArtifacts')->with(12)->willReturn(TestHelper::emptyDar());
         $result = $this->counter->getStatus($this->user, 12);
-        $this->assertEquals(
-            [
-                Artifact::STATUS_OPEN   => 0,
-                Artifact::STATUS_CLOSED => 0,
-            ],
-            $result
-        );
+        $this->assertEquals([
+            Artifact::STATUS_OPEN   => 0,
+            Artifact::STATUS_CLOSED => 0,
+        ], $result);
     }
 
     public function testItDoesntTryToFetchChildrenWhenNoBacklog(): void
     {
-        $this->backlog_dao->shouldReceive('getBacklogArtifacts')->andReturns(\TestHelper::emptyDar());
-        $this->artifact_dao->shouldReceive('getChildrenForArtifacts')->never();
+        $this->backlog_dao->method('getBacklogArtifacts')->willReturn(TestHelper::emptyDar());
+        $this->artifact_dao->expects(self::never())->method('getChildrenForArtifacts');
         $this->counter->getStatus($this->user, 12);
     }
 
     public function testItFetchesTheStatusOfReturnedArtifacts(): void
     {
-        $this->backlog_dao->shouldReceive('getBacklogArtifacts')->with(12)->andReturns(
-            \TestHelper::arrayToDar(['id' => 35], ['id' => 36])
+        $this->backlog_dao->method('getBacklogArtifacts')->with(12)->willReturn(
+            TestHelper::arrayToDar(['id' => 35], ['id' => 36])
         );
-        $this->artifact_dao->shouldReceive('getArtifactsStatusByIds')->with([35, 36])->andReturns(
-            \TestHelper::arrayToDar(
-                ['id' => 36, 'status' => Artifact::STATUS_OPEN],
-                ['id' => 35, 'status' => Artifact::STATUS_CLOSED]
-            )
-        );
-        $this->artifact_dao->shouldReceive('getChildrenForArtifacts')->andReturns(\TestHelper::emptyDar());
+        $this->artifact_dao->method('getArtifactsStatusByIds')->with([35, 36])->willReturn(TestHelper::arrayToDar(
+            ['id' => 36, 'status' => Artifact::STATUS_OPEN],
+            ['id' => 35, 'status' => Artifact::STATUS_CLOSED]
+        ));
+        $this->artifact_dao->method('getChildrenForArtifacts')->willReturn(TestHelper::emptyDar());
         $result = $this->counter->getStatus($this->user, 12);
-        $this->assertEquals(
-            [
-                Artifact::STATUS_OPEN   => 1,
-                Artifact::STATUS_CLOSED => 1,
-            ],
-            $result
-        );
+        $this->assertEquals([
+            Artifact::STATUS_OPEN   => 1,
+            Artifact::STATUS_CLOSED => 1,
+        ], $result);
     }
 
     public function testItFetchesTheStatusOfReturnedArtifactsAtSublevel(): void
     {
         // Level 0
-        $this->backlog_dao->shouldReceive('getBacklogArtifacts')->with(12)->andReturns(
-            \TestHelper::arrayToDar(['id' => 35], ['id' => 36])
-        );
-        $this->artifact_dao->shouldReceive('getArtifactsStatusByIds')->with([35, 36])->andReturns(
-            \TestHelper::arrayToDar(
-                ['id' => 36, 'status' => Artifact::STATUS_OPEN],
-                ['id' => 35, 'status' => Artifact::STATUS_CLOSED]
-            )
+        $this->backlog_dao->method('getBacklogArtifacts')->with(12)->willReturn(
+            TestHelper::arrayToDar(['id' => 35], ['id' => 36])
         );
 
         // Level -1
-        $this->artifact_dao->shouldReceive('getChildrenForArtifacts')->with([35, 36])->andReturns(
-            \TestHelper::arrayToDar(['id' => 38], ['id' => 39], ['id' => 40])
-        );
-        $this->artifact_dao->shouldReceive('getArtifactsStatusByIds')->with([38, 39, 40])->andReturns(
-            \TestHelper::arrayToDar(
-                ['id' => 38, 'status' => Artifact::STATUS_OPEN],
-                ['id' => 39, 'status' => Artifact::STATUS_CLOSED],
-                ['id' => 40, 'status' => Artifact::STATUS_CLOSED]
-            )
+        $this->artifact_dao->method('getChildrenForArtifacts')->with([35, 36])->willReturn(
+            TestHelper::arrayToDar(['id' => 38], ['id' => 39], ['id' => 40])
         );
 
+        $this->artifact_dao->method('getArtifactsStatusByIds')
+            ->withConsecutive(
+                [[35, 36]], // Level 0
+                [[38, 39, 40]] // Level -1
+            )->willReturnOnConsecutiveCalls(
+                TestHelper::arrayToDar(
+                    ['id' => 36, 'status' => Artifact::STATUS_OPEN],
+                    ['id' => 35, 'status' => Artifact::STATUS_CLOSED]
+                ),
+                TestHelper::arrayToDar(
+                    ['id' => 38, 'status' => Artifact::STATUS_OPEN],
+                    ['id' => 39, 'status' => Artifact::STATUS_CLOSED],
+                    ['id' => 40, 'status' => Artifact::STATUS_CLOSED]
+                ),
+            );
+
         $result = $this->counter->getStatus($this->user, 12);
-        $this->assertEquals(
-            [
-                Artifact::STATUS_OPEN   => 2,
-                Artifact::STATUS_CLOSED => 3,
-            ],
-            $result
-        );
+        $this->assertEquals([
+            Artifact::STATUS_OPEN   => 2,
+            Artifact::STATUS_CLOSED => 3,
+        ], $result);
     }
 
     public function testItDoesntCountBacklogElementNotReadable(): void
     {
-        $artifact = Mockery::mock(Artifact::class);
-        $artifact->shouldReceive('userCanView')->andReturnFalse();
-        $this->artifact_factory->shouldReceive('getArtifactById')->with(35)->andReturns(
-            $artifact
-        );
-        $other_artifact = Mockery::mock(Artifact::class);
-        $other_artifact->shouldReceive('userCanView')->andReturnTrue();
-        $this->artifact_factory->shouldReceive('getArtifactById')->with(36)->andReturns(
-            $other_artifact
-        );
+        $artifact       = ArtifactTestBuilder::anArtifact(35)
+            ->userCannotView($this->user)
+            ->build();
+        $other_artifact = ArtifactTestBuilder::anArtifact(36)
+            ->userCanView($this->user)
+            ->build();
+        $this->artifact_factory->method('getArtifactById')
+            ->withConsecutive([35], [36])
+            ->willReturnOnConsecutiveCalls($artifact, $other_artifact);
 
-        $this->backlog_dao->shouldReceive('getBacklogArtifacts')->with(12)->andReturns(
-            \TestHelper::arrayToDar(['id' => 35], ['id' => 36])
+        $this->backlog_dao->method('getBacklogArtifacts')->with(12)->willReturn(
+            TestHelper::arrayToDar(['id' => 35], ['id' => 36])
         );
-        $this->artifact_dao->shouldReceive('getArtifactsStatusByIds')->andReturns(
-            \TestHelper::arrayToDar(['id' => 36, 'status' => Artifact::STATUS_OPEN])
+        $this->artifact_dao->method('getArtifactsStatusByIds')->willReturn(
+            TestHelper::arrayToDar(['id' => 36, 'status' => Artifact::STATUS_OPEN])
         );
-        $this->artifact_dao->shouldReceive('getChildrenForArtifacts')->andReturns(\TestHelper::emptyDar());
+        $this->artifact_dao->method('getChildrenForArtifacts')->willReturn(TestHelper::emptyDar());
         $result = $this->counter->getStatus($this->user, 12);
-        $this->assertEquals(
-            [
-                Artifact::STATUS_OPEN   => 1,
-                Artifact::STATUS_CLOSED => 0,
-            ],
-            $result
-        );
+        $this->assertEquals([
+            Artifact::STATUS_OPEN   => 1,
+            Artifact::STATUS_CLOSED => 0,
+        ], $result);
     }
 
     public function testItDoesntCountSubElementsNotReadable(): void
     {
-        $artifact_36 = Mockery::mock(Artifact::class);
-        $artifact_36->shouldReceive('userCanView')->andReturnTrue();
-        $this->artifact_factory->shouldReceive('getArtifactById')->with(36)->andReturns(
-            $artifact_36
-        );
+        $artifact_36 = ArtifactTestBuilder::anArtifact(36)
+            ->userCanView($this->user)
+            ->build();
+        $artifact_37 = ArtifactTestBuilder::anArtifact(37)
+            ->userCannotView($this->user)
+            ->build();
+        $artifact_38 = ArtifactTestBuilder::anArtifact(38)
+            ->userCanView($this->user)
+            ->build();
 
-        $artifact_37 = Mockery::mock(Artifact::class);
-        $artifact_37->shouldReceive('userCanView')->andReturnFalse();
-        $this->artifact_factory->shouldReceive('getArtifactById')->with(37)->andReturns(
-            $artifact_37
-        );
+        $this->artifact_factory->method('getArtifactById')
+            ->withConsecutive([36], [37], [38])
+            ->willReturnOnConsecutiveCalls($artifact_36, $artifact_37, $artifact_38);
 
-        $artifact_38 = Mockery::mock(Artifact::class);
-        $artifact_38->shouldReceive('userCanView')->andReturnTrue();
-        $this->artifact_factory->shouldReceive('getArtifactById')->with(38)->andReturns(
-            $artifact_38
-        );
-
-        $this->backlog_dao->shouldReceive('getBacklogArtifacts')->with(12)->andReturns(
-            \TestHelper::arrayToDar(['id' => 36])
-        );
-        $this->artifact_dao->shouldReceive('getArtifactsStatusByIds')->with([36])->andReturns(
-            \TestHelper::arrayToDar(['id' => 36, 'status' => Artifact::STATUS_OPEN])
-        );
-        $this->artifact_dao->shouldReceive('getChildrenForArtifacts')->andReturns(
-            \TestHelper::arrayToDar(['id' => 37], ['id' => 38])
-        );
-
-        $this->artifact_dao->shouldReceive('getArtifactsStatusByIds')->with([37, 38])->andReturns(
-            \TestHelper::arrayToDar(['id' => 38, 'status' => Artifact::STATUS_OPEN])
+        $this->backlog_dao->method('getBacklogArtifacts')->with(12)->willReturn(TestHelper::arrayToDar(['id' => 36]));
+        $this->artifact_dao->method('getArtifactsStatusByIds')
+            ->withConsecutive([[36]], [[37, 38]])
+            ->willReturnOnConsecutiveCalls(
+                TestHelper::arrayToDar(['id' => 36, 'status' => Artifact::STATUS_OPEN]),
+                TestHelper::arrayToDar(['id' => 38, 'status' => Artifact::STATUS_OPEN])
+            );
+        $this->artifact_dao->method('getChildrenForArtifacts')->willReturn(
+            TestHelper::arrayToDar(['id' => 37], ['id' => 38])
         );
 
         $result = $this->counter->getStatus($this->user, 12);
-        $this->assertEquals(
-            [
-                Artifact::STATUS_OPEN   => 2,
-                Artifact::STATUS_CLOSED => 0,
-            ],
-            $result
-        );
+        $this->assertEquals([
+            Artifact::STATUS_OPEN   => 2,
+            Artifact::STATUS_CLOSED => 0,
+        ], $result);
     }
 }
