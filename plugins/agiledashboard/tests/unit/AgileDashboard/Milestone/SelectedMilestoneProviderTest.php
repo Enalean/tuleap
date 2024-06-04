@@ -18,50 +18,53 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class AgileDashboard_Milestone_SelectedMilestoneProviderTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
-{
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+declare(strict_types=1);
 
+namespace Tuleap\AgileDashboard\Milestone;
+
+use AgileDashboard_Milestone_MilestoneReportCriterionProvider;
+use AgileDashboard_Milestone_SelectedMilestoneProvider;
+use PFUser;
+use PHPUnit\Framework\MockObject\MockObject;
+use Planning_ArtifactMilestone;
+use Planning_MilestoneFactory;
+use Project;
+use Tracker_Report_AdditionalCriterion;
+use Tuleap\AgileDashboard\Test\Builders\PlanningBuilder;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
+
+final class SelectedMilestoneProviderTest extends TestCase
+{
     public const FIELD_NAME = AgileDashboard_Milestone_MilestoneReportCriterionProvider::FIELD_NAME;
     public const ANY        = AgileDashboard_Milestone_MilestoneReportCriterionProvider::ANY;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Planning_ArtifactMilestone
-     */
-    private $milestone;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Planning_MilestoneFactory
-     */
-    private $milestone_factory;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Project
-     */
-    private $project;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|PFUser
-     */
-    private $user;
+
+    private Planning_MilestoneFactory&MockObject $milestone_factory;
+    private Project $project;
+    private PFUser $user;
 
     protected function setUp(): void
     {
-        $artifact_id     = 123;
-        $this->milestone = Mockery::mock(Planning_ArtifactMilestone::class);
-        $this->milestone->shouldReceive('getArtifactId')->andReturn($artifact_id);
+        $artifact_id   = 123;
+        $this->user    = UserTestBuilder::buildWithDefaults();
+        $this->project = ProjectTestBuilder::aProject()->build();
+        $milestone     = new Planning_ArtifactMilestone(
+            $this->project,
+            PlanningBuilder::aPlanning((int) $this->project->getID())->build(),
+            ArtifactTestBuilder::anArtifact($artifact_id)->build(),
+        );
 
-        $this->user    = Mockery::mock(PFUser::class);
-        $this->project = \Mockery::spy(\Project::class);
-
-        $this->milestone_factory = \Mockery::spy(\Planning_MilestoneFactory::class)
-            ->shouldReceive('getBareMilestoneByArtifactId')
+        $this->milestone_factory = $this->createMock(Planning_MilestoneFactory::class);
+        $this->milestone_factory->method('getBareMilestoneByArtifactId')
             ->with($this->user, $artifact_id)
-            ->andReturns($this->milestone)
-            ->getMock();
+            ->willReturn($milestone);
     }
 
     public function testItReturnsTheIdOfTheMilestone(): void
     {
-        $additional_criteria = [
-            self::FIELD_NAME => new Tracker_Report_AdditionalCriterion(self::FIELD_NAME, 123),
-        ];
+        $additional_criteria = [self::FIELD_NAME => new Tracker_Report_AdditionalCriterion(self::FIELD_NAME, 123)];
 
         $provider = new AgileDashboard_Milestone_SelectedMilestoneProvider(
             $additional_criteria,
@@ -70,7 +73,7 @@ class AgileDashboard_Milestone_SelectedMilestoneProviderTest extends \Tuleap\Tes
             $this->project
         );
 
-        $this->assertEquals(123, $provider->getMilestoneId());
+        self::assertEquals(123, $provider->getMilestoneId());
     }
 
     public function testItReturnsAnyWhenNoCriterion(): void
@@ -84,7 +87,7 @@ class AgileDashboard_Milestone_SelectedMilestoneProviderTest extends \Tuleap\Tes
             $this->project
         );
 
-        $this->assertEquals(
+        self::assertEquals(
             AgileDashboard_Milestone_MilestoneReportCriterionProvider::ANY,
             $provider->getMilestoneId()
         );
