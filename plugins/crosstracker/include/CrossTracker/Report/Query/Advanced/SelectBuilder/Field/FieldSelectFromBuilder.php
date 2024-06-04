@@ -24,13 +24,16 @@ namespace Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Field;
 
 use PFUser;
 use Tracker;
+use Tracker_FormElement_Field;
 use Tuleap\CrossTracker\Report\Query\Advanced\DuckTypedField\Select\DuckTypedFieldSelect;
 use Tuleap\CrossTracker\Report\Query\Advanced\DuckTypedField\Select\DuckTypedFieldTypeSelect;
-use Tuleap\CrossTracker\Report\Query\Advanced\DuckTypedField\FieldTypeRetrieverWrapper;
+use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Field\Date\DateSelectFromBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\IProvideParametrizedSelectAndFromSQLFragments;
 use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\ParametrizedSelectFrom;
 use Tuleap\Tracker\FormElement\Field\RetrieveUsedFields;
 use Tuleap\Tracker\FormElement\RetrieveFieldType;
+use Tuleap\Tracker\Permission\FieldPermissionType;
+use Tuleap\Tracker\Permission\RetrieveUserPermissionOnFields;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Field;
 
 final readonly class FieldSelectFromBuilder
@@ -38,6 +41,8 @@ final readonly class FieldSelectFromBuilder
     public function __construct(
         private RetrieveUsedFields $retrieve_used_fields,
         private RetrieveFieldType $retrieve_field_type,
+        private RetrieveUserPermissionOnFields $permission_on_fields,
+        private DateSelectFromBuilder $date_builder,
     ) {
     }
 
@@ -49,18 +54,21 @@ final readonly class FieldSelectFromBuilder
         PFUser $user,
         array $trackers,
     ): IProvideParametrizedSelectAndFromSQLFragments {
-        $tracker_ids          = [];
-        $fields_user_can_read = [];
-        foreach ($trackers as $tracker) {
-            $tracker_id    = $tracker->getId();
-            $tracker_ids[] = $tracker_id;
-            $used_field    = $this->retrieve_used_fields->getUsedFieldByName($tracker_id, $field->getName());
-            if ($used_field && $used_field->userCanRead($user)) {
-                $fields_user_can_read[] = $used_field;
-            }
-        }
+        $tracker_ids = array_map(static fn(Tracker $tracker) => $tracker->getId(), $trackers);
+        $fields      = array_filter(
+            array_map(
+                fn(int $tracker_id) => $this->retrieve_used_fields->getUsedFieldByName($tracker_id, $field->getName()),
+                $tracker_ids,
+            ),
+            static fn(?Tracker_FormElement_Field $field) => $field !== null,
+        );
+
+        $fields_user_can_read = $this->permission_on_fields
+            ->retrieveUserPermissionOnFields($user, $fields, FieldPermissionType::PERMISSION_READ)
+            ->allowed;
+
         return DuckTypedFieldSelect::build(
-            new FieldTypeRetrieverWrapper($this->retrieve_field_type),
+            $this->retrieve_field_type,
             $field->getName(),
             $fields_user_can_read,
             $tracker_ids,
@@ -73,7 +81,7 @@ final readonly class FieldSelectFromBuilder
     private function matchTypeToBuilder(DuckTypedFieldSelect $field): IProvideParametrizedSelectAndFromSQLFragments
     {
         return match ($field->type) {
-            DuckTypedFieldTypeSelect::DATE,
+            DuckTypedFieldTypeSelect::DATE      => $this->date_builder->getSelectFrom($field),
             DuckTypedFieldTypeSelect::TEXT,
             DuckTypedFieldTypeSelect::NUMERIC,
             DuckTypedFieldTypeSelect::STATIC_LIST,

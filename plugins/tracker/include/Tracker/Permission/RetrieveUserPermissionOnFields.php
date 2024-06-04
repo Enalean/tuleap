@@ -28,8 +28,9 @@ use Tracker_FormElement;
 interface RetrieveUserPermissionOnFields
 {
     /**
-     * @param Tracker_FormElement[] $fields
-     * @return UserPermissionsOnItems<Tracker_FormElement, FieldPermissionType>
+     * @template FormElement of Tracker_FormElement
+     * @param FormElement[] $fields
+     * @return UserPermissionsOnItems<FormElement, FieldPermissionType>
      */
     public function retrieveUserPermissionOnFields(PFUser $user, array $fields, FieldPermissionType $permission): UserPermissionsOnItems;
 }

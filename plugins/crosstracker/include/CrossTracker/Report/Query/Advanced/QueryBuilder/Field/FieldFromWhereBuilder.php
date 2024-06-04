@@ -24,7 +24,6 @@ namespace Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Field;
 
 use PFUser;
 use Tracker;
-use Tuleap\CrossTracker\Report\Query\Advanced\DuckTypedField\FieldTypeRetrieverWrapper;
 use Tuleap\CrossTracker\Report\Query\Advanced\DuckTypedField\Where\DuckTypedFieldTypeWhere;
 use Tuleap\CrossTracker\Report\Query\Advanced\DuckTypedField\Where\DuckTypedFieldWhere;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Field\Date\DateFromWhereBuilder;
@@ -76,7 +75,7 @@ final readonly class FieldFromWhereBuilder
             }
         }
         return DuckTypedFieldWhere::build(
-            new FieldTypeRetrieverWrapper($this->retrieve_field_type),
+            $this->retrieve_field_type,
             $field->getName(),
             $fields_user_can_read,
             $tracker_ids,

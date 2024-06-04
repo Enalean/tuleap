@@ -31,6 +31,7 @@ use Tracker_Semantic_StatusDao;
 use Tracker_Semantic_TitleDao;
 use Tuleap\CrossTracker\CrossTrackerArtifactReportDao;
 use Tuleap\CrossTracker\Report\CrossTrackerArtifactReportFactory;
+use Tuleap\CrossTracker\Report\Query\Advanced\DuckTypedField\FieldTypeRetrieverWrapper;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSearchableCollectorVisitor;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSelectablesCollectorVisitor;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidTermCollectorVisitor;
@@ -50,6 +51,7 @@ use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata\MetadataU
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata\StatusChecker;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata\SubmissionDateChecker;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata\TextSemanticChecker;
+use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Field\Date\DateSelectFromBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Field\FieldSelectFromBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilderVisitor;
 use Tuleap\DB\DBFactory;
@@ -172,13 +174,14 @@ final class ArtifactReportFactoryInstantiator
         $date_time_value_rounder  = new DateTimeValueRounder();
         $artifact_factory         = Tracker_ArtifactFactory::instance();
         $field_from_where_builder = new Field\ListFromWhereBuilder();
+        $retrieve_field_type      = new FieldTypeRetrieverWrapper($form_element_factory);
         $query_builder_visitor    = new QueryBuilderVisitor(
             new FromWhereSearchableVisitor(),
             new ReverseLinkFromWhereBuilder($artifact_factory),
             new ForwardLinkFromWhereBuilder($artifact_factory),
             new Field\FieldFromWhereBuilder(
                 $form_element_factory,
-                $form_element_factory,
+                $retrieve_field_type,
                 new Field\Numeric\NumericFromWhereBuilder(),
                 new Field\Text\TextFromWhereBuilder($db),
                 new Field\Date\DateFromWhereBuilder($date_time_value_rounder),
@@ -204,7 +207,9 @@ final class ArtifactReportFactoryInstantiator
         $select_builder_visitor   = new SelectBuilderVisitor(
             new FieldSelectFromBuilder(
                 $form_element_factory,
-                $form_element_factory,
+                $retrieve_field_type,
+                TrackersPermissionsRetriever::build(),
+                new DateSelectFromBuilder(),
             ),
         );
 
