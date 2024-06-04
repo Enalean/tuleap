@@ -18,56 +18,58 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
+namespace Tuleap\AgileDashboard\Milestone;
+
+use AgileDashboard_Milestone_Backlog_Backlog;
+use AgileDashboard_Milestone_Backlog_BacklogFactory;
+use MilestoneParentLinker;
+use PFUser;
+use PHPUnit\Framework\MockObject\MockObject;
+use Planning_ArtifactMilestone;
+use Planning_Milestone;
+use Planning_MilestoneFactory;
+use Tuleap\AgileDashboard\Test\Builders\PlanningBuilder;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
-final class MilestoneParentLinkerTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
+final class MilestoneParentLinkerTest extends TestCase
 {
-    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
-    /**
-     * @var MilestoneParentLinker
-     */
-    private $milestone_parent_linker;
-
-    /**
-     * @var Planning_Milestone
-     */
-    private $milestone;
-
-    /**
-     * @var PFUser
-     */
-    private $user;
-
-    /**
-     * @var AgileDashboard_Milestone_Backlog_Backlog
-     */
-    private $backlog;
+    private MilestoneParentLinker $milestone_parent_linker;
+    private Planning_Milestone&MockObject $milestone;
+    private PFUser $user;
+    private AgileDashboard_Milestone_Backlog_Backlog&MockObject $backlog;
 
     protected function setUp(): void
     {
-        $milestone_factory             = Mockery::spy(\Planning_MilestoneFactory::class);
-        $backlog_factory               = Mockery::spy(\AgileDashboard_Milestone_Backlog_BacklogFactory::class);
+        $milestone_factory             = $this->createMock(Planning_MilestoneFactory::class);
+        $backlog_factory               = $this->createMock(AgileDashboard_Milestone_Backlog_BacklogFactory::class);
         $this->milestone_parent_linker = new MilestoneParentLinker(
             $milestone_factory,
             $backlog_factory
         );
 
-        $this->milestone = Mockery::spy(\Planning_Milestone::class);
-        $this->user      = Mockery::spy(\PFUser::class);
-        $this->backlog   = Mockery::spy(\AgileDashboard_Milestone_Backlog_Backlog::class);
+        $this->milestone = $this->createMock(Planning_Milestone::class);
+        $this->backlog   = $this->createMock(AgileDashboard_Milestone_Backlog_Backlog::class);
+        $this->user      = UserTestBuilder::buildWithDefaults();
 
-        $backlog_factory->shouldReceive('getBacklog')->andReturns($this->backlog);
+        $backlog_factory->method('getBacklog')->willReturn($this->backlog);
+        $milestone_factory->method('addMilestoneAncestors');
     }
 
     public function testItDoesNothingIfTheMilestoneHasNoParent(): void
     {
-        $artifact_added            = Mockery::mock(Artifact::class);
-        $parent_milestone_artifact = Mockery::spy(Artifact::class);
+        $artifact_added            = ArtifactTestBuilder::anArtifact(1)->build();
+        $parent_milestone_artifact = $this->createMock(Artifact::class);
 
-        $this->milestone->shouldReceive('getParent')->andReturns(null);
+        $this->milestone->method('getParent')->willReturn(null);
 
-        $parent_milestone_artifact->shouldReceive('linkArtifact')->never();
+        $parent_milestone_artifact->expects(self::never())->method('linkArtifact');
 
         $this->milestone_parent_linker->linkToMilestoneParent(
             $this->milestone,
@@ -78,17 +80,21 @@ final class MilestoneParentLinkerTest extends \Tuleap\Test\PHPUnit\TestCase //ph
 
     public function testItDoesNothingIfTheArtifactTrackerIsNotInParentMilestoneBacklogTrackers(): void
     {
-        $artifact_added = Mockery::mock(Artifact::class);
-        $artifact_added->shouldReceive('getTRackerId')->andReturn(201);
-        $parent_milestone_artifact = Mockery::spy(Artifact::class);
-        $parent_milestone          = Mockery::spy(\Planning_Milestone::class)->shouldReceive('getArtifact')->andReturns($parent_milestone_artifact)->getMock();
-        $descendant_tracker        = Mockery::mock(Tracker::class);
-        $descendant_tracker->shouldReceive('getId')->andReturn(202);
+        $artifact_added            = ArtifactTestBuilder::anArtifact(1)
+            ->inTracker(TrackerTestBuilder::aTracker()->withId(201)->build())
+            ->build();
+        $parent_milestone_artifact = $this->createMock(Artifact::class);
+        $parent_milestone          = new Planning_ArtifactMilestone(
+            ProjectTestBuilder::aProject()->withId(101)->build(),
+            PlanningBuilder::aPlanning(101)->build(),
+            $parent_milestone_artifact,
+        );
+        $descendant_tracker        = TrackerTestBuilder::aTracker()->withId(202)->build();
 
-        $this->backlog->shouldReceive('getDescendantTrackers')->andReturns([$descendant_tracker]);
-        $this->milestone->shouldReceive('getParent')->andReturns($parent_milestone);
+        $this->backlog->method('getDescendantTrackers')->willReturn([$descendant_tracker]);
+        $this->milestone->method('getParent')->willReturn($parent_milestone);
 
-        $parent_milestone_artifact->shouldReceive('linkArtifact')->never();
+        $parent_milestone_artifact->expects(self::never())->method('linkArtifact');
 
         $this->milestone_parent_linker->linkToMilestoneParent(
             $this->milestone,
@@ -99,19 +105,24 @@ final class MilestoneParentLinkerTest extends \Tuleap\Test\PHPUnit\TestCase //ph
 
     public function testItDoesNothingIfTheParentIsLinkedToParentMilestone(): void
     {
-        $artifact_added            = Mockery::spy(Artifact::class)->shouldReceive('getTrackerId')->andReturns(201)->getMock();
-        $parent_milestone_artifact = Mockery::spy(Artifact::class);
-        $parent_milestone          = Mockery::spy(\Planning_Milestone::class)->shouldReceive('getArtifact')->andReturns($parent_milestone_artifact)->getMock();
-        $parent_linked_artifact    = Mockery::spy(Artifact::class)->shouldReceive('getId')->andReturns(102)->getMock();
-        $descendant_tracker        = Mockery::mock(Tracker::class);
-        $descendant_tracker->shouldReceive('getId')->andReturn(201);
+        $parent_linked_artifact    = ArtifactTestBuilder::anArtifact(102)->build();
+        $artifact_added            = ArtifactTestBuilder::anArtifact(1)
+            ->inTracker(TrackerTestBuilder::aTracker()->withId(201)->build())
+            ->withParent($parent_linked_artifact)
+            ->build();
+        $parent_milestone_artifact = $this->createMock(Artifact::class);
+        $parent_milestone          = new Planning_ArtifactMilestone(
+            ProjectTestBuilder::aProject()->withId(101)->build(),
+            PlanningBuilder::aPlanning(101)->build(),
+            $parent_milestone_artifact,
+        );
+        $descendant_tracker        = TrackerTestBuilder::aTracker()->withId(201)->build();
 
-        $this->backlog->shouldReceive('getDescendantTrackers')->andReturns([$descendant_tracker]);
-        $artifact_added->shouldReceive('getParent')->andReturns($parent_linked_artifact);
-        $parent_milestone_artifact->shouldReceive('getLinkedArtifacts')->with($this->user)->andReturns([$parent_linked_artifact]);
-        $this->milestone->shouldReceive('getParent')->andReturns($parent_milestone);
+        $this->backlog->method('getDescendantTrackers')->willReturn([$descendant_tracker]);
+        $parent_milestone_artifact->method('getLinkedArtifacts')->with($this->user)->willReturn([$parent_linked_artifact]);
+        $this->milestone->method('getParent')->willReturn($parent_milestone);
 
-        $parent_milestone_artifact->shouldReceive('linkArtifact')->never();
+        $parent_milestone_artifact->expects(self::never())->method('linkArtifact');
 
         $this->milestone_parent_linker->linkToMilestoneParent(
             $this->milestone,
@@ -122,22 +133,26 @@ final class MilestoneParentLinkerTest extends \Tuleap\Test\PHPUnit\TestCase //ph
 
     public function testItLinksTheItemToParentMilestone(): void
     {
-        $added_artifact            = Mockery::spy(Artifact::class)->shouldReceive('getTrackerId')->andReturns(201)->getMock();
-        $parent_milestone_artifact = Mockery::spy(Artifact::class);
-        $parent_milestone          = Mockery::spy(\Planning_Milestone::class)->shouldReceive('getArtifact')->andReturns($parent_milestone_artifact)->getMock();
-        $parent_linked_artifact    = Mockery::spy(Artifact::class)->shouldReceive('getId')->andReturns(102)->getMock();
-        $parent                    = Mockery::spy(Artifact::class)->shouldReceive('getId')->andReturns(103)->getMock();
-        $descendant_tracker        = Mockery::mock(Tracker::class);
-        $descendant_tracker->shouldReceive('getId')->andReturn(201);
+        $descendant_tracker        = TrackerTestBuilder::aTracker()->withId(201)->build();
+        $parent                    = ArtifactTestBuilder::anArtifact(103)->build();
+        $added_artifact            = ArtifactTestBuilder::anArtifact(101)
+            ->inTracker($descendant_tracker)
+            ->withParent($parent)
+            ->build();
+        $parent_milestone_artifact = $this->createMock(Artifact::class);
+        $parent_milestone          = new Planning_ArtifactMilestone(
+            ProjectTestBuilder::aProject()->withId(101)->build(),
+            PlanningBuilder::aPlanning(101)->build(),
+            $parent_milestone_artifact,
+        );
+        $parent_linked_artifact    = ArtifactTestBuilder::anArtifact(102)->build();
 
-        $this->backlog->shouldReceive('getDescendantTrackers')->andReturns([$descendant_tracker]);
+        $this->backlog->method('getDescendantTrackers')->willReturn([$descendant_tracker]);
 
-        $added_artifact->shouldReceive('getId')->andReturns(101);
-        $added_artifact->shouldReceive('getParent')->andReturns($parent);
-        $parent_milestone_artifact->shouldReceive('getLinkedArtifacts')->with($this->user)->andReturns([$parent_linked_artifact]);
-        $this->milestone->shouldReceive('getParent')->andReturns($parent_milestone);
+        $parent_milestone_artifact->method('getLinkedArtifacts')->with($this->user)->willReturn([$parent_linked_artifact]);
+        $this->milestone->method('getParent')->willReturn($parent_milestone);
 
-        $parent_milestone_artifact->shouldReceive('linkArtifact')->with(101, $this->user)->once();
+        $parent_milestone_artifact->expects(self::once())->method('linkArtifact')->with(101, $this->user);
 
         $this->milestone_parent_linker->linkToMilestoneParent(
             $this->milestone,
@@ -148,21 +163,25 @@ final class MilestoneParentLinkerTest extends \Tuleap\Test\PHPUnit\TestCase //ph
 
     public function testItLinksTheItemToParentMilestoneIfTheItemHasNoParent(): void
     {
-        $added_artifact            = Mockery::spy(Artifact::class)->shouldReceive('getTrackerId')->andReturns(201)->getMock();
-        $parent_milestone_artifact = Mockery::spy(Artifact::class);
-        $parent_milestone          = Mockery::spy(\Planning_Milestone::class)->shouldReceive('getArtifact')->andReturns($parent_milestone_artifact)->getMock();
-        $parent_linked_artifact    = Mockery::spy(Artifact::class)->shouldReceive('getId')->andReturns(102)->getMock();
-        $descendant_tracker        = Mockery::mock(Tracker::class);
-        $descendant_tracker->shouldReceive('getId')->andReturn(201);
+        $descendant_tracker        = TrackerTestBuilder::aTracker()->withId(201)->build();
+        $added_artifact            = ArtifactTestBuilder::anArtifact(101)
+            ->inTracker($descendant_tracker)
+            ->withParent(null)
+            ->build();
+        $parent_milestone_artifact = $this->createMock(Artifact::class);
+        $parent_milestone          = new Planning_ArtifactMilestone(
+            ProjectTestBuilder::aProject()->withId(101)->build(),
+            PlanningBuilder::aPlanning(101)->build(),
+            $parent_milestone_artifact,
+        );
+        $parent_linked_artifact    = ArtifactTestBuilder::anArtifact(102)->build();
 
-        $added_artifact->shouldReceive('getId')->andReturns(101);
-        $added_artifact->shouldReceive('getParent')->andReturns(null);
-        $this->backlog->shouldReceive('getDescendantTrackers')->andReturns([$descendant_tracker]);
+        $this->backlog->method('getDescendantTrackers')->willReturn([$descendant_tracker]);
 
-        $parent_milestone_artifact->shouldReceive('getLinkedArtifacts')->with($this->user)->andReturns([$parent_linked_artifact]);
-        $this->milestone->shouldReceive('getParent')->andReturns($parent_milestone);
+        $parent_milestone_artifact->method('getLinkedArtifacts')->with($this->user)->willReturn([$parent_linked_artifact]);
+        $this->milestone->method('getParent')->willReturn($parent_milestone);
 
-        $parent_milestone_artifact->shouldReceive('linkArtifact')->with(101, $this->user)->once();
+        $parent_milestone_artifact->expects(self::once())->method('linkArtifact')->with(101, $this->user);
 
         $this->milestone_parent_linker->linkToMilestoneParent(
             $this->milestone,
