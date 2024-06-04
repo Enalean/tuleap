@@ -143,28 +143,62 @@ describe("Artifact link usage", () => {
     });
 
     describe("Project administration", function () {
+        before(function () {
+            cy.projectAdministratorSession();
+            cy.getProjectId("hierarchy")
+                .as("project_id")
+                .then((project_id) => {
+                    cy.getTrackerIdFromREST(project_id, "issue").then((tracker_id) => {
+                        cy.createArtifact({
+                            tracker_id: tracker_id,
+                            artifact_title: "Parent",
+                            title_field_name: TITLE_FIELD_NAME,
+                        }).as("parent_artifact");
+
+                        cy.createArtifact({
+                            tracker_id: tracker_id,
+                            artifact_title: "Update parent",
+                            title_field_name: TITLE_FIELD_NAME,
+                        }).as("update_parent");
+
+                        cy.createArtifact({
+                            tracker_id: tracker_id,
+                            artifact_title: "Update parent",
+                            title_field_name: TITLE_FIELD_NAME,
+                        }).as("create_parent");
+                    });
+                });
+        });
+
         it("can create a new `Parent` link between two artifact", function () {
             cy.projectMemberSession();
-            cy.visitProjectService("hierarchy", "Trackers");
 
-            cy.get("[data-test=tracker-link-bugs]").click();
-            cy.get("[data-test=direct-link-to-artifact]").click();
-            cy.get("[data-test=current-artifact-id]")
-                .should("have.attr", "data-artifact-id")
-                .then((artifact_id) => {
-                    cy.projectMemberSession();
-                    cy.visitProjectService("hierarchy", "Trackers");
-                    cy.get("[data-test=tracker-link-issue]").click();
-                    cy.get("[data-test=direct-link-to-artifact]").click();
+            cy.visit("/plugins/tracker/?&aid=" + this.create_parent);
 
-                    cy.get("[data-test=edit-field-linked_issues]").click();
-                    cy.get("[data-test=artifact-link-submit]").type(`${artifact_id}`);
-                    cy.get("[data-test=artifact-link-type-selector]").first().select("Parent");
-                    submitArtifactAndStay();
+            cy.get("[data-test=edit-field-linked_issues]").click();
+            cy.get("[data-test=artifact-link-submit]").type(`${this.parent_artifact}`);
+            cy.get("[data-test=artifact-link-type-selector]").first().select("Parent");
+            submitArtifactAndStay();
 
-                    cy.get("[data-test=tracker-hierarchy]").contains(`${artifact_id}`);
-                    cy.get("[data-test=tracker-artifact-title]").contains("issue");
-                });
+            cy.get("[data-test=tracker-hierarchy]").contains(`${this.parent_artifact}`);
+            cy.get("[data-test=tracker-artifact-title]").contains("issue");
+        });
+
+        it("can update a `Parent` link between two existing artifact", function () {
+            cy.projectMemberSession();
+
+            cy.visit("/plugins/tracker/?&aid=" + this.update_parent);
+
+            cy.get("[data-test=edit-field-linked_issues]").click();
+            cy.get("[data-test=artifact-link-submit]").type(`${this.parent_artifact}`);
+            submitArtifactAndStay();
+
+            cy.get("[data-test=edit-field-linked_issues]").click();
+            cy.get("[data-test=artifact-link-type-selector]").last().select("Parent");
+            submitArtifactAndStay();
+
+            cy.get("[data-test=tracker-hierarchy]").contains(`${this.parent_artifact}`);
+            cy.get("[data-test=tracker-artifact-title]").contains("issue");
         });
     });
 });
