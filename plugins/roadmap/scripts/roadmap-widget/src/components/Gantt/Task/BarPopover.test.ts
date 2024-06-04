@@ -32,6 +32,8 @@ jest.mock("@tuleap/tooltip", () => ({
     retrieveTooltipData: jest.fn(),
 }));
 
+jest.useFakeTimers();
+
 describe("BarPopover", () => {
     it("should display the title of the task", async () => {
         const wrapper = shallowMount(BarPopover, {
@@ -142,10 +144,7 @@ describe("BarPopover", () => {
             {} as MutationObserver,
         );
 
-        // await watch() and body content is fetched
-        await wrapper.vm.$nextTick();
-        await wrapper.vm.$nextTick();
-        await wrapper.vm.$nextTick();
+        await jest.runOnlyPendingTimersAsync();
 
         expect(observer.stop).toHaveBeenCalled();
         expect(wrapper.text()).toContain("the retrieved body");

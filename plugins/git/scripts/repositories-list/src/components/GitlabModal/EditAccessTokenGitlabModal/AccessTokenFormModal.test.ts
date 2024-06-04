@@ -24,6 +24,8 @@ import { shallowMount } from "@vue/test-utils";
 import AccessTokenFormModal from "./AccessTokenFormModal.vue";
 import { createLocalVueForTests } from "../../../helpers/local-vue-for-tests";
 
+jest.useFakeTimers();
+
 describe("AccessTokenFormModal", () => {
     let store_options = {},
         propsData = {},
@@ -65,12 +67,9 @@ describe("AccessTokenFormModal", () => {
             gitlab_new_token: "AFREZF546",
         });
 
-        await wrapper.vm.$nextTick();
-
-        wrapper
+        await wrapper
             .find("[data-test=edit-token-gitlab-repository-modal-form]")
             .trigger("submit.prevent");
-        await wrapper.vm.$nextTick();
 
         expect(
             wrapper.find("[data-test=button-check-new-token-gitlab-repository]").attributes()
@@ -108,11 +107,9 @@ describe("AccessTokenFormModal", () => {
 
         const wrapper = await instantiateComponent();
 
-        wrapper.setData({
+        await wrapper.setData({
             error_message: "Error message",
         });
-
-        await wrapper.vm.$nextTick();
 
         expect(wrapper.find("[data-test=gitlab-fail-check-new-token]").text()).toBe(
             "Error message",
@@ -132,11 +129,9 @@ describe("AccessTokenFormModal", () => {
         };
 
         const wrapper = await instantiateComponent();
-        wrapper.setData({
+        await wrapper.setData({
             gitlab_new_token: "",
         });
-
-        await wrapper.vm.$nextTick();
 
         expect(
             wrapper.find("[data-test=button-check-new-token-gitlab-repository]").attributes()
@@ -162,12 +157,9 @@ describe("AccessTokenFormModal", () => {
             gitlab_new_token: "",
         });
 
-        await wrapper.vm.$nextTick();
-
-        wrapper
+        await wrapper
             .find("[data-test=edit-token-gitlab-repository-modal-form]")
             .trigger("submit.prevent");
-        await wrapper.vm.$nextTick();
 
         expect(wrapper.find("[data-test=gitlab-fail-check-new-token]").text()).toBe(
             "You must provide a valid GitLab API token",
@@ -193,12 +185,15 @@ describe("AccessTokenFormModal", () => {
             gitlab_new_token: "AZERTY123",
         });
 
-        await wrapper.vm.$nextTick();
-
         wrapper
             .find("[data-test=edit-token-gitlab-repository-modal-form]")
             .trigger("submit.prevent");
-        await wrapper.vm.$nextTick();
+
+        try {
+            await jest.runOnlyPendingTimersAsync();
+        } catch (e) {
+            // Ignore, error handler re-throws REST errors
+        }
 
         expect(wrapper.vm.$data.error_message).toBe(
             "Submitted token is invalid to access to this repository on this GitLab server.",
@@ -217,18 +212,17 @@ describe("AccessTokenFormModal", () => {
         };
 
         const wrapper = await instantiateComponent();
-        wrapper.setData({
+        await wrapper.setData({
             gitlab_new_token: "AZERTY123",
             error_message: "Error",
         });
 
-        await wrapper.vm.$nextTick();
-
         expect(wrapper.vm.$data.gitlab_new_token).toBe("AZERTY123");
         expect(wrapper.vm.$data.error_message).toBe("Error");
 
-        wrapper.find("[data-test=button-cancel-new-token-gitlab-repository]").trigger("click");
-        await wrapper.vm.$nextTick();
+        await wrapper
+            .find("[data-test=button-cancel-new-token-gitlab-repository]")
+            .trigger("click");
 
         expect(wrapper.vm.$data.gitlab_new_token).toBe("");
         expect(wrapper.vm.$data.error_message).toBe("");

@@ -41,7 +41,6 @@ import {
     CLIPBOARD_OPERATION_CUT,
 } from "../../../constants";
 import type { Folder, Item, RootState } from "../../../type";
-import { nextTick } from "vue";
 import { useClipboardStore } from "../../../stores/clipboard";
 import type { Store } from "vuex";
 
@@ -115,8 +114,7 @@ describe("PasteItem", () => {
         );
         expect(wrapper.text()).toContain("My item");
 
-        wrapper.trigger("click");
-        await nextTick();
+        await wrapper.trigger("click");
 
         expect(store.pasteItem).toHaveBeenCalledWith({
             destination_folder: destination,

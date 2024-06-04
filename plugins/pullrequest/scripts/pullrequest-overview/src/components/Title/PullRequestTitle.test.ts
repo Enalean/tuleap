@@ -44,13 +44,11 @@ describe("OverviewAppHeader", () => {
 
         expect(wrapper.find("[data-test=pullrequest-title-skeleton]").exists()).toBe(true);
 
-        wrapper.setProps({
+        await wrapper.setProps({
             pull_request: {
                 title: "My pull request title",
             } as PullRequest,
         });
-
-        await wrapper.vm.$nextTick();
 
         expect(wrapper.find("[data-test=pullrequest-title-skeleton]").exists()).toBe(false);
         expect(wrapper.find("[data-test=pullrequest-title]").text()).toBe("My pull request title");

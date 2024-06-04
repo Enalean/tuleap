@@ -27,7 +27,6 @@ import * as tlp_dropdown from "@tuleap/tlp-dropdown";
 import { EVENT_TLP_DROPDOWN_SHOWN } from "@tuleap/tlp-dropdown";
 import { getGlobalTestOptions } from "../../../../helpers/global-options-for-test";
 import type { ConfigurationState } from "../../../../store/configuration";
-import { nextTick } from "vue";
 
 jest.mock("@tuleap/tlp-dropdown");
 
@@ -103,8 +102,7 @@ describe("SearchItemDropdown", () => {
         expect(document.body).toMatchSnapshot();
     });
 
-    it("should display a spinner if real item is not loaded", async () => {
-        await nextTick();
+    it("should display a spinner if real item is not loaded", () => {
         expect(wrapper.vm.should_menu_be_displayed).toBe(false);
         expect(wrapper.findComponent(DropDownMenuTreeView).exists()).toBe(false);
     });

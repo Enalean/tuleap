@@ -24,7 +24,6 @@ import type { Folder, Item, ItemFile, State, RootState } from "../../../../../ty
 import TitleProperty from "./TitleProperty.vue";
 import emitter from "../../../../../helpers/emitter";
 import { getGlobalTestOptions } from "../../../../../helpers/global-options-for-test";
-import { nextTick } from "vue";
 
 jest.mock("../../../../../helpers/emitter");
 
@@ -90,14 +89,10 @@ describe("TitleProperty", () => {
         } as Folder;
 
         const wrapper = createWrapper(value, isInUpdateContext, parent, currentlyUpdatedItem);
-        wrapper.setProps({ value: value });
+        await wrapper.setProps({ value: value });
 
-        await nextTick();
-        const input = wrapper.get("[data-test=document-new-item-title]");
+        const input = wrapper.find<HTMLInputElement>("[data-test=document-new-item-title]");
 
-        if (!(input.element instanceof HTMLInputElement)) {
-            throw new Error("input element is not an html input");
-        }
         expect(input.element.disabled).toBe(true);
         expect(wrapper.get("[data-test=document-new-item-title-form-element]").classes()).toContain(
             "tlp-form-element-disabled",
@@ -114,14 +109,9 @@ describe("TitleProperty", () => {
         } as Folder;
 
         const wrapper = createWrapper(value, isInUpdateContext, parent, currentlyUpdatedItem);
-        wrapper.setProps({ value: value });
+        await wrapper.setProps({ value: value });
 
-        await nextTick();
-        const input = wrapper.get("[data-test=document-new-item-title]");
-
-        if (!(input.element instanceof HTMLInputElement)) {
-            throw new Error("input element is not an html input");
-        }
+        const input = wrapper.find<HTMLInputElement>("[data-test=document-new-item-title]");
         expect(input.element.disabled).toBe(false);
     });
 
@@ -135,14 +125,9 @@ describe("TitleProperty", () => {
         } as Folder;
 
         const wrapper = createWrapper(value, isInUpdateContext, parent, currentlyUpdatedItem);
-        wrapper.setProps({ value: value });
+        await wrapper.setProps({ value: value });
 
-        await nextTick();
-        const input = wrapper.get("[data-test=document-new-item-title]");
-
-        if (!(input.element instanceof HTMLInputElement)) {
-            throw new Error("input element is not an html input");
-        }
+        const input = wrapper.find<HTMLInputElement>("[data-test=document-new-item-title]");
         input.element.value = "My new title";
 
         input.trigger("input");
@@ -162,9 +147,8 @@ describe("TitleProperty", () => {
             } as Folder;
 
             const wrapper = createWrapper(value, isInUpdateContext, parent, currentlyUpdatedItem);
-            wrapper.setProps({ value: value });
+            await wrapper.setProps({ value: value });
 
-            await nextTick();
             expect(wrapper.find("[data-test=title-error-message]").exists()).toBeFalsy();
         });
 
@@ -179,9 +163,7 @@ describe("TitleProperty", () => {
             } as Folder;
 
             const wrapper = createWrapper(value, isInUpdateContext, parent, currentlyUpdatedItem);
-            wrapper.setProps({ value: existing_folder_name });
-
-            await nextTick();
+            await wrapper.setProps({ value: existing_folder_name });
 
             expect(wrapper.find("[data-test=title-error-message]").exists()).toBeTruthy();
         });
@@ -199,9 +181,8 @@ describe("TitleProperty", () => {
             } as ItemFile;
 
             const wrapper = createWrapper(value, isInUpdateContext, parent, currentlyUpdatedItem);
-            wrapper.setProps({ value: value });
+            await wrapper.setProps({ value: value });
 
-            await nextTick();
             expect(wrapper.find("[data-test=title-error-message]").exists()).toBeFalsy();
         });
 
@@ -216,9 +197,8 @@ describe("TitleProperty", () => {
             } as ItemFile;
 
             const wrapper = createWrapper(value, isInUpdateContext, parent, currentlyUpdatedItem);
-            wrapper.setProps({ value: existing_document_name });
+            await wrapper.setProps({ value: existing_document_name });
 
-            await nextTick();
             expect(wrapper.find("[data-test=title-error-message]").exists()).toBeTruthy();
         });
     });
@@ -235,9 +215,8 @@ describe("TitleProperty", () => {
             } as ItemFile;
 
             const wrapper = createWrapper(value, isInUpdateContext, parent, currentlyUpdatedItem);
-            wrapper.setProps({ value: "updated title" });
+            await wrapper.setProps({ value: "updated title" });
 
-            await nextTick();
             expect(wrapper.find("[data-test=title-error-message]").exists()).toBeFalsy();
         });
 
@@ -252,9 +231,8 @@ describe("TitleProperty", () => {
             } as ItemFile;
 
             const wrapper = createWrapper(value, isInUpdateContext, parent, currentlyUpdatedItem);
-            wrapper.setProps({ value: existing_document_name });
+            await wrapper.setProps({ value: existing_document_name });
 
-            await nextTick();
             expect(wrapper.find("[data-test=title-error-message]").exists()).toBeTruthy();
         });
     });

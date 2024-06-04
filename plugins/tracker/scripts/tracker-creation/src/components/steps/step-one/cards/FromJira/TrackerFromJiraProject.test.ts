@@ -86,9 +86,7 @@ describe("TrackerFromJiraProject", () => {
     });
 
     it("display the error message", async () => {
-        wrapper.vm.$data.error_message = "Oh snap!";
-
-        await wrapper.vm.$nextTick();
+        await wrapper.setData({ error_message: "Oh snap!" });
 
         expect(wrapper.find("[data-test=jira-fail-load-trackers]").exists()).toBe(true);
     });

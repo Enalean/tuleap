@@ -25,7 +25,6 @@ import FileCreationModal from "./FileCreationModal.vue";
 import type { Folder, RootState } from "../../../../type";
 import { getGlobalTestOptions } from "../../../../helpers/global-options-for-test";
 import type { ErrorState } from "../../../../store/error/module";
-import { nextTick } from "vue";
 import { TYPE_FILE } from "../../../../constants";
 
 describe("FileCreationModal", () => {
@@ -92,7 +91,7 @@ describe("FileCreationModal", () => {
         const dropped_file = new File([], "Duster Pikes Peak.lol");
         const wrapper = getWrapper(dropped_file, true);
 
-        wrapper.get("form").trigger("submit");
+        await wrapper.get("form").trigger("submit");
 
         const expected_item = {
             title: "",
@@ -104,7 +103,6 @@ describe("FileCreationModal", () => {
             status: "none",
         };
 
-        await nextTick();
         expect(create_new_item).toHaveBeenCalledWith(expect.anything(), [
             expected_item,
             { id: 12, title: "Dacia" },
@@ -119,10 +117,7 @@ describe("FileCreationModal", () => {
         const dropped_file = new File([], "Duster Pikes Peak.lol");
         const wrapper = getWrapper(dropped_file, false);
 
-        wrapper.get("form").trigger("submit");
-
-        await nextTick();
-        await nextTick();
+        await wrapper.get("form").trigger("submit");
 
         const expected_item = {
             title: "",

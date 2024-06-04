@@ -26,6 +26,8 @@ import type { PullRequest } from "@tuleap/plugin-pullrequest-rest-api-types";
 import * as tuleap_api from "../../../api/tuleap-rest-querier";
 import PullRequestLabels from "./PullRequestLabels.vue";
 
+vi.useFakeTimers();
+
 describe("PullRequestLabels", () => {
     let pull_request: PullRequest;
 
@@ -62,7 +64,7 @@ describe("PullRequestLabels", () => {
         );
 
         const wrapper = getWrapper();
-        await wrapper.vm.$nextTick();
+        await vi.runOnlyPendingTimersAsync();
         const labels = wrapper.findAll("[data-test=pull-request-card-label]");
 
         expect(labels).toHaveLength(3);

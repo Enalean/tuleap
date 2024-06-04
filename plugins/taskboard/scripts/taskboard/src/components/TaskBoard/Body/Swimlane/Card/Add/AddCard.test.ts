@@ -86,8 +86,7 @@ describe("AddCard", () => {
         const wrapper = getWrapper();
 
         wrapper.findComponent(AddButton).vm.$emit("click");
-        wrapper.setData({ label: "Lorem ipsum" });
-        await wrapper.vm.$nextTick();
+        await wrapper.setData({ label: "Lorem ipsum" });
 
         expect(wrapper.vm.$data.label).toBe("Lorem ipsum");
         wrapper.findComponent(LabelEditor).vm.$emit("save");
@@ -113,8 +112,7 @@ describe("AddCard", () => {
         const wrapper = getWrapper();
 
         wrapper.findComponent(AddButton).vm.$emit("click");
-        wrapper.setData({ label: "Lorem ipsum" });
-        await wrapper.vm.$nextTick();
+        await wrapper.setData({ label: "Lorem ipsum" });
 
         expect(wrapper.vm.$data.label).toBe("Lorem ipsum");
         wrapper.findComponent(CancelSaveButtons).vm.$emit("save");
@@ -140,8 +138,7 @@ describe("AddCard", () => {
         const wrapper = getWrapper();
 
         wrapper.findComponent(AddButton).vm.$emit("click");
-        wrapper.setData({ label: "" });
-        await wrapper.vm.$nextTick();
+        await wrapper.setData({ label: "" });
 
         expect(wrapper.vm.$data.label).toBe("");
         wrapper.findComponent(CancelSaveButtons).vm.$emit("save");

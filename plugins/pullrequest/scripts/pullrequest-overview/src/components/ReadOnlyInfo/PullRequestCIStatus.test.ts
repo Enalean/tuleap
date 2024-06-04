@@ -73,14 +73,12 @@ describe("PullRequestCIStatus", () => {
             expect(wrapper.find("[data-test=pullrequest-property-skeleton]").exists()).toBe(true);
             expect(wrapper.find("[data-test=pullrequest-ci-status-badge]").exists()).toBe(false);
 
-            wrapper.setProps({
+            await wrapper.setProps({
                 pull_request_info: {
                     last_build_status,
                     last_build_date: "2023-02-20T10:00:00Z",
                 } as PullRequest,
             });
-
-            await wrapper.vm.$nextTick();
 
             expect(wrapper.find("[data-test=pullrequest-property-skeleton]").exists()).toBe(false);
 

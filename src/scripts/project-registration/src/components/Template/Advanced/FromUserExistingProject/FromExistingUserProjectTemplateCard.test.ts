@@ -100,7 +100,6 @@ describe("FromExistingUserProjectTemplateCard", () => {
             is_loading_project_list: true,
         };
         const wrapper = await getWrapper(null, [], false, data);
-        await wrapper.vm.$nextTick();
 
         expect(wrapper.find("[data-test=user-project-description]").exists()).toBe(false);
         expect(wrapper.find("[data-test=user-project-spinner]").exists()).toBe(true);
@@ -115,8 +114,6 @@ describe("FromExistingUserProjectTemplateCard", () => {
         };
         const wrapper = await getWrapper(null, [], false, data);
 
-        await wrapper.vm.$nextTick();
-
         expect(wrapper.find("[data-test=user-project-description]").exists()).toBe(false);
         expect(wrapper.find("[data-test=user-project-spinner]").exists()).toBe(false);
         expect(wrapper.find("[data-test=user-project-error]").exists()).toBe(true);
@@ -129,8 +126,6 @@ describe("FromExistingUserProjectTemplateCard", () => {
         };
         const wrapper = await getWrapper(null, [], false, data);
 
-        await wrapper.vm.$nextTick();
-
         expect(wrapper.find("[data-test=user-project-description]").exists()).toBe(false);
         expect(wrapper.find("[data-test=user-project-spinner]").exists()).toBe(false);
         expect(wrapper.find("[data-test=user-project-error]").exists()).toBe(true);
@@ -141,9 +136,7 @@ describe("FromExistingUserProjectTemplateCard", () => {
         const wrapper = await getWrapper(null, projects_user_is_admin_of, true);
         const store = useStore();
 
-        wrapper.get("[data-test=project-registration-card-label").trigger("click");
-        await wrapper.vm.$nextTick();
-        await wrapper.vm.$nextTick();
+        await wrapper.get("[data-test=project-registration-card-label").trigger("click");
 
         expect(store.loadUserProjects).not.toHaveBeenCalled();
 
@@ -157,20 +150,14 @@ describe("FromExistingUserProjectTemplateCard", () => {
         const wrapper = await getWrapper();
         const store = useStore();
 
-        wrapper.get("[data-test=project-registration-card-label").trigger("click");
-        await wrapper.vm.$nextTick();
-        await wrapper.vm.$nextTick();
+        await wrapper.get("[data-test=project-registration-card-label").trigger("click");
 
         expect(store.loadUserProjects).toHaveBeenCalled();
     });
 
     it("should display the card as checked if the card is currently selected", async () => {
         const wrapper = await getWrapper(alm2, projects_user_is_admin_of, true);
-        const input = wrapper.find("[data-test=selected-template-input]").element;
-
-        if (!(input instanceof HTMLInputElement)) {
-            throw new Error("[data-test=selected-template-input] is not a HTMLInputElement");
-        }
+        const input = wrapper.find<HTMLInputElement>("[data-test=selected-template-input]").element;
 
         expect(input.checked).toBe(true);
         expect(wrapper.getComponent(UserProjectList).exists()).toBe(true);

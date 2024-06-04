@@ -22,10 +22,11 @@ import type { ActionContext } from "vuex";
 import type { RootState } from "./type";
 import * as TaskRetriever from "../helpers/task-retriever";
 import * as IterationsRetriever from "../helpers/iterations-retriever";
-import Vue from "vue";
 import { mockFetchError } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper";
 import type { Iteration, Task } from "../type";
 import { DateTime } from "luxon";
+
+jest.useFakeTimers();
 
 describe("root-actions", () => {
     let context: ActionContext<RootState, RootState>;
@@ -48,8 +49,7 @@ describe("root-actions", () => {
             jest.spyOn(TaskRetriever, "retrieveAllTasks").mockResolvedValue([]);
 
             actions.loadRoadmap(context, 42);
-            await Vue.nextTick();
-            await Vue.nextTick();
+            await jest.runOnlyPendingTimersAsync();
 
             expect(context.commit).toHaveBeenCalledWith("setApplicationInEmptyState");
         });
@@ -69,8 +69,7 @@ describe("root-actions", () => {
                 .mockResolvedValue([]);
 
             actions.loadRoadmap(context, 42);
-            await Vue.nextTick();
-            await Vue.nextTick();
+            await jest.runOnlyPendingTimersAsync();
 
             expect(tasks_retrieval.mock.calls).toHaveLength(1);
             expect(iterations_retrieval.mock.calls).toHaveLength(2);
@@ -96,8 +95,7 @@ describe("root-actions", () => {
                 });
 
                 actions.loadRoadmap(context, 42);
-                await Vue.nextTick();
-                await Vue.nextTick();
+                await jest.runOnlyPendingTimersAsync();
 
                 expect(context.commit).toHaveBeenCalledWith(
                     "setApplicationInErrorStateDueToRestError",
@@ -121,8 +119,7 @@ describe("root-actions", () => {
                 });
 
                 actions.loadRoadmap(context, 42);
-                await Vue.nextTick();
-                await Vue.nextTick();
+                await jest.runOnlyPendingTimersAsync();
 
                 expect(context.commit).toHaveBeenCalledWith("setApplicationInEmptyState");
             },
@@ -152,8 +149,7 @@ describe("root-actions", () => {
             jest.spyOn(TaskRetriever, "retrieveAllTasks").mockResolvedValue([task_1, task_2]);
 
             actions.loadRoadmap(context, 42);
-            await Vue.nextTick();
-            await Vue.nextTick();
+            await jest.runOnlyPendingTimersAsync();
 
             expect(context.commit).toHaveBeenCalledWith("tasks/setTasks", [task_1, task_2], {
                 root: true,
@@ -191,8 +187,7 @@ describe("root-actions", () => {
                 });
 
                 actions.loadRoadmap(context, 42);
-                await Vue.nextTick();
-                await Vue.nextTick();
+                await jest.runOnlyPendingTimersAsync();
 
                 expect(context.commit).not.toHaveBeenCalledWith(
                     "tasks/setTasks",
@@ -229,8 +224,7 @@ describe("root-actions", () => {
             jest.spyOn(IterationsRetriever, "retrieveIterations").mockResolvedValue(iterations);
 
             actions.loadRoadmap(context, 42);
-            await Vue.nextTick();
-            await Vue.nextTick();
+            await jest.runOnlyPendingTimersAsync();
 
             expect(context.commit).toHaveBeenCalledWith(
                 `iterations/setLvl${level}Iterations`,

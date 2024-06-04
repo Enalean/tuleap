@@ -24,6 +24,8 @@ import store_options from "../../store/store_options";
 import DeleteComparisonConfirmationModal from "./DeleteComparisonConfirmationModal.vue";
 import * as rest_querier from "../../api/rest-querier";
 
+jest.useFakeTimers();
+
 describe("DeleteComparisonConfirmationModal", () => {
     let deleteComparison, deleteComparisonResolve, deleteComparisonReject;
     const comparison = { id: 1 };
@@ -76,7 +78,7 @@ describe("DeleteComparisonConfirmationModal", () => {
         describe("and deletion is successful", () => {
             beforeEach(async () => {
                 deleteComparisonResolve();
-                await wrapper.vm.$nextTick();
+                await jest.runOnlyPendingTimersAsync();
             });
             it("deletes comparison in store", () => {
                 expect($store.commit).toHaveBeenCalledWith("comparisons/delete", comparison);
@@ -95,7 +97,7 @@ describe("DeleteComparisonConfirmationModal", () => {
         describe("and deletion failed", () => {
             beforeEach(async () => {
                 deleteComparisonReject();
-                await wrapper.vm.$nextTick();
+                await jest.runOnlyPendingTimersAsync();
             });
             it("does not delete comparison in store", () => {
                 expect($store.commit).not.toHaveBeenCalledWith(

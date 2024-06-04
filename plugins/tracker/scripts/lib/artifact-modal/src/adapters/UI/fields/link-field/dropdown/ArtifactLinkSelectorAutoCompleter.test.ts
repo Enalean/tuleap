@@ -21,7 +21,6 @@ import { Fault } from "@tuleap/fault";
 import { Option } from "@tuleap/option";
 import type { GroupCollection } from "@tuleap/lazybox";
 import { okAsync } from "neverthrow";
-import type { ResultAsync } from "neverthrow";
 import { setCatalog } from "../../../../../gettext-catalog";
 import { ArtifactLinkSelectorAutoCompleter } from "./ArtifactLinkSelectorAutoCompleter";
 import { RetrieveMatchingArtifactStub } from "../../../../../../tests/stubs/RetrieveMatchingArtifactStub";
@@ -39,6 +38,8 @@ import { SearchArtifactsStub } from "../../../../../../tests/stubs/SearchArtifac
 import type { SearchArtifacts } from "../../../../../domain/fields/link-field/SearchArtifacts";
 import { DispatchEventsStub } from "../../../../../../tests/stubs/DispatchEventsStub";
 import type { LinkFieldController } from "../../../../../domain/fields/link-field/LinkFieldController";
+
+jest.useFakeTimers();
 
 const FIRST_ARTIFACT_ID = 1621;
 const SECOND_ARTIFACT_ID = 15;
@@ -62,7 +63,6 @@ describe("ArtifactLinkSelectorAutoCompleter", () => {
     let first_artifact: LinkableArtifact,
         second_artifact: LinkableArtifact,
         artifact_retriever: RetrieveMatchingArtifact,
-        artifact_retriever_async: ResultAsync<LinkableArtifact, never>,
         current_artifact_option: Option<CurrentArtifactIdentifier>,
         user_history_retriever: RetrieveUserHistory,
         event_dispatcher: DispatchEventsStub,
@@ -137,8 +137,9 @@ describe("ArtifactLinkSelectorAutoCompleter", () => {
 
         it(`when the query of the autocomplete is empty and the user has already seen some artifacts,
             then it will display the recently displayed group ONLY`, async () => {
-            const user_history_async = okAsync([first_artifact, second_artifact]);
-            user_history_retriever = RetrieveUserHistoryStub.withUserHistory(user_history_async);
+            user_history_retriever = RetrieveUserHistoryStub.withUserHistory(
+                okAsync([first_artifact, second_artifact]),
+            );
 
             autocomplete("");
 
@@ -146,8 +147,7 @@ describe("ArtifactLinkSelectorAutoCompleter", () => {
             expect(loading_groups).toHaveLength(1);
             expect(loading_groups[0].is_loading).toBe(true);
 
-            await user_history_async;
-            await user_history_async; //There are two level of promise
+            await jest.runOnlyPendingTimersAsync();
 
             expect(host.matching_artifact_section).toHaveLength(0);
             expect(host.search_results_section).toHaveLength(0);
@@ -161,13 +161,13 @@ describe("ArtifactLinkSelectorAutoCompleter", () => {
 
         it(`when the query has at least 3 characters,
             it will display the search results section`, async () => {
-            const search_async = okAsync([first_artifact, second_artifact]);
-            artifacts_searcher = SearchArtifactsStub.withResults(search_async);
+            artifacts_searcher = SearchArtifactsStub.withResults(
+                okAsync([first_artifact, second_artifact]),
+            );
 
             autocomplete("abc");
 
-            await search_async;
-            await search_async; //There are two level of promise
+            await jest.runOnlyPendingTimersAsync();
 
             expect(host.search_results_section).toHaveLength(1);
             const group = host.search_results_section[0];
@@ -182,7 +182,8 @@ describe("ArtifactLinkSelectorAutoCompleter", () => {
             and it will clear the search group so that the section does not appear at all`, async () => {
             artifacts_searcher = SearchArtifactsStub.withFault(NotFoundFault());
 
-            await await autocomplete("abc");
+            autocomplete("abc");
+            await jest.runOnlyPendingTimersAsync();
 
             expect(event_dispatcher.getDispatchedEventTypes()).not.toContain("WillNotifyFault");
             expect(host.search_results_section).toHaveLength(0);
@@ -193,7 +194,8 @@ describe("ArtifactLinkSelectorAutoCompleter", () => {
             and will notify the fault`, async () => {
             artifacts_searcher = SearchArtifactsStub.withFault(Fault.fromMessage("Ooops"));
 
-            await await autocomplete("abc");
+            autocomplete("abc");
+            await jest.runOnlyPendingTimersAsync();
 
             expect(event_dispatcher.getDispatchedEventTypes()).toContain("WillNotifyFault");
             expect(host.search_results_section).toHaveLength(1);
@@ -205,9 +207,9 @@ describe("ArtifactLinkSelectorAutoCompleter", () => {
         it(`when an artifact is returned by the artifact api,
             it will be added to the matching artifact section,
             and clear the fault notification`, async () => {
-            const artifact_retriever_async = okAsync(first_artifact);
-            artifact_retriever =
-                RetrieveMatchingArtifactStub.withMatchingArtifact(artifact_retriever_async);
+            artifact_retriever = RetrieveMatchingArtifactStub.withMatchingArtifact(
+                okAsync(first_artifact),
+            );
 
             autocomplete(String(FIRST_ARTIFACT_ID));
 
@@ -215,8 +217,7 @@ describe("ArtifactLinkSelectorAutoCompleter", () => {
             expect(loading_groups).toHaveLength(1);
             expect(loading_groups[0].is_loading).toBe(true);
 
-            await artifact_retriever_async;
-            await artifact_retriever_async; //There are two level of promise
+            await jest.runOnlyPendingTimersAsync();
 
             const groups = host.matching_artifact_section;
             expect(groups).toHaveLength(1);
@@ -230,13 +231,11 @@ describe("ArtifactLinkSelectorAutoCompleter", () => {
         it(`when an unexpected error is returned by the api (not code 403 or 404),
             then it will set a matching artifact with zero items so that link-selector can show the empty state message
             and notify the fault`, async () => {
-            const fault = Fault.fromMessage("Nope");
-            artifact_retriever = RetrieveMatchingArtifactStub.withFault(fault);
+            artifact_retriever = RetrieveMatchingArtifactStub.withFault(Fault.fromMessage("Nope"));
 
             autocomplete(String(FIRST_ARTIFACT_ID));
 
-            await artifact_retriever_async;
-            await artifact_retriever_async; //There are two level of promise
+            await jest.runOnlyPendingTimersAsync();
 
             expect(event_dispatcher.getDispatchedEventTypes()).toContain("WillNotifyFault");
             const groups = host.matching_artifact_section;
@@ -248,15 +247,15 @@ describe("ArtifactLinkSelectorAutoCompleter", () => {
         it(`when an unexpected error is returned by the api,
             then it will set the recently viewed artifact with zero items so that link-selector can show the empty state message
             and notify the fault`, async () => {
-            const user_history_async = okAsync([second_artifact, first_artifact]);
-            user_history_retriever = RetrieveUserHistoryStub.withUserHistory(user_history_async);
+            user_history_retriever = RetrieveUserHistoryStub.withUserHistory(
+                okAsync([second_artifact, first_artifact]),
+            );
             const fault = Fault.fromMessage("Nope");
             user_history_retriever = RetrieveUserHistoryStub.withFault(fault);
 
             autocomplete("");
 
-            await user_history_async;
-            await user_history_async; //There are two level of promise
+            await jest.runOnlyPendingTimersAsync();
 
             expect(event_dispatcher.getDispatchedEventTypes()).toContain("WillNotifyFault");
             const groups = host.recently_viewed_section;
@@ -278,8 +277,7 @@ describe("ArtifactLinkSelectorAutoCompleter", () => {
 
                 autocomplete("404");
 
-                await artifact_retriever_async;
-                await artifact_retriever_async; //There are two level of promise
+                await jest.runOnlyPendingTimersAsync();
 
                 expect(event_dispatcher.getDispatchedEventTypes()).not.toContain("WillNotifyFault");
                 const groups = host.matching_artifact_section;
@@ -305,8 +303,7 @@ describe("ArtifactLinkSelectorAutoCompleter", () => {
             expect(loading_groups).toHaveLength(1);
             expect(loading_groups[0].is_loading).toBe(true);
 
-            await get_parents_promise;
-            await get_parents_promise; //There are two levels of promise
+            await jest.runOnlyPendingTimersAsync();
 
             const groups = host.possible_parents_section;
             expect(groups).toHaveLength(1);
@@ -330,8 +327,7 @@ describe("ArtifactLinkSelectorAutoCompleter", () => {
             async (_type_of_query, query, expected_number_of_matching_parents) => {
                 autocomplete(query);
 
-                await get_parents_promise;
-                await get_parents_promise; //There are two levels of promise
+                await jest.runOnlyPendingTimersAsync();
 
                 const groups = host.possible_parents_section;
                 expect(groups).toHaveLength(1);
@@ -349,8 +345,7 @@ describe("ArtifactLinkSelectorAutoCompleter", () => {
             async (_type_of_query, query, expected_number_of_matching_parents) => {
                 autocomplete(query);
 
-                await get_parents_promise;
-                await get_parents_promise; //There are two levels of promise
+                await jest.runOnlyPendingTimersAsync();
 
                 const parent_groups = host.possible_parents_section;
                 expect(parent_groups).toHaveLength(1);
@@ -366,8 +361,7 @@ describe("ArtifactLinkSelectorAutoCompleter", () => {
                 and it will set two groups holding each`, async () => {
             autocomplete(String(FIRST_ARTIFACT_ID));
 
-            await get_parents_promise;
-            await get_parents_promise; //There are two levels of promise
+            await jest.runOnlyPendingTimersAsync();
 
             const groups = host.possible_parents_section;
             expect(groups).toHaveLength(1);

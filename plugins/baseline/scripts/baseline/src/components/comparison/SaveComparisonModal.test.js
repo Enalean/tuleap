@@ -18,7 +18,6 @@
  *
  */
 
-import Vue from "vue";
 import VueRouter from "vue-router";
 import { shallowMount } from "@vue/test-utils";
 import * as rest_querier from "../../api/rest-querier";
@@ -26,6 +25,8 @@ import SaveComparisonModal from "./SaveComparisonModal.vue";
 import store_options from "../../store/store_options";
 import { createStoreMock } from "../../support/store-wrapper.test-helper";
 import { createLocalVueForTests } from "../../support/local-vue";
+
+jest.useFakeTimers();
 
 describe("SaveComparisonModal", () => {
     const error_message_selector = '[data-test-type="error-message"]';
@@ -74,7 +75,7 @@ describe("SaveComparisonModal", () => {
 
         it("shows spinner", async () => {
             wrapper.vm.saveComparison();
-            await Vue.nextTick();
+            await jest.runOnlyPendingTimersAsync();
             expect(wrapper.find('[data-test-type="spinner"]').exists()).toBeTruthy();
         });
 
@@ -95,8 +96,8 @@ describe("SaveComparisonModal", () => {
                     author_id: 1,
                     creation_date: "2019-03-22T10:01:48+00:00",
                 });
-                await wrapper.vm.saveComparison();
-                await Vue.nextTick();
+                wrapper.vm.saveComparison();
+                await jest.runOnlyPendingTimersAsync();
             });
 
             it("Navigates to comparison page", () => {

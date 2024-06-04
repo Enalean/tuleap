@@ -26,6 +26,8 @@ import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import type { Feature } from "../../../type";
 import type { Store } from "@tuleap/vuex-store-wrapper-jest";
 
+jest.useFakeTimers();
+
 describe("ProgramIncrementFeatureList", () => {
     it("Displays the empty state when no features are found", async () => {
         const store: Store = createStoreMock({
@@ -177,7 +179,7 @@ describe("ProgramIncrementFeatureList", () => {
             },
         });
 
-        await wrapper.vm.$nextTick();
+        await jest.runOnlyPendingTimersAsync();
 
         expect(wrapper.find("[data-test=empty-state]").exists()).toBe(false);
         expect(wrapper.find("[data-test=to-be-planned-skeleton]").exists()).toBe(false);
@@ -235,7 +237,7 @@ describe("ProgramIncrementFeatureList", () => {
             },
         });
 
-        await wrapper.vm.$nextTick();
+        await jest.runOnlyPendingTimersAsync();
 
         expect(wrapper.vm.$store.dispatch).toHaveBeenCalledWith(
             "getFeatureAndStoreInProgramIncrement",

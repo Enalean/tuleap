@@ -37,7 +37,7 @@ describe("PullRequestStats", () => {
         expect(wrapper.find("[data-test=pullrequest-property-skeleton]").exists()).toBe(true);
         expect(wrapper.find("[data-test=pullrequest-stats]").exists()).toBe(false);
 
-        wrapper.setProps({
+        await wrapper.setProps({
             pull_request_info: {
                 short_stat: {
                     lines_added: 75,
@@ -45,8 +45,6 @@ describe("PullRequestStats", () => {
                 },
             } as PullRequest,
         });
-
-        await wrapper.vm.$nextTick();
 
         expect(wrapper.find("[data-test=pullrequest-property-skeleton]").exists()).toBe(false);
         expect(wrapper.find("[data-test=pullrequest-stats]").exists()).toBe(true);

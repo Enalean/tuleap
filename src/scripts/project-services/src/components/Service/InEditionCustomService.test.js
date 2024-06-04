@@ -69,8 +69,7 @@ describe(`InEditionCustomService`, () => {
             iframe_switch.setChecked(false);
             const updated_service = { ...props.service, is_in_iframe: false };
             const new_props = { minimal_rank: 10, service: updated_service, allowed_icons: {} };
-            wrapper.setProps(new_props);
-            await wrapper.vm.$nextTick();
+            await wrapper.setProps(new_props);
 
             const deprecation_message = wrapper.get("[data-test=iframe-deprecation-warning");
             expect(deprecation_message.exists()).toBe(true);

@@ -26,7 +26,8 @@ import { TYPE_EMBEDDED, TYPE_EMPTY, TYPE_FILE, TYPE_LINK, TYPE_WIKI } from "../.
 import emitter, { default as real_emitter } from "../../../../helpers/emitter";
 import * as get_office_file from "../../../../helpers/office/get-empty-office-file";
 import { getGlobalTestOptions } from "../../../../helpers/global-options-for-test";
-import { nextTick } from "vue";
+
+jest.useFakeTimers();
 
 describe("NewVersionEmptyMenuOptions", function () {
     const CURRENT_ITEM: Empty = {
@@ -176,8 +177,7 @@ describe("NewVersionEmptyMenuOptions", function () {
 
         await alternatives.at(0).trigger("click");
 
-        await nextTick();
-        await nextTick();
+        await jest.runOnlyPendingTimersAsync();
 
         expect(create_version_from_empty).toHaveBeenCalled();
         expect(create_version_from_empty.mock.calls[0][1][2].file_properties.file.name).toBe(

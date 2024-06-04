@@ -23,7 +23,6 @@ import { shallowMount } from "@vue/test-utils";
 import emitter from "../../../../../helpers/emitter";
 import DescriptionProperty from "./DescriptionProperty.vue";
 import { getGlobalTestOptions } from "../../../../../helpers/global-options-for-test";
-import { nextTick } from "vue";
 
 jest.mock("../../../../../helpers/emitter");
 
@@ -40,14 +39,11 @@ describe("DescriptionProperty", () => {
 
         const wrapper = createWrapper(value);
 
-        await nextTick();
-        const input = wrapper.get("[data-test=document-property-description]");
-
-        if (!(input.element instanceof HTMLTextAreaElement)) {
-            throw new Error("input element is not an html input");
-        }
+        const input = wrapper.find<HTMLTextAreaElement>(
+            "[data-test=document-property-description]",
+        );
         input.element.value = "My new description";
-        input.trigger("input");
+        await input.trigger("input");
 
         expect(emitter.emit).toHaveBeenCalledWith(
             "update-description-property",

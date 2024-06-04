@@ -16,15 +16,10 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-import type { RouteLocationNormalizedLoaded, Router } from "vue-router";
 
 const searchInFolderMock = jest.fn();
-jest.mock("../../api/rest-querier", () => {
-    return {
-        searchInFolder: searchInFolderMock,
-    };
-});
 
+import type { RouteLocationNormalizedLoaded, Router } from "vue-router";
 import SearchResultError from "./SearchResult/SearchResultError.vue";
 import SearchContainer from "./SearchContainer.vue";
 import SearchResultTable from "./SearchResult/SearchResultTable.vue";
@@ -35,10 +30,17 @@ import type { Events } from "../../helpers/emitter";
 import emitter from "../../helpers/emitter";
 import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
-import { nextTick } from "vue";
 import { FetchWrapperError } from "@tuleap/tlp-fetch";
 import * as router from "../../helpers/use-router";
 import { getGlobalTestOptions } from "../../helpers/global-options-for-test";
+
+jest.mock("../../api/rest-querier", () => {
+    return {
+        searchInFolder: searchInFolderMock,
+    };
+});
+
+jest.useFakeTimers();
 
 describe("SearchContainer", () => {
     let push_route_spy: jest.Mock;
@@ -202,8 +204,7 @@ describe("SearchContainer", () => {
         });
         expect(searchInFolderMock).toHaveBeenCalledWith(101, expected_params, 0);
 
-        wrapper.setProps({ offset: 10 });
-        await nextTick();
+        await wrapper.setProps({ offset: 10 });
 
         expect(push_route_spy).not.toHaveBeenCalled();
         expect(searchInFolderMock).toHaveBeenCalledWith(101, expected_params, 10);
@@ -219,8 +220,7 @@ describe("SearchContainer", () => {
         });
         expect(searchInFolderMock).toHaveBeenCalledWith(101, expected_params, 0);
 
-        wrapper.setProps({ folder_id: 102 });
-        await nextTick();
+        await wrapper.setProps({ folder_id: 102 });
 
         expect(push_route_spy).not.toHaveBeenCalled();
         expect(searchInFolderMock).toHaveBeenCalledWith(102, expected_params, 0);
@@ -251,9 +251,7 @@ describe("SearchContainer", () => {
         );
 
         const wrapper = getWrapper("", buildAdvancedSearchParams());
-
-        await nextTick();
-        await nextTick();
+        await jest.runOnlyPendingTimersAsync();
 
         expect(wrapper.findComponent("search-result-table-stub").exists()).toBe(false);
         expect(wrapper.findComponent("search-result-error-stub").exists()).toBe(true);

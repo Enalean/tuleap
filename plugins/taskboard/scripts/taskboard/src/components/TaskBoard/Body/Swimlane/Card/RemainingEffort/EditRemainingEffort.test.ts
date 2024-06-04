@@ -62,7 +62,7 @@ describe("EditRemainingEffort", () => {
     it("Does not save anything if user hit enter but didn't change the initial value", async () => {
         const wrapper = await getWrapper();
 
-        wrapper.trigger("keyup.enter");
+        await wrapper.trigger("keyup.enter");
         expect(wrapper.vm.$store.dispatch).not.toHaveBeenCalled();
         const card = wrapper.props("card");
         expect(wrapper.vm.$store.commit).toHaveBeenCalledWith(
@@ -74,7 +74,7 @@ describe("EditRemainingEffort", () => {
     it(`Does not save anything if the remaining effort is already being saved`, async () => {
         const wrapper = await getWrapper(true);
 
-        wrapper.trigger("keyup.enter");
+        await wrapper.trigger("keyup.enter");
         expect(wrapper.vm.$store.dispatch).not.toHaveBeenCalled();
     });
 
@@ -82,10 +82,8 @@ describe("EditRemainingEffort", () => {
         const wrapper = await getWrapper();
 
         const value = 42;
-        wrapper.setData({ value });
-        await wrapper.vm.$nextTick();
-        wrapper.trigger("keyup.enter");
-        await wrapper.vm.$nextTick();
+        await wrapper.setData({ value });
+        await wrapper.trigger("keyup.enter");
 
         const card = wrapper.props("card");
         expect(wrapper.vm.$store.dispatch).toHaveBeenCalledWith("swimlane/saveRemainingEffort", {
@@ -99,8 +97,7 @@ describe("EditRemainingEffort", () => {
         const wrapper = await getWrapper();
 
         const value = 42;
-        wrapper.setData({ value });
-        await wrapper.vm.$nextTick();
+        await wrapper.setData({ value });
 
         const card = wrapper.props("card");
         EventBus.$emit(TaskboardEvent.SAVE_CARD_EDITION, card);
@@ -115,8 +112,7 @@ describe("EditRemainingEffort", () => {
         const wrapper = await getWrapper();
 
         const value = 42;
-        wrapper.setData({ value });
-        await wrapper.vm.$nextTick();
+        await wrapper.setData({ value });
 
         const card = wrapper.props("card");
         EventBus.$emit(TaskboardEvent.CANCEL_CARD_EDITION, card);
@@ -132,8 +128,7 @@ describe("EditRemainingEffort", () => {
         const wrapper = await getWrapper();
 
         const value = 42;
-        wrapper.setData({ value });
-        await wrapper.vm.$nextTick();
+        await wrapper.setData({ value });
 
         const card = wrapper.props("card");
         EventBus.$emit(TaskboardEvent.SAVE_CARD_EDITION, {} as Card);
@@ -146,8 +141,7 @@ describe("EditRemainingEffort", () => {
         const wrapper = await getWrapper();
 
         const value = 42;
-        wrapper.setData({ value });
-        await wrapper.vm.$nextTick();
+        await wrapper.setData({ value });
 
         const card = wrapper.props("card");
         EventBus.$emit(TaskboardEvent.CANCEL_CARD_EDITION, {} as Card);
@@ -158,16 +152,13 @@ describe("EditRemainingEffort", () => {
     it("Adjust the size of the input whenever user enters digits", async () => {
         const wrapper = await getWrapper();
 
-        wrapper.setData({ value: "3" });
-        await wrapper.vm.$nextTick();
+        await wrapper.setData({ value: "3" });
         expect(wrapper.classes()).toEqual(["taskboard-card-remaining-effort-input"]);
 
-        wrapper.setData({ value: "3.14" });
-        await wrapper.vm.$nextTick();
+        await wrapper.setData({ value: "3.14" });
         expect(wrapper.classes()).toContain("taskboard-card-remaining-effort-input-width-40");
 
-        wrapper.setData({ value: "3.14159265358979323846264338327950288" });
-        await wrapper.vm.$nextTick();
+        await wrapper.setData({ value: "3.14159265358979323846264338327950288" });
         expect(wrapper.classes()).toContain("taskboard-card-remaining-effort-input-width-60");
     });
 
@@ -175,10 +166,8 @@ describe("EditRemainingEffort", () => {
         const wrapper = await getWrapper();
 
         const value = 42;
-        wrapper.setData({ value });
-        await wrapper.vm.$nextTick();
-        wrapper.trigger("keyup.enter");
-        await wrapper.vm.$nextTick();
+        await wrapper.setData({ value });
+        await wrapper.trigger("keyup.enter");
 
         expect(wrapper.emitted("editor-closed")).toBeTruthy();
     });

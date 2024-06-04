@@ -27,6 +27,8 @@ import * as gitlab_error_handler from "../../../gitlab/gitlab-error-handler";
 import { FetchWrapperError } from "@tuleap/tlp-fetch";
 import { createLocalVueForTests } from "../../../helpers/local-vue-for-tests";
 
+jest.useFakeTimers();
+
 describe("RegenerateGitlabWebhook", () => {
     let store_options = {},
         store: Store;
@@ -51,7 +53,7 @@ describe("RegenerateGitlabWebhook", () => {
         const wrapper = await instantiateComponent();
         expect(wrapper.find("[data-test=icon-spin]").exists()).toBeFalsy();
 
-        wrapper.setData({
+        await wrapper.setData({
             repository: {
                 gitlab_data: {
                     gitlab_repository_url: "https://example.com/my/repo",
@@ -62,10 +64,8 @@ describe("RegenerateGitlabWebhook", () => {
                 integration_id: 1,
             } as Repository,
         });
-        await wrapper.vm.$nextTick();
 
-        wrapper.find("[data-test=regenerate-gitlab-webhook-submit]").trigger("click");
-        await wrapper.vm.$nextTick();
+        await wrapper.find("[data-test=regenerate-gitlab-webhook-submit]").trigger("click");
 
         expect(
             wrapper.find("[data-test=regenerate-gitlab-webhook-submit]").attributes().disabled,
@@ -78,7 +78,7 @@ describe("RegenerateGitlabWebhook", () => {
     it("When user submit but there are errors, Then nothing happens", async () => {
         const wrapper = await instantiateComponent();
 
-        wrapper.setData({
+        await wrapper.setData({
             message_error_rest: "Error message",
             repository: {
                 gitlab_data: {
@@ -89,10 +89,8 @@ describe("RegenerateGitlabWebhook", () => {
                 normalized_path: "my/repo",
             },
         });
-        await wrapper.vm.$nextTick();
 
-        wrapper.find("[data-test=regenerate-gitlab-webhook-submit]").trigger("click");
-        await wrapper.vm.$nextTick();
+        await wrapper.find("[data-test=regenerate-gitlab-webhook-submit]").trigger("click");
 
         expect(store.dispatch).not.toHaveBeenCalled();
     });
@@ -100,7 +98,7 @@ describe("RegenerateGitlabWebhook", () => {
     it("When api throws an error, Then error message is displayed", async () => {
         const wrapper = await instantiateComponent();
 
-        wrapper.setData({
+        await wrapper.setData({
             repository: {
                 gitlab_data: {
                     gitlab_repository_url: "https://example.com/my/repo",
@@ -110,7 +108,6 @@ describe("RegenerateGitlabWebhook", () => {
                 normalized_path: "my/repo",
             },
         });
-        await wrapper.vm.$nextTick();
 
         jest.spyOn(store, "dispatch").mockRejectedValue(
             new FetchWrapperError("Not Found", {
@@ -125,9 +122,7 @@ describe("RegenerateGitlabWebhook", () => {
         jest.spyOn(global.console, "error").mockImplementation();
 
         wrapper.find("[data-test=regenerate-gitlab-webhook-submit]").trigger("click");
-        await wrapper.vm.$nextTick();
-        await wrapper.vm.$nextTick();
-        await wrapper.vm.$nextTick();
+        await jest.runOnlyPendingTimersAsync();
 
         expect(wrapper.vm.$data.message_error_rest).toBe("404 Error on server");
         expect(
@@ -138,7 +133,7 @@ describe("RegenerateGitlabWebhook", () => {
 
     it("When user cancel, Then data are reset", async () => {
         const wrapper = await instantiateComponent();
-        wrapper.setData({
+        await wrapper.setData({
             repository: {
                 gitlab_data: {
                     gitlab_repository_url: "https://example.com/my/repo",
@@ -150,10 +145,8 @@ describe("RegenerateGitlabWebhook", () => {
             message_error_rest: "Error server",
             is_updating_webhook: true,
         });
-        await wrapper.vm.$nextTick();
 
-        wrapper.find("[data-test=regenerate-gitlab-webhook-cancel]").trigger("click");
-        await wrapper.vm.$nextTick();
+        await wrapper.find("[data-test=regenerate-gitlab-webhook-cancel]").trigger("click");
 
         expect(wrapper.vm.$data.message_error_rest).toBe("");
         expect(wrapper.vm.$data.repository).toBeNull();

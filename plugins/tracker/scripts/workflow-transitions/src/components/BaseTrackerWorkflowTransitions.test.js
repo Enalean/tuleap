@@ -122,7 +122,6 @@ describe("BaseTrackerWorkflowTransitions", () => {
             it("when base field is not configured and there is no selectbox field, then it shows that first configuration is impossible", async () => {
                 store.getters.has_selectbox_fields = false;
                 const wrapper = await getWrapper();
-                await wrapper.vm.$nextTick();
 
                 expect(
                     wrapper.findComponent(FirstConfigurationImpossibleWarning).exists(),

@@ -22,6 +22,8 @@ import { shallowMount } from "@vue/test-utils";
 import { createLocalVueForTests } from "../../support/local-vue";
 import DeleteConfirmationModal from "./DeleteConfirmationModal.vue";
 
+jest.useFakeTimers();
+
 describe("DeleteConfirmationModal", () => {
     const confirm_selector = '[data-test-action="confirm"]';
     const spinner_selector = '[data-test-type="spinner"]';
@@ -57,8 +59,7 @@ describe("DeleteConfirmationModal", () => {
 
     describe("when confirming", () => {
         beforeEach(async () => {
-            wrapper.get(confirm_selector).trigger("click");
-            await wrapper.vm.$nextTick();
+            await wrapper.get(confirm_selector).trigger("click");
         });
 
         it("shows spinner", () => {
@@ -76,7 +77,7 @@ describe("DeleteConfirmationModal", () => {
         beforeEach(async () => {
             wrapper.get(confirm_selector).trigger("click");
             confirmResolve("resolved");
-            await wrapper.vm.$nextTick();
+            await jest.runOnlyPendingTimersAsync();
         });
 
         it("does not show spinner any more", () => {

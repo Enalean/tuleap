@@ -102,10 +102,9 @@ describe("Artifact", () => {
 
     describe("when artifact has no description", () => {
         beforeEach(async () => {
-            wrapper.setProps({
+            await wrapper.setProps({
                 artifact: { description: null, status: "Planned", tracker_id: 9 },
             });
-            await wrapper.vm.$nextTick();
         });
 
         it("does not show description", () => {
@@ -116,8 +115,8 @@ describe("Artifact", () => {
     });
 
     describe("when artifact has status", () => {
-        beforeEach(() => {
-            wrapper.setProps({
+        beforeEach(async () => {
+            await wrapper.setProps({
                 artifact: { description: "lorem", status: "my status", tracker_id: 9 },
             });
         });
@@ -129,10 +128,9 @@ describe("Artifact", () => {
 
     describe("when artifact has no status", () => {
         beforeEach(async () => {
-            wrapper.setProps({
+            await wrapper.setProps({
                 artifact: { status: null, description: "" },
             });
-            await wrapper.vm.$nextTick();
         });
 
         it("does not show status", () => {

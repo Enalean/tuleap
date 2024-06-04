@@ -18,7 +18,6 @@
  *
  */
 
-import Vue from "vue";
 import { shallowMount } from "@vue/test-utils";
 import { createPlanIterationsLocalVue } from "../../../helpers/local-vue-for-test";
 import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
@@ -30,6 +29,8 @@ import PlannedIterationsSection from "./PlannedIterationsSection.vue";
 import PlannedIterationsSectionEmptyState from "./PlannedIterationsSectionEmptyState.vue";
 import IterationCard from "./IterationCard.vue";
 import BacklogElementSkeleton from "./../../BacklogElementSkeleton.vue";
+
+jest.useFakeTimers();
 
 describe("PlannedIterationsSection", () => {
     async function getWrapper(
@@ -65,8 +66,7 @@ describe("PlannedIterationsSection", () => {
                 sub_label: "g-pig",
             });
 
-            await Vue.nextTick();
-            await Vue.nextTick();
+            await jest.runOnlyPendingTimersAsync();
 
             expect(wrapper.get("[data-test=planned-iterations-section-title]").text()).toBe(
                 "Guinea Pigs",
@@ -86,8 +86,7 @@ describe("PlannedIterationsSection", () => {
 
                 const wrapper = await getWrapper(iterations_labels);
 
-                await Vue.nextTick();
-                await Vue.nextTick();
+                await jest.runOnlyPendingTimersAsync();
 
                 expect(wrapper.find("[data-test=iteration-fetch-error]").text()).toEqual(
                     expected_message,
@@ -98,8 +97,7 @@ describe("PlannedIterationsSection", () => {
         it("should use the custom iteration sub_label in the [+ add iteration] button when it is defined", async () => {
             const wrapper = await getWrapper({ label: "Guinea Pigs", sub_label: "g-pig" });
 
-            await Vue.nextTick();
-            await Vue.nextTick();
+            await jest.runOnlyPendingTimersAsync();
 
             expect(wrapper.find("[data-test=button-add-iteration-label]").text()).toBe("New g-pig");
         });
@@ -113,8 +111,7 @@ describe("PlannedIterationsSection", () => {
 
             expect(wrapper.findComponent(BacklogElementSkeleton).exists()).toBe(true);
 
-            await Vue.nextTick();
-            await Vue.nextTick();
+            await jest.runOnlyPendingTimersAsync();
 
             expect(wrapper.findComponent(PlannedIterationsSectionEmptyState).exists()).toBe(true);
             expect(wrapper.findComponent(BacklogElementSkeleton).exists()).toBe(false);
@@ -137,8 +134,7 @@ describe("PlannedIterationsSection", () => {
 
             expect(wrapper.findComponent(BacklogElementSkeleton).exists()).toBe(true);
 
-            await Vue.nextTick();
-            await Vue.nextTick();
+            await jest.runOnlyPendingTimersAsync();
 
             expect(retriever.getIncrementIterations).toHaveBeenCalledWith(666);
             expect(wrapper.findComponent(PlannedIterationsSectionEmptyState).exists()).toBe(false);
@@ -155,8 +151,7 @@ describe("PlannedIterationsSection", () => {
                 sub_label: "g-pig",
             });
 
-            await Vue.nextTick();
-            await Vue.nextTick();
+            await jest.runOnlyPendingTimersAsync();
 
             const displayed_error = wrapper.find("[data-test=iteration-fetch-error]");
             expect(displayed_error.exists()).toBe(true);

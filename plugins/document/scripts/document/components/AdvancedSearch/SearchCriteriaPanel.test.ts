@@ -24,11 +24,10 @@ import type { ConfigurationState } from "../../store/configuration";
 import type { AdvancedSearchParams, SearchDate } from "../../type";
 import { buildAdvancedSearchParams } from "../../helpers/build-advanced-search-params";
 import { getGlobalTestOptions } from "../../helpers/global-options-for-test";
-import { nextTick } from "vue";
 import emitter from "../../helpers/emitter";
 
 describe("SearchCriteriaPanel", () => {
-    it("should allow user to search for new terms", async () => {
+    it("should allow user to search for new terms", () => {
         // Need to attach the wrapper to a parent node so that Vue Test Utils can
         // submit the form when clicking on the submit button.
         // See https://github.com/vuejs/vue-test-utils/issues/1030#issuecomment-441166455
@@ -73,8 +72,6 @@ describe("SearchCriteriaPanel", () => {
                 }),
             },
         });
-
-        await nextTick();
 
         emitter.emit("update-criteria", {
             criteria: "id",

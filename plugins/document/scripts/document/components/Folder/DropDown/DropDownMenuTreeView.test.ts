@@ -22,7 +22,6 @@ import { shallowMount } from "@vue/test-utils";
 import DropDownMenuTreeView from "./DropDownMenuTreeView.vue";
 import type { Folder, Item, ItemFile, OtherTypeItem } from "../../../type";
 import { getGlobalTestOptions } from "../../../helpers/global-options-for-test";
-import { nextTick } from "vue";
 
 describe("DropDownMenuTreeView", () => {
     function createWrapper(
@@ -125,7 +124,7 @@ describe("DropDownMenuTreeView", () => {
     });
 
     it(`Given item is not a folder and user can write
-        Then user can create new version of document`, async () => {
+        Then user can create new version of document`, () => {
         const wrapper = createWrapper(
             {
                 id: 1,
@@ -136,7 +135,6 @@ describe("DropDownMenuTreeView", () => {
             false,
             false,
         );
-        await nextTick();
 
         expect(wrapper.find("[data-test=document-folder-title]").exists()).toBe(true);
         expect(wrapper.find("[data-test=document-folder-content-creation]").exists()).toBe(false);
@@ -149,7 +147,7 @@ describe("DropDownMenuTreeView", () => {
     });
 
     it(`Given item is another type
-        Then user cannot lock, unlock nor create new version of document`, async () => {
+        Then user cannot lock, unlock nor create new version of document`, () => {
         const wrapper = createWrapper(
             {
                 id: 1,
@@ -160,7 +158,6 @@ describe("DropDownMenuTreeView", () => {
             false,
             false,
         );
-        await nextTick();
 
         expect(wrapper.find("[data-test=document-folder-title]").exists()).toBe(true);
         expect(wrapper.find("[data-test=document-folder-content-creation]").exists()).toBe(false);

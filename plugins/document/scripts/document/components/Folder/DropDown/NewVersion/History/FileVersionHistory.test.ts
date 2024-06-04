@@ -25,10 +25,11 @@ import * as version_history_retriever from "../../../../../helpers/version-histo
 import type { FileHistory } from "../../../../../type";
 import { getGlobalTestOptions } from "../../../../../helpers/global-options-for-test";
 import type { ConfigurationState } from "../../../../../store/configuration";
-import { nextTick } from "vue";
 import { FetchWrapperError } from "@tuleap/tlp-fetch";
 
 jest.mock("vue-router");
+
+jest.useFakeTimers();
 
 describe("FileVersionHistory", () => {
     function createWrapper(
@@ -82,9 +83,7 @@ describe("FileVersionHistory", () => {
 
         const wrapper = createWrapper();
 
-        await nextTick();
-        await nextTick();
-        await nextTick();
+        await jest.runOnlyPendingTimersAsync();
 
         expect(wrapper.vm.versions).toHaveLength(2);
         expect(wrapper.vm.are_versions_loading).toBe(false);
@@ -128,9 +127,7 @@ describe("FileVersionHistory", () => {
 
         const wrapper = createWrapper();
 
-        await nextTick();
-        await nextTick();
-        await nextTick();
+        await jest.runOnlyPendingTimersAsync();
 
         expect(wrapper.vm.versions).toHaveLength(5);
         expect(wrapper.vm.are_versions_loading).toBe(false);
@@ -141,9 +138,7 @@ describe("FileVersionHistory", () => {
         version_history_spy.mockResolvedValue([] as ReadonlyArray<FileHistory>);
         const wrapper = createWrapper();
 
-        await nextTick();
-        await nextTick();
-        await nextTick();
+        await jest.runOnlyPendingTimersAsync();
 
         expect(wrapper.vm.versions).toHaveLength(0);
         expect(wrapper.vm.are_versions_loading).toBe(false);
@@ -166,10 +161,7 @@ describe("FileVersionHistory", () => {
         );
         const wrapper = createWrapper(true);
 
-        await nextTick();
-        await nextTick();
-        await nextTick();
-        await nextTick();
+        await jest.runOnlyPendingTimersAsync();
 
         expect(wrapper.vm.versions).toHaveLength(0);
         expect(wrapper.vm.get_has_error).toBe(true);
@@ -181,8 +173,7 @@ describe("FileVersionHistory", () => {
 
         const wrapper = createWrapper(false, is_filename_pattern_enforced);
 
-        await nextTick();
-        await nextTick();
+        await jest.runOnlyPendingTimersAsync();
 
         expect(version_history_spy).not.toHaveBeenCalled();
         expect(wrapper.element).toMatchInlineSnapshot(`<!--v-if-->`);

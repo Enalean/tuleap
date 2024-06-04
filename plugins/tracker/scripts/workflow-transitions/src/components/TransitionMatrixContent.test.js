@@ -26,6 +26,8 @@ import { createLocalVueForTests } from "../support/local-vue.js";
 import store_options from "../store/index.js";
 import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 
+jest.useFakeTimers();
+
 describe("TransitionMatrixContent", () => {
     let store, wrapper;
 
@@ -126,7 +128,7 @@ describe("TransitionMatrixContent", () => {
                 describe("and new transition successfully saved", () => {
                     beforeEach(async () => {
                         resolveCreateTransition();
-                        await wrapper.vm.$nextTick();
+                        await jest.runOnlyPendingTimersAsync();
                     });
 
                     it("hides spinner", () => {

@@ -23,6 +23,8 @@ import { createPlatformBannerAdminLocalVue } from "../helpers/local-vue-for-test
 import BannerPresenter from "./BannerPresenter.vue";
 import * as rest_querier from "../api/rest-querier";
 
+jest.useFakeTimers();
+
 describe("App", () => {
     it("displays something when no banner is set", async () => {
         const wrapper = shallowMount(App, {
@@ -94,8 +96,7 @@ describe("App", () => {
             importance: "critical",
             activated: false,
         });
-
-        await wrapper.vm.$nextTick();
+        await jest.runOnlyPendingTimersAsync();
 
         expect(delete_banner).toHaveBeenCalledTimes(1);
         expect(location.reload).toHaveBeenCalledTimes(1);
@@ -120,8 +121,7 @@ describe("App", () => {
         wrapper
             .findComponent(BannerPresenter)
             .vm.$emit("save-banner", { message: "test", importance: "critical", activated: false });
-        await wrapper.vm.$nextTick();
-        await wrapper.vm.$nextTick();
+        await jest.runOnlyPendingTimersAsync();
 
         expect(wrapper.findComponent(BannerPresenter).props().loading).toBe(false);
         expect(wrapper.element).toMatchSnapshot();
@@ -151,8 +151,7 @@ describe("App", () => {
             expiration_date: "",
             activated: true,
         });
-
-        await wrapper.vm.$nextTick();
+        await jest.runOnlyPendingTimersAsync();
 
         expect(wrapper.findComponent(BannerPresenter).props().loading).toBe(true);
         expect(save_banner).toHaveBeenCalledTimes(1);
@@ -181,8 +180,7 @@ describe("App", () => {
             expiration_date: "",
             activated: true,
         });
-        await wrapper.vm.$nextTick();
-        await wrapper.vm.$nextTick();
+        await jest.runOnlyPendingTimersAsync();
 
         expect(wrapper.findComponent(BannerPresenter).props().loading).toBe(false);
         expect(wrapper.element).toMatchSnapshot();

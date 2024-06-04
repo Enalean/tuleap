@@ -24,7 +24,6 @@ import CreateModal from "./CreateModal.vue";
 import type { RootState } from "../../store/type";
 import * as tracker_report_retriever from "../../helpers/Campaigns/tracker-reports-retriever";
 import { getGlobalTestOptions } from "../../helpers/global-options-for-test";
-import { nextTick } from "vue";
 
 jest.mock("tlp", () => {
     return {
@@ -32,6 +31,8 @@ jest.mock("tlp", () => {
         createModal: jest.fn(),
     };
 });
+
+jest.useFakeTimers();
 
 describe("CreateModal", () => {
     it("Display the modal when mounted", async () => {
@@ -53,7 +54,7 @@ describe("CreateModal", () => {
             },
         });
         // We need to wait for the loading state to be rendered and the tracker reports status to be resolved
-        await nextTick();
+        await jest.runOnlyPendingTimersAsync();
 
         expect(modal_show).toHaveBeenCalledTimes(1);
         expect(wrapper.element).toMatchSnapshot();
@@ -99,7 +100,7 @@ describe("CreateModal", () => {
         });
 
         // We need to wait for the loading state to be rendered and the tracker reports status to be resolved
-        await nextTick();
+        await jest.runOnlyPendingTimersAsync();
 
         wrapper.find("[data-test=new-campaign-label]").setValue("My new campaign");
 
@@ -145,10 +146,7 @@ describe("CreateModal", () => {
         });
 
         // We need to wait for the loading state to be rendered and then to fail to retrieve the tracker reports
-        await nextTick();
-        await nextTick();
-        await nextTick();
-        await nextTick();
+        await jest.runOnlyPendingTimersAsync();
 
         expect(wrapper.find("[data-test=new-campaign-error-message]").exists()).toBe(true);
     });

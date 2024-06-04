@@ -17,8 +17,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import ExportError from "./ExportError.vue";
-
 jest.mock("@tuleap/tlp-dropdown");
 
 const downloadXlsxExportDocument = jest.fn();
@@ -35,6 +33,7 @@ jest.mock("../../helpers/ExportAsDocument/download-export-document", () => {
     };
 });
 
+import ExportError from "./ExportError.vue";
 import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import type { RootState } from "../../store/type";
@@ -42,7 +41,8 @@ import ExportButton from "./ExportButton.vue";
 import type { BacklogItemState } from "../../store/backlog-item/type";
 import type { CampaignState } from "../../store/campaign/type";
 import { getGlobalTestOptions } from "../../helpers/global-options-for-test";
-import { nextTick } from "vue";
+
+jest.useFakeTimers();
 
 describe("ExportButton", () => {
     beforeEach(() => {
@@ -82,8 +82,8 @@ describe("ExportButton", () => {
         });
     }
 
-    it("Allows to download a report", async () => {
-        const wrapper = await createWrapper(
+    it("Allows to download a report", () => {
+        const wrapper = createWrapper(
             {
                 is_loading: false,
                 has_loading_error: false,
@@ -120,8 +120,8 @@ describe("ExportButton", () => {
         xslx_button.trigger("click");
     });
 
-    it("Does not allow to download the report when the backlog items are not loaded", async () => {
-        const wrapper = await createWrapper(
+    it("Does not allow to download the report when the backlog items are not loaded", () => {
+        const wrapper = createWrapper(
             {
                 is_loading: true,
                 has_loading_error: false,
@@ -137,8 +137,8 @@ describe("ExportButton", () => {
         ).toBe(true);
     });
 
-    it("Does not allow to download the report when the campaigns are not loaded", async () => {
-        const wrapper = await createWrapper(
+    it("Does not allow to download the report when the campaigns are not loaded", () => {
+        const wrapper = createWrapper(
             {
                 is_loading: false,
                 has_loading_error: false,
@@ -154,8 +154,8 @@ describe("ExportButton", () => {
         ).toBe(true);
     });
 
-    it("Does not allow to download the report when the backlog items have a loading error", async () => {
-        const wrapper = await createWrapper(
+    it("Does not allow to download the report when the backlog items have a loading error", () => {
+        const wrapper = createWrapper(
             {
                 is_loading: false,
                 has_loading_error: true,
@@ -171,8 +171,8 @@ describe("ExportButton", () => {
         ).toBe(true);
     });
 
-    it("Does not allow to download the report when the campaigns have a loading error", async () => {
-        const wrapper = await createWrapper(
+    it("Does not allow to download the report when the campaigns have a loading error", () => {
+        const wrapper = createWrapper(
             {
                 is_loading: false,
                 has_loading_error: false,
@@ -191,7 +191,7 @@ describe("ExportButton", () => {
     it("Export button icon does not stay in loading mode in case of xlsx failure", async () => {
         const error = new Error("Something bad happened");
         downloadXlsxExportDocument.mockRejectedValue(error);
-        const wrapper = await createWrapper(
+        const wrapper = createWrapper(
             {
                 is_loading: false,
                 has_loading_error: false,
@@ -208,11 +208,7 @@ describe("ExportButton", () => {
         const download_button = wrapper.get("[data-test=testplan-export-xlsx-button]");
 
         await download_button.trigger("click");
-
-        // Needs 5 ticks so the component can be rendered after the error in the async v-on handler
-        for (let i = 0; i < 5; i++) {
-            await nextTick();
-        }
+        await jest.runOnlyPendingTimersAsync();
 
         expect(wrapper.get("[data-test=download-export-button-icon]").classes()).not.toContain(
             "fa-spin",
@@ -224,7 +220,7 @@ describe("ExportButton", () => {
         const error = new Error("Something bad happened");
         downloadDocxExportDocument.mockRejectedValue(error);
 
-        const wrapper = await createWrapper(
+        const wrapper = createWrapper(
             {
                 is_loading: false,
                 has_loading_error: false,
@@ -241,11 +237,7 @@ describe("ExportButton", () => {
         const download_button = wrapper.get("[data-test=testplan-export-docx-button]");
 
         await download_button.trigger("click");
-
-        // Needs 5 ticks so the component can be rendered after the error in the async v-on handler
-        for (let i = 0; i < 5; i++) {
-            await nextTick();
-        }
+        await jest.runOnlyPendingTimersAsync();
 
         expect(wrapper.get("[data-test=download-export-button-icon]").classes()).not.toContain(
             "fa-spin",

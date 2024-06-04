@@ -36,6 +36,8 @@ import { getGlobalTestOptions } from "../../../../helpers/global-options-for-tes
 
 const project_id = 102;
 
+jest.useFakeTimers();
+
 describe("ChartDisplayer", () => {
     function getPersonalWidgetInstance(
         burndown_data: BurndownData | null,
@@ -94,7 +96,7 @@ describe("ChartDisplayer", () => {
         );
 
         const wrapper = getPersonalWidgetInstance(burndown_data, {} as BurnupData);
-        await wrapper.vm.$nextTick();
+        await jest.runOnlyPendingTimersAsync();
 
         expect(wrapper.findComponent(BurndownDisplayer).exists()).toBe(true);
     });
@@ -134,8 +136,7 @@ describe("ChartDisplayer", () => {
         );
 
         const wrapper = getPersonalWidgetInstance(null, null);
-        await wrapper.vm.$nextTick();
-        await wrapper.vm.$nextTick();
+        await jest.runOnlyPendingTimersAsync();
 
         expect(wrapper.findComponent(BurndownDisplayer).exists()).toBe(true);
         expect(wrapper.find("[data-test=burnup-exists]").exists()).toBe(true);
@@ -151,9 +152,7 @@ describe("ChartDisplayer", () => {
         const wrapper = getPersonalWidgetInstance(null, null);
         expect(wrapper.find("[data-test=loading-data]").exists()).toBe(true);
 
-        await wrapper.vm.$nextTick();
-        await wrapper.vm.$nextTick();
-        await wrapper.vm.$nextTick();
+        await jest.runOnlyPendingTimersAsync();
         expect(wrapper.find("[data-test=loading-data]").exists()).toBe(false);
     });
 
@@ -168,9 +167,7 @@ describe("ChartDisplayer", () => {
         );
 
         const wrapper = getPersonalWidgetInstance(null, null);
-        await wrapper.vm.$nextTick();
-        await wrapper.vm.$nextTick();
-        await wrapper.vm.$nextTick();
+        await jest.runOnlyPendingTimersAsync();
 
         expect(wrapper.get("[data-test=error-rest]").text()).toBe("404 Error");
     });

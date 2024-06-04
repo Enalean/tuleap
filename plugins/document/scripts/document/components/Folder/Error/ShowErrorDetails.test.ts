@@ -22,7 +22,6 @@ import { shallowMount } from "@vue/test-utils";
 import ShowErrorDetails from "./ShowErrorDetails.vue";
 import { getGlobalTestOptions } from "../../../helpers/global-options-for-test";
 import type { ErrorState } from "../../../store/error/module";
-import { nextTick } from "vue";
 
 describe("ShowErrorDetails", () => {
     let show_error_details_factory: () => VueWrapper<InstanceType<typeof ShowErrorDetails>>,
@@ -63,8 +62,7 @@ describe("ShowErrorDetails", () => {
             expect(
                 wrapper.find("[data-test=error-details-show-more-button]").exists(),
             ).toBeTruthy();
-            wrapper.get("[data-test=error-details-show-more-button]").trigger("click");
-            await nextTick();
+            await wrapper.get("[data-test=error-details-show-more-button]").trigger("click");
             expect(wrapper.find("[data-test=show-more-error-message]").exists()).toBeTruthy();
         });
 
@@ -82,8 +80,7 @@ describe("ShowErrorDetails", () => {
             When we display the error
             Then the message displayed is the folder one`, async () => {
             const wrapper = show_error_details_factory();
-            wrapper.get("[data-test=error-details-show-more-button]").trigger("click");
-            await nextTick();
+            await wrapper.get("[data-test=error-details-show-more-button]").trigger("click");
             expect(wrapper.vm.error_message).toBe(folder_loading_error);
         });
     });
@@ -117,8 +114,7 @@ describe("ShowErrorDetails", () => {
         When we display the error
         Then the message displayed is the item one`, async () => {
             const wrapper = show_error_details_factory();
-            wrapper.get("[data-test=error-details-show-more-button]").trigger("click");
-            await nextTick();
+            await wrapper.get("[data-test=error-details-show-more-button]").trigger("click");
             expect(wrapper.vm.error_message).toBe(document_loading_error);
         });
     });
@@ -154,8 +150,7 @@ describe("ShowErrorDetails", () => {
             expect(
                 wrapper.find("[data-test=error-details-show-more-button]").exists(),
             ).toBeTruthy();
-            wrapper.get("[data-test=error-details-show-more-button]").trigger("click");
-            await nextTick();
+            await wrapper.get("[data-test=error-details-show-more-button]").trigger("click");
             expect(wrapper.find("[data-test=show-more-error-message]").exists()).toBeTruthy();
         });
 
@@ -173,8 +168,7 @@ describe("ShowErrorDetails", () => {
             When we display the error
             Then the message displayed is the folder one`, async () => {
             const wrapper = show_error_details_factory();
-            wrapper.get("[data-test=error-details-show-more-button]").trigger("click");
-            await nextTick();
+            await wrapper.get("[data-test=error-details-show-more-button]").trigger("click");
             expect(wrapper.vm.error_message).toBe(document_lock_error);
         });
     });

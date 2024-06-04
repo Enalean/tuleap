@@ -23,6 +23,8 @@ import * as tlp_fetch from "@tuleap/tlp-fetch";
 import type { Branch } from "../type";
 import { createBranchTagSelectorLocalVue } from "../helpers/local-vue-for-test";
 
+jest.useFakeTimers();
+
 describe("BranchesSection", () => {
     it("Displays two branches referencing the same commit", async () => {
         const tlpRecursiveGetMock = jest.spyOn(tlp_fetch, "recursiveGet");
@@ -45,8 +47,7 @@ describe("BranchesSection", () => {
             },
         });
 
-        await wrapper.vm.$nextTick(); // Init the component & load the branches
-        await wrapper.vm.$nextTick(); // Display the loaded branches
+        await jest.runOnlyPendingTimersAsync();
 
         expect(wrapper).toMatchInlineSnapshot(`
 <section class="git-repository-branch-tag-selector-refs">

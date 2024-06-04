@@ -30,6 +30,8 @@ import type { DefaultData } from "vue/types/options";
 import BacklogElementSkeleton from "../BacklogElementSkeleton.vue";
 import type { Store } from "@tuleap/vuex-store-wrapper-jest";
 
+jest.useFakeTimers();
+
 describe("ToBePlannedBacklogItems", () => {
     let component_options: ShallowMountOptions<ToBePlannedBacklogItems>;
     let store: Store;
@@ -56,16 +58,13 @@ describe("ToBePlannedBacklogItems", () => {
 
         const wrapper = shallowMount(ToBePlannedBacklogItems, component_options);
 
-        wrapper.find("[data-test=backlog-items-open-close-button]").trigger("click");
-        await wrapper.vm.$nextTick();
+        await wrapper.find("[data-test=backlog-items-open-close-button]").trigger("click");
 
-        wrapper.setData({
+        await wrapper.setData({
             user_stories: [],
             is_loading_user_story: true,
             message_error_rest: "",
         });
-
-        await wrapper.vm.$nextTick();
 
         expect(wrapper.findComponent(BacklogElementSkeleton).exists()).toBeTruthy();
     });
@@ -88,8 +87,7 @@ describe("ToBePlannedBacklogItems", () => {
 
         const wrapper = shallowMount(ToBePlannedBacklogItems, component_options);
 
-        wrapper.find("[data-test=backlog-items-open-close-button]").trigger("click");
-        await wrapper.vm.$nextTick();
+        await wrapper.find("[data-test=backlog-items-open-close-button]").trigger("click");
 
         expect(wrapper.findComponent(BacklogElementSkeleton).exists()).toBeFalsy();
         expect(wrapper.findComponent(ErrorDisplayer).exists()).toBeTruthy();
@@ -130,9 +128,8 @@ describe("ToBePlannedBacklogItems", () => {
 
         const wrapper = shallowMount(ToBePlannedBacklogItems, component_options);
 
-        wrapper.find("[data-test=backlog-items-open-close-button]").trigger("click");
-        await wrapper.vm.$nextTick(); // Load User Stories
-        await wrapper.vm.$nextTick(); // Display User Stories
+        await wrapper.find("[data-test=backlog-items-open-close-button]").trigger("click");
+        await jest.runOnlyPendingTimersAsync();
 
         expect(wrapper.findComponent(BacklogElementSkeleton).exists()).toBeFalsy();
         expect(wrapper.findComponent(ErrorDisplayer).exists()).toBeFalsy();
@@ -172,15 +169,13 @@ describe("ToBePlannedBacklogItems", () => {
         const wrapper = await shallowMount(ToBePlannedBacklogItems, component_options);
         expect(dispatchSpy).not.toHaveBeenCalled();
 
-        wrapper.find("[data-test=backlog-items-open-close-button]").trigger("click");
-        await wrapper.vm.$nextTick();
+        await wrapper.find("[data-test=backlog-items-open-close-button]").trigger("click");
 
         expect(wrapper.findComponent(BacklogElementSkeleton).exists()).toBeFalsy();
         expect(wrapper.findComponent(ErrorDisplayer).exists()).toBeFalsy();
         expect(wrapper.findComponent(UserStoryDisplayer).exists).toBeTruthy();
 
-        wrapper.find("[data-test=backlog-items-open-close-button]").trigger("click");
-        await wrapper.vm.$nextTick();
+        await wrapper.find("[data-test=backlog-items-open-close-button]").trigger("click");
 
         expect(wrapper.findComponent(BacklogElementSkeleton).exists()).toBeFalsy();
         expect(wrapper.findComponent(ErrorDisplayer).exists()).toBeFalsy();

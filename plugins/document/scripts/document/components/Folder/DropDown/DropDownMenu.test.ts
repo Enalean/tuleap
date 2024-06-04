@@ -32,8 +32,6 @@ import {
 } from "../../../constants";
 import { getGlobalTestOptions } from "../../../helpers/global-options-for-test";
 
-import { nextTick } from "vue";
-
 describe("DropDownMenu", () => {
     function createWrapper(item: Item): VueWrapper<InstanceType<typeof DropDownMenu>> {
         return shallowMount(DropDownMenu, {
@@ -58,14 +56,13 @@ describe("DropDownMenu", () => {
     }
 
     describe("Dropdown menu", () => {
-        it(`Detects empty document type`, async () => {
+        it(`Detects empty document type`, () => {
             const wrapper = createWrapper({
                 id: 4,
                 title: "my item title",
                 type: "empty",
                 can_user_manage: false,
             } as Item);
-            await nextTick();
             expect(wrapper.vm.is_item_an_empty_document).toBeTruthy();
         });
         it(`Other types are not empty documents`, () => {
@@ -78,27 +75,23 @@ describe("DropDownMenu", () => {
             expect(wrapper.vm.is_item_an_empty_document).toBeFalsy();
         });
 
-        it("Detects folder", async () => {
+        it("Detects folder", () => {
             const wrapper = createWrapper({
                 id: 69,
                 title: "NSFW",
                 type: "folder",
             } as Item);
 
-            await nextTick();
-
             expect(wrapper.vm.is_item_a_folder).toBeTruthy();
         });
 
-        it("Other types are not folders", async () => {
+        it("Other types are not folders", () => {
             const wrapper = createWrapper({
                 id: 4,
                 title: "my item title",
                 type: "file",
                 can_user_manage: false,
             } as Item);
-
-            await nextTick();
 
             expect(wrapper.vm.is_item_a_folder).toBeFalsy();
         });
@@ -112,15 +105,13 @@ describe("DropDownMenu", () => {
         [TYPE_WIKI, false],
         [TYPE_EMPTY, false],
         ["whatever", false],
-    ])("should display a %s with versions link: %s", async (type, should_versions_be_displayed) => {
+    ])("should display a %s with versions link: %s", (type, should_versions_be_displayed) => {
         const wrapper = createWrapper({
             id: 4,
             title: "my item title",
             type,
             can_user_manage: false,
         } as Item);
-
-        await nextTick();
 
         expect(wrapper.vm.should_display_versions_link).toBe(should_versions_be_displayed);
     });
@@ -135,15 +126,13 @@ describe("DropDownMenu", () => {
         ["whatever", false],
     ])(
         "should display a %s with notifications link: %s",
-        async (type, should_notifications_be_displayed) => {
+        (type, should_notifications_be_displayed) => {
             const wrapper = createWrapper({
                 id: 4,
                 title: "my item title",
                 type,
                 can_user_manage: false,
             } as Item);
-
-            await nextTick();
 
             expect(wrapper.find("[data-test=notifications-menu-link]").exists()).toBe(
                 should_notifications_be_displayed,
@@ -159,15 +148,13 @@ describe("DropDownMenu", () => {
         [TYPE_WIKI, true],
         [TYPE_EMPTY, true],
         ["whatever", false],
-    ])("should display a %s with history link: %s", async (type, should_history_be_displayed) => {
+    ])("should display a %s with history link: %s", (type, should_history_be_displayed) => {
         const wrapper = createWrapper({
             id: 4,
             title: "my item title",
             type,
             can_user_manage: false,
         } as Item);
-
-        await nextTick();
 
         expect(wrapper.find("[data-test=document-history]").exists()).toBe(
             should_history_be_displayed,
@@ -182,15 +169,13 @@ describe("DropDownMenu", () => {
         [TYPE_WIKI, true],
         [TYPE_EMPTY, false],
         ["whatever", false],
-    ])("should display a %s with approval link: %s", async (type, should_approval_be_displayed) => {
+    ])("should display a %s with approval link: %s", (type, should_approval_be_displayed) => {
         const wrapper = createWrapper({
             id: 4,
             title: "my item title",
             type,
             can_user_manage: false,
         } as Item);
-
-        await nextTick();
 
         expect(wrapper.find("[data-test=document-dropdown-approval-tables]").exists()).toBe(
             should_approval_be_displayed,

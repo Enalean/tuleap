@@ -23,7 +23,6 @@ import { shallowMount } from "@vue/test-utils";
 import GlobalErrorModal from "./GlobalErrorModal.vue";
 import type { Modal } from "@tuleap/tlp-modal";
 import { getGlobalTestOptions } from "../../../helpers/global-options-for-test";
-import { nextTick } from "vue";
 import type { ErrorState } from "../../../store/error/module";
 
 let reset_error: jest.Mock;
@@ -75,8 +74,7 @@ describe(`GlobalErrorModal`, () => {
         const error_message = "Full error message with details";
         const wrapper = createWrapper(error_message);
 
-        wrapper.get("[data-test=show-details]").trigger("click");
-        await nextTick();
+        await wrapper.get("[data-test=show-details]").trigger("click");
 
         const details = wrapper.get("[data-test=details]");
         expect(details.text()).toEqual(error_message);

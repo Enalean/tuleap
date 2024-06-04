@@ -80,9 +80,7 @@ describe("ObsolescenceDatePropertyForCreate", () => {
             const wrapper = createWrapper("", true);
 
             const select = wrapper.get("[data-test=document-obsolescence-date-select]");
-            select.trigger("change");
-
-            await nextTick();
+            await select.trigger("change");
 
             checkOptionValue(wrapper, "permanent");
             expect(emitter.emit).toHaveBeenCalledWith("update-obsolescence-date-property", "");

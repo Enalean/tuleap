@@ -60,12 +60,9 @@ describe("TrackerFromJira", () => {
             token: "azerty1234",
         } as Credentials;
 
-        wrapper.vm.$data.credentials = credentials;
-        await wrapper.vm.$nextTick();
+        await wrapper.setData({ credentials });
 
-        wrapper.trigger("submit");
-
-        await wrapper.vm.$nextTick();
+        await wrapper.trigger("submit");
 
         expect(wrapper.vm.$store.dispatch).toHaveBeenCalledWith("getJiraProjectList", credentials);
         expect(wrapper.vm.$data.is_connection_valid).toBe(true);
@@ -75,9 +72,7 @@ describe("TrackerFromJira", () => {
     });
 
     it("display the error message", async () => {
-        wrapper.vm.$data.error_message = "Oh snap!";
-
-        await wrapper.vm.$nextTick();
+        await wrapper.setData({ error_message: "Oh snap!" });
 
         expect(wrapper.find("[data-test=jira-fail-load-project]").exists()).toBe(true);
     });

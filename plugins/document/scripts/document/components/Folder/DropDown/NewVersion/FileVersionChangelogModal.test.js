@@ -69,9 +69,7 @@ describe("FileVersionChangelogModal", () => {
             },
         });
 
-        wrapper.get("form").trigger("submit");
-
-        await nextTick();
+        await wrapper.get("form").trigger("submit");
 
         expect(create_file_version).toHaveBeenCalledWith(expect.anything(), [
             { id: 12, title: "How to.pdf", properties: [] },
@@ -95,9 +93,7 @@ describe("FileVersionChangelogModal", () => {
         wrapper
             .findComponent(ItemUpdateProperties)
             .vm.$emit("approval-table-action-change", "reset");
-        wrapper.get("form").trigger("submit");
-
-        await nextTick();
+        await wrapper.get("form").trigger("submit");
 
         expect(create_file_version).toHaveBeenCalledWith(expect.anything(), [
             { id: 12, title: "How to.pdf", properties: [] },

@@ -39,13 +39,11 @@ describe("PullRequestCreationDate", () => {
         expect(wrapper.find("[data-test=pullrequest-property-skeleton]").exists()).toBe(true);
         expect(wrapper.find("[data-test=pullrequest-creation-date]").exists()).toBe(false);
 
-        wrapper.setProps({
+        await wrapper.setProps({
             pull_request_info: {
                 creation_date: "2023-02-17T11:00:00Z",
             },
         });
-
-        await wrapper.vm.$nextTick();
 
         expect(wrapper.find("[data-test=pullrequest-property-skeleton]").exists()).toBe(false);
         expect(wrapper.find("[data-test=pullrequest-creation-date]").exists()).toBe(true);

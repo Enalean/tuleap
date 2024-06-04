@@ -18,7 +18,6 @@
  *
  */
 
-import Vue from "vue";
 import { shallowMount } from "@vue/test-utils";
 import { createLocalVueForTests } from "../../support/local-vue.ts";
 import * as rest_querier from "../../api/rest-querier";
@@ -27,6 +26,8 @@ import MilestonesSelect from "./MilestonesSelect.vue";
 import MilestonesSelectSkeleton from "./MilestonesSelectSkeleton.vue";
 import store_options from "../../store/store_options";
 import { createStoreMock } from "../../support/store-wrapper.test-helper";
+
+jest.useFakeTimers();
 
 describe("NewBaselineModal", () => {
     const error_message_selector = '[data-test-type="error-message"]';
@@ -65,7 +66,7 @@ describe("NewBaselineModal", () => {
                 $store,
             },
         });
-        await wrapper.vm.$nextTick();
+        await jest.runOnlyPendingTimersAsync();
     });
 
     it("shows skeleton", () => {
@@ -75,7 +76,7 @@ describe("NewBaselineModal", () => {
     describe("when getOpenMilestones() fail", () => {
         beforeEach(async () => {
             getOpenMilestonesReject("rejection");
-            await Vue.nextTick();
+            await jest.runOnlyPendingTimersAsync();
         });
 
         it("shows error message", () => {
@@ -94,7 +95,7 @@ describe("NewBaselineModal", () => {
     describe("when getOpenMilestones() is successful", () => {
         beforeEach(async () => {
             getOpenMilestonesResolve([a_milestone]);
-            await Vue.nextTick();
+            await jest.runOnlyPendingTimersAsync();
         });
 
         it("does not show error message", () => {
@@ -144,7 +145,7 @@ describe("NewBaselineModal", () => {
         describe("when createBaseline() fail", () => {
             beforeEach(async () => {
                 createBaselineReject("rejection");
-                await Vue.nextTick();
+                await jest.runOnlyPendingTimersAsync();
             });
 
             it("shows an error message", () => {
@@ -158,7 +159,7 @@ describe("NewBaselineModal", () => {
         describe("when createBaseline() is successful", () => {
             beforeEach(async () => {
                 createBaselineResolve(a_baseline);
-                await Vue.nextTick();
+                await jest.runOnlyPendingTimersAsync();
             });
 
             it("notify user with successful creation", () => {

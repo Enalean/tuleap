@@ -26,6 +26,8 @@ import { createGettext } from "vue3-gettext";
 
 vi.mock("@tuleap/list-picker");
 
+vi.useFakeTimers();
+
 describe("App", () => {
     beforeEach(() => {
         vi.spyOn(list_picker, "createListPicker").mockReturnValue({
@@ -57,7 +59,7 @@ describe("App", () => {
                 selected_default_timescale: "week",
             },
         });
-        await wrapper.vm.$nextTick();
+        await vi.runOnlyPendingTimersAsync();
 
         const select = wrapper.find("[data-test=tracker]").element;
         if (!(select instanceof HTMLSelectElement)) {
@@ -93,7 +95,7 @@ describe("App", () => {
                 selected_default_timescale: "week",
             },
         });
-        await wrapper.vm.$nextTick();
+        await vi.runOnlyPendingTimersAsync();
 
         const select = wrapper.find("[data-test=tracker]").element;
         if (!(select instanceof HTMLSelectElement)) {
@@ -129,7 +131,7 @@ describe("App", () => {
                 selected_default_timescale: "week",
             },
         });
-        await wrapper.vm.$nextTick();
+        await vi.runOnlyPendingTimersAsync();
 
         const select = wrapper.find("[data-test=lvl1-iteration-tracker]").element;
         if (!(select instanceof HTMLSelectElement)) {
@@ -165,7 +167,7 @@ describe("App", () => {
                 selected_default_timescale: "week",
             },
         });
-        await wrapper.vm.$nextTick();
+        await vi.runOnlyPendingTimersAsync();
 
         const select = wrapper.find("[data-test=lvl1-iteration-tracker]").element;
         if (!(select instanceof HTMLSelectElement)) {
@@ -201,7 +203,7 @@ describe("App", () => {
                 selected_default_timescale: "week",
             },
         });
-        await wrapper.vm.$nextTick();
+        await vi.runOnlyPendingTimersAsync();
 
         const select = wrapper.find("[data-test=lvl2-iteration-tracker]").element;
         if (!(select instanceof HTMLSelectElement)) {
@@ -237,7 +239,7 @@ describe("App", () => {
                 selected_default_timescale: "week",
             },
         });
-        await wrapper.vm.$nextTick();
+        await vi.runOnlyPendingTimersAsync();
 
         const select = wrapper.find("[data-test=lvl2-iteration-tracker]").element;
         if (!(select instanceof HTMLSelectElement)) {
@@ -273,7 +275,7 @@ describe("App", () => {
                 selected_default_timescale: "week",
             },
         });
-        await wrapper.vm.$nextTick();
+        await vi.runOnlyPendingTimersAsync();
 
         const lvl1_select = wrapper.find("[data-test=lvl1-iteration-tracker]");
         if (!(lvl1_select.element instanceof HTMLSelectElement)) {
@@ -314,7 +316,7 @@ describe("App", () => {
                 selected_default_timescale: "week",
             },
         });
-        await wrapper.vm.$nextTick();
+        await vi.runOnlyPendingTimersAsync();
 
         expect(wrapper.find("[data-test=report]").exists()).toBe(false);
     });
@@ -341,7 +343,7 @@ describe("App", () => {
                 selected_default_timescale: "week",
             },
         });
-        await wrapper.vm.$nextTick();
+        await vi.runOnlyPendingTimersAsync();
 
         expect(wrapper.find("[data-test=report]").exists()).toBe(true);
     });

@@ -26,6 +26,8 @@ import * as gitlab_error_handler from "../../../gitlab/gitlab-error-handler";
 import { FetchWrapperError } from "@tuleap/tlp-fetch";
 import { createLocalVueForTests } from "../../../helpers/local-vue-for-tests";
 
+jest.useFakeTimers();
+
 describe("ConfirmReplaceTokenModal", () => {
     let store_options = {},
         propsData = {},
@@ -64,8 +66,7 @@ describe("ConfirmReplaceTokenModal", () => {
         const wrapper = await instantiateComponent();
         expect(wrapper.find("[data-test=icon-spin]").exists()).toBeFalsy();
 
-        wrapper.find("[data-test=button-confirm-edit-token-gitlab]").trigger("click");
-        await wrapper.vm.$nextTick();
+        await wrapper.find("[data-test=button-confirm-edit-token-gitlab]").trigger("click");
 
         expect(
             wrapper.find("[data-test=button-confirm-edit-token-gitlab]").attributes().disabled,
@@ -99,11 +100,9 @@ describe("ConfirmReplaceTokenModal", () => {
 
         const wrapper = await instantiateComponent();
 
-        wrapper.setData({
+        await wrapper.setData({
             message_error_rest: "Error message",
         });
-
-        await wrapper.vm.$nextTick();
 
         expect(wrapper.find("[data-test=gitlab-fail-patch-edit-token]").text()).toBe(
             "Error message",
@@ -131,10 +130,7 @@ describe("ConfirmReplaceTokenModal", () => {
             message_error_rest: "Error message",
         });
 
-        await wrapper.vm.$nextTick();
-
-        wrapper.find("[data-test=button-confirm-edit-token-gitlab]").trigger("click");
-        await wrapper.vm.$nextTick();
+        await wrapper.find("[data-test=button-confirm-edit-token-gitlab]").trigger("click");
 
         expect(store.dispatch).not.toHaveBeenCalled();
     });
@@ -166,9 +162,7 @@ describe("ConfirmReplaceTokenModal", () => {
         jest.spyOn(global.console, "error").mockImplementation();
 
         wrapper.find("[data-test=button-confirm-edit-token-gitlab]").trigger("click");
-        await wrapper.vm.$nextTick();
-        await wrapper.vm.$nextTick();
-        await wrapper.vm.$nextTick();
+        await jest.runOnlyPendingTimersAsync();
 
         expect(wrapper.vm.$data.message_error_rest).toBe("404 Error on server");
         expect(gitlab_error_handler.handleError).toHaveBeenCalled();
@@ -188,8 +182,7 @@ describe("ConfirmReplaceTokenModal", () => {
 
         const wrapper = await instantiateComponent();
 
-        wrapper.find("[data-test=button-gitlab-edit-token-back]").trigger("click");
-        await wrapper.vm.$nextTick();
+        await wrapper.find("[data-test=button-gitlab-edit-token-back]").trigger("click");
 
         const on_back_button = wrapper.emitted()["on-back-button"];
         if (!on_back_button) {

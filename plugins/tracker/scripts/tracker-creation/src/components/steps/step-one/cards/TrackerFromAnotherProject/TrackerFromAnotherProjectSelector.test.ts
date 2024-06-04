@@ -95,8 +95,7 @@ describe("TrackerFromAnotherProject", () => {
 
         const project_select = wrapper.get("[data-test=project-select]");
 
-        project_select.findAll("option").at(1).setSelected();
-        await wrapper.vm.$nextTick();
+        await project_select.findAll("option").at(1).setSelected();
 
         const tracker_select = wrapper.get("[data-test=project-tracker-select]");
         const tracker_option_names = tracker_select
@@ -148,7 +147,7 @@ describe("TrackerFromAnotherProject", () => {
 
         const tracker_select = wrapper.get("[data-test=project-tracker-select]");
 
-        tracker_select.findAll("option").at(1).setSelected();
+        await tracker_select.findAll("option").at(1).setSelected();
 
         expect(wrapper.vm.$store.commit).toHaveBeenCalledWith(
             "setSelectedProjectTrackerTemplate",

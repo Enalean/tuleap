@@ -122,7 +122,6 @@ describe("TemplateSelection", () => {
                 external_templates,
                 "ACME",
             );
-            await wrapper.vm.$nextTick();
             expect(
                 wrapper
                     .get("[data-test=project-registration-acme-templates-tab]")
@@ -137,7 +136,6 @@ describe("TemplateSelection", () => {
                 external_templates,
                 "Tuleap",
             );
-            await wrapper.vm.$nextTick();
             expect(
                 wrapper
                     .get("[data-test=project-registration-acme-templates-tab]")
@@ -147,7 +145,6 @@ describe("TemplateSelection", () => {
 
         it("should not display the tab containing the company templates when there are no company templates", async () => {
             const wrapper = await getWrapper(tuleap_templates, [], external_templates, "ACME");
-            await wrapper.vm.$nextTick();
             expect(
                 wrapper.find("[data-test=project-registration-acme-templates-tab]").exists(),
             ).toBe(false);
@@ -166,7 +163,6 @@ describe("TemplateSelection", () => {
                 "Tuleap",
             );
 
-            await wrapper.vm.$nextTick();
             expect(
                 wrapper
                     .get("[data-test=project-registration-tuleap-templates-tab]")
@@ -185,7 +181,6 @@ describe("TemplateSelection", () => {
                 "ACME",
             );
 
-            await wrapper.vm.$nextTick();
             expect(
                 wrapper
                     .get("[data-test=project-registration-acme-templates-tab]")
@@ -204,7 +199,6 @@ describe("TemplateSelection", () => {
                 "Tuleap",
             );
 
-            await wrapper.vm.$nextTick();
             expect(
                 wrapper
                     .get("[data-test=project-registration-tuleap-templates-tab]")
@@ -217,7 +211,6 @@ describe("TemplateSelection", () => {
         it("should display the first external template category by default if there are no tuleap/ACME templates", async () => {
             const wrapper = await getWrapper([], [], external_templates, "ACME", "SAFe");
 
-            await wrapper.vm.$nextTick();
             expect(
                 wrapper
                     .get("[data-test=project-registration-SAFe-templates-tab]")
@@ -230,7 +223,6 @@ describe("TemplateSelection", () => {
         it("should display the advanced category by default if there are no ACME/Tuleap/External templates", async () => {
             const wrapper = await getWrapper([], [], [], "ACME", "Advanced");
 
-            await wrapper.vm.$nextTick();
             expect(
                 wrapper
                     .get("[data-test=project-registration-advanced-templates-tab]")

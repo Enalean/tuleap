@@ -48,19 +48,19 @@ describe("FieldDescription -", () => {
     it("add correct attribute when description is required", async () => {
         const wrapper = await getWrapper(true);
 
-        const description = wrapper.get("[data-test=project-description]")
-            .element as HTMLTextAreaElement;
-        await wrapper.vm.$nextTick();
+        const description = wrapper.get<HTMLTextAreaElement>(
+            "[data-test=project-description]",
+        ).element;
 
         expect(description.required).toBe(true);
     });
 
-    it("add correct attribute when description is NOT requried", async () => {
+    it("add correct attribute when description is NOT required", async () => {
         const wrapper = await getWrapper(false);
 
-        const description = wrapper.get("[data-test=project-description]")
-            .element as HTMLTextAreaElement;
-        await wrapper.vm.$nextTick();
+        const description = wrapper.get<HTMLTextAreaElement>(
+            "[data-test=project-description]",
+        ).element;
 
         expect(description.required).toBe(false);
     });

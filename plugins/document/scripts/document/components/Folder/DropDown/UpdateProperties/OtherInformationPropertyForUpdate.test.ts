@@ -25,7 +25,6 @@ import type { Item, ItemFile, ListValue, Property } from "../../../../type";
 import { getGlobalTestOptions } from "../../../../helpers/global-options-for-test";
 import type { ConfigurationState } from "../../../../store/configuration";
 import type { PropertiesState } from "../../../../store/properties/module";
-import { nextTick } from "vue";
 
 jest.mock("../../../../helpers/emitter");
 
@@ -71,7 +70,7 @@ describe("OtherInformationPropertiesForUpdate", () => {
 
     describe("Custom properties", () => {
         it(`Given custom component are loading
-        Then it displays spinner`, async () => {
+        Then it displays spinner`, () => {
             const properties: Array<Property> = [];
             const item = {
                 properties,
@@ -79,8 +78,6 @@ describe("OtherInformationPropertiesForUpdate", () => {
                 title: "title",
             } as ItemFile;
             const wrapper = createWrapper(true, false, item, []);
-
-            await nextTick();
 
             expect(wrapper.find("[data-test=document-other-information]").exists()).toBeTruthy();
             expect(
@@ -103,7 +100,7 @@ describe("OtherInformationPropertiesForUpdate", () => {
 
     describe("Other information display", () => {
         it(`Given obsolescence date is enabled for project
-            Then we should display the obsolescence date component`, async () => {
+            Then we should display the obsolescence date component`, () => {
             const properties: Array<Property> = [
                 {
                     short_name: "obsolescence_date",
@@ -117,8 +114,6 @@ describe("OtherInformationPropertiesForUpdate", () => {
             } as ItemFile;
 
             const wrapper = createWrapper(true, true, item, []);
-
-            await nextTick();
 
             expect(wrapper.find("[data-test=document-other-information]").exists()).toBeTruthy();
         });
@@ -151,7 +146,7 @@ describe("OtherInformationPropertiesForUpdate", () => {
         });
 
         it(`Given obsolescence date is disabled for project and given no properties are provided
-            Then other information section is not rendered`, async () => {
+            Then other information section is not rendered`, () => {
             const properties: Array<Property> = [];
             const item = {
                 properties,
@@ -160,8 +155,6 @@ describe("OtherInformationPropertiesForUpdate", () => {
             } as ItemFile;
 
             const wrapper = createWrapper(false, true, item, []);
-
-            await nextTick();
 
             expect(wrapper.find("[data-test=document-other-information]").exists()).toBeFalsy();
         });

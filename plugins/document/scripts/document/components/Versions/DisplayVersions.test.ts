@@ -28,7 +28,6 @@ import {
 import { shallowMount } from "@vue/test-utils";
 import DisplayVersions from "./DisplayVersions.vue";
 import HistoryVersions from "./HistoryVersions.vue";
-import { nextTick } from "vue";
 import { getGlobalTestOptions } from "../../helpers/global-options-for-test";
 import type { Item } from "../../type";
 import * as router from "vue-router";
@@ -36,6 +35,8 @@ import type { RouteLocationNormalizedLoaded } from "vue-router";
 import * as strict_inject from "@tuleap/vue-strict-inject";
 
 jest.mock("vue-router");
+
+jest.useFakeTimers();
 
 describe("DisplayVersions", () => {
     beforeEach(() => {
@@ -73,8 +74,7 @@ describe("DisplayVersions", () => {
         });
 
         // wait for loadDocumentWithAscendentHierarchy() to be called
-        await nextTick();
-        await nextTick();
+        await jest.runOnlyPendingTimersAsync();
 
         expect(wrapper.findComponent(HistoryVersions).exists()).toBe(should_versions_be_displayed);
     });

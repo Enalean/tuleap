@@ -17,7 +17,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { nextTick } from "vue";
 import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import FolderCellTitle from "./FolderCellTitle.vue";
@@ -26,6 +25,8 @@ import type { Folder, RootState } from "../../../type";
 import { getGlobalTestOptions } from "../../../helpers/global-options-for-test";
 import * as router from "../../../helpers/use-router";
 import type { Router } from "vue-router";
+
+jest.useFakeTimers();
 
 describe("FolderCellTitle", () => {
     let initialize_folder_properties: jest.Mock;
@@ -98,10 +99,9 @@ describe("FolderCellTitle", () => {
     it(`Given folder is open
         When we display the folder
         Then we should dynamically load its content`, async () => {
-        const wrapper = await getWrapper(true, false);
+        const wrapper = getWrapper(true, false);
 
-        await nextTick();
-        await nextTick();
+        await jest.runOnlyPendingTimersAsync();
 
         expect(initialize_folder_properties).toHaveBeenCalled();
         expect(unfold_folder_content).toHaveBeenCalled();
@@ -118,7 +118,7 @@ describe("FolderCellTitle", () => {
         Then we don't load anything and render directly it`, async () => {
         const wrapper = getWrapper(false, false);
 
-        await nextTick();
+        await jest.runOnlyPendingTimersAsync();
 
         expect(initialize_folder_properties).toHaveBeenCalled();
         const toggle = wrapper.get("[data-test=toggle]");
@@ -135,10 +135,9 @@ describe("FolderCellTitle", () => {
             wrapper.get("[data-test=toggle]").trigger("click");
 
             expect(initialize_folder_properties).toHaveBeenCalled();
-            await nextTick();
+            await jest.runOnlyPendingTimersAsync();
             const toggle = wrapper.get("[data-test=toggle]");
-            toggle.trigger("click");
-            await nextTick();
+            await toggle.trigger("click");
             expect(toggle.classes()).toContain("fa-caret-down");
 
             expect(unfold_folder_content).toHaveBeenCalled();
@@ -153,9 +152,8 @@ describe("FolderCellTitle", () => {
         When we toggle it
         Then it should close it and store the new user preferences in backend`, async () => {
             const wrapper = getWrapper(true, false);
-            wrapper.get("[data-test=toggle]").trigger("click");
+            await wrapper.get("[data-test=toggle]").trigger("click");
 
-            await nextTick();
             expect(initialize_folder_properties).toHaveBeenCalled();
             const toggle = wrapper.get("[data-test=toggle]");
             expect(toggle.classes()).toContain("fa-caret-right");
@@ -171,14 +169,11 @@ describe("FolderCellTitle", () => {
         When we toggle it multiples times
         Then it save baby bears and load its content only once`, async () => {
             const wrapper = getWrapper(false, false);
-            wrapper.get("[data-test=toggle]").trigger("click");
-            await nextTick();
+            await wrapper.get("[data-test=toggle]").trigger("click");
 
-            wrapper.get("[data-test=toggle]").trigger("click");
-            await nextTick();
+            await wrapper.get("[data-test=toggle]").trigger("click");
 
-            wrapper.get("[data-test=toggle]").trigger("click");
-            await nextTick();
+            await wrapper.get("[data-test=toggle]").trigger("click");
 
             const toggle = wrapper.get("[data-test=toggle]");
             expect(toggle.classes()).toContain("fa-caret-down");
@@ -191,10 +186,9 @@ describe("FolderCellTitle", () => {
         it(`Given folder is expanded and given folder has uploading content
         When we toggle it
         Then we should store that folder is collapsed with uploading content`, async () => {
-            const wrapper = await getWrapper(true, false);
-            wrapper.get("[data-test=toggle]").trigger("click");
+            const wrapper = getWrapper(true, false);
+            await wrapper.get("[data-test=toggle]").trigger("click");
 
-            await nextTick();
             expect(initialize_folder_properties).toHaveBeenCalled();
             const toggle = wrapper.get("[data-test=toggle]");
             expect(toggle.classes()).toContain("fa-caret-right");

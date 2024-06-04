@@ -16,24 +16,28 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
+const emitMock = jest.fn();
+
 import type { TestingPinia } from "@pinia/testing";
 import { createTestingPinia } from "@pinia/testing";
-const emitMock = jest.fn();
+import type { VueWrapper } from "@vue/test-utils";
+import { shallowMount } from "@vue/test-utils";
+import CopyItem from "./CopyItem.vue";
+import type { Item, RootState } from "../../../type";
+import { useClipboardStore } from "../../../stores/clipboard";
+import { ref } from "vue";
+import { getGlobalTestOptions } from "../../../helpers/global-options-for-test";
+import type { ConfigurationState } from "../../../store/configuration";
+import type { Store } from "vuex";
+
 jest.mock("../../../helpers/emitter", () => {
     return {
         emit: emitMock,
     };
 });
 const mocked_store = { store: { dispatch: jest.fn() } } as unknown as Store<RootState>;
-import type { VueWrapper } from "@vue/test-utils";
-import { shallowMount } from "@vue/test-utils";
-import CopyItem from "./CopyItem.vue";
-import type { Item, RootState } from "../../../type";
-import { useClipboardStore } from "../../../stores/clipboard";
-import { nextTick, ref } from "vue";
-import { getGlobalTestOptions } from "../../../helpers/global-options-for-test";
-import type { ConfigurationState } from "../../../store/configuration";
-import type { Store } from "vuex";
+
 describe("CopyItem", () => {
     let pinia: TestingPinia;
     let store: ReturnType<typeof useClipboardStore>;
@@ -78,8 +82,7 @@ describe("CopyItem", () => {
         const item = { id: 147, type: "item_type", title: "My item" } as Item;
         const wrapper = createWrapper(item, false);
 
-        wrapper.trigger("click");
-        await nextTick();
+        await wrapper.trigger("click");
 
         expect(store.copyItem).toHaveBeenCalledWith(item);
 
@@ -87,11 +90,10 @@ describe("CopyItem", () => {
     });
     it(`Given an item is being pasted
         Then the action is marked as disabled
-        And the menu is not closed if the user tries to click on it`, async () => {
+        And the menu is not closed if the user tries to click on it`, () => {
         const item = { id: 147, type: "item_type", title: "My item" } as Item;
 
         const wrapper = createWrapper(item, true);
-        await nextTick();
 
         expect(wrapper.attributes().disabled).toBe("");
         expect(wrapper.classes("tlp-dropdown-menu-item-disabled")).toBe(true);

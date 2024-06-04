@@ -18,7 +18,6 @@
  *
  */
 
-import Vue from "vue";
 import { shallowMount } from "@vue/test-utils";
 import { createLocalVueForTests } from "../../support/local-vue.ts";
 import MilestoneList from "./MilestonesSelect.vue";
@@ -44,10 +43,9 @@ describe("MilestonesSelect", () => {
         const milestone_3 = { id: 3, label: "a milestone" };
 
         beforeEach(async () => {
-            wrapper.setProps({
+            await wrapper.setProps({
                 milestones: [milestone_2, milestone_1, milestone_3],
             });
-            await Vue.nextTick();
         });
 
         it("shows as many milestones as given", () => {

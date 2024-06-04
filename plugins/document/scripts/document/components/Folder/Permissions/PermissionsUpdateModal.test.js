@@ -23,7 +23,8 @@ import * as tlp_modal from "@tuleap/tlp-modal";
 import * as handle_errors from "../../../store/actions-helpers/handle-errors";
 import emitter from "../../../helpers/emitter";
 import { getGlobalTestOptions } from "../../../helpers/global-options-for-test";
-import { nextTick } from "vue";
+
+jest.useFakeTimers();
 
 describe("PermissionsUpdateModal", () => {
     let factory;
@@ -85,7 +86,7 @@ describe("PermissionsUpdateModal", () => {
         });
     });
 
-    it(`when the modal receives a "show" event, it will open again`, async () => {
+    it(`when the modal receives a "show" event, it will open again`, () => {
         const item_to_update = {
             id: 104,
             title: "My item",
@@ -97,7 +98,6 @@ describe("PermissionsUpdateModal", () => {
         };
         const project_ugroups = [{ id: "102_3", label: "Project members" }];
         const wrapper = factory({ item: item_to_update }, project_ugroups);
-        await nextTick();
         wrapper.vm.reset();
         emitter.emit("show-update-permissions-modal");
 
@@ -112,7 +112,7 @@ describe("PermissionsUpdateModal", () => {
         );
     });
 
-    it("When the modal is first opened the project user groups are loaded and the content populated", async () => {
+    it("When the modal is first opened the project user groups are loaded and the content populated", () => {
         const item_to_update = {
             id: 104,
             title: "My item",
@@ -124,7 +124,6 @@ describe("PermissionsUpdateModal", () => {
         };
         const project_ugroups = [{ id: "102_3", label: "Project members" }];
         const wrapper = factory({ item: item_to_update }, project_ugroups);
-        await nextTick();
         expect(wrapper.find(".document-permissions-update-container").exists()).toBe(true);
         expect(wrapper.vm.can_be_submitted).toBe(true);
 
@@ -153,8 +152,7 @@ describe("PermissionsUpdateModal", () => {
             },
         };
         factory({ item: item_to_update });
-        await nextTick();
-        await nextTick();
+        await jest.runOnlyPendingTimersAsync();
 
         expect(handleErrors).toHaveBeenCalledTimes(1);
     });
@@ -173,8 +171,7 @@ describe("PermissionsUpdateModal", () => {
         };
 
         const project_ugroups = [{ id: "102_3", label: "Project members" }];
-        wrapper.setProps({ item: item_to_update }, project_ugroups);
-        await nextTick();
+        await wrapper.setProps({ item: item_to_update }, project_ugroups);
 
         const updated_permissions_per_groups = {
             can_read: wrapper.vm.updated_permissions.can_read,
@@ -211,8 +208,7 @@ describe("PermissionsUpdateModal", () => {
             item: item,
             updated_permissions: permissions_to_update,
         });
-        await nextTick();
-        await nextTick();
+        await jest.runOnlyPendingTimersAsync();
         expect(wrapper.vm.can_be_submitted).toBe(true);
     });
 
