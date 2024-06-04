@@ -29,6 +29,7 @@
                 v-on:input="onTitleChange"
                 v-bind:placeholder="placeholder"
                 ref="textarea"
+                data-test="title-input"
                 rows="1"
             ></textarea>
             <template v-else>

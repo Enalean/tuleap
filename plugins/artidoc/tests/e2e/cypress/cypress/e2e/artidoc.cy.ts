@@ -79,9 +79,21 @@ describe("Artidoc", () => {
                             cy.log("Check that the document has now section in given order");
                             cy.reload();
                             cy.contains("This document is empty").should("not.exist");
-                            cy.contains("li:first-child", "Performance Requirement");
-                            cy.contains("li", "Functional Requirement");
-                            cy.contains("li:last-child", "Security Requirement");
+                            cy.get("[data-test=document-content]").within(() => {
+                                cy.contains("li:first-child", "Performance Requirement");
+                                cy.contains("li", "Functional Requirement");
+                                cy.contains("li:last-child", "Security Requirement").within(() => {
+                                    cy.intercept("*/artifacts/*").as("updateArtifact");
+                                    cy.intercept("*/artidoc_sections/*").as("refreshSection");
+                                    cy.contains("button", "Edit").click();
+                                });
+                                cy.get("[data-test=title-input]").type(
+                                    "{selectAll}Security Requirement (edited)",
+                                );
+                                cy.contains("button", "Save").click();
+                                cy.wait(["@updateArtifact", "@refreshSection"]);
+                                cy.contains("h1", "Security Requirement (edited)");
+                            });
                         });
                     });
             });

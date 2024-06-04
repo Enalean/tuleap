@@ -25,7 +25,7 @@
                 <table-of-contents />
             </div>
         </aside>
-        <section class="document-content">
+        <section class="document-content" data-test="document-content">
             <document-content />
         </section>
     </div>
