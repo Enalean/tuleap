@@ -767,7 +767,12 @@ class FRSFileFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamesp
     public function cleanStaging($backend)
     {
         // All projects
-        $prjIter = new DirectoryIterator(ForgeConfig::get('ftp_frs_dir_prefix') . '/DELETED');
+        $staging_path = ForgeConfig::get('ftp_frs_dir_prefix') . '/DELETED';
+        assert($staging_path !== '');
+        if (! \Psl\Filesystem\exists($staging_path)) {
+            return true;
+        }
+        $prjIter = new DirectoryIterator($staging_path);
         foreach ($prjIter as $prj) {
             if (strpos($prj->getFilename(), '.') !== 0) {
                 // Releases
