@@ -93,3 +93,20 @@ id = "GHSA-2p57-rm9w-gvfp" # CVE-2024-29415
 # https://github.com/storybookjs/storybook/issues/26014
 reason = "Waiting for storybook upstream to switch to fix the issue."
 ignoreUntil = 2024-07-03
+
+# tuleap-mercure
+## Go stdlib
+[[IgnoredVulns]]
+id = "GO-2024-2824" # CVE-2024-24788
+reason = "No impact in our situation. Waiting for Go 1.22.4 in nixpkgs cache."
+ignoreUntil = 2024-07-05
+
+[[IgnoredVulns]]
+id = "GO-2024-2887" # CVE-2024-24790
+reason = "No impact in our situation. Waiting for Go 1.22.4 in nixpkgs cache."
+ignoreUntil = 2024-07-05
+
+[[IgnoredVulns]]
+id = "GO-2024-2888" # CVE-2024-24789
+reason = "Impacted function is not even called. Waiting for Go 1.22.4 in nixpkgs cache."
+ignoreUntil = 2024-07-05
