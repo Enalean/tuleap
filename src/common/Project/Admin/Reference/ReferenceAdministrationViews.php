@@ -195,7 +195,7 @@ class ReferenceAdministrationViews extends Views
                 'can_be_edited' => &$can_be_edited,
             ]
         );
-        $ro = ! $can_be_edited || ($ref->isSystemReference() && $ref->getGroupId() != 100);
+        $ro = ! $can_be_edited || ($ref->isSystemReference() && $ref->getGroupId() != 100) || $ref->getServiceShortName() !== '';
         if ($ro) {
             $star = '';
         }
