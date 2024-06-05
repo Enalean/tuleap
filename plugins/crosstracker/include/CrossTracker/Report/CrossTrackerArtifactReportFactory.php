@@ -45,6 +45,7 @@ use Tuleap\Tracker\Report\Query\Advanced\SearchablesDoNotExistException;
 use Tuleap\Tracker\Report\Query\Advanced\SelectablesAreInvalidException;
 use Tuleap\Tracker\Report\Query\Advanced\SelectablesDoNotExistException;
 use Tuleap\Tracker\REST\v1\ArtifactMatchingReportCollection;
+use function Psl\Json\encode as psl_json_encode;
 
 final readonly class CrossTrackerArtifactReportFactory
 {
@@ -176,7 +177,7 @@ final readonly class CrossTrackerArtifactReportFactory
             array_map(static fn(array $row) => $row['id'], $artifact_ids),
         );
 
-        RESTLogger::getLogger()->debug(print_r($temp_results, true)); // Temporary for debugging
+        RESTLogger::getLogger()->debug(psl_json_encode($temp_results, true)); // Temporary for debugging
 
         return $this->buildCollectionOfArtifacts($temp_results, $this->expert_query_dao->foundRows());
     }
