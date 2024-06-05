@@ -84,25 +84,22 @@ class ArtifactsTest extends ArtifactsTestExecutionHelper  // @codingStandardsIgn
         self::assertEquals(400, $response->getStatusCode());
     }
 
-    public function testComputedFieldsCalculation()
+    public function testComputedFieldsCalculation(): void
     {
         $this->checkComputedFieldValueForArtifactId(
             $this->level_one_artifact_ids[1],
-            10,
             25,
-            20,
+            10.3,
             33
         );
         $this->checkComputedFieldValueForArtifactId(
             $this->level_two_artifact_ids[1],
-            null,
             25,
-            15,
+            5.3,
             33
         );
         $this->checkComputedFieldValueForArtifactId(
             $this->level_two_artifact_ids[2],
-            null,
             null,
             5,
             null
@@ -110,47 +107,41 @@ class ArtifactsTest extends ArtifactsTestExecutionHelper  // @codingStandardsIgn
         $this->checkComputedFieldValueForArtifactId(
             $this->level_three_artifact_ids[1],
             null,
-            null,
             5,
             11
         );
         $this->checkComputedFieldValueForArtifactId(
             $this->level_three_artifact_ids[2],
             10,
-            10,
-            5,
+            0.2,
             22
         );
         $this->checkComputedFieldValueForArtifactId(
             $this->level_three_artifact_ids[3],
-            null,
             null,
             5,
             null
         );
         $this->checkComputedFieldValueForArtifactId(
             $this->level_four_artifact_ids[1],
-            null,
             15,
-            5,
+            0.1,
             null
         );
         $this->checkComputedFieldValueForArtifactId(
             $this->level_four_artifact_ids[2],
-            null,
             10,
-            5,
+            0.2,
             null
         );
     }
 
     private function checkComputedFieldValueForArtifactId(
         $artifact_id,
-        $capacity_slow_compute_value,
-        $capacity_fast_compute_value,
+        ?float $capacity_fast_compute_value,
         $remaining_effort_value,
         $total_effort_value,
-    ) {
+    ): void {
         if ($artifact_id !== null) {
             $response = $this->getResponse($this->request_factory->createRequest('GET', "artifacts/$artifact_id"));
             $artifact = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);

@@ -32,8 +32,9 @@ use Tuleap\Tracker\REST\Artifact\ArtifactFieldComputedValueFullRepresentation;
 
 class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float //phpcs:ignore
 {
-    public const FIELD_VALUE_IS_AUTOCOMPUTED = 'is_autocomputed';
-    public const FIELD_VALUE_MANUAL          = 'manual_value';
+    private const DISPLAY_AUTOCOMPUTED_VALUE_MAX_PRECISION = 10;
+    public const FIELD_VALUE_IS_AUTOCOMPUTED               = 'is_autocomputed';
+    public const FIELD_VALUE_MANUAL                        = 'manual_value';
 
     public $default_properties = [
         'target_field_name' => [
@@ -122,17 +123,34 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
         PFUser $user,
         Artifact $artifact,
         $timestamp = null,
-    ) {
-        return $this->getCalculator()->calculate(
+    ): ?float {
+        return self::transformComputedValueForDisplay($this->getCalculator()->calculate(
             [$artifact->getId()],
             $timestamp,
             true,
             $this->getName(),
             $this->getId()
-        );
+        ));
     }
 
-    public function getComputedValueWithNoStopOnManualValue(Artifact $artifact)
+    /**
+     * @psalm-pure
+     * @template T of float|int|null
+     * @psalm-param T $value
+     * @psalm-return (T is null ? null : float)
+     */
+    private static function transformComputedValueForDisplay(float|int|null $value): ?float
+    {
+        if ($value === null) {
+            return null;
+        }
+
+        // Note: this is not an appropriate way manage float precisions but this is only expected to be used
+        // to have a coherent display between JS and the PHP side so it is good enough.
+        return round($value, self::DISPLAY_AUTOCOMPUTED_VALUE_MAX_PRECISION, \PHP_ROUND_HALF_UP);
+    }
+
+    public function getComputedValueWithNoStopOnManualValue(Artifact $artifact): ?float
     {
         $computed_children_to_fetch    = [];
         $artifact_ids_to_fetch         = [];
@@ -169,22 +187,22 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
                 $computed_children = $this->getStandardCalculationMode($computed_children_to_fetch);
             }
             $manually_set_children = $this->getStopAtManualSetFieldMode([$artifact->getId()]);
-            return $manually_set_children + $computed_children;
+            return self::transformComputedValueForDisplay($manually_set_children + $computed_children);
         }
 
         if (count($artifact_ids_to_fetch) === 0 && $has_manual_value_in_children) {
-            return $this->getStopAtManualSetFieldMode([$artifact->getId()]);
+            return self::transformComputedValueForDisplay($this->getStopAtManualSetFieldMode([$artifact->getId()]));
         }
 
         if ($has_manual_value_in_children && ($manual_value_for_current_node['value'] ?? null) === null) {
-            return $this->getStandardCalculationMode([$artifact->getId()]);
+            return self::transformComputedValueForDisplay($this->getStandardCalculationMode([$artifact->getId()]));
         }
 
         if (count($artifact_ids_to_fetch) === 0) {
             return null;
         }
 
-        return $this->getStandardCalculationMode($artifact_ids_to_fetch);
+        return self::transformComputedValueForDisplay($this->getStandardCalculationMode($artifact_ids_to_fetch));
     }
 
     public function getStopAtManualSetFieldMode(array $artifact_ids)
