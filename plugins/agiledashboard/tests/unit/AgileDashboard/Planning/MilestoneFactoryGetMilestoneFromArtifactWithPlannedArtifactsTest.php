@@ -24,35 +24,31 @@ declare(strict_types=1);
 namespace Tuleap\AgileDashboard\Planning;
 
 use ArtifactNode;
-use Mockery;
-use PFUser;
 use Planning_MilestoneFactory;
-use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 
-final class MilestoneFactoryGetMilestoneFromArtifactWithPlannedArtifactsTest extends \Tuleap\Test\PHPUnit\TestCase
+final class MilestoneFactoryGetMilestoneFromArtifactWithPlannedArtifactsTest extends TestCase
 {
-    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
     public function testItCreateMilestoneFromArtifactAndLoadsItsPlannedArtifacts(): void
     {
-        $milestone_factory = Mockery::mock(Planning_MilestoneFactory::class)
-            ->makePartial()
-            ->shouldAllowMockingProtectedMethods();
+        $milestone_factory = $this->createPartialMock(Planning_MilestoneFactory::class, [
+            'getPlannedArtifacts',
+            'getMilestoneFromArtifact',
+        ]);
 
-        $user     = Mockery::mock(PFUser::class);
-        $artifact = Mockery::mock(Artifact::class);
-        $artifact->shouldReceive('getId')->andReturn(101);
-        $artifact2 = Mockery::mock(Artifact::class);
-        $artifact2->shouldReceive('getId')->andReturn(102);
-        $artifact3 = Mockery::mock(Artifact::class);
-        $artifact3->shouldReceive('getId')->andReturn(103);
+        $user      = UserTestBuilder::buildWithDefaults();
+        $artifact  = ArtifactTestBuilder::anArtifact(101)->build();
+        $artifact2 = ArtifactTestBuilder::anArtifact(102)->build();
+        $artifact3 = ArtifactTestBuilder::anArtifact(103)->build();
 
         $node = new ArtifactNode($artifact);
         $node->addChild(new ArtifactNode($artifact2));
         $node->addChild(new ArtifactNode($artifact3));
 
-        $milestone_factory->shouldReceive('getPlannedArtifacts')->with($user, $artifact)->once()->andReturn($node);
-        $milestone_factory->shouldReceive('getMilestoneFromArtifact')->with($artifact, $node)->once();
+        $milestone_factory->expects(self::once())->method('getPlannedArtifacts')->with($user, $artifact)->willReturn($node);
+        $milestone_factory->expects(self::once())->method('getMilestoneFromArtifact')->with($artifact, $node);
 
         $milestone_factory->getMilestoneFromArtifactWithPlannedArtifacts($artifact, $user);
     }

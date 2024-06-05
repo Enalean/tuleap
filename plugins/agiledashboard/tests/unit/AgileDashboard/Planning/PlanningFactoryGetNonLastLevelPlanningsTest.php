@@ -23,76 +23,68 @@ declare(strict_types=1);
 
 namespace Tuleap\AgileDashboard\Planning;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\MockObject\MockObject;
 use PlanningFactory;
 use PlanningPermissionsManager;
 use Tracker_Hierarchy;
 use TrackerFactory;
+use Tuleap\AgileDashboard\Test\Builders\PlanningBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
-class PlanningFactoryGetNonLastLevelPlanningsTest extends \Tuleap\Test\PHPUnit\TestCase
+final class PlanningFactoryGetNonLastLevelPlanningsTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|PlanningDao
-     */
-    private $planning_dao;
-    /**
-     * @var Mockery\Mock | PlanningFactory
-     */
-    private $partial_factory;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|TrackerFactory
-     */
-    private $tracker_factory;
+    private PlanningFactory&MockObject $partial_factory;
+    private TrackerFactory&MockObject $tracker_factory;
 
     protected function setUp(): void
     {
-        $this->planning_dao           = Mockery::spy(PlanningDao::class);
-        $this->tracker_factory        = Mockery::spy(TrackerFactory::class);
-        $planning_permissions_manager = Mockery::spy(PlanningPermissionsManager::class);
+        $planning_dao                 = $this->createMock(PlanningDao::class);
+        $this->tracker_factory        = $this->createMock(TrackerFactory::class);
+        $planning_permissions_manager = $this->createMock(PlanningPermissionsManager::class);
 
-        $this->partial_factory = Mockery::mock(
-            PlanningFactory::class,
-            [$this->planning_dao, $this->tracker_factory, $planning_permissions_manager]
-        )->makePartial()->shouldAllowMockingProtectedMethods();
+        $this->partial_factory = $this->getMockBuilder(PlanningFactory::class)
+            ->setConstructorArgs([$planning_dao, $this->tracker_factory, $planning_permissions_manager])
+            ->onlyMethods([
+                'getPlannings',
+            ])
+            ->getMock();
     }
 
     public function testItReturnsAnEmptyArrayIfNoPlanningsExist(): void
     {
-        $this->partial_factory->shouldReceive('getPlannings')->andReturn([]);
+        $this->partial_factory->method('getPlannings')->willReturn([]);
 
-        $plannings = $this->partial_factory->getNonLastLevelPlannings(Mockery::mock(\PFUser::class), 14);
+        $plannings = $this->partial_factory->getNonLastLevelPlannings(UserTestBuilder::buildWithDefaults(), 14);
 
-        $this->assertCount(0, $plannings);
+        self::assertCount(0, $plannings);
     }
 
     public function testItDoesNotReturnLastLevelPlannings(): void
     {
-        $planning_1 = Mockery::mock(\Planning::class);
-        $planning_2 = Mockery::mock(\Planning::class);
-        $planning_3 = Mockery::mock(\Planning::class);
+        $planning_1 = PlanningBuilder::aPlanning(14)
+            ->withMilestoneTracker(TrackerTestBuilder::aTracker()->withId(11)->build())
+            ->build();
+        $planning_2 = PlanningBuilder::aPlanning(14)
+            ->withMilestoneTracker(TrackerTestBuilder::aTracker()->withId(22)->build())
+            ->build();
+        $planning_3 = PlanningBuilder::aPlanning(14)
+            ->withMilestoneTracker(TrackerTestBuilder::aTracker()->withId(33)->build())
+            ->build();
 
-        $planning_1->shouldReceive('getPlanningTrackerId')->andReturn(11);
-        $planning_2->shouldReceive('getPlanningTrackerId')->andReturn(22);
-        $planning_3->shouldReceive('getPlanningTrackerId')->andReturn(33);
+        $this->partial_factory->method('getPlannings')->willReturn([$planning_3, $planning_2, $planning_1]);
 
-        $this->partial_factory->shouldReceive('getPlannings')->andReturn([$planning_3, $planning_2, $planning_1]);
+        $hierarchy = $this->createMock(Tracker_Hierarchy::class);
+        $hierarchy->method('getLastLevelTrackerIds')->willReturn([11]);
+        $hierarchy->method('sortTrackerIds')->with([33, 22])->willReturn([22, 33]);
+        $this->tracker_factory->method('getHierarchy')->willReturn($hierarchy);
 
-        $hierarchy = Mockery::mock(Tracker_Hierarchy::class);
-        $hierarchy->shouldReceive('getLastLevelTrackerIds')->andReturn([11]);
-        $hierarchy->shouldReceive('sortTrackerIds')->with([33, 22])->andReturn([22, 33]);
-        $this->tracker_factory->shouldReceive('getHierarchy')->andReturn($hierarchy);
+        $plannings = $this->partial_factory->getNonLastLevelPlannings(UserTestBuilder::buildWithDefaults(), 14);
 
-        $plannings = $this->partial_factory->getNonLastLevelPlannings(Mockery::mock(\PFUser::class), 14);
+        self::assertCount(2, $plannings);
 
-        $this->assertCount(2, $plannings);
-
-        $first_planning  = $plannings[0];
-        $second_planning = $plannings[1];
-
-        $this->assertEquals(22, $first_planning->getPlanningTrackerId());
-        $this->assertEquals(33, $second_planning->getPlanningTrackerId());
+        self::assertEquals(22, $plannings[0]->getPlanningTrackerId());
+        self::assertEquals(33, $plannings[1]->getPlanningTrackerId());
     }
 }

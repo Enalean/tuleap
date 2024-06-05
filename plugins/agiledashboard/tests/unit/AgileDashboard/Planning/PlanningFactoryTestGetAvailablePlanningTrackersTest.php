@@ -23,52 +23,48 @@ declare(strict_types=1);
 
 namespace Tuleap\AgileDashboard\Planning;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PFUser;
+use PHPUnit\Framework\MockObject\MockObject;
 use PlanningFactory;
 use PlanningPermissionsManager;
+use Tracker;
 use TrackerFactory;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
 
-final class PlanningFactoryTestGetAvailablePlanningTrackersTest extends \Tuleap\Test\PHPUnit\TestCase
+final class PlanningFactoryTestGetAvailablePlanningTrackersTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var Mockery\Mock | PlanningFactory
-     */
-    private $partial_factory;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|TrackerFactory
-     */
-    private $tracker_factory;
+    private PlanningFactory&MockObject $partial_factory;
+    private TrackerFactory&MockObject $tracker_factory;
 
     protected function setUp(): void
     {
-        $planning_dao                 = Mockery::spy(PlanningDao::class);
-        $this->tracker_factory        = Mockery::spy(TrackerFactory::class);
-        $planning_permissions_manager = Mockery::spy(PlanningPermissionsManager::class);
+        $planning_dao                 = $this->createMock(PlanningDao::class);
+        $this->tracker_factory        = $this->createMock(TrackerFactory::class);
+        $planning_permissions_manager = $this->createMock(PlanningPermissionsManager::class);
 
-        $this->partial_factory = Mockery::mock(
-            PlanningFactory::class,
-            [$planning_dao, $this->tracker_factory, $planning_permissions_manager]
-        )->makePartial()->shouldAllowMockingProtectedMethods();
+        $this->partial_factory = $this->getMockBuilder(PlanningFactory::class)
+            ->setConstructorArgs([$planning_dao, $this->tracker_factory, $planning_permissions_manager])
+            ->onlyMethods([
+                'getPotentialPlanningTrackerIds',
+                'getPlanningTrackerIdsByGroupId',
+            ])
+            ->getMock();
     }
 
     public function testItRetrievesAvailablePlanningTrackersIncludingTheCurrentPlanningTracker(): void
     {
         $group_id = 789;
 
-        $this->partial_factory->shouldReceive('getPotentialPlanningTrackerIds')->andReturn([1, 2, 3]);
-        $this->partial_factory->shouldReceive('getPlanningTrackerIdsByGroupId')->andReturn([1, 3]);
+        $this->partial_factory->method('getPotentialPlanningTrackerIds')->willReturn([1, 2, 3]);
+        $this->partial_factory->method('getPlanningTrackerIdsByGroupId')->willReturn([1, 3]);
 
-        $releases_tracker = $this->createMock(\Tracker::class);
+        $releases_tracker = $this->createMock(Tracker::class);
         $releases_tracker->method('userCanView')->willReturn(true);
 
-        $this->tracker_factory->shouldReceive('getTrackerById')->with(2)->andReturn($releases_tracker);
+        $this->tracker_factory->method('getTrackerById')->with(2)->willReturn($releases_tracker);
 
         $actual_trackers = $this->partial_factory->getAvailablePlanningTrackers(
-            Mockery::mock(PFUser::class),
+            UserTestBuilder::buildWithDefaults(),
             $group_id
         );
 
@@ -79,16 +75,16 @@ final class PlanningFactoryTestGetAvailablePlanningTrackersTest extends \Tuleap\
     {
         $group_id = 789;
 
-        $this->partial_factory->shouldReceive('getPotentialPlanningTrackerIds')->andReturn([1, 2, 3]);
-        $this->partial_factory->shouldReceive('getPlanningTrackerIdsByGroupId')->andReturn([1, 3]);
+        $this->partial_factory->method('getPotentialPlanningTrackerIds')->willReturn([1, 2, 3]);
+        $this->partial_factory->method('getPlanningTrackerIdsByGroupId')->willReturn([1, 3]);
 
-        $releases_tracker = $this->createMock(\Tracker::class);
+        $releases_tracker = $this->createMock(Tracker::class);
         $releases_tracker->method('userCanView')->willReturn(false);
 
-        $this->tracker_factory->shouldReceive('getTrackerById')->with(2)->andReturn($releases_tracker);
+        $this->tracker_factory->method('getTrackerById')->with(2)->willReturn($releases_tracker);
 
         $actual_trackers = $this->partial_factory->getAvailablePlanningTrackers(
-            Mockery::mock(PFUser::class),
+            UserTestBuilder::buildWithDefaults(),
             $group_id
         );
 

@@ -18,59 +18,38 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\AgileDashboard\Planning;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use Tracker;
+use PHPUnit\Framework\MockObject\MockObject;
+use PlanningFactory;
+use Tuleap\AgileDashboard\Test\Builders\PlanningBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
-class ScrumPlanningFilterTest extends \Tuleap\Test\PHPUnit\TestCase
+final class ScrumPlanningFilterTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var \PFUser
-     */
-    private $user;
-
-    /**
-     * @var \Planning
-     */
-    private $planning;
-
-    /**
-     * @var \PlanningFactory
-     */
-    private $planning_factory;
-
-    /**
-     * @var  ScrumPlanningFilter
-     */
-    private $scrum_planning_filter;
+    private PlanningFactory&MockObject $planning_factory;
+    private ScrumPlanningFilter $scrum_planning_filter;
 
     protected function setUp(): void
     {
-        $this->planning_factory = \Mockery::spy(\PlanningFactory::class);
-        $this->planning         = \Mockery::spy(\Planning::class);
-        $this->user             = \Mockery::spy(\PFUser::class);
-
-        $this->scrum_planning_filter = new ScrumPlanningFilter(
-            $this->planning_factory
-        );
+        $this->planning_factory      = $this->createMock(PlanningFactory::class);
+        $this->scrum_planning_filter = new ScrumPlanningFilter($this->planning_factory);
     }
 
     public function testItRetrievesMilestoneTracker(): void
     {
-        $this->planning_factory->shouldReceive('getAvailablePlanningTrackers')->once();
-        $tracker = \Mockery::spy(Tracker::class);
-        $tracker->shouldReceive('getId')->andReturn(888);
-        $this->planning_factory->shouldReceive('getAvailablePlanningTrackers')->andReturns([$tracker]);
+        $this->planning_factory->expects(self::once())->method('getAvailablePlanningTrackers');
+        $tracker = TrackerTestBuilder::aTracker()->withId(888)->build();
+        $this->planning_factory->method('getAvailablePlanningTrackers')->willReturn([$tracker]);
 
         $this->scrum_planning_filter->getPlanningTrackersFiltered(
-            $this->planning,
-            $this->user,
+            PlanningBuilder::aPlanning(1)->build(),
+            UserTestBuilder::buildWithDefaults(),
             101
         );
-
-        $this->addToAssertionCount(1);
     }
 }
