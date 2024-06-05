@@ -22,11 +22,11 @@
         <div class="timetracking-management-query-displayer-dates">
             <div>
                 <label class="tlp-label">{{ $gettext("From") }}</label>
-                <span data-test="start-date">{{ props.start_date }}</span>
+                <span data-test="start-date">{{ getQuery().start_date }}</span>
             </div>
             <div>
                 <label class="tlp-label">{{ $gettext("To") }}</label>
-                <span data-test="end-date">{{ props.end_date }}</span>
+                <span data-test="end-date">{{ getQuery().end_date }}</span>
             </div>
         </div>
     </div>
@@ -34,13 +34,11 @@
 
 <script setup lang="ts">
 import { useGettext } from "vue3-gettext";
+import { strictInject } from "@tuleap/vue-strict-inject";
+import { RETRIEVE_QUERY } from "../injection-symbols";
 
 const { $gettext } = useGettext();
-
-const props = defineProps<{
-    start_date: string;
-    end_date: string;
-}>();
+const { getQuery } = strictInject(RETRIEVE_QUERY);
 </script>
 
 <style scoped lang="scss">

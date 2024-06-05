@@ -20,6 +20,8 @@ import { createApp } from "vue";
 import TimetrackingManagementWidget from "./components/TimetrackingManagementWidget.vue";
 import { createGettext } from "vue3-gettext";
 import { getPOFileFromLocaleWithoutExtension, initVueGettext } from "@tuleap/vue3-gettext-init";
+import { RETRIEVE_QUERY } from "./injection-symbols";
+import { QueryRetriever } from "./query/QueryRetriever";
 
 document.addEventListener("DOMContentLoaded", async () => {
     const mount_point = document.getElementById("timetracking-management-widget");
@@ -37,5 +39,6 @@ document.addEventListener("DOMContentLoaded", async () => {
                 return import(`../po/${getPOFileFromLocaleWithoutExtension(locale)}.po`);
             }),
         )
+        .provide(RETRIEVE_QUERY, QueryRetriever())
         .mount(mount_point);
 });

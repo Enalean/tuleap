@@ -9,6 +9,7 @@
     "@tuleap/plugin-timetracking-predefined-time-periods": "workspace:*",
     "@tuleap/plugin-timetracking-time-formatters": "workspace:^",
     "@tuleap/tlp": "workspace:*",
+    "@tuleap/vue-strict-inject": "workspace:^",
     "@tuleap/vue3-gettext-init": "workspace:*",
     "vue": "^3.4.27",
     "vue3-gettext": "^2.4.0"

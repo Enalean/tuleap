@@ -21,35 +21,14 @@
     <widget-query-displayer
         v-if="!is_query_being_edited"
         v-on:click="is_query_being_edited = true"
-        v-bind:start_date="start_date"
-        v-bind:end_date="end_date"
     />
-    <widget-query-editor
-        v-else
-        v-on:set-dates="setDates"
-        v-on:close-edit-mode="is_query_being_edited = false"
-        v-bind:start_date="start_date"
-        v-bind:end_date="end_date"
-        v-bind:predefined_time_selected="predefined_time_selected"
-    />
+    <widget-query-editor v-else v-on:close-edit-mode="is_query_being_edited = false" />
 </template>
 
 <script setup lang="ts">
 import WidgetQueryDisplayer from "./WidgetQueryDisplayer.vue";
 import WidgetQueryEditor from "./WidgetQueryEditor.vue";
 import { ref } from "vue";
-import type { PredefinedTimePeriod } from "@tuleap/plugin-timetracking-predefined-time-periods";
-import { TODAY } from "@tuleap/plugin-timetracking-predefined-time-periods";
 
 const is_query_being_edited = ref(false);
-
-const start_date = ref(new Date().toISOString().split("T")[0]);
-const end_date = ref(new Date().toISOString().split("T")[0]);
-const predefined_time_selected = ref<PredefinedTimePeriod | "">(TODAY);
-
-const setDates = (start: string, end: string, selected_option: PredefinedTimePeriod | ""): void => {
-    start_date.value = start;
-    end_date.value = end;
-    predefined_time_selected.value = selected_option;
-};
 </script>
