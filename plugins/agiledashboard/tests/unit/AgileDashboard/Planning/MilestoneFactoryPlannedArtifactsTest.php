@@ -23,53 +23,57 @@ declare(strict_types=1);
 
 namespace Tuleap\AgileDashboard\Planning;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use AgileDashboard_Milestone_MilestoneDao;
+use AgileDashboard_Milestone_MilestoneStatusCounter;
 use Planning_MilestoneFactory;
+use PlanningFactory;
+use PlanningPermissionsManager;
 use Psr\Log\NullLogger;
+use Tracker_ArtifactFactory;
+use Tracker_FormElementFactory;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\Artifact;
-use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
+use Tuleap\Tracker\Test\Stub\Tracker\Semantic\Timeframe\BuildSemanticTimeframeStub;
 
-final class MilestoneFactoryPlannedArtifactsTest extends \Tuleap\Test\PHPUnit\TestCase
+final class MilestoneFactoryPlannedArtifactsTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     public function testItReturnsATreeOfPlanningItems(): void
     {
-        $depth3_artifact = Mockery::mock(Artifact::class);
-        $depth3_artifact->shouldReceive('getId')->andReturn(3);
-        $depth3_artifact->shouldReceive('getUniqueLinkedArtifacts')->andReturn([]);
+        $depth3_artifact = $this->createMock(Artifact::class);
+        $depth3_artifact->method('getId')->willReturn(3);
+        $depth3_artifact->method('getUniqueLinkedArtifacts')->willReturn([]);
 
-        $depth2_artifact = Mockery::mock(Artifact::class);
-        $depth2_artifact->shouldReceive('getId')->andReturn(2);
-        $depth2_artifact->shouldReceive('getUniqueLinkedArtifacts')->andReturn([$depth3_artifact]);
+        $depth2_artifact = $this->createMock(Artifact::class);
+        $depth2_artifact->method('getId')->willReturn(2);
+        $depth2_artifact->method('getUniqueLinkedArtifacts')->willReturn([$depth3_artifact]);
 
-        $depth1_artifact = Mockery::mock(Artifact::class);
-        $depth1_artifact->shouldReceive('getId')->andReturn(1);
-        $depth1_artifact->shouldReceive('getUniqueLinkedArtifacts')->andReturn([$depth2_artifact]);
+        $depth1_artifact = $this->createMock(Artifact::class);
+        $depth1_artifact->method('getId')->willReturn(1);
+        $depth1_artifact->method('getUniqueLinkedArtifacts')->willReturn([$depth2_artifact]);
 
-        $root_artifact = Mockery::mock(Artifact::class);
-        $root_artifact->shouldReceive('getId')->andReturn(100);
-        $root_artifact->shouldReceive('getUniqueLinkedArtifacts')->andReturn([$depth1_artifact]);
+        $root_artifact = $this->createMock(Artifact::class);
+        $root_artifact->method('getId')->willReturn(100);
+        $root_artifact->method('getUniqueLinkedArtifacts')->willReturn([$depth1_artifact]);
 
         $factory             = new Planning_MilestoneFactory(
-            Mockery::spy(\PlanningFactory::class),
-            Mockery::spy(\Tracker_ArtifactFactory::class),
-            Mockery::spy(\Tracker_FormElementFactory::class),
-            Mockery::spy(\AgileDashboard_Milestone_MilestoneStatusCounter::class),
-            Mockery::spy(\PlanningPermissionsManager::class),
-            Mockery::spy(\AgileDashboard_Milestone_MilestoneDao::class),
-            Mockery::mock(SemanticTimeframeBuilder::class),
+            $this->createMock(PlanningFactory::class),
+            $this->createMock(Tracker_ArtifactFactory::class),
+            $this->createMock(Tracker_FormElementFactory::class),
+            $this->createMock(AgileDashboard_Milestone_MilestoneStatusCounter::class),
+            $this->createMock(PlanningPermissionsManager::class),
+            $this->createMock(AgileDashboard_Milestone_MilestoneDao::class),
+            BuildSemanticTimeframeStub::withTimeframeSemanticNotConfigured(TrackerTestBuilder::aTracker()->build()),
             new NullLogger(),
-            Mockery::spy(MilestoneBurndownFieldChecker::class)
         );
-        $planning_items_tree = $factory->getPlannedArtifacts(Mockery::spy(\PFUser::class), $root_artifact);
+        $planning_items_tree = $factory->getPlannedArtifacts(UserTestBuilder::buildWithDefaults(), $root_artifact);
 
         $children = $planning_items_tree->flattenChildren();
 
-        $this->assertFalse(empty($children));
+        self::assertNotEmpty($children);
         foreach ($children as $tree_node) {
-            $this->assertInstanceOf(Artifact::class, $tree_node->getObject());
+            self::assertInstanceOf(Artifact::class, $tree_node->getObject());
         }
     }
 }

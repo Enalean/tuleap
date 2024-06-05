@@ -27,6 +27,7 @@ use Tuleap\AgileDashboard\Planning\NotFoundException;
 use Tuleap\Date\DatePeriodWithOpenDays;
 use Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Semantic\Timeframe\BuildSemanticTimeframe;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 
 /**
@@ -66,10 +67,7 @@ class Planning_MilestoneFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
      */
     private $milestone_dao;
 
-    /**
-     * @var SemanticTimeframeBuilder
-     */
-    private $semantic_timeframe_builder;
+    private BuildSemanticTimeframe $semantic_timeframe_builder;
     /**
      * @var array
      */
@@ -93,7 +91,7 @@ class Planning_MilestoneFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
         AgileDashboard_Milestone_MilestoneStatusCounter $status_counter,
         PlanningPermissionsManager $planning_permissions_manager,
         AgileDashboard_Milestone_MilestoneDao $milestone_dao,
-        SemanticTimeframeBuilder $semantic_timeframe_builder,
+        BuildSemanticTimeframe $semantic_timeframe_builder,
         LoggerInterface $logger,
     ) {
         $this->planning_factory             = $planning_factory;
