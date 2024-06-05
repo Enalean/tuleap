@@ -23,45 +23,31 @@ declare(strict_types=1);
 
 namespace Tuleap\AgileDashboard\Planning;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\MockObject\MockObject;
 use PlanningFactory;
+use PlanningParameters;
+use PlanningPermissionsManager;
 use Tuleap\AgileDashboard\ExplicitBacklog\ArtifactsInExplicitBacklogDao;
 use Tuleap\AgileDashboard\Test\Builders\PlanningBuilder;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
+use Tuleap\Test\PHPUnit\TestCase;
 
-final class PlanningUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
+final class PlanningUpdaterTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var PlanningUpdater
-     */
-    private $planning_updater;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ArtifactsInExplicitBacklogDao
-     */
-    private $artifacts_in_explicit_backlog_dao;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|PlanningFactory
-     */
-    private $planning_factory;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|PlanningDao
-     */
-    private $planning_dao;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|\PlanningPermissionsManager
-     */
-    private $permissions_manager;
+    private PlanningUpdater $planning_updater;
+    private ArtifactsInExplicitBacklogDao&MockObject $artifacts_in_explicit_backlog_dao;
+    private PlanningFactory&MockObject $planning_factory;
+    private PlanningDao&MockObject $planning_dao;
+    private PlanningPermissionsManager&MockObject $permissions_manager;
 
     protected function setUp(): void
     {
-        $this->planning_factory                  = Mockery::mock(PlanningFactory::class);
-        $this->artifacts_in_explicit_backlog_dao = Mockery::mock(ArtifactsInExplicitBacklogDao::class);
-        $this->planning_dao                      = Mockery::mock(PlanningDao::class);
-        $this->permissions_manager               = Mockery::mock(\PlanningPermissionsManager::class);
+        $this->planning_factory                  = $this->createMock(PlanningFactory::class);
+        $this->artifacts_in_explicit_backlog_dao = $this->createMock(ArtifactsInExplicitBacklogDao::class);
+        $this->planning_dao                      = $this->createMock(PlanningDao::class);
+        $this->permissions_manager               = $this->createMock(PlanningPermissionsManager::class);
 
         $this->planning_updater = new PlanningUpdater(
             $this->planning_factory,
@@ -75,21 +61,18 @@ final class PlanningUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItUpdatesStandardPlanning(): void
     {
         $user                = UserTestBuilder::aUser()->build();
-        $project             = new \Project(['group_id' => '102']);
+        $project             = ProjectTestBuilder::aProject()->withId(102)->build();
         $updated_planning_id = 10;
-        $planning_parameters = Mockery::mock(\PlanningParameters::class);
+        $planning_parameters = $this->createMock(PlanningParameters::class);
 
-        $this->planning_dao->shouldReceive('updatePlanning')
-            ->once()
+        $this->planning_dao->expects(self::once())->method('updatePlanning')
             ->with($updated_planning_id, $planning_parameters);
-        $this->permissions_manager->shouldReceive('savePlanningPermissionForUgroups')->once();
+        $this->permissions_manager->expects(self::once())->method('savePlanningPermissionForUgroups');
 
         $planning = PlanningBuilder::aPlanning(102)->withId(20)->build();
-        $this->planning_factory->shouldReceive('getRootPlanning')->andReturn($planning);
+        $this->planning_factory->method('getRootPlanning')->willReturn($planning);
 
-        $this->artifacts_in_explicit_backlog_dao->shouldNotReceive(
-            'removeNoMoreSelectableItemsFromExplicitBacklogOfProject'
-        );
+        $this->artifacts_in_explicit_backlog_dao->expects(self::never())->method('removeNoMoreSelectableItemsFromExplicitBacklogOfProject');
 
         $this->planning_updater->update($user, $project, $updated_planning_id, $planning_parameters);
     }
@@ -97,21 +80,20 @@ final class PlanningUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItUpdatesExplicitBacklogPlanning(): void
     {
         $user                = UserTestBuilder::aUser()->build();
-        $project             = new \Project(['group_id' => '102']);
+        $project             = ProjectTestBuilder::aProject()->withId(102)->build();
         $updated_planning_id = 10;
-        $planning_parameters = Mockery::mock(\PlanningParameters::class);
+        $planning_parameters = $this->createMock(PlanningParameters::class);
 
-        $this->planning_dao->shouldReceive('updatePlanning')
-            ->once()
+        $this->planning_dao->expects(self::once())->method('updatePlanning')
             ->with($updated_planning_id, $planning_parameters);
-        $this->permissions_manager->shouldReceive('savePlanningPermissionForUgroups')->once();
+        $this->permissions_manager->expects(self::once())->method('savePlanningPermissionForUgroups');
 
         $planning = PlanningBuilder::aPlanning(102)->withId($updated_planning_id)->build();
-        $this->planning_factory->shouldReceive('getRootPlanning')->andReturn($planning);
+        $this->planning_factory->method('getRootPlanning')->willReturn($planning);
 
-        $this->artifacts_in_explicit_backlog_dao->shouldReceive(
+        $this->artifacts_in_explicit_backlog_dao->expects(self::once())->method(
             'removeNoMoreSelectableItemsFromExplicitBacklogOfProject'
-        )->once();
+        );
 
         $this->planning_updater->update($user, $project, $updated_planning_id, $planning_parameters);
     }
