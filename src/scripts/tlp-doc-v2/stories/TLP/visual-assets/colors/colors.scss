@@ -1,0 +1,135 @@
+/*
+ * Copyright (c) Enalean, 2024-Present. All Rights Reserved.
+ *
+ *  This file is a part of Tuleap.
+ *
+ *  Tuleap is free software; you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation; either version 2 of the License, or
+ *  (at your option) any later version.
+ *
+ *  Tuleap is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+@use "sass:map";
+@use "@tuleap/tlp-swatch-colors";
+@use "@tuleap/tlp/src/scss/variables/colors/common-colors";
+
+%size {
+    font-size: 13px;
+}
+
+tbody > tr > td:first-child,
+tbody > tr > td:nth-child(2) {
+    white-space: nowrap;
+}
+
+.code-inline {
+    @extend %size;
+}
+
+.doc-color {
+    display: inline-block;
+    width: 30px;
+    height: 30px;
+    margin: 0 10px 0 0;
+    border-radius: 50%;
+    vertical-align: middle;
+}
+
+.doc-color-info {
+    background-color: var(--tlp-info-color);
+}
+
+.doc-color-success {
+    background-color: var(--tlp-success-color);
+}
+
+.doc-color-warning {
+    background-color: var(--tlp-warning-color);
+}
+
+.doc-color-danger {
+    background-color: var(--tlp-danger-color);
+}
+
+.doc-color-orange {
+    background-color: common-colors.$tlp-theme-orange;
+}
+
+.doc-color-blue {
+    background-color: common-colors.$tlp-theme-blue;
+}
+
+.doc-color-green {
+    background-color: common-colors.$tlp-theme-green;
+}
+
+.doc-color-grey {
+    background-color: common-colors.$tlp-theme-grey;
+}
+
+.doc-color-purple {
+    background-color: common-colors.$tlp-theme-purple;
+}
+
+.doc-color-red {
+    background-color: common-colors.$tlp-theme-red;
+}
+
+.doc-color-swatch {
+    border: 3px solid var(--primary-color);
+    background-color: var(--secondary-color);
+}
+
+.doc-color-swatch-primary {
+    @extend %size;
+
+    background-color: var(--primary-color);
+    color: var(--tlp-dark-color);
+
+    &.dark {
+        color: var(--tlp-white-color);
+    }
+}
+
+.doc-color-swatch-secondary {
+    @extend %size;
+
+    background-color: var(--secondary-color);
+    color: var(--text-color);
+}
+
+.doc-color-swatch-border {
+    @extend %size;
+
+    border: 2px solid var(--border-color);
+    color: var(--border-color);
+}
+
+.doc-color-swatch-text {
+    @extend %size;
+
+    background-color: var(--secondary-color);
+    color: var(--text-color);
+}
+
+.doc-color-swatch-text-on-dark {
+    @extend %size;
+
+    background-color: var(--tlp-dark-color);
+    color: var(--text-on-dark-color);
+}
+
+.doc-color-swatch-pattern {
+    width: 30px;
+    height: 30px;
+    background-color: var(--text-color);
+    mask-image: var(--accessibility-pattern);
+}
