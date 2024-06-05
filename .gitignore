@@ -13,6 +13,7 @@ src/tuleap-cfg/vendor/
 src/www/tlp-doc/dist/
 src/themes/*/vendor/
 plugins/*/vendor/
+tools/utils/*/vendor/
 /.idea/
 npm-debug.log
 yarn-error.log
@@ -43,6 +44,11 @@ tsconfig.tsbuildinfo
 .turbo/
 js-test-results/
 result
+
+# Workaround OSV Scanner not taking into account .gitignore not located at root directory
+plugins/mediawiki_standalone/additional-packages/mediawiki-extensions-*/extensions/
+plugins/mediawiki_standalone/additional-packages/mediawiki-extensions-*/skins/
+plugins/mediawiki_standalone/additional-packages/mediawiki-extensions-*/vendor/
 
 #legacy
 coverage/

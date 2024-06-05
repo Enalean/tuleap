@@ -1,8 +1,6 @@
 module tuleap-mercure
 
-go 1.22.0
-
-toolchain go1.22.2
+go 1.22.2
 
 require (
 	github.com/caddyserver/caddy/v2 v2.8.4
