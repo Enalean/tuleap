@@ -18,152 +18,103 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\AgileDashboard\Planning;
 
+use Codendi_Request;
 use ForgeConfig;
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\MockObject\MockObject;
 use Planning_Milestone;
 use Planning_MilestoneController;
+use Planning_MilestoneFactory;
+use Planning_MilestonePaneFactory;
+use ProjectManager;
 use Tuleap\AgileDashboard\BreadCrumbDropdown\AgileDashboardCrumbBuilder;
 use Tuleap\AgileDashboard\BreadCrumbDropdown\MilestoneCrumbBuilder;
 use Tuleap\AgileDashboard\Milestone\AllBreadCrumbsForMilestoneBuilder;
 use Tuleap\AgileDashboard\Milestone\HeaderOptionsProvider;
+use Tuleap\ForgeConfigSandbox;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumb;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbLink;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\RecentlyVisited\VisitRecorder;
 
-final class MilestoneControllerTest extends \Tuleap\Test\PHPUnit\TestCase
+final class MilestoneControllerTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
+    use ForgeConfigSandbox;
 
-    /** @var string */
-    private $plugin_path;
-
-    /** @var Planning_Milestone */
-    private $product;
-
-    /** @var Planning_Milestone */
-    private $release;
-
-    /** @var Planning_Milestone */
-    private $sprint;
-
-    /** @var Planning_Milestone */
-    private $nomilestone;
-
-    /** @var \Planning_MilestoneFactory */
-    private $milestone_factory;
-
-    /** @var \ProjectManager */
-    private $project_manager;
-
-    /** @var \Project */
-    private $project;
-
-    /** @var Planning_MilestoneController */
-    private $milestone_controller;
-
-    /** @var \Codendi_Request */
-    private $request;
-
-    /** @var \Planning_MilestonePaneFactory */
-    private $pane_factory;
-
-    /** @var \PFUser */
-    private $current_user;
-
-    /** @var AgileDashboardCrumbBuilder */
-    private $agile_dashboard_crumb_builder;
-
-    /** @var MilestoneCrumbBuilder */
-    private $milestone_crumb_builder;
-
-    /** @var BreadCrumb */
-    private $service_breadcrumb;
-
-    /** @var BreadCrumb */
-    private $top_backlog_breadcrumb;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|VisitRecorder
-     */
-    private $visit_recorder;
-    /**
-     * @var AllBreadCrumbsForMilestoneBuilder
-     */
-    private $crumb_builder;
+    private string $plugin_path;
+    private Planning_Milestone&MockObject $product;
+    private Planning_Milestone&MockObject $release;
+    private Planning_Milestone&MockObject $sprint;
+    private Planning_Milestone&MockObject $nomilestone;
+    private Planning_MilestoneFactory $milestone_factory;
+    private Planning_MilestoneController $milestone_controller;
+    private AgileDashboardCrumbBuilder&MockObject $agile_dashboard_crumb_builder;
+    private MilestoneCrumbBuilder&MockObject $milestone_crumb_builder;
+    private BreadCrumb $service_breadcrumb;
+    private BreadCrumb $top_backlog_breadcrumb;
 
     public function setUp(): void
     {
-        ForgeConfig::store();
         ForgeConfig::set('codendi_dir', __DIR__ . '/../../../../../..');
 
-        $this->pane_factory = Mockery::mock(\Planning_MilestonePaneFactory::class);
-
         $this->plugin_path       = '/plugin/path';
-        $this->milestone_factory = Mockery::mock(\Planning_MilestoneFactory::class);
-        $this->project_manager   = Mockery::mock(\ProjectManager::class);
+        $this->milestone_factory = $this->createMock(Planning_MilestoneFactory::class);
+        $project_manager         = $this->createMock(ProjectManager::class);
 
-        $this->product = Mockery::mock(Planning_Milestone::class);
-        $this->release = Mockery::mock(Planning_Milestone::class);
-        $this->sprint  = Mockery::mock(Planning_Milestone::class);
-        $this->sprint->shouldReceive('getArtifact')->andReturn(true);
+        $this->product = $this->createMock(Planning_Milestone::class);
+        $this->release = $this->createMock(Planning_Milestone::class);
+        $this->sprint  = $this->createMock(Planning_Milestone::class);
+        $this->sprint->method('getArtifact')->willReturn(true);
 
-        $this->nomilestone = Mockery::mock(Planning_Milestone::class);
-        $this->nomilestone->shouldReceive('getArtifact')->andReturn(null);
+        $this->nomilestone = $this->createMock(Planning_Milestone::class);
+        $this->nomilestone->method('getArtifact')->willReturn(null);
 
-        $this->current_user = Mockery::mock(\PFUser::class);
-        $this->request      = Mockery::mock(\Codendi_Request::class);
-        $this->request->shouldReceive('get', 'group_id')->andReturn(102);
-        $this->request->shouldReceive('getCurrentUser')->andReturn($this->current_user);
+        $current_user = UserTestBuilder::buildWithDefaults();
+        $request      = new Codendi_Request([
+            'group_id'    => 102,
+            'planning_id' => 102,
+        ]);
+        $request->setCurrentUser($current_user);
 
-        $this->project = Mockery::mock(\Project::class);
-        $this->project_manager->shouldReceive('getProject', 102)->andReturn($this->project);
+        $project = ProjectTestBuilder::aProject()->withId(102)->build();
+        $project_manager->method('getProject')->with(102)->willReturn($project);
 
-        $this->agile_dashboard_crumb_builder = Mockery::mock(AgileDashboardCrumbBuilder::class);
-        $this->milestone_crumb_builder       = Mockery::mock(MilestoneCrumbBuilder::class);
+        $this->agile_dashboard_crumb_builder = $this->createMock(AgileDashboardCrumbBuilder::class);
+        $this->milestone_crumb_builder       = $this->createMock(MilestoneCrumbBuilder::class);
 
-        $this->crumb_builder = new AllBreadCrumbsForMilestoneBuilder(
-            $this->agile_dashboard_crumb_builder,
-            $this->milestone_crumb_builder,
-        );
-
-        $this->service_breadcrumb     = new BreadCrumb(
-            new BreadCrumbLink('Backlog', '/fake_url')
-        );
-        $this->top_backlog_breadcrumb = new BreadCrumb(
-            new BreadCrumbLink('Top backlog', '/fake_url')
-        );
-
-        $this->visit_recorder = Mockery::mock(VisitRecorder::class);
+        $this->service_breadcrumb     = new BreadCrumb(new BreadCrumbLink('Backlog', '/fake_url'));
+        $this->top_backlog_breadcrumb = new BreadCrumb(new BreadCrumbLink('Top backlog', '/fake_url'));
 
         $this->milestone_controller = new Planning_MilestoneController(
-            $this->request,
+            $request,
             $this->milestone_factory,
-            $this->project_manager,
-            $this->pane_factory,
-            $this->visit_recorder,
-            $this->crumb_builder,
-            Mockery::mock(HeaderOptionsProvider::class),
+            $project_manager,
+            $this->createMock(Planning_MilestonePaneFactory::class),
+            $this->createMock(VisitRecorder::class),
+            new AllBreadCrumbsForMilestoneBuilder(
+                $this->agile_dashboard_crumb_builder,
+                $this->milestone_crumb_builder,
+            ),
+            $this->createMock(HeaderOptionsProvider::class),
         );
-    }
-
-    public function tearDown(): void
-    {
-        ForgeConfig::restore();
     }
 
     public function testItHasOnlyTheServiceBreadCrumbsWhenThereIsNoMilestone(): void
     {
-        $this->milestone_factory->shouldReceive('getBareMilestone')->andReturn($this->nomilestone);
-        $this->agile_dashboard_crumb_builder->shouldReceive('build')->andReturn($this->service_breadcrumb);
-        $this->milestone_crumb_builder->shouldNotReceive('build');
+        $this->milestone_factory->method('getBareMilestone')->willReturn($this->nomilestone);
+        $this->agile_dashboard_crumb_builder->method('build')->willReturn($this->service_breadcrumb);
+        $this->milestone_crumb_builder->expects(self::never())->method('build');
 
         $breadcrumbs = $this->milestone_controller->getBreadcrumbs();
 
         $expected = [$this->service_breadcrumb];
 
-        $this->assertEquals($expected, $breadcrumbs->getBreadcrumbs());
+        self::assertEquals($expected, $breadcrumbs->getBreadcrumbs());
     }
 
     public function testItIncludesBreadcrumbsForParentMilestones(): void
@@ -172,10 +123,10 @@ final class MilestoneControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $release_breadcrumb = new BreadCrumb(new BreadCrumbLink('Release 1.0', 'fake_url'));
         $sprint_breadcrumb  = new BreadCrumb(new BreadCrumbLink('Sprint 1', 'fake_url'));
 
-        $this->sprint->shouldReceive('getAncestors')->andReturn([$this->release, $this->product]);
-        $this->milestone_factory->shouldReceive('getBareMilestone')->andReturn($this->sprint);
-        $this->agile_dashboard_crumb_builder->shouldReceive('build')->andReturn($this->service_breadcrumb);
-        $this->milestone_crumb_builder->shouldReceive('build')->andReturn(
+        $this->sprint->method('getAncestors')->willReturn([$this->release, $this->product]);
+        $this->milestone_factory->method('getBareMilestone')->willReturn($this->sprint);
+        $this->agile_dashboard_crumb_builder->method('build')->willReturn($this->service_breadcrumb);
+        $this->milestone_crumb_builder->method('build')->willReturnOnConsecutiveCalls(
             $product_breadcrumb,
             $release_breadcrumb,
             $sprint_breadcrumb
@@ -190,6 +141,6 @@ final class MilestoneControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             $sprint_breadcrumb,
         ];
 
-        $this->assertEquals($expected, $breadcrumbs->getBreadcrumbs());
+        self::assertEquals($expected, $breadcrumbs->getBreadcrumbs());
     }
 }
