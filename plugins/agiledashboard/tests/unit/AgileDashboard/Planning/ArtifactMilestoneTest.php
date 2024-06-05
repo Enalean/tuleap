@@ -18,46 +18,36 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\AgileDashboard\Planning;
 
 use ArtifactNode;
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PFUser;
+use PHPUnit\Framework\MockObject\MockObject;
 use Planning;
 use Planning_ArtifactMilestone;
 use Project;
 use Tuleap\Date\DatePeriodWithOpenDays;
+use Tuleap\AgileDashboard\Test\Builders\PlanningBuilder;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 
-require_once __DIR__ . '/../../bootstrap.php';
-
-final class ArtifactMilestoneTest extends \Tuleap\Test\PHPUnit\TestCase
+final class ArtifactMilestoneTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    private $project;
-    private $planning;
-    private $artifact;
-
-    /**
-     * @var Planning_ArtifactMilestone
-     */
-    private $milestone;
+    private Project $project;
+    private Planning $planning;
+    private Artifact&MockObject $artifact;
+    private Planning_ArtifactMilestone $milestone;
 
     protected function setUp(): void
     {
-        parent::setUp();
-
-        $this->project = Mockery::mock(Project::class);
-        $this->project->shouldReceive('getID')->andReturn(123);
-
-        $this->planning = Mockery::mock(Planning::class);
-        $this->planning->shouldReceive('getId')->andReturn(9999);
-
-        $this->artifact = Mockery::mock(Artifact::class);
-        $this->artifact->shouldReceive('getId')->andReturn(201);
-
+        $this->project  = ProjectTestBuilder::aProject()->withId(123)->build();
+        $this->planning = PlanningBuilder::aPlanning(123)->withId(9999)->build();
+        $this->artifact = $this->createMock(Artifact::class);
+        $this->artifact->method('getId')->willReturn(201);
         $this->milestone = new Planning_ArtifactMilestone(
             $this->project,
             $this->planning,
@@ -65,36 +55,35 @@ final class ArtifactMilestoneTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-    public function testItHasAPlanning()
+    public function testItHasAPlanning(): void
     {
-        $this->assertSame($this->planning, $this->milestone->getPlanning());
-        $this->assertSame($this->planning->getId(), $this->milestone->getPlanningId());
+        self::assertSame($this->planning, $this->milestone->getPlanning());
+        self::assertSame($this->planning->getId(), $this->milestone->getPlanningId());
     }
 
-    public function testItHasAProject()
+    public function testItHasAProject(): void
     {
-        $this->assertSame($this->project, $this->milestone->getProject());
-        $this->assertSame($this->project->getID(), $this->milestone->getGroupId());
+        self::assertSame($this->project, $this->milestone->getProject());
+        self::assertSame($this->project->getID(), $this->milestone->getGroupId());
     }
 
-    public function testItRepresentsAnArtifact()
+    public function testItRepresentsAnArtifact(): void
     {
-        $this->assertSame($this->artifact, $this->milestone->getArtifact());
-        $this->assertSame($this->artifact->getId(), $this->milestone->getArtifactId());
+        self::assertSame($this->artifact, $this->milestone->getArtifact());
+        self::assertSame($this->artifact->getId(), $this->milestone->getArtifactId());
     }
 
-    public function testItDelegatesArtifactTitleRetrieval()
+    public function testItDelegatesArtifactTitleRetrieval(): void
     {
-        $this->artifact->shouldReceive('getTitle')->andReturn('Foo');
+        $this->artifact->method('getTitle')->willReturn('Foo');
 
-        $this->assertSame($this->artifact->getTitle(), $this->milestone->getArtifactTitle());
-        $this->assertSame('Foo', $this->milestone->getArtifactTitle());
+        self::assertSame($this->artifact->getTitle(), $this->milestone->getArtifactTitle());
+        self::assertSame('Foo', $this->milestone->getArtifactTitle());
     }
 
-    public function testItMayHavePlannedArtifacts()
+    public function testItMayHavePlannedArtifacts(): void
     {
-        $node_artifact = Mockery::mock(Artifact::class);
-        $node_artifact->shouldReceive('getId')->andReturn(202);
+        $node_artifact = ArtifactTestBuilder::anArtifact(202)->build();
 
         $planned_artifacts = new ArtifactNode($node_artifact);
 
@@ -105,39 +94,36 @@ final class ArtifactMilestoneTest extends \Tuleap\Test\PHPUnit\TestCase
             $planned_artifacts,
         );
 
-
-        $this->assertSame($planned_artifacts, $milestone->getPlannedArtifacts());
+        self::assertSame($planned_artifacts, $milestone->getPlannedArtifacts());
     }
 
-    public function testItGetsLinkedArtifactsOfTheRootLevelArtifact()
+    public function testItGetsLinkedArtifactsOfTheRootLevelArtifact(): void
     {
-        $this->artifact->shouldReceive('getUniqueLinkedArtifacts')->andReturn([
-            Mockery::mock(Artifact::class),
-        ]);
+        $this->artifact->method('getUniqueLinkedArtifacts')->willReturn([ArtifactTestBuilder::anArtifact(301)->build()]);
 
-        $all_artifacts = $this->milestone->getLinkedArtifacts(Mockery::mock(PFUser::class));
+        $all_artifacts = $this->milestone->getLinkedArtifacts(UserTestBuilder::buildWithDefaults());
 
-        $this->assertCount(1, $all_artifacts);
+        self::assertCount(1, $all_artifacts);
     }
 
-    public function testItGetsTheArtifactsChildNodes()
+    public function testItGetsTheArtifactsChildNodes(): void
     {
-        $this->artifact->shouldReceive('getUniqueLinkedArtifacts')->andReturn([]);
+        $this->artifact->method('getUniqueLinkedArtifacts')->willReturn([]);
 
-        $root_artifact = Mockery::mock(Artifact::class);
-        $root_artifact->shouldReceive('getId')->andReturn(9999);
-        $root_artifact->shouldReceive('getTitle')->andReturn('root artifact');
-        $root_artifact->shouldReceive('getUniqueLinkedArtifacts')->andReturn([]);
+        $root_artifact = $this->createMock(Artifact::class);
+        $root_artifact->method('getId')->willReturn(9999);
+        $root_artifact->method('getTitle')->willReturn('root artifact');
+        $root_artifact->method('getUniqueLinkedArtifacts')->willReturn([]);
 
-        $child1_artifact = Mockery::mock(Artifact::class);
-        $child1_artifact->shouldReceive('getId')->andReturn(1111);
-        $child1_artifact->shouldReceive('getTitle')->andReturn('child artifact 1');
-        $child1_artifact->shouldReceive('getUniqueLinkedArtifacts')->andReturn([]);
+        $child1_artifact = $this->createMock(Artifact::class);
+        $child1_artifact->method('getId')->willReturn(1111);
+        $child1_artifact->method('getTitle')->willReturn('child artifact 1');
+        $child1_artifact->method('getUniqueLinkedArtifacts')->willReturn([]);
 
-        $child2_artifact = Mockery::mock(Artifact::class);
-        $child2_artifact->shouldReceive('getId')->andReturn(2222);
-        $child2_artifact->shouldReceive('getTitle')->andReturn('child artifact 2');
-        $child2_artifact->shouldReceive('getUniqueLinkedArtifacts')->andReturn([]);
+        $child2_artifact = $this->createMock(Artifact::class);
+        $child2_artifact->method('getId')->willReturn(2222);
+        $child2_artifact->method('getTitle')->willReturn('child artifact 2');
+        $child2_artifact->method('getUniqueLinkedArtifacts')->willReturn([]);
 
         $planned_artifacts    = new ArtifactNode($root_artifact);
         $child1_artifact_node = new ArtifactNode($child1_artifact);
@@ -152,29 +138,29 @@ final class ArtifactMilestoneTest extends \Tuleap\Test\PHPUnit\TestCase
             $planned_artifacts,
         );
 
-        $all_artifacts = $milestone->getLinkedArtifacts(Mockery::mock(PFUser::class));
+        $all_artifacts = $milestone->getLinkedArtifacts(UserTestBuilder::buildWithDefaults());
 
-        $this->assertCount(2, $all_artifacts);
+        self::assertCount(2, $all_artifacts);
     }
 
-    public function testItGetsTheArtifactsOfNestedChildNodes()
+    public function testItGetsTheArtifactsOfNestedChildNodes(): void
     {
-        $this->artifact->shouldReceive('getUniqueLinkedArtifacts')->andReturn([]);
+        $this->artifact->method('getUniqueLinkedArtifacts')->willReturn([]);
 
-        $root_artifact = Mockery::mock(Artifact::class);
-        $root_artifact->shouldReceive('getId')->andReturn(9999);
-        $root_artifact->shouldReceive('getTitle')->andReturn('root artifact');
-        $root_artifact->shouldReceive('getUniqueLinkedArtifacts')->andReturn([]);
+        $root_artifact = $this->createMock(Artifact::class);
+        $root_artifact->method('getId')->willReturn(9999);
+        $root_artifact->method('getTitle')->willReturn('root artifact');
+        $root_artifact->method('getUniqueLinkedArtifacts')->willReturn([]);
 
-        $depth1_artifact = Mockery::mock(Artifact::class);
-        $depth1_artifact->shouldReceive('getId')->andReturn(1111);
-        $depth1_artifact->shouldReceive('getTitle')->andReturn('depth artifact 1');
-        $depth1_artifact->shouldReceive('getUniqueLinkedArtifacts')->andReturn([]);
+        $depth1_artifact = $this->createMock(Artifact::class);
+        $depth1_artifact->method('getId')->willReturn(1111);
+        $depth1_artifact->method('getTitle')->willReturn('depth artifact 1');
+        $depth1_artifact->method('getUniqueLinkedArtifacts')->willReturn([]);
 
-        $depth2_artifact = Mockery::mock(Artifact::class);
-        $depth2_artifact->shouldReceive('getId')->andReturn(2222);
-        $depth2_artifact->shouldReceive('getTitle')->andReturn('depth artifact 2');
-        $depth2_artifact->shouldReceive('getUniqueLinkedArtifacts')->andReturn([]);
+        $depth2_artifact = $this->createMock(Artifact::class);
+        $depth2_artifact->method('getId')->willReturn(2222);
+        $depth2_artifact->method('getTitle')->willReturn('depth artifact 2');
+        $depth2_artifact->method('getUniqueLinkedArtifacts')->willReturn([]);
 
         $planned_artifacts    = new ArtifactNode($root_artifact);
         $depth1_artifact_node = new ArtifactNode($depth1_artifact);
@@ -190,34 +176,34 @@ final class ArtifactMilestoneTest extends \Tuleap\Test\PHPUnit\TestCase
             $planned_artifacts,
         );
 
-        $all_artifacts = $milestone->getLinkedArtifacts(Mockery::mock(PFUser::class));
+        $all_artifacts = $milestone->getLinkedArtifacts(UserTestBuilder::buildWithDefaults());
 
-        $this->assertCount(2, $all_artifacts);
+        self::assertCount(2, $all_artifacts);
     }
 
-    public function testItGetsTheLinkedArtifactsOfChildNodes()
+    public function testItGetsTheLinkedArtifactsOfChildNodes(): void
     {
-        $this->artifact->shouldReceive('getUniqueLinkedArtifacts')->andReturn([]);
+        $this->artifact->method('getUniqueLinkedArtifacts')->willReturn([]);
 
-        $root_artifact = Mockery::mock(Artifact::class);
-        $root_artifact->shouldReceive('getId')->andReturn(9999);
-        $root_artifact->shouldReceive('getTitle')->andReturn('root artifact');
-        $root_artifact->shouldReceive('getUniqueLinkedArtifacts')->andReturn([]);
+        $root_artifact = $this->createMock(Artifact::class);
+        $root_artifact->method('getId')->willReturn(9999);
+        $root_artifact->method('getTitle')->willReturn('root artifact');
+        $root_artifact->method('getUniqueLinkedArtifacts')->willReturn([]);
 
-        $linked_artifact_1 = Mockery::mock(Artifact::class);
-        $linked_artifact_1->shouldReceive('getId')->andReturn(1111);
-        $linked_artifact_1->shouldReceive('getTitle')->andReturn('depth artifact 1');
-        $linked_artifact_1->shouldReceive('getUniqueLinkedArtifacts')->andReturn([]);
+        $linked_artifact_1 = $this->createMock(Artifact::class);
+        $linked_artifact_1->method('getId')->willReturn(1111);
+        $linked_artifact_1->method('getTitle')->willReturn('depth artifact 1');
+        $linked_artifact_1->method('getUniqueLinkedArtifacts')->willReturn([]);
 
-        $linked_artifact_2 = Mockery::mock(Artifact::class);
-        $linked_artifact_2->shouldReceive('getId')->andReturn(2222);
-        $linked_artifact_2->shouldReceive('getTitle')->andReturn('depth artifact 2');
-        $linked_artifact_2->shouldReceive('getUniqueLinkedArtifacts')->andReturn([]);
+        $linked_artifact_2 = $this->createMock(Artifact::class);
+        $linked_artifact_2->method('getId')->willReturn(2222);
+        $linked_artifact_2->method('getTitle')->willReturn('depth artifact 2');
+        $linked_artifact_2->method('getUniqueLinkedArtifacts')->willReturn([]);
 
-        $artifact = Mockery::mock(Artifact::class);
-        $artifact->shouldReceive('getId')->andReturn(4444);
-        $artifact->shouldReceive('getTitle')->andReturn('artifact');
-        $artifact->shouldReceive('getUniqueLinkedArtifacts')->andReturn([$linked_artifact_1, $linked_artifact_2]);
+        $artifact = $this->createMock(Artifact::class);
+        $artifact->method('getId')->willReturn(4444);
+        $artifact->method('getTitle')->willReturn('artifact');
+        $artifact->method('getUniqueLinkedArtifacts')->willReturn([$linked_artifact_1, $linked_artifact_2]);
 
         $planned_artifacts = new ArtifactNode($root_artifact);
         $artifact_node     = new ArtifactNode($artifact);
@@ -231,28 +217,28 @@ final class ArtifactMilestoneTest extends \Tuleap\Test\PHPUnit\TestCase
             $planned_artifacts,
         );
 
-        $all_artifacts = $milestone->getLinkedArtifacts(Mockery::mock(PFUser::class));
+        $all_artifacts = $milestone->getLinkedArtifacts(UserTestBuilder::buildWithDefaults());
 
-        $this->assertCount(3, $all_artifacts);
+        self::assertCount(3, $all_artifacts);
     }
 
-    public function testEndDateIsNullIfNoStartDate()
+    public function testEndDateIsNullIfNoStartDate(): void
     {
         $date_period = DatePeriodWithOpenDays::buildFromDuration(0, 10);
         $this->milestone->setDatePeriod($date_period);
 
-        $this->assertNull($this->milestone->getEndDate());
+        self::assertNull($this->milestone->getEndDate());
     }
 
-    public function testEndDateIsNullIfNoDuration()
+    public function testEndDateIsNullIfNoDuration(): void
     {
         $date_period = DatePeriodWithOpenDays::buildFromDuration(10, 0);
         $this->milestone->setDatePeriod($date_period);
 
-        $this->assertNull($this->milestone->getEndDate());
+        self::assertNull($this->milestone->getEndDate());
     }
 
-    public function testEndDateIsNullIfNegativeDuration()
+    public function testEndDateIsNullIfNegativeDuration(): void
     {
         $date_period = DatePeriodWithOpenDays::buildFromDuration(10, -2);
         $this->milestone->setDatePeriod($date_period);
