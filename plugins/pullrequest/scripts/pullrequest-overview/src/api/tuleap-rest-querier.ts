@@ -17,7 +17,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { getJSON, getAllJSON, uri, patchJSON, put, patch } from "@tuleap/fetch-result";
+import {
+    getJSON,
+    getAllJSON,
+    uri,
+    patchJSON,
+    putResponse,
+    patchResponse,
+} from "@tuleap/fetch-result";
 import type {
     PullRequest,
     User,
@@ -107,7 +114,7 @@ export const putReviewers = (
     pull_request_id: number,
     reviewers: ReadonlyArray<User>,
 ): ResultAsync<Response, Fault> => {
-    return put(
+    return putResponse(
         uri`/api/v1/pull_requests/${pull_request_id}/reviewers`,
         {},
         {
@@ -165,5 +172,5 @@ export const patchPullRequestLabels = (
         return okAsync(null);
     }
 
-    return patch(uri`/api/v1/pull_requests/${pull_request_id}/labels`, {}, payload);
+    return patchResponse(uri`/api/v1/pull_requests/${pull_request_id}/labels`, {}, payload);
 };

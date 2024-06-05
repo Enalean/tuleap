@@ -23,6 +23,7 @@ type User = {
 
 // searchUser("jdoe", 10, 0) will query /api/v1/users/?query%3D%7Busername%3A%22jdoe%22%7D&limit=10&offset=0
 function searchUser(username: string, limit: number, offset: number): ResultAsync<User, Fault> {
+    // The remote API endpoint returns a User
     return getJSON<User>(uri`/api/v1/artifacts/${id}`, {
         params: {
             // These parameters are URI-encoded and appended to the base URI
@@ -32,6 +33,37 @@ function searchUser(username: string, limit: number, offset: number): ResultAsyn
         }
     });
 }
+```
+
+### `getResponse()`
+
+```typescript
+import type { ResultAsync } from "@neverthrow";
+import type { Fault } from "@tuleap/fault";
+import { decodeJSON, getResponse, uri } from "@tuleap/fetch-result";
+
+// getPersonalTimes(110, 20, 20) will query /api/v1/users/110/timetracking?query=%7Bstart_date%3A%222003-12-10T00%3A00%3A00Z%22%2Cend_date%3A%222003-12-17T00%3A00%3A00Z%22%7D&limit=20&offset=20
+function getPersonalTimes(user_id: number, limit: number, offset: number): ResultAsync<PersonalTime[], Fault> {
+    return getResponse(uri`/api/v1/users/${user_id}/timetracking`, {
+        params: {
+            // These parameters are URI-encoded and appended to the base URI
+            query: JSON.stringify({
+                start_date: "2003-12-10T00:00:00Z",
+                end_date: "2003-12-17T00:00:00Z"
+            }),
+            limit,
+            offset
+        }
+    }).andThen((response) => {
+        // You can work on the headers of the Response, and later decode the body to JSON
+        const total = Number.parseInt(response.headers.get("X-PAGINATION-SIZE") ?? "0", 10);
+        return decodeJSON<PersonalTime[]>(response).map((times) => ({
+            times,
+            total,
+        }));
+    });
+}
+
 ```
 
 ### `head()`
@@ -49,7 +81,7 @@ function getBacklogSize(kanban_id: number): ResultAsync<number, Fault> {
             query: JSON.stringify({ status: "open" })
         }
     }).map((response) =>
-        Number.parseInt(response.headers.get("X-PAGINATION-SIZE"), 10)
+        Number.parseInt(response.headers.get("X-PAGINATION-SIZE") ?? "0", 10)
     );
 }
 ```
@@ -92,9 +124,12 @@ type UpdatedReport = {
 
 function updateReport(report_id: number, trackers_id: number): ResultAsync<UpdatedReport, Fault> {
     // "Content-Type" header is automatically set to "application/json"
-    // The second parameter is automatically encoded to JSON string in the Request body
-    return putJSON<UpdatedReport>(uri`/api/v1/cross_tracker_reports/
-    ${report_id}`, { trackers_id });
+    // The remote API endpoint returns an UpdatedReport
+    return putJSON<UpdatedReport>(
+        uri`/api/v1/cross_tracker_reports/${report_id}`,
+        // These parameters are encoded to a JSON string in the Request body
+        { trackers_id }
+    );
 }
 ```
 
@@ -111,8 +146,12 @@ type UpdatedLabel = {
 
 function removeLabel(label_id: number): ResultAsync<UpdatedLabel, Fault> {
     // "Content-Type" header is automatically set to "application/json"
-    // The second parameter is automatically encoded to JSON string in the Request body
-    return patchJSON<UpdatedLabel>(uri`/api/v1/labels`, { remove: [{id: label_id }]});
+    // The remote API endpoint returns an UpdatedLabel
+    return patchJSON<UpdatedLabel>(
+        uri`/api/v1/labels`,
+        // These parameters are encoded to a JSON string in the Request body
+        { remove: [{id: label_id }]}
+    );
 }
 ```
 
@@ -129,22 +168,42 @@ type CreatedArtifact = {
 
 function createArtifact(tracker_id: number, field_values: unknown): ResultAsync<CreatedArtifact, Fault> {
     // "Content-Type" header is automatically set to "application/json"
-    // The second parameter is automatically encoded to JSON string in the Request body
-    return postJSON<CreatedArtifact>(uri`/api/v1/artifacts`, { tracker: { id: tracker_id }, values: field_values });
+    // The remote API endpoint returns a CreatedArtifact
+    return postJSON<CreatedArtifact>(
+        uri`/api/v1/artifacts`,
+        // These parameters are encoded to a JSON string in the Request body
+        { tracker: { id: tracker_id }, values: field_values }
+    );
 }
 ```
 
-### `post()`
+### `postResponse()`
+
+Note: `patchResponse` and `putResponse()` are also available and work the same way.
 
 ```typescript
 import type { ResultAsync } from "@neverthrow";
 import type { Fault } from "@tuleap/fault";
-import { postJSON, uri } from "@tuleap/fetch-result";
+import { decodeJSON, postResponse, uri } from "@tuleap/fetch-result";
 
-function createArtifact(tracker_id: number, field_values: unknown): ResultAsync<Response, Fault> {
+type ItemDefinition = {
+    readonly xref: string;
+    readonly title: string;
+}
+
+// searchAt("test", 20) will query /api/v1/search?limit=50&offset=20
+function searchAt(keywords: string, offset: number): ResultAsync<ItemDefinition[], Fault> {
     // "Content-Type" header is automatically set to "application/json"
-    // The second parameter is automatically encoded to JSON string in the Request body
-    return post(uri`/api/v1/artifacts`, { tracker: { id: tracker_id }, values: field_values });
+    return postResponse(
+        uri`/api/v1/search`,
+        // These parameters are URI-encoded and appended to the base URI
+        { params: { limit: 50, offset } },
+        // These parameters are encoded to a JSON string in the Request body
+        { search_query: { keywords } },
+    ).map((response) => {
+        // For example, you can work on the headers of the Response, and later decode the body to JSON
+        return decodeJSON<ItemDefinition[]>(response);
+    });
 }
 ```
 
@@ -177,12 +236,12 @@ type ProjectCollection = {
     collection: ReadonlyArray<Project>;
 };
 
-// On each request, getAllJSON will call this callback with the JSON payload
+// For each request, getAllJSON will call this callback with the JSON payload
 function getCollectionCallback({ collection }: ProjectCollection): ReadonlyArray<Project> {
     // You can also leverage this callback to display this batch of items
     displayABatchOfTrackers(collection);
 
-    // collection must be an [Array]
+    // collection must be an Array or ReadonlyArray
     return collection;
 }
 

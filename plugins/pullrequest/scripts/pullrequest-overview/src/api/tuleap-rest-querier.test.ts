@@ -234,7 +234,7 @@ describe("tuleap-rest-querier", () => {
 
     describe("putReviewers", () => {
         it("Given a collection of users, then it should set them as reviewers of the pull-request", async () => {
-            vi.spyOn(fetch_result, "put").mockReturnValue(okAsync(new Response()));
+            vi.spyOn(fetch_result, "putResponse").mockReturnValue(okAsync(new Response()));
 
             await putReviewers(pull_request_id, [
                 {
@@ -247,7 +247,7 @@ describe("tuleap-rest-querier", () => {
                 } as User,
             ]);
 
-            expect(fetch_result.put).toHaveBeenCalledWith(
+            expect(fetch_result.putResponse).toHaveBeenCalledWith(
                 uri`/api/v1/pull_requests/${pull_request_id}/reviewers`,
                 {},
                 {
@@ -326,7 +326,7 @@ describe("tuleap-rest-querier", () => {
         let added_labels: number[], removed_labels: number[], labels_to_create: string[];
 
         beforeEach(() => {
-            vi.spyOn(fetch_result, "patch").mockReturnValue(okAsync(new Response()));
+            vi.spyOn(fetch_result, "patchResponse").mockReturnValue(okAsync(new Response()));
 
             added_labels = [];
             removed_labels = [];
@@ -336,7 +336,7 @@ describe("tuleap-rest-querier", () => {
         it("when there are no added labels nor removed labels, then it should do nothing", () => {
             patchPullRequestLabels(pull_request_id, added_labels, removed_labels, labels_to_create);
 
-            expect(fetch_result.patch).not.toHaveBeenCalled();
+            expect(fetch_result.patchResponse).not.toHaveBeenCalled();
         });
 
         it('when there are only added labels, then it should not send a "remove" key in the payload', () => {
@@ -345,7 +345,7 @@ describe("tuleap-rest-querier", () => {
 
             patchPullRequestLabels(pull_request_id, added_labels, removed_labels, labels_to_create);
 
-            expect(fetch_result.patch).toHaveBeenCalledWith(
+            expect(fetch_result.patchResponse).toHaveBeenCalledWith(
                 uri`/api/v1/pull_requests/${pull_request_id}/labels`,
                 {},
                 {
@@ -359,7 +359,7 @@ describe("tuleap-rest-querier", () => {
 
             patchPullRequestLabels(pull_request_id, added_labels, removed_labels, labels_to_create);
 
-            expect(fetch_result.patch).toHaveBeenCalledWith(
+            expect(fetch_result.patchResponse).toHaveBeenCalledWith(
                 uri`/api/v1/pull_requests/${pull_request_id}/labels`,
                 {},
                 {
@@ -378,7 +378,7 @@ describe("tuleap-rest-querier", () => {
 
             patchPullRequestLabels(pull_request_id, added_labels, removed_labels, labels_to_create);
 
-            expect(fetch_result.patch).toHaveBeenCalledWith(
+            expect(fetch_result.patchResponse).toHaveBeenCalledWith(
                 uri`/api/v1/pull_requests/${pull_request_id}/labels`,
                 {},
                 {

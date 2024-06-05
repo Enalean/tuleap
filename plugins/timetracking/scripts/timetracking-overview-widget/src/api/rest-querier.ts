@@ -23,7 +23,7 @@
 
 import type { ResultAsync } from "neverthrow";
 import type { Fault } from "@tuleap/fault";
-import { uri, getJSON, putJSON, patch } from "@tuleap/fetch-result";
+import { uri, getJSON, putJSON, patchResponse } from "@tuleap/fetch-result";
 import { formatDatetimeToISO } from "@tuleap/plugin-timetracking-time-formatters";
 import type { ProjectReference } from "@tuleap/core-rest-api-types";
 import type {
@@ -109,7 +109,7 @@ export function setDisplayPreference(
     user_id: number,
     are_void_trackers_hidden: boolean,
 ): ResultAsync<unknown, Fault> {
-    return patch(
+    return patchResponse(
         uri`/api/v1/users/${user_id}/preferences`,
         {},
         {

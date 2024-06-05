@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { post, postJSON, uri } from "@tuleap/fetch-result";
+import { postResponse, postJSON, uri } from "@tuleap/fetch-result";
 import type {
     PublicKeyCredentialCreationOptionsJSON,
     RegistrationResponseJSON,
@@ -38,7 +38,7 @@ export function register(name: string, csrf_token: string): ResultAsync<null, Fa
             return registration(options);
         })
         .andThen((attestation_response) => {
-            return post(
+            return postResponse(
                 uri`/webauthn/registration`,
                 {},
                 {

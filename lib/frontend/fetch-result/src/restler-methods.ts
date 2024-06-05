@@ -39,6 +39,16 @@ export const buildHead =
             })
             .andThen(RestlerErrorHandler().handleErrorResponse);
 
+export const buildGetResponse =
+    (response_retriever: RetrieveResponse) =>
+    (uri: EncodedURI, options?: OptionsWithAutoEncodedParameters): ResultAsync<Response, Fault> =>
+        response_retriever
+            .retrieveResponse(getURI(uri, options?.params), {
+                method: GET_METHOD,
+                credentials,
+            })
+            .andThen(RestlerErrorHandler().handleErrorResponse);
+
 export const buildOptions =
     (response_retriever: RetrieveResponse) =>
     (uri: EncodedURI): ResultAsync<Response, Fault> =>

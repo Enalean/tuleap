@@ -18,8 +18,7 @@
  */
 
 import type { ResultAsync } from "neverthrow";
-import type { EncodedURI } from "@tuleap/fetch-result";
-import { uri, head, getJSON, postJSON, putJSON, del } from "@tuleap/fetch-result";
+import { decodeJSON, del, getResponse, postJSON, putJSON, uri } from "@tuleap/fetch-result";
 import { formatDatetimeToISO } from "@tuleap/plugin-timetracking-time-formatters";
 import type { Fault } from "@tuleap/fault";
 import type { PersonalTime } from "@tuleap/plugin-timetracking-rest-api-types";
@@ -27,18 +26,6 @@ import type { PersonalTime } from "@tuleap/plugin-timetracking-rest-api-types";
 export type TotalTimes = {
     readonly times: PersonalTime[];
     readonly total: number;
-};
-
-const fetchTotalSize = (route: EncodedURI, query: string): ResultAsync<number, Fault> => {
-    return head(route, {
-        params: {
-            query,
-        },
-    }).map((response) => {
-        return response.headers.get("X-PAGINATION-SIZE") === null
-            ? 0
-            : Number(response.headers.get("X-PAGINATION-SIZE"));
-    });
 };
 
 export function getTrackedTimes(
@@ -53,22 +40,15 @@ export function getTrackedTimes(
         end_date: formatDatetimeToISO(end_date),
     });
 
-    const route = uri`/api/v1/users/${user_id}/timetracking`;
-
-    return getJSON<PersonalTime[]>(route, {
-        params: {
-            limit,
-            offset,
-            query,
-        },
-    }).andThen((times) =>
-        fetchTotalSize(route, query).map(
-            (total): TotalTimes => ({
-                times,
-                total,
-            }),
-        ),
-    );
+    return getResponse(uri`/api/v1/users/${user_id}/timetracking`, {
+        params: { query, limit, offset },
+    }).andThen((response) => {
+        const total = Number.parseInt(response.headers.get("X-PAGINATION-SIZE") ?? "0", 10);
+        return decodeJSON<PersonalTime[]>(response).map((times) => ({
+            times,
+            total,
+        }));
+    });
 }
 
 export function postTime(

@@ -25,6 +25,7 @@ import { ResponseRetriever } from "./ResponseRetriever";
 import {
     buildDelete,
     buildGetJSON,
+    buildGetResponse,
     buildHead,
     buildOptions,
     buildSendAndReceiveJSON,
@@ -66,6 +67,9 @@ export { uri, rawUri } from "./uri-string-template";
  * containing a `Fault`.
  *
  * Each type of Fault has a dedicated method to distinguish them in error-handling, please see the README for more details.
+ *
+ * @see `getResponse` when you need access to the Response, for example for a "Load more" button where you need the total number of items.
+ * @see `getAllJSON` when you want to fetch a complete paginated collection.
  *
  * @template TypeOfJSONPayload
  * @param {EncodedURI} uri The URI destination of the request.
@@ -133,6 +137,23 @@ export const getAllJSON = all_getter.getAllJSON;
 export const head = buildHead(response_retriever);
 
 /**
+ * `getResponse` queries the given URI with GET method and returns an `Ok` variant containing a Response.
+ * If there was a problem (network error, remote API error), it returns an `Err` variant containing a `Fault`.
+ * Accessing the response can be useful when you have a "Load more" button, and you need to know the total number of items
+ * which is only available on the Response headers.
+ *
+ * Each type of Fault has a dedicated method to distinguish them in error-handling, please see the README for more details.
+ *
+ * @see `getJSON` when you don't care about the Response and you want the decoded JSON returned by the server.
+ *
+ * @param {EncodedURI} uri The URI destination of the request.
+ * @param {OptionsWithAutoEncodedParameters=} options (optional) An object with a `params` key containing a list of URI
+ * search parameters. Each key-value pair will be URI-encoded and appended to `uri`.
+ * @returns {ResultAsync<Response, Fault>}
+ */
+export const getResponse = buildGetResponse(response_retriever);
+
+/**
  * `options` queries the given URI with OPTIONS method and returns an `Ok` variant containing a Response.
  * If there was a problem (network error, remote API error), it returns an `Err` variant containing a `Fault`.
  *
@@ -152,6 +173,8 @@ export const options = buildOptions(response_retriever);
  *
  * Each type of Fault has a dedicated method to distinguish them in error-handling, please see the README for more details.
  *
+ * @see `putResponse` when the server does not respond with JSON, or you don't care about decoding it.
+ *
  * @template TypeOfJSONPayload
  * @param {EncodedURI} uri The URI destination of the request.
  * @param {unknown} json_payload The JSON payload to send in the request body. It is automatically encoded as a JSON
@@ -168,6 +191,8 @@ export const putJSON = buildSendAndReceiveJSON(response_retriever, PUT_METHOD);
  * containing a `Fault`.
  *
  * Each type of Fault has a dedicated method to distinguish them in error-handling, please see the README for more details.
+ *
+ * @see `patchResponse` when the server does not respond with JSON, or you don't care about decoding it.
  *
  * @template TypeOfJSONPayload
  * @param {EncodedURI} uri The URI destination of the request.
@@ -186,6 +211,8 @@ export const patchJSON = buildSendAndReceiveJSON(response_retriever, PATCH_METHO
  *
  * Each type of Fault has a dedicated method to distinguish them in error-handling, please see the README for more details.
  *
+ * @see `postResponse` when the server does not respond with JSON, or you don't care about decoding it.
+ *
  * @template TypeOfJSONPayload
  * @param {EncodedURI} uri The URI destination of the request.
  * @param {unknown} json_payload The JSON payload to send in the request body. It is automatically encoded as a JSON
@@ -195,11 +222,13 @@ export const patchJSON = buildSendAndReceiveJSON(response_retriever, PATCH_METHO
 export const postJSON = buildSendAndReceiveJSON(response_retriever, POST_METHOD);
 
 /**
- * `post` queries the given URI with POST method and returns an `Ok` variant containing a Response.
+ * `postResponse` queries the given URI with POST method and returns an `Ok` variant containing a Response.
  * It automatically sets the "Content-type" header to "application/json".
  * If there was a problem (network error, remote API error), it returns an `Err` variant containing a `Fault`.
  *
  * Each type of Fault has a dedicated method to distinguish them in error-handling, please see the README for more details.
+ *
+ * @see `postJSON` when you don't care about the Response and you want the decoded JSON returned by the server.
  *
  * @param {EncodedURI} uri The URI destination of the request.
  * @param {OptionsWithAutoEncodedParameters} options An object with a `params` key containing a list of URI
@@ -208,14 +237,16 @@ export const postJSON = buildSendAndReceiveJSON(response_retriever, POST_METHOD)
  * string.
  * @returns {ResultAsync<Response, Fault>}
  */
-export const post = buildSendJSON(response_retriever, POST_METHOD);
+export const postResponse = buildSendJSON(response_retriever, POST_METHOD);
 
 /**
- * `put` queries the given URI with PUT method and returns an `Ok` variant containing a Response.
+ * `putResponse` queries the given URI with PUT method and returns an `Ok` variant containing a Response.
  * It automatically sets the "Content-type" header to "application/json".
  * If there was a problem (network error, remote API error), it returns an `Err` variant containing a `Fault`.
  *
  * Each type of Fault has a dedicated method to distinguish them in error-handling, please see the README for more details.
+ *
+ * @see `putJSON` when you don't care about the Response and you want the decoded JSON returned by the server.
  *
  * @param {EncodedURI} uri The URI destination of the request.
  * @param {OptionsWithAutoEncodedParameters} options An object with a `params` key containing a list of URI
@@ -224,14 +255,16 @@ export const post = buildSendJSON(response_retriever, POST_METHOD);
  * string.
  * @returns {ResultAsync<Response, Fault>}
  */
-export const put = buildSendJSON(response_retriever, PUT_METHOD);
+export const putResponse = buildSendJSON(response_retriever, PUT_METHOD);
 
 /**
- * `patch` queries the given URI with PATCH method and returns an `Ok` variant containing a Response.
+ * `patchResponse` queries the given URI with PATCH method and returns an `Ok` variant containing a Response.
  * It automatically sets the "Content-type" header to "application/json".
  * If there was a problem (network error, remote API error), it returns an `Err` variant containing a `Fault`.
  *
  * Each type of Fault has a dedicated method to distinguish them in error-handling, please see the README for more details.
+ *
+ * @see `patchJSON` when you don't care about the Response and you want the decoded JSON returned by the server.
  *
  * @param {EncodedURI} uri The URI destination of the request.
  * @param {OptionsWithAutoEncodedParameters} options An object with a `params` key containing a list of URI
@@ -240,7 +273,7 @@ export const put = buildSendJSON(response_retriever, PUT_METHOD);
  * string.
  * @returns {ResultAsync<Response, Fault>}
  */
-export const patch = buildSendJSON(response_retriever, PATCH_METHOD);
+export const patchResponse = buildSendJSON(response_retriever, PATCH_METHOD);
 
 /**
  * `del` queries the given URI with DELETE method and returns an `Ok` variant containing a Response.

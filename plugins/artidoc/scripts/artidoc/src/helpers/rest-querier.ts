@@ -18,7 +18,7 @@
  */
 
 import type { ResultAsync } from "neverthrow";
-import { getAllJSON, put, uri, getJSON } from "@tuleap/fetch-result";
+import { getAllJSON, putResponse, uri, getJSON } from "@tuleap/fetch-result";
 import type { Fault } from "@tuleap/fault";
 import TurndownService from "turndown";
 import type { ArtidocSection } from "@/helpers/artidoc-section.type";
@@ -33,7 +33,7 @@ export function putArtifact(
     new_description: string,
     description_field_id: number,
 ): ResultAsync<Response, Fault> {
-    return put(
+    return putResponse(
         uri`/api/artifacts/${artifact_id}`,
         {},
         {

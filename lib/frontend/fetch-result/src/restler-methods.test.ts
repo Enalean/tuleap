@@ -37,6 +37,7 @@ import { uri as uriTag } from "./uri-string-template";
 import {
     buildDelete,
     buildGetJSON,
+    buildGetResponse,
     buildHead,
     buildOptions,
     buildSendAndReceiveJSON,
@@ -80,17 +81,25 @@ describe(`restler-methods`, () => {
         fetcher = FetchInterfaceStub.withSuccessiveResponses(success_response);
     });
 
-    describe(`head()`, () => {
-        const callHead = (
-            uri: EncodedURI,
-            options?: OptionsWithAutoEncodedParameters,
-        ): ResponseResult => buildHead(ResponseRetriever(fetcher))(uri, options);
+    function* provideHeadAndGetResponse(): Generator<[string, () => ResponseResult]> {
+        yield [
+            HEAD_METHOD,
+            (): ResponseResult => buildHead(ResponseRetriever(fetcher))(uri, { params }),
+        ];
+        yield [
+            GET_METHOD,
+            (): ResponseResult => buildGetResponse(ResponseRetriever(fetcher))(uri, { params }),
+        ];
+    }
 
-        it(`will encode the given URI with the given parameters
-            and will return a ResultAsync with the Response`, async () => {
-            const result = await callHead(uri, { params });
+    it.each([...provideHeadAndGetResponse()])(
+        `it will encode the given URI in addition to the given parameters
+            and set the %s method
+            and will return a ResultAsync with the Response`,
+        async (expected_http_method, method_under_test) => {
+            const result = await method_under_test();
             if (!result.isOk()) {
-                throw new Error("Expected an Ok");
+                throw Error("Expected an Ok");
             }
 
             expect(result.value).toBe(success_response);
@@ -100,27 +109,31 @@ describe(`restler-methods`, () => {
 
             const request_init = fetcher.getRequestInit(0);
             if (request_init === undefined) {
-                throw new Error("Expected request init to be defined");
+                throw Error("Expected request init to be defined");
             }
-            expect(request_init.method).toBe(HEAD_METHOD);
+            expect(request_init.method).toBe(expected_http_method);
             expect(request_init.credentials).toBe("same-origin");
-        });
+        },
+    );
 
-        it(`options are not mandatory`, async () => {
-            await callHead(uri);
+    it(`head() options are not mandatory`, async () => {
+        await buildHead(ResponseRetriever(fetcher))(uri);
 
-            expect(fetcher.getRequestInfo(0)).toBe(
-                "https://example.com/result-fetcher-test/d%C3%A9mo",
-            );
-        });
+        expect(fetcher.getRequestInfo(0)).toBe("https://example.com/result-fetcher-test/d%C3%A9mo");
     });
 
-    function* optionsAndDeleteProvider(): Generator<[string, () => ResponseResult]> {
+    it(`get() options are not mandatory`, async () => {
+        await buildGetResponse(ResponseRetriever(fetcher))(uri);
+
+        expect(fetcher.getRequestInfo(0)).toBe("https://example.com/result-fetcher-test/d%C3%A9mo");
+    });
+
+    function* provideOptionsAndDelete(): Generator<[string, () => ResponseResult]> {
         yield [OPTIONS_METHOD, (): ResponseResult => buildOptions(ResponseRetriever(fetcher))(uri)];
         yield [DELETE_METHOD, (): ResponseResult => buildDelete(ResponseRetriever(fetcher))(uri)];
     }
 
-    it.each([...optionsAndDeleteProvider()])(
+    it.each([...provideOptionsAndDelete()])(
         `it will encode the given URI
         and set the %s method
         and will return a ResultAsync with the Response`,
@@ -143,14 +156,14 @@ describe(`restler-methods`, () => {
         },
     );
 
-    function* provider(): Generator<[PutMethod | PatchMethod | PostMethod]> {
+    function* provideMethodsSendingJSON(): Generator<[PutMethod | PatchMethod | PostMethod]> {
         yield [PATCH_METHOD];
         yield [POST_METHOD];
         yield [PUT_METHOD];
     }
 
-    it.each([...provider()])(
-        `sendJSON will encode the given URI with the given parameters
+    it.each([...provideMethodsSendingJSON()])(
+        `sendJSON will encode the given URI in addition to the given parameters
             and set the %s method
             and add the JSON Content-Type header
             and stringify the given JSON payload
@@ -195,7 +208,7 @@ describe(`restler-methods`, () => {
         });
 
         describe(`getJSON()`, () => {
-            const callGet = <TypeOfJSONPayload>(
+            const callGetJSON = <TypeOfJSONPayload>(
                 uri: EncodedURI,
                 options?: OptionsWithAutoEncodedParameters,
             ): ResultAsync<TypeOfJSONPayload, Fault> =>
@@ -203,7 +216,7 @@ describe(`restler-methods`, () => {
 
             it(`will encode the given URI with the given parameters
                 and will return a ResultAsync with the decoded JSON from the Response body`, async () => {
-                const result = await callGet<JSONResponsePayload>(uri, { params });
+                const result = await callGetJSON<JSONResponsePayload>(uri, { params });
                 if (!result.isOk()) {
                     throw new Error("Expected an Ok");
                 }
@@ -223,7 +236,7 @@ describe(`restler-methods`, () => {
             });
 
             it(`options are not mandatory`, async () => {
-                await callGet(uri);
+                await callGetJSON(uri);
 
                 expect(fetcher.getRequestInfo(0)).toBe(
                     "https://example.com/result-fetcher-test/d%C3%A9mo",
@@ -231,7 +244,7 @@ describe(`restler-methods`, () => {
             });
         });
 
-        it.each([...provider()])(
+        it.each([...provideMethodsSendingJSON()])(
             `sendAndReceiveJSON will encode the given URI
             and set the %s method
             and add the JSON Content-Type header
@@ -269,9 +282,10 @@ describe(`restler-methods`, () => {
         );
     });
 
-    function* apiFaultProvider(): Generator<[() => ResultAsync<unknown, Fault>]> {
+    function* provideMethodsReturningFaults(): Generator<[() => ResultAsync<unknown, Fault>]> {
         yield [(): JSONResult => buildGetJSON(ResponseRetriever(fetcher))(uri)];
         yield [(): ResponseResult => buildHead(ResponseRetriever(fetcher))(uri, {})];
+        yield [(): ResponseResult => buildGetResponse(ResponseRetriever(fetcher))(uri, {})];
         yield [(): ResponseResult => buildOptions(ResponseRetriever(fetcher))(uri)];
         yield [(): ResponseResult => buildDelete(ResponseRetriever(fetcher))(uri)];
         yield [
@@ -291,7 +305,7 @@ describe(`restler-methods`, () => {
         ];
     }
 
-    it.each([...apiFaultProvider()])(
+    it.each([...provideMethodsReturningFaults()])(
         `when there is an API error, it will read the Restler error format
         and will return an Err with a TuleapAPIFault`,
         async (method_under_test) => {

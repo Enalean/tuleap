@@ -21,7 +21,7 @@ import { okAsync, ResultAsync } from "neverthrow";
 import type { ItemDefinition } from "../type";
 import type { Fault } from "@tuleap/fault";
 import type { EncodedURI } from "@tuleap/fetch-result";
-import { JSONParseFault, post } from "@tuleap/fetch-result";
+import { JSONParseFault, postResponse } from "@tuleap/fetch-result";
 import { limitConcurrencyPool } from "@tuleap/concurrency-limit-pool";
 import type { FullTextState } from "../stores/type";
 import type { StoppableQuery } from "./delayed-querier";
@@ -166,7 +166,7 @@ export function querier(
         }
 
         function searchAt(offset: number): ResultAsync<Response, Fault> {
-            return post(
+            return postResponse(
                 url,
                 {
                     params: {

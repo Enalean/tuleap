@@ -339,7 +339,9 @@ describe("rest-querier", () => {
 
     describe("putArtifactDescription", () => {
         it("should update artifact, when title is a string", async () => {
-            const put = vi.spyOn(fetch, "put").mockReturnValue(errAsync(Fault.fromMessage("OSEF")));
+            const put = vi
+                .spyOn(fetch, "putResponse")
+                .mockReturnValue(errAsync(Fault.fromMessage("OSEF")));
 
             putArtifact(
                 123,
@@ -413,7 +415,7 @@ describe("rest-querier", () => {
             "should update artifact, when title is a text field with %s",
             async (title: ArtidocSection["title"]) => {
                 const put = vi
-                    .spyOn(fetch, "put")
+                    .spyOn(fetch, "putResponse")
                     .mockReturnValue(errAsync(Fault.fromMessage("OSEF")));
 
                 putArtifact(123, "New title", title, "New description", 1002);
