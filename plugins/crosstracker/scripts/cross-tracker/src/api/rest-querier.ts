@@ -17,71 +17,110 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { get, put, recursiveGet } from "@tuleap/tlp-fetch";
+import { decodeJSON, getJSON, getResponse, putJSON, uri } from "@tuleap/fetch-result";
+import type { ResultAsync } from "neverthrow";
+import type { Fault } from "@tuleap/fault";
+import { get, recursiveGet } from "@tuleap/tlp-fetch";
 import type { ProjectReference } from "@tuleap/core-rest-api-types";
-import type { ArtifactsCollection, Report, TrackerInfo } from "../type";
+import type {
+    Artifact,
+    ArtifactsCollection,
+    Report,
+    TrackerAndProject,
+    TrackerInfo,
+} from "../type";
+import type { TrackerResponseWithProject } from "@tuleap/plugin-tracker-rest-api-types";
 
-export async function getReport(report_id: number): Promise<Report> {
-    const response = await get("/api/v1/cross_tracker_reports/" + report_id);
-    return response.json();
+export type TrackerReference = Pick<TrackerResponseWithProject, "id" | "label" | "project">;
+
+type ReportRepresentation = {
+    readonly trackers: ReadonlyArray<TrackerReference>;
+    readonly expert_query: string;
+    readonly invalid_trackers: ReadonlyArray<TrackerReference>;
+};
+
+const mapToTrackerAndProject = (
+    trackers: ReadonlyArray<TrackerReference>,
+): ReadonlyArray<TrackerAndProject> =>
+    trackers.map((tracker): TrackerAndProject => {
+        return {
+            tracker: { id: tracker.id, label: tracker.label },
+            project: tracker.project,
+        };
+    });
+
+export function getReport(report_id: number): ResultAsync<Report, Fault> {
+    return getJSON<ReportRepresentation>(uri`/api/v1/cross_tracker_reports/${report_id}`).map(
+        (report): Report => {
+            return {
+                expert_query: report.expert_query,
+                trackers: mapToTrackerAndProject(report.trackers),
+                invalid_trackers: report.invalid_trackers,
+            };
+        },
+    );
 }
 
-export async function getReportContent(
+type ReportContentRepresentation = {
+    readonly artifacts: ReadonlyArray<Artifact>;
+};
+
+export function getReportContent(
     report_id: number,
     limit: number,
     offset: number,
-): Promise<ArtifactsCollection> {
-    const response = await get("/api/v1/cross_tracker_reports/" + report_id + "/content", {
+): ResultAsync<ArtifactsCollection, Fault> {
+    return getResponse(uri`/api/v1/cross_tracker_reports/${report_id}/content`, {
         params: {
             limit,
             offset,
         },
+    }).andThen((response) => {
+        const total = Number.parseInt(response.headers.get("X-PAGINATION-SIZE") ?? "0", 10);
+        return decodeJSON<ReportContentRepresentation>(response).map((collection) => ({
+            artifacts: collection.artifacts,
+            total,
+        }));
     });
-    const total = response.headers.get("X-PAGINATION-SIZE");
-    const { artifacts } = await response.json();
-
-    if (!total) {
-        throw new Error("can not get report content, pagination size is not sent in headers");
-    }
-    return { artifacts, total };
 }
 
-export async function getQueryResult(
+export function getQueryResult(
     report_id: number,
     trackers_id: Array<number>,
     expert_query: string,
     limit: number,
     offset: number,
-): Promise<ArtifactsCollection> {
-    const response = await get("/api/v1/cross_tracker_reports/" + report_id + "/content", {
+): ResultAsync<ArtifactsCollection, Fault> {
+    return getResponse(uri`/api/v1/cross_tracker_reports/${report_id}/content`, {
         params: {
             limit,
             offset,
             query: JSON.stringify({ trackers_id, expert_query }),
         },
+    }).andThen((response) => {
+        const total = Number.parseInt(response.headers.get("X-PAGINATION-SIZE") ?? "0", 10);
+        return decodeJSON<ReportContentRepresentation>(response).map((collection) => ({
+            artifacts: collection.artifacts,
+            total,
+        }));
     });
-    const total = response.headers.get("X-PAGINATION-SIZE");
-    if (!total) {
-        throw new Error("can not get query result, pagination size is not sent in headers");
-    }
-
-    const { artifacts } = await response.json();
-
-    return { artifacts, total };
 }
 
-export async function updateReport(
+export function updateReport(
     report_id: number,
     trackers_id: Array<number>,
     expert_query: string,
-): Promise<Report> {
-    const response = await put("/api/v1/cross_tracker_reports/" + report_id, {
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ trackers_id, expert_query }),
+): ResultAsync<Report, Fault> {
+    return putJSON<ReportRepresentation>(uri`/api/v1/cross_tracker_reports/${report_id}`, {
+        trackers_id,
+        expert_query,
+    }).map((report): Report => {
+        return {
+            expert_query: report.expert_query,
+            trackers: mapToTrackerAndProject(report.trackers),
+            invalid_trackers: report.invalid_trackers,
+        };
     });
-    return response.json();
 }
 
 export async function getSortedProjectsIAmMemberOf(): Promise<ProjectReference[]> {

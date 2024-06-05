@@ -61,8 +61,7 @@ import { getReport } from "./api/rest-querier";
 import type WritingCrossTrackerReport from "./writing-mode/writing-cross-tracker-report";
 import type BackendCrossTrackerReport from "./backend-cross-tracker-report";
 import type ReadingCrossTrackerReport from "./reading-mode/reading-cross-tracker-report";
-import { FetchWrapperError } from "@tuleap/tlp-fetch";
-import type { State } from "./type";
+import type { State, Report } from "./type";
 
 const gettext_provider = useGettext();
 
@@ -102,24 +101,24 @@ function initReports(): void {
     props.writingCrossTrackerReport.duplicateFromReport(props.readingCrossTrackerReport);
 }
 
-async function loadBackendReport(): Promise<void> {
+function loadBackendReport(): void {
     is_loading.value = true;
-    try {
-        const { trackers, expert_query, invalid_trackers } = await getReport(report_id.value);
-        props.backendCrossTrackerReport.init(trackers, expert_query);
-        initReports();
-
-        if (invalid_trackers.length > 0) {
-            setInvalidTrackers(invalid_trackers);
-        }
-    } catch (error) {
-        if (error instanceof FetchWrapperError) {
-            const error_json = await error.response.json();
-            setErrorMessage(error_json.error.message);
-        }
-    } finally {
-        is_loading.value = false;
-    }
+    getReport(report_id.value)
+        .match(
+            (report: Report) => {
+                props.backendCrossTrackerReport.init(report.trackers, report.expert_query);
+                initReports();
+                if (report.invalid_trackers.length > 0) {
+                    setInvalidTrackers(report.invalid_trackers);
+                }
+            },
+            (fault) => {
+                setErrorMessage(String(fault));
+            },
+        )
+        .then(() => {
+            is_loading.value = false;
+        });
 }
 
 onMounted(() => {

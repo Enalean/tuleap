@@ -12,6 +12,9 @@ msgstr "Adicionar"
 msgid "An error occurred"
 msgstr ""
 
+msgid "An error occurred: %{error}"
+msgstr ""
+
 msgid "Artifact"
 msgstr ""
 

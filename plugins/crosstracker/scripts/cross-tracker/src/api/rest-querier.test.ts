@@ -17,111 +17,185 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { okAsync } from "neverthrow";
+import * as fetch_result from "@tuleap/fetch-result";
+import * as tlp_fetch from "@tuleap/tlp-fetch";
+import type { TrackerReference } from "./rest-querier";
 import {
+    getCSVReport,
+    getQueryResult,
     getReport,
     getReportContent,
-    getQueryResult,
-    updateReport,
     getSortedProjectsIAmMemberOf,
     getTrackersOfProject,
-    getCSVReport,
+    updateReport,
 } from "./rest-querier";
-import { mockFetchSuccess } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper";
-import * as tlp_fetch from "@tuleap/tlp-fetch";
 
 describe("rest-querier", () => {
-    describe("getReport() -", () => {
-        it("the REST API will be queried and the report returned", async () => {
-            const tlpGet = jest.spyOn(tlp_fetch, "get");
-            const report = {
-                trackers: [{ id: 63 }, { id: 100 }],
-                expert_query: '@title = "bla"',
+    describe("getReport()", () => {
+        it(`will query the REST API and return the report`, async () => {
+            const first_tracker: TrackerReference = {
+                id: 63,
+                label: "Copeognatha",
+                project: { id: 111, label: "runagate", uri: "/projects/111", icon: "🌷" },
             };
-            mockFetchSuccess(tlpGet, {
-                return_json: report,
-            });
+            const second_tracker: TrackerReference = {
+                id: 54,
+                label: "isocymene",
+                project: { id: 182, label: "antilens", uri: "/projects/182", icon: "" },
+            };
+            const report = {
+                trackers: [first_tracker, second_tracker],
+                expert_query: '@title = "bla"',
+                invalid_trackers: [second_tracker],
+            };
+            const getJSON = jest.spyOn(fetch_result, "getJSON").mockReturnValue(okAsync(report));
+            const report_id = 16;
 
-            const result = await getReport(16);
+            const result = await getReport(report_id);
 
-            expect(tlpGet).toHaveBeenCalledWith("/api/v1/cross_tracker_reports/16");
-            expect(result).toEqual(report);
+            expect(getJSON).toHaveBeenCalledWith(
+                fetch_result.uri`/api/v1/cross_tracker_reports/${report_id}`,
+            );
+            if (!result.isOk()) {
+                throw Error("Expected an ok");
+            }
+            expect(result.value.trackers).toStrictEqual([
+                {
+                    tracker: { id: first_tracker.id, label: first_tracker.label },
+                    project: first_tracker.project,
+                },
+                {
+                    tracker: { id: second_tracker.id, label: second_tracker.label },
+                    project: second_tracker.project,
+                },
+            ]);
+            expect(result.value.expert_query).toBe(report.expert_query);
+            expect(result.value.invalid_trackers).toStrictEqual([second_tracker]);
         });
     });
 
-    describe("getReportContent() -", () => {
-        it("the artifacts and the total number of artifacts will be returned", async () => {
-            const tlpGet = jest.spyOn(tlp_fetch, "get");
-            const artifacts = [{ id: 100 }, { id: 33 }];
-            const total = "91";
-            const headers = {
-                /** 'X-PAGINATION-SIZE' */
-                get: (): string => total,
-            };
-            mockFetchSuccess(tlpGet, {
-                headers,
-                return_json: { artifacts },
-            });
+    describe("getReportContent()", () => {
+        it(`will return the artifacts and the total number of artifacts`, async () => {
+            const total = 91;
+            const collection = { artifacts: [{ id: 100 }, { id: 33 }] };
+            const getResponse = jest.spyOn(fetch_result, "getResponse").mockReturnValue(
+                okAsync({
+                    headers: new Headers({
+                        "X-PAGINATION-SIZE": String(total),
+                    }),
+                    json: () => Promise.resolve(collection),
+                } as Response),
+            );
             const limit = 30;
             const offset = 30;
+            const report_id = 57;
 
-            const result = await getReportContent(57, limit, offset);
+            const result = await getReportContent(report_id, limit, offset);
 
-            expect(tlpGet).toHaveBeenCalledWith("/api/v1/cross_tracker_reports/57/content", {
-                params: { limit, offset },
-            });
-            expect(result).toEqual({ artifacts, total });
+            expect(getResponse).toHaveBeenCalledWith(
+                fetch_result.uri`/api/v1/cross_tracker_reports/${report_id}/content`,
+                { params: { limit, offset } },
+            );
+            if (!result.isOk()) {
+                throw Error("Expected an Ok");
+            }
+            expect(result.value).toStrictEqual({ artifacts: collection.artifacts, total });
         });
     });
 
     describe("getQueryResult() -", () => {
-        it("the tracker ids and the expert query will be submitted to the REST API, and the artifacts and the total number of artifacts will be returned", async () => {
-            const tlpGet = jest.spyOn(tlp_fetch, "get");
-            const artifacts = [{ id: 26 }, { id: 89 }];
-            const total = "69";
-            const headers = {
-                /** 'X-PAGINATION-SIZE' */
-                get: (): string => total,
-            };
-            mockFetchSuccess(tlpGet, {
-                headers,
-                return_json: { artifacts },
-            });
+        it(`will send the given tracker ids and expert query to the REST API,
+            and will return the artifacts and the total number of artifacts`, async () => {
+            const total = 69;
+            const collection = { artifacts: [{ id: 26 }, { id: 89 }] };
+            const getResponse = jest.spyOn(fetch_result, "getResponse").mockReturnValue(
+                okAsync({
+                    headers: new Headers({
+                        "X-PAGINATION-SIZE": String(total),
+                    }),
+                    json: () => Promise.resolve(collection),
+                } as Response),
+            );
             const limit = 30;
             const offset = 30;
-
+            const report_id = 72;
             const trackers_id = [16, 80, 6];
             const expert_query = '@title = "stalky"';
-            const result = await getQueryResult(72, trackers_id, expert_query, limit, offset);
 
-            expect(tlpGet).toHaveBeenCalledWith("/api/v1/cross_tracker_reports/72/content", {
-                params: {
-                    limit,
-                    offset,
-                    query: JSON.stringify({ trackers_id, expert_query }),
+            const result = await getQueryResult(
+                report_id,
+                trackers_id,
+                expert_query,
+                limit,
+                offset,
+            );
+
+            expect(getResponse).toHaveBeenCalledWith(
+                fetch_result.uri`/api/v1/cross_tracker_reports/${report_id}/content`,
+                {
+                    params: {
+                        limit,
+                        offset,
+                        query: JSON.stringify({ trackers_id, expert_query }),
+                    },
                 },
-            });
-            expect(result).toEqual({ artifacts, total });
+            );
+            if (!result.isOk()) {
+                throw Error("Expected an Ok");
+            }
+            expect(result.value).toStrictEqual({ artifacts: collection.artifacts, total });
         });
 
-        describe("updateReport() -", () => {
-            it("the REST API will be queried and the report returned", async () => {
-                const tlpPut = jest.spyOn(tlp_fetch, "put");
+        describe("updateReport()", () => {
+            it(`will send the given tracker ids and expert query to be saved by the REST API
+                and will return the report from the response`, async () => {
                 const expert_query = '@title = "dolous"';
-                const trackers_id = [8, 3, 67];
-                mockFetchSuccess(tlpPut, {
-                    return_json: {
-                        trackers_id,
-                        expert_query,
-                    },
-                });
+                const first_tracker: TrackerReference = {
+                    id: 461,
+                    label: "deputize",
+                    project: { id: 550, label: "uranographist", uri: "/projects/550", icon: "🌷" },
+                };
+                const second_tracker: TrackerReference = {
+                    id: 184,
+                    label: "Wiros",
+                    project: { id: 616, label: "misperform", uri: "/projects/616", icon: "" },
+                };
+                const report = {
+                    trackers: [first_tracker, second_tracker],
+                    expert_query,
+                    invalid_trackers: [second_tracker],
+                };
+                const putJSON = jest
+                    .spyOn(fetch_result, "putJSON")
+                    .mockReturnValue(okAsync(report));
+                const report_id = 59;
 
-                const result = await updateReport(59, trackers_id, expert_query);
+                const result = await updateReport(
+                    report_id,
+                    [first_tracker.id, second_tracker.id],
+                    expert_query,
+                );
 
-                expect(tlpPut).toHaveBeenCalledWith(
-                    "/api/v1/cross_tracker_reports/59",
+                expect(putJSON).toHaveBeenCalledWith(
+                    fetch_result.uri`/api/v1/cross_tracker_reports/${report_id}`,
                     expect.any(Object),
                 );
-                expect(result).toEqual({ trackers_id, expert_query });
+                if (!result.isOk()) {
+                    throw Error("Expected an Ok");
+                }
+                expect(result.value.trackers).toStrictEqual([
+                    {
+                        tracker: { id: first_tracker.id, label: first_tracker.label },
+                        project: first_tracker.project,
+                    },
+                    {
+                        tracker: { id: second_tracker.id, label: second_tracker.label },
+                        project: second_tracker.project,
+                    },
+                ]);
+                expect(result.value.expert_query).toBe(report.expert_query);
+                expect(result.value.invalid_trackers).toStrictEqual([second_tracker]);
             });
         });
 

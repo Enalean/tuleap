@@ -17,13 +17,18 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { ProjectReference } from "@tuleap/core-rest-api-types";
-import type { TrackerResponseNoInstance } from "@tuleap/plugin-tracker-rest-api-types";
-import type { TrackerForInit } from "./backend-cross-tracker-report";
+import type {
+    TrackerProjectRepresentation,
+    TrackerResponseWithProject,
+} from "@tuleap/plugin-tracker-rest-api-types";
 
-export type InvalidTracker = Pick<TrackerResponseNoInstance, "id" | "label" | "project">;
-export type TrackerInfo = Pick<TrackerResponseNoInstance, "id" | "label">;
-export type ProjectInfo = Pick<ProjectReference, "id" | "uri" | "label">;
+export type InvalidTracker = {
+    readonly id: number;
+    readonly label: string;
+    readonly project: { readonly label: string };
+};
+export type TrackerInfo = Pick<TrackerResponseWithProject, "id" | "label">;
+export type ProjectInfo = Pick<TrackerProjectRepresentation, "id" | "uri" | "label">;
 
 export type State = {
     error_message: string | null;
@@ -51,14 +56,14 @@ export type TrackerToUpdate = {
 };
 
 export type Report = {
-    readonly trackers: Map<number, TrackerForInit>;
+    readonly trackers: ReadonlyArray<TrackerAndProject>;
     readonly expert_query: string;
     readonly invalid_trackers: ReadonlyArray<InvalidTracker>;
 };
 
 export type ArtifactsCollection = {
     readonly artifacts: ReadonlyArray<Artifact>;
-    readonly total: string;
+    readonly total: number;
 };
 
 export type Artifact = {
@@ -69,12 +74,12 @@ export type Artifact = {
         readonly cross_ref: string;
         readonly color: string;
     };
-    formatted_last_update_date: string;
+    formatted_last_update_date?: string;
     readonly last_update_date: string;
     readonly status: string;
     readonly submitted_by: User;
     readonly assigned_to: ReadonlyArray<User>;
-    readonly project: ProjectReference;
+    readonly project: TrackerProjectRepresentation;
 };
 
 export type User = {

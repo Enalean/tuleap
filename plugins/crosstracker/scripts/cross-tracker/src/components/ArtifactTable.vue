@@ -79,13 +79,14 @@ import { computed, onMounted, ref, watch } from "vue";
 import { useMutations, useState } from "vuex-composition-helpers";
 import { useGettext } from "vue3-gettext";
 import moment from "moment";
+import type { Fault } from "@tuleap/fault";
+import type { ResultAsync } from "neverthrow";
 import ArtifactTableRow from "./ArtifactTableRow.vue";
 import ExportButton from "./ExportCSVButton.vue";
 import { getQueryResult, getReportContent } from "../api/rest-querier";
 import { getUserPreferredDateFormat } from "../user-service";
 import type WritingCrossTrackerReport from "../writing-mode/writing-cross-tracker-report";
 import type { Artifact, ArtifactsCollection, State } from "../type";
-import { FetchWrapperError } from "@tuleap/tlp-fetch";
 
 const props = defineProps<{ writingCrossTrackerReport: WritingCrossTrackerReport }>();
 
@@ -93,7 +94,7 @@ const { reading_mode, is_report_saved, report_id } = useState<
     Pick<State, "reading_mode" | "is_report_saved" | "report_id">
 >(["reading_mode", "is_report_saved", "report_id"]);
 const { setErrorMessage } = useMutations(["setErrorMessage"]);
-const { $gettext } = useGettext();
+const { $gettext, interpolate } = useGettext();
 
 const is_loading = ref(true);
 let artifacts: Ref<Artifact[]> = ref([]);
@@ -136,32 +137,36 @@ function refreshArtifactList(): void {
     loadArtifacts();
 }
 
-async function loadArtifacts(): Promise<void> {
-    try {
-        const result = await getArtifactsFromReportOrUnsavedQuery();
+const isTuleapAPIFault = (fault: Fault): boolean =>
+    "isTuleapAPIFault" in fault && fault.isTuleapAPIFault() === true;
 
-        current_offset += limit;
-        is_load_more_displayed.value = current_offset < parseInt(result.total, 10);
-
-        const new_artifacts = formatArtifacts(result.artifacts);
-        artifacts.value = artifacts.value.concat(new_artifacts);
-    } catch (error) {
-        is_load_more_displayed.value = false;
-        if (error instanceof FetchWrapperError) {
-            const error_json = await error.response.json();
-            if (error_json && "error" in error_json && "i18n_error_message" in error_json.error) {
-                setErrorMessage(error_json.error.i18n_error_message);
-            } else {
-                setErrorMessage($gettext("An error occurred"));
-            }
-        }
-    } finally {
-        is_loading.value = false;
-        is_loading_more.value = false;
-    }
+function loadArtifacts(): void {
+    getArtifactsFromReportOrUnsavedQuery()
+        .match(
+            (collection: ArtifactsCollection) => {
+                current_offset += limit;
+                is_load_more_displayed.value = current_offset < collection.total;
+                const new_artifacts = formatArtifacts(collection.artifacts);
+                artifacts.value = artifacts.value.concat(new_artifacts);
+            },
+            (fault) => {
+                is_load_more_displayed.value = false;
+                if (isTuleapAPIFault(fault)) {
+                    setErrorMessage(String(fault));
+                    return;
+                }
+                setErrorMessage(
+                    interpolate($gettext("An error occurred: %{error}"), { error: String(fault) }),
+                );
+            },
+        )
+        .then(() => {
+            is_loading.value = false;
+            is_loading_more.value = false;
+        });
 }
 
-function getArtifactsFromReportOrUnsavedQuery(): Promise<ArtifactsCollection> {
+function getArtifactsFromReportOrUnsavedQuery(): ResultAsync<ArtifactsCollection, Fault> {
     if (is_report_saved.value === true) {
         return getReportContent(report_id.value, limit, current_offset);
     }

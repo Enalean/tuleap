@@ -135,17 +135,23 @@ export interface TrackerResponseWithCannotCreateReason extends TrackerResponseWi
     readonly cannot_create_reasons: ReadonlyArray<string>;
 }
 
+export interface TrackerResponseWithProject extends MinimalTrackerResponse {
+    readonly uri: string;
+    readonly project: TrackerProjectRepresentation;
+}
+
 /**
  * Do not use this type directly as it contains way too many things.
  * Instead, create your own type with Pick:
  * `type Subset = Pick<TrackerResponseNoInstance, "id" | "label" | "fields">;`
  */
-export interface TrackerResponseNoInstance extends TrackerResponseWithColor {
+export interface TrackerResponseNoInstance
+    extends TrackerResponseWithColor,
+        TrackerResponseWithProject {
     readonly _pick_what_you_need: never;
     readonly item_name: string;
     readonly fields: ReadonlyArray<StructureFields>;
     readonly structure: ReadonlyArray<StructureFormat>;
-    readonly project: TrackerProjectRepresentation;
     readonly semantics: SemanticsRepresentation;
 }
 
