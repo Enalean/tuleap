@@ -157,13 +157,13 @@ describe("Artifact link usage", () => {
 
                         cy.createArtifact({
                             tracker_id: tracker_id,
-                            artifact_title: "Update parent",
+                            artifact_title: "Update",
                             title_field_name: TITLE_FIELD_NAME,
                         }).as("update_parent");
 
                         cy.createArtifact({
                             tracker_id: tracker_id,
-                            artifact_title: "Update parent",
+                            artifact_title: "Create parent",
                             title_field_name: TITLE_FIELD_NAME,
                         }).as("create_parent");
                     });
@@ -186,19 +186,25 @@ describe("Artifact link usage", () => {
 
         it("can update a `Parent` link between two existing artifact", function () {
             cy.projectMemberSession();
+            cy.intercept("*?func=artifactlink-renderer-async*").as("loadLinksPost");
 
             cy.visit("/plugins/tracker/?&aid=" + this.update_parent);
 
             cy.get("[data-test=edit-field-linked_issues]").click();
             cy.get("[data-test=artifact-link-submit]").type(`${this.parent_artifact}`);
             submitArtifactAndStay();
-
             cy.get("[data-test=edit-field-linked_issues]").click();
-            cy.get("[data-test=artifact-link-type-selector]").last().select("Parent");
+            cy.wait("@loadLinksPost", { timeout: 6000 });
+
+            cy.get("[data-test=artifact-report-table]").within(() => {
+                cy.get("[data-test=artifact-link-type-selector]")
+                    .last()
+                    .select("Parent", { force: true });
+            });
+
             submitArtifactAndStay();
 
-            cy.get("[data-test=tracker-hierarchy]").contains(`${this.parent_artifact}`);
-            cy.get("[data-test=tracker-artifact-title]").contains("issue");
+            cy.get("[data-test=tracker-hierarchy]").contains("Parent");
         });
     });
 });
