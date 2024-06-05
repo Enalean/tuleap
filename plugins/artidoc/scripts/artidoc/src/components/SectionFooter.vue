@@ -53,9 +53,11 @@ const { is_section_editable } = props.editor;
 </script>
 
 <style scoped lang="scss">
+@use "@/themes/includes/zindex";
+
 .section-footer {
     position: sticky;
-    z-index: 2;
+    z-index: zindex.$footer;
     bottom: 0;
     padding: var(--tlp-medium-spacing) 0;
     background: var(--tuleap-artidoc-section-background);

@@ -18,33 +18,119 @@
 -
 -->
 <template>
-    <span class="section-editor-cta" v-if="is_section_editable && !is_edit_mode">
+    <div class="tlp-dropdown">
         <button
-            v-on:click="enableEditor()"
             type="button"
-            class="tlp-button-primary tlp-button-mini"
+            v-bind:title="trigger_title"
+            class="tlp-button-secondary tlp-button-outline artidoc-dropdown-trigger"
+            ref="trigger"
         >
-            <i class="fa-solid fa-pencil tlp-button-icon" aria-hidden="true"></i>
-            <span>{{ $gettext("Edit") }}</span>
+            <i class="fa-solid fa-ellipsis-vertical fa-fw" role="img"></i>
         </button>
-    </span>
+        <div class="tlp-dropdown-menu tlp-dropdown-menu-on-icon" role="menu">
+            <a v-bind:href="artifact_url" class="tlp-dropdown-menu-item" role="menuitem">
+                <i
+                    class="tlp-dropdown-menu-item-icon fa-solid fa-fw fa-arrow-right"
+                    aria-hidden="true"
+                ></i>
+                {{ $gettext("Go to artifact") }}
+            </a>
+            <template v-if="is_section_editable">
+                <span class="tlp-dropdown-menu-separator" role="separator"></span>
+                <a
+                    v-bind:href="artifact_url"
+                    v-on:click="edit"
+                    type="button"
+                    class="tlp-dropdown-menu-item"
+                    role="menuitem"
+                    v-bind:class="{ 'tlp-dropdown-menu-item-disabled': is_edit_mode }"
+                    v-bind:title="edit_title"
+                    data-test="edit"
+                >
+                    <i
+                        class="fa-solid tlp-dropdown-menu-item-icon fa-pen-to-square fa-fw"
+                        aria-hidden="true"
+                    ></i>
+                    <span>{{ $gettext("Edit") }}</span>
+                </a>
+            </template>
+        </div>
+    </div>
 </template>
 
 <script setup lang="ts">
 import type { SectionEditor } from "@/composables/useSectionEditor";
 import { useGettext } from "vue3-gettext";
+import type { ArtidocSection } from "@/helpers/artidoc-section.type";
+import type { Dropdown } from "@tuleap/tlp-dropdown";
+import { createDropdown } from "@tuleap/tlp-dropdown";
+import { computed, onMounted, ref } from "vue";
 
 const { $gettext } = useGettext();
 const props = defineProps<{
     editor: SectionEditor;
+    section: ArtidocSection;
 }>();
 const { enableEditor } = props.editor.editor_actions;
 const { is_section_editable } = props.editor;
 const is_edit_mode = props.editor.isSectionInEditMode();
+const artifact_url = `/plugins/tracker/?aid=${props.section.artifact.id}`;
+const trigger = ref<HTMLElement | null>(null);
+
+const edit_title = computed(() =>
+    is_edit_mode.value ? $gettext("Section is currently being edited") : "",
+);
+
+const trigger_title = $gettext("Open contextual menu");
+
+let dropdown: Dropdown | null = null;
+
+onMounted(() => {
+    if (trigger.value) {
+        dropdown = createDropdown(trigger.value);
+    }
+});
+
+function edit(event: Event): void {
+    event.preventDefault();
+    enableEditor();
+    if (dropdown) {
+        dropdown.hide();
+    }
+}
 </script>
 
 <style lang="scss" scoped>
-.cancel-button {
-    margin-right: var(--tlp-small-spacing);
+@use "@/themes/includes/whitespace";
+
+$button-size: 24px;
+$remaining-padding-when-button-is-in-section-horizontal-padding: calc(
+    #{whitespace.$section-horizontal-padding} - #{$button-size}
+);
+$left-or-right-button-margin-to-center-button: calc(
+    #{$remaining-padding-when-button-is-in-section-horizontal-padding} * 0.5
+);
+$right-position-to-center-the-button-in-section-right-padding: calc(
+    -1 * (#{$button-size} + #{$left-or-right-button-margin-to-center-button})
+);
+
+.tlp-dropdown {
+    position: absolute;
+    top: var(--tlp-medium-spacing);
+    right: $right-position-to-center-the-button-in-section-right-padding;
+}
+
+.artidoc-dropdown-trigger {
+    width: $button-size;
+    height: $button-size;
+    padding: 0;
+    border: var(--tuleap-artidoc-section-background);
+    border-radius: 50%;
+    background: var(--tuleap-artidoc-section-background);
+    box-shadow: none;
+
+    &:focus {
+        box-shadow: var(--tlp-shadow-focus);
+    }
 }
 </style>

@@ -22,10 +22,10 @@ import { shallowMount } from "@vue/test-utils";
 import SectionContent from "@/components/SectionContent.vue";
 import type { ComponentPublicInstance } from "vue";
 import ArtidocSectionFactory from "@/helpers/artidoc-section.factory";
-import SectionTitleWithArtifactId from "@/components/SectionTitleWithArtifactId.vue";
+import SectionHeader from "@/components/SectionHeader.vue";
 import SectionDescription from "@/components/SectionDescription.vue";
 import * as sectionsStore from "@/stores/useSectionsStore";
-import SectionTitleWithArtifactIdSkeleton from "@/components/SectionTitleWithArtifactIdSkeleton.vue";
+import SectionHeaderSkeleton from "@/components/SectionHeaderSkeleton.vue";
 import { InjectedSectionsStoreStub } from "@/helpers/stubs/InjectSectionsStoreStub";
 
 describe("SectionContent", () => {
@@ -42,8 +42,8 @@ describe("SectionContent", () => {
             });
         });
         it("should display a section title", () => {
-            expect(wrapper.findComponent(SectionTitleWithArtifactId).exists()).toBe(true);
-            expect(wrapper.findComponent(SectionTitleWithArtifactIdSkeleton).exists()).toBe(false);
+            expect(wrapper.findComponent(SectionHeader).exists()).toBe(true);
+            expect(wrapper.findComponent(SectionHeaderSkeleton).exists()).toBe(false);
         });
         it("should display a section description", () => {
             expect(wrapper.findComponent(SectionDescription).exists()).toBe(true);
@@ -62,8 +62,8 @@ describe("SectionContent", () => {
             });
         });
         it("should display a skeleton section title", () => {
-            expect(wrapper.findComponent(SectionTitleWithArtifactIdSkeleton).exists()).toBe(true);
-            expect(wrapper.findComponent(SectionTitleWithArtifactId).exists()).toBe(false);
+            expect(wrapper.findComponent(SectionHeaderSkeleton).exists()).toBe(true);
+            expect(wrapper.findComponent(SectionHeader).exists()).toBe(false);
         });
     });
 });

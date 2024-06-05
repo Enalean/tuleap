@@ -1,4 +1,4 @@
-/*
+/**
  * Copyright (c) Enalean, 2024 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -17,15 +17,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { describe, expect, it } from "vitest";
-import { shallowMount } from "@vue/test-utils";
-import SectionTitleWithArtifactIdSkeleton from "@/components/SectionTitleWithArtifactIdSkeleton.vue";
+// ckeditor toolbar should be under the sticky title when we scroll
+$editor: 1;
 
-describe("SectionTitleWithArtifactIdSkeleton", () => {
-    describe("when the sections are loading", () => {
-        it("should display skeleton", () => {
-            const wrapper = shallowMount(SectionTitleWithArtifactIdSkeleton);
-            expect(wrapper.find('span[class="tlp-skeleton-text"]').exists()).toBe(true);
-        });
-    });
-});
+// footer must be above ckeditor when we scroll
+$footer: 2;
+
+// header must be above ckeditor when we scroll
+// dropdown in the header must be above footer when we scroll
+$header: 3;

@@ -28,19 +28,18 @@
             'document-section-is-outdated': is_outdated,
         }"
     >
-        <section-title-with-artifact-id
+        <section-header
             class="section-header"
             v-if="!is_sections_loading"
             v-bind:title="title"
-            v-bind:artifact_id="section.artifact.id"
             v-bind:input_current_title="editor.inputCurrentTitle"
             v-bind:is_edit_mode="is_edit_mode"
         >
             <template #header-cta>
-                <section-editor-cta v-bind:editor="editor" />
+                <section-editor-cta v-bind:editor="editor" v-bind:section="section" />
             </template>
-        </section-title-with-artifact-id>
-        <section-title-with-artifact-id-skeleton v-else class="section-header" />
+        </section-header>
+        <section-header-skeleton v-else class="section-header" />
         <section-description
             v-bind:artifact_id="section.artifact.id"
             v-bind:editable_description="editable_description"
@@ -55,12 +54,12 @@
 
 <script setup lang="ts">
 import type { ArtidocSection } from "@/helpers/artidoc-section.type";
-import SectionTitleWithArtifactId from "@/components/SectionTitleWithArtifactId.vue";
+import SectionHeader from "@/components/SectionHeader.vue";
 import SectionDescription from "@/components/SectionDescription.vue";
 import useSectionEditor from "@/composables/useSectionEditor";
 import SectionEditorCta from "@/components/SectionEditorCta.vue";
 import { useInjectSectionsStore } from "@/stores/useSectionsStore";
-import SectionTitleWithArtifactIdSkeleton from "@/components/SectionTitleWithArtifactIdSkeleton.vue";
+import SectionHeaderSkeleton from "@/components/SectionHeaderSkeleton.vue";
 import SectionFooter from "@/components/SectionFooter.vue";
 
 const props = defineProps<{ section: ArtidocSection }>();
@@ -82,6 +81,7 @@ const readonly_description = editor.getReadonlyDescription();
 
 <style lang="scss" scoped>
 @use "@tuleap/burningparrot-theme/css/includes/global-variables";
+@use "@/themes/includes/zindex";
 
 .document-section {
     display: flex;
@@ -91,6 +91,7 @@ const readonly_description = editor.getReadonlyDescription();
 
 .section-header {
     position: sticky;
+    z-index: zindex.$header;
     top: global-variables.$navbar-height;
     margin-bottom: var(--tlp-medium-spacing);
     border-bottom: 1px solid var(--tlp-neutral-normal-color);
