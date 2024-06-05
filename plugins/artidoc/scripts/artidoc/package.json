@@ -33,7 +33,7 @@
   "scripts": {
     "build": "vite build",
     "watch": "vite build --watch --mode development --minify false",
-    "test": "COLLECT_COVERAGE=false vitest",
+    "test": "vitest",
     "typecheck": "vue-tsc --noEmit"
   }
 }
