@@ -375,12 +375,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/wikimedia/mediawiki-skins-TuleapSkin.git",
-                "reference": "8ec68faae39eaf8fdd76cd8f8c38ec4794df1f2a"
+                "reference": "d7665b40f2f41f30ffbde677ed558375e33cf0ec"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/wikimedia/mediawiki-skins-TuleapSkin/zipball/8ec68faae39eaf8fdd76cd8f8c38ec4794df1f2a",
-                "reference": "8ec68faae39eaf8fdd76cd8f8c38ec4794df1f2a",
+                "url": "https://api.github.com/repos/wikimedia/mediawiki-skins-TuleapSkin/zipball/d7665b40f2f41f30ffbde677ed558375e33cf0ec",
+                "reference": "d7665b40f2f41f30ffbde677ed558375e33cf0ec",
                 "shasum": ""
             },
             "require": {
@@ -419,9 +419,9 @@
                 "GPL-3.0-only"
             ],
             "support": {
-                "source": "https://github.com/wikimedia/mediawiki-skins-TuleapSkin/tree/2.0.0"
+                "source": "https://github.com/wikimedia/mediawiki-skins-TuleapSkin/tree/REL1_39"
             },
-            "time": "2024-04-09T08:56:11+00:00"
+            "time": "2024-05-07T05:55:13+00:00"
         },
         {
             "name": "mediawiki/tuleap-wiki-farm",
