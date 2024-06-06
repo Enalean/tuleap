@@ -6,7 +6,7 @@
         <a href="/admin/userlist.php?group_id={{ id }}" class="tlp-tab">{{ members_label }}</a>
         <a href="/admin/projecthistory.php?group_id={{ id }}" class="tlp-tab">{{ history_label }}</a>
         {{# is_active }}
-            <a href="/admin/show_pending_documents.php?group_id={{ id }}" class="tlp-tab">{{ pending_label }}</a>
+            <a href="/admin/show_pending_documents.php?group_id={{ id }}" data-test="pending-deleted-documents" class="tlp-tab">{{ pending_label }}</a>
         {{/ is_active }}
     </nav>
 
