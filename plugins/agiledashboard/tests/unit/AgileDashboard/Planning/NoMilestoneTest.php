@@ -18,62 +18,50 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\AgileDashboard\Planning;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PFUser;
 use Planning;
 use Planning_NoMilestone;
 use Project;
+use Tuleap\AgileDashboard\Test\Builders\PlanningBuilder;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
 
-final class NoMilestoneTest extends \Tuleap\Test\PHPUnit\TestCase
+final class NoMilestoneTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    private $project;
-    private $planning;
-
-    /**
-     * @var Planning_NoMilestone
-     */
-    private $milestone;
+    private Project $project;
+    private Planning $planning;
+    private Planning_NoMilestone $milestone;
 
     protected function setUp(): void
     {
-        parent::setUp();
-
-        $this->project = Mockery::mock(Project::class);
-        $this->project->shouldReceive('getID')->andReturn(123);
-
-        $this->planning = Mockery::mock(Planning::class);
-        $this->planning->shouldReceive('getId')->andReturn(9999);
-
-        $this->milestone = new Planning_NoMilestone(
-            $this->project,
-            $this->planning
-        );
+        $this->project   = ProjectTestBuilder::aProject()->withId(123)->build();
+        $this->planning  = PlanningBuilder::aPlanning(123)->withId(9999)->build();
+        $this->milestone = new Planning_NoMilestone($this->project, $this->planning);
     }
 
-    public function testItHasAPlanning()
+    public function testItHasAPlanning(): void
     {
-        $this->assertSame($this->planning, $this->milestone->getPlanning());
-        $this->assertSame($this->planning->getId(), $this->milestone->getPlanningId());
+        self::assertSame($this->planning, $this->milestone->getPlanning());
+        self::assertSame($this->planning->getId(), $this->milestone->getPlanningId());
     }
 
-    public function testItHasAProject()
+    public function testItHasAProject(): void
     {
-        $this->assertSame($this->project, $this->milestone->getProject());
-        $this->assertSame($this->project->getID(), $this->milestone->getGroupId());
+        self::assertSame($this->project, $this->milestone->getProject());
+        self::assertSame($this->project->getID(), $this->milestone->getGroupId());
     }
 
-    public function testItMayBeNull()
+    public function testItMayBeNull(): void
     {
-        $this->assertNull($this->milestone->getArtifact());
-        $this->assertNull($this->milestone->getArtifactId());
-        $this->assertNull($this->milestone->getArtifactTitle());
-        $this->assertTrue(
-            $this->milestone->userCanView(Mockery::mock(PFUser::class)),
+        self::assertNull($this->milestone->getArtifact());
+        self::assertNull($this->milestone->getArtifactId());
+        self::assertNull($this->milestone->getArtifactTitle());
+        self::assertTrue(
+            $this->milestone->userCanView(UserTestBuilder::buildWithDefaults()),
             'any user should be able to read an empty milstone'
         );
     }
