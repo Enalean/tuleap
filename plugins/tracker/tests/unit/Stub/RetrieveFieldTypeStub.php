@@ -32,6 +32,7 @@ final class RetrieveFieldTypeStub implements RetrieveFieldType
         \Tracker_FormElementFactory::FIELD_INTEGER_TYPE => \Tracker_FormElement_Field_Integer::class,
         \Tracker_FormElementFactory::FIELD_FLOAT_TYPE => \Tracker_FormElement_Field_Float::class,
         \Tracker_FormElementFactory::FIELD_DATE_TYPE => \Tracker_FormElement_Field_Date::class,
+        \Tracker_FormElementFactory::FIELD_TEXT_TYPE => \Tracker_FormElement_Field_Text::class,
     ];
 
     private function __construct(private string $predefined_type)

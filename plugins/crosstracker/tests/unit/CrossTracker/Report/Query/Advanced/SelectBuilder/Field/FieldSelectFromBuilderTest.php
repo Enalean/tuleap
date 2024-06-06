@@ -27,6 +27,7 @@ use PFUser;
 use Tracker;
 use Tuleap\CrossTracker\Report\Query\Advanced\DuckTypedField\FieldTypeRetrieverWrapper;
 use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Field\Date\DateSelectFromBuilder;
+use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Field\Text\TextSelectFromBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\IProvideParametrizedSelectAndFromSQLFragments;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\Test\Builders\UserTestBuilder;
@@ -37,6 +38,7 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\Field;
 use Tuleap\Tracker\Test\Builders\Fields\DateFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\FloatFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\IntFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\TextFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\RetrieveFieldTypeStub;
 use Tuleap\Tracker\Test\Stub\RetrieveUsedFieldsStub;
@@ -72,6 +74,7 @@ final class FieldSelectFromBuilderTest extends TestCase
                 FieldPermissionType::PERMISSION_READ,
             ),
             new DateSelectFromBuilder(),
+            new TextSelectFromBuilder(),
         );
 
         return $builder->getSelectFrom(
@@ -116,6 +119,27 @@ final class FieldSelectFromBuilderTest extends TestCase
                 ->inTracker($this->second_tracker)
                 ->withReadPermission($this->user, true)
                 ->build()
+        );
+
+        $select_from = $this->getSelectFrom($fields_retriever);
+        self::assertNotEmpty($select_from->getSelect());
+        self::assertNotEmpty($select_from->getFrom());
+        self::assertNotEmpty($select_from->getFromParameters());
+    }
+
+    public function testItReturnsSQLForTextField(): void
+    {
+        $fields_retriever = RetrieveUsedFieldsStub::withFields(
+            TextFieldBuilder::aTextField(self::FIRST_FIELD_ID)
+                    ->withName(self::FIELD_NAME)
+                    ->inTracker($this->first_tracker)
+                    ->withReadPermission($this->user, true)
+                    ->build(),
+            TextFieldBuilder::aTextField(self::SECOND_FIELD_ID)
+                    ->withName(self::FIELD_NAME)
+                    ->inTracker($this->first_tracker)
+                    ->withReadPermission($this->user, true)
+                    ->build()
         );
 
         $select_from = $this->getSelectFrom($fields_retriever);

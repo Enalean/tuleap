@@ -28,6 +28,7 @@ use Tracker_FormElement_Field;
 use Tuleap\CrossTracker\Report\Query\Advanced\DuckTypedField\Select\DuckTypedFieldSelect;
 use Tuleap\CrossTracker\Report\Query\Advanced\DuckTypedField\Select\DuckTypedFieldTypeSelect;
 use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Field\Date\DateSelectFromBuilder;
+use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Field\Text\TextSelectFromBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\IProvideParametrizedSelectAndFromSQLFragments;
 use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\ParametrizedSelectFrom;
 use Tuleap\Tracker\FormElement\Field\RetrieveUsedFields;
@@ -43,6 +44,7 @@ final readonly class FieldSelectFromBuilder
         private RetrieveFieldType $retrieve_field_type,
         private RetrieveUserPermissionOnFields $permission_on_fields,
         private DateSelectFromBuilder $date_builder,
+        private TextSelectFromBuilder $text_builder,
     ) {
     }
 
@@ -66,7 +68,6 @@ final readonly class FieldSelectFromBuilder
         $fields_user_can_read = $this->permission_on_fields
             ->retrieveUserPermissionOnFields($user, $fields, FieldPermissionType::PERMISSION_READ)
             ->allowed;
-
         return DuckTypedFieldSelect::build(
             $this->retrieve_field_type,
             $field->getName(),
@@ -82,7 +83,7 @@ final readonly class FieldSelectFromBuilder
     {
         return match ($field->type) {
             DuckTypedFieldTypeSelect::DATE      => $this->date_builder->getSelectFrom($field),
-            DuckTypedFieldTypeSelect::TEXT,
+            DuckTypedFieldTypeSelect::TEXT => $this->text_builder->getSelectFrom($field),
             DuckTypedFieldTypeSelect::NUMERIC,
             DuckTypedFieldTypeSelect::STATIC_LIST,
             DuckTypedFieldTypeSelect::UGROUP_LIST,
