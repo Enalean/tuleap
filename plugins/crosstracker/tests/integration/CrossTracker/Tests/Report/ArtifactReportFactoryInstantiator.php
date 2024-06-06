@@ -53,6 +53,7 @@ use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata\Submissio
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata\TextSemanticChecker;
 use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Field\Date\DateSelectFromBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Field\FieldSelectFromBuilder;
+use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Field\Numeric\NumericSelectFromBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Field\Text\TextSelectFromBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilderVisitor;
 use Tuleap\DB\DBFactory;
@@ -211,7 +212,8 @@ final class ArtifactReportFactoryInstantiator
                 $retrieve_field_type,
                 TrackersPermissionsRetriever::build(),
                 new DateSelectFromBuilder(),
-                new TextSelectFromBuilder()
+                new TextSelectFromBuilder(),
+                new NumericSelectFromBuilder(),
             ),
         );
 
