@@ -18,75 +18,64 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class AgileDashboard_Planning_NearestPlanningTrackerProviderTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+declare(strict_types=1);
+
+namespace Tuleap\AgileDashboard\Planning;
+
+use AgileDashboard_Planning_NearestPlanningTrackerProvider;
+use LogicException;
+use PHPUnit\Framework\MockObject\MockObject;
+use PlanningFactory;
+use Tracker;
+use Tracker_Hierarchy;
+use Tracker_HierarchyFactory;
+use Tuleap\AgileDashboard\Test\Builders\PlanningBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
+
+final class NearestPlanningTrackerProviderTest extends TestCase
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Tracker
-     */
-    private $task_tracker;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Tracker
-     */
-    private $epic_tracker;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Tracker
-     */
-    private $sprint_tracker;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Tracker_HierarchyFactory
-     */
-    private $hierarchy_factory;
-    /**
-     * @var AgileDashboard_Planning_NearestPlanningTrackerProvider
-     */
-    private $provider;
-
-
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|PlanningFactory
-     */
-    private $planning_factory;
+    private Tracker $task_tracker;
+    private Tracker $epic_tracker;
+    private Tracker $sprint_tracker;
+    private Tracker_HierarchyFactory&MockObject $hierarchy_factory;
+    private AgileDashboard_Planning_NearestPlanningTrackerProvider $provider;
 
     protected function setUp(): void
     {
-        $this->epic_tracker = Mockery::mock(Tracker::class);
-        $this->epic_tracker->shouldReceive('getParent')->andReturn(null);
+        $this->epic_tracker   = TrackerTestBuilder::aTracker()->withParent(null)->build();
+        $this->sprint_tracker = TrackerTestBuilder::aTracker()->withParent($this->epic_tracker)->build();
+        $story_tracker        = TrackerTestBuilder::aTracker()->withParent($this->epic_tracker)->build();
+        $this->task_tracker   = TrackerTestBuilder::aTracker()->withParent($story_tracker)->build();
 
-        $this->sprint_tracker = Mockery::mock(Tracker::class);
-        $this->sprint_tracker->shouldReceive('getParent')->andReturn($this->epic_tracker);
+        $sprint_planning = PlanningBuilder::aPlanning(101)
+            ->withMilestoneTracker($this->sprint_tracker)
+            ->build();
 
-        $story_tracker = Mockery::mock(Tracker::class);
-        $story_tracker->shouldReceive('getParent')->andReturn($this->epic_tracker);
+        $hierarchy = $this->createMock(Tracker_Hierarchy::class);
+        $hierarchy->method('sortTrackerIds')->willReturn(['release', 'sprint']);
+        $this->hierarchy_factory = $this->createMock(Tracker_HierarchyFactory::class);
+        $this->hierarchy_factory->method('getHierarchy')->willReturn($hierarchy);
 
-        $this->task_tracker = Mockery::mock(Tracker::class);
-        $this->task_tracker->shouldReceive('getParent')->andReturn($story_tracker);
+        $planning_factory = $this->createMock(PlanningFactory::class);
+        $planning_factory->method('getPlanningsByBacklogTracker')
+            ->will(self::returnCallback(fn(Tracker $tracker) => match ($tracker) {
+                $this->task_tracker,
+                $this->epic_tracker => [],
+                $story_tracker      => [$sprint_planning],
+                default             => throw new LogicException("Should not be called with tracker #{$tracker->getId()}"),
+            }));
 
-        $sprint_planning = Mockery::mock(Planning::class);
-        $sprint_planning->shouldReceive('getPlanningTrackerId')->andReturns('sprint');
-        $sprint_planning->shouldReceive('getPlanningTracker')->andReturns($this->sprint_tracker);
-
-        $hierarchy = \Mockery::spy(\Tracker_Hierarchy::class);
-        $hierarchy->shouldReceive('sortTrackerIds')->andReturns(['release', 'sprint']);
-        $this->hierarchy_factory = \Mockery::spy(\Tracker_HierarchyFactory::class);
-        $this->hierarchy_factory->shouldReceive('getHierarchy')->andReturns($hierarchy);
-
-        $this->planning_factory = \Mockery::spy(\PlanningFactory::class);
-        $this->planning_factory->shouldReceive('getPlanningsByBacklogTracker')->with($this->task_tracker)->andReturns([]);
-        $this->planning_factory->shouldReceive('getPlanningsByBacklogTracker')->with($story_tracker)->andReturns([$sprint_planning]);
-        $this->planning_factory->shouldReceive('getPlanningsByBacklogTracker')->with($this->epic_tracker)->andReturns([]);
-
-        $this->provider = new AgileDashboard_Planning_NearestPlanningTrackerProvider($this->planning_factory);
+        $this->provider = new AgileDashboard_Planning_NearestPlanningTrackerProvider($planning_factory);
     }
 
     public function testItRetrievesTheNearestPlanningTracker(): void
     {
-        $this->assertEquals($this->sprint_tracker, $this->provider->getNearestPlanningTracker($this->task_tracker, $this->hierarchy_factory));
+        self::assertEquals($this->sprint_tracker, $this->provider->getNearestPlanningTracker($this->task_tracker, $this->hierarchy_factory));
     }
 
     public function testItReturnsNullWhenNoPlanningMatches(): void
     {
-        $this->assertNull($this->provider->getNearestPlanningTracker($this->epic_tracker, $this->hierarchy_factory));
+        self::assertNull($this->provider->getNearestPlanningTracker($this->epic_tracker, $this->hierarchy_factory));
     }
 }
