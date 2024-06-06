@@ -18,78 +18,78 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\Tracker\Artifact\Artifact;
+declare(strict_types=1);
 
-final class Planning_MilestoneSelectorControllerTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+namespace Tuleap\AgileDashboard\Planning;
+
+use Codendi_Request;
+use EventManager;
+use ForgeConfig;
+use PHPUnit\Framework\MockObject\MockObject;
+use Planning_ArtifactMilestone;
+use Planning_MilestoneFactory;
+use Planning_MilestoneSelectorController;
+use Planning_NoMilestone;
+use Tuleap\AgileDashboard\Test\Builders\PlanningBuilder;
+use Tuleap\ForgeConfigSandbox;
+use Tuleap\GlobalResponseMock;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
+
+final class MilestoneSelectorControllerTest extends TestCase
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+    use ForgeConfigSandbox;
+    use GlobalResponseMock;
 
-    use \Tuleap\ForgeConfigSandbox;
-    use \Tuleap\GlobalResponseMock;
-
-    /**
-     * @var int
-     */
-    private $current_milestone_artifact_id;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Planning_MilestoneFactory
-     */
-    private $milestone_factory;
-
-    /**
-     * @var Codendi_Request
-     */
-    private $request;
+    private int $current_milestone_artifact_id;
+    private Planning_MilestoneFactory&MockObject $milestone_factory;
+    private Codendi_Request $request;
 
     protected function setUp(): void
     {
         ForgeConfig::set('codendi_dir', AGILEDASHBOARD_BASE_DIR . '/../../..');
         $planning_id   = '321';
-        $user          = Mockery::mock(PFUser::class);
-        $this->request = Mockery::mock(Codendi_Request::class);
-        $this->request->shouldReceive('getCurrentUser')->andReturn($user);
-        $this->request->shouldReceive('getValidated')->andReturn($planning_id);
-        $this->milestone_factory = \Mockery::spy(\Planning_MilestoneFactory::class);
+        $user          = UserTestBuilder::buildWithDefaults();
+        $this->request = new Codendi_Request(['planning_id' => $planning_id]);
+        $this->request->setCurrentUser($user);
+        $this->milestone_factory = $this->createMock(Planning_MilestoneFactory::class);
 
         $this->current_milestone_artifact_id = 444;
 
-        $artifact = Mockery::mock(Artifact::class);
-        $artifact->shouldReceive('getId')->andReturn($this->current_milestone_artifact_id);
-        $milestone = Mockery::mock(Planning_ArtifactMilestone::class);
-        $milestone->shouldReceive('getArtifact')->andReturn($artifact);
-        $milestone->shouldReceive('getGroupId')->andReturn(101);
-        $milestone->shouldReceive('getPlanningId')->andReturn($planning_id);
+        $artifact  = ArtifactTestBuilder::anArtifact($this->current_milestone_artifact_id)->build();
+        $milestone = $this->createMock(Planning_ArtifactMilestone::class);
+        $milestone->method('getArtifact')->willReturn($artifact);
+        $milestone->method('getGroupId')->willReturn(101);
+        $milestone->method('getPlanningId')->willReturn($planning_id);
 
-        $this->milestone_factory->shouldReceive('getLastMilestoneCreated')
-            ->with($user, $planning_id)->andReturns($milestone);
-
-        $GLOBALS['Response'] = Mockery::spy(Layout::class);
+        $this->milestone_factory->method('getLastMilestoneCreated')
+            ->with($user, $planning_id)->willReturn($milestone);
     }
 
     protected function tearDown(): void
     {
         EventManager::clearInstance();
-        unset($GLOBALS['Response']);
     }
 
     public function testItRedirectToTheCurrentMilestone(): void
     {
-        $GLOBALS['Response']->shouldReceive('redirect')
-            ->with(\Mockery::pattern("/aid=$this->current_milestone_artifact_id/"))
-            ->once();
+        $GLOBALS['Response']->expects(self::once())->method('redirect')
+            ->with(self::matchesRegularExpression("/aid=$this->current_milestone_artifact_id/"));
         $controller = new Planning_MilestoneSelectorController($this->request, $this->milestone_factory);
         $controller->show();
     }
 
     public function testItRedirectToTheCurrentMilestoneCardwallIfAny(): void
     {
-        $event_manager = \Mockery::mock(\EventManager::class);
+        $event_manager = $this->createMock(EventManager::class);
         EventManager::setInstance($event_manager);
 
-        $event_manager->shouldReceive('processEvent')->with(
+        $event_manager->expects(self::atLeastOnce())->method('processEvent')->with(
             Planning_MilestoneSelectorController::AGILEDASHBOARD_EVENT_MILESTONE_SELECTOR_REDIRECT,
-            \Mockery::any()
-        )->atLeast()->once();
+            self::anything()
+        );
 
         $controller = new Planning_MilestoneSelectorController($this->request, $this->milestone_factory);
         $controller->show();
@@ -97,12 +97,13 @@ final class Planning_MilestoneSelectorControllerTest extends \Tuleap\Test\PHPUni
 
     public function testItDoesntRedirectIfNoMilestone(): void
     {
-        $milestone_factory = \Mockery::spy(\Planning_MilestoneFactory::class);
-        $milestone_factory->shouldReceive('getLastMilestoneCreated')->andReturns(
-            \Mockery::spy(\Planning_NoMilestone::class)
-        );
+        $milestone_factory = $this->createMock(Planning_MilestoneFactory::class);
+        $milestone_factory->method('getLastMilestoneCreated')->willReturn(new Planning_NoMilestone(
+            ProjectTestBuilder::aProject()->build(),
+            PlanningBuilder::aPlanning(1)->build(),
+        ));
 
-        $GLOBALS['Response']->shouldReceive('redirect')->never();
+        $GLOBALS['Response']->expects(self::never())->method('redirect');
         $controller = new Planning_MilestoneSelectorController($this->request, $milestone_factory);
         $controller->show();
     }
