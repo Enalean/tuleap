@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\CrossTracker\REST\v1;
 
 use BaseLanguageFactory;
@@ -109,186 +111,15 @@ use Tuleap\Tracker\Report\TrackerReportExtractor;
 use URLVerification;
 use UserManager;
 
-class CrossTrackerReportsResource extends AuthenticatedResource
+final class CrossTrackerReportsResource extends AuthenticatedResource
 {
     public const MAX_LIMIT = 50;
-    /**
-     * @var QueryParameterParser
-     */
-    private $query_parser;
-    /**
-     * @var CrossTrackerArtifactReportFactory
-     */
-    private $cross_tracker_artifact_factory;
-    /**
-     * @var TrackerReportExtractor
-     */
-    private $tracker_extractor;
-    /**
-     * @var CrossTrackerReportFactory
-     */
-    private $report_factory;
-    /**
-     * @var UserManager
-     */
-    private $user_manager;
-    /** @var ExpertQueryValidator */
-    private $validator;
-    /** @var InvalidTermCollectorVisitor */
-    private $invalid_comparisons_collector;
-    private InvalidSelectablesCollectorVisitor $invalid_selectables_collector;
-    private ArtifactRepresentationFactory $representation_factory;
+
+    private UserManager $user_manager;
 
     public function __construct()
     {
-        $db = DBFactory::getMainTuleapDBConnection()->getDB();
-
-        $this->user_manager   = UserManager::instance();
-        $this->report_factory = new CrossTrackerReportFactory(
-            new CrossTrackerReportDao(),
-            TrackerFactory::instance()
-        );
-
-        $this->tracker_extractor = new TrackerReportExtractor(TrackerFactory::instance());
-
-        $report_config = new TrackerReportConfig(
-            new TrackerReportConfigDao()
-        );
-
-        $parser = new ParserCacheProxy(new Parser());
-
-        $this->validator = new ExpertQueryValidator(
-            $parser,
-            new SizeValidatorVisitor($report_config->getExpertQueryLimit())
-        );
-
-        $list_field_bind_value_normalizer = new ListFieldBindValueNormalizer();
-        $ugroup_label_converter           = new UgroupLabelConverter(
-            $list_field_bind_value_normalizer,
-            new \BaseLanguageFactory()
-        );
-        $bind_labels_extractor            = new CollectionOfNormalizedBindLabelsExtractor(
-            $list_field_bind_value_normalizer,
-            $ugroup_label_converter
-        );
-
-        $form_element_factory                = Tracker_FormElementFactory::instance();
-        $duck_typed_field_checker            = new DuckTypedFieldChecker(
-            $form_element_factory,
-            $form_element_factory,
-            new InvalidFieldChecker(
-                new FloatFieldChecker(),
-                new IntegerFieldChecker(),
-                new TextFieldChecker(),
-                new DateFieldChecker(),
-                new FileFieldChecker(),
-                new ListFieldChecker(
-                    $list_field_bind_value_normalizer,
-                    $bind_labels_extractor,
-                    $ugroup_label_converter
-                ),
-                new ListFieldChecker(
-                    $list_field_bind_value_normalizer,
-                    new CollectionOfNormalizedBindLabelsExtractorForOpenList(
-                        $bind_labels_extractor,
-                        new OpenListValueDao(),
-                        $list_field_bind_value_normalizer,
-                    ),
-                    $ugroup_label_converter
-                ),
-                new ArtifactSubmitterChecker($this->user_manager),
-                true,
-            ),
-            TrackersPermissionsRetriever::build(),
-        );
-        $this->invalid_comparisons_collector = new InvalidTermCollectorVisitor(
-            new InvalidSearchableCollectorVisitor(
-                new MetadataChecker(
-                    new MetadataUsageChecker(
-                        $form_element_factory,
-                        new Tracker_Semantic_TitleDao(),
-                        new Tracker_Semantic_DescriptionDao(),
-                        new Tracker_Semantic_StatusDao(),
-                        new Tracker_Semantic_ContributorDao()
-                    ),
-                    new InvalidMetadataChecker(
-                        new TextSemanticChecker(),
-                        new StatusChecker(),
-                        new AssignedToChecker($this->user_manager),
-                        new \Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata\ArtifactSubmitterChecker(
-                            $this->user_manager
-                        ),
-                        new SubmissionDateChecker(),
-                        new ArtifactIdMetadataChecker(),
-                    )
-                ),
-                $duck_typed_field_checker,
-            ),
-            new ArtifactLinkTypeChecker(
-                new TypePresenterFactory(
-                    new TypeDao(),
-                    new ArtifactLinksUsageDao(),
-                ),
-            )
-        );
-        $this->invalid_selectables_collector = new InvalidSelectablesCollectorVisitor($duck_typed_field_checker);
-
-        $date_time_value_rounder = new DateTimeValueRounder();
-        $artifact_factory        = Tracker_ArtifactFactory::instance();
-        $list_from_where_builder = new Field\ListFromWhereBuilder();
-        $retrieve_field_type     = new FieldTypeRetrieverWrapper($form_element_factory);
-        $query_builder_visitor   = new QueryBuilderVisitor(
-            new FromWhereSearchableVisitor(),
-            new ReverseLinkFromWhereBuilder($artifact_factory),
-            new ForwardLinkFromWhereBuilder($artifact_factory),
-            new Field\FieldFromWhereBuilder(
-                $form_element_factory,
-                $retrieve_field_type,
-                new Field\Numeric\NumericFromWhereBuilder(),
-                new Field\Text\TextFromWhereBuilder($db),
-                new Field\Date\DateFromWhereBuilder($date_time_value_rounder),
-                new Field\Datetime\DatetimeFromWhereBuilder($date_time_value_rounder),
-                new Field\StaticList\StaticListFromWhereBuilder($list_from_where_builder),
-                new Field\UGroupList\UGroupListFromWhereBuilder(
-                    new UgroupLabelConverter(new ListFieldBindValueNormalizer(), new BaseLanguageFactory()),
-                    $list_from_where_builder,
-                ),
-                new Field\UserList\UserListFromWhereBuilder($list_from_where_builder),
-            ),
-            new Metadata\MetadataFromWhereBuilder(
-                new Metadata\Semantic\Title\TitleFromWhereBuilder($db),
-                new Metadata\Semantic\Description\DescriptionFromWhereBuilder($db),
-                new Metadata\Semantic\Status\StatusFromWhereBuilder(),
-                new Metadata\Semantic\AssignedTo\AssignedToFromWhereBuilder($this->user_manager),
-                new Metadata\AlwaysThereField\Date\DateFromWhereBuilder($date_time_value_rounder),
-                new Metadata\AlwaysThereField\Users\UsersFromWhereBuilder($this->user_manager),
-                new Metadata\AlwaysThereField\ArtifactId\ArtifactIdFromWhereBuilder(),
-                $form_element_factory,
-            ),
-        );
-        $select_builder_visitor  = new SelectBuilderVisitor(
-            new FieldSelectFromBuilder(
-                $form_element_factory,
-                $retrieve_field_type,
-                TrackersPermissionsRetriever::build(),
-                new DateSelectFromBuilder(),
-            ),
-        );
-
-        $this->cross_tracker_artifact_factory = new CrossTrackerArtifactReportFactory(
-            new CrossTrackerArtifactReportDao(),
-            $artifact_factory,
-            $this->validator,
-            $query_builder_visitor,
-            $select_builder_visitor,
-            $parser,
-            new CrossTrackerExpertQueryReportDao(),
-            $this->invalid_comparisons_collector,
-            $this->invalid_selectables_collector,
-        );
-
-        $this->query_parser           = new QueryParameterParser(new JsonDecoder());
-        $this->representation_factory = new ArtifactRepresentationFactory();
+        $this->user_manager = UserManager::instance();
     }
 
     /**
@@ -296,7 +127,7 @@ class CrossTrackerReportsResource extends AuthenticatedResource
      *
      * @param int $id Id of the report
      */
-    public function optionsId($id)
+    public function optionsId(int $id): void
     {
         $this->sendAllowHeaders();
     }
@@ -311,11 +142,10 @@ class CrossTrackerReportsResource extends AuthenticatedResource
      *
      * @param int $id Id of the report
      *
-     * @return CrossTrackerReportRepresentation
      *
      * @throws RestException 404
      */
-    public function getId($id)
+    public function getId(int $id): CrossTrackerReportRepresentation
     {
         $this->checkAccess();
         try {
@@ -348,7 +178,7 @@ class CrossTrackerReportsResource extends AuthenticatedResource
      * @access hybrid
      *
      * @param int $id Id of the report
-     * @param string $query
+     * @param string|null $query
      *                      With a property "trackers_id" to search artifacts presents in given trackers.
      *                      With a property "expert_query" to customize the search. {@required false}
      * @param int $limit Number of elements displayed per page {@from path}{@min 1}{@max 50}
@@ -356,7 +186,7 @@ class CrossTrackerReportsResource extends AuthenticatedResource
      *
      * @throws RestException 404
      */
-    public function getIdContent($id, $query, $limit = self::MAX_LIMIT, $offset = 0): array
+    public function getIdContent(int $id, ?string $query, int $limit = self::MAX_LIMIT, int $offset = 0): array
     {
         $this->checkAccess();
         Header::allowOptionsGet();
@@ -364,27 +194,56 @@ class CrossTrackerReportsResource extends AuthenticatedResource
         try {
             $current_user = $this->user_manager->getCurrentUser();
             $report       = $this->getReport($id);
-            $trackers     = $this->getTrackersFromRoute($query, $report);
+
+            $query_parser = new QueryParameterParser(new JsonDecoder());
+
+            $trackers = $this->getTrackersFromRoute($query, $report, $query_parser);
             if (count($trackers) === 0) {
                 return ['artifacts' => []];
             }
-            $expert_query    = $this->getExpertQueryFromRoute($query, $report);
+            $expert_query    = $this->getExpertQueryFromRoute($query, $report, $query_parser);
             $expected_report = new CrossTrackerReport($report->getId(), $expert_query, $trackers);
 
             $this->getUserIsAllowedToSeeReportChecker()->checkUserIsAllowedToSeeReport($current_user, $expected_report);
 
-            $artifacts       = $this->cross_tracker_artifact_factory->getArtifactsMatchingReport(
+            $form_element_factory = Tracker_FormElementFactory::instance();
+
+            $select_builder_visitor = new SelectBuilderVisitor(
+                new FieldSelectFromBuilder(
+                    $form_element_factory,
+                    new FieldTypeRetrieverWrapper($form_element_factory),
+                    TrackersPermissionsRetriever::build(),
+                    new DateSelectFromBuilder(),
+                ),
+            );
+
+            $artifact_factory               = Tracker_ArtifactFactory::instance();
+            $query_builder_visitor          = $this->getQueryBuilderVisitor();
+            $cross_tracker_artifact_factory = new CrossTrackerArtifactReportFactory(
+                new CrossTrackerArtifactReportDao(),
+                $artifact_factory,
+                $this->getExpertQueryValidator(),
+                $query_builder_visitor,
+                $select_builder_visitor,
+                new ParserCacheProxy(new Parser()),
+                new CrossTrackerExpertQueryReportDao(),
+                $this->getInvalidComparisonsCollector(),
+                new InvalidSelectablesCollectorVisitor($this->getDuckTypedFieldChecker()),
+            );
+
+            $artifacts       = $cross_tracker_artifact_factory->getArtifactsMatchingReport(
                 $expected_report,
                 $current_user,
                 $limit,
                 $offset
             );
-            $representations = $this->representation_factory->buildRepresentationsForReport($artifacts, $current_user);
+            $representations = (new ArtifactRepresentationFactory())->buildRepresentationsForReport(
+                $artifacts,
+                $current_user
+            );
         } catch (CrossTrackerReportNotFoundException $exception) {
             throw new RestException(404, null, ['i18n_error_message' => 'Report not found']);
-        } catch (TrackerNotFoundException $exception) {
-            throw new RestException(400, null, ['i18n_error_message' => $exception->getMessage()]);
-        } catch (TrackerDuplicateException $exception) {
+        } catch (TrackerNotFoundException | TrackerDuplicateException $exception) {
             throw new RestException(400, null, ['i18n_error_message' => $exception->getMessage()]);
         } catch (SyntaxError $exception) {
             throw new RestException(
@@ -413,6 +272,45 @@ class CrossTrackerReportsResource extends AuthenticatedResource
         return ['artifacts' => $representations->getArtifacts()];
     }
 
+    private function getQueryBuilderVisitor(): QueryBuilderVisitor
+    {
+        $artifact_factory        = Tracker_ArtifactFactory::instance();
+        $form_element_factory    = Tracker_FormElementFactory::instance();
+        $db                      = DBFactory::getMainTuleapDBConnection()->getDB();
+        $date_time_value_rounder = new DateTimeValueRounder();
+        $list_from_where_builder = new Field\ListFromWhereBuilder();
+
+        return new QueryBuilderVisitor(
+            new FromWhereSearchableVisitor(),
+            new ReverseLinkFromWhereBuilder($artifact_factory),
+            new ForwardLinkFromWhereBuilder($artifact_factory),
+            new Field\FieldFromWhereBuilder(
+                $form_element_factory,
+                new FieldTypeRetrieverWrapper($form_element_factory),
+                new Field\Numeric\NumericFromWhereBuilder(),
+                new Field\Text\TextFromWhereBuilder($db),
+                new Field\Date\DateFromWhereBuilder($date_time_value_rounder),
+                new Field\Datetime\DatetimeFromWhereBuilder($date_time_value_rounder),
+                new Field\StaticList\StaticListFromWhereBuilder($list_from_where_builder),
+                new Field\UGroupList\UGroupListFromWhereBuilder(
+                    new UgroupLabelConverter(new ListFieldBindValueNormalizer(), new BaseLanguageFactory()),
+                    $list_from_where_builder,
+                ),
+                new Field\UserList\UserListFromWhereBuilder($list_from_where_builder),
+            ),
+            new Metadata\MetadataFromWhereBuilder(
+                new Metadata\Semantic\Title\TitleFromWhereBuilder($db),
+                new Metadata\Semantic\Description\DescriptionFromWhereBuilder($db),
+                new Metadata\Semantic\Status\StatusFromWhereBuilder(),
+                new Metadata\Semantic\AssignedTo\AssignedToFromWhereBuilder($this->user_manager),
+                new Metadata\AlwaysThereField\Date\DateFromWhereBuilder($date_time_value_rounder),
+                new Metadata\AlwaysThereField\Users\UsersFromWhereBuilder($this->user_manager),
+                new Metadata\AlwaysThereField\ArtifactId\ArtifactIdFromWhereBuilder(),
+                $form_element_factory,
+            ),
+        );
+    }
+
     /**
      * Update a cross tracker report
      *
@@ -433,18 +331,18 @@ class CrossTrackerReportsResource extends AuthenticatedResource
      * @status 201
      * @access hybrid
      *
-     * @return CrossTrackerReportRepresentation
      *
      * @throws RestException 400
      * @throws RestException 404
      */
-    protected function put($id, array $trackers_id, $expert_query = '')
+    protected function put(int $id, array $trackers_id, string $expert_query = ''): CrossTrackerReportRepresentation
     {
         $this->sendAllowHeaders();
 
         $current_user = $this->user_manager->getCurrentUser();
         try {
-            $trackers = $this->tracker_extractor->extractTrackers($trackers_id);
+            $tracker_extractor = new TrackerReportExtractor(TrackerFactory::instance());
+            $trackers          = $tracker_extractor->extractTrackers($trackers_id);
 
             $this->checkQueryIsValid($trackers, $expert_query, $current_user);
 
@@ -467,20 +365,23 @@ class CrossTrackerReportsResource extends AuthenticatedResource
 
     /**
      * @param Tracker[] $trackers
-     * @param $expert_query
      * @throws RestException
      */
-    private function checkQueryIsValid(array $trackers, $expert_query, PFUser $user)
+    private function checkQueryIsValid(array $trackers, string $expert_query, PFUser $user)
     {
         if ($expert_query === '') {
             return;
         }
 
         try {
-            $this->validator->validateExpertQuery(
+            $this->getExpertQueryValidator()->validateExpertQuery(
                 $expert_query,
-                new InvalidSearchablesCollectionBuilder($this->invalid_comparisons_collector, $trackers, $user),
-                new InvalidSelectablesCollectionBuilder($this->invalid_selectables_collector, $trackers, $user),
+                new InvalidSearchablesCollectionBuilder($this->getInvalidComparisonsCollector(), $trackers, $user),
+                new InvalidSelectablesCollectionBuilder(
+                    new InvalidSelectablesCollectorVisitor($this->getDuckTypedFieldChecker()),
+                    $trackers,
+                    $user
+                ),
             );
         } catch (SearchablesDoNotExistException $exception) {
             throw new RestException(400, $exception->getMessage());
@@ -495,7 +396,7 @@ class CrossTrackerReportsResource extends AuthenticatedResource
         }
     }
 
-    private function sendAllowHeaders()
+    private function sendAllowHeaders(): void
     {
         Header::allowOptionsGetPut();
     }
@@ -505,43 +406,49 @@ class CrossTrackerReportsResource extends AuthenticatedResource
         return CrossTrackerReportRepresentation::fromReport($report, $user);
     }
 
-    private function sendPaginationHeaders($limit, $offset, $size)
+    private function sendPaginationHeaders($limit, $offset, $size): void
     {
         Header::sendPaginationHeaders($limit, $offset, $size, self::MAX_LIMIT);
     }
 
     /**
-     * @param                    $query
      *
-     * @return array
+     * @return Tracker[]
      * @throws RestException 400
      *
      */
-    private function getTrackersFromRoute($query, CrossTrackerReport $report)
-    {
-        $query = trim($query);
-        if (empty($query)) {
+    private function getTrackersFromRoute(
+        ?string $query,
+        CrossTrackerReport $report,
+        QueryParameterParser $query_parser,
+    ): array {
+        if ($query === null || $query === '') {
             return $report->getTrackers();
         }
 
+        $query = trim($query);
+
         try {
-            $trackers_id = $this->query_parser->getArrayOfInt($query, 'trackers_id');
+            $trackers_id = $query_parser->getArrayOfInt($query, 'trackers_id');
         } catch (QueryParameterException $exception) {
             throw new RestException(400, $exception->getMessage());
         }
-
-        return $this->tracker_extractor->extractTrackers($trackers_id);
+        $tracker_extractor = new TrackerReportExtractor(TrackerFactory::instance());
+        return $tracker_extractor->extractTrackers($trackers_id);
     }
 
-    private function getExpertQueryFromRoute($query_parameter, CrossTrackerReport $report)
-    {
-        $query_parameter = trim($query_parameter);
-        if (empty($query_parameter)) {
+    private function getExpertQueryFromRoute(
+        ?string $query_parameter,
+        CrossTrackerReport $report,
+        QueryParameterParser $query_parser,
+    ): string {
+        if ($query_parameter === null || $query_parameter === '') {
             return $report->getExpertQuery();
         }
+        $query_parameter = trim($query_parameter);
 
         try {
-            return $this->query_parser->getString($query_parameter, 'expert_query');
+            return $query_parser->getString($query_parameter, 'expert_query');
         } catch (QueryParameterException $exception) {
             throw new RestException(400, $exception->getMessage());
         }
@@ -575,10 +482,106 @@ class CrossTrackerReportsResource extends AuthenticatedResource
      */
     private function getReport(int $id): CrossTrackerReport
     {
-        $report       = $this->report_factory->getById($id);
+        $report_factory = new CrossTrackerReportFactory(
+            new CrossTrackerReportDao(),
+            TrackerFactory::instance()
+        );
+
+        $report       = $report_factory->getById($id);
         $current_user = $this->user_manager->getCurrentUser();
         $this->getUserIsAllowedToSeeReportChecker()->checkUserIsAllowedToSeeReport($current_user, $report);
 
         return $report;
+    }
+
+    private function getDuckTypedFieldChecker(): DuckTypedFieldChecker
+    {
+        $form_element_factory             = Tracker_FormElementFactory::instance();
+        $list_field_bind_value_normalizer = new ListFieldBindValueNormalizer();
+        $ugroup_label_converter           = new UgroupLabelConverter(
+            $list_field_bind_value_normalizer,
+            new \BaseLanguageFactory()
+        );
+        $bind_labels_extractor            = new CollectionOfNormalizedBindLabelsExtractor(
+            $list_field_bind_value_normalizer,
+            $ugroup_label_converter
+        );
+
+        return new DuckTypedFieldChecker(
+            $form_element_factory,
+            $form_element_factory,
+            new InvalidFieldChecker(
+                new FloatFieldChecker(),
+                new IntegerFieldChecker(),
+                new TextFieldChecker(),
+                new DateFieldChecker(),
+                new FileFieldChecker(),
+                new ListFieldChecker(
+                    $list_field_bind_value_normalizer,
+                    $bind_labels_extractor,
+                    $ugroup_label_converter
+                ),
+                new ListFieldChecker(
+                    $list_field_bind_value_normalizer,
+                    new CollectionOfNormalizedBindLabelsExtractorForOpenList(
+                        $bind_labels_extractor,
+                        new OpenListValueDao(),
+                        $list_field_bind_value_normalizer,
+                    ),
+                    $ugroup_label_converter
+                ),
+                new ArtifactSubmitterChecker($this->user_manager),
+                true,
+            ),
+            TrackersPermissionsRetriever::build(),
+        );
+    }
+
+    private function getExpertQueryValidator(): ExpertQueryValidator
+    {
+        $report_config = new TrackerReportConfig(
+            new TrackerReportConfigDao()
+        );
+
+        $parser = new ParserCacheProxy(new Parser());
+
+        return new ExpertQueryValidator(
+            $parser,
+            new SizeValidatorVisitor($report_config->getExpertQueryLimit())
+        );
+    }
+
+    private function getInvalidComparisonsCollector(): InvalidTermCollectorVisitor
+    {
+        return new InvalidTermCollectorVisitor(
+            new InvalidSearchableCollectorVisitor(
+                new MetadataChecker(
+                    new MetadataUsageChecker(
+                        Tracker_FormElementFactory::instance(),
+                        new Tracker_Semantic_TitleDao(),
+                        new Tracker_Semantic_DescriptionDao(),
+                        new Tracker_Semantic_StatusDao(),
+                        new Tracker_Semantic_ContributorDao()
+                    ),
+                    new InvalidMetadataChecker(
+                        new TextSemanticChecker(),
+                        new StatusChecker(),
+                        new AssignedToChecker($this->user_manager),
+                        new \Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata\ArtifactSubmitterChecker(
+                            $this->user_manager
+                        ),
+                        new SubmissionDateChecker(),
+                        new ArtifactIdMetadataChecker(),
+                    )
+                ),
+                $this->getDuckTypedFieldChecker(),
+            ),
+            new ArtifactLinkTypeChecker(
+                new TypePresenterFactory(
+                    new TypeDao(),
+                    new ArtifactLinksUsageDao(),
+                ),
+            )
+        );
     }
 }
