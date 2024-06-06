@@ -32,6 +32,12 @@ use Tuleap\Artidoc\Document\ArtidocDao;
 use Tuleap\Artidoc\Document\ArtidocDocument;
 use Tuleap\Artidoc\Document\ArtidocRetriever;
 use Tuleap\Artidoc\Document\DocumentServiceFromAllowedProjectRetriever;
+use Tuleap\Artidoc\Document\Tracker\NoSemanticDescriptionFault;
+use Tuleap\Artidoc\Document\Tracker\NoSemanticTitleFault;
+use Tuleap\Artidoc\Document\Tracker\SemanticTitleIsNotAStringFault;
+use Tuleap\Artidoc\Document\Tracker\SuitableTrackerForDocumentChecker;
+use Tuleap\Artidoc\Document\Tracker\TooManyRequiredFieldsFault;
+use Tuleap\Artidoc\Document\Tracker\TrackerNotFoundFault;
 use Tuleap\DB\DatabaseUUIDV7Factory;
 use Tuleap\Docman\ItemType\DoesItemHasExpectedTypeVisitor;
 use Tuleap\Docman\REST\v1\DocmanItemsEventAdder;
@@ -248,6 +254,22 @@ final class ArtidocResource extends AuthenticatedResource
                             400,
                             dgettext('tuleap-artidoc', "Given tracker cannot be found or you don't have access to it.")
                         ),
+                        $fault instanceof NoSemanticTitleFault => new I18NRestException(
+                            400,
+                            dgettext('tuleap-artidoc', 'Given tracker does not have a semantic title.')
+                        ),
+                        $fault instanceof NoSemanticDescriptionFault => new I18NRestException(
+                            400,
+                            dgettext('tuleap-artidoc', 'Given tracker does not have a semantic description.')
+                        ),
+                        $fault instanceof SemanticTitleIsNotAStringFault => new I18NRestException(
+                            400,
+                            dgettext('tuleap-artidoc', 'The semantic title should be a string field.')
+                        ),
+                        $fault instanceof TooManyRequiredFieldsFault => new I18NRestException(
+                            400,
+                            dgettext('tuleap-artidoc', 'There cannot be other required fields than title or description.')
+                        ),
                         $fault instanceof UserCannotWriteDocumentFault => new I18NRestException(
                             403,
                             dgettext('tuleap-artidoc', "You don't have permission to write the document.")
@@ -334,6 +356,7 @@ final class ArtidocResource extends AuthenticatedResource
             $retriever,
             $dao,
             \TrackerFactory::instance(),
+            new SuitableTrackerForDocumentChecker(\Tracker_FormElementFactory::instance()),
         );
     }
 }

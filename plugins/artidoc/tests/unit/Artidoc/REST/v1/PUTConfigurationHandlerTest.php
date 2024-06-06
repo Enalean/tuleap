@@ -27,6 +27,7 @@ use Tuleap\Artidoc\Document\ArtidocDocument;
 use Tuleap\Artidoc\Document\ArtidocDocumentInformation;
 use Tuleap\Artidoc\Stubs\Document\RetrieveArtidocStub;
 use Tuleap\Artidoc\Stubs\Document\SaveConfiguredTrackerStub;
+use Tuleap\Artidoc\Stubs\Document\Tracker\CheckTrackerIsSuitableForDocumentStub;
 use Tuleap\Docman\ServiceDocman;
 use Tuleap\NeverThrow\Result;
 use Tuleap\Test\Builders\UserTestBuilder;
@@ -61,6 +62,11 @@ final class PUTConfigurationHandlerTest extends TestCase
 
         $this->permissions_manager->method('userCanWrite')->willReturn(true);
 
+        $tracker = TrackerTestBuilder::aTracker()
+            ->withUserCanView(true)
+            ->withId(self::TRACKER_ID)
+            ->build();
+
         $handler = new PUTConfigurationHandler(
             RetrieveArtidocStub::withDocument(
                 new ArtidocDocumentInformation(
@@ -69,12 +75,8 @@ final class PUTConfigurationHandlerTest extends TestCase
                 ),
             ),
             $saver,
-            RetrieveTrackerStub::withTracker(
-                TrackerTestBuilder::aTracker()
-                    ->withUserCanView(true)
-                    ->withId(self::TRACKER_ID)
-                    ->build(),
-            ),
+            RetrieveTrackerStub::withTracker($tracker),
+            CheckTrackerIsSuitableForDocumentStub::withSuitableTrackers($tracker),
         );
 
         $result = $handler->handle(
@@ -103,6 +105,7 @@ final class PUTConfigurationHandlerTest extends TestCase
                     ->withId(self::TRACKER_ID)
                     ->build(),
             ),
+            CheckTrackerIsSuitableForDocumentStub::shouldNotBeCalled(),
         );
 
         $result = $handler->handle(
@@ -135,6 +138,7 @@ final class PUTConfigurationHandlerTest extends TestCase
                     ->withId(self::TRACKER_ID)
                     ->build(),
             ),
+            CheckTrackerIsSuitableForDocumentStub::shouldNotBeCalled(),
         );
 
         $result = $handler->handle(
@@ -163,6 +167,7 @@ final class PUTConfigurationHandlerTest extends TestCase
             ),
             $saver,
             RetrieveTrackerStub::withoutTracker(),
+            CheckTrackerIsSuitableForDocumentStub::shouldNotBeCalled(),
         );
 
         $result = $handler->handle(
@@ -175,7 +180,7 @@ final class PUTConfigurationHandlerTest extends TestCase
         self::assertFalse($saver->isSaved(1));
     }
 
-    public function testFaultWhenTrackerIsDeleted(): void
+    public function testFaultWhenTrackerIsNotSuitable(): void
     {
         $saver = SaveConfiguredTrackerStub::build();
 
@@ -192,42 +197,10 @@ final class PUTConfigurationHandlerTest extends TestCase
             RetrieveTrackerStub::withTracker(
                 TrackerTestBuilder::aTracker()
                     ->withUserCanView(true)
-                    ->withDeletionDate(1)
                     ->withId(self::TRACKER_ID)
                     ->build(),
             ),
-        );
-
-        $result = $handler->handle(
-            1,
-            new ArtidocPUTConfigurationRepresentation([self::TRACKER_ID]),
-            $this->user,
-        );
-
-        self::assertTrue(Result::isErr($result));
-        self::assertFalse($saver->isSaved(1));
-    }
-
-    public function testFaultWhenTrackerIsNotViewableByUser(): void
-    {
-        $saver = SaveConfiguredTrackerStub::build();
-
-        $this->permissions_manager->method('userCanWrite')->willReturn(true);
-
-        $handler = new PUTConfigurationHandler(
-            RetrieveArtidocStub::withDocument(
-                new ArtidocDocumentInformation(
-                    new ArtidocDocument(['item_id' => 1, 'group_id' => self::PROJECT_ID]),
-                    $this->createMock(ServiceDocman::class),
-                ),
-            ),
-            $saver,
-            RetrieveTrackerStub::withTracker(
-                TrackerTestBuilder::aTracker()
-                    ->withUserCanView(false)
-                    ->withId(self::TRACKER_ID)
-                    ->build(),
-            ),
+            CheckTrackerIsSuitableForDocumentStub::withoutSuitableTracker(),
         );
 
         $result = $handler->handle(

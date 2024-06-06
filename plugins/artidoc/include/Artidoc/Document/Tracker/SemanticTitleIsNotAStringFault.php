@@ -20,17 +20,18 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Artidoc\REST\v1;
+namespace Tuleap\Artidoc\Document\Tracker;
 
+use Tuleap\Artidoc\Document\ArtidocDocument;
 use Tuleap\NeverThrow\Fault;
 
 /**
  * @psalm-immutable
  */
-final readonly class TrackerNotFoundFault extends Fault
+final readonly class SemanticTitleIsNotAStringFault extends Fault
 {
-    public static function build(): Fault
+    public static function forDocument(ArtidocDocument $document): Fault
     {
-        return new self('Tracker not found');
+        return new self("The tracker semantic title for artidoc #{$document->getId()} is not a string");
     }
 }

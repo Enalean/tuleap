@@ -27,9 +27,21 @@ msgstr "Documents"
 msgid "Given tracker cannot be found or you don't have access to it."
 msgstr "Le tracker fourni n'existe pas ou vous n'y avez pas accès."
 
+msgid "Given tracker does not have a semantic description."
+msgstr "Le tracker fourni n'a pas de sémantique description."
+
+msgid "Given tracker does not have a semantic title."
+msgstr "Le tracker fourni n'a pas de sémantique titre."
+
 msgid "Parent folders are not displayed to not clutter the interface"
 msgstr ""
 "Les dossiers parents ne sont pas affichés pour ne pas encombrer l'interface"
+
+msgid "The semantic title should be a string field."
+msgstr "La sémantique titre doit être un champ chaîne de caractères."
+
+msgid "There cannot be other required fields than title or description."
+msgstr "Il ne peut y avoir de champs requis autres que titre ou description."
 
 msgid ""
 "Unable to set the sections of the document, at least one of the submitted "
