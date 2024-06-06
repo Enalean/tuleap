@@ -626,9 +626,6 @@ msgstr "가입 요청"
 msgid "Ask to join this project"
 msgstr "이 프로젝트에 가입하도록 요청"
 
-msgid "Asynchronous workers must be available."
-msgstr "비동기 작업자를 사용할 수 있어야 합니다."
-
 msgid "Authenticated users (Registered + Restricted) label"
 msgstr "인증된 사용자 (등록됨 + 제한됨) 레이블"
 

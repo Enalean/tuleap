@@ -101,7 +101,6 @@ use Tuleap\Project\Status\CannotDeletedDefaultAdminProjectException;
 use Tuleap\Project\Status\SwitchingBackToPendingException;
 use Tuleap\Project\XML\InvalidXMLContentFault;
 use Tuleap\Project\XML\XMLFileContentRetriever;
-use Tuleap\Queue\WorkerAvailability;
 use Tuleap\Reference\REST\ReferenceRepresentationBuilder;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Event\ProjectGetSvn;
@@ -329,7 +328,7 @@ class ProjectResource extends AuthenticatedResource
                 ),
                 $this->getBackendLogger(),
                 $this->getURLVerification(),
-                new CustomProjectArchive(new WorkerAvailability()),
+                new CustomProjectArchive(),
             );
 
             $creation_data = $creation_data_post_project_builder->buildProjectCreationDataFromPOSTRepresentation(

@@ -29,12 +29,9 @@ use Tuleap\ProgramManagement\Adapter\JSON\PendingIterationUpdateRepresentation;
 use Tuleap\ProgramManagement\Domain\Events\IterationUpdateEvent;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration\IterationUpdate;
 use Tuleap\ProgramManagement\Tests\Builder\IterationUpdateBuilder;
-use Tuleap\ProgramManagement\Tests\Stub\BuildIterationUpdateProcessorStub;
 use Tuleap\ProgramManagement\Tests\Stub\ProcessIterationUpdateStub;
-use Tuleap\Queue\NoQueueSystemAvailableException;
 use Tuleap\Queue\PersistentQueue;
 use Tuleap\Queue\QueueFactory;
-use Tuleap\Queue\QueueServerConnectionException;
 
 final class IterationUpdateDispatcherTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -58,15 +55,11 @@ final class IterationUpdateDispatcherTest extends \Tuleap\Test\PHPUnit\TestCase
     private function getIterationUpdateDispatcher(): IterationUpdateDispatcher
     {
         return new IterationUpdateDispatcher(
-            $this->logger,
-            BuildIterationUpdateProcessorStub::withProcessor(
-                $this->update_processor
-            ),
             $this->queue_factory
         );
     }
 
-    public function testItProcessesAsynchronousUpdateByDefault(): void
+    public function testItProcessesUpdate(): void
     {
         $queue = $this->createMock(PersistentQueue::class);
         $queue->expects(self::once())
@@ -81,28 +74,5 @@ final class IterationUpdateDispatcherTest extends \Tuleap\Test\PHPUnit\TestCase
 
         self::assertSame(0, $this->update_processor->getCallCount());
         self::assertFalse($this->logger->hasErrorRecords());
-    }
-
-    public function testItProcessesSynchronousUpdateIfThereIsNoQueueSystemAvailable(): void
-    {
-        $this->queue_factory->method('getPersistentQueue')->willThrowException(new NoQueueSystemAvailableException());
-
-        $this->getIterationUpdateDispatcher()->dispatchUpdate($this->iteration_update);
-
-        self::assertSame(1, $this->update_processor->getCallCount());
-        self::assertTrue($this->logger->hasErrorRecords());
-    }
-
-    public function testItProcessesSynchronousUpdateIfThereIsARedisServerConnectionIssue(): void
-    {
-        $queue = $this->createMock(PersistentQueue::class);
-        $queue->method('pushSinglePersistentMessage')->willThrowException(new QueueServerConnectionException());
-
-        $this->queue_factory->method('getPersistentQueue')->willReturn($queue);
-
-        $this->getIterationUpdateDispatcher()->dispatchUpdate($this->iteration_update);
-
-        self::assertSame(1, $this->update_processor->getCallCount());
-        self::assertTrue($this->logger->hasErrorRecords());
     }
 }

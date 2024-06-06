@@ -23,39 +23,24 @@ declare(strict_types=1);
 namespace Tuleap\PullRequest\Notification;
 
 use Psr\EventDispatcher\EventDispatcherInterface;
-use Tuleap\Queue\IsAsyncTaskProcessingAvailable;
-use Tuleap\Queue\NoQueueSystemAvailableException;
 use Tuleap\Queue\QueueFactory;
 use Tuleap\Queue\Worker;
 
-final class EventSubjectToNotificationAsynchronousRedisDispatcher implements EventDispatcherInterface
+final readonly class EventSubjectToNotificationAsynchronousQueueDispatcher implements EventDispatcherInterface
 {
     public const TOPIC = 'tuleap.pullrequest.notification';
 
-    /**
-     * @var QueueFactory
-     */
-    private $queue_factory;
-
-    public function __construct(QueueFactory $queue_factory, private IsAsyncTaskProcessingAvailable $worker_availability)
+    public function __construct(private QueueFactory $queue_factory)
     {
-        $this->queue_factory = $queue_factory;
     }
 
-    /**
-     * @throws NoQueueSystemAvailableException
-     */
     public function dispatch(object $event): object
     {
         if (! $event instanceof EventSubjectToNotification) {
             return $event;
         }
 
-        if (! $this->worker_availability->canProcessAsyncTasks()) {
-            throw new NoWorkerAvailableToProcessTheQueueException();
-        }
-
-        $queue = $this->queue_factory->getPersistentQueue(Worker::EVENT_QUEUE_NAME, QueueFactory::REDIS);
+        $queue = $this->queue_factory->getPersistentQueue(Worker::EVENT_QUEUE_NAME);
         $queue->pushSinglePersistentMessage(
             self::TOPIC,
             [

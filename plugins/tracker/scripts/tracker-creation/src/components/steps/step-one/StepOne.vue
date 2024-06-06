@@ -41,7 +41,7 @@
                 <tracker-from-another-project-card />
                 <tracker-xml-file-card />
                 <tracker-empty-card />
-                <tracker-from-jira-card v-if="display_jira_importer" />
+                <tracker-from-jira-card />
             </div>
         </template>
     </step-layout>
@@ -84,9 +84,6 @@ export default class StepOne extends Vue {
 
     @State
     readonly project_templates!: Tracker[];
-
-    @State
-    readonly display_jira_importer!: boolean;
 
     mounted(): void {
         this.setSlugifyShortnameMode(true);

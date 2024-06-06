@@ -39,7 +39,6 @@ export interface State {
     default_tracker_color: string;
     company_name: string;
     from_jira_data: JiraImportData;
-    display_jira_importer: boolean;
     are_there_tv3: boolean;
     project_unix_name: string;
 }

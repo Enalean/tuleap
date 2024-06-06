@@ -21,60 +21,26 @@
 
 namespace Tuleap\Queue;
 
-use ForgeConfig;
 use Psr\Log\LoggerInterface;
-use Tuleap\DB\CheckThereIsAnOngoingTransaction;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Queue\DB\DBPersistentQueue;
 use Tuleap\Queue\DB\DBPersistentQueueDAO;
-use Tuleap\Queue\Redis\BackOffDelayFailedMessage;
-use Tuleap\Redis\ClientFactory as RedisClientFactory;
 
 class QueueFactory
 {
-    public const REDIS = 'redis';
-
     public function __construct(
         private readonly LoggerInterface $logger,
-        private readonly CheckThereIsAnOngoingTransaction $transaction_checker,
     ) {
     }
 
-    /**
-     * @throws NoQueueSystemAvailableException
-     */
-    public function getPersistentQueue(string $queue_name, string $favor = ''): PersistentQueue
+    public function getPersistentQueue(string $queue_name): PersistentQueue
     {
-        if ((int) ForgeConfig::getFeatureFlag(DBPersistentQueue::FEATURE_FLAG) === 1) {
-            return new DBPersistentQueue(
-                $queue_name,
-                $this->logger,
-                new DBPersistentQueueDAO(),
-                new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection()),
-            );
-        }
-        if (RedisClientFactory::canClientBeBuiltFromForgeConfig()) {
-            return new PersistentQueueNoTransactionWrapper(
-                new Redis\RedisPersistentQueue(
-                    $this->logger,
-                    new BackOffDelayFailedMessage(
-                        $this->logger,
-                        /**
-                         * @psalm-param positive-int|0 $time_to_sleep
-                         */
-                        static function (int $time_to_sleep): void {
-                            sleep($time_to_sleep);
-                        }
-                    ),
-                    $queue_name,
-                ),
-                $this->transaction_checker
-            );
-        }
-        if ($favor === self::REDIS) {
-            throw new NoQueueSystemAvailableException();
-        }
-        return new Noop\PersistentQueue();
+        return new DBPersistentQueue(
+            $queue_name,
+            $this->logger,
+            new DBPersistentQueueDAO(),
+            new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection()),
+        );
     }
 }

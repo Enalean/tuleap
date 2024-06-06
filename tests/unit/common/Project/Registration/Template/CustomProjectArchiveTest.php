@@ -24,7 +24,6 @@ namespace Tuleap\Project\Registration\Template;
 
 use ForgeConfig;
 use Tuleap\ForgeConfigSandbox;
-use Tuleap\Queue\IsAsyncTaskProcessingAvailable;
 use Tuleap\Test\PHPUnit\TestCase;
 
 final class CustomProjectArchiveTest extends TestCase
@@ -35,14 +34,7 @@ final class CustomProjectArchiveTest extends TestCase
     {
         ForgeConfig::set(CustomProjectArchive::CONFIG_KEY, '0');
 
-        $verifier = new CustomProjectArchive(
-            new class implements IsAsyncTaskProcessingAvailable {
-                public function canProcessAsyncTasks(): bool
-                {
-                    return true;
-                }
-            }
-        );
+        $verifier = new CustomProjectArchive();
 
         self::assertTrue($verifier->canCreateFromCustomArchive());
     }
@@ -51,28 +43,7 @@ final class CustomProjectArchiveTest extends TestCase
     {
         ForgeConfig::set(CustomProjectArchive::CONFIG_KEY, '1');
 
-        $verifier = new CustomProjectArchive(
-            new class implements IsAsyncTaskProcessingAvailable {
-                public function canProcessAsyncTasks(): bool
-                {
-                    return true;
-                }
-            }
-        );
-
-        self::assertFalse($verifier->canCreateFromCustomArchive());
-    }
-
-    public function testCreateProjectFromCustomTemplateWhenNoWorkerIsAvailable(): void
-    {
-        $verifier = new CustomProjectArchive(
-            new class implements IsAsyncTaskProcessingAvailable {
-                public function canProcessAsyncTasks(): bool
-                {
-                    return false;
-                }
-            }
-        );
+        $verifier = new CustomProjectArchive();
 
         self::assertFalse($verifier->canCreateFromCustomArchive());
     }

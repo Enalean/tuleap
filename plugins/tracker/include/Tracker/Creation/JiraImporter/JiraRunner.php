@@ -29,7 +29,6 @@ use Tuleap\Cryptography\Exception\CannotPerformIOOperationException;
 use Tuleap\Cryptography\Exception\InvalidCiphertextException;
 use Tuleap\Cryptography\KeyFactory;
 use Tuleap\Cryptography\Symmetric\SymmetricCrypto;
-use Tuleap\Queue\IsAsyncTaskProcessingAvailable;
 use Tuleap\Queue\QueueFactory;
 use Tuleap\Queue\Worker;
 use Tuleap\Tracker\Creation\JiraImporter\Import\ImportNotifier\JiraErrorImportNotifier;
@@ -46,7 +45,6 @@ class JiraRunner
     public function __construct(
         private LoggerInterface $logger,
         private QueueFactory $queue_factory,
-        private IsAsyncTaskProcessingAvailable $worker_availability,
         private KeyFactory $key_factory,
         private FromJiraTrackerCreator $tracker_creator,
         private PendingJiraImportDao $dao,
@@ -58,48 +56,20 @@ class JiraRunner
     ) {
     }
 
-    public function canBeProcessedAsynchronously(): bool
-    {
-        if (! $this->worker_availability->canProcessAsyncTasks()) {
-            return false;
-        }
-
-        try {
-            $this->getPersistentQueue();
-            return true;
-        } catch (\Exception $exception) {
-            return false;
-        }
-    }
-
     public function queueJiraImportEvent(int $pending_jira_import_id): void
     {
-        try {
-            $queue = $this->getPersistentQueue();
-            $queue->pushSinglePersistentMessage(
-                AsynchronousJiraRunner::TOPIC,
-                [
-                    'pending_jira_import_id' => $pending_jira_import_id,
-                ]
-            );
-        } catch (\Exception $exception) {
-            $this->logger->error("Unable to queue notification for Jira import #{$pending_jira_import_id}.");
-        }
+        $queue = $this->getPersistentQueue();
+        $queue->pushSinglePersistentMessage(
+            AsynchronousJiraRunner::TOPIC,
+            [
+                'pending_jira_import_id' => $pending_jira_import_id,
+            ]
+        );
     }
 
-    /**
-     * @throws \Tuleap\Queue\NoQueueSystemAvailableException
-     * @throws NoNoopPersistentQueueForJiraImport
-     * @throws \RuntimeException
-     */
     private function getPersistentQueue(): \Tuleap\Queue\PersistentQueue
     {
-        $persistent_queue = $this->queue_factory->getPersistentQueue(Worker::EVENT_QUEUE_NAME, QueueFactory::REDIS);
-        if ($persistent_queue instanceof \Tuleap\Queue\Noop\PersistentQueue) {
-            throw new NoNoopPersistentQueueForJiraImport();
-        }
-
-        return $persistent_queue;
+        return $this->queue_factory->getPersistentQueue(Worker::EVENT_QUEUE_NAME);
     }
 
     public function processAsyncJiraImport(PendingJiraImport $pending_import): void

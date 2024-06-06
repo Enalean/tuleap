@@ -22,17 +22,12 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation;
 
-use Psr\Log\LoggerInterface;
 use Tuleap\ProgramManagement\Adapter\JSON\PendingProgramIncrementUpdateRepresentation;
 use Tuleap\ProgramManagement\Domain\Events\ProgramIncrementUpdateEvent;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\BuildIterationCreationProcessor;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\BuildProgramIncrementUpdateProcessor;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\DispatchProgramIncrementUpdate;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\IterationCreation;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementUpdate;
-use Tuleap\Queue\NoQueueSystemAvailableException;
 use Tuleap\Queue\QueueFactory;
-use Tuleap\Queue\QueueServerConnectionException;
 use Tuleap\Queue\Worker;
 
 /**
@@ -41,44 +36,17 @@ use Tuleap\Queue\Worker;
  * will modify the mirrored program increments (for artifact links). If we do them in parallel,
  * due to the way changesets are stored, we will lose modifications.
  */
-final class ProgramIncrementUpdateDispatcher implements DispatchProgramIncrementUpdate
+final readonly class ProgramIncrementUpdateDispatcher implements DispatchProgramIncrementUpdate
 {
     public function __construct(
-        private LoggerInterface $logger,
         private QueueFactory $queue_factory,
-        private BuildProgramIncrementUpdateProcessor $update_processor_builder,
-        private BuildIterationCreationProcessor $iteration_processor_builder,
     ) {
     }
 
     public function dispatchUpdate(ProgramIncrementUpdate $update, IterationCreation ...$creations): void
     {
         $representation = PendingProgramIncrementUpdateRepresentation::fromUpdateAndCreations($update, ...$creations);
-        try {
-            $queue = $this->queue_factory->getPersistentQueue(Worker::EVENT_QUEUE_NAME, QueueFactory::REDIS);
-            $queue->pushSinglePersistentMessage(ProgramIncrementUpdateEvent::TOPIC, $representation);
-        } catch (NoQueueSystemAvailableException | QueueServerConnectionException $exception) {
-            $this->processUpdateSynchronously($exception, $update, ...$creations);
-        }
-    }
-
-    private function processUpdateSynchronously(
-        \Exception $exception,
-        ProgramIncrementUpdate $update,
-        IterationCreation ...$creations,
-    ): void {
-        $this->logger->error(
-            sprintf(
-                'Unable to queue program increment mirrors update for program increment #%d',
-                $update->getProgramIncrement()->getId()
-            ),
-            ['exception' => $exception]
-        );
-        $update_processor = $this->update_processor_builder->getProcessor();
-        $update_processor->processUpdate($update);
-        $iteration_processor = $this->iteration_processor_builder->getProcessor();
-        foreach ($creations as $iteration_creation) {
-            $iteration_processor->processCreation($iteration_creation);
-        }
+        $queue          = $this->queue_factory->getPersistentQueue(Worker::EVENT_QUEUE_NAME);
+        $queue->pushSinglePersistentMessage(ProgramIncrementUpdateEvent::TOPIC, $representation);
     }
 }

@@ -20,7 +20,6 @@
 
 namespace Tuleap\Tracker\Artifact\ArtifactsDeletion;
 
-use Exception;
 use PFUser;
 use Psr\Log\LoggerInterface;
 use Tuleap\Queue\IsAsyncTaskProcessingAvailable;
@@ -86,21 +85,16 @@ class AsynchronousArtifactsDeletionActionsRunner
             return;
         }
 
-        try {
-            $queue = $this->queue_factory->getPersistentQueue(Worker::EVENT_QUEUE_NAME, QueueFactory::REDIS);
-            $queue->pushSinglePersistentMessage(
-                self::TOPIC,
-                [
-                    'artifact_id' => $artifact->getId(),
-                    'user_id' => (int) $user->getId(),
-                    'source_project_id' => $context->getSourceProjectId(),
-                    'destination_project_id' => $context->getDestinationProjectId(),
-                    'context' => $context->getType(),
-                ]
-            );
-        } catch (Exception $exception) {
-            $this->logger->error("Unable to queue deletion for {$artifact->getId()}");
-            $this->processArchiveAndArtifactDeletion($artifact, $user, $context);
-        }
+        $queue = $this->queue_factory->getPersistentQueue(Worker::EVENT_QUEUE_NAME);
+        $queue->pushSinglePersistentMessage(
+            self::TOPIC,
+            [
+                'artifact_id' => $artifact->getId(),
+                'user_id' => (int) $user->getId(),
+                'source_project_id' => $context->getSourceProjectId(),
+                'destination_project_id' => $context->getDestinationProjectId(),
+                'context' => $context->getType(),
+            ]
+        );
     }
 }

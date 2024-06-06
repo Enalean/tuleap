@@ -648,9 +648,6 @@ msgstr "Solicitar acesso"
 msgid "Ask to join this project"
 msgstr "Solicitar acesso a este projeto"
 
-msgid "Asynchronous workers must be available."
-msgstr "Robôs assíncronos precisam estar disponíveis."
-
 msgid "Authenticated users (Registered + Restricted) label"
 msgstr "Rótulo dos Usuários Autenticados (Registrados + Restritos)"
 

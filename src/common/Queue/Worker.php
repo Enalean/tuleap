@@ -28,7 +28,6 @@ use Log_ConsoleLogger;
 use ForgeConfig;
 use Exception;
 use Tuleap\DB\DBFactory;
-use Tuleap\DB\ThereIsAnOngoingTransactionChecker;
 use Tuleap\Queue\TaskWorker\TaskWorkerProcess;
 use Tuleap\Queue\TaskWorker\TaskWorkerTimedOutException;
 use Tuleap\System\DaemonLocker;
@@ -82,7 +81,7 @@ class Worker
     {
         $this->logger->info('Wait for messages');
 
-        $queue = (new QueueFactory($this->logger, new ThereIsAnOngoingTransactionChecker()))->getPersistentQueue(self::EVENT_QUEUE_NAME, QueueFactory::REDIS);
+        $queue = (new QueueFactory($this->logger))->getPersistentQueue(self::EVENT_QUEUE_NAME);
         $queue->listen($this->id, '*', function (WorkerEventContent $event): void {
             $task_worker = new TaskWorkerProcess(DBFactory::getMainTuleapDBConnection());
             $this->logger->info('Got message: ' . $event->event_name);

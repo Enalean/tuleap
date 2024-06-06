@@ -24,46 +24,22 @@ namespace Tuleap\Queue;
 
 use Tuleap\Config\InvalidConfigKeyValueException;
 use Tuleap\Config\ValueValidator;
-use Tuleap\Plugin\MandatoryAsyncWorkerSetupPluginInstallRequirement;
-use Tuleap\Plugin\RetrieveEnabledPlugins;
 
 final class NbBackendWorkersConfigValidator implements ValueValidator
 {
-    private function __construct(private readonly RetrieveEnabledPlugins $retrieve_enabled_plugins)
+    private function __construct()
     {
     }
 
     public static function buildSelf(): ValueValidator
     {
-        return self::buildWithPluginRetriever(\PluginManager::instance());
-    }
-
-    public static function buildWithPluginRetriever(RetrieveEnabledPlugins $retriever): self
-    {
-        return new self($retriever);
+        return new self();
     }
 
     public function checkIsValid(string $value): void
     {
-        if ((int) $value < 0) {
-            throw new InvalidConfigKeyValueException('Nb backend workers cannot be a negative number');
-        }
-
-        if ((int) $value > 0) {
-            return;
-        }
-
-        $plugins_that_need_workers = [];
-        foreach ($this->retrieve_enabled_plugins->getEnabledPlugins() as $plugin) {
-            foreach ($plugin->getInstallRequirements() as $install_requirement) {
-                if ($install_requirement instanceof MandatoryAsyncWorkerSetupPluginInstallRequirement) {
-                    $plugins_that_need_workers[] = $plugin->getName();
-                }
-            }
-        }
-
-        if (count($plugins_that_need_workers) > 0) {
-            throw new InvalidConfigKeyValueException('Nb backend workers cannot be 0, the following plugins need workers: ' . implode(', ', $plugins_that_need_workers));
+        if ((int) $value <= 0) {
+            throw new InvalidConfigKeyValueException('Nb backend workers must be at least 1');
         }
     }
 }

@@ -71,10 +71,6 @@ class TrackerCreationPresenter
     /**
      * @var bool
      */
-    public $display_jira_importer;
-    /**
-     * @var bool
-     */
     public $are_there_tv3;
 
     public function __construct(
@@ -85,7 +81,6 @@ class TrackerCreationPresenter
         array $tracker_colors,
         Project $current_project,
         \CSRFSynchronizerToken $csrf,
-        bool $display_jira_importer,
         bool $are_there_tv3,
     ) {
         $this->default_templates            = json_encode($default_templates, JSON_THROW_ON_ERROR);
@@ -102,7 +97,6 @@ class TrackerCreationPresenter
             ]
         );
         $this->company_name                 = (string) ForgeConfig::get('sys_org_name');
-        $this->display_jira_importer        = $display_jira_importer;
         $this->are_there_tv3                = $are_there_tv3;
     }
 }

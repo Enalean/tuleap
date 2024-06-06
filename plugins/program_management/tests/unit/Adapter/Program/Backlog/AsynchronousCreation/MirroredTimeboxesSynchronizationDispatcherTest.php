@@ -21,11 +21,9 @@
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation;
 
 use PHPUnit\Framework\MockObject\Stub;
-use ColinODell\PsrTestLogger\TestLogger;
 use Tuleap\ProgramManagement\Tests\Stub\CommandTeamSynchronizationStub;
 use Tuleap\Queue\PersistentQueue;
 use Tuleap\Queue\QueueFactory;
-use Tuleap\Queue\QueueServerConnectionException;
 
 class MirroredTimeboxesSynchronizationDispatcherTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -33,7 +31,6 @@ class MirroredTimeboxesSynchronizationDispatcherTest extends \Tuleap\Test\PHPUni
     private const TEAM_ID    = 123;
     private const USER_ID    = 456;
 
-    private TestLogger $logger;
     /**
      * @var Stub&QueueFactory
      */
@@ -42,7 +39,6 @@ class MirroredTimeboxesSynchronizationDispatcherTest extends \Tuleap\Test\PHPUni
 
     protected function setUp(): void
     {
-        $this->logger        = new TestLogger();
         $this->queue_factory = $this->createStub(QueueFactory::class);
 
         $this->command = CommandTeamSynchronizationStub::withProgramAndTeamIdsAndUserId(
@@ -55,7 +51,6 @@ class MirroredTimeboxesSynchronizationDispatcherTest extends \Tuleap\Test\PHPUni
     private function getDispatcher(): MirroredTimeboxesSynchronizationDispatcher
     {
         return new MirroredTimeboxesSynchronizationDispatcher(
-            $this->logger,
             $this->queue_factory,
         );
     }
@@ -77,22 +72,5 @@ class MirroredTimeboxesSynchronizationDispatcherTest extends \Tuleap\Test\PHPUni
             );
 
         $this->getDispatcher()->dispatchSynchronizationCommand($this->command);
-    }
-
-    public function testItLogsAnErrorWhenThereIsAProblemWithTheQueue(): void
-    {
-        $queue = $this->createStub(PersistentQueue::class);
-        $queue->method('pushSinglePersistentMessage')->willThrowException(
-            new QueueServerConnectionException('Because reasons')
-        );
-        $this->queue_factory->method('getPersistentQueue')->willReturn($queue);
-
-        $this->getDispatcher()->dispatchSynchronizationCommand($this->command);
-
-        self::assertTrue(
-            $this->logger->hasError(
-                'Unable to queue event tuleap.program_management.team.synchronize for team 123 of program 1: Because reasons',
-            )
-        );
     }
 }

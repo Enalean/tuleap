@@ -27,7 +27,6 @@ use GitRepositoryFactory;
 use ProjectManager;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use TemplateRendererFactory;
-use Tuleap\DB\ThereIsAnOngoingTransactionChecker;
 use Tuleap\Git\Permissions\AccessControlVerifier;
 use Tuleap\Git\Permissions\FineGrainedDao;
 use Tuleap\Git\Permissions\FineGrainedRetriever;
@@ -70,14 +69,13 @@ use Tuleap\PullRequest\StateStatus\PullRequestMergedEvent;
 use Tuleap\PullRequest\StateStatus\PullRequestMergedNotificationToProcessBuilder;
 use Tuleap\PullRequest\Timeline\Dao as TimelineDAO;
 use Tuleap\Queue\QueueFactory;
-use Tuleap\Queue\WorkerAvailability;
 use Tuleap\Queue\WorkerEvent;
 
 final class PullRequestNotificationSupport
 {
     public static function listen(WorkerEvent $event): void
     {
-        if ($event->getEventName() !== EventSubjectToNotificationAsynchronousRedisDispatcher::TOPIC) {
+        if ($event->getEventName() !== EventSubjectToNotificationAsynchronousQueueDispatcher::TOPIC) {
             return;
         }
 
@@ -486,13 +484,8 @@ final class PullRequestNotificationSupport
 
     public static function buildDispatcher(\Psr\Log\LoggerInterface $logger): EventDispatcherInterface
     {
-        return new EventDispatcherWithFallback(
-            $logger,
-            new EventSubjectToNotificationAsynchronousRedisDispatcher(
-                new QueueFactory($logger, new ThereIsAnOngoingTransactionChecker()),
-                new WorkerAvailability()
-            ),
-            self::buildSynchronousDispatcher()
+        return new EventSubjectToNotificationAsynchronousQueueDispatcher(
+            new QueueFactory($logger),
         );
     }
 }

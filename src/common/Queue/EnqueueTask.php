@@ -24,7 +24,6 @@ declare(strict_types=1);
 namespace Tuleap\Queue;
 
 use Psr\Log\LoggerInterface;
-use Tuleap\DB\ThereIsAnOngoingTransactionChecker;
 
 final class EnqueueTask implements EnqueueTaskInterface
 {
@@ -43,8 +42,8 @@ final class EnqueueTask implements EnqueueTaskInterface
     {
         try {
             $this->logger->info($event->getPreEnqueueMessage());
-            $queue_factory = new QueueFactory($this->logger, new ThereIsAnOngoingTransactionChecker());
-            $queue         = $queue_factory->getPersistentQueue(Worker::EVENT_QUEUE_NAME, QueueFactory::REDIS);
+            $queue_factory = new QueueFactory($this->logger);
+            $queue         = $queue_factory->getPersistentQueue(Worker::EVENT_QUEUE_NAME);
             $queue->pushSinglePersistentMessage($event->getTopic(), $event->getPayload());
         } catch (\Exception $exception) {
             $this->logger->error(

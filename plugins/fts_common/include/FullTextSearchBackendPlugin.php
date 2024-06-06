@@ -46,11 +46,6 @@ use Tuleap\Search\ItemToIndexBatchQueue;
 
 abstract class FullTextSearchBackendPlugin extends Plugin
 {
-    public function getInstallRequirements(): array
-    {
-        return [new \Tuleap\Plugin\MandatoryAsyncWorkerSetupPluginInstallRequirement(new \Tuleap\Queue\WorkerAvailability())];
-    }
-
     public function postEnable(): void
     {
         parent::postEnable();

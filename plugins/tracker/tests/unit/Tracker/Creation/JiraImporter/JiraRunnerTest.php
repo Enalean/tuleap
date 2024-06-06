@@ -32,12 +32,10 @@ use Tuleap\Cryptography\Exception\CannotPerformIOOperationException;
 use Tuleap\Cryptography\KeyFactory;
 use Tuleap\Cryptography\Symmetric\EncryptionKey;
 use Tuleap\Cryptography\Symmetric\SymmetricCrypto;
-use Tuleap\Queue\NoQueueSystemAvailableException;
 use Tuleap\Queue\PersistentQueue;
 use Tuleap\Queue\QueueFactory;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
-use Tuleap\Queue\WorkerAvailability;
 use Tuleap\Tracker\Creation\JiraImporter\Import\ImportNotifier\JiraErrorImportNotifier;
 use Tuleap\Tracker\Creation\JiraImporter\Import\ImportNotifier\JiraSuccessImportNotifier;
 use Tuleap\Tracker\Creation\JiraImporter\Import\User\JiraUserOnTuleapCache;
@@ -57,10 +55,6 @@ final class JiraRunnerTest extends \Tuleap\Test\PHPUnit\TestCase
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|QueueFactory
      */
     private $queue_factory;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|WorkerAvailability
-     */
-    private $worker_availability;
     /**
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|PendingJiraImportDao
      */
@@ -105,7 +99,6 @@ final class JiraRunnerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->logger                    = Mockery::mock(LoggerInterface::class);
         $this->queue_factory             = Mockery::mock(QueueFactory::class);
-        $this->worker_availability       = Mockery::mock(WorkerAvailability::class);
         $this->dao                       = Mockery::mock(PendingJiraImportDao::class);
         $this->key_factory               = Mockery::mock(KeyFactory::class);
         $this->creator                   = Mockery::mock(FromJiraTrackerCreator::class);
@@ -124,7 +117,6 @@ final class JiraRunnerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->runner = new JiraRunner(
             $this->logger,
             $this->queue_factory,
-            $this->worker_availability,
             $this->key_factory,
             $this->creator,
             $this->dao,
@@ -141,7 +133,7 @@ final class JiraRunnerTest extends \Tuleap\Test\PHPUnit\TestCase
         $persistent_queue = Mockery::mock(PersistentQueue::class);
         $this->queue_factory
             ->shouldReceive('getPersistentQueue')
-            ->with('app_user_events', 'redis')
+            ->with('app_user_events')
             ->andReturn($persistent_queue)
             ->atLeast()->once();
 
@@ -154,32 +146,6 @@ final class JiraRunnerTest extends \Tuleap\Test\PHPUnit\TestCase
                 ]
             )
             ->atLeast()->once();
-
-        $this->runner->queueJiraImportEvent(123);
-    }
-
-    public function testItLogsErrorWhenItCannotQueueTheEvent(): void
-    {
-        $persistent_queue = Mockery::mock(PersistentQueue::class);
-        $this->queue_factory
-            ->shouldReceive('getPersistentQueue')
-            ->with('app_user_events', 'redis')
-            ->andReturn($persistent_queue);
-
-        $persistent_queue
-            ->shouldReceive('pushSinglePersistentMessage')
-            ->with(
-                'tuleap.tracker.creation.jira',
-                [
-                    'pending_jira_import_id' => 123,
-                ]
-            )
-            ->andThrow(\Exception::class);
-
-        $this->logger
-            ->shouldReceive('error')
-            ->with('Unable to queue notification for Jira import #123.')
-            ->once();
 
         $this->runner->queueJiraImportEvent(123);
     }
@@ -539,33 +505,5 @@ final class JiraRunnerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->once();
 
         $this->runner->processAsyncJiraImport($import);
-    }
-
-    public function testItCanBeProcessedAsynchronously(): void
-    {
-        $this->worker_availability->shouldReceive('canProcessAsyncTasks')->andReturn(true);
-        $this->queue_factory->shouldReceive(['getPersistentQueue' => Mockery::mock(PersistentQueue::class)]);
-        $this->assertTrue($this->runner->canBeProcessedAsynchronously());
-    }
-
-    public function testItCannotBeProcessedAsynchronouslyIfNbOfBackendWorkersIsZero(): void
-    {
-        $this->worker_availability->shouldReceive('canProcessAsyncTasks')->andReturn(false);
-        $this->queue_factory->shouldReceive(['getPersistentQueue' => Mockery::mock(PersistentQueue::class)]);
-        $this->assertFalse($this->runner->canBeProcessedAsynchronously());
-    }
-
-    public function testItCannotBeProcessedAsynchronouslyIfNoopPersistentQueue(): void
-    {
-        $this->worker_availability->shouldReceive('canProcessAsyncTasks')->andReturn(true);
-        $this->queue_factory->shouldReceive(['getPersistentQueue' => Mockery::mock(\Tuleap\Queue\Noop\PersistentQueue::class)]);
-        $this->assertFalse($this->runner->canBeProcessedAsynchronously());
-    }
-
-    public function testItCannotBeProcessedAsynchronouslyIfNoQueueSystemAvailableException(): void
-    {
-        $this->worker_availability->shouldReceive('canProcessAsyncTasks')->andReturn(true);
-        $this->queue_factory->shouldReceive('getPersistentQueue')->andThrow(NoQueueSystemAvailableException::class);
-        $this->assertFalse($this->runner->canBeProcessedAsynchronously());
     }
 }
