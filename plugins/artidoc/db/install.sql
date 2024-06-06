@@ -8,3 +8,10 @@ CREATE TABLE plugin_artidoc_document
     UNIQUE idx_uniq_artifact (item_id, artifact_id),
     INDEX idx_rank (item_id, `rank`)
 ) ENGINE = InnoDB;
+
+DROP TABLE IF EXISTS plugin_artidoc_document_tracker;
+CREATE TABLE plugin_artidoc_document_tracker
+(
+    item_id    INT(11) UNSIGNED NOT NULL PRIMARY KEY,
+    tracker_id INT(11)          NOT NULL
+) ENGINE = InnoDB;

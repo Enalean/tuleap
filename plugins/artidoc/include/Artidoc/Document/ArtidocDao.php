@@ -27,7 +27,7 @@ use Tuleap\DB\DataAccessObject;
 use Tuleap\DB\InvalidUuidStringException;
 use Tuleap\DB\UUID;
 
-final class ArtidocDao extends DataAccessObject implements SearchArtidocDocument, SearchOneSection, SearchPaginatedRawSections, SaveSections
+final class ArtidocDao extends DataAccessObject implements SearchArtidocDocument, SearchOneSection, SearchPaginatedRawSections, SaveSections, SearchConfiguredTracker, SaveConfiguredTracker
 {
     public function searchByItemId(int $item_id): ?array
     {
@@ -131,6 +131,16 @@ final class ArtidocDao extends DataAccessObject implements SearchArtidocDocument
                     $rows,
                 )
             );
+
+            $db->run('DELETE FROM plugin_artidoc_document_tracker WHERE item_id = ?', $target_id);
+            $db->run(
+                'INSERT INTO plugin_artidoc_document_tracker (item_id, tracker_id)
+                SELECT ?, tracker_id
+                FROM plugin_artidoc_document_tracker
+                WHERE item_id = ?',
+                $target_id,
+                $source_id
+            );
         });
     }
 
@@ -157,5 +167,29 @@ final class ArtidocDao extends DataAccessObject implements SearchArtidocDocument
                 );
             }
         });
+    }
+
+    public function getTracker(int $item_id): ?int
+    {
+        return $this->getDB()->cell(
+            'SELECT tracker_id
+            FROM plugin_artidoc_document_tracker
+            WHERE item_id = ?',
+            $item_id,
+        ) ?: null;
+    }
+
+    public function saveTracker(int $item_id, int $tracker_id): void
+    {
+        $this->getDB()->insertOnDuplicateKeyUpdate(
+            'plugin_artidoc_document_tracker',
+            [
+                'item_id'    => $item_id,
+                'tracker_id' => $tracker_id,
+            ],
+            [
+                'tracker_id',
+            ]
+        );
     }
 }

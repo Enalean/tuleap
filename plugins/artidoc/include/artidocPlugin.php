@@ -25,6 +25,7 @@ use Tuleap\Artidoc\Document\ArtidocBreadcrumbsProvider;
 use Tuleap\Artidoc\Document\ArtidocDao;
 use Tuleap\Artidoc\Document\ArtidocDocument;
 use Tuleap\Artidoc\Document\ArtidocRetriever;
+use Tuleap\Artidoc\Document\ConfiguredTrackerRetriever;
 use Tuleap\Artidoc\Document\DocumentServiceFromAllowedProjectRetriever;
 use Tuleap\Artidoc\REST\ResourcesInjector;
 use Tuleap\Config\PluginWithConfigKeys;
@@ -90,15 +91,23 @@ class ArtidocPlugin extends Plugin implements PluginWithConfigKeys
     public function routeController(): DispatchableWithRequest
     {
         $docman_item_factory = new Docman_ItemFactory();
+        $dao                 = new ArtidocDao();
+        $logger              = BackendLogger::getDefaultLogger();
+
         return new ArtidocController(
             new ArtidocRetriever(
                 ProjectManager::instance(),
-                new ArtidocDao(),
+                $dao,
                 $docman_item_factory,
                 new DocumentServiceFromAllowedProjectRetriever($this),
             ),
+            new ConfiguredTrackerRetriever(
+                $dao,
+                TrackerFactory::instance(),
+                $logger,
+            ),
             new ArtidocBreadcrumbsProvider($docman_item_factory),
-            BackendLogger::getDefaultLogger(),
+            $logger,
         );
     }
 

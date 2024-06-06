@@ -26,6 +26,7 @@ use HTTPRequest;
 use Psr\Log\LoggerInterface;
 use Tuleap\Artidoc\Document\ArtidocBreadcrumbsProvider;
 use Tuleap\Artidoc\Document\ArtidocDocumentInformation;
+use Tuleap\Artidoc\Document\ConfiguredTrackerRetriever;
 use Tuleap\Artidoc\Document\RetrieveArtidoc;
 use Tuleap\Config\ConfigKeyString;
 use Tuleap\Config\FeatureFlagConfigKey;
@@ -52,6 +53,7 @@ final readonly class ArtidocController implements DispatchableWithRequest, Dispa
 
     public function __construct(
         private RetrieveArtidoc $retrieve_artidoc,
+        private ConfiguredTrackerRetriever $configured_tracker_retriever,
         private ArtidocBreadcrumbsProvider $breadcrumbs_provider,
         private LoggerInterface $logger,
     ) {
@@ -101,11 +103,17 @@ final readonly class ArtidocController implements DispatchableWithRequest, Dispa
                 ->withBodyClass(['has-sidebar-with-pinned-header'])
                 ->build()
         );
-        \TemplateRendererFactory::build()->getRenderer(__DIR__)->renderToPage('artidoc', [
-            'item_id' => $document_information->document->getId(),
-            'can_user_edit_document' => $user_can_write && \ForgeConfig::getFeatureFlag(self::EDIT_FEATURE_FLAG) === '1',
-            'title' => $title,
-        ]);
+        \TemplateRendererFactory::build()
+            ->getRenderer(__DIR__)
+            ->renderToPage(
+                'artidoc',
+                new ArtidocPresenter(
+                    (int) $document_information->document->getId(),
+                    $user_can_write && \ForgeConfig::getFeatureFlag(self::EDIT_FEATURE_FLAG) === '1',
+                    $title,
+                    (int) $this->configured_tracker_retriever->getTracker($document_information->document)?->getId(),
+                )
+            );
         $service->displayFooter();
     }
 }

@@ -434,4 +434,37 @@ final class ArtidocTest extends DocmanTestExecutionHelper
         $section_representation = json_decode($get_section_response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         self::assertSame($document_content[0], $section_representation);
     }
+
+    /**
+     * @depends testArtidocCreation
+     */
+    public function testOptionsConfiguration(int $id): void
+    {
+        $response = $this->getResponse($this->request_factory->createRequest('OPTIONS', 'artidoc/' . $id . '/configuration'));
+
+        self::assertSame(200, $response->getStatusCode());
+        self::assertSame(['OPTIONS', 'PUT'], explode(', ', $response->getHeaderLine('Allow')));
+    }
+
+    /**
+     * @depends testArtidocCreation
+     */
+    public function testPutConfiguration(int $id): void
+    {
+        $response = $this->getResponse(
+            $this->request_factory->createRequest(
+                'PUT',
+                'artidoc/' . $id . '/configuration'
+            )->withBody(
+                $this->stream_factory->createStream(
+                    json_encode(
+                        [
+                            'selected_tracker_ids' => [$this->requirements_tracker_id],
+                        ],
+                    ),
+                )
+            )
+        );
+        self::assertSame(200, $response->getStatusCode());
+    }
 }

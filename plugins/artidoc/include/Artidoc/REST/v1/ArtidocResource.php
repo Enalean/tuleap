@@ -209,6 +209,55 @@ final class ArtidocResource extends AuthenticatedResource
             );
     }
 
+    /**
+     * @url OPTIONS {id}/configuration
+     */
+    public function optionsConfiguration(int $id): void
+    {
+        Header::allowOptionsPut();
+    }
+
+    /**
+     * Set configuration
+     *
+     * Update the configuration of an artidoc document.
+     *
+     * @url    PUT {id}/configuration
+     * @access hybrid
+     *
+     * @param int $id Id of the document
+     * @param ArtidocPUTConfigurationRepresentation $configuration {@from body}
+     *
+     * @status 200
+     * @throws RestException
+     */
+    public function putConfiguration(int $id, ArtidocPUTConfigurationRepresentation $configuration): void
+    {
+        $this->checkAccess();
+
+        $this->getPutConfigurationHandler()
+            ->handle($id, $configuration, UserManager::instance()->getCurrentUser())
+            ->match(
+                static function () {
+                    // nothing to do
+                },
+                function (Fault $fault) {
+                    Fault::writeToLogger($fault, RESTLogger::getLogger());
+                    throw match (true) {
+                        $fault instanceof TrackerNotFoundFault => new I18NRestException(
+                            400,
+                            dgettext('tuleap-artidoc', "Given tracker cannot be found or you don't have access to it.")
+                        ),
+                        $fault instanceof UserCannotWriteDocumentFault => new I18NRestException(
+                            403,
+                            dgettext('tuleap-artidoc', "You don't have permission to write the document.")
+                        ),
+                        default => new RestException(404),
+                    };
+                }
+            );
+    }
+
     private function getBuilder(): PaginatedArtidocSectionRepresentationCollectionBuilder
     {
         $plugin = \PluginManager::instance()->getEnabledPluginByName('artidoc');
@@ -260,6 +309,31 @@ final class ArtidocResource extends AuthenticatedResource
             $transformer,
             $dao,
             new DatabaseUUIDV7Factory(),
+        );
+    }
+
+    /**
+     * @throws RestException
+     */
+    private function getPutConfigurationHandler(): PUTConfigurationHandler
+    {
+        $plugin = \PluginManager::instance()->getEnabledPluginByName('artidoc');
+        if (! $plugin) {
+            throw new RestException(404);
+        }
+
+        $dao       = new ArtidocDao();
+        $retriever = new ArtidocRetriever(
+            \ProjectManager::instance(),
+            $dao,
+            new Docman_ItemFactory(),
+            new DocumentServiceFromAllowedProjectRetriever($plugin),
+        );
+
+        return new PUTConfigurationHandler(
+            $retriever,
+            $dao,
+            \TrackerFactory::instance(),
         );
     }
 }
