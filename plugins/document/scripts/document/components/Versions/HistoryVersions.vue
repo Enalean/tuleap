@@ -20,19 +20,25 @@
 
 <template>
     <div class="document-history-versions">
-        <h2 class="document-history-section-title">{{ $gettext("Versions") }}</h2>
+        <h2 class="document-history-section-title">
+            {{ $gettext("Versions") }}
+        </h2>
         <section class="tlp-pane">
             <div class="tlp-pane-container">
                 <section class="tlp-pane-section">
-                    <table class="tlp-table">
+                    <table class="tlp-table" data-test="history-versions">
                         <thead>
                             <tr>
-                                <th class="tlp-table-cell-numeric">{{ $gettext("Version") }}</th>
+                                <th class="tlp-table-cell-numeric">
+                                    {{ $gettext("Version") }}
+                                </th>
                                 <th>{{ $gettext("Date") }}</th>
                                 <th>{{ $gettext("Author") }}</th>
                                 <th>{{ $gettext("Version name") }}</th>
                                 <th>{{ $gettext("Change Log") }}</th>
-                                <th v-if="!is_link">{{ $gettext("Approval") }}</th>
+                                <th v-if="!is_link">
+                                    {{ $gettext("Approval") }}
+                                </th>
                                 <th v-if="should_display_source_column">
                                     {{ $gettext("Source") }}
                                 </th>

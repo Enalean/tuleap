@@ -828,7 +828,7 @@ class DocmanPlugin extends Plugin implements PluginWithConfigKeys
                             <input type="hidden" name="item_id" value="' . $hp->purify($row['item_id']) . '">
                             <input type="hidden" name="group_id" value="' . $hp->purify($project->getID()) . '">
                             <input type="hidden" name="func" value="confirm_restore_version">
-                            <button class="tlp-table-cell-actions-button tlp-button-small tlp-button-primary tlp-button-outline">
+                            <button class="tlp-table-cell-actions-button tlp-button-small tlp-button-primary tlp-button-outline" data-test="restore-version">
                                 <i class="fas fa-redo tlp-button-icon"></i> Restore
                             </button>
                         </form>
@@ -915,7 +915,7 @@ class DocmanPlugin extends Plugin implements PluginWithConfigKeys
                         <input type="hidden" name="id" value="' . $hp->purify($row['id']) . '">
                         <input type="hidden" name="group_id" value="' . $hp->purify($groupId) . '">
                         <input type="hidden" name="func" value="confirm_restore_item">
-                        <button class="tlp-table-cell-actions-button tlp-button-small tlp-button-primary tlp-button-outline">
+                        <button class="tlp-table-cell-actions-button tlp-button-small tlp-button-primary tlp-button-outline" data-test="restore-document">
                             <i class="fas fa-redo tlp-button-icon"></i> Restore
                         </button>
                     </form>
