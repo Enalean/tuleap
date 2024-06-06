@@ -24,77 +24,54 @@ namespace Tuleap\AgileDashboard\Planning;
 
 use AgileDashboard_Milestone_MilestoneDao;
 use AgileDashboard_Milestone_MilestoneStatusCounter;
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use LogicException;
 use PFUser;
 use Planning;
 use Planning_MilestoneFactory;
 use PlanningFactory;
 use PlanningPermissionsManager;
-use Project;
 use Psr\Log\NullLogger;
+use Tracker;
+use Tracker_Artifact_Changeset;
 use Tracker_ArtifactFactory;
 use Tracker_FormElementFactory;
+use Tuleap\AgileDashboard\Test\Builders\PlanningBuilder;
 use Tuleap\Date\DatePeriodWithOpenDays;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Semantic\Timeframe\IComputeTimeframes;
-use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframe;
-use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\IntFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
+use Tuleap\Tracker\Test\Stub\Tracker\Semantic\Timeframe\BuildSemanticTimeframeStub;
 
-class MilestoneFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
+final class MilestoneFactoryTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    private Project $project;
-    /**
-     * @var Planning_MilestoneFactory
-     */
-    private $milestone;
+    private Planning_MilestoneFactory $milestone;
     private PFUser $user;
-    /**
-     * @var Mockery\MockInterface|Planning
-     */
-    private $planning;
-    /**
-     * @var Mockery\MockInterface|Artifact
-     */
-    private $artifact_closed_passed;
-    /**
-     * @var Mockery\MockInterface|Artifact
-     */
-    private $artifact_open_current_with_start_date;
-    /**
-     * @var Mockery\MockInterface|Artifact
-     */
-    private $artifact_open_current_without_start_date;
-    /**
-     * @var Mockery\MockInterface|Artifact
-     */
-    private $artifact_open_future_without_start_date;
-    /**
-     * @var Mockery\MockInterface|Artifact
-     */
-    private $artifact_open_future_with_start_date;
+    private Planning $planning;
+    private Artifact $artifact_closed_passed;
+    private Artifact $artifact_open_current_with_start_date;
+    private Artifact $artifact_open_current_without_start_date;
+    private Artifact $artifact_open_future_without_start_date;
+    private Artifact $artifact_open_future_with_start_date;
 
     protected function setUp(): void
     {
-        parent::setUp();
+        $project        = ProjectTestBuilder::aProject()->build();
+        $this->planning = PlanningBuilder::aPlanning((int) $project->getID())
+            ->withMilestoneTracker(TrackerTestBuilder::aTracker()->withId(20)->build())
+            ->build();
 
-        $this->planning = Mockery::mock(Planning::class);
-        $this->planning->shouldReceive('getPlanningTrackerId')->andReturn(20);
+        $this->user = UserTestBuilder::anActiveUser()->build();
 
-        $this->user    = UserTestBuilder::anActiveUser()->build();
-        $this->project = ProjectTestBuilder::aProject()->build();
+        $planning_factory = $this->createMock(PlanningFactory::class);
+        $planning_factory->method('getPlanningByPlanningTracker')->willReturn($this->planning);
 
-        $planning_factory = Mockery::mock(PlanningFactory::class);
-        $planning_factory->shouldReceive('getPlanningByPlanningTracker')->andReturn($this->planning);
-
-        $tracker = TrackerTestBuilder::aTracker()->withId(100)->withProject($this->project)->build();
+        $tracker = TrackerTestBuilder::aTracker()->withId(100)->withProject($project)->build();
 
         $this->artifact_open_current_with_start_date    = $this->getAnArtifact(1, true, 'open', $tracker);
         $this->artifact_open_current_without_start_date = $this->getAnArtifact(2, true, 'open', $tracker);
@@ -102,77 +79,50 @@ class MilestoneFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->artifact_open_future_without_start_date  = $this->getAnArtifact(4, true, 'open', $tracker);
         $this->artifact_closed_passed                   = $this->getAnArtifact(5, false, 'closed', $tracker);
 
-        $artifact_factory = Mockery::mock(Tracker_ArtifactFactory::class);
-        $artifact_factory
-            ->shouldReceive('getArtifactsByTrackerIdUserCanView')
-            ->andReturn([
+        $artifact_factory = $this->createMock(Tracker_ArtifactFactory::class);
+        $artifact_factory->method('getArtifactsByTrackerIdUserCanView')
+            ->willReturn([
                 $this->artifact_open_current_with_start_date,
                 $this->artifact_open_current_without_start_date,
                 $this->artifact_open_future_without_start_date,
                 $this->artifact_closed_passed,
                 $this->artifact_open_future_with_start_date,
             ]);
-        $artifact_factory
-            ->shouldReceive('getClosedArtifactsByTrackerIdUserCanView')
-            ->andReturn([
-                $this->artifact_closed_passed,
-            ]);
 
-        $formelement_factory = Mockery::mock(Tracker_FormElementFactory::class);
-        $formelement_factory->shouldReceive('getFormElementByName')->andReturn(Mockery::mock(\Tracker_FormElement_Field::class));
+        $formelement_factory = $this->createMock(Tracker_FormElementFactory::class);
+        $formelement_factory->method('getFormElementByName')->willReturn(IntFieldBuilder::anIntField(1)->build());
 
-        $status_counter               = Mockery::mock(AgileDashboard_Milestone_MilestoneStatusCounter::class);
-        $planning_permissions_manager = Mockery::mock(PlanningPermissionsManager::class);
-        $milestone_dao                = Mockery::mock(AgileDashboard_Milestone_MilestoneDao::class);
+        $status_counter               = $this->createMock(AgileDashboard_Milestone_MilestoneStatusCounter::class);
+        $planning_permissions_manager = $this->createMock(PlanningPermissionsManager::class);
+        $milestone_dao                = $this->createMock(AgileDashboard_Milestone_MilestoneDao::class);
 
-        $date_period_open_current_without_start_date = Mockery::mock(DatePeriodWithOpenDays::class);
-        $date_period_open_current_without_start_date->shouldReceive('isTodayBeforeDatePeriod')->andReturn(false);
-        $date_period_open_current_without_start_date->shouldReceive('getStartDate')->andReturn(0);
+        $logger                                      = new NullLogger();
+        $date_period_open_current_without_start_date = DatePeriodWithOpenDays::buildFromEndDate(0, 0, $logger);
+        $date_period_open_current_with_start_date    = DatePeriodWithOpenDays::buildFromEndDate(strtotime('2015-12-03T14:55:00'), 0, $logger);
 
-        $date_period_open_current_with_start_date = Mockery::mock(DatePeriodWithOpenDays::class);
-        $date_period_open_current_with_start_date->shouldReceive('isTodayBeforeDatePeriod')->andReturn(false);
-        $date_period_open_current_with_start_date->shouldReceive('getStartDate')->andReturn(strtotime('2015-12-03T14:55:00'));
+        $date_period_open_future_with_start_date = $this->createMock(DatePeriodWithOpenDays::class);
+        $date_period_open_future_with_start_date->method('isTodayBeforeDatePeriod')->willReturn(true);
+        $date_period_open_future_with_start_date->method('getStartDate')->willReturn(strtotime('2015-12-03T14:55:00'));
 
-        $date_period_open_future_with_start_date = Mockery::mock(DatePeriodWithOpenDays::class);
-        $date_period_open_future_with_start_date->shouldReceive('isTodayBeforeDatePeriod')->andReturn(true);
-        $date_period_open_future_with_start_date->shouldReceive('getStartDate')->andReturn(strtotime('2015-12-03T14:55:00'));
+        $date_period_open_future_without_start_date = $this->createMock(DatePeriodWithOpenDays::class);
+        $date_period_open_future_without_start_date->method('isTodayBeforeDatePeriod')->willReturn(true);
+        $date_period_open_future_without_start_date->method('getStartDate')->willReturn(0);
 
-        $date_period_open_future_without_start_date = Mockery::mock(DatePeriodWithOpenDays::class);
-        $date_period_open_future_without_start_date->shouldReceive('isTodayBeforeDatePeriod')->andReturn(true);
-        $date_period_open_future_without_start_date->shouldReceive('getStartDate')->andReturn(0);
+        $date_period_closed_passed = DatePeriodWithOpenDays::buildFromEndDate(0, strtotime('2015-12-03T14:55:00'), $logger);
 
-        $date_period_closed_passed = Mockery::mock(DatePeriodWithOpenDays::class);
-        $date_period_closed_passed->shouldReceive('getStartDate')->andReturn(0);
-        $date_period_closed_passed->shouldReceive('getEndDate')->andReturn(strtotime('2015-12-03T14:55:00'));
+        $timeframe_calculator       = $this->createMock(IComputeTimeframes::class);
+        $semantic_timeframe_builder = BuildSemanticTimeframeStub::withTimeframeCalculator(TrackerTestBuilder::aTracker()->build(), $timeframe_calculator);
 
-        $logger                     = new NullLogger();
-        $timeframe_calculator       = Mockery::mock(IComputeTimeframes::class);
-        $semantic_timeframe         = Mockery::mock(SemanticTimeframe::class, ['getTimeframeCalculator' => $timeframe_calculator]);
-        $semantic_timeframe_builder = Mockery::mock(SemanticTimeframeBuilder::class);
-        $semantic_timeframe_builder->shouldReceive('getSemantic')
-            ->with($tracker)
-            ->andReturn($semantic_timeframe);
-
-        $timeframe_calculator
-            ->shouldReceive('buildDatePeriodWithoutWeekendForChangeset')
-            ->withArgs([$this->artifact_open_current_without_start_date->getLastChangeset(), $this->user, $logger])
-            ->andReturn($date_period_open_current_without_start_date);
-        $timeframe_calculator
-            ->shouldReceive('buildDatePeriodWithoutWeekendForChangeset')
-            ->withArgs([$this->artifact_open_current_with_start_date->getLastChangeset(), $this->user, $logger])
-            ->andReturn($date_period_open_current_with_start_date);
-        $timeframe_calculator
-            ->shouldReceive('buildDatePeriodWithoutWeekendForChangeset')
-            ->withArgs([$this->artifact_closed_passed->getLastChangeset(), $this->user, $logger])
-            ->andReturn($date_period_closed_passed);
-        $timeframe_calculator
-            ->shouldReceive('buildDatePeriodWithoutWeekendForChangeset')
-            ->withArgs([$this->artifact_open_future_with_start_date->getLastChangeset(), $this->user, $logger])
-            ->andReturn($date_period_open_future_with_start_date);
-        $timeframe_calculator
-            ->shouldReceive('buildDatePeriodWithoutWeekendForChangeset')
-            ->withArgs([$this->artifact_open_future_without_start_date->getLastChangeset(), $this->user, $logger])
-            ->andReturn($date_period_open_future_without_start_date);
+        $timeframe_calculator->method('buildDatePeriodWithoutWeekendForChangeset')
+            ->with(self::isInstanceOf(Tracker_Artifact_Changeset::class), $this->user, $logger)
+            ->will(self::returnCallback(fn(?Tracker_Artifact_Changeset $changeset) => match ($changeset) {
+                $this->artifact_open_current_without_start_date->getLastChangeset() => $date_period_open_current_without_start_date,
+                $this->artifact_open_current_with_start_date->getLastChangeset()    => $date_period_open_current_with_start_date,
+                $this->artifact_closed_passed->getLastChangeset()                   => $date_period_closed_passed,
+                $this->artifact_open_future_with_start_date->getLastChangeset()     => $date_period_open_future_with_start_date,
+                $this->artifact_open_future_without_start_date->getLastChangeset()  => $date_period_open_future_without_start_date,
+                default                                                             => throw new LogicException("Should not have arg changeset #{$changeset->getId()}"),
+            }));
 
         $this->milestone = new Planning_MilestoneFactory(
             $planning_factory,
@@ -189,22 +139,22 @@ class MilestoneFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testGetOnlyCurrentMilestone(): void
     {
         $milestones = $this->milestone->getAllCurrentMilestones($this->user, $this->planning);
-        $this->assertCount(3, $milestones);
-        $this->assertEquals($this->artifact_open_current_with_start_date, $milestones[0]->getArtifact());
-        $this->assertEquals($this->artifact_open_current_without_start_date, $milestones[1]->getArtifact());
-        $this->assertEquals($this->artifact_open_future_without_start_date, $milestones[2]->getArtifact());
+        self::assertCount(3, $milestones);
+        self::assertEquals($this->artifact_open_current_with_start_date, $milestones[0]->getArtifact());
+        self::assertEquals($this->artifact_open_current_without_start_date, $milestones[1]->getArtifact());
+        self::assertEquals($this->artifact_open_future_without_start_date, $milestones[2]->getArtifact());
     }
 
     public function testGetOnlyFutureMilestone(): void
     {
         $milestones = $this->milestone->getAllFutureMilestones($this->user, $this->planning);
-        $this->assertCount(3, $milestones);
-        $this->assertEquals($this->artifact_open_current_without_start_date, $milestones[0]->getArtifact());
-        $this->assertEquals($this->artifact_open_future_without_start_date, $milestones[1]->getArtifact());
-        $this->assertEquals($this->artifact_open_future_with_start_date, $milestones[2]->getArtifact());
+        self::assertCount(3, $milestones);
+        self::assertEquals($this->artifact_open_current_without_start_date, $milestones[0]->getArtifact());
+        self::assertEquals($this->artifact_open_future_without_start_date, $milestones[1]->getArtifact());
+        self::assertEquals($this->artifact_open_future_with_start_date, $milestones[2]->getArtifact());
     }
 
-    private function getAnArtifact(int $id, bool $is_open, string $status, \Tracker $tracker): Artifact
+    private function getAnArtifact(int $id, bool $is_open, string $status, Tracker $tracker): Artifact
     {
         return ArtifactTestBuilder::anArtifact($id)
             ->inTracker($tracker)
