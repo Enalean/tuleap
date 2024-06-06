@@ -25,114 +25,90 @@ namespace Tuleap\AgileDashboard\Planning;
 
 use AgileDashboard_Milestone_MilestoneDao;
 use AgileDashboard_Milestone_MilestoneStatusCounter;
-use Mockery;
 use PFUser;
-use Planning;
+use PHPUnit\Framework\MockObject\MockObject;
 use Planning_ArtifactMilestone;
 use Planning_MilestoneFactory;
 use Planning_NoMilestone;
 use PlanningFactory;
 use PlanningPermissionsManager;
-use Project;
 use Psr\Log\NullLogger;
-use Tracker;
 use Tracker_ArtifactFactory;
 use Tracker_FormElementFactory;
+use Tuleap\AgileDashboard\Test\Builders\PlanningBuilder;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
+use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
-final class MilestoneFactoryGetLastMilestoneCreatedTest extends \Tuleap\Test\PHPUnit\TestCase
+final class MilestoneFactoryGetLastMilestoneCreatedTest extends TestCase
 {
-    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
-    /**
-     * @var \Tracker
-     */
-    private $planning_tracker;
-    /**
-     * @var int
-     */
-    private $planning_tracker_id;
-    /**
-     * @var int
-     */
-    private $planning_id;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|PFUser
-     */
-    private $current_user;
-    /**
-     * @var Mockery\Mock | Planning_MilestoneFactory
-     */
-    private $milestone_factory;
-    /**
-     * @var Mockery\MockInterface|Artifact
-     */
-    private $sprint_1_artifact;
-    /**
-     * @var Planning_ArtifactMilestone
-     */
-    private $sprint_1_milestone;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Tracker_ArtifactFactory
-     */
-    private $artifact_factory;
+    private int $planning_tracker_id;
+    private int $planning_id;
+    private PFUser $current_user;
+    private Planning_MilestoneFactory&MockObject $milestone_factory;
+    private Artifact $sprint_1_artifact;
+    private Planning_ArtifactMilestone&MockObject $sprint_1_milestone;
+    private Tracker_ArtifactFactory&MockObject $artifact_factory;
 
     protected function setUp(): void
     {
-        $this->current_user      = Mockery::mock(PFUser::class);
-        $planning_factory        = Mockery::spy(PlanningFactory::class);
-        $this->artifact_factory  = Mockery::spy(Tracker_ArtifactFactory::class);
-        $this->milestone_factory = Mockery::mock(
-            Planning_MilestoneFactory::class,
-            [
+        $this->current_user      = UserTestBuilder::buildWithDefaults();
+        $planning_factory        = $this->createMock(PlanningFactory::class);
+        $this->artifact_factory  = $this->createMock(Tracker_ArtifactFactory::class);
+        $this->milestone_factory = $this->getMockBuilder(Planning_MilestoneFactory::class)
+            ->setConstructorArgs([
                 $planning_factory,
                 $this->artifact_factory,
-                Mockery::mock(Tracker_FormElementFactory::class),
-                Mockery::mock(AgileDashboard_Milestone_MilestoneStatusCounter::class),
-                Mockery::mock(PlanningPermissionsManager::class),
-                Mockery::mock(AgileDashboard_Milestone_MilestoneDao::class),
-                Mockery::mock(SemanticTimeframeBuilder::class),
+                $this->createMock(Tracker_FormElementFactory::class),
+                $this->createMock(AgileDashboard_Milestone_MilestoneStatusCounter::class),
+                $this->createMock(PlanningPermissionsManager::class),
+                $this->createMock(AgileDashboard_Milestone_MilestoneDao::class),
+                $this->createMock(SemanticTimeframeBuilder::class),
                 new NullLogger(),
-                Mockery::spy(MilestoneBurndownFieldChecker::class),
-            ]
-        )
-            ->makePartial()
-            ->shouldAllowMockingProtectedMethods();
+            ])
+            ->onlyMethods(['getMilestoneFromArtifact'])
+            ->getMock();
 
-        $this->sprint_1_artifact  = Mockery::mock(Artifact::class);
-        $this->sprint_1_milestone = Mockery::mock(Planning_ArtifactMilestone::class);
+        $this->sprint_1_artifact  = ArtifactTestBuilder::anArtifact(1)->build();
+        $this->sprint_1_milestone = $this->createMock(Planning_ArtifactMilestone::class);
 
         $this->planning_id         = 12;
         $this->planning_tracker_id = 123;
-        $this->planning_tracker    = Mockery::mock(Tracker::class);
-        $this->planning_tracker->shouldReceive('getProject')->andReturn(Mockery::spy(Project::class));
+        $planning_tracker          = TrackerTestBuilder::aTracker()
+            ->withId($this->planning_tracker_id)
+            ->withProject(ProjectTestBuilder::aProject()->build())
+            ->build();
 
-        $planning = Mockery::mock(Planning::class);
-        $planning->shouldReceive('getPlanningTrackerId')->andReturn($this->planning_tracker_id);
-        $planning->shouldReceive('getPlanningTracker')->andReturn($this->planning_tracker);
+        $planning = PlanningBuilder::aPlanning(101)
+            ->withId($this->planning_id)
+            ->withMilestoneTracker($planning_tracker)
+            ->build();
 
-        $planning_factory->shouldReceive('getPlanning')->with($this->planning_id)->andReturn($planning);
+        $planning_factory->method('getPlanning')->with($this->planning_id)->willReturn($planning);
     }
 
     public function testItReturnsEmptyMilestoneWhenNothingMatches(): void
     {
-        $this->artifact_factory->shouldReceive('getOpenArtifactsByTrackerIdUserCanView')->andReturn([]);
+        $this->artifact_factory->method('getOpenArtifactsByTrackerIdUserCanView')->willReturn([]);
         $milestone = $this->milestone_factory->getLastMilestoneCreated($this->current_user, $this->planning_id);
-        $this->assertInstanceOf(Planning_NoMilestone::class, $milestone);
+        self::assertInstanceOf(Planning_NoMilestone::class, $milestone);
     }
 
     public function testItReturnsTheLastOpenArtifactOfPlanningTracker(): void
     {
-        $this->artifact_factory->shouldReceive('getOpenArtifactsByTrackerIdUserCanView')
+        $this->artifact_factory->method('getOpenArtifactsByTrackerIdUserCanView')
             ->with($this->current_user, $this->planning_tracker_id)
-            ->andReturn(['115' => $this->sprint_1_artifact, '104' => Mockery::mock(Artifact::class)]);
+            ->willReturn(['115' => $this->sprint_1_artifact, '104' => ArtifactTestBuilder::anArtifact(104)->build()]);
 
-        $this->milestone_factory->shouldReceive('getMilestoneFromArtifact')
+        $this->milestone_factory->method('getMilestoneFromArtifact')
             ->with($this->sprint_1_artifact)
-            ->andReturn($this->sprint_1_milestone);
+            ->willReturn($this->sprint_1_milestone);
 
         $milestone = $this->milestone_factory->getLastMilestoneCreated($this->current_user, $this->planning_id);
-        $this->assertEquals($this->sprint_1_milestone, $milestone);
+        self::assertEquals($this->sprint_1_milestone, $milestone);
     }
 }

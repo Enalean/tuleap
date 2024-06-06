@@ -23,37 +23,25 @@ declare(strict_types=1);
 
 namespace Tuleap\AgileDashboard\Planning;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\MockObject\MockObject;
 use PlanningFactory;
 use PlanningPermissionsManager;
 use TrackerFactory;
 use Tuleap\AgileDashboard\Test\Builders\PlanningBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
-class PlanningFactoryTestGetPlanningByPlanningTrackerTest extends \Tuleap\Test\PHPUnit\TestCase
+class PlanningFactoryTestGetPlanningByPlanningTrackerTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var PlanningFactory
-     */
-    private $planning_factory;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|TrackerFactory
-     */
-    private $tracker_factory;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|PlanningDao
-     */
-    private $planning_dao;
+    private PlanningFactory $planning_factory;
+    private TrackerFactory&MockObject $tracker_factory;
+    private PlanningDao&MockObject $planning_dao;
 
     protected function setUp(): void
     {
-        $this->planning_dao           = Mockery::spy(PlanningDao::class);
-        $this->tracker_factory        = Mockery::spy(TrackerFactory::class);
-        $planning_permissions_manager = Mockery::spy(PlanningPermissionsManager::class);
+        $this->planning_dao           = $this->createMock(PlanningDao::class);
+        $this->tracker_factory        = $this->createMock(TrackerFactory::class);
+        $planning_permissions_manager = $this->createMock(PlanningPermissionsManager::class);
 
         $this->planning_factory = new PlanningFactory(
             $this->planning_dao,
@@ -65,10 +53,9 @@ class PlanningFactoryTestGetPlanningByPlanningTrackerTest extends \Tuleap\Test\P
     public function testItReturnsNothingIfThereIsNoAssociatedPlanning(): void
     {
         $tracker = TrackerTestBuilder::aTracker()->withId(99)->build();
-        $this->planning_dao->shouldReceive('searchByMilestoneTrackerId')
-            ->andReturnNull();
+        $this->planning_dao->method('searchByMilestoneTrackerId')->willReturn(null);
 
-        $this->assertNull($this->planning_factory->getPlanningByPlanningTracker($tracker));
+        self::assertNull($this->planning_factory->getPlanningByPlanningTracker($tracker));
     }
 
     public function testItReturnsAPlanning(): void
@@ -82,8 +69,9 @@ class PlanningFactoryTestGetPlanningByPlanningTrackerTest extends \Tuleap\Test\P
             ->withBacklogTrackers($backlog_tracker)
             ->build();
 
-        $this->tracker_factory->shouldReceive('getTrackerById')->with(1)->once()->andReturn($planning_tracker);
-        $this->tracker_factory->shouldReceive('getTrackerById')->with(2)->once()->andReturn($backlog_tracker);
+        $this->tracker_factory->expects(self::exactly(2))->method('getTrackerById')
+            ->withConsecutive([1], [2])
+            ->willReturnOnConsecutiveCalls($planning_tracker, $backlog_tracker);
 
         $rows = [
             'id'                  => 12,
@@ -94,12 +82,11 @@ class PlanningFactoryTestGetPlanningByPlanningTrackerTest extends \Tuleap\Test\P
             'plan_title'          => 'Sprint Plan',
         ];
 
-        $this->planning_dao->shouldReceive('searchBacklogTrackersByPlanningId')->andReturn([['tracker_id' => 2]]);
-        $this->planning_dao->shouldReceive('searchByMilestoneTrackerId')
-            ->andReturns($rows);
+        $this->planning_dao->method('searchBacklogTrackersByPlanningId')->willReturn([['tracker_id' => 2]]);
+        $this->planning_dao->method('searchByMilestoneTrackerId')->willReturn($rows);
 
         $retrieved_planning = $this->planning_factory->getPlanningByPlanningTracker($tracker);
-        $this->assertEquals($planning->getPlanningTracker(), $retrieved_planning->getPlanningTracker());
-        $this->assertEquals($planning->getBacklogTrackers(), $retrieved_planning->getBacklogTrackers());
+        self::assertEquals($planning->getPlanningTracker(), $retrieved_planning->getPlanningTracker());
+        self::assertEquals($planning->getBacklogTrackers(), $retrieved_planning->getBacklogTrackers());
     }
 }
