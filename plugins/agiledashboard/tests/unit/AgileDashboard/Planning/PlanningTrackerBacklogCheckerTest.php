@@ -23,61 +23,39 @@ declare(strict_types=1);
 
 namespace Tuleap\AgileDashboard\Planning;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
-use Planning;
+use PHPUnit\Framework\MockObject\MockObject;
 use PlanningFactory;
 use Tracker;
+use Tuleap\AgileDashboard\Test\Builders\PlanningBuilder;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
-class PlanningTrackerBacklogCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
+final class PlanningTrackerBacklogCheckerTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var PlanningTrackerBacklogChecker
-     */
-    private $checker;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|PlanningFactory
-     */
-    private $planning_factory;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Tracker
-     */
-    private $tracker;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|PFUser
-     */
-    private $user;
+    private PlanningTrackerBacklogChecker $checker;
+    private PlanningFactory&MockObject $planning_factory;
+    private Tracker $tracker;
+    private PFUser $user;
 
     protected function setUp(): void
     {
-        parent::setUp();
-
-        $this->planning_factory = Mockery::mock(PlanningFactory::class);
-
-        $this->checker = new PlanningTrackerBacklogChecker(
-            $this->planning_factory
-        );
-
-        $this->tracker = Mockery::mock(Tracker::class);
-        $this->user    = Mockery::mock(PFUser::class);
-
-        $this->tracker->shouldReceive('getGroupId')->andReturn('104');
-        $this->tracker->shouldReceive('getId')->andReturn(187);
+        $this->planning_factory = $this->createMock(PlanningFactory::class);
+        $this->checker          = new PlanningTrackerBacklogChecker($this->planning_factory);
+        $this->tracker          = TrackerTestBuilder::aTracker()
+            ->withId(187)
+            ->withProject(ProjectTestBuilder::aProject()->withId(104)->build())
+            ->build();
+        $this->user             = UserTestBuilder::buildWithDefaults();
     }
 
     public function testItReturnsFalseIfNoRootPlanningInProject(): void
     {
-        $this->planning_factory->shouldReceive('getRootPlanning')
-            ->once()
-            ->andReturnFalse();
+        $this->planning_factory->expects(self::once())->method('getRootPlanning')->willReturn(false);
 
-        $this->assertFalse($this->checker->isTrackerBacklogOfProjectRootPlanning(
+        self::assertFalse($this->checker->isTrackerBacklogOfProjectRootPlanning(
             $this->tracker,
             $this->user
         ));
@@ -85,16 +63,16 @@ class PlanningTrackerBacklogCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItReturnsFalseIfNotARootBacklogTrackerPlanning(): void
     {
-        $planning = Mockery::mock(Planning::class)
-            ->shouldReceive('getBacklogTrackersIds')
-            ->andReturn([188, 189])
-            ->getMock();
+        $planning = PlanningBuilder::aPlanning(104)
+            ->withBacklogTrackers(
+                TrackerTestBuilder::aTracker()->withId(188)->build(),
+                TrackerTestBuilder::aTracker()->withId(189)->build(),
+            )
+            ->build();
 
-        $this->planning_factory->shouldReceive('getRootPlanning')
-            ->once()
-            ->andReturn($planning);
+        $this->planning_factory->expects(self::once())->method('getRootPlanning')->willReturn($planning);
 
-        $this->assertFalse($this->checker->isTrackerBacklogOfProjectRootPlanning(
+        self::assertFalse($this->checker->isTrackerBacklogOfProjectRootPlanning(
             $this->tracker,
             $this->user
         ));
@@ -102,16 +80,16 @@ class PlanningTrackerBacklogCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItReturnsTrueIfTrackerIsARootBacklogTrackerPlanning(): void
     {
-        $planning = Mockery::mock(Planning::class)
-            ->shouldReceive('getBacklogTrackersIds')
-            ->andReturn([188, 187])
-            ->getMock();
+        $planning = PlanningBuilder::aPlanning(104)
+            ->withBacklogTrackers(
+                TrackerTestBuilder::aTracker()->withId(188)->build(),
+                $this->tracker,
+            )
+            ->build();
 
-        $this->planning_factory->shouldReceive('getRootPlanning')
-            ->once()
-            ->andReturn($planning);
+        $this->planning_factory->expects(self::once())->method('getRootPlanning')->willReturn($planning);
 
-        $this->assertTrue($this->checker->isTrackerBacklogOfProjectRootPlanning(
+        self::assertTrue($this->checker->isTrackerBacklogOfProjectRootPlanning(
             $this->tracker,
             $this->user
         ));
@@ -119,12 +97,14 @@ class PlanningTrackerBacklogCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItReturnsFalseIfTrackerIsABacklogTrackerPlanning(): void
     {
-        $planning = Mockery::mock(Planning::class)
-            ->shouldReceive('getBacklogTrackersIds')
-            ->andReturn([188, 189])
-            ->getMock();
+        $planning = PlanningBuilder::aPlanning(104)
+            ->withBacklogTrackers(
+                TrackerTestBuilder::aTracker()->withId(188)->build(),
+                TrackerTestBuilder::aTracker()->withId(189)->build(),
+            )
+            ->build();
 
-        $this->assertFalse($this->checker->isTrackerBacklogOfProjectPlanning(
+        self::assertFalse($this->checker->isTrackerBacklogOfProjectPlanning(
             $planning,
             $this->tracker
         ));
@@ -132,12 +112,14 @@ class PlanningTrackerBacklogCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItReturnsTrueIfTrackerIsABacklogTrackerPlanning(): void
     {
-        $planning = Mockery::mock(Planning::class)
-            ->shouldReceive('getBacklogTrackersIds')
-            ->andReturn([188, 187])
-            ->getMock();
+        $planning = PlanningBuilder::aPlanning(104)
+            ->withBacklogTrackers(
+                TrackerTestBuilder::aTracker()->withId(188)->build(),
+                $this->tracker,
+            )
+            ->build();
 
-        $this->assertTrue($this->checker->isTrackerBacklogOfProjectPlanning(
+        self::assertTrue($this->checker->isTrackerBacklogOfProjectPlanning(
             $planning,
             $this->tracker
         ));
