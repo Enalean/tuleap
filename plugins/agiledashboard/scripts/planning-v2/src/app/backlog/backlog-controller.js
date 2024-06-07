@@ -165,7 +165,17 @@ function BacklogController(
     }
 
     function loadInitialBacklogItems() {
-        displayBacklogItems();
+        displayBacklogItems().then(function () {
+            if (self.backlog_items.fully_loaded) {
+                return;
+            }
+            if (self.backlog_items.content.length !== 0) {
+                return;
+            }
+            // Force to continue to load items, we want some items to display immediately without having to trigger the
+            // infinite load mechanism
+            loadInitialBacklogItems();
+        });
     }
 
     function displayBacklogItems() {
