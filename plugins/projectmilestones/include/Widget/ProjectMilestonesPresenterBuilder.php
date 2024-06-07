@@ -169,7 +169,8 @@ class ProjectMilestonesPresenterBuilder
                 new AgileDashboard_Milestone_Backlog_BacklogItemBuilder(),
                 new RemainingEffortValueRetriever(Tracker_FormElementFactory::instance()),
                 new ArtifactsInExplicitBacklogDao(),
-                new Tracker_Artifact_PriorityDao()
+                new Tracker_Artifact_PriorityDao(),
+                \Tuleap\Tracker\Permission\TrackersPermissionsRetriever::build(),
             ),
             $milestone_factory,
             new ExplicitBacklogDao(),
