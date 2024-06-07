@@ -234,6 +234,9 @@ describe("BacklogController -", () => {
 
                 MilestoneService.getMilestone.mockReturnValue($q.when({ results: milestone }));
                 jest.spyOn(BacklogController, "loadBacklog");
+                jest.spyOn(BacklogController, "loadInitialBacklogItems").mockImplementation(() => {
+                    // Do nothing to avoid the infinite recursion
+                });
 
                 BacklogController.$onInit();
                 $scope.$apply();
