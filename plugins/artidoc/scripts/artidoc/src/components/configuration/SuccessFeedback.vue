@@ -19,40 +19,23 @@
   -->
 
 <template>
-    <document-header />
-    <div class="artidoc-container">
-        <document-view class="artidoc-app-container" />
+    <div class="tlp-alert-success">
+        <p class="tlp-alert-title">
+            {{ $gettext("Configuration saved successfully") }}
+        </p>
+
+        <p>
+            {{
+                $gettext(
+                    "You can now go back to the document and create new sections, they will be stored as artifacts in the selected tracker.",
+                )
+            }}
+        </p>
     </div>
 </template>
 
 <script setup lang="ts">
-import { onMounted } from "vue";
-import DocumentView from "@/views/DocumentView.vue";
-import { useInjectSectionsStore } from "@/stores/useSectionsStore";
-import DocumentHeader from "@/components/DocumentHeader.vue";
+import { useGettext } from "vue3-gettext";
 
-const props = defineProps<{ item_id: number }>();
-const store = useInjectSectionsStore();
-
-onMounted(() => {
-    store.loadSections(props.item_id);
-});
+const { $gettext } = useGettext();
 </script>
-
-<style lang="scss">
-@use "@/themes/artidoc";
-
-html {
-    scroll-behavior: smooth;
-}
-
-.artidoc-container {
-    height: 100%;
-}
-</style>
-
-<style lang="scss" scoped>
-.artidoc-app-container {
-    height: inherit;
-}
-</style>

@@ -28,6 +28,7 @@ use Tuleap\Artidoc\Document\ArtidocBreadcrumbsProvider;
 use Tuleap\Artidoc\Document\ArtidocDocumentInformation;
 use Tuleap\Artidoc\Document\ConfiguredTrackerRetriever;
 use Tuleap\Artidoc\Document\RetrieveArtidoc;
+use Tuleap\Artidoc\Document\Tracker\SuitableTrackersForDocumentRetriever;
 use Tuleap\Config\ConfigKeyString;
 use Tuleap\Config\FeatureFlagConfigKey;
 use Tuleap\Layout\BaseLayout;
@@ -39,6 +40,7 @@ use Tuleap\Project\ServiceInstrumentation;
 use Tuleap\Request\DispatchableWithBurningParrot;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\NotFoundException;
+use Tuleap\Tracker\REST\MinimalTrackerRepresentation;
 
 final readonly class ArtidocController implements DispatchableWithRequest, DispatchableWithBurningParrot
 {
@@ -54,6 +56,7 @@ final readonly class ArtidocController implements DispatchableWithRequest, Dispa
     public function __construct(
         private RetrieveArtidoc $retrieve_artidoc,
         private ConfiguredTrackerRetriever $configured_tracker_retriever,
+        private SuitableTrackersForDocumentRetriever $suitable_trackers_retriever,
         private ArtidocBreadcrumbsProvider $breadcrumbs_provider,
         private LoggerInterface $logger,
     ) {
@@ -112,6 +115,10 @@ final readonly class ArtidocController implements DispatchableWithRequest, Dispa
                     $user_can_write && \ForgeConfig::getFeatureFlag(self::EDIT_FEATURE_FLAG) === '1',
                     $title,
                     (int) $this->configured_tracker_retriever->getTracker($document_information->document)?->getId(),
+                    array_map(
+                        static fn (\Tracker $tracker) => MinimalTrackerRepresentation::build($tracker),
+                        $this->suitable_trackers_retriever->getTrackers($document_information, $user),
+                    )
                 )
             );
         $service->displayFooter();

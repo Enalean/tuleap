@@ -1,5 +1,4 @@
-<?php
-/**
+/*
  * Copyright (c) Enalean, 2024 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -18,27 +17,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
+import type { InjectionKey } from "vue";
 
-namespace Tuleap\Artidoc;
-
-use Tuleap\Tracker\REST\MinimalTrackerRepresentation;
-use function Psl\Json\encode;
-
-final readonly class ArtidocPresenter
-{
-    public string $allowed_trackers;
-
-    /**
-     * @param list<MinimalTrackerRepresentation> $allowed_trackers
-     */
-    public function __construct(
-        public int $item_id,
-        public bool $can_user_edit_document,
-        public string $title,
-        public int $selected_tracker,
-        array $allowed_trackers,
-    ) {
-        $this->allowed_trackers = encode($allowed_trackers);
-    }
-}
+export const TITLE: InjectionKey<string> = Symbol("title");

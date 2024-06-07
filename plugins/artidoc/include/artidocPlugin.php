@@ -27,7 +27,10 @@ use Tuleap\Artidoc\Document\ArtidocDocument;
 use Tuleap\Artidoc\Document\ArtidocRetriever;
 use Tuleap\Artidoc\Document\ConfiguredTrackerRetriever;
 use Tuleap\Artidoc\Document\DocumentServiceFromAllowedProjectRetriever;
+use Tuleap\Artidoc\Document\Tracker\SuitableTrackerForDocumentChecker;
+use Tuleap\Artidoc\Document\Tracker\SuitableTrackersForDocumentRetriever;
 use Tuleap\Artidoc\REST\ResourcesInjector;
+use Tuleap\Config\ConfigClassProvider;
 use Tuleap\Config\PluginWithConfigKeys;
 use Tuleap\Docman\Item\CloneOtherItemPostAction;
 use Tuleap\Docman\Item\GetDocmanItemOtherTypeEvent;
@@ -35,6 +38,7 @@ use Tuleap\Docman\ItemType\GetItemTypeAsText;
 use Tuleap\Docman\REST\v1\Folders\FilterItemOtherTypeProvider;
 use Tuleap\Docman\REST\v1\GetOtherDocumentItemRepresentationWrapper;
 use Tuleap\Docman\REST\v1\MoveItem\MoveOtherItemUriRetriever;
+use Tuleap\Docman\REST\v1\Others\OtherTypePropertiesRepresentation;
 use Tuleap\Docman\REST\v1\Others\VerifyOtherTypeIsSupported;
 use Tuleap\Docman\REST\v1\Search\SearchRepresentationOtherType;
 use Tuleap\Document\Tree\OtherItemTypeDefinition;
@@ -43,6 +47,7 @@ use Tuleap\Document\Tree\SearchCriterionListOptionPresenter;
 use Tuleap\Document\Tree\TypeOptionsCollection;
 use Tuleap\Plugin\ListeningToEventClass;
 use Tuleap\Plugin\ListeningToEventName;
+use Tuleap\Request\CollectRoutesEvent;
 use Tuleap\Request\DispatchableWithRequest;
 
 require_once __DIR__ . '/../vendor/autoload.php';
@@ -81,7 +86,7 @@ class ArtidocPlugin extends Plugin implements PluginWithConfigKeys
     }
 
     #[ListeningToEventClass]
-    public function collectRoutesEvent(\Tuleap\Request\CollectRoutesEvent $event): void
+    public function collectRoutesEvent(CollectRoutesEvent $event): void
     {
         $event->getRouteCollector()->addGroup('/artidoc', function (FastRoute\RouteCollector $r) {
             $r->get('/{id:\d+}[/]', $this->getRouteHandler('routeController'));
@@ -90,6 +95,7 @@ class ArtidocPlugin extends Plugin implements PluginWithConfigKeys
 
     public function routeController(): DispatchableWithRequest
     {
+        $tracker_factory     = TrackerFactory::instance();
         $docman_item_factory = new Docman_ItemFactory();
         $dao                 = new ArtidocDao();
         $logger              = BackendLogger::getDefaultLogger();
@@ -103,8 +109,14 @@ class ArtidocPlugin extends Plugin implements PluginWithConfigKeys
             ),
             new ConfiguredTrackerRetriever(
                 $dao,
-                TrackerFactory::instance(),
+                $tracker_factory,
                 $logger,
+            ),
+            new SuitableTrackersForDocumentRetriever(
+                new SuitableTrackerForDocumentChecker(
+                    Tracker_FormElementFactory::instance(),
+                ),
+                $tracker_factory,
             ),
             new ArtidocBreadcrumbsProvider($docman_item_factory),
             $logger,
@@ -133,7 +145,7 @@ class ArtidocPlugin extends Plugin implements PluginWithConfigKeys
     public function getOtherDocumentItemRepresentationWrapper(GetOtherDocumentItemRepresentationWrapper $event): void
     {
         if ($event->item instanceof ArtidocDocument) {
-            $event->setItemRepresentationArguments(ArtidocDocument::TYPE, new \Tuleap\Docman\REST\v1\Others\OtherTypePropertiesRepresentation('/artidoc/' . urlencode((string) $event->item->getId())));
+            $event->setItemRepresentationArguments(ArtidocDocument::TYPE, new OtherTypePropertiesRepresentation('/artidoc/' . urlencode((string) $event->item->getId())));
         }
     }
 
@@ -215,7 +227,7 @@ class ArtidocPlugin extends Plugin implements PluginWithConfigKeys
         }
     }
 
-    public function getConfigKeys(\Tuleap\Config\ConfigClassProvider $event): void
+    public function getConfigKeys(ConfigClassProvider $event): void
     {
         $event->addConfigClass(ArtidocController::class);
     }

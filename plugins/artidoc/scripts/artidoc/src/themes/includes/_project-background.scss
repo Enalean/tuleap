@@ -18,7 +18,7 @@
  */
 
 @use "@tuleap/project-background";
-@use "../../../../../../../src/themes/BurningParrot/css/includes/global-variables";
+@use "@tuleap/burningparrot-theme/css/includes/global-variables";
 
 .project-with-background {
     .artidoc-header-title {
@@ -28,11 +28,26 @@
     .document-layout {
         border-top: 0;
     }
+
+    .tlp-button-ellipsis {
+        --tlp-button-ellipsis-color: var(--tlp-button-ellipsis-color-on-dark-value);
+        --tlp-button-ellipsis-hover-color: var(--tlp-button-ellipsis-hover-color-on-dark-value);
+        --tlp-button-ellipsis-focus-border-color: var(
+            --tlp-button-ellipsis-focus-border-color-on-dark-value
+        );
+        --tlp-button-ellipsis-disabled-color: var(
+            --tlp-button-ellipsis-disabled-color-on-dark-value
+        );
+        --tlp-button-ellipsis-disabled-opacity: var(
+            --tlp-button-ellipsis-disabled-opacity-on-dark-value
+        );
+        --tlp-button-ellipsis-text-shadow: var(--tlp-button-ellipsis-text-shadow-on-dark-value);
+    }
 }
 
 body {
     @include project-background.apply-background(
-        ".artidoc-header-title",
+        ".document-header",
         global-variables.$sidebar-expanded-width,
         global-variables.$sidebar-collapsed-width
     );

@@ -8,6 +8,9 @@ dependencies:
   '@tuleap/ckeditor-config':
     specifier: workspace:*
     version: link:../../../../lib/frontend/ckeditor-config
+  '@tuleap/dom':
+    specifier: workspace:^
+    version: link:../../../../lib/frontend/dom
   '@tuleap/fault':
     specifier: workspace:*
     version: link:../../../../lib/frontend/fault
@@ -20,6 +23,9 @@ dependencies:
   '@tuleap/tlp-dropdown':
     specifier: workspace:*
     version: link:../../../../lib/frontend/tlp-dropdown
+  '@tuleap/tlp-modal':
+    specifier: workspace:^
+    version: link:../../../../lib/frontend/tlp-modal
   '@tuleap/tooltip':
     specifier: workspace:*
     version: link:../../../../lib/frontend/tooltip
