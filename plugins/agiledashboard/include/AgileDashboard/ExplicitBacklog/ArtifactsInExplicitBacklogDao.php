@@ -37,16 +37,21 @@ class ArtifactsInExplicitBacklogDao extends DataAccessObject
         $this->getDB()->run($sql, $project_id, $artifact_id, $project_id, $artifact_id);
     }
 
-    public function getTopBacklogItemsForProjectSortedByRank(int $project_id, int $limit, int $offset)
+    /**
+     * @psalm-return list<array{artifact_id: int}>
+     */
+    public function getOpenTopBacklogItemsForProjectSortedByRank(int $project_id, int $limit, int $offset): array
     {
         $sql = 'SELECT SQL_CALC_FOUND_ROWS plugin_agiledashboard_planning_artifacts_explicit_backlog.artifact_id
                 FROM plugin_agiledashboard_planning_artifacts_explicit_backlog
-                INNER JOIN tracker_artifact_priority_rank
-                    ON plugin_agiledashboard_planning_artifacts_explicit_backlog.artifact_id = tracker_artifact_priority_rank.artifact_id
-                WHERE project_id = ?
+                JOIN tracker_artifact_priority_rank ON plugin_agiledashboard_planning_artifacts_explicit_backlog.artifact_id = tracker_artifact_priority_rank.artifact_id
+                JOIN tracker_artifact ON tracker_artifact.id = plugin_agiledashboard_planning_artifacts_explicit_backlog.artifact_id
+                JOIN tracker_semantic_status ON tracker_semantic_status.tracker_id = tracker_artifact.tracker_id
+                JOIN tracker_changeset_value ON (tracker_changeset_value.field_id = tracker_semantic_status.field_id AND tracker_changeset_value.changeset_id = tracker_artifact.last_changeset_id)
+                JOIN tracker_changeset_value_list ON (tracker_changeset_value_list.bindvalue_id = tracker_semantic_status.open_value_id AND tracker_changeset_value_list.changeset_value_id = tracker_changeset_value.id)
+                WHERE plugin_agiledashboard_planning_artifacts_explicit_backlog.project_id = ?
                 ORDER BY tracker_artifact_priority_rank.`rank`
-                LIMIT ?
-                OFFSET ?';
+                LIMIT ? OFFSET ?';
 
         return $this->getDB()->run($sql, $project_id, $limit, $offset);
     }

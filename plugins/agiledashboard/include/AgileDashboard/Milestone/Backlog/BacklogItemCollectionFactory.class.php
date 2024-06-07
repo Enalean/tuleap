@@ -706,7 +706,7 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory
         int $limit,
         int $offset,
     ): AgileDashboard_Milestone_Backlog_IBacklogItemCollection {
-        $rows                  = $this->artifacts_in_explicit_backlog_dao->getTopBacklogItemsForProjectSortedByRank(
+        $rows                  = $this->artifacts_in_explicit_backlog_dao->getOpenTopBacklogItemsForProjectSortedByRank(
             (int) $milestone->getGroupId(),
             $limit,
             $offset
@@ -741,10 +741,10 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory
         Planning_Milestone $milestone,
         ?string $redirection_url,
         array $backlog_item_ids,
-        array $artifacts,
+        array $open_artifacts,
     ): AgileDashboard_Milestone_Backlog_IBacklogItemCollection {
         $parents   = $this->getParentArtifacts($milestone, $user, $backlog_item_ids);
-        $semantics = $this->getArtifactsSemantics($user, $milestone, $backlog_item_ids, $artifacts);
+        $semantics = $this->getArtifactsSemantics($user, $milestone, $backlog_item_ids, $open_artifacts);
 
         if (empty($backlog_item_ids)) {
             $children = 0;
@@ -753,14 +753,10 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory
         }
 
         $collection = $this->backlog_item_builder->getCollection();
-        foreach ($artifacts as $artifact) {
+        foreach ($open_artifacts as $artifact) {
             $artifact_id = $artifact->getId();
 
-            if (
-                ! isset($semantics[$artifact_id])
-                || ! isset($semantics[$artifact_id][Tracker_Semantic_Status::NAME])
-                || $semantics[$artifact_id][Tracker_Semantic_Status::NAME] != AgileDashboard_BacklogItemDao::STATUS_OPEN
-            ) {
+            if (! isset($semantics[$artifact_id])) {
                 continue;
             }
 
