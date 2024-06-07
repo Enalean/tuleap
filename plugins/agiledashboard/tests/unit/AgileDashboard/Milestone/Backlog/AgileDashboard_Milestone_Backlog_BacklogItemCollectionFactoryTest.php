@@ -396,7 +396,7 @@ final class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactoryTest ex
         $milestone = $this->createMock(Planning_Milestone::class);
         $milestone->expects(self::once())->method('getGroupId')->willReturn(101);
 
-        $this->artifacts_in_explicit_backlog_dao->expects(self::once())->method('getTopBacklogItemsForProjectSortedByRank')
+        $this->artifacts_in_explicit_backlog_dao->expects(self::once())->method('getOpenTopBacklogItemsForProjectSortedByRank')
             ->willReturn([
                 ['artifact_id' => 9],
                 ['artifact_id' => 10],
