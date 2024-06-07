@@ -19,7 +19,6 @@
   -->
 <template>
     <div>
-        <span class="editor-cta"><slot name="header-cta"></slot></span>
         <h1>
             <textarea
                 type="text"
@@ -35,8 +34,8 @@
             <template v-else>
                 {{ title }}
             </template>
-            <a v-bind:href="artifact_url">#{{ artifact_id }}</a>
         </h1>
+        <slot name="header-cta"></slot>
     </div>
 </template>
 
@@ -47,12 +46,10 @@ import type { SectionEditor } from "@/composables/useSectionEditor";
 import { useGettext } from "vue3-gettext";
 
 const props = defineProps<{
-    artifact_id: number;
     title: string;
     is_edit_mode: boolean;
     input_current_title: SectionEditor["inputCurrentTitle"];
 }>();
-const artifact_url = `/plugins/tracker/?aid=${props.artifact_id}`;
 
 const { scrollToAnchor } = useScrollToAnchor();
 const { $gettext } = useGettext();
@@ -98,20 +95,15 @@ function adjustHeightOfTextareaToContent(textarea: HTMLTextAreaElement): void {
 </script>
 
 <style lang="scss" scoped>
+div {
+    position: relative;
+}
+
 h1 {
-    align-items: center;
+    flex-grow: 1;
     margin: 0;
     padding-bottom: var(--tlp-small-spacing);
     color: var(--tlp-dark-color);
-}
-
-.editor-cta {
-    margin: var(--tlp-small-spacing) 0 0 var(--tlp-small-spacing);
-    float: right;
-
-    &:empty {
-        display: none;
-    }
 }
 
 a {

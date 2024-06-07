@@ -34,17 +34,26 @@ msgstr "Détails de l'erreur"
 msgid "Force save"
 msgstr "Forcer la sauvegarde"
 
+msgid "Go to artifact"
+msgstr "Aller à l'artéfact"
+
 msgid "Load new section"
 msgstr "Charger la nouvelle section"
 
 msgid "Open artifact"
 msgstr "Ouvrir l'artéfact"
 
+msgid "Open contextual menu"
+msgstr "Ouvrir le menu contextuel"
+
 msgid "Reload page"
 msgstr "Recharger la page"
 
 msgid "Save"
 msgstr "Sauvegarder"
+
+msgid "Section is currently being edited"
+msgstr "La section est en train d'être éditée"
 
 msgid "Section without title"
 msgstr "Section sans titre"

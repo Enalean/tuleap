@@ -16,20 +16,24 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-import { describe, expect, it } from "vitest";
-import type { VueWrapper } from "@vue/test-utils";
+import { describe, expect, it, vi } from "vitest";
+import type { DOMWrapper, VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import SectionEditorCta from "./SectionEditorCta.vue";
 import type { ComponentPublicInstance } from "vue";
 import { createGettext } from "vue3-gettext";
 import { SectionEditorStub } from "@/helpers/stubs/SectionEditorStub";
 import type { SectionEditor } from "@/composables/useSectionEditor";
+import ArtidocSectionFactory from "@/helpers/artidoc-section.factory";
+
+vi.mock("@tuleap/tlp-dropdown");
 
 describe("SectionEditorCta", () => {
     function getWrapper(editor: SectionEditor): VueWrapper<ComponentPublicInstance> {
         return shallowMount(SectionEditorCta, {
             propsData: {
                 editor,
+                section: ArtidocSectionFactory.create(),
             },
             global: {
                 plugins: [createGettext({ silent: true })],
@@ -37,25 +41,27 @@ describe("SectionEditorCta", () => {
         });
     }
 
+    function getEditCta(editor: SectionEditor): DOMWrapper<Element> {
+        return getWrapper(editor).find("[data-test=edit]");
+    }
+
     describe("when the edit mode is off", () => {
-        it("should display edit button", () => {
-            expect(
-                getWrapper(SectionEditorStub.withEditableSection()).find("button").exists(),
-            ).toBe(true);
+        it("should display edit cta", () => {
+            expect(getEditCta(SectionEditorStub.withEditableSection()).exists()).toBe(true);
         });
     });
 
     describe("when the edit mode is on", () => {
-        it("should hide edit button", () => {
-            expect(getWrapper(SectionEditorStub.inEditMode()).find("button").exists()).toBe(false);
+        it("should disable edit cta", () => {
+            const cta = getEditCta(SectionEditorStub.inEditMode());
+            expect(cta.exists()).toBe(true);
+            expect(cta.classes()).toContain("tlp-dropdown-menu-item-disabled");
         });
     });
 
     describe("when the user is not allowed to edit the section", () => {
-        it("should display edit button", () => {
-            expect(
-                getWrapper(SectionEditorStub.withoutEditableSection()).find("button").exists(),
-            ).toBe(false);
+        it("should hide edit cta", () => {
+            expect(getEditCta(SectionEditorStub.withoutEditableSection()).exists()).toBe(false);
         });
     });
 });

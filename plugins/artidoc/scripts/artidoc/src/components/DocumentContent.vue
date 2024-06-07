@@ -68,20 +68,22 @@ const { sections } = useInjectSectionsStore();
 </style>
 
 <style lang="scss" scoped>
+@use "@/themes/includes/whitespace";
+
 ol {
     padding: 0;
     counter-reset: item-without-dot;
 }
 
-$section-horizontal-padding: calc(var(--tlp-jumbo-spacing) + var(--tlp-large-spacing));
+$section-left-padding: calc(#{whitespace.$section-horizontal-padding} + var(--tlp-large-spacing));
 
 li {
     --tuleap-artidoc-section-background: var(--tlp-white-color);
 
     position: relative;
     margin: 0 0 var(--tlp-medium-spacing);
-    padding: var(--tlp-medium-spacing) var(--tlp-jumbo-spacing) var(--tlp-medium-spacing)
-        $section-horizontal-padding;
+    padding: var(--tlp-medium-spacing) whitespace.$section-horizontal-padding
+        var(--tlp-medium-spacing) $section-left-padding;
     transition: background-color 75ms ease-in-out;
     background: var(--tuleap-artidoc-section-background);
     counter-increment: item-without-dot;
@@ -132,7 +134,7 @@ li::before {
     position: absolute;
     left: 0;
     width: calc(
-        #{$section-horizontal-padding} - #{$section-number-padding-left} - #{$section-number-padding-right}
+        #{$section-left-padding} - #{$section-number-padding-left} - #{$section-number-padding-right}
     );
     padding: 0 $section-number-padding-right 0 $section-number-padding-left;
     color: var(--tlp-dimmed-color-lighter-50);

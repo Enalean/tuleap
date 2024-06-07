@@ -110,7 +110,9 @@ onBeforeUnmount(() => {
 </script>
 
 <style lang="scss" scoped>
+@use "@/themes/includes/zindex";
+
 div {
-    z-index: 1;
+    z-index: zindex.$editor;
 }
 </style>

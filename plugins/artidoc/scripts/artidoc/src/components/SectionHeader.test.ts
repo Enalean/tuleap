@@ -20,18 +20,17 @@
 import { beforeAll, describe, expect, it, vi } from "vitest";
 import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
-import SectionTitleWithArtifactId from "./SectionTitleWithArtifactId.vue";
+import SectionHeader from "./SectionHeader.vue";
 import type { ComponentPublicInstance } from "vue";
 import { createGettext } from "vue3-gettext";
 
-describe("SectionTitleWithArtifactId", () => {
+describe("SectionHeader", () => {
     describe("when the sections are loaded", () => {
         let wrapper: VueWrapper<ComponentPublicInstance>;
         beforeAll(() => {
-            wrapper = shallowMount(SectionTitleWithArtifactId, {
+            wrapper = shallowMount(SectionHeader, {
                 propsData: {
                     title: "expected title",
-                    artifact_id: 555,
                     is_edit_mode: false,
                     input_current_title: (): void => {},
                 },
@@ -46,11 +45,6 @@ describe("SectionTitleWithArtifactId", () => {
             expect(wrapper.find("h1").text()).toContain("expected title");
         });
 
-        it("should display the artifact id with artifact page link", () => {
-            expect(wrapper.find("a").text()).toContain("#555");
-            expect(wrapper.find("a").attributes().href).toBe("/plugins/tracker/?aid=555");
-        });
-
         it("should display the edit button", () => {
             expect(wrapper.find("div button").text()).toBe("edit");
         });
@@ -58,10 +52,9 @@ describe("SectionTitleWithArtifactId", () => {
         it("should display title in edit mode", () => {
             const input_current_title: (value: string) => void = vi.fn();
 
-            const wrapper = shallowMount(SectionTitleWithArtifactId, {
+            const wrapper = shallowMount(SectionHeader, {
                 propsData: {
                     title: "expected title",
-                    artifact_id: 555,
                     is_edit_mode: true,
                     input_current_title,
                 },
