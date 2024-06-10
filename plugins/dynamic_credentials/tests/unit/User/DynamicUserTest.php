@@ -61,6 +61,14 @@ final class DynamicUserTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertTrue($user->isSuperUser());
     }
 
+    public function testUserIsNotConsideredToBeATechnicalUser(): void
+    {
+        $is_logged_in = true;
+        $user         = new DynamicUser('Realname', [], $is_logged_in);
+
+        self::assertFalse($user->isATechnicalUser());
+    }
+
     public function testRealnameUsedIsTheGivenOne(): void
     {
         $is_logged_in = true;
