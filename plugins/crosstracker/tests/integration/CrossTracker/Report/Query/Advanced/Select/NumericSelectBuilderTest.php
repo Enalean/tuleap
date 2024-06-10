@@ -19,6 +19,7 @@
  */
 
 declare(strict_types=1);
+
 namespace Tuleap\CrossTracker\Report\Query\Advanced\Select;
 
 use PFUser;
@@ -38,8 +39,10 @@ use Tuleap\Test\Builders\CoreDatabaseBuilder;
 use Tuleap\Tracker\Permission\TrackersPermissionsRetriever;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Field;
 use Tuleap\Tracker\Test\Builders\TrackerDatabaseBuilder;
+use function count;
+use function md5;
 
-final class TextSelectFromBuilderTest extends CrossTrackerFieldTestCase
+final class NumericSelectBuilderTest extends CrossTrackerFieldTestCase
 {
     private SelectBuilderVisitor $builder;
     private CrossTrackerExpertQueryReportDao $dao;
@@ -52,7 +55,7 @@ final class TextSelectFromBuilderTest extends CrossTrackerFieldTestCase
      */
     private array $artifact_ids;
     /**
-     * @var array<int, ?string>
+     * @var array<int, int|float|null>
      */
     private array $expected_values;
     private PFUser $user;
@@ -72,72 +75,72 @@ final class TextSelectFromBuilderTest extends CrossTrackerFieldTestCase
         $sprint_tracker  = $tracker_builder->buildTracker($project_id, 'Sprint');
         $this->trackers  = [$release_tracker, $sprint_tracker];
 
-        $release_text_field_id = $tracker_builder->buildTextField(
+        $release_int_field_id  = $tracker_builder->buildIntField(
             $release_tracker->getId(),
-            'text_field',
+            'numeric_field',
         );
-        $sprint_text_field_id  = $tracker_builder->buildTextField(
+        $sprint_float_field_id = $tracker_builder->buildFloatField(
             $sprint_tracker->getId(),
-            'text_field',
+            'numeric_field',
         );
 
         $tracker_builder->setReadPermission(
-            $release_text_field_id,
+            $release_int_field_id,
             ProjectUGroup::PROJECT_MEMBERS
         );
         $tracker_builder->setReadPermission(
-            $sprint_text_field_id,
+            $sprint_float_field_id,
             ProjectUGroup::PROJECT_MEMBERS
         );
 
         $release_artifact_empty_id     = $tracker_builder->buildArtifact($release_tracker->getId());
-        $release_artifact_with_text_id = $tracker_builder->buildArtifact($release_tracker->getId());
-        $sprint_artifact_with_text_id  = $tracker_builder->buildArtifact($sprint_tracker->getId());
+        $release_artifact_with_int_id  = $tracker_builder->buildArtifact($release_tracker->getId());
+        $sprint_artifact_with_float_id = $tracker_builder->buildArtifact($sprint_tracker->getId());
         $this->artifact_ids            = [
             $release_artifact_empty_id,
-            $release_artifact_with_text_id,
-            $sprint_artifact_with_text_id,
+            $release_artifact_with_int_id,
+            $sprint_artifact_with_float_id,
         ];
 
         $tracker_builder->buildLastChangeset($release_artifact_empty_id);
-        $release_artifact_with_text_changeset = $tracker_builder->buildLastChangeset($release_artifact_with_text_id);
-        $sprint_artifact_with_text_changeset  = $tracker_builder->buildLastChangeset($sprint_artifact_with_text_id);
+        $release_artifact_with_int_changeset  = $tracker_builder->buildLastChangeset($release_artifact_with_int_id);
+        $sprint_artifact_with_float_changeset = $tracker_builder->buildLastChangeset($sprint_artifact_with_float_id);
 
         $this->expected_values = [
-            $release_artifact_empty_id      => null,
-            $release_artifact_with_text_id  => '911 GT3 RS',
-            $sprint_artifact_with_text_id   => '718 Cayman GT4 RS',
+            $release_artifact_empty_id     => null,
+            $release_artifact_with_int_id  => 42,
+            $sprint_artifact_with_float_id => 3.14,
         ];
-        $tracker_builder->buildTextValue(
-            $release_artifact_with_text_changeset,
-            $release_text_field_id,
-            (string) $this->expected_values[$release_artifact_with_text_id],
-            'text'
+        $tracker_builder->buildIntValue(
+            $release_artifact_with_int_changeset,
+            $release_int_field_id,
+            (int) $this->expected_values[$release_artifact_with_int_id],
         );
 
-        $tracker_builder->buildTextValue(
-            $sprint_artifact_with_text_changeset,
-            $sprint_text_field_id,
-            (string) $this->expected_values[$sprint_artifact_with_text_id],
-            'commonmark'
+        $tracker_builder->buildFloatValue(
+            $sprint_artifact_with_float_changeset,
+            $sprint_float_field_id,
+            (float) $this->expected_values[$sprint_artifact_with_float_id],
         );
 
 
-        $this->builder = new SelectBuilderVisitor(new FieldSelectFromBuilder(
-            Tracker_FormElementFactory::instance(),
-            new FieldTypeRetrieverWrapper(Tracker_FormElementFactory::instance()),
-            TrackersPermissionsRetriever::build(),
-            new DateSelectFromBuilder(),
-            new TextSelectFromBuilder(),
-            new NumericSelectFromBuilder()
-        ));
+        $this->builder = new SelectBuilderVisitor(
+            new FieldSelectFromBuilder(
+                Tracker_FormElementFactory::instance(),
+                new FieldTypeRetrieverWrapper(Tracker_FormElementFactory::instance()),
+                TrackersPermissionsRetriever::build(),
+                new DateSelectFromBuilder(),
+                new TextSelectFromBuilder(),
+                new NumericSelectFromBuilder()
+            )
+        );
         $this->dao     = new CrossTrackerExpertQueryReportDao();
     }
 
     private function getQueryResults(): array
     {
         $select_from = $this->builder->buildSelectFrom(
-            [new Field('text_field')],
+            [new Field('numeric_field')],
             $this->trackers,
             $this->user,
         );
@@ -147,13 +150,43 @@ final class TextSelectFromBuilderTest extends CrossTrackerFieldTestCase
 
     public function testItReturnsColumns(): void
     {
-        $results = $this->getQueryResults();
-        $hash    = \md5('text_field');
-        self::assertCount(\count($this->artifact_ids), $results);
+        $results          = $this->getQueryResults();
+        $hash             = md5('numeric_field');
+        $int_field_hash   = 'int_' . $hash;
+        $float_field_hash = 'float_' . $hash;
+        self::assertCount(count($this->artifact_ids), $results);
+
         foreach ($results as $row) {
-            self::assertArrayHasKey($hash, $row);
+            self::assertArrayHasKey($int_field_hash, $row);
+            self::assertArrayHasKey($float_field_hash, $row);
             self::assertArrayHasKey('id', $row);
-            self::assertSame($this->expected_values[$row['id']], $row[$hash]);
+            $this->assertIntValueCase($row, $int_field_hash, $float_field_hash);
+            $this->assertFloatValueCase($row, $int_field_hash, $float_field_hash);
+            $this->assertNullValueCase($row, $int_field_hash, $float_field_hash);
+        }
+    }
+
+    private function assertNullValueCase(array $row, string $int_field_hash, string $float_field_hash): void
+    {
+        if ($row[$int_field_hash] === null && $row[$float_field_hash] === null) {
+            self::assertNull($row[$int_field_hash]);
+            self::assertNull($row[$float_field_hash]);
+        }
+    }
+
+    private function assertIntValueCase(array $row, string $int_field_hash, string $float_field_hash): void
+    {
+        if ($row[$int_field_hash] !== null && $row[$float_field_hash] === null) {
+            self::assertSame($this->expected_values[$row['id']], $row[$int_field_hash]);
+            self::assertNull($row[$float_field_hash]);
+        }
+    }
+
+    private function assertFloatValueCase(array $row, string $int_field_hash, string $float_field_hash): void
+    {
+        if ($row[$int_field_hash] === null && $row[$float_field_hash] !== null) {
+            self::assertNull($row[$int_field_hash]);
+            self::assertSame($this->expected_values[$row['id']], $row[$float_field_hash]);
         }
     }
 }

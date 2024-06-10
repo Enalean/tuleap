@@ -32,6 +32,7 @@ use Tuleap\CrossTracker\Report\Query\Advanced\DuckTypedField\FieldTypeRetrieverW
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\CrossTrackerExpertQueryReportDao;
 use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Field\Date\DateSelectFromBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Field\FieldSelectFromBuilder;
+use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Field\Numeric\NumericSelectFromBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Field\Text\TextSelectFromBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilderVisitor;
 use Tuleap\DB\DBFactory;
@@ -150,6 +151,7 @@ final class DateSelectBuilderTest extends CrossTrackerFieldTestCase
             TrackersPermissionsRetriever::build(),
             new DateSelectFromBuilder(),
             new TextSelectFromBuilder(),
+            new NumericSelectFromBuilder()
         ));
         $this->dao     = new CrossTrackerExpertQueryReportDao();
     }

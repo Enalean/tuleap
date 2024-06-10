@@ -27,6 +27,7 @@ use PFUser;
 use Tracker;
 use Tuleap\CrossTracker\Report\Query\Advanced\DuckTypedField\FieldTypeRetrieverWrapper;
 use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Field\Date\DateSelectFromBuilder;
+use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Field\Numeric\NumericSelectFromBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Field\Text\TextSelectFromBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\IProvideParametrizedSelectAndFromSQLFragments;
 use Tuleap\ForgeConfigSandbox;
@@ -35,7 +36,9 @@ use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Permission\FieldPermissionType;
 use Tuleap\Tracker\Permission\TrackersPermissionsRetriever;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Field;
+use Tuleap\Tracker\Test\Builders\Fields\ArtifactLinkFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\DateFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\FileFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\FloatFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\IntFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\TextFieldBuilder;
@@ -75,6 +78,7 @@ final class FieldSelectFromBuilderTest extends TestCase
             ),
             new DateSelectFromBuilder(),
             new TextSelectFromBuilder(),
+            new NumericSelectFromBuilder(),
         );
 
         return $builder->getSelectFrom(
@@ -88,12 +92,11 @@ final class FieldSelectFromBuilderTest extends TestCase
     {
         $result = $this->getSelectFrom(
             RetrieveUsedFieldsStub::withFields(
-                IntFieldBuilder::anIntField(self::FIRST_FIELD_ID)
+                ArtifactLinkFieldBuilder::anArtifactLinkField(self::FIRST_FIELD_ID)
                     ->withName(self::FIELD_NAME)
                     ->inTracker($this->first_tracker)
-                    ->withReadPermission($this->user, true)
                     ->build(),
-                FloatFieldBuilder::aFloatField(self::SECOND_FIELD_ID)
+                FileFieldBuilder::aFileField(self::SECOND_FIELD_ID)
                     ->withName(self::FIELD_NAME)
                     ->inTracker($this->second_tracker)
                     ->withReadPermission($this->user, true)
@@ -136,6 +139,27 @@ final class FieldSelectFromBuilderTest extends TestCase
                     ->withReadPermission($this->user, true)
                     ->build(),
             TextFieldBuilder::aTextField(self::SECOND_FIELD_ID)
+                    ->withName(self::FIELD_NAME)
+                    ->inTracker($this->first_tracker)
+                    ->withReadPermission($this->user, true)
+                    ->build()
+        );
+
+        $select_from = $this->getSelectFrom($fields_retriever);
+        self::assertNotEmpty($select_from->getSelect());
+        self::assertNotEmpty($select_from->getFrom());
+        self::assertNotEmpty($select_from->getFromParameters());
+    }
+
+    public function testItReturnsSQLForNumericField(): void
+    {
+        $fields_retriever = RetrieveUsedFieldsStub::withFields(
+            IntFieldBuilder::anIntField(self::FIRST_FIELD_ID)
+                    ->withName(self::FIELD_NAME)
+                    ->inTracker($this->first_tracker)
+                    ->withReadPermission($this->user, true)
+                    ->build(),
+            FloatFieldBuilder::aFloatField(self::SECOND_FIELD_ID)
                     ->withName(self::FIELD_NAME)
                     ->inTracker($this->first_tracker)
                     ->withReadPermission($this->user, true)
