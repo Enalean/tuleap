@@ -19,7 +19,6 @@
 
 import "./style.scss";
 import { openAllTargetModalsOnClick } from "@tuleap/tlp-modal";
-import "@tuleap/copy-to-clipboard";
 
 document.addEventListener("DOMContentLoaded", () => {
     openAllTargetModalsOnClick(
@@ -33,23 +32,4 @@ document.addEventListener("DOMContentLoaded", () => {
             activation.form?.submit();
         });
     }
-
-    document
-        .querySelectorAll(".tracker-functions-admin-logs-details-payload-copy")
-        .forEach((copy) => {
-            let copied = false;
-            copy.addEventListener("copied-to-clipboard", () => {
-                if (copied) {
-                    return;
-                }
-                copied = true;
-                copy.classList.add("tracker-functions-admin-logs-details-payload-copy-copied");
-                setTimeout(() => {
-                    copy.classList.remove(
-                        "tracker-functions-admin-logs-details-payload-copy-copied",
-                    );
-                    copied = false;
-                }, 2000);
-            });
-        });
 });

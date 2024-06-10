@@ -3,8 +3,8 @@ CREATE TABLE IF NOT EXISTS plugin_tracker_functions_log
     id                     int(11) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
     status                 varchar(64)      NOT NULL,
     changeset_id           int(11)          NOT NULL,
-    source_payload_json    text             NOT NULL,
-    generated_payload_json text             NULL,
+    source_payload_json    mediumblob       NOT NULL,
+    generated_payload_json mediumblob       NULL,
     error_message          text             NULL,
     execution_date         int(11)          NOT NULL,
 

@@ -192,7 +192,7 @@
 </div>
 
 {{# logs }}
-    <div class="tlp-modal tlp-modal-medium-sized"
+    <div class="tlp-modal"
          role="dialog"
          id="tracker-functions-admin-logs-details-{{ id }}"
          aria-labelledby="tracker-functions-admin-logs-details-{{ id }}-title"
@@ -272,66 +272,14 @@
             {{/ is_error }}
 
             <div class="tlp-property">
-                <label class="tlp-label">
-                    {{# dgettext }}tuleap-tracker_functions | Input payload{{/ dgettext }}
-                </label>
-                <div class="tracker-functions-admin-logs-details-payload-container">
-                    <copy-to-clipboard
-                        value="{{ source_payload_json }}"
-                        class="tracker-functions-admin-logs-details-payload-copy"
-                        aria-label="{{# dgettext }}tuleap-tracker_functions | Copy the input payload{{/ dgettext }}"
-                    >
-                        <button type="button"
-                                class="tlp-button-small tlp-button-outline tlp-button-secondary tlp-tooltip tlp-tooltip-left tracker-functions-admin-logs-details-payload-copy-button"
-                                data-tlp-tooltip="{{# dgettext }}tuleap-tracker_functions | Copy the input payload{{/ dgettext }}"
-                        >
-                            <span class="tracker-functions-admin-logs-details-payload-copy-default">
-                                <i class="fa-solid fa-fw fa-copy tlp-button-icon" aria-hidden="true"></i>
-                                {{# dgettext }}tuleap-tracker_functions | Copy {{/ dgettext }}
-                            </span>
-                            <span class="tracker-functions-admin-logs-details-payload-copy-feedback">
-                                <i class="fa-solid fa-fw fa-check tlp-button-icon" aria-hidden="true"></i>
-                                {{# dgettext }}tuleap-tracker_functions | Copied! {{/ dgettext }}
-                            </span>
-                        </button>
-                    </copy-to-clipboard>
-                    <tlp-syntax-highlighting class="tracker-functions-admin-logs-details-payload">
-                        <pre><code class="language-json">{{ source_payload_json }}</code></pre>
-                    </tlp-syntax-highlighting>
-                </div>
+                <p>
+                    <a href="{{ download_payloads_url }}" class="tlp-button-primary tlp-button-small">
+                        <i class="fa-solid fa-download tlp-button-icon" aria-hidden="true"></i>
+                        {{# dgettext }}tuleap-tracker_functions | Download payloads received and sent by the Tuleap Function{{/ dgettext }}
+                    </a>
+                </p>
             </div>
 
-            {{^ is_error }}
-                <div class="tlp-property">
-                    <label class="tlp-label">
-                        {{# dgettext }}tuleap-tracker_functions | Output payload{{/ dgettext }}
-                    </label>
-                    <div class="tracker-functions-admin-logs-details-payload-container">
-                        <copy-to-clipboard
-                            value="{{ generated_payload_json }}"
-                            class="tracker-functions-admin-logs-details-payload-copy"
-                            aria-label="{{# dgettext }}tuleap-tracker_functions | Copy the output payload{{/ dgettext }}"
-                        >
-                            <button type="button"
-                                    class="tlp-button-small tlp-button-outline tlp-button-secondary tlp-tooltip tlp-tooltip-left tracker-functions-admin-logs-details-payload-copy-button"
-                                    data-tlp-tooltip="{{# dgettext }}tuleap-tracker_functions | Copy the output payload{{/ dgettext }}"
-                            >
-                                <span class="tracker-functions-admin-logs-details-payload-copy-default">
-                                    <i class="fa-solid fa-fw fa-copy tlp-button-icon" aria-hidden="true"></i>
-                                    {{# dgettext }}tuleap-tracker_functions | Copy {{/ dgettext }}
-                                </span>
-                                <span class="tracker-functions-admin-logs-details-payload-copy-feedback">
-                                    <i class="fa-solid fa-fw fa-check tlp-button-icon" aria-hidden="true"></i>
-                                    {{# dgettext }}tuleap-tracker_functions | Copied! {{/ dgettext }}
-                                </span>
-                            </button>
-                        </copy-to-clipboard>
-                        <tlp-syntax-highlighting class="tracker-functions-admin-logs-details-payload">
-                            <pre><code class="language-json">{{ generated_payload_json }}</code></pre>
-                        </tlp-syntax-highlighting>
-                    </div>
-                </div>
-            {{/ is_error }}
         </div>
         <div class="tlp-modal-footer">
             <button type="button" class="tlp-button-primary tlp-modal-action" data-dismiss="modal">

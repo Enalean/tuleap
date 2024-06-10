@@ -19,18 +19,6 @@ msgstr ""
 msgid "Close"
 msgstr ""
 
-msgid "Copied!"
-msgstr ""
-
-msgid "Copy"
-msgstr ""
-
-msgid "Copy the input payload"
-msgstr ""
-
-msgid "Copy the output payload"
-msgstr ""
-
 msgid "Creation"
 msgstr ""
 
@@ -38,6 +26,9 @@ msgid "Date"
 msgstr ""
 
 msgid "Details"
+msgstr ""
+
+msgid "Download payloads received and sent by the Tuleap Function"
 msgstr ""
 
 msgid "Error"
@@ -70,9 +61,6 @@ msgstr ""
 msgid "Function uploaded"
 msgstr ""
 
-msgid "Input payload"
-msgstr ""
-
 msgid "Logs will also be deleted."
 msgstr ""
 
@@ -89,9 +77,6 @@ msgid "No function has been uploaded"
 msgstr ""
 
 msgid "No function!"
-msgstr ""
-
-msgid "Output payload"
 msgstr ""
 
 msgid "Please confirm your action."

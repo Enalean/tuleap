@@ -24,8 +24,9 @@ namespace Tuleap\TrackerFunctions\Logs;
 
 use Tracker_ArtifactFactory;
 use Tuleap\DB\DataAccessObject;
+use Tuleap\Option\Option;
 
-final class FunctionLogDao extends DataAccessObject implements SaveFunctionLog, RetrieveLogsForTracker, DeleteLogsPerTracker
+final class FunctionLogDao extends DataAccessObject implements SaveFunctionLog, RetrieveLogsForTracker, RetrievePayloadsForChangeset, DeleteLogsPerTracker
 {
     private const TABLE_NAME = 'plugin_tracker_functions_log';
 
@@ -59,16 +60,13 @@ final class FunctionLogDao extends DataAccessObject implements SaveFunctionLog, 
             fn(array $row) => new FunctionLogLineWithArtifact(
                 $row['log_id'],
                 match ($row['status']) {
-                    FunctionLogLine::STATUS_PASSED => FunctionLogLine::buildPassed(
+                    FunctionLogLineStatus::PASSED->value => FunctionLogLine::buildPassed(
                         $row['changeset_id'],
-                        $this->getDB()->cell('SELECT log.source_payload_json FROM plugin_tracker_functions_log AS log WHERE log.changeset_id = ?', $row['changeset_id']),
-                        $this->getDB()->cell('SELECT log.generated_payload_json FROM plugin_tracker_functions_log AS log WHERE log.changeset_id = ?', $row['changeset_id']),
                         $row['execution_date'],
                     ),
-                    FunctionLogLine::STATUS_ERROR  => FunctionLogLine::buildError(
+                    FunctionLogLineStatus::ERROR->value  => FunctionLogLine::buildError(
                         $row['changeset_id'],
-                        $this->getDB()->cell('SELECT log.source_payload_json FROM plugin_tracker_functions_log AS log WHERE log.changeset_id = ?', $row['changeset_id']),
-                        $this->getDB()->cell('SELECT log.error_message FROM plugin_tracker_functions_log AS log WHERE log.changeset_id = ?', $row['changeset_id']),
+                        $row['error_message'],
                         $row['execution_date'],
                     )
                 },
@@ -80,6 +78,7 @@ final class FunctionLogDao extends DataAccessObject implements SaveFunctionLog, 
                        log.status,
                        log.changeset_id,
                        log.execution_date,
+                       log.error_message,
                        artifact.*,
                        CVT.value AS title,
                        CVT.body_format AS title_format
@@ -101,9 +100,47 @@ final class FunctionLogDao extends DataAccessObject implements SaveFunctionLog, 
         );
     }
 
-    public function saveFunctionLogLine(FunctionLogLine $log_line): void
+    /**
+     * @psalm-return Option<FunctionLogPayloads>
+     */
+    public function searchPayloadsByChangesetID(int $changeset_id): Option
     {
-        $this->getDB()->insert(self::TABLE_NAME, $log_line->toArray());
+        $row = $this->getDB()->row(
+            '
+            SELECT tracker_artifact.tracker_id, plugin_tracker_functions_log.source_payload_json, plugin_tracker_functions_log.generated_payload_json
+            FROM plugin_tracker_functions_log
+            JOIN tracker_changeset ON (tracker_changeset.id = plugin_tracker_functions_log.changeset_id)
+            JOIN tracker_artifact ON (tracker_artifact.id = tracker_changeset.artifact_id)
+            WHERE tracker_changeset.id = ?',
+            $changeset_id
+        );
+
+        if ($row === null) {
+            return Option::nothing(FunctionLogPayloads::class);
+        }
+
+        return Option::fromValue(
+            new FunctionLogPayloads(
+                $row['tracker_id'],
+                $row['source_payload_json'],
+                Option::fromNullable($row['generated_payload_json']),
+            )
+        );
+    }
+
+    public function saveFunctionLogLine(FunctionLogLineToSave $log_line): void
+    {
+        $this->getDB()->insert(
+            self::TABLE_NAME,
+            [
+                'status'                 => $log_line->status->value,
+                'changeset_id'           => $log_line->changeset_id,
+                'source_payload_json'    => $log_line->source_payload_json,
+                'generated_payload_json' => $log_line->generated_payload_json,
+                'error_message'          => $log_line->error_message,
+                'execution_date'         => $log_line->execution_date,
+            ]
+        );
         $this->cleanupLogs($log_line->changeset_id);
     }
 

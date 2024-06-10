@@ -68,29 +68,36 @@ final class FunctionLogDaoTest extends TestIntegrationTestCase
     {
         $this->dao->saveFunctionLogLine($this->createLogForChangeset($this->changeset_id, true));
 
-        $result = $this->dao->searchLogsByTrackerId($this->tracker_id)[0]->log_line->toArray();
+        $result = $this->dao->searchLogsByTrackerId($this->tracker_id)[0]->log_line;
 
-        self::assertEquals(FunctionLogLine::STATUS_PASSED, $result['status']);
-        self::assertEquals($this->changeset_id, $result['changeset_id']);
-        self::assertEquals('{"source": "payload"}', $result['source_payload_json']);
-        self::assertEquals('{"generated": "payload"}', $result['generated_payload_json']);
-        self::assertNull($result['error_message']);
-        self::assertEquals(1234567890, $result['execution_date']);
+        self::assertEquals(FunctionLogLineStatus::PASSED, $result->status);
+        self::assertEquals($this->changeset_id, $result->changeset_id);
+        self::assertNull($result->error_message);
+        self::assertEquals(1234567890, $result->execution_date);
+
+        $payloads = $this->dao->searchPayloadsByChangesetID($this->changeset_id)->unwrapOr(null);
+        self::assertNotNull($payloads);
+        self::assertEquals('{"source": "payload"}', $payloads->source_payload);
+        self::assertEquals('{"generated": "payload"}', $payloads->generated_payload->unwrapOr(null));
+        self::assertEquals($this->tracker_id, $payloads->tracker_id);
     }
 
     public function testItCanInsertANewErrorEntry(): void
     {
         $this->dao->saveFunctionLogLine($this->createLogForChangeset($this->changeset_id, false));
 
-        $result = $this->dao->searchLogsByTrackerId($this->tracker_id)[0]->log_line->toArray();
+        $result = $this->dao->searchLogsByTrackerId($this->tracker_id)[0]->log_line;
 
-        self::assertIsArray($result);
-        self::assertEquals(FunctionLogLine::STATUS_ERROR, $result['status']);
-        self::assertEquals($this->changeset_id, $result['changeset_id']);
-        self::assertEquals('{"source": "payload"}', $result['source_payload_json']);
-        self::assertNull($result['generated_payload_json']);
-        self::assertEquals('Error message', $result['error_message']);
-        self::assertEquals(1234567890, $result['execution_date']);
+        self::assertEquals(FunctionLogLineStatus::ERROR, $result->status);
+        self::assertEquals($this->changeset_id, $result->changeset_id);
+        self::assertEquals('Error message', $result->error_message);
+        self::assertEquals(1234567890, $result->execution_date);
+
+        $payloads = $this->dao->searchPayloadsByChangesetID($this->changeset_id)->unwrapOr(null);
+        self::assertNotNull($payloads);
+        self::assertEquals('{"source": "payload"}', $payloads->source_payload);
+        self::assertTrue($payloads->generated_payload->isNothing());
+        self::assertEquals($this->tracker_id, $payloads->tracker_id);
     }
 
     public function testItKeepsOnly50LogsMaxPerTracker(): void
@@ -115,17 +122,17 @@ final class FunctionLogDaoTest extends TestIntegrationTestCase
         self::assertCount(1, $this->dao->searchLogsByTrackerId($this->other_tracker_id));
     }
 
-    private function createLogForChangeset(int $changeset_id, bool $passed): FunctionLogLine
+    private function createLogForChangeset(int $changeset_id, bool $passed): FunctionLogLineToSave
     {
         if ($passed) {
-            return FunctionLogLine::buildPassed(
+            return FunctionLogLineToSave::buildPassed(
                 $changeset_id,
                 '{"source": "payload"}',
                 '{"generated": "payload"}',
                 1234567890,
             );
         } else {
-            return FunctionLogLine::buildError(
+            return FunctionLogLineToSave::buildError(
                 $changeset_id,
                 '{"source": "payload"}',
                 'Error message',

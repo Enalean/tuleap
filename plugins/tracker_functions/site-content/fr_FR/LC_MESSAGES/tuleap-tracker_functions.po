@@ -30,18 +30,6 @@ msgstr "Changer"
 msgid "Close"
 msgstr "Fermer"
 
-msgid "Copied!"
-msgstr "Copié !"
-
-msgid "Copy"
-msgstr "Copier"
-
-msgid "Copy the input payload"
-msgstr "Copier les données d'entrée"
-
-msgid "Copy the output payload"
-msgstr "Copier les données de sortie"
-
 msgid "Creation"
 msgstr "Création"
 
@@ -50,6 +38,9 @@ msgstr "Date"
 
 msgid "Details"
 msgstr "Détails"
+
+msgid "Download payloads received and sent by the Tuleap Function"
+msgstr "Télécharger les données reçues et envoyées par la Tuleap Function"
 
 msgid "Error"
 msgstr "Erreur"
@@ -82,9 +73,6 @@ msgstr "La fonction n'existe pas, peut-être a-t-elle déjà été supprimé ?"
 msgid "Function uploaded"
 msgstr "Fonction téléversé"
 
-msgid "Input payload"
-msgstr "Données d'entrée"
-
 msgid "Logs will also be deleted."
 msgstr "Les logs seront aussi supprimés."
 
@@ -102,9 +90,6 @@ msgstr "Aucune fonction n'a été téléversé"
 
 msgid "No function!"
 msgstr "Pas de fonction !"
-
-msgid "Output payload"
-msgstr "Données de sortie"
 
 msgid "Please confirm your action."
 msgstr "Veuillez confirmer votre action."
