@@ -25,6 +25,7 @@
 use Tuleap\AgileDashboard\ExplicitBacklog\ArtifactsInExplicitBacklogDao;
 use Tuleap\AgileDashboard\RemainingEffortValueRetriever;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Permission\RetrieveUserPermissionOnArtifacts;
 
 /**
  * I build collections of IBacklogItem
@@ -95,6 +96,7 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory
         RemainingEffortValueRetriever $remaining_effort_value_retriever,
         ArtifactsInExplicitBacklogDao $artifacts_in_explicit_backlog_dao,
         Tracker_Artifact_PriorityDao $artifact_priority_dao,
+        private readonly RetrieveUserPermissionOnArtifacts $user_permission_on_artifacts_retriever,
     ) {
         $this->dao                               = $dao;
         $this->artifact_factory                  = $artifact_factory;
@@ -185,10 +187,16 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory
         Planning_Milestone $milestone,
         ?string $redirection_url,
     ): AgileDashboard_Milestone_Backlog_IBacklogItemCollection {
+        $permissions_on_items = $this->user_permission_on_artifacts_retriever->retrieveUserPermissionOnArtifacts(
+            $user,
+            iterator_to_array($item_collection),
+            \Tuleap\Tracker\Permission\ArtifactPermissionType::PERMISSION_VIEW
+        );
+
         $artifacts        = [];
         $backlog_item_ids = [];
 
-        foreach ($item_collection as $artifact) {
+        foreach ($permissions_on_items->allowed as $artifact) {
             $artifacts[$artifact->getId()] = $artifact;
             $backlog_item_ids[]            = $artifact->getId();
         }
@@ -234,20 +242,17 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory
         $redirect_to_self,
     ): AgileDashboard_Milestone_Backlog_IBacklogItemCollection {
         $artifacts         = [];
-        $backlog_item_ids  = [];
         $sub_milestone_ids = $this->getSubmilestoneIds($user, $milestone);
 
         $item_collection = $backlog->getOpenUnplannedArtifacts($user, $sub_milestone_ids);
         foreach ($item_collection as $artifact) {
             $artifacts[$artifact->getId()] = $artifact;
-            $backlog_item_ids[]            = $artifact->getId();
         }
 
         $collection = $this->buildTopBacklogCollection(
             $user,
             $milestone,
             $redirect_to_self,
-            $backlog_item_ids,
             $artifacts
         );
         $collection->setTotalAvaialableSize($item_collection->getTotalAvaialableSize());
@@ -713,22 +718,19 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory
         );
         $collection_total_size = $this->artifacts_in_explicit_backlog_dao->foundRows();
 
-        $backlog_item_ids = [];
-        $artifacts        = [];
+        $artifacts = [];
         foreach ($rows as $row) {
             $artifact = $this->artifact_factory->getArtifactById($row['artifact_id']);
             if ($artifact === null) {
                 continue;
             }
             $artifacts[$artifact->getId()] = $artifact;
-            $backlog_item_ids[]            = $artifact->getId();
         }
 
         $collection = $this->buildTopBacklogCollection(
             $user,
             $milestone,
             $redirect_to_self,
-            $backlog_item_ids,
             $artifacts
         );
         $collection->setTotalAvaialableSize($collection_total_size);
@@ -736,13 +738,26 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory
         return $collection;
     }
 
+    /**
+     * @param Artifact[] $open_artifacts
+     */
     private function buildTopBacklogCollection(
         PFUser $user,
         Planning_Milestone $milestone,
         ?string $redirection_url,
-        array $backlog_item_ids,
         array $open_artifacts,
     ): AgileDashboard_Milestone_Backlog_IBacklogItemCollection {
+        $permissions_on_items = $this->user_permission_on_artifacts_retriever->retrieveUserPermissionOnArtifacts(
+            $user,
+            $open_artifacts,
+            \Tuleap\Tracker\Permission\ArtifactPermissionType::PERMISSION_VIEW,
+        );
+
+        $backlog_item_ids = [];
+        foreach ($permissions_on_items->allowed as $artifact) {
+            $backlog_item_ids[] = $artifact->getId();
+        }
+
         $parents   = $this->getParentArtifacts($milestone, $user, $backlog_item_ids);
         $semantics = $this->getArtifactsSemantics($user, $milestone, $backlog_item_ids, $open_artifacts);
 
@@ -753,7 +768,7 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory
         }
 
         $collection = $this->backlog_item_builder->getCollection();
-        foreach ($open_artifacts as $artifact) {
+        foreach ($permissions_on_items->allowed as $artifact) {
             $artifact_id = $artifact->getId();
 
             if (! isset($semantics[$artifact_id])) {

@@ -225,7 +225,8 @@ class Cardwall_Pane extends AgileDashboard_Pane
                 $this->tracker_form_element_factory
             ),
             new ArtifactsInExplicitBacklogDao(),
-            new Tracker_Artifact_PriorityDao()
+            new Tracker_Artifact_PriorityDao(),
+            \Tuleap\Tracker\Permission\TrackersPermissionsRetriever::build(),
         );
 
         $backlog_factory = new AgileDashboard_Milestone_Backlog_BacklogFactory(

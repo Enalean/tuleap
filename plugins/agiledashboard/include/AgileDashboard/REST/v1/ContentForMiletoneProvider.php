@@ -75,7 +75,8 @@ class ContentForMiletoneProvider
                     Tracker_FormElementFactory::instance()
                 ),
                 new ArtifactsInExplicitBacklogDao(),
-                new Tracker_Artifact_PriorityDao()
+                new Tracker_Artifact_PriorityDao(),
+                \Tuleap\Tracker\Permission\TrackersPermissionsRetriever::build(),
             )
         );
     }

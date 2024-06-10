@@ -47,6 +47,7 @@ use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
+use Tuleap\Tracker\Test\Stub\Tracker\Permission\TrackersPermissionsPassthroughRetriever;
 
 final class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactoryTest extends TestCase //phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 {
@@ -83,6 +84,7 @@ final class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactoryTest ex
                 $this->remaining_effort_value_retriever,
                 $this->artifacts_in_explicit_backlog_dao,
                 $this->artifact_priority_dao,
+                new TrackersPermissionsPassthroughRetriever(),
             ])
             ->onlyMethods([
                 'userCanReadBacklogTitleField',

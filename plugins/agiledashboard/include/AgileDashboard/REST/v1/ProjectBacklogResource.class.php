@@ -119,7 +119,8 @@ class ProjectBacklogResource
                 $tracker_form_element_factory
             ),
             new ArtifactsInExplicitBacklogDao(),
-            new Tracker_Artifact_PriorityDao()
+            new Tracker_Artifact_PriorityDao(),
+            \Tuleap\Tracker\Permission\TrackersPermissionsRetriever::build(),
         );
 
         $this->milestone_validator = new MilestoneResourceValidator(

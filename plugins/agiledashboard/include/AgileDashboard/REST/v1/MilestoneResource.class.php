@@ -160,7 +160,8 @@ class MilestoneResource extends AuthenticatedResource
             new AgileDashboard_Milestone_Backlog_BacklogItemBuilder(),
             new RemainingEffortValueRetriever(Tracker_FormElementFactory::instance()),
             new ArtifactsInExplicitBacklogDao(),
-            new Tracker_Artifact_PriorityDao()
+            new Tracker_Artifact_PriorityDao(),
+            \Tuleap\Tracker\Permission\TrackersPermissionsRetriever::build(),
         );
 
         $this->milestone_validator = new MilestoneResourceValidator(
