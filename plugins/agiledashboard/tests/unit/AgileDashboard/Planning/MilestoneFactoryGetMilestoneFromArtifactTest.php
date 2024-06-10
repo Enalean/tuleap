@@ -25,7 +25,7 @@ namespace Tuleap\AgileDashboard\Planning;
 
 use AgileDashboard_Milestone_MilestoneDao;
 use AgileDashboard_Milestone_MilestoneStatusCounter;
-use Mockery;
+use PHPUnit\Framework\MockObject\MockObject;
 use Planning;
 use Planning_ArtifactMilestone;
 use Planning_MilestoneFactory;
@@ -33,77 +33,54 @@ use PlanningFactory;
 use PlanningPermissionsManager;
 use Project;
 use Psr\Log\NullLogger;
-use Tracker;
 use Tracker_ArtifactFactory;
 use Tracker_FormElementFactory;
+use Tuleap\AgileDashboard\Test\Builders\PlanningBuilder;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
+use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
-class MilestoneFactoryGetMilestoneFromArtifactTest extends \Tuleap\Test\PHPUnit\TestCase
+final class MilestoneFactoryGetMilestoneFromArtifactTest extends TestCase
 {
-    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|PlanningFactory
-     */
-    private $planning_factory;
-    /**
-     * @var Planning_MilestoneFactory
-     */
-    private $milestone_factory;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Artifact
-     */
-    private $task_artifact;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Artifact
-     */
-    private $release_artifact;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Planning
-     */
-    private $release_planning;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Project
-     */
-    private $project;
+    private PlanningFactory&MockObject $planning_factory;
+    private Planning_MilestoneFactory $milestone_factory;
+    private Artifact $task_artifact;
+    private Artifact $release_artifact;
+    private Planning $release_planning;
+    private Project $project;
 
     protected function setUp(): void
     {
-        $this->project          = Mockery::spy(Project::class);
-        $this->release_planning = Mockery::spy(Planning::class);
+        $this->project          = ProjectTestBuilder::aProject()->build();
+        $this->release_planning = PlanningBuilder::aPlanning((int) $this->project->getID())->build();
 
-        $release_tracker = Mockery::mock(Tracker::class);
-        $release_tracker->shouldReceive('getProject')->andReturn($this->project);
-        $this->release_artifact = Mockery::mock(Artifact::class);
-        $this->release_artifact->shouldReceive('getTracker')->andReturn($release_tracker);
+        $release_tracker        = TrackerTestBuilder::aTracker()->withProject($this->project)->build();
+        $this->release_artifact = ArtifactTestBuilder::anArtifact(1)->inTracker($release_tracker)->build();
 
-        $task_tracker = Mockery::mock(Tracker::class);
-        $task_tracker->shouldReceive('getProject')->andReturn(Mockery::mock(Project::class));
+        $task_tracker        = TrackerTestBuilder::aTracker()->withProject($this->project)->build();
+        $this->task_artifact = ArtifactTestBuilder::anArtifact(2)->inTracker($task_tracker)->build();
 
-        $this->task_artifact = Mockery::mock(Artifact::class);
-        $this->task_artifact->shouldReceive('getTracker')->andReturn($task_tracker);
-
-        $this->planning_factory = Mockery::mock(PlanningFactory::class);
+        $this->planning_factory = $this->createMock(PlanningFactory::class);
 
         $this->milestone_factory = new Planning_MilestoneFactory(
             $this->planning_factory,
-            Mockery::spy(Tracker_ArtifactFactory::class),
-            Mockery::spy(Tracker_FormElementFactory::class),
-            Mockery::spy(AgileDashboard_Milestone_MilestoneStatusCounter::class),
-            Mockery::spy(PlanningPermissionsManager::class),
-            Mockery::spy(AgileDashboard_Milestone_MilestoneDao::class),
-            Mockery::mock(SemanticTimeframeBuilder::class),
+            $this->createMock(Tracker_ArtifactFactory::class),
+            $this->createMock(Tracker_FormElementFactory::class),
+            $this->createMock(AgileDashboard_Milestone_MilestoneStatusCounter::class),
+            $this->createMock(PlanningPermissionsManager::class),
+            $this->createMock(AgileDashboard_Milestone_MilestoneDao::class),
+            $this->createMock(SemanticTimeframeBuilder::class),
             new NullLogger(),
-            Mockery::spy(MilestoneBurndownFieldChecker::class)
         );
     }
 
     public function testItCreateMilestoneFromArtifact(): void
     {
-        $this->planning_factory->shouldReceive('getPlanningByPlanningTracker')->andReturn($this->release_planning)->once();
-        $release_milestone = $this->milestone_factory->getMilestoneFromArtifact($this->release_artifact);
-        $this->assertEqualToReleaseMilestone($release_milestone);
+        $this->planning_factory->expects(self::once())->method('getPlanningByPlanningTracker')->willReturn($this->release_planning);
+        $this->assertEqualToReleaseMilestone($this->milestone_factory->getMilestoneFromArtifact($this->release_artifact));
     }
 
     private function assertEqualToReleaseMilestone($actual_release_milestone): void
@@ -113,13 +90,12 @@ class MilestoneFactoryGetMilestoneFromArtifactTest extends \Tuleap\Test\PHPUnit\
             $this->release_planning,
             $this->release_artifact,
         );
-        $this->assertEquals($expected_release_milestone, $actual_release_milestone);
+        self::assertEquals($expected_release_milestone, $actual_release_milestone);
     }
 
     public function testItReturnsNullWhenThereIsNoPlanningForTheTracker(): void
     {
-        $this->planning_factory->shouldReceive('getPlanningByPlanningTracker')->andReturn(null)->once();
-        $task_milestone = $this->milestone_factory->getMilestoneFromArtifact($this->task_artifact);
-        $this->assertNull($task_milestone);
+        $this->planning_factory->expects(self::once())->method('getPlanningByPlanningTracker')->willReturn(null);
+        self::assertNull($this->milestone_factory->getMilestoneFromArtifact($this->task_artifact));
     }
 }
