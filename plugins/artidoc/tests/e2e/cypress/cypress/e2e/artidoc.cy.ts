@@ -85,6 +85,7 @@ describe("Artidoc", () => {
                                 cy.contains("li:last-child", "Security Requirement").within(() => {
                                     cy.intercept("*/artifacts/*").as("updateArtifact");
                                     cy.intercept("*/artidoc_sections/*").as("refreshSection");
+                                    cy.get("[data-test=artidoc-dropdown-trigger]").click();
                                     cy.get("[data-test=edit]").click();
                                 });
                                 cy.get("[data-test=title-input]").type(
