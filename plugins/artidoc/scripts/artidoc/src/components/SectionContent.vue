@@ -18,38 +18,45 @@
   -
   -->
 <template>
-    <article
-        class="document-section"
-        v-bind:class="{
-            'document-section-is-being-saved': is_being_saved,
-            'document-section-is-just-saved': is_just_saved,
-            'document-section-is-just-refreshed': is_just_refreshed,
-            'document-section-is-in-error': is_in_error,
-            'document-section-is-outdated': is_outdated,
-        }"
-    >
-        <section-header
-            class="section-header"
-            v-if="!is_sections_loading"
-            v-bind:title="title"
-            v-bind:input_current_title="editor.inputCurrentTitle"
-            v-bind:is_edit_mode="is_edit_mode"
+    <section>
+        <article
+            class="document-section"
+            v-bind:class="{
+                'document-section-is-being-saved': is_being_saved,
+                'document-section-is-just-saved': is_just_saved,
+                'document-section-is-just-refreshed': is_just_refreshed,
+                'document-section-is-in-error': is_in_error,
+                'document-section-is-outdated': is_outdated,
+            }"
         >
-            <template #header-cta>
-                <section-editor-cta v-bind:editor="editor" v-bind:section="section" />
-            </template>
-        </section-header>
-        <section-header-skeleton v-else class="section-header" />
-        <section-description
-            v-bind:artifact_id="section.artifact.id"
-            v-bind:editable_description="editable_description"
-            v-bind:readonly_description="readonly_description"
-            v-bind:input_current_description="editor.inputCurrentDescription"
-            v-bind:is_edit_mode="is_edit_mode"
-        />
+            <section-header
+                class="section-header"
+                v-if="!is_sections_loading"
+                v-bind:title="title"
+                v-bind:input_current_title="editor.inputCurrentTitle"
+                v-bind:is_edit_mode="is_edit_mode"
+            />
+            <section-header-skeleton v-else class="section-header" />
 
-        <section-footer v-bind:editor="editor" v-bind:section="section" />
-    </article>
+            <section-description
+                v-bind:artifact_id="section.artifact.id"
+                v-bind:editable_description="editable_description"
+                v-bind:readonly_description="readonly_description"
+                v-bind:input_current_description="editor.inputCurrentDescription"
+                v-bind:is_edit_mode="is_edit_mode"
+            />
+
+            <section-footer v-bind:editor="editor" v-bind:section="section" />
+        </article>
+
+        <div class="artidoc-dropdown-container">
+            <section-dropdown
+                v-bind:editor="editor"
+                v-bind:section="section"
+                v-if="!is_sections_loading"
+            />
+        </div>
+    </section>
 </template>
 
 <script setup lang="ts">
@@ -57,7 +64,7 @@ import type { ArtidocSection } from "@/helpers/artidoc-section.type";
 import SectionHeader from "@/components/SectionHeader.vue";
 import SectionDescription from "@/components/SectionDescription.vue";
 import useSectionEditor from "@/composables/useSectionEditor";
-import SectionEditorCta from "@/components/SectionEditorCta.vue";
+import SectionDropdown from "@/components/SectionDropdown.vue";
 import { useInjectSectionsStore } from "@/stores/useSectionsStore";
 import SectionHeaderSkeleton from "@/components/SectionHeaderSkeleton.vue";
 import SectionFooter from "@/components/SectionFooter.vue";
@@ -82,6 +89,18 @@ const readonly_description = editor.getReadonlyDescription();
 <style lang="scss" scoped>
 @use "@tuleap/burningparrot-theme/css/includes/global-variables";
 @use "@/themes/includes/zindex";
+@use "@/themes/includes/whitespace";
+
+section {
+    display: grid;
+    grid-template-columns: auto whitespace.$section-horizontal-padding;
+}
+
+.artidoc-dropdown-container {
+    display: flex;
+    z-index: zindex.$dropdown;
+    justify-content: center;
+}
 
 .document-section {
     display: flex;

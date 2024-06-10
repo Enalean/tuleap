@@ -101,23 +101,15 @@ function edit(event: Event): void {
 </script>
 
 <style lang="scss" scoped>
-@use "@/themes/includes/whitespace";
+@use "@tuleap/burningparrot-theme/css/includes/global-variables";
 
 $button-size: 24px;
-$remaining-padding-when-button-is-in-section-horizontal-padding: calc(
-    #{whitespace.$section-horizontal-padding} - #{$button-size}
-);
-$left-or-right-button-margin-to-center-button: calc(
-    #{$remaining-padding-when-button-is-in-section-horizontal-padding} * 0.5
-);
-$right-position-to-center-the-button-in-section-right-padding: calc(
-    -1 * (#{$button-size} + #{$left-or-right-button-margin-to-center-button})
-);
 
 .tlp-dropdown {
-    position: absolute;
-    top: var(--tlp-medium-spacing);
-    right: $right-position-to-center-the-button-in-section-right-padding;
+    position: sticky;
+    top: calc(var(--tlp-small-spacing) + #{global-variables.$navbar-height});
+    align-self: flex-start;
+    margin: var(--tlp-small-spacing) 0 0;
 }
 
 .artidoc-dropdown-trigger {

@@ -45,10 +45,6 @@ describe("SectionHeader", () => {
             expect(wrapper.find("h1").text()).toContain("expected title");
         });
 
-        it("should display the edit button", () => {
-            expect(wrapper.find("div button").text()).toBe("edit");
-        });
-
         it("should display title in edit mode", () => {
             const input_current_title: (value: string) => void = vi.fn();
 

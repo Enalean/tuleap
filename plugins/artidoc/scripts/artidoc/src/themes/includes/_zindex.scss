@@ -17,12 +17,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-// ckeditor toolbar should be under the sticky title when we scroll
-$editor: 1;
+$header: 1;
 
-// footer must be above ckeditor when we scroll
-$footer: 2;
+// editor should be above the title when we scroll (toolbar always visible)
+$editor: 2;
 
-// header must be above ckeditor when we scroll
-// dropdown in the header must be above footer when we scroll
-$header: 3;
+// footer must be above editor when we scroll (submit button always visible)
+$footer: 3;
+
+// dropdown should be displayed above everything else
+$dropdown: 4;
