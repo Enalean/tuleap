@@ -82,8 +82,7 @@ li {
 
     position: relative;
     margin: 0 0 var(--tlp-medium-spacing);
-    padding: var(--tlp-medium-spacing) whitespace.$section-horizontal-padding
-        var(--tlp-medium-spacing) $section-left-padding;
+    padding: var(--tlp-medium-spacing) 0 var(--tlp-medium-spacing) $section-left-padding;
     transition: background-color 75ms ease-in-out;
     background: var(--tuleap-artidoc-section-background);
     counter-increment: item-without-dot;

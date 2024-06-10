@@ -19,7 +19,7 @@
 import { describe, expect, it, vi } from "vitest";
 import type { DOMWrapper, VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
-import SectionEditorCta from "./SectionEditorCta.vue";
+import SectionDropdown from "./SectionDropdown.vue";
 import type { ComponentPublicInstance } from "vue";
 import { createGettext } from "vue3-gettext";
 import { SectionEditorStub } from "@/helpers/stubs/SectionEditorStub";
@@ -28,9 +28,9 @@ import ArtidocSectionFactory from "@/helpers/artidoc-section.factory";
 
 vi.mock("@tuleap/tlp-dropdown");
 
-describe("SectionEditorCta", () => {
+describe("SectionDropdown", () => {
     function getWrapper(editor: SectionEditor): VueWrapper<ComponentPublicInstance> {
-        return shallowMount(SectionEditorCta, {
+        return shallowMount(SectionDropdown, {
             propsData: {
                 editor,
                 section: ArtidocSectionFactory.create(),

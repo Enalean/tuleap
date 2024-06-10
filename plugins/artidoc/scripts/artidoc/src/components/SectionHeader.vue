@@ -35,7 +35,6 @@
                 {{ title }}
             </template>
         </h1>
-        <slot name="header-cta"></slot>
     </div>
 </template>
 
@@ -95,12 +94,7 @@ function adjustHeightOfTextareaToContent(textarea: HTMLTextAreaElement): void {
 </script>
 
 <style lang="scss" scoped>
-div {
-    position: relative;
-}
-
 h1 {
-    flex-grow: 1;
     margin: 0;
     padding-bottom: var(--tlp-small-spacing);
     color: var(--tlp-dark-color);
