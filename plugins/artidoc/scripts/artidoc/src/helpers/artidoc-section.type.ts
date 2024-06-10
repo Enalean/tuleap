@@ -18,6 +18,7 @@
  */
 
 import type { Tracker } from "@/stores/configuration-store";
+import type { Project } from "@/helpers/project.type";
 
 interface ArtifactFieldValueRepresentation {
     readonly field_id: number;
@@ -36,6 +37,16 @@ interface ArtifactFieldValueTextRepresentation extends ArtifactFieldValueReprese
     readonly post_processed_value: string;
 }
 
+interface FileInfoRepresentation {
+    id: number;
+    type: string;
+}
+
+export interface ArtifactFieldValueFileFullRepresentation extends ArtifactFieldValueRepresentation {
+    type: "file";
+    file_descriptions: FileInfoRepresentation[];
+}
+
 export interface ArtifactFieldValueCommonmarkRepresentation
     extends ArtifactFieldValueTextRepresentation {
     readonly commonmark: string;
@@ -50,6 +61,7 @@ export interface ArtidocSection {
     title: ArtifactFieldValueStringRepresentation | ArtifactTextFieldValueRepresentation;
     display_title: string;
     description: ArtifactTextFieldValueRepresentation;
+    attachments: ArtifactFieldValueFileFullRepresentation | null;
 }
 
 export interface ArtifactSection extends ArtidocSection {
@@ -60,12 +72,7 @@ export interface ArtifactSection extends ArtidocSection {
             id: number;
             uri: string;
             label: string;
-            project: {
-                id: number;
-                uri: string;
-                label: string;
-                icon: string;
-            };
+            project: Project;
         };
     };
     can_user_edit_section: boolean;

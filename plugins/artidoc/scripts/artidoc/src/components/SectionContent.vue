@@ -47,10 +47,13 @@
             <section-header-skeleton v-else class="section-header" />
             <section-description
                 v-bind:section="section"
+                v-bind:add_attachment_to_waiting_list="addAttachmentToWaitingList"
+                v-bind:upload_url="upload_url"
                 v-bind:editable_description="editable_description"
                 v-bind:readonly_description="readonly_description"
                 v-bind:input_current_description="editor.inputCurrentDescription"
                 v-bind:is_edit_mode="is_edit_mode"
+                v-bind:is_dragndrop_allowed="is_dragndrop_allowed"
             />
             <section-footer v-bind:editor="editor" v-bind:section="section" />
         </article>
@@ -66,9 +69,16 @@ import SectionDropdown from "@/components/SectionDropdown.vue";
 import { useInjectSectionsStore } from "@/stores/useSectionsStore";
 import SectionHeaderSkeleton from "@/components/SectionHeaderSkeleton.vue";
 import SectionFooter from "@/components/SectionFooter.vue";
+import { useAttachmentFile } from "@/composables/useAttachmentFile";
+import { ref } from "vue";
 
 const props = defineProps<{ section: ArtidocSection }>();
 
+const is_dragndrop_allowed = ref(
+    props.section.attachments !== null &&
+        props.section?.attachments.field_id !== undefined &&
+        props.section?.attachments?.field_id !== 0,
+);
 const {
     is_sections_loading,
     updateSection,
@@ -77,12 +87,21 @@ const {
     replacePendingByArtifactSection,
 } = useInjectSectionsStore();
 
+const {
+    upload_url,
+    addAttachmentToWaitingList,
+    mergeArtifactAttachments,
+    setWaitingListAttachments,
+} = useAttachmentFile(ref(props.section.attachments ? props.section.attachments.field_id : 0));
+
 const editor = useSectionEditor(
     props.section,
     updateSection,
     removeSection,
     getSectionPositionForSave,
     replacePendingByArtifactSection,
+    mergeArtifactAttachments,
+    setWaitingListAttachments,
 );
 
 const is_edit_mode = editor.isSectionInEditMode();

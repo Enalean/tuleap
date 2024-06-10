@@ -10,6 +10,8 @@
     "@tuleap/dom": "workspace:^",
     "@tuleap/fault": "workspace:*",
     "@tuleap/fetch-result": "workspace:*",
+    "@tuleap/ckeditor-image-upload": "workspace:^",
+    "@tuleap/plugin-tracker-artifact-ckeditor-image-upload": "workspace:^",
     "@tuleap/project-background": "workspace:^",
     "@tuleap/tlp-dropdown": "workspace:*",
     "@tuleap/tlp-modal": "workspace:^",
@@ -37,7 +39,7 @@
   },
   "scripts": {
     "build": "vite build",
-    "watch": "vite build --watch --mode development --minify false",
+    "watch": "NODE_ENV=development vite build --watch --mode development --minify false",
     "test": "vitest",
     "typecheck": "vue-tsc --noEmit"
   }

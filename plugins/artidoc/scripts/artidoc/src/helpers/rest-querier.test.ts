@@ -354,6 +354,10 @@ describe("rest-querier", () => {
                 },
                 "New description",
                 1002,
+                {
+                    field_id: 171,
+                    value: [123, 456],
+                },
             );
 
             await flushPromises();
@@ -373,6 +377,10 @@ describe("rest-querier", () => {
                         {
                             field_id: 1001,
                             value: "New title",
+                        },
+                        {
+                            field_id: 171,
+                            value: [123, 456],
                         },
                     ],
                 },
@@ -418,7 +426,10 @@ describe("rest-querier", () => {
                     .spyOn(fetch, "putResponse")
                     .mockReturnValue(errAsync(Fault.fromMessage("OSEF")));
 
-                putArtifact(123, "New title", title, "New description", 1002);
+                putArtifact(123, "New title", title, "New description", 1002, {
+                    field_id: 171,
+                    value: [123, 456],
+                });
 
                 await flushPromises();
 
@@ -440,6 +451,10 @@ describe("rest-querier", () => {
                                     content: "New title",
                                     format: "text",
                                 },
+                            },
+                            {
+                                field_id: 171,
+                                value: [123, 456],
                             },
                         ],
                     },

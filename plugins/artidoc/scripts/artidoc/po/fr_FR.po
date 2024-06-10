@@ -128,6 +128,15 @@ msgstr "Cette section a été mise à jour par quelqu'un d'autre."
 msgid "Tracker"
 msgstr "Tracker"
 
+msgid "Unable to upload the image"
+msgstr "Impossible de téléverser l'image"
+
+msgid "You are not allowed to paste images here"
+msgstr "Vous ne pouvez pas ajouter d'images ici"
+
+msgid "You can drag 'n drop or paste image directly in the editor."
+msgstr "Vous pouvez glisser/déposer une image directement dans l'éditeur."
+
 msgid ""
 "You can now go back to the document and create new sections, they will be "
 "stored as artifacts in the selected tracker."

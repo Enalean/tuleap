@@ -35,6 +35,7 @@ import {
     useOpenConfigurationModalBus,
 } from "@/composables/useOpenConfigurationModalBus";
 import { DOCUMENT_ID } from "@/document-id-injection-key";
+import { UPLOAD_MAX_SIZE } from "@/max-upload-size-injecion-keys";
 
 document.addEventListener("DOMContentLoaded", async () => {
     const vue_mount_point = document.getElementById("artidoc-mountpoint");
@@ -65,6 +66,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     app.provide(OPEN_CONFIGURATION_MODAL_BUS, useOpenConfigurationModalBus());
     app.provide(DOCUMENT_ID, item_id);
     app.provide(TITLE, getDatasetItemOrThrow(vue_mount_point, "title"));
+    app.provide(
+        UPLOAD_MAX_SIZE,
+        Number.parseInt(getDatasetItemOrThrow(vue_mount_point, "uploadMaxSize"), 10),
+    );
     app.provide(
         CONFIGURATION_STORE,
         initConfigurationStore(

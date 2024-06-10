@@ -42,7 +42,7 @@ final readonly class ArtidocSectionRepresentation
         public mixed $title,
         public ArtifactTextFieldValueRepresentation $description,
         public bool $can_user_edit_section,
-        public ?ArtifactFieldValueFileFullRepresentation $attachment,
+        public ?ArtifactFieldValueFileFullRepresentation $attachments,
     ) {
     }
 
@@ -54,7 +54,7 @@ final readonly class ArtidocSectionRepresentation
             $representation->title,
             $representation->description,
             $representation->can_user_edit_section,
-            $representation->attachment,
+            $representation->attachments,
         );
     }
 }

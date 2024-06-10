@@ -39,15 +39,17 @@ export function isOutdatedSectionFault(fault: Fault): fault is OutdatedSectionFa
     return "isOutdatedSectionFault" in fault && fault.isOutdatedSectionFault() === true;
 }
 
-export function isSectionInItsLatestVersion(old_section: ArtidocSection): ResultAsync<true, Fault> {
+export function getSectionInItsLatestVersion(
+    old_section: ArtidocSection,
+): ResultAsync<ArtidocSection, Fault> {
     return getSection(old_section.id).andThen(
-        (new_section: ArtidocSection): ResultAsync<true, OutdatedSectionFault> => {
+        (new_section: ArtidocSection): ResultAsync<ArtidocSection, OutdatedSectionFault> => {
             if (
                 new_section.display_title === old_section.display_title &&
                 convertDescriptionToHtml(new_section.description) ===
                     convertDescriptionToHtml(old_section.description)
             ) {
-                return okAsync(true);
+                return okAsync(new_section);
             }
 
             return errAsync(OutdatedSectionFault.build());

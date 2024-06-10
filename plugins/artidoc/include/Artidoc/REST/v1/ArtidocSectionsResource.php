@@ -115,7 +115,7 @@ final class ArtidocSectionsResource extends AuthenticatedResource
                     )
                 ),
                 $form_element_factory
-            )
+            ),
         );
 
         return new ArtidocSectionRepresentationBuilder($dao, $retriever, $transformer);
