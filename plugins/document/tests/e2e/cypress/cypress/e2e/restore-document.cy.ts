@@ -116,8 +116,7 @@ describe("Document restoration", () => {
         openQuickLook("versions");
 
         cy.log("delete a given version of a document");
-        cy.get(`[data-test=document-drop-down-button]`).last().click();
-        cy.get(`[data-test=document-versions]`).last().click();
+        cy.get(`[data-test=document-versions]`).last().click({ force: true });
         cy.get(`[data-test=delete-button]`).eq(0).click();
         cy.get("[data-test=confirm-button]").eq(0).click();
         cy.get("[data-test=display-version-feedback]").contains("successfully deleted");
@@ -136,8 +135,8 @@ describe("Document restoration", () => {
         cy.visitProjectService(project_shortname, "Documents");
         cy.log("Check version is restored");
         openQuickLook("versions");
-        cy.get(`[data-test=document-drop-down-button]`).last().click();
-        cy.get(`[data-test=document-versions]`).last().click();
+
+        cy.get(`[data-test=document-versions]`).last().click({ force: true });
 
         cy.get("[data-test=history-versions]").find("tr").should("have.length", 3);
     });
