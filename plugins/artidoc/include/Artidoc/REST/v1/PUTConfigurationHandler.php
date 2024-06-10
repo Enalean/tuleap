@@ -25,6 +25,8 @@ namespace Tuleap\Artidoc\REST\v1;
 use Tuleap\Artidoc\Document\ArtidocDocumentInformation;
 use Tuleap\Artidoc\Document\RetrieveArtidoc;
 use Tuleap\Artidoc\Document\SaveConfiguredTracker;
+use Tuleap\Artidoc\Document\Tracker\CheckTrackerIsSuitableForDocument;
+use Tuleap\Artidoc\Document\Tracker\TrackerNotFoundFault;
 use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
@@ -37,6 +39,7 @@ final readonly class PUTConfigurationHandler
         private RetrieveArtidoc $retrieve_artidoc,
         private SaveConfiguredTracker $save_configured_tracker,
         private RetrieveTracker $retrieve_tracker,
+        private CheckTrackerIsSuitableForDocument $suitable_tracker_for_document_checker,
     ) {
     }
 
@@ -74,22 +77,18 @@ final readonly class PUTConfigurationHandler
     ): Ok|Err {
         $tracker = $this->retrieve_tracker->getTrackerById($configuration->selected_tracker_ids[0]);
         if (! $tracker) {
-            return Result::err(TrackerNotFoundFault::build());
+            return Result::err(TrackerNotFoundFault::forDocument($document_information->document));
         }
 
-        if ($tracker->isDeleted()) {
-            return Result::err(TrackerNotFoundFault::build());
-        }
+        return $this->suitable_tracker_for_document_checker
+            ->checkTrackerIsSuitableForDocument($tracker, $document_information->document, $user)
+            ->andThen(function ($tracker) use ($document_information) {
+                $this->save_configured_tracker->saveTracker(
+                    (int) $document_information->document->getId(),
+                    $tracker->getId()
+                );
 
-        if (! $tracker->userCanView($user)) {
-            return Result::err(TrackerNotFoundFault::build());
-        }
-
-        $this->save_configured_tracker->saveTracker(
-            (int) $document_information->document->getId(),
-            $tracker->getId()
-        );
-
-        return Result::ok(true);
+                return Result::ok(true);
+            });
     }
 }
