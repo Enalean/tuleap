@@ -69,4 +69,13 @@ class DynamicUser extends \PFUser
     public function setExpiryDate($expiryDate)
     {
     }
+
+    /**
+     * All actions done with this user are done by human operators
+     * not by internal automatic processes
+     */
+    public function isATechnicalUser(): bool
+    {
+        return false;
+    }
 }
