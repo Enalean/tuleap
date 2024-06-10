@@ -39,6 +39,7 @@ final class TrackerTestBuilder
     private ?\Workflow $workflow  = null;
     private bool $user_can_submit = true;
     private ?Tracker $parent      = Tracker::NO_PARENT;
+    private ?bool $user_can_view  = null;
 
     public static function aTracker(): self
     {
@@ -102,6 +103,13 @@ final class TrackerTestBuilder
         return $this;
     }
 
+    public function withUserCanView(bool $user_can_view): self
+    {
+        $this->user_can_view = $user_can_view;
+
+        return $this;
+    }
+
     public function withParent(?Tracker $parent): self
     {
         $this->parent = $parent;
@@ -146,6 +154,7 @@ final class TrackerTestBuilder
             $this->getColor(),
             false,
             $this->user_can_submit,
+            $this->user_can_view,
         ) extends Tracker {
             public function __construct(
                 $id,
@@ -164,6 +173,7 @@ final class TrackerTestBuilder
                 TrackerColor $color,
                 $enable_emailgateway,
                 private readonly bool $user_can_submit,
+                private readonly ?bool $user_can_view,
             ) {
                 parent::__construct($id, $group_id, $name, $description, $item_name, $allow_copy, $submit_instructions, $browse_instructions, $status, $deletion_date, $instantiate_for_new_projects, $log_priority_changes, $notifications_level, $color, $enable_emailgateway);
             }
@@ -173,6 +183,11 @@ final class TrackerTestBuilder
                 return $this->user_can_submit
                     ? VerifySubmissionPermissionStub::withSubmitPermission()
                     : VerifySubmissionPermissionStub::withoutSubmitPermission();
+            }
+
+            public function userCanView($user = 0): bool
+            {
+                return $this->user_can_view ?? parent::userCanView($user);
             }
         };
 

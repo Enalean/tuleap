@@ -103,6 +103,7 @@ final class ArtidocDaoTest extends TestIntegrationTestCase
         $dao = new ArtidocDao();
         $dao->save(101, [1001]);
         $dao->save(102, [2001, 1001]);
+        $dao->saveTracker(102, 10001);
 
         self::assertSame(0, $dao->searchPaginatedRawSectionsByItemId(103, 50, 0)->total);
         self::assertSame(
@@ -129,6 +130,8 @@ final class ArtidocDaoTest extends TestIntegrationTestCase
             [2001, 1001],
             array_column($dao->searchPaginatedRawSectionsByItemId(103, 50, 0)->rows, 'artifact_id'),
         );
+
+        self::assertSame(10001, $dao->getTracker(103));
     }
 
     public function testSave(): void
@@ -189,5 +192,18 @@ final class ArtidocDaoTest extends TestIntegrationTestCase
         $first_section_id = $rows[0]['id']->toString();
         $dao->save(101, []);
         self::assertNull($dao->searchSectionById($first_section_id));
+    }
+
+    public function testSaveTracker(): void
+    {
+        $dao = new ArtidocDao();
+
+        self::assertNull($dao->getTracker(101));
+
+        $dao->saveTracker(101, 1001);
+        self::assertSame(1001, $dao->getTracker(101));
+
+        $dao->saveTracker(101, 1002);
+        self::assertSame(1002, $dao->getTracker(101));
     }
 }

@@ -24,6 +24,9 @@ msgstr "Artéfacts sous forme de Documents"
 msgid "Documents"
 msgstr "Documents"
 
+msgid "Given tracker cannot be found or you don't have access to it."
+msgstr "Le tracker fourni n'existe pas ou vous n'y avez pas accès."
+
 msgid "Parent folders are not displayed to not clutter the interface"
 msgstr ""
 "Les dossiers parents ne sont pas affichés pour ne pas encombrer l'interface"
@@ -34,3 +37,6 @@ msgid ""
 msgstr ""
 "Impossible de mettre à jour les sections du document, l'une des sections "
 "envoyées n'existe pas."
+
+msgid "You don't have permission to write the document."
+msgstr "Vous n'avez pas la permission de mettre à jour le document."
