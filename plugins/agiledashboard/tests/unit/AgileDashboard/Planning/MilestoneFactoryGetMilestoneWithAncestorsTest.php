@@ -23,113 +23,91 @@ declare(strict_types=1);
 
 namespace Tuleap\AgileDashboard\Planning;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
-use Planning;
+use PHPUnit\Framework\MockObject\MockObject;
 use Planning_ArtifactMilestone;
 use Planning_MilestoneFactory;
 use Planning_NoMilestone;
-use Project;
+use Tuleap\AgileDashboard\Test\Builders\PlanningBuilder;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 
-final class MilestoneFactoryGetMilestoneWithAncestorsTest extends \Tuleap\Test\PHPUnit\TestCase
+final class MilestoneFactoryGetMilestoneWithAncestorsTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Planning_ArtifactMilestone
-     */
-    private $sprint_milestone;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Artifact
-     */
-    private $sprint_artifact;
-    /**
-     * @var Mockery\Mock|Planning_MilestoneFactory
-     */
-    private $milestone_factory;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|PFUser
-     */
-    private $current_user;
+    private Planning_ArtifactMilestone&MockObject $sprint_milestone;
+    private Artifact&MockObject $sprint_artifact;
+    private Planning_MilestoneFactory&MockObject $milestone_factory;
+    private PFUser $current_user;
 
     protected function setUp(): void
     {
-        $this->current_user      = Mockery::mock(PFUser::class);
-        $this->milestone_factory = Mockery::mock(Planning_MilestoneFactory::class)
-            ->makePartial()->shouldAllowMockingProtectedMethods();
+        $this->current_user      = UserTestBuilder::buildWithDefaults();
+        $this->milestone_factory = $this->createPartialMock(Planning_MilestoneFactory::class, [
+            'getMilestoneFromArtifact',
+        ]);
 
-        $this->sprint_artifact  = Mockery::spy(Artifact::class);
-        $this->sprint_milestone = Mockery::mock(Planning_ArtifactMilestone::class);
-        $this->sprint_milestone->shouldReceive('getArtifact')->andReturn($this->sprint_artifact);
+        $this->sprint_artifact  = $this->createMock(Artifact::class);
+        $this->sprint_milestone = $this->createMock(Planning_ArtifactMilestone::class);
+        $this->sprint_milestone->method('getArtifact')->willReturn($this->sprint_artifact);
     }
 
     public function testItReturnsEmptyArrayIfThereIsNoArtifactInMilestone(): void
     {
-        $empty_milestone = new Planning_NoMilestone(Mockery::spy(Project::class), Mockery::spy(Planning::class));
+        $empty_milestone = new Planning_NoMilestone(ProjectTestBuilder::aProject()->build(), PlanningBuilder::aPlanning(101)->build());
 
         $milestones = $this->milestone_factory->getMilestoneAncestors($this->current_user, $empty_milestone);
-        $this->assertEquals([], $milestones);
+        self::assertEquals([], $milestones);
     }
 
     public function testItBuildTheMilestonesWhenNoParents(): void
     {
-        $this->sprint_artifact->shouldReceive('getAllAncestors')->with($this->current_user)->andReturn([]);
+        $this->sprint_artifact->method('getAllAncestors')->with($this->current_user)->willReturn([]);
 
         $milestones = $this->milestone_factory->getMilestoneAncestors($this->current_user, $this->sprint_milestone);
-        $this->assertEquals([], $milestones);
+        self::assertEquals([], $milestones);
     }
 
     public function testItBuildTheMilestoneForOneParent(): void
     {
-        $release_artifact = Mockery::mock(Artifact::class);
-        $this->sprint_artifact->shouldReceive('getAllAncestors')
-            ->with($this->current_user)
-            ->andReturn([$release_artifact]);
+        $release_artifact = ArtifactTestBuilder::anArtifact(1)->build();
+        $this->sprint_artifact->method('getAllAncestors')->with($this->current_user)->willReturn([$release_artifact]);
 
-        $release_milestone = Mockery::spy(Planning_ArtifactMilestone::class);
-        $this->milestone_factory->shouldReceive('getMilestoneFromArtifact')
-            ->with($release_artifact)
-            ->andReturn($release_milestone);
+        $release_milestone = $this->createMock(Planning_ArtifactMilestone::class);
+        $this->milestone_factory->method('getMilestoneFromArtifact')->with($release_artifact)->willReturn($release_milestone);
 
         $milestones = $this->milestone_factory->getMilestoneAncestors($this->current_user, $this->sprint_milestone);
-        $this->assertEquals([$release_milestone], $milestones);
+        self::assertEquals([$release_milestone], $milestones);
     }
 
     public function testItBuildTheMilestoneForSeveralParents(): void
     {
-        $release_artifact = Mockery::mock(Artifact::class);
-        $product_artifact = Mockery::mock(Artifact::class);
-        $this->sprint_artifact->shouldReceive('getAllAncestors')
-            ->with($this->current_user)
-            ->andReturn([$release_artifact, $product_artifact]);
+        $release_artifact = ArtifactTestBuilder::anArtifact(1)->build();
+        $product_artifact = ArtifactTestBuilder::anArtifact(2)->build();
+        $this->sprint_artifact->method('getAllAncestors')->with($this->current_user)->willReturn([$release_artifact, $product_artifact]);
 
-        $product_milestone = Mockery::mock(Planning_ArtifactMilestone::class);
-        $product_milestone->shouldReceive('getArtifact')->andReturn($product_artifact);
-        $release_milestone = Mockery::mock(Planning_ArtifactMilestone::class);
-        $release_milestone->shouldReceive('getArtifact')->andReturn($release_artifact);
-        $this->milestone_factory->shouldReceive('getMilestoneFromArtifact')
-            ->with($product_artifact)
-            ->andReturn($product_milestone);
-        $this->milestone_factory->shouldReceive('getMilestoneFromArtifact')
-            ->with($release_artifact)
-            ->andReturn($release_milestone);
+        $product_milestone = $this->createMock(Planning_ArtifactMilestone::class);
+        $product_milestone->method('getArtifact')->willReturn($product_artifact);
+        $release_milestone = $this->createMock(Planning_ArtifactMilestone::class);
+        $release_milestone->method('getArtifact')->willReturn($release_artifact);
+        $this->milestone_factory->method('getMilestoneFromArtifact')
+            ->withConsecutive([$release_artifact], [$product_artifact])
+            ->willReturnOnConsecutiveCalls($release_milestone, $product_milestone);
 
         $milestones = $this->milestone_factory->getMilestoneAncestors($this->current_user, $this->sprint_milestone);
-        $this->assertEquals([$release_milestone, $product_milestone], $milestones);
+        self::assertEquals([$release_milestone, $product_milestone], $milestones);
     }
 
     public function testItFiltersOutTheEmptyMilestones(): void
     {
-        $release_artifact = Mockery::mock(Artifact::class);
-        $this->sprint_artifact->shouldReceive('getAllAncestors')
-            ->with($this->current_user)
-            ->andReturn([$release_artifact]);
+        $release_artifact = ArtifactTestBuilder::anArtifact(1)->build();
+        $this->sprint_artifact->method('getAllAncestors')->with($this->current_user)->willReturn([$release_artifact]);
 
-        $this->milestone_factory->shouldReceive('getMilestoneFromArtifact')->with($release_artifact)->andReturn(null);
+        $this->milestone_factory->method('getMilestoneFromArtifact')->with($release_artifact)->willReturn(null);
 
         $milestones = $this->milestone_factory->getMilestoneAncestors($this->current_user, $this->sprint_milestone);
-        $this->assertEquals([], $milestones);
+        self::assertEquals([], $milestones);
     }
 }

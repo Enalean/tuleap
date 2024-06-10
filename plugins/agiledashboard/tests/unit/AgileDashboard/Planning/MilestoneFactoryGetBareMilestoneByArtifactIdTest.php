@@ -25,72 +25,58 @@ namespace Tuleap\AgileDashboard\Planning;
 
 use AgileDashboard_Milestone_MilestoneDao;
 use AgileDashboard_Milestone_MilestoneStatusCounter;
-use Mockery;
 use PFUser;
-use Planning;
+use PHPUnit\Framework\MockObject\MockObject;
 use Planning_MilestoneFactory;
 use PlanningFactory;
 use PlanningPermissionsManager;
-use Project;
 use Psr\Log\NullLogger;
-use Tracker;
 use Tracker_ArtifactFactory;
 use Tracker_FormElementFactory;
+use Tuleap\AgileDashboard\Test\Builders\PlanningBuilder;
 use Tuleap\Date\DatePeriodWithOpenDays;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
-use Tuleap\Tracker\Artifact\Artifact;
-use Tuleap\Tracker\Semantic\Timeframe\IComputeTimeframes;
-use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframe;
-use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\DateFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\IntFieldBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
+use Tuleap\Tracker\Test\Stub\Semantic\Timeframe\IComputeTimeframesStub;
+use Tuleap\Tracker\Test\Stub\Tracker\Semantic\Timeframe\BuildSemanticTimeframeStub;
 
-final class MilestoneFactoryGetBareMilestoneByArtifactIdTest extends \Tuleap\Test\PHPUnit\TestCase
+final class MilestoneFactoryGetBareMilestoneByArtifactIdTest extends TestCase
 {
-    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
-    /**
-     * @var int
-     */
-    private $artifact_id;
-    /**
-     * @var Planning_MilestoneFactory
-     */
-    private $milestone_factory;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|PlanningFactory
-     */
-    private $planning_factory;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Tracker_ArtifactFactory
-     */
-    private $artifact_factory;
+    private int $artifact_id;
+    private Planning_MilestoneFactory $milestone_factory;
+    private PlanningFactory&MockObject $planning_factory;
+    private Tracker_ArtifactFactory&MockObject $artifact_factory;
     private PFUser $user;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|IComputeTimeframes
-     */
-    private $timeframe_calculator;
-    private NullLogger $logger;
 
     protected function setUp(): void
     {
-        $this->planning_factory     = Mockery::spy(PlanningFactory::class);
-        $this->artifact_factory     = Mockery::spy(Tracker_ArtifactFactory::class);
-        $this->timeframe_calculator = Mockery::mock(IComputeTimeframes::class);
-        $semantic_timeframe         = Mockery::mock(SemanticTimeframe::class, ['getTimeframeCalculator' => $this->timeframe_calculator]);
-        $semantic_timeframe_builder = Mockery::mock(SemanticTimeframeBuilder::class, ['getSemantic' => $semantic_timeframe]);
-        $this->logger               = new NullLogger();
+        $this->planning_factory = $this->createMock(PlanningFactory::class);
+        $this->artifact_factory = $this->createMock(Tracker_ArtifactFactory::class);
+        $form_element_factory   = $this->createMock(Tracker_FormElementFactory::class);
+        $form_element_factory->method('getComputableFieldByNameForUser');
 
         $this->milestone_factory = new Planning_MilestoneFactory(
             $this->planning_factory,
             $this->artifact_factory,
-            Mockery::spy(Tracker_FormElementFactory::class),
-            Mockery::spy(AgileDashboard_Milestone_MilestoneStatusCounter::class),
-            Mockery::spy(PlanningPermissionsManager::class),
-            Mockery::spy(AgileDashboard_Milestone_MilestoneDao::class),
-            $semantic_timeframe_builder,
-            $this->logger,
-            Mockery::spy(MilestoneBurndownFieldChecker::class)
+            $form_element_factory,
+            $this->createMock(AgileDashboard_Milestone_MilestoneStatusCounter::class),
+            $this->createMock(PlanningPermissionsManager::class),
+            $this->createMock(AgileDashboard_Milestone_MilestoneDao::class),
+            BuildSemanticTimeframeStub::withTimeframeCalculator(
+                TrackerTestBuilder::aTracker()->build(),
+                IComputeTimeframesStub::fromStartAndDuration(
+                    DatePeriodWithOpenDays::buildFromDuration(1, 1),
+                    DateFieldBuilder::aDateField(1)->build(),
+                    IntFieldBuilder::anIntField(2)->build(),
+                ),
+            ),
+            new NullLogger(),
         );
         $this->user              = UserTestBuilder::anActiveUser()->build();
         $this->artifact_id       = 112;
@@ -98,19 +84,18 @@ final class MilestoneFactoryGetBareMilestoneByArtifactIdTest extends \Tuleap\Tes
 
     public function testItReturnsNullIfArtifactDoesntExist(): void
     {
-        $this->assertNull(
-            $this->milestone_factory->getBareMilestoneByArtifactId($this->user, $this->artifact_id)
-        );
+        $this->artifact_factory->method('getArtifactById');
+        self::assertNull($this->milestone_factory->getBareMilestoneByArtifactId($this->user, $this->artifact_id));
     }
 
     public function testItReturnsAMilestone(): void
     {
-        $planning_tracker = Mockery::mock(Tracker::class);
-        $planning_tracker->shouldReceive('getProject')->andReturn(Mockery::spy(Project::class));
-        $planning_tracker->shouldReceive('getId')->andReturn(12);
+        $planning_tracker = TrackerTestBuilder::aTracker()
+            ->withId(12)
+            ->withProject(ProjectTestBuilder::aProject()->build())
+            ->build();
 
-        $this->planning_factory->shouldReceive('getPlanningByPlanningTracker')->with($planning_tracker)->andReturn(Mockery::mock(Planning::class));
-
+        $this->planning_factory->method('getPlanningByPlanningTracker')->with($planning_tracker)->willReturn(PlanningBuilder::aPlanning(101)->build());
 
         $changeset = ChangesetTestBuilder::aChangeset('1')->build();
 
@@ -124,42 +109,35 @@ final class MilestoneFactoryGetBareMilestoneByArtifactIdTest extends \Tuleap\Tes
             ->withAncestors([])
             ->build();
 
-        $this->artifact_factory->shouldReceive('getArtifactById')->with($this->artifact_id)->andReturn($artifact);
-
-        $this->timeframe_calculator->shouldReceive('buildDatePeriodWithoutWeekendForChangeset')
-            ->with($artifact->getLastChangeset(), $this->user, $this->logger)
-            ->once()
-            ->andReturn(DatePeriodWithOpenDays::buildFromDuration(1, 1));
+        $this->artifact_factory->method('getArtifactById')->with($this->artifact_id)->willReturn($artifact);
 
         $milestone = $this->milestone_factory->getBareMilestoneByArtifactId($this->user, $this->artifact_id);
-        $this->assertEquals($artifact, $milestone->getArtifact());
+        self::assertEquals($artifact, $milestone->getArtifact());
     }
 
     public function testItReturnsNullWhenArtifactIsNotAMilestone(): void
     {
-        $planning_tracker = Mockery::mock(Tracker::class);
-        $this->planning_factory->shouldReceive('getPlanningByPlanningTracker')->with()->andReturn(false);
+        $planning_tracker = TrackerTestBuilder::aTracker()->build();
+        $this->planning_factory->method('getPlanningByPlanningTracker')->with()->willReturn(null);
 
-        $artifact = Mockery::spy(Artifact::class);
-        $artifact->shouldReceive('getTracker')->andReturn($planning_tracker);
-        $artifact->shouldReceive('userCanView')->with($this->user)->once()->andReturn($planning_tracker);
-        $this->artifact_factory->shouldReceive('getArtifactById')->with($this->artifact_id)->andReturn($artifact);
+        $artifact = ArtifactTestBuilder::anArtifact(1)
+            ->inTracker($planning_tracker)
+            ->userCanView($this->user)
+            ->build();
+        $this->artifact_factory->method('getArtifactById')->with($this->artifact_id)->willReturn($artifact);
 
-        $this->assertNull(
-            $this->milestone_factory->getBareMilestoneByArtifactId($this->user, $this->artifact_id)
-        );
+        self::assertNull($this->milestone_factory->getBareMilestoneByArtifactId($this->user, $this->artifact_id));
     }
 
     public function testItReturnsNullWhenUserCannotSeeArtifacts(): void
     {
-        $this->planning_factory->shouldReceive('getPlanningByPlanningTracker')->andReturn(Mockery::mock(Planning::class));
+        $this->planning_factory->method('getPlanningByPlanningTracker')->willReturn(PlanningBuilder::aPlanning(101)->build());
 
-        $artifact = Mockery::mock(Artifact::class);
-        $artifact->shouldReceive('userCanView')->with($this->user)->andReturn(false);
-        $this->artifact_factory->shouldReceive('getArtifactById')->with($this->artifact_id)->andReturn($artifact);
+        $artifact = ArtifactTestBuilder::anArtifact(1)
+            ->userCannotView($this->user)
+            ->build();
+        $this->artifact_factory->method('getArtifactById')->with($this->artifact_id)->willReturn($artifact);
 
-        $this->assertNull(
-            $this->milestone_factory->getBareMilestoneByArtifactId($this->user, $this->artifact_id)
-        );
+        self::assertNull($this->milestone_factory->getBareMilestoneByArtifactId($this->user, $this->artifact_id));
     }
 }
