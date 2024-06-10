@@ -23,6 +23,7 @@
             type="button"
             v-bind:title="trigger_title"
             class="tlp-button-secondary tlp-button-outline artidoc-dropdown-trigger"
+            data-test="artidoc-dropdown-trigger"
             ref="trigger"
         >
             <i class="fa-solid fa-ellipsis-vertical fa-fw" role="img"></i>
