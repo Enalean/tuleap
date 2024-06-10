@@ -28,9 +28,10 @@ use Codendi_Request;
 use EventManager;
 use Exception;
 use ForgeConfig;
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use LogicException;
+use PHPUnit\Framework\MockObject\MockObject;
 use Planning_Controller;
+use Planning_RequestValidator;
 use PlanningFactory;
 use PlanningParameters;
 use PlanningPermissionsManager;
@@ -43,376 +44,328 @@ use Tuleap\AgileDashboard\ExplicitBacklog\ArtifactsInExplicitBacklogDao;
 use Tuleap\AgileDashboard\Planning\Admin\PlanningEditionPresenterBuilder;
 use Tuleap\AgileDashboard\Planning\Admin\UpdateRequestValidator;
 use Tuleap\AgileDashboard\Planning\RootPlanning\UpdateIsAllowedChecker;
+use Tuleap\AgileDashboard\Test\Builders\PlanningBuilder;
+use Tuleap\ForgeConfigSandbox;
 use Tuleap\GlobalLanguageMock;
-use Tuleap\Layout\BaseLayout;
+use Tuleap\GlobalResponseMock;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
+use Tuleap\Test\PHPUnit\TestCase;
 
-final class PlanningControllerTest extends \Tuleap\Test\PHPUnit\TestCase
+final class PlanningControllerTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
+    use ForgeConfigSandbox;
     use GlobalLanguageMock;
+    use GlobalResponseMock;
 
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|PlanningFactory
-     */
-    public $planning_factory;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ArtifactsInExplicitBacklogDao
-     */
-    public $explicit_backlog_dao;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|PlanningUpdater
-     */
-    private $planning_updater;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|\Planning_RequestValidator
-     */
-    private $planning_request_validator;
-    /**
-     * @var EventManager|Mockery\LegacyMockInterface|Mockery\MockInterface
-     */
-    private $event_manager;
-    /**
-     * @var Codendi_Request|Mockery\LegacyMockInterface|Mockery\MockInterface
-     */
-    private $request;
-
-    /**
-     * @var Planning_Controller
-     */
-    private $planning_controller;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|UpdateIsAllowedChecker
-     */
-    private $root_planning_update_checker;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|UpdateRequestValidator
-     */
-    private $update_request_validator;
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&BacklogTrackersUpdateChecker
-     */
-    private $backlog_trackers_update_checker;
+    public PlanningFactory&MockObject $planning_factory;
+    public ArtifactsInExplicitBacklogDao&MockObject $explicit_backlog_dao;
+    private PlanningUpdater&MockObject $planning_updater;
+    private Planning_RequestValidator&MockObject $planning_request_validator;
+    private EventManager&MockObject $event_manager;
+    private Codendi_Request&MockObject $request;
+    private Planning_Controller $planning_controller;
+    private UpdateIsAllowedChecker&MockObject $root_planning_update_checker;
+    private UpdateRequestValidator&MockObject $update_request_validator;
+    private BacklogTrackersUpdateChecker&MockObject $backlog_trackers_update_checker;
+    private Project $project;
 
     protected function setUp(): void
     {
-        parent::setUp();
-
-        ForgeConfig::store();
         ForgeConfig::set('codendi_dir', AGILEDASHBOARD_BASE_DIR . '/../../..');
 
-        $this->request = Mockery::mock(Codendi_Request::class);
-        $project       = Mockery::mock(Project::class);
-        $this->request->shouldReceive('getProject')->andReturn($project);
-        $project->shouldReceive('getID')->andReturn(101);
+        $this->request = $this->createMock(Codendi_Request::class);
+        $this->project = ProjectTestBuilder::aProject()->withId(101)->build();
+        $this->request->method('getProject')->willReturn($this->project);
 
-        $GLOBALS['Response'] = Mockery::mock(BaseLayout::class);
+        $this->planning_factory     = $this->createMock(PlanningFactory::class);
+        $this->explicit_backlog_dao = $this->createMock(ArtifactsInExplicitBacklogDao::class);
 
-        $this->planning_factory     = Mockery::mock(PlanningFactory::class);
-        $this->explicit_backlog_dao = Mockery::mock(ArtifactsInExplicitBacklogDao::class);
-
-        $this->event_manager                   = Mockery::mock(EventManager::class);
-        $this->planning_request_validator      = Mockery::mock(\Planning_RequestValidator::class);
-        $this->planning_updater                = Mockery::mock(PlanningUpdater::class);
-        $this->root_planning_update_checker    = Mockery::mock(UpdateIsAllowedChecker::class);
-        $this->update_request_validator        = Mockery::mock(UpdateRequestValidator::class);
+        $this->event_manager                   = $this->createMock(EventManager::class);
+        $this->planning_request_validator      = $this->createMock(Planning_RequestValidator::class);
+        $this->planning_updater                = $this->createMock(PlanningUpdater::class);
+        $this->root_planning_update_checker    = $this->createMock(UpdateIsAllowedChecker::class);
+        $this->update_request_validator        = $this->createMock(UpdateRequestValidator::class);
         $this->backlog_trackers_update_checker = $this->createMock(BacklogTrackersUpdateChecker::class);
 
         $this->planning_controller = new Planning_Controller(
             $this->request,
             $this->planning_factory,
-            Mockery::mock(ProjectManager::class),
-            Mockery::mock(AgileDashboard_XMLFullStructureExporter::class),
-            Mockery::mock(PlanningPermissionsManager::class),
-            Mockery::mock(ScrumPlanningFilter::class),
-            Mockery::mock(Tracker_FormElementFactory::class),
-            Mockery::mock(AgileDashboardCrumbBuilder::class),
-            Mockery::mock(AdministrationCrumbBuilder::class),
+            $this->createMock(ProjectManager::class),
+            $this->createMock(AgileDashboard_XMLFullStructureExporter::class),
+            $this->createMock(PlanningPermissionsManager::class),
+            $this->createMock(ScrumPlanningFilter::class),
+            $this->createMock(Tracker_FormElementFactory::class),
+            $this->createMock(AgileDashboardCrumbBuilder::class),
+            $this->createMock(AdministrationCrumbBuilder::class),
             new DBTransactionExecutorPassthrough(),
             $this->explicit_backlog_dao,
             $this->planning_updater,
             $this->event_manager,
             $this->planning_request_validator,
             $this->root_planning_update_checker,
-            Mockery::mock(PlanningEditionPresenterBuilder::class),
+            $this->createMock(PlanningEditionPresenterBuilder::class),
             $this->update_request_validator,
             $this->backlog_trackers_update_checker,
         );
     }
 
-    protected function tearDown(): void
-    {
-        unset($GLOBALS['Response']);
-        ForgeConfig::restore();
-
-        parent::tearDown();
-    }
-
     public function testItDeletesThePlanningAndRedirectsToTheIndex(): void
     {
-        $user = Mockery::mock(\PFUser::class);
-        $user->shouldReceive('isAdmin')->once()->andReturnTrue();
-        $this->request->shouldReceive('getCurrentUser')->twice()->andReturn($user);
-        $this->request->shouldReceive('get')->once()->withArgs(['planning_id'])->andReturn(42);
-        $this->event_manager->shouldReceive('dispatch')->once();
+        $user = UserTestBuilder::anActiveUser()
+            ->withAdministratorOf($this->project)
+            ->build();
+        $this->request->expects(self::exactly(2))->method('getCurrentUser')->willReturn($user);
+        $this->request->expects(self::once())->method('get')->with('planning_id')->willReturn(42);
 
-        $root_planning = Mockery::mock(\Planning::class);
-        $root_planning->shouldReceive('getId')->andReturn(109);
-        $this->planning_factory->shouldReceive('getRootPlanning')->andReturn($root_planning);
-        $this->planning_factory->shouldReceive('deletePlanning')->once()->withArgs([42]);
-        $this->explicit_backlog_dao->shouldReceive('removeExplicitBacklogOfPlanning')->never();
+        $root_planning = PlanningBuilder::aPlanning(101)->withId(109)->build();
+        $this->planning_factory->method('getRootPlanning')->willReturn($root_planning);
+        $this->planning_factory->expects(self::once())->method('deletePlanning')->with(42);
+        $this->explicit_backlog_dao->expects(self::never())->method('removeExplicitBacklogOfPlanning');
 
-        $GLOBALS['Response']->shouldReceive('redirect')->once()->withArgs(
-            ['/plugins/agiledashboard/?group_id=101&action=admin']
-        );
+        $this->event_manager->expects(self::once())->method('dispatch');
+
+        $GLOBALS['Response']->expects(self::once())->method('redirect')->with('/plugins/agiledashboard/?group_id=101&action=admin');
 
         $this->planning_controller->delete();
     }
 
     public function testItDeletesExplicitBacklogPlanning(): void
     {
-        $user = Mockery::mock(\PFUser::class);
-        $user->shouldReceive('isAdmin')->once()->andReturnTrue();
-        $this->request->shouldReceive('getCurrentUser')->twice()->andReturn($user);
-        $this->request->shouldReceive('get')->once()->withArgs(['planning_id'])->andReturn(42);
-        $this->event_manager->shouldReceive('dispatch')->once();
+        $user = UserTestBuilder::anActiveUser()
+            ->withAdministratorOf($this->project)
+            ->build();
+        $this->request->expects(self::exactly(2))->method('getCurrentUser')->willReturn($user);
+        $this->request->expects(self::once())->method('get')->with('planning_id')->willReturn(42);
 
-        $root_planning = Mockery::mock(\Planning::class);
-        $root_planning->shouldReceive('getId')->andReturn(42);
-        $this->planning_factory->shouldReceive('getRootPlanning')->andReturn($root_planning);
-        $this->planning_factory->shouldReceive('deletePlanning')->once()->withArgs([42]);
-        $this->explicit_backlog_dao->shouldReceive('removeExplicitBacklogOfPlanning')->once()->withArgs([42]);
+        $root_planning = PlanningBuilder::aPlanning(101)->withId(42)->build();
+        $this->planning_factory->method('getRootPlanning')->willReturn($root_planning);
+        $this->planning_factory->expects(self::once())->method('deletePlanning')->with(42);
+        $this->explicit_backlog_dao->expects(self::once())->method('removeExplicitBacklogOfPlanning')->with(42);
 
-        $GLOBALS['Response']->shouldReceive('redirect')->once()->withArgs(
-            ['/plugins/agiledashboard/?group_id=101&action=admin']
-        );
+        $this->event_manager->expects(self::once())->method('dispatch');
+
+        $GLOBALS['Response']->expects(self::once())->method('redirect')->with('/plugins/agiledashboard/?group_id=101&action=admin');
 
         $this->planning_controller->delete();
     }
 
     public function testItDoesntDeleteAnythingIfTheUserIsNotAdmin(): void
     {
-        $user = Mockery::mock(\PFUser::class);
-        $user->shouldReceive('isAdmin')->once()->andReturnFalse();
-        $user->shouldReceive('isSuperUser')->once()->andReturnFalse();
-        $this->request->shouldReceive('getCurrentUser')->once()->andReturn($user);
-        $this->request->shouldReceive('get')->never()->withArgs(['planning_id']);
+        $user = UserTestBuilder::anActiveUser()
+            ->withoutMemberOfProjects()
+            ->withoutSiteAdministrator()
+            ->build();
+        $this->request->expects(self::once())->method('getCurrentUser')->willReturn($user);
+        $this->request->expects(self::never())->method('get')->with('planning_id');
 
-        $this->expectException(\Exception::class);
+        // redirect() is a never return method, but phpunit mock system cannot handle it, so replace the exit() call by an exception
+        $GLOBALS['Response']->expects(self::once())->method('redirect')->willThrowException(new Exception());
+
+        self::expectException(Exception::class);
         $this->planning_controller->delete();
     }
 
     public function testItOnlyUpdateCardWallConfigWhenRequestIsInvalid(): void
     {
-        $user = Mockery::mock(\PFUser::class);
-        $user->shouldReceive('isAdmin')->once()->andReturnTrue();
+        $user = UserTestBuilder::anActiveUser()
+            ->withAdministratorOf($this->project)
+            ->build();
 
-        $this->request->shouldReceive('getCurrentUser')->once()->andReturn($user);
-        $this->request->shouldReceive('get')->withArgs(['planning_id'])->andReturn(1);
+        $this->request->expects(self::once())->method('getCurrentUser')->willReturn($user);
+        $this->request->method('get')->with('planning_id')->willReturn(1);
 
-        $GLOBALS['Response']->shouldReceive('addFeedback')->once();
+        $GLOBALS['Response']->expects(self::once())->method('addFeedback');
 
-        $this->event_manager->shouldReceive('processEvent')->once();
-        $this->event_manager->shouldReceive('dispatch')->once();
+        $this->event_manager->expects(self::once())->method('processEvent');
+        $this->event_manager->expects(self::once())->method('dispatch');
 
-        $planning = Mockery::mock(\Planning::class);
-        $planning->shouldReceive('getPlanningTracker')->once();
-        $this->planning_factory->shouldReceive('getPlanning')->times(2)->andReturn($planning);
-        $this->planning_factory->shouldReceive('getPlanningTrackerIdsByGroupId')
-            ->once()
-            ->andReturn([]);
-        $this->update_request_validator->shouldReceive('getValidatedPlanning')
-            ->once()
-            ->andReturnNull();
+        $planning = PlanningBuilder::aPlanning(101)->build();
+        $this->planning_factory->expects(self::exactly(2))->method('getPlanning')->willReturn($planning);
+        $this->planning_factory->expects(self::once())->method('getPlanningTrackerIdsByGroupId')->willReturn([]);
+        $this->update_request_validator->expects(self::once())->method('getValidatedPlanning')->willReturn(null);
 
-        $GLOBALS['Response']->shouldReceive('redirect')->once();
+        $GLOBALS['Response']->expects(self::once())->method('redirect');
 
-        $this->planning_updater->shouldNotReceive('update');
+        $this->planning_updater->expects(self::never())->method('update');
 
         $this->planning_controller->update();
     }
 
     public function testItOnlyUpdateCardWallConfigWhenRootPlanningCannotBeUpdated(): void
     {
-        $user = Mockery::mock(\PFUser::class);
-        $user->shouldReceive('isAdmin')->once()->andReturnTrue();
+        $user = UserTestBuilder::anActiveUser()
+            ->withAdministratorOf($this->project)
+            ->build();
 
-        $this->request->shouldReceive('getCurrentUser')->twice()->andReturn($user);
-        $this->request->shouldReceive('get')->withArgs(['planning_id'])->andReturn(1);
-
+        $this->request->expects(self::exactly(2))->method('getCurrentUser')->willReturn($user);
         $planning_parameters = [];
-        $this->request->shouldReceive('get')->withArgs(['planning'])->andReturn($planning_parameters);
+        $this->request->method('get')
+            ->will(self::returnCallback(static fn(string $arg) => match ($arg) {
+                'planning_id' => 1,
+                'planning'    => $planning_parameters,
+                default       => throw new LogicException("Should not be called with '$arg'"),
+            }));
 
-        $GLOBALS['Response']->shouldReceive('addFeedback')->once();
+        $GLOBALS['Response']->expects(self::once())->method('addFeedback');
 
-        $this->event_manager->shouldReceive('processEvent')->once();
-        $this->event_manager->shouldReceive('dispatch')->once();
+        $this->event_manager->expects(self::once())->method('processEvent');
+        $this->event_manager->expects(self::once())->method('dispatch');
 
-        $planning = Mockery::mock(\Planning::class);
-        $planning->shouldReceive('getPlanningTracker')->once();
-        $this->planning_factory->shouldReceive('getPlanning')->times(2)->andReturn($planning);
-        $this->planning_factory->shouldReceive('getPlanningTrackerIdsByGroupId')
-            ->once()
-            ->andReturn([]);
+        $planning = PlanningBuilder::aPlanning(101)->build();
+        $this->planning_factory->expects(self::exactly(2))->method('getPlanning')->willReturn($planning);
+        $this->planning_factory->expects(self::once())->method('getPlanningTrackerIdsByGroupId')->willReturn([]);
 
-        $this->update_request_validator->shouldReceive('getValidatedPlanning')->andReturn(PlanningParameters::fromArray([]));
-        $this->root_planning_update_checker->shouldReceive('checkUpdateIsAllowed')
-            ->once()
-            ->andThrow(new TrackerHaveAtLeastOneAddToTopBacklogPostActionException([]));
+        $this->update_request_validator->method('getValidatedPlanning')->willReturn(PlanningParameters::fromArray([]));
+        $this->root_planning_update_checker->expects(self::once())->method('checkUpdateIsAllowed')
+            ->willThrowException(new TrackerHaveAtLeastOneAddToTopBacklogPostActionException([]));
 
-        $this->planning_updater->shouldNotReceive('update');
+        $this->planning_updater->expects(self::never())->method('update');
         $this->backlog_trackers_update_checker->method('checkProvidedBacklogTrackersAreValid');
 
-        $GLOBALS['Response']->shouldReceive('redirect')->once();
+        $GLOBALS['Response']->expects(self::once())->method('redirect');
 
         $this->planning_controller->update();
     }
 
     public function testItOnlyUpdateCardWallConfigWhenPlanningCannotBeUpdated(): void
     {
-        $user = Mockery::mock(\PFUser::class);
-        $user->shouldReceive('isAdmin')->once()->andReturnTrue();
+        $user = UserTestBuilder::anActiveUser()
+            ->withAdministratorOf($this->project)
+            ->build();
 
-        $this->request->shouldReceive('getCurrentUser')->twice()->andReturn($user);
-        $this->request->shouldReceive('get')->withArgs(['planning_id'])->andReturn(1);
-
+        $this->request->expects(self::exactly(2))->method('getCurrentUser')->willReturn($user);
         $planning_parameters = [];
-        $this->request->shouldReceive('get')->withArgs(['planning'])->andReturn($planning_parameters);
+        $this->request->method('get')
+            ->will(self::returnCallback(static fn(string $arg) => match ($arg) {
+                'planning_id' => 1,
+                'planning'    => $planning_parameters,
+                default       => throw new LogicException("Should not be called with '$arg'"),
+            }));
 
-        $GLOBALS['Response']->shouldReceive('addFeedback')->once();
+        $GLOBALS['Response']->expects(self::once())->method('addFeedback');
 
-        $this->event_manager->shouldReceive('processEvent')->once();
-        $this->event_manager->shouldReceive('dispatch')->once();
+        $this->event_manager->expects(self::once())->method('processEvent');
+        $this->event_manager->expects(self::once())->method('dispatch');
 
-        $planning = Mockery::mock(\Planning::class);
-        $planning->shouldReceive('getPlanningTracker')->once();
-        $this->planning_factory->shouldReceive('getPlanning')->times(2)->andReturn($planning);
-        $this->planning_factory->shouldReceive('getPlanningTrackerIdsByGroupId')
-            ->once()
-            ->andReturn([]);
+        $planning = PlanningBuilder::aPlanning(101)->build();
+        $this->planning_factory->expects(self::exactly(2))->method('getPlanning')->willReturn($planning);
+        $this->planning_factory->expects(self::once())->method('getPlanningTrackerIdsByGroupId')->willReturn([]);
 
-        $this->update_request_validator->shouldReceive('getValidatedPlanning')->andReturn(PlanningParameters::fromArray([]));
+        $this->update_request_validator->method('getValidatedPlanning')->willReturn(PlanningParameters::fromArray([]));
         $this->backlog_trackers_update_checker->method('checkProvidedBacklogTrackersAreValid')->willThrowException(
             new TrackersHaveAtLeastOneHierarchicalLinkException('tracker01', 'tracker02')
         );
-        $this->root_planning_update_checker->shouldNotReceive('checkUpdateIsAllowed');
+        $this->root_planning_update_checker->expects(self::never())->method('checkUpdateIsAllowed');
 
-        $this->planning_updater->shouldNotReceive('update');
+        $this->planning_updater->expects(self::never())->method('update');
 
-        $GLOBALS['Response']->shouldReceive('redirect')->once();
+        $GLOBALS['Response']->expects(self::once())->method('redirect');
 
         $this->planning_controller->update();
     }
 
     public function testItUpdatesThePlanning(): void
     {
-        $user = Mockery::mock(\PFUser::class);
-        $user->shouldReceive('isAdmin')->once()->andReturnTrue();
+        $user = UserTestBuilder::anActiveUser()
+            ->withAdministratorOf($this->project)
+            ->build();
 
-        $this->request->shouldReceive('getCurrentUser')->twice()->andReturn($user);
-        $this->request->shouldReceive('get')->withArgs(['planning_id'])->andReturn(1);
-
+        $this->request->expects(self::exactly(2))->method('getCurrentUser')->willReturn($user);
         $planning_parameters = [];
-        $this->request->shouldReceive('get')->withArgs(['planning'])->andReturn($planning_parameters);
+        $this->request->method('get')
+            ->will(self::returnCallback(static fn(string $arg) => match ($arg) {
+                'planning_id' => 1,
+                'planning'    => $planning_parameters,
+                default       => throw new LogicException("Should not be called with '$arg'"),
+            }));
 
-        $GLOBALS['Response']->shouldReceive('addFeedback')->once();
+        $GLOBALS['Response']->expects(self::once())->method('addFeedback');
 
-        $this->event_manager->shouldReceive('processEvent')->once();
-        $this->event_manager->shouldReceive('dispatch')->once();
+        $this->event_manager->expects(self::once())->method('processEvent');
+        $this->event_manager->expects(self::once())->method('dispatch');
 
-        $planning = Mockery::mock(\Planning::class);
-        $planning->shouldReceive('getPlanningTracker')->once();
-        $this->planning_factory->shouldReceive('getPlanning')->times(2)->andReturn($planning);
-        $this->planning_factory->shouldReceive('getPlanningTrackerIdsByGroupId')
-            ->once()
-            ->andReturn([]);
+        $planning = PlanningBuilder::aPlanning(101)->build();
+        $this->planning_factory->expects(self::exactly(2))->method('getPlanning')->willReturn($planning);
+        $this->planning_factory->expects(self::once())->method('getPlanningTrackerIdsByGroupId')->willReturn([]);
 
-        $this->update_request_validator->shouldReceive('getValidatedPlanning')->andReturn(PlanningParameters::fromArray([]));
-        $this->root_planning_update_checker->shouldReceive('checkUpdateIsAllowed')->once();
+        $this->update_request_validator->method('getValidatedPlanning')->willReturn(PlanningParameters::fromArray([]));
+        $this->root_planning_update_checker->expects(self::once())->method('checkUpdateIsAllowed');
         $this->backlog_trackers_update_checker->method('checkProvidedBacklogTrackersAreValid');
 
-        $this->planning_updater->shouldReceive('update')->once();
+        $this->planning_updater->expects(self::once())->method('update');
 
-        $GLOBALS['Response']->shouldReceive('redirect')->once();
+        $GLOBALS['Response']->expects(self::once())->method('redirect');
 
         $this->planning_controller->update();
     }
 
     public function testItShowsAnErrorMessageAndRedirectsBackToTheCreationForm(): void
     {
-        $user = Mockery::mock(\PFUser::class);
-        $user->shouldReceive('isAdmin')->once()->andReturnTrue();
+        $user = UserTestBuilder::anActiveUser()
+            ->withAdministratorOf($this->project)
+            ->build();
 
-        $this->request->shouldReceive('getCurrentUser')->andReturn($user);
-        $project = Mockery::mock(Project::class);
-        $project->shouldReceive('getId')->andReturn(101);
-        $this->request->shouldReceive('getProject')->andReturn($project);
+        $this->request->method('getCurrentUser')->willReturn($user);
+        $this->request->method('getProject')->willReturn($this->project);
 
-        $this->planning_request_validator->shouldReceive('isValid')->andReturnFalse();
+        $this->planning_request_validator->method('isValid')->willReturn(false);
 
-        $this->planning_factory->shouldReceive('createPlanning')->never();
+        $this->planning_factory->expects(self::never())->method('createPlanning');
 
-        $GLOBALS['Response']->shouldReceive('addFeedback')->once();
-        $GLOBALS['Response']->shouldReceive('redirect')->with('/plugins/agiledashboard/?group_id=101&action=new')->once(
-        );
+        $GLOBALS['Response']->expects(self::once())->method('addFeedback');
+        $GLOBALS['Response']->expects(self::once())->method('redirect')->with('/plugins/agiledashboard/?group_id=101&action=new');
 
         $this->planning_controller->create();
     }
 
     public function testItCreatesThePlanningAndRedirectsToTheIndex(): void
     {
-        $user = Mockery::mock(\PFUser::class);
-        $user->shouldReceive('isAdmin')->once()->andReturnTrue();
+        $user = UserTestBuilder::anActiveUser()
+            ->withAdministratorOf($this->project)
+            ->build();
 
         $planning_parameters = [
             PlanningParameters::NAME                         => 'Release Planning',
             PlanningParameters::PLANNING_TRACKER_ID          => '3',
             PlanningParameters::BACKLOG_TITLE                => 'Release Backlog',
             PlanningParameters::PLANNING_TITLE               => 'Sprint Plan',
-            PlanningParameters::BACKLOG_TRACKER_IDS          => [
-                '2',
-            ],
-            PlanningPermissionsManager::PERM_PRIORITY_CHANGE => [
-                '2',
-                '3',
-            ],
+            PlanningParameters::BACKLOG_TRACKER_IDS          => ['2'],
+            PlanningPermissionsManager::PERM_PRIORITY_CHANGE => ['2', '3'],
         ];
 
-        $this->request->shouldReceive('getCurrentUser')->andReturn($user);
-        $this->request->shouldReceive('get')->with('planning')->andReturn($planning_parameters);
-        $project = Mockery::mock(Project::class);
-        $project->shouldReceive('getId')->andReturn(101);
-        $this->request->shouldReceive('getProject')->andReturn($project);
+        $this->request->method('getCurrentUser')->willReturn($user);
+        $this->request->method('get')->with('planning')->willReturn($planning_parameters);
+        $this->request->method('getProject')->willReturn($this->project);
 
-        $this->planning_request_validator->shouldReceive('isValid')->andReturnTrue();
+        $this->planning_request_validator->method('isValid')->willReturn(true);
 
-        $this->planning_factory->shouldReceive('createPlanning')->once();
+        $this->planning_factory->expects(self::once())->method('createPlanning');
 
-        $GLOBALS['Response']->shouldReceive('addFeedback')->once();
-        $GLOBALS['Response']->shouldReceive('redirect')->with(
-            '/plugins/agiledashboard/?group_id=101&action=admin'
-        )->once();
+        $GLOBALS['Response']->expects(self::once())->method('addFeedback');
+        $GLOBALS['Response']->expects(self::once())->method('redirect')->with('/plugins/agiledashboard/?group_id=101&action=admin');
 
         $this->planning_controller->create();
     }
 
     public function testItDoesntCreateAnythingIfTheUserIsNotAdmin(): void
     {
-        $user = Mockery::mock(\PFUser::class);
-        $user->shouldReceive('isAdmin')->once()->andReturnFalse();
-        $user->shouldReceive('isSuperUser')->once()->andReturnFalse();
-        $project = Mockery::mock(Project::class);
-        $project->shouldReceive('getId')->andReturn(101);
+        $user = UserTestBuilder::anActiveUser()
+            ->withoutMemberOfProjects()
+            ->withoutSiteAdministrator()
+            ->build();
 
-        $this->request->shouldReceive('getProject')->andReturn($project);
-        $this->request->shouldReceive('getCurrentUser')->andReturn($user);
+        $this->request->method('getProject')->willReturn($this->project);
+        $this->request->method('getCurrentUser')->willReturn($user);
 
-        $this->planning_factory->shouldReceive('createPlanning')->never();
+        $this->planning_factory->expects(self::never())->method('createPlanning');
 
-        $GLOBALS['Response']->shouldReceive('addFeedback')->once();
-        $GLOBALS['Response']->shouldReceive('redirect')->with('/plugins/agiledashboard/?group_id=101')->once();
+        $GLOBALS['Response']->expects(self::once())->method('addFeedback');
+        // redirect() is a never return method, but phpunit mock system cannot handle it, so replace the exit() call by an exception
+        $GLOBALS['Response']->expects(self::once())->method('redirect')->with('/plugins/agiledashboard/?group_id=101')->willThrowException(new Exception());
 
-        $this->expectException(Exception::class);
+        self::expectException(Exception::class);
 
         $this->planning_controller->create();
     }
