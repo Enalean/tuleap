@@ -17,24 +17,24 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { getSortedProjectsIAmMemberOf as getProjects } from "../api/rest-querier";
+import { okAsync, type ResultAsync } from "neverthrow";
+import type { Fault } from "@tuleap/fault";
 import type { ProjectInfo } from "../type";
+import type { RetrieveProjects } from "./RetrieveProjects";
 
-let cached_projects: Array<ProjectInfo> = [];
-
-export async function getSortedProjectsIAmMemberOf(): Promise<Array<ProjectInfo>> {
-    if (cached_projects.length > 0) {
-        return cached_projects;
-    }
-
-    await fetchProjects();
-
-    return cached_projects;
-}
-
-async function fetchProjects(): Promise<void> {
-    const projects = await getProjects();
-    cached_projects = projects.map(({ id, label, uri }) => {
-        return { id, label, uri };
-    });
-}
+export const ProjectsCache = (actual_retriever: RetrieveProjects): RetrieveProjects => {
+    let is_first_call = true;
+    let cache: ReadonlyArray<ProjectInfo> = [];
+    return {
+        getSortedProjectsIAmMemberOf(): ResultAsync<ReadonlyArray<ProjectInfo>, Fault> {
+            if (!is_first_call) {
+                return okAsync(cache);
+            }
+            is_first_call = false;
+            return actual_retriever.getSortedProjectsIAmMemberOf().map((projects) => {
+                cache = projects;
+                return cache;
+            });
+        },
+    };
+};

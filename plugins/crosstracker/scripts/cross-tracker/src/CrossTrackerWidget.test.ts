@@ -29,7 +29,6 @@ import WritingCrossTrackerReport from "./writing-mode/writing-cross-tracker-repo
 import * as rest_querier from "./api/rest-querier";
 import ReadingMode from "./reading-mode/ReadingMode.vue";
 import WritingMode from "./writing-mode/WritingMode.vue";
-import type { ProjectReference } from "@tuleap/core-rest-api-types";
 import type { InvalidTracker, State, TrackerAndProject } from "./type";
 
 const noop = (): void => {
@@ -65,7 +64,7 @@ describe("CrossTrackerWidget", () => {
         );
     });
 
-    function instantiateComponent(
+    function getWrapper(
         state: Partial<State>,
     ): VueWrapper<InstanceType<typeof CrossTrackerWidget>> {
         const invalid_trackers: ReadonlyArray<InvalidTracker> = [];
@@ -95,14 +94,11 @@ describe("CrossTrackerWidget", () => {
         });
     }
 
-    describe("switchToWritingMode() -", () => {
+    describe("switchToWritingMode()", () => {
         it(`when I switch to the writing mode,
             then the writing report will be updated and a mutation will be committed`, async () => {
-            jest.spyOn(rest_querier, "getSortedProjectsIAmMemberOf").mockResolvedValue([
-                { id: 102 } as ProjectReference,
-            ]);
             const duplicate = jest.spyOn(writingCrossTrackerReport, "duplicateFromReport");
-            const wrapper = instantiateComponent({
+            const wrapper = getWrapper({
                 is_user_admin: true,
                 reading_mode: true,
             });
@@ -116,9 +112,8 @@ describe("CrossTrackerWidget", () => {
 
         it(`Given I am not admin,
             when I try to switch to writing mode, then nothing will happen`, async () => {
-            jest.spyOn(rest_querier, "getSortedProjectsIAmMemberOf").mockResolvedValue([]);
             const duplicate = jest.spyOn(writingCrossTrackerReport, "duplicateFromReport");
-            const wrapper = instantiateComponent({
+            const wrapper = getWrapper({
                 is_user_admin: false,
                 reading_mode: true,
             });
@@ -136,7 +131,7 @@ describe("CrossTrackerWidget", () => {
         it(`When I switch to the reading mode with saved state,
             then the writing report will be updated and a mutation will be committed`, async () => {
             const duplicate = jest.spyOn(writingCrossTrackerReport, "duplicateFromReport");
-            const wrapper = instantiateComponent({
+            const wrapper = getWrapper({
                 is_user_admin: true,
                 reading_mode: false,
             });
@@ -154,7 +149,7 @@ describe("CrossTrackerWidget", () => {
             then a batch of artifacts will be loaded,
             the reading report will be updated and a mutation will be committed`, async () => {
             const duplicate = jest.spyOn(readingCrossTrackerReport, "duplicateFromWritingReport");
-            const wrapper = instantiateComponent({
+            const wrapper = getWrapper({
                 is_user_admin: true,
                 reading_mode: false,
             });
@@ -188,7 +183,7 @@ describe("CrossTrackerWidget", () => {
             const init = jest.spyOn(backendCrossTrackerReport, "init");
             const duplicateReading = jest.spyOn(readingCrossTrackerReport, "duplicateFromReport");
             const duplicateWriting = jest.spyOn(writingCrossTrackerReport, "duplicateFromReport");
-            instantiateComponent({ is_user_admin: true });
+            getWrapper({ is_user_admin: true });
             await jest.runOnlyPendingTimersAsync();
 
             expect(init).toHaveBeenCalledWith(trackers, expert_query);
@@ -201,7 +196,7 @@ describe("CrossTrackerWidget", () => {
             jest.spyOn(rest_querier, "getReport").mockReturnValue(
                 errAsync(Fault.fromMessage(message)),
             );
-            instantiateComponent({ is_user_admin: true });
+            getWrapper({ is_user_admin: true });
             await jest.runOnlyPendingTimersAsync();
 
             expect(setErrorMessageSpy).toHaveBeenCalledWith(expect.any(Object), message);
@@ -211,7 +206,7 @@ describe("CrossTrackerWidget", () => {
     describe("reportSaved() -", () => {
         it(`when the report is saved,
             then the reports will be updated and a mutation will be committed`, async () => {
-            const wrapper = instantiateComponent({
+            const wrapper = getWrapper({
                 is_user_admin: true,
                 reading_mode: true,
             });

@@ -37,8 +37,10 @@ msgstr "Annuler"
 msgid "Description"
 msgstr "Description"
 
-msgid "Error while fetching the list of projects you are member of"
-msgstr "Erreur à la récupération de la liste des projets dont vous êtes membre"
+msgid "Error while fetching the list of projects you are member of: %{error}"
+msgstr ""
+"Erreur à la récupération de la liste des projets dont vous êtes membre : "
+"%{error}"
 
 msgid "Error while fetching the list of trackers of this project"
 msgstr "Erreur à la récupération de la liste des outils de suivi de ce projet"

@@ -23,6 +23,9 @@ dependencies:
   '@tuleap/tlp-fetch':
     specifier: workspace:*
     version: link:../../../../lib/frontend/tlp-fetch
+  '@tuleap/vue-strict-inject':
+    specifier: workspace:^
+    version: link:../../../../lib/frontend/vue-strict-inject
   '@tuleap/vue3-gettext-init':
     specifier: workspace:^
     version: link:../../../../lib/frontend/vue3-gettext-init
@@ -52,9 +55,6 @@ devDependencies:
   '@tuleap/build-system-configurator':
     specifier: workspace:*
     version: link:../../../../lib/frontend/build-system-configurator
-  '@tuleap/core-rest-api-types':
-    specifier: workspace:*
-    version: link:../../../../lib/frontend/rest-api-types
   '@tuleap/plugin-tracker-rest-api-types':
     specifier: workspace:*
     version: link:../../../tracker/scripts/lib/rest-api-types
