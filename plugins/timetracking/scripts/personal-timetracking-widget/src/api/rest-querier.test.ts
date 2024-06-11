@@ -36,17 +36,13 @@ describe("getTrackedTimes() -", (): void => {
             },
         ] as PersonalTime[];
 
-        vi.spyOn(fetch_result, "head").mockReturnValue(
+        const getResponse = vi.spyOn(fetch_result, "getResponse").mockReturnValue(
             okAsync({
                 ok: true,
-                headers: {
-                    get: (header_name: string): string | null =>
-                        header_name !== "X-PAGINATION-SIZE" ? null : String(time.length),
-                },
-            } as unknown as Response),
+                headers: new Headers({ "X-PAGINATION-SIZE": String(time.length) }),
+                json: () => Promise.resolve(time),
+            } as Response),
         );
-
-        const getJSON = vi.spyOn(fetch_result, "getJSON").mockReturnValue(okAsync(time));
 
         const result = await getTrackedTimes(user_id, "2018-03-08", "2018-03-15", limit, offset);
 
@@ -54,7 +50,7 @@ describe("getTrackedTimes() -", (): void => {
             throw new Error("Expected an Ok");
         }
 
-        expect(getJSON).toHaveBeenCalledWith(uri`/api/v1/users/${user_id}/timetracking`, {
+        expect(getResponse).toHaveBeenCalledWith(uri`/api/v1/users/${user_id}/timetracking`, {
             params: {
                 limit,
                 offset,

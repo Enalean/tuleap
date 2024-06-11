@@ -52,7 +52,7 @@ describe(`rest-querier`, () => {
     });
 
     it("asks to create the GitLab merge request", async () => {
-        const postSpy = vi.spyOn(fetch_result, "post");
+        const postSpy = vi.spyOn(fetch_result, "postResponse");
         postSpy.mockReturnValue(okAsync({} as Response));
 
         const result = await postGitlabMergeRequest(

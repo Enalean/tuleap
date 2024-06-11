@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { getJSON, postJSON, post, uri } from "@tuleap/fetch-result";
+import { getJSON, postJSON, postResponse, uri } from "@tuleap/fetch-result";
 import type { Fault } from "@tuleap/fault";
 import type { ResultAsync } from "neverthrow";
 
@@ -37,7 +37,7 @@ export const postGitlabMergeRequest = (
     artifact_id: number,
     source_branch: string,
 ): ResultAsync<void, Fault> =>
-    post(
+    postResponse(
         uri`/api/v1/gitlab_merge_request`,
         {},
         { gitlab_integration_id, artifact_id, source_branch },

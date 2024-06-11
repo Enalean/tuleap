@@ -31,15 +31,12 @@ import type { ItemDefinition } from "../type";
 describe("search-querier", () => {
     const url = uri`/search`;
     const keywords = "keywords";
-    const PAGINATION_SIZE_HEADER = "X-PAGINATION-SIZE";
-    const PAGINATION_LIMIT_HEADER = "X-PAGINATION-LIMIT";
-    const PAGINATION_LIMIT_MAX_HEADER = "X-PAGINATION-LIMIT-MAX";
 
     describe("run()", () => {
         let expected_results: ResultAsync<QueryResults, Fault> | undefined = undefined;
 
         it("should propagate the API error", async () => {
-            const post_spy = jest.spyOn(fetch_result, "post");
+            const post_spy = jest.spyOn(fetch_result, "postResponse");
             post_spy.mockReturnValue(errAsync(Fault.fromMessage("Something went wrong")));
 
             querier(
@@ -64,25 +61,20 @@ describe("search-querier", () => {
         });
 
         it("should return the results", async () => {
-            const post_spy = jest.spyOn(fetch_result, "post");
+            const post_spy = jest.spyOn(fetch_result, "postResponse");
             post_spy.mockReturnValue(
                 okAsync({
-                    headers: {
-                        get: (name: string): string | null =>
-                            name === PAGINATION_SIZE_HEADER
-                                ? "2"
-                                : name === PAGINATION_LIMIT_MAX_HEADER
-                                  ? "50"
-                                  : name === PAGINATION_LIMIT_HEADER
-                                    ? "50"
-                                    : null,
-                    },
+                    headers: new Headers({
+                        "X-PAGINATION-SIZE": "2",
+                        "X-PAGINATION-LIMIT-MAX": "50",
+                        "X-PAGINATION-LIMIT": "50",
+                    }),
                     json: () =>
                         Promise.resolve([
                             { title: "toto", html_url: "/toto" },
                             { title: "titi", html_url: "/titi" },
                         ] as ItemDefinition[]),
-                } as unknown as Response),
+                } as Response),
             );
 
             querier(
@@ -114,24 +106,19 @@ describe("search-querier", () => {
         });
 
         it("should start at the given offset", async () => {
-            const post_spy = jest.spyOn(fetch_result, "post");
+            const post_spy = jest.spyOn(fetch_result, "postResponse");
             let called_offset = 0;
             post_spy.mockImplementation((url, options: OptionsWithAutoEncodedParameters) => {
                 called_offset = Number(options.params?.offset);
 
                 return okAsync({
-                    headers: {
-                        get: (name: string): string | null =>
-                            name === PAGINATION_SIZE_HEADER
-                                ? "2"
-                                : name === PAGINATION_LIMIT_MAX_HEADER
-                                  ? "50"
-                                  : name === PAGINATION_LIMIT_HEADER
-                                    ? "50"
-                                    : null,
-                    },
+                    headers: new Headers({
+                        "X-PAGINATION-SIZE": "2",
+                        "X-PAGINATION-LIMIT-MAX": "50",
+                        "X-PAGINATION-LIMIT": "50",
+                    }),
                     json: () => Promise.resolve([] as ItemDefinition[]),
-                } as unknown as Response);
+                } as Response);
             });
 
             querier(
@@ -161,25 +148,20 @@ describe("search-querier", () => {
         });
 
         it("should add the results to the previously fetched ones", async () => {
-            const post_spy = jest.spyOn(fetch_result, "post");
+            const post_spy = jest.spyOn(fetch_result, "postResponse");
             post_spy.mockReturnValue(
                 okAsync({
-                    headers: {
-                        get: (name: string): string | null =>
-                            name === PAGINATION_SIZE_HEADER
-                                ? "200"
-                                : name === PAGINATION_LIMIT_MAX_HEADER
-                                  ? "50"
-                                  : name === PAGINATION_LIMIT_HEADER
-                                    ? "50"
-                                    : null,
-                    },
+                    headers: new Headers({
+                        "X-PAGINATION-SIZE": "200",
+                        "X-PAGINATION-LIMIT-MAX": "50",
+                        "X-PAGINATION-LIMIT": "50",
+                    }),
                     json: () =>
                         Promise.resolve([
                             { title: "toto", html_url: "/toto" },
                             { title: "tata", html_url: "/tata" },
                         ] as ItemDefinition[]),
-                } as unknown as Response),
+                } as Response),
             );
 
             querier(
@@ -215,25 +197,20 @@ describe("search-querier", () => {
         });
 
         it("should incrementally add items so that user has better chance to see progress if results are spanned between multiple pages", async () => {
-            const post_spy = jest.spyOn(fetch_result, "post");
+            const post_spy = jest.spyOn(fetch_result, "postResponse");
             post_spy.mockReturnValue(
                 okAsync({
-                    headers: {
-                        get: (name: string): string | null =>
-                            name === PAGINATION_SIZE_HEADER
-                                ? "2"
-                                : name === PAGINATION_LIMIT_MAX_HEADER
-                                  ? "50"
-                                  : name === PAGINATION_LIMIT_HEADER
-                                    ? "50"
-                                    : null,
-                    },
+                    headers: new Headers({
+                        "X-PAGINATION-SIZE": "2",
+                        "X-PAGINATION-LIMIT-MAX": "50",
+                        "X-PAGINATION-LIMIT": "50",
+                    }),
                     json: () =>
                         Promise.resolve([
                             { title: "toto", html_url: "/toto" },
                             { title: "titi", html_url: "/titi" },
                         ] as ItemDefinition[]),
-                } as unknown as Response),
+                } as Response),
             );
 
             const addItemToCollection = jest.fn();
@@ -257,25 +234,20 @@ describe("search-querier", () => {
         });
 
         it("should deduplicate the results", async () => {
-            const post_spy = jest.spyOn(fetch_result, "post");
+            const post_spy = jest.spyOn(fetch_result, "postResponse");
             post_spy.mockReturnValue(
                 okAsync({
-                    headers: {
-                        get: (name: string): string | null =>
-                            name === PAGINATION_SIZE_HEADER
-                                ? "2"
-                                : name === PAGINATION_LIMIT_MAX_HEADER
-                                  ? "50"
-                                  : name === PAGINATION_LIMIT_HEADER
-                                    ? "50"
-                                    : null,
-                    },
+                    headers: new Headers({
+                        "X-PAGINATION-SIZE": "2",
+                        "X-PAGINATION-LIMIT-MAX": "50",
+                        "X-PAGINATION-LIMIT": "50",
+                    }),
                     json: () =>
                         Promise.resolve([
                             { title: "toto", html_url: "/toto" },
                             { title: "toto", html_url: "/toto" },
                         ] as ItemDefinition[]),
-                } as unknown as Response),
+                } as Response),
             );
 
             querier(
@@ -306,7 +278,7 @@ describe("search-querier", () => {
         });
 
         it("should query another pages to have 15 results and indicate if there are more results", async () => {
-            const post_spy = jest.spyOn(fetch_result, "post");
+            const post_spy = jest.spyOn(fetch_result, "postResponse");
             post_spy.mockImplementation(
                 (
                     url: EncodedURI,
@@ -353,18 +325,13 @@ describe("search-querier", () => {
                     const results = results_by_offset.get(offset) || ([] as ItemDefinition[]);
 
                     return okAsync({
-                        headers: {
-                            get: (name: string): string | null =>
-                                name === PAGINATION_SIZE_HEADER
-                                    ? "2000"
-                                    : name === PAGINATION_LIMIT_MAX_HEADER
-                                      ? "50"
-                                      : name === PAGINATION_LIMIT_HEADER
-                                        ? "50"
-                                        : null,
-                        },
+                        headers: new Headers({
+                            "X-PAGINATION-SIZE": "2000",
+                            "X-PAGINATION-LIMIT-MAX": "50",
+                            "X-PAGINATION-LIMIT": "50",
+                        }),
                         json: () => Promise.resolve(results),
-                    } as unknown as Response);
+                    } as Response);
                 },
             );
 
@@ -410,7 +377,7 @@ describe("search-querier", () => {
         });
 
         it("should deduplicate results accross pages", async () => {
-            const post_spy = jest.spyOn(fetch_result, "post");
+            const post_spy = jest.spyOn(fetch_result, "postResponse");
             post_spy.mockImplementation(
                 (
                     url: EncodedURI,
@@ -446,18 +413,13 @@ describe("search-querier", () => {
                     const results = results_by_offset.get(offset) || ([] as ItemDefinition[]);
 
                     return okAsync({
-                        headers: {
-                            get: (name: string): string | null =>
-                                name === PAGINATION_SIZE_HEADER
-                                    ? "2000"
-                                    : name === PAGINATION_LIMIT_MAX_HEADER
-                                      ? "50"
-                                      : name === PAGINATION_LIMIT_HEADER
-                                        ? "50"
-                                        : null,
-                        },
+                        headers: new Headers({
+                            "X-PAGINATION-SIZE": "2000",
+                            "X-PAGINATION-LIMIT-MAX": "50",
+                            "X-PAGINATION-LIMIT": "50",
+                        }),
                         json: () => Promise.resolve(results),
-                    } as unknown as Response);
+                    } as Response);
                 },
             );
 
@@ -506,25 +468,20 @@ describe("search-querier", () => {
                 jest.fn(),
             );
 
-            const post_spy = jest.spyOn(fetch_result, "post");
+            const post_spy = jest.spyOn(fetch_result, "postResponse");
             post_spy.mockReturnValue(
                 okAsync({
-                    headers: {
-                        get: (name: string): string | null =>
-                            name === PAGINATION_SIZE_HEADER
-                                ? "2"
-                                : name === PAGINATION_LIMIT_MAX_HEADER
-                                  ? "50"
-                                  : name === PAGINATION_LIMIT_HEADER
-                                    ? "50"
-                                    : null,
-                    },
+                    headers: new Headers({
+                        "X-PAGINATION-SIZE": "2",
+                        "X-PAGINATION-LIMIT-MAX": "50",
+                        "X-PAGINATION-LIMIT": "50",
+                    }),
                     json: () =>
                         Promise.resolve([
                             { title: "toto", html_url: "/toto" },
                             { title: "titi", html_url: "/titi" },
                         ] as ItemDefinition[]),
-                } as unknown as Response),
+                } as Response),
             );
 
             query.stop();
@@ -546,7 +503,7 @@ describe("search-querier", () => {
                 jest.fn(),
             );
 
-            const post_spy = jest.spyOn(fetch_result, "post");
+            const post_spy = jest.spyOn(fetch_result, "postResponse");
             post_spy.mockImplementation(
                 (
                     url: EncodedURI,
@@ -567,18 +524,13 @@ describe("search-querier", () => {
                     }
 
                     return okAsync({
-                        headers: {
-                            get: (name: string): string | null =>
-                                name === PAGINATION_SIZE_HEADER
-                                    ? "2000"
-                                    : name === PAGINATION_LIMIT_MAX_HEADER
-                                      ? "50"
-                                      : name === PAGINATION_LIMIT_HEADER
-                                        ? "50"
-                                        : null,
-                        },
+                        headers: new Headers({
+                            "X-PAGINATION-SIZE": "2000",
+                            "X-PAGINATION-LIMIT-MAX": "50",
+                            "X-PAGINATION-LIMIT": "50",
+                        }),
                         json: () => Promise.resolve(results),
-                    } as unknown as Response);
+                    } as Response);
                 },
             );
 

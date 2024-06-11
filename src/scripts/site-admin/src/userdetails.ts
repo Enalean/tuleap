@@ -18,7 +18,7 @@
 import { datePicker } from "tlp";
 import { createModal, EVENT_TLP_MODAL_HIDDEN, openTargetModalIdOnClick } from "@tuleap/tlp-modal";
 import { selectOrThrow } from "@tuleap/dom";
-import { post, uri } from "@tuleap/fetch-result";
+import { postResponse, uri } from "@tuleap/fetch-result";
 import type { Fault } from "@tuleap/fault";
 
 const HIDDEN = "siteadmin-hidden";
@@ -161,7 +161,7 @@ function initWebAuthnRemove(): void {
         remove_button_icon.classList.remove(HIDDEN);
         remove_button.disabled = true;
 
-        post(
+        postResponse(
             uri`/webauthn/key/delete`,
             {},
             {
