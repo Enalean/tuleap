@@ -40,10 +40,8 @@ use Tuleap\Test\Builders\CoreDatabaseBuilder;
 use Tuleap\Tracker\Permission\TrackersPermissionsRetriever;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Field;
 use Tuleap\Tracker\Test\Builders\TrackerDatabaseBuilder;
-use function count;
-use function md5;
 
-final class NumericSelectBuilderTest extends CrossTrackerFieldTestCase
+final class StaticListSelectBuilderTest extends CrossTrackerFieldTestCase
 {
     private SelectBuilderVisitor $builder;
     private CrossTrackerExpertQueryReportDao $dao;
@@ -56,7 +54,7 @@ final class NumericSelectBuilderTest extends CrossTrackerFieldTestCase
      */
     private array $artifact_ids;
     /**
-     * @var array<int, int|float|null>
+     * @var array<int, array<string, string>>
      */
     private array $expected_values;
     private PFUser $user;
@@ -76,52 +74,84 @@ final class NumericSelectBuilderTest extends CrossTrackerFieldTestCase
         $sprint_tracker  = $tracker_builder->buildTracker($project_id, 'Sprint');
         $this->trackers  = [$release_tracker, $sprint_tracker];
 
-        $release_int_field_id  = $tracker_builder->buildIntField(
+        $release_static_list_field_id = $tracker_builder->buildStaticListField(
             $release_tracker->getId(),
-            'numeric_field',
+            'list_field',
+            Tracker_FormElementFactory::FIELD_SELECT_BOX_TYPE
         );
-        $sprint_float_field_id = $tracker_builder->buildFloatField(
+
+
+        $release_bind_ids = $tracker_builder->buildValuesForStaticListField(
+            $release_static_list_field_id,
+            ['A110', 'A610']
+        );
+
+        $sprint_list_field_id = $tracker_builder->buildStaticListField(
             $sprint_tracker->getId(),
-            'numeric_field',
+            'list_field',
+            Tracker_FormElementFactory::FIELD_OPEN_LIST_TYPE
+        );
+
+        $sprint_bind_list_ids = $tracker_builder->buildValuesForStaticListField(
+            $sprint_list_field_id,
+            ['Elan', 'Elise'],
+        );
+
+        $sprint_bind_open_ids = $tracker_builder->buildValuesForStaticOpenListField(
+            $sprint_list_field_id,
+            ['Europa'],
         );
 
         $tracker_builder->setReadPermission(
-            $release_int_field_id,
+            $release_static_list_field_id,
             ProjectUGroup::PROJECT_MEMBERS
         );
         $tracker_builder->setReadPermission(
-            $sprint_float_field_id,
+            $sprint_list_field_id,
             ProjectUGroup::PROJECT_MEMBERS
         );
 
-        $release_artifact_empty_id     = $tracker_builder->buildArtifact($release_tracker->getId());
-        $release_artifact_with_int_id  = $tracker_builder->buildArtifact($release_tracker->getId());
-        $sprint_artifact_with_float_id = $tracker_builder->buildArtifact($sprint_tracker->getId());
-        $this->artifact_ids            = [
+        $release_artifact_empty_id            = $tracker_builder->buildArtifact($release_tracker->getId());
+        $release_artifact_with_static_list_id = $tracker_builder->buildArtifact($release_tracker->getId());
+        $sprint_artifact_with_open_list_id    = $tracker_builder->buildArtifact($sprint_tracker->getId());
+        $this->artifact_ids                   = [
             $release_artifact_empty_id,
-            $release_artifact_with_int_id,
-            $sprint_artifact_with_float_id,
+            $release_artifact_with_static_list_id,
+            $sprint_artifact_with_open_list_id,
+            $sprint_artifact_with_open_list_id,
         ];
 
         $tracker_builder->buildLastChangeset($release_artifact_empty_id);
-        $release_artifact_with_int_changeset  = $tracker_builder->buildLastChangeset($release_artifact_with_int_id);
-        $sprint_artifact_with_float_changeset = $tracker_builder->buildLastChangeset($sprint_artifact_with_float_id);
-
-        $this->expected_values = [
-            $release_artifact_empty_id     => null,
-            $release_artifact_with_int_id  => 42,
-            $sprint_artifact_with_float_id => 3.14,
-        ];
-        $tracker_builder->buildIntValue(
-            $release_artifact_with_int_changeset,
-            $release_int_field_id,
-            (int) $this->expected_values[$release_artifact_with_int_id],
+        $release_artifact_with_list_changeset     = $tracker_builder->buildLastChangeset(
+            $release_artifact_with_static_list_id
+        );
+        $sprint_artifact_with_open_list_changeset = $tracker_builder->buildLastChangeset(
+            $sprint_artifact_with_open_list_id
         );
 
-        $tracker_builder->buildFloatValue(
-            $sprint_artifact_with_float_changeset,
-            $sprint_float_field_id,
-            (float) $this->expected_values[$sprint_artifact_with_float_id],
+        $hash                  = md5('list_field');
+        $this->expected_values = [
+            $release_artifact_with_static_list_id => ["list_value_$hash" => 'A110'],
+            $sprint_artifact_with_open_list_id    => ["open_value_$hash" => 'Europa', "list_value_$hash" => 'Elan'],
+        ];
+
+        $tracker_builder->buildListValue(
+            $release_artifact_with_list_changeset,
+            $release_static_list_field_id,
+            $release_bind_ids['A110']
+        );
+
+        $tracker_builder->buildListValue(
+            $sprint_artifact_with_open_list_changeset,
+            $sprint_list_field_id,
+            $sprint_bind_list_ids['Elan']
+        );
+
+        $tracker_builder->buildOpenValue(
+            $sprint_artifact_with_open_list_changeset,
+            $sprint_list_field_id,
+            $sprint_bind_open_ids['Europa'],
+            true
         );
 
 
@@ -142,7 +172,7 @@ final class NumericSelectBuilderTest extends CrossTrackerFieldTestCase
     private function getQueryResults(): array
     {
         $select_from = $this->builder->buildSelectFrom(
-            [new Field('numeric_field')],
+            [new Field('list_field')],
             $this->trackers,
             $this->user,
         );
@@ -152,43 +182,43 @@ final class NumericSelectBuilderTest extends CrossTrackerFieldTestCase
 
     public function testItReturnsColumns(): void
     {
-        $results          = $this->getQueryResults();
-        $hash             = md5('numeric_field');
-        $int_field_hash   = 'int_' . $hash;
-        $float_field_hash = 'float_' . $hash;
+        $results         = $this->getQueryResults();
+        $hash            = md5('list_field');
+        $list_field_hash = 'list_value_' . $hash;
+        $open_field_hash = 'open_value_' . $hash;
         self::assertCount(count($this->artifact_ids), $results);
 
         foreach ($results as $row) {
-            self::assertArrayHasKey($int_field_hash, $row);
-            self::assertArrayHasKey($float_field_hash, $row);
+            self::assertArrayHasKey($list_field_hash, $row);
+            self::assertArrayHasKey($open_field_hash, $row);
             self::assertArrayHasKey('id', $row);
-            $this->assertIntValueCase($row, $int_field_hash, $float_field_hash);
-            $this->assertFloatValueCase($row, $int_field_hash, $float_field_hash);
-            $this->assertNullValueCase($row, $int_field_hash, $float_field_hash);
+            $this->assertListValueCase($row, $list_field_hash, $open_field_hash);
+            $this->assertOpenValueCase($row, $list_field_hash, $open_field_hash);
+            $this->assertNullValueCase($row, $list_field_hash, $open_field_hash);
         }
     }
 
-    private function assertNullValueCase(array $row, string $int_field_hash, string $float_field_hash): void
+    private function assertNullValueCase(array $row, string $list_field_hash, string $open_field_hash): void
     {
-        if ($row[$int_field_hash] === null && $row[$float_field_hash] === null) {
-            self::assertNull($row[$int_field_hash]);
-            self::assertNull($row[$float_field_hash]);
+        if ($row[$list_field_hash] === null && $row[$open_field_hash] === null) {
+            self::assertNull($row[$list_field_hash]);
+            self::assertNull($row[$open_field_hash]);
         }
     }
 
-    private function assertIntValueCase(array $row, string $int_field_hash, string $float_field_hash): void
+    private function assertListValueCase(array $row, string $list_field_hash, string $open_field_hash): void
     {
-        if ($row[$int_field_hash] !== null && $row[$float_field_hash] === null) {
-            self::assertSame($this->expected_values[$row['id']], $row[$int_field_hash]);
-            self::assertNull($row[$float_field_hash]);
+        if ($row[$list_field_hash] !== null && $row[$open_field_hash] === null) {
+            self::assertSame($this->expected_values[$row['id']][$list_field_hash], $row[$list_field_hash]);
+            self::assertNull($row[$open_field_hash]);
         }
     }
 
-    private function assertFloatValueCase(array $row, string $int_field_hash, string $float_field_hash): void
+    private function assertOpenValueCase(array $row, string $list_field_hash, string $open_field_hash): void
     {
-        if ($row[$int_field_hash] === null && $row[$float_field_hash] !== null) {
-            self::assertNull($row[$int_field_hash]);
-            self::assertSame($this->expected_values[$row['id']], $row[$float_field_hash]);
+        if ($row[$list_field_hash] === null && $row[$open_field_hash] !== null) {
+            self::assertNull($row[$list_field_hash]);
+            self::assertSame($this->expected_values[$row['id']][$open_field_hash], $row[$open_field_hash]);
         }
     }
 }
