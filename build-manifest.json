@@ -17,6 +17,10 @@
             "src": "lib/frontend/commonmark-popover/src",
             "po": "lib/frontend/commonmark-popover/po"
         },
+        "lazybox-users-autocomplete": {
+            "src": "lib/frontend/lazybox-users-autocomplete/src",
+            "po": "lib/frontend/lazybox-users-autocomplete/po"
+        },
         "access-denied-error": {
             "src": "src/scripts/main/src/BurningParrot/src/",
             "po": "src/scripts/main/src/BurningParrot/po"

@@ -27,7 +27,7 @@ import * as tlp_modal from "@tuleap/tlp-modal";
 import type { Modal } from "@tuleap/tlp-modal";
 import type { User } from "@tuleap/plugin-pullrequest-rest-api-types";
 import { LazyboxVueStub } from "../../../tests/stubs/LazyboxVueStub";
-import { DISPLAY_TULEAP_API_ERROR, PULL_REQUEST_ID_KEY } from "../../constants";
+import { DISPLAY_TULEAP_API_ERROR, PULL_REQUEST_ID_KEY, USER_LOCALE_KEY } from "../../constants";
 import { getGlobalTestOptions } from "../../../tests/helpers/global-options-for-tests";
 import * as tuleap_api from "../../api/tuleap-rest-querier";
 import PullRequestManageReviewersModal from "./PullRequestManageReviewersModal.vue";
@@ -88,6 +88,8 @@ describe("PullRequestManageReviewersModal", () => {
                     return pull_request_id;
                 case DISPLAY_TULEAP_API_ERROR:
                     return display_api_error_callback;
+                case USER_LOCALE_KEY:
+                    return "pt_BR";
                 default:
                     throw new Error("Tried to strictInject a value while it was not mocked");
             }

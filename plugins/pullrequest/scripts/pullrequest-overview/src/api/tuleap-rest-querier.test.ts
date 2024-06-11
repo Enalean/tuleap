@@ -39,7 +39,6 @@ import {
     fetchReviewersInfo,
     fetchUserInfo,
     fetchPullRequestLabels,
-    fetchMatchingUsers,
     patchTitle,
     mergePullRequest,
     reopenPullRequest,
@@ -205,30 +204,6 @@ describe("tuleap-rest-querier", () => {
                 uri`/api/v1/pull_requests/${pull_request_id}`,
                 { status: PULL_REQUEST_STATUS_ABANDON },
             );
-        });
-    });
-
-    describe("fetchMatchingUsers", () => {
-        it("Given a query, Then it should fetch the matching users", async () => {
-            const users = [{ id: 101, display_name: "Joe l'Asticot" } as User];
-
-            vi.spyOn(fetch_result, "getJSON").mockReturnValue(okAsync(users));
-
-            const query = "Joe l'A";
-            const result = await fetchMatchingUsers(query);
-            if (!result.isOk()) {
-                throw new Error("Expected an Ok");
-            }
-
-            expect(fetch_result.getJSON).toHaveBeenCalledWith(uri`/api/v1/users`, {
-                params: {
-                    query,
-                    limit: 10,
-                    offset: 0,
-                },
-            });
-
-            expect(result.value).toStrictEqual(users);
         });
     });
 

@@ -18,32 +18,32 @@
  */
 
 import { describe, it, expect } from "vitest";
-import type { User } from "@tuleap/plugin-pullrequest-rest-api-types";
-import { getAssignableReviewer, getSelectedReviewers } from "./AssignableReviewerTemplate";
+import type { User } from "@tuleap/core-rest-api-types";
+import { getAssignableUser, getSelectedUsers } from "./AssignableUserTemplate";
 
 const user = {
     id: 102,
     display_name: "Joe l'Asticot (jolasti)",
 } as User;
 
-describe("AssignableReviewerTemplate", () => {
-    describe("getAssignableReviewer", () => {
+describe("AssignableUserTemplate", () => {
+    describe("getAssignableUser", () => {
         it("should return null if the provided value is not a user", () => {
-            expect(getAssignableReviewer({ foo: "bar" })).toBeNull();
+            expect(getAssignableUser({ foo: "bar" })).toBeNull();
         });
 
         it("should return the value if it is a user", () => {
-            expect(getAssignableReviewer(user)).toStrictEqual(user);
+            expect(getAssignableUser(user)).toStrictEqual(user);
         });
     });
 
-    describe("getSelectedReviewers", () => {
+    describe("getSelectedUsers", () => {
         it("should return an empty array when the provided parameter is not an array", () => {
-            expect(getSelectedReviewers("abcd")).toStrictEqual([]);
+            expect(getSelectedUsers("abcd")).toStrictEqual([]);
         });
 
         it("should return an array of users", () => {
-            expect(getSelectedReviewers([user])).toStrictEqual([user]);
+            expect(getSelectedUsers([user])).toStrictEqual([user]);
         });
     });
 });

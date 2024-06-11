@@ -1,0 +1,24 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: Joris MASSON <joris.masson@enalean.com>\n"
+"Language-Team: \n"
+"Language: fr_FR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+msgid "Matching users"
+msgstr "Utilisateurs correspondant"
+
+msgid "No matching users found"
+msgstr "Aucun utilisateur correspondant trouvé"
+
+msgid "Search users by their names"
+msgstr "Rechercher des utilisateurs par leurs noms"
+
+msgid "Type at least 3 characters"
+msgstr "Tapez au moins 3 caractères"

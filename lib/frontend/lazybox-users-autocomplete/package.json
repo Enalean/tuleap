@@ -1,0 +1,39 @@
+{
+  "author": "Enalean Team",
+  "name": "@tuleap/lazybox-users-autocomplete",
+  "homepage": "https://tuleap.org",
+  "license": "GPL-2.0-or-later",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "module": "dist/lazybox-users-autocomplete.js",
+  "main": "dist/lazybox-users-autocomplete.umd.cjs",
+  "types": "dist/main.d.ts",
+  "style": "dist/style.css",
+  "exports": {
+    ".": {
+      "import": "./dist/lazybox-users-autocomplete.js",
+      "require": "./dist/lazybox-users-autocomplete.umd.cjs",
+      "style": "./dist/style.css"
+    },
+    "./style": "./dist/style.css"
+  },
+  "dependencies": {
+    "@tuleap/fault": "workspace:*",
+    "@tuleap/fetch-result": "workspace:*",
+    "@tuleap/gettext": "workspace:*",
+    "@tuleap/lazybox": "workspace:*",
+    "neverthrow": "^6.0.0"
+  },
+  "devDependencies": {
+    "@tuleap/build-system-configurator": "workspace:*",
+    "@tuleap/core-rest-api-types": "workspace:*",
+    "@tuleap/po-gettext-plugin": "workspace:*"
+  },
+  "scripts": {
+    "build": "vite build",
+    "test": "vitest",
+    "typecheck": "tsc --noEmit",
+    "watch": "vite build --watch --mode development --minify false"
+  }
+}

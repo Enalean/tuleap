@@ -18,7 +18,7 @@
  */
 
 import { describe, it, expect } from "vitest";
-import type { User } from "@tuleap/plugin-pullrequest-rest-api-types";
+import type { User } from "@tuleap/core-rest-api-types";
 import { UsersToLazyboxItemsTransformer } from "./UsersToLazyboxItemsTransformer";
 
 const user_1 = {

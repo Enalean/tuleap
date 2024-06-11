@@ -18,10 +18,11 @@
  */
 
 import type { GroupOfItems } from "@tuleap/lazybox";
-import type { User } from "@tuleap/plugin-pullrequest-rest-api-types";
+import type { User } from "@tuleap/core-rest-api-types";
 import type { TransformUsersToLazyboxItems } from "./UsersToLazyboxItemsTransformer";
+import type { GettextProvider } from "@tuleap/gettext";
 
-export interface BuildGroupOfReviewers {
+export interface BuildGroupOfUsers {
     buildEmpty(): GroupOfItems;
     buildEmptyNotEnoughCharacters(): GroupOfItems;
     buildLoading(): GroupOfItems;
@@ -31,13 +32,13 @@ export interface BuildGroupOfReviewers {
     ): GroupOfItems;
 }
 
-export const GroupOfReviewersBuilder = (
+export const GroupOfUsersBuilder = (
     users_transformer: TransformUsersToLazyboxItems,
-    $gettext: (msgid: string) => string,
-): BuildGroupOfReviewers => {
+    gettext_provider: GettextProvider,
+): BuildGroupOfUsers => {
     const empty_group: GroupOfItems = {
-        label: $gettext("Matching users"),
-        empty_message: $gettext("No matching users found"),
+        label: gettext_provider.gettext("Matching users"),
+        empty_message: gettext_provider.gettext("No matching users found"),
         is_loading: false,
         footer_message: "",
         items: [],
@@ -50,7 +51,7 @@ export const GroupOfReviewersBuilder = (
         buildEmptyNotEnoughCharacters(): GroupOfItems {
             return {
                 ...empty_group,
-                empty_message: $gettext("Type at least 3 characters"),
+                empty_message: gettext_provider.gettext("Type at least 3 characters"),
             };
         },
         buildLoading(): GroupOfItems {
