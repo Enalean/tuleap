@@ -29,7 +29,7 @@ export default vite.defineAppConfig(
         sub_app_name: path.basename(__dirname),
     },
     {
-        plugins: [viteExternalsPlugin({ tlp: "tlp" }), vue(), POGettextPlugin.vite()],
+        plugins: [POGettextPlugin.vite(), viteExternalsPlugin({ tlp: "tlp" }), vue()],
         build: {
             rollupOptions: {
                 input: {

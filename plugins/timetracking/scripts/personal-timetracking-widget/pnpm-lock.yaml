@@ -20,6 +20,18 @@ dependencies:
   '@tuleap/option':
     specifier: workspace:*
     version: link:../../../../lib/frontend/option
+  '@tuleap/plugin-timetracking-constants':
+    specifier: workspace:*
+    version: link:../lib/constants
+  '@tuleap/plugin-timetracking-predefined-time-periods':
+    specifier: workspace:*
+    version: link:../lib/predefined-time-periods
+  '@tuleap/plugin-timetracking-rest-api-types':
+    specifier: workspace:*
+    version: link:../lib/rest-api-types
+  '@tuleap/plugin-timetracking-time-formatters':
+    specifier: workspace:*
+    version: link:../lib/time-formatters
   '@tuleap/tlp-modal':
     specifier: workspace:*
     version: link:../../../../lib/frontend/tlp-modal
@@ -49,18 +61,6 @@ devDependencies:
   '@tuleap/build-system-configurator':
     specifier: workspace:*
     version: link:../../../../lib/frontend/build-system-configurator
-  '@tuleap/plugin-timetracking-constants':
-    specifier: workspace:*
-    version: link:../lib/constants
-  '@tuleap/plugin-timetracking-predefined-time-periods':
-    specifier: workspace:*
-    version: link:../lib/predefined-time-periods
-  '@tuleap/plugin-timetracking-rest-api-types':
-    specifier: workspace:*
-    version: link:../lib/rest-api-types
-  '@tuleap/plugin-timetracking-time-formatters':
-    specifier: workspace:*
-    version: link:../lib/time-formatters
   '@tuleap/po-gettext-plugin':
     specifier: workspace:*
     version: link:../../../../lib/frontend/po-gettext-plugin

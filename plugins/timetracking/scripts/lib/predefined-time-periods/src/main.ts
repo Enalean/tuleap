@@ -17,16 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { vite, viteDtsPlugin } from "@tuleap/build-system-configurator";
-import * as path from "node:path";
-import POGettextPlugin from "@tuleap/po-gettext-plugin";
-
-export default vite.defineLibConfig({
-    build: {
-        lib: {
-            entry: path.resolve(__dirname, "src/main.ts"),
-            name: "TimeTrackingPredefinedTimePeriods",
-        },
-    },
-    plugins: [viteDtsPlugin(), POGettextPlugin.vite()],
-});
+export { element } from "./SelectionPredefinedTimePeriods";
+export type { PredefinedTimePeriodSelect, PeriodOption } from "./SelectionPredefinedTimePeriods";
+export type { Period, PredefinedTimePeriod } from "./predefined-time-periods";
+export { TODAY, LAST_7_DAYS } from "./predefined-time-periods";
