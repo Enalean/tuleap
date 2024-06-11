@@ -20,32 +20,25 @@
 import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import { getGlobalTestOptions } from "../helpers/global-options-for-tests";
-import { mockFetchError, mockFetchSuccess } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper";
+import { errAsync, okAsync } from "neverthrow";
+import { Fault } from "@tuleap/fault";
 import WritingCrossTrackerReport from "../writing-mode/writing-cross-tracker-report";
 import ArtifactTable from "./ArtifactTable.vue";
 import * as rest_querier from "../api/rest-querier";
-import type { Artifact, ArtifactsCollection, State } from "../type";
+import type { Artifact, State } from "../type";
 import ArtifactTableRow from "./ArtifactTableRow.vue";
+import { TuleapAPIFaultStub } from "../../tests/stubs/TuleapAPIFaultStub";
 
 jest.useFakeTimers();
 
 describe("ArtifactTable", () => {
-    let writingCrossTrackerReport: WritingCrossTrackerReport,
-        getReportContent: jest.SpyInstance,
-        getQueryResult: jest.SpyInstance,
-        errorSpy: jest.Mock;
+    let errorSpy: jest.Mock;
 
     beforeEach(() => {
-        writingCrossTrackerReport = new WritingCrossTrackerReport();
-
-        getReportContent = jest.spyOn(rest_querier, "getReportContent");
-        getQueryResult = jest.spyOn(rest_querier, "getQueryResult");
         errorSpy = jest.fn();
     });
 
-    function instantiateComponent(
-        state: Partial<State>,
-    ): VueWrapper<InstanceType<typeof ArtifactTable>> {
+    function getWrapper(state: Partial<State>): VueWrapper<InstanceType<typeof ArtifactTable>> {
         return shallowMount(ArtifactTable, {
             global: {
                 ...getGlobalTestOptions({
@@ -56,77 +49,66 @@ describe("ArtifactTable", () => {
                 }),
             },
             props: {
-                writingCrossTrackerReport,
+                writingCrossTrackerReport: new WritingCrossTrackerReport(),
             },
         });
     }
 
     describe("loadArtifacts() -", () => {
         it("Given report is saved, it loads artifacts of report", () => {
-            mockFetchSuccess(getReportContent);
-            instantiateComponent({ is_report_saved: true });
+            const getReportContent = jest
+                .spyOn(rest_querier, "getReportContent")
+                .mockReturnValue(okAsync({ artifacts: [], total: 0 }));
+            getWrapper({ is_report_saved: true });
             expect(getReportContent).toHaveBeenCalled();
         });
 
         it("Given report is not saved, it loads artifacts of current selected trackers", () => {
-            mockFetchSuccess(getQueryResult);
-            instantiateComponent({ is_report_saved: false });
+            const getQueryResult = jest
+                .spyOn(rest_querier, "getQueryResult")
+                .mockReturnValue(okAsync({ artifacts: [], total: 0 }));
+            getWrapper({ is_report_saved: false });
             expect(getQueryResult).toHaveBeenCalled();
         });
 
         it("when there is a REST error, it will be displayed", async () => {
-            mockFetchError(getReportContent, {
-                error_json: {
-                    error: { status: 500 },
-                },
-            });
-            instantiateComponent({ is_report_saved: true });
+            const error_message = "Internal Server Error";
+            jest.spyOn(rest_querier, "getReportContent").mockReturnValue(
+                errAsync(Fault.fromMessage(error_message)),
+            );
+            getWrapper({ is_report_saved: true });
             await jest.runOnlyPendingTimersAsync();
 
-            expect(errorSpy).toHaveBeenCalledWith(expect.any(Object), "An error occurred");
+            expect(errorSpy).toHaveBeenCalled();
+            expect(errorSpy.mock.calls[0][1]).toContain(error_message);
         });
 
-        it("when there is a translated REST error, it will be shown", async () => {
-            mockFetchError(getReportContent, {
-                error_json: {
-                    error: { status: 400, i18n_error_message: "Error while parsing the query" },
-                },
-            });
-
-            instantiateComponent({ is_report_saved: true });
+        it("when there is a Tuleap API error, it will be shown", async () => {
+            const error_message = "Error while parsing the query";
+            jest.spyOn(rest_querier, "getReportContent").mockReturnValue(
+                errAsync(TuleapAPIFaultStub.fromMessage(error_message)),
+            );
+            getWrapper({ is_report_saved: true });
             await jest.runOnlyPendingTimersAsync();
 
-            expect(errorSpy).toHaveBeenCalledWith(
-                expect.any(Object),
-                "Error while parsing the query",
-            );
+            expect(errorSpy).toHaveBeenCalled();
+            expect(errorSpy.mock.calls[0][1]).toContain(error_message);
         });
 
         it(`Given the user does not have the permission to see all the matching artifacts on a call,
-    then a load more button is displayed to retrieve the next ones.`, async () => {
-            getReportContent.mockImplementation(function (
-                report_id: number,
-                limit: number,
-                offset: number,
-            ): Promise<ArtifactsCollection> {
-                if (offset === 0) {
-                    return Promise.resolve({
-                        artifacts: [{ id: 123 } as Artifact],
-                        total: "32",
-                    });
-                } else if (offset === 30) {
-                    return Promise.resolve({
-                        artifacts: [{ id: 124 } as Artifact],
-                        total: "32",
-                    });
-                }
-                throw Error("Unexpected offset " + offset);
-            });
-            const wrapper = instantiateComponent({ is_report_saved: true });
+            then a load more button is displayed to retrieve the next ones`, async () => {
+            const total = 32;
+            const first_batch = { artifacts: [{ id: 123 } as Artifact], total };
+            const second_batch = { artifacts: [{ id: 545 } as Artifact], total };
+            const getReportContent = jest
+                .spyOn(rest_querier, "getReportContent")
+                .mockReturnValueOnce(okAsync(first_batch));
+            const wrapper = getWrapper({ is_report_saved: true });
             await jest.runOnlyPendingTimersAsync();
 
             expect(wrapper.findAllComponents(ArtifactTableRow)).toHaveLength(1);
 
+            getReportContent.mockReturnValueOnce(okAsync(second_batch));
             await wrapper.find("[data-test=load-more]").trigger("click");
 
             expect(wrapper.findAllComponents(ArtifactTableRow)).toHaveLength(2);

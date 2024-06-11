@@ -19,8 +19,9 @@
 
 import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
+import { errAsync, okAsync } from "neverthrow";
+import { Fault } from "@tuleap/fault";
 import { getGlobalTestOptions } from "./helpers/global-options-for-tests";
-import { mockFetchError } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper";
 import CrossTrackerWidget from "./CrossTrackerWidget.vue";
 import BackendCrossTrackerReport from "./backend-cross-tracker-report";
 import ReadingCrossTrackerReport from "./reading-mode/reading-cross-tracker-report";
@@ -28,9 +29,8 @@ import WritingCrossTrackerReport from "./writing-mode/writing-cross-tracker-repo
 import * as rest_querier from "./api/rest-querier";
 import ReadingMode from "./reading-mode/ReadingMode.vue";
 import WritingMode from "./writing-mode/WritingMode.vue";
-
 import type { ProjectReference } from "@tuleap/core-rest-api-types";
-import type { InvalidTracker, State } from "./type";
+import type { InvalidTracker, State, TrackerAndProject } from "./type";
 
 const noop = (): void => {
     //Do nothing
@@ -42,7 +42,6 @@ describe("CrossTrackerWidget", () => {
     let backendCrossTrackerReport: BackendCrossTrackerReport,
         readingCrossTrackerReport: ReadingCrossTrackerReport,
         writingCrossTrackerReport: WritingCrossTrackerReport,
-        getReport: jest.SpyInstance,
         switchToWritingModeSpy: jest.Mock,
         switchToReadingModeSpy: jest.Mock,
         setErrorMessageSpy: jest.Mock,
@@ -56,6 +55,14 @@ describe("CrossTrackerWidget", () => {
         switchToReadingModeSpy = jest.fn();
         setErrorMessageSpy = jest.fn();
         switchReportToSavedSpy = jest.fn();
+
+        jest.spyOn(rest_querier, "getReport").mockReturnValue(
+            okAsync({
+                trackers: [],
+                expert_query: "",
+                invalid_trackers: [],
+            }),
+        );
     });
 
     function instantiateComponent(
@@ -74,6 +81,7 @@ describe("CrossTrackerWidget", () => {
                 setErrorMessage: setErrorMessageSpy,
                 switchReportToSaved: switchReportToSavedSpy,
                 resetInvalidTrackerList: noop,
+                setInvalidTrackers: noop,
             },
         };
 
@@ -115,6 +123,7 @@ describe("CrossTrackerWidget", () => {
                 reading_mode: true,
             });
             await jest.runOnlyPendingTimersAsync();
+            duplicate.mockReset(); // It is called once during onMounted
 
             wrapper.findComponent(ReadingMode).vm.$emit("switch-to-writing-mode");
 
@@ -161,34 +170,37 @@ describe("CrossTrackerWidget", () => {
     });
 
     describe("loadBackendReport() -", () => {
-        beforeEach(() => {
-            getReport = jest.spyOn(rest_querier, "getReport");
-        });
-
         it("When I load the report, then the reports will be initialized", async () => {
-            const trackers = [{ id: 25 }, { id: 30 }];
+            const first_tracker: TrackerAndProject = {
+                tracker: { id: 25, label: "alveolitis" },
+                project: { id: 182, label: "betide" },
+            };
+            const second_tracker: TrackerAndProject = {
+                tracker: { id: 956, label: "Stephanoceros" },
+                project: { id: 248, label: "methodic" },
+            };
+            const trackers = [first_tracker, second_tracker];
+            const invalid_trackers = [{ id: 956 } as InvalidTracker];
             const expert_query = '@title != ""';
-            getReport.mockResolvedValue({ trackers, expert_query });
-            jest.spyOn(backendCrossTrackerReport, "init").mockImplementation(() => {
-                // nothing to mock
-            });
+            jest.spyOn(rest_querier, "getReport").mockReturnValue(
+                okAsync({ trackers, expert_query, invalid_trackers }),
+            );
+            const init = jest.spyOn(backendCrossTrackerReport, "init");
             const duplicateReading = jest.spyOn(readingCrossTrackerReport, "duplicateFromReport");
             const duplicateWriting = jest.spyOn(writingCrossTrackerReport, "duplicateFromReport");
             instantiateComponent({ is_user_admin: true });
             await jest.runOnlyPendingTimersAsync();
 
-            expect(backendCrossTrackerReport.init).toHaveBeenCalledWith(trackers, expert_query);
+            expect(init).toHaveBeenCalledWith(trackers, expert_query);
             expect(duplicateReading).toHaveBeenCalledWith(backendCrossTrackerReport);
             expect(duplicateWriting).toHaveBeenCalledWith(readingCrossTrackerReport);
         });
 
         it("When there is a REST error, it will be shown", async () => {
             const message = "Report 41 not found";
-            mockFetchError(getReport, {
-                error_json: {
-                    error: { message },
-                },
-            });
+            jest.spyOn(rest_querier, "getReport").mockReturnValue(
+                errAsync(Fault.fromMessage(message)),
+            );
             instantiateComponent({ is_user_admin: true });
             await jest.runOnlyPendingTimersAsync();
 

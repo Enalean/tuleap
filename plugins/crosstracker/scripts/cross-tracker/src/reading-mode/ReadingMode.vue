@@ -73,9 +73,8 @@ import { useGettext } from "vue3-gettext";
 import TrackerListReadingMode from "./TrackerListReadingMode.vue";
 import { updateReport } from "../api/rest-querier";
 import type ReadingCrossTrackerReport from "./reading-cross-tracker-report";
-import type { State } from "../type";
+import type { Report, State } from "../type";
 import type BackendCrossTrackerReport from "../backend-cross-tracker-report";
-import { FetchWrapperError } from "@tuleap/tlp-fetch";
 
 const { $gettext } = useGettext();
 
@@ -117,7 +116,7 @@ function switchToWritingMode(): void {
     emit("switch-to-writing-mode");
 }
 
-async function saveReport(): Promise<void> {
+function saveReport(): void {
     if (is_save_disabled.value) {
         return;
     }
@@ -127,23 +126,20 @@ async function saveReport(): Promise<void> {
     props.backendCrossTrackerReport.duplicateFromReport(props.readingCrossTrackerReport);
     const tracker_ids = props.backendCrossTrackerReport.getTrackerIds();
     const new_expert_query = props.backendCrossTrackerReport.getExpertQuery();
-    try {
-        const { trackers, expert_query } = await updateReport(
-            report_id.value,
-            tracker_ids,
-            new_expert_query,
-        );
-        props.backendCrossTrackerReport.init(trackers, expert_query);
 
-        emit("saved");
-    } catch (error) {
-        if (error instanceof FetchWrapperError) {
-            const error_json = await error.response.json();
-            setErrorMessage(error_json.error.message);
-        }
-    } finally {
-        is_loading.value = false;
-    }
+    updateReport(report_id.value, tracker_ids, new_expert_query)
+        .match(
+            (report: Report) => {
+                props.backendCrossTrackerReport.init(report.trackers, report.expert_query);
+                emit("saved");
+            },
+            (fault) => {
+                setErrorMessage(String(fault));
+            },
+        )
+        .then(() => {
+            is_loading.value = false;
+        });
 }
 
 function cancelReport(): void {

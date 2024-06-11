@@ -19,14 +19,14 @@
 
 import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
+import { errAsync, okAsync } from "neverthrow";
+import { Fault } from "@tuleap/fault";
 import ReadingMode from "./ReadingMode.vue";
-import type { TrackerForInit } from "../backend-cross-tracker-report";
 import BackendCrossTrackerReport from "../backend-cross-tracker-report";
 import ReadingCrossTrackerReport from "./reading-cross-tracker-report";
 import * as rest_querier from "../api/rest-querier";
-import type { Report, State } from "../type";
+import type { Report, State, TrackerAndProject } from "../type";
 import { getGlobalTestOptions } from "../helpers/global-options-for-tests";
-import { FetchWrapperError } from "@tuleap/tlp-fetch";
 
 describe("ReadingMode", () => {
     let backendCrossTrackerReport: BackendCrossTrackerReport,
@@ -89,18 +89,20 @@ describe("ReadingMode", () => {
     });
 
     describe("saveReport()", () => {
-        it(`When I save the report,
-            the backend report will be updated and an event will be emitted`, async () => {
+        it(`will update the backend report and emit a "saved" event`, async () => {
             const initBackend = jest.spyOn(backendCrossTrackerReport, "init");
             initBackend.mockImplementation(() => Promise.resolve());
             const duplicateBackend = jest.spyOn(backendCrossTrackerReport, "duplicateFromReport");
-            const trackers = new Map();
-            trackers.set(36, { id: 36 } as TrackerForInit);
-            trackers.set(17, { id: 17 } as TrackerForInit);
+            const trackers: ReadonlyArray<TrackerAndProject> = [
+                { tracker: { id: 36 }, project: { id: 180 } } as TrackerAndProject,
+                { tracker: { id: 17 }, project: { id: 138 } } as TrackerAndProject,
+            ];
             const expert_query = '@description != ""';
             const report = { trackers, expert_query } as Report;
 
-            const updateReport = jest.spyOn(rest_querier, "updateReport").mockResolvedValue(report);
+            const updateReport = jest
+                .spyOn(rest_querier, "updateReport")
+                .mockReturnValue(okAsync(report));
             const wrapper = instantiateComponent();
 
             await wrapper.get("[data-test=cross-tracker-save-report]").trigger("click");
@@ -123,18 +125,17 @@ describe("ReadingMode", () => {
         });
 
         it("When there is a REST error, then it will be shown", async () => {
-            jest.spyOn(rest_querier, "updateReport").mockRejectedValue(
-                new FetchWrapperError("Not found", {
-                    json: (): Promise<{ error: { code: number; message: string } }> =>
-                        Promise.resolve({ error: { code: 404, message: "Report not found" } }),
-                } as Response),
+            const error_message = "Report not found";
+            jest.spyOn(rest_querier, "updateReport").mockReturnValue(
+                errAsync(Fault.fromMessage(error_message)),
             );
 
             const wrapper = instantiateComponent();
 
             await wrapper.get("[data-test=cross-tracker-save-report]").trigger("click");
 
-            expect(errorSpy).toHaveBeenCalledWith(expect.any(Object), "Report not found");
+            expect(errorSpy).toHaveBeenCalled();
+            expect(errorSpy.mock.calls[0][1]).toContain(error_message);
         });
     });
 

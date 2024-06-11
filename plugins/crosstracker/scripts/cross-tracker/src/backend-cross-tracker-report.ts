@@ -17,14 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { ProjectReference } from "@tuleap/core-rest-api-types";
-import type { TrackerAndProject, TrackerInfo } from "./type";
+import type { TrackerAndProject } from "./type";
 import type ReadingCrossTrackerReport from "./reading-mode/reading-cross-tracker-report";
-
-export interface TrackerForInit extends TrackerInfo {
-    readonly uri: string;
-    readonly project: ProjectReference;
-}
 
 export default class BackendCrossTrackerReport {
     expert_query: string;
@@ -34,26 +28,12 @@ export default class BackendCrossTrackerReport {
         this.expert_query = "";
     }
 
-    init(trackers: Map<number, TrackerForInit>, expert_query: string): void {
-        this.clearTrackers();
-        for (const tracker_for_init of trackers.values()) {
-            const tracker = { id: tracker_for_init.id, label: tracker_for_init.label };
-            const light_project = {
-                id: tracker_for_init.project.id,
-                label: tracker_for_init.project.label,
-                uri: tracker_for_init.project.uri,
-            };
-            this.trackers.set(tracker_for_init.id, {
-                project: light_project,
-                tracker: tracker,
-            });
-        }
-
-        this.expert_query = expert_query;
-    }
-
-    clearTrackers(): void {
+    init(trackers: ReadonlyArray<TrackerAndProject>, expert_query: string): void {
         this.trackers.clear();
+        for (const tracker_with_project of trackers) {
+            this.trackers.set(tracker_with_project.tracker.id, tracker_with_project);
+        }
+        this.expert_query = expert_query;
     }
 
     duplicateFromReport(report: ReadingCrossTrackerReport): void {
