@@ -23,35 +23,28 @@ declare(strict_types=1);
 namespace Tuleap\AgileDashboard\Planning;
 
 use AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinder;
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PFUser;
-use Planning;
+use PHPUnit\Framework\MockObject\MockObject;
 use Planning_ArtifactMilestone;
 use Planning_VirtualTopMilestone;
 use Tracker;
+use Tuleap\AgileDashboard\Test\Builders\PlanningBuilder;
 use Tuleap\Layout\NewDropdown\CurrentContextSectionToHeaderOptionsInserter;
 use Tuleap\Layout\NewDropdown\NewDropdownLinkPresenter;
 use Tuleap\Layout\NewDropdown\NewDropdownLinkSectionPresenter;
 use Tuleap\Option\Option;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\NewDropdown\TrackerNewDropdownLinkPresenterBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
-final class HeaderOptionsForPlanningProviderTest extends \Tuleap\Test\PHPUnit\TestCase
+final class HeaderOptionsForPlanningProviderTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinder|Mockery\LegacyMockInterface|Mockery\MockInterface
-     */
-    private $submilestone_finder;
-    /**
-     * @var HeaderOptionsForPlanningProvider
-     */
-    private $provider;
+    private AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinder&MockObject $submilestone_finder;
+    private HeaderOptionsForPlanningProvider $provider;
 
     protected function setUp(): void
     {
-        $this->submilestone_finder = Mockery::mock(AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinder::class);
+        $this->submilestone_finder = $this->createMock(AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinder::class);
 
         $this->provider = new HeaderOptionsForPlanningProvider(
             $this->submilestone_finder,
@@ -62,20 +55,13 @@ final class HeaderOptionsForPlanningProviderTest extends \Tuleap\Test\PHPUnit\Te
 
     public function testItAddsSubmilestoneTrackerForMilestoneInNewDropdownCurrentSection(): void
     {
-        $user           = Mockery::mock(PFUser::class);
-        $sprint_tracker = Mockery::mock(Tracker::class)
-            ->shouldReceive(
-                [
-                    'getId'                 => 102,
-                    'getSubmitUrl'          => '/path/to/102',
-                    'getItemName'           => 'sprint',
-                    'userCanSubmitArtifact' => true,
-                ]
-            )
-            ->getMock();
-        $this->submilestone_finder
-            ->shouldReceive('findFirstSubmilestoneTracker')
-            ->andReturn($sprint_tracker);
+        $user           = UserTestBuilder::buildWithDefaults();
+        $sprint_tracker = TrackerTestBuilder::aTracker()
+            ->withId(102)
+            ->withUserCanSubmit(true)
+            ->withShortName('sprint')
+            ->build();
+        $this->submilestone_finder->method('findFirstSubmilestoneTracker')->willReturn($sprint_tracker);
 
         $new_dropdown_current_context_section = $this->provider
             ->getCurrentContextSection($user, $this->aMilestone(), Option::nothing(NewDropdownLinkSectionPresenter::class))
@@ -88,29 +74,18 @@ final class HeaderOptionsForPlanningProviderTest extends \Tuleap\Test\PHPUnit\Te
 
     public function testItAddsSubmilestoneTrackerForMilestoneInNewDropdownCurrentSectionWithoutOverridingExistingOne(): void
     {
-        $user           = Mockery::mock(PFUser::class);
-        $sprint_tracker = Mockery::mock(Tracker::class)
-            ->shouldReceive(
-                [
-                    'getId'                 => 102,
-                    'getSubmitUrl'          => '/path/to/102',
-                    'getItemName'           => 'sprint',
-                    'userCanSubmitArtifact' => true,
-                ]
-            )
-            ->getMock();
-        $this->submilestone_finder
-            ->shouldReceive('findFirstSubmilestoneTracker')
-            ->andReturn($sprint_tracker);
+        $user           = UserTestBuilder::buildWithDefaults();
+        $sprint_tracker = TrackerTestBuilder::aTracker()
+            ->withId(102)
+            ->withShortName('sprint')
+            ->withUserCanSubmit(true)
+            ->build();
+        $this->submilestone_finder->method('findFirstSubmilestoneTracker')->willReturn($sprint_tracker);
 
-        $existing_section                     = Option::fromValue(
-            new NewDropdownLinkSectionPresenter(
-                'Current section',
-                [
-                    new NewDropdownLinkPresenter('url', 'Already existing link', 'icon', []),
-                ],
-            ),
-        );
+        $existing_section                     = Option::fromValue(new NewDropdownLinkSectionPresenter(
+            'Current section',
+            [new NewDropdownLinkPresenter('url', 'Already existing link', 'icon', [])],
+        ));
         $new_dropdown_current_context_section = $this->provider
             ->getCurrentContextSection($user, $this->aMilestone(), $existing_section)
             ->unwrapOr(null);
@@ -123,20 +98,13 @@ final class HeaderOptionsForPlanningProviderTest extends \Tuleap\Test\PHPUnit\Te
 
     public function testItDoesNotAddSubmilestoneTrackerForMilestoneInNewDropdownCurrentSectionIfUserCannotSubmitArtifacts(): void
     {
-        $user           = Mockery::mock(PFUser::class);
-        $sprint_tracker = Mockery::mock(Tracker::class)
-            ->shouldReceive(
-                [
-                    'getId'                 => 102,
-                    'getSubmitUrl'          => '/path/to/102',
-                    'getItemName'           => 'sprint',
-                    'userCanSubmitArtifact' => false,
-                ]
-            )
-            ->getMock();
-        $this->submilestone_finder
-            ->shouldReceive('findFirstSubmilestoneTracker')
-            ->andReturn($sprint_tracker);
+        $user           = UserTestBuilder::buildWithDefaults();
+        $sprint_tracker = TrackerTestBuilder::aTracker()
+            ->withId(102)
+            ->withShortName('sprint')
+            ->withUserCanSubmit(false)
+            ->build();
+        $this->submilestone_finder->method('findFirstSubmilestoneTracker')->willReturn($sprint_tracker);
 
         self::assertTrue(
             $this->provider
@@ -147,17 +115,12 @@ final class HeaderOptionsForPlanningProviderTest extends \Tuleap\Test\PHPUnit\Te
 
     public function testItAddsSubmilestoneTrackerForTopBacklogInNewDropdownCurrentSection(): void
     {
-        $user           = Mockery::mock(PFUser::class);
-        $sprint_tracker = Mockery::mock(Tracker::class)
-            ->shouldReceive(
-                [
-                    'getId'                 => 102,
-                    'getSubmitUrl'          => '/path/to/102',
-                    'getItemName'           => 'sprint',
-                    'userCanSubmitArtifact' => true,
-                ]
-            )
-            ->getMock();
+        $user           = UserTestBuilder::buildWithDefaults();
+        $sprint_tracker = TrackerTestBuilder::aTracker()
+            ->withId(102)
+            ->withShortName('sprint')
+            ->withUserCanSubmit(true)
+            ->build();
 
         $new_dropdown_current_context_section = $this->provider
             ->getCurrentContextSection(
@@ -171,31 +134,19 @@ final class HeaderOptionsForPlanningProviderTest extends \Tuleap\Test\PHPUnit\Te
         self::assertEquals('New sprint', $new_dropdown_current_context_section->links[0]->label);
     }
 
-    /**
-     * @return Mockery\LegacyMockInterface|Mockery\MockInterface|Planning_ArtifactMilestone
-     */
-    private function aMilestone()
+    private function aMilestone(): Planning_ArtifactMilestone&MockObject
     {
-        return Mockery::mock(Planning_ArtifactMilestone::class)
-            ->shouldReceive(['getArtifactTitle' => 'Milestone title'])
-            ->getMock();
+        $milestone = $this->createMock(Planning_ArtifactMilestone::class);
+        $milestone->method('getArtifactTitle')->willReturn('Milestone title');
+
+        return $milestone;
     }
 
-    /**
-     * @return Mockery\LegacyMockInterface|Mockery\MockInterface|Planning_VirtualTopMilestone
-     */
-    private function theTopBacklogMilestone(Tracker $planning_tracker)
+    private function theTopBacklogMilestone(Tracker $planning_tracker): Planning_VirtualTopMilestone&MockObject
     {
-        return Mockery::mock(Planning_VirtualTopMilestone::class)
-            ->shouldReceive(
-                [
-                    'getPlanning' => Mockery::mock(Planning::class)
-                        ->shouldReceive(
-                            [
-                                'getPlanningTracker' => $planning_tracker,
-                            ],
-                        )->getMock(),
-                ],
-            )->getMock();
+        $milestone = $this->createMock(Planning_VirtualTopMilestone::class);
+        $milestone->method('getPlanning')->willReturn(PlanningBuilder::aPlanning(101)->withMilestoneTracker($planning_tracker)->build());
+
+        return $milestone;
     }
 }

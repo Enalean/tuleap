@@ -23,40 +23,25 @@ declare(strict_types=1);
 
 namespace Tuleap\AgileDashboard\Planning;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use Planning;
+use PHPUnit\Framework\MockObject\MockObject;
 use PlanningFactory;
-use PlanningParameters;
 use PlanningPermissionsManager;
 use TrackerFactory;
+use Tuleap\AgileDashboard\Test\Builders\PlanningBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
 
-class PlanningFactoryDuplicationTest extends \Tuleap\Test\PHPUnit\TestCase
+final class PlanningFactoryDuplicationTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var Mockery\Mock | PlanningFactory
-     */
-    private $partial_factory;
-    /**
-     * @var PlanningFactory
-     */
-    private $planning_factory;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|PlanningPermissionsManager
-     */
-    private $planning_permissions_manager;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|PlanningDao
-     */
-    private $planning_dao;
+    private PlanningFactory&MockObject $partial_factory;
+    private PlanningFactory $planning_factory;
+    private PlanningPermissionsManager&MockObject $planning_permissions_manager;
+    private PlanningDao&MockObject $planning_dao;
 
     protected function setUp(): void
     {
-        $this->planning_dao                 = Mockery::spy(PlanningDao::class);
-        $tracker_factory                    = Mockery::spy(TrackerFactory::class);
-        $this->planning_permissions_manager = Mockery::spy(PlanningPermissionsManager::class);
+        $this->planning_dao                 = $this->createMock(PlanningDao::class);
+        $tracker_factory                    = $this->createMock(TrackerFactory::class);
+        $this->planning_permissions_manager = $this->createMock(PlanningPermissionsManager::class);
 
         $this->planning_factory = new PlanningFactory(
             $this->planning_dao,
@@ -64,10 +49,10 @@ class PlanningFactoryDuplicationTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->planning_permissions_manager
         );
 
-        $this->partial_factory = Mockery::mock(
-            PlanningFactory::class,
-            [$this->planning_dao, $tracker_factory, $this->planning_permissions_manager]
-        )->makePartial()->shouldAllowMockingProtectedMethods();
+        $this->partial_factory = $this->getMockBuilder(PlanningFactory::class)
+            ->setConstructorArgs([$this->planning_dao, $tracker_factory, $this->planning_permissions_manager])
+            ->onlyMethods(['getPlanning'])
+            ->getMock();
     }
 
     public function testItDuplicatesPlannings(): void
@@ -83,9 +68,7 @@ class PlanningFactoryDuplicationTest extends \Tuleap\Test\PHPUnit\TestCase
         $bug_tracker_copy_id    = 7;
         $faq_tracker_copy_id    = 8;
 
-        $this->partial_factory->shouldReceive('getPlanning')
-            ->with(1)
-            ->andReturns(Mockery::spy(Planning::class));
+        $this->partial_factory->method('getPlanning')->with(1)->willReturn(PlanningBuilder::aPlanning(123)->build());
 
         $tracker_mapping = [
             $sprint_tracker_id => $sprint_tracker_copy_id,
@@ -105,17 +88,11 @@ class PlanningFactoryDuplicationTest extends \Tuleap\Test\PHPUnit\TestCase
             ],
         ];
 
-        $this->planning_dao->shouldReceive('searchByMilestoneTrackerIds')->with(
-            array_keys($tracker_mapping)
-        )->andReturns($rows);
+        $this->planning_dao->method('searchByMilestoneTrackerIds')->with(array_keys($tracker_mapping))->willReturn($rows);
 
-        $this->planning_dao->shouldReceive('searchBacklogTrackersByPlanningId')
-            ->with(1)
-            ->andReturns(
-                [
-                    ['planning_id' => 1, 'tracker_id' => $story_tracker_id],
-                ]
-            );
+        $this->planning_dao->method('searchBacklogTrackersByPlanningId')->with(1)->willReturn([
+            ['planning_id' => 1, 'tracker_id' => $story_tracker_id],
+        ]);
 
         $parameters = [
             'id'                  => 1,
@@ -127,12 +104,11 @@ class PlanningFactoryDuplicationTest extends \Tuleap\Test\PHPUnit\TestCase
             'backlog_tracker_ids' => [$story_tracker_copy_id],
         ];
 
-        $this->planning_dao->shouldReceive('searchById')->with(1)->andReturns($parameters);
-        $expected_parameters = PlanningParameters::fromArray($parameters);
+        $this->planning_dao->method('searchById')->with(1)->willReturn($parameters);
+        $this->planning_dao->expects(self::once())->method('createPlanning')
+            ->with($group_id, self::anything());
 
-        $this->planning_dao->shouldReceive('createPlanning')
-            ->withArgs([$group_id, Mockery::capture($expected_parameters)])
-            ->once();
+        $this->planning_permissions_manager->method('getGroupIdsWhoHasPermissionOnPlanning');
 
         $this->partial_factory->duplicatePlannings($group_id, $tracker_mapping, []);
     }
@@ -142,7 +118,7 @@ class PlanningFactoryDuplicationTest extends \Tuleap\Test\PHPUnit\TestCase
         $group_id              = 123;
         $empty_tracker_mapping = [];
 
-        $this->planning_dao->shouldReceive('createPlanning')->never();
+        $this->planning_dao->expects(self::never())->method('createPlanning');
 
         $this->planning_factory->duplicatePlannings($group_id, $empty_tracker_mapping, []);
     }
@@ -160,9 +136,7 @@ class PlanningFactoryDuplicationTest extends \Tuleap\Test\PHPUnit\TestCase
         $bug_tracker_copy_id    = 7;
         $faq_tracker_copy_id    = 8;
 
-        $this->partial_factory->shouldReceive('getPlanning')
-            ->with(1)
-            ->andReturns(Mockery::spy(Planning::class));
+        $this->partial_factory->method('getPlanning')->with(1)->willReturn(PlanningBuilder::aPlanning(123)->build());
 
         $tracker_mapping = [
             $sprint_tracker_id => $sprint_tracker_copy_id,
@@ -182,15 +156,11 @@ class PlanningFactoryDuplicationTest extends \Tuleap\Test\PHPUnit\TestCase
             ],
         ];
 
-        $this->planning_dao->shouldReceive('searchByMilestoneTrackerIds')->with(
-            array_keys($tracker_mapping)
-        )->andReturns($rows);
+        $this->planning_dao->method('searchByMilestoneTrackerIds')->with(array_keys($tracker_mapping))->willReturn($rows);
 
-        $this->planning_dao->shouldReceive('searchBacklogTrackersByPlanningId')->with(1)->andReturns(
-            [
-                ['planning_id' => 1, 'tracker_id' => $story_tracker_id],
-            ]
-        );
+        $this->planning_dao->method('searchBacklogTrackersByPlanningId')->with(1)->willReturn([
+            ['planning_id' => 1, 'tracker_id' => $story_tracker_id],
+        ]);
 
         $parameters = [
             'id'                  => 1,
@@ -201,23 +171,23 @@ class PlanningFactoryDuplicationTest extends \Tuleap\Test\PHPUnit\TestCase
             'planning_tracker_id' => $sprint_tracker_copy_id,
             'backlog_tracker_ids' => [$story_tracker_copy_id],
         ];
-        $this->planning_dao->shouldReceive('searchById')->with(1)->andReturns($parameters);
+        $this->planning_dao->method('searchById')->with(1)->willReturn($parameters);
 
         $expected_ugroups = [113, 114];
-        $this->planning_permissions_manager->shouldReceive('savePlanningPermissionForUgroups')->with(
-            Mockery::any(),
-            Mockery::any(),
+        $this->planning_permissions_manager->expects(self::once())->method('savePlanningPermissionForUgroups')->with(
+            self::anything(),
+            self::anything(),
             PlanningPermissionsManager::PERM_PRIORITY_CHANGE,
             $expected_ugroups
-        )->once();
+        );
 
         $ugroups_mapping = [
             103 => 113,
             104 => 114,
         ];
 
-        $this->planning_permissions_manager->shouldReceive('getGroupIdsWhoHasPermissionOnPlanning')
-            ->andReturn($ugroups_mapping);
+        $this->planning_permissions_manager->method('getGroupIdsWhoHasPermissionOnPlanning')->willReturn($ugroups_mapping);
+        $this->planning_dao->method('createPlanning');
 
         $this->partial_factory->duplicatePlannings($group_id, $tracker_mapping, $ugroups_mapping);
     }
