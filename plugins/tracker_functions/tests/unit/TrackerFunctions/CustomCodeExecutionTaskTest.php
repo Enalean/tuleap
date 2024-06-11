@@ -32,7 +32,7 @@ use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\Tracker\Webhook\ArtifactPayloadBuilderStub;
-use Tuleap\TrackerFunctions\Logs\FunctionLogLine;
+use Tuleap\TrackerFunctions\Logs\FunctionLogLineStatus;
 use Tuleap\TrackerFunctions\Stubs\Administration\CheckFunctionIsActivatedStub;
 use Tuleap\TrackerFunctions\Stubs\Logs\SaveFunctionLogStub;
 use Tuleap\TrackerFunctions\Stubs\Notification\TrackerAdministratorNotificationSenderStub;
@@ -233,7 +233,7 @@ final class CustomCodeExecutionTaskTest extends TestCase
         self::assertTrue($logger->hasDebug('Executor error'));
         $line_saved = $dao->getLineSaved();
         self::assertNotNull($line_saved);
-        self::assertEquals(FunctionLogLine::STATUS_ERROR, $line_saved->status);
+        self::assertEquals(FunctionLogLineStatus::ERROR, $line_saved->status);
         self::assertTrue($notification->hasBeenCalled());
     }
 
@@ -265,7 +265,7 @@ final class CustomCodeExecutionTaskTest extends TestCase
         self::assertTrue($logger->hasDebug('CustomCodeExecutionTask finished'));
         $line_saved = $dao->getLineSaved();
         self::assertNotNull($line_saved);
-        self::assertEquals(FunctionLogLine::STATUS_PASSED, $line_saved->status);
+        self::assertEquals(FunctionLogLineStatus::PASSED, $line_saved->status);
         self::assertFalse($notification->hasBeenCalled());
     }
 }

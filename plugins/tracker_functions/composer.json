@@ -17,5 +17,8 @@
     "psr-4": {
       "Tuleap\\TrackerFunctions\\": ["tests/unit/TrackerFunctions", "tests/unit/", "tests/integration/TrackerFunctions"]
     }
+  },
+  "require": {
+    "maennchen/zipstream-php": "^2.0"
   }
 }

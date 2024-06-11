@@ -36,8 +36,7 @@ final class LogLinePresenter
         public readonly string $xref,
         public readonly string $title,
         public readonly string $color,
-        public readonly string $source_payload_json,
-        public readonly ?string $generated_payload_json,
+        public readonly string $download_payloads_url,
         public readonly ?string $error_message,
     ) {
     }

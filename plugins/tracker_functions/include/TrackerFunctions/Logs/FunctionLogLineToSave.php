@@ -22,11 +22,13 @@ declare(strict_types=1);
 
 namespace Tuleap\TrackerFunctions\Logs;
 
-final readonly class FunctionLogLine
+final readonly class FunctionLogLineToSave
 {
     private function __construct(
         public FunctionLogLineStatus $status,
         public int $changeset_id,
+        public string $source_payload_json,
+        public ?string $generated_payload_json,
         public ?string $error_message,
         public int $execution_date,
     ) {
@@ -34,11 +36,15 @@ final readonly class FunctionLogLine
 
     public static function buildPassed(
         int $changeset_id,
+        string $source_payload_json,
+        string $generated_payload_json,
         int $execution_date,
     ): self {
         return new self(
             FunctionLogLineStatus::PASSED,
             $changeset_id,
+            $source_payload_json,
+            $generated_payload_json,
             null,
             $execution_date,
         );
@@ -46,12 +52,15 @@ final readonly class FunctionLogLine
 
     public static function buildError(
         int $changeset_id,
+        string $source_payload_json,
         string $error_message,
         int $execution_date,
     ): self {
         return new self(
             FunctionLogLineStatus::ERROR,
             $changeset_id,
+            $source_payload_json,
+            null,
             $error_message,
             $execution_date,
         );

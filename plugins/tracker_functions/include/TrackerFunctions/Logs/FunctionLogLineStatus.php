@@ -20,31 +20,9 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\TrackerFunctions\Stubs\Logs;
-
-use Tuleap\TrackerFunctions\Logs\FunctionLogLineToSave;
-use Tuleap\TrackerFunctions\Logs\SaveFunctionLog;
-
-final class SaveFunctionLogStub implements SaveFunctionLog
+namespace Tuleap\TrackerFunctions\Logs;
+enum FunctionLogLineStatus: string
 {
-    private ?FunctionLogLineToSave $line_saved = null;
-
-    private function __construct()
-    {
-    }
-
-    public static function build(): self
-    {
-        return new self();
-    }
-
-    public function saveFunctionLogLine(FunctionLogLineToSave $log_line): void
-    {
-        $this->line_saved = $log_line;
-    }
-
-    public function getLineSaved(): ?FunctionLogLineToSave
-    {
-        return $this->line_saved;
-    }
+    case PASSED = 'passed';
+    case ERROR  = 'error';
 }

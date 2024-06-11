@@ -20,31 +20,18 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\TrackerFunctions\Stubs\Logs;
-
-use Tuleap\TrackerFunctions\Logs\FunctionLogLineToSave;
-use Tuleap\TrackerFunctions\Logs\SaveFunctionLog;
-
-final class SaveFunctionLogStub implements SaveFunctionLog
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+final class b202406101145_increase_size_payload_columns extends \Tuleap\ForgeUpgrade\Bucket
 {
-    private ?FunctionLogLineToSave $line_saved = null;
-
-    private function __construct()
+    public function description(): string
     {
+        return 'Increase the size of the columns storing the payloads';
     }
 
-    public static function build(): self
+    public function up(): void
     {
-        return new self();
-    }
-
-    public function saveFunctionLogLine(FunctionLogLineToSave $log_line): void
-    {
-        $this->line_saved = $log_line;
-    }
-
-    public function getLineSaved(): ?FunctionLogLineToSave
-    {
-        return $this->line_saved;
+        $this->api->dbh->exec(
+            'ALTER TABLE plugin_tracker_functions_log MODIFY COLUMN source_payload_json MEDIUMBLOB NOT NULL, MODIFY generated_payload_json MEDIUMBLOB NULL'
+        );
     }
 }

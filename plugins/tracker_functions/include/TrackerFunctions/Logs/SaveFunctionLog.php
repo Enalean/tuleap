@@ -24,5 +24,5 @@ namespace Tuleap\TrackerFunctions\Logs;
 
 interface SaveFunctionLog
 {
-    public function saveFunctionLogLine(FunctionLogLine $log_line): void;
+    public function saveFunctionLogLine(FunctionLogLineToSave $log_line): void;
 }

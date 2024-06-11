@@ -151,7 +151,7 @@ fn compile_and_exec(
     limits: &Limitations,
 ) -> Result<OutputAndStats, anyhow::Error> {
     let stdin = MemoryInputPipe::new(module_input_json.as_bytes().to_owned());
-    let stdout = MemoryOutputPipe::new(2_000_000);
+    let stdout = MemoryOutputPipe::new(16_777_215);
 
     let mut config = Config::new();
     config.epoch_interruption(true);

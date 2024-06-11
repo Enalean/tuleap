@@ -20,31 +20,14 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\TrackerFunctions\Stubs\Logs;
+namespace Tuleap\TrackerFunctions\Logs;
 
-use Tuleap\TrackerFunctions\Logs\FunctionLogLineToSave;
-use Tuleap\TrackerFunctions\Logs\SaveFunctionLog;
+use Tuleap\Option\Option;
 
-final class SaveFunctionLogStub implements SaveFunctionLog
+interface RetrievePayloadsForChangeset
 {
-    private ?FunctionLogLineToSave $line_saved = null;
-
-    private function __construct()
-    {
-    }
-
-    public static function build(): self
-    {
-        return new self();
-    }
-
-    public function saveFunctionLogLine(FunctionLogLineToSave $log_line): void
-    {
-        $this->line_saved = $log_line;
-    }
-
-    public function getLineSaved(): ?FunctionLogLineToSave
-    {
-        return $this->line_saved;
-    }
+    /**
+     * @psalm-return Option<FunctionLogPayloads>
+     */
+    public function searchPayloadsByChangesetID(int $changeset_id): Option;
 }

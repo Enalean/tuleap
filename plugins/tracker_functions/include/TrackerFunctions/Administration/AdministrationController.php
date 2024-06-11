@@ -30,9 +30,7 @@ use Tuleap\Date\RelativeDatesAssetsRetriever;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
 use Tuleap\Layout\IncludeAssets;
-use Tuleap\Layout\IncludeCoreAssets;
 use Tuleap\Layout\IncludeViteAssets;
-use Tuleap\Layout\JavascriptAsset;
 use Tuleap\Layout\JavascriptViteAsset;
 use Tuleap\Request\DispatchableWithBurningParrot;
 use Tuleap\Request\DispatchableWithProject;
@@ -91,13 +89,6 @@ final class AdministrationController implements DispatchableWithRequest, Dispatc
 
         $logs = $this->logs_for_tracker->searchLogsByTrackerId($tracker->getId());
         if (count($logs) > 0) {
-            $layout->addCssAsset(new CssAssetWithoutVariantDeclinaisons(new IncludeCoreAssets(), 'syntax-highlight'));
-            $layout->addJavascriptAsset(
-                new JavascriptAsset(
-                    new IncludeCoreAssets(),
-                    'syntax-highlight.js'
-                )
-            );
             $layout->includeFooterJavascriptFile(RelativeDatesAssetsRetriever::retrieveAssetsUrl());
         }
 

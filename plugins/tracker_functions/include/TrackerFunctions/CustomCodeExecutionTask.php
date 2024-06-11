@@ -34,7 +34,7 @@ use Tuleap\NeverThrow\Result;
 use Tuleap\Tracker\Artifact\Changeset\PostCreation\PostCreationTask;
 use Tuleap\Tracker\Webhook\ArtifactPayloadBuilder;
 use Tuleap\TrackerFunctions\Administration\CheckFunctionIsActivated;
-use Tuleap\TrackerFunctions\Logs\FunctionLogLine;
+use Tuleap\TrackerFunctions\Logs\FunctionLogLineToSave;
 use Tuleap\TrackerFunctions\Logs\SaveFunctionLog;
 use Tuleap\TrackerFunctions\Notification\TrackerAdministratorNotificationSender;
 use Tuleap\TrackerFunctions\WASM\WASMFunctionCaller;
@@ -90,13 +90,12 @@ final class CustomCodeExecutionTask implements PostCreationTask
             )
             ->andThen(
             /** @psalm-return Ok<null>|Err<Fault> */
-                function (WASMResponseRepresentation $response) use ($changeset, &$generated_payload): Ok|Err {
-                    $generated_payload = $response;
+                function (WASMResponseRepresentation $response) use ($changeset): Ok|Err {
                     return $this->response_executor->executeResponse($response, $changeset->getArtifact());
                 }
             )
             ->match(
-                fn() => $this->log_dao->saveFunctionLogLine(FunctionLogLine::buildPassed(
+                fn() => $this->log_dao->saveFunctionLogLine(FunctionLogLineToSave::buildPassed(
                     (int) $changeset->getId(),
                     $source_payload,
                     psl_json_encode($generated_payload),
@@ -104,7 +103,7 @@ final class CustomCodeExecutionTask implements PostCreationTask
                 )),
                 function (Fault $fault) use ($changeset, $source_payload) {
                     Fault::writeToLogger($fault, $this->logger, LogLevel::DEBUG);
-                    $this->log_dao->saveFunctionLogLine(FunctionLogLine::buildError(
+                    $this->log_dao->saveFunctionLogLine(FunctionLogLineToSave::buildError(
                         (int) $changeset->getId(),
                         $source_payload,
                         (string) $fault,

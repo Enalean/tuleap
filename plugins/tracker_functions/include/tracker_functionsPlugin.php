@@ -21,11 +21,13 @@
 declare(strict_types=1);
 
 use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
+use Laminas\HttpHandlerRunner\Emitter\SapiStreamEmitter;
 use Psr\Log\LoggerInterface;
 use Tuleap\Date\TlpRelativeDatePresenterBuilder;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Http\HTTPFactoryBuilder;
+use Tuleap\Http\Response\BinaryFileResponseBuilder;
 use Tuleap\Http\Response\RedirectWithFeedbackFactory;
 use Tuleap\Instrument\Prometheus\Prometheus;
 use Tuleap\Layout\Feedback\FeedbackSerializer;
@@ -112,6 +114,7 @@ use Tuleap\TrackerFunctions\Administration\UpdateFunctionController;
 use Tuleap\TrackerFunctions\CustomCodeExecutionTask;
 use Tuleap\TrackerFunctions\Logs\LogLinePresenterBuilder;
 use Tuleap\TrackerFunctions\Logs\FunctionLogDao;
+use Tuleap\TrackerFunctions\Logs\PayloadDownloaderController;
 use Tuleap\TrackerFunctions\Notification\BuildMessagesForAdmins;
 use Tuleap\TrackerFunctions\Notification\RetrieveTrackerAdminRecipients;
 use Tuleap\TrackerFunctions\Notification\SendMessagesForAdmins;
@@ -274,6 +277,7 @@ final class tracker_functionsPlugin extends Plugin
         $event->getRouteCollector()->post('/tracker_functions/{id:\d+}/admin', $this->getRouteHandler('routePostTrackerAdministration'));
         $event->getRouteCollector()->post('/tracker_functions/{id:\d+}/admin/remove', $this->getRouteHandler('routeRemoveTrackerAdministration'));
         $event->getRouteCollector()->post('/tracker_functions/{id:\d+}/admin/activate', $this->getRouteHandler('routeActivateTrackerAdministration'));
+        $event->getRouteCollector()->get('/tracker_functions/download_payloads/{changeset_id:\d+}', $this->getRouteHandler('routeDownloadPayloads'));
     }
 
     public function routeActivateTrackerAdministration(): DispatchableWithRequest
@@ -344,6 +348,17 @@ final class tracker_functionsPlugin extends Plugin
             new ActiveTrackerRetrieverMiddleware(TrackerFactory::instance()),
             new RejectNonTrackerAdministratorMiddleware(UserManager::instance()),
             new CheckTrackerCSRFMiddleware(new AdministrationCSRFTokenProvider()),
+        );
+    }
+
+    public function routeDownloadPayloads(): DispatchableWithRequest
+    {
+        return new PayloadDownloaderController(
+            new SapiStreamEmitter(),
+            new FunctionLogDao(Tracker_ArtifactFactory::instance()),
+            UserManager::instance(),
+            TrackerFactory::instance(),
+            new BinaryFileResponseBuilder(HTTPFactoryBuilder::responseFactory(), HTTPFactoryBuilder::streamFactory()),
         );
     }
 

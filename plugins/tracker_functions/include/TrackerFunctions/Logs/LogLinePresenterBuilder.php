@@ -22,11 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\TrackerFunctions\Logs;
 
-use Psl\Json\Exception\DecodeException;
-use Psl\Json\Exception\EncodeException;
 use Tuleap\Date\TlpRelativeDatePresenterBuilder;
-use function Psl\Json\decode;
-use function Psl\Json\encode;
 
 final class LogLinePresenterBuilder
 {
@@ -43,7 +39,7 @@ final class LogLinePresenterBuilder
 
         return new LogLinePresenter(
             $log->id,
-            $log->log_line->status === FunctionLogLine::STATUS_ERROR,
+            $log->log_line->status === FunctionLogLineStatus::ERROR,
             $this->tlp_relative_date_presenter_builder->getTlpRelativeDatePresenterInBlockContext(
                 $execution_date,
                 $user,
@@ -60,25 +56,8 @@ final class LogLinePresenterBuilder
             $log->artifact->getXRef(),
             $log->artifact->getTitle() ?? '',
             $log->artifact->getTracker()->getColor()->getName(),
-            $this->tryPrettyPrintJson($log->log_line->source_payload_json),
-            $this->tryPrettyPrintJson($log->log_line->generated_payload_json),
+            PayloadDownloaderController::buildURL($log->log_line->changeset_id),
             $log->log_line->error_message,
         );
-    }
-
-    /**
-     * @psalm-return ($json is null ? null : string)
-     */
-    private function tryPrettyPrintJson(?string $json): ?string
-    {
-        if (! $json) {
-            return $json;
-        }
-
-        try {
-            return encode(decode($json), true);
-        } catch (DecodeException | EncodeException) {
-            return $json;
-        }
     }
 }
