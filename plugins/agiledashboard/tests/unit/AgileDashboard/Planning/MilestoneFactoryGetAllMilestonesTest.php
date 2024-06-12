@@ -26,8 +26,8 @@ namespace Tuleap\AgileDashboard\Planning;
 use AgileDashboard_Milestone_MilestoneDao;
 use AgileDashboard_Milestone_MilestoneStatusCounter;
 use ArtifactNode;
-use Mockery;
 use PFUser;
+use PHPUnit\Framework\MockObject\MockObject;
 use Planning;
 use Planning_ArtifactMilestone;
 use Planning_MilestoneFactory;
@@ -35,109 +35,91 @@ use PlanningFactory;
 use PlanningPermissionsManager;
 use Project;
 use Psr\Log\NullLogger;
-use Tracker;
-use Tracker_Artifact_Changeset;
 use Tracker_ArtifactFactory;
 use Tracker_FormElementFactory;
+use Tuleap\AgileDashboard\Test\Builders\PlanningBuilder;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
+use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
+use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
-final class MilestoneFactoryGetAllMilestonesTest extends \Tuleap\Test\PHPUnit\TestCase
+final class MilestoneFactoryGetAllMilestonesTest extends TestCase
 {
-    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Project
-     */
-    private $project;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Tracker
-     */
-    private $planning_tracker;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Tracker_ArtifactFactory
-     */
-    private $artifact_factory;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|PlanningFactory
-     */
-    private $planning_factory;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Planning
-     */
-    private $planning;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|PFUser
-     */
-    private $user;
+    private Project $project;
+    private Tracker_ArtifactFactory&MockObject $artifact_factory;
+    private PlanningFactory&MockObject $planning_factory;
+    private Planning $planning;
+    private PFUser $user;
 
     protected function setUp(): void
     {
-        $this->user    = Mockery::spy(PFUser::class);
-        $this->project = Mockery::mock(Project::class);
+        $this->user       = UserTestBuilder::buildWithDefaults();
+        $this->project    = ProjectTestBuilder::aProject()->build();
+        $planning_tracker = TrackerTestBuilder::aTracker()->withId(12)->withProject($this->project)->build();
+        $this->planning   = PlanningBuilder::aPlanning((int) $this->project->getID())
+            ->withId(1)
+            ->withMilestoneTracker($planning_tracker)
+            ->build();
 
-        $this->planning_tracker = Mockery::mock(Tracker::class);
-        $this->planning_tracker->shouldReceive('getProject')->andReturn($this->project);
-
-        $this->planning = Mockery::mock(Planning::class);
-        $this->planning->shouldReceive('getId')->andReturn(1);
-        $this->planning->shouldReceive('getPlanningTracker')->andReturn($this->planning_tracker);
-        $this->planning->shouldReceive('getPlanningTrackerId')->andReturn(12);
-
-        $this->planning_factory = Mockery::spy(PlanningFactory::class);
-        $this->artifact_factory = Mockery::mock(Tracker_ArtifactFactory::class);
+        $this->planning_factory = $this->createMock(PlanningFactory::class);
+        $this->artifact_factory = $this->createMock(Tracker_ArtifactFactory::class);
     }
 
     public function testItReturnsAnEmptyArrayWhenAllItemsAreClosed(): void
     {
-        $this->artifact_factory->shouldReceive('getArtifactsByTrackerIdUserCanView')->andReturn([]);
+        $this->artifact_factory->method('getArtifactsByTrackerIdUserCanView')->willReturn([]);
 
-        $this->assertEquals([], $this->newMileStoneFactory()->getAllMilestones($this->user, $this->planning));
+        self::assertEquals([], $this->newMileStoneFactory()->getAllMilestones($this->user, $this->planning));
     }
 
     public function testItReturnsAsManyMilestonesAsThereAreArtifacts(): void
     {
-        $artifact1 = Mockery::spy(Artifact::class);
-        $artifact1->shouldReceive('getLastChangeset')->andReturn(Mockery::spy(Tracker_Artifact_Changeset::class));
-        $artifact2 = Mockery::spy(Artifact::class);
-        $artifact2->shouldReceive('getLastChangeset')->andReturn(Mockery::spy(Tracker_Artifact_Changeset::class));
-        $artifacts = [
-            $artifact1,
-            $artifact2,
-        ];
+        $artifact1 = ArtifactTestBuilder::anArtifact(1)
+            ->withChangesets(ChangesetTestBuilder::aChangeset('1')->build())
+            ->build();
+        $artifact2 = ArtifactTestBuilder::anArtifact(2)
+            ->withChangesets(ChangesetTestBuilder::aChangeset('2')->build())
+            ->build();
 
-        $this->artifact_factory->shouldReceive('getArtifactsByTrackerIdUserCanView')->andReturn($artifacts);
-        $this->assertCount(2, $this->newMileStoneFactory()->getAllMilestones($this->user, $this->planning));
+        $factory = $this->newMileStoneFactory();
+        $factory->method('getPlannedArtifacts');
+        $this->artifact_factory->method('getArtifactsByTrackerIdUserCanView')->willReturn([$artifact1, $artifact2]);
+        self::assertCount(2, $factory->getAllMilestones($this->user, $this->planning));
     }
 
     public function testItReturnsMilestones(): void
     {
-        $changeset01 = Mockery::spy(Tracker_Artifact_Changeset::class);
-        $artifact    = Mockery::mock(Artifact::class);
+        $changeset01 = ChangesetTestBuilder::aChangeset('1')->build();
+        $artifact    = $this->createMock(Artifact::class);
 
-        $artifact->shouldReceive('getId')->andReturns(101);
-        $artifact->shouldReceive('getLinkedArtifacts')->with($this->user)->andReturns([]);
-        $artifact->shouldReceive('getUniqueLinkedArtifacts')->with($this->user)->andReturns(null);
-        $artifact->shouldReceive('getLastChangeset')->andReturns($changeset01);
+        $artifact->method('getId')->willReturn(101);
+        $artifact->method('getLinkedArtifacts')->with($this->user)->willReturn([]);
+        $artifact->method('getUniqueLinkedArtifacts')->with($this->user)->willReturn(null);
+        $artifact->method('getLastChangeset')->willReturn($changeset01);
 
-        $this->artifact_factory->shouldReceive('getArtifactsByTrackerIdUserCanView')->andReturn([$artifact]);
+        $this->artifact_factory->method('getArtifactsByTrackerIdUserCanView')->willReturn([$artifact]);
 
         $factory = $this->newMileStoneFactory();
+        $factory->method('getPlannedArtifacts');
 
         $all_milestones = $factory->getAllMilestones($this->user, $this->planning);
-        $this->assertEquals($artifact->getId(), $all_milestones[0]->getArtifact()->getId());
+        self::assertEquals($artifact->getId(), $all_milestones[0]->getArtifact()->getId());
     }
 
     public function testItReturnsMilestonesWithPlannedArtifacts(): void
     {
-        $artifact = $this->getAMockedArtifact();
-        $planning = $this->getAMockedPlanning();
+        $artifact = $this->getAnArtifact();
+        $planning = $this->getAPlanning();
 
-        $this->artifact_factory->shouldReceive('getArtifactsByTrackerIdUserCanView')->andReturn([$artifact]);
+        $this->artifact_factory->method('getArtifactsByTrackerIdUserCanView')->willReturn([$artifact]);
 
         $planned_artifacts = new ArtifactNode($artifact);
         $factory           = $this->newMileStoneFactory();
-        $factory->shouldReceive('getPlannedArtifacts')->andReturn($planned_artifacts);
+        $factory->method('getPlannedArtifacts')->willReturn($planned_artifacts);
 
         $milestone  = new Planning_ArtifactMilestone(
             $this->project,
@@ -146,19 +128,19 @@ final class MilestoneFactoryGetAllMilestonesTest extends \Tuleap\Test\PHPUnit\Te
             $planned_artifacts
         );
         $milestones = $factory->getAllMilestones($this->user, $planning);
-        $this->assertEquals($milestone, $milestones[0]);
+        self::assertEquals($milestone, $milestones[0]);
     }
 
     public function testItReturnsMilestonesWithoutPlannedArtifacts(): void
     {
-        $artifact = $this->getAMockedArtifact();
-        $planning = $this->getAMockedPlanning();
+        $artifact = $this->getAnArtifact();
+        $planning = $this->getAPlanning();
 
-        $this->artifact_factory->shouldReceive('getArtifactsByTrackerIdUserCanView')->andReturn([$artifact]);
+        $this->artifact_factory->method('getArtifactsByTrackerIdUserCanView')->willReturn([$artifact]);
 
         $planned_artifacts = new ArtifactNode($artifact);
         $factory           = $this->newMileStoneFactory();
-        $factory->shouldReceive('getPlannedArtifacts')->andReturn($planned_artifacts);
+        $factory->method('getPlannedArtifacts')->willReturn($planned_artifacts);
 
         $milestone  = new Planning_ArtifactMilestone(
             $this->project,
@@ -167,53 +149,43 @@ final class MilestoneFactoryGetAllMilestonesTest extends \Tuleap\Test\PHPUnit\Te
             null
         );
         $milestones = $factory->getAllMilestonesWithoutPlannedElement($this->user, $planning);
-        $this->assertEquals($milestone, $milestones[0]);
+        self::assertEquals($milestone, $milestones[0]);
     }
 
-    /**
-     * @return Mockery\Mock|Planning_MilestoneFactory
-     */
-    private function newMileStoneFactory()
+    private function newMileStoneFactory(): Planning_MilestoneFactory&MockObject
     {
-        return Mockery::mock(
-            Planning_MilestoneFactory::class,
-            [
+        return $this->getMockBuilder(Planning_MilestoneFactory::class)
+            ->setConstructorArgs([
                 $this->planning_factory,
                 $this->artifact_factory,
-                Mockery::spy(Tracker_FormElementFactory::class),
-                Mockery::spy(AgileDashboard_Milestone_MilestoneStatusCounter::class),
-                Mockery::spy(PlanningPermissionsManager::class),
-                Mockery::spy(AgileDashboard_Milestone_MilestoneDao::class),
-                Mockery::mock(SemanticTimeframeBuilder::class),
+                $this->createMock(Tracker_FormElementFactory::class),
+                $this->createMock(AgileDashboard_Milestone_MilestoneStatusCounter::class),
+                $this->createMock(PlanningPermissionsManager::class),
+                $this->createMock(AgileDashboard_Milestone_MilestoneDao::class),
+                $this->createMock(SemanticTimeframeBuilder::class),
                 new NullLogger(),
-            ]
-        )
-            ->makePartial()
-            ->shouldAllowMockingProtectedMethods();
+            ])
+            ->onlyMethods(['getPlannedArtifacts'])
+            ->getMock();
     }
 
-    /**
-     * @return Mockery\LegacyMockInterface|Mockery\MockInterface|Artifact
-     */
-    protected function getAMockedArtifact()
+    protected function getAnArtifact(): Artifact
     {
-        $artifact = Mockery::spy(Artifact::class);
-        $artifact->shouldReceive('getLastChangeset')->andReturn(Mockery::spy(Tracker_Artifact_Changeset::class));
-
-        return $artifact;
+        return ArtifactTestBuilder::anArtifact(1)
+            ->withChangesets(ChangesetTestBuilder::aChangeset('1')->build())
+            ->build();
     }
 
-    /**
-     * @return Mockery\LegacyMockInterface|Mockery\MockInterface|Planning
-     */
-    protected function getAMockedPlanning()
+    protected function getAPlanning(): Planning
     {
-        $tracker_id = 7777777;
-        $planning   = Mockery::mock(Planning::class);
-        $planning->shouldReceive('getPlanningTracker')->andReturn($this->planning_tracker);
-        $planning->shouldReceive('getPlanningTrackerId')->andReturn($tracker_id);
-        $planning->shouldReceive('getId')->andReturn(109);
-
-        return $planning;
+        return PlanningBuilder::aPlanning(101)
+            ->withId(109)
+            ->withMilestoneTracker(
+                TrackerTestBuilder::aTracker()
+                    ->withProject($this->project)
+                    ->withId(7777777)
+                    ->build()
+            )
+            ->build();
     }
 }
