@@ -20,9 +20,6 @@ dependencies:
   '@tuleap/tlp-badge':
     specifier: workspace:^
     version: link:../../../../lib/frontend/tlp-badge
-  '@tuleap/tlp-fetch':
-    specifier: workspace:*
-    version: link:../../../../lib/frontend/tlp-fetch
   '@tuleap/vue-strict-inject':
     specifier: workspace:^
     version: link:../../../../lib/frontend/vue-strict-inject

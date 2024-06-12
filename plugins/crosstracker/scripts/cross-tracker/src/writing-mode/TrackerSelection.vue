@@ -100,6 +100,7 @@ import { strictInject } from "@tuleap/vue-strict-inject";
 import { getTrackersOfProject } from "../api/rest-querier";
 import type { ProjectInfo, SelectedTracker, TrackerInfo } from "../type";
 import { RETRIEVE_PROJECTS } from "../injection-symbols";
+import { ProjectIdentifier } from "../domain/ProjectIdentifier";
 
 type TrackerSelectOption = TrackerInfo & {
     readonly disabled: boolean;
@@ -110,7 +111,7 @@ export type AddTrackerToSelectionCommand = {
     readonly selected_tracker: TrackerInfo;
 };
 
-const { interpolate, $gettext } = useGettext();
+const { $gettext } = useGettext();
 
 const props = defineProps<{ selectedTrackers: ReadonlyArray<SelectedTracker> }>();
 const emit = defineEmits<{
@@ -152,11 +153,10 @@ function loadProjects(): void {
             },
             (fault) => {
                 setErrorMessage(
-                    interpolate(
-                        $gettext(
-                            "Error while fetching the list of projects you are member of: %{error}",
-                        ),
+                    $gettext(
+                        "Error while fetching the list of projects you are member of: %{error}",
                         { error: String(fault) },
+                        true,
                     ),
                 );
             },
@@ -166,22 +166,33 @@ function loadProjects(): void {
         });
 }
 
-async function loadTrackers(project_id: number): Promise<void> {
+function loadTrackers(project_id: ProjectIdentifier): void {
     is_loader_shown.value = true;
-    try {
-        trackers.value = await getTrackersOfProject(project_id);
-    } catch (error) {
-        setErrorMessage($gettext("Error while fetching the list of trackers of this project"));
-    } finally {
-        is_loader_shown.value = false;
-    }
+    getTrackersOfProject(project_id)
+        .match(
+            (fetched_trackers) => {
+                trackers.value = fetched_trackers;
+            },
+            (fault) => {
+                setErrorMessage(
+                    $gettext(
+                        "Error while fetching the list of trackers of this project: %{error}",
+                        { error: String(fault) },
+                        true,
+                    ),
+                );
+            },
+        )
+        .then(() => {
+            is_loader_shown.value = false;
+        });
 }
 
 watch(selected_project, (new_value: ProjectInfo | null) => {
     tracker_to_add.value = null;
     trackers.value = [];
     if (new_value) {
-        loadTrackers(new_value.id);
+        loadTrackers(ProjectIdentifier.fromProjectInfo(new_value));
     }
 });
 

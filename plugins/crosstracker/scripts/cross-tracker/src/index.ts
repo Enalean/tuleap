@@ -26,7 +26,7 @@ import ReadingCrossTrackerReport from "./reading-mode/reading-cross-tracker-repo
 import WritingCrossTrackerReport from "./writing-mode/writing-cross-tracker-report";
 import BackendCrossTrackerReport from "./backend-cross-tracker-report";
 import CrossTrackerWidget from "./CrossTrackerWidget.vue";
-import type { RetrieveProjects } from "./writing-mode/RetrieveProjects";
+import type { RetrieveProjects } from "./domain/RetrieveProjects";
 import { getSortedProjectsIAmMemberOf } from "./api/rest-querier";
 import { ProjectsCache } from "./writing-mode/ProjectsCache";
 import { RETRIEVE_PROJECTS } from "./injection-symbols";

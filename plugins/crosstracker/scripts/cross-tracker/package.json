@@ -11,7 +11,6 @@
     "@tuleap/fetch-result": "workspace:^",
     "@tuleap/plugin-tracker-tql-codemirror": "workspace:*",
     "@tuleap/tlp-badge": "workspace:^",
-    "@tuleap/tlp-fetch": "workspace:*",
     "@tuleap/vue-strict-inject": "workspace:^",
     "@tuleap/vue3-gettext-init": "workspace:^",
     "extendable-error": "^0.1.7",

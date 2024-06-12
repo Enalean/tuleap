@@ -111,19 +111,19 @@ class CSVExportController implements DispatchableWithRequest
             list($limit, $offset) = $this->getPaginationParameters($request);
             $representations      = $this->buildRepresentations($current_user, $report_id, $limit, $offset);
             Header::sendPaginationHeaders($limit, $offset, $representations->getTotalSize(), self::MAX_LIMIT);
-            header('Content-Type: text/csv');
+            header('Content-Type: text/csv; charset=utf-8');
             echo $representations;
         } catch (BadRequestException $e) {
             http_response_code(400);
-            header('Content-type: text/plain');
+            header('Content-Type: text/plain; charset=utf-8');
             echo $e->getMessage();
         } catch (ForbiddenException $e) {
             http_response_code(403);
-            header('Content-type: text/plain');
+            header('Content-Type: text/plain; charset=utf-8');
             echo $e->getMessage();
         } catch (NotFoundException $e) {
             http_response_code(404);
-            header('Content-type: text/plain');
+            header('Content-Type: text/plain; charset=utf-8');
             echo $e->getMessage();
         }
     }

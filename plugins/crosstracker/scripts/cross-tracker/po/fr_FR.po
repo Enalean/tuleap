@@ -16,9 +16,6 @@ msgstr ""
 msgid "Add"
 msgstr "Ajouter"
 
-msgid "An error occurred"
-msgstr "Une erreur est survenue"
-
 msgid "An error occurred: %{error}"
 msgstr "Une erreur s'est produite : %{error}"
 
@@ -42,8 +39,10 @@ msgstr ""
 "Erreur à la récupération de la liste des projets dont vous êtes membre : "
 "%{error}"
 
-msgid "Error while fetching the list of trackers of this project"
-msgstr "Erreur à la récupération de la liste des outils de suivi de ce projet"
+msgid "Error while fetching the list of trackers of this project: %{error}"
+msgstr ""
+"Erreur à la récupération de la liste des outils de suivi de ce projet : "
+"%{error}"
 
 msgid "Example: @title = 'value'"
 msgstr "Exemple : @title = 'valeur'"

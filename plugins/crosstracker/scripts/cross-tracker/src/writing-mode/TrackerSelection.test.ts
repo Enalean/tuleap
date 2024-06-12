@@ -17,15 +17,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { nextTick } from "vue";
 import { shallowMount } from "@vue/test-utils";
 import type { VueWrapper } from "@vue/test-utils";
+import { errAsync, okAsync } from "neverthrow";
 import { Fault } from "@tuleap/fault";
 import * as strict_inject from "@tuleap/vue-strict-inject";
 import { getGlobalTestOptions } from "../helpers/global-options-for-tests";
 import TrackerSelection from "./TrackerSelection.vue";
 import * as rest_querier from "../api/rest-querier";
 import type { ProjectInfo, SelectedTracker, State, TrackerInfo } from "../type";
-import type { RetrieveProjects } from "./RetrieveProjects";
+import type { RetrieveProjects } from "../domain/RetrieveProjects";
 import { RetrieveProjectsStub } from "../../tests/stubs/RetrieveProjectsStub";
 import { ProjectInfoStub } from "../../tests/stubs/ProjectInfoStub";
 
@@ -64,6 +66,10 @@ describe("TrackerSelection", () => {
     }
 
     describe("mounted()", () => {
+        beforeEach(() => {
+            jest.spyOn(rest_querier, "getTrackersOfProject").mockReturnValue(okAsync([]));
+        });
+
         it("on init, the projects will be loaded", () => {
             const getSortedProjectsIAmMemberOf = jest.spyOn(
                 projects_retriever,
@@ -76,7 +82,7 @@ describe("TrackerSelection", () => {
 
     describe("loadProjects()", () => {
         beforeEach(() => {
-            jest.spyOn(rest_querier, "getTrackersOfProject").mockResolvedValue([]);
+            jest.spyOn(rest_querier, "getTrackersOfProject").mockReturnValue(okAsync([]));
         });
 
         it("Displays an error when rest route fails", async () => {
@@ -102,25 +108,36 @@ describe("TrackerSelection", () => {
     });
 
     describe("loadTrackers()", () => {
-        it("when I load trackers, the loader will be shown and the trackers options will be disabled if already selected", async () => {
+        it(`will show a loader and will disable the tracker options that are already selected`, async () => {
             const first_tracker = { id: 8, label: "coquettish" } as TrackerInfo;
             const second_tracker = { id: 26, label: "unfruitfully" } as TrackerInfo;
             const trackers = [first_tracker, second_tracker];
-            jest.spyOn(rest_querier, "getTrackersOfProject").mockResolvedValue(trackers);
+            jest.spyOn(rest_querier, "getTrackersOfProject").mockReturnValue(okAsync(trackers));
 
             const wrapper = getWrapper([{ tracker_id: 26 } as SelectedTracker]);
-            await jest.runOnlyPendingTimersAsync();
+            wrapper.vm.selected_project = { id: 102 } as ProjectInfo;
+            await nextTick(); // wait for watch
+            expect(wrapper.find("[data-test=tracker-loader]").classes()).toContain("fa-spin");
 
-            expect(wrapper.vm.trackers).toStrictEqual(trackers);
+            await jest.runOnlyPendingTimersAsync();
+            expect(
+                wrapper
+                    .findAll("[data-test=cross-tracker-selector-tracker] > option")
+                    .map((wrapper) => wrapper.attributes("disabled")),
+            ).not.toHaveLength(0);
         });
 
         it("when there is a REST error, it will be displayed", async () => {
-            jest.spyOn(rest_querier, "getTrackersOfProject").mockRejectedValue([]);
+            const error_message = "Not Found";
+            jest.spyOn(rest_querier, "getTrackersOfProject").mockReturnValue(
+                errAsync(Fault.fromMessage(error_message)),
+            );
 
             getWrapper();
             await jest.runOnlyPendingTimersAsync();
 
-            expect(errorSpy).toHaveBeenCalledWith(expect.any(Object), expect.any(String));
+            expect(errorSpy).toHaveBeenCalled();
+            expect(errorSpy.mock.calls[0][1]).toContain(error_message);
         });
     });
 
@@ -128,25 +145,22 @@ describe("TrackerSelection", () => {
         it("when I add a tracker, then an event will be emitted", async () => {
             const tracker = { id: 96, label: "simplus" } as TrackerInfo;
             const tracker_to_add = { id: 97, label: "acinus" } as TrackerInfo;
-            jest.spyOn(rest_querier, "getTrackersOfProject").mockResolvedValue([
-                tracker,
-                tracker_to_add,
-            ]);
+            jest.spyOn(rest_querier, "getTrackersOfProject").mockReturnValue(
+                okAsync([tracker, tracker_to_add]),
+            );
 
             const wrapper = getWrapper();
-            await jest.runOnlyPendingTimersAsync();
-
+            await jest.runOnlyPendingTimersAsync(); // load projects
             wrapper.vm.selected_project = second_project;
+            await jest.runOnlyPendingTimersAsync(); // load trackers
             wrapper.vm.tracker_to_add = tracker_to_add;
+            await nextTick(); // wait for button to be enabled
 
-            wrapper
-                .find("[data-test=cross-tracker-selector-tracker-button]")
-                .element.removeAttribute("disabled");
             await wrapper.get("[data-test=cross-tracker-selector-tracker-button]").trigger("click");
 
             const emitted = wrapper.emitted("tracker-added");
             if (!emitted) {
-                throw new Error("Event has not been emitted");
+                throw Error("Event has not been emitted");
             }
             expect(emitted[0][0]).toStrictEqual({
                 selected_project: second_project,

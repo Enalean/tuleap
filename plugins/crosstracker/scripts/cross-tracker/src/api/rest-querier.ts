@@ -17,10 +17,19 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { decodeJSON, getAllJSON, getJSON, getResponse, putJSON, uri } from "@tuleap/fetch-result";
+import type { EncodedURI } from "@tuleap/fetch-result";
+import {
+    decodeAsText,
+    decodeJSON,
+    getAllJSON,
+    getJSON,
+    getResponse,
+    getTextResponse,
+    putJSON,
+    uri,
+} from "@tuleap/fetch-result";
 import type { ResultAsync } from "neverthrow";
 import type { Fault } from "@tuleap/fault";
-import { get, recursiveGet } from "@tuleap/tlp-fetch";
 import type {
     Artifact,
     ArtifactsCollection,
@@ -33,6 +42,7 @@ import type {
     TrackerProjectRepresentation,
     TrackerResponseWithProject,
 } from "@tuleap/plugin-tracker-rest-api-types";
+import type { ProjectIdentifier } from "../domain/ProjectIdentifier";
 
 export type TrackerReference = Pick<TrackerResponseWithProject, "id" | "label" | "project">;
 
@@ -145,8 +155,10 @@ export function getSortedProjectsIAmMemberOf(): ResultAsync<ReadonlyArray<Projec
     ).map(sortProjects);
 }
 
-export function getTrackersOfProject(project_id: number): Promise<Array<TrackerInfo>> {
-    return recursiveGet("/api/v1/projects/" + project_id + "/trackers", {
+export function getTrackersOfProject(
+    project_id: ProjectIdentifier,
+): ResultAsync<ReadonlyArray<TrackerInfo>, Fault> {
+    return getAllJSON(uri`/api/v1/projects/${project_id.id}/trackers`, {
         params: {
             limit: 50,
             representation: "minimal",
@@ -154,45 +166,33 @@ export function getTrackersOfProject(project_id: number): Promise<Array<TrackerI
     });
 }
 
-export function getCSVReport(report_id: number): Promise<string> {
-    return recursiveGetCSV("/plugins/crosstracker/csv_export/" + report_id, {
-        limit: 50,
-        offset: 0,
-    });
+export function getCSVReport(report_id: number): ResultAsync<string, Fault> {
+    return recursiveGetCSV(uri`/plugins/crosstracker/csv_export/${report_id}`, 50, 0);
 }
 
-async function recursiveGetCSV(
-    route: string,
-    params: { limit: number; offset: number },
-): Promise<string> {
-    const { limit = 50, offset = 0 } = params;
-    const response = await get(route, {
-        params: {
-            ...params,
-            limit,
-            offset,
-        },
+function recursiveGetCSV(
+    api_uri: EncodedURI,
+    limit: number,
+    offset: number,
+): ResultAsync<string, Fault> {
+    return getTextResponse(api_uri, { params: { limit, offset } }).andThen((response) => {
+        const size = response.headers.get("X-PAGINATION-SIZE");
+        if (!size) {
+            // This is likely an unexpected dev problem, we should not handle this case with Fault
+            throw Error("No X-PAGINATION-SIZE field in the header.");
+        }
+        const total = Number.parseInt(size, 10);
+        const new_offset = offset + limit;
+        const csv_result = decodeAsText(response);
+        if (new_offset >= total) {
+            return csv_result;
+        }
+
+        return recursiveGetCSV(api_uri, limit, new_offset).andThen((second_csv) => {
+            const csv_strings = second_csv.split("\r\n");
+            // Remove the first line
+            csv_strings.shift();
+            return csv_result.map((first_csv) => first_csv + csv_strings.join("\r\n"));
+        });
     });
-    const results = await response.text();
-    const size = response.headers.get("X-PAGINATION-SIZE");
-    if (!size) {
-        throw new Error("can not get query result, pagination size is not sent in headers");
-    }
-
-    const total = Number.parseInt(size, 10);
-    const new_offset = offset + limit;
-
-    if (new_offset >= total) {
-        return results;
-    }
-
-    const new_params = {
-        ...params,
-        offset: new_offset,
-    };
-
-    const second_response = await recursiveGetCSV(route, new_params);
-    const second_results = second_response.split("\r\n");
-    second_results.shift();
-    return results + second_results.join("\r\n");
 }
