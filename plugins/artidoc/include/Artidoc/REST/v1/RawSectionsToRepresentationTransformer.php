@@ -31,6 +31,7 @@ use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Artifact\FileUploadDataProvider;
 use Tuleap\Tracker\REST\Artifact\ArtifactFieldValueFullRepresentation;
 use Tuleap\Tracker\REST\Artifact\ArtifactReference;
 use Tuleap\Tracker\REST\Artifact\ArtifactTextFieldValueRepresentation;
@@ -43,6 +44,7 @@ final readonly class RawSectionsToRepresentationTransformer implements Transform
     public function __construct(
         private \Tracker_ArtifactDao $artifact_dao,
         private \Tracker_ArtifactFactory $artifact_factory,
+        private FileUploadDataProvider $file_upload_data_provider,
     ) {
     }
 
@@ -138,12 +140,20 @@ final readonly class RawSectionsToRepresentationTransformer implements Transform
 
             $can_user_edit_section = $title_field->userCanUpdate($user) && $description_field->userCanUpdate($user);
 
+            $file_upload_data = $this->file_upload_data_provider->getFileUploadData($artifact->getTracker(), $artifact, $user);
+
+            $value = null;
+            if ($file_upload_data) {
+                $value = $file_upload_data->getField()->getRESTValue($user, $last_changeset);
+            }
+
             $sections[] = new ArtidocSectionRepresentation(
                 $section['section_uuid']->toString(),
                 ArtifactReference::build($artifact),
                 $title,
                 $description,
                 $can_user_edit_section,
+                $value
             );
         }
 

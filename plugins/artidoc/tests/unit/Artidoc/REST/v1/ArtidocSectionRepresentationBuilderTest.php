@@ -31,6 +31,7 @@ use Tuleap\Docman\ServiceDocman;
 use Tuleap\NeverThrow\Result;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\REST\Artifact\ArtifactFieldValueFileFullRepresentation;
 use Tuleap\Tracker\REST\Artifact\ArtifactFieldValueFullRepresentation;
 use Tuleap\Tracker\REST\Artifact\ArtifactReference;
 use Tuleap\Tracker\REST\Artifact\ArtifactTextFieldValueRepresentation;
@@ -43,12 +44,28 @@ final class ArtidocSectionRepresentationBuilderTest extends TestCase
 
     public function testHappyPath(): void
     {
+        $attachments_representation = new ArtifactFieldValueFileFullRepresentation();
+        $values                     = [
+            [
+                'id' => 107,
+                'submitted_by' => 103,
+                'description' => '',
+                'name' => 'maraiste.jpg',
+                'size' => 5910,
+                'type' => 'image/jpeg',
+                'html_url' => '/plugins/tracker/attachments/107-maraiste.jpg',
+                'html_preview_url' => '/plugins/tracker/attachments/preview/107-maraiste.jpg',
+                'uri' => 'artifact_files/107',
+            ],
+        ];
+        $attachments_representation->build(1, 'file', 'Attachments', $values);
         $section_representation = new ArtidocSectionRepresentation(
             self::SECTION_ID,
             $this->createMock(ArtifactReference::class),
             $this->createMock(ArtifactFieldValueFullRepresentation::class),
             $this->createMock(ArtifactTextFieldValueRepresentation::class),
             true,
+            $attachments_representation
         );
 
         $builder = new ArtidocSectionRepresentationBuilder(
@@ -121,7 +138,7 @@ final class ArtidocSectionRepresentationBuilderTest extends TestCase
         self::assertTrue(Result::isErr($result));
     }
 
-    public function testWhenTransformerReturnsTwoManyRepresentationsForMatchingSection(): void
+    public function testWhenTransformerReturnsTooManyRepresentationsForMatchingSection(): void
     {
         $section_representation = new ArtidocSectionRepresentation(
             self::SECTION_ID,
@@ -129,6 +146,7 @@ final class ArtidocSectionRepresentationBuilderTest extends TestCase
             $this->createMock(ArtifactFieldValueFullRepresentation::class),
             $this->createMock(ArtifactTextFieldValueRepresentation::class),
             true,
+            null
         );
 
         $builder = new ArtidocSectionRepresentationBuilder(
