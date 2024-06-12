@@ -51,6 +51,7 @@ use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata\MetadataU
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata\StatusChecker;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata\SubmissionDateChecker;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata\TextSemanticChecker;
+use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Field\Date\DateResultBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Field\FieldResultBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilderVisitor;
 use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Field\Date\DateSelectFromBuilder;
@@ -230,6 +231,10 @@ final class ArtifactReportFactoryInstantiator
                 $form_element_factory,
                 $retrieve_field_type,
                 $trackers_permissions,
+                new DateResultBuilder(
+                    $artifact_factory,
+                    $form_element_factory,
+                ),
             ),
         );
 

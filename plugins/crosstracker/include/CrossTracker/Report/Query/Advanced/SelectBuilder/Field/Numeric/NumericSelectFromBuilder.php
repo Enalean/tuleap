@@ -26,12 +26,13 @@ use ParagonIE\EasyDB\EasyStatement;
 use Tuleap\CrossTracker\Report\Query\Advanced\DuckTypedField\Select\DuckTypedFieldSelect;
 use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\IProvideParametrizedSelectAndFromSQLFragments;
 use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\ParametrizedSelectFrom;
+use Tuleap\CrossTracker\Report\Query\Advanced\SelectResultKey;
 
 final class NumericSelectFromBuilder
 {
     public function getSelectFrom(DuckTypedFieldSelect $field): IProvideParametrizedSelectAndFromSQLFragments
     {
-        $suffix                      = md5($field->name);
+        $suffix                      = SelectResultKey::fromDuckTypedField($field);
         $suffix_int                  = "int_$suffix";
         $suffix_float                = "float_$suffix";
         $tracker_field_alias         = "TF_$suffix";

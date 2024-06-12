@@ -20,28 +20,25 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\CrossTracker\REST\v1\Representation;
+namespace Tuleap\CrossTracker\Report\Query\Advanced;
 
-use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\SelectedValueRepresentation;
+use Stringable;
+use Tuleap\CrossTracker\Report\Query\Advanced\DuckTypedField\Select\DuckTypedFieldSelect;
 
-/**
- * @psalm-immutable
- */
-final readonly class CrossTrackerReportContentRepresentation
+final readonly class SelectResultKey implements Stringable
 {
-    /**
-     * @param array<array<string, SelectedValueRepresentation>> $artifacts
-     * @param CrossTrackerSelectedRepresentation[] $selected
-     */
-    public function __construct(
-        public array $artifacts,
-        public array $selected,
-        private int $total_size,
+    private function __construct(
+        public string $key,
     ) {
     }
 
-    public function getTotalSize(): int
+    public static function fromDuckTypedField(DuckTypedFieldSelect $field): self
     {
-        return $this->total_size;
+        return new self(md5($field->name));
+    }
+
+    public function __toString(): string
+    {
+        return $this->key;
     }
 }

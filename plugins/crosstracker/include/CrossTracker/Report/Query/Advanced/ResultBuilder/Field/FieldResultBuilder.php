@@ -27,6 +27,7 @@ use Tracker;
 use Tracker_FormElement_Field;
 use Tuleap\CrossTracker\Report\Query\Advanced\DuckTypedField\Select\DuckTypedFieldSelect;
 use Tuleap\CrossTracker\Report\Query\Advanced\DuckTypedField\Select\DuckTypedFieldTypeSelect;
+use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Field\Date\DateResultBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\SelectedValuesCollection;
 use Tuleap\Tracker\FormElement\Field\RetrieveUsedFields;
 use Tuleap\Tracker\FormElement\RetrieveFieldType;
@@ -40,6 +41,7 @@ final readonly class FieldResultBuilder
         private RetrieveUsedFields $retrieve_used_fields,
         private RetrieveFieldType $retrieve_field_type,
         private RetrieveUserPermissionOnFields $permission_on_fields,
+        private DateResultBuilder $date_builder,
     ) {
     }
 
@@ -70,15 +72,15 @@ final readonly class FieldResultBuilder
             $fields_user_can_read,
             $tracker_ids,
         )->match(
-            fn(DuckTypedFieldSelect $duck_typed_field) => $this->matchTypeToBuilder($duck_typed_field, $select_results),
+            fn(DuckTypedFieldSelect $duck_typed_field) => $this->matchTypeToBuilder($duck_typed_field, $select_results, $user),
             static fn() => new SelectedValuesCollection(null, []),
         );
     }
 
-    private function matchTypeToBuilder(DuckTypedFieldSelect $field, array $select_results): SelectedValuesCollection
+    private function matchTypeToBuilder(DuckTypedFieldSelect $field, array $select_results, PFUser $user): SelectedValuesCollection
     {
         return match ($field->type) {
-            DuckTypedFieldTypeSelect::DATE,
+            DuckTypedFieldTypeSelect::DATE      => $this->date_builder->getResult($field, $select_results, $user),
             DuckTypedFieldTypeSelect::TEXT,
             DuckTypedFieldTypeSelect::NUMERIC,
             DuckTypedFieldTypeSelect::STATIC_LIST,

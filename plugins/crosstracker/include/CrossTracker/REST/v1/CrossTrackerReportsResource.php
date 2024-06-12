@@ -64,6 +64,7 @@ use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata\MetadataU
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata\StatusChecker;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata\SubmissionDateChecker;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata\TextSemanticChecker;
+use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Field\Date\DateResultBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Field\FieldResultBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilderVisitor;
 use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Field\Date\DateSelectFromBuilder;
@@ -243,6 +244,10 @@ final class CrossTrackerReportsResource extends AuthenticatedResource
                     $form_element_factory,
                     $retrieve_field_type,
                     $trackers_permissions,
+                    new DateResultBuilder(
+                        Tracker_ArtifactFactory::instance(),
+                        $form_element_factory,
+                    ),
                 ),
             );
 
@@ -271,7 +276,7 @@ final class CrossTrackerReportsResource extends AuthenticatedResource
 
             if ($return_format === self::FORMAT_SELECTABLE) {
                 assert($artifacts instanceof CrossTrackerReportContentRepresentation);
-                $this->sendPaginationHeaders($limit, $offset, $artifacts->total_size);
+                $this->sendPaginationHeaders($limit, $offset, $artifacts->getTotalSize());
                 return $artifacts;
             } else {
                 assert($artifacts instanceof ArtifactMatchingReportCollection);

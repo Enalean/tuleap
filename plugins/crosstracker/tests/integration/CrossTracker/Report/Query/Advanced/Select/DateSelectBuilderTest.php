@@ -26,36 +26,21 @@ use DateTime;
 use PFUser;
 use ProjectUGroup;
 use Tracker;
-use Tracker_FormElementFactory;
+use Tuleap\CrossTracker\CrossTrackerReport;
 use Tuleap\CrossTracker\Report\Query\Advanced\CrossTrackerFieldTestCase;
-use Tuleap\CrossTracker\Report\Query\Advanced\DuckTypedField\FieldTypeRetrieverWrapper;
-use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\CrossTrackerExpertQueryReportDao;
-use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Field\Date\DateSelectFromBuilder;
-use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Field\FieldSelectFromBuilder;
-use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Field\Numeric\NumericSelectFromBuilder;
-use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Field\StaticList\StaticListSelectFromBuilder;
-use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Field\Text\TextSelectFromBuilder;
-use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Field\UGroupList\UGroupListSelectFromBuilder;
-use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Field\UserList\UserListSelectFromBuilder;
-use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilderVisitor;
+use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Field\Date\DateResultRepresentation;
+use Tuleap\CrossTracker\REST\v1\Representation\CrossTrackerReportContentRepresentation;
+use Tuleap\CrossTracker\Tests\Report\ArtifactReportFactoryInstantiator;
 use Tuleap\DB\DBFactory;
 use Tuleap\Test\Builders\CoreDatabaseBuilder;
-use Tuleap\Tracker\Permission\TrackersPermissionsRetriever;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\Field;
 use Tuleap\Tracker\Test\Builders\TrackerDatabaseBuilder;
 
 final class DateSelectBuilderTest extends CrossTrackerFieldTestCase
 {
-    private SelectBuilderVisitor $builder;
-    private CrossTrackerExpertQueryReportDao $dao;
     /**
      * @var Tracker[]
      */
     private array $trackers;
-    /**
-     * @var list<int>
-     */
-    private array $artifact_ids;
     /**
      * @var array<int, ?int>
      */
@@ -103,14 +88,6 @@ final class DateSelectBuilderTest extends CrossTrackerFieldTestCase
         $sprint_artifact_empty_id       = $tracker_builder->buildArtifact($sprint_tracker->getId());
         $sprint_artifact_with_date_id   = $tracker_builder->buildArtifact($sprint_tracker->getId());
         $sprint_artifact_with_future_id = $tracker_builder->buildArtifact($sprint_tracker->getId());
-        $this->artifact_ids             = [
-            $release_artifact_empty_id,
-            $release_artifact_with_date_id,
-            $release_artifact_with_now_id,
-            $sprint_artifact_empty_id,
-            $sprint_artifact_with_date_id,
-            $sprint_artifact_with_future_id,
-        ];
 
         $tracker_builder->buildLastChangeset($release_artifact_empty_id);
         $release_artifact_with_date_changeset = $tracker_builder->buildLastChangeset($release_artifact_with_date_id);
@@ -147,41 +124,43 @@ final class DateSelectBuilderTest extends CrossTrackerFieldTestCase
             $sprint_date_field_id,
             (int) $this->expected_values[$sprint_artifact_with_future_id],
         );
-
-        $this->builder = new SelectBuilderVisitor(new FieldSelectFromBuilder(
-            Tracker_FormElementFactory::instance(),
-            new FieldTypeRetrieverWrapper(Tracker_FormElementFactory::instance()),
-            TrackersPermissionsRetriever::build(),
-            new DateSelectFromBuilder(),
-            new TextSelectFromBuilder(),
-            new NumericSelectFromBuilder(),
-            new StaticListSelectFromBuilder(),
-            new UGroupListSelectFromBuilder(),
-            new UserListSelectFromBuilder()
-        ));
-        $this->dao     = new CrossTrackerExpertQueryReportDao();
     }
 
-    private function getQueryResults(): array
+    private function getQueryResults(CrossTrackerReport $report, PFUser $user): CrossTrackerReportContentRepresentation
     {
-        $select_from = $this->builder->buildSelectFrom(
-            [new Field('date_field')],
-            $this->trackers,
-            $this->user,
-        );
-
-        return $this->dao->searchArtifactsColumnsMatchingIds($select_from, $this->artifact_ids);
+        $result = (new ArtifactReportFactoryInstantiator())
+            ->getFactory()
+            ->getArtifactsMatchingReport($report, $user, 10, 0, false);
+        assert($result instanceof CrossTrackerReportContentRepresentation);
+        return $result;
     }
 
     public function testItReturnsColumns(): void
     {
-        $results = $this->getQueryResults();
-        $hash    = md5('date_field');
-        self::assertCount(count($this->artifact_ids), $results);
-        foreach ($results as $row) {
-            self::assertArrayHasKey($hash, $row);
-            self::assertArrayHasKey('id', $row);
-            self::assertSame($this->expected_values[$row['id']], $row[$hash]);
+        $result = $this->getQueryResults(
+            new CrossTrackerReport(
+                1,
+                "SELECT date_field WHERE date_field = '' OR date_field != ''",
+                $this->trackers,
+            ),
+            $this->user,
+        );
+
+        self::assertSame(6, $result->getTotalSize());
+        self::assertCount(1, $result->selected);
+        self::assertSame('date_field', $result->selected[0]->name);
+        self::assertSame('date', $result->selected[0]->type);
+        $values = [];
+        foreach ($result->artifacts as $artifact) {
+            self::assertCount(1, $artifact);
+            self::assertArrayHasKey('date_field', $artifact);
+            $value = $artifact['date_field'];
+            self::assertInstanceOf(DateResultRepresentation::class, $value);
+            $values[] = $value->value;
         }
+        self::assertEqualsCanonicalizing(array_map(
+            static fn(?int $value) => $value === null ? null : (new DateTime("@$value"))->format(DateTime::ATOM),
+            array_values($this->expected_values)
+        ), $values);
     }
 }
