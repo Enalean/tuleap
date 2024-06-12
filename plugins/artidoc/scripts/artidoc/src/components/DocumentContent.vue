@@ -24,122 +24,99 @@
             v-for="section in sections"
             v-bind:key="section.artifact.id"
             v-bind:id="`${section.artifact.id}`"
+            v-bind:class="{ 'artidoc-section-with-add-button': has_add_button }"
         >
-            <section-content v-bind:section="section" />
+            <add-new-section-button
+                class="artidoc-button-add-section-container"
+                v-if="has_add_button"
+            />
+            <section-container v-bind:section="section" />
         </li>
     </ol>
+    <add-new-section-button class="artidoc-button-add-section-container" v-if="has_add_button" />
 </template>
 
 <script setup lang="ts">
 import { useInjectSectionsStore } from "@/stores/useSectionsStore";
-import SectionContent from "@/components/SectionContent.vue";
+import AddNewSectionButton from "@/components/AddNewSectionButton.vue";
+import SectionContainer from "@/components/SectionContainer.vue";
 
 const { sections } = useInjectSectionsStore();
+
+const has_add_button = false;
 </script>
-
-<style lang="scss">
-@keyframes blink-section {
-    0% {
-        background: var(--tlp-info-color-transparent-90);
-    }
-
-    50% {
-        background: var(--tlp-white-color);
-    }
-
-    100% {
-        background: var(--tlp-info-color-transparent-90);
-    }
-}
-
-@keyframes pulse-section {
-    0% {
-        transform: scale(1);
-    }
-
-    50% {
-        transform: scale(1.05);
-    }
-
-    100% {
-        transform: scale(1);
-    }
-}
-</style>
 
 <style lang="scss" scoped>
 @use "@/themes/includes/whitespace";
+@use "@/themes/includes/size";
+
+$section-number-padding-left: var(--tlp-small-spacing);
+$section-number-padding-right: var(--tlp-medium-spacing);
+$magic-number-to-align-li-number-with-title: 13px;
+$li-number-top: calc(#{$magic-number-to-align-li-number-with-title} + var(--tlp-medium-spacing));
+$li-number-top-for-first-section: calc(
+    #{$magic-number-to-align-li-number-with-title} + var(--tlp-large-spacing)
+);
+$li-number-top-with-add-button: calc(
+    #{$li-number-top} + #{size.$add-section-button-container-height}
+);
+$li-number-top-for-first-section-with-add-button: calc(
+    #{$li-number-top-for-first-section} + #{size.$add-section-button-container-height}
+);
 
 ol {
     padding: 0;
     counter-reset: item-without-dot;
 }
 
-$section-left-padding: calc(#{whitespace.$section-horizontal-padding} + var(--tlp-large-spacing));
-
 li {
-    --tuleap-artidoc-section-background: var(--tlp-white-color);
-
     position: relative;
     margin: 0 0 var(--tlp-medium-spacing);
-    padding: var(--tlp-medium-spacing) 0 var(--tlp-medium-spacing) $section-left-padding;
-    transition: background-color 75ms ease-in-out;
-    background: var(--tuleap-artidoc-section-background);
     counter-increment: item-without-dot;
-
-    &:first-child {
-        padding-top: var(--tlp-large-spacing);
-    }
 
     &:last-child {
         margin: 0;
-    }
 
-    &:has(.cke) {
-        --tuleap-artidoc-section-background: var(--tlp-main-color-lighter-90);
-
-        &:has(.document-section-is-in-error) {
-            --tuleap-artidoc-section-background: var(--tlp-danger-color-lighter-90);
+        > .artidoc-section-container {
+            margin-bottom: 0;
         }
     }
 
-    &:has(.document-section-is-being-saved) {
-        animation: blink-section 1200ms ease-in-out alternate infinite;
-    }
+    &:first-child {
+        > .artidoc-section-container {
+            padding-top: var(--tlp-large-spacing);
+        }
 
-    &:has(.document-section-is-just-saved) {
-        --tuleap-artidoc-section-background: var(--tlp-success-color-lighter-90);
-
-        animation: pulse-section 500ms ease-in-out;
-    }
-
-    &:has(.document-section-is-just-refreshed) {
-        --tuleap-artidoc-section-background: var(--tlp-info-color-lighter-90);
-
-        animation: pulse-section 500ms ease-in-out;
-    }
-
-    &:has(.document-section-is-outdated) {
-        --tuleap-artidoc-section-background: var(--tlp-alert-warning-background);
+        &::before {
+            top: $li-number-top-for-first-section;
+        }
     }
 }
 
-$section-number-padding-left: var(--tlp-small-spacing);
-$section-number-padding-right: var(--tlp-medium-spacing);
-$section-title-height: 57px;
+.artidoc-section-with-add-button {
+    margin: 0;
+
+    &::before {
+        top: $li-number-top-with-add-button;
+    }
+
+    &:first-child::before {
+        top: $li-number-top-for-first-section-with-add-button;
+    }
+}
 
 li::before {
     content: counter(item-without-dot);
     position: absolute;
+    top: $li-number-top;
     left: 0;
     width: calc(
-        #{$section-left-padding} - #{$section-number-padding-left} - #{$section-number-padding-right}
+        #{whitespace.$section-left-padding} - #{$section-number-padding-left} - #{$section-number-padding-right}
     );
     padding: 0 $section-number-padding-right 0 $section-number-padding-left;
     color: var(--tlp-dimmed-color-lighter-50);
     font-style: italic;
     font-weight: 600;
-    line-height: $section-title-height;
     text-align: right;
 }
 </style>

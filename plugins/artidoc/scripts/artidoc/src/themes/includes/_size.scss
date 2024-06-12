@@ -17,7 +17,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-$section-horizontal-padding: var(--tlp-jumbo-spacing);
-$section-left-padding: calc(#{$section-horizontal-padding} + var(--tlp-large-spacing));
-$section-right-padding: #{$section-horizontal-padding};
-$add-section-button-container-vertical-padding: var(--tlp-small-spacing);
+@use "@/themes/includes/whitespace";
+
+$add-section-button-size: 26px;
+$add-section-button-container-height: calc(
+    2 * #{whitespace.$add-section-button-container-vertical-padding} + #{$add-section-button-size}
+);

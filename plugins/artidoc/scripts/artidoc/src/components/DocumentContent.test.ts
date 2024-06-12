@@ -23,7 +23,7 @@ import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import DocumentContent from "@/components/DocumentContent.vue";
 import ArtidocSectionFactory from "@/helpers/artidoc-section.factory";
-import SectionContent from "@/components/SectionContent.vue";
+import SectionContainer from "@/components/SectionContainer.vue";
 import * as sectionsStore from "@/stores/useSectionsStore";
 import { InjectedSectionsStoreStub } from "@/helpers/stubs/InjectSectionsStoreStub";
 
@@ -48,7 +48,7 @@ describe("DocumentContent", () => {
     });
     it("should display the two sections", () => {
         const list = wrapper.find("ol");
-        expect(list.findAllComponents(SectionContent)).toHaveLength(2);
+        expect(list.findAllComponents(SectionContainer)).toHaveLength(2);
     });
     it("sections should have an id for anchor feature", () => {
         const list = wrapper.find("ol");

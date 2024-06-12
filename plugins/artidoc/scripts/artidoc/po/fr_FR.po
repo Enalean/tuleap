@@ -12,6 +12,9 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Generator: Poedit 3.0.1\n"
 
+msgid "Add new section"
+msgstr "Créer une nouvelle section"
+
 msgid "An error occurred while trying to save the configuration."
 msgstr "Une erreur est survenue lors de la sauvegarde de la configuration."
 

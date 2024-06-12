@@ -93,7 +93,7 @@ const readonly_description = editor.getReadonlyDescription();
 
 section {
     display: grid;
-    grid-template-columns: auto whitespace.$section-horizontal-padding;
+    grid-template-columns: auto whitespace.$section-right-padding;
 }
 
 .artidoc-dropdown-container {
@@ -105,7 +105,6 @@ section {
 .document-section {
     display: flex;
     flex-direction: column;
-    margin-bottom: 2rem;
 }
 
 .section-header {
