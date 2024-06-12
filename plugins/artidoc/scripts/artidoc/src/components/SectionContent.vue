@@ -19,6 +19,14 @@
   -->
 <template>
     <section>
+        <div class="artidoc-dropdown-container">
+            <section-dropdown
+                v-bind:editor="editor"
+                v-bind:section="section"
+                v-if="!is_sections_loading"
+            />
+        </div>
+
         <article
             class="document-section"
             v-bind:class="{
@@ -37,7 +45,6 @@
                 v-bind:is_edit_mode="is_edit_mode"
             />
             <section-header-skeleton v-else class="section-header" />
-
             <section-description
                 v-bind:artifact_id="section.artifact.id"
                 v-bind:editable_description="editable_description"
@@ -45,17 +52,8 @@
                 v-bind:input_current_description="editor.inputCurrentDescription"
                 v-bind:is_edit_mode="is_edit_mode"
             />
-
             <section-footer v-bind:editor="editor" v-bind:section="section" />
         </article>
-
-        <div class="artidoc-dropdown-container">
-            <section-dropdown
-                v-bind:editor="editor"
-                v-bind:section="section"
-                v-if="!is_sections_loading"
-            />
-        </div>
     </section>
 </template>
 
@@ -100,6 +98,7 @@ section {
     display: flex;
     z-index: zindex.$dropdown;
     justify-content: center;
+    order: 1;
 }
 
 .document-section {
