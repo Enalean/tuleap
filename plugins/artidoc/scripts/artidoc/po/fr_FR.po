@@ -12,11 +12,35 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Generator: Poedit 3.0.1\n"
 
+msgid "An error occurred while trying to save the configuration."
+msgstr "Une erreur est survenue lors de la sauvegarde de la configuration."
+
 msgid "An error occurred while trying to update the section."
 msgstr "Une erreur est survenue lors de la mise à jour de la section."
 
+msgid "Artidoc allows composition of a document based on artifacts."
+msgstr "Artidoc permet la composition d'un document basé sur des artéfacts."
+
 msgid "Cancel"
 msgstr "Annuler"
+
+msgid "Choose a tracker"
+msgstr "Choisissez un tracker"
+
+msgid "Close"
+msgstr "Fermer"
+
+msgid "Configuration failure"
+msgstr "Échec de la configuration"
+
+msgid "Configuration of %{ title }"
+msgstr "Configuration de %{ title }"
+
+msgid "Configuration saved successfully"
+msgstr "Configuration sauvegardée"
+
+msgid "Configure document"
+msgstr "Configurer le document"
 
 msgid ""
 "Do you want to continue to force save your modification, or discard it and "
@@ -24,6 +48,9 @@ msgid ""
 msgstr ""
 "Voulez-vous continuer en forçant la sauvegarde de vos modifications, ou "
 "annuler et charger la nouvelle section ?"
+
+msgid "Each section is an artifact."
+msgstr "Chaque section est un artéfact."
 
 msgid "Edit"
 msgstr "Éditer"
@@ -37,8 +64,23 @@ msgstr "Forcer la sauvegarde"
 msgid "Go to artifact"
 msgstr "Aller à l'artéfact"
 
+msgid ""
+"In order to be able to add new sections to your document, we need to know in "
+"which tracker the sections will be created into."
+msgstr ""
+"Afin d'être en mesure d'ajouter de nouvelles sections à votre document, nous "
+"avons besoin de savoir dans quel tracker les sections vont être créées."
+
 msgid "Load new section"
 msgstr "Charger la nouvelle section"
+
+msgid ""
+"Note: the tracker must have a title semantic (string field), a description "
+"semantic, and no required fields except title and description."
+msgstr ""
+"Note : le tracker doit avoir une sémantique titre (champ chaîne de "
+"caractères), une sémantique description, et aucun champ requis autre que "
+"titre et description."
 
 msgid "Open artifact"
 msgstr "Ouvrir l'artéfact"
@@ -51,6 +93,9 @@ msgstr "Recharger la page"
 
 msgid "Save"
 msgstr "Sauvegarder"
+
+msgid "Save configuration"
+msgstr "Sauvegarder la configuration"
 
 msgid "Section is currently being edited"
 msgstr "La section est en train d'être éditée"
@@ -68,11 +113,24 @@ msgstr ""
 "La section que vous êtes en train d'éditer n'existe pas ou vous n'y avez "
 "plus accès."
 
+msgid "There isn't any suitable trackers in this project"
+msgstr "Il n'y a pas de tracker utilisable dans ce projet"
+
 msgid "This document is empty"
 msgstr "Ce document est vide"
 
 msgid "This section has been edited by someone else."
 msgstr "Cette section a été mise à jour par quelqu'un d'autre."
+
+msgid "Tracker"
+msgstr "Tracker"
+
+msgid ""
+"You can now go back to the document and create new sections, they will be "
+"stored as artifacts in the selected tracker."
+msgstr ""
+"Vous pouvez désormais retourner au document et créer de nouvelles sections, "
+"elles seront stockées en tant qu'artéfacts dans le tracker sélectionné."
 
 msgid ""
 "You can open the corresponding artifact in a new tab to fix the situation."

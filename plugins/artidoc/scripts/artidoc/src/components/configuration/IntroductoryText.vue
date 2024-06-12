@@ -19,40 +19,28 @@
   -->
 
 <template>
-    <document-header />
-    <div class="artidoc-container">
-        <document-view class="artidoc-app-container" />
-    </div>
+    <p>
+        {{ $gettext("Artidoc allows composition of a document based on artifacts.") }}
+        {{ $gettext("Each section is an artifact.") }}
+    </p>
+    <p>
+        {{
+            $gettext(
+                "In order to be able to add new sections to your document, we need to know in which tracker the sections will be created into.",
+            )
+        }}
+    </p>
+    <p>
+        {{
+            $gettext(
+                "Note: the tracker must have a title semantic (string field), a description semantic, and no required fields except title and description.",
+            )
+        }}
+    </p>
 </template>
 
 <script setup lang="ts">
-import { onMounted } from "vue";
-import DocumentView from "@/views/DocumentView.vue";
-import { useInjectSectionsStore } from "@/stores/useSectionsStore";
-import DocumentHeader from "@/components/DocumentHeader.vue";
+import { useGettext } from "vue3-gettext";
 
-const props = defineProps<{ item_id: number }>();
-const store = useInjectSectionsStore();
-
-onMounted(() => {
-    store.loadSections(props.item_id);
-});
+const { $gettext } = useGettext();
 </script>
-
-<style lang="scss">
-@use "@/themes/artidoc";
-
-html {
-    scroll-behavior: smooth;
-}
-
-.artidoc-container {
-    height: 100%;
-}
-</style>
-
-<style lang="scss" scoped>
-.artidoc-app-container {
-    height: inherit;
-}
-</style>

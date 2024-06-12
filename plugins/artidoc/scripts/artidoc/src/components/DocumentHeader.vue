@@ -19,40 +19,27 @@
   -->
 
 <template>
-    <document-header />
-    <div class="artidoc-container">
-        <document-view class="artidoc-app-container" />
+    <div class="document-header">
+        <h1 class="artidoc-header-title">
+            {{ title }}
+        </h1>
+        <configuration-modal v-if="can_user_edit_document" />
     </div>
 </template>
 
 <script setup lang="ts">
-import { onMounted } from "vue";
-import DocumentView from "@/views/DocumentView.vue";
-import { useInjectSectionsStore } from "@/stores/useSectionsStore";
-import DocumentHeader from "@/components/DocumentHeader.vue";
+import { strictInject } from "@tuleap/vue-strict-inject";
+import { TITLE } from "@/title-injection-key";
+import { CAN_USER_EDIT_DOCUMENT } from "@/can-user-edit-document-injection-key";
+import ConfigurationModal from "@/components/configuration/ConfigurationModal.vue";
 
-const props = defineProps<{ item_id: number }>();
-const store = useInjectSectionsStore();
-
-onMounted(() => {
-    store.loadSections(props.item_id);
-});
+const title = strictInject(TITLE);
+const can_user_edit_document = strictInject(CAN_USER_EDIT_DOCUMENT);
 </script>
 
-<style lang="scss">
-@use "@/themes/artidoc";
-
-html {
-    scroll-behavior: smooth;
-}
-
-.artidoc-container {
-    height: 100%;
-}
-</style>
-
-<style lang="scss" scoped>
-.artidoc-app-container {
-    height: inherit;
+<style scoped lang="scss">
+.document-header {
+    display: flex;
+    gap: var(--tlp-medium-spacing);
 }
 </style>

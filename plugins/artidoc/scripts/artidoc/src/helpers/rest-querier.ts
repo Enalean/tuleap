@@ -26,6 +26,19 @@ import { isCommonmark, isTitleAString } from "@/helpers/artidoc-section.type";
 
 type ArtidocSectionFromRest = Omit<ArtidocSection, "display_title">;
 
+export function putConfiguration(
+    document_id: number,
+    selected_tracker_id: number,
+): ResultAsync<Response, Fault> {
+    return putResponse(
+        uri`/api/artidoc/${document_id}/configuration`,
+        {},
+        {
+            selected_tracker_ids: [selected_tracker_id],
+        },
+    );
+}
+
 export function putArtifact(
     artifact_id: number,
     new_title: string,

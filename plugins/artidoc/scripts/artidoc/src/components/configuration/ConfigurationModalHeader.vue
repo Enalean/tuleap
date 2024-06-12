@@ -19,40 +19,30 @@
   -->
 
 <template>
-    <document-header />
-    <div class="artidoc-container">
-        <document-view class="artidoc-app-container" />
+    <div class="tlp-modal-header">
+        <h1 class="tlp-modal-title" id="artidoc-configuration-modal-title">
+            {{ modal_title }}
+        </h1>
+        <button
+            class="tlp-modal-close"
+            type="button"
+            data-dismiss="modal"
+            v-bind:title="close_title"
+        >
+            <i class="fa-solid fa-xmark tlp-modal-close-icon" role="img"></i>
+        </button>
     </div>
 </template>
 
 <script setup lang="ts">
-import { onMounted } from "vue";
-import DocumentView from "@/views/DocumentView.vue";
-import { useInjectSectionsStore } from "@/stores/useSectionsStore";
-import DocumentHeader from "@/components/DocumentHeader.vue";
+import { useGettext } from "vue3-gettext";
+import { strictInject } from "@tuleap/vue-strict-inject";
+import { TITLE } from "@/title-injection-key";
 
-const props = defineProps<{ item_id: number }>();
-const store = useInjectSectionsStore();
+const { $gettext, interpolate } = useGettext();
 
-onMounted(() => {
-    store.loadSections(props.item_id);
-});
+const title = strictInject(TITLE);
+
+const modal_title = interpolate($gettext("Configuration of %{ title }"), { title });
+const close_title = $gettext("Close");
 </script>
-
-<style lang="scss">
-@use "@/themes/artidoc";
-
-html {
-    scroll-behavior: smooth;
-}
-
-.artidoc-container {
-    height: 100%;
-}
-</style>
-
-<style lang="scss" scoped>
-.artidoc-app-container {
-    height: inherit;
-}
-</style>

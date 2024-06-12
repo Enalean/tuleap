@@ -27,6 +27,9 @@ import { sectionsStoreKey } from "@/stores/sectionsStoreKey";
 import { CURRENT_LOCALE } from "@/locale-injection-key";
 import { userLocale } from "@/helpers/user-locale";
 import { CAN_USER_EDIT_DOCUMENT } from "@/can-user-edit-document-injection-key";
+import { TITLE } from "@/title-injection-key";
+import { getDatasetItemOrThrow } from "@tuleap/dom";
+import { CONFIGURATION_STORE, initConfigurationStore } from "@/stores/configuration-store";
 
 document.addEventListener("DOMContentLoaded", async () => {
     const vue_mount_point = document.getElementById("artidoc-mountpoint");
@@ -43,14 +46,26 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     const current_locale = userLocale(user_locale);
 
-    const app = createApp(App, {
-        item_id: Number.parseInt(vue_mount_point.dataset.itemId || "", 10),
-    });
+    const item_id = Number.parseInt(getDatasetItemOrThrow(vue_mount_point, "itemId"), 10);
+
+    const app = createApp(App, { item_id });
 
     const sectionsStore = provideSectionsStore();
     app.provide(sectionsStoreKey, sectionsStore);
     app.provide(CURRENT_LOCALE, current_locale);
-    app.provide(CAN_USER_EDIT_DOCUMENT, Boolean(vue_mount_point.dataset.canUserEditDocument));
+    app.provide(
+        CAN_USER_EDIT_DOCUMENT,
+        Boolean(getDatasetItemOrThrow(vue_mount_point, "canUserEditDocument")),
+    );
+    app.provide(TITLE, getDatasetItemOrThrow(vue_mount_point, "title"));
+    app.provide(
+        CONFIGURATION_STORE,
+        initConfigurationStore(
+            item_id,
+            Number.parseInt(getDatasetItemOrThrow(vue_mount_point, "selectedTracker"), 10),
+            JSON.parse(getDatasetItemOrThrow(vue_mount_point, "allowedTrackers")),
+        ),
+    );
 
     app.use(gettext);
     app.use(VueDOMPurifyHTML);
