@@ -49,6 +49,8 @@ use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata\MetadataU
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata\StatusChecker;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata\SubmissionDateChecker;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata\TextSemanticChecker;
+use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Field\FieldResultBuilder;
+use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilderVisitor;
 use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Field\Date\DateSelectFromBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Field\FieldSelectFromBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Field\Numeric\NumericSelectFromBuilder;
@@ -199,6 +201,7 @@ class crosstrackerPlugin extends Plugin
             $ugroup_label_converter
         );
 
+        $trackers_permissions          = TrackersPermissionsRetriever::build();
         $duck_typed_field_checker      = new DuckTypedFieldChecker(
             $form_element_factory,
             $form_element_factory,
@@ -225,7 +228,7 @@ class crosstrackerPlugin extends Plugin
                 new ArtifactSubmitterChecker($user_manager),
                 true,
             ),
-            TrackersPermissionsRetriever::build(),
+            $trackers_permissions,
         );
         $invalid_comparisons_collector = new InvalidTermCollectorVisitor(
             new InvalidSearchableCollectorVisitor(
@@ -295,13 +298,20 @@ class crosstrackerPlugin extends Plugin
             new FieldSelectFromBuilder(
                 $form_element_factory,
                 $retrieve_field_type,
-                TrackersPermissionsRetriever::build(),
+                $trackers_permissions,
                 new DateSelectFromBuilder(),
                 new TextSelectFromBuilder(),
                 new NumericSelectFromBuilder(),
                 new StaticListSelectFromBuilder(),
                 new UGroupListSelectFromBuilder(),
                 new UserListSelectFromBuilder()
+            ),
+        );
+        $result_builder_visitor  = new ResultBuilderVisitor(
+            new FieldResultBuilder(
+                $form_element_factory,
+                $retrieve_field_type,
+                $trackers_permissions,
             ),
         );
 
@@ -311,6 +321,7 @@ class crosstrackerPlugin extends Plugin
             $validator,
             $query_builder_visitor,
             $select_builder_visitor,
+            $result_builder_visitor,
             $parser,
             new CrossTrackerExpertQueryReportDao(),
             $invalid_comparisons_collector,
@@ -327,7 +338,7 @@ class crosstrackerPlugin extends Plugin
             new SimilarFieldsFormatter($formatter_visitor, new BindToValueVisitor())
         );
         $representation_factory         = new CSVRepresentationFactory($csv_representation_builder);
-        $trackers_permissions_retriever = TrackersPermissionsRetriever::build();
+        $trackers_permissions_retriever = $trackers_permissions;
 
         return new CSVExportController(
             new CrossTrackerReportFactory(

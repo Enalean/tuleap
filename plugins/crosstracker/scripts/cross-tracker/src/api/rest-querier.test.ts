@@ -95,7 +95,7 @@ describe("rest-querier", () => {
 
             expect(getResponse).toHaveBeenCalledWith(
                 fetch_result.uri`/api/v1/cross_tracker_reports/${report_id}/content`,
-                { params: { limit, offset } },
+                { params: { limit, offset, return_format: "static" } },
             );
             if (!result.isOk()) {
                 throw Error("Expected an Ok");
@@ -138,6 +138,7 @@ describe("rest-querier", () => {
                         limit,
                         offset,
                         query: JSON.stringify({ trackers_id, expert_query }),
+                        return_format: "static",
                     },
                 },
             );

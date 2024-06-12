@@ -46,6 +46,7 @@ use Tuleap\Tracker\Report\Query\Advanced\SearchablesDoNotExistException;
 use Tuleap\Tracker\Report\Query\Advanced\SelectablesAreInvalidException;
 use Tuleap\Tracker\Report\Query\Advanced\SelectablesDoNotExistException;
 use Tuleap\Tracker\Report\Query\Advanced\SelectablesMustBeUniqueException;
+use Tuleap\Tracker\REST\v1\ArtifactMatchingReportCollection;
 use URLVerification;
 
 class CSVExportController implements DispatchableWithRequest
@@ -143,12 +144,14 @@ class CSVExportController implements DispatchableWithRequest
             $report = $this->report_factory->getById($report_id);
 
             $this->checkUserIsAllowedToSeeReport($current_user, $report);
-            $collection     = $this->artifact_report_factory->getArtifactsMatchingReport(
+            $collection = $this->artifact_report_factory->getArtifactsMatchingReport(
                 $report,
                 $current_user,
                 $limit,
-                $offset
+                $offset,
+                true,
             );
+            assert($collection instanceof ArtifactMatchingReportCollection);
             $similar_fields = $this->similar_fields_matcher->getSimilarFieldsCollection($report, $current_user);
             return $this->csv_representation_factory->buildRepresentations(
                 $collection,

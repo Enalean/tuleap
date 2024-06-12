@@ -77,6 +77,7 @@ export function getReportContent(
         params: {
             limit,
             offset,
+            return_format: "static",
         },
     }).andThen((response) => {
         const total = Number.parseInt(response.headers.get("X-PAGINATION-SIZE") ?? "0", 10);
@@ -99,6 +100,7 @@ export function getQueryResult(
             limit,
             offset,
             query: JSON.stringify({ trackers_id, expert_query }),
+            return_format: "static",
         },
     }).andThen((response) => {
         const total = Number.parseInt(response.headers.get("X-PAGINATION-SIZE") ?? "0", 10);

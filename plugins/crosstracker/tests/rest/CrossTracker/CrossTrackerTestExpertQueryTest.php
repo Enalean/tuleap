@@ -788,7 +788,7 @@ class CrossTrackerTestExpertQueryTest extends RestBase
 
     private function getMatchingArtifactsFromJson()
     {
-        $response = $this->getResponse($this->request_factory->createRequest('GET', 'cross_tracker_reports/1/content?limit=50&offset=0'));
+        $response = $this->getResponse($this->request_factory->createRequest('GET', 'cross_tracker_reports/1/content?limit=50&offset=0&return_format=static'));
 
         $this->assertEquals($response->getStatusCode(), 200);
         $cross_tracker_artifacts = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);

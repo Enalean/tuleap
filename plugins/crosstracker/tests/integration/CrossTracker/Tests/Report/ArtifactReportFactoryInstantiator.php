@@ -51,6 +51,8 @@ use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata\MetadataU
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata\StatusChecker;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata\SubmissionDateChecker;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata\TextSemanticChecker;
+use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Field\FieldResultBuilder;
+use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilderVisitor;
 use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Field\Date\DateSelectFromBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Field\FieldSelectFromBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Field\Numeric\NumericSelectFromBuilder;
@@ -116,6 +118,7 @@ final class ArtifactReportFactoryInstantiator
         );
 
         $form_element_factory          = Tracker_FormElementFactory::instance();
+        $trackers_permissions          = TrackersPermissionsRetriever::build();
         $duck_typed_field_checker      = new DuckTypedFieldChecker(
             $form_element_factory,
             $form_element_factory,
@@ -142,7 +145,7 @@ final class ArtifactReportFactoryInstantiator
                 new ArtifactSubmitterChecker($user_manager),
                 true,
             ),
-            TrackersPermissionsRetriever::build(),
+            $trackers_permissions,
         );
         $invalid_comparisons_collector = new InvalidTermCollectorVisitor(
             new InvalidSearchableCollectorVisitor(
@@ -213,13 +216,20 @@ final class ArtifactReportFactoryInstantiator
             new FieldSelectFromBuilder(
                 $form_element_factory,
                 $retrieve_field_type,
-                TrackersPermissionsRetriever::build(),
+                $trackers_permissions,
                 new DateSelectFromBuilder(),
                 new TextSelectFromBuilder(),
                 new NumericSelectFromBuilder(),
                 new StaticListSelectFromBuilder(),
                 new UGroupListSelectFromBuilder(),
                 new UserListSelectFromBuilder()
+            ),
+        );
+        $result_builder_visitor   = new ResultBuilderVisitor(
+            new FieldResultBuilder(
+                $form_element_factory,
+                $retrieve_field_type,
+                $trackers_permissions,
             ),
         );
 
@@ -229,6 +239,7 @@ final class ArtifactReportFactoryInstantiator
             $validator,
             $query_builder_visitor,
             $select_builder_visitor,
+            $result_builder_visitor,
             $parser,
             new CrossTrackerExpertQueryReportDao(),
             $invalid_comparisons_collector,
