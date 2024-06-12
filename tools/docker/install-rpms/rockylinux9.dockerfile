@@ -19,7 +19,8 @@ RUN rm -f /lib/systemd/system/multi-user.target.wants/*;\
         openssh-server \
         createrepo \
         mysql-server \
-        https://dl.fedoraproject.org/pub/epel/epel-release-latest-9.noarch.rpm \
+        rocky-release-security \
+        epel-release \
         https://rpms.remirepo.net/enterprise/remi-release-9.rpm && \
     dnf clean all && \
     rm -rf /var/cache/yum
