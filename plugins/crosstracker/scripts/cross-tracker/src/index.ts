@@ -26,6 +26,10 @@ import ReadingCrossTrackerReport from "./reading-mode/reading-cross-tracker-repo
 import WritingCrossTrackerReport from "./writing-mode/writing-cross-tracker-report";
 import BackendCrossTrackerReport from "./backend-cross-tracker-report";
 import CrossTrackerWidget from "./CrossTrackerWidget.vue";
+import type { RetrieveProjects } from "./writing-mode/RetrieveProjects";
+import { getSortedProjectsIAmMemberOf } from "./api/rest-querier";
+import { ProjectsCache } from "./writing-mode/ProjectsCache";
+import { RETRIEVE_PROJECTS } from "./injection-symbols";
 
 document.addEventListener("DOMContentLoaded", async () => {
     const locale = document.body.dataset.userLocale;
@@ -41,6 +45,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     const widget_cross_tracker_elements = document.getElementsByClassName(
         "dashboard-widget-content-cross-tracker",
     );
+
+    const projects_retriever: RetrieveProjects = { getSortedProjectsIAmMemberOf };
+    const projects_cache = ProjectsCache(projects_retriever);
 
     for (const widget_element of widget_cross_tracker_elements) {
         if (!widget_element || !(widget_element instanceof HTMLElement)) {
@@ -67,13 +74,15 @@ document.addEventListener("DOMContentLoaded", async () => {
         if (!vue_mount_point || !(vue_mount_point instanceof HTMLElement)) {
             throw new Error("vue-mount-point DOM element is not found");
         }
-        const app = createApp(CrossTrackerWidget, {
+
+        createApp(CrossTrackerWidget, {
             backendCrossTrackerReport: backend_report,
             readingCrossTrackerReport: reading_report,
             writingCrossTrackerReport: writing_report,
-        });
-        app.use(gettext_plugin);
-        app.use(createInitializedStore(Number.parseInt(report_id, 10), is_widget_admin));
-        app.mount(vue_mount_point);
+        })
+            .use(gettext_plugin)
+            .use(createInitializedStore(Number.parseInt(report_id, 10), is_widget_admin))
+            .provide(RETRIEVE_PROJECTS, projects_cache)
+            .mount(vue_mount_point);
     }
 });

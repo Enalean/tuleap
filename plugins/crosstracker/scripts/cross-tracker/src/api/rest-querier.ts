@@ -17,19 +17,22 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { decodeJSON, getJSON, getResponse, putJSON, uri } from "@tuleap/fetch-result";
+import { decodeJSON, getAllJSON, getJSON, getResponse, putJSON, uri } from "@tuleap/fetch-result";
 import type { ResultAsync } from "neverthrow";
 import type { Fault } from "@tuleap/fault";
 import { get, recursiveGet } from "@tuleap/tlp-fetch";
-import type { ProjectReference } from "@tuleap/core-rest-api-types";
 import type {
     Artifact,
     ArtifactsCollection,
+    ProjectInfo,
     Report,
     TrackerAndProject,
     TrackerInfo,
 } from "../type";
-import type { TrackerResponseWithProject } from "@tuleap/plugin-tracker-rest-api-types";
+import type {
+    TrackerProjectRepresentation,
+    TrackerResponseWithProject,
+} from "@tuleap/plugin-tracker-rest-api-types";
 
 export type TrackerReference = Pick<TrackerResponseWithProject, "id" | "label" | "project">;
 
@@ -123,17 +126,23 @@ export function updateReport(
     });
 }
 
-export async function getSortedProjectsIAmMemberOf(): Promise<ProjectReference[]> {
-    const json = await recursiveGet<unknown[], ProjectReference>("/api/v1/projects", {
-        params: {
-            limit: 50,
-            query: JSON.stringify({ is_member_of: true }),
-        },
-    });
+const sortProjects = (
+    projects: ReadonlyArray<TrackerProjectRepresentation>,
+): ReadonlyArray<ProjectInfo> =>
+    Array.from(projects).sort((project_a, project_b) =>
+        project_a.label.localeCompare(project_b.label),
+    );
 
-    return json.sort(({ label: label_a }, { label: label_b }) => {
-        return label_a.localeCompare(label_b);
-    });
+export function getSortedProjectsIAmMemberOf(): ResultAsync<ReadonlyArray<ProjectInfo>, Fault> {
+    return getAllJSON<TrackerProjectRepresentation, ReadonlyArray<TrackerProjectRepresentation>>(
+        uri`/api/v1/projects`,
+        {
+            params: {
+                limit: 50,
+                query: `{"is_member_of":true}`,
+            },
+        },
+    ).map(sortProjects);
 }
 
 export function getTrackersOfProject(project_id: number): Promise<Array<TrackerInfo>> {

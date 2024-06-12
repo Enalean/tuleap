@@ -199,25 +199,30 @@ describe("rest-querier", () => {
             });
         });
 
-        describe("getSortedProjectsIAmMemberOf() -", () => {
-            it("the REST API will be queried and the list of projects will be sorted and returned", async () => {
-                const tlpRecursiveGet = jest.spyOn(tlp_fetch, "recursiveGet");
+        describe("getSortedProjectsIAmMemberOf()", () => {
+            it(`will return the list of projects that current user is member of
+                and will sort the list by project label`, async () => {
                 const projects = [
                     { id: 765, label: "physicianless" },
                     { id: 239, label: "spur" },
                     { id: 487, label: "castellano" },
                 ];
-                tlpRecursiveGet.mockResolvedValue(projects);
+                const getAllJSON = jest
+                    .spyOn(fetch_result, "getAllJSON")
+                    .mockReturnValue(okAsync(projects));
 
                 const result = await getSortedProjectsIAmMemberOf();
 
-                expect(tlpRecursiveGet).toHaveBeenCalledWith("/api/v1/projects", {
+                if (!result.isOk()) {
+                    throw Error("Expected an Ok");
+                }
+                expect(getAllJSON).toHaveBeenCalledWith(fetch_result.uri`/api/v1/projects`, {
                     params: {
                         limit: 50,
                         query: JSON.stringify({ is_member_of: true }),
                     },
                 });
-                expect(result).toEqual([
+                expect(result.value).toStrictEqual([
                     { id: 487, label: "castellano" },
                     { id: 765, label: "physicianless" },
                     { id: 239, label: "spur" },

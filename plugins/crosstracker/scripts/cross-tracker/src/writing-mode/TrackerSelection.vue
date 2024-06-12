@@ -96,9 +96,10 @@
 import { computed, onMounted, ref, watch } from "vue";
 import { useMutations } from "vuex-composition-helpers";
 import { useGettext } from "vue3-gettext";
-import { getSortedProjectsIAmMemberOf } from "./projects-cache";
+import { strictInject } from "@tuleap/vue-strict-inject";
 import { getTrackersOfProject } from "../api/rest-querier";
 import type { ProjectInfo, SelectedTracker, TrackerInfo } from "../type";
+import { RETRIEVE_PROJECTS } from "../injection-symbols";
 
 type TrackerSelectOption = TrackerInfo & {
     readonly disabled: boolean;
@@ -109,13 +110,14 @@ export type AddTrackerToSelectionCommand = {
     readonly selected_tracker: TrackerInfo;
 };
 
-const { $gettext } = useGettext();
+const { interpolate, $gettext } = useGettext();
 
 const props = defineProps<{ selectedTrackers: ReadonlyArray<SelectedTracker> }>();
 const emit = defineEmits<{
     (e: "tracker-added", add: AddTrackerToSelectionCommand): void;
 }>();
 const { setErrorMessage } = useMutations(["setErrorMessage"]);
+const projects_retriever = strictInject(RETRIEVE_PROJECTS);
 
 const projects = ref<ReadonlyArray<ProjectInfo>>([]);
 const trackers = ref<ReadonlyArray<TrackerInfo>>([]);
@@ -139,17 +141,29 @@ const tracker_options = computed<ReadonlyArray<TrackerSelectOption>>(() => {
     });
 });
 
-async function loadProjects(): Promise<void> {
+function loadProjects(): void {
     is_loader_shown.value = true;
-    try {
-        projects.value = await getSortedProjectsIAmMemberOf();
-
-        selected_project.value = projects.value[0];
-    } catch (error) {
-        setErrorMessage($gettext("Error while fetching the list of projects you are member of"));
-    } finally {
-        is_loader_shown.value = false;
-    }
+    projects_retriever
+        .getSortedProjectsIAmMemberOf()
+        .match(
+            (sorted_projects: ReadonlyArray<ProjectInfo>) => {
+                projects.value = sorted_projects;
+                selected_project.value = sorted_projects[0];
+            },
+            (fault) => {
+                setErrorMessage(
+                    interpolate(
+                        $gettext(
+                            "Error while fetching the list of projects you are member of: %{error}",
+                        ),
+                        { error: String(fault) },
+                    ),
+                );
+            },
+        )
+        .then(() => {
+            is_loader_shown.value = false;
+        });
 }
 
 async function loadTrackers(project_id: number): Promise<void> {

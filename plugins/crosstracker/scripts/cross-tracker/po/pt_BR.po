@@ -30,7 +30,7 @@ msgstr "Cancelar"
 msgid "Description"
 msgstr "Descrição"
 
-msgid "Error while fetching the list of projects you are member of"
+msgid "Error while fetching the list of projects you are member of: %{error}"
 msgstr ""
 
 msgid "Error while fetching the list of trackers of this project"

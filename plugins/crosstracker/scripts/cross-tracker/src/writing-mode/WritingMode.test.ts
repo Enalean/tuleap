@@ -25,24 +25,19 @@ import {
     default as WritingCrossTrackerReport,
     TooManyTrackersSelectedError,
 } from "./writing-cross-tracker-report";
-import * as rest_querier from "../api/rest-querier";
 import type { ProjectInfo, State, TrackerInfo, TrackerToUpdate } from "../type";
 import TrackerListWritingMode from "./TrackerListWritingMode.vue";
 import TrackerSelection from "./TrackerSelection.vue";
-import type { ProjectReference } from "@tuleap/core-rest-api-types";
 
 describe("WritingMode", () => {
     let resetSpy: jest.Mock, errorSpy: jest.Mock;
 
     beforeEach(() => {
-        jest.spyOn(rest_querier, "getSortedProjectsIAmMemberOf").mockResolvedValue([
-            { id: 102 } as ProjectReference,
-        ]);
         resetSpy = jest.fn();
         errorSpy = jest.fn();
     });
 
-    function instantiateComponent(
+    function getWrapper(
         writingCrossTrackerReport: WritingCrossTrackerReport,
     ): VueWrapper<InstanceType<typeof WritingMode>> {
         const store_options = {
@@ -73,7 +68,7 @@ describe("WritingMode", () => {
                 { id: 51, label: "monodynamism" } as TrackerInfo,
             );
 
-            const wrapper = instantiateComponent(writingCrossTrackerReport);
+            const wrapper = getWrapper(writingCrossTrackerReport);
 
             expect(wrapper.vm.selected_trackers).toStrictEqual([
                 {
@@ -93,7 +88,7 @@ describe("WritingMode", () => {
     describe("cancel()", () => {
         it("when I hit cancel, then an event will be emitted to switch the widget to reading mode in saved state", () => {
             const writingCrossTrackerReport = new WritingCrossTrackerReport();
-            const wrapper = instantiateComponent(writingCrossTrackerReport);
+            const wrapper = getWrapper(writingCrossTrackerReport);
 
             wrapper.find("[data-test=writing-mode-cancel-button]").trigger("click");
             const emitted = wrapper.emitted("switch-to-reading-mode");
@@ -108,7 +103,7 @@ describe("WritingMode", () => {
     describe("search()", () => {
         it("when I hit search, then an event will be emitted to switch the widget to reading mode in unsaved state", () => {
             const writingCrossTrackerReport = new WritingCrossTrackerReport();
-            const wrapper = instantiateComponent(writingCrossTrackerReport);
+            const wrapper = getWrapper(writingCrossTrackerReport);
 
             wrapper.find("[data-test=search-report-button]").trigger("click");
             const emitted = wrapper.emitted("switch-to-reading-mode");
@@ -132,7 +127,7 @@ describe("WritingMode", () => {
                 { id: 46, label: "knothorn" } as TrackerInfo,
             );
             jest.spyOn(writingCrossTrackerReport, "removeTracker");
-            const wrapper = instantiateComponent(writingCrossTrackerReport);
+            const wrapper = getWrapper(writingCrossTrackerReport);
 
             wrapper
                 .findComponent(TrackerListWritingMode)
@@ -154,7 +149,7 @@ describe("WritingMode", () => {
         it("when I add a tracker, then the writing report will be updated", () => {
             const writingCrossTrackerReport = new WritingCrossTrackerReport();
             jest.spyOn(writingCrossTrackerReport, "addTracker");
-            const wrapper = instantiateComponent(writingCrossTrackerReport);
+            const wrapper = getWrapper(writingCrossTrackerReport);
             const selected_project = { id: 656, label: "ergatogyne" } as ProjectInfo;
             const selected_tracker = { id: 53, label: "observingly" } as TrackerInfo;
 
@@ -181,7 +176,7 @@ describe("WritingMode", () => {
             jest.spyOn(writingCrossTrackerReport, "addTracker").mockImplementation(() => {
                 throw new TooManyTrackersSelectedError();
             });
-            const wrapper = instantiateComponent(writingCrossTrackerReport);
+            const wrapper = getWrapper(writingCrossTrackerReport);
             const selected_project = { id: 656, label: "ergatogyne" } as ProjectInfo;
             const selected_tracker = { id: 53, label: "observingly" } as TrackerInfo;
 
