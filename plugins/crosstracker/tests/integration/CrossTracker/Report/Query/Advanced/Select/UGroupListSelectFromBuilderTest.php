@@ -19,7 +19,6 @@
  */
 
 declare(strict_types=1);
-
 namespace Tuleap\CrossTracker\Report\Query\Advanced\Select;
 
 use PFUser;
@@ -42,7 +41,7 @@ use Tuleap\Tracker\Permission\TrackersPermissionsRetriever;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Field;
 use Tuleap\Tracker\Test\Builders\TrackerDatabaseBuilder;
 
-final class StaticListSelectBuilderTest extends CrossTrackerFieldTestCase
+final class UGroupListSelectFromBuilderTest extends CrossTrackerFieldTestCase
 {
     private SelectBuilderVisitor $builder;
     private CrossTrackerExpertQueryReportDao $dao;
@@ -75,40 +74,43 @@ final class StaticListSelectBuilderTest extends CrossTrackerFieldTestCase
         $sprint_tracker  = $tracker_builder->buildTracker($project_id, 'Sprint');
         $this->trackers  = [$release_tracker, $sprint_tracker];
 
-        $release_static_list_field_id = $tracker_builder->buildStaticListField(
+        $release_ugroup_static_list_field_id = $tracker_builder->buildUserGroupListField(
             $release_tracker->getId(),
-            'list_field',
+            'ugroup_list_field',
             Tracker_FormElementFactory::FIELD_SELECT_BOX_TYPE
         );
 
+        $static_ugroup_id = $core_builder->buildStaticUserGroup($project_id, 'Bagheera');
 
-        $release_bind_ids = $tracker_builder->buildValuesForStaticListField(
-            $release_static_list_field_id,
-            ['A110', 'A610']
+        $release_bind_ids = $tracker_builder->buildValuesForUserGroupListField(
+            $release_ugroup_static_list_field_id,
+            [
+                ProjectUGroup::PROJECT_MEMBERS, ProjectUGroup::PROJECT_ADMIN, $static_ugroup_id,
+            ]
         );
 
-        $sprint_list_field_id = $tracker_builder->buildStaticListField(
+        $sprint_ugroup_list_field_id = $tracker_builder->buildUserGroupListField(
             $sprint_tracker->getId(),
-            'list_field',
+            'ugroup_list_field',
             Tracker_FormElementFactory::FIELD_OPEN_LIST_TYPE
         );
 
-        $sprint_bind_list_ids = $tracker_builder->buildValuesForStaticListField(
-            $sprint_list_field_id,
-            ['Elan', 'Elise'],
+        $sprint_bind_ugroup_list_ids = $tracker_builder->buildValuesForUserGroupListField(
+            $sprint_ugroup_list_field_id,
+            [$static_ugroup_id, ProjectUGroup::PROJECT_MEMBERS],
         );
 
-        $sprint_bind_open_ids = $tracker_builder->buildValuesForStaticOpenListField(
-            $sprint_list_field_id,
-            ['Europa'],
+        $sprint_bind_ugroup_open_ids = $tracker_builder->buildValuesForStaticOpenListField(
+            $sprint_ugroup_list_field_id,
+            ['Rancho'],
         );
 
         $tracker_builder->setReadPermission(
-            $release_static_list_field_id,
+            $release_ugroup_static_list_field_id,
             ProjectUGroup::PROJECT_MEMBERS
         );
         $tracker_builder->setReadPermission(
-            $sprint_list_field_id,
+            $sprint_ugroup_list_field_id,
             ProjectUGroup::PROJECT_MEMBERS
         );
 
@@ -130,28 +132,28 @@ final class StaticListSelectBuilderTest extends CrossTrackerFieldTestCase
             $sprint_artifact_with_open_list_id
         );
 
-        $hash                  = md5('list_field');
+        $hash                  = md5('ugroup_list_field');
         $this->expected_values = [
-            $release_artifact_with_static_list_id => ["list_value_$hash" => 'A110'],
-            $sprint_artifact_with_open_list_id    => ["open_value_$hash" => 'Europa', "list_value_$hash" => 'Elan'],
+            $release_artifact_with_static_list_id => ["user_group_name_$hash" => 'ugroup_project_members_name_key'],
+            $sprint_artifact_with_open_list_id    => ["user_group_open_list_value_$hash" => 'Rancho', "user_group_name_$hash" => 'Bagheera'],
         ];
 
         $tracker_builder->buildListValue(
             $release_artifact_with_list_changeset,
-            $release_static_list_field_id,
-            $release_bind_ids['A110']
+            $release_ugroup_static_list_field_id,
+            $release_bind_ids[ProjectUGroup::PROJECT_MEMBERS]
         );
 
         $tracker_builder->buildListValue(
             $sprint_artifact_with_open_list_changeset,
-            $sprint_list_field_id,
-            $sprint_bind_list_ids['Elan']
+            $sprint_ugroup_list_field_id,
+            $sprint_bind_ugroup_list_ids[$static_ugroup_id]
         );
 
         $tracker_builder->buildOpenValue(
             $sprint_artifact_with_open_list_changeset,
-            $sprint_list_field_id,
-            $sprint_bind_open_ids['Europa'],
+            $sprint_ugroup_list_field_id,
+            $sprint_bind_ugroup_open_ids['Rancho'],
             true
         );
 
@@ -174,7 +176,7 @@ final class StaticListSelectBuilderTest extends CrossTrackerFieldTestCase
     private function getQueryResults(): array
     {
         $select_from = $this->builder->buildSelectFrom(
-            [new Field('list_field')],
+            [new Field('ugroup_list_field')],
             $this->trackers,
             $this->user,
         );
@@ -185,11 +187,10 @@ final class StaticListSelectBuilderTest extends CrossTrackerFieldTestCase
     public function testItReturnsColumns(): void
     {
         $results         = $this->getQueryResults();
-        $hash            = md5('list_field');
-        $list_field_hash = 'list_value_' . $hash;
-        $open_field_hash = 'open_value_' . $hash;
+        $hash            = md5('ugroup_list_field');
+        $list_field_hash = 'user_group_name_' . $hash;
+        $open_field_hash = 'user_group_open_list_value_' . $hash;
         self::assertCount(count($this->artifact_ids), $results);
-
         foreach ($results as $row) {
             self::assertArrayHasKey($list_field_hash, $row);
             self::assertArrayHasKey($open_field_hash, $row);
