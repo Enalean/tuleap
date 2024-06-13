@@ -275,6 +275,8 @@ final class ProgramIncrementResource extends AuthenticatedResource
             $program_adapter,
         );
 
+        $logger = \Tuleap\ProgramManagement\ProgramManagementLogger::getLogger();
+
         $user = $user_manager->getCurrentUser();
 
         try {
@@ -289,10 +291,13 @@ final class ProgramIncrementResource extends AuthenticatedResource
                 UserProxy::buildFromPFUser($user)
             );
         } catch (ProgramTrackerException | ProgramIncrementNotFoundException | ProgramIncrementHasNoProgramException | ProjectIsNotAProgramException $e) {
+            $logger->debug('Cannot change program increment content', ['exception' => $e]);
             throw new I18NRestException(404, $e->getI18NExceptionMessage());
         } catch (ProgramAccessException | NotAllowedToPrioritizeException $e) {
+            $logger->debug('Cannot change program increment content', ['exception' => $e]);
             throw new I18NRestException(403, $e->getI18NExceptionMessage());
         } catch (FeatureException | AddOrOrderMustBeSetException $e) {
+            $logger->debug('Cannot change program increment content', ['exception' => $e]);
             throw new I18NRestException(400, $e->getI18NExceptionMessage());
         }
     }
