@@ -21,9 +21,9 @@ import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import SectionDescriptionEditor from "@/components/SectionDescriptionEditor.vue";
 import type { ComponentPublicInstance } from "vue";
-import * as strict_inject from "@tuleap/vue-strict-inject";
 import { CURRENT_LOCALE } from "@/locale-injection-key";
 import { userLocale } from "@/helpers/user-locale";
+import { mockStrictInject } from "@/helpers/mock-strict-inject";
 
 vi.mock("@tuleap/vue-strict-inject");
 
@@ -39,11 +39,7 @@ describe("SectionDescriptionEditor", () => {
             })),
         };
 
-        vi.spyOn(strict_inject, "strictInject").mockImplementation((key) => {
-            if (key === CURRENT_LOCALE) {
-                return userLocale("fr_FR");
-            }
-        });
+        mockStrictInject([[CURRENT_LOCALE, userLocale("fr_FR")]]);
 
         wrapper = shallowMount(SectionDescriptionEditor, {
             props: {

@@ -20,19 +20,30 @@
 import { describe, expect, it, vi } from "vitest";
 import { shallowMount } from "@vue/test-utils";
 import ConfigurationModal from "@/components/configuration/ConfigurationModal.vue";
-import * as strict_inject from "@tuleap/vue-strict-inject";
 import { ConfigurationStoreStub } from "@/helpers/stubs/ConfigurationStoreStub";
 import { createGettext } from "vue3-gettext";
 import SuccessFeedback from "@/components/configuration/SuccessFeedback.vue";
 import ErrorFeedback from "@/components/configuration/ErrorFeedback.vue";
+import type { ConfigurationStore } from "@/stores/configuration-store";
+import { CONFIGURATION_STORE } from "@/stores/configuration-store";
+import {
+    OPEN_CONFIGURATION_MODAL_BUS,
+    useOpenConfigurationModalBus,
+} from "@/composables/useOpenConfigurationModalBus";
+import { mockStrictInject } from "@/helpers/mock-strict-inject";
 
 vi.mock("@tuleap/vue-strict-inject");
 
 describe("ConfigurationModal", () => {
+    function setupInjectionKeys(store: ConfigurationStore): void {
+        mockStrictInject([
+            [CONFIGURATION_STORE, store],
+            [OPEN_CONFIGURATION_MODAL_BUS, useOpenConfigurationModalBus()],
+        ]);
+    }
+
     it("should display success feedback", () => {
-        vi.spyOn(strict_inject, "strictInject").mockReturnValue(
-            ConfigurationStoreStub.withSuccessfullSave(),
-        );
+        setupInjectionKeys(ConfigurationStoreStub.withSuccessfullSave());
 
         const wrapper = shallowMount(ConfigurationModal, {
             global: { plugins: [createGettext({ silent: true })] },
@@ -43,7 +54,7 @@ describe("ConfigurationModal", () => {
     });
 
     it("should display error feedback", () => {
-        vi.spyOn(strict_inject, "strictInject").mockReturnValue(ConfigurationStoreStub.withError());
+        setupInjectionKeys(ConfigurationStoreStub.withError());
 
         const wrapper = shallowMount(ConfigurationModal, {
             global: { plugins: [createGettext({ silent: true })] },

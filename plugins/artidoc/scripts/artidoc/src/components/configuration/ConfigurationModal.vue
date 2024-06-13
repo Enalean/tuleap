@@ -94,6 +94,9 @@ import SuccessFeedback from "@/components/configuration/SuccessFeedback.vue";
 import ConfigurationModalHeader from "@/components/configuration/ConfigurationModalHeader.vue";
 import TrackerSelection from "@/components/configuration/TrackerSelection.vue";
 import { useConfigurationScreenHelper } from "@/composables/useConfigurationScreenHelper";
+import type { OpenConfigurationModalBus } from "@/composables/useOpenConfigurationModalBus";
+import { OPEN_CONFIGURATION_MODAL_BUS } from "@/composables/useOpenConfigurationModalBus";
+import { strictInject } from "@tuleap/vue-strict-inject";
 
 const { $gettext } = useGettext();
 
@@ -105,6 +108,8 @@ const { is_submit_button_disabled, submit_button_icon, is_success, is_error, err
 const button_title = $gettext("Configure document");
 
 const modal_element = ref<HTMLElement | undefined>(undefined);
+
+strictInject<OpenConfigurationModalBus>(OPEN_CONFIGURATION_MODAL_BUS).registerHandler(openModal);
 
 let modal: Modal | null = null;
 function openModal(): void {
