@@ -52,6 +52,14 @@ use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\REST\I18NRestException;
 use Tuleap\REST\RESTLogger;
+use Tuleap\Tracker\Artifact\FileUploadDataProvider;
+use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldDetector;
+use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsDao;
+use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsRetriever;
+use Tuleap\Tracker\Workflow\SimpleMode\SimpleWorkflowDao;
+use Tuleap\Tracker\Workflow\SimpleMode\State\StateFactory;
+use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionExtractor;
+use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionRetriever;
 use UserManager;
 
 final class ArtidocResource extends AuthenticatedResource
@@ -295,9 +303,26 @@ final class ArtidocResource extends AuthenticatedResource
             new DocumentServiceFromAllowedProjectRetriever($plugin),
         );
 
-        $transformer = new RawSectionsToRepresentationTransformer(
+        $form_element_factory = \Tracker_FormElementFactory::instance();
+        $transformer          = new RawSectionsToRepresentationTransformer(
             new \Tracker_ArtifactDao(),
             \Tracker_ArtifactFactory::instance(),
+            new FileUploadDataProvider(
+                new FrozenFieldDetector(
+                    new TransitionRetriever(
+                        new StateFactory(
+                            \TransitionFactory::instance(),
+                            new SimpleWorkflowDao()
+                        ),
+                        new TransitionExtractor()
+                    ),
+                    new FrozenFieldsRetriever(
+                        new FrozenFieldsDao(),
+                        $form_element_factory
+                    )
+                ),
+                $form_element_factory
+            )
         );
 
         return new PaginatedArtidocSectionRepresentationCollectionBuilder($retriever, $dao, $transformer);
@@ -321,9 +346,26 @@ final class ArtidocResource extends AuthenticatedResource
             new DocumentServiceFromAllowedProjectRetriever($plugin),
         );
 
-        $transformer = new RawSectionsToRepresentationTransformer(
+        $form_element_factory = \Tracker_FormElementFactory::instance();
+        $transformer          = new RawSectionsToRepresentationTransformer(
             new \Tracker_ArtifactDao(),
             \Tracker_ArtifactFactory::instance(),
+            new FileUploadDataProvider(
+                new FrozenFieldDetector(
+                    new TransitionRetriever(
+                        new StateFactory(
+                            \TransitionFactory::instance(),
+                            new SimpleWorkflowDao()
+                        ),
+                        new TransitionExtractor()
+                    ),
+                    new FrozenFieldsRetriever(
+                        new FrozenFieldsDao(),
+                        $form_element_factory
+                    )
+                ),
+                $form_element_factory
+            )
         );
 
         return new PUTSectionsHandler(
