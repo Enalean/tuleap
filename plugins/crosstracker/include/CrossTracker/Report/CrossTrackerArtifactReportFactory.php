@@ -233,7 +233,7 @@ final readonly class CrossTrackerArtifactReportFactory
         $artifacts = [];
         foreach ($results as $artifact) {
             $artifact = $this->artifact_factory->getArtifactById($artifact['id']);
-            if ($artifact) {
+            if ($artifact && ! in_array($artifact, $artifacts, true)) {
                 $artifacts[] = $artifact;
             }
         }

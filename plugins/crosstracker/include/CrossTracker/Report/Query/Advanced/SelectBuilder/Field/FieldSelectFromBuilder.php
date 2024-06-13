@@ -29,6 +29,7 @@ use Tuleap\CrossTracker\Report\Query\Advanced\DuckTypedField\Select\DuckTypedFie
 use Tuleap\CrossTracker\Report\Query\Advanced\DuckTypedField\Select\DuckTypedFieldTypeSelect;
 use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Field\Date\DateSelectFromBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Field\Numeric\NumericSelectFromBuilder;
+use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Field\StaticList\StaticListSelectFromBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Field\Text\TextSelectFromBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\IProvideParametrizedSelectAndFromSQLFragments;
 use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\ParametrizedSelectFrom;
@@ -47,6 +48,7 @@ final readonly class FieldSelectFromBuilder
         private DateSelectFromBuilder $date_builder,
         private TextSelectFromBuilder $text_builder,
         private NumericSelectFromBuilder $numeric_builder,
+        private StaticListSelectFromBuilder $static_list_builder,
     ) {
     }
 
@@ -87,7 +89,7 @@ final readonly class FieldSelectFromBuilder
             DuckTypedFieldTypeSelect::DATE    => $this->date_builder->getSelectFrom($field),
             DuckTypedFieldTypeSelect::TEXT    => $this->text_builder->getSelectFrom($field),
             DuckTypedFieldTypeSelect::NUMERIC => $this->numeric_builder->getSelectFrom($field),
-            DuckTypedFieldTypeSelect::STATIC_LIST,
+            DuckTypedFieldTypeSelect::STATIC_LIST => $this->static_list_builder->getSelectFrom($field),
             DuckTypedFieldTypeSelect::UGROUP_LIST,
             DuckTypedFieldTypeSelect::USER_LIST => new ParametrizedSelectFrom('', '', []),
         };
