@@ -25,91 +25,74 @@ namespace Tuleap\AgileDashboard\Planning;
 
 use AgileDashboard_Milestone_MilestoneDao;
 use AgileDashboard_Milestone_MilestoneStatusCounter;
-use Mockery;
 use PFUser;
-use Planning;
+use PHPUnit\Framework\MockObject\MockObject;
 use Planning_ArtifactMilestone;
 use Planning_MilestoneFactory;
 use Planning_NoMilestone;
 use PlanningFactory;
 use PlanningPermissionsManager;
-use Project;
 use Psr\Log\NullLogger;
 use TestHelper;
-use Tracker;
 use Tracker_ArtifactFactory;
 use Tracker_FormElementFactory;
+use Tuleap\AgileDashboard\Test\Builders\PlanningBuilder;
 use Tuleap\Date\DatePeriodWithOpenDays;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\Artifact;
-use Tuleap\Tracker\Semantic\Timeframe\IComputeTimeframes;
-use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframe;
-use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\DateFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\IntFieldBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
+use Tuleap\Tracker\Test\Stub\Semantic\Timeframe\IComputeTimeframesStub;
+use Tuleap\Tracker\Test\Stub\Tracker\Semantic\Timeframe\BuildSemanticTimeframeStub;
 
-final class MilestoneFactoryGetMilestoneTest extends \Tuleap\Test\PHPUnit\TestCase
+final class MilestoneFactoryGetMilestoneTest extends TestCase
 {
-    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Tracker_ArtifactFactory
-     */
-    private $artifact_factory;
-    /**
-     * @var \AgileDashboard_Milestone_MilestoneDao|Mockery\LegacyMockInterface|Mockery\MockInterface
-     */
-    private $dao;
+    private Tracker_ArtifactFactory&MockObject $artifact_factory;
+    private AgileDashboard_Milestone_MilestoneDao&MockObject $dao;
     private PFUser $user;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|PlanningFactory
-     */
-    private $planning_factory;
-    /**
-     * @var Planning_MilestoneFactory
-     */
-    private $milestone_factory;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|IComputeTimeframes
-     */
-    private $timeframe_calculator;
-    private NullLogger $logger;
+    private PlanningFactory&MockObject $planning_factory;
+    private Planning_MilestoneFactory $milestone_factory;
 
     protected function setUp(): void
     {
-        $this->user                   = UserTestBuilder::anActiveUser()->build();
-        $this->planning_factory       = Mockery::spy(PlanningFactory::class);
-        $this->artifact_factory       = Mockery::spy(Tracker_ArtifactFactory::class);
-        $formelement_factory          = Mockery::spy(Tracker_FormElementFactory::class);
-        $status_counter               = Mockery::spy(AgileDashboard_Milestone_MilestoneStatusCounter::class);
-        $planning_permissions_manager = Mockery::spy(PlanningPermissionsManager::class);
-        $this->dao                    = Mockery::spy(AgileDashboard_Milestone_MilestoneDao::class);
-        $milestone_burndown_cheker    = Mockery::spy(MilestoneBurndownFieldChecker::class);
-        $this->timeframe_calculator   = Mockery::mock(IComputeTimeframes::class);
-        $semantic_timeframe           = Mockery::mock(SemanticTimeframe::class, ['getTimeframeCalculator' => $this->timeframe_calculator]);
-        $semantic_timeframe_builder   = Mockery::mock(SemanticTimeframeBuilder::class, ['getSemantic' => $semantic_timeframe]);
-        $this->logger                 = new NullLogger();
+        $this->user             = UserTestBuilder::anActiveUser()->build();
+        $this->planning_factory = $this->createMock(PlanningFactory::class);
+        $this->artifact_factory = $this->createMock(Tracker_ArtifactFactory::class);
+        $formelement_factory    = $this->createMock(Tracker_FormElementFactory::class);
+        $this->dao              = $this->createMock(AgileDashboard_Milestone_MilestoneDao::class);
+        $formelement_factory->method('getComputableFieldByNameForUser');
 
         $this->milestone_factory = new Planning_MilestoneFactory(
             $this->planning_factory,
             $this->artifact_factory,
             $formelement_factory,
-            $status_counter,
-            $planning_permissions_manager,
+            $this->createMock(AgileDashboard_Milestone_MilestoneStatusCounter::class),
+            $this->createMock(PlanningPermissionsManager::class),
             $this->dao,
-            $semantic_timeframe_builder,
-            $this->logger,
-            $milestone_burndown_cheker
+            BuildSemanticTimeframeStub::withTimeframeCalculator(
+                TrackerTestBuilder::aTracker()->build(),
+                IComputeTimeframesStub::fromStartAndDuration(
+                    DatePeriodWithOpenDays::buildFromDuration(1, 1),
+                    DateFieldBuilder::aDateField(1)->build(),
+                    IntFieldBuilder::anIntField(2)->build(),
+                ),
+            ),
+            new NullLogger(),
         );
     }
 
     public function testItCanRetrieveSubMilestonesOfAGivenMilestone(): void
     {
-        $sprints_tracker   = Mockery::spy(Tracker::class);
-        $hackfests_tracker = Mockery::spy(Tracker::class);
+        $sprints_tracker   = TrackerTestBuilder::aTracker()->build();
+        $hackfests_tracker = TrackerTestBuilder::aTracker()->build();
 
-        $sprint_planning   = Mockery::mock(Planning::class);
-        $hackfest_planning = Mockery::mock(Planning::class);
+        $sprint_planning   = PlanningBuilder::aPlanning(101)->build();
+        $hackfest_planning = PlanningBuilder::aPlanning(101)->build();
 
         $row_sprint_1      = [
             'id'                       => 1,
@@ -133,9 +116,7 @@ final class MilestoneFactoryGetMilestoneTest extends \Tuleap\Test\PHPUnit\TestCa
             'use_artifact_permissions' => true,
         ];
 
-        $this->dao->shouldReceive('searchSubMilestones')->andReturn(
-            TestHelper::arrayToDar($row_sprint_1, $row_sprint_2, $row_hackfest_2012)
-        );
+        $this->dao->method('searchSubMilestones')->willReturn(TestHelper::arrayToDar($row_sprint_1, $row_sprint_2, $row_hackfest_2012));
 
         $release_1_0   = ArtifactTestBuilder::anArtifact(1)
             ->withTitle('release_1_0')
@@ -173,56 +154,47 @@ final class MilestoneFactoryGetMilestoneTest extends \Tuleap\Test\PHPUnit\TestCa
             ->withAncestors([])
             ->build();
 
-        $this->artifact_factory->shouldReceive('getInstanceFromRow')->with($row_sprint_1)->andReturn($sprint_1);
-        $this->artifact_factory->shouldReceive('getInstanceFromRow')->with($row_sprint_2)->andReturn($sprint_2);
-        $this->artifact_factory->shouldReceive('getInstanceFromRow')->with($row_hackfest_2012)->andReturn(
-            $hackfest_2012
+        $this->artifact_factory->method('getInstanceFromRow')
+            ->withConsecutive(
+                [$row_sprint_1],
+                [$row_sprint_2],
+                [$row_hackfest_2012],
+            )
+            ->willReturnOnConsecutiveCalls(
+                $sprint_1,
+                $sprint_2,
+                $hackfest_2012,
+            );
+
+
+        $this->planning_factory->method('getPlanningByPlanningTracker')
+            ->withConsecutive([$sprints_tracker], [$sprints_tracker], [$hackfests_tracker])
+            ->willReturnOnConsecutiveCalls($sprint_planning, $sprint_planning, $hackfest_planning);
+
+        $milestone = new Planning_ArtifactMilestone(
+            ProjectTestBuilder::aProject()->build(),
+            PlanningBuilder::aPlanning(101)->build(),
+            $release_1_0,
         );
-
-
-        $this->planning_factory->shouldReceive('getPlanningByPlanningTracker')->with($sprints_tracker)->andReturn(
-            $sprint_planning
-        );
-        $this->planning_factory->shouldReceive('getPlanningByPlanningTracker')->with($hackfests_tracker)->andReturn(
-            $hackfest_planning
-        );
-
-        $this->timeframe_calculator->shouldReceive('buildDatePeriodWithoutWeekendForChangeset')
-            ->with($sprint_1->getLastChangeset(), $this->user, $this->logger)
-            ->once()
-            ->andReturn(DatePeriodWithOpenDays::buildFromDuration(1, 1));
-
-        $this->timeframe_calculator->shouldReceive('buildDatePeriodWithoutWeekendForChangeset')
-            ->with($sprint_2->getLastChangeset(), $this->user, $this->logger)
-            ->once()
-            ->andReturn(DatePeriodWithOpenDays::buildFromDuration(1, 1));
-
-        $this->timeframe_calculator->shouldReceive('buildDatePeriodWithoutWeekendForChangeset')
-            ->with($hackfest_2012->getLastChangeset(), $this->user, $this->logger)
-            ->once()
-            ->andReturn(DatePeriodWithOpenDays::buildFromDuration(1, 1));
-
-        $milestone = Mockery::mock(Planning_ArtifactMilestone::class);
-        $milestone->shouldReceive('getArtifact')->andReturn($release_1_0);
-        $milestone->shouldReceive('getProject')->andReturn(Mockery::mock(Project::class));
 
         $sub_milestones = $this->milestone_factory->getSubMilestones($this->user, $milestone);
 
-        $this->assertCount(3, $sub_milestones);
-        $this->assertInstanceOf(Planning_ArtifactMilestone::class, $sub_milestones[0]);
-        $this->assertInstanceOf(Planning_ArtifactMilestone::class, $sub_milestones[1]);
-        $this->assertInstanceOf(Planning_ArtifactMilestone::class, $sub_milestones[2]);
-        $this->assertEquals($sprint_1, $sub_milestones[0]->getArtifact());
-        $this->assertEquals($sprint_2, $sub_milestones[1]->getArtifact());
-        $this->assertEquals($hackfest_2012, $sub_milestones[2]->getArtifact());
+        self::assertCount(3, $sub_milestones);
+        self::assertInstanceOf(Planning_ArtifactMilestone::class, $sub_milestones[0]);
+        self::assertInstanceOf(Planning_ArtifactMilestone::class, $sub_milestones[1]);
+        self::assertInstanceOf(Planning_ArtifactMilestone::class, $sub_milestones[2]);
+        self::assertEquals($sprint_1, $sub_milestones[0]->getArtifact());
+        self::assertEquals($sprint_2, $sub_milestones[1]->getArtifact());
+        self::assertEquals($hackfest_2012, $sub_milestones[2]->getArtifact());
     }
 
     public function testItBuildsBareMilestoneFromAnArtifact(): void
     {
-        $project = Mockery::mock(Project::class);
-        $tracker = Mockery::mock(Tracker::class);
-        $tracker->shouldReceive('getProject')->andReturn($project);
-        $tracker->shouldReceive('getId')->andReturn(1);
+        $project = ProjectTestBuilder::aProject()->build();
+        $tracker = TrackerTestBuilder::aTracker()
+            ->withId(1)
+            ->withProject($project)
+            ->build();
 
         $artifact = ArtifactTestBuilder::anArtifact(100)
             ->withTitle('release_1_0')
@@ -234,17 +206,11 @@ final class MilestoneFactoryGetMilestoneTest extends \Tuleap\Test\PHPUnit\TestCa
             ->withAncestors([])
             ->build();
 
-        $this->artifact_factory->shouldReceive('getArtifactById')
+        $this->artifact_factory->expects(self::once())->method('getArtifactById')
             ->with($artifact->getId())
-            ->andReturn($artifact)
-            ->once();
+            ->willReturn($artifact);
 
-        $this->timeframe_calculator->shouldReceive('buildDatePeriodWithoutWeekendForChangeset')
-            ->with($artifact->getLastChangeset(), $this->user, $this->logger)
-            ->once()
-            ->andReturn(DatePeriodWithOpenDays::buildFromDuration(1, 1));
-
-        $this->planning_factory->shouldReceive('getPlanning')->andReturn(Mockery::mock(Planning::class));
+        $this->planning_factory->method('getPlanning')->willReturn(PlanningBuilder::aPlanning(101)->build());
 
         $milestone = $this->milestone_factory->getBareMilestone(
             $this->user,
@@ -253,85 +219,84 @@ final class MilestoneFactoryGetMilestoneTest extends \Tuleap\Test\PHPUnit\TestCa
             $artifact->getId()
         );
 
-        $this->assertEquals($artifact, $milestone->getArtifact());
+        self::assertEquals($artifact, $milestone->getArtifact());
     }
 
     public function testItReturnsNoMilestoneWhenThereIsNoArtifact(): void
     {
-        $project     = Mockery::mock(Project::class);
+        $project     = ProjectTestBuilder::aProject()->build();
         $artifact_id = 101;
-        $this->artifact_factory->shouldReceive('getArtifactById')
+        $this->artifact_factory->expects(self::once())->method('getArtifactById')
             ->with($artifact_id)
-            ->andReturn(null)
-            ->once();
+            ->willReturn(null);
 
-        $this->planning_factory->shouldReceive('getPlanning')->andReturn(Mockery::mock(Planning::class));
+        $this->planning_factory->method('getPlanning')->willReturn(PlanningBuilder::aPlanning(101)->build());
 
         $milestone = $this->milestone_factory->getBareMilestone($this->user, $project, 1, $artifact_id);
 
-        $this->assertInstanceOf(Planning_NoMilestone::class, $milestone);
+        self::assertInstanceOf(Planning_NoMilestone::class, $milestone);
     }
 
     public function testItCanSetMilestonesWithAHierarchyDepthGreaterThan2(): void
     {
-        $depth3_artifact = Mockery::mock(Artifact::class);
-        $depth3_artifact->shouldReceive('getId')->andReturn(3);
-        $depth3_artifact->shouldReceive('getUniqueLinkedArtifacts')->andReturn([]);
+        $depth3_artifact = $this->createMock(Artifact::class);
+        $depth3_artifact->method('getId')->willReturn(3);
+        $depth3_artifact->method('getUniqueLinkedArtifacts')->willReturn([]);
 
-        $depth2_artifact = Mockery::mock(Artifact::class);
-        $depth2_artifact->shouldReceive('getId')->andReturn(2);
-        $depth2_artifact->shouldReceive('getUniqueLinkedArtifacts')->andReturn([$depth3_artifact]);
+        $depth2_artifact = $this->createMock(Artifact::class);
+        $depth2_artifact->method('getId')->willReturn(2);
+        $depth2_artifact->method('getUniqueLinkedArtifacts')->willReturn([$depth3_artifact]);
 
-        $depth1_artifact = Mockery::mock(Artifact::class);
-        $depth1_artifact->shouldReceive('getId')->andReturn(1);
-        $depth1_artifact->shouldReceive('getUniqueLinkedArtifacts')->andReturn([$depth2_artifact]);
+        $depth1_artifact = $this->createMock(Artifact::class);
+        $depth1_artifact->method('getId')->willReturn(1);
+        $depth1_artifact->method('getUniqueLinkedArtifacts')->willReturn([$depth2_artifact]);
 
-        $root_artifact = Mockery::mock(Artifact::class);
-        $root_artifact->shouldReceive('getId')->andReturn(100);
-        $root_artifact->shouldReceive('getUniqueLinkedArtifacts')->andReturn([$depth1_artifact]);
+        $root_artifact = $this->createMock(Artifact::class);
+        $root_artifact->method('getId')->willReturn(100);
+        $root_artifact->method('getUniqueLinkedArtifacts')->willReturn([$depth1_artifact]);
 
         $tree_node = $this->milestone_factory->getPlannedArtifacts($this->user, $root_artifact);
-        $this->assertTrue($tree_node->hasChildren());
+        self::assertTrue($tree_node->hasChildren());
         $tree_node1 = $tree_node->getChild(0);
-        $this->assertTrue($tree_node1->hasChildren());
+        self::assertTrue($tree_node1->hasChildren());
         $tree_node2 = $tree_node1->getChild(0);
-        $this->assertTrue($tree_node2->hasChildren());
+        self::assertTrue($tree_node2->hasChildren());
         $tree_node3 = $tree_node2->getChild(0);
-        $this->assertEquals(3, $tree_node3->getId());
+        self::assertEquals(3, $tree_node3->getId());
     }
 
     public function testItAddsTheArtifactsToTheRootNode(): void
     {
         $root_aid = 100;
 
-        $root_artifact = Mockery::mock(Artifact::class);
-        $root_artifact->shouldReceive('getId')->andReturn($root_aid);
-        $root_artifact->shouldReceive('getUniqueLinkedArtifacts')->andReturn([]);
+        $root_artifact = $this->createMock(Artifact::class);
+        $root_artifact->method('getId')->willReturn($root_aid);
+        $root_artifact->method('getUniqueLinkedArtifacts')->willReturn([]);
 
         $root_node = $this->milestone_factory->getPlannedArtifacts($this->user, $root_artifact);
 
         $root_note_data = $root_node->getObject();
-        $this->assertEquals($root_aid, $root_node->getId());
-        $this->assertEquals($root_artifact, $root_note_data);
+        self::assertEquals($root_aid, $root_node->getId());
+        self::assertEquals($root_artifact, $root_note_data);
     }
 
     public function testItAddsTheArtifactsToTheChildNodes(): void
     {
         $root_aid = 100;
 
-        $depth1_artifact = Mockery::mock(Artifact::class);
-        $depth1_artifact->shouldReceive('getId')->andReturn(9999);
-        $depth1_artifact->shouldReceive('getUniqueLinkedArtifacts')->andReturn([]);
+        $depth1_artifact = $this->createMock(Artifact::class);
+        $depth1_artifact->method('getId')->willReturn(9999);
+        $depth1_artifact->method('getUniqueLinkedArtifacts')->willReturn([]);
 
-        $root_artifact = Mockery::mock(Artifact::class);
-        $root_artifact->shouldReceive('getId')->andReturn($root_aid);
-        $root_artifact->shouldReceive('getUniqueLinkedArtifacts')->andReturn([$depth1_artifact]);
+        $root_artifact = $this->createMock(Artifact::class);
+        $root_artifact->method('getId')->willReturn($root_aid);
+        $root_artifact->method('getUniqueLinkedArtifacts')->willReturn([$depth1_artifact]);
 
         $root_node = $this->milestone_factory->getPlannedArtifacts($this->user, $root_artifact);
 
         $child_node      = $root_node->getChild(0);
         $child_node_data = $child_node->getObject();
-        $this->assertEquals(9999, $child_node->getId());
-        $this->assertEquals($depth1_artifact, $child_node_data);
+        self::assertEquals(9999, $child_node->getId());
+        self::assertEquals($depth1_artifact, $child_node_data);
     }
 }
