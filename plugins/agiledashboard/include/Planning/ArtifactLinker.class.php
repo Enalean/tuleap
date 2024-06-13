@@ -19,6 +19,7 @@
  */
 
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Artifact\RetrieveArtifact;
 
 /**
  * Ensure consistency of backlogs.
@@ -40,13 +41,10 @@ class Planning_ArtifactLinker
 {
     public const LINK_TO_MILESTONE_PARAMETER = 'link-to-milestone';
 
-    private $artifact_factory;
-    private $planning_factory;
-
-    public function __construct(Tracker_ArtifactFactory $artifact_factory, PlanningFactory $planning_factory)
-    {
-        $this->artifact_factory = $artifact_factory;
-        $this->planning_factory = $planning_factory;
+    public function __construct(
+        private readonly RetrieveArtifact $artifact_factory,
+        private readonly PlanningFactory $planning_factory,
+    ) {
     }
 
     /**

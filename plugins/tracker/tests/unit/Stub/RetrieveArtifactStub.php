@@ -28,9 +28,9 @@ use Tuleap\Tracker\Artifact\RetrieveArtifact;
 final class RetrieveArtifactStub implements RetrieveArtifact
 {
     /**
-     * @param Artifact[] $artifacts
+     * @param array<int, Artifact> $artifacts
      */
-    private function __construct(private array $artifacts)
+    private function __construct(private array $artifacts, private readonly bool $order_by_id)
     {
     }
 
@@ -39,16 +39,30 @@ final class RetrieveArtifactStub implements RetrieveArtifact
      */
     public static function withArtifacts(Artifact $artifact, Artifact ...$other_artifacts): self
     {
-        return new self([$artifact, ...$other_artifacts]);
+        return new self([$artifact, ...$other_artifacts], false);
+    }
+
+    public static function withArtifactAndOrderedById(): self
+    {
+        return new self([], true);
     }
 
     public static function withNoArtifact(): self
     {
-        return new self([]);
+        return new self([], false);
+    }
+
+    public function addArtifact(Artifact $artifact): void
+    {
+        $this->artifacts[$artifact->getId()] = $artifact;
     }
 
     public function getArtifactById($id): ?Artifact
     {
+        if ($this->order_by_id) {
+            return array_key_exists($id, $this->artifacts) ? $this->artifacts[$id] : null;
+        }
+
         if (count($this->artifacts) > 0) {
             return array_shift($this->artifacts);
         }
