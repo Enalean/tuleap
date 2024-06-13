@@ -41,5 +41,6 @@ const can_user_edit_document = strictInject(CAN_USER_EDIT_DOCUMENT);
 .document-header {
     display: flex;
     gap: var(--tlp-medium-spacing);
+    padding: var(--tlp-medium-spacing) var(--tlp-medium-spacing) var(--tlp-title-spacing);
 }
 </style>

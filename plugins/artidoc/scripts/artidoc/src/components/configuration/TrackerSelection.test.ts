@@ -18,38 +18,28 @@
  */
 
 import { describe, expect, it, vi } from "vitest";
-import { shallowMount } from "@vue/test-utils";
-import ConfigurationModal from "@/components/configuration/ConfigurationModal.vue";
 import * as strict_inject from "@tuleap/vue-strict-inject";
 import { ConfigurationStoreStub } from "@/helpers/stubs/ConfigurationStoreStub";
+import { shallowMount } from "@vue/test-utils";
+import TrackerSelection from "@/components/configuration/TrackerSelection.vue";
 import { createGettext } from "vue3-gettext";
-import SuccessFeedback from "@/components/configuration/SuccessFeedback.vue";
-import ErrorFeedback from "@/components/configuration/ErrorFeedback.vue";
+import { useConfigurationScreenHelper } from "@/composables/useConfigurationScreenHelper";
 
-vi.mock("@tuleap/vue-strict-inject");
-
-describe("ConfigurationModal", () => {
-    it("should display success feedback", () => {
+describe("TrackerSelection", () => {
+    it("should display error if there is no allowed trackers", () => {
         vi.spyOn(strict_inject, "strictInject").mockReturnValue(
-            ConfigurationStoreStub.withSuccessfullSave(),
+            ConfigurationStoreStub.withoutAllowedTrackers(),
         );
 
-        const wrapper = shallowMount(ConfigurationModal, {
+        const wrapper = shallowMount(TrackerSelection, {
+            props: {
+                configuration_helper: useConfigurationScreenHelper(),
+            },
             global: { plugins: [createGettext({ silent: true })] },
         });
 
-        expect(wrapper.findComponent(SuccessFeedback).exists()).toBe(true);
-        expect(wrapper.findComponent(ErrorFeedback).exists()).toBe(false);
-    });
-
-    it("should display error feedback", () => {
-        vi.spyOn(strict_inject, "strictInject").mockReturnValue(ConfigurationStoreStub.withError());
-
-        const wrapper = shallowMount(ConfigurationModal, {
-            global: { plugins: [createGettext({ silent: true })] },
-        });
-
-        expect(wrapper.findComponent(SuccessFeedback).exists()).toBe(false);
-        expect(wrapper.findComponent(ErrorFeedback).exists()).toBe(true);
+        expect(
+            wrapper.find("[data-test=artidoc-configuration-form-element-trackers]").classes(),
+        ).toContain("tlp-form-element-error");
     });
 });

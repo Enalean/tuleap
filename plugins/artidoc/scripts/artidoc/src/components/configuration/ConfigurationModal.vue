@@ -32,43 +32,13 @@
         class="tlp-modal"
         aria-labelledby="artidoc-configuration-modal-title"
         ref="modal_element"
-        v-on:submit="onSubmit"
+        v-on:submit="configuration_helper.onSubmit"
     >
         <configuration-modal-header />
 
         <div class="tlp-modal-body">
             <introductory-text />
-            <div
-                class="tlp-form-element"
-                v-bind:class="{ 'tlp-form-element-error': no_allowed_trackers }"
-                data-test="artidoc-configuration-modal-form-element-trackers"
-            >
-                <label class="tlp-label" for="artidoc-configuration-modal-tracker">
-                    {{ $gettext("Tracker") }}
-                    <i class="fa-solid fa-asterisk" aria-hidden="true"></i>
-                </label>
-                <select
-                    id="artidoc-configuration-modal-tracker"
-                    class="tlp-select tlp-select-adjusted"
-                    required
-                    v-model="new_selected_tracker"
-                >
-                    <option v-bind:value="NO_SELECTED_TRACKER" disabled>
-                        {{ $gettext("Choose a tracker") }}
-                    </option>
-                    <option
-                        v-for="tracker in allowed_trackers"
-                        v-bind:key="tracker.id"
-                        v-bind:value="tracker.id"
-                    >
-                        {{ tracker.label }}
-                    </option>
-                </select>
-                <p class="tlp-text-danger" v-if="no_allowed_trackers">
-                    {{ $gettext("There isn't any suitable trackers in this project") }}
-                    <i class="fa-regular fa-face-frown" aria-hidden="true"></i>
-                </p>
-            </div>
+            <tracker-selection v-bind:configuration_helper="configuration_helper" />
         </div>
 
         <div class="tlp-modal-footer">
@@ -114,47 +84,23 @@
 </template>
 
 <script setup lang="ts">
-import { strictInject } from "@tuleap/vue-strict-inject";
 import { useGettext } from "vue3-gettext";
-import { computed, ref, toRaw } from "vue";
+import { ref, toRaw } from "vue";
 import type { Modal } from "@tuleap/tlp-modal";
 import { createModal } from "@tuleap/tlp-modal";
-import type { ConfigurationStore } from "@/stores/configuration-store";
-import { CONFIGURATION_STORE } from "@/stores/configuration-store";
 import IntroductoryText from "@/components/configuration/IntroductoryText.vue";
 import ErrorFeedback from "@/components/configuration/ErrorFeedback.vue";
 import SuccessFeedback from "@/components/configuration/SuccessFeedback.vue";
 import ConfigurationModalHeader from "@/components/configuration/ConfigurationModalHeader.vue";
-
-const NO_SELECTED_TRACKER = "0";
+import TrackerSelection from "@/components/configuration/TrackerSelection.vue";
+import { useConfigurationScreenHelper } from "@/composables/useConfigurationScreenHelper";
 
 const { $gettext } = useGettext();
 
-const {
-    allowed_trackers,
-    selected_tracker_id,
-    is_saving,
-    is_error,
-    is_success,
-    error_message,
-    saveConfiguration,
-    resetSuccessFlagFromPreviousCalls,
-} = strictInject<ConfigurationStore>(CONFIGURATION_STORE);
+const configuration_helper = useConfigurationScreenHelper();
 
-const new_selected_tracker = ref(String(selected_tracker_id.value));
-
-const no_allowed_trackers = allowed_trackers.length === 0;
-
-const is_submit_button_disabled = computed(
-    () =>
-        no_allowed_trackers ||
-        is_saving.value ||
-        new_selected_tracker.value === NO_SELECTED_TRACKER ||
-        new_selected_tracker.value === String(selected_tracker_id.value),
-);
-const submit_button_icon = computed(() =>
-    is_saving.value ? "fa-solid fa-spin fa-circle-notch" : "fa-solid fa-floppy-disk",
-);
+const { is_submit_button_disabled, submit_button_icon, is_success, is_error, error_message } =
+    configuration_helper;
 
 const button_title = $gettext("Configure document");
 
@@ -167,8 +113,7 @@ function openModal(): void {
     }
 
     if (modal) {
-        new_selected_tracker.value = String(selected_tracker_id.value);
-        resetSuccessFlagFromPreviousCalls();
+        configuration_helper.resetSelection();
         modal.show();
     }
 }
@@ -178,18 +123,12 @@ function closeModal(): void {
         modal.hide();
     }
 }
-
-function onSubmit(event: Event): void {
-    event.preventDefault();
-
-    saveConfiguration(Number.parseInt(new_selected_tracker.value, 10));
-}
 </script>
 
 <style scoped lang="scss">
 .tlp-button-ellipsis {
     flex-shrink: 0;
-    margin: var(--tlp-medium-spacing) 0 0;
+    margin: 3px 0 0;
     font-size: 1.125rem;
 }
 
