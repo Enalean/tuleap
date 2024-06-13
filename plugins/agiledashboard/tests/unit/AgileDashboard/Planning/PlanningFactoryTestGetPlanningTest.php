@@ -23,7 +23,8 @@ declare(strict_types=1);
 
 namespace Tuleap\AgileDashboard\Planning;
 
-use Mockery;
+use PFUser;
+use PHPUnit\Framework\MockObject\MockObject;
 use Planning;
 use PlanningFactory;
 use PlanningPermissionsManager;
@@ -32,43 +33,27 @@ use Tracker_Hierarchy;
 use TrackerFactory;
 use Tuleap\AgileDashboard\Test\Builders\PlanningBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
-final class PlanningFactoryTestGetPlanningTest extends \Tuleap\Test\PHPUnit\TestCase
+final class PlanningFactoryTestGetPlanningTest extends TestCase
 {
-    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
     private Planning $sprint_planning;
     private Planning $release_planning;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Tracker
-     */
-    private $sprint_tracker;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Tracker
-     */
-    private $release_tracker;
-    private \PFUser $user;
-    private \Tracker $backlog_tracker;
-    private \Tracker $planning_tracker;
-    /**
-     * @var PlanningFactory
-     */
-    private $planning_factory;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|TrackerFactory
-     */
-    private $tracker_factory;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|PlanningDao
-     */
-    private $planning_dao;
+    private Tracker&MockObject $sprint_tracker;
+    private Tracker&MockObject $release_tracker;
+    private PFUser $user;
+    private Tracker $backlog_tracker;
+    private Tracker $planning_tracker;
+    private PlanningFactory $planning_factory;
+    private TrackerFactory&MockObject $tracker_factory;
+    private PlanningDao&MockObject $planning_dao;
 
     protected function setUp(): void
     {
-        $this->planning_dao           = Mockery::spy(PlanningDao::class);
-        $this->tracker_factory        = Mockery::spy(TrackerFactory::class);
-        $planning_permissions_manager = Mockery::spy(PlanningPermissionsManager::class);
+        $this->planning_dao           = $this->createMock(PlanningDao::class);
+        $this->tracker_factory        = $this->createMock(TrackerFactory::class);
+        $planning_permissions_manager = $this->createMock(PlanningPermissionsManager::class);
 
         $this->planning_factory = new PlanningFactory(
             $this->planning_dao,
@@ -76,19 +61,14 @@ final class PlanningFactoryTestGetPlanningTest extends \Tuleap\Test\PHPUnit\Test
             $planning_permissions_manager
         );
 
-        $this->planning_dao->shouldReceive('searchByMilestoneTrackerId')->andReturn(
-            [
-                'id'                  => 1,
-                'name'                => 'Release Planning',
-                'group_id'            => 102,
-                'planning_tracker_id' => 103,
-                'backlog_title'       => 'Release Backlog',
-                'plan_title'          => 'Sprint Plan',
-            ]
-        );
-        $this->planning_dao->shouldReceive('searchBacklogTrackersByPlanningId')
-            ->with(1)
-            ->andReturn([['planning_id' => 1, 'tracker_id' => 104]]);
+        $this->planning_dao->method('searchByMilestoneTrackerId')->willReturn([
+            'id'                  => 1,
+            'name'                => 'Release Planning',
+            'group_id'            => 102,
+            'planning_tracker_id' => 103,
+            'backlog_title'       => 'Release Backlog',
+            'plan_title'          => 'Sprint Plan',
+        ]);
 
         $this->user = UserTestBuilder::buildWithDefaults();
 
@@ -100,51 +80,49 @@ final class PlanningFactoryTestGetPlanningTest extends \Tuleap\Test\PHPUnit\Test
         $this->release_tracker = $this->mockTrackerWithId(107);
         $this->sprint_tracker  = $this->mockTrackerWithId(108);
 
-        $this->tracker_factory->shouldReceive('getTrackerById')
-            ->with(103)->andReturns($this->planning_tracker);
-        $this->tracker_factory->shouldReceive('getTrackerById')
-            ->with(104)->andReturns($this->backlog_tracker);
-        $this->tracker_factory->shouldReceive('getTrackerById')
-            ->with(100)->andReturns($story_tracker);
-        $this->tracker_factory->shouldReceive('getTrackerById')
-            ->with(101)->andReturns($epic_tracker);
-        $this->tracker_factory->shouldReceive('getTrackerById')
-            ->with(107)->andReturns($this->release_tracker);
-        $this->tracker_factory->shouldReceive('getTrackerById')
-            ->with(108)->andReturns($this->sprint_tracker);
+        $this->tracker_factory->method('getTrackerById')
+            ->willReturnCallback(fn(int $tracker_id) => match ($tracker_id) {
+                100     => $story_tracker,
+                101     => $epic_tracker,
+                103     => $this->planning_tracker,
+                104     => $this->backlog_tracker,
+                107     => $this->release_tracker,
+                108     => $this->sprint_tracker,
+                default => null,
+            });
 
 
-        $this->tracker_factory->shouldReceive('setCachedInstances')->andReturn(
-            [
-                101 => $epic_tracker,
-                100 => $story_tracker,
-                107 => $this->release_tracker,
-                108 => $this->sprint_tracker,
-            ]
-        );
+        $this->tracker_factory->method('setCachedInstances')->willReturn([
+            100 => $story_tracker,
+            101 => $epic_tracker,
+            107 => $this->release_tracker,
+            108 => $this->sprint_tracker,
+        ]);
 
         $this->createHierarchy();
 
-        $this->planning_dao->shouldReceive('searchByProjectId')->with(101)->andReturn(
-            [
-                [
-                    'id'                  => 1,
-                    'name'                => 'Sprint Planning',
-                    'group_id'            => 123,
-                    'planning_tracker_id' => 108,
-                    'backlog_title'       => 'Release Backlog',
-                    'plan_title'          => 'Sprint Plan',
+        $this->planning_dao->method('searchByProjectId')
+            ->willReturnCallback(static fn(int $project_id) => match ($project_id) {
+                101     => [
+                    [
+                        'id'                  => 1,
+                        'name'                => 'Sprint Planning',
+                        'group_id'            => 123,
+                        'planning_tracker_id' => 108,
+                        'backlog_title'       => 'Release Backlog',
+                        'plan_title'          => 'Sprint Plan',
+                    ],
+                    [
+                        'id'                  => 2,
+                        'name'                => 'Release Planning',
+                        'group_id'            => 123,
+                        'planning_tracker_id' => 107,
+                        'backlog_title'       => 'Product Backlog',
+                        'plan_title'          => 'Release Plan',
+                    ],
                 ],
-                [
-                    'id'                  => 2,
-                    'name'                => 'Release Planning',
-                    'group_id'            => 123,
-                    'planning_tracker_id' => 107,
-                    'backlog_title'       => 'Product Backlog',
-                    'plan_title'          => 'Release Plan',
-                ],
-            ]
-        );
+                default => [],
+            });
 
         $this->release_planning = PlanningBuilder::aPlanning(123)
             ->withId(2)
@@ -178,38 +156,38 @@ final class PlanningFactoryTestGetPlanningTest extends \Tuleap\Test\PHPUnit\Test
             'plan_title'          => 'Sprint Plan',
         ];
 
-        $this->planning_dao->shouldReceive('searchById')->with($planning_id)->andReturns($planning_rows);
+        $this->planning_dao->method('searchById')->with($planning_id)->willReturn($planning_rows);
 
-        $this->planning_dao->shouldReceive('searchBacklogTrackersByPlanningId')
+        $this->planning_dao->method('searchBacklogTrackersByPlanningId')
             ->with($planning_id)
-            ->andReturns([['tracker_id' => 104]]);
+            ->willReturn([['tracker_id' => 104]]);
 
         $planning = $this->planning_factory->getPlanning($planning_id);
 
-        $this->assertInstanceOf(Planning::class, $planning);
-        $this->assertEquals($this->planning_tracker, $planning->getPlanningTracker());
-        $this->assertEquals([$this->backlog_tracker], $planning->getBacklogTrackers());
+        self::assertInstanceOf(Planning::class, $planning);
+        self::assertEquals($this->planning_tracker, $planning->getPlanningTracker());
+        self::assertEquals([$this->backlog_tracker], $planning->getBacklogTrackers());
     }
 
     public function testItReturnsAnEmptyArrayIfThereIsNoPlanningDefinedForAProject(): void
     {
-        $this->assertEquals([], $this->planning_factory->getPlannings($this->user, 101));
+        self::assertEquals([], $this->planning_factory->getPlannings($this->user, 102));
     }
 
     public function testItReturnsAllDefinedPlanningsForAProjectInTheOrderDefinedByTheHierarchy(): void
     {
-        $this->planning_dao->shouldReceive('searchBacklogTrackersByPlanningId')
-            ->with(1)
-            ->andReturns([['tracker_id' => 100]]);
-        $this->planning_dao->shouldReceive('searchBacklogTrackersByPlanningId')
-            ->with(2)
-            ->andReturns([['tracker_id' => 101]]);
+        $this->planning_dao->method('searchBacklogTrackersByPlanningId')
+            ->withConsecutive([1], [2])
+            ->willReturnOnConsecutiveCalls(
+                [['tracker_id' => 104]],
+                [['tracker_id' => 101]],
+            );
 
 
-        $this->release_tracker->shouldReceive('userCanView')->with($this->user)->andReturn(true);
-        $this->sprint_tracker->shouldReceive('userCanView')->with($this->user)->andReturn(true);
+        $this->release_tracker->method('userCanView')->with($this->user)->willReturn(true);
+        $this->sprint_tracker->method('userCanView')->with($this->user)->willReturn(true);
 
-        $this->assertEquals(
+        self::assertEquals(
             [$this->release_planning, $this->sprint_planning],
             $this->planning_factory->getPlannings($this->user, 101)
         );
@@ -217,16 +195,16 @@ final class PlanningFactoryTestGetPlanningTest extends \Tuleap\Test\PHPUnit\Test
 
     public function testItReturnsOnlyPlanningsWhereTheUserCanViewTrackers(): void
     {
-        $this->planning_dao->shouldReceive('searchBacklogTrackersByPlanningId')
-            ->with(1)
-            ->andReturns([['tracker_id' => 100]]);
-        $this->planning_dao->shouldReceive('searchBacklogTrackersByPlanningId')
-            ->with(2)
-            ->andReturns([['tracker_id' => 101]]);
+        $this->planning_dao->method('searchBacklogTrackersByPlanningId')
+            ->withConsecutive([1], [2])
+            ->willReturnOnConsecutiveCalls(
+                [['tracker_id' => 104]],
+                [['tracker_id' => 101]],
+            );
 
 
-        $this->release_tracker->shouldReceive('userCanView')->with($this->user)->andReturn(false);
-        $this->sprint_tracker->shouldReceive('userCanView')->with($this->user)->andReturn(true);
+        $this->release_tracker->method('userCanView')->with($this->user)->willReturn(false);
+        $this->sprint_tracker->method('userCanView')->with($this->user)->willReturn(true);
 
         $this->assertEquals(
             [$this->sprint_planning],
@@ -234,13 +212,10 @@ final class PlanningFactoryTestGetPlanningTest extends \Tuleap\Test\PHPUnit\Test
         );
     }
 
-    /**
-     * @return Mockery\LegacyMockInterface|Mockery\MockInterface|Tracker
-     */
-    private function mockTrackerWithId(int $tracker_id)
+    private function mockTrackerWithId(int $tracker_id): Tracker&MockObject
     {
-        $tracker = Mockery::spy(Tracker::class);
-        $tracker->shouldReceive('getId')->andReturn($tracker_id);
+        $tracker = $this->createMock(Tracker::class);
+        $tracker->method('getId')->willReturn($tracker_id);
 
         return $tracker;
     }
@@ -251,11 +226,11 @@ final class PlanningFactoryTestGetPlanningTest extends \Tuleap\Test\PHPUnit\Test
      *
      *  $this->release_tracker &&  $this->sprint_tracker can be added in both planning
      */
-    protected function createHierarchy(): void
+    private function createHierarchy(): void
     {
         $hierarchy = new Tracker_Hierarchy();
 
-        $this->tracker_factory->shouldReceive('getHierarchy')->andReturn($hierarchy);
+        $this->tracker_factory->method('getHierarchy')->willReturn($hierarchy);
         $hierarchy->addRelationship(104, 107);
         $hierarchy->addRelationship(104, 108);
 
