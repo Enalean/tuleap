@@ -56,6 +56,7 @@ use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Field\FieldSelectFro
 use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Field\Numeric\NumericSelectFromBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Field\StaticList\StaticListSelectFromBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Field\Text\TextSelectFromBuilder;
+use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Field\UGroupList\UGroupListSelectFromBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilderVisitor;
 use Tuleap\DB\DBFactory;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
@@ -215,7 +216,8 @@ final class ArtifactReportFactoryInstantiator
                 new DateSelectFromBuilder(),
                 new TextSelectFromBuilder(),
                 new NumericSelectFromBuilder(),
-                new StaticListSelectFromBuilder()
+                new StaticListSelectFromBuilder(),
+                new UGroupListSelectFromBuilder(),
             ),
         );
 
