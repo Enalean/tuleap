@@ -25,11 +25,15 @@ const noop = (): void => {};
 const tasks: Tracker = {
     id: 101,
     label: "Tasks",
+    title: null,
+    description: null,
 };
 
 const bugs: Tracker = {
     id: 102,
     label: "Bugs",
+    title: null,
+    description: null,
 };
 
 export const ConfigurationStoreStub = {

@@ -37,7 +37,7 @@
         <configuration-modal-header />
 
         <div class="tlp-modal-body">
-            <introductory-text />
+            <introductory-text v-bind:configuration_helper="configuration_helper" />
             <tracker-selection v-bind:configuration_helper="configuration_helper" />
         </div>
 
