@@ -37,10 +37,50 @@
             )
         }}
     </p>
+
+    <div class="tlp-alert-warning" data-test="warning" v-if="should_display_warning">
+        {{ reason }}
+    </div>
 </template>
 
 <script setup lang="ts">
 import { useGettext } from "vue3-gettext";
+import type { ConfigurationScreenHelper } from "@/composables/useConfigurationScreenHelper";
+import { computed } from "vue";
 
 const { $gettext } = useGettext();
+
+const props = defineProps<{ configuration_helper: ConfigurationScreenHelper }>();
+
+const reason = computed(() => {
+    const tracker = props.configuration_helper.new_selected_tracker.value;
+    if (!tracker) {
+        return null;
+    }
+
+    const has_title = Boolean(tracker.title);
+    const has_description = Boolean(tracker.description);
+
+    if (has_title && has_description) {
+        return null;
+    }
+
+    if (has_title && !has_description) {
+        return $gettext(
+            "You cannot create new sections because you don't have submit permission for the description field of the selected tracker.",
+        );
+    }
+
+    if (!has_title && has_description) {
+        return $gettext(
+            "You cannot create new sections because you don't have submit permission for the title field of the selected tracker.",
+        );
+    }
+
+    return $gettext(
+        "You cannot create new sections because you don't have submit permission for the title and description fields of the selected tracker.",
+    );
+});
+
+const should_display_warning = computed(() => Boolean(reason.value));
 </script>

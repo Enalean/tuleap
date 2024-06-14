@@ -144,6 +144,28 @@ msgstr ""
 msgid "You can read this document, it's just empty for now"
 msgstr "Vous pouvez lire ce document, mais celui-ci est vide pour l'instant"
 
+msgid ""
+"You cannot create new sections because you don't have submit permission for "
+"the description field of the selected tracker."
+msgstr ""
+"Vous ne pouvez pas créer de nouvelles sections car vous n'avez pas les "
+"droits de soumission pour le champ description du tracker sélectionné."
+
+msgid ""
+"You cannot create new sections because you don't have submit permission for "
+"the title and description fields of the selected tracker."
+msgstr ""
+"Vous ne pouvez pas créer de nouvelles sections car vous n'avez pas les "
+"droits de soumission pour les champs titre et description du tracker "
+"sélectionné."
+
+msgid ""
+"You cannot create new sections because you don't have submit permission for "
+"the title field of the selected tracker."
+msgstr ""
+"Vous ne pouvez pas créer de nouvelles sections car vous n'avez pas les "
+"droits de soumission pour le champ titre du tracker sélectionné."
+
 msgid "You can’t see nor edit this document"
 msgstr "Vous ne pouvez pas lire ou éditer ce document"
 

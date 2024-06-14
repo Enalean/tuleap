@@ -123,7 +123,7 @@ final class SuitableTrackerForDocumentCheckerTest extends TestCase
         self::assertInstanceOf(NoSemanticTitleFault::class, $result->error);
     }
 
-    public function testFaultWhenSemanticDescriptionIsNotAStringField(): void
+    public function testFaultWhenSemanticTitleIsNotAStringField(): void
     {
         $tracker = TrackerTestBuilder::aTracker()
             ->withUserCanView(true)

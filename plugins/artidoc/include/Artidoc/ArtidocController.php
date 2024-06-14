@@ -114,9 +114,9 @@ final readonly class ArtidocController implements DispatchableWithRequest, Dispa
                     (int) $document_information->document->getId(),
                     $user_can_write && \ForgeConfig::getFeatureFlag(self::EDIT_FEATURE_FLAG) === '1',
                     $title,
-                    $this->getTrackerRepresentation($this->configured_tracker_retriever->getTracker($document_information->document)),
+                    $this->getTrackerRepresentation($this->configured_tracker_retriever->getTracker($document_information->document), $user),
                     array_map(
-                        fn (\Tracker $tracker): DocumentTrackerRepresentation => $this->getTrackerRepresentation($tracker),
+                        fn (\Tracker $tracker): DocumentTrackerRepresentation => $this->getTrackerRepresentation($tracker, $user),
                         $this->suitable_trackers_retriever->getTrackers($document_information, $user),
                     )
                 )
@@ -127,10 +127,10 @@ final readonly class ArtidocController implements DispatchableWithRequest, Dispa
     /**
      * @psalm-return ($tracker is null ? null : DocumentTrackerRepresentation)
      */
-    private function getTrackerRepresentation(?\Tracker $tracker): ?DocumentTrackerRepresentation
+    private function getTrackerRepresentation(?\Tracker $tracker, \PFUser $user): ?DocumentTrackerRepresentation
     {
         if ($tracker) {
-            return DocumentTrackerRepresentation::fromTracker($tracker);
+            return DocumentTrackerRepresentation::fromTracker($tracker, $user);
         }
 
         return null;
