@@ -37,7 +37,7 @@ export type InternalCommonmarkPopover = {
     popover_trigger_element: HTMLElement;
     popover_anchor_element: HTMLElement;
     popover_content_element: HTMLElement;
-    content: () => HTMLElement;
+    render(): HTMLElement;
 };
 
 export type HostElement = InternalCommonmarkPopover & HTMLElement;
@@ -45,21 +45,17 @@ export type HostElement = InternalCommonmarkPopover & HTMLElement;
 export const CommonmarkPopover = define<InternalCommonmarkPopover>({
     tag: TAG,
     is_open: false,
-    popover_trigger_element: {
-        get: (host) => selectOrThrow(host, `.${POPOVER_TRIGGER_CLASSNAME}`),
-    },
-    popover_anchor_element: {
-        get: (host) => selectOrThrow(host, `.${POPOVER_ANCHOR_CLASSNAME}`),
-    },
-    popover_content_element: {
-        get: (host) => selectOrThrow(host, `.${POPOVER_CLASSNAME}`),
-    },
+    popover_trigger_element: (host: InternalCommonmarkPopover) =>
+        selectOrThrow(host.render(), `.${POPOVER_TRIGGER_CLASSNAME}`),
+    popover_anchor_element: (host: InternalCommonmarkPopover) =>
+        selectOrThrow(host.render(), `.${POPOVER_ANCHOR_CLASSNAME}`),
+    popover_content_element: (host: InternalCommonmarkPopover) =>
+        selectOrThrow(host.render(), `.${POPOVER_CLASSNAME}`),
     controller: {
-        get: (host: InternalCommonmarkPopover, controller: ControlCommonmarkPopover | undefined) =>
-            controller ?? CommonmarkPopoverController(),
-        set: (host: InternalCommonmarkPopover, controller: ControlCommonmarkPopover) =>
-            // set is needed for testing purpose
-            controller,
+        value: (
+            host: InternalCommonmarkPopover,
+            controller: ControlCommonmarkPopover | undefined,
+        ) => controller ?? CommonmarkPopoverController(),
         connect: (host) => {
             setTimeout(() => host.controller.initPopover(host));
 
@@ -68,5 +64,8 @@ export const CommonmarkPopover = define<InternalCommonmarkPopover>({
             };
         },
     },
-    content: (host) => getPopoverTemplate(host, gettext_provider),
+    render: {
+        value: (host) => getPopoverTemplate(host, gettext_provider),
+        shadow: false,
+    },
 });

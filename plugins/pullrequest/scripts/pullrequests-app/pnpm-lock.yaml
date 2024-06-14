@@ -66,8 +66,8 @@ dependencies:
     specifier: ^5.62.0
     version: 5.65.9
   hybrids:
-    specifier: ^8.2.2
-    version: 8.2.2
+    specifier: ^9.0.0
+    version: 9.0.0
   moment:
     specifier: ^2.29.4
     version: 2.29.4
@@ -151,8 +151,8 @@ packages:
     resolution: {integrity: sha512-19Jox5sAKpusTDgqgKB5dawPpQcY+ipQK7xoEI+MVucEF9qqFaXpeqY1KaoyGBso/wHQoDa4HMMxMjdsS3Zzzw==}
     dev: false
 
-  /hybrids@8.2.2:
-    resolution: {integrity: sha512-xCangE3oItxeWMNKHLa0yn0MHi0MHBtGLIz0Ty7PwdcBBN2sQ0mrBvVSf4lLMyBFNO7x47/2lO13FSJB/SkPyw==}
+  /hybrids@9.0.0:
+    resolution: {integrity: sha512-BEwhBvhJlUB3cKJJbnrKrsdr871T1VC/tDL5Umeuoy4DWz9ssJNldgYot4QP8zHPPxUlUpGv+41QYq9m4kzQ5g==}
     engines: {node: '>=18.0.0'}
     hasBin: true
     dev: false

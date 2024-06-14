@@ -19,7 +19,7 @@
 
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { HostElement } from "./DropdownElement";
-import { DropdownElement, observeOpen } from "./DropdownElement";
+import { renderDropdownElement, observeOpen } from "./DropdownElement";
 import type { GroupCollection } from "../GroupCollection";
 import { selectOrThrow } from "@tuleap/dom";
 import * as tuleap_focus from "@tuleap/focus-navigation";
@@ -69,7 +69,7 @@ describe(`DropdownElement`, () => {
         };
 
         const render = (host: HostElement): void => {
-            const updateFunction = DropdownElement.content(host);
+            const updateFunction = renderDropdownElement(host);
             updateFunction(host, target);
         };
 
@@ -143,7 +143,7 @@ describe(`DropdownElement`, () => {
             const dropdown = doc.createElement("span");
             return Object.assign(dropdown, {
                 open: false,
-                content: () => dropdown,
+                render: () => dropdown,
                 search_input: doc.createElement("span"),
             }) as HostElement;
         };
