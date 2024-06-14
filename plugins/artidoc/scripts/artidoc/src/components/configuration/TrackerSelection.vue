@@ -40,7 +40,7 @@
             <option
                 v-for="tracker in allowed_trackers"
                 v-bind:key="tracker.id"
-                v-bind:value="tracker.id"
+                v-bind:value="tracker"
             >
                 {{ tracker.label }}
             </option>

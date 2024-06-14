@@ -28,6 +28,7 @@ import * as sectionsStore from "@/stores/useSectionsStore";
 import { InjectedSectionsStoreStub } from "@/helpers/stubs/InjectSectionsStoreStub";
 import ConfigurationPanel from "@/components/configuration/ConfigurationPanel.vue";
 import { CAN_USER_EDIT_DOCUMENT } from "@/can-user-edit-document-injection-key";
+import type { Tracker } from "@/stores/configuration-store";
 import { CONFIGURATION_STORE } from "@/stores/configuration-store";
 import { ConfigurationStoreStub } from "@/helpers/stubs/ConfigurationStoreStub";
 import { mockStrictInject } from "@/helpers/mock-strict-inject";
@@ -35,22 +36,17 @@ import { mockStrictInject } from "@/helpers/mock-strict-inject";
 describe("DocumentView", () => {
     function setupInjectionKeys(
         can_user_edit_document: boolean,
-        selected_tracker_id: number | null,
+        selected_tracker: Tracker | null,
     ): void {
         mockStrictInject([
             [CAN_USER_EDIT_DOCUMENT, can_user_edit_document],
-            [
-                CONFIGURATION_STORE,
-                selected_tracker_id
-                    ? ConfigurationStoreStub.withSelectedTracker(selected_tracker_id)
-                    : ConfigurationStoreStub.withoutAllowedTrackers(),
-            ],
+            [CONFIGURATION_STORE, ConfigurationStoreStub.withSelectedTracker(selected_tracker)],
         ]);
     }
 
     describe("when sections not found", () => {
         it("should display empty state view if user cannot edit document", () => {
-            setupInjectionKeys(false, ConfigurationStoreStub.bugs.id);
+            setupInjectionKeys(false, ConfigurationStoreStub.bugs);
             vi.spyOn(sectionsStore, "useInjectSectionsStore").mockReturnValue(
                 InjectedSectionsStoreStub.withLoadedSections([]),
             );
@@ -62,7 +58,7 @@ describe("DocumentView", () => {
         });
 
         it("should display empty state view if user can edit document and the tracker is configured", () => {
-            setupInjectionKeys(false, ConfigurationStoreStub.bugs.id);
+            setupInjectionKeys(false, ConfigurationStoreStub.bugs);
             vi.spyOn(sectionsStore, "useInjectSectionsStore").mockReturnValue(
                 InjectedSectionsStoreStub.withLoadedSections([]),
             );
@@ -88,7 +84,7 @@ describe("DocumentView", () => {
 
     describe("when sections found", () => {
         it("should display document content view", () => {
-            setupInjectionKeys(false, ConfigurationStoreStub.bugs.id);
+            setupInjectionKeys(false, ConfigurationStoreStub.bugs);
             vi.spyOn(sectionsStore, "useInjectSectionsStore").mockReturnValue(
                 InjectedSectionsStoreStub.withLoadedSections([ArtidocSectionFactory.create()]),
             );
@@ -102,7 +98,7 @@ describe("DocumentView", () => {
 
     describe("when sections are loading", () => {
         it("should display document content view", () => {
-            setupInjectionKeys(false, ConfigurationStoreStub.bugs.id);
+            setupInjectionKeys(false, ConfigurationStoreStub.bugs);
             vi.spyOn(sectionsStore, "useInjectSectionsStore").mockReturnValue(
                 InjectedSectionsStoreStub.withLoadingSections(),
             );
@@ -119,7 +115,7 @@ describe("DocumentView", () => {
 
     describe("when the user is not allowed to access the document", () => {
         it("should display no access state view", () => {
-            setupInjectionKeys(false, ConfigurationStoreStub.bugs.id);
+            setupInjectionKeys(false, ConfigurationStoreStub.bugs);
             vi.spyOn(sectionsStore, "useInjectSectionsStore").mockReturnValue(
                 InjectedSectionsStoreStub.withSectionsInError(),
             );

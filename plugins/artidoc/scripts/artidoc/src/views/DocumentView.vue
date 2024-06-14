@@ -44,9 +44,9 @@ const { sections, is_sections_loading } = useInjectSectionsStore();
 
 const can_user_edit_document = strictInject<boolean>(CAN_USER_EDIT_DOCUMENT);
 
-const { selected_tracker_id } = strictInject<ConfigurationStore>(CONFIGURATION_STORE);
+const { selected_tracker } = strictInject<ConfigurationStore>(CONFIGURATION_STORE);
 
 const should_display_configuration_panel = computed(
-    () => can_user_edit_document && !selected_tracker_id.value,
+    () => can_user_edit_document && !selected_tracker.value,
 );
 </script>

@@ -25,14 +25,14 @@ import { strictInject } from "@tuleap/vue-strict-inject";
 
 export interface ConfigurationScreenHelper {
     allowed_trackers: readonly Tracker[];
-    NO_SELECTED_TRACKER: "0";
+    NO_SELECTED_TRACKER: null;
     no_allowed_trackers: boolean;
     is_submit_button_disabled: ComputedRef<boolean>;
     is_success: Ref<boolean>;
     is_error: Ref<boolean>;
     error_message: Ref<string>;
     submit_button_icon: ComputedRef<string>;
-    new_selected_tracker: Ref<string>;
+    new_selected_tracker: Ref<Tracker | null>;
     onSubmit: (event: Event) => void;
     resetSelection: () => void;
 }
@@ -40,7 +40,7 @@ export interface ConfigurationScreenHelper {
 export function useConfigurationScreenHelper(): ConfigurationScreenHelper {
     const {
         allowed_trackers,
-        selected_tracker_id,
+        selected_tracker,
         is_saving,
         is_error,
         is_success,
@@ -49,18 +49,18 @@ export function useConfigurationScreenHelper(): ConfigurationScreenHelper {
         resetSuccessFlagFromPreviousCalls,
     } = strictInject<ConfigurationStore>(CONFIGURATION_STORE);
 
-    const NO_SELECTED_TRACKER = "0";
+    const NO_SELECTED_TRACKER = null;
 
     const no_allowed_trackers = allowed_trackers.length === 0;
 
-    const new_selected_tracker = ref(String(selected_tracker_id.value));
+    const new_selected_tracker = ref(selected_tracker.value);
 
     const is_submit_button_disabled = computed(
         () =>
             no_allowed_trackers ||
             is_saving.value ||
             new_selected_tracker.value === NO_SELECTED_TRACKER ||
-            new_selected_tracker.value === String(selected_tracker_id.value),
+            new_selected_tracker.value === selected_tracker.value,
     );
     const submit_button_icon = computed(() =>
         is_saving.value ? "fa-solid fa-spin fa-circle-notch" : "fa-solid fa-floppy-disk",
@@ -69,11 +69,13 @@ export function useConfigurationScreenHelper(): ConfigurationScreenHelper {
     function onSubmit(event: Event): void {
         event.preventDefault();
 
-        saveConfiguration(Number.parseInt(new_selected_tracker.value, 10));
+        if (new_selected_tracker.value) {
+            saveConfiguration(new_selected_tracker.value);
+        }
     }
 
     function resetSelection(): void {
-        new_selected_tracker.value = String(selected_tracker_id.value);
+        new_selected_tracker.value = selected_tracker.value;
         resetSuccessFlagFromPreviousCalls();
     }
 

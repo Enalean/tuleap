@@ -67,7 +67,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         CONFIGURATION_STORE,
         initConfigurationStore(
             item_id,
-            Number.parseInt(getDatasetItemOrThrow(vue_mount_point, "selectedTracker"), 10),
+            JSON.parse(getDatasetItemOrThrow(vue_mount_point, "selectedTracker")),
             JSON.parse(getDatasetItemOrThrow(vue_mount_point, "allowedTrackers")),
         ),
     );
