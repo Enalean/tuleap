@@ -40,10 +40,14 @@
 import { useInjectSectionsStore } from "@/stores/useSectionsStore";
 import AddNewSectionButton from "@/components/AddNewSectionButton.vue";
 import SectionContainer from "@/components/SectionContainer.vue";
+import { strictInject } from "@tuleap/vue-strict-inject";
+import { CAN_USER_EDIT_DOCUMENT } from "@/can-user-edit-document-injection-key";
 
 const { sections } = useInjectSectionsStore();
 
-const has_add_button = false;
+const can_user_edit_document = strictInject<boolean>(CAN_USER_EDIT_DOCUMENT);
+
+const has_add_button = can_user_edit_document;
 </script>
 
 <style lang="scss" scoped>

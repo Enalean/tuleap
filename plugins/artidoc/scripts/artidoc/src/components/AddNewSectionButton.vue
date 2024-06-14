@@ -20,7 +20,7 @@
 
 <template>
     <div>
-        <button type="button" class="tlp-button-primary" v-bind:title="title">
+        <button type="button" class="tlp-button-primary" v-bind:title="title" v-on:click="onClick">
             <i class="fa-solid fa-plus" role="img"></i>
         </button>
     </div>
@@ -28,10 +28,25 @@
 
 <script setup lang="ts">
 import { useGettext } from "vue3-gettext";
+import { strictInject } from "@tuleap/vue-strict-inject";
+import type { OpenConfigurationModalBus } from "@/composables/useOpenConfigurationModalBus";
+import { OPEN_CONFIGURATION_MODAL_BUS } from "@/composables/useOpenConfigurationModalBus";
+import type { ConfigurationStore } from "@/stores/configuration-store";
+import { CONFIGURATION_STORE } from "@/stores/configuration-store";
+
+const configuration_store = strictInject<ConfigurationStore>(CONFIGURATION_STORE);
 
 const { $gettext } = useGettext();
 
 const title = $gettext("Add new section");
+
+const bus = strictInject<OpenConfigurationModalBus>(OPEN_CONFIGURATION_MODAL_BUS);
+
+function onClick(): void {
+    if (!configuration_store.selected_tracker_id.value) {
+        bus.openModal();
+    }
+}
 </script>
 
 <style scoped lang="scss">

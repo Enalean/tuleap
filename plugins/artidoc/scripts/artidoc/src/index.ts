@@ -30,6 +30,10 @@ import { CAN_USER_EDIT_DOCUMENT } from "@/can-user-edit-document-injection-key";
 import { TITLE } from "@/title-injection-key";
 import { getDatasetItemOrThrow } from "@tuleap/dom";
 import { CONFIGURATION_STORE, initConfigurationStore } from "@/stores/configuration-store";
+import {
+    OPEN_CONFIGURATION_MODAL_BUS,
+    useOpenConfigurationModalBus,
+} from "@/composables/useOpenConfigurationModalBus";
 
 document.addEventListener("DOMContentLoaded", async () => {
     const vue_mount_point = document.getElementById("artidoc-mountpoint");
@@ -57,6 +61,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         CAN_USER_EDIT_DOCUMENT,
         Boolean(getDatasetItemOrThrow(vue_mount_point, "canUserEditDocument")),
     );
+    app.provide(OPEN_CONFIGURATION_MODAL_BUS, useOpenConfigurationModalBus());
     app.provide(TITLE, getDatasetItemOrThrow(vue_mount_point, "title"));
     app.provide(
         CONFIGURATION_STORE,

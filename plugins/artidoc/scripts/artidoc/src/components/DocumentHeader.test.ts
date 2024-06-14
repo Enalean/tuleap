@@ -18,16 +18,21 @@
  */
 
 import { describe, expect, it, vi } from "vitest";
-import * as strict_inject from "@tuleap/vue-strict-inject";
 import { shallowMount } from "@vue/test-utils";
 import DocumentHeader from "@/components/DocumentHeader.vue";
 import ConfigurationModal from "@/components/configuration/ConfigurationModal.vue";
+import { mockStrictInject } from "@/helpers/mock-strict-inject";
+import { CAN_USER_EDIT_DOCUMENT } from "@/can-user-edit-document-injection-key";
+import { TITLE } from "@/title-injection-key";
 
 vi.mock("@tuleap/vue-strict-inject");
 
 describe("DocumentHeader", () => {
     it("should display configuration if user can edit document", () => {
-        vi.spyOn(strict_inject, "strictInject").mockReturnValue(true);
+        mockStrictInject([
+            [CAN_USER_EDIT_DOCUMENT, true],
+            [TITLE, "My document"],
+        ]);
 
         const wrapper = shallowMount(DocumentHeader);
 
@@ -35,7 +40,10 @@ describe("DocumentHeader", () => {
     });
 
     it("should not display configuration if user cannot edit document", () => {
-        vi.spyOn(strict_inject, "strictInject").mockReturnValue(false);
+        mockStrictInject([
+            [CAN_USER_EDIT_DOCUMENT, false],
+            [TITLE, "My document"],
+        ]);
 
         const wrapper = shallowMount(DocumentHeader);
 

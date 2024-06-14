@@ -17,17 +17,18 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { describe, it, expect, vi } from "vitest";
-import * as strict_inject from "@tuleap/vue-strict-inject";
+import { describe, it, expect } from "vitest";
 import { ConfigurationStoreStub } from "@/helpers/stubs/ConfigurationStoreStub";
 import { useConfigurationScreenHelper } from "@/composables/useConfigurationScreenHelper";
 import type { ConfigurationStore } from "@/stores/configuration-store";
+import { CONFIGURATION_STORE } from "@/stores/configuration-store";
 import { ref } from "vue";
+import { mockStrictInject } from "@/helpers/mock-strict-inject";
 
 describe("useConfigurationScreenHelper", () => {
     it("should act as a proxy for configuration store", () => {
         const store = ConfigurationStoreStub.withSelectedTracker(ConfigurationStoreStub.bugs.id);
-        vi.spyOn(strict_inject, "strictInject").mockReturnValue(store);
+        mockStrictInject([[CONFIGURATION_STORE, store]]);
 
         const helper = useConfigurationScreenHelper();
 
@@ -40,7 +41,7 @@ describe("useConfigurationScreenHelper", () => {
     describe("no_allowed_trackers", () => {
         it("should be true if there is no tracker", () => {
             const store = ConfigurationStoreStub.withoutAllowedTrackers();
-            vi.spyOn(strict_inject, "strictInject").mockReturnValue(store);
+            mockStrictInject([[CONFIGURATION_STORE, store]]);
 
             const helper = useConfigurationScreenHelper();
 
@@ -51,7 +52,7 @@ describe("useConfigurationScreenHelper", () => {
             const store = ConfigurationStoreStub.withSelectedTracker(
                 ConfigurationStoreStub.bugs.id,
             );
-            vi.spyOn(strict_inject, "strictInject").mockReturnValue(store);
+            mockStrictInject([[CONFIGURATION_STORE, store]]);
 
             const helper = useConfigurationScreenHelper();
 
@@ -64,7 +65,7 @@ describe("useConfigurationScreenHelper", () => {
             const store = ConfigurationStoreStub.withSelectedTracker(
                 ConfigurationStoreStub.bugs.id,
             );
-            vi.spyOn(strict_inject, "strictInject").mockReturnValue(store);
+            mockStrictInject([[CONFIGURATION_STORE, store]]);
 
             const helper = useConfigurationScreenHelper();
 
@@ -75,7 +76,7 @@ describe("useConfigurationScreenHelper", () => {
 
         it("should be true if no allowed trackers", () => {
             const store = ConfigurationStoreStub.withoutAllowedTrackers();
-            vi.spyOn(strict_inject, "strictInject").mockReturnValue(store);
+            mockStrictInject([[CONFIGURATION_STORE, store]]);
 
             const helper = useConfigurationScreenHelper();
 
@@ -84,7 +85,7 @@ describe("useConfigurationScreenHelper", () => {
 
         it("should be true if saving is in progress", () => {
             const store = ConfigurationStoreStub.withSavingInProgress();
-            vi.spyOn(strict_inject, "strictInject").mockReturnValue(store);
+            mockStrictInject([[CONFIGURATION_STORE, store]]);
 
             const helper = useConfigurationScreenHelper();
 
@@ -95,7 +96,7 @@ describe("useConfigurationScreenHelper", () => {
             const store = ConfigurationStoreStub.withSelectedTracker(
                 ConfigurationStoreStub.bugs.id,
             );
-            vi.spyOn(strict_inject, "strictInject").mockReturnValue(store);
+            mockStrictInject([[CONFIGURATION_STORE, store]]);
 
             const helper = useConfigurationScreenHelper();
 
@@ -108,7 +109,7 @@ describe("useConfigurationScreenHelper", () => {
             const store = ConfigurationStoreStub.withSelectedTracker(
                 ConfigurationStoreStub.bugs.id,
             );
-            vi.spyOn(strict_inject, "strictInject").mockReturnValue(store);
+            mockStrictInject([[CONFIGURATION_STORE, store]]);
 
             const helper = useConfigurationScreenHelper();
 
@@ -121,7 +122,7 @@ describe("useConfigurationScreenHelper", () => {
             const store = ConfigurationStoreStub.withSelectedTracker(
                 ConfigurationStoreStub.bugs.id,
             );
-            vi.spyOn(strict_inject, "strictInject").mockReturnValue(store);
+            mockStrictInject([[CONFIGURATION_STORE, store]]);
 
             const helper = useConfigurationScreenHelper();
 
@@ -130,7 +131,7 @@ describe("useConfigurationScreenHelper", () => {
 
         it("should display spinner icon if saving is in progress", () => {
             const store = ConfigurationStoreStub.withSavingInProgress();
-            vi.spyOn(strict_inject, "strictInject").mockReturnValue(store);
+            mockStrictInject([[CONFIGURATION_STORE, store]]);
 
             const helper = useConfigurationScreenHelper();
 
@@ -144,7 +145,7 @@ describe("useConfigurationScreenHelper", () => {
                 ...ConfigurationStoreStub.withSuccessfullSave(),
                 selected_tracker_id: ref(ConfigurationStoreStub.bugs.id),
             };
-            vi.spyOn(strict_inject, "strictInject").mockReturnValue(store);
+            mockStrictInject([[CONFIGURATION_STORE, store]]);
 
             const helper = useConfigurationScreenHelper();
 

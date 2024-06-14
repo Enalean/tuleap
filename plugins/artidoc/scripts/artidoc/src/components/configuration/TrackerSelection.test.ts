@@ -17,19 +17,18 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { describe, expect, it, vi } from "vitest";
-import * as strict_inject from "@tuleap/vue-strict-inject";
+import { describe, expect, it } from "vitest";
 import { ConfigurationStoreStub } from "@/helpers/stubs/ConfigurationStoreStub";
 import { shallowMount } from "@vue/test-utils";
 import TrackerSelection from "@/components/configuration/TrackerSelection.vue";
 import { createGettext } from "vue3-gettext";
 import { useConfigurationScreenHelper } from "@/composables/useConfigurationScreenHelper";
+import { mockStrictInject } from "@/helpers/mock-strict-inject";
+import { CONFIGURATION_STORE } from "@/stores/configuration-store";
 
 describe("TrackerSelection", () => {
     it("should display error if there is no allowed trackers", () => {
-        vi.spyOn(strict_inject, "strictInject").mockReturnValue(
-            ConfigurationStoreStub.withoutAllowedTrackers(),
-        );
+        mockStrictInject([[CONFIGURATION_STORE, ConfigurationStoreStub.withoutAllowedTrackers()]]);
 
         const wrapper = shallowMount(TrackerSelection, {
             props: {
