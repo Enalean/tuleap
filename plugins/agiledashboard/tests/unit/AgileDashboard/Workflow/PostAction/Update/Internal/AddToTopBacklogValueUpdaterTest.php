@@ -22,61 +22,43 @@ declare(strict_types=1);
 
 namespace Tuleap\AgileDashboard\Workflow\PostAction\Update\Internal;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\MockObject\MockObject;
+use Tracker_FormElement_Field_List_Bind_StaticValue;
 use Transition;
 use Tuleap\AgileDashboard\Workflow\PostAction\Update\AddToTopBacklogValue;
+use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Workflow\PostAction\Update\PostActionCollection;
 
-class AddToTopBacklogValueUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
+final class AddToTopBacklogValueUpdaterTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var AddToTopBacklogValueUpdater
-     */
-    private $value_updater;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|AddToTopBacklogValueRepository
-     */
-    private $value_repository;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|PostActionCollection
-     */
-    private $collection;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Transition
-     */
-    private $transition;
+    private AddToTopBacklogValueUpdater $value_updater;
+    private AddToTopBacklogValueRepository&MockObject $value_repository;
+    private PostActionCollection&MockObject $collection;
+    private Transition $transition;
 
     protected function setUp(): void
     {
-        parent::setUp();
-
-        $this->value_repository = Mockery::mock(AddToTopBacklogValueRepository::class);
-
-        $this->value_updater = new AddToTopBacklogValueUpdater(
-            $this->value_repository
+        $this->value_repository = $this->createMock(AddToTopBacklogValueRepository::class);
+        $this->value_updater    = new AddToTopBacklogValueUpdater($this->value_repository);
+        $this->collection       = $this->createMock(PostActionCollection::class);
+        $this->transition       = new Transition(
+            1,
+            1,
+            null,
+            new Tracker_FormElement_Field_List_Bind_StaticValue(1, 'label', '', 1, false),
         );
-
-        $this->collection = Mockery::mock(PostActionCollection::class);
-        $this->transition = Mockery::mock(Transition::class);
     }
 
     public function testItAddsOnlyOneAddToTopBacklogPostAction(): void
     {
-        $this->collection->shouldReceive('getExternalPostActionsValue')
-            ->once()
-            ->andReturn([
+        $this->collection->expects(self::once())->method('getExternalPostActionsValue')
+            ->willReturn([
                 new AddToTopBacklogValue(),
                 new AddToTopBacklogValue(),
             ]);
 
-        $this->value_repository->shouldReceive('deleteAllByTransition')->once();
-        $this->value_repository->shouldReceive('create')->once();
+        $this->value_repository->expects(self::once())->method('deleteAllByTransition');
+        $this->value_repository->expects(self::once())->method('create');
 
         $this->value_updater->updateByTransition(
             $this->collection,
@@ -86,12 +68,10 @@ class AddToTopBacklogValueUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItOnlyDeletesAddToTopBacklogPostActionIfNoActionProvided(): void
     {
-        $this->collection->shouldReceive('getExternalPostActionsValue')
-            ->once()
-            ->andReturn([]);
+        $this->collection->expects(self::once())->method('getExternalPostActionsValue')->willReturn([]);
 
-        $this->value_repository->shouldReceive('deleteAllByTransition')->once();
-        $this->value_repository->shouldReceive('create')->never();
+        $this->value_repository->expects(self::once())->method('deleteAllByTransition');
+        $this->value_repository->expects(self::never())->method('create');
 
         $this->value_updater->updateByTransition(
             $this->collection,
