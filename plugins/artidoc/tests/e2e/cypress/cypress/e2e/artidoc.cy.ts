@@ -68,6 +68,16 @@ describe("Artidoc", () => {
                     .then((interception) => interception.response?.body.id)
                     .then((document_id): void => {
                         cy.get("[data-test=document-folder-subitem-link]").click();
+                        cy.log(
+                            "Wait for section to be loaded, intercepting section load does not do the trick",
+                        );
+                        cy.get("[data-test=states-section]");
+                        cy.get("[data-test=artidoc-configuration-tracker]")
+                            .last()
+                            .select("Requirements");
+                        cy.intercept("/api/artidoc/*/configuration").as("saveConfiguration");
+                        cy.get("[data-test=artidoc-configuration-submit-button]").click();
+                        cy.wait("@saveConfiguration");
                         cy.contains("This document is empty");
                         cy.log(document_id);
 
