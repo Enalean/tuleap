@@ -26,94 +26,68 @@ namespace Tuleap\AgileDashboard\Scrum;
 use AdminScrumPresenter;
 use AgileDashboard_ConfigurationManager;
 use EventManager;
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use Planning;
+use PHPUnit\Framework\MockObject\MockObject;
 use Planning_PlanningAdminPresenter;
 use PlanningFactory;
 use Tuleap\AgileDashboard\Event\GetAdditionalScrumAdminSection;
 use Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao;
 use Tuleap\AgileDashboard\Stub\Milestone\Sidebar\CheckMilestonesInSidebarStub;
+use Tuleap\AgileDashboard\Test\Builders\PlanningBuilder;
 use Tuleap\AgileDashboard\Workflow\AddToTopBacklogPostActionDao;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
-class ScrumPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
+final class ScrumPresenterBuilderTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
     use GlobalLanguageMock;
 
-    /**
-     * @var ScrumPresenterBuilder
-     */
-    private $scrum_presenter_builder;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|ExplicitBacklogDao
-     */
-    private $explicit_backlog_dao;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|PlanningFactory
-     */
-    private $planning_factory;
-    /**
-     * @var EventManager|\Mockery\LegacyMockInterface|\Mockery\MockInterface
-     */
-    private $event_manager;
-
-    /**
-     * @var AgileDashboard_ConfigurationManager|\Mockery\LegacyMockInterface|\Mockery\MockInterface
-     */
-    private $config_manager;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|AddToTopBacklogPostActionDao
-     */
-    private $add_to_top_backlog_post_action_dao;
+    private ScrumPresenterBuilder $scrum_presenter_builder;
+    private ExplicitBacklogDao&MockObject $explicit_backlog_dao;
+    private PlanningFactory&MockObject $planning_factory;
+    private AgileDashboard_ConfigurationManager&MockObject $config_manager;
 
     protected function setUp(): void
     {
-        parent::setUp();
-
-        $this->config_manager                     = Mockery::mock(AgileDashboard_ConfigurationManager::class);
-        $this->event_manager                      = Mockery::mock(EventManager::class);
-        $this->planning_factory                   = Mockery::mock(PlanningFactory::class);
-        $this->explicit_backlog_dao               = Mockery::mock(ExplicitBacklogDao::class);
-        $this->add_to_top_backlog_post_action_dao = Mockery::mock(AddToTopBacklogPostActionDao::class);
+        $this->config_manager               = $this->createMock(AgileDashboard_ConfigurationManager::class);
+        $event_manager                      = $this->createMock(EventManager::class);
+        $this->planning_factory             = $this->createMock(PlanningFactory::class);
+        $this->explicit_backlog_dao         = $this->createMock(ExplicitBacklogDao::class);
+        $add_to_top_backlog_post_action_dao = $this->createMock(AddToTopBacklogPostActionDao::class);
 
         $this->scrum_presenter_builder = new ScrumPresenterBuilder(
             $this->config_manager,
-            $this->event_manager,
+            $event_manager,
             $this->planning_factory,
             $this->explicit_backlog_dao,
-            $this->add_to_top_backlog_post_action_dao,
+            $add_to_top_backlog_post_action_dao,
             CheckMilestonesInSidebarStub::withoutMilestonesInSidebar(),
         );
 
-        $this->add_to_top_backlog_post_action_dao->shouldReceive('isAtLeastOnePostActionDefinedInProject')->andReturnTrue();
+        $add_to_top_backlog_post_action_dao->method('isAtLeastOnePostActionDefinedInProject')->willReturn(true);
+        $event_manager->expects(self::once())->method('processEvent');
+        $event_manager->expects(self::once())->method('dispatch');
     }
 
     public function testItBuildsPresenterWhenNoRootPlanning(): void
     {
-        $user    = Mockery::mock(\PFUser::class);
+        $user    = UserTestBuilder::buildWithDefaults();
         $project = ProjectTestBuilder::aProject()
             ->withId(101)
             ->withUsedService('plugin_agiledashboard')
             ->build();
 
-        $root_planning = false;
-        $this->planning_factory->shouldReceive('getRootPlanning')->atLeast(1)->andReturn($root_planning);
+        $this->planning_factory->expects(self::atLeastOnce())->method('getRootPlanning')->willReturn(false);
 
-        $this->config_manager->shouldReceive('scrumIsActivatedForProject')->once()->andReturnFalse();
+        $this->config_manager->expects(self::once())->method('scrumIsActivatedForProject')->willReturn(false);
 
-        $planning = Mockery::mock(Planning::class);
-        $planning->shouldReceive('getId')->andReturn(42);
-        $this->planning_factory->shouldReceive('getPlanningsOutOfRootPlanningHierarchy')->once()->andReturn($planning);
-        $this->planning_factory->shouldReceive('getPlannings')->once()->andReturn([$planning]);
+        $planning = PlanningBuilder::aPlanning(101)->withId(42)->build();
+        $this->planning_factory->expects(self::once())->method('getPlanningsOutOfRootPlanningHierarchy')->willReturn($planning);
+        $this->planning_factory->expects(self::once())->method('getPlannings')->willReturn([$planning]);
 
-        $this->event_manager->shouldReceive('processEvent')->once();
-        $this->event_manager->shouldReceive('dispatch')->once();
-
-        $this->explicit_backlog_dao->shouldReceive('isProjectUsingExplicitBacklog')->andReturnFalse();
+        $this->explicit_backlog_dao->method('isProjectUsingExplicitBacklog')->willReturn(false);
 
         $expected_presenter = new AdminScrumPresenter(
             [new Planning_PlanningAdminPresenter(
@@ -133,45 +107,41 @@ class ScrumPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             [],
             false,
             false,
-            false,
         );
 
-        $additional_sections_event = new GetAdditionalScrumAdminSection(Mockery::mock(\Project::class));
+        $additional_sections_event = new GetAdditionalScrumAdminSection($project);
 
         $presenter = $this->scrum_presenter_builder->getAdminScrumPresenter($user, $project, $additional_sections_event);
 
-        $this->assertEquals($expected_presenter, $presenter);
+        self::assertEquals($expected_presenter, $presenter);
     }
 
     public function testItBuildsPresenterInExplicitBacklogContext(): void
     {
-        $user    = Mockery::mock(\PFUser::class);
+        $user    = UserTestBuilder::buildWithDefaults();
         $project = ProjectTestBuilder::aProject()
             ->withId(101)
             ->withUsedService('plugin_agiledashboard')
             ->build();
 
 
-        $planning = Mockery::mock(Planning::class);
-        $planning->shouldReceive('getId')->andReturn(42);
+        $tracker  = TrackerTestBuilder::aTracker()->build();
+        $planning = PlanningBuilder::aPlanning(101)
+            ->withId(42)
+            ->withMilestoneTracker($tracker)
+            ->withName('tracker name')
+            ->build();
+        $this->planning_factory->expects(self::atLeastOnce())->method('getRootPlanning')->willReturn($planning);
 
-        $tracker = Mockery::mock(\Tracker::class);
-        $planning->shouldReceive('getPlanningTracker')->andReturn($tracker);
-        $planning->shouldReceive('getName')->once()->andReturn('tracker name');
-        $this->planning_factory->shouldReceive('getRootPlanning')->atLeast(1)->andReturn($planning);
+        $this->config_manager->expects(self::once())->method('scrumIsActivatedForProject')->willReturn(true);
 
-        $this->config_manager->shouldReceive('scrumIsActivatedForProject')->once()->andReturnTrue();
+        $this->planning_factory->expects(self::once())->method('getAvailablePlanningTrackers')->willReturn([]);
+        $this->planning_factory->expects(self::once())->method('getPlanningsOutOfRootPlanningHierarchy')->willReturn($planning);
+        $this->planning_factory->expects(self::once())->method('getPlannings')->willReturn([$planning]);
 
-        $this->planning_factory->shouldReceive('getAvailablePlanningTrackers')->once()->andReturn([]);
-        $this->planning_factory->shouldReceive('getPlanningsOutOfRootPlanningHierarchy')->once()->andReturn($planning);
-        $this->planning_factory->shouldReceive('getPlannings')->once()->andReturn([$planning]);
+        $this->explicit_backlog_dao->method('isProjectUsingExplicitBacklog')->willReturn(true);
 
-        $this->event_manager->shouldReceive('processEvent')->once();
-        $this->event_manager->shouldReceive('dispatch')->once();
-
-        $this->explicit_backlog_dao->shouldReceive('isProjectUsingExplicitBacklog')->andReturnTrue();
-
-        $this->planning_factory->shouldReceive('getPotentialPlanningTrackers')->once()->andReturn([]);
+        $this->planning_factory->expects(self::once())->method('getPotentialPlanningTrackers')->willReturn([]);
 
         $expected_presenter = new AdminScrumPresenter(
             [new Planning_PlanningAdminPresenter(
@@ -191,13 +161,12 @@ class ScrumPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             [],
             false,
             false,
-            false,
         );
 
-        $additional_sections_event = new GetAdditionalScrumAdminSection(Mockery::mock(\Project::class));
+        $additional_sections_event = new GetAdditionalScrumAdminSection($project);
 
         $presenter = $this->scrum_presenter_builder->getAdminScrumPresenter($user, $project, $additional_sections_event);
 
-        $this->assertEquals($expected_presenter, $presenter);
+        self::assertEquals($expected_presenter, $presenter);
     }
 }
