@@ -55,6 +55,7 @@ use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Field\Numeric\Numeri
 use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Field\StaticList\StaticListSelectFromBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Field\Text\TextSelectFromBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Field\UGroupList\UGroupListSelectFromBuilder;
+use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Field\UserList\UserListSelectFromBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilderVisitor;
 use Tuleap\CrossTracker\Report\SimilarField\BindNameVisitor;
 use Tuleap\CrossTracker\Report\SimilarField\SimilarFieldsFilter;
@@ -300,6 +301,7 @@ class crosstrackerPlugin extends Plugin
                 new NumericSelectFromBuilder(),
                 new StaticListSelectFromBuilder(),
                 new UGroupListSelectFromBuilder(),
+                new UserListSelectFromBuilder()
             ),
         );
 

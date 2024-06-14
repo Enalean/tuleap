@@ -35,6 +35,7 @@ use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Field\Numeric\Numeri
 use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Field\StaticList\StaticListSelectFromBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Field\Text\TextSelectFromBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Field\UGroupList\UGroupListSelectFromBuilder;
+use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Field\UserList\UserListSelectFromBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilderVisitor;
 use Tuleap\DB\DBFactory;
 use Tuleap\Test\Builders\CoreDatabaseBuilder;
@@ -166,6 +167,7 @@ final class StaticListSelectBuilderTest extends CrossTrackerFieldTestCase
                 new NumericSelectFromBuilder(),
                 new StaticListSelectFromBuilder(),
                 new UGroupListSelectFromBuilder(),
+                new UserListSelectFromBuilder(),
             )
         );
         $this->dao     = new CrossTrackerExpertQueryReportDao();
