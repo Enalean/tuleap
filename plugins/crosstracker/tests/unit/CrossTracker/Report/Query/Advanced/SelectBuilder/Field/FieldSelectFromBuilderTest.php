@@ -31,6 +31,7 @@ use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Field\Numeric\Numeri
 use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Field\StaticList\StaticListSelectFromBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Field\Text\TextSelectFromBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Field\UGroupList\UGroupListSelectFromBuilder;
+use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Field\UserList\UserListSelectFromBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\IProvideParametrizedSelectAndFromSQLFragments;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\Test\Builders\UserTestBuilder;
@@ -44,6 +45,7 @@ use Tuleap\Tracker\Test\Builders\Fields\FileFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\FloatFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\IntFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticBindBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\List\ListUserBindBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListUserGroupBindBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\TextFieldBuilder;
@@ -86,6 +88,7 @@ final class FieldSelectFromBuilderTest extends TestCase
             new NumericSelectFromBuilder(),
             new StaticListSelectFromBuilder(),
             new UGroupListSelectFromBuilder(),
+            new UserListSelectFromBuilder()
         );
 
         return $builder->getSelectFrom(
@@ -215,6 +218,31 @@ final class FieldSelectFromBuilderTest extends TestCase
                     ->build()
             )->build()->getField(),
             ListUserGroupBindBuilder::aUserGroupBind(
+                ListFieldBuilder::aListField(self::SECOND_FIELD_ID)
+                    ->withName(self::FIELD_NAME)
+                    ->inTracker($this->second_tracker)
+                    ->withReadPermission($this->user, true)
+                    ->build()
+            )->build()->getField(),
+        );
+
+        $select_from = $this->getSelectFrom($fields_retriever);
+        self::assertNotEmpty($select_from->getSelect());
+        self::assertNotEmpty($select_from->getFrom());
+        self::assertNotEmpty($select_from->getFromParameters());
+    }
+
+    public function testItReturnsSQLForUserListField(): void
+    {
+        $fields_retriever = RetrieveUsedFieldsStub::withFields(
+            ListUserBindBuilder::aUserBind(
+                ListFieldBuilder::aListField(self::FIRST_FIELD_ID)
+                    ->withName(self::FIELD_NAME)
+                    ->inTracker($this->first_tracker)
+                    ->withReadPermission($this->user, true)
+                    ->build()
+            )->build()->getField(),
+            ListUserBindBuilder::aUserBind(
                 ListFieldBuilder::aListField(self::SECOND_FIELD_ID)
                     ->withName(self::FIELD_NAME)
                     ->inTracker($this->second_tracker)
