@@ -40,7 +40,7 @@ describe("AddNewSectionButton", () => {
             });
 
             mockStrictInject([
-                [CONFIGURATION_STORE, ConfigurationStoreStub.withSelectedTracker(0)],
+                [CONFIGURATION_STORE, ConfigurationStoreStub.withSelectedTracker(null)],
                 [OPEN_CONFIGURATION_MODAL_BUS, bus],
             ]);
 

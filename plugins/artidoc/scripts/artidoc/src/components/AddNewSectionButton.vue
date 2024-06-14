@@ -43,7 +43,7 @@ const title = $gettext("Add new section");
 const bus = strictInject<OpenConfigurationModalBus>(OPEN_CONFIGURATION_MODAL_BUS);
 
 function onClick(): void {
-    if (!configuration_store.selected_tracker_id.value) {
+    if (!configuration_store.selected_tracker.value) {
         bus.openModal();
     }
 }

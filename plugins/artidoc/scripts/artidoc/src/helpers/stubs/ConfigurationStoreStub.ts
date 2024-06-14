@@ -36,7 +36,7 @@ export const ConfigurationStoreStub = {
     tasks,
     bugs,
     withoutAllowedTrackers: (): ConfigurationStore => ({
-        selected_tracker_id: ref(0),
+        selected_tracker: ref(null),
         allowed_trackers: [],
         is_saving: ref(false),
         is_error: ref(false),
@@ -46,24 +46,24 @@ export const ConfigurationStoreStub = {
         resetSuccessFlagFromPreviousCalls: noop,
     }),
 
-    withSelectedTracker: (selected_tracker_id: number): ConfigurationStore => ({
+    withSelectedTracker: (selected_tracker: Tracker | null): ConfigurationStore => ({
         ...ConfigurationStoreStub.withoutAllowedTrackers(),
-        selected_tracker_id: ref(selected_tracker_id),
+        selected_tracker: ref(selected_tracker),
         allowed_trackers: [tasks, bugs],
     }),
 
     withSavingInProgress: (): ConfigurationStore => ({
-        ...ConfigurationStoreStub.withSelectedTracker(ConfigurationStoreStub.bugs.id),
+        ...ConfigurationStoreStub.withSelectedTracker(ConfigurationStoreStub.bugs),
         is_saving: ref(true),
     }),
 
     withSuccessfullSave: (): ConfigurationStore => ({
-        ...ConfigurationStoreStub.withSelectedTracker(ConfigurationStoreStub.bugs.id),
+        ...ConfigurationStoreStub.withSelectedTracker(ConfigurationStoreStub.bugs),
         is_success: ref(true),
     }),
 
     withError: (): ConfigurationStore => ({
-        ...ConfigurationStoreStub.withSelectedTracker(ConfigurationStoreStub.bugs.id),
+        ...ConfigurationStoreStub.withSelectedTracker(ConfigurationStoreStub.bugs),
         is_error: ref(true),
         error_message: ref("Oh no!"),
     }),

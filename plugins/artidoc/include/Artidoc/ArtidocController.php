@@ -28,6 +28,7 @@ use Tuleap\Artidoc\Document\ArtidocBreadcrumbsProvider;
 use Tuleap\Artidoc\Document\ArtidocDocumentInformation;
 use Tuleap\Artidoc\Document\ConfiguredTrackerRetriever;
 use Tuleap\Artidoc\Document\RetrieveArtidoc;
+use Tuleap\Artidoc\Document\Tracker\DocumentTrackerRepresentation;
 use Tuleap\Artidoc\Document\Tracker\SuitableTrackersForDocumentRetriever;
 use Tuleap\Config\ConfigKeyString;
 use Tuleap\Config\FeatureFlagConfigKey;
@@ -40,7 +41,6 @@ use Tuleap\Project\ServiceInstrumentation;
 use Tuleap\Request\DispatchableWithBurningParrot;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\NotFoundException;
-use Tuleap\Tracker\REST\MinimalTrackerRepresentation;
 
 final readonly class ArtidocController implements DispatchableWithRequest, DispatchableWithBurningParrot
 {
@@ -114,13 +114,25 @@ final readonly class ArtidocController implements DispatchableWithRequest, Dispa
                     (int) $document_information->document->getId(),
                     $user_can_write && \ForgeConfig::getFeatureFlag(self::EDIT_FEATURE_FLAG) === '1',
                     $title,
-                    (int) $this->configured_tracker_retriever->getTracker($document_information->document)?->getId(),
+                    $this->getTrackerRepresentation($this->configured_tracker_retriever->getTracker($document_information->document)),
                     array_map(
-                        static fn (\Tracker $tracker) => MinimalTrackerRepresentation::build($tracker),
+                        fn (\Tracker $tracker): DocumentTrackerRepresentation => $this->getTrackerRepresentation($tracker),
                         $this->suitable_trackers_retriever->getTrackers($document_information, $user),
                     )
                 )
             );
         $service->displayFooter();
+    }
+
+    /**
+     * @psalm-return ($tracker is null ? null : DocumentTrackerRepresentation)
+     */
+    private function getTrackerRepresentation(?\Tracker $tracker): ?DocumentTrackerRepresentation
+    {
+        if ($tracker) {
+            return DocumentTrackerRepresentation::fromTracker($tracker);
+        }
+
+        return null;
     }
 }

@@ -20,27 +20,21 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Artidoc;
+namespace Tuleap\Artidoc\Document\Tracker;
 
-use Tuleap\Artidoc\Document\Tracker\DocumentTrackerRepresentation;
-use function Psl\Json\encode;
-
-final readonly class ArtidocPresenter
+/**
+ * @psalm-immutable
+ */
+final readonly class DocumentTrackerRepresentation
 {
-    public string $allowed_trackers;
-    public string $selected_tracker;
-
-    /**
-     * @param list<DocumentTrackerRepresentation> $allowed_trackers
-     */
-    public function __construct(
-        public int $item_id,
-        public bool $can_user_edit_document,
-        public string $title,
-        ?DocumentTrackerRepresentation $selected_tracker,
-        array $allowed_trackers,
+    private function __construct(
+        public int $id,
+        public string $label,
     ) {
-        $this->selected_tracker = encode($selected_tracker);
-        $this->allowed_trackers = encode($allowed_trackers);
+    }
+
+    public static function fromTracker(\Tracker $tracker): self
+    {
+        return new self($tracker->getId(), $tracker->getName());
     }
 }

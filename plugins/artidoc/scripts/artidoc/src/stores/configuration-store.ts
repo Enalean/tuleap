@@ -27,13 +27,13 @@ export interface Tracker {
 }
 
 export interface ConfigurationStore {
-    selected_tracker_id: Ref<number>;
+    selected_tracker: Ref<Tracker | null>;
     allowed_trackers: readonly Tracker[];
     is_saving: Ref<boolean>;
     is_error: Ref<boolean>;
     is_success: Ref<boolean>;
     error_message: Ref<string>;
-    saveConfiguration: (new_selected_tracker_id: number) => void;
+    saveConfiguration: (new_selected_tracker: Tracker) => void;
     resetSuccessFlagFromPreviousCalls: () => void;
 }
 
@@ -41,23 +41,23 @@ export const CONFIGURATION_STORE: InjectionKey<ConfigurationStore> = Symbol("con
 
 export function initConfigurationStore(
     document_id: number,
-    selected_tracker: number,
+    selected_tracker: Tracker | null,
     allowed_trackers: readonly Tracker[],
 ): ConfigurationStore {
-    const selected_tracker_id = ref(selected_tracker);
+    const currently_selected_tracker = ref(selected_tracker);
     const is_saving = ref(false);
     const is_error = ref(false);
     const is_success = ref(false);
     const error_message = ref("");
 
-    function saveConfiguration(new_selected_tracker_id: number): void {
+    function saveConfiguration(new_selected_tracker: Tracker): void {
         is_saving.value = true;
         is_error.value = false;
         is_success.value = false;
 
-        putConfiguration(document_id, new_selected_tracker_id).match(
+        putConfiguration(document_id, new_selected_tracker.id).match(
             () => {
-                selected_tracker_id.value = new_selected_tracker_id;
+                currently_selected_tracker.value = new_selected_tracker;
                 is_saving.value = false;
                 is_success.value = true;
             },
@@ -75,7 +75,7 @@ export function initConfigurationStore(
 
     return {
         allowed_trackers,
-        selected_tracker_id,
+        selected_tracker: currently_selected_tracker,
         is_saving,
         is_error,
         is_success,

@@ -27,7 +27,7 @@ import { mockStrictInject } from "@/helpers/mock-strict-inject";
 
 describe("useConfigurationScreenHelper", () => {
     it("should act as a proxy for configuration store", () => {
-        const store = ConfigurationStoreStub.withSelectedTracker(ConfigurationStoreStub.bugs.id);
+        const store = ConfigurationStoreStub.withSelectedTracker(ConfigurationStoreStub.bugs);
         mockStrictInject([[CONFIGURATION_STORE, store]]);
 
         const helper = useConfigurationScreenHelper();
@@ -49,9 +49,7 @@ describe("useConfigurationScreenHelper", () => {
         });
 
         it("should be false if there are trackers", () => {
-            const store = ConfigurationStoreStub.withSelectedTracker(
-                ConfigurationStoreStub.bugs.id,
-            );
+            const store = ConfigurationStoreStub.withSelectedTracker(ConfigurationStoreStub.bugs);
             mockStrictInject([[CONFIGURATION_STORE, store]]);
 
             const helper = useConfigurationScreenHelper();
@@ -62,14 +60,12 @@ describe("useConfigurationScreenHelper", () => {
 
     describe("is_submit_button_disabled", () => {
         it("should be false by default", () => {
-            const store = ConfigurationStoreStub.withSelectedTracker(
-                ConfigurationStoreStub.bugs.id,
-            );
+            const store = ConfigurationStoreStub.withSelectedTracker(ConfigurationStoreStub.bugs);
             mockStrictInject([[CONFIGURATION_STORE, store]]);
 
             const helper = useConfigurationScreenHelper();
 
-            helper.new_selected_tracker.value = String(ConfigurationStoreStub.tasks.id);
+            helper.new_selected_tracker.value = ConfigurationStoreStub.tasks;
 
             expect(helper.is_submit_button_disabled.value).toBe(false);
         });
@@ -93,9 +89,7 @@ describe("useConfigurationScreenHelper", () => {
         });
 
         it("should be true if selected tracker is NO_SELECTED_TRACKER", () => {
-            const store = ConfigurationStoreStub.withSelectedTracker(
-                ConfigurationStoreStub.bugs.id,
-            );
+            const store = ConfigurationStoreStub.withSelectedTracker(ConfigurationStoreStub.bugs);
             mockStrictInject([[CONFIGURATION_STORE, store]]);
 
             const helper = useConfigurationScreenHelper();
@@ -106,9 +100,7 @@ describe("useConfigurationScreenHelper", () => {
         });
 
         it("should be true if selected tracker does not change", () => {
-            const store = ConfigurationStoreStub.withSelectedTracker(
-                ConfigurationStoreStub.bugs.id,
-            );
+            const store = ConfigurationStoreStub.withSelectedTracker(ConfigurationStoreStub.bugs);
             mockStrictInject([[CONFIGURATION_STORE, store]]);
 
             const helper = useConfigurationScreenHelper();
@@ -119,9 +111,7 @@ describe("useConfigurationScreenHelper", () => {
 
     describe("submit_button_icon", () => {
         it("should display default icon", () => {
-            const store = ConfigurationStoreStub.withSelectedTracker(
-                ConfigurationStoreStub.bugs.id,
-            );
+            const store = ConfigurationStoreStub.withSelectedTracker(ConfigurationStoreStub.bugs);
             mockStrictInject([[CONFIGURATION_STORE, store]]);
 
             const helper = useConfigurationScreenHelper();
@@ -143,17 +133,17 @@ describe("useConfigurationScreenHelper", () => {
         it("should reset current selection", () => {
             const store: ConfigurationStore = {
                 ...ConfigurationStoreStub.withSuccessfullSave(),
-                selected_tracker_id: ref(ConfigurationStoreStub.bugs.id),
+                selected_tracker: ref(ConfigurationStoreStub.bugs),
             };
             mockStrictInject([[CONFIGURATION_STORE, store]]);
 
             const helper = useConfigurationScreenHelper();
 
-            helper.new_selected_tracker.value = String(ConfigurationStoreStub.tasks.id);
+            helper.new_selected_tracker.value = ConfigurationStoreStub.tasks;
 
             helper.resetSelection();
 
-            expect(helper.new_selected_tracker.value).toBe(String(ConfigurationStoreStub.bugs.id));
+            expect(helper.new_selected_tracker.value).toStrictEqual(ConfigurationStoreStub.bugs);
         });
     });
 });
