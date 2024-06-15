@@ -18,7 +18,7 @@
 -
 -->
 <template>
-    <div class="tlp-dropdown">
+    <div class="tlp-dropdown" v-if="!is_pending">
         <button
             type="button"
             v-bind:title="trigger_title"
@@ -63,6 +63,7 @@
 import type { SectionEditor } from "@/composables/useSectionEditor";
 import { useGettext } from "vue3-gettext";
 import type { ArtidocSection } from "@/helpers/artidoc-section.type";
+import { isPendingArtifactSection, isArtifactSection } from "@/helpers/artidoc-section.type";
 import type { Dropdown } from "@tuleap/tlp-dropdown";
 import { createDropdown } from "@tuleap/tlp-dropdown";
 import { computed, onMounted, ref } from "vue";
@@ -75,7 +76,10 @@ const props = defineProps<{
 const { enableEditor } = props.editor.editor_actions;
 const { is_section_editable } = props.editor;
 const is_edit_mode = props.editor.isSectionInEditMode();
-const artifact_url = `/plugins/tracker/?aid=${props.section.artifact.id}`;
+const is_pending = computed(() => isPendingArtifactSection(props.section));
+const artifact_url = computed(() =>
+    isArtifactSection(props.section) ? `/plugins/tracker/?aid=${props.section.artifact.id}` : "",
+);
 const trigger = ref<HTMLElement | null>(null);
 
 const edit_title = computed(() =>

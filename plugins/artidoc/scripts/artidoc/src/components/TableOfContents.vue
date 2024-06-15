@@ -24,11 +24,18 @@
             {{ $gettext("Table of contents") }}
         </h1>
         <ol>
-            <li v-for="section in sections" v-bind:key="section.artifact.id">
+            <li v-for="section in sections" v-bind:key="section.id">
                 <span v-if="is_sections_loading" class="tlp-skeleton-text"></span>
-                <a v-else v-bind:href="`#${section.artifact.id}`" class="section-title">
+                <a
+                    v-else-if="isArtifactSection(section)"
+                    v-bind:href="href(section)"
+                    class="section-title"
+                >
                     {{ section.display_title }}
                 </a>
+                <template v-else>
+                    {{ section.display_title }}
+                </template>
             </li>
         </ol>
     </div>
@@ -37,10 +44,15 @@
 <script setup lang="ts">
 import { useInjectSectionsStore } from "@/stores/useSectionsStore";
 import { useGettext } from "vue3-gettext";
+import type { ArtidocSection } from "@/helpers/artidoc-section.type";
+import { isArtifactSection } from "@/helpers/artidoc-section.type";
 
 const { $gettext } = useGettext();
 
 const { sections, is_sections_loading } = useInjectSectionsStore();
+
+const href = (section: ArtidocSection): string =>
+    isArtifactSection(section) ? `#${section.artifact.id}` : "";
 </script>
 
 <style scoped lang="scss">

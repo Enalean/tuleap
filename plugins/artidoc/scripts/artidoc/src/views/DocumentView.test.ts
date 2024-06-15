@@ -21,7 +21,7 @@ import { describe, expect, it, vi } from "vitest";
 import { shallowMount } from "@vue/test-utils";
 import EmptyState from "@/views/EmptyState.vue";
 import DocumentLayout from "@/components/DocumentLayout.vue";
-import ArtidocSectionFactory from "@/helpers/artidoc-section.factory";
+import ArtifactSectionFactory from "@/helpers/artifact-section.factory";
 import NoAccessState from "@/views/NoAccessState.vue";
 import DocumentView from "@/views/DocumentView.vue";
 import * as sectionsStore from "@/stores/useSectionsStore";
@@ -86,7 +86,7 @@ describe("DocumentView", () => {
         it("should display document content view", () => {
             setupInjectionKeys(false, ConfigurationStoreStub.bugs);
             vi.spyOn(sectionsStore, "useInjectSectionsStore").mockReturnValue(
-                InjectedSectionsStoreStub.withLoadedSections([ArtidocSectionFactory.create()]),
+                InjectedSectionsStoreStub.withLoadedSections([ArtifactSectionFactory.create()]),
             );
             const wrapper = shallowMount(DocumentView);
             expect(wrapper.findComponent(DocumentLayout).exists()).toBe(true);

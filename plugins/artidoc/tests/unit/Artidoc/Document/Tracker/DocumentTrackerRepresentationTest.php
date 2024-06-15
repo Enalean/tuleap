@@ -134,6 +134,7 @@ final class DocumentTrackerRepresentationTest extends TestCase
 
         self::assertNotNull($representation->title);
         self::assertSame(1004, $representation->title->field_id);
+        self::assertSame('A String Field', $representation->title->label);
     }
 
     public function testItExposesNullForDescriptionIfNoSemanticDescription(): void
@@ -192,12 +193,14 @@ final class DocumentTrackerRepresentationTest extends TestCase
 
         self::assertNotNull($representation->description);
         self::assertSame(1005, $representation->description->field_id);
+        self::assertSame('A Text Field', $representation->description->label);
     }
 
     private function getStringField(int $id, bool $submittable): Tracker_FormElement_Field_String
     {
         $field = $this->createMock(Tracker_FormElement_Field_String::class);
         $field->method('getId')->willReturn($id);
+        $field->method('getLabel')->willReturn('A String Field');
         $field->method('userCanSubmit')->willReturn($submittable);
 
         return $field;
@@ -207,6 +210,7 @@ final class DocumentTrackerRepresentationTest extends TestCase
     {
         $field = $this->createMock(Tracker_FormElement_Field_Text::class);
         $field->method('getId')->willReturn($id);
+        $field->method('getLabel')->willReturn('A Text Field');
         $field->method('userCanSubmit')->willReturn($submittable);
 
         return $field;

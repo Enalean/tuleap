@@ -21,33 +21,46 @@
 <template>
     <ol>
         <li
-            v-for="section in sections"
-            v-bind:key="section.artifact.id"
-            v-bind:id="`${section.artifact.id}`"
+            v-for="(section, index) in sections"
+            v-bind:key="section.id"
+            v-bind:id="getId(section)"
             v-bind:class="{ 'artidoc-section-with-add-button': has_add_button }"
         >
             <add-new-section-button
                 class="artidoc-button-add-section-container"
                 v-if="has_add_button"
+                v-bind:insert_section_callback="insertSection"
+                v-bind:position="{ index }"
             />
             <section-container v-bind:section="section" />
         </li>
     </ol>
-    <add-new-section-button class="artidoc-button-add-section-container" v-if="has_add_button" />
+    <add-new-section-button
+        class="artidoc-button-add-section-container"
+        v-if="has_add_button"
+        v-bind:insert_section_callback="insertSection"
+        v-bind:position="AT_THE_END"
+    />
 </template>
 
 <script setup lang="ts">
-import { useInjectSectionsStore } from "@/stores/useSectionsStore";
+import type { ArtidocSection } from "@/helpers/artidoc-section.type";
+import { isArtifactSection } from "@/helpers/artidoc-section.type";
+import { useInjectSectionsStore, AT_THE_END } from "@/stores/useSectionsStore";
 import AddNewSectionButton from "@/components/AddNewSectionButton.vue";
 import SectionContainer from "@/components/SectionContainer.vue";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import { CAN_USER_EDIT_DOCUMENT } from "@/can-user-edit-document-injection-key";
 
-const { sections } = useInjectSectionsStore();
+const { sections, insertSection } = useInjectSectionsStore();
 
 const can_user_edit_document = strictInject<boolean>(CAN_USER_EDIT_DOCUMENT);
 
 const has_add_button = can_user_edit_document;
+
+function getId(section: ArtidocSection): string {
+    return isArtifactSection(section) ? String(section.artifact.id) : "";
+}
 </script>
 
 <style lang="scss" scoped>

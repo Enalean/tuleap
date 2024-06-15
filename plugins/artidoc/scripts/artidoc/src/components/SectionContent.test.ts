@@ -21,7 +21,7 @@ import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import SectionContent from "@/components/SectionContent.vue";
 import type { ComponentPublicInstance } from "vue";
-import ArtidocSectionFactory from "@/helpers/artidoc-section.factory";
+import ArtifactSectionFactory from "@/helpers/artifact-section.factory";
 import SectionHeader from "@/components/SectionHeader.vue";
 import SectionDescription from "@/components/SectionDescription.vue";
 import * as sectionsStore from "@/stores/useSectionsStore";
@@ -37,7 +37,7 @@ describe("SectionContent", () => {
             );
             wrapper = shallowMount(SectionContent, {
                 props: {
-                    section: ArtidocSectionFactory.create(),
+                    section: ArtifactSectionFactory.create(),
                 },
             });
         });
@@ -57,7 +57,7 @@ describe("SectionContent", () => {
             );
             wrapper = shallowMount(SectionContent, {
                 props: {
-                    section: ArtidocSectionFactory.create(),
+                    section: ArtifactSectionFactory.create(),
                 },
             });
         });

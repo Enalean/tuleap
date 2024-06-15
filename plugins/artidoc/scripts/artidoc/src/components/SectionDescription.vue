@@ -23,7 +23,6 @@
     <template v-else-if="is_edit_mode">
         <component
             v-bind:is="async_editor"
-            v-bind:artifact_id="artifact_id"
             v-bind:editable_description="editable_description"
             v-bind:input_current_description="input_current_description"
             v-bind:readonly_value="readonly_description"
@@ -41,7 +40,6 @@ import { useInjectSectionsStore } from "@/stores/useSectionsStore";
 import SectionDescriptionReadOnly from "@/components/description/SectionDescriptionReadOnly.vue";
 
 defineProps<{
-    artifact_id: number;
     editable_description: string;
     readonly_description: string;
     is_edit_mode: boolean;

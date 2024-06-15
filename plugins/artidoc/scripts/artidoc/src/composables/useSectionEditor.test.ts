@@ -20,19 +20,20 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import useSectionEditor from "@/composables/useSectionEditor";
 import * as rest_querier from "@/helpers/rest-querier";
-import ArtidocSectionFactory from "@/helpers/artidoc-section.factory";
+import ArtifactSectionFactory from "@/helpers/artifact-section.factory";
 import * as tuleap_strict_inject from "@tuleap/vue-strict-inject";
 import { errAsync, okAsync } from "neverthrow";
 import { flushPromises } from "@vue/test-utils";
 import * as on_before_unload from "@/helpers/on-before-unload";
 import { TuleapAPIFaultStub } from "@/helpers/stubs/TuleapAPIFaultStub";
-import type { ArtidocSection } from "@/helpers/artidoc-section.type";
+import type { ArtidocSection, ArtifactSection } from "@/helpers/artidoc-section.type";
 import * as latest from "@/helpers/is-section-in-its-latest-version";
 import { OutdatedSectionFault } from "@/helpers/is-section-in-its-latest-version";
+import PendingArtifactSectionFactory from "@/helpers/pending-artifact-section.factory";
 
-const default_section = ArtidocSectionFactory.create();
+const default_section = ArtifactSectionFactory.create();
 
-const section = ArtidocSectionFactory.override({
+const section = ArtifactSectionFactory.override({
     artifact: {
         ...default_section.artifact,
         id: 1,
@@ -45,15 +46,21 @@ const section = ArtidocSectionFactory.override({
 });
 
 describe("useSectionEditor", () => {
-    let update_section_callback: (section: ArtidocSection) => void;
+    let update_section_callback: (section: ArtifactSection) => void;
+    let remove_section_callback: (section: ArtidocSection) => void;
 
     beforeEach(() => {
         update_section_callback = vi.fn();
+        remove_section_callback = vi.fn();
     });
 
     describe("getReadonlyDescription", () => {
         it("should return the post processed value", () => {
-            const store = useSectionEditor(section, update_section_callback);
+            const store = useSectionEditor(
+                section,
+                update_section_callback,
+                remove_section_callback,
+            );
             expect(store.getReadonlyDescription().value).toBe("the description");
         });
     });
@@ -72,6 +79,7 @@ describe("useSectionEditor", () => {
                     },
                 },
                 update_section_callback,
+                remove_section_callback,
             );
 
             expect(store.getEditableDescription().value).toBe(
@@ -92,6 +100,7 @@ describe("useSectionEditor", () => {
                     },
                 },
                 update_section_callback,
+                remove_section_callback,
             );
 
             expect(store.getEditableDescription().value).toBe(
@@ -113,6 +122,7 @@ describe("useSectionEditor", () => {
                     },
                 },
                 update_section_callback,
+                remove_section_callback,
             );
 
             expect(store.getEditableDescription().value).toBe(
@@ -123,7 +133,11 @@ describe("useSectionEditor", () => {
 
     describe("inputCurrentDescription", () => {
         it("should input current description", () => {
-            const store = useSectionEditor(section, update_section_callback);
+            const store = useSectionEditor(
+                section,
+                update_section_callback,
+                remove_section_callback,
+            );
             expect(store.getEditableDescription().value).toBe("the original description");
 
             store.inputCurrentDescription("new description");
@@ -134,7 +148,11 @@ describe("useSectionEditor", () => {
 
     describe("enableEditor", () => {
         it("should enable edit mode", () => {
-            const store = useSectionEditor(section, update_section_callback);
+            const store = useSectionEditor(
+                section,
+                update_section_callback,
+                remove_section_callback,
+            );
             expect(store.isSectionInEditMode().value).toBe(false);
 
             store.editor_actions.enableEditor();
@@ -145,7 +163,11 @@ describe("useSectionEditor", () => {
 
     describe("cancelEditor", () => {
         it("should cancel edit mode", () => {
-            const store = useSectionEditor(section, update_section_callback);
+            const store = useSectionEditor(
+                section,
+                update_section_callback,
+                remove_section_callback,
+            );
             store.editor_actions.enableEditor();
             expect(store.isSectionInEditMode().value).toBe(true);
             store.inputCurrentDescription("the description changed");
@@ -155,13 +177,30 @@ describe("useSectionEditor", () => {
 
             expect(store.isSectionInEditMode().value).toBe(false);
             expect(store.getEditableDescription().value).toBe("the original description");
+            expect(remove_section_callback).not.toHaveBeenCalled();
+        });
+
+        it("should remove the section if it is a pending one", () => {
+            const store = useSectionEditor(
+                PendingArtifactSectionFactory.create(),
+                update_section_callback,
+                remove_section_callback,
+            );
+
+            store.editor_actions.cancelEditor();
+
+            expect(remove_section_callback).toHaveBeenCalled();
         });
     });
 
     describe("saveEditor", () => {
         describe("when the description is the same as the original description", () => {
             it("should not put artifact description", () => {
-                const store = useSectionEditor(section, update_section_callback);
+                const store = useSectionEditor(
+                    section,
+                    update_section_callback,
+                    remove_section_callback,
+                );
                 const mock_put_artifact_description = vi.spyOn(rest_querier, "putArtifact");
 
                 store.editor_actions.saveEditor();
@@ -175,7 +214,11 @@ describe("useSectionEditor", () => {
             it("should end in error in case of 400", async () => {
                 vi.spyOn(latest, "isSectionInItsLatestVersion").mockReturnValue(okAsync(true));
 
-                const store = useSectionEditor(section, update_section_callback);
+                const store = useSectionEditor(
+                    section,
+                    update_section_callback,
+                    remove_section_callback,
+                );
                 const mock_put_artifact_description = vi
                     .spyOn(rest_querier, "putArtifact")
                     .mockReturnValue(
@@ -200,7 +243,11 @@ describe("useSectionEditor", () => {
             it("should end in NotFound error in case of 404", async () => {
                 vi.spyOn(latest, "isSectionInItsLatestVersion").mockReturnValue(okAsync(true));
 
-                const store = useSectionEditor(section, update_section_callback);
+                const store = useSectionEditor(
+                    section,
+                    update_section_callback,
+                    remove_section_callback,
+                );
                 const mock_put_artifact_description = vi
                     .spyOn(rest_querier, "putArtifact")
                     .mockReturnValue(
@@ -225,7 +272,11 @@ describe("useSectionEditor", () => {
             it("should end in NotFound error in case of 403", async () => {
                 vi.spyOn(latest, "isSectionInItsLatestVersion").mockReturnValue(okAsync(true));
 
-                const store = useSectionEditor(section, update_section_callback);
+                const store = useSectionEditor(
+                    section,
+                    update_section_callback,
+                    remove_section_callback,
+                );
                 const mock_put_artifact_description = vi
                     .spyOn(rest_querier, "putArtifact")
                     .mockReturnValue(
@@ -252,7 +303,11 @@ describe("useSectionEditor", () => {
                     errAsync(OutdatedSectionFault.build()),
                 );
 
-                const store = useSectionEditor(section, update_section_callback);
+                const store = useSectionEditor(
+                    section,
+                    update_section_callback,
+                    remove_section_callback,
+                );
                 const mock_put_artifact_description = vi.spyOn(rest_querier, "putArtifact");
 
                 store.inputCurrentDescription("new description");
@@ -272,13 +327,17 @@ describe("useSectionEditor", () => {
             it("should get updated section", async () => {
                 vi.spyOn(latest, "isSectionInItsLatestVersion").mockReturnValue(okAsync(true));
 
-                const store = useSectionEditor(section, update_section_callback);
+                const store = useSectionEditor(
+                    section,
+                    update_section_callback,
+                    remove_section_callback,
+                );
                 const mock_put_artifact_description = vi
                     .spyOn(rest_querier, "putArtifact")
                     .mockReturnValue(okAsync(new Response()));
                 const mock_get_section = vi.spyOn(rest_querier, "getSection").mockReturnValue(
                     okAsync(
-                        ArtidocSectionFactory.override({
+                        ArtifactSectionFactory.override({
                             description: {
                                 ...default_section.description,
                                 value: "the original description",
@@ -304,11 +363,30 @@ describe("useSectionEditor", () => {
                 expect(update_section_callback).toHaveBeenCalled();
             });
         });
+
+        describe("when the section is a pending artifact section", () => {
+            it("should display an error because the feature is not implemented yet", async () => {
+                const store = useSectionEditor(
+                    PendingArtifactSectionFactory.create(),
+                    update_section_callback,
+                    remove_section_callback,
+                );
+
+                store.editor_actions.saveEditor();
+                await flushPromises();
+
+                expect(store.isInError().value).toBe(true);
+            });
+        });
     });
 
     describe("forceSaveEditor", () => {
         it("should end in error in case of... error", async () => {
-            const store = useSectionEditor(section, update_section_callback);
+            const store = useSectionEditor(
+                section,
+                update_section_callback,
+                remove_section_callback,
+            );
             const mock_put_artifact_description = vi
                 .spyOn(rest_querier, "putArtifact")
                 .mockReturnValue(
@@ -329,13 +407,17 @@ describe("useSectionEditor", () => {
         });
 
         it("should get updated section", async () => {
-            const store = useSectionEditor(section, update_section_callback);
+            const store = useSectionEditor(
+                section,
+                update_section_callback,
+                remove_section_callback,
+            );
             const mock_put_artifact_description = vi
                 .spyOn(rest_querier, "putArtifact")
                 .mockReturnValue(okAsync(new Response()));
             const mock_get_section = vi.spyOn(rest_querier, "getSection").mockReturnValue(
                 okAsync(
-                    ArtidocSectionFactory.override({
+                    ArtifactSectionFactory.override({
                         description: {
                             ...default_section.description,
                             value: "the original description",
@@ -358,14 +440,35 @@ describe("useSectionEditor", () => {
             expect(store.getReadonlyDescription().value).toBe("the updated post_processed_value");
             expect(update_section_callback).toHaveBeenCalled();
         });
+
+        describe("when the section is a pending artifact section", () => {
+            it("should do not save anything because the feature is not implemented yet", async () => {
+                const store = useSectionEditor(
+                    PendingArtifactSectionFactory.create(),
+                    update_section_callback,
+                    remove_section_callback,
+                );
+
+                const mock_put_artifact_description = vi.spyOn(rest_querier, "putArtifact");
+
+                store.editor_actions.forceSaveEditor();
+                await flushPromises();
+
+                expect(mock_put_artifact_description).not.toHaveBeenCalled();
+            });
+        });
     });
 
     describe("refreshSection", () => {
         it("should refresh the section", async () => {
-            const store = useSectionEditor(section, update_section_callback);
+            const store = useSectionEditor(
+                section,
+                update_section_callback,
+                remove_section_callback,
+            );
             vi.spyOn(rest_querier, "getSection").mockReturnValue(
                 okAsync(
-                    ArtidocSectionFactory.override({
+                    ArtifactSectionFactory.override({
                         display_title: "concurrently edited title",
                         description: {
                             ...section.description,
@@ -406,16 +509,19 @@ describe("useSectionEditor", () => {
             [true, true, true],
         ])(
             `When user can edit document = %s
-    And can edit section = %s
-    Then the is_section_editable = %s`,
+            And can edit section = %s
+            Then the is_section_editable = %s`,
             function (can_user_edit_document, can_user_edit_section, expected) {
                 vi.spyOn(tuleap_strict_inject, "strictInject").mockReturnValue(
                     can_user_edit_document,
                 );
 
+                const artifact_section: ArtifactSection = { ...section, can_user_edit_section };
+
                 const store = useSectionEditor(
-                    { ...section, can_user_edit_section },
+                    artifact_section,
                     update_section_callback,
+                    remove_section_callback,
                 );
 
                 expect(store.is_section_editable.value).toBe(expected);
@@ -427,7 +533,11 @@ describe("useSectionEditor", () => {
         it("should prevent page leave when section is in edit mode", () => {
             const preventPageLeave = vi.spyOn(on_before_unload, "preventPageLeave");
 
-            const store = useSectionEditor(section, update_section_callback);
+            const store = useSectionEditor(
+                section,
+                update_section_callback,
+                remove_section_callback,
+            );
             store.clearGlobalNumberOfOpenEditorForTests();
             expect(store.isSectionInEditMode().value).toBe(false);
 
@@ -439,7 +549,11 @@ describe("useSectionEditor", () => {
         it("should allow page leave when section is not anymore in edit mode", () => {
             const allowPageLeave = vi.spyOn(on_before_unload, "allowPageLeave");
 
-            const store = useSectionEditor(section, update_section_callback);
+            const store = useSectionEditor(
+                section,
+                update_section_callback,
+                remove_section_callback,
+            );
             store.clearGlobalNumberOfOpenEditorForTests();
             expect(store.isSectionInEditMode().value).toBe(false);
 
@@ -453,23 +567,25 @@ describe("useSectionEditor", () => {
             const allowPageLeave = vi.spyOn(on_before_unload, "allowPageLeave");
 
             const first_store = useSectionEditor(
-                ArtidocSectionFactory.override({
+                ArtifactSectionFactory.override({
                     artifact: {
                         ...default_section.artifact,
                         id: 1,
                     },
                 }),
                 update_section_callback,
+                remove_section_callback,
             );
             first_store.clearGlobalNumberOfOpenEditorForTests();
             const second_store = useSectionEditor(
-                ArtidocSectionFactory.override({
+                ArtifactSectionFactory.override({
                     artifact: {
                         ...default_section.artifact,
                         id: 2,
                     },
                 }),
                 update_section_callback,
+                remove_section_callback,
             );
 
             expect(first_store.isSectionInEditMode().value).toBe(false);

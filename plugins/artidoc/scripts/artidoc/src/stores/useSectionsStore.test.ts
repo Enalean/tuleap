@@ -18,12 +18,13 @@
  */
 
 import { describe, it, vi, expect } from "vitest";
-import { useSectionsStore } from "@/stores/useSectionsStore";
+import { AT_THE_END, useSectionsStore } from "@/stores/useSectionsStore";
 import * as rest from "@/helpers/rest-querier";
 import { errAsync, okAsync } from "neverthrow";
 import { flushPromises } from "@vue/test-utils";
-import ArtidocSectionFactory from "@/helpers/artidoc-section.factory";
+import ArtifactSectionFactory from "@/helpers/artifact-section.factory";
 import { Fault } from "@tuleap/fault";
+import PendingArtifactSectionFactory from "@/helpers/pending-artifact-section.factory";
 
 describe("useSectionsStore", () => {
     describe("loadSections", () => {
@@ -35,7 +36,7 @@ describe("useSectionsStore", () => {
 
         it("should store loaded sections", async () => {
             vi.spyOn(rest, "getAllSections").mockReturnValue(
-                okAsync([ArtidocSectionFactory.create()]),
+                okAsync([ArtifactSectionFactory.create()]),
             );
 
             const store = useSectionsStore();
@@ -80,7 +81,7 @@ describe("useSectionsStore", () => {
 
         it("should says that sections are not anymore loading when they are loaded #CaptainObvious", async () => {
             vi.spyOn(rest, "getAllSections").mockReturnValue(
-                okAsync([ArtidocSectionFactory.create()]),
+                okAsync([ArtifactSectionFactory.create()]),
             );
 
             const store = useSectionsStore();
@@ -107,7 +108,7 @@ describe("useSectionsStore", () => {
 
     describe("updateSection", () => {
         it("should throw when we try to update a section while sections are undefined", async () => {
-            const section = ArtidocSectionFactory.create();
+            const section = ArtifactSectionFactory.create();
 
             vi.spyOn(rest, "getAllSections").mockReturnValue(
                 errAsync(Fault.fromMessage("Oopsie!")),
@@ -122,8 +123,8 @@ describe("useSectionsStore", () => {
         });
 
         it("should update the section", async () => {
-            const section = ArtidocSectionFactory.create();
-            const section_a = ArtidocSectionFactory.override({
+            const section = ArtifactSectionFactory.create();
+            const section_a = ArtifactSectionFactory.override({
                 ...section,
                 id: "section-a",
                 title: {
@@ -131,7 +132,7 @@ describe("useSectionsStore", () => {
                     value: "Section A",
                 },
             });
-            const section_b = ArtidocSectionFactory.override({
+            const section_b = ArtifactSectionFactory.override({
                 ...section,
                 id: "section-b",
                 title: {
@@ -148,7 +149,7 @@ describe("useSectionsStore", () => {
             await flushPromises();
 
             store.updateSection(
-                ArtidocSectionFactory.override({
+                ArtifactSectionFactory.override({
                     ...section_b,
                     title: {
                         ...section_b.title,
@@ -160,6 +161,108 @@ describe("useSectionsStore", () => {
             expect(store.sections.value).toHaveLength(2);
             expect(store.sections.value?.[0].title.value).toBe("Section A");
             expect(store.sections.value?.[1].title.value).toBe("Updated section B");
+        });
+    });
+
+    describe("removeSection", () => {
+        it("should remove the section when it is found", () => {
+            const section1 = ArtifactSectionFactory.create();
+            const section2 = PendingArtifactSectionFactory.create();
+            const section3 = ArtifactSectionFactory.create();
+            const section4 = PendingArtifactSectionFactory.create();
+
+            const store = useSectionsStore();
+            store.sections.value = [section1, section2, section3, section4];
+
+            store.removeSection(section2);
+            store.removeSection(section3);
+
+            expect(store.sections.value).not.toBeUndefined();
+            expect(store.sections.value).toHaveLength(2);
+            expect(store.sections.value[0]).toStrictEqual(section1);
+            expect(store.sections.value[1]).toStrictEqual(section4);
+        });
+
+        it("should do nothing when there is no sections", () => {
+            const store = useSectionsStore();
+            store.sections.value = undefined;
+
+            store.removeSection(ArtifactSectionFactory.create());
+
+            expect(store.sections.value).toBeUndefined();
+        });
+
+        it("should do nothing when there is no sections", () => {
+            const section1 = ArtifactSectionFactory.create();
+            const section2 = PendingArtifactSectionFactory.create();
+            const section3 = ArtifactSectionFactory.create();
+            const section4 = PendingArtifactSectionFactory.create();
+
+            const store = useSectionsStore();
+            store.sections.value = [section1, section2, section3, section4];
+
+            store.removeSection(ArtifactSectionFactory.create());
+
+            expect(store.sections.value).not.toBeUndefined();
+            expect(store.sections.value).toHaveLength(4);
+            expect(store.sections.value[0]).toStrictEqual(section1);
+            expect(store.sections.value[1]).toStrictEqual(section2);
+            expect(store.sections.value[2]).toStrictEqual(section3);
+            expect(store.sections.value[3]).toStrictEqual(section4);
+        });
+    });
+
+    describe("insertSection", () => {
+        const section1 = ArtifactSectionFactory.create();
+        const section2 = PendingArtifactSectionFactory.create();
+        const new_section = PendingArtifactSectionFactory.create();
+
+        it("should do nothing when sections are undefined", () => {
+            const store = useSectionsStore();
+            store.sections.value = undefined;
+
+            store.insertSection(PendingArtifactSectionFactory.create(), AT_THE_END);
+
+            expect(store.sections.value).toBeUndefined();
+        });
+
+        it("should insert the section at the beginning", () => {
+            const store = useSectionsStore();
+            store.sections.value = [section1, section2];
+
+            store.insertSection(new_section, { index: 0 });
+
+            expect(store.sections.value).not.toBeUndefined();
+            expect(store.sections.value).toHaveLength(3);
+            expect(store.sections.value[0]).toStrictEqual(new_section);
+            expect(store.sections.value[1]).toStrictEqual(section1);
+            expect(store.sections.value[2]).toStrictEqual(section2);
+        });
+
+        it("should insert the section before the second one", () => {
+            const store = useSectionsStore();
+            store.sections.value = [section1, section2];
+
+            store.insertSection(new_section, { index: 1 });
+
+            expect(store.sections.value).not.toBeUndefined();
+            expect(store.sections.value).toHaveLength(3);
+            expect(store.sections.value[0]).toStrictEqual(section1);
+            expect(store.sections.value[1]).toStrictEqual(new_section);
+            expect(store.sections.value[2]).toStrictEqual(section2);
+        });
+
+        it("should insert the section at the end", () => {
+            const store = useSectionsStore();
+            store.sections.value = [section1, section2];
+
+            store.insertSection(new_section, AT_THE_END);
+
+            expect(store.sections.value).not.toBeUndefined();
+            expect(store.sections.value).toHaveLength(3);
+            expect(store.sections.value[0]).toStrictEqual(section1);
+            expect(store.sections.value[1]).toStrictEqual(section2);
+            expect(store.sections.value[2]).toStrictEqual(new_section);
         });
     });
 });

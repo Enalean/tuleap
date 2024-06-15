@@ -24,7 +24,8 @@ import type { ComponentPublicInstance } from "vue";
 import { createGettext } from "vue3-gettext";
 import { SectionEditorStub } from "@/helpers/stubs/SectionEditorStub";
 import type { SectionEditor } from "@/composables/useSectionEditor";
-import ArtidocSectionFactory from "@/helpers/artidoc-section.factory";
+import ArtifactSectionFactory from "@/helpers/artifact-section.factory";
+import PendingArtifactSectionFactory from "@/helpers/pending-artifact-section.factory";
 
 vi.mock("@tuleap/tlp-dropdown");
 
@@ -33,7 +34,7 @@ describe("SectionDropdown", () => {
         return shallowMount(SectionDropdown, {
             propsData: {
                 editor,
-                section: ArtidocSectionFactory.create(),
+                section: ArtifactSectionFactory.create(),
             },
             global: {
                 plugins: [createGettext({ silent: true })],
@@ -62,6 +63,22 @@ describe("SectionDropdown", () => {
     describe("when the user is not allowed to edit the section", () => {
         it("should hide edit cta", () => {
             expect(getEditCta(SectionEditorStub.withoutEditableSection()).exists()).toBe(false);
+        });
+    });
+
+    describe("when the section is a pending artifact section", () => {
+        it("should not display the dropdown", () => {
+            const wrapper = shallowMount(SectionDropdown, {
+                propsData: {
+                    editor: SectionEditorStub.inEditMode(),
+                    section: PendingArtifactSectionFactory.create(),
+                },
+                global: {
+                    plugins: [createGettext({ silent: true })],
+                },
+            });
+
+            expect(wrapper.find("[data-test=artidoc-dropdown-trigger]").exists()).toBe(false);
         });
     });
 });

@@ -25,6 +25,7 @@ namespace Tuleap\Artidoc\Document\Tracker;
 use PFUser;
 use Tracker;
 use Tracker_FormElement_Field_String;
+use Tracker_FormElementFactory;
 use Tracker_Semantic_Description;
 use Tracker_Semantic_Title;
 
@@ -45,12 +46,12 @@ final readonly class DocumentTrackerRepresentation
     {
         $title_field = Tracker_Semantic_Title::load($tracker)->getField();
         $title       = $title_field && $title_field instanceof Tracker_FormElement_Field_String && $title_field->userCanSubmit($user)
-            ? new DocumentTrackerFieldRepresentation($title_field->getId())
+            ? new DocumentTrackerFieldRepresentation($title_field->getId(), $title_field->getLabel(), Tracker_FormElementFactory::instance()->getType($title_field))
             : null;
 
         $description_field = Tracker_Semantic_Description::load($tracker)->getField();
         $description       = $description_field && $description_field->userCanSubmit($user)
-            ? new DocumentTrackerFieldRepresentation($description_field->getId())
+            ? new DocumentTrackerFieldRepresentation($description_field->getId(), $description_field->getLabel(), Tracker_FormElementFactory::instance()->getType($title_field))
             : null;
 
         return new self($tracker->getId(), $tracker->getName(), $title, $description);

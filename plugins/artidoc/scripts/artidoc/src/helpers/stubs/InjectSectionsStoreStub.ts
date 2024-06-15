@@ -25,24 +25,32 @@ const noop = (): void => {};
 
 export const InjectedSectionsStoreStub = {
     withLoadedSections: (sections: readonly ArtidocSection[]): SectionsStore => ({
+        insertSection: noop,
+        removeSection: noop,
         loadSections: noop,
         updateSection: noop,
         is_sections_loading: ref(false),
         sections: ref(sections),
     }),
     withLoadingSections: (sections: readonly ArtidocSection[] = []): SectionsStore => ({
+        insertSection: noop,
+        removeSection: noop,
         loadSections: noop,
         updateSection: noop,
         is_sections_loading: ref(true),
         sections: ref(sections),
     }),
     withSectionsInError: (): SectionsStore => ({
+        insertSection: noop,
+        removeSection: noop,
         loadSections: noop,
         updateSection: noop,
         is_sections_loading: ref(false),
         sections: ref(undefined),
     }),
     withMockedLoadSections: (loadSections: (item_id: number) => void): SectionsStore => ({
+        insertSection: noop,
+        removeSection: noop,
         loadSections,
         updateSection: noop,
         is_sections_loading: ref(false),

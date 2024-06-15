@@ -20,7 +20,7 @@
 import { describe, expect, it, vi } from "vitest";
 import * as fetch from "@tuleap/fetch-result";
 import { errAsync, okAsync } from "neverthrow";
-import ArtidocSectionFactory from "@/helpers/artidoc-section.factory";
+import ArtifactSectionFactory from "@/helpers/artifact-section.factory";
 import { getAllSections, getSection, putArtifact } from "@/helpers/rest-querier";
 import { flushPromises } from "@vue/test-utils";
 import type { ArtidocSection } from "@/helpers/artidoc-section.type";
@@ -30,11 +30,11 @@ import { uri } from "@tuleap/fetch-result";
 describe("rest-querier", () => {
     describe("getAllSections", () => {
         it("should returns retrieved sections when title is a string field", async () => {
-            const section_a = ArtidocSectionFactory.create();
-            const section_b = ArtidocSectionFactory.create();
+            const section_a = ArtifactSectionFactory.create();
+            const section_b = ArtifactSectionFactory.create();
             vi.spyOn(fetch, "getAllJSON").mockReturnValue(
                 okAsync([
-                    ArtidocSectionFactory.override({
+                    ArtifactSectionFactory.override({
                         ...section_a,
                         title: {
                             ...section_a.title,
@@ -42,7 +42,7 @@ describe("rest-querier", () => {
                             value: "Le title A",
                         },
                     }),
-                    ArtidocSectionFactory.override({
+                    ArtifactSectionFactory.override({
                         ...section_b,
                         title: {
                             ...section_b.title,
@@ -71,11 +71,11 @@ describe("rest-querier", () => {
         });
 
         it("should returns retrieved sections when title is a text field in text format, replacing line breaks", async () => {
-            const section_a = ArtidocSectionFactory.create();
-            const section_b = ArtidocSectionFactory.create();
+            const section_a = ArtifactSectionFactory.create();
+            const section_b = ArtifactSectionFactory.create();
             vi.spyOn(fetch, "getAllJSON").mockReturnValue(
                 okAsync([
-                    ArtidocSectionFactory.override({
+                    ArtifactSectionFactory.override({
                         ...section_a,
                         title: {
                             ...section_a.title,
@@ -85,7 +85,7 @@ describe("rest-querier", () => {
                             post_processed_value: "Le title<br>A",
                         },
                     }),
-                    ArtidocSectionFactory.override({
+                    ArtifactSectionFactory.override({
                         ...section_b,
                         title: {
                             ...section_b.title,
@@ -116,11 +116,11 @@ describe("rest-querier", () => {
         });
 
         it("should returns retrieved sections when title is a text field in html format, replacing line breaks", async () => {
-            const section_a = ArtidocSectionFactory.create();
-            const section_b = ArtidocSectionFactory.create();
+            const section_a = ArtifactSectionFactory.create();
+            const section_b = ArtifactSectionFactory.create();
             vi.spyOn(fetch, "getAllJSON").mockReturnValue(
                 okAsync([
-                    ArtidocSectionFactory.override({
+                    ArtifactSectionFactory.override({
                         ...section_a,
                         title: {
                             ...section_a.title,
@@ -130,7 +130,7 @@ describe("rest-querier", () => {
                             post_processed_value: "<p>Le title</p>\r\n<p>A</p>",
                         },
                     }),
-                    ArtidocSectionFactory.override({
+                    ArtifactSectionFactory.override({
                         ...section_b,
                         title: {
                             ...section_b.title,
@@ -161,11 +161,11 @@ describe("rest-querier", () => {
         });
 
         it("should returns retrieved sections when title is a text field in markdown format, replacing line breaks", async () => {
-            const section_a = ArtidocSectionFactory.create();
-            const section_b = ArtidocSectionFactory.create();
+            const section_a = ArtifactSectionFactory.create();
+            const section_b = ArtifactSectionFactory.create();
             vi.spyOn(fetch, "getAllJSON").mockReturnValue(
                 okAsync([
-                    ArtidocSectionFactory.override({
+                    ArtifactSectionFactory.override({
                         ...section_a,
                         title: {
                             ...section_a.title,
@@ -176,7 +176,7 @@ describe("rest-querier", () => {
                             commonmark: "Le title\r\nA",
                         },
                     }),
-                    ArtidocSectionFactory.override({
+                    ArtifactSectionFactory.override({
                         ...section_b,
                         title: {
                             ...section_b.title,
@@ -210,10 +210,10 @@ describe("rest-querier", () => {
 
     describe("getSection", () => {
         it("should returns retrieved section when title is a string field", async () => {
-            const section = ArtidocSectionFactory.create();
+            const section = ArtifactSectionFactory.create();
             vi.spyOn(fetch, "getJSON").mockReturnValue(
                 okAsync(
-                    ArtidocSectionFactory.override({
+                    ArtifactSectionFactory.override({
                         ...section,
                         title: {
                             ...section.title,
@@ -224,7 +224,7 @@ describe("rest-querier", () => {
                 ),
             );
 
-            let retrieved_section: ArtidocSection = ArtidocSectionFactory.create();
+            let retrieved_section: ArtidocSection = ArtifactSectionFactory.create();
             getSection("section-id").match(
                 (section) => {
                     retrieved_section = section;
@@ -240,10 +240,10 @@ describe("rest-querier", () => {
         });
 
         it("should returns retrieved section when title is a text field in text format, replacing line breaks", async () => {
-            const section = ArtidocSectionFactory.create();
+            const section = ArtifactSectionFactory.create();
             vi.spyOn(fetch, "getJSON").mockReturnValue(
                 okAsync(
-                    ArtidocSectionFactory.override({
+                    ArtifactSectionFactory.override({
                         ...section,
                         title: {
                             ...section.title,
@@ -256,7 +256,7 @@ describe("rest-querier", () => {
                 ),
             );
 
-            let retrieved_section: ArtidocSection = ArtidocSectionFactory.create();
+            let retrieved_section: ArtidocSection = ArtifactSectionFactory.create();
             getSection("section-id").match(
                 (section) => {
                     retrieved_section = section;
@@ -272,10 +272,10 @@ describe("rest-querier", () => {
         });
 
         it("should returns retrieved section when title is a text field in html format, replacing line breaks", async () => {
-            const section = ArtidocSectionFactory.create();
+            const section = ArtifactSectionFactory.create();
             vi.spyOn(fetch, "getJSON").mockReturnValue(
                 okAsync(
-                    ArtidocSectionFactory.override({
+                    ArtifactSectionFactory.override({
                         ...section,
                         title: {
                             ...section.title,
@@ -288,7 +288,7 @@ describe("rest-querier", () => {
                 ),
             );
 
-            let retrieved_section: ArtidocSection = ArtidocSectionFactory.create();
+            let retrieved_section: ArtidocSection = ArtifactSectionFactory.create();
             getSection("section-id").match(
                 (section) => {
                     retrieved_section = section;
@@ -304,10 +304,10 @@ describe("rest-querier", () => {
         });
 
         it("should returns retrieved section when title is a text field in markdown format, replacing line breaks", async () => {
-            const section = ArtidocSectionFactory.create();
+            const section = ArtifactSectionFactory.create();
             vi.spyOn(fetch, "getJSON").mockReturnValue(
                 okAsync(
-                    ArtidocSectionFactory.override({
+                    ArtifactSectionFactory.override({
                         ...section,
                         title: {
                             ...section.title,
@@ -321,7 +321,7 @@ describe("rest-querier", () => {
                 ),
             );
 
-            let retrieved_section: ArtidocSection = ArtidocSectionFactory.create();
+            let retrieved_section: ArtidocSection = ArtifactSectionFactory.create();
             getSection("section-id").match(
                 (section) => {
                     retrieved_section = section;
