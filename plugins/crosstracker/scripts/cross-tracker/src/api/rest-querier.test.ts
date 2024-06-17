@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { describe, expect, it, vi } from "vitest";
 import { okAsync } from "neverthrow";
 import * as fetch_result from "@tuleap/fetch-result";
 import type { TrackerReference } from "./rest-querier";
@@ -50,7 +51,7 @@ describe("rest-querier", () => {
                 expert_query: '@title = "bla"',
                 invalid_trackers: [second_tracker],
             };
-            const getJSON = jest.spyOn(fetch_result, "getJSON").mockReturnValue(okAsync(report));
+            const getJSON = vi.spyOn(fetch_result, "getJSON").mockReturnValue(okAsync(report));
             const report_id = 16;
 
             const result = await getReport(report_id);
@@ -80,7 +81,7 @@ describe("rest-querier", () => {
         it(`will return the artifacts and the total number of artifacts`, async () => {
             const total = 91;
             const collection = { artifacts: [{ id: 100 }, { id: 33 }] };
-            const getResponse = jest.spyOn(fetch_result, "getResponse").mockReturnValue(
+            const getResponse = vi.spyOn(fetch_result, "getResponse").mockReturnValue(
                 okAsync({
                     headers: new Headers({
                         "X-PAGINATION-SIZE": String(total),
@@ -110,7 +111,7 @@ describe("rest-querier", () => {
             and will return the artifacts and the total number of artifacts`, async () => {
             const total = 69;
             const collection = { artifacts: [{ id: 26 }, { id: 89 }] };
-            const getResponse = jest.spyOn(fetch_result, "getResponse").mockReturnValue(
+            const getResponse = vi.spyOn(fetch_result, "getResponse").mockReturnValue(
                 okAsync({
                     headers: new Headers({
                         "X-PAGINATION-SIZE": String(total),
@@ -168,9 +169,7 @@ describe("rest-querier", () => {
                     expert_query,
                     invalid_trackers: [second_tracker],
                 };
-                const putJSON = jest
-                    .spyOn(fetch_result, "putJSON")
-                    .mockReturnValue(okAsync(report));
+                const putJSON = vi.spyOn(fetch_result, "putJSON").mockReturnValue(okAsync(report));
                 const report_id = 59;
 
                 const result = await updateReport(
@@ -209,7 +208,7 @@ describe("rest-querier", () => {
                     { id: 239, label: "spur" },
                     { id: 487, label: "castellano" },
                 ];
-                const getAllJSON = jest
+                const getAllJSON = vi
                     .spyOn(fetch_result, "getAllJSON")
                     .mockReturnValue(okAsync(projects));
 
@@ -235,7 +234,7 @@ describe("rest-querier", () => {
         describe("getTrackersOfProject()", () => {
             it(`will return the list of trackers of a given project`, async () => {
                 const trackers = [{ id: 28 }, { id: 50 }];
-                const getAllJSON = jest
+                const getAllJSON = vi
                     .spyOn(fetch_result, "getAllJSON")
                     .mockReturnValue(okAsync(trackers));
                 const project_id = 444;
@@ -263,7 +262,7 @@ describe("rest-querier", () => {
         describe("getCSVReport()", () => {
             it("When there is only one page then it will return the first request", async () => {
                 const csv = `"id"\r\n65\r\n88\r\n`;
-                const getTextResponse = jest.spyOn(fetch_result, "getTextResponse").mockReturnValue(
+                const getTextResponse = vi.spyOn(fetch_result, "getTextResponse").mockReturnValue(
                     okAsync({
                         headers: new Headers({ "X-PAGINATION-SIZE": "2" }),
                         text: () => Promise.resolve(csv),
@@ -287,7 +286,7 @@ describe("rest-querier", () => {
             it(`When there are two pages, then it will drop the header line of the second request
                 concat the two requests and return them`, async () => {
                 const csv = `"id"\r\n61\r\n26\r\n`;
-                const getTextResponse = jest.spyOn(fetch_result, "getTextResponse").mockReturnValue(
+                const getTextResponse = vi.spyOn(fetch_result, "getTextResponse").mockReturnValue(
                     okAsync({
                         headers: new Headers({ "X-PAGINATION-SIZE": "70" }),
                         text: () => Promise.resolve(csv),

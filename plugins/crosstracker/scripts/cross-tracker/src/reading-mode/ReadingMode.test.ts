@@ -17,6 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import type { Mock } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import { errAsync, okAsync } from "neverthrow";
@@ -33,16 +35,16 @@ describe("ReadingMode", () => {
         readingCrossTrackerReport: ReadingCrossTrackerReport,
         is_user_admin: boolean,
         has_error_message: boolean,
-        errorSpy: jest.Mock,
-        discardSpy: jest.Mock;
+        errorSpy: Mock,
+        discardSpy: Mock;
 
     beforeEach(() => {
         backendCrossTrackerReport = new BackendCrossTrackerReport();
         readingCrossTrackerReport = new ReadingCrossTrackerReport();
         is_user_admin = true;
         has_error_message = false;
-        errorSpy = jest.fn();
-        discardSpy = jest.fn();
+        errorSpy = vi.fn();
+        discardSpy = vi.fn();
     });
 
     function instantiateComponent(): VueWrapper<InstanceType<typeof ReadingMode>> {
@@ -90,9 +92,9 @@ describe("ReadingMode", () => {
 
     describe("saveReport()", () => {
         it(`will update the backend report and emit a "saved" event`, async () => {
-            const initBackend = jest.spyOn(backendCrossTrackerReport, "init");
+            const initBackend = vi.spyOn(backendCrossTrackerReport, "init");
             initBackend.mockImplementation(() => Promise.resolve());
-            const duplicateBackend = jest.spyOn(backendCrossTrackerReport, "duplicateFromReport");
+            const duplicateBackend = vi.spyOn(backendCrossTrackerReport, "duplicateFromReport");
             const trackers: ReadonlyArray<TrackerAndProject> = [
                 { tracker: { id: 36 }, project: { id: 180 } } as TrackerAndProject,
                 { tracker: { id: 17 }, project: { id: 138 } } as TrackerAndProject,
@@ -100,7 +102,7 @@ describe("ReadingMode", () => {
             const expert_query = '@description != ""';
             const report = { trackers, expert_query } as Report;
 
-            const updateReport = jest
+            const updateReport = vi
                 .spyOn(rest_querier, "updateReport")
                 .mockReturnValue(okAsync(report));
             const wrapper = instantiateComponent();
@@ -116,7 +118,7 @@ describe("ReadingMode", () => {
 
         it("Given the report is in error, then nothing will happen", async () => {
             has_error_message = true;
-            const updateReport = jest.spyOn(rest_querier, "updateReport");
+            const updateReport = vi.spyOn(rest_querier, "updateReport");
 
             const wrapper = instantiateComponent();
             await wrapper.get("[data-test=cross-tracker-save-report]").trigger("click");
@@ -126,7 +128,7 @@ describe("ReadingMode", () => {
 
         it("When there is a REST error, then it will be shown", async () => {
             const error_message = "Report not found";
-            jest.spyOn(rest_querier, "updateReport").mockReturnValue(
+            vi.spyOn(rest_querier, "updateReport").mockReturnValue(
                 errAsync(Fault.fromMessage(error_message)),
             );
 
@@ -141,7 +143,7 @@ describe("ReadingMode", () => {
 
     describe("cancelReport() -", () => {
         it("when I click on 'Cancel', then the reading report will be reset", async () => {
-            const duplicateReading = jest.spyOn(readingCrossTrackerReport, "duplicateFromReport");
+            const duplicateReading = vi.spyOn(readingCrossTrackerReport, "duplicateFromReport");
             const wrapper = instantiateComponent();
 
             await wrapper.get("[data-test=cross-tracker-cancel-report]").trigger("click");

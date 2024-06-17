@@ -17,6 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import type { Mock } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import { getGlobalTestOptions } from "../helpers/global-options-for-tests";
@@ -29,13 +31,13 @@ import type { Artifact, State } from "../type";
 import ArtifactTableRow from "./ArtifactTableRow.vue";
 import { TuleapAPIFaultStub } from "../../tests/stubs/TuleapAPIFaultStub";
 
-jest.useFakeTimers();
+vi.useFakeTimers();
 
 describe("ArtifactTable", () => {
-    let errorSpy: jest.Mock;
+    let errorSpy: Mock;
 
     beforeEach(() => {
-        errorSpy = jest.fn();
+        errorSpy = vi.fn();
     });
 
     function getWrapper(state: Partial<State>): VueWrapper<InstanceType<typeof ArtifactTable>> {
@@ -56,7 +58,7 @@ describe("ArtifactTable", () => {
 
     describe("loadArtifacts() -", () => {
         it("Given report is saved, it loads artifacts of report", () => {
-            const getReportContent = jest
+            const getReportContent = vi
                 .spyOn(rest_querier, "getReportContent")
                 .mockReturnValue(okAsync({ artifacts: [], total: 0 }));
             getWrapper({ is_report_saved: true });
@@ -64,7 +66,7 @@ describe("ArtifactTable", () => {
         });
 
         it("Given report is not saved, it loads artifacts of current selected trackers", () => {
-            const getQueryResult = jest
+            const getQueryResult = vi
                 .spyOn(rest_querier, "getQueryResult")
                 .mockReturnValue(okAsync({ artifacts: [], total: 0 }));
             getWrapper({ is_report_saved: false });
@@ -73,11 +75,11 @@ describe("ArtifactTable", () => {
 
         it("when there is a REST error, it will be displayed", async () => {
             const error_message = "Internal Server Error";
-            jest.spyOn(rest_querier, "getReportContent").mockReturnValue(
+            vi.spyOn(rest_querier, "getReportContent").mockReturnValue(
                 errAsync(Fault.fromMessage(error_message)),
             );
             getWrapper({ is_report_saved: true });
-            await jest.runOnlyPendingTimersAsync();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(errorSpy).toHaveBeenCalled();
             expect(errorSpy.mock.calls[0][1]).toContain(error_message);
@@ -85,11 +87,11 @@ describe("ArtifactTable", () => {
 
         it("when there is a Tuleap API error, it will be shown", async () => {
             const error_message = "Error while parsing the query";
-            jest.spyOn(rest_querier, "getReportContent").mockReturnValue(
+            vi.spyOn(rest_querier, "getReportContent").mockReturnValue(
                 errAsync(TuleapAPIFaultStub.fromMessage(error_message)),
             );
             getWrapper({ is_report_saved: true });
-            await jest.runOnlyPendingTimersAsync();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(errorSpy).toHaveBeenCalled();
             expect(errorSpy.mock.calls[0][1]).toContain(error_message);
@@ -100,11 +102,11 @@ describe("ArtifactTable", () => {
             const total = 32;
             const first_batch = { artifacts: [{ id: 123 } as Artifact], total };
             const second_batch = { artifacts: [{ id: 545 } as Artifact], total };
-            const getReportContent = jest
+            const getReportContent = vi
                 .spyOn(rest_querier, "getReportContent")
                 .mockReturnValueOnce(okAsync(first_batch));
             const wrapper = getWrapper({ is_report_saved: true });
-            await jest.runOnlyPendingTimersAsync();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(wrapper.findAllComponents(ArtifactTableRow)).toHaveLength(1);
 
