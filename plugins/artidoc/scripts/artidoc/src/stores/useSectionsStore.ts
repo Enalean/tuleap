@@ -21,22 +21,35 @@ import type { Ref } from "vue";
 import { ref, provide } from "vue";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import { sectionsStoreKey } from "./sectionsStoreKey";
-import type { ArtidocSection } from "@/helpers/artidoc-section.type";
-import ArtidocSectionFactory from "@/helpers/artidoc-section.factory";
+import { isArtifactSection } from "@/helpers/artidoc-section.type";
+import type {
+    ArtidocSection,
+    PendingArtifactSection,
+    ArtifactSection,
+} from "@/helpers/artidoc-section.type";
+import ArtifactSectionFactory from "@/helpers/artifact-section.factory";
 import { getAllSections } from "@/helpers/rest-querier";
 
 export interface SectionsStore {
     sections: Ref<readonly ArtidocSection[] | undefined>;
     is_sections_loading: Ref<boolean>;
     loadSections: (item_id: number) => void;
-    updateSection: (section: ArtidocSection) => void;
+    updateSection: (section: ArtifactSection) => void;
+    insertSection: (section: PendingArtifactSection, position: Position) => void;
+    removeSection: (section: ArtidocSection) => void;
 }
+
+type BeforeSection = { index: number };
+type AtTheEnd = "at-the-end";
+
+export const AT_THE_END: AtTheEnd = "at-the-end";
+export type Position = AtTheEnd | BeforeSection;
 
 export function useSectionsStore(): SectionsStore {
     const skeleton_data = [
-        ArtidocSectionFactory.create(),
-        ArtidocSectionFactory.create(),
-        ArtidocSectionFactory.create(),
+        ArtifactSectionFactory.create(),
+        ArtifactSectionFactory.create(),
+        ArtifactSectionFactory.create(),
     ];
     const sections: Ref<ArtidocSection[] | undefined> = ref(skeleton_data);
     const is_sections_loading = ref(true);
@@ -54,17 +67,43 @@ export function useSectionsStore(): SectionsStore {
         );
     }
 
-    function updateSection(section: ArtidocSection): void {
+    function updateSection(section: ArtifactSection): void {
         if (sections.value === undefined) {
             throw Error("Unexpected call to updateSection while there is no section");
         }
 
         const length = sections.value.length;
         for (let i = 0; i < length; i++) {
-            if (sections.value[i].id === section.id) {
+            const current = sections.value[i];
+            if (isArtifactSection(current) && current.id === section.id) {
                 sections.value[i] = section;
             }
         }
+    }
+
+    function insertSection(section: PendingArtifactSection, position: Position): void {
+        if (sections.value === undefined) {
+            return;
+        }
+
+        if (position === AT_THE_END) {
+            sections.value.push(section);
+        } else {
+            sections.value.splice(position.index, 0, section);
+        }
+    }
+
+    function removeSection(section: ArtidocSection): void {
+        if (sections.value === undefined) {
+            return;
+        }
+
+        const index = sections.value.findIndex((element) => element.id === section.id);
+        if (index === -1) {
+            return;
+        }
+
+        sections.value.splice(index, 1);
     }
 
     return {
@@ -72,6 +111,8 @@ export function useSectionsStore(): SectionsStore {
         is_sections_loading,
         loadSections,
         updateSection,
+        insertSection,
+        removeSection,
     };
 }
 

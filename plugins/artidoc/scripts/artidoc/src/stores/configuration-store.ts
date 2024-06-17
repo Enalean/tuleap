@@ -24,8 +24,16 @@ import { putConfiguration } from "@/helpers/rest-querier";
 export interface Tracker {
     readonly id: number;
     readonly label: string;
-    readonly title: { field_id: number } | null;
-    readonly description: { field_id: number } | null;
+    readonly title: null | {
+        readonly field_id: number;
+        readonly label: string;
+        readonly type: "string" | "text";
+    };
+    readonly description: null | {
+        readonly field_id: number;
+        readonly label: string;
+        readonly type: "text";
+    };
 }
 
 export interface ConfigurationStore {

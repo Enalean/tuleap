@@ -17,6 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import type { Tracker } from "@/stores/configuration-store";
+
 interface ArtifactFieldValueRepresentation {
     readonly field_id: number;
     readonly label: string;
@@ -43,8 +45,14 @@ export type ArtifactTextFieldValueRepresentation =
     | ArtifactFieldValueCommonmarkRepresentation
     | ArtifactFieldValueTextRepresentation;
 
-export type ArtidocSection = {
+export interface ArtidocSection {
     id: string;
+    title: ArtifactFieldValueStringRepresentation | ArtifactTextFieldValueRepresentation;
+    display_title: string;
+    description: ArtifactTextFieldValueRepresentation;
+}
+
+export interface ArtifactSection extends ArtidocSection {
     artifact: {
         id: number;
         uri: string;
@@ -60,11 +68,22 @@ export type ArtidocSection = {
             };
         };
     };
-    title: ArtifactFieldValueStringRepresentation | ArtifactTextFieldValueRepresentation;
-    display_title: string;
-    description: ArtifactTextFieldValueRepresentation;
     can_user_edit_section: boolean;
-};
+}
+
+export interface PendingArtifactSection extends ArtidocSection {
+    tracker: Tracker;
+}
+
+export function isPendingArtifactSection(
+    section: ArtidocSection,
+): section is PendingArtifactSection {
+    return "tracker" in section;
+}
+
+export function isArtifactSection(section: ArtidocSection): section is ArtifactSection {
+    return "artifact" in section;
+}
 
 export function isTitleAString(
     title: ArtidocSection["title"],

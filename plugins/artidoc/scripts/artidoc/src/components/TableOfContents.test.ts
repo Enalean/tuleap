@@ -23,7 +23,7 @@ import { shallowMount } from "@vue/test-utils";
 import { createGettext } from "vue3-gettext";
 import type { ComponentPublicInstance } from "vue";
 import TableOfContents from "@/components/TableOfContents.vue";
-import ArtidocSectionFactory from "@/helpers/artidoc-section.factory";
+import ArtifactSectionFactory from "@/helpers/artifact-section.factory";
 import * as sectionsStore from "@/stores/useSectionsStore";
 import { InjectedSectionsStoreStub } from "@/helpers/stubs/InjectSectionsStoreStub";
 
@@ -31,13 +31,13 @@ describe("TableOfContents", () => {
     describe("when the sections are loading", () => {
         let wrapper: VueWrapper<ComponentPublicInstance>;
         beforeAll(() => {
-            const defaultSection = ArtidocSectionFactory.create();
+            const defaultSection = ArtifactSectionFactory.create();
             vi.spyOn(sectionsStore, "useInjectSectionsStore").mockReturnValue(
                 InjectedSectionsStoreStub.withLoadingSections([
-                    ArtidocSectionFactory.override({
+                    ArtifactSectionFactory.override({
                         artifact: { ...defaultSection.artifact, id: 1 },
                     }),
-                    ArtidocSectionFactory.override({
+                    ArtifactSectionFactory.override({
                         artifact: { ...defaultSection.artifact, id: 2 },
                     }),
                 ]),
@@ -61,13 +61,13 @@ describe("TableOfContents", () => {
     describe("when the sections are loaded", () => {
         let wrapper: VueWrapper<ComponentPublicInstance>;
         beforeAll(() => {
-            const defaultSection = ArtidocSectionFactory.create();
+            const defaultSection = ArtifactSectionFactory.create();
             vi.spyOn(sectionsStore, "useInjectSectionsStore").mockReturnValue(
                 InjectedSectionsStoreStub.withLoadedSections([
-                    ArtidocSectionFactory.override({
+                    ArtifactSectionFactory.override({
                         artifact: { ...defaultSection.artifact, id: 1 },
                     }),
-                    ArtidocSectionFactory.override({
+                    ArtifactSectionFactory.override({
                         artifact: { ...defaultSection.artifact, id: 2 },
                     }),
                 ]),

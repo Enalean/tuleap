@@ -27,15 +27,15 @@ import { useConfigurationScreenHelper } from "@/composables/useConfigurationScre
 import { createGettext } from "vue3-gettext";
 import IntroductoryText from "@/components/configuration/IntroductoryText.vue";
 
+const title: Tracker["title"] = { field_id: 1001, label: "Summary", type: "string" };
+const description: Tracker["description"] = { field_id: 1002, label: "Description", type: "text" };
+
 describe("IntroductoryText", () => {
     it.each<[Tracker, boolean]>([
         [{ id: 101, label: "Bugs", title: null, description: null }, true],
-        [{ id: 101, label: "Bugs", title: null, description: { field_id: 1002 } }, true],
-        [{ id: 101, label: "Bugs", title: { field_id: 1001 }, description: null }, true],
-        [
-            { id: 101, label: "Bugs", title: { field_id: 1001 }, description: { field_id: 1002 } },
-            false,
-        ],
+        [{ id: 101, label: "Bugs", title: null, description }, true],
+        [{ id: 101, label: "Bugs", title, description: null }, true],
+        [{ id: 101, label: "Bugs", title, description }, false],
     ])(
         `Given the tracker %s Then warning will be displayed = %s`,
         (tracker: Tracker, expected: boolean) => {

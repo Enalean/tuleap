@@ -22,26 +22,32 @@ import type { ComponentPublicInstance } from "vue";
 import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import DocumentContent from "@/components/DocumentContent.vue";
-import ArtidocSectionFactory from "@/helpers/artidoc-section.factory";
+import ArtifactSectionFactory from "@/helpers/artifact-section.factory";
 import SectionContainer from "@/components/SectionContainer.vue";
 import * as sectionsStore from "@/stores/useSectionsStore";
 import { InjectedSectionsStoreStub } from "@/helpers/stubs/InjectSectionsStoreStub";
 import { mockStrictInject } from "@/helpers/mock-strict-inject";
 import { CAN_USER_EDIT_DOCUMENT } from "@/can-user-edit-document-injection-key";
 import AddNewSectionButton from "./AddNewSectionButton.vue";
+import PendingArtifactSectionFactory from "@/helpers/pending-artifact-section.factory";
 
 describe("DocumentContent", () => {
     function getWrapper(): VueWrapper<ComponentPublicInstance> {
-        const defaultSection = ArtidocSectionFactory.create();
+        const default_artifact_section = ArtifactSectionFactory.create();
+        const default_pending_artifact_section = PendingArtifactSectionFactory.create();
+
         vi.spyOn(sectionsStore, "useInjectSectionsStore").mockReturnValue(
             InjectedSectionsStoreStub.withLoadedSections([
-                ArtidocSectionFactory.override({
-                    title: { ...defaultSection.title, value: "Title 1" },
-                    artifact: { ...defaultSection.artifact, id: 1 },
+                ArtifactSectionFactory.override({
+                    title: { ...default_artifact_section.title, value: "Title 1" },
+                    artifact: { ...default_artifact_section.artifact, id: 1 },
                 }),
-                ArtidocSectionFactory.override({
-                    title: { ...defaultSection.title, value: "Title 2" },
-                    artifact: { ...defaultSection.artifact, id: 2 },
+                ArtifactSectionFactory.override({
+                    title: { ...default_artifact_section.title, value: "Title 2" },
+                    artifact: { ...default_artifact_section.artifact, id: 2 },
+                }),
+                PendingArtifactSectionFactory.override({
+                    title: { ...default_pending_artifact_section.title, value: "Title 3" },
                 }),
             ]),
         );
@@ -52,15 +58,16 @@ describe("DocumentContent", () => {
     it("should display the two sections", () => {
         mockStrictInject([[CAN_USER_EDIT_DOCUMENT, false]]);
         const list = getWrapper().find("ol");
-        expect(list.findAllComponents(SectionContainer)).toHaveLength(2);
+        expect(list.findAllComponents(SectionContainer)).toHaveLength(3);
     });
 
-    it("sections should have an id for anchor feature", () => {
+    it("sections should have an id for anchor feature except pending artifact section", () => {
         mockStrictInject([[CAN_USER_EDIT_DOCUMENT, false]]);
         const list = getWrapper().find("ol");
         const sections = list.findAll("li");
         expect(sections[0].attributes().id).toBe("1");
         expect(sections[1].attributes().id).toBe("2");
+        expect(sections[2].attributes().id).toBe("");
     });
 
     it("should not display add new section button if user cannot edit the document", () => {
@@ -70,6 +77,6 @@ describe("DocumentContent", () => {
 
     it("should display n+1 add new section button if user can edit the document", () => {
         mockStrictInject([[CAN_USER_EDIT_DOCUMENT, true]]);
-        expect(getWrapper().findAllComponents(AddNewSectionButton)).toHaveLength(3);
+        expect(getWrapper().findAllComponents(AddNewSectionButton)).toHaveLength(4);
     });
 });

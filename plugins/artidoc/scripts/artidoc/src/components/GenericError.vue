@@ -29,29 +29,32 @@
             <blockquote>{{ error_message }}</blockquote>
         </div>
 
-        <p>
-            {{
-                $gettext(
-                    "You can open the corresponding artifact in a new tab to fix the situation.",
-                )
-            }}
-        </p>
+        <template v-if="is_artifact">
+            <p>
+                {{
+                    $gettext(
+                        "You can open the corresponding artifact in a new tab to fix the situation.",
+                    )
+                }}
+            </p>
 
-        <div class="alert-error-buttons">
-            <a v-bind:href="href" target="_blank" rel="noreferrer" class="tlp-button-danger">
-                <i
-                    class="fa-solid fa-arrow-up-right-from-square tlp-button-icon"
-                    aria-hidden="true"
-                ></i>
-                {{ $gettext("Open artifact") }}
-            </a>
-        </div>
+            <div class="alert-error-buttons">
+                <a v-bind:href="href" target="_blank" rel="noreferrer" class="tlp-button-danger">
+                    <i
+                        class="fa-solid fa-arrow-up-right-from-square tlp-button-icon"
+                        aria-hidden="true"
+                    ></i>
+                    {{ $gettext("Open artifact") }}
+                </a>
+            </div>
+        </template>
     </div>
 </template>
 
 <script setup lang="ts">
 import { useGettext } from "vue3-gettext";
 import type { ArtidocSection } from "@/helpers/artidoc-section.type";
+import { isArtifactSection } from "@/helpers/artidoc-section.type";
 import { computed } from "vue";
 
 const props = defineProps<{
@@ -61,8 +64,12 @@ const props = defineProps<{
 
 const { $gettext } = useGettext();
 
-const href = computed(
-    () => "/plugins/tracker/?aid=" + encodeURIComponent(props.section.artifact.id),
+const is_artifact = computed(() => isArtifactSection(props.section));
+
+const href = computed(() =>
+    isArtifactSection(props.section)
+        ? "/plugins/tracker/?aid=" + encodeURIComponent(props.section.artifact.id)
+        : "",
 );
 </script>
 

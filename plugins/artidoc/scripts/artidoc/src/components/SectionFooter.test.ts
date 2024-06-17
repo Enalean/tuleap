@@ -25,14 +25,14 @@ import { createGettext } from "vue3-gettext";
 import { SectionEditorStub } from "@/helpers/stubs/SectionEditorStub";
 import type { SectionEditor } from "@/composables/useSectionEditor";
 import SectionFooter from "@/components/SectionFooter.vue";
-import ArtidocSectionFactory from "@/helpers/artidoc-section.factory";
+import ArtifactSectionFactory from "@/helpers/artifact-section.factory";
 
 describe("SectionFooter", () => {
     function getWrapper(editor: SectionEditor): VueWrapper<ComponentPublicInstance> {
         return shallowMount(SectionFooter, {
             propsData: {
                 editor,
-                section: ArtidocSectionFactory.create(),
+                section: ArtifactSectionFactory.create(),
             },
             global: { plugins: [createGettext({ silent: true })] },
         });

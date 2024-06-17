@@ -36,7 +36,6 @@ import eventInfo = CKEDITOR.eventInfo;
 const { language } = strictInject<UserLocale>(CURRENT_LOCALE);
 
 const props = defineProps<{
-    artifact_id: number;
     editable_description: string;
     input_current_description: SectionEditor["inputCurrentDescription"];
 }>();

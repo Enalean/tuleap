@@ -19,7 +19,8 @@
 import { computed, ref } from "vue";
 import type { Ref, ComputedRef } from "vue";
 import { getSection, putArtifact } from "@/helpers/rest-querier";
-import type { ArtidocSection } from "@/helpers/artidoc-section.type";
+import type { ArtidocSection, ArtifactSection } from "@/helpers/artidoc-section.type";
+import { isArtifactSection, isPendingArtifactSection } from "@/helpers/artidoc-section.type";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import { CAN_USER_EDIT_DOCUMENT } from "@/can-user-edit-document-injection-key";
 import { preventPageLeave, allowPageLeave } from "@/helpers/on-before-unload";
@@ -28,7 +29,9 @@ import {
     isOutdatedSectionFault,
     isSectionInItsLatestVersion,
 } from "@/helpers/is-section-in-its-latest-version";
-import type { Fault } from "@tuleap/fault";
+import { Fault } from "@tuleap/fault";
+import type { ResultAsync } from "neverthrow";
+import { errAsync, okAsync } from "neverthrow";
 
 export type SectionEditorActions = {
     enableEditor: () => void;
@@ -63,10 +66,11 @@ const TEMPORARY_FLAG_DURATION_IN_MS = 1000;
 
 function useSectionEditor(
     section: ArtidocSection,
-    update_section_callback: (section: ArtidocSection) => void,
+    update_section_callback: (section: ArtifactSection) => void,
+    remove_section_callback: (section: ArtidocSection) => void,
 ): SectionEditor {
     const current_section: Ref<ArtidocSection> = ref(section);
-    const is_edit_mode = ref(false);
+    const is_edit_mode = ref(isPendingArtifactSection(current_section.value));
     const original_description = computed(() =>
         convertDescriptionToHtml(current_section.value.description),
     );
@@ -78,7 +82,19 @@ function useSectionEditor(
     );
     const is_section_editable = computed(() => {
         const can_user_edit_document = strictInject<boolean>(CAN_USER_EDIT_DOCUMENT);
-        return current_section.value.can_user_edit_section && can_user_edit_document;
+
+        if (isPendingArtifactSection(current_section.value)) {
+            return can_user_edit_document;
+        }
+
+        if (
+            isArtifactSection(current_section.value) &&
+            current_section.value.can_user_edit_section
+        ) {
+            return can_user_edit_document;
+        }
+
+        return false;
     });
     const is_being_saved = ref(false);
     const is_just_saved = ref(false);
@@ -108,6 +124,11 @@ function useSectionEditor(
         is_in_error.value = false;
         is_outdated.value = false;
 
+        if (!isArtifactSection(current_section.value)) {
+            handleError(Fault.fromMessage("Save of new section is not implemented yet"));
+            return;
+        }
+
         if (
             editable_description.value === original_description.value &&
             editable_title.value === original_title.value
@@ -120,20 +141,28 @@ function useSectionEditor(
         is_being_saved.value = true;
 
         isSectionInItsLatestVersion(current_section.value)
-            .andThen(() =>
-                putArtifact(
+            .andThen(() => {
+                if (!isArtifactSection(current_section.value)) {
+                    return errAsync(
+                        Fault.fromMessage("Save of new section is not implemented yet"),
+                    );
+                }
+
+                return putArtifact(
                     current_section.value.artifact.id,
                     editable_title.value,
                     current_section.value.title,
                     editable_description.value,
                     current_section.value.description.field_id,
-                ),
-            )
-            .andThen(() => getSection(current_section.value.id))
+                );
+            })
+            .andThen(getLatestVersionOfCurrentSection)
             .match(
                 (artidoc_section: ArtidocSection) => {
                     current_section.value = artidoc_section;
-                    update_section_callback(artidoc_section);
+                    if (isArtifactSection(artidoc_section)) {
+                        update_section_callback(artidoc_section);
+                    }
                     cancelEditor();
                     is_being_saved.value = false;
                     addTemporaryJustSavedFlag();
@@ -145,7 +174,19 @@ function useSectionEditor(
             );
     };
 
+    function getLatestVersionOfCurrentSection(): ResultAsync<ArtidocSection, Fault> {
+        if (isArtifactSection(current_section.value)) {
+            return getSection(current_section.value.id);
+        }
+
+        return okAsync(current_section.value);
+    }
+
     function forceSaveEditor(): void {
+        if (!isArtifactSection(current_section.value)) {
+            return;
+        }
+
         is_outdated.value = false;
         is_being_saved.value = true;
 
@@ -156,11 +197,13 @@ function useSectionEditor(
             editable_description.value,
             current_section.value.description.field_id,
         )
-            .andThen(() => getSection(current_section.value.id))
+            .andThen(getLatestVersionOfCurrentSection)
             .match(
                 (artidoc_section: ArtidocSection) => {
                     current_section.value = artidoc_section;
-                    update_section_callback(artidoc_section);
+                    if (isArtifactSection(artidoc_section)) {
+                        update_section_callback(artidoc_section);
+                    }
                     cancelEditor();
                     is_being_saved.value = false;
                     addTemporaryJustSavedFlag();
@@ -173,10 +216,16 @@ function useSectionEditor(
     }
 
     function refreshSection(): void {
+        if (!isArtifactSection(current_section.value)) {
+            return;
+        }
+
         getSection(current_section.value.id).match(
             (artidoc_section: ArtidocSection) => {
                 current_section.value = artidoc_section;
-                update_section_callback(artidoc_section);
+                if (isArtifactSection(artidoc_section)) {
+                    update_section_callback(artidoc_section);
+                }
                 cancelEditor();
                 addTemporaryJustRefreshedFlag();
             },
@@ -231,6 +280,9 @@ function useSectionEditor(
         editable_title.value = original_title.value;
         setEditMode(false);
         resetErrorStates();
+        if (isPendingArtifactSection(current_section.value)) {
+            remove_section_callback(current_section.value);
+        }
     }
 
     function resetErrorStates(): void {

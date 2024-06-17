@@ -17,11 +17,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { ArtidocSection } from "@/helpers/artidoc-section.type";
+import type { ArtifactSection } from "@/helpers/artidoc-section.type";
+import { v4 as uuidv4 } from "uuid";
 
-const ArtidocSectionFactory = {
-    create: (): ArtidocSection => ({
-        id: "section-id",
+const ArtifactSectionFactory = {
+    create: (): ArtifactSection => ({
+        id: uuidv4(),
         artifact: {
             id: 0,
             uri: "artifacts/1",
@@ -55,10 +56,10 @@ const ArtidocSectionFactory = {
         can_user_edit_section: true,
     }),
 
-    override: (overrides: Partial<ArtidocSection>): ArtidocSection => ({
-        ...ArtidocSectionFactory.create(),
+    override: (overrides: Partial<ArtifactSection>): ArtifactSection => ({
+        ...ArtifactSectionFactory.create(),
         ...overrides,
     }),
 };
 
-export default ArtidocSectionFactory;
+export default ArtifactSectionFactory;

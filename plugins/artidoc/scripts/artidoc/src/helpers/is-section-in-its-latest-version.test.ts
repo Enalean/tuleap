@@ -20,7 +20,7 @@
 import { describe, expect, it, vi } from "vitest";
 import * as rest from "@/helpers/rest-querier";
 import { errAsync, okAsync } from "neverthrow";
-import ArtidocSectionFactory from "@/helpers/artidoc-section.factory";
+import ArtifactSectionFactory from "@/helpers/artifact-section.factory";
 import {
     isOutdatedSectionFault,
     isSectionInItsLatestVersion,
@@ -29,7 +29,7 @@ import { Fault } from "@tuleap/fault";
 
 describe("is-section-in-its-latest-version", () => {
     it("should return true if retrieved section content is the same than the old one", async () => {
-        const section = ArtidocSectionFactory.create();
+        const section = ArtifactSectionFactory.create();
 
         vi.spyOn(rest, "getSection").mockReturnValue(okAsync(section));
 
@@ -39,7 +39,7 @@ describe("is-section-in-its-latest-version", () => {
     });
 
     it("should return fault if retrieved section title is not the same than the old one", async () => {
-        const section = ArtidocSectionFactory.create();
+        const section = ArtifactSectionFactory.create();
 
         vi.spyOn(rest, "getSection").mockReturnValue(
             okAsync({
@@ -61,7 +61,7 @@ describe("is-section-in-its-latest-version", () => {
     });
 
     it("should return fault if retrieved section description is not the same than the old one", async () => {
-        const section = ArtidocSectionFactory.create();
+        const section = ArtifactSectionFactory.create();
 
         vi.spyOn(rest, "getSection").mockReturnValue(
             okAsync({
@@ -89,7 +89,7 @@ describe("is-section-in-its-latest-version", () => {
         const err = Fault.fromMessage("Not found");
         vi.spyOn(rest, "getSection").mockReturnValue(errAsync(err));
 
-        const result = await isSectionInItsLatestVersion(ArtidocSectionFactory.create());
+        const result = await isSectionInItsLatestVersion(ArtifactSectionFactory.create());
 
         expect(result.isErr()).toBe(true);
         result.match(

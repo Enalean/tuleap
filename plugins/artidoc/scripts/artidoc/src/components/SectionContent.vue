@@ -46,7 +46,7 @@
             />
             <section-header-skeleton v-else class="section-header" />
             <section-description
-                v-bind:artifact_id="section.artifact.id"
+                v-bind:section="section"
                 v-bind:editable_description="editable_description"
                 v-bind:readonly_description="readonly_description"
                 v-bind:input_current_description="editor.inputCurrentDescription"
@@ -69,9 +69,9 @@ import SectionFooter from "@/components/SectionFooter.vue";
 
 const props = defineProps<{ section: ArtidocSection }>();
 
-const { is_sections_loading, updateSection } = useInjectSectionsStore();
+const { is_sections_loading, updateSection, removeSection } = useInjectSectionsStore();
 
-const editor = useSectionEditor(props.section, updateSection);
+const editor = useSectionEditor(props.section, updateSection, removeSection);
 
 const is_edit_mode = editor.isSectionInEditMode();
 const is_being_saved = editor.isBeeingSaved();
