@@ -33,7 +33,12 @@ use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSelectablesCollectorVisitor
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidTermCollectorVisitor;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\CrossTrackerExpertQueryReportDao;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilderVisitor;
+use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\SelectedValueRepresentation;
+use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\SelectedValuesCollection;
+use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilderVisitor;
 use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilderVisitor;
+use Tuleap\CrossTracker\REST\v1\Representation\CrossTrackerReportContentRepresentation;
+use Tuleap\CrossTracker\REST\v1\Representation\CrossTrackerSelectedRepresentation;
 use Tuleap\REST\RESTLogger;
 use Tuleap\Tracker\Artifact\RetrieveArtifact;
 use Tuleap\Tracker\Report\Query\Advanced\ExpertQueryValidator;
@@ -55,6 +60,7 @@ final readonly class CrossTrackerArtifactReportFactory
         private ExpertQueryValidator $expert_query_validator,
         private QueryBuilderVisitor $query_builder,
         private SelectBuilderVisitor $select_builder,
+        private ResultBuilderVisitor $result_builder,
         private ParserCacheProxy $parser,
         private CrossTrackerExpertQueryReportDao $expert_query_dao,
         private InvalidTermCollectorVisitor $term_collector,
@@ -74,7 +80,8 @@ final readonly class CrossTrackerArtifactReportFactory
         PFUser $current_user,
         int $limit,
         int $offset,
-    ): ArtifactMatchingReportCollection {
+        bool $static_return,
+    ): ArtifactMatchingReportCollection|CrossTrackerReportContentRepresentation {
         if ($report->getExpertQuery() === '') {
             return $this->getArtifactsFromGivenTrackers(
                 $this->getOnlyActiveTrackersInActiveProjects($report->getTrackers()),
@@ -95,7 +102,8 @@ final readonly class CrossTrackerArtifactReportFactory
                 $report,
                 $current_user,
                 $limit,
-                $offset
+                $offset,
+                $static_return,
             );
         }
     }
@@ -155,7 +163,8 @@ final readonly class CrossTrackerArtifactReportFactory
         PFUser $current_user,
         int $limit,
         int $offset,
-    ): ArtifactMatchingReportCollection {
+        bool $static_return,
+    ): ArtifactMatchingReportCollection|CrossTrackerReportContentRepresentation {
         $trackers = $this->getOnlyActiveTrackersInActiveProjects($report->getTrackers());
         $query    = $this->getQueryFromReport($report, $current_user, $trackers);
 
@@ -172,14 +181,19 @@ final readonly class CrossTrackerArtifactReportFactory
         }
 
         $additional_select_from = $this->select_builder->buildSelectFrom($query->getSelect(), $trackers, $current_user);
-        $temp_results           = $this->expert_query_dao->searchArtifactsColumnsMatchingIds(
+        $select_results         = $this->expert_query_dao->searchArtifactsColumnsMatchingIds(
             $additional_select_from,
             array_map(static fn(array $row) => $row['id'], $artifact_ids),
         );
 
-        RESTLogger::getLogger()->debug(psl_json_encode($temp_results, true)); // Temporary for debugging
+        RESTLogger::getLogger()->debug(psl_json_encode($select_results, true)); // Temporary for debugging
 
-        return $this->buildCollectionOfArtifacts($temp_results, $this->expert_query_dao->foundRows());
+        if ($static_return) {
+            return $this->buildCollectionOfArtifacts($select_results, $this->expert_query_dao->foundRows());
+        } else {
+            $results = $this->result_builder->buildResult($query->getSelect(), $trackers, $current_user, $select_results);
+            return $this->buildReportContentRepresentation($results, $this->expert_query_dao->foundRows());
+        }
     }
 
     /**
@@ -239,5 +253,31 @@ final readonly class CrossTrackerArtifactReportFactory
         }
 
         return new ArtifactMatchingReportCollection($artifacts, $total_size);
+    }
+
+    /**
+     * @param SelectedValuesCollection[] $results
+     */
+    private function buildReportContentRepresentation(array $results, int $total_size): CrossTrackerReportContentRepresentation
+    {
+        /** @var CrossTrackerSelectedRepresentation[] $selected */
+        $selected = [];
+        /** @var array<int, array<string, SelectedValueRepresentation>> $artifacts */
+        $artifacts = [];
+
+        foreach ($results as $result) {
+            if ($result->selected === null) {
+                continue;
+            }
+            $selected[] = $result->selected;
+            foreach ($result->values as $id => $value) {
+                if (! isset($artifacts[$id])) {
+                    $artifacts[$id] = [];
+                }
+                $artifacts[$id][$value->name] = $value->value;
+            }
+        }
+
+        return new CrossTrackerReportContentRepresentation(array_values($artifacts), $selected, $total_size);
     }
 }

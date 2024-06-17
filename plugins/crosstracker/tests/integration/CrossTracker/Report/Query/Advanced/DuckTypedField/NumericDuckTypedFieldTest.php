@@ -31,6 +31,7 @@ use Tuleap\Test\Builders\CoreDatabaseBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Report\Query\Advanced\SearchablesAreInvalidException;
 use Tuleap\Tracker\Report\Query\Advanced\SearchablesDoNotExistException;
+use Tuleap\Tracker\REST\v1\ArtifactMatchingReportCollection;
 use Tuleap\Tracker\Test\Builders\TrackerDatabaseBuilder;
 
 final class NumericDuckTypedFieldTest extends CrossTrackerFieldTestCase
@@ -126,11 +127,11 @@ final class NumericDuckTypedFieldTest extends CrossTrackerFieldTestCase
      */
     private function getMatchingArtifactIds(CrossTrackerReport $report, \PFUser $user): array
     {
-        $artifacts = (new ArtifactReportFactoryInstantiator())
+        $result = (new ArtifactReportFactoryInstantiator())
             ->getFactory()
-            ->getArtifactsMatchingReport($report, $user, 10, 0)
-            ->getArtifacts();
-        return array_values(array_map(static fn(Artifact $artifact) => $artifact->getId(), $artifacts));
+            ->getArtifactsMatchingReport($report, $user, 10, 0, true);
+        assert($result instanceof ArtifactMatchingReportCollection);
+        return array_values(array_map(static fn(Artifact $artifact) => $artifact->getId(), $result->getArtifacts()));
     }
 
     public function testEqualEmpty(): void

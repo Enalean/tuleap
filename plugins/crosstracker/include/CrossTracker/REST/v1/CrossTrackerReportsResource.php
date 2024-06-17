@@ -64,6 +64,8 @@ use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata\MetadataU
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata\StatusChecker;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata\SubmissionDateChecker;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata\TextSemanticChecker;
+use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Field\FieldResultBuilder;
+use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilderVisitor;
 use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Field\Date\DateSelectFromBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Field\FieldSelectFromBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Field\Numeric\NumericSelectFromBuilder;
@@ -72,6 +74,8 @@ use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Field\Text\TextSelec
 use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Field\UGroupList\UGroupListSelectFromBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Field\UserList\UserListSelectFromBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilderVisitor;
+use Tuleap\CrossTracker\REST\v1\Representation\CrossTrackerReportContentRepresentation;
+use Tuleap\CrossTracker\REST\v1\Representation\LegacyCrossTrackerReportContentRepresentation;
 use Tuleap\DB\DBFactory;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
@@ -113,12 +117,14 @@ use Tuleap\Tracker\Report\TrackerNotFoundException;
 use Tuleap\Tracker\Report\TrackerReportConfig;
 use Tuleap\Tracker\Report\TrackerReportConfigDao;
 use Tuleap\Tracker\Report\TrackerReportExtractor;
+use Tuleap\Tracker\REST\v1\ArtifactMatchingReportCollection;
 use URLVerification;
 use UserManager;
 
 final class CrossTrackerReportsResource extends AuthenticatedResource
 {
-    public const MAX_LIMIT = 50;
+    public const MAX_LIMIT          = 50;
+    private const FORMAT_SELECTABLE = 'selectable';
 
     private UserManager $user_manager;
 
@@ -182,16 +188,17 @@ final class CrossTrackerReportsResource extends AuthenticatedResource
      * @url GET {id}/content
      * @access hybrid
      *
-     * @param int $id Id of the report
+     * @param int $id id of the report
      * @param string|null $query
      *                      With a property "trackers_id" to search artifacts presents in given trackers.
      *                      With a property "expert_query" to customize the search. {@required false}
      * @param int $limit Number of elements displayed per page {@from path}{@min 1}{@max 50}
      * @param int $offset Position of the first element to display {@from path}{@min 0}
+     * @param string $return_format Format of the returned payload. Default is 'selectable' {@from path}{@choice selectable,static}
      *
      * @throws RestException 404
      */
-    public function getIdContent(int $id, ?string $query, int $limit = self::MAX_LIMIT, int $offset = 0): array
+    public function getIdContent(int $id, ?string $query, int $limit = self::MAX_LIMIT, int $offset = 0, string $return_format = self::FORMAT_SELECTABLE): LegacyCrossTrackerReportContentRepresentation|CrossTrackerReportContentRepresentation
     {
         $this->checkAccess();
         Header::allowOptionsGet();
@@ -204,7 +211,10 @@ final class CrossTrackerReportsResource extends AuthenticatedResource
 
             $trackers = $this->getTrackersFromRoute($query, $report, $query_parser);
             if (count($trackers) === 0) {
-                return ['artifacts' => []];
+                if ($return_format === self::FORMAT_SELECTABLE) {
+                    return new CrossTrackerReportContentRepresentation([], [], 0);
+                }
+                return new LegacyCrossTrackerReportContentRepresentation([]);
             }
             $expert_query    = $this->getExpertQueryFromRoute($query, $report, $query_parser);
             $expected_report = new CrossTrackerReport($report->getId(), $expert_query, $trackers);
@@ -213,17 +223,26 @@ final class CrossTrackerReportsResource extends AuthenticatedResource
 
             $form_element_factory = Tracker_FormElementFactory::instance();
 
+            $retrieve_field_type    = new FieldTypeRetrieverWrapper($form_element_factory);
+            $trackers_permissions   = TrackersPermissionsRetriever::build();
             $select_builder_visitor = new SelectBuilderVisitor(
                 new FieldSelectFromBuilder(
                     $form_element_factory,
-                    new FieldTypeRetrieverWrapper($form_element_factory),
-                    TrackersPermissionsRetriever::build(),
+                    $retrieve_field_type,
+                    $trackers_permissions,
                     new DateSelectFromBuilder(),
                     new TextSelectFromBuilder(),
                     new NumericSelectFromBuilder(),
                     new StaticListSelectFromBuilder(),
                     new UGroupListSelectFromBuilder(),
                     new UserListSelectFromBuilder()
+                ),
+            );
+            $result_builder_visitor = new ResultBuilderVisitor(
+                new FieldResultBuilder(
+                    $form_element_factory,
+                    $retrieve_field_type,
+                    $trackers_permissions,
                 ),
             );
 
@@ -235,22 +254,36 @@ final class CrossTrackerReportsResource extends AuthenticatedResource
                 $this->getExpertQueryValidator(),
                 $query_builder_visitor,
                 $select_builder_visitor,
+                $result_builder_visitor,
                 new ParserCacheProxy(new Parser()),
                 new CrossTrackerExpertQueryReportDao(),
                 $this->getInvalidComparisonsCollector(),
                 new InvalidSelectablesCollectorVisitor($this->getDuckTypedFieldChecker()),
             );
 
-            $artifacts       = $cross_tracker_artifact_factory->getArtifactsMatchingReport(
+            $artifacts = $cross_tracker_artifact_factory->getArtifactsMatchingReport(
                 $expected_report,
                 $current_user,
                 $limit,
-                $offset
+                $offset,
+                $return_format !== self::FORMAT_SELECTABLE,
             );
-            $representations = (new ArtifactRepresentationFactory())->buildRepresentationsForReport(
-                $artifacts,
-                $current_user
-            );
+
+            if ($return_format === self::FORMAT_SELECTABLE) {
+                assert($artifacts instanceof CrossTrackerReportContentRepresentation);
+                $this->sendPaginationHeaders($limit, $offset, $artifacts->total_size);
+                return $artifacts;
+            } else {
+                assert($artifacts instanceof ArtifactMatchingReportCollection);
+                $representations = (new ArtifactRepresentationFactory())->buildRepresentationsForReport(
+                    $artifacts,
+                    $current_user
+                );
+
+                $this->sendPaginationHeaders($limit, $offset, $representations->getTotalSize());
+
+                return new LegacyCrossTrackerReportContentRepresentation($representations->getArtifacts());
+            }
         } catch (CrossTrackerReportNotFoundException $exception) {
             throw new RestException(404, null, ['i18n_error_message' => 'Report not found']);
         } catch (TrackerNotFoundException | TrackerDuplicateException $exception) {
@@ -276,10 +309,6 @@ final class CrossTrackerReportsResource extends AuthenticatedResource
         } catch (SearchablesAreInvalidException | SelectablesAreInvalidException $exception) {
             throw new RestException(400, null, ['i18n_error_message' => $exception->getMessage()]);
         }
-
-        $this->sendPaginationHeaders($limit, $offset, $representations->getTotalSize());
-
-        return ['artifacts' => $representations->getArtifacts()];
     }
 
     private function getQueryBuilderVisitor(): QueryBuilderVisitor
