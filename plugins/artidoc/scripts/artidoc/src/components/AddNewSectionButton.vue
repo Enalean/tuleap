@@ -29,10 +29,8 @@
 <script setup lang="ts">
 import { useGettext } from "vue3-gettext";
 import { strictInject } from "@tuleap/vue-strict-inject";
-import type { OpenConfigurationModalBus } from "@/composables/useOpenConfigurationModalBus";
 import { OPEN_CONFIGURATION_MODAL_BUS } from "@/composables/useOpenConfigurationModalBus";
-import type { ConfigurationStore } from "@/stores/configuration-store";
-import { CONFIGURATION_STORE } from "@/stores/configuration-store";
+import { isTrackerWithSubmittableSection, CONFIGURATION_STORE } from "@/stores/configuration-store";
 import type { Position, SectionsStore } from "@/stores/useSectionsStore";
 import type { PendingArtifactSection } from "@/helpers/artidoc-section.type";
 import PendingArtifactSectionFactory from "@/helpers/pending-artifact-section.factory";
@@ -42,13 +40,13 @@ const props = defineProps<{
     insert_section_callback: SectionsStore["insertSection"];
 }>();
 
-const configuration_store = strictInject<ConfigurationStore>(CONFIGURATION_STORE);
+const configuration_store = strictInject(CONFIGURATION_STORE);
 
 const { $gettext } = useGettext();
 
 const title = $gettext("Add new section");
 
-const bus = strictInject<OpenConfigurationModalBus>(OPEN_CONFIGURATION_MODAL_BUS);
+const bus = strictInject(OPEN_CONFIGURATION_MODAL_BUS);
 
 function onClick(): void {
     if (!configuration_store.selected_tracker.value) {
@@ -56,31 +54,14 @@ function onClick(): void {
         return;
     }
 
-    if (
-        configuration_store.selected_tracker.value.description === null ||
-        configuration_store.selected_tracker.value.title === null
-    ) {
+    if (!isTrackerWithSubmittableSection(configuration_store.selected_tracker.value)) {
         bus.openModal();
         return;
     }
 
-    const section: PendingArtifactSection = PendingArtifactSectionFactory.override({
-        tracker: configuration_store.selected_tracker.value,
-        title: {
-            ...configuration_store.selected_tracker.value.title,
-            value: "",
-            ...(configuration_store.selected_tracker.value.title.type === "string"
-                ? { type: "string" }
-                : { type: "text", post_processed_value: "", format: "html" }),
-        },
-        display_title: "",
-        description: {
-            ...configuration_store.selected_tracker.value.description,
-            value: "",
-            post_processed_value: "",
-            format: "html",
-        },
-    });
+    const section: PendingArtifactSection = PendingArtifactSectionFactory.overrideFromTracker(
+        configuration_store.selected_tracker.value,
+    );
 
     props.insert_section_callback(section, props.position);
 }

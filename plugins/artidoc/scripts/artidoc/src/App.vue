@@ -30,12 +30,18 @@ import { onMounted } from "vue";
 import DocumentView from "@/views/DocumentView.vue";
 import { useInjectSectionsStore } from "@/stores/useSectionsStore";
 import DocumentHeader from "@/components/DocumentHeader.vue";
+import { CONFIGURATION_STORE } from "@/stores/configuration-store";
+import { strictInject } from "@tuleap/vue-strict-inject";
+import { CAN_USER_EDIT_DOCUMENT } from "@/can-user-edit-document-injection-key";
 
 const props = defineProps<{ item_id: number }>();
 const store = useInjectSectionsStore();
 
+const configuration = strictInject(CONFIGURATION_STORE);
+const can_user_edit_document = strictInject(CAN_USER_EDIT_DOCUMENT);
+
 onMounted(() => {
-    store.loadSections(props.item_id);
+    store.loadSections(props.item_id, configuration.selected_tracker.value, can_user_edit_document);
 });
 </script>
 

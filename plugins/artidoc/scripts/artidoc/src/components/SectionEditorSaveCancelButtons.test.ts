@@ -25,6 +25,9 @@ import { createGettext } from "vue3-gettext";
 import { SectionEditorStub } from "@/helpers/stubs/SectionEditorStub";
 import type { SectionEditor } from "@/composables/useSectionEditor";
 import SectionEditorSaveCancelButtons from "@/components/SectionEditorSaveCancelButtons.vue";
+import { mockStrictInject } from "@/helpers/mock-strict-inject";
+import { CONFIGURATION_STORE } from "@/stores/configuration-store";
+import { ConfigurationStoreStub } from "@/helpers/stubs/ConfigurationStoreStub";
 
 describe("SectionEditorSaveCancelButtons", () => {
     function getWrapper(editor: SectionEditor): VueWrapper<ComponentPublicInstance> {
@@ -38,6 +41,9 @@ describe("SectionEditorSaveCancelButtons", () => {
 
     describe("when the edit mode is off", () => {
         it("should hide buttons", () => {
+            mockStrictInject([
+                [CONFIGURATION_STORE, ConfigurationStoreStub.withoutAllowedTrackers()],
+            ]);
             expect(
                 getWrapper(SectionEditorStub.withEditableSection()).find("button").exists(),
             ).toBe(false);
@@ -46,6 +52,9 @@ describe("SectionEditorSaveCancelButtons", () => {
 
     describe("when the edit mode is on", () => {
         it("should display buttons", () => {
+            mockStrictInject([
+                [CONFIGURATION_STORE, ConfigurationStoreStub.withoutAllowedTrackers()],
+            ]);
             expect(getWrapper(SectionEditorStub.inEditMode()).find("button").exists()).toBe(true);
         });
     });

@@ -36,15 +36,14 @@ import DocumentLayout from "@/components/DocumentLayout.vue";
 import ConfigurationPanel from "@/components/configuration/ConfigurationPanel.vue";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import { CAN_USER_EDIT_DOCUMENT } from "@/can-user-edit-document-injection-key";
-import type { ConfigurationStore } from "@/stores/configuration-store";
 import { CONFIGURATION_STORE } from "@/stores/configuration-store";
 import { computed } from "vue";
 
 const { sections, is_sections_loading } = useInjectSectionsStore();
 
-const can_user_edit_document = strictInject<boolean>(CAN_USER_EDIT_DOCUMENT);
+const can_user_edit_document = strictInject(CAN_USER_EDIT_DOCUMENT);
 
-const { selected_tracker } = strictInject<ConfigurationStore>(CONFIGURATION_STORE);
+const { selected_tracker } = strictInject(CONFIGURATION_STORE);
 
 const should_display_configuration_panel = computed(
     () => can_user_edit_document && !selected_tracker.value,

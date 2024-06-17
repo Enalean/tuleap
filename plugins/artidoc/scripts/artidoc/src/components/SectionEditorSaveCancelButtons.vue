@@ -20,7 +20,7 @@
 <template>
     <div v-if="is_edit_mode">
         <button
-            v-on:click="cancelEditor"
+            v-on:click="onCancel"
             type="button"
             class="tlp-button-primary tlp-button-outline tlp-button-large"
         >
@@ -37,14 +37,22 @@
 <script setup lang="ts">
 import type { SectionEditor } from "@/composables/useSectionEditor";
 import { useGettext } from "vue3-gettext";
+import { strictInject } from "@tuleap/vue-strict-inject";
+import { CONFIGURATION_STORE } from "@/stores/configuration-store";
 
 const props = defineProps<{
     editor: SectionEditor;
 }>();
 
+const { selected_tracker } = strictInject(CONFIGURATION_STORE);
+
 const { $gettext } = useGettext();
 const { cancelEditor, saveEditor } = props.editor.editor_actions;
 const is_edit_mode = props.editor.isSectionInEditMode();
+
+function onCancel(): void {
+    cancelEditor(selected_tracker.value);
+}
 </script>
 
 <style lang="scss" scoped>

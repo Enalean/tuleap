@@ -17,15 +17,15 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { InjectionKey } from "vue";
 import { vi } from "vitest";
 import * as strict_inject from "@tuleap/vue-strict-inject";
+import type { StrictInjectionKey } from "@tuleap/vue-strict-inject";
 
-export function mockStrictInject(keys: [InjectionKey<unknown>, unknown][]): void {
+export function mockStrictInject(keys: [StrictInjectionKey<unknown>, unknown][]): void {
     const map = new Map(keys);
 
     vi.spyOn(strict_inject, "strictInject").mockImplementation(
-        (key: InjectionKey<unknown>): unknown => {
+        (key: StrictInjectionKey<unknown>): unknown => {
             const value = map.get(key);
             if (value === undefined) {
                 throw new Error("Unknown key " + String(key));

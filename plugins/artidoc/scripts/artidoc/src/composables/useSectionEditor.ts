@@ -32,12 +32,13 @@ import {
 import { Fault } from "@tuleap/fault";
 import type { ResultAsync } from "neverthrow";
 import { errAsync, okAsync } from "neverthrow";
+import type { Tracker } from "@/stores/configuration-store";
 
 export type SectionEditorActions = {
     enableEditor: () => void;
     saveEditor: () => void;
     forceSaveEditor: () => void;
-    cancelEditor: () => void;
+    cancelEditor: (tracker: Tracker | null) => void;
     refreshSection: () => void;
 };
 
@@ -67,7 +68,7 @@ const TEMPORARY_FLAG_DURATION_IN_MS = 1000;
 function useSectionEditor(
     section: ArtidocSection,
     update_section_callback: (section: ArtifactSection) => void,
-    remove_section_callback: (section: ArtidocSection) => void,
+    remove_section_callback: (section: ArtidocSection, tracker: Tracker | null) => void,
 ): SectionEditor {
     const current_section: Ref<ArtidocSection> = ref(section);
     const is_edit_mode = ref(isPendingArtifactSection(current_section.value));
@@ -81,7 +82,7 @@ function useSectionEditor(
         () => current_section.value.description.post_processed_value,
     );
     const is_section_editable = computed(() => {
-        const can_user_edit_document = strictInject<boolean>(CAN_USER_EDIT_DOCUMENT);
+        const can_user_edit_document = strictInject(CAN_USER_EDIT_DOCUMENT);
 
         if (isPendingArtifactSection(current_section.value)) {
             return can_user_edit_document;
@@ -163,7 +164,7 @@ function useSectionEditor(
                     if (isArtifactSection(artidoc_section)) {
                         update_section_callback(artidoc_section);
                     }
-                    cancelEditor();
+                    closeEditor();
                     is_being_saved.value = false;
                     addTemporaryJustSavedFlag();
                 },
@@ -204,7 +205,7 @@ function useSectionEditor(
                     if (isArtifactSection(artidoc_section)) {
                         update_section_callback(artidoc_section);
                     }
-                    cancelEditor();
+                    closeEditor();
                     is_being_saved.value = false;
                     addTemporaryJustSavedFlag();
                 },
@@ -226,7 +227,7 @@ function useSectionEditor(
                 if (isArtifactSection(artidoc_section)) {
                     update_section_callback(artidoc_section);
                 }
-                cancelEditor();
+                closeEditor();
                 addTemporaryJustRefreshedFlag();
             },
             (fault: Fault) => {
@@ -275,13 +276,17 @@ function useSectionEditor(
         setEditMode(true);
     };
 
-    function cancelEditor(): void {
+    function closeEditor(): void {
         editable_description.value = original_description.value;
         editable_title.value = original_title.value;
         setEditMode(false);
         resetErrorStates();
+    }
+
+    function cancelEditor(tracker: Tracker | null): void {
+        closeEditor();
         if (isPendingArtifactSection(current_section.value)) {
-            remove_section_callback(current_section.value);
+            remove_section_callback(current_section.value, tracker);
         }
     }
 

@@ -28,12 +28,12 @@ import type * as ckeditor from "ckeditor4";
 import { toValue, ref, onMounted, onBeforeUnmount } from "vue";
 import { config } from "@tuleap/ckeditor-config";
 import { CURRENT_LOCALE } from "@/locale-injection-key";
-import type { UserLocale } from "@/helpers/user-locale";
 import { strictInject } from "@tuleap/vue-strict-inject";
+
 // CKEDITOR is injected by the backend
 // eslint-disable-next-line
 import eventInfo = CKEDITOR.eventInfo;
-const { language } = strictInject<UserLocale>(CURRENT_LOCALE);
+const { language } = strictInject(CURRENT_LOCALE);
 
 const props = defineProps<{
     editable_description: string;
