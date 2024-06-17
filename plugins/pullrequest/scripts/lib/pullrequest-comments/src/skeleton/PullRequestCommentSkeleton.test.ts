@@ -19,15 +19,15 @@
 
 import { describe, it, expect } from "vitest";
 import type { HostElement } from "./PullRequestCommentSkeleton";
-import { PullRequestCommentSkeletonComponent } from "./PullRequestCommentSkeleton";
+import { renderSkeleton } from "./PullRequestCommentSkeleton";
 
 describe("PullRequestCommentSkeleton", () => {
-    const renderSkeleton = (has_replies: boolean): ShadowRoot => {
+    const renderComponent = (has_replies: boolean): ShadowRoot => {
         const target = document.implementation
             .createHTMLDocument()
             .createElement("div") as unknown as ShadowRoot;
         const host = { has_replies } as HostElement;
-        const render = PullRequestCommentSkeletonComponent.content(host);
+        const render = renderSkeleton(host);
         render(host, target);
 
         return target;
@@ -35,13 +35,13 @@ describe("PullRequestCommentSkeleton", () => {
 
     it("should not display the follow ups section when has_replies is false", () => {
         expect(
-            renderSkeleton(false).querySelector("[data-test=skeleton-follow-ups-section]"),
+            renderComponent(false).querySelector("[data-test=skeleton-follow-ups-section]"),
         ).toBeNull();
     });
 
     it("should  display the follow ups section when has_replies is true", () => {
         expect(
-            renderSkeleton(true).querySelector("[data-test=skeleton-follow-ups-section]"),
+            renderComponent(true).querySelector("[data-test=skeleton-follow-ups-section]"),
         ).not.toBeNull();
     });
 });

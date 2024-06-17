@@ -23,7 +23,7 @@
     "@tuleap/tlp-relative-date": "workspace:*",
     "@tuleap/tooltip": "workspace:*",
     "dompurify": "^3.1.4",
-    "hybrids": "^8.2.2",
+    "hybrids": "^9.0.0",
     "moment": "^2.29.4",
     "neverthrow": "6.0.0"
   },

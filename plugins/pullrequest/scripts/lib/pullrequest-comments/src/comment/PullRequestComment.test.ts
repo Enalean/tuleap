@@ -23,9 +23,9 @@ import { selectOrThrow } from "@tuleap/dom";
 import * as tooltip from "@tuleap/tooltip";
 import type { HostElement } from "./PullRequestComment";
 import {
+    renderComment,
     after_render_once_descriptor,
     element_height_descriptor,
-    PullRequestCommentComponent,
 } from "./PullRequestComment";
 import { PullRequestCommentPresenterStub } from "../../tests/stubs/PullRequestCommentPresenterStub";
 import "@tuleap/tlp-relative-date";
@@ -60,7 +60,7 @@ describe("PullRequestComment", () => {
             relative_date_helper: RelativeDateHelperStub,
             replies: PullRequestCommentRepliesCollectionPresenter.buildEmpty(),
         } as HostElement;
-        const updateFunction = PullRequestCommentComponent.content(host);
+        const updateFunction = renderComment(host);
         updateFunction(host, target);
     };
 

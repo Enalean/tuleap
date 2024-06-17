@@ -82,7 +82,7 @@ describe("NewCommentFormController", () => {
                 } as unknown as NewCommentForm;
 
                 vi.useFakeTimers();
-                getController().buildInitialPresenter(host);
+                host.presenter = getController().buildInitialPresenter();
                 vi.advanceTimersToNextTimer();
 
                 expect(host.presenter.is_cancel_allowed).toStrictEqual(expected_value);
@@ -124,7 +124,7 @@ describe("NewCommentFormController", () => {
                     getEmptyPresenter(),
                     comment_content,
                 ),
-                content: () => host_content,
+                render: () => host_content,
                 writing_zone_controller: {
                     resetWritingZone: vi.fn(),
                 } as unknown as ControlWritingZone,

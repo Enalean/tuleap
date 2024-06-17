@@ -134,11 +134,11 @@ export const PullRequestCommentController = (
                 (updated_comment) => {
                     host.comment = updated_comment;
                     host.is_edition_form_shown = false;
-                    loadTooltips(host.content(), false);
+                    loadTooltips(host.render(), false);
                 },
                 () => {
                     host.is_edition_form_shown = false;
-                    loadTooltips(host.content(), false);
+                    loadTooltips(host.render(), false);
                 },
                 getErrorCallback(),
             );

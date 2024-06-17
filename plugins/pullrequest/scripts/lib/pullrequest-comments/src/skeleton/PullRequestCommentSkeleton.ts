@@ -25,7 +25,7 @@ export const PULL_REQUEST_COMMENT_SKELETON_ELEMENT_TAG_NAME = "tuleap-pullreques
 export type HostElement = PullRequestCommentSkeleton & HTMLElement;
 
 interface PullRequestCommentSkeleton {
-    readonly content: () => HTMLElement;
+    readonly render: () => HTMLElement;
     readonly has_replies: boolean;
 }
 
@@ -61,29 +61,33 @@ const getFollowUpsSkeletons = (
     `;
 };
 
+export const renderSkeleton = (
+    host: PullRequestCommentSkeleton,
+): UpdateFunction<PullRequestCommentSkeleton> => html`
+    <div class="pull-request-comment-component pull-request-comment-skeleton">
+        <div class="pull-request-comment">
+            <div class="pull-request-comment-skeleton-avatar"></div>
+            <div class="pull-request-comment-content">
+                <div data-test="pull-request-comment-body">
+                    <div class="pull-request-comment-content-info">
+                        <div class="pull-request-comment-author-and-date">
+                            <span class="tlp-skeleton-text"></span>
+                        </div>
+                    </div>
+
+                    <p class="pull-request-comment-text">
+                        <span class="tlp-skeleton-text"></span>
+                        <span class="tlp-skeleton-text"></span>
+                    </p>
+                </div>
+            </div>
+        </div>
+        ${getFollowUpsSkeletons(host)}
+    </div>
+`;
+
 export const PullRequestCommentSkeletonComponent = define<PullRequestCommentSkeleton>({
     tag: PULL_REQUEST_COMMENT_SKELETON_ELEMENT_TAG_NAME,
     has_replies: true,
-    content: (host) => html`
-        <div class="pull-request-comment-component pull-request-comment-skeleton">
-            <div class="pull-request-comment">
-                <div class="pull-request-comment-skeleton-avatar"></div>
-                <div class="pull-request-comment-content">
-                    <div data-test="pull-request-comment-body">
-                        <div class="pull-request-comment-content-info">
-                            <div class="pull-request-comment-author-and-date">
-                                <span class="tlp-skeleton-text"></span>
-                            </div>
-                        </div>
-
-                        <p class="pull-request-comment-text">
-                            <span class="tlp-skeleton-text"></span>
-                            <span class="tlp-skeleton-text"></span>
-                        </p>
-                    </div>
-                </div>
-            </div>
-            ${getFollowUpsSkeletons(host)}
-        </div>
-    `,
+    render: renderSkeleton,
 });

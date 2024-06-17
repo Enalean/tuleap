@@ -30,7 +30,7 @@ export type InternalWritingZone = {
     controller: ControlWritingZone;
     presenter: WritingZonePresenter;
     textarea: HTMLTextAreaElement;
-    content: () => HTMLElement;
+    render: () => HTMLElement;
 };
 
 export type HostElement = InternalWritingZone & HTMLElement;
@@ -61,13 +61,10 @@ export const getWritingZoneElement = <ElementType>(
     return element;
 };
 
-export const WritingZoneElement = define<InternalWritingZone>({
+define<InternalWritingZone>({
     tag: TAG,
     controller: {
-        set: (host: InternalWritingZone, controller) => {
-            controller.initWritingZone(host);
-            return controller;
-        },
+        value: (host: InternalWritingZone, controller) => controller,
         connect: (host) => {
             const onMouseDownInDocumentHandler = (event: MouseEvent): void => {
                 if (!event.composedPath().includes(host)) {
@@ -96,9 +93,9 @@ export const WritingZoneElement = define<InternalWritingZone>({
             };
         },
     },
-    presenter: undefined,
+    presenter: (host, value) => value ?? host.controller.initWritingZone(),
     textarea: {
-        get: (host) => {
+        value: (host: HostElement) => {
             const textarea_element = document.createElement("textarea");
             textarea_element.setAttribute("data-test", "writing-zone-textarea");
             textarea_element.setAttribute(
@@ -118,5 +115,5 @@ export const WritingZoneElement = define<InternalWritingZone>({
             host.textarea.value = host.presenter.initial_content;
         },
     },
-    content: (host) => getWritingZoneTemplate(host, gettext_provider),
+    render: (host) => getWritingZoneTemplate(host, gettext_provider),
 });

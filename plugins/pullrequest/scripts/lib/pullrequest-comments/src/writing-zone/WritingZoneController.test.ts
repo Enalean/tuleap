@@ -21,7 +21,7 @@ import { describe, it, expect, beforeEach, vi } from "vitest";
 import { okAsync, errAsync } from "neverthrow";
 import * as tooltip from "@tuleap/tooltip";
 import type { HostElement } from "./WritingZone";
-import type { WritingZoneConfig } from "./WritingZoneController";
+import type { ControlWritingZone } from "./WritingZoneController";
 import { PARENT_ELEMENT_ACTIVE_CLASS, WritingZoneController } from "./WritingZoneController";
 import { WritingZonePresenter } from "./WritingZonePresenter";
 import * as preview_fetcher from "./WritingZoneCommonMarkPreviewFetcher";
@@ -29,27 +29,20 @@ import * as preview_fetcher from "./WritingZoneCommonMarkPreviewFetcher";
 const project_id = 105;
 
 describe("WritingZoneController", () => {
-    let doc: Document, textarea: HTMLTextAreaElement, config: WritingZoneConfig;
+    let doc: Document, textarea: HTMLTextAreaElement, controller: ControlWritingZone;
 
     beforeEach(() => {
         doc = document.implementation.createHTMLDocument();
         textarea = doc.createElement("textarea");
-        config = {
+        controller = WritingZoneController({
             document: doc,
             focus_writing_zone_when_connected: false,
             project_id,
-        };
+        });
     });
 
-    it("initWritingZone() should assign the WritingZone a default presenter", () => {
-        const host = {
-            presenter: undefined,
-            project_id,
-        } as unknown as HostElement;
-
-        WritingZoneController(config).initWritingZone(host);
-
-        expect(host.presenter).toStrictEqual({
+    it("initWritingZone() should return a default presenter", () => {
+        expect(controller.initWritingZone()).toStrictEqual({
             initial_content: "",
             previewed_content: "",
             has_preview_error: false,
@@ -60,7 +53,7 @@ describe("WritingZoneController", () => {
         });
     });
 
-    it("When there is some unsaved content, initWritingZone() should assign the WritingZone a default presenter containing the unsaved content", () => {
+    it("When there is some unsaved content, initWritingZone() should return a default presenter containing the unsaved content", () => {
         const host = {
             presenter: undefined,
             project_id,
@@ -72,11 +65,9 @@ describe("WritingZoneController", () => {
 
         textarea.value = "Some unsaved content, before the WritingZone disconnects";
 
-        const controller = WritingZoneController(config);
         controller.onTextareaInput(host);
-        controller.initWritingZone(host);
 
-        expect(host.presenter).toStrictEqual({
+        expect(controller.initWritingZone()).toStrictEqual({
             initial_content: textarea.value,
             previewed_content: "",
             has_preview_error: false,
@@ -96,7 +87,7 @@ describe("WritingZoneController", () => {
 
         const dispatchEvent = vi.spyOn(host, "dispatchEvent");
 
-        WritingZoneController(config).onTextareaInput(host);
+        controller.onTextareaInput(host);
 
         expect(dispatchEvent).toHaveBeenCalledOnce();
 
@@ -121,7 +112,7 @@ describe("WritingZoneController", () => {
         const focus = vi.spyOn(textarea, "focus");
         const setSelectionRange = vi.spyOn(textarea, "setSelectionRange");
 
-        WritingZoneController(config).focusWritingZone(host);
+        controller.focusWritingZone(host);
 
         expect(focus).toHaveBeenCalledOnce();
         expect(setSelectionRange).toHaveBeenCalledOnce();
@@ -172,7 +163,7 @@ describe("WritingZoneController", () => {
 
         const focus = vi.spyOn(textarea, "focus");
 
-        WritingZoneController(config).switchToWritingMode(host);
+        controller.switchToWritingMode(host);
 
         vi.advanceTimersToNextTimer();
 
@@ -205,7 +196,7 @@ describe("WritingZoneController", () => {
             // do nothing
         });
 
-        await WritingZoneController(config).switchToPreviewMode(host);
+        await controller.switchToPreviewMode(host);
 
         vi.advanceTimersToNextTimer();
 
@@ -240,7 +231,7 @@ describe("WritingZoneController", () => {
             // do nothing
         });
 
-        await WritingZoneController(config).switchToPreviewMode(host);
+        await controller.switchToPreviewMode(host);
 
         vi.advanceTimersToNextTimer();
 
