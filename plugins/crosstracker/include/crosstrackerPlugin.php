@@ -49,6 +49,7 @@ use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata\MetadataU
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata\StatusChecker;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata\SubmissionDateChecker;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata\TextSemanticChecker;
+use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Field\Date\DateResultBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Field\FieldResultBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilderVisitor;
 use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Field\Date\DateSelectFromBuilder;
@@ -265,10 +266,11 @@ class crosstrackerPlugin extends Plugin
         $date_time_value_rounder = new DateTimeValueRounder();
         $list_from_where_builder = new Field\ListFromWhereBuilder();
         $retrieve_field_type     = new FieldTypeRetrieverWrapper($form_element_factory);
+        $artifact_factory        = Tracker_ArtifactFactory::instance();
         $query_builder_visitor   = new QueryBuilderVisitor(
             new FromWhereSearchableVisitor(),
-            new ReverseLinkFromWhereBuilder(Tracker_ArtifactFactory::instance()),
-            new ForwardLinkFromWhereBuilder(Tracker_ArtifactFactory::instance()),
+            new ReverseLinkFromWhereBuilder($artifact_factory),
+            new ForwardLinkFromWhereBuilder($artifact_factory),
             new Field\FieldFromWhereBuilder(
                 $form_element_factory,
                 $retrieve_field_type,
@@ -312,6 +314,10 @@ class crosstrackerPlugin extends Plugin
                 $form_element_factory,
                 $retrieve_field_type,
                 $trackers_permissions,
+                new DateResultBuilder(
+                    $artifact_factory,
+                    $form_element_factory,
+                ),
             ),
         );
 

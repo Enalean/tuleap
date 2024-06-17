@@ -20,28 +20,18 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\CrossTracker\REST\v1\Representation;
+namespace Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Field\Date;
 
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\SelectedValueRepresentation;
 
 /**
  * @psalm-immutable
  */
-final readonly class CrossTrackerReportContentRepresentation
+final readonly class DateResultRepresentation implements SelectedValueRepresentation
 {
-    /**
-     * @param array<array<string, SelectedValueRepresentation>> $artifacts
-     * @param CrossTrackerSelectedRepresentation[] $selected
-     */
     public function __construct(
-        public array $artifacts,
-        public array $selected,
-        private int $total_size,
+        public ?string $value,
+        public bool $with_time,
     ) {
-    }
-
-    public function getTotalSize(): int
-    {
-        return $this->total_size;
     }
 }

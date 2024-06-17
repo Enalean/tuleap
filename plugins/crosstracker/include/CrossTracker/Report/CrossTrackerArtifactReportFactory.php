@@ -74,6 +74,8 @@ final readonly class CrossTrackerArtifactReportFactory
      * @throws SelectablesAreInvalidException
      * @throws SelectablesDoNotExistException
      * @throws SyntaxError
+     *
+     * @psalm-return ($static_return is true ? ArtifactMatchingReportCollection : CrossTrackerReportContentRepresentation)
      */
     public function getArtifactsMatchingReport(
         CrossTrackerReport $report,
@@ -157,6 +159,8 @@ final readonly class CrossTrackerArtifactReportFactory
      * @throws SelectablesAreInvalidException
      * @throws SyntaxError
      * @throws SelectablesDoNotExistException
+     *
+     * @psalm-return ($static_return is true ? ArtifactMatchingReportCollection : CrossTrackerReportContentRepresentation)
      */
     private function getArtifactsMatchingExpertQueryWithSelect(
         CrossTrackerReport $report,
@@ -175,6 +179,7 @@ final readonly class CrossTrackerArtifactReportFactory
             $limit,
             $offset
         );
+        $total_size            = $this->expert_query_dao->foundRows();
 
         if ($artifact_ids === []) {
             return new ArtifactMatchingReportCollection([], 0);
@@ -192,7 +197,7 @@ final readonly class CrossTrackerArtifactReportFactory
             return $this->buildCollectionOfArtifacts($select_results, $this->expert_query_dao->foundRows());
         } else {
             $results = $this->result_builder->buildResult($query->getSelect(), $trackers, $current_user, $select_results);
-            return $this->buildReportContentRepresentation($results, $this->expert_query_dao->foundRows());
+            return $this->buildReportContentRepresentation($results, $total_size);
         }
     }
 
