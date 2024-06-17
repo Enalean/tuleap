@@ -19,7 +19,6 @@
 
 import { okAsync } from "neverthrow";
 import * as fetch_result from "@tuleap/fetch-result";
-import * as tlp_fetch from "@tuleap/tlp-fetch";
 import type { TrackerReference } from "./rest-querier";
 import {
     getCSVReport,
@@ -30,6 +29,8 @@ import {
     getTrackersOfProject,
     updateReport,
 } from "./rest-querier";
+import { ProjectIdentifier } from "../domain/ProjectIdentifier";
+import type { ProjectInfo } from "../type";
 
 describe("rest-querier", () => {
     describe("getReport()", () => {
@@ -231,93 +232,85 @@ describe("rest-querier", () => {
             });
         });
 
-        describe("getTrackersOfProject() -", () => {
-            beforeEach(() => {
-                jest.clearAllMocks();
-            });
-
-            it("the REST API will be queried and the list of trackers returned", async () => {
-                const tlpRecursiveGet = jest.spyOn(tlp_fetch, "recursiveGet");
+        describe("getTrackersOfProject()", () => {
+            it(`will return the list of trackers of a given project`, async () => {
                 const trackers = [{ id: 28 }, { id: 50 }];
-                tlpRecursiveGet.mockResolvedValue(trackers);
+                const getAllJSON = jest
+                    .spyOn(fetch_result, "getAllJSON")
+                    .mockReturnValue(okAsync(trackers));
+                const project_id = 444;
 
-                const result = await getTrackersOfProject(444);
+                const result = await getTrackersOfProject(
+                    ProjectIdentifier.fromProjectInfo({ id: project_id } as ProjectInfo),
+                );
 
-                expect(tlpRecursiveGet).toHaveBeenCalledWith("/api/v1/projects/444/trackers", {
-                    params: {
-                        limit: 50,
-                        representation: "minimal",
+                if (!result.isOk()) {
+                    throw Error("Expected an Ok");
+                }
+                expect(getAllJSON).toHaveBeenCalledWith(
+                    fetch_result.uri`/api/v1/projects/${project_id}/trackers`,
+                    {
+                        params: {
+                            limit: 50,
+                            representation: "minimal",
+                        },
                     },
-                });
-                expect(result).toEqual(trackers);
+                );
+                expect(result.value).toStrictEqual(trackers);
             });
         });
 
-        describe("getCSVReport() -", () => {
-            afterEach(() => {
-                jest.clearAllMocks();
-            });
-
+        describe("getCSVReport()", () => {
             it("When there is only one page then it will return the first request", async () => {
-                const tlpGet = jest.spyOn(tlp_fetch, "get");
                 const csv = `"id"\r\n65\r\n88\r\n`;
-
-                tlpGet.mockReturnValue(
-                    Promise.resolve({
-                        headers: {
-                            /** 'X-PAGINATION-SIZE' */
-                            get: (): string => "2",
-                        },
-                        text() {
-                            return Promise.resolve(csv);
-                        },
-                    } as unknown as Response),
+                const getTextResponse = jest.spyOn(fetch_result, "getTextResponse").mockReturnValue(
+                    okAsync({
+                        headers: new Headers({ "X-PAGINATION-SIZE": "2" }),
+                        text: () => Promise.resolve(csv),
+                    } as Response),
                 );
+                const report_id = 72;
 
-                const results = await getCSVReport(72);
-                expect(tlpGet).toHaveBeenCalledWith("/plugins/crosstracker/csv_export/72", {
-                    params: {
-                        limit: 50,
-                        offset: 0,
-                    },
-                });
-                expect(tlpGet).toHaveBeenCalledTimes(1);
+                const result = await getCSVReport(report_id);
 
-                expect(results).toEqual(csv);
+                if (!result.isOk()) {
+                    throw Error("Expected an Ok");
+                }
+                expect(getTextResponse).toHaveBeenCalledWith(
+                    fetch_result.uri`/plugins/crosstracker/csv_export/${report_id}`,
+                    { params: { limit: 50, offset: 0 } },
+                );
+                expect(getTextResponse).toHaveBeenCalledTimes(1);
+                expect(result.value).toBe(csv);
             });
 
-            it("When there are two pages, then it will drop the header line of the second request, concat the two requests and return them", async () => {
-                const tlpGet = jest.spyOn(tlp_fetch, "get");
+            it(`When there are two pages, then it will drop the header line of the second request
+                concat the two requests and return them`, async () => {
                 const csv = `"id"\r\n61\r\n26\r\n`;
-
-                tlpGet.mockReturnValue(
-                    Promise.resolve({
-                        headers: {
-                            /** 'X-PAGINATION-SIZE' */
-                            get: (): string => "70",
-                        },
-                        text() {
-                            return Promise.resolve(csv);
-                        },
-                    } as unknown as Response),
+                const getTextResponse = jest.spyOn(fetch_result, "getTextResponse").mockReturnValue(
+                    okAsync({
+                        headers: new Headers({ "X-PAGINATION-SIZE": "70" }),
+                        text: () => Promise.resolve(csv),
+                    } as Response),
                 );
+                const report_id = 81;
 
-                const results = await getCSVReport(81);
-                expect(tlpGet).toHaveBeenCalledWith("/plugins/crosstracker/csv_export/81", {
-                    params: {
-                        limit: 50,
-                        offset: 0,
-                    },
-                });
-                expect(tlpGet).toHaveBeenCalledWith("/plugins/crosstracker/csv_export/81", {
-                    params: {
-                        limit: 50,
-                        offset: 50,
-                    },
-                });
-                expect(tlpGet).toHaveBeenCalledTimes(2);
+                const result = await getCSVReport(report_id);
 
-                expect(results).toBe(`"id"\r\n61\r\n26\r\n61\r\n26\r\n`);
+                if (!result.isOk()) {
+                    throw Error("Expected an Ok");
+                }
+                expect(getTextResponse).toHaveBeenCalledWith(
+                    fetch_result.uri`/plugins/crosstracker/csv_export/${report_id}`,
+                    { params: { limit: 50, offset: 0 } },
+                );
+                expect(getTextResponse).toHaveBeenCalledWith(
+                    fetch_result.uri`/plugins/crosstracker/csv_export/${report_id}`,
+                    { params: { limit: 50, offset: 50 } },
+                );
+                expect(getTextResponse).toHaveBeenCalledTimes(2);
+
+                expect(result.value).toBe(`"id"\r\n61\r\n26\r\n61\r\n26\r\n`);
             });
         });
     });

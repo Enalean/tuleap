@@ -9,9 +9,6 @@ msgstr ""
 msgid "Add"
 msgstr "Adicionar"
 
-msgid "An error occurred"
-msgstr ""
-
 msgid "An error occurred: %{error}"
 msgstr ""
 
@@ -33,7 +30,7 @@ msgstr "Descrição"
 msgid "Error while fetching the list of projects you are member of: %{error}"
 msgstr ""
 
-msgid "Error while fetching the list of trackers of this project"
+msgid "Error while fetching the list of trackers of this project: %{error}"
 msgstr ""
 
 msgid "Example: @title = 'value'"

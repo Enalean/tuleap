@@ -20,7 +20,7 @@
 import { errAsync, okAsync, type ResultAsync } from "neverthrow";
 import type { Fault } from "@tuleap/fault";
 import type { ProjectInfo } from "../../src/type";
-import type { RetrieveProjects } from "../../src/writing-mode/RetrieveProjects";
+import type { RetrieveProjects } from "../../src/domain/RetrieveProjects";
 
 export const RetrieveProjectsStub = {
     withProjects: (project: ProjectInfo, ...other_projects: ProjectInfo[]): RetrieveProjects => ({

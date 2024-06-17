@@ -94,7 +94,7 @@ const { reading_mode, is_report_saved, report_id } = useState<
     Pick<State, "reading_mode" | "is_report_saved" | "report_id">
 >(["reading_mode", "is_report_saved", "report_id"]);
 const { setErrorMessage } = useMutations(["setErrorMessage"]);
-const { $gettext, interpolate } = useGettext();
+const { $gettext } = useGettext();
 
 const is_loading = ref(true);
 let artifacts: Ref<Artifact[]> = ref([]);
@@ -156,7 +156,7 @@ function loadArtifacts(): void {
                     return;
                 }
                 setErrorMessage(
-                    interpolate($gettext("An error occurred: %{error}"), { error: String(fault) }),
+                    $gettext("An error occurred: %{error}", { error: String(fault) }, true),
                 );
             },
         )

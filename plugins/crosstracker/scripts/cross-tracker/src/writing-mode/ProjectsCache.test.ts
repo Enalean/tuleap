@@ -19,7 +19,7 @@
  */
 
 import type { ProjectInfo } from "../type";
-import type { RetrieveProjects } from "./RetrieveProjects";
+import type { RetrieveProjects } from "../domain/RetrieveProjects";
 import { RetrieveProjectsStub } from "../../tests/stubs/RetrieveProjectsStub";
 import { ProjectsCache } from "./ProjectsCache";
 import { ProjectInfoStub } from "../../tests/stubs/ProjectInfoStub";

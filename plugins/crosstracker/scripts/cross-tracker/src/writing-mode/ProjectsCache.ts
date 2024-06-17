@@ -20,7 +20,7 @@
 import { okAsync, type ResultAsync } from "neverthrow";
 import type { Fault } from "@tuleap/fault";
 import type { ProjectInfo } from "../type";
-import type { RetrieveProjects } from "./RetrieveProjects";
+import type { RetrieveProjects } from "../domain/RetrieveProjects";
 
 export const ProjectsCache = (actual_retriever: RetrieveProjects): RetrieveProjects => {
     let is_first_call = true;

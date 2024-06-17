@@ -17,7 +17,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { StrictInjectionKey } from "@tuleap/vue-strict-inject";
-import type { RetrieveProjects } from "./domain/RetrieveProjects";
+import type { Identifier } from "./Identifier";
+import type { ProjectInfo } from "../type";
 
-export const RETRIEVE_PROJECTS: StrictInjectionKey<RetrieveProjects> = Symbol("RetrieveProjects");
+export type ProjectIdentifier = Identifier<"ProjectIdentifier">;
+
+export const ProjectIdentifier = {
+    fromProjectInfo: (project: ProjectInfo): ProjectIdentifier => ({
+        _type: "ProjectIdentifier",
+        id: project.id,
+    }),
+};

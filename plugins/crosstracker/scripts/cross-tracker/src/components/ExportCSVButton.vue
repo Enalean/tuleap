@@ -41,33 +41,34 @@ import { useGettext } from "vue3-gettext";
 import { download } from "../helpers/download-helper";
 import { addBOM } from "../helpers/bom-helper";
 import { getCSVReport } from "../api/rest-querier";
-import { FetchWrapperError } from "@tuleap/tlp-fetch";
 
 const is_loading = ref(false);
 const { report_id } = useState(["report_id"]);
 const { should_display_export_button } = useGetters(["should_display_export_button"]);
 const { resetFeedbacks, setErrorMessage } = useMutations(["resetFeedbacks", "setErrorMessage"]);
-const gettext_provider = useGettext();
+const { $gettext } = useGettext();
 
-async function exportCSV(): Promise<void> {
+function exportCSV(): void {
     is_loading.value = true;
     resetFeedbacks();
-    try {
-        const report = await getCSVReport(report_id.value);
-        const report_with_bom = addBOM(report);
-        download(report_with_bom, `export-${report_id.value}.csv`, "text/csv;encoding:utf-8");
-    } catch (error) {
-        if (!(error instanceof FetchWrapperError)) {
-            throw error;
-        }
-        if (error.response.status.toString().substring(0, 2) === "50") {
-            setErrorMessage(gettext_provider.$gettext("An error occurred"));
-            return;
-        }
-        const message = await error.response.text();
-        setErrorMessage(message);
-    } finally {
-        is_loading.value = false;
-    }
+    getCSVReport(report_id.value)
+        .match(
+            (report) => {
+                const report_with_bom = addBOM(report);
+                download(
+                    report_with_bom,
+                    `export-${report_id.value}.csv`,
+                    "text/csv;encoding:utf-8",
+                );
+            },
+            (fault) => {
+                setErrorMessage(
+                    $gettext("An error occurred: %{error}", { error: String(fault) }, true),
+                );
+            },
+        )
+        .then(() => {
+            is_loading.value = false;
+        });
 }
 </script>

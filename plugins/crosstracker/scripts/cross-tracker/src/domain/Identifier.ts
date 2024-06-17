@@ -17,7 +17,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { StrictInjectionKey } from "@tuleap/vue-strict-inject";
-import type { RetrieveProjects } from "./domain/RetrieveProjects";
-
-export const RETRIEVE_PROJECTS: StrictInjectionKey<RetrieveProjects> = Symbol("RetrieveProjects");
+/**
+ * Used to coerce a nominal type system into TypeScript's structural type system.
+ * Without this, TypeScript will consider different types that have the same "shape" to be compatible.
+ */
+export type Identifier<TypeOfIdentifier extends string> = {
+    _type: TypeOfIdentifier;
+    id: number;
+};
