@@ -17,14 +17,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { describe, expect, it } from "vitest";
 import {
     en_US_DATE_FORMAT,
     en_US_DATE_TIME_FORMAT,
     fr_FR_DATE_FORMAT,
     fr_FR_DATE_TIME_FORMAT,
 } from "@tuleap/core-constants";
-import { describe, it, expect } from "vitest";
-import { formatFromPhpToMoment, formatDateYearMonthDay } from "./index";
+import { formatFromPhpToMoment } from "./for-moment";
 
 describe("formatFromPhpToMoment", () => {
     it.each([
@@ -45,20 +45,5 @@ describe("formatFromPhpToMoment", () => {
         expect(() => formatFromPhpToMoment(php_date_format)).toThrow(
             "Only french and english date are supported for display",
         );
-    });
-});
-
-describe("formatDateYearMonthDay", () => {
-    it("Given date, When I call this function with an ISO date, then it should return date at good format", () => {
-        const date_iso = new Date("2017-01-22T13:42:08+02:00");
-        expect(formatDateYearMonthDay("en-US", date_iso.toDateString())).toBe("Jan 22, 2017");
-    });
-
-    it("Given empty string, When I call this function with date null, then it should return empty string", () => {
-        expect(formatDateYearMonthDay("en-US", null)).toBe("");
-    });
-
-    it("Given empty string, When I call this function with an empty string, then it should return empty string", () => {
-        expect(formatDateYearMonthDay("en-US", "")).toBe("");
     });
 });

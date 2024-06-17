@@ -5,13 +5,14 @@
   "license": "GPL-2.0-or-later",
   "private": true,
   "type": "module",
-  "module": "dist/date-helper.js",
-  "main": "dist/date-helper.umd.cjs",
-  "types": "dist/index.d.ts",
+  "module": "./dist/date-helper.js",
+  "main": "./dist/date-helper.umd.cjs",
+  "types": "./dist/index.d.ts",
   "exports": {
     ".": {
       "import": "./dist/date-helper.js",
-      "require": "./dist/date-helper.umd.cjs"
+      "require": "./dist/date-helper.umd.cjs",
+      "types": "./dist/index.d.ts"
     }
   },
   "dependencies": {
@@ -24,6 +25,6 @@
     "typecheck": "tsc --noEmit",
     "build": "vite build",
     "watch": "vite build --watch --mode development --minify false",
-    "test": "vitest"
+    "test": "vitest --typecheck"
   }
 }

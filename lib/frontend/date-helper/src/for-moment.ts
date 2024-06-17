@@ -24,6 +24,9 @@ import {
     fr_FR_DATE_TIME_FORMAT,
 } from "@tuleap/core-constants";
 
+/**
+ * @deprecated Consider using `IntlFormatter` instead.
+ */
 export function formatFromPhpToMoment(php_date_format: string): string {
     switch (php_date_format) {
         case fr_FR_DATE_FORMAT:
@@ -37,16 +40,4 @@ export function formatFromPhpToMoment(php_date_format: string): string {
         default:
             throw new Error("Only french and english date are supported for display");
     }
-}
-
-export function formatDateYearMonthDay(user_locale: string, date: string | null): string {
-    if (!(date && Date.parse(date))) {
-        return "";
-    }
-
-    return new Date(date).toLocaleDateString(user_locale, {
-        year: "numeric",
-        month: "short",
-        day: "numeric",
-    });
 }

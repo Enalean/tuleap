@@ -20,8 +20,8 @@
 import { createApp } from "vue";
 import { getPOFileFromLocaleWithoutExtension, initVueGettext } from "@tuleap/vue3-gettext-init";
 import { createGettext } from "vue3-gettext";
+import { getLocaleOrThrow, getTimezoneOrThrow, IntlFormatter } from "@tuleap/date-helper";
 import { createInitializedStore } from "./store";
-import { init as initUser } from "./user-service";
 import ReadingCrossTrackerReport from "./reading-mode/reading-cross-tracker-report";
 import WritingCrossTrackerReport from "./writing-mode/writing-cross-tracker-report";
 import BackendCrossTrackerReport from "./backend-cross-tracker-report";
@@ -29,18 +29,16 @@ import CrossTrackerWidget from "./CrossTrackerWidget.vue";
 import type { RetrieveProjects } from "./domain/RetrieveProjects";
 import { getSortedProjectsIAmMemberOf } from "./api/rest-querier";
 import { ProjectsCache } from "./writing-mode/ProjectsCache";
-import { RETRIEVE_PROJECTS } from "./injection-symbols";
+import { DATE_FORMATTER, RETRIEVE_PROJECTS } from "./injection-symbols";
 
 document.addEventListener("DOMContentLoaded", async () => {
-    const locale = document.body.dataset.userLocale;
-    if (locale === undefined) {
-        throw new Error("Unable to load user locale");
-    }
-
+    const locale = getLocaleOrThrow(document);
     const gettext_plugin = await initVueGettext(
         createGettext,
         (locale) => import(`../po/${getPOFileFromLocaleWithoutExtension(locale)}.po`),
     );
+
+    const date_formatter = IntlFormatter(locale, getTimezoneOrThrow(document), "date");
 
     const widget_cross_tracker_elements = document.getElementsByClassName(
         "dashboard-widget-content-cross-tracker",
@@ -58,13 +56,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         if (!report_id) {
             throw new Error("Can not find report id");
         }
-        const localized_php_date_format = widget_element.dataset.dateFormat;
-        if (!localized_php_date_format) {
-            throw new Error("Can not find user date format");
-        }
         const is_widget_admin = widget_element.dataset.isWidgetAdmin === "true";
-
-        initUser(localized_php_date_format, locale);
 
         const backend_report = new BackendCrossTrackerReport();
         const reading_report = new ReadingCrossTrackerReport();
@@ -83,6 +75,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             .use(gettext_plugin)
             .use(createInitializedStore(Number.parseInt(report_id, 10), is_widget_admin))
             .provide(RETRIEVE_PROJECTS, projects_cache)
+            .provide(DATE_FORMATTER, date_formatter)
             .mount(vue_mount_point);
     }
 });

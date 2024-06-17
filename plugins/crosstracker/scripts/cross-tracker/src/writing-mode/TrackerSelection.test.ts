@@ -24,7 +24,6 @@ import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import { errAsync, okAsync } from "neverthrow";
 import { Fault } from "@tuleap/fault";
-import * as strict_inject from "@tuleap/vue-strict-inject";
 import { getGlobalTestOptions } from "../helpers/global-options-for-tests";
 import TrackerSelection from "./TrackerSelection.vue";
 import * as rest_querier from "../api/rest-querier";
@@ -32,6 +31,7 @@ import type { ProjectInfo, SelectedTracker, State, TrackerInfo } from "../type";
 import type { RetrieveProjects } from "../domain/RetrieveProjects";
 import { RetrieveProjectsStub } from "../../tests/stubs/RetrieveProjectsStub";
 import { ProjectInfoStub } from "../../tests/stubs/ProjectInfoStub";
+import { RETRIEVE_PROJECTS } from "../injection-symbols";
 
 vi.useFakeTimers();
 
@@ -51,7 +51,6 @@ describe("TrackerSelection", () => {
     function getWrapper(
         selectedTrackers: Array<SelectedTracker> = [],
     ): VueWrapper<InstanceType<typeof TrackerSelection>> {
-        vi.spyOn(strict_inject, "strictInject").mockReturnValue(projects_retriever);
         const store_options = {
             state: { is_user_admin: true } as State,
             mutations: {
@@ -63,7 +62,12 @@ describe("TrackerSelection", () => {
             props: {
                 selectedTrackers,
             },
-            global: { ...getGlobalTestOptions(store_options) },
+            global: {
+                ...getGlobalTestOptions(store_options),
+                provide: {
+                    [RETRIEVE_PROJECTS.valueOf()]: projects_retriever,
+                },
+            },
         });
     }
 

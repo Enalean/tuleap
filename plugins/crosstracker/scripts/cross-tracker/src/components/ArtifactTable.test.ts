@@ -24,12 +24,14 @@ import { shallowMount } from "@vue/test-utils";
 import { getGlobalTestOptions } from "../helpers/global-options-for-tests";
 import { errAsync, okAsync } from "neverthrow";
 import { Fault } from "@tuleap/fault";
+import { IntlFormatter } from "@tuleap/date-helper";
 import WritingCrossTrackerReport from "../writing-mode/writing-cross-tracker-report";
 import ArtifactTable from "./ArtifactTable.vue";
 import * as rest_querier from "../api/rest-querier";
 import type { Artifact, State } from "../type";
 import ArtifactTableRow from "./ArtifactTableRow.vue";
 import { TuleapAPIFaultStub } from "../../tests/stubs/TuleapAPIFaultStub";
+import { DATE_FORMATTER } from "../injection-symbols";
 
 vi.useFakeTimers();
 
@@ -41,6 +43,7 @@ describe("ArtifactTable", () => {
     });
 
     function getWrapper(state: Partial<State>): VueWrapper<InstanceType<typeof ArtifactTable>> {
+        const date_formatter = IntlFormatter("en_US", "Europe/Paris", "date");
         return shallowMount(ArtifactTable, {
             global: {
                 ...getGlobalTestOptions({
@@ -49,6 +52,9 @@ describe("ArtifactTable", () => {
                         setErrorMessage: errorSpy,
                     },
                 }),
+                provide: {
+                    [DATE_FORMATTER.valueOf()]: date_formatter,
+                },
             },
             props: {
                 writingCrossTrackerReport: new WritingCrossTrackerReport(),
