@@ -17,6 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import type { Mock } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import { errAsync, okAsync } from "neverthrow";
@@ -30,11 +32,11 @@ import type { State } from "../type";
 
 const REPORT_ID = 36;
 describe("ExportCSVButton", () => {
-    let resetSpy: jest.Mock, errorSpy: jest.Mock;
+    let resetSpy: Mock, errorSpy: Mock;
 
     beforeEach(() => {
-        resetSpy = jest.fn();
-        errorSpy = jest.fn();
+        resetSpy = vi.fn();
+        errorSpy = vi.fn();
     });
 
     function getWrapper(): VueWrapper<InstanceType<typeof ExportCSVButton>> {
@@ -58,11 +60,11 @@ describe("ExportCSVButton", () => {
             show a spinner and offer to download a CSV file with the results`, async () => {
             const wrapper = getWrapper();
             const csv = `"id"\r\n72\r\n17\r\n`;
-            const getCSVReport = jest
+            const getCSVReport = vi
                 .spyOn(rest_querier, "getCSVReport")
                 .mockReturnValue(okAsync(csv));
-            jest.spyOn(bom_helper, "addBOM").mockImplementation((csv) => csv);
-            const download = jest.spyOn(download_helper, "download").mockImplementation(() => {
+            vi.spyOn(bom_helper, "addBOM").mockImplementation((csv) => csv);
+            const download = vi.spyOn(download_helper, "download").mockImplementation(() => {
                 //Do nothing
             });
 
@@ -76,7 +78,7 @@ describe("ExportCSVButton", () => {
         it("When there is a REST error, then it will be shown", async () => {
             const error_message = "Report with id 90 not found";
             const wrapper = getWrapper();
-            jest.spyOn(rest_querier, "getCSVReport").mockReturnValue(
+            vi.spyOn(rest_querier, "getCSVReport").mockReturnValue(
                 errAsync(Fault.fromMessage(error_message)),
             );
 

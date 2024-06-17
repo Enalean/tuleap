@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { describe, expect, it, vi } from "vitest";
 import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import { getGlobalTestOptions } from "../helpers/global-options-for-tests";
@@ -48,7 +49,7 @@ describe("QueryEditor", () => {
     });
 
     it("Update the report when query is updated", () => {
-        jest.spyOn(document, "createRange").mockImplementation(() => {
+        vi.spyOn(document, "createRange").mockImplementation(() => {
             return {
                 getBoundingClientRect: noop,
                 setEnd: noop,

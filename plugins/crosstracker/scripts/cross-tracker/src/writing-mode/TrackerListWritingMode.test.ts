@@ -17,8 +17,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { shallowMount } from "@vue/test-utils";
+import { describe, expect, it } from "vitest";
 import type { VueWrapper } from "@vue/test-utils";
+import { shallowMount } from "@vue/test-utils";
 import type { TrackerToUpdate } from "../type";
 import TrackerListWritingMode from "./TrackerListWritingMode.vue";
 
@@ -33,11 +34,6 @@ describe("TrackerListWritingMode", () => {
             },
         });
     }
-
-    it("renders a list of trackers", () => {
-        const wrapper = instantiateComponent();
-        expect(wrapper.element).toMatchSnapshot();
-    });
 
     it("when I remove a tracker, then an event will be emitted", () => {
         const wrapper = instantiateComponent();

@@ -17,6 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import type { Mock } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import { errAsync, okAsync } from "neverthrow";
@@ -35,27 +37,27 @@ const noop = (): void => {
     //Do nothing
 };
 
-jest.useFakeTimers();
+vi.useFakeTimers();
 
 describe("CrossTrackerWidget", () => {
     let backendCrossTrackerReport: BackendCrossTrackerReport,
         readingCrossTrackerReport: ReadingCrossTrackerReport,
         writingCrossTrackerReport: WritingCrossTrackerReport,
-        switchToWritingModeSpy: jest.Mock,
-        switchToReadingModeSpy: jest.Mock,
-        setErrorMessageSpy: jest.Mock,
-        switchReportToSavedSpy: jest.Mock;
+        switchToWritingModeSpy: Mock,
+        switchToReadingModeSpy: Mock,
+        setErrorMessageSpy: Mock,
+        switchReportToSavedSpy: Mock;
 
     beforeEach(() => {
         backendCrossTrackerReport = new BackendCrossTrackerReport();
         readingCrossTrackerReport = new ReadingCrossTrackerReport();
         writingCrossTrackerReport = new WritingCrossTrackerReport();
-        switchToWritingModeSpy = jest.fn();
-        switchToReadingModeSpy = jest.fn();
-        setErrorMessageSpy = jest.fn();
-        switchReportToSavedSpy = jest.fn();
+        switchToWritingModeSpy = vi.fn();
+        switchToReadingModeSpy = vi.fn();
+        setErrorMessageSpy = vi.fn();
+        switchReportToSavedSpy = vi.fn();
 
-        jest.spyOn(rest_querier, "getReport").mockReturnValue(
+        vi.spyOn(rest_querier, "getReport").mockReturnValue(
             okAsync({
                 trackers: [],
                 expert_query: "",
@@ -97,12 +99,12 @@ describe("CrossTrackerWidget", () => {
     describe("switchToWritingMode()", () => {
         it(`when I switch to the writing mode,
             then the writing report will be updated and a mutation will be committed`, async () => {
-            const duplicate = jest.spyOn(writingCrossTrackerReport, "duplicateFromReport");
+            const duplicate = vi.spyOn(writingCrossTrackerReport, "duplicateFromReport");
             const wrapper = getWrapper({
                 is_user_admin: true,
                 reading_mode: true,
             });
-            await jest.runOnlyPendingTimersAsync();
+            await vi.runOnlyPendingTimersAsync();
 
             wrapper.findComponent(ReadingMode).vm.$emit("switch-to-writing-mode");
 
@@ -112,12 +114,12 @@ describe("CrossTrackerWidget", () => {
 
         it(`Given I am not admin,
             when I try to switch to writing mode, then nothing will happen`, async () => {
-            const duplicate = jest.spyOn(writingCrossTrackerReport, "duplicateFromReport");
+            const duplicate = vi.spyOn(writingCrossTrackerReport, "duplicateFromReport");
             const wrapper = getWrapper({
                 is_user_admin: false,
                 reading_mode: true,
             });
-            await jest.runOnlyPendingTimersAsync();
+            await vi.runOnlyPendingTimersAsync();
             duplicate.mockReset(); // It is called once during onMounted
 
             wrapper.findComponent(ReadingMode).vm.$emit("switch-to-writing-mode");
@@ -130,12 +132,12 @@ describe("CrossTrackerWidget", () => {
     describe("switchToReadingMode() -", () => {
         it(`When I switch to the reading mode with saved state,
             then the writing report will be updated and a mutation will be committed`, async () => {
-            const duplicate = jest.spyOn(writingCrossTrackerReport, "duplicateFromReport");
+            const duplicate = vi.spyOn(writingCrossTrackerReport, "duplicateFromReport");
             const wrapper = getWrapper({
                 is_user_admin: true,
                 reading_mode: false,
             });
-            await jest.runOnlyPendingTimersAsync();
+            await vi.runOnlyPendingTimersAsync();
 
             wrapper
                 .findComponent(WritingMode)
@@ -148,12 +150,12 @@ describe("CrossTrackerWidget", () => {
         it(`When I switch to the reading mode with unsaved state,
             then a batch of artifacts will be loaded,
             the reading report will be updated and a mutation will be committed`, async () => {
-            const duplicate = jest.spyOn(readingCrossTrackerReport, "duplicateFromWritingReport");
+            const duplicate = vi.spyOn(readingCrossTrackerReport, "duplicateFromWritingReport");
             const wrapper = getWrapper({
                 is_user_admin: true,
                 reading_mode: false,
             });
-            await jest.runOnlyPendingTimersAsync();
+            await vi.runOnlyPendingTimersAsync();
 
             wrapper
                 .findComponent(WritingMode)
@@ -177,14 +179,14 @@ describe("CrossTrackerWidget", () => {
             const trackers = [first_tracker, second_tracker];
             const invalid_trackers = [{ id: 956 } as InvalidTracker];
             const expert_query = '@title != ""';
-            jest.spyOn(rest_querier, "getReport").mockReturnValue(
+            vi.spyOn(rest_querier, "getReport").mockReturnValue(
                 okAsync({ trackers, expert_query, invalid_trackers }),
             );
-            const init = jest.spyOn(backendCrossTrackerReport, "init");
-            const duplicateReading = jest.spyOn(readingCrossTrackerReport, "duplicateFromReport");
-            const duplicateWriting = jest.spyOn(writingCrossTrackerReport, "duplicateFromReport");
+            const init = vi.spyOn(backendCrossTrackerReport, "init");
+            const duplicateReading = vi.spyOn(readingCrossTrackerReport, "duplicateFromReport");
+            const duplicateWriting = vi.spyOn(writingCrossTrackerReport, "duplicateFromReport");
             getWrapper({ is_user_admin: true });
-            await jest.runOnlyPendingTimersAsync();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(init).toHaveBeenCalledWith(trackers, expert_query);
             expect(duplicateReading).toHaveBeenCalledWith(backendCrossTrackerReport);
@@ -193,11 +195,11 @@ describe("CrossTrackerWidget", () => {
 
         it("When there is a REST error, it will be shown", async () => {
             const message = "Report 41 not found";
-            jest.spyOn(rest_querier, "getReport").mockReturnValue(
+            vi.spyOn(rest_querier, "getReport").mockReturnValue(
                 errAsync(Fault.fromMessage(message)),
             );
             getWrapper({ is_user_admin: true });
-            await jest.runOnlyPendingTimersAsync();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(setErrorMessageSpy).toHaveBeenCalledWith(expect.any(Object), message);
         });
@@ -210,9 +212,9 @@ describe("CrossTrackerWidget", () => {
                 is_user_admin: true,
                 reading_mode: true,
             });
-            const duplicateReading = jest.spyOn(readingCrossTrackerReport, "duplicateFromReport");
-            const duplicateWriting = jest.spyOn(writingCrossTrackerReport, "duplicateFromReport");
-            await jest.runOnlyPendingTimersAsync();
+            const duplicateReading = vi.spyOn(readingCrossTrackerReport, "duplicateFromReport");
+            const duplicateWriting = vi.spyOn(writingCrossTrackerReport, "duplicateFromReport");
+            await vi.runOnlyPendingTimersAsync();
 
             wrapper.findComponent(ReadingMode).vm.$emit("saved");
 
