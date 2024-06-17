@@ -22,104 +22,93 @@ declare(strict_types=1);
 
 namespace Tuleap\AgileDashboard\Workflow\REST\v1;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use Tracker;
+use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao;
 use Tuleap\AgileDashboard\Workflow\PostAction\Update\AddToTopBacklogValue;
 use Tuleap\REST\I18NRestException;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Workflow;
 
-class AddToTopBacklogJsonParserTest extends \Tuleap\Test\PHPUnit\TestCase
+final class AddToTopBacklogJsonParserTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var AddToTopBacklogJsonParser
-     */
-    private $parser;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ExplicitBacklogDao
-     */
-    private $explicit_backlog_dao;
+    private AddToTopBacklogJsonParser $parser;
+    private ExplicitBacklogDao&MockObject $explicit_backlog_dao;
 
     protected function setUp(): void
     {
-        parent::setUp();
-
-        $this->explicit_backlog_dao = Mockery::mock(ExplicitBacklogDao::class);
-
-        $this->parser = new AddToTopBacklogJsonParser(
-            $this->explicit_backlog_dao
-        );
+        $this->explicit_backlog_dao = $this->createMock(ExplicitBacklogDao::class);
+        $this->parser               = new AddToTopBacklogJsonParser($this->explicit_backlog_dao);
     }
 
     public function testAcceptReturnsTrueIfJsonIsAddToTopBacklog(): void
     {
         $json_post_action = [
-            'id' => 4,
+            'id'   => 4,
             'type' => 'add_to_top_backlog',
         ];
 
-        $this->assertTrue($this->parser->accept($json_post_action));
+        self::assertTrue($this->parser->accept($json_post_action));
     }
 
     public function testAcceptReturnsFalseIfJsonIsNotAddToTopBacklog(): void
     {
         $json_post_action = [
-            'id' => 4,
+            'id'   => 4,
             'type' => 'whatever',
         ];
 
-        $this->assertFalse($this->parser->accept($json_post_action));
+        self::assertFalse($this->parser->accept($json_post_action));
     }
 
     public function testAcceptReturnsFalseIfJsonIsNotTypeKeyProvided(): void
     {
         $json_post_action = [
-            'id' => 4,
+            'id'   => 4,
             'type' => 'whatever',
         ];
 
-        $this->assertFalse($this->parser->accept($json_post_action));
+        self::assertFalse($this->parser->accept($json_post_action));
     }
 
     public function testItThrowsAnExceptionIfProjectDoesNotUseExplicitBacklog(): void
     {
-        $tracker  = Mockery::mock(Tracker::class)->shouldReceive('getGroupId')->andReturn(101)->getMock();
-        $workflow = Mockery::mock(Workflow::class)->shouldReceive('getTracker')->andReturn($tracker)->getMock();
+        $tracker  = TrackerTestBuilder::aTracker()
+            ->withProject(ProjectTestBuilder::aProject()->withId(101)->build())
+            ->build();
+        $workflow = $this->createMock(Workflow::class);
+        $workflow->method('getTracker')->willReturn($tracker);
 
         $json_post_action = [
-            'id' => 4,
+            'id'   => 4,
             'type' => 'add_to_top_backlog',
         ];
 
-        $this->explicit_backlog_dao->shouldReceive('isProjectUsingExplicitBacklog')
-            ->once()
-            ->andReturnFalse();
+        $this->explicit_backlog_dao->expects(self::once())->method('isProjectUsingExplicitBacklog')->willReturn(false);
 
-        $this->expectException(I18NRestException::class);
+        self::expectException(I18NRestException::class);
 
         $this->parser->parse($workflow, $json_post_action);
     }
 
     public function testItReturnsTheAddToTopBacklogValue(): void
     {
-        $tracker  = Mockery::mock(Tracker::class)->shouldReceive('getGroupId')->andReturn(101)->getMock();
-        $workflow = Mockery::mock(Workflow::class)->shouldReceive('getTracker')->andReturn($tracker)->getMock();
+        $tracker  = TrackerTestBuilder::aTracker()
+            ->withProject(ProjectTestBuilder::aProject()->withId(101)->build())
+            ->build();
+        $workflow = $this->createMock(Workflow::class);
+        $workflow->method('getTracker')->willReturn($tracker);
 
         $json_post_action = [
-            'id' => 4,
+            'id'   => 4,
             'type' => 'add_to_top_backlog',
         ];
 
-        $this->explicit_backlog_dao->shouldReceive('isProjectUsingExplicitBacklog')
-            ->once()
-            ->andReturnTrue();
+        $this->explicit_backlog_dao->expects(self::once())->method('isProjectUsingExplicitBacklog')->willReturn(true);
 
         $value_object = $this->parser->parse($workflow, $json_post_action);
 
-        $this->assertInstanceOf(AddToTopBacklogValue::class, $value_object);
+        self::assertInstanceOf(AddToTopBacklogValue::class, $value_object);
     }
 }
