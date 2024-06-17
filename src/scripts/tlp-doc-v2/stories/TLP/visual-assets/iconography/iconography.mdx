@@ -1,0 +1,284 @@
+import { Canvas, Meta } from '@storybook/blocks';
+import * as IconographyStories from "./iconography.stories";
+import "./iconography.scss";
+
+<Meta of={IconographyStories}/>
+
+# Iconography
+
+## Font Awesome icons
+
+<code>.fa-solid</code> <code>.fa-[icon]</code>
+
+We use Font Awesome 6 as our main icon library. The complete list can be found <a href="https://fontawesome.com/icons">here</a>.
+
+<Canvas withToolbar={true} of={IconographyStories.FontAwesomeIcons}></Canvas>
+
+## Font Awesome TLP extension
+
+<code>.fa-solid .fa-tlp-[icon]</code>
+
+<table className="tlp-table">
+    <thead>
+    <tr>
+        <th>Icon</th>
+        <th>Class</th>
+        <th>Unicode</th>
+        <th>Usage</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td class="doc-tlp-icon"><i className="fa-solid fa-fw fa-tlp-lock-plus-r" aria-hidden="true"></i></td>
+        <td><code>fa-tlp-lock-plus-r</code></td>
+        <td><code>\f000</code></td>
+        <td><code>&lt;i className="fa-solid fa-tlp-lock-plus-r" aria-hidden="true"&gt;&lt;/i&gt;</code></td>
+    </tr>
+    <tr>
+        <td class="doc-tlp-icon"><i className="fa-solid fa-fw fa-tlp-unlock-plus-r" aria-hidden="true"></i></td>
+        <td><code>fa-tlp-unlock-plus-r</code></td>
+        <td><code>\f001</code></td>
+        <td><code>&lt;i className="fa-solid fa-tlp-unlock-plus-r" aria-hidden="true"&gt;&lt;/i&gt;</code></td>
+    </tr>
+    <tr>
+        <td class="doc-tlp-icon"><i className="fa-solid fa-fw fa-tlp-baseline" aria-hidden="true"></i></td>
+        <td><code>fa-tlp-baseline</code></td>
+        <td><code>\f002</code></td>
+        <td><code>&lt;i className="fa-solid fa-tlp-baseline" aria-hidden="true"&gt;&lt;/i&gt;</code></td>
+    </tr>
+    <tr>
+        <td class="doc-tlp-icon"><i className="fa-solid fa-fw fa-tlp-baseline-comparison" aria-hidden="true"></i></td>
+        <td><code>fa-tlp-baseline-comparison</code></td>
+        <td><code>\f003</code></td>
+        <td><code>&lt;i className="fa-solid fa-tlp-baseline-comparison" aria-hidden="true"&gt;&lt;/i&gt;</code></td>
+    </tr>
+    <tr>
+        <td class="doc-tlp-icon"><i className="fa-solid fa-fw fa-tlp-gavel-pending" aria-hidden="true"></i></td>
+        <td><code>fa-tlp-gavel-pending</code></td>
+        <td><code>\f004</code></td>
+        <td><code>&lt;i className="fa-solid fa-tlp-gavel-pending" aria-hidden="true"&gt;&lt;/i&gt;</code></td>
+    </tr>
+    <tr>
+        <td class="doc-tlp-icon"><i className="fa-solid fa-fw fa-tlp-gavel-approved" aria-hidden="true"></i></td>
+        <td><code>fa-tlp-gavel-approved</code></td>
+        <td><code>\f005</code></td>
+        <td><code>&lt;i className="fa-solid fa-tlp-gavel-approved" aria-hidden="true"&gt;&lt;/i&gt;</code></td>
+    </tr>
+    <tr>
+        <td class="doc-tlp-icon"><i className="fa-solid fa-fw fa-tlp-gavel-rejected" aria-hidden="true"></i></td>
+        <td><code>fa-tlp-gavel-rejected</code></td>
+        <td><code>\f006</code></td>
+        <td><code>&lt;i className="fa-solid fa-tlp-gavel-rejected" aria-hidden="true"&gt;&lt;/i&gt;</code></td>
+    </tr>
+    <tr>
+        <td class="doc-tlp-icon"><i className="fa-solid fa-fw fa-tlp-gavel-comment" aria-hidden="true"></i></td>
+        <td><code>fa-tlp-gavel-comment</code></td>
+        <td><code>\f007</code></td>
+        <td><code>&lt;i className="fa-solid fa-tlp-gavel-comment" aria-hidden="true"&gt;&lt;/i&gt;</code></td>
+    </tr>
+    <tr>
+        <td class="doc-tlp-icon"><i className="fa-solid fa-fw fa-tlp-text-large" aria-hidden="true"></i></td>
+        <td><code>fa-tlp-text-large</code></td>
+        <td><code>\f008</code></td>
+        <td><code>&lt;i className="fa-solid fa-tlp-text-large" aria-hidden="true"&gt;&lt;/i&gt;</code></td>
+    </tr>
+    <tr>
+        <td class="doc-tlp-icon"><i className="fa-solid fa-fw fa-tlp-text-narrow" aria-hidden="true"></i></td>
+        <td><code>fa-tlp-text-narrow</code></td>
+        <td><code>\f009</code></td>
+        <td><code>&lt;i className="fa-solid fa-tlp-text-narrow" aria-hidden="true"&gt;&lt;/i&gt;</code></td>
+    </tr>
+    <tr>
+        <td class="doc-tlp-icon"><i className="fa-solid fa-fw fa-tlp-versioning-svn" aria-hidden="true"></i></td>
+        <td><code>fa-tlp-versioning-svn</code></td>
+        <td><code>\f011</code></td>
+        <td><code>&lt;i className="fa-solid fa-tlp-versioning-svn" aria-hidden="true"&gt;&lt;/i&gt;</code></td>
+    </tr>
+    <tr>
+        <td class="doc-tlp-icon"><i className="fa-solid fa-fw fa-tlp-versioning-git" aria-hidden="true"></i></td>
+        <td><code>fa-tlp-versioning-git</code></td>
+        <td><code>\f012</code></td>
+        <td><code>&lt;i className="fa-solid fa-tlp-versioning-git" aria-hidden="true"&gt;&lt;/i&gt;</code></td>
+    </tr>
+    <tr>
+        <td class="doc-tlp-icon"><i className="fa-solid fa-fw fa-tlp-wiki" aria-hidden="true"></i></td>
+        <td><code>fa-tlp-wiki</code></td>
+        <td><code>\f013</code></td>
+        <td><code>&lt;i className="fa-solid fa-tlp-wiki" aria-hidden="true"&gt;&lt;/i&gt;</code></td>
+    </tr>
+    <tr>
+        <td class="doc-tlp-icon"><i className="fa-solid fa-fw fa-tlp-mediawiki" aria-hidden="true"></i></td>
+        <td><code>fa-tlp-mediawiki</code></td>
+        <td><code>\f014</code></td>
+        <td><code>&lt;i className="fa-solid fa-tlp-mediawiki" aria-hidden="true"&gt;&lt;/i&gt;</code></td>
+    </tr>
+    <tr>
+        <td class="doc-tlp-icon"><i className="fa-solid fa-fw fa-tlp-folder-globe" aria-hidden="true"></i></td>
+        <td><code>fa-tlp-folder-globe</code></td>
+        <td><code>\f015</code></td>
+        <td><code>&lt;i className="fa-solid fa-tlp-folder-globe" aria-hidden="true"&gt;&lt;/i&gt;</code></td>
+    </tr>
+    <tr>
+        <td class="doc-tlp-icon"><i className="fa-solid fa-fw fa-tlp-add-to-backlog" aria-hidden="true"></i></td>
+        <td><code>fa-tlp-add-to-backlog</code></td>
+        <td><code>\f016</code></td>
+        <td><code>&lt;i className="fa-solid fa-tlp-add-to-backlog" aria-hidden="true"&gt;&lt;/i&gt;</code></td>
+    </tr>
+    <tr>
+        <td class="doc-tlp-icon"><i className="fa-solid fa-fw fa-tlp-dependencies-graph" aria-hidden="true"></i></td>
+        <td><code>fa-tlp-dependencies-graph</code></td>
+        <td><code>\f017</code></td>
+        <td><code>&lt;i className="fa-solid fa-tlp-dependencies-graph" aria-hidden="true"&gt;&lt;/i&gt;</code></td>
+    </tr>
+    <tr>
+        <td class="doc-tlp-icon"><i className="fa-solid fa-fw fa-tlp-backlog" aria-hidden="true"></i></td>
+        <td><code>fa-tlp-backlog</code></td>
+        <td><code>\f018</code></td>
+        <td><code>&lt;i className="fa-solid fa-tlp-backlog" aria-hidden="true"&gt;&lt;/i&gt;</code></td>
+    </tr>
+    <tr>
+        <td class="doc-tlp-icon"><i className="fa-solid fa-fw fa-tlp-remove-from-backlog" aria-hidden="true"></i></td>
+        <td><code>fa-tlp-remove-from-backlog</code></td>
+        <td><code>\f019</code></td>
+        <td><code>&lt;i className="fa-solid fa-tlp-remove-from-backlog" aria-hidden="true"&gt;&lt;/i&gt;</code></td>
+    </tr>
+    <tr>
+        <td class="doc-tlp-icon"><i className="fa-solid fa-fw fa-tlp-taskboard" aria-hidden="true"></i></td>
+        <td><code>fa-tlp-taskboard</code></td>
+        <td><code>\f020</code></td>
+        <td><code>&lt;i className="fa-solid fa-tlp-taskboard" aria-hidden="true"&gt;&lt;/i&gt;</code></td>
+    </tr>
+    <tr>
+        <td class="doc-tlp-icon"><i className="fa-solid fa-fw fa-tlp-kanban-boards" aria-hidden="true"></i></td>
+        <td><code>fa-tlp-kanban-boards</code></td>
+        <td><code>\f021</code></td>
+        <td><code>&lt;i className="fa-solid fa-tlp-kanban-boards" aria-hidden="true"&gt;&lt;/i&gt;</code></td>
+    </tr>
+    <tr>
+        <td class="doc-tlp-icon"><i className="fa-solid fa-fw fa-tlp-esc-key" aria-hidden="true"></i></td>
+        <td><code>fa-tlp-esc-key</code></td>
+        <td><code>\f022</code></td>
+        <td><code>&lt;i className="fa-solid fa-tlp-esc-key" aria-hidden="true"&gt;&lt;/i&gt;</code></td>
+    </tr>
+    <tr>
+        <td class="doc-tlp-icon"><i className="fa-solid fa-fw fa-tlp-enter-key" aria-hidden="true"></i></td>
+        <td><code>fa-tlp-enter-key</code></td>
+        <td><code>\f023</code></td>
+        <td><code>&lt;i className="fa-solid fa-tlp-enter-key" aria-hidden="true"&gt;&lt;/i&gt;</code></td>
+    </tr>
+    <tr>
+        <td class="doc-tlp-icon"><i className="fa-solid fa-fw fa-tlp-hierarchy-plus" aria-hidden="true"></i></td>
+        <td><code>fa-tlp-hierarchy-plus</code></td>
+        <td><code>\f024</code></td>
+        <td><code>&lt;i className="fa-solid fa-tlp-hierarchy-plus" aria-hidden="true"&gt;&lt;/i&gt;</code></td>
+    </tr>
+    <tr>
+        <td class="doc-tlp-icon"><i className="fa-solid fa-fw fa-tlp-user-pencil" aria-hidden="true"></i></td>
+        <td><code>fa-tlp-user-pencil</code></td>
+        <td><code>\f025</code></td>
+        <td><code>&lt;i className="fa-solid fa-tlp-user-pencil" aria-hidden="true"&gt;&lt;/i&gt;</code></td>
+    </tr>
+    <tr>
+        <td class="doc-tlp-icon"><i className="fa-solid fa-fw fa-tlp-gerrit" aria-hidden="true"></i></td>
+        <td><code>fa-tlp-gerrit</code></td>
+        <td><code>\f026</code></td>
+        <td><code>&lt;i className="fa-solid fa-tlp-gerrit" aria-hidden="true"&gt;&lt;/i&gt;</code></td>
+    </tr>
+    <tr>
+        <td class="doc-tlp-icon"><i className="fa-solid fa-fw fa-tlp-tuleap" aria-hidden="true"></i></td>
+        <td><code>fa-tlp-tuleap</code></td>
+        <td><code>\f027</code></td>
+        <td><code>&lt;i className="fa-solid fa-tlp-tuleap" aria-hidden="true"&gt;&lt;/i&gt;</code></td>
+    </tr>
+    <tr>
+        <td class="doc-tlp-icon"><i className="fa-solid fa-fw fa-tlp-zip-download" aria-hidden="true"></i></td>
+        <td><code>fa-tlp-zip-download</code></td>
+        <td><code>\f028</code></td>
+        <td><code>&lt;i className="fa-solid fa-tlp-zip-download" aria-hidden="true"&gt;&lt;/i&gt;</code></td>
+    </tr>
+    <tr>
+        <td class="doc-tlp-icon"><i className="fa-solid fa-fw fa-tlp-robot" aria-hidden="true"></i></td>
+        <td><code>fa-tlp-robot</code></td>
+        <td><code>\f029</code></td>
+        <td><code>&lt;i className="fa-solid fa-tlp-robot" aria-hidden="true"&gt;&lt;/i&gt;</code></td>
+    </tr>
+    <tr>
+        <td class="doc-tlp-icon"><i className="fa-solid fa-fw fa-tlp-robot-happy" aria-hidden="true"></i></td>
+        <td><code>fa-tlp-robot-happy</code></td>
+        <td><code>\f030</code></td>
+        <td><code>&lt;i className="fa-solid fa-tlp-robot-happy" aria-hidden="true"&gt;&lt;/i&gt;</code></td>
+    </tr>
+    <tr>
+        <td class="doc-tlp-icon"><i className="fa-solid fa-fw fa-tlp-robot-unhappy" aria-hidden="true"></i></td>
+        <td><code>fa-tlp-robot-unhappy</code></td>
+        <td><code>\f031</code></td>
+        <td><code>&lt;i className="fa-solid fa-tlp-robot-unhappy" aria-hidden="true"&gt;&lt;/i&gt;</code></td>
+    </tr>
+    <tr>
+        <td class="doc-tlp-icon"><i className="fa-solid fa-fw fa-tlp-go-to-user" aria-hidden="true"></i></td>
+        <td><code>fa-tlp-go-to-user</code></td>
+        <td><code>\f032</code></td>
+        <td><code>&lt;i className="fa-solid fa-tlp-go-to-user" aria-hidden="true"&gt;&lt;/i&gt;</code></td>
+    </tr>
+    <tr>
+        <td class="doc-tlp-icon"><i className="fa-solid fa-fw fa-tlp-webhooks" aria-hidden="true"></i></td>
+        <td><code>fa-tlp-webhooks</code></td>
+        <td><code>\f033</code></td>
+        <td><code>&lt;i className="fa-solid fa-tlp-webhooks" aria-hidden="true"&gt;&lt;/i&gt;</code></td>
+    </tr>
+    <tr>
+        <td class="doc-tlp-icon"><i className="fa-solid fa-fw fa-tlp-select-test" aria-hidden="true"></i></td>
+        <td><code>fa-tlp-select-test</code></td>
+        <td><code>\f034</code></td>
+        <td><code>&lt;i className="fa-solid fa-tlp-select-test" aria-hidden="true"&gt;&lt;/i&gt;</code></td>
+    </tr>
+    <tr>
+        <td class="doc-tlp-icon"><i className="fa-solid fa-fw fa-tlp-project-boxes" aria-hidden="true"></i></td>
+        <td><code>fa-tlp-project-boxes</code></td>
+        <td><code>\f035</code></td>
+        <td><code>&lt;i className="fa-solid fa-tlp-project-boxes" aria-hidden="true"&gt;&lt;/i&gt;</code></td>
+    </tr>
+    <tr>
+        <td class="doc-tlp-icon"><i className="fa-solid fa-fw fa-tlp-level-down" aria-hidden="true"></i></td>
+        <td><code>fa-tlp-level-down</code></td>
+        <td><code>\f036</code></td>
+        <td><code>&lt;i className="fa-solid fa-tlp-level-down" aria-hidden="true"&gt;&lt;/i&gt;</code></td>
+    </tr>
+    <tr>
+        <td class="doc-tlp-icon"><i className="fa-solid fa-fw fa-tlp-new-bug" aria-hidden="true"></i></td>
+        <td><code>fa-tlp-new-bug</code></td>
+        <td><code>\f037</code></td>
+        <td><code>&lt;i className="fa-solid fa-tlp-new-bug" aria-hidden="true"&gt;&lt;/i&gt;</code></td>
+    </tr>
+    <tr>
+        <td class="doc-tlp-icon"><i className="fa-solid fa-fw fa-tlp-small-cards" aria-hidden="true"></i></td>
+        <td><code>fa-tlp-small-cards</code></td>
+        <td><code>\f038</code></td>
+        <td><code>&lt;i className="fa-solid fa-tlp-small-cards" aria-hidden="true"&gt;&lt;/i&gt;</code></td>
+    </tr>
+    <tr>
+        <td class="doc-tlp-icon"><i className="fa-solid fa-fw fa-tlp-big-cards" aria-hidden="true"></i></td>
+        <td><code>fa-tlp-big-cards</code></td>
+        <td><code>\f039</code></td>
+        <td><code>&lt;i className="fa-solid fa-tlp-big-cards" aria-hidden="true"&gt;&lt;/i&gt;</code></td>
+    </tr>
+    <tr>
+        <td class="doc-tlp-icon"><i className="fa-solid fa-fw fa-tlp-tracker" aria-hidden="true"></i></td>
+        <td><code>fa-tlp-tracker</code></td>
+        <td><code>\f040</code></td>
+        <td><code>&lt;i className="fa-solid fa-tlp-tracker" aria-hidden="true"&gt;&lt;/i&gt;</code></td>
+    </tr>
+    <tr>
+        <td class="doc-tlp-icon"><i className="fa-solid fa-fw fa-tlp-tracker-circle" aria-hidden="true"></i></td>
+        <td><code>fa-tlp-tracker-circle</code></td>
+        <td><code>\f041</code></td>
+        <td><code>&lt;i className="fa-solid fa-tlp-tracker-circle" aria-hidden="true"&gt;&lt;/i&gt;</code></td>
+    </tr>
+    <tr>
+        <td class="doc-tlp-icon"><i className="fa-solid fa-fw fa-tlp-artidoc" aria-hidden="true"></i></td>
+        <td><code>fa-tlp-artidoc</code></td>
+        <td><code>\f042</code></td>
+        <td><code>&lt;i className="fa-solid fa-tlp-artidoc" aria-hidden="true"&gt;&lt;/i&gt;</code></td>
+    </tr>
+    </tbody>
+</table>
