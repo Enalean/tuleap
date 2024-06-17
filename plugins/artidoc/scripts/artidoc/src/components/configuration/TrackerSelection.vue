@@ -30,6 +30,7 @@
         </label>
         <select
             id="artidoc-configuration-tracker"
+            data-test="artidoc-configuration-tracker"
             class="tlp-select tlp-select-adjusted"
             required
             v-model="new_selected_tracker"

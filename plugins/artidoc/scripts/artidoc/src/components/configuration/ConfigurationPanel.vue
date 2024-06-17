@@ -43,7 +43,7 @@
                     type="submit"
                     class="tlp-button-primary tlp-button-large artidoc-configuration-submit-button"
                     v-bind:disabled="is_submit_button_disabled"
-                    data-test="submit"
+                    data-test="artidoc-configuration-submit-button"
                 >
                     <i
                         class="tlp-button-icon"

@@ -22,7 +22,7 @@
     <div v-else-if="!is_sections_loading && !sections" class="tlp-framed">
         <no-access-state />
     </div>
-    <div v-else class="tlp-framed">
+    <div v-else class="tlp-framed" data-test="states-section">
         <configuration-panel v-if="should_display_configuration_panel" />
         <empty-state v-else />
     </div>
