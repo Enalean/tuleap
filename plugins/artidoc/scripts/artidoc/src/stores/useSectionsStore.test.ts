@@ -25,6 +25,9 @@ import { flushPromises } from "@vue/test-utils";
 import ArtifactSectionFactory from "@/helpers/artifact-section.factory";
 import { Fault } from "@tuleap/fault";
 import PendingArtifactSectionFactory from "@/helpers/pending-artifact-section.factory";
+import { TrackerStub } from "@/helpers/stubs/TrackerStub";
+import type { Tracker } from "@/stores/configuration-store";
+import { isPendingArtifactSection } from "@/helpers/artidoc-section.type";
 
 describe("useSectionsStore", () => {
     describe("loadSections", () => {
@@ -40,22 +43,55 @@ describe("useSectionsStore", () => {
             );
 
             const store = useSectionsStore();
-            store.loadSections(101);
+            store.loadSections(101, null, false);
 
             await flushPromises();
 
             expect(store.sections.value).toHaveLength(1);
         });
 
-        it("should store loaded sections when empty", async () => {
+        it.each([
+            [null],
+            [TrackerStub.withoutTitleAndDescription()],
+            [TrackerStub.withTitle()],
+            [TrackerStub.withDescription()],
+        ])(
+            "should store loaded sections when empty and user can edit document and configured tracker = %s",
+            async (tracker: Tracker | null) => {
+                vi.spyOn(rest, "getAllSections").mockReturnValue(okAsync([]));
+
+                const store = useSectionsStore();
+                store.loadSections(101, tracker, true);
+
+                await flushPromises();
+
+                expect(store.sections.value).toHaveLength(0);
+            },
+        );
+
+        it("should store loaded sections when empty and configured tracker but no rights to edit document", async () => {
             vi.spyOn(rest, "getAllSections").mockReturnValue(okAsync([]));
 
             const store = useSectionsStore();
-            store.loadSections(101);
+            store.loadSections(101, TrackerStub.withTitleAndDescription(), false);
 
             await flushPromises();
 
             expect(store.sections.value).toHaveLength(0);
+        });
+
+        it(`should create a pending artifact section
+            when loaded sections are empty
+            and there is a configured tracker
+            and user can edit document`, async () => {
+            vi.spyOn(rest, "getAllSections").mockReturnValue(okAsync([]));
+
+            const store = useSectionsStore();
+            store.loadSections(101, TrackerStub.withTitleAndDescription(), true);
+
+            await flushPromises();
+
+            expect(store.sections.value).toHaveLength(1);
         });
 
         it("should store undefined in case of error", async () => {
@@ -64,7 +100,7 @@ describe("useSectionsStore", () => {
             );
 
             const store = useSectionsStore();
-            store.loadSections(101);
+            store.loadSections(101, null, false);
 
             await flushPromises();
 
@@ -85,7 +121,7 @@ describe("useSectionsStore", () => {
             );
 
             const store = useSectionsStore();
-            store.loadSections(101);
+            store.loadSections(101, null, false);
 
             await flushPromises();
 
@@ -98,7 +134,7 @@ describe("useSectionsStore", () => {
             );
 
             const store = useSectionsStore();
-            store.loadSections(101);
+            store.loadSections(101, null, false);
 
             await flushPromises();
 
@@ -115,7 +151,7 @@ describe("useSectionsStore", () => {
             );
 
             const store = useSectionsStore();
-            store.loadSections(101);
+            store.loadSections(101, null, true);
 
             await flushPromises();
 
@@ -144,7 +180,7 @@ describe("useSectionsStore", () => {
             vi.spyOn(rest, "getAllSections").mockReturnValue(okAsync([section_a, section_b]));
 
             const store = useSectionsStore();
-            store.loadSections(101);
+            store.loadSections(101, null, true);
 
             await flushPromises();
 
@@ -165,34 +201,76 @@ describe("useSectionsStore", () => {
     });
 
     describe("removeSection", () => {
-        it("should remove the section when it is found", () => {
-            const section1 = ArtifactSectionFactory.create();
-            const section2 = PendingArtifactSectionFactory.create();
-            const section3 = ArtifactSectionFactory.create();
-            const section4 = PendingArtifactSectionFactory.create();
+        it.each([
+            [null],
+            [TrackerStub.withoutTitleAndDescription()],
+            [TrackerStub.withTitle()],
+            [TrackerStub.withDescription()],
+            [TrackerStub.withTitleAndDescription()],
+        ])(
+            "should remove the section when it is found and tracker is %s",
+            (tracker: Tracker | null) => {
+                const section1 = ArtifactSectionFactory.create();
+                const section2 = PendingArtifactSectionFactory.create();
+                const section3 = ArtifactSectionFactory.create();
+                const section4 = PendingArtifactSectionFactory.create();
+
+                const store = useSectionsStore();
+                store.sections.value = [section1, section2, section3, section4];
+
+                store.removeSection(section2, tracker);
+                store.removeSection(section3, null);
+
+                expect(store.sections.value).not.toBeUndefined();
+                expect(store.sections.value).toHaveLength(2);
+                expect(store.sections.value[0]).toStrictEqual(section1);
+                expect(store.sections.value[1]).toStrictEqual(section4);
+            },
+        );
+
+        it.each([
+            [null],
+            [TrackerStub.withoutTitleAndDescription()],
+            [TrackerStub.withTitle()],
+            [TrackerStub.withDescription()],
+        ])(
+            "should remove the last section and end up with empty sections when tracker is %s",
+            (tracker: Tracker | null) => {
+                const section = ArtifactSectionFactory.create();
+
+                const store = useSectionsStore();
+                store.sections.value = [section];
+
+                store.removeSection(section, tracker);
+
+                expect(store.sections.value).not.toBeUndefined();
+                expect(store.sections.value).toHaveLength(0);
+            },
+        );
+
+        it("should remove the last section and add automatically a fresh new one when tracker has title and description", () => {
+            const section = ArtifactSectionFactory.create();
 
             const store = useSectionsStore();
-            store.sections.value = [section1, section2, section3, section4];
+            store.sections.value = [section];
 
-            store.removeSection(section2);
-            store.removeSection(section3);
+            store.removeSection(section, TrackerStub.withTitleAndDescription());
 
             expect(store.sections.value).not.toBeUndefined();
-            expect(store.sections.value).toHaveLength(2);
-            expect(store.sections.value[0]).toStrictEqual(section1);
-            expect(store.sections.value[1]).toStrictEqual(section4);
+            expect(store.sections.value).toHaveLength(1);
+            expect(isPendingArtifactSection(store.sections.value[0])).toBe(true);
         });
 
         it("should do nothing when there is no sections", () => {
             const store = useSectionsStore();
             store.sections.value = undefined;
 
-            store.removeSection(ArtifactSectionFactory.create());
+            store.removeSection(ArtifactSectionFactory.create(), null);
 
             expect(store.sections.value).toBeUndefined();
         });
 
-        it("should do nothing when there is no sections", () => {
+        it("should do nothing when section cannot be found", () => {
             const section1 = ArtifactSectionFactory.create();
             const section2 = PendingArtifactSectionFactory.create();
             const section3 = ArtifactSectionFactory.create();
@@ -201,7 +279,7 @@ describe("useSectionsStore", () => {
             const store = useSectionsStore();
             store.sections.value = [section1, section2, section3, section4];
 
-            store.removeSection(ArtifactSectionFactory.create());
+            store.removeSection(ArtifactSectionFactory.create(), null);
 
             expect(store.sections.value).not.toBeUndefined();
             expect(store.sections.value).toHaveLength(4);
@@ -263,6 +341,62 @@ describe("useSectionsStore", () => {
             expect(store.sections.value[0]).toStrictEqual(section1);
             expect(store.sections.value[1]).toStrictEqual(section2);
             expect(store.sections.value[2]).toStrictEqual(new_section);
+        });
+    });
+
+    describe("insertPendingArtifactSectionForEmptyDocument", () => {
+        it.each([
+            [null],
+            [TrackerStub.withoutTitleAndDescription()],
+            [TrackerStub.withTitle()],
+            [TrackerStub.withDescription()],
+        ])("should do nothing if tracker is %s", (tracker: Tracker | null) => {
+            const store = useSectionsStore();
+            store.sections.value = [];
+
+            store.insertPendingArtifactSectionForEmptyDocument(tracker);
+
+            expect(store.sections.value).not.toBeUndefined();
+            expect(store.sections.value).toHaveLength(0);
+        });
+
+        it("should insert a pending artifact section when sections is empty", () => {
+            const store = useSectionsStore();
+            store.sections.value = [];
+
+            store.insertPendingArtifactSectionForEmptyDocument(
+                TrackerStub.withTitleAndDescription(),
+            );
+
+            expect(store.sections.value).not.toBeUndefined();
+            expect(store.sections.value).toHaveLength(1);
+            expect(isPendingArtifactSection(store.sections.value[0]));
+        });
+
+        it("should do nothing when loading of sections failed", () => {
+            const store = useSectionsStore();
+            store.sections.value = undefined;
+
+            store.insertPendingArtifactSectionForEmptyDocument(
+                TrackerStub.withTitleAndDescription(),
+            );
+
+            expect(store.sections.value).toBeUndefined();
+        });
+
+        it("should do nothing when not empty", () => {
+            const section = ArtifactSectionFactory.create();
+
+            const store = useSectionsStore();
+            store.sections.value = [section];
+
+            store.insertPendingArtifactSectionForEmptyDocument(
+                TrackerStub.withTitleAndDescription(),
+            );
+
+            expect(store.sections.value).not.toBeUndefined();
+            expect(store.sections.value).toHaveLength(1);
+            expect(store.sections.value[0]).toStrictEqual(section);
         });
     });
 });

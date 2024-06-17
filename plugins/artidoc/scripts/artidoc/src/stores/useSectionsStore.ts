@@ -29,14 +29,23 @@ import type {
 } from "@/helpers/artidoc-section.type";
 import ArtifactSectionFactory from "@/helpers/artifact-section.factory";
 import { getAllSections } from "@/helpers/rest-querier";
+import PendingArtifactSectionFactory from "@/helpers/pending-artifact-section.factory";
+import type { Tracker } from "@/stores/configuration-store";
+import { isTrackerWithSubmittableSection } from "@/stores/configuration-store";
+import { okAsync } from "neverthrow";
 
 export interface SectionsStore {
     sections: Ref<readonly ArtidocSection[] | undefined>;
     is_sections_loading: Ref<boolean>;
-    loadSections: (item_id: number) => void;
+    loadSections: (
+        item_id: number,
+        tracker: Tracker | null,
+        can_user_edit_document: boolean,
+    ) => void;
     updateSection: (section: ArtifactSection) => void;
     insertSection: (section: PendingArtifactSection, position: Position) => void;
-    removeSection: (section: ArtidocSection) => void;
+    removeSection: (section: ArtidocSection, tracker: Tracker | null) => void;
+    insertPendingArtifactSectionForEmptyDocument: (tracker: Tracker | null) => void;
 }
 
 type BeforeSection = { index: number };
@@ -54,17 +63,30 @@ export function useSectionsStore(): SectionsStore {
     const sections: Ref<ArtidocSection[] | undefined> = ref(skeleton_data);
     const is_sections_loading = ref(true);
 
-    function loadSections(item_id: number): void {
-        getAllSections(item_id).match(
-            (artidoc_sections: readonly ArtidocSection[]) => {
+    function loadSections(
+        item_id: number,
+        tracker: Tracker | null,
+        can_user_edit_document: boolean,
+    ): void {
+        getAllSections(item_id)
+            .andThen((artidoc_sections: readonly ArtidocSection[]) => {
                 sections.value = [...artidoc_sections];
-                is_sections_loading.value = false;
-            },
-            () => {
-                sections.value = undefined;
-                is_sections_loading.value = false;
-            },
-        );
+
+                if (sections.value.length === 0 && can_user_edit_document) {
+                    insertPendingArtifactSectionForEmptyDocument(tracker);
+                }
+
+                return okAsync(true);
+            })
+            .match(
+                () => {
+                    is_sections_loading.value = false;
+                },
+                () => {
+                    sections.value = undefined;
+                    is_sections_loading.value = false;
+                },
+            );
     }
 
     function updateSection(section: ArtifactSection): void {
@@ -93,7 +115,26 @@ export function useSectionsStore(): SectionsStore {
         }
     }
 
-    function removeSection(section: ArtidocSection): void {
+    function insertPendingArtifactSectionForEmptyDocument(tracker: Tracker | null): void {
+        if (!tracker) {
+            return;
+        }
+
+        if (!isTrackerWithSubmittableSection(tracker)) {
+            return;
+        }
+
+        if (sections.value === undefined) {
+            return;
+        }
+        if (sections.value.length > 0) {
+            return;
+        }
+
+        sections.value.push(PendingArtifactSectionFactory.overrideFromTracker(tracker));
+    }
+
+    function removeSection(section: ArtidocSection, tracker: Tracker | null): void {
         if (sections.value === undefined) {
             return;
         }
@@ -104,6 +145,8 @@ export function useSectionsStore(): SectionsStore {
         }
 
         sections.value.splice(index, 1);
+
+        insertPendingArtifactSectionForEmptyDocument(tracker);
     }
 
     return {
@@ -113,6 +156,7 @@ export function useSectionsStore(): SectionsStore {
         updateSection,
         insertSection,
         removeSection,
+        insertPendingArtifactSectionForEmptyDocument,
     };
 }
 
@@ -121,14 +165,14 @@ let sectionsStore: SectionsStore | null = null;
 export function provideSectionsStore(): SectionsStore {
     if (!sectionsStore) {
         sectionsStore = useSectionsStore();
+        provide(sectionsStoreKey, sectionsStore);
     }
-    provide(sectionsStoreKey, sectionsStore);
 
     return sectionsStore;
 }
 
 export function useInjectSectionsStore(): SectionsStore {
-    const store = strictInject<SectionsStore>(sectionsStoreKey);
+    const store = strictInject(sectionsStoreKey);
     if (!store) {
         throw new Error("No sections store provided!");
     }

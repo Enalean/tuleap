@@ -54,7 +54,7 @@ import { CAN_USER_EDIT_DOCUMENT } from "@/can-user-edit-document-injection-key";
 
 const { sections, insertSection } = useInjectSectionsStore();
 
-const can_user_edit_document = strictInject<boolean>(CAN_USER_EDIT_DOCUMENT);
+const can_user_edit_document = strictInject(CAN_USER_EDIT_DOCUMENT);
 
 const has_add_button = can_user_edit_document;
 

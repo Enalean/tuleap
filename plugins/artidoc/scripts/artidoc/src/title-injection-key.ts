@@ -17,6 +17,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { InjectionKey } from "vue";
+import type { StrictInjectionKey } from "@tuleap/vue-strict-inject";
 
-export const TITLE: InjectionKey<string> = Symbol("title");
+export const TITLE: StrictInjectionKey<string> = Symbol("title");

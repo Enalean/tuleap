@@ -54,8 +54,8 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     const app = createApp(App, { item_id });
 
-    const sectionsStore = provideSectionsStore();
-    app.provide(sectionsStoreKey, sectionsStore);
+    const sections_store = provideSectionsStore();
+    app.provide(sectionsStoreKey, sections_store);
     app.provide(CURRENT_LOCALE, current_locale);
     app.provide(
         CAN_USER_EDIT_DOCUMENT,
@@ -69,6 +69,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             item_id,
             JSON.parse(getDatasetItemOrThrow(vue_mount_point, "selectedTracker")),
             JSON.parse(getDatasetItemOrThrow(vue_mount_point, "allowedTrackers")),
+            sections_store,
         ),
     );
 

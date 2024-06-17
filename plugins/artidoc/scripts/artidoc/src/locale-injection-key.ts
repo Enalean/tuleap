@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { InjectionKey } from "vue";
+import type { StrictInjectionKey } from "@tuleap/vue-strict-inject";
 import type { UserLocale } from "@/helpers/user-locale";
 
-export const CURRENT_LOCALE: InjectionKey<UserLocale> = Symbol("current_locale");
+export const CURRENT_LOCALE: StrictInjectionKey<UserLocale> = Symbol("current_locale");

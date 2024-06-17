@@ -17,14 +17,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { InjectionKey } from "vue";
+import type { StrictInjectionKey } from "@tuleap/vue-strict-inject";
 
 export interface OpenConfigurationModalBus {
     readonly registerHandler: (new_handler: () => void) => void;
     readonly openModal: () => void;
 }
 
-export const OPEN_CONFIGURATION_MODAL_BUS: InjectionKey<OpenConfigurationModalBus> = Symbol(
+export const OPEN_CONFIGURATION_MODAL_BUS: StrictInjectionKey<OpenConfigurationModalBus> = Symbol(
     "open_configuration_modal_bus",
 );
 

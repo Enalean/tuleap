@@ -20,11 +20,13 @@
 import type { SectionsStore } from "@/stores/useSectionsStore";
 import { ref } from "vue";
 import type { ArtidocSection } from "@/helpers/artidoc-section.type";
+import type { Tracker } from "@/stores/configuration-store";
 
 const noop = (): void => {};
 
 export const InjectedSectionsStoreStub = {
     withLoadedSections: (sections: readonly ArtidocSection[]): SectionsStore => ({
+        insertPendingArtifactSectionForEmptyDocument: noop,
         insertSection: noop,
         removeSection: noop,
         loadSections: noop,
@@ -33,6 +35,7 @@ export const InjectedSectionsStoreStub = {
         sections: ref(sections),
     }),
     withLoadingSections: (sections: readonly ArtidocSection[] = []): SectionsStore => ({
+        insertPendingArtifactSectionForEmptyDocument: noop,
         insertSection: noop,
         removeSection: noop,
         loadSections: noop,
@@ -41,6 +44,7 @@ export const InjectedSectionsStoreStub = {
         sections: ref(sections),
     }),
     withSectionsInError: (): SectionsStore => ({
+        insertPendingArtifactSectionForEmptyDocument: noop,
         insertSection: noop,
         removeSection: noop,
         loadSections: noop,
@@ -49,11 +53,18 @@ export const InjectedSectionsStoreStub = {
         sections: ref(undefined),
     }),
     withMockedLoadSections: (loadSections: (item_id: number) => void): SectionsStore => ({
+        insertPendingArtifactSectionForEmptyDocument: noop,
         insertSection: noop,
         removeSection: noop,
         loadSections,
         updateSection: noop,
         is_sections_loading: ref(false),
         sections: ref([]),
+    }),
+    withMockedInsertPendingArtifactSectionForEmptyDocument: (
+        insertPendingArtifactSectionForEmptyDocument: (tracker: Tracker | null) => void,
+    ): SectionsStore => ({
+        ...InjectedSectionsStoreStub.withLoadedSections([]),
+        insertPendingArtifactSectionForEmptyDocument,
     }),
 };

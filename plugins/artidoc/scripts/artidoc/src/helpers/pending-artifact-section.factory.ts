@@ -19,6 +19,7 @@
 
 import type { PendingArtifactSection } from "@/helpers/artidoc-section.type";
 import { v4 as uuidv4 } from "uuid";
+import type { TrackerWithSubmittableSection } from "@/stores/configuration-store";
 
 const PendingArtifactSectionFactory = {
     create: (): PendingArtifactSection => ({
@@ -50,6 +51,25 @@ const PendingArtifactSectionFactory = {
         ...PendingArtifactSectionFactory.create(),
         ...overrides,
     }),
+
+    overrideFromTracker: (tracker: TrackerWithSubmittableSection): PendingArtifactSection =>
+        PendingArtifactSectionFactory.override({
+            tracker,
+            title: {
+                ...tracker.title,
+                value: "",
+                ...(tracker.title.type === "string"
+                    ? { type: "string" }
+                    : { type: "text", post_processed_value: "", format: "html" }),
+            },
+            display_title: "",
+            description: {
+                ...tracker.description,
+                value: "",
+                post_processed_value: "",
+                format: "html",
+            },
+        }),
 };
 
 export default PendingArtifactSectionFactory;

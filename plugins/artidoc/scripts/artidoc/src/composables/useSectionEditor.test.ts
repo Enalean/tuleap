@@ -173,7 +173,7 @@ describe("useSectionEditor", () => {
             store.inputCurrentDescription("the description changed");
             expect(store.getEditableDescription().value).toBe("the description changed");
 
-            store.editor_actions.cancelEditor();
+            store.editor_actions.cancelEditor(null);
 
             expect(store.isSectionInEditMode().value).toBe(false);
             expect(store.getEditableDescription().value).toBe("the original description");
@@ -187,7 +187,7 @@ describe("useSectionEditor", () => {
                 remove_section_callback,
             );
 
-            store.editor_actions.cancelEditor();
+            store.editor_actions.cancelEditor(null);
 
             expect(remove_section_callback).toHaveBeenCalled();
         });
@@ -558,7 +558,7 @@ describe("useSectionEditor", () => {
             expect(store.isSectionInEditMode().value).toBe(false);
 
             store.editor_actions.enableEditor();
-            store.editor_actions.cancelEditor();
+            store.editor_actions.cancelEditor(null);
 
             expect(allowPageLeave).toHaveBeenCalled();
         });
@@ -596,7 +596,7 @@ describe("useSectionEditor", () => {
             expect(first_store.isSectionInEditMode().value).toBe(true);
             expect(second_store.isSectionInEditMode().value).toBe(true);
 
-            first_store.editor_actions.cancelEditor();
+            first_store.editor_actions.cancelEditor(null);
             expect(first_store.isSectionInEditMode().value).toBe(false);
             expect(second_store.isSectionInEditMode().value).toBe(true);
 

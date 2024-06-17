@@ -17,23 +17,40 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { InjectionKey, Ref } from "vue";
+import type { Ref } from "vue";
 import { ref } from "vue";
 import { putConfiguration } from "@/helpers/rest-querier";
+import type { SectionsStore } from "@/stores/useSectionsStore";
+import type { StrictInjectionKey } from "@tuleap/vue-strict-inject";
+
+interface TitleFieldDefinition {
+    readonly field_id: number;
+    readonly label: string;
+    readonly type: "string" | "text";
+}
+
+interface DescriptionFieldDefinition {
+    readonly field_id: number;
+    readonly label: string;
+    readonly type: "text";
+}
 
 export interface Tracker {
     readonly id: number;
     readonly label: string;
-    readonly title: null | {
-        readonly field_id: number;
-        readonly label: string;
-        readonly type: "string" | "text";
-    };
-    readonly description: null | {
-        readonly field_id: number;
-        readonly label: string;
-        readonly type: "text";
-    };
+    readonly title: null | TitleFieldDefinition;
+    readonly description: null | DescriptionFieldDefinition;
+}
+
+export interface TrackerWithSubmittableSection extends Tracker {
+    readonly title: TitleFieldDefinition;
+    readonly description: DescriptionFieldDefinition;
+}
+
+export function isTrackerWithSubmittableSection(
+    tracker: Tracker,
+): tracker is TrackerWithSubmittableSection {
+    return tracker.title !== null && tracker.description !== null;
 }
 
 export interface ConfigurationStore {
@@ -47,12 +64,14 @@ export interface ConfigurationStore {
     resetSuccessFlagFromPreviousCalls: () => void;
 }
 
-export const CONFIGURATION_STORE: InjectionKey<ConfigurationStore> = Symbol("configuration-store");
+export const CONFIGURATION_STORE: StrictInjectionKey<ConfigurationStore> =
+    Symbol("configuration-store");
 
 export function initConfigurationStore(
     document_id: number,
     selected_tracker: Tracker | null,
     allowed_trackers: readonly Tracker[],
+    sections_store: SectionsStore,
 ): ConfigurationStore {
     const currently_selected_tracker = ref(selected_tracker);
     const is_saving = ref(false);
@@ -68,6 +87,7 @@ export function initConfigurationStore(
         putConfiguration(document_id, new_selected_tracker.id).match(
             () => {
                 currently_selected_tracker.value = new_selected_tracker;
+                sections_store.insertPendingArtifactSectionForEmptyDocument(new_selected_tracker);
                 is_saving.value = false;
                 is_success.value = true;
             },

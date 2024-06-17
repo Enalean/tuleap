@@ -17,6 +17,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { InjectionKey } from "vue";
+import type { StrictInjectionKey } from "@tuleap/vue-strict-inject";
 import type { SectionsStore } from "@/stores/useSectionsStore";
-export const sectionsStoreKey: InjectionKey<SectionsStore> = Symbol("sectionsStore");
+export const sectionsStoreKey: StrictInjectionKey<SectionsStore> = Symbol("sectionsStore");

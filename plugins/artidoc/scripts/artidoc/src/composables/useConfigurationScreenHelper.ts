@@ -19,7 +19,7 @@
 
 import type { ComputedRef, Ref } from "vue";
 import { ref, computed } from "vue";
-import type { Tracker, ConfigurationStore } from "@/stores/configuration-store";
+import type { Tracker } from "@/stores/configuration-store";
 import { CONFIGURATION_STORE } from "@/stores/configuration-store";
 import { strictInject } from "@tuleap/vue-strict-inject";
 
@@ -47,7 +47,7 @@ export function useConfigurationScreenHelper(): ConfigurationScreenHelper {
         error_message,
         saveConfiguration,
         resetSuccessFlagFromPreviousCalls,
-    } = strictInject<ConfigurationStore>(CONFIGURATION_STORE);
+    } = strictInject(CONFIGURATION_STORE);
 
     const NO_SELECTED_TRACKER = null;
 
