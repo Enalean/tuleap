@@ -31,7 +31,7 @@ let io;
 try {
     const server = require('node:http').createServer(app);
     io     = require('socket.io')(server, {path: "/local-socket.io/"});
-    server.listen(2999, 'localhost');
+    server.listen(2999, '127.0.0.1');
 } catch (err) {
     console.error('Be careful,' + err.message.split(',')[1]);
     process.exit(1);
