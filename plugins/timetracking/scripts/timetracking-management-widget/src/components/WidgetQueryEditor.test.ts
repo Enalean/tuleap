@@ -22,8 +22,9 @@ import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import WidgetQueryEditor from "./WidgetQueryEditor.vue";
 import { getGlobalTestOptions } from "../../tests/global-options-for-tests";
-import { TODAY } from "@tuleap/plugin-timetracking-predefined-time-periods";
 import { PredefinedTimePeriodsVueStub } from "../../tests/stubs/PredefinedTimePeriodsVueStub";
+import * as strict_inject from "@tuleap/vue-strict-inject";
+import { StubInjectionSymbols } from "../../tests/injection-symbols-stub";
 
 vi.mock("tlp", () => ({
     datePicker: (): { setDate(): void } => ({
@@ -34,17 +35,12 @@ vi.mock("tlp", () => ({
 }));
 
 describe("Given a timetracking management widget query editor", () => {
-    const start_date_test = "2024-05-22";
-    const end_date_test = "2024-05-22";
-    const predefined_time_selected = TODAY;
-
     function getWidgetQueryEditorInstance(): VueWrapper {
+        vi.spyOn(strict_inject, "strictInject").mockImplementation(
+            StubInjectionSymbols.withDefaults(),
+        );
+
         return shallowMount(WidgetQueryEditor, {
-            props: {
-                start_date: start_date_test,
-                end_date: end_date_test,
-                predefined_time_selected: predefined_time_selected,
-            },
             global: {
                 ...getGlobalTestOptions(),
                 stubs: { "tuleap-predefined-time-period-select": PredefinedTimePeriodsVueStub },
@@ -61,18 +57,10 @@ describe("Given a timetracking management widget query editor", () => {
         end_date_input.setValue("2024-05-20");
         wrapper.find("[data-test=search-button]").trigger("click");
 
-        const set_dates_event = wrapper.emitted("setDates");
         const close_edit_mode_event = wrapper.emitted("closeEditMode");
 
-        expect(set_dates_event).toBeDefined();
-        if (set_dates_event) {
-            expect(set_dates_event[0]).toStrictEqual([
-                start_date_input.element.value,
-                end_date_input.element.value,
-                TODAY,
-            ]);
-        }
-
+        expect(start_date_input.element.value).equals("2024-05-10");
+        expect(end_date_input.element.value).equals("2024-05-20");
         expect(close_edit_mode_event).toBeDefined();
     });
 

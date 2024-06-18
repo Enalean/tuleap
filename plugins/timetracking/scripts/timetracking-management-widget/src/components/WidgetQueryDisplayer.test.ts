@@ -17,22 +17,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, vi } from "vitest";
 import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import WidgetQueryDisplayer from "./WidgetQueryDisplayer.vue";
 import { getGlobalTestOptions } from "../../tests/global-options-for-tests";
+import { injected_query, StubInjectionSymbols } from "../../tests/injection-symbols-stub";
+import * as strict_inject from "@tuleap/vue-strict-inject";
 
 describe("Given a timetracking management widget query displayer", () => {
-    const start_date_test = "2024-05-10";
-    const end_date_test = "2024-05-20";
-
     function getWidgetQueryDisplayerInstance(): VueWrapper {
         return shallowMount(WidgetQueryDisplayer, {
-            props: {
-                start_date: start_date_test,
-                end_date: end_date_test,
-            },
             global: {
                 ...getGlobalTestOptions(),
             },
@@ -41,19 +36,27 @@ describe("Given a timetracking management widget query displayer", () => {
 
     describe("When query is displaying", () => {
         it("Then it should display the start date", () => {
+            vi.spyOn(strict_inject, "strictInject").mockImplementation(
+                StubInjectionSymbols.withDefaults(),
+            );
+
             const wrapper = getWidgetQueryDisplayerInstance();
 
             const start_date = wrapper.find("[data-test=start-date]");
 
-            expect(start_date.text()).equals(start_date_test);
+            expect(start_date.text()).equals(injected_query.getQuery().start_date);
         });
 
         it("Then it should display the end date", () => {
+            vi.spyOn(strict_inject, "strictInject").mockImplementation(
+                StubInjectionSymbols.withDefaults(),
+            );
+
             const wrapper = getWidgetQueryDisplayerInstance();
 
             const end_date = wrapper.find("[data-test=end-date]");
 
-            expect(end_date.text()).equals(end_date_test);
+            expect(end_date.text()).equals(injected_query.getQuery().end_date);
         });
     });
 });

@@ -62,7 +62,7 @@
         <tuleap-predefined-time-period-select
             ref="predefined_time_period_select"
             v-bind:onselection="setDatePickersValues"
-            v-bind:selected_time_period="predefined_time_selected"
+            v-bind:selected_time_period="selected_predefined_time_period"
             data-test="predefined-time-period-select"
         />
     </div>
@@ -98,14 +98,12 @@ import type {
     PeriodOption,
 } from "@tuleap/plugin-timetracking-predefined-time-periods";
 import { formatDatetimeToYearMonthDay } from "@tuleap/plugin-timetracking-time-formatters";
+import { strictInject } from "@tuleap/vue-strict-inject";
+import { RETRIEVE_QUERY } from "../injection-symbols";
 
 const { $gettext } = useGettext();
 
-const props = defineProps<{
-    start_date: string;
-    end_date: string;
-    predefined_time_selected: PredefinedTimePeriod | "";
-}>();
+const query = strictInject(RETRIEVE_QUERY);
 
 const start_date_input: Ref<HTMLInputElement | undefined> = ref();
 const end_date_input: Ref<HTMLInputElement | undefined> = ref();
@@ -115,16 +113,10 @@ let start_date_picker: DatePickerInstance;
 let end_date_picker: DatePickerInstance;
 
 let selected_predefined_time_period = ref<PredefinedTimePeriod | "">(
-    props.predefined_time_selected,
+    query.getQuery().predefined_time_period,
 );
 
 const emit = defineEmits<{
-    (
-        e: "setDates",
-        start_date: string,
-        end_date: string,
-        selected_option: PredefinedTimePeriod | "",
-    ): void;
     (e: "closeEditMode"): void;
 }>();
 
@@ -137,10 +129,10 @@ onMounted((): void => {
         return;
     }
     start_date_picker = datePicker(start_date_input.value);
-    start_date_picker.setDate(props.start_date);
+    start_date_picker.setDate(query.getQuery().start_date);
 
     end_date_picker = datePicker(end_date_input.value);
-    end_date_picker.setDate(props.end_date);
+    end_date_picker.setDate(query.getQuery().end_date);
 });
 
 onBeforeUnmount((): void => {
@@ -149,12 +141,13 @@ onBeforeUnmount((): void => {
 });
 
 const setDatesAndCloseEditMode = (): void => {
-    emit(
-        "setDates",
-        String(start_date_input.value?.value),
-        String(end_date_input.value?.value),
-        selected_predefined_time_period.value,
-    );
+    if (start_date_input.value?.value && end_date_input.value?.value) {
+        query.setQuery(
+            start_date_input.value?.value,
+            end_date_input.value?.value,
+            selected_predefined_time_period.value,
+        );
+    }
     emit("closeEditMode");
 };
 
