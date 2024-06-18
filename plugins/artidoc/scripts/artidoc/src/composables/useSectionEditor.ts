@@ -34,6 +34,7 @@ import type { AttachmentFile } from "@/composables/useAttachmentFile";
 import { SECTIONS_STORE } from "@/stores/sections-store-injection-key";
 import { EDITORS_COLLECTION } from "@/composables/useSectionEditorsCollection";
 import { EDITOR_CHOICE } from "@/helpers/editor-choice";
+import type { Fault } from "@tuleap/fault";
 
 export type SectionEditorActions = {
     enableEditor: () => void;
@@ -41,6 +42,7 @@ export type SectionEditorActions = {
     forceSaveEditor: () => void;
     cancelEditor: (tracker: Tracker | null) => void;
     refreshSection: RefreshSection["refreshSection"];
+    deleteSection: (tracker: Tracker | null) => void;
 };
 
 export type EditorState = {
@@ -65,6 +67,7 @@ export function useSectionEditor(
     mergeArtifactAttachments: AttachmentFile["mergeArtifactAttachments"],
     setWaitingListAttachments: AttachmentFile["setWaitingListAttachments"],
     is_upload_in_progress: Ref<boolean>,
+    raise_delete_section_error_callback: (error_message: string) => void,
 ): SectionEditor {
     const editors_collection = strictInject(EDITORS_COLLECTION);
     const can_user_edit_document = strictInject(CAN_USER_EDIT_DOCUMENT);
@@ -162,6 +165,24 @@ export function useSectionEditor(
         }
     }
 
+    function deleteSection(tracker: Tracker | null): void {
+        removeSection(current_section.value, tracker).match(
+            () => {
+                if (is_section_in_edit_mode.value) {
+                    closeEditor();
+                }
+                editors_collection.removeEditor(current_section.value);
+            },
+            (fault: Fault) => {
+                if (is_section_in_edit_mode.value) {
+                    editor_errors_handler.handleError(fault);
+                } else {
+                    raise_delete_section_error_callback(String(fault));
+                }
+            },
+        );
+    }
+
     const is_save_allowed = computed(() => !is_upload_in_progress.value);
     const forceSaveEditor = (): void => {
         if (!is_save_allowed.value) {
@@ -189,6 +210,7 @@ export function useSectionEditor(
         forceSaveEditor,
         cancelEditor,
         refreshSection,
+        deleteSection,
     };
 
     const editor: SectionEditor = {

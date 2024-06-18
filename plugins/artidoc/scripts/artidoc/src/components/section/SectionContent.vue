@@ -74,10 +74,13 @@ import { strictInject } from "@tuleap/vue-strict-inject";
 import { SECTIONS_STORE } from "@/stores/sections-store-injection-key";
 import type { UseUploadFileType } from "@/composables/useUploadFile";
 import { useUploadFile } from "@/composables/useUploadFile";
+import { SET_GLOBAL_ERROR_MESSAGE } from "@/global-error-message-injection-key";
+import { useGettext } from "vue3-gettext";
 
 const props = defineProps<{ section: ArtidocSection }>();
 
 const { is_sections_loading } = strictInject(SECTIONS_STORE);
+const setGlobalErrorMessage = strictInject(SET_GLOBAL_ERROR_MESSAGE);
 
 const {
     upload_url,
@@ -88,11 +91,19 @@ const {
 
 const upload_file: UseUploadFileType = useUploadFile(upload_url, addAttachmentToWaitingList);
 
+const { $gettext } = useGettext();
+
 const editor = useSectionEditor(
     props.section,
     mergeArtifactAttachments,
     setWaitingListAttachments,
     upload_file.is_in_progress,
+    (error: string) => {
+        setGlobalErrorMessage({
+            message: $gettext("An error occurred while removing the section."),
+            details: error,
+        });
+    },
 );
 
 const {

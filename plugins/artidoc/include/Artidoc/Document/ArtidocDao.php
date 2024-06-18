@@ -29,7 +29,7 @@ use Tuleap\Artidoc\Document\Section\Identifier\SectionIdentifierFactory;
 use Tuleap\Artidoc\Document\Section\UnableToFindSiblingSectionException;
 use Tuleap\DB\DataAccessObject;
 
-final class ArtidocDao extends DataAccessObject implements SearchArtidocDocument, SearchOneSection, SearchPaginatedRawSections, SaveSections, SaveOneSection, SearchConfiguredTracker, SaveConfiguredTracker
+final class ArtidocDao extends DataAccessObject implements SearchArtidocDocument, SearchOneSection, DeleteOneSection, SearchPaginatedRawSections, SaveSections, SaveOneSection, SearchConfiguredTracker, SaveConfiguredTracker
 {
     public function __construct(private readonly SectionIdentifierFactory $identifier_factory)
     {
@@ -275,6 +275,16 @@ final class ArtidocDao extends DataAccessObject implements SearchArtidocDocument
             'plugin_artidoc_document',
             [
                 'artifact_id' => $artifact_id,
+            ]
+        );
+    }
+
+    public function deleteSectionById(SectionIdentifier $section_id): void
+    {
+        $this->getDB()->delete(
+            'plugin_artidoc_document',
+            [
+                'id' => $section_id->getBytes(),
             ]
         );
     }

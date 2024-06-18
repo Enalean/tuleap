@@ -282,6 +282,22 @@ final class ArtidocDaoTest extends TestIntegrationTestCase
         $this->assertSectionsMatchArtifactIdsForDocument($dao, 103, []);
     }
 
+    public function testDeleteSectionsById(): void
+    {
+        $identifier_factory = new SectionIdentifierFactory(new \Tuleap\DB\DatabaseUUIDV7Factory());
+        $dao                = new ArtidocDao($identifier_factory);
+
+        $item_1 = 101;
+
+        $uuid_1 = $dao->saveSectionAtTheEnd($item_1, 1001);
+        $uuid_2 = $dao->saveSectionAtTheEnd($item_1, 1002);
+        $uuid_3 = $dao->saveSectionAtTheEnd($item_1, 1003);
+
+        $dao->deleteSectionById($uuid_2);
+
+        $this->assertSectionsMatchArtifactIdsForDocument($dao, $item_1, [1001, 1003]);
+    }
+
     /**
      * @param list<int> $artifact_ids
      */

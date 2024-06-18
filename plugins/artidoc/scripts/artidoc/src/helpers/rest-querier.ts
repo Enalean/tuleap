@@ -18,7 +18,7 @@
  */
 
 import type { ResultAsync } from "neverthrow";
-import { getAllJSON, putResponse, uri, getJSON, postJSON } from "@tuleap/fetch-result";
+import { del, getAllJSON, putResponse, uri, getJSON, postJSON } from "@tuleap/fetch-result";
 import type { Fault } from "@tuleap/fault";
 import TurndownService from "turndown";
 import type { ArtidocSection } from "@/helpers/artidoc-section.type";
@@ -140,6 +140,10 @@ export function getSection(section_id: string): ResultAsync<ArtidocSection, Faul
     return getJSON<ArtidocSectionFromRest>(uri`/api/artidoc_sections/${section_id}`).map(
         injectDisplayTitle,
     );
+}
+
+export function deleteSection(section_id: string): ResultAsync<Response, Fault> {
+    return del(uri`/api/artidoc_sections/${section_id}`);
 }
 
 const turndown_service = new TurndownService({ emDelimiter: "*" });

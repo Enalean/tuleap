@@ -15,6 +15,9 @@ msgstr ""
 msgid "Add new section"
 msgstr "Créer une nouvelle section"
 
+msgid "An error occurred while removing the section."
+msgstr "Une erreur est survenue lors de la suppression de la section."
+
 msgid "An error occurred while trying to export the document as PDF."
 msgstr "Une erreur est survenue lors de l'export du document en PDF."
 
@@ -51,6 +54,9 @@ msgstr "Configuration sauvegardée"
 msgid "Configure document"
 msgstr "Configurer le document"
 
+msgid "Delete"
+msgstr "Supprimer"
+
 msgid ""
 "Do you want to continue to force save your modification, or discard it and "
 "load the new one?"
@@ -63,6 +69,9 @@ msgstr "Chaque section est un artéfact."
 
 msgid "Edit"
 msgstr "Éditer"
+
+msgid "Error"
+msgstr "Erreur"
 
 msgid "Error details"
 msgstr "Détails de l'erreur"

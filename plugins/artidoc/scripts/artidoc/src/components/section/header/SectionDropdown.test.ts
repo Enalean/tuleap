@@ -26,9 +26,8 @@ import { SectionEditorStub } from "@/helpers/stubs/SectionEditorStub";
 import type { SectionEditor } from "@/composables/useSectionEditor";
 import ArtifactSectionFactory from "@/helpers/artifact-section.factory";
 import PendingArtifactSectionFactory from "@/helpers/pending-artifact-section.factory";
-import { CAN_USER_EDIT_DOCUMENT } from "@/can-user-edit-document-injection-key";
-import { DOCUMENT_ID } from "@/document-id-injection-key";
 import type { ArtifactSection } from "@/helpers/artidoc-section.type";
+import { CONFIGURATION_STORE } from "@/stores/configuration-store";
 
 vi.mock("@tuleap/tlp-dropdown");
 
@@ -46,8 +45,7 @@ describe("SectionDropdown", () => {
             global: {
                 plugins: [createGettext({ silent: true })],
                 provide: {
-                    [CAN_USER_EDIT_DOCUMENT.valueOf()]: true,
-                    [DOCUMENT_ID.valueOf()]: true,
+                    [CONFIGURATION_STORE.valueOf()]: true,
                 },
             },
         });
@@ -86,6 +84,9 @@ describe("SectionDropdown", () => {
                 },
                 global: {
                     plugins: [createGettext({ silent: true })],
+                    provide: {
+                        [CONFIGURATION_STORE.valueOf()]: true,
+                    },
                 },
             });
 

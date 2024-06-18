@@ -31,6 +31,8 @@ import { InjectedSectionsStoreStub } from "@/helpers/stubs/InjectSectionsStoreSt
 import { SectionEditorStub } from "@/helpers/stubs/SectionEditorStub";
 import { SECTIONS_STORE } from "@/stores/sections-store-injection-key";
 import { UploadFileStub } from "@/helpers/stubs/UploadFileStub";
+import { SET_GLOBAL_ERROR_MESSAGE } from "@/global-error-message-injection-key";
+import { createGettext } from "vue3-gettext";
 
 describe("SectionContent", () => {
     describe("when the sections are loaded", () => {
@@ -45,10 +47,12 @@ describe("SectionContent", () => {
 
             wrapper = shallowMount(SectionContent, {
                 global: {
+                    plugins: [createGettext({ silent: true })],
                     provide: {
                         [SECTIONS_STORE.valueOf()]: InjectedSectionsStoreStub.withLoadedSections(
                             [],
                         ),
+                        [SET_GLOBAL_ERROR_MESSAGE.valueOf()]: true,
                     },
                 },
                 props: {
@@ -79,10 +83,12 @@ describe("SectionContent", () => {
 
             wrapper = shallowMount(SectionContent, {
                 global: {
+                    plugins: [createGettext({ silent: true })],
                     provide: {
                         [SECTIONS_STORE.valueOf()]: InjectedSectionsStoreStub.withLoadingSections(
                             [],
                         ),
+                        [SET_GLOBAL_ERROR_MESSAGE.valueOf()]: true,
                     },
                 },
                 props: {

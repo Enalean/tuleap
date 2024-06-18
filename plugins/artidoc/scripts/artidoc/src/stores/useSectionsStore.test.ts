@@ -233,6 +233,7 @@ describe("useSectionsStore", () => {
                 vi.spyOn(rest, "getAllSections").mockReturnValue(
                     okAsync([section1, section2, section3, section4]),
                 );
+                vi.spyOn(rest, "deleteSection").mockReturnValue(okAsync(new Response()));
 
                 const store = useSectionsStore();
                 store.loadSections(101, null, true);
@@ -240,6 +241,7 @@ describe("useSectionsStore", () => {
 
                 store.removeSection(section2, tracker);
                 store.removeSection(section3, null);
+                await flushPromises();
 
                 expect(store.sections.value).not.toBeUndefined();
                 expect(store.sections.value).toHaveLength(2);
@@ -259,12 +261,14 @@ describe("useSectionsStore", () => {
                 const section = ArtifactSectionFactory.create();
 
                 vi.spyOn(rest, "getAllSections").mockReturnValue(okAsync([section]));
+                vi.spyOn(rest, "deleteSection").mockReturnValue(okAsync(new Response()));
 
                 const store = useSectionsStore();
                 store.loadSections(101, null, true);
                 await flushPromises();
 
                 store.removeSection(section, tracker);
+                await flushPromises();
 
                 expect(store.sections.value).not.toBeUndefined();
                 expect(store.sections.value).toHaveLength(0);
@@ -275,12 +279,14 @@ describe("useSectionsStore", () => {
             const section = ArtifactSectionFactory.create();
 
             vi.spyOn(rest, "getAllSections").mockReturnValue(okAsync([section]));
+            vi.spyOn(rest, "deleteSection").mockReturnValue(okAsync(new Response()));
 
             const store = useSectionsStore();
             store.loadSections(101, null, true);
             await flushPromises();
 
             store.removeSection(section, TrackerStub.withTitleAndDescription());
+            await flushPromises();
 
             expect(store.sections.value).not.toBeUndefined();
             expect(store.sections.value).toHaveLength(1);
@@ -291,11 +297,12 @@ describe("useSectionsStore", () => {
             expect(isPendingArtifactSection(pending)).toBe(true);
         });
 
-        it("should do nothing when there is no sections", () => {
+        it("should do nothing when there is no sections", async () => {
             const store = useSectionsStore();
             store.sections.value = undefined;
 
             store.removeSection(ArtifactSectionFactory.create(), null);
+            await flushPromises();
 
             expect(store.sections.value).toBeUndefined();
         });
@@ -315,6 +322,7 @@ describe("useSectionsStore", () => {
             await flushPromises();
 
             store.removeSection(ArtifactSectionFactory.create(), null);
+            await flushPromises();
 
             expect(store.sections.value).not.toBeUndefined();
             expect(store.sections.value).toHaveLength(4);

@@ -54,6 +54,19 @@
                     ></i>
                     <span>{{ $gettext("Edit") }}</span>
                 </a>
+                <button
+                    type="button"
+                    v-on:click="onDelete"
+                    class="tlp-dropdown-menu-item"
+                    role="menuitem"
+                    data-test="delete"
+                >
+                    <i
+                        class="fa-solid tlp-dropdown-menu-item-icon fa-trash fa-fw"
+                        aria-hidden="true"
+                    ></i>
+                    <span>{{ $gettext("Delete") }}</span>
+                </button>
             </template>
         </div>
     </div>
@@ -67,13 +80,17 @@ import { isPendingArtifactSection, isArtifactSection } from "@/helpers/artidoc-s
 import type { Dropdown } from "@tuleap/tlp-dropdown";
 import { createDropdown } from "@tuleap/tlp-dropdown";
 import { computed, ref, watch } from "vue";
+import { strictInject } from "@tuleap/vue-strict-inject";
+import { CONFIGURATION_STORE } from "@/stores/configuration-store";
+
+const configuration = strictInject(CONFIGURATION_STORE);
 
 const { $gettext } = useGettext();
 const props = defineProps<{
     editor: SectionEditor;
     section: ArtidocSection;
 }>();
-const { enableEditor } = props.editor.editor_actions;
+const { enableEditor, deleteSection } = props.editor.editor_actions;
 const is_edit_mode = props.editor.editor_state.is_section_in_edit_mode;
 const is_section_editable = props.editor.editor_state.is_section_editable;
 const is_pending = computed(() => isPendingArtifactSection(props.section));
@@ -102,6 +119,10 @@ function edit(event: Event): void {
     if (dropdown) {
         dropdown.hide();
     }
+}
+
+function onDelete(): void {
+    deleteSection(configuration.selected_tracker.value);
 }
 </script>
 
