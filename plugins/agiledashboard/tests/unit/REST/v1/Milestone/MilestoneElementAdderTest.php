@@ -23,7 +23,8 @@ declare(strict_types=1);
 
 namespace Tuleap\AgileDashboard\REST\v1\Milestone;
 
-use Mockery;
+use PHPUnit\Framework\MockObject\MockObject;
+use Tracker_ArtifactFactory;
 use Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao;
 use Tuleap\AgileDashboard\ExplicitBacklog\UnplannedArtifactsAdder;
 use Tuleap\AgileDashboard\Milestone\Backlog\NoRootPlanningException;
@@ -31,68 +32,32 @@ use Tuleap\AgileDashboard\Milestone\Backlog\ProvidedAddedIdIsNotInPartOfTopBackl
 use Tuleap\AgileDashboard\Milestone\Backlog\TopBacklogElementsToAddChecker;
 use Tuleap\AgileDashboard\REST\v1\BacklogAddRepresentation;
 use Tuleap\AgileDashboard\REST\v1\ResourcesPatcher;
-use Tuleap\DB\DBTransactionExecutorWithConnection;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
-use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
-final class MilestoneElementAdderTest extends \Tuleap\Test\PHPUnit\TestCase
+final class MilestoneElementAdderTest extends TestCase
 {
-    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|DBTransactionExecutorWithConnection
-     */
-    private $transaction_executor;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ExplicitBacklogDao
-     */
-    private $explicit_backlog_dao;
-    /**
-     * @var MilestoneElementAdder
-     */
-    private $adder;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ResourcesPatcher
-     */
-    private $resources_patcher;
-
-    /**
-     * @var BacklogAddRepresentation
-     */
-    private $backlog_add_representation;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|TopBacklogElementsToAddChecker
-     */
-    private $top_backlog_elements_to_add_checker;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|\Tracker_ArtifactFactory
-     */
-    private $artifact_factory;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Artifact
-     */
-    private $artifact;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|UnplannedArtifactsAdder
-     */
-    private $unplanned_artifact_adder;
+    private ExplicitBacklogDao&MockObject $explicit_backlog_dao;
+    private MilestoneElementAdder $adder;
+    private ResourcesPatcher&MockObject $resources_patcher;
+    private BacklogAddRepresentation $backlog_add_representation;
+    private TopBacklogElementsToAddChecker&MockObject $top_backlog_elements_to_add_checker;
+    private Tracker_ArtifactFactory&MockObject $artifact_factory;
+    private UnplannedArtifactsAdder&MockObject $unplanned_artifact_adder;
 
     protected function setUp(): void
     {
-        parent::setUp();
+        $this->resources_patcher                   = $this->createMock(ResourcesPatcher::class);
+        $this->explicit_backlog_dao                = $this->createMock(ExplicitBacklogDao::class);
+        $this->unplanned_artifact_adder            = $this->createMock(UnplannedArtifactsAdder::class);
+        $this->top_backlog_elements_to_add_checker = $this->createMock(TopBacklogElementsToAddChecker::class);
+        $this->artifact_factory                    = $this->createMock(Tracker_ArtifactFactory::class);
 
-        $this->resources_patcher                   = Mockery::mock(ResourcesPatcher::class);
-        $this->explicit_backlog_dao                = Mockery::mock(ExplicitBacklogDao::class);
-        $this->unplanned_artifact_adder            = Mockery::mock(UnplannedArtifactsAdder::class);
-        $this->top_backlog_elements_to_add_checker = Mockery::mock(TopBacklogElementsToAddChecker::class);
-        $this->artifact_factory                    = Mockery::mock(\Tracker_ArtifactFactory::class);
-
-        $this->transaction_executor = new DBTransactionExecutorPassthrough();
+        $transaction_executor = new DBTransactionExecutorPassthrough();
 
         $this->adder = new MilestoneElementAdder(
             $this->explicit_backlog_dao,
@@ -100,124 +65,108 @@ final class MilestoneElementAdderTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->resources_patcher,
             $this->top_backlog_elements_to_add_checker,
             $this->artifact_factory,
-            $this->transaction_executor
+            $transaction_executor
         );
 
         $this->backlog_add_representation     = new BacklogAddRepresentation();
         $this->backlog_add_representation->id = 112;
-
-        $this->artifact = Mockery::mock(Artifact::class);
     }
 
     public function testItAddsElementToMilestoneInExplicitMode(): void
     {
-        $user    = Mockery::mock(\PFUser::class);
+        $user    = UserTestBuilder::buildWithDefaults();
         $add     = [$this->backlog_add_representation];
-        $project = Mockery::mock(\Project::class);
-        $project->shouldReceive('getID')->andReturn(102);
+        $project = ProjectTestBuilder::aProject()->withId(102)->build();
 
-        $this->artifact->shouldReceive('getTrackerId')->andReturn(101);
-        $this->artifact_factory->shouldReceive('getArtifactByIdUserCanView')->andReturn($this->artifact);
+        $artifact = ArtifactTestBuilder::anArtifact(1)->inTracker(TrackerTestBuilder::aTracker()->withId(101)->build())->build();
+        $this->artifact_factory->method('getArtifactByIdUserCanView')->willReturn($artifact);
 
-        $this->top_backlog_elements_to_add_checker->shouldReceive('checkAddedIdsBelongToTheProjectTopBacklogTrackers')
-            ->once();
+        $this->top_backlog_elements_to_add_checker->expects(self::once())->method('checkAddedIdsBelongToTheProjectTopBacklogTrackers');
 
-        $this->unplanned_artifact_adder->shouldReceive('addArtifactToTopBacklogFromIds')->once();
-        $this->resources_patcher->shouldReceive('removeArtifactFromSource')->once();
+        $this->unplanned_artifact_adder->expects(self::once())->method('addArtifactToTopBacklogFromIds');
+        $this->resources_patcher->expects(self::once())->method('removeArtifactFromSource');
 
-        $this->explicit_backlog_dao->shouldReceive('isProjectUsingExplicitBacklog')
-            ->once()
-            ->withArgs([102])
-            ->andReturnTrue();
+        $this->explicit_backlog_dao->expects(self::once())->method('isProjectUsingExplicitBacklog')
+            ->with(102)
+            ->willReturn(true);
 
         $this->adder->addElementToBacklog($project, $add, $user);
     }
 
     public function testItAddsElementToMilestoneInStandardMode(): void
     {
-        $user    = Mockery::mock(\PFUser::class);
+        $user    = UserTestBuilder::buildWithDefaults();
         $add     = [$this->backlog_add_representation];
-        $project = Mockery::mock(\Project::class);
-        $project->shouldReceive('getID')->andReturn(102);
+        $project = ProjectTestBuilder::aProject()->withId(102)->build();
 
-        $this->artifact->shouldReceive('getTrackerId')->andReturn(101);
-        $this->artifact_factory->shouldReceive('getArtifactByIdUserCanView')->andReturn($this->artifact);
+        $artifact = ArtifactTestBuilder::anArtifact(1)->inTracker(TrackerTestBuilder::aTracker()->withId(101)->build())->build();
+        $this->artifact_factory->method('getArtifactByIdUserCanView')->willReturn($artifact);
 
-        $this->top_backlog_elements_to_add_checker->shouldReceive('checkAddedIdsBelongToTheProjectTopBacklogTrackers')
-            ->once();
+        $this->top_backlog_elements_to_add_checker->expects(self::once())->method('checkAddedIdsBelongToTheProjectTopBacklogTrackers');
 
-        $this->explicit_backlog_dao->shouldReceive('isProjectUsingExplicitBacklog')
-            ->once()
-            ->withArgs([102])
-            ->andReturnFalse();
+        $this->explicit_backlog_dao->expects(self::once())->method('isProjectUsingExplicitBacklog')
+            ->with(102)
+            ->willReturn(false);
 
-        $this->resources_patcher->shouldReceive('removeArtifactFromSource')
-            ->once()
-            ->withArgs([$user, $add]);
+        $this->resources_patcher->expects(self::once())->method('removeArtifactFromSource')->with($user, $add);
 
         $this->adder->addElementToBacklog($project, $add, $user);
     }
 
     public function testDoesNothingWhenUserCannotSeeTheArtifactInExplicitMode(): void
     {
-        $user    = Mockery::mock(\PFUser::class);
+        $user    = UserTestBuilder::buildWithDefaults();
         $add     = [$this->backlog_add_representation];
-        $project = Mockery::mock(\Project::class);
-        $project->shouldReceive('getID')->andReturn(102);
+        $project = ProjectTestBuilder::aProject()->withId(102)->build();
 
-        $this->artifact->shouldReceive('getTrackerId')->andReturn(101);
-        $this->artifact_factory->shouldReceive('getArtifactByIdUserCanView')->andReturn(null);
+        $this->artifact_factory->method('getArtifactByIdUserCanView')->willReturn(null);
 
-        $this->top_backlog_elements_to_add_checker->shouldNotReceive('checkAddedIdsBelongToTheProjectTopBacklogTrackers');
-        $this->unplanned_artifact_adder->shouldNotReceive('addArtifactToTopBacklogFromIds');
-        $this->resources_patcher->shouldNotReceive('removeArtifactFromSource');
-        $this->explicit_backlog_dao->shouldNotReceive('isProjectUsingExplicitBacklog');
+        $this->top_backlog_elements_to_add_checker->expects(self::never())->method('checkAddedIdsBelongToTheProjectTopBacklogTrackers');
+        $this->unplanned_artifact_adder->expects(self::never())->method('addArtifactToTopBacklogFromIds');
+        $this->resources_patcher->expects(self::never())->method('removeArtifactFromSource');
+        $this->explicit_backlog_dao->expects(self::never())->method('isProjectUsingExplicitBacklog');
 
         $this->adder->addElementToBacklog($project, $add, $user);
     }
 
     public function testItDoesNotAddElementToMilestoneIfAtLeastOneArtifactIsNotInTopBacklogTracker(): void
     {
-        $user    = Mockery::mock(\PFUser::class);
+        $user    = UserTestBuilder::buildWithDefaults();
         $add     = [$this->backlog_add_representation];
-        $project = Mockery::mock(\Project::class);
-        $project->shouldReceive('getID')->andReturn(102);
+        $project = ProjectTestBuilder::aProject()->withId(102)->build();
 
-        $this->artifact->shouldReceive('getTrackerId')->andReturn(199);
-        $this->artifact_factory->shouldReceive('getArtifactByIdUserCanView')->andReturn($this->artifact);
+        $artifact = ArtifactTestBuilder::anArtifact(1)->inTracker(TrackerTestBuilder::aTracker()->withId(199)->build())->build();
+        $this->artifact_factory->method('getArtifactByIdUserCanView')->willReturn($artifact);
 
-        $this->top_backlog_elements_to_add_checker->shouldReceive('checkAddedIdsBelongToTheProjectTopBacklogTrackers')
-            ->once()
-            ->andThrow(new ProvidedAddedIdIsNotInPartOfTopBacklogException([]));
+        $this->top_backlog_elements_to_add_checker->expects(self::once())->method('checkAddedIdsBelongToTheProjectTopBacklogTrackers')
+            ->willThrowException(new ProvidedAddedIdIsNotInPartOfTopBacklogException([]));
 
-        $this->unplanned_artifact_adder->shouldReceive('addArtifactToTopBacklogFromIds')->never();
-        $this->resources_patcher->shouldReceive('removeArtifactFromSource')->never();
-        $this->explicit_backlog_dao->shouldReceive('isProjectUsingExplicitBacklog')->never();
+        $this->unplanned_artifact_adder->expects(self::never())->method('addArtifactToTopBacklogFromIds');
+        $this->resources_patcher->expects(self::never())->method('removeArtifactFromSource');
+        $this->explicit_backlog_dao->expects(self::never())->method('isProjectUsingExplicitBacklog');
 
-        $this->expectException(ProvidedAddedIdIsNotInPartOfTopBacklogException::class);
+        self::expectException(ProvidedAddedIdIsNotInPartOfTopBacklogException::class);
 
         $this->adder->addElementToBacklog($project, $add, $user);
     }
 
     public function testItDoesNotAddElementToMilestoneIfNoRootPlanning(): void
     {
-        $user    = Mockery::mock(\PFUser::class);
+        $user    = UserTestBuilder::buildWithDefaults();
         $add     = [$this->backlog_add_representation];
-        $project = Mockery::mock(\Project::class);
-        $project->shouldReceive('getID')->andReturn(102);
+        $project = ProjectTestBuilder::aProject()->withId(102)->build();
 
-        $this->artifact->shouldReceive('getTrackerId')->andReturn(199);
-        $this->artifact_factory->shouldReceive('getArtifactByIdUserCanView')->andReturn($this->artifact);
+        $artifact = ArtifactTestBuilder::anArtifact(1)->inTracker(TrackerTestBuilder::aTracker()->withId(199)->build())->build();
+        $this->artifact_factory->method('getArtifactByIdUserCanView')->willReturn($artifact);
 
-        $this->top_backlog_elements_to_add_checker->shouldReceive('checkAddedIdsBelongToTheProjectTopBacklogTrackers')
-            ->once()
-            ->andThrow(new NoRootPlanningException());
+        $this->top_backlog_elements_to_add_checker->expects(self::once())->method('checkAddedIdsBelongToTheProjectTopBacklogTrackers')
+            ->willThrowException(new NoRootPlanningException());
 
-        $this->unplanned_artifact_adder->shouldReceive('addArtifactToTopBacklogFromIds')->never();
-        $this->resources_patcher->shouldReceive('removeArtifactFromSource')->never();
-        $this->explicit_backlog_dao->shouldReceive('isProjectUsingExplicitBacklog')->never();
+        $this->unplanned_artifact_adder->expects(self::never())->method('addArtifactToTopBacklogFromIds');
+        $this->resources_patcher->expects(self::never())->method('removeArtifactFromSource');
+        $this->explicit_backlog_dao->expects(self::never())->method('isProjectUsingExplicitBacklog');
 
-        $this->expectException(NoRootPlanningException::class);
+        self::expectException(NoRootPlanningException::class);
 
         $this->adder->addElementToBacklog($project, $add, $user);
     }

@@ -22,8 +22,18 @@ declare(strict_types=1);
 
 namespace Tuleap\AgileDashboard\REST\v1\Milestone;
 
-use Mockery as M;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use AgileDashboard_Milestone_Backlog_Backlog;
+use AgileDashboard_Milestone_Backlog_BacklogFactory;
+use AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinder;
+use EventManager;
+use PHPUnit\Framework\MockObject\MockObject;
+use Planning;
+use Planning_ArtifactMilestone;
+use Planning_MilestoneFactory;
+use PlanningFactory;
+use Project;
+use Tracker;
+use Tracker_Artifact_Changeset;
 use Tuleap\AgileDashboard\Milestone\PaginatedMilestones;
 use Tuleap\AgileDashboard\Milestone\ParentTrackerRetriever;
 use Tuleap\AgileDashboard\REST\v1\MilestoneRepresentation;
@@ -31,51 +41,30 @@ use Tuleap\AgileDashboard\Test\Builders\PlanningBuilder;
 use Tuleap\Project\ProjectBackground\ProjectBackgroundConfiguration;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
-final class MilestoneRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
+final class MilestoneRepresentationBuilderTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     private const PROJECT_ID = 101;
 
-    /**
-     * @var MilestoneRepresentationBuilder
-     */
-    private $builder;
-    /**
-     * @var M\LegacyMockInterface|M\MockInterface|\Planning_MilestoneFactory
-     */
-    private $milestone_factory;
-    /**
-     * @var \AgileDashboard_Milestone_Backlog_BacklogFactory|M\LegacyMockInterface|M\MockInterface
-     */
-    private $backlog_factory;
-    /**
-     * @var \EventManager|M\LegacyMockInterface|M\MockInterface
-     */
-    private $event_manager;
-    /**
-     * @var M\LegacyMockInterface|M\MockInterface|ParentTrackerRetriever
-     */
-    private $parent_tracker_retriever;
-    /**
-     * @var \AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinder|M\LegacyMockInterface|M\MockInterface
-     */
-    private $sub_milestone_finder;
-    /**
-     * @var M\LegacyMockInterface|M\MockInterface|\PlanningFactory
-     */
-    private $planning_factory;
+    private MilestoneRepresentationBuilder $builder;
+    private Planning_MilestoneFactory&MockObject $milestone_factory;
+    private AgileDashboard_Milestone_Backlog_BacklogFactory&MockObject $backlog_factory;
+    private EventManager&MockObject $event_manager;
+    private ParentTrackerRetriever&MockObject $parent_tracker_retriever;
+    private AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinder&MockObject $sub_milestone_finder;
+    private PlanningFactory&MockObject $planning_factory;
 
     protected function setUp(): void
     {
-        $this->milestone_factory        = M::mock(\Planning_MilestoneFactory::class);
-        $this->backlog_factory          = M::mock(\AgileDashboard_Milestone_Backlog_BacklogFactory::class);
-        $this->event_manager            = M::mock(\EventManager::class);
-        $this->parent_tracker_retriever = M::mock(ParentTrackerRetriever::class);
-        $this->sub_milestone_finder     = M::mock(\AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinder::class);
-        $this->planning_factory         = M::mock(\PlanningFactory::class);
+        $this->milestone_factory        = $this->createMock(Planning_MilestoneFactory::class);
+        $this->backlog_factory          = $this->createMock(AgileDashboard_Milestone_Backlog_BacklogFactory::class);
+        $this->event_manager            = $this->createMock(EventManager::class);
+        $this->parent_tracker_retriever = $this->createMock(ParentTrackerRetriever::class);
+        $this->sub_milestone_finder     = $this->createMock(AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinder::class);
+        $this->planning_factory         = $this->createMock(PlanningFactory::class);
         $this->builder                  = new MilestoneRepresentationBuilder(
             $this->milestone_factory,
             $this->backlog_factory,
@@ -83,21 +72,21 @@ final class MilestoneRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\Test
             $this->parent_tracker_retriever,
             $this->sub_milestone_finder,
             $this->planning_factory,
-            \Mockery::mock(ProjectBackgroundConfiguration::class)
+            $this->createMock(ProjectBackgroundConfiguration::class)
         );
     }
 
     public function testItBuildsRepresentationsFromCollection(): void
     {
-        $backlog = M::mock(\AgileDashboard_Milestone_Backlog_Backlog::class);
-        $backlog->shouldReceive('getDescendantTrackers')->andReturn([]);
-        $this->backlog_factory->shouldReceive('getBacklog')->andReturn($backlog);
-        $this->event_manager->shouldReceive('processEvent');
-        $this->parent_tracker_retriever->shouldReceive('getCreatableParentTrackers')->andReturn([]);
-        $this->milestone_factory->shouldReceive('userCanChangePrioritiesInMilestone')->andReturnTrue();
+        $backlog = $this->createMock(AgileDashboard_Milestone_Backlog_Backlog::class);
+        $backlog->method('getDescendantTrackers')->willReturn([]);
+        $this->backlog_factory->method('getBacklog')->willReturn($backlog);
+        $this->event_manager->method('processEvent');
+        $this->parent_tracker_retriever->method('getCreatableParentTrackers')->willReturn([]);
+        $this->milestone_factory->method('userCanChangePrioritiesInMilestone')->willReturn(true);
 
-        $this->sub_milestone_finder->shouldReceive('findFirstSubmilestoneTracker')->andReturnNull();
-        $this->planning_factory->shouldReceive('getChildrenPlanning')->andReturnNull();
+        $this->sub_milestone_finder->method('findFirstSubmilestoneTracker')->willReturn(null);
+        $this->planning_factory->method('getChildrenPlanning')->willReturn(null);
 
         $project           = ProjectTestBuilder::aProject()->withId(self::PROJECT_ID)->build();
         $milestone_tracker = $this->buildMilestoneTracker($project);
@@ -114,14 +103,14 @@ final class MilestoneRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\Test
             MilestoneRepresentation::SLIM
         );
 
-        $this->assertSame(4, $representations->getTotalSize());
+        self::assertSame(4, $representations->getTotalSize());
         $first_representation = $representations->getMilestonesRepresentations()[0];
-        $this->assertSame(22, $first_representation->id);
+        self::assertSame(22, $first_representation->id);
         $second_representation = $representations->getMilestonesRepresentations()[1];
-        $this->assertSame(23, $second_representation->id);
+        self::assertSame(23, $second_representation->id);
     }
 
-    private function buildMilestoneTracker(\Project $project): \Tracker
+    private function buildMilestoneTracker(Project $project): Tracker
     {
         return TrackerTestBuilder::aTracker()
             ->withId(8)
@@ -130,7 +119,7 @@ final class MilestoneRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\Test
             ->build();
     }
 
-    private function buildBacklogTracker(\Project $project): \Tracker
+    private function buildBacklogTracker(Project $project): Tracker
     {
         return TrackerTestBuilder::aTracker()
             ->withId(9)
@@ -139,7 +128,7 @@ final class MilestoneRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\Test
             ->build();
     }
 
-    private function buildPlanning(\Tracker $milestone_tracker, \Tracker $backlog_tracker): \Planning
+    private function buildPlanning(Tracker $milestone_tracker, Tracker $backlog_tracker): Planning
     {
         return PlanningBuilder::aPlanning(self::PROJECT_ID)
             ->withMilestoneTracker($milestone_tracker)
@@ -149,23 +138,23 @@ final class MilestoneRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\Test
 
     private function buildMilestone(
         int $artifact_id,
-        \Project $project,
-        \Planning $planning,
-        \Tracker $milestone_tracker,
-    ): \Planning_ArtifactMilestone {
-        $artifact = M::mock(\Tuleap\Tracker\Artifact\Artifact::class);
-        $artifact->shouldReceive('getId')->andReturn($artifact_id);
-        $artifact->shouldReceive('getTitle')->andReturn('Test Milestone');
-        $artifact->shouldReceive('getStatus')->andReturn('Ongoing');
-        $artifact->shouldReceive('getSemanticStatusValue')->andReturn(\Tuleap\Tracker\Artifact\Artifact::STATUS_OPEN);
-        $artifact->shouldReceive('getDescription')->andReturn('Test description');
-        $artifact->shouldReceive('getPostProcessedDescription')->andReturn('Test description');
-        $artifact->shouldReceive('getLastUpdateDate')->andReturn(1);
-        $first_changeset = new \Tracker_Artifact_Changeset(1, $artifact, 101, 1, 'irrelevant@example.com');
-        $artifact->shouldReceive('getFirstChangeset')->andReturn($first_changeset);
-        $artifact->shouldReceive('getTracker')->andReturn($milestone_tracker);
+        Project $project,
+        Planning $planning,
+        Tracker $milestone_tracker,
+    ): Planning_ArtifactMilestone {
+        $artifact = $this->createMock(Artifact::class);
+        $artifact->method('getId')->willReturn($artifact_id);
+        $artifact->method('getTitle')->willReturn('Test Milestone');
+        $artifact->method('getStatus')->willReturn('Ongoing');
+        $artifact->method('getSemanticStatusValue')->willReturn(Artifact::STATUS_OPEN);
+        $artifact->method('getDescription')->willReturn('Test description');
+        $artifact->method('getPostProcessedDescription')->willReturn('Test description');
+        $artifact->method('getLastUpdateDate')->willReturn(1);
+        $first_changeset = new Tracker_Artifact_Changeset(1, $artifact, 101, 1, 'irrelevant@example.com');
+        $artifact->method('getFirstChangeset')->willReturn($first_changeset);
+        $artifact->method('getTracker')->willReturn($milestone_tracker);
 
-        return new \Planning_ArtifactMilestone(
+        return new Planning_ArtifactMilestone(
             $project,
             $planning,
             $artifact,
