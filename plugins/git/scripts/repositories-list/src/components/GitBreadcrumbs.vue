@@ -66,9 +66,7 @@
         </nav>
     </div>
 </template>
-<script lang="ts">
-import Vue from "vue";
-import { Component } from "vue-property-decorator";
+<script setup lang="ts">
 import {
     getAdministrationUrl,
     getForkRepositoriesUrl,
@@ -84,34 +82,39 @@ import { BreadcrumbPrivacy } from "@tuleap/vue-breadcrumb-privacy";
 import type { ProjectFlag } from "@tuleap/vue-breadcrumb-privacy";
 import type { ProjectPrivacy } from "@tuleap/project-privacy-helper";
 
-@Component({ components: { BreadcrumbPrivacy } })
-export default class GitBreadcrumbs extends Vue {
-    repository_list_url(): string {
-        return getRepositoryListUrl();
-    }
-    repository_admin_url(): string {
-        return getAdministrationUrl();
-    }
-    repository_fork_url(): string {
-        return getForkRepositoriesUrl();
-    }
-    is_admin(): boolean {
-        return getUserIsAdmin();
-    }
-    project_url(): string {
-        return getProjectUrl();
-    }
-    project_public_name(): string {
-        return getProjectPublicName();
-    }
-    privacy(): ProjectPrivacy {
-        return getPrivacy();
-    }
-    project_flags(): Array<ProjectFlag> {
-        return getProjectFlags();
-    }
-    project_icon() {
-        return getProjectIcon();
-    }
+function repository_list_url(): string {
+    return getRepositoryListUrl();
+}
+
+function repository_admin_url(): string {
+    return getAdministrationUrl();
+}
+
+function repository_fork_url(): string {
+    return getForkRepositoriesUrl();
+}
+
+function is_admin(): boolean {
+    return getUserIsAdmin();
+}
+
+function project_url(): string {
+    return getProjectUrl();
+}
+
+function project_public_name(): string {
+    return getProjectPublicName();
+}
+
+function privacy(): ProjectPrivacy {
+    return getPrivacy();
+}
+
+function project_flags(): Array<ProjectFlag> {
+    return getProjectFlags();
+}
+
+function project_icon(): string {
+    return getProjectIcon();
 }
 </script>
