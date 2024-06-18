@@ -18,37 +18,32 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-final class Planning_TrackerPresenterTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
-{
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+declare(strict_types=1);
 
-    /**
-     * @var Planning_TrackerPresenter
-     */
-    private $presenter;
-    /**
-     * @var int
-     */
-    private $other_tracker_id;
-    /**
-     * @var int
-     */
-    private $tracker_id;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Tracker
-     */
-    private $tracker;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Planning
-     */
-    private $planning;
+namespace Tuleap\AgileDashboard\Planning;
+
+use PHPUnit\Framework\MockObject\MockObject;
+use Planning;
+use Planning_TrackerPresenter;
+use Tracker;
+use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
+
+final class Planning_TrackerPresenterTest extends TestCase //phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
+{
+    private Planning_TrackerPresenter $presenter;
+    private int $other_tracker_id;
+    private int $tracker_id;
+    private Tracker $tracker;
+    private Planning&MockObject $planning;
 
     protected function setUp(): void
     {
-        $this->planning = \Mockery::spy(\Planning::class);
-        $this->tracker  = Mockery::mock(Tracker::class);
-        $this->tracker->shouldReceive('getId')->andReturn(10);
-        $this->tracker->shouldReceive('getName')->andReturn('name');
+        $this->planning         = $this->createMock(Planning::class);
+        $this->tracker          = TrackerTestBuilder::aTracker()
+            ->withId(10)
+            ->withName('name')
+            ->build();
         $this->tracker_id       = $this->tracker->getId();
         $this->other_tracker_id = $this->tracker->getId() + 1;
         $this->presenter        = new Planning_TrackerPresenter($this->planning, $this->tracker);
@@ -56,63 +51,63 @@ final class Planning_TrackerPresenterTest extends \Tuleap\Test\PHPUnit\TestCase 
 
     public function testItHasAnId(): void
     {
-        $this->assertEquals($this->presenter->getId(), $this->tracker_id);
+        self::assertEquals($this->presenter->getId(), $this->tracker_id);
     }
 
     public function testItHasAName(): void
     {
-        $this->assertEquals($this->presenter->getName(), $this->tracker->getName());
+        self::assertEquals($this->presenter->getName(), $this->tracker->getName());
     }
 
     private function assertSelected($selected): void
     {
-        $this->assertTrue($selected);
+        self::assertTrue($selected);
     }
 
     private function assertNotSelected($selected): void
     {
-        $this->assertFalse($selected);
+        self::assertFalse($selected);
     }
 
     public function testItIsSelectedAsABacklogTracker(): void
     {
-        $this->planning->shouldReceive('getBacklogTrackersIds')->andReturns([$this->tracker_id]);
-        $this->planning->shouldReceive('getPlanningTrackerId')->andReturns($this->other_tracker_id);
+        $this->planning->method('getBacklogTrackersIds')->willReturn([$this->tracker_id]);
+        $this->planning->method('getPlanningTrackerId')->willReturn($this->other_tracker_id);
         $this->assertSelected($this->presenter->selectedIfBacklogTracker());
     }
 
     public function testItIsNotSelectedAsAPlanningTracker(): void
     {
-        $this->planning->shouldReceive('getBacklogTrackersIds')->andReturns([$this->tracker_id]);
-        $this->planning->shouldReceive('getPlanningTrackerId')->andReturns($this->other_tracker_id);
+        $this->planning->method('getBacklogTrackersIds')->willReturn([$this->tracker_id]);
+        $this->planning->method('getPlanningTrackerId')->willReturn($this->other_tracker_id);
         $this->assertNotSelected($this->presenter->selectedIfPlanningTracker());
     }
 
     public function testItIsNotSelectedAsABacklogTracker(): void
     {
-        $this->planning->shouldReceive('getBacklogTrackersIds')->andReturns([$this->other_tracker_id]);
-        $this->planning->shouldReceive('getPlanningTrackerId')->andReturns($this->tracker_id);
+        $this->planning->method('getBacklogTrackersIds')->willReturn([$this->other_tracker_id]);
+        $this->planning->method('getPlanningTrackerId')->willReturn($this->tracker_id);
         $this->assertNotSelected($this->presenter->selectedIfBacklogTracker());
     }
 
     public function testItIsSelectedAsPlanningTracker(): void
     {
-        $this->planning->shouldReceive('getBacklogTrackersIds')->andReturns([$this->other_tracker_id]);
-        $this->planning->shouldReceive('getPlanningTrackerId')->andReturns($this->tracker_id);
+        $this->planning->method('getBacklogTrackersIds')->willReturn([$this->other_tracker_id]);
+        $this->planning->method('getPlanningTrackerId')->willReturn($this->tracker_id);
         $this->assertSelected($this->presenter->selectedIfPlanningTracker());
     }
 
     public function testItIsNotSelectedAsABacklogOrPlanningTracker(): void
     {
-        $this->planning->shouldReceive('getBacklogTrackersIds')->andReturns([$this->other_tracker_id]);
-        $this->planning->shouldReceive('getPlanningTrackerId')->andReturns($this->other_tracker_id);
+        $this->planning->method('getBacklogTrackersIds')->willReturn([$this->other_tracker_id]);
+        $this->planning->method('getPlanningTrackerId')->willReturn($this->other_tracker_id);
         $this->assertNotSelected($this->presenter->selectedIfBacklogTracker());
     }
 
     public function testItIsNotSelectedAsAPlanningOrBacklogTracker(): void
     {
-        $this->planning->shouldReceive('getBacklogTrackersIds')->andReturns([$this->other_tracker_id]);
-        $this->planning->shouldReceive('getPlanningTrackerId')->andReturns($this->other_tracker_id);
+        $this->planning->method('getBacklogTrackersIds')->willReturn([$this->other_tracker_id]);
+        $this->planning->method('getPlanningTrackerId')->willReturn($this->other_tracker_id);
         $this->assertNotSelected($this->presenter->selectedIfPlanningTracker());
     }
 }
