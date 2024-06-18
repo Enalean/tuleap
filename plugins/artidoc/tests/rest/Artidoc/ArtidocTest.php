@@ -213,7 +213,7 @@ final class ArtidocTest extends DocmanTestExecutionHelper
         $response = $this->getResponse($this->request_factory->createRequest('OPTIONS', 'artidoc/' . $id . '/sections'));
 
         self::assertSame(200, $response->getStatusCode());
-        self::assertSame(['OPTIONS', 'GET', 'PUT'], explode(', ', $response->getHeaderLine('Allow')));
+        self::assertSame(['OPTIONS', 'GET', 'PUT', 'POST'], explode(', ', $response->getHeaderLine('Allow')));
     }
 
     public function testOptionsSectionsId(): void

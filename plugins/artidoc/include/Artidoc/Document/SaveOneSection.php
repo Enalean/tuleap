@@ -18,19 +18,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
+namespace Tuleap\Artidoc\Document;
 
-namespace Tuleap\Artidoc\REST\v1;
+use Tuleap\DB\UUID;
 
-/**
- * @psalm-immutable
- */
-final class ArtidocPUTSectionArtifactRepresentation
+interface SaveOneSection
 {
-    public int $id;
+    public function saveSectionAtTheEnd(int $item_id, int $artifact_id): UUID;
 
-    public function __construct(int $id)
-    {
-        $this->id = $id;
-    }
+    public function saveSectionBefore(int $item_id, int $artifact_id, string $sibling_section_id): UUID;
 }
