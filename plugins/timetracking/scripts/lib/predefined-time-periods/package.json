@@ -14,8 +14,16 @@
       "require": "./dist/plugin-timetracking-predefined-time-periods.umd.cjs"
     }
   },
+  "dependencies": {
+    "@tuleap/dom": "workspace:^",
+    "@tuleap/gettext": "workspace:^",
+    "@tuleap/option": "workspace:*",
+    "@tuleap/plugin-timetracking-time-formatters": "workspace:^",
+    "hybrids": "^9.0.0"
+  },
   "devDependencies": {
-    "@tuleap/build-system-configurator": "workspace:*"
+    "@tuleap/build-system-configurator": "workspace:*",
+    "@tuleap/po-gettext-plugin": "workspace:*"
   },
   "scripts": {
     "typecheck": "tsc --noEmit",

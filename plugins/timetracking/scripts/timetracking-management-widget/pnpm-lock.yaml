@@ -5,6 +5,12 @@ settings:
   excludeLinksFromLockfile: false
 
 dependencies:
+  '@tuleap/plugin-timetracking-predefined-time-periods':
+    specifier: workspace:*
+    version: link:../lib/predefined-time-periods
+  '@tuleap/plugin-timetracking-time-formatters':
+    specifier: workspace:^
+    version: link:../lib/time-formatters
   '@tuleap/tlp':
     specifier: workspace:*
     version: link:../../../../src/scripts/tlp
@@ -22,9 +28,6 @@ devDependencies:
   '@tuleap/build-system-configurator':
     specifier: workspace:*
     version: link:../../../../lib/frontend/build-system-configurator
-  '@tuleap/plugin-timetracking-predefined-time-periods':
-    specifier: workspace:*
-    version: link:../lib/predefined-time-periods
   '@tuleap/po-gettext-plugin':
     specifier: workspace:*
     version: link:../../../../lib/frontend/po-gettext-plugin

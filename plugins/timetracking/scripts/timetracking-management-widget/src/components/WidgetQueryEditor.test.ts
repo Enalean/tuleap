@@ -22,15 +22,8 @@ import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import WidgetQueryEditor from "./WidgetQueryEditor.vue";
 import { getGlobalTestOptions } from "../../tests/global-options-for-tests";
-import {
-    CURRENT_WEEK,
-    LAST_7_DAYS,
-    LAST_MONTH,
-    LAST_WEEK,
-    TODAY,
-    YESTERDAY,
-} from "@tuleap/plugin-timetracking-predefined-time-periods";
-import * as predefined_time_periods from "@tuleap/plugin-timetracking-predefined-time-periods";
+import { TODAY } from "@tuleap/plugin-timetracking-predefined-time-periods";
+import { PredefinedTimePeriodsVueStub } from "../../tests/stubs/PredefinedTimePeriodsVueStub";
 
 vi.mock("tlp", () => ({
     datePicker: (): { setDate(): void } => ({
@@ -54,6 +47,7 @@ describe("Given a timetracking management widget query editor", () => {
             },
             global: {
                 ...getGlobalTestOptions(),
+                stubs: { "tuleap-predefined-time-period-select": PredefinedTimePeriodsVueStub },
             },
         });
     }
@@ -75,7 +69,7 @@ describe("Given a timetracking management widget query editor", () => {
             expect(set_dates_event[0]).toStrictEqual([
                 start_date_input.element.value,
                 end_date_input.element.value,
-                "",
+                TODAY,
             ]);
         }
 
@@ -94,75 +88,24 @@ describe("Given a timetracking management widget query editor", () => {
         expect(close_edit_mode_event).toBeDefined();
     });
 
-    it("When Today is selected, then 'getTodayPeriod' should be called", () => {
-        const getTodayPeriod = vi.spyOn(predefined_time_periods, "getTodayPeriod");
-        const wrapper = getWidgetQueryEditorInstance();
-        const select = wrapper.find<HTMLSelectElement>("[data-test=predefined-periods-select]");
-        select.setValue(TODAY);
-
-        expect(getTodayPeriod).toHaveBeenCalledOnce();
-    });
-
-    it("When Yesterday is selected, then 'getYesterdayPeriod' should be called", () => {
-        const getYesterdayPeriod = vi.spyOn(predefined_time_periods, "getYesterdayPeriod");
-        const wrapper = getWidgetQueryEditorInstance();
-        const select = wrapper.find<HTMLSelectElement>("[data-test=predefined-periods-select]");
-        select.setValue(YESTERDAY);
-
-        expect(getYesterdayPeriod).toHaveBeenCalledOnce();
-    });
-
-    it("When Last 7 days is selected, then 'getLastSevenDaysPeriod' should be called", () => {
-        const getLastSevenDaysPeriod = vi.spyOn(predefined_time_periods, "getLastSevenDaysPeriod");
-        const wrapper = getWidgetQueryEditorInstance();
-        const select = wrapper.find<HTMLSelectElement>("[data-test=predefined-periods-select]");
-        select.setValue(LAST_7_DAYS);
-
-        expect(getLastSevenDaysPeriod).toHaveBeenCalledOnce();
-    });
-
-    it("When Current week is selected, then 'getCurrentWeekPeriod' should be called", () => {
-        const getCurrentWeekPeriod = vi.spyOn(predefined_time_periods, "getCurrentWeekPeriod");
-        const wrapper = getWidgetQueryEditorInstance();
-        const select = wrapper.find<HTMLSelectElement>("[data-test=predefined-periods-select]");
-        select.setValue(CURRENT_WEEK);
-
-        expect(getCurrentWeekPeriod).toHaveBeenCalledOnce();
-    });
-
-    it("When Last week is selected, then 'getLastWeekPeriod' should be called", () => {
-        const getLastWeekPeriod = vi.spyOn(predefined_time_periods, "getLastWeekPeriod");
-        const wrapper = getWidgetQueryEditorInstance();
-        const select = wrapper.find<HTMLSelectElement>("[data-test=predefined-periods-select]");
-        select.setValue(LAST_WEEK);
-
-        expect(getLastWeekPeriod).toHaveBeenCalledOnce();
-    });
-
-    it("When Last month is selected, then 'getLastMonthPeriod' should be called", () => {
-        const getLastMonthPeriod = vi.spyOn(predefined_time_periods, "getLastMonthPeriod");
-        const wrapper = getWidgetQueryEditorInstance();
-        const select = wrapper.find<HTMLSelectElement>("[data-test=predefined-periods-select]");
-        select.setValue(LAST_MONTH);
-
-        expect(getLastMonthPeriod).toHaveBeenCalledOnce();
-    });
-
     it("When start date is selected manually, then the selected predefined time period should be cleared", async () => {
         const wrapper = getWidgetQueryEditorInstance();
-        const select = wrapper.find<HTMLSelectElement>("[data-test=predefined-periods-select]");
+        const predefined_time_period_stub = wrapper.findComponent(PredefinedTimePeriodsVueStub);
+
         const input = wrapper.find<HTMLInputElement>("[data-test=start-date-input]");
         await input.setValue("2024-23-05");
 
-        expect(select.element.value).toBe("");
+        expect(predefined_time_period_stub.vm.getCurrentlySelectedPredefinedTimePeriod()).toBe("");
     });
 
     it("When end date is selected manually, then the selected predefined time period should be cleared", async () => {
         const wrapper = getWidgetQueryEditorInstance();
-        const select = wrapper.find<HTMLSelectElement>("[data-test=predefined-periods-select]");
+
+        const predefined_time_period_stub = wrapper.findComponent(PredefinedTimePeriodsVueStub);
+
         const input = wrapper.find<HTMLInputElement>("[data-test=end-date-input]");
         await input.setValue("2024-23-05");
 
-        expect(select.element.value).toBe("");
+        expect(predefined_time_period_stub.vm.getCurrentlySelectedPredefinedTimePeriod()).toBe("");
     });
 });

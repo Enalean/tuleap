@@ -15,5 +15,11 @@
             "src": "scripts/timetracking-overview-widget/src",
             "po": "scripts/timetracking-overview-widget/po"
         }
+    },
+    "gettext-ts": {
+        "predefined-time-periods": {
+            "src": "scripts/lib/predefined-time-periods/src",
+            "po": "scripts/lib/predefined-time-periods/po"
+        }
     }
 }

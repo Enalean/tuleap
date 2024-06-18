@@ -58,30 +58,11 @@
                 </div>
             </div>
 
-            <div class="tlp-form-element timetracking-writing-mode-selected-date">
-                <label for="timetracking-predefined-date" class="tlp-label">
-                    {{ $gettext("Predefined periods") }}
-                </label>
-                <div class="tlp-form-element tlp-form-element-prepend">
-                    <span class="tlp-prepend"><i class="fas fa-calendar-alt"></i></span>
-                    <select
-                        class="tlp-select tlp-input"
-                        id="period"
-                        ref="select"
-                        v-model="selected_option"
-                        v-on:change="applyDatesPreset"
-                        data-test="timetracking-predefined-periods"
-                    >
-                        <option value="">{{ $gettext("Please choose...") }}</option>
-                        <option v-bind:value="TODAY">{{ $gettext("Today") }}</option>
-                        <option v-bind:value="YESTERDAY">{{ $gettext("Yesterday") }}</option>
-                        <option v-bind:value="LAST_7_DAYS">{{ $gettext("Last 7 days") }}</option>
-                        <option v-bind:value="CURRENT_WEEK">{{ $gettext("Current week") }}</option>
-                        <option v-bind:value="LAST_WEEK">{{ $gettext("Last week") }}</option>
-                        <option v-bind:value="LAST_MONTH">{{ $gettext("Last month") }}</option>
-                    </select>
-                </div>
-            </div>
+            <tuleap-predefined-time-period-select
+                ref="predefined_time_period_select"
+                v-bind:onselection="setDatePickersValues"
+                v-bind:selected_time_period="selected_option"
+            />
         </div>
         <div class="timetracking-writing-mode-actions">
             <button
@@ -110,24 +91,12 @@ import { onMounted, ref } from "vue";
 import type { Ref } from "vue";
 import { useGettext } from "vue3-gettext";
 import type {
-    Period,
+    PeriodOption,
     PredefinedTimePeriod,
-} from "@tuleap/plugin-timetracking-predefined-time-periods";
-import {
-    TODAY,
-    YESTERDAY,
-    LAST_7_DAYS,
-    LAST_WEEK,
-    CURRENT_WEEK,
-    LAST_MONTH,
-    getTodayPeriod,
-    getYesterdayPeriod,
-    getCurrentWeekPeriod,
-    getLastWeekPeriod,
-    getLastMonthPeriod,
-    getLastSevenDaysPeriod,
+    PredefinedTimePeriodSelect,
 } from "@tuleap/plugin-timetracking-predefined-time-periods";
 import { Option } from "@tuleap/option";
+import { formatDatetimeToYearMonthDay } from "@tuleap/plugin-timetracking-time-formatters";
 
 const { $gettext } = useGettext();
 const personal_store = usePersonalTimetrackingWidgetStore();
@@ -140,6 +109,8 @@ let selected_option: Ref<PredefinedTimePeriod | ""> = ref(
 
 let start_date_picker: DatePickerInstance;
 let end_date_picker: DatePickerInstance;
+
+const predefined_time_period_select: Ref<PredefinedTimePeriodSelect | undefined> = ref();
 
 const isHTMLInputElement = (element: HTMLElement | undefined): element is HTMLInputElement => {
     return element instanceof HTMLInputElement;
@@ -160,36 +131,26 @@ onMounted((): void => {
 const resetSelectedOption = (): void => {
     selected_option.value = "";
     personal_store.selected_time_period = Option.nothing();
+    predefined_time_period_select.value?.resetSelection();
 };
 
-const applyDatesPreset = (): void => {
-    const setDatePickersValues = (period: Period): void => {
-        start_date_picker.setDate(period.start);
-        end_date_picker.setDate(period.end);
-    };
+const setDatePickersValues = (
+    selected_time_period: PredefinedTimePeriod,
+    period: PeriodOption,
+): void => {
+    selected_option.value = selected_time_period;
+    period.apply((period) => {
+        start_date_picker.setDate(formatDatetimeToYearMonthDay(period.start));
+        end_date_picker.setDate(formatDatetimeToYearMonthDay(period.end));
+    });
 
-    switch (selected_option.value) {
-        case TODAY:
-            personal_store.selected_time_period = Option.fromValue(TODAY);
-            return setDatePickersValues(getTodayPeriod());
-        case YESTERDAY:
-            personal_store.selected_time_period = Option.fromValue(YESTERDAY);
-            return setDatePickersValues(getYesterdayPeriod());
-        case LAST_7_DAYS:
-            personal_store.selected_time_period = Option.fromValue(LAST_7_DAYS);
-            return setDatePickersValues(getLastSevenDaysPeriod());
-        case CURRENT_WEEK:
-            personal_store.selected_time_period = Option.fromValue(CURRENT_WEEK);
-            return setDatePickersValues(getCurrentWeekPeriod());
-        case LAST_WEEK:
-            personal_store.selected_time_period = Option.fromValue(LAST_WEEK);
-            return setDatePickersValues(getLastWeekPeriod());
-        case LAST_MONTH:
-            personal_store.selected_time_period = Option.fromValue(LAST_MONTH);
-            return setDatePickersValues(getLastMonthPeriod());
-        default:
-            return resetSelectedOption();
-    }
+    const isPredefinedTimePeriod = (
+        selected_option: PredefinedTimePeriod | "",
+    ): selected_option is PredefinedTimePeriod => selected_option !== "";
+
+    personal_store.selected_time_period = isPredefinedTimePeriod(selected_option.value)
+        ? Option.fromValue(selected_option.value)
+        : Option.nothing();
 };
 
 const changeDates = (): void => {

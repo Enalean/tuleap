@@ -1,5 +1,5 @@
-/**
- * Copyright (c) Enalean, 2024 - Present. All Rights Reserved.
+/*
+ * Copyright (c) Enalean, 2023 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,16 +17,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { vite, viteDtsPlugin } from "@tuleap/build-system-configurator";
-import * as path from "node:path";
-import POGettextPlugin from "@tuleap/po-gettext-plugin";
+import { initGettextSync } from "@tuleap/gettext";
+import fr_FR from "../po/fr_FR.po";
 
-export default vite.defineLibConfig({
-    build: {
-        lib: {
-            entry: path.resolve(__dirname, "src/main.ts"),
-            name: "TimeTrackingPredefinedTimePeriods",
-        },
-    },
-    plugins: [viteDtsPlugin(), POGettextPlugin.vite()],
-});
+export const gettext_provider = initGettextSync(
+    "plugin-timetracking/predefined-time-periods",
+    { fr_FR },
+    document.body.dataset.userLocale ?? "en_US",
+);
