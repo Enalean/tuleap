@@ -19,7 +19,7 @@
     "@tuleap/lazybox": "workspace:*",
     "@tuleap/option": "workspace:*",
     "@tuleap/tlp-dropdown": "workspace:*",
-    "hybrids": "^8.2.2"
+    "hybrids": "^9.0.0"
   },
   "devDependencies": {
     "@tuleap/build-system-configurator": "workspace:*"

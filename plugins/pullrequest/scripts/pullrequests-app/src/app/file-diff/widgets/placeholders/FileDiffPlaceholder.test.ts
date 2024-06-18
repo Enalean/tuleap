@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { FileDiffPlaceholder } from "./FileDiffPlaceholder";
+import { renderPlaceholder } from "./FileDiffPlaceholder";
 import type { HostElement } from "./FileDiffPlaceholder";
 import { selectOrThrow } from "@tuleap/dom";
 
@@ -38,7 +38,7 @@ describe("FileDiffPlaceholder", () => {
                 height: 60,
             } as unknown as HostElement;
 
-            const update = FileDiffPlaceholder.content(host);
+            const update = renderPlaceholder(host);
             update(host, target);
 
             const placeholder = selectOrThrow(
@@ -59,7 +59,7 @@ describe("FileDiffPlaceholder", () => {
                 height: 80,
             } as unknown as HostElement;
 
-            const update = FileDiffPlaceholder.content(host);
+            const update = renderPlaceholder(host);
             update(host, target);
 
             const placeholder = selectOrThrow(

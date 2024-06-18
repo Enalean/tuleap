@@ -18,15 +18,16 @@
  */
 
 import { define, html } from "hybrids";
+import type { UpdateFunction } from "hybrids";
 
 export const TAG_NAME = "tuleap-pullrequest-placeholder";
 
 export type HostElement = FileDiffPlaceholder & HTMLElement;
 
 export interface FileDiffPlaceholder {
-    readonly content: () => HTMLElement;
+    readonly render: () => HTMLElement;
     readonly isReplacingAComment: boolean;
-    readonly post_rendering_callback: () => void;
+    post_rendering_callback: () => void;
     height: number;
 }
 
@@ -39,6 +40,18 @@ const getStyle = (host: FileDiffPlaceholder): Record<string, string> => ({
     height: host.height + "px",
 });
 
+export const renderPlaceholder = (
+    host: FileDiffPlaceholder,
+): UpdateFunction<FileDiffPlaceholder> => {
+    return html`
+        <div
+            class="${getPlaceholderClasses(host)}"
+            style="${getStyle(host)}"
+            data-test="pullrequest-file-diff-placeholder"
+        ></div>
+    `;
+};
+
 export const FileDiffPlaceholder = define<FileDiffPlaceholder>({
     tag: TAG_NAME,
     isReplacingAComment: false,
@@ -48,12 +61,6 @@ export const FileDiffPlaceholder = define<FileDiffPlaceholder>({
             host.post_rendering_callback();
         },
     },
-    post_rendering_callback: undefined,
-    content: (host) => html`
-        <div
-            class="${getPlaceholderClasses(host)}"
-            style="${getStyle(host)}"
-            data-test="pullrequest-file-diff-placeholder"
-        ></div>
-    `,
+    post_rendering_callback: (host, callback) => callback,
+    render: renderPlaceholder,
 });

@@ -18,6 +18,7 @@
  */
 
 import { define, dispatch, html } from "hybrids";
+import type { UpdateFunction } from "hybrids";
 import type { LazyboxTemplatingCallback } from "../Options";
 import { getAllGroupsTemplate } from "./GroupTemplate";
 import type { GroupCollection } from "../GroupCollection";
@@ -39,7 +40,7 @@ export type DropdownElement = {
     selection: HandleSelection;
 };
 type InternalDropdownElement = Readonly<DropdownElement> & {
-    content(): HTMLElement;
+    render(): HTMLElement;
 };
 export type HostElement = InternalDropdownElement & HTMLElement;
 
@@ -53,7 +54,7 @@ export const observeOpen = (
         return;
     }
     if (new_value) {
-        host.content();
+        host.render();
         dispatch(host, "open");
         return;
     }
@@ -82,40 +83,44 @@ export const onArrowKeyDown = (host: unknown, event: KeyboardEvent): void => {
     }
 };
 
+export const renderDropdownElement = (
+    host: InternalDropdownElement,
+): UpdateFunction<InternalDropdownElement> => {
+    const search_section = !host.multiple_selection ? html`${host.search_input}` : html``;
+    const new_item_button = host.has_new_item
+        ? html`<button
+              type="button"
+              class="lazybox-new-item-button"
+              onclick="${onClickOnNewItemButton}"
+              data-test="new-item-button"
+              data-navigation="lazybox-item"
+              onkeyup="${onArrowKeyUp}"
+              onkeydown="${onArrowKeyDown}"
+          >
+              ${host.new_item_button_label}
+          </button>`
+        : html``;
+
+    return html`${search_section}${new_item_button}
+        <ul
+            class="lazybox-dropdown-values-list"
+            role="listbox"
+            aria-expanded="true"
+            aria-hidden="false"
+        >
+            ${getAllGroupsTemplate(host)}
+        </ul>`;
+};
+
 export const DropdownElement = define<InternalDropdownElement>({
     tag: TAG,
-    open: { observe: observeOpen, value: false },
+    open: { observe: observeOpen, value: false, reflect: true },
     multiple_selection: false,
-    groups: { set: (host, new_value) => new_value ?? [] },
+    groups: (host, new_value) => new_value ?? [],
     has_new_item: false,
     new_item_button_label: "",
-    templating_callback: undefined,
-    search_input: undefined,
-    selection: undefined,
-    content: (host) => {
-        const search_section = !host.multiple_selection ? html`${host.search_input}` : html``;
-        const new_item_button = host.has_new_item
-            ? html`<button
-                  type="button"
-                  class="lazybox-new-item-button"
-                  onclick="${onClickOnNewItemButton}"
-                  data-test="new-item-button"
-                  data-navigation="lazybox-item"
-                  onkeyup="${onArrowKeyUp}"
-                  onkeydown="${onArrowKeyDown}"
-              >
-                  ${host.new_item_button_label}
-              </button>`
-            : html``;
-
-        return html`${search_section}${new_item_button}
-            <ul
-                class="lazybox-dropdown-values-list"
-                role="listbox"
-                aria-expanded="true"
-                aria-hidden="false"
-            >
-                ${getAllGroupsTemplate(host)}
-            </ul>`;
-    },
+    templating_callback: (host, value) => value,
+    search_input: (host, value) => value,
+    selection: (host, value) => value,
+    render: renderDropdownElement,
 });

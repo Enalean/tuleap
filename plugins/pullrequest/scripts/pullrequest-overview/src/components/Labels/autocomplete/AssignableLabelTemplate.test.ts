@@ -60,8 +60,8 @@ describe("getAssignableLabelsTemplate", () => {
                 is_disabled: false,
             });
 
-            expect(badge.getAttribute("color")).toBe(label.color);
-            expect(badge.hasAttribute("outline")).toBe(true);
+            expect(badge.color).toBe(label.color);
+            expect(badge.outline).toBe(true);
             expect(badge.textContent?.trim()).toBe(label.label);
         });
     });

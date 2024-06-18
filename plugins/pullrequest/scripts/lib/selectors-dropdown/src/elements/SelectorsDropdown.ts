@@ -72,7 +72,7 @@ export type InternalSelectorsDropdown = Readonly<SelectorsDropdown> & {
     controller: ControlSelectorsDropdown;
     active_selector: Option<SelectorEntry>;
     is_dropdown_shown: boolean;
-    content(): HTMLElement;
+    render(): HTMLElement;
 };
 
 export type HostElement = InternalSelectorsDropdown & HTMLElement;
@@ -80,27 +80,27 @@ export type HostElement = InternalSelectorsDropdown & HTMLElement;
 export const SelectorsDropdown = define<InternalSelectorsDropdown>({
     tag: TAG,
     button_text: "",
-    selectors_entries: undefined,
+    selectors_entries: (host, value) => value,
     is_dropdown_shown: false,
-    active_selector: {
-        get: (host, active_selector) => active_selector ?? Option.nothing(),
-        set: (host, active_selector) => active_selector,
-    },
-    dropdown_button_element: {
-        get: (host) => selectOrThrow(host, `.${DROPDOWN_BUTTON_CLASSNAME}`),
-    },
-    dropdown_content_element: {
-        get: (host) => selectOrThrow(host, `.${DROPDOWN_CONTENT_CLASSNAME}`),
-    },
-    auto_completer_element: {
-        get: (host) => selectOrThrow(host.content(), ".selectors-dropdown-auto-completer"),
-    },
+    active_selector: (host: InternalSelectorsDropdown, active_selector) =>
+        active_selector ?? Option.nothing(),
+    dropdown_button_element: (host: InternalSelectorsDropdown) =>
+        selectOrThrow(host.render(), `.${DROPDOWN_BUTTON_CLASSNAME}`),
+    dropdown_content_element: (host: InternalSelectorsDropdown) =>
+        selectOrThrow(host.render(), `.${DROPDOWN_CONTENT_CLASSNAME}`),
+    auto_completer_element: (host: InternalSelectorsDropdown) =>
+        selectOrThrow(host.render(), ".selectors-dropdown-auto-completer"),
     controller: {
-        get: (host: InternalSelectorsDropdown, controller: ControlSelectorsDropdown | undefined) =>
-            controller ?? SelectorsDropdownController(SelectorsDropdownAutocompleter(document)),
+        value: (
+            host: InternalSelectorsDropdown,
+            controller: ControlSelectorsDropdown | undefined,
+        ) => controller ?? SelectorsDropdownController(SelectorsDropdownAutocompleter(document)),
         connect: (host) => {
             setTimeout(() => host.controller.initDropdown(host));
         },
     },
-    content: renderContent,
+    render: {
+        value: renderContent,
+        shadow: false,
+    },
 });

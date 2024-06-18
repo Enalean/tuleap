@@ -88,11 +88,11 @@ export const SearchInput = define<InternalSearchInput>({
     disabled: false,
     placeholder: "",
     query: "",
-    clear: { get: buildClear },
-    getQuery: { get: (host: InternalSearchInput) => (): string => host.query },
+    clear: buildClear,
+    getQuery: (host: InternalSearchInput) => (): string => host.query,
     timeout_id: undefined,
-    render: Object.assign(
-        (host: InternalSearchInput) =>
+    render: {
+        value: (host: InternalSearchInput) =>
             html`<input
                 type="search"
                 disabled="${host.disabled}"
@@ -112,6 +112,9 @@ export const SearchInput = define<InternalSearchInput>({
                 onkeyup="${onKeyUp}"
                 onkeydown="${onKeyDown}"
             />`.style(input_style),
-        { delegatesFocus: true },
-    ),
+        shadow: {
+            mode: "open",
+            delegatesFocus: true,
+        },
+    },
 });

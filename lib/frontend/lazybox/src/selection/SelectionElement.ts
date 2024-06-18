@@ -43,7 +43,7 @@ export type SelectionElement = HandleSelection & {
     search_input: SearchInput & HTMLElement;
 };
 type InternalSelectionElement = Readonly<SelectionElement> & {
-    content(): HTMLElement;
+    render(): HTMLElement;
     selected_items: LazyboxItem[];
 };
 export type HostElement = InternalSelectionElement & HTMLElement;
@@ -152,14 +152,14 @@ export const SelectionElement = define<InternalSelectionElement>({
     tag: TAG,
     multiple: false,
     placeholder_text: "",
-    selected_items: { observe: observeSelectedItems, set: (host, new_value) => new_value ?? [] },
-    selectItem: { get: buildSelectItem },
-    clearSelection: { get: buildClear },
-    isSelected: { get: buildIsSelected },
-    replaceSelection: { get: buildReplaceSelection },
-    onSelection: undefined,
-    selection_badge_callback: undefined,
-    templating_callback: undefined,
-    search_input: { set: searchInputSetter },
-    content: getContent,
+    selected_items: { observe: observeSelectedItems, value: (host, new_value) => new_value ?? [] },
+    selectItem: buildSelectItem,
+    clearSelection: buildClear,
+    isSelected: buildIsSelected,
+    replaceSelection: buildReplaceSelection,
+    onSelection: (host, value) => value,
+    selection_badge_callback: (host, value) => value,
+    templating_callback: (host, value) => value,
+    search_input: searchInputSetter,
+    render: getContent,
 });

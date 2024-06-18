@@ -250,17 +250,17 @@ export const getDropdownElement = (host: HostElement): DropdownElement & HTMLEle
 const IntermediaryClass = define.compile<InternalLazyboxElement>({
     tag: TAG,
     tabindex: 0,
-    options: undefined,
-    replaceDropdownContent: { get: buildReplaceDropdown, connect },
-    clearSelection: { get: buildClearSelection },
-    replaceSelection: { get: buildReplaceSelection },
-    cleanupAutoUpdate: { set: (host, new_value) => new_value ?? noop },
-    search_input_element: { get: getSearchInput },
-    selection_element: { get: getSelectionElement },
-    dropdown_element: { get: getDropdownElement },
+    options: (host, value) => value,
+    replaceDropdownContent: { value: buildReplaceDropdown, connect },
+    clearSelection: buildClearSelection,
+    replaceSelection: buildReplaceSelection,
+    cleanupAutoUpdate: (host, new_value) => new_value ?? noop,
+    search_input_element: getSearchInput,
+    selection_element: getSelectionElement,
+    dropdown_element: getDropdownElement,
     scrolling_manager: undefined,
-    internals: { get: (host) => host.attachInternals() },
-    content: (host) => html`${host.selection_element}${host.dropdown_element}`,
+    internals: (host: HostElement) => host.attachInternals(),
+    render: (host) => html`${host.selection_element}${host.dropdown_element}`,
 });
 
 export class LazyboxElement extends IntermediaryClass {
