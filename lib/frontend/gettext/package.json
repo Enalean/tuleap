@@ -4,18 +4,19 @@
   "homepage": "https://tuleap.org",
   "license": "GPL-2.0-or-later",
   "private": true,
-  "version": "0.0.0",
   "type": "module",
-  "module": "dist/gettext.js",
-  "main": "dist/gettext.umd.cjs",
-  "types": "dist/index.d.ts",
+  "module": "./dist/gettext.js",
+  "main": "./dist/gettext.umd.cjs",
+  "types": "./dist/index.d.ts",
   "exports": {
     ".": {
       "import": "./dist/gettext.js",
-      "require": "./dist/gettext.umd.cjs"
+      "require": "./dist/gettext.umd.cjs",
+      "types": "./dist/index.d.ts"
     }
   },
   "dependencies": {
+    "@tuleap/core-constants": "workspace:^",
     "node-gettext": "^3.0.0"
   },
   "devDependencies": {
@@ -26,6 +27,6 @@
     "typecheck": "tsc --noEmit",
     "build": "vite build",
     "watch": "vite build --watch --mode development --minify false",
-    "test": "vitest"
+    "test": "vitest --typecheck"
   }
 }

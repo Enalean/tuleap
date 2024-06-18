@@ -23,12 +23,11 @@ import { selectOrThrow } from "@tuleap/dom";
 import { canUserDoWebAuthn, getAuthenticationResult } from "./authenticate";
 import fr_FR from "../po/fr_FR.po";
 import pt_BR from "../po/pt_BR.po";
-import { initGettextSync } from "@tuleap/gettext";
+import { getLocaleWithDefault, initGettextSync } from "@tuleap/gettext";
 import type { Fault } from "@tuleap/fault";
 import { AUTHENTICATION_MODAL_TAG, AuthenticationModal } from "./AuthenticationModal";
 import type { ResultAsync } from "neverthrow";
 import { errAsync, okAsync } from "neverthrow";
-import { en_US_LOCALE } from "@tuleap/core-constants";
 
 export { getAuthenticationResult, AUTHENTICATION_MODAL_TAG };
 
@@ -52,7 +51,7 @@ export function openTargetModalIdAfterAuthentication(
             const gettext_provider = initGettextSync(
                 "tuleap-webauthn",
                 { fr_FR, pt_BR },
-                doc.body.dataset.userLocale ?? en_US_LOCALE,
+                getLocaleWithDefault(doc),
             );
 
             const target_modal = getTargetModal(doc, button);

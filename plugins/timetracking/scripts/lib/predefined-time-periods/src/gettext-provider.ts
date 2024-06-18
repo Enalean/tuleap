@@ -17,11 +17,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { initGettextSync } from "@tuleap/gettext";
+import { getLocaleWithDefault, initGettextSync } from "@tuleap/gettext";
 import fr_FR from "../po/fr_FR.po";
 
 export const gettext_provider = initGettextSync(
     "plugin-timetracking/predefined-time-periods",
     { fr_FR },
-    document.body.dataset.userLocale ?? "en_US",
+    getLocaleWithDefault(document),
 );
