@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Artidoc\Document\Tracker;
 
+use Tracker_FormElement_Field_File;
 use Tracker_FormElement_Field_String;
 use Tracker_FormElement_Field_Text;
 use Tracker_Semantic_Description;
@@ -30,6 +31,7 @@ use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Test\Builders\Fields\TextFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
+use Tuleap\Tracker\Test\Stub\Tracker\Artifact\GetFileUploadDataStub;
 
 final class DocumentTrackerRepresentationTest extends TestCase
 {
@@ -53,7 +55,11 @@ final class DocumentTrackerRepresentationTest extends TestCase
             $tracker,
         );
 
-        $representation = DocumentTrackerRepresentation::fromTracker($tracker, UserTestBuilder::buildWithDefaults());
+        $representation = DocumentTrackerRepresentation::fromTracker(
+            GetFileUploadDataStub::withoutField(),
+            $tracker,
+            UserTestBuilder::buildWithDefaults(),
+        );
 
         self::assertSame(101, $representation->id);
         self::assertSame('Bugs', $representation->label);
@@ -73,7 +79,11 @@ final class DocumentTrackerRepresentationTest extends TestCase
             $tracker,
         );
 
-        $representation = DocumentTrackerRepresentation::fromTracker($tracker, UserTestBuilder::buildWithDefaults());
+        $representation = DocumentTrackerRepresentation::fromTracker(
+            GetFileUploadDataStub::withoutField(),
+            $tracker,
+            UserTestBuilder::buildWithDefaults(),
+        );
 
         self::assertNull($representation->title);
     }
@@ -92,7 +102,11 @@ final class DocumentTrackerRepresentationTest extends TestCase
             $tracker,
         );
 
-        $representation = DocumentTrackerRepresentation::fromTracker($tracker, UserTestBuilder::buildWithDefaults());
+        $representation = DocumentTrackerRepresentation::fromTracker(
+            GetFileUploadDataStub::withoutField(),
+            $tracker,
+            UserTestBuilder::buildWithDefaults(),
+        );
 
         self::assertNull($representation->title);
     }
@@ -111,7 +125,11 @@ final class DocumentTrackerRepresentationTest extends TestCase
             $tracker,
         );
 
-        $representation = DocumentTrackerRepresentation::fromTracker($tracker, UserTestBuilder::buildWithDefaults());
+        $representation = DocumentTrackerRepresentation::fromTracker(
+            GetFileUploadDataStub::withoutField(),
+            $tracker,
+            UserTestBuilder::buildWithDefaults(),
+        );
 
         self::assertNull($representation->title);
     }
@@ -130,7 +148,11 @@ final class DocumentTrackerRepresentationTest extends TestCase
             $tracker,
         );
 
-        $representation = DocumentTrackerRepresentation::fromTracker($tracker, UserTestBuilder::buildWithDefaults());
+        $representation = DocumentTrackerRepresentation::fromTracker(
+            GetFileUploadDataStub::withoutField(),
+            $tracker,
+            UserTestBuilder::buildWithDefaults(),
+        );
 
         self::assertNotNull($representation->title);
         self::assertSame(1004, $representation->title->field_id);
@@ -151,7 +173,11 @@ final class DocumentTrackerRepresentationTest extends TestCase
             $tracker,
         );
 
-        $representation = DocumentTrackerRepresentation::fromTracker($tracker, UserTestBuilder::buildWithDefaults());
+        $representation = DocumentTrackerRepresentation::fromTracker(
+            GetFileUploadDataStub::withoutField(),
+            $tracker,
+            UserTestBuilder::buildWithDefaults(),
+        );
 
         self::assertNull($representation->description);
     }
@@ -170,7 +196,11 @@ final class DocumentTrackerRepresentationTest extends TestCase
             $tracker,
         );
 
-        $representation = DocumentTrackerRepresentation::fromTracker($tracker, UserTestBuilder::buildWithDefaults());
+        $representation = DocumentTrackerRepresentation::fromTracker(
+            GetFileUploadDataStub::withoutField(),
+            $tracker,
+            UserTestBuilder::buildWithDefaults(),
+        );
 
         self::assertNull($representation->description);
     }
@@ -189,11 +219,96 @@ final class DocumentTrackerRepresentationTest extends TestCase
             $tracker,
         );
 
-        $representation = DocumentTrackerRepresentation::fromTracker($tracker, UserTestBuilder::buildWithDefaults());
+        $representation = DocumentTrackerRepresentation::fromTracker(
+            GetFileUploadDataStub::withoutField(),
+            $tracker,
+            UserTestBuilder::buildWithDefaults(),
+        );
 
         self::assertNotNull($representation->description);
         self::assertSame(1005, $representation->description->field_id);
         self::assertSame('A Text Field', $representation->description->label);
+    }
+
+    public function testItExposesNullForFileFieldIfNoAttachmentField(): void
+    {
+        $tracker = TrackerTestBuilder::aTracker()->withId(101)->withName('Bugs')->build();
+
+        Tracker_Semantic_Title::setInstance(
+            new Tracker_Semantic_Title($tracker, $this->getStringField(1004, true)),
+            $tracker,
+        );
+
+        Tracker_Semantic_Description::setInstance(
+            new Tracker_Semantic_Description($tracker, $this->getTextField(1005, true)),
+            $tracker,
+        );
+
+        $representation = DocumentTrackerRepresentation::fromTracker(
+            GetFileUploadDataStub::withoutField(),
+            $tracker,
+            UserTestBuilder::buildWithDefaults(),
+        );
+
+        self::assertNull($representation->file);
+    }
+
+    public function testItExposesNullForFileFieldIfNotSubmittable(): void
+    {
+        $tracker = TrackerTestBuilder::aTracker()->withId(101)->withName('Bugs')->build();
+
+        Tracker_Semantic_Title::setInstance(
+            new Tracker_Semantic_Title($tracker, $this->getStringField(1004, true)),
+            $tracker,
+        );
+
+        Tracker_Semantic_Description::setInstance(
+            new Tracker_Semantic_Description($tracker, $this->getTextField(1005, true)),
+            $tracker,
+        );
+
+        $representation = DocumentTrackerRepresentation::fromTracker(
+            GetFileUploadDataStub::withField($this->getFileField(1006, false)),
+            $tracker,
+            UserTestBuilder::buildWithDefaults(),
+        );
+
+        self::assertNull($representation->file);
+    }
+
+    public function testItExposesTheFileUploadField(): void
+    {
+        $tracker = TrackerTestBuilder::aTracker()->withId(101)->withName('Bugs')->build();
+
+        Tracker_Semantic_Title::setInstance(
+            new Tracker_Semantic_Title($tracker, $this->getStringField(1004, true)),
+            $tracker,
+        );
+
+        Tracker_Semantic_Description::setInstance(
+            new Tracker_Semantic_Description($tracker, $this->getTextField(1005, true)),
+            $tracker,
+        );
+
+        $representation = DocumentTrackerRepresentation::fromTracker(
+            GetFileUploadDataStub::withField($this->getFileField(1006, true)),
+            $tracker,
+            UserTestBuilder::buildWithDefaults(),
+        );
+
+        self::assertNotNull($representation->file);
+        self::assertSame(1006, $representation->file->field_id);
+        self::assertSame('A File Field', $representation->file->label);
+    }
+
+    private function getFileField(int $id, bool $submittable): Tracker_FormElement_Field_File
+    {
+        $field = $this->createMock(Tracker_FormElement_Field_File::class);
+        $field->method('getId')->willReturn($id);
+        $field->method('getLabel')->willReturn('A File Field');
+        $field->method('userCanSubmit')->willReturn($submittable);
+
+        return $field;
     }
 
     private function getStringField(int $id, bool $submittable): Tracker_FormElement_Field_String

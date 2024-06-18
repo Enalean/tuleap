@@ -31,7 +31,7 @@ use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
 use Tuleap\Tracker\Artifact\Artifact;
-use Tuleap\Tracker\Artifact\FileUploadDataProvider;
+use Tuleap\Tracker\Artifact\GetFileUploadData;
 use Tuleap\Tracker\REST\Artifact\ArtifactFieldValueFullRepresentation;
 use Tuleap\Tracker\REST\Artifact\ArtifactReference;
 use Tuleap\Tracker\REST\Artifact\ArtifactTextFieldValueRepresentation;
@@ -44,7 +44,7 @@ final readonly class RawSectionsToRepresentationTransformer implements Transform
     public function __construct(
         private \Tracker_ArtifactDao $artifact_dao,
         private \Tracker_ArtifactFactory $artifact_factory,
-        private FileUploadDataProvider $file_upload_data_provider,
+        private GetFileUploadData $file_upload_data_provider,
     ) {
     }
 

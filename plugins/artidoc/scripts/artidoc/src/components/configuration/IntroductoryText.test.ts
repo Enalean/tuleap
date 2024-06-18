@@ -26,16 +26,14 @@ import { shallowMount } from "@vue/test-utils";
 import { useConfigurationScreenHelper } from "@/composables/useConfigurationScreenHelper";
 import { createGettext } from "vue3-gettext";
 import IntroductoryText from "@/components/configuration/IntroductoryText.vue";
-
-const title: Tracker["title"] = { field_id: 1001, label: "Summary", type: "string" };
-const description: Tracker["description"] = { field_id: 1002, label: "Description", type: "text" };
+import { TrackerStub } from "@/helpers/stubs/TrackerStub";
 
 describe("IntroductoryText", () => {
     it.each<[Tracker, boolean]>([
-        [{ id: 101, label: "Bugs", title: null, description: null }, true],
-        [{ id: 101, label: "Bugs", title: null, description }, true],
-        [{ id: 101, label: "Bugs", title, description: null }, true],
-        [{ id: 101, label: "Bugs", title, description }, false],
+        [TrackerStub.withoutTitleAndDescription(), true],
+        [TrackerStub.withTitle(), true],
+        [TrackerStub.withDescription(), true],
+        [TrackerStub.withTitleAndDescription(), false],
     ])(
         `Given the tracker %s Then warning will be displayed = %s`,
         (tracker: Tracker, expected: boolean) => {

@@ -39,7 +39,6 @@ use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\Artifact;
-use Tuleap\Tracker\Artifact\FileUploadData;
 use Tuleap\Tracker\Artifact\FileUploadDataProvider;
 use Tuleap\Tracker\Artifact\UploadDataAttributesForRichTextEditorBuilder;
 use Tuleap\Tracker\REST\Artifact\ArtifactFieldValueCommonmarkRepresentation;
@@ -48,6 +47,7 @@ use Tuleap\Tracker\REST\Artifact\ArtifactFieldValueFullRepresentation;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetValueTextTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
+use Tuleap\Tracker\Test\Stub\Tracker\Artifact\GetFileUploadDataStub;
 
 final class RawSectionsToRepresentationTransformerTest extends TestCase
 {
@@ -192,10 +192,7 @@ final class RawSectionsToRepresentationTransformerTest extends TestCase
                 4 => $art4,
             });
 
-        $file_upload_provider = $this->createMock(FileUploadDataProvider::class);
-        $file_upload_provider->method('getFileUploadData')->willReturn(
-            new FileUploadData($file)
-        );
+        $file_upload_provider = GetFileUploadDataStub::withField($file);
 
         $file->method('getRESTValue')
             ->willReturnCallback(fn(PFUser $user, Tracker_Artifact_Changeset $changeset) => match ($changeset) {
@@ -302,8 +299,7 @@ final class RawSectionsToRepresentationTransformerTest extends TestCase
                 1 => $art1,
             });
 
-        $file_upload_provider = $this->createMock(FileUploadDataProvider::class);
-        $file_upload_provider->method('getFileUploadData')->willReturn(null);
+        $file_upload_provider = GetFileUploadDataStub::withoutField();
 
         $editor_builder = $this->createMock(UploadDataAttributesForRichTextEditorBuilder::class);
         $editor_builder->method('getDataAttributes')->willReturn([]);

@@ -35,11 +35,18 @@ interface DescriptionFieldDefinition {
     readonly type: "text";
 }
 
+interface FileFieldDefinition {
+    readonly field_id: number;
+    readonly label: string;
+    readonly type: "file";
+}
+
 export interface Tracker {
     readonly id: number;
     readonly label: string;
     readonly title: null | TitleFieldDefinition;
     readonly description: null | DescriptionFieldDefinition;
+    readonly file: null | FileFieldDefinition;
 }
 
 export interface TrackerWithSubmittableSection extends Tracker {

@@ -86,24 +86,34 @@ export function postArtifact(
     title: ArtidocSection["title"],
     new_description: string,
     description_field_id: number,
+    file_field: ReturnType<AttachmentFile["mergeArtifactAttachments"]>,
 ): ResultAsync<{ id: number }, Fault> {
+    const values: { field_id: number; value: unknown }[] = [
+        {
+            field_id: description_field_id,
+            value: {
+                content: new_description,
+                format: "html",
+            },
+        },
+        {
+            field_id: title.field_id,
+            ...(isTitleAString(title)
+                ? { value: new_title }
+                : { value: { content: new_title, format: "text" } }),
+        },
+    ];
+
+    if (file_field && file_field.field_id > 0) {
+        values.push({
+            field_id: file_field.field_id,
+            value: file_field.value,
+        });
+    }
+
     return postJSON<{ id: number }>(uri`/api/artifacts`, {
         tracker: { id: tracker.id },
-        values: [
-            {
-                field_id: description_field_id,
-                value: {
-                    content: new_description,
-                    format: "html",
-                },
-            },
-            {
-                field_id: title.field_id,
-                ...(isTitleAString(title)
-                    ? { value: new_title }
-                    : { value: { content: new_title, format: "text" } }),
-            },
-        ],
+        values,
     });
 }
 
