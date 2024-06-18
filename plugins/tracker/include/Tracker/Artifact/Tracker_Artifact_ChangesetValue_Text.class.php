@@ -22,6 +22,7 @@
 use Tuleap\Markdown\CommonMarkInterpreter;
 use Tuleap\Markdown\EnhancedCodeBlockExtension;
 use Tuleap\Tracker\Artifact\ChangesetValue\Text\FollowUpPresenter;
+use Tuleap\Tracker\Artifact\ChangesetValue\Text\TextValueInterpreter;
 use Tuleap\Tracker\Artifact\CodeBlockFeaturesOnArtifact;
 use Tuleap\Tracker\REST\Artifact\ArtifactFieldValueCommonmarkRepresentation;
 use Tuleap\Tracker\REST\Artifact\ArtifactFieldValueTextRepresentation;
@@ -133,12 +134,8 @@ class Tracker_Artifact_ChangesetValue_Text extends Tracker_Artifact_ChangesetVal
      */
     public function getValue()
     {
-        if ($this->isInHTMLFormat()) {
-            return $this->purifier->purifyHTMLWithReferences($this->getText(), $this->field->getTracker()->getProject()->getID());
-        } elseif ($this->format === self::COMMONMARK_CONTENT) {
-            return $this->interpretMarkdownContent($this->getText());
-        }
-        return $this->purifier->purifyTextWithReferences($this->getText(), $this->field->getTracker()->getProject()->getID());
+        $interpreter = new TextValueInterpreter($this->purifier, self::getCommonMarkInterpreter($this->purifier));
+        return $interpreter->interpretValueAccordingToFormat($this->getFormat(), $this->getText(), (int) $this->field->getTracker()->getProject()->getID());
     }
 
     /**

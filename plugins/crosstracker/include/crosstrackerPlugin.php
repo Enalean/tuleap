@@ -51,6 +51,7 @@ use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata\Submissio
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata\TextSemanticChecker;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Field\Date\DateResultBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Field\FieldResultBuilder;
+use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Field\Text\TextResultBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilderVisitor;
 use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Field\Date\DateSelectFromBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Field\FieldSelectFromBuilder;
@@ -67,8 +68,12 @@ use Tuleap\CrossTracker\Report\SimilarField\SupportedFieldsDao;
 use Tuleap\CrossTracker\REST\ResourcesInjector;
 use Tuleap\CrossTracker\Widget\ProjectCrossTrackerSearch;
 use Tuleap\DB\DBFactory;
+use Tuleap\Markdown\CommonMarkInterpreter;
+use Tuleap\Plugin\ListeningToEventClass;
+use Tuleap\Plugin\ListeningToEventName;
 use Tuleap\Request\CollectRoutesEvent;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
+use Tuleap\Tracker\Artifact\ChangesetValue\Text\TextValueInterpreter;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
 use Tuleap\Tracker\FormElement\Field\Date\CSVFormatter;
@@ -94,6 +99,9 @@ use Tuleap\Tracker\Report\Query\Advanced\SizeValidatorVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\UgroupLabelConverter;
 use Tuleap\Tracker\Report\TrackerReportConfig;
 use Tuleap\Tracker\Report\TrackerReportConfigDao;
+use Tuleap\Widget\Event\GetProjectWidgetList;
+use Tuleap\Widget\Event\GetUserWidgetList;
+use Tuleap\Widget\Event\GetWidget;
 
 require_once __DIR__ . '/../../tracker/include/trackerPlugin.php';
 require_once __DIR__ . '/../vendor/autoload.php';
@@ -127,20 +135,20 @@ class crosstrackerPlugin extends Plugin
         return $this->pluginInfo;
     }
 
-    #[\Tuleap\Plugin\ListeningToEventClass]
-    public function getUserWidgetList(\Tuleap\Widget\Event\GetUserWidgetList $event): void
+    #[ListeningToEventClass]
+    public function getUserWidgetList(GetUserWidgetList $event): void
     {
         $event->addWidget(ProjectCrossTrackerSearch::NAME);
     }
 
-    #[\Tuleap\Plugin\ListeningToEventClass]
-    public function getProjectWidgetList(\Tuleap\Widget\Event\GetProjectWidgetList $event): void
+    #[ListeningToEventClass]
+    public function getProjectWidgetList(GetProjectWidgetList $event): void
     {
         $event->addWidget(ProjectCrossTrackerSearch::NAME);
     }
 
-    #[\Tuleap\Plugin\ListeningToEventClass]
-    public function widgetInstance(\Tuleap\Widget\Event\GetWidget $get_widget_event): void
+    #[ListeningToEventClass]
+    public function widgetInstance(GetWidget $get_widget_event): void
     {
         if ($get_widget_event->getName() === ProjectCrossTrackerSearch::NAME) {
             $get_widget_event->setWidget(new ProjectCrossTrackerSearch());
@@ -152,14 +160,14 @@ class crosstrackerPlugin extends Plugin
         $this->removeOrphanWidgets([ProjectCrossTrackerSearch::NAME]);
     }
 
-    #[\Tuleap\Plugin\ListeningToEventName(Event::REST_RESOURCES)]
+    #[ListeningToEventName(Event::REST_RESOURCES)]
     public function restResources(array $params): void
     {
         $injector = new ResourcesInjector();
         $injector->populate($params['restler']);
     }
 
-    #[\Tuleap\Plugin\ListeningToEventName(TrackerFactory::TRACKER_EVENT_PROJECT_CREATION_TRACKERS_REQUIRED)]
+    #[ListeningToEventName(TrackerFactory::TRACKER_EVENT_PROJECT_CREATION_TRACKERS_REQUIRED)]
     public function trackerEventProjectCreationTrackersRequired(array $params): void
     {
         $dao = new CrossTrackerReportDao();
@@ -168,7 +176,7 @@ class crosstrackerPlugin extends Plugin
         }
     }
 
-    #[\Tuleap\Plugin\ListeningToEventClass]
+    #[ListeningToEventClass]
     public function collectRoutesEvent(CollectRoutesEvent $event): void
     {
         $event->getRouteCollector()->get(CROSSTRACKER_BASE_URL . '/csv_export/{report_id:\d+}', $this->getRouteHandler('routeGetCSVExportReport'));
@@ -195,7 +203,7 @@ class crosstrackerPlugin extends Plugin
         $list_field_bind_value_normalizer = new ListFieldBindValueNormalizer();
         $ugroup_label_converter           = new UgroupLabelConverter(
             $list_field_bind_value_normalizer,
-            new \BaseLanguageFactory()
+            new BaseLanguageFactory()
         );
         $bind_labels_extractor            = new CollectionOfNormalizedBindLabelsExtractor(
             $list_field_bind_value_normalizer,
@@ -309,6 +317,7 @@ class crosstrackerPlugin extends Plugin
                 new UserListSelectFromBuilder()
             ),
         );
+        $purifier                = Codendi_HTMLPurifier::instance();
         $result_builder_visitor  = new ResultBuilderVisitor(
             new FieldResultBuilder(
                 $form_element_factory,
@@ -318,12 +327,21 @@ class crosstrackerPlugin extends Plugin
                     $artifact_factory,
                     $form_element_factory,
                 ),
+                new TextResultBuilder(
+                    $artifact_factory,
+                    new TextValueInterpreter(
+                        $purifier,
+                        CommonMarkInterpreter::build(
+                            $purifier,
+                        ),
+                    ),
+                ),
             ),
         );
 
         $cross_tracker_artifact_factory = new CrossTrackerArtifactReportFactory(
             new CrossTrackerArtifactReportDao(),
-            \Tracker_ArtifactFactory::instance(),
+            Tracker_ArtifactFactory::instance(),
             $validator,
             $query_builder_visitor,
             $select_builder_visitor,
