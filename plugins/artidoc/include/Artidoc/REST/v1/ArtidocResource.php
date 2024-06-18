@@ -138,7 +138,7 @@ final class ArtidocResource extends AuthenticatedResource
      */
     public function optionsSections(int $id): void
     {
-        Header::allowOptionsGetPut();
+        Header::allowOptionsGetPutPost();
     }
 
     /**
@@ -153,7 +153,7 @@ final class ArtidocResource extends AuthenticatedResource
      * @param int $limit Number of elements displayed {@from path}{@min 1}{@max 50}
      * @param int $offset Position of the first element to display {@from path}{@min 0}
      *
-     * @return \Tuleap\Artidoc\REST\v1\ArtidocSectionRepresentation[]
+     * @return ArtidocSectionRepresentation[]
      *
      * @status 200
      * @throws RestException
@@ -219,6 +219,59 @@ final class ArtidocResource extends AuthenticatedResource
                         );
                     }
                     throw new RestException(404);
+                }
+            );
+    }
+
+    /**
+     * Create section
+     *
+     * Create one section in an artidoc document.
+     *
+     * <p>Example payload, to create a section based on artifact #123. The new section will be placed before its sibling:</p>
+     * <pre>
+     * {<br>
+     * &nbsp;&nbsp;"artifact": { "id": 123 },<br>
+     * &nbsp;&nbsp;"position": { "before": "550e8400-e29b-41d4-a716-446655440000" },<br>
+     * }
+     * </pre>
+     *
+     * <p>Another example, if you want to put the section at the end of the document:</p>
+     * <pre>
+     * {<br>
+     * &nbsp;&nbsp;"artifact": { "id": 123 },<br>
+     * &nbsp;&nbsp;"position": null,<br>
+     * }
+     * </pre>
+     *
+     * @url    POST {id}/sections
+     * @access hybrid
+     *
+     * @param int $id Id of the document
+     * @param ArtidocPOSTSectionRepresentation $section {@from body}
+     *
+     * @status 200
+     * @throws RestException
+     */
+    public function postSection(int $id, ArtidocPOSTSectionRepresentation $section): ArtidocSectionRepresentation
+    {
+        $this->checkAccess();
+
+        return $this->getPostHandler()
+            ->handle($id, $section, UserManager::instance()->getCurrentUser())
+            ->match(
+                static function (ArtidocSectionRepresentation $representation) {
+                    return $representation;
+                },
+                static function (Fault $fault) {
+                    Fault::writeToLogger($fault, RESTLogger::getLogger());
+                    throw match (true) {
+                        $fault instanceof UserCannotWriteDocumentFault => new I18NRestException(
+                            403,
+                            dgettext('tuleap-artidoc', "You don't have permission to write the document.")
+                        ),
+                        default => new RestException(404),
+                    };
                 }
             );
     }
@@ -303,27 +356,7 @@ final class ArtidocResource extends AuthenticatedResource
             new DocumentServiceFromAllowedProjectRetriever($plugin),
         );
 
-        $form_element_factory = \Tracker_FormElementFactory::instance();
-        $transformer          = new RawSectionsToRepresentationTransformer(
-            new \Tracker_ArtifactDao(),
-            \Tracker_ArtifactFactory::instance(),
-            new FileUploadDataProvider(
-                new FrozenFieldDetector(
-                    new TransitionRetriever(
-                        new StateFactory(
-                            \TransitionFactory::instance(),
-                            new SimpleWorkflowDao()
-                        ),
-                        new TransitionExtractor()
-                    ),
-                    new FrozenFieldsRetriever(
-                        new FrozenFieldsDao(),
-                        $form_element_factory
-                    )
-                ),
-                $form_element_factory
-            )
-        );
+        $transformer = $this->getRepresentationTransformer();
 
         return new PaginatedArtidocSectionRepresentationCollectionBuilder($retriever, $dao, $transformer);
     }
@@ -346,29 +379,37 @@ final class ArtidocResource extends AuthenticatedResource
             new DocumentServiceFromAllowedProjectRetriever($plugin),
         );
 
-        $form_element_factory = \Tracker_FormElementFactory::instance();
-        $transformer          = new RawSectionsToRepresentationTransformer(
-            new \Tracker_ArtifactDao(),
-            \Tracker_ArtifactFactory::instance(),
-            new FileUploadDataProvider(
-                new FrozenFieldDetector(
-                    new TransitionRetriever(
-                        new StateFactory(
-                            \TransitionFactory::instance(),
-                            new SimpleWorkflowDao()
-                        ),
-                        new TransitionExtractor()
-                    ),
-                    new FrozenFieldsRetriever(
-                        new FrozenFieldsDao(),
-                        $form_element_factory
-                    )
-                ),
-                $form_element_factory
-            )
-        );
+        $transformer = $this->getRepresentationTransformer();
 
         return new PUTSectionsHandler(
+            $retriever,
+            $transformer,
+            $dao,
+            new DatabaseUUIDV7Factory(),
+        );
+    }
+
+    /**
+     * @throws RestException
+     */
+    private function getPostHandler(): POSTSectionHandler
+    {
+        $plugin = \PluginManager::instance()->getEnabledPluginByName('artidoc');
+        if (! $plugin) {
+            throw new RestException(404);
+        }
+
+        $dao       = new ArtidocDao();
+        $retriever = new ArtidocRetriever(
+            \ProjectManager::instance(),
+            $dao,
+            new Docman_ItemFactory(),
+            new DocumentServiceFromAllowedProjectRetriever($plugin),
+        );
+
+        $transformer = $this->getRepresentationTransformer();
+
+        return new POSTSectionHandler(
             $retriever,
             $transformer,
             $dao,
@@ -400,5 +441,31 @@ final class ArtidocResource extends AuthenticatedResource
             \TrackerFactory::instance(),
             new SuitableTrackerForDocumentChecker(\Tracker_FormElementFactory::instance()),
         );
+    }
+
+    private function getRepresentationTransformer(): RawSectionsToRepresentationTransformer
+    {
+        $form_element_factory = \Tracker_FormElementFactory::instance();
+        $transformer          = new RawSectionsToRepresentationTransformer(
+            new \Tracker_ArtifactDao(),
+            \Tracker_ArtifactFactory::instance(),
+            new FileUploadDataProvider(
+                new FrozenFieldDetector(
+                    new TransitionRetriever(
+                        new StateFactory(
+                            \TransitionFactory::instance(),
+                            new SimpleWorkflowDao()
+                        ),
+                        new TransitionExtractor()
+                    ),
+                    new FrozenFieldsRetriever(
+                        new FrozenFieldsDao(),
+                        $form_element_factory
+                    )
+                ),
+                $form_element_factory
+            )
+        );
+        return $transformer;
     }
 }

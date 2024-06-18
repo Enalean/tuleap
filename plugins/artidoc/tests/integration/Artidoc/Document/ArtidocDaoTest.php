@@ -206,4 +206,77 @@ final class ArtidocDaoTest extends TestIntegrationTestCase
         $dao->saveTracker(101, 1002);
         self::assertSame(1002, $dao->getTracker(101));
     }
+
+    public function testSaveSectionAtTheEnd(): void
+    {
+        $dao = new ArtidocDao();
+
+        $item_1 = 101;
+        $item_2 = 102;
+
+        $dao->saveSectionAtTheEnd($item_1, 1001);
+        $dao->saveSectionAtTheEnd($item_1, 1002);
+        $dao->saveSectionAtTheEnd($item_2, 1003);
+        $dao->saveSectionAtTheEnd($item_1, 1004);
+
+        self::assertSame(3, $dao->searchPaginatedRawSectionsByItemId($item_1, 50, 0)->total);
+        self::assertSame(
+            [1001, 1002, 1004],
+            array_column($dao->searchPaginatedRawSectionsByItemId($item_1, 50, 0)->rows, 'artifact_id'),
+        );
+
+        self::assertSame(1, $dao->searchPaginatedRawSectionsByItemId($item_2, 50, 0)->total);
+        self::assertSame(
+            [1003],
+            array_column($dao->searchPaginatedRawSectionsByItemId($item_2, 50, 0)->rows, 'artifact_id'),
+        );
+    }
+
+    public function testSaveTrackerBefore(): void
+    {
+        $dao = new ArtidocDao();
+
+        $item_1 = 101;
+
+
+        [$uuid_1, $uuid_2, $uuid_3] = [
+            $dao->saveSectionAtTheEnd($item_1, 1001),
+            $dao->saveSectionAtTheEnd($item_1, 1002),
+            $dao->saveSectionAtTheEnd($item_1, 1003),
+        ];
+
+        $dao->saveSectionBefore($item_1, 1004, $uuid_1->toString());
+        $dao->saveSectionBefore($item_1, 1005, $uuid_2->toString());
+        $dao->saveSectionBefore($item_1, 1006, $uuid_3->toString());
+
+        self::assertSame(6, $dao->searchPaginatedRawSectionsByItemId($item_1, 50, 0)->total);
+        self::assertSame(
+            [1004, 1001, 1005, 1002, 1006, 1003],
+            array_column($dao->searchPaginatedRawSectionsByItemId($item_1, 50, 0)->rows, 'artifact_id'),
+        );
+    }
+
+    public function testSaveTrackerBeforeUnknownSectionWillPutItAtTheBeginningUntilWeFindABetterSolution(): void
+    {
+        $dao = new ArtidocDao();
+
+        $item_1 = 101;
+
+        [, $uuid_2,] = [
+            $dao->saveSectionAtTheEnd($item_1, 1001),
+            $dao->saveSectionAtTheEnd($item_1, 1002),
+            $dao->saveSectionAtTheEnd($item_1, 1003),
+        ];
+
+        // remove section linked to artifact #1002
+        $dao->save(101, [1001, 1003]);
+
+        $dao->saveSectionBefore($item_1, 1004, $uuid_2->toString());
+
+        self::assertSame(3, $dao->searchPaginatedRawSectionsByItemId($item_1, 50, 0)->total);
+        self::assertSame(
+            [1004, 1001, 1003],
+            array_column($dao->searchPaginatedRawSectionsByItemId($item_1, 50, 0)->rows, 'artifact_id'),
+        );
+    }
 }

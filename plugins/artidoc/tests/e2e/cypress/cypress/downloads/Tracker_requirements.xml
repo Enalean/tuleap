@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tracker id="T11" parent_id="0" instantiate_for_new_projects="1" enable_move_artifacts="1">
+  <name><![CDATA[Requirements]]></name>
+  <item_name><![CDATA[requirements]]></item_name>
+  <description><![CDATA[]]></description>
+  <color><![CDATA[inca-silver]]></color>
+  <cannedResponses/>
+  <formElements>
+    <formElement type="aid" ID="F334" rank="0" id="334" tracker_id="11" parent_id="0">
+      <name><![CDATA[id]]></name>
+      <label><![CDATA[id]]></label>
+    </formElement>
+    <formElement type="string" ID="F335" rank="1" id="335" tracker_id="11" parent_id="0">
+      <name><![CDATA[title]]></name>
+      <label><![CDATA[Title]]></label>
+      <properties size="30"/>
+    </formElement>
+    <formElement type="text" ID="F336" rank="2" id="336" tracker_id="11" parent_id="0">
+      <name><![CDATA[description]]></name>
+      <label><![CDATA[Description]]></label>
+      <properties rows="10" cols="50"/>
+    </formElement>
+  </formElements>
+  <semantics>
+    <semantic type="title">
+      <shortname><![CDATA[title]]></shortname>
+      <label><![CDATA[Title]]></label>
+      <description><![CDATA[Define the title of an artifact]]></description>
+      <field REF="F335"/>
+    </semantic>
+    <semantic type="description">
+      <shortname><![CDATA[description]]></shortname>
+      <label><![CDATA[Description]]></label>
+      <description><![CDATA[Define the description of an artifact]]></description>
+      <field REF="F336"/>
+    </semantic>
+    <semantic type="tooltip"/>
+    <semantic type="plugin_cardwall_card_fields"/>
+  </semantics>
+  <rules>
+    <date_rules/>
+    <list_rules/>
+  </rules>
+  <reports>
+    <report id="REPORT_117" is_default="0">
+      <name><![CDATA[Default]]></name>
+      <description><![CDATA[The system default artifact report]]></description>
+      <criterias/>
+      <renderers>
+        <renderer ID="R136" type="table" rank="0" chunksz="15">
+          <name><![CDATA[Results]]></name>
+          <columns/>
+        </renderer>
+      </renderers>
+    </report>
+  </reports>
+  <permissions>
+    <permission scope="tracker" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_ACCESS_FULL"/>
+    <permission scope="field" REF="F334" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+    <permission scope="field" REF="F335" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+    <permission scope="field" REF="F335" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+    <permission scope="field" REF="F335" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+    <permission scope="field" REF="F336" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+    <permission scope="field" REF="F336" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+    <permission scope="field" REF="F336" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+  </permissions>
+</tracker>

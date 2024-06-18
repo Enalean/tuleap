@@ -27,7 +27,7 @@ use Tuleap\DB\DataAccessObject;
 use Tuleap\DB\InvalidUuidStringException;
 use Tuleap\DB\UUID;
 
-final class ArtidocDao extends DataAccessObject implements SearchArtidocDocument, SearchOneSection, SearchPaginatedRawSections, SaveSections, SearchConfiguredTracker, SaveConfiguredTracker
+final class ArtidocDao extends DataAccessObject implements SearchArtidocDocument, SearchOneSection, SearchPaginatedRawSections, SaveSections, SaveOneSection, SearchConfiguredTracker, SaveConfiguredTracker
 {
     public function searchByItemId(int $item_id): ?array
     {
@@ -191,5 +191,60 @@ final class ArtidocDao extends DataAccessObject implements SearchArtidocDocument
                 'tracker_id',
             ]
         );
+    }
+
+    public function saveSectionAtTheEnd(int $item_id, int $artifact_id): UUID
+    {
+        return $this->getDB()->tryFlatTransaction(function (EasyDB $db) use ($item_id, $artifact_id) {
+            $rank = $this->getDB()->cell(
+                'SELECT max(`rank`) + 1 FROM plugin_artidoc_document WHERE item_id = ?',
+                $item_id,
+            ) ?: 0;
+
+            return $this->insertSection($db, $item_id, $artifact_id, $rank);
+        });
+    }
+
+    public function saveSectionBefore(int $item_id, int $artifact_id, string $sibling_section_id): UUID
+    {
+        return $this->getDB()->tryFlatTransaction(function (EasyDB $db) use ($item_id, $artifact_id, $sibling_section_id) {
+            try {
+                $rank = $this->getDB()->cell(
+                    'SELECT `rank` FROM plugin_artidoc_document WHERE id = ? AND item_id = ?',
+                    $this->uuid_factory->buildUUIDFromHexadecimalString($sibling_section_id)->getBytes(),
+                    $item_id,
+                ) ?: 0;
+            } catch (InvalidUuidStringException) {
+                $rank = 0;
+            }
+
+            $db->run(
+                <<<EOS
+                UPDATE plugin_artidoc_document
+                SET `rank` = `rank` + 1
+                WHERE item_id = ? AND `rank` >= ?
+                EOS,
+                $item_id,
+                $rank,
+            );
+
+            return $this->insertSection($db, $item_id, $artifact_id, $rank);
+        });
+    }
+
+    private function insertSection(EasyDB $db, int $item_id, int $artifact_id, int $rank): UUID
+    {
+        $id = $this->uuid_factory->buildUUIDBytes();
+        $db->insert(
+            'plugin_artidoc_document',
+            [
+                'id'          => $id,
+                'item_id'     => $item_id,
+                'artifact_id' => $artifact_id,
+                'rank'        => $rank,
+            ]
+        );
+
+        return $this->uuid_factory->buildUUIDFromBytesData($id);
     }
 }

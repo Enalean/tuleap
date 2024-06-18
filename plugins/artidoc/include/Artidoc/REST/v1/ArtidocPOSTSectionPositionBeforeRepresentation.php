@@ -25,12 +25,12 @@ namespace Tuleap\Artidoc\REST\v1;
 /**
  * @psalm-immutable
  */
-final class ArtidocPUTSectionRepresentation
+final class ArtidocPOSTSectionPositionBeforeRepresentation
 {
-    public ArtidocPUTAndPOSTSectionArtifactRepresentation $artifact;
+    public string $before;
 
-    public function __construct(ArtidocPUTAndPOSTSectionArtifactRepresentation $artifact)
+    public function __construct(string $before)
     {
-        $this->artifact = $artifact;
+        $this->before = $before;
     }
 }

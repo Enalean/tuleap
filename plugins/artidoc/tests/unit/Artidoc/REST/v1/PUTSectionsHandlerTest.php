@@ -78,10 +78,10 @@ final class PUTSectionsHandlerTest extends TestCase
             1,
             [
                 new ArtidocPUTSectionRepresentation(
-                    new ArtidocPUTSectionArtifactRepresentation(102),
+                    new ArtidocPUTAndPOSTSectionArtifactRepresentation(102),
                 ),
                 new ArtidocPUTSectionRepresentation(
-                    new ArtidocPUTSectionArtifactRepresentation(101),
+                    new ArtidocPUTAndPOSTSectionArtifactRepresentation(101),
                 ),
             ],
             $this->user,
@@ -109,10 +109,10 @@ final class PUTSectionsHandlerTest extends TestCase
             1,
             [
                 new ArtidocPUTSectionRepresentation(
-                    new ArtidocPUTSectionArtifactRepresentation(102),
+                    new ArtidocPUTAndPOSTSectionArtifactRepresentation(102),
                 ),
                 new ArtidocPUTSectionRepresentation(
-                    new ArtidocPUTSectionArtifactRepresentation(101),
+                    new ArtidocPUTAndPOSTSectionArtifactRepresentation(101),
                 ),
             ],
             $this->user,
@@ -144,10 +144,10 @@ final class PUTSectionsHandlerTest extends TestCase
             1,
             [
                 new ArtidocPUTSectionRepresentation(
-                    new ArtidocPUTSectionArtifactRepresentation(102),
+                    new ArtidocPUTAndPOSTSectionArtifactRepresentation(102),
                 ),
                 new ArtidocPUTSectionRepresentation(
-                    new ArtidocPUTSectionArtifactRepresentation(101),
+                    new ArtidocPUTAndPOSTSectionArtifactRepresentation(101),
                 ),
             ],
             $this->user,
@@ -179,10 +179,10 @@ final class PUTSectionsHandlerTest extends TestCase
             1,
             [
                 new ArtidocPUTSectionRepresentation(
-                    new ArtidocPUTSectionArtifactRepresentation(102),
+                    new ArtidocPUTAndPOSTSectionArtifactRepresentation(102),
                 ),
                 new ArtidocPUTSectionRepresentation(
-                    new ArtidocPUTSectionArtifactRepresentation(101),
+                    new ArtidocPUTAndPOSTSectionArtifactRepresentation(101),
                 ),
             ],
             $this->user,
