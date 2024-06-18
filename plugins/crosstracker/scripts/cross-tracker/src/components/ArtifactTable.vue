@@ -78,15 +78,15 @@ import type { Ref } from "vue";
 import { computed, onMounted, ref, watch } from "vue";
 import { useMutations, useState } from "vuex-composition-helpers";
 import { useGettext } from "vue3-gettext";
-import moment from "moment";
+import { strictInject } from "@tuleap/vue-strict-inject";
 import type { Fault } from "@tuleap/fault";
 import type { ResultAsync } from "neverthrow";
 import ArtifactTableRow from "./ArtifactTableRow.vue";
 import ExportButton from "./ExportCSVButton.vue";
 import { getQueryResult, getReportContent } from "../api/rest-querier";
-import { getUserPreferredDateFormat } from "../user-service";
 import type WritingCrossTrackerReport from "../writing-mode/writing-cross-tracker-report";
 import type { Artifact, ArtifactsCollection, State } from "../type";
+import { DATE_FORMATTER } from "../injection-symbols";
 
 const props = defineProps<{ writingCrossTrackerReport: WritingCrossTrackerReport }>();
 
@@ -95,6 +95,8 @@ const { reading_mode, is_report_saved, report_id } = useState<
 >(["reading_mode", "is_report_saved", "report_id"]);
 const { setErrorMessage } = useMutations(["setErrorMessage"]);
 const { $gettext } = useGettext();
+
+const date_formatter = strictInject(DATE_FORMATTER);
 
 const is_loading = ref(true);
 let artifacts: Ref<Artifact[]> = ref([]);
@@ -182,10 +184,7 @@ function getArtifactsFromReportOrUnsavedQuery(): ResultAsync<ArtifactsCollection
 
 function formatArtifacts(artifacts: ReadonlyArray<Artifact>): ReadonlyArray<Artifact> {
     return artifacts.map((artifact) => {
-        artifact.formatted_last_update_date = moment(artifact.last_update_date).format(
-            getUserPreferredDateFormat(),
-        );
-
+        artifact.formatted_last_update_date = date_formatter.format(artifact.last_update_date);
         return artifact;
     });
 }

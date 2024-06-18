@@ -17,9 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { StrictInjectionKey } from "@tuleap/vue-strict-inject";
-import type { RetrieveProjects } from "./domain/RetrieveProjects";
-import type { IntlFormatter } from "@tuleap/date-helper";
-
-export const RETRIEVE_PROJECTS: StrictInjectionKey<RetrieveProjects> = Symbol("RetrieveProjects");
-export const DATE_FORMATTER: StrictInjectionKey<IntlFormatter> = Symbol("DateFormatter");
+export type { LocaleString } from "@tuleap/core-constants";
+export { getLocaleOrThrow, getTimezoneOrThrow } from "./dom";
+export { formatFromPhpToMoment } from "./for-moment";
+export { formatDateYearMonthDay } from "./date-only";
+export { IntlFormatter } from "./IntlFormatter";

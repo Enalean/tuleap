@@ -11,7 +11,8 @@
   "exports": {
     ".": {
       "import": "./dist/core-constants.js",
-      "require": "./dist/core-constants.umd.cjs"
+      "require": "./dist/core-constants.umd.cjs",
+      "types": "./src/main.ts"
     }
   },
   "devDependencies": {

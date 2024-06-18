@@ -29,9 +29,6 @@ dependencies:
   extendable-error:
     specifier: ^0.1.7
     version: 0.1.7
-  moment:
-    specifier: ^2.29.4
-    version: 2.29.4
   neverthrow:
     specifier: 6.0.0
     version: 6.0.0
@@ -529,10 +526,6 @@ packages:
     dependencies:
       brace-expansion: 2.0.1
     dev: true
-
-  /moment@2.29.4:
-    resolution: {integrity: sha512-5LC9SOxjSc2HF6vO2CyuTDNivEdoz2IvyJJGj6X8DJ0eFyfszE0QiEd+iXmBvUP3WHxSjFH/vIsA0EN00cgr8w==}
-    dev: false
 
   /nanoid@3.3.4:
     resolution: {integrity: sha512-MqBkQh/OHTS2egovRtLk45wEyNXwF+cokD+1YPf9u5VfJiRdAiRwB2froX5Co9Rh20xs4siNPm8naNotSD6RBw==}

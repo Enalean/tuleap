@@ -18,12 +18,12 @@
  */
 
 import { vite, viteDtsPlugin } from "@tuleap/build-system-configurator";
-import * as path from "path";
+import * as path from "node:path";
 
 export default vite.defineLibConfig({
     build: {
         lib: {
-            entry: path.resolve(__dirname, "src/index.ts"),
+            entry: path.resolve(__dirname, "src/main.ts"),
             name: "DateHelper",
         },
     },

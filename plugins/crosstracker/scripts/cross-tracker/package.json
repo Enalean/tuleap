@@ -14,7 +14,6 @@
     "@tuleap/vue-strict-inject": "workspace:^",
     "@tuleap/vue3-gettext-init": "workspace:^",
     "extendable-error": "^0.1.7",
-    "moment": "^2.29.4",
     "neverthrow": "6.0.0",
     "vue": "^3.3.4",
     "vue3-gettext": "2.4.0",

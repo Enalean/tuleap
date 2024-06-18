@@ -1,5 +1,5 @@
-/**
- * Copyright (c) Enalean, 2017 - Present. All Rights Reserved.
+/*
+ * Copyright (c) Enalean, 2021 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,16 +17,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import moment from "moment";
-import { formatFromPhpToMoment } from "@tuleap/date-helper";
+/**
+ * @deprecated Consider using `IntlFormatter` with `"short-month"` type instead.
+ */
+export function formatDateYearMonthDay(user_locale: string, date: string | null): string {
+    if (!(date && Date.parse(date))) {
+        return "";
+    }
 
-let date_format: string;
-
-export function init(localized_php_date_format: string, locale: string): void {
-    date_format = formatFromPhpToMoment(localized_php_date_format);
-    moment.locale(locale);
-}
-
-export function getUserPreferredDateFormat(): string {
-    return date_format;
+    return new Date(date).toLocaleDateString(user_locale, {
+        year: "numeric",
+        month: "short",
+        day: "numeric",
+    });
 }

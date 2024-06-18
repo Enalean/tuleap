@@ -17,9 +17,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { StrictInjectionKey } from "@tuleap/vue-strict-inject";
-import type { RetrieveProjects } from "./domain/RetrieveProjects";
-import type { IntlFormatter } from "@tuleap/date-helper";
+import { describe, expectTypeOf, it } from "vitest";
+import { getLocaleOrThrow } from "./dom";
+import type { LocaleString } from "@tuleap/core-constants";
 
-export const RETRIEVE_PROJECTS: StrictInjectionKey<RetrieveProjects> = Symbol("RetrieveProjects");
-export const DATE_FORMATTER: StrictInjectionKey<IntlFormatter> = Symbol("DateFormatter");
+describe(`dom`, () => {
+    describe(`getLocaleOrThrow()`, () => {
+        it(`should return LocaleString type`, () => {
+            const doc = document.implementation.createHTMLDocument();
+            const locale_string = "fr_FR";
+            doc.body.setAttribute("data-user-locale", locale_string);
+            expectTypeOf(getLocaleOrThrow(doc)).toMatchTypeOf<LocaleString>();
+        });
+    });
+});

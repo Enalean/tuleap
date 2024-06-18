@@ -18,22 +18,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\CrossTracker\Widget;
 
-class ProjectCrossTrackerSearchPresenter
+final readonly class ProjectCrossTrackerSearchPresenter
 {
-    /** @var  int */
-    public $report_id;
-    public $date_format;
-    /**
-     * @var string
-     */
-    public $is_widget_admin;
+    public string $is_widget_admin;
 
-    public function __construct($report_id, $is_admin)
+    public function __construct(public int $report_id, bool $is_admin)
     {
-        $this->report_id       = $report_id;
-        $this->date_format     = $GLOBALS['Language']->getText('system', 'datefmt_short');
         $this->is_widget_admin = $is_admin ? 'true' : 'false';
     }
 }
