@@ -1,4 +1,4 @@
-/*
+/**
  * Copyright (c) Enalean, 2024 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -16,57 +16,52 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-
 import type { PredefinedTimePeriod } from "@tuleap/plugin-timetracking-predefined-time-periods";
-import { TODAY } from "@tuleap/plugin-timetracking-predefined-time-periods";
 import type { User } from "@tuleap/core-rest-api-types";
+import type { Query, TimetrackingManagementQuery } from "../../src/query/QueryRetriever";
 
-export type TimetrackingManagementQuery = {
-    start_date: string;
-    end_date: string;
-    predefined_time_period: PredefinedTimePeriod | "";
-    users_list: User[];
-};
+let start_date: string = new Date().toISOString().split("T")[0];
+let end_date: string = new Date().toISOString().split("T")[0];
+let predefined_time_period: PredefinedTimePeriod | "" = "";
+let users_list: User[] = [];
 
-export type Query = {
-    getQuery: () => TimetrackingManagementQuery;
-    setQuery: (
-        start: string,
-        end: string,
-        period: PredefinedTimePeriod | "",
-        users: User[],
-    ) => void;
-};
-
-export const QueryRetriever = (): Query => {
-    let start_date = new Date().toISOString().split("T")[0];
-    let end_date = new Date().toISOString().split("T")[0];
-    let predefined_period: PredefinedTimePeriod | "" = TODAY;
-    let users_list: User[] = [];
-
-    const getQuery = (): TimetrackingManagementQuery => {
+export const injected_query: Query = {
+    getQuery: (): TimetrackingManagementQuery => {
         return {
             start_date: start_date,
             end_date: end_date,
-            predefined_time_period: predefined_period,
+            predefined_time_period: predefined_time_period,
             users_list: users_list,
         };
-    };
-
-    const setQuery = (
+    },
+    setQuery: (
         start: string,
         end: string,
-        period: PredefinedTimePeriod | "",
+        period: "" | PredefinedTimePeriod,
         users: User[],
     ): void => {
         start_date = start;
         end_date = end;
-        predefined_period = period;
+        predefined_time_period = period;
         users_list = users;
-    };
+    },
+};
 
-    return {
-        getQuery,
-        setQuery,
-    };
+export const RetrieveQueryStub = {
+    withDefaults: (users: User[]): Query => ({
+        getQuery: (): TimetrackingManagementQuery => {
+            return {
+                start_date: start_date,
+                end_date: end_date,
+                predefined_time_period: predefined_time_period,
+                users_list: users,
+            };
+        },
+        setQuery: (start, end, period, users): void => {
+            start_date = start;
+            end_date = end;
+            predefined_time_period = period;
+            users_list = users;
+        },
+    }),
 };

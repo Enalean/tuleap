@@ -66,6 +66,10 @@
             data-test="predefined-time-period-select"
         />
     </div>
+    <div class="tlp-form-element">
+        <label class="tlp-label" for="update-users-select">{{ $gettext("Users") }}</label>
+        <tuleap-lazybox id="update-users-select" ref="users_input" />
+    </div>
     <div class="timetracking-management-query-editor-actions">
         <button
             class="tlp-button-primary tlp-button-outline"
@@ -87,6 +91,8 @@
 </template>
 
 <script setup lang="ts">
+import "@tuleap/lazybox";
+import type { Lazybox } from "@tuleap/lazybox";
 import { datePicker, type DatePickerInstance } from "tlp";
 import { useGettext } from "vue3-gettext";
 import type { Ref } from "vue";
@@ -99,9 +105,13 @@ import type {
 } from "@tuleap/plugin-timetracking-predefined-time-periods";
 import { formatDatetimeToYearMonthDay } from "@tuleap/plugin-timetracking-time-formatters";
 import { strictInject } from "@tuleap/vue-strict-inject";
-import { RETRIEVE_QUERY } from "../injection-symbols";
+import { RETRIEVE_QUERY, USER_LOCALE_KEY } from "../injection-symbols";
+import type { User } from "@tuleap/core-rest-api-types";
+import { initUsersAutocompleter } from "@tuleap/lazybox-users-autocomplete";
 
 const { $gettext } = useGettext();
+
+const user_locale = strictInject(USER_LOCALE_KEY);
 
 const query = strictInject(RETRIEVE_QUERY);
 
@@ -116,6 +126,9 @@ let selected_predefined_time_period = ref<PredefinedTimePeriod | "">(
     query.getQuery().predefined_time_period,
 );
 
+const users_input = ref<Lazybox | undefined>();
+const currently_selected_users = ref<Array<User>>([]);
+
 const emit = defineEmits<{
     (e: "closeEditMode"): void;
 }>();
@@ -125,7 +138,11 @@ const isHTMLInputElement = (element: HTMLElement | undefined): element is HTMLIn
 };
 
 onMounted((): void => {
-    if (!isHTMLInputElement(start_date_input.value) || !isHTMLInputElement(end_date_input.value)) {
+    if (
+        !isHTMLInputElement(start_date_input.value) ||
+        !isHTMLInputElement(end_date_input.value) ||
+        !users_input.value
+    ) {
         return;
     }
     start_date_picker = datePicker(start_date_input.value);
@@ -133,6 +150,15 @@ onMounted((): void => {
 
     end_date_picker = datePicker(end_date_input.value);
     end_date_picker.setDate(query.getQuery().end_date);
+
+    initUsersAutocompleter(
+        users_input.value,
+        query.getQuery().users_list,
+        (selected_users: ReadonlyArray<User>): void => {
+            currently_selected_users.value = [...selected_users];
+        },
+        user_locale,
+    );
 });
 
 onBeforeUnmount((): void => {
@@ -146,6 +172,7 @@ const setDatesAndCloseEditMode = (): void => {
             start_date_input.value?.value,
             end_date_input.value?.value,
             selected_predefined_time_period.value,
+            currently_selected_users.value,
         );
     }
     emit("closeEditMode");
@@ -166,6 +193,10 @@ const setDatePickersValues = (
     });
 };
 </script>
+
+<style lang="scss">
+@use "@tuleap/lazybox/style";
+</style>
 
 <style scoped lang="scss">
 .timetracking-management-query-editor {

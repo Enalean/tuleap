@@ -22,11 +22,32 @@ import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import WidgetQueryDisplayer from "./WidgetQueryDisplayer.vue";
 import { getGlobalTestOptions } from "../../tests/global-options-for-tests";
-import { injected_query, StubInjectionSymbols } from "../../tests/injection-symbols-stub";
 import * as strict_inject from "@tuleap/vue-strict-inject";
+import type { User } from "@tuleap/core-rest-api-types";
+import { RetrieveQueryStub, injected_query } from "../../tests/stubs/RetrieveQueryStub";
+
+const mireillelabeille: User = {
+    id: 101,
+    avatar_url: "https://example.com/users/mireillelabeille/avatar-mireillelabeille.png",
+    display_name: "Mireille L'Abeille (mireillelabeille)",
+    user_url: "/users/mireillelabeille",
+};
+
+const bellelacoccinelle: User = {
+    id: 102,
+    avatar_url: "https://example.com/users/bellelacoccinelle/avatar-bellelacoccinelle.png",
+    display_name: "Belle La Coccinelle (bellelacoccinelle)",
+    user_url: "/users/bellelacoccinelle",
+};
 
 describe("Given a timetracking management widget query displayer", () => {
+    let users_list: User[] = [];
+
     function getWidgetQueryDisplayerInstance(): VueWrapper {
+        vi.spyOn(strict_inject, "strictInject").mockReturnValue(
+            RetrieveQueryStub.withDefaults(users_list),
+        );
+
         return shallowMount(WidgetQueryDisplayer, {
             global: {
                 ...getGlobalTestOptions(),
@@ -36,10 +57,6 @@ describe("Given a timetracking management widget query displayer", () => {
 
     describe("When query is displaying", () => {
         it("Then it should display the start date", () => {
-            vi.spyOn(strict_inject, "strictInject").mockImplementation(
-                StubInjectionSymbols.withDefaults(),
-            );
-
             const wrapper = getWidgetQueryDisplayerInstance();
 
             const start_date = wrapper.find("[data-test=start-date]");
@@ -48,15 +65,37 @@ describe("Given a timetracking management widget query displayer", () => {
         });
 
         it("Then it should display the end date", () => {
-            vi.spyOn(strict_inject, "strictInject").mockImplementation(
-                StubInjectionSymbols.withDefaults(),
-            );
-
             const wrapper = getWidgetQueryDisplayerInstance();
 
             const end_date = wrapper.find("[data-test=end-date]");
 
             expect(end_date.text()).equals(injected_query.getQuery().end_date);
+        });
+
+        it("When some users are selected, then it should display their avatar", () => {
+            users_list = [mireillelabeille, bellelacoccinelle];
+
+            const wrapper = getWidgetQueryDisplayerInstance();
+
+            const images = wrapper.findAll("[data-test=img-avatar]");
+            const avatars_url = images.map((img) => {
+                return img.attributes().src;
+            });
+
+            expect(avatars_url).toStrictEqual([
+                mireillelabeille.avatar_url,
+                bellelacoccinelle.avatar_url,
+            ]);
+        });
+
+        it("When no users are selected, then it should display a message", () => {
+            users_list = [];
+
+            const wrapper = getWidgetQueryDisplayerInstance();
+
+            const users = wrapper.find("[data-test=users-displayer]");
+
+            expect(users.text()).equals("No user selected");
         });
     });
 });
