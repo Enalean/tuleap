@@ -27,6 +27,7 @@ import { mockStrictInject } from "@/helpers/mock-strict-inject";
 import { CONFIGURATION_STORE } from "@/stores/configuration-store";
 import { ConfigurationStoreStub } from "@/helpers/stubs/ConfigurationStoreStub";
 import { CAN_USER_EDIT_DOCUMENT } from "@/can-user-edit-document-injection-key";
+import { DOCUMENT_ID } from "@/document-id-injection-key";
 
 describe("App", () => {
     it("should display the document view", () => {
@@ -39,13 +40,10 @@ describe("App", () => {
         mockStrictInject([
             [CONFIGURATION_STORE, ConfigurationStoreStub.withoutAllowedTrackers()],
             [CAN_USER_EDIT_DOCUMENT, true],
+            [DOCUMENT_ID, 1],
         ]);
 
-        const wrapper = shallowMount(App, {
-            props: {
-                item_id: 1,
-            },
-        });
+        const wrapper = shallowMount(App);
 
         expect(loadSections).toHaveBeenCalled();
         expect(wrapper.findComponent(DocumentView).exists()).toBe(true);

@@ -22,7 +22,7 @@
     <ol>
         <li
             v-for="(section, index) in sections"
-            v-bind:key="section.id"
+            v-bind:key="section.internal_id"
             v-bind:id="getId(section)"
             v-bind:class="{ 'artidoc-section-with-add-button': has_add_button }"
         >

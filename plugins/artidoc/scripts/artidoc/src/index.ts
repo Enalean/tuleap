@@ -34,6 +34,7 @@ import {
     OPEN_CONFIGURATION_MODAL_BUS,
     useOpenConfigurationModalBus,
 } from "@/composables/useOpenConfigurationModalBus";
+import { DOCUMENT_ID } from "@/document-id-injection-key";
 
 document.addEventListener("DOMContentLoaded", async () => {
     const vue_mount_point = document.getElementById("artidoc-mountpoint");
@@ -62,6 +63,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         Boolean(getDatasetItemOrThrow(vue_mount_point, "canUserEditDocument")),
     );
     app.provide(OPEN_CONFIGURATION_MODAL_BUS, useOpenConfigurationModalBus());
+    app.provide(DOCUMENT_ID, item_id);
     app.provide(TITLE, getDatasetItemOrThrow(vue_mount_point, "title"));
     app.provide(
         CONFIGURATION_STORE,

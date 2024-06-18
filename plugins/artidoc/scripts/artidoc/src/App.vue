@@ -33,15 +33,16 @@ import DocumentHeader from "@/components/DocumentHeader.vue";
 import { CONFIGURATION_STORE } from "@/stores/configuration-store";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import { CAN_USER_EDIT_DOCUMENT } from "@/can-user-edit-document-injection-key";
+import { DOCUMENT_ID } from "@/document-id-injection-key";
 
-const props = defineProps<{ item_id: number }>();
+const item_id = strictInject(DOCUMENT_ID);
 const store = useInjectSectionsStore();
 
 const configuration = strictInject(CONFIGURATION_STORE);
 const can_user_edit_document = strictInject(CAN_USER_EDIT_DOCUMENT);
 
 onMounted(() => {
-    store.loadSections(props.item_id, configuration.selected_tracker.value, can_user_edit_document);
+    store.loadSections(item_id, configuration.selected_tracker.value, can_user_edit_document);
 });
 </script>
 

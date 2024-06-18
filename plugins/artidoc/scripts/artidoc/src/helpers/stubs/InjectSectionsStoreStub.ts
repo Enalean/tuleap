@@ -21,29 +21,36 @@ import type { SectionsStore } from "@/stores/useSectionsStore";
 import { ref } from "vue";
 import type { ArtidocSection } from "@/helpers/artidoc-section.type";
 import type { Tracker } from "@/stores/configuration-store";
+import { injectInternalId } from "@/helpers/inject-internal-id";
 
 const noop = (): void => {};
 
 export const InjectedSectionsStoreStub = {
     withLoadedSections: (sections: readonly ArtidocSection[]): SectionsStore => ({
+        replacePendingByArtifactSection: noop,
+        getSectionPositionForSave: () => null,
         insertPendingArtifactSectionForEmptyDocument: noop,
         insertSection: noop,
         removeSection: noop,
         loadSections: noop,
         updateSection: noop,
         is_sections_loading: ref(false),
-        sections: ref(sections),
+        sections: ref(sections.map(injectInternalId)),
     }),
     withLoadingSections: (sections: readonly ArtidocSection[] = []): SectionsStore => ({
+        replacePendingByArtifactSection: noop,
+        getSectionPositionForSave: () => null,
         insertPendingArtifactSectionForEmptyDocument: noop,
         insertSection: noop,
         removeSection: noop,
         loadSections: noop,
         updateSection: noop,
         is_sections_loading: ref(true),
-        sections: ref(sections),
+        sections: ref(sections.map(injectInternalId)),
     }),
     withSectionsInError: (): SectionsStore => ({
+        replacePendingByArtifactSection: noop,
+        getSectionPositionForSave: () => null,
         insertPendingArtifactSectionForEmptyDocument: noop,
         insertSection: noop,
         removeSection: noop,
@@ -53,6 +60,8 @@ export const InjectedSectionsStoreStub = {
         sections: ref(undefined),
     }),
     withMockedLoadSections: (loadSections: (item_id: number) => void): SectionsStore => ({
+        replacePendingByArtifactSection: noop,
+        getSectionPositionForSave: () => null,
         insertPendingArtifactSectionForEmptyDocument: noop,
         insertSection: noop,
         removeSection: noop,
