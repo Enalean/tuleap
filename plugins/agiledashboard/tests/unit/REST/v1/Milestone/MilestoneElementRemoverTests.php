@@ -23,59 +23,33 @@ declare(strict_types=1);
 
 namespace Tuleap\AgileDashboard\REST\v1\Milestone;
 
-use Artifact;
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\MockObject\MockObject;
 use Project;
+use Tracker_ArtifactFactory;
 use Tuleap\AgileDashboard\ExplicitBacklog\ArtifactsInExplicitBacklogDao;
 use Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao;
 use Tuleap\AgileDashboard\REST\v1\BacklogRemoveRepresentation;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 
-final class MilestoneElementRemoverTests extends \Tuleap\Test\PHPUnit\TestCase
+final class MilestoneElementRemoverTests extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Project
-     */
-    private $project;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ExplicitBacklogDao
-     */
-    private $explicit_backlog_dao;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|\Tracker_ArtifactFactory
-     */
-    private $artifact_factory;
-
-    /**
-     * @var MilestoneElementRemover
-     */
-    private $remover;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ArtifactsInExplicitBacklogDao
-     */
-    private $artifacts_in_explicit_backlog_dao;
-
-    /**
-     * @var BacklogRemoveRepresentation
-     */
-    private $backlog_remove_representation;
+    private Project $project;
+    private ExplicitBacklogDao&MockObject $explicit_backlog_dao;
+    private Tracker_ArtifactFactory&MockObject $artifact_factory;
+    private MilestoneElementRemover $remover;
+    private ArtifactsInExplicitBacklogDao&MockObject $artifacts_in_explicit_backlog_dao;
+    private BacklogRemoveRepresentation $backlog_remove_representation;
 
     protected function setUp(): void
     {
-        parent::setUp();
+        $this->project = ProjectTestBuilder::aProject()->withId(101)->build();
 
-        $this->project = Mockery::mock(Project::class);
-        $this->project->shouldReceive('getID')->andReturn('101');
-
-        $this->explicit_backlog_dao              = Mockery::mock(ExplicitBacklogDao::class);
-        $this->artifacts_in_explicit_backlog_dao = Mockery::mock(ArtifactsInExplicitBacklogDao::class);
-        $this->artifact_factory                  = Mockery::mock(\Tracker_ArtifactFactory::class);
+        $this->explicit_backlog_dao              = $this->createMock(ExplicitBacklogDao::class);
+        $this->artifacts_in_explicit_backlog_dao = $this->createMock(ArtifactsInExplicitBacklogDao::class);
+        $this->artifact_factory                  = $this->createMock(Tracker_ArtifactFactory::class);
 
         $this->remover = new MilestoneElementRemover(
             $this->explicit_backlog_dao,
@@ -89,98 +63,80 @@ final class MilestoneElementRemoverTests extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItThrowsAnExceptionIfRemoveIsCalledIntoClassicBacklogContext(): void
     {
-        $this->explicit_backlog_dao->shouldReceive('isProjectUsingExplicitBacklog')
-            ->once()
+        $this->explicit_backlog_dao->expects(self::once())->method('isProjectUsingExplicitBacklog')
             ->with(101)
-            ->andReturnFalse();
+            ->willReturn(false);
 
-        $this->artifacts_in_explicit_backlog_dao->shouldReceive('removeItemsFromExplicitBacklogOfProject')
-            ->never();
+        $this->artifacts_in_explicit_backlog_dao->expects(self::never())->method('removeItemsFromExplicitBacklogOfProject');
 
-        $this->expectException(RemoveNotAvailableInClassicBacklogModeException::class);
+        self::expectException(RemoveNotAvailableInClassicBacklogModeException::class);
 
         $this->remover->removeElementsFromBacklog(
             $this->project,
             UserTestBuilder::aUser()->build(),
-            [
-                $this->backlog_remove_representation,
-            ]
+            [$this->backlog_remove_representation]
         );
     }
 
     public function testItThrowsAnExceptionIfAtLeastOneRemovedIdIsNotInExplicitBacklog(): void
     {
-        $this->artifact_factory->shouldReceive('getArtifactByIdUserCanView')->andReturn(Mockery::mock(Artifact::class));
-        $this->explicit_backlog_dao->shouldReceive('isProjectUsingExplicitBacklog')
-            ->once()
+        $this->artifact_factory->method('getArtifactByIdUserCanView')->willReturn(ArtifactTestBuilder::anArtifact(1)->build());
+        $this->explicit_backlog_dao->expects(self::once())->method('isProjectUsingExplicitBacklog')
             ->with(101)
-            ->andReturnTrue();
+            ->willReturn(true);
 
-        $this->artifacts_in_explicit_backlog_dao->shouldReceive('isArtifactInTopBacklogOfProject')
-            ->once()
+        $this->artifacts_in_explicit_backlog_dao->expects(self::once())->method('isArtifactInTopBacklogOfProject')
             ->with(124, 101)
-            ->andReturnFalse();
+            ->willReturn(false);
 
-        $this->artifacts_in_explicit_backlog_dao->shouldReceive('removeItemsFromExplicitBacklogOfProject')
-            ->never();
+        $this->artifacts_in_explicit_backlog_dao->expects(self::never())->method('removeItemsFromExplicitBacklogOfProject');
 
-        $this->expectException(ProvidedRemoveIdIsNotInExplicitBacklogException::class);
+        self::expectException(ProvidedRemoveIdIsNotInExplicitBacklogException::class);
 
         $this->remover->removeElementsFromBacklog(
             $this->project,
             UserTestBuilder::aUser()->build(),
-            [
-                $this->backlog_remove_representation,
-            ]
+            [$this->backlog_remove_representation]
         );
     }
 
     public function testItRemovesItemsFromExplicitBacklog(): void
     {
-        $this->artifact_factory->shouldReceive('getArtifactByIdUserCanView')->andReturn(Mockery::mock(Artifact::class));
-        $this->explicit_backlog_dao->shouldReceive('isProjectUsingExplicitBacklog')
-            ->once()
+        $this->artifact_factory->method('getArtifactByIdUserCanView')->willReturn(ArtifactTestBuilder::anArtifact(1)->build());
+        $this->explicit_backlog_dao->expects(self::once())->method('isProjectUsingExplicitBacklog')
             ->with(101)
-            ->andReturnTrue();
+            ->willReturn(true);
 
-        $this->artifacts_in_explicit_backlog_dao->shouldReceive('isArtifactInTopBacklogOfProject')
-            ->once()
+        $this->artifacts_in_explicit_backlog_dao->expects(self::once())->method('isArtifactInTopBacklogOfProject')
             ->with(124, 101)
-            ->andReturnTrue();
+            ->willReturn(true);
 
-        $this->artifacts_in_explicit_backlog_dao->shouldReceive('removeItemsFromExplicitBacklogOfProject')
-            ->once()
+        $this->artifacts_in_explicit_backlog_dao->expects(self::once())->method('removeItemsFromExplicitBacklogOfProject')
             ->with(101, [124]);
 
         $this->remover->removeElementsFromBacklog(
             $this->project,
             UserTestBuilder::aUser()->build(),
-            [
-                $this->backlog_remove_representation,
-            ]
+            [$this->backlog_remove_representation]
         );
     }
 
     public function testDoesNotRemoveFromExplicitBacklogItemsTheUserCannotSee(): void
     {
-        $this->artifact_factory->shouldReceive('getArtifactByIdUserCanView')->andReturn(null);
-        $this->explicit_backlog_dao->shouldReceive('isProjectUsingExplicitBacklog')
-            ->once()
+        $this->artifact_factory->method('getArtifactByIdUserCanView')->willReturn(null);
+        $this->explicit_backlog_dao->expects(self::once())->method('isProjectUsingExplicitBacklog')
             ->with(101)
-            ->andReturnTrue();
+            ->willReturn(true);
 
-        $this->artifacts_in_explicit_backlog_dao->shouldNotReceive('isArtifactInTopBacklogOfProject');
+        $this->artifacts_in_explicit_backlog_dao->expects(self::never())->method('isArtifactInTopBacklogOfProject');
 
-        $this->artifacts_in_explicit_backlog_dao->shouldReceive('removeItemsFromExplicitBacklogOfProject')
-            ->once()
+        $this->artifacts_in_explicit_backlog_dao->expects(self::once())->method('removeItemsFromExplicitBacklogOfProject')
             ->with(101, []);
 
         $this->remover->removeElementsFromBacklog(
             $this->project,
             UserTestBuilder::aUser()->build(),
-            [
-                $this->backlog_remove_representation,
-            ]
+            [$this->backlog_remove_representation]
         );
     }
 }
