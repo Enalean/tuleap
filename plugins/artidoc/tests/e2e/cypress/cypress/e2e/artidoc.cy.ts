@@ -67,6 +67,8 @@ describe("Artidoc", () => {
                 cy.wait("@createDocument")
                     .then((interception) => interception.response?.body.id)
                     .then((document_id): void => {
+                        const url = "/artidoc/" + encodeURIComponent(document_id);
+
                         cy.get("[data-test=document-folder-subitem-link]").click();
                         cy.log(
                             "Wait for section to be loaded, intercepting section load does not do the trick",
@@ -78,8 +80,16 @@ describe("Artidoc", () => {
                         cy.intercept("/api/artidoc/*/configuration").as("saveConfiguration");
                         cy.get("[data-test=artidoc-configuration-submit-button]").click();
                         cy.wait("@saveConfiguration");
+
+                        cy.regularUserSession();
+                        cy.visit(url);
+                        cy.log("User with read rights should see an empty state");
                         cy.contains("This document is empty");
-                        cy.log(document_id);
+
+                        cy.projectMemberSession();
+                        cy.visit(url);
+                        cy.log("User with write rights should see a form to enter a new section");
+                        cy.get("[data-test=title-input]");
 
                         cy.putFromTuleapApi(`https://tuleap/api/artidoc/${document_id}/sections`, [
                             { artifact: { id: this.func_req_2 } },
