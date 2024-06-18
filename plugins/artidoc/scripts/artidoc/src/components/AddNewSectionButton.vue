@@ -31,12 +31,12 @@ import { useGettext } from "vue3-gettext";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import { OPEN_CONFIGURATION_MODAL_BUS } from "@/composables/useOpenConfigurationModalBus";
 import { isTrackerWithSubmittableSection, CONFIGURATION_STORE } from "@/stores/configuration-store";
-import type { Position, SectionsStore } from "@/stores/useSectionsStore";
+import type { PositionDuringEdition, SectionsStore } from "@/stores/useSectionsStore";
 import type { PendingArtifactSection } from "@/helpers/artidoc-section.type";
 import PendingArtifactSectionFactory from "@/helpers/pending-artifact-section.factory";
 
 const props = defineProps<{
-    position: Position;
+    position: PositionDuringEdition;
     insert_section_callback: SectionsStore["insertSection"];
 }>();
 

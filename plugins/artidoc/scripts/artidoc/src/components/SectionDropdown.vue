@@ -66,7 +66,7 @@ import type { ArtidocSection } from "@/helpers/artidoc-section.type";
 import { isPendingArtifactSection, isArtifactSection } from "@/helpers/artidoc-section.type";
 import type { Dropdown } from "@tuleap/tlp-dropdown";
 import { createDropdown } from "@tuleap/tlp-dropdown";
-import { computed, onMounted, ref } from "vue";
+import { computed, ref, watch } from "vue";
 
 const { $gettext } = useGettext();
 const props = defineProps<{
@@ -90,8 +90,8 @@ const trigger_title = $gettext("Open contextual menu");
 
 let dropdown: Dropdown | null = null;
 
-onMounted(() => {
-    if (trigger.value) {
+watch(trigger, () => {
+    if (dropdown === null && trigger.value) {
         dropdown = createDropdown(trigger.value);
     }
 });

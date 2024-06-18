@@ -18,11 +18,13 @@
  */
 
 import type { ResultAsync } from "neverthrow";
-import { getAllJSON, putResponse, uri, getJSON } from "@tuleap/fetch-result";
+import { getAllJSON, putResponse, uri, getJSON, postJSON } from "@tuleap/fetch-result";
 import type { Fault } from "@tuleap/fault";
 import TurndownService from "turndown";
 import type { ArtidocSection } from "@/helpers/artidoc-section.type";
 import { isCommonmark, isTitleAString } from "@/helpers/artidoc-section.type";
+import type { Tracker } from "@/stores/configuration-store";
+import type { PositionForSave } from "@/stores/useSectionsStore";
 
 type ArtidocSectionFromRest = Omit<ArtidocSection, "display_title">;
 
@@ -67,6 +69,44 @@ export function putArtifact(
             ],
         },
     );
+}
+
+export function postArtifact(
+    tracker: Tracker,
+    new_title: string,
+    title: ArtidocSection["title"],
+    new_description: string,
+    description_field_id: number,
+): ResultAsync<{ id: number }, Fault> {
+    return postJSON<{ id: number }>(uri`/api/artifacts`, {
+        tracker: { id: tracker.id },
+        values: [
+            {
+                field_id: description_field_id,
+                value: {
+                    content: new_description,
+                    format: "html",
+                },
+            },
+            {
+                field_id: title.field_id,
+                ...(isTitleAString(title)
+                    ? { value: new_title }
+                    : { value: { content: new_title, format: "text" } }),
+            },
+        ],
+    });
+}
+
+export function createSection(
+    document_id: number,
+    artifact_id: number,
+    position: PositionForSave,
+): ResultAsync<ArtidocSection, Fault> {
+    return postJSON<ArtidocSectionFromRest>(uri`/api/artidoc/${document_id}/sections`, {
+        artifact: { id: artifact_id },
+        position,
+    }).map(injectDisplayTitle);
 }
 
 export function getAllSections(document_id: number): ResultAsync<readonly ArtidocSection[], Fault> {

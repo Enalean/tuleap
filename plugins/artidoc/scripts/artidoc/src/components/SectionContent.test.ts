@@ -25,8 +25,10 @@ import ArtifactSectionFactory from "@/helpers/artifact-section.factory";
 import SectionHeader from "@/components/SectionHeader.vue";
 import SectionDescription from "@/components/SectionDescription.vue";
 import * as sectionsStore from "@/stores/useSectionsStore";
+import * as editor from "@/composables/useSectionEditor";
 import SectionHeaderSkeleton from "@/components/SectionHeaderSkeleton.vue";
 import { InjectedSectionsStoreStub } from "@/helpers/stubs/InjectSectionsStoreStub";
+import { SectionEditorStub } from "@/helpers/stubs/SectionEditorStub";
 
 describe("SectionContent", () => {
     describe("when the sections are loaded", () => {
@@ -35,32 +37,44 @@ describe("SectionContent", () => {
             vi.spyOn(sectionsStore, "useInjectSectionsStore").mockReturnValue(
                 InjectedSectionsStoreStub.withLoadedSections([]),
             );
+            vi.spyOn(editor, "useSectionEditor").mockReturnValue(
+                SectionEditorStub.withEditableSection(),
+            );
+
             wrapper = shallowMount(SectionContent, {
                 props: {
                     section: ArtifactSectionFactory.create(),
                 },
             });
         });
+
         it("should display a section title", () => {
             expect(wrapper.findComponent(SectionHeader).exists()).toBe(true);
             expect(wrapper.findComponent(SectionHeaderSkeleton).exists()).toBe(false);
         });
+
         it("should display a section description", () => {
             expect(wrapper.findComponent(SectionDescription).exists()).toBe(true);
         });
     });
+
     describe("when the sections are loading", () => {
         let wrapper: VueWrapper<ComponentPublicInstance>;
         beforeAll(() => {
             vi.spyOn(sectionsStore, "useInjectSectionsStore").mockReturnValue(
                 InjectedSectionsStoreStub.withLoadingSections(),
             );
+            vi.spyOn(editor, "useSectionEditor").mockReturnValue(
+                SectionEditorStub.withEditableSection(),
+            );
+
             wrapper = shallowMount(SectionContent, {
                 props: {
                     section: ArtifactSectionFactory.create(),
                 },
             });
         });
+
         it("should display a skeleton section title", () => {
             expect(wrapper.findComponent(SectionHeaderSkeleton).exists()).toBe(true);
             expect(wrapper.findComponent(SectionHeader).exists()).toBe(false);

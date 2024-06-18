@@ -61,7 +61,7 @@
 import type { ArtidocSection } from "@/helpers/artidoc-section.type";
 import SectionHeader from "@/components/SectionHeader.vue";
 import SectionDescription from "@/components/SectionDescription.vue";
-import useSectionEditor from "@/composables/useSectionEditor";
+import { useSectionEditor } from "@/composables/useSectionEditor";
 import SectionDropdown from "@/components/SectionDropdown.vue";
 import { useInjectSectionsStore } from "@/stores/useSectionsStore";
 import SectionHeaderSkeleton from "@/components/SectionHeaderSkeleton.vue";
@@ -69,9 +69,21 @@ import SectionFooter from "@/components/SectionFooter.vue";
 
 const props = defineProps<{ section: ArtidocSection }>();
 
-const { is_sections_loading, updateSection, removeSection } = useInjectSectionsStore();
+const {
+    is_sections_loading,
+    updateSection,
+    removeSection,
+    getSectionPositionForSave,
+    replacePendingByArtifactSection,
+} = useInjectSectionsStore();
 
-const editor = useSectionEditor(props.section, updateSection, removeSection);
+const editor = useSectionEditor(
+    props.section,
+    updateSection,
+    removeSection,
+    getSectionPositionForSave,
+    replacePendingByArtifactSection,
+);
 
 const is_edit_mode = editor.isSectionInEditMode();
 const is_being_saved = editor.isBeeingSaved();
