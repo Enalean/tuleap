@@ -18,82 +18,65 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\AgileDashboard\REST\v1\Scrum\BacklogItem;
 
 use AgileDashboard_Milestone_Backlog_BacklogItem;
 use AgileDashBoard_Semantic_InitialEffort;
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
+use PHPUnit\Framework\MockObject\MockObject;
 use Tracker_Artifact_Changeset;
 use Tracker_FormElement_Field_Computed;
-use Tracker_FormElement_Field_Integer;
-use Tracker_FormElement_Field_Selectbox;
+use Tracker_FormElement_Field_List_Bind_StaticValue;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\REST\Artifact\ArtifactFieldValueFullRepresentation;
+use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
+use Tuleap\Tracker\Test\Builders\ChangesetValueIntegerTestBuilder;
+use Tuleap\Tracker\Test\Builders\ChangesetValueListTestBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\IntFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticBindBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
 
-final class InitialEffortSemanticUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
+final class InitialEffortSemanticUpdaterTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var InitialEffortSemanticUpdater
-     */
-    private $updater;
-
-    /**
-     * @var Mockery\MockInterface|PFUser
-     */
-    private $user;
-
-    /**
-     * @var Mockery\MockInterface|Artifact
-     */
-    private $artifact;
-
-    /**
-     * @var AgileDashboard_Milestone_Backlog_BacklogItem|Mockery\MockInterface
-     */
-    private $backlog_item;
-
-    /**
-     * @var AgileDashBoard_Semantic_InitialEffort|Mockery\MockInterface
-     */
-    private $semantic_initial_effort;
-
-    /**
-     * @var Mockery\MockInterface|Tracker_Artifact_Changeset
-     */
-    private $last_changeset;
+    private InitialEffortSemanticUpdater $updater;
+    private PFUser $user;
+    private Artifact&MockObject $artifact;
+    private AgileDashboard_Milestone_Backlog_BacklogItem&MockObject $backlog_item;
+    private AgileDashBoard_Semantic_InitialEffort&MockObject $semantic_initial_effort;
+    private Tracker_Artifact_Changeset $last_changeset;
 
     protected function setUp(): void
     {
-        parent::setUp();
-
         $this->updater = new InitialEffortSemanticUpdater();
 
-        $this->user                    = Mockery::mock(PFUser::class);
-        $this->artifact                = Mockery::mock(Artifact::class);
-        $this->backlog_item            = Mockery::mock(AgileDashboard_Milestone_Backlog_BacklogItem::class);
-        $this->semantic_initial_effort = Mockery::mock(AgileDashBoard_Semantic_InitialEffort::class);
-        $this->last_changeset          = Mockery::mock(Tracker_Artifact_Changeset::class);
+        $this->user                    = UserTestBuilder::buildWithDefaults();
+        $this->artifact                = $this->createMock(Artifact::class);
+        $this->backlog_item            = $this->createMock(AgileDashboard_Milestone_Backlog_BacklogItem::class);
+        $this->semantic_initial_effort = $this->createMock(AgileDashBoard_Semantic_InitialEffort::class);
+        $this->last_changeset          = ChangesetTestBuilder::aChangeset('1')->ofArtifact($this->artifact)->build();
 
-        $this->backlog_item->shouldReceive('getArtifact')->once()->andReturn($this->artifact);
+        $this->backlog_item->expects(self::once())->method('getArtifact')->willReturn($this->artifact);
     }
 
     public function testItSetsTheInitialEffortInTheBacklogItem(): void
     {
-        $initial_effort_field = Mockery::mock(Tracker_FormElement_Field_Integer::class);
-        $initial_effort_field->shouldReceive('userCanRead')->once()->with($this->user)->andReturnTrue();
-        $initial_effort_field->shouldReceive('getFullRESTValue')
-            ->once()
-            ->with($this->user, $this->last_changeset)
-            ->andReturn($this->buildRESTIntValue());
+        $initial_effort_field = IntFieldBuilder::anIntField(1)
+            ->withName('Initial effort')
+            ->withReadPermission($this->user, true)
+            ->build();
+        $this->last_changeset->setFieldValue(
+            $initial_effort_field,
+            ChangesetValueIntegerTestBuilder::aValue(1, $this->last_changeset, $initial_effort_field)->withValue(5)->build()
+        );
 
-        $this->artifact->shouldReceive('getLastChangeset')->andReturn($this->last_changeset);
-        $this->semantic_initial_effort->shouldReceive('getField')->once()->andReturn($initial_effort_field);
+        $this->artifact->method('getLastChangeset')->willReturn($this->last_changeset);
+        $this->semantic_initial_effort->expects(self::once())->method('getField')->willReturn($initial_effort_field);
 
-        $this->backlog_item->shouldReceive('setInitialEffort')->once()->with(5);
+        $this->backlog_item->expects(self::once())->method('setInitialEffort')->with(5);
 
         $this->updater->updateBacklogItemInitialEffortSemantic(
             $this->user,
@@ -104,21 +87,24 @@ final class InitialEffortSemanticUpdaterTest extends \Tuleap\Test\PHPUnit\TestCa
 
     public function testItSetsTheInitialEffortInTheBacklogItemWhenInitialEffortFieldIsASelectbox(): void
     {
-        $initial_effort_field = Mockery::mock(Tracker_FormElement_Field_Selectbox::class);
-        $initial_effort_field->shouldReceive('userCanRead')->once()->with($this->user)->andReturnTrue();
-        $initial_effort_field->shouldReceive('getFullRESTValue')
-            ->once()
-            ->with($this->user, $this->last_changeset)
-            ->andReturn($this->buildRESTListValue());
-        $initial_effort_field->shouldReceive('getComputedValue')
-            ->once()
-            ->with($this->user, $this->artifact)
-            ->andReturn(10);
+        $initial_effort_field = ListStaticBindBuilder::aStaticBind(
+            ListFieldBuilder::aListField(1)
+                ->withName('Initial effort')
+                ->withReadPermission($this->user, true)
+                ->build()
+        )->withStaticValues([
+            381 => '10',
+        ])->build()->getField();
+        $value                = ChangesetValueListTestBuilder::aListOfValue(1, $this->last_changeset, $initial_effort_field)
+            ->withValues([new Tracker_FormElement_Field_List_Bind_StaticValue(381, '10', '', 0, false)])
+            ->build();
+        $this->last_changeset->setFieldValue($initial_effort_field, $value);
 
-        $this->artifact->shouldReceive('getLastChangeset')->andReturn($this->last_changeset);
-        $this->semantic_initial_effort->shouldReceive('getField')->once()->andReturn($initial_effort_field);
+        $this->artifact->method('getLastChangeset')->willReturn($this->last_changeset);
+        $this->semantic_initial_effort->expects(self::once())->method('getField')->willReturn($initial_effort_field);
+        $this->artifact->method('getValue')->with($initial_effort_field, null)->willReturn($value);
 
-        $this->backlog_item->shouldReceive('setInitialEffort')->once()->with(10);
+        $this->backlog_item->expects(self::once())->method('setInitialEffort')->with(10);
 
         $this->updater->updateBacklogItemInitialEffortSemantic(
             $this->user,
@@ -129,21 +115,19 @@ final class InitialEffortSemanticUpdaterTest extends \Tuleap\Test\PHPUnit\TestCa
 
     public function testItSetsTheInitialEffortInTheBacklogItemWhenInitialEffortFieldIsAComputedField(): void
     {
-        $initial_effort_field = Mockery::mock(Tracker_FormElement_Field_Computed::class);
-        $initial_effort_field->shouldReceive('userCanRead')->once()->with($this->user)->andReturnTrue();
-        $initial_effort_field->shouldReceive('getFullRESTValue')
-            ->once()
+        $initial_effort_field = $this->createMock(Tracker_FormElement_Field_Computed::class);
+        $initial_effort_field->expects(self::once())->method('userCanRead')->with($this->user)->willReturn(true);
+        $initial_effort_field->expects(self::once())->method('getFullRESTValue')
             ->with($this->user, $this->last_changeset)
-            ->andReturn($this->buildRESTComputedValue());
-        $initial_effort_field->shouldReceive('getComputedValue')
-            ->once()
+            ->willReturn($this->buildRESTComputedValue());
+        $initial_effort_field->expects(self::once())->method('getComputedValue')
             ->with($this->user, $this->artifact)
-            ->andReturn(8);
+            ->willReturn(8.0);
 
-        $this->artifact->shouldReceive('getLastChangeset')->andReturn($this->last_changeset);
-        $this->semantic_initial_effort->shouldReceive('getField')->once()->andReturn($initial_effort_field);
+        $this->artifact->method('getLastChangeset')->willReturn($this->last_changeset);
+        $this->semantic_initial_effort->expects(self::once())->method('getField')->willReturn($initial_effort_field);
 
-        $this->backlog_item->shouldReceive('setInitialEffort')->once()->with(8);
+        $this->backlog_item->expects(self::once())->method('setInitialEffort')->with(8);
 
         $this->updater->updateBacklogItemInitialEffortSemantic(
             $this->user,
@@ -154,14 +138,14 @@ final class InitialEffortSemanticUpdaterTest extends \Tuleap\Test\PHPUnit\TestCa
 
     public function testItDoesNotSetTheInitialEffortInTheBacklogItemIfUserCannotReadTheField(): void
     {
-        $initial_effort_field = Mockery::mock(Tracker_FormElement_Field_Integer::class);
-        $initial_effort_field->shouldReceive('userCanRead')->once()->with($this->user)->andReturnFalse();
-        $initial_effort_field->shouldReceive('getFullRESTValue')->never();
+        $initial_effort_field = IntFieldBuilder::anIntField(1)
+            ->withReadPermission($this->user, false)
+            ->build();
 
-        $this->artifact->shouldReceive('getLastChangeset')->never();
-        $this->semantic_initial_effort->shouldReceive('getField')->once()->andReturn($initial_effort_field);
+        $this->artifact->expects(self::never())->method('getLastChangeset');
+        $this->semantic_initial_effort->expects(self::once())->method('getField')->willReturn($initial_effort_field);
 
-        $this->backlog_item->shouldReceive('setInitialEffort')->never();
+        $this->backlog_item->expects(self::never())->method('setInitialEffort');
 
         $this->updater->updateBacklogItemInitialEffortSemantic(
             $this->user,
@@ -172,17 +156,15 @@ final class InitialEffortSemanticUpdaterTest extends \Tuleap\Test\PHPUnit\TestCa
 
     public function testItDoesNotSetTheInitialEffortInTheBacklogItemIfFieldDoesNotHaveRESTValue(): void
     {
-        $initial_effort_field = Mockery::mock(Tracker_FormElement_Field_Integer::class);
-        $initial_effort_field->shouldReceive('userCanRead')->once()->with($this->user)->andReturnTrue();
-        $initial_effort_field->shouldReceive('getFullRESTValue')
-            ->once()
-            ->with($this->user, $this->last_changeset)
-            ->andReturnNull();
+        $initial_effort_field = IntFieldBuilder::anIntField(1)
+            ->withReadPermission($this->user, true)
+            ->build();
+        $this->last_changeset->setFieldValue($initial_effort_field, null);
 
-        $this->artifact->shouldReceive('getLastChangeset')->andReturn($this->last_changeset);
-        $this->semantic_initial_effort->shouldReceive('getField')->once()->andReturn($initial_effort_field);
+        $this->artifact->method('getLastChangeset')->willReturn($this->last_changeset);
+        $this->semantic_initial_effort->expects(self::once())->method('getField')->willReturn($initial_effort_field);
 
-        $this->backlog_item->shouldReceive('setInitialEffort')->never();
+        $this->backlog_item->expects(self::never())->method('setInitialEffort');
 
         $this->updater->updateBacklogItemInitialEffortSemantic(
             $this->user,
@@ -193,45 +175,20 @@ final class InitialEffortSemanticUpdaterTest extends \Tuleap\Test\PHPUnit\TestCa
 
     public function testItDoesNotSetTheInitialEffortInTheBacklogItemIfArtifactDoesNotHaveLastChangeset(): void
     {
-        $initial_effort_field = Mockery::mock(Tracker_FormElement_Field_Integer::class);
-        $initial_effort_field->shouldReceive('userCanRead')->once()->with($this->user)->andReturnTrue();
+        $initial_effort_field = IntFieldBuilder::anIntField(1)
+            ->withReadPermission($this->user, true)
+            ->build();
 
-        $this->artifact->shouldReceive('getLastChangeset')->andReturnNull();
-        $this->semantic_initial_effort->shouldReceive('getField')->once()->andReturn($initial_effort_field);
+        $this->artifact->method('getLastChangeset')->willReturn(null);
+        $this->semantic_initial_effort->expects(self::once())->method('getField')->willReturn($initial_effort_field);
 
-        $this->backlog_item->shouldReceive('setInitialEffort')->never();
+        $this->backlog_item->expects(self::never())->method('setInitialEffort');
 
         $this->updater->updateBacklogItemInitialEffortSemantic(
             $this->user,
             $this->backlog_item,
             $this->semantic_initial_effort
         );
-    }
-
-    private function buildRESTIntValue(): ArtifactFieldValueFullRepresentation
-    {
-        $artifact_field_value_full_representation = new ArtifactFieldValueFullRepresentation();
-        $artifact_field_value_full_representation->build(
-            101,
-            'int',
-            'Initial effort',
-            5
-        );
-
-        return $artifact_field_value_full_representation;
-    }
-
-    private function buildRESTListValue(): ArtifactFieldValueFullRepresentation
-    {
-        $artifact_field_value_full_representation = new ArtifactFieldValueFullRepresentation();
-        $artifact_field_value_full_representation->build(
-            101,
-            'sb',
-            'Initial effort',
-            381
-        );
-
-        return $artifact_field_value_full_representation;
     }
 
     private function buildRESTComputedValue(): ArtifactFieldValueFullRepresentation
