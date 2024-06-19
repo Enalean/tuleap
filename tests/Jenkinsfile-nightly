@@ -50,18 +50,6 @@ pipeline {
             }
         }
 
-        stage('Tests') {
-            failFast false
-            parallel {
-                stage ('CentOS 7') {
-                    stages {
-                        stage ('Build and run CentOS 7') {
-                            steps { script { actions.runBuildAndRun('centos7') } }
-                        }
-                    }
-                }
-            }
-        }
         stage('E2E tests') {
             options { retry(1) }
             steps {

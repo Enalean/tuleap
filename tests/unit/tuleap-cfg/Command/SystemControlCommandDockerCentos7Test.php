@@ -51,7 +51,7 @@ class SystemControlCommandDockerCentos7Test extends \Tuleap\Test\PHPUnit\TestCas
         $this->control_command = new SystemControlCommand($this->process_factory, $this->root->url());
         $this->command_tester  = new CommandTester($this->control_command);
 
-        putenv('TLP_SYSTEMCTL=docker-centos7');
+        putenv('TLP_SYSTEMCTL=docker');
         mkdir($this->root->url() . '/etc/cron.d', 0755, true);
     }
 

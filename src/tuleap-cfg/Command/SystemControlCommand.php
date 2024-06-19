@@ -31,9 +31,9 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class SystemControlCommand extends Command
 {
-    private const ENV_SYSTEMCTL           = 'TLP_SYSTEMCTL';
-    private const ENV_SYSTEMCTL_DOCKER_C7 = 'docker-centos7';
-    private const ENV_SYSTEMCTL_C7        = 'centos7';
+    private const ENV_SYSTEMCTL         = 'TLP_SYSTEMCTL';
+    private const ENV_SYSTEMCTL_DOCKER  = 'docker';
+    private const ENV_SYSTEMCTL_SYSTEMD = 'systemd';
 
     private const ALLOWED_ACTIONS = [
         'start',
@@ -74,7 +74,7 @@ class SystemControlCommand extends Command
     {
         $help  = "systemctl is a wrapper for commands to init system\n";
         $help .= "\n";
-        $help .= "You can modify the command behaviour by setting environment variable TLP_SYSTEMCTL to 'centos7' or 'docker-centos7'";
+        $help .= "You can modify the command behaviour by setting environment variable TLP_SYSTEMCTL to 'systemd' or 'docker'";
         $this
             ->setName('systemctl')
             ->setDescription('Wrapper for service activation / desactivation')
@@ -123,14 +123,14 @@ class SystemControlCommand extends Command
     {
         $env = getenv(self::ENV_SYSTEMCTL);
         if ($env === false) {
-            return self::ENV_SYSTEMCTL_C7;
+            return self::ENV_SYSTEMCTL_SYSTEMD;
         }
-        return strtolower($env) === self::ENV_SYSTEMCTL_DOCKER_C7 ? self::ENV_SYSTEMCTL_DOCKER_C7 : self::ENV_SYSTEMCTL_C7;
+        return strtolower($env) === self::ENV_SYSTEMCTL_DOCKER ? self::ENV_SYSTEMCTL_DOCKER : self::ENV_SYSTEMCTL_SYSTEMD;
     }
 
     private function getAllCommands(array $targets, string $action, bool $quiet): array
     {
-        if ($this->getSystemControlContext() === self::ENV_SYSTEMCTL_DOCKER_C7) {
+        if ($this->getSystemControlContext() === self::ENV_SYSTEMCTL_DOCKER) {
             $all_commands = [];
             if (in_array(SystemControlTuleapCron::TARGET_NAME, $targets, true)) {
                 $all_commands[] = new SystemControlTuleapCron($this->base_directory, $action);

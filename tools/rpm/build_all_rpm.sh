@@ -19,8 +19,6 @@ trap cleanup EXIT
 
 mkdir -p "$RPM_BUILD/RPMS/noarch/"
 
-export OS="${OS:-centos7}"
-
 nix-build "$TULEAP_SOURCES"/tools/rpm/tuleap-rpms.nix \
     --argstr tuleapRelease "${RELEASE}" \
     --argstr tuleapOS "${OS}" \

@@ -53,9 +53,7 @@ Requires: php82-php, php82-php-mysql, php82-php-xml, php82-php-mbstring, php82-p
 Requires: php82-php-intl, php82-php-process, php82-php-opcache, php82-php-fpm, php82-php-pecl-redis5, php82-php-sodium
 Requires: php82-php-pecl-zip
 Requires: php82-php-ffi
-%if "%{?dist}" == ".el9"
 Requires: glibc-locale-source
-%endif
 
 Requires: sudo, openssh
 Requires: perl(File::Copy)
@@ -75,19 +73,6 @@ Requires: systemd
 Obsoletes: forgeupgrade <= 999
 Provides: forgeupgrade
 
-%if "%{?dist}" == ".el7"
-
-Obsoletes: tuleap-plugin-forumml <= 15.0
-Provides: tuleap-plugin-forumml
-
-Obsoletes: tuleap-core-mailman <= 15.0
-Provides: tuleap-core-mailman
-
-Obsoletes: tuleap-core-cvs <= 15.0
-Provides: tuleap-core-cvs
-
-%endif
-
 
 %description
 Tuleap is a web based application that address all the aspects of product development.
@@ -103,11 +88,7 @@ Group: Development/Tools
 Version: 1.2
 Release: %{tuleap_version}_%{tuleap_release}%{?dist}
 Requires: %{name} = %{tuleap_version}-%{tuleap_release}%{?dist}, mod_dav_svn
-%if "%{?dist}" == ".el9"
 Requires: viewvc-tuleap, httpd, glibc-langpack-en
-%else
-Requires: viewvc >= 1.1.30, python
-%endif
 Requires: viewvc-theme-tuleap >= 1.0.8
 Requires: tuleap-theme-flamingparrot
 Requires: sha1collisiondetector
@@ -239,9 +220,6 @@ Summary: Mediawiki plugin
 Group: Development/Tools
 Requires: %{name} = %{tuleap_version}-%{tuleap_release}%{?dist}
 Requires: php-mediawiki-tuleap-123 >= 1.23.9-17, tuleap-plugin-mediawiki-standalone
-%if "%{?dist}" == ".el7"
-Requires: htmldoc
-%endif
 %description plugin-mediawiki
 This plugin provides Mediawiki integration in Tuleap.
 

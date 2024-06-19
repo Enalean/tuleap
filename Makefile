@@ -340,10 +340,6 @@ start: ## Start Tuleap with PHP 8.2 on Rocky Linux 9
 	@echo "Start Tuleap with PHP 8.2 on Rocky Linux 9"
 	@$(MAKE) --no-print-directory start-rp
 
-start-el7: ## Start Tuleap with PHP 8.2 on CentOS 7
-	@echo "Start Tuleap with PHP 8.2 on CentOS 7"
-	@$(MAKE) --no-print-directory start-rp DOCKER_COMPOSE_FLAGS="-f docker-compose-mac.yml -f compose-el7.yaml"
-
 start-dockerdesktop: ## Start Tuleap on Docker Desktop
 	@echo "Start Tuleap with Docker Desktop"
 	@$(MAKE) --no-print-directory start-rp DOCKER_COMPOSE_FLAGS="-f docker-compose-mac.yml"

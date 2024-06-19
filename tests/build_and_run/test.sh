@@ -23,10 +23,7 @@ function cleanup {
 }
 trap cleanup EXIT
 
-if [ "$OS" == "centos7" ]; then
-    INSTALL_IMAGE=tuleap-installrpms:centos7-ci
-    docker build --target ci --tag $INSTALL_IMAGE -f "$WORKSPACE/sources/tools/docker/install-rpms/centos7.dockerfile" "$WORKSPACE/sources/tools/docker/install-rpms/"
-elif [ "$OS" == "el9" ]; then
+if [ "$OS" == "el9" ]; then
     INSTALL_IMAGE=tuleap-installrpms:el9-ci
     docker build --target ci --tag $INSTALL_IMAGE -f "$WORKSPACE/sources/tools/docker/install-rpms/rockylinux9.dockerfile" "$WORKSPACE/sources/tools/docker/install-rpms/"
 else

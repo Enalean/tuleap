@@ -137,7 +137,7 @@ final class Tuleap
         $process = $this->process_factory->getProcessWithoutTimeout(
             [
                 '/bin/bash',
-                '/usr/share/tuleap/tools/setup.el7.sh',
+                '/usr/share/tuleap/tools/setup.sh',
                 '--assumeyes',
                 '--configure',
                 '--server-name=' . $tuleap_fqdn,

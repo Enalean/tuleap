@@ -19,7 +19,7 @@ cd /var/lib
 popd > /dev/null
 
 # Install Tuleap
-/usr/share/tuleap/tools/setup.el7.sh \
+/usr/share/tuleap/tools/setup.sh \
     --assumeyes \
     --configure \
     --mysql-server=db \
