@@ -52,8 +52,6 @@ class OnlyOfficeDownloadDocumentTokenVerifier
                     return null;
                 }
 
-                $this->dao->deleteTokenByID($download_token->getID());
-
                 return new DownloadDocumentTokenData($row['user_id'], $row['document_id']);
             }
         );

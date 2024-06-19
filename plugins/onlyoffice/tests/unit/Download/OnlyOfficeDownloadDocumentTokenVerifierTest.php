@@ -57,7 +57,6 @@ final class OnlyOfficeDownloadDocumentTokenVerifierTest extends TestCase
         $this->dao->method('searchTokenVerificationAndAssociatedData')->willReturn(
             ['verifier' => $this->hasher->computeHash($download_token->getVerificationString()), 'user_id' => 102, 'document_id' => 11]
         );
-        $this->dao->expects($this->once())->method('deleteTokenByID');
 
         $token_data = $this->token_verifier->getDocumentDownloadTokenData($download_token, new \DateTimeImmutable('@20'));
 
