@@ -5,7 +5,7 @@
     "tools/utils/scripts/**",
     "tools/utils/nix/**"
   ],
-  "pipeline": {
+  "tasks": {
     "typecheck": {
       "dependsOn": [
         "^build"
