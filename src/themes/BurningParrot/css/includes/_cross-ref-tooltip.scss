@@ -168,9 +168,14 @@
             font-weight: 600;
             vertical-align: top;
 
-            /* stylelint-disable selector-no-qualifying-type */
+            /* stylelint-disable-next-line selector-no-qualifying-type */
             &.crossref-tooltip-value-undefined {
                 font-weight: 400;
+            }
+
+            /* stylelint-disable-next-line selector-no-qualifying-type */
+            &.crossref-tooltip-value-error {
+                color: var(--tlp-danger-color-on-dark-background);
             }
         }
     }
