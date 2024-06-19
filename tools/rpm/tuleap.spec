@@ -538,16 +538,16 @@ Provides: tuleap-plugin-tracker-cce
 %description plugin-tracker-functions
 %{summary}.
 
-%endif
-
-%if %{with experimental}
-
 %package plugin-artidoc
 Summary: Artifacts as Documents plugin
 Group: Development/Tools
 Requires: %{name} = %{tuleap_version}-%{tuleap_release}%{?dist}, tuleap-plugin-tracker, tuleap-plugin-document
 %description plugin-artidoc
 %{summary}.
+
+%endif
+
+%if %{with experimental}
 
 %endif
 
@@ -628,11 +628,11 @@ done
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/enalean_licensemanager
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/webauthn
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/tracker_functions
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/artidoc
 %endif
 
 %if %{with experimental}
 %else
-%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/artidoc
 %endif
 
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/themes/BurningParrot/composer.json
@@ -1450,13 +1450,13 @@ fi
 %defattr(-,root,root,-)
 %{APP_DIR}/plugins/tracker_functions
 
-%endif
-
-%if %{with experimental}
-
 %files plugin-artidoc
 %defattr(-,root,root,-)
 %{APP_DIR}/plugins/artidoc
+
+%endif
+
+%if %{with experimental}
 
 %endif
 
