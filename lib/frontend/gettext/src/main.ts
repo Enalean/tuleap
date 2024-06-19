@@ -19,5 +19,7 @@
 
 export * from "./gettext-async";
 export * from "./synchronous";
+export { getLocaleWithDefault } from "./dom";
+export type { LocaleString } from "@tuleap/core-constants";
 export type { GettextProvider, GettextParserPoFile } from "./types";
 export type { default as GetText } from "node-gettext";

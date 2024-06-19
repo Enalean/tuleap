@@ -16,12 +16,12 @@ declare module "*.po" {
 //src/index.ts
 import fr_FR from "../po/fr_FR.po";
 import pt_BR from "../po/pt_BR.po";
-import { initGettextSync } from "@tuleap/gettext";
+import { getLocaleWithDefault, initGettextSync } from "@tuleap/gettext";
 
 const gettext_provider = initGettextSync(
     "tuleap-my-lib", // domain for your translations
     { fr_FR, pt_BR },
-    locale // fr_FR, pt_BR, or en_US
+    getLocaleWithDefault(document) // fr_FR, en_US, pt_BR or ko_KR. Defaults to en_US
 );
 
 // Use the gexttext_provider !
