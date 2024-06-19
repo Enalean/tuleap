@@ -5,20 +5,23 @@ stdenvNoCC.mkDerivation (finalAttrs: {
   version = "8.7.0";
 
   src = fetchurl {
-    url = "https://registry.npmjs.org/${finalAttrs.pname}/-/${finalAttrs.pname}-${finalAttrs.version}.tgz";
+    url = "https://registry.npmjs.org/pnpm/-/pnpm-${finalAttrs.version}.tgz";
     hash = "sha256-rvjSa8F2FsYNyxXS2zCAN2YFGicg7cw71guH+4ySVHA=";
   };
 
   buildInputs = [ nodejs ];
 
-  dontBuild = true;
+  # Remove binary files from src, we don't need them
+  preConfigure = ''
+    rm -r dist/reflink.*node dist/vendor
+  '';
 
   installPhase = ''
     runHook preInstall
 
-    mkdir -p $out/bin/
-    mv dist $out/
-    mv bin/pnpm.cjs $out/bin/pnpm
+    install -d $out/{bin,libexec}
+    cp -R . $out/libexec/pnpm
+    ln -s $out/libexec/pnpm/bin/pnpm.cjs $out/bin/pnpm
 
     runHook postInstall
   '';

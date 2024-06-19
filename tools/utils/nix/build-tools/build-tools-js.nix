@@ -2,7 +2,7 @@
 
 let
     node = pkgs.nodejs_20;
-    nodeBaseBin = pkgs.stdenv.mkDerivation {
+    nodeBaseBin = pkgs.stdenvNoCC.mkDerivation {
         name = "node-base-bin";
         unpackPhase = "true";
         installPhase = ''
