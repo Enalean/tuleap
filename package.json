@@ -71,7 +71,7 @@
     "stylelint-prettier": "^5.0.0",
     "ts-jest": "^29.1.0",
     "tslib": "^2.6.2",
-    "turbo": "1.10.13",
+    "turbo": "2.0.4",
     "typescript": "^5.3.3",
     "unplugin-vue2-script-setup": "^0.9.2",
     "vite": "^5.0.4",
@@ -90,11 +90,11 @@
     "webpack-remove-empty-scripts": "^1.0.1"
   },
   "scripts": {
-    "typecheck": "turbo run typecheck",
-    "build": "turbo run build",
+    "typecheck": "TURBO_LOG_ORDER=grouped turbo run typecheck --no-daemon",
+    "build": "TURBO_LOG_ORDER=grouped turbo run build --no-daemon",
     "eslint": "eslint --config .eslintrc.js --no-eslintrc --ext .js,.ts,.vue",
     "stylelint": "stylelint --config .stylelintrc.js",
-    "test": "turbo run test --concurrency=1 --output-logs=new-only --continue"
+    "test": "TURBO_LOG_ORDER=grouped turbo run test --concurrency=1 --output-logs=new-only --continue --no-daemon"
   },
-  "packageManager": "pnpm@6.25.0"
+  "packageManager": "pnpm@8.7.0"
 }
