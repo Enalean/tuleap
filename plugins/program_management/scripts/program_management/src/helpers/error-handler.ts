@@ -52,7 +52,12 @@ export async function handleModalError(
             throw rest_error;
         }
         const { error } = await rest_error.response.json();
-        context.commit("setModalErrorMessage", error.code + " " + error.message);
+
+        if (Object.prototype.hasOwnProperty.call(error, "i18n_error_message")) {
+            context.commit("setModalErrorMessage", error.i18n_error_message);
+        } else {
+            context.commit("setModalErrorMessage", error.code + " " + error.message);
+        }
     } catch (e) {
         context.commit("setModalErrorMessage", "");
     }

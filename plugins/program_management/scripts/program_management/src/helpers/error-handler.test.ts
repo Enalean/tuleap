@@ -106,6 +106,24 @@ describe("Error Handler", () => {
             );
         });
 
+        it(`When a translated message can be extracted from the FetchWrapperError,
+            it will set an error message that will show up in a modal window`, async () => {
+            const error = new FetchWrapperError("Internal Server Error", {
+                json: () =>
+                    Promise.resolve({
+                        error: {
+                            code: 400,
+                            message: "Bad Request",
+                            i18n_error_message: "Please fix",
+                        },
+                    }),
+            } as Response);
+
+            await handleModalError(context, error);
+
+            expect(context.commit).toHaveBeenCalledWith("setModalErrorMessage", "Please fix");
+        });
+
         it(`When a message can not be extracted from the FetchWrapperError,
             it will leave the modal error message empty`, async () => {
             const error = new FetchWrapperError("", {
