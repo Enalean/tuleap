@@ -18,7 +18,7 @@
  */
 
 import { vite } from "@tuleap/build-system-configurator";
-import * as path from "path";
+import * as path from "node:path";
 
 export default vite.defineAppConfig(
     { plugin_name: "api-explorer" },
@@ -29,12 +29,6 @@ export default vite.defineAppConfig(
                     "api-explorer": path.resolve(__dirname, "scripts/index.tsx"),
                 },
             },
-            commonjsOptions: {
-                include: [],
-            },
-        },
-        optimizeDeps: {
-            disabled: false,
         },
     },
 );
