@@ -19,16 +19,28 @@
  */
 
 describe("Document filename pattern", () => {
-    let project_unixname: string, now: number;
+    let project_unixname: string, no_pattern_project_unixname: string, now: number;
 
     before(() => {
         now = Date.now();
         project_unixname = "doc-pattern-" + now;
+        no_pattern_project_unixname = "doc-no-pattern-" + now;
     });
+
+    function uploadNewVersion(file_name: string): void {
+        cy.intercept("POST", "*/docman_files/*/versions").as("createVersion");
+        cy.visitProjectService(project_unixname, "Documents");
+        cy.get("[data-test=dropdown-button]").click({ force: true });
+        cy.get("[data-test=document-dropdown-create-new-version-button]").click({ force: true });
+        cy.get("[data-test=document-new-file-upload]").selectFile(file_name);
+        cy.get("[data-test=document-modal-submit-button-create-file-version]").click();
+        cy.wait("@createVersion");
+    }
 
     it("administrator can define a specific pattern", () => {
         cy.projectAdministratorSession();
         cy.createNewPublicProject(project_unixname, "issues");
+        cy.createNewPublicProject(no_pattern_project_unixname, "issues");
 
         cy.log("Pattern can be set");
         cy.visitProjectService(project_unixname, "Documents");
@@ -53,5 +65,49 @@ describe("Document filename pattern", () => {
         cy.get("[data-test=document-new-item-title]").type("test");
         // eslint-disable-next-line no-template-curly-in-string
         cy.get("[data-test=preview]").contains("tuleap-${ID}-test");
+
+        cy.log("User can upload a file");
+        cy.intercept("POST", "*/docman_folders/*/files").as("createFile");
+        cy.get("[data-test=document-new-file-upload]").selectFile("./_fixtures/aa.txt");
+        cy.get("[data-test=document-modal-submit-button-create-item]").click();
+        cy.wait("@createFile");
+        cy.log("Check that progress bar is displayed");
+        cy.get("[data-test=document-progress-bar]");
+        uploadNewVersion("./_fixtures/bb.txt");
+        uploadNewVersion("./_fixtures/cc.txt");
+        uploadNewVersion("./_fixtures/dd.txt");
+        uploadNewVersion("./_fixtures/ee.txt");
+
+        cy.log("When file has several version history, then user have a show all versions link");
+        cy.intercept("GET", "*/docman_files/*/versions*").as("loadVersions");
+        cy.get("[data-test=dropdown-button]").click({ force: true });
+        cy.get("[data-test=document-dropdown-create-new-version-button]").click({ force: true });
+        cy.wait("@loadVersions");
+
+        cy.get("[data-test=document-history]").find("tr").should("have.length", 6);
+
+        cy.get("[data-test=download-version]").first().click();
+        cy.get("[data-test=version-file-name]")
+            .eq(1)
+            .then((version_one) => {
+                const download_folder = Cypress.config("downloadsFolder");
+                cy.readFile(download_folder + "/" + version_one.html()).should("exist");
+                cy.readFile(download_folder + "/" + version_one.html()).should("eq", "ee\n");
+            });
+
+        cy.log("Go to all versions page");
+        cy.get("[data-test=document-view-all-versions]").contains("View all versions");
+        cy.get("[data-test=document-view-all-versions]").click();
+        //
+        cy.get("[data-test=history-versions]").find("tr").should("have.length", 6);
+
+        cy.log("Filename is not displayed when not configured");
+        cy.visitProjectService(no_pattern_project_unixname, "Documents");
+
+        cy.get("[data-test=document-header-actions]").within(() => {
+            cy.get("[data-test=document-item-action-new-button]").click();
+            cy.get("[data-test=document-new-file-creation-button]").click();
+        });
+        cy.get("[data-test=preview]").should("not.exist");
     });
 });

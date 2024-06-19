@@ -27,6 +27,7 @@
             class="document-file-upload-progress-bar"
             max="100"
             v-bind:value="progress"
+            data-test="document-progress-bar"
         ></progress>
     </div>
 </template>

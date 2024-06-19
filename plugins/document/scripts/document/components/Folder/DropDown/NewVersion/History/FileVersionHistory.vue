@@ -30,13 +30,13 @@
                 class="tlp-dropdown-menu-item"
                 role="menuitem"
                 data-shortcut-history
-                data-test="document-versions"
+                data-test="document-view-all-versions"
             >
                 {{ $gettext("View all versions") }}
                 <i class="fa-solid fa-right-long"></i>
             </router-link>
         </p>
-        <table class="tlp-table" v-if="!get_has_error">
+        <table class="tlp-table" v-if="!get_has_error" data-test="document-history">
             <thead>
                 <tr>
                     <th class="document-file-version-version">
