@@ -110,7 +110,6 @@ Requires: viewvc >= 1.1.30, python
 %endif
 Requires: viewvc-theme-tuleap >= 1.0.8
 Requires: tuleap-theme-flamingparrot
-Requires: sha1collisiondetector
 %description core-subversion
 Manage dependencies for Tuleap Subversion integration
 
