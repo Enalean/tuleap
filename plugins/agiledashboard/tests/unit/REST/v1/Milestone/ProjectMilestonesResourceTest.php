@@ -27,38 +27,33 @@ namespace Tuleap\REST {
         \Tuleap\header($header, $replace, $http_response_code);
     }
 }
+
 namespace Tuleap\AgileDashboard\REST\v1\Milestone {
 
-    use Mockery as M;
-    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-        use Tuleap\AgileDashboard\Milestone\PaginatedMilestones;
+    use PHPUnit\Framework\MockObject\MockObject;
+    use Planning_ArtifactMilestone;
+    use Planning_MilestoneFactory;
+    use Planning_NoPlanningsException;
+    use Tuleap\AgileDashboard\Milestone\PaginatedMilestones;
     use Tuleap\AgileDashboard\Milestone\Request\FilteringQueryParser;
     use Tuleap\AgileDashboard\REST\v1\MilestoneRepresentation;
+    use Tuleap\AgileDashboard\Test\Builders\PlanningBuilder;
     use Tuleap\Test\Builders\ProjectTestBuilder;
     use Tuleap\Test\Builders\UserTestBuilder;
     use Tuleap\Test\Network\HTTPHeaderStack;
+    use Tuleap\Test\PHPUnit\TestCase;
+    use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 
-    final class ProjectMilestonesResourceTest extends \Tuleap\Test\PHPUnit\TestCase
+    final class ProjectMilestonesResourceTest extends TestCase
     {
-        use MockeryPHPUnitIntegration;
-
-        /**
-         * @var ProjectMilestonesResource
-         */
-        private $controller;
-        /**
-         * @var M\LegacyMockInterface|M\MockInterface|\Planning_MilestoneFactory
-         */
-        private $milestone_factory;
-        /**
-         * @var M\LegacyMockInterface|M\MockInterface|MilestoneRepresentationBuilder
-         */
-        private $milestone_representation_builder;
+        private ProjectMilestonesResource $controller;
+        private Planning_MilestoneFactory&MockObject $milestone_factory;
+        private MilestoneRepresentationBuilder&MockObject $milestone_representation_builder;
 
         protected function setUp(): void
         {
-            $this->milestone_factory                = M::mock(\Planning_MilestoneFactory::class);
-            $this->milestone_representation_builder = M::mock(MilestoneRepresentationBuilder::class);
+            $this->milestone_factory                = $this->createMock(Planning_MilestoneFactory::class);
+            $this->milestone_representation_builder = $this->createMock(MilestoneRepresentationBuilder::class);
             $this->controller                       = new ProjectMilestonesResource(
                 new FilteringQueryParser(),
                 $this->milestone_factory,
@@ -78,23 +73,23 @@ namespace Tuleap\AgileDashboard\REST\v1\Milestone {
             $query               = '';
             $representation_type = MilestoneRepresentation::SLIM;
 
-            $first_milestone  = M::mock(\Planning_ArtifactMilestone::class);
-            $second_milestone = M::mock(\Planning_ArtifactMilestone::class);
-            $milestones       = new PaginatedMilestones([$first_milestone, $second_milestone], 2);
-            $this->milestone_factory->shouldReceive('getPaginatedTopMilestones')
-                ->once()
-                ->andReturn($milestones);
+            $milestone  = new Planning_ArtifactMilestone(
+                $project,
+                PlanningBuilder::aPlanning(101)->build(),
+                ArtifactTestBuilder::anArtifact(154)->build(),
+            );
+            $milestones = new PaginatedMilestones([$milestone, $milestone], 2);
+            $this->milestone_factory->expects(self::once())->method('getPaginatedTopMilestones')->willReturn($milestones);
 
-            $first_representation  = M::mock(MilestoneRepresentation::class);
-            $second_representation = M::mock(MilestoneRepresentation::class);
+            $first_representation  = $this->createMock(MilestoneRepresentation::class);
+            $second_representation = $this->createMock(MilestoneRepresentation::class);
             $representations       = new PaginatedMilestonesRepresentations(
                 [$first_representation, $second_representation],
                 2
             );
-            $this->milestone_representation_builder->shouldReceive('buildRepresentationsFromCollection')
-                ->once()
+            $this->milestone_representation_builder->expects(self::once())->method('buildRepresentationsFromCollection')
                 ->with($milestones, $user, $representation_type)
-                ->andReturn($representations);
+                ->willReturn($representations);
 
             $result  = $this->controller->get(
                 $user,
@@ -106,9 +101,9 @@ namespace Tuleap\AgileDashboard\REST\v1\Milestone {
                 'asc'
             );
             $headers = HTTPHeaderStack::getStack();
-            $this->assertEquals('X-PAGINATION-SIZE: 2', $headers[2]->getHeader());
-            $this->assertContains($first_representation, $result);
-            $this->assertContains($second_representation, $result);
+            self::assertEquals('X-PAGINATION-SIZE: 2', $headers[2]->getHeader());
+            self::assertContains($first_representation, $result);
+            self::assertContains($second_representation, $result);
         }
 
         public function testItThrowsBadRequestWhenQueryIsMalformed(): void
@@ -117,7 +112,7 @@ namespace Tuleap\AgileDashboard\REST\v1\Milestone {
             $project = ProjectTestBuilder::aProject()->build();
             $query   = 'null';
 
-            $this->expectExceptionCode(400);
+            self::expectExceptionCode(400);
             $this->controller->get($user, $project, MilestoneRepresentation::SLIM, $query, 50, 0, 'asc');
         }
 
@@ -126,9 +121,8 @@ namespace Tuleap\AgileDashboard\REST\v1\Milestone {
             $user    = UserTestBuilder::aUser()->build();
             $project = ProjectTestBuilder::aProject()->build();
             $query   = '';
-            $this->milestone_factory->shouldReceive('getPaginatedTopMilestones')
-                ->once()
-                ->andThrow(new \Planning_NoPlanningsException());
+            $this->milestone_factory->expects(self::once())->method('getPaginatedTopMilestones')
+                ->willThrowException(new Planning_NoPlanningsException());
 
             $representations = $this->controller->get(
                 $user,
@@ -139,9 +133,9 @@ namespace Tuleap\AgileDashboard\REST\v1\Milestone {
                 0,
                 'asc'
             );
-            $this->assertEmpty($representations);
+            self::assertEmpty($representations);
             $headers = HTTPHeaderStack::getStack();
-            $this->assertEquals('X-PAGINATION-SIZE: 0', $headers[2]->getHeader());
+            self::assertEquals('X-PAGINATION-SIZE: 0', $headers[2]->getHeader());
         }
     }
 }
