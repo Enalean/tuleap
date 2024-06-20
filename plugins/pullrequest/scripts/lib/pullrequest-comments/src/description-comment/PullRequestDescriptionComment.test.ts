@@ -21,7 +21,7 @@ import { describe, it, beforeEach, expect, vi } from "vitest";
 import type { SpyInstance } from "vitest";
 import type { HostElement } from "./PullRequestDescriptionComment";
 import {
-    PullRequestCommentDescriptionComponent,
+    renderDescriptionComment,
     after_render_once_descriptor,
     post_description_form_close_callback_descriptor,
 } from "./PullRequestDescriptionComment";
@@ -69,7 +69,7 @@ describe("PullRequestDescriptionComment", () => {
         it("When the component is in read-mode, then it should render its content", () => {
             host.edition_form_presenter = null;
 
-            const update = PullRequestCommentDescriptionComponent.content(host);
+            const update = renderDescriptionComment(host);
             update(host, target);
 
             expect(selectOrThrow(target, "[data-test=comment-author-avatar]")).toBeDefined();
@@ -82,7 +82,7 @@ describe("PullRequestDescriptionComment", () => {
             host.edition_form_presenter =
                 PullRequestDescriptionCommentFormPresenter.fromCurrentDescription(host.description);
 
-            const update = PullRequestCommentDescriptionComponent.content(host);
+            const update = renderDescriptionComment(host);
             update(host, target);
 
             expect(selectOrThrow(target, "[data-test=comment-author-avatar]")).toBeDefined();
@@ -104,7 +104,7 @@ describe("PullRequestDescriptionComment", () => {
         const host = {} as HostElement;
 
         vi.useFakeTimers();
-        post_description_form_close_callback_descriptor.get(host)();
+        post_description_form_close_callback_descriptor.value(host)();
         vi.advanceTimersToNextTimer();
 
         expect(loadTooltips).toHaveBeenCalledTimes(1);

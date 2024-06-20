@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import type { UpdateFunction } from "hybrids";
 import { define, html } from "hybrids";
 import { loadTooltips } from "@tuleap/tooltip";
 import type { DescriptionCommentFormPresenter } from "./PullRequestDescriptionCommentFormPresenter";
@@ -39,7 +40,7 @@ export type HostElement = PullRequestDescriptionComment &
     HTMLElement;
 
 export type PullRequestDescriptionComment = {
-    readonly content: () => HTMLElement;
+    readonly render: () => HTMLElement;
     readonly after_render_once: unknown;
     readonly controller: ControlPullRequestDescriptionComment;
     readonly post_description_form_close_callback: () => void;
@@ -50,46 +51,45 @@ export type PullRequestDescriptionComment = {
 };
 
 export const after_render_once_descriptor = {
-    get: (host: PullRequestDescriptionComment): unknown => host.content(),
+    value: (host: PullRequestDescriptionComment): unknown => host.render(),
     observe(host: HostElement): void {
         loadTooltips(host, false);
     },
 };
 
 export const post_description_form_close_callback_descriptor = {
-    get: (host: HostElement) => (): void => {
+    value: (host: HostElement) => (): void => {
         setTimeout(() => {
             loadTooltips(host, false);
         });
     },
 };
 
+export const renderDescriptionComment = (
+    host: PullRequestDescriptionComment,
+): UpdateFunction<PullRequestDescriptionComment> => html`
+    <div class="pull-request-comment pull-request-description-comment">
+        ${getCommentAvatarTemplate(host.description.author)}
+        ${getDescriptionContentTemplate(host, gettext_provider)}
+        ${getDescriptionCommentFormTemplate(host, gettext_provider)}
+    </div>
+`;
+
 export const PullRequestCommentDescriptionComponent = define<PullRequestDescriptionComment>({
     tag: PULL_REQUEST_COMMENT_DESCRIPTION_ELEMENT_TAG_NAME,
-    description: undefined,
-    controller: undefined,
+    description: (host, value) => value,
+    controller: (host, value) => value,
     after_render_once: after_render_once_descriptor,
     post_description_form_close_callback: post_description_form_close_callback_descriptor,
-    edition_form_presenter: {
-        set: (host, presenter: DescriptionCommentFormPresenter | undefined) => presenter ?? null,
-    },
-    writing_zone_controller: {
-        get: (host, controller: ControlWritingZone | undefined) =>
-            controller ??
-            WritingZoneController({
-                document,
-                focus_writing_zone_when_connected: true,
-                project_id: host.description.project_id,
-            }),
-    },
-    writing_zone: {
-        get: getWritingZoneElement,
-    },
-    content: (host) => html`
-        <div class="pull-request-comment pull-request-description-comment">
-            ${getCommentAvatarTemplate(host.description.author)}
-            ${getDescriptionContentTemplate(host, gettext_provider)}
-            ${getDescriptionCommentFormTemplate(host, gettext_provider)}
-        </div>
-    `,
+    edition_form_presenter: (host, presenter: DescriptionCommentFormPresenter | undefined) =>
+        presenter ?? null,
+    writing_zone_controller: (host, controller: ControlWritingZone | undefined) =>
+        controller ??
+        WritingZoneController({
+            document,
+            focus_writing_zone_when_connected: true,
+            project_id: host.description.project_id,
+        }),
+    writing_zone: getWritingZoneElement,
+    render: renderDescriptionComment,
 });

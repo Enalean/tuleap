@@ -38,7 +38,7 @@ export type HostElement = PullRequestCommentComponentType &
 type MapOfClasses = Record<string, boolean>;
 
 export type PullRequestCommentComponentType = {
-    readonly content: () => HTMLElement;
+    readonly render: () => HTMLElement;
     readonly after_render_once: unknown;
     readonly element_height: number;
     readonly post_rendering_callback: (() => void) | undefined;
@@ -85,15 +85,15 @@ export const setReplies = (
 };
 
 export const after_render_once_descriptor = {
-    get: (host: PullRequestCommentComponentType): unknown => host.content(),
+    value: (host: PullRequestCommentComponentType): unknown => host.render(),
     observe(host: HostElement): void {
         loadTooltips(host, false);
     },
 };
 
 export const element_height_descriptor = {
-    get: (host: PullRequestCommentComponentType): number =>
-        host.content().getBoundingClientRect().height,
+    value: (host: PullRequestCommentComponentType): number =>
+        host.render().getBoundingClientRect().height,
     observe(host: PullRequestCommentComponentType): void {
         setTimeout(() => {
             host.post_rendering_callback?.();
@@ -131,54 +131,55 @@ const getCommentContent = (
     `;
 };
 
+export const renderComment = (
+    host: PullRequestCommentComponentType,
+): UpdateFunction<PullRequestCommentComponentType> => html`
+    <div class="pull-request-comment-component">
+        <div class="${getCommentClasses(host)}" data-test="pullrequest-comment">
+            ${getCommentAvatarTemplate(host.comment.user)} ${getCommentContent(host)}
+        </div>
+
+        <div class="pull-request-comment-follow-ups">
+            ${host.replies.map(
+                (reply: PullRequestCommentPresenter) => html`
+                    <tuleap-pullrequest-comment-reply
+                        comment="${reply}"
+                        controller="${host.controller.buildReplyController()}"
+                        onshow-reply-form="${(): void => host.controller.showReplyForm(host)}"
+                        onhide-reply-form="${(): void => host.controller.hideReplyForm(host)}"
+                        is_last_reply="${isLastReply(host, reply)}"
+                    ></tuleap-pullrequest-comment-reply>
+                `,
+            )}
+            ${host.is_reply_form_shown &&
+            html`
+                <tuleap-pullrequest-new-comment-form
+                    class="pull-request-comment-reply-form"
+                    controller="${host.controller.buildReplyCreationController(host)}"
+                ></tuleap-pullrequest-new-comment-form>
+            `}
+        </div>
+    </div>
+`;
+
 export const PullRequestCommentComponent = define<PullRequestCommentComponentType>({
     tag: PULL_REQUEST_COMMENT_ELEMENT_TAG_NAME,
     is_reply_form_shown: false,
     is_edition_form_shown: false,
-    comment: undefined,
+    comment: (host, value) => value,
     post_rendering_callback: undefined,
-    relative_date_helper: undefined,
+    relative_date_helper: (host: PullRequestCommentComponentType) => {
+        return host.controller.getRelativeDateHelper();
+    },
     after_render_once: after_render_once_descriptor,
     element_height: element_height_descriptor,
-    controller: {
-        set: (host, controller: ControlPullRequestComment) => {
-            host.relative_date_helper = controller.getRelativeDateHelper();
-            if (host.comment) {
-                controller.displayReplies(host);
-            }
+    controller: (host, controller: ControlPullRequestComment) => {
+        if (host.comment) {
+            controller.displayReplies(host);
+        }
 
-            return controller;
-        },
+        return controller;
     },
-    replies: {
-        set: setReplies,
-    },
-    content: (host) => html`
-        <div class="pull-request-comment-component">
-            <div class="${getCommentClasses(host)}" data-test="pullrequest-comment">
-                ${getCommentAvatarTemplate(host.comment.user)} ${getCommentContent(host)}
-            </div>
-
-            <div class="pull-request-comment-follow-ups">
-                ${host.replies.map(
-                    (reply: PullRequestCommentPresenter) => html`
-                        <tuleap-pullrequest-comment-reply
-                            comment="${reply}"
-                            controller="${host.controller.buildReplyController()}"
-                            onshow-reply-form="${(): void => host.controller.showReplyForm(host)}"
-                            onhide-reply-form="${(): void => host.controller.hideReplyForm(host)}"
-                            is_last_reply="${isLastReply(host, reply)}"
-                        ></tuleap-pullrequest-comment-reply>
-                    `,
-                )}
-                ${host.is_reply_form_shown &&
-                html`
-                    <tuleap-pullrequest-new-comment-form
-                        class="pull-request-comment-reply-form"
-                        controller="${host.controller.buildReplyCreationController(host)}"
-                    ></tuleap-pullrequest-new-comment-form>
-                `}
-            </div>
-        </div>
-    `,
+    replies: setReplies,
+    render: renderComment,
 });

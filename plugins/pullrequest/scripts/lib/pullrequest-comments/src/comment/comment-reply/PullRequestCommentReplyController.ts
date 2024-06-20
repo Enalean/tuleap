@@ -70,11 +70,11 @@ export const PullRequestCommentReplyController = (
             (updated_comment) => {
                 host.comment = updated_comment;
                 host.is_in_edition_mode = false;
-                loadTooltips(host.content(), false);
+                loadTooltips(host.render(), false);
             },
             () => {
                 host.is_in_edition_mode = false;
-                loadTooltips(host.content(), false);
+                loadTooltips(host.render(), false);
             },
             host.parent_element.controller.getErrorCallback(),
         ),

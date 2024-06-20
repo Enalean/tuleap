@@ -30,7 +30,7 @@ export type ControlWritingZone = {
     focusWritingZone(host: HostElement): void;
     blurWritingZone(host: HostElement): void;
     resetWritingZone(host: HTMLElement & InternalWritingZone): void;
-    initWritingZone(host: HostElement): void;
+    initWritingZone(): WritingZonePresenter;
     setWritingZoneContent(host: HostElement, content: string): void;
     shouldFocusWritingZoneWhenConnected(): boolean;
     getDocument(): Document;
@@ -73,16 +73,13 @@ export const WritingZoneController = (config: WritingZoneConfig): ControlWriting
     let unsaved_content = "";
 
     return {
-        initWritingZone: (host: HostElement): void => {
+        initWritingZone: (): WritingZonePresenter => {
             const presenter = WritingZonePresenter.buildInitial(config.project_id);
-
             if (unsaved_content) {
-                host.presenter = WritingZonePresenter.buildWithContent(presenter, unsaved_content);
-
-                return;
+                return WritingZonePresenter.buildWithContent(presenter, unsaved_content);
             }
 
-            host.presenter = presenter;
+            return presenter;
         },
 
         onTextareaInput: (host: HostElement): void => {

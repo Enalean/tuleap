@@ -35,7 +35,7 @@ type PullRequestCommentReply = {
 };
 
 export type InternalPullRequestCommentReply = Readonly<PullRequestCommentReply> & {
-    content: () => HTMLElement;
+    render: () => HTMLElement;
     comment: PullRequestCommentPresenter;
     relative_date_helper: HelpRelativeDatesDisplay;
     parent_element: PullRequestCommentComponentType;
@@ -47,15 +47,15 @@ export type InternalPullRequestCommentReply = Readonly<PullRequestCommentReply> 
 export type HostElement = InternalPullRequestCommentReply & HTMLElement;
 
 export const after_render_once_descriptor = {
-    get: (host: InternalPullRequestCommentReply): unknown => host.content(),
+    value: (host: InternalPullRequestCommentReply): unknown => host.render(),
     observe(host: HostElement): void {
         loadTooltips(host, false);
     },
 };
 
 export const element_height_descriptor = {
-    get: (host: InternalPullRequestCommentReply): number =>
-        host.content().getBoundingClientRect().height,
+    value: (host: InternalPullRequestCommentReply): number =>
+        host.render().getBoundingClientRect().height,
     observe(host: InternalPullRequestCommentReply): void {
         setTimeout(() => {
             host.parent_element.post_rendering_callback?.();
@@ -67,20 +67,15 @@ export const PullRequestCommentReply = define<InternalPullRequestCommentReply>({
     tag: TAG,
     is_last_reply: false,
     is_in_edition_mode: false,
-    comment: undefined,
-    relative_date_helper: undefined,
+    comment: (host, value) => value,
     parent_element: parent(PullRequestCommentComponent),
     after_render_once: after_render_once_descriptor,
     element_height: element_height_descriptor,
-    controller: {
-        set: (
-            host: InternalPullRequestCommentReply,
-            controller: ControlPullRequestCommentReply,
-        ) => {
-            host.relative_date_helper = controller.getRelativeDateHelper();
-
-            return controller;
-        },
-    },
-    content: (host) => getCommentReplyTemplate(host, gettext_provider),
+    relative_date_helper: (host: InternalPullRequestCommentReply) =>
+        host.controller.getRelativeDateHelper(),
+    controller: (
+        host: InternalPullRequestCommentReply,
+        controller: ControlPullRequestCommentReply,
+    ) => controller,
+    render: (host) => getCommentReplyTemplate(host, gettext_provider),
 });

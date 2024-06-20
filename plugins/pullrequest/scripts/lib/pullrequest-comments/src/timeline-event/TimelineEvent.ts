@@ -45,23 +45,19 @@ export type HostElement = InternalTimelineEvent & HTMLElement;
 
 export const TimelineEvent = define<InternalTimelineEvent>({
     tag: TAG,
-    event: undefined,
-    current_user: undefined,
-    presenter: {
-        get: (host, presenter) =>
-            presenter ??
-            TimelineEventPresenter.fromActionOnPullRequestEvent(host.event, gettext_provider),
-    },
-    relative_date_helper: {
-        get: (host, relative_date_display) =>
-            relative_date_display ??
-            RelativeDatesHelper(
-                host.current_user.preferred_date_format,
-                host.current_user.preferred_relative_date_display,
-                host.current_user.user_locale,
-            ),
-    },
-    content: (host) => html`
+    event: (host, value) => value,
+    current_user: (host, value) => value,
+    presenter: (host, presenter) =>
+        presenter ??
+        TimelineEventPresenter.fromActionOnPullRequestEvent(host.event, gettext_provider),
+    relative_date_helper: (host, relative_date_display) =>
+        relative_date_display ??
+        RelativeDatesHelper(
+            host.current_user.preferred_date_format,
+            host.current_user.preferred_relative_date_display,
+            host.current_user.user_locale,
+        ),
+    render: (host) => html`
         <div class="pull-request-comment pull-request-timeline-event timeline-event">
             ${getCommentAvatarTemplate(host.presenter.user)}
             <div class="pull-request-comment-content">

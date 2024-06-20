@@ -41,7 +41,7 @@ export type InternalEditionForm = Readonly<EditionForm> & {
     writing_zone_controller: ControlWritingZone;
     writing_zone: HTMLElement & InternalWritingZone;
     after_render_once: unknown;
-    content: () => HTMLElement;
+    render: () => HTMLElement;
     presenter: EditionFormPresenter;
 };
 
@@ -50,35 +50,25 @@ export type HostElement = InternalEditionForm &
     HTMLElement;
 
 export const after_render_once_descriptor = {
-    get: (host: InternalEditionForm): unknown => host.content(),
+    value: (host: InternalEditionForm): unknown => host.render(),
     observe(host: InternalEditionForm): void {
         host.controller.initEditionForm(host);
     },
 };
 export const EditionForm = define<InternalEditionForm>({
     tag: TAG,
-    project_id: undefined,
-    comment: {
-        set: (host, comment) => {
-            host.presenter = EditionFormPresenter.fromComment(comment);
-            return comment;
-        },
-    },
-    presenter: undefined,
-    controller: undefined,
-    writing_zone_controller: {
-        get: (host, controller: ControlWritingZone | undefined) =>
-            controller ??
-            WritingZoneController({
-                document,
-                project_id: host.project_id,
-                focus_writing_zone_when_connected:
-                    host.controller.shouldFocusWritingZoneOnceRendered(),
-            }),
-    },
-    writing_zone: {
-        get: getWritingZoneElement,
-    },
+    project_id: (host, value) => value,
+    comment: (host, comment) => comment,
+    presenter: (host, value) => value ?? EditionFormPresenter.fromComment(host.comment),
+    controller: (host, value) => value,
+    writing_zone_controller: (host, controller: ControlWritingZone | undefined) =>
+        controller ??
+        WritingZoneController({
+            document,
+            project_id: host.project_id,
+            focus_writing_zone_when_connected: host.controller.shouldFocusWritingZoneOnceRendered(),
+        }),
+    writing_zone: getWritingZoneElement,
     after_render_once: after_render_once_descriptor,
-    content: (host) => html`${getEditionForm(host, gettext_provider)}`,
+    render: (host) => html`${getEditionForm(host, gettext_provider)}`,
 });

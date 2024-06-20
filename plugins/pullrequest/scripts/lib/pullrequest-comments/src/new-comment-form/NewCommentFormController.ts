@@ -31,7 +31,7 @@ export interface NewCommentFormComponentConfig {
 }
 
 export type ControlNewCommentForm = WritingZoneInteractionsHandler<NewCommentForm> & {
-    buildInitialPresenter: (host: NewCommentForm) => void;
+    buildInitialPresenter: () => NewCommentFormPresenter;
     saveNewComment: (host: NewCommentForm) => Promise<void>;
     cancelNewComment: (host: NewCommentForm) => void;
     triggerPostSubmitCallback: NewCommentPostSubmitCallback;
@@ -51,8 +51,8 @@ export const NewCommentFormController = (
     on_error_callback: PullRequestCommentErrorCallback,
     on_cancel_callback?: NewCommentCancelCallback,
 ): ControlNewCommentForm => ({
-    buildInitialPresenter: (host: NewCommentForm): void => {
-        host.presenter = NewCommentFormPresenter.buildFromAuthor(author, config);
+    buildInitialPresenter: (): NewCommentFormPresenter => {
+        return NewCommentFormPresenter.buildFromAuthor(author, config);
     },
     cancelNewComment: (host: NewCommentForm): void => {
         host.presenter = NewCommentFormPresenter.buildFromAuthor(author, config);

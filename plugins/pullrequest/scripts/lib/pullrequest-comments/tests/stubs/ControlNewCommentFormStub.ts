@@ -18,13 +18,24 @@
  */
 
 import type { ControlNewCommentForm } from "../../src/new-comment-form/NewCommentFormController";
+import type { NewCommentFormPresenter } from "../../src/new-comment-form/NewCommentFormPresenter";
 
 const noop = (): void => {
     // Do nothing
 };
 
 export const ControlNewCommentFormStub = (): ControlNewCommentForm => ({
-    buildInitialPresenter: noop,
+    buildInitialPresenter: (): NewCommentFormPresenter => {
+        return {
+            comment_content: "A presenter built by ControlNewCommentFormStub",
+            comment_author: {
+                avatar_url: "url/to/avatar.png",
+            },
+            is_cancel_allowed: true,
+            is_being_submitted: false,
+            is_submittable: true,
+        };
+    },
     saveNewComment: (): Promise<void> => {
         return Promise.resolve();
     },

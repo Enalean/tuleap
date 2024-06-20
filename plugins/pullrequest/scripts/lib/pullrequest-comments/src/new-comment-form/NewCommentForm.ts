@@ -34,7 +34,7 @@ export type HostElement = NewCommentForm &
     ElementContainingAWritingZone<NewCommentForm>;
 
 export interface NewCommentForm {
-    readonly content: () => HTMLElement;
+    readonly render: () => HTMLElement;
     readonly element_height: number;
     readonly post_rendering_callback: (() => void) | undefined;
     readonly controller: ControlNewCommentForm;
@@ -44,7 +44,7 @@ export interface NewCommentForm {
 }
 
 export const form_height_descriptor = {
-    get: (host: NewCommentForm): number => host.content().getBoundingClientRect().height,
+    value: (host: NewCommentForm): number => host.render().getBoundingClientRect().height,
     observe(host: NewCommentForm): void {
         setTimeout(() => {
             host.post_rendering_callback?.();
@@ -56,26 +56,15 @@ export const NewInlineCommentFormComponent = define<NewCommentForm>({
     tag: PULL_REQUEST_NEW_COMMENT_FORM_ELEMENT_TAG_NAME,
     post_rendering_callback: undefined,
     element_height: form_height_descriptor,
-    writing_zone_controller: {
-        get: (host, controller: ControlWritingZone | undefined) =>
-            controller ??
-            WritingZoneController({
-                document,
-                project_id: Number(host.controller.getProjectId()),
-                focus_writing_zone_when_connected:
-                    host.controller.shouldFocusWritingZoneOnceRendered(),
-            }),
-    },
-    writing_zone: {
-        get: getWritingZoneElement,
-    },
-    controller: {
-        set: (host, controller: ControlNewCommentForm) => {
-            controller.buildInitialPresenter(host);
-
-            return controller;
-        },
-    },
-    presenter: undefined,
-    content: (host) => getNewCommentFormContent(host, gettext_provider),
+    writing_zone_controller: (host, controller: ControlWritingZone | undefined) =>
+        controller ??
+        WritingZoneController({
+            document,
+            project_id: Number(host.controller.getProjectId()),
+            focus_writing_zone_when_connected: host.controller.shouldFocusWritingZoneOnceRendered(),
+        }),
+    writing_zone: getWritingZoneElement,
+    controller: (host, controller: ControlNewCommentForm) => controller,
+    presenter: (host, value) => value ?? host.controller.buildInitialPresenter(),
+    render: (host) => getNewCommentFormContent(host, gettext_provider),
 });
