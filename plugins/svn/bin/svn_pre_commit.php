@@ -29,7 +29,6 @@ require_once __DIR__ . '/../include/svnPlugin.php';
 
 use Tuleap\SVN\AccessControl\AccessFileHistoryDao;
 use Tuleap\SVN\AccessControl\AccessFileHistoryFactory;
-use Tuleap\SVN\Commit\CollidingSHA1Validator;
 use Tuleap\SVN\Commit\CommitMessageValidator;
 use Tuleap\SVN\Commit\FileSizeValidator;
 use Tuleap\SVN\Commit\ImmutableTagCommitValidator;
@@ -43,7 +42,6 @@ use Tuleap\SVN\Repository\HookConfigRetriever;
 use Tuleap\SVN\Repository\HookConfigSanitizer;
 use Tuleap\SVN\Repository\HookDao;
 use Tuleap\SVN\Repository\RepositoryManager;
-use Tuleap\SVNCore\SHA1CollisionDetector;
 use Tuleap\SVN\SvnAdmin;
 
 $logger          = SvnPlugin::getLogger();
@@ -80,10 +78,6 @@ try {
             new ImmutableTagFactory(
                 new ImmutableTagDao()
             )
-        ),
-        new CollidingSHA1Validator(
-            $svnlook,
-            new SHA1CollisionDetector()
         ),
         new FileSizeValidator(
             $svnlook,
