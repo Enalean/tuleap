@@ -4,6 +4,7 @@
   "date": "2024-02-28T03:28:52+01:00",
   "path": "/nix/store/m8c3r36x64bl5ijp5zykw2kidhpq4rdh-gitignore.nix",
   "sha256": "02wxkdpbhlm3yk5mhkhsp3kwakc16xpmsf2baw57nz1dg459qv8w",
+  "hash": "sha256-HG2cCnktfHsKV0s4XW83gU3F57gaTljL9KNSuG6bnQs=",
   "fetchLFS": false,
   "fetchSubmodules": false,
   "deepClone": false,
