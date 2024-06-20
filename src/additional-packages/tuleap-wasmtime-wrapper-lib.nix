@@ -27,7 +27,7 @@ let
     buildPhase = ''
       runHook preBuild
       HOME="$TMPDIR"
-      cargo-build-glibc217 --release --frozen
+      cargo-build-glibc --release --frozen
       runHook postBuild
     '';
 
