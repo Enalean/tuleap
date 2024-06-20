@@ -45,6 +45,12 @@ const PendingArtifactSectionFactory = {
             format: "html",
             post_processed_value: "<h2>Title 1</h2><p>description 1</p>",
         },
+        attachments: {
+            field_id: 171,
+            label: "attachment",
+            type: "file",
+            file_descriptions: [],
+        },
     }),
 
     override: (overrides: Partial<PendingArtifactSection>): PendingArtifactSection => ({

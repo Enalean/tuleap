@@ -39,6 +39,7 @@ final readonly class ArtidocPresenter
         public string $title,
         ?DocumentTrackerRepresentation $selected_tracker,
         array $allowed_trackers,
+        public int $upload_max_size,
     ) {
         $this->selected_tracker = encode($selected_tracker);
         $this->allowed_trackers = encode($allowed_trackers);

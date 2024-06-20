@@ -20,12 +20,15 @@
 <template>
     <div>
         <textarea ref="area_editor" v-bind:value="toValue(editable_description)"></textarea>
+        <p class="tlp-text-muted drag-and-drop-info" v-if="isUploadEnabled">
+            {{ $gettext("You can drag 'n drop or paste image directly in the editor.") }}
+        </p>
     </div>
 </template>
 <script setup lang="ts">
 import type { SectionEditor } from "@/composables/useSectionEditor";
 import type * as ckeditor from "ckeditor4";
-import { toValue, ref, onMounted, onBeforeUnmount } from "vue";
+import { computed, toValue, ref, onMounted, onBeforeUnmount } from "vue";
 import { config } from "@tuleap/ckeditor-config";
 import { CURRENT_LOCALE } from "@/locale-injection-key";
 import { strictInject } from "@tuleap/vue-strict-inject";
@@ -33,15 +36,30 @@ import { strictInject } from "@tuleap/vue-strict-inject";
 // CKEDITOR is injected by the backend
 // eslint-disable-next-line
 import eventInfo = CKEDITOR.eventInfo;
-const { language } = strictInject(CURRENT_LOCALE);
+
+const { language } = strictInject<UserLocale>(CURRENT_LOCALE);
+import type { UploadHandler, UploadError } from "@tuleap/ckeditor-image-upload";
+import { MaxSizeUploadExceededError, buildFileUploadHandler } from "@tuleap/ckeditor-image-upload";
+import type { AttachmentFile } from "@/composables/useAttachmentFile";
+import { UPLOAD_MAX_SIZE } from "@/max-upload-size-injecion-keys";
+import type { UserLocale } from "@/helpers/user-locale";
+import { useGettext } from "vue3-gettext";
 
 const props = defineProps<{
+    upload_url: string;
+    add_attachment_to_waiting_list: AttachmentFile["addAttachmentToWaitingList"];
     editable_description: string;
     input_current_description: SectionEditor["inputCurrentDescription"];
+    is_dragndrop_allowed: boolean;
 }>();
 
 const area_editor = ref<HTMLTextAreaElement | null>(null);
 const editor = ref<ckeditor.default.editor | null>(null);
+const isUploadEnabled = computed(() => props.is_dragndrop_allowed);
+
+const upload_max_size = strictInject(UPLOAD_MAX_SIZE);
+
+const { $gettext, interpolate } = useGettext();
 
 const onChange = (editor_value: string | undefined): void => {
     if (editor_value) {
@@ -49,7 +67,41 @@ const onChange = (editor_value: string | undefined): void => {
     }
 };
 
-const onInstanceReady = (event: eventInfo<ckeditor.default.eventDataTypes>): void => {
+const setupImageUpload = (): UploadHandler => {
+    const onStartCallback = (): void => {};
+    const wait_maximum_time = 9999999;
+    const onErrorCallback = (error: UploadError | MaxSizeUploadExceededError): void => {
+        if (error instanceof MaxSizeUploadExceededError) {
+            editor.value?.showNotification(
+                interpolate("You are not allowed to upload images bigger than %{ max_size }", {
+                    max_size: upload_max_size,
+                }),
+                "warning",
+                wait_maximum_time,
+            );
+        } else {
+            editor.value?.showNotification(
+                $gettext("Unable to upload the image"),
+                "warning",
+                wait_maximum_time,
+            );
+        }
+    };
+    const onSuccessCallback = (id: number, download_href: string): void => {
+        props.add_attachment_to_waiting_list({ id, upload_url: download_href });
+    };
+
+    return buildFileUploadHandler({
+        // eslint-disable-next-line
+        ckeditor_instance: editor.value as any as CKEDITOR.editor,
+        max_size_upload: upload_max_size,
+        onStartCallback,
+        onErrorCallback,
+        onSuccessCallback,
+    });
+};
+
+const onInstanceReady = (): void => {
     if (editor.value) {
         editor.value.on("change", () => onChange(editor.value?.getData()));
 
@@ -62,17 +114,40 @@ const onInstanceReady = (event: eventInfo<ckeditor.default.eventDataTypes>): voi
             }
         });
 
-        // disable drag and drop
-        // @ts-expect-error: CKEDITOR is injected by the backend
-        // eslint-disable-next-line
-        CKEDITOR.plugins.clipboard.preventDefaultDropOnElement(event.editor.document);
-
         // Ajust the height of the editor to the content. The timeout is required to load autogrow plugin correctly after editor initialization
         setTimeout(() => {
             if (editor.value) {
                 editor.value.execCommand("autogrow");
             }
         });
+
+        editor.value.on(
+            "fileUploadRequest",
+            // eslint-disable-next-line
+            (event: eventInfo<CKEDITOR.eventDataTypes>) => {
+                if (
+                    props.upload_url === "/api/v1/tracker_fields/0/files" ||
+                    !props.is_dragndrop_allowed
+                ) {
+                    event.cancel();
+                    // @ts-expect-error : we have to intercept the fileLoader and abort the image upload to prevent the image from being displayed in the editor
+                    event.data.fileLoader.abort();
+
+                    editor.value?.showNotification(
+                        $gettext("You are not allowed to paste images here"),
+                        "warning",
+                        0,
+                    );
+                } else {
+                    // eslint-disable-next-line
+                    setupImageUpload()(event as any);
+                }
+            },
+            null,
+            null,
+            4,
+        );
+
         editor.value.document.getBody().setStyle("font-size", "16px");
     }
 };
@@ -88,7 +163,8 @@ onMounted(() => {
         editor.value = CKEDITOR.replace(area_editor.value, {
             ...config,
             language,
-            extraPlugins: "autogrow",
+            extraPlugins: "autogrow,uploadimage",
+            uploadUrl: props.upload_url,
             autoGrow_minHeight: 200,
             autoGrow_bottomSpace: 50,
             height: "auto",
@@ -113,5 +189,10 @@ onBeforeUnmount(() => {
 
 div {
     z-index: zindex.$editor;
+}
+
+.drag-and-drop-info {
+    margin: 0 0 var(--tlp-small-spacing);
+    font-size: 0.9rem;
 }
 </style>

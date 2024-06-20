@@ -51,8 +51,8 @@ use Tuleap\Request\CollectRoutesEvent;
 use Tuleap\Request\DispatchableWithRequest;
 
 require_once __DIR__ . '/../vendor/autoload.php';
-require_once __DIR__ . '/../../docman/vendor/autoload.php';
-require_once __DIR__ . '/../../tracker/vendor/autoload.php';
+require_once __DIR__ . '/../../docman/include/docmanPlugin.php';
+require_once __DIR__ . '/../../tracker/include/trackerPlugin.php';
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 class ArtidocPlugin extends Plugin implements PluginWithConfigKeys
@@ -119,7 +119,7 @@ class ArtidocPlugin extends Plugin implements PluginWithConfigKeys
                 $tracker_factory,
             ),
             new ArtidocBreadcrumbsProvider($docman_item_factory),
-            $logger,
+            $logger
         );
     }
 

@@ -31,12 +31,13 @@ import { preventPageLeave, allowPageLeave } from "@/helpers/on-before-unload";
 import { convertDescriptionToHtml } from "@/helpers/convert-description-to-html";
 import {
     isOutdatedSectionFault,
-    isSectionInItsLatestVersion,
-} from "@/helpers/is-section-in-its-latest-version";
+    getSectionInItsLatestVersion,
+} from "@/helpers/get-section-in-its-latest-version";
 import { Fault } from "@tuleap/fault";
 import type { ResultAsync } from "neverthrow";
 import { errAsync, okAsync } from "neverthrow";
 import type { Tracker } from "@/stores/configuration-store";
+import type { AttachmentFile } from "@/composables/useAttachmentFile";
 import { DOCUMENT_ID } from "@/document-id-injection-key";
 import type { PositionForSave } from "@/stores/useSectionsStore";
 
@@ -80,6 +81,8 @@ export function useSectionEditor(
         pending: PendingArtifactSection,
         section: ArtifactSection,
     ) => void,
+    merge_artifact_attachments: AttachmentFile["mergeArtifactAttachments"],
+    set_waiting_list_attachments: AttachmentFile["setWaitingListAttachments"],
 ): SectionEditor {
     const document_id = strictInject(DOCUMENT_ID);
     const can_user_edit_document = strictInject(CAN_USER_EDIT_DOCUMENT);
@@ -199,13 +202,18 @@ export function useSectionEditor(
             );
         }
 
-        return isSectionInItsLatestVersion(current_section.value)
-            .andThen(() => {
+        return getSectionInItsLatestVersion(current_section.value)
+            .andThen((section_in_its_latest_version: ArtidocSection) => {
                 if (!isArtifactSection(current_section.value)) {
                     return errAsync(
                         Fault.fromMessage("Save of new section is not implemented yet"),
                     );
                 }
+
+                const merged_attachments = merge_artifact_attachments(
+                    section_in_its_latest_version,
+                    editable_description.value,
+                );
 
                 return putArtifact(
                     current_section.value.artifact.id,
@@ -213,6 +221,7 @@ export function useSectionEditor(
                     current_section.value.title,
                     editable_description.value,
                     current_section.value.description.field_id,
+                    merged_attachments,
                 );
             })
             .andThen(getLatestVersionOfCurrentSection);
@@ -240,6 +249,7 @@ export function useSectionEditor(
             current_section.value.title,
             editable_description.value,
             current_section.value.description.field_id,
+            merge_artifact_attachments(current_section.value, editable_description.value),
         )
             .andThen(getLatestVersionOfCurrentSection)
             .match(
@@ -249,6 +259,7 @@ export function useSectionEditor(
                         update_section_callback(artidoc_section);
                     }
                     closeEditor();
+
                     is_being_saved.value = false;
                     addTemporaryJustSavedFlag();
                 },
@@ -322,6 +333,7 @@ export function useSectionEditor(
     function closeEditor(): void {
         editable_description.value = original_description.value;
         editable_title.value = original_title.value;
+        set_waiting_list_attachments([]);
         setEditMode(false);
         resetErrorStates();
     }

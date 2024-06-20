@@ -8,6 +8,9 @@ dependencies:
   '@tuleap/ckeditor-config':
     specifier: workspace:*
     version: link:../../../../lib/frontend/ckeditor-config
+  '@tuleap/ckeditor-image-upload':
+    specifier: workspace:^
+    version: link:../../../../lib/frontend/ckeditor-image-upload
   '@tuleap/dom':
     specifier: workspace:^
     version: link:../../../../lib/frontend/dom
@@ -17,6 +20,9 @@ dependencies:
   '@tuleap/fetch-result':
     specifier: workspace:*
     version: link:../../../../lib/frontend/fetch-result
+  '@tuleap/plugin-tracker-artifact-ckeditor-image-upload':
+    specifier: workspace:^
+    version: link:../../../tracker/scripts/lib/artifact-ckeditor-image-upload
   '@tuleap/project-background':
     specifier: workspace:^
     version: link:../../../../lib/frontend/project-background

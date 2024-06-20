@@ -28,9 +28,12 @@ import SectionDescriptionReadOnly from "@/components/description/SectionDescript
 const default_props = {
     editable_description: "Lorem ipsum",
     readonly_description: "Lorem ipsum",
-    artifact_id: 1,
+    section_id: "1abc",
     is_edit_mode: false,
+    upload_url: "/file/upload",
+    add_attachment_to_waiting_list: vi.fn(),
     input_current_description: vi.fn(),
+    is_dragndrop_allowed: true,
 };
 describe("SectionDescription", () => {
     describe("while the sections are loading", () => {

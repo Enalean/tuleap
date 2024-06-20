@@ -23,9 +23,12 @@
     <template v-else-if="is_edit_mode">
         <component
             v-bind:is="async_editor"
+            v-bind:upload_url="upload_url"
+            v-bind:add_attachment_to_waiting_list="add_attachment_to_waiting_list"
             v-bind:editable_description="editable_description"
             v-bind:input_current_description="input_current_description"
             v-bind:readonly_value="readonly_description"
+            v-bind:is_dragndrop_allowed="is_dragndrop_allowed"
             data-test="editor"
         />
     </template>
@@ -38,12 +41,16 @@ import { loadTooltips } from "@tuleap/tooltip";
 import SectionDescriptionSkeleton from "@/components/SectionDescriptionSkeleton.vue";
 import { useInjectSectionsStore } from "@/stores/useSectionsStore";
 import SectionDescriptionReadOnly from "@/components/description/SectionDescriptionReadOnly.vue";
+import type { AttachmentFile } from "@/composables/useAttachmentFile";
 
 defineProps<{
+    add_attachment_to_waiting_list: AttachmentFile["addAttachmentToWaitingList"];
+    upload_url: string;
     editable_description: string;
     readonly_description: string;
     is_edit_mode: boolean;
     input_current_description: SectionEditor["inputCurrentDescription"];
+    is_dragndrop_allowed: boolean;
 }>();
 
 const { is_sections_loading } = useInjectSectionsStore();

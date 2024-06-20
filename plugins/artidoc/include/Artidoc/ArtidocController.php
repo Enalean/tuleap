@@ -97,6 +97,8 @@ final readonly class ArtidocController implements DispatchableWithRequest, Dispa
         $permissions_manager = \Docman_PermissionsManager::instance((int) $service->getProject()->getID());
         $user_can_write      = $permissions_manager->userCanWrite($user, $document_information->document->getId());
 
+        $allowed_max_size = \ForgeConfig::getInt('sys_max_size_upload');
+
         $service->displayHeader(
             $title,
             $this->breadcrumbs_provider->getBreadcrumbs($document_information, $user),
@@ -118,7 +120,8 @@ final readonly class ArtidocController implements DispatchableWithRequest, Dispa
                     array_map(
                         fn (\Tracker $tracker): DocumentTrackerRepresentation => $this->getTrackerRepresentation($tracker, $user),
                         $this->suitable_trackers_retriever->getTrackers($document_information, $user),
-                    )
+                    ),
+                    $allowed_max_size
                 )
             );
         $service->displayFooter();

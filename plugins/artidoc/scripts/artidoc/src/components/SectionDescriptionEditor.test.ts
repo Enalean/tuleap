@@ -24,6 +24,8 @@ import type { ComponentPublicInstance } from "vue";
 import { CURRENT_LOCALE } from "@/locale-injection-key";
 import { userLocale } from "@/helpers/user-locale";
 import { mockStrictInject } from "@/helpers/mock-strict-inject";
+import { UPLOAD_MAX_SIZE } from "@/max-upload-size-injecion-keys";
+import { createGettext } from "vue3-gettext";
 
 vi.mock("@tuleap/vue-strict-inject");
 
@@ -39,13 +41,20 @@ describe("SectionDescriptionEditor", () => {
             })),
         };
 
-        mockStrictInject([[CURRENT_LOCALE, userLocale("fr_FR")]]);
+        mockStrictInject([
+            [CURRENT_LOCALE, userLocale("fr_FR")],
+            [UPLOAD_MAX_SIZE, 1234567890],
+        ]);
 
         wrapper = shallowMount(SectionDescriptionEditor, {
+            global: { plugins: [createGettext({ silent: true })] },
             props: {
-                artifact_id: 1,
+                section_id: "1abc",
                 editable_description: "<h1>description</h1>",
+                upload_url: "file/upload_url",
+                add_attachment_to_waiting_list: vi.fn(),
                 input_current_description: vi.fn(),
+                is_dragndrop_allowed: true,
             },
         });
     });

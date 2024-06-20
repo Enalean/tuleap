@@ -41,6 +41,7 @@ use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\FileUploadData;
 use Tuleap\Tracker\Artifact\FileUploadDataProvider;
+use Tuleap\Tracker\Artifact\UploadDataAttributesForRichTextEditorBuilder;
 use Tuleap\Tracker\REST\Artifact\ArtifactFieldValueCommonmarkRepresentation;
 use Tuleap\Tracker\REST\Artifact\ArtifactFieldValueFileFullRepresentation;
 use Tuleap\Tracker\REST\Artifact\ArtifactFieldValueFullRepresentation;
@@ -204,6 +205,20 @@ final class RawSectionsToRepresentationTransformerTest extends TestCase
                 $art4->getLastChangeset() => $this->getFileValue($art4),
             });
 
+        $editor_builder = $this->createMock(UploadDataAttributesForRichTextEditorBuilder::class);
+        $editor_builder->method('getDataAttributes')->willReturn([
+            [
+                'name' => 'upload-url',
+                'value' => 'https//upload_url',
+            ], [
+                'name' => 'upload-field-name',
+                'value' => 'field',
+            ], [
+                'name' => 'upload-max-size',
+                'value' => 1234567890,
+            ],
+        ]);
+
         $transformer = new RawSectionsToRepresentationTransformer(
             $dao,
             $factory,
@@ -243,7 +258,7 @@ final class RawSectionsToRepresentationTransformerTest extends TestCase
                 self::assertInstanceOf(ArtifactFieldValueCommonmarkRepresentation::class, $result->value->sections[$index]->description);
                 self::assertSame($expected['description'], $result->value->sections[$index]->description->value);
                 self::assertSame($expected['can_user_edit_section'], $result->value->sections[$index]->can_user_edit_section);
-                self::assertInstanceOf(ArtifactFieldValueFileFullRepresentation::class, $result->value->sections[$index]->attachment);
+                self::assertInstanceOf(ArtifactFieldValueFileFullRepresentation::class, $result->value->sections[$index]->attachments);
             }
         );
     }
@@ -290,6 +305,9 @@ final class RawSectionsToRepresentationTransformerTest extends TestCase
         $file_upload_provider = $this->createMock(FileUploadDataProvider::class);
         $file_upload_provider->method('getFileUploadData')->willReturn(null);
 
+        $editor_builder = $this->createMock(UploadDataAttributesForRichTextEditorBuilder::class);
+        $editor_builder->method('getDataAttributes')->willReturn([]);
+
         $transformer = new RawSectionsToRepresentationTransformer(
             $dao,
             $factory,
@@ -323,7 +341,7 @@ final class RawSectionsToRepresentationTransformerTest extends TestCase
                 self::assertInstanceOf(ArtifactFieldValueCommonmarkRepresentation::class, $result->value->sections[$index]->description);
                 self::assertSame($expected['description'], $result->value->sections[$index]->description->value);
                 self::assertSame($expected['can_user_edit_section'], $result->value->sections[$index]->can_user_edit_section);
-                self::assertnull($result->value->sections[$index]->attachment);
+                self::assertnull($result->value->sections[$index]->attachments);
             }
         );
     }
@@ -387,6 +405,10 @@ final class RawSectionsToRepresentationTransformerTest extends TestCase
         $file_upload_provider->method('getFileUploadData')->willReturn(
             null
         );
+
+        $editor_builder = $this->createMock(UploadDataAttributesForRichTextEditorBuilder::class);
+        $editor_builder->method('getDataAttributes')->willReturn([]);
+
         $transformer = new RawSectionsToRepresentationTransformer(
             $dao,
             $factory,
