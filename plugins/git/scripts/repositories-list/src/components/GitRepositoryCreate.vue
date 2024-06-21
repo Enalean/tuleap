@@ -24,6 +24,7 @@
         id="create-repository-modal"
         class="tlp-modal"
         v-on:submit="createRepository"
+        ref="modal_element"
         data-test="create-repository-modal-form"
     >
         <div class="tlp-modal-header">
@@ -98,62 +99,67 @@
         </div>
     </form>
 </template>
-<script lang="ts">
-import Vue from "vue";
-import { Component } from "vue-property-decorator";
+<script setup lang="ts">
+import { onMounted, ref } from "vue";
 import { FetchWrapperError } from "@tuleap/tlp-fetch";
 import { createModal } from "@tuleap/tlp-modal";
 import type { Modal } from "@tuleap/tlp-modal";
 import { getProjectId } from "../repository-list-presenter";
 import { postRepository } from "../api/rest-querier";
+import { useMutations } from "vuex-composition-helpers";
+import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
 
-@Component
-export default class GitRepositoryCreate extends Vue {
-    private modal: Modal | null = null;
-    error = "";
-    is_loading = false;
-    repository_name = "";
+const { $gettext } = useGettext();
 
-    mounted(): void {
-        this.modal = createModal(this.$el);
+const { setAddRepositoryModal } = useMutations(["setAddRepositoryModal"]);
 
-        this.modal.addEventListener("tlp-modal-hidden", this.reset);
+const modal = ref<Modal | null>(null);
+const error = ref("");
+const is_loading = ref(false);
+const repository_name = ref("");
 
-        this.$store.commit("setAddRepositoryModal", this.modal);
-    }
+const modal_element = ref();
 
-    reset(): void {
-        this.repository_name = "";
-        this.error = "";
-    }
-    async createRepository(event: Event): Promise<void> {
-        event.preventDefault();
-        this.is_loading = true;
-        this.error = "";
-        try {
-            const repository = await postRepository(getProjectId(), this.repository_name);
-            window.location.href = repository.html_url;
-        } catch (e) {
-            let error_code: number | undefined = undefined;
-            if (e instanceof FetchWrapperError) {
-                const { error } = await e.response.json();
-                error_code = Number.parseInt(error.code, 10);
-            }
-            if (error_code === 400) {
-                this.error = this.$gettext(
-                    'Repository name is not well formatted or is already used. Allowed characters: a-zA-Z0-9/_.- and max length is 255, no slashes at the beginning or the end, and repositories names must not finish with ".git".',
-                );
-            } else if (error_code === 401) {
-                this.error = this.$gettext(
-                    "You don't have permission to create Git repositories as you are not Git administrator.",
-                );
-            } else if (error_code === 404) {
-                this.error = this.$gettext("Project not found");
-            } else {
-                this.error = this.$gettext("An error occurred while creating the repository.");
-            }
-            this.is_loading = false;
+const reset = (): void => {
+    repository_name.value = "";
+    error.value = "";
+};
+
+onMounted(() => {
+    modal.value = createModal(modal_element.value);
+
+    modal.value.addEventListener("tlp-modal-hidden", reset);
+
+    setAddRepositoryModal(modal.value);
+});
+
+async function createRepository(event: Event): Promise<void> {
+    event.preventDefault();
+    is_loading.value = true;
+    error.value = "";
+    try {
+        const repository = await postRepository(getProjectId(), repository_name.value);
+        window.location.href = repository.html_url;
+    } catch (e) {
+        let error_code: number | undefined = undefined;
+        if (e instanceof FetchWrapperError) {
+            const { error } = await e.response.json();
+            error_code = Number.parseInt(error.code, 10);
         }
+        if (error_code === 400) {
+            error.value = $gettext(
+                'Repository name is not well formatted or is already used. Allowed characters: a-zA-Z0-9/_.- and max length is 255, no slashes at the beginning or the end, and repositories names must not finish with ".git".',
+            );
+        } else if (error_code === 401) {
+            error.value = $gettext(
+                "You don't have permission to create Git repositories as you are not Git administrator.",
+            );
+        } else if (error_code === 404) {
+            error.value = $gettext("Project not found");
+        } else {
+            error.value = $gettext("An error occurred while creating the repository.");
+        }
+        is_loading.value = false;
     }
 }
 </script>
