@@ -11,6 +11,7 @@
                         <span class="tlp-prepend"><i class="fas fa-calendar-alt"></i></span>
                         <input type="text"
                                name="services_usage_start_date"
+                               data-test="services-usage-start-date"
                                id="date-picker-services-usage-start"
                                class="tlp-input tlp-input-date"
                                size="11"
@@ -35,14 +36,14 @@
             </div>
         </div>
         <label class="tlp-label tlp-radio">
-            <input type="radio" name="data-export-content" value="siteadmin-export-data-scm-statistics" /> {{ scm_statistics_label }}
+            <input type="radio" name="data-export-content" data-test="scm-statistics" value="siteadmin-export-data-scm-statistics" /> {{ scm_statistics_label }}
         </label>
         <label class="tlp-label tlp-radio">
             <input type="radio" name="data-export-content" value="siteadmin-export-data-usage-progress" /> {{ usage_progress_label }}
         </label>
 
         <div class="tlp-pane-section-submit">
-            <button type="submit" class="tlp-button-primary" name="export">
+            <button type="submit" class="tlp-button-primary" name="export" data-test="export-csv-button">
                 <i class="fa fa-download tlp-button-icon"></i> {{ csv_export_button }}
             </button>
         </div>

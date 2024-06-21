@@ -129,7 +129,7 @@ class StatisticsPlugin extends Plugin
     public function siteAdministrationAddOption(SiteAdministrationAddOption $site_administration_add_option): void
     {
         $site_administration_add_option->addPluginOption(
-            SiteAdministrationPluginOption::build('Statistics', $this->getPluginPath() . '/')
+            SiteAdministrationPluginOption::withShortname('Statistics', $this->getPluginPath() . '/', 'statistics')
         );
     }
 

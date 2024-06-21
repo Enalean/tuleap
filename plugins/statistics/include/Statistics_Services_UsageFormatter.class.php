@@ -99,6 +99,6 @@ class Statistics_Services_UsageFormatter
 
     private function canAddValueFromQuery(array $data)
     {
-        return array_key_exists($data[self::GROUP_ID], $this->datas) && isset($data[self::VALUES]);
+        return isset($data[self::GROUP_ID]) && array_key_exists($data[self::GROUP_ID], $this->datas) && isset($data[self::VALUES]);
     }
 }

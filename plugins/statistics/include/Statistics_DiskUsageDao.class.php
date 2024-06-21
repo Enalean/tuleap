@@ -266,9 +266,14 @@ class Statistics_DiskUsageDao extends DataAccessObject // phpcs:ignore PSR1.Clas
 
     public function returnTotalSizeProjectNearDate($group_id, $date)
     {
+        $first_date_lower_than = $this->findFirstDateLowerThan($date, 'plugin_statistics_diskusage_group');
+
+        if (! $first_date_lower_than) {
+            return null;
+        }
         $sql = 'SELECT sum(size) as size' .
             ' FROM plugin_statistics_diskusage_group ' .
-            ' WHERE ' . $this->findFirstDateLowerThan($date, 'plugin_statistics_diskusage_group') .
+            ' WHERE ' . $first_date_lower_than .
             ' AND group_id = ' . $this->da->escapeInt($group_id);
         return $this->retrieve($sql);
     }

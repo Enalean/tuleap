@@ -70,5 +70,77 @@ describe("Site admin", function () {
             cy.get("[data-test=massmail-send-button]").click();
             cy.get("[data-test=massmail-warning]").contains("users will receive this email.");
         });
+
+        it("Can see statistics frequencies", function () {
+            cy.siteAdministratorSession();
+            cy.visit("/");
+            cy.get("[data-test=platform-administration-link]").click();
+            cy.get("[data-test=statistics]").click({ force: true });
+
+            cy.log("Check that image is rendered by asserting that its size is > 0");
+            cy.get("[data-test=graph-frequencies]")
+                .should("be.visible")
+                .and(($img) => {
+                    // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
+                    const image_element: HTMLImageElement = $img[0] as HTMLImageElement;
+                    expect(image_element.naturalWidth).to.be.gt(0);
+                });
+        });
+        it("Can see statistics disk usage", function () {
+            cy.siteAdministratorSession();
+            cy.visit("/");
+            cy.get("[data-test=platform-administration-link]").click();
+            cy.get("[data-test=statistics]").click({ force: true });
+            cy.get("[data-test=disk-usage-by-services]").click({ force: true });
+            cy.get("[data-test=services-usages]").find("tr").should("have.length.at.least", 2);
+
+            cy.get("[data-test=disk-usage-by-projects]").click({ force: true });
+            cy.get("[data-test=disk-usage-project]").find("tr").should("have.length.at.least", 2);
+
+            cy.get("[data-test=global-usage]").click({ force: true });
+            cy.get("[data-test=global-usage]").contains("Global usage");
+        });
+        it("Can export data", function () {
+            cy.siteAdministratorSession();
+            cy.visit("/");
+            cy.get("[data-test=platform-administration-link]").click();
+            cy.get("[data-test=statistics]").click({ force: true });
+            cy.get("[data-test=data-export]").click();
+            cy.intercept("*service_usage*").as("export_csv");
+
+            const download_folder = Cypress.config("downloadsFolder");
+            const today = new Date().toISOString().slice(0, 10);
+            const last_year_date = new Date();
+            last_year_date.setFullYear(last_year_date.getFullYear() - 1);
+            const last_year = last_year_date.toISOString().slice(0, 10);
+
+            cy.get("[data-test=export-csv-button]")
+                .click()
+                .then(() => {
+                    cy.get("[data-test=services-usage-start-date]")
+                        .invoke("val")
+                        .then((last_month) => {
+                            cy.readFile(
+                                download_folder + `/services_usage_${last_month}_${today}.csv`,
+                            ).should("exist");
+                        });
+                });
+
+            cy.get("[data-test=scm-statistics]").click();
+            cy.get("[data-test=scm-export-button]")
+                .click()
+                .then(() => {
+                    cy.readFile(download_folder + `/scm_stats_${last_year}_${today}.csv`).should(
+                        "exist",
+                    );
+                });
+
+            cy.get("[data-test=usage-progress]").click();
+            cy.get("[data-test=usage-progress-button]")
+                .click()
+                .then(() => {
+                    cy.readFile(download_folder + "/Tuleap_progress_data.csv").should("exist");
+                });
+        });
     });
 });
