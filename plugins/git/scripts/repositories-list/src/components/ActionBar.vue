@@ -43,36 +43,27 @@
         </template>
     </div>
 </template>
-<script lang="ts">
+<script setup lang="ts">
 import ListFilter from "./ActionBar/ListFilter.vue";
 import SelectOwner from "./ActionBar/SelectOwner.vue";
 import DisplayModeSwitcher from "./ActionBar/DisplayModeSwitcher.vue";
 import DropdownActionButton from "./DropdownActionButton.vue";
 import { getUserIsAdmin } from "../repository-list-presenter";
-import { Component } from "vue-property-decorator";
-import Vue from "vue";
-import { Action, Getter, State } from "vuex-class";
+import { useActions, useGetters, useState } from "vuex-composition-helpers";
 
-@Component({ components: { DropdownActionButton, SelectOwner, ListFilter, DisplayModeSwitcher } })
-export default class ActionBar extends Vue {
-    @Getter
-    readonly isCurrentRepositoryListEmpty!: boolean;
-    @Getter
-    readonly isInitialLoadingDoneWithoutError!: boolean;
-    @Getter
-    readonly areExternalUsedServices!: boolean;
+const { isCurrentRepositoryListEmpty, isInitialLoadingDoneWithoutError, areExternalUsedServices } =
+    useGetters([
+        "isCurrentRepositoryListEmpty",
+        "isInitialLoadingDoneWithoutError",
+        "areExternalUsedServices",
+    ]);
+const { is_first_load_done } = useState(["is_first_load_done"]);
+const { showAddRepositoryModal } = useActions(["showAddRepositoryModal"]);
 
-    @State
-    readonly is_first_load_done!: boolean | number;
-
-    @Action
-    readonly showAddRepositoryModal!: () => void;
-
-    showCreateRepositoryButton(): boolean {
-        return (
-            getUserIsAdmin() &&
-            !(this.isCurrentRepositoryListEmpty && this.isInitialLoadingDoneWithoutError)
-        );
-    }
-}
+const showCreateRepositoryButton = (): boolean => {
+    return (
+        getUserIsAdmin() &&
+        !(isCurrentRepositoryListEmpty.value && isInitialLoadingDoneWithoutError.value)
+    );
+};
 </script>
