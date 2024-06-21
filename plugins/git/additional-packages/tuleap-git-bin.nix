@@ -7,10 +7,10 @@ let
   tuleapVersion = builtins.readFile ../../../VERSION;
   tuleapGitBinBasePath = "/usr/lib/tuleap/git";
   gitStatic = (pkgs.pkgsStatic.gitMinimal.overrideAttrs (oldAttrs: rec {
-    version = "2.45.1";
+    version = "2.45.2";
     src = pkgs.fetchurl {
       url = "https://www.kernel.org/pub/software/scm/git/git-${version}.tar.xz";
-      hash = "sha256-5k00Co5ieuIs+4vMZRzKC0l88en99SNzVUT/SnMvEr8=";
+      hash = "sha256-Ub/ofrHAL+0UhAUYdTZe6rIpgx0w0M7F2JoU+eQOmts=";
     };
 
     dontPatchShebangs = true;
@@ -25,7 +25,12 @@ let
     # Its role is to rewrite the installed scripts so they can find utilities like grep/cut/wc in the Nix store and to
     # deploy additional helpers like shell completions files. It is not something we need for our context and it cannot
     # work without modification because it expects to find files under $out and not under $out/$tuleapGitBinBasePath.
-    postInstall = "";
+    postInstall = ''
+      # Cleanup remaining features we do not need
+      rm $out/${tuleapGitBinBasePath}/libexec/git-core/git-imap-send
+      rm $out/${tuleapGitBinBasePath}/libexec/git-core/scalar
+      rm $out/${tuleapGitBinBasePath}/bin/scalar
+    '';
 
     doInstallCheck = false;
   }));
