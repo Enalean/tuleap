@@ -20,12 +20,14 @@
 <template>
     <tr>
         <td>
-            <a v-bind:href="encodeURI(props.version.download_href)">{{ props.version.number }}</a>
+            <a v-bind:href="encodeURI(props.version.download_href)" data-test="download-version">{{
+                props.version.number
+            }}</a>
         </td>
         <td>
             {{ props.version.name }}
         </td>
-        <td>
+        <td data-test="version-file-name">
             {{ props.version.filename }}
         </td>
     </tr>

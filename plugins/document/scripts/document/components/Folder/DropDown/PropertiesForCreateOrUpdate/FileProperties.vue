@@ -27,6 +27,7 @@
             <input
                 type="file"
                 id="document-new-file-upload"
+                data-test="document-new-file-upload"
                 name="file-upload"
                 required
                 v-on:change="onFileChange"
