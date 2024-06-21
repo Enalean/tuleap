@@ -42,3 +42,18 @@
 @use "includes/platform-banner";
 @use "includes/browser-unsupported";
 @use "includes/mermaid";
+
+@media print {
+    body {
+        padding: 0 !important;
+    }
+
+    tuleap-project-sidebar,
+    .help-dropdown,
+    .platform-banner,
+    .project-banner,
+    header,
+    footer {
+        display: none;
+    }
+}
