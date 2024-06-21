@@ -9,7 +9,7 @@
     "express": "^4.19.2",
     "jsonwebtoken": "9.0.0",
     "lodash": "4.17.21",
-    "socket.io": "^4.6.1"
+    "socket.io": "^4.6.2"
   },
   "devDependencies": {
     "esbuild": "^0.19.8"
