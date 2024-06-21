@@ -41,13 +41,13 @@
 <script setup lang="ts">
 import { onMounted, ref, watch } from "vue";
 import useScrollToAnchor from "@/composables/useScrollToAnchor";
-import type { SectionEditor } from "@/composables/useSectionEditor";
 import { useGettext } from "vue3-gettext";
+import type { EditorSectionContent } from "@/composables/useEditorSectionContent";
 
 const props = defineProps<{
     title: string;
     is_edit_mode: boolean;
-    input_current_title: SectionEditor["inputCurrentTitle"];
+    input_current_title: EditorSectionContent["inputCurrentTitle"];
 }>();
 
 const { scrollToAnchor } = useScrollToAnchor();

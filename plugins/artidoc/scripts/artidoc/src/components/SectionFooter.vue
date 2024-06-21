@@ -20,7 +20,7 @@
 
 <template>
     <div v-if="is_section_editable" class="section-footer">
-        <not-found-error v-if="is_not_found_error" />
+        <not-found-error v-if="is_not_found" />
         <generic-error
             v-else-if="is_in_error"
             v-bind:section="section"
@@ -45,11 +45,9 @@ import type { ArtidocSection } from "@/helpers/artidoc-section.type";
 
 const props = defineProps<{ section: ArtidocSection; editor: SectionEditor }>();
 
-const error_message = props.editor.getErrorMessage();
-const is_outdated = props.editor.isOutdated();
-const is_in_error = props.editor.isInError();
-const is_not_found_error = props.editor.isNotFoundError();
-const { is_section_editable } = props.editor;
+const { getErrorMessage, is_outdated, is_in_error, is_not_found } = props.editor.editor_error;
+const error_message = getErrorMessage();
+const { is_section_editable } = props.editor.editor_state;
 </script>
 
 <style scoped lang="scss">

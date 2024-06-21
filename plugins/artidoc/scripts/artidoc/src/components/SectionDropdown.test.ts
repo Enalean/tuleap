@@ -26,15 +26,27 @@ import { SectionEditorStub } from "@/helpers/stubs/SectionEditorStub";
 import type { SectionEditor } from "@/composables/useSectionEditor";
 import ArtifactSectionFactory from "@/helpers/artifact-section.factory";
 import PendingArtifactSectionFactory from "@/helpers/pending-artifact-section.factory";
+import { mockStrictInject } from "@/helpers/mock-strict-inject";
+import { CAN_USER_EDIT_DOCUMENT } from "@/can-user-edit-document-injection-key";
+import { DOCUMENT_ID } from "@/document-id-injection-key";
+import type { ArtifactSection } from "@/helpers/artidoc-section.type";
 
 vi.mock("@tuleap/tlp-dropdown");
 
 describe("SectionDropdown", () => {
     function getWrapper(editor: SectionEditor): VueWrapper<ComponentPublicInstance> {
+        mockStrictInject([
+            [CAN_USER_EDIT_DOCUMENT, true],
+            [DOCUMENT_ID, 1],
+        ]);
+        const section: ArtifactSection = {
+            ...ArtifactSectionFactory.create(),
+            can_user_edit_section: true,
+        };
         return shallowMount(SectionDropdown, {
             propsData: {
                 editor,
-                section: ArtifactSectionFactory.create(),
+                section,
             },
             global: {
                 plugins: [createGettext({ silent: true })],

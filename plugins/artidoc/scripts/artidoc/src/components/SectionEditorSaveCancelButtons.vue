@@ -48,7 +48,7 @@ const { selected_tracker } = strictInject(CONFIGURATION_STORE);
 
 const { $gettext } = useGettext();
 const { cancelEditor, saveEditor } = props.editor.editor_actions;
-const is_edit_mode = props.editor.isSectionInEditMode();
+const is_edit_mode = props.editor.editor_state.is_section_in_edit_mode;
 
 function onCancel(): void {
     cancelEditor(selected_tracker.value);

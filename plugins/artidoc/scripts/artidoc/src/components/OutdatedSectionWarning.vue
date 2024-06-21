@@ -31,7 +31,7 @@
                 type="button"
                 class="tlp-button-warning"
                 data-test="force-save"
-                v-on:click="editor_actions.forceSaveEditor()"
+                v-on:click="editor_actions.forceSaveEditor"
             >
                 {{ $gettext("Force save") }}
             </button>
@@ -39,7 +39,7 @@
                 type="button"
                 class="tlp-button-warning"
                 data-test="refresh"
-                v-on:click="editor_actions.refreshSection()"
+                v-on:click="editor_actions.refreshSection"
             >
                 {{ $gettext("Load new section") }}
             </button>
