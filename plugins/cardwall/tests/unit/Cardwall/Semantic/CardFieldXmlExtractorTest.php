@@ -21,19 +21,21 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Cardwall\Semantic;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use SimpleXMLElement;
+use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
 
-class CardFieldXmlExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
+final class CardFieldXmlExtractorTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    public function testItImportsACardFieldsSemanticFromXMLFormat()
+    public function testItImportsACardFieldsSemanticFromXMLFormat(): void
     {
         $xml = simplexml_load_string(
             file_get_contents(__DIR__ . '/_fixtures/ImportCardwallSemanticCardFields.xml'),
-            \SimpleXMLElement::class,
+            SimpleXMLElement::class,
             LIBXML_NONET
         );
 
@@ -44,25 +46,20 @@ class CardFieldXmlExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
         $extractor = new CardFieldXmlExtractor();
         $fields    = $extractor->extractFieldFromXml($xml, $mapping);
 
-        $this->assertTrue(in_array(102, $fields));
-        $this->assertTrue(in_array(103, $fields));
+        self::assertTrue(in_array(102, $fields));
+        self::assertTrue(in_array(103, $fields));
     }
 
-    public function testItImportsBackgroundColorSemanticFromXMLFormat()
+    public function testItImportsBackgroundColorSemanticFromXMLFormat(): void
     {
         $xml = simplexml_load_string(
             file_get_contents(__DIR__ . '/_fixtures/ImportCardwallSemanticCardFields.xml'),
-            \SimpleXMLElement::class,
+            SimpleXMLElement::class,
             LIBXML_NONET
         );
 
-        $status = \Mockery::spy('Tracker_FormElement_Field');
-        $status->shouldReceive('getId')->andReturn(101);
-        $status->shouldReceive('getLabel')->andReturn('status');
-
-        $severity = \Mockery::spy('Tracker_FormElement_Field');
-        $severity->shouldReceive('getId')->andReturn(102);
-        $severity->shouldReceive('getLabel')->andReturn('severity');
+        $status   = ListFieldBuilder::aListField(101)->withLabel('status')->build();
+        $severity = ListFieldBuilder::aListField(102)->withLabel('severity')->build();
 
         $mapping                = [
             'F13' => $status,
@@ -71,6 +68,6 @@ class CardFieldXmlExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
         $extractor              = new CardFieldXmlExtractor();
         $background_color_field = $extractor->extractBackgroundColorFromXml($xml, $mapping);
 
-        $this->assertEquals(102, $background_color_field->getId());
+        self::assertEquals(102, $background_color_field->getId());
     }
 }

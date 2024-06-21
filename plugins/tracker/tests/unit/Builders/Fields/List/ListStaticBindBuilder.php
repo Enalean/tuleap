@@ -22,18 +22,27 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Test\Builders\Fields\List;
 
+use Tracker_FormElement_Field_List;
+use Tracker_FormElement_Field_List_Bind_Static;
+use Tracker_FormElement_Field_List_Bind_StaticValue;
+use Tracker_FormElement_Field_List_BindDecorator;
+
 final class ListStaticBindBuilder
 {
     /**
-     * @var \Tracker_FormElement_Field_List_Bind_StaticValue[]
+     * @var Tracker_FormElement_Field_List_Bind_StaticValue[]
      */
     private array $bind_values = [];
+    /**
+     * @var Tracker_FormElement_Field_List_BindDecorator[]
+     */
+    private array $decorators = [];
 
-    private function __construct(private readonly \Tracker_FormElement_Field_List $field)
+    private function __construct(private readonly Tracker_FormElement_Field_List $field)
     {
     }
 
-    public static function aStaticBind(\Tracker_FormElement_Field_List $field): self
+    public static function aStaticBind(Tracker_FormElement_Field_List $field): self
     {
         return new self($field);
     }
@@ -44,7 +53,7 @@ final class ListStaticBindBuilder
     public function withStaticValues(array $values_labels): self
     {
         foreach ($values_labels as $id => $label) {
-            $bind_value = new \Tracker_FormElement_Field_List_Bind_StaticValue(
+            $bind_value = new Tracker_FormElement_Field_List_Bind_StaticValue(
                 $id,
                 $label,
                 'A static bind value',
@@ -58,14 +67,24 @@ final class ListStaticBindBuilder
         return $this;
     }
 
-    public function build(): \Tracker_FormElement_Field_List_Bind_Static
+    /**
+     * @param Tracker_FormElement_Field_List_BindDecorator[] $decorators
+     */
+    public function withDecorators(array $decorators): self
     {
-        $bind = new \Tracker_FormElement_Field_List_Bind_Static(
+        $this->decorators = $decorators;
+
+        return $this;
+    }
+
+    public function build(): Tracker_FormElement_Field_List_Bind_Static
+    {
+        $bind = new Tracker_FormElement_Field_List_Bind_Static(
             $this->field,
             false,
             $this->bind_values,
             [],
-            []
+            $this->decorators,
         );
         $this->field->setBind($bind);
 
