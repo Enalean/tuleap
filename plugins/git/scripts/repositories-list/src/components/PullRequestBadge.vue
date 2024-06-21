@@ -26,33 +26,32 @@
         <span class="tlp-badge-primary">{{ pull_requests }}</span>
     </a>
 </template>
-<script lang="ts">
-import Vue from "vue";
-import { Component, Prop } from "vue-property-decorator";
+<script setup lang="ts">
+import { computed } from "vue";
 import { getProjectId } from "../repository-list-presenter";
 import { getPullRequestsHomepageUrl } from "../helpers/pull-requests-homepage-url-builder";
+import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
 
-@Component
-export default class PullRequestBadge extends Vue {
-    @Prop({ required: true })
-    readonly numberPullRequest!: number;
+const { interpolate, $ngettext } = useGettext();
 
-    @Prop({ required: true })
-    readonly repositoryId!: number;
+const props = defineProps<{
+    numberPullRequest: number;
+    repositoryId: number;
+}>();
 
-    pullrequest_url(): string {
-        return String(getPullRequestsHomepageUrl(location, getProjectId(), this.repositoryId));
-    }
+const pullrequest_url = (): string => {
+    return String(getPullRequestsHomepageUrl(location, getProjectId(), props.repositoryId));
+};
 
-    get pull_requests() {
-        return this.$gettextInterpolate(
-            this.$ngettext(
-                "%{ numberPullRequest } pull request",
-                "%{ numberPullRequest } pull requests",
-                this.numberPullRequest,
-            ),
-            { numberPullRequest: this.numberPullRequest },
-        );
-    }
-}
+const pull_requests = computed(() => {
+    const nb = props.numberPullRequest;
+    return interpolate(
+        $ngettext(
+            "%{ numberPullRequest } pull request",
+            "%{ numberPullRequest } pull requests",
+            nb,
+        ),
+        { numberPullRequest: nb },
+    );
+});
 </script>
