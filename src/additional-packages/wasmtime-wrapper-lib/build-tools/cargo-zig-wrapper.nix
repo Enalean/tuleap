@@ -3,9 +3,9 @@
 let
   zigcc = pkgs.writeShellScriptBin "zigcc"
     ''
-    ${pkgs.zig_0_9}/bin/zig cc -target ${baseArch}-linux-gnu.2.17 $@
+    ${pkgs.zig}/bin/zig cc -target ${baseArch}-linux-gnu.2.34 $@
     '';
-in pkgs.writeShellScriptBin "cargo-build-glibc217"
+in pkgs.writeShellScriptBin "cargo-build-glibc"
   ''
     export CC="${zigcc}/bin/zigcc"
     export CARGO_TARGET_X86_64_UNKNOWN_LINUX_GNU_LINKER="${zigcc}/bin/zigcc"
