@@ -18,7 +18,7 @@
   -->
 
 <template functional>
-    <div class="card-content" data-test="template-description">
+    <div class="card-content" data-test="template-xml-description">
         <h4 class="card-title" v-translate>Tracker XML file</h4>
         <div class="card-description">
             <span class="card-description-content" v-translate>

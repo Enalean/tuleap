@@ -32,6 +32,7 @@
                 <input
                     type="checkbox"
                     id="workflow-transitions-enabled"
+                    data-test="workflow-transitions-enabled"
                     class="tlp-switch-checkbox"
                     v-model="transition_rules_enforcement"
                     v-bind:disabled="is_operation_running"
