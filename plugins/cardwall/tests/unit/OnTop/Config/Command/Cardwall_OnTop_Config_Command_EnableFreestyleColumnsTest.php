@@ -20,27 +20,27 @@
 
 declare(strict_types=1);
 
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
-final class Cardwall_OnTop_Config_Command_EnableFreestyleColumnsTest extends \Tuleap\Test\PHPUnit\TestCase
-{
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+namespace Tuleap\Cardwall\OnTop\Config\Command;
 
+use Cardwall_OnTop_Config_Command_EnableFreestyleColumns;
+use Cardwall_OnTop_Dao;
+use HTTPRequest;
+use PHPUnit\Framework\MockObject\MockObject;
+use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
+
+final class Cardwall_OnTop_Config_Command_EnableFreestyleColumnsTest extends TestCase // phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
+{
     private int $tracker_id;
-    /**
-     * @var Cardwall_OnTop_Dao&\Mockery\MockInterface
-     */
-    private $dao;
+    private Cardwall_OnTop_Dao&MockObject $dao;
     private Cardwall_OnTop_Config_Command_EnableFreestyleColumns $command;
 
     protected function setUp(): void
     {
-        parent::setUp();
-
         $this->tracker_id = 666;
-        $tracker          = \Mockery::spy(\Tracker::class);
-        $tracker->shouldReceive('getId')->andReturns($this->tracker_id);
+        $tracker          = TrackerTestBuilder::aTracker()->withId($this->tracker_id)->build();
 
-        $this->dao     = \Mockery::spy(\Cardwall_OnTop_Dao::class);
+        $this->dao     = $this->createMock(Cardwall_OnTop_Dao::class);
         $this->command = new Cardwall_OnTop_Config_Command_EnableFreestyleColumns($tracker, $this->dao);
     }
 
@@ -48,8 +48,8 @@ final class Cardwall_OnTop_Config_Command_EnableFreestyleColumnsTest extends \Tu
     {
         $request = new HTTPRequest();
         $request->set('use_freestyle_columns', '1');
-        $this->dao->shouldReceive('isFreestyleEnabled')->with($this->tracker_id)->andReturns(false);
-        $this->dao->shouldReceive('enableFreestyleColumns')->once($this->tracker_id);
+        $this->dao->method('isFreestyleEnabled')->with($this->tracker_id)->willReturn(false);
+        $this->dao->expects(self::once())->method('enableFreestyleColumns')->willReturn($this->tracker_id);
 
         $this->command->execute($request);
     }
@@ -58,8 +58,8 @@ final class Cardwall_OnTop_Config_Command_EnableFreestyleColumnsTest extends \Tu
     {
         $request = new HTTPRequest();
         $request->set('use_freestyle_columns', '1');
-        $this->dao->shouldReceive('isFreestyleEnabled')->with($this->tracker_id)->andReturns(true);
-        $this->dao->shouldReceive('enableFreestyleColumns')->never();
+        $this->dao->method('isFreestyleEnabled')->with($this->tracker_id)->willReturn(true);
+        $this->dao->expects(self::never())->method('enableFreestyleColumns');
 
         $this->command->execute($request);
     }
@@ -68,8 +68,8 @@ final class Cardwall_OnTop_Config_Command_EnableFreestyleColumnsTest extends \Tu
     {
         $request = new HTTPRequest();
         $request->set('use_freestyle_columns', '0');
-        $this->dao->shouldReceive('isFreestyleEnabled')->with($this->tracker_id)->andReturns(true);
-        $this->dao->shouldReceive('disableFreestyleColumns')->once($this->tracker_id);
+        $this->dao->method('isFreestyleEnabled')->with($this->tracker_id)->willReturn(true);
+        $this->dao->expects(self::once())->method('disableFreestyleColumns')->with($this->tracker_id);
 
         $this->command->execute($request);
     }
@@ -78,8 +78,8 @@ final class Cardwall_OnTop_Config_Command_EnableFreestyleColumnsTest extends \Tu
     {
         $request = new HTTPRequest();
         $request->set('use_freestyle_columns', '0');
-        $this->dao->shouldReceive('isFreestyleEnabled')->with($this->tracker_id)->andReturns(false);
-        $this->dao->shouldReceive('disableFreestyleColumns')->never();
+        $this->dao->method('isFreestyleEnabled')->with($this->tracker_id)->willReturn(false);
+        $this->dao->expects(self::never())->method('disableFreestyleColumns');
 
         $this->command->execute($request);
     }
