@@ -25,7 +25,7 @@ import { createLocalVueForTests } from "../helpers/local-vue-for-tests";
 
 jest.mock("@tuleap/tlp-dropdown"); // ResizeObserver is not defined
 
-async function getWrapper(is_empty_state: boolean): Promise<Wrapper<DropdownActionButton>> {
+async function getWrapper(is_empty_state: boolean): Promise<Wrapper<Vue>> {
     return shallowMount(DropdownActionButton, {
         localVue: await createLocalVueForTests(),
         propsData: { is_empty_state },
