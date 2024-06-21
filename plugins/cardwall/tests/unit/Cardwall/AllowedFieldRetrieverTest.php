@@ -18,82 +18,57 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Cardwall;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\MockObject\MockObject;
+use Tracker_FormElement_Field;
 use Tracker_FormElementFactory;
 use Tuleap\Cardwall\Semantic\FieldUsedInSemanticObjectChecker;
+use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\Test\Builders\Fields\IntFieldBuilder;
 
-class AllowedFieldRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
+final class AllowedFieldRetrieverTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var \Tracker_FormElement_Field
-     */
-    private $field;
-    /**
-     * @var Tracker_FormElementFactory
-     */
-    private $checker;
-    /**
-     * @var AllowedFieldRetriever
-     */
-    private $allowed_field_retriever;
-
-    /**
-     * @var Tracker_FormElementFactory
-     */
-    private $form_element_factory;
+    private Tracker_FormElement_Field $field;
+    private FieldUsedInSemanticObjectChecker&MockObject $checker;
+    private AllowedFieldRetriever $allowed_field_retriever;
+    private Tracker_FormElementFactory&MockObject $form_element_factory;
 
     public function setUp(): void
     {
-        parent::setUp();
-
-        $this->checker                 = Mockery::spy(FieldUsedInSemanticObjectChecker::class);
-        $this->form_element_factory    = Mockery::spy(Tracker_FormElementFactory::class);
+        $this->checker                 = $this->createMock(FieldUsedInSemanticObjectChecker::class);
+        $this->form_element_factory    = $this->createMock(Tracker_FormElementFactory::class);
         $this->allowed_field_retriever = new AllowedFieldRetriever($this->form_element_factory, $this->checker);
 
-        $this->field = Mockery::spy(\Tracker_FormElement_Field::class);
+        $this->field = IntFieldBuilder::anIntField(153)->build();
     }
 
-    public function testReturnsAndEmptyArrayIfFieldIsNotUsedForBackgroundSemantic()
+    public function testReturnsAndEmptyArrayIfFieldIsNotUsedForBackgroundSemantic(): void
     {
-        $this->checker->shouldReceive('isUsedInBackgroundColorSemantic')->andReturn(false);
-        $expected_allowed_fields = [];
-        $allowed_fields          = $this->allowed_field_retriever->retrieveAllowedFieldType($this->field);
-
-        $this->assertEquals($expected_allowed_fields, $allowed_fields);
+        $this->checker->method('isUsedInBackgroundColorSemantic')->willReturn(false);
+        self::assertEquals([], $this->allowed_field_retriever->retrieveAllowedFieldType($this->field));
     }
 
-    public function testItOnlyAllowsRbWhenFieldIsASb()
+    public function testItOnlyAllowsRbWhenFieldIsASb(): void
     {
-        $this->checker->shouldReceive('isUsedInBackgroundColorSemantic')->andReturn(true);
-        $this->form_element_factory->shouldReceive('getType')->andReturn('sb');
-        $expected_allowed_fields = ['rb'];
-        $allowed_fields          = $this->allowed_field_retriever->retrieveAllowedFieldType($this->field);
-
-        $this->assertEquals($expected_allowed_fields, $allowed_fields);
+        $this->checker->method('isUsedInBackgroundColorSemantic')->willReturn(true);
+        $this->form_element_factory->method('getType')->willReturn('sb');
+        self::assertEquals(['rb'], $this->allowed_field_retriever->retrieveAllowedFieldType($this->field));
     }
 
-    public function testItOnlyAllowsSbWhenFieldIsARb()
+    public function testItOnlyAllowsSbWhenFieldIsARb(): void
     {
-        $this->checker->shouldReceive('isUsedInBackgroundColorSemantic')->andReturn(true);
-        $this->form_element_factory->shouldReceive('getType')->andReturn('rb');
-        $expected_allowed_fields = ['sb'];
-        $allowed_fields          = $this->allowed_field_retriever->retrieveAllowedFieldType($this->field);
-
-        $this->assertEquals($expected_allowed_fields, $allowed_fields);
+        $this->checker->method('isUsedInBackgroundColorSemantic')->willReturn(true);
+        $this->form_element_factory->method('getType')->willReturn('rb');
+        self::assertEquals(['sb'], $this->allowed_field_retriever->retrieveAllowedFieldType($this->field));
     }
 
-    public function testReturnsAndEmptyArrayByDefault()
+    public function testReturnsAndEmptyArrayByDefault(): void
     {
-        $this->checker->shouldReceive('isUsedInBackgroundColorSemantic')->andReturn(true);
-        $this->form_element_factory->shouldReceive('getType')->andReturn('msb');
-        $expected_allowed_fields = [];
-        $allowed_fields          = $this->allowed_field_retriever->retrieveAllowedFieldType($this->field);
-
-        $this->assertEquals($expected_allowed_fields, $allowed_fields);
+        $this->checker->method('isUsedInBackgroundColorSemantic')->willReturn(true);
+        $this->form_element_factory->method('getType')->willReturn('msb');
+        self::assertEquals([], $this->allowed_field_retriever->retrieveAllowedFieldType($this->field));
     }
 }
