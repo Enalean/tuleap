@@ -46,7 +46,6 @@ import { ArtifactCrossReference } from "./domain/ArtifactCrossReference";
 import { ArtifactLinkSelectorAutoCompleter } from "./adapters/UI/fields/link-field/dropdown/ArtifactLinkSelectorAutoCompleter";
 import { NewLinksStore } from "./adapters/Memory/fields/link-field/NewLinksStore";
 import { PermissionFieldController } from "./adapters/UI/fields/permission-field/PermissionFieldController";
-import { ParentLinkVerifier } from "./domain/fields/link-field/ParentLinkVerifier";
 import { CheckboxFieldController } from "./adapters/UI/fields/checkbox-field/CheckboxFieldController";
 import { CurrentTrackerIdentifierProxy } from "./adapters/Caller/CurrentTrackerIdentifierProxy";
 import { PossibleParentsCache } from "./adapters/Memory/fields/link-field/PossibleParentsCache";
@@ -183,9 +182,7 @@ function ArtifactModalController(
                 new_links_store,
                 new_links_store,
                 new_links_store,
-                ParentLinkVerifier(links_store, new_links_store, parent_artifact_identifier),
                 possible_parents_cache,
-                already_linked_verifier,
                 event_dispatcher,
                 field,
                 current_tracker_identifier,
@@ -197,6 +194,7 @@ function ArtifactModalController(
                 ),
                 LinkTypesCollector.buildFromTypesRepresentations(field.allowed_types),
                 current_project_identifier,
+                parent_artifact_identifier,
             );
         },
         getLinkFieldAutoCompleter: () => {

@@ -18,7 +18,11 @@
  */
 
 import type { HostElement } from "./NewFileToAttachElement";
-import { NewFileToAttachElement, onClick, onDescriptionInput } from "./NewFileToAttachElement";
+import {
+    renderNewFileToAttachElement,
+    onClick,
+    onDescriptionInput,
+} from "./NewFileToAttachElement";
 import { setCatalog } from "../../../../gettext-catalog";
 
 describe(`NewFileToAttachElement`, () => {
@@ -71,7 +75,7 @@ describe(`NewFileToAttachElement`, () => {
     const renderNewFileToAttach = (host: HostElement): ShadowRoot => {
         const doc = document.implementation.createHTMLDocument();
         const target = doc.createElement("div") as unknown as ShadowRoot;
-        const render = NewFileToAttachElement.content(host);
+        const render = renderNewFileToAttachElement(host);
         render(host, target);
 
         return target;

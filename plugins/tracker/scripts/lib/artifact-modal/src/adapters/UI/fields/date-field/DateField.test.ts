@@ -21,7 +21,7 @@ import { selectOrThrow } from "@tuleap/dom";
 import type { EditableDateFieldStructure } from "@tuleap/plugin-tracker-rest-api-types";
 import { setCatalog } from "../../../../gettext-catalog";
 import type { HostElement } from "./DateField";
-import { DateField, onInput } from "./DateField";
+import { renderDateField, onInput } from "./DateField";
 
 function getField(data?: Partial<EditableDateFieldStructure>): EditableDateFieldStructure {
     return {
@@ -51,7 +51,7 @@ describe("DateField", () => {
     };
 
     const render = (host: HostElement): ShadowRoot => {
-        const update = DateField.content(host);
+        const update = renderDateField(host);
         update(host, host);
         return host as unknown as ShadowRoot;
     };

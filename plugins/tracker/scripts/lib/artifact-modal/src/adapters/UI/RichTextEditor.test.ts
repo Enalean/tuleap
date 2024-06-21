@@ -40,7 +40,7 @@ import {
     getValidFormat,
     onInstanceReady,
     onTextareaInput,
-    RichTextEditor,
+    renderRichTextEditor,
     setupImageUpload,
 } from "./RichTextEditor";
 import { FormattedTextController } from "../../domain/common/FormattedTextController";
@@ -362,7 +362,7 @@ describe(`RichTextEditor`, () => {
                 const target = doc.createElement("div") as unknown as ShadowRoot;
                 const host = getHost();
                 host.is_help_shown = true;
-                const update = RichTextEditor.content(host);
+                const update = renderRichTextEditor(host);
                 update(host, target);
 
                 const help = target.querySelector("[data-test=help]");
@@ -495,7 +495,7 @@ describe(`RichTextEditor`, () => {
         it(`will set the textarea to disabled`, () => {
             const target = doc.createElement("div") as unknown as ShadowRoot;
             const host = getHost();
-            const update = RichTextEditor.content(host);
+            const update = renderRichTextEditor(host);
             update(host, target);
 
             const textarea = selectOrThrow(target, "[data-test=textarea]", HTMLTextAreaElement);
@@ -511,7 +511,7 @@ describe(`RichTextEditor`, () => {
         it(`will set the textarea to required`, () => {
             const target = doc.createElement("div") as unknown as ShadowRoot;
             const host = getHost();
-            const update = RichTextEditor.content(host);
+            const update = renderRichTextEditor(host);
             update(host, target);
 
             const textarea = selectOrThrow(target, "[data-test=textarea]", HTMLTextAreaElement);
@@ -523,16 +523,12 @@ describe(`RichTextEditor`, () => {
         it.each([[TEXT_FORMAT_TEXT], [TEXT_FORMAT_HTML], [TEXT_FORMAT_COMMONMARK]])(
             `when value is a valid format, it will return it`,
             (format) => {
-                expect(getValidFormat({}, format, TEXT_FORMAT_TEXT)).toBe(format);
+                expect(getValidFormat({}, format)).toBe(format);
             },
         );
 
-        it(`when value is not a valid format, it will return last value`, () => {
-            expect(getValidFormat({}, "invalid_format", TEXT_FORMAT_TEXT)).toBe(TEXT_FORMAT_TEXT);
-        });
-
-        it(`when last value is undefined (no previous cached value), it will default to Commonmark format`, () => {
-            expect(getValidFormat({}, "invalid_format", undefined)).toBe(TEXT_FORMAT_COMMONMARK);
+        it(`when value is not a valid format, it will default to Commonmark format`, () => {
+            expect(getValidFormat({}, "invalid_format")).toBe(TEXT_FORMAT_COMMONMARK);
         });
     });
 });

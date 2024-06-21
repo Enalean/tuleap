@@ -30,7 +30,7 @@ export type StaticOpenListField = {
 };
 
 export type InternalStaticOpenListField = Readonly<StaticOpenListField> & {
-    readonly content: () => HTMLElement;
+    render(): HTMLElement;
     select_element: HTMLSelectElement;
     presenter: StaticOpenListFieldPresenter;
 };
@@ -39,10 +39,10 @@ export type HostElement = InternalStaticOpenListField & HTMLElement;
 
 export const StaticOpenListField = define<InternalStaticOpenListField>({
     tag: TAG,
-    presenter: undefined,
+    presenter: (host, presenter) => presenter ?? host.controller.getInitialPresenter(),
     disabled: false,
-    select_element: ({ content }) => {
-        const select = content().querySelector("[data-role=select-element]");
+    select_element: (host: InternalStaticOpenListField) => {
+        const select = host.render().querySelector("[data-role=select-element]");
         if (!(select instanceof HTMLSelectElement)) {
             throw new Error(`Unable to find the <select> in the StaticOpenListField`);
         }
@@ -50,11 +50,10 @@ export const StaticOpenListField = define<InternalStaticOpenListField>({
         return select;
     },
     controller: {
-        set: (host, controller: ControlStaticOpenListField) => {
-            controller.init(host);
-
-            return controller;
+        value: (host, controller) => controller,
+        connect: (host) => {
+            host.controller.initSelect2(host);
         },
     },
-    content: renderStaticOpenListField,
+    render: renderStaticOpenListField,
 });

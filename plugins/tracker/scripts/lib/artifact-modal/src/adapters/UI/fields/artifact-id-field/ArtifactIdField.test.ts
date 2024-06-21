@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { ArtifactIdField } from "./ArtifactIdField";
+import { renderArtifactIdField } from "./ArtifactIdField";
 import { ARTIFACT_ID_FIELD, ARTIFACT_ID_IN_TRACKER_FIELD } from "@tuleap/plugin-tracker-constants";
 
 import type { HostElement } from "./ArtifactIdField";
@@ -49,7 +49,7 @@ describe("ArtifactIdField", () => {
                 .createHTMLDocument()
                 .createElement("div") as unknown as ShadowRoot;
 
-            const update = ArtifactIdField.content(host);
+            const update = renderArtifactIdField(host);
 
             update(host, target);
 

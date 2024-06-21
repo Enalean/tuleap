@@ -101,30 +101,27 @@ export type ModalCommentsSection = {
 };
 type InternalModalCommentsSection = ModalCommentsSection & {
     presenter: CommentsPresenter;
-    content(): HTMLElement;
+    render(): HTMLElement;
 };
 export type HostElement = InternalModalCommentsSection & HTMLElement;
 
 export const ModalCommentsSection = define<InternalModalCommentsSection>({
     tag: "tuleap-artifact-modal-comments-section",
-    presenter: undefined,
-    controller: {
-        set(host, controller: CommentsControllerType) {
-            const preferences = controller.getPreferences();
-            host.presenter = CommentsPresenter.buildLoading(preferences);
-            controller.getComments().then((comments) => {
-                host.presenter = CommentsPresenter.fromCommentsAndPreferences(
-                    comments,
-                    preferences,
-                );
-                host.content();
-                loadTooltips(host);
-            });
-            return controller;
-        },
+    presenter: (host, presenter) =>
+        presenter ?? CommentsPresenter.buildLoading(host.controller.getPreferences()),
+    controller: (host, controller: CommentsControllerType) => {
+        controller.getComments().then((comments) => {
+            host.presenter = CommentsPresenter.fromCommentsAndPreferences(
+                comments,
+                controller.getPreferences(),
+            );
+            host.render();
+            loadTooltips(host);
+        });
+        return controller;
     },
-    formattedTextController: undefined,
-    content: (host) =>
+    formattedTextController: (host, controller) => controller,
+    render: (host) =>
         html` <h2
                 class="tlp-modal-subtitle tuleap-artifact-modal-followups-title"
                 title="${getChangesetsCommentMessage()}"

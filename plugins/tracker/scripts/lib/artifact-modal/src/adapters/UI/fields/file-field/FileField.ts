@@ -179,59 +179,51 @@ export interface FileField {
     new_files: NewFileToAttachCollection;
     attached_files: AttachedFileCollection;
     readonly disabled: boolean;
-    content(): HTMLElement;
 }
 export type HostElement = FileField & HTMLElement;
 
+export const renderFileField = (host: HostElement): UpdateFunction<FileField> => html`
+    <div class="tlp-form-element">
+        <label class="tlp-label" data-test="file-field-label">
+            ${host.field.label}${host.field.required &&
+            html`<i class="fas fa-asterisk" aria-hidden="true"></i>`}
+        </label>
+        ${getAttachedFilesTemplate(host)}
+        ${host.new_files.map((file) => {
+            const onFileChanged = (host: HostElement, event: CustomEvent): void => {
+                host.new_files = host.controller.setFileOfNewFileToAttach(file, event.detail.file);
+            };
+            const onDescriptionChanged = (host: HostElement, event: CustomEvent): void => {
+                host.new_files = host.controller.setDescriptionOfNewFileToAttach(
+                    file,
+                    event.detail.description,
+                );
+            };
+            const onReset = (host: HostElement): void => {
+                host.new_files = host.controller.reset(file);
+            };
+            return html`
+                <tuleap-artifact-modal-new-file-attach
+                    disabled="${host.disabled}"
+                    required="${isRequired(host)}"
+                    description="${file.description}"
+                    onfile-changed="${onFileChanged}"
+                    ondescription-changed="${onDescriptionChanged}"
+                    onreset="${onReset}"
+                    data-test="new-file-to-attach"
+                ></tuleap-artifact-modal-new-file-attach>
+            `;
+        })}
+        ${getAddNewFileToAttachButtonTemplate(host)}
+    </div>
+`;
+
 export const FileField = define<FileField>({
     tag: "tuleap-artifact-modal-file-field",
-    field: undefined,
-    controller: {
-        set(host: FileField, controller: FileFieldControllerType) {
-            host.new_files = controller.getNewFilesToAttach();
-            host.attached_files = controller.getAttachedFiles();
-            return controller;
-        },
-    },
-    new_files: undefined,
-    attached_files: undefined,
+    field: (host, field) => field,
+    controller: (host: FileField, controller: FileFieldControllerType) => controller,
+    new_files: (host, new_files) => new_files ?? host.controller.getNewFilesToAttach(),
+    attached_files: (host, attached_files) => attached_files ?? host.controller.getAttachedFiles(),
     disabled: false,
-    content: (host) => html`
-        <div class="tlp-form-element">
-            <label class="tlp-label" data-test="file-field-label">
-                ${host.field.label}${host.field.required &&
-                html`<i class="fas fa-asterisk" aria-hidden="true"></i>`}
-            </label>
-            ${getAttachedFilesTemplate(host)}
-            ${host.new_files.map((file) => {
-                const onFileChanged = (host: HostElement, event: CustomEvent): void => {
-                    host.new_files = host.controller.setFileOfNewFileToAttach(
-                        file,
-                        event.detail.file,
-                    );
-                };
-                const onDescriptionChanged = (host: HostElement, event: CustomEvent): void => {
-                    host.new_files = host.controller.setDescriptionOfNewFileToAttach(
-                        file,
-                        event.detail.description,
-                    );
-                };
-                const onReset = (host: HostElement): void => {
-                    host.new_files = host.controller.reset(file);
-                };
-                return html`
-                    <tuleap-artifact-modal-new-file-attach
-                        disabled="${host.disabled}"
-                        required="${isRequired(host)}"
-                        description="${file.description}"
-                        onfile-changed="${onFileChanged}"
-                        ondescription-changed="${onDescriptionChanged}"
-                        onreset="${onReset}"
-                        data-test="new-file-to-attach"
-                    ></tuleap-artifact-modal-new-file-attach>
-                `;
-            })}
-            ${getAddNewFileToAttachButtonTemplate(host)}
-        </div>
-    `,
+    render: renderFileField,
 });

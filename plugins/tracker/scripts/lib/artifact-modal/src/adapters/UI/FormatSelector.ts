@@ -18,6 +18,7 @@
  */
 
 import { define, dispatch, html } from "hybrids";
+import type { UpdateFunction } from "hybrids";
 import { getCommonMarkLabel, getHTMLLabel, getTextLabel } from "../../gettext-catalog";
 import type { TextFieldFormat } from "@tuleap/plugin-tracker-constants";
 import {
@@ -36,7 +37,6 @@ export interface FormatSelector {
     required: boolean;
     isInPreviewMode: boolean;
     isPreviewLoading: boolean;
-    content: () => HTMLElement;
 }
 
 const isFormatSelectboxDisabled = (host: FormatSelector): boolean =>
@@ -53,6 +53,57 @@ const onPreview = (host: HTMLElement): void => {
 
 const isSelected = (host: FormatSelector, value: TextFieldFormat): boolean => host.value === value;
 
+export const renderFormatSelector = (host: FormatSelector): UpdateFunction<FormatSelector> => html`
+    <div class="artifact-modal-text-label-with-format">
+        <label for="${host.identifier}" class="tlp-label artifact-modal-text-label">
+            ${host.label}
+            ${host.required && html`<i class="fas fa-asterisk artifact-modal-text-asterisk"></i>`}
+        </label>
+        <div class="artifact-modal-text-label-with-format-and-helper-container">
+            <select
+                id="${"format_" + host.identifier}"
+                oninput="${html.set("value")}"
+                disabled="${isFormatSelectboxDisabled(host)}"
+                class="tlp-select tlp-select-small tlp-select-adjusted"
+                value="${host.value}"
+                data-test="format"
+            >
+                <option
+                    value="${TEXT_FORMAT_TEXT}"
+                    selected="${isSelected(host, TEXT_FORMAT_TEXT)}"
+                >
+                    ${getTextLabel()}
+                </option>
+                <option
+                    value="${TEXT_FORMAT_HTML}"
+                    selected="${isSelected(host, TEXT_FORMAT_HTML)}"
+                >
+                    ${getHTMLLabel()}
+                </option>
+                <option
+                    value="${TEXT_FORMAT_COMMONMARK}"
+                    selected="${isSelected(host, TEXT_FORMAT_COMMONMARK)}"
+                >
+                    ${getCommonMarkLabel()}
+                </option>
+            </select>
+            ${isCommonmarkFormat(host) &&
+            html`
+                <tuleap-artifact-modal-commonmark-preview
+                    isInPreviewMode="${host.isInPreviewMode}"
+                    isPreviewLoading="${host.isPreviewLoading}"
+                    oncommonmark-preview-event="${onPreview}"
+                    data-test="preview-button"
+                ></tuleap-artifact-modal-commonmark-preview>
+                <tuleap-artifact-modal-commonmark-syntax-helper
+                    disabled="${isSyntaxHelperDisabled(host)}"
+                    data-test="syntax-button"
+                ></tuleap-artifact-modal-commonmark-syntax-helper>
+            `}
+        </div>
+    </div>
+`;
+
 export const FormatSelector = define<FormatSelector>({
     tag: "tuleap-artifact-modal-format-selector",
     identifier: "",
@@ -62,55 +113,5 @@ export const FormatSelector = define<FormatSelector>({
     required: false,
     isInPreviewMode: false,
     isPreviewLoading: false,
-    content: (host) => html`
-        <div class="artifact-modal-text-label-with-format">
-            <label for="${host.identifier}" class="tlp-label artifact-modal-text-label">
-                ${host.label}
-                ${host.required &&
-                html`<i class="fas fa-asterisk artifact-modal-text-asterisk"></i>`}
-            </label>
-            <div class="artifact-modal-text-label-with-format-and-helper-container">
-                <select
-                    id="${"format_" + host.identifier}"
-                    oninput="${html.set("value")}"
-                    disabled="${isFormatSelectboxDisabled(host)}"
-                    class="tlp-select tlp-select-small tlp-select-adjusted"
-                    value="${host.value}"
-                    data-test="format"
-                >
-                    <option
-                        value="${TEXT_FORMAT_TEXT}"
-                        selected="${isSelected(host, TEXT_FORMAT_TEXT)}"
-                    >
-                        ${getTextLabel()}
-                    </option>
-                    <option
-                        value="${TEXT_FORMAT_HTML}"
-                        selected="${isSelected(host, TEXT_FORMAT_HTML)}"
-                    >
-                        ${getHTMLLabel()}
-                    </option>
-                    <option
-                        value="${TEXT_FORMAT_COMMONMARK}"
-                        selected="${isSelected(host, TEXT_FORMAT_COMMONMARK)}"
-                    >
-                        ${getCommonMarkLabel()}
-                    </option>
-                </select>
-                ${isCommonmarkFormat(host) &&
-                html`
-                    <tuleap-artifact-modal-commonmark-preview
-                        isInPreviewMode="${host.isInPreviewMode}"
-                        isPreviewLoading="${host.isPreviewLoading}"
-                        oncommonmark-preview-event="${onPreview}"
-                        data-test="preview-button"
-                    ></tuleap-artifact-modal-commonmark-preview>
-                    <tuleap-artifact-modal-commonmark-syntax-helper
-                        disabled="${isSyntaxHelperDisabled(host)}"
-                        data-test="syntax-button"
-                    ></tuleap-artifact-modal-commonmark-syntax-helper>
-                `}
-            </div>
-        </div>
-    `,
+    render: renderFormatSelector,
 });

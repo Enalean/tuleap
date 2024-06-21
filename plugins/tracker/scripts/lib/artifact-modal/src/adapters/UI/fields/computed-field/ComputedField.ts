@@ -37,7 +37,7 @@ export interface ComputedField {
     autocomputed: boolean;
     manualValue: AllowedValue | null;
     value: number | null;
-    content: () => HTMLElement;
+    render(): HTMLElement;
 }
 export type HostElement = ComputedField & HTMLElement;
 
@@ -82,7 +82,7 @@ function switchToManualValue(host: HostElement): void {
             manual_value: host.manualValue,
         },
     });
-    const target = host.content();
+    const target = host.render();
     const manual_value_input = target.querySelector("[data-manual-value-input]");
     if (manual_value_input instanceof HTMLElement) {
         manual_value_input.focus();
@@ -165,6 +165,15 @@ const getFieldTemplate = (host: ComputedField): UpdateFunction<ComputedField> =>
     return getManualValueTemplate(host);
 };
 
+export const renderComputedField = (host: ComputedField): UpdateFunction<ComputedField> => html`
+    <div class="tlp-form-element">
+        <label class="tlp-label">
+            ${host.label}${host.required && html`<i class="fas fa-asterisk"></i>`}
+        </label>
+        ${getFieldTemplate(host)}
+    </div>
+`;
+
 export const ComputedField = define<ComputedField>({
     tag: "tuleap-artifact-modal-computed-field",
     fieldId: 0,
@@ -172,14 +181,7 @@ export const ComputedField = define<ComputedField>({
     required: false,
     disabled: false,
     autocomputed: false,
-    manualValue: { set: validateInput },
-    value: { set: validateInput },
-    content: (host) => html`
-        <div class="tlp-form-element">
-            <label class="tlp-label">
-                ${host.label}${host.required && html`<i class="fas fa-asterisk"></i>`}
-            </label>
-            ${getFieldTemplate(host)}
-        </div>
-    `,
+    manualValue: validateInput,
+    value: validateInput,
+    render: renderComputedField,
 });

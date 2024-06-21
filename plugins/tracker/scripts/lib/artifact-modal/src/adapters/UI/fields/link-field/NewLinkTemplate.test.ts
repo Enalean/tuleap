@@ -35,10 +35,8 @@ import { VerifyLinkIsMarkedForRemovalStub } from "../../../../../tests/stubs/Ver
 import { AddNewLinkStub } from "../../../../../tests/stubs/AddNewLinkStub";
 import { DeleteNewLinkStub } from "../../../../../tests/stubs/DeleteNewLinkStub";
 import { RetrieveNewLinksStub } from "../../../../../tests/stubs/RetrieveNewLinksStub";
-import { VerifyHasParentLinkStub } from "../../../../../tests/stubs/VerifyHasParentLinkStub";
 import { RetrievePossibleParentsStub } from "../../../../../tests/stubs/RetrievePossibleParentsStub";
 import { CurrentTrackerIdentifierStub } from "../../../../../tests/stubs/CurrentTrackerIdentifierStub";
-import { VerifyIsAlreadyLinkedStub } from "../../../../../tests/stubs/VerifyIsAlreadyLinkedStub";
 import { DispatchEventsStub } from "../../../../../tests/stubs/DispatchEventsStub";
 import { LinkTypesCollectionStub } from "../../../../../tests/stubs/LinkTypesCollectionStub";
 import { ChangeNewLinkTypeStub } from "../../../../../tests/stubs/ChangeNewLinkTypeStub";
@@ -47,6 +45,7 @@ import { LabeledFieldStub } from "../../../../../tests/stubs/LabeledFieldStub";
 import type { ParentTrackerIdentifier } from "../../../../domain/fields/link-field/ParentTrackerIdentifier";
 import { CurrentProjectIdentifierStub } from "../../../../../tests/stubs/CurrentProjectIdentifierStub";
 import { ProjectStub } from "../../../../../tests/stubs/ProjectStub";
+import type { ParentArtifactIdentifier } from "../../../../domain/parent/ParentArtifactIdentifier";
 
 describe(`NewLinkTemplate`, () => {
     let target: ShadowRoot;
@@ -173,9 +172,7 @@ describe(`NewLinkTemplate`, () => {
                 DeleteNewLinkStub.withCount(),
                 RetrieveNewLinksStub.withoutLink(),
                 ChangeNewLinkTypeStub.withCount(),
-                VerifyHasParentLinkStub.withNoParentLink(),
                 RetrievePossibleParentsStub.withoutParents(),
-                VerifyIsAlreadyLinkedStub.withNoArtifactAlreadyLinked(),
                 DispatchEventsStub.buildNoOp(),
                 LabeledFieldStub.withDefaults(),
                 current_tracker_identifier,
@@ -183,12 +180,13 @@ describe(`NewLinkTemplate`, () => {
                 current_artifact_reference,
                 LinkTypesCollectionStub.withParentPair(),
                 CurrentProjectIdentifierStub.withId(10),
+                Option.nothing<ParentArtifactIdentifier>(),
             );
 
-            const new_links_presenter: ReadonlyArray<NewLink> = [new_link];
+            const new_links: ReadonlyArray<NewLink> = [new_link];
             return {
                 current_artifact_reference,
-                new_links_presenter,
+                new_links,
                 controller,
             } as HostElement;
         };
@@ -205,7 +203,7 @@ describe(`NewLinkTemplate`, () => {
             const button = selectOrThrow(target, "[data-test=action-button]", HTMLButtonElement);
             button.click();
 
-            expect(host.new_links_presenter).toHaveLength(0);
+            expect(host.new_links).toHaveLength(0);
         });
     });
 });

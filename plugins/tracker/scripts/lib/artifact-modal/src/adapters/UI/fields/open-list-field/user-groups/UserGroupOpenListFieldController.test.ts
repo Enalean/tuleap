@@ -61,8 +61,10 @@ describe("UserGroupOpenListField", () => {
             - a select2 will be created
             - its events will be listened
             - the component presenter will be built`, () => {
+            const controller = getController();
             const host = {
                 select_element: doc.createElement("select"),
+                presenter: controller.buildInitialPresenter(),
             } as InternalUserGroupOpenListField;
 
             const registerSelect2EventHandler = jest.fn();
@@ -72,7 +74,7 @@ describe("UserGroupOpenListField", () => {
                 on: registerSelect2EventHandler,
             });
 
-            getController().init(host);
+            controller.initSelect2(host);
 
             expect(tlp.select2).toHaveBeenCalledTimes(1);
             expect(registerSelect2EventHandler).toHaveBeenCalledTimes(2);

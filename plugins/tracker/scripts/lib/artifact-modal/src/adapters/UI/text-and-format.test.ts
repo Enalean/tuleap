@@ -115,8 +115,13 @@ describe(`TextAndFormat`, () => {
 
             const format_selector_element = getSelector("[data-test=format-selector]");
             const text_editor_element = getSelector("[data-test=text-editor]");
-            expect(format_selector_element.getAttribute("identifier")).toBe(identifier);
-            expect(text_editor_element.getAttribute("identifier")).toBe(identifier);
+
+            if (!hasIdentifier(format_selector_element) || !hasIdentifier(text_editor_element)) {
+                throw new Error("Element is missing an 'identifier' attribute.");
+            }
+
+            expect(format_selector_element.identifier).toBe(identifier);
+            expect(text_editor_element.identifier).toBe(identifier);
         });
 
         it("shows the Rich Text Editor if there is no error and if the user is in edit mode", () => {
@@ -194,5 +199,9 @@ describe(`TextAndFormat`, () => {
             throw new Error("Could not select element");
         }
         return selected;
+    }
+
+    function hasIdentifier(element: HTMLElement): element is HTMLElement & { identifier: string } {
+        return "identifier" in element && typeof element.identifier === "string";
     }
 });

@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { DateReadonlyField } from "./DateReadonlyField";
+import { renderDateReadonlyField } from "./DateReadonlyField";
 import type { HostElement } from "./DateReadonlyField";
 import { FormatReadonlyDateFieldStub } from "../../../../../tests/stubs/FormatReadonlyDateFieldStub";
 
@@ -35,7 +35,7 @@ describe("DateReadonlyField", () => {
             .createHTMLDocument()
             .createElement("div") as unknown as ShadowRoot;
 
-        const update = DateReadonlyField.content(host);
+        const update = renderDateReadonlyField(host);
 
         update(host, target);
 

@@ -32,7 +32,6 @@ export type ModalFeedback = {
     error_message_option: Option<string>;
     readonly parentController: ParentFeedbackControllerType;
     readonly faultController: FaultFeedbackControllerType;
-    content(): HTMLElement;
 };
 export type HostElement = ModalFeedback & HTMLElement;
 
@@ -59,36 +58,34 @@ const displayFaultIfNeeded = (message_option: Option<string>): UpdateFunction<Mo
 const noFeedbackToShow = (host: ModalFeedback): boolean =>
     host.error_message_option.isNothing() && host.parent_option.isNothing();
 
+export const renderModalFeedback = (host: ModalFeedback): UpdateFunction<ModalFeedback> => {
+    if (noFeedbackToShow(host)) {
+        return html``;
+    }
+    return html`
+        <div class="tlp-modal-feedback">
+            ${displayParentIfNeeded(host.parent_option)}
+            ${displayFaultIfNeeded(host.error_message_option)}
+        </div>
+    `;
+};
+
 export const ModalFeedback = define<ModalFeedback>({
     tag: "modal-feedback",
-    parentController: {
-        set(host, controller: ParentFeedbackControllerType) {
-            controller
-                .getParentArtifact()
-                .then((parent_option) => (host.parent_option = parent_option));
-            return controller;
-        },
+    parentController: (host, controller: ParentFeedbackControllerType) => {
+        controller
+            .getParentArtifact()
+            .then((parent_option) => (host.parent_option = parent_option));
+        return controller;
     },
-    faultController: {
-        set(host, controller: FaultFeedbackControllerType) {
-            const formatter = ErrorMessageFormatter();
-            controller.registerFaultListener((fault_option) => {
-                host.error_message_option = fault_option.map(formatter.format);
-            });
-            return controller;
-        },
+    faultController: (host, controller: FaultFeedbackControllerType) => {
+        const formatter = ErrorMessageFormatter();
+        controller.registerFaultListener((fault_option) => {
+            host.error_message_option = fault_option.map(formatter.format);
+        });
+        return controller;
     },
-    parent_option: { set: (host, new_value) => new_value ?? Option.nothing() },
-    error_message_option: { set: (host, new_value) => new_value ?? Option.nothing() },
-    content: (host) => {
-        if (noFeedbackToShow(host)) {
-            return html``;
-        }
-        return html`
-            <div class="tlp-modal-feedback">
-                ${displayParentIfNeeded(host.parent_option)}
-                ${displayFaultIfNeeded(host.error_message_option)}
-            </div>
-        `;
-    },
+    parent_option: (host, new_value) => new_value ?? Option.nothing(),
+    error_message_option: (host, new_value) => new_value ?? Option.nothing(),
+    render: renderModalFeedback,
 });

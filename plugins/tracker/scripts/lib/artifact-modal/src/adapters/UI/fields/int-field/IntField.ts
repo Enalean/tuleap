@@ -18,6 +18,7 @@
  */
 
 import { define, dispatch, html } from "hybrids";
+import type { UpdateFunction } from "hybrids";
 import { cleanValue } from "./int-field-value-formatter";
 
 export type AllowedValue = number | "";
@@ -30,7 +31,7 @@ export interface IntField {
     value: AllowedValue;
 }
 type InternalIntField = IntField & {
-    content(): HTMLElement;
+    render(): HTMLElement;
 };
 export type HostElement = InternalIntField & HTMLElement;
 
@@ -49,33 +50,31 @@ export const onInput = (host: HostElement, event: Event): void => {
     });
 };
 
+export const renderIntField = (host: InternalIntField): UpdateFunction<InternalIntField> => html`
+    <div class="tlp-form-element">
+        <label for="${"tracker_field_" + host.fieldId}" class="tlp-label">
+            ${host.label}${host.required && html`<i class="fas fa-asterisk"></i>`}
+        </label>
+        <input
+            type="number"
+            class="tlp-input"
+            data-test="int-field-input"
+            size="5"
+            oninput="${onInput}"
+            value="${host.value}"
+            required="${host.required}"
+            disabled="${host.disabled}"
+            id="${"tracker_field_" + host.fieldId}"
+        />
+    </div>
+`;
+
 export const IntField = define<InternalIntField>({
     tag: "tuleap-artifact-modal-int-field",
     fieldId: 0,
     label: "",
     required: false,
     disabled: false,
-    value: {
-        set: (host, new_value: AllowedValue | null) => {
-            return new_value === null ? "" : new_value;
-        },
-    },
-    content: (host) => html`
-        <div class="tlp-form-element">
-            <label for="${"tracker_field_" + host.fieldId}" class="tlp-label">
-                ${host.label}${host.required && html`<i class="fas fa-asterisk"></i>`}
-            </label>
-            <input
-                type="number"
-                class="tlp-input"
-                data-test="int-field-input"
-                size="5"
-                oninput="${onInput}"
-                value="${host.value}"
-                required="${host.required}"
-                disabled="${host.disabled}"
-                id="${"tracker_field_" + host.fieldId}"
-            />
-        </div>
-    `,
+    value: (host, new_value: AllowedValue | null) => (new_value === null ? "" : new_value),
+    render: renderIntField,
 });

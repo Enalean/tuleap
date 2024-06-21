@@ -18,6 +18,7 @@
  */
 
 import { define, dispatch, html } from "hybrids";
+import type { UpdateFunction } from "hybrids";
 
 export interface StringField {
     fieldId: number;
@@ -27,7 +28,7 @@ export interface StringField {
     value: string;
 }
 type InternalStringField = StringField & {
-    content(): HTMLElement;
+    render(): HTMLElement;
 };
 export type HostElement = InternalStringField & HTMLElement;
 
@@ -46,6 +47,26 @@ export const onInput = (host: HostElement, event: Event): void => {
     });
 };
 
+export const renderStringField = (
+    host: InternalStringField,
+): UpdateFunction<InternalStringField> => html`
+    <div class="tlp-form-element">
+        <label for="${"tracker_field_" + host.fieldId}" class="tlp-label">
+            ${host.label}${host.required && html`<i class="fas fa-asterisk"></i>`}
+        </label>
+        <input
+            type="text"
+            class="tlp-input"
+            data-test="string-field-input"
+            oninput="${onInput}"
+            value="${host.value}"
+            required="${host.required}"
+            disabled="${host.disabled}"
+            id="${"tracker_field_" + host.fieldId}"
+        />
+    </div>
+`;
+
 export const StringField = define<InternalStringField>({
     tag: "tuleap-artifact-modal-string-field",
     fieldId: 0,
@@ -53,21 +74,5 @@ export const StringField = define<InternalStringField>({
     required: false,
     disabled: false,
     value: "",
-    content: (host) => html`
-        <div class="tlp-form-element">
-            <label for="${"tracker_field_" + host.fieldId}" class="tlp-label">
-                ${host.label}${host.required && html`<i class="fas fa-asterisk"></i>`}
-            </label>
-            <input
-                type="text"
-                class="tlp-input"
-                data-test="string-field-input"
-                oninput="${onInput}"
-                value="${host.value}"
-                required="${host.required}"
-                disabled="${host.disabled}"
-                id="${"tracker_field_" + host.fieldId}"
-            />
-        </div>
-    `,
+    render: renderStringField,
 });

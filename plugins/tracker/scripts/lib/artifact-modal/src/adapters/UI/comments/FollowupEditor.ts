@@ -18,15 +18,14 @@
  */
 
 import { define, dispatch } from "hybrids";
+import type { UpdateFunction } from "hybrids";
 import { getCommentLabel } from "../../../gettext-catalog";
 import type { TextAndFormat } from "../text-and-format";
 import { getTextAndFormatTemplate } from "../text-and-format";
 import { getValidFormat } from "../RichTextEditor";
 import "../FormatSelector";
 
-export interface FollowupEditor extends TextAndFormat {
-    content: () => HTMLElement;
-}
+export type FollowupEditor = TextAndFormat;
 export type HostElement = FollowupEditor & HTMLElement;
 
 const onFormatChange = (host: HostElement, event: CustomEvent): void => {
@@ -42,10 +41,18 @@ const onContentChange = (host: HostElement, event: CustomEvent): void => {
     dispatch(host, "value-changed", { detail: { format: host.format, body: content } });
 };
 
+export const renderFollowupEditor = (host: FollowupEditor): UpdateFunction<FollowupEditor> =>
+    getTextAndFormatTemplate(host, {
+        identifier: "followup_comment",
+        rows: 3,
+        onContentChange,
+        onFormatChange,
+    });
+
 export const FollowupEditor = define<FollowupEditor>({
     tag: "tuleap-artifact-modal-followup-editor",
-    label: { get: getCommentLabel },
-    format: { set: getValidFormat },
+    label: () => getCommentLabel(),
+    format: getValidFormat,
     contentValue: "",
     required: false,
     disabled: false,
@@ -54,12 +61,6 @@ export const FollowupEditor = define<FollowupEditor>({
     is_preview_loading: false,
     has_error: false,
     error_message: "",
-    controller: undefined,
-    content: (host) =>
-        getTextAndFormatTemplate(host, {
-            identifier: "followup_comment",
-            rows: 3,
-            onContentChange,
-            onFormatChange,
-        }),
+    controller: (host, controller) => controller,
+    render: renderFollowupEditor,
 });

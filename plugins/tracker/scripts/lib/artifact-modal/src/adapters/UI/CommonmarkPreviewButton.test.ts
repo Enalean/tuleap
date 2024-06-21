@@ -18,7 +18,8 @@
  *
  */
 
-import { buttonLabel, CommonmarkPreviewButton, iconClasses } from "./CommonmarkPreviewButton";
+import type { CommonmarkPreviewButton } from "./CommonmarkPreviewButton";
+import { buttonLabel, iconClasses, renderCommonmarkPreviewButton } from "./CommonmarkPreviewButton";
 import { setCatalog } from "../../gettext-catalog";
 
 type HostElement = CommonmarkPreviewButton & HTMLElement;
@@ -76,7 +77,7 @@ describe("CommonmarkPreviewButton", () => {
                 iconClasses: [],
                 dispatchEvent,
             } as unknown as HostElement;
-            const update = CommonmarkPreviewButton.content(host);
+            const update = renderCommonmarkPreviewButton(host);
             update(host, target);
 
             const button = getButton(target);
@@ -92,7 +93,7 @@ describe("CommonmarkPreviewButton", () => {
                 buttonLabel: "Preview",
                 iconClasses: [],
             } as unknown as HostElement;
-            const update = CommonmarkPreviewButton.content(host);
+            const update = renderCommonmarkPreviewButton(host);
             update(host, target);
 
             const button = getButton(target);

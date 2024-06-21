@@ -17,8 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { HostElement } from "./ComputedField";
-import { ComputedField, getDisplayedValue, onInput, validateInput } from "./ComputedField";
+import type { HostElement, ComputedField } from "./ComputedField";
+import { getDisplayedValue, onInput, validateInput, renderComputedField } from "./ComputedField";
 import { setCatalog } from "../../../../gettext-catalog";
 import { selectOrThrow } from "@tuleap/dom";
 
@@ -89,7 +89,7 @@ describe(`ComputedField`, () => {
             and a "value-changed" event with autocomputed true and manual value as empty string`, () => {
             const host = getHost({ manualValue: 3, autocomputed: false });
             const dispatchEvent = jest.spyOn(host, "dispatchEvent");
-            const update = ComputedField.content(host);
+            const update = renderComputedField(host);
             update(host, target);
 
             selectOrThrow(target, "[data-test=switch-to-auto]", HTMLButtonElement).click();
@@ -116,7 +116,7 @@ describe(`ComputedField`, () => {
             and a "value-changed" event with autocomputed false and manual value as empty string`, () => {
             const host = getHost({ manualValue: "", autocomputed: true });
             const dispatchEvent = jest.spyOn(host, "dispatchEvent");
-            const update = ComputedField.content(host);
+            const update = renderComputedField(host);
             update(host, target);
 
             selectOrThrow(target, "[data-test=switch-to-manual]", HTMLButtonElement).click();
@@ -139,7 +139,7 @@ describe(`ComputedField`, () => {
 
         it(`when the field is disabled, it only renders its value`, () => {
             const host = getHost({ disabled: true, value: 95.1 });
-            const update = ComputedField.content(host);
+            const update = renderComputedField(host);
             update(host, target);
 
             const div = target as unknown as HTMLDivElement;

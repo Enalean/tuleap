@@ -21,7 +21,7 @@ import { selectOrThrow } from "@tuleap/dom";
 import { Option } from "@tuleap/option";
 import { LinkedArtifactIdentifierStub } from "../../../../../tests/stubs/LinkedArtifactIdentifierStub";
 import type { HostElement } from "./LinkField";
-import { setLinkedArtifacts } from "./LinkField";
+import { getLinkedArtifactPresenters } from "./LinkField";
 import {
     getActionButton,
     getLinkedArtifactTemplate,
@@ -46,10 +46,8 @@ import { ArtifactCrossReferenceStub } from "../../../../../tests/stubs/ArtifactC
 import { AddNewLinkStub } from "../../../../../tests/stubs/AddNewLinkStub";
 import { RetrieveNewLinksStub } from "../../../../../tests/stubs/RetrieveNewLinksStub";
 import { DeleteNewLinkStub } from "../../../../../tests/stubs/DeleteNewLinkStub";
-import { VerifyHasParentLinkStub } from "../../../../../tests/stubs/VerifyHasParentLinkStub";
 import { RetrievePossibleParentsStub } from "../../../../../tests/stubs/RetrievePossibleParentsStub";
 import { CurrentTrackerIdentifierStub } from "../../../../../tests/stubs/CurrentTrackerIdentifierStub";
-import { VerifyIsAlreadyLinkedStub } from "../../../../../tests/stubs/VerifyIsAlreadyLinkedStub";
 import { DispatchEventsStub } from "../../../../../tests/stubs/DispatchEventsStub";
 import { LinkTypesCollectionStub } from "../../../../../tests/stubs/LinkTypesCollectionStub";
 import { ChangeNewLinkTypeStub } from "../../../../../tests/stubs/ChangeNewLinkTypeStub";
@@ -58,6 +56,7 @@ import { LabeledFieldStub } from "../../../../../tests/stubs/LabeledFieldStub";
 import type { ParentTrackerIdentifier } from "../../../../domain/fields/link-field/ParentTrackerIdentifier";
 import { CollectionOfAllowedLinksTypesPresenters } from "./CollectionOfAllowedLinksTypesPresenters";
 import { CurrentProjectIdentifierStub } from "../../../../../tests/stubs/CurrentProjectIdentifierStub";
+import type { ParentArtifactIdentifier } from "src/domain/parent/ParentArtifactIdentifier";
 
 describe(`LinkedArtifactTemplate`, () => {
     let target: ShadowRoot;
@@ -210,9 +209,7 @@ describe(`LinkedArtifactTemplate`, () => {
                 DeleteNewLinkStub.withCount(),
                 RetrieveNewLinksStub.withoutLink(),
                 ChangeNewLinkTypeStub.withCount(),
-                VerifyHasParentLinkStub.withNoParentLink(),
                 RetrievePossibleParentsStub.withoutParents(),
-                VerifyIsAlreadyLinkedStub.withNoArtifactAlreadyLinked(),
                 DispatchEventsStub.buildNoOp(),
                 LabeledFieldStub.withDefaults(),
                 current_tracker_identifier,
@@ -220,6 +217,7 @@ describe(`LinkedArtifactTemplate`, () => {
                 current_artifact_reference,
                 LinkTypesCollectionStub.withParentPair(),
                 CurrentProjectIdentifierStub.withId(10),
+                Option.nothing<ParentArtifactIdentifier>(),
             );
 
             const linked_artifacts: ReadonlyArray<LinkedArtifact> = [];
@@ -229,16 +227,17 @@ describe(`LinkedArtifactTemplate`, () => {
                 current_artifact_reference,
                 linked_artifacts,
                 linked_artifact_presenters,
-                parent_artifacts,
+                parent_artifact_ids: parent_artifacts,
                 allowed_link_types: CollectionOfAllowedLinksTypesPresenters.buildEmpty(),
                 controller,
             } as HostElement);
             return new Proxy(host, {
                 set: (target, property, new_value): boolean => {
-                    if (property === "linked_artifacts") {
-                        setLinkedArtifacts(target, new_value);
-                    }
                     Reflect.set(target, property, new_value);
+                    if (property === "linked_artifacts") {
+                        // Simulate hybrids re-computing the property
+                        target.linked_artifact_presenters = getLinkedArtifactPresenters(target);
+                    }
                     return true;
                 },
             });

@@ -20,7 +20,7 @@
 import type { HostElement } from "./SelectBoxField";
 
 export const highlightSelectBoxField = (host: HostElement): void => {
-    const list_picker = host.content().querySelector("[data-list-picker=wrapper]");
+    const list_picker = host.render().querySelector("[data-list-picker=wrapper]");
     if (!list_picker) {
         return;
     }

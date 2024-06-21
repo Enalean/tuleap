@@ -18,12 +18,12 @@
  */
 
 import { define, dispatch, html } from "hybrids";
+import type { UpdateFunction } from "hybrids";
 import { getEditButtonLabel, getPreviewButtonLabel } from "../../gettext-catalog";
 
 export interface CommonmarkPreviewButton {
     isInPreviewMode: boolean;
     isPreviewLoading: boolean;
-    content: () => HTMLElement;
 }
 
 export const iconClasses = (host: CommonmarkPreviewButton): string[] => {
@@ -47,24 +47,28 @@ export const onClick = (host: HTMLElement): void => {
     dispatch(host, "commonmark-preview-event");
 };
 
+export const renderCommonmarkPreviewButton = (
+    host: CommonmarkPreviewButton,
+): UpdateFunction<CommonmarkPreviewButton> => html`
+    <button
+        class="tlp-button-secondary tlp-button-small artifact-modal-preview-button"
+        type="button"
+        onclick="${onClick}"
+        disabled="${host.isPreviewLoading}"
+        data-test="button-commonmark-preview"
+    >
+        <i
+            class="${iconClasses(host)}"
+            data-test="button-commonmark-preview-icon"
+            aria-hidden="true"
+        ></i>
+        ${buttonLabel(host)}
+    </button>
+`;
+
 export const CommonmarkPreviewButton = define<CommonmarkPreviewButton>({
     tag: "tuleap-artifact-modal-commonmark-preview",
     isInPreviewMode: false,
     isPreviewLoading: false,
-    content: (host) => html`
-        <button
-            class="tlp-button-secondary tlp-button-small artifact-modal-preview-button"
-            type="button"
-            onclick="${onClick}"
-            disabled="${host.isPreviewLoading}"
-            data-test="button-commonmark-preview"
-        >
-            <i
-                class="${iconClasses(host)}"
-                data-test="button-commonmark-preview-icon"
-                aria-hidden="true"
-            ></i>
-            ${buttonLabel(host)}
-        </button>
-    `,
+    render: renderCommonmarkPreviewButton,
 });

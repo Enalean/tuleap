@@ -24,15 +24,15 @@ import type { HostElement, LinkField } from "./LinkField";
 import {
     current_link_type_descriptor,
     dropdown_section_descriptor,
+    getAllowedLinkTypes,
     getEmptyStateIfNeeded,
+    getLinkedArtifactPresenters,
     getSkeletonIfNeeded,
     observeArtifactCreator,
+    observeNewLinks,
     onArtifactCreated,
     onCancel,
     onLinkTypeChanged,
-    setAllowedTypes,
-    setLinkedArtifacts,
-    setNewLinks,
 } from "./LinkField";
 import { LinkedArtifactPresenter } from "./LinkedArtifactPresenter";
 import { LinkedArtifactStub } from "../../../../../tests/stubs/LinkedArtifactStub";
@@ -54,7 +54,10 @@ import type { ArtifactLinkSelectorAutoCompleterType } from "./dropdown/ArtifactL
 import { LabeledFieldStub } from "../../../../../tests/stubs/LabeledFieldStub";
 import type { ArtifactCreatedEvent } from "./creation/ArtifactCreatorElement";
 import { LinkableArtifactStub } from "../../../../../tests/stubs/LinkableArtifactStub";
-import type { LinkedArtifactIdentifier } from "../../../../domain/fields/link-field/LinkedArtifact";
+import type {
+    LinkedArtifact,
+    LinkedArtifactIdentifier,
+} from "../../../../domain/fields/link-field/LinkedArtifact";
 import { LinkedArtifactIdentifierStub } from "../../../../../tests/stubs/LinkedArtifactIdentifierStub";
 
 describe("LinkField", () => {
@@ -105,7 +108,7 @@ describe("LinkField", () => {
                 );
                 const host = {
                     linked_artifact_presenters: presenters,
-                    new_links_presenter: new_links,
+                    new_links,
                 } as HostElement;
                 const render = getEmptyStateIfNeeded(host);
 
@@ -137,7 +140,7 @@ describe("LinkField", () => {
         });
     });
 
-    describe(`setters`, () => {
+    describe(`property descriptors`, () => {
         describe("dropdown_section_descriptor", () => {
             let link_selector: LazyboxStub;
             beforeEach(() => {
@@ -156,10 +159,6 @@ describe("LinkField", () => {
                     search_results_section: initial_dropdown_content,
                 } as HostElement;
             };
-
-            it(`defaults property value to empty array`, () => {
-                expect(dropdown_section_descriptor.set(getHost(), undefined)).toStrictEqual([]);
-            });
 
             it(`replaces the link selector dropdown with the sections in the expected order when a section changes`, () => {
                 const host = getHost();
@@ -181,30 +180,56 @@ describe("LinkField", () => {
         });
 
         describe(`current_link_type_descriptor`, () => {
-            let host: LinkField;
+            let is_parent_type_disabled: boolean;
 
             beforeEach(() => {
-                host = {
+                is_parent_type_disabled = false;
+            });
+
+            const getHost = (): HostElement => {
+                return {
                     autocompleter: {
                         autoComplete(): void {
                             //Do nothing
                         },
                     } as ArtifactLinkSelectorAutoCompleterType,
+                    allowed_link_types:
+                        CollectionOfAllowedLinksTypesPresenters.fromCollectionOfAllowedLinkType(
+                            is_parent_type_disabled,
+                            LinkTypesCollectionStub.withParentPair(),
+                        ),
                     current_link_type: LinkTypeStub.buildUntyped(),
-                } as LinkField;
-            });
+                } as HostElement;
+            };
 
-            const setType = (new_link_type: LinkType | undefined): LinkType => {
-                return current_link_type_descriptor.set(host, new_link_type);
+            const getType = (new_link_type: LinkType | undefined): LinkType => {
+                return current_link_type_descriptor.value(getHost(), new_link_type);
             };
 
             it(`defaults to Untyped link`, () => {
-                const link_type = setType(undefined);
+                const link_type = getType(undefined);
                 expect(LinkType.isUntypedLink(link_type)).toBe(true);
+            });
+
+            it(`When the current link is a reverse child and the child link type is disabled,
+                then it should default to Untyped link`, () => {
+                is_parent_type_disabled = true;
+                const current_link_type = getType(LinkTypeStub.buildChildLinkType());
+
+                expect(LinkType.isUntypedLink(current_link_type)).toBe(true);
+            });
+
+            it(`when the current link is a reverse child and the child link type is allowed,
+                then it will return reverse child type`, () => {
+                is_parent_type_disabled = false;
+                const new_link_type = LinkTypeStub.buildChildLinkType();
+
+                expect(getType(new_link_type)).toBe(new_link_type);
             });
 
             it(`when the current type is changed,
                 it will call the autocompleter with an empty string`, () => {
+                const host = getHost();
                 const autoComplete = jest.spyOn(host.autocompleter, "autoComplete");
 
                 current_link_type_descriptor.observe(host);
@@ -213,93 +238,68 @@ describe("LinkField", () => {
             });
         });
 
-        describe(`setAllowedTypes()`, () => {
-            let host: LinkField;
-
-            beforeEach(() => {
-                host = {
+        describe(`getAllowedLinkTypes()`, () => {
+            const getHost = (): LinkField => {
+                const linked_artifacts: ReadonlyArray<LinkedArtifact> = [];
+                const new_links: ReadonlyArray<NewLink> = [];
+                return {
                     current_link_type: LinkTypeStub.buildUntyped(),
+                    linked_artifacts,
+                    new_links,
                 } as LinkField;
-            });
-
-            const setTypes = (
-                presenter: CollectionOfAllowedLinksTypesPresenters | undefined,
-            ): CollectionOfAllowedLinksTypesPresenters => {
-                return setAllowedTypes(host, presenter);
             };
 
             it("defaults to a en empty CollectionOfAllowedLinksTypesPresenters", () => {
-                const allowed_types = setTypes(undefined);
+                const allowed_types = getAllowedLinkTypes(getHost(), undefined);
                 expect(allowed_types.types).toHaveLength(0);
                 expect(allowed_types.is_parent_type_disabled).toBe(false);
             });
-
-            it(`When the current link is a reverse child and the child link type is disabled,
-                then it should default to Untyped link`, () => {
-                host.current_link_type = LinkTypeStub.buildChildLinkType();
-                setTypes(
-                    CollectionOfAllowedLinksTypesPresenters.fromCollectionOfAllowedLinkType(
-                        true,
-                        LinkTypesCollectionStub.withParentPair(),
-                    ),
-                );
-
-                expect(LinkType.isUntypedLink(host.current_link_type)).toBe(true);
-            });
         });
 
-        describe("link setters", () => {
-            let has_parent_link: boolean, parent_artifacts: ReadonlyArray<LinkedArtifactIdentifier>;
-            beforeEach(() => {
-                has_parent_link = false;
-                parent_artifacts = [];
-            });
-
+        describe("link descriptors", () => {
             const getHost = (): HostElement => {
                 const element = doc.createElement("div");
-                const linked_artifact_presenters: ReadonlyArray<LinkedArtifactPresenter> = [];
+                const parent_artifact_ids: ReadonlyArray<LinkedArtifactIdentifier> = [];
+                const linked_artifacts: ReadonlyArray<LinkedArtifact> = [];
                 return Object.assign(element, {
                     controller: {
-                        getAllowedLinkTypes: () => LinkTypesCollectionStub.withParentPair(),
-                        hasParentLink: () => has_parent_link,
                         isMarkedForRemoval: (link) => (link ? false : false),
                     },
-                    linked_artifact_presenters,
-                    parent_artifacts,
+                    linked_artifacts,
+                    parent_artifact_ids,
                 } as HostElement);
             };
 
-            describe("setLinkedArtifacts", () => {
+            describe("getLinkedArtifactPresenters()", () => {
                 it("should default to an empty array", () => {
-                    const linked_artifacts = setLinkedArtifacts(getHost(), undefined);
-                    expect(linked_artifacts).toHaveLength(0);
+                    const host = getHost();
+                    expect(getLinkedArtifactPresenters(host)).toHaveLength(0);
                 });
 
                 it(`should set the presenters property when linked artifacts have been retrieved`, () => {
                     const host = getHost();
-                    setLinkedArtifacts(host, [LinkedArtifactStub.withDefaults()]);
-                    expect(host.linked_artifact_presenters).toHaveLength(1);
+                    host.linked_artifacts = [LinkedArtifactStub.withDefaults()];
+                    expect(getLinkedArtifactPresenters(host)).toHaveLength(1);
                 });
 
                 it(`should sort the parent links at the beginning of the list of linked artifacts
                     and mark the presenters with "is_parent"`, () => {
+                    const host = getHost();
                     const first_parent_id = LinkedArtifactIdentifierStub.withId(89),
                         second_parent_id = LinkedArtifactIdentifierStub.withId(27),
                         first_other_id = LinkedArtifactIdentifierStub.withId(73),
                         second_other_id = LinkedArtifactIdentifierStub.withId(46);
-                    parent_artifacts = [first_parent_id, second_parent_id];
-                    const linked_artifacts = [
+                    host.parent_artifact_ids = [first_parent_id, second_parent_id];
+                    host.linked_artifacts = [
                         LinkedArtifactStub.withDefaults({ identifier: first_other_id }),
                         LinkedArtifactStub.withDefaults({ identifier: first_parent_id }),
                         LinkedArtifactStub.withDefaults({ identifier: second_other_id }),
                         LinkedArtifactStub.withDefaults({ identifier: second_parent_id }),
                     ];
-                    const host = getHost();
-                    setLinkedArtifacts(host, linked_artifacts);
+                    const presenters = getLinkedArtifactPresenters(host);
 
-                    expect(host.linked_artifact_presenters).toHaveLength(4);
-                    const [first_link, second_link, third_link, fourth_link] =
-                        host.linked_artifact_presenters;
+                    expect(presenters).toHaveLength(4);
+                    const [first_link, second_link, third_link, fourth_link] = presenters;
                     expect(first_link.identifier).toBe(first_parent_id);
                     expect(first_link.is_parent).toBe(true);
                     expect(second_link.identifier).toBe(second_parent_id);
@@ -309,40 +309,27 @@ describe("LinkField", () => {
                     expect(fourth_link.identifier).toBe(second_other_id);
                     expect(fourth_link.is_parent).toBe(false);
                 });
-
-                it("should refresh allowed types when linked artifacts have been retrieved", () => {
-                    has_parent_link = true;
-                    const host = getHost();
-                    setLinkedArtifacts(host, []);
-
-                    expect(host.allowed_link_types.is_parent_type_disabled).toBe(true);
-                    expect(host.allowed_link_types.types).not.toHaveLength(0);
-                });
             });
 
-            describe("setNewLinks", () => {
-                it("defaults to an empty array", () => {
-                    const new_links = setNewLinks(getHost(), undefined);
-                    expect(new_links).toHaveLength(0);
-                });
-
-                it(`should refresh allowed types when new links have been edited`, () => {
-                    const host = getHost();
-                    setNewLinks(host, []);
-
-                    expect(host.allowed_link_types.is_parent_type_disabled).toBe(false);
-                    expect(host.allowed_link_types.types).not.toHaveLength(0);
-                });
-
+            describe("observeNewLinks()", () => {
                 it(`dispatches a bubbling "change" event`, () => {
                     const host = getHost();
                     const dispatchEvent = jest.spyOn(host, "dispatchEvent");
 
-                    setNewLinks(host, []);
+                    observeNewLinks(host, [NewLinkStub.withDefaults()], []);
 
                     const event = dispatchEvent.mock.calls[0][0];
                     expect(event.type).toBe("change");
                     expect(event.bubbles).toBe(true);
+                });
+
+                it(`does not trigger when the property is defined for the first time`, () => {
+                    const host = getHost();
+                    const dispatchEvent = jest.spyOn(host, "dispatchEvent");
+
+                    observeNewLinks(host, [], undefined);
+
+                    expect(dispatchEvent).not.toHaveBeenCalled();
                 });
             });
         });
@@ -358,7 +345,7 @@ describe("LinkField", () => {
             const host = {
                 is_artifact_creator_shown: true,
                 link_selector: lazybox,
-                content: () => doc.createElement("div") as HTMLElement,
+                render: () => doc.createElement("div") as HTMLElement,
             } as HostElement;
             observeArtifactCreator(host, false);
 
@@ -398,7 +385,7 @@ describe("LinkField", () => {
             and tell the controller to add the NewLink from the event
             and assign the list of new links with the result`, () => {
             const ARTIFACT_ID = 278;
-            const new_links_presenter: ReadonlyArray<NewLink> = [];
+            const new_links: ReadonlyArray<NewLink> = [];
 
             const host = {
                 controller: {
@@ -407,7 +394,7 @@ describe("LinkField", () => {
                     },
                 },
                 current_link_type: LinkTypeStub.buildChildLinkType(),
-                new_links_presenter,
+                new_links,
                 is_artifact_creator_shown: true,
             } as HostElement;
 
@@ -418,8 +405,8 @@ describe("LinkField", () => {
             );
 
             expect(host.is_artifact_creator_shown).toBe(false);
-            expect(host.new_links_presenter).toHaveLength(1);
-            const [new_link] = host.new_links_presenter;
+            expect(host.new_links).toHaveLength(1);
+            const [new_link] = host.new_links;
             expect(new_link.identifier.id).toBe(ARTIFACT_ID);
             expect(LinkType.isReverseChild(new_link.link_type)).toBe(true);
         });

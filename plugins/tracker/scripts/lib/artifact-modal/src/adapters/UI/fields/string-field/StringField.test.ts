@@ -18,7 +18,7 @@
  */
 
 import type { HostElement } from "./StringField";
-import { onInput, StringField } from "./StringField";
+import { onInput, renderStringField } from "./StringField";
 import { selectOrThrow } from "@tuleap/dom";
 
 describe(`StringField`, () => {
@@ -58,7 +58,7 @@ describe(`StringField`, () => {
     it(`dispatches a bubbling "change" event when its inner input is changed
         so that the modal shows a warning when closed`, () => {
         const host = getHost();
-        const update = StringField.content(host);
+        const update = renderStringField(host);
         update(host, host);
         let is_bubbling = false;
         host.addEventListener("change", (event) => {

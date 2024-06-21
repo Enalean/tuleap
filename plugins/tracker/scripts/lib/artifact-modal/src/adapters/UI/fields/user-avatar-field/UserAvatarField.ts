@@ -18,6 +18,7 @@
  */
 
 import { html, define } from "hybrids";
+import type { UpdateFunction } from "hybrids";
 
 export type HostElement = UserAvatarField & HTMLElement;
 
@@ -34,30 +35,33 @@ export interface FieldUserAvatarType {
 
 export interface UserAvatarField {
     readonly field: FieldUserAvatarType;
-    readonly content: () => HTMLElement;
 }
+
+export const renderUserAvatarField = (
+    host: UserAvatarField,
+): UpdateFunction<UserAvatarField> => html`
+    <div class="tlp-property">
+        <label class="tlp-label" data-test="user-avatar-field-label">${host.field.label}</label>
+        <div class="tuleap-artifact-modal-artifact-field-user">
+            <div class="tlp-avatar">
+                ${host.field.value.avatar_url &&
+                html`
+                    <img
+                        src="${host.field.value.avatar_url}"
+                        alt="avatar"
+                        data-test="user-avatar-field-avatar-image"
+                    />
+                `}
+            </div>
+            <a href="${host.field.value.user_url}" data-test="user-avatar-field-user-link">
+                ${host.field.value.display_name}
+            </a>
+        </div>
+    </div>
+`;
 
 export const UserAvatarField = define<UserAvatarField>({
     tag: "tuleap-artifact-modal-user-avatar-field",
-    field: undefined,
-    content: (host) => html`
-        <div class="tlp-property">
-            <label class="tlp-label" data-test="user-avatar-field-label">${host.field.label}</label>
-            <div class="tuleap-artifact-modal-artifact-field-user">
-                <div class="tlp-avatar">
-                    ${host.field.value.avatar_url &&
-                    html`
-                        <img
-                            src="${host.field.value.avatar_url}"
-                            alt="avatar"
-                            data-test="user-avatar-field-avatar-image"
-                        />
-                    `}
-                </div>
-                <a href="${host.field.value.user_url}" data-test="user-avatar-field-user-link">
-                    ${host.field.value.display_name}
-                </a>
-            </div>
-        </div>
-    `,
+    field: (host, field) => field,
+    render: renderUserAvatarField,
 });

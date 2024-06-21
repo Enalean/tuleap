@@ -18,6 +18,7 @@
  */
 
 import { html, define } from "hybrids";
+import type { UpdateFunction } from "hybrids";
 import type { CurrentArtifactIdentifier } from "../../../../domain/CurrentArtifactIdentifier";
 
 export type HostElement = BurndownField & HTMLElement;
@@ -30,25 +31,26 @@ interface FieldBurndownType {
 export interface BurndownField {
     readonly field: FieldBurndownType;
     readonly currentArtifactIdentifier: CurrentArtifactIdentifier;
-    readonly content: () => HTMLElement;
 }
 
 const getBurndownImageUrl = (host: HostElement): string =>
     `/plugins/tracker/?formElement=${host.field.field_id}&func=show_burndown&src_aid=${host.currentArtifactIdentifier.id}`;
 
+export const renderBurndownField = (host: HostElement): UpdateFunction<BurndownField> => html`
+    <div class="tlp-property">
+        <label class="tlp-label" data-test="burndown-field-label">${host.field.label}</label>
+        <img
+            src="${getBurndownImageUrl(host)}"
+            alt="${host.field.label}"
+            class="tuleap-artifact-modal-artifact-field-burndown-image"
+            data-test="burndown-field-image"
+        />
+    </div>
+`;
+
 export const BurndownField = define<BurndownField>({
     tag: "tuleap-artifact-modal-burndown-field",
-    field: undefined,
-    currentArtifactIdentifier: undefined,
-    content: (host) => html`
-        <div class="tlp-property">
-            <label class="tlp-label" data-test="burndown-field-label">${host.field.label}</label>
-            <img
-                src="${getBurndownImageUrl(host)}"
-                alt="${host.field.label}"
-                class="tuleap-artifact-modal-artifact-field-burndown-image"
-                data-test="burndown-field-image"
-            />
-        </div>
-    `,
+    field: (host, field) => field,
+    currentArtifactIdentifier: (host, identifier) => identifier,
+    render: renderBurndownField,
 });

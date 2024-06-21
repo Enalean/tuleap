@@ -18,6 +18,7 @@
  */
 
 import { html, define } from "hybrids";
+import type { UpdateFunction } from "hybrids";
 import type { FormatReadonlyDateField } from "../../../../domain/fields/readonly-date-field/FormatReadonlyDateField";
 
 export type HostElement = DateReadonlyField & HTMLElement;
@@ -30,24 +31,23 @@ interface FieldDateReadonlyType {
 export interface DateReadonlyField {
     readonly field: FieldDateReadonlyType;
     readonly formatter: FormatReadonlyDateField;
-    readonly content: () => HTMLElement;
 }
 
 const getFormattedDate = (host: DateReadonlyField): string =>
     host.formatter.format(host.field.value);
 
+export const renderDateReadonlyField = (
+    host: DateReadonlyField,
+): UpdateFunction<DateReadonlyField> => html`
+    <div class="tlp-property">
+        <label class="tlp-label" data-test="date-readonly-field-label"> ${host.field.label} </label>
+        <span data-test="date-readonly-field-date">${getFormattedDate(host)}</span>
+    </div>
+`;
+
 export const DateReadonlyField = define<DateReadonlyField>({
     tag: "tuleap-artifact-modal-date-readonly-field",
-    field: undefined,
-    formatter: undefined,
-    content: (host) => {
-        return html`
-            <div class="tlp-property">
-                <label class="tlp-label" data-test="date-readonly-field-label">
-                    ${host.field.label}
-                </label>
-                <span data-test="date-readonly-field-date">${getFormattedDate(host)}</span>
-            </div>
-        `;
-    },
+    field: (host, field) => field,
+    formatter: (host, formatter) => formatter,
+    render: renderDateReadonlyField,
 });

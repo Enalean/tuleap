@@ -44,7 +44,7 @@ export type LinkTypeSelectorElement = {
     readonly available_types: CollectionOfAllowedLinksTypesPresenters;
 };
 type InternalLinkTypeSelector = LinkTypeSelectorElement & {
-    content(): HTMLElement;
+    render(): HTMLElement;
 };
 export type HostElement = InternalLinkTypeSelector & HTMLElement;
 
@@ -100,31 +100,35 @@ const onChange = (host: HostElement, event: Event): void => {
     dispatch(host, "type-changed", { bubbles: true, detail: { new_link_type } });
 };
 
+export const renderLinkTypeSelectorElement = (
+    host: InternalLinkTypeSelector,
+): UpdateFunction<InternalLinkTypeSelector> => {
+    const current_artifact_xref = host.current_artifact_reference.mapOr(
+        (reference) => reference.ref,
+        getNewArtifactLabel(),
+    );
+
+    return html`<select
+        class="tlp-select tlp-select-small"
+        data-test="link-type-select"
+        required
+        onchange="${onChange}"
+        disabled="${host.disabled}"
+    >
+        <optgroup label="${current_artifact_xref}" data-test="link-type-select-optgroup">
+            <option value=" forward" selected="${host.value.shortname === UNTYPED_LINK}">
+                ${getDefaultLinkTypeLabel()}
+            </option>
+            ${host.available_types.types.map((presenter) => getOptions(host, presenter))}
+        </optgroup>
+    </select>`;
+};
+
 export const LinkTypeSelectorElement = define<InternalLinkTypeSelector>({
     tag: "tuleap-artifact-modal-link-type-selector",
-    value: undefined,
+    value: (host, value) => value,
     disabled: false,
-    current_artifact_reference: undefined,
-    available_types: undefined,
-    content: (host) => {
-        const current_artifact_xref = host.current_artifact_reference.mapOr(
-            (reference) => reference.ref,
-            getNewArtifactLabel(),
-        );
-
-        return html`<select
-            class="tlp-select tlp-select-small"
-            data-test="link-type-select"
-            required
-            onchange="${onChange}"
-            disabled="${host.disabled}"
-        >
-            <optgroup label="${current_artifact_xref}" data-test="link-type-select-optgroup">
-                <option value=" forward" selected="${host.value.shortname === UNTYPED_LINK}">
-                    ${getDefaultLinkTypeLabel()}
-                </option>
-                ${host.available_types.types.map((presenter) => getOptions(host, presenter))}
-            </optgroup>
-        </select>`;
-    },
+    current_artifact_reference: (host, current_artifact_reference) => current_artifact_reference,
+    available_types: (host, available_types) => available_types,
+    render: renderLinkTypeSelectorElement,
 });

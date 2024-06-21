@@ -20,7 +20,7 @@
 import { Option } from "@tuleap/option";
 import { selectOrThrow } from "@tuleap/dom";
 import type { HostElement } from "./ModalFeedback";
-import { ModalFeedback } from "./ModalFeedback";
+import { renderModalFeedback } from "./ModalFeedback";
 import { setCatalog } from "../../../gettext-catalog";
 import type { ParentArtifact } from "../../../domain/parent/ParentArtifact";
 
@@ -44,7 +44,7 @@ describe(`ModalFeedback`, () => {
 
     const renderTemplate = (): void => {
         const host = { parent_option, error_message_option } as HostElement;
-        const updateFunction = ModalFeedback.content(host);
+        const updateFunction = renderModalFeedback(host);
         updateFunction(host, target);
     };
 

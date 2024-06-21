@@ -18,6 +18,7 @@
  */
 
 import { define, dispatch, html } from "hybrids";
+import type { UpdateFunction } from "hybrids";
 import { cleanValue } from "./float-field-value-formatter";
 
 export type AllowedValue = number | "";
@@ -30,7 +31,7 @@ export interface FloatField {
     value: AllowedValue;
 }
 type InternalFloatField = FloatField & {
-    content(): HTMLElement;
+    render(): HTMLElement;
 };
 export type HostElement = InternalFloatField & HTMLElement;
 
@@ -49,34 +50,35 @@ export const onInput = (host: HostElement, event: Event): void => {
     });
 };
 
+export const renderFloatField = (
+    host: InternalFloatField,
+): UpdateFunction<InternalFloatField> => html`
+    <div class="tlp-form-element">
+        <label for="${"tracker_field_" + host.fieldId}" class="tlp-label">
+            ${host.label}${host.required && html`<i class="fas fa-asterisk"></i>`}
+        </label>
+        <input
+            type="number"
+            step="any"
+            class="tlp-input"
+            data-test="float-field-input"
+            size="5"
+            oninput="${onInput}"
+            value="${host.value}"
+            required="${host.required}"
+            disabled="${host.disabled}"
+            id="${"tracker_field_" + host.fieldId}"
+        />
+    </div>
+`;
+
 export const FloatField = define<InternalFloatField>({
     tag: "tuleap-artifact-modal-float-field",
     fieldId: 0,
     label: "",
     required: false,
     disabled: false,
-    value: {
-        set: (host, new_value: AllowedValue | null): AllowedValue => {
-            return new_value === null ? "" : new_value;
-        },
-    },
-    content: (host) => html`
-        <div class="tlp-form-element">
-            <label for="${"tracker_field_" + host.fieldId}" class="tlp-label">
-                ${host.label}${host.required && html`<i class="fas fa-asterisk"></i>`}
-            </label>
-            <input
-                type="number"
-                step="any"
-                class="tlp-input"
-                data-test="float-field-input"
-                size="5"
-                oninput="${onInput}"
-                value="${host.value}"
-                required="${host.required}"
-                disabled="${host.disabled}"
-                id="${"tracker_field_" + host.fieldId}"
-            />
-        </div>
-    `,
+    value: (host, new_value: AllowedValue | null): AllowedValue =>
+        new_value === null ? "" : new_value,
+    render: renderFloatField,
 });

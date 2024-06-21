@@ -18,6 +18,7 @@
  */
 
 import { define, dispatch, html } from "hybrids";
+import type { UpdateFunction } from "hybrids";
 import { getFieldDateRequiredAndEmptyMessage } from "../../../../gettext-catalog";
 
 import type { DatePickerInitializerType } from "./DatePickerInitializer";
@@ -34,7 +35,7 @@ export interface DateField {
     value: string;
 }
 type InternalDateField = DateField & {
-    content(): HTMLElement;
+    render(): HTMLElement;
 };
 
 export type HostElement = InternalDateField & HTMLElement;
@@ -67,55 +68,59 @@ export const onInput = (host: HostElement, event: Event): void => {
     });
 };
 
+export const renderDateField = (host: InternalDateField): UpdateFunction<InternalDateField> => html`
+    <div class="${getDateFormElementClasses(host)}" data-test="date-field">
+        <label for="${"tracker_field_" + host.field.field_id}" class="tlp-label">
+            ${host.field.label}
+            ${host.field.required &&
+            html`<i class="fas fa-asterisk" data-test="date-field-required-flag"></i>`}
+        </label>
+        <div class="tlp-form-element tlp-form-element-prepend">
+            <span class="tlp-prepend"><i class="fas fa-calendar-alt"></i></span>
+            <input
+                id="${"tracker_field_" + host.field.field_id}"
+                type="text"
+                class="tlp-input tlp-input-date"
+                data-test="date-field-input"
+                data-input="date-field-input"
+                size="${getFieldSize(host.field)}"
+                value="${host.value}"
+                disabled="${host.isDisabled}"
+                data-enabletime="${Boolean(host.field.is_time_displayed)}"
+                oninput="${onInput}"
+            />
+        </div>
+        ${isRequiredAndEmpty(host) &&
+        html`
+            <p class="tlp-text-danger" data-test="date-field-required-and-empty-error">
+                ${getFieldDateRequiredAndEmptyMessage()}
+            </p>
+        `}
+    </div>
+`;
+
+type DisconnectCallback = () => void;
+
 export const DateField = define<InternalDateField>({
     tag: "tuleap-artifact-modal-date-field",
-    field: undefined,
+    field: (host, field) => field,
     isDisabled: false,
     value: "",
     datePickerInitializer: {
-        set: (host: DateField, initializer: DatePickerInitializerType): void => {
-            if (host.date_input_element === null) {
+        value: (host, initializer) => initializer,
+        connect: (host): DisconnectCallback | undefined => {
+            if (!host.date_input_element) {
                 return;
             }
-
-            initializer.initDatePicker(host.date_input_element);
+            host.datePickerInitializer.initDatePicker(host.date_input_element);
         },
     },
-    date_input_element: ({ content }) => {
-        const input = content().querySelector(`[data-input=date-field-input]`);
+    date_input_element: (host: InternalDateField): HTMLInputElement | null => {
+        const input = host.render().querySelector(`[data-input=date-field-input]`);
         if (!(input instanceof HTMLInputElement)) {
             return null;
         }
         return input;
     },
-    content: (host) => html`
-        <div class="${getDateFormElementClasses(host)}" data-test="date-field">
-            <label for="${"tracker_field_" + host.field.field_id}" class="tlp-label">
-                ${host.field.label}
-                ${host.field.required &&
-                html`<i class="fas fa-asterisk" data-test="date-field-required-flag"></i>`}
-            </label>
-            <div class="tlp-form-element tlp-form-element-prepend">
-                <span class="tlp-prepend"><i class="fas fa-calendar-alt"></i></span>
-                <input
-                    id="${"tracker_field_" + host.field.field_id}"
-                    type="text"
-                    class="tlp-input tlp-input-date"
-                    data-test="date-field-input"
-                    data-input="date-field-input"
-                    size="${getFieldSize(host.field)}"
-                    value="${host.value}"
-                    disabled="${host.isDisabled}"
-                    data-enabletime="${Boolean(host.field.is_time_displayed)}"
-                    oninput="${onInput}"
-                />
-            </div>
-            ${isRequiredAndEmpty(host) &&
-            html`
-                <p class="tlp-text-danger" data-test="date-field-required-and-empty-error">
-                    ${getFieldDateRequiredAndEmptyMessage()}
-                </p>
-            `}
-        </div>
-    `,
+    render: renderDateField,
 });

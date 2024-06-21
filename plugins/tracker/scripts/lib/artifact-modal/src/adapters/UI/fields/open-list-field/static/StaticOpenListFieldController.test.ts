@@ -60,8 +60,10 @@ describe("StaticOpenListFieldController", () => {
             - a select2 will be created
             - its events will be listened
             - the component presenter will be built`, () => {
+            const controller = getController();
             const host = {
                 select_element: doc.createElement("select"),
+                presenter: controller.getInitialPresenter(),
             } as InternalStaticOpenListField;
 
             const registerSelect2EventHandler = jest.fn();
@@ -71,7 +73,7 @@ describe("StaticOpenListFieldController", () => {
                 on: registerSelect2EventHandler,
             });
 
-            getController().init(host);
+            controller.initSelect2(host);
 
             expect(tlp.select2).toHaveBeenCalledTimes(1);
             expect(registerSelect2EventHandler).toHaveBeenCalledTimes(2);

@@ -18,6 +18,7 @@
  */
 
 import { define, html } from "hybrids";
+import type { UpdateFunction } from "hybrids";
 
 export type HostElement = PriorityField & HTMLElement;
 
@@ -28,16 +29,17 @@ interface FieldPriorityType {
 
 export interface PriorityField {
     readonly field: FieldPriorityType;
-    readonly content: () => HTMLElement;
 }
+
+export const renderPriorityField = (host: PriorityField): UpdateFunction<PriorityField> => html`
+    <div class="tlp-property">
+        <label class="tlp-label" data-test="priority-field-label">${host.field.label}</label>
+        <p data-test="priority-field-value">${host.field.value}</p>
+    </div>
+`;
 
 export const PriorityField = define<PriorityField>({
     tag: "tuleap-artifact-modal-priority-field",
-    field: undefined,
-    content: (host) => html`
-        <div class="tlp-property">
-            <label class="tlp-label" data-test="priority-field-label">${host.field.label}</label>
-            <p data-test="priority-field-value">${host.field.value}</p>
-        </div>
-    `,
+    field: (host, field) => field,
+    render: renderPriorityField,
 });

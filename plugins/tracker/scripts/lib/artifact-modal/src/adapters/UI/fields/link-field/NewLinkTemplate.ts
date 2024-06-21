@@ -52,14 +52,11 @@ export const getCrossRefClasses = (artifact: LinkedArtifactPresenter | NewLink):
 
 export const getNewLinkTemplate = (host: LinkField, link: NewLink): UpdateFunction<LinkField> => {
     const removeNewLink = (): void => {
-        host.new_links_presenter = host.controller.removeNewLink(link);
+        host.new_links = host.controller.removeNewLink(link);
     };
 
     const onTypeChanged = (host: LinkField, event: CustomEvent<TypeChangedEvent>): void => {
-        host.new_links_presenter = host.controller.changeNewLinkType(
-            link,
-            event.detail.new_link_type,
-        );
+        host.new_links = host.controller.changeNewLinkType(link, event.detail.new_link_type);
     };
 
     return html`<div class="link-field-row link-field-new-row" data-test="link-row">

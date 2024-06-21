@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { UserAvatarField } from "./UserAvatarField";
+import { renderUserAvatarField } from "./UserAvatarField";
 import type { HostElement } from "./UserAvatarField";
 
 const field_label = "Submitted by",
@@ -50,7 +50,7 @@ describe("UserAvatarField", () => {
 
             const host = getHost(avatar_url);
 
-            const update = UserAvatarField.content(host);
+            const update = renderUserAvatarField(host);
 
             update(host, target);
 

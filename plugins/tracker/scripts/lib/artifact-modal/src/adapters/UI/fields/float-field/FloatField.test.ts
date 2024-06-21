@@ -19,7 +19,7 @@
 
 import { selectOrThrow } from "@tuleap/dom";
 import type { HostElement } from "./FloatField";
-import { FloatField, onInput } from "./FloatField";
+import { FloatField, onInput, renderFloatField } from "./FloatField";
 
 const FIELD_ID = 87;
 
@@ -66,16 +66,13 @@ describe(`FloatField`, () => {
     );
 
     it(`does not use hybrids default setter (otherwise, zero is converted to empty string)`, () => {
-        if (typeof FloatField.value !== "object") {
-            throw Error("value should have a setter");
-        }
-        expect(typeof FloatField.value.set).toBe("function");
+        expect(typeof FloatField.value).toBe("function");
     });
 
     it(`dispatches a bubbling "change" event when its inner input is changed
         so that the modal shows a warning when closed`, () => {
         const host = getHost();
-        const update = FloatField.content(host);
+        const update = renderFloatField(host);
         update(host, host);
         let is_bubbling = false;
         host.addEventListener("change", (event) => {
