@@ -30,5 +30,18 @@
     "storybook": "storybook dev -p 6006 -h localhost",
     "build-storybook": "storybook build",
     "build-storybook-docs": "storybook build --docs"
+  },
+  "pnpm": {
+    "overrides": {
+      "assert": "npm:@nolyfill/assert@latest",
+      "deep-equal": "npm:@nolyfill/deep-equal@latest",
+      "hasown": "npm:@nolyfill/hasown@latest",
+      "is-arguments": "npm:@nolyfill/is-arguments@latest",
+      "is-generator-function": "npm:@nolyfill/is-generator-function@latest",
+      "is-typed-array": "npm:@nolyfill/is-typed-array@latest",
+      "isarray": "npm:@nolyfill/isarray@latest",
+      "side-channel": "npm:@nolyfill/side-channel@latest",
+      "which-typed-array": "npm:@nolyfill/which-typed-array@latest"
+    }
   }
 }

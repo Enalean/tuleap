@@ -96,5 +96,21 @@
     "stylelint": "stylelint --config .stylelintrc.js",
     "test": "TURBO_LOG_ORDER=grouped turbo run test --concurrency=1 --output-logs=new-only --continue --no-daemon"
   },
-  "packageManager": "pnpm@8.7.0"
+  "packageManager": "pnpm@8.7.0",
+  "pnpm": {
+    "overrides": {
+      "abab": "npm:@nolyfill/abab@latest",
+      "array-includes": "npm:@nolyfill/array-includes@latest",
+      "array.prototype.findlastindex": "npm:@nolyfill/array.prototype.findlastindex@latest",
+      "array.prototype.flat": "npm:@nolyfill/array.prototype.flat@latest",
+      "array.prototype.flatmap": "npm:@nolyfill/array.prototype.flatmap@latest",
+      "harmony-reflect": "npm:@nolyfill/harmony-reflect@latest",
+      "has": "npm:@nolyfill/has@latest",
+      "hasown": "npm:@nolyfill/hasown@latest",
+      "object.fromentries": "npm:@nolyfill/object.fromentries@latest",
+      "object.groupby": "npm:@nolyfill/object.groupby@latest",
+      "object.values": "npm:@nolyfill/object.values@latest",
+      "side-channel": "npm:@nolyfill/side-channel@latest"
+    }
+  }
 }
