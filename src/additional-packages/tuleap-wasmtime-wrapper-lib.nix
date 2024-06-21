@@ -18,6 +18,9 @@ let
       lockFile = "${src}/Cargo.lock";
     };
 
+    # Make zstd-sys crate to behave correctly in our "cross-compilation" setup
+    CRATE_CC_NO_DEFAULTS = 1;
+
     nativeBuildInputs = [
       pkgs.rustPlatform.cargoSetupHook
       rust
