@@ -8,7 +8,7 @@
   },
   "autoload-dev": {
     "psr-4": {
-      "Tuleap\\Cardwall\\": "tests/unit/"
+      "Tuleap\\Cardwall\\": ["tests/unit/", "tests/unit/Cardwall"]
     },
     "classmap": ["tests/unit/"]
   },

@@ -18,104 +18,79 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Cardwall\Semantic;
 
 use Cardwall_Semantic_CardFields;
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\MockObject\MockObject;
 use SimpleXMLElement;
 use Tracker;
-use Tracker_FormElement_Field_List;
+use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
-final class CardFieldXmlExporterTest extends \Tuleap\Test\PHPUnit\TestCase
+final class CardFieldXmlExporterTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var Tracker
-     */
-    private $tracker;
-    /**
-     * @var SimpleXMLElement
-     */
-    private $xml_tree;
-
-    /**
-     * @var CardFieldXmlExporter
-     */
-    private $exporter;
-
-    /**
-     * @var BackgroundColorDao
-     */
-    private $color_dao;
+    private Tracker $tracker;
+    private SimpleXMLElement $xml_tree;
+    private CardFieldXmlExporter $exporter;
+    private BackgroundColorDao&MockObject $color_dao;
 
     public function setUp(): void
     {
-        parent::setUp();
-
-        $this->color_dao = Mockery::spy(BackgroundColorDao::class);
+        $this->color_dao = $this->createMock(BackgroundColorDao::class);
         $this->exporter  = new CardFieldXmlExporter($this->color_dao);
-
-        $data = '<?xml version="1.0" encoding="UTF-8"?>
-                 <projects />';
-
-        $this->xml_tree = new SimpleXMLElement($data);
-
-        $this->tracker = Mockery::spy(Tracker::class);
+        $this->xml_tree  = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><projects />');
+        $this->tracker   = TrackerTestBuilder::aTracker()->build();
     }
 
-    public function testItShouldExportCardFields()
+    public function testItShouldExportCardFields(): void
     {
         $mapping = [
             'F102' => 13,
             'F103' => 14,
         ];
 
-        $severity_field = Mockery::spy(Tracker_FormElement_Field_List::class);
-        $severity_field->shouldReceive('getId')->andReturn(13);
+        $severity_field = ListFieldBuilder::aListField(13)->build();
+        $status_field   = ListFieldBuilder::aListField(14)->build();
 
-        $status_field = Mockery::spy(Tracker_FormElement_Field_List::class);
-        $status_field->shouldReceive('getId')->andReturn(14);
+        $fields = [$severity_field, $status_field];
 
-        $fields = [
-            $severity_field,
-            $status_field,
-        ];
-
-        $semantic = Mockery::spy(Cardwall_Semantic_CardFields::class);
-        $semantic->shouldReceive('getFields')->andReturn($fields);
-        $semantic->shouldReceive('getTracker')->andReturn($this->tracker);
+        $semantic = $this->createMock(Cardwall_Semantic_CardFields::class);
+        $semantic->method('getFields')->willReturn($fields);
+        $semantic->method('getTracker')->willReturn($this->tracker);
+        $this->color_dao->method('searchBackgroundColor');
 
         $this->exporter->exportToXml($this->xml_tree, $mapping, $semantic);
 
         $semantic = $this->xml_tree->semantic->attributes();
-        $this->assertEquals($semantic->type, Cardwall_Semantic_CardFields::NAME);
+        self::assertEquals(Cardwall_Semantic_CardFields::NAME, $semantic->type);
 
         $fields = $this->xml_tree->semantic->field;
-        $this->assertEquals('F102', $fields[0]->attributes());
-        $this->assertEquals('F103', $fields[1]->attributes());
+        self::assertEquals('F102', $fields[0]->attributes());
+        self::assertEquals('F103', $fields[1]->attributes());
     }
 
-    public function testItShouldExportBackgroundColor()
+    public function testItShouldExportBackgroundColor(): void
     {
-        $this->color_dao->shouldReceive('searchBackgroundColor')->andReturn(13);
+        $this->color_dao->method('searchBackgroundColor')->willReturn(13);
 
         $mapping = [
             'F102' => 13,
             'F103' => 14,
         ];
 
-        $semantic = Mockery::spy(Cardwall_Semantic_CardFields::class);
-        $semantic->shouldReceive('getFields')->andReturn([]);
-        $semantic->shouldReceive('getTracker')->andReturn($this->tracker);
+        $semantic = $this->createMock(Cardwall_Semantic_CardFields::class);
+        $semantic->method('getFields')->willReturn([]);
+        $semantic->method('getTracker')->willReturn($this->tracker);
 
         $this->exporter->exportToXml($this->xml_tree, $mapping, $semantic);
 
         $semantic = $this->xml_tree->semantic->attributes();
-        $this->assertEquals($semantic->type, Cardwall_Semantic_CardFields::NAME);
+        self::assertEquals(Cardwall_Semantic_CardFields::NAME, $semantic->type);
 
-        $background_color_field = $this->xml_tree->semantic->{ 'background-color' };
-        $this->assertEquals('F102', $background_color_field[0]->attributes());
+        $background_color_field = $this->xml_tree->semantic->{'background-color'};
+        self::assertEquals('F102', $background_color_field[0]->attributes());
     }
 }
