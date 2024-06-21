@@ -26,6 +26,21 @@ function getTrackerIdFromTrackerListPage(): Cypress.Chainable<JQuery<HTMLElement
     return cy.get("[data-test=tracker-link-workflow]").should("have.attr", "data-test-tracker-id");
 }
 
+function saveTransition(
+    position: number,
+    transition_on_field: string,
+    field_name: string,
+    field_value: string,
+): void {
+    cy.get("[data-test-action=configure-transition]").eq(position).click();
+    cy.get("[data-test=add-post-action]").click();
+    cy.get("[data-test=post-action-type-select]").select(transition_on_field);
+
+    cy.get("[data-test-type=field]").select(field_name);
+    cy.get("[data-test=select-date]").select(field_value);
+    cy.get("[data-test=save-button]").click();
+}
+
 describe(`Tracker Workflow`, () => {
     const STATUS_FIELD_LABEL = "Status";
     const REMAINING_EFFORT_FIELD_LABEL = "Remaining Effort";
@@ -288,6 +303,131 @@ describe(`Tracker Workflow`, () => {
             cy.get("[data-test=required_by_workflow]").type("required");
             cy.get("[data-test=artifact-submit-and-stay]").click();
             cy.get("[data-test=feedback]").contains("Successfully Updated");
+        });
+
+        it(`Workflow PostActions on transitions`, function () {
+            cy.projectAdministratorSession();
+            const now = Date.now();
+            const project_name = "transitions-" + now;
+            cy.createNewPublicProject(project_name, "issues").then(() => {
+                cy.addProjectMember(project_name, "projectMember");
+            });
+
+            cy.projectAdministratorSession();
+            cy.log("Import the tracker from XML");
+            cy.visitProjectService(project_name, "Trackers");
+            cy.get("[data-test=new-tracker-creation]").click();
+            cy.get("[data-test=template-xml-description]").click();
+            cy.get("[data-test=tracker-creation-xml-file-selector]").selectFile(
+                "./_fixtures/TrackerValidPostAction.xml",
+            );
+
+            cy.get("[data-test=button-next]").click();
+            cy.get("[data-test=chosen-template]").contains("SR8");
+            cy.get("[data-test=button-create-my-tracker]").click();
+            cy.get("[data-test=tracker-creation-modal-success]").click();
+            cy.get("[data-test=link-to-current-tracker-administration]").click({ force: true });
+
+            cy.get("[data-test=workflow]").click();
+            cy.get("[data-test=transitions]").click();
+
+            cy.log("Add action change value of field in transition Open => Closed");
+            saveTransition(1, "set_field_value", "Close date", "Current time");
+
+            cy.log("Try to add the same transition");
+            cy.log("Add action change value of field in transition Open => Closed");
+            cy.get("[data-test-action=configure-transition]").eq(1).click();
+            cy.get("[data-test=add-post-action]").click();
+            cy.get("[data-test=post-action-type-select]").eq(1).select("set_field_value");
+            cy.get("[data-test-type=field] > option").eq(1).should("be.disabled");
+            cy.get("[data-test=cancel-button]").click();
+
+            cy.log("Add action change value of field in transition Close => Open");
+            saveTransition(2, "set_field_value", "Close date", "Clear");
+
+            cy.log("Add action change value of field in transition New Artifact => Open");
+            saveTransition(0, "set_field_value", "Start date", "Current time");
+
+            cy.get("[data-test=workflow-transitions-enabled]").click({ force: true });
+
+            cy.log("Create a new Artifact should set Start Date");
+            cy.visitProjectService(project_name, "Trackers");
+            cy.get("[data-test=tracker-link-SR8]").click();
+            cy.get("[data-test=create-new]").click();
+            cy.get("[data-test=create-new-item]").first().click();
+            cy.get("[data-test=summary]").type("My artifact");
+            cy.get("[data-test=artifact-submit-and-stay]").click();
+            const today = new Date().toISOString().slice(0, 10);
+            cy.get("[data-test=tracker-artifact-value-start_date]").contains(today);
+
+            cy.log("Closing an artifact should update close date");
+            selectLabelInListPickerDropdown("Closed");
+            cy.get("[data-test=artifact-submit-and-stay]").click();
+            cy.get("[data-test=tracker-artifact-value-close_date]").contains(today);
+
+            cy.log("Reopening an artifact should clear close date");
+            selectLabelInListPickerDropdown("Open");
+            cy.get("[data-test=artifact-submit-and-stay]").click();
+            cy.get("[data-test=tracker-artifact-value-close_date]").should(
+                "not.include.text",
+                today,
+            );
+
+            cy.log("End date is set by workflow, and not by user");
+            cy.get("[data-test=edit-field-start_date]").click();
+            cy.get('[data-test="date-time-start_date"]').clear().type("2024-06-01");
+            selectLabelInListPickerDropdown("Closed");
+            cy.get("[data-test=artifact-submit-and-stay]").click();
+            cy.get("[data-test=tracker-artifact-value-close_date]").contains(today);
+
+            cy.log("User can change artifact status even when he can not update date field");
+            cy.get("[data-test=link-to-current-tracker-administration]").click({ force: true });
+            cy.get("[data-test=admin-permissions]").click();
+            cy.get("[data-test=field-permissions]").click();
+            cy.get("[data-test=select-field-permissions]").select("Close date");
+            cy.get("[data-test=field-permissions]").eq(3).select("Read only");
+            cy.get("[data-test=submit-permissions]").click();
+
+            cy.projectMemberSession();
+
+            cy.visitProjectService(project_name, "Trackers");
+            cy.get("[data-test=tracker-link-SR8]").click();
+            cy.get("[data-test=direct-link-to-artifact]").click();
+            selectLabelInListPickerDropdown("Open");
+            cy.get("[data-test=artifact-submit-and-stay]").click();
+            cy.get("[data-test=tracker-artifact-value-close_date]").should(
+                "not.include.text",
+                today,
+            );
+
+            cy.projectAdministratorSession();
+            cy.visitProjectService(project_name, "Trackers");
+            cy.get("[data-test=tracker-link-SR8]").click();
+            cy.log("User can change artifact status even when he can not see date field");
+            cy.get("[data-test=link-to-current-tracker-administration]").click({ force: true });
+            cy.get("[data-test=admin-permissions]").click();
+            cy.get("[data-test=field-permissions]").click();
+            cy.get("[data-test=select-field-permissions]").select("Close date");
+            cy.get("[data-test=field-permissions]").eq(1).select("-");
+            cy.get("[data-test=field-permissions]").eq(2).select("-");
+            cy.get("[data-test=field-permissions]").eq(3).select("-");
+            cy.get("[data-test=field-permissions]").eq(4).select("Read only");
+            cy.get("[data-test=submit-permissions]").click();
+
+            cy.projectMemberSession();
+
+            cy.visitProjectService(project_name, "Trackers");
+            cy.get("[data-test=tracker-link-SR8]").click();
+            cy.get("[data-test=direct-link-to-artifact]").click();
+            selectLabelInListPickerDropdown("Close");
+            cy.get("[data-test=artifact-submit-and-stay]").click();
+            cy.get("[data-test=tracker-artifact-value-close_date]").should("not.exist");
+
+            cy.projectAdministratorSession();
+            cy.visitProjectService(project_name, "Trackers");
+            cy.get("[data-test=tracker-link-SR8]").click();
+            cy.get("[data-test=direct-link-to-artifact]").click();
+            cy.get("[data-test=tracker-artifact-value-close_date]").contains(today);
         });
     });
 });

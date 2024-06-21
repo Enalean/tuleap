@@ -23,7 +23,7 @@
             <tr>
                 {{# is_first }}
                 <td rowspan="{{ nb_permissions }}" style="vertical-align:top;">
-                    <select id="permissions-selector-target-element">
+                    <select id="permissions-selector-target-element" data-test="select-field-permissions">
                         {{# field_list }}
                             <option value="{{ id }}"{{# is_selected }} selected="selected" style="background:#EEE;"{{/ is_selected }}>{{ name }}</option>
                         {{/ field_list }}
@@ -38,7 +38,7 @@
                     <input type='checkbox' name="permissions[{{ field_id }}][{{ ugroup_id }}][submit]" {{# has_submit_access }}checked="checked"{{/ has_submit_access }} {{# not_submitable }}disabled="disabled"{{/ not_submitable }} />
                 </td>
                 <td>
-                    <select name="permissions[{{ field_id }}][{{ ugroup_id }}][others]">
+                    <select name="permissions[{{ field_id }}][{{ ugroup_id }}][others]" data-test="field-permissions">
                         <option value="100" {{# has_no_access }}selected="selected" style="background:#EEE;"{{/ has_no_access }}>-</option>
                         <option value="0" {{# has_read_access }}selected="selected" style="background:#EEE;"{{/ has_read_access }} >{{# dgettext }} tuleap-tracker |Read only{{/ dgettext }}</option>
                         {{# is_updatable }}
@@ -53,7 +53,7 @@
         {{# might_not_have_access }}
             <p>{{# dgettext }} tuleap-tracker |* denotes user groups that may not have access to the tracker (no <a href="%s">tracker permission</a> set).| {{ tracker_url }} {{/ dgettext }}</p>
         {{/ might_not_have_access }}
-        <input type='submit' name='update' value="{{# dgettext }} tuleap-tracker |Submit permissions{{/ dgettext }}" />
+        <input type='submit' name='update' data-test="submit-permissions" value="{{# dgettext }} tuleap-tracker |Submit permissions{{/ dgettext }}" />
     </div>
 </form>
 {{/ has_permissions }}

@@ -19,7 +19,13 @@
   -->
 
 <template>
-    <select class="tlp-select" v-model="field_value" v-bind:disabled="disabled" required>
+    <select
+        class="tlp-select"
+        v-model="field_value"
+        v-bind:disabled="disabled"
+        required
+        data-test="select-date"
+    >
         <option data-test-type="placeholder" v-bind:value="null" disabled>
             {{ $gettext("Please choose") }}
         </option>
