@@ -32,18 +32,15 @@
     </div>
 </template>
 
-<script lang="ts">
-import Vue from "vue";
-import { Getter } from "vuex-class";
-import { Component } from "vue-property-decorator";
+<script setup lang="ts">
+import { useGetters, useNamespacedMutations } from "vuex-composition-helpers";
 
-@Component
-export default class AddGitlabRepositoryActionButton extends Vue {
-    @Getter
-    readonly isGitlabUsed!: boolean;
+const { isGitlabUsed } = useGetters(["isGitlabUsed"]);
+const { showAddGitlabRepositoryModal } = useNamespacedMutations("gitlab", [
+    "showAddGitlabRepositoryModal",
+]);
 
-    showModal(): void {
-        this.$store.commit("gitlab/showAddGitlabRepositoryModal");
-    }
+function showModal(): void {
+    showAddGitlabRepositoryModal();
 }
 </script>
