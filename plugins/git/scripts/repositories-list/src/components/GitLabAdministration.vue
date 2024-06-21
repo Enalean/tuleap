@@ -91,107 +91,105 @@
         </div>
     </div>
 </template>
-<script lang="ts">
-import Vue from "vue";
-import { Component, Prop } from "vue-property-decorator";
+<script setup lang="ts">
+import { onMounted, ref } from "vue";
 import type { GitLabRepository } from "../type";
 import { createDropdown } from "@tuleap/tlp-dropdown";
-import { namespace } from "vuex-class";
+import { useActions } from "vuex-composition-helpers";
 
-const gitlab = namespace("gitlab");
+const props = defineProps<{
+    is_admin: boolean;
+    repository: GitLabRepository;
+}>();
 
-@Component
-export default class GitLabAdministration extends Vue {
-    @Prop({ required: true })
-    readonly is_admin!: boolean;
+const {
+    showDeleteGitlabRepositoryModal,
+    showEditAccessTokenGitlabRepositoryModal,
+    showRegenerateGitlabWebhookModal,
+    showArtifactClosureModal,
+    showCreateBranchPrefixModal,
+} = useActions([
+    "showDeleteGitlabRepositoryModal",
+    "showEditAccessTokenGitlabRepositoryModal",
+    "showRegenerateGitlabWebhookModal",
+    "showArtifactClosureModal",
+    "showCreateBranchPrefixModal",
+]);
 
-    @Prop({ required: true })
-    readonly repository!: GitLabRepository;
+const unlink_gitlab_repository = ref();
+const edit_access_token_gitlab_repository = ref();
+const regenerate_gitlab_webhook = ref();
+const artifact_closure = ref();
+const create_branch_prefix = ref();
+const gitlab_administration = ref();
+const dropdown_gitlab_administration = ref();
+const dropdown_gitlab_administration_menu_options = ref();
 
-    @gitlab.Action
-    readonly showDeleteGitlabRepositoryModal!: (repository: GitLabRepository) => void;
+onMounted((): void => {
+    const button_unlink = unlink_gitlab_repository.value;
 
-    @gitlab.Action
-    readonly showEditAccessTokenGitlabRepositoryModal!: (repository: GitLabRepository) => void;
+    if (button_unlink && button_unlink instanceof Element) {
+        button_unlink.addEventListener("click", (event: Event) => {
+            event.preventDefault();
+            showDeleteGitlabRepositoryModal(props.repository);
+        });
+    }
 
-    @gitlab.Action
-    readonly showRegenerateGitlabWebhookModal!: (repository: GitLabRepository) => void;
+    const button_edit_access_token = edit_access_token_gitlab_repository.value;
 
-    @gitlab.Action
-    readonly showArtifactClosureModal!: (repository: GitLabRepository) => void;
+    if (button_edit_access_token && button_edit_access_token instanceof Element) {
+        button_edit_access_token.addEventListener("click", (event: Event) => {
+            event.preventDefault();
+            showEditAccessTokenGitlabRepositoryModal(props.repository);
+        });
+    }
 
-    @gitlab.Action
-    readonly showCreateBranchPrefixModal!: (repository: GitLabRepository) => void;
+    const button_regenerate_gitlab_webhook = regenerate_gitlab_webhook.value;
 
-    mounted() {
-        const button_unlink = this.$refs.unlink_gitlab_repository;
+    if (button_regenerate_gitlab_webhook && button_regenerate_gitlab_webhook instanceof Element) {
+        button_regenerate_gitlab_webhook.addEventListener("click", (event: Event) => {
+            event.preventDefault();
+            showRegenerateGitlabWebhookModal(props.repository);
+        });
+    }
 
-        if (button_unlink && button_unlink instanceof Element) {
-            button_unlink.addEventListener("click", (event: Event) => {
-                event.preventDefault();
-                this.showDeleteGitlabRepositoryModal(this.repository);
+    const button_artifact_closure = artifact_closure.value;
+
+    if (button_artifact_closure && button_artifact_closure instanceof Element) {
+        button_artifact_closure.addEventListener("click", (event: Event) => {
+            event.preventDefault();
+            showArtifactClosureModal(props.repository);
+        });
+    }
+
+    const button_create_branch_prefix = create_branch_prefix.value;
+
+    if (button_create_branch_prefix && button_create_branch_prefix instanceof Element) {
+        button_create_branch_prefix.addEventListener("click", (event: Event) => {
+            event.preventDefault();
+            showCreateBranchPrefixModal(props.repository);
+        });
+    }
+
+    const button_gitlab_administration = gitlab_administration.value;
+    const dropdown_gitlab_administration_value = dropdown_gitlab_administration.value;
+
+    if (
+        button_gitlab_administration &&
+        button_gitlab_administration instanceof Element &&
+        dropdown_gitlab_administration_value &&
+        dropdown_gitlab_administration_value instanceof Element
+    ) {
+        button_gitlab_administration.addEventListener("click", (event: Event) => {
+            event.preventDefault();
+        });
+        const dropdownMenu = dropdown_gitlab_administration_menu_options.value;
+        if (dropdownMenu instanceof Element) {
+            createDropdown(dropdown_gitlab_administration_value, {
+                keyboard: false,
+                dropdown_menu: dropdownMenu,
             });
-        }
-
-        const button_edit_access_token = this.$refs.edit_access_token_gitlab_repository;
-
-        if (button_edit_access_token && button_edit_access_token instanceof Element) {
-            button_edit_access_token.addEventListener("click", (event: Event) => {
-                event.preventDefault();
-                this.showEditAccessTokenGitlabRepositoryModal(this.repository);
-            });
-        }
-
-        const button_regenerate_gitlab_webhook = this.$refs.regenerate_gitlab_webhook;
-
-        if (
-            button_regenerate_gitlab_webhook &&
-            button_regenerate_gitlab_webhook instanceof Element
-        ) {
-            button_regenerate_gitlab_webhook.addEventListener("click", (event: Event) => {
-                event.preventDefault();
-                this.showRegenerateGitlabWebhookModal(this.repository);
-            });
-        }
-
-        const button_artifact_closure = this.$refs.artifact_closure;
-
-        if (button_artifact_closure && button_artifact_closure instanceof Element) {
-            button_artifact_closure.addEventListener("click", (event: Event) => {
-                event.preventDefault();
-                this.showArtifactClosureModal(this.repository);
-            });
-        }
-
-        const button_create_branch_prefix = this.$refs.create_branch_prefix;
-
-        if (button_create_branch_prefix && button_create_branch_prefix instanceof Element) {
-            button_create_branch_prefix.addEventListener("click", (event: Event) => {
-                event.preventDefault();
-                this.showCreateBranchPrefixModal(this.repository);
-            });
-        }
-
-        const button_gitlab_administration = this.$refs.gitlab_administration;
-        const dropdown_gitlab_administration = this.$refs.dropdown_gitlab_administration;
-
-        if (
-            button_gitlab_administration &&
-            button_gitlab_administration instanceof Element &&
-            dropdown_gitlab_administration &&
-            dropdown_gitlab_administration instanceof Element
-        ) {
-            button_gitlab_administration.addEventListener("click", (event: Event) => {
-                event.preventDefault();
-            });
-            const dropdownMenu = this.$refs.dropdown_gitlab_administration_menu_options;
-            if (dropdownMenu instanceof Element) {
-                createDropdown(dropdown_gitlab_administration, {
-                    keyboard: false,
-                    dropdown_menu: dropdownMenu,
-                });
-            }
         }
     }
-}
+});
 </script>
