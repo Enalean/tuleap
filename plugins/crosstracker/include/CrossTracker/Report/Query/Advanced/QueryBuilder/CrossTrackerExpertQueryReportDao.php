@@ -92,7 +92,7 @@ final class CrossTrackerExpertQueryReportDao extends DataAccessObject
         $tracker_ids_statement = EasyStatement::open()->in('tracker_artifact.tracker_id IN (?*)', $tracker_ids);
 
         $sql = <<<EOSQL
-        SELECT SQL_CALC_FOUND_ROWS DISTINCT tracker_artifact.id AS id
+        SELECT DISTINCT tracker_artifact.id AS id
         FROM tracker_artifact
         INNER JOIN tracker ON (tracker_artifact.tracker_id = tracker.id)
         INNER JOIN tracker_changeset AS last_changeset ON (tracker_artifact.last_changeset_id = last_changeset.id)
@@ -154,5 +154,42 @@ final class CrossTrackerExpertQueryReportDao extends DataAccessObject
         ];
 
         return $this->getDB()->q($sql, ...$parameters);
+    }
+
+    public function countArtifactsMatchingQuery(
+        IProvideParametrizedFromAndWhereSQLFragments $from_where,
+        array $tracker_ids,
+    ): int {
+            $from  = $from_where->getFrom();
+            $where = $from_where->getWhere();
+
+            $tracker_ids_statement = EasyStatement::open()->in('tracker_artifact.tracker_id IN (?*)', $tracker_ids);
+
+            $sql = <<<EOSQL
+            SELECT count(tracker_artifact.id) AS nb_of_artifact
+            FROM tracker_artifact
+            INNER JOIN tracker ON (tracker_artifact.tracker_id = tracker.id)
+            INNER JOIN tracker_changeset AS last_changeset ON (tracker_artifact.last_changeset_id = last_changeset.id)
+            LEFT JOIN (
+                tracker_changeset_value AS changeset_value_title
+                INNER JOIN tracker_semantic_title
+                    ON (tracker_semantic_title.field_id = changeset_value_title.field_id)
+                INNER JOIN tracker_changeset_value_text AS tracker_changeset_value_title
+                    ON (tracker_changeset_value_title.changeset_value_id = changeset_value_title.id)
+            ) ON (
+                tracker_semantic_title.tracker_id = tracker_artifact.tracker_id
+                AND changeset_value_title.changeset_id = tracker_artifact.last_changeset_id
+            )
+            $from
+            WHERE $tracker_ids_statement AND $where
+            EOSQL;
+
+        $parameters = [
+            ...$from_where->getFromParameters(),
+            ...$tracker_ids_statement->values(),
+            ...$from_where->getWhereParameters(),
+        ];
+
+        return $this->getDB()->single($sql, $parameters);
     }
 }

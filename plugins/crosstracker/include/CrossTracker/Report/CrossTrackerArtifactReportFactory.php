@@ -179,7 +179,11 @@ final readonly class CrossTrackerArtifactReportFactory
             $limit,
             $offset
         );
-        $total_size            = $this->expert_query_dao->foundRows();
+
+        $total_size = $this->expert_query_dao->countArtifactsMatchingQuery(
+            $additional_from_where,
+            $this->getTrackersId($trackers),
+        );
 
         if ($artifact_ids === []) {
             return new ArtifactMatchingReportCollection([], 0);
@@ -194,11 +198,10 @@ final readonly class CrossTrackerArtifactReportFactory
         RESTLogger::getLogger()->debug(psl_json_encode($select_results, true)); // Temporary for debugging
 
         if ($static_return) {
-            return $this->buildCollectionOfArtifacts($select_results, $this->expert_query_dao->foundRows());
-        } else {
+            return $this->buildCollectionOfArtifacts($select_results, $total_size);
+        }
             $results = $this->result_builder->buildResult($query->getSelect(), $trackers, $current_user, $select_results);
             return $this->buildReportContentRepresentation($results, $total_size);
-        }
     }
 
     /**
