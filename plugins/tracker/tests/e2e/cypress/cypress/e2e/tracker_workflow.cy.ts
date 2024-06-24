@@ -133,7 +133,9 @@ describe(`Tracker Workflow`, () => {
                     .parent("[data-test=matrix-row]")
                     .and("contain", "(New artifact)")
                     .within(() => {
-                        cy.get("[data-test-action=delete-transition]").first().click();
+                        cy.get("[data-test=delete-transition-without-confirmation]")
+                            .first()
+                            .click();
                         // Making sure the transition deletion is visible in the UI (aka there is no more a delete button) before continuing
                         cy.wait("@updateTransitions");
                         cy.get("[data-test-action=confirm-delete-transition]").should("not.exist");
