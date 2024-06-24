@@ -43,7 +43,6 @@ $sampleFactory = new SampleFactory();
 $request = HTTPRequest::instance();
 $sampleFactory->setSample($request->get('data'));
 
-
 //advanced search
 if ($request->get('start') && $request->get('end') && $request->get('filter')) {
     //if user make a mistake in the advanced search
