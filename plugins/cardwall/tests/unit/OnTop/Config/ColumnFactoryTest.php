@@ -18,143 +18,122 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Mockery as M;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+declare(strict_types=1);
 
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
-class Cardwall_OnTop_Config_ColumnFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
+namespace Tuleap\Cardwall\OnTop\Config;
+
+use Cardwall_OnTop_ColumnDao;
+use Cardwall_OnTop_Config_ColumnFactory;
+use Cardwall_OnTop_Config_ColumnFreestyleCollection;
+use PHPUnit\Framework\MockObject\MockObject;
+use TestHelper;
+use Tracker;
+use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticBindBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
+
+final class ColumnFactoryTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var M\LegacyMockInterface|M\MockInterface|Tracker_FormElement_Field_Selectbox
-     */
-    private $status_field;
-    /**
-     * @var M\LegacyMockInterface|M\MockInterface|Tracker
-     */
-    private $tracker;
-    /**
-     * @var Cardwall_OnTop_ColumnDao|M\LegacyMockInterface|M\MockInterface
-     */
-    private $dao;
-    /**
-     * @var Cardwall_OnTop_Config_ColumnFactory
-     */
-    private $factory;
+    private Tracker $tracker;
+    private Cardwall_OnTop_ColumnDao&MockObject $dao;
+    private Cardwall_OnTop_Config_ColumnFactory $factory;
 
     protected function setUp(): void
     {
-        $new = M::mock(Tracker_FormElement_Field_List_Bind_StaticValue::class);
-        $new->shouldReceive('getId')
-            ->andReturn(10);
-        $new->shouldReceive('getLabel')
-            ->andReturn('New');
-        $verified = M::mock(Tracker_FormElement_Field_List_Bind_StaticValue::class);
-        $verified->shouldReceive('getId')
-            ->andReturn(11);
-        $verified->shouldReceive('getLabel')
-            ->andReturn('Verified');
-        $fixed = M::mock(Tracker_FormElement_Field_List_Bind_StaticValue::class);
-        $fixed->shouldReceive('getId')
-            ->andReturn(12);
-        $fixed->shouldReceive('getLabel')
-            ->andReturn('Fixed');
-
-        $this->status_field = M::mock(Tracker_FormElement_Field_Selectbox::class);
-        $this->status_field->shouldReceive('getVisibleValuesPlusNoneIfAny')
-            ->andReturn([$new, $verified, $fixed]);
-
-        $this->tracker = M::mock(Tracker::class);
-        $this->tracker->shouldReceive('getId')->andReturn(42);
-        $this->dao     = M::mock(Cardwall_OnTop_ColumnDao::class);
+        $this->tracker = TrackerTestBuilder::aTracker()->withId(42)->build();
+        $this->dao     = $this->createMock(Cardwall_OnTop_ColumnDao::class);
         $this->factory = new Cardwall_OnTop_Config_ColumnFactory($this->dao);
     }
 
     public function testItBuildsColumnsFromTheDataStorage(): void
     {
-        $this->dao->shouldReceive('searchColumnsByTrackerId')
+        $this->dao->expects(self::once())->method('searchColumnsByTrackerId')
             ->with(42)
-            ->once()
-            ->andReturn(
+            ->willReturn([
                 [
-                    [
-                        'id'             => 1,
-                        'label'          => 'Todo',
-                        'bg_red'         => '123',
-                        'bg_green'       => '12',
-                        'bg_blue'        => '10',
-                        'tlp_color_name' => null,
-                    ],
-                    [
-                        'id'             => 2,
-                        'label'          => 'On Going',
-                        'bg_red'         => null,
-                        'bg_green'       => null,
-                        'bg_blue'        => null,
-                        'tlp_color_name' => null,
-                    ],
-                    [
-                        'id'             => 2,
-                        'label'          => 'Review',
-                        'bg_red'         => null,
-                        'bg_green'       => null,
-                        'bg_blue'        => null,
-                        'tlp_color_name' => 'peggy-pink',
-                    ],
-                ]
-            );
+                    'id'             => 1,
+                    'label'          => 'Todo',
+                    'bg_red'         => '123',
+                    'bg_green'       => '12',
+                    'bg_blue'        => '10',
+                    'tlp_color_name' => null,
+                ],
+                [
+                    'id'             => 2,
+                    'label'          => 'On Going',
+                    'bg_red'         => null,
+                    'bg_green'       => null,
+                    'bg_blue'        => null,
+                    'tlp_color_name' => null,
+                ],
+                [
+                    'id'             => 2,
+                    'label'          => 'Review',
+                    'bg_red'         => null,
+                    'bg_green'       => null,
+                    'bg_blue'        => null,
+                    'tlp_color_name' => 'peggy-pink',
+                ],
+            ]);
         $columns = $this->factory->getDashboardColumns($this->tracker);
 
-        $this->assertInstanceOf(Cardwall_OnTop_Config_ColumnFreestyleCollection::class, $columns);
-        $this->assertSame(3, count($columns));
-        $this->assertSame('On Going', $columns[1]->getLabel());
-        $this->assertSame('rgb(123, 12, 10)', $columns[0]->getHeadercolor());
-        $this->assertSame('rgb(248,248,248)', $columns[1]->getHeadercolor());
+        self::assertInstanceOf(Cardwall_OnTop_Config_ColumnFreestyleCollection::class, $columns);
+        self::assertSame(3, count($columns));
+        self::assertSame('On Going', $columns[1]->getLabel());
+        self::assertSame('rgb(123, 12, 10)', $columns[0]->getHeadercolor());
+        self::assertSame('rgb(248,248,248)', $columns[1]->getHeadercolor());
 
-        $this->assertSame('Review', $columns[2]->getLabel());
-        $this->assertSame('peggy-pink', $columns[2]->getHeadercolor());
+        self::assertSame('Review', $columns[2]->getLabel());
+        self::assertSame('peggy-pink', $columns[2]->getHeadercolor());
     }
 
     public function testItBuildsAnEmptyFreestyleCollection(): void
     {
-        $this->dao->shouldReceive('searchColumnsByTrackerId')
+        $this->dao->method('searchColumnsByTrackerId')
             ->with(42)
-            ->andReturn([]);
+            ->willReturn([]);
         $columns = $this->factory->getDashboardColumns($this->tracker);
 
-        $this->assertInstanceOf(Cardwall_OnTop_Config_ColumnFreestyleCollection::class, $columns);
-        $this->assertSame(0, count($columns));
+        self::assertInstanceOf(Cardwall_OnTop_Config_ColumnFreestyleCollection::class, $columns);
+        self::assertSame(0, count($columns));
     }
 
     public function testGetColumnByIdReturnsNullWhenColumnCantBeFound(): void
     {
-        $this->dao->shouldReceive('searchByColumnId')
+        $this->dao->expects(self::once())->method('searchByColumnId')
             ->with(79)
-            ->once()
-            ->andReturnFalse();
-        $this->assertNull($this->factory->getColumnById(79));
+            ->willReturn(false);
+        self::assertNull($this->factory->getColumnById(79));
     }
 
     public function testGetColumnByIdBuildsASingleColumn(): void
     {
-        $column_row = [
-            'id' => 79,
-            'label' => 'Review',
-            'bg_red' => null,
-            'bg_green' => null,
-            'bg_blue' => null,
-            'tlp_color_name' => 'acid-green',
-        ];
-        $dar        = M::mock(DataAccessResult::class)
-            ->shouldReceive(['getRow' => $column_row])
-            ->getMock();
-        $this->dao->shouldReceive('searchByColumnId')
+        $this->dao->expects(self::once())->method('searchByColumnId')
             ->with(79)
-            ->once()
-            ->andReturn($dar);
+            ->willReturn(TestHelper::arrayToDar([
+                'id'             => 79,
+                'label'          => 'Review',
+                'bg_red'         => null,
+                'bg_green'       => null,
+                'bg_blue'        => null,
+                'tlp_color_name' => 'acid-green',
+            ]));
         $column = $this->factory->getColumnById(79);
-        $this->assertSame('Review', $column->getLabel());
-        $this->assertSame('acid-green', $column->getHeadercolor());
+        self::assertSame('Review', $column->getLabel());
+        self::assertSame('acid-green', $column->getHeadercolor());
+    }
+
+    public function testItShouldNotFatalErrorOnInvalidBindValue(): void
+    {
+        self::expectNotToPerformAssertions();
+        $filter = [123, 234];
+        $field  = ListStaticBindBuilder::aStaticBind(
+            ListFieldBuilder::aListField(692)->build()
+        )->build()->getField();
+
+        $dao            = $this->createMock(Cardwall_OnTop_ColumnDao::class);
+        $column_factory = new Cardwall_OnTop_Config_ColumnFactory($dao);
+        $column_factory->getFilteredRendererColumns($field, $filter);
     }
 }
