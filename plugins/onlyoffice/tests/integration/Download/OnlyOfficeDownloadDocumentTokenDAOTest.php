@@ -42,10 +42,6 @@ final class OnlyOfficeDownloadDocumentTokenDAOTest extends TestIntegrationTestCa
 
         $row = $this->dao->searchTokenVerificationAndAssociatedData($key_id, $current_time);
         self::assertEqualsCanonicalizing(['verifier' => 'verification_string', 'user_id' => 102, 'document_id' => 11], $row);
-
-        $this->dao->deleteTokenByID($key_id);
-
-        self::assertNull($this->dao->searchTokenVerificationAndAssociatedData($key_id, $current_time));
     }
 
     public function testDoesNotFoundAnExpiredToken(): void

@@ -57,9 +57,4 @@ class OnlyOfficeDownloadDocumentTokenDAO extends DataAccessObject
     {
         $this->getDB()->run('DELETE FROM plugin_onlyoffice_download_document_token WHERE expiration_date <= ?', $current_timestamp);
     }
-
-    public function deleteTokenByID(int $id): void
-    {
-        $this->getDB()->run('DELETE FROM plugin_onlyoffice_download_document_token WHERE id = ?', $id);
-    }
 }
