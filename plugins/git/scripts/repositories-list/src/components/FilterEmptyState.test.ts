@@ -34,9 +34,7 @@ interface StoreOption {
 }
 
 describe("FilterEmptyState", () => {
-    async function instantiateComponent(
-        store_options: StoreOption,
-    ): Promise<Wrapper<FilterEmptyState>> {
+    async function instantiateComponent(store_options: StoreOption): Promise<Wrapper<Vue>> {
         const store = createStoreMock(store_options);
         return shallowMount(FilterEmptyState, {
             mocks: { $store: store },
