@@ -21,7 +21,7 @@ import { selectOrThrow } from "@tuleap/dom";
 import { IS_CHILD_LINK_TYPE } from "@tuleap/plugin-tracker-constants";
 import { Option } from "@tuleap/option";
 import type { HostElement } from "./LinkTypeSelectorElement";
-import { LinkTypeSelectorElement } from "./LinkTypeSelectorElement";
+import { renderLinkTypeSelectorElement } from "./LinkTypeSelectorElement";
 import { setCatalog } from "../../../../gettext-catalog";
 import { ArtifactCrossReferenceStub } from "../../../../../tests/stubs/ArtifactCrossReferenceStub";
 import type { ArtifactCrossReference } from "../../../../domain/ArtifactCrossReference";
@@ -59,7 +59,7 @@ describe("LinkTypeSelectorElement", () => {
     };
 
     const render = (host: HostElement): HTMLSelectElement => {
-        const update = LinkTypeSelectorElement.content(host);
+        const update = renderLinkTypeSelectorElement(host);
         update(host, host);
         return selectOrThrow(host, "[data-test=link-type-select]", HTMLSelectElement);
     };

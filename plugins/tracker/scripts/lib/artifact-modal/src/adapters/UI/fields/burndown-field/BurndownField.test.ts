@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { BurndownField } from "./BurndownField";
+import { renderBurndownField } from "./BurndownField";
 import { CurrentArtifactIdentifierStub } from "../../../../../tests/stubs/CurrentArtifactIdentifierStub";
 
 import type { HostElement } from "./BurndownField";
@@ -35,7 +35,7 @@ describe("BurndownField", () => {
         const target = document.implementation
             .createHTMLDocument()
             .createElement("div") as unknown as ShadowRoot;
-        const update = BurndownField.content(host);
+        const update = renderBurndownField(host);
 
         update(host, target);
 

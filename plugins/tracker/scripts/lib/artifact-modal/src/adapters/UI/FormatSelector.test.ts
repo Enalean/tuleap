@@ -18,7 +18,8 @@
  */
 
 import { setCatalog } from "../../gettext-catalog";
-import { FormatSelector, isSyntaxHelperDisabled } from "./FormatSelector";
+import type { FormatSelector } from "./FormatSelector";
+import { isSyntaxHelperDisabled, renderFormatSelector } from "./FormatSelector";
 
 type HostElement = FormatSelector & HTMLElement;
 
@@ -43,7 +44,7 @@ describe(`FormatSelector`, () => {
             "will disable the format selectbox when %s",
             (result_condition, disabled, isInPreviewMode, isPreviewLoading) => {
                 const host = getHost({ disabled, isInPreviewMode, isPreviewLoading });
-                const update = FormatSelector.content(host);
+                const update = renderFormatSelector(host);
                 update(host, target);
 
                 const format_selectbox = target.querySelector("[data-test=format]");
@@ -57,7 +58,7 @@ describe(`FormatSelector`, () => {
                 isInPreviewMode: false,
                 isPreviewLoading: false,
             });
-            const update = FormatSelector.content(host);
+            const update = renderFormatSelector(host);
             update(host, target);
 
             const format_selectbox = target.querySelector("[data-test=format]");
@@ -69,7 +70,7 @@ describe(`FormatSelector`, () => {
             `does not displays the CommonMark related buttons if the chosen format is %s`,
             (format) => {
                 const host = getHost({ value: format });
-                const update = FormatSelector.content(host);
+                const update = renderFormatSelector(host);
                 update(host, target);
 
                 expect(target.querySelector("[data-test=preview-button]")).toBeNull();
@@ -78,7 +79,7 @@ describe(`FormatSelector`, () => {
         );
         it(`displays the CommonMark related buttons if the chosen format is 'Markdown'`, () => {
             const host = getHost({ value: "commonmark" });
-            const update = FormatSelector.content(host);
+            const update = renderFormatSelector(host);
             update(host, target);
 
             expect(target.querySelector("[data-test=preview-button]")).not.toBeNull();

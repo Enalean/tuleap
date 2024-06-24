@@ -18,6 +18,7 @@
  */
 
 import { define, html, dispatch } from "hybrids";
+import type { UpdateFunction } from "hybrids";
 import { getFileDescriptionPlaceholder, getResetLabel } from "../../../../gettext-catalog";
 
 const onFileChange = (host: HostElement, event: Event): void => {
@@ -49,56 +50,57 @@ export interface NewFileToAttachElement {
     readonly required: boolean;
     readonly description: string;
     readonly file_input: HTMLInputElement | null;
-    content(): HTMLElement;
+    render(): HTMLElement;
 }
 export type HostElement = HTMLElement & NewFileToAttachElement;
+
+export const renderNewFileToAttachElement = (
+    host: NewFileToAttachElement,
+): UpdateFunction<NewFileToAttachElement> => html`
+    <div class="tuleap-artifact-modal-field-file-new-file">
+        <input
+            type="file"
+            onchange="${onFileChange}"
+            disabled="${host.disabled}"
+            required="${host.required}"
+            data-test="file-field-file-input"
+            data-file-input
+        />
+        <div class="tuleap-artifact-modal-field-file-new-file-description">
+            <input
+                type="text"
+                class="tlp-input tlp-input-small"
+                disabled="${host.disabled}"
+                placeholder="${getFileDescriptionPlaceholder()}"
+                oninput="${onDescriptionInput}"
+                value="${host.description}"
+                data-test="file-field-description-input"
+            />
+            <button
+                type="button"
+                class="tlp-button-secondary tlp-button-outline tlp-button-small"
+                disabled="${host.disabled}"
+                onclick="${onClick}"
+                data-test="file-field-reset"
+            >
+                <i class="far fa-trash-alt tlp-button-icon" aria-hidden="true"></i>
+                ${getResetLabel()}
+            </button>
+        </div>
+    </div>
+`;
 
 export const NewFileToAttachElement = define<NewFileToAttachElement>({
     tag: "tuleap-artifact-modal-new-file-attach",
     disabled: false,
     required: false,
     description: "",
-    file_input: {
-        get: (host) => {
-            const element = host.content();
-            const input = element.querySelector("[data-file-input]");
-            if (!(input instanceof HTMLInputElement)) {
-                return null;
-            }
-            return input;
-        },
+    file_input: (host: NewFileToAttachElement): HTMLInputElement | null => {
+        const input = host.render().querySelector("[data-file-input]");
+        if (!(input instanceof HTMLInputElement)) {
+            return null;
+        }
+        return input;
     },
-    content: (host) => html`
-        <div class="tuleap-artifact-modal-field-file-new-file">
-            <input
-                type="file"
-                onchange="${onFileChange}"
-                disabled="${host.disabled}"
-                required="${host.required}"
-                data-test="file-field-file-input"
-                data-file-input
-            />
-            <div class="tuleap-artifact-modal-field-file-new-file-description">
-                <input
-                    type="text"
-                    class="tlp-input tlp-input-small"
-                    disabled="${host.disabled}"
-                    placeholder="${getFileDescriptionPlaceholder()}"
-                    oninput="${onDescriptionInput}"
-                    value="${host.description}"
-                    data-test="file-field-description-input"
-                />
-                <button
-                    type="button"
-                    class="tlp-button-secondary tlp-button-outline tlp-button-small"
-                    disabled="${host.disabled}"
-                    onclick="${onClick}"
-                    data-test="file-field-reset"
-                >
-                    <i class="far fa-trash-alt tlp-button-icon" aria-hidden="true"></i>
-                    ${getResetLabel()}
-                </button>
-            </div>
-        </div>
-    `,
+    render: renderNewFileToAttachElement,
 });

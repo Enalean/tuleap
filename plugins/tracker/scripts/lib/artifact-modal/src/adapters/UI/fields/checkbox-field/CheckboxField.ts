@@ -68,14 +68,9 @@ export const buildCheckbox = (
 
 export const CheckboxField = define<CheckboxField>({
     tag: "tuleap-artifact-modal-checkbox-field",
-    controller: {
-        set: (host, controller: CheckboxFieldControllerType) => {
-            host.field_presenter = controller.buildPresenter();
-            return controller;
-        },
-    },
-    field_presenter: undefined,
-    content: (host) => html`
+    controller: (host, controller: CheckboxFieldControllerType) => controller,
+    field_presenter: (host, presenter) => presenter ?? host.controller.buildPresenter(),
+    render: (host) => html`
         <div class="tlp-form-element">
             <label class="tlp-label">
                 ${host.field_presenter.field_label}

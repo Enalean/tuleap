@@ -67,7 +67,7 @@ type InternalArtifactCreator = Readonly<ArtifactCreatorElement> & {
     project_selectbox: HTMLSelectElement;
     has_tracker_selection_error: boolean;
     tracker_selectbox: HTMLSelectElement;
-    content(): HTMLElement;
+    render(): HTMLElement;
 };
 export type HostElement = InternalArtifactCreator & HTMLElement;
 
@@ -240,16 +240,96 @@ export const setErrorMessage = (
     new_value: Option<string> | undefined,
 ): Option<string> => {
     if (new_value) {
-        host.content().querySelector("[data-form]")?.scrollIntoView({ block: "center" });
+        host.render().querySelector("[data-form]")?.scrollIntoView({ block: "center" });
         return new_value;
     }
     return Option.nothing();
 };
 
+export const renderArtifactCreatorElement = (
+    host: InternalArtifactCreator,
+): UpdateFunction<InternalArtifactCreator> =>
+    html`${getErrorTemplate(host)}
+        <form class="link-field-artifact-creator-main" onsubmit="${onSubmit}">
+            <span class="link-field-row-type"
+                ><tuleap-artifact-modal-link-type-selector
+                    value="${host.current_link_type}"
+                    current_artifact_reference="${host.current_artifact_reference}"
+                    available_types="${host.available_types}"
+                    disabled="${host.is_loading}"
+                ></tuleap-artifact-modal-link-type-selector
+            ></span>
+            <div class="link-field-artifact-creator-form" data-form>
+                <div class="link-field-artifact-creator-inputs">
+                    <input
+                        type="text"
+                        name="artifact_title"
+                        class="tlp-input tlp-input-small"
+                        placeholder="${getArtifactCreationInputPlaceholderText()}"
+                        disabled="${host.is_loading}"
+                        data-test="artifact-creator-title"
+                        value="${host.artifact_title}"
+                        required
+                    />${host.is_loading &&
+                    html`<i
+                        class="fa-solid fa-spin fa-circle-notch link-field-artifact-creator-spinner"
+                        aria-hidden="true"
+                        data-test="artifact-creator-spinner"
+                    ></i>`}
+                    <div class="artifact-modal-link-creator-container">
+                        <div class="tlp-form-element link-field-artifact-creator-project-list">
+                            <label for="artifact-modal-link-creator-projects" class="tlp-label"
+                                >${getArtifactCreationProjectLabel()}
+                                <i class="fa-solid fa-asterisk" aria-hidden="true"></i></label
+                            ><select
+                                id="artifact-modal-link-creator-projects"
+                                onchange="${onProjectChange}"
+                            >
+                                <option value=""></option>
+                                ${getProjectOptions(host)}
+                            </select>
+                        </div>
+                        <div
+                            class="${getTrackerSelectClasses(host)}"
+                            id="artifact-modal-link-creator-tracker-wrapper"
+                            data-test="tracker-picker-form-element"
+                        >
+                            <label for="artifact-modal-link-creator-trackers" class="tlp-label"
+                                >${getArtifactCreationTrackerLabel()}
+                                <i class="fa-solid fa-asterisk" aria-hidden="true"></i></label
+                            ><select
+                                required
+                                id="artifact-modal-link-creator-trackers"
+                                onchange="${onTrackerChange}"
+                            >
+                                <option value=""></option>
+                                ${getTrackersOptions(host)}
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <button
+                    type="submit"
+                    class="tlp-button-primary tlp-button-small link-field-artifact-creator-button"
+                    disabled="${host.is_loading}"
+                    data-test="artifact-creator-submit"
+                >
+                    ${getCreateArtifactButtonInCreatorLabel()}
+                </button>
+                <button
+                    type="button"
+                    class="tlp-button-secondary tlp-button-small link-field-artifact-creator-button"
+                    onclick="${onClickCancel}"
+                >
+                    ${getCancelArtifactCreationLabel()}
+                </button>
+            </div>
+        </form>`;
+
 export const ArtifactCreatorElement = define<InternalArtifactCreator>({
     tag: "tuleap-artifact-modal-link-artifact-creator",
     controller: {
-        set(host, controller: ArtifactCreatorController) {
+        value: (host, controller: ArtifactCreatorController) => {
             const displayer = FaultDisplayer();
             controller.registerFaultListener((fault) => {
                 host.error_message = Option.fromValue(displayer.formatForDisplay(fault));
@@ -272,109 +352,21 @@ export const ArtifactCreatorElement = define<InternalArtifactCreator>({
         },
         connect: initListPickers,
     },
-    current_artifact_reference: undefined,
-    available_types: undefined,
-    current_link_type: undefined,
+    current_artifact_reference: (host, current_artifact_reference) => current_artifact_reference,
+    available_types: (host, available_types) => available_types,
+    current_link_type: (host, current_link_type) => current_link_type,
     is_loading: false,
-    error_message: { set: setErrorMessage },
+    error_message: setErrorMessage,
     show_error_details: false,
-    projects: { set: (host, new_value) => new_value ?? [] },
-    trackers: { set: (host, new_value) => new_value ?? [] },
-    selected_project: undefined,
-    selected_tracker: { set: (host, new_value) => new_value ?? Option.nothing() },
+    projects: (host, new_value) => new_value ?? [],
+    trackers: (host, new_value) => new_value ?? [],
+    selected_project: (host, selected_project) => selected_project,
+    selected_tracker: (host, new_value) => new_value ?? Option.nothing(),
     artifact_title: "",
-    project_selectbox: {
-        get: (host) =>
-            selectOrThrow(
-                host.content(),
-                "#artifact-modal-link-creator-projects",
-                HTMLSelectElement,
-            ),
-    },
+    project_selectbox: (host: InternalArtifactCreator) =>
+        selectOrThrow(host.render(), "#artifact-modal-link-creator-projects", HTMLSelectElement),
     has_tracker_selection_error: false,
-    tracker_selectbox: {
-        get: (host) =>
-            selectOrThrow(
-                host.content(),
-                "#artifact-modal-link-creator-trackers",
-                HTMLSelectElement,
-            ),
-    },
-    content: (host) =>
-        html`${getErrorTemplate(host)}
-            <form class="link-field-artifact-creator-main" onsubmit="${onSubmit}">
-                <span class="link-field-row-type"
-                    ><tuleap-artifact-modal-link-type-selector
-                        value="${host.current_link_type}"
-                        current_artifact_reference="${host.current_artifact_reference}"
-                        available_types="${host.available_types}"
-                        disabled="${host.is_loading}"
-                    ></tuleap-artifact-modal-link-type-selector
-                ></span>
-                <div class="link-field-artifact-creator-form" data-form>
-                    <div class="link-field-artifact-creator-inputs">
-                        <input
-                            type="text"
-                            name="artifact_title"
-                            class="tlp-input tlp-input-small"
-                            placeholder="${getArtifactCreationInputPlaceholderText()}"
-                            disabled="${host.is_loading}"
-                            data-test="artifact-creator-title"
-                            value="${host.artifact_title}"
-                            required
-                        />${host.is_loading &&
-                        html`<i
-                            class="fa-solid fa-spin fa-circle-notch link-field-artifact-creator-spinner"
-                            aria-hidden="true"
-                            data-test="artifact-creator-spinner"
-                        ></i>`}
-                        <div class="artifact-modal-link-creator-container">
-                            <div class="tlp-form-element link-field-artifact-creator-project-list">
-                                <label for="artifact-modal-link-creator-projects" class="tlp-label"
-                                    >${getArtifactCreationProjectLabel()}
-                                    <i class="fa-solid fa-asterisk" aria-hidden="true"></i></label
-                                ><select
-                                    id="artifact-modal-link-creator-projects"
-                                    onchange="${onProjectChange}"
-                                >
-                                    <option value=""></option>
-                                    ${getProjectOptions(host)}
-                                </select>
-                            </div>
-                            <div
-                                class="${getTrackerSelectClasses(host)}"
-                                id="artifact-modal-link-creator-tracker-wrapper"
-                                data-test="tracker-picker-form-element"
-                            >
-                                <label for="artifact-modal-link-creator-trackers" class="tlp-label"
-                                    >${getArtifactCreationTrackerLabel()}
-                                    <i class="fa-solid fa-asterisk" aria-hidden="true"></i></label
-                                ><select
-                                    required
-                                    id="artifact-modal-link-creator-trackers"
-                                    onchange="${onTrackerChange}"
-                                >
-                                    <option value=""></option>
-                                    ${getTrackersOptions(host)}
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                    <button
-                        type="submit"
-                        class="tlp-button-primary tlp-button-small link-field-artifact-creator-button"
-                        disabled="${host.is_loading}"
-                        data-test="artifact-creator-submit"
-                    >
-                        ${getCreateArtifactButtonInCreatorLabel()}
-                    </button>
-                    <button
-                        type="button"
-                        class="tlp-button-secondary tlp-button-small link-field-artifact-creator-button"
-                        onclick="${onClickCancel}"
-                    >
-                        ${getCancelArtifactCreationLabel()}
-                    </button>
-                </div>
-            </form>`,
+    tracker_selectbox: (host: InternalArtifactCreator) =>
+        selectOrThrow(host.render(), "#artifact-modal-link-creator-trackers", HTMLSelectElement),
+    render: renderArtifactCreatorElement,
 });

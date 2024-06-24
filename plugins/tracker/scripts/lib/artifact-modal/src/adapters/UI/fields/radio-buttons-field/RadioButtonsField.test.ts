@@ -18,8 +18,8 @@
  */
 
 import { selectOrThrow } from "@tuleap/dom";
+import { renderRadioButtonsField, onInput } from "./RadioButtonsField";
 import type { HostElement, RadioButtonValue } from "./RadioButtonsField";
-import { RadioButtonsField, onInput } from "./RadioButtonsField";
 import { setCatalog } from "../../../../gettext-catalog";
 
 describe(`RadioButtonsField`, () => {
@@ -62,7 +62,7 @@ describe(`RadioButtonsField`, () => {
     });
 
     const render = (host: HostElement): ShadowRoot => {
-        const update = RadioButtonsField.content(host);
+        const update = renderRadioButtonsField(host);
         update(host, host);
         return host as unknown as ShadowRoot;
     };

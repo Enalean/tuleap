@@ -18,7 +18,7 @@
  */
 
 import { setCatalog } from "../../../../gettext-catalog";
-import { CrossReferencesField } from "./CrossReferencesField";
+import { renderCrossReferencesField } from "./CrossReferencesField";
 
 import type { HostElement, CrossReference } from "./CrossReferencesField";
 
@@ -44,7 +44,7 @@ describe("CrossReferencesField", () => {
             .createHTMLDocument()
             .createElement("div") as unknown as ShadowRoot;
 
-        const update = CrossReferencesField.content(host);
+        const update = renderCrossReferencesField(host);
 
         update(host, target);
 
@@ -68,7 +68,7 @@ describe("CrossReferencesField", () => {
             .createHTMLDocument()
             .createElement("div") as unknown as ShadowRoot;
 
-        const update = CrossReferencesField.content(host);
+        const update = renderCrossReferencesField(host);
 
         update(host, target);
 

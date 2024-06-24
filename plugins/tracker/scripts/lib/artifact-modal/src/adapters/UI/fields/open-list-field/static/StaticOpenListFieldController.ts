@@ -21,11 +21,13 @@ import { select2 } from "tlp";
 import type { StaticValueModelItem } from "../../../../../domain/fields/static-open-list-field/StaticOpenListValueModel";
 import type { StaticOpenListFieldType } from "../../../../../domain/fields/static-open-list-field/StaticOpenListFieldType";
 import type { InternalStaticOpenListField } from "./StaticOpenListField";
+import type { StaticOpenListFieldPresenter } from "./StaticOpenListFieldPresenter";
 import { StaticOpenListFieldPresenterBuilder } from "./StaticOpenListFieldPresenter";
 import type { Select2SelectionEvent, Select2Value } from "../Select2SelectionEvent";
 
 export type ControlStaticOpenListField = {
-    init(host: InternalStaticOpenListField): void;
+    initSelect2(host: InternalStaticOpenListField): void;
+    getInitialPresenter(): StaticOpenListFieldPresenter;
     handleStaticValueSelection(
         host: InternalStaticOpenListField,
         event: Select2SelectionEvent,
@@ -129,17 +131,9 @@ export const StaticOpenListFieldController = (
     };
 
     return {
-        init(host: InternalStaticOpenListField): void {
-            const presenter = StaticOpenListFieldPresenterBuilder.withSelectableValues(
-                field,
-                bind_value_objects,
-                getFieldValues(),
-            );
-
-            host.presenter = presenter;
-
+        initSelect2(host: InternalStaticOpenListField): void {
             const select2_instance = select2(host.select_element, {
-                placeholder: presenter.hint,
+                placeholder: host.presenter.hint,
                 allowClear: true,
                 tags: true,
                 createTag: (new_open_value) => newOpenListStaticValue(field, new_open_value),
@@ -157,6 +151,12 @@ export const StaticOpenListFieldController = (
                 handleStaticValueUnselection(host, event),
             );
         },
+        getInitialPresenter: () =>
+            StaticOpenListFieldPresenterBuilder.withSelectableValues(
+                field,
+                bind_value_objects,
+                getFieldValues(),
+            ),
         handleStaticValueSelection,
         handleStaticValueUnselection,
         newOpenListStaticValue,

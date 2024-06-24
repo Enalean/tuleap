@@ -18,6 +18,7 @@
  */
 
 import { define, dispatch, html } from "hybrids";
+import type { UpdateFunction } from "hybrids";
 import { sprintf } from "sprintf-js";
 import prettyKibibytes from "pretty-kibibytes";
 import type { TextEditorInterface } from "@tuleap/plugin-tracker-rich-text-editor";
@@ -34,7 +35,7 @@ import {
     TEXT_FORMAT_COMMONMARK,
     TEXT_FORMAT_HTML,
 } from "@tuleap/plugin-tracker-constants";
-import { Option } from "@tuleap/option";
+import type { Option } from "@tuleap/option";
 import { selectOrThrow } from "@tuleap/dom";
 import {
     getNoPasteMessage,
@@ -60,19 +61,15 @@ export interface RichTextEditor {
     is_help_shown: boolean;
     upload_setup: Option<FileUploadSetup>;
     readonly controller: FormattedTextControllerType;
-    content: () => HTMLElement;
+    render(): HTMLElement;
 }
 export type HostElement = RichTextEditor & HTMLElement;
 
-export const getValidFormat = (
-    host: unknown,
-    value: string,
-    lastValue: TextFieldFormat | undefined,
-): TextFieldFormat => {
+export const getValidFormat = (host: unknown, value: string): TextFieldFormat => {
     if (isValidTextFormat(value)) {
         return value;
     }
-    return lastValue ?? TEXT_FORMAT_COMMONMARK;
+    return TEXT_FORMAT_COMMONMARK;
 };
 
 export const onTextareaInput = (host: HostElement, event: Event): void => {
@@ -201,6 +198,22 @@ export const createEditor = (host: HostElement): TextEditorInterface | undefined
 // Destroy the rich text editor on disconnect
 export const connect = (host: RichTextEditor) => (): void => host.editor?.destroy();
 
+export const renderRichTextEditor = (host: RichTextEditor): UpdateFunction<RichTextEditor> =>
+    html`<textarea
+            data-textarea
+            data-test="textarea"
+            id="${host.identifier}"
+            required="${host.required}"
+            disabled="${host.disabled}"
+            class="tlp-textarea"
+            rows="${host.rows}"
+            maxlength="65535"
+            oninput="${onTextareaInput}"
+        >
+${host.contentValue}</textarea
+        >${host.is_help_shown &&
+        html`<p data-test="help" class="tlp-text-muted">${getRTEHelpMessage()}</p>`} `;
+
 export const RichTextEditor = define<RichTextEditor>({
     tag: "tuleap-artifact-modal-rich-text-editor",
     identifier: {
@@ -218,36 +231,15 @@ export const RichTextEditor = define<RichTextEditor>({
         },
     },
     editor: { value: undefined, connect },
-    format: { set: getValidFormat },
+    format: getValidFormat,
     contentValue: "",
     disabled: false,
     required: false,
     rows: 5,
-    textarea: (host) => selectOrThrow(host.content(), "[data-textarea]", HTMLTextAreaElement),
-    upload_setup: {
-        get: (host, last_value) => last_value ?? Option.nothing(),
-        set: (host, new_value) => new_value,
-    },
+    textarea: (host: RichTextEditor): HTMLTextAreaElement =>
+        selectOrThrow(host.render(), "[data-textarea]", HTMLTextAreaElement),
+    upload_setup: (host, upload_section) => upload_section ?? host.controller.getFileUploadSetup(),
     is_help_shown: false,
-    controller: {
-        set(host, controller: FormattedTextControllerType) {
-            host.upload_setup = controller.getFileUploadSetup();
-            return controller;
-        },
-    },
-    content: (host) =>
-        html`<textarea
-                data-textarea
-                data-test="textarea"
-                id="${host.identifier}"
-                required="${host.required}"
-                disabled="${host.disabled}"
-                class="tlp-textarea"
-                rows="${host.rows}"
-                maxlength="65535"
-                oninput="${onTextareaInput}"
-            >
-${host.contentValue}</textarea
-            >${host.is_help_shown &&
-            html`<p data-test="help" class="tlp-text-muted">${getRTEHelpMessage()}</p>`} `,
+    controller: (host, controller) => controller,
+    render: renderRichTextEditor,
 });

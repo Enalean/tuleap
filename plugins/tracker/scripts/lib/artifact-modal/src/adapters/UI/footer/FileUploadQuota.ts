@@ -18,6 +18,7 @@
  */
 
 import { define, html } from "hybrids";
+import type { UpdateFunction } from "hybrids";
 import { sprintf } from "sprintf-js";
 import prettyKibibytes from "pretty-kibibytes";
 import { getMaxAllowedUploadSizeText } from "../../../gettext-catalog";
@@ -29,23 +30,27 @@ export interface FileUploadQuota {
 }
 export type HostElement = FileUploadQuota & HTMLElement;
 
+export const renderFileUploadQuota = (host: FileUploadQuota): UpdateFunction<FileUploadQuota> => {
+    if (host.max_upload_size_in_bytes === 0) {
+        return html``;
+    }
+    const quota_message = sprintf(
+        getMaxAllowedUploadSizeText(),
+        prettyKibibytes(host.max_upload_size_in_bytes),
+    );
+    return html`<div class="tlp-text-info">${quota_message}</div>`;
+};
+
 export const FileUploadQuota = define<FileUploadQuota>({
     tag: "tuleap-artifact-modal-file-upload-quota",
     controller: {
-        async set(host, controller: FileUploadQuotaControllerType) {
-            host.max_upload_size_in_bytes = await controller.getMaxAllowedUploadSizeInBytes();
-            return controller;
+        value: (host, controller) => controller,
+        connect: (host) => {
+            host.controller.getMaxAllowedUploadSizeInBytes().then((max_size) => {
+                host.max_upload_size_in_bytes = max_size;
+            });
         },
     },
     max_upload_size_in_bytes: 0,
-    content: (host) => {
-        if (host.max_upload_size_in_bytes === 0) {
-            return html``;
-        }
-        const quota_message = sprintf(
-            getMaxAllowedUploadSizeText(),
-            prettyKibibytes(host.max_upload_size_in_bytes),
-        );
-        return html`<div class="tlp-text-info">${quota_message}</div>`;
-    },
+    render: renderFileUploadQuota,
 });

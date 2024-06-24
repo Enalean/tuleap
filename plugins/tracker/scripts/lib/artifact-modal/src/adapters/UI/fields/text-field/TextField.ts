@@ -18,13 +18,14 @@
  */
 
 import { define, html, dispatch } from "hybrids";
+import type { UpdateFunction } from "hybrids";
 import type { TextAndFormat } from "../../text-and-format";
 import { getTextAndFormatTemplate } from "../../text-and-format";
 import { getValidFormat } from "../../RichTextEditor";
 
 export interface TextField extends TextAndFormat {
     fieldId: number;
-    content: () => HTMLElement;
+    render(): HTMLElement;
 }
 export type HostElement = TextField & HTMLElement;
 
@@ -58,11 +59,22 @@ const onContentChange = (host: HostElement, event: CustomEvent): void => {
     });
 };
 
+export const renderTextField = (host: TextField): UpdateFunction<TextField> => html`
+    <div class="${getClasses(host)}">
+        ${getTextAndFormatTemplate(host, {
+            identifier: getIdentifier(host),
+            rows: 5,
+            onContentChange,
+            onFormatChange,
+        })}
+    </div>
+`;
+
 export const TextField = define<TextField>({
     tag: "tuleap-artifact-modal-text-field",
     fieldId: 0,
     label: "",
-    format: { set: getValidFormat },
+    format: getValidFormat,
     contentValue: "",
     required: false,
     disabled: false,
@@ -71,17 +83,6 @@ export const TextField = define<TextField>({
     is_preview_loading: false,
     has_error: false,
     error_message: "",
-    controller: undefined,
-    content: (host) => {
-        return html`
-            <div class="${getClasses(host)}">
-                ${getTextAndFormatTemplate(host, {
-                    identifier: getIdentifier(host),
-                    rows: 5,
-                    onContentChange,
-                    onFormatChange,
-                })}
-            </div>
-        `;
-    },
+    controller: (host, controller) => controller,
+    render: renderTextField,
 });

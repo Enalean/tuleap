@@ -19,7 +19,7 @@
 
 import { selectOrThrow } from "@tuleap/dom";
 import type { HostElement } from "./IntField";
-import { IntField, onInput } from "./IntField";
+import { IntField, onInput, renderIntField } from "./IntField";
 
 const FIELD_ID = 43;
 
@@ -66,16 +66,13 @@ describe(`IntField`, () => {
     );
 
     it(`does not use hybrids default setter (otherwise, zero is converted to empty string)`, () => {
-        if (typeof IntField.value !== "object") {
-            throw Error("value should have a setter");
-        }
-        expect(typeof IntField.value.set).toBe("function");
+        expect(typeof IntField.value).toBe("function");
     });
 
     it(`dispatches a bubbling "change" event when its inner input is changed
         so that the modal shows a warning when closed`, () => {
         const host = getHost();
-        const update = IntField.content(host);
+        const update = renderIntField(host);
         update(host, host);
         let is_bubbling = false;
         host.addEventListener("change", (event) => {

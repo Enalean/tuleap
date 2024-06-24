@@ -18,6 +18,7 @@
  */
 
 import { define, html } from "hybrids";
+import type { UpdateFunction } from "hybrids";
 import type { ControlSelectBoxField } from "./SelectBoxFieldController";
 import type { SelectBoxFieldPresenter } from "./SelectBoxFieldPresenter";
 import { buildSelectBox } from "./SelectBoxFieldTemplate";
@@ -31,7 +32,7 @@ export interface SelectBoxField {
     bind_value_ids: ReadonlyArray<BindValueId>;
 }
 type InternalSelectboxField = SelectBoxField & {
-    content(): HTMLElement;
+    render(): HTMLElement;
 };
 export type HostElement = InternalSelectboxField & HTMLElement;
 
@@ -50,20 +51,30 @@ function getDisconnectedCallback(host: HostElement): () => void {
     };
 }
 
+export const renderSelectboxField = (
+    host: InternalSelectboxField,
+): UpdateFunction<InternalSelectboxField> => html`
+    <div class="${getFormElementClasses(host)}">
+        <label for="${`tracker_field_${host.field_presenter.field_id}`}" class="tlp-label">
+            ${host.field_presenter.field_label}
+            ${host.field_presenter.is_field_required &&
+            html`<i class="fa-solid fa-asterisk" aria-hidden="true"></i>`}
+        </label>
+        ${buildSelectBox(host)}
+    </div>
+`;
+
 export const SelectBoxField = define<InternalSelectboxField>({
     tag: "tuleap-artifact-modal-select-box-field",
-    select_element: ({ content }) => {
-        const input = content().querySelector(`[data-select=list-picker]`);
+    select_element: (host: InternalSelectboxField): HTMLSelectElement => {
+        const input = host.render().querySelector(`[data-select=list-picker]`);
         if (!(input instanceof HTMLSelectElement)) {
             throw new Error(`Unable to find the <select> in the SelectBoxField`);
         }
         return input;
     },
     controller: {
-        set: (host, controller: ControlSelectBoxField) => {
-            host.bind_value_ids = controller.getInitialBindValueIds();
-            host.field_presenter = controller.buildPresenter();
-            controller.initListPicker(host.select_element);
+        value: (host, controller: ControlSelectBoxField) => {
             controller.onDependencyChange((bind_value_ids, presenter) => {
                 host.bind_value_ids = bind_value_ids;
                 host.field_presenter = presenter;
@@ -75,18 +86,14 @@ export const SelectBoxField = define<InternalSelectboxField>({
 
             return controller;
         },
-        connect: (host) => getDisconnectedCallback(host),
+        connect: (host) => {
+            host.controller.initListPicker(host.select_element);
+
+            return getDisconnectedCallback(host);
+        },
     },
-    field_presenter: undefined,
-    bind_value_ids: undefined,
-    content: (host) => html`
-        <div class="${getFormElementClasses(host)}">
-            <label for="${`tracker_field_${host.field_presenter.field_id}`}" class="tlp-label">
-                ${host.field_presenter.field_label}
-                ${host.field_presenter.is_field_required &&
-                html`<i class="fa-solid fa-asterisk" aria-hidden="true"></i>`}
-            </label>
-            ${buildSelectBox(host)}
-        </div>
-    `,
+    field_presenter: (host, field_presenter) => field_presenter ?? host.controller.buildPresenter(),
+    bind_value_ids: (host, bind_value_ids) =>
+        bind_value_ids ?? host.controller.getInitialBindValueIds(),
+    render: renderSelectboxField,
 });

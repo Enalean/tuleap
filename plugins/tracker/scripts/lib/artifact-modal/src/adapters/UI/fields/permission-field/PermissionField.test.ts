@@ -23,7 +23,7 @@ import type { HostElement } from "./PermissionField";
 import {
     getGrantedGroupsSelect,
     getIsUsedByDefaultCheckbox,
-    PermissionField,
+    renderPermissionField,
 } from "./PermissionField";
 import { PermissionFieldController } from "./PermissionFieldController";
 
@@ -113,7 +113,7 @@ describe("PermissionField", () => {
     });
 
     const render = (host: HostElement): ShadowRoot => {
-        const update = PermissionField.content(host);
+        const update = renderPermissionField(host);
         update(host, host);
         return host as unknown as ShadowRoot;
     };

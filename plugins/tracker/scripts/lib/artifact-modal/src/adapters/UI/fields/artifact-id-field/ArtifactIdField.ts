@@ -18,6 +18,7 @@
  */
 
 import { define, html } from "hybrids";
+import type { UpdateFunction } from "hybrids";
 import { ARTIFACT_ID_FIELD } from "@tuleap/plugin-tracker-constants";
 import type { CurrentArtifactIdentifier } from "../../../../domain/CurrentArtifactIdentifier";
 
@@ -37,7 +38,6 @@ interface FieldArtifactIdType {
 export interface ArtifactIdField {
     readonly field: FieldArtifactIdType;
     readonly currentArtifactIdentifier: CurrentArtifactIdentifier;
-    readonly content: () => HTMLElement;
 }
 
 const getArtifactUrl = (host: ArtifactIdField): string =>
@@ -48,16 +48,17 @@ const getFormattedValue = (host: ArtifactIdField): string => {
     return host.field.type === ARTIFACT_ID_FIELD ? `#${id}` : String(host.field.value);
 };
 
+export const renderArtifactIdField = (host: ArtifactIdField): UpdateFunction<ArtifactIdField> =>
+    html` <div class="tlp-property">
+        <label class="tlp-label" data-test="artifact-id-field-label">${host.field.label}</label>
+        <a href="${getArtifactUrl(host)}" data-test="artifact-id-field-link">
+            ${getFormattedValue(host)}
+        </a>
+    </div>`;
+
 export const ArtifactIdField = define<ArtifactIdField>({
     tag: "tuleap-artifact-modal-artifact-id-field",
-    field: undefined,
-    currentArtifactIdentifier: undefined,
-    content: (host) => html`
-        <div class="tlp-property">
-            <label class="tlp-label" data-test="artifact-id-field-label">${host.field.label}</label>
-            <a href="${getArtifactUrl(host)}" data-test="artifact-id-field-link">
-                ${getFormattedValue(host)}
-            </a>
-        </div>
-    `,
+    field: (host, field) => field,
+    currentArtifactIdentifier: (host, identifier) => identifier,
+    render: renderArtifactIdField,
 });

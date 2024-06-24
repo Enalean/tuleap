@@ -18,7 +18,8 @@
  */
 
 import * as popover from "@tuleap/tlp-popovers";
-import { connect, CommonmarkSyntaxHelper } from "./CommonmarkSyntaxHelper";
+import type { CommonmarkSyntaxHelper } from "./CommonmarkSyntaxHelper";
+import { connect, renderCommonmarkSyntaxHelper } from "./CommonmarkSyntaxHelper";
 import { setCatalog } from "../../gettext-catalog";
 
 const emptyFunction = (): void => {
@@ -44,7 +45,7 @@ describe(`CommonmarkSyntaxHelper`, () => {
                 section: null,
                 button: null,
             } as HostElement;
-            const update = CommonmarkSyntaxHelper.content(host);
+            const update = renderCommonmarkSyntaxHelper(host);
             update(host, target);
 
             const button = target.querySelector("[data-test=artifact-modal-helper-popover-button]");

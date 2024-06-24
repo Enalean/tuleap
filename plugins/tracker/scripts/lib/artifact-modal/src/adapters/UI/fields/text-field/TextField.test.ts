@@ -18,7 +18,7 @@
  */
 
 import type { HostElement } from "./TextField";
-import { getClasses, getIdentifier, TextField } from "./TextField";
+import { getClasses, getIdentifier, renderTextField } from "./TextField";
 import { FormattedTextController } from "../../../../domain/common/FormattedTextController";
 import { DispatchEventsStub } from "../../../../../tests/stubs/DispatchEventsStub";
 import { TEXT_FORMAT_TEXT } from "@tuleap/plugin-tracker-constants";
@@ -73,7 +73,7 @@ describe(`TextField`, () => {
             const doc = document.implementation.createHTMLDocument();
             target = doc.createElement("div") as unknown as ShadowRoot;
             host = getHost({ fieldId: field_id, contentValue: "previous content", format: "text" });
-            const update = TextField.content(host);
+            const update = renderTextField(host);
             update(host, target);
         });
 

@@ -20,7 +20,7 @@
 import { selectOrThrow } from "@tuleap/dom";
 import type { HostElement } from "./FileField";
 import {
-    FileField,
+    renderFileField,
     getActionButton,
     getAddNewFileToAttachButtonTemplate,
     getAttachedFileTemplate,
@@ -261,7 +261,7 @@ describe(`FileField`, () => {
                 attached_files: undefined,
             } as HostElement;
 
-            const render = FileField.content(host);
+            const render = renderFileField(host);
             render(host, target);
 
             return target;

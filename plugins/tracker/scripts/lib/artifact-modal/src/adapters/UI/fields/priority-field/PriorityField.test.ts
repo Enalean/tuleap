@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { PriorityField } from "./PriorityField";
+import { renderPriorityField } from "./PriorityField";
 import type { HostElement } from "./PriorityField";
 
 describe("PriorityField", () => {
@@ -33,7 +33,7 @@ describe("PriorityField", () => {
             .createHTMLDocument()
             .createElement("div") as unknown as ShadowRoot;
 
-        const update = PriorityField.content(host);
+        const update = renderPriorityField(host);
 
         update(host, target);
 

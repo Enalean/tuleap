@@ -19,7 +19,7 @@
 
 import type { ArtifactCreatedEvent, HostElement } from "./ArtifactCreatorElement";
 import {
-    ArtifactCreatorElement,
+    renderArtifactCreatorElement,
     getTrackerSelectClasses,
     onClickCancel,
     onProjectChange,
@@ -98,7 +98,7 @@ describe(`ArtifactCreatorElement`, () => {
                 projects,
                 trackers,
                 tracker_selectbox,
-                content: (): HTMLElement => element,
+                render: (): HTMLElement => element,
             } as HostElement);
         };
 
@@ -255,10 +255,10 @@ describe(`ArtifactCreatorElement`, () => {
                 trackers,
                 selected_project: ProjectIdentifierStub.withId(selected_project_id),
                 selected_tracker,
-                content: (): HTMLElement => element,
+                render: (): HTMLElement => element,
             } as HostElement);
 
-            const updateFunction = ArtifactCreatorElement.content(host);
+            const updateFunction = renderArtifactCreatorElement(host);
             updateFunction(host, element as unknown as ShadowRoot);
             return element;
         };
@@ -371,7 +371,7 @@ describe(`ArtifactCreatorElement`, () => {
             return Object.assign(target, {
                 tracker_selectbox,
                 has_tracker_selection_error: false,
-                content: (): HTMLElement => target,
+                render: (): HTMLElement => target,
             } as HostElement);
         };
 

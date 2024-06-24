@@ -18,6 +18,7 @@
  */
 
 import { define, dispatch, html } from "hybrids";
+import type { UpdateFunction } from "hybrids";
 import { getNone } from "../../../../gettext-catalog";
 
 export const RADIO_BUTTONS_NONE_VALUE = "100";
@@ -32,7 +33,7 @@ export interface RadioButtonsField {
     value: string;
 }
 type InternalRadioButtonsField = RadioButtonsField & {
-    content(): HTMLElement;
+    render(): HTMLElement;
 };
 export type HostElement = InternalRadioButtonsField & HTMLElement;
 
@@ -56,6 +57,50 @@ export const onInput = (host: HostElement, event: Event): void => {
     });
 };
 
+export const renderRadioButtonsField = (
+    host: RadioButtonsField,
+): UpdateFunction<RadioButtonsField> => html`
+    <div class="tlp-form-element">
+        <label class="tlp-label">
+            ${host.label}${host.required && html`<i class="fas fa-asterisk"></i>`}
+        </label>
+
+        ${!host.required &&
+        html`
+            <label class="tlp-label tlp-radio" data-test="radiobutton-field-value">
+                <input
+                    type="radio"
+                    name="${host.name}"
+                    oninput="${onInput}"
+                    value="${RADIO_BUTTONS_NONE_VALUE}"
+                    data-test="radiobutton-field-input"
+                    required="${host.required}"
+                    disabled="${host.disabled}"
+                    checked="${host.value === RADIO_BUTTONS_NONE_VALUE}"
+                />
+                ${getNone()}
+            </label>
+        `}
+        ${host.values.map(
+            (value) => html`
+                <label class="tlp-label tlp-radio" data-test="radiobutton-field-value">
+                    <input
+                        type="radio"
+                        name="${host.name}"
+                        oninput="${onInput}"
+                        value="${value.id}"
+                        data-test="radiobutton-field-input"
+                        required="${host.required}"
+                        disabled="${host.disabled}"
+                        checked="${host.value === String(value.id)}"
+                    />
+                    ${value.label}
+                </label>
+            `,
+        )}
+    </div>
+`;
+
 export const RadioButtonsField = define<InternalRadioButtonsField>({
     tag: "tuleap-artifact-modal-radio-buttons-field",
     fieldId: 0,
@@ -64,49 +109,8 @@ export const RadioButtonsField = define<InternalRadioButtonsField>({
     required: false,
     disabled: false,
     values: {
-        get: (host, value = []) => value,
-        set: (host, value) => [...value],
+        value: [],
     },
     value: RADIO_BUTTONS_NONE_VALUE,
-    content: (host) => html`
-        <div class="tlp-form-element">
-            <label class="tlp-label">
-                ${host.label}${host.required && html`<i class="fas fa-asterisk"></i>`}
-            </label>
-
-            ${!host.required &&
-            html`
-                <label class="tlp-label tlp-radio" data-test="radiobutton-field-value">
-                    <input
-                        type="radio"
-                        name="${host.name}"
-                        oninput="${onInput}"
-                        value="${RADIO_BUTTONS_NONE_VALUE}"
-                        data-test="radiobutton-field-input"
-                        required="${host.required}"
-                        disabled="${host.disabled}"
-                        checked="${host.value === RADIO_BUTTONS_NONE_VALUE}"
-                    />
-                    ${getNone()}
-                </label>
-            `}
-            ${host.values.map(
-                (value) => html`
-                    <label class="tlp-label tlp-radio" data-test="radiobutton-field-value">
-                        <input
-                            type="radio"
-                            name="${host.name}"
-                            oninput="${onInput}"
-                            value="${value.id}"
-                            data-test="radiobutton-field-input"
-                            required="${host.required}"
-                            disabled="${host.disabled}"
-                            checked="${host.value === String(value.id)}"
-                        />
-                        ${value.label}
-                    </label>
-                `,
-            )}
-        </div>
-    `,
+    render: renderRadioButtonsField,
 });

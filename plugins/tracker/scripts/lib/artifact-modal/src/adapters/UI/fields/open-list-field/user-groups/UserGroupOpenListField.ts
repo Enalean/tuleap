@@ -30,7 +30,7 @@ export type UserGroupOpenListField = {
 };
 
 export type InternalUserGroupOpenListField = Readonly<UserGroupOpenListField> & {
-    readonly content: () => HTMLElement;
+    render(): HTMLElement;
     select_element: HTMLSelectElement;
     presenter: UserGroupOpenListFieldPresenter;
 };
@@ -39,10 +39,10 @@ export type HostElement = InternalUserGroupOpenListField & HTMLElement;
 
 export const UserGroupOpenListField = define<InternalUserGroupOpenListField>({
     tag: TAG,
-    presenter: undefined,
+    presenter: (host, presenter) => presenter ?? host.controller.buildInitialPresenter(),
     disabled: false,
-    select_element: ({ content }) => {
-        const select = content().querySelector("[data-role=select-element]");
+    select_element: (host: InternalUserGroupOpenListField) => {
+        const select = host.render().querySelector("[data-role=select-element]");
         if (!(select instanceof HTMLSelectElement)) {
             throw new Error(`Unable to find the <select> in the UserGroupOpenListField`);
         }
@@ -50,10 +50,10 @@ export const UserGroupOpenListField = define<InternalUserGroupOpenListField>({
         return select;
     },
     controller: {
-        set: (host, controller) => {
-            controller.init(host);
-            return controller;
+        value: (host, controller) => controller,
+        connect: (host) => {
+            host.controller.initSelect2(host);
         },
     },
-    content: renderUserGroupOpenListField,
+    render: renderUserGroupOpenListField,
 });

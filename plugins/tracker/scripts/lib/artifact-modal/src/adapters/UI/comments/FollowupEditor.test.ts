@@ -19,7 +19,7 @@
 
 import { setCatalog } from "../../../gettext-catalog";
 import type { HostElement } from "./FollowupEditor";
-import { FollowupEditor } from "./FollowupEditor";
+import { renderFollowupEditor } from "./FollowupEditor";
 import { FormattedTextController } from "../../../domain/common/FormattedTextController";
 import { DispatchEventsStub } from "../../../../tests/stubs/DispatchEventsStub";
 import { TEXT_FORMAT_TEXT } from "@tuleap/plugin-tracker-constants";
@@ -49,7 +49,7 @@ describe(`FollowupEditor`, () => {
         let host: HostElement;
         beforeEach(() => {
             host = getHost({ contentValue: "previous content", format: "text" });
-            const update = FollowupEditor.content(host);
+            const update = renderFollowupEditor(host);
             update(host, target);
         });
 

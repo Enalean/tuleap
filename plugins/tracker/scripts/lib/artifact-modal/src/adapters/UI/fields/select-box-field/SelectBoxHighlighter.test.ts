@@ -32,7 +32,7 @@ describe("SelectBoxHighlighter", () => {
         field_element.append(list_picker_element);
 
         highlightSelectBoxField({
-            content: (): HTMLElement => field_element,
+            render: (): HTMLElement => field_element,
         } as HostElement);
 
         expect(

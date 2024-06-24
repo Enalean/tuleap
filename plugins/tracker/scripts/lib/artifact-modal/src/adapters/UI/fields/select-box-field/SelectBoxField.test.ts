@@ -18,8 +18,8 @@
  */
 
 import { selectOrThrow } from "@tuleap/dom";
-import type { HostElement } from "./SelectBoxField";
-import { getFormElementClasses, SelectBoxField } from "./SelectBoxField";
+import type { HostElement, SelectBoxField } from "./SelectBoxField";
+import { getFormElementClasses, renderSelectboxField } from "./SelectBoxField";
 import { SelectBoxFieldPresenter } from "./SelectBoxFieldPresenter";
 import type { BindValueId } from "../../../../domain/fields/select-box-field/BindValueId";
 
@@ -55,7 +55,7 @@ describe("SelectBoxField", () => {
     };
 
     const render = (host: HostElement): ShadowRoot => {
-        const update = SelectBoxField.content(host);
+        const update = renderSelectboxField(host);
         update(host, host);
         return host as unknown as ShadowRoot;
     };

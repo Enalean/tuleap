@@ -28,7 +28,7 @@ interface PermissionField {
     field_presenter: PermissionFieldPresenter;
 }
 type InternalPermissionField = PermissionField & {
-    content(): HTMLElement;
+    render(): HTMLElement;
 };
 export type HostElement = InternalPermissionField & HTMLElement;
 
@@ -107,24 +107,23 @@ export const getGrantedGroupsSelect = (
     </select>
 `;
 
+export const renderPermissionField = (
+    host: InternalPermissionField,
+): UpdateFunction<InternalPermissionField> => html`
+    <div class="tlp-form-element">
+        <label for="tracker_field_${host.field_presenter.field_id}" class="tlp-label">
+            ${host.field_presenter.label}
+            ${host.field_presenter.is_field_required &&
+            html`<i class="fas fa-asterisk" aria-hidden="true"></i>`}
+        </label>
+
+        ${getGrantedGroupsSelectLabelWithCheckboxIfNeeded(host)} ${getGrantedGroupsSelect(host)}
+    </div>
+`;
+
 export const PermissionField = define<InternalPermissionField>({
     tag: "tuleap-artifact-modal-permission-field",
-    controller: {
-        set(host, controller: PermissionFieldControllerType) {
-            host.field_presenter = controller.buildPresenter();
-            return controller;
-        },
-    },
-    field_presenter: undefined,
-    content: (host) => html`
-        <div class="tlp-form-element">
-            <label for="tracker_field_${host.field_presenter.field_id}" class="tlp-label">
-                ${host.field_presenter.label}
-                ${host.field_presenter.is_field_required &&
-                html`<i class="fas fa-asterisk" aria-hidden="true"></i>`}
-            </label>
-
-            ${getGrantedGroupsSelectLabelWithCheckboxIfNeeded(host)} ${getGrantedGroupsSelect(host)}
-        </div>
-    `,
+    controller: (host, controller) => controller,
+    field_presenter: (host, field_presenter) => field_presenter ?? host.controller.buildPresenter(),
+    render: renderPermissionField,
 });

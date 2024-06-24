@@ -18,6 +18,7 @@
  */
 
 import { define, html } from "hybrids";
+import type { UpdateFunction } from "hybrids";
 import { getEmptyCrossReferencesCollectionText } from "../../../../gettext-catalog";
 
 export type HostElement = CrossReferencesField & HTMLElement;
@@ -34,45 +35,48 @@ interface FieldCrossReferencesType {
 
 interface CrossReferencesField {
     readonly field: FieldCrossReferencesType;
-    readonly content: () => HTMLElement;
 }
+
+export const renderCrossReferencesField = (
+    host: CrossReferencesField,
+): UpdateFunction<CrossReferencesField> => html`
+    <div class="tlp-property">
+        <label class="tlp-label" data-test="cross-references-field-label">
+            ${host.field.label}
+        </label>
+        ${host.field.value.length === 0 &&
+        html`
+            <p
+                class="tuleap-artifact-modal-field-empty-value"
+                data-test="cross-references-field-empty-state"
+            >
+                ${getEmptyCrossReferencesCollectionText()}
+            </p>
+        `}
+        ${host.field.value.length > 0 &&
+        html`
+            <ul>
+                ${host.field.value.map(
+                    (value) => html`
+                        <li>
+                            <a
+                                href="${value.url}"
+                                data-test="cross-references-field-cross-reference-link"
+                                title=""
+                                class="cross-reference"
+                            >
+                                ${value.ref}
+                            </a>
+                        </li>
+                    `,
+                )}
+            </ul>
+        `}
+    </div>
+`;
 
 export const CrossReferencesField = define<CrossReferencesField>({
     tag: "tuleap-artifact-modal-cross-references-field",
-    field: undefined,
-    content: (host) => html`
-        <div class="tlp-property">
-            <label class="tlp-label" data-test="cross-references-field-label">
-                ${host.field.label}
-            </label>
-            ${host.field.value.length === 0 &&
-            html`
-                <p
-                    class="tuleap-artifact-modal-field-empty-value"
-                    data-test="cross-references-field-empty-state"
-                >
-                    ${getEmptyCrossReferencesCollectionText()}
-                </p>
-            `}
-            ${host.field.value.length > 0 &&
-            html`
-                <ul>
-                    ${host.field.value.map(
-                        (value) => html`
-                            <li>
-                                <a
-                                    href="${value.url}"
-                                    data-test="cross-references-field-cross-reference-link"
-                                    title=""
-                                    class="cross-reference"
-                                >
-                                    ${value.ref}
-                                </a>
-                            </li>
-                        `,
-                    )}
-                </ul>
-            `}
-        </div>
-    `,
+    field: (host, field) => field,
+    render: renderCrossReferencesField,
 });

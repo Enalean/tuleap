@@ -25,7 +25,8 @@ import { UserGroupOpenListFieldPresenter } from "./UserGroupOpenListFieldPresent
 import type { Select2SelectionEvent } from "../Select2SelectionEvent";
 
 export type ControlUserGroupOpenListField = {
-    init(host: InternalUserGroupOpenListField): void;
+    initSelect2(host: InternalUserGroupOpenListField): void;
+    buildInitialPresenter(): UserGroupOpenListFieldPresenter;
     handleValueUnselection(
         host: InternalUserGroupOpenListField,
         event: Select2SelectionEvent,
@@ -73,15 +74,7 @@ export const UserGroupOpenListFieldController = (
     }
 
     return {
-        init(host): void {
-            const presenter = UserGroupOpenListFieldPresenter.withSelectableValues(
-                field,
-                bind_value_objects,
-                field.values.map((value) => value),
-            );
-
-            host.presenter = presenter;
-
+        initSelect2(host): void {
             const select2_instance = select2(host.select_element, {
                 placeholder: host.presenter.hint,
                 allowClear: true,
@@ -99,6 +92,12 @@ export const UserGroupOpenListFieldController = (
                 handleValueUnselection(host, event),
             );
         },
+        buildInitialPresenter: () =>
+            UserGroupOpenListFieldPresenter.withSelectableValues(
+                field,
+                bind_value_objects,
+                field.values.map((value) => value),
+            ),
         handleValueSelection,
         handleValueUnselection,
     };

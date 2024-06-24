@@ -29,7 +29,7 @@
     "angular-custom-elements": "^2.1.0",
     "angular-gettext": "^2.4.2",
     "dompurify": "^3.1.4",
-    "hybrids": "^8.2.2",
+    "hybrids": "^9.0.0",
     "lodash-es": "^4.17.21",
     "moment": "^2.29.4",
     "neverthrow": "^6.0.0",
