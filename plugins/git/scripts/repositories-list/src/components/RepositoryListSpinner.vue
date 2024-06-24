@@ -19,21 +19,12 @@
 <template>
     <div class="git-repository-list-loading" v-if="show_spinner()"></div>
 </template>
-<script lang="ts">
-import Vue from "vue";
-import { Getter } from "vuex-class";
-import { Component } from "vue-property-decorator";
+<script setup lang="ts">
+import { useGetters } from "vuex-composition-helpers";
 
-@Component
-export default class RepositoryListSpinner extends Vue {
-    @Getter
-    readonly hasError!: boolean;
+const { hasError, isLoading } = useGetters(["hasError", "isLoading"]);
 
-    @Getter
-    readonly isLoading!: boolean;
-
-    show_spinner(): boolean {
-        return !this.hasError && this.isLoading;
-    }
+function show_spinner(): boolean {
+    return !hasError.value && isLoading.value;
 }
 </script>
