@@ -150,7 +150,10 @@ export const getContent = (host: HostElement): UpdateFunction<InternalSelectionE
 
 export const SelectionElement = define<InternalSelectionElement>({
     tag: TAG,
-    multiple: false,
+    multiple: {
+        value: false,
+        reflect: true,
+    },
     placeholder_text: "",
     selected_items: { observe: observeSelectedItems, value: (host, new_value) => new_value ?? [] },
     selectItem: buildSelectItem,
