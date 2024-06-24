@@ -52,7 +52,7 @@ describe("NoRepositoryEmptyState", () => {
         };
     });
 
-    async function instantiateComponent(): Promise<Wrapper<NoRepositoryEmptyState>> {
+    async function instantiateComponent(): Promise<Wrapper<Vue>> {
         const store = createStoreMock(store_options);
         return shallowMount(NoRepositoryEmptyState, {
             mocks: { $store: store },
