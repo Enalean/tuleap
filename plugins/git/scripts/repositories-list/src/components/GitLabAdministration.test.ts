@@ -31,7 +31,7 @@ jest.mock("tlp");
 describe("GitLabAdministration", () => {
     let repository: Repository, store: Store;
 
-    async function instantiateComponent(): Promise<Wrapper<GitLabAdministration>> {
+    async function instantiateComponent(): Promise<Wrapper<Vue>> {
         repository = {
             id: 1,
             normalized_path: "MyPath/MyRepo",
@@ -80,10 +80,7 @@ describe("GitLabAdministration", () => {
 
         await wrapper.find("[data-test=unlink-gitlab-repository-1]").trigger("click");
 
-        expect(store.dispatch).toHaveBeenCalledWith(
-            "gitlab/showDeleteGitlabRepositoryModal",
-            repository,
-        );
+        expect(store.dispatch).toHaveBeenCalledWith("showDeleteGitlabRepositoryModal", repository);
     });
 
     it("When repository is GitLab and user clicks to edit token, Then modal opens", async () => {
@@ -92,7 +89,7 @@ describe("GitLabAdministration", () => {
         await wrapper.find("[data-test=edit-access-token-gitlab-repository]").trigger("click");
 
         expect(store.dispatch).toHaveBeenCalledWith(
-            "gitlab/showEditAccessTokenGitlabRepositoryModal",
+            "showEditAccessTokenGitlabRepositoryModal",
             repository,
         );
     });
@@ -102,10 +99,7 @@ describe("GitLabAdministration", () => {
 
         await wrapper.find("[data-test=regenerate-webhook-gitlab-repository]").trigger("click");
 
-        expect(store.dispatch).toHaveBeenCalledWith(
-            "gitlab/showRegenerateGitlabWebhookModal",
-            repository,
-        );
+        expect(store.dispatch).toHaveBeenCalledWith("showRegenerateGitlabWebhookModal", repository);
     });
 
     it("When repository is GitLab and user clicks to update the allowing artifact closure value, Then modal opens", async () => {
@@ -113,6 +107,6 @@ describe("GitLabAdministration", () => {
 
         await wrapper.find("[data-test=artifact-closure-gitlab-repository]").trigger("click");
 
-        expect(store.dispatch).toHaveBeenCalledWith("gitlab/showArtifactClosureModal", repository);
+        expect(store.dispatch).toHaveBeenCalledWith("showArtifactClosureModal", repository);
     });
 });
