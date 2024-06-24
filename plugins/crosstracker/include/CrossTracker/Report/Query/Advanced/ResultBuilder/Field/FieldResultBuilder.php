@@ -28,6 +28,7 @@ use Tracker_FormElement_Field;
 use Tuleap\CrossTracker\Report\Query\Advanced\DuckTypedField\Select\DuckTypedFieldSelect;
 use Tuleap\CrossTracker\Report\Query\Advanced\DuckTypedField\Select\DuckTypedFieldTypeSelect;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Field\Date\DateResultBuilder;
+use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Field\Text\TextResultBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\SelectedValuesCollection;
 use Tuleap\Tracker\FormElement\Field\RetrieveUsedFields;
 use Tuleap\Tracker\FormElement\RetrieveFieldType;
@@ -42,6 +43,7 @@ final readonly class FieldResultBuilder
         private RetrieveFieldType $retrieve_field_type,
         private RetrieveUserPermissionOnFields $permission_on_fields,
         private DateResultBuilder $date_builder,
+        private TextResultBuilder $text_builder,
     ) {
     }
 
@@ -81,7 +83,7 @@ final readonly class FieldResultBuilder
     {
         return match ($field->type) {
             DuckTypedFieldTypeSelect::DATE      => $this->date_builder->getResult($field, $select_results, $user),
-            DuckTypedFieldTypeSelect::TEXT,
+            DuckTypedFieldTypeSelect::TEXT => $this->text_builder->getResult($field, $select_results, $user),
             DuckTypedFieldTypeSelect::NUMERIC,
             DuckTypedFieldTypeSelect::STATIC_LIST,
             DuckTypedFieldTypeSelect::UGROUP_LIST,

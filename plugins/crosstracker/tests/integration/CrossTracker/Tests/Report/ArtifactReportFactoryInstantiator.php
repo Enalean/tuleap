@@ -53,6 +53,7 @@ use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata\Submissio
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata\TextSemanticChecker;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Field\Date\DateResultBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Field\FieldResultBuilder;
+use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Field\Text\TextResultBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilderVisitor;
 use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Field\Date\DateSelectFromBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Field\FieldSelectFromBuilder;
@@ -63,7 +64,9 @@ use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Field\UGroupList\UGr
 use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Field\UserList\UserListSelectFromBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilderVisitor;
 use Tuleap\DB\DBFactory;
+use Tuleap\Markdown\CommonMarkInterpreter;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
+use Tuleap\Tracker\Artifact\ChangesetValue\Text\TextValueInterpreter;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
 use Tuleap\Tracker\FormElement\Field\ListFields\OpenListValueDao;
@@ -226,6 +229,7 @@ final class ArtifactReportFactoryInstantiator
                 new UserListSelectFromBuilder()
             ),
         );
+        $purifier                 = \Codendi_HTMLPurifier::instance();
         $result_builder_visitor   = new ResultBuilderVisitor(
             new FieldResultBuilder(
                 $form_element_factory,
@@ -234,6 +238,15 @@ final class ArtifactReportFactoryInstantiator
                 new DateResultBuilder(
                     $artifact_factory,
                     $form_element_factory,
+                ),
+                new TextResultBuilder(
+                    $artifact_factory,
+                    new TextValueInterpreter(
+                        $purifier,
+                        CommonMarkInterpreter::build(
+                            $purifier
+                        ),
+                    ),
                 ),
             ),
         );

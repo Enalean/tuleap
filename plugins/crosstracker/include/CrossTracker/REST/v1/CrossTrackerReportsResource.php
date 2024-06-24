@@ -66,6 +66,7 @@ use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata\Submissio
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata\TextSemanticChecker;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Field\Date\DateResultBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Field\FieldResultBuilder;
+use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Field\Text\TextResultBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilderVisitor;
 use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Field\Date\DateSelectFromBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Field\FieldSelectFromBuilder;
@@ -78,12 +79,14 @@ use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilderVisitor;
 use Tuleap\CrossTracker\REST\v1\Representation\CrossTrackerReportContentRepresentation;
 use Tuleap\CrossTracker\REST\v1\Representation\LegacyCrossTrackerReportContentRepresentation;
 use Tuleap\DB\DBFactory;
+use Tuleap\Markdown\CommonMarkInterpreter;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\REST\JsonDecoder;
 use Tuleap\REST\QueryParameterException;
 use Tuleap\REST\QueryParameterParser;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
+use Tuleap\Tracker\Artifact\ChangesetValue\Text\TextValueInterpreter;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
 use Tuleap\Tracker\FormElement\Field\ListFields\OpenListValueDao;
@@ -222,7 +225,8 @@ final class CrossTrackerReportsResource extends AuthenticatedResource
 
             $this->getUserIsAllowedToSeeReportChecker()->checkUserIsAllowedToSeeReport($current_user, $expected_report);
 
-            $form_element_factory = Tracker_FormElementFactory::instance();
+            $form_element_factory     = Tracker_FormElementFactory::instance();
+            $tracker_artifact_factory = Tracker_ArtifactFactory::instance();
 
             $retrieve_field_type    = new FieldTypeRetrieverWrapper($form_element_factory);
             $trackers_permissions   = TrackersPermissionsRetriever::build();
@@ -239,14 +243,24 @@ final class CrossTrackerReportsResource extends AuthenticatedResource
                     new UserListSelectFromBuilder()
                 ),
             );
+            $purifier               = \Codendi_HTMLPurifier::instance();
             $result_builder_visitor = new ResultBuilderVisitor(
                 new FieldResultBuilder(
                     $form_element_factory,
                     $retrieve_field_type,
                     $trackers_permissions,
                     new DateResultBuilder(
-                        Tracker_ArtifactFactory::instance(),
+                        $tracker_artifact_factory,
                         $form_element_factory,
+                    ),
+                    new TextResultBuilder(
+                        $tracker_artifact_factory,
+                        new TextValueInterpreter(
+                            $purifier,
+                            CommonMarkInterpreter::build(
+                                $purifier,
+                            ),
+                        ),
                     ),
                 ),
             );

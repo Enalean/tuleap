@@ -29,12 +29,15 @@ use Tracker;
 use Tuleap\Config\ConfigurationVariables;
 use Tuleap\CrossTracker\Report\Query\Advanced\DuckTypedField\FieldTypeRetrieverWrapper;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Field\Date\DateResultBuilder;
+use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Field\Text\TextResultBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\SelectedValuesCollection;
 use Tuleap\CrossTracker\REST\v1\Representation\CrossTrackerSelectedRepresentation;
 use Tuleap\CrossTracker\REST\v1\Representation\CrossTrackerSelectedType;
 use Tuleap\ForgeConfigSandbox;
+use Tuleap\Markdown\CommonMarkInterpreter;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\Artifact\ChangesetValue\Text\TextValueInterpreter;
 use Tuleap\Tracker\Permission\FieldPermissionType;
 use Tuleap\Tracker\Permission\TrackersPermissionsRetriever;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Field;
@@ -42,6 +45,7 @@ use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\DateFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\FloatFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\IntFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\TextFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\RetrieveArtifactStub;
 use Tuleap\Tracker\Test\Stub\RetrieveFieldTypeStub;
@@ -72,10 +76,11 @@ final class FieldResultBuilderTest extends TestCase
 
     private function getSelectedResult(
         RetrieveUsedFieldsStub $fields_retriever,
-        mixed $first_value,
-        mixed $second_value,
+        array $first_value,
+        array $second_value,
     ): SelectedValuesCollection {
-        $builder = new FieldResultBuilder(
+        $purifier = \Codendi_HTMLPurifier::instance();
+        $builder  = new FieldResultBuilder(
             $fields_retriever,
             new FieldTypeRetrieverWrapper(RetrieveFieldTypeStub::withDetectionOfType()),
             RetrieveUserPermissionOnFieldsStub::build()->withPermissionOn(
@@ -89,6 +94,18 @@ final class FieldResultBuilderTest extends TestCase
                 ),
                 $fields_retriever,
             ),
+            new TextResultBuilder(
+                RetrieveArtifactStub::withArtifacts(
+                    ArtifactTestBuilder::anArtifact(12)->inTracker($this->first_tracker)->build(),
+                    ArtifactTestBuilder::anArtifact(15)->inTracker($this->second_tracker)->build(),
+                ),
+                new TextValueInterpreter(
+                    $purifier,
+                    CommonMarkInterpreter::build(
+                        $purifier,
+                    ),
+                ),
+            ),
         );
 
         return $builder->getResult(
@@ -98,11 +115,11 @@ final class FieldResultBuilderTest extends TestCase
             [
                 [
                     'id'              => 12,
-                    $this->field_hash => $first_value,
+                    ...$first_value,
                 ],
                 [
                     'id'              => 15,
-                    $this->field_hash => $second_value,
+                    ...$second_value,
                 ],
             ],
         );
@@ -121,8 +138,8 @@ final class FieldResultBuilderTest extends TestCase
                     ->inTracker($this->first_tracker)
                     ->build()
             ),
-            12,
-            25,
+            [$this->field_hash => 12],
+            [$this->field_hash => 25],
         );
 
         self::assertNull($result->selected);
@@ -145,12 +162,36 @@ final class FieldResultBuilderTest extends TestCase
                     ->inTracker($this->second_tracker)
                     ->build(),
             ),
-            $first_date->getTimestamp(),
-            $second_date->getTimestamp(),
+            [$this->field_hash => $first_date->getTimestamp()],
+            [$this->field_hash => $second_date->getTimestamp()],
         );
 
         self::assertEquals(
             new CrossTrackerSelectedRepresentation(self::FIELD_NAME, CrossTrackerSelectedType::TYPE_DATE),
+            $result->selected,
+        );
+        self::assertCount(2, $result->values);
+    }
+
+    public function testItReturnsValuesForTextField(): void
+    {
+        $result = $this->getSelectedResult(
+            RetrieveUsedFieldsStub::withFields(
+                TextFieldBuilder::aTextField(self::FIRST_FIELD_ID)
+                    ->withName(self::FIELD_NAME)
+                    ->inTracker($this->first_tracker)
+                    ->build(),
+                TextFieldBuilder::aTextField(self::SECOND_FIELD_ID)
+                    ->withName(self::FIELD_NAME)
+                    ->inTracker($this->second_tracker)
+                    ->build(),
+            ),
+            [$this->field_hash => '499P', "format_$this->field_hash" => 'text'],
+            [$this->field_hash => 'V-Series.R', "format_$this->field_hash" => 'commonmark'],
+        );
+
+        self::assertEquals(
+            new CrossTrackerSelectedRepresentation(self::FIELD_NAME, CrossTrackerSelectedType::TYPE_TEXT),
             $result->selected,
         );
         self::assertCount(2, $result->values);
