@@ -20,11 +20,17 @@
 
 declare(strict_types=1);
 
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
-final class Cardwall_OnTop_Config_Command_UpdateMappingFields_UpdateValuesTest extends Cardwall_OnTop_Config_Command_UpdateMappingFieldsTestBase
+namespace Tuleap\Cardwall\OnTop\Config\Command;
+
+use HTTPRequest;
+use TestHelper;
+use Tuleap\GlobalLanguageMock;
+use Tuleap\GlobalResponseMock;
+
+final class Cardwall_OnTop_Config_Command_UpdateMappingFields_UpdateValuesTest extends Cardwall_OnTop_Config_Command_UpdateMappingFieldsTestBase // phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 {
-    use \Tuleap\GlobalResponseMock;
-    use \Tuleap\GlobalLanguageMock;
+    use GlobalResponseMock;
+    use GlobalLanguageMock;
 
     public function testItUpdatesMappingFieldValues(): void
     {
@@ -33,7 +39,7 @@ final class Cardwall_OnTop_Config_Command_UpdateMappingFields_UpdateValuesTest e
             'mapping_field',
             [
                 '69' => [
-                    'field' => '321',
+                    'field'  => '321',
                     'values' => [
                         '11' => [
                             '9001',
@@ -43,16 +49,18 @@ final class Cardwall_OnTop_Config_Command_UpdateMappingFields_UpdateValuesTest e
                 ],
             ]
         );
-        $this->dao->shouldReceive('searchMappingFields')->with($this->tracker_id)->andReturns(TestHelper::arrayToDar(
-            [
-                'cardwall_tracker_id' => 666,
-                'tracker_id'          => 69,
-                'field_id'            => 321,
-            ]
-        ));
-        $this->value_dao->shouldReceive('deleteAllFieldValues')->with($this->tracker_id, 69, 321, 11)->once();
-        $this->value_dao->shouldReceive('save')->with($this->tracker_id, 69, 321, 9001, 11)->once();
-        $this->value_dao->shouldReceive('save')->with($this->tracker_id, 69, 321, 9002, 11)->once();
+        $this->dao->method('searchMappingFields')->with($this->tracker_id)->willReturn(TestHelper::arrayToDar([
+            'cardwall_tracker_id' => 666,
+            'tracker_id'          => 69,
+            'field_id'            => 321,
+        ]));
+        $this->value_dao->expects(self::once())->method('deleteAllFieldValues')->with($this->tracker_id, 69, 321, 11);
+        $this->value_dao->expects(self::exactly(2))
+            ->method('save')
+            ->withConsecutive(
+                [$this->tracker_id, 69, 321, 9001, 11],
+                [$this->tracker_id, 69, 321, 9002, 11],
+            );
         $this->command->execute($request);
     }
 
@@ -63,7 +71,7 @@ final class Cardwall_OnTop_Config_Command_UpdateMappingFields_UpdateValuesTest e
             'mapping_field',
             [
                 '69' => [
-                    'field' => '321',
+                    'field'  => '321',
                     'values' => [
                         '11' => [
                             '9001',
@@ -73,17 +81,17 @@ final class Cardwall_OnTop_Config_Command_UpdateMappingFields_UpdateValuesTest e
                 ],
             ]
         );
-        $this->dao->shouldReceive('searchMappingFields')->with($this->tracker_id)->andReturns(TestHelper::arrayToDar(
+        $this->dao->method('searchMappingFields')->with($this->tracker_id)->willReturn(TestHelper::arrayToDar(
             [
                 'cardwall_tracker_id' => 666,
                 'tracker_id'          => 69,
                 'field_id'            => 666,
             ]
         ));
-        $this->dao->shouldReceive('save')->andReturns(true);
-        $this->value_dao->shouldReceive('delete')->with($this->tracker_id, 69)->once();
-        $this->value_dao->shouldReceive('deleteAllFieldValues')->never();
-        $this->value_dao->shouldReceive('save')->never();
+        $this->dao->method('save')->willReturn(true);
+        $this->value_dao->expects(self::once())->method('delete')->with($this->tracker_id, 69);
+        $this->value_dao->expects(self::never())->method('deleteAllFieldValues');
+        $this->value_dao->expects(self::never())->method('save');
         $this->command->execute($request);
     }
 }

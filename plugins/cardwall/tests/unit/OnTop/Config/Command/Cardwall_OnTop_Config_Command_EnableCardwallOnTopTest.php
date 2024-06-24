@@ -20,35 +20,40 @@
 
 declare(strict_types=1);
 
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
-final class Cardwall_OnTop_Config_Command_EnableCardwallOnTopTest extends \Tuleap\Test\PHPUnit\TestCase
+namespace Tuleap\Cardwall\OnTop\Config\Command;
+
+use Cardwall_OnTop_Config_Command_EnableCardwallOnTop;
+use Cardwall_OnTop_Dao;
+use HTTPRequest;
+use PHPUnit\Framework\MockObject\MockObject;
+use Tuleap\GlobalLanguageMock;
+use Tuleap\GlobalResponseMock;
+use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
+
+final class Cardwall_OnTop_Config_Command_EnableCardwallOnTopTest extends TestCase // phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-    use \Tuleap\GlobalResponseMock;
-    use \Tuleap\GlobalLanguageMock;
+    use GlobalResponseMock;
+    use GlobalLanguageMock;
 
     private int $tracker_id;
-    private $dao;
+    private Cardwall_OnTop_Dao&MockObject $dao;
     private Cardwall_OnTop_Config_Command_EnableCardwallOnTop $command;
 
     protected function setUp(): void
     {
-        parent::setUp();
-
         $this->tracker_id = 666;
-
-        $tracker = \Tuleap\Tracker\Test\Builders\TrackerTestBuilder::aTracker()->withId($this->tracker_id)->build();
-
-        $this->dao     = \Mockery::spy(\Cardwall_OnTop_Dao::class);
-        $this->command = new Cardwall_OnTop_Config_Command_EnableCardwallOnTop($tracker, $this->dao);
+        $tracker          = TrackerTestBuilder::aTracker()->withId($this->tracker_id)->build();
+        $this->dao        = $this->createMock(Cardwall_OnTop_Dao::class);
+        $this->command    = new Cardwall_OnTop_Config_Command_EnableCardwallOnTop($tracker, $this->dao);
     }
 
     public function testItEnablesIfItIsNotAlreadyTheCase(): void
     {
         $request = new HTTPRequest();
         $request->set('cardwall_on_top', '1');
-        $this->dao->shouldReceive('isEnabled')->with($this->tracker_id)->andReturns(false);
-        $this->dao->shouldReceive('enable')->once($this->tracker_id);
+        $this->dao->method('isEnabled')->with($this->tracker_id)->willReturn(false);
+        $this->dao->expects(self::once())->method('enable')->with($this->tracker_id);
 
         $this->command->execute($request);
     }
@@ -57,8 +62,8 @@ final class Cardwall_OnTop_Config_Command_EnableCardwallOnTopTest extends \Tulea
     {
         $request = new HTTPRequest();
         $request->set('cardwall_on_top', '1');
-        $this->dao->shouldReceive('isEnabled')->with($this->tracker_id)->andReturns(true);
-        $this->dao->shouldReceive('enable')->never();
+        $this->dao->method('isEnabled')->with($this->tracker_id)->willReturn(true);
+        $this->dao->expects(self::never())->method('enable');
 
         $this->command->execute($request);
     }
@@ -67,8 +72,8 @@ final class Cardwall_OnTop_Config_Command_EnableCardwallOnTopTest extends \Tulea
     {
         $request = new HTTPRequest();
         $request->set('cardwall_on_top', '0');
-        $this->dao->shouldReceive('isEnabled')->with($this->tracker_id)->andReturns(true);
-        $this->dao->shouldReceive('disable')->once($this->tracker_id);
+        $this->dao->method('isEnabled')->with($this->tracker_id)->willReturn(true);
+        $this->dao->expects(self::once())->method('disable')->with($this->tracker_id);
 
         $this->command->execute($request);
     }
@@ -77,8 +82,8 @@ final class Cardwall_OnTop_Config_Command_EnableCardwallOnTopTest extends \Tulea
     {
         $request = new HTTPRequest();
         $request->set('cardwall_on_top', '0');
-        $this->dao->shouldReceive('isEnabled')->with($this->tracker_id)->andReturns(false);
-        $this->dao->shouldReceive('disable')->never();
+        $this->dao->method('isEnabled')->with($this->tracker_id)->willReturn(false);
+        $this->dao->expects(self::never())->method('disable');
 
         $this->command->execute($request);
     }

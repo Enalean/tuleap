@@ -20,51 +20,51 @@
 
 declare(strict_types=1);
 
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
-final class Cardwall_OnTop_Config_Command_DeleteMappingFieldsTest extends \Tuleap\Test\PHPUnit\TestCase
-{
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+namespace Tuleap\Cardwall\OnTop\Config\Command;
 
+use Cardwall_OnTop_ColumnMappingFieldDao;
+use Cardwall_OnTop_ColumnMappingFieldValueDao;
+use Cardwall_OnTop_Config_Command_DeleteMappingFields;
+use Cardwall_OnTop_Config_TrackerMappingFreestyle;
+use Cardwall_OnTop_Config_TrackerMappingNoField;
+use HTTPRequest;
+use LogicException;
+use PHPUnit\Framework\MockObject\MockObject;
+use TrackerFactory;
+use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
+
+final class Cardwall_OnTop_Config_Command_DeleteMappingFieldsTest extends TestCase // phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
+{
     private int $tracker_id;
-    /**
-     * @var Cardwall_OnTop_ColumnMappingFieldDao&\Mockery\MockInterface
-     */
-    private $dao;
-    /**
-     * @var Cardwall_OnTop_ColumnMappingFieldValueDao&\Mockery\MockInterface
-     */
-    private $value_dao;
+    private Cardwall_OnTop_ColumnMappingFieldDao&MockObject $dao;
+    private Cardwall_OnTop_ColumnMappingFieldValueDao&MockObject $value_dao;
     private Cardwall_OnTop_Config_Command_DeleteMappingFields $command;
 
     protected function setUp(): void
     {
-        parent::setUp();
-
         $this->tracker_id = 666;
-        $tracker          = \Mockery::spy(\Tracker::class);
-        $tracker->shouldReceive('getId')->andReturns($this->tracker_id);
+        $tracker          = TrackerTestBuilder::aTracker()->withId($this->tracker_id)->build();
+        $bug_tracker      = TrackerTestBuilder::aTracker()->withId(13)->build();
+        $task_tracker     = TrackerTestBuilder::aTracker()->withId(42)->build();
+        $story_tracker    = TrackerTestBuilder::aTracker()->withId(69)->build();
 
-        $bug_tracker = \Mockery::spy(\Tracker::class);
-        $bug_tracker->shouldReceive('getId')->andReturns(13);
-
-        $task_tracker = \Mockery::spy(\Tracker::class);
-        $task_tracker->shouldReceive('getId')->andReturns(42);
-
-        $story_tracker = \Mockery::spy(\Tracker::class);
-        $story_tracker->shouldReceive('getId')->andReturns(69);
-
-        $tracker_factory = \Mockery::spy(\TrackerFactory::class);
-        $tracker_factory->shouldReceive('getTrackerById')->with(13)->andReturns($bug_tracker);
-        $tracker_factory->shouldReceive('getTrackerById')->with(42)->andReturns($task_tracker);
-        $tracker_factory->shouldReceive('getTrackerById')->with(69)->andReturns($story_tracker);
+        $tracker_factory = $this->createMock(TrackerFactory::class);
+        $tracker_factory->method('getTrackerById')->willReturnCallback(fn(int $tracker_id) => match ($tracker_id) {
+            13      => $bug_tracker,
+            42      => $task_tracker,
+            69      => $story_tracker,
+            default => throw new LogicException("Should not have been called with $tracker_id"),
+        });
 
         $existing_mappings = [
             13 => new Cardwall_OnTop_Config_TrackerMappingNoField($bug_tracker, []),
             42 => new Cardwall_OnTop_Config_TrackerMappingNoField($task_tracker, []),
-            69 => new Cardwall_OnTop_Config_TrackerMappingFreestyle($story_tracker, [], [], Mockery::mock(Tracker_FormElement_Field_Selectbox::class)),
+            69 => new Cardwall_OnTop_Config_TrackerMappingFreestyle($story_tracker, [], [], ListFieldBuilder::aListField(186)->build()),
         ];
-        $this->dao         = \Mockery::mock(\Cardwall_OnTop_ColumnMappingFieldDao::class);
-        $this->value_dao   = \Mockery::mock(\Cardwall_OnTop_ColumnMappingFieldValueDao::class);
+        $this->dao         = $this->createMock(Cardwall_OnTop_ColumnMappingFieldDao::class);
+        $this->value_dao   = $this->createMock(Cardwall_OnTop_ColumnMappingFieldValueDao::class);
         $this->command     = new Cardwall_OnTop_Config_Command_DeleteMappingFields($tracker, $this->dao, $this->value_dao, $tracker_factory, $existing_mappings);
     }
 
@@ -72,8 +72,8 @@ final class Cardwall_OnTop_Config_Command_DeleteMappingFieldsTest extends \Tulea
     {
         $request = new HTTPRequest();
         $request->set('custom_mapping', ['13' => '1', '42' => 0, '69' => 0]);
-        $this->dao->shouldReceive('delete')->with($this->tracker_id, 69)->once()->andReturns(true);
-        $this->value_dao->shouldReceive('delete')->with($this->tracker_id, 69)->once();
+        $this->dao->expects(self::once())->method('delete')->with($this->tracker_id, 69)->willReturn(true);
+        $this->value_dao->expects(self::once())->method('delete')->with($this->tracker_id, 69);
         $this->command->execute($request);
     }
 }

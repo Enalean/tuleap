@@ -20,20 +20,25 @@
 
 declare(strict_types=1);
 
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
-final class Cardwall_OnTop_Config_Command_UpdateMappingFields_UpdateValuesNoUpdateTest extends Cardwall_OnTop_Config_Command_UpdateMappingFieldsTestBase
+namespace Tuleap\Cardwall\OnTop\Config\Command;
+
+use Cardwall_OnTop_Config_Command_UpdateMappingFields;
+use Cardwall_OnTop_Config_TrackerMappingFreestyle;
+use Cardwall_OnTop_Config_TrackerMappingStatus;
+use Cardwall_OnTop_Config_ValueMapping;
+use HTTPRequest;
+use TestHelper;
+use Tracker_FormElement_Field_List_Bind_StaticValue;
+
+final class Cardwall_OnTop_Config_Command_UpdateMappingFields_UpdateValuesNoUpdateTest extends Cardwall_OnTop_Config_Command_UpdateMappingFieldsTestBase // phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 {
     protected function setUp(): void
     {
-        parent::setUp();
-
-        $this->dao->shouldReceive('searchMappingFields')->with($this->tracker_id)->andReturns(TestHelper::arrayToDar(
-            [
-                'cardwall_tracker_id' => 666,
-                'tracker_id'          => 69,
-                'field_id'            => 321,
-            ]
-        ));
+        $this->dao->method('searchMappingFields')->with($this->tracker_id)->willReturn(TestHelper::arrayToDar([
+            'cardwall_tracker_id' => 666,
+            'tracker_id'          => 69,
+            'field_id'            => 321,
+        ]));
 
         $existing_mappings = [
             42 => new Cardwall_OnTop_Config_TrackerMappingStatus($this->task_tracker, [], [], $this->status_field),
@@ -66,7 +71,7 @@ final class Cardwall_OnTop_Config_Command_UpdateMappingFields_UpdateValuesNoUpda
             'mapping_field',
             [
                 '69' => [
-                    'field' => '321',
+                    'field'  => '321',
                     'values' => [
                         '11' => [
                             '9001',
@@ -76,8 +81,8 @@ final class Cardwall_OnTop_Config_Command_UpdateMappingFields_UpdateValuesNoUpda
                 ],
             ]
         );
-        $this->value_dao->shouldReceive('deleteAllFieldValues')->never();
-        $this->value_dao->shouldReceive('save')->never();
+        $this->value_dao->expects(self::never())->method('deleteAllFieldValues');
+        $this->value_dao->expects(self::never())->method('save');
         $this->command->execute($request);
     }
 
@@ -88,7 +93,7 @@ final class Cardwall_OnTop_Config_Command_UpdateMappingFields_UpdateValuesNoUpda
             'mapping_field',
             [
                 '69' => [
-                    'field' => '321',
+                    'field'  => '321',
                     'values' => [
                         '11' => [
                             '9001',
@@ -99,8 +104,8 @@ final class Cardwall_OnTop_Config_Command_UpdateMappingFields_UpdateValuesNoUpda
                 ],
             ]
         );
-        $this->value_dao->shouldReceive('deleteAllFieldValues')->once();
-        $this->value_dao->shouldReceive('save')->times(3);
+        $this->value_dao->expects(self::once())->method('deleteAllFieldValues');
+        $this->value_dao->expects(self::exactly(3))->method('save');
         $this->command->execute($request);
     }
 
@@ -111,7 +116,7 @@ final class Cardwall_OnTop_Config_Command_UpdateMappingFields_UpdateValuesNoUpda
             'mapping_field',
             [
                 '69' => [
-                    'field' => '321',
+                    'field'  => '321',
                     'values' => [
                         '11' => [
                             '9001',
@@ -120,16 +125,13 @@ final class Cardwall_OnTop_Config_Command_UpdateMappingFields_UpdateValuesNoUpda
                 ],
             ]
         );
-        $this->value_dao->shouldReceive('deleteAllFieldValues')->once();
-        $this->value_dao->shouldReceive('save')->once();
+        $this->value_dao->expects(self::once())->method('deleteAllFieldValues');
+        $this->value_dao->expects(self::once())->method('save');
         $this->command->execute($request);
     }
 
     private function buildStaticListFieldValue(int $id): Tracker_FormElement_Field_List_Bind_StaticValue
     {
-        $value = Mockery::mock(Tracker_FormElement_Field_List_Bind_StaticValue::class);
-        $value->shouldReceive('getId')->andReturn($id);
-
-        return $value;
+        return new Tracker_FormElement_Field_List_Bind_StaticValue($id, 'label', '', 1, false);
     }
 }
