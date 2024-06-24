@@ -20,24 +20,28 @@
 
 declare(strict_types=1);
 
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
-final class Cardwall_OnTop_Config_Command_UpdateColumnsTest extends \Tuleap\Test\PHPUnit\TestCase
-{
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+namespace Tuleap\Cardwall\OnTop\Config\Command;
 
+use Cardwall_OnTop_ColumnDao;
+use Cardwall_OnTop_Config_Command_UpdateColumns;
+use HTTPRequest;
+use PHPUnit\Framework\MockObject\MockObject;
+use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
+
+final class Cardwall_OnTop_Config_Command_UpdateColumnsTest extends TestCase // phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
+{
     private int $tracker_id;
-    private $dao;
+    private Cardwall_OnTop_ColumnDao&MockObject $dao;
     private Cardwall_OnTop_Config_Command_UpdateColumns $command;
 
     protected function setUp(): void
     {
-        parent::setUp();
-
         $this->tracker_id = 666;
 
-        $tracker = \Tuleap\Tracker\Test\Builders\TrackerTestBuilder::aTracker()->withId($this->tracker_id)->build();
+        $tracker = TrackerTestBuilder::aTracker()->withId($this->tracker_id)->build();
 
-        $this->dao     = \Mockery::spy(\Cardwall_OnTop_ColumnDao::class);
+        $this->dao     = $this->createMock(Cardwall_OnTop_ColumnDao::class);
         $this->command = new Cardwall_OnTop_Config_Command_UpdateColumns($tracker, $this->dao);
     }
 
@@ -52,8 +56,12 @@ final class Cardwall_OnTop_Config_Command_UpdateColumnsTest extends \Tuleap\Test
                 14 => ['label' => 'Done', 'bgcolor' => '#16ed9d'],
             ]
         );
-        $this->dao->shouldReceive('save')->with($this->tracker_id, 12, 'Todo', 0, 0, 0)->once();
-        $this->dao->shouldReceive('save')->with($this->tracker_id, 14, 'Done', 22, 237, 157)->once();
+        $this->dao->expects(self::exactly(2))
+            ->method('save')
+            ->withConsecutive(
+                [$this->tracker_id, 12, 'Todo', 0, 0, 0],
+                [$this->tracker_id, 14, 'Done', 22, 237, 157],
+            );
         $this->command->execute($request);
     }
 }

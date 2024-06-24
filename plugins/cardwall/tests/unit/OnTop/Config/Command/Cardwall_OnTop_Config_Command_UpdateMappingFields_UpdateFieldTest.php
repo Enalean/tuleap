@@ -20,11 +20,17 @@
 
 declare(strict_types=1);
 
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
-final class Cardwall_OnTop_Config_Command_UpdateMappingFields_UpdateFieldTest extends Cardwall_OnTop_Config_Command_UpdateMappingFieldsTestBase
+namespace Tuleap\Cardwall\OnTop\Config\Command;
+
+use HTTPRequest;
+use TestHelper;
+use Tuleap\GlobalLanguageMock;
+use Tuleap\GlobalResponseMock;
+
+final class Cardwall_OnTop_Config_Command_UpdateMappingFields_UpdateFieldTest extends Cardwall_OnTop_Config_Command_UpdateMappingFieldsTestBase // phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 {
-    use \Tuleap\GlobalResponseMock;
-    use \Tuleap\GlobalLanguageMock;
+    use GlobalResponseMock;
+    use GlobalLanguageMock;
 
     public function testItUpdatesMappingFields(): void
     {
@@ -40,7 +46,7 @@ final class Cardwall_OnTop_Config_Command_UpdateMappingFields_UpdateFieldTest ex
                 ],
             ]
         );
-        $this->dao->shouldReceive('searchMappingFields')->with($this->tracker_id)->andReturns(TestHelper::arrayToDar(
+        $this->dao->method('searchMappingFields')->with($this->tracker_id)->willReturn(TestHelper::arrayToDar(
             [
                 'cardwall_tracker_id' => 666,
                 'tracker_id'          => 42,
@@ -52,8 +58,13 @@ final class Cardwall_OnTop_Config_Command_UpdateMappingFields_UpdateFieldTest ex
                 'field_id'            => null,
             ]
         ));
-        $this->dao->shouldReceive('save')->with($this->tracker_id, 42, 123)->once()->andReturns(true);
-        $this->dao->shouldReceive('save')->with($this->tracker_id, 69, 321)->once()->andReturns(true);
+        $this->dao->expects(self::exactly(2))->method('save')
+            ->withConsecutive(
+                [$this->tracker_id, 42, 123],
+                [$this->tracker_id, 69, 321],
+            )
+            ->willReturn(true);
+        $this->value_dao->method('delete');
         $this->command->execute($request);
     }
 
@@ -71,7 +82,7 @@ final class Cardwall_OnTop_Config_Command_UpdateMappingFields_UpdateFieldTest ex
                 ],
             ]
         );
-        $this->dao->shouldReceive('searchMappingFields')->with($this->tracker_id)->andReturns(TestHelper::arrayToDar(
+        $this->dao->method('searchMappingFields')->with($this->tracker_id)->willReturn(TestHelper::arrayToDar(
             [
                 'cardwall_tracker_id' => 666,
                 'tracker_id'          => 42,
@@ -83,7 +94,7 @@ final class Cardwall_OnTop_Config_Command_UpdateMappingFields_UpdateFieldTest ex
                 'field_id'            => 321,
             ]
         ));
-        $this->dao->shouldReceive('save')->with($this->tracker_id, 69, 322)->once();
+        $this->dao->expects(self::once())->method('save')->with($this->tracker_id, 69, 322);
         $this->command->execute($request);
     }
 }
