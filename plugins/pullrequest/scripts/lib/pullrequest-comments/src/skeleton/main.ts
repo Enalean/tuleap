@@ -17,7 +17,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export {
-    PullRequestCommentSkeletonComponent,
-    PULL_REQUEST_COMMENT_SKELETON_ELEMENT_TAG_NAME,
-} from "./PullRequestCommentSkeleton";
+import "./PullRequestCommentSkeleton";
+
+export { PULL_REQUEST_COMMENT_SKELETON_ELEMENT_TAG_NAME } from "./PullRequestCommentSkeleton";

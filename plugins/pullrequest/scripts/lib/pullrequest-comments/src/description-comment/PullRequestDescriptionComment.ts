@@ -75,7 +75,7 @@ export const renderDescriptionComment = (
     </div>
 `;
 
-export const PullRequestCommentDescriptionComponent = define<PullRequestDescriptionComment>({
+define<PullRequestDescriptionComment>({
     tag: PULL_REQUEST_COMMENT_DESCRIPTION_ELEMENT_TAG_NAME,
     description: (host, value) => value,
     controller: (host, value) => value,

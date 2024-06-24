@@ -86,7 +86,7 @@ export const renderSkeleton = (
     </div>
 `;
 
-export const PullRequestCommentSkeletonComponent = define<PullRequestCommentSkeleton>({
+define<PullRequestCommentSkeleton>({
     tag: PULL_REQUEST_COMMENT_SKELETON_ELEMENT_TAG_NAME,
     has_replies: true,
     render: renderSkeleton,

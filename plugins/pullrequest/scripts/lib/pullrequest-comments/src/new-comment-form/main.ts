@@ -17,10 +17,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export {
-    NewInlineCommentFormComponent,
-    PULL_REQUEST_NEW_COMMENT_FORM_ELEMENT_TAG_NAME,
-} from "./NewCommentForm";
+import "./NewCommentForm";
+
+export { PULL_REQUEST_NEW_COMMENT_FORM_ELEMENT_TAG_NAME } from "./NewCommentForm";
 
 export { NewCommentSaver } from "./NewCommentSaver";
 export { NewReplySaver } from "./NewReplySaver";
