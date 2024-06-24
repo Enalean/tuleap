@@ -20,20 +20,25 @@
 
 declare(strict_types=1);
 
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
-final class Cardwall_OnTop_Config_TrackerMappingStatusTest extends \Tuleap\Test\PHPUnit\TestCase
-{
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+namespace Tuleap\Cardwall\OnTop\Config;
 
+use Cardwall_Column;
+use Cardwall_OnTop_Config_TrackerMappingStatus;
+use Cardwall_OnTop_Config_ValueMapping;
+use Tracker_FormElement_Field_List_Bind_StaticValue;
+use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
+
+final class Cardwall_OnTop_Config_TrackerMappingStatusTest extends TestCase // phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
+{
     /**
-     * @var array<int,Cardwall_OnTop_Config_ValueMapping[]>
+     * @var array<int, Cardwall_OnTop_Config_ValueMapping[]>
      */
     private array $value_mappings;
 
     protected function setUp(): void
     {
-        parent::setUp();
-
         $value_none       = new Tracker_FormElement_Field_List_Bind_StaticValue(100, 'None', '', 0, 0);
         $value_todo       = new Tracker_FormElement_Field_List_Bind_StaticValue(101, 'Todo', '', 0, 0);
         $value_inprogress = new Tracker_FormElement_Field_List_Bind_StaticValue(102, 'In Progress', '', 0, 0);
@@ -55,50 +60,50 @@ final class Cardwall_OnTop_Config_TrackerMappingStatusTest extends \Tuleap\Test\
     public function testItReturnsAnEmptyLabelWhenThereIsNoValueMapping(): void
     {
         $value_mappings = [];
-        $mapping        = new Cardwall_OnTop_Config_TrackerMappingStatus(\Mockery::spy(\Tracker::class), [], $value_mappings, Mockery::mock(Tracker_FormElement_Field_Selectbox::class));
+        $mapping        = new Cardwall_OnTop_Config_TrackerMappingStatus(TrackerTestBuilder::aTracker()->build(), [], $value_mappings, ListFieldBuilder::aListField(875)->build());
         $column         = new Cardwall_Column(0, 'whatever', 'white');
-        $this->assertEquals('', $mapping->getSelectedValueLabel($column));
+        self::assertEquals('', $mapping->getSelectedValueLabel($column));
     }
 
     public function testItReturnsAnEmptyLabelWhenThereIsNoMappingForTheGivenColumn(): void
     {
-        $mapping                 = new Cardwall_OnTop_Config_TrackerMappingStatus(\Mockery::spy(\Tracker::class), [], $this->value_mappings, Mockery::mock(Tracker_FormElement_Field_Selectbox::class));
+        $mapping                 = new Cardwall_OnTop_Config_TrackerMappingStatus(TrackerTestBuilder::aTracker()->build(), [], $this->value_mappings, ListFieldBuilder::aListField(875)->build());
         $column_which_match      = new Cardwall_Column(11, 'Ongoing', 'white');
         $column_which_dont_match = new Cardwall_Column(13, 'Ship It', 'white');
-        $this->assertEquals('In Progress', $mapping->getSelectedValueLabel($column_which_match));
-        $this->assertEquals('', $mapping->getSelectedValueLabel($column_which_dont_match));
-        $this->assertEquals('Accept a default value', $mapping->getSelectedValueLabel($column_which_dont_match, 'Accept a default value'));
+        self::assertEquals('In Progress', $mapping->getSelectedValueLabel($column_which_match));
+        self::assertEquals('', $mapping->getSelectedValueLabel($column_which_dont_match));
+        self::assertEquals('Accept a default value', $mapping->getSelectedValueLabel($column_which_dont_match, 'Accept a default value'));
     }
 
     public function testItIsMappedToAColumnWhenTheStatusValueMatchColumnMapping(): void
     {
-        $mapping = new Cardwall_OnTop_Config_TrackerMappingStatus(\Mockery::spy(\Tracker::class), [], $this->value_mappings, Mockery::mock(Tracker_FormElement_Field_Selectbox::class));
+        $mapping = new Cardwall_OnTop_Config_TrackerMappingStatus(TrackerTestBuilder::aTracker()->build(), [], $this->value_mappings, ListFieldBuilder::aListField(875)->build());
 
         $column = new Cardwall_Column(11, 'Ongoing', '');
 
-        $this->assertTrue($mapping->isMappedTo($column, 'In Progress'));
-        $this->assertFalse($mapping->isMappedTo($column, 'Ongoing'));
-        $this->assertFalse($mapping->isMappedTo($column, 'Todo'));
-        $this->assertFalse($mapping->isMappedTo($column, null));
+        self::assertTrue($mapping->isMappedTo($column, 'In Progress'));
+        self::assertFalse($mapping->isMappedTo($column, 'Ongoing'));
+        self::assertFalse($mapping->isMappedTo($column, 'Todo'));
+        self::assertFalse($mapping->isMappedTo($column, null));
     }
 
     public function testItIsMappedToAColumnWhenStatusIsNullAndNoneIsMappedToColumn(): void
     {
-        $mapping = new Cardwall_OnTop_Config_TrackerMappingStatus(\Mockery::spy(\Tracker::class), [], $this->value_mappings, Mockery::mock(Tracker_FormElement_Field_Selectbox::class));
+        $mapping = new Cardwall_OnTop_Config_TrackerMappingStatus(TrackerTestBuilder::aTracker()->build(), [], $this->value_mappings, ListFieldBuilder::aListField(875)->build());
 
         $column = new Cardwall_Column(10, 'Todo', '');
 
-        $this->assertTrue($mapping->isMappedTo($column, null));
+        self::assertTrue($mapping->isMappedTo($column, null));
 
-        $this->assertFalse($mapping->isMappedTo($column, 'In Progress'));
+        self::assertFalse($mapping->isMappedTo($column, 'In Progress'));
     }
 
     public function testItDoesntMapOnNoneIfItsNotExplicitlyConfigured(): void
     {
-        $mapping = new Cardwall_OnTop_Config_TrackerMappingStatus(\Mockery::spy(\Tracker::class), [], $this->value_mappings, Mockery::mock(Tracker_FormElement_Field_Selectbox::class));
+        $mapping = new Cardwall_OnTop_Config_TrackerMappingStatus(TrackerTestBuilder::aTracker()->build(), [], $this->value_mappings, ListFieldBuilder::aListField(875)->build());
 
         $column = new Cardwall_Column(100, 'None', '');
 
-        $this->assertFalse($mapping->isMappedTo($column, null));
+        self::assertFalse($mapping->isMappedTo($column, null));
     }
 }
