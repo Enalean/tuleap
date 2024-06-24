@@ -52,7 +52,7 @@
                 v-bind:placeholder="$gettext('project-shortname')"
                 v-bind:minlength="min_project_length"
                 v-bind:maxlength="max_project_length"
-                v-on:input="updateProjectShortName($refs.shortname.value)"
+                v-on:input="updateProjectShortName(shortname ? shortname.value : '')"
                 v-bind:value="slugified_project_name"
                 data-test="new-project-shortname"
             />
@@ -60,7 +60,7 @@
                 <i class="far fa-fw fa-life-ring"></i>
                 <span v-translate>Must start with a letter, without spaces nor punctuation.</span>
             </p>
-            <p class="tlp-text-danger" v-if="has_slug_error">
+            <p class="tlp-text-danger" v-if="has_slug_error" data-test="has-error-slug">
                 <i class="fa fa-fw fa-exclamation-circle"></i>
                 <translate
                     v-bind:translate-params="{ min: min_project_length, max: max_project_length }"
@@ -72,122 +72,118 @@
         </div>
     </div>
 </template>
-<script lang="ts">
+<script setup lang="ts">
 import EventBus from "../../../helpers/event-bus";
 import slugify from "slugify";
-import Vue from "vue";
-import { Component } from "vue-property-decorator";
+import { computed, onBeforeUnmount, onMounted, ref } from "vue";
 import { useStore } from "../../../stores/root";
 
-@Component
-export default class ProjectShortName extends Vue {
-    root_store = useStore();
+const root_store = useStore();
 
-    override $refs!: {
-        shortname: HTMLFormElement;
-    };
+const shortname = ref<InstanceType<typeof HTMLFormElement>>();
 
-    project_name = "";
-    slugified_project_name = "";
-    has_slug_error = false;
-    is_in_edit_mode = false;
+const project_name = ref("");
+const slugified_project_name = ref("");
+const has_slug_error = ref(false);
+const is_in_edit_mode = ref(false);
 
-    min_project_length = 3;
-    max_project_length = 30;
+const min_project_length = ref(3);
+const max_project_length = ref(30);
 
-    get should_user_correct_shortname(): string {
-        if (this.shouldDisplayEditShortName()) {
-            return "project-short-name-edit-section";
-        }
-
-        return "project-short-name-hidden-section";
+const should_user_correct_shortname = computed((): string => {
+    if (shouldDisplayEditShortName()) {
+        return "project-short-name-edit-section";
     }
 
-    mounted(): void {
-        EventBus.$on("slugify-project-name", this.slugifyProjectShortName);
+    return "project-short-name-hidden-section";
+});
+
+onMounted(() => {
+    EventBus.$on("slugify-project-name", slugifyProjectShortName);
+});
+
+onBeforeUnmount((): void => {
+    EventBus.$off("slugify-project-name", slugifyProjectShortName);
+});
+
+function slugifyProjectShortName(value: string): void {
+    if (root_store.has_error || is_in_edit_mode.value) {
+        return;
     }
 
-    beforeDestroy(): void {
-        EventBus.$off("slugify-project-name", this.slugifyProjectShortName);
+    has_slug_error.value = false;
+    project_name.value = value;
+
+    slugify.extend({
+        "+": "-",
+        ".": "-",
+        "~": "-",
+        "(": "-",
+        ")": "-",
+        "!": "-",
+        ":": "-",
+        "@": "-",
+        '"': "-",
+        "'": "-",
+        "*": "-",
+        "©": "-",
+        "®": "-",
+        _: "-",
+    });
+    slugified_project_name.value = slugify(value, { lower: true })
+        .replace(/-+/, "-")
+        .slice(0, max_project_length.value);
+    checkValidity(slugified_project_name.value);
+
+    if (shortname.value) {
+        shortname.value.value = slugified_project_name.value;
     }
 
-    slugifyProjectShortName(value: string): void {
-        if (this.root_store.has_error || this.is_in_edit_mode) {
-            return;
-        }
+    EventBus.$emit("update-project-name", {
+        slugified_name: slugified_project_name.value,
+        name: project_name.value,
+    });
+}
 
-        this.has_slug_error = false;
-        this.project_name = value;
+function updateProjectShortName(value: string): void {
+    checkValidity(value);
+    slugified_project_name.value = value;
 
-        slugify.extend({
-            "+": "-",
-            ".": "-",
-            "~": "-",
-            "(": "-",
-            ")": "-",
-            "!": "-",
-            ":": "-",
-            "@": "-",
-            '"': "-",
-            "'": "-",
-            "*": "-",
-            "©": "-",
-            "®": "-",
-            _: "-",
-        });
-        this.slugified_project_name = slugify(value, { lower: true })
-            .replace(/-+/, "-")
-            .slice(0, this.max_project_length);
-        this.checkValidity(this.slugified_project_name);
+    EventBus.$emit("update-project-name", {
+        slugified_name: value,
+        name: project_name.value,
+    });
+}
 
-        this.$refs.shortname.value = this.slugified_project_name;
-
-        EventBus.$emit("update-project-name", {
-            slugified_name: this.slugified_project_name,
-            name: this.project_name,
-        });
+function checkValidity(value: string): void {
+    if (root_store.has_error) {
+        is_in_edit_mode.value = true;
+        has_slug_error.value = true;
+        root_store.resetError();
     }
 
-    updateProjectShortName(value: string): void {
-        this.checkValidity(value);
-        this.slugified_project_name = value;
-
-        EventBus.$emit("update-project-name", {
-            slugified_name: value,
-            name: this.project_name,
-        });
+    if (value.length < min_project_length.value || value.length > max_project_length.value) {
+        has_slug_error.value = true;
+        return;
     }
 
-    checkValidity(value: string): void {
-        if (this.root_store.has_error) {
-            this.is_in_edit_mode = true;
-            this.has_slug_error = true;
-            this.root_store.resetError();
-        }
+    const regexp = RegExp(/^[a-zA-Z][a-zA-Z0-9-]+$/);
+    has_slug_error.value = !regexp.test(value);
+}
 
-        if (value.length < this.min_project_length || value.length > this.max_project_length) {
-            this.has_slug_error = true;
-            return;
-        }
-
-        const regexp = RegExp(/^[a-zA-Z][a-zA-Z0-9-]+$/);
-        this.has_slug_error = !regexp.test(value);
+function shouldDisplaySlug(): boolean {
+    if (slugified_project_name.value.length === 0 || is_in_edit_mode.value) {
+        return false;
     }
 
-    shouldDisplaySlug(): boolean {
-        if (this.slugified_project_name.length === 0 || this.is_in_edit_mode) {
-            return false;
-        }
+    return !root_store.has_error;
+}
 
-        return !this.root_store.has_error;
+function shouldDisplayEditShortName(): boolean {
+    if (is_in_edit_mode.value) {
+        return true;
     }
 
-    shouldDisplayEditShortName(): boolean {
-        if (this.is_in_edit_mode) {
-            return true;
-        }
-
-        return this.root_store.has_error;
-    }
+    return root_store.has_error;
 }
 </script>

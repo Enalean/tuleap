@@ -22,18 +22,15 @@ import type { Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import { createProjectRegistrationLocalVue } from "../../../helpers/local-vue-for-tests";
 import ProjectShortName from "./ProjectShortName.vue";
-import type { DefaultData } from "vue/types/options";
 import EventBus from "../../../helpers/event-bus";
 import { defineStore } from "pinia";
 import { createTestingPinia } from "@pinia/testing";
 
 describe("ProjectShortName", () => {
-    async function createWrapper(
-        data: DefaultData<ProjectShortName>,
-    ): Promise<Wrapper<ProjectShortName>> {
+    async function createWrapper(error: boolean): Promise<Wrapper<Vue, Element>> {
         const useStore = defineStore("root", {
             getters: {
-                has_error: () => false,
+                has_error: () => error,
             },
         });
 
@@ -41,9 +38,6 @@ describe("ProjectShortName", () => {
         useStore(pinia);
 
         return shallowMount(ProjectShortName, {
-            data(): DefaultData<ProjectShortName> {
-                return { ...data };
-            },
             localVue: await createProjectRegistrationLocalVue(),
             pinia,
         });
@@ -51,12 +45,7 @@ describe("ProjectShortName", () => {
 
     describe("Slug display", () => {
         it(`Does not display anything if project shortname is empty`, async () => {
-            const data = {
-                slugified_project_name: "",
-                has_slug_error: false,
-                is_in_edit_mode: false,
-            };
-            const wrapper = await createWrapper(data);
+            const wrapper = await createWrapper(false);
             expect(wrapper.find("[data-test=project-shortname-slugified-section]").exists()).toBe(
                 false,
             );
@@ -66,17 +55,15 @@ describe("ProjectShortName", () => {
             ]);
         });
 
-        it(`Display the edit mode if user switched to edit short name mode`, async () => {
-            const data = {
-                slugified_project_name: "",
-                has_slug_error: false,
-                is_in_edit_mode: true,
-            };
-            const wrapper = await createWrapper(data);
+        it(`Display the edit mode when there is an error`, async () => {
+            const wrapper = await createWrapper(true);
 
             expect(wrapper.find("[data-test=project-shortname-slugified-section]").exists()).toBe(
                 false,
             );
+
+            await EventBus.$emit("slugify-project-name", "My");
+
             expect(wrapper.get("[data-test=project-shortname-edit-section]").classes()).toEqual([
                 "tlp-form-element",
                 "project-short-name-edit-section",
@@ -84,12 +71,9 @@ describe("ProjectShortName", () => {
         });
 
         it(`Displays slugged project name`, async () => {
-            const data = {
-                slugified_project_name: "my-short-name",
-                has_slug_error: false,
-                is_in_edit_mode: false,
-            };
-            const wrapper = await createWrapper(data);
+            const wrapper = await createWrapper(false);
+
+            await EventBus.$emit("slugify-project-name", "My project");
 
             expect(wrapper.find("[data-test=project-shortname-slugified-section]").exists()).toBe(
                 true,
@@ -105,83 +89,56 @@ describe("ProjectShortName", () => {
         it(`Has an error when shortname has less than 3 characters`, async () => {
             const event_bus_emit = jest.spyOn(EventBus, "$emit");
 
-            const data = {
-                slugified_project_name: "",
-                has_slug_error: false,
-                is_in_edit_mode: false,
-            };
-            const wrapper = await createWrapper(data);
+            const wrapper = await createWrapper(false);
 
-            EventBus.$emit("slugify-project-name", "My");
+            await EventBus.$emit("slugify-project-name", "My");
 
-            expect(wrapper.vm.$data.slugified_project_name).toBe("my");
-            expect(wrapper.vm.$data.has_slug_error).toBe(true);
+            expect(wrapper.find("[data-test=has-error-slug]").exists()).toBe(true);
 
             expect(event_bus_emit).toHaveBeenCalledWith("update-project-name", {
-                slugified_name: wrapper.vm.$data.slugified_project_name,
+                slugified_name: "my",
                 name: "My",
             });
         });
 
         it(`Has no error when shortname has exactly 30 characters`, async () => {
             const event_bus_emit = jest.spyOn(EventBus, "$emit");
+            const wrapper = await createWrapper(false);
 
-            const data = {
-                slugified_project_name: "",
-                has_slug_error: false,
-                is_in_edit_mode: false,
-            };
-            const wrapper = await createWrapper(data);
+            await EventBus.$emit("slugify-project-name", "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
 
-            EventBus.$emit("slugify-project-name", "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
-
-            expect(wrapper.vm.$data.slugified_project_name).toBe("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
-            expect(wrapper.vm.$data.has_slug_error).toBe(false);
+            expect(wrapper.find("[data-test=has-error-slug]").exists()).toBe(false);
 
             expect(event_bus_emit).toHaveBeenCalledWith("update-project-name", {
-                slugified_name: wrapper.vm.$data.slugified_project_name,
+                slugified_name: "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
                 name: "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
             });
         });
 
         it(`Truncates slugified shortname to 30 characters`, async () => {
             const event_bus_emit = jest.spyOn(EventBus, "$emit");
+            const wrapper = await createWrapper(false);
 
-            const data = {
-                slugified_project_name: "",
-                has_slug_error: false,
-                is_in_edit_mode: false,
-            };
-            const wrapper = await createWrapper(data);
+            await EventBus.$emit("slugify-project-name", "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaabbbbb");
 
-            EventBus.$emit("slugify-project-name", "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaabbbbb");
-
-            expect(wrapper.vm.$data.slugified_project_name).toBe("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
-            expect(wrapper.vm.$data.has_slug_error).toBe(false);
+            expect(wrapper.find("[data-test=has-error-slug]").exists()).toBe(false);
 
             expect(event_bus_emit).toHaveBeenCalledWith("update-project-name", {
-                slugified_name: wrapper.vm.$data.slugified_project_name,
+                slugified_name: "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
                 name: "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaabbbbb",
             });
         });
 
         it(`Has an error when shortname start by a numerical character`, async () => {
             const event_bus_emit = jest.spyOn(EventBus, "$emit");
+            const wrapper = await createWrapper(false);
 
-            const data = {
-                slugified_project_name: "",
-                has_slug_error: false,
-                is_in_edit_mode: false,
-            };
-            const wrapper = await createWrapper(data);
+            await EventBus.$emit("slugify-project-name", "0My project");
 
-            EventBus.$emit("slugify-project-name", "0My project");
-
-            expect(wrapper.vm.$data.slugified_project_name).toBe("0my-project");
-            expect(wrapper.vm.$data.has_slug_error).toBe(true);
+            expect(wrapper.find("[data-test=has-error-slug]").exists()).toBe(true);
 
             expect(event_bus_emit).toHaveBeenCalledWith("update-project-name", {
-                slugified_name: wrapper.vm.$data.slugified_project_name,
+                slugified_name: "0my-project",
                 name: "0My project",
             });
         });
@@ -189,19 +146,13 @@ describe("ProjectShortName", () => {
         it(`Store and validate the project name`, async () => {
             const event_bus_emit = jest.spyOn(EventBus, "$emit");
 
-            const data = {
-                slugified_project_name: "",
-                has_slug_error: false,
-                is_in_edit_mode: false,
-            };
-            const wrapper = await createWrapper(data);
-            EventBus.$emit("slugify-project-name", "my project name");
+            const wrapper = await createWrapper(false);
+            await EventBus.$emit("slugify-project-name", "my project name");
 
-            expect(wrapper.vm.$data.slugified_project_name).toBe("my-project-name");
-            expect(wrapper.vm.$data.has_slug_error).toBe(false);
+            expect(wrapper.find("[data-test=has-error-slug]").exists()).toBe(false);
 
             expect(event_bus_emit).toHaveBeenCalledWith("update-project-name", {
-                slugified_name: wrapper.vm.$data.slugified_project_name,
+                slugified_name: "my-project-name",
                 name: "my project name",
             });
         });
@@ -209,19 +160,13 @@ describe("ProjectShortName", () => {
         it(`Slugified project name handle correctly the accents`, async () => {
             const event_bus_emit = jest.spyOn(EventBus, "$emit");
 
-            const data = {
-                slugified_project_name: "",
-                has_slug_error: false,
-                is_in_edit_mode: false,
-            };
-            const wrapper = await createWrapper(data);
-            EventBus.$emit("slugify-project-name", "accentué ç è é ù ë");
+            const wrapper = await createWrapper(false);
+            await EventBus.$emit("slugify-project-name", "accentué ç è é ù ë");
 
-            expect(wrapper.vm.$data.slugified_project_name).toBe("accentue-c-e-e-u-e");
-            expect(wrapper.vm.$data.has_slug_error).toBe(false);
+            expect(wrapper.find("[data-test=has-error-slug]").exists()).toBe(false);
 
             expect(event_bus_emit).toHaveBeenCalledWith("update-project-name", {
-                slugified_name: wrapper.vm.$data.slugified_project_name,
+                slugified_name: "accentue-c-e-e-u-e",
                 name: "accentué ç è é ù ë",
             });
         });
@@ -229,19 +174,13 @@ describe("ProjectShortName", () => {
         it(`Slugified project name should be lower case`, async () => {
             const event_bus_emit = jest.spyOn(EventBus, "$emit");
 
-            const data = {
-                slugified_project_name: "",
-                has_slug_error: false,
-                is_in_edit_mode: false,
-            };
-            const wrapper = await createWrapper(data);
-            EventBus.$emit("slugify-project-name", "My Project Short Name");
+            const wrapper = await createWrapper(false);
+            await EventBus.$emit("slugify-project-name", "My Project Short Name");
 
-            expect(wrapper.vm.$data.slugified_project_name).toBe("my-project-short-name");
-            expect(wrapper.vm.$data.has_slug_error).toBe(false);
+            expect(wrapper.find("[data-test=has-error-slug]").exists()).toBe(false);
 
             expect(event_bus_emit).toHaveBeenCalledWith("update-project-name", {
-                slugified_name: wrapper.vm.$data.slugified_project_name,
+                slugified_name: "my-project-short-name",
                 name: "My Project Short Name",
             });
         });
@@ -249,57 +188,36 @@ describe("ProjectShortName", () => {
         it(`Slugified project name handle correctly the special characters`, async () => {
             const event_bus_emit = jest.spyOn(EventBus, "$emit");
 
-            const data = {
-                slugified_project_name: "",
-                has_slug_error: false,
-                is_in_edit_mode: false,
-            };
-            const wrapper = await createWrapper(data);
-            EventBus.$emit("slugify-project-name", "valid 11.11");
+            const wrapper = await createWrapper(false);
+            await EventBus.$emit("slugify-project-name", "valid 11.11");
 
-            expect(wrapper.vm.$data.slugified_project_name).toBe("valid-11-11");
-            expect(wrapper.vm.$data.has_slug_error).toBe(false);
+            expect(wrapper.find("[data-test=has-error-slug]").exists()).toBe(false);
 
             expect(event_bus_emit).toHaveBeenCalledWith("update-project-name", {
-                slugified_name: wrapper.vm.$data.slugified_project_name,
+                slugified_name: "valid-11-11",
                 name: "valid 11.11",
             });
         });
 
         it(`Slugified project name does not repeat replacement when special characters are siblings`, async () => {
             const event_bus_emit = jest.spyOn(EventBus, "$emit");
+            const wrapper = await createWrapper(false);
+            await EventBus.$emit("slugify-project-name", "valid'*_©®11");
 
-            const data = {
-                slugified_project_name: "",
-                has_slug_error: false,
-                is_in_edit_mode: false,
-            };
-            const wrapper = await createWrapper(data);
-            EventBus.$emit("slugify-project-name", "valid'*_©®11");
-
-            expect(wrapper.vm.$data.slugified_project_name).toBe("valid-11");
-            expect(wrapper.vm.$data.has_slug_error).toBe(false);
+            expect(wrapper.find("[data-test=has-error-slug]").exists()).toBe(false);
 
             expect(event_bus_emit).toHaveBeenCalledWith("update-project-name", {
-                slugified_name: wrapper.vm.$data.slugified_project_name,
+                slugified_name: "valid-11",
                 name: "valid'*_©®11",
             });
         });
 
         it(`Does not slugify in edit mode`, async () => {
             const event_bus_emit = jest.spyOn(EventBus, "$emit");
+            const wrapper = await createWrapper(false);
+            await EventBus.$emit("slugify-project-name", "test-project!!!!");
 
-            const data = {
-                slugified_project_name: "",
-                has_slug_error: false,
-                is_in_edit_mode: true,
-                project_name: "test-project",
-            };
-            const wrapper = await createWrapper(data);
-            EventBus.$emit("slugify-project-name", "test-project!!!!");
-
-            expect(wrapper.vm.$data.slugified_project_name).toBe("");
-            expect(wrapper.vm.$data.has_slug_error).toBe(false);
+            expect(wrapper.find("[data-test=has-error-slug]").exists()).toBe(false);
 
             expect(event_bus_emit).not.toHaveBeenCalledWith("update-project-name", {
                 slugified_name: "test-project!!!!",
@@ -311,26 +229,16 @@ describe("ProjectShortName", () => {
     describe("Project shortname update", () => {
         it(`Validate string but not calls slugify when shortname is in edit mode`, async () => {
             const event_bus_emit = jest.spyOn(EventBus, "$emit");
+            const wrapper = await createWrapper(false);
+            await EventBus.$emit("slugify-project-name", "Accentué ç è é ù ë");
 
-            const data = {
-                slugified_project_name: "my-short-name",
-                has_slug_error: false,
-                is_in_edit_mode: false,
-                project_name: "my-short-name",
-            };
-            const wrapper = await createWrapper(data);
-
-            wrapper.get("[data-test=new-project-shortname]").setValue("Original");
-
-            wrapper.get("[data-test=project-shortname-slugified-section]").trigger("click");
-
-            wrapper.get("[data-test=new-project-shortname]").setValue("Accentué ç è é ù ë");
-            expect(wrapper.vm.$data.slugified_project_name).toBe("Accentué ç è é ù ë");
-            expect(wrapper.vm.$data.has_slug_error).toBe(true);
+            await wrapper.get("[data-test=project-shortname-slugified-section]").trigger("click");
+            await wrapper.get("[data-test=new-project-shortname]").setValue("Accentué ç è é ù ë");
+            expect(wrapper.find("[data-test=has-error-slug]").exists()).toBe(true);
 
             expect(event_bus_emit).toHaveBeenCalledWith("update-project-name", {
                 slugified_name: "Accentué ç è é ù ë",
-                name: wrapper.vm.$data.project_name,
+                name: "Accentué ç è é ù ë",
             });
         });
     });
