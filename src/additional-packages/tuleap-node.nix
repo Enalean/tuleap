@@ -15,18 +15,13 @@ let
       mv node $out/node
     '';
   };
-  el7NodeBin = fetchNodeBin rec {
-    name = "node-v${version}-linux-x64-glibc-217";
-    url = "https://unofficial-builds.nodejs.org/download/release/v${version}/${name}.tar.xz";
-    hash = "sha256-DFsP9qtU/fUnqAJ6yL6y3gbJ4HfFXwa40Cz433bkSS8=";
-  };
-  el9NodeBin = fetchNodeBin rec {
+  nodeBin = fetchNodeBin rec {
     name = "node-v${version}-linux-x64";
     url = "https://nodejs.org/dist/v${version}/${name}.tar.xz";
     hash = "sha256-8lBpsZVWg4XeFy+7FyA9ulAEEgwhqve7Vfkim/rNhKA=";
   };
-  buildNodeRPM = { version, bin, dist, outputFolder }: pkgs.stdenvNoCC.mkDerivation {
-    pname = "tuleap-node-rpm-package-${dist}";
+  buildNodeRPM = { version, bin }: pkgs.stdenvNoCC.mkDerivation {
+    pname = "tuleap-node-rpm-package";
     inherit version;
     srcs = [
       "${bin}/node"
@@ -46,7 +41,6 @@ let
       rpmbuild \
         --define "node_version ${version}" \
         --define "nixpkgs_epoch .${nixpkgsPinEpoch}" \
-        --define "dist .${dist}" \
         --define "_sourcedir $(pwd)" \
         --dbpath="$(pwd)"/rpmdb \
         --define "%_topdir $(pwd)" \
@@ -57,26 +51,13 @@ let
     '';
 
     installPhase = ''
-      mkdir -p $out/${outputFolder}/
-      mv RPMS/x86_64/*.rpm $out/${outputFolder}/
+      mkdir -p $out/
+      mv RPMS/x86_64/*.rpm $out/
     '';
 
     dontFixUp = true;
   };
-in pkgs.symlinkJoin {
-  name = "all-tuleap-node-rpm-flavor";
-  paths = [
-    (buildNodeRPM {
-      inherit version;
-      bin = el7NodeBin;
-      dist = "el7";
-      outputFolder = "centos7";
-    })
-    (buildNodeRPM {
-      inherit version;
-      bin = el9NodeBin;
-      dist = "el9";
-      outputFolder = "el9";
-    })
-  ];
+in buildNodeRPM {
+    inherit version;
+    bin = nodeBin;
 }

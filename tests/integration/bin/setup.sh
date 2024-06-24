@@ -37,7 +37,7 @@ setup_database() {
         --tuleap-fqdn="localhost" \
         --site-admin-password="welcome0"
 
-    TLP_SYSTEMCTL=docker-centos7 /usr/share/tuleap/src/tuleap-cfg/tuleap-cfg.php setup:tuleap --force --tuleap-fqdn="localhost" --php-version=$PHP_VERSION
+    TLP_SYSTEMCTL=docker /usr/share/tuleap/src/tuleap-cfg/tuleap-cfg.php setup:tuleap --force --tuleap-fqdn="localhost" --php-version=$PHP_VERSION
     echo '$sys_logger_level = "debug";' >> /etc/tuleap/conf/local.inc
 
     PHP="$PHP_CLI" /usr/share/tuleap/tests/integration/bin/setup-db.php

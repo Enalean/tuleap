@@ -16,7 +16,7 @@ dnf install -y tuleap-plugin-agiledashboard \
   tuleap-plugin-svn \
   tuleap-plugin-hudson\*
 
-/usr/share/tuleap/tools/setup.el7.sh \
+/usr/share/tuleap/tools/setup.sh \
     --assumeyes \
     --configure \
     --mysql-server='localhost' \

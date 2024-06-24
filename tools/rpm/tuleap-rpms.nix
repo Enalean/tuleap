@@ -7,7 +7,7 @@
 
 let
   tuleapVersion = pkgs.lib.strings.fileContents ../../VERSION;
-  tuleapDist = if tuleapOS == "centos7" then "el7" else tuleapOS;
+  tuleapDist = tuleapOS;
 in pkgs.stdenvNoCC.mkDerivation {
   name = "tuleap-rpms";
 

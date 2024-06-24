@@ -29,7 +29,7 @@ if [ -z "$SRC_DIR" ]; then
 fi
 
 if [ -z "$OS" ]; then
-    >&2 echo "OS environment variable must be defined (centos7|el9)"
+    >&2 echo "OS environment variable must be defined (el9)"
     exit 1
 fi
 
@@ -58,10 +58,7 @@ nix-shell --pure -I nixpkgs="$clean_tuleap_sources/tools/utils/nix/pinned-nixpkg
         tools/utils/scripts/generated-files-builder.sh prod && \
         tools/rpm/build_all_rpm.sh $clean_tuleap_sources $rpms"
 
-if [ "$OS" == "centos7" ]; then
-    INSTALL_IMAGE=tuleap-installrpms:centos7
-    docker build --target interactive --tag $INSTALL_IMAGE -f "$SRC_DIR/tools/docker/install-rpms/centos7.dockerfile" "$SRC_DIR/tools/docker/install-rpms/"
-elif [ "$OS" == "el9" ]; then
+if [ "$OS" == "el9" ]; then
     INSTALL_IMAGE=tuleap-installrpms:el9
     docker build --target interactive --tag $INSTALL_IMAGE -f "$SRC_DIR/tools/docker/install-rpms/rockylinux9.dockerfile" "$SRC_DIR/tools/docker/install-rpms/"
 else
