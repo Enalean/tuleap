@@ -20,29 +20,32 @@
 
 declare(strict_types=1);
 
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
-final class Cardwall_OnTop_Config_Command_CreateColumnTest extends \Tuleap\Test\PHPUnit\TestCase
+namespace Tuleap\Cardwall\OnTop\Config\Command;
+
+use Cardwall_OnTop_ColumnDao;
+use Cardwall_OnTop_Config_Command_CreateColumn;
+use HTTPRequest;
+use PHPUnit\Framework\MockObject\MockObject;
+use Tuleap\GlobalLanguageMock;
+use Tuleap\GlobalResponseMock;
+use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
+
+final class Cardwall_OnTop_Config_Command_CreateColumnTest extends TestCase // phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-    use \Tuleap\GlobalResponseMock;
-    use \Tuleap\GlobalLanguageMock;
+    use GlobalResponseMock;
+    use GlobalLanguageMock;
 
     private int $tracker_id;
-    /**
-     * @var Cardwall_OnTop_ColumnDao&\Mockery\MockInterface
-     */
-    private $dao;
+    private Cardwall_OnTop_ColumnDao&MockObject $dao;
     private Cardwall_OnTop_Config_Command_CreateColumn $command;
 
     protected function setUp(): void
     {
-        parent::setUp();
-
         $this->tracker_id = 666;
-        $tracker          = \Mockery::spy(\Tracker::class);
-        $tracker->shouldReceive('getId')->andReturns($this->tracker_id);
+        $tracker          = TrackerTestBuilder::aTracker()->withId($this->tracker_id)->build();
 
-        $this->dao     = \Mockery::spy(\Cardwall_OnTop_ColumnDao::class);
+        $this->dao     = $this->createMock(Cardwall_OnTop_ColumnDao::class);
         $this->command = new Cardwall_OnTop_Config_Command_CreateColumn($tracker, $this->dao);
     }
 
@@ -50,7 +53,7 @@ final class Cardwall_OnTop_Config_Command_CreateColumnTest extends \Tuleap\Test\
     {
         $request = new HTTPRequest();
         $request->set('new_column', 'On Going');
-        $this->dao->shouldReceive('create')->with($this->tracker_id, 'On Going')->once();
+        $this->dao->expects(self::once())->method('create')->with($this->tracker_id, 'On Going');
         $this->command->execute($request);
     }
 }

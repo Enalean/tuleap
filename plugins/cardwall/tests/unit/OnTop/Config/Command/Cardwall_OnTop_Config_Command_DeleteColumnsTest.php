@@ -20,39 +20,39 @@
 
 declare(strict_types=1);
 
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
-final class Cardwall_OnTop_Config_Command_DeleteColumnsTest extends \Tuleap\Test\PHPUnit\TestCase
+namespace Tuleap\Cardwall\OnTop\Config\Command;
+
+use Cardwall_OnTop_ColumnDao;
+use Cardwall_OnTop_ColumnMappingFieldDao;
+use Cardwall_OnTop_ColumnMappingFieldValueDao;
+use Cardwall_OnTop_Config_Command_DeleteColumns;
+use HTTPRequest;
+use PHPUnit\Framework\MockObject\MockObject;
+use Tuleap\GlobalLanguageMock;
+use Tuleap\GlobalResponseMock;
+use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
+
+final class Cardwall_OnTop_Config_Command_DeleteColumnsTest extends TestCase // phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-    use \Tuleap\GlobalResponseMock;
-    use \Tuleap\GlobalLanguageMock;
+    use GlobalResponseMock;
+    use GlobalLanguageMock;
 
     private int $tracker_id;
-    /**
-     * @var Cardwall_OnTop_ColumnMappingFieldDao&\Mockery\MockInterface
-     */
-    private $field_dao;
-    /**
-     * @var Cardwall_OnTop_ColumnMappingFieldValueDao&\Mockery\MockInterface
-     */
-    private $value_dao;
-    /**
-     * @var Cardwall_OnTop_ColumnDao&\Mockery\MockInterface
-     */
-    private $dao;
+    private Cardwall_OnTop_ColumnMappingFieldDao&MockObject $field_dao;
+    private Cardwall_OnTop_ColumnMappingFieldValueDao&MockObject $value_dao;
+    private Cardwall_OnTop_ColumnDao&MockObject $dao;
     private Cardwall_OnTop_Config_Command_DeleteColumns $command;
 
     protected function setUp(): void
     {
-        parent::setUp();
-
         $this->tracker_id = 666;
-        $tracker          = \Mockery::spy(\Tracker::class)->shouldReceive('getId')->andReturns($this->tracker_id)->getMock();
+        $tracker          = TrackerTestBuilder::aTracker()->withId($this->tracker_id)->build();
 
-        $this->field_dao = \Mockery::spy(\Cardwall_OnTop_ColumnMappingFieldDao::class);
-        $this->value_dao = \Mockery::spy(\Cardwall_OnTop_ColumnMappingFieldValueDao::class);
+        $this->field_dao = $this->createMock(Cardwall_OnTop_ColumnMappingFieldDao::class);
+        $this->value_dao = $this->createMock(Cardwall_OnTop_ColumnMappingFieldValueDao::class);
 
-        $this->dao     = \Mockery::spy(\Cardwall_OnTop_ColumnDao::class);
+        $this->dao     = $this->createMock(Cardwall_OnTop_ColumnDao::class);
         $this->command = new Cardwall_OnTop_Config_Command_DeleteColumns($tracker, $this->dao, $this->field_dao, $this->value_dao);
     }
 
@@ -66,9 +66,9 @@ final class Cardwall_OnTop_Config_Command_DeleteColumnsTest extends \Tuleap\Test
                 14 => ['label' => ''],
             ]
         );
-        $this->field_dao->shouldReceive('deleteCardwall')->never();
-        $this->value_dao->shouldReceive('deleteForColumn')->with($this->tracker_id, 14)->once();
-        $this->dao->shouldReceive('delete')->with($this->tracker_id, 14)->once();
+        $this->field_dao->expects(self::never())->method('deleteCardwall');
+        $this->value_dao->expects(self::once())->method('deleteForColumn')->with($this->tracker_id, 14);
+        $this->dao->expects(self::once())->method('delete')->with($this->tracker_id, 14);
         $this->command->execute($request);
     }
 
@@ -83,11 +83,13 @@ final class Cardwall_OnTop_Config_Command_DeleteColumnsTest extends \Tuleap\Test
                 14 => ['label' => ''],
             ]
         );
-        $this->field_dao->shouldReceive('deleteCardwall')->never();
-        $this->value_dao->shouldReceive('deleteForColumn')->with($this->tracker_id, 13)->once();
-        $this->value_dao->shouldReceive('deleteForColumn')->with($this->tracker_id, 14)->once();
-        $this->dao->shouldReceive('delete')->with($this->tracker_id, 13)->once();
-        $this->dao->shouldReceive('delete')->with($this->tracker_id, 14)->once();
+        $this->field_dao->expects(self::never())->method('deleteCardwall');
+        $this->value_dao->expects(self::exactly(2))
+            ->method('deleteForColumn')
+            ->withConsecutive([$this->tracker_id, 13], [$this->tracker_id, 14]);
+        $this->dao->expects(self::exactly(2))
+            ->method('delete')
+            ->withConsecutive([$this->tracker_id, 13], [$this->tracker_id, 14]);
         $this->command->execute($request);
     }
 
@@ -95,9 +97,9 @@ final class Cardwall_OnTop_Config_Command_DeleteColumnsTest extends \Tuleap\Test
     {
         $request = new HTTPRequest();
         $request->set('column', [14 => ['label' => '']]);
-        $this->field_dao->shouldReceive('deleteCardwall')->with($this->tracker_id)->once();
-        $this->value_dao->shouldReceive('deleteForColumn')->with($this->tracker_id, 14)->once();
-        $this->dao->shouldReceive('delete')->with($this->tracker_id, 14)->once();
+        $this->field_dao->expects(self::once())->method('deleteCardwall')->with($this->tracker_id);
+        $this->value_dao->expects(self::once())->method('deleteForColumn')->with($this->tracker_id, 14);
+        $this->dao->expects(self::once())->method('delete')->with($this->tracker_id, 14);
         $this->command->execute($request);
     }
 
@@ -111,11 +113,13 @@ final class Cardwall_OnTop_Config_Command_DeleteColumnsTest extends \Tuleap\Test
                 13 => ['label' => ''],
             ]
         );
-        $this->field_dao->shouldReceive('deleteCardwall')->with($this->tracker_id)->once();
-        $this->value_dao->shouldReceive('deleteForColumn')->with($this->tracker_id, 12)->once();
-        $this->value_dao->shouldReceive('deleteForColumn')->with($this->tracker_id, 13)->once();
-        $this->dao->shouldReceive('delete')->with($this->tracker_id, 12)->once();
-        $this->dao->shouldReceive('delete')->with($this->tracker_id, 13)->once();
+        $this->field_dao->expects(self::once())->method('deleteCardwall')->with($this->tracker_id);
+        $this->value_dao->expects(self::exactly(2))
+            ->method('deleteForColumn')
+            ->withConsecutive([$this->tracker_id, 12], [$this->tracker_id, 13]);
+        $this->dao->expects(self::exactly(2))
+            ->method('delete')
+            ->withConsecutive([$this->tracker_id, 12], [$this->tracker_id, 13]);
         $this->command->execute($request);
     }
 }
