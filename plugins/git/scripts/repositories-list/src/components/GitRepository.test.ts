@@ -57,7 +57,7 @@ describe("GitRepository", () => {
         };
     });
 
-    async function instantiateComponent(): Promise<Wrapper<GitRepository>> {
+    async function instantiateComponent(): Promise<Wrapper<Vue>> {
         store = createStoreMock(store_options);
         return shallowMount(GitRepository, {
             propsData,

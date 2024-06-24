@@ -47,16 +47,16 @@
                     </h2>
                     <div class="git-repository-links-spacer"></div>
                     <pull-request-badge
-                        v-if="!isGitlabRepository()"
+                        v-if="!isGitlabRepository(props.repository)"
                         v-bind:number-pull-request="number_pull_requests()"
-                        v-bind:repository-id="repository.id"
+                        v-bind:repository-id="Number(repository.id)"
                     />
                     <div class="git-repository-card-last-update">
                         <i class="far fa-clock git-repository-card-last-update-icon"></i>
                         {{ formatted_last_update_date() }}
                     </div>
                     <a
-                        v-if="is_admin() && !isGitlabRepository()"
+                        v-if="is_admin() && !isGitlabRepository(props.repository)"
                         v-bind:href="repository_admin_url()"
                         class="git-repository-card-admin-link"
                         data-test="git-repository-card-admin-link"
@@ -67,7 +67,7 @@
                         ></i>
                     </a>
                     <git-lab-administration
-                        v-if="isGitlabRepository()"
+                        v-if="isGitlabRepository(props.repository)"
                         v-bind:is_admin="is_admin()"
                         v-bind:repository="repository"
                     />
@@ -76,14 +76,16 @@
                     class="tlp-pane-section git-repository-card-header"
                     v-if="
                         hasRepositoryDescription() ||
-                        isGitlabRepository() ||
-                        isRepositoryHandledByGerrit()
+                        isGitlabRepository(props.repository) ||
+                        isRepositoryHandledByGerrit(props.repository)
                     "
                 >
                     <p
                         v-if="hasRepositoryDescription()"
                         class="git-repository-card-description"
-                        v-bind:class="{ 'gitlab-description': isGitlabRepository() }"
+                        v-bind:class="{
+                            'gitlab-description': isGitlabRepository(props.repository),
+                        }"
                         data-test="git-repository-card-description"
                     >
                         {{ repository.description }}
@@ -93,20 +95,23 @@
                         class="git-repository-links-spacer"
                     ></div>
                     <i
-                        v-if="isRepositoryHandledByGerrit()"
+                        v-if="isRepositoryHandledByGerrit(props.repository)"
                         class="fas fa-tlp-gerrit git-gerrit-icon"
                         v-bind:title="$gettext('This repository is handled by Gerrit.')"
                         data-test="git-repository-card-gerrit-icon"
                     ></i>
                     <i
-                        v-if="isGitlabRepository()"
+                        v-if="isGitlabRepository(props.repository)"
                         class="fab fa-gitlab git-gitlab-icon"
                         v-bind:class="{ 'git-gitlab-icon-align-to-date': !is_admin() }"
                         v-bind:title="$gettext('This repository comes from GitLab.')"
                         data-test="git-repository-card-gitlab-icon"
                     ></i>
                     <i
-                        v-if="isGitlabRepository() && !isGitlabRepositoryWellConfigured()"
+                        v-if="
+                            isGitlabRepository(props.repository) &&
+                            !isGitlabRepositoryWellConfigured(props.repository)
+                        "
                         class="fas fa-exclamation-triangle git-gitlab-integration-not-well-configured"
                         v-bind:title="$gettext('Webhook must be regenerated.')"
                     ></i>
@@ -115,10 +120,7 @@
         </div>
     </section>
 </template>
-<script lang="ts">
-import Vue from "vue";
-import { Getter } from "vuex-class";
-import { Component, Prop } from "vue-property-decorator";
+<script setup lang="ts">
 import TimeAgo from "javascript-time-ago";
 import GitLabAdministration from "./GitLabAdministration.vue";
 import PullRequestBadge from "./PullRequestBadge.vue";
@@ -127,76 +129,79 @@ import { isRepositoryHandledByGerrit } from "../gerrit/gerrit-checker";
 import { getDashCasedLocale, getProjectId, getUserIsAdmin } from "../repository-list-presenter";
 import { getRepositoryListUrl } from "../breadcrumb-presenter";
 import type { FormattedGitLabRepository, Repository } from "../type";
+import { useGetters } from "vuex-composition-helpers";
+import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
 
+const gettext_provider = useGettext();
 const DEFAULT_DESCRIPTION = "-- Default description --";
 
-@Component({ components: { GitLabAdministration, PullRequestBadge } })
-export default class GitRepository extends Vue {
-    @Prop({ required: true })
-    readonly repository!: Repository | FormattedGitLabRepository;
+const { isFolderDisplayMode } = useGetters(["isFolderDisplayMode"]);
 
-    @Getter
-    readonly isFolderDisplayMode!: boolean;
+const props = defineProps<{
+    repository: Repository | FormattedGitLabRepository;
+}>();
 
-    isGitlabRepository(): boolean {
-        return isGitlabRepository(this.repository);
-    }
-    isGitlabRepositoryWellConfigured(): boolean {
-        return isGitlabRepositoryWellConfigured(this.repository);
-    }
-    isRepositoryHandledByGerrit(): boolean {
-        return isRepositoryHandledByGerrit(this.repository);
-    }
-    mustDisplayAdditionalInformation(): boolean {
-        return (
-            this.isRepositoryHandledByGerrit() ||
-            this.isGitlabRepository() ||
-            this.isGitlabRepositoryWellConfigured()
-        );
-    }
-    hasRepositoryDescription(): boolean {
-        return this.repository.description !== DEFAULT_DESCRIPTION;
-    }
-    repository_admin_url(): string {
-        return `/plugins/git/?action=repo_management&group_id=${getProjectId()}&repo_id=${
-            this.repository.id
-        }`;
-    }
-    is_admin(): boolean {
-        return getUserIsAdmin();
-    }
-    formatted_last_update_date(): string {
-        const date = new Date(this.repository.last_update_date);
-        const time_ago = new TimeAgo(getDashCasedLocale());
+function mustDisplayAdditionalInformation(): boolean {
+    return (
+        isRepositoryHandledByGerrit(props.repository) ||
+        isGitlabRepository(props.repository) ||
+        isGitlabRepositoryWellConfigured(props.repository)
+    );
+}
 
-        return this.$gettextInterpolate(this.$gettext("Updated %{time_ago}"), {
-            time_ago: time_ago.format(date),
-        });
-    }
-    isRepository(repository: Repository | FormattedGitLabRepository): repository is Repository {
-        return Object.prototype.hasOwnProperty.call(repository, "permissions");
-    }
-    number_pull_requests(): number {
-        if (this.isRepository(this.repository)) {
-            return Number.parseInt(this.repository.additional_information.opened_pull_requests, 10);
-        }
+function hasRepositoryDescription(): boolean {
+    return props.repository.description !== DEFAULT_DESCRIPTION;
+}
 
-        return 0;
+function repository_admin_url(): string {
+    return `/plugins/git/?action=repo_management&group_id=${getProjectId()}&repo_id=${
+        props.repository.id
+    }`;
+}
+
+function is_admin(): boolean {
+    return getUserIsAdmin();
+}
+
+function formatted_last_update_date(): string {
+    const date = new Date(props.repository.last_update_date);
+    const time_ago = new TimeAgo(getDashCasedLocale());
+
+    return gettext_provider.interpolate(gettext_provider.$gettext("Updated %{time_ago}"), {
+        time_ago: time_ago.format(date),
+    });
+}
+
+function isRepository(
+    repository: Repository | FormattedGitLabRepository,
+): repository is Repository {
+    return Object.prototype.hasOwnProperty.call(repository, "permissions");
+}
+
+function number_pull_requests(): number {
+    if (isRepository(props.repository)) {
+        return Number.parseInt(props.repository.additional_information.opened_pull_requests, 10);
     }
-    repository_label(): string {
-        return this.repository.label;
+
+    return 0;
+}
+
+function repository_label(): string {
+    return props.repository.label;
+}
+
+function is_in_folder(): number {
+    return props.repository.path_without_project.length;
+}
+
+function getRepositoryPath(): string {
+    if (isGitlabRepository(props.repository) && props.repository.gitlab_data) {
+        return props.repository.gitlab_data.gitlab_repository_url;
     }
-    is_in_folder(): number {
-        return this.repository.path_without_project.length;
-    }
-    getRepositoryPath(): string {
-        if (this.isGitlabRepository() && this.repository.gitlab_data) {
-            return this.repository.gitlab_data.gitlab_repository_url;
-        }
-        return getRepositoryListUrl() + this.repository.normalized_path;
-    }
-    folder_path(): string {
-        return this.repository.path_without_project + "/";
-    }
+    return getRepositoryListUrl() + props.repository.normalized_path;
+}
+
+function folder_path(): string {
+    return props.repository.path_without_project + "/";
 }
 </script>
