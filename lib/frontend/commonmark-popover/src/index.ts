@@ -17,4 +17,4 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export { CommonmarkPopover } from "./CommonmarkPopover";
+import "./CommonmarkPopover";

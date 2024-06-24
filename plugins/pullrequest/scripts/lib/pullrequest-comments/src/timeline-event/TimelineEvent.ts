@@ -43,7 +43,7 @@ type InternalTimelineEvent = Readonly<TimelineEvent> & {
 
 export type HostElement = InternalTimelineEvent & HTMLElement;
 
-export const TimelineEvent = define<InternalTimelineEvent>({
+define<InternalTimelineEvent>({
     tag: TAG,
     event: (host, value) => value,
     current_user: (host, value) => value,

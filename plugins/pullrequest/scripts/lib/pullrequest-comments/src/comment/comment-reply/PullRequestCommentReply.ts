@@ -63,7 +63,7 @@ export const element_height_descriptor = {
     },
 };
 
-export const PullRequestCommentReply = define<InternalPullRequestCommentReply>({
+define<InternalPullRequestCommentReply>({
     tag: TAG,
     is_last_reply: false,
     is_in_edition_mode: false,

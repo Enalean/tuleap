@@ -17,10 +17,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export {
-    PullRequestCommentDescriptionComponent,
-    PULL_REQUEST_COMMENT_DESCRIPTION_ELEMENT_TAG_NAME,
-} from "./PullRequestDescriptionComment";
+import "./PullRequestDescriptionComment";
+
+export { PULL_REQUEST_COMMENT_DESCRIPTION_ELEMENT_TAG_NAME } from "./PullRequestDescriptionComment";
 
 export type { PullRequestDescriptionCommentPresenter } from "./PullRequestDescriptionCommentPresenter";
 

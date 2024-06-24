@@ -55,7 +55,8 @@ export const after_render_once_descriptor = {
         host.controller.initEditionForm(host);
     },
 };
-export const EditionForm = define<InternalEditionForm>({
+
+define<InternalEditionForm>({
     tag: TAG,
     project_id: (host, value) => value,
     comment: (host, comment) => comment,

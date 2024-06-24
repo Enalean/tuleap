@@ -19,10 +19,9 @@
 
 import "./edition/EditionForm";
 import "./comment-reply/PullRequestCommentReply";
-export {
-    PullRequestCommentComponent,
-    PULL_REQUEST_COMMENT_ELEMENT_TAG_NAME,
-} from "./PullRequestComment";
+import "./PullRequestComment";
+
+export { PULL_REQUEST_COMMENT_ELEMENT_TAG_NAME } from "./PullRequestComment";
 export { PullRequestCommentController } from "./PullRequestCommentController";
 export { PullRequestCommentRepliesStore } from "./PullRequestCommentRepliesStore";
 

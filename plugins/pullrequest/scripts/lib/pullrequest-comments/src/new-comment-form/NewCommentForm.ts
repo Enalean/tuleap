@@ -52,7 +52,7 @@ export const form_height_descriptor = {
     },
 };
 
-export const NewInlineCommentFormComponent = define<NewCommentForm>({
+define<NewCommentForm>({
     tag: PULL_REQUEST_NEW_COMMENT_FORM_ELEMENT_TAG_NAME,
     post_rendering_callback: undefined,
     element_height: form_height_descriptor,
