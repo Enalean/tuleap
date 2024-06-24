@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) Enalean, 2024 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -17,8 +17,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { StrictInjectionKey } from "@tuleap/vue-strict-inject";
-import type { Query } from "./query/QueryRetriever";
-export const RETRIEVE_QUERY: StrictInjectionKey<Query> = Symbol("Query");
+import { defineComponent, h } from "vue";
+import { LazyboxStub } from "./LazyboxStub";
 
-export const USER_LOCALE_KEY: StrictInjectionKey<string> = Symbol("user_locale");
+export const LazyboxVueStub = defineComponent({
+    name: "LazyboxVueStub",
+    setup: () => LazyboxStub.build(),
+    render: () => h("span", undefined),
+});

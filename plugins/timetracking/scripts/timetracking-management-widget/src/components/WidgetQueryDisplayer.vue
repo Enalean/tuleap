@@ -28,6 +28,26 @@
                 <label class="tlp-label">{{ $gettext("To") }}</label>
                 <span data-test="end-date">{{ getQuery().end_date }}</span>
             </div>
+            <div class="tlp-property">
+                <label class="tlp-label">
+                    {{ $gettext("Users") }}
+                </label>
+                <div
+                    class="timetracking-management-query-displayer-avatar"
+                    data-test="users-displayer"
+                >
+                    <div
+                        class="tlp-avatar-small"
+                        v-for="user in getQuery().users_list"
+                        v-bind:key="user.id"
+                    >
+                        <img v-bind:src="user.avatar_url" data-test="img-avatar" />
+                    </div>
+                    <div v-if="getQuery().users_list.length === 0">
+                        {{ $gettext("No user selected") }}
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </template>
@@ -54,5 +74,10 @@ const { getQuery } = strictInject(RETRIEVE_QUERY);
 .timetracking-management-query-displayer-dates {
     display: flex;
     gap: var(--tlp-medium-spacing);
+}
+
+.timetracking-management-query-displayer-avatar {
+    display: flex;
+    gap: var(--tlp-small-spacing);
 }
 </style>

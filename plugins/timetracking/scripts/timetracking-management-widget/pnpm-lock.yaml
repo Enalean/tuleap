@@ -5,6 +5,15 @@ settings:
   excludeLinksFromLockfile: false
 
 dependencies:
+  '@tuleap/dom':
+    specifier: workspace:^
+    version: link:../../../../lib/frontend/dom
+  '@tuleap/lazybox':
+    specifier: workspace:*
+    version: link:../../../../lib/frontend/lazybox
+  '@tuleap/lazybox-users-autocomplete':
+    specifier: workspace:*
+    version: link:../../../../lib/frontend/lazybox-users-autocomplete
   '@tuleap/plugin-timetracking-predefined-time-periods':
     specifier: workspace:*
     version: link:../lib/predefined-time-periods
@@ -31,6 +40,9 @@ devDependencies:
   '@tuleap/build-system-configurator':
     specifier: workspace:*
     version: link:../../../../lib/frontend/build-system-configurator
+  '@tuleap/core-rest-api-types':
+    specifier: workspace:*
+    version: link:../../../../lib/frontend/rest-api-types
   '@tuleap/po-gettext-plugin':
     specifier: workspace:*
     version: link:../../../../lib/frontend/po-gettext-plugin

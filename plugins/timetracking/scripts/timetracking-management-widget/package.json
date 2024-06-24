@@ -6,6 +6,9 @@
   "private": true,
   "type": "module",
   "dependencies": {
+    "@tuleap/dom": "workspace:^",
+    "@tuleap/lazybox": "workspace:*",
+    "@tuleap/lazybox-users-autocomplete": "workspace:*",
     "@tuleap/plugin-timetracking-predefined-time-periods": "workspace:*",
     "@tuleap/plugin-timetracking-time-formatters": "workspace:^",
     "@tuleap/tlp": "workspace:*",
@@ -16,6 +19,7 @@
   },
   "devDependencies": {
     "@tuleap/build-system-configurator": "workspace:*",
+    "@tuleap/core-rest-api-types": "workspace:*",
     "@tuleap/po-gettext-plugin": "workspace:*",
     "@vitejs/plugin-vue": "^4.2.3",
     "@vue/test-utils": "^2.4.6"
