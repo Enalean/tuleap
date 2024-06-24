@@ -19,6 +19,7 @@
  */
 
 declare(strict_types=1);
+
 namespace Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Field\Text;
 
 use LogicException;
@@ -46,7 +47,10 @@ final readonly class TextResultBuilder
         $alias  = SelectResultKey::fromDuckTypedField($field);
 
         foreach ($select_results as $result) {
-            $id     = (int) $result['id'];
+            $id = (int) $result['id'];
+            if (isset($values[$id])) {
+                continue;
+            }
             $value  = $result[(string) $alias];
             $format = $result["format_$alias"];
 

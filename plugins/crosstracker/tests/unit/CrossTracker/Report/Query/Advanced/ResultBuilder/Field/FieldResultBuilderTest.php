@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Field;
 
+use Codendi_HTMLPurifier;
 use DateTime;
 use ForgeConfig;
 use PFUser;
@@ -29,6 +30,7 @@ use Tracker;
 use Tuleap\Config\ConfigurationVariables;
 use Tuleap\CrossTracker\Report\Query\Advanced\DuckTypedField\FieldTypeRetrieverWrapper;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Field\Date\DateResultBuilder;
+use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Field\Numeric\NumericResultBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Field\Text\TextResultBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\SelectedValuesCollection;
 use Tuleap\CrossTracker\REST\v1\Representation\CrossTrackerSelectedRepresentation;
@@ -42,7 +44,9 @@ use Tuleap\Tracker\Permission\FieldPermissionType;
 use Tuleap\Tracker\Permission\TrackersPermissionsRetriever;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Field;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\ArtifactLinkFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\DateFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\ExternalFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\FloatFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\IntFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\TextFieldBuilder;
@@ -79,7 +83,7 @@ final class FieldResultBuilderTest extends TestCase
         array $first_value,
         array $second_value,
     ): SelectedValuesCollection {
-        $purifier = \Codendi_HTMLPurifier::instance();
+        $purifier = Codendi_HTMLPurifier::instance();
         $builder  = new FieldResultBuilder(
             $fields_retriever,
             new FieldTypeRetrieverWrapper(RetrieveFieldTypeStub::withDetectionOfType()),
@@ -106,6 +110,7 @@ final class FieldResultBuilderTest extends TestCase
                     ),
                 ),
             ),
+            new NumericResultBuilder(),
         );
 
         return $builder->getResult(
@@ -114,11 +119,11 @@ final class FieldResultBuilderTest extends TestCase
             [$this->first_tracker, $this->second_tracker],
             [
                 [
-                    'id'              => 12,
+                    'id' => 12,
                     ...$first_value,
                 ],
                 [
-                    'id'              => 15,
+                    'id' => 15,
                     ...$second_value,
                 ],
             ],
@@ -129,17 +134,17 @@ final class FieldResultBuilderTest extends TestCase
     {
         $result = $this->getSelectedResult(
             RetrieveUsedFieldsStub::withFields(
-                IntFieldBuilder::anIntField(self::FIRST_FIELD_ID)
+                ExternalFieldBuilder::anExternalField(self::FIRST_FIELD_ID)
                     ->withName(self::FIELD_NAME)
                     ->inTracker($this->first_tracker)
                     ->build(),
-                FloatFieldBuilder::aFloatField(self::SECOND_FIELD_ID)
+                ArtifactLinkFieldBuilder::anArtifactLinkField(self::SECOND_FIELD_ID)
                     ->withName(self::FIELD_NAME)
                     ->inTracker($this->first_tracker)
                     ->build()
             ),
-            [$this->field_hash => 12],
-            [$this->field_hash => 25],
+            [$this->field_hash => null],
+            [$this->field_hash => null],
         );
 
         self::assertNull($result->selected);
@@ -192,6 +197,30 @@ final class FieldResultBuilderTest extends TestCase
 
         self::assertEquals(
             new CrossTrackerSelectedRepresentation(self::FIELD_NAME, CrossTrackerSelectedType::TYPE_TEXT),
+            $result->selected,
+        );
+        self::assertCount(2, $result->values);
+    }
+
+    public function testItReturnsValuesForNumericField(): void
+    {
+        $result = $this->getSelectedResult(
+            RetrieveUsedFieldsStub::withFields(
+                IntFieldBuilder::anIntField(self::FIRST_FIELD_ID)
+                    ->withName(self::FIELD_NAME)
+                    ->inTracker($this->first_tracker)
+                    ->build(),
+                FloatFieldBuilder::aFloatField(self::SECOND_FIELD_ID)
+                    ->withName(self::FIELD_NAME)
+                    ->inTracker($this->second_tracker)
+                    ->build(),
+            ),
+            ["int_$this->field_hash" => 42, "float_$this->field_hash" => null],
+            ["int_$this->field_hash" => null, "float_$this->field_hash" => 3.1415],
+        );
+
+        self::assertEquals(
+            new CrossTrackerSelectedRepresentation(self::FIELD_NAME, CrossTrackerSelectedType::TYPE_NUMERIC),
             $result->selected,
         );
         self::assertCount(2, $result->values);

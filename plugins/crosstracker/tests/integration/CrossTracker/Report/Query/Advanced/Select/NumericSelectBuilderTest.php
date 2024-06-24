@@ -25,38 +25,21 @@ namespace Tuleap\CrossTracker\Report\Query\Advanced\Select;
 use PFUser;
 use ProjectUGroup;
 use Tracker;
-use Tracker_FormElementFactory;
+use Tuleap\CrossTracker\CrossTrackerReport;
 use Tuleap\CrossTracker\Report\Query\Advanced\CrossTrackerFieldTestCase;
-use Tuleap\CrossTracker\Report\Query\Advanced\DuckTypedField\FieldTypeRetrieverWrapper;
-use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\CrossTrackerExpertQueryReportDao;
-use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Field\Date\DateSelectFromBuilder;
-use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Field\FieldSelectFromBuilder;
-use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Field\Numeric\NumericSelectFromBuilder;
-use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Field\StaticList\StaticListSelectFromBuilder;
-use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Field\Text\TextSelectFromBuilder;
-use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Field\UGroupList\UGroupListSelectFromBuilder;
-use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Field\UserList\UserListSelectFromBuilder;
-use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilderVisitor;
+use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Field\Numeric\NumericResultRepresentation;
+use Tuleap\CrossTracker\REST\v1\Representation\CrossTrackerReportContentRepresentation;
+use Tuleap\CrossTracker\Tests\Report\ArtifactReportFactoryInstantiator;
 use Tuleap\DB\DBFactory;
 use Tuleap\Test\Builders\CoreDatabaseBuilder;
-use Tuleap\Tracker\Permission\TrackersPermissionsRetriever;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\Field;
 use Tuleap\Tracker\Test\Builders\TrackerDatabaseBuilder;
-use function count;
-use function md5;
 
 final class NumericSelectBuilderTest extends CrossTrackerFieldTestCase
 {
-    private SelectBuilderVisitor $builder;
-    private CrossTrackerExpertQueryReportDao $dao;
     /**
      * @var Tracker[]
      */
     private array $trackers;
-    /**
-     * @var list<int>
-     */
-    private array $artifact_ids;
     /**
      * @var array<int, int|float|null>
      */
@@ -99,11 +82,6 @@ final class NumericSelectBuilderTest extends CrossTrackerFieldTestCase
         $release_artifact_empty_id     = $tracker_builder->buildArtifact($release_tracker->getId());
         $release_artifact_with_int_id  = $tracker_builder->buildArtifact($release_tracker->getId());
         $sprint_artifact_with_float_id = $tracker_builder->buildArtifact($sprint_tracker->getId());
-        $this->artifact_ids            = [
-            $release_artifact_empty_id,
-            $release_artifact_with_int_id,
-            $sprint_artifact_with_float_id,
-        ];
 
         $tracker_builder->buildLastChangeset($release_artifact_empty_id);
         $release_artifact_with_int_changeset  = $tracker_builder->buildLastChangeset($release_artifact_with_int_id);
@@ -125,74 +103,40 @@ final class NumericSelectBuilderTest extends CrossTrackerFieldTestCase
             $sprint_float_field_id,
             (float) $this->expected_values[$sprint_artifact_with_float_id],
         );
-
-
-        $this->builder = new SelectBuilderVisitor(
-            new FieldSelectFromBuilder(
-                Tracker_FormElementFactory::instance(),
-                new FieldTypeRetrieverWrapper(Tracker_FormElementFactory::instance()),
-                TrackersPermissionsRetriever::build(),
-                new DateSelectFromBuilder(),
-                new TextSelectFromBuilder(),
-                new NumericSelectFromBuilder(),
-                new StaticListSelectFromBuilder(),
-                new UGroupListSelectFromBuilder(),
-                new UserListSelectFromBuilder()
-            )
-        );
-        $this->dao     = new CrossTrackerExpertQueryReportDao();
     }
 
-    private function getQueryResults(): array
+    private function getQueryResults(CrossTrackerReport $report, PFUser $user): CrossTrackerReportContentRepresentation
     {
-        $select_from = $this->builder->buildSelectFrom(
-            [new Field('numeric_field')],
-            $this->trackers,
-            $this->user,
-        );
-
-        return $this->dao->searchArtifactsColumnsMatchingIds($select_from, $this->artifact_ids);
+        $result = (new ArtifactReportFactoryInstantiator())
+            ->getFactory()
+            ->getArtifactsMatchingReport($report, $user, 10, 0, false);
+        assert($result instanceof CrossTrackerReportContentRepresentation);
+        return $result;
     }
 
     public function testItReturnsColumns(): void
     {
-        $results          = $this->getQueryResults();
-        $hash             = md5('numeric_field');
-        $int_field_hash   = 'int_' . $hash;
-        $float_field_hash = 'float_' . $hash;
-        self::assertCount(count($this->artifact_ids), $results);
+        $result = $this->getQueryResults(
+            new CrossTrackerReport(
+                1,
+                "SELECT numeric_field WHERE numeric_field = '' OR numeric_field != ''",
+                $this->trackers,
+            ),
+            $this->user,
+        );
 
-        foreach ($results as $row) {
-            self::assertArrayHasKey($int_field_hash, $row);
-            self::assertArrayHasKey($float_field_hash, $row);
-            self::assertArrayHasKey('id', $row);
-            $this->assertIntValueCase($row, $int_field_hash, $float_field_hash);
-            $this->assertFloatValueCase($row, $int_field_hash, $float_field_hash);
-            $this->assertNullValueCase($row, $int_field_hash, $float_field_hash);
+        self::assertSame(3, $result->getTotalSize());
+        self::assertCount(1, $result->selected);
+        self::assertSame('numeric_field', $result->selected[0]->name);
+        self::assertSame('numeric', $result->selected[0]->type);
+        $values = [];
+        foreach ($result->artifacts as $artifact) {
+            self::assertCount(1, $artifact);
+            self::assertArrayHasKey('numeric_field', $artifact);
+            $value = $artifact['numeric_field'];
+            self::assertInstanceOf(NumericResultRepresentation::class, $value);
+            $values[] = $value->value;
         }
-    }
-
-    private function assertNullValueCase(array $row, string $int_field_hash, string $float_field_hash): void
-    {
-        if ($row[$int_field_hash] === null && $row[$float_field_hash] === null) {
-            self::assertNull($row[$int_field_hash]);
-            self::assertNull($row[$float_field_hash]);
-        }
-    }
-
-    private function assertIntValueCase(array $row, string $int_field_hash, string $float_field_hash): void
-    {
-        if ($row[$int_field_hash] !== null && $row[$float_field_hash] === null) {
-            self::assertSame($this->expected_values[$row['id']], $row[$int_field_hash]);
-            self::assertNull($row[$float_field_hash]);
-        }
-    }
-
-    private function assertFloatValueCase(array $row, string $int_field_hash, string $float_field_hash): void
-    {
-        if ($row[$int_field_hash] === null && $row[$float_field_hash] !== null) {
-            self::assertNull($row[$int_field_hash]);
-            self::assertSame($this->expected_values[$row['id']], $row[$float_field_hash]);
-        }
+        self::assertEqualsCanonicalizing(array_values($this->expected_values), $values);
     }
 }
