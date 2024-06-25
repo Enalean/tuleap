@@ -23,7 +23,7 @@ set -o nounset
 set -o pipefail
 
 declare -r tools_dir="$(/usr/bin/dirname "${BASH_SOURCE[0]}")"
-declare -r include="${tools_dir}/setup/el7/include"
+declare -r include="${tools_dir}/setup/include"
 
 . ${include}/define.sh
 . ${include}/messages.sh

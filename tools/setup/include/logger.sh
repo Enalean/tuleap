@@ -15,4 +15,3 @@ _logMessages() {
     local datelog=$(${date} --rfc-3339=seconds)
     echo "[${datelog}] ${@}\n" >> ${tuleap_log}
 }
-
