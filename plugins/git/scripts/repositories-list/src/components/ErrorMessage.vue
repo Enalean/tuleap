@@ -22,26 +22,24 @@
         {{ message() }}
     </div>
 </template>
-<script lang="ts">
+<script setup lang="ts">
 import { ERROR_TYPE_NO_GIT, ERROR_TYPE_UNKNOWN_ERROR } from "../constants";
-import { Component } from "vue-property-decorator";
-import Vue from "vue";
-import { Getter } from "vuex-class";
+import { useGetters, useState } from "vuex-composition-helpers";
+import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
 
-@Component
-export default class ErrorMessage extends Vue {
-    @Getter
-    readonly hasError!: boolean;
+const { $gettext } = useGettext();
 
-    message(): string {
-        switch (this.$store.state.error_message_type) {
-            case ERROR_TYPE_NO_GIT:
-                return this.$gettext("Git plugin is not activated");
-            case ERROR_TYPE_UNKNOWN_ERROR:
-                return this.$gettext("An error occurred during your last action.");
-            default:
-                return "";
-        }
+const { error_message_type } = useState(["error_message_type"]);
+const { hasError } = useGetters(["hasError"]);
+
+const message = (): string => {
+    switch (error_message_type.value) {
+        case ERROR_TYPE_NO_GIT:
+            return $gettext("Git plugin is not activated");
+        case ERROR_TYPE_UNKNOWN_ERROR:
+            return $gettext("An error occurred during your last action.");
+        default:
+            return "";
     }
-}
+};
 </script>
