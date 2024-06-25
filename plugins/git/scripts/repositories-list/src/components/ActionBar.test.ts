@@ -40,7 +40,7 @@ describe("ActionBar", () => {
         jest.spyOn(repo_list, "getUserIsAdmin").mockReturnValue(true);
     });
 
-    async function instantiateComponent(store_options: StoreOption): Promise<Wrapper<ActionBar>> {
+    async function instantiateComponent(store_options: StoreOption): Promise<Wrapper<Vue>> {
         const store = createStoreMock(store_options);
         return shallowMount(ActionBar, {
             mocks: { $store: store },
