@@ -115,9 +115,6 @@ describe(`Link field of Artifact Modal`, function () {
                     String(this.parent_artifact_id),
                     PARENT_TITLE,
                 ).click();
-                cy.getContains("[data-test=link-row]", PARENT_TITLE)
-                    .find("[data-test=link-type-select]")
-                    .select("is Child of");
             });
             cy.get("[data-test=artifact-modal-save-button]").click();
         });
