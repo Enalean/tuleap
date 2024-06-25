@@ -51,8 +51,12 @@ final readonly class DateResultBuilder
         $alias  = SelectResultKey::fromDuckTypedField($field);
 
         foreach ($select_results as $result) {
-            $id    = (int) $result['id'];
+            $id = (int) $result['id'];
+            if (isset($values[$id])) {
+                continue;
+            }
             $value = $result[(string) $alias];
+
             if (is_int($value)) {
                 $value = (new DateTimeImmutable("@$value"))
                     ->setTimezone(new DateTimeZone(TimezoneRetriever::getUserTimezone($user)))
