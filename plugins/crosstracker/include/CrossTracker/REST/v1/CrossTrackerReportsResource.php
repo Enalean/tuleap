@@ -67,6 +67,7 @@ use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata\TextSeman
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Field\Date\DateResultBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Field\FieldResultBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Field\Numeric\NumericResultBuilder;
+use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Field\StaticList\StaticListResultBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Field\Text\TextResultBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilderVisitor;
 use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Field\Date\DateSelectFromBuilder;
@@ -264,6 +265,7 @@ final class CrossTrackerReportsResource extends AuthenticatedResource
                         ),
                     ),
                     new NumericResultBuilder(),
+                    new StaticListResultBuilder(),
                 ),
             );
 

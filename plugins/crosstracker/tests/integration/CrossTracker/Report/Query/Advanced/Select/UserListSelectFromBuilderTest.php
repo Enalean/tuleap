@@ -129,8 +129,8 @@ final class UserListSelectFromBuilderTest extends CrossTrackerFieldTestCase
 
         $hash                  = md5('user_list_field');
         $this->expected_values = [
-            $release_artifact_with_static_list_id => ["user_$hash" => $this->alice->getId()],
-            $sprint_artifact_with_open_list_id    => ["user_open_list_value_$hash" => $bob->getEmail(), "user_$hash" => $project_admin->getId() ],
+            $release_artifact_with_static_list_id => ["user_list_value_$hash" => $this->alice->getId()],
+            $sprint_artifact_with_open_list_id    => ["user_list_open_$hash" => $bob->getEmail(), "user_list_value_$hash" => $project_admin->getId() ],
         ];
 
         $tracker_builder->buildListValue(
@@ -183,8 +183,8 @@ final class UserListSelectFromBuilderTest extends CrossTrackerFieldTestCase
     {
         $results         = $this->getQueryResults();
         $hash            = md5('user_list_field');
-        $list_field_hash = 'user_' . $hash;
-        $open_field_hash = 'user_open_list_value_' . $hash;
+        $list_field_hash = 'user_list_value_' . $hash;
+        $open_field_hash = 'user_list_open_' . $hash;
 
         self::assertCount(count($this->artifact_ids), $results);
 

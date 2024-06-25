@@ -26,37 +26,24 @@ use PFUser;
 use ProjectUGroup;
 use Tracker;
 use Tracker_FormElementFactory;
+use Tuleap\CrossTracker\CrossTrackerReport;
 use Tuleap\CrossTracker\Report\Query\Advanced\CrossTrackerFieldTestCase;
-use Tuleap\CrossTracker\Report\Query\Advanced\DuckTypedField\FieldTypeRetrieverWrapper;
-use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\CrossTrackerExpertQueryReportDao;
-use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Field\Date\DateSelectFromBuilder;
-use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Field\FieldSelectFromBuilder;
-use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Field\Numeric\NumericSelectFromBuilder;
-use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Field\StaticList\StaticListSelectFromBuilder;
-use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Field\Text\TextSelectFromBuilder;
-use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Field\UGroupList\UGroupListSelectFromBuilder;
-use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Field\UserList\UserListSelectFromBuilder;
-use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilderVisitor;
+use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Field\StaticList\StaticListRepresentation;
+use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Field\StaticList\StaticListValueRepresentation;
+use Tuleap\CrossTracker\REST\v1\Representation\CrossTrackerReportContentRepresentation;
+use Tuleap\CrossTracker\Tests\Report\ArtifactReportFactoryInstantiator;
 use Tuleap\DB\DBFactory;
 use Tuleap\Test\Builders\CoreDatabaseBuilder;
-use Tuleap\Tracker\Permission\TrackersPermissionsRetriever;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\Field;
 use Tuleap\Tracker\Test\Builders\TrackerDatabaseBuilder;
 
 final class StaticListSelectBuilderTest extends CrossTrackerFieldTestCase
 {
-    private SelectBuilderVisitor $builder;
-    private CrossTrackerExpertQueryReportDao $dao;
     /**
      * @var Tracker[]
      */
     private array $trackers;
     /**
-     * @var list<int>
-     */
-    private array $artifact_ids;
-    /**
-     * @var array<int, array<string, string>>
+     * @var array<int, StaticListValueRepresentation[]>
      */
     private array $expected_values;
     private PFUser $user;
@@ -81,24 +68,20 @@ final class StaticListSelectBuilderTest extends CrossTrackerFieldTestCase
             'list_field',
             Tracker_FormElementFactory::FIELD_SELECT_BOX_TYPE
         );
-
-
-        $release_bind_ids = $tracker_builder->buildValuesForStaticListField(
-            $release_static_list_field_id,
-            ['A110', 'A610']
-        );
-
-        $sprint_list_field_id = $tracker_builder->buildStaticListField(
+        $sprint_list_field_id         = $tracker_builder->buildStaticListField(
             $sprint_tracker->getId(),
             'list_field',
             Tracker_FormElementFactory::FIELD_OPEN_LIST_TYPE
         );
 
+        $release_bind_ids     = $tracker_builder->buildValuesForStaticListField(
+            $release_static_list_field_id,
+            ['A110', 'A610']
+        );
         $sprint_bind_list_ids = $tracker_builder->buildValuesForStaticListField(
             $sprint_list_field_id,
             ['Elan', 'Elise'],
         );
-
         $sprint_bind_open_ids = $tracker_builder->buildValuesForStaticOpenListField(
             $sprint_list_field_id,
             ['Europa'],
@@ -116,25 +99,18 @@ final class StaticListSelectBuilderTest extends CrossTrackerFieldTestCase
         $release_artifact_empty_id            = $tracker_builder->buildArtifact($release_tracker->getId());
         $release_artifact_with_static_list_id = $tracker_builder->buildArtifact($release_tracker->getId());
         $sprint_artifact_with_open_list_id    = $tracker_builder->buildArtifact($sprint_tracker->getId());
-        $this->artifact_ids                   = [
-            $release_artifact_empty_id,
-            $release_artifact_with_static_list_id,
-            $sprint_artifact_with_open_list_id,
-            $sprint_artifact_with_open_list_id,
-        ];
 
         $tracker_builder->buildLastChangeset($release_artifact_empty_id);
-        $release_artifact_with_list_changeset     = $tracker_builder->buildLastChangeset(
-            $release_artifact_with_static_list_id
-        );
-        $sprint_artifact_with_open_list_changeset = $tracker_builder->buildLastChangeset(
-            $sprint_artifact_with_open_list_id
-        );
+        $release_artifact_with_list_changeset     = $tracker_builder->buildLastChangeset($release_artifact_with_static_list_id);
+        $sprint_artifact_with_open_list_changeset = $tracker_builder->buildLastChangeset($sprint_artifact_with_open_list_id);
 
-        $hash                  = md5('list_field');
         $this->expected_values = [
-            $release_artifact_with_static_list_id => ["list_value_$hash" => 'A110'],
-            $sprint_artifact_with_open_list_id    => ["open_value_$hash" => 'Europa', "list_value_$hash" => 'Elan'],
+            $release_artifact_empty_id            => [],
+            $release_artifact_with_static_list_id => [new StaticListValueRepresentation('A110', null)],
+            $sprint_artifact_with_open_list_id    => [
+                new StaticListValueRepresentation('Elan', null),
+                new StaticListValueRepresentation('Europa', null),
+            ],
         ];
 
         $tracker_builder->buildListValue(
@@ -142,87 +118,51 @@ final class StaticListSelectBuilderTest extends CrossTrackerFieldTestCase
             $release_static_list_field_id,
             $release_bind_ids['A110']
         );
-
         $tracker_builder->buildListValue(
             $sprint_artifact_with_open_list_changeset,
             $sprint_list_field_id,
             $sprint_bind_list_ids['Elan']
         );
-
         $tracker_builder->buildOpenValue(
             $sprint_artifact_with_open_list_changeset,
             $sprint_list_field_id,
             $sprint_bind_open_ids['Europa'],
             true
         );
-
-
-        $this->builder = new SelectBuilderVisitor(
-            new FieldSelectFromBuilder(
-                Tracker_FormElementFactory::instance(),
-                new FieldTypeRetrieverWrapper(Tracker_FormElementFactory::instance()),
-                TrackersPermissionsRetriever::build(),
-                new DateSelectFromBuilder(),
-                new TextSelectFromBuilder(),
-                new NumericSelectFromBuilder(),
-                new StaticListSelectFromBuilder(),
-                new UGroupListSelectFromBuilder(),
-                new UserListSelectFromBuilder(),
-            )
-        );
-        $this->dao     = new CrossTrackerExpertQueryReportDao();
     }
 
-    private function getQueryResults(): array
+    private function getQueryResults(CrossTrackerReport $report, PFUser $user): CrossTrackerReportContentRepresentation
     {
-        $select_from = $this->builder->buildSelectFrom(
-            [new Field('list_field')],
-            $this->trackers,
-            $this->user,
-        );
-
-        return $this->dao->searchArtifactsColumnsMatchingIds($select_from, $this->artifact_ids);
+        $result = (new ArtifactReportFactoryInstantiator())
+            ->getFactory()
+            ->getArtifactsMatchingReport($report, $user, 10, 0, false);
+        assert($result instanceof CrossTrackerReportContentRepresentation);
+        return $result;
     }
 
     public function testItReturnsColumns(): void
     {
-        $results         = $this->getQueryResults();
-        $hash            = md5('list_field');
-        $list_field_hash = 'list_value_' . $hash;
-        $open_field_hash = 'open_value_' . $hash;
-        self::assertCount(count($this->artifact_ids), $results);
+        $result = $this->getQueryResults(
+            new CrossTrackerReport(
+                1,
+                "SELECT list_field WHERE list_field = '' OR list_field != ''",
+                $this->trackers,
+            ),
+            $this->user,
+        );
 
-        foreach ($results as $row) {
-            self::assertArrayHasKey($list_field_hash, $row);
-            self::assertArrayHasKey($open_field_hash, $row);
-            self::assertArrayHasKey('id', $row);
-            $this->assertListValueCase($row, $list_field_hash, $open_field_hash);
-            $this->assertOpenValueCase($row, $list_field_hash, $open_field_hash);
-            $this->assertNullValueCase($row, $list_field_hash, $open_field_hash);
+        self::assertSame(3, $result->getTotalSize());
+        self::assertCount(1, $result->selected);
+        self::assertSame('list_field', $result->selected[0]->name);
+        self::assertSame('list_static', $result->selected[0]->type);
+        $values = [];
+        foreach ($result->artifacts as $artifact) {
+            self::assertCount(1, $artifact);
+            self::assertArrayHasKey('list_field', $artifact);
+            $value = $artifact['list_field'];
+            self::assertInstanceOf(StaticListRepresentation::class, $value);
+            $values[] = $value->value;
         }
-    }
-
-    private function assertNullValueCase(array $row, string $list_field_hash, string $open_field_hash): void
-    {
-        if ($row[$list_field_hash] === null && $row[$open_field_hash] === null) {
-            self::assertNull($row[$list_field_hash]);
-            self::assertNull($row[$open_field_hash]);
-        }
-    }
-
-    private function assertListValueCase(array $row, string $list_field_hash, string $open_field_hash): void
-    {
-        if ($row[$list_field_hash] !== null && $row[$open_field_hash] === null) {
-            self::assertSame($this->expected_values[$row['id']][$list_field_hash], $row[$list_field_hash]);
-            self::assertNull($row[$open_field_hash]);
-        }
-    }
-
-    private function assertOpenValueCase(array $row, string $list_field_hash, string $open_field_hash): void
-    {
-        if ($row[$list_field_hash] === null && $row[$open_field_hash] !== null) {
-            self::assertNull($row[$list_field_hash]);
-            self::assertSame($this->expected_values[$row['id']][$open_field_hash], $row[$open_field_hash]);
-        }
+        self::assertEqualsCanonicalizing(array_values($this->expected_values), $values);
     }
 }

@@ -29,6 +29,7 @@ use Tuleap\CrossTracker\Report\Query\Advanced\DuckTypedField\Select\DuckTypedFie
 use Tuleap\CrossTracker\Report\Query\Advanced\DuckTypedField\Select\DuckTypedFieldTypeSelect;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Field\Date\DateResultBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Field\Numeric\NumericResultBuilder;
+use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Field\StaticList\StaticListResultBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Field\Text\TextResultBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\SelectedValuesCollection;
 use Tuleap\Tracker\FormElement\Field\RetrieveUsedFields;
@@ -46,6 +47,7 @@ final readonly class FieldResultBuilder
         private DateResultBuilder $date_builder,
         private TextResultBuilder $text_builder,
         private NumericResultBuilder $numeric_builder,
+        private StaticListResultBuilder $static_list_builder,
     ) {
     }
 
@@ -84,12 +86,12 @@ final readonly class FieldResultBuilder
     private function matchTypeToBuilder(DuckTypedFieldSelect $field, array $select_results, PFUser $user): SelectedValuesCollection
     {
         return match ($field->type) {
-            DuckTypedFieldTypeSelect::DATE      => $this->date_builder->getResult($field, $select_results, $user),
-            DuckTypedFieldTypeSelect::TEXT      => $this->text_builder->getResult($field, $select_results, $user),
-            DuckTypedFieldTypeSelect::NUMERIC   => $this->numeric_builder->getResult($field, $select_results),
-            DuckTypedFieldTypeSelect::STATIC_LIST,
+            DuckTypedFieldTypeSelect::DATE        => $this->date_builder->getResult($field, $select_results, $user),
+            DuckTypedFieldTypeSelect::TEXT        => $this->text_builder->getResult($field, $select_results, $user),
+            DuckTypedFieldTypeSelect::NUMERIC     => $this->numeric_builder->getResult($field, $select_results),
+            DuckTypedFieldTypeSelect::STATIC_LIST => $this->static_list_builder->getResult($field, $select_results),
             DuckTypedFieldTypeSelect::UGROUP_LIST,
-            DuckTypedFieldTypeSelect::USER_LIST => new SelectedValuesCollection(null, []),
+            DuckTypedFieldTypeSelect::USER_LIST   => new SelectedValuesCollection(null, []),
         };
     }
 }
