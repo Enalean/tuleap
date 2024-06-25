@@ -28,6 +28,7 @@ use Tracker_FormElement_Field_String;
 use Tracker_FormElementFactory;
 use Tracker_Semantic_Description;
 use Tracker_Semantic_Title;
+use Tuleap\Tracker\Artifact\GetFileUploadData;
 
 /**
  * @psalm-immutable
@@ -39,10 +40,11 @@ final readonly class DocumentTrackerRepresentation
         public string $label,
         public ?DocumentTrackerFieldRepresentation $title,
         public ?DocumentTrackerFieldRepresentation $description,
+        public ?DocumentTrackerFieldRepresentation $file,
     ) {
     }
 
-    public static function fromTracker(Tracker $tracker, PFUser $user): self
+    public static function fromTracker(GetFileUploadData $file_upload_provider, Tracker $tracker, PFUser $user): self
     {
         $title_field = Tracker_Semantic_Title::load($tracker)->getField();
         $title       = $title_field && $title_field instanceof Tracker_FormElement_Field_String && $title_field->userCanSubmit($user)
@@ -54,6 +56,12 @@ final readonly class DocumentTrackerRepresentation
             ? new DocumentTrackerFieldRepresentation($description_field->getId(), $description_field->getLabel(), Tracker_FormElementFactory::instance()->getType($title_field))
             : null;
 
-        return new self($tracker->getId(), $tracker->getName(), $title, $description);
+        $file_upload_data = $file_upload_provider->getFileUploadData($tracker, null, $user);
+
+        $file_field = $file_upload_data?->getField();
+        $file       = $file_field && $file_field->userCanSubmit($user)
+            ? new DocumentTrackerFieldRepresentation($file_field->getId(), $file_field->getLabel(), Tracker_FormElementFactory::instance()->getType($file_field))
+            : null;
+        return new self($tracker->getId(), $tracker->getName(), $title, $description, $file);
     }
 }

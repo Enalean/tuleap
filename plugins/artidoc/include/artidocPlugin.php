@@ -49,6 +49,14 @@ use Tuleap\Plugin\ListeningToEventClass;
 use Tuleap\Plugin\ListeningToEventName;
 use Tuleap\Request\CollectRoutesEvent;
 use Tuleap\Request\DispatchableWithRequest;
+use Tuleap\Tracker\Artifact\FileUploadDataProvider;
+use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldDetector;
+use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsDao;
+use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsRetriever;
+use Tuleap\Tracker\Workflow\SimpleMode\SimpleWorkflowDao;
+use Tuleap\Tracker\Workflow\SimpleMode\State\StateFactory;
+use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionExtractor;
+use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionRetriever;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/../../docman/include/docmanPlugin.php';
@@ -100,6 +108,7 @@ class ArtidocPlugin extends Plugin implements PluginWithConfigKeys
         $dao                 = new ArtidocDao();
         $logger              = BackendLogger::getDefaultLogger();
 
+        $form_element_factory = Tracker_FormElementFactory::instance();
         return new ArtidocController(
             new ArtidocRetriever(
                 ProjectManager::instance(),
@@ -114,12 +123,28 @@ class ArtidocPlugin extends Plugin implements PluginWithConfigKeys
             ),
             new SuitableTrackersForDocumentRetriever(
                 new SuitableTrackerForDocumentChecker(
-                    Tracker_FormElementFactory::instance(),
+                    $form_element_factory,
                 ),
                 $tracker_factory,
             ),
             new ArtidocBreadcrumbsProvider($docman_item_factory),
-            $logger
+            $logger,
+            new FileUploadDataProvider(
+                new FrozenFieldDetector(
+                    new TransitionRetriever(
+                        new StateFactory(
+                            \TransitionFactory::instance(),
+                            new SimpleWorkflowDao()
+                        ),
+                        new TransitionExtractor()
+                    ),
+                    new FrozenFieldsRetriever(
+                        new FrozenFieldsDao(),
+                        $form_element_factory
+                    )
+                ),
+                $form_element_factory
+            ),
         );
     }
 

@@ -24,6 +24,7 @@ const base: Tracker = {
     label: "Bugs",
     title: null,
     description: null,
+    file: null,
 };
 
 export const TrackerStub = {

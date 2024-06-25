@@ -187,12 +187,18 @@ export function useSectionEditor(
 
     function saveSection(): ResultAsync<ArtidocSection, Fault> {
         if (isPendingArtifactSection(current_section.value)) {
+            const merged_attachments = merge_artifact_attachments(
+                section,
+                editable_description.value,
+            );
+
             return postArtifact(
                 current_section.value.tracker,
                 editable_title.value,
                 current_section.value.title,
                 editable_description.value,
                 current_section.value.description.field_id,
+                merged_attachments,
             ).andThen(({ id }) =>
                 createSection(
                     document_id,

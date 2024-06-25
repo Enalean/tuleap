@@ -72,7 +72,7 @@ final class RichTextareaProviderTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItPassesArgumentsAsPresenterToTheTemplate(): void
     {
         $tracker = $this->buildTracker(7);
-        $this->first_usable_field_data_getter->shouldReceive('getFileUploadData')->andReturn([]);
+        $this->first_usable_field_data_getter->shouldReceive('getFileUploadData')->andReturn(null);
 
         $textarea = $this->provider->getTextarea(
             $tracker,

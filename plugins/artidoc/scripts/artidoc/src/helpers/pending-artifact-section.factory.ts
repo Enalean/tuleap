@@ -20,16 +20,12 @@
 import type { PendingArtifactSection } from "@/helpers/artidoc-section.type";
 import { v4 as uuidv4 } from "uuid";
 import type { TrackerWithSubmittableSection } from "@/stores/configuration-store";
+import { TrackerStub } from "@/helpers/stubs/TrackerStub";
 
 const PendingArtifactSectionFactory = {
     create: (): PendingArtifactSection => ({
         id: uuidv4(),
-        tracker: {
-            id: 1,
-            label: "Bugs",
-            title: null,
-            description: null,
-        },
+        tracker: TrackerStub.withoutTitleAndDescription(),
         display_title: "Technologies section",
         title: {
             field_id: 110,
@@ -75,6 +71,7 @@ const PendingArtifactSectionFactory = {
                 post_processed_value: "",
                 format: "html",
             },
+            attachments: tracker.file ? { ...tracker.file, file_descriptions: [] } : null,
         }),
 };
 

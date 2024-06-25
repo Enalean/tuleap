@@ -19,21 +19,20 @@
 
 import { ref } from "vue";
 import type { ConfigurationStore, Tracker } from "@/stores/configuration-store";
+import { TrackerStub } from "@/helpers/stubs/TrackerStub";
 
 const noop = (): void => {};
 
 const tasks: Tracker = {
+    ...TrackerStub.withoutTitleAndDescription(),
     id: 101,
     label: "Tasks",
-    title: null,
-    description: null,
 };
 
 const bugs: Tracker = {
+    ...TrackerStub.withoutTitleAndDescription(),
     id: 102,
     label: "Bugs",
-    title: null,
-    description: null,
 };
 
 export const ConfigurationStoreStub = {
