@@ -30,11 +30,11 @@ import type VueRouter from "vue-router";
 import * as location_helper from "../../helpers/location-helper";
 import { defineStore } from "pinia";
 import { createTestingPinia } from "@pinia/testing";
-import EventBus from "../../helpers/event-bus";
 import { useStore } from "../../stores/root";
 import type { ProjectArchiveTemplateData, TemplateData } from "../../type";
 import * as router from "../../helpers/use-router";
 import { ACCESS_PRIVATE, ACCESS_PUBLIC } from "../../constant";
+import emitter from "../../helpers/emitter";
 
 jest.useFakeTimers();
 
@@ -131,18 +131,18 @@ describe("ProjectInformation -", () => {
         const wrapper = await getWrapper();
         const store = useStore();
 
-        EventBus.$emit("choose-trove-cat", { category_id: 1, value_id: 10 });
+        emitter.emit("choose-trove-cat", { category_id: "1", value_id: "10" });
         wrapper.vm.$nextTick();
-        EventBus.$emit("choose-trove-cat", { category_id: 2, value_id: 20 });
+        emitter.emit("choose-trove-cat", { category_id: "2", value_id: "20" });
         wrapper.vm.$nextTick();
 
-        EventBus.$emit("update-field-list", { field_id: 1, value: "test value" });
+        emitter.emit("update-field-list", { field_id: "1", value: "test value" });
         wrapper.vm.$nextTick();
-        EventBus.$emit("update-field-list", { field_id: 2, value: "other value" });
+        emitter.emit("update-field-list", { field_id: "2", value: "other value" });
         wrapper.vm.$nextTick();
-        EventBus.$emit("update-project-visibility", { new_visibility: ACCESS_PUBLIC });
+        emitter.emit("update-project-visibility", { new_visibility: ACCESS_PUBLIC });
         wrapper.vm.$nextTick();
-        EventBus.$emit("update-project-name", {
+        emitter.emit("update-project-name", {
             slugified_name: "this-is-a-test",
             name: "this is a test",
         });
@@ -154,13 +154,13 @@ describe("ProjectInformation -", () => {
             is_public: true,
             description: "",
             categories: [
-                { category_id: 1, value_id: 10 },
-                { category_id: 2, value_id: 20 },
+                { category_id: "1", value_id: "10" },
+                { category_id: "2", value_id: "20" },
             ],
             xml_template_name: "scrum",
             fields: [
-                { field_id: 1, value: "test value" },
-                { field_id: 2, value: "other value" },
+                { field_id: "1", value: "test value" },
+                { field_id: "2", value: "other value" },
             ],
             allow_restricted: false,
         };
@@ -189,7 +189,7 @@ describe("ProjectInformation -", () => {
         is_project_approval_required = true;
         are_restricted_users_allowed = true;
         const wrapper = await getWrapper();
-        EventBus.$emit("update-project-visibility", { new_visibility: ACCESS_PRIVATE });
+        emitter.emit("update-project-visibility", { new_visibility: ACCESS_PRIVATE });
         wrapper.vm.$nextTick();
 
         await wrapper.get("[data-test=project-registration-form]").trigger("submit.prevent");
@@ -207,7 +207,7 @@ describe("ProjectInformation -", () => {
         };
         const wrapper = await getWrapper(selected_company_template);
         const store = useStore();
-        EventBus.$emit("update-project-visibility", { new_visibility: ACCESS_PRIVATE });
+        emitter.emit("update-project-visibility", { new_visibility: ACCESS_PRIVATE });
         wrapper.vm.$nextTick();
 
         await wrapper.get("[data-test=project-registration-form]").trigger("submit.prevent");

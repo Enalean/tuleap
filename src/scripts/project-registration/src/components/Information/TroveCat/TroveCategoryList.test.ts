@@ -22,8 +22,8 @@ import type { Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import { createProjectRegistrationLocalVue } from "../../../helpers/local-vue-for-tests";
 import TroveCategoryList from "./TroveCategoryList.vue";
-import EventBus from "../../../helpers/event-bus";
 import type Vue from "vue";
+import emitter from "../../../helpers/emitter";
 
 describe("TroveCategoryList -", () => {
     let factory: Wrapper<Vue, Element>;
@@ -62,14 +62,14 @@ describe("TroveCategoryList -", () => {
     });
 
     it("Send an event when user chooses a category", () => {
-        const event_bus_emit = jest.spyOn(EventBus, "$emit");
+        const emit = jest.spyOn(emitter, "emit");
 
         const wrapper = factory;
         (wrapper.findAll("option").at(2).element as HTMLOptionElement).selected = true;
 
         wrapper.get("[data-test=trove-category-list]").trigger("change");
 
-        expect(event_bus_emit).toHaveBeenCalledWith("choose-trove-cat", {
+        expect(emit).toHaveBeenCalledWith("choose-trove-cat", {
             category_id: "1",
             value_id: "20",
         });

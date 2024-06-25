@@ -52,7 +52,7 @@
 <script setup lang="ts">
 import { computed } from "vue";
 import type { FieldData } from "../../../type";
-import EventBus from "../../../helpers/event-bus";
+import emitter from "../../../helpers/emitter";
 
 const props = defineProps<{
     field: FieldData;
@@ -70,6 +70,6 @@ function updateField(field_id: string, event: Event): void {
         return;
     }
     const value = event.target.value;
-    EventBus.$emit("update-field-list", { field_id, value });
+    emitter.emit("update-field-list", { field_id, value });
 }
 </script>

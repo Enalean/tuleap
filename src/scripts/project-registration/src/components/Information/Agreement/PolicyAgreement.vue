@@ -32,8 +32,8 @@
 <script setup lang="ts">
 import { computed } from "vue";
 import AgreementModal from "./AgreementModal.vue";
-import EventBus from "../../../helpers/event-bus";
 import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
+import emitter from "../../../helpers/emitter";
 
 const { $gettext } = useGettext();
 
@@ -44,7 +44,7 @@ const agreement = computed((): string => {
 function loadAgreement(event: MouseEvent): void {
     if (event.target instanceof Element) {
         if (event.target.tagName === "A") {
-            EventBus.$emit("show-agreement");
+            emitter.emit("show-agreement");
             event.preventDefault();
         }
     }

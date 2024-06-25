@@ -18,13 +18,13 @@
  *
  */
 
-import EventBus from "../../../helpers/event-bus";
 import { shallowMount } from "@vue/test-utils";
 import { createProjectRegistrationLocalVue } from "../../../helpers/local-vue-for-tests";
 import AgreementModal from "./AgreementModal.vue";
 import * as rest_querier from "../../../api/rest-querier";
 import * as tlp from "tlp";
 import type { Modal } from "tlp";
+import emitter from "../../../helpers/emitter";
 
 jest.mock("tlp", () => {
     return {
@@ -51,7 +51,7 @@ describe("AgreementModal -", () => {
             localVue: await createProjectRegistrationLocalVue(),
         });
 
-        EventBus.$emit("show-agreement");
+        emitter.emit("show-agreement");
 
         expect(get_term_of_service).toHaveBeenCalled();
     });

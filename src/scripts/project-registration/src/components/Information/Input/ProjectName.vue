@@ -52,8 +52,8 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import ProjectShortName from "./ProjectShortName.vue";
-import EventBus from "../../../helpers/event-bus";
 import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
+import emitter from "../../../helpers/emitter";
 
 const written_chars = ref(0);
 const has_error = ref(false);
@@ -88,6 +88,6 @@ function slugifiedProjectName(): void {
         written_chars.value > 3 &&
         (project_name.length < min_project_length || project_name.length > max_project_length);
 
-    EventBus.$emit("slugify-project-name", project_name);
+    emitter.emit("slugify-project-name", project_name);
 }
 </script>
