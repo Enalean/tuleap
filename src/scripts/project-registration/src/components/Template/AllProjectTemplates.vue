@@ -23,20 +23,23 @@
         <div class="register-new-project-section">
             <new-project-boxes />
             <div class="register-new-project-list">
-                <h1 class="project-registration-title" v-translate>Start a new project</h1>
+                <h1 class="project-registration-title">{{ $gettext("Start a new project") }}</h1>
 
                 <nav class="tlp-wizard">
-                    <span class="tlp-wizard-step-current" v-translate>Template</span>
-                    <span class="tlp-wizard-step-next" v-translate>Information</span>
+                    <span class="tlp-wizard-step-current">{{ $gettext("Template") }}</span>
+                    <span class="tlp-wizard-step-next">{{ $gettext("Information") }}</span>
                 </nav>
 
                 <h2>
-                    <span v-translate>What kind of project is it?</span>
+                    <span>{{ $gettext("What kind of project is it?") }}</span>
                 </h2>
 
-                <p v-translate>
-                    The project template you will select provides pre-configured tools. Don’t worry,
-                    you can always modify your project workspace after it has been created.
+                <p>
+                    {{
+                        $gettext(
+                            "The project template you will select provides pre-configured tools. Don’t worry, you can always modify your project workspace after it has been created.",
+                        )
+                    }}
                 </p>
 
                 <template-selection />

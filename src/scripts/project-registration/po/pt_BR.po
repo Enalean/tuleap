@@ -120,9 +120,8 @@ msgstr ""
 
 msgid ""
 "Project short name must have between %{ min } and %{ max } characters "
-"length. It\n"
-"                can only contain alphanumerical characters and dashes. Must "
-"start with a letter."
+"length. It can only contain alphanumerical characters and dashes. Must start "
+"with a letter."
 msgstr ""
 
 msgid "Project shortname"
@@ -148,9 +147,8 @@ msgstr "Modelo"
 
 msgid ""
 "The project template you will select provides pre-configured tools. Don’t "
-"worry,\n"
-"                you can always modify your project workspace after it has "
-"been created."
+"worry, you can always modify your project workspace after it has been "
+"created."
 msgstr ""
 
 msgid "Visibility"
