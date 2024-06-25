@@ -142,9 +142,9 @@ final readonly class RawSectionsToRepresentationTransformer implements Transform
 
             $file_upload_data = $this->file_upload_data_provider->getFileUploadData($artifact->getTracker(), $artifact, $user);
 
-            $value = null;
+            $attachments = null;
             if ($file_upload_data) {
-                $value = $file_upload_data->getField()->getRESTValue($user, $last_changeset);
+                $attachments = $file_upload_data->getField()->getRESTValue($user, $last_changeset);
             }
 
             $sections[] = new ArtidocSectionRepresentation(
@@ -153,7 +153,7 @@ final readonly class RawSectionsToRepresentationTransformer implements Transform
                 $title,
                 $description,
                 $can_user_edit_section,
-                $value
+                $attachments
             );
         }
 

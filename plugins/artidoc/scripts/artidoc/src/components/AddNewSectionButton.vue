@@ -20,7 +20,13 @@
 
 <template>
     <div>
-        <button type="button" class="tlp-button-primary" v-bind:title="title" v-on:click="onClick">
+        <button
+            type="button"
+            class="tlp-button-primary"
+            v-bind:title="title"
+            v-on:click="onClick"
+            data-test="add-new-section"
+        >
             <i class="fa-solid fa-plus" role="img"></i>
         </button>
     </div>
