@@ -70,11 +70,11 @@
     </div>
 </template>
 <script setup lang="ts">
-import EventBus from "../../../helpers/event-bus";
 import slugify from "slugify";
 import { computed, onBeforeUnmount, onMounted, ref } from "vue";
 import { useStore } from "../../../stores/root";
 import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
+import emitter from "../../../helpers/emitter";
 
 const root_store = useStore();
 
@@ -108,11 +108,11 @@ const should_user_correct_shortname = computed((): string => {
 });
 
 onMounted(() => {
-    EventBus.$on("slugify-project-name", slugifyProjectShortName);
+    emitter.on("slugify-project-name", slugifyProjectShortName);
 });
 
 onBeforeUnmount((): void => {
-    EventBus.$off("slugify-project-name", slugifyProjectShortName);
+    emitter.off("slugify-project-name", slugifyProjectShortName);
 });
 
 function slugifyProjectShortName(value: string): void {
@@ -148,7 +148,7 @@ function slugifyProjectShortName(value: string): void {
         shortname.value.value = slugified_project_name.value;
     }
 
-    EventBus.$emit("update-project-name", {
+    emitter.emit("update-project-name", {
         slugified_name: slugified_project_name.value,
         name: project_name.value,
     });
@@ -158,7 +158,7 @@ function updateProjectShortName(value: string): void {
     checkValidity(value);
     slugified_project_name.value = value;
 
-    EventBus.$emit("update-project-name", {
+    emitter.emit("update-project-name", {
         slugified_name: value,
         name: project_name.value,
     });

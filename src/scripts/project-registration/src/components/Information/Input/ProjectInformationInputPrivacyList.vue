@@ -53,7 +53,7 @@ import type { Ref } from "vue";
 import { onBeforeUnmount, onMounted, ref } from "vue";
 import type { ListPicker } from "@tuleap/list-picker";
 import { createListPicker } from "@tuleap/list-picker";
-import EventBus from "../../../helpers/event-bus";
+import emitter from "../../../helpers/emitter";
 import {
     ACCESS_PRIVATE,
     ACCESS_PRIVATE_WO_RESTRICTED,
@@ -124,6 +124,6 @@ function translatedVisibilityDetails(visibility: string): string {
 }
 
 function onChange(): void {
-    EventBus.$emit("update-project-visibility", { new_visibility: selected_visibility.value });
+    emitter.emit("update-project-visibility", { new_visibility: selected_visibility.value });
 }
 </script>

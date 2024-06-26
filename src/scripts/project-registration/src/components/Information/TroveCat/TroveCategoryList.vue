@@ -46,7 +46,7 @@
 
 <script setup lang="ts">
 import type { TroveCatData } from "../../../type";
-import EventBus from "../../../helpers/event-bus";
+import emitter from "../../../helpers/emitter";
 
 defineProps<{
     trovecat: TroveCatData;
@@ -57,6 +57,6 @@ function updateTroveCategories(category_id: string, event: Event): void {
         return;
     }
     const value_id = event.target.value;
-    EventBus.$emit("choose-trove-cat", { category_id, value_id });
+    emitter.emit("choose-trove-cat", { category_id, value_id });
 }
 </script>

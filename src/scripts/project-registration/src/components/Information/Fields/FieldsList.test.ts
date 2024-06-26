@@ -22,8 +22,8 @@ import type { Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import { createProjectRegistrationLocalVue } from "../../../helpers/local-vue-for-tests";
 import FieldsList from "./FieldsList.vue";
-import EventBus from "../../../helpers/event-bus";
 import type { FieldData } from "../../../type";
+import emitter from "../../../helpers/emitter";
 
 async function getWrapper(field: FieldData): Promise<Wrapper<Vue, Element>> {
     return shallowMount(FieldsList, {
@@ -78,7 +78,7 @@ describe("FieldsList -", () => {
     });
 
     it("Send an event when user chooses a new value for the field", async () => {
-        const event_bus_emit = jest.spyOn(EventBus, "$emit");
+        const emit = jest.spyOn(emitter, "emit");
 
         const wrapper = await getWrapper({
             group_desc_id: "1",
@@ -88,7 +88,7 @@ describe("FieldsList -", () => {
 
         wrapper.get("[data-test=project-field-text]").setValue("my new value");
 
-        expect(event_bus_emit).toHaveBeenCalledWith("update-field-list", {
+        expect(emit).toHaveBeenCalledWith("update-field-list", {
             field_id: "1",
             value: "my new value",
         });

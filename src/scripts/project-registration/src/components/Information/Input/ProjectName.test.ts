@@ -24,7 +24,7 @@ import { createProjectRegistrationLocalVue } from "../../../helpers/local-vue-fo
 import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import ProjectName from "./ProjectName.vue";
 import type { DefaultData } from "vue/types/options";
-import EventBus from "../../../helpers/event-bus";
+import emitter from "../../../helpers/emitter";
 
 describe("ProjectName", () => {
     async function createWrapper(): Promise<Wrapper<Vue, Element>> {
@@ -50,7 +50,7 @@ describe("ProjectName", () => {
     });
 
     it(`Emit a named event`, async () => {
-        const event_bus_emit = jest.spyOn(EventBus, "$emit");
+        const event_bus_emit = jest.spyOn(emitter, "emit");
 
         const wrapper = await createWrapper();
         wrapper.get("[data-test=new-project-name]").setValue("test");

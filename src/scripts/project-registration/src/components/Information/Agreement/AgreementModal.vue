@@ -55,8 +55,8 @@
 import { onBeforeUnmount, onMounted, ref } from "vue";
 import type { Modal } from "@tuleap/tlp-modal";
 import { createModal } from "@tuleap/tlp-modal";
-import EventBus from "../../../helpers/event-bus";
 import { getTermOfService } from "../../../api/rest-querier";
+import emitter from "../../../helpers/emitter";
 
 let modal: Modal | null = null;
 
@@ -65,10 +65,10 @@ const agreement_content = ref<string>("");
 const modal_element = ref<InstanceType<typeof Element>>();
 
 onMounted(() => {
-    EventBus.$on("show-agreement", show);
+    emitter.on("show-agreement", show);
 });
 onBeforeUnmount(() => {
-    EventBus.$off("show-agreement", show);
+    emitter.off("show-agreement", show);
 });
 
 async function show(): Promise<void> {

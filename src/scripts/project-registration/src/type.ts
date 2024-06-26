@@ -38,8 +38,8 @@ export interface FieldProperties {
 }
 
 export interface TroveCatProperties {
-    category_id: number;
-    value_id: number;
+    category_id: string;
+    value_id: string;
 }
 
 export interface ProjectVisibilityProperties {

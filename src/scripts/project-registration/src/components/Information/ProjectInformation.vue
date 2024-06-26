@@ -121,7 +121,7 @@ import type {
     ProjectVisibilityProperties,
     TroveCatProperties,
 } from "../../type";
-import EventBus from "../../helpers/event-bus";
+import emitter from "../../helpers/emitter";
 import TroveCategoryList from "./TroveCat/TroveCategoryList.vue";
 import FieldDescription from "./Fields/FieldDescription.vue";
 import PolicyAgreement from "./Agreement/PolicyAgreement.vue";
@@ -159,17 +159,17 @@ onMounted(() => {
     }
 
     selected_visibility.value = root_store.project_default_visibility;
-    EventBus.$on("update-project-name", updateProjectName);
-    EventBus.$on("choose-trove-cat", updateTroveCat);
-    EventBus.$on("update-field-list", updateFieldList);
-    EventBus.$on("update-project-visibility", updateProjectVisibility);
+    emitter.on("update-project-name", updateProjectName);
+    emitter.on("choose-trove-cat", updateTroveCat);
+    emitter.on("update-field-list", updateFieldList);
+    emitter.on("update-project-visibility", updateProjectVisibility);
 });
 
 onBeforeUnmount((): void => {
-    EventBus.$off("update-project-name", updateProjectName);
-    EventBus.$off("choose-trove-cat", updateTroveCat);
-    EventBus.$off("update-field-list", updateFieldList);
-    EventBus.$off("update-project-visibility", updateProjectVisibility);
+    emitter.off("update-project-name", updateProjectName);
+    emitter.off("choose-trove-cat", updateTroveCat);
+    emitter.off("update-field-list", updateFieldList);
+    emitter.off("update-project-visibility", updateProjectVisibility);
 });
 
 function updateProjectName(event: ProjectNameProperties): void {
