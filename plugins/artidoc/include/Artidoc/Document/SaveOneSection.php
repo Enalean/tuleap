@@ -20,11 +20,11 @@
 
 namespace Tuleap\Artidoc\Document;
 
-use Tuleap\DB\UUID;
+use Tuleap\Artidoc\Document\Section\Identifier\SectionIdentifier;
 
 interface SaveOneSection
 {
-    public function saveSectionAtTheEnd(int $item_id, int $artifact_id): UUID;
+    public function saveSectionAtTheEnd(int $item_id, int $artifact_id): SectionIdentifier;
 
-    public function saveSectionBefore(int $item_id, int $artifact_id, string $sibling_section_id): UUID;
+    public function saveSectionBefore(int $item_id, int $artifact_id, SectionIdentifier $sibling_section_id): SectionIdentifier;
 }

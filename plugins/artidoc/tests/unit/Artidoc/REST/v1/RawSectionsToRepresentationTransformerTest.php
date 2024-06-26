@@ -34,6 +34,8 @@ use Tracker_FormElement_Field_Text;
 use Tracker_Semantic_Description;
 use Tracker_Semantic_Title;
 use Tuleap\Artidoc\Document\PaginatedRawSections;
+use Tuleap\Artidoc\Document\RawSection;
+use Tuleap\Artidoc\Stubs\Document\SectionIdentifierStub;
 use Tuleap\NeverThrow\Result;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
@@ -54,7 +56,6 @@ final class RawSectionsToRepresentationTransformerTest extends TestCase
     private Tracker $tracker;
     private Tracker_Semantic_Title&MockObject $semantic_title;
     private Tracker_Semantic_Description&MockObject $semantic_description;
-    private \Tuleap\DB\DatabaseUUIDFactory $uuid_factory;
 
     protected function setUp(): void
     {
@@ -67,8 +68,6 @@ final class RawSectionsToRepresentationTransformerTest extends TestCase
 
         Tracker_Semantic_Title::setInstance($this->semantic_title, $this->tracker);
         Tracker_Semantic_Description::setInstance($this->semantic_description, $this->tracker);
-
-        $this->uuid_factory = new \Tuleap\DB\DatabaseUUIDV7Factory();
     }
 
     protected function tearDown(): void
@@ -225,10 +224,10 @@ final class RawSectionsToRepresentationTransformerTest extends TestCase
             new PaginatedRawSections(
                 101,
                 [
-                    ['artifact_id' => 1, 'id' => $this->uuid_factory->buildUUIDFromBytesData($this->uuid_factory->buildUUIDBytes())],
-                    ['artifact_id' => 2, 'id' => $this->uuid_factory->buildUUIDFromBytesData($this->uuid_factory->buildUUIDBytes())],
-                    ['artifact_id' => 3, 'id' => $this->uuid_factory->buildUUIDFromBytesData($this->uuid_factory->buildUUIDBytes())],
-                    ['artifact_id' => 4, 'id' => $this->uuid_factory->buildUUIDFromBytesData($this->uuid_factory->buildUUIDBytes())],
+                    RawSection::fromRow(['artifact_id' => 1, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 0]),
+                    RawSection::fromRow(['artifact_id' => 2, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 1]),
+                    RawSection::fromRow(['artifact_id' => 3, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 2]),
+                    RawSection::fromRow(['artifact_id' => 4, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 3]),
                 ],
                 10,
             ),
@@ -313,7 +312,7 @@ final class RawSectionsToRepresentationTransformerTest extends TestCase
             new PaginatedRawSections(
                 101,
                 [
-                    ['artifact_id' => 1, 'id' => $this->uuid_factory->buildUUIDFromBytesData($this->uuid_factory->buildUUIDBytes())],
+                    RawSection::fromRow(['artifact_id' => 1, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 0]),
                 ],
                 10,
             ),
@@ -414,10 +413,10 @@ final class RawSectionsToRepresentationTransformerTest extends TestCase
             new PaginatedRawSections(
                 101,
                 [
-                    ['artifact_id' => 1, 'id' => $this->uuid_factory->buildUUIDFromBytesData($this->uuid_factory->buildUUIDBytes())],
-                    ['artifact_id' => 2, 'id' => $this->uuid_factory->buildUUIDFromBytesData($this->uuid_factory->buildUUIDBytes())],
-                    ['artifact_id' => 3, 'id' => $this->uuid_factory->buildUUIDFromBytesData($this->uuid_factory->buildUUIDBytes())],
-                    ['artifact_id' => 4, 'id' => $this->uuid_factory->buildUUIDFromBytesData($this->uuid_factory->buildUUIDBytes())],
+                    RawSection::fromRow(['artifact_id' => 1, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 0]),
+                    RawSection::fromRow(['artifact_id' => 2, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 1]),
+                    RawSection::fromRow(['artifact_id' => 3, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 2]),
+                    RawSection::fromRow(['artifact_id' => 4, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 3]),
                 ],
                 10,
             ),
@@ -503,10 +502,10 @@ final class RawSectionsToRepresentationTransformerTest extends TestCase
             new PaginatedRawSections(
                 101,
                 [
-                    ['artifact_id' => 1, 'id' => $this->uuid_factory->buildUUIDFromBytesData($this->uuid_factory->buildUUIDBytes())],
-                    ['artifact_id' => 2, 'id' => $this->uuid_factory->buildUUIDFromBytesData($this->uuid_factory->buildUUIDBytes())],
-                    ['artifact_id' => 3, 'id' => $this->uuid_factory->buildUUIDFromBytesData($this->uuid_factory->buildUUIDBytes())],
-                    ['artifact_id' => 4, 'id' => $this->uuid_factory->buildUUIDFromBytesData($this->uuid_factory->buildUUIDBytes())],
+                    RawSection::fromRow(['artifact_id' => 1, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 0]),
+                    RawSection::fromRow(['artifact_id' => 2, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 1]),
+                    RawSection::fromRow(['artifact_id' => 3, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 2]),
+                    RawSection::fromRow(['artifact_id' => 4, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 3]),
                 ],
                 10,
             ),
@@ -573,10 +572,10 @@ final class RawSectionsToRepresentationTransformerTest extends TestCase
             new PaginatedRawSections(
                 101,
                 [
-                    ['artifact_id' => 1, 'id' => $this->uuid_factory->buildUUIDFromBytesData($this->uuid_factory->buildUUIDBytes())],
-                    ['artifact_id' => 2, 'id' => $this->uuid_factory->buildUUIDFromBytesData($this->uuid_factory->buildUUIDBytes())],
-                    ['artifact_id' => 3, 'id' => $this->uuid_factory->buildUUIDFromBytesData($this->uuid_factory->buildUUIDBytes())],
-                    ['artifact_id' => 4, 'id' => $this->uuid_factory->buildUUIDFromBytesData($this->uuid_factory->buildUUIDBytes())],
+                    RawSection::fromRow(['artifact_id' => 1, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 0]),
+                    RawSection::fromRow(['artifact_id' => 2, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 1]),
+                    RawSection::fromRow(['artifact_id' => 3, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 2]),
+                    RawSection::fromRow(['artifact_id' => 4, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 3]),
                 ],
                 10,
             ),
@@ -651,10 +650,10 @@ final class RawSectionsToRepresentationTransformerTest extends TestCase
             new PaginatedRawSections(
                 101,
                 [
-                    ['artifact_id' => 1, 'id' => $this->uuid_factory->buildUUIDFromBytesData($this->uuid_factory->buildUUIDBytes())],
-                    ['artifact_id' => 2, 'id' => $this->uuid_factory->buildUUIDFromBytesData($this->uuid_factory->buildUUIDBytes())],
-                    ['artifact_id' => 3, 'id' => $this->uuid_factory->buildUUIDFromBytesData($this->uuid_factory->buildUUIDBytes())],
-                    ['artifact_id' => 4, 'id' => $this->uuid_factory->buildUUIDFromBytesData($this->uuid_factory->buildUUIDBytes())],
+                    RawSection::fromRow(['artifact_id' => 1, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 0]),
+                    RawSection::fromRow(['artifact_id' => 2, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 1]),
+                    RawSection::fromRow(['artifact_id' => 3, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 2]),
+                    RawSection::fromRow(['artifact_id' => 4, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 3]),
                 ],
                 10,
             ),
@@ -729,10 +728,10 @@ final class RawSectionsToRepresentationTransformerTest extends TestCase
             new PaginatedRawSections(
                 101,
                 [
-                    ['artifact_id' => 1, 'id' => $this->uuid_factory->buildUUIDFromBytesData($this->uuid_factory->buildUUIDBytes())],
-                    ['artifact_id' => 2, 'id' => $this->uuid_factory->buildUUIDFromBytesData($this->uuid_factory->buildUUIDBytes())],
-                    ['artifact_id' => 3, 'id' => $this->uuid_factory->buildUUIDFromBytesData($this->uuid_factory->buildUUIDBytes())],
-                    ['artifact_id' => 4, 'id' => $this->uuid_factory->buildUUIDFromBytesData($this->uuid_factory->buildUUIDBytes())],
+                    RawSection::fromRow(['artifact_id' => 1, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 0]),
+                    RawSection::fromRow(['artifact_id' => 2, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 1]),
+                    RawSection::fromRow(['artifact_id' => 3, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 2]),
+                    RawSection::fromRow(['artifact_id' => 4, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 3]),
                 ],
                 10,
             ),
@@ -791,10 +790,10 @@ final class RawSectionsToRepresentationTransformerTest extends TestCase
             new PaginatedRawSections(
                 101,
                 [
-                    ['artifact_id' => 1, 'id' => $this->uuid_factory->buildUUIDFromBytesData($this->uuid_factory->buildUUIDBytes())],
-                    ['artifact_id' => 2, 'id' => $this->uuid_factory->buildUUIDFromBytesData($this->uuid_factory->buildUUIDBytes())],
-                    ['artifact_id' => 3, 'id' => $this->uuid_factory->buildUUIDFromBytesData($this->uuid_factory->buildUUIDBytes())],
-                    ['artifact_id' => 4, 'id' => $this->uuid_factory->buildUUIDFromBytesData($this->uuid_factory->buildUUIDBytes())],
+                    RawSection::fromRow(['artifact_id' => 1, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 0]),
+                    RawSection::fromRow(['artifact_id' => 2, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 1]),
+                    RawSection::fromRow(['artifact_id' => 3, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 2]),
+                    RawSection::fromRow(['artifact_id' => 4, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 3]),
                 ],
                 10,
             ),

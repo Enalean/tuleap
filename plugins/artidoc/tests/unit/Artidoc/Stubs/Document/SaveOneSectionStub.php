@@ -23,8 +23,8 @@ declare(strict_types=1);
 namespace Tuleap\Artidoc\Stubs\Document;
 
 use Tuleap\Artidoc\Document\SaveOneSection;
-use Tuleap\DB\DatabaseUUIDFactory;
-use Tuleap\DB\UUID;
+use Tuleap\Artidoc\Document\Section\Identifier\SectionIdentifier;
+use Tuleap\Artidoc\Document\Section\Identifier\SectionIdentifierFactory;
 
 final class SaveOneSectionStub implements SaveOneSection
 {
@@ -37,13 +37,13 @@ final class SaveOneSectionStub implements SaveOneSection
      */
     private array $saved_end = [];
 
-    private function __construct(private DatabaseUUIDFactory $uuid_factory, private string $id)
+    private function __construct(private SectionIdentifierFactory $identifier_factory, private string $id)
     {
     }
 
-    public static function withGeneratedSectionId(DatabaseUUIDFactory $uuid_factory, string $id): self
+    public static function withGeneratedSectionId(SectionIdentifierFactory $identifier_factory, string $id): self
     {
-        return new self($uuid_factory, $id);
+        return new self($identifier_factory, $id);
     }
 
     public function isSaved(int $id): bool
@@ -61,17 +61,17 @@ final class SaveOneSectionStub implements SaveOneSection
         return $this->saved_before[$id];
     }
 
-    public function saveSectionAtTheEnd(int $item_id, int $artifact_id): UUID
+    public function saveSectionAtTheEnd(int $item_id, int $artifact_id): SectionIdentifier
     {
         $this->saved_end[$item_id] = $artifact_id;
 
-        return $this->uuid_factory->buildUUIDFromHexadecimalString($this->id);
+        return $this->identifier_factory->buildFromHexadecimalString($this->id);
     }
 
-    public function saveSectionBefore(int $item_id, int $artifact_id, string $sibling_section_id): UUID
+    public function saveSectionBefore(int $item_id, int $artifact_id, SectionIdentifier $sibling_section_id): SectionIdentifier
     {
         $this->saved_before[$item_id] = $artifact_id;
 
-        return $this->uuid_factory->buildUUIDFromHexadecimalString($this->id);
+        return $this->identifier_factory->buildFromHexadecimalString($this->id);
     }
 }

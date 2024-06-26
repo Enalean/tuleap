@@ -25,10 +25,11 @@ namespace Tuleap\Artidoc\REST\v1;
 use Tuleap\Artidoc\Document\ArtidocDocument;
 use Tuleap\Artidoc\Document\ArtidocDocumentInformation;
 use Tuleap\Artidoc\Document\PaginatedRawSections;
+use Tuleap\Artidoc\Document\RawSection;
 use Tuleap\Artidoc\Stubs\Document\RetrieveArtidocStub;
 use Tuleap\Artidoc\Stubs\Document\SearchPaginatedRawSectionsStub;
+use Tuleap\Artidoc\Stubs\Document\SectionIdentifierStub;
 use Tuleap\Artidoc\Stubs\Document\TransformRawSectionsToRepresentationStub;
-use Tuleap\DB\UUID;
 use Tuleap\Docman\ServiceDocman;
 use Tuleap\NeverThrow\Result;
 use Tuleap\Test\Builders\UserTestBuilder;
@@ -106,10 +107,10 @@ final class PaginatedArtidocSectionRepresentationCollectionBuilderTest extends T
                 new PaginatedRawSections(
                     123,
                     [
-                        ['artifact_id' => 1, 'id' => $this->createMock(UUID::class)],
-                        ['artifact_id' => 2, 'id' => $this->createMock(UUID::class)],
-                        ['artifact_id' => 3, 'id' => $this->createMock(UUID::class)],
-                        ['artifact_id' => 4, 'id' => $this->createMock(UUID::class)],
+                        RawSection::fromRow(['artifact_id' => 1, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 0]),
+                        RawSection::fromRow(['artifact_id' => 2, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 1]),
+                        RawSection::fromRow(['artifact_id' => 3, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 2]),
+                        RawSection::fromRow(['artifact_id' => 4, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 3]),
                     ],
                     10,
                 ),
@@ -147,10 +148,10 @@ final class PaginatedArtidocSectionRepresentationCollectionBuilderTest extends T
                 new PaginatedRawSections(
                     123,
                     [
-                        ['artifact_id' => 1, 'id' => $this->createMock(UUID::class)],
-                        ['artifact_id' => 2, 'id' => $this->createMock(UUID::class)],
-                        ['artifact_id' => 3, 'id' => $this->createMock(UUID::class)],
-                        ['artifact_id' => 4, 'id' => $this->createMock(UUID::class)],
+                        RawSection::fromRow(['artifact_id' => 1, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 0]),
+                        RawSection::fromRow(['artifact_id' => 2, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 1]),
+                        RawSection::fromRow(['artifact_id' => 3, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 2]),
+                        RawSection::fromRow(['artifact_id' => 4, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 3]),
                     ],
                     10,
                 ),

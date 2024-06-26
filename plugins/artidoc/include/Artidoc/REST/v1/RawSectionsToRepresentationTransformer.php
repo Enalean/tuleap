@@ -25,7 +25,7 @@ namespace Tuleap\Artidoc\REST\v1;
 use Tracker_Semantic_Description;
 use Tracker_Semantic_Title;
 use Tuleap\Artidoc\Document\PaginatedRawSections;
-use Tuleap\DB\UUID;
+use Tuleap\Artidoc\Document\Section\Identifier\SectionIdentifier;
 use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
@@ -61,15 +61,15 @@ final readonly class RawSectionsToRepresentationTransformer implements Transform
     }
 
     /**
-     * @return Ok<list<array{artifact: Artifact, section_uuid: UUID}>>|Err<Fault>
+     * @return Ok<list<array{artifact: Artifact, section_identifier: SectionIdentifier}>>|Err<Fault>
      */
     private function instantiateArtifacts(PaginatedRawSections $raw_sections, \PFUser $user): Ok|Err
     {
-        $uuids        = [];
+        $identifiers  = [];
         $artifact_ids = [];
         foreach ($raw_sections->rows as $row) {
-            $artifact_ids[]             = $row['artifact_id'];
-            $uuids[$row['artifact_id']] = $row['id'];
+            $artifact_ids[]                 = $row->artifact_id;
+            $identifiers[$row->artifact_id] = $row->id;
         }
         if (count($artifact_ids) === 0) {
             return Result::ok([]);
@@ -87,8 +87,8 @@ final readonly class RawSectionsToRepresentationTransformer implements Transform
             $id = $artifact->getId();
 
             $artifacts[$artifact_order[$id]] = [
-                'artifact'     => $artifact,
-                'section_uuid' => $uuids[$id],
+                'artifact'           => $artifact,
+                'section_identifier' => $identifiers[$id],
             ];
         }
 
@@ -98,7 +98,7 @@ final readonly class RawSectionsToRepresentationTransformer implements Transform
     }
 
     /**
-     * @param list<array{artifact: Artifact, section_uuid: UUID}> $artifacts
+     * @param list<array{artifact: Artifact, section_identifier: SectionIdentifier}> $artifacts
      * @return Ok<list<ArtidocSectionRepresentation>>|Err<Fault>
      */
     private function instantiateSections(PaginatedRawSections $raw_sections, array $artifacts, \PFUser $user): Ok|Err
@@ -148,7 +148,7 @@ final readonly class RawSectionsToRepresentationTransformer implements Transform
             }
 
             $sections[] = new ArtidocSectionRepresentation(
-                $section['section_uuid']->toString(),
+                $section['section_identifier']->toString(),
                 ArtifactReference::build($artifact),
                 $title,
                 $description,

@@ -27,11 +27,13 @@ use Tuleap\Artidoc\Document\ArtidocDocument;
 use Tuleap\Artidoc\Document\ArtidocRetriever;
 use Tuleap\Artidoc\Document\ConfiguredTrackerRetriever;
 use Tuleap\Artidoc\Document\DocumentServiceFromAllowedProjectRetriever;
+use Tuleap\Artidoc\Document\Section\Identifier\SectionIdentifierFactory;
 use Tuleap\Artidoc\Document\Tracker\SuitableTrackerForDocumentChecker;
 use Tuleap\Artidoc\Document\Tracker\SuitableTrackersForDocumentRetriever;
 use Tuleap\Artidoc\REST\ResourcesInjector;
 use Tuleap\Config\ConfigClassProvider;
 use Tuleap\Config\PluginWithConfigKeys;
+use Tuleap\DB\DatabaseUUIDV7Factory;
 use Tuleap\Docman\Item\CloneOtherItemPostAction;
 use Tuleap\Docman\Item\GetDocmanItemOtherTypeEvent;
 use Tuleap\Docman\ItemType\GetItemTypeAsText;
@@ -105,7 +107,7 @@ class ArtidocPlugin extends Plugin implements PluginWithConfigKeys
     {
         $tracker_factory     = TrackerFactory::instance();
         $docman_item_factory = new Docman_ItemFactory();
-        $dao                 = new ArtidocDao();
+        $dao                 = new ArtidocDao(new SectionIdentifierFactory(new DatabaseUUIDV7Factory()));
         $logger              = BackendLogger::getDefaultLogger();
 
         $form_element_factory = Tracker_FormElementFactory::instance();
@@ -206,7 +208,7 @@ class ArtidocPlugin extends Plugin implements PluginWithConfigKeys
     public function cloneOtherItemPostAction(CloneOtherItemPostAction $event): void
     {
         if ($event->source instanceof ArtidocDocument && $event->target instanceof ArtidocDocument) {
-            (new ArtidocDao())->cloneItem((int) $event->source->getId(), (int) $event->target->getId());
+            (new ArtidocDao(new SectionIdentifierFactory(new DatabaseUUIDV7Factory())))->cloneItem((int) $event->source->getId(), (int) $event->target->getId());
         }
     }
 

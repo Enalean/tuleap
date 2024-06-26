@@ -27,6 +27,9 @@ use Luracast\Restler\RestException;
 use Tuleap\Artidoc\Document\ArtidocDao;
 use Tuleap\Artidoc\Document\ArtidocRetriever;
 use Tuleap\Artidoc\Document\DocumentServiceFromAllowedProjectRetriever;
+use Tuleap\Artidoc\Document\Section\Identifier\InvalidSectionIdentifierStringException;
+use Tuleap\Artidoc\Document\Section\Identifier\SectionIdentifierFactory;
+use Tuleap\DB\DatabaseUUIDV7Factory;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
@@ -68,8 +71,14 @@ final class ArtidocSectionsResource extends AuthenticatedResource
     {
         $this->checkAccess();
 
+        try {
+            $section_id = $this->getSectionIdentifierFactory()->buildFromHexadecimalString($id);
+        } catch (InvalidSectionIdentifierStringException) {
+            throw new RestException(404);
+        }
+
         return $this->getBuilder()
-            ->build($id, UserManager::instance()->getCurrentUser())
+            ->build($section_id, UserManager::instance()->getCurrentUser())
             ->match(
                 function (ArtidocSectionRepresentation $representation) {
                     return $representation;
@@ -88,7 +97,7 @@ final class ArtidocSectionsResource extends AuthenticatedResource
             throw new RestException(404);
         }
 
-        $dao       = new ArtidocDao();
+        $dao       = new ArtidocDao($this->getSectionIdentifierFactory());
         $retriever = new ArtidocRetriever(
             \ProjectManager::instance(),
             $dao,
@@ -119,5 +128,10 @@ final class ArtidocSectionsResource extends AuthenticatedResource
         );
 
         return new ArtidocSectionRepresentationBuilder($dao, $retriever, $transformer);
+    }
+
+    private function getSectionIdentifierFactory(): SectionIdentifierFactory
+    {
+        return new SectionIdentifierFactory(new DatabaseUUIDV7Factory());
     }
 }

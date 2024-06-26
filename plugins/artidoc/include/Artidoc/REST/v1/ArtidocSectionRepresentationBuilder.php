@@ -25,6 +25,7 @@ namespace Tuleap\Artidoc\REST\v1;
 use Tuleap\Artidoc\Document\PaginatedRawSections;
 use Tuleap\Artidoc\Document\RetrieveArtidoc;
 use Tuleap\Artidoc\Document\SearchOneSection;
+use Tuleap\Artidoc\Document\Section\Identifier\SectionIdentifier;
 use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
@@ -42,7 +43,7 @@ final class ArtidocSectionRepresentationBuilder
     /**
      * @return Ok<ArtidocSectionRepresentation>|Err<Fault>
      */
-    public function build(string $id, \PFUser $user): Ok|Err
+    public function build(SectionIdentifier $id, \PFUser $user): Ok|Err
     {
         $row = $this->dao->searchSectionById($id);
         if ($row === null) {
@@ -50,8 +51,8 @@ final class ArtidocSectionRepresentationBuilder
         }
 
         return $this->retrieve_artidoc
-            ->retrieveArtidoc($row['item_id'], $user)
-            ->andThen(fn () => $this->transformer->getRepresentation(new PaginatedRawSections($row['item_id'], [$row], 1), $user))
+            ->retrieveArtidoc($row->item_id, $user)
+            ->andThen(fn () => $this->transformer->getRepresentation(new PaginatedRawSections($row->item_id, [$row], 1), $user))
             ->andThen($this->getFirstAndOnlySectionFromCollection(...));
     }
 

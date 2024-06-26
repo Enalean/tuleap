@@ -23,12 +23,17 @@ declare(strict_types=1);
 namespace Tuleap\Artidoc\Document;
 
 use ParagonIE\EasyDB\EasyDB;
+use Tuleap\Artidoc\Document\Section\Identifier\SectionIdentifier;
+use Tuleap\Artidoc\Document\Section\Identifier\SectionIdentifierFactory;
 use Tuleap\DB\DataAccessObject;
-use Tuleap\DB\InvalidUuidStringException;
-use Tuleap\DB\UUID;
 
 final class ArtidocDao extends DataAccessObject implements SearchArtidocDocument, SearchOneSection, SearchPaginatedRawSections, SaveSections, SaveOneSection, SearchConfiguredTracker, SaveConfiguredTracker
 {
+    public function __construct(private readonly SectionIdentifierFactory $identifier_factory)
+    {
+        parent::__construct();
+    }
+
     public function searchByItemId(int $item_id): ?array
     {
         return $this->getDB()->row(
@@ -46,26 +51,24 @@ final class ArtidocDao extends DataAccessObject implements SearchArtidocDocument
         );
     }
 
-    public function searchSectionById(string $section_id): ?array
+    public function searchSectionById(SectionIdentifier $section_id): ?RawSection
     {
-        try {
-            $row = $this->getDB()->row(
-                <<<EOS
+        $row = $this->getDB()->row(
+            <<<EOS
             SELECT *
             FROM plugin_artidoc_document
             WHERE id = ?
             EOS,
-                $this->uuid_factory->buildUUIDFromHexadecimalString($section_id)->getBytes(),
-            );
-        } catch (InvalidUuidStringException) {
+            $section_id->getBytes(),
+        );
+
+        if ($row === null) {
             return null;
         }
 
-        if ($row) {
-            $row['id'] = $this->uuid_factory->buildUUIDFromBytesData($row['id']);
-        }
+        $row['id'] = $section_id;
 
-        return $row;
+        return RawSection::fromRow($row);
     }
 
     public function searchPaginatedRawSectionsByItemId(int $item_id, int $limit, int $offset): PaginatedRawSections
@@ -73,7 +76,7 @@ final class ArtidocDao extends DataAccessObject implements SearchArtidocDocument
         return $this->getDB()->tryFlatTransaction(function (EasyDB $db) use ($item_id, $limit, $offset) {
             $rows = $db->run(
                 <<<EOS
-                SELECT id, artifact_id
+                SELECT id, artifact_id, item_id, `rank`
                 FROM plugin_artidoc_document
                 WHERE item_id = ?
                 ORDER BY `rank`
@@ -91,13 +94,12 @@ final class ArtidocDao extends DataAccessObject implements SearchArtidocDocument
                 array_values(
                     array_map(
                         /**
-                         * @param array{id: string, artifact_id: int} $row
-                         * @return array{id: UUID, artifact_id: int} $row
+                         * @param array{ id: string, item_id: int, artifact_id: int, rank: int } $row
                          */
-                        function (array $row): array {
-                            $row['id'] = $this->uuid_factory->buildUUIDFromBytesData($row['id']);
+                        function (array $row): RawSection {
+                            $row['id'] = $this->identifier_factory->buildFromBytesData($row['id']);
 
-                            return $row;
+                            return RawSection::fromRow($row);
                         },
                         $rows,
                     ),
@@ -122,7 +124,7 @@ final class ArtidocDao extends DataAccessObject implements SearchArtidocDocument
                 array_map(
                     function (array $row) use ($target_id) {
                         return [
-                            'id'          => $this->uuid_factory->buildUUIDBytes(),
+                            'id'          => $this->identifier_factory->buildIdentifier()->getBytes(),
                             'item_id'     => $target_id,
                             'artifact_id' => $row['artifact_id'],
                             'rank'        => $row['rank'],
@@ -156,7 +158,7 @@ final class ArtidocDao extends DataAccessObject implements SearchArtidocDocument
                     array_map(
                         function ($artifact_id) use ($item_id, &$rank) {
                             return [
-                                'id'          => $this->uuid_factory->buildUUIDBytes(),
+                                'id'          => $this->identifier_factory->buildIdentifier()->getBytes(),
                                 'item_id'     => $item_id,
                                 'artifact_id' => $artifact_id,
                                 'rank'        => $rank++,
@@ -193,7 +195,7 @@ final class ArtidocDao extends DataAccessObject implements SearchArtidocDocument
         );
     }
 
-    public function saveSectionAtTheEnd(int $item_id, int $artifact_id): UUID
+    public function saveSectionAtTheEnd(int $item_id, int $artifact_id): SectionIdentifier
     {
         return $this->getDB()->tryFlatTransaction(function (EasyDB $db) use ($item_id, $artifact_id) {
             $rank = $this->getDB()->cell(
@@ -205,18 +207,14 @@ final class ArtidocDao extends DataAccessObject implements SearchArtidocDocument
         });
     }
 
-    public function saveSectionBefore(int $item_id, int $artifact_id, string $sibling_section_id): UUID
+    public function saveSectionBefore(int $item_id, int $artifact_id, SectionIdentifier $sibling_section_id): SectionIdentifier
     {
         return $this->getDB()->tryFlatTransaction(function (EasyDB $db) use ($item_id, $artifact_id, $sibling_section_id) {
-            try {
-                $rank = $this->getDB()->cell(
-                    'SELECT `rank` FROM plugin_artidoc_document WHERE id = ? AND item_id = ?',
-                    $this->uuid_factory->buildUUIDFromHexadecimalString($sibling_section_id)->getBytes(),
-                    $item_id,
-                ) ?: 0;
-            } catch (InvalidUuidStringException) {
-                $rank = 0;
-            }
+            $rank = $this->getDB()->cell(
+                'SELECT `rank` FROM plugin_artidoc_document WHERE id = ? AND item_id = ?',
+                $sibling_section_id->getBytes(),
+                $item_id,
+            ) ?: 0;
 
             $db->run(
                 <<<EOS
@@ -232,19 +230,19 @@ final class ArtidocDao extends DataAccessObject implements SearchArtidocDocument
         });
     }
 
-    private function insertSection(EasyDB $db, int $item_id, int $artifact_id, int $rank): UUID
+    private function insertSection(EasyDB $db, int $item_id, int $artifact_id, int $rank): SectionIdentifier
     {
-        $id = $this->uuid_factory->buildUUIDBytes();
+        $id = $this->identifier_factory->buildIdentifier();
         $db->insert(
             'plugin_artidoc_document',
             [
-                'id'          => $id,
+                'id'          => $id->getBytes(),
                 'item_id'     => $item_id,
                 'artifact_id' => $artifact_id,
                 'rank'        => $rank,
             ]
         );
 
-        return $this->uuid_factory->buildUUIDFromBytesData($id);
+        return $id;
     }
 }

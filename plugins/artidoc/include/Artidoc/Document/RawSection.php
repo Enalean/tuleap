@@ -20,30 +20,30 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Artidoc\Stubs\Document;
+namespace Tuleap\Artidoc\Document;
 
-use Tuleap\Artidoc\Document\RawSection;
-use Tuleap\Artidoc\Document\SearchOneSection;
 use Tuleap\Artidoc\Document\Section\Identifier\SectionIdentifier;
 
-final class SearchOneSectionStub implements SearchOneSection
+final readonly class RawSection
 {
-    private function __construct(private ?RawSection $row)
-    {
+    public function __construct(
+        public SectionIdentifier $id,
+        public int $item_id,
+        public int $artifact_id,
+        public int $rank,
+    ) {
     }
 
-    public static function withResults(RawSection $row): self
+    /**
+     * @param array{ id: SectionIdentifier, item_id: int, artifact_id: int, rank: int } $row
+     */
+    public static function fromRow(array $row): self
     {
-        return new self($row);
-    }
-
-    public static function withoutResults(): self
-    {
-        return new self(null);
-    }
-
-    public function searchSectionById(SectionIdentifier $section_id): ?RawSection
-    {
-        return $this->row;
+        return new self(
+            $row['id'],
+            $row['item_id'],
+            $row['artifact_id'],
+            $row['rank'],
+        );
     }
 }

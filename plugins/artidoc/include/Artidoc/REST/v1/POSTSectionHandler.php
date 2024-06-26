@@ -23,10 +23,12 @@ declare(strict_types=1);
 namespace Tuleap\Artidoc\REST\v1;
 
 use Tuleap\Artidoc\Document\ArtidocDocumentInformation;
+use Tuleap\Artidoc\Document\Section\Identifier\InvalidSectionIdentifierStringException;
 use Tuleap\Artidoc\Document\PaginatedRawSections;
+use Tuleap\Artidoc\Document\RawSection;
 use Tuleap\Artidoc\Document\RetrieveArtidoc;
 use Tuleap\Artidoc\Document\SaveOneSection;
-use Tuleap\DB\DatabaseUUIDFactory;
+use Tuleap\Artidoc\Document\Section\Identifier\SectionIdentifierFactory;
 use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
@@ -38,7 +40,7 @@ final readonly class POSTSectionHandler
         private RetrieveArtidoc $retrieve_artidoc,
         private TransformRawSectionsToRepresentation $transformer,
         private SaveOneSection $dao,
-        private DatabaseUUIDFactory $uuid_factory,
+        private SectionIdentifierFactory $identifier_factory,
     ) {
     }
 
@@ -75,13 +77,14 @@ final readonly class POSTSectionHandler
         ArtidocPOSTSectionRepresentation $section,
         \PFUser $user,
     ): Ok|Err {
-        $dummy_uuid = $this->uuid_factory->buildUUIDFromBytesData($this->uuid_factory->buildUUIDBytes());
+        $dummy_identifier = $this->identifier_factory->buildIdentifier();
 
+        $item_id = (int) $document_information->document->getId();
         return $this->transformer
             ->getRepresentation(
                 new PaginatedRawSections(
-                    (int) $document_information->document->getId(),
-                    [['id' => $dummy_uuid, 'artifact_id' => $section->artifact->id]],
+                    $item_id,
+                    [RawSection::fromRow(['id' => $dummy_identifier, 'artifact_id' => $section->artifact->id, 'item_id' => $item_id, 'rank' => 0])],
                     1,
                 ),
                 $user,
@@ -109,10 +112,14 @@ final readonly class POSTSectionHandler
         ArtidocSectionRepresentation $section_representation,
         ArtidocPOSTSectionRepresentation $section,
     ): Ok|Err {
-        $uuid = $section->position
-            ? $this->dao->saveSectionBefore($id, $section->artifact->id, $section->position->before)
-            : $this->dao->saveSectionAtTheEnd($id, $section->artifact->id);
+        try {
+            $section_id = $section->position
+                ? $this->dao->saveSectionBefore($id, $section->artifact->id, $this->identifier_factory->buildFromHexadecimalString($section->position->before))
+                : $this->dao->saveSectionAtTheEnd($id, $section->artifact->id);
+        } catch (InvalidSectionIdentifierStringException) {
+            return Result::err(Fault::fromMessage('Sibling section id is invalid'));
+        }
 
-        return Result::ok(ArtidocSectionRepresentation::fromRepresentationWithId($section_representation, $uuid));
+        return Result::ok(ArtidocSectionRepresentation::fromRepresentationWithId($section_representation, $section_id));
     }
 }

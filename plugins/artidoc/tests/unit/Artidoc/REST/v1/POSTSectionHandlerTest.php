@@ -27,10 +27,10 @@ use PFUser;
 use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\Artidoc\Document\ArtidocDocument;
 use Tuleap\Artidoc\Document\ArtidocDocumentInformation;
+use Tuleap\Artidoc\Document\Section\Identifier\SectionIdentifierFactory;
 use Tuleap\Artidoc\Stubs\Document\RetrieveArtidocStub;
 use Tuleap\Artidoc\Stubs\Document\SaveOneSectionStub;
 use Tuleap\Artidoc\Stubs\Document\TransformRawSectionsToRepresentationStub;
-use Tuleap\DB\DatabaseUUIDFactory;
 use Tuleap\DB\DatabaseUUIDV7Factory;
 use Tuleap\Docman\ServiceDocman;
 use Tuleap\NeverThrow\Result;
@@ -50,7 +50,7 @@ final class POSTSectionHandlerTest extends TestCase
 
     private PFUser $user;
     private Docman_PermissionsManager & MockObject $permissions_manager;
-    private DatabaseUUIDFactory $uuid_factory;
+    private SectionIdentifierFactory $identifier_factory;
 
     protected function setUp(): void
     {
@@ -59,7 +59,7 @@ final class POSTSectionHandlerTest extends TestCase
         $this->permissions_manager = $this->createMock(Docman_PermissionsManager::class);
         Docman_PermissionsManager::setInstance(self::PROJECT_ID, $this->permissions_manager);
 
-        $this->uuid_factory = new DatabaseUUIDV7Factory();
+        $this->identifier_factory = new SectionIdentifierFactory(new DatabaseUUIDV7Factory());
     }
 
     protected function tearDown(): void
@@ -69,7 +69,7 @@ final class POSTSectionHandlerTest extends TestCase
 
     public function testHappyPathAtTheEnd(): void
     {
-        $saver = SaveOneSectionStub::withGeneratedSectionId($this->uuid_factory, self::NEW_SECTION_ID);
+        $saver = SaveOneSectionStub::withGeneratedSectionId($this->identifier_factory, self::NEW_SECTION_ID);
 
         $this->permissions_manager->method('userCanWrite')->willReturn(true);
 
@@ -93,7 +93,7 @@ final class POSTSectionHandlerTest extends TestCase
                 new PaginatedArtidocSectionRepresentationCollection([$section_representation], 1),
             ),
             $saver,
-            $this->uuid_factory,
+            $this->identifier_factory,
         );
 
         $result = $handler->handle(
@@ -114,7 +114,7 @@ final class POSTSectionHandlerTest extends TestCase
 
     public function testHappyPathBeforeSection(): void
     {
-        $saver = SaveOneSectionStub::withGeneratedSectionId($this->uuid_factory, self::NEW_SECTION_ID);
+        $saver = SaveOneSectionStub::withGeneratedSectionId($this->identifier_factory, self::NEW_SECTION_ID);
 
         $this->permissions_manager->method('userCanWrite')->willReturn(true);
 
@@ -138,7 +138,7 @@ final class POSTSectionHandlerTest extends TestCase
                 new PaginatedArtidocSectionRepresentationCollection([$section_representation], 1),
             ),
             $saver,
-            $this->uuid_factory,
+            $this->identifier_factory,
         );
 
         $result = $handler->handle(
@@ -159,7 +159,7 @@ final class POSTSectionHandlerTest extends TestCase
 
     public function testFaultWhenDocumentCannotBeRetrieved(): void
     {
-        $saver = SaveOneSectionStub::withGeneratedSectionId($this->uuid_factory, self::NEW_SECTION_ID);
+        $saver = SaveOneSectionStub::withGeneratedSectionId($this->identifier_factory, self::NEW_SECTION_ID);
 
         $this->permissions_manager->method('userCanWrite')->willReturn(true);
 
@@ -167,7 +167,7 @@ final class POSTSectionHandlerTest extends TestCase
             RetrieveArtidocStub::withoutDocument(),
             TransformRawSectionsToRepresentationStub::shouldNotBeCalled(),
             $saver,
-            $this->uuid_factory,
+            $this->identifier_factory,
         );
 
         $result = $handler->handle(
@@ -185,7 +185,7 @@ final class POSTSectionHandlerTest extends TestCase
 
     public function testFaultWhenDocumentIsNotWritable(): void
     {
-        $saver = SaveOneSectionStub::withGeneratedSectionId($this->uuid_factory, self::NEW_SECTION_ID);
+        $saver = SaveOneSectionStub::withGeneratedSectionId($this->identifier_factory, self::NEW_SECTION_ID);
 
         $this->permissions_manager->method('userCanWrite')->willReturn(false);
 
@@ -198,7 +198,7 @@ final class POSTSectionHandlerTest extends TestCase
             ),
             TransformRawSectionsToRepresentationStub::shouldNotBeCalled(),
             $saver,
-            $this->uuid_factory,
+            $this->identifier_factory,
         );
 
         $result = $handler->handle(

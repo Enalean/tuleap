@@ -22,12 +22,11 @@ declare(strict_types=1);
 
 namespace Tuleap\Artidoc\Document;
 
-use Tuleap\DB\UUID;
 
 final readonly class PaginatedRawSections
 {
     /**
-     * @param list<array{id: UUID, artifact_id: int, ...}> $rows
+     * @param list<RawSection> $rows
      */
     public function __construct(public int $id, public array $rows, public int $total)
     {
