@@ -20,51 +20,57 @@
 
 declare(strict_types=1);
 
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
-final class Cardwall_OnTop_MappedFieldProviderTest extends \Tuleap\Test\PHPUnit\TestCase
-{
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+namespace Tuleap\Cardwall\OnTop;
 
+use Cardwall_FieldProviders_SemanticStatusFieldRetriever;
+use Cardwall_OnTop_Config;
+use Cardwall_OnTop_Config_MappedFieldProvider;
+use Cardwall_OnTop_Config_TrackerMapping;
+use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\Test\Builders\Fields\OpenListFieldBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
+
+final class Cardwall_OnTop_MappedFieldProviderTest extends TestCase // phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
+{
     public function testItProvidesTheStatusFieldIfNoMapping(): void
     {
-        $tracker = \Mockery::spy(\Tracker::class);
+        $tracker          = TrackerTestBuilder::aTracker()->build();
+        $status_field     = OpenListFieldBuilder::anOpenListField()->build();
+        $status_retriever = $this->createMock(Cardwall_FieldProviders_SemanticStatusFieldRetriever::class);
+        $status_retriever->method('getField')->willReturn($status_field);
+        $config   = $this->createMock(Cardwall_OnTop_Config::class);
+        $provider = new Cardwall_OnTop_Config_MappedFieldProvider($config, $status_retriever);
+        $config->method('getMappingFor');
 
-        $status_field     = \Mockery::spy(\Tracker_FormElement_Field_OpenList::class);
-        $status_retriever = Mockery::mock(\Cardwall_FieldProviders_SemanticStatusFieldRetriever::class);
-        $status_retriever->shouldReceive('getField')->andReturn($status_field);
-        $provider = new Cardwall_OnTop_Config_MappedFieldProvider(\Mockery::spy(\Cardwall_OnTop_Config::class), $status_retriever);
-
-        $this->assertEquals($status_field, $provider->getField($tracker));
+        self::assertEquals($status_field, $provider->getField($tracker));
     }
 
     public function testItProvidesTheMappedFieldIfThereIsAMapping(): void
     {
-        $tracker = Mockery::mock(Tracker::class);
-
-        $mapped_field     = \Mockery::spy(\Tracker_FormElement_Field_OpenList::class);
-        $status_retriever = \Mockery::spy(\Cardwall_FieldProviders_SemanticStatusFieldRetriever::class);
-        $mapping          = Mockery::mock(\Cardwall_OnTop_Config_TrackerMapping::class);
-        $mapping->shouldReceive('getField')->andReturn($mapped_field);
-        $config = Mockery::mock(Cardwall_OnTop_Config::class);
-        $config->shouldReceive('getMappingFor')->with($tracker)->andReturn($mapping);
+        $tracker          = TrackerTestBuilder::aTracker()->build();
+        $mapped_field     = OpenListFieldBuilder::anOpenListField()->build();
+        $status_retriever = $this->createMock(Cardwall_FieldProviders_SemanticStatusFieldRetriever::class);
+        $mapping          = $this->createMock(Cardwall_OnTop_Config_TrackerMapping::class);
+        $mapping->method('getField')->willReturn($mapped_field);
+        $config = $this->createMock(Cardwall_OnTop_Config::class);
+        $config->method('getMappingFor')->with($tracker)->willReturn($mapping);
         $provider = new Cardwall_OnTop_Config_MappedFieldProvider($config, $status_retriever);
 
-        $this->assertEquals($mapped_field, $provider->getField($tracker));
+        self::assertEquals($mapped_field, $provider->getField($tracker));
     }
 
     public function testItReturnsNullIfThereIsACustomMappingButNoFieldChoosenYet(): void
     {
-        $tracker = Mockery::mock(Tracker::class);
-
-        $status_field     = \Mockery::spy(\Tracker_FormElement_Field_OpenList::class);
-        $status_retriever = Mockery::mock(\Cardwall_FieldProviders_SemanticStatusFieldRetriever::class);
-        $status_retriever->shouldReceive('getField')->andReturn($status_field);
-        $mapping = Mockery::mock(\Cardwall_OnTop_Config_TrackerMapping::class);
-        $mapping->shouldReceive('getField')->andReturn(null);
-        $config = Mockery::mock(Cardwall_OnTop_Config::class);
-        $config->shouldReceive('getMappingFor')->with($tracker)->andReturn($mapping);
+        $tracker          = TrackerTestBuilder::aTracker()->build();
+        $status_field     = OpenListFieldBuilder::anOpenListField()->build();
+        $status_retriever = $this->createMock(Cardwall_FieldProviders_SemanticStatusFieldRetriever::class);
+        $status_retriever->method('getField')->willReturn($status_field);
+        $mapping = $this->createMock(Cardwall_OnTop_Config_TrackerMapping::class);
+        $mapping->method('getField')->willReturn(null);
+        $config = $this->createMock(Cardwall_OnTop_Config::class);
+        $config->method('getMappingFor')->with($tracker)->willReturn($mapping);
         $provider = new Cardwall_OnTop_Config_MappedFieldProvider($config, $status_retriever);
 
-        $this->assertEquals(null, $provider->getField($tracker));
+        self::assertEquals(null, $provider->getField($tracker));
     }
 }
