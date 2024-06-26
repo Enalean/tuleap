@@ -32,9 +32,7 @@ interface StoreOption {
 }
 
 describe("AddGitlabRepositoryActionButton", () => {
-    async function instantiateComponent(
-        store_option: StoreOption,
-    ): Promise<Wrapper<AddGitlabRepositoryActionButton>> {
+    async function instantiateComponent(store_option: StoreOption): Promise<Wrapper<Vue>> {
         const store = createStoreMock(store_option);
         return shallowMount(AddGitlabRepositoryActionButton, {
             mocks: { $store: store },
