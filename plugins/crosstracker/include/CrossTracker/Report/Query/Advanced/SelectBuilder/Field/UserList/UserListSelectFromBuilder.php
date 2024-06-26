@@ -45,7 +45,7 @@ final class UserListSelectFromBuilder
             $field->field_ids
         );
 
-        $select = "$user_alias.user_id as user_$suffix, $tracker_field_openlist_value_alias.label as user_open_list_value_$suffix";
+        $select = "$user_alias.user_id as user_list_value_$suffix, $tracker_field_openlist_value_alias.label as user_list_open_$suffix";
 
         $from = <<<EOSQL
         LEFT JOIN tracker_field AS $tracker_field_alias
@@ -59,8 +59,8 @@ final class UserListSelectFromBuilder
         LEFT JOIN tracker_changeset_value_list AS $tracker_changeset_value_list_alias
             ON $tracker_changeset_value_list_alias.changeset_value_id = $changeset_value_alias.id
         LEFT JOIN user as $user_alias
-                  ON ( $user_alias.user_id = $changeset_value_openlist_alias.bindvalue_id OR $user_alias.user_id =
-                                                                                       $tracker_changeset_value_list_alias.bindvalue_id )
+            ON ($user_alias.user_id = $changeset_value_openlist_alias.bindvalue_id
+                OR $user_alias.user_id = $tracker_changeset_value_list_alias.bindvalue_id)
         EOSQL;
 
         return new ParametrizedSelectFrom(

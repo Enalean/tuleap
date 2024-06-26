@@ -46,7 +46,7 @@ final class UGroupListSelectFromBuilder
             $field->field_ids
         );
 
-        $select = "$ugroup_alias.name as user_group_name_$suffix, $tracker_field_openlist_value_alias.label as user_group_open_list_value_$suffix";
+        $select = "$ugroup_alias.name as user_group_list_value_$suffix, $tracker_field_openlist_value_alias.label as user_group_list_open_$suffix";
 
         $from = <<<EOSQL
          LEFT JOIN tracker_field AS $tracker_field_alias
@@ -59,9 +59,9 @@ final class UGroupListSelectFromBuilder
             ON $tracker_field_openlist_value_alias.id = $changeset_value_openlist_alias.openvalue_id
         LEFT JOIN tracker_changeset_value_list AS $tracker_changeset_value_list_alias
             ON $tracker_changeset_value_list_alias.changeset_value_id = $changeset_value_alias.id
-         LEFT JOIN tracker_field_list_bind_ugroups_value as $tracker_field_list_bind_ugroups_value_alias
-                    ON ( $tracker_field_list_bind_ugroups_value_alias.id = $changeset_value_openlist_alias.bindvalue_id
-                        OR $tracker_field_list_bind_ugroups_value_alias.id = $tracker_changeset_value_list_alias.bindvalue_id )
+        LEFT JOIN tracker_field_list_bind_ugroups_value as $tracker_field_list_bind_ugroups_value_alias
+            ON ($tracker_field_list_bind_ugroups_value_alias.id = $changeset_value_openlist_alias.bindvalue_id
+                OR $tracker_field_list_bind_ugroups_value_alias.id = $tracker_changeset_value_list_alias.bindvalue_id)
         LEFT JOIN ugroup as $ugroup_alias
             ON $tracker_field_list_bind_ugroups_value_alias.ugroup_id = $ugroup_alias.ugroup_id
         EOSQL;

@@ -30,8 +30,15 @@ use Tracker;
 use Tuleap\Config\ConfigurationVariables;
 use Tuleap\CrossTracker\Report\Query\Advanced\DuckTypedField\FieldTypeRetrieverWrapper;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Field\Date\DateResultBuilder;
+use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Field\Date\DateResultRepresentation;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Field\Numeric\NumericResultBuilder;
+use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Field\Numeric\NumericResultRepresentation;
+use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Field\StaticList\StaticListRepresentation;
+use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Field\StaticList\StaticListResultBuilder;
+use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Field\StaticList\StaticListValueRepresentation;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Field\Text\TextResultBuilder;
+use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Field\Text\TextResultRepresentation;
+use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\SelectedValue;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\SelectedValuesCollection;
 use Tuleap\CrossTracker\REST\v1\Representation\CrossTrackerSelectedRepresentation;
 use Tuleap\CrossTracker\REST\v1\Representation\CrossTrackerSelectedType;
@@ -49,6 +56,9 @@ use Tuleap\Tracker\Test\Builders\Fields\DateFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\ExternalFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\FloatFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\IntFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticBindBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\OpenListFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\TextFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\RetrieveArtifactStub;
@@ -80,8 +90,8 @@ final class FieldResultBuilderTest extends TestCase
 
     private function getSelectedResult(
         RetrieveUsedFieldsStub $fields_retriever,
-        array $first_value,
-        array $second_value,
+        RetrieveArtifactStub $artifact_retriever,
+        array $selected_result,
     ): SelectedValuesCollection {
         $purifier = Codendi_HTMLPurifier::instance();
         $builder  = new FieldResultBuilder(
@@ -91,42 +101,23 @@ final class FieldResultBuilderTest extends TestCase
                 [self::FIRST_FIELD_ID, self::SECOND_FIELD_ID],
                 FieldPermissionType::PERMISSION_READ,
             ),
-            new DateResultBuilder(
-                RetrieveArtifactStub::withArtifacts(
-                    ArtifactTestBuilder::anArtifact(12)->inTracker($this->first_tracker)->build(),
-                    ArtifactTestBuilder::anArtifact(15)->inTracker($this->second_tracker)->build(),
-                ),
-                $fields_retriever,
-            ),
+            new DateResultBuilder($artifact_retriever, $fields_retriever),
             new TextResultBuilder(
-                RetrieveArtifactStub::withArtifacts(
-                    ArtifactTestBuilder::anArtifact(12)->inTracker($this->first_tracker)->build(),
-                    ArtifactTestBuilder::anArtifact(15)->inTracker($this->second_tracker)->build(),
-                ),
+                $artifact_retriever,
                 new TextValueInterpreter(
                     $purifier,
-                    CommonMarkInterpreter::build(
-                        $purifier,
-                    ),
+                    CommonMarkInterpreter::build($purifier),
                 ),
             ),
             new NumericResultBuilder(),
+            new StaticListResultBuilder(),
         );
 
         return $builder->getResult(
             new Field(self::FIELD_NAME),
             $this->user,
             [$this->first_tracker, $this->second_tracker],
-            [
-                [
-                    'id' => 12,
-                    ...$first_value,
-                ],
-                [
-                    'id' => 15,
-                    ...$second_value,
-                ],
-            ],
+            $selected_result,
         );
     }
 
@@ -140,11 +131,11 @@ final class FieldResultBuilderTest extends TestCase
                     ->build(),
                 ArtifactLinkFieldBuilder::anArtifactLinkField(self::SECOND_FIELD_ID)
                     ->withName(self::FIELD_NAME)
-                    ->inTracker($this->first_tracker)
+                    ->inTracker($this->second_tracker)
                     ->build()
             ),
-            [$this->field_hash => null],
-            [$this->field_hash => null],
+            RetrieveArtifactStub::withNoArtifact(),
+            [],
         );
 
         self::assertNull($result->selected);
@@ -167,8 +158,14 @@ final class FieldResultBuilderTest extends TestCase
                     ->inTracker($this->second_tracker)
                     ->build(),
             ),
-            [$this->field_hash => $first_date->getTimestamp()],
-            [$this->field_hash => $second_date->getTimestamp()],
+            RetrieveArtifactStub::withArtifacts(
+                ArtifactTestBuilder::anArtifact(11)->inTracker($this->first_tracker)->build(),
+                ArtifactTestBuilder::anArtifact(12)->inTracker($this->second_tracker)->build(),
+            ),
+            [
+                ['id' => 11, $this->field_hash => $first_date->getTimestamp()],
+                ['id' => 12, $this->field_hash => $second_date->getTimestamp()],
+            ],
         );
 
         self::assertEquals(
@@ -176,6 +173,10 @@ final class FieldResultBuilderTest extends TestCase
             $result->selected,
         );
         self::assertCount(2, $result->values);
+        self::assertEqualsCanonicalizing([
+            11 => new SelectedValue(self::FIELD_NAME, new DateResultRepresentation($first_date->format(DATE_ATOM), true)),
+            12 => new SelectedValue(self::FIELD_NAME, new DateResultRepresentation($second_date->format(DATE_ATOM), false)),
+        ], $result->values);
     }
 
     public function testItReturnsValuesForTextField(): void
@@ -191,8 +192,14 @@ final class FieldResultBuilderTest extends TestCase
                     ->inTracker($this->second_tracker)
                     ->build(),
             ),
-            [$this->field_hash => '499P', "format_$this->field_hash" => 'text'],
-            [$this->field_hash => 'V-Series.R', "format_$this->field_hash" => 'commonmark'],
+            RetrieveArtifactStub::withArtifacts(
+                ArtifactTestBuilder::anArtifact(21)->inTracker($this->first_tracker)->build(),
+                ArtifactTestBuilder::anArtifact(22)->inTracker($this->second_tracker)->build(),
+            ),
+            [
+                ['id' => 21, $this->field_hash => '499P', "format_$this->field_hash" => 'text'],
+                ['id' => 22, $this->field_hash => 'V-Series.R', "format_$this->field_hash" => 'commonmark'],
+            ],
         );
 
         self::assertEquals(
@@ -200,6 +207,13 @@ final class FieldResultBuilderTest extends TestCase
             $result->selected,
         );
         self::assertCount(2, $result->values);
+        self::assertEqualsCanonicalizing([
+            21 => new SelectedValue(self::FIELD_NAME, new TextResultRepresentation('499P')),
+            22 => new SelectedValue(self::FIELD_NAME, new TextResultRepresentation(<<<EOL
+<p>V-Series.R</p>\n
+EOL
+            )),
+        ], $result->values);
     }
 
     public function testItReturnsValuesForNumericField(): void
@@ -215,14 +229,96 @@ final class FieldResultBuilderTest extends TestCase
                     ->inTracker($this->second_tracker)
                     ->build(),
             ),
-            ["int_$this->field_hash" => 42, "float_$this->field_hash" => null],
-            ["int_$this->field_hash" => null, "float_$this->field_hash" => 3.1415],
+            RetrieveArtifactStub::withArtifacts(
+                ArtifactTestBuilder::anArtifact(31)->inTracker($this->first_tracker)->build(),
+                ArtifactTestBuilder::anArtifact(32)->inTracker($this->second_tracker)->build(),
+                ArtifactTestBuilder::anArtifact(33)->inTracker($this->second_tracker)->build(),
+            ),
+            [
+                ['id' => 31, "int_$this->field_hash" => 6, "float_$this->field_hash" => null],
+                ['id' => 32, "int_$this->field_hash" => null, "float_$this->field_hash" => 3.1415],
+                ['id' => 33, "int_$this->field_hash" => null, "float_$this->field_hash" => null],
+            ]
         );
 
         self::assertEquals(
             new CrossTrackerSelectedRepresentation(self::FIELD_NAME, CrossTrackerSelectedType::TYPE_NUMERIC),
             $result->selected,
         );
-        self::assertCount(2, $result->values);
+        self::assertCount(3, $result->values);
+        self::assertEqualsCanonicalizing([
+            31 => new SelectedValue(self::FIELD_NAME, new NumericResultRepresentation(6)),
+            32 => new SelectedValue(self::FIELD_NAME, new NumericResultRepresentation(3.1415)),
+            33 => new SelectedValue(self::FIELD_NAME, new NumericResultRepresentation(null)),
+        ], $result->values);
+    }
+
+    public function testItReturnsValuesForStaticListField(): void
+    {
+        $result = $this->getSelectedResult(
+            RetrieveUsedFieldsStub::withFields(
+                ListStaticBindBuilder::aStaticBind(
+                    ListFieldBuilder::aListField(self::FIRST_FIELD_ID)
+                        ->withName(self::FIELD_NAME)
+                        ->inTracker($this->first_tracker)
+                        ->build()
+                )->build()->getField(),
+                ListStaticBindBuilder::aStaticBind(
+                    OpenListFieldBuilder::anOpenListField()
+                        ->withId(self::SECOND_FIELD_ID)
+                        ->withName(self::FIELD_NAME)
+                        ->withTracker($this->second_tracker)
+                        ->build()
+                )->build()->getField(),
+            ),
+            RetrieveArtifactStub::withArtifacts(
+                ArtifactTestBuilder::anArtifact(41)->inTracker($this->first_tracker)->build(),
+                ArtifactTestBuilder::anArtifact(42)->inTracker($this->second_tracker)->build(),
+                ArtifactTestBuilder::anArtifact(43)->inTracker($this->second_tracker)->build(),
+            ),
+            [
+                [
+                    'id'                                  => 41,
+                    "static_list_value_$this->field_hash" => 'electrophobia',
+                    "static_list_open_$this->field_hash"  => null,
+                    "static_list_color_$this->field_hash" => 'fiesta-red',
+                ],
+                [
+                    'id'                                  => 42,
+                    "static_list_value_$this->field_hash" => null,
+                    "static_list_open_$this->field_hash"  => 'abnormalised',
+                    "static_list_color_$this->field_hash" => null,
+                ],
+                [
+                    'id'                                  => 42,
+                    "static_list_value_$this->field_hash" => 'disbenchment',
+                    "static_list_open_$this->field_hash"  => null,
+                    "static_list_color_$this->field_hash" => null,
+                ],
+                [
+                    'id'                                  => 43,
+                    "static_list_value_$this->field_hash" => null,
+                    "static_list_open_$this->field_hash"  => null,
+                    "static_list_color_$this->field_hash" => null,
+                ],
+            ],
+        );
+
+        self::assertEquals(
+            new CrossTrackerSelectedRepresentation(self::FIELD_NAME, CrossTrackerSelectedType::TYPE_STATIC_LIST),
+            $result->selected,
+        );
+        $values = $result->values;
+        self::assertCount(3, $values);
+        self::assertEqualsCanonicalizing([
+            41 => new SelectedValue(self::FIELD_NAME, new StaticListRepresentation([
+                new StaticListValueRepresentation('electrophobia', 'fiesta-red'),
+            ])),
+            42 => new SelectedValue(self::FIELD_NAME, new StaticListRepresentation([
+                new StaticListValueRepresentation('abnormalised', null),
+                new StaticListValueRepresentation('disbenchment', null),
+            ])),
+            43 => new SelectedValue(self::FIELD_NAME, new StaticListRepresentation([])),
+        ], $result->values);
     }
 }

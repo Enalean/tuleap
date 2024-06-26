@@ -135,8 +135,8 @@ final class UGroupListSelectFromBuilderTest extends CrossTrackerFieldTestCase
 
         $hash                  = md5('ugroup_list_field');
         $this->expected_values = [
-            $release_artifact_with_static_list_id => ["user_group_name_$hash" => 'ugroup_project_members_name_key'],
-            $sprint_artifact_with_open_list_id    => ["user_group_open_list_value_$hash" => 'Rancho', "user_group_name_$hash" => 'Bagheera'],
+            $release_artifact_with_static_list_id => ["user_group_list_value_$hash" => 'ugroup_project_members_name_key'],
+            $sprint_artifact_with_open_list_id    => ["user_group_list_open_$hash" => 'Rancho', "user_group_list_value_$hash" => 'Bagheera'],
         ];
 
         $tracker_builder->buildListValue(
@@ -190,8 +190,8 @@ final class UGroupListSelectFromBuilderTest extends CrossTrackerFieldTestCase
     {
         $results         = $this->getQueryResults();
         $hash            = md5('ugroup_list_field');
-        $list_field_hash = 'user_group_name_' . $hash;
-        $open_field_hash = 'user_group_open_list_value_' . $hash;
+        $list_field_hash = 'user_group_list_value_' . $hash;
+        $open_field_hash = 'user_group_list_open_' . $hash;
         self::assertCount(count($this->artifact_ids), $results);
         foreach ($results as $row) {
             self::assertArrayHasKey($list_field_hash, $row);

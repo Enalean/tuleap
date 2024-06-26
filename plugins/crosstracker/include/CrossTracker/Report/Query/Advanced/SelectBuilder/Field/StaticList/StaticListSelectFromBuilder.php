@@ -46,7 +46,7 @@ final class StaticListSelectFromBuilder
             $field->field_ids
         );
 
-        $select = "$tracker_field_list_bind_static_alias.label as list_value_$suffix, $tracker_field_openlist_value_alias.label as open_value_$suffix, $tracker_field_list_bind_decorator_alias.tlp_color_name as color_value_$suffix ";
+        $select = "$tracker_field_list_bind_static_alias.label as static_list_value_$suffix, $tracker_field_openlist_value_alias.label as static_list_open_$suffix, $tracker_field_list_bind_decorator_alias.tlp_color_name as static_list_color_$suffix ";
 
         $from = <<<EOSQL
          LEFT JOIN tracker_field AS $tracker_field_alias
@@ -60,10 +60,10 @@ final class StaticListSelectFromBuilder
         LEFT JOIN tracker_changeset_value_list AS $tracker_changeset_value_list_alias
             ON $tracker_changeset_value_list_alias.changeset_value_id = $changeset_value_alias.id
         LEFT JOIN tracker_field_list_bind_static_value AS $tracker_field_list_bind_static_alias
-            ON ( $changeset_value_openlist_alias.bindvalue_id = $tracker_field_list_bind_static_alias.id
-                OR $tracker_changeset_value_list_alias.bindvalue_id = $tracker_field_list_bind_static_alias.id )
+            ON ($changeset_value_openlist_alias.bindvalue_id = $tracker_field_list_bind_static_alias.id
+                OR $tracker_changeset_value_list_alias.bindvalue_id = $tracker_field_list_bind_static_alias.id)
         LEFT JOIN tracker_field_list_bind_decorator as $tracker_field_list_bind_decorator_alias
-                    ON $tracker_field_list_bind_static_alias.id = $tracker_field_list_bind_decorator_alias.value_id
+            ON $tracker_field_list_bind_static_alias.id = $tracker_field_list_bind_decorator_alias.value_id
         EOSQL;
 
         return new ParametrizedSelectFrom(
