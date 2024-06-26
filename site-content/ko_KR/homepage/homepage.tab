@@ -1,0 +1,18 @@
+# Copyright (c) Enalean, 2014 - Present. All Rights Reserved.
+# Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+# This file is licensed under the GNU General Public License version 2. See the file COPYING.
+
+# Contact
+contact	title	문의하기
+
+# Homepage
+homepage	title	환영합니다
+homepage	username_placeholder	아이디
+homepage	password_placeholder	비밀번호
+homepage	sign_in_submit	로그인
+homepage	forgot_password	 비밀번호를 잊어버렸습니다.
+homepage	not_a_member	멤버가 아니십니까?
+homepage	create_account	회원가입
+homepage	welcome_back	환영합니다!
+homepage	welcome_title	$1에 오신 것을 환영합니다!
+homepage	my_personal_page	내 개인 페이지

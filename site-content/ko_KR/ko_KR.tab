@@ -1,1 +1,115 @@
+#
+# Copyright (c) Enalean, 2011 - Present. All Rights Reserved.
+# Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+#
+# This file is a part of Tuleap.
+#
+# Tuleap is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# Tuleap is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with Tuleap; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+#
+
+system	locale	ko_KR
 system	locale_label	한국어
+system	strftimefmt	%Y %B %e  %H:%M
+system	strfdatefmt	%Y %B %e
+system	strfdateshortfmt	%Y %b %e
+system	datefmt	Y/m/d H:i
+system	datefmt_full	Y/m/d H:i:s
+system	datefmt_time	Y/m/d H:i
+system	datefmt_short	Y/m/d
+system	datefmt_day_and_month	M d
+system	decimal_separator	.
+system	thousand_separator	,
+conf	content_encoding	utf-8
+conf	default_font	verdana,arial,helvetica,sans-serif
+conf	language_code	ko
+conf	language_id	ko_KR
+global	perm_denied	권한 거부됨
+global	error_perm_denied	오류 - 권한 거부됨
+global	back_home	홈페이지로 돌아가기
+global	back	뒤로가기
+global	btn_apply	적용
+global	btn_delete	삭제
+global	btn_cancel	취소
+global	btn_update	업데이트
+global	btn_submit	저장
+global	btn_search	찾기
+global	btn_submit_and_continue	저장하고 계속하기
+global	btn_submit_and_stay	저장하고 머무르기
+global	btn_browse	찾기
+global	btn_create	만들기
+global	btn_preview	미리보기
+global	btn_close	닫기
+global	btn_reset	초기화
+global	btn_edit	수정
+global	btn_restrict	제한하기
+global	search_title	검색
+global	save_change	변경사항 저장
+global	reset	초기화
+global	delete	삭제
+global	add	추가
+global	total	총
+global	warning	경고
+global	yes	예
+global	no	아니오
+global	on	켬
+global	off	끔
+global	any	모든
+global	none	없음
+global	please_choose_dashed	-- 선택해주세요
+global	begin	시작하기
+global	end	끝내기
+global	next	다음
+global	prev	이전
+global	of	of
+global	printer_version	프린터 버전
+global	error	오류
+global	help	도움말
+global	by	By
+global	select	선택
+global	unchanged	변경사항 없음
+global	or	또는
+global	and	and
+global	more	more
+global	activate	활성화
+global	deactivate	비활성화
+global	Project	프로젝트
+global	System	시스템
+global	Admin	관리자
+global	Administration	관리
+global	Settings	설정
+global	Personal	개인
+global	default	기본
+global	no_mail_for_account	이 계정에 이메일 주소가 없습니다.
+global	mail_failed	이메일이 전송되지 않았습니다. 관리자에게 문의하세요. 이메일 주소는 $1입니다.
+global	open	열림
+global	closed	닫힘
+global	status	상태
+global	return_to	<p>요청된 페이지가 로딩 중입니다. 로딩되지 않을 경우, <a href="$1">$1</a>를 시도하세요.</p>
+global	at_the_beginning	처음에
+global	at_the_end	끝에
+global	after	$1 이후
+global	missing_parameters	매개 변수 누락됨
+global	error_upload	파일 업로드 중 오류가 발생했습니다. 다시 시도해주세요.
+global	error_upload_nofile	파일 업로드 중 오류가 발생했습니다($1). 파일이 업로드되지 않았습니다.
+global	error_upload_partial	파일 업로드 중 오류가 발생했습니다($1). 파일이 일부만 업로드되었습니다.
+global	error_upload_size	파일 업로드 중 오류가 발생했습니다($1). 업로드 된 파일이 최대 허용 파일 사이즈를 초과합니다.
+global	error_upload_unknown	파일 업로드 중 오류가 발생했습니다($1). 알 수 없는 에러코드입니다.
+global	service_conf_not_inherited	이 서비스의 설정이 하위 프로젝트에는 적용되지 않습니다.
+global	pick_date	날짜를 선택해주세요.
+global	show_frame	이 프레임만 보기
+global	null	NULL
+global	error_synchronizertoken	사용자님의 요청이 유효하지 않습니다. 다시 시도해주세요.
+global	settings	설정
+global	usage	사용
