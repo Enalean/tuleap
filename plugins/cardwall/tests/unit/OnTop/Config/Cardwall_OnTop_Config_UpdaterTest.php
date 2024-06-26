@@ -20,22 +20,26 @@
 
 declare(strict_types=1);
 
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
-final class Cardwall_OnTop_Config_UpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
-{
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+namespace Tuleap\Cardwall\OnTop\Config;
 
+use Cardwall_OnTop_Config_Command;
+use Cardwall_OnTop_Config_Updater;
+use Codendi_Request;
+use Tuleap\Test\PHPUnit\TestCase;
+
+final class Cardwall_OnTop_Config_UpdaterTest extends TestCase // phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
+{
     public function testItScheduleExecuteOnCommands(): void
     {
-        $request = \Mockery::spy(\Codendi_Request::class);
-        $c1      = \Mockery::spy(\Cardwall_OnTop_Config_Command::class);
-        $c2      = \Mockery::spy(\Cardwall_OnTop_Config_Command::class);
+        $request = new Codendi_Request([]);
+        $c1      = $this->createMock(Cardwall_OnTop_Config_Command::class);
+        $c2      = $this->createMock(Cardwall_OnTop_Config_Command::class);
         $updater = new Cardwall_OnTop_Config_Updater();
         $updater->addCommand($c1);
         $updater->addCommand($c2);
 
-        $c1->shouldReceive('execute')->with($request)->once();
-        $c2->shouldReceive('execute')->with($request)->once();
+        $c1->expects(self::once())->method('execute')->with($request);
+        $c2->expects(self::once())->method('execute')->with($request);
 
         $updater->process($request);
     }

@@ -20,24 +20,27 @@
 
 declare(strict_types=1);
 
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
-final class Cardwall_OnTop_Config_TrackerMappingNoFieldTest extends \Tuleap\Test\PHPUnit\TestCase
-{
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+namespace Tuleap\Cardwall\OnTop\Config;
 
+use Cardwall_OnTop_Config_TrackerMappingNoField;
+use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
+
+final class Cardwall_OnTop_Config_TrackerMappingNoFieldTest extends TestCase // phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
+{
     public function testItHasAnEmptyValueMappings(): void
     {
-        $tracker          = Mockery::mock(Tracker::class);
+        $tracker          = TrackerTestBuilder::aTracker()->build();
         $available_fields = [];
         $mapping          = new Cardwall_OnTop_Config_TrackerMappingNoField($tracker, $available_fields);
-        $this->assertEquals([], $mapping->getValueMappings());
+        self::assertEquals([], $mapping->getValueMappings());
     }
 
     public function testItsFieldIsNull(): void
     {
-        $tracker          = Mockery::mock(Tracker::class);
+        $tracker          = TrackerTestBuilder::aTracker()->build();
         $available_fields = [];
         $mapping          = new Cardwall_OnTop_Config_TrackerMappingNoField($tracker, $available_fields);
-        $this->assertNull($mapping->getField());
+        self::assertNull($mapping->getField());
     }
 }
