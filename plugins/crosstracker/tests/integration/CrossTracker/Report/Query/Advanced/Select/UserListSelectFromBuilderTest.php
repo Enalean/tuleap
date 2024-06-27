@@ -19,46 +19,36 @@
  */
 
 declare(strict_types=1);
+
 namespace Tuleap\CrossTracker\Report\Query\Advanced\Select;
 
 use PFUser;
 use ProjectUGroup;
 use Tracker;
 use Tracker_FormElementFactory;
+use Tuleap\CrossTracker\CrossTrackerReport;
 use Tuleap\CrossTracker\Report\Query\Advanced\CrossTrackerFieldTestCase;
-use Tuleap\CrossTracker\Report\Query\Advanced\DuckTypedField\FieldTypeRetrieverWrapper;
-use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\CrossTrackerExpertQueryReportDao;
-use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Field\Date\DateSelectFromBuilder;
-use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Field\FieldSelectFromBuilder;
-use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Field\Numeric\NumericSelectFromBuilder;
-use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Field\StaticList\StaticListSelectFromBuilder;
-use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Field\Text\TextSelectFromBuilder;
-use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Field\UGroupList\UGroupListSelectFromBuilder;
-use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Field\UserList\UserListSelectFromBuilder;
-use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilderVisitor;
+use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Field\UserList\UserListRepresentation;
+use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Field\UserList\UserListValueRepresentation;
+use Tuleap\CrossTracker\REST\v1\Representation\CrossTrackerReportContentRepresentation;
+use Tuleap\CrossTracker\Tests\Report\ArtifactReportFactoryInstantiator;
 use Tuleap\DB\DBFactory;
 use Tuleap\Test\Builders\CoreDatabaseBuilder;
-use Tuleap\Tracker\Permission\TrackersPermissionsRetriever;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\Field;
 use Tuleap\Tracker\Test\Builders\TrackerDatabaseBuilder;
+use UserHelper;
+use UserManager;
 
 final class UserListSelectFromBuilderTest extends CrossTrackerFieldTestCase
 {
-    private SelectBuilderVisitor $builder;
-    private CrossTrackerExpertQueryReportDao $dao;
     /**
      * @var Tracker[]
      */
     private array $trackers;
     /**
-     * @var list<int>
-     */
-    private array $artifact_ids;
-    /**
-     * @var array<int, array<string, int|string>>
+     * @var array<int, UserListValueRepresentation[]>
      */
     private array $expected_values;
-    private PFUser $alice;
+    private PFUser $user;
 
     public function setUp(): void
     {
@@ -66,18 +56,18 @@ final class UserListSelectFromBuilderTest extends CrossTrackerFieldTestCase
         $tracker_builder = new TrackerDatabaseBuilder($db);
         $core_builder    = new CoreDatabaseBuilder($db);
 
-        $project        = $core_builder->buildProject();
-        $project_id     = (int) $project->getID();
-        $project_member = $core_builder->buildUser('project_member', 'Project Member', 'project_member@example.com');
-        $project_admin  = $core_builder->buildUser('project_admin', 'Project Admin', 'project_admin@example.com');
-        $core_builder->addUserToProjectMembers((int) $project_member->getId(), $project_id);
+        $project       = $core_builder->buildProject();
+        $project_id    = (int) $project->getID();
+        $this->user    = $core_builder->buildUser('project_member', 'Project Member', 'project_member@example.com');
+        $project_admin = $core_builder->buildUser('project_admin', 'Project Admin', 'project_admin@example.com');
+        $core_builder->addUserToProjectMembers((int) $this->user->getId(), $project_id);
         $core_builder->addUserToProjectMembers((int) $project_admin->getId(), $project_id);
         $core_builder->addUserToProjectAdmins((int) $project_admin->getId(), $project_id);
 
-        $this->alice = $core_builder->buildUser('alice', 'Alice', 'alice@example.com');
-        $bob         = $core_builder->buildUser('bob', 'Bob', 'bob@example.com');
-        $core_builder->addUserToProjectMembers((int) $this->alice->getId(), $project_id);
-        $core_builder->addUserToProjectMembers((int) $bob->getId(), $project_id);
+        $alice = $core_builder->buildUser('alice', 'Alice', 'alice@example.com');
+        $core_builder->addUserToProjectMembers((int) $alice->getId(), $project_id);
+        $bob = (UserManager::instance())->getUserAnonymous();
+        $bob->setEmail('bob@example.com');
 
         $release_tracker = $tracker_builder->buildTracker($project_id, 'Release');
         $sprint_tracker  = $tracker_builder->buildTracker($project_id, 'Sprint');
@@ -88,8 +78,7 @@ final class UserListSelectFromBuilderTest extends CrossTrackerFieldTestCase
             'user_list_field',
             Tracker_FormElementFactory::FIELD_SELECT_BOX_TYPE
         );
-
-        $sprint_user_list_field_id = $tracker_builder->buildUserListField(
+        $sprint_user_list_field_id         = $tracker_builder->buildUserListField(
             $sprint_tracker->getId(),
             'user_list_field',
             Tracker_FormElementFactory::FIELD_OPEN_LIST_TYPE
@@ -112,113 +101,71 @@ final class UserListSelectFromBuilderTest extends CrossTrackerFieldTestCase
         $release_artifact_empty_id            = $tracker_builder->buildArtifact($release_tracker->getId());
         $release_artifact_with_static_list_id = $tracker_builder->buildArtifact($release_tracker->getId());
         $sprint_artifact_with_open_list_id    = $tracker_builder->buildArtifact($sprint_tracker->getId());
-        $this->artifact_ids                   = [
-            $release_artifact_empty_id,
-            $release_artifact_with_static_list_id,
-            $sprint_artifact_with_open_list_id,
-            $sprint_artifact_with_open_list_id,
-        ];
 
         $tracker_builder->buildLastChangeset($release_artifact_empty_id);
-        $release_artifact_with_list_changeset     = $tracker_builder->buildLastChangeset(
-            $release_artifact_with_static_list_id
-        );
-        $sprint_artifact_with_open_list_changeset = $tracker_builder->buildLastChangeset(
-            $sprint_artifact_with_open_list_id
-        );
+        $release_artifact_with_list_changeset     = $tracker_builder->buildLastChangeset($release_artifact_with_static_list_id);
+        $sprint_artifact_with_open_list_changeset = $tracker_builder->buildLastChangeset($sprint_artifact_with_open_list_id);
 
-        $hash                  = md5('user_list_field');
+        $helper                = UserHelper::instance();
         $this->expected_values = [
-            $release_artifact_with_static_list_id => ["user_list_value_$hash" => $this->alice->getId()],
-            $sprint_artifact_with_open_list_id    => ["user_list_open_$hash" => $bob->getEmail(), "user_list_value_$hash" => $project_admin->getId() ],
+            $release_artifact_empty_id            => [],
+            $release_artifact_with_static_list_id => [UserListValueRepresentation::fromPFUser($alice, $helper)],
+            $sprint_artifact_with_open_list_id    => [
+                UserListValueRepresentation::fromPFUser($project_admin, $helper),
+                UserListValueRepresentation::fromAnonymous($bob->getEmail()),
+            ],
         ];
 
         $tracker_builder->buildListValue(
             $release_artifact_with_list_changeset,
             $release_user_static_list_field_id,
-            (int) $this->alice->getId()
+            (int) $alice->getId()
         );
-
         $tracker_builder->buildListValue(
             $sprint_artifact_with_open_list_changeset,
             $sprint_user_list_field_id,
             (int) $project_admin->getId(),
         );
-
         $tracker_builder->buildOpenValue(
             $sprint_artifact_with_open_list_changeset,
             $sprint_user_list_field_id,
             $sprint_bind_user_open_ids[$bob->getEmail()],
             true
         );
-
-        $this->builder = new SelectBuilderVisitor(
-            new FieldSelectFromBuilder(
-                Tracker_FormElementFactory::instance(),
-                new FieldTypeRetrieverWrapper(Tracker_FormElementFactory::instance()),
-                TrackersPermissionsRetriever::build(),
-                new DateSelectFromBuilder(),
-                new TextSelectFromBuilder(),
-                new NumericSelectFromBuilder(),
-                new StaticListSelectFromBuilder(),
-                new UGroupListSelectFromBuilder(),
-                new UserListSelectFromBuilder()
-            )
-        );
-        $this->dao     = new CrossTrackerExpertQueryReportDao();
     }
 
-    private function getQueryResults(): array
+    private function getQueryResults(CrossTrackerReport $report, PFUser $user): CrossTrackerReportContentRepresentation
     {
-        $select_from = $this->builder->buildSelectFrom(
-            [new Field('user_list_field')],
-            $this->trackers,
-            $this->alice,
-        );
-
-        return $this->dao->searchArtifactsColumnsMatchingIds($select_from, $this->artifact_ids);
+        $result = (new ArtifactReportFactoryInstantiator())
+            ->getFactory()
+            ->getArtifactsMatchingReport($report, $user, 10, 0, false);
+        assert($result instanceof CrossTrackerReportContentRepresentation);
+        return $result;
     }
 
     public function testItReturnsColumns(): void
     {
-        $results         = $this->getQueryResults();
-        $hash            = md5('user_list_field');
-        $list_field_hash = 'user_list_value_' . $hash;
-        $open_field_hash = 'user_list_open_' . $hash;
+        $result = $this->getQueryResults(
+            new CrossTrackerReport(
+                1,
+                "SELECT user_list_field WHERE user_list_field = '' OR user_list_field != ''",
+                $this->trackers,
+            ),
+            $this->user,
+        );
 
-        self::assertCount(count($this->artifact_ids), $results);
-
-        foreach ($results as $row) {
-            self::assertArrayHasKey($list_field_hash, $row);
-            self::assertArrayHasKey($open_field_hash, $row);
-            self::assertArrayHasKey('id', $row);
-            $this->assertListValueCase($row, $list_field_hash, $open_field_hash);
-            $this->assertOpenValueCase($row, $list_field_hash, $open_field_hash);
-            $this->assertNullValueCase($row, $list_field_hash, $open_field_hash);
+        self::assertSame(3, $result->getTotalSize());
+        self::assertCount(1, $result->selected);
+        self::assertSame('user_list_field', $result->selected[0]->name);
+        self::assertSame('list_user', $result->selected[0]->type);
+        $values = [];
+        foreach ($result->artifacts as $artifact) {
+            self::assertCount(1, $artifact);
+            self::assertArrayHasKey('user_list_field', $artifact);
+            $value = $artifact['user_list_field'];
+            self::assertInstanceOf(UserListRepresentation::class, $value);
+            $values[] = $value->value;
         }
-    }
-
-    private function assertNullValueCase(array $row, string $list_field_hash, string $open_field_hash): void
-    {
-        if ($row[$list_field_hash] === null && $row[$open_field_hash] === null) {
-            self::assertNull($row[$list_field_hash]);
-            self::assertNull($row[$open_field_hash]);
-        }
-    }
-
-    private function assertListValueCase(array $row, string $list_field_hash, string $open_field_hash): void
-    {
-        if ($row[$list_field_hash] !== null && $row[$open_field_hash] === null) {
-            self::assertSame($this->expected_values[$row['id']][$list_field_hash], $row[$list_field_hash]);
-            self::assertNull($row[$open_field_hash]);
-        }
-    }
-
-    private function assertOpenValueCase(array $row, string $list_field_hash, string $open_field_hash): void
-    {
-        if ($row[$list_field_hash] === null && $row[$open_field_hash] !== null) {
-            self::assertNull($row[$list_field_hash]);
-            self::assertSame($this->expected_values[$row['id']][$open_field_hash], $row[$open_field_hash]);
-        }
+        self::assertEqualsCanonicalizing(array_values($this->expected_values), $values);
     }
 }

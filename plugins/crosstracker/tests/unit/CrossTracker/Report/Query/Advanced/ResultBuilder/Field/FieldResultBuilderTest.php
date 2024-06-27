@@ -42,6 +42,9 @@ use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Field\Text\TextResul
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Field\UGroupList\UGroupListRepresentation;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Field\UGroupList\UGroupListResultBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Field\UGroupList\UGroupListValueRepresentation;
+use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Field\UserList\UserListRepresentation;
+use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Field\UserList\UserListResultBuilder;
+use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Field\UserList\UserListValueRepresentation;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\SelectedValue;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\SelectedValuesCollection;
 use Tuleap\CrossTracker\REST\v1\Representation\CrossTrackerSelectedRepresentation;
@@ -52,6 +55,9 @@ use Tuleap\Markdown\CommonMarkInterpreter;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Test\Stubs\ProvideAndRetrieveUserStub;
+use Tuleap\Test\Stubs\RetrieveUserByEmailStub;
+use Tuleap\Test\Stubs\RetrieveUserByIdStub;
 use Tuleap\Test\Stubs\UGroupRetrieverStub;
 use Tuleap\Tracker\Artifact\ChangesetValue\Text\TextValueInterpreter;
 use Tuleap\Tracker\Permission\FieldPermissionType;
@@ -64,6 +70,7 @@ use Tuleap\Tracker\Test\Builders\Fields\ExternalFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\FloatFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\IntFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticBindBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\List\ListUserBindBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListUserGroupBindBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\OpenListFieldBuilder;
@@ -74,6 +81,7 @@ use Tuleap\Tracker\Test\Stub\RetrieveFieldTypeStub;
 use Tuleap\Tracker\Test\Stub\RetrieveUsedFieldsStub;
 use Tuleap\Tracker\Test\Stub\Tracker\Permission\RetrieveUserPermissionOnFieldsStub;
 use Tuleap\User\UserGroup\NameTranslator;
+use UserHelper;
 
 final class FieldResultBuilderTest extends TestCase
 {
@@ -104,8 +112,9 @@ final class FieldResultBuilderTest extends TestCase
         RetrieveArtifactStub $artifact_retriever,
         array $selected_result,
     ): SelectedValuesCollection {
-        $purifier = Codendi_HTMLPurifier::instance();
-        $builder  = new FieldResultBuilder(
+        $purifier    = Codendi_HTMLPurifier::instance();
+        $user_helper = $this->createMock(UserHelper::class);
+        $builder     = new FieldResultBuilder(
             $fields_retriever,
             new FieldTypeRetrieverWrapper(RetrieveFieldTypeStub::withDetectionOfType()),
             RetrieveUserPermissionOnFieldsStub::build()->withPermissionOn(
@@ -127,7 +136,18 @@ final class FieldResultBuilderTest extends TestCase
                 new ProjectUGroup(['name' => NameTranslator::PROJECT_ADMINS]),
                 new ProjectUGroup(['name' => 'Custom_User_Group']),
             )),
+            new UserListResultBuilder(
+                RetrieveUserByIdStub::withUsers(
+                    UserTestBuilder::aUser()->withId(131)->withRealName('Fabrice')->withUserName('fabDu38')->withAvatarUrl('https://example.com/fabrice')->build(),
+                    UserTestBuilder::aUser()->withId(132)->withRealName('Eugénie')->withUserName('gege')->withAvatarUrl('https://example.com/eugenie')->build(),
+                ),
+                RetrieveUserByEmailStub::withNoUser(),
+                ProvideAndRetrieveUserStub::build(UserTestBuilder::buildWithDefaults()),
+                $user_helper,
+            ),
         );
+
+        $user_helper->method('getDisplayNameFromUser')->willReturnCallback(static fn(PFUser $user) => $user->isAnonymous() ? $user->getEmail() : $user->getRealName());
 
         return $builder->getResult(
             new Field(self::FIELD_NAME),
@@ -407,6 +427,71 @@ EOL
                 new UGroupListValueRepresentation('Custom_User_Group'),
             ])),
             53 => new SelectedValue(self::FIELD_NAME, new UGroupListRepresentation([])),
+        ], $values);
+    }
+
+    public function testItReturnsValuesForUserListField(): void
+    {
+        $result = $this->getSelectedResult(
+            RetrieveUsedFieldsStub::withFields(
+                ListUserBindBuilder::aUserBind(
+                    ListFieldBuilder::aListField(self::FIRST_FIELD_ID)
+                        ->withName(self::FIELD_NAME)
+                        ->inTracker($this->first_tracker)
+                        ->build()
+                )->build()->getField(),
+                ListUserBindBuilder::aUserBind(
+                    OpenListFieldBuilder::anOpenListField()
+                        ->withId(self::SECOND_FIELD_ID)
+                        ->withName(self::FIELD_NAME)
+                        ->withTracker($this->second_tracker)
+                        ->build()
+                )->build()->getField(),
+            ),
+            RetrieveArtifactStub::withArtifacts(
+                ArtifactTestBuilder::anArtifact(61)->build(),
+                ArtifactTestBuilder::anArtifact(62)->build(),
+                ArtifactTestBuilder::anArtifact(63)->build(),
+            ),
+            [
+                [
+                    'id'                                => 61,
+                    "user_list_value_$this->field_hash" => 131,
+                    "user_list_open_$this->field_hash"  => null,
+                ],
+                [
+                    'id'                                => 62,
+                    "user_list_value_$this->field_hash" => 132,
+                    "user_list_open_$this->field_hash"  => null,
+                ],
+                [
+                    'id'                                => 62,
+                    "user_list_value_$this->field_hash" => null,
+                    "user_list_open_$this->field_hash"  => 'windmill@example.com',
+                ],
+                [
+                    'id'                                => 63,
+                    "user_list_value_$this->field_hash" => null,
+                    "user_list_open_$this->field_hash"  => null,
+                ],
+            ],
+        );
+
+        self::assertEquals(
+            new CrossTrackerSelectedRepresentation(self::FIELD_NAME, CrossTrackerSelectedType::TYPE_USER_LIST),
+            $result->selected,
+        );
+        $values = $result->values;
+        self::assertCount(3, $values);
+        self::assertEqualsCanonicalizing([
+            61 => new SelectedValue(self::FIELD_NAME, new UserListRepresentation([
+                new UserListValueRepresentation('Fabrice', 'https://example.com/fabrice', '/users/fabDu38', false),
+            ])),
+            62 => new SelectedValue(self::FIELD_NAME, new UserListRepresentation([
+                new UserListValueRepresentation('Eugénie', 'https://example.com/eugenie', '/users/gege', false),
+                new UserListValueRepresentation('windmill@example.com', 'https://' . PFUser::DEFAULT_AVATAR_URL, null, true),
+            ])),
+            63 => new SelectedValue(self::FIELD_NAME, new UserListRepresentation([])),
         ], $values);
     }
 }
