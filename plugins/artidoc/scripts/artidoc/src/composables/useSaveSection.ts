@@ -18,11 +18,7 @@
  */
 
 import { isArtifactSection, isPendingArtifactSection } from "@/helpers/artidoc-section.type";
-import type {
-    ArtidocSection,
-    ArtifactSection,
-    PendingArtifactSection,
-} from "@/helpers/artidoc-section.type";
+import type { ArtidocSection } from "@/helpers/artidoc-section.type";
 import { createSection, getSection, postArtifact, putArtifact } from "@/helpers/rest-querier";
 import { Fault } from "@tuleap/fault";
 import type { ResultAsync } from "neverthrow";
@@ -30,7 +26,7 @@ import { errAsync, okAsync } from "neverthrow";
 import { getSectionInItsLatestVersion } from "@/helpers/get-section-in-its-latest-version";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import { DOCUMENT_ID } from "@/document-id-injection-key";
-import type { PositionForSave } from "@/stores/useSectionsStore";
+import type { SectionsStore } from "@/stores/useSectionsStore";
 import type { EditorErrors } from "@/composables/useEditorErrors";
 import type { AttachmentFile } from "@/composables/useAttachmentFile";
 import { TEMPORARY_FLAG_DURATION_IN_MS } from "@/composables/temporary-flag-duration";
@@ -58,15 +54,12 @@ export type SaveEditor = {
 export default function useSaveSection(
     editor_errors: EditorErrors,
     callbacks: {
-        updateSectionStore: (section: ArtifactSection) => void;
-        updateCurrentSection: (section: ArtidocSection) => void;
+        updateSectionStore: SectionsStore["updateSection"];
+        updateCurrentSection: (new_value: ArtidocSection) => void;
         closeEditor: () => void;
         setEditMode: (new_value: boolean) => void;
-        replacePendingByArtifactSection: (
-            pending: PendingArtifactSection,
-            section: ArtifactSection,
-        ) => void;
-        getSectionPositionForSave: (section: ArtidocSection) => PositionForSave;
+        replacePendingByArtifactSection: SectionsStore["replacePendingByArtifactSection"];
+        getSectionPositionForSave: SectionsStore["getSectionPositionForSave"];
         mergeArtifactAttachments: AttachmentFile["mergeArtifactAttachments"];
     },
 ): SaveEditor {
