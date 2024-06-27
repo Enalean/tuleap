@@ -43,7 +43,7 @@ export type SectionEditorActions = {
 };
 
 export type EditorState = {
-    is_dragndrop_allowed: ComputedRef<boolean>;
+    is_image_upload_allowed: ComputedRef<boolean>;
     is_section_editable: ComputedRef<boolean>;
     is_section_in_edit_mode: Ref<boolean>;
     isJustRefreshed: () => boolean;
@@ -70,7 +70,7 @@ export function useSectionEditor(
     const current_section: Ref<ArtidocSection> = ref(section);
     const editor_errors_handler = useEditorErrors();
     const editor_section_content = useEditorSectionContent(current_section);
-    const is_dragndrop_allowed = computed(
+    const is_image_upload_allowed = computed(
         () =>
             current_section.value.attachments !== null &&
             undefined !== current_section.value.attachments.field_id &&
@@ -185,7 +185,7 @@ export function useSectionEditor(
 
     return {
         editor_state: {
-            is_dragndrop_allowed,
+            is_image_upload_allowed: is_image_upload_allowed,
             is_section_editable,
             is_section_in_edit_mode,
             isJustRefreshed,

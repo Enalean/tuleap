@@ -54,7 +54,7 @@ describe("SectionDescriptionEditor", () => {
                 upload_url: "file/upload_url",
                 add_attachment_to_waiting_list: vi.fn(),
                 input_current_description: vi.fn(),
-                is_dragndrop_allowed: true,
+                is_image_upload_allowed: true,
             },
         });
     });

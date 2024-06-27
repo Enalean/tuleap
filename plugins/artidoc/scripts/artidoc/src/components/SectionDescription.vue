@@ -28,7 +28,7 @@
             v-bind:editable_description="editable_description"
             v-bind:input_current_description="input_current_description"
             v-bind:readonly_value="readonly_description"
-            v-bind:is_dragndrop_allowed="is_dragndrop_allowed"
+            v-bind:is_image_upload_allowed="is_image_upload_allowed"
             data-test="editor"
         />
     </template>
@@ -49,7 +49,7 @@ defineProps<{
     editable_description: string;
     readonly_description: string;
     is_edit_mode: boolean;
-    is_dragndrop_allowed: boolean;
+    is_image_upload_allowed: boolean;
     input_current_description: EditorSectionContent["inputCurrentDescription"];
 }>();
 

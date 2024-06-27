@@ -56,7 +56,7 @@ describe("useSectionEditor", () => {
         it("should return editor states", () => {
             const { editor_state } = useSectionEditor(section, merge_artifacts, set_waiting_list);
 
-            expect(editor_state.is_dragndrop_allowed.value).toEqual(true);
+            expect(editor_state.is_image_upload_allowed.value).toEqual(true);
             expect(editor_state.is_section_editable.value).toEqual(true);
             expect(editor_state.is_section_in_edit_mode.value).toEqual(false);
             expect(editor_state.isJustRefreshed()).toEqual(false);

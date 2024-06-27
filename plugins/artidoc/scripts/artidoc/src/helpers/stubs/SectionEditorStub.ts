@@ -28,7 +28,7 @@ import type { EditorSectionContent } from "@/composables/useEditorSectionContent
 const noop = (): void => {};
 
 const editor_state_stub: EditorState = {
-    is_dragndrop_allowed: computed(() => false),
+    is_image_upload_allowed: computed(() => false),
     is_section_editable: computed(() => false),
     is_section_in_edit_mode: ref(false),
     isBeingSaved: () => false,
