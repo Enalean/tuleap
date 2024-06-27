@@ -20,7 +20,7 @@
 <template>
     <div
         class="tlp-dropdown"
-        v-bind:class="{ 'git-repository-list-create-repository-button': !is_empty_state }"
+        v-bind:class="{ 'git-repository-list-create-repository-button': !props.is_empty_state }"
     >
         <button class="tlp-button-primary" ref="dropdownButton" type="button">
             {{ $gettext("New repository") }}
@@ -41,29 +41,26 @@
     </div>
 </template>
 
-<script lang="ts">
-import Vue from "vue";
-import { Action } from "vuex-class";
-import { Component, Prop } from "vue-property-decorator";
+<script setup lang="ts">
+import { onMounted, ref } from "vue";
 import type { Dropdown } from "@tuleap/tlp-dropdown";
 import { createDropdown } from "@tuleap/tlp-dropdown";
 import AddGitlabRepositoryActionButton from "./AddGitlabRepositoryActionButton.vue";
+import { useActions } from "vuex-composition-helpers";
 
-@Component({ components: { AddGitlabRepositoryActionButton } })
-export default class DropdownActionButton extends Vue {
-    @Prop({ required: true })
-    readonly is_empty_state!: boolean;
+const props = defineProps<{
+    is_empty_state: boolean;
+}>();
 
-    @Action
-    readonly showAddRepositoryModal!: () => void;
+const { showAddRepositoryModal } = useActions(["showAddRepositoryModal"]);
 
-    private dropdown: null | Dropdown = null;
+const dropdown = ref<null | Dropdown>(null);
+const dropdownButton = ref();
 
-    mounted(): void {
-        if (!(this.$refs.dropdownButton instanceof Element)) {
-            throw new Error("Can not find DOM element for dropdown");
-        }
-        this.dropdown = createDropdown(this.$refs.dropdownButton);
+onMounted(() => {
+    if (!(dropdownButton.value instanceof Element)) {
+        throw new Error("Can not find DOM element for dropdown");
     }
-}
+    dropdown.value = createDropdown(dropdownButton.value);
+});
 </script>
