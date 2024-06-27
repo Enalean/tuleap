@@ -18,7 +18,7 @@
   -
   -->
 <template>
-    <section v-bind:data-test="is_edit_mode ? 'section-edition' : undefined">
+    <section v-bind:data-test="is_section_in_edit_mode ? 'section-edition' : undefined">
         <div class="artidoc-dropdown-container">
             <section-dropdown
                 v-bind:editor="editor"
@@ -30,9 +30,9 @@
         <article
             class="document-section"
             v-bind:class="{
-                'document-section-is-being-saved': is_being_saved,
-                'document-section-is-just-saved': is_just_saved,
-                'document-section-is-just-refreshed': is_just_refreshed,
+                'document-section-is-being-saved': isBeingSaved(),
+                'document-section-is-just-saved': isJustSaved(),
+                'document-section-is-just-refreshed': isJustRefreshed(),
                 'document-section-is-in-error': is_in_error,
                 'document-section-is-outdated': is_outdated,
             }"
@@ -40,19 +40,19 @@
             <section-header
                 class="section-header"
                 v-if="!is_sections_loading"
-                v-bind:title="title"
-                v-bind:input_current_title="editor.inputCurrentTitle"
-                v-bind:is_edit_mode="is_edit_mode"
+                v-bind:title="editable_title"
+                v-bind:input_current_title="inputCurrentTitle"
+                v-bind:is_edit_mode="is_section_in_edit_mode"
             />
             <section-header-skeleton v-else class="section-header" />
             <section-description
                 v-bind:section="section"
+                v-bind:editable_description="editable_description"
+                v-bind:readonly_description="getReadonlyDescription()"
+                v-bind:input_current_description="inputCurrentDescription"
+                v-bind:is_edit_mode="is_section_in_edit_mode"
                 v-bind:add_attachment_to_waiting_list="addAttachmentToWaitingList"
                 v-bind:upload_url="upload_url"
-                v-bind:editable_description="editable_description"
-                v-bind:readonly_description="readonly_description"
-                v-bind:input_current_description="editor.inputCurrentDescription"
-                v-bind:is_edit_mode="is_edit_mode"
                 v-bind:is_dragndrop_allowed="is_dragndrop_allowed"
             />
             <section-footer v-bind:editor="editor" v-bind:section="section" />
@@ -74,18 +74,7 @@ import { ref } from "vue";
 
 const props = defineProps<{ section: ArtidocSection }>();
 
-const is_dragndrop_allowed = ref(
-    props.section.attachments !== null &&
-        props.section?.attachments.field_id !== undefined &&
-        props.section?.attachments?.field_id !== 0,
-);
-const {
-    is_sections_loading,
-    updateSection,
-    removeSection,
-    getSectionPositionForSave,
-    replacePendingByArtifactSection,
-} = useInjectSectionsStore();
+const { is_sections_loading } = useInjectSectionsStore();
 
 const {
     upload_url,
@@ -94,25 +83,24 @@ const {
     setWaitingListAttachments,
 } = useAttachmentFile(ref(props.section.attachments ? props.section.attachments.field_id : 0));
 
-const editor = useSectionEditor(
-    props.section,
-    updateSection,
-    removeSection,
-    getSectionPositionForSave,
-    replacePendingByArtifactSection,
-    mergeArtifactAttachments,
-    setWaitingListAttachments,
-);
+const editor = useSectionEditor(props.section, mergeArtifactAttachments, setWaitingListAttachments);
 
-const is_edit_mode = editor.isSectionInEditMode();
-const is_being_saved = editor.isBeeingSaved();
-const is_just_saved = editor.isJustSaved();
-const is_just_refreshed = editor.isJustRefreshed();
-const is_in_error = editor.isInError();
-const is_outdated = editor.isOutdated();
-const title = editor.getEditableTitle();
-const editable_description = editor.getEditableDescription();
-const readonly_description = editor.getReadonlyDescription();
+const {
+    is_section_in_edit_mode,
+    isJustRefreshed,
+    isJustSaved,
+    isBeingSaved,
+    is_dragndrop_allowed,
+} = editor.editor_state;
+const { is_in_error, is_outdated } = editor.editor_error;
+
+const {
+    inputCurrentDescription,
+    inputCurrentTitle,
+    editable_title,
+    editable_description,
+    getReadonlyDescription,
+} = editor.editor_section_content;
 </script>
 
 <style lang="scss" scoped>

@@ -74,8 +74,8 @@ const props = defineProps<{
     section: ArtidocSection;
 }>();
 const { enableEditor } = props.editor.editor_actions;
-const { is_section_editable } = props.editor;
-const is_edit_mode = props.editor.isSectionInEditMode();
+const is_edit_mode = props.editor.editor_state.is_section_in_edit_mode;
+const is_section_editable = props.editor.editor_state.is_section_editable;
 const is_pending = computed(() => isPendingArtifactSection(props.section));
 const artifact_url = computed(() =>
     isArtifactSection(props.section) ? `/plugins/tracker/?aid=${props.section.artifact.id}` : "",

@@ -20,42 +20,41 @@
 <template>
     <div>
         <textarea ref="area_editor" v-bind:value="toValue(editable_description)"></textarea>
-        <p class="tlp-text-muted drag-and-drop-info" v-if="isUploadEnabled">
+        <p class="tlp-text-muted drag-and-drop-info" v-if="is_dragndrop_allowed">
             {{ $gettext("You can drag 'n drop or paste image directly in the editor.") }}
         </p>
     </div>
 </template>
 <script setup lang="ts">
-import type { SectionEditor } from "@/composables/useSectionEditor";
 import type * as ckeditor from "ckeditor4";
-import { computed, toValue, ref, onMounted, onBeforeUnmount } from "vue";
+import { toValue, ref, onMounted, onBeforeUnmount } from "vue";
 import { config } from "@tuleap/ckeditor-config";
 import { CURRENT_LOCALE } from "@/locale-injection-key";
 import { strictInject } from "@tuleap/vue-strict-inject";
+import type { EditorSectionContent } from "@/composables/useEditorSectionContent";
 
 // CKEDITOR is injected by the backend
 // eslint-disable-next-line
 import eventInfo = CKEDITOR.eventInfo;
 
-const { language } = strictInject<UserLocale>(CURRENT_LOCALE);
 import type { UploadHandler, UploadError } from "@tuleap/ckeditor-image-upload";
 import { MaxSizeUploadExceededError, buildFileUploadHandler } from "@tuleap/ckeditor-image-upload";
 import type { AttachmentFile } from "@/composables/useAttachmentFile";
 import { UPLOAD_MAX_SIZE } from "@/max-upload-size-injecion-keys";
 import type { UserLocale } from "@/helpers/user-locale";
 import { useGettext } from "vue3-gettext";
+const { language } = strictInject<UserLocale>(CURRENT_LOCALE);
 
 const props = defineProps<{
     upload_url: string;
     add_attachment_to_waiting_list: AttachmentFile["addAttachmentToWaitingList"];
     editable_description: string;
-    input_current_description: SectionEditor["inputCurrentDescription"];
     is_dragndrop_allowed: boolean;
+    input_current_description: EditorSectionContent["inputCurrentDescription"];
 }>();
 
 const area_editor = ref<HTMLTextAreaElement | null>(null);
 const editor = ref<ckeditor.default.editor | null>(null);
-const isUploadEnabled = computed(() => props.is_dragndrop_allowed);
 
 const upload_max_size = strictInject(UPLOAD_MAX_SIZE);
 
