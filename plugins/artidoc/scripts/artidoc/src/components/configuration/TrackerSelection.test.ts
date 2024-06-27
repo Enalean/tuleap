@@ -33,6 +33,7 @@ describe("TrackerSelection", () => {
         const wrapper = shallowMount(TrackerSelection, {
             props: {
                 configuration_helper: useConfigurationScreenHelper(),
+                disabled: false,
             },
             global: { plugins: [createGettext({ silent: true })] },
         });

@@ -56,12 +56,28 @@ const bus = strictInject(OPEN_CONFIGURATION_MODAL_BUS);
 
 function onClick(): void {
     if (!configuration_store.selected_tracker.value) {
-        bus.openModal();
+        openConfigurationModalBeforeInsertingNewSection();
         return;
     }
 
     if (!isTrackerWithSubmittableSection(configuration_store.selected_tracker.value)) {
-        bus.openModal();
+        openConfigurationModalBeforeInsertingNewSection();
+        return;
+    }
+
+    insertNewSection();
+}
+
+function openConfigurationModalBeforeInsertingNewSection(): void {
+    bus.openModal(insertNewSection);
+}
+
+function insertNewSection(): void {
+    if (!configuration_store.selected_tracker.value) {
+        return;
+    }
+
+    if (!isTrackerWithSubmittableSection(configuration_store.selected_tracker.value)) {
         return;
     }
 

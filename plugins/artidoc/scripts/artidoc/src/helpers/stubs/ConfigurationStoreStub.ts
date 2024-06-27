@@ -70,4 +70,11 @@ export const ConfigurationStoreStub = {
         is_error: ref(true),
         error_message: ref("Oh no!"),
     }),
+
+    withMockedSavedConfiguration: (
+        saveConfiguration: ConfigurationStore["saveConfiguration"],
+    ): ConfigurationStore => ({
+        ...ConfigurationStoreStub.withSelectedTracker(ConfigurationStoreStub.bugs),
+        saveConfiguration,
+    }),
 };

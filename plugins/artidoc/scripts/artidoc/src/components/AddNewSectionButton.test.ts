@@ -29,15 +29,16 @@ import {
 } from "@/composables/useOpenConfigurationModalBus";
 import { createGettext } from "vue3-gettext";
 import { AT_THE_END } from "@/stores/useSectionsStore";
+import { TrackerStub } from "@/helpers/stubs/TrackerStub";
 
 describe("AddNewSectionButton", () => {
     describe("when the tracker is not configured", () => {
         it("should ask to open the configuration modal on click", async () => {
-            let has_been_called = false;
+            let has_modal_been_opened = false;
 
             const bus = useOpenConfigurationModalBus();
             bus.registerHandler(() => {
-                has_been_called = true;
+                has_modal_been_opened = true;
             });
 
             mockStrictInject([
@@ -54,18 +55,47 @@ describe("AddNewSectionButton", () => {
 
             await wrapper.find("button").trigger("click");
 
-            expect(has_been_called).toBe(true);
+            expect(has_modal_been_opened).toBe(true);
             expect(insert_section_callback).not.toHaveBeenCalled();
+        });
+
+        it("should insert a pending artifact section after the configuration is saved", async () => {
+            const bus = useOpenConfigurationModalBus();
+            const store = ConfigurationStoreStub.withSelectedTracker(null);
+
+            mockStrictInject([
+                [CONFIGURATION_STORE, store],
+                [OPEN_CONFIGURATION_MODAL_BUS, bus],
+            ]);
+
+            let has_modal_been_opened = false;
+            bus.registerHandler((onSuccessfulSaved: () => void) => {
+                has_modal_been_opened = true;
+                store.selected_tracker.value = TrackerStub.withTitleAndDescription();
+                onSuccessfulSaved();
+            });
+
+            const insert_section_callback = vi.fn();
+
+            const wrapper = shallowMount(AddNewSectionButton, {
+                props: { position: AT_THE_END, insert_section_callback },
+                global: { plugins: [createGettext({ silent: true })] },
+            });
+
+            await wrapper.find("button").trigger("click");
+
+            expect(has_modal_been_opened).toBe(true);
+            expect(insert_section_callback).toHaveBeenCalled();
         });
     });
 
-    describe("when the tracker is configured but user cannot submit title or description", () => {
+    describe("when the tracker is configured but user cannot submit title", () => {
         it("should ask to open the configuration modal on click when title is not submittable", async () => {
-            let has_been_called = false;
+            let has_modal_been_opened = false;
 
             const bus = useOpenConfigurationModalBus();
             bus.registerHandler(() => {
-                has_been_called = true;
+                has_modal_been_opened = true;
             });
 
             mockStrictInject([
@@ -93,16 +123,55 @@ describe("AddNewSectionButton", () => {
 
             await wrapper.find("button").trigger("click");
 
-            expect(has_been_called).toBe(true);
+            expect(has_modal_been_opened).toBe(true);
             expect(insert_section_callback).not.toHaveBeenCalled();
         });
 
+        it("should insert a pending artifact section after the configuration is saved", async () => {
+            const bus = useOpenConfigurationModalBus();
+            const store = ConfigurationStoreStub.withSelectedTracker({
+                ...ConfigurationStoreStub.bugs,
+                title: null,
+                description: {
+                    field_id: 1002,
+                    label: "Description",
+                    type: "text",
+                },
+            });
+
+            mockStrictInject([
+                [CONFIGURATION_STORE, store],
+                [OPEN_CONFIGURATION_MODAL_BUS, bus],
+            ]);
+
+            let has_modal_been_opened = false;
+            bus.registerHandler((onSuccessfulSaved: () => void) => {
+                has_modal_been_opened = true;
+                store.selected_tracker.value = TrackerStub.withTitleAndDescription();
+                onSuccessfulSaved();
+            });
+
+            const insert_section_callback = vi.fn();
+
+            const wrapper = shallowMount(AddNewSectionButton, {
+                props: { position: AT_THE_END, insert_section_callback },
+                global: { plugins: [createGettext({ silent: true })] },
+            });
+
+            await wrapper.find("button").trigger("click");
+
+            expect(has_modal_been_opened).toBe(true);
+            expect(insert_section_callback).toHaveBeenCalled();
+        });
+    });
+
+    describe("when the tracker is configured but user cannot submit description", () => {
         it("should ask to open the configuration modal on click when description is not submittable", async () => {
-            let has_been_called = false;
+            let has_modal_been_opened = false;
 
             const bus = useOpenConfigurationModalBus();
             bus.registerHandler(() => {
-                has_been_called = true;
+                has_modal_been_opened = true;
             });
 
             mockStrictInject([
@@ -130,8 +199,45 @@ describe("AddNewSectionButton", () => {
 
             await wrapper.find("button").trigger("click");
 
-            expect(has_been_called).toBe(true);
+            expect(has_modal_been_opened).toBe(true);
             expect(insert_section_callback).not.toHaveBeenCalled();
+        });
+
+        it("should insert a pending artifact section after the configuration is saved", async () => {
+            const bus = useOpenConfigurationModalBus();
+            const store = ConfigurationStoreStub.withSelectedTracker({
+                ...ConfigurationStoreStub.bugs,
+                title: {
+                    field_id: 1001,
+                    label: "Summary",
+                    type: "string",
+                },
+                description: null,
+            });
+
+            mockStrictInject([
+                [CONFIGURATION_STORE, store],
+                [OPEN_CONFIGURATION_MODAL_BUS, bus],
+            ]);
+
+            let has_modal_been_opened = false;
+            bus.registerHandler((onSuccessfulSaved: () => void) => {
+                has_modal_been_opened = true;
+                store.selected_tracker.value = TrackerStub.withTitleAndDescription();
+                onSuccessfulSaved();
+            });
+
+            const insert_section_callback = vi.fn();
+
+            const wrapper = shallowMount(AddNewSectionButton, {
+                props: { position: AT_THE_END, insert_section_callback },
+                global: { plugins: [createGettext({ silent: true })] },
+            });
+
+            await wrapper.find("button").trigger("click");
+
+            expect(has_modal_been_opened).toBe(true);
+            expect(insert_section_callback).toHaveBeenCalled();
         });
     });
 

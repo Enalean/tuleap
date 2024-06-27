@@ -23,7 +23,7 @@
         class="tlp-button-primary tlp-button-ellipsis"
         type="button"
         v-bind:title="button_title"
-        v-on:click="openModal"
+        v-on:click="openModal()"
     >
         <i class="fa-solid fa-cog" role="img"></i>
     </button>
@@ -32,13 +32,16 @@
         class="tlp-modal"
         aria-labelledby="artidoc-configuration-modal-title"
         ref="modal_element"
-        v-on:submit="configuration_helper.onSubmit"
+        v-on:submit="onSubmit"
     >
         <configuration-modal-header />
 
         <div class="tlp-modal-body">
             <introductory-text v-bind:configuration_helper="configuration_helper" />
-            <tracker-selection v-bind:configuration_helper="configuration_helper" />
+            <tracker-selection
+                v-bind:configuration_helper="configuration_helper"
+                v-bind:disabled="is_success"
+            />
         </div>
 
         <div class="tlp-modal-footer">
@@ -108,10 +111,15 @@ const button_title = $gettext("Configure document");
 
 const modal_element = ref<HTMLElement | undefined>(undefined);
 
+const noop = (): void => {};
+
+let onSuccessfulSavedCallback: () => void = noop;
+
 strictInject(OPEN_CONFIGURATION_MODAL_BUS).registerHandler(openModal);
 
 let modal: Modal | null = null;
-function openModal(): void {
+function openModal(onSuccessfulSaved?: () => void): void {
+    onSuccessfulSavedCallback = onSuccessfulSaved || noop;
     if (modal === null && modal_element.value) {
         modal = createModal(toRaw(modal_element.value));
     }
@@ -126,6 +134,10 @@ function closeModal(): void {
     if (modal) {
         modal.hide();
     }
+}
+
+function onSubmit(event: Event): void {
+    configuration_helper.onSubmit(event, onSuccessfulSavedCallback);
 }
 </script>
 

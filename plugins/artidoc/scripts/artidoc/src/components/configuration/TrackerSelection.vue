@@ -33,6 +33,7 @@
             data-test="artidoc-configuration-tracker"
             class="tlp-select tlp-select-adjusted"
             required
+            v-bind:disabled="disabled"
             v-model="new_selected_tracker"
         >
             <option v-bind:value="NO_SELECTED_TRACKER" disabled>
@@ -56,7 +57,7 @@
 <script setup lang="ts">
 import type { ConfigurationScreenHelper } from "@/composables/useConfigurationScreenHelper";
 
-const props = defineProps<{ configuration_helper: ConfigurationScreenHelper }>();
+const props = defineProps<{ configuration_helper: ConfigurationScreenHelper; disabled: boolean }>();
 
 const { NO_SELECTED_TRACKER, allowed_trackers, no_allowed_trackers, new_selected_tracker } =
     props.configuration_helper;

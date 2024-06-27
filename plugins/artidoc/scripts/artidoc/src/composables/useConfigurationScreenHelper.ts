@@ -33,7 +33,7 @@ export interface ConfigurationScreenHelper {
     error_message: Ref<string>;
     submit_button_icon: ComputedRef<string>;
     new_selected_tracker: Ref<Tracker | null>;
-    onSubmit: (event: Event) => void;
+    onSubmit: (event: Event, onSave: () => void) => void;
     resetSelection: () => void;
 }
 
@@ -66,11 +66,11 @@ export function useConfigurationScreenHelper(): ConfigurationScreenHelper {
         is_saving.value ? "fa-solid fa-spin fa-circle-notch" : "fa-solid fa-floppy-disk",
     );
 
-    function onSubmit(event: Event): void {
+    function onSubmit(event: Event, onSave: () => void): void {
         event.preventDefault();
 
         if (new_selected_tracker.value) {
-            saveConfiguration(new_selected_tracker.value);
+            saveConfiguration(new_selected_tracker.value, onSave);
         }
     }
 
