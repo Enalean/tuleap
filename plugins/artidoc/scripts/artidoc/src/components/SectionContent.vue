@@ -18,7 +18,7 @@
   -
   -->
 <template>
-    <section>
+    <section v-bind:data-test="is_edit_mode ? 'section-edition' : undefined">
         <div class="artidoc-dropdown-container">
             <section-dropdown
                 v-bind:editor="editor"

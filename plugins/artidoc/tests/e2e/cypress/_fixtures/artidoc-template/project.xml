@@ -42,6 +42,10 @@
           <label><![CDATA[Description]]></label>
           <properties rows="10" cols="50"/>
         </formElement>
+        <formElement type="file" ID="F57946" rank="3">
+          <name>attachment</name>
+          <label><![CDATA[Attachments]]></label>
+        </formElement>
       </formElements>
       <semantics>
         <semantic type="title">
@@ -85,6 +89,9 @@
         <permission scope="field" REF="F57944" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
         <permission scope="field" REF="F57944" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
         <permission scope="field" REF="F57944" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F57946" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F57946" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F57946" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
       </permissions>
     </tracker>
     <triggers/>
