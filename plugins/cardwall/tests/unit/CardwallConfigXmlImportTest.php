@@ -20,55 +20,53 @@
 
 declare(strict_types=1);
 
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
-final class CardwallConfigXmlImportTest extends \Tuleap\Test\PHPUnit\TestCase
-{
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-    use \Tuleap\GlobalResponseMock;
-    use \Tuleap\GlobalLanguageMock;
+namespace Tuleap\Cardwall;
 
-    private $default_xml_input;
-    private $enhanced_xml_input;
-    /**
-     * @var \Mockery\MockInterface|EventManager
-     */
-    private $event_manager;
-    /**
-     * @var Cardwall_OnTop_Dao|\Mockery\LegacyMockInterface|\Mockery\MockInterface
-     */
-    private $cardwall_ontop_dao;
-    /**
-     * @var CardwallConfigXmlImport
-     */
-    private $cardwall_config_xml_import;
+use Cardwall_OnTop_ColumnDao;
+use Cardwall_OnTop_ColumnMappingFieldDao;
+use Cardwall_OnTop_ColumnMappingFieldValueDao;
+use Cardwall_OnTop_Dao;
+use CardwallConfigXmlImport;
+use CardwallFromXmlImportCannotBeEnabledException;
+use Event;
+use EventManager;
+use PHPUnit\Framework\MockObject\MockObject;
+use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
+use SimpleXMLElement;
+use Tracker_XML_Importer_ArtifactImportedMapping;
+use Tuleap\GlobalLanguageMock;
+use Tuleap\GlobalResponseMock;
+use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
+use Tuleap\Tracker\Test\Builders\ChangesetValueListTestBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
+use Tuleap\XML\ParseExceptionWithErrors;
+use XML_ParseException;
+use XML_RNGValidator;
+
+final class CardwallConfigXmlImportTest extends TestCase
+{
+    use GlobalResponseMock;
+    use GlobalLanguageMock;
+
+    private SimpleXMLElement $default_xml_input;
+    private SimpleXMLElement $enhanced_xml_input;
+    private EventManager&MockObject $event_manager;
+    private Cardwall_OnTop_Dao&MockObject $cardwall_ontop_dao;
+    private CardwallConfigXmlImport $cardwall_config_xml_import;
     private array $mapping;
     private array $field_mapping;
-    /**
-     * @var Cardwall_OnTop_ColumnDao&\Mockery\MockInterface
-     */
-    private $column_dao;
-    /**
-     * @var Cardwall_OnTop_ColumnMappingFieldDao&\Mockery\MockInterface
-     */
-    private $mapping_field_dao;
-    /**
-     * @var Cardwall_OnTop_ColumnMappingFieldValueDao&\Mockery\MockInterface
-     */
-    private $mapping_field_value_dao;
+    private Cardwall_OnTop_ColumnDao&MockObject $column_dao;
+    private Cardwall_OnTop_ColumnMappingFieldDao&MockObject $mapping_field_dao;
+    private Cardwall_OnTop_ColumnMappingFieldValueDao&MockObject $mapping_field_value_dao;
     private int $group_id;
-    /**
-     * @var XML_RNGValidator&\Mockery\LegacyMockInterface
-     */
-    private $xml_validator;
-    /**
-     * @var \Psr\Log\LoggerInterface&\Mockery\MockInterface
-     */
-    private $logger;
+    private XML_RNGValidator&MockObject $xml_validator;
+    private LoggerInterface $logger;
     private Tracker_XML_Importer_ArtifactImportedMapping $artifact_id_mapping;
 
     protected function setUp(): void
     {
-        parent::setUp();
         $this->default_xml_input = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?>
             <project>
               <empty_section />
@@ -167,11 +165,11 @@ final class CardwallConfigXmlImportTest extends \Tuleap\Test\PHPUnit\TestCase
               <agiledashboard/>
             </project>');
 
-        $field    = \Mockery::spy(\Tracker_FormElement_Field_List::class)->shouldReceive('getId')->andReturns(1)->getMock();
-        $value_01 = \Mockery::spy(\Tracker_Artifact_ChangesetValue_List::class)->shouldReceive('getId')->andReturns(401)->getMock();
-        $value_02 = \Mockery::spy(\Tracker_Artifact_ChangesetValue_List::class)->shouldReceive('getId')->andReturns(402)->getMock();
-        $value_03 = \Mockery::spy(\Tracker_Artifact_ChangesetValue_List::class)->shouldReceive('getId')->andReturns(403)->getMock();
-        $value_04 = \Mockery::spy(\Tracker_Artifact_ChangesetValue_List::class)->shouldReceive('getId')->andReturns(404)->getMock();
+        $field    = ListFieldBuilder::aListField(1)->build();
+        $value_01 = ChangesetValueListTestBuilder::aListOfValue(401, ChangesetTestBuilder::aChangeset('1')->build(), $field)->build();
+        $value_02 = ChangesetValueListTestBuilder::aListOfValue(402, ChangesetTestBuilder::aChangeset('2')->build(), $field)->build();
+        $value_03 = ChangesetValueListTestBuilder::aListOfValue(403, ChangesetTestBuilder::aChangeset('3')->build(), $field)->build();
+        $value_04 = ChangesetValueListTestBuilder::aListOfValue(404, ChangesetTestBuilder::aChangeset('4')->build(), $field)->build();
 
         $this->mapping = [
             'T101' => 444,
@@ -187,15 +185,19 @@ final class CardwallConfigXmlImportTest extends \Tuleap\Test\PHPUnit\TestCase
             'V4' => $value_04,
         ];
 
-        $this->cardwall_ontop_dao      = \Mockery::spy(\Cardwall_OnTop_Dao::class);
-        $this->column_dao              = \Mockery::spy(\Cardwall_OnTop_ColumnDao::class);
-        $this->mapping_field_dao       = \Mockery::spy(\Cardwall_OnTop_ColumnMappingFieldDao::class);
-        $this->mapping_field_value_dao = \Mockery::spy(\Cardwall_OnTop_ColumnMappingFieldValueDao::class);
+        $this->cardwall_ontop_dao      = $this->createMock(Cardwall_OnTop_Dao::class);
+        $this->column_dao              = $this->createMock(Cardwall_OnTop_ColumnDao::class);
+        $this->mapping_field_dao       = $this->createMock(Cardwall_OnTop_ColumnMappingFieldDao::class);
+        $this->mapping_field_value_dao = $this->createMock(Cardwall_OnTop_ColumnMappingFieldValueDao::class);
         $this->group_id                = 145;
-        $this->event_manager           = \Mockery::mock(\EventManager::class);
-        $this->xml_validator           = \Mockery::spy(\XML_RNGValidator::class);
-        $this->logger                  = \Mockery::mock(\Psr\Log\LoggerInterface::class);
+        $this->event_manager           = $this->createMock(EventManager::class);
+        $this->xml_validator           = $this->createMock(XML_RNGValidator::class);
+        $this->logger                  = new NullLogger();
         $this->artifact_id_mapping     = new Tracker_XML_Importer_ArtifactImportedMapping();
+
+        $this->cardwall_ontop_dao->method('startTransaction');
+        $this->cardwall_ontop_dao->method('commit');
+        $this->xml_validator->method('validate');
 
         $this->cardwall_config_xml_import = new CardwallConfigXmlImport(
             $this->group_id,
@@ -214,86 +216,94 @@ final class CardwallConfigXmlImportTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItStoresAllTheCardwallOnTop(): void
     {
-        $this->event_manager->shouldReceive('processEvent');
+        $this->event_manager->method('processEvent');
 
-        $this->cardwall_ontop_dao->shouldReceive('enable')->times(2)->andReturn(true);
-        $this->cardwall_ontop_dao->shouldReceive('enableFreestyleColumns')->times(2);
+        $this->cardwall_ontop_dao->expects(self::exactly(2))->method('enable')->willReturn(true);
+        $this->cardwall_ontop_dao->expects(self::exactly(2))->method('enableFreestyleColumns');
+        $this->column_dao->method('createWithcolor');
 
         $this->cardwall_config_xml_import->import($this->default_xml_input);
     }
 
     public function testItCreatesTheFreestyleColumns(): void
     {
-        $this->event_manager->shouldReceive('processEvent');
+        $this->event_manager->method('processEvent');
 
-        $this->cardwall_ontop_dao->shouldReceive('enable')->andReturn(true);
+        $this->cardwall_ontop_dao->method('enable')->willReturn(true);
+        $this->cardwall_ontop_dao->method('enableFreestyleColumns');
 
-        $this->column_dao->shouldReceive('createWithcolor')->times(4);
-        $this->column_dao->shouldReceive('createWithcolor')->with(555, 'Todo', '', '', '')->ordered();
-        $this->column_dao->shouldReceive('createWithcolor')->with(555, 'On going', '', '', '')->ordered();
-        $this->column_dao->shouldReceive('createWithcolor')->with(555, 'Review', '', '', '')->ordered();
-        $this->column_dao->shouldReceive('createWithcolor')->with(555, 'Done', '', '', '')->ordered();
+        $this->column_dao->expects(self::exactly(4))->method('createWithcolor')
+            ->withConsecutive(
+                [555, 'Todo', '', '', ''],
+                [555, 'On going', '', '', ''],
+                [555, 'Review', '', '', ''],
+                [555, 'Done', '', '', ''],
+            );
 
         $this->cardwall_config_xml_import->import($this->default_xml_input);
     }
 
     public function testItCreatesTheFreestyleColumnsWithColor(): void
     {
-        $this->event_manager->shouldReceive('processEvent');
+        $this->event_manager->method('processEvent');
 
-        $this->cardwall_ontop_dao->shouldReceive('enable')->andReturn(true);
+        $this->cardwall_ontop_dao->method('enable')->willReturn(true);
+        $this->cardwall_ontop_dao->method('enableFreestyleColumns');
+        $this->mapping_field_dao->method('create');
+        $this->mapping_field_value_dao->method('save');
 
-        $this->column_dao->shouldReceive('createWithcolor')->andReturns(20)->ordered();
-        $this->column_dao->shouldReceive('createWithcolor')->andReturns(21)->ordered();
-        $this->column_dao->shouldReceive('createWithcolor')->andReturns(22)->ordered();
-        $this->column_dao->shouldReceive('createWithTLPColor')->once();
-
-        $this->column_dao->shouldReceive('createWithcolor')->with(555, 'Todo', '', '', '')->ordered();
-        $this->column_dao->shouldReceive('createWithcolor')->with(555, 'On going', 255, 255, 240)->ordered();
-        $this->column_dao->shouldReceive('createWithcolor')->with(555, 'Review', '', '', '')->ordered();
-
-        $this->column_dao->shouldReceive('createWithTLPColor')->with(555, 'Done', 'fiesta-red');
+        $this->column_dao->method('createWithcolor')
+            ->withConsecutive(
+                [555, 'Todo', '', '', ''],
+                [555, 'On going', 255, 255, 240],
+                [555, 'Review', '', '', ''],
+            )
+            ->willReturnOnConsecutiveCalls(20, 21, 22);
+        $this->column_dao->expects(self::once())->method('createWithTLPColor')->with(555, 'Done', 'fiesta-red');
 
         $this->cardwall_config_xml_import->import($this->enhanced_xml_input);
     }
 
     public function testItDoesNotCreateMappingAndMappingValueinDefaultXML(): void
     {
-        $this->event_manager->shouldReceive('processEvent');
+        $this->event_manager->method('processEvent');
 
-        $this->cardwall_ontop_dao->shouldReceive('enable')->andReturn(true);
+        $this->cardwall_ontop_dao->method('enable')->willReturn(true);
+        $this->cardwall_ontop_dao->method('enableFreestyleColumns');
+        $this->column_dao->method('createWithcolor');
 
-        $this->mapping_field_dao->shouldReceive('create')->never();
-        $this->mapping_field_value_dao->shouldReceive('save')->never();
+        $this->mapping_field_dao->expects(self::never())->method('create');
+        $this->mapping_field_value_dao->expects(self::never())->method('save');
 
         $this->cardwall_config_xml_import->import($this->default_xml_input);
     }
 
     public function testItCreatesMappingAndMappingValue(): void
     {
-        $this->event_manager->shouldReceive('processEvent');
+        $this->event_manager->method('processEvent');
 
-        $this->cardwall_ontop_dao->shouldReceive('enable')->andReturn(true);
+        $this->cardwall_ontop_dao->method('enable')->willReturn(true);
+        $this->cardwall_ontop_dao->method('enableFreestyleColumns');
 
-        $this->column_dao->shouldReceive('createWithcolor')->andReturns(20)->ordered();
-        $this->column_dao->shouldReceive('createWithcolor')->andReturns(21)->ordered();
-        $this->column_dao->shouldReceive('createWithcolor')->andReturns(22)->ordered();
-        $this->column_dao->shouldReceive('createWithTLPColor')->andReturns(23)->ordered();
+        $this->column_dao->method('createWithcolor')
+            ->willReturnOnConsecutiveCalls(20, 21, 22);
+        $this->column_dao->method('createWithTLPColor')->willReturn(23);
 
-        $this->mapping_field_dao->shouldReceive('create')->times(1);
-        $this->mapping_field_dao->shouldReceive('create')->with(555, 666, 1)->ordered();
+        $this->mapping_field_dao->expects(self::once())->method('create')->with(555, 666, 1);
 
-        $this->mapping_field_value_dao->shouldReceive('save')->times(3);
-        $this->mapping_field_value_dao->shouldReceive('save')->with(555, 666, 1, 401, \Mockery::any())->ordered();
-        $this->mapping_field_value_dao->shouldReceive('save')->with(555, 666, 1, 404, \Mockery::any())->ordered();
-        $this->mapping_field_value_dao->shouldReceive('save')->with(555, 666, 1, 100, \Mockery::any())->ordered();
+        $this->mapping_field_value_dao->expects(self::exactly(3))->method('save')
+            ->withConsecutive(
+                [555, 666, 1, 401, self::anything()],
+                [555, 666, 1, 404, self::anything()],
+                [555, 666, 1, 100, self::anything()],
+            );
 
         $this->cardwall_config_xml_import->import($this->enhanced_xml_input);
     }
 
     public function testItProcessesANewEventIfAllCardwallAreEnabled(): void
     {
-        $this->event_manager->shouldReceive('processEvent')->with(
+        $this->event_manager->method('processEvent')->with(
             Event::IMPORT_XML_PROJECT_CARDWALL_DONE,
             [
                 'project_id'          => $this->group_id,
@@ -304,15 +314,18 @@ final class CardwallConfigXmlImportTest extends \Tuleap\Test\PHPUnit\TestCase
             ]
         );
 
-        $this->cardwall_ontop_dao->shouldReceive('enable')->times(2)->andReturn(true);
+        $this->cardwall_ontop_dao->expects(self::exactly(2))->method('enable')->willReturn(true);
+        $this->cardwall_ontop_dao->method('enableFreestyleColumns');
+        $this->column_dao->method('createWithcolor');
 
         $this->cardwall_config_xml_import->import($this->default_xml_input);
     }
 
     public function testItDoesNotProcessAnEventIfAtLeastOneCardwallCannotBeEnabledAndThrowsAnException(): void
     {
-        $cardwall_ontop_dao = \Mockery::spy(\Cardwall_OnTop_Dao::class);
-        $cardwall_ontop_dao->shouldReceive('enable')->andReturns(false)->once();
+        $cardwall_ontop_dao = $this->createMock(Cardwall_OnTop_Dao::class);
+        $cardwall_ontop_dao->expects(self::once())->method('enable')->willReturn(false);
+        $cardwall_ontop_dao->method('startTransaction');
         $cardwall_config_xml_import = new CardwallConfigXmlImport(
             $this->group_id,
             $this->mapping,
@@ -327,16 +340,16 @@ final class CardwallConfigXmlImportTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->logger
         );
 
-        $this->event_manager->shouldNotReceive('processEvent')->with(Event::IMPORT_XML_PROJECT_CARDWALL_DONE, \Mockery::any());
+        $this->event_manager->expects(self::never())->method('processEvent')->with(Event::IMPORT_XML_PROJECT_CARDWALL_DONE, self::anything());
 
-        $this->expectException(CardwallFromXmlImportCannotBeEnabledException::class);
+        self::expectException(CardwallFromXmlImportCannotBeEnabledException::class);
         $cardwall_config_xml_import->import($this->default_xml_input);
     }
 
     public function testItThrowsAnExceptionIfXmlDoesNotMatchRNG(): void
     {
-        $xml_validator = \Mockery::spy(\XML_RNGValidator::class);
-        $xml_validator->shouldReceive('validate')->andThrows(new \Tuleap\XML\ParseExceptionWithErrors('', [], []));
+        $xml_validator = $this->createMock(XML_RNGValidator::class);
+        $xml_validator->method('validate')->willThrowException(new ParseExceptionWithErrors('', [], []));
 
         $cardwall_config_xml_import = new CardwallConfigXmlImport(
             $this->group_id,
@@ -352,7 +365,7 @@ final class CardwallConfigXmlImportTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->logger
         );
 
-        $this->expectException(\XML_ParseException::class);
+        self::expectException(XML_ParseException::class);
 
         $cardwall_config_xml_import->import($this->default_xml_input);
     }
@@ -369,11 +382,11 @@ final class CardwallConfigXmlImportTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->mapping_field_dao,
             $this->mapping_field_value_dao,
             $this->event_manager,
-            Mockery::mock(XML_RNGValidator::class),
+            $this->createMock(XML_RNGValidator::class),
             $this->logger
         );
 
-        $this->event_manager->shouldReceive('processEvent')->with(Event::IMPORT_XML_PROJECT_CARDWALL_DONE, Mockery::any())->once();
+        $this->event_manager->expects(self::once())->method('processEvent')->with(Event::IMPORT_XML_PROJECT_CARDWALL_DONE, self::anything());
 
         $cardwall_config_xml_import->import(new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><project></project>'));
     }
