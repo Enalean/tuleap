@@ -23,7 +23,7 @@ import App from "./App.vue";
 import { createApp } from "vue";
 import VueDOMPurifyHTML from "vue-dompurify-html";
 import { provideSectionsStore } from "@/stores/useSectionsStore";
-import { sectionsStoreKey } from "@/stores/sectionsStoreKey";
+import { SECTIONS_STORE } from "@/stores/sections-store-injection-key";
 import { CURRENT_LOCALE } from "@/locale-injection-key";
 import { userLocale } from "@/helpers/user-locale";
 import { CAN_USER_EDIT_DOCUMENT } from "@/can-user-edit-document-injection-key";
@@ -57,7 +57,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const app = createApp(App, { item_id });
 
     const sections_store = provideSectionsStore();
-    app.provide(sectionsStoreKey, sections_store);
+    app.provide(SECTIONS_STORE, sections_store);
     app.provide(CURRENT_LOCALE, current_locale);
     app.provide(
         CAN_USER_EDIT_DOCUMENT,
