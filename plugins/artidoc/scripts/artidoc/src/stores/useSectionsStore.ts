@@ -20,7 +20,7 @@
 import type { Ref } from "vue";
 import { ref, provide } from "vue";
 import { strictInject } from "@tuleap/vue-strict-inject";
-import { sectionsStoreKey } from "./sectionsStoreKey";
+import { SECTIONS_STORE } from "./sections-store-injection-key";
 import { isArtifactSection, isPendingArtifactSection } from "@/helpers/artidoc-section.type";
 import type {
     ArtidocSection,
@@ -226,14 +226,14 @@ let sectionsStore: SectionsStore | null = null;
 export function provideSectionsStore(): SectionsStore {
     if (!sectionsStore) {
         sectionsStore = useSectionsStore();
-        provide(sectionsStoreKey, sectionsStore);
+        provide(SECTIONS_STORE, sectionsStore);
     }
 
     return sectionsStore;
 }
 
 export function useInjectSectionsStore(): SectionsStore {
-    const store = strictInject(sectionsStoreKey);
+    const store = strictInject(SECTIONS_STORE);
     if (!store) {
         throw new Error("No sections store provided!");
     }

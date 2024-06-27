@@ -19,4 +19,5 @@
 
 import type { StrictInjectionKey } from "@tuleap/vue-strict-inject";
 import type { SectionsStore } from "@/stores/useSectionsStore";
-export const sectionsStoreKey: StrictInjectionKey<SectionsStore> = Symbol("sectionsStore");
+
+export const SECTIONS_STORE: StrictInjectionKey<SectionsStore> = Symbol("sections-store");
