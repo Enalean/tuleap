@@ -20,30 +20,31 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Artidoc\Stubs\Document;
+namespace Tuleap\Artidoc\Document\Section\Identifier;
 
-use Tuleap\Artidoc\Document\RawSection;
-use Tuleap\Artidoc\Document\SearchOneSection;
-use Tuleap\Artidoc\Document\Section\Identifier\SectionIdentifier;
+use Tuleap\DB\UUID;
 
-final class SearchOneSectionStub implements SearchOneSection
+final readonly class SectionIdentifier
 {
-    private function __construct(private ?RawSection $row)
+    private function __construct(private UUID $uuid)
     {
     }
 
-    public static function withResults(RawSection $row): self
+    /**
+     * @psalm-internal Tuleap\Artidoc\Document\Section\Identifier
+     */
+    public static function fromUUID(UUID $uuid): self
     {
-        return new self($row);
+        return new self($uuid);
     }
 
-    public static function withoutResults(): self
+    public function getBytes(): string
     {
-        return new self(null);
+        return $this->uuid->getBytes();
     }
 
-    public function searchSectionById(SectionIdentifier $section_id): ?RawSection
+    public function toString(): string
     {
-        return $this->row;
+        return $this->uuid->toString();
     }
 }

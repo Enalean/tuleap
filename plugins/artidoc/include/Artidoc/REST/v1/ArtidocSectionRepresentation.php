@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Artidoc\REST\v1;
 
-use Tuleap\DB\UUID;
+use Tuleap\Artidoc\Document\Section\Identifier\SectionIdentifier;
 use Tuleap\Tracker\REST\Artifact\ArtifactFieldValueFileFullRepresentation;
 use Tuleap\Tracker\REST\Artifact\ArtifactFieldValueFullRepresentation;
 use Tuleap\Tracker\REST\Artifact\ArtifactReference;
@@ -46,10 +46,10 @@ final readonly class ArtidocSectionRepresentation
     ) {
     }
 
-    public static function fromRepresentationWithId(self $representation, UUID $uuid): self
+    public static function fromRepresentationWithId(self $representation, SectionIdentifier $id): self
     {
         return new self(
-            $uuid->toString(),
+            $id->toString(),
             $representation->artifact,
             $representation->title,
             $representation->description,

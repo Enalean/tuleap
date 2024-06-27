@@ -25,6 +25,7 @@ namespace Tuleap\Artidoc\REST\v1;
 use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\Artidoc\Document\ArtidocDocument;
 use Tuleap\Artidoc\Document\ArtidocDocumentInformation;
+use Tuleap\Artidoc\Document\Section\Identifier\SectionIdentifierFactory;
 use Tuleap\Artidoc\Stubs\Document\RetrieveArtidocStub;
 use Tuleap\Artidoc\Stubs\Document\SaveSectionsStub;
 use Tuleap\Artidoc\Stubs\Document\TransformRawSectionsToRepresentationStub;
@@ -71,7 +72,7 @@ final class PUTSectionsHandlerTest extends TestCase
             ),
             TransformRawSectionsToRepresentationStub::withCollection($dummy_collection),
             $saver,
-            new DatabaseUUIDV7Factory(),
+            new SectionIdentifierFactory(new DatabaseUUIDV7Factory()),
         );
 
         $result = $handler->handle(
@@ -102,7 +103,7 @@ final class PUTSectionsHandlerTest extends TestCase
             RetrieveArtidocStub::withoutDocument(),
             TransformRawSectionsToRepresentationStub::shouldNotBeCalled(),
             $saver,
-            new DatabaseUUIDV7Factory(),
+            new SectionIdentifierFactory(new DatabaseUUIDV7Factory()),
         );
 
         $result = $handler->handle(
@@ -137,7 +138,7 @@ final class PUTSectionsHandlerTest extends TestCase
             ),
             TransformRawSectionsToRepresentationStub::withoutCollection(),
             $saver,
-            new DatabaseUUIDV7Factory(),
+            new SectionIdentifierFactory(new DatabaseUUIDV7Factory()),
         );
 
         $result = $handler->handle(
@@ -172,7 +173,7 @@ final class PUTSectionsHandlerTest extends TestCase
             ),
             TransformRawSectionsToRepresentationStub::shouldNotBeCalled(),
             $saver,
-            new DatabaseUUIDV7Factory(),
+            new SectionIdentifierFactory(new DatabaseUUIDV7Factory()),
         );
 
         $result = $handler->handle(

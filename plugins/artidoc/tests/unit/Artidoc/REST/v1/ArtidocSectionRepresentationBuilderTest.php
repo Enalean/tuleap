@@ -24,9 +24,13 @@ namespace Tuleap\Artidoc\REST\v1;
 
 use Tuleap\Artidoc\Document\ArtidocDocument;
 use Tuleap\Artidoc\Document\ArtidocDocumentInformation;
+use Tuleap\Artidoc\Document\RawSection;
+use Tuleap\Artidoc\Document\Section\Identifier\SectionIdentifierFactory;
 use Tuleap\Artidoc\Stubs\Document\RetrieveArtidocStub;
 use Tuleap\Artidoc\Stubs\Document\SearchOneSectionStub;
+use Tuleap\Artidoc\Stubs\Document\SectionIdentifierStub;
 use Tuleap\Artidoc\Stubs\Document\TransformRawSectionsToRepresentationStub;
+use Tuleap\DB\DatabaseUUIDV7Factory;
 use Tuleap\Docman\ServiceDocman;
 use Tuleap\NeverThrow\Result;
 use Tuleap\Test\Builders\UserTestBuilder;
@@ -41,6 +45,12 @@ final class ArtidocSectionRepresentationBuilderTest extends TestCase
     public const SECTION_ID  = '018f77dc-eebb-73b3-9dfd-a294e5cfa1b5';
     public const ITEM_ID     = 123;
     public const ARTIFACT_ID = 1001;
+    private SectionIdentifierFactory $identifier_factory;
+
+    protected function setUp(): void
+    {
+        $this->identifier_factory = new SectionIdentifierFactory(new DatabaseUUIDV7Factory());
+    }
 
     public function testHappyPath(): void
     {
@@ -69,10 +79,7 @@ final class ArtidocSectionRepresentationBuilderTest extends TestCase
         );
 
         $builder = new ArtidocSectionRepresentationBuilder(
-            SearchOneSectionStub::withResults([
-                'item_id'     => self::ITEM_ID,
-                'artifact_id' => self::ARTIFACT_ID,
-            ]),
+            SearchOneSectionStub::withResults($this->getMatchingRawSection()),
             RetrieveArtidocStub::withDocument(
                 new ArtidocDocumentInformation(
                     new ArtidocDocument(['item_id' => self::ITEM_ID]),
@@ -84,7 +91,7 @@ final class ArtidocSectionRepresentationBuilderTest extends TestCase
             ),
         );
 
-        $result = $builder->build(self::SECTION_ID, UserTestBuilder::buildWithDefaults());
+        $result = $builder->build($this->identifier_factory->buildFromHexadecimalString(self::SECTION_ID), UserTestBuilder::buildWithDefaults());
         self::assertTrue(Result::isOk($result));
         self::assertSame($section_representation, $result->value);
     }
@@ -97,32 +104,26 @@ final class ArtidocSectionRepresentationBuilderTest extends TestCase
             TransformRawSectionsToRepresentationStub::shouldNotBeCalled(),
         );
 
-        $result = $builder->build(self::SECTION_ID, UserTestBuilder::buildWithDefaults());
+        $result = $builder->build($this->identifier_factory->buildFromHexadecimalString(self::SECTION_ID), UserTestBuilder::buildWithDefaults());
         self::assertTrue(Result::isErr($result));
     }
 
     public function testWhenDocumentIsNotFound(): void
     {
         $builder = new ArtidocSectionRepresentationBuilder(
-            SearchOneSectionStub::withResults([
-                'item_id'     => self::ITEM_ID,
-                'artifact_id' => self::ARTIFACT_ID,
-            ]),
+            SearchOneSectionStub::withResults($this->getMatchingRawSection()),
             RetrieveArtidocStub::withoutDocument(),
             TransformRawSectionsToRepresentationStub::shouldNotBeCalled(),
         );
 
-        $result = $builder->build(self::SECTION_ID, UserTestBuilder::buildWithDefaults());
+        $result = $builder->build($this->identifier_factory->buildFromHexadecimalString(self::SECTION_ID), UserTestBuilder::buildWithDefaults());
         self::assertTrue(Result::isErr($result));
     }
 
     public function testWhenTransformerReturnsNoRepresentationForMatchingSection(): void
     {
         $builder = new ArtidocSectionRepresentationBuilder(
-            SearchOneSectionStub::withResults([
-                'item_id'     => self::ITEM_ID,
-                'artifact_id' => self::ARTIFACT_ID,
-            ]),
+            SearchOneSectionStub::withResults($this->getMatchingRawSection()),
             RetrieveArtidocStub::withDocument(
                 new ArtidocDocumentInformation(
                     new ArtidocDocument(['item_id' => self::ITEM_ID]),
@@ -134,7 +135,7 @@ final class ArtidocSectionRepresentationBuilderTest extends TestCase
             ),
         );
 
-        $result = $builder->build(self::SECTION_ID, UserTestBuilder::buildWithDefaults());
+        $result = $builder->build($this->identifier_factory->buildFromHexadecimalString(self::SECTION_ID), UserTestBuilder::buildWithDefaults());
         self::assertTrue(Result::isErr($result));
     }
 
@@ -150,10 +151,7 @@ final class ArtidocSectionRepresentationBuilderTest extends TestCase
         );
 
         $builder = new ArtidocSectionRepresentationBuilder(
-            SearchOneSectionStub::withResults([
-                'item_id'     => self::ITEM_ID,
-                'artifact_id' => self::ARTIFACT_ID,
-            ]),
+            SearchOneSectionStub::withResults($this->getMatchingRawSection()),
             RetrieveArtidocStub::withDocument(
                 new ArtidocDocumentInformation(
                     new ArtidocDocument(['item_id' => self::ITEM_ID]),
@@ -171,7 +169,17 @@ final class ArtidocSectionRepresentationBuilderTest extends TestCase
             ),
         );
 
-        $result = $builder->build(self::SECTION_ID, UserTestBuilder::buildWithDefaults());
+        $result = $builder->build($this->identifier_factory->buildFromHexadecimalString(self::SECTION_ID), UserTestBuilder::buildWithDefaults());
         self::assertTrue(Result::isErr($result));
+    }
+
+    private function getMatchingRawSection(): RawSection
+    {
+        return RawSection::fromRow([
+            'id' => SectionIdentifierStub::create(),
+            'item_id' => self::ITEM_ID,
+            'artifact_id' => self::ARTIFACT_ID,
+            'rank' => 0,
+        ]);
     }
 }

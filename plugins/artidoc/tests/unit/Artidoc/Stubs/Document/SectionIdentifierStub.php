@@ -22,28 +22,15 @@ declare(strict_types=1);
 
 namespace Tuleap\Artidoc\Stubs\Document;
 
-use Tuleap\Artidoc\Document\RawSection;
-use Tuleap\Artidoc\Document\SearchOneSection;
 use Tuleap\Artidoc\Document\Section\Identifier\SectionIdentifier;
+use Tuleap\Artidoc\Document\Section\Identifier\SectionIdentifierFactory;
 
-final class SearchOneSectionStub implements SearchOneSection
+final class SectionIdentifierStub
 {
-    private function __construct(private ?RawSection $row)
+    public static function create(): SectionIdentifier
     {
-    }
+        $uuid_factory = new \Tuleap\DB\DatabaseUUIDV7Factory();
 
-    public static function withResults(RawSection $row): self
-    {
-        return new self($row);
-    }
-
-    public static function withoutResults(): self
-    {
-        return new self(null);
-    }
-
-    public function searchSectionById(SectionIdentifier $section_id): ?RawSection
-    {
-        return $this->row;
+        return (new SectionIdentifierFactory($uuid_factory))->buildIdentifier();
     }
 }

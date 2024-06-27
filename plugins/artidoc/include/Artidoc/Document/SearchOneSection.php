@@ -20,12 +20,9 @@
 
 namespace Tuleap\Artidoc\Document;
 
-use Tuleap\DB\UUID;
+use Tuleap\Artidoc\Document\Section\Identifier\SectionIdentifier;
 
 interface SearchOneSection
 {
-    /**
-     * @return array{ id: UUID, item_id: int, artifact_id: int, rank: int }|null
-     */
-    public function searchSectionById(string $section_id): ?array;
+    public function searchSectionById(SectionIdentifier $section_id): ?RawSection;
 }
