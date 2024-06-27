@@ -49,7 +49,7 @@ describe("TrackerSelection", () => {
     });
 
     function getWrapper(
-        selectedTrackers: Array<SelectedTracker> = [],
+        selected_trackers: Array<SelectedTracker> = [],
     ): VueWrapper<InstanceType<typeof TrackerSelection>> {
         const store_options = {
             state: { is_user_admin: true } as State,
@@ -60,7 +60,7 @@ describe("TrackerSelection", () => {
 
         return shallowMount(TrackerSelection, {
             props: {
-                selectedTrackers,
+                selected_trackers,
             },
             global: {
                 ...getGlobalTestOptions(store_options),

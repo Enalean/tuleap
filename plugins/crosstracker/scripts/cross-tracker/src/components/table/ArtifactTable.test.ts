@@ -21,17 +21,17 @@ import type { Mock } from "vitest";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
-import { getGlobalTestOptions } from "../helpers/global-options-for-tests";
+import { getGlobalTestOptions } from "../../helpers/global-options-for-tests";
 import { errAsync, okAsync } from "neverthrow";
 import { Fault } from "@tuleap/fault";
 import { IntlFormatter } from "@tuleap/date-helper";
-import WritingCrossTrackerReport from "../writing-mode/writing-cross-tracker-report";
+import WritingCrossTrackerReport from "../../writing-mode/writing-cross-tracker-report";
 import ArtifactTable from "./ArtifactTable.vue";
-import * as rest_querier from "../api/rest-querier";
-import type { Artifact, State } from "../type";
+import * as rest_querier from "../../api/rest-querier";
+import type { Artifact, State } from "../../type";
 import ArtifactTableRow from "./ArtifactTableRow.vue";
-import { TuleapAPIFaultStub } from "../../tests/stubs/TuleapAPIFaultStub";
-import { DATE_FORMATTER } from "../injection-symbols";
+import { TuleapAPIFaultStub } from "../../../tests/stubs/TuleapAPIFaultStub";
+import { DATE_FORMATTER } from "../../injection-symbols";
 
 vi.useFakeTimers();
 
@@ -57,7 +57,7 @@ describe("ArtifactTable", () => {
                 },
             },
             props: {
-                writingCrossTrackerReport: new WritingCrossTrackerReport(),
+                writing_cross_tracker_report: new WritingCrossTrackerReport(),
             },
         });
     }

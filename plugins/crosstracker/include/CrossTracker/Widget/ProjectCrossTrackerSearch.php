@@ -25,8 +25,6 @@ use HTTPRequest;
 use Project;
 use TemplateRendererFactory;
 use Tuleap\CrossTracker\CrossTrackerReportDao;
-use Tuleap\Layout\CssAssetCollection;
-use Tuleap\Layout\CssViteAsset;
 use Tuleap\Layout\IncludeViteAssets;
 use Tuleap\Layout\JavascriptViteAsset;
 use Tuleap\Project\MappingRegistry;
@@ -164,16 +162,6 @@ class ProjectCrossTrackerSearch extends Widget
         return [
             new JavascriptViteAsset($this->getAssets(), 'src/index.ts'),
         ];
-    }
-
-    public function getStylesheetDependencies(): CssAssetCollection
-    {
-        return new CssAssetCollection([
-            CssViteAsset::fromFileName(
-                $this->getAssets(),
-                'themes/cross-tracker.scss'
-            ),
-        ]);
     }
 
     private function getAssets(): IncludeViteAssets

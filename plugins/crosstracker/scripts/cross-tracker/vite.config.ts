@@ -33,7 +33,6 @@ export default vite.defineAppConfig(
             rollupOptions: {
                 input: {
                     "cross-tracker": path.resolve(__dirname, "src/index.ts"),
-                    "cross-tracker-style": path.resolve(__dirname, "themes/cross-tracker.scss"),
                 },
             },
         },

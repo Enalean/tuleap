@@ -30,22 +30,22 @@ const noop = (): void => {
 
 describe("QueryEditor", () => {
     function instantiateComponent(
-        writingCrossTrackerReport: WritingCrossTrackerReport,
+        writing_cross_tracker_report: WritingCrossTrackerReport,
     ): VueWrapper<InstanceType<typeof QueryEditor>> {
         return shallowMount(QueryEditor, {
             props: {
-                writingCrossTrackerReport,
+                writing_cross_tracker_report,
             },
             global: { ...getGlobalTestOptions({}) },
         });
     }
 
     it("Displays a code mirror integration", () => {
-        const writingCrossTrackerReport = new WritingCrossTrackerReport();
-        writingCrossTrackerReport.expert_query = "@title = 'foo'";
+        const writing_cross_tracker_report = new WritingCrossTrackerReport();
+        writing_cross_tracker_report.expert_query = "@title = 'foo'";
 
-        const wrapper = instantiateComponent(writingCrossTrackerReport);
-        expect(wrapper.vm.value).toBe(writingCrossTrackerReport.expert_query);
+        const wrapper = instantiateComponent(writing_cross_tracker_report);
+        expect(wrapper.vm.value).toBe(writing_cross_tracker_report.expert_query);
     });
 
     it("Update the report when query is updated", () => {
@@ -58,11 +58,11 @@ describe("QueryEditor", () => {
             } as unknown as Range;
         });
 
-        const writingCrossTrackerReport = new WritingCrossTrackerReport();
-        writingCrossTrackerReport.expert_query = "@title = 'foo'";
-        const wrapper = instantiateComponent(writingCrossTrackerReport);
+        const writing_cross_tracker_report = new WritingCrossTrackerReport();
+        writing_cross_tracker_report.expert_query = "@title = 'foo'";
+        const wrapper = instantiateComponent(writing_cross_tracker_report);
 
         wrapper.vm.code_mirror_instance?.setValue("@title = 'bar'");
-        expect(writingCrossTrackerReport.expert_query).toBe("@title = 'bar'");
+        expect(writing_cross_tracker_report.expert_query).toBe("@title = 'bar'");
     });
 });

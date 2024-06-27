@@ -30,6 +30,7 @@ import type { RetrieveProjects } from "./domain/RetrieveProjects";
 import { getSortedProjectsIAmMemberOf } from "./api/rest-querier";
 import { ProjectsCache } from "./writing-mode/ProjectsCache";
 import { DATE_FORMATTER, RETRIEVE_PROJECTS } from "./injection-symbols";
+import "../themes/cross-tracker.scss";
 
 document.addEventListener("DOMContentLoaded", async () => {
     const locale = getLocaleOrThrow(document);
@@ -68,9 +69,9 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
 
         createApp(CrossTrackerWidget, {
-            backendCrossTrackerReport: backend_report,
-            readingCrossTrackerReport: reading_report,
-            writingCrossTrackerReport: writing_report,
+            backend_cross_tracker_report: backend_report,
+            reading_cross_tracker_report: reading_report,
+            writing_cross_tracker_report: writing_report,
         })
             .use(gettext_plugin)
             .use(createInitializedStore(Number.parseInt(report_id, 10), is_widget_admin))

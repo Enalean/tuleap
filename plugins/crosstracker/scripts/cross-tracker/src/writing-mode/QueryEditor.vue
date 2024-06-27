@@ -86,19 +86,19 @@ import type WritingCrossTrackerReport from "./writing-cross-tracker-report";
 
 const { $gettext } = useGettext();
 
-const props = defineProps<{ writingCrossTrackerReport: WritingCrossTrackerReport }>();
+const props = defineProps<{ writing_cross_tracker_report: WritingCrossTrackerReport }>();
 const emit = defineEmits<{ (e: "trigger-search"): void }>();
 
 const code_mirror_instance = ref<TQLCodeMirrorEditor | null>(null);
 
-const value = ref<string>(props.writingCrossTrackerReport.expert_query);
+const value = ref<string>(props.writing_cross_tracker_report.expert_query);
 
 const query_textarea = ref<InstanceType<typeof HTMLTextAreaElement>>();
 
 initializeTQLMode(TQL_cross_tracker_mode_definition);
 
 onMounted(() => {
-    const submitFormCallback = () => {
+    const submitFormCallback = (): void => {
         emit("trigger-search");
     };
 
@@ -119,7 +119,7 @@ onMounted(() => {
         if (!code_mirror_instance.value) {
             throw new Error("Code mirror is not accessible");
         }
-        props.writingCrossTrackerReport.setExpertQuery(code_mirror_instance.value.getValue());
+        props.writing_cross_tracker_report.setExpertQuery(code_mirror_instance.value.getValue());
     });
 });
 

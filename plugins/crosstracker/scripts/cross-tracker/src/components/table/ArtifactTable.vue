@@ -82,13 +82,13 @@ import { strictInject } from "@tuleap/vue-strict-inject";
 import type { Fault } from "@tuleap/fault";
 import type { ResultAsync } from "neverthrow";
 import ArtifactTableRow from "./ArtifactTableRow.vue";
-import ExportButton from "./ExportCSVButton.vue";
-import { getQueryResult, getReportContent } from "../api/rest-querier";
-import type WritingCrossTrackerReport from "../writing-mode/writing-cross-tracker-report";
-import type { Artifact, ArtifactsCollection, State } from "../type";
-import { DATE_FORMATTER } from "../injection-symbols";
+import ExportButton from "../ExportCSVButton.vue";
+import { getQueryResult, getReportContent } from "../../api/rest-querier";
+import type WritingCrossTrackerReport from "../../writing-mode/writing-cross-tracker-report";
+import type { Artifact, ArtifactsCollection, State } from "../../type";
+import { DATE_FORMATTER } from "../../injection-symbols";
 
-const props = defineProps<{ writingCrossTrackerReport: WritingCrossTrackerReport }>();
+const props = defineProps<{ writing_cross_tracker_report: WritingCrossTrackerReport }>();
 
 const { reading_mode, is_report_saved, report_id } = useState<
     Pick<State, "reading_mode" | "is_report_saved" | "report_id">
@@ -175,8 +175,8 @@ function getArtifactsFromReportOrUnsavedQuery(): ResultAsync<ArtifactsCollection
 
     return getQueryResult(
         report_id.value,
-        props.writingCrossTrackerReport.getTrackerIds(),
-        props.writingCrossTrackerReport.expert_query,
+        props.writing_cross_tracker_report.getTrackerIds(),
+        props.writing_cross_tracker_report.expert_query,
         limit,
         current_offset,
     );

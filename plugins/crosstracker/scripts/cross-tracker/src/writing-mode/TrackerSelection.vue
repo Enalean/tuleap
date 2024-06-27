@@ -113,7 +113,7 @@ export type AddTrackerToSelectionCommand = {
 
 const { $gettext } = useGettext();
 
-const props = defineProps<{ selectedTrackers: ReadonlyArray<SelectedTracker> }>();
+const props = defineProps<{ selected_trackers: ReadonlyArray<SelectedTracker> }>();
 const emit = defineEmits<{
     (e: "tracker-added", add: AddTrackerToSelectionCommand): void;
 }>();
@@ -131,7 +131,7 @@ const is_tracker_select_disabled = computed(() => trackers.value.length === 0);
 const is_add_button_disabled = computed(() => tracker_to_add.value === null);
 const tracker_options = computed<ReadonlyArray<TrackerSelectOption>>(() => {
     return trackers.value.map((tracker: TrackerInfo) => {
-        const is_already_selected = props.selectedTrackers.some(
+        const is_already_selected = props.selected_trackers.some(
             ({ tracker_id }) => tracker_id === tracker.id,
         );
         return {

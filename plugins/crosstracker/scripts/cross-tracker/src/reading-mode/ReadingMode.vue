@@ -18,52 +18,50 @@
   -->
 
 <template>
-    <div class="cross-tracker-reading-mode">
+    <div
+        class="reading-mode-report"
+        v-bind:class="{ disabled: !is_user_admin }"
+        v-on:click="switchToWritingMode"
+        data-test="cross-tracker-reading-mode"
+    >
+        <tracker-list-reading-mode
+            v-bind:reading_cross_tracker_report="props.reading_cross_tracker_report"
+            data-test="tracker-list-reading-mode"
+        />
         <div
-            class="reading-mode-report"
-            v-bind:class="{ disabled: !is_user_admin }"
-            v-on:click="switchToWritingMode"
-            data-test="cross-tracker-reading-mode"
+            class="reading-mode-query"
+            v-if="is_expert_query_not_empty"
+            data-test="tql-reading-mode-query"
         >
-            <tracker-list-reading-mode
-                v-bind:reading-cross-tracker-report="props.readingCrossTrackerReport"
-                data-test="tracker-list-reading-mode"
-            />
-            <div
-                class="reading-mode-query"
-                v-if="is_expert_query_not_empty"
-                data-test="tql-reading-mode-query"
-            >
-                {{ props.readingCrossTrackerReport.expert_query }}
-            </div>
+            {{ props.reading_cross_tracker_report.expert_query }}
         </div>
-        <div class="reading-mode-actions" v-if="!is_report_saved">
-            <button
-                type="button"
-                class="tlp-button-primary tlp-button-outline reading-mode-actions-cancel"
-                v-on:click="cancelReport()"
-                data-test="cross-tracker-cancel-report"
-            >
-                {{ $gettext("Cancel") }}
-            </button>
-            <button
-                type="button"
-                class="tlp-button-primary"
-                v-on:click="saveReport()"
-                v-bind:class="{ disabled: is_save_disabled }"
-                data-test="cross-tracker-save-report"
-            >
-                <i
-                    aria-hidden="true"
-                    class="tlp-button-icon fa-solid"
-                    v-bind:class="{
-                        'fa-circle-notch fa-spin': is_loading,
-                        'fa-save': !is_loading,
-                    }"
-                ></i>
-                {{ $gettext("Save report") }}
-            </button>
-        </div>
+    </div>
+    <div class="reading-mode-actions" v-if="!is_report_saved">
+        <button
+            type="button"
+            class="tlp-button-primary tlp-button-outline reading-mode-actions-cancel"
+            v-on:click="cancelReport()"
+            data-test="cross-tracker-cancel-report"
+        >
+            {{ $gettext("Cancel") }}
+        </button>
+        <button
+            type="button"
+            class="tlp-button-primary"
+            v-on:click="saveReport()"
+            v-bind:class="{ disabled: is_save_disabled }"
+            data-test="cross-tracker-save-report"
+        >
+            <i
+                aria-hidden="true"
+                class="tlp-button-icon fa-solid"
+                v-bind:class="{
+                    'fa-circle-notch fa-spin': is_loading,
+                    'fa-save': !is_loading,
+                }"
+            ></i>
+            {{ $gettext("Save report") }}
+        </button>
     </div>
 </template>
 <script setup lang="ts">
@@ -79,8 +77,8 @@ import type BackendCrossTrackerReport from "../backend-cross-tracker-report";
 const { $gettext } = useGettext();
 
 const props = defineProps<{
-    readingCrossTrackerReport: ReadingCrossTrackerReport;
-    backendCrossTrackerReport: BackendCrossTrackerReport;
+    reading_cross_tracker_report: ReadingCrossTrackerReport;
+    backend_cross_tracker_report: BackendCrossTrackerReport;
 }>();
 
 const emit = defineEmits<{
@@ -106,7 +104,7 @@ const is_save_disabled = computed(
 );
 
 const is_expert_query_not_empty = computed(
-    () => props.readingCrossTrackerReport.expert_query !== "",
+    () => props.reading_cross_tracker_report.expert_query !== "",
 );
 
 function switchToWritingMode(): void {
@@ -123,14 +121,14 @@ function saveReport(): void {
 
     is_loading.value = true;
 
-    props.backendCrossTrackerReport.duplicateFromReport(props.readingCrossTrackerReport);
-    const tracker_ids = props.backendCrossTrackerReport.getTrackerIds();
-    const new_expert_query = props.backendCrossTrackerReport.getExpertQuery();
+    props.backend_cross_tracker_report.duplicateFromReport(props.reading_cross_tracker_report);
+    const tracker_ids = props.backend_cross_tracker_report.getTrackerIds();
+    const new_expert_query = props.backend_cross_tracker_report.getExpertQuery();
 
     updateReport(report_id.value, tracker_ids, new_expert_query)
         .match(
             (report: Report) => {
-                props.backendCrossTrackerReport.init(report.trackers, report.expert_query);
+                props.backend_cross_tracker_report.init(report.trackers, report.expert_query);
                 emit("saved");
             },
             (fault) => {
@@ -143,7 +141,7 @@ function saveReport(): void {
 }
 
 function cancelReport(): void {
-    props.readingCrossTrackerReport.duplicateFromReport(props.backendCrossTrackerReport);
+    props.reading_cross_tracker_report.duplicateFromReport(props.backend_cross_tracker_report);
     discardUnsavedReport();
 }
 </script>
