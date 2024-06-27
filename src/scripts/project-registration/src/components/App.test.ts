@@ -17,16 +17,19 @@
  *  along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { Wrapper } from "@vue/test-utils";
+import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import App from "./App.vue";
-import { createProjectRegistrationLocalVue } from "../helpers/local-vue-for-tests";
+import { getGlobalTestOptions } from "../helpers/global-options-for-test";
 
 describe("App", () => {
-    let factory: Wrapper<Vue, Element>;
-    beforeEach(async () => {
+    let factory: VueWrapper;
+    beforeEach(() => {
         factory = shallowMount(App, {
-            localVue: await createProjectRegistrationLocalVue(),
+            global: {
+                ...getGlobalTestOptions(),
+                stubs: ["router-view"],
+            },
         });
     });
     it("Spawns the app", () => {

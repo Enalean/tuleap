@@ -18,16 +18,15 @@
  *
  */
 
-import type { Wrapper } from "@vue/test-utils";
+import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
-import { createProjectRegistrationLocalVue } from "../../../helpers/local-vue-for-tests";
 import TroveCategoryList from "./TroveCategoryList.vue";
-import type Vue from "vue";
 import emitter from "../../../helpers/emitter";
+import { getGlobalTestOptions } from "../../../helpers/global-options-for-test";
 
 describe("TroveCategoryList -", () => {
-    let factory: Wrapper<Vue, Element>;
-    beforeEach(async () => {
+    let factory: VueWrapper;
+    beforeEach(() => {
         const trove_categories = {
             id: "1",
             shortname: "licence",
@@ -50,8 +49,10 @@ describe("TroveCategoryList -", () => {
         };
 
         factory = shallowMount(TroveCategoryList, {
-            localVue: await createProjectRegistrationLocalVue(),
-            propsData: { trovecat: trove_categories },
+            global: {
+                ...getGlobalTestOptions(),
+            },
+            props: { trovecat: trove_categories },
         });
     });
 
@@ -65,7 +66,11 @@ describe("TroveCategoryList -", () => {
         const emit = jest.spyOn(emitter, "emit");
 
         const wrapper = factory;
-        (wrapper.findAll("option").at(2).element as HTMLOptionElement).selected = true;
+        const second_option = wrapper.findAll("option").at(2);
+        if (second_option === undefined) {
+            throw new Error("error");
+        }
+        (second_option.element as HTMLOptionElement).selected = true;
 
         wrapper.get("[data-test=trove-category-list]").trigger("change");
 

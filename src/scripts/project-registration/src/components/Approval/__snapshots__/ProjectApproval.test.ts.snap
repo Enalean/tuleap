@@ -5,11 +5,7 @@ exports[`ProjectApproval - Spawns the ProjectApproval component 1`] = `
   <div class="empty-state-illustration">
     <project-approval-svg-stub></project-approval-svg-stub>
   </div>
-  <h1 class="empty-state-title">
-    Your project has been submitted to the administrators for validation
-  </h1>
-  <p class="empty-state-text">
-    You will receive an email when the administrator has validated it.
-  </p> <a href="/my/" class="tlp-button-primary tlp-button-large empty-state-action"><i class="fa fa-reply tlp-button-icon"></i> <span>Go to my home page</span></a>
+  <h1 class="empty-state-title">Your project has been submitted to the administrators for validation</h1>
+  <p class="empty-state-text">You will receive an email when the administrator has validated it.</p><a class="tlp-button-primary tlp-button-large empty-state-action" href="/my/"><i class="fa fa-reply tlp-button-icon"></i><span>Go to my home page</span></a>
 </div>
 `;

@@ -52,7 +52,7 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import ProjectShortName from "./ProjectShortName.vue";
-import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
+import { useGettext } from "vue3-gettext";
 import emitter from "../../../helpers/emitter";
 
 const written_chars = ref(0);

@@ -18,41 +18,34 @@
  *
  */
 
-import type { Wrapper } from "@vue/test-utils";
+import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
-import { createProjectRegistrationLocalVue } from "../../../helpers/local-vue-for-tests";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import ProjectName from "./ProjectName.vue";
-import type { DefaultData } from "vue/types/options";
 import emitter from "../../../helpers/emitter";
+import { getGlobalTestOptions } from "../../../helpers/global-options-for-test";
 
 describe("ProjectName", () => {
-    async function createWrapper(): Promise<Wrapper<Vue, Element>> {
-        const store = createStoreMock({});
+    function createWrapper(): VueWrapper {
         const component_options = {
-            data(): DefaultData<Element> {
-                return {
-                    error: "",
-                };
+            global: {
+                ...getGlobalTestOptions(),
             },
-            localVue: await createProjectRegistrationLocalVue(),
-            mocks: { $store: store },
         };
 
         return shallowMount(ProjectName, component_options);
     }
 
-    it(`Should not yields again user, if he just started to type its new project short name, even if the minimal length is not reached`, async () => {
-        const wrapper = await createWrapper();
+    it(`Should not yields again user, if he just started to type its new project short name, even if the minimal length is not reached`, () => {
+        const wrapper = createWrapper();
         wrapper.get("[data-test=new-project-name]").setValue("t");
 
         expect(wrapper.find("[data-test=project-name-is-invalid]").exists()).toBe(false);
     });
 
-    it(`Emit a named event`, async () => {
+    it(`Emit a named event`, () => {
         const event_bus_emit = jest.spyOn(emitter, "emit");
 
-        const wrapper = await createWrapper();
+        const wrapper = createWrapper();
         wrapper.get("[data-test=new-project-name]").setValue("test");
 
         expect(wrapper.find("[data-test=project-project-name-is-invalid]").exists()).toBe(false);

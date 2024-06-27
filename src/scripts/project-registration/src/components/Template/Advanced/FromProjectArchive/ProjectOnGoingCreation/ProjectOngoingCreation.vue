@@ -38,7 +38,7 @@
 <script setup lang="ts">
 import ProjectOngoingCreationSvg from "./ProjectOngoingCreationSvg.vue";
 import { computed, onMounted } from "vue";
-import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
+import { useGettext } from "vue3-gettext";
 import type { ResultAsync } from "neverthrow";
 import type { Fault } from "@tuleap/fault";
 import { getJSON, uri } from "@tuleap/fetch-result";

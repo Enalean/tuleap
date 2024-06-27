@@ -19,13 +19,19 @@
  */
 
 import { shallowMount } from "@vue/test-utils";
-import { createProjectRegistrationLocalVue } from "../../../helpers/local-vue-for-tests";
 import PolicyAgreement from "./PolicyAgreement.vue";
+import { getGlobalTestOptions } from "../../../helpers/global-options-for-test";
+import { buildVueDompurifyHTMLDirective } from "vue-dompurify-html";
 
 describe("PolicyAgreement -", () => {
-    it("Displays text with a clickable link", async () => {
+    it("Displays text with a clickable link", () => {
         const wrapper = shallowMount(PolicyAgreement, {
-            localVue: await createProjectRegistrationLocalVue(),
+            global: {
+                ...getGlobalTestOptions(),
+                directives: {
+                    "dompurify-html": buildVueDompurifyHTMLDirective(),
+                },
+            },
         });
 
         expect(wrapper).toMatchSnapshot();

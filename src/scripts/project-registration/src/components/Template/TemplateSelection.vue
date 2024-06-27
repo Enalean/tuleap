@@ -78,7 +78,7 @@ import TuleapTemplateList from "./Tuleap/TuleapTemplateList.vue";
 import CategorisedExternalTemplatesList from "./CategorisedExternalTemplates/CategorisedExternalTemplatesList.vue";
 import type { ExternalTemplateCategory, ExternalTemplateData } from "../../type";
 import { useStore } from "../../stores/root";
-import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
+import { useGettext } from "vue3-gettext";
 
 const CATEGORY_TULEAP = "Tuleap";
 const CATEGORY_ACME = "ACME";

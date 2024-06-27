@@ -17,29 +17,23 @@
  *  along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { createApp } from "vue";
 import "../themes/project-registration/project-registration.scss";
-import Vue from "vue";
-import { getPOFileFromLocaleWithoutExtension, initVueGettext } from "@tuleap/vue2-gettext-init";
+import { getPOFileFromLocaleWithoutExtension, initVueGettext } from "@tuleap/vue3-gettext-init";
 import App from "./components/App.vue";
 import type { TemplateData, TroveCatData } from "./type";
 import { useStore } from "./stores/root";
 import VueDOMPurifyHTML from "vue-dompurify-html";
-import { createRouter } from "./router";
-import { createPinia, PiniaVuePlugin } from "pinia";
+import { router } from "./router";
+import { createPinia } from "pinia";
 import type { RootState } from "./stores/type";
+import { createGettext } from "vue3-gettext";
 
 document.addEventListener("DOMContentLoaded", async () => {
-    Vue.use(PiniaVuePlugin);
-
     const vue_mount_point = document.getElementById("project-registration");
     if (!vue_mount_point) {
         return;
     }
-
-    await initVueGettext(
-        Vue,
-        (locale: string) => import(`../po/${getPOFileFromLocaleWithoutExtension(locale)}.po`),
-    );
 
     const tuleap_templates_json = vue_mount_point.dataset.availableTuleapTemplates;
     if (!tuleap_templates_json) {
@@ -86,8 +80,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     const pinia = createPinia();
 
-    const AppComponent = Vue.extend(App);
-
     const root_state: RootState = {
         tuleap_templates,
         external_templates,
@@ -110,20 +102,17 @@ document.addEventListener("DOMContentLoaded", async () => {
         is_creating_project: false,
     };
 
-    Vue.use(VueDOMPurifyHTML, {
-        namedConfigurations: {
-            svg: {
-                USE_PROFILES: { svg: true },
-            },
-        },
-    });
-
     const store = useStore(pinia);
-    store.$patch(root_state);
-    const router = createRouter();
 
-    new AppComponent({
-        pinia,
-        router,
-    }).$mount(vue_mount_point);
+    store.$patch(root_state);
+    createApp(App)
+        .use(VueDOMPurifyHTML)
+        .use(pinia)
+        .use(
+            await initVueGettext(createGettext, (locale: string) => {
+                return import(`../po/${getPOFileFromLocaleWithoutExtension(locale)}.po`);
+            }),
+        )
+        .use(router)
+        .mount(vue_mount_point);
 });

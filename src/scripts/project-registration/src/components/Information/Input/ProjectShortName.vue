@@ -73,7 +73,7 @@
 import slugify from "slugify";
 import { computed, onBeforeUnmount, onMounted, ref } from "vue";
 import { useStore } from "../../../stores/root";
-import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
+import { useGettext } from "vue3-gettext";
 import emitter from "../../../helpers/emitter";
 
 const root_store = useStore();

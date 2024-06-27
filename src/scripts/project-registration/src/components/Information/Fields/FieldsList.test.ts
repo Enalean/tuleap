@@ -18,17 +18,23 @@
  *
  */
 
-import type { Wrapper } from "@vue/test-utils";
+import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
-import { createProjectRegistrationLocalVue } from "../../../helpers/local-vue-for-tests";
 import FieldsList from "./FieldsList.vue";
 import type { FieldData } from "../../../type";
 import emitter from "../../../helpers/emitter";
+import { getGlobalTestOptions } from "../../../helpers/global-options-for-test";
+import { buildVueDompurifyHTMLDirective } from "vue-dompurify-html";
 
-async function getWrapper(field: FieldData): Promise<Wrapper<Vue, Element>> {
+function getWrapper(field: FieldData): VueWrapper {
     return shallowMount(FieldsList, {
-        localVue: await createProjectRegistrationLocalVue(),
-        propsData: { field },
+        global: {
+            ...getGlobalTestOptions(),
+        },
+        directives: {
+            "dompurify-html": buildVueDompurifyHTMLDirective(),
+        },
+        props: { field },
     });
 }
 
@@ -74,7 +80,7 @@ describe("FieldsList -", () => {
             desc_required: "0",
         } as FieldData);
 
-        expect(wrapper.html()).toBe("");
+        expect(wrapper.isVisible()).toBe(false);
     });
 
     it("Send an event when user chooses a new value for the field", async () => {

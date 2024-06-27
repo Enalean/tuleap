@@ -18,19 +18,21 @@
  *
  */
 
-import type { Wrapper } from "@vue/test-utils";
+import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
-import { createProjectRegistrationLocalVue } from "../../helpers/local-vue-for-tests";
 import ProjectList from "./AllProjectTemplates.vue";
 import NewProjectBoxes from "./NewProjectBoxesSvg.vue";
 import TemplateSelection from "./TemplateSelection.vue";
 import TemplateFooter from "./TemplateFooter.vue";
+import { getGlobalTestOptions } from "../../helpers/global-options-for-test";
 
 describe("AllProjectTemplates", () => {
-    let factory: Wrapper<Vue, Element>;
-    beforeEach(async () => {
+    let factory: VueWrapper;
+    beforeEach(() => {
         factory = shallowMount(ProjectList, {
-            localVue: await createProjectRegistrationLocalVue(),
+            global: {
+                ...getGlobalTestOptions(),
+            },
         });
     });
     it("Spawns the AllProjectTemplates component", () => {

@@ -18,15 +18,15 @@
  *
  */
 
-import type { Wrapper } from "@vue/test-utils";
+import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
-import { createProjectRegistrationLocalVue } from "../../../helpers/local-vue-for-tests";
 import FieldDescription from "./FieldDescription.vue";
 import { createTestingPinia } from "@pinia/testing";
 import { defineStore } from "pinia";
+import { getGlobalTestOptions } from "../../../helpers/global-options-for-test";
 
 describe("FieldDescription -", () => {
-    async function getWrapper(is_description_required: boolean): Promise<Wrapper<Vue, Element>> {
+    function getWrapper(is_description_required: boolean): VueWrapper {
         const useStore = defineStore("root", {
             state: () => ({
                 is_description_required,
@@ -41,8 +41,12 @@ describe("FieldDescription -", () => {
         useStore(pinia);
 
         return shallowMount(FieldDescription, {
-            localVue: await createProjectRegistrationLocalVue(),
-            pinia,
+            global: {
+                ...getGlobalTestOptions(pinia),
+            },
+            props: {
+                field_description_value: "",
+            },
         });
     }
     it("add correct attribute when description is required", async () => {

@@ -18,14 +18,14 @@
  *
  */
 
-import type { Wrapper } from "@vue/test-utils";
+import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
-import { createProjectRegistrationLocalVue } from "../../helpers/local-vue-for-tests";
 import ProjectApproval from "./ProjectApproval.vue";
 import * as router from "../../helpers/use-router";
 import { defineStore } from "pinia";
 import { createTestingPinia } from "@pinia/testing";
-import type VueRouter from "vue-router";
+import { getGlobalTestOptions } from "../../helpers/global-options-for-test";
+import type { Router } from "vue-router";
 
 describe("ProjectApproval -", () => {
     let push_route_spy: jest.Mock;
@@ -34,11 +34,11 @@ describe("ProjectApproval -", () => {
         push_route_spy = jest.fn();
 
         jest.spyOn(router, "useRouter").mockImplementation(() => {
-            return { push: push_route_spy } as unknown as VueRouter;
+            return { push: push_route_spy } as unknown as Router;
         });
     });
 
-    async function getWrapper(): Promise<Wrapper<Vue, Element>> {
+    function getWrapper(): VueWrapper {
         const useStore = defineStore("root", {
             getters: {
                 has_error: () => false,
@@ -51,21 +51,22 @@ describe("ProjectApproval -", () => {
         useStore(pinia);
 
         return shallowMount(ProjectApproval, {
-            localVue: await createProjectRegistrationLocalVue(),
-            pinia,
+            global: {
+                ...getGlobalTestOptions(pinia),
+            },
         });
     }
 
-    it("Spawns the ProjectApproval component", async () => {
+    it("Spawns the ProjectApproval component", () => {
         is_template_selected = true;
-        const wrapper = await getWrapper();
+        const wrapper = getWrapper();
 
         expect(wrapper).toMatchSnapshot();
     });
 
-    it("redirects user on /new when he does not have all needed information to start his project creation", async () => {
+    it("redirects user on /new when he does not have all needed information to start his project creation", () => {
         is_template_selected = false;
-        await getWrapper();
+        getWrapper();
 
         expect(push_route_spy).toHaveBeenCalledWith("new");
     });

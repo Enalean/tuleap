@@ -24,7 +24,7 @@ export function uploadFile(
     project_id: number,
     project_archive: File,
     upload_href: string,
-    router: VueRouter,
+    router: VueRouter.Router,
     setIsCreatingProject: (is_creating_project: boolean) => void,
     setErrorMessage: (error: string) => void,
 ): void {

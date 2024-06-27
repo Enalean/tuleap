@@ -1,17 +1,13 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`FieldsList - Display correctly a string field 1`] = `
-<div class="tlp-form-element"><label for="input-1" class="tlp-label">
-    custom field
-    <i class="fa fa-asterisk"></i></label> <input type="text" id="input-1" required="required" class="tlp-input tlp-input-large">
+<div class="tlp-form-element"><label class="tlp-label" for="input-1">custom field <i class="fa fa-asterisk"></i></label><input type="text" class="tlp-input tlp-input-large" id="input-1" required="">
   <p class="tlp-text-info">a helpful description</p>
 </div>
 `;
 
 exports[`FieldsList - Display correctly a text field 1`] = `
-<div class="tlp-form-element"><label for="input-1" class="tlp-label">
-    custom field
-    <i class="fa fa-asterisk"></i></label> <textarea id="textaarea-1" required="required" class="tlp-textarea tlp-textarea-large"></textarea>
+<div class="tlp-form-element"><label class="tlp-label" for="input-1">custom field <i class="fa fa-asterisk"></i></label><textarea class="tlp-textarea tlp-textarea-large" id="textaarea-1" required=""></textarea>
   <p class="tlp-text-info">a helpful description</p>
 </div>
 `;
