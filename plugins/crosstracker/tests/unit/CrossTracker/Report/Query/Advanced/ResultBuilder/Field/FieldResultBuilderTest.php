@@ -26,6 +26,7 @@ use Codendi_HTMLPurifier;
 use DateTime;
 use ForgeConfig;
 use PFUser;
+use ProjectUGroup;
 use Tracker;
 use Tuleap\Config\ConfigurationVariables;
 use Tuleap\CrossTracker\Report\Query\Advanced\DuckTypedField\FieldTypeRetrieverWrapper;
@@ -38,14 +39,20 @@ use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Field\StaticList\Sta
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Field\StaticList\StaticListValueRepresentation;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Field\Text\TextResultBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Field\Text\TextResultRepresentation;
+use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Field\UGroupList\UGroupListRepresentation;
+use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Field\UGroupList\UGroupListResultBuilder;
+use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Field\UGroupList\UGroupListValueRepresentation;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\SelectedValue;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\SelectedValuesCollection;
 use Tuleap\CrossTracker\REST\v1\Representation\CrossTrackerSelectedRepresentation;
 use Tuleap\CrossTracker\REST\v1\Representation\CrossTrackerSelectedType;
 use Tuleap\ForgeConfigSandbox;
+use Tuleap\GlobalLanguageMock;
 use Tuleap\Markdown\CommonMarkInterpreter;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Test\Stubs\UGroupRetrieverStub;
 use Tuleap\Tracker\Artifact\ChangesetValue\Text\TextValueInterpreter;
 use Tuleap\Tracker\Permission\FieldPermissionType;
 use Tuleap\Tracker\Permission\TrackersPermissionsRetriever;
@@ -57,6 +64,7 @@ use Tuleap\Tracker\Test\Builders\Fields\ExternalFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\FloatFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\IntFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticBindBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\List\ListUserGroupBindBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\OpenListFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\TextFieldBuilder;
@@ -65,10 +73,12 @@ use Tuleap\Tracker\Test\Stub\RetrieveArtifactStub;
 use Tuleap\Tracker\Test\Stub\RetrieveFieldTypeStub;
 use Tuleap\Tracker\Test\Stub\RetrieveUsedFieldsStub;
 use Tuleap\Tracker\Test\Stub\Tracker\Permission\RetrieveUserPermissionOnFieldsStub;
+use Tuleap\User\UserGroup\NameTranslator;
 
 final class FieldResultBuilderTest extends TestCase
 {
     use ForgeConfigSandbox;
+    use GlobalLanguageMock;
 
     private const FIELD_NAME      = 'my_field';
     private const FIRST_FIELD_ID  = 134;
@@ -84,8 +94,9 @@ final class FieldResultBuilderTest extends TestCase
         ForgeConfig::set(ConfigurationVariables::SERVER_TIMEZONE, 'Europe/Paris');
         $this->field_hash     = md5('my_field');
         $this->user           = UserTestBuilder::buildWithId(133);
-        $this->first_tracker  = TrackerTestBuilder::aTracker()->withId(38)->build();
-        $this->second_tracker = TrackerTestBuilder::aTracker()->withId(4)->build();
+        $project              = ProjectTestBuilder::aProject()->withId(154)->build();
+        $this->first_tracker  = TrackerTestBuilder::aTracker()->withId(38)->withProject($project)->build();
+        $this->second_tracker = TrackerTestBuilder::aTracker()->withId(4)->withProject($project)->build();
     }
 
     private function getSelectedResult(
@@ -111,6 +122,11 @@ final class FieldResultBuilderTest extends TestCase
             ),
             new NumericResultBuilder(),
             new StaticListResultBuilder(),
+            new UGroupListResultBuilder($artifact_retriever, UGroupRetrieverStub::buildWithUserGroups(
+                new ProjectUGroup(['name' => NameTranslator::PROJECT_MEMBERS]),
+                new ProjectUGroup(['name' => NameTranslator::PROJECT_ADMINS]),
+                new ProjectUGroup(['name' => 'Custom_User_Group']),
+            )),
         );
 
         return $builder->getResult(
@@ -320,5 +336,77 @@ EOL
             ])),
             43 => new SelectedValue(self::FIELD_NAME, new StaticListRepresentation([])),
         ], $result->values);
+    }
+
+    public function testItReturnsValuesForUserGroupListField(): void
+    {
+        $GLOBALS['Language']->method('getText')
+            ->withConsecutive(
+                ['project_ugroup', 'ugroup_project_members'],
+                ['project_ugroup', 'ugroup_project_admins'],
+            )
+            ->willReturnOnConsecutiveCalls('Project members', 'Project admins');
+
+        $result = $this->getSelectedResult(
+            RetrieveUsedFieldsStub::withFields(
+                ListUserGroupBindBuilder::aUserGroupBind(
+                    ListFieldBuilder::aListField(self::FIRST_FIELD_ID)
+                        ->withName(self::FIELD_NAME)
+                        ->inTracker($this->first_tracker)
+                        ->build()
+                )->build()->getField(),
+                ListUserGroupBindBuilder::aUserGroupBind(
+                    OpenListFieldBuilder::anOpenListField()
+                        ->withId(self::SECOND_FIELD_ID)
+                        ->withName(self::FIELD_NAME)
+                        ->withTracker($this->second_tracker)
+                        ->build()
+                )->build()->getField(),
+            ),
+            RetrieveArtifactStub::withArtifacts(
+                ArtifactTestBuilder::anArtifact(51)->inTracker($this->first_tracker)->build(),
+                ArtifactTestBuilder::anArtifact(52)->inTracker($this->first_tracker)->build(),
+                ArtifactTestBuilder::anArtifact(53)->inTracker($this->first_tracker)->build(),
+            ),
+            [
+                [
+                    'id'                                      => 51,
+                    "user_group_list_value_$this->field_hash" => 'ugroup_project_members_name_key',
+                    "user_group_list_open_$this->field_hash"  => null,
+                ],
+                [
+                    'id'                                      => 52,
+                    "user_group_list_value_$this->field_hash" => 'ugroup_project_admins_name_key',
+                    "user_group_list_open_$this->field_hash"  => null,
+                ],
+                [
+                    'id'                                      => 52,
+                    "user_group_list_value_$this->field_hash" => null,
+                    "user_group_list_open_$this->field_hash"  => 'Custom_User_Group',
+                ],
+                [
+                    'id'                                      => 53,
+                    "user_group_list_value_$this->field_hash" => null,
+                    "user_group_list_open_$this->field_hash"  => null,
+                ],
+            ],
+        );
+
+        self::assertEquals(
+            new CrossTrackerSelectedRepresentation(self::FIELD_NAME, CrossTrackerSelectedType::TYPE_USER_GROUP_LIST),
+            $result->selected,
+        );
+        $values = $result->values;
+        self::assertCount(3, $values);
+        self::assertEqualsCanonicalizing([
+            51 => new SelectedValue(self::FIELD_NAME, new UGroupListRepresentation([
+                new UGroupListValueRepresentation('Project members'),
+            ])),
+            52 => new SelectedValue(self::FIELD_NAME, new UGroupListRepresentation([
+                new UGroupListValueRepresentation('Project admins'),
+                new UGroupListValueRepresentation('Custom_User_Group'),
+            ])),
+            53 => new SelectedValue(self::FIELD_NAME, new UGroupListRepresentation([])),
+        ], $values);
     }
 }

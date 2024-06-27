@@ -19,49 +19,40 @@
  */
 
 declare(strict_types=1);
+
 namespace Tuleap\CrossTracker\Report\Query\Advanced\Select;
 
+use BaseLanguageFactory;
 use PFUser;
 use ProjectUGroup;
 use Tracker;
 use Tracker_FormElementFactory;
+use Tuleap\CrossTracker\CrossTrackerReport;
 use Tuleap\CrossTracker\Report\Query\Advanced\CrossTrackerFieldTestCase;
-use Tuleap\CrossTracker\Report\Query\Advanced\DuckTypedField\FieldTypeRetrieverWrapper;
-use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\CrossTrackerExpertQueryReportDao;
-use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Field\Date\DateSelectFromBuilder;
-use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Field\FieldSelectFromBuilder;
-use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Field\Numeric\NumericSelectFromBuilder;
-use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Field\StaticList\StaticListSelectFromBuilder;
-use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Field\Text\TextSelectFromBuilder;
-use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Field\UGroupList\UGroupListSelectFromBuilder;
-use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Field\UserList\UserListSelectFromBuilder;
-use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilderVisitor;
+use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Field\UGroupList\UGroupListRepresentation;
+use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Field\UGroupList\UGroupListValueRepresentation;
+use Tuleap\CrossTracker\REST\v1\Representation\CrossTrackerReportContentRepresentation;
+use Tuleap\CrossTracker\Tests\Report\ArtifactReportFactoryInstantiator;
 use Tuleap\DB\DBFactory;
 use Tuleap\Test\Builders\CoreDatabaseBuilder;
-use Tuleap\Tracker\Permission\TrackersPermissionsRetriever;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\Field;
 use Tuleap\Tracker\Test\Builders\TrackerDatabaseBuilder;
 
 final class UGroupListSelectFromBuilderTest extends CrossTrackerFieldTestCase
 {
-    private SelectBuilderVisitor $builder;
-    private CrossTrackerExpertQueryReportDao $dao;
     /**
      * @var Tracker[]
      */
     private array $trackers;
     /**
-     * @var list<int>
-     */
-    private array $artifact_ids;
-    /**
-     * @var array<int, array<string, string>>
+     * @var array<int, UGroupListValueRepresentation[]>
      */
     private array $expected_values;
     private PFUser $user;
 
     public function setUp(): void
     {
+        $GLOBALS['Language'] = (new BaseLanguageFactory())->getBaseLanguage('en_US');
+
         $db              = DBFactory::getMainTuleapDBConnection()->getDB();
         $tracker_builder = new TrackerDatabaseBuilder($db);
         $core_builder    = new CoreDatabaseBuilder($db);
@@ -82,12 +73,11 @@ final class UGroupListSelectFromBuilderTest extends CrossTrackerFieldTestCase
         );
 
         $static_ugroup_id = $core_builder->buildStaticUserGroup($project_id, 'Bagheera');
+        $core_builder->buildStaticUserGroup($project_id, 'Rancho');
 
         $release_bind_ids = $tracker_builder->buildValuesForUserGroupListField(
             $release_ugroup_static_list_field_id,
-            [
-                ProjectUGroup::PROJECT_MEMBERS, ProjectUGroup::PROJECT_ADMIN, $static_ugroup_id,
-            ]
+            [ProjectUGroup::PROJECT_MEMBERS, ProjectUGroup::PROJECT_ADMIN, $static_ugroup_id]
         );
 
         $sprint_ugroup_list_field_id = $tracker_builder->buildUserGroupListField(
@@ -118,25 +108,18 @@ final class UGroupListSelectFromBuilderTest extends CrossTrackerFieldTestCase
         $release_artifact_empty_id            = $tracker_builder->buildArtifact($release_tracker->getId());
         $release_artifact_with_static_list_id = $tracker_builder->buildArtifact($release_tracker->getId());
         $sprint_artifact_with_open_list_id    = $tracker_builder->buildArtifact($sprint_tracker->getId());
-        $this->artifact_ids                   = [
-            $release_artifact_empty_id,
-            $release_artifact_with_static_list_id,
-            $sprint_artifact_with_open_list_id,
-            $sprint_artifact_with_open_list_id,
-        ];
 
         $tracker_builder->buildLastChangeset($release_artifact_empty_id);
-        $release_artifact_with_list_changeset     = $tracker_builder->buildLastChangeset(
-            $release_artifact_with_static_list_id
-        );
-        $sprint_artifact_with_open_list_changeset = $tracker_builder->buildLastChangeset(
-            $sprint_artifact_with_open_list_id
-        );
+        $release_artifact_with_list_changeset     = $tracker_builder->buildLastChangeset($release_artifact_with_static_list_id);
+        $sprint_artifact_with_open_list_changeset = $tracker_builder->buildLastChangeset($sprint_artifact_with_open_list_id);
 
-        $hash                  = md5('ugroup_list_field');
         $this->expected_values = [
-            $release_artifact_with_static_list_id => ["user_group_list_value_$hash" => 'ugroup_project_members_name_key'],
-            $sprint_artifact_with_open_list_id    => ["user_group_list_open_$hash" => 'Rancho', "user_group_list_value_$hash" => 'Bagheera'],
+            $release_artifact_empty_id            => [],
+            $release_artifact_with_static_list_id => [new UGroupListValueRepresentation('Project members')],
+            $sprint_artifact_with_open_list_id    => [
+                new UGroupListValueRepresentation('Rancho'),
+                new UGroupListValueRepresentation('Bagheera'),
+            ],
         ];
 
         $tracker_builder->buildListValue(
@@ -144,86 +127,51 @@ final class UGroupListSelectFromBuilderTest extends CrossTrackerFieldTestCase
             $release_ugroup_static_list_field_id,
             $release_bind_ids[ProjectUGroup::PROJECT_MEMBERS]
         );
-
         $tracker_builder->buildListValue(
             $sprint_artifact_with_open_list_changeset,
             $sprint_ugroup_list_field_id,
             $sprint_bind_ugroup_list_ids[$static_ugroup_id]
         );
-
         $tracker_builder->buildOpenValue(
             $sprint_artifact_with_open_list_changeset,
             $sprint_ugroup_list_field_id,
             $sprint_bind_ugroup_open_ids['Rancho'],
             true
         );
-
-
-        $this->builder = new SelectBuilderVisitor(
-            new FieldSelectFromBuilder(
-                Tracker_FormElementFactory::instance(),
-                new FieldTypeRetrieverWrapper(Tracker_FormElementFactory::instance()),
-                TrackersPermissionsRetriever::build(),
-                new DateSelectFromBuilder(),
-                new TextSelectFromBuilder(),
-                new NumericSelectFromBuilder(),
-                new StaticListSelectFromBuilder(),
-                new UGroupListSelectFromBuilder(),
-                new UserListSelectFromBuilder()
-            )
-        );
-        $this->dao     = new CrossTrackerExpertQueryReportDao();
     }
 
-    private function getQueryResults(): array
+    private function getQueryResults(CrossTrackerReport $report, PFUser $user): CrossTrackerReportContentRepresentation
     {
-        $select_from = $this->builder->buildSelectFrom(
-            [new Field('ugroup_list_field')],
-            $this->trackers,
-            $this->user,
-        );
-
-        return $this->dao->searchArtifactsColumnsMatchingIds($select_from, $this->artifact_ids);
+        $result = (new ArtifactReportFactoryInstantiator())
+            ->getFactory()
+            ->getArtifactsMatchingReport($report, $user, 10, 0, false);
+        assert($result instanceof CrossTrackerReportContentRepresentation);
+        return $result;
     }
 
     public function testItReturnsColumns(): void
     {
-        $results         = $this->getQueryResults();
-        $hash            = md5('ugroup_list_field');
-        $list_field_hash = 'user_group_list_value_' . $hash;
-        $open_field_hash = 'user_group_list_open_' . $hash;
-        self::assertCount(count($this->artifact_ids), $results);
-        foreach ($results as $row) {
-            self::assertArrayHasKey($list_field_hash, $row);
-            self::assertArrayHasKey($open_field_hash, $row);
-            self::assertArrayHasKey('id', $row);
-            $this->assertListValueCase($row, $list_field_hash, $open_field_hash);
-            $this->assertOpenValueCase($row, $list_field_hash, $open_field_hash);
-            $this->assertNullValueCase($row, $list_field_hash, $open_field_hash);
-        }
-    }
+        $result = $this->getQueryResults(
+            new CrossTrackerReport(
+                1,
+                "SELECT ugroup_list_field WHERE ugroup_list_field = '' OR ugroup_list_field != ''",
+                $this->trackers,
+            ),
+            $this->user,
+        );
 
-    private function assertNullValueCase(array $row, string $list_field_hash, string $open_field_hash): void
-    {
-        if ($row[$list_field_hash] === null && $row[$open_field_hash] === null) {
-            self::assertNull($row[$list_field_hash]);
-            self::assertNull($row[$open_field_hash]);
+        self::assertSame(3, $result->getTotalSize());
+        self::assertCount(1, $result->selected);
+        self::assertSame('ugroup_list_field', $result->selected[0]->name);
+        self::assertSame('list_user_group', $result->selected[0]->type);
+        $values = [];
+        foreach ($result->artifacts as $artifact) {
+            self::assertCount(1, $artifact);
+            self::assertArrayHasKey('ugroup_list_field', $artifact);
+            $value = $artifact['ugroup_list_field'];
+            self::assertInstanceOf(UGroupListRepresentation::class, $value);
+            $values[] = $value->value;
         }
-    }
-
-    private function assertListValueCase(array $row, string $list_field_hash, string $open_field_hash): void
-    {
-        if ($row[$list_field_hash] !== null && $row[$open_field_hash] === null) {
-            self::assertSame($this->expected_values[$row['id']][$list_field_hash], $row[$list_field_hash]);
-            self::assertNull($row[$open_field_hash]);
-        }
-    }
-
-    private function assertOpenValueCase(array $row, string $list_field_hash, string $open_field_hash): void
-    {
-        if ($row[$list_field_hash] === null && $row[$open_field_hash] !== null) {
-            self::assertNull($row[$list_field_hash]);
-            self::assertSame($this->expected_values[$row['id']][$open_field_hash], $row[$open_field_hash]);
-        }
+        self::assertEqualsCanonicalizing(array_values($this->expected_values), $values);
     }
 }

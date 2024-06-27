@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\CrossTracker\Tests\Report;
 
 use BaseLanguageFactory;
+use Codendi_HTMLPurifier;
 use Tracker_ArtifactFactory;
 use Tracker_FormElementFactory;
 use Tracker_Semantic_ContributorDao;
@@ -56,6 +57,7 @@ use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Field\FieldResultBui
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Field\Numeric\NumericResultBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Field\StaticList\StaticListResultBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Field\Text\TextResultBuilder;
+use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Field\UGroupList\UGroupListResultBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilderVisitor;
 use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Field\Date\DateSelectFromBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Field\FieldSelectFromBuilder;
@@ -93,6 +95,7 @@ use Tuleap\Tracker\Report\Query\Advanced\SizeValidatorVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\UgroupLabelConverter;
 use Tuleap\Tracker\Report\TrackerReportConfig;
 use Tuleap\Tracker\Report\TrackerReportConfigDao;
+use UGroupManager;
 use UserManager;
 
 final class ArtifactReportFactoryInstantiator
@@ -231,7 +234,7 @@ final class ArtifactReportFactoryInstantiator
                 new UserListSelectFromBuilder()
             ),
         );
-        $purifier                 = \Codendi_HTMLPurifier::instance();
+        $purifier                 = Codendi_HTMLPurifier::instance();
         $result_builder_visitor   = new ResultBuilderVisitor(
             new FieldResultBuilder(
                 $form_element_factory,
@@ -252,6 +255,7 @@ final class ArtifactReportFactoryInstantiator
                 ),
                 new NumericResultBuilder(),
                 new StaticListResultBuilder(),
+                new UGroupListResultBuilder($artifact_factory, new UGroupManager()),
             ),
         );
 
