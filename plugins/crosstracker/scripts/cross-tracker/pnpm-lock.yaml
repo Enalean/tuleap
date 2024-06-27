@@ -17,6 +17,9 @@ dependencies:
   '@tuleap/fetch-result':
     specifier: workspace:^
     version: link:../../../../lib/frontend/fetch-result
+  '@tuleap/option':
+    specifier: workspace:^
+    version: link:../../../../lib/frontend/option
   '@tuleap/plugin-tracker-tql-codemirror':
     specifier: workspace:*
     version: link:../../../tracker/scripts/lib/TQL-CodeMirror
@@ -52,6 +55,9 @@ devDependencies:
   '@tuleap/build-system-configurator':
     specifier: workspace:*
     version: link:../../../../lib/frontend/build-system-configurator
+  '@tuleap/core-constants':
+    specifier: workspace:^
+    version: link:../../../../lib/frontend/constants
   '@tuleap/core-rest-api-types':
     specifier: workspace:^
     version: link:../../../../lib/frontend/rest-api-types

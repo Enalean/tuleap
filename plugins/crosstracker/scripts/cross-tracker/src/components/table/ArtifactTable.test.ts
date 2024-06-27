@@ -25,6 +25,7 @@ import { getGlobalTestOptions } from "../../helpers/global-options-for-tests";
 import { errAsync, okAsync } from "neverthrow";
 import { Fault } from "@tuleap/fault";
 import { IntlFormatter } from "@tuleap/date-helper";
+import { en_US_LOCALE } from "@tuleap/core-constants";
 import WritingCrossTrackerReport from "../../writing-mode/writing-cross-tracker-report";
 import ArtifactTable from "./ArtifactTable.vue";
 import * as rest_querier from "../../api/rest-querier";
@@ -43,7 +44,7 @@ describe("ArtifactTable", () => {
     });
 
     function getWrapper(state: Partial<State>): VueWrapper<InstanceType<typeof ArtifactTable>> {
-        const date_formatter = IntlFormatter("en_US", "Europe/Paris", "date");
+        const date_formatter = IntlFormatter(en_US_LOCALE, "Europe/Paris", "date");
         return shallowMount(ArtifactTable, {
             global: {
                 ...getGlobalTestOptions({

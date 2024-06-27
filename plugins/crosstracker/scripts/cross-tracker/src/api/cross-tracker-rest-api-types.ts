@@ -31,3 +31,35 @@ export type ReportRepresentation = {
 export type ReportContentRepresentation = {
     readonly artifacts: ReadonlyArray<Artifact>;
 };
+
+export const DATE_SELECTABLE_TYPE = "date";
+
+type UnsupportedSelectableRepresentation = Record<string, unknown>;
+
+export type DateSelectableRepresentation = {
+    readonly value: string | null;
+    readonly with_time: boolean;
+};
+
+export type SelectableRepresentation =
+    | DateSelectableRepresentation
+    | UnsupportedSelectableRepresentation;
+
+export type SelectableArtifactRepresentation = Record<string, SelectableRepresentation>;
+
+type UnsupportedSelectable = {
+    readonly type: string;
+    readonly name: string;
+};
+
+type DateSelectable = {
+    readonly type: typeof DATE_SELECTABLE_TYPE;
+    readonly name: string;
+};
+
+export type Selectable = DateSelectable | UnsupportedSelectable;
+
+export type SelectableReportContentRepresentation = {
+    readonly artifacts: ReadonlyArray<SelectableArtifactRepresentation>;
+    readonly selected: ReadonlyArray<Selectable>;
+};

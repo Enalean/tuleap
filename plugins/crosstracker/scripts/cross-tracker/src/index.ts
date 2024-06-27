@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import "../themes/cross-tracker.scss";
 import { createApp } from "vue";
 import { getPOFileFromLocaleWithoutExtension, initVueGettext } from "@tuleap/vue3-gettext-init";
 import { createGettext } from "vue3-gettext";
@@ -29,8 +30,14 @@ import CrossTrackerWidget from "./CrossTrackerWidget.vue";
 import type { RetrieveProjects } from "./domain/RetrieveProjects";
 import { getSortedProjectsIAmMemberOf } from "./api/rest-querier";
 import { ProjectsCache } from "./writing-mode/ProjectsCache";
-import { DATE_FORMATTER, RETRIEVE_PROJECTS } from "./injection-symbols";
-import "../themes/cross-tracker.scss";
+import {
+    DATE_FORMATTER,
+    DATE_TIME_FORMATTER,
+    RETRIEVE_ARTIFACTS_TABLE,
+    RETRIEVE_PROJECTS,
+} from "./injection-symbols";
+import { ArtifactsTableRetriever } from "./api/ArtifactsTableRetriever";
+import { ArtifactsTableBuilder } from "./api/ArtifactsTableBuilder";
 
 document.addEventListener("DOMContentLoaded", async () => {
     const locale = getLocaleOrThrow(document);
@@ -39,7 +46,9 @@ document.addEventListener("DOMContentLoaded", async () => {
         (locale) => import(`../po/${getPOFileFromLocaleWithoutExtension(locale)}.po`),
     );
 
-    const date_formatter = IntlFormatter(locale, getTimezoneOrThrow(document), "date");
+    const timezone = getTimezoneOrThrow(document);
+    const date_formatter = IntlFormatter(locale, timezone, "date");
+    const date_time_formatter = IntlFormatter(locale, timezone, "date-with-time");
 
     const widget_cross_tracker_elements = document.getElementsByClassName(
         "dashboard-widget-content-cross-tracker",
@@ -53,10 +62,11 @@ document.addEventListener("DOMContentLoaded", async () => {
             return;
         }
 
-        const report_id = widget_element.dataset.reportId;
-        if (!report_id) {
+        const report_id_string = widget_element.dataset.reportId;
+        if (!report_id_string) {
             throw new Error("Can not find report id");
         }
+        const report_id = Number.parseInt(report_id_string, 10);
         const is_widget_admin = widget_element.dataset.isWidgetAdmin === "true";
 
         const backend_report = new BackendCrossTrackerReport();
@@ -74,9 +84,14 @@ document.addEventListener("DOMContentLoaded", async () => {
             writing_cross_tracker_report: writing_report,
         })
             .use(gettext_plugin)
-            .use(createInitializedStore(Number.parseInt(report_id, 10), is_widget_admin))
+            .use(createInitializedStore(report_id, is_widget_admin))
             .provide(RETRIEVE_PROJECTS, projects_cache)
             .provide(DATE_FORMATTER, date_formatter)
+            .provide(DATE_TIME_FORMATTER, date_time_formatter)
+            .provide(
+                RETRIEVE_ARTIFACTS_TABLE,
+                ArtifactsTableRetriever(ArtifactsTableBuilder(), report_id),
+            )
             .mount(vue_mount_point);
     }
 });

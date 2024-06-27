@@ -45,7 +45,10 @@
             v-if="!is_using_select"
             v-bind:writing_cross_tracker_report="writing_cross_tracker_report"
         />
-        <selectable-table v-if="is_using_select" />
+        <selectable-table
+            v-if="is_using_select"
+            v-bind:writing_cross_tracker_report="writing_cross_tracker_report"
+        />
     </template>
 </template>
 <script setup lang="ts">
