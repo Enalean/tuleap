@@ -335,7 +335,7 @@ CREATE TABLE tracker_changeset_value_file(
 DROP TABLE IF EXISTS tracker_changeset_value_int;
 CREATE TABLE tracker_changeset_value_int(
     changeset_value_id INT(11) NOT NULL PRIMARY KEY,
-    value INT(11) NULL
+    value BIGINT NULL
 ) ENGINE=InnoDB AUTO_INCREMENT=101;
 
 DROP TABLE IF EXISTS tracker_changeset_value_float;
