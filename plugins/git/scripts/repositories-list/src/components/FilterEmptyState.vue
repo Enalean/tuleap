@@ -27,35 +27,30 @@
         </p>
     </section>
 </template>
-<script lang="ts">
-import { Component } from "vue-property-decorator";
-import Vue from "vue";
-import { Getter } from "vuex-class";
+<script setup lang="ts">
+import { useGetters } from "vuex-composition-helpers";
 
-@Component
-export default class FilterEmptyState extends Vue {
-    @Getter
-    readonly isThereAResultInCurrentFilteredList!: boolean;
+const {
+    isThereAResultInCurrentFilteredList,
+    isCurrentRepositoryListEmpty,
+    isInitialLoadingDoneWithoutError,
+    isFiltering,
+} = useGetters([
+    "isThereAResultInCurrentFilteredList",
+    "isCurrentRepositoryListEmpty",
+    "isInitialLoadingDoneWithoutError",
+    "isFiltering",
+]);
 
-    @Getter
-    readonly isCurrentRepositoryListEmpty!: boolean;
-
-    @Getter
-    readonly isInitialLoadingDoneWithoutError!: boolean;
-
-    @Getter
-    readonly isFiltering!: boolean;
-
-    show_filter_empty_state(): boolean {
-        if (!this.isFiltering) {
-            return false;
-        }
-
-        if (!this.isInitialLoadingDoneWithoutError) {
-            return false;
-        }
-
-        return !this.isCurrentRepositoryListEmpty && !this.isThereAResultInCurrentFilteredList;
+function show_filter_empty_state(): boolean {
+    if (!isFiltering.value) {
+        return false;
     }
+
+    if (!isInitialLoadingDoneWithoutError.value) {
+        return false;
+    }
+
+    return !isCurrentRepositoryListEmpty.value && !isThereAResultInCurrentFilteredList.value;
 }
 </script>
