@@ -21,7 +21,7 @@ in pkgs.stdenv.mkDerivation {
   buildPhase = ''
     rpmbuild --nodeps \
         --define "nixpkgs_epoch .${nixpkgsPinEpoch}" \
-        --define "_binary_payload w9.xzdio" \
+        --define "_binary_payload w22T8.zstdio" \
         --define "_sourcedir $(pwd)" \
         --define "_rpmdir $(pwd)" \
         --dbpath="$(pwd)"/rpmdb \
