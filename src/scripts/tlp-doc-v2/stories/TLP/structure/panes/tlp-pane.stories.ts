@@ -28,7 +28,7 @@ type PaneProps = {
     table?: boolean;
     submit_button?: boolean;
     split?: "No splitting" | "Horizontally" | "Vertically" | "Both";
-    story?: "tabs" | "table" | "submit" | "horizontal" | "vertical";
+    story?: "tabs" | "table" | "submit" | "submit in new section" | "horizontal" | "vertical";
 };
 
 const DEFAULT_TITLE = "Pane title";
@@ -43,6 +43,7 @@ function getTemplate(args: PaneProps): TemplateResult {
     const tabs = args.story === "tabs" || (args.story === undefined && args.tabs);
     const submit_button =
         args.story === "submit" || (args.story === undefined && args.submit_button);
+    const submit_button_in_new_section = args.story === "submit in new section";
     const split: PaneProps["split"] =
         args.story === "horizontal"
             ? "Horizontally"
@@ -110,7 +111,10 @@ function getTemplate(args: PaneProps): TemplateResult {
             <div class="tlp-pane-section-submit">
                   <button type="submit" class="tlp-button-primary">Submit</button>
             </div>` : ""}
-        </section>${split === "Horizontally" || split === "Both" ? html`
+        </section>${submit_button_in_new_section ? html`
+        <section class="tlp-pane-section tlp-pane-section-submit">
+            <button type="submit" class="tlp-button-primary">Submit</button>
+        </section>` : ""}${split === "Horizontally" || split === "Both" ? html`
         <section class="tlp-pane-section">
               <p>${content}</p>
         </section>` : ``}
@@ -213,6 +217,12 @@ export const PaneWithTable: Story = {
 export const PaneWithSubmitButton: Story = {
     args: {
         story: "submit",
+    },
+};
+
+export const PaneWithSubmitButtonInNewSection: Story = {
+    args: {
+        story: "submit in new section",
     },
 };
 
