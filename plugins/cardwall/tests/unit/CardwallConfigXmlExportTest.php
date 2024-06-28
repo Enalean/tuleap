@@ -20,70 +20,54 @@
 
 declare(strict_types=1);
 
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
-final class CardwallConfigXmlExportTest extends \Tuleap\Test\PHPUnit\TestCase
+namespace Tuleap\Cardwall;
+
+use Cardwall_OnTop_Config;
+use Cardwall_OnTop_ConfigFactory;
+use CardwallConfigXmlExport;
+use PHPUnit\Framework\MockObject\MockObject;
+use Project;
+use SimpleXMLElement;
+use Tracker;
+use TrackerFactory;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
+use Tuleap\XML\ParseExceptionWithErrors;
+use XML_ParseException;
+use XML_RNGValidator;
+
+final class CardwallConfigXmlExportTest extends TestCase
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Project
-     */
-    private $project;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Tracker
-     */
-    private $tracker1;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Tracker
-     */
-    private $tracker2;
-    /**
-     * @var Cardwall_OnTop_Config|\Mockery\LegacyMockInterface|\Mockery\MockInterface
-     */
-    private $cardwall_config;
-    /**
-     * @var Cardwall_OnTop_Config|\Mockery\LegacyMockInterface|\Mockery\MockInterface
-     */
-    private $cardwall_config2;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|TrackerFactory
-     */
-    private $tracker_factory;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|XML_RNGValidator
-     */
-    private $xml_validator;
-    /** @var CardwallConfigXmlExport **/
-    private $xml_exporter;
-
-    /** @var SimpleXMLElement **/
-    private $root;
-
-    /** @var Cardwall_OnTop_ConfigFactory **/
-    private $config_factory;
+    private Project $project;
+    private Tracker $tracker1;
+    private Tracker $tracker2;
+    private Cardwall_OnTop_Config&MockObject $cardwall_config;
+    private Cardwall_OnTop_Config&MockObject $cardwall_config2;
+    private TrackerFactory&MockObject $tracker_factory;
+    private XML_RNGValidator&MockObject $xml_validator;
+    private CardwallConfigXmlExport $xml_exporter;
+    private SimpleXMLElement $root;
+    private Cardwall_OnTop_ConfigFactory&MockObject $config_factory;
 
     protected function setUp(): void
     {
-        parent::setUp();
+        $this->project  = ProjectTestBuilder::aProject()->withId(140)->build();
+        $this->tracker1 = TrackerTestBuilder::aTracker()->withId(214)->build();
+        $this->tracker2 = TrackerTestBuilder::aTracker()->withId(614)->build();
+        $this->root     = new SimpleXMLElement('<projects/>');
 
-        $this->project = Mockery::mock(Project::class);
-        $this->project->shouldReceive('getID')->andReturn(140);
-        $this->tracker1 = Mockery::mock(Tracker::class);
-        $this->tracker1->shouldReceive('getId')->andReturn(214);
-        $this->tracker2 = Mockery::mock(Tracker::class);
-        $this->tracker2->shouldReceive('getId')->andReturn(614);
-        $this->root = new SimpleXMLElement('<projects/>');
+        $this->cardwall_config = $this->createMock(Cardwall_OnTop_Config::class);
+        $this->cardwall_config->method('isEnabled')->willReturn(false);
+        $this->cardwall_config2 = $this->createMock(Cardwall_OnTop_Config::class);
+        $this->cardwall_config2->method('isEnabled')->willReturn(true);
 
-        $this->cardwall_config = Mockery::mock(\Cardwall_OnTop_Config::class);
-        $this->cardwall_config->shouldReceive('isEnabled')->andReturn(false);
-        $this->cardwall_config2 = Mockery::mock(\Cardwall_OnTop_Config::class);
-        $this->cardwall_config2->shouldReceive('isEnabled')->andReturn(true);
+        $this->tracker_factory = $this->createMock(TrackerFactory::class);
+        $this->tracker_factory->method('getTrackersByGroupId')->with(140)->willReturn([214 => $this->tracker1, 614 => $this->tracker2]);
 
-        $this->tracker_factory = Mockery::mock(TrackerFactory::class);
-        $this->tracker_factory->shouldReceive('getTrackersByGroupId')->with(140)->andReturn([214 => $this->tracker1, 614 => $this->tracker2]);
-
-        $this->config_factory = \Mockery::spy(\Cardwall_OnTop_ConfigFactory::class);
-        $this->xml_validator  = \Mockery::spy(\XML_RNGValidator::class);
+        $this->config_factory = $this->createMock(Cardwall_OnTop_ConfigFactory::class);
+        $this->xml_validator  = $this->createMock(XML_RNGValidator::class);
+        $this->xml_validator->method('validate');
 
         $this->xml_exporter = new CardwallConfigXmlExport(
             $this->project,
@@ -95,46 +79,49 @@ final class CardwallConfigXmlExportTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItReturnsTheGoodRootXmlWithTrackers(): void
     {
-        $this->config_factory->shouldReceive('getOnTopConfig')->with($this->tracker1)->once()->andReturn($this->cardwall_config);
-        $this->config_factory->shouldReceive('getOnTopConfig')->with($this->tracker2)->once()->andReturn($this->cardwall_config2);
+        $this->config_factory->expects(self::exactly(2))->method('getOnTopConfig')
+            ->withConsecutive([$this->tracker1], [$this->tracker2])
+            ->willReturnOnConsecutiveCalls($this->cardwall_config, $this->cardwall_config2);
 
-        $this->cardwall_config2->shouldReceive('getDashboardColumns')->andReturn([]);
+        $this->cardwall_config2->method('getDashboardColumns')->willReturn([]);
 
         $this->xml_exporter->export($this->root);
         $attributes = $this->root->cardwall->trackers->tracker->attributes();
-        $this->assertCount(1, $this->root->cardwall->trackers->children());
-        $this->assertEquals('T614', (string) $attributes['id']);
+        self::assertCount(1, $this->root->cardwall->trackers->children());
+        self::assertEquals('T614', (string) $attributes['id']);
     }
 
     public function testItReturnsTheGoodRootXmlWithoutTrackers(): void
     {
-        $cardwall_config = Mockery::spy(\Cardwall_OnTop_Config::class);
-        $cardwall_config->shouldReceive('isEnabled')->andReturn(false);
-        $cardwall_config2 = Mockery::spy(\Cardwall_OnTop_Config::class);
-        $cardwall_config2->shouldReceive('isEnabled')->andReturn(false);
-        $config_factory2 = \Mockery::spy(\Cardwall_OnTop_ConfigFactory::class);
+        $cardwall_config = $this->createMock(Cardwall_OnTop_Config::class);
+        $cardwall_config->method('isEnabled')->willReturn(false);
+        $cardwall_config2 = $this->createMock(Cardwall_OnTop_Config::class);
+        $cardwall_config2->method('isEnabled')->willReturn(false);
+        $config_factory2 = $this->createMock(Cardwall_OnTop_ConfigFactory::class);
 
-        $config_factory2->shouldReceive('getOnTopConfig')->with($this->tracker1)->andReturns($cardwall_config);
-        $config_factory2->shouldReceive('getOnTopConfig')->with($this->tracker2)->andReturns($cardwall_config2);
+        $config_factory2->method('getOnTopConfig')
+            ->withConsecutive([$this->tracker1], [$this->tracker2])
+            ->willReturnOnConsecutiveCalls($cardwall_config, $cardwall_config2);
 
         $xml_exporter2 = new CardwallConfigXmlExport($this->project, $this->tracker_factory, $config_factory2, $this->xml_validator);
 
         $xml_exporter2->export($this->root);
-        $this->assertCount(0, $this->root->cardwall->trackers->children());
+        self::assertCount(0, $this->root->cardwall->trackers->children());
     }
 
     public function testItThrowsAnExceptionIfXmlGeneratedIsNotValid(): void
     {
-        $this->config_factory->shouldReceive('getOnTopConfig')->with($this->tracker1)->once()->andReturn($this->cardwall_config);
-        $this->config_factory->shouldReceive('getOnTopConfig')->with($this->tracker2)->once()->andReturn($this->cardwall_config2);
+        $this->config_factory->method('getOnTopConfig')
+            ->withConsecutive([$this->tracker1], [$this->tracker2])
+            ->willReturnOnConsecutiveCalls($this->cardwall_config, $this->cardwall_config2);
 
-        $this->cardwall_config2->shouldReceive('getDashboardColumns')->andReturn([]);
+        $this->cardwall_config2->method('getDashboardColumns')->willReturn([]);
 
-        $xml_validator = Mockery::mock(XML_RNGValidator::class);
-        $xml_validator->shouldReceive('validate')->andThrow(new \Tuleap\XML\ParseExceptionWithErrors('', [], []));
+        $xml_validator = $this->createMock(XML_RNGValidator::class);
+        $xml_validator->method('validate')->willThrowException(new ParseExceptionWithErrors('', [], []));
 
         $xml_exporter = new CardwallConfigXmlExport($this->project, $this->tracker_factory, $this->config_factory, $xml_validator);
-        $this->expectException(XML_ParseException::class);
+        self::expectException(XML_ParseException::class);
         $xml_exporter->export(new SimpleXMLElement('<empty/>'));
     }
 }
