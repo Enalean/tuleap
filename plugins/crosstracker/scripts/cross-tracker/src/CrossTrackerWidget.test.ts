@@ -40,18 +40,18 @@ const noop = (): void => {
 vi.useFakeTimers();
 
 describe("CrossTrackerWidget", () => {
-    let backendCrossTrackerReport: BackendCrossTrackerReport,
-        readingCrossTrackerReport: ReadingCrossTrackerReport,
-        writingCrossTrackerReport: WritingCrossTrackerReport,
+    let backend_cross_tracker_report: BackendCrossTrackerReport,
+        reading_cross_tracker_report: ReadingCrossTrackerReport,
+        writing_cross_tracker_report: WritingCrossTrackerReport,
         switchToWritingModeSpy: Mock,
         switchToReadingModeSpy: Mock,
         setErrorMessageSpy: Mock,
         switchReportToSavedSpy: Mock;
 
     beforeEach(() => {
-        backendCrossTrackerReport = new BackendCrossTrackerReport();
-        readingCrossTrackerReport = new ReadingCrossTrackerReport();
-        writingCrossTrackerReport = new WritingCrossTrackerReport();
+        backend_cross_tracker_report = new BackendCrossTrackerReport();
+        reading_cross_tracker_report = new ReadingCrossTrackerReport();
+        writing_cross_tracker_report = new WritingCrossTrackerReport();
         switchToWritingModeSpy = vi.fn();
         switchToReadingModeSpy = vi.fn();
         setErrorMessageSpy = vi.fn();
@@ -88,9 +88,9 @@ describe("CrossTrackerWidget", () => {
 
         return shallowMount(CrossTrackerWidget, {
             props: {
-                writingCrossTrackerReport,
-                backendCrossTrackerReport,
-                readingCrossTrackerReport,
+                writing_cross_tracker_report,
+                backend_cross_tracker_report,
+                reading_cross_tracker_report,
             },
             global: { ...getGlobalTestOptions(store_options) },
         });
@@ -99,7 +99,7 @@ describe("CrossTrackerWidget", () => {
     describe("switchToWritingMode()", () => {
         it(`when I switch to the writing mode,
             then the writing report will be updated and a mutation will be committed`, async () => {
-            const duplicate = vi.spyOn(writingCrossTrackerReport, "duplicateFromReport");
+            const duplicate = vi.spyOn(writing_cross_tracker_report, "duplicateFromReport");
             const wrapper = getWrapper({
                 is_user_admin: true,
                 reading_mode: true,
@@ -108,13 +108,13 @@ describe("CrossTrackerWidget", () => {
 
             wrapper.findComponent(ReadingMode).vm.$emit("switch-to-writing-mode");
 
-            expect(duplicate).toHaveBeenCalledWith(readingCrossTrackerReport);
+            expect(duplicate).toHaveBeenCalledWith(reading_cross_tracker_report);
             expect(switchToWritingModeSpy).toHaveBeenCalled();
         });
 
         it(`Given I am not admin,
             when I try to switch to writing mode, then nothing will happen`, async () => {
-            const duplicate = vi.spyOn(writingCrossTrackerReport, "duplicateFromReport");
+            const duplicate = vi.spyOn(writing_cross_tracker_report, "duplicateFromReport");
             const wrapper = getWrapper({
                 is_user_admin: false,
                 reading_mode: true,
@@ -132,7 +132,7 @@ describe("CrossTrackerWidget", () => {
     describe("switchToReadingMode() -", () => {
         it(`When I switch to the reading mode with saved state,
             then the writing report will be updated and a mutation will be committed`, async () => {
-            const duplicate = vi.spyOn(writingCrossTrackerReport, "duplicateFromReport");
+            const duplicate = vi.spyOn(writing_cross_tracker_report, "duplicateFromReport");
             const wrapper = getWrapper({
                 is_user_admin: true,
                 reading_mode: false,
@@ -143,14 +143,14 @@ describe("CrossTrackerWidget", () => {
                 .findComponent(WritingMode)
                 .vm.$emit("switch-to-reading-mode", { saved_state: true });
 
-            expect(duplicate).toHaveBeenCalledWith(readingCrossTrackerReport);
+            expect(duplicate).toHaveBeenCalledWith(reading_cross_tracker_report);
             expect(switchToReadingModeSpy).toHaveBeenCalledWith(expect.any(Object), true);
         });
 
         it(`When I switch to the reading mode with unsaved state,
             then a batch of artifacts will be loaded,
             the reading report will be updated and a mutation will be committed`, async () => {
-            const duplicate = vi.spyOn(readingCrossTrackerReport, "duplicateFromWritingReport");
+            const duplicate = vi.spyOn(reading_cross_tracker_report, "duplicateFromWritingReport");
             const wrapper = getWrapper({
                 is_user_admin: true,
                 reading_mode: false,
@@ -161,7 +161,7 @@ describe("CrossTrackerWidget", () => {
                 .findComponent(WritingMode)
                 .vm.$emit("switch-to-reading-mode", { saved_state: false });
 
-            expect(duplicate).toHaveBeenCalledWith(writingCrossTrackerReport);
+            expect(duplicate).toHaveBeenCalledWith(writing_cross_tracker_report);
             expect(switchToReadingModeSpy).toHaveBeenCalledWith(expect.any(Object), false);
         });
     });
@@ -182,15 +182,15 @@ describe("CrossTrackerWidget", () => {
             vi.spyOn(rest_querier, "getReport").mockReturnValue(
                 okAsync({ trackers, expert_query, invalid_trackers }),
             );
-            const init = vi.spyOn(backendCrossTrackerReport, "init");
-            const duplicateReading = vi.spyOn(readingCrossTrackerReport, "duplicateFromReport");
-            const duplicateWriting = vi.spyOn(writingCrossTrackerReport, "duplicateFromReport");
+            const init = vi.spyOn(backend_cross_tracker_report, "init");
+            const duplicateReading = vi.spyOn(reading_cross_tracker_report, "duplicateFromReport");
+            const duplicateWriting = vi.spyOn(writing_cross_tracker_report, "duplicateFromReport");
             getWrapper({ is_user_admin: true });
             await vi.runOnlyPendingTimersAsync();
 
             expect(init).toHaveBeenCalledWith(trackers, expert_query);
-            expect(duplicateReading).toHaveBeenCalledWith(backendCrossTrackerReport);
-            expect(duplicateWriting).toHaveBeenCalledWith(readingCrossTrackerReport);
+            expect(duplicateReading).toHaveBeenCalledWith(backend_cross_tracker_report);
+            expect(duplicateWriting).toHaveBeenCalledWith(reading_cross_tracker_report);
         });
 
         it("When there is a REST error, it will be shown", async () => {
@@ -212,14 +212,14 @@ describe("CrossTrackerWidget", () => {
                 is_user_admin: true,
                 reading_mode: true,
             });
-            const duplicateReading = vi.spyOn(readingCrossTrackerReport, "duplicateFromReport");
-            const duplicateWriting = vi.spyOn(writingCrossTrackerReport, "duplicateFromReport");
+            const duplicateReading = vi.spyOn(reading_cross_tracker_report, "duplicateFromReport");
+            const duplicateWriting = vi.spyOn(writing_cross_tracker_report, "duplicateFromReport");
             await vi.runOnlyPendingTimersAsync();
 
             wrapper.findComponent(ReadingMode).vm.$emit("saved");
 
-            expect(duplicateReading).toHaveBeenCalledWith(backendCrossTrackerReport);
-            expect(duplicateWriting).toHaveBeenCalledWith(readingCrossTrackerReport);
+            expect(duplicateReading).toHaveBeenCalledWith(backend_cross_tracker_report);
+            expect(duplicateWriting).toHaveBeenCalledWith(reading_cross_tracker_report);
             expect(switchReportToSavedSpy).toHaveBeenCalledWith(
                 expect.any(Object),
                 expect.any(String),

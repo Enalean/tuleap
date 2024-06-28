@@ -18,40 +18,38 @@
   -->
 
 <template>
-    <div>
-        <error-message />
-        <error-inactive-project-message />
-        <div
-            class="tlp-alert-info cross-tracker-report-success"
-            v-if="has_success_message"
-            data-test="cross-tracker-report-success"
-        >
-            {{ success_message }}
-        </div>
-        <div class="cross-tracker-loader" v-if="is_loading"></div>
-        <reading-mode
-            v-if="is_reading_mode_shown"
-            v-bind:backend-cross-tracker-report="backendCrossTrackerReport"
-            v-bind:reading-cross-tracker-report="readingCrossTrackerReport"
-            v-on:switch-to-writing-mode="handleSwitchWriting"
-            v-on:saved="reportSaved"
-        />
-        <writing-mode
-            v-if="!reading_mode"
-            v-bind:writing-cross-tracker-report="writingCrossTrackerReport"
-            v-on:switch-to-reading-mode="handleSwitchReading"
-        />
-        <artifact-table
-            v-if="!is_loading"
-            v-bind:writing-cross-tracker-report="writingCrossTrackerReport"
-        />
+    <error-message />
+    <error-inactive-project-message />
+    <div
+        class="tlp-alert-info cross-tracker-report-success"
+        v-if="has_success_message"
+        data-test="cross-tracker-report-success"
+    >
+        {{ success_message }}
     </div>
+    <div class="cross-tracker-loader" v-if="is_loading"></div>
+    <reading-mode
+        v-if="is_reading_mode_shown"
+        v-bind:backend_cross_tracker_report="backend_cross_tracker_report"
+        v-bind:reading_cross_tracker_report="reading_cross_tracker_report"
+        v-on:switch-to-writing-mode="handleSwitchWriting"
+        v-on:saved="reportSaved"
+    />
+    <writing-mode
+        v-if="!reading_mode"
+        v-bind:writing_cross_tracker_report="writing_cross_tracker_report"
+        v-on:switch-to-reading-mode="handleSwitchReading"
+    />
+    <artifact-table
+        v-if="!is_loading"
+        v-bind:writing_cross_tracker_report="writing_cross_tracker_report"
+    />
 </template>
 <script setup lang="ts">
 import { computed, onMounted, ref } from "vue";
 import { useGetters, useMutations, useState } from "vuex-composition-helpers";
 import { useGettext } from "vue3-gettext";
-import ArtifactTable from "./components/ArtifactTable.vue";
+import ArtifactTable from "./components/table/ArtifactTable.vue";
 import ReadingMode from "./reading-mode/ReadingMode.vue";
 import type { SaveEvent } from "./writing-mode/WritingMode.vue";
 import WritingMode from "./writing-mode/WritingMode.vue";
@@ -87,9 +85,9 @@ const {
 ]);
 
 const props = defineProps<{
-    backendCrossTrackerReport: BackendCrossTrackerReport;
-    readingCrossTrackerReport: ReadingCrossTrackerReport;
-    writingCrossTrackerReport: WritingCrossTrackerReport;
+    backend_cross_tracker_report: BackendCrossTrackerReport;
+    reading_cross_tracker_report: ReadingCrossTrackerReport;
+    writing_cross_tracker_report: WritingCrossTrackerReport;
 }>();
 
 const is_loading = ref(true);
@@ -97,8 +95,8 @@ const is_loading = ref(true);
 const is_reading_mode_shown = computed(() => reading_mode.value === true && !is_loading.value);
 
 function initReports(): void {
-    props.readingCrossTrackerReport.duplicateFromReport(props.backendCrossTrackerReport);
-    props.writingCrossTrackerReport.duplicateFromReport(props.readingCrossTrackerReport);
+    props.reading_cross_tracker_report.duplicateFromReport(props.backend_cross_tracker_report);
+    props.writing_cross_tracker_report.duplicateFromReport(props.reading_cross_tracker_report);
 }
 
 function loadBackendReport(): void {
@@ -106,7 +104,7 @@ function loadBackendReport(): void {
     getReport(report_id.value)
         .match(
             (report: Report) => {
-                props.backendCrossTrackerReport.init(report.trackers, report.expert_query);
+                props.backend_cross_tracker_report.init(report.trackers, report.expert_query);
                 initReports();
                 if (report.invalid_trackers.length > 0) {
                     setInvalidTrackers(report.invalid_trackers);
@@ -130,15 +128,17 @@ function handleSwitchWriting(): void {
         return;
     }
 
-    props.writingCrossTrackerReport.duplicateFromReport(props.readingCrossTrackerReport);
+    props.writing_cross_tracker_report.duplicateFromReport(props.reading_cross_tracker_report);
     switchToWritingMode();
 }
 
 function handleSwitchReading(event: SaveEvent): void {
     if (event.saved_state) {
-        props.writingCrossTrackerReport.duplicateFromReport(props.readingCrossTrackerReport);
+        props.writing_cross_tracker_report.duplicateFromReport(props.reading_cross_tracker_report);
     } else {
-        props.readingCrossTrackerReport.duplicateFromWritingReport(props.writingCrossTrackerReport);
+        props.reading_cross_tracker_report.duplicateFromWritingReport(
+            props.writing_cross_tracker_report,
+        );
     }
     switchToReadingMode(event.saved_state);
 }

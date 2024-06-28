@@ -1,6 +1,6 @@
 {
     "name": "crosstracker",
-    "gettext-vue": {
+    "gettext-vue3": {
         "cross-tracker": {
             "src": "scripts/cross-tracker/src",
             "po": "scripts/cross-tracker/po"

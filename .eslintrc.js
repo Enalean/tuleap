@@ -187,7 +187,6 @@ module.exports = {
                 "plugins/testmanagement/**/*.vue",
                 "plugins/baseline/**/*.vue",
                 "plugins/create_test_env/**/*.vue",
-                "plugins/crosstracker/**/*.vue",
                 "plugins/agiledashboard/scripts/permissions-per-group/src/**/*.vue",
                 "src/scripts/project-services/src/**/*.vue",
                 "src/scripts/news-permissions-per-group/src/**/*.vue",
@@ -297,6 +296,7 @@ module.exports = {
                 "plugins/tracker/scripts/permissions-per-group/**/*.vue",
                 "src/scripts/frs-permissions-per-group/**/*.vue",
                 "src/scripts/news-permissions-per-group/**/*.vue",
+                "plugins/crosstracker/scripts/cross-tracker/**/*.vue",
             ],
             extends: ["plugin:vue/vue3-recommended"],
             rules: {

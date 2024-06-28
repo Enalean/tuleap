@@ -54,11 +54,11 @@ interface TrackerWithProject {
     readonly project_label: string;
 }
 
-const props = defineProps<{ readingCrossTrackerReport: ReadingCrossTrackerReport }>();
+const props = defineProps<{ reading_cross_tracker_report: ReadingCrossTrackerReport }>();
 
-const no_trackers_in_report = computed(() => props.readingCrossTrackerReport.areTrackersEmpty());
+const no_trackers_in_report = computed(() => props.reading_cross_tracker_report.areTrackersEmpty());
 const trackers = computed((): ReadonlyArray<TrackerWithProject> => {
-    return props.readingCrossTrackerReport.getTrackers().map(({ tracker, project }) => {
+    return props.reading_cross_tracker_report.getTrackers().map(({ tracker, project }) => {
         return {
             id: tracker.id,
             tracker_label: tracker.label,

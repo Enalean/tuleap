@@ -40,7 +40,7 @@ describe("WritingMode", () => {
     });
 
     function getWrapper(
-        writingCrossTrackerReport: WritingCrossTrackerReport,
+        writing_cross_tracker_report: WritingCrossTrackerReport,
     ): VueWrapper<InstanceType<typeof WritingMode>> {
         const store_options = {
             state: { is_user_admin: true } as State,
@@ -52,7 +52,7 @@ describe("WritingMode", () => {
 
         return shallowMount(WritingMode, {
             props: {
-                writingCrossTrackerReport,
+                writing_cross_tracker_report,
             },
             global: { ...getGlobalTestOptions(store_options) },
         });
@@ -60,17 +60,17 @@ describe("WritingMode", () => {
 
     describe("mounted()", () => {
         it("on init, the selected trackers will be formatted from the writing report", () => {
-            const writingCrossTrackerReport = new WritingCrossTrackerReport();
-            writingCrossTrackerReport.addTracker(
+            const writing_cross_tracker_report = new WritingCrossTrackerReport();
+            writing_cross_tracker_report.addTracker(
                 { id: 804, label: "fanatical" } as ProjectInfo,
                 { id: 29, label: "charry" } as TrackerInfo,
             );
-            writingCrossTrackerReport.addTracker(
+            writing_cross_tracker_report.addTracker(
                 { id: 146, label: "surly" } as ProjectInfo,
                 { id: 51, label: "monodynamism" } as TrackerInfo,
             );
 
-            const wrapper = getWrapper(writingCrossTrackerReport);
+            const wrapper = getWrapper(writing_cross_tracker_report);
 
             expect(wrapper.vm.selected_trackers).toStrictEqual([
                 {
@@ -89,8 +89,8 @@ describe("WritingMode", () => {
 
     describe("cancel()", () => {
         it("when I hit cancel, then an event will be emitted to switch the widget to reading mode in saved state", () => {
-            const writingCrossTrackerReport = new WritingCrossTrackerReport();
-            const wrapper = getWrapper(writingCrossTrackerReport);
+            const writing_cross_tracker_report = new WritingCrossTrackerReport();
+            const wrapper = getWrapper(writing_cross_tracker_report);
 
             wrapper.find("[data-test=writing-mode-cancel-button]").trigger("click");
             const emitted = wrapper.emitted("switch-to-reading-mode");
@@ -104,8 +104,8 @@ describe("WritingMode", () => {
 
     describe("search()", () => {
         it("when I hit search, then an event will be emitted to switch the widget to reading mode in unsaved state", () => {
-            const writingCrossTrackerReport = new WritingCrossTrackerReport();
-            const wrapper = getWrapper(writingCrossTrackerReport);
+            const writing_cross_tracker_report = new WritingCrossTrackerReport();
+            const wrapper = getWrapper(writing_cross_tracker_report);
 
             wrapper.find("[data-test=search-report-button]").trigger("click");
             const emitted = wrapper.emitted("switch-to-reading-mode");
@@ -119,23 +119,23 @@ describe("WritingMode", () => {
 
     describe("removeTrackerFromSelection()", () => {
         it("when I remove a tracker, then the writing report will be updated and the errors hidden", () => {
-            const writingCrossTrackerReport = new WritingCrossTrackerReport();
-            writingCrossTrackerReport.addTracker(
+            const writing_cross_tracker_report = new WritingCrossTrackerReport();
+            writing_cross_tracker_report.addTracker(
                 { id: 172, label: "undiuretic" } as ProjectInfo,
                 { id: 61, label: "Dipneumona" } as TrackerInfo,
             );
-            writingCrossTrackerReport.addTracker(
+            writing_cross_tracker_report.addTracker(
                 { id: 288, label: "defectless" } as ProjectInfo,
                 { id: 46, label: "knothorn" } as TrackerInfo,
             );
-            vi.spyOn(writingCrossTrackerReport, "removeTracker");
-            const wrapper = getWrapper(writingCrossTrackerReport);
+            vi.spyOn(writing_cross_tracker_report, "removeTracker");
+            const wrapper = getWrapper(writing_cross_tracker_report);
 
             wrapper
                 .findComponent(TrackerListWritingMode)
                 .vm.$emit("tracker-removed", { tracker_id: 46 } as TrackerToUpdate);
 
-            expect(writingCrossTrackerReport.removeTracker).toHaveBeenCalledWith(46);
+            expect(writing_cross_tracker_report.removeTracker).toHaveBeenCalledWith(46);
             expect(resetSpy).toHaveBeenCalled();
             expect(wrapper.vm.selected_trackers).toStrictEqual([
                 {
@@ -149,9 +149,9 @@ describe("WritingMode", () => {
 
     describe("addTrackerToSelection()", () => {
         it("when I add a tracker, then the writing report will be updated", () => {
-            const writingCrossTrackerReport = new WritingCrossTrackerReport();
-            vi.spyOn(writingCrossTrackerReport, "addTracker");
-            const wrapper = getWrapper(writingCrossTrackerReport);
+            const writing_cross_tracker_report = new WritingCrossTrackerReport();
+            vi.spyOn(writing_cross_tracker_report, "addTracker");
+            const wrapper = getWrapper(writing_cross_tracker_report);
             const selected_project = { id: 656, label: "ergatogyne" } as ProjectInfo;
             const selected_tracker = { id: 53, label: "observingly" } as TrackerInfo;
 
@@ -160,7 +160,7 @@ describe("WritingMode", () => {
                 selected_tracker,
             });
 
-            expect(writingCrossTrackerReport.addTracker).toHaveBeenCalledWith(
+            expect(writing_cross_tracker_report.addTracker).toHaveBeenCalledWith(
                 selected_project,
                 selected_tracker,
             );
@@ -174,11 +174,11 @@ describe("WritingMode", () => {
         });
 
         it("Given I had already added 25 trackers, when I try to add another, then an error will be shown", () => {
-            const writingCrossTrackerReport = new WritingCrossTrackerReport();
-            vi.spyOn(writingCrossTrackerReport, "addTracker").mockImplementation(() => {
+            const writing_cross_tracker_report = new WritingCrossTrackerReport();
+            vi.spyOn(writing_cross_tracker_report, "addTracker").mockImplementation(() => {
                 throw new TooManyTrackersSelectedError();
             });
-            const wrapper = getWrapper(writingCrossTrackerReport);
+            const wrapper = getWrapper(writing_cross_tracker_report);
             const selected_project = { id: 656, label: "ergatogyne" } as ProjectInfo;
             const selected_tracker = { id: 53, label: "observingly" } as TrackerInfo;
 

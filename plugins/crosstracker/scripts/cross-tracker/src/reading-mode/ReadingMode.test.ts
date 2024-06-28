@@ -31,16 +31,16 @@ import type { Report, State, TrackerAndProject } from "../type";
 import { getGlobalTestOptions } from "../helpers/global-options-for-tests";
 
 describe("ReadingMode", () => {
-    let backendCrossTrackerReport: BackendCrossTrackerReport,
-        readingCrossTrackerReport: ReadingCrossTrackerReport,
+    let backend_cross_tracker_report: BackendCrossTrackerReport,
+        reading_cross_tracker_report: ReadingCrossTrackerReport,
         is_user_admin: boolean,
         has_error_message: boolean,
         errorSpy: Mock,
         discardSpy: Mock;
 
     beforeEach(() => {
-        backendCrossTrackerReport = new BackendCrossTrackerReport();
-        readingCrossTrackerReport = new ReadingCrossTrackerReport();
+        backend_cross_tracker_report = new BackendCrossTrackerReport();
+        reading_cross_tracker_report = new ReadingCrossTrackerReport();
         is_user_admin = true;
         has_error_message = false;
         errorSpy = vi.fn();
@@ -60,8 +60,8 @@ describe("ReadingMode", () => {
         return shallowMount(ReadingMode, {
             global: { ...getGlobalTestOptions(store_options) },
             props: {
-                backendCrossTrackerReport,
-                readingCrossTrackerReport,
+                backend_cross_tracker_report,
+                reading_cross_tracker_report,
             },
         });
     }
@@ -92,9 +92,9 @@ describe("ReadingMode", () => {
 
     describe("saveReport()", () => {
         it(`will update the backend report and emit a "saved" event`, async () => {
-            const initBackend = vi.spyOn(backendCrossTrackerReport, "init");
+            const initBackend = vi.spyOn(backend_cross_tracker_report, "init");
             initBackend.mockImplementation(() => Promise.resolve());
-            const duplicateBackend = vi.spyOn(backendCrossTrackerReport, "duplicateFromReport");
+            const duplicateBackend = vi.spyOn(backend_cross_tracker_report, "duplicateFromReport");
             const trackers: ReadonlyArray<TrackerAndProject> = [
                 { tracker: { id: 36 }, project: { id: 180 } } as TrackerAndProject,
                 { tracker: { id: 17 }, project: { id: 138 } } as TrackerAndProject,
@@ -109,7 +109,7 @@ describe("ReadingMode", () => {
 
             await wrapper.get("[data-test=cross-tracker-save-report]").trigger("click");
 
-            expect(duplicateBackend).toHaveBeenCalledWith(readingCrossTrackerReport);
+            expect(duplicateBackend).toHaveBeenCalledWith(reading_cross_tracker_report);
             expect(updateReport).toHaveBeenCalled();
             expect(initBackend).toHaveBeenCalledWith(trackers, expert_query);
             const emitted = wrapper.emitted("saved");
@@ -143,12 +143,12 @@ describe("ReadingMode", () => {
 
     describe("cancelReport() -", () => {
         it("when I click on 'Cancel', then the reading report will be reset", async () => {
-            const duplicateReading = vi.spyOn(readingCrossTrackerReport, "duplicateFromReport");
+            const duplicateReading = vi.spyOn(reading_cross_tracker_report, "duplicateFromReport");
             const wrapper = instantiateComponent();
 
             await wrapper.get("[data-test=cross-tracker-cancel-report]").trigger("click");
 
-            expect(duplicateReading).toHaveBeenCalledWith(backendCrossTrackerReport);
+            expect(duplicateReading).toHaveBeenCalledWith(backend_cross_tracker_report);
             expect(discardSpy).toHaveBeenCalled();
         });
     });

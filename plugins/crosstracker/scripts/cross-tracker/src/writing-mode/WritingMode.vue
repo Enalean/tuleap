@@ -20,7 +20,7 @@
 <template>
     <div class="cross-tracker-writing-mode">
         <tracker-selection
-            v-bind:selected-trackers="selected_trackers"
+            v-bind:selected_trackers="selected_trackers"
             v-on:tracker-added="addTrackerToSelection"
         />
         <tracker-list-writing-mode
@@ -28,7 +28,7 @@
             v-on:tracker-removed="removeTrackerFromSelection"
         />
         <query-editor
-            v-bind:writing-cross-tracker-report="writingCrossTrackerReport"
+            v-bind:writing_cross_tracker_report="writing_cross_tracker_report"
             v-on:trigger-search="search"
         />
         <div class="writing-mode-actions">
@@ -68,7 +68,7 @@ export type SaveEvent = { readonly saved_state: boolean };
 
 const { $gettext } = useGettext();
 
-const props = defineProps<{ writingCrossTrackerReport: WritingCrossTrackerReport }>();
+const props = defineProps<{ writing_cross_tracker_report: WritingCrossTrackerReport }>();
 const emit = defineEmits<{
     (e: "switch-to-reading-mode", payload: SaveEvent): void;
 }>();
@@ -85,7 +85,7 @@ function search(): void {
 }
 
 function updateSelectedTrackers(): void {
-    const trackers = props.writingCrossTrackerReport.getTrackers();
+    const trackers = props.writing_cross_tracker_report.getTrackers();
 
     selected_trackers.value = trackers.map(({ tracker, project }): TrackerToUpdate => {
         return {
@@ -102,7 +102,7 @@ onMounted(() => {
 
 function addTrackerToSelection(payload: AddTrackerToSelectionCommand): void {
     try {
-        props.writingCrossTrackerReport.addTracker(
+        props.writing_cross_tracker_report.addTracker(
             payload.selected_project,
             payload.selected_tracker,
         );
@@ -117,7 +117,7 @@ function addTrackerToSelection(payload: AddTrackerToSelectionCommand): void {
 }
 
 function removeTrackerFromSelection(tracker: TrackerToUpdate): void {
-    props.writingCrossTrackerReport.removeTracker(tracker.tracker_id);
+    props.writing_cross_tracker_report.removeTracker(tracker.tracker_id);
     updateSelectedTrackers();
     resetFeedbacks();
 }
