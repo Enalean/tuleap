@@ -69,7 +69,7 @@
                     <git-lab-administration
                         v-if="isGitlabRepository(props.repository)"
                         v-bind:is_admin="is_admin()"
-                        v-bind:repository="repository"
+                        v-bind:repository="props.repository"
                     />
                 </div>
                 <section
