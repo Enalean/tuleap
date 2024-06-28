@@ -24,21 +24,34 @@
 
 declare(strict_types=1);
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+namespace Tuleap\Cardwall;
+
+use Cardwall_CardController;
+use Cardwall_CardFields;
+use Cardwall_CardInCellPresenter;
+use Cardwall_CardPresenter;
+use Cardwall_OnTop_Config_TrackerMapping;
+use Cardwall_SingleCard;
+use Cardwall_UserPreferences_UserPreferencesDisplayUser;
+use ForgeConfig;
+use Tracker;
+use Tracker_Artifact_Changeset_Null;
+use Tracker_FormElement_Field_Float;
+use Tracker_FormElement_Field_Selectbox;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\GlobalResponseMock;
-use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Test\Builders\HTTPRequestBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
-final class Cardwall_CardControllerTest extends \Tuleap\Test\PHPUnit\TestCase
+final class Cardwall_CardControllerTest extends TestCase // phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 {
-    use MockeryPHPUnitIntegration;
     use ForgeConfigSandbox;
     use GlobalResponseMock;
 
     protected function setUp(): void
     {
-        parent::setUp();
         ForgeConfig::set('codendi_dir', __DIR__ . '/../../../..');
     }
 
@@ -52,49 +65,51 @@ final class Cardwall_CardControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $swimline_id    = 215;
         $drop_into      = ['5', '7'];
 
-        $artifact = Mockery::mock(Artifact::class);
-        $artifact->shouldReceive('getId')->andReturn($artifact_id);
-        $artifact->shouldReceive('getLastChangeset')->andReturn(Mockery::spy(Tracker_Artifact_Changeset::class));
-        $card_fields = \Mockery::spy(\Cardwall_CardFields::class);
+        $artifact    = ArtifactTestBuilder::anArtifact($artifact_id)
+            ->withChangesets(new Tracker_Artifact_Changeset_Null())
+            ->build();
+        $card_fields = $this->createMock(Cardwall_CardFields::class);
 
-        $field1 = \Mockery::spy(\Tracker_FormElement_Field_Float::class);
-        $field2 = \Mockery::spy(\Tracker_FormElement_Field_Selectbox::class);
-        $field3 = \Mockery::spy(\Tracker_FormElement_Field_Selectbox::class);
+        $field1 = $this->createMock(Tracker_FormElement_Field_Float::class);
+        $field2 = $this->createMock(Tracker_FormElement_Field_Selectbox::class);
+        $field3 = $this->createMock(Tracker_FormElement_Field_Selectbox::class);
 
-        $field1->shouldReceive('getJsonValue')->andReturns(5.1);
-        $field2->shouldReceive('getJsonValue')->andReturns([101, 201]);
-        $field3->shouldReceive('getJsonValue')->andReturns(236);
+        $field1->method('getJsonValue')->willReturn(5.1);
+        $field2->method('getJsonValue')->willReturn([101, 201]);
+        $field3->method('getJsonValue')->willReturn(236);
 
-        $field1->shouldReceive('fetchCardValue')->andReturns('5.1');
-        $field2->shouldReceive('fetchCardValue')->andReturns('<a href');
-        $field3->shouldReceive('fetchCardValue')->andReturns('<span>Decorator</span>');
+        $field1->method('fetchCardValue')->willReturn('5.1');
+        $field2->method('fetchCardValue')->willReturn('<a href');
+        $field3->method('fetchCardValue')->willReturn('<span>Decorator</span>');
 
-        $field1->shouldReceive('getName')->andReturns(Tracker::REMAINING_EFFORT_FIELD_NAME);
-        $field2->shouldReceive('getName')->andReturns('assigned_to');
-        $field3->shouldReceive('getName')->andReturns('impediment');
+        $field1->method('getName')->willReturn(Tracker::REMAINING_EFFORT_FIELD_NAME);
+        $field2->method('getName')->willReturn('assigned_to');
+        $field3->method('getName')->willReturn('impediment');
 
-        $card_presenter = \Mockery::spy(\Cardwall_CardPresenter::class);
-        $card_presenter->shouldReceive('getTitle')->andReturns($artifact_title);
-        $card_presenter->shouldReceive('getXRef')->andReturns($cross_ref);
-        $card_presenter->shouldReceive('getEditUrl')->andReturns($edit_url);
-        $card_presenter->shouldReceive('getAccentColor')->andReturns($accent_color);
-        $card_presenter->shouldReceive('getSwimlineId')->andReturns($swimline_id);
+        $card_presenter = $this->createMock(Cardwall_CardPresenter::class);
+        $card_presenter->method('getTitle')->willReturn($artifact_title);
+        $card_presenter->method('getXRef')->willReturn($cross_ref);
+        $card_presenter->method('getEditUrl')->willReturn($edit_url);
+        $card_presenter->method('getAccentColor')->willReturn($accent_color);
+        $card_presenter->method('getSwimlineId')->willReturn($swimline_id);
 
-        $card_in_cell_presenter = \Mockery::spy(\Cardwall_CardInCellPresenter::class);
-        $card_in_cell_presenter->shouldReceive('getCardPresenter')->andReturns($card_presenter);
-        $card_in_cell_presenter->shouldReceive('getDropIntoIds')->andReturns($drop_into);
-        $card_in_cell_presenter->shouldReceive('getArtifact')->andReturns($artifact);
+        $card_in_cell_presenter = $this->createMock(Cardwall_CardInCellPresenter::class);
+        $card_in_cell_presenter->method('getCardPresenter')->willReturn($card_presenter);
+        $card_in_cell_presenter->method('getDropIntoIds')->willReturn($drop_into);
+        $card_in_cell_presenter->method('getArtifact')->willReturn($artifact);
 
-        $card_fields->shouldReceive('getFields')->andReturns([$field1, $field2, $field3]);
+        $card_fields->method('getFields')->willReturn([$field1, $field2, $field3]);
 
-        $single_card = new Cardwall_SingleCard($card_in_cell_presenter, $card_fields, \Mockery::spy(\Cardwall_UserPreferences_UserPreferencesDisplayUser::class), 1111, \Mockery::spy(\Cardwall_OnTop_Config_TrackerMapping::class));
-
-        $request = Mockery::mock(Codendi_Request::class);
-        $request->shouldReceive('getCurrentUser')->andReturn(\Mockery::spy(\PFUser::class));
-        $card_controller = new Cardwall_CardController(
-            $request,
-            $single_card
+        $single_card = new Cardwall_SingleCard(
+            $card_in_cell_presenter,
+            $card_fields,
+            $this->createMock(Cardwall_UserPreferences_UserPreferencesDisplayUser::class),
+            1111,
+            $this->createMock(Cardwall_OnTop_Config_TrackerMapping::class),
         );
+
+        $request         = HTTPRequestBuilder::get()->withUser(UserTestBuilder::buildWithDefaults())->build();
+        $card_controller = new Cardwall_CardController($request, $single_card);
 
         $expected = [
             $artifact_id => [
