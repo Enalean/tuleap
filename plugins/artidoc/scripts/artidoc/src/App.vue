@@ -28,15 +28,15 @@
 <script setup lang="ts">
 import { onMounted } from "vue";
 import DocumentView from "@/views/DocumentView.vue";
-import { useInjectSectionsStore } from "@/stores/useSectionsStore";
 import DocumentHeader from "@/components/DocumentHeader.vue";
 import { CONFIGURATION_STORE } from "@/stores/configuration-store";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import { CAN_USER_EDIT_DOCUMENT } from "@/can-user-edit-document-injection-key";
 import { DOCUMENT_ID } from "@/document-id-injection-key";
+import { SECTIONS_STORE } from "@/stores/sections-store-injection-key";
 
 const item_id = strictInject(DOCUMENT_ID);
-const store = useInjectSectionsStore();
+const store = strictInject(SECTIONS_STORE);
 
 const configuration = strictInject(CONFIGURATION_STORE);
 const can_user_edit_document = strictInject(CAN_USER_EDIT_DOCUMENT);

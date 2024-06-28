@@ -17,28 +17,22 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { beforeAll, describe, expect, it, vi } from "vitest";
-import type { ComponentPublicInstance } from "vue";
-import type { VueWrapper } from "@vue/test-utils";
+import { describe, expect, it } from "vitest";
 import { shallowMount } from "@vue/test-utils";
 import DocumentLayout from "@/components/DocumentLayout.vue";
 import DocumentContent from "@/components/DocumentContent.vue";
 import TableOfContents from "@/components/TableOfContents.vue";
-import * as sectionsStore from "@/stores/useSectionsStore";
-import { InjectedSectionsStoreStub } from "@/helpers/stubs/InjectSectionsStoreStub";
 
 describe("DocumentLayout", () => {
-    let wrapper: VueWrapper<ComponentPublicInstance>;
-    beforeAll(() => {
-        vi.spyOn(sectionsStore, "useInjectSectionsStore").mockReturnValue(
-            InjectedSectionsStoreStub.withLoadedSections([]),
-        );
-        wrapper = shallowMount(DocumentLayout);
-    });
     it("should display document content", () => {
+        const wrapper = shallowMount(DocumentLayout);
+
         expect(wrapper.findComponent(DocumentContent).exists()).toBe(true);
     });
+
     it("should display table of contents", () => {
+        const wrapper = shallowMount(DocumentLayout);
+
         expect(wrapper.findComponent(TableOfContents).exists()).toBe(true);
     });
 });

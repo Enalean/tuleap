@@ -42,14 +42,15 @@
 </template>
 
 <script setup lang="ts">
-import { useInjectSectionsStore } from "@/stores/useSectionsStore";
 import { useGettext } from "vue3-gettext";
 import type { ArtidocSection } from "@/helpers/artidoc-section.type";
 import { isArtifactSection } from "@/helpers/artidoc-section.type";
+import { strictInject } from "@tuleap/vue-strict-inject";
+import { SECTIONS_STORE } from "@/stores/sections-store-injection-key";
 
 const { $gettext } = useGettext();
 
-const { sections, is_sections_loading } = useInjectSectionsStore();
+const { sections, is_sections_loading } = strictInject(SECTIONS_STORE);
 
 const href = (section: ArtidocSection): string =>
     isArtifactSection(section) ? `#${section.artifact.id}` : "";

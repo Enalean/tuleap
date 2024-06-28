@@ -24,7 +24,6 @@ import { strictInject } from "@tuleap/vue-strict-inject";
 import { CAN_USER_EDIT_DOCUMENT } from "@/can-user-edit-document-injection-key";
 import { preventPageLeave, allowPageLeave } from "@/helpers/on-before-unload";
 import type { Tracker } from "@/stores/configuration-store";
-import { useInjectSectionsStore } from "@/stores/useSectionsStore";
 import useSaveSection from "@/composables/useSaveSection";
 import type { EditorErrors } from "@/composables/useEditorErrors";
 import { useEditorErrors } from "@/composables/useEditorErrors";
@@ -33,6 +32,7 @@ import { useEditorSectionContent } from "@/composables/useEditorSectionContent";
 import type { RefreshSection } from "@/composables/useRefreshSection";
 import { useRefreshSection } from "@/composables/useRefreshSection";
 import type { AttachmentFile } from "@/composables/useAttachmentFile";
+import { SECTIONS_STORE } from "@/stores/sections-store-injection-key";
 
 export type SectionEditorActions = {
     enableEditor: () => void;
@@ -81,7 +81,7 @@ export function useSectionEditor(
         replacePendingByArtifactSection,
         removeSection,
         updateSection,
-    } = useInjectSectionsStore();
+    } = strictInject(SECTIONS_STORE);
     const is_section_in_edit_mode = ref(isPendingArtifactSection(current_section.value));
     const is_section_editable = computed(() => {
         if (isPendingArtifactSection(current_section.value)) {

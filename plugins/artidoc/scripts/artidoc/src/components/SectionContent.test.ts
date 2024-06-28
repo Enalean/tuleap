@@ -24,19 +24,18 @@ import type { ComponentPublicInstance } from "vue";
 import ArtifactSectionFactory from "@/helpers/artifact-section.factory";
 import SectionHeader from "@/components/SectionHeader.vue";
 import SectionDescription from "@/components/SectionDescription.vue";
-import * as sectionsStore from "@/stores/useSectionsStore";
 import * as editor from "@/composables/useSectionEditor";
 import SectionHeaderSkeleton from "@/components/SectionHeaderSkeleton.vue";
 import { InjectedSectionsStoreStub } from "@/helpers/stubs/InjectSectionsStoreStub";
 import { SectionEditorStub } from "@/helpers/stubs/SectionEditorStub";
+import { mockStrictInject } from "@/helpers/mock-strict-inject";
+import { SECTIONS_STORE } from "@/stores/sections-store-injection-key";
 
 describe("SectionContent", () => {
     describe("when the sections are loaded", () => {
         let wrapper: VueWrapper<ComponentPublicInstance>;
         beforeAll(() => {
-            vi.spyOn(sectionsStore, "useInjectSectionsStore").mockReturnValue(
-                InjectedSectionsStoreStub.withLoadedSections([]),
-            );
+            mockStrictInject([[SECTIONS_STORE, InjectedSectionsStoreStub.withLoadedSections([])]]);
             vi.spyOn(editor, "useSectionEditor").mockReturnValue(
                 SectionEditorStub.withEditableSection(),
             );
@@ -61,9 +60,7 @@ describe("SectionContent", () => {
     describe("when the sections are loading", () => {
         let wrapper: VueWrapper<ComponentPublicInstance>;
         beforeAll(() => {
-            vi.spyOn(sectionsStore, "useInjectSectionsStore").mockReturnValue(
-                InjectedSectionsStoreStub.withLoadingSections(),
-            );
+            mockStrictInject([[SECTIONS_STORE, InjectedSectionsStoreStub.withLoadingSections()]]);
             vi.spyOn(editor, "useSectionEditor").mockReturnValue(
                 SectionEditorStub.withEditableSection(),
             );

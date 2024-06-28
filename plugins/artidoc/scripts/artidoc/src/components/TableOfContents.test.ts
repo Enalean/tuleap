@@ -17,31 +17,35 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { beforeAll, describe, expect, it, vi } from "vitest";
+import { beforeAll, describe, expect, it } from "vitest";
 import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import { createGettext } from "vue3-gettext";
 import type { ComponentPublicInstance } from "vue";
 import TableOfContents from "@/components/TableOfContents.vue";
 import ArtifactSectionFactory from "@/helpers/artifact-section.factory";
-import * as sectionsStore from "@/stores/useSectionsStore";
 import { InjectedSectionsStoreStub } from "@/helpers/stubs/InjectSectionsStoreStub";
+import { mockStrictInject } from "@/helpers/mock-strict-inject";
+import { SECTIONS_STORE } from "@/stores/sections-store-injection-key";
 
 describe("TableOfContents", () => {
     describe("when the sections are loading", () => {
         let wrapper: VueWrapper<ComponentPublicInstance>;
         beforeAll(() => {
-            const defaultSection = ArtifactSectionFactory.create();
-            vi.spyOn(sectionsStore, "useInjectSectionsStore").mockReturnValue(
-                InjectedSectionsStoreStub.withLoadingSections([
-                    ArtifactSectionFactory.override({
-                        artifact: { ...defaultSection.artifact, id: 1 },
-                    }),
-                    ArtifactSectionFactory.override({
-                        artifact: { ...defaultSection.artifact, id: 2 },
-                    }),
-                ]),
-            );
+            const default_section = ArtifactSectionFactory.create();
+            mockStrictInject([
+                [
+                    SECTIONS_STORE,
+                    InjectedSectionsStoreStub.withLoadingSections([
+                        ArtifactSectionFactory.override({
+                            artifact: { ...default_section.artifact, id: 1 },
+                        }),
+                        ArtifactSectionFactory.override({
+                            artifact: { ...default_section.artifact, id: 2 },
+                        }),
+                    ]),
+                ],
+            ]);
 
             wrapper = shallowMount(TableOfContents, {
                 global: {
@@ -61,17 +65,20 @@ describe("TableOfContents", () => {
     describe("when the sections are loaded", () => {
         let wrapper: VueWrapper<ComponentPublicInstance>;
         beforeAll(() => {
-            const defaultSection = ArtifactSectionFactory.create();
-            vi.spyOn(sectionsStore, "useInjectSectionsStore").mockReturnValue(
-                InjectedSectionsStoreStub.withLoadedSections([
-                    ArtifactSectionFactory.override({
-                        artifact: { ...defaultSection.artifact, id: 1 },
-                    }),
-                    ArtifactSectionFactory.override({
-                        artifact: { ...defaultSection.artifact, id: 2 },
-                    }),
-                ]),
-            );
+            const default_section = ArtifactSectionFactory.create();
+            mockStrictInject([
+                [
+                    SECTIONS_STORE,
+                    InjectedSectionsStoreStub.withLoadedSections([
+                        ArtifactSectionFactory.override({
+                            artifact: { ...default_section.artifact, id: 1 },
+                        }),
+                        ArtifactSectionFactory.override({
+                            artifact: { ...default_section.artifact, id: 2 },
+                        }),
+                    ]),
+                ],
+            ]);
 
             wrapper = shallowMount(TableOfContents, {
                 global: {
