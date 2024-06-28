@@ -17,14 +17,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-const handler = (event: Event): void => {
-    event.preventDefault();
-};
+import type { SectionEditorsCollection } from "@/composables/useSectionEditorsCollection";
 
-export function preventPageLeave(): void {
-    window.addEventListener("beforeunload", handler);
-}
-
-export function allowPageLeave(): void {
-    window.removeEventListener("beforeunload", handler);
+export function preventPageLeave(editors_collection: SectionEditorsCollection): void {
+    window.addEventListener("beforeunload", (event) => {
+        if (editors_collection.hasAtLeastOneEditorOpened()) {
+            event.preventDefault();
+        }
+    });
 }

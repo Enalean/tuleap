@@ -36,6 +36,11 @@ import {
 } from "@/composables/useOpenConfigurationModalBus";
 import { DOCUMENT_ID } from "@/document-id-injection-key";
 import { UPLOAD_MAX_SIZE } from "@/max-upload-size-injecion-keys";
+import { preventPageLeave } from "@/helpers/on-before-unload";
+import {
+    EDITORS_COLLECTION,
+    useSectionEditorsCollection,
+} from "@/composables/useSectionEditorsCollection";
 
 document.addEventListener("DOMContentLoaded", async () => {
     const vue_mount_point = document.getElementById("artidoc-mountpoint");
@@ -57,6 +62,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     const app = createApp(App);
 
     const sections_store = useSectionsStore();
+    const editors_collection = useSectionEditorsCollection();
+    app.provide(EDITORS_COLLECTION, editors_collection);
     app.provide(SECTIONS_STORE, sections_store);
     app.provide(CURRENT_LOCALE, current_locale);
     app.provide(
@@ -83,4 +90,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     app.use(gettext);
     app.use(VueDOMPurifyHTML);
     app.mount(vue_mount_point);
+
+    preventPageLeave(editors_collection);
 });
