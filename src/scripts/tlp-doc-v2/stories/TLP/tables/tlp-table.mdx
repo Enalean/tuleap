@@ -1,0 +1,34 @@
+import { Canvas, Meta, Controls } from '@storybook/blocks';
+import * as TableStories from "./tlp-table.stories";
+
+<Meta of={TableStories}/>
+
+# Tables
+
+<code>.tlp-table</code>
+
+<i className="fa-regular fa-thumbs-up" aria-hidden="true"></i> Good practices:
+
+- Use <code>.tlp-table-actions</code> on a block element before the table if needed (e.g. "+ Add" button…).
+- Use <code>.tlp-table-cell-numeric</code> on numeric cells to right align numeric value (header must be aligned with the content, so apply this class also on the <code>th</code>).
+- Use <code>.tlp-table-cell-actions</code> on action cells to right align the buttons and to prevent the wrapping. No title is required for this kind of column.
+
+<Canvas withToolbar={true} of={TableStories.Simple}></Canvas>
+
+<Controls></Controls>
+
+## Inline Filters
+
+You can filter inline the table by using the <code>filterInlineTable()</code> component.
+
+The <code>input</code> used for the search must have a <code>data-target-table-id</code> attribute.
+
+Cells in which we can search for the term must have the class <code>tlp-table-cell-filterable</code>.
+
+If there aren't any matching entries, then the filter displays the row with the class <code>tlp-table-empty-filter</code>
+which should present to the user an empty state.
+
+<strong>Known limitations:</strong> Table sections <code>plugins-list-filterable</code> and
+table footer <code>tfoot</code> are not handled yet by the filter.
+
+<Canvas withToolbar={true} of={TableStories.InlineFilters}></Canvas>
