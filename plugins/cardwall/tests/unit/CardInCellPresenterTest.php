@@ -20,64 +20,58 @@
 
 declare(strict_types=1);
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+namespace Tuleap\Cardwall;
+
+use Cardwall_CardInCellPresenter;
+use Cardwall_CardPresenter;
+use PHPUnit\Framework\MockObject\MockObject;
+use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
-final class CardInCellPresenterTest extends \Tuleap\Test\PHPUnit\TestCase
+final class CardInCellPresenterTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     private const CARD_FIELD_ID = 9999;
     private const CARD_ID       = 56789;
 
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Artifact
-     */
-    private $artifact;
-    /**
-     * @var Cardwall_CardInCellPresenter
-     */
-    private $presenter;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Cardwall_CardPresenter
-     */
-    private $card_presenter;
+    private Artifact $artifact;
+    private Cardwall_CardInCellPresenter $presenter;
+    private Cardwall_CardPresenter&MockObject $card_presenter;
 
     protected function setUp(): void
     {
-        parent::setUp();
         $swimline_field_values = [100, 221];
         $swimline_id           = 3;
-        $this->artifact        = \Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
-        $this->card_presenter  = \Mockery::mock(\Cardwall_CardPresenter::class)->shouldReceive('getArtifact')->andReturns($this->artifact)->getMock();
-        $this->card_presenter->shouldReceive('getId')->andReturns(self::CARD_ID);
+        $this->artifact        = ArtifactTestBuilder::anArtifact(475)->build();
+        $this->card_presenter  = $this->createMock(Cardwall_CardPresenter::class);
+        $this->card_presenter->method('getArtifact')->willReturn($this->artifact);
+        $this->card_presenter->method('getId')->willReturn(self::CARD_ID);
         $this->presenter = new Cardwall_CardInCellPresenter($this->card_presenter, self::CARD_FIELD_ID, $swimline_id, $swimline_field_values);
     }
 
     public function testItHasColumnDropInto(): void
     {
         $drop_into = 'drop-into-3-100 drop-into-3-221';
-        $this->assertEquals($drop_into, $this->presenter->getDropIntoClass());
+        self::assertEquals($drop_into, $this->presenter->getDropIntoClass());
     }
 
     public function testItHasCardFieldId(): void
     {
-        $this->assertEquals(self::CARD_FIELD_ID, $this->presenter->getCardFieldId());
+        self::assertEquals(self::CARD_FIELD_ID, $this->presenter->getCardFieldId());
     }
 
     public function testItHasACardPresenter(): void
     {
-        $this->assertEquals($this->card_presenter, $this->presenter->getCardPresenter());
+        self::assertEquals($this->card_presenter, $this->presenter->getCardPresenter());
     }
 
     public function testItHasAnArtifact(): void
     {
-        $this->assertEquals($this->artifact, $this->presenter->getArtifact());
+        self::assertEquals($this->artifact, $this->presenter->getArtifact());
     }
 
     public function testItHasAnId(): void
     {
-        $this->assertEquals(self::CARD_ID, $this->presenter->getId());
+        self::assertEquals(self::CARD_ID, $this->presenter->getId());
     }
 }

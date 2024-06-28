@@ -20,29 +20,27 @@
 
 declare(strict_types=1);
 
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
-class Cardwall_Column_canContainStatusTest extends \Tuleap\Test\PHPUnit\TestCase
-{
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+namespace Tuleap\Cardwall;
 
-    private $column;
+use Cardwall_Column;
+use Tuleap\Test\PHPUnit\TestCase;
+
+class Cardwall_Column_canContainStatusTest extends TestCase // phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
+{
+    private Cardwall_Column $column;
 
     protected function setUp(): void
     {
-        parent::setUp();
-
-        $id           = 100;
-        $label        = $header_color = 'whatever';
-        $this->column = new Cardwall_Column($id, $label, $header_color);
+        $this->column = new Cardwall_Column(100, 'whatever', 'whatever');
     }
 
     public function testItReturnsTrueOnNoneColumnIfStatusIsNone(): void
     {
-        $this->assertTrue($this->column->canContainStatus('None'));
+        self::assertTrue($this->column->canContainStatus('None'));
     }
 
     public function testItReturnsTrueOnNoneColumnIfStatusIsNull(): void
     {
-        $this->assertTrue($this->column->canContainStatus(null));
+        self::assertTrue($this->column->canContainStatus(null));
     }
 }

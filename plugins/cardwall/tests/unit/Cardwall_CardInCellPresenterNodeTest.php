@@ -20,24 +20,30 @@
 
 declare(strict_types=1);
 
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
-final class Cardwall_CardInCellPresenterNodeTest extends \Tuleap\Test\PHPUnit\TestCase
-{
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+namespace Tuleap\Cardwall;
 
+use Cardwall_CardInCellPresenter;
+use Cardwall_CardInCellPresenterNode;
+use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
+
+final class Cardwall_CardInCellPresenterNodeTest extends TestCase // phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
+{
     public function testItHoldsTheGivenPresenter(): void
     {
-        $presenter      = \Mockery::spy(\Cardwall_CardInCellPresenter::class);
+        $presenter = $this->createMock(Cardwall_CardInCellPresenter::class);
+        $presenter->method('getId');
         $presenter_node = new Cardwall_CardInCellPresenterNode($presenter);
-        $this->assertEquals($presenter, $presenter_node->getCardInCellPresenter());
+        self::assertEquals($presenter, $presenter_node->getCardInCellPresenter());
     }
 
     public function testItHasAnArtifact(): void
     {
-        $artifact  = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
-        $presenter = \Mockery::spy(\Cardwall_CardInCellPresenter::class);
-        $presenter->shouldReceive('getArtifact')->andReturns($artifact);
+        $artifact  = ArtifactTestBuilder::anArtifact(25)->build();
+        $presenter = $this->createMock(Cardwall_CardInCellPresenter::class);
+        $presenter->method('getId');
+        $presenter->method('getArtifact')->willReturn($artifact);
         $presenter_node = new Cardwall_CardInCellPresenterNode($presenter);
-        $this->assertEquals($artifact, $presenter_node->getArtifact());
+        self::assertEquals($artifact, $presenter_node->getArtifact());
     }
 }
