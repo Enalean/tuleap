@@ -83,16 +83,7 @@ pipeline {
                     } }
                 }
                 stage('Translations: check .tab files') {
-                    agent {
-                        docker {
-                            image 'ghcr.io/enalean/tuleap-test-phpunit:el9-php82'
-                            reuseNode true
-                            args '--network none'
-                        }
-                    }
-                    steps { script { execTestWithLimitedConcurrency({
-                        sh 'sources/src/utils/analyse_language_files.pl sources/'
-                    }) } }
+                    steps { script { execTestWithLimitedConcurrency({ actions.runTabFilesCheck() }) } }
                 }
                 stage('PHP coding standards') {
                     steps {
