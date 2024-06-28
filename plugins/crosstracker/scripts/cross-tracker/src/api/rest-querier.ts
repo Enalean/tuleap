@@ -28,29 +28,23 @@ import {
     putJSON,
     uri,
 } from "@tuleap/fetch-result";
-import type { ResultAsync } from "neverthrow";
+import { type ResultAsync } from "neverthrow";
 import type { Fault } from "@tuleap/fault";
 import type {
-    Artifact,
     ArtifactsCollection,
     ProjectInfo,
     Report,
     TrackerAndProject,
     TrackerInfo,
 } from "../type";
-import type {
-    TrackerProjectRepresentation,
-    TrackerResponseWithProject,
-} from "@tuleap/plugin-tracker-rest-api-types";
+import type { FeatureFlagResponse } from "@tuleap/core-rest-api-types";
+import type { TrackerProjectRepresentation } from "@tuleap/plugin-tracker-rest-api-types";
 import type { ProjectIdentifier } from "../domain/ProjectIdentifier";
-
-export type TrackerReference = Pick<TrackerResponseWithProject, "id" | "label" | "project">;
-
-type ReportRepresentation = {
-    readonly trackers: ReadonlyArray<TrackerReference>;
-    readonly expert_query: string;
-    readonly invalid_trackers: ReadonlyArray<TrackerReference>;
-};
+import type {
+    ReportContentRepresentation,
+    ReportRepresentation,
+    TrackerReference,
+} from "./cross-tracker-rest-api-types";
 
 const mapToTrackerAndProject = (
     trackers: ReadonlyArray<TrackerReference>,
@@ -73,10 +67,6 @@ export function getReport(report_id: number): ResultAsync<Report, Fault> {
         },
     );
 }
-
-type ReportContentRepresentation = {
-    readonly artifacts: ReadonlyArray<Artifact>;
-};
 
 export function getReportContent(
     report_id: number,
@@ -119,6 +109,15 @@ export function getQueryResult(
             total,
         }));
     });
+}
+
+export function isFeatureFlagEnabled(): PromiseLike<boolean> {
+    return getJSON<FeatureFlagResponse>(
+        uri`/feature_flag?name=feature_flag_enable_tql_select`,
+    ).match(
+        (response) => response.value === "1",
+        () => false,
+    );
 }
 
 export function updateReport(

@@ -18,9 +18,10 @@
  */
 
 import { describe, expect, it, vi } from "vitest";
-import { okAsync } from "neverthrow";
+import { errAsync, okAsync } from "neverthrow";
+import { Fault } from "@tuleap/fault";
 import * as fetch_result from "@tuleap/fetch-result";
-import type { TrackerReference } from "./rest-querier";
+import type { TrackerReference } from "./cross-tracker-rest-api-types";
 import {
     getCSVReport,
     getQueryResult,
@@ -28,6 +29,7 @@ import {
     getReportContent,
     getSortedProjectsIAmMemberOf,
     getTrackersOfProject,
+    isFeatureFlagEnabled,
     updateReport,
 } from "./rest-querier";
 import { ProjectIdentifier } from "../domain/ProjectIdentifier";
@@ -106,7 +108,31 @@ describe("rest-querier", () => {
         });
     });
 
-    describe("getQueryResult() -", () => {
+    describe(`isFeatureFlagEnabled()`, () => {
+        it(`asks the backend if the TQL select feature flag is enabled and returns true or false`, async () => {
+            const getJSON = vi
+                .spyOn(fetch_result, "getJSON")
+                .mockReturnValue(okAsync({ value: "1" }));
+
+            const result = await isFeatureFlagEnabled();
+
+            expect(result).toBe(true);
+            expect(getJSON).toHaveBeenCalledWith(
+                fetch_result.uri`/feature_flag?name=feature_flag_enable_tql_select`,
+            );
+        });
+
+        it(`when there is any error, it will ignore it and return false,
+            so that user can fallback to default functionality`, () => {
+            vi.spyOn(fetch_result, "getJSON").mockReturnValue(
+                errAsync(Fault.fromMessage("Not Found")),
+            );
+
+            expect(isFeatureFlagEnabled()).resolves.toBe(false);
+        });
+    });
+
+    describe("getQueryResult()", () => {
         it(`will send the given tracker ids and expert query to the REST API,
             and will return the artifacts and the total number of artifacts`, async () => {
             const total = 69;

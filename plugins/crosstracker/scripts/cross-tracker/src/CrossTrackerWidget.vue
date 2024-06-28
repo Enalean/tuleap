@@ -40,10 +40,13 @@
         v-bind:writing_cross_tracker_report="writing_cross_tracker_report"
         v-on:switch-to-reading-mode="handleSwitchReading"
     />
-    <artifact-table
-        v-if="!is_loading"
-        v-bind:writing_cross_tracker_report="writing_cross_tracker_report"
-    />
+    <template v-if="!is_loading">
+        <artifact-table
+            v-if="!is_using_select"
+            v-bind:writing_cross_tracker_report="writing_cross_tracker_report"
+        />
+        <selectable-table v-if="is_using_select" />
+    </template>
 </template>
 <script setup lang="ts">
 import { computed, onMounted, ref } from "vue";
@@ -55,11 +58,12 @@ import type { SaveEvent } from "./writing-mode/WritingMode.vue";
 import WritingMode from "./writing-mode/WritingMode.vue";
 import ErrorMessage from "./components/ErrorMessage.vue";
 import ErrorInactiveProjectMessage from "./components/ErrorInactiveProjectMessage.vue";
-import { getReport } from "./api/rest-querier";
+import { getReport, isFeatureFlagEnabled } from "./api/rest-querier";
 import type WritingCrossTrackerReport from "./writing-mode/writing-cross-tracker-report";
 import type BackendCrossTrackerReport from "./backend-cross-tracker-report";
 import type ReadingCrossTrackerReport from "./reading-mode/reading-cross-tracker-report";
-import type { State, Report } from "./type";
+import type { Report, State } from "./type";
+import SelectableTable from "./components/selectable-table/SelectableTable.vue";
 
 const gettext_provider = useGettext();
 
@@ -91,6 +95,7 @@ const props = defineProps<{
 }>();
 
 const is_loading = ref(true);
+const is_using_select = ref(false);
 
 const is_reading_mode_shown = computed(() => reading_mode.value === true && !is_loading.value);
 
@@ -121,6 +126,9 @@ function loadBackendReport(): void {
 
 onMounted(() => {
     loadBackendReport();
+    isFeatureFlagEnabled().then((enabled) => {
+        is_using_select.value = enabled;
+    });
 });
 
 function handleSwitchWriting(): void {
