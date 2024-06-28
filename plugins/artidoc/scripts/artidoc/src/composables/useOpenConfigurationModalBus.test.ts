@@ -35,4 +35,23 @@ describe("useOpenConfigurationModalBus", () => {
 
         expect(has_been_called).toBe(true);
     });
+
+    it("should call the open modal handler with a callback", () => {
+        let has_been_called = false;
+
+        const onSuccessfulSaved = (): void => {
+            has_been_called = true;
+        };
+
+        const bus = useOpenConfigurationModalBus();
+        bus.registerHandler((onSuccessfulSaved: () => void) => {
+            onSuccessfulSaved();
+        });
+
+        expect(has_been_called).toBe(false);
+
+        bus.openModal(onSuccessfulSaved);
+
+        expect(has_been_called).toBe(true);
+    });
 });

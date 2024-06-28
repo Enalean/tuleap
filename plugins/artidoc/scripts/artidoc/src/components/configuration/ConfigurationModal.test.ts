@@ -24,8 +24,9 @@ import { ConfigurationStoreStub } from "@/helpers/stubs/ConfigurationStoreStub";
 import { createGettext } from "vue3-gettext";
 import SuccessFeedback from "@/components/configuration/SuccessFeedback.vue";
 import ErrorFeedback from "@/components/configuration/ErrorFeedback.vue";
-import type { ConfigurationStore } from "@/stores/configuration-store";
+import type { ConfigurationStore, Tracker } from "@/stores/configuration-store";
 import { CONFIGURATION_STORE } from "@/stores/configuration-store";
+import type { OpenConfigurationModalBus } from "@/composables/useOpenConfigurationModalBus";
 import {
     OPEN_CONFIGURATION_MODAL_BUS,
     useOpenConfigurationModalBus,
@@ -35,15 +36,18 @@ import { mockStrictInject } from "@/helpers/mock-strict-inject";
 vi.mock("@tuleap/vue-strict-inject");
 
 describe("ConfigurationModal", () => {
-    function setupInjectionKeys(store: ConfigurationStore): void {
+    function setupInjectionKeys(store: ConfigurationStore, bus: OpenConfigurationModalBus): void {
         mockStrictInject([
             [CONFIGURATION_STORE, store],
-            [OPEN_CONFIGURATION_MODAL_BUS, useOpenConfigurationModalBus()],
+            [OPEN_CONFIGURATION_MODAL_BUS, bus],
         ]);
     }
 
     it("should display success feedback", () => {
-        setupInjectionKeys(ConfigurationStoreStub.withSuccessfullSave());
+        setupInjectionKeys(
+            ConfigurationStoreStub.withSuccessfullSave(),
+            useOpenConfigurationModalBus(),
+        );
 
         const wrapper = shallowMount(ConfigurationModal, {
             global: { plugins: [createGettext({ silent: true })] },
@@ -54,7 +58,7 @@ describe("ConfigurationModal", () => {
     });
 
     it("should display error feedback", () => {
-        setupInjectionKeys(ConfigurationStoreStub.withError());
+        setupInjectionKeys(ConfigurationStoreStub.withError(), useOpenConfigurationModalBus());
 
         const wrapper = shallowMount(ConfigurationModal, {
             global: { plugins: [createGettext({ silent: true })] },
@@ -62,5 +66,34 @@ describe("ConfigurationModal", () => {
 
         expect(wrapper.findComponent(SuccessFeedback).exists()).toBe(false);
         expect(wrapper.findComponent(ErrorFeedback).exists()).toBe(true);
+    });
+
+    it("should save the configuration and call the onSave callback", async () => {
+        let has_been_called = false;
+        const onSuccessfulSaved = (): void => {
+            has_been_called = true;
+        };
+
+        const bus = useOpenConfigurationModalBus();
+
+        const save: ConfigurationStore["saveConfiguration"] = vi
+            .fn()
+            .mockImplementation((new_selected_tracker: Tracker, onSave: () => void): void => {
+                onSave();
+            });
+
+        setupInjectionKeys(ConfigurationStoreStub.withMockedSavedConfiguration(save), bus);
+
+        const wrapper = shallowMount(ConfigurationModal, {
+            global: { plugins: [createGettext({ silent: true })] },
+        });
+
+        bus.openModal(onSuccessfulSaved);
+
+        expect(has_been_called).toBe(false);
+
+        await wrapper.find("form").trigger("submit");
+
+        expect(has_been_called).toBe(true);
     });
 });

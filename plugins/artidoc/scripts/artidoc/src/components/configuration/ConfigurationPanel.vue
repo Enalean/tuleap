@@ -19,7 +19,7 @@
   -->
 
 <template>
-    <form class="tlp-pane" v-on:submit="configuration_helper.onSubmit">
+    <form class="tlp-pane" v-on:submit="onSubmit">
         <div class="tlp-pane-container">
             <div class="tlp-pane-header">
                 <h1 class="tlp-pane-title">
@@ -29,7 +29,10 @@
 
             <section class="tlp-pane-section">
                 <introductory-text v-bind:configuration_helper="configuration_helper" />
-                <tracker-selection v-bind:configuration_helper="configuration_helper" />
+                <tracker-selection
+                    v-bind:configuration_helper="configuration_helper"
+                    v-bind:disabled="false"
+                />
             </section>
 
             <section class="tlp-pane-section tlp-pane-section-submit">
@@ -76,6 +79,10 @@ const configuration_helper = useConfigurationScreenHelper();
 
 const { is_submit_button_disabled, submit_button_icon, is_error, error_message } =
     configuration_helper;
+
+function onSubmit(event: Event): void {
+    configuration_helper.onSubmit(event, () => {});
+}
 </script>
 
 <style scoped lang="scss">

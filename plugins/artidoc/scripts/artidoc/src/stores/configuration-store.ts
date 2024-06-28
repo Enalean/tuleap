@@ -67,7 +67,7 @@ export interface ConfigurationStore {
     is_error: Ref<boolean>;
     is_success: Ref<boolean>;
     error_message: Ref<string>;
-    saveConfiguration: (new_selected_tracker: Tracker) => void;
+    saveConfiguration: (new_selected_tracker: Tracker, onSuccessfulSave: () => void) => void;
     resetSuccessFlagFromPreviousCalls: () => void;
 }
 
@@ -86,7 +86,7 @@ export function initConfigurationStore(
     const is_success = ref(false);
     const error_message = ref("");
 
-    function saveConfiguration(new_selected_tracker: Tracker): void {
+    function saveConfiguration(new_selected_tracker: Tracker, onSuccessfulSave: () => void): void {
         is_saving.value = true;
         is_error.value = false;
         is_success.value = false;
@@ -97,6 +97,7 @@ export function initConfigurationStore(
                 sections_store.insertPendingArtifactSectionForEmptyDocument(new_selected_tracker);
                 is_saving.value = false;
                 is_success.value = true;
+                onSuccessfulSave();
             },
             (fault) => {
                 is_saving.value = false;

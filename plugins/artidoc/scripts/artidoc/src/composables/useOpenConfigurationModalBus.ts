@@ -19,9 +19,13 @@
 
 import type { StrictInjectionKey } from "@tuleap/vue-strict-inject";
 
+type OpenConfigurationModalHandler = (onSuccessfulSaved: () => void) => void;
+
+const noop = (): void => {};
+
 export interface OpenConfigurationModalBus {
-    readonly registerHandler: (new_handler: () => void) => void;
-    readonly openModal: () => void;
+    readonly registerHandler: (new_handler: OpenConfigurationModalHandler) => void;
+    readonly openModal: (onSuccessfulSaved?: () => void) => void;
 }
 
 export const OPEN_CONFIGURATION_MODAL_BUS: StrictInjectionKey<OpenConfigurationModalBus> = Symbol(
@@ -29,14 +33,14 @@ export const OPEN_CONFIGURATION_MODAL_BUS: StrictInjectionKey<OpenConfigurationM
 );
 
 export function useOpenConfigurationModalBus(): OpenConfigurationModalBus {
-    let handler = (): void => {};
+    let handler: OpenConfigurationModalHandler = noop;
 
     return {
-        registerHandler: (new_handler: () => void): void => {
+        registerHandler: (new_handler: OpenConfigurationModalHandler): void => {
             handler = new_handler;
         },
-        openModal: (): void => {
-            handler();
+        openModal: (onSuccessfulSaved?: () => void): void => {
+            handler(onSuccessfulSaved || noop);
         },
     };
 }
