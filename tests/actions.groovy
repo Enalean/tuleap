@@ -74,6 +74,12 @@ def runStylelint() {
     }
 }
 
+def runTabFilesCheck() {
+    dir ('sources') {
+        runInsideNixShell('src/utils/analyse_language_files.pl ./')
+    }
+}
+
 def runPsalm(String configPath, String root='.') {
     withEnv(['XDG_CACHE_HOME=/tmp/psalm_cache/']) {
         dir ('sources') {
