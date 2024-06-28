@@ -20,7 +20,7 @@
 <template>
     <div>
         <textarea ref="area_editor" v-bind:value="toValue(editable_description)"></textarea>
-        <p class="tlp-text-muted drag-and-drop-info" v-if="is_dragndrop_allowed">
+        <p class="tlp-text-muted drag-and-drop-info" v-if="is_image_upload_allowed">
             {{ $gettext("You can drag 'n drop or paste image directly in the editor.") }}
         </p>
     </div>
@@ -49,7 +49,7 @@ const props = defineProps<{
     upload_url: string;
     add_attachment_to_waiting_list: AttachmentFile["addAttachmentToWaitingList"];
     editable_description: string;
-    is_dragndrop_allowed: boolean;
+    is_image_upload_allowed: boolean;
     input_current_description: EditorSectionContent["inputCurrentDescription"];
 }>();
 
@@ -126,7 +126,7 @@ const onInstanceReady = (): void => {
             (event: eventInfo<CKEDITOR.eventDataTypes>) => {
                 if (
                     props.upload_url === "/api/v1/tracker_fields/0/files" ||
-                    !props.is_dragndrop_allowed
+                    !props.is_image_upload_allowed
                 ) {
                     event.cancel();
                     // @ts-expect-error : we have to intercept the fileLoader and abort the image upload to prevent the image from being displayed in the editor

@@ -34,7 +34,7 @@ const default_props = {
     upload_url: "/file/upload",
     add_attachment_to_waiting_list: vi.fn(),
     input_current_description: vi.fn(),
-    is_dragndrop_allowed: true,
+    is_image_upload_allowed: true,
 };
 describe("SectionDescription", () => {
     describe("while the sections are loading", () => {

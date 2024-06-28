@@ -52,7 +52,7 @@
                 v-bind:is_edit_mode="is_section_in_edit_mode"
                 v-bind:add_attachment_to_waiting_list="addAttachmentToWaitingList"
                 v-bind:upload_url="upload_url"
-                v-bind:is_dragndrop_allowed="is_dragndrop_allowed"
+                v-bind:is_image_upload_allowed="is_image_upload_allowed"
             />
             <section-footer v-bind:editor="editor" v-bind:section="section" />
         </article>
@@ -90,7 +90,7 @@ const {
     isJustRefreshed,
     isJustSaved,
     isBeingSaved,
-    is_dragndrop_allowed,
+    is_image_upload_allowed,
 } = editor.editor_state;
 const { is_in_error, is_outdated } = editor.editor_error;
 
