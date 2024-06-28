@@ -1,0 +1,54 @@
+<div class="tlp-framed">
+    <section class="tlp-pane">
+        <div class="tlp-pane-container">
+            <div class="tlp-pane-header">
+                <h1 class="tlp-pane-title">{{# dgettext }} tuleap-tracker | Delete artifacts {{/ dgettext }}</h1>
+            </div>
+            <section class="tlp-pane-section">
+                <form method="POST"  name="delete_artifact" method="post" action="{{ url_to_deletion_confirmation }}">
+                    {{# csrf_token }}
+                        {{> csrf_token_input }}
+                    {{/ csrf_token }}
+
+                    {{# is_deletion_impossible }}
+                        <div class="tlp-alert-danger">
+                            {{ error_message }}
+                        </div>
+                    {{/ is_deletion_impossible }}
+                    {{^ is_deletion_impossible }}
+                        <p>{{# dgettext }} tuleap-tracker | Allow to permanently delete an artifact. {{/ dgettext }}</p>
+                        <div class="tlp-alert-warning">
+                            {{# dgettext }}
+                                tuleap-tracker |
+                                Warning: There is no way to restore the artifact. This operation should be an exception.
+                            {{/ dgettext }}
+                        </div>
+                    {{/ is_deletion_impossible }}
+
+                    <div class="tlp-form-element {{# is_deletion_impossible }}tlp-form-element-disabled{{/ is_deletion_impossible }}">
+                        <label class="tlp-label" for="admin-artifacts-deletion-artifact-id">
+                            {{# dgettext }} tuleap-tracker | Id of the artifact to delete{{/ dgettext }}
+                        </label>
+
+                        <input
+                            id="admin-artifacts-deletion-artifact-id"
+                            placeholder="{{# dgettext }} tuleap-tracker | Id of the artifact {{/ dgettext }}"
+                            name="id"
+                            type="text"
+                            class="tlp-input"
+                            size="11"
+                            {{# is_deletion_impossible }}disabled{{/ is_deletion_impossible }}
+                        />
+                    </div>
+                    <div class="tlp-pane-section-submit">
+                        <button
+                            class="tlp-button-primary"
+                            type="submit"
+                            {{# is_deletion_impossible }}disabled{{/ is_deletion_impossible }}
+                        >{{# dgettext }} tuleap-tracker | Submit {{/ dgettext }}</button>
+                    </div>
+                </form>
+            </section>
+        </div>
+    </section>
+</div>

@@ -21,6 +21,7 @@
 namespace Tuleap\Tracker\Admin;
 
 use Tracker;
+use Tuleap\Tracker\Admin\ArtifactsDeletion\ArtifactsDeletionInTrackerAdminUrlBuilder;
 use Tuleap\Tracker\Workflow\WorkflowMenuPresenter;
 
 class HeaderPresenter
@@ -29,35 +30,14 @@ class HeaderPresenter
     public $tracker_name;
     public $additional_items;
 
-    /**
-     * @var bool
-     */
-    public $is_fields_tab_active = false;
+    public bool $is_fields_tab_active       = false;
+    public bool $is_semantics_tab_active    = false;
+    public bool $is_permissions_tab_active  = false;
+    public bool $is_workflow_tab_active     = false;
+    public bool $is_notification_tab_active = false;
+    public bool $is_other_tab_active        = false;
 
-    /**
-     * @var bool
-     */
-    public $is_semantics_tab_active = false;
-
-    /**
-     * @var bool
-     */
-    public $is_permissions_tab_active = false;
-
-    /**
-     * @var bool
-     */
-    public $is_workflow_tab_active = false;
-
-    /**
-     * @var bool
-     */
-    public $is_notification_tab_active = false;
-
-    /**
-     * @var bool
-     */
-    public $is_other_tab_active = false;
+    public string $artifacts_deletion_url;
 
     public function __construct(
         Tracker $tracker,
@@ -65,9 +45,10 @@ class HeaderPresenter
         array $additional_items,
         public readonly WorkflowMenuPresenter $workflow_menu,
     ) {
-        $this->tracker_id       = $tracker->getId();
-        $this->tracker_name     = $tracker->getName();
-        $this->additional_items = $additional_items;
+        $this->tracker_id             = $tracker->getId();
+        $this->tracker_name           = $tracker->getName();
+        $this->additional_items       = $additional_items;
+        $this->artifacts_deletion_url = ArtifactsDeletionInTrackerAdminUrlBuilder::fromTracker($tracker);
 
         $this->defineActiveTabBasedOnItem($current_item);
     }

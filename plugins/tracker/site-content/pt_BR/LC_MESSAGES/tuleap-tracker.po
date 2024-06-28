@@ -344,9 +344,7 @@ msgid ""
 "removing the existing link."
 msgstr ""
 
-msgid ""
-"Allow to permanently delete an artifact. Warning: <strong>There is no way to "
-"restore the artifact</strong>. This operation should be an exception."
+msgid "Allow to permanently delete an artifact."
 msgstr ""
 
 msgid "Allow user to give permissions to an artifact"
@@ -535,6 +533,10 @@ msgid "Artifacts deletion"
 msgstr ""
 
 msgid "Artifacts deletion configuration"
+msgstr ""
+
+msgid ""
+"Artifacts deletion is deactivated. Please contact your site administrator."
 msgstr ""
 
 msgid "Artifacts fields"
@@ -1464,7 +1466,10 @@ msgstr ""
 msgid "Hint"
 msgstr ""
 
-msgid "Id of the artifact to delete:"
+msgid "Id of the artifact"
+msgstr ""
+
+msgid "Id of the artifact to delete"
 msgstr ""
 
 msgid ""
@@ -1755,8 +1760,8 @@ msgid "Maximum"
 msgstr ""
 
 msgid ""
-"Maximum number of artifacts users can delete or move from the REST API on a "
-"24 hours sliding window."
+"Maximum number of artifacts users can delete or move from the REST API and "
+"from the user interface on a 24 hours sliding window."
 msgstr ""
 
 msgid "Message Body:"
@@ -3895,6 +3900,11 @@ msgstr ""
 msgid "Warning : use that field only once."
 msgstr ""
 
+msgid ""
+"Warning: There is no way to restore the artifact. This operation should be "
+"an exception."
+msgstr ""
+
 msgid "Warning: concurrent edit"
 msgstr ""
 
@@ -4150,6 +4160,11 @@ msgstr ""
 msgid ""
 "You don't have the permissions to view this tracker. Given that you are "
 "anonymous, please try to <a href=\"%1$s\">login</a>."
+msgstr ""
+
+msgid ""
+"You have reached the limit of artifacts deletion for the next 24 hours. "
+"Please come back later."
 msgstr ""
 
 msgid ""

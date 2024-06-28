@@ -36,6 +36,8 @@ use Tuleap\Tracker\Admin\ArtifactDeletion\ArtifactsDeletionConfig;
 use Tuleap\Tracker\Admin\ArtifactDeletion\ArtifactsDeletionConfigDAO;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageUpdater;
+use Tuleap\Tracker\Admin\ArtifactsDeletion\ArtifactsConfirmDeletionInTrackerAdminUrlBuilder;
+use Tuleap\Tracker\Admin\ArtifactsDeletion\ArtifactsDeletionInTrackerAdminUrlBuilder;
 use Tuleap\Tracker\Admin\ArtifactsDeletion\UserDeletionRetriever;
 use Tuleap\Tracker\Admin\GlobalAdmin\GlobalAdminPermissionsChecker;
 use Tuleap\Tracker\Admin\HeaderPresenter;
@@ -885,17 +887,9 @@ class Tracker implements Tracker_Dispatchable_Interface
                     $GLOBALS['Response']->redirect(TRACKER_BASE_URL . '/?tracker=' . $this->getId());
                 }
                 break;
-            case 'admin-clean':
-                if ($this->userIsAdmin($current_user)) {
-                    $this->displayAdminClean($layout);
-                } else {
-                    $GLOBALS['Response']->addFeedback('error', dgettext('tuleap-tracker', 'Access denied. You don\'t have permissions to perform this action.'));
-                    $GLOBALS['Response']->redirect(TRACKER_BASE_URL . '/?tracker=' . $this->getId());
-                }
-                break;
             case 'admin-delete-artifact-confirm':
                 if ($this->userIsAdmin($current_user)) {
-                    $token = new CSRFSynchronizerToken(TRACKER_BASE_URL . '/?tracker=' . (int) $this->id . '&amp;func=admin-delete-artifact-confirm');
+                    $token = ArtifactsConfirmDeletionInTrackerAdminUrlBuilder::fromTracker($this)->getCSRFSynchronizerToken();
                     $token->check();
                     $artifact_id = $request->getValidated('id', 'uint', 0);
                     $artifact    = $this->getTrackerArtifactFactory()->getArtifactById($artifact_id);
@@ -903,7 +897,7 @@ class Tracker implements Tracker_Dispatchable_Interface
                         $this->displayAdminConfirmDelete($layout, $artifact);
                     } else {
                         $GLOBALS['Response']->addFeedback('error', sprintf(dgettext('tuleap-tracker', 'Artifact %1$s doesn\'t exist or doesn\'t belong to current tracker'), $request->get('id')));
-                        $GLOBALS['Response']->redirect(TRACKER_BASE_URL . '/?tracker=' . $this->getId() . '&func=admin-clean');
+                        $GLOBALS['Response']->redirect(ArtifactsDeletionInTrackerAdminUrlBuilder::fromTracker($this));
                     }
                 } else {
                     $GLOBALS['Response']->addFeedback('error', dgettext('tuleap-tracker', 'Access denied. You don\'t have permissions to perform this action.'));
@@ -1544,22 +1538,6 @@ class Tracker implements Tracker_Dispatchable_Interface
         echo '<br>';
         echo '<input type="hidden" name="action" value="import_preview">';
         echo '<input type="submit" value="' . dgettext('tuleap-tracker', 'Load artifacts') . '">';
-        echo '</form>';
-        $this->displayAdminFooter($layout);
-    }
-
-    public function displayAdminClean(Tracker_IDisplayTrackerLayout $layout)
-    {
-        $token = new CSRFSynchronizerToken(TRACKER_BASE_URL . '/?tracker=' . (int) $this->id . '&amp;func=admin-delete-artifact-confirm');
-        $title = dgettext('tuleap-tracker', 'Delete artifacts');
-        $this->displayAdminItemHeader($layout, 'clean', $title);
-        echo '<h2 class="almost-tlp-title">' . $title . '</h2>';
-        echo '<p>' . dgettext('tuleap-tracker', 'Allow to permanently delete an artifact. Warning: <strong>There is no way to restore the artifact</strong>. This operation should be an exception.') . '</p>';
-        echo '<form name="delete_artifact" method="post" action="' . TRACKER_BASE_URL . '/?tracker=' . (int) $this->id . '&amp;func=admin-delete-artifact-confirm">';
-        echo $token->fetchHTMLInput();
-        echo '<label>' . dgettext('tuleap-tracker', 'Id of the artifact to delete:') . ' <input type="text" name="id" value=""></label>';
-        echo '<br>';
-        echo '<input type="submit" value="' . $GLOBALS['Language']->getText('global', 'btn_submit') . '">';
         echo '</form>';
         $this->displayAdminFooter($layout);
     }
