@@ -42,30 +42,25 @@
         </div>
     </section>
 </template>
-<script lang="ts">
-import Vue from "vue";
-import { Component } from "vue-property-decorator";
-import { Action, Getter } from "vuex-class";
+<script setup lang="ts">
 import { getUserIsAdmin } from "../repository-list-presenter";
 import DropdownActionButton from "./DropdownActionButton.vue";
+import { useActions, useGetters } from "vuex-composition-helpers";
 
-@Component({ components: { DropdownActionButton } })
-export default class NoRepositoryEmptyState extends Vue {
-    @Action
-    readonly showAddRepositoryModal!: () => void;
+const { showAddRepositoryModal } = useActions(["showAddRepositoryModal"]);
 
-    @Getter
-    readonly isCurrentRepositoryListEmpty!: boolean;
-    @Getter
-    readonly isInitialLoadingDoneWithoutError!: boolean;
-    @Getter
-    readonly areExternalUsedServices!: boolean;
+const { isCurrentRepositoryListEmpty, isInitialLoadingDoneWithoutError, areExternalUsedServices } =
+    useGetters([
+        "isCurrentRepositoryListEmpty",
+        "isInitialLoadingDoneWithoutError",
+        "areExternalUsedServices",
+    ]);
 
-    is_admin(): boolean {
-        return getUserIsAdmin();
-    }
-    show_empty_state(): boolean {
-        return this.isCurrentRepositoryListEmpty && this.isInitialLoadingDoneWithoutError;
-    }
+function is_admin(): boolean {
+    return getUserIsAdmin();
+}
+
+function show_empty_state(): boolean {
+    return isCurrentRepositoryListEmpty.value && isInitialLoadingDoneWithoutError.value;
 }
 </script>
