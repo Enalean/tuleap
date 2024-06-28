@@ -22,7 +22,7 @@ import { createGettext } from "vue3-gettext";
 import App from "./App.vue";
 import { createApp } from "vue";
 import VueDOMPurifyHTML from "vue-dompurify-html";
-import { provideSectionsStore } from "@/stores/useSectionsStore";
+import { useSectionsStore } from "@/stores/useSectionsStore";
 import { SECTIONS_STORE } from "@/stores/sections-store-injection-key";
 import { CURRENT_LOCALE } from "@/locale-injection-key";
 import { userLocale } from "@/helpers/user-locale";
@@ -54,9 +54,9 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     const item_id = Number.parseInt(getDatasetItemOrThrow(vue_mount_point, "itemId"), 10);
 
-    const app = createApp(App, { item_id });
+    const app = createApp(App);
 
-    const sections_store = provideSectionsStore();
+    const sections_store = useSectionsStore();
     app.provide(SECTIONS_STORE, sections_store);
     app.provide(CURRENT_LOCALE, current_locale);
     app.provide(

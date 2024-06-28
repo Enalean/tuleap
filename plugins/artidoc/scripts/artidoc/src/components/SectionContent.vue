@@ -46,7 +46,6 @@
             />
             <section-header-skeleton v-else class="section-header" />
             <section-description
-                v-bind:section="section"
                 v-bind:editable_description="editable_description"
                 v-bind:readonly_description="getReadonlyDescription()"
                 v-bind:input_current_description="inputCurrentDescription"

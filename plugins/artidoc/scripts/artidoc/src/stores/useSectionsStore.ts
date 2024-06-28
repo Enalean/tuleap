@@ -18,7 +18,7 @@
  */
 
 import type { Ref } from "vue";
-import { ref, provide } from "vue";
+import { ref } from "vue";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import { SECTIONS_STORE } from "./sections-store-injection-key";
 import { isArtifactSection, isPendingArtifactSection } from "@/helpers/artidoc-section.type";
@@ -219,17 +219,6 @@ export function useSectionsStore(): SectionsStore {
         getSectionPositionForSave,
         replacePendingByArtifactSection,
     };
-}
-
-let sectionsStore: SectionsStore | null = null;
-
-export function provideSectionsStore(): SectionsStore {
-    if (!sectionsStore) {
-        sectionsStore = useSectionsStore();
-        provide(SECTIONS_STORE, sectionsStore);
-    }
-
-    return sectionsStore;
 }
 
 export function useInjectSectionsStore(): SectionsStore {
