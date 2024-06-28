@@ -1,6 +1,6 @@
 %define _buildhost tuleap-builder
-%define _source_payload w9T8.xzdio
-%define _binary_payload w9T8.xzdio
+%define _source_payload w22T8.zstdio
+%define _binary_payload w22T8.zstdio
 %define app_group tuleap-mercure
 %define app_user tuleap-mercure
 
