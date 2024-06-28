@@ -18,7 +18,9 @@
  */
 import type { Repository, FormattedGitLabRepository } from "../type";
 
-export function isGitlabRepository(repository: FormattedGitLabRepository | Repository): boolean {
+export function isGitlabRepository(
+    repository: FormattedGitLabRepository | Repository,
+): repository is FormattedGitLabRepository {
     return (
         Object.prototype.hasOwnProperty.call(repository, "gitlab_data") &&
         repository.gitlab_data !== null &&
@@ -30,7 +32,7 @@ export function isGitlabRepository(repository: FormattedGitLabRepository | Repos
 
 export function isGitlabRepositoryWellConfigured(
     repository: FormattedGitLabRepository | Repository,
-): boolean {
+): repository is FormattedGitLabRepository {
     return (
         Object.prototype.hasOwnProperty.call(repository, "gitlab_data") &&
         repository.gitlab_data !== null &&

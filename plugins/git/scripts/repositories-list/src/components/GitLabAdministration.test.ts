@@ -23,13 +23,13 @@ import { shallowMount } from "@vue/test-utils";
 import GitLabAdministration from "./GitLabAdministration.vue";
 import type { Store } from "@tuleap/vuex-store-wrapper-jest";
 import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
-import type { Repository } from "../type";
+import type { FormattedGitLabRepository } from "../type";
 import { createLocalVueForTests } from "../helpers/local-vue-for-tests";
 
 jest.mock("tlp");
 
 describe("GitLabAdministration", () => {
-    let repository: Repository, store: Store;
+    let repository: FormattedGitLabRepository, store: Store;
 
     async function instantiateComponent(): Promise<Wrapper<Vue>> {
         repository = {
@@ -43,7 +43,7 @@ describe("GitLabAdministration", () => {
                 gitlab_repository_url: "https://example.com/MyPath/MyRepo",
                 gitlab_repository_id: 1,
             },
-        } as Repository;
+        } as FormattedGitLabRepository;
         const propsData = { repository, is_admin: true };
         const store_options = {
             state: { gitlab: {} },
@@ -80,7 +80,10 @@ describe("GitLabAdministration", () => {
 
         await wrapper.find("[data-test=unlink-gitlab-repository-1]").trigger("click");
 
-        expect(store.dispatch).toHaveBeenCalledWith("showDeleteGitlabRepositoryModal", repository);
+        expect(store.dispatch).toHaveBeenCalledWith(
+            "gitlab/showDeleteGitlabRepositoryModal",
+            repository,
+        );
     });
 
     it("When repository is GitLab and user clicks to edit token, Then modal opens", async () => {
@@ -89,7 +92,7 @@ describe("GitLabAdministration", () => {
         await wrapper.find("[data-test=edit-access-token-gitlab-repository]").trigger("click");
 
         expect(store.dispatch).toHaveBeenCalledWith(
-            "showEditAccessTokenGitlabRepositoryModal",
+            "gitlab/showEditAccessTokenGitlabRepositoryModal",
             repository,
         );
     });
@@ -99,7 +102,10 @@ describe("GitLabAdministration", () => {
 
         await wrapper.find("[data-test=regenerate-webhook-gitlab-repository]").trigger("click");
 
-        expect(store.dispatch).toHaveBeenCalledWith("showRegenerateGitlabWebhookModal", repository);
+        expect(store.dispatch).toHaveBeenCalledWith(
+            "gitlab/showRegenerateGitlabWebhookModal",
+            repository,
+        );
     });
 
     it("When repository is GitLab and user clicks to update the allowing artifact closure value, Then modal opens", async () => {
@@ -107,6 +113,6 @@ describe("GitLabAdministration", () => {
 
         await wrapper.find("[data-test=artifact-closure-gitlab-repository]").trigger("click");
 
-        expect(store.dispatch).toHaveBeenCalledWith("showArtifactClosureModal", repository);
+        expect(store.dispatch).toHaveBeenCalledWith("gitlab/showArtifactClosureModal", repository);
     });
 });

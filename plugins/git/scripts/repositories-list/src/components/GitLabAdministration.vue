@@ -93,13 +93,13 @@
 </template>
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
-import type { GitLabRepository } from "../type";
+import type { FormattedGitLabRepository } from "../type";
 import { createDropdown } from "@tuleap/tlp-dropdown";
-import { useActions } from "vuex-composition-helpers";
+import { useNamespacedActions } from "vuex-composition-helpers";
 
 const props = defineProps<{
     is_admin: boolean;
-    repository: GitLabRepository;
+    repository: FormattedGitLabRepository;
 }>();
 
 const {
@@ -108,7 +108,7 @@ const {
     showRegenerateGitlabWebhookModal,
     showArtifactClosureModal,
     showCreateBranchPrefixModal,
-} = useActions([
+} = useNamespacedActions("gitlab", [
     "showDeleteGitlabRepositoryModal",
     "showEditAccessTokenGitlabRepositoryModal",
     "showRegenerateGitlabWebhookModal",
