@@ -245,4 +245,14 @@ final class ArtidocDao extends DataAccessObject implements SearchArtidocDocument
 
         return $id;
     }
+
+    public function deleteSectionsByArtifactId(int $artifact_id): void
+    {
+        $this->getDB()->delete(
+            'plugin_artidoc_document',
+            [
+                'artifact_id' => $artifact_id,
+            ]
+        );
+    }
 }
