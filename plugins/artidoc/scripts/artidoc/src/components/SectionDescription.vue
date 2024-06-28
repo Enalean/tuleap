@@ -38,10 +38,11 @@
 import { defineAsyncComponent, onMounted } from "vue";
 import { loadTooltips } from "@tuleap/tooltip";
 import SectionDescriptionSkeleton from "@/components/SectionDescriptionSkeleton.vue";
-import { useInjectSectionsStore } from "@/stores/useSectionsStore";
 import SectionDescriptionReadOnly from "@/components/description/SectionDescriptionReadOnly.vue";
 import type { EditorSectionContent } from "@/composables/useEditorSectionContent";
 import type { AttachmentFile } from "@/composables/useAttachmentFile";
+import { strictInject } from "@tuleap/vue-strict-inject";
+import { SECTIONS_STORE } from "@/stores/sections-store-injection-key";
 
 defineProps<{
     add_attachment_to_waiting_list: AttachmentFile["addAttachmentToWaitingList"];
@@ -53,7 +54,7 @@ defineProps<{
     input_current_description: EditorSectionContent["inputCurrentDescription"];
 }>();
 
-const { is_sections_loading } = useInjectSectionsStore();
+const { is_sections_loading } = strictInject(SECTIONS_STORE);
 
 const async_editor = defineAsyncComponent({
     loader: () => import("@/components/SectionDescriptionEditor.vue"),

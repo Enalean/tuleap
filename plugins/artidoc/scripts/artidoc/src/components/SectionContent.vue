@@ -65,15 +65,16 @@ import SectionHeader from "@/components/SectionHeader.vue";
 import SectionDescription from "@/components/SectionDescription.vue";
 import { useSectionEditor } from "@/composables/useSectionEditor";
 import SectionDropdown from "@/components/SectionDropdown.vue";
-import { useInjectSectionsStore } from "@/stores/useSectionsStore";
 import SectionHeaderSkeleton from "@/components/SectionHeaderSkeleton.vue";
 import SectionFooter from "@/components/SectionFooter.vue";
 import { useAttachmentFile } from "@/composables/useAttachmentFile";
 import { ref } from "vue";
+import { strictInject } from "@tuleap/vue-strict-inject";
+import { SECTIONS_STORE } from "@/stores/sections-store-injection-key";
 
 const props = defineProps<{ section: ArtidocSection }>();
 
-const { is_sections_loading } = useInjectSectionsStore();
+const { is_sections_loading } = strictInject(SECTIONS_STORE);
 
 const {
     upload_url,

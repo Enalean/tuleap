@@ -19,8 +19,6 @@
 
 import type { Ref } from "vue";
 import { ref } from "vue";
-import { strictInject } from "@tuleap/vue-strict-inject";
-import { SECTIONS_STORE } from "./sections-store-injection-key";
 import { isArtifactSection, isPendingArtifactSection } from "@/helpers/artidoc-section.type";
 import type {
     ArtidocSection,
@@ -219,13 +217,4 @@ export function useSectionsStore(): SectionsStore {
         getSectionPositionForSave,
         replacePendingByArtifactSection,
     };
-}
-
-export function useInjectSectionsStore(): SectionsStore {
-    const store = strictInject(SECTIONS_STORE);
-    if (!store) {
-        throw new Error("No sections store provided!");
-    }
-
-    return store;
 }

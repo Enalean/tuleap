@@ -27,12 +27,12 @@ import type { SectionsStore } from "@/stores/useSectionsStore";
 import { mockStrictInject } from "@/helpers/mock-strict-inject";
 import { CAN_USER_EDIT_DOCUMENT } from "@/can-user-edit-document-injection-key";
 import { DOCUMENT_ID } from "@/document-id-injection-key";
-import * as sectionsStore from "@/stores/useSectionsStore";
 import { InjectedSectionsStoreStub } from "@/helpers/stubs/InjectSectionsStoreStub";
 import * as saveSection from "@/composables/useSaveSection";
 import * as refreshSection from "@/composables/useRefreshSection";
 import * as editorError from "@/composables/useEditorErrors";
 import * as editorContent from "@/composables/useEditorSectionContent";
+import { SECTIONS_STORE } from "@/stores/sections-store-injection-key";
 
 const section = ArtifactSectionFactory.create();
 const merge_artifacts = vi.fn();
@@ -49,8 +49,8 @@ describe("useSectionEditor", () => {
         mockStrictInject([
             [CAN_USER_EDIT_DOCUMENT, true],
             [DOCUMENT_ID, 1],
+            [SECTIONS_STORE, store_stub],
         ]);
-        vi.spyOn(sectionsStore, "useInjectSectionsStore").mockReturnValue(store_stub);
     });
     describe("editor_state", () => {
         it("should return editor states", () => {

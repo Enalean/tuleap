@@ -21,9 +21,10 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import { shallowMount } from "@vue/test-utils";
 import SectionDescription from "@/components/SectionDescription.vue";
 import SectionDescriptionSkeleton from "@/components/SectionDescriptionSkeleton.vue";
-import * as sectionsStore from "@/stores/useSectionsStore";
 import { InjectedSectionsStoreStub } from "@/helpers/stubs/InjectSectionsStoreStub";
 import SectionDescriptionReadOnly from "@/components/description/SectionDescriptionReadOnly.vue";
+import { mockStrictInject } from "@/helpers/mock-strict-inject";
+import { SECTIONS_STORE } from "@/stores/sections-store-injection-key";
 
 const default_props = {
     editable_description: "Lorem ipsum",
@@ -38,9 +39,7 @@ const default_props = {
 describe("SectionDescription", () => {
     describe("while the sections are loading", () => {
         beforeEach(() => {
-            vi.spyOn(sectionsStore, "useInjectSectionsStore").mockReturnValue(
-                InjectedSectionsStoreStub.withLoadingSections(),
-            );
+            mockStrictInject([[SECTIONS_STORE, InjectedSectionsStoreStub.withLoadingSections()]]);
         });
         it("should display the skeleton", () => {
             const wrapper = shallowMount(SectionDescription, {
@@ -55,9 +54,7 @@ describe("SectionDescription", () => {
 
     describe("when the sections are loaded", () => {
         beforeEach(() => {
-            vi.spyOn(sectionsStore, "useInjectSectionsStore").mockReturnValue(
-                InjectedSectionsStoreStub.withLoadedSections([]),
-            );
+            mockStrictInject([[SECTIONS_STORE, InjectedSectionsStoreStub.withLoadedSections([])]]);
         });
         describe("when the editor mode is disabled", () => {
             it("should display the description", () => {

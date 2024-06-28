@@ -46,13 +46,14 @@
 <script setup lang="ts">
 import type { ArtidocSection } from "@/helpers/artidoc-section.type";
 import { isArtifactSection } from "@/helpers/artidoc-section.type";
-import { useInjectSectionsStore, AT_THE_END } from "@/stores/useSectionsStore";
+import { AT_THE_END } from "@/stores/useSectionsStore";
 import AddNewSectionButton from "@/components/AddNewSectionButton.vue";
 import SectionContainer from "@/components/SectionContainer.vue";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import { CAN_USER_EDIT_DOCUMENT } from "@/can-user-edit-document-injection-key";
+import { SECTIONS_STORE } from "@/stores/sections-store-injection-key";
 
-const { sections, insertSection } = useInjectSectionsStore();
+const { sections, insertSection } = strictInject(SECTIONS_STORE);
 
 const can_user_edit_document = strictInject(CAN_USER_EDIT_DOCUMENT);
 

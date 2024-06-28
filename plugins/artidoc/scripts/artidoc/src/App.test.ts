@@ -21,26 +21,23 @@ import { describe, expect, it, vi } from "vitest";
 import { shallowMount } from "@vue/test-utils";
 import App from "@/App.vue";
 import DocumentView from "@/views/DocumentView.vue";
-import * as sectionsStore from "@/stores/useSectionsStore";
 import { InjectedSectionsStoreStub } from "@/helpers/stubs/InjectSectionsStoreStub";
 import { mockStrictInject } from "@/helpers/mock-strict-inject";
 import { CONFIGURATION_STORE } from "@/stores/configuration-store";
 import { ConfigurationStoreStub } from "@/helpers/stubs/ConfigurationStoreStub";
 import { CAN_USER_EDIT_DOCUMENT } from "@/can-user-edit-document-injection-key";
 import { DOCUMENT_ID } from "@/document-id-injection-key";
+import { SECTIONS_STORE } from "@/stores/sections-store-injection-key";
 
 describe("App", () => {
     it("should display the document view", () => {
         const loadSections = vi.fn();
 
-        vi.spyOn(sectionsStore, "useInjectSectionsStore").mockReturnValue(
-            InjectedSectionsStoreStub.withMockedLoadSections(loadSections),
-        );
-
         mockStrictInject([
             [CONFIGURATION_STORE, ConfigurationStoreStub.withoutAllowedTrackers()],
             [CAN_USER_EDIT_DOCUMENT, true],
             [DOCUMENT_ID, 1],
+            [SECTIONS_STORE, InjectedSectionsStoreStub.withMockedLoadSections(loadSections)],
         ]);
 
         const wrapper = shallowMount(App);

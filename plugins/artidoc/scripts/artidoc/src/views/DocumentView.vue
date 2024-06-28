@@ -30,7 +30,6 @@
 
 <script setup lang="ts">
 import EmptyState from "@/views/EmptyState.vue";
-import { useInjectSectionsStore } from "@/stores/useSectionsStore";
 import NoAccessState from "@/views/NoAccessState.vue";
 import DocumentLayout from "@/components/DocumentLayout.vue";
 import ConfigurationPanel from "@/components/configuration/ConfigurationPanel.vue";
@@ -38,8 +37,9 @@ import { strictInject } from "@tuleap/vue-strict-inject";
 import { CAN_USER_EDIT_DOCUMENT } from "@/can-user-edit-document-injection-key";
 import { CONFIGURATION_STORE } from "@/stores/configuration-store";
 import { computed } from "vue";
+import { SECTIONS_STORE } from "@/stores/sections-store-injection-key";
 
-const { sections, is_sections_loading } = useInjectSectionsStore();
+const { sections, is_sections_loading } = strictInject(SECTIONS_STORE);
 
 const can_user_edit_document = strictInject(CAN_USER_EDIT_DOCUMENT);
 
