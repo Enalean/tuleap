@@ -7,30 +7,19 @@ let
   tuleapSmokescreenBin = pkgs.buildGoModule {
     name = "tuleap-smokescreen-bin";
 
-    src = pkgs.fetchFromGitHub {
-      owner = "stripe";
-      repo = "smokescreen";
-      rev = "8c0fa26edf63f35d5632ba7682d78ff07a306819";
-      hash = "sha256-+v0Yr+KtKEYgSwyxDOqWjCKxTsC8B2nKFQL1qLBjCaE=";
-    };
+    src = ./tuleap-smokescreen;
 
-    vendorHash = null;
-
-    subPackages = [ "." ];
+    vendorHash = "sha256-4ynwcDdagyoQ7VuqVlQXB+f9rLp5DIjIGWt/c89lUyM=";
 
     CGO_ENABLED=0;
 
     ldflags = [ "-s" "-w" ];
-
-    # Do not attempt to run the tests: the most interesting ones require network access (which we do not have in Nix sandbox)
-    # and it does not play well with a TMPDIR mounted on a tmpfs directory
-    doCheck = false;
   };
   tuleapVersion = builtins.readFile ../../VERSION;
 in pkgs.stdenvNoCC.mkDerivation {
   name = "tuleap-smokescreen-rpm-package";
   srcs = [
-    "${tuleapSmokescreenBin}/bin/smokescreen"
+    "${tuleapSmokescreenBin}/bin/tuleap-smokescreen"
     ./tuleap-smokescreen/tuleap-smokescreen.service
   ];
 
