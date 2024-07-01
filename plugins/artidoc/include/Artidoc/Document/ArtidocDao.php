@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Artidoc\Document;
 
 use ParagonIE\EasyDB\EasyDB;
+use Tuleap\Artidoc\Document\Section\AlreadyExistingSectionWithSameArtifactException;
 use Tuleap\Artidoc\Document\Section\Identifier\SectionIdentifier;
 use Tuleap\Artidoc\Document\Section\Identifier\SectionIdentifierFactory;
 use Tuleap\DB\DataAccessObject;
@@ -230,8 +231,25 @@ final class ArtidocDao extends DataAccessObject implements SearchArtidocDocument
         });
     }
 
+    /**
+     * @throws AlreadyExistingSectionWithSameArtifactException
+     */
     private function insertSection(EasyDB $db, int $item_id, int $artifact_id, int $rank): SectionIdentifier
     {
+        if (
+            $db->cell(
+                <<<EOL
+                SELECT id
+                FROM plugin_artidoc_document
+                WHERE item_id = ? AND artifact_id = ?
+                EOL,
+                $item_id,
+                $artifact_id,
+            )
+        ) {
+            throw new AlreadyExistingSectionWithSameArtifactException();
+        }
+
         $id = $this->identifier_factory->buildIdentifier();
         $db->insert(
             'plugin_artidoc_document',
@@ -240,7 +258,7 @@ final class ArtidocDao extends DataAccessObject implements SearchArtidocDocument
                 'item_id'     => $item_id,
                 'artifact_id' => $artifact_id,
                 'rank'        => $rank,
-            ]
+            ],
         );
 
         return $id;

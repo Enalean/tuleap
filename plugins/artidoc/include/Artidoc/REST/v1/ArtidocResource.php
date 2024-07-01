@@ -271,7 +271,11 @@ final class ArtidocResource extends AuthenticatedResource
                             403,
                             dgettext('tuleap-artidoc', "You don't have permission to write the document.")
                         ),
-                        default => new RestException(404),
+                        $fault instanceof AlreadyExistingSectionWithSameArtifactFault => new I18NRestException(
+                            400,
+                            dgettext('tuleap-artidoc', 'There is already an existing section with the same artifact in the document.')
+                        ),
+                        default => new RestException(404, (string) $fault),
                     };
                 }
             );

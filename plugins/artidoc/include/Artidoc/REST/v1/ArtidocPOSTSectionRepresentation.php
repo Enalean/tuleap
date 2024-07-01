@@ -34,8 +34,10 @@ final class ArtidocPOSTSectionRepresentation
      */
     public mixed $position;
 
-    public function __construct(ArtidocPUTAndPOSTSectionArtifactRepresentation $artifact, ?ArtidocPOSTSectionPositionBeforeRepresentation $position)
-    {
+    public function __construct(
+        ArtidocPUTAndPOSTSectionArtifactRepresentation $artifact,
+        ?ArtidocPOSTSectionPositionBeforeRepresentation $position,
+    ) {
         $this->artifact = $artifact;
         $this->position = $position;
     }

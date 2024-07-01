@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Artidoc\REST\v1;
 
 use Tuleap\Artidoc\Document\ArtidocDocumentInformation;
+use Tuleap\Artidoc\Document\Section\AlreadyExistingSectionWithSameArtifactException;
 use Tuleap\Artidoc\Document\Section\Identifier\InvalidSectionIdentifierStringException;
 use Tuleap\Artidoc\Document\PaginatedRawSections;
 use Tuleap\Artidoc\Document\RawSection;
@@ -112,12 +113,15 @@ final readonly class POSTSectionHandler
         ArtidocSectionRepresentation $section_representation,
         ArtidocPOSTSectionRepresentation $section,
     ): Ok|Err {
+        \BackendLogger::getDefaultLogger()->info(var_export($section, true));
         try {
             $section_id = $section->position
                 ? $this->dao->saveSectionBefore($id, $section->artifact->id, $this->identifier_factory->buildFromHexadecimalString($section->position->before))
                 : $this->dao->saveSectionAtTheEnd($id, $section->artifact->id);
         } catch (InvalidSectionIdentifierStringException) {
             return Result::err(Fault::fromMessage('Sibling section id is invalid'));
+        } catch (AlreadyExistingSectionWithSameArtifactException $exception) {
+            return Result::err(AlreadyExistingSectionWithSameArtifactFault::fromThrowable($exception));
         }
 
         return Result::ok(ArtidocSectionRepresentation::fromRepresentationWithId($section_representation, $section_id));

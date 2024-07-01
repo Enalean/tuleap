@@ -157,6 +157,64 @@ final class POSTSectionHandlerTest extends TestCase
         self::assertSame(self::NEW_SECTION_ID, $result->value->id);
     }
 
+    private function provideArtidocPOSTSectionRepresentation(): array
+    {
+        return [
+            [
+                new ArtidocPOSTSectionRepresentation(
+                    new ArtidocPUTAndPOSTSectionArtifactRepresentation(101),
+                    null,
+                ),
+            ],
+            [
+                new ArtidocPOSTSectionRepresentation(
+                    new ArtidocPUTAndPOSTSectionArtifactRepresentation(101),
+                    new ArtidocPOSTSectionPositionBeforeRepresentation(self::ANOTHER_SECTION_ID),
+                ),
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider provideArtidocPOSTSectionRepresentation
+     */
+    public function testFaultWhenArtifactIsAlreadyReferencedInTheDocumentByAnotherSection(
+        ArtidocPOSTSectionRepresentation $section,
+    ): void {
+        $saver = SaveOneSectionStub::withAlreadyExistingSectionWithSameArtifact(self::NEW_SECTION_ID);
+
+        $this->permissions_manager->method('userCanWrite')->willReturn(true);
+
+        $section_representation = new ArtidocSectionRepresentation(
+            self::DUMMY_SECTION_ID,
+            $this->createMock(ArtifactReference::class),
+            $this->createMock(ArtifactFieldValueFullRepresentation::class),
+            $this->createMock(ArtifactTextFieldValueRepresentation::class),
+            true,
+            null,
+        );
+
+        $handler = new POSTSectionHandler(
+            RetrieveArtidocStub::withDocument(
+                new ArtidocDocumentInformation(
+                    new ArtidocDocument(['item_id' => 1, 'group_id' => self::PROJECT_ID]),
+                    $this->createMock(ServiceDocman::class),
+                ),
+            ),
+            TransformRawSectionsToRepresentationStub::withCollection(
+                new PaginatedArtidocSectionRepresentationCollection([$section_representation], 1),
+            ),
+            $saver,
+            $this->identifier_factory,
+        );
+
+        $result = $handler->handle(1, $section, $this->user);
+
+        self::assertTrue(Result::isErr($result));
+        self::assertInstanceOf(AlreadyExistingSectionWithSameArtifactFault::class, $result->error);
+        self::assertFalse($saver->isSaved(1));
+    }
+
     public function testFaultWhenDocumentCannotBeRetrieved(): void
     {
         $saver = SaveOneSectionStub::withGeneratedSectionId($this->identifier_factory, self::NEW_SECTION_ID);

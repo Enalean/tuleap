@@ -18,20 +18,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Artidoc\Document;
+declare(strict_types=1);
 
-use Tuleap\Artidoc\Document\Section\AlreadyExistingSectionWithSameArtifactException;
-use Tuleap\Artidoc\Document\Section\Identifier\SectionIdentifier;
+namespace Tuleap\Artidoc\Document\Section;
 
-interface SaveOneSection
+final class AlreadyExistingSectionWithSameArtifactException extends \Exception
 {
-    /**
-     * @throws AlreadyExistingSectionWithSameArtifactException
-     */
-    public function saveSectionAtTheEnd(int $item_id, int $artifact_id): SectionIdentifier;
-
-    /**
-     * @throws AlreadyExistingSectionWithSameArtifactException
-     */
-    public function saveSectionBefore(int $item_id, int $artifact_id, SectionIdentifier $sibling_section_id): SectionIdentifier;
 }
