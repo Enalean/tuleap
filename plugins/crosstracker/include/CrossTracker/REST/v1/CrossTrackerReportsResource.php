@@ -70,6 +70,7 @@ use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Field\Numeric\Numeri
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Field\StaticList\StaticListResultBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Field\Text\TextResultBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Field\UGroupList\UGroupListResultBuilder;
+use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Field\UserList\UserListResultBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilderVisitor;
 use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Field\Date\DateSelectFromBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Field\FieldSelectFromBuilder;
@@ -127,6 +128,7 @@ use Tuleap\Tracker\Report\TrackerReportExtractor;
 use Tuleap\Tracker\REST\v1\ArtifactMatchingReportCollection;
 use UGroupManager;
 use URLVerification;
+use UserHelper;
 use UserManager;
 
 final class CrossTrackerReportsResource extends AuthenticatedResource
@@ -269,6 +271,7 @@ final class CrossTrackerReportsResource extends AuthenticatedResource
                     new NumericResultBuilder(),
                     new StaticListResultBuilder(),
                     new UGroupListResultBuilder($tracker_artifact_factory, new UGroupManager()),
+                    new UserListResultBuilder($this->user_manager, $this->user_manager, $this->user_manager, UserHelper::instance()),
                 ),
             );
 

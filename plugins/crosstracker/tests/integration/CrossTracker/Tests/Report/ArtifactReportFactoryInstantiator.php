@@ -58,6 +58,7 @@ use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Field\Numeric\Numeri
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Field\StaticList\StaticListResultBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Field\Text\TextResultBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Field\UGroupList\UGroupListResultBuilder;
+use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Field\UserList\UserListResultBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilderVisitor;
 use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Field\Date\DateSelectFromBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Field\FieldSelectFromBuilder;
@@ -96,6 +97,7 @@ use Tuleap\Tracker\Report\Query\Advanced\UgroupLabelConverter;
 use Tuleap\Tracker\Report\TrackerReportConfig;
 use Tuleap\Tracker\Report\TrackerReportConfigDao;
 use UGroupManager;
+use UserHelper;
 use UserManager;
 
 final class ArtifactReportFactoryInstantiator
@@ -256,6 +258,7 @@ final class ArtifactReportFactoryInstantiator
                 new NumericResultBuilder(),
                 new StaticListResultBuilder(),
                 new UGroupListResultBuilder($artifact_factory, new UGroupManager()),
+                new UserListResultBuilder($user_manager, $user_manager, $user_manager, UserHelper::instance()),
             ),
         );
 

@@ -147,6 +147,9 @@ msgstr ""
 "titre définie. Merci de modifier votre requête ou de vérifier la "
 "configuration des outils de suivi."
 
+msgid "Anonymous user"
+msgstr "Utilisateur anonyme"
+
 msgid "Cross trackers search"
 msgstr "Recherche multi trackers"
 

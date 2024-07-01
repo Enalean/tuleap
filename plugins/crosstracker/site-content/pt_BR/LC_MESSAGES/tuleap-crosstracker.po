@@ -110,6 +110,9 @@ msgid ""
 "Please refine your query or check the configuration of the trackers."
 msgstr ""
 
+msgid "Anonymous user"
+msgstr ""
+
 msgid "Cross trackers search"
 msgstr ""
 
