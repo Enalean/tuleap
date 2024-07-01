@@ -61,7 +61,7 @@
                     required
                     v-model="repository_name"
                     v-bind:placeholder="$gettext('Repository name')"
-                    pattern="[a-zA-Z0-9/_.-]{1,255}"
+                    pattern="[a-zA-Z0-9\/_.\-]{1,255}"
                     maxlength="255"
                     v-bind:title="$gettext('Allowed characters: a-zA-Z0-9/_.-')"
                     data-test="create_repository_name"
