@@ -20,102 +20,100 @@
 
 declare(strict_types=1);
 
+namespace Tuleap\Cardwall;
+
+use Cardwall_Column;
+use Cardwall_FieldProviders_IProvideFieldGivenAnArtifact;
+use Cardwall_OnTop_Config;
+use Cardwall_OnTop_Config_ColumnCollection;
+use Cardwall_OnTop_Config_ColumnFactory;
+use Cardwall_OnTop_Config_TrackerMappingFactory;
+use Cardwall_OnTop_Dao;
+use PHPUnit\Framework\MockObject\MockObject;
+use Tracker_Artifact_Changeset_Null;
+use Tracker_FormElement_Field_MultiSelectbox;
+use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
-final class Cardwall_Column_isInColumnTest extends \Tuleap\Test\PHPUnit\TestCase
+final class Cardwall_Column_isInColumnTest extends TestCase // phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Artifact
-     */
-    private $artifact;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Tracker_FormElement_Field_MultiSelectbox
-     */
-    private $field;
-    /**
-     * @var Cardwall_FieldProviders_IProvideFieldGivenAnArtifact|\Mockery\LegacyMockInterface|\Mockery\MockInterface
-     */
-    private $field_provider;
-    /**
-     * @var Cardwall_OnTop_Config
-     */
-    private $config;
+    private Artifact $artifact;
+    private Tracker_FormElement_Field_MultiSelectbox&MockObject $field;
+    private Cardwall_FieldProviders_IProvideFieldGivenAnArtifact&MockObject $field_provider;
+    private Cardwall_OnTop_Config $config;
 
     protected function setUp(): void
     {
-        parent::setUp();
-        $tracker = Mockery::mock(Tracker::class);
-        $tracker->shouldReceive('getId')->andReturn(33);
-        $this->artifact = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
-        $changset       = new Tracker_Artifact_Changeset_Null();
-        $this->artifact->shouldReceive('getTracker')->andReturns($tracker);
-        $this->artifact->shouldReceive('getLastChangeset')->andReturns($changset);
+        $tracker        = TrackerTestBuilder::aTracker()->withId(33)->build();
+        $this->artifact = ArtifactTestBuilder::anArtifact(452)
+            ->inTracker($tracker)
+            ->withChangesets(new Tracker_Artifact_Changeset_Null())
+            ->build();
 
-        $this->field          = \Mockery::spy(\Tracker_FormElement_Field_MultiSelectbox::class);
-        $this->field_provider = Mockery::mock(\Cardwall_FieldProviders_IProvideFieldGivenAnArtifact::class);
-        $this->field_provider->shouldReceive('getField')->with($tracker)->andReturn($this->field);
-        $dao                     = \Mockery::spy(\Cardwall_OnTop_Dao::class);
-        $column_factory          = \Mockery::spy(\Cardwall_OnTop_Config_ColumnFactory::class);
-        $tracker_mapping_factory = \Mockery::spy(\Cardwall_OnTop_Config_TrackerMappingFactory::class);
+        $this->field          = $this->createMock(Tracker_FormElement_Field_MultiSelectbox::class);
+        $this->field_provider = $this->createMock(Cardwall_FieldProviders_IProvideFieldGivenAnArtifact::class);
+        $this->field_provider->method('getField')->with($tracker)->willReturn($this->field);
+        $dao                     = $this->createMock(Cardwall_OnTop_Dao::class);
+        $column_factory          = $this->createMock(Cardwall_OnTop_Config_ColumnFactory::class);
+        $tracker_mapping_factory = $this->createMock(Cardwall_OnTop_Config_TrackerMappingFactory::class);
 
-        $column_factory->shouldReceive('getDashboardColumns')->with($tracker)->andReturn(new Cardwall_OnTop_Config_ColumnCollection());
+        $column_factory->method('getDashboardColumns')->with($tracker)->willReturn(new Cardwall_OnTop_Config_ColumnCollection());
+        $tracker_mapping_factory->method('getMappings');
 
         $this->config = new Cardwall_OnTop_Config($tracker, $dao, $column_factory, $tracker_mapping_factory);
     }
 
     public function testItIsInTheCellIfTheLabelMatches(): void
     {
-        $this->field->shouldReceive('getFirstValueFor')->with($this->artifact->getLastChangeset())->andReturns('ongoing');
-        $column = $this->newCardwall_Column(0, 'ongoing');
+        $this->field->method('getFirstValueFor')->with($this->artifact->getLastChangeset())->willReturn('ongoing');
+        $column = $this->newCardwallColumn(0, 'ongoing');
         $this->assertIn($column);
     }
 
     public function testItIsNotInTheCellIfTheLabelDoesntMatch(): void
     {
-        $this->field->shouldReceive('getFirstValueFor')->with($this->artifact->getLastChangeset())->andReturns('ongoing');
-        $column = $this->newCardwall_Column(0, 'done');
+        $this->field->method('getFirstValueFor')->with($this->artifact->getLastChangeset())->willReturn('ongoing');
+        $column = $this->newCardwallColumn(0, 'done');
         $this->assertNotIn($column);
     }
 
     public function testItIsInTheCellIfItHasNoStatusAndTheColumnHasId100(): void
     {
         $null_status = null;
-        $this->field->shouldReceive('getFirstValueFor')->with($this->artifact->getLastChangeset())->andReturns($null_status);
-        $column = $this->newCardwall_Column(100, 'done');
+        $this->field->method('getFirstValueFor')->with($this->artifact->getLastChangeset())->willReturn($null_status);
+        $column = $this->newCardwallColumn(100, 'done');
         $this->assertIn($column);
     }
 
     public function testItIsNotInTheCellIfItHasNoStatus(): void
     {
         $null_status = null;
-        $this->field->shouldReceive('getFirstValueFor')->with($this->artifact->getLastChangeset())->andReturns($null_status);
-        $column = $this->newCardwall_Column(123, 'done');
+        $this->field->method('getFirstValueFor')->with($this->artifact->getLastChangeset())->willReturn($null_status);
+        $column = $this->newCardwallColumn(123, 'done');
         $this->assertNotIn($column);
     }
 
     public function testItIsNotInTheCellIfHasANonMatchingLabelTheColumnIdIs100(): void
     {
-        $this->field->shouldReceive('getFirstValueFor')->with($this->artifact->getLastChangeset())->andReturns('ongoing');
-        $column = $this->newCardwall_Column(100, 'done');
+        $this->field->method('getFirstValueFor')->with($this->artifact->getLastChangeset())->willReturn('ongoing');
+        $column = $this->newCardwallColumn(100, 'done');
         $this->assertNotIn($column);
     }
 
-    private function assertIn($column)
+    private function assertIn($column): void
     {
-         $this->assertTrue($this->config->isInColumn($this->artifact, $this->field_provider, $column));
+        self::assertTrue($this->config->isInColumn($this->artifact, $this->field_provider, $column));
     }
 
-    private function assertNotIn($column)
+    private function assertNotIn($column): void
     {
-         $this->assertFalse($this->config->isInColumn($this->artifact, $this->field_provider, $column));
+        self::assertFalse($this->config->isInColumn($this->artifact, $this->field_provider, $column));
     }
 
-    public function newCardwall_Column($id, $label) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    private function newCardwallColumn($id, $label): Cardwall_Column
     {
-        $header_color = 0;
-        return new Cardwall_Column($id, $label, $header_color);
+        return new Cardwall_Column($id, $label, 0);
     }
 }

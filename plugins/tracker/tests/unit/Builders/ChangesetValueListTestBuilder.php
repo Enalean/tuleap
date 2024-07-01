@@ -57,12 +57,16 @@ final class ChangesetValueListTestBuilder
 
     public function build(): Tracker_Artifact_ChangesetValue_List
     {
-        return new Tracker_Artifact_ChangesetValue_List(
+        $value = new Tracker_Artifact_ChangesetValue_List(
             $this->id,
             $this->changeset,
             $this->field,
             true,
             $this->values,
         );
+
+        $this->changeset->setFieldValue($this->field, $value);
+
+        return $value;
     }
 }
