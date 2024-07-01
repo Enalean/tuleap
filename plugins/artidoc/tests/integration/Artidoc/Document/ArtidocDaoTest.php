@@ -107,31 +107,13 @@ final class ArtidocDaoTest extends TestIntegrationTestCase
         $dao->save(102, [2001, 1001]);
         $dao->saveTracker(102, 10001);
 
-        self::assertSame(0, $dao->searchPaginatedRawSectionsByItemId(103, 50, 0)->total);
-        self::assertSame(
-            [],
-            array_column($dao->searchPaginatedRawSectionsByItemId(103, 50, 0)->rows, 'artifact_id'),
-        );
+        $this->assertSectionsMatchArtifactIdsForDocument($dao, 103, []);
 
         $dao->cloneItem(102, 103);
 
-        self::assertSame(1, $dao->searchPaginatedRawSectionsByItemId(101, 50, 0)->total);
-        self::assertSame(
-            [1001],
-            array_column($dao->searchPaginatedRawSectionsByItemId(101, 50, 0)->rows, 'artifact_id'),
-        );
-
-        self::assertSame(2, $dao->searchPaginatedRawSectionsByItemId(102, 50, 0)->total);
-        self::assertSame(
-            [2001, 1001],
-            array_column($dao->searchPaginatedRawSectionsByItemId(102, 50, 0)->rows, 'artifact_id'),
-        );
-
-        self::assertSame(2, $dao->searchPaginatedRawSectionsByItemId(103, 50, 0)->total);
-        self::assertSame(
-            [2001, 1001],
-            array_column($dao->searchPaginatedRawSectionsByItemId(103, 50, 0)->rows, 'artifact_id'),
-        );
+        $this->assertSectionsMatchArtifactIdsForDocument($dao, 101, [1001]);
+        $this->assertSectionsMatchArtifactIdsForDocument($dao, 102, [2001, 1001]);
+        $this->assertSectionsMatchArtifactIdsForDocument($dao, 103, [2001, 1001]);
 
         self::assertSame(10001, $dao->getTracker(103));
     }
@@ -142,37 +124,17 @@ final class ArtidocDaoTest extends TestIntegrationTestCase
         $dao                = new ArtidocDao($identifier_factory);
         $dao->save(101, [1001, 1002, 1003]);
 
-        self::assertSame(3, $dao->searchPaginatedRawSectionsByItemId(101, 50, 0)->total);
-        self::assertSame(
-            [1001, 1002, 1003],
-            array_column($dao->searchPaginatedRawSectionsByItemId(101, 50, 0)->rows, 'artifact_id'),
-        );
+        $this->assertSectionsMatchArtifactIdsForDocument($dao, 101, [1001, 1002, 1003]);
 
         $dao->save(102, [1001, 1003]);
 
-        self::assertSame(3, $dao->searchPaginatedRawSectionsByItemId(101, 50, 0)->total);
-        self::assertSame(
-            [1001, 1002, 1003],
-            array_column($dao->searchPaginatedRawSectionsByItemId(101, 50, 0)->rows, 'artifact_id'),
-        );
-        self::assertSame(2, $dao->searchPaginatedRawSectionsByItemId(102, 50, 0)->total);
-        self::assertSame(
-            [1001, 1003],
-            array_column($dao->searchPaginatedRawSectionsByItemId(102, 50, 0)->rows, 'artifact_id'),
-        );
+        $this->assertSectionsMatchArtifactIdsForDocument($dao, 101, [1001, 1002, 1003]);
+        $this->assertSectionsMatchArtifactIdsForDocument($dao, 102, [1001, 1003]);
 
         $dao->save(101, []);
 
-        self::assertSame(0, $dao->searchPaginatedRawSectionsByItemId(101, 50, 0)->total);
-        self::assertSame(
-            [],
-            array_column($dao->searchPaginatedRawSectionsByItemId(101, 50, 0)->rows, 'artifact_id'),
-        );
-        self::assertSame(2, $dao->searchPaginatedRawSectionsByItemId(102, 50, 0)->total);
-        self::assertSame(
-            [1001, 1003],
-            array_column($dao->searchPaginatedRawSectionsByItemId(102, 50, 0)->rows, 'artifact_id'),
-        );
+        $this->assertSectionsMatchArtifactIdsForDocument($dao, 101, []);
+        $this->assertSectionsMatchArtifactIdsForDocument($dao, 102, [1001, 1003]);
     }
 
     public function testSearchSectionById(): void
@@ -223,17 +185,8 @@ final class ArtidocDaoTest extends TestIntegrationTestCase
         $dao->saveSectionAtTheEnd($item_2, 1003);
         $dao->saveSectionAtTheEnd($item_1, 1004);
 
-        self::assertSame(3, $dao->searchPaginatedRawSectionsByItemId($item_1, 50, 0)->total);
-        self::assertSame(
-            [1001, 1002, 1004],
-            array_column($dao->searchPaginatedRawSectionsByItemId($item_1, 50, 0)->rows, 'artifact_id'),
-        );
-
-        self::assertSame(1, $dao->searchPaginatedRawSectionsByItemId($item_2, 50, 0)->total);
-        self::assertSame(
-            [1003],
-            array_column($dao->searchPaginatedRawSectionsByItemId($item_2, 50, 0)->rows, 'artifact_id'),
-        );
+        $this->assertSectionsMatchArtifactIdsForDocument($dao, $item_1, [1001, 1002, 1004]);
+        $this->assertSectionsMatchArtifactIdsForDocument($dao, $item_2, [1003]);
     }
 
     public function testSaveTrackerBefore(): void
@@ -254,11 +207,7 @@ final class ArtidocDaoTest extends TestIntegrationTestCase
         $dao->saveSectionBefore($item_1, 1005, $uuid_2);
         $dao->saveSectionBefore($item_1, 1006, $uuid_3);
 
-        self::assertSame(6, $dao->searchPaginatedRawSectionsByItemId($item_1, 50, 0)->total);
-        self::assertSame(
-            [1004, 1001, 1005, 1002, 1006, 1003],
-            array_column($dao->searchPaginatedRawSectionsByItemId($item_1, 50, 0)->rows, 'artifact_id'),
-        );
+        $this->assertSectionsMatchArtifactIdsForDocument($dao, $item_1, [1004, 1001, 1005, 1002, 1006, 1003]);
     }
 
     public function testSaveTrackerBeforeUnknownSectionWillPutItAtTheBeginningUntilWeFindABetterSolution(): void
@@ -279,10 +228,36 @@ final class ArtidocDaoTest extends TestIntegrationTestCase
 
         $dao->saveSectionBefore($item_1, 1004, $uuid_2);
 
-        self::assertSame(3, $dao->searchPaginatedRawSectionsByItemId($item_1, 50, 0)->total);
-        self::assertSame(
-            [1004, 1001, 1003],
-            array_column($dao->searchPaginatedRawSectionsByItemId($item_1, 50, 0)->rows, 'artifact_id'),
-        );
+        $this->assertSectionsMatchArtifactIdsForDocument($dao, $item_1, [1004, 1001, 1003]);
+    }
+
+    public function testDeleteSectionsByArtifactId(): void
+    {
+        $identifier_factory = new SectionIdentifierFactory(new \Tuleap\DB\DatabaseUUIDV7Factory());
+        $dao                = new ArtidocDao($identifier_factory);
+        $dao->save(101, [1001, 1002, 1003]);
+        $dao->save(102, [1002, 1003, 1004]);
+        $dao->save(103, [1003]);
+
+        $dao->deleteSectionsByArtifactId(1003);
+        $dao->deleteSectionsByArtifactId(1005);
+
+        $this->assertSectionsMatchArtifactIdsForDocument($dao, 101, [1001, 1002]);
+        $this->assertSectionsMatchArtifactIdsForDocument($dao, 102, [1002, 1004]);
+        $this->assertSectionsMatchArtifactIdsForDocument($dao, 103, []);
+    }
+
+    /**
+     * @param list<int> $artifact_ids
+     */
+    private function assertSectionsMatchArtifactIdsForDocument(
+        ArtidocDao $dao,
+        int $document_id,
+        array $artifact_ids,
+    ): void {
+        $paginated_raw_sections = $dao->searchPaginatedRawSectionsByItemId($document_id, 50, 0);
+
+        self::assertSame(count($artifact_ids), $paginated_raw_sections->total);
+        self::assertSame($artifact_ids, array_column($paginated_raw_sections->rows, 'artifact_id'));
     }
 }

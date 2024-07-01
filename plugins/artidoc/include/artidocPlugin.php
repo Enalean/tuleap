@@ -51,6 +51,7 @@ use Tuleap\Plugin\ListeningToEventClass;
 use Tuleap\Plugin\ListeningToEventName;
 use Tuleap\Request\CollectRoutesEvent;
 use Tuleap\Request\DispatchableWithRequest;
+use Tuleap\Tracker\Artifact\Event\ArtifactDeleted;
 use Tuleap\Tracker\Artifact\FileUploadDataProvider;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldDetector;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsDao;
@@ -107,7 +108,7 @@ class ArtidocPlugin extends Plugin implements PluginWithConfigKeys
     {
         $tracker_factory     = TrackerFactory::instance();
         $docman_item_factory = new Docman_ItemFactory();
-        $dao                 = new ArtidocDao(new SectionIdentifierFactory(new DatabaseUUIDV7Factory()));
+        $dao                 = $this->getArtidocDao();
         $logger              = BackendLogger::getDefaultLogger();
 
         $form_element_factory = Tracker_FormElementFactory::instance();
@@ -208,7 +209,7 @@ class ArtidocPlugin extends Plugin implements PluginWithConfigKeys
     public function cloneOtherItemPostAction(CloneOtherItemPostAction $event): void
     {
         if ($event->source instanceof ArtidocDocument && $event->target instanceof ArtidocDocument) {
-            (new ArtidocDao(new SectionIdentifierFactory(new DatabaseUUIDV7Factory())))->cloneItem((int) $event->source->getId(), (int) $event->target->getId());
+            $this->getArtidocDao()->cloneItem((int) $event->source->getId(), (int) $event->target->getId());
         }
     }
 
@@ -257,5 +258,17 @@ class ArtidocPlugin extends Plugin implements PluginWithConfigKeys
     public function getConfigKeys(ConfigClassProvider $event): void
     {
         $event->addConfigClass(ArtidocController::class);
+    }
+
+    #[\Tuleap\Plugin\ListeningToEventClass]
+    public function trackerArtifactDeleted(ArtifactDeleted $artifact_deleted): void
+    {
+        $this->getArtidocDao()
+            ->deleteSectionsByArtifactId($artifact_deleted->getArtifact()->getId());
+    }
+
+    private function getArtidocDao(): ArtidocDao
+    {
+        return (new ArtidocDao(new SectionIdentifierFactory(new DatabaseUUIDV7Factory())));
     }
 }
