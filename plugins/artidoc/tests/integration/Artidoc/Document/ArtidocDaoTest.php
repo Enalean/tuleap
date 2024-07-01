@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Artidoc\Document;
 
+use Tuleap\Artidoc\Document\Section\AlreadyExistingSectionWithSameArtifactException;
 use Tuleap\Artidoc\Document\Section\Identifier\SectionIdentifierFactory;
 use Tuleap\DB\DBFactory;
 use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
@@ -189,7 +190,23 @@ final class ArtidocDaoTest extends TestIntegrationTestCase
         $this->assertSectionsMatchArtifactIdsForDocument($dao, $item_2, [1003]);
     }
 
-    public function testSaveTrackerBefore(): void
+    public function testSaveAlreadyExistingSectionAtTheEnd(): void
+    {
+        $identifier_factory = new SectionIdentifierFactory(new \Tuleap\DB\DatabaseUUIDV7Factory());
+        $dao                = new ArtidocDao($identifier_factory);
+
+        $item_1 = 101;
+        $item_2 = 102;
+
+        $dao->saveSectionAtTheEnd($item_1, 1001);
+        $dao->saveSectionAtTheEnd($item_1, 1002);
+        $dao->saveSectionAtTheEnd($item_2, 1003);
+
+        $this->expectException(AlreadyExistingSectionWithSameArtifactException::class);
+        $dao->saveSectionAtTheEnd($item_1, 1001);
+    }
+
+    public function testSaveSectionBefore(): void
     {
         $identifier_factory = new SectionIdentifierFactory(new \Tuleap\DB\DatabaseUUIDV7Factory());
         $dao                = new ArtidocDao($identifier_factory);
@@ -210,7 +227,25 @@ final class ArtidocDaoTest extends TestIntegrationTestCase
         $this->assertSectionsMatchArtifactIdsForDocument($dao, $item_1, [1004, 1001, 1005, 1002, 1006, 1003]);
     }
 
-    public function testSaveTrackerBeforeUnknownSectionWillPutItAtTheBeginningUntilWeFindABetterSolution(): void
+    public function testSaveAlreadyExistingSectionBefore(): void
+    {
+        $identifier_factory = new SectionIdentifierFactory(new \Tuleap\DB\DatabaseUUIDV7Factory());
+        $dao                = new ArtidocDao($identifier_factory);
+
+        $item_1 = 101;
+
+
+        [$uuid_1, $uuid_2, $uuid_3] = [
+            $dao->saveSectionAtTheEnd($item_1, 1001),
+            $dao->saveSectionAtTheEnd($item_1, 1002),
+            $dao->saveSectionAtTheEnd($item_1, 1003),
+        ];
+
+        $this->expectException(AlreadyExistingSectionWithSameArtifactException::class);
+        $dao->saveSectionBefore($item_1, 1003, $uuid_1);
+    }
+
+    public function testSaveSectionBeforeUnknownSectionWillPutItAtTheBeginningUntilWeFindABetterSolution(): void
     {
         $identifier_factory = new SectionIdentifierFactory(new \Tuleap\DB\DatabaseUUIDV7Factory());
         $dao                = new ArtidocDao($identifier_factory);

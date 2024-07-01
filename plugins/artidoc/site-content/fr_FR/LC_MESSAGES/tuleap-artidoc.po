@@ -44,6 +44,11 @@ msgid "There cannot be other required fields than title or description."
 msgstr "Il ne peut y avoir de champs requis autres que titre ou description."
 
 msgid ""
+"There is already an existing section with the same artifact in the document."
+msgstr ""
+"Il y a déjà une section existante avec le même artéfact dans le document."
+
+msgid ""
 "Unable to set the sections of the document, at least one of the submitted "
 "section does not exist."
 msgstr ""

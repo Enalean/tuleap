@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Artidoc\Stubs\Document;
 
 use Tuleap\Artidoc\Document\SaveOneSection;
+use Tuleap\Artidoc\Document\Section\AlreadyExistingSectionWithSameArtifactException;
 use Tuleap\Artidoc\Document\Section\Identifier\SectionIdentifier;
 use Tuleap\Artidoc\Document\Section\Identifier\SectionIdentifierFactory;
 
@@ -37,13 +38,18 @@ final class SaveOneSectionStub implements SaveOneSection
      */
     private array $saved_end = [];
 
-    private function __construct(private SectionIdentifierFactory $identifier_factory, private string $id)
+    private function __construct(private ?SectionIdentifierFactory $identifier_factory, private string $id)
     {
     }
 
     public static function withGeneratedSectionId(SectionIdentifierFactory $identifier_factory, string $id): self
     {
         return new self($identifier_factory, $id);
+    }
+
+    public static function withAlreadyExistingSectionWithSameArtifact(string $id): self
+    {
+        return new self(null, $id);
     }
 
     public function isSaved(int $id): bool
@@ -63,6 +69,10 @@ final class SaveOneSectionStub implements SaveOneSection
 
     public function saveSectionAtTheEnd(int $item_id, int $artifact_id): SectionIdentifier
     {
+        if ($this->identifier_factory === null) {
+            throw new AlreadyExistingSectionWithSameArtifactException();
+        }
+
         $this->saved_end[$item_id] = $artifact_id;
 
         return $this->identifier_factory->buildFromHexadecimalString($this->id);
@@ -70,6 +80,10 @@ final class SaveOneSectionStub implements SaveOneSection
 
     public function saveSectionBefore(int $item_id, int $artifact_id, SectionIdentifier $sibling_section_id): SectionIdentifier
     {
+        if ($this->identifier_factory === null) {
+            throw new AlreadyExistingSectionWithSameArtifactException();
+        }
+
         $this->saved_before[$item_id] = $artifact_id;
 
         return $this->identifier_factory->buildFromHexadecimalString($this->id);
