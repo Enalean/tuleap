@@ -30,7 +30,6 @@ use Tracker_Semantic_DescriptionDao;
 use Tracker_Semantic_StatusDao;
 use Tracker_Semantic_TitleDao;
 use Tuleap\CrossTracker\Report\Query\Advanced\AllowedMetadata;
-use Tuleap\CrossTracker\Report\Query\Advanced\InvalidComparisonCollectorParameters;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
 
 final class MetadataUsageChecker implements CheckMetadataUsage
@@ -52,7 +51,8 @@ final class MetadataUsageChecker implements CheckMetadataUsage
 
     public function checkMetadataIsUsedByAllTrackers(
         Metadata $metadata,
-        InvalidComparisonCollectorParameters $collector_parameters,
+        array $trackers,
+        PFUser $user,
     ): void {
         if (isset($this->cache_already_checked[$metadata->getName()])) {
             return;
@@ -60,33 +60,27 @@ final class MetadataUsageChecker implements CheckMetadataUsage
         $this->cache_already_checked[$metadata->getName()] = true;
 
         match ($metadata->getName()) {
-            AllowedMetadata::TITLE            => $this->checkTitleIsUsedByAtLeastOneTracker($collector_parameters->getTrackerIds()),
-            AllowedMetadata::DESCRIPTION      => $this->checkDescriptionIsUsedByAtLeastOneTracker($collector_parameters->getTrackerIds()),
-            AllowedMetadata::STATUS           => $this->checkStatusIsUsedByAtLeastOneTracker($collector_parameters->getTrackerIds()),
-            AllowedMetadata::ASSIGNED_TO      => $this->checkAssignedToIsUsedByAtLeastOneTracker($collector_parameters->getTrackerIds()),
+            AllowedMetadata::TITLE            => $this->checkTitleIsUsedByAtLeastOneTracker(self::getTrackerIds($trackers)),
+            AllowedMetadata::DESCRIPTION      => $this->checkDescriptionIsUsedByAtLeastOneTracker(self::getTrackerIds($trackers)),
+            AllowedMetadata::STATUS           => $this->checkStatusIsUsedByAtLeastOneTracker(self::getTrackerIds($trackers)),
+            AllowedMetadata::ASSIGNED_TO      => $this->checkAssignedToIsUsedByAtLeastOneTracker(self::getTrackerIds($trackers)),
 
-            AllowedMetadata::SUBMITTED_ON     => $this->checkSubmittedOnIsUsedByAtLeastOneTracker(
-                $collector_parameters->getTrackers(),
-                $collector_parameters->getUser()
-            ),
-            AllowedMetadata::LAST_UPDATE_DATE => $this->checkLastUpdateDateIsUsedByAtLeastOneTracker(
-                $collector_parameters->getTrackers(),
-                $collector_parameters->getUser()
-            ),
-            AllowedMetadata::SUBMITTED_BY     => $this->checkSubmittedByIsUsedByAtLeastOneTracker(
-                $collector_parameters->getTrackers(),
-                $collector_parameters->getUser()
-            ),
-            AllowedMetadata::LAST_UPDATE_BY   => $this->checkLastUpdateByIsUsedByAtLeastOneTracker(
-                $collector_parameters->getTrackers(),
-                $collector_parameters->getUser()
-            ),
-            AllowedMetadata::ID => $this->checkArtifactIdIsUsedByAtLeastOneTracker(
-                $collector_parameters->getTrackers(),
-                $collector_parameters->getUser()
-            ),
+            AllowedMetadata::SUBMITTED_ON     => $this->checkSubmittedOnIsUsedByAtLeastOneTracker($trackers, $user),
+            AllowedMetadata::LAST_UPDATE_DATE => $this->checkLastUpdateDateIsUsedByAtLeastOneTracker($trackers, $user),
+            AllowedMetadata::SUBMITTED_BY     => $this->checkSubmittedByIsUsedByAtLeastOneTracker($trackers, $user),
+            AllowedMetadata::LAST_UPDATE_BY   => $this->checkLastUpdateByIsUsedByAtLeastOneTracker($trackers, $user),
+            AllowedMetadata::ID               => $this->checkArtifactIdIsUsedByAtLeastOneTracker($trackers, $user),
             default                           => throw new LogicException("Unknown metadata type: {$metadata->getName()}"),
         };
+    }
+
+    /**
+     * @param Tracker[] $trackers
+     * @return int[]
+     */
+    private static function getTrackerIds(array $trackers): array
+    {
+        return array_map(static fn(Tracker $tracker) => $tracker->getId(), $trackers);
     }
 
     /**

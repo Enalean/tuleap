@@ -27,6 +27,8 @@ use Tracker;
 use Tuleap\CrossTracker\Report\Query\Advanced\DuckTypedField\FieldNotFoundInAnyTrackerFault;
 use Tuleap\CrossTracker\Report\Query\Advanced\DuckTypedField\FieldTypeIsNotSupportedFault;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\DuckTypedField\DuckTypedFieldChecker;
+use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\InvalidQueryException;
+use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata\MetadataChecker;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Field;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
@@ -41,6 +43,7 @@ final readonly class InvalidSelectablesCollectorVisitor implements SelectableVis
 {
     public function __construct(
         private DuckTypedFieldChecker $field_checker,
+        private MetadataChecker $metadata_checker,
     ) {
     }
 
@@ -81,6 +84,10 @@ final readonly class InvalidSelectablesCollectorVisitor implements SelectableVis
 
     public function visitMetaData(Metadata $metadata, $parameters): void
     {
-        $parameters->invalid_selectables_collection->addNonExistentSelectable($metadata->getName());
+        try {
+            $this->metadata_checker->checkMetadataIsValidForSelect($metadata, $parameters);
+        } catch (InvalidQueryException $exception) {
+            $parameters->invalid_selectables_collection->addInvalidSelectableError($exception->getMessage());
+        }
     }
 }

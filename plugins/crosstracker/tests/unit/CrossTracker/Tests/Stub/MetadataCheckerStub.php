@@ -22,14 +22,14 @@ declare(strict_types=1);
 
 namespace Tuleap\CrossTracker\Tests\Stub;
 
-use Tuleap\CrossTracker\Report\Query\Advanced\InvalidComparisonCollectorParameters;
+use PFUser;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata\CheckMetadataUsage;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata\TitleIsMissingInAllTrackersException;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
 
-final class MetadataCheckerStub implements CheckMetadataUsage
+final readonly class MetadataCheckerStub implements CheckMetadataUsage
 {
-    private function __construct(private readonly bool $is_valid)
+    private function __construct(private bool $is_valid)
     {
     }
 
@@ -43,7 +43,7 @@ final class MetadataCheckerStub implements CheckMetadataUsage
         return new self(false);
     }
 
-    public function checkMetadataIsUsedByAllTrackers(Metadata $metadata, InvalidComparisonCollectorParameters $collector_parameters): void
+    public function checkMetadataIsUsedByAllTrackers(Metadata $metadata, array $trackers, PFUser $user): void
     {
         if (! $this->is_valid) {
             throw new TitleIsMissingInAllTrackersException();

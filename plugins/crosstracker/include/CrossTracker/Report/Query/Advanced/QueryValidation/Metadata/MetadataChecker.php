@@ -20,7 +20,9 @@
 
 namespace Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata;
 
+use Tuleap\CrossTracker\Report\Query\Advanced\AllowedMetadata;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidComparisonCollectorParameters;
+use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSelectableCollectorParameters;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\InvalidQueryException;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
@@ -36,12 +38,32 @@ final readonly class MetadataChecker
     /**
      * @throws InvalidQueryException
      */
-    public function checkMetadataIsValid(
+    public function checkMetadataIsValidForSearch(
         Metadata $metadata,
         Comparison $comparison,
         InvalidComparisonCollectorParameters $collector_parameters,
     ): void {
-        $this->semantic_usage_checker->checkMetadataIsUsedByAllTrackers($metadata, $collector_parameters);
+        if (! in_array($metadata->getName(), AllowedMetadata::NAMES, true)) {
+            $collector_parameters->getInvalidSearchablesCollection()->addNonexistentSearchable($metadata->getName());
+            return;
+        }
+
+        $this->semantic_usage_checker->checkMetadataIsUsedByAllTrackers($metadata, $collector_parameters->getTrackers(), $collector_parameters->getUser());
         $this->comparison_checker->checkComparisonIsValid($metadata, $comparison);
+    }
+
+    /**
+     * @throws InvalidQueryException
+     */
+    public function checkMetadataIsValidForSelect(
+        Metadata $metadata,
+        InvalidSelectableCollectorParameters $collector_parameters,
+    ): void {
+        if (! in_array($metadata->getName(), AllowedMetadata::NAMES, true)) {
+            $collector_parameters->invalid_selectables_collection->addNonExistentSelectable($metadata->getName());
+            return;
+        }
+
+        $this->semantic_usage_checker->checkMetadataIsUsedByAllTrackers($metadata, $collector_parameters->trackers, $collector_parameters->user);
     }
 }

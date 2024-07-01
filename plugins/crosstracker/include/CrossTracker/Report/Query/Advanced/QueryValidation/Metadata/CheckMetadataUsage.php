@@ -22,12 +22,14 @@ declare(strict_types=1);
 
 namespace Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata;
 
-use Tuleap\CrossTracker\Report\Query\Advanced\InvalidComparisonCollectorParameters;
+use PFUser;
+use Tracker;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
 
 interface CheckMetadataUsage
 {
     /**
+     * @param Tracker[] $trackers
      * @throws DescriptionIsMissingInAllTrackersException
      * @throws StatusIsMissingInAllTrackersException
      * @throws SubmittedOnIsMissingInAllTrackersException
@@ -40,6 +42,7 @@ interface CheckMetadataUsage
      */
     public function checkMetadataIsUsedByAllTrackers(
         Metadata $metadata,
-        InvalidComparisonCollectorParameters $collector_parameters,
+        array $trackers,
+        PFUser $user,
     ): void;
 }
