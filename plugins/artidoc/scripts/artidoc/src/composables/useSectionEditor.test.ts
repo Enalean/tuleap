@@ -21,7 +21,6 @@ import type { Mock } from "vitest";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { useSectionEditor } from "@/composables/useSectionEditor";
 import ArtifactSectionFactory from "@/helpers/artifact-section.factory";
-import * as on_before_unload from "@/helpers/on-before-unload";
 import PendingArtifactSectionFactory from "@/helpers/pending-artifact-section.factory";
 import type { SectionsStore } from "@/stores/useSectionsStore";
 import { mockStrictInject } from "@/helpers/mock-strict-inject";
@@ -33,6 +32,11 @@ import * as refreshSection from "@/composables/useRefreshSection";
 import * as editorError from "@/composables/useEditorErrors";
 import * as editorContent from "@/composables/useEditorSectionContent";
 import { SECTIONS_STORE } from "@/stores/sections-store-injection-key";
+import type { SectionEditorsCollection } from "@/composables/useSectionEditorsCollection";
+import {
+    EDITORS_COLLECTION,
+    useSectionEditorsCollection,
+} from "@/composables/useSectionEditorsCollection";
 
 const section = ArtifactSectionFactory.create();
 const merge_artifacts = vi.fn();
@@ -41,17 +45,22 @@ const set_waiting_list = vi.fn();
 const remove_section = vi.fn();
 describe("useSectionEditor", () => {
     let store_stub: SectionsStore;
+    let editors_collection: SectionEditorsCollection;
+
     beforeEach(() => {
         store_stub = {
             ...InjectedSectionsStoreStub.withLoadedSections([]),
             removeSection: remove_section,
         };
+        editors_collection = useSectionEditorsCollection();
         mockStrictInject([
             [CAN_USER_EDIT_DOCUMENT, true],
             [DOCUMENT_ID, 1],
             [SECTIONS_STORE, store_stub],
+            [EDITORS_COLLECTION, editors_collection],
         ]);
     });
+
     describe("editor_state", () => {
         it("should return editor states", () => {
             const { editor_state } = useSectionEditor(section, merge_artifacts, set_waiting_list);
@@ -64,6 +73,7 @@ describe("useSectionEditor", () => {
             expect(editor_state.isBeingSaved()).toEqual(false);
         });
     });
+
     describe("editor_actions", () => {
         let save: Mock;
         let force_save: Mock;
@@ -84,6 +94,7 @@ describe("useSectionEditor", () => {
                 isJustRefreshed: vi.fn(),
             });
         });
+
         describe("enable_editor", () => {
             it("should enable editor", () => {
                 const { editor_actions, editor_state } = useSectionEditor(
@@ -92,12 +103,15 @@ describe("useSectionEditor", () => {
                     set_waiting_list,
                 );
                 expect(editor_state.is_section_in_edit_mode.value).toEqual(false);
+                expect(editors_collection.hasAtLeastOneEditorOpened()).toBe(false);
 
                 editor_actions.enableEditor();
 
                 expect(editor_state.is_section_in_edit_mode.value).toEqual(true);
+                expect(editors_collection.hasAtLeastOneEditorOpened()).toBe(true);
             });
         });
+
         describe("save_editor", () => {
             it("should save the editor content", () => {
                 const { editor_actions } = useSectionEditor(
@@ -185,57 +199,6 @@ describe("useSectionEditor", () => {
             );
             expect(editor_content).toHaveBeenCalledOnce();
             expect(editor_section_content).toBeDefined();
-        });
-    });
-    describe("page leave", () => {
-        it("should prevent page leave when section is in edit mode", () => {
-            const preventPageLeave = vi.spyOn(on_before_unload, "preventPageLeave");
-
-            const { clearGlobalNumberOfOpenEditorForTests, editor_actions, editor_state } =
-                useSectionEditor(section, merge_artifacts, set_waiting_list);
-            clearGlobalNumberOfOpenEditorForTests();
-            expect(editor_state.is_section_in_edit_mode.value).toBe(false);
-
-            editor_actions.enableEditor();
-
-            expect(preventPageLeave).toHaveBeenCalled();
-        });
-
-        it("should allow page leave when section is not anymore in edit mode", () => {
-            const allowPageLeave = vi.spyOn(on_before_unload, "allowPageLeave");
-
-            const { clearGlobalNumberOfOpenEditorForTests, editor_actions, editor_state } =
-                useSectionEditor(section, merge_artifacts, set_waiting_list);
-            clearGlobalNumberOfOpenEditorForTests();
-
-            editor_actions.enableEditor();
-            expect(editor_state.is_section_in_edit_mode.value).toBe(true);
-
-            editor_actions.cancelEditor(null);
-
-            expect(editor_state.is_section_in_edit_mode.value).toBe(false);
-            expect(allowPageLeave).toHaveBeenCalled();
-        });
-
-        it("should still prevent page leave when at least one section is in edit mode", () => {
-            const allowPageLeave = vi.spyOn(on_before_unload, "allowPageLeave");
-
-            const first_store = useSectionEditor(section, merge_artifacts, set_waiting_list);
-
-            first_store.clearGlobalNumberOfOpenEditorForTests();
-
-            const second_store = useSectionEditor(section, merge_artifacts, set_waiting_list);
-
-            first_store.editor_actions.enableEditor();
-            second_store.editor_actions.enableEditor();
-            expect(first_store.editor_state.is_section_in_edit_mode.value).toBe(true);
-            expect(second_store.editor_state.is_section_in_edit_mode.value).toBe(true);
-
-            first_store.editor_actions.cancelEditor(null);
-            expect(first_store.editor_state.is_section_in_edit_mode.value).toBe(false);
-            expect(second_store.editor_state.is_section_in_edit_mode.value).toBe(true);
-
-            expect(allowPageLeave).not.toHaveBeenCalled();
         });
     });
 });

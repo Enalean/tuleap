@@ -22,7 +22,6 @@ import type { ArtidocSection } from "@/helpers/artidoc-section.type";
 import { isArtifactSection, isPendingArtifactSection } from "@/helpers/artidoc-section.type";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import { CAN_USER_EDIT_DOCUMENT } from "@/can-user-edit-document-injection-key";
-import { preventPageLeave, allowPageLeave } from "@/helpers/on-before-unload";
 import type { Tracker } from "@/stores/configuration-store";
 import useSaveSection from "@/composables/useSaveSection";
 import type { EditorErrors } from "@/composables/useEditorErrors";
@@ -33,6 +32,7 @@ import type { RefreshSection } from "@/composables/useRefreshSection";
 import { useRefreshSection } from "@/composables/useRefreshSection";
 import type { AttachmentFile } from "@/composables/useAttachmentFile";
 import { SECTIONS_STORE } from "@/stores/sections-store-injection-key";
+import { EDITORS_COLLECTION } from "@/composables/useSectionEditorsCollection";
 
 export type SectionEditorActions = {
     enableEditor: () => void;
@@ -56,16 +56,14 @@ export type SectionEditor = {
     editor_error: EditorErrors;
     editor_actions: SectionEditorActions;
     editor_section_content: EditorSectionContent;
-    clearGlobalNumberOfOpenEditorForTests: () => void;
 };
-
-let nb_active_edit_mode = 0;
 
 export function useSectionEditor(
     section: ArtidocSection,
     mergeArtifactAttachments: AttachmentFile["mergeArtifactAttachments"],
     setWaitingListAttachments: AttachmentFile["setWaitingListAttachments"],
 ): SectionEditor {
+    const editors_collection = strictInject(EDITORS_COLLECTION);
     const can_user_edit_document = strictInject(CAN_USER_EDIT_DOCUMENT);
     const current_section: Ref<ArtidocSection> = ref(section);
     const editor_errors_handler = useEditorErrors();
@@ -118,18 +116,6 @@ export function useSectionEditor(
         }
 
         is_section_in_edit_mode.value = new_value;
-
-        if (new_value) {
-            nb_active_edit_mode++;
-        } else {
-            nb_active_edit_mode = Math.abs(nb_active_edit_mode - 1);
-        }
-
-        if (nb_active_edit_mode > 0) {
-            preventPageLeave();
-        } else {
-            allowPageLeave();
-        }
     };
 
     const { save, forceSave, isBeingSaved, isJustSaved } = useSaveSection(editor_errors_handler, {
@@ -157,6 +143,7 @@ export function useSectionEditor(
     function cancelEditor(tracker: Tracker | null): void {
         closeEditor();
         if (isPendingArtifactSection(current_section.value)) {
+            editors_collection.removeEditor(current_section.value);
             removeSection(current_section.value, tracker);
         }
     }
@@ -183,7 +170,7 @@ export function useSectionEditor(
         refreshSection,
     };
 
-    return {
+    const editor: SectionEditor = {
         editor_state: {
             is_image_upload_allowed: is_image_upload_allowed,
             is_section_editable,
@@ -195,8 +182,9 @@ export function useSectionEditor(
         editor_actions,
         editor_error: editor_errors_handler,
         editor_section_content,
-        clearGlobalNumberOfOpenEditorForTests: (): void => {
-            nb_active_edit_mode = 0;
-        },
     };
+
+    editors_collection.addEditor(section, editor);
+
+    return editor;
 }
