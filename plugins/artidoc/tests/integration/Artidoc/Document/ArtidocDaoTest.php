@@ -24,6 +24,7 @@ namespace Tuleap\Artidoc\Document;
 
 use Tuleap\Artidoc\Document\Section\AlreadyExistingSectionWithSameArtifactException;
 use Tuleap\Artidoc\Document\Section\Identifier\SectionIdentifierFactory;
+use Tuleap\Artidoc\Document\Section\UnableToFindSiblingSectionException;
 use Tuleap\DB\DBFactory;
 use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
 
@@ -235,7 +236,7 @@ final class ArtidocDaoTest extends TestIntegrationTestCase
         $item_1 = 101;
 
 
-        [$uuid_1, $uuid_2, $uuid_3] = [
+        [$uuid_1] = [
             $dao->saveSectionAtTheEnd($item_1, 1001),
             $dao->saveSectionAtTheEnd($item_1, 1002),
             $dao->saveSectionAtTheEnd($item_1, 1003),
@@ -245,14 +246,14 @@ final class ArtidocDaoTest extends TestIntegrationTestCase
         $dao->saveSectionBefore($item_1, 1003, $uuid_1);
     }
 
-    public function testSaveSectionBeforeUnknownSectionWillPutItAtTheBeginningUntilWeFindABetterSolution(): void
+    public function testSaveSectionBeforeUnknownSectionWillRaiseAnException(): void
     {
         $identifier_factory = new SectionIdentifierFactory(new \Tuleap\DB\DatabaseUUIDV7Factory());
         $dao                = new ArtidocDao($identifier_factory);
 
         $item_1 = 101;
 
-        [, $uuid_2,] = [
+        [, $uuid_2] = [
             $dao->saveSectionAtTheEnd($item_1, 1001),
             $dao->saveSectionAtTheEnd($item_1, 1002),
             $dao->saveSectionAtTheEnd($item_1, 1003),
@@ -261,9 +262,8 @@ final class ArtidocDaoTest extends TestIntegrationTestCase
         // remove section linked to artifact #1002
         $dao->save(101, [1001, 1003]);
 
+        $this->expectException(UnableToFindSiblingSectionException::class);
         $dao->saveSectionBefore($item_1, 1004, $uuid_2);
-
-        $this->assertSectionsMatchArtifactIdsForDocument($dao, $item_1, [1004, 1001, 1003]);
     }
 
     public function testDeleteSectionsByArtifactId(): void

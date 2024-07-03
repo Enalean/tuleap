@@ -275,6 +275,10 @@ final class ArtidocResource extends AuthenticatedResource
                             400,
                             dgettext('tuleap-artidoc', 'There is already an existing section with the same artifact in the document.')
                         ),
+                        $fault instanceof UnableToFindSiblingSectionFault => new I18NRestException(
+                            400,
+                            dgettext('tuleap-artidoc', 'We were unable to insert the new section at the required position. The sibling section does not exist, maybe it has been deleted by someone else while you were editing the document?')
+                        ),
                         default => new RestException(404, (string) $fault),
                     };
                 }
