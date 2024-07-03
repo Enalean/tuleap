@@ -20,93 +20,106 @@
 
 declare(strict_types=1);
 
+namespace Tuleap\Cardwall;
+
+use AgileDashboard_BacklogItemDao;
+use Cardwall_Board;
+use Cardwall_CardInCellPresenter;
+use Cardwall_CardInCellPresenterBuilder;
+use Cardwall_MappingCollection;
+use Cardwall_OnTop_Config_ColumnCollection;
+use Cardwall_PaneBoardBuilder;
+use Cardwall_Swimline;
+use Cardwall_SwimlineFactory;
+use Cardwall_SwimlineSolo;
+use PFUser;
+use PHPUnit\Framework\MockObject\MockObject;
+use TestHelper;
+use Tracker_ArtifactFactory;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
-final class Cardwall_PaneBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
+final class Cardwall_PaneBuilderTest extends TestCase // phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
-    private $card_in_cell_presenter_builder;
-    private $artifact_factory;
-    private $dao;
-    private $user;
-    private $milestone_artifact;
-    private $swimline_factory;
-    private $mapping_collection;
-    private $columns;
+    private Cardwall_CardInCellPresenterBuilder&MockObject $card_in_cell_presenter_builder;
+    private Tracker_ArtifactFactory&MockObject $artifact_factory;
+    private AgileDashboard_BacklogItemDao&MockObject $dao;
+    private PFUser $user;
+    private Artifact $milestone_artifact;
+    private Cardwall_SwimlineFactory&MockObject $swimline_factory;
+    private Cardwall_MappingCollection&MockObject $mapping_collection;
+    private Cardwall_OnTop_Config_ColumnCollection&MockObject $columns;
 
     protected function setUp(): void
     {
-        parent::setUp();
-        $this->card_in_cell_presenter_builder = Mockery::spy(Cardwall_CardInCellPresenterBuilder::class);
-        $this->artifact_factory               = \Mockery::spy(\Tracker_ArtifactFactory::class);
-        $this->dao                            = \Mockery::spy(\AgileDashboard_BacklogItemDao::class);
-        $this->swimline_factory               = \Mockery::spy(\Cardwall_SwimlineFactory::class);
-        $this->user                           = new PFUser(['language_id' => 'en']);
-        $this->milestone_artifact             = Mockery::mock(Artifact::class);
-        $this->milestone_artifact->shouldReceive('getId')->andReturn(1);
-        $this->mapping_collection = \Mockery::spy(\Cardwall_MappingCollection::class);
-        $this->columns            = \Mockery::spy(\Cardwall_OnTop_Config_ColumnCollection::class);
+        $this->card_in_cell_presenter_builder = $this->createMock(Cardwall_CardInCellPresenterBuilder::class);
+        $this->artifact_factory               = $this->createMock(Tracker_ArtifactFactory::class);
+        $this->dao                            = $this->createMock(AgileDashboard_BacklogItemDao::class);
+        $this->swimline_factory               = $this->createMock(Cardwall_SwimlineFactory::class);
+        $this->user                           = UserTestBuilder::buildWithDefaults();
+        $this->milestone_artifact             = ArtifactTestBuilder::anArtifact(1)->build();
+        $this->mapping_collection             = $this->createMock(Cardwall_MappingCollection::class);
+        $this->columns                        = $this->createMock(Cardwall_OnTop_Config_ColumnCollection::class);
     }
 
     public function testItReturnsAnEmptyBoard(): void
     {
-        $this->dao->shouldReceive('getBacklogArtifacts')->andReturns(\TestHelper::emptyDar());
+        $this->dao->method('getBacklogArtifacts')->willReturn(TestHelper::emptyDar());
 
         $pane_builder = new Cardwall_PaneBoardBuilder($this->card_in_cell_presenter_builder, $this->artifact_factory, $this->dao, $this->swimline_factory);
 
-        $this->assertInstanceOf(\Cardwall_Board::class, $pane_builder->getBoard($this->user, $this->milestone_artifact, $this->columns, $this->mapping_collection));
+        self::assertInstanceOf(Cardwall_Board::class, $pane_builder->getBoard($this->user, $this->milestone_artifact, $this->columns, $this->mapping_collection));
     }
 
     public function testItReturnsABoardWithASoloSwimline(): void
     {
-        $swimline_artifact = $this->buildMockArtifactAllUserCanView();
-        $swimline_artifact->shouldReceive('getChildrenForUser')->andReturns([]);
+        $swimline_artifact = $this->buildMockedArtifactAllUserCanView();
+        $swimline_artifact->method('getChildrenForUser')->willReturn([]);
 
         $row = ['id' => 'the id'];
-        $this->artifact_factory->shouldReceive('getInstanceFromRow')->with($row)->andReturns($swimline_artifact);
-        $this->dao->shouldReceive('getBacklogArtifacts')->andReturns(\TestHelper::arrayToDar($row));
+        $this->artifact_factory->method('getInstanceFromRow')->with($row)->willReturn($swimline_artifact);
+        $this->dao->method('getBacklogArtifacts')->willReturn(TestHelper::arrayToDar($row));
 
-        $this->swimline_factory->shouldReceive('getCells')->andReturns([['cardincell_presenters' => 'something']]);
-        $this->card_in_cell_presenter_builder->shouldReceive('getCardInCellPresenter')->with($swimline_artifact, $swimline_artifact->getId())->andReturns(\Mockery::spy(\Cardwall_CardInCellPresenter::class));
+        $this->swimline_factory->method('getCells')->willReturn([['cardincell_presenters' => 'something']]);
+        $this->card_in_cell_presenter_builder->method('getCardInCellPresenter')->with($swimline_artifact, $swimline_artifact->getId())->willReturn($this->createMock(Cardwall_CardInCellPresenter::class));
 
         $pane_builder = new Cardwall_PaneBoardBuilder($this->card_in_cell_presenter_builder, $this->artifact_factory, $this->dao, $this->swimline_factory);
         $board        = $pane_builder->getBoard($this->user, $this->milestone_artifact, $this->columns, $this->mapping_collection);
-        $this->assertCount(1, $board->swimlines);
-        $this->assertInstanceOf(\Cardwall_SwimlineSolo::class, $board->swimlines[0]);
+        self::assertCount(1, $board->swimlines);
+        self::assertInstanceOf(Cardwall_SwimlineSolo::class, $board->swimlines[0]);
     }
 
     public function testItReturnsABoardWithaSwimline(): void
     {
-        $child_artifact = $this->buildMockArtifactAllUserCanView();
+        $child_artifact = $this->buildMockedArtifactAllUserCanView();
 
-        $swimline_artifact = $this->buildMockArtifactAllUserCanView();
-        $swimline_artifact->shouldReceive('getChildrenForUser')->andReturns([$child_artifact]);
+        $swimline_artifact = $this->buildMockedArtifactAllUserCanView();
+        $swimline_artifact->method('getChildrenForUser')->willReturn([$child_artifact]);
 
-        $this->swimline_factory->shouldReceive('getCells')->andReturns([]);
+        $this->swimline_factory->method('getCells')->willReturn([]);
 
         $row = ['id' => 'whatever'];
-        $this->artifact_factory->shouldReceive('getInstanceFromRow')->with($row)->andReturns($swimline_artifact);
-        $this->dao->shouldReceive('getBacklogArtifacts')->andReturns(\TestHelper::arrayToDar($row));
+        $this->artifact_factory->method('getInstanceFromRow')->with($row)->willReturn($swimline_artifact);
+        $this->dao->method('getBacklogArtifacts')->willReturn(TestHelper::arrayToDar($row));
 
-        $this->card_in_cell_presenter_builder->shouldReceive('getCardInCellPresenter')->andReturns(\Mockery::spy(\Cardwall_CardInCellPresenter::class));
-        $this->card_in_cell_presenter_builder->shouldReceive('getCardInCellPresenters')->andReturns([\Mockery::spy(\Cardwall_CardInCellPresenter::class)]);
+        $presenter = $this->createMock(Cardwall_CardInCellPresenter::class);
+        $presenter->method('getId');
+        $this->card_in_cell_presenter_builder->method('getCardInCellPresenter')->willReturn($presenter);
+        $this->card_in_cell_presenter_builder->method('getCardInCellPresenters')->willReturn([$presenter]);
 
         $pane_builder = new Cardwall_PaneBoardBuilder($this->card_in_cell_presenter_builder, $this->artifact_factory, $this->dao, $this->swimline_factory);
         $board        = $pane_builder->getBoard($this->user, $this->milestone_artifact, $this->columns, $this->mapping_collection);
-        $this->assertCount(1, $board->swimlines);
-        $this->assertInstanceOf(\Cardwall_Swimline::class, $board->swimlines[0]);
+        self::assertCount(1, $board->swimlines);
+        self::assertInstanceOf(Cardwall_Swimline::class, $board->swimlines[0]);
     }
 
-    /**
-     * @return \Mockery\LegacyMockInterface|\Mockery\MockInterface|Artifact
-     */
-    private function buildMockArtifactAllUserCanView()
+    private function buildMockedArtifactAllUserCanView(): Artifact&MockObject
     {
-        $artifact = Mockery::mock(Artifact::class);
-        $artifact->shouldReceive('getId')->andReturn(1);
-        $artifact->shouldReceive('userCanView')->andReturn(true);
+        $artifact = $this->createMock(Artifact::class);
+        $artifact->method('getId')->willReturn(1);
+        $artifact->method('userCanView')->willReturn(true);
 
         return $artifact;
     }
