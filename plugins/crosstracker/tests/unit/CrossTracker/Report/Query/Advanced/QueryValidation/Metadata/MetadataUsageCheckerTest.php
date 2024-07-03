@@ -29,11 +29,9 @@ use Tracker_Semantic_ContributorDao;
 use Tracker_Semantic_DescriptionDao;
 use Tracker_Semantic_StatusDao;
 use Tracker_Semantic_TitleDao;
-use Tuleap\CrossTracker\Report\Query\Advanced\InvalidComparisonCollectorParameters;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
-use Tuleap\Tracker\Report\Query\Advanced\InvalidSearchablesCollection;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class MetadataUsageCheckerTest extends TestCase
@@ -51,14 +49,11 @@ final class MetadataUsageCheckerTest extends TestCase
     private MetadataUsageChecker $checker;
     private Tracker $tracker_101;
     private Tracker $tracker_102;
-    private InvalidSearchablesCollection $invalid_searchable_collection;
     private Tracker_FormElement_Field_SubmittedOn&MockObject $submitted_on_101;
     private Tracker_FormElement_Field_SubmittedOn&MockObject $submitted_on_102;
 
     public function setUp(): void
     {
-        $this->invalid_searchable_collection = new InvalidSearchablesCollection();
-
         $this->tracker_101 = TrackerTestBuilder::aTracker()->withId(101)->build();
         $this->tracker_102 = TrackerTestBuilder::aTracker()->withId(102)->build();
         $this->trackers    = [$this->tracker_101, $this->tracker_102];
@@ -90,11 +85,7 @@ final class MetadataUsageCheckerTest extends TestCase
         self::expectException(TitleIsMissingInAllTrackersException::class);
 
         $metadata = new Metadata('title');
-        $this->checker->checkMetadataIsUsedByAllTrackers($metadata, new InvalidComparisonCollectorParameters(
-            $this->invalid_searchable_collection,
-            $this->trackers,
-            $this->user
-        ));
+        $this->checker->checkMetadataIsUsedByAllTrackers($metadata, $this->trackers, $this->user);
     }
 
     public function testItShouldRaiseNoErrorIfThereIsAtLeastOneSemanticTitleDefined(): void
@@ -104,11 +95,7 @@ final class MetadataUsageCheckerTest extends TestCase
         $this->title_dao->method('getNbOfTrackerWithoutSemanticTitleDefined')->willReturn(1);
 
         $metadata = new Metadata('title');
-        $this->checker->checkMetadataIsUsedByAllTrackers($metadata, new InvalidComparisonCollectorParameters(
-            $this->invalid_searchable_collection,
-            $this->trackers,
-            $this->user
-        ));
+        $this->checker->checkMetadataIsUsedByAllTrackers($metadata, $this->trackers, $this->user);
     }
 
     public function testItShouldRaiseAnErrorIfThereIsNotSemanticDescriptionInTrackers(): void
@@ -118,11 +105,7 @@ final class MetadataUsageCheckerTest extends TestCase
         self::expectException(DescriptionIsMissingInAllTrackersException::class);
 
         $metadata = new Metadata('description');
-        $this->checker->checkMetadataIsUsedByAllTrackers($metadata, new InvalidComparisonCollectorParameters(
-            $this->invalid_searchable_collection,
-            $this->trackers,
-            $this->user
-        ));
+        $this->checker->checkMetadataIsUsedByAllTrackers($metadata, $this->trackers, $this->user);
     }
 
     public function testItShouldRaiseNoErrorIfThereIsAtLeastOneSemanticDescriptionDefined(): void
@@ -132,11 +115,7 @@ final class MetadataUsageCheckerTest extends TestCase
         $this->description_dao->method('getNbOfTrackerWithoutSemanticDescriptionDefined')->willReturn(1);
 
         $metadata = new Metadata('description');
-        $this->checker->checkMetadataIsUsedByAllTrackers($metadata, new InvalidComparisonCollectorParameters(
-            $this->invalid_searchable_collection,
-            $this->trackers,
-            $this->user
-        ));
+        $this->checker->checkMetadataIsUsedByAllTrackers($metadata, $this->trackers, $this->user);
     }
 
     public function testItShouldRaiseAnErrorIfThereIsNotSemanticStatusInTrackers(): void
@@ -146,11 +125,7 @@ final class MetadataUsageCheckerTest extends TestCase
         self::expectException(StatusIsMissingInAllTrackersException::class);
 
         $metadata = new Metadata('status');
-        $this->checker->checkMetadataIsUsedByAllTrackers($metadata, new InvalidComparisonCollectorParameters(
-            $this->invalid_searchable_collection,
-            $this->trackers,
-            $this->user
-        ));
+        $this->checker->checkMetadataIsUsedByAllTrackers($metadata, $this->trackers, $this->user);
     }
 
     public function testItShouldRaiseNoErrorIfThereIsAtLeastOneSemanticStatusDefined(): void
@@ -160,11 +135,7 @@ final class MetadataUsageCheckerTest extends TestCase
         $this->status_dao->method('getNbOfTrackerWithoutSemanticStatusDefined')->willReturn(1);
 
         $metadata = new Metadata('status');
-        $this->checker->checkMetadataIsUsedByAllTrackers($metadata, new InvalidComparisonCollectorParameters(
-            $this->invalid_searchable_collection,
-            $this->trackers,
-            $this->user
-        ));
+        $this->checker->checkMetadataIsUsedByAllTrackers($metadata, $this->trackers, $this->user);
     }
 
     public function testItShouldRaiseAnErrorIfThereIsNotSemanticContributorInTrackers(): void
@@ -174,11 +145,7 @@ final class MetadataUsageCheckerTest extends TestCase
         self::expectException(AssignedToIsMissingInAllTrackersException::class);
 
         $metadata = new Metadata('assigned_to');
-        $this->checker->checkMetadataIsUsedByAllTrackers($metadata, new InvalidComparisonCollectorParameters(
-            $this->invalid_searchable_collection,
-            $this->trackers,
-            $this->user
-        ));
+        $this->checker->checkMetadataIsUsedByAllTrackers($metadata, $this->trackers, $this->user);
     }
 
     public function testItShouldRaiseNoErrorIfThereIsAtLeastOneSemanticContributorDefined(): void
@@ -188,11 +155,7 @@ final class MetadataUsageCheckerTest extends TestCase
         $this->assigned_to->method('getNbOfTrackerWithoutSemanticContributorDefined')->willReturn(1);
 
         $metadata = new Metadata('assigned_to');
-        $this->checker->checkMetadataIsUsedByAllTrackers($metadata, new InvalidComparisonCollectorParameters(
-            $this->invalid_searchable_collection,
-            $this->trackers,
-            $this->user
-        ));
+        $this->checker->checkMetadataIsUsedByAllTrackers($metadata, $this->trackers, $this->user);
     }
 
     public function testItShouldRaiseAnErrorIfThereIsNoSubmittedOnFieldInTrackers(): void
@@ -204,16 +167,11 @@ final class MetadataUsageCheckerTest extends TestCase
         ];
         $this->form_element_factory->method('getFormElementsByType')->willReturnMap($fields_map);
 
-        $metadata   = new Metadata('submitted_on');
-        $parameters = new InvalidComparisonCollectorParameters(
-            $this->invalid_searchable_collection,
-            $this->trackers,
-            $this->user
-        );
+        $metadata = new Metadata('submitted_on');
 
         self::expectException(SubmittedOnIsMissingInAllTrackersException::class);
 
-        $this->checker->checkMetadataIsUsedByAllTrackers($metadata, $parameters);
+        $this->checker->checkMetadataIsUsedByAllTrackers($metadata, $this->trackers, $this->user);
     }
 
     public function testItShouldNotRaiseAnErrorIfThereIsAtLeastOneReadableSubmittedOnField(): void
@@ -228,14 +186,9 @@ final class MetadataUsageCheckerTest extends TestCase
         ];
         $this->form_element_factory->method('getFormElementsByType')->willReturnMap($fields_map);
 
-        $metadata   = new Metadata('submitted_on');
-        $parameters = new InvalidComparisonCollectorParameters(
-            $this->invalid_searchable_collection,
-            $this->trackers,
-            $this->user
-        );
+        $metadata = new Metadata('submitted_on');
 
-        $this->checker->checkMetadataIsUsedByAllTrackers($metadata, $parameters);
+        $this->checker->checkMetadataIsUsedByAllTrackers($metadata, $this->trackers, $this->user);
     }
 
     public function testItShouldNotRaiseAnErrorIfAllSubmittedOnFieldsAreReadable(): void
@@ -250,13 +203,8 @@ final class MetadataUsageCheckerTest extends TestCase
         ];
         $this->form_element_factory->method('getFormElementsByType')->willReturnMap($fields_map);
 
-        $metadata   = new Metadata('submitted_on');
-        $parameters = new InvalidComparisonCollectorParameters(
-            $this->invalid_searchable_collection,
-            $this->trackers,
-            $this->user
-        );
+        $metadata = new Metadata('submitted_on');
 
-        $this->checker->checkMetadataIsUsedByAllTrackers($metadata, $parameters);
+        $this->checker->checkMetadataIsUsedByAllTrackers($metadata, $this->trackers, $this->user);
     }
 }

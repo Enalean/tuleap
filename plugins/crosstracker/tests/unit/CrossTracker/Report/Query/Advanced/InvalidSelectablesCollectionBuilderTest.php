@@ -24,9 +24,18 @@ namespace Tuleap\CrossTracker\Report\Query\Advanced;
 
 use BaseLanguageFactory;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\DuckTypedField\DuckTypedFieldChecker;
+use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata\ArtifactIdMetadataChecker;
+use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata\AssignedToChecker;
+use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata\InvalidMetadataChecker;
+use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata\MetadataChecker;
+use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata\StatusChecker;
+use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata\SubmissionDateChecker;
+use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata\TextSemanticChecker;
+use Tuleap\CrossTracker\Tests\Stub\MetadataCheckerStub;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\LegacyTabTranslationsSupport;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Test\Stubs\ProvideAndRetrieveUserStub;
 use Tuleap\Tracker\FormElement\Field\ListFields\OpenListValueDao;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Field;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
@@ -94,6 +103,16 @@ final class InvalidSelectablesCollectionBuilderTest extends TestCase
                     true,
                 ),
                 RetrieveUserPermissionOnFieldsStub::build(),
+            ), new MetadataChecker(
+                MetadataCheckerStub::withValidMetadata(),
+                new InvalidMetadataChecker(
+                    new TextSemanticChecker(),
+                    new StatusChecker(),
+                    new AssignedToChecker(ProvideAndRetrieveUserStub::build(UserTestBuilder::buildWithDefaults())),
+                    new QueryValidation\Metadata\ArtifactSubmitterChecker(ProvideAndRetrieveUserStub::build(UserTestBuilder::buildWithDefaults())),
+                    new SubmissionDateChecker(),
+                    new ArtifactIdMetadataChecker(),
+                ),
             )),
             [],
             UserTestBuilder::buildWithDefaults()
@@ -105,6 +124,14 @@ final class InvalidSelectablesCollectionBuilderTest extends TestCase
         self::expectException(SelectablesMustBeUniqueException::class);
         $this->builder->buildCollectionOfInvalidSelectables([
             new Field('a'), new Field('b'), new Metadata('meta'), new Field('b'),
+        ]);
+    }
+
+    public function testItThrowsIfSelectSameMetadataMultipleTimes(): void
+    {
+        self::expectException(SelectablesMustBeUniqueException::class);
+        $this->builder->buildCollectionOfInvalidSelectables([
+            new Metadata('meta'), new Metadata('meta'),
         ]);
     }
 

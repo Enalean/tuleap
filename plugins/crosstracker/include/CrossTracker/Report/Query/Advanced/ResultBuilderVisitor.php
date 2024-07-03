@@ -71,6 +71,6 @@ final readonly class ResultBuilderVisitor implements SelectableVisitor
 
     public function visitMetaData(Metadata $metadata, $parameters)
     {
-        throw new \LogicException('Should not end up there');
+        return new SelectedValuesCollection(null, []);
     }
 }

@@ -65,21 +65,12 @@ final readonly class InvalidSearchableCollectorVisitor implements SearchableVisi
 
     /**
      * @param InvalidSearchableCollectorParameters $parameters
-     * @return void
      */
-    public function visitMetadata(Metadata $metadata, $parameters)
+    public function visitMetadata(Metadata $metadata, $parameters): void
     {
         $invalid_searchables_collection = $parameters->invalid_comparison_parameters->getInvalidSearchablesCollection();
-        if (! in_array($metadata->getName(), AllowedMetadata::NAMES, true)) {
-            $invalid_searchables_collection->addNonexistentSearchable(
-                $metadata->getName()
-            );
-
-            return;
-        }
-
         try {
-            $this->metadata_checker->checkMetadataIsValid(
+            $this->metadata_checker->checkMetadataIsValidForSearch(
                 $metadata,
                 $parameters->comparison,
                 $parameters->invalid_comparison_parameters,

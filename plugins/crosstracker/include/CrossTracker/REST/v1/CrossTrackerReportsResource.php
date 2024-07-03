@@ -287,7 +287,7 @@ final class CrossTrackerReportsResource extends AuthenticatedResource
                 new ParserCacheProxy(new Parser()),
                 new CrossTrackerExpertQueryReportDao(),
                 $this->getInvalidComparisonsCollector(),
-                new InvalidSelectablesCollectorVisitor($this->getDuckTypedFieldChecker()),
+                new InvalidSelectablesCollectorVisitor($this->getDuckTypedFieldChecker(), $this->getMetadataChecker()),
             );
 
             $artifacts = $cross_tracker_artifact_factory->getArtifactsMatchingReport(
@@ -446,7 +446,7 @@ final class CrossTrackerReportsResource extends AuthenticatedResource
                 $expert_query,
                 new InvalidSearchablesCollectionBuilder($this->getInvalidComparisonsCollector(), $trackers, $user),
                 new InvalidSelectablesCollectionBuilder(
-                    new InvalidSelectablesCollectorVisitor($this->getDuckTypedFieldChecker()),
+                    new InvalidSelectablesCollectorVisitor($this->getDuckTypedFieldChecker(), $this->getMetadataChecker()),
                     $trackers,
                     $user
                 ),
@@ -605,6 +605,29 @@ final class CrossTrackerReportsResource extends AuthenticatedResource
         );
     }
 
+    private function getMetadataChecker(): MetadataChecker
+    {
+        return new MetadataChecker(
+            new MetadataUsageChecker(
+                Tracker_FormElementFactory::instance(),
+                new Tracker_Semantic_TitleDao(),
+                new Tracker_Semantic_DescriptionDao(),
+                new Tracker_Semantic_StatusDao(),
+                new Tracker_Semantic_ContributorDao()
+            ),
+            new InvalidMetadataChecker(
+                new TextSemanticChecker(),
+                new StatusChecker(),
+                new AssignedToChecker($this->user_manager),
+                new \Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata\ArtifactSubmitterChecker(
+                    $this->user_manager
+                ),
+                new SubmissionDateChecker(),
+                new ArtifactIdMetadataChecker(),
+            )
+        );
+    }
+
     private function getExpertQueryValidator(): ExpertQueryValidator
     {
         $report_config = new TrackerReportConfig(
@@ -622,28 +645,7 @@ final class CrossTrackerReportsResource extends AuthenticatedResource
     private function getInvalidComparisonsCollector(): InvalidTermCollectorVisitor
     {
         return new InvalidTermCollectorVisitor(
-            new InvalidSearchableCollectorVisitor(
-                new MetadataChecker(
-                    new MetadataUsageChecker(
-                        Tracker_FormElementFactory::instance(),
-                        new Tracker_Semantic_TitleDao(),
-                        new Tracker_Semantic_DescriptionDao(),
-                        new Tracker_Semantic_StatusDao(),
-                        new Tracker_Semantic_ContributorDao()
-                    ),
-                    new InvalidMetadataChecker(
-                        new TextSemanticChecker(),
-                        new StatusChecker(),
-                        new AssignedToChecker($this->user_manager),
-                        new \Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata\ArtifactSubmitterChecker(
-                            $this->user_manager
-                        ),
-                        new SubmissionDateChecker(),
-                        new ArtifactIdMetadataChecker(),
-                    )
-                ),
-                $this->getDuckTypedFieldChecker(),
-            ),
+            new InvalidSearchableCollectorVisitor($this->getMetadataChecker(), $this->getDuckTypedFieldChecker()),
             new ArtifactLinkTypeChecker(
                 new TypePresenterFactory(
                     new TypeDao(),

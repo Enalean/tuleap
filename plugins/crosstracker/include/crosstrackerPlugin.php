@@ -243,29 +243,27 @@ class crosstrackerPlugin extends Plugin
             ),
             $trackers_permissions,
         );
-        $invalid_comparisons_collector = new InvalidTermCollectorVisitor(
-            new InvalidSearchableCollectorVisitor(
-                new MetadataChecker(
-                    new MetadataUsageChecker(
-                        $form_element_factory,
-                        new Tracker_Semantic_TitleDao(),
-                        new Tracker_Semantic_DescriptionDao(),
-                        new Tracker_Semantic_StatusDao(),
-                        new Tracker_Semantic_ContributorDao()
-                    ),
-                    new InvalidMetadataChecker(
-                        new TextSemanticChecker(),
-                        new StatusChecker(),
-                        new AssignedToChecker($user_manager),
-                        new \Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata\ArtifactSubmitterChecker(
-                            $user_manager
-                        ),
-                        new SubmissionDateChecker(),
-                        new ArtifactIdMetadataChecker(),
-                    )
-                ),
-                $duck_typed_field_checker,
+        $metadata_checker              = new MetadataChecker(
+            new MetadataUsageChecker(
+                $form_element_factory,
+                new Tracker_Semantic_TitleDao(),
+                new Tracker_Semantic_DescriptionDao(),
+                new Tracker_Semantic_StatusDao(),
+                new Tracker_Semantic_ContributorDao()
             ),
+            new InvalidMetadataChecker(
+                new TextSemanticChecker(),
+                new StatusChecker(),
+                new AssignedToChecker($user_manager),
+                new \Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata\ArtifactSubmitterChecker(
+                    $user_manager
+                ),
+                new SubmissionDateChecker(),
+                new ArtifactIdMetadataChecker(),
+            )
+        );
+        $invalid_comparisons_collector = new InvalidTermCollectorVisitor(
+            new InvalidSearchableCollectorVisitor($metadata_checker, $duck_typed_field_checker),
             new ArtifactLinkTypeChecker(
                 new TypePresenterFactory(
                     new TypeDao(),
@@ -273,7 +271,7 @@ class crosstrackerPlugin extends Plugin
                 ),
             )
         );
-        $invalid_selectables_collector = new InvalidSelectablesCollectorVisitor($duck_typed_field_checker);
+        $invalid_selectables_collector = new InvalidSelectablesCollectorVisitor($duck_typed_field_checker, $metadata_checker);
 
         $date_time_value_rounder = new DateTimeValueRounder();
         $list_from_where_builder = new Field\ListFromWhereBuilder();
