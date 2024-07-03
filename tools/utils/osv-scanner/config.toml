@@ -86,14 +86,6 @@ reason = "@vue/component-compiler-utils will be removed when the Vue 2 migration
 
 ### TO BE FIXED
 
-# tlp-doc-v2
-## ip
-[[IgnoredVulns]]
-id = "GHSA-2p57-rm9w-gvfp" # CVE-2024-29415
-# https://github.com/storybookjs/storybook/issues/26014
-reason = "Waiting for storybook upstream to switch to fix the issue."
-ignoreUntil = 2024-07-03
-
 # tuleap-mercure
 ## Go stdlib
 [[IgnoredVulns]]
