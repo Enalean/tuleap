@@ -46,7 +46,7 @@ use Tuleap\Tracker\Permission\TrackersPermissionsRetriever;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
 use Tuleap\Tracker\Test\Builders\TrackerDatabaseBuilder;
 
-final class TitleSelectBuilderTest extends CrossTrackerFieldTestCase
+final class DescriptionSelectBuilderTest extends CrossTrackerFieldTestCase
 {
     private PFUser $user;
     /**
@@ -83,12 +83,12 @@ final class TitleSelectBuilderTest extends CrossTrackerFieldTestCase
             $release_tracker->getId(),
             'text_field',
         );
-        $tracker_builder->buildTitleSemantic($release_tracker->getId(), $release_text_field_id);
+        $tracker_builder->buildDescriptionSemantic($release_tracker->getId(), $release_text_field_id);
         $sprint_text_field_id = $tracker_builder->buildTextField(
             $sprint_tracker->getId(),
             'text_field',
         );
-        $tracker_builder->buildTitleSemantic($sprint_tracker->getId(), $sprint_text_field_id);
+        $tracker_builder->buildDescriptionSemantic($sprint_tracker->getId(), $sprint_text_field_id);
 
         $tracker_builder->setReadPermission(
             $release_text_field_id,
@@ -111,7 +111,7 @@ final class TitleSelectBuilderTest extends CrossTrackerFieldTestCase
         $this->expected_results = [
             $release_artifact_empty_id     => null,
             $release_artifact_with_text_id => 'Hello World!',
-            $sprint_artifact_with_text_id  => '**Title**',
+            $sprint_artifact_with_text_id  => '**Description**',
         ];
         $tracker_builder->buildTextValue(
             $release_artifact_with_text_changeset,
@@ -149,16 +149,16 @@ final class TitleSelectBuilderTest extends CrossTrackerFieldTestCase
 
     public function testItReturnsColumns(): void
     {
-        $fragments = $this->builder->buildSelectFrom([new Metadata('title')], $this->trackers, $this->user);
+        $fragments = $this->builder->buildSelectFrom([new Metadata('description')], $this->trackers, $this->user);
         $results   = $this->dao->searchArtifactsColumnsMatchingIds($fragments, $this->artifact_ids);
 
         self::assertCount(3, $results);
         $values = [];
         foreach ($results as $result) {
             self::assertArrayHasKey('id', $result);
-            self::assertArrayHasKey('@title', $result);
-            self::assertArrayHasKey('@title_format', $result);
-            $values[$result['id']] = $result['@title'];
+            self::assertArrayHasKey('@description', $result);
+            self::assertArrayHasKey('@description_format', $result);
+            $values[$result['id']] = $result['@description'];
         }
         self::assertEqualsCanonicalizing($values, $this->expected_results);
     }

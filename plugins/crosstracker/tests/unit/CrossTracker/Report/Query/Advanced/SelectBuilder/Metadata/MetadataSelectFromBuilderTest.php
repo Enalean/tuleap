@@ -24,6 +24,7 @@ namespace Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Metadata;
 
 use LogicException;
 use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\IProvideParametrizedSelectAndFromSQLFragments;
+use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Metadata\Semantic\Description\DescriptionSelectFromBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Metadata\Semantic\Title\TitleSelectFromBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
@@ -34,6 +35,7 @@ final class MetadataSelectFromBuilderTest extends TestCase
     {
         $builder = new MetadataSelectFromBuilder(
             new TitleSelectFromBuilder(),
+            new DescriptionSelectFromBuilder(),
         );
 
         return $builder->getSelectFrom($metadata);
@@ -56,6 +58,13 @@ final class MetadataSelectFromBuilderTest extends TestCase
     public function testItReturnsSQLForTitleSemantic(): void
     {
         $result = $this->getSelectFrom(new Metadata('title'));
+        self::assertNotEmpty($result->getSelect());
+        self::assertNotEmpty($result->getFrom());
+    }
+
+    public function testItReturnsSQLForDescriptionSemantic(): void
+    {
+        $result = $this->getSelectFrom(new Metadata('description'));
         self::assertNotEmpty($result->getSelect());
         self::assertNotEmpty($result->getFrom());
     }

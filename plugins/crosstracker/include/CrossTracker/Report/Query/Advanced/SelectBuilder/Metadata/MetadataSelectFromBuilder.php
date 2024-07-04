@@ -25,6 +25,7 @@ namespace Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Metadata;
 use LogicException;
 use Tuleap\CrossTracker\Report\Query\Advanced\AllowedMetadata;
 use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\IProvideParametrizedSelectAndFromSQLFragments;
+use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Metadata\Semantic\Description\DescriptionSelectFromBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Metadata\Semantic\Title\TitleSelectFromBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\ParametrizedSelectFrom;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
@@ -33,6 +34,7 @@ final readonly class MetadataSelectFromBuilder
 {
     public function __construct(
         private TitleSelectFromBuilder $title_builder,
+        private DescriptionSelectFromBuilder $description_builder,
     ) {
     }
 
@@ -40,18 +42,18 @@ final readonly class MetadataSelectFromBuilder
     {
         return match ($metadata->getName()) {
             // Semantics
-            AllowedMetadata::TITLE => $this->title_builder->getSelectFrom(),
-            AllowedMetadata::DESCRIPTION,
+            AllowedMetadata::TITLE       => $this->title_builder->getSelectFrom(),
+            AllowedMetadata::DESCRIPTION => $this->description_builder->getSelectFrom(),
             AllowedMetadata::STATUS,
             AllowedMetadata::ASSIGNED_TO,
 
-                // Always there fields
+            // Always there fields
             AllowedMetadata::SUBMITTED_ON,
             AllowedMetadata::LAST_UPDATE_DATE,
             AllowedMetadata::SUBMITTED_BY,
             AllowedMetadata::LAST_UPDATE_BY,
-            AllowedMetadata::ID    => new ParametrizedSelectFrom('', '', []),
-            default                => throw new LogicException("Unknown metadata type: {$metadata->getName()}"),
+            AllowedMetadata::ID          => new ParametrizedSelectFrom('', '', []),
+            default                      => throw new LogicException("Unknown metadata type: {$metadata->getName()}"),
         };
     }
 }
