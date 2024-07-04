@@ -19,6 +19,9 @@ dependencies:
   '@tuleap/core-constants':
     specifier: workspace:*
     version: link:../../../lib/frontend/constants
+  '@tuleap/filter-inline-table':
+    specifier: workspace:^
+    version: link:../../../lib/frontend/filter-table
   '@tuleap/lazybox':
     specifier: workspace:^
     version: link:../../../lib/frontend/lazybox
