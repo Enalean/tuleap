@@ -24,6 +24,7 @@ import type { Tracker } from "@/stores/configuration-store";
 import { injectInternalId } from "@/helpers/inject-internal-id";
 
 const noop = (): void => {};
+const promised_noop = (): Promise<void> => Promise.resolve();
 
 export const InjectedSectionsStoreStub = {
     withLoadedSections: (sections: readonly ArtidocSection[]): SectionsStore => ({
@@ -32,7 +33,7 @@ export const InjectedSectionsStoreStub = {
         insertPendingArtifactSectionForEmptyDocument: noop,
         insertSection: noop,
         removeSection: noop,
-        loadSections: noop,
+        loadSections: promised_noop,
         updateSection: noop,
         is_sections_loading: ref(false),
         sections: ref(sections.map(injectInternalId)),
@@ -43,7 +44,7 @@ export const InjectedSectionsStoreStub = {
         insertPendingArtifactSectionForEmptyDocument: noop,
         insertSection: noop,
         removeSection: noop,
-        loadSections: noop,
+        loadSections: promised_noop,
         updateSection: noop,
         is_sections_loading: ref(true),
         sections: ref(sections.map(injectInternalId)),
@@ -54,12 +55,12 @@ export const InjectedSectionsStoreStub = {
         insertPendingArtifactSectionForEmptyDocument: noop,
         insertSection: noop,
         removeSection: noop,
-        loadSections: noop,
+        loadSections: promised_noop,
         updateSection: noop,
         is_sections_loading: ref(false),
         sections: ref(undefined),
     }),
-    withMockedLoadSections: (loadSections: (item_id: number) => void): SectionsStore => ({
+    withMockedLoadSections: (loadSections: (item_id: number) => Promise<void>): SectionsStore => ({
         replacePendingByArtifactSection: noop,
         getSectionPositionForSave: () => null,
         insertPendingArtifactSectionForEmptyDocument: noop,

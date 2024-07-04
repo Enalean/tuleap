@@ -31,7 +31,7 @@ import { SECTIONS_STORE } from "@/stores/sections-store-injection-key";
 
 describe("App", () => {
     it("should display the document view", () => {
-        const loadSections = vi.fn();
+        const loadSections = vi.fn().mockReturnValue(Promise.resolve());
 
         mockStrictInject([
             [CONFIGURATION_STORE, ConfigurationStoreStub.withoutAllowedTrackers()],

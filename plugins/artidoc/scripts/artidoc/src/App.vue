@@ -29,6 +29,7 @@
 import { onMounted } from "vue";
 import DocumentView from "@/views/DocumentView.vue";
 import DocumentHeader from "@/components/DocumentHeader.vue";
+import useScrollToAnchor from "@/composables/useScrollToAnchor";
 import { CONFIGURATION_STORE } from "@/stores/configuration-store";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import { CAN_USER_EDIT_DOCUMENT } from "@/can-user-edit-document-injection-key";
@@ -41,8 +42,17 @@ const store = strictInject(SECTIONS_STORE);
 const configuration = strictInject(CONFIGURATION_STORE);
 const can_user_edit_document = strictInject(CAN_USER_EDIT_DOCUMENT);
 
+const { scrollToAnchor } = useScrollToAnchor();
+
 onMounted(() => {
-    store.loadSections(item_id, configuration.selected_tracker.value, can_user_edit_document);
+    store
+        .loadSections(item_id, configuration.selected_tracker.value, can_user_edit_document)
+        .then(() => {
+            const hash = window.location.hash.slice(1);
+            if (hash) {
+                scrollToAnchor(hash);
+            }
+        });
 });
 </script>
 
