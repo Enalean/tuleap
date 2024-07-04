@@ -67,7 +67,9 @@ h1 {
 
 ol {
     height: var(--available-height-for-sidebar);
+    padding: 0;
     overflow: hidden scroll;
+    list-style-position: inside;
 }
 
 li {
