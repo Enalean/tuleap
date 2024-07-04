@@ -26,7 +26,7 @@ use PFUser;
 use Tracker;
 use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Field\FieldSelectFromBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\IProvideParametrizedSelectAndFromSQLFragments;
-use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\ParametrizedSelectFrom;
+use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Metadata\MetadataSelectFromBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\ParametrizedSelectFromBase;
 use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\SelectBuilderVisitorParameters;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Field;
@@ -41,6 +41,7 @@ final readonly class SelectBuilderVisitor implements SelectableVisitor
 {
     public function __construct(
         private FieldSelectFromBuilder $field_select_from_builder,
+        private MetadataSelectFromBuilder $metadata_select_from_builder,
     ) {
     }
 
@@ -76,6 +77,6 @@ final readonly class SelectBuilderVisitor implements SelectableVisitor
 
     public function visitMetaData(Metadata $metadata, $parameters)
     {
-        return new ParametrizedSelectFrom('', '', []);
+        return $this->metadata_select_from_builder->getSelectFrom($metadata);
     }
 }
