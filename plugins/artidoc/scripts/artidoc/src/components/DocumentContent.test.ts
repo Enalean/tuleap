@@ -21,7 +21,7 @@ import { beforeEach, describe, expect, it } from "vitest";
 import { shallowMount } from "@vue/test-utils";
 import DocumentContent from "@/components/DocumentContent.vue";
 import ArtifactSectionFactory from "@/helpers/artifact-section.factory";
-import SectionContainer from "@/components/SectionContainer.vue";
+import SectionContainer from "@/components/section/SectionContainer.vue";
 import type { SectionsStore } from "@/stores/useSectionsStore";
 import { InjectedSectionsStoreStub } from "@/helpers/stubs/InjectSectionsStoreStub";
 import { mockStrictInject } from "@/helpers/mock-strict-inject";

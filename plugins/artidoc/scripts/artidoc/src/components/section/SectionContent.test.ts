@@ -19,13 +19,13 @@
 import { beforeAll, describe, expect, it, vi } from "vitest";
 import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
-import SectionContent from "@/components/SectionContent.vue";
+import SectionContent from "./SectionContent.vue";
 import type { ComponentPublicInstance } from "vue";
 import ArtifactSectionFactory from "@/helpers/artifact-section.factory";
-import SectionHeader from "@/components/SectionHeader.vue";
-import SectionDescription from "@/components/SectionDescription.vue";
+import SectionHeader from "./header/SectionHeader.vue";
+import SectionDescription from "./description/SectionDescription.vue";
 import * as editor from "@/composables/useSectionEditor";
-import SectionHeaderSkeleton from "@/components/SectionHeaderSkeleton.vue";
+import SectionHeaderSkeleton from "./header/SectionHeaderSkeleton.vue";
 import { InjectedSectionsStoreStub } from "@/helpers/stubs/InjectSectionsStoreStub";
 import { SectionEditorStub } from "@/helpers/stubs/SectionEditorStub";
 import { mockStrictInject } from "@/helpers/mock-strict-inject";

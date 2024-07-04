@@ -32,8 +32,8 @@
 </template>
 
 <script setup lang="ts">
-import TableOfContents from "@/components/TableOfContents.vue";
-import DocumentContent from "@/components/DocumentContent.vue";
+import TableOfContents from "./toc/TableOfContents.vue";
+import DocumentContent from "./DocumentContent.vue";
 </script>
 
 <style lang="scss" scoped>

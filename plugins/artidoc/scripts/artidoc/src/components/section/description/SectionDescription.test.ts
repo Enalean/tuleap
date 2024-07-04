@@ -19,10 +19,10 @@
 
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { shallowMount } from "@vue/test-utils";
-import SectionDescription from "@/components/SectionDescription.vue";
-import SectionDescriptionSkeleton from "@/components/SectionDescriptionSkeleton.vue";
+import SectionDescription from "./SectionDescription.vue";
+import SectionDescriptionSkeleton from "./SectionDescriptionSkeleton.vue";
 import { InjectedSectionsStoreStub } from "@/helpers/stubs/InjectSectionsStoreStub";
-import SectionDescriptionReadOnly from "@/components/description/SectionDescriptionReadOnly.vue";
+import SectionDescriptionReadOnly from "./SectionDescriptionReadOnly.vue";
 import { mockStrictInject } from "@/helpers/mock-strict-inject";
 import { SECTIONS_STORE } from "@/stores/sections-store-injection-key";
 

@@ -19,9 +19,9 @@
 
 import { describe, expect, it } from "vitest";
 import { shallowMount } from "@vue/test-utils";
-import DocumentLayout from "@/components/DocumentLayout.vue";
-import DocumentContent from "@/components/DocumentContent.vue";
-import TableOfContents from "@/components/TableOfContents.vue";
+import DocumentLayout from "./DocumentLayout.vue";
+import DocumentContent from "./DocumentContent.vue";
+import TableOfContents from "./toc/TableOfContents.vue";
 
 describe("DocumentLayout", () => {
     it("should display document content", () => {

@@ -24,7 +24,7 @@
 </template>
 
 <script setup lang="ts">
-import SectionContent from "@/components/SectionContent.vue";
+import SectionContent from "./SectionContent.vue";
 import type { ArtidocSection } from "@/helpers/artidoc-section.type";
 
 defineProps<{ section: ArtidocSection }>();

@@ -24,38 +24,33 @@ import type { ComponentPublicInstance } from "vue";
 import { createGettext } from "vue3-gettext";
 import { SectionEditorStub } from "@/helpers/stubs/SectionEditorStub";
 import type { SectionEditor } from "@/composables/useSectionEditor";
-import SectionEditorSaveCancelButtons from "@/components/SectionEditorSaveCancelButtons.vue";
-import { mockStrictInject } from "@/helpers/mock-strict-inject";
-import { CONFIGURATION_STORE } from "@/stores/configuration-store";
-import { ConfigurationStoreStub } from "@/helpers/stubs/ConfigurationStoreStub";
+import SectionFooter from "./SectionFooter.vue";
+import ArtifactSectionFactory from "@/helpers/artifact-section.factory";
 
-describe("SectionEditorSaveCancelButtons", () => {
+describe("SectionFooter", () => {
     function getWrapper(editor: SectionEditor): VueWrapper<ComponentPublicInstance> {
-        return shallowMount(SectionEditorSaveCancelButtons, {
+        return shallowMount(SectionFooter, {
             propsData: {
                 editor,
+                section: ArtifactSectionFactory.create(),
             },
             global: { plugins: [createGettext({ silent: true })] },
         });
     }
 
-    describe("when the edit mode is off", () => {
-        it("should hide buttons", () => {
-            mockStrictInject([
-                [CONFIGURATION_STORE, ConfigurationStoreStub.withoutAllowedTrackers()],
-            ]);
+    describe("when the section is not editable", () => {
+        it("should hide the footer", () => {
             expect(
-                getWrapper(SectionEditorStub.withEditableSection()).find("button").exists(),
+                getWrapper(SectionEditorStub.withoutEditableSection()).find("div").exists(),
             ).toBe(false);
         });
     });
 
-    describe("when the edit mode is on", () => {
-        it("should display buttons", () => {
-            mockStrictInject([
-                [CONFIGURATION_STORE, ConfigurationStoreStub.withoutAllowedTrackers()],
-            ]);
-            expect(getWrapper(SectionEditorStub.inEditMode()).find("button").exists()).toBe(true);
+    describe("when the section is editable", () => {
+        it("should display the footer", () => {
+            expect(getWrapper(SectionEditorStub.withEditableSection()).find("div").exists()).toBe(
+                true,
+            );
         });
     });
 });

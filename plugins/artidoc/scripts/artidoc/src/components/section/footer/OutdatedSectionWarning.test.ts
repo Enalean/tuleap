@@ -19,7 +19,7 @@
 
 import { describe, expect, it, vi } from "vitest";
 import { shallowMount } from "@vue/test-utils";
-import OutdatedSectionWarning from "@/components/OutdatedSectionWarning.vue";
+import OutdatedSectionWarning from "./OutdatedSectionWarning.vue";
 import { createGettext } from "vue3-gettext";
 import type { SectionEditorActions } from "@/composables/useSectionEditor";
 
