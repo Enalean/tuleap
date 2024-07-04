@@ -91,14 +91,19 @@ reason = "@vue/component-compiler-utils will be removed when the Vue 2 migration
 [[IgnoredVulns]]
 id = "GO-2024-2824" # CVE-2024-24788
 reason = "No impact in our situation. Waiting for Go 1.22.4 in nixpkgs cache."
-ignoreUntil = 2024-07-05
+ignoreUntil = 2024-08-04
 
 [[IgnoredVulns]]
 id = "GO-2024-2887" # CVE-2024-24790
 reason = "No impact in our situation. Waiting for Go 1.22.4 in nixpkgs cache."
-ignoreUntil = 2024-07-05
+ignoreUntil = 2024-08-04
 
 [[IgnoredVulns]]
 id = "GO-2024-2888" # CVE-2024-24789
 reason = "Impacted function is not even called. Waiting for Go 1.22.4 in nixpkgs cache."
-ignoreUntil = 2024-07-05
+ignoreUntil = 2024-08-04
+
+[[IgnoredVulns]]
+id = "GO-2024-2963" # CVE-2024-24791
+reason = "No impact in our situation. Waiting for Go 1.22.5 in nixpkgs cache."
+ignoreUntil = 2024-08-04
