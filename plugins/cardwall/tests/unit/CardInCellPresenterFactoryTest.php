@@ -22,104 +22,74 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use Tuleap\Tracker\Artifact\Artifact;
+declare(strict_types=1);
 
-//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
-class CardInCellPresenterFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
+namespace Tuleap\Cardwall;
+
+use Cardwall_CardInCellPresenter;
+use Cardwall_CardInCellPresenterFactory;
+use Cardwall_CardPresenter;
+use Cardwall_FieldProviders_IProvideFieldGivenAnArtifact;
+use Cardwall_MappingCollection;
+use PHPUnit\Framework\MockObject\MockObject;
+use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
+
+final class CardInCellPresenterFactoryTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     private int $field_id;
-    /**
-     * @var \Mockery\MockInterface&Tracker_FormElement_Field_MultiSelectbox
-     */
-    private $field;
-    /**
-     * @var \Mockery\MockInterface&Artifact
-     */
-    private $artifact;
-    /**
-     * @var \Mockery\MockInterface&Cardwall_CardPresenter
-     */
-    private $card_presenter;
-    /**
-     * @var \Mockery\MockInterface&Cardwall_FieldProviders_IProvideFieldGivenAnArtifact
-     */
-    private $field_provider;
+    private Cardwall_CardPresenter&MockObject $card_presenter;
+    private Cardwall_FieldProviders_IProvideFieldGivenAnArtifact&MockObject $field_provider;
 
     protected function setUp(): void
     {
-        parent::setUp();
-
-        $tracker        = \Mockery::spy(\Tracker::class);
+        $tracker        = TrackerTestBuilder::aTracker()->build();
         $this->field_id = 77777;
-        $this->field    = Mockery::spy(\Tracker_FormElement_Field_MultiSelectbox::class)
-            ->shouldReceive('getId')
-            ->andReturns($this->field_id)
-            ->getMock();
+        $field          = ListFieldBuilder::aListField($this->field_id)->withMultipleValues()->build();
+        $artifact       = ArtifactTestBuilder::anArtifact(145)->inTracker($tracker)->build();
 
-        $this->artifact = Mockery::spy(Artifact::class)
-            ->shouldReceive('getTracker')
-            ->andReturn($tracker)
-            ->getMock();
+        $this->card_presenter = $this->createMock(Cardwall_CardPresenter::class);
+        $this->card_presenter->method('getArtifact')->willReturn($artifact);
 
-        $this->card_presenter = Mockery::spy(\Cardwall_CardPresenter::class)
-            ->shouldReceive('getArtifact')
-            ->andReturns($this->artifact)
-            ->getMock();
-
-        $this->field_provider = Mockery::spy(\Cardwall_FieldProviders_IProvideFieldGivenAnArtifact::class)
-            ->shouldReceive('getField')
-            ->with($tracker)
-            ->andReturns($this->field)
-            ->getMock();
+        $this->field_provider = $this->createMock(Cardwall_FieldProviders_IProvideFieldGivenAnArtifact::class);
+        $this->field_provider->method('getField')->with($tracker)->willReturn($field);
     }
 
     public function testItHasACardInCellPresenterWithASemanticStatusFieldId(): void
     {
         $card_in_cell_presenter_factory = new Cardwall_CardInCellPresenterFactory($this->field_provider, new Cardwall_MappingCollection());
-        $cell_presenter                 = $card_in_cell_presenter_factory->getCardInCellPresenter($this->card_presenter);
+        $this->card_presenter->method('getSwimlineId');
+        $cell_presenter = $card_in_cell_presenter_factory->getCardInCellPresenter($this->card_presenter);
 
-        $this->assertEquals(
-            $cell_presenter,
-            new Cardwall_CardInCellPresenter($this->card_presenter, $this->field_id)
-        );
+        self::assertEquals($cell_presenter, new Cardwall_CardInCellPresenter($this->card_presenter, $this->field_id));
     }
 
     public function testItHasACardInCellPresenterWithSwimLineId(): void
     {
         $swimline_id = 112;
-        $this->card_presenter->shouldReceive('getSwimlineId')->andReturns($swimline_id);
+        $this->card_presenter->method('getSwimlineId')->willReturn($swimline_id);
 
         $mapping_collection = new Cardwall_MappingCollection();
 
         $card_in_cell_presenter_factory = new Cardwall_CardInCellPresenterFactory($this->field_provider, $mapping_collection);
         $cell_presenter                 = $card_in_cell_presenter_factory->getCardInCellPresenter($this->card_presenter);
 
-        $this->assertEquals(
-            $cell_presenter,
-            new Cardwall_CardInCellPresenter($this->card_presenter, $this->field_id, $swimline_id)
-        );
+        self::assertEquals($cell_presenter, new Cardwall_CardInCellPresenter($this->card_presenter, $this->field_id, $swimline_id));
     }
 
     public function testItHasACardInCellPresenterWithSwimLineValueCollection(): void
     {
         $swimline_id = 112;
-        $this->card_presenter->shouldReceive('getSwimlineId')->andReturns($swimline_id);
+        $this->card_presenter->method('getSwimlineId')->willReturn($swimline_id);
 
-        $mapping_collection = Mockery::mock(\Cardwall_MappingCollection::class)
-            ->shouldReceive('getSwimLineValues')
-            ->with($this->field_id)
-            ->andReturns([123, 456])
-            ->getMock();
+        $mapping_collection = $this->createMock(Cardwall_MappingCollection::class);
+        $mapping_collection->method('getSwimLineValues')->with($this->field_id)->willReturn([123, 456]);
 
         $card_in_cell_presenter_factory = new Cardwall_CardInCellPresenterFactory($this->field_provider, $mapping_collection);
         $cell_presenter                 = $card_in_cell_presenter_factory->getCardInCellPresenter($this->card_presenter);
 
-        $this->assertEquals(
-            $cell_presenter,
-            new Cardwall_CardInCellPresenter($this->card_presenter, $this->field_id, $swimline_id, [123, 456])
-        );
+        self::assertEquals($cell_presenter, new Cardwall_CardInCellPresenter($this->card_presenter, $this->field_id, $swimline_id, [123, 456]));
     }
 }

@@ -20,27 +20,28 @@
 
 declare(strict_types=1);
 
-use Tuleap\Tracker\Artifact\Artifact;
+namespace Tuleap\Cardwall;
 
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
-final class Cardwall_SwimLineFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
+use Cardwall_CardInCellPresenter;
+use Cardwall_Column;
+use Cardwall_FieldProviders_IProvideFieldGivenAnArtifact;
+use Cardwall_OnTop_Config;
+use Cardwall_OnTop_Config_ColumnCollection;
+use Cardwall_OnTop_Config_ColumnFreestyleCollection;
+use Cardwall_SwimlineFactory;
+use PHPUnit\Framework\MockObject\MockObject;
+use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
+
+final class Cardwall_SwimLineFactoryTest extends TestCase // phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
-    /**
-     * @var Cardwall_OnTop_Config|\Mockery\LegacyMockInterface|\Mockery\MockInterface
-     */
-    private $config;
-    /**
-     * @var Cardwall_SwimlineFactory
-     */
-    private $factory;
+    private Cardwall_OnTop_Config&MockObject $config;
+    private Cardwall_SwimlineFactory $factory;
 
     protected function setUp(): void
     {
-        parent::setUp();
-        $this->config  = \Mockery::mock(\Cardwall_OnTop_Config::class);
-        $this->factory = new Cardwall_SwimlineFactory($this->config, \Mockery::spy(\Cardwall_FieldProviders_IProvideFieldGivenAnArtifact::class));
+        $this->config  = $this->createMock(Cardwall_OnTop_Config::class);
+        $this->factory = new Cardwall_SwimlineFactory($this->config, $this->createMock(Cardwall_FieldProviders_IProvideFieldGivenAnArtifact::class));
     }
 
     public function testItReturnsAnEmptyArrayIfThereAreNoColumnsAndNoPresenters(): void
@@ -48,70 +49,73 @@ final class Cardwall_SwimLineFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
         $columns    = new Cardwall_OnTop_Config_ColumnFreestyleCollection();
         $presenters = [];
         $swimlines  = $this->factory->getCells($columns, $presenters);
-        $this->assertSame([], $swimlines);
+        self::assertSame([], $swimlines);
     }
 
     public function testItReturnsAnEmptyArrayIfThereAreNoColumnsButSomePresenters(): void
     {
         $columns    = new Cardwall_OnTop_Config_ColumnFreestyleCollection();
-        $presenters = [\Mockery::spy(\Cardwall_CardInCellPresenter::class)];
+        $presenters = [$this->createMock(Cardwall_CardInCellPresenter::class)];
         $swimlines  = $this->factory->getCells($columns, $presenters);
-        $this->assertSame([], $swimlines);
+        self::assertSame([], $swimlines);
     }
 
     public function testItReturnsANestedArrayOfPresenterPresentersIfThereAreColumnsButNoPresenters(): void
     {
-        $mocked_column = \Mockery::spy(\Cardwall_Column::class);
-        $mocked_column->shouldReceive('getId')->andReturns(44);
-        $mocked_column->shouldReceive('isAutostacked')->andReturns(true);
+        $mocked_column = $this->createMock(Cardwall_Column::class);
+        $mocked_column->method('getId')->willReturn(44);
+        $mocked_column->method('isAutostacked')->willReturn(true);
 
         $columns    = new Cardwall_OnTop_Config_ColumnFreestyleCollection([$mocked_column]);
         $presenters = [];
         $swimlines  = $this->factory->getCells($columns, $presenters);
-        $expected   = [
-            ['column_id' => 44, 'column_stacked' => true, 'cardincell_presenters' => []],
-        ];
-        $this->assertSame($expected, $swimlines);
+        $expected   = [['column_id' => 44, 'column_stacked' => true, 'cardincell_presenters' => []]];
+        self::assertSame($expected, $swimlines);
     }
 
     public function testItAsksTheColumnIfItGoesInThere(): void
     {
-        $artifact1             = Mockery::mock(Artifact::class);
-        $artifact2             = Mockery::mock(Artifact::class);
+        $artifact1             = ArtifactTestBuilder::anArtifact(1)->build();
+        $artifact2             = ArtifactTestBuilder::anArtifact(2)->build();
         $label                 = $bgcolor = null;
         $column1               = new Cardwall_Column(55, $label, $bgcolor);
         $column2               = new Cardwall_Column(100, $label, $bgcolor);
         $columns               = new Cardwall_OnTop_Config_ColumnCollection([$column1, $column2]);
-        $cardincell_presenter1 = \Mockery::spy(\Cardwall_CardInCellPresenter::class)->shouldReceive('getArtifact')->andReturns($artifact1)->getMock();
-        $cardincell_presenter2 = \Mockery::spy(\Cardwall_CardInCellPresenter::class)->shouldReceive('getArtifact')->andReturns($artifact2)->getMock();
+        $cardincell_presenter1 = $this->createMock(Cardwall_CardInCellPresenter::class);
+        $cardincell_presenter1->method('getArtifact')->willReturn($artifact1);
+        $cardincell_presenter2 = $this->createMock(Cardwall_CardInCellPresenter::class);
+        $cardincell_presenter2->method('getArtifact')->willReturn($artifact2);
 
-        $this->config->shouldReceive('isInColumn')->with($artifact1, \Mockery::any(), $column1)->andReturns(true);
-        $this->config->shouldReceive('isInColumn')->with($artifact1, \Mockery::any(), $column2)->andReturns(false);
-        $this->config->shouldReceive('isInColumn')->with($artifact2, \Mockery::any(), $column1)->andReturns(false);
-        $this->config->shouldReceive('isInColumn')->with($artifact2, \Mockery::any(), $column2)->andReturns(true);
+        $this->config->method('isInColumn')
+            ->withConsecutive(
+                [$artifact1, self::anything(), $column1],
+                [$artifact2, self::anything(), $column1],
+                [$artifact1, self::anything(), $column2],
+                [$artifact2, self::anything(), $column2],
+            )
+            ->willReturnOnConsecutiveCalls(true, false, false, true);
 
         $swimlines = $this->factory->getCells($columns, [$cardincell_presenter1, $cardincell_presenter2]);
         $expected  = [
             ['column_id' => 55, 'column_stacked' => true, 'cardincell_presenters' => [$cardincell_presenter1]],
             ['column_id' => 100, 'column_stacked' => true, 'cardincell_presenters' => [$cardincell_presenter2]],
         ];
-        $this->assertSame($expected, $swimlines);
+        self::assertSame($expected, $swimlines);
     }
 
     public function testItIgnoresPresentersIfThereIsNoMatchingColumn(): void
     {
-        $artifact             = Mockery::mock(Artifact::class);
+        $artifact             = ArtifactTestBuilder::anArtifact(1)->build();
         $column               = new Cardwall_Column(55, null, null);
         $columns              = new Cardwall_OnTop_Config_ColumnCollection();
         $columns[]            = $column;
-        $cardincell_presenter = \Mockery::spy(\Cardwall_CardInCellPresenter::class)->shouldReceive('getArtifact')->andReturns($artifact)->getMock();
+        $cardincell_presenter = $this->createMock(Cardwall_CardInCellPresenter::class);
+        $cardincell_presenter->method('getArtifact')->willReturn($artifact);
 
-        $this->config->shouldReceive('isInColumn')->with($artifact, \Mockery::any(), $column)->andReturns(false);
+        $this->config->method('isInColumn')->with($artifact, self::anything(), $column)->willReturn(false);
 
         $swimlines = $this->factory->getCells($columns, [$cardincell_presenter]);
-        $expected  = [
-            ['column_id' => 55, 'column_stacked' => true, 'cardincell_presenters' => []],
-        ];
-        $this->assertSame($expected, $swimlines);
+        $expected  = [['column_id' => 55, 'column_stacked' => true, 'cardincell_presenters' => []]];
+        self::assertSame($expected, $swimlines);
     }
 }
