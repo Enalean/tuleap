@@ -61,7 +61,7 @@ const upload_max_size = strictInject(UPLOAD_MAX_SIZE);
 const { $gettext, interpolate } = useGettext();
 
 const onChange = (editor_value: string | undefined): void => {
-    if (editor_value) {
+    if (editor_value !== undefined) {
         props.input_current_description(editor_value);
     }
 };
