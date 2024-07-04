@@ -26,6 +26,7 @@ use ParagonIE\EasyDB\EasyDB;
 use Tuleap\Artidoc\Document\Section\AlreadyExistingSectionWithSameArtifactException;
 use Tuleap\Artidoc\Document\Section\Identifier\SectionIdentifier;
 use Tuleap\Artidoc\Document\Section\Identifier\SectionIdentifierFactory;
+use Tuleap\Artidoc\Document\Section\UnableToFindSiblingSectionException;
 use Tuleap\DB\DataAccessObject;
 
 final class ArtidocDao extends DataAccessObject implements SearchArtidocDocument, SearchOneSection, SearchPaginatedRawSections, SaveSections, SaveOneSection, SearchConfiguredTracker, SaveConfiguredTracker
@@ -215,7 +216,11 @@ final class ArtidocDao extends DataAccessObject implements SearchArtidocDocument
                 'SELECT `rank` FROM plugin_artidoc_document WHERE id = ? AND item_id = ?',
                 $sibling_section_id->getBytes(),
                 $item_id,
-            ) ?: 0;
+            );
+
+            if ($rank === false) {
+                throw new UnableToFindSiblingSectionException();
+            }
 
             $db->run(
                 <<<EOS

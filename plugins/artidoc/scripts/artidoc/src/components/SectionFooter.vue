@@ -45,8 +45,7 @@ import type { ArtidocSection } from "@/helpers/artidoc-section.type";
 
 const props = defineProps<{ section: ArtidocSection; editor: SectionEditor }>();
 
-const { getErrorMessage, is_outdated, is_in_error, is_not_found } = props.editor.editor_error;
-const error_message = getErrorMessage();
+const { error_message, is_outdated, is_in_error, is_not_found } = props.editor.editor_error;
 const { is_section_editable } = props.editor.editor_state;
 </script>
 

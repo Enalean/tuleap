@@ -36,8 +36,8 @@ export const SectionEditorStub = {
             is_in_error: ref(false),
             is_outdated: ref(false),
             is_not_found: ref(false),
+            error_message: ref(""),
             resetErrorStates: noop,
-            getErrorMessage: () => "",
         },
         editor_actions: {
             enableEditor: noop,

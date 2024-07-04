@@ -48,11 +48,11 @@ describe("useEditorErrors", () => {
         });
         describe("when an error is triggered", () => {
             it("should set an error message", () => {
-                const { handleError, getErrorMessage } = useEditorErrors();
+                const { handleError, error_message } = useEditorErrors();
 
                 handleError(TuleapAPIFaultStub.fromCodeAndMessage(500, "Explosion !!"));
 
-                expect(getErrorMessage()).toBe("Explosion !!");
+                expect(error_message.value).toBe("Explosion !!");
             });
         });
     });

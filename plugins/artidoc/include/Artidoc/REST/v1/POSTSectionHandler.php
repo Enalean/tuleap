@@ -30,6 +30,7 @@ use Tuleap\Artidoc\Document\RawSection;
 use Tuleap\Artidoc\Document\RetrieveArtidoc;
 use Tuleap\Artidoc\Document\SaveOneSection;
 use Tuleap\Artidoc\Document\Section\Identifier\SectionIdentifierFactory;
+use Tuleap\Artidoc\Document\Section\UnableToFindSiblingSectionException;
 use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
@@ -122,6 +123,8 @@ final readonly class POSTSectionHandler
             return Result::err(Fault::fromMessage('Sibling section id is invalid'));
         } catch (AlreadyExistingSectionWithSameArtifactException $exception) {
             return Result::err(AlreadyExistingSectionWithSameArtifactFault::fromThrowable($exception));
+        } catch (UnableToFindSiblingSectionException $exception) {
+            return Result::err(UnableToFindSiblingSectionFault::fromThrowable($exception));
         }
 
         return Result::ok(ArtidocSectionRepresentation::fromRepresentationWithId($section_representation, $section_id));

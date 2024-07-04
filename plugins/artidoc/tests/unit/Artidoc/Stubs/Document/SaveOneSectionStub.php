@@ -26,6 +26,7 @@ use Tuleap\Artidoc\Document\SaveOneSection;
 use Tuleap\Artidoc\Document\Section\AlreadyExistingSectionWithSameArtifactException;
 use Tuleap\Artidoc\Document\Section\Identifier\SectionIdentifier;
 use Tuleap\Artidoc\Document\Section\Identifier\SectionIdentifierFactory;
+use Tuleap\Artidoc\Document\Section\UnableToFindSiblingSectionException;
 
 final class SaveOneSectionStub implements SaveOneSection
 {
@@ -38,7 +39,13 @@ final class SaveOneSectionStub implements SaveOneSection
      */
     private array $saved_end = [];
 
-    private function __construct(private ?SectionIdentifierFactory $identifier_factory, private string $id)
+    private const EXCEPTION_ALREADY_EXISTING_ARTIFACT = 'already-existing-artifact';
+    private const EXCEPTION_NO_SIBLING_SECTION        = 'no-sibling-SECTION';
+
+    /**
+     * @param-param self::EXCEPTION_*|SectionIdentifierFactory $identifier_factory
+     */
+    private function __construct(private string|SectionIdentifierFactory $identifier_factory, private string $id)
     {
     }
 
@@ -49,7 +56,12 @@ final class SaveOneSectionStub implements SaveOneSection
 
     public static function withAlreadyExistingSectionWithSameArtifact(string $id): self
     {
-        return new self(null, $id);
+        return new self(self::EXCEPTION_ALREADY_EXISTING_ARTIFACT, $id);
+    }
+
+    public static function withUnableToFindSiblingSection(string $id): self
+    {
+        return new self(self::EXCEPTION_NO_SIBLING_SECTION, $id);
     }
 
     public function isSaved(int $id): bool
@@ -69,9 +81,7 @@ final class SaveOneSectionStub implements SaveOneSection
 
     public function saveSectionAtTheEnd(int $item_id, int $artifact_id): SectionIdentifier
     {
-        if ($this->identifier_factory === null) {
-            throw new AlreadyExistingSectionWithSameArtifactException();
-        }
+        $this->raiseExceptionIfNeeded();
 
         $this->saved_end[$item_id] = $artifact_id;
 
@@ -80,12 +90,23 @@ final class SaveOneSectionStub implements SaveOneSection
 
     public function saveSectionBefore(int $item_id, int $artifact_id, SectionIdentifier $sibling_section_id): SectionIdentifier
     {
-        if ($this->identifier_factory === null) {
-            throw new AlreadyExistingSectionWithSameArtifactException();
-        }
+        $this->raiseExceptionIfNeeded();
 
         $this->saved_before[$item_id] = $artifact_id;
 
         return $this->identifier_factory->buildFromHexadecimalString($this->id);
+    }
+
+    /**
+     * @psalm-assert SectionIdentifierFactory $this->identifier_factory
+     */
+    private function raiseExceptionIfNeeded(): void
+    {
+        if (! $this->identifier_factory instanceof SectionIdentifierFactory) {
+            throw match ($this->identifier_factory) {
+                self::EXCEPTION_ALREADY_EXISTING_ARTIFACT => new AlreadyExistingSectionWithSameArtifactException(),
+                self::EXCEPTION_NO_SIBLING_SECTION => new UnableToFindSiblingSectionException(),
+            };
+        }
     }
 }

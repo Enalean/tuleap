@@ -25,7 +25,7 @@ export type EditorErrors = {
     is_in_error: Ref<boolean>;
     is_outdated: Ref<boolean>;
     is_not_found: Ref<boolean>;
-    getErrorMessage: () => string;
+    error_message: Ref<string>;
     resetErrorStates: () => void;
     handleError: (fault: Fault) => void;
 };
@@ -64,10 +64,10 @@ export function useEditorErrors(): EditorErrors {
     }
 
     return {
-        is_in_error: is_in_error,
-        is_outdated: is_outdated,
-        is_not_found: is_not_found,
-        getErrorMessage: () => error_message.value,
+        is_in_error,
+        is_outdated,
+        is_not_found,
+        error_message,
         resetErrorStates: resetErrorStates,
         handleError: handleError,
     };
