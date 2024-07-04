@@ -25,13 +25,12 @@ namespace Tuleap\PrometheusMetrics;
 use Enalean\Prometheus\Storage\FlushableStorage;
 use EventManager;
 use Psr\Http\Message\ServerRequestInterface;
-use Redis;
 use Tuleap\Admin\Homepage\NbUsersByStatus;
 use Tuleap\Admin\Homepage\NbUsersByStatusBuilder;
 use Tuleap\BuildVersion\FlavorFinder;
 use Tuleap\BuildVersion\VersionPresenter;
 use Tuleap\Http\HTTPFactoryBuilder;
-use Tuleap\Queue\Worker;
+use Tuleap\Queue\Noop\PersistentQueue;
 use Laminas\HttpHandlerRunner\Emitter\EmitterInterface;
 
 final class MetricsControllerTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -41,7 +40,6 @@ final class MetricsControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $dao               = $this->createMock(MetricsCollectorDao::class);
         $nb_user_builder   = $this->createMock(NbUsersByStatusBuilder::class);
         $event_manager     = $this->createMock(EventManager::class);
-        $redis_client      = $this->getMockBuilder(Redis::class)->onlyMethods(['lLen'])->setConstructorArgs([])->getMock();
         $version_presenter = VersionPresenter::fromFlavorFinder(
             new class implements FlavorFinder {
                 public function isEnterprise(): bool
@@ -58,7 +56,7 @@ final class MetricsControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             $nb_user_builder,
             $event_manager,
             $version_presenter,
-            $redis_client,
+            new PersistentQueue(),
             $this->createMock(FlushableStorage::class)
         );
 
@@ -68,8 +66,6 @@ final class MetricsControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             new NbUsersByStatus(0, 0, 0, 0, 0, 0, 0)
         );
         $event_manager->method('processEvent');
-
-        $redis_client->method('lLen')->with(Worker::EVENT_QUEUE_NAME)->willReturn(0);
 
         $response = $controller->handle($this->createMock(ServerRequestInterface::class));
 

@@ -29,6 +29,7 @@ use Tuleap\Admin\Homepage\NbUsersByStatusBuilder;
 use Tuleap\BuildVersion\VersionPresenter;
 use Tuleap\Instrument\Prometheus\CollectTuleapComputedMetrics;
 use Tuleap\Instrument\Prometheus\Prometheus;
+use Tuleap\Queue\PersistentQueue;
 use Tuleap\Queue\Worker;
 
 class MetricsCollector
@@ -60,10 +61,6 @@ class MetricsCollector
      * @var VersionPresenter
      */
     private $version_presenter;
-    /**
-     * @var \Redis|null
-     */
-    private $redis;
 
     public function __construct(
         Prometheus $prometheus,
@@ -71,14 +68,13 @@ class MetricsCollector
         NbUsersByStatusBuilder $nb_user_builder,
         \EventManager $event_manager,
         VersionPresenter $version_presenter,
-        ?\Redis $redis,
+        private readonly PersistentQueue $worker_queue,
     ) {
         $this->prometheus        = $prometheus;
         $this->dao               = $dao;
         $this->nb_user_builder   = $nb_user_builder;
         $this->event_manager     = $event_manager;
         $this->version_presenter = $version_presenter;
-        $this->redis             = $redis;
     }
 
     public function collect(): void
@@ -122,10 +118,8 @@ class MetricsCollector
 
     private function setWorkerStatus(): void
     {
-        if ($this->redis !== null) {
-            $nb_events = $this->redis->lLen(Worker::EVENT_QUEUE_NAME);
-            $this->prometheus->gaugeSet('worker_events', 'Total number of worker events', (float) $nb_events, ['queue' => Worker::EVENT_QUEUE_NAME]);
-        }
+        $nb_events = $this->worker_queue->getStatistics()->size;
+        $this->prometheus->gaugeSet('worker_events', 'Total number of worker events', (float) $nb_events, ['queue' => Worker::EVENT_QUEUE_NAME]);
     }
 
     private function setSystemEventsStatus(): void
