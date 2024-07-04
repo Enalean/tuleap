@@ -69,6 +69,8 @@ watch(
     () => textarea.value,
     () => {
         if (textarea.value) {
+            textarea.value.focus();
+            scrollToAnchor(textarea.value.closest("li") || textarea.value);
             adjustHeightOfTextareaToContent(textarea.value);
         }
     },

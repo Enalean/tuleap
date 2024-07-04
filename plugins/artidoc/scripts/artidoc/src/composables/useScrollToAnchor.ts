@@ -17,13 +17,21 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-type ToAnchorScroller = { scrollToAnchor: (anchor_id: string) => void };
+import scrollIntoView from "scroll-into-view-if-needed";
+
+type ToAnchorScroller = { scrollToAnchor: (anchor_id: string | HTMLElement) => void };
 
 function useScrollToAnchor(): ToAnchorScroller {
-    const scrollToAnchor = (anchor_id: string): void => {
-        const anchor_element = document.getElementById(anchor_id);
+    const scrollToAnchor = (anchor_id: string | HTMLElement): void => {
+        const anchor_element =
+            anchor_id instanceof HTMLElement ? anchor_id : document.getElementById(anchor_id);
+
         if (anchor_element) {
-            anchor_element.scrollIntoView({ behavior: "smooth" });
+            scrollIntoView(anchor_element, {
+                behavior: "smooth",
+                scrollMode: "if-needed",
+                block: "center",
+            });
         }
     };
 
