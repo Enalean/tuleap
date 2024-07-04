@@ -37,8 +37,8 @@
 <script setup lang="ts">
 import { defineAsyncComponent, onMounted } from "vue";
 import { loadTooltips } from "@tuleap/tooltip";
-import SectionDescriptionSkeleton from "@/components/SectionDescriptionSkeleton.vue";
-import SectionDescriptionReadOnly from "@/components/description/SectionDescriptionReadOnly.vue";
+import SectionDescriptionSkeleton from "./SectionDescriptionSkeleton.vue";
+import SectionDescriptionReadOnly from "./SectionDescriptionReadOnly.vue";
 import type { EditorSectionContent } from "@/composables/useEditorSectionContent";
 import type { AttachmentFile } from "@/composables/useAttachmentFile";
 import { strictInject } from "@tuleap/vue-strict-inject";
@@ -57,7 +57,7 @@ defineProps<{
 const { is_sections_loading } = strictInject(SECTIONS_STORE);
 
 const async_editor = defineAsyncComponent({
-    loader: () => import("@/components/SectionDescriptionEditor.vue"),
+    loader: () => import("./SectionDescriptionEditor.vue"),
     loadingComponent: SectionDescriptionReadOnly,
     delay: 0,
 });

@@ -19,7 +19,7 @@
 import { beforeAll, describe, expect, it, vi } from "vitest";
 import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
-import SectionDescriptionEditor from "@/components/SectionDescriptionEditor.vue";
+import SectionDescriptionEditor from "./SectionDescriptionEditor.vue";
 import type { ComponentPublicInstance } from "vue";
 import { CURRENT_LOCALE } from "@/locale-injection-key";
 import { userLocale } from "@/helpers/user-locale";

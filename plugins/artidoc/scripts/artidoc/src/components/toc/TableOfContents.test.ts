@@ -22,7 +22,7 @@ import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import { createGettext } from "vue3-gettext";
 import type { ComponentPublicInstance } from "vue";
-import TableOfContents from "@/components/TableOfContents.vue";
+import TableOfContents from "./TableOfContents.vue";
 import ArtifactSectionFactory from "@/helpers/artifact-section.factory";
 import { InjectedSectionsStoreStub } from "@/helpers/stubs/InjectSectionsStoreStub";
 import { mockStrictInject } from "@/helpers/mock-strict-inject";

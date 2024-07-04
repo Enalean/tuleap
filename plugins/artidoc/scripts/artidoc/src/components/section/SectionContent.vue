@@ -61,12 +61,12 @@
 
 <script setup lang="ts">
 import type { ArtidocSection } from "@/helpers/artidoc-section.type";
-import SectionHeader from "@/components/SectionHeader.vue";
-import SectionDescription from "@/components/SectionDescription.vue";
+import SectionHeader from "./header/SectionHeader.vue";
+import SectionDescription from "./description/SectionDescription.vue";
 import { useSectionEditor } from "@/composables/useSectionEditor";
-import SectionDropdown from "@/components/SectionDropdown.vue";
-import SectionHeaderSkeleton from "@/components/SectionHeaderSkeleton.vue";
-import SectionFooter from "@/components/SectionFooter.vue";
+import SectionDropdown from "./header/SectionDropdown.vue";
+import SectionHeaderSkeleton from "./header/SectionHeaderSkeleton.vue";
+import SectionFooter from "./footer/SectionFooter.vue";
 import { useAttachmentFile } from "@/composables/useAttachmentFile";
 import { ref } from "vue";
 import { strictInject } from "@tuleap/vue-strict-inject";

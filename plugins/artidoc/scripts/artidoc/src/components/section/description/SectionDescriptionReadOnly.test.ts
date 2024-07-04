@@ -17,15 +17,24 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
+import * as tooltip from "@tuleap/tooltip";
 import { shallowMount } from "@vue/test-utils";
-import SectionHeaderSkeleton from "@/components/SectionHeaderSkeleton.vue";
+import SectionDescriptionReadOnly from "./SectionDescriptionReadOnly.vue";
+import VueDOMPurifyHTML from "vue-dompurify-html";
 
-describe("SectionHeaderSkeleton", () => {
-    describe("when the sections are loading", () => {
-        it("should display skeleton", () => {
-            const wrapper = shallowMount(SectionHeaderSkeleton);
-            expect(wrapper.find('span[class="tlp-skeleton-text"]').exists()).toBe(true);
+describe("SectionDescriptionReadOnly", () => {
+    it("should display text with tooltips", () => {
+        const loadTooltips = vi.spyOn(tooltip, "loadTooltips");
+        const wrapper = shallowMount(SectionDescriptionReadOnly, {
+            props: {
+                readonly_value: "Lorem ipsum",
+            },
+            global: {
+                plugins: [VueDOMPurifyHTML],
+            },
         });
+        expect(wrapper.text()).toContain("Lorem ipsum");
+        expect(loadTooltips).toHaveBeenCalled();
     });
 });

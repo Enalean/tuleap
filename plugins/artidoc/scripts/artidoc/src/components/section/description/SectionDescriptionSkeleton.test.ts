@@ -20,7 +20,7 @@ import { beforeAll, describe, expect, it } from "vitest";
 import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import type { ComponentPublicInstance } from "vue";
-import SectionDescriptionSkeleton from "@/components/SectionDescriptionSkeleton.vue";
+import SectionDescriptionSkeleton from "./SectionDescriptionSkeleton.vue";
 describe("SectionDescriptionSkeleton", () => {
     let wrapper: VueWrapper<ComponentPublicInstance>;
     beforeAll(() => {

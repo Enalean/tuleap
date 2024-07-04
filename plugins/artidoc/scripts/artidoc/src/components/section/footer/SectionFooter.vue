@@ -37,10 +37,10 @@
 
 <script setup lang="ts">
 import type { SectionEditor } from "@/composables/useSectionEditor";
-import SectionEditorSaveCancelButtons from "@/components/SectionEditorSaveCancelButtons.vue";
-import NotFoundError from "@/components/NotFoundError.vue";
-import OutdatedSectionWarning from "@/components/OutdatedSectionWarning.vue";
-import GenericError from "@/components/GenericError.vue";
+import SectionEditorSaveCancelButtons from "./SectionEditorSaveCancelButtons.vue";
+import NotFoundError from "./NotFoundError.vue";
+import OutdatedSectionWarning from "./OutdatedSectionWarning.vue";
+import GenericError from "./GenericError.vue";
 import type { ArtidocSection } from "@/helpers/artidoc-section.type";
 
 const props = defineProps<{ section: ArtidocSection; editor: SectionEditor }>();
