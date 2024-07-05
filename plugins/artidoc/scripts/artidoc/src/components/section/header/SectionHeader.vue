@@ -39,7 +39,7 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref, watch } from "vue";
+import { ref, watch } from "vue";
 import useScrollToAnchor from "@/composables/useScrollToAnchor";
 import { useGettext } from "vue3-gettext";
 import type { EditorSectionContent } from "@/composables/useEditorSectionContent";
@@ -57,13 +57,6 @@ const placeholder = $gettext("Section without title");
 
 const textarea = ref<HTMLTextAreaElement | undefined>(undefined);
 const title_to_edit = ref(props.title);
-
-onMounted(() => {
-    const hash = window.location.hash.slice(1);
-    if (hash) {
-        scrollToAnchor(hash);
-    }
-});
 
 watch(
     () => textarea.value,

@@ -40,7 +40,7 @@ export interface SectionsStore {
         item_id: number,
         tracker: Tracker | null,
         can_user_edit_document: boolean,
-    ) => void;
+    ) => Promise<void>;
     updateSection: (section: ArtifactSection) => void;
     insertSection: (section: PendingArtifactSection, position: PositionDuringEdition) => void;
     removeSection: (section: ArtidocSection, tracker: Tracker | null) => void;
@@ -77,8 +77,8 @@ export function useSectionsStore(): SectionsStore {
         item_id: number,
         tracker: Tracker | null,
         can_user_edit_document: boolean,
-    ): void {
-        getAllSections(item_id)
+    ): Promise<void> {
+        return getAllSections(item_id)
             .andThen((artidoc_sections: readonly ArtidocSection[]) => {
                 sections.value = [...artidoc_sections].map(injectInternalId);
 
