@@ -32,12 +32,12 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\StreamFactoryInterface;
 use Psr\Http\Server\MiddlewareInterface;
-use Redis;
 use Tuleap\Admin\Homepage\NbUsersByStatusBuilder;
 use Tuleap\BuildVersion\VersionPresenter;
 use Tuleap\Http\HttpClientFactory;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Instrument\Prometheus\Prometheus;
+use Tuleap\Queue\PersistentQueue;
 use Tuleap\Request\DispatchablePSR15Compatible;
 use Tuleap\Request\DispatchableWithRequestNoAuthz;
 use Laminas\HttpHandlerRunner\Emitter\EmitterInterface;
@@ -69,10 +69,6 @@ final class MetricsController extends DispatchablePSR15Compatible implements Dis
      */
     private $version_presenter;
     /**
-     * @var Redis|null
-     */
-    private $redis;
-    /**
      * @var FlushableStorage
      */
     private $flushable_storage;
@@ -85,7 +81,7 @@ final class MetricsController extends DispatchablePSR15Compatible implements Dis
         NbUsersByStatusBuilder $nb_user_builder,
         EventManager $event_manager,
         VersionPresenter $version_presenter,
-        ?Redis $redis,
+        private readonly PersistentQueue $worker_queue,
         FlushableStorage $flushable_storage,
         MiddlewareInterface ...$middleware_stack,
     ) {
@@ -96,7 +92,6 @@ final class MetricsController extends DispatchablePSR15Compatible implements Dis
         $this->nb_user_builder   = $nb_user_builder;
         $this->event_manager     = $event_manager;
         $this->version_presenter = $version_presenter;
-        $this->redis             = $redis;
         $this->flushable_storage = $flushable_storage;
     }
 
@@ -137,7 +132,7 @@ final class MetricsController extends DispatchablePSR15Compatible implements Dis
             $this->nb_user_builder,
             $this->event_manager,
             $this->version_presenter,
-            $this->redis
+            $this->worker_queue,
         );
 
         $collector->collect();

@@ -28,8 +28,6 @@ use Tuleap\Http\Server\Authentication\BasicAuthLoginExtractor;
 use Tuleap\PrometheusMetrics\MetricsAuthentication;
 use Tuleap\PrometheusMetrics\MetricsCollectorDao;
 use Tuleap\PrometheusMetrics\MetricsController;
-use Tuleap\Redis\ClientFactory;
-use Tuleap\Redis\RedisConnectionException;
 use Tuleap\CLI\CLICommandsCollector;
 use Tuleap\PrometheusMetrics\ClearPrometheusMetricsCommand;
 use Tuleap\PrometheusMetrics\PrometheusFlushableStorageProvider;
@@ -62,12 +60,6 @@ class prometheus_metricsPlugin extends Plugin  // @codingStandardsIgnoreLine
     public function routeGetMetrics(): MetricsController
     {
         $response_factory = HTTPFactoryBuilder::responseFactory();
-        $redis_client     = null;
-        try {
-            $redis_client = ClientFactory::fromForgeConfig();
-        } catch (\RedisException | RedisConnectionException $exception) {
-            // If no redis, client can be null
-        }
         return new MetricsController(
             $response_factory,
             HTTPFactoryBuilder::streamFactory(),
@@ -76,7 +68,7 @@ class prometheus_metricsPlugin extends Plugin  // @codingStandardsIgnoreLine
             new NbUsersByStatusBuilder(new UserCounterDao()),
             EventManager::instance(),
             VersionPresenter::fromFlavorFinder(new FlavorFinderFromFilePresence()),
-            $redis_client,
+            (new \Tuleap\Queue\QueueFactory(BackendLogger::getDefaultLogger()))->getPersistentQueue(\Tuleap\Queue\Worker::EVENT_QUEUE_NAME),
             (new PrometheusFlushableStorageProvider())->getFlushableStorage(),
             new MetricsAuthentication(
                 $response_factory,
