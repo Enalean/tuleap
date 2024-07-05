@@ -35,7 +35,7 @@ import {
     DATE_TIME_FORMATTER,
     RETRIEVE_ARTIFACTS_TABLE,
 } from "../../injection-symbols";
-import { DATE_CELL } from "../../domain/ArtifactsTable";
+import { DATE_CELL, NUMERIC_CELL } from "../../domain/ArtifactsTable";
 import { RetrieveArtifactsTableStub } from "../../../tests/stubs/RetrieveArtifactsTableStub";
 import { ArtifactsTableBuilder } from "../../../tests/builders/ArtifactsTableBuilder";
 import { ArtifactRowBuilder } from "../../../tests/builders/ArtifactRowBuilder";
@@ -44,7 +44,8 @@ import { Fault } from "@tuleap/fault";
 
 vi.useFakeTimers();
 
-const COLUMN_NAME = "start_date";
+const DATE_COLUMN_NAME = "start_date";
+const NUMERIC_COLUMN_NAME = "remaining_effort";
 
 describe(`SelectableTable`, () => {
     let errorSpy: Mock;
@@ -91,22 +92,31 @@ describe(`SelectableTable`, () => {
             will show a loading spinner
             and will show a table-like grid with the selected columns and artifact values`, async () => {
             const table = new ArtifactsTableBuilder()
-                .withColumn(COLUMN_NAME)
+                .withColumn(DATE_COLUMN_NAME)
+                .withColumn(NUMERIC_COLUMN_NAME)
                 .withArtifactRow(
                     new ArtifactRowBuilder()
-                        .addCell(COLUMN_NAME, {
+                        .addCell(DATE_COLUMN_NAME, {
                             type: DATE_CELL,
                             value: Option.fromValue("2021-09-26T07:40:03+09:00"),
                             with_time: true,
+                        })
+                        .addCell(NUMERIC_COLUMN_NAME, {
+                            type: NUMERIC_CELL,
+                            value: Option.fromValue(74),
                         })
                         .build(),
                 )
                 .withArtifactRow(
                     new ArtifactRowBuilder()
-                        .addCell(COLUMN_NAME, {
+                        .addCell(DATE_COLUMN_NAME, {
                             type: DATE_CELL,
                             value: Option.fromValue("2025-09-19T13:54:07+10:00"),
                             with_time: true,
+                        })
+                        .addCell(NUMERIC_COLUMN_NAME, {
+                            type: NUMERIC_CELL,
+                            value: Option.fromValue(3),
                         })
                         .build(),
                 )
@@ -127,8 +137,11 @@ describe(`SelectableTable`, () => {
             expect(wrapper.find("[data-test=loading").exists()).toBe(false);
             expect(
                 wrapper.findAll("[data-test=column-header]").map((header) => header.text()),
-            ).toContain(COLUMN_NAME);
-            expect(wrapper.findAll("[data-test=cell]")).toHaveLength(2);
+            ).toContain(DATE_COLUMN_NAME);
+            expect(
+                wrapper.findAll("[data-test=column-header]").map((header) => header.text()),
+            ).toContain(NUMERIC_COLUMN_NAME);
+            expect(wrapper.findAll("[data-test=cell]")).toHaveLength(4);
         });
 
         it(`when there is a REST error, it will be shown`, async () => {

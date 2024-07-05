@@ -23,14 +23,15 @@ import { Fault } from "@tuleap/fault";
 import { Option } from "@tuleap/option";
 import type {
     DateSelectableRepresentation,
+    NumericSelectableRepresentation,
     Selectable,
     SelectableArtifactRepresentation,
     SelectableReportContentRepresentation,
     SelectableRepresentation,
 } from "./cross-tracker-rest-api-types";
-import { DATE_SELECTABLE_TYPE } from "./cross-tracker-rest-api-types";
+import { DATE_SELECTABLE_TYPE, NUMERIC_SELECTABLE_TYPE } from "./cross-tracker-rest-api-types";
 import type { ArtifactsTable, Cell } from "../domain/ArtifactsTable";
-import { DATE_CELL } from "../domain/ArtifactsTable";
+import { DATE_CELL, NUMERIC_CELL } from "../domain/ArtifactsTable";
 
 export type ArtifactsTableBuilder = {
     mapReportToArtifactsTable(report: SelectableReportContentRepresentation): ArtifactsTable;
@@ -40,26 +41,45 @@ const isDateSelectableRepresentation = (
     representation: SelectableRepresentation,
 ): representation is DateSelectableRepresentation => "with_time" in representation;
 
+const isNumericSelectableRepresentation = (
+    representation: SelectableRepresentation,
+): representation is NumericSelectableRepresentation =>
+    representation.value === null || typeof representation.value === "number";
+
 function buildCell(
     selectable: Selectable,
     artifact: SelectableArtifactRepresentation,
 ): Result<Cell, Fault> {
-    if (selectable.type === DATE_SELECTABLE_TYPE) {
-        const artifact_value = artifact[selectable.name];
-        if (!isDateSelectableRepresentation(artifact_value)) {
-            // This is likely a developer mistake in the backend,
-            // we throw so that Tuleap devs can hear about it and fix it
-            throw Error(
-                `Expected Artifact value for ${selectable.name} to be a date format, but it was not`,
-            );
-        }
-        return ok({
-            type: DATE_CELL,
-            value: Option.fromNullable(artifact_value.value),
-            with_time: artifact_value.with_time,
-        });
+    const artifact_value = artifact[selectable.name];
+    switch (selectable.type) {
+        case DATE_SELECTABLE_TYPE:
+            if (!isDateSelectableRepresentation(artifact_value)) {
+                // This is likely a developer mistake in the backend,
+                // we throw so that Tuleap devs can hear about it and fix it
+                throw Error(
+                    `Expected Artifact value for ${selectable.name} to be a date format, but it was not`,
+                );
+            }
+            return ok({
+                type: DATE_CELL,
+                value: Option.fromNullable(artifact_value.value),
+                with_time: artifact_value.with_time,
+            });
+        case NUMERIC_SELECTABLE_TYPE:
+            if (!isNumericSelectableRepresentation(artifact_value)) {
+                // This is likely a developer mistake in the backend,
+                // we throw so that Tuleap devs can hear about it and fix it
+                throw Error(
+                    `Expected Artifact value for ${selectable.name} to be a number format, but it was not`,
+                );
+            }
+            return ok({
+                type: NUMERIC_CELL,
+                value: Option.fromNullable(artifact_value.value),
+            });
+        default:
+            return err(Fault.fromMessage(`Selectable type is not supported`));
     }
-    return err(Fault.fromMessage(`Selectable type is not supported`));
 }
 
 export const ArtifactsTableBuilder = (): ArtifactsTableBuilder => {
