@@ -23,18 +23,16 @@
         <h1 class="artidoc-header-title">
             {{ title }}
         </h1>
-        <configuration-modal v-if="can_user_edit_document" />
+        <document-dropdown />
     </div>
 </template>
 
 <script setup lang="ts">
 import { strictInject } from "@tuleap/vue-strict-inject";
 import { TITLE } from "@/title-injection-key";
-import { CAN_USER_EDIT_DOCUMENT } from "@/can-user-edit-document-injection-key";
-import ConfigurationModal from "@/components/configuration/ConfigurationModal.vue";
+import DocumentDropdown from "@/components/DocumentDropdown.vue";
 
 const title = strictInject(TITLE);
-const can_user_edit_document = strictInject(CAN_USER_EDIT_DOCUMENT);
 </script>
 
 <style scoped lang="scss">

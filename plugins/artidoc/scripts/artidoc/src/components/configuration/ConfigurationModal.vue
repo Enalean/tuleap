@@ -20,12 +20,14 @@
 
 <template>
     <button
-        class="tlp-button-primary tlp-button-ellipsis"
+        class="tlp-dropdown-menu-item"
         type="button"
+        role="menuitem"
         v-bind:title="button_title"
         v-on:click="openModal()"
     >
-        <i class="fa-solid fa-cog" role="img"></i>
+        <i class="fa-solid fa-cog fa-fw" aria-hidden="true"></i>
+        {{ $gettext("Configure document") }}
     </button>
 
     <form
