@@ -38,6 +38,7 @@ use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Field\UGroupList\UGr
 use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Field\UserList\UserListSelectFromBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Metadata\MetadataSelectFromBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Metadata\Semantic\Description\DescriptionSelectFromBuilder;
+use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Metadata\Semantic\Status\StatusSelectFromBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Metadata\Semantic\Title\TitleSelectFromBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilderVisitor;
 use Tuleap\DB\DBFactory;
@@ -143,6 +144,7 @@ final class TitleSelectBuilderTest extends CrossTrackerFieldTestCase
             new MetadataSelectFromBuilder(
                 new TitleSelectFromBuilder(),
                 new DescriptionSelectFromBuilder(),
+                new StatusSelectFromBuilder(),
             ),
         );
     }

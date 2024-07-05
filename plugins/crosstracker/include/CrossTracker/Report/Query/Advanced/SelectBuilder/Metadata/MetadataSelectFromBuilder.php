@@ -26,6 +26,7 @@ use LogicException;
 use Tuleap\CrossTracker\Report\Query\Advanced\AllowedMetadata;
 use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\IProvideParametrizedSelectAndFromSQLFragments;
 use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Metadata\Semantic\Description\DescriptionSelectFromBuilder;
+use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Metadata\Semantic\Status\StatusSelectFromBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Metadata\Semantic\Title\TitleSelectFromBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\ParametrizedSelectFrom;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
@@ -35,6 +36,7 @@ final readonly class MetadataSelectFromBuilder
     public function __construct(
         private TitleSelectFromBuilder $title_builder,
         private DescriptionSelectFromBuilder $description_builder,
+        private StatusSelectFromBuilder $status_builder,
     ) {
     }
 
@@ -44,7 +46,7 @@ final readonly class MetadataSelectFromBuilder
             // Semantics
             AllowedMetadata::TITLE       => $this->title_builder->getSelectFrom(),
             AllowedMetadata::DESCRIPTION => $this->description_builder->getSelectFrom(),
-            AllowedMetadata::STATUS,
+            AllowedMetadata::STATUS      => $this->status_builder->getSelectFrom(),
             AllowedMetadata::ASSIGNED_TO,
 
             // Always there fields
