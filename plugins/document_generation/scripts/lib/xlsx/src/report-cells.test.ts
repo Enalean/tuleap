@@ -34,7 +34,7 @@ describe("Report cells", () => {
     });
 
     it("has a date cell", () => {
-        const date = new Date(2020, 8, 7, 17, 15, 0);
+        const date = "2020-08-07T17:15:00";
         const cell = new DateCell(date);
 
         expect(cell).toEqual({ type: "date", value: date });

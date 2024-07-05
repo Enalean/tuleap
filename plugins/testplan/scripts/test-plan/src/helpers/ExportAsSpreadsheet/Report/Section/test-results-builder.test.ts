@@ -36,7 +36,7 @@ describe("Build test results section", () => {
                 test_exec_status: "passed",
                 test_exec_internationalized_status: "Passed",
                 test_exec_runner: "Some user",
-                test_exec_date: new Date("2020-08-11T10:00:00.000Z"),
+                test_exec_date: "2020-08-11T10:00:00.000Z",
             },
             {
                 campaign_id: 123,
@@ -47,7 +47,7 @@ describe("Build test results section", () => {
                 test_exec_status: "failed",
                 test_exec_internationalized_status: "Failed",
                 test_exec_runner: "Some user",
-                test_exec_date: new Date("2020-08-11T10:20:00.000Z"),
+                test_exec_date: "2020-08-11T10:20:00.000Z",
             },
         ];
 
@@ -74,7 +74,7 @@ describe("Build test results section", () => {
                     new TextCell("9999"),
                     new TextCell("Passed"),
                     new TextCell("Some user"),
-                    new DateCell(new Date("2020-08-11T10:00:00.000Z")),
+                    new DateCell("2020-08-11T10:00:00.000Z"),
                 ],
                 [
                     new TextCell("123"),
@@ -84,7 +84,7 @@ describe("Build test results section", () => {
                     new TextCell("99992"),
                     new TextCell("Failed"),
                     new TextCell("Some user"),
-                    new DateCell(new Date("2020-08-11T10:20:00.000Z")),
+                    new DateCell("2020-08-11T10:20:00.000Z"),
                 ],
             ],
         });

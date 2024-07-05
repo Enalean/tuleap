@@ -35,7 +35,7 @@ export interface PlannedTestCaseAssociatedWithTestExecAndCampaign {
     test_exec_internationalized_status: string;
     test_exec_status: "passed" | "failed" | "blocked" | "notrun";
     test_exec_runner: string;
-    test_exec_date: Date;
+    test_exec_date: string;
 }
 
 export function getPlannedTestCasesAssociatedWithCampaignAndTestExec(
@@ -83,9 +83,7 @@ export function getPlannedTestCasesAssociatedWithCampaignAndTestExec(
                 ),
                 test_exec_runner:
                     test_case.test_execution_used_to_define_status.submitted_by.display_name,
-                test_exec_date: new Date(
-                    test_case.test_execution_used_to_define_status.submitted_on,
-                ),
+                test_exec_date: test_case.test_execution_used_to_define_status.submitted_on,
             };
         },
     );

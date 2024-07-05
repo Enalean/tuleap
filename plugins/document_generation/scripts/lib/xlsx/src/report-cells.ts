@@ -46,7 +46,7 @@ export class HTMLCell extends CommentCell {
 export class DateCell extends CommentCell {
     readonly type = "date";
 
-    constructor(readonly value: Date) {
+    constructor(readonly value: string) {
         super();
     }
 }

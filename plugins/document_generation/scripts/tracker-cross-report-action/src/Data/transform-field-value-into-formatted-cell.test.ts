@@ -153,11 +153,11 @@ describe("transform-field-value-into-formatted-cell", () => {
             field_id: 1,
             type: "date",
             label: "Date field",
-            value: "03/11/2020 09:36:10",
+            value: "2020-11-03T09:36:10",
         };
         const formatted_cell = transformFieldValueIntoAFormattedCell(field_value);
 
-        expect(formatted_cell).toStrictEqual(new DateCell(new Date("03/11/2020 09:36:10")));
+        expect(formatted_cell).toStrictEqual(new DateCell("2020-11-03T09:36:10"));
     });
     it("transforms null date field value into EmptyCell", (): void => {
         const field_value: ArtifactReportResponseFieldValue = {
@@ -175,11 +175,11 @@ describe("transform-field-value-into-formatted-cell", () => {
             field_id: 1,
             type: "subon",
             label: "Submitted On",
-            value: "03/11/2020 09:36:10",
+            value: "2020-11-03T09:36:10",
         };
         const formatted_cell = transformFieldValueIntoAFormattedCell(field_value);
 
-        expect(formatted_cell).toStrictEqual(new DateCell(new Date("03/11/2020 09:36:10")));
+        expect(formatted_cell).toStrictEqual(new DateCell("2020-11-03T09:36:10"));
     });
     it("transforms null submitted on field value into EmptyCell", (): void => {
         const field_value: ArtifactReportResponseFieldValue = {
@@ -197,11 +197,11 @@ describe("transform-field-value-into-formatted-cell", () => {
             field_id: 1,
             type: "lud",
             label: "Last update date",
-            value: "03/11/2020 09:36:10",
+            value: "2020-11-03T09:36:10",
         };
         const formatted_cell = transformFieldValueIntoAFormattedCell(field_value);
 
-        expect(formatted_cell).toStrictEqual(new DateCell(new Date("03/11/2020 09:36:10")));
+        expect(formatted_cell).toStrictEqual(new DateCell("2020-11-03T09:36:10"));
     });
     it("transforms null last update date field value into EmptyCell", (): void => {
         const field_value: ArtifactReportResponseFieldValue = {

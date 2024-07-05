@@ -37,7 +37,7 @@ describe("Build justifications section", () => {
                 test_exec_status: "passed",
                 test_exec_internationalized_status: "Passed",
                 test_exec_runner: "Some user",
-                test_exec_date: new Date("2020-08-11T10:00:00.000Z"),
+                test_exec_date: "2020-08-11T10:00:00.000Z",
             },
             {
                 campaign_id: 123,
@@ -48,7 +48,7 @@ describe("Build justifications section", () => {
                 test_exec_status: "failed",
                 test_exec_internationalized_status: "Failed",
                 test_exec_runner: "Some user",
-                test_exec_date: new Date("2020-08-11T10:20:00.000Z"),
+                test_exec_date: "2020-08-11T10:20:00.000Z",
             },
             {
                 campaign_id: 123,
@@ -59,7 +59,7 @@ describe("Build justifications section", () => {
                 test_exec_status: "failed",
                 test_exec_internationalized_status: "Failed",
                 test_exec_runner: "Some user",
-                test_exec_date: new Date("2020-08-11T10:30:00.000Z"),
+                test_exec_date: "2020-08-11T10:30:00.000Z",
             },
         ];
 
@@ -128,7 +128,7 @@ describe("Build justifications section", () => {
                     new TextCell("Test case title 2"),
                     new TextCell("Failed"),
                     new TextCell("Some user"),
-                    new DateCell(new Date("2020-08-11T10:20:00.000Z")),
+                    new DateCell("2020-08-11T10:20:00.000Z"),
                     new HTMLCell("HTML Comment"),
                 ],
                 [
@@ -137,7 +137,7 @@ describe("Build justifications section", () => {
                     new TextCell("Test case title 3"),
                     new TextCell("Failed"),
                     new TextCell("Some user"),
-                    new DateCell(new Date("2020-08-11T10:30:00.000Z")),
+                    new DateCell("2020-08-11T10:30:00.000Z"),
                     new TextCell("Plaintext Comment"),
                 ],
             ],
@@ -157,7 +157,7 @@ describe("Build justifications section", () => {
                 test_exec_status: "failed",
                 test_exec_internationalized_status: "Failed",
                 test_exec_runner: "Some user",
-                test_exec_date: new Date("2020-08-11T10:40:00.000Z"),
+                test_exec_date: "2020-08-11T10:40:00.000Z",
             },
         ];
 
@@ -172,7 +172,7 @@ describe("Build justifications section", () => {
                 new TextCell("Test case title 4"),
                 new TextCell("Failed"),
                 new TextCell("Some user"),
-                new DateCell(new Date("2020-08-11T10:40:00.000Z")),
+                new DateCell("2020-08-11T10:40:00.000Z"),
                 new TextCell(""),
             ],
         ]);
@@ -191,7 +191,7 @@ describe("Build justifications section", () => {
                 test_exec_status: "failed",
                 test_exec_internationalized_status: "Failed",
                 test_exec_runner: "Some user",
-                test_exec_date: new Date("2020-08-11T10:50:00.000Z"),
+                test_exec_date: "2020-08-11T10:50:00.000Z",
             },
         ];
 
@@ -208,7 +208,7 @@ describe("Build justifications section", () => {
                 new TextCell("Test case title 5"),
                 new TextCell("Failed"),
                 new TextCell("Some user"),
-                new DateCell(new Date("2020-08-11T10:50:00.000Z")),
+                new DateCell("2020-08-11T10:50:00.000Z"),
                 new TextCell(""),
             ],
         ]);

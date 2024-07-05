@@ -54,7 +54,7 @@ export function transformFieldValueIntoAFormattedCell(
             if (field_value.value === null) {
                 return new EmptyCell();
             }
-            return new DateCell(new Date(field_value.value));
+            return new DateCell(field_value.value);
         case "sb":
         case "msb":
         case "rb":

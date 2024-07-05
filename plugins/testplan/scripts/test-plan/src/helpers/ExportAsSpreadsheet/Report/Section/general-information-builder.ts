@@ -42,7 +42,7 @@ export function buildGeneralSection(
             [new TextCell(gettext_provider.$gettext("Milestone")), new TextCell(milestone_title)],
             [
                 new TextCell(gettext_provider.$gettext("Report extracted on")),
-                new DateCell(current_date),
+                new DateCell(current_date.toISOString()),
             ],
             [
                 new TextCell(gettext_provider.$gettext("Report extracted by")),

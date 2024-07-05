@@ -48,7 +48,7 @@ export function transformFieldValueIntoACell(
             if (field_value.value === null) {
                 return null;
             }
-            return new DateCell(new Date(field_value.value));
+            return new DateCell(field_value.value);
         default:
             return null;
     }

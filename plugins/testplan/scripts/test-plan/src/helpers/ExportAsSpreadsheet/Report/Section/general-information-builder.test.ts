@@ -38,7 +38,7 @@ describe("Build general information section", () => {
             rows: [
                 [new TextCell("Project"), new TextCell("My project")],
                 [new TextCell("Milestone"), new TextCell("My milestone")],
-                [new TextCell("Report extracted on"), new DateCell(current_date)],
+                [new TextCell("Report extracted on"), new DateCell(current_date.toISOString())],
                 [new TextCell("Report extracted by"), new TextCell("User name")],
             ],
         });

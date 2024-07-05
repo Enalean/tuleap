@@ -33,7 +33,7 @@ describe("Transform an export report into a XSLX sheet", () => {
                     headers: [new TextCell("Col 1"), new TextCell("Col 2")],
                     rows: [
                         [new TextCell("Section B"), new TextCell("Section B col 2")],
-                        [new DateCell(new Date("2020-09-07T14:00:00.000Z"))],
+                        [new DateCell("2020-09-07T14:00:00+03:00")],
                         [new HTMLCell("<div>HTML Content</div>")],
                         [new EmptyCell()],
                         [new NumberCell(2020).withComment("A comment")],
@@ -142,7 +142,7 @@ describe("Transform an export report into a XSLX sheet", () => {
                 "character_width": 10,
                 "nb_lines": 1,
                 "t": "d",
-                "v": 2020-09-07T14:00:00.000Z,
+                "v": "2020-09-07T14:00:00",
               },
               "A7": {
                 "character_width": 12,

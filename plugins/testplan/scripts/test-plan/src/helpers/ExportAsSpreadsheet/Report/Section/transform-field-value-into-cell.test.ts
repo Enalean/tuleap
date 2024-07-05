@@ -107,7 +107,7 @@ describe("transform-field-value-into-cell", () => {
                 type: "subon",
                 value: "2020-08-18T10:40:03+01:00",
             } as ArtifactReportResponseFieldValue,
-            new DateCell(new Date("2020-08-18T10:40:03+01:00")),
+            new DateCell("2020-08-18T10:40:03+01:00"),
         ],
         [
             "last updated on value",
@@ -116,7 +116,7 @@ describe("transform-field-value-into-cell", () => {
                 type: "lud",
                 value: "2020-08-18T10:40:03+01:00",
             } as ArtifactReportResponseFieldValue,
-            new DateCell(new Date("2020-08-18T10:40:03+01:00")),
+            new DateCell("2020-08-18T10:40:03+01:00"),
         ],
         [
             "unknown field value",
