@@ -37,8 +37,6 @@ import type { CurrentPullRequestUserPresenter } from "../types";
 import { NewCommentFormPresenter } from "./NewCommentFormPresenter";
 import { NewReplySaver } from "./NewReplySaver";
 
-vi.mock("@tuleap/fetch-result");
-
 const current_user_id = 104;
 const comment_content = "This is fine";
 
@@ -87,12 +85,15 @@ describe("NewReplySaver", () => {
             throw new Error("Expected an OK");
         }
 
-        expect(postSpy).toHaveBeenCalledWith(uri`/api/v1/pull_requests/144/comments`, {
-            content: comment_content,
-            parent_id: root_comment.id,
-            user_id: current_user_id,
-            format: FORMAT_COMMONMARK,
-        });
+        expect(postSpy).toHaveBeenCalledWith(
+            uri`/api/v1/pull_requests/${current_pull_request.pull_request_id}/comments`,
+            {
+                content: comment_content,
+                parent_id: root_comment.id,
+                user_id: current_user_id,
+                format: FORMAT_COMMONMARK,
+            },
+        );
 
         expect(result.value).toStrictEqual(new_comment);
     });
@@ -128,15 +129,13 @@ describe("NewReplySaver", () => {
             throw new Error("Expected an OK");
         }
 
-        expect(postSpy).toHaveBeenCalledWith(uri`/api/v1/pull_requests/144/inline-comments`, {
-            content: comment_content,
-            parent_id: root_comment.id,
-            user_id: current_user_id,
-            file_path: root_comment.file.file_path,
-            position: root_comment.file.position,
-            unidiff_offset: root_comment.file.unidiff_offset,
-            format: FORMAT_COMMONMARK,
-        });
+        expect(postSpy).toHaveBeenCalledWith(
+            uri`/api/v1/pull_request_inline_comments/${root_comment.id}/reply`,
+            {
+                content: comment_content,
+                format: FORMAT_COMMONMARK,
+            },
+        );
 
         expect(result.value).toStrictEqual({
             type: TYPE_INLINE_COMMENT,

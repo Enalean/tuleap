@@ -50,14 +50,9 @@ const saveReplyToInlineComment = (
     new_comment: NewCommentFormPresenter,
 ): ResultAsync<PullRequestComment, Fault> => {
     return postJSON<NewCommentOnFile>(
-        uri`/api/v1/pull_requests/${context.pull_request_id}/inline-comments`,
+        uri`/api/v1/pull_request_inline_comments/${context.root_comment.id}/reply`,
         {
-            user_id: context.user_id,
-            parent_id: context.root_comment.id,
             content: new_comment.comment_content,
-            file_path: context.root_comment.file.file_path,
-            position: context.root_comment.file.position,
-            unidiff_offset: context.root_comment.file.unidiff_offset,
             format: FORMAT_COMMONMARK,
         },
     ).map((new_inline_comment) => ({
