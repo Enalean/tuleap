@@ -150,6 +150,14 @@ msgid "Review"
 msgstr "En revue"
 
 #, php-format
+msgid ""
+"The comment with #%d has already a parent comment. Please provide the id of "
+"the first comment of the thread."
+msgstr ""
+"Le commentaire avec l'identifiant #%d a déjà un commentaire parent. Veuillez "
+"fournir l'identifiant du tout premier commentaire du fil de commentaire."
+
+#, php-format
 msgid "The pull request #%d does not exist"
 msgstr "La pull request #%d n'existe pas"
 
