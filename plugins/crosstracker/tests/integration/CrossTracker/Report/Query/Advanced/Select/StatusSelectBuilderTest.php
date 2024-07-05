@@ -47,7 +47,7 @@ use Tuleap\Tracker\Permission\TrackersPermissionsRetriever;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
 use Tuleap\Tracker\Test\Builders\TrackerDatabaseBuilder;
 
-final class DescriptionSelectBuilderTest extends CrossTrackerFieldTestCase
+final class StatusSelectBuilderTest extends CrossTrackerFieldTestCase
 {
     private PFUser $user;
     /**
@@ -80,52 +80,36 @@ final class DescriptionSelectBuilderTest extends CrossTrackerFieldTestCase
         $sprint_tracker  = $tracker_builder->buildTracker($project_id, 'Sprint');
         $this->trackers  = [$release_tracker, $sprint_tracker];
 
-        $release_text_field_id = $tracker_builder->buildTextField(
-            $release_tracker->getId(),
-            'text_field',
-        );
-        $tracker_builder->buildDescriptionSemantic($release_tracker->getId(), $release_text_field_id);
-        $sprint_text_field_id = $tracker_builder->buildTextField(
-            $sprint_tracker->getId(),
-            'text_field',
-        );
-        $tracker_builder->buildDescriptionSemantic($sprint_tracker->getId(), $sprint_text_field_id);
+        $release_status_field_id = $tracker_builder->buildStaticListField($release_tracker->getId(), 'release_status', 'sb');
+        $release_status_values   = $tracker_builder->buildOpenAndClosedValuesForField($release_status_field_id, $release_tracker->getId(), ['Open'], ['Closed']);
+        $sprint_status_field_id  = $tracker_builder->buildStaticListField($sprint_tracker->getId(), 'sprint_status', 'sb');
+        $sprint_status_values    = $tracker_builder->buildOpenAndClosedValuesForField($sprint_status_field_id, $sprint_tracker->getId(), ['Open'], ['Closed']);
 
         $tracker_builder->setReadPermission(
-            $release_text_field_id,
+            $release_status_field_id,
             ProjectUGroup::PROJECT_MEMBERS
         );
         $tracker_builder->setReadPermission(
-            $sprint_text_field_id,
+            $sprint_status_field_id,
             ProjectUGroup::PROJECT_MEMBERS
         );
 
-        $release_artifact_empty_id     = $tracker_builder->buildArtifact($release_tracker->getId());
-        $release_artifact_with_text_id = $tracker_builder->buildArtifact($release_tracker->getId());
-        $sprint_artifact_with_text_id  = $tracker_builder->buildArtifact($sprint_tracker->getId());
-        $this->artifact_ids            = [$release_artifact_empty_id, $release_artifact_with_text_id, $sprint_artifact_with_text_id];
+        $release_artifact_empty_id = $tracker_builder->buildArtifact($release_tracker->getId());
+        $release_artifact_open_id  = $tracker_builder->buildArtifact($release_tracker->getId());
+        $sprint_artifact_closed_id = $tracker_builder->buildArtifact($sprint_tracker->getId());
+        $this->artifact_ids        = [$release_artifact_empty_id, $release_artifact_open_id, $sprint_artifact_closed_id];
 
         $tracker_builder->buildLastChangeset($release_artifact_empty_id);
-        $release_artifact_with_text_changeset = $tracker_builder->buildLastChangeset($release_artifact_with_text_id);
-        $sprint_artifact_with_text_changeset  = $tracker_builder->buildLastChangeset($sprint_artifact_with_text_id);
+        $release_artifact_open_changeset  = $tracker_builder->buildLastChangeset($release_artifact_open_id);
+        $sprint_artifact_closed_changeset = $tracker_builder->buildLastChangeset($sprint_artifact_closed_id);
 
         $this->expected_results = [
-            $release_artifact_empty_id     => null,
-            $release_artifact_with_text_id => 'Hello World!',
-            $sprint_artifact_with_text_id  => '**Description**',
+            $release_artifact_empty_id => null,
+            $release_artifact_open_id  => 'Open',
+            $sprint_artifact_closed_id => 'Closed',
         ];
-        $tracker_builder->buildTextValue(
-            $release_artifact_with_text_changeset,
-            $release_text_field_id,
-            (string) $this->expected_results[$release_artifact_with_text_id],
-            'text'
-        );
-        $tracker_builder->buildTextValue(
-            $sprint_artifact_with_text_changeset,
-            $sprint_text_field_id,
-            (string) $this->expected_results[$sprint_artifact_with_text_id],
-            'commonmark'
-        );
+        $tracker_builder->buildListValue($release_artifact_open_changeset, $release_status_field_id, $release_status_values['open'][0]);
+        $tracker_builder->buildListValue($sprint_artifact_closed_changeset, $sprint_status_field_id, $sprint_status_values['closed'][0]);
 
         $this->dao            = new CrossTrackerExpertQueryReportDao();
         $form_element_factory = Tracker_FormElementFactory::instance();
@@ -151,16 +135,16 @@ final class DescriptionSelectBuilderTest extends CrossTrackerFieldTestCase
 
     public function testItReturnsColumns(): void
     {
-        $fragments = $this->builder->buildSelectFrom([new Metadata('description')], $this->trackers, $this->user);
+        $fragments = $this->builder->buildSelectFrom([new Metadata('status')], $this->trackers, $this->user);
         $results   = $this->dao->searchArtifactsColumnsMatchingIds($fragments, $this->artifact_ids);
 
         self::assertCount(3, $results);
         $values = [];
         foreach ($results as $result) {
             self::assertArrayHasKey('id', $result);
-            self::assertArrayHasKey('@description', $result);
-            self::assertArrayHasKey('@description_format', $result);
-            $values[$result['id']] = $result['@description'];
+            self::assertArrayHasKey('@status', $result);
+            self::assertArrayHasKey('@status_color', $result);
+            $values[$result['id']] = $result['@status'];
         }
         self::assertEqualsCanonicalizing($values, $this->expected_results);
     }
