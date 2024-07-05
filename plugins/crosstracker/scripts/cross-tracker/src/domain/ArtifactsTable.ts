@@ -17,13 +17,21 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { StrictInjectionKey } from "@tuleap/vue-strict-inject";
-import type { RetrieveProjects } from "./domain/RetrieveProjects";
-import type { IntlFormatter } from "@tuleap/date-helper";
-import type { RetrieveArtifactsTable } from "./domain/RetrieveArtifactsTable";
+import type { Option } from "@tuleap/option";
 
-export const RETRIEVE_PROJECTS: StrictInjectionKey<RetrieveProjects> = Symbol("RetrieveProjects");
-export const DATE_FORMATTER: StrictInjectionKey<IntlFormatter> = Symbol("DateFormatter");
-export const DATE_TIME_FORMATTER: StrictInjectionKey<IntlFormatter> = Symbol("DateTimeFormatter");
-export const RETRIEVE_ARTIFACTS_TABLE: StrictInjectionKey<RetrieveArtifactsTable> =
-    Symbol("RetrieveArtifactsTable");
+export const DATE_CELL = "date";
+
+type DateCell = {
+    readonly type: typeof DATE_CELL;
+    readonly value: Option<string>;
+    readonly with_time: boolean;
+};
+
+export type Cell = DateCell;
+
+export type ArtifactRow = Map<string, Cell>;
+
+export type ArtifactsTable = {
+    readonly columns: Set<string>;
+    readonly rows: ReadonlyArray<ArtifactRow>;
+};

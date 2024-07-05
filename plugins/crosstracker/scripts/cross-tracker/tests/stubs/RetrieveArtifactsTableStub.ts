@@ -17,13 +17,23 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { StrictInjectionKey } from "@tuleap/vue-strict-inject";
-import type { RetrieveProjects } from "./domain/RetrieveProjects";
-import type { IntlFormatter } from "@tuleap/date-helper";
-import type { RetrieveArtifactsTable } from "./domain/RetrieveArtifactsTable";
+import { errAsync, okAsync } from "neverthrow";
+import type { Fault } from "@tuleap/fault";
+import type {
+    ArtifactsTableWithTotal,
+    RetrieveArtifactsTable,
+} from "../../src/domain/RetrieveArtifactsTable";
 
-export const RETRIEVE_PROJECTS: StrictInjectionKey<RetrieveProjects> = Symbol("RetrieveProjects");
-export const DATE_FORMATTER: StrictInjectionKey<IntlFormatter> = Symbol("DateFormatter");
-export const DATE_TIME_FORMATTER: StrictInjectionKey<IntlFormatter> = Symbol("DateTimeFormatter");
-export const RETRIEVE_ARTIFACTS_TABLE: StrictInjectionKey<RetrieveArtifactsTable> =
-    Symbol("RetrieveArtifactsTable");
+export const RetrieveArtifactsTableStub = {
+    withContent(table_with_total: ArtifactsTableWithTotal): RetrieveArtifactsTable {
+        return {
+            getSelectableQueryResult: () => okAsync(table_with_total),
+        };
+    },
+
+    withFault(fault: Fault): RetrieveArtifactsTable {
+        return {
+            getSelectableQueryResult: () => errAsync(fault),
+        };
+    },
+};

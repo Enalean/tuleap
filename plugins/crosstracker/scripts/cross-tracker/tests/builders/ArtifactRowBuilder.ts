@@ -17,13 +17,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { StrictInjectionKey } from "@tuleap/vue-strict-inject";
-import type { RetrieveProjects } from "./domain/RetrieveProjects";
-import type { IntlFormatter } from "@tuleap/date-helper";
-import type { RetrieveArtifactsTable } from "./domain/RetrieveArtifactsTable";
+import type { ArtifactRow, Cell } from "../../src/domain/ArtifactsTable";
 
-export const RETRIEVE_PROJECTS: StrictInjectionKey<RetrieveProjects> = Symbol("RetrieveProjects");
-export const DATE_FORMATTER: StrictInjectionKey<IntlFormatter> = Symbol("DateFormatter");
-export const DATE_TIME_FORMATTER: StrictInjectionKey<IntlFormatter> = Symbol("DateTimeFormatter");
-export const RETRIEVE_ARTIFACTS_TABLE: StrictInjectionKey<RetrieveArtifactsTable> =
-    Symbol("RetrieveArtifactsTable");
+export class ArtifactRowBuilder {
+    #map: ArtifactRow = new Map();
+
+    public addCell(column_name: string, cell: Cell): this {
+        this.#map.set(column_name, cell);
+        return this;
+    }
+
+    public build(): ArtifactRow {
+        return this.#map;
+    }
+}

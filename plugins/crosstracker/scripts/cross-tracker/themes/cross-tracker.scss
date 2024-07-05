@@ -20,14 +20,6 @@
 @use "./reading-mode";
 @use "./writing-mode";
 
-.dashboard-widget-content-crosstrackersearch {
-    margin: 0 calc(-1 * var(--tlp-medium-spacing));
-}
-
-.dashboard-widget-content-cross-tracker {
-    margin: 0 0 var(--tlp-medium-spacing);
-}
-
 .cross-tracker-loader {
     height: 100px;
     background: url("@tuleap/burningparrot-theme/images/spinner.gif") no-repeat center center;

@@ -5,11 +5,12 @@
   "license": "GPL-2.0-or-later",
   "private": true,
   "type": "module",
-  "module": "dist/option.js",
-  "main": "dist/option.umd.cjs",
-  "types": "dist/index.d.ts",
+  "module": "./dist/option.js",
+  "main": "./dist/option.umd.cjs",
+  "types": "./dist/index.d.ts",
   "exports": {
     ".": {
+      "types": "./dist/index.d.ts",
       "import": "./dist/option.js",
       "require": "./dist/option.umd.cjs"
     }
