@@ -25,6 +25,7 @@ namespace Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Metadata;
 use LogicException;
 use Tuleap\CrossTracker\Report\Query\Advanced\AllowedMetadata;
 use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\IProvideParametrizedSelectAndFromSQLFragments;
+use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Metadata\Semantic\AssignedTo\AssignedToSelectFromBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Metadata\Semantic\Description\DescriptionSelectFromBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Metadata\Semantic\Status\StatusSelectFromBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Metadata\Semantic\Title\TitleSelectFromBuilder;
@@ -37,6 +38,7 @@ final readonly class MetadataSelectFromBuilder
         private TitleSelectFromBuilder $title_builder,
         private DescriptionSelectFromBuilder $description_builder,
         private StatusSelectFromBuilder $status_builder,
+        private AssignedToSelectFromBuilder $assigned_to_builder,
     ) {
     }
 
@@ -47,7 +49,7 @@ final readonly class MetadataSelectFromBuilder
             AllowedMetadata::TITLE       => $this->title_builder->getSelectFrom(),
             AllowedMetadata::DESCRIPTION => $this->description_builder->getSelectFrom(),
             AllowedMetadata::STATUS      => $this->status_builder->getSelectFrom(),
-            AllowedMetadata::ASSIGNED_TO,
+            AllowedMetadata::ASSIGNED_TO => $this->assigned_to_builder->getSelectFrom(),
 
             // Always there fields
             AllowedMetadata::SUBMITTED_ON,

@@ -65,6 +65,7 @@ use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Field\Text\TextSelec
 use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Field\UGroupList\UGroupListSelectFromBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Field\UserList\UserListSelectFromBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Metadata\MetadataSelectFromBuilder;
+use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Metadata\Semantic\AssignedTo\AssignedToSelectFromBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Metadata\Semantic\Description\DescriptionSelectFromBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Metadata\Semantic\Status\StatusSelectFromBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Metadata\Semantic\Title\TitleSelectFromBuilder;
@@ -326,6 +327,7 @@ class crosstrackerPlugin extends Plugin
                 new TitleSelectFromBuilder(),
                 new DescriptionSelectFromBuilder(),
                 new StatusSelectFromBuilder(),
+                new AssignedToSelectFromBuilder(),
             ),
         );
         $purifier                = Codendi_HTMLPurifier::instance();
