@@ -101,8 +101,8 @@ class BackendAliases extends Backend
         fwrite($fp, 'codex-admin:             ' . self::ADMIN_ALIAS . "\n");// deprecated user name
         fwrite($fp, 'sourceforge:             ' . self::ADMIN_ALIAS . "\n");// deprecated user name
         fwrite($fp, $this->getHTTPUser() . ':               ' . self::ADMIN_ALIAS . "\n");
-        fwrite($fp, 'noreply:                 "|' . ForgeConfig::get('codendi_bin_prefix') . "/gotohell\"\n");
-        fwrite($fp, 'undisclosed-recipients:  "|' . ForgeConfig::get('codendi_bin_prefix') . "/gotohell\"\n"); // for phpWiki notifications...
+        fwrite($fp, "noreply:                 \"|/bin/true\"\n");
+        fwrite($fp, "undisclosed-recipients:  \"|/bin/true\"\n"); // for phpWiki notifications...
         fwrite($fp, 'webmaster:               ' . self::ADMIN_ALIAS . "\n");
         return fwrite($fp, "\n\n");
     }
