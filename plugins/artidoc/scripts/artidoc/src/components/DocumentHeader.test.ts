@@ -20,33 +20,18 @@
 import { describe, expect, it, vi } from "vitest";
 import { shallowMount } from "@vue/test-utils";
 import DocumentHeader from "@/components/DocumentHeader.vue";
-import ConfigurationModal from "@/components/configuration/ConfigurationModal.vue";
+import DocumentDropdown from "@/components/DocumentDropdown.vue";
 import { mockStrictInject } from "@/helpers/mock-strict-inject";
-import { CAN_USER_EDIT_DOCUMENT } from "@/can-user-edit-document-injection-key";
 import { TITLE } from "@/title-injection-key";
 
 vi.mock("@tuleap/vue-strict-inject");
 
 describe("DocumentHeader", () => {
-    it("should display configuration if user can edit document", () => {
-        mockStrictInject([
-            [CAN_USER_EDIT_DOCUMENT, true],
-            [TITLE, "My document"],
-        ]);
+    it("should display dropdown for document", () => {
+        mockStrictInject([[TITLE, "My document"]]);
 
         const wrapper = shallowMount(DocumentHeader);
 
-        expect(wrapper.findComponent(ConfigurationModal).exists()).toBe(true);
-    });
-
-    it("should not display configuration if user cannot edit document", () => {
-        mockStrictInject([
-            [CAN_USER_EDIT_DOCUMENT, false],
-            [TITLE, "My document"],
-        ]);
-
-        const wrapper = shallowMount(DocumentHeader);
-
-        expect(wrapper.findComponent(ConfigurationModal).exists()).toBe(false);
+        expect(wrapper.findComponent(DocumentDropdown).exists()).toBe(true);
     });
 });
