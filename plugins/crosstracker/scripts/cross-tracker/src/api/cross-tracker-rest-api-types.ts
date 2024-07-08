@@ -34,6 +34,7 @@ export type ReportContentRepresentation = {
 
 export const DATE_SELECTABLE_TYPE = "date";
 export const NUMERIC_SELECTABLE_TYPE = "numeric";
+export const TEXT_SELECTABLE_TYPE = "text";
 
 type UnsupportedSelectableRepresentation = Record<string, unknown>;
 
@@ -46,9 +47,14 @@ export type NumericSelectableRepresentation = {
     readonly value: number | null;
 };
 
+export type TextSelectableRepresentation = {
+    readonly value: string | null;
+};
+
 export type SelectableRepresentation =
     | DateSelectableRepresentation
     | NumericSelectableRepresentation
+    | TextSelectableRepresentation
     | UnsupportedSelectableRepresentation;
 
 export type SelectableArtifactRepresentation = Record<string, SelectableRepresentation>;
@@ -68,7 +74,16 @@ type NumericSelectable = {
     readonly name: string;
 };
 
-export type Selectable = DateSelectable | NumericSelectable | UnsupportedSelectable;
+type TextSelectable = {
+    readonly type: typeof TEXT_SELECTABLE_TYPE;
+    readonly name: string;
+};
+
+export type Selectable =
+    | DateSelectable
+    | NumericSelectable
+    | TextSelectable
+    | UnsupportedSelectable;
 
 export type SelectableReportContentRepresentation = {
     readonly artifacts: ReadonlyArray<SelectableArtifactRepresentation>;
