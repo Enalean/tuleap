@@ -526,6 +526,13 @@ Requires: %{name} = %{tuleap_version}-%{tuleap_release}%{?dist}, tuleap-plugin-t
 
 %if %{with experimental}
 
+%package plugin-pdftemplate
+Summary: Allow to define templates for PDF export
+Group: Development/Tools
+Requires: %{name} = %{tuleap_version}-%{tuleap_release}%{?dist}
+%description plugin-pdftemplate
+%{summary}.
+
 %endif
 
 #
@@ -610,6 +617,7 @@ done
 
 %if %{with experimental}
 %else
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/pdftemplate
 %endif
 
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/themes/BurningParrot/composer.json
@@ -1434,6 +1442,10 @@ fi
 %endif
 
 %if %{with experimental}
+
+%files plugin-pdftemplate
+%defattr(-,root,root,-)
+%{APP_DIR}/plugins/pdftemplate
 
 %endif
 

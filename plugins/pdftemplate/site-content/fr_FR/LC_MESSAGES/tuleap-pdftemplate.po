@@ -1,0 +1,25 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: Nicolas Terray <nicolas.terray@enalean.com>\n"
+"Language-Team: \n"
+"Language: fr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Generator: Poedit 3.0.1\n"
+
+msgid "Allow to define templates for PDF export"
+msgstr "Permet de définir des modèles pour l'export PDF"
+
+msgid "Default template"
+msgstr "Modèle par défaut"
+
+msgid "Generic template to provide basic styles for a PDF document"
+msgstr "Modèle générique qui offre un style de base pour un document PDF"
+
+msgid "PDF Template"
+msgstr "Modèle PDF"

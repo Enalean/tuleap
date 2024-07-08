@@ -148,6 +148,7 @@ class ArtidocPlugin extends Plugin implements PluginWithConfigKeys
                 ),
                 $form_element_factory
             ),
+            EventManager::instance(),
         );
     }
 

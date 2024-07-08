@@ -118,6 +118,10 @@ section {
     z-index: zindex.$dropdown;
     justify-content: center;
     order: 1;
+
+    @media print {
+        display: none;
+    }
 }
 
 .document-section {
