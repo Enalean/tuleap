@@ -54,4 +54,37 @@ final class InlineCommentsTest extends \RestBase
         self::assertSame($new_content, $edited_comment['content']);
         self::assertNotNull($edited_comment['last_edition_date']);
     }
+
+    public function testOptionsInlineCommentReply(): void
+    {
+        $response = $this->getResponse(
+            $this->request_factory->createRequest('OPTIONS', 'pull_request_inline_comments/1/reply')
+        );
+        self::assertEqualsCanonicalizing(['OPTIONS', 'POST'], explode(', ', $response->getHeaderLine('Allow')));
+    }
+
+    public function testReplyToAnInlineComment(): void
+    {
+        $root_comment_id = 1;
+        $reply_content   = 'This is my reply: nope .';
+        $reply_format    = 'commonmark';
+        $response        = $this->getResponse(
+            $this->request_factory
+                ->createRequest('POST', 'pull_request_inline_comments/' . $root_comment_id . '/reply')
+                ->withBody(
+                    $this->stream_factory->createStream(
+                        json_encode([
+                            'content' => $reply_content,
+                            'format' => $reply_format,
+                        ], JSON_THROW_ON_ERROR)
+                    ),
+                ),
+        );
+        self::assertSame(200, $response->getStatusCode());
+
+        $reply = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
+        self::assertSame($reply_content, $reply['content']);
+        self::assertSame($reply_format, $reply['format']);
+        self::assertSame($root_comment_id, $reply['parent_id']);
+    }
 }

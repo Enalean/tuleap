@@ -23,7 +23,9 @@ declare(strict_types=1);
 namespace Tuleap\PullRequest\REST\v1;
 
 use BackendLogger;
+use EventManager;
 use Luracast\Restler\RestException;
+use ReferenceManager;
 use Tuleap\Git\Permissions\AccessControlVerifier;
 use Tuleap\Git\Permissions\FineGrainedDao;
 use Tuleap\Git\Permissions\FineGrainedRetriever;
@@ -33,8 +35,14 @@ use Tuleap\Markdown\EnhancedCodeBlockExtension;
 use Tuleap\Project\ProjectAccessChecker;
 use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
 use Tuleap\PullRequest\Authorization\PullRequestPermissionChecker;
+use Tuleap\PullRequest\Comment\ThreadCommentColorAssigner;
+use Tuleap\PullRequest\Comment\ThreadCommentColorRetriever;
+use Tuleap\PullRequest\Comment\ThreadCommentDao;
+use Tuleap\PullRequest\InlineComment\InlineCommentCreator;
 use Tuleap\PullRequest\InlineComment\InlineCommentRetriever;
 use Tuleap\PullRequest\Notification\PullRequestNotificationSupport;
+use Tuleap\PullRequest\PullRequest\REST\v1\InlineComment\Reply\InlineCommentReplyPOSTRepresentation;
+use Tuleap\PullRequest\PullRequest\REST\v1\InlineComment\Reply\POSTHandler;
 use Tuleap\PullRequest\PullRequestRetriever;
 use Tuleap\PullRequest\REST\v1\InlineComment\InlineCommentPATCHRepresentation;
 use Tuleap\PullRequest\REST\v1\InlineComment\InlineCommentRepresentation;
@@ -110,5 +118,94 @@ final class PullRequestInlineCommentsResource extends AuthenticatedResource
                 static fn(InlineCommentRepresentation $representation) => $representation,
                 FaultMapper::mapToRestException(...)
             );
+    }
+
+    /**
+     * @url OPTIONS {id}/reply
+     * @param int $id Inline comment ID
+     */
+    public function optionsReply(int $id): void
+    {
+        Header::allowOptionsPost();
+    }
+
+    /**
+     * Reply to a given inline comment
+     *
+     * <p>
+     *     This route takes an inline comment id parameter:
+     *     <ul>
+     *         <li>To reply to a comment which is not part of a thread yet, provide its id.</li>
+     *         <li>To reply to a comment in a thread, provide the id of the very first comment of the thread.</li>
+     *     </ul>
+     * </p>
+     *
+     * @url    POST {id}/reply
+     * @access protected
+     *
+     * @param int                              $id           Root inline comment id
+     * @param InlineCommentReplyPOSTRepresentation $reply_data {@from body}
+     *
+     * @status 200
+     * @throws RestException 403
+     * @throws RestException 404
+     */
+    public function postReply(int $id, InlineCommentReplyPOSTRepresentation $reply_data): InlineCommentRepresentation
+    {
+        Header::allowOptionsPost();
+        $this->checkAccess();
+
+        $dao             = new \Tuleap\PullRequest\InlineComment\Dao();
+        $color_retriever = new ThreadCommentColorRetriever(new ThreadCommentDao(), $dao);
+        $color_assigner  = new ThreadCommentColorAssigner($dao, $dao);
+        $comment_creator = new InlineCommentCreator(
+            $dao,
+            ReferenceManager::instance(),
+            PullRequestNotificationSupport::buildDispatcher(
+                BackendLogger::getDefaultLogger()
+            ),
+            $color_retriever,
+            $color_assigner
+        );
+
+        $git_repository_factory = new \GitRepositoryFactory(
+            new \GitDao(),
+            \ProjectManager::instance(),
+        );
+
+        $purifier             = \Codendi_HTMLPurifier::instance();
+        $markdown_interpreter = CommonMarkInterpreter::build(
+            $purifier,
+            new EnhancedCodeBlockExtension(new CodeBlockFeatures())
+        );
+
+        return (
+            new POSTHandler(
+                new InlineCommentRetriever(new \Tuleap\PullRequest\InlineComment\Dao()),
+                new PullRequestRetriever(new \Tuleap\PullRequest\Dao()),
+                new PullRequestPermissionChecker(
+                    $git_repository_factory,
+                    new ProjectAccessChecker(
+                        new RestrictedUserCanAccessProjectVerifier(),
+                        EventManager::instance()
+                    ),
+                    new AccessControlVerifier(
+                        new FineGrainedRetriever(new FineGrainedDao()),
+                        new \System_Command()
+                    ),
+                ),
+                $git_repository_factory,
+                new SingleRepresentationBuilder($purifier, $markdown_interpreter),
+                $comment_creator
+            )
+        )->handle(
+            $id,
+            $reply_data,
+            \UserManager::instance()->getCurrentUser(),
+            new \DateTimeImmutable(),
+        )->match(
+            static fn(InlineCommentRepresentation $representation) => $representation,
+            FaultMapper::mapToRestException(...)
+        );
     }
 }

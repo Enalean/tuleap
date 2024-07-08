@@ -32,6 +32,7 @@ use Tuleap\PullRequest\Comment\CommentIsNotFromCurrentUserFault;
 use Tuleap\PullRequest\Comment\CommentNotFoundFault;
 use Tuleap\PullRequest\Criterion\MalformedQueryFault;
 use Tuleap\PullRequest\InlineComment\InlineCommentNotFoundFault;
+use Tuleap\PullRequest\InlineComment\RootInlineCommentHasAParentFault;
 use Tuleap\PullRequest\PullRequest\REST\v1\UserNotFoundFault;
 use Tuleap\Test\PHPUnit\TestCase;
 
@@ -47,6 +48,7 @@ final class FaultMapperTest extends TestCase
         yield 'Source Git Repository not found' => [GitRepositoryNotFoundFault::fromRepositoryId(982), 404];
         yield 'Malformed query parameter' => [MalformedQueryFault::build(), 400];
         yield 'User not found' => [UserNotFoundFault::fromUserId(102), 404];
+        yield 'Inline comment has a parent' => [RootInlineCommentHasAParentFault::fromParentCommentId(15), 400];
     }
 
     /**
