@@ -35,8 +35,11 @@
                     data-test="cell-row"
                 >
                     <!-- eslint-enable vue/valid-v-for eslint is not happy about nested v-for -->
-                    <span class="cell-text" data-test="cell">
-                        {{ renderCell(row_map, column_name) }}
+                    <span
+                        class="cell-text"
+                        data-test="cell"
+                        v-dompurify-html="renderCell(row_map, column_name)"
+                    >
                     </span>
                 </div>
             </template>
@@ -56,7 +59,7 @@ import {
 } from "../../injection-symbols";
 import type WritingCrossTrackerReport from "../../writing-mode/writing-cross-tracker-report";
 import type { ArtifactRow, ArtifactsTable } from "../../domain/ArtifactsTable";
-import { DATE_CELL, NUMERIC_CELL } from "../../domain/ArtifactsTable";
+import { DATE_CELL, NUMERIC_CELL, TEXT_CELL } from "../../domain/ArtifactsTable";
 
 const artifacts_retriever = strictInject(RETRIEVE_ARTIFACTS_TABLE);
 const date_formatter = strictInject(DATE_FORMATTER);
@@ -110,6 +113,8 @@ function renderCell(row: ArtifactRow, column_name: string): string {
         return cell.value.mapOr(formatter.format, "");
     } else if (cell.type === NUMERIC_CELL) {
         return String(cell.value.unwrapOr(""));
+    } else if (cell.type === TEXT_CELL) {
+        return cell.value.unwrapOr("");
     }
     return "";
 }

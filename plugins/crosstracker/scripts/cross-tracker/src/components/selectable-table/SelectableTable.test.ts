@@ -35,17 +35,19 @@ import {
     DATE_TIME_FORMATTER,
     RETRIEVE_ARTIFACTS_TABLE,
 } from "../../injection-symbols";
-import { DATE_CELL, NUMERIC_CELL } from "../../domain/ArtifactsTable";
+import { DATE_CELL, NUMERIC_CELL, TEXT_CELL } from "../../domain/ArtifactsTable";
 import { RetrieveArtifactsTableStub } from "../../../tests/stubs/RetrieveArtifactsTableStub";
 import { ArtifactsTableBuilder } from "../../../tests/builders/ArtifactsTableBuilder";
 import { ArtifactRowBuilder } from "../../../tests/builders/ArtifactRowBuilder";
 import type { RetrieveArtifactsTable } from "../../domain/RetrieveArtifactsTable";
 import { Fault } from "@tuleap/fault";
+import { buildVueDompurifyHTMLDirective } from "vue-dompurify-html";
 
 vi.useFakeTimers();
 
 const DATE_COLUMN_NAME = "start_date";
 const NUMERIC_COLUMN_NAME = "remaining_effort";
+const TEXT_COLUMN_NAME = "details";
 
 describe(`SelectableTable`, () => {
     let errorSpy: Mock;
@@ -71,6 +73,9 @@ describe(`SelectableTable`, () => {
                         setErrorMessage: errorSpy,
                     },
                 }),
+                directives: {
+                    "dompurify-html": buildVueDompurifyHTMLDirective(),
+                },
                 provide: {
                     [DATE_FORMATTER.valueOf()]: IntlFormatter(en_US_LOCALE, "Europe/Paris", "date"),
                     [DATE_TIME_FORMATTER.valueOf()]: IntlFormatter(
@@ -94,6 +99,7 @@ describe(`SelectableTable`, () => {
             const table = new ArtifactsTableBuilder()
                 .withColumn(DATE_COLUMN_NAME)
                 .withColumn(NUMERIC_COLUMN_NAME)
+                .withColumn(TEXT_COLUMN_NAME)
                 .withArtifactRow(
                     new ArtifactRowBuilder()
                         .addCell(DATE_COLUMN_NAME, {
@@ -104,6 +110,10 @@ describe(`SelectableTable`, () => {
                         .addCell(NUMERIC_COLUMN_NAME, {
                             type: NUMERIC_CELL,
                             value: Option.fromValue(74),
+                        })
+                        .addCell(TEXT_COLUMN_NAME, {
+                            type: TEXT_CELL,
+                            value: Option.fromValue("<span>Griffith</span>"),
                         })
                         .build(),
                 )
@@ -141,7 +151,10 @@ describe(`SelectableTable`, () => {
             expect(
                 wrapper.findAll("[data-test=column-header]").map((header) => header.text()),
             ).toContain(NUMERIC_COLUMN_NAME);
-            expect(wrapper.findAll("[data-test=cell]")).toHaveLength(4);
+            expect(
+                wrapper.findAll("[data-test=column-header]").map((header) => header.text()),
+            ).toContain(TEXT_COLUMN_NAME);
+            expect(wrapper.findAll("[data-test=cell]")).toHaveLength(6);
         });
 
         it(`when there is a REST error, it will be shown`, async () => {

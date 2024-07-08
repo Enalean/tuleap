@@ -38,6 +38,7 @@ import {
 } from "./injection-symbols";
 import { ArtifactsTableRetriever } from "./api/ArtifactsTableRetriever";
 import { ArtifactsTableBuilder } from "./api/ArtifactsTableBuilder";
+import VueDOMPurifyHTML from "vue-dompurify-html";
 
 document.addEventListener("DOMContentLoaded", async () => {
     const locale = getLocaleOrThrow(document);
@@ -85,6 +86,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         })
             .use(gettext_plugin)
             .use(createInitializedStore(report_id, is_widget_admin))
+            .use(VueDOMPurifyHTML)
             .provide(RETRIEVE_PROJECTS, projects_cache)
             .provide(DATE_FORMATTER, date_formatter)
             .provide(DATE_TIME_FORMATTER, date_time_formatter)

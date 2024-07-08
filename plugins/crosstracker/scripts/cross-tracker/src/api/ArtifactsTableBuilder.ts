@@ -28,10 +28,15 @@ import type {
     SelectableArtifactRepresentation,
     SelectableReportContentRepresentation,
     SelectableRepresentation,
+    TextSelectableRepresentation,
 } from "./cross-tracker-rest-api-types";
-import { DATE_SELECTABLE_TYPE, NUMERIC_SELECTABLE_TYPE } from "./cross-tracker-rest-api-types";
+import {
+    DATE_SELECTABLE_TYPE,
+    NUMERIC_SELECTABLE_TYPE,
+    TEXT_SELECTABLE_TYPE,
+} from "./cross-tracker-rest-api-types";
 import type { ArtifactsTable, Cell } from "../domain/ArtifactsTable";
-import { DATE_CELL, NUMERIC_CELL } from "../domain/ArtifactsTable";
+import { DATE_CELL, NUMERIC_CELL, TEXT_CELL } from "../domain/ArtifactsTable";
 
 export type ArtifactsTableBuilder = {
     mapReportToArtifactsTable(report: SelectableReportContentRepresentation): ArtifactsTable;
@@ -45,6 +50,11 @@ const isNumericSelectableRepresentation = (
     representation: SelectableRepresentation,
 ): representation is NumericSelectableRepresentation =>
     representation.value === null || typeof representation.value === "number";
+
+const isTextSelectableRepresentation = (
+    representation: SelectableRepresentation,
+): representation is TextSelectableRepresentation =>
+    representation.value === null || typeof representation.value === "string";
 
 function buildCell(
     selectable: Selectable,
@@ -75,6 +85,18 @@ function buildCell(
             }
             return ok({
                 type: NUMERIC_CELL,
+                value: Option.fromNullable(artifact_value.value),
+            });
+        case TEXT_SELECTABLE_TYPE:
+            if (!isTextSelectableRepresentation(artifact_value)) {
+                // This is likely a developer mistake in the backend,
+                // we throw so that Tuleap devs can hear about it and fix it
+                throw Error(
+                    `Expected Artifact value for ${selectable.name} to be a text format, but it was not`,
+                );
+            }
+            return ok({
+                type: TEXT_CELL,
                 value: Option.fromNullable(artifact_value.value),
             });
         default:
