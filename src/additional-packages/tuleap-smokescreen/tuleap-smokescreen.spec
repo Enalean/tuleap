@@ -12,7 +12,7 @@ Release:	1%{?nixpkgs_epoch}%{?dist}
 Summary:	Tuleap Smokescreen (proxy filtering outbound HTTP requests)
 
 License:	MIT
-Source0: smokescreen
+Source0: tuleap-smokescreen
 Source1: tuleap-smokescreen.service
 
 %description
@@ -44,7 +44,7 @@ fi
 
 %install
 mkdir -p %{buildroot}%{_bindir}/
-cp smokescreen %{buildroot}%{_bindir}/tuleap-smokescreen
+cp tuleap-smokescreen %{buildroot}%{_bindir}/tuleap-smokescreen
 chmod 755 %{buildroot}%{_bindir}/tuleap-smokescreen
 mkdir -p %{buildroot}%{_unitdir}/
 cp tuleap-smokescreen.service %{buildroot}%{_unitdir}/tuleap-smokescreen.service
