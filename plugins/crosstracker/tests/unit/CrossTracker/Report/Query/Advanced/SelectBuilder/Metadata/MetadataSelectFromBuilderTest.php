@@ -24,6 +24,7 @@ namespace Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Metadata;
 
 use LogicException;
 use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\IProvideParametrizedSelectAndFromSQLFragments;
+use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Metadata\Semantic\AssignedTo\AssignedToSelectFromBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Metadata\Semantic\Description\DescriptionSelectFromBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Metadata\Semantic\Status\StatusSelectFromBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Metadata\Semantic\Title\TitleSelectFromBuilder;
@@ -38,6 +39,7 @@ final class MetadataSelectFromBuilderTest extends TestCase
             new TitleSelectFromBuilder(),
             new DescriptionSelectFromBuilder(),
             new StatusSelectFromBuilder(),
+            new AssignedToSelectFromBuilder(),
         );
 
         return $builder->getSelectFrom($metadata);
@@ -74,6 +76,13 @@ final class MetadataSelectFromBuilderTest extends TestCase
     public function testItReturnsSQLForStatusSemantic(): void
     {
         $result = $this->getSelectFrom(new Metadata('status'));
+        self::assertNotEmpty($result->getSelect());
+        self::assertNotEmpty($result->getFrom());
+    }
+
+    public function testItReturnsSQLForAssignedToSemantic(): void
+    {
+        $result = $this->getSelectFrom(new Metadata('assigned_to'));
         self::assertNotEmpty($result->getSelect());
         self::assertNotEmpty($result->getFrom());
     }

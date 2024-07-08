@@ -48,7 +48,7 @@ use Tuleap\Tracker\Permission\TrackersPermissionsRetriever;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
 use Tuleap\Tracker\Test\Builders\TrackerDatabaseBuilder;
 
-final class TitleSelectBuilderTest extends CrossTrackerFieldTestCase
+final class AssignedToSelectBuilderTest extends CrossTrackerFieldTestCase
 {
     private PFUser $user;
     /**
@@ -60,7 +60,7 @@ final class TitleSelectBuilderTest extends CrossTrackerFieldTestCase
      */
     private array $artifact_ids;
     /**
-     * @var array<int, ?string>
+     * @var array<int, ?int>
      */
     private array $expected_results;
     private CrossTrackerExpertQueryReportDao $dao;
@@ -77,55 +77,53 @@ final class TitleSelectBuilderTest extends CrossTrackerFieldTestCase
         $this->user = $core_builder->buildUser('project_member', 'Project Member', 'project_member@example.com');
         $core_builder->addUserToProjectMembers((int) $this->user->getId(), $project_id);
 
+        $alice = $core_builder->buildUser('alice', 'Alice', 'alice@example.com');
+        $bob   = $core_builder->buildUser('bob', 'Bob', 'bob@example.com');
+        $core_builder->addUserToProjectMembers((int) $alice->getId(), $project_id);
+        $core_builder->addUserToProjectMembers((int) $bob->getId(), $project_id);
+
         $release_tracker = $tracker_builder->buildTracker($project_id, 'Release');
         $sprint_tracker  = $tracker_builder->buildTracker($project_id, 'Sprint');
         $this->trackers  = [$release_tracker, $sprint_tracker];
 
-        $release_text_field_id = $tracker_builder->buildTextField(
-            $release_tracker->getId(),
-            'text_field',
-        );
-        $tracker_builder->buildTitleSemantic($release_tracker->getId(), $release_text_field_id);
-        $sprint_text_field_id = $tracker_builder->buildTextField(
-            $sprint_tracker->getId(),
-            'text_field',
-        );
-        $tracker_builder->buildTitleSemantic($sprint_tracker->getId(), $sprint_text_field_id);
+        $release_assignee_field_id = $tracker_builder->buildUserListField($release_tracker->getId(), 'release_assignee', 'sb');
+        $sprint_assignee_field_id  = $tracker_builder->buildUserListField($sprint_tracker->getId(), 'sprint_assignee', 'msb');
+
+        $tracker_builder->buildContributorAssigneeSemantic($release_tracker->getId(), $release_assignee_field_id);
+        $tracker_builder->buildContributorAssigneeSemantic($sprint_tracker->getId(), $sprint_assignee_field_id);
 
         $tracker_builder->setReadPermission(
-            $release_text_field_id,
+            $release_assignee_field_id,
             ProjectUGroup::PROJECT_MEMBERS
         );
         $tracker_builder->setReadPermission(
-            $sprint_text_field_id,
+            $sprint_assignee_field_id,
             ProjectUGroup::PROJECT_MEMBERS
         );
 
-        $release_artifact_empty_id     = $tracker_builder->buildArtifact($release_tracker->getId());
-        $release_artifact_with_text_id = $tracker_builder->buildArtifact($release_tracker->getId());
-        $sprint_artifact_with_text_id  = $tracker_builder->buildArtifact($sprint_tracker->getId());
-        $this->artifact_ids            = [$release_artifact_empty_id, $release_artifact_with_text_id, $sprint_artifact_with_text_id];
+        $release_artifact_empty_id      = $tracker_builder->buildArtifact($release_tracker->getId());
+        $release_artifact_with_alice_id = $tracker_builder->buildArtifact($release_tracker->getId());
+        $sprint_artifact_with_bob_id    = $tracker_builder->buildArtifact($sprint_tracker->getId());
+        $this->artifact_ids             = [$release_artifact_empty_id, $release_artifact_with_alice_id, $sprint_artifact_with_bob_id];
 
         $tracker_builder->buildLastChangeset($release_artifact_empty_id);
-        $release_artifact_with_text_changeset = $tracker_builder->buildLastChangeset($release_artifact_with_text_id);
-        $sprint_artifact_with_text_changeset  = $tracker_builder->buildLastChangeset($sprint_artifact_with_text_id);
+        $release_artifact_with_alice_changeset = $tracker_builder->buildLastChangeset($release_artifact_with_alice_id);
+        $sprint_artifact_with_bob_changeset    = $tracker_builder->buildLastChangeset($sprint_artifact_with_bob_id);
 
         $this->expected_results = [
-            $release_artifact_empty_id     => null,
-            $release_artifact_with_text_id => 'Hello World!',
-            $sprint_artifact_with_text_id  => '**Title**',
+            $release_artifact_empty_id      => null,
+            $release_artifact_with_alice_id => (int) $alice->getId(),
+            $sprint_artifact_with_bob_id    => (int) $bob->getId(),
         ];
-        $tracker_builder->buildTextValue(
-            $release_artifact_with_text_changeset,
-            $release_text_field_id,
-            (string) $this->expected_results[$release_artifact_with_text_id],
-            'text'
+        $tracker_builder->buildListValue(
+            $release_artifact_with_alice_changeset,
+            $release_assignee_field_id,
+            (int) $this->expected_results[$release_artifact_with_alice_id],
         );
-        $tracker_builder->buildTextValue(
-            $sprint_artifact_with_text_changeset,
-            $sprint_text_field_id,
-            (string) $this->expected_results[$sprint_artifact_with_text_id],
-            'commonmark'
+        $tracker_builder->buildListValue(
+            $sprint_artifact_with_bob_changeset,
+            $sprint_assignee_field_id,
+            (int) $this->expected_results[$sprint_artifact_with_bob_id],
         );
 
         $this->dao            = new CrossTrackerExpertQueryReportDao();
@@ -153,16 +151,15 @@ final class TitleSelectBuilderTest extends CrossTrackerFieldTestCase
 
     public function testItReturnsColumns(): void
     {
-        $fragments = $this->builder->buildSelectFrom([new Metadata('title')], $this->trackers, $this->user);
+        $fragments = $this->builder->buildSelectFrom([new Metadata('assigned_to')], $this->trackers, $this->user);
         $results   = $this->dao->searchArtifactsColumnsMatchingIds($fragments, $this->artifact_ids);
 
         self::assertCount(3, $results);
         $values = [];
         foreach ($results as $result) {
             self::assertArrayHasKey('id', $result);
-            self::assertArrayHasKey('@title', $result);
-            self::assertArrayHasKey('@title_format', $result);
-            $values[$result['id']] = $result['@title'];
+            self::assertArrayHasKey('@assigned_to', $result);
+            $values[$result['id']] = $result['@assigned_to'];
         }
         self::assertEqualsCanonicalizing($values, $this->expected_results);
     }
