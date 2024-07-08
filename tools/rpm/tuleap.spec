@@ -675,7 +675,6 @@ done
 %{__ln_s} %{APP_DIR}/src/tuleap-cfg/tuleap-cfg.php $RPM_BUILD_ROOT/%{_bindir}/tuleap-cfg
 
 %{__install} -d $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}
-%{__install} src/utils/gotohell $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}
 %{__install} src/utils/fileforge.pl $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}/fileforge
 
 #
@@ -1091,7 +1090,6 @@ fi
 # Executables (/usr/lib/tuleap/bin)
 %attr(755,%{APP_USER},%{APP_USER}) %dir %{APP_LIB_DIR}
 %attr(755,%{APP_USER},%{APP_USER}) %dir %{APP_LIBBIN_DIR}
-%attr(00755,%{APP_USER},%{APP_USER}) %{APP_LIBBIN_DIR}/gotohell
 %attr(04755,root,root) %{APP_LIBBIN_DIR}/fileforge
 %attr(00644,root,root) /etc/logrotate.d/%{APP_NAME}_syslog
 %dir %attr(00750,%{APP_USER},%{APP_USER}) %{APP_CACHE_DIR}
