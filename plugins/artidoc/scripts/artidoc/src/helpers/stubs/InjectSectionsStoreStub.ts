@@ -18,10 +18,11 @@
  */
 
 import type { SectionsStore } from "@/stores/useSectionsStore";
-import { ref } from "vue";
+import { computed, ref } from "vue";
 import type { ArtidocSection } from "@/helpers/artidoc-section.type";
 import type { Tracker } from "@/stores/configuration-store";
 import { injectInternalId } from "@/helpers/inject-internal-id";
+import { extractArtifactSectionsFromArtidocSections } from "@/helpers/extract-artifact-sections-from-artidoc-sections";
 
 const noop = (): void => {};
 const promised_noop = (): Promise<void> => Promise.resolve();
@@ -37,6 +38,7 @@ export const InjectedSectionsStoreStub = {
         updateSection: noop,
         is_sections_loading: ref(false),
         sections: ref(sections.map(injectInternalId)),
+        saved_sections: computed(() => extractArtifactSectionsFromArtidocSections(sections)),
     }),
     withLoadingSections: (sections: readonly ArtidocSection[] = []): SectionsStore => ({
         replacePendingByArtifactSection: noop,
@@ -48,6 +50,7 @@ export const InjectedSectionsStoreStub = {
         updateSection: noop,
         is_sections_loading: ref(true),
         sections: ref(sections.map(injectInternalId)),
+        saved_sections: computed(() => extractArtifactSectionsFromArtidocSections(sections)),
     }),
     withSectionsInError: (): SectionsStore => ({
         replacePendingByArtifactSection: noop,
@@ -59,6 +62,7 @@ export const InjectedSectionsStoreStub = {
         updateSection: noop,
         is_sections_loading: ref(false),
         sections: ref(undefined),
+        saved_sections: computed(() => undefined),
     }),
     withMockedLoadSections: (loadSections: (item_id: number) => Promise<void>): SectionsStore => ({
         replacePendingByArtifactSection: noop,
@@ -70,6 +74,7 @@ export const InjectedSectionsStoreStub = {
         updateSection: noop,
         is_sections_loading: ref(false),
         sections: ref([]),
+        saved_sections: computed(() => []),
     }),
     withMockedInsertPendingArtifactSectionForEmptyDocument: (
         insertPendingArtifactSectionForEmptyDocument: (tracker: Tracker | null) => void,

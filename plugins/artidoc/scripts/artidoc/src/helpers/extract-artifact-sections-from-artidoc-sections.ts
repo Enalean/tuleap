@@ -1,5 +1,4 @@
-<?php
-/**
+/*
  * Copyright (c) Enalean, 2024 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -18,19 +17,21 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
+import { isArtifactSection } from "@/helpers/artidoc-section.type";
+import type { ArtidocSection, ArtifactSection } from "@/helpers/artidoc-section.type";
 
-namespace Tuleap\Export\Pdf\Template;
-
-/**
- * @psalm-immutable
- */
-final readonly class PdfTemplate
-{
-    public function __construct(
-        public string $label,
-        public string $description,
-        public string $style,
-    ) {
+export function extractArtifactSectionsFromArtidocSections(
+    sections: readonly ArtidocSection[] | undefined,
+): readonly ArtifactSection[] | undefined {
+    if (sections === undefined) {
+        return undefined;
     }
+
+    return sections.reduce((saved: ArtifactSection[], current: ArtidocSection) => {
+        if (isArtifactSection(current)) {
+            saved.push(current);
+        }
+
+        return saved;
+    }, []);
 }

@@ -35,6 +35,7 @@ final class PdfTemplateCollectionRetriever
             new PdfTemplate(
                 dgettext('tuleap-pdftemplate', 'Default template'),
                 dgettext('tuleap-pdftemplate', 'Generic template to provide basic styles for a PDF document'),
+                file_get_contents(__DIR__ . '/Default/pdf-template-default.css'),
             ),
         ];
     }
