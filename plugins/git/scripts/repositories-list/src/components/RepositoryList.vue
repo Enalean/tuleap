@@ -26,28 +26,20 @@
         />
     </div>
 </template>
-<script lang="ts">
-import Vue from "vue";
-import { Component } from "vue-property-decorator";
-import { Getter, State } from "vuex-class";
+<script setup lang="ts">
 import GitRepository from "./GitRepository.vue";
 import type { Folder, FormattedGitLabRepository, Repository } from "../type";
+import { useGetters, useState } from "vuex-composition-helpers";
 
-@Component({ components: { GitRepository } })
-export default class RepositoryList extends Vue {
-    @State
-    readonly is_loading_initial!: boolean | number;
+const { is_loading_initial } = useState(["is_loading_initial"]);
+const { getFilteredRepositoriesByLastUpdateDate } = useGetters([
+    "getFilteredRepositoriesByLastUpdateDate",
+]);
 
-    @Getter
-    readonly getFilteredRepositoriesByLastUpdateDate!: Array<
-        Repository | FormattedGitLabRepository | Folder
-    >;
-
-    getKey(item: Repository | Folder | FormattedGitLabRepository): string {
-        if ("is_folder" in item) {
-            return item.normalized_path ?? "";
-        }
-        return String(item.id);
+function getKey(item: Repository | Folder | FormattedGitLabRepository): string {
+    if ("is_folder" in item) {
+        return item.normalized_path ?? "";
     }
+    return String(item.id);
 }
 </script>
