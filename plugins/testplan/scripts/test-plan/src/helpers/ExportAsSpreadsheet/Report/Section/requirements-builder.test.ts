@@ -300,7 +300,7 @@ describe("Build requirements section", () => {
                     new NumberCell(12).withComment(
                         "This requirement have multiple fields with this label, only one value is visible",
                     ),
-                    new DateCell(new Date("2020-08-01T00:00:00+01:00")),
+                    new DateCell("2020-08-01T00:00:00+01:00"),
                     new TextCell("Text 1"),
                 ],
                 [
