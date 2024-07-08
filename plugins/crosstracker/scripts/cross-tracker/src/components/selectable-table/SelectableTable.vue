@@ -32,6 +32,7 @@
                     v-for="column_name of columns"
                     v-bind:key="column_name"
                     v-bind:class="{ 'even-row': isEvenRow(index), 'odd-row': !isEvenRow(index) }"
+                    data-test="cell-row"
                 >
                     <!-- eslint-enable vue/valid-v-for eslint is not happy about nested v-for -->
                     <span class="cell-text" data-test="cell">
@@ -55,7 +56,7 @@ import {
 } from "../../injection-symbols";
 import type WritingCrossTrackerReport from "../../writing-mode/writing-cross-tracker-report";
 import type { ArtifactRow, ArtifactsTable } from "../../domain/ArtifactsTable";
-import { DATE_CELL } from "../../domain/ArtifactsTable";
+import { DATE_CELL, NUMERIC_CELL } from "../../domain/ArtifactsTable";
 
 const artifacts_retriever = strictInject(RETRIEVE_ARTIFACTS_TABLE);
 const date_formatter = strictInject(DATE_FORMATTER);
@@ -107,6 +108,8 @@ function renderCell(row: ArtifactRow, column_name: string): string {
     if (cell.type === DATE_CELL) {
         const formatter = cell.with_time ? date_time_formatter : date_formatter;
         return cell.value.mapOr(formatter.format, "");
+    } else if (cell.type === NUMERIC_CELL) {
+        return String(cell.value.unwrapOr(""));
     }
     return "";
 }

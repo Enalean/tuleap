@@ -20,6 +20,7 @@
 import type { Option } from "@tuleap/option";
 
 export const DATE_CELL = "date";
+export const NUMERIC_CELL = "numeric";
 
 type DateCell = {
     readonly type: typeof DATE_CELL;
@@ -27,7 +28,12 @@ type DateCell = {
     readonly with_time: boolean;
 };
 
-export type Cell = DateCell;
+type NumericCell = {
+    readonly type: typeof NUMERIC_CELL;
+    readonly value: Option<number>;
+};
+
+export type Cell = DateCell | NumericCell;
 
 export type ArtifactRow = Map<string, Cell>;
 
