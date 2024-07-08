@@ -1,0 +1,166 @@
+import { Meta, Canvas, Controls } from '@storybook/blocks';
+import * as LazyAutocompleterStories from "./lazyautocompleter.stories";
+
+<Meta of={LazyAutocompleterStories}/>
+
+# LazyAutocompleter
+
+LazyAutocompleter is a lighter version of the regular Lazybox component:
+
+- It does not look like a select-box
+- It won't show/hide a dropdown
+- It won't handle multiple values
+- It won't display any selected value. It is up to you to handle the selected values through the `selection_callback`
+
+It is basically an autocompleted list based on an input.
+
+## Options
+
+- <code>placeholder: string</code>: A (translated) text that will be shown in the search input. Its purpose is to tell the user what kind of items they will search using this field. For example "Search for an artifact…"
+- <code>templating_callback: (html: HTMLTemplateStringProcessor, item: LazyboxItem) => HTMLTemplateResult</code>: A callback function returning a hybrids update function to customize item templates.
+    - It takes two parameters:
+        - <code>html: HTMLTemplateStringProcessor</code> The hybrids tag function to help the developer build a secure HTMLTemplateResult.
+        - <code>item: LazyboxItem</code> The item for which to build the template. See below for its definition.
+- <code>selection_callback: (selected_value: unknown) => void</code>: A callback function to be executed each time the user selects a value.
+    - It takes one parameter: <code>selected_value</code>.
+    - It returns the value of the selected item.
+- <code>search_input_callback: (query: string) => void</code>: A callback to be executed each time the user types a query in the search input.
+    - It takes one parameter: <code>query: string</code>: The query typed by the user.
+
+## Methods
+
+##### <code>replaceContent(groups: GroupsOfItems[]) => void</code>
+
+Replaces the contents of the list with the given list of <code>GroupOfItems</code>.
+
+Each <code>GroupOfItems</code> has these properties:
+    - <code>label: string</code>: The label of the group. Think of it as the text content of an &lt;optgroup&gt;.
+    - <code>empty_message: string</code>: The translated message that will be shown when there are no items. It is the "empty state" of the group.
+    - <code>is_loading: boolean</code>: Show a spinner next to the group's label if true.
+    - <code>items: LazyboxItem[]</code>: the items of the group.
+    - <code>footer_message: string</code>: a message to display below the group of items.
+
+Each <code>LazyboxItem</code> has these properties:
+    - <code>value: unknown</code>: The value that will be passed to <code>selection_callback</code>. It can be any type, usually it's an object.
+    - <code>is_disabled: boolean</code>: the item cannot be selected if it's true.
+
+## Attributes:
+
+- <code>disabled: boolean</code>: when set to true, it will disable the search input and clear its query.
+
+## Example
+
+In this live example, type `105` in the search field to simulate some content fetched from a remote endpoint.
+
+<Canvas withToolbar={true}  of={LazyAutocompleterStories.LazyAutocompleter}></Canvas>
+
+<Controls></Controls>
+
+#### Typescript example
+
+```typescript
+import { createLazyAutocompleter } from "@tuleap/lazybox";
+
+import type {
+    HTMLTemplateResult,
+    GroupOfItems,
+    LazyboxItem,
+} from "@tuleap/lazybox";
+import type { ColorName } from "@tuleap/core-constants";
+
+type Artifact = {
+    readonly id: number;
+    readonly color: ColorName;
+    readonly xref: string;
+    readonly title: string;
+};
+
+export interface ArtifactLazyboxItem extends LazyboxItem {
+    value: Artifact;
+}
+
+function isArtifact(item: unknown): item is Artifact {
+    return typeof item === "object" && item !== null && "id" in item;
+}
+
+const ADDITIONAL_ITEM_ID = 105;
+
+const item_105 = {
+    value: {
+        id: ADDITIONAL_ITEM_ID,
+        color: "graffiti-yellow",
+        xref: "story #105",
+        title: "Do more stuff",
+    },
+    is_disabled: false,
+};
+
+const items: Array<ArtifactLazyboxItem> = [
+    {
+        value: { id: 101, color: "acid-green", xref: "story #101", title: "Do this" },
+        is_disabled: false,
+    },
+    {
+        value: { id: 102, color: "fiesta-red", xref: "story #102", title: "Do that" },
+        is_disabled: false,
+    },
+    {
+        value: { id: 103, color: "deep-blue", xref: "story #103", title: "And that too" },
+        is_disabled: true,
+    },
+];
+
+
+const items_group: GroupOfItems = {
+    label: "Recent items",
+    empty_message: "No recent item",
+    is_loading: false,
+    items,
+    footer_message: "",
+};
+
+const values_display = document.getElementById("lazy-autocompleter-links-value");
+const lazy_autocompleter = createLazyAutocompleter(document);
+lazy_autocompleter.id = "lazy-autocompleter-links";
+lazy_autocompleter.options = {
+    placeholder: "Type an id",
+    templating_callback: (html, item): HTMLTemplateResult => {
+        if (!isArtifact(item.value)) {
+            return html``;
+        }
+        return html`<span class="tlp-badge-${item.value.color} doc-link-selector-badge">
+                ${item.value.xref}
+            </span>
+            ${item.value.title}`;
+    },
+    selection_callback: (selected_value: unknown): void => {
+        if (!values_display) {
+            return;
+        }
+        if (!isArtifact(selected_value)) {
+            return;
+        }
+        values_display.textContent = `${selected_value.xref} - ${selected_value.title}`;
+    },
+    search_input_callback: (query): void => {
+        if (query === "") {
+            lazy_autocompleter.replaceContent([items_group]);
+            return;
+        }
+        const lowercase_query = query.toLowerCase();
+
+        if (lowercase_query === String(ADDITIONAL_ITEM_ID)) {
+            lazy_autocompleter.replaceContent([{ ...items_group, items: [item_105] }]);
+            return;
+        }
+        const matching_items = items.filter(
+            (item: ArtifactLazyboxItem) =>
+                String(item.value.id).includes(lowercase_query) ||
+                item.value.title.toLowerCase().includes(lowercase_query),
+        );
+        const matching_items_group = { ...items_group, items: matching_items };
+        lazy_autocompleter.replaceContent([matching_items_group]);
+    },
+};
+lazy_autocompleter.replaceContent([items_group]);
+```
