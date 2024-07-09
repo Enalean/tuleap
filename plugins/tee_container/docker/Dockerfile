@@ -83,6 +83,7 @@ RUN /usr/sbin/groupadd -g 900 -r codendiadm && \
     tuleap-theme-burningparrot \
     tuleap-theme-flamingparrot \
     tuleap-realtime && \
+    if [ "$RELEASE_CYCLE" == "dev" ]; then dnf install -y tuleap-plugin-pdftemplate; fi && \
     dnf clean all && \
     /bin/rm -rf /rpms $YUM_REPO_PATH && \
     awk '$5 >= 3071' /etc/ssh/moduli > /etc/ssh/moduli.tmp && mv /etc/ssh/moduli.tmp /etc/ssh/moduli

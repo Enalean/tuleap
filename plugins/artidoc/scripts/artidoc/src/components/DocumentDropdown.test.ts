@@ -24,6 +24,8 @@ import { shallowMount } from "@vue/test-utils";
 import DocumentDropdown from "@/components/DocumentDropdown.vue";
 import { createGettext } from "vue3-gettext";
 import ConfigurationModal from "@/components/configuration/ConfigurationModal.vue";
+import { PDF_TEMPLATES } from "@/pdf-templates-injection-key";
+import PdfExportMenuItem from "@/components/export/pdf/PdfExportMenuItem.vue";
 
 vi.mock("@tuleap/tlp-dropdown");
 
@@ -36,7 +38,10 @@ const options = {
 describe("DocumentDropdown", () => {
     describe("Document configuration", () => {
         it("should display configuration modal when user can edit document", () => {
-            mockStrictInject([[CAN_USER_EDIT_DOCUMENT, true]]);
+            mockStrictInject([
+                [CAN_USER_EDIT_DOCUMENT, true],
+                [PDF_TEMPLATES, null],
+            ]);
 
             const wrapper = shallowMount(DocumentDropdown, options);
 
@@ -44,11 +49,49 @@ describe("DocumentDropdown", () => {
         });
 
         it("should not display configuration modal when user cannot edit document", () => {
-            mockStrictInject([[CAN_USER_EDIT_DOCUMENT, false]]);
+            mockStrictInject([
+                [CAN_USER_EDIT_DOCUMENT, false],
+                [PDF_TEMPLATES, null],
+            ]);
 
             const wrapper = shallowMount(DocumentDropdown, options);
 
             expect(wrapper.findComponent(ConfigurationModal).exists()).toBe(false);
+        });
+    });
+
+    describe("PDF export", () => {
+        it("should not display PDF export when there nothing provide pdf template", () => {
+            mockStrictInject([
+                [CAN_USER_EDIT_DOCUMENT, true],
+                [PDF_TEMPLATES, null],
+            ]);
+
+            const wrapper = shallowMount(DocumentDropdown, options);
+
+            expect(wrapper.findComponent(PdfExportMenuItem).exists()).toBe(false);
+        });
+
+        it("should not display PDF export when the array of PDF templates is empty", () => {
+            mockStrictInject([
+                [CAN_USER_EDIT_DOCUMENT, true],
+                [PDF_TEMPLATES, []],
+            ]);
+
+            const wrapper = shallowMount(DocumentDropdown, options);
+
+            expect(wrapper.findComponent(PdfExportMenuItem).exists()).toBe(false);
+        });
+
+        it("should display PDF export when there is at least one PDF template", () => {
+            mockStrictInject([
+                [CAN_USER_EDIT_DOCUMENT, true],
+                [PDF_TEMPLATES, [{ label: "My PDF Template", description: "My PDF Template" }]],
+            ]);
+
+            const wrapper = shallowMount(DocumentDropdown, options);
+
+            expect(wrapper.findComponent(PdfExportMenuItem).exists()).toBe(true);
         });
     });
 });

@@ -119,6 +119,10 @@ div {
         --add-new-section-button-background-color: var(--tlp-main-color);
         --add-new-section-button-text-color: var(--tlp-white-color);
     }
+
+    @media print {
+        display: none;
+    }
 }
 
 button {

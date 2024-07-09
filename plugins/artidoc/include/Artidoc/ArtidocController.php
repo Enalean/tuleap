@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Artidoc;
 
 use HTTPRequest;
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Log\LoggerInterface;
 use Tuleap\Artidoc\Document\ArtidocBreadcrumbsProvider;
 use Tuleap\Artidoc\Document\ArtidocDocumentInformation;
@@ -32,6 +33,7 @@ use Tuleap\Artidoc\Document\Tracker\DocumentTrackerRepresentation;
 use Tuleap\Artidoc\Document\Tracker\SuitableTrackersForDocumentRetriever;
 use Tuleap\Config\ConfigKeyString;
 use Tuleap\Config\FeatureFlagConfigKey;
+use Tuleap\Export\Pdf\Template\GetPdfTemplatesEvent;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\HeaderConfigurationBuilder;
 use Tuleap\Layout\IncludeViteAssets;
@@ -61,6 +63,7 @@ final readonly class ArtidocController implements DispatchableWithRequest, Dispa
         private ArtidocBreadcrumbsProvider $breadcrumbs_provider,
         private LoggerInterface $logger,
         private FileUploadDataProvider $file_upload_provider,
+        private EventDispatcherInterface $event_dispatcher,
     ) {
     }
 
@@ -123,7 +126,8 @@ final readonly class ArtidocController implements DispatchableWithRequest, Dispa
                         fn (\Tracker $tracker): DocumentTrackerRepresentation => $this->getTrackerRepresentation($tracker, $user),
                         $this->suitable_trackers_retriever->getTrackers($document_information, $user),
                     ),
-                    $allowed_max_size
+                    $allowed_max_size,
+                    $this->event_dispatcher->dispatch(new GetPdfTemplatesEvent())->getTemplates(),
                 )
             );
         $service->displayFooter();

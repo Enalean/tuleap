@@ -23,15 +23,18 @@ declare(strict_types=1);
 namespace Tuleap\Artidoc;
 
 use Tuleap\Artidoc\Document\Tracker\DocumentTrackerRepresentation;
+use Tuleap\Export\Pdf\Template\PdfTemplate;
 use function Psl\Json\encode;
 
 final readonly class ArtidocPresenter
 {
     public string $allowed_trackers;
     public string $selected_tracker;
+    public string $pdf_templates;
 
     /**
      * @param list<DocumentTrackerRepresentation> $allowed_trackers
+     * @param list<PdfTemplate> $pdf_templates
      */
     public function __construct(
         public int $item_id,
@@ -40,8 +43,10 @@ final readonly class ArtidocPresenter
         ?DocumentTrackerRepresentation $selected_tracker,
         array $allowed_trackers,
         public int $upload_max_size,
+        ?array $pdf_templates,
     ) {
         $this->selected_tracker = encode($selected_tracker);
         $this->allowed_trackers = encode($allowed_trackers);
+        $this->pdf_templates    = encode($pdf_templates);
     }
 }

@@ -1,0 +1,13 @@
+{
+  "name": "tuleap/plugin-pdftemplate",
+  "autoload": {
+    "psr-4": {
+      "Tuleap\\PdfTemplate\\": "include/PdfTemplate"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Tuleap\\PdfTemplate\\": ["tests/unit/PdfTemplate", "tests/integration/PdfTemplate", "tests/rest/PdfTemplate"]
+    }
+  }
+}

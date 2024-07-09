@@ -61,6 +61,9 @@ msgstr "Éditer"
 msgid "Error details"
 msgstr "Détails de l'erreur"
 
+msgid "Export document in PDF"
+msgstr "Exporter le document en PDF"
+
 msgid "Force save"
 msgstr "Forcer la sauvegarde"
 

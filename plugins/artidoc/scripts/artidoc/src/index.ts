@@ -41,6 +41,7 @@ import {
     EDITORS_COLLECTION,
     useSectionEditorsCollection,
 } from "@/composables/useSectionEditorsCollection";
+import { PDF_TEMPLATES } from "@/pdf-templates-injection-key";
 
 document.addEventListener("DOMContentLoaded", async () => {
     const vue_mount_point = document.getElementById("artidoc-mountpoint");
@@ -86,6 +87,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             sections_store,
         ),
     );
+    app.provide(PDF_TEMPLATES, JSON.parse(getDatasetItemOrThrow(vue_mount_point, "pdfTemplates")));
 
     app.use(gettext);
     app.use(VueDOMPurifyHTML);
