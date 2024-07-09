@@ -17,8 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { Ref } from "vue";
-import { ref } from "vue";
+import type { ComputedRef, Ref } from "vue";
+import { computed, ref } from "vue";
 import { isArtifactSection, isPendingArtifactSection } from "@/helpers/artidoc-section.type";
 import type {
     ArtidocSection,
@@ -32,9 +32,11 @@ import type { Tracker } from "@/stores/configuration-store";
 import { isTrackerWithSubmittableSection } from "@/stores/configuration-store";
 import { okAsync } from "neverthrow";
 import { injectInternalId } from "@/helpers/inject-internal-id";
+import { extractArtifactSectionsFromArtidocSections } from "@/helpers/extract-artifact-sections-from-artidoc-sections";
 
 export interface SectionsStore {
     sections: Ref<readonly (ArtidocSection & InternalArtidocSectionId)[] | undefined>;
+    saved_sections: ComputedRef<readonly ArtifactSection[] | undefined>;
     is_sections_loading: Ref<boolean>;
     loadSections: (
         item_id: number,
@@ -72,6 +74,10 @@ export function useSectionsStore(): SectionsStore {
     const sections: Ref<(ArtidocSection & InternalArtidocSectionId)[] | undefined> =
         ref(skeleton_data);
     const is_sections_loading = ref(true);
+
+    const saved_sections: ComputedRef<readonly ArtifactSection[] | undefined> = computed(() => {
+        return extractArtifactSectionsFromArtidocSections(sections.value);
+    });
 
     function loadSections(
         item_id: number,
@@ -208,6 +214,7 @@ export function useSectionsStore(): SectionsStore {
 
     return {
         sections,
+        saved_sections,
         is_sections_loading,
         loadSections,
         updateSection,

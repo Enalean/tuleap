@@ -1,4 +1,3 @@
-<?php
 /**
  * Copyright (c) Enalean, 2024 - Present. All Rights Reserved.
  *
@@ -18,19 +17,34 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
+body {
+    font-size: 12pt;
+}
 
-namespace Tuleap\Export\Pdf\Template;
+h1, h2, h3, h4, h5, h6 {
+    font-family: system-ui, "Segoe UI", roboto, oxygen, ubuntu, cantarell, "Helvetica Neue", arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+}
 
-/**
- * @psalm-immutable
- */
-final readonly class PdfTemplate
-{
-    public function __construct(
-        public string $label,
-        public string $description,
-        public string $style,
-    ) {
-    }
+h1 { font-size: 2.5rem; }
+h2 { font-size: 1.75rem; }
+h3 { font-size: 1.35rem; }
+h4 { font-variant: small-caps; }
+h6 { font-size: 0.9rem; font-style: italic; }
+
+a:link, a:visited {
+	color: #00c;
+	font-weight: bold;
+	text-decoration: underline;
+}
+
+.document-title {
+    font-size: 4rem;
+    border: 1rem solid black;
+    text-align: center;
+    padding: 2rem;
+}
+
+.table-of-contents-container,
+.page-title {
+    page-break-before: always;
 }

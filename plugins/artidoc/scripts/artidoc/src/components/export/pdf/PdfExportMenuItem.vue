@@ -27,10 +27,31 @@
 
 <script setup lang="ts">
 import { useGettext } from "vue3-gettext";
+import print from "print-js";
+import { strictInject } from "@tuleap/vue-strict-inject";
+import { PDF_TEMPLATES } from "@/pdf-templates-injection-key";
+
+const pdf_templates = strictInject(PDF_TEMPLATES);
 
 const { $gettext } = useGettext();
 
 function onClick(): void {
-    window.print();
+    const printable = document.getElementById("artidoc-print-version");
+    if (!printable) {
+        return;
+    }
+
+    if (pdf_templates === null || pdf_templates.length === 0) {
+        return;
+    }
+
+    const selected_pdf_template = pdf_templates[0];
+
+    print({
+        printable,
+        type: "html",
+        scanStyles: false,
+        style: selected_pdf_template.style,
+    });
 }
 </script>

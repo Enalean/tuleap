@@ -20,4 +20,5 @@
 export interface PdfTemplate {
     readonly label: string;
     readonly description: string;
+    readonly style: string;
 }
