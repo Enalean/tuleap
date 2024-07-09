@@ -20,9 +20,15 @@
 
 declare(strict_types=1);
 
+use Tuleap\Admin\AdminPageRenderer;
+use Tuleap\Admin\SiteAdministrationAddOption;
+use Tuleap\Admin\SiteAdministrationPluginOption;
 use Tuleap\Export\Pdf\Template\GetPdfTemplatesEvent;
+use Tuleap\PdfTemplate\Admin\IndexPdfTemplateController;
 use Tuleap\PdfTemplate\PdfTemplateCollectionRetriever;
 use Tuleap\Plugin\ListeningToEventClass;
+use Tuleap\Request\CollectRoutesEvent;
+use Tuleap\Request\DispatchableWithRequest;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
@@ -58,5 +64,33 @@ class PdfTemplatePlugin extends Plugin
         $retriever = new PdfTemplateCollectionRetriever();
 
         $event->setTemplates($retriever->getTemplates());
+    }
+
+    #[ListeningToEventClass]
+    public function siteAdministrationAddOption(SiteAdministrationAddOption $event): void
+    {
+        $event->addPluginOption(
+            SiteAdministrationPluginOption::withShortname(
+                dgettext('tuleap-pdftemplate', 'PDF Template'),
+                IndexPdfTemplateController::ROUTE,
+                'pdftemplate',
+            )
+        );
+    }
+
+    #[ListeningToEventClass]
+    public function collectRoutesEvent(CollectRoutesEvent $event): void
+    {
+        $event->getRouteCollector()->get(
+            IndexPdfTemplateController::ROUTE,
+            $this->getRouteHandler('indexAdminController'),
+        );
+    }
+
+    public function indexAdminController(): DispatchableWithRequest
+    {
+        return new IndexPdfTemplateController(
+            new AdminPageRenderer(),
+        );
     }
 }

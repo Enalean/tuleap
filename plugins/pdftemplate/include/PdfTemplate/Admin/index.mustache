@@ -1,0 +1,41 @@
+<h1>{{# dgettext }} tuleap-pdftemplate | PDF Template {{/ dgettext }}</h1>
+<section class="tlp-pane">
+    <div class="tlp-pane-container">
+        <div class="tlp-pane-header">
+            <h1 class="tlp-pane-title">
+                <i class="tlp-pane-title-icon fa-solid fa-list" aria-hidden="true"></i>
+                {{# dgettext }} tuleap-pdftemplate | Templates {{/ dgettext }}
+            </h1>
+        </div>
+        <section class="tlp-pane-section">
+            <p>
+                {{# dgettext }} tuleap-pdftemplate | Templates defined here will be used to produce PDF documents. {{/ dgettext }}
+                {{# dgettext }} tuleap-pdftemplate | This is useful to match your company design guidelines for example. {{/ dgettext }}
+            </p>
+            <div class="tlp-table-actions">
+                <button type="button" class="tlp-button-primary" disabled>
+                    <i class="fa-solid fa-plus tlp-button-icon" aria-hidden="true"></i>
+                    {{# dgettext }} tuleap-pdftemplate | Create template {{/ dgettext }}
+                </button>
+            </div>
+            <table class="tlp-table">
+                <thead>
+                    <tr>
+                        <th>{{# dgettext }} tuleap-pdftemplate | Label {{/ dgettext }}</th>
+                        <th class="artidoc-admin-description-column">
+                            {{# dgettext }} tuleap-pdftemplate | Description {{/ dgettext }}
+                        </th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td colspan="3" class="tlp-table-cell-empty">
+                            {{# dgettext }} tuleap-pdftemplate | There isn't any templates defined {{/ dgettext }}
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+    </div>
+</section>
