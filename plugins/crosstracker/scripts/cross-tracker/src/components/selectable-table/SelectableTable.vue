@@ -48,9 +48,9 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from "vue";
+import { onMounted, ref, watch } from "vue";
 import { strictInject } from "@tuleap/vue-strict-inject";
-import { useMutations } from "vuex-composition-helpers";
+import { useMutations, useState } from "vuex-composition-helpers";
 import { useGettext } from "vue3-gettext";
 import {
     DATE_FORMATTER,
@@ -60,6 +60,7 @@ import {
 import type WritingCrossTrackerReport from "../../writing-mode/writing-cross-tracker-report";
 import type { ArtifactRow, ArtifactsTable } from "../../domain/ArtifactsTable";
 import { DATE_CELL, NUMERIC_CELL, TEXT_CELL } from "../../domain/ArtifactsTable";
+import type { State } from "../../type";
 
 const artifacts_retriever = strictInject(RETRIEVE_ARTIFACTS_TABLE);
 const date_formatter = strictInject(DATE_FORMATTER);
@@ -68,6 +69,10 @@ const date_time_formatter = strictInject(DATE_TIME_FORMATTER);
 const props = defineProps<{
     writing_cross_tracker_report: WritingCrossTrackerReport;
 }>();
+
+const { reading_mode, is_report_saved } = useState<Pick<State, "reading_mode" | "is_report_saved">>(
+    ["reading_mode", "is_report_saved"],
+);
 
 const { setErrorMessage } = useMutations(["setErrorMessage"]);
 const { $gettext } = useGettext();
@@ -78,8 +83,28 @@ const rows = ref<ArtifactsTable["rows"]>([]);
 const offset = 0;
 const limit = 30;
 
+watch(
+    () => [reading_mode.value, is_report_saved.value],
+    () => {
+        if (reading_mode.value === true) {
+            refreshArtifactList();
+        }
+    },
+);
+
+function refreshArtifactList(): void {
+    rows.value = [];
+    columns.value = new Set<string>();
+    is_loading.value = true;
+    loadArtifacts();
+}
+
 onMounted(() => {
     is_loading.value = true;
+    loadArtifacts();
+});
+
+function loadArtifacts(): void {
     artifacts_retriever
         .getSelectableQueryResult(
             props.writing_cross_tracker_report.getTrackerIds(),
@@ -101,7 +126,7 @@ onMounted(() => {
         .then(() => {
             is_loading.value = false;
         });
-});
+}
 
 function renderCell(row: ArtifactRow, column_name: string): string {
     const cell = row.get(column_name);
