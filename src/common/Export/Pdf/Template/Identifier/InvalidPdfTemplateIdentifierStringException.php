@@ -20,20 +20,12 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Export\Pdf\Template;
+namespace Tuleap\Export\Pdf\Template\Identifier;
 
-use Tuleap\Export\Pdf\Template\Identifier\PdfTemplateIdentifier;
-
-/**
- * @psalm-immutable
- */
-final readonly class PdfTemplate
+final class InvalidPdfTemplateIdentifierStringException extends \Exception
 {
-    public function __construct(
-        public PdfTemplateIdentifier $identifier,
-        public string $label,
-        public string $description,
-        public string $style,
-    ) {
+    public function __construct(\Exception $previous)
+    {
+        parent::__construct($previous->getMessage(), (int) $previous->getCode(), $previous);
     }
 }

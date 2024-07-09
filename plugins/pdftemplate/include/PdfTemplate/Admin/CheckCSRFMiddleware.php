@@ -20,20 +20,23 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Export\Pdf\Template;
+namespace Tuleap\PdfTemplate\Admin;
 
-use Tuleap\Export\Pdf\Template\Identifier\PdfTemplateIdentifier;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Server\MiddlewareInterface;
+use Psr\Http\Server\RequestHandlerInterface;
 
-/**
- * @psalm-immutable
- */
-final readonly class PdfTemplate
+final readonly class CheckCSRFMiddleware implements MiddlewareInterface
 {
-    public function __construct(
-        public PdfTemplateIdentifier $identifier,
-        public string $label,
-        public string $description,
-        public string $style,
-    ) {
+    public function __construct(private CSRFTokenProvider $token_provider)
+    {
+    }
+
+    public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
+    {
+        $this->token_provider->getToken()->check();
+
+        return $handler->handle($request);
     }
 }

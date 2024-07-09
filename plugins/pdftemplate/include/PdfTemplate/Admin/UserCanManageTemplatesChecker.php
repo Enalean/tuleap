@@ -20,20 +20,29 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Export\Pdf\Template;
+namespace Tuleap\PdfTemplate\Admin;
 
-use Tuleap\Export\Pdf\Template\Identifier\PdfTemplateIdentifier;
+use PFUser;
+use Tuleap\Request\NotFoundException;
+use Tuleap\User\ForgePermissionsRetriever;
 
-/**
- * @psalm-immutable
- */
-final readonly class PdfTemplate
+final class UserCanManageTemplatesChecker
 {
     public function __construct(
-        public PdfTemplateIdentifier $identifier,
-        public string $label,
-        public string $description,
-        public string $style,
+        private ForgePermissionsRetriever $forge_permissions_retriever,
     ) {
+    }
+
+    public function checkUserCanManageTemplates(PFUser $user): void
+    {
+        if ($user->isSuperUser()) {
+            return;
+        }
+
+        if ($this->forge_permissions_retriever->doesUserHavePermission($user, new ManagePdfTemplates())) {
+            return;
+        }
+
+        throw new NotFoundException();
     }
 }

@@ -13,10 +13,10 @@
                 {{# dgettext }} tuleap-pdftemplate | This is useful to match your company design guidelines for example. {{/ dgettext }}
             </p>
             <div class="tlp-table-actions">
-                <button type="button" class="tlp-button-primary" disabled>
+                <a href="{{ create_url }}" class="tlp-button-primary">
                     <i class="fa-solid fa-plus tlp-button-icon" aria-hidden="true"></i>
                     {{# dgettext }} tuleap-pdftemplate | Create template {{/ dgettext }}
-                </button>
+                </a>
             </div>
             <table class="tlp-table">
                 <thead>
@@ -29,11 +29,22 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td colspan="3" class="tlp-table-cell-empty">
-                            {{# dgettext }} tuleap-pdftemplate | There isn't any templates defined {{/ dgettext }}
-                        </td>
-                    </tr>
+                    {{# has_templates }}
+                        {{# templates }}
+                            <tr>
+                                <td class="artidoc-admin-description-label">{{ label }}</td>
+                                <td>{{ description }}</td>
+                                <td></td>
+                            </tr>
+                        {{/ templates }}
+                    {{/ has_templates }}
+                    {{^ has_templates }}
+                        <tr>
+                            <td colspan="3" class="tlp-table-cell-empty">
+                                {{# dgettext }} tuleap-pdftemplate | There isn't any templates defined {{/ dgettext }}
+                            </td>
+                        </tr>
+                    {{/ has_templates }}
                 </tbody>
             </table>
         </section>

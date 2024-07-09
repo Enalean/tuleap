@@ -23,21 +23,21 @@ declare(strict_types=1);
 namespace Tuleap\PdfTemplate\Admin;
 
 use HTTPRequest;
+use Tuleap\CSRFSynchronizerTokenPresenter;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\IncludeViteAssets;
 use Tuleap\Layout\JavascriptViteAsset;
-use Tuleap\PdfTemplate\RetrieveAllTemplates;
 use Tuleap\Request\DispatchableWithBurningParrot;
 use Tuleap\Request\DispatchableWithRequest;
 
-final readonly class IndexPdfTemplateController implements DispatchableWithBurningParrot, DispatchableWithRequest
+final readonly class DisplayPdfTemplateCreationFormController implements DispatchableWithBurningParrot, DispatchableWithRequest
 {
-    public const ROUTE = '/pdftemplate/admin';
+    public const ROUTE = '/pdftemplate/admin/create';
 
     public function __construct(
         private RenderAPresenter $admin_page_renderer,
         private UserCanManageTemplatesChecker $can_manage_templates_checker,
-        private RetrieveAllTemplates $templates_retriever,
+        private CSRFTokenProvider $token_provider,
     ) {
     }
 
@@ -56,18 +56,17 @@ final readonly class IndexPdfTemplateController implements DispatchableWithBurni
             )
         );
 
-        $templates = $this->templates_retriever->retrieveAll();
-
         $this->admin_page_renderer->renderAPresenter(
             $layout,
             $current_user,
             dgettext('tuleap-pdftemplate', 'PDF Template'),
             __DIR__,
-            'index',
+            'create',
             [
-                'create_url' => DisplayPdfTemplateCreationFormController::ROUTE,
-                'templates' => $templates,
-                'has_templates' => count($templates) > 0,
+                'index_url' => IndexPdfTemplateController::ROUTE,
+                'create_url' => self::ROUTE,
+                'general_styling' => file_get_contents(__DIR__ . '/../Default/pdf-template-default.css'),
+                'csrf' => CSRFSynchronizerTokenPresenter::fromToken($this->token_provider->getToken()),
             ],
         );
     }

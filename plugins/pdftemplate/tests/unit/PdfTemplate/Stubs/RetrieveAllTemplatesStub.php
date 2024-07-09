@@ -20,20 +20,35 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Export\Pdf\Template;
+namespace Tuleap\PdfTemplate\Stubs;
 
-use Tuleap\Export\Pdf\Template\Identifier\PdfTemplateIdentifier;
+use Tuleap\Export\Pdf\Template\PdfTemplate;
+use Tuleap\PdfTemplate\RetrieveAllTemplates;
 
-/**
- * @psalm-immutable
- */
-final readonly class PdfTemplate
+final readonly class RetrieveAllTemplatesStub implements RetrieveAllTemplates
 {
-    public function __construct(
-        public PdfTemplateIdentifier $identifier,
-        public string $label,
-        public string $description,
-        public string $style,
-    ) {
+    /**
+     * @param list<PdfTemplate> $templates
+     */
+    private function __construct(private array $templates)
+    {
+    }
+
+    public static function withoutTemplates(): self
+    {
+        return new self([]);
+    }
+
+    /**
+     * @param list<PdfTemplate> $templates
+     */
+    public static function withTemplates(array $templates): self
+    {
+        return new self($templates);
+    }
+
+    public function retrieveAll(): array
+    {
+        return $this->templates;
     }
 }

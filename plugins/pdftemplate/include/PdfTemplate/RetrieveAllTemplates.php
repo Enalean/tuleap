@@ -18,22 +18,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
+namespace Tuleap\PdfTemplate;
 
-namespace Tuleap\Export\Pdf\Template;
+use Tuleap\Export\Pdf\Template\PdfTemplate;
 
-use Tuleap\Export\Pdf\Template\Identifier\PdfTemplateIdentifier;
-
-/**
- * @psalm-immutable
- */
-final readonly class PdfTemplate
+interface RetrieveAllTemplates
 {
-    public function __construct(
-        public PdfTemplateIdentifier $identifier,
-        public string $label,
-        public string $description,
-        public string $style,
-    ) {
-    }
+    /**
+     * @return list<PdfTemplate>
+     */
+    public function retrieveAll(): array;
 }

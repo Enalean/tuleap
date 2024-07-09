@@ -21,14 +21,11 @@ msgstr "Créer et éditer des modèles de PDF"
 msgid "Create template"
 msgstr "Créer un modèle"
 
-msgid "Default template"
-msgstr "Modèle par défaut"
-
 msgid "Description"
 msgstr "Description"
 
-msgid "Generic template to provide basic styles for a PDF document"
-msgstr "Modèle générique qui offre un style de base pour un document PDF"
+msgid "General styling"
+msgstr "Style général"
 
 msgid "Label"
 msgstr "Label"
@@ -39,12 +36,33 @@ msgstr "Modèle PDF"
 msgid "PDF templates manager"
 msgstr "Gestionnaire de modèles PDF"
 
+msgid "Preview"
+msgstr "Prévisualisation"
+
+msgid "Return to templates list"
+msgstr "Retour à la liste des modèles"
+
+msgid "Save"
+msgstr "Sauvegarder"
+
+msgid "Technical documentation"
+msgstr "Documentation technique"
+
+msgid "Template creation"
+msgstr "Création de modèle"
+
 msgid "Templates"
 msgstr "Modèles"
 
 msgid "Templates defined here will be used to produce PDF documents."
 msgstr ""
 "Les modèles définis ici seront utilisés pour produire les documents PDF."
+
+msgid "The template has been created"
+msgstr "Le modèle a été créé"
+
+msgid "The template label is mandatory"
+msgstr "Le label du modèle est obligatoire"
 
 msgid "There isn't any templates defined"
 msgstr "Il n'y a pas de modèle défini"

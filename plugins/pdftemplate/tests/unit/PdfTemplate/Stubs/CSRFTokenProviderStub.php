@@ -20,20 +20,24 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Export\Pdf\Template;
+namespace Tuleap\PdfTemplate\Stubs;
 
-use Tuleap\Export\Pdf\Template\Identifier\PdfTemplateIdentifier;
+use Tuleap\PdfTemplate\Admin\CSRFTokenProvider;
+use Tuleap\Request\CSRFSynchronizerTokenInterface;
 
-/**
- * @psalm-immutable
- */
-final readonly class PdfTemplate
+final class CSRFTokenProviderStub implements CSRFTokenProvider
 {
-    public function __construct(
-        public PdfTemplateIdentifier $identifier,
-        public string $label,
-        public string $description,
-        public string $style,
-    ) {
+    private function __construct(private readonly CSRFSynchronizerTokenInterface $token)
+    {
+    }
+
+    public static function withToken(CSRFSynchronizerTokenInterface $token): self
+    {
+        return new self($token);
+    }
+
+    public function getToken(): CSRFSynchronizerTokenInterface
+    {
+        return $this->token;
     }
 }
