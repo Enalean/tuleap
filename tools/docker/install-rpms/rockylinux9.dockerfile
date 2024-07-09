@@ -22,6 +22,8 @@ RUN rm -f /lib/systemd/system/multi-user.target.wants/*;\
         rocky-release-security \
         epel-release \
         https://rpms.remirepo.net/enterprise/remi-release-9.rpm && \
+    dnf install -y dnf-plugins-core && \
+    dnf config-manager --enable security-common && \
     dnf clean all && \
     rm -rf /var/cache/yum
 
