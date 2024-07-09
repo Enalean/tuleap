@@ -23,6 +23,7 @@ import { shallowMount } from "@vue/test-utils";
 import PermissionsUpdateFolderSubItems from "./PermissionsUpdateFolderSubItems.vue";
 import { TYPE_FOLDER, TYPE_EMPTY } from "../../../constants";
 import { getGlobalTestOptions } from "../../../helpers/global-options-for-test";
+import emitter from "../../../helpers/emitter";
 import type { Empty, Folder, Item } from "../../../type";
 
 describe("PermissionsUpdateFolderSubItems", () => {
@@ -50,4 +51,24 @@ describe("PermissionsUpdateFolderSubItems", () => {
 
         expect(wrapper.html()).toMatchInlineSnapshot(`<!--v-if-->`);
     });
+
+    it.each([
+        ["checked", true],
+        ["unchecked", false],
+    ])(
+        'When the checkbox is %s, then it should emit a "update-apply-permissions-on-children" event containing the checkbox state.',
+        (state, is_checked) => {
+            const emit = jest.spyOn(emitter, "emit");
+            const wrapper = getWrapper({ type: TYPE_FOLDER } as Folder);
+            const checkbox = wrapper.find<HTMLInputElement>(
+                "[data-test=checkbox-apply-permissions-on-children]",
+            );
+
+            checkbox.setValue(is_checked);
+            checkbox.trigger("input");
+            expect(emit).toHaveBeenCalledWith("update-apply-permissions-on-children", {
+                do_permissions_apply_on_children: is_checked,
+            });
+        },
+    );
 });
