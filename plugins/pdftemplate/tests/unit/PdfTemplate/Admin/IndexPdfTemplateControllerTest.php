@@ -22,19 +22,24 @@ declare(strict_types=1);
 
 namespace Tuleap\PdfTemplate\Admin;
 
-use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\Request\NotFoundException;
 use Tuleap\Test\Builders\HTTPRequestBuilder;
 use Tuleap\Test\Builders\LayoutInspector;
 use Tuleap\Test\Builders\TestLayout;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Test\Stubs\User\ForgePermissionsRetrieverStub;
 
 final class IndexPdfTemplateControllerTest extends TestCase
 {
     public function testExceptionWhenUserIsNotAllowed(): void
     {
-        $controller = new IndexPdfTemplateController(new AdminPageRenderer());
+        $admin_page_renderer = RenderAPresenterStub::build();
+
+        $controller = new IndexPdfTemplateController(
+            $admin_page_renderer,
+            ForgePermissionsRetrieverStub::withoutPermission(),
+        );
 
         $user = UserTestBuilder::anActiveUser()->build();
 
@@ -45,5 +50,47 @@ final class IndexPdfTemplateControllerTest extends TestCase
             new TestLayout(new LayoutInspector()),
             [],
         );
+
+        self::assertFalse($admin_page_renderer->isCalled());
+    }
+
+    public function testOkWhenUserIsSuperUser(): void
+    {
+        $admin_page_renderer = RenderAPresenterStub::build();
+
+        $controller = new IndexPdfTemplateController(
+            $admin_page_renderer,
+            ForgePermissionsRetrieverStub::withoutPermission(),
+        );
+
+        $user = UserTestBuilder::buildSiteAdministrator();
+
+        $controller->process(
+            HTTPRequestBuilder::get()->withUser($user,)->build(),
+            new TestLayout(new LayoutInspector()),
+            [],
+        );
+
+        self::assertTrue($admin_page_renderer->isCalled());
+    }
+
+    public function testOkWhenUserHasPermissionDelegation(): void
+    {
+        $admin_page_renderer = RenderAPresenterStub::build();
+
+        $controller = new IndexPdfTemplateController(
+            $admin_page_renderer,
+            ForgePermissionsRetrieverStub::withPermission(),
+        );
+
+        $user = UserTestBuilder::anActiveUser()->build();
+
+        $controller->process(
+            HTTPRequestBuilder::get()->withUser($user,)->build(),
+            new TestLayout(new LayoutInspector()),
+            [],
+        );
+
+        self::assertTrue($admin_page_renderer->isCalled());
     }
 }

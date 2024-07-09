@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Layout;
 
 use Tuleap\Layout\HeaderConfiguration\InProject;
+use Tuleap\Layout\HeaderConfiguration\InSiteAdministration;
 use Tuleap\Layout\NewDropdown\NewDropdownLinkSectionPresenter;
 
 /**
@@ -43,6 +44,7 @@ final class HeaderConfiguration
         public readonly int $printer_version,
         public readonly ?NewDropdownLinkSectionPresenter $new_dropdown_link_section_presenter,
         public readonly bool $include_fat_combined,
+        public readonly ?InSiteAdministration $in_site_administration,
     ) {
     }
 
@@ -71,6 +73,7 @@ final class HeaderConfiguration
                 'without-project-in-breadcrumbs' => ! $this->in_project->in_breadcrumbs,
                 'active-promoted-item-id'        => $this->in_project->active_promoted_item_id,
             ] : []),
+            ...($this->in_site_administration ? $this->in_site_administration->flatten() : []),
         ];
     }
 }

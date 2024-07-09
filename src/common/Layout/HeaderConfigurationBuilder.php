@@ -24,6 +24,7 @@ namespace Tuleap\Layout;
 
 use Tuleap\Layout\HeaderConfiguration\InProject;
 use Tuleap\Layout\HeaderConfiguration\InProjectWithoutProjectContext\BackToLinkPresenter;
+use Tuleap\Layout\HeaderConfiguration\InSiteAdministration;
 use Tuleap\Layout\HeaderConfiguration\WithoutProjectContext;
 use Tuleap\Layout\NewDropdown\NewDropdownLinkSectionPresenter;
 
@@ -42,6 +43,7 @@ final class HeaderConfigurationBuilder
     private int $printer_version                                                  = 0;
     private ?NewDropdownLinkSectionPresenter $new_dropdown_link_section_presenter = null;
     private bool $include_fat_combined                                            = false;
+    private ?InSiteAdministration $in_site_administration                         = null;
 
     private function __construct(private string $title)
     {
@@ -155,6 +157,20 @@ final class HeaderConfigurationBuilder
         return $this;
     }
 
+    public function inSiteAdministration(SidebarPresenter $sidebar): self
+    {
+        $this->in_site_administration = new InSiteAdministration($sidebar);
+
+        return $this;
+    }
+
+    public function inSiteAdministrationWithoutSidebar(): self
+    {
+        $this->in_site_administration = new InSiteAdministration(null);
+
+        return $this;
+    }
+
     public function build(): HeaderConfiguration
     {
         return new HeaderConfiguration(
@@ -165,6 +181,7 @@ final class HeaderConfigurationBuilder
             $this->printer_version,
             $this->new_dropdown_link_section_presenter,
             $this->include_fat_combined,
+            $this->in_site_administration,
         );
     }
 }
