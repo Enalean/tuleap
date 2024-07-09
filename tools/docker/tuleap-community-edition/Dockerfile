@@ -14,6 +14,9 @@ RUN /usr/sbin/groupadd -g 900 -r codendiadm && \
     /usr/sbin/useradd -u 904 -c 'FTP Administrator' -M -d '/var/lib/tuleap/ftp' -r -g ftpadmin ftpadmin && \
     /usr/sbin/usermod -u 14 -c 'FTP User' -d '/var/lib/tuleap/ftp' -g ftp ftp && \
     dnf install --setopt=skip_missing_names_on_install=False --setopt install_weak_deps=false --nodocs -y epel-release rocky-release-security sudo https://rpms.remirepo.net/enterprise/remi-release-9.rpm && \
+    dnf install -y dnf-plugins-core && \
+    dnf config-manager --enable security-common && \
+    dnf remove -y dnf-plugins-core && \
     dnf update -y && \
     dnf install -y --setopt=skip_missing_names_on_install=False --setopt install_weak_deps=false --nodocs \
         --exclude='tuleap-plugin-tracker-encryption' \

@@ -24,6 +24,9 @@ RUN /usr/sbin/groupadd -g 900 -r codendiadm && \
     /usr/sbin/usermod -u 14 -c 'FTP User' -d '/var/lib/tuleap/ftp' -g ftp ftp && \
     echo "$RELEASE_CYCLE" > /etc/yum/vars/tuleap_release_cycle && \
     dnf install --setopt=skip_missing_names_on_install=False -y epel-release rocky-release-security sudo https://rpms.remirepo.net/enterprise/remi-release-9.rpm && \
+    dnf install -y dnf-plugins-core && \
+    dnf config-manager --enable security-common && \
+    dnf remove -y dnf-plugins-core && \
     dnf update -y && \
     dnf install -y --setopt=skip_missing_names_on_install=False \
     cronie \
