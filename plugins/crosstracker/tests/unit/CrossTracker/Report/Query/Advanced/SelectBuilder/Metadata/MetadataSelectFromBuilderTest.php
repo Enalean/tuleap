@@ -45,14 +45,6 @@ final class MetadataSelectFromBuilderTest extends TestCase
         return $builder->getSelectFrom($metadata);
     }
 
-    public function testItReturnsEmptyAsNothingHasBeenImplemented(): void
-    {
-        $result = $this->getSelectFrom(new Metadata('id'));
-        self::assertEmpty($result->getSelect());
-        self::assertEmpty($result->getFrom());
-        self::assertEmpty($result->getFromParameters());
-    }
-
     public function testItThrowsIfMetadataNotRecognized(): void
     {
         self::expectException(LogicException::class);
@@ -85,5 +77,35 @@ final class MetadataSelectFromBuilderTest extends TestCase
         $result = $this->getSelectFrom(new Metadata('assigned_to'));
         self::assertNotEmpty($result->getSelect());
         self::assertNotEmpty($result->getFrom());
+    }
+
+    public function testItReturnsSQLForSubmittedOnAlwaysThereField(): void
+    {
+        $result = $this->getSelectFrom(new Metadata('submitted_on'));
+        self::assertNotEmpty($result->getSelect());
+    }
+
+    public function testItReturnsSQLForLastUpdateDateAlwaysThereField(): void
+    {
+        $result = $this->getSelectFrom(new Metadata('last_update_date'));
+        self::assertNotEmpty($result->getSelect());
+    }
+
+    public function testItReturnsSQLForSubmittedByAlwaysThereField(): void
+    {
+        $result = $this->getSelectFrom(new Metadata('submitted_by'));
+        self::assertNotEmpty($result->getSelect());
+    }
+
+    public function testItReturnsSQLForLastUpdateByAlwaysThereField(): void
+    {
+        $result = $this->getSelectFrom(new Metadata('last_update_by'));
+        self::assertNotEmpty($result->getSelect());
+    }
+
+    public function testItReturnsSQLForArtifactIdAlwaysThereField(): void
+    {
+        $result = $this->getSelectFrom(new Metadata('id'));
+        self::assertNotEmpty($result->getSelect());
     }
 }

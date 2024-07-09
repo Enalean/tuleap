@@ -46,18 +46,18 @@ final readonly class MetadataSelectFromBuilder
     {
         return match ($metadata->getName()) {
             // Semantics
-            AllowedMetadata::TITLE       => $this->title_builder->getSelectFrom(),
-            AllowedMetadata::DESCRIPTION => $this->description_builder->getSelectFrom(),
-            AllowedMetadata::STATUS      => $this->status_builder->getSelectFrom(),
-            AllowedMetadata::ASSIGNED_TO => $this->assigned_to_builder->getSelectFrom(),
+            AllowedMetadata::TITLE            => $this->title_builder->getSelectFrom(),
+            AllowedMetadata::DESCRIPTION      => $this->description_builder->getSelectFrom(),
+            AllowedMetadata::STATUS           => $this->status_builder->getSelectFrom(),
+            AllowedMetadata::ASSIGNED_TO      => $this->assigned_to_builder->getSelectFrom(),
 
             // Always there fields
-            AllowedMetadata::SUBMITTED_ON,
-            AllowedMetadata::LAST_UPDATE_DATE,
-            AllowedMetadata::SUBMITTED_BY,
-            AllowedMetadata::LAST_UPDATE_BY,
-            AllowedMetadata::ID          => new ParametrizedSelectFrom('', '', []),
-            default                      => throw new LogicException("Unknown metadata type: {$metadata->getName()}"),
+            AllowedMetadata::SUBMITTED_ON     => new ParametrizedSelectFrom("artifact.submitted_on AS '@submitted_on'", '', []),
+            AllowedMetadata::LAST_UPDATE_DATE => new ParametrizedSelectFrom("changeset.submitted_on AS '@last_update_date'", '', []),
+            AllowedMetadata::SUBMITTED_BY     => new ParametrizedSelectFrom("artifact.submitted_by AS '@submitted_by'", '', []),
+            AllowedMetadata::LAST_UPDATE_BY   => new ParametrizedSelectFrom("changeset.submitted_by AS '@last_update_by'", '', []),
+            AllowedMetadata::ID               => new ParametrizedSelectFrom("artifact.id AS '@id'", '', []),
+            default                           => throw new LogicException("Unknown metadata type: {$metadata->getName()}"),
         };
     }
 }
