@@ -311,7 +311,7 @@ class timetrackingPlugin extends PluginWithLegacyInternalRouting implements Plug
             );
         }
         if ($get_widget_event->getName() === TimetrackingManagementWidget::NAME && (int) \ForgeConfig::getFeatureFlag(TimetrackingManagementWidget::FEATURE_FLAG) === 1) {
-            $get_widget_event->setWidget(new TimetrackingManagementWidget());
+            $get_widget_event->setWidget(new TimetrackingManagementWidget(new \Tuleap\Timetracking\REST\v1\TimetrackingManagement\Dao()));
         }
     }
 
