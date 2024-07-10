@@ -61,6 +61,9 @@ import type WritingCrossTrackerReport from "../../writing-mode/writing-cross-tra
 import type { ArtifactRow, ArtifactsTable } from "../../domain/ArtifactsTable";
 import { DATE_CELL, NUMERIC_CELL, TEXT_CELL } from "../../domain/ArtifactsTable";
 import type { State } from "../../type";
+import type { ResultAsync } from "neverthrow";
+import type { Fault } from "@tuleap/fault";
+import type { ArtifactsTableWithTotal } from "../../domain/RetrieveArtifactsTable";
 
 const artifacts_retriever = strictInject(RETRIEVE_ARTIFACTS_TABLE);
 const date_formatter = strictInject(DATE_FORMATTER);
@@ -105,13 +108,7 @@ onMounted(() => {
 });
 
 function loadArtifacts(): void {
-    artifacts_retriever
-        .getSelectableQueryResult(
-            props.writing_cross_tracker_report.getTrackerIds(),
-            props.writing_cross_tracker_report.expert_query,
-            limit,
-            offset,
-        )
+    getArtifactsFromReportOrUnsavedQuery()
         .match(
             (report_with_total) => {
                 columns.value = report_with_total.table.columns;
@@ -126,6 +123,19 @@ function loadArtifacts(): void {
         .then(() => {
             is_loading.value = false;
         });
+}
+
+function getArtifactsFromReportOrUnsavedQuery(): ResultAsync<ArtifactsTableWithTotal, Fault> {
+    if (is_report_saved.value === true) {
+        return artifacts_retriever.getSelectableReportContent(limit, offset);
+    }
+
+    return artifacts_retriever.getSelectableQueryResult(
+        props.writing_cross_tracker_report.getTrackerIds(),
+        props.writing_cross_tracker_report.expert_query,
+        limit,
+        offset,
+    );
 }
 
 function renderCell(row: ArtifactRow, column_name: string): string {

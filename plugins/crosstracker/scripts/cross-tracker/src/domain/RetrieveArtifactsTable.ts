@@ -33,4 +33,9 @@ export type RetrieveArtifactsTable = {
         limit: number,
         offset: number,
     ): ResultAsync<ArtifactsTableWithTotal, Fault>;
+
+    getSelectableReportContent(
+        limit: number,
+        offset: number,
+    ): ResultAsync<ArtifactsTableWithTotal, Fault>;
 };
