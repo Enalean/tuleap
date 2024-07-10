@@ -40,10 +40,7 @@
                     v-model="updated_permissions"
                     v-bind:value="updated_permissions"
                 />
-                <permissions-update-folder-sub-items
-                    v-bind:item="item"
-                    v-model="updated_permissions.apply_permissions_on_children"
-                />
+                <permissions-update-folder-sub-items v-bind:item="item" />
             </div>
         </div>
         <modal-footer
@@ -119,6 +116,7 @@ export default {
         this.modal = createModal(this.$el);
         emitter.on("show-update-permissions-modal", this.show);
         emitter.on("update-permissions", this.updateUGroup);
+        emitter.on("update-apply-permissions-on-children", this.setApplyPermissionsOnChildren);
         this.modal.addEventListener("tlp-modal-hidden", this.reset);
         this.show();
     },
@@ -181,6 +179,13 @@ export default {
                     break;
                 default:
             }
+        },
+
+        setApplyPermissionsOnChildren(event) {
+            this.updated_permissions = {
+                ...this.updated_permissions,
+                apply_permissions_on_children: event.do_permissions_apply_on_children,
+            };
         },
     },
 };

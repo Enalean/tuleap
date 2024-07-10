@@ -20,7 +20,11 @@
 <template>
     <div class="tlp-form-element" v-if="is_item_a_folder">
         <label class="tlp-label tlp-checkbox">
-            <input type="checkbox" v-bind:value="props.value" v-on:input="onInput" />
+            <input
+                type="checkbox"
+                v-on:input="onInput"
+                data-test="checkbox-apply-permissions-on-children"
+            />
             {{ $gettext("Apply same permissions to all sub-items of this folder") }}
         </label>
     </div>
@@ -29,18 +33,17 @@
 import { isFolder } from "../../../helpers/type-check-helper";
 import type { Folder } from "../../../type";
 import { computed } from "vue";
+import emitter from "../../../helpers/emitter";
 
 const props = defineProps<{ item: Folder }>();
-
-const emit = defineEmits<{
-    (e: "input", value: string): void;
-}>();
 
 function onInput($event: Event): void {
     const event_target = $event.target;
 
     if (event_target instanceof HTMLInputElement) {
-        emit("input", event_target.value);
+        emitter.emit("update-apply-permissions-on-children", {
+            do_permissions_apply_on_children: event_target.checked,
+        });
     }
 }
 

@@ -243,4 +243,34 @@ describe("PermissionsUpdateModal", () => {
         };
         expect(wrapper.vm.updated_permissions).toEqual(expected_permissions_to_update_state);
     });
+
+    it('When an event "update-apply-permissions-on-children" is received, then it should update do_permissions_apply_on_children', () => {
+        const item = {
+            id: 104,
+            title: "My item",
+            permissions_for_groups: {
+                can_read: [],
+                can_write: [],
+                can_manage: [],
+            },
+        };
+
+        const wrapper = factory({ item });
+
+        wrapper.setData({
+            updated_permissions: {
+                ...item.permissions_for_groups,
+                apply_permissions_on_children: false,
+            },
+        });
+
+        emitter.emit("update-apply-permissions-on-children", {
+            do_permissions_apply_on_children: true,
+        });
+
+        expect(wrapper.vm.updated_permissions).toStrictEqual({
+            ...item.permissions_for_groups,
+            apply_permissions_on_children: true,
+        });
+    });
 });

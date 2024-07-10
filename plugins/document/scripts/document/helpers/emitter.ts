@@ -88,6 +88,10 @@ export interface UpdateCriteriaDateEvent {
     value: SearchDate;
 }
 
+export type UpdateApplyPermissionsOnChildren = {
+    do_permissions_apply_on_children: boolean;
+};
+
 export type Events = {
     "update-status-property": string;
     "update-status-recursion": boolean;
@@ -129,6 +133,7 @@ export type Events = {
     "properties-recursion-list": UpdatePropertyListEvent;
 
     "update-permissions": string;
+    "update-apply-permissions-on-children": UpdateApplyPermissionsOnChildren;
     "update-global-criteria": string;
 
     "update-criteria": UpdateCriteriaEvent;
