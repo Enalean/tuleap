@@ -23,13 +23,18 @@
  *
  */
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+declare(strict_types=1);
 
-//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
-final class ApprovalTableNotificationCycleTest extends \Tuleap\Test\PHPUnit\TestCase
+namespace Tuleap\Docman\ApprovalTable;
+
+use Docman_ApprovalReviewer;
+use Docman_ApprovalTableItem;
+use Docman_ApprovalTableNotificationCycle;
+use MailNotificationBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
+
+final class ApprovalTableNotificationCycleTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     /**
      * first:  approve
      * second: reject
@@ -37,24 +42,19 @@ final class ApprovalTableNotificationCycleTest extends \Tuleap\Test\PHPUnit\Test
      */
     public function testGetTableStateReject(): void
     {
-        $reviewers[0] = \Mockery::spy(Docman_ApprovalReviewer::class);
-        $reviewers[0]->shouldReceive('getState')->andReturns(PLUGIN_DOCMAN_APPROVAL_STATE_APPROVED);
+        $reviewers[0] = new Docman_ApprovalReviewer();
+        $reviewers[0]->setState(PLUGIN_DOCMAN_APPROVAL_STATE_APPROVED);
+        $reviewers[1] = new Docman_ApprovalReviewer();
+        $reviewers[1]->setState(PLUGIN_DOCMAN_APPROVAL_STATE_REJECTED);
+        $reviewers[2] = new Docman_ApprovalReviewer();
+        $reviewers[2]->setState(PLUGIN_DOCMAN_APPROVAL_STATE_APPROVED);
+        $table            = new Docman_ApprovalTableItem();
+        $table->reviewers = $reviewers;
 
-        $reviewers[1] = \Mockery::spy(Docman_ApprovalReviewer::class);
-        $reviewers[1]->shouldReceive('getState')->andReturns(PLUGIN_DOCMAN_APPROVAL_STATE_REJECTED);
-
-        $reviewers[2] = \Mockery::spy(Docman_ApprovalReviewer::class);
-        $reviewers[2]->shouldReceive('getState')->andReturns(PLUGIN_DOCMAN_APPROVAL_STATE_APPROVED);
-
-        $reviewerIterator = new ArrayIterator($reviewers);
-
-        $table = \Mockery::spy(Docman_ApprovalTable::class);
-        $table->shouldReceive('getReviewerIterator')->andReturns($reviewerIterator);
-
-        $cycle = \Mockery::mock(Docman_ApprovalTableNotificationCycle::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $cycle = new Docman_ApprovalTableNotificationCycle($this->createMock(MailNotificationBuilder::class));
         $cycle->setTable($table);
 
-        $this->assertEquals(PLUGIN_DOCMAN_APPROVAL_STATE_REJECTED, $cycle->getTableState());
+        self::assertEquals(PLUGIN_DOCMAN_APPROVAL_STATE_REJECTED, $cycle->getTableState());
     }
 
     /**
@@ -64,24 +64,19 @@ final class ApprovalTableNotificationCycleTest extends \Tuleap\Test\PHPUnit\Test
      */
     public function testGetTableStateNotYet(): void
     {
-        $reviewers[0] = \Mockery::spy(Docman_ApprovalReviewer::class);
-        $reviewers[0]->shouldReceive('getState')->andReturns(PLUGIN_DOCMAN_APPROVAL_STATE_APPROVED);
+        $reviewers[0] = new Docman_ApprovalReviewer();
+        $reviewers[0]->setState(PLUGIN_DOCMAN_APPROVAL_STATE_APPROVED);
+        $reviewers[1] = new Docman_ApprovalReviewer();
+        $reviewers[1]->setState(PLUGIN_DOCMAN_APPROVAL_STATE_NOTYET);
+        $reviewers[2] = new Docman_ApprovalReviewer();
+        $reviewers[2]->setState(PLUGIN_DOCMAN_APPROVAL_STATE_APPROVED);
+        $table            = new Docman_ApprovalTableItem();
+        $table->reviewers = $reviewers;
 
-        $reviewers[1] = \Mockery::spy(Docman_ApprovalReviewer::class);
-        $reviewers[1]->shouldReceive('getState')->andReturns(PLUGIN_DOCMAN_APPROVAL_STATE_NOTYET);
-
-        $reviewers[2] = \Mockery::spy(Docman_ApprovalReviewer::class);
-        $reviewers[2]->shouldReceive('getState')->andReturns(PLUGIN_DOCMAN_APPROVAL_STATE_APPROVED);
-
-        $reviewerIterator = new ArrayIterator($reviewers);
-
-        $table = \Mockery::spy(Docman_ApprovalTable::class);
-        $table->shouldReceive('getReviewerIterator')->andReturns($reviewerIterator);
-
-        $cycle = \Mockery::mock(Docman_ApprovalTableNotificationCycle::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $cycle = new Docman_ApprovalTableNotificationCycle($this->createMock(MailNotificationBuilder::class));
         $cycle->setTable($table);
 
-        $this->assertEquals(PLUGIN_DOCMAN_APPROVAL_STATE_NOTYET, $cycle->getTableState());
+        self::assertEquals(PLUGIN_DOCMAN_APPROVAL_STATE_NOTYET, $cycle->getTableState());
     }
 
     /**
@@ -91,35 +86,29 @@ final class ApprovalTableNotificationCycleTest extends \Tuleap\Test\PHPUnit\Test
      */
     public function testGetTableStateWillNotReview(): void
     {
-        $reviewers[0] = \Mockery::spy(Docman_ApprovalReviewer::class);
-        $reviewers[0]->shouldReceive('getState')->andReturns(PLUGIN_DOCMAN_APPROVAL_STATE_APPROVED);
+        $reviewers[0] = new Docman_ApprovalReviewer();
+        $reviewers[0]->setState(PLUGIN_DOCMAN_APPROVAL_STATE_APPROVED);
+        $reviewers[1] = new Docman_ApprovalReviewer();
+        $reviewers[1]->setState(PLUGIN_DOCMAN_APPROVAL_STATE_DECLINED);
+        $reviewers[2] = new Docman_ApprovalReviewer();
+        $reviewers[2]->setState(PLUGIN_DOCMAN_APPROVAL_STATE_APPROVED);
+        $table            = new Docman_ApprovalTableItem();
+        $table->reviewers = $reviewers;
 
-        $reviewers[1] = \Mockery::spy(Docman_ApprovalReviewer::class);
-        $reviewers[1]->shouldReceive('getState')->andReturns(PLUGIN_DOCMAN_APPROVAL_STATE_DECLINED);
-
-        $reviewers[2] = \Mockery::spy(Docman_ApprovalReviewer::class);
-        $reviewers[2]->shouldReceive('getState')->andReturns(PLUGIN_DOCMAN_APPROVAL_STATE_APPROVED);
-
-        $reviewerIterator = new ArrayIterator($reviewers);
-
-        $table = \Mockery::spy(Docman_ApprovalTable::class);
-        $table->shouldReceive('getReviewerIterator')->andReturns($reviewerIterator);
-
-        $cycle = \Mockery::mock(Docman_ApprovalTableNotificationCycle::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $cycle = new Docman_ApprovalTableNotificationCycle($this->createMock(MailNotificationBuilder::class));
         $cycle->setTable($table);
 
-        $this->assertEquals(PLUGIN_DOCMAN_APPROVAL_STATE_APPROVED, $cycle->getTableState());
+        self::assertEquals(PLUGIN_DOCMAN_APPROVAL_STATE_APPROVED, $cycle->getTableState());
     }
 
     public function testLastReviewerApprove(): void
     {
-        $cycle = \Mockery::mock(Docman_ApprovalTableNotificationCycle::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $mail  = \Mockery::spy(Mail::class);
-        $cycle->shouldReceive('sendNotifTableApproved')->once()->andReturns($mail);
-        $cycle->shouldReceive('notifyNextReviewer')->never();
-        $reviewer       = \Mockery::spy(Docman_ApprovalReviewer::class);
-        $isLastReviewer = true;
-        $withComments   = '';
-        $cycle->reviewerApprove($reviewer, $isLastReviewer, $withComments);
+        $cycle = $this->createPartialMock(Docman_ApprovalTableNotificationCycle::class, [
+            'sendNotifTableApproved',
+            'notifyNextReviewer',
+        ]);
+        $cycle->expects(self::once())->method('sendNotifTableApproved')->willReturn(true);
+        $cycle->expects(self::never())->method('notifyNextReviewer');
+        $cycle->reviewerApprove(new Docman_ApprovalReviewer(), true, '');
     }
 }

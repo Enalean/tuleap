@@ -26,30 +26,19 @@ namespace Tuleap\Docman\ApprovalTable;
 use Docman_ApprovalTableFactoriesFactory;
 use Docman_ApprovalTableFileFactory;
 use Docman_File;
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PFUser;
+use PHPUnit\Framework\MockObject\MockObject;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
 
-class ApprovalTableUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
+final class ApprovalTableUpdaterTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var Docman_ApprovalTableFactoriesFactory
-     */
-    private $approval_table_factory;
-
-    /**
-     * @var ApprovalTableRetriever
-     */
-    private $approval_table_retriever;
+    private Docman_ApprovalTableFactoriesFactory&MockObject $approval_table_factory;
+    private ApprovalTableRetriever&MockObject $approval_table_retriever;
 
     protected function setUp(): void
     {
-        parent::setUp();
-
-        $this->approval_table_factory   = Mockery::mock(Docman_ApprovalTableFactoriesFactory::class);
-        $this->approval_table_retriever = Mockery::mock(ApprovalTableRetriever::class);
+        $this->approval_table_factory   = $this->createMock(Docman_ApprovalTableFactoriesFactory::class);
+        $this->approval_table_retriever = $this->createMock(ApprovalTableRetriever::class);
     }
 
     public function testItUpdateItemAndCreateItsApprovalTable(): void
@@ -59,19 +48,16 @@ class ApprovalTableUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->approval_table_factory
         );
 
-        $item = Mockery::mock(Docman_File::class);
-        $user = Mockery::mock(PFUser::class);
-        $user->shouldReceive('getId')->andReturn(18);
+        $item = new Docman_File();
+        $user = UserTestBuilder::buildWithId(18);
 
-        $approval_file = Mockery::mock(Docman_ApprovalTableFileFactory::class);
-        $this->approval_table_retriever->shouldReceive('hasApprovalTable')->with($item)->andReturn(true);
-        $this->approval_table_factory->shouldReceive('getSpecificFactoryFromItem')->with($item)->andReturn(
-            $approval_file
-        )->once();
+        $approval_file = $this->createMock(Docman_ApprovalTableFileFactory::class);
+        $this->approval_table_retriever->method('hasApprovalTable')->with($item)->willReturn(true);
+        $this->approval_table_factory->expects(self::once())->method('getSpecificFactoryFromItem')->with($item)->willReturn($approval_file);
 
         $approval_action = 'copy';
 
-        $approval_file->shouldReceive('createTable')->withArgs([18, $approval_action])->once();
+        $approval_file->expects(self::once())->method('createTable')->with(18, $approval_action);
 
         $approval_table_updater->updateApprovalTable($item, $user, $approval_action);
     }
@@ -83,17 +69,16 @@ class ApprovalTableUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->approval_table_factory
         );
 
-        $item = Mockery::mock(Docman_File::class);
-        $user = Mockery::mock(PFUser::class);
-        $user->shouldReceive('getId')->andReturn(18);
+        $item = new Docman_File();
+        $user = UserTestBuilder::buildWithId(18);
 
-        $approval_file = Mockery::mock(Docman_ApprovalTableFileFactory::class);
-        $this->approval_table_retriever->shouldReceive('hasApprovalTable')->with($item)->andReturn(false);
-        $this->approval_table_factory->shouldReceive('getSpecificFactoryFromItem')->never();
+        $approval_file = $this->createMock(Docman_ApprovalTableFileFactory::class);
+        $this->approval_table_retriever->method('hasApprovalTable')->with($item)->willReturn(false);
+        $this->approval_table_factory->expects(self::never())->method('getSpecificFactoryFromItem');
 
         $approval_action = 'copy';
 
-        $approval_file->shouldReceive('createTable')->never();
+        $approval_file->expects(self::never())->method('createTable');
 
         $approval_table_updater->updateApprovalTable($item, $user, $approval_action);
     }
