@@ -39,9 +39,14 @@ import { DATE_CELL, NUMERIC_CELL, TEXT_CELL } from "../../domain/ArtifactsTable"
 import { RetrieveArtifactsTableStub } from "../../../tests/stubs/RetrieveArtifactsTableStub";
 import { ArtifactsTableBuilder } from "../../../tests/builders/ArtifactsTableBuilder";
 import { ArtifactRowBuilder } from "../../../tests/builders/ArtifactRowBuilder";
-import type { RetrieveArtifactsTable } from "../../domain/RetrieveArtifactsTable";
+import type {
+    ArtifactsTableWithTotal,
+    RetrieveArtifactsTable,
+} from "../../domain/RetrieveArtifactsTable";
 import { Fault } from "@tuleap/fault";
 import { buildVueDompurifyHTMLDirective } from "vue-dompurify-html";
+import { TEXT_SELECTABLE_TYPE } from "../../api/cross-tracker-rest-api-types";
+import type { State } from "../../type";
 
 vi.useFakeTimers();
 
@@ -58,6 +63,7 @@ describe(`SelectableTable`, () => {
 
     const getWrapper = (
         table_retriever: RetrieveArtifactsTable,
+        state: Partial<State> = {},
     ): VueWrapper<InstanceType<typeof SelectableTable>> => {
         const writing_cross_tracker_report = new WritingCrossTrackerReport();
         writing_cross_tracker_report.expert_query = `SELECT start_date WHERE start_date != ''`;
@@ -69,6 +75,7 @@ describe(`SelectableTable`, () => {
         return shallowMount(SelectableTable, {
             global: {
                 ...getGlobalTestOptions({
+                    state: state as State,
                     mutations: {
                         setErrorMessage: errorSpy,
                     },
@@ -92,7 +99,7 @@ describe(`SelectableTable`, () => {
         });
     };
 
-    describe(`onMounted()`, () => {
+    describe(`onMounted() - `, () => {
         it(`will retrieve the query result,
             will show a loading spinner
             and will show a table-like grid with the selected columns and artifact values`, async () => {
@@ -132,10 +139,14 @@ describe(`SelectableTable`, () => {
                 )
                 .build();
 
-            const table_retriever = RetrieveArtifactsTableStub.withContent({
+            const table_result = {
                 table,
                 total: 2,
-            });
+            };
+            const table_retriever = RetrieveArtifactsTableStub.withContent(
+                table_result,
+                table_result,
+            );
 
             const wrapper = getWrapper(table_retriever);
 
@@ -169,6 +180,105 @@ describe(`SelectableTable`, () => {
 
             expect(errorSpy).toHaveBeenCalled();
             expect(errorSpy.mock.calls[0][1]).toContain(error_message);
+        });
+    });
+    describe("loadArtifact() -", () => {
+        let initial_report_with_total: ArtifactsTableWithTotal;
+        let query_report_with_total: ArtifactsTableWithTotal;
+        beforeEach(() => {
+            const initial_report = new ArtifactsTableBuilder()
+                .withColumn(DATE_COLUMN_NAME)
+                .withColumn(NUMERIC_COLUMN_NAME)
+                .withArtifactRow(
+                    new ArtifactRowBuilder()
+                        .addCell(DATE_COLUMN_NAME, {
+                            type: DATE_CELL,
+                            value: Option.fromValue("2021-09-26T07:40:03+09:00"),
+                            with_time: true,
+                        })
+                        .addCell(NUMERIC_COLUMN_NAME, {
+                            type: NUMERIC_CELL,
+                            value: Option.fromValue(74),
+                        })
+                        .build(),
+                )
+                .withArtifactRow(
+                    new ArtifactRowBuilder()
+                        .addCell(DATE_COLUMN_NAME, {
+                            type: DATE_CELL,
+                            value: Option.fromValue("2025-09-19T13:54:07+10:00"),
+                            with_time: true,
+                        })
+                        .addCell(NUMERIC_COLUMN_NAME, {
+                            type: NUMERIC_CELL,
+                            value: Option.fromValue(3),
+                        })
+                        .build(),
+                )
+                .build();
+
+            const query_report = new ArtifactsTableBuilder()
+                .withColumn(TEXT_COLUMN_NAME)
+                .withArtifactRow(
+                    new ArtifactRowBuilder()
+                        .addCell(TEXT_COLUMN_NAME, {
+                            type: TEXT_CELL,
+                            value: Option.fromValue("not hehehe"),
+                        })
+                        .build(),
+                )
+                .withArtifactRow(
+                    new ArtifactRowBuilder()
+                        .addCell(TEXT_COLUMN_NAME, {
+                            type: TEXT_SELECTABLE_TYPE,
+                            value: Option.fromValue("hehe"),
+                        })
+                        .build(),
+                )
+                .build();
+
+            initial_report_with_total = {
+                table: initial_report,
+                total: 2,
+            };
+
+            query_report_with_total = {
+                table: query_report,
+                total: 1,
+            };
+        });
+        it("returns the current query report, if the current report is not saved", async () => {
+            const table_retriever = RetrieveArtifactsTableStub.withContent(
+                query_report_with_total,
+                initial_report_with_total,
+            );
+
+            const wrapper = getWrapper(table_retriever, { is_report_saved: false });
+
+            await vi.runOnlyPendingTimersAsync();
+
+            expect(
+                wrapper.findAll("[data-test=column-header]").map((header) => header.text()),
+            ).toContain(TEXT_COLUMN_NAME);
+            expect(wrapper.findAll("[data-test=cell]")).toHaveLength(2);
+        });
+        it("returns the saved report, if the current report is saved", async () => {
+            const table_retriever = RetrieveArtifactsTableStub.withContent(
+                query_report_with_total,
+                initial_report_with_total,
+            );
+
+            const wrapper = getWrapper(table_retriever, { is_report_saved: true });
+
+            await vi.runOnlyPendingTimersAsync();
+
+            expect(
+                wrapper.findAll("[data-test=column-header]").map((header) => header.text()),
+            ).toContain(DATE_COLUMN_NAME);
+            expect(
+                wrapper.findAll("[data-test=column-header]").map((header) => header.text()),
+            ).toContain(NUMERIC_COLUMN_NAME);
+            expect(wrapper.findAll("[data-test=cell]")).toHaveLength(4);
         });
     });
 });

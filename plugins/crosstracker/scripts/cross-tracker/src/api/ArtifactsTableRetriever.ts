@@ -51,5 +51,19 @@ export const ArtifactsTableRetriever = (
                 });
             });
         },
+
+        getSelectableReportContent(limit, offset): ResultAsync<ArtifactsTableWithTotal, Fault> {
+            return getResponse(uri`/api/v1/cross_tracker_reports/${report_id}/content`, {
+                params: {
+                    limit,
+                    offset,
+                },
+            }).andThen((response) => {
+                const total = Number.parseInt(response.headers.get("X-PAGINATION-SIZE") ?? "0", 10);
+                return decodeJSON<SelectableReportContentRepresentation>(response).map((report) => {
+                    return { table: table_builder.mapReportToArtifactsTable(report), total };
+                });
+            });
+        },
     };
 };
