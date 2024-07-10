@@ -37,6 +37,9 @@ dependencies:
   '@tuleap/tlp-button':
     specifier: workspace:^
     version: link:../../../lib/frontend/tlp-button
+  '@tuleap/tlp-popovers':
+    specifier: workspace:^
+    version: link:../../../lib/frontend/tlp-popovers
   '@tuleap/tlp-relative-date':
     specifier: workspace:*
     version: link:../../../lib/frontend/tlp-relative-date
