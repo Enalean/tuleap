@@ -1,0 +1,73 @@
+<h1>{{# dgettext }} tuleap-pdftemplate | PDF Template {{/ dgettext }}</h1>
+<section class="tlp-pane">
+    <form method="post" action="{{ create_url }}" class="tlp-pane-container">
+        <div class="tlp-pane-header">
+            <h1 class="tlp-pane-title">
+                <i class="tlp-pane-title-icon fa-solid fa-list" aria-hidden="true"></i>
+                {{# dgettext }} tuleap-pdftemplate | Template creation {{/ dgettext }}
+            </h1>
+        </div>
+        <section class="tlp-pane-section">
+            {{# csrf }}
+                {{> csrf_token_input }}
+            {{/ csrf }}
+
+            <p>
+                <a href="{{ index_url }}" class="artidoc-admin-back-link">
+                    <i class="fa-solid fa-arrow-left-long artidoc-admin-back-link-icon" aria-hidden="true"></i><!--
+                    -->{{# dgettext }} tuleap-pdftemplate | Return to templates list {{/ dgettext }}
+                </a>
+            </p>
+
+            <div class="tlp-form-element">
+                <label class="tlp-label" for="input-label">
+                    {{# dgettext }} tuleap-pdftemplate | Label {{/ dgettext }}
+                    <i class="fa-solid fa-asterisk" aria-hidden="true"></i>
+                </label>
+                <input
+                    type="text"
+                    id="input-label"
+                    name="label"
+                    class="tlp-input"
+                    required
+                    placeholder="{{# dgettext }} tuleap-pdftemplate | Technical documentation {{/ dgettext }}"
+                >
+            </div>
+
+            <div class="tlp-form-element">
+                <label class="tlp-label" for="input-description">
+                    {{# dgettext }} tuleap-pdftemplate | Description {{/ dgettext }}
+                </label>
+                <textarea
+                    id="input-description"
+                    name="description"
+                    class="tlp-textarea"
+                ></textarea>
+            </div>
+
+            <div class="tlp-form-element">
+                <label class="tlp-label" for="input-general-styling">
+                    {{# dgettext }} tuleap-pdftemplate | General styling {{/ dgettext }}
+                </label>
+                <textarea
+                    id="input-general-styling"
+                    name="style"
+                    class="tlp-textarea"
+                    rows="20"
+                >{{ general_styling }}</textarea>
+            </div>
+        </section>
+
+        <section class="tlp-pane-section tlp-pane-section-submit">
+            <button type="submit" class="tlp-button-primary">
+                <i class="fa-solid fa-save tlp-button-icon" aria-hidden="true"></i>
+                {{# dgettext }} tuleap-pdftemplate | Save {{/ dgettext }}
+            </button>
+
+            <button type="button" class="tlp-button-primary tlp-button-outline" disabled>
+                <i class="fa-regular fa-file-pdf tlp-button-icon" aria-hidden="true"></i>
+                {{# dgettext }} tuleap-pdftemplate | Preview {{/ dgettext }}
+            </button>
+        </section>
+    </form>
+</section>

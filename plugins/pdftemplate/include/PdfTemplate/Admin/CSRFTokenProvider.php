@@ -18,18 +18,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
+namespace Tuleap\PdfTemplate\Admin;
 
-namespace Tuleap\PdfTemplate;
+use Tuleap\Request\CSRFSynchronizerTokenInterface;
 
-use Tuleap\Test\PHPUnit\TestCase;
-
-final class PdfTemplateCollectionRetrieverTest extends TestCase
+interface CSRFTokenProvider
 {
-    public function testItReturnsADummyCollectionForNow(): void
-    {
-        $retriever = new PdfTemplateCollectionRetriever();
-
-        self::assertCount(1, $retriever->getTemplates());
-    }
+    public function getToken(): CSRFSynchronizerTokenInterface;
 }

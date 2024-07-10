@@ -20,23 +20,31 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\PdfTemplate;
+namespace Tuleap\Export\Pdf\Template\Identifier;
 
-use Tuleap\Export\Pdf\Template\PdfTemplate;
+use Tuleap\DB\UUID;
 
-final class PdfTemplateCollectionRetriever
+final readonly class PdfTemplateIdentifier
 {
-    /**
-     * @return list<PdfTemplate>
-     */
-    public function getTemplates(): array
+    private function __construct(private UUID $uuid)
     {
-        return [
-            new PdfTemplate(
-                dgettext('tuleap-pdftemplate', 'Default template'),
-                dgettext('tuleap-pdftemplate', 'Generic template to provide basic styles for a PDF document'),
-                file_get_contents(__DIR__ . '/Default/pdf-template-default.css'),
-            ),
-        ];
+    }
+
+    /**
+     * @psalm-internal Tuleap\Export\Pdf\Template\Identifier
+     */
+    public static function fromUUID(UUID $uuid): self
+    {
+        return new self($uuid);
+    }
+
+    public function getBytes(): string
+    {
+        return $this->uuid->getBytes();
+    }
+
+    public function toString(): string
+    {
+        return $this->uuid->toString();
     }
 }

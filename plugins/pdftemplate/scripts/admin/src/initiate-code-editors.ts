@@ -1,5 +1,4 @@
-<?php
-/**
+/*
  * Copyright (c) Enalean, 2024 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -18,22 +17,18 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
+import CodeMirror from "codemirror";
+import "codemirror/mode/css/css.js";
 
-namespace Tuleap\Export\Pdf\Template;
-
-use Tuleap\Export\Pdf\Template\Identifier\PdfTemplateIdentifier;
-
-/**
- * @psalm-immutable
- */
-final readonly class PdfTemplate
-{
-    public function __construct(
-        public PdfTemplateIdentifier $identifier,
-        public string $label,
-        public string $description,
-        public string $style,
-    ) {
+export function initiateCodeEditors(): void {
+    const styling = document.getElementById("input-general-styling");
+    if (!(styling instanceof HTMLTextAreaElement)) {
+        return;
     }
+
+    CodeMirror.fromTextArea(styling, {
+        extraKeys: { "Ctrl-Space": "autocomplete" },
+        mode: "text/css",
+        lineNumbers: true,
+    });
 }

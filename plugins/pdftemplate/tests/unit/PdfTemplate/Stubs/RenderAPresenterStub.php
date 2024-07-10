@@ -20,20 +20,37 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Export\Pdf\Template;
+namespace Tuleap\PdfTemplate\Stubs;
 
-use Tuleap\Export\Pdf\Template\Identifier\PdfTemplateIdentifier;
+use Tuleap\Layout\BaseLayout;
+use Tuleap\PdfTemplate\Admin\RenderAPresenter;
 
-/**
- * @psalm-immutable
- */
-final readonly class PdfTemplate
+final class RenderAPresenterStub implements RenderAPresenter
 {
-    public function __construct(
-        public PdfTemplateIdentifier $identifier,
-        public string $label,
-        public string $description,
-        public string $style,
-    ) {
+    private bool $called = false;
+
+    private function __construct()
+    {
+    }
+
+    public static function build(): self
+    {
+        return new self();
+    }
+
+    public function isCalled(): bool
+    {
+        return $this->called;
+    }
+
+    public function renderAPresenter(
+        BaseLayout $layout,
+        \PFUser $user,
+        string $title,
+        string $template_path,
+        string $template_name,
+        mixed $presenter,
+    ): void {
+        $this->called = true;
     }
 }

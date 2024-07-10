@@ -22,34 +22,12 @@ declare(strict_types=1);
 
 namespace Tuleap\PdfTemplate\Admin;
 
-use Tuleap\Layout\BaseLayout;
+use Tuleap\Request\CSRFSynchronizerTokenInterface;
 
-final class RenderAPresenterStub implements RenderAPresenter
+final readonly class AdministrationCSRFTokenProvider implements CSRFTokenProvider
 {
-    private bool $called = false;
-
-    private function __construct()
+    public function getToken(): CSRFSynchronizerTokenInterface
     {
-    }
-
-    public static function build(): self
-    {
-        return new self();
-    }
-
-    public function isCalled(): bool
-    {
-        return $this->called;
-    }
-
-    public function renderAPresenter(
-        BaseLayout $layout,
-        \PFUser $user,
-        string $title,
-        string $template_path,
-        string $template_name,
-        mixed $presenter,
-    ): void {
-        $this->called = true;
+        return new \CSRFSynchronizerToken(IndexPdfTemplateController::ROUTE);
     }
 }

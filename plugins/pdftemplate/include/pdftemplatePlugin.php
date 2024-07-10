@@ -20,13 +20,25 @@
 
 declare(strict_types=1);
 
+use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
 use Tuleap\Admin\SiteAdministrationAddOption;
 use Tuleap\Admin\SiteAdministrationPluginOption;
+use Tuleap\DB\DatabaseUUIDV7Factory;
 use Tuleap\Export\Pdf\Template\GetPdfTemplatesEvent;
+use Tuleap\Export\Pdf\Template\Identifier\PdfTemplateIdentifierFactory;
+use Tuleap\Http\HTTPFactoryBuilder;
+use Tuleap\Http\Response\RedirectWithFeedbackFactory;
+use Tuleap\Layout\Feedback\FeedbackSerializer;
+use Tuleap\PdfTemplate\Admin\AdministrationCSRFTokenProvider;
 use Tuleap\PdfTemplate\Admin\AdminPageRenderer;
+use Tuleap\PdfTemplate\Admin\CheckCSRFMiddleware;
+use Tuleap\PdfTemplate\Admin\CreatePdfTemplateController;
+use Tuleap\PdfTemplate\Admin\DisplayPdfTemplateCreationFormController;
 use Tuleap\PdfTemplate\Admin\IndexPdfTemplateController;
 use Tuleap\PdfTemplate\Admin\ManagePdfTemplates;
-use Tuleap\PdfTemplate\PdfTemplateCollectionRetriever;
+use Tuleap\PdfTemplate\Admin\RejectNonNonPdfTemplateManagerMiddleware;
+use Tuleap\PdfTemplate\Admin\UserCanManageTemplatesChecker;
+use Tuleap\PdfTemplate\PdfTemplateDao;
 use Tuleap\Plugin\ListeningToEventClass;
 use Tuleap\Plugin\ListeningToEventName;
 use Tuleap\Request\CollectRoutesEvent;
@@ -64,9 +76,7 @@ class PdfTemplatePlugin extends Plugin
     #[ListeningToEventClass]
     public function getPdfTemplatesEvent(GetPdfTemplatesEvent $event): void
     {
-        $retriever = new PdfTemplateCollectionRetriever();
-
-        $event->setTemplates($retriever->getTemplates());
+        $event->setTemplates($this->getPdfTemplateDao()->retrieveAll());
     }
 
     #[ListeningToEventClass]
@@ -88,15 +98,49 @@ class PdfTemplatePlugin extends Plugin
             IndexPdfTemplateController::ROUTE,
             $this->getRouteHandler('indexAdminController'),
         );
+        $event->getRouteCollector()->get(
+            DisplayPdfTemplateCreationFormController::ROUTE,
+            $this->getRouteHandler('displayCreateAdminController'),
+        );
+        $event->getRouteCollector()->post(
+            DisplayPdfTemplateCreationFormController::ROUTE,
+            $this->getRouteHandler('createAdminController'),
+        );
     }
 
     public function indexAdminController(): DispatchableWithRequest
     {
         return new IndexPdfTemplateController(
             new AdminPageRenderer(),
-            new User_ForgeUserGroupPermissionsManager(
-                new User_ForgeUserGroupPermissionsDao(),
+            $this->getUserCanManageTemplatesChecker(),
+            $this->getPdfTemplateDao(),
+        );
+    }
+
+    public function displayCreateAdminController(): DispatchableWithRequest
+    {
+        return new DisplayPdfTemplateCreationFormController(
+            new AdminPageRenderer(),
+            $this->getUserCanManageTemplatesChecker(),
+            new AdministrationCSRFTokenProvider(),
+        );
+    }
+
+    public function createAdminController(): DispatchableWithRequest
+    {
+        return new CreatePdfTemplateController(
+            new RedirectWithFeedbackFactory(
+                HTTPFactoryBuilder::responseFactory(),
+                new FeedbackSerializer(new FeedbackDao()),
             ),
+            BackendLogger::getDefaultLogger(),
+            $this->getPdfTemplateDao(),
+            new SapiEmitter(),
+            new RejectNonNonPdfTemplateManagerMiddleware(
+                UserManager::instance(),
+                $this->getUserCanManageTemplatesChecker(),
+            ),
+            new CheckCSRFMiddleware(new AdministrationCSRFTokenProvider()),
         );
     }
 
@@ -104,5 +148,19 @@ class PdfTemplatePlugin extends Plugin
     public function getPermissionDelegation(array $params): void
     {
         $params['plugins_permission'][ManagePdfTemplates::ID] = new ManagePdfTemplates();
+    }
+
+    private function getUserCanManageTemplatesChecker(): UserCanManageTemplatesChecker
+    {
+        return new UserCanManageTemplatesChecker(
+            new User_ForgeUserGroupPermissionsManager(
+                new User_ForgeUserGroupPermissionsDao(),
+            ),
+        );
+    }
+
+    private function getPdfTemplateDao(): PdfTemplateDao
+    {
+        return new PdfTemplateDao(new PdfTemplateIdentifierFactory(new DatabaseUUIDV7Factory()));
     }
 }

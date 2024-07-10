@@ -17,6 +17,26 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+@use "codemirror/lib/codemirror";
+
+.artidoc-admin-description-label {
+    white-space: nowrap;
+}
+
 .artidoc-admin-description-column {
     width: 100%;
+}
+
+.artidoc-admin-back-link {
+    color: var(--tlp-dimmed-color);
+}
+
+.artidoc-admin-back-link-icon {
+    margin: 0 var(--tlp-small-spacing) 0 0;
+}
+
+/* stylelint-disable-next-line selector-class-pattern */
+.CodeMirror {
+    border: 1px solid var(--tlp-form-element-border-color);
+    border-radius: var(--tlp-small-radius);
 }

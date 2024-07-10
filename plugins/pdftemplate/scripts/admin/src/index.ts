@@ -18,3 +18,8 @@
  */
 
 import "./admin.scss";
+import { initiateCodeEditors } from "./initiate-code-editors";
+
+document.addEventListener("DOMContentLoaded", () => {
+    initiateCodeEditors();
+});

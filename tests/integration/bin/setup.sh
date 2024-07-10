@@ -75,6 +75,7 @@ seed_data() {
         gitlab \
         roadmap \
         artidoc \
+        pdftemplate \
         tracker_functions
 }
 
