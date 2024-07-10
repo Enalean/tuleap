@@ -85,11 +85,17 @@ final readonly class CrossTrackerArtifactReportFactory
         bool $static_return,
     ): ArtifactMatchingReportCollection|CrossTrackerReportContentRepresentation {
         if ($report->getExpertQuery() === '') {
-            return $this->getArtifactsFromGivenTrackers(
-                $this->getOnlyActiveTrackersInActiveProjects($report->getTrackers()),
-                $limit,
-                $offset
-            );
+            if (! Query::isSelectEnabled()) {
+                return $this->getArtifactsFromGivenTrackers(
+                    $this->getOnlyActiveTrackersInActiveProjects($report->getTrackers()),
+                    $limit,
+                    $offset
+                );
+            }
+            if ($static_return) {
+                return new ArtifactMatchingReportCollection([], 0);
+            }
+            return new CrossTrackerReportContentRepresentation([], [], 0);
         } else {
             if (! Query::isSelectEnabled()) {
                 return $this->getArtifactsMatchingExpertQuery(
@@ -186,7 +192,10 @@ final readonly class CrossTrackerArtifactReportFactory
         );
 
         if ($artifact_ids === []) {
-            return new ArtifactMatchingReportCollection([], 0);
+            if ($static_return) {
+                return new ArtifactMatchingReportCollection([], 0);
+            }
+            return new CrossTrackerReportContentRepresentation([], [], 0);
         }
 
         $additional_select_from = $this->select_builder->buildSelectFrom($query->getSelect(), $trackers, $current_user);
