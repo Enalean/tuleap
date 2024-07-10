@@ -18,8 +18,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Timetracking\Widget;
 
+use Codendi_Request;
 use TemplateRendererFactory;
 use Tuleap\Config\ConfigKeyHidden;
 use Tuleap\Config\ConfigKeyInt;
@@ -27,6 +30,8 @@ use Tuleap\Config\FeatureFlagConfigKey;
 use Tuleap\Layout\IncludeViteAssets;
 use Tuleap\Layout\JavascriptAssetGeneric;
 use Tuleap\Layout\JavascriptViteAsset;
+use Tuleap\Timetracking\REST\v1\TimetrackingManagement\Dao;
+use Tuleap\Timetracking\REST\v1\TimetrackingManagement\PredefinedTimePeriod;
 use Widget;
 
 class TimetrackingManagementWidget extends Widget
@@ -38,9 +43,12 @@ class TimetrackingManagementWidget extends Widget
 
     public const NAME = 'timetracking-management-widget';
 
-    public function __construct()
+    private Dao $dao;
+
+    public function __construct(Dao $dao)
     {
         parent::__construct(self::NAME);
+        $this->dao = $dao;
     }
 
     public function getTitle(): string
@@ -96,5 +104,18 @@ class TimetrackingManagementWidget extends Widget
                 'src/index.ts'
             ),
         ];
+    }
+
+    public function create(Codendi_Request $request): int
+    {
+        return $this->dao->create(PredefinedTimePeriod::LAST_7_DAYS);
+    }
+
+    /**
+     * @param string $id
+     */
+    public function destroy($id): void
+    {
+        $this->dao->delete((int) $id);
     }
 }
