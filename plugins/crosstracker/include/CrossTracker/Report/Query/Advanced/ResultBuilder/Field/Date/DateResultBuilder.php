@@ -56,6 +56,10 @@ final readonly class DateResultBuilder
                 continue;
             }
             $value = $result[(string) $alias];
+            if ($value === null) {
+                $values[$id] = new SelectedValue($field->name, new DateResultRepresentation($value, false));
+                continue;
+            }
 
             if (is_int($value)) {
                 $value = (new DateTimeImmutable("@$value"))
