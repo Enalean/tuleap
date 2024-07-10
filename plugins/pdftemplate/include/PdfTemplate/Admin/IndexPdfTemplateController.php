@@ -24,20 +24,22 @@ namespace Tuleap\PdfTemplate\Admin;
 
 use HTTPRequest;
 use PFUser;
-use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\IncludeViteAssets;
 use Tuleap\Layout\JavascriptViteAsset;
 use Tuleap\Request\DispatchableWithBurningParrot;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\NotFoundException;
+use Tuleap\User\ForgePermissionsRetriever;
 
 final readonly class IndexPdfTemplateController implements DispatchableWithBurningParrot, DispatchableWithRequest
 {
     public const ROUTE = '/pdftemplate/admin';
 
-    public function __construct(private AdminPageRenderer $admin_page_renderer)
-    {
+    public function __construct(
+        private RenderAPresenter $admin_page_renderer,
+        private ForgePermissionsRetriever $forge_permissions_retriever,
+    ) {
     }
 
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
@@ -56,6 +58,8 @@ final readonly class IndexPdfTemplateController implements DispatchableWithBurni
         );
 
         $this->admin_page_renderer->renderAPresenter(
+            $layout,
+            $current_user,
             dgettext('tuleap-pdftemplate', 'PDF Template'),
             __DIR__,
             'index',
@@ -65,8 +69,14 @@ final readonly class IndexPdfTemplateController implements DispatchableWithBurni
 
     private function checkUserCanManageTemplates(PFUser $user): void
     {
-        if (! $user->isSuperUser()) {
-            throw new NotFoundException();
+        if ($user->isSuperUser()) {
+            return;
         }
+
+        if ($this->forge_permissions_retriever->doesUserHavePermission($user, new ManagePdfTemplates())) {
+            return;
+        }
+
+        throw new NotFoundException();
     }
 }

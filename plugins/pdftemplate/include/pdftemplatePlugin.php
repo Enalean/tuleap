@@ -20,15 +20,18 @@
 
 declare(strict_types=1);
 
-use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\Admin\SiteAdministrationAddOption;
 use Tuleap\Admin\SiteAdministrationPluginOption;
 use Tuleap\Export\Pdf\Template\GetPdfTemplatesEvent;
+use Tuleap\PdfTemplate\Admin\AdminPageRenderer;
 use Tuleap\PdfTemplate\Admin\IndexPdfTemplateController;
+use Tuleap\PdfTemplate\Admin\ManagePdfTemplates;
 use Tuleap\PdfTemplate\PdfTemplateCollectionRetriever;
 use Tuleap\Plugin\ListeningToEventClass;
+use Tuleap\Plugin\ListeningToEventName;
 use Tuleap\Request\CollectRoutesEvent;
 use Tuleap\Request\DispatchableWithRequest;
+use Tuleap\User\User_ForgeUserGroupPermissionsFactory;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
@@ -91,6 +94,15 @@ class PdfTemplatePlugin extends Plugin
     {
         return new IndexPdfTemplateController(
             new AdminPageRenderer(),
+            new User_ForgeUserGroupPermissionsManager(
+                new User_ForgeUserGroupPermissionsDao(),
+            ),
         );
+    }
+
+    #[ListeningToEventName(User_ForgeUserGroupPermissionsFactory::GET_PERMISSION_DELEGATION)]
+    public function getPermissionDelegation(array $params): void
+    {
+        $params['plugins_permission'][ManagePdfTemplates::ID] = new ManagePdfTemplates();
     }
 }

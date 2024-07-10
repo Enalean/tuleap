@@ -15,6 +15,9 @@ msgstr ""
 msgid "Allow to define templates for PDF export"
 msgstr "Permet de définir des modèles pour l'export PDF"
 
+msgid "Create and edit PDF templates"
+msgstr "Créer et éditer des modèles de PDF"
+
 msgid "Create template"
 msgstr "Créer un modèle"
 
@@ -32,6 +35,9 @@ msgstr "Label"
 
 msgid "PDF Template"
 msgstr "Modèle PDF"
+
+msgid "PDF templates manager"
+msgstr "Gestionnaire de modèles PDF"
 
 msgid "Templates"
 msgstr "Modèles"
