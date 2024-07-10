@@ -15,11 +15,35 @@ msgstr ""
 msgid "Allow to define templates for PDF export"
 msgstr "Permet de définir des modèles pour l'export PDF"
 
+msgid "Create template"
+msgstr "Créer un modèle"
+
 msgid "Default template"
 msgstr "Modèle par défaut"
+
+msgid "Description"
+msgstr "Description"
 
 msgid "Generic template to provide basic styles for a PDF document"
 msgstr "Modèle générique qui offre un style de base pour un document PDF"
 
+msgid "Label"
+msgstr "Label"
+
 msgid "PDF Template"
 msgstr "Modèle PDF"
+
+msgid "Templates"
+msgstr "Modèles"
+
+msgid "Templates defined here will be used to produce PDF documents."
+msgstr ""
+"Les modèles définis ici seront utilisés pour produire les documents PDF."
+
+msgid "There isn't any templates defined"
+msgstr "Il n'y a pas de modèle défini"
+
+msgid "This is useful to match your company design guidelines for example."
+msgstr ""
+"Ceci permet d'appliquer les règles de conception de documents propres à "
+"votre entreprise par exemple."
