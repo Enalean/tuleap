@@ -22,7 +22,7 @@
                 <thead>
                     <tr>
                         <th>{{# dgettext }} tuleap-pdftemplate | Label {{/ dgettext }}</th>
-                        <th class="artidoc-admin-description-column">
+                        <th class="pdftemplate-admin-description-column">
                             {{# dgettext }} tuleap-pdftemplate | Description {{/ dgettext }}
                         </th>
                         <th></th>
@@ -32,9 +32,60 @@
                     {{# has_templates }}
                         {{# templates }}
                             <tr>
-                                <td class="artidoc-admin-description-label">{{ label }}</td>
+                                <td class="pdftemplate-admin-description-label">{{ label }}</td>
                                 <td>{{ description }}</td>
-                                <td></td>
+                                <td class="tlp-table-cell-actions">
+                                    <button class="tlp-table-cell-actions-button tlp-button-danger tlp-button-outline tlp-button-small pdftemplate-delete-button"
+                                            data-target-modal-id="pdftemplate-remove-{{ id }}"
+                                    >
+                                        <i class="fa-regular fa-trash-can tlp-button-icon" aria-hidden="true"></i>
+                                        {{# dgettext }} tuleap-pdftemplate | Delete {{/ dgettext }}
+                                    </button>
+
+                                    <div id="pdftemplate-remove-{{ id }}"
+                                         class="tlp-modal tlp-modal-danger"
+                                         role="dialog"
+                                         aria-labelledby="pdftemplate-remove-{{ id }}-label"
+                                    >
+                                        <form action="{{ delete_url }}" method="post">
+                                            <div class="tlp-modal-header">
+                                                <h1 class="tlp-modal-title" id="pdftemplate-remove-{{ id }}-label">
+                                                    {{# dgettext }} tuleap-pdftemplate | Delete %s | {{ label }}{{/ dgettext }}
+                                                </h1>
+                                                <button class="tlp-modal-close"
+                                                        type="button"
+                                                        data-dismiss="modal"
+                                                        aria-label="{{# dgettext }} tuleap-pdftemplate | Close{{/ dgettext }}"
+                                                >
+                                                    <i class="fa-solid fa-xmark tlp-modal-close-icon" role="img"></i>
+                                                </button>
+                                            </div>
+                                            <div class="tlp-modal-body">
+                                                {{# csrf }}
+                                                    {{> csrf_token_input }}
+                                                {{/ csrf }}
+                                                <input type="hidden" name="id" value="{{ id }}">
+
+                                                <p>
+                                                    {{# dgettext }} tuleap-pdftemplate | You are about to delete the PDF template '%s'. | {{ label }}{{/ dgettext }}
+                                                    {{# dgettext }} tuleap-pdftemplate | This operation cannot be undone.{{/ dgettext }}
+                                                </p>
+                                                <p>
+                                                    {{# dgettext }} tuleap-pdftemplate | Please confirm your action.{{/ dgettext }}
+                                                </p>
+                                            </div>
+                                            <div class="tlp-modal-footer">
+                                                <button type="button" class="tlp-button-danger tlp-button-outline tlp-modal-action" data-dismiss="modal">
+                                                    {{# dgettext }} tuleap-pdftemplate | Cancel{{/ dgettext }}
+                                                </button>
+                                                <button type="submit" class="tlp-button-danger tlp-modal-action">
+                                                    <i class="fa-regular fa-trash-can tlp-button-icon" aria-hidden="true"></i>
+                                                    {{# dgettext }} tuleap-pdftemplate | Delete %s | {{ label }}{{/ dgettext }}
+                                                </button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </td>
                             </tr>
                         {{/ templates }}
                     {{/ has_templates }}

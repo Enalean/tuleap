@@ -23,10 +23,11 @@ declare(strict_types=1);
 namespace Tuleap\PdfTemplate;
 
 use Tuleap\DB\DataAccessObject;
+use Tuleap\Export\Pdf\Template\Identifier\PdfTemplateIdentifier;
 use Tuleap\Export\Pdf\Template\Identifier\PdfTemplateIdentifierFactory;
 use Tuleap\Export\Pdf\Template\PdfTemplate;
 
-final class PdfTemplateDao extends DataAccessObject implements RetrieveAllTemplates, CreateTemplate
+final class PdfTemplateDao extends DataAccessObject implements RetrieveAllTemplates, CreateTemplate, DeleteTemplate
 {
     public function __construct(private readonly PdfTemplateIdentifierFactory $identifier_factory)
     {
@@ -64,6 +65,16 @@ final class PdfTemplateDao extends DataAccessObject implements RetrieveAllTempla
                 ),
                 $rows,
             ),
+        );
+    }
+
+    public function delete(PdfTemplateIdentifier $identifier): void
+    {
+        $this->getDB()->delete(
+            'plugin_pdftemplate',
+            [
+                'id' => $identifier->getBytes(),
+            ]
         );
     }
 }

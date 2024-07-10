@@ -1,3 +1,4 @@
+<?php
 /**
  * Copyright (c) Enalean, 2024 - Present. All Rights Reserved.
  *
@@ -17,26 +18,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@use "codemirror/lib/codemirror";
+namespace Tuleap\PdfTemplate;
 
-.pdftemplate-admin-description-label {
-    white-space: nowrap;
-}
+use Tuleap\Export\Pdf\Template\Identifier\PdfTemplateIdentifier;
 
-.pdftemplate-admin-description-column {
-    width: 100%;
-}
-
-.pdftemplate-admin-back-link {
-    color: var(--tlp-dimmed-color);
-}
-
-.pdftemplate-admin-back-link-icon {
-    margin: 0 var(--tlp-small-spacing) 0 0;
-}
-
-/* stylelint-disable-next-line selector-class-pattern */
-.CodeMirror {
-    border: 1px solid var(--tlp-form-element-border-color);
-    border-radius: var(--tlp-small-radius);
+interface DeleteTemplate
+{
+    public function delete(PdfTemplateIdentifier $identifier): void;
 }
