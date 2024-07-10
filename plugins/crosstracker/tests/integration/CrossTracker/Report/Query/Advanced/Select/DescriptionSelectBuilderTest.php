@@ -22,30 +22,18 @@ declare(strict_types=1);
 
 namespace Tuleap\CrossTracker\Report\Query\Advanced\Select;
 
+use Codendi_HTMLPurifier;
 use PFUser;
 use ProjectUGroup;
 use Tracker;
-use Tracker_FormElementFactory;
+use Tuleap\CrossTracker\CrossTrackerReport;
 use Tuleap\CrossTracker\Report\Query\Advanced\CrossTrackerFieldTestCase;
-use Tuleap\CrossTracker\Report\Query\Advanced\DuckTypedField\FieldTypeRetrieverWrapper;
-use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\CrossTrackerExpertQueryReportDao;
-use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Field\Date\DateSelectFromBuilder;
-use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Field\FieldSelectFromBuilder;
-use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Field\Numeric\NumericSelectFromBuilder;
-use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Field\StaticList\StaticListSelectFromBuilder;
-use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Field\Text\TextSelectFromBuilder;
-use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Field\UGroupList\UGroupListSelectFromBuilder;
-use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Field\UserList\UserListSelectFromBuilder;
-use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Metadata\MetadataSelectFromBuilder;
-use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Metadata\Semantic\AssignedTo\AssignedToSelectFromBuilder;
-use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Metadata\Semantic\Description\DescriptionSelectFromBuilder;
-use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Metadata\Semantic\Status\StatusSelectFromBuilder;
-use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Metadata\Semantic\Title\TitleSelectFromBuilder;
-use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilderVisitor;
+use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Field\Text\TextResultRepresentation;
+use Tuleap\CrossTracker\REST\v1\Representation\CrossTrackerReportContentRepresentation;
+use Tuleap\CrossTracker\Tests\Report\ArtifactReportFactoryInstantiator;
 use Tuleap\DB\DBFactory;
+use Tuleap\Markdown\CommonMarkInterpreter;
 use Tuleap\Test\Builders\CoreDatabaseBuilder;
-use Tuleap\Tracker\Permission\TrackersPermissionsRetriever;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
 use Tuleap\Tracker\Test\Builders\TrackerDatabaseBuilder;
 
 final class DescriptionSelectBuilderTest extends CrossTrackerFieldTestCase
@@ -56,15 +44,9 @@ final class DescriptionSelectBuilderTest extends CrossTrackerFieldTestCase
      */
     private array $trackers;
     /**
-     * @var list<int>
-     */
-    private array $artifact_ids;
-    /**
-     * @var array<int, ?string>
+     * @var array<int, string>
      */
     private array $expected_results;
-    private CrossTrackerExpertQueryReportDao $dao;
-    private SelectBuilderVisitor $builder;
 
     public function setUp(): void
     {
@@ -101,69 +83,65 @@ final class DescriptionSelectBuilderTest extends CrossTrackerFieldTestCase
             ProjectUGroup::PROJECT_MEMBERS
         );
 
-        $release_artifact_empty_id     = $tracker_builder->buildArtifact($release_tracker->getId());
         $release_artifact_with_text_id = $tracker_builder->buildArtifact($release_tracker->getId());
         $sprint_artifact_with_text_id  = $tracker_builder->buildArtifact($sprint_tracker->getId());
-        $this->artifact_ids            = [$release_artifact_empty_id, $release_artifact_with_text_id, $sprint_artifact_with_text_id];
 
-        $tracker_builder->buildLastChangeset($release_artifact_empty_id);
         $release_artifact_with_text_changeset = $tracker_builder->buildLastChangeset($release_artifact_with_text_id);
         $sprint_artifact_with_text_changeset  = $tracker_builder->buildLastChangeset($sprint_artifact_with_text_id);
 
+        $commonmark_interpreter = CommonMarkInterpreter::build(Codendi_HTMLPurifier::instance());
+
         $this->expected_results = [
-            $release_artifact_empty_id     => null,
             $release_artifact_with_text_id => 'Hello World!',
-            $sprint_artifact_with_text_id  => '**Description**',
+            $sprint_artifact_with_text_id  => $commonmark_interpreter->getInterpretedContentWithReferences('**Description**', $project_id),
         ];
         $tracker_builder->buildTextValue(
             $release_artifact_with_text_changeset,
             $release_text_field_id,
-            (string) $this->expected_results[$release_artifact_with_text_id],
+            $this->expected_results[$release_artifact_with_text_id],
             'text'
         );
         $tracker_builder->buildTextValue(
             $sprint_artifact_with_text_changeset,
             $sprint_text_field_id,
-            (string) $this->expected_results[$sprint_artifact_with_text_id],
+            '**Description**',
             'commonmark'
         );
+    }
 
-        $this->dao            = new CrossTrackerExpertQueryReportDao();
-        $form_element_factory = Tracker_FormElementFactory::instance();
-        $this->builder        = new SelectBuilderVisitor(
-            new FieldSelectFromBuilder(
-                $form_element_factory,
-                new FieldTypeRetrieverWrapper($form_element_factory),
-                TrackersPermissionsRetriever::build(),
-                new DateSelectFromBuilder(),
-                new TextSelectFromBuilder(),
-                new NumericSelectFromBuilder(),
-                new StaticListSelectFromBuilder(),
-                new UGroupListSelectFromBuilder(),
-                new UserListSelectFromBuilder(),
-            ),
-            new MetadataSelectFromBuilder(
-                new TitleSelectFromBuilder(),
-                new DescriptionSelectFromBuilder(),
-                new StatusSelectFromBuilder(),
-                new AssignedToSelectFromBuilder(),
-            ),
-        );
+    private function getQueryResults(CrossTrackerReport $report, PFUser $user): CrossTrackerReportContentRepresentation
+    {
+        $result = (new ArtifactReportFactoryInstantiator())
+            ->getFactory()
+            ->getArtifactsMatchingReport($report, $user, 10, 0, false);
+        assert($result instanceof CrossTrackerReportContentRepresentation);
+        return $result;
     }
 
     public function testItReturnsColumns(): void
     {
-        $fragments = $this->builder->buildSelectFrom([new Metadata('description')], $this->trackers, $this->user);
-        $results   = $this->dao->searchArtifactsColumnsMatchingIds($fragments, $this->artifact_ids);
-
-        self::assertCount(3, $results);
+        $result = $this->getQueryResults(
+            new CrossTrackerReport(
+                1,
+                "SELECT @description WHERE @description = '' OR @description != ''",
+                $this->trackers,
+            ),
+            $this->user,
+        );
+        self::assertSame(2, $result->getTotalSize());
+        self::assertCount(1, $result->selected);
+        self::assertSame('@description', $result->selected[0]->name);
         $values = [];
-        foreach ($results as $result) {
-            self::assertArrayHasKey('id', $result);
-            self::assertArrayHasKey('@description', $result);
-            self::assertArrayHasKey('@description_format', $result);
-            $values[$result['id']] = $result['@description'];
+        foreach ($result->artifacts as $artifact) {
+            self::assertCount(1, $artifact);
+            self::assertArrayHasKey('@description', $artifact);
+            $value = $artifact['@description'];
+            self::assertInstanceOf(TextResultRepresentation::class, $value);
+            $values[] = $value->value;
         }
-        self::assertEqualsCanonicalizing($values, $this->expected_results);
+        self::assertEqualsCanonicalizing(
+            array_values($this->expected_results),
+            $values
+        );
     }
 }

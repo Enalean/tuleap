@@ -25,6 +25,7 @@ namespace Tuleap\CrossTracker\Report\Query\Advanced;
 use PFUser;
 use Tracker;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Field\FieldResultBuilder;
+use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Metadata\MetadataResultBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\ResultBuilderVisitorParameters;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\SelectedValuesCollection;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Field;
@@ -39,6 +40,7 @@ final readonly class ResultBuilderVisitor implements SelectableVisitor
 {
     public function __construct(
         private FieldResultBuilder $field_result_builder,
+        private MetadataResultBuilder $metadata_result_builder,
     ) {
     }
 
@@ -71,6 +73,9 @@ final readonly class ResultBuilderVisitor implements SelectableVisitor
 
     public function visitMetaData(Metadata $metadata, $parameters)
     {
-        return new SelectedValuesCollection(null, []);
+        return $this->metadata_result_builder->getResult(
+            $metadata,
+            $parameters->select_results,
+        );
     }
 }

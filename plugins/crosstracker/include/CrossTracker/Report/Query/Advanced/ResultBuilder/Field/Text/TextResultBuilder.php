@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Field\Text;
 
 use LogicException;
-use PFUser;
 use Tuleap\CrossTracker\Report\Query\Advanced\DuckTypedField\Select\DuckTypedFieldSelect;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\SelectedValue;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\SelectedValuesCollection;
@@ -41,7 +40,7 @@ final readonly class TextResultBuilder
     ) {
     }
 
-    public function getResult(DuckTypedFieldSelect $field, array $select_results, PFUser $user): SelectedValuesCollection
+    public function getResult(DuckTypedFieldSelect $field, array $select_results): SelectedValuesCollection
     {
         $values = [];
         $alias  = SelectResultKey::fromDuckTypedField($field);
@@ -55,6 +54,7 @@ final readonly class TextResultBuilder
             $format = $result["format_$alias"];
 
             if ($value === null) {
+                $values[$id] = new SelectedValue($field->name, new TextResultRepresentation(null));
                 continue;
             }
 

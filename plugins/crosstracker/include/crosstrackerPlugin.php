@@ -56,6 +56,8 @@ use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Field\StaticList\Sta
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Field\Text\TextResultBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Field\UGroupList\UGroupListResultBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Field\UserList\UserListResultBuilder;
+use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Metadata\MetadataResultBuilder;
+use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Metadata\Text\MetadataTextResultBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilderVisitor;
 use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Field\Date\DateSelectFromBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Field\FieldSelectFromBuilder;
@@ -331,6 +333,10 @@ class crosstrackerPlugin extends Plugin
             ),
         );
         $purifier                = Codendi_HTMLPurifier::instance();
+        $text_value_interpreter  = new TextValueInterpreter(
+            $purifier,
+            CommonMarkInterpreter::build($purifier),
+        );
         $result_builder_visitor  = new ResultBuilderVisitor(
             new FieldResultBuilder(
                 $form_element_factory,
@@ -342,17 +348,18 @@ class crosstrackerPlugin extends Plugin
                 ),
                 new TextResultBuilder(
                     $artifact_factory,
-                    new TextValueInterpreter(
-                        $purifier,
-                        CommonMarkInterpreter::build(
-                            $purifier,
-                        ),
-                    ),
+                    $text_value_interpreter,
                 ),
                 new NumericResultBuilder(),
                 new StaticListResultBuilder(),
                 new UGroupListResultBuilder($artifact_factory, new UGroupManager()),
                 new UserListResultBuilder($user_manager, $user_manager, $user_manager, UserHelper::instance()),
+            ),
+            new MetadataResultBuilder(
+                new MetadataTextResultBuilder(
+                    $artifact_factory,
+                    $text_value_interpreter,
+                ),
             ),
         );
 
