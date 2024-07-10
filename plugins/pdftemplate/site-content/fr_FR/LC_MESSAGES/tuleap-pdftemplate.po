@@ -15,11 +15,23 @@ msgstr ""
 msgid "Allow to define templates for PDF export"
 msgstr "Permet de définir des modèles pour l'export PDF"
 
+msgid "Cancel"
+msgstr "Annuler"
+
+msgid "Close"
+msgstr "Fermer"
+
 msgid "Create and edit PDF templates"
 msgstr "Créer et éditer des modèles de PDF"
 
 msgid "Create template"
 msgstr "Créer un modèle"
+
+msgid "Delete"
+msgstr "Supprimer"
+
+msgid "Delete %s"
+msgstr "Supprimer %s"
 
 msgid "Description"
 msgstr "Description"
@@ -35,6 +47,9 @@ msgstr "Modèle PDF"
 
 msgid "PDF templates manager"
 msgstr "Gestionnaire de modèles PDF"
+
+msgid "Please confirm your action."
+msgstr "Merci de confirmer votre action."
 
 msgid "Preview"
 msgstr "Prévisualisation"
@@ -61,6 +76,9 @@ msgstr ""
 msgid "The template has been created"
 msgstr "Le modèle a été créé"
 
+msgid "The template has been deleted"
+msgstr "Le modèle a été supprimé"
+
 msgid "The template label is mandatory"
 msgstr "Le label du modèle est obligatoire"
 
@@ -71,3 +89,9 @@ msgid "This is useful to match your company design guidelines for example."
 msgstr ""
 "Ceci permet d'appliquer les règles de conception de documents propres à "
 "votre entreprise par exemple."
+
+msgid "This operation cannot be undone."
+msgstr "Cette opération ne pourra pas être annulée."
+
+msgid "You are about to delete the PDF template '%s'."
+msgstr "Vous êtes sur le point de supprimer le modèle PDF '%s'."

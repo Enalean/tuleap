@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\PdfTemplate\Admin;
 
+use Tuleap\PdfTemplate\Stubs\CSRFTokenProviderStub;
 use Tuleap\PdfTemplate\Stubs\RenderAPresenterStub;
 use Tuleap\PdfTemplate\Stubs\RetrieveAllTemplatesStub;
 use Tuleap\Request\NotFoundException;
@@ -30,6 +31,7 @@ use Tuleap\Test\Builders\LayoutInspector;
 use Tuleap\Test\Builders\TestLayout;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Test\Stubs\CSRFSynchronizerTokenStub;
 use Tuleap\Test\Stubs\User\ForgePermissionsRetrieverStub;
 
 final class IndexPdfTemplateControllerTest extends TestCase
@@ -44,6 +46,7 @@ final class IndexPdfTemplateControllerTest extends TestCase
                 ForgePermissionsRetrieverStub::withoutPermission(),
             ),
             RetrieveAllTemplatesStub::withoutTemplates(),
+            CSRFTokenProviderStub::withToken(CSRFSynchronizerTokenStub::buildSelf()),
         );
 
         $user = UserTestBuilder::anActiveUser()->build();
@@ -69,6 +72,7 @@ final class IndexPdfTemplateControllerTest extends TestCase
                 ForgePermissionsRetrieverStub::withoutPermission(),
             ),
             RetrieveAllTemplatesStub::withoutTemplates(),
+            CSRFTokenProviderStub::withToken(CSRFSynchronizerTokenStub::buildSelf()),
         );
 
         $user = UserTestBuilder::buildSiteAdministrator();
@@ -92,6 +96,7 @@ final class IndexPdfTemplateControllerTest extends TestCase
                 ForgePermissionsRetrieverStub::withPermission(),
             ),
             RetrieveAllTemplatesStub::withoutTemplates(),
+            CSRFTokenProviderStub::withToken(CSRFSynchronizerTokenStub::buildSelf()),
         );
 
         $user = UserTestBuilder::anActiveUser()->build();

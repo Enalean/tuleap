@@ -33,6 +33,7 @@ use Tuleap\PdfTemplate\Admin\AdministrationCSRFTokenProvider;
 use Tuleap\PdfTemplate\Admin\AdminPageRenderer;
 use Tuleap\PdfTemplate\Admin\CheckCSRFMiddleware;
 use Tuleap\PdfTemplate\Admin\CreatePdfTemplateController;
+use Tuleap\PdfTemplate\Admin\DeletePdfTemplateController;
 use Tuleap\PdfTemplate\Admin\DisplayPdfTemplateCreationFormController;
 use Tuleap\PdfTemplate\Admin\IndexPdfTemplateController;
 use Tuleap\PdfTemplate\Admin\ManagePdfTemplates;
@@ -106,6 +107,10 @@ class PdfTemplatePlugin extends Plugin
             DisplayPdfTemplateCreationFormController::ROUTE,
             $this->getRouteHandler('createAdminController'),
         );
+        $event->getRouteCollector()->post(
+            DeletePdfTemplateController::ROUTE,
+            $this->getRouteHandler('deleteAdminController'),
+        );
     }
 
     public function indexAdminController(): DispatchableWithRequest
@@ -114,6 +119,7 @@ class PdfTemplatePlugin extends Plugin
             new AdminPageRenderer(),
             $this->getUserCanManageTemplatesChecker(),
             $this->getPdfTemplateDao(),
+            new AdministrationCSRFTokenProvider(),
         );
     }
 
@@ -144,6 +150,25 @@ class PdfTemplatePlugin extends Plugin
         );
     }
 
+    public function deleteAdminController(): DispatchableWithRequest
+    {
+        return new DeletePdfTemplateController(
+            new RedirectWithFeedbackFactory(
+                HTTPFactoryBuilder::responseFactory(),
+                new FeedbackSerializer(new FeedbackDao()),
+            ),
+            BackendLogger::getDefaultLogger(),
+            $this->getPdfTemplateDao(),
+            $this->getPdfTemplateIdentifierFactory(),
+            new SapiEmitter(),
+            new RejectNonNonPdfTemplateManagerMiddleware(
+                UserManager::instance(),
+                $this->getUserCanManageTemplatesChecker(),
+            ),
+            new CheckCSRFMiddleware(new AdministrationCSRFTokenProvider()),
+        );
+    }
+
     #[ListeningToEventName(User_ForgeUserGroupPermissionsFactory::GET_PERMISSION_DELEGATION)]
     public function getPermissionDelegation(array $params): void
     {
@@ -161,6 +186,11 @@ class PdfTemplatePlugin extends Plugin
 
     private function getPdfTemplateDao(): PdfTemplateDao
     {
-        return new PdfTemplateDao(new PdfTemplateIdentifierFactory(new DatabaseUUIDV7Factory()));
+        return new PdfTemplateDao($this->getPdfTemplateIdentifierFactory());
+    }
+
+    private function getPdfTemplateIdentifierFactory(): PdfTemplateIdentifierFactory
+    {
+        return new PdfTemplateIdentifierFactory(new DatabaseUUIDV7Factory());
     }
 }

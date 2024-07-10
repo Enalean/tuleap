@@ -8,7 +8,8 @@
     "codemirror": "^5.62.0"
   },
   "devDependencies": {
-    "@tuleap/build-system-configurator": "workspace:*",
+    "@tuleap/build-system-configurator": "workspace:^",
+    "@tuleap/tlp-modal": "workspace:^",
     "@types/codemirror": "^5.60.15"
   },
   "scripts": {

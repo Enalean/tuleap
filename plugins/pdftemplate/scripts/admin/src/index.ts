@@ -19,7 +19,9 @@
 
 import "./admin.scss";
 import { initiateCodeEditors } from "./initiate-code-editors";
+import { initiateModals } from "./initiate-modals";
 
 document.addEventListener("DOMContentLoaded", () => {
     initiateCodeEditors();
+    initiateModals(document);
 });

@@ -38,6 +38,7 @@ final readonly class IndexPdfTemplateController implements DispatchableWithBurni
         private RenderAPresenter $admin_page_renderer,
         private UserCanManageTemplatesChecker $can_manage_templates_checker,
         private RetrieveAllTemplates $templates_retriever,
+        private CSRFTokenProvider $token_provider,
     ) {
     }
 
@@ -56,19 +57,18 @@ final readonly class IndexPdfTemplateController implements DispatchableWithBurni
             )
         );
 
-        $templates = $this->templates_retriever->retrieveAll();
-
         $this->admin_page_renderer->renderAPresenter(
             $layout,
             $current_user,
             dgettext('tuleap-pdftemplate', 'PDF Template'),
             __DIR__,
             'index',
-            [
-                'create_url' => DisplayPdfTemplateCreationFormController::ROUTE,
-                'templates' => $templates,
-                'has_templates' => count($templates) > 0,
-            ],
+            new IndexPdfTemplatePresenter(
+                DisplayPdfTemplateCreationFormController::ROUTE,
+                DeletePdfTemplateController::ROUTE,
+                $this->templates_retriever->retrieveAll(),
+                $this->token_provider->getToken(),
+            ),
         );
     }
 }

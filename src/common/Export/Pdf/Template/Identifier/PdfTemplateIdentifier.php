@@ -24,6 +24,9 @@ namespace Tuleap\Export\Pdf\Template\Identifier;
 
 use Tuleap\DB\UUID;
 
+/**
+ * @psalm-immutable
+ */
 final readonly class PdfTemplateIdentifier
 {
     private function __construct(private UUID $uuid)
