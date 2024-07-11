@@ -77,7 +77,7 @@ class ReferenceRetriever
     public function getReferenceByKeyword($keyword)
     {
         $row = $this->dao->searchReferenceByKeyword($keyword);
-        if (empty($row)) {
+        if ($row === null) {
             return null;
         }
 
