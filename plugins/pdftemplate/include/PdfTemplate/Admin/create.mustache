@@ -19,43 +19,7 @@
                 </a>
             </p>
 
-            <div class="tlp-form-element">
-                <label class="tlp-label" for="input-label">
-                    {{# dgettext }} tuleap-pdftemplate | Label {{/ dgettext }}
-                    <i class="fa-solid fa-asterisk" aria-hidden="true"></i>
-                </label>
-                <input
-                    type="text"
-                    id="input-label"
-                    name="label"
-                    class="tlp-input"
-                    required
-                    placeholder="{{# dgettext }} tuleap-pdftemplate | Technical documentation {{/ dgettext }}"
-                >
-            </div>
-
-            <div class="tlp-form-element">
-                <label class="tlp-label" for="input-description">
-                    {{# dgettext }} tuleap-pdftemplate | Description {{/ dgettext }}
-                </label>
-                <textarea
-                    id="input-description"
-                    name="description"
-                    class="tlp-textarea"
-                ></textarea>
-            </div>
-
-            <div class="tlp-form-element">
-                <label class="tlp-label" for="input-general-styling">
-                    {{# dgettext }} tuleap-pdftemplate | General styling {{/ dgettext }}
-                </label>
-                <textarea
-                    id="input-general-styling"
-                    name="style"
-                    class="tlp-textarea"
-                    rows="20"
-                >{{ general_styling }}</textarea>
-            </div>
+            {{> template-form-elements }}
         </section>
 
         <section class="tlp-pane-section tlp-pane-section-submit">

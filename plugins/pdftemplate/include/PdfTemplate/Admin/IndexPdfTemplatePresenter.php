@@ -29,7 +29,7 @@ use Tuleap\Request\CSRFSynchronizerTokenInterface;
 /**
  * @psalm-immutable
  */
-final class IndexPdfTemplatePresenter
+final readonly class IndexPdfTemplatePresenter
 {
     public bool $has_templates;
     public CSRFSynchronizerTokenPresenter $csrf;
