@@ -35,6 +35,7 @@ use Tuleap\PdfTemplate\Admin\CheckCSRFMiddleware;
 use Tuleap\PdfTemplate\Admin\CreatePdfTemplateController;
 use Tuleap\PdfTemplate\Admin\DeletePdfTemplateController;
 use Tuleap\PdfTemplate\Admin\DisplayPdfTemplateCreationFormController;
+use Tuleap\PdfTemplate\Admin\DisplayPdfTemplateUpdateFormController;
 use Tuleap\PdfTemplate\Admin\IndexPdfTemplateController;
 use Tuleap\PdfTemplate\Admin\ManagePdfTemplates;
 use Tuleap\PdfTemplate\Admin\RejectNonNonPdfTemplateManagerMiddleware;
@@ -111,6 +112,10 @@ class PdfTemplatePlugin extends Plugin
             DeletePdfTemplateController::ROUTE,
             $this->getRouteHandler('deleteAdminController'),
         );
+        $event->getRouteCollector()->get(
+            DisplayPdfTemplateUpdateFormController::ROUTE . '/{id:[A-Fa-f0-9-]+}',
+            $this->getRouteHandler('displayUpdateAdminController'),
+        );
     }
 
     public function indexAdminController(): DispatchableWithRequest
@@ -128,6 +133,17 @@ class PdfTemplatePlugin extends Plugin
         return new DisplayPdfTemplateCreationFormController(
             new AdminPageRenderer(),
             $this->getUserCanManageTemplatesChecker(),
+            new AdministrationCSRFTokenProvider(),
+        );
+    }
+
+    public function displayUpdateAdminController(): DispatchableWithRequest
+    {
+        return new DisplayPdfTemplateUpdateFormController(
+            new AdminPageRenderer(),
+            $this->getUserCanManageTemplatesChecker(),
+            $this->getPdfTemplateIdentifierFactory(),
+            $this->getPdfTemplateDao(),
             new AdministrationCSRFTokenProvider(),
         );
     }

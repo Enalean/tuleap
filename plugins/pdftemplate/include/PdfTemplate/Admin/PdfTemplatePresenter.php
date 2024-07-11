@@ -29,12 +29,15 @@ use Tuleap\Export\Pdf\Template\PdfTemplate;
  */
 final readonly class PdfTemplatePresenter
 {
+    public string $update_url;
+
     private function __construct(
         public string $id,
         public string $label,
         public string $description,
         public string $style,
     ) {
+        $this->update_url = DisplayPdfTemplateUpdateFormController::ROUTE . '/' . urlencode($id);
     }
 
     public static function fromPdfTemplate(PdfTemplate $template): self

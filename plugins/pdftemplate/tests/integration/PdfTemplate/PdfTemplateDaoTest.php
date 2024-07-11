@@ -62,4 +62,15 @@ final class PdfTemplateDaoTest extends TestIntegrationTestCase
         self::assertCount(1, $templates);
         self::assertEquals($a_template->label, $templates[0]->label);
     }
+
+    public function testRetrieveTemplate(): void
+    {
+        $identifier_factory = new PdfTemplateIdentifierFactory(new \Tuleap\DB\DatabaseUUIDV7Factory());
+        $dao                = new PdfTemplateDao($identifier_factory);
+
+        $the_template = $dao->create('the template', 'its description', 'its styles');
+
+        self::assertNull($dao->retrieveTemplate($identifier_factory->buildIdentifier()));
+        self::assertEquals('the template', $dao->retrieveTemplate($the_template->identifier)?->label);
+    }
 }

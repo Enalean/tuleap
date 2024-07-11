@@ -1,10 +1,10 @@
 <h1>{{# dgettext }} tuleap-pdftemplate | PDF Template {{/ dgettext }}</h1>
 <section class="tlp-pane">
-    <form method="post" action="{{ create_url }}" class="tlp-pane-container">
+    <form method="post" action="{{ save_url }}" class="tlp-pane-container">
         <div class="tlp-pane-header">
             <h1 class="tlp-pane-title">
-                <i class="tlp-pane-title-icon fa-solid fa-list" aria-hidden="true"></i>
-                {{# dgettext }} tuleap-pdftemplate | Template creation {{/ dgettext }}
+                <i class="tlp-pane-title-icon {{ icon }}" aria-hidden="true"></i>
+                {{ title }}
             </h1>
         </div>
         <section class="tlp-pane-section">

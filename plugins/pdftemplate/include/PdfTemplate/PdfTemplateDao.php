@@ -27,7 +27,7 @@ use Tuleap\Export\Pdf\Template\Identifier\PdfTemplateIdentifier;
 use Tuleap\Export\Pdf\Template\Identifier\PdfTemplateIdentifierFactory;
 use Tuleap\Export\Pdf\Template\PdfTemplate;
 
-final class PdfTemplateDao extends DataAccessObject implements RetrieveAllTemplates, CreateTemplate, DeleteTemplate
+final class PdfTemplateDao extends DataAccessObject implements RetrieveAllTemplates, CreateTemplate, DeleteTemplate, RetrieveTemplate
 {
     public function __construct(private readonly PdfTemplateIdentifierFactory $identifier_factory)
     {
@@ -57,12 +57,7 @@ final class PdfTemplateDao extends DataAccessObject implements RetrieveAllTempla
 
         return array_values(
             array_map(
-                fn (array $row) => new PdfTemplate(
-                    $this->identifier_factory->buildFromBytesData($row['id']),
-                    $row['label'],
-                    $row['description'],
-                    $row['style'],
-                ),
+                $this->instantiatePdfTemplateFromRow(...),
                 $rows,
             ),
         );
@@ -75,6 +70,30 @@ final class PdfTemplateDao extends DataAccessObject implements RetrieveAllTempla
             [
                 'id' => $identifier->getBytes(),
             ]
+        );
+    }
+
+    public function retrieveTemplate(PdfTemplateIdentifier $identifier): ?PdfTemplate
+    {
+        $row = $this->getDB()->row(
+            'SELECT * FROM plugin_pdftemplate WHERE id = ?',
+            $identifier->getBytes(),
+        );
+
+        if (! $row) {
+            return null;
+        }
+
+        return $this->instantiatePdfTemplateFromRow($row);
+    }
+
+    private function instantiatePdfTemplateFromRow(array $row): PdfTemplate
+    {
+        return new PdfTemplate(
+            $this->identifier_factory->buildFromBytesData($row['id']),
+            $row['label'],
+            $row['description'],
+            $row['style'],
         );
     }
 }

@@ -23,19 +23,25 @@ declare(strict_types=1);
 namespace Tuleap\PdfTemplate\Admin;
 
 use HTTPRequest;
+use Tuleap\Export\Pdf\Template\Identifier\InvalidPdfTemplateIdentifierStringException;
+use Tuleap\Export\Pdf\Template\Identifier\PdfTemplateIdentifierFactory;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\IncludeViteAssets;
 use Tuleap\Layout\JavascriptViteAsset;
+use Tuleap\PdfTemplate\RetrieveTemplate;
 use Tuleap\Request\DispatchableWithBurningParrot;
 use Tuleap\Request\DispatchableWithRequest;
+use Tuleap\Request\NotFoundException;
 
-final readonly class DisplayPdfTemplateCreationFormController implements DispatchableWithBurningParrot, DispatchableWithRequest
+final readonly class DisplayPdfTemplateUpdateFormController implements DispatchableWithBurningParrot, DispatchableWithRequest
 {
-    public const ROUTE = '/pdftemplate/admin/create';
+    public const ROUTE = '/pdftemplate/admin/update';
 
     public function __construct(
         private RenderAPresenter $admin_page_renderer,
         private UserCanManageTemplatesChecker $can_manage_templates_checker,
+        private PdfTemplateIdentifierFactory $identifier_factory,
+        private RetrieveTemplate $retriever,
         private CSRFTokenProvider $token_provider,
     ) {
     }
@@ -44,6 +50,17 @@ final readonly class DisplayPdfTemplateCreationFormController implements Dispatc
     {
         $current_user = $request->getCurrentUser();
         $this->can_manage_templates_checker->checkUserCanManageTemplates($current_user);
+
+        try {
+            $identifier = $this->identifier_factory->buildFromHexadecimalString($variables['id']);
+        } catch (InvalidPdfTemplateIdentifierStringException) {
+            throw new NotFoundException();
+        }
+
+        $template = $this->retriever->retrieveTemplate($identifier);
+        if (! $template) {
+            throw new NotFoundException();
+        }
 
         $layout->addJavascriptAsset(
             new JavascriptViteAsset(
@@ -61,7 +78,8 @@ final readonly class DisplayPdfTemplateCreationFormController implements Dispatc
             dgettext('tuleap-pdftemplate', 'PDF Template'),
             __DIR__,
             'create-or-update-template',
-            DisplayPdfTemplateCreationOrUpdateFormPresenter::forCreation(
+            DisplayPdfTemplateCreationOrUpdateFormPresenter::forUpdate(
+                $template,
                 $this->token_provider->getToken(),
             ),
         );
