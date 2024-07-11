@@ -26,9 +26,48 @@ use DateTimeImmutable;
 
 final readonly class Period
 {
-    public function __construct(
-        public DateTimeImmutable $start_date,
-        public DateTimeImmutable $end_date,
+    private function __construct(
+        private ?DateTimeImmutable $start_date,
+        private ?DateTimeImmutable $end_date,
+        private ?PredefinedTimePeriod $period,
     ) {
+    }
+
+    public function getStartDate(): ?DateTimeImmutable
+    {
+        return $this->start_date;
+    }
+
+    public function getEndDate(): ?DateTimeImmutable
+    {
+        return $this->end_date;
+    }
+
+    public function getPeriod(): ?PredefinedTimePeriod
+    {
+        return $this->period;
+    }
+
+    public static function fromPredefinedTimePeriod(PredefinedTimePeriod $predefined_time_period): self
+    {
+        return new self(
+            null,
+            null,
+            $predefined_time_period
+        );
+    }
+
+    public static function fromDates(DateTimeImmutable $start, DateTimeImmutable $end): self
+    {
+        return new self(
+            $start,
+            $end,
+            null
+        );
+    }
+
+    public function isPredefined(): bool
+    {
+        return $this->period !== null;
     }
 }

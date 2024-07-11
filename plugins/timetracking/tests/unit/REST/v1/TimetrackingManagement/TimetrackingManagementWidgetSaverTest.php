@@ -26,13 +26,15 @@ use DateTime;
 use DateTimeImmutable;
 use Tuleap\NeverThrow\Result;
 use Tuleap\Test\PHPUnit\TestCase;
-use Tuleap\Timetracking\Tests\Stub\SaveQueryStub;
+use Tuleap\Timetracking\Tests\Stub\SaveQueryWithDatesStub;
+use Tuleap\Timetracking\Tests\Stub\SaveQueryWithPredefinedTimePeriodStub;
 
 final class TimetrackingManagementWidgetSaverTest extends TestCase
 {
-    public function testItReturnsTrueWhenQueryWasSaved(): void
+    public function testItReturnsTrueWhenQueryWasSavedWithDates(): void
     {
-        $dao = SaveQueryStub::build();
+        $save_with_dates       = SaveQueryWithDatesStub::build();
+        $save_with_time_period = SaveQueryWithPredefinedTimePeriodStub::shouldNotBeCalled();
 
         $start_date_immutable = DateTimeImmutable::createFromFormat(DateTime::ATOM, '2024-06-26T15:46:00z');
         $end_date_immutable   = DateTimeImmutable::createFromFormat(DateTime::ATOM, '2024-06-27T15:46:00z');
@@ -41,14 +43,32 @@ final class TimetrackingManagementWidgetSaverTest extends TestCase
             throw new \Exception('Unable to build a start_date or end_date.');
         }
 
-        $result = (new TimetrackingManagementWidgetSaver($dao))->saveConfiguration(
+        $result = (new TimetrackingManagementWidgetSaver($save_with_dates, $save_with_time_period))->save(
             89,
-            $start_date_immutable,
-            $end_date_immutable,
+            Period::fromDates($start_date_immutable, $end_date_immutable),
         );
 
         self::assertTrue(Result::isOk($result));
         self::assertTrue($result->value);
-        self::assertTrue($dao->getHasBeenCalled());
+
+        self::assertFalse($save_with_time_period->hasBeenCalled());
+        self::assertTrue($save_with_dates->hasBeenCalled());
+    }
+
+    public function testItReturnsTrueWhenQueryWasSavedWithPredefinedTimePeriod(): void
+    {
+        $save_with_dates       = SaveQueryWithDatesStub::shouldNotBeCalled();
+        $save_with_time_period = SaveQueryWithPredefinedTimePeriodStub::build();
+
+        $result = (new TimetrackingManagementWidgetSaver($save_with_dates, $save_with_time_period))->save(
+            89,
+            Period::fromPredefinedTimePeriod(PredefinedTimePeriod::YESTERDAY),
+        );
+
+        self::assertTrue(Result::isOk($result));
+        self::assertTrue($result->value);
+
+        self::assertFalse($save_with_dates->hasBeenCalled());
+        self::assertTrue($save_with_time_period->hasBeenCalled());
     }
 }

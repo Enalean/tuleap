@@ -22,24 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Timetracking\REST\v1\TimetrackingManagement;
 
-use Tuleap\NeverThrow\Err;
-use Tuleap\NeverThrow\Fault;
-use Tuleap\NeverThrow\Ok;
-
-final readonly class QueryPUTHandler
+interface SaveQueryWithPredefinedTimePeriod
 {
-    public function __construct(
-        private FromPayloadPeriodBuilder $data_checker,
-        private TimetrackingManagementWidgetSaver $timetracking_management_widget_saver,
-    ) {
-    }
-
-    /**
-     * @return Ok<true>|Err<Fault>
-     */
-    public function handle(int $widget_id, QueryPUTRepresentation $representation): Ok|Err
-    {
-        return $this->data_checker->getValidatedPeriod($representation)
-            ->andThen(fn (Period $period) => $this->timetracking_management_widget_saver->save($widget_id, $period));
-    }
+    public function saveQueryWithPredefinedTimePeriod(int $widget_id, PredefinedTimePeriod $predefined_time_period): void;
 }

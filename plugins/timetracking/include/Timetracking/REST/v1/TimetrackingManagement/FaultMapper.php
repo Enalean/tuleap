@@ -33,7 +33,11 @@ final class FaultMapper
     public static function mapToRestException(Fault $fault): void
     {
         $status_code = match ($fault::class) {
-            QueryEndDateLesserThanStartDateFault::class, QueryInvalidDateFormatFault::class => 400,
+            QueryEndDateLesserThanStartDateFault::class,
+                QueryInvalidDateFormatFault::class,
+                QueryOnlyOneDateProvidedFault::class,
+                QueryPredefinedTimePeriodAndDatesProvidedFault::class
+            => 400,
             default => 500,
         };
         throw new RestException($status_code, (string) $fault);

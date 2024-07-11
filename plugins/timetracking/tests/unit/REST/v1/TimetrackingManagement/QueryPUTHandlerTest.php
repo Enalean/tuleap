@@ -27,31 +27,41 @@ use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
 use Tuleap\Test\PHPUnit\TestCase;
-use Tuleap\Timetracking\Tests\Stub\SaveQueryStub;
+use Tuleap\Timetracking\Tests\Stub\SaveQueryWithDatesStub;
+use Tuleap\Timetracking\Tests\Stub\SaveQueryWithPredefinedTimePeriodStub;
 
 final class QueryPUTHandlerTest extends TestCase
 {
     /**
      * @return Ok<true> | Err<Fault>
      */
-    public function handle(string $start_date, string $end_date): Ok|Err
+    public function handle(?string $start_date, ?string $end_date, ?string $predefined_time_period): Ok|Err
     {
         $widget_id      = 10;
         $representation = (new QueryPUTRepresentation(
             $start_date,
             $end_date,
+            $predefined_time_period,
         ));
 
         $handler = new QueryPUTHandler(
-            new QueryTimePeriodChecker(),
-            new TimetrackingManagementWidgetSaver(SaveQueryStub::build()),
+            new FromPayloadPeriodBuilder(),
+            new TimetrackingManagementWidgetSaver(SaveQueryWithDatesStub::build(), SaveQueryWithPredefinedTimePeriodStub::build()),
         );
         return $handler->handle($widget_id, $representation);
     }
 
-    public function testUpdateQuery(): void
+    public function testUpdateQueryWithDates(): void
     {
-        $result = $this->handle('2024-06-27T15:46:00z', '2024-06-27T15:46:00z');
+        $result = $this->handle('2024-06-27T15:46:00z', '2024-06-27T15:46:00z', null);
+
+        self::assertTrue(Result::isOk($result));
+        self::assertTrue($result->value);
+    }
+
+    public function testUpdateQueryWithPredefinedTimePeriod(): void
+    {
+        $result = $this->handle(null, null, 'last_week');
 
         self::assertTrue(Result::isOk($result));
         self::assertTrue($result->value);
@@ -59,7 +69,7 @@ final class QueryPUTHandlerTest extends TestCase
 
     public function testFaultWhenInvalidDateFormat(): void
     {
-        $result = $this->handle('hello', '2024-06-27T15:46:00z');
+        $result = $this->handle('hello', '2024-06-27T15:46:00z', null);
 
         self::assertTrue(Result::isErr($result));
         self::assertInstanceOf(QueryInvalidDateFormatFault::class, $result->error);
@@ -67,9 +77,41 @@ final class QueryPUTHandlerTest extends TestCase
 
     public function testFaultEndDateLesserThanStartDate(): void
     {
-        $result = $this->handle('2024-06-27T15:46:00z', '2023-05-26T15:46:00z');
+        $result = $this->handle('2024-06-27T15:46:00z', '2023-05-26T15:46:00z', null);
 
         self::assertTrue(Result::isErr($result));
         self::assertInstanceOf(QueryEndDateLesserThanStartDateFault::class, $result->error);
+    }
+
+    public function testFaultWhenDatesAndPredefinedTimePeriodAreProvided(): void
+    {
+        $result = $this->handle('2024-06-27T15:46:00z', '2023-05-26T15:46:00z', 'today');
+
+        self::assertTrue(Result::isErr($result));
+        self::assertInstanceOf(QueryPredefinedTimePeriodAndDatesProvidedFault::class, $result->error);
+    }
+
+    public function testFaultWhenOneDateAndPredefinedTimePeriodAreProvided(): void
+    {
+        $result = $this->handle('2024-06-27T15:46:00z', '', 'today');
+
+        self::assertTrue(Result::isErr($result));
+        self::assertInstanceOf(QueryPredefinedTimePeriodAndDatesProvidedFault::class, $result->error);
+    }
+
+    public function testFaultWhenNothingIsProvided(): void
+    {
+        $result = $this->handle(null, null, null);
+
+        self::assertTrue(Result::isErr($result));
+        self::assertInstanceOf(QueryPredefinedTimePeriodAndDatesProvidedFault::class, $result->error);
+    }
+
+    public function testFaultWhenOnlyOneDateIsProvided(): void
+    {
+        $result = $this->handle('2024-06-27T15:46:00z', null, null);
+
+        self::assertTrue(Result::isErr($result));
+        self::assertInstanceOf(QueryOnlyOneDateProvidedFault::class, $result->error);
     }
 }

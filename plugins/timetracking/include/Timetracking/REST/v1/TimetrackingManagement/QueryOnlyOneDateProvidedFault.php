@@ -22,9 +22,15 @@ declare(strict_types=1);
 
 namespace Tuleap\Timetracking\REST\v1\TimetrackingManagement;
 
-use DateTimeImmutable;
+use Tuleap\NeverThrow\Fault;
 
-interface SaveQuery
+/**
+ * @psalm-immutable
+ */
+final readonly class QueryOnlyOneDateProvidedFault extends Fault
 {
-    public function saveQueryWithDates(int $widget_id, DateTimeImmutable $start_date, DateTimeImmutable $end_date): void;
+    public static function build(): Fault
+    {
+        return new self('Please enter a start_date and end_date');
+    }
 }

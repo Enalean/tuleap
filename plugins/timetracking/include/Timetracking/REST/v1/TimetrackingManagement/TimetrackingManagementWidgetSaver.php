@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Timetracking\REST\v1\TimetrackingManagement;
 
-use DateTimeImmutable;
 use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
@@ -30,20 +29,25 @@ use Tuleap\NeverThrow\Result;
 
 final readonly class TimetrackingManagementWidgetSaver
 {
-    private SaveQuery $dao;
-
-    public function __construct(SaveQuery $dao)
-    {
-        $this->dao = $dao;
+    public function __construct(
+        private SaveQueryWithDates $save_with_dates,
+        private SaveQueryWithPredefinedTimePeriod $save_with_time_period,
+    ) {
     }
 
     /**
      * @return Ok<true>|Err<Fault>
      */
-    public function saveConfiguration(int $widget_id, DatetimeImmutable $start_date, DatetimeImmutable $end_date): Ok|Err
+    public function save(int $widget_id, Period $period): Ok|Err
     {
-        $this->dao->saveQueryWithDates($widget_id, $start_date, $end_date);
+        if ($period->isPredefined() && $period->getPeriod()) {
+            $this->save_with_time_period->saveQueryWithPredefinedTimePeriod($widget_id, $period->getPeriod());
+            return Result::ok(true);
+        }
 
+        if ($period->getStartDate() && $period->getEndDate()) {
+            $this->save_with_dates->saveQueryWithDates($widget_id, $period->getStartDate(), $period->getEndDate());
+        }
         return Result::ok(true);
     }
 }
