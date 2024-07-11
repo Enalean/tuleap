@@ -23,21 +23,50 @@ declare(strict_types=1);
 namespace Tuleap\PdfTemplate\Admin;
 
 use Tuleap\CSRFSynchronizerTokenPresenter;
+use Tuleap\Export\Pdf\Template\PdfTemplate;
 use Tuleap\Request\CSRFSynchronizerTokenInterface;
 
 /**
  * @psalm-immutable
  */
-final readonly class DisplayPdfTemplateCreationFormPresenter
+final readonly class DisplayPdfTemplateCreationOrUpdateFormPresenter
 {
     public CSRFSynchronizerTokenPresenter $csrf;
 
-    public function __construct(
+    private function __construct(
+        public string $title,
+        public string $icon,
         public string $index_url,
-        public string $create_url,
+        public string $save_url,
         public PdfTemplatePresenter $template,
         CSRFSynchronizerTokenInterface $token,
     ) {
         $this->csrf = CSRFSynchronizerTokenPresenter::fromToken($token);
+    }
+
+    public static function forCreation(CSRFSynchronizerTokenInterface $token): self
+    {
+        return new self(
+            dgettext('tuleap-pdftemplate', 'Template creation'),
+            'fa-solid fa-plus',
+            IndexPdfTemplateController::ROUTE,
+            DisplayPdfTemplateCreationFormController::ROUTE,
+            PdfTemplatePresenter::forCreation(),
+            $token,
+        );
+    }
+
+    public static function forUpdate(
+        PdfTemplate $template,
+        CSRFSynchronizerTokenInterface $token,
+    ): self {
+        return new self(
+            dgettext('tuleap-pdftemplate', 'Update template'),
+            'fa-solid fa-pencil',
+            IndexPdfTemplateController::ROUTE,
+            DisplayPdfTemplateUpdateFormController::ROUTE,
+            PdfTemplatePresenter::fromPdfTemplate($template),
+            $token,
+        );
     }
 }

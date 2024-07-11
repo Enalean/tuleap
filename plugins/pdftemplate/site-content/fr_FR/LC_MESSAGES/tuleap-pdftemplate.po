@@ -36,6 +36,9 @@ msgstr "Supprimer %s"
 msgid "Description"
 msgstr "Description"
 
+msgid "Edit"
+msgstr "Éditer"
+
 msgid "General styling"
 msgstr "Style général"
 
@@ -92,6 +95,9 @@ msgstr ""
 
 msgid "This operation cannot be undone."
 msgstr "Cette opération ne pourra pas être annulée."
+
+msgid "Update template"
+msgstr "Mise à jour du modèle"
 
 msgid "You are about to delete the PDF template '%s'."
 msgstr "Vous êtes sur le point de supprimer le modèle PDF '%s'."
