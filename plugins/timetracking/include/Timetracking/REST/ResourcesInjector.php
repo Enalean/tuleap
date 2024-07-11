@@ -24,6 +24,7 @@
 
 namespace Tuleap\Timetracking\REST;
 
+use Tuleap\Timetracking\REST\v1\TimetrackingManagement\TimetrackingManagementWidgetResource;
 use Tuleap\Timetracking\REST\v1\TimetrackingReportRepresentation;
 use Tuleap\Timetracking\REST\v1\TimetrackingRepresentation;
 use Tuleap\Timetracking\REST\v1\TimetrackingResource;
@@ -48,5 +49,10 @@ class ResourcesInjector
         );
 
         $restler->addAPIClass(TimetrackingUserResource::class, UserRepresentation::ROUTE);
+
+        $restler->addAPIClass(
+            v1\TimetrackingManagement\TimetrackingManagementWidgetResource::class,
+            TimetrackingManagementWidgetResource::NAME
+        );
     }
 }
