@@ -58,6 +58,15 @@
       ],
       "env": ["CI_MODE", "COLLECT_COVERAGE"],
       "outputs": ["js-test-results/**"]
+    },
+    "build-storybook": {
+      "dependsOn": ["build"],
+      "inputs": [
+        ".storybook/**",
+        "images/**",
+        "stories/**"
+      ],
+      "outputs": ["storybook-static/**"]
     }
   }
 }
