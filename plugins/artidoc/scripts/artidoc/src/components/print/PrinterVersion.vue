@@ -26,7 +26,7 @@
         <aside>
             <table-of-contents />
         </aside>
-        <section class="document-content" data-test="document-content">
+        <section class="document-content">
             <ol>
                 <li v-for="section in saved_sections" v-bind:key="section.id">
                     <section-printer-version v-bind:section="section" />
