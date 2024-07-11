@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\PdfTemplate\Admin;
 
 use HTTPRequest;
-use Tuleap\CSRFSynchronizerTokenPresenter;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\IncludeViteAssets;
 use Tuleap\Layout\JavascriptViteAsset;
@@ -62,12 +61,12 @@ final readonly class DisplayPdfTemplateCreationFormController implements Dispatc
             dgettext('tuleap-pdftemplate', 'PDF Template'),
             __DIR__,
             'create',
-            [
-                'index_url' => IndexPdfTemplateController::ROUTE,
-                'create_url' => self::ROUTE,
-                'general_styling' => file_get_contents(__DIR__ . '/../Default/pdf-template-default.css'),
-                'csrf' => CSRFSynchronizerTokenPresenter::fromToken($this->token_provider->getToken()),
-            ],
+            new DisplayPdfTemplateCreationFormPresenter(
+                IndexPdfTemplateController::ROUTE,
+                self::ROUTE,
+                PdfTemplatePresenter::forCreation(),
+                $this->token_provider->getToken(),
+            ),
         );
     }
 }
