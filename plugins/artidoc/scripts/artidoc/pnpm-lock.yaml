@@ -23,6 +23,9 @@ dependencies:
   '@tuleap/plugin-tracker-artifact-ckeditor-image-upload':
     specifier: workspace:^
     version: link:../../../tracker/scripts/lib/artifact-ckeditor-image-upload
+  '@tuleap/print-as-pdf':
+    specifier: workspace:^
+    version: link:../../../../lib/frontend/print-as-pdf
   '@tuleap/project-background':
     specifier: workspace:^
     version: link:../../../../lib/frontend/project-background

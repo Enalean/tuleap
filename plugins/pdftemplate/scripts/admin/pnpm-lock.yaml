@@ -5,6 +5,9 @@ settings:
   excludeLinksFromLockfile: false
 
 dependencies:
+  '@tuleap/print-as-pdf':
+    specifier: workspace:^
+    version: link:../../../../lib/frontend/print-as-pdf
   codemirror:
     specifier: ^5.62.0
     version: 5.65.16

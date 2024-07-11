@@ -18,7 +18,7 @@
  */
 
 import type { StrictInjectionKey } from "@tuleap/vue-strict-inject";
-import type { PdfTemplate } from "@/helpers/pdf-template";
+import type { PdfTemplate } from "@tuleap/print-as-pdf";
 
 export const PDF_TEMPLATES: StrictInjectionKey<ReadonlyArray<PdfTemplate> | null> =
     Symbol("pdf-templates");

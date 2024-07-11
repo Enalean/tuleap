@@ -12,6 +12,7 @@
     "@tuleap/fault": "workspace:*",
     "@tuleap/fetch-result": "workspace:*",
     "@tuleap/plugin-tracker-artifact-ckeditor-image-upload": "workspace:^",
+    "@tuleap/print-as-pdf": "workspace:^",
     "@tuleap/project-background": "workspace:^",
     "@tuleap/tlp-dropdown": "workspace:*",
     "@tuleap/tlp-modal": "workspace:^",

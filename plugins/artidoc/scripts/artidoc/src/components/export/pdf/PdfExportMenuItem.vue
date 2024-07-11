@@ -27,9 +27,9 @@
 
 <script setup lang="ts">
 import { useGettext } from "vue3-gettext";
-import print from "print-js";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import { PDF_TEMPLATES } from "@/pdf-templates-injection-key";
+import { printAsPdf } from "@tuleap/print-as-pdf";
 
 const pdf_templates = strictInject(PDF_TEMPLATES);
 
@@ -47,11 +47,6 @@ function onClick(): void {
 
     const selected_pdf_template = pdf_templates[0];
 
-    print({
-        printable,
-        type: "html",
-        scanStyles: false,
-        style: selected_pdf_template.style,
-    });
+    printAsPdf(printable, selected_pdf_template);
 }
 </script>

@@ -1,0 +1,29 @@
+{
+  "author": "Enalean Team",
+  "name": "@tuleap/print-as-pdf",
+  "homepage": "https://tuleap.org",
+  "license": "GPL-2.0-or-later",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "module": "dist/print-as-pdf.js",
+  "main": "dist/print-as-pdf.umd.cjs",
+  "types": "src/print-as-pdf.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/print-as-pdf.js",
+      "require": "./dist/print-as-pdf.umd.cjs"
+    }
+  },
+  "dependencies": {
+    "print-js": "^1.6.0"
+  },
+  "devDependencies": {
+    "@tuleap/build-system-configurator": "workspace:*"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "build": "vite build",
+    "watch": "vite build --watch --mode development --minify false"
+  }
+}

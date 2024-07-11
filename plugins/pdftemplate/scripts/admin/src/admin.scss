@@ -40,3 +40,7 @@
     border: 1px solid var(--tlp-form-element-border-color);
     border-radius: var(--tlp-small-radius);
 }
+
+.pdftemplate-print-preview-fake-document {
+    display: none;
+}

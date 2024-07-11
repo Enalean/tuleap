@@ -28,10 +28,14 @@
                 {{# dgettext }} tuleap-pdftemplate | Save {{/ dgettext }}
             </button>
 
-            <button type="button" class="tlp-button-primary tlp-button-outline" disabled>
+            <button type="button" class="tlp-button-primary tlp-button-outline" id="pdftemplate-print-preview">
                 <i class="fa-regular fa-file-pdf tlp-button-icon" aria-hidden="true"></i>
                 {{# dgettext }} tuleap-pdftemplate | Preview {{/ dgettext }}
             </button>
+
+            <div id="pdftemplate-print-preview-fake-document" class="pdftemplate-print-preview-fake-document">
+                {{> print-preview-fake-document }}
+            </div>
         </section>
     </form>
 </section>
