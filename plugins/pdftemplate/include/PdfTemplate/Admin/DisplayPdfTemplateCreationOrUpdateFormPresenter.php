@@ -60,12 +60,14 @@ final readonly class DisplayPdfTemplateCreationOrUpdateFormPresenter
         PdfTemplate $template,
         CSRFSynchronizerTokenInterface $token,
     ): self {
+        $presenter = PdfTemplatePresenter::fromPdfTemplate($template);
+
         return new self(
             dgettext('tuleap-pdftemplate', 'Update template'),
             'fa-solid fa-pencil',
             IndexPdfTemplateController::ROUTE,
-            DisplayPdfTemplateUpdateFormController::ROUTE,
-            PdfTemplatePresenter::fromPdfTemplate($template),
+            $presenter->update_url,
+            $presenter,
             $token,
         );
     }

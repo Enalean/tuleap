@@ -45,6 +45,9 @@ msgstr "Style général"
 msgid "Label"
 msgstr "Label"
 
+msgid "No changes for template"
+msgstr "Aucun changement pour le modèle"
+
 msgid "PDF Template"
 msgstr "Modèle PDF"
 
@@ -81,6 +84,9 @@ msgstr "Le modèle a été créé"
 
 msgid "The template has been deleted"
 msgstr "Le modèle a été supprimé"
+
+msgid "The template has been updated"
+msgstr "Le modèle a été mis à jour"
 
 msgid "The template label is mandatory"
 msgstr "Le label du modèle est obligatoire"

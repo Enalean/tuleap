@@ -31,6 +31,7 @@ use Tuleap\Http\Response\RedirectWithFeedbackFactory;
 use Tuleap\Layout\Feedback\FeedbackSerializer;
 use Tuleap\PdfTemplate\Admin\AdministrationCSRFTokenProvider;
 use Tuleap\PdfTemplate\Admin\AdminPageRenderer;
+use Tuleap\PdfTemplate\Admin\BuildUpdateTemplateRequestMiddleware;
 use Tuleap\PdfTemplate\Admin\CheckCSRFMiddleware;
 use Tuleap\PdfTemplate\Admin\CreatePdfTemplateController;
 use Tuleap\PdfTemplate\Admin\DeletePdfTemplateController;
@@ -39,6 +40,7 @@ use Tuleap\PdfTemplate\Admin\DisplayPdfTemplateUpdateFormController;
 use Tuleap\PdfTemplate\Admin\IndexPdfTemplateController;
 use Tuleap\PdfTemplate\Admin\ManagePdfTemplates;
 use Tuleap\PdfTemplate\Admin\RejectNonNonPdfTemplateManagerMiddleware;
+use Tuleap\PdfTemplate\Admin\UpdatePdfTemplateController;
 use Tuleap\PdfTemplate\Admin\UserCanManageTemplatesChecker;
 use Tuleap\PdfTemplate\PdfTemplateDao;
 use Tuleap\Plugin\ListeningToEventClass;
@@ -116,6 +118,10 @@ class PdfTemplatePlugin extends Plugin
             DisplayPdfTemplateUpdateFormController::ROUTE . '/{id:[A-Fa-f0-9-]+}',
             $this->getRouteHandler('displayUpdateAdminController'),
         );
+        $event->getRouteCollector()->post(
+            DisplayPdfTemplateUpdateFormController::ROUTE . '/{id:[A-Fa-f0-9-]+}',
+            $this->getRouteHandler('updateAdminController'),
+        );
     }
 
     public function indexAdminController(): DispatchableWithRequest
@@ -161,6 +167,31 @@ class PdfTemplatePlugin extends Plugin
             new RejectNonNonPdfTemplateManagerMiddleware(
                 UserManager::instance(),
                 $this->getUserCanManageTemplatesChecker(),
+            ),
+            new CheckCSRFMiddleware(new AdministrationCSRFTokenProvider()),
+        );
+    }
+
+    public function updateAdminController(): DispatchableWithRequest
+    {
+        $redirect_with_feedback_factory = new RedirectWithFeedbackFactory(
+            HTTPFactoryBuilder::responseFactory(),
+            new FeedbackSerializer(new FeedbackDao()),
+        );
+
+        return new UpdatePdfTemplateController(
+            $redirect_with_feedback_factory,
+            BackendLogger::getDefaultLogger(),
+            $this->getPdfTemplateDao(),
+            new SapiEmitter(),
+            new RejectNonNonPdfTemplateManagerMiddleware(
+                UserManager::instance(),
+                $this->getUserCanManageTemplatesChecker(),
+            ),
+            new BuildUpdateTemplateRequestMiddleware(
+                $redirect_with_feedback_factory,
+                $this->getPdfTemplateIdentifierFactory(),
+                $this->getPdfTemplateDao(),
             ),
             new CheckCSRFMiddleware(new AdministrationCSRFTokenProvider()),
         );
