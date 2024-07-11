@@ -24,6 +24,7 @@
                 type="checkbox"
                 v-on:input="onInput"
                 data-test="checkbox-apply-permissions-on-children"
+                v-bind:checked="value"
             />
             {{ $gettext("Apply same permissions to all sub-items of this folder") }}
         </label>
@@ -35,7 +36,7 @@ import type { Folder } from "../../../type";
 import { computed } from "vue";
 import emitter from "../../../helpers/emitter";
 
-const props = defineProps<{ item: Folder }>();
+const props = defineProps<{ item: Folder; value: boolean }>();
 
 function onInput($event: Event): void {
     const event_target = $event.target;
