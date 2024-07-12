@@ -28,11 +28,17 @@ msgstr "ID de l'artéfact"
 msgid "Assigned to"
 msgstr "Assigné à"
 
+msgid "Begin"
+msgstr "Début"
+
 msgid "Cancel"
 msgstr "Annuler"
 
 msgid "Description"
 msgstr "Description"
+
+msgid "End"
+msgstr "Fin"
 
 msgid "Error while fetching the list of projects you are member of: %{error}"
 msgstr ""
@@ -64,6 +70,9 @@ msgstr "Mis à jour le"
 msgid "Load more"
 msgstr "Voir plus"
 
+msgid "Next"
+msgstr "Suivant"
+
 msgid "No matching artifacts found"
 msgstr "Aucun artéfact correspondant trouvé"
 
@@ -72,6 +81,9 @@ msgstr "Aucun élément sélectionné"
 
 msgid "Please choose…"
 msgstr "Veuillez choisir…"
+
+msgid "Previous"
+msgstr "Précédent"
 
 msgid "Project"
 msgstr "Projet"
@@ -122,3 +134,6 @@ msgstr ""
 "Vous pouvez utiliser : AND, OR, WITH PARENT, WITHOUT PARENT, WITH CHILDREN, "
 "WITHOUT CHILDREN, BETWEEN(), NOW(), MYSELF(), OPEN(), IN(), NOT IN(), "
 "parenthèses. Ctrl + Espace active l’auto-complétion."
+
+msgid "of"
+msgstr "sur"

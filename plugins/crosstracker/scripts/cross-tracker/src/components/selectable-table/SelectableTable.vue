@@ -45,6 +45,12 @@
             </template>
         </div>
     </div>
+    <selectable-pagination
+        v-bind:limit="limit"
+        v-bind:offset="offset"
+        v-bind:total_number="total"
+        v-on:new-page="handleNewPage"
+    />
 </template>
 
 <script setup lang="ts">
@@ -64,6 +70,7 @@ import type { State } from "../../type";
 import type { ResultAsync } from "neverthrow";
 import type { Fault } from "@tuleap/fault";
 import type { ArtifactsTableWithTotal } from "../../domain/RetrieveArtifactsTable";
+import SelectablePagination from "./SelectablePagination.vue";
 
 const artifacts_retriever = strictInject(RETRIEVE_ARTIFACTS_TABLE);
 const date_formatter = strictInject(DATE_FORMATTER);
@@ -83,7 +90,8 @@ const { $gettext } = useGettext();
 const is_loading = ref(false);
 const columns = ref<ArtifactsTable["columns"]>(new Set());
 const rows = ref<ArtifactsTable["rows"]>([]);
-const offset = 0;
+const total = ref(0);
+let offset = 0;
 const limit = 30;
 
 watch(
@@ -94,6 +102,11 @@ watch(
         }
     },
 );
+
+function handleNewPage(new_offset: number): void {
+    offset = new_offset;
+    refreshArtifactList();
+}
 
 function refreshArtifactList(): void {
     rows.value = [];
@@ -113,6 +126,7 @@ function loadArtifacts(): void {
             (report_with_total) => {
                 columns.value = report_with_total.table.columns;
                 rows.value = report_with_total.table.rows;
+                total.value = report_with_total.total;
             },
             (fault) => {
                 setErrorMessage(
