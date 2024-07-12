@@ -164,13 +164,7 @@ class ViewVCProxy
 
     private function getPythonLauncher(): string
     {
-        if (file_exists('/usr/lib/python3.9/site-packages/viewvc/lib')) {
-            return '/usr/bin/python3 ' . __DIR__ . '/../../../bin/viewvc-master.cgi';
-        }
-        if (file_exists('/opt/rh/python27/root/usr/bin/python')) {
-            return "LD_LIBRARY_PATH='/opt/rh/python27/root/usr/lib64' /opt/rh/python27/root/usr/bin/python " . __DIR__ . '/../../../bin/viewvc-epel.cgi';
-        }
-        return '/usr/bin/python ' . __DIR__ . '/../../../bin/viewvc-epel.cgi';
+        return '/usr/bin/python3 ' . __DIR__ . '/../../../bin/viewvc.cgi';
     }
 
     public function getContent(HTTPRequest $request, CurrentUserWithLoggedInInformation $current_user, Repository $repository, string $path)
