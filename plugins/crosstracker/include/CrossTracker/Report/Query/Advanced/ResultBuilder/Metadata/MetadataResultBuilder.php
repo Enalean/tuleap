@@ -24,6 +24,7 @@ namespace Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Metadata;
 
 use LogicException;
 use Tuleap\CrossTracker\Report\Query\Advanced\AllowedMetadata;
+use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Metadata\Semantic\Status\StatusResultBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Metadata\Text\MetadataTextResultBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\SelectedValuesCollection;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
@@ -32,6 +33,7 @@ final readonly class MetadataResultBuilder
 {
     public function __construct(
         private MetadataTextResultBuilder $text_builder,
+        private StatusResultBuilder $status_builder,
     ) {
     }
 
@@ -43,7 +45,7 @@ final readonly class MetadataResultBuilder
             // Semantics
             AllowedMetadata::TITLE,
             AllowedMetadata::DESCRIPTION => $this->text_builder->getResult($metadata, $select_results),
-            AllowedMetadata::STATUS,
+            AllowedMetadata::STATUS      => $this->status_builder->getResult($select_results),
             AllowedMetadata::ASSIGNED_TO,
 
                 // Always there fields
