@@ -40,7 +40,10 @@
                     v-model="updated_permissions"
                     v-bind:value="updated_permissions"
                 />
-                <permissions-update-folder-sub-items v-bind:item="item" />
+                <permissions-update-folder-sub-items
+                    v-bind:item="item"
+                    v-bind:value="updated_permissions.apply_permissions_on_children"
+                />
             </div>
         </div>
         <modal-footer

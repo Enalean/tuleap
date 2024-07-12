@@ -212,7 +212,7 @@ describe("PermissionsUpdateModal", () => {
         expect(wrapper.vm.can_be_submitted).toBe(true);
     });
 
-    it("Reset selected user groups when the modal is closed", () => {
+    it("Resets selected user groups and apply_permissions_on_children when the modal is closed", () => {
         const item = {
             id: 104,
             title: "My item",

@@ -29,10 +29,12 @@ import type { Empty, Folder, Item } from "../../../type";
 describe("PermissionsUpdateFolderSubItems", () => {
     function getWrapper(
         item: Item,
+        value = false,
     ): VueWrapper<InstanceType<typeof PermissionsUpdateFolderSubItems>> {
         return shallowMount(PermissionsUpdateFolderSubItems, {
             props: {
                 item,
+                value,
             },
             global: { ...getGlobalTestOptions({}) },
         });
@@ -71,4 +73,15 @@ describe("PermissionsUpdateFolderSubItems", () => {
             });
         },
     );
+
+    it.each([
+        [false, "unchecked"],
+        [true, "checked"],
+    ])("When its value is %s, then the checkbox input should be %s", (value) => {
+        const wrapper = getWrapper({ type: TYPE_FOLDER } as Folder, value);
+        const checkbox = wrapper.find<HTMLInputElement>(
+            "[data-test=checkbox-apply-permissions-on-children]",
+        );
+        expect(checkbox.element.checked).toBe(value);
+    });
 });
