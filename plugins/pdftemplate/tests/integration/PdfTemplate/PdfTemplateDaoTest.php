@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\PdfTemplate;
 
 use Tuleap\Export\Pdf\Template\Identifier\PdfTemplateIdentifierFactory;
+use Tuleap\Export\Pdf\Template\PdfTemplate;
 use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
 
 final class PdfTemplateDaoTest extends TestIntegrationTestCase
@@ -72,5 +73,27 @@ final class PdfTemplateDaoTest extends TestIntegrationTestCase
 
         self::assertNull($dao->retrieveTemplate($identifier_factory->buildIdentifier()));
         self::assertEquals('the template', $dao->retrieveTemplate($the_template->identifier)?->label);
+    }
+
+    public function testUpdateTemplate(): void
+    {
+        $identifier_factory = new PdfTemplateIdentifierFactory(new \Tuleap\DB\DatabaseUUIDV7Factory());
+        $dao                = new PdfTemplateDao($identifier_factory);
+
+        $the_template = $dao->create('the template', 'its description', 'its styles');
+
+        $submitted_template = new PdfTemplate(
+            $the_template->identifier,
+            'updated label',
+            'updated description',
+            'updated style',
+        );
+        $dao->update($submitted_template);
+
+        $updated_template = $dao->retrieveTemplate($the_template->identifier);
+        self::assertNotNull($updated_template);
+        self::assertEquals('updated label', $updated_template->label);
+        self::assertEquals('updated description', $updated_template->description);
+        self::assertEquals('updated style', $updated_template->style);
     }
 }
