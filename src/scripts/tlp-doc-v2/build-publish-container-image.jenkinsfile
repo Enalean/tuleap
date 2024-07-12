@@ -1,0 +1,50 @@
+#!/usr/bin/env groovy
+
+def actions
+
+pipeline {
+    agent {
+        label 'agent-one-time-use'
+    }
+    triggers { cron('H 5 * * 1-5') }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
+
+        stage('Build doc static files') {
+            steps {
+                dir ('sources') {
+                    script {
+                        actions = load 'tests/actions.groovy'
+                        actions.runInsideNixShell('pnpm install && TURBO_LOG_ORDER=grouped pnpm turbo run build-storybook --no-daemon --filter=@tuleap/tlp-doc-v2')
+                    }
+                }
+            }
+        }
+
+        stage('Build and publish container image') {
+            steps {
+                dir ('sources') {
+                    script {
+                        @Library('tuleap-jenkinsfile-library@master') _
+                        def lib_signing = new org.tuleap.Signing();
+                        lib_signing.prefetchToolsToSignDockerImages('ci-write');
+                        def image_name = 'tlp-doc-v2';
+                        sh 'docker load < $(nix-build --no-out-link ./src/scripts/tlp-doc-v2/container-image.nix)'
+                        def image = docker.image(image_name)
+                        def registry_name = "nexus.enalean.com:22000";
+                        docker.withRegistry("https://${registry_name}", 'ci-write') {
+                            image.push()
+
+                            lib_signing.signDockerImage("${registry_name}/${image_name}", env.VAULT, 'tuleap-additional-tools-signing', 'vault-role-tuleap-additional-tools-signing')
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
