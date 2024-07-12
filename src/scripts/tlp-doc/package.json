@@ -10,6 +10,7 @@
     "@tuleap/lazybox": "workspace:*",
     "@tuleap/list-picker": "workspace:*",
     "@tuleap/tlp": "workspace:*",
+    "@tuleap/tlp-date-picker": "workspace:^",
     "@tuleap/tlp-dropdown": "workspace:*",
     "@tuleap/tlp-modal": "workspace:*",
     "@tuleap/tlp-popovers": "workspace:*",

@@ -1,5 +1,5 @@
-/**
- * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
+/*
+ * Copyright (c) Enalean, 2024-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,16 +17,18 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export * from "@tuleap/tlp-popovers";
-export * from "@tuleap/tlp-modal";
-export * from "@tuleap/tlp-date-picker";
+import { vite, viteDtsPlugin } from "@tuleap/build-system-configurator";
+import * as path from "node:path";
 
-export { default as locale } from "./default_locale";
-
-import jQuery from "jquery";
-// Many scripts still depend on jQuery being on window
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
-window.jQuery = jQuery;
-
-export * from "../vendor-overrides/select2";
+export default vite.defineLibConfig({
+    plugins: [viteDtsPlugin()],
+    build: {
+        lib: {
+            name: "TlpDatePicker",
+            entry: {
+                en_US: path.resolve(__dirname, "src/main.ts"),
+                fr_FR: path.resolve(__dirname, "src/main.fr_FR.ts"),
+            },
+        },
+    },
+});

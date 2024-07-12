@@ -17,9 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import flatpickr from "flatpickr";
-import { French } from "flatpickr/dist/l10n/fr.js";
-
+export * from "@tuleap/tlp-date-picker/fr_FR";
 export * from "./js/index";
 
 import "select2/dist/js/i18n/fr.js";
@@ -27,8 +25,6 @@ import "select2/dist/js/i18n/fr.js";
 import locale from "./vendor-i18n/fr_FR/tlp.fr";
 import type { Options, Select2Plugin } from "./js/index";
 import { select2 } from "./js/index";
-
-flatpickr.localize(French);
 
 function frenchSelect2(element: Element, options?: Options): Select2Plugin {
     return select2(element, { language: locale, ...options });
