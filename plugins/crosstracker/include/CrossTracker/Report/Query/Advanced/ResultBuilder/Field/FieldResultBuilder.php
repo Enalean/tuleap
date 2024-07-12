@@ -91,7 +91,7 @@ final readonly class FieldResultBuilder
     {
         return match ($field->type) {
             DuckTypedFieldTypeSelect::DATE        => $this->date_builder->getResult($field, $select_results, $user),
-            DuckTypedFieldTypeSelect::TEXT        => $this->text_builder->getResult($field, $select_results, $user),
+            DuckTypedFieldTypeSelect::TEXT        => $this->text_builder->getResult($field, $select_results),
             DuckTypedFieldTypeSelect::NUMERIC     => $this->numeric_builder->getResult($field, $select_results),
             DuckTypedFieldTypeSelect::STATIC_LIST => $this->static_list_builder->getResult($field, $select_results),
             DuckTypedFieldTypeSelect::UGROUP_LIST => $this->user_group_list_builder->getResult($field, $select_results),

@@ -231,10 +231,12 @@ final class FieldResultBuilderTest extends TestCase
             RetrieveArtifactStub::withArtifacts(
                 ArtifactTestBuilder::anArtifact(21)->inTracker($this->first_tracker)->build(),
                 ArtifactTestBuilder::anArtifact(22)->inTracker($this->second_tracker)->build(),
+                ArtifactTestBuilder::anArtifact(23)->inTracker($this->second_tracker)->build(),
             ),
             [
                 ['id' => 21, $this->field_hash => '499P', "format_$this->field_hash" => 'text'],
                 ['id' => 22, $this->field_hash => 'V-Series.R', "format_$this->field_hash" => 'commonmark'],
+                ['id' => 23, $this->field_hash => null, "format_$this->field_hash" => null],
             ],
         );
 
@@ -242,13 +244,14 @@ final class FieldResultBuilderTest extends TestCase
             new CrossTrackerSelectedRepresentation(self::FIELD_NAME, CrossTrackerSelectedType::TYPE_TEXT),
             $result->selected,
         );
-        self::assertCount(2, $result->values);
+        self::assertCount(3, $result->values);
         self::assertEqualsCanonicalizing([
             21 => new SelectedValue(self::FIELD_NAME, new TextResultRepresentation('499P')),
             22 => new SelectedValue(self::FIELD_NAME, new TextResultRepresentation(<<<EOL
 <p>V-Series.R</p>\n
 EOL
             )),
+            23 => new SelectedValue(self::FIELD_NAME, new TextResultRepresentation(null)),
         ], $result->values);
     }
 
