@@ -24,6 +24,9 @@ msgstr "Une erreur est survenue lors de la mise à jour de la section."
 msgid "Artidoc allows composition of a document based on artifacts."
 msgstr "Artidoc permet la composition d'un document basé sur des artéfacts."
 
+msgid "Available templates"
+msgstr ""
+
 msgid "Cancel"
 msgstr "Annuler"
 
