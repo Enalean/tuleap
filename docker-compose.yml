@@ -121,7 +121,7 @@ services:
       - db80-data:/var/lib/mysql
 
   redis:
-    image: redis:3.2
+    image: redis:6.2.7@sha256:a93c14584715ec5bd9d2648d58c3b27f89416242bee0bc9e5fb2edc1a4cbec1d
     volumes:
       - redis-data:/data
     command: redis-server --appendonly yes --auto-aof-rewrite-percentage 20 --auto-aof-rewrite-min-size 200kb
