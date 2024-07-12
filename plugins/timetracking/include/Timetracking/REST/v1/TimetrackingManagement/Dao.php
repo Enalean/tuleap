@@ -22,9 +22,10 @@ declare(strict_types=1);
 
 namespace Tuleap\Timetracking\REST\v1\TimetrackingManagement;
 
+use DateTimeImmutable;
 use Tuleap\DB\DataAccessObject;
 
-final class Dao extends DataAccessObject
+final class Dao extends DataAccessObject implements SaveQuery
 {
     public function create(PredefinedTimePeriod $predefined_time_period): int
     {
@@ -37,5 +38,14 @@ final class Dao extends DataAccessObject
     {
         $sql = 'DELETE FROM plugin_timetracking_management_query WHERE id = ?';
         $this->getDB()->run($sql, $widget_id);
+    }
+
+    public function saveQueryWithDates(int $widget_id, DateTimeImmutable $start_date, DateTimeImmutable $end_date): void
+    {
+        $sql = 'UPDATE plugin_timetracking_management_query
+        SET start_date = ?, end_date = ?, predefined_time_period = ?
+        WHERE id = ?';
+
+        $this->getDB()->run($sql, $start_date->getTimestamp(), $end_date->getTimestamp(), null, $widget_id);
     }
 }

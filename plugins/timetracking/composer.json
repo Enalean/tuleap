@@ -5,6 +5,11 @@
       "Tuleap\\Timetracking\\": "include/Timetracking"
     }
   },
+  "autoload-dev": {
+    "psr-4": {
+      "Tuleap\\Timetracking\\": "./tests/unit/"
+    }
+  },
   "tuleap": {
     "preload": {
       "include": [
