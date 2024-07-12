@@ -1,0 +1,79 @@
+import { Canvas, Meta, Controls } from "@storybook/blocks";
+import * as DropdownStories from "./tlp-dropdown.stories";
+
+<Meta of={DropdownStories}/>
+
+# Dropdowns
+
+<code>.tlp-dropdown</code>
+
+- You can specify the dropdown menu element via <code>dropdown_menu</code> options. Otherwise, TLP will look for a trigger's sibling with the <code>tlp-dropdown-menu</code> class.
+
+- You can top align the dropdown menu with the <code>.tlp-dropdown-menu-top</code> class.
+
+- Don't forget the <code>.tlp-dropdown-menu-item-icon</code> class if you use icons.
+
+- You can disable closing the dropdown on the escape key pressed: `const the_dropdown = createDropdown(trigger_element, {keyboard: false} );`
+
+- <code>const the_dropdown = createDropdown(trigger_element);</code> will return a <code>Dropdown</code> instance. You can then call <code>show()</code>, <code>hide()</code>, or <code>toggle()</code> methods on this instance.
+
+- On the <code>the_dropdown.show()</code> method an event <code>tlp-dropdown-shown</code> is dispatched.
+
+- On the <code>the_dropdown.hide()</code> method an event <code>tlp-dropdown-hidden</code> is dispatched.
+
+<Canvas withToolbar={true} of={DropdownStories.Dropdown}></Canvas>
+
+<Controls></Controls>
+
+#### Typescript example
+
+```typescript
+import { createDropdown } from "@tuleap/tlp-dropdown";
+
+createDropdown(document.querySelector("#dropdown-example"), {
+            dropdown_menu: document.querySelector("#dropdown-menu-example"),
+            trigger: "click",
+            keyboard: true,
+        });
+```
+
+## With submenu
+
+<Canvas withToolbar={true} of={DropdownStories.WithSubmenu}></Canvas>
+
+#### Typescript example
+
+```typescript
+import { createDropdown } from "@tuleap/tlp-dropdown";
+
+createDropdown(document.querySelector("#dropdown-example"), {
+            dropdown_menu: document.querySelector("#dropdown-menu-example"),
+        });
+
+createDropdown(document.querySelector("#dropdown-submenu-example-1"), {
+            dropdown_menu: document.querySelector("#dropdown-menu-example-submenu-1"),
+        });
+
+createDropdown(document.querySelector("#dropdown-submenu-example-2"), {
+            dropdown_menu: document.querySelector("#dropdown-menu-example-submenu-2"),
+        });
+```
+
+## With tabs
+
+<Canvas withToolbar={true} of={DropdownStories.WithTab}></Canvas>
+
+## Split button
+
+<Canvas withToolbar={true} of={DropdownStories.SplitButton}></Canvas>
+
+## Large split button
+
+<Canvas withToolbar={true} of={DropdownStories.LargeSplitButton}></Canvas>
+
+## Trigger icon
+
+Use <code>fa-fw</code> on the icon and <code>tlp-dropdown-menu-on-icon</code> on the menu if the trigger
+of the dropdown is a unique icon.
+
+<Canvas withToolbar={true} of={DropdownStories.UniqueIconTrigger}></Canvas>
