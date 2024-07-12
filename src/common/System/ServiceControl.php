@@ -26,16 +26,13 @@ use Tuleap\Config\ConfigKey;
 
 /**
  * Abstract service control from system implementation
- *
- * It will favor systemd if present so it should work out-of-the box on Centos7 and RHEL7
  */
 class ServiceControl
 {
     public const SYSTEMD     = 'systemd';
-    public const INITV       = 'initv';
     public const SUPERVISORD = 'supervisord';
 
-    #[ConfigKey('Init mode for the platform (systemd, initv, supervisord)')]
+    #[ConfigKey('Init mode for the platform (systemd, supervisord)')]
     public const FORGECONFIG_INIT_MODE = 'init_mode';
 
     public function getInitMode()
@@ -46,9 +43,6 @@ class ServiceControl
         if (is_executable('/usr/bin/systemctl')) {
             return self::SYSTEMD;
         }
-        if (is_executable('/sbin/service')) {
-            return self::INITV;
-        }
     }
 
     public function execute($service, $action)
@@ -57,20 +51,11 @@ class ServiceControl
             case self::SYSTEMD:
                 $this->systemctl($service, $action);
                 break;
-
-            case self::INITV:
-                $this->service($service, $action);
-                break;
         }
     }
 
     public function systemctl($service, $action)
     {
         (new \System_Command())->exec(sprintf('/usr/bin/systemctl %s %s', escapeshellarg($action), escapeshellarg($service)));
-    }
-
-    public function service($service, $action)
-    {
-        (new \System_Command())->exec(sprintf('/sbin/service %s %s', escapeshellarg($service), escapeshellarg($action)));
     }
 }
