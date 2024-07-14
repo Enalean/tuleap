@@ -20,34 +20,22 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Export\Pdf\Template;
+namespace Tuleap\PdfTemplate;
 
-use Tuleap\Event\Dispatchable;
+use Tuleap\Export\Pdf\Template\GetPdfTemplatesEvent;
 
-final class GetPdfTemplatesEvent implements Dispatchable
+final readonly class PdfTemplateForUserRetriever
 {
-    /**
-     * @var list<PdfTemplate>
-     */
-    private ?array $templates = null;
-
-    public function __construct(public readonly \PFUser $user)
+    public function __construct(private RetrieveAllTemplates $dao)
     {
     }
 
-    /**
-     * @return list<PdfTemplate>
-     */
-    public function getTemplates(): ?array
+    public function injectTemplates(GetPdfTemplatesEvent $event): void
     {
-        return $this->templates;
-    }
+        if ($event->user->isAnonymous()) {
+            return;
+        }
 
-    /**
-     * @param list<PdfTemplate> $templates
-     */
-    public function setTemplates(array $templates): void
-    {
-        $this->templates = $templates;
+        $event->setTemplates($this->dao->retrieveAll());
     }
 }

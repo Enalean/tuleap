@@ -19,8 +19,19 @@
 -->
 
 <template>
+    <button
+        v-if="is_option_disabled"
+        type="button"
+        disabled
+        class="tlp-dropdown-menu-item tlp-dropdown-menu-item-disabled"
+        role="menuitem"
+        v-bind:title="disabled_option_title"
+    >
+        <i class="fa-regular fa-file-pdf fa-fw" aria-hidden="true"></i>
+        {{ export_in_pdf }}
+    </button>
     <div
-        v-if="has_more_than_one_template"
+        v-else-if="has_more_than_one_template"
         class="tlp-dropdown-menu-item tlp-dropdown-menu-item-submenu"
         id="dropdown-menu-example-options-submenu-1"
         aria-haspopup="true"
@@ -28,7 +39,7 @@
         ref="trigger"
     >
         <i class="fa-regular fa-file-pdf fa-fw" aria-hidden="true"></i>
-        {{ $gettext("Export document in PDF") }}
+        {{ export_in_pdf }}
         <div
             class="tlp-dropdown-menu tlp-dropdown-submenu tlp-dropdown-menu-side"
             role="menu"
@@ -56,8 +67,10 @@
         role="menuitem"
     >
         <i class="fa-regular fa-file-pdf fa-fw" aria-hidden="true"></i>
-        {{ $gettext("Export document in PDF") }}
+        {{ export_in_pdf }}
     </button>
+
+    <printer-version v-if="!is_option_disabled" />
 </template>
 
 <script setup lang="ts">
@@ -68,13 +81,24 @@ import type { PdfTemplate } from "@tuleap/print-as-pdf";
 import { printAsPdf } from "@tuleap/print-as-pdf";
 import { onMounted, ref } from "vue";
 import { createDropdown } from "@tuleap/tlp-dropdown";
+import { IS_USER_ANONYMOUS } from "@/is-user-anonymous";
+import PrinterVersion from "@/components/print/PrinterVersion.vue";
 
 const pdf_templates = strictInject(PDF_TEMPLATES);
+const is_user_anonymous = strictInject(IS_USER_ANONYMOUS);
 
 const has_more_than_one_template = pdf_templates !== null && pdf_templates.length > 1;
 
 const { $gettext } = useGettext();
 const submenu_label = $gettext("Available templates");
+const export_in_pdf = $gettext("Export document in PDF");
+
+const has_pdf_templates = pdf_templates !== null && pdf_templates.length > 0;
+
+const is_option_disabled = is_user_anonymous || !has_pdf_templates;
+const disabled_option_title = is_user_anonymous
+    ? $gettext("Please log in in order to be able to export as PDF")
+    : $gettext("No template was defined for export, please contact site administrator");
 
 function printUsingFirstTemplate(): void {
     if (pdf_templates === null || pdf_templates.length === 0) {

@@ -43,6 +43,7 @@ use Tuleap\PdfTemplate\Admin\RejectNonNonPdfTemplateManagerMiddleware;
 use Tuleap\PdfTemplate\Admin\UpdatePdfTemplateController;
 use Tuleap\PdfTemplate\Admin\UserCanManageTemplatesChecker;
 use Tuleap\PdfTemplate\PdfTemplateDao;
+use Tuleap\PdfTemplate\PdfTemplateForUserRetriever;
 use Tuleap\Plugin\ListeningToEventClass;
 use Tuleap\Plugin\ListeningToEventName;
 use Tuleap\Request\CollectRoutesEvent;
@@ -80,7 +81,8 @@ class PdfTemplatePlugin extends Plugin
     #[ListeningToEventClass]
     public function getPdfTemplatesEvent(GetPdfTemplatesEvent $event): void
     {
-        $event->setTemplates($this->getPdfTemplateDao()->retrieveAll());
+        (new PdfTemplateForUserRetriever($this->getPdfTemplateDao()))
+            ->injectTemplates($event);
     }
 
     #[ListeningToEventClass]

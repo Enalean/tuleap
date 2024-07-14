@@ -1,5 +1,4 @@
-<?php
-/**
+/*
  * Copyright (c) Enalean, 2024 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -18,36 +17,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
+import type { StrictInjectionKey } from "@tuleap/vue-strict-inject";
 
-namespace Tuleap\Export\Pdf\Template;
-
-use Tuleap\Event\Dispatchable;
-
-final class GetPdfTemplatesEvent implements Dispatchable
-{
-    /**
-     * @var list<PdfTemplate>
-     */
-    private ?array $templates = null;
-
-    public function __construct(public readonly \PFUser $user)
-    {
-    }
-
-    /**
-     * @return list<PdfTemplate>
-     */
-    public function getTemplates(): ?array
-    {
-        return $this->templates;
-    }
-
-    /**
-     * @param list<PdfTemplate> $templates
-     */
-    public function setTemplates(array $templates): void
-    {
-        $this->templates = $templates;
-    }
-}
+export const IS_USER_ANONYMOUS: StrictInjectionKey<boolean> = Symbol("is_user_anonymous");

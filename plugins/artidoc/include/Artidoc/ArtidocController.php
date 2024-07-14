@@ -127,7 +127,7 @@ final readonly class ArtidocController implements DispatchableWithRequest, Dispa
                         $this->suitable_trackers_retriever->getTrackers($document_information, $user),
                     ),
                     $allowed_max_size,
-                    $this->event_dispatcher->dispatch(new GetPdfTemplatesEvent())->getTemplates(),
+                    $this->event_dispatcher->dispatch(new GetPdfTemplatesEvent($user))->getTemplates(),
                 )
             );
         $service->displayFooter();
