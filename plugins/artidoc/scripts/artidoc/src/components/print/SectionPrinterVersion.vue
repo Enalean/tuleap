@@ -19,7 +19,7 @@
 -->
 
 <template>
-    <article class="document-section">
+    <article>
         <section-header
             class="section-header"
             v-bind:title="editable_title"
