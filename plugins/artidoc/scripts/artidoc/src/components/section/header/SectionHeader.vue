@@ -19,7 +19,7 @@
   -->
 <template>
     <div>
-        <h1 class="page-title">
+        <h1 class="section-title">
             <textarea
                 type="text"
                 class="tlp-textarea"

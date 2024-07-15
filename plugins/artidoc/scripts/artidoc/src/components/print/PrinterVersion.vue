@@ -28,7 +28,11 @@
         </aside>
         <section class="document-content">
             <ol>
-                <li v-for="section in saved_sections" v-bind:key="section.id">
+                <li
+                    v-for="section in saved_sections"
+                    v-bind:key="section.id"
+                    class="document-section"
+                >
                     <section-printer-version v-bind:section="section" />
                 </li>
             </ol>
