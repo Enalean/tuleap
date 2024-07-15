@@ -24,9 +24,6 @@ namespace Tuleap\Timetracking\Widget;
 
 use Codendi_Request;
 use TemplateRendererFactory;
-use Tuleap\Config\ConfigKeyHidden;
-use Tuleap\Config\ConfigKeyInt;
-use Tuleap\Config\FeatureFlagConfigKey;
 use Tuleap\Layout\IncludeViteAssets;
 use Tuleap\Layout\JavascriptAssetGeneric;
 use Tuleap\Layout\JavascriptViteAsset;
@@ -36,11 +33,6 @@ use Widget;
 
 class TimetrackingManagementWidget extends Widget
 {
-    #[FeatureFlagConfigKey('Allow Timetracking Management widget. 0 to disallow, 1 to allow. By default they are disallowed. Guarded by allow_timetracking_management_widget feature flag.')]
-    #[ConfigKeyInt(0)]
-    #[ConfigKeyHidden]
-    public const FEATURE_FLAG = 'allow_timetracking_management_widget';
-
     public const NAME = 'timetracking-management-widget';
 
     private Dao $dao;

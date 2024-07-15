@@ -45,6 +45,7 @@ use Tuleap\Timetracking\Time\TimePresenterBuilder;
 use Tuleap\Timetracking\Time\TimeRetriever;
 use Tuleap\Timetracking\Time\TimetrackingReportDao;
 use Tuleap\Timetracking\Time\TimeUpdater;
+use Tuleap\Timetracking\Widget\FeatureFlagTimetrackingManagementWidget;
 use Tuleap\Timetracking\Widget\TimetrackingManagementWidget;
 use Tuleap\Timetracking\Widget\TimeTrackingOverview;
 use Tuleap\Timetracking\Widget\UserWidget;
@@ -310,7 +311,7 @@ class timetrackingPlugin extends PluginWithLegacyInternalRouting implements Plug
                 )
             );
         }
-        if ($get_widget_event->getName() === TimetrackingManagementWidget::NAME && (int) \ForgeConfig::getFeatureFlag(TimetrackingManagementWidget::FEATURE_FLAG) === 1) {
+        if ($get_widget_event->getName() === TimetrackingManagementWidget::NAME && FeatureFlagTimetrackingManagementWidget::isActive()) {
             $get_widget_event->setWidget(new TimetrackingManagementWidget(new \Tuleap\Timetracking\REST\v1\TimetrackingManagement\Dao()));
         }
     }
@@ -448,6 +449,6 @@ class timetrackingPlugin extends PluginWithLegacyInternalRouting implements Plug
 
     public function getConfigKeys(\Tuleap\Config\ConfigClassProvider $event): void
     {
-        $event->addConfigClass(TimetrackingManagementWidget::class);
+        $event->addConfigClass(FeatureFlagTimetrackingManagementWidget::class);
     }
 }
