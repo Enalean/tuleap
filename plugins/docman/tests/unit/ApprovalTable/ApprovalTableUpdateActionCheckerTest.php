@@ -23,67 +23,59 @@ declare(strict_types=1);
 
 namespace Tuleap\Docman\ApprovalTable;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use Docman_Item;
+use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\Docman\REST\v1\Files\DocmanFilesPATCHRepresentation;
+use Tuleap\Test\PHPUnit\TestCase;
 
-class ApprovalTableUpdateActionCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
+final class ApprovalTableUpdateActionCheckerTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var ApprovalTableRetriever
-     */
-    private $approval_table_retriever;
+    private ApprovalTableRetriever&MockObject $approval_table_retriever;
 
     protected function setUp(): void
     {
-        parent::setUp();
-
-        $this->approval_table_retriever = Mockery::mock(ApprovalTableRetriever::class);
+        $this->approval_table_retriever = $this->createMock(ApprovalTableRetriever::class);
     }
 
-    public function testItDoesnOtThrowAnExceptionWhenItemHasApprovalTableAndOptionIsCorrect()
+    public function testItDoesnOtThrowAnExceptionWhenItemHasApprovalTableAndOptionIsCorrect(): void
     {
-        $this->expectNotToPerformAssertions();
+        self::expectNotToPerformAssertions();
         $approval_checker                      = new ApprovalTableUpdateActionChecker($this->approval_table_retriever);
-        $item                                  = Mockery::mock(\Docman_Item::class);
+        $item                                  = new Docman_Item();
         $representation                        = new DocmanFilesPATCHRepresentation();
         $representation->approval_table_action = 'copy';
 
-        $this->approval_table_retriever->shouldReceive('hasApprovalTable')->andReturn(true);
+        $this->approval_table_retriever->method('hasApprovalTable')->willReturn(true);
 
         $approval_checker->checkApprovalTableForItem($representation->approval_table_action, $item);
     }
 
     public function testCheckApprovalTableThrowsExceptionWhenItemHasApprovalTableAndApprovalActionIsNull(): void
     {
-        $approval_checker = new ApprovalTableUpdateActionChecker($this->approval_table_retriever);
-        $item             = Mockery::mock(\Docman_Item::class);
-        $item->shouldReceive('getTitle')->andReturn('my item title');
+        $approval_checker                      = new ApprovalTableUpdateActionChecker($this->approval_table_retriever);
+        $item                                  = new Docman_Item(['title' => 'my item title']);
         $representation                        = new DocmanFilesPATCHRepresentation();
         $representation->approval_table_action = null;
 
-        $this->approval_table_retriever->shouldReceive('hasApprovalTable')->andReturn(true);
+        $this->approval_table_retriever->method('hasApprovalTable')->willReturn(true);
 
-        $this->expectException(ApprovalTableException::class);
-        $this->expectExceptionMessage('approval_table_action is required');
+        self::expectException(ApprovalTableException::class);
+        self::expectExceptionMessage('approval_table_action is required');
 
         $approval_checker->checkApprovalTableForItem($representation->approval_table_action, $item);
     }
 
     public function testCheckApprovalTableThrowsExceptionWhenItemHasNoApprovalTableButApprovalAction(): void
     {
-        $approval_checker = new ApprovalTableUpdateActionChecker($this->approval_table_retriever);
-        $item             = Mockery::mock(\Docman_Item::class);
-        $item->shouldReceive('getTitle')->andReturn('my item title');
+        $approval_checker                      = new ApprovalTableUpdateActionChecker($this->approval_table_retriever);
+        $item                                  = new Docman_Item(['title' => 'my item title']);
         $representation                        = new DocmanFilesPATCHRepresentation();
         $representation->approval_table_action = 'reset';
 
-        $this->approval_table_retriever->shouldReceive('hasApprovalTable')->andReturn(false);
+        $this->approval_table_retriever->method('hasApprovalTable')->willReturn(false);
 
-        $this->expectException(ApprovalTableException::class);
-        $this->expectExceptionMessage('approval_table_action should not be provided');
+        self::expectException(ApprovalTableException::class);
+        self::expectExceptionMessage('approval_table_action should not be provided');
 
         $approval_checker->checkApprovalTableForItem($representation->approval_table_action, $item);
     }
@@ -92,15 +84,15 @@ class ApprovalTableUpdateActionCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $approval_checker = new ApprovalTableUpdateActionChecker($this->approval_table_retriever);
 
-        $this->assertTrue($approval_checker->checkAvailableUpdateAction('copy'));
-        $this->assertTrue($approval_checker->checkAvailableUpdateAction('reset'));
-        $this->assertTrue($approval_checker->checkAvailableUpdateAction('empty'));
+        self::assertTrue($approval_checker->checkAvailableUpdateAction('copy'));
+        self::assertTrue($approval_checker->checkAvailableUpdateAction('reset'));
+        self::assertTrue($approval_checker->checkAvailableUpdateAction('empty'));
     }
 
     public function testItReturnFalseBecauseTheActionIsNOTAvailabe(): void
     {
         $approval_checker = new ApprovalTableUpdateActionChecker($this->approval_table_retriever);
 
-        $this->assertFalse($approval_checker->checkAvailableUpdateAction('nonon'));
+        self::assertFalse($approval_checker->checkAvailableUpdateAction('nonon'));
     }
 }
