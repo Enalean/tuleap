@@ -18,7 +18,7 @@ pkgs.stdenvNoCC.mkDerivation {
     rpmbuild \
       --dbpath="$(pwd)"/rpmdb \
       --define "%_topdir $(pwd)" \
-      --define "_binary_payload w22T8.zstdio" \
+      --define "_binary_payload w16T8.zstdio" \
       --define "%_tmppath %{_topdir}/TMP" \
       --define "%_datadir /usr/share" \
       -bb php-mediawiki-tuleap.spec

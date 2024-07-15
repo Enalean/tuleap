@@ -4,8 +4,8 @@
 %global _docdir_fmt %%original_name-%%gitolite_version
 
 %define _buildhost tuleap-builder
-%define _source_payload w22T8.zstdio
-%define _binary_payload w22T8.zstdio
+%define _source_payload w16T8.zstdio
+%define _binary_payload w16T8.zstdio
 
 Name:           tuleap-gitolite3
 Version:        %{tuleap_version}
