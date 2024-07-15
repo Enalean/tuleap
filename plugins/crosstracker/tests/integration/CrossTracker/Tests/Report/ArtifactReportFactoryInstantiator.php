@@ -60,6 +60,7 @@ use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Field\Text\TextResul
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Field\UGroupList\UGroupListResultBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Field\UserList\UserListResultBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Metadata\MetadataResultBuilder;
+use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Metadata\Semantic\AssignedTo\AssignedToResultBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Metadata\Semantic\Status\StatusResultBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Metadata\Text\MetadataTextResultBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilderVisitor;
@@ -277,6 +278,7 @@ final class ArtifactReportFactoryInstantiator
                     $text_value_interpreter,
                 ),
                 new StatusResultBuilder(),
+                new AssignedToResultBuilder($user_manager, UserHelper::instance()),
             ),
         );
 

@@ -24,10 +24,14 @@ namespace Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Metadata;
 
 use Codendi_HTMLPurifier;
 use LogicException;
+use PFUser;
 use Tracker;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Field\StaticList\StaticListRepresentation;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Field\StaticList\StaticListValueRepresentation;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Field\Text\TextResultRepresentation;
+use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Field\UserList\UserListRepresentation;
+use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Field\UserList\UserListValueRepresentation;
+use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Metadata\Semantic\AssignedTo\AssignedToResultBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Metadata\Semantic\Status\StatusResultBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Metadata\Text\MetadataTextResultBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\SelectedValue;
@@ -36,12 +40,15 @@ use Tuleap\CrossTracker\REST\v1\Representation\CrossTrackerSelectedRepresentatio
 use Tuleap\CrossTracker\REST\v1\Representation\CrossTrackerSelectedType;
 use Tuleap\Markdown\CommonMarkInterpreter;
 use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Test\Stubs\RetrieveUserByIdStub;
 use Tuleap\Tracker\Artifact\ChangesetValue\Text\TextValueInterpreter;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\RetrieveArtifactStub;
+use UserHelper;
 
 final class MetadataResultBuilderTest extends TestCase
 {
@@ -60,8 +67,9 @@ final class MetadataResultBuilderTest extends TestCase
         RetrieveArtifactStub $artifact_retriever,
         array $selected_result,
     ): SelectedValuesCollection {
-        $purifier = Codendi_HTMLPurifier::instance();
-        $builder  = new MetadataResultBuilder(
+        $purifier    = Codendi_HTMLPurifier::instance();
+        $user_helper = $this->createMock(UserHelper::class);
+        $builder     = new MetadataResultBuilder(
             new MetadataTextResultBuilder(
                 $artifact_retriever,
                 new TextValueInterpreter(
@@ -70,7 +78,16 @@ final class MetadataResultBuilderTest extends TestCase
                 ),
             ),
             new StatusResultBuilder(),
+            new AssignedToResultBuilder(
+                RetrieveUserByIdStub::withUsers(
+                    UserTestBuilder::aUser()->withId(135)->withUserName('jean')->withRealName('Jean Eude')->withAvatarUrl('https://example.com/jean')->build(),
+                    UserTestBuilder::aUser()->withId(145)->withUserName('alice')->withRealName('Alice')->withAvatarUrl('https://example.com/alice')->build(),
+                ),
+                $user_helper,
+            ),
         );
+
+        $user_helper->method('getDisplayNameFromUser')->willReturnCallback(static fn(PFUser $user) => $user->getRealName());
 
         return $builder->getResult(
             $metadata,
@@ -195,6 +212,40 @@ EOL
                 new StaticListValueRepresentation('Also open', null),
             ])),
             33 => new SelectedValue('@status', new StaticListRepresentation([])),
+        ], $result->values);
+    }
+
+    public function testItReturnsValuesForAssignedToSemantic(): void
+    {
+        $result = $this->getSelectedResult(
+            new Metadata('assigned_to'),
+            RetrieveArtifactStub::withArtifacts(
+                ArtifactTestBuilder::anArtifact(41)->inTracker($this->first_tracker)->build(),
+                ArtifactTestBuilder::anArtifact(42)->inTracker($this->first_tracker)->build(),
+                ArtifactTestBuilder::anArtifact(43)->inTracker($this->second_tracker)->build(),
+            ),
+            [
+                ['id' => 41, '@assigned_to' => 135],
+                ['id' => 42, '@assigned_to' => 135],
+                ['id' => 42, '@assigned_to' => 145],
+                ['id' => 43, '@assigned_to' => null],
+            ],
+        );
+
+        self::assertEquals(
+            new CrossTrackerSelectedRepresentation('@assigned_to', CrossTrackerSelectedType::TYPE_USER_LIST),
+            $result->selected,
+        );
+        self::assertCount(3, $result->values);
+        self::assertEqualsCanonicalizing([
+            41 => new SelectedValue('@assigned_to', new UserListRepresentation([
+                new UserListValueRepresentation('Jean Eude', 'https://example.com/jean', '/users/jean', false),
+            ])),
+            42 => new SelectedValue('@assigned_to', new UserListRepresentation([
+                new UserListValueRepresentation('Jean Eude', 'https://example.com/jean', '/users/jean', false),
+                new UserListValueRepresentation('Alice', 'https://example.com/alice', '/users/alice', false),
+            ])),
+            43 => new SelectedValue('@assigned_to', new UserListRepresentation([])),
         ], $result->values);
     }
 }

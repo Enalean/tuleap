@@ -24,6 +24,7 @@ namespace Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Metadata;
 
 use LogicException;
 use Tuleap\CrossTracker\Report\Query\Advanced\AllowedMetadata;
+use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Metadata\Semantic\AssignedTo\AssignedToResultBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Metadata\Semantic\Status\StatusResultBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Metadata\Text\MetadataTextResultBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\SelectedValuesCollection;
@@ -34,6 +35,7 @@ final readonly class MetadataResultBuilder
     public function __construct(
         private MetadataTextResultBuilder $text_builder,
         private StatusResultBuilder $status_builder,
+        private AssignedToResultBuilder $assigned_to_builder,
     ) {
     }
 
@@ -46,9 +48,9 @@ final readonly class MetadataResultBuilder
             AllowedMetadata::TITLE,
             AllowedMetadata::DESCRIPTION => $this->text_builder->getResult($metadata, $select_results),
             AllowedMetadata::STATUS      => $this->status_builder->getResult($select_results),
-            AllowedMetadata::ASSIGNED_TO,
+            AllowedMetadata::ASSIGNED_TO => $this->assigned_to_builder->getResult($select_results),
 
-                // Always there fields
+            // Always there fields
             AllowedMetadata::SUBMITTED_ON,
             AllowedMetadata::LAST_UPDATE_DATE,
             AllowedMetadata::SUBMITTED_BY,
