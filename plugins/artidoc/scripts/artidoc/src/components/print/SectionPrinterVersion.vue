@@ -23,49 +23,37 @@
         <section-header
             class="section-header"
             v-bind:title="editable_title"
-            v-bind:input_current_title="inputCurrentTitle"
+            v-bind:input_current_title="noop"
             v-bind:is_edit_mode="false"
         />
         <section-description
             v-bind:editable_description="editable_description"
-            v-bind:readonly_description="getReadonlyDescription()"
-            v-bind:input_current_description="inputCurrentDescription"
+            v-bind:readonly_description="readonly_description"
+            v-bind:input_current_description="noop"
             v-bind:is_edit_mode="false"
-            v-bind:add_attachment_to_waiting_list="addAttachmentToWaitingList"
+            v-bind:add_attachment_to_waiting_list="noop"
             v-bind:upload_url="upload_url"
             v-bind:is_image_upload_allowed="is_image_upload_allowed"
         />
-        <section-footer v-bind:editor="editor" v-bind:section="section" />
     </article>
 </template>
 
 <script setup lang="ts">
 import type { ArtifactSection } from "@/helpers/artidoc-section.type";
-import SectionFooter from "@/components/section/footer/SectionFooter.vue";
 import SectionHeader from "@/components/section/header/SectionHeader.vue";
 import SectionDescription from "@/components/section/description/SectionDescription.vue";
-import { useAttachmentFile } from "@/composables/useAttachmentFile";
-import { ref } from "vue";
-import { useSectionEditor } from "@/composables/useSectionEditor";
+import { computed, ref } from "vue";
+import { useEditorSectionContent } from "@/composables/useEditorSectionContent";
 
 const props = defineProps<{ section: ArtifactSection }>();
 
-const {
-    upload_url,
-    addAttachmentToWaitingList,
-    mergeArtifactAttachments,
-    setWaitingListAttachments,
-} = useAttachmentFile(ref(props.section.attachments ? props.section.attachments.field_id : 0));
+const content = computed(() => useEditorSectionContent(ref(props.section)));
 
-const editor = useSectionEditor(props.section, mergeArtifactAttachments, setWaitingListAttachments);
+const editable_title = computed(() => content.value.editable_title.value);
+const readonly_description = computed(() => content.value.getReadonlyDescription());
 
-const { is_image_upload_allowed } = editor.editor_state;
-
-const {
-    inputCurrentDescription,
-    inputCurrentTitle,
-    editable_title,
-    editable_description,
-    getReadonlyDescription,
-} = editor.editor_section_content;
+function noop(): void {}
+const upload_url = "";
+const is_image_upload_allowed = false;
+const editable_description = "";
 </script>
