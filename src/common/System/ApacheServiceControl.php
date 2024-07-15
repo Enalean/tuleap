@@ -47,10 +47,6 @@ class ApacheServiceControl
                 $this->service_control->systemctl('httpd', 'reload');
                 break;
 
-            case ServiceControl::INITV:
-                $this->service_control->service('httpd', 'graceful');
-                break;
-
             case ServiceControl::SUPERVISORD:
                 $this->process_factory->getProcess(['/usr/sbin/httpd', '-k', 'graceful'])->mustRun();
                 break;
