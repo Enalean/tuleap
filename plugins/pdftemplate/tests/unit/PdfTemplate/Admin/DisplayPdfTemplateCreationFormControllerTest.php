@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\PdfTemplate\Admin;
 
+use Tuleap\GlobalLanguageMock;
 use Tuleap\PdfTemplate\Stubs\CSRFTokenProviderStub;
 use Tuleap\PdfTemplate\Stubs\RenderAPresenterStub;
 use Tuleap\Request\NotFoundException;
@@ -35,6 +36,16 @@ use Tuleap\Test\Stubs\User\ForgePermissionsRetrieverStub;
 
 final class DisplayPdfTemplateCreationFormControllerTest extends TestCase
 {
+    use GlobalLanguageMock;
+
+    protected function setUp(): void
+    {
+        $GLOBALS['Language']
+            ->method('getText')
+            ->with('system', 'datefmt')
+            ->willReturn('d/m/Y H:i');
+    }
+
     public function testExceptionWhenUserIsNotAllowed(): void
     {
         $admin_page_renderer = RenderAPresenterStub::build();

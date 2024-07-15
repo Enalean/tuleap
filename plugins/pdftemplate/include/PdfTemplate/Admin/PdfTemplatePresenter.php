@@ -22,41 +22,57 @@ declare(strict_types=1);
 
 namespace Tuleap\PdfTemplate\Admin;
 
+use Tuleap\Date\TlpRelativeDatePresenter;
+use Tuleap\Date\TlpRelativeDatePresenterBuilder;
 use Tuleap\Export\Pdf\Template\PdfTemplate;
+use Tuleap\User\Admin\UserPresenter;
 
 /**
  * @psalm-immutable
  */
 final readonly class PdfTemplatePresenter
 {
+    private const DUMMY_ID_FOR_CREATION = '';
     public string $update_url;
+    public bool $is_update;
 
     private function __construct(
         public string $id,
         public string $label,
         public string $description,
         public string $style,
+        public UserPresenter $last_updated_by,
+        public TlpRelativeDatePresenter $last_updated_date,
     ) {
         $this->update_url = DisplayPdfTemplateUpdateFormController::ROUTE . '/' . urlencode($id);
+        $this->is_update  = $id !== self::DUMMY_ID_FOR_CREATION;
     }
 
-    public static function fromPdfTemplate(PdfTemplate $template): self
+    public static function fromPdfTemplate(PdfTemplate $template, \PFUser $user): self
     {
+        $builder = new TlpRelativeDatePresenterBuilder();
+
         return new self(
             $template->identifier->toString(),
             $template->label,
             $template->description,
             $template->style,
+            UserPresenter::fromUser($template->last_updated_by),
+            $builder->getTlpRelativeDatePresenterInInlineContext($template->last_updated_date, $user),
         );
     }
 
-    public static function forCreation(): self
+    public static function forCreation(\PFUser $user): self
     {
+        $builder = new TlpRelativeDatePresenterBuilder();
+
         return new self(
-            '',
+            self::DUMMY_ID_FOR_CREATION,
             '',
             '',
             file_get_contents(__DIR__ . '/../Default/pdf-template-default.css'),
+            UserPresenter::fromUser($user),
+            $builder->getTlpRelativeDatePresenterInInlineContext(new \DateTimeImmutable(), $user),
         );
     }
 }

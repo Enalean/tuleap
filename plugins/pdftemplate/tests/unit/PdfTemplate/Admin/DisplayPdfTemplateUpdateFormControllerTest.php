@@ -24,11 +24,12 @@ namespace Tuleap\PdfTemplate\Admin;
 
 use Tuleap\DB\DatabaseUUIDV7Factory;
 use Tuleap\Export\Pdf\Template\Identifier\PdfTemplateIdentifierFactory;
-use Tuleap\Export\Pdf\Template\PdfTemplate;
+use Tuleap\GlobalLanguageMock;
 use Tuleap\PdfTemplate\Stubs\CSRFTokenProviderStub;
 use Tuleap\PdfTemplate\Stubs\RenderAPresenterStub;
 use Tuleap\PdfTemplate\Stubs\RetrieveTemplateStub;
 use Tuleap\Request\NotFoundException;
+use Tuleap\Test\Builders\Export\Pdf\Template\PdfTemplateTestBuilder;
 use Tuleap\Test\Builders\HTTPRequestBuilder;
 use Tuleap\Test\Builders\LayoutInspector;
 use Tuleap\Test\Builders\TestLayout;
@@ -39,10 +40,19 @@ use Tuleap\Test\Stubs\User\ForgePermissionsRetrieverStub;
 
 final class DisplayPdfTemplateUpdateFormControllerTest extends TestCase
 {
+    use GlobalLanguageMock;
+
+    protected function setUp(): void
+    {
+        $GLOBALS['Language']
+            ->method('getText')
+            ->with('system', 'datefmt')
+            ->willReturn('d/m/Y H:i');
+    }
+
     public function testExceptionWhenUserIsNotAllowed(): void
     {
-        $identifier_factory = new PdfTemplateIdentifierFactory(new DatabaseUUIDV7Factory());
-        $template           = new PdfTemplate($identifier_factory->buildIdentifier(), 'Label', 'Description', 'Style');
+        $template = PdfTemplateTestBuilder::aTemplate()->build();
 
         $admin_page_renderer = RenderAPresenterStub::build();
 
@@ -51,7 +61,7 @@ final class DisplayPdfTemplateUpdateFormControllerTest extends TestCase
             new UserCanManageTemplatesChecker(
                 ForgePermissionsRetrieverStub::withoutPermission(),
             ),
-            $identifier_factory,
+            new PdfTemplateIdentifierFactory(new DatabaseUUIDV7Factory()),
             RetrieveTemplateStub::withMatchingTemplate($template),
             CSRFTokenProviderStub::withToken(CSRFSynchronizerTokenStub::buildSelf()),
         );
@@ -73,8 +83,7 @@ final class DisplayPdfTemplateUpdateFormControllerTest extends TestCase
 
     public function testOkWhenUserIsSuperUser(): void
     {
-        $identifier_factory = new PdfTemplateIdentifierFactory(new DatabaseUUIDV7Factory());
-        $template           = new PdfTemplate($identifier_factory->buildIdentifier(), 'Label', 'Description', 'Style');
+        $template = PdfTemplateTestBuilder::aTemplate()->build();
 
         $admin_page_renderer = RenderAPresenterStub::build();
 
@@ -83,7 +92,7 @@ final class DisplayPdfTemplateUpdateFormControllerTest extends TestCase
             new UserCanManageTemplatesChecker(
                 ForgePermissionsRetrieverStub::withoutPermission(),
             ),
-            $identifier_factory,
+            new PdfTemplateIdentifierFactory(new DatabaseUUIDV7Factory()),
             RetrieveTemplateStub::withMatchingTemplate($template),
             CSRFTokenProviderStub::withToken(CSRFSynchronizerTokenStub::buildSelf()),
         );
@@ -103,8 +112,7 @@ final class DisplayPdfTemplateUpdateFormControllerTest extends TestCase
 
     public function testOkWhenUserHasPermissionDelegation(): void
     {
-        $identifier_factory = new PdfTemplateIdentifierFactory(new DatabaseUUIDV7Factory());
-        $template           = new PdfTemplate($identifier_factory->buildIdentifier(), 'Label', 'Description', 'Style');
+        $template = PdfTemplateTestBuilder::aTemplate()->build();
 
         $admin_page_renderer = RenderAPresenterStub::build();
 
@@ -113,7 +121,7 @@ final class DisplayPdfTemplateUpdateFormControllerTest extends TestCase
             new UserCanManageTemplatesChecker(
                 ForgePermissionsRetrieverStub::withPermission(),
             ),
-            $identifier_factory,
+            new PdfTemplateIdentifierFactory(new DatabaseUUIDV7Factory()),
             RetrieveTemplateStub::withMatchingTemplate($template),
             CSRFTokenProviderStub::withToken(CSRFSynchronizerTokenStub::buildSelf()),
         );
@@ -133,8 +141,7 @@ final class DisplayPdfTemplateUpdateFormControllerTest extends TestCase
 
     public function testExceptionWhenUuidIsInvalid(): void
     {
-        $identifier_factory = new PdfTemplateIdentifierFactory(new DatabaseUUIDV7Factory());
-        $template           = new PdfTemplate($identifier_factory->buildIdentifier(), 'Label', 'Description', 'Style');
+        $template = PdfTemplateTestBuilder::aTemplate()->build();
 
         $admin_page_renderer = RenderAPresenterStub::build();
 
@@ -143,7 +150,7 @@ final class DisplayPdfTemplateUpdateFormControllerTest extends TestCase
             new UserCanManageTemplatesChecker(
                 ForgePermissionsRetrieverStub::withoutPermission(),
             ),
-            $identifier_factory,
+            new PdfTemplateIdentifierFactory(new DatabaseUUIDV7Factory()),
             RetrieveTemplateStub::withMatchingTemplate($template),
             CSRFTokenProviderStub::withToken(CSRFSynchronizerTokenStub::buildSelf()),
         );
@@ -174,7 +181,7 @@ final class DisplayPdfTemplateUpdateFormControllerTest extends TestCase
             new UserCanManageTemplatesChecker(
                 ForgePermissionsRetrieverStub::withoutPermission(),
             ),
-            $identifier_factory,
+            new PdfTemplateIdentifierFactory(new DatabaseUUIDV7Factory()),
             RetrieveTemplateStub::withoutMatchingTemplate(),
             CSRFTokenProviderStub::withToken(CSRFSynchronizerTokenStub::buildSelf()),
         );

@@ -22,11 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\PdfTemplate;
 
-use Tuleap\DB\DatabaseUUIDV7Factory;
 use Tuleap\Export\Pdf\Template\GetPdfTemplatesEvent;
-use Tuleap\Export\Pdf\Template\Identifier\PdfTemplateIdentifierFactory;
-use Tuleap\Export\Pdf\Template\PdfTemplate;
 use Tuleap\PdfTemplate\Stubs\RetrieveAllTemplatesStub;
+use Tuleap\Test\Builders\Export\Pdf\Template\PdfTemplateTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
@@ -34,10 +32,8 @@ final class PdfTemplateForUserRetrieverTest extends TestCase
 {
     public function testAnonymousCannotSeeTemplates(): void
     {
-        $identifier = (new PdfTemplateIdentifierFactory(new DatabaseUUIDV7Factory()))->buildIdentifier();
-
         $templates = [
-            new PdfTemplate($identifier, 'Blue template', '', 'body { color: blue }'),
+            PdfTemplateTestBuilder::aTemplate()->build(),
         ];
 
         $retriever = new PdfTemplateForUserRetriever(RetrieveAllTemplatesStub::withTemplates($templates));
@@ -51,10 +47,8 @@ final class PdfTemplateForUserRetrieverTest extends TestCase
 
     public function testLoggedInUserCanSeeTemplates(): void
     {
-        $identifier = (new PdfTemplateIdentifierFactory(new DatabaseUUIDV7Factory()))->buildIdentifier();
-
         $templates = [
-            new PdfTemplate($identifier, 'Blue template', '', 'body { color: blue }'),
+            PdfTemplateTestBuilder::aTemplate()->build(),
         ];
 
         $retriever = new PdfTemplateForUserRetriever(RetrieveAllTemplatesStub::withTemplates($templates));

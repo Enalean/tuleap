@@ -24,19 +24,23 @@ namespace Tuleap\PdfTemplate;
 
 use Tuleap\Export\Pdf\Template\Identifier\PdfTemplateIdentifierFactory;
 use Tuleap\Export\Pdf\Template\PdfTemplate;
+use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
+use Tuleap\Test\Stubs\RetrieveUserByIdStub;
 
 final class PdfTemplateDaoTest extends TestIntegrationTestCase
 {
     public function testTemplatesAreRetrievedOrderedByLabel(): void
     {
+        $alice = UserTestBuilder::aUser()->build();
+
         $identifier_factory = new PdfTemplateIdentifierFactory(new \Tuleap\DB\DatabaseUUIDV7Factory());
-        $dao                = new PdfTemplateDao($identifier_factory);
+        $dao                = new PdfTemplateDao($identifier_factory, RetrieveUserByIdStub::withUser($alice));
 
         self::assertCount(0, $dao->retrieveAll());
 
-        $dao->create('the template', 'its description', 'its styles');
-        $dao->create('a template', 'its description', 'its styles');
+        $dao->create('the template', 'its description', 'its styles', $alice, new \DateTimeImmutable());
+        $dao->create('a template', 'its description', 'its styles', $alice, new \DateTimeImmutable());
 
         $templates = $dao->retrieveAll();
 
@@ -47,11 +51,13 @@ final class PdfTemplateDaoTest extends TestIntegrationTestCase
 
     public function testTemplateDeletion(): void
     {
-        $identifier_factory = new PdfTemplateIdentifierFactory(new \Tuleap\DB\DatabaseUUIDV7Factory());
-        $dao                = new PdfTemplateDao($identifier_factory);
+        $alice = UserTestBuilder::aUser()->build();
 
-        $the_template = $dao->create('the template', 'its description', 'its styles');
-        $a_template   = $dao->create('a template', 'its description', 'its styles');
+        $identifier_factory = new PdfTemplateIdentifierFactory(new \Tuleap\DB\DatabaseUUIDV7Factory());
+        $dao                = new PdfTemplateDao($identifier_factory, RetrieveUserByIdStub::withUser($alice));
+
+        $the_template = $dao->create('the template', 'its description', 'its styles', $alice, new \DateTimeImmutable());
+        $a_template   = $dao->create('a template', 'its description', 'its styles', $alice, new \DateTimeImmutable());
 
         $templates = $dao->retrieveAll();
 
@@ -66,10 +72,12 @@ final class PdfTemplateDaoTest extends TestIntegrationTestCase
 
     public function testRetrieveTemplate(): void
     {
-        $identifier_factory = new PdfTemplateIdentifierFactory(new \Tuleap\DB\DatabaseUUIDV7Factory());
-        $dao                = new PdfTemplateDao($identifier_factory);
+        $alice = UserTestBuilder::aUser()->build();
 
-        $the_template = $dao->create('the template', 'its description', 'its styles');
+        $identifier_factory = new PdfTemplateIdentifierFactory(new \Tuleap\DB\DatabaseUUIDV7Factory());
+        $dao                = new PdfTemplateDao($identifier_factory, RetrieveUserByIdStub::withUser($alice));
+
+        $the_template = $dao->create('the template', 'its description', 'its styles', $alice, new \DateTimeImmutable());
 
         self::assertNull($dao->retrieveTemplate($identifier_factory->buildIdentifier()));
         self::assertEquals('the template', $dao->retrieveTemplate($the_template->identifier)?->label);
@@ -77,16 +85,23 @@ final class PdfTemplateDaoTest extends TestIntegrationTestCase
 
     public function testUpdateTemplate(): void
     {
+        $alice = UserTestBuilder::aUser()->withId(101)->build();
+        $bob   = UserTestBuilder::aUser()->withId(102)->build();
+
         $identifier_factory = new PdfTemplateIdentifierFactory(new \Tuleap\DB\DatabaseUUIDV7Factory());
-        $dao                = new PdfTemplateDao($identifier_factory);
+        $dao                = new PdfTemplateDao($identifier_factory, RetrieveUserByIdStub::withUsers($alice, $bob));
 
-        $the_template = $dao->create('the template', 'its description', 'its styles');
+        $last_updated_date = (new \DateTimeImmutable())->setTimestamp(123);
+        $the_template      = $dao->create('the template', 'its description', 'its styles', $alice, $last_updated_date);
 
+        $last_updated_date  = (new \DateTimeImmutable())->setTimestamp(456);
         $submitted_template = new PdfTemplate(
             $the_template->identifier,
             'updated label',
             'updated description',
             'updated style',
+            $bob,
+            $last_updated_date,
         );
         $dao->update($submitted_template);
 
@@ -95,5 +110,7 @@ final class PdfTemplateDaoTest extends TestIntegrationTestCase
         self::assertEquals('updated label', $updated_template->label);
         self::assertEquals('updated description', $updated_template->description);
         self::assertEquals('updated style', $updated_template->style);
+        self::assertSame($bob, $updated_template->last_updated_by);
+        self::assertEquals(456, $updated_template->last_updated_date->getTimestamp());
     }
 }

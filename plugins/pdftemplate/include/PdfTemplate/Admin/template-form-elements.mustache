@@ -1,40 +1,38 @@
-{{# template }}
-    <div class="tlp-form-element">
-        <label class="tlp-label" for="input-label">
-            {{# dgettext }} tuleap-pdftemplate | Label {{/ dgettext }}
-            <i class="fa-solid fa-asterisk" aria-hidden="true"></i>
-        </label>
-        <input
-            type="text"
-            id="input-label"
-            name="label"
-            value="{{ label }}"
-            class="tlp-input"
-            required
-            placeholder="{{# dgettext }} tuleap-pdftemplate | Technical documentation {{/ dgettext }}"
-        >
-    </div>
+<div class="tlp-form-element">
+    <label class="tlp-label" for="input-label">
+        {{# dgettext }} tuleap-pdftemplate | Label {{/ dgettext }}
+        <i class="fa-solid fa-asterisk" aria-hidden="true"></i>
+    </label>
+    <input
+        type="text"
+        id="input-label"
+        name="label"
+        value="{{ label }}"
+        class="tlp-input"
+        required
+        placeholder="{{# dgettext }} tuleap-pdftemplate | Technical documentation {{/ dgettext }}"
+    >
+</div>
 
-    <div class="tlp-form-element">
-        <label class="tlp-label" for="input-description">
-            {{# dgettext }} tuleap-pdftemplate | Description {{/ dgettext }}
-        </label>
-        <textarea
-            id="input-description"
-            name="description"
-            class="tlp-textarea"
-        >{{ description }}</textarea>
-    </div>
+<div class="tlp-form-element">
+    <label class="tlp-label" for="input-description">
+        {{# dgettext }} tuleap-pdftemplate | Description {{/ dgettext }}
+    </label>
+    <textarea
+        id="input-description"
+        name="description"
+        class="tlp-textarea"
+    >{{ description }}</textarea>
+</div>
 
-    <div class="tlp-form-element">
-        <label class="tlp-label" for="input-style">
-            {{# dgettext }} tuleap-pdftemplate | General styling {{/ dgettext }}
-        </label>
-        <textarea
-            id="input-style"
-            name="style"
-            class="tlp-textarea"
-            rows="20"
-        >{{ style }}</textarea>
-    </div>
-{{/ template }}
+<div class="tlp-form-element">
+    <label class="tlp-label" for="input-style">
+        {{# dgettext }} tuleap-pdftemplate | General styling {{/ dgettext }}
+    </label>
+    <textarea
+        id="input-style"
+        name="style"
+        class="tlp-textarea"
+        rows="20"
+    >{{ style }}</textarea>
+</div>
