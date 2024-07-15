@@ -27,12 +27,17 @@ interface TitleFieldDefinition {
     readonly field_id: number;
     readonly label: string;
     readonly type: "string" | "text";
+    readonly default_value: string;
 }
 
 interface DescriptionFieldDefinition {
     readonly field_id: number;
     readonly label: string;
     readonly type: "text";
+    readonly default_value: {
+        readonly format: "text" | "html" | "commonmark";
+        readonly content: string;
+    };
 }
 
 interface FileFieldDefinition {

@@ -317,6 +317,7 @@ final class DocumentTrackerRepresentationTest extends TestCase
         $field->method('getId')->willReturn($id);
         $field->method('getLabel')->willReturn('A String Field');
         $field->method('userCanSubmit')->willReturn($submittable);
+        $field->method('getDefaultRESTValue')->willReturn('');
 
         return $field;
     }
@@ -327,6 +328,7 @@ final class DocumentTrackerRepresentationTest extends TestCase
         $field->method('getId')->willReturn($id);
         $field->method('getLabel')->willReturn('A Text Field');
         $field->method('userCanSubmit')->willReturn($submittable);
+        $field->method('getDefaultRESTValue')->willReturn(['format' => 'html', 'content' => '']);
 
         return $field;
     }

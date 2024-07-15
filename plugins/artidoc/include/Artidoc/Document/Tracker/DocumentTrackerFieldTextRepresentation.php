@@ -25,9 +25,16 @@ namespace Tuleap\Artidoc\Document\Tracker;
 /**
  * @psalm-immutable
  */
-final readonly class DocumentTrackerFieldRepresentation
+final readonly class DocumentTrackerFieldTextRepresentation
 {
-    public function __construct(public int $field_id, public string $label, public string $type)
-    {
+    /**
+     * @param array{format: string, content: string} $default_value
+     */
+    public function __construct(
+        public int $field_id,
+        public string $label,
+        public string $type,
+        public array $default_value,
+    ) {
     }
 }
