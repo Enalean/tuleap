@@ -25,7 +25,10 @@ namespace Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Metadata;
 use Codendi_HTMLPurifier;
 use LogicException;
 use Tracker;
+use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Field\StaticList\StaticListRepresentation;
+use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Field\StaticList\StaticListValueRepresentation;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Field\Text\TextResultRepresentation;
+use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Metadata\Semantic\Status\StatusResultBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Metadata\Text\MetadataTextResultBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\SelectedValue;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\SelectedValuesCollection;
@@ -66,6 +69,7 @@ final class MetadataResultBuilderTest extends TestCase
                     CommonMarkInterpreter::build($purifier),
                 ),
             ),
+            new StatusResultBuilder(),
         );
 
         return $builder->getResult(
@@ -157,6 +161,40 @@ EOL
 EOL
             )),
             23 => new SelectedValue('@description', new TextResultRepresentation(null)),
+        ], $result->values);
+    }
+
+    public function testItReturnsValuesStatusSemantic(): void
+    {
+        $result = $this->getSelectedResult(
+            new Metadata('status'),
+            RetrieveArtifactStub::withArtifacts(
+                ArtifactTestBuilder::anArtifact(31)->inTracker($this->first_tracker)->build(),
+                ArtifactTestBuilder::anArtifact(32)->inTracker($this->first_tracker)->build(),
+                ArtifactTestBuilder::anArtifact(33)->inTracker($this->second_tracker)->build(),
+            ),
+            [
+                ['id' => 31, '@status' => 'Open', '@status_color' => 'neon-green'],
+                ['id' => 32, '@status' => 'Closed', '@status_color' => 'fiesta-red'],
+                ['id' => 32, '@status' => 'Also open', '@status_color' => null],
+                ['id' => 33, '@status' => null, '@status_color' => null],
+            ],
+        );
+
+        self::assertEquals(
+            new CrossTrackerSelectedRepresentation('@status', CrossTrackerSelectedType::TYPE_STATIC_LIST),
+            $result->selected,
+        );
+        self::assertCount(3, $result->values);
+        self::assertEqualsCanonicalizing([
+            31 => new SelectedValue('@status', new StaticListRepresentation([
+                new StaticListValueRepresentation('Open', 'neon-green'),
+            ])),
+            32 => new SelectedValue('@status', new StaticListRepresentation([
+                new StaticListValueRepresentation('Closed', 'fiesta-red'),
+                new StaticListValueRepresentation('Also open', null),
+            ])),
+            33 => new SelectedValue('@status', new StaticListRepresentation([])),
         ], $result->values);
     }
 }
