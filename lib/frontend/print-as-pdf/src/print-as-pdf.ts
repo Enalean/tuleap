@@ -20,6 +20,7 @@
 import print from "print-js";
 
 export interface PdfTemplate {
+    readonly id: string;
     readonly label: string;
     readonly description: string;
     readonly style: string;

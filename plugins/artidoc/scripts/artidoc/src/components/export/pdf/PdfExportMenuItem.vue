@@ -19,7 +19,42 @@
 -->
 
 <template>
-    <button type="button" v-on:click="onClick" class="tlp-dropdown-menu-item" role="menuitem">
+    <div
+        v-if="has_more_than_one_template"
+        class="tlp-dropdown-menu-item tlp-dropdown-menu-item-submenu"
+        id="dropdown-menu-example-options-submenu-1"
+        aria-haspopup="true"
+        role="menuitem"
+        ref="trigger"
+    >
+        <i class="fa-regular fa-file-pdf fa-fw" aria-hidden="true"></i>
+        {{ $gettext("Export document in PDF") }}
+        <div
+            class="tlp-dropdown-menu tlp-dropdown-submenu tlp-dropdown-menu-side"
+            role="menu"
+            ref="submenu"
+            v-bind:aria-label="submenu_label"
+        >
+            <button
+                v-for="template in pdf_templates"
+                v-bind:key="template.id"
+                type="button"
+                v-on:click="printUsingTemplate(template)"
+                class="tlp-dropdown-menu-item"
+                role="menuitem"
+                v-bind:title="template.description"
+            >
+                {{ template.label }}
+            </button>
+        </div>
+    </div>
+    <button
+        v-else
+        type="button"
+        v-on:click="printUsingFirstTemplate"
+        class="tlp-dropdown-menu-item"
+        role="menuitem"
+    >
         <i class="fa-regular fa-file-pdf fa-fw" aria-hidden="true"></i>
         {{ $gettext("Export document in PDF") }}
     </button>
@@ -29,24 +64,45 @@
 import { useGettext } from "vue3-gettext";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import { PDF_TEMPLATES } from "@/pdf-templates-injection-key";
+import type { PdfTemplate } from "@tuleap/print-as-pdf";
 import { printAsPdf } from "@tuleap/print-as-pdf";
+import { onMounted, ref } from "vue";
+import { createDropdown } from "@tuleap/tlp-dropdown";
 
 const pdf_templates = strictInject(PDF_TEMPLATES);
 
-const { $gettext } = useGettext();
+const has_more_than_one_template = pdf_templates !== null && pdf_templates.length > 1;
 
-function onClick(): void {
+const { $gettext } = useGettext();
+const submenu_label = $gettext("Available templates");
+
+function printUsingFirstTemplate(): void {
+    if (pdf_templates === null || pdf_templates.length === 0) {
+        return;
+    }
+
+    printUsingTemplate(pdf_templates[0]);
+}
+
+function printUsingTemplate(template: PdfTemplate): void {
     const printable = document.getElementById("artidoc-print-version");
     if (!printable) {
         return;
     }
 
-    if (pdf_templates === null || pdf_templates.length === 0) {
-        return;
-    }
-
-    const selected_pdf_template = pdf_templates[0];
-
-    printAsPdf(printable, selected_pdf_template);
+    printAsPdf(printable, template);
 }
+
+const trigger = ref<HTMLElement | null>(null);
+const submenu = ref<HTMLElement | null>(null);
+
+onMounted(() => {
+    if (trigger.value && submenu.value) {
+        createDropdown(trigger.value, {
+            keyboard: false,
+            trigger: "hover-and-click",
+            dropdown_menu: submenu.value,
+        });
+    }
+});
 </script>

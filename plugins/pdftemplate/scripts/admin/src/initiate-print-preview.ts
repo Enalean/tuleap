@@ -44,6 +44,7 @@ export function initiatePrintPreview(style: CodeMirror.EditorFromTextArea): void
 
     button.addEventListener("click", () => {
         const template: PdfTemplate = {
+            id: "",
             label: label.value,
             description: description.value,
             style: style.getValue(),
