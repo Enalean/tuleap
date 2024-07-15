@@ -25,7 +25,7 @@ msgid "Artidoc allows composition of a document based on artifacts."
 msgstr "Artidoc permet la composition d'un document basé sur des artéfacts."
 
 msgid "Available templates"
-msgstr ""
+msgstr "Modèles disponibles"
 
 msgid "Cancel"
 msgstr "Annuler"
@@ -83,6 +83,11 @@ msgstr ""
 msgid "Load new section"
 msgstr "Charger la nouvelle section"
 
+msgid "No template was defined for export, please contact site administrator"
+msgstr ""
+"Aucun modèles n'a été défini pour l'export, veuillez contacter "
+"l'administrateur de la plateforme."
+
 msgid ""
 "Note: the tracker must have a title semantic (string field), a description "
 "semantic, and no required fields except title and description."
@@ -96,6 +101,9 @@ msgstr "Ouvrir l'artéfact"
 
 msgid "Open contextual menu"
 msgstr "Ouvrir le menu contextuel"
+
+msgid "Please log in in order to be able to export as PDF"
+msgstr "Veuillez vous connecter afin de pouvoir exporter en PDF"
 
 msgid "Reload page"
 msgstr "Recharger la page"

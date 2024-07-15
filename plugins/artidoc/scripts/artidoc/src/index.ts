@@ -42,6 +42,7 @@ import {
     useSectionEditorsCollection,
 } from "@/composables/useSectionEditorsCollection";
 import { PDF_TEMPLATES } from "@/pdf-templates-injection-key";
+import { IS_USER_ANONYMOUS } from "@/is-user-anonymous";
 
 document.addEventListener("DOMContentLoaded", async () => {
     const vue_mount_point = document.getElementById("artidoc-mountpoint");
@@ -88,6 +89,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         ),
     );
     app.provide(PDF_TEMPLATES, JSON.parse(getDatasetItemOrThrow(vue_mount_point, "pdfTemplates")));
+    app.provide(IS_USER_ANONYMOUS, Number(getDatasetItemOrThrow(document.body, "userId")) === 0);
 
     app.use(gettext);
     app.use(VueDOMPurifyHTML);

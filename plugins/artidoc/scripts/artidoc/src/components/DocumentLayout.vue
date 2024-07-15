@@ -29,13 +29,11 @@
             <document-content />
         </section>
     </div>
-    <printer-version />
 </template>
 
 <script setup lang="ts">
 import TableOfContents from "./toc/TableOfContents.vue";
 import DocumentContent from "./DocumentContent.vue";
-import PrinterVersion from "@/components/print/PrinterVersion.vue";
 </script>
 
 <style lang="scss" scoped>
