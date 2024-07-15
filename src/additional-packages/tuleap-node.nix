@@ -58,6 +58,6 @@ let
     dontFixUp = true;
   };
 in buildNodeRPM {
-    inherit version;
-    bin = nodeBin;
+  inherit version;
+  bin = nodeBin;
 }

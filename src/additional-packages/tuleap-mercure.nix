@@ -13,17 +13,17 @@ let
 
     CGO_ENABLED=0;
 
-     ldflags = [ "-s" "-w" ];
+    ldflags = [ "-s" "-w" ];
   };
   tuleapVersion = builtins.readFile ../../VERSION;
 in pkgs.stdenvNoCC.mkDerivation {
   name = "tuleap-mercure-rpm-package";
   srcs = [
-   "${tuleapMercureBin}/bin/tuleap-mercure"
-  ./tuleap-mercure/Caddyfile
-  ./tuleap-mercure/tuleap-mercure.service
-  ./tuleap-mercure/tuleap-mercure-config-change.service
-  ./tuleap-mercure/tuleap-mercure-config-change.path
+    "${tuleapMercureBin}/bin/tuleap-mercure"
+    ./tuleap-mercure/Caddyfile
+    ./tuleap-mercure/tuleap-mercure.service
+    ./tuleap-mercure/tuleap-mercure-config-change.service
+    ./tuleap-mercure/tuleap-mercure-config-change.path
   ];
 
   nativeBuildInputs = [ pkgs.rpm ];

@@ -61,15 +61,15 @@ in pkgs.stdenvNoCC.mkDerivation {
 
   buildPhase = ''
     rpmbuild \
-     --define "tuleap_version ${tuleapVersion}" \
-     --define "nixpkgs_epoch .${nixpkgsPinEpoch}" \
-     --define "_sourcedir ${tuleapWasmtimeWrapperLib}" \
-     --define "_rpmdir $(pwd)" \
-     --dbpath="$(pwd)"/rpmdb \
-     --define "%_topdir $(pwd)" \
-     --define "%_tmppath %{_topdir}/TMP" \
-     --define "_rpmdir $(pwd)/RPMS" \
-     -bb ${./wasmtime-wrapper-lib/tuleap-wasmtime-wrapper-lib.spec}
+      --define "tuleap_version ${tuleapVersion}" \
+      --define "nixpkgs_epoch .${nixpkgsPinEpoch}" \
+      --define "_sourcedir ${tuleapWasmtimeWrapperLib}" \
+      --define "_rpmdir $(pwd)" \
+      --dbpath="$(pwd)"/rpmdb \
+      --define "%_topdir $(pwd)" \
+      --define "%_tmppath %{_topdir}/TMP" \
+      --define "_rpmdir $(pwd)/RPMS" \
+      -bb ${./wasmtime-wrapper-lib/tuleap-wasmtime-wrapper-lib.spec}
   '';
 
   installPhase = ''

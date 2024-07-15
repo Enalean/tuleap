@@ -67,14 +67,14 @@ in pkgs.stdenvNoCC.mkDerivation {
 
     cp $src tuleap-documentation.tar.gz
     rpmbuild \
-     --define "tuleap_version ${tuleapVersion}" \
-     --define "_sourcedir $(pwd)" \
-     --dbpath="$(pwd)"/rpmdb \
-     --define "%_topdir $(pwd)" \
-     --define "%_tmppath %{_topdir}/TMP" \
-     --define "_rpmdir $(pwd)/RPMS" \
-     --define "%_datadir /usr/share" \
-     -bb ${./tuleap-documentation/tuleap-documentation.spec}
+      --define "tuleap_version ${tuleapVersion}" \
+      --define "_sourcedir $(pwd)" \
+      --dbpath="$(pwd)"/rpmdb \
+      --define "%_topdir $(pwd)" \
+      --define "%_tmppath %{_topdir}/TMP" \
+      --define "_rpmdir $(pwd)/RPMS" \
+      --define "%_datadir /usr/share" \
+      -bb ${./tuleap-documentation/tuleap-documentation.spec}
 
     runHook postBuild
   '';

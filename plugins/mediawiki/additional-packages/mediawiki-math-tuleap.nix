@@ -20,16 +20,16 @@ in pkgs.stdenv.mkDerivation {
 
   buildPhase = ''
     rpmbuild --nodeps \
-        --define "nixpkgs_epoch .${nixpkgsPinEpoch}" \
-        --define "_binary_payload w16T8.zstdio" \
-        --define "_sourcedir $(pwd)" \
-        --define "_rpmdir $(pwd)" \
-        --dbpath="$(pwd)"/rpmdb \
-        --define "%_topdir $(pwd)" \
-        --define "%_tmppath %{_topdir}/TMP" \
-        --define "_rpmdir $(pwd)/RPMS" \
-        --define "%_datadir /usr/share" \
-        -bb mediawiki-math-tuleap.spec
+      --define "nixpkgs_epoch .${nixpkgsPinEpoch}" \
+      --define "_binary_payload w16T8.zstdio" \
+      --define "_sourcedir $(pwd)" \
+      --define "_rpmdir $(pwd)" \
+      --dbpath="$(pwd)"/rpmdb \
+      --define "%_topdir $(pwd)" \
+      --define "%_tmppath %{_topdir}/TMP" \
+      --define "_rpmdir $(pwd)/RPMS" \
+      --define "%_datadir /usr/share" \
+      -bb mediawiki-math-tuleap.spec
   '';
 
   installPhase = ''
