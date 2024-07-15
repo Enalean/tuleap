@@ -45,7 +45,7 @@ class Docman_View_ItemDetailsSectionNewVersion extends Docman_View_ItemDetailsSe
     {
         $html = '';
 
-        $atf = Docman_ApprovalTableFactoriesFactory::getFromItem($this->item);
+        $atf = (new Docman_ApprovalTableFactoriesFactory())->getFromItem($this->item);
         if ($atf->tableExistsForItem()) {
             $html .= '<dt>' . dgettext('tuleap-docman', 'Approval table') . '</dt><dd>';
             $html .= '<dd>';

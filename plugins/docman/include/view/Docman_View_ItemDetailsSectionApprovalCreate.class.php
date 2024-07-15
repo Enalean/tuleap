@@ -74,7 +74,7 @@ class Docman_View_ItemDetailsSectionApprovalCreate extends Docman_View_ItemDetai
         );
         $atsm->setItem($this->item);
 
-        $atf   = Docman_ApprovalTableFactoriesFactory::getFromItem($this->item);
+        $atf   = (new Docman_ApprovalTableFactoriesFactory())->getFromItem($this->item);
         $table = $atf->getTable(false);
         $atsm->setTable($table);
 

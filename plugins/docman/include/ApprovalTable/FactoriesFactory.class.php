@@ -28,7 +28,7 @@ class Docman_ApprovalTableFactoriesFactory implements \Tuleap\Docman\ApprovalTab
     /**
      * Return the right ApprovalTableFactory depending of the item.
      */
-    public static function getFromItem($item, $version = null)
+    public function getFromItem($item, $version = null)
     {
         $appTableFactory = null;
         if ($item instanceof Docman_File) {
@@ -47,7 +47,7 @@ class Docman_ApprovalTableFactoriesFactory implements \Tuleap\Docman\ApprovalTab
 
     public function getSpecificFactoryFromItem($item, $version = null)
     {
-        return self::getFromItem($item, $version);
+        return $this->getFromItem($item, $version);
     }
 
     public function getReviewerFactory(Docman_ApprovalTable $table, Docman_Item $item)

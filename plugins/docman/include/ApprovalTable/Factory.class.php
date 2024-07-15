@@ -52,7 +52,7 @@ abstract class Docman_ApprovalTableFactory
      */
     public static function getReviewerFactoryFromItem($item)
     {
-        $appTableFactory = Docman_ApprovalTableFactoriesFactory::getFromItem($item);
+        $appTableFactory = (new Docman_ApprovalTableFactoriesFactory())->getFromItem($item);
         if ($appTableFactory !== null) {
             $table = $appTableFactory->getTable();
             return $appTableFactory->_getReviewerFactory($table, $item);
