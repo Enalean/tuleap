@@ -20,8 +20,12 @@
 import "./admin.scss";
 import { initiateCodeEditors } from "./initiate-code-editors";
 import { initiateModals } from "./initiate-modals";
+import { initiatePrintPreview } from "./initiate-print-preview";
 
 document.addEventListener("DOMContentLoaded", () => {
-    initiateCodeEditors();
+    const style = initiateCodeEditors();
     initiateModals(document);
+    if (style) {
+        initiatePrintPreview(style);
+    }
 });

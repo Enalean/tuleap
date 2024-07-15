@@ -1,5 +1,5 @@
-/*
- * Copyright (c) Enalean, 2024 - Present. All Rights Reserved.
+/**
+ * Copyright (c) Enalean, 2024-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,8 +17,15 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export interface PdfTemplate {
-    readonly label: string;
-    readonly description: string;
-    readonly style: string;
-}
+import { vite, viteDtsPlugin } from "@tuleap/build-system-configurator";
+import * as path from "path";
+
+export default vite.defineLibConfig({
+    plugins: [viteDtsPlugin()],
+    build: {
+        lib: {
+            entry: path.resolve(__dirname, "src/print-as-pdf.ts"),
+            name: "PrintAsPdf",
+        },
+    },
+});

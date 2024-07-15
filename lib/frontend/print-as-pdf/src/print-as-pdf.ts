@@ -17,18 +17,19 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import CodeMirror from "codemirror";
-import "codemirror/mode/css/css.js";
+import print from "print-js";
 
-export function initiateCodeEditors(): CodeMirror.EditorFromTextArea | undefined {
-    const styling = document.getElementById("input-style");
-    if (!(styling instanceof HTMLTextAreaElement)) {
-        return;
-    }
+export interface PdfTemplate {
+    readonly label: string;
+    readonly description: string;
+    readonly style: string;
+}
 
-    return CodeMirror.fromTextArea(styling, {
-        extraKeys: { "Ctrl-Space": "autocomplete" },
-        mode: "text/css",
-        lineNumbers: true,
+export function printAsPdf(printable: HTMLElement, template: PdfTemplate): void {
+    print({
+        printable,
+        type: "html",
+        scanStyles: false,
+        style: template.style,
     });
 }
