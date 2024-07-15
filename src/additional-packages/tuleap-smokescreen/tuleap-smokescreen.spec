@@ -1,6 +1,6 @@
 %define _buildhost tuleap-builder
-%define _source_payload w22T8.zstdio
-%define _binary_payload w22T8.zstdio
+%define _source_payload w16T8.zstdio
+%define _binary_payload w16T8.zstdio
 %define app_group tuleap-smokescreen
 %define app_user tuleap-smokescreen
 
