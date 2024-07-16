@@ -42,6 +42,13 @@
                                         {{# dgettext }} tuleap-pdftemplate | Edit {{/ dgettext }}
                                     </a>
 
+                                    <a href="{{ duplicate_url }}"
+                                       class="tlp-table-cell-actions-button tlp-button-primary tlp-button-outline tlp-button-small"
+                                    >
+                                        <i class="fa-solid fa-copy tlp-button-icon" aria-hidden="true"></i>
+                                        {{# dgettext }} tuleap-pdftemplate | Duplicate {{/ dgettext }}
+                                    </a>
+
                                     <button type="button"
                                             class="tlp-table-cell-actions-button tlp-button-danger tlp-button-outline tlp-button-small pdftemplate-delete-button"
                                             data-target-modal-id="pdftemplate-remove-{{ id }}"

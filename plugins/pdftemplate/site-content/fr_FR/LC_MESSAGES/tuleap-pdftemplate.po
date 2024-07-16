@@ -36,6 +36,9 @@ msgstr "Supprimer %s"
 msgid "Description"
 msgstr "Description"
 
+msgid "Duplicate"
+msgstr "Dupliquer"
+
 msgid "Edit"
 msgstr "Éditer"
 

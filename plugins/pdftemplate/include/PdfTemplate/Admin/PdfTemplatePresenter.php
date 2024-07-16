@@ -34,6 +34,7 @@ final readonly class PdfTemplatePresenter
 {
     private const DUMMY_ID_FOR_CREATION = '';
     public string $update_url;
+    public string $duplicate_url;
     public bool $is_update;
 
     private function __construct(
@@ -44,8 +45,9 @@ final readonly class PdfTemplatePresenter
         public UserPresenter $last_updated_by,
         public TlpRelativeDatePresenter $last_updated_date,
     ) {
-        $this->update_url = DisplayPdfTemplateUpdateFormController::ROUTE . '/' . urlencode($id);
-        $this->is_update  = $id !== self::DUMMY_ID_FOR_CREATION;
+        $this->update_url    = DisplayPdfTemplateUpdateFormController::ROUTE . '/' . urlencode($id);
+        $this->duplicate_url = DisplayPdfTemplateDuplicateFormController::ROUTE . '/' . urlencode($id);
+        $this->is_update     = $id !== self::DUMMY_ID_FOR_CREATION;
     }
 
     public static function fromPdfTemplate(PdfTemplate $template, \PFUser $user): self
@@ -71,6 +73,20 @@ final readonly class PdfTemplatePresenter
             '',
             '',
             file_get_contents(__DIR__ . '/../Default/pdf-template-default.css'),
+            UserPresenter::fromUser($user),
+            $builder->getTlpRelativeDatePresenterInInlineContext(new \DateTimeImmutable(), $user),
+        );
+    }
+
+    public static function forDuplication(PdfTemplate $source, \PFUser $user): self
+    {
+        $builder = new TlpRelativeDatePresenterBuilder();
+
+        return new self(
+            self::DUMMY_ID_FOR_CREATION,
+            '',
+            '',
+            $source->style,
             UserPresenter::fromUser($user),
             $builder->getTlpRelativeDatePresenterInInlineContext(new \DateTimeImmutable(), $user),
         );
