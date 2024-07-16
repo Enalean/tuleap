@@ -43,6 +43,7 @@ import {
 } from "@/composables/useSectionEditorsCollection";
 import { PDF_TEMPLATES } from "@/pdf-templates-injection-key";
 import { IS_USER_ANONYMOUS } from "@/is-user-anonymous";
+import { EDITOR_CHOICE, editorChoice } from "@/helpers/editor-choice";
 
 document.addEventListener("DOMContentLoaded", async () => {
     const vue_mount_point = document.getElementById("artidoc-mountpoint");
@@ -71,6 +72,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     app.provide(
         CAN_USER_EDIT_DOCUMENT,
         Boolean(getDatasetItemOrThrow(vue_mount_point, "canUserEditDocument")),
+    );
+    app.provide(
+        EDITOR_CHOICE,
+        editorChoice(Boolean(getDatasetItemOrThrow(vue_mount_point, "isNextGenEditorEnabled"))),
     );
     app.provide(OPEN_CONFIGURATION_MODAL_BUS, useOpenConfigurationModalBus());
     app.provide(DOCUMENT_ID, item_id);

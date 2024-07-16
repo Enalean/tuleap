@@ -19,6 +19,7 @@
   -->
 
 <template>
+    <editor-choice />
     <ol>
         <li
             v-for="(section, index) in sections"
@@ -52,6 +53,7 @@ import SectionContainer from "@/components/section/SectionContainer.vue";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import { CAN_USER_EDIT_DOCUMENT } from "@/can-user-edit-document-injection-key";
 import { SECTIONS_STORE } from "@/stores/sections-store-injection-key";
+import EditorChoice from "@/components/EditorChoice.vue";
 
 const { sections, insertSection } = strictInject(SECTIONS_STORE);
 
