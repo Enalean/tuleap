@@ -23,7 +23,11 @@
             <textarea
                 type="text"
                 class="tlp-textarea"
-                v-if="is_edit_mode"
+                v-bind:class="{
+                    'disable-border': is_prose_mirror,
+                    'add-hover-effect': is_prose_mirror,
+                }"
+                v-if="is_edit_mode || is_prose_mirror"
                 v-model="title_to_edit"
                 v-on:input="onTitleChange"
                 v-bind:placeholder="placeholder"
@@ -39,10 +43,12 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from "vue";
+import { ref, toRefs, watch } from "vue";
 import useScrollToAnchor from "@/composables/useScrollToAnchor";
 import { useGettext } from "vue3-gettext";
 import type { EditorSectionContent } from "@/composables/useEditorSectionContent";
+import { strictInject } from "@tuleap/vue-strict-inject";
+import { EDITOR_CHOICE } from "@/helpers/editor-choice";
 
 const props = defineProps<{
     title: string;
@@ -56,12 +62,23 @@ const { $gettext } = useGettext();
 const placeholder = $gettext("Section without title");
 
 const textarea = ref<HTMLTextAreaElement | undefined>(undefined);
-const title_to_edit = ref(props.title);
+const { title } = toRefs(props);
+
+const title_to_edit = ref(title.value);
+
+const { is_prose_mirror } = strictInject(EDITOR_CHOICE);
+
+watch(
+    () => title.value,
+    () => {
+        title_to_edit.value = title.value;
+    },
+);
 
 watch(
     () => textarea.value,
     () => {
-        if (textarea.value) {
+        if (textarea.value && !is_prose_mirror.value) {
             textarea.value.focus();
             scrollToAnchor(textarea.value.closest("li") || textarea.value);
             adjustHeightOfTextareaToContent(textarea.value);
@@ -107,5 +124,18 @@ textarea {
     font-weight: inherit;
     line-height: inherit;
     resize: none;
+}
+
+// prose-mirror
+.disable-border {
+    border: 0;
+}
+
+.add-hover-effect:hover {
+    transition:
+        border-color var(--tlp-form-element-border-transition-duration) linear,
+        box-shadow 0.35s;
+    border-color: var(--tlp-main-color);
+    box-shadow: var(--tlp-shadow-focus);
 }
 </style>

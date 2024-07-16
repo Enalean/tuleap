@@ -58,6 +58,7 @@ onMounted(() => {
 
 <style lang="scss">
 @use "@/themes/artidoc";
+@use "@tuleap/prose-mirror-editor";
 
 html {
     scroll-behavior: smooth;

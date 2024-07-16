@@ -37,6 +37,8 @@ import {
     EDITORS_COLLECTION,
     useSectionEditorsCollection,
 } from "@/composables/useSectionEditorsCollection";
+import { EDITOR_CHOICE } from "@/helpers/editor-choice";
+import { ref } from "vue";
 
 const section = ArtifactSectionFactory.create();
 const merge_artifacts = vi.fn();
@@ -58,6 +60,7 @@ describe("useSectionEditor", () => {
             [DOCUMENT_ID, 1],
             [SECTIONS_STORE, store_stub],
             [EDITORS_COLLECTION, editors_collection],
+            [EDITOR_CHOICE, { is_prose_mirror: ref(false) }],
         ]);
     });
 
@@ -167,15 +170,30 @@ describe("useSectionEditor", () => {
                 expect(store_stub.removeSection).not.toHaveBeenCalled();
             });
 
-            it("should remove the section if it is a pending one", () => {
-                const { editor_actions } = useSectionEditor(
+            describe("when prose mirror is disable", () => {
+                it("should remove the section if it is a pending one", () => {
+                    const { editor_actions } = useSectionEditor(
+                        PendingArtifactSectionFactory.create(),
+                        merge_artifacts,
+                        set_waiting_list,
+                    );
+                    editor_actions.cancelEditor(null);
+
+                    expect(store_stub.removeSection).toHaveBeenCalled();
+                });
+            });
+
+            it("should indicate that cancel button has been triggered", () => {
+                const { editor_actions, editor_state } = useSectionEditor(
                     PendingArtifactSectionFactory.create(),
                     merge_artifacts,
                     set_waiting_list,
                 );
                 editor_actions.cancelEditor(null);
 
-                expect(store_stub.removeSection).toHaveBeenCalled();
+                expect(editor_state.toggle_has_been_canceled.value).toBe(true);
+                editor_actions.cancelEditor(null);
+                expect(editor_state.toggle_has_been_canceled.value).toBe(false);
             });
         });
     });

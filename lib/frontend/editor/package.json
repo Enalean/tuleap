@@ -1,0 +1,33 @@
+{
+  "author": "Enalean Team",
+  "name": "@tuleap/prose-mirror-editor",
+  "homepage": "https://tuleap.org",
+  "license": "GPL-2.0-or-later",
+  "private": true,
+  "type": "module",
+  "files": [
+        "dist"
+  ],
+  "module": "dist/prose-mirror-editor.js",
+  "main": "dist/prose-mirror-editor.umd.cjs",
+  "types": "dist/prose-mirror-editor.d.ts",
+  "style": "dist/style.css",
+  "dependencies": {
+    "prosemirror-model": "^1.21.3",
+    "prosemirror-schema-basic": "^1.2.2",
+    "prosemirror-schema-list": "^1.4.0",
+    "prosemirror-state": "^1.4.3",
+    "prosemirror-transform": "^1.9.0",
+    "prosemirror-view": "^1.33.8",
+    "prosemirror-keymap": "^1.2.2",
+    "prosemirror-commands": "^1.5.2"
+  },
+  "devDependencies": {
+    "@tuleap/build-system-configurator": "workspace:*"
+  },
+  "scripts": {
+    "build": "vite build",
+    "watch": "NODE_ENV=development vite build --watch --mode development --minify false",
+    "typecheck": "vue-tsc --noEmit"
+  }
+}
