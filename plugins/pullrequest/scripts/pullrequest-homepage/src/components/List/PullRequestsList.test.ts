@@ -17,13 +17,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import type { Mock } from "vitest";
 import { describe, beforeEach, it, expect, vi } from "vitest";
 import { ref } from "vue";
 import { shallowMount } from "@vue/test-utils";
 import type { VueWrapper } from "@vue/test-utils";
 import { okAsync, errAsync } from "neverthrow";
 import { Fault } from "@tuleap/fault";
-import * as strict_inject from "@tuleap/vue-strict-inject";
 import { PullRequestStub } from "@tuleap/plugin-pullrequest-stub";
 import {
     injected_current_user_id,
@@ -31,8 +31,8 @@ import {
     injected_repository_id,
     injected_show_closed_pull_requests,
     injected_show_pull_requests_related_to_me,
-    StubInjectionSymbols,
-} from "../../../tests/injection-symbols-stub";
+    InjectionSymbolsStub,
+} from "../../../tests/InjectionSymbolsStub";
 import * as tuleap_api from "../../api/tuleap-rest-querier";
 import PullRequestsList from "./PullRequestsList.vue";
 import type { StoreListFilters } from "../Filters/ListFiltersStore";
@@ -44,20 +44,20 @@ import { SORT_ASCENDANT, SORT_DESCENDANT } from "../../injection-symbols";
 vi.useFakeTimers();
 
 describe("PullRequestsList", () => {
-    let filters_store: StoreListFilters;
+    let filters_store: StoreListFilters, tuleap_api_error_callback: Mock;
 
     beforeEach(() => {
         filters_store = ListFiltersStore(ref([]));
+        tuleap_api_error_callback = vi.fn();
     });
 
     const getWrapper = (): VueWrapper => {
-        vi.spyOn(strict_inject, "strictInject").mockImplementation(
-            StubInjectionSymbols.withDefaults(),
-        );
-
         return shallowMount(PullRequestsList, {
             props: {
                 filters_store,
+            },
+            global: {
+                provide: InjectionSymbolsStub.withTuleapApiErrorCallback(tuleap_api_error_callback),
             },
         });
     };
@@ -222,20 +222,14 @@ describe("PullRequestsList", () => {
     });
 
     it("should call the tuleap_api_error_callback when an error occurres while the pull-requests are being retrieved", async () => {
-        const tuleap_api_error_callback = vi.fn();
+        const tuleap_api_fault = Fault.fromMessage("Nope");
 
-        vi.spyOn(strict_inject, "strictInject").mockImplementation(
-            StubInjectionSymbols.withTuleapApiErrorCallback(tuleap_api_error_callback),
-        );
-
-        const tuleap_ap_fault = Fault.fromMessage("Nope");
-
-        vi.spyOn(tuleap_api, "fetchAllPullRequests").mockReturnValue(errAsync(tuleap_ap_fault));
+        vi.spyOn(tuleap_api, "fetchAllPullRequests").mockReturnValue(errAsync(tuleap_api_fault));
 
         getWrapper();
         await vi.runOnlyPendingTimersAsync();
 
         expect(tuleap_api_error_callback).toHaveBeenCalledOnce();
-        expect(tuleap_api_error_callback).toHaveBeenCalledWith(tuleap_ap_fault);
+        expect(tuleap_api_error_callback).toHaveBeenCalledWith(tuleap_api_fault);
     });
 });

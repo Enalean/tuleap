@@ -17,17 +17,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { describe, it, expect, vi } from "vitest";
-import { shallowMount } from "@vue/test-utils";
+import { describe, expect, it } from "vitest";
 import type { VueWrapper } from "@vue/test-utils";
-import * as strict_inject from "@tuleap/vue-strict-inject";
+import { shallowMount } from "@vue/test-utils";
+import type { RelativeDatesDisplayPreference } from "@tuleap/tlp-relative-date";
 import {
-    PREFERENCE_RELATIVE_FIRST_ABSOLUTE_SHOWN,
     PREFERENCE_ABSOLUTE_FIRST_RELATIVE_SHOWN,
     PREFERENCE_ABSOLUTE_FIRST_RELATIVE_TOOLTIP,
+    PREFERENCE_RELATIVE_FIRST_ABSOLUTE_SHOWN,
     PREFERENCE_RELATIVE_FIRST_ABSOLUTE_TOOLTIP,
 } from "@tuleap/tlp-relative-date";
-import type { RelativeDatesDisplayPreference } from "@tuleap/tlp-relative-date";
 import {
     PULL_REQUEST_STATUS_ABANDON,
     PULL_REQUEST_STATUS_MERGED,
@@ -36,21 +35,21 @@ import {
 import type { PullRequest } from "@tuleap/plugin-pullrequest-rest-api-types";
 import { getGlobalTestOptions } from "../../../../tests/helpers/global-options-for-tests";
 import PullRequestAlreadyMergedState from "./PullRequestAlreadyMergedState.vue";
-
-vi.mock("@tuleap/vue-strict-inject");
+import { USER_RELATIVE_DATE_DISPLAY_PREFERENCE_KEY } from "../../../constants";
 
 const getWrapper = (
     pull_request: PullRequest,
     relative_date_preference: RelativeDatesDisplayPreference = PREFERENCE_RELATIVE_FIRST_ABSOLUTE_SHOWN,
 ): VueWrapper => {
-    vi.spyOn(strict_inject, "strictInject").mockReturnValue(relative_date_preference);
-
     return shallowMount(PullRequestAlreadyMergedState, {
         global: {
+            ...getGlobalTestOptions(),
             stubs: {
                 PullRequestRelativeDate: true,
             },
-            ...getGlobalTestOptions(),
+            provide: {
+                [USER_RELATIVE_DATE_DISPLAY_PREFERENCE_KEY.valueOf()]: relative_date_preference,
+            },
         },
         props: {
             pull_request,

@@ -17,10 +17,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { describe, it, expect, beforeEach, vi } from "vitest";
-import { shallowMount } from "@vue/test-utils";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { VueWrapper } from "@vue/test-utils";
-import { okAsync, errAsync } from "neverthrow";
+import { shallowMount } from "@vue/test-utils";
+import { errAsync, okAsync } from "neverthrow";
 import { Fault } from "@tuleap/fault";
 import {
     PULL_REQUEST_STATUS_ABANDON,
@@ -29,17 +29,15 @@ import {
 } from "@tuleap/plugin-pullrequest-constants";
 import PullRequestAbandonButton from "./PullRequestAbandonButton.vue";
 import { getGlobalTestOptions } from "../../../../tests/helpers/global-options-for-tests";
-import * as strict_inject from "@tuleap/vue-strict-inject";
 import * as tuleap_api from "../../../api/tuleap-rest-querier";
+import type { DisplayErrorCallback, PostPullRequestUpdateCallback } from "../../../constants";
 import {
     DISPLAY_TULEAP_API_ERROR,
     POST_PULL_REQUEST_UPDATE_CALLBACK,
     PULL_REQUEST_ID_KEY,
 } from "../../../constants";
-import type { DisplayErrorCallback, PostPullRequestUpdateCallback } from "../../../constants";
 import type { PullRequest } from "@tuleap/plugin-pullrequest-rest-api-types";
 
-vi.mock("@tuleap/vue-strict-inject");
 vi.mock("./tuleap-rest-querier");
 
 describe("PullRequestAbandonButton", () => {
@@ -54,22 +52,14 @@ describe("PullRequestAbandonButton", () => {
     });
 
     const getWrapper = (data: Partial<PullRequest> = {}): VueWrapper => {
-        vi.spyOn(strict_inject, "strictInject").mockImplementation((key): unknown => {
-            switch (key) {
-                case DISPLAY_TULEAP_API_ERROR:
-                    return on_error_callback;
-                case POST_PULL_REQUEST_UPDATE_CALLBACK:
-                    return post_update_callback;
-                case PULL_REQUEST_ID_KEY:
-                    return current_pull_request_id;
-                default:
-                    throw new Error("Tried to strictInject a value while it was not mocked");
-            }
-        });
-
         return shallowMount(PullRequestAbandonButton, {
             global: {
                 ...getGlobalTestOptions(),
+                provide: {
+                    [DISPLAY_TULEAP_API_ERROR.valueOf()]: on_error_callback,
+                    [POST_PULL_REQUEST_UPDATE_CALLBACK.valueOf()]: post_update_callback,
+                    [PULL_REQUEST_ID_KEY.valueOf()]: current_pull_request_id,
+                },
             },
             props: {
                 pull_request: {

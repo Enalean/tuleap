@@ -22,7 +22,6 @@ import { okAsync, errAsync } from "neverthrow";
 import { shallowMount } from "@vue/test-utils";
 import type { VueWrapper } from "@vue/test-utils";
 import { Fault } from "@tuleap/fault";
-import * as strict_inject from "@tuleap/vue-strict-inject";
 import * as tlp_modal from "@tuleap/tlp-modal";
 import type { Modal } from "@tuleap/tlp-modal";
 import { LazyboxVueStub } from "../../../tests/stubs/LazyboxVueStub";
@@ -47,7 +46,6 @@ const easy_fix_label: ProjectLabel = {
 };
 const project_labels = [emergency_label, easy_fix_label];
 
-vi.mock("@tuleap/vue-strict-inject");
 vi.mock("@tuleap/tlp-modal", () => ({
     createModal: vi.fn(),
     EVENT_TLP_MODAL_HIDDEN: "tlp-modal-hidden",
@@ -74,21 +72,14 @@ describe("PullRequestManageLabelsModal", () => {
     });
 
     const getWrapper = (current_labels: ReadonlyArray<ProjectLabel>): VueWrapper => {
-        vi.spyOn(strict_inject, "strictInject").mockImplementation((key): unknown => {
-            switch (key) {
-                case PULL_REQUEST_ID_KEY:
-                    return pull_request_id;
-                case DISPLAY_TULEAP_API_ERROR:
-                    return display_api_error_callback;
-                default:
-                    throw new Error("Tried to strictInject a value while it was not mocked");
-            }
-        });
-
         return shallowMount(PullRequestManageLabelsModal, {
             global: {
                 ...getGlobalTestOptions(),
                 stubs: { "tuleap-lazybox": LazyboxVueStub },
+                provide: {
+                    [PULL_REQUEST_ID_KEY.valueOf()]: pull_request_id,
+                    [DISPLAY_TULEAP_API_ERROR.valueOf()]: display_api_error_callback,
+                },
             },
             props: {
                 project_labels,

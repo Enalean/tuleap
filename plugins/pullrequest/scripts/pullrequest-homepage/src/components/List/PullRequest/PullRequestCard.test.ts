@@ -17,13 +17,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { describe, it, expect, beforeEach, vi } from "vitest";
+import { beforeEach, describe, expect, it } from "vitest";
 import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
-import * as strict_inject from "@tuleap/vue-strict-inject";
 import { PullRequestStub } from "@tuleap/plugin-pullrequest-stub";
 import type { PullRequest } from "@tuleap/plugin-pullrequest-rest-api-types";
-import { injected_base_url, StubInjectionSymbols } from "../../../../tests/injection-symbols-stub";
+import { injected_base_url, InjectionSymbolsStub } from "../../../../tests/InjectionSymbolsStub";
 import { buildPullRequestOverviewUrl } from "../../../urls/base-url-builders";
 import PullRequestCard from "./PullRequestCard.vue";
 
@@ -37,13 +36,12 @@ describe("PullRequestCard", () => {
     });
 
     const getWrapper = (): VueWrapper => {
-        vi.spyOn(strict_inject, "strictInject").mockImplementation(
-            StubInjectionSymbols.withDefaults(),
-        );
-
         return shallowMount(PullRequestCard, {
             props: {
                 pull_request,
+            },
+            global: {
+                provide: InjectionSymbolsStub.withDefaults(),
             },
         });
     };

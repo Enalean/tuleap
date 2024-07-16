@@ -18,21 +18,20 @@
  */
 
 import { ref } from "vue";
-import { describe, beforeEach, it, expect, vi } from "vitest";
-import { shallowMount } from "@vue/test-utils";
+import { beforeEach, describe, expect, it } from "vitest";
 import type { VueWrapper } from "@vue/test-utils";
-import * as strict_inject from "@tuleap/vue-strict-inject";
+import { shallowMount } from "@vue/test-utils";
 import {
     injected_show_pull_requests_related_to_me,
-    StubInjectionSymbols,
-} from "../../../../tests/injection-symbols-stub";
+    InjectionSymbolsStub,
+} from "../../../../tests/InjectionSymbolsStub";
 import { getGlobalTestOptions } from "../../../../tests/global-options-for-tests";
 import { AuthorFilterStub } from "../../../../tests/stubs/AuthorFilterStub";
 import { UserStub } from "../../../../tests/stubs/UserStub";
 import { GettextStub } from "../../../../tests/stubs/GettextStub";
 import { ReviewerFilterBuilder } from "../Reviewer/ReviewerFilter";
-import { ListFiltersStore } from "../ListFiltersStore";
 import type { StoreListFilters } from "../ListFiltersStore";
+import { ListFiltersStore } from "../ListFiltersStore";
 import RelatedToMeSwitch from "./RelatedToMeSwitch.vue";
 
 describe("RelatedToMeSwitch", () => {
@@ -43,13 +42,10 @@ describe("RelatedToMeSwitch", () => {
     });
 
     const getWrapper = (): VueWrapper => {
-        vi.spyOn(strict_inject, "strictInject").mockImplementation(
-            StubInjectionSymbols.withDefaults(),
-        );
-
         return shallowMount(RelatedToMeSwitch, {
             global: {
                 ...getGlobalTestOptions(),
+                provide: InjectionSymbolsStub.withDefaults(),
             },
             props: { filters_store },
         });

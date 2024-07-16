@@ -17,16 +17,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { describe, it, expect, beforeEach, vi } from "vitest";
+import { beforeEach, describe, expect, it } from "vitest";
 import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
-import * as strict_inject from "@tuleap/vue-strict-inject";
 import { PullRequestStub } from "@tuleap/plugin-pullrequest-stub";
 import type { PullRequest, User } from "@tuleap/plugin-pullrequest-rest-api-types";
-import {
-    injected_user_locale,
-    StubInjectionSymbols,
-} from "../../../../tests/injection-symbols-stub";
+import { injected_user_locale, InjectionSymbolsStub } from "../../../../tests/InjectionSymbolsStub";
 import { UserStub } from "../../../../tests/stubs/UserStub";
 import { getGlobalTestOptions } from "../../../../tests/global-options-for-tests";
 import PullRequestCreationDate from "./PullRequestCreationDate.vue";
@@ -35,16 +31,13 @@ describe("PullRequestCreationDate", () => {
     let pull_request: PullRequest, creation_date: string, creator: User;
 
     const getWrapper = (): VueWrapper => {
-        vi.spyOn(strict_inject, "strictInject").mockImplementation(
-            StubInjectionSymbols.withDefaults(),
-        );
-
         return shallowMount(PullRequestCreationDate, {
             global: {
                 ...getGlobalTestOptions(),
                 stubs: {
                     tlpRelativeDate: true,
                 },
+                provide: InjectionSymbolsStub.withDefaults(),
             },
             props: {
                 pull_request,

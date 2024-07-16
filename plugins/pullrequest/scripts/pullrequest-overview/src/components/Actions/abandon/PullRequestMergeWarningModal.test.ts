@@ -31,12 +31,10 @@ import {
     PULL_REQUEST_MERGE_STATUS_FF,
     PULL_REQUEST_MERGE_STATUS_NOT_FF,
 } from "@tuleap/plugin-pullrequest-constants";
-import * as strict_inject from "@tuleap/vue-strict-inject";
 import * as tlp_modal from "@tuleap/tlp-modal";
 import type { Modal } from "@tuleap/tlp-modal";
 import { ARE_MERGE_COMMITS_ALLOWED_IN_REPOSITORY } from "../../../constants";
 
-vi.mock("@tuleap/vue-strict-inject");
 vi.mock("@tuleap/tlp-modal", () => ({
     createModal: vi.fn(),
     EVENT_TLP_MODAL_HIDDEN: "tlp-modal-hidden",
@@ -60,18 +58,12 @@ describe("PullRequestMergeWarningModal", () => {
     });
 
     const getWrapper = (pull_request: PullRequest): VueWrapper => {
-        vi.spyOn(strict_inject, "strictInject").mockImplementation((key): unknown => {
-            switch (key) {
-                case ARE_MERGE_COMMITS_ALLOWED_IN_REPOSITORY:
-                    return true;
-                default:
-                    throw new Error("Tried to strictInject a value while it was not mocked");
-            }
-        });
-
         return shallowMount(PullRequestMergeWarningModal, {
             global: {
                 ...getGlobalTestOptions(),
+                provide: {
+                    [ARE_MERGE_COMMITS_ALLOWED_IN_REPOSITORY.valueOf()]: true,
+                },
             },
             props: {
                 merge_callback,

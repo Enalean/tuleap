@@ -23,8 +23,7 @@ import type { VueWrapper } from "@vue/test-utils";
 import { ref } from "vue";
 import PullRequestListFilters from "./PullRequestListFilters.vue";
 import type { DisplayErrorCallback } from "../../injection-symbols";
-import { StubInjectionSymbols } from "../../../tests/injection-symbols-stub";
-import * as strict_inject from "@tuleap/vue-strict-inject";
+import { InjectionSymbolsStub } from "../../../tests/InjectionSymbolsStub";
 import { getGlobalTestOptions } from "../../../tests/global-options-for-tests";
 import { ListFiltersStore } from "./ListFiltersStore";
 import type { StoreListFilters } from "./ListFiltersStore";
@@ -41,13 +40,10 @@ describe("PullRequestListFilters", () => {
     });
 
     const getWrapper = (): VueWrapper => {
-        vi.spyOn(strict_inject, "strictInject").mockImplementation(
-            StubInjectionSymbols.withTuleapApiErrorCallback(tuleap_api_error_callback),
-        );
-
         return shallowMount(PullRequestListFilters, {
             global: {
                 ...getGlobalTestOptions(),
+                provide: InjectionSymbolsStub.withTuleapApiErrorCallback(tuleap_api_error_callback),
             },
             props: {
                 filters_store: store_filters,

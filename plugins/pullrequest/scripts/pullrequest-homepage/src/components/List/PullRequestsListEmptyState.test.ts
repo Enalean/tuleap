@@ -17,14 +17,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { describe, it, expect, beforeEach, vi } from "vitest";
+import { beforeEach, describe, expect, it } from "vitest";
 import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
-import * as strict_inject from "@tuleap/vue-strict-inject";
 import {
     injected_show_closed_pull_requests,
-    StubInjectionSymbols,
-} from "../../../tests/injection-symbols-stub";
+    InjectionSymbolsStub,
+} from "../../../tests/InjectionSymbolsStub";
 import { getGlobalTestOptions } from "../../../tests/global-options-for-tests";
 import PullRequestsListEmptyState from "./PullRequestsListEmptyState.vue";
 
@@ -33,16 +32,13 @@ describe("PullRequestsListEmptyState", () => {
 
     beforeEach(() => {
         are_some_filters_defined = false;
-
-        vi.spyOn(strict_inject, "strictInject").mockImplementation(
-            StubInjectionSymbols.withDefaults(),
-        );
     });
 
     const getWrapper = (): VueWrapper =>
         shallowMount(PullRequestsListEmptyState, {
             global: {
                 ...getGlobalTestOptions(),
+                provide: InjectionSymbolsStub.withDefaults(),
             },
             props: {
                 are_some_filters_defined,
