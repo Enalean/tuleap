@@ -19,7 +19,7 @@
   -->
 
 <template>
-    <div class="table-of-contents-container">
+    <div class="table-of-contents">
         <h1 class="tlp-pane-title">
             {{ $gettext("Table of contents") }}
         </h1>
@@ -57,7 +57,7 @@ const href = (section: ArtidocSection): string =>
 </script>
 
 <style scoped lang="scss">
-.table-of-contents-container {
+.table-of-contents {
     padding-top: var(--tlp-small-spacing);
 }
 

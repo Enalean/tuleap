@@ -1,16 +1,19 @@
 body {
+    --main-color: #f57c13;
+
     font-size: 12pt;
+    overflow: visible !important;
 }
 
 h1, h2, h3, h4, h5, h6 {
     font-family: system-ui, "Segoe UI", roboto, oxygen, ubuntu, cantarell, "Helvetica Neue", arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
 }
 
-h1 { font-size: 2.5rem; }
-h2 { font-size: 1.75rem; }
-h3 { font-size: 1.35rem; }
-h4 { font-variant: small-caps; }
-h6 { font-size: 0.9rem; font-style: italic; }
+h1 { font-size: 18pt; }
+h2 { font-size: 16pt; }
+h3 { font-size: 14pt; }
+h4 { font-size: 13pt; }
+h6 { font-size: 12pt; }
 
 a:link, a:visited {
 	color: #00c;
@@ -19,13 +22,61 @@ a:link, a:visited {
 }
 
 .document-title {
-    font-size: 4rem;
-    border: 1rem solid black;
+    font-size: 20pt;
+    border-top: 1pt solid var(--main-color);
+    border-bottom: 1pt solid var(--main-color);
+    margin-top: 10cm;
+    padding: 4rem;
     text-align: center;
-    padding: 2rem;
 }
 
 .table-of-contents,
+.document-content {
+    break-before: page;
+}
+
+.table-of-contents > h1 {
+    border-bottom: 1pt solid var(--main-color);
+    text-align: center;
+}
+
+.document-content > ol {
+    list-style: none;
+    padding: 0;
+    counter-reset: section;
+}
+
 .document-section {
-    page-break-before: always;
+    break-before: auto;
+    counter-increment: section;
+}
+
+.section-title {
+    border-bottom: 1pt solid var(--main-color);
+
+    &::before {
+        display: inline;
+        content: counter(section) ". ";
+    }
+}
+
+table {
+    border-collapse: collapse;
+    border: 1pt solid black;
+    border-bottom: 0;
+}
+
+td, th {
+    border-right: 1pt solid black;
+    border-bottom: 1pt solid black;
+}
+
+th {
+    background-color: #dddddd;
+    font-weight: bold;
+}
+
+img {
+    max-width: 100%;
+    page-break-inside: avoid;
 }
