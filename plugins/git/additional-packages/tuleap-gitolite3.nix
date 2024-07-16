@@ -33,18 +33,18 @@ in pkgs.stdenvNoCC.mkDerivation rec {
 
   buildPhase = ''
     rpmbuild \
-        --define "nixpkgs_epoch .${nixpkgsPinEpoch}" \
-        --define "gitolite_version ${version}" \
-        --define "tuleap_version ${tuleapVersion}" \
-        --define "_sourcedir $(pwd)" \
-        --define "_rpmdir $(pwd)" \
-        --dbpath="$(pwd)"/rpmdb \
-        --define "%_topdir $(pwd)" \
-        --define "%_tmppath %{_topdir}/TMP" \
-        --define "_rpmdir $(pwd)/RPMS" \
-        --define "%_datadir /usr/share" \
-        --define "%_bindir /usr/bin" \
-        -bb ${./tuleap-gitolite3.spec}
+      --define "nixpkgs_epoch .${nixpkgsPinEpoch}" \
+      --define "gitolite_version ${version}" \
+      --define "tuleap_version ${tuleapVersion}" \
+      --define "_sourcedir $(pwd)" \
+      --define "_rpmdir $(pwd)" \
+      --dbpath="$(pwd)"/rpmdb \
+      --define "%_topdir $(pwd)" \
+      --define "%_tmppath %{_topdir}/TMP" \
+      --define "_rpmdir $(pwd)/RPMS" \
+      --define "%_datadir /usr/share" \
+      --define "%_bindir /usr/bin" \
+      -bb ${./tuleap-gitolite3.spec}
   '';
 
   installPhase = ''

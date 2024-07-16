@@ -1,6 +1,6 @@
 { pkgs }:
 
 [
-    pkgs.glibcLocales
-    pkgs.openssh
+  pkgs.glibcLocales
+  pkgs.openssh
 ]

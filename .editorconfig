@@ -21,5 +21,8 @@ indent_size = 2
 [*.{yml,xml}]
 indent_size = 2
 
+[*.nix]
+indent_size = 2
+
 [*.{md,mkd,snap}]
 trim_trailing_whitespace = false
