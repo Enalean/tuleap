@@ -20,18 +20,22 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Field\Date;
+namespace Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Representations;
 
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\SelectedValueRepresentation;
 
 /**
  * @psalm-immutable
  */
-final readonly class DateResultRepresentation implements SelectedValueRepresentation
+final readonly class UGroupListRepresentation implements SelectedValueRepresentation
 {
-    public function __construct(
-        public ?string $value,
-        public bool $with_time,
-    ) {
+    /**
+     * @var UGroupListValueRepresentation[]
+     */
+    public array $value;
+
+    public function __construct(array $value)
+    {
+        $this->value = array_unique($value, SORT_REGULAR);
     }
 }

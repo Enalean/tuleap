@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Field\UserList;
+namespace Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Representations;
 
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\SelectedValueRepresentation;
 

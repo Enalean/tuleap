@@ -20,20 +20,23 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Field\UGroupList;
+namespace Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Representations;
 
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\SelectedValueRepresentation;
 
 /**
  * @psalm-immutable
  */
-final readonly class UGroupListRepresentation implements SelectedValueRepresentation
+final readonly class StaticListRepresentation implements SelectedValueRepresentation
 {
     /**
-     * @var UGroupListValueRepresentation[]
+     * @var StaticListValueRepresentation[]
      */
     public array $value;
 
+    /**
+     * @param StaticListValueRepresentation[] $value
+     */
     public function __construct(array $value)
     {
         $this->value = array_unique($value, SORT_REGULAR);

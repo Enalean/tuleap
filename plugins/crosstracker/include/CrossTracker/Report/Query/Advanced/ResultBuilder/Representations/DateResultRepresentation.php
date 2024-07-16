@@ -20,14 +20,18 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Field\Numeric;
+namespace Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Representations;
 
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\SelectedValueRepresentation;
 
-final readonly class NumericResultRepresentation implements SelectedValueRepresentation
+/**
+ * @psalm-immutable
+ */
+final readonly class DateResultRepresentation implements SelectedValueRepresentation
 {
     public function __construct(
-        public int|float|null $value,
+        public ?string $value,
+        public bool $with_time,
     ) {
     }
 }
