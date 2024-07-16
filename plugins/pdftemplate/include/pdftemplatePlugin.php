@@ -36,6 +36,7 @@ use Tuleap\PdfTemplate\Admin\CheckCSRFMiddleware;
 use Tuleap\PdfTemplate\Admin\CreatePdfTemplateController;
 use Tuleap\PdfTemplate\Admin\DeletePdfTemplateController;
 use Tuleap\PdfTemplate\Admin\DisplayPdfTemplateCreationFormController;
+use Tuleap\PdfTemplate\Admin\DisplayPdfTemplateDuplicateFormController;
 use Tuleap\PdfTemplate\Admin\DisplayPdfTemplateUpdateFormController;
 use Tuleap\PdfTemplate\Admin\IndexPdfTemplateController;
 use Tuleap\PdfTemplate\Admin\ManagePdfTemplates;
@@ -124,6 +125,10 @@ class PdfTemplatePlugin extends Plugin
             DisplayPdfTemplateUpdateFormController::ROUTE . '/{id:[A-Fa-f0-9-]+}',
             $this->getRouteHandler('updateAdminController'),
         );
+        $event->getRouteCollector()->get(
+            DisplayPdfTemplateDuplicateFormController::ROUTE . '/{id:[A-Fa-f0-9-]+}',
+            $this->getRouteHandler('displayDuplicateAdminController'),
+        );
     }
 
     public function indexAdminController(): DispatchableWithRequest
@@ -148,6 +153,17 @@ class PdfTemplatePlugin extends Plugin
     public function displayUpdateAdminController(): DispatchableWithRequest
     {
         return new DisplayPdfTemplateUpdateFormController(
+            new AdminPageRenderer(),
+            $this->getUserCanManageTemplatesChecker(),
+            $this->getPdfTemplateIdentifierFactory(),
+            $this->getPdfTemplateDao(),
+            new AdministrationCSRFTokenProvider(),
+        );
+    }
+
+    public function displayDuplicateAdminController(): DispatchableWithRequest
+    {
+        return new DisplayPdfTemplateDuplicateFormController(
             new AdminPageRenderer(),
             $this->getUserCanManageTemplatesChecker(),
             $this->getPdfTemplateIdentifierFactory(),

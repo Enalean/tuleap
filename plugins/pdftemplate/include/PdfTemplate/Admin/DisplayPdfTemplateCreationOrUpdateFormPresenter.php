@@ -46,12 +46,33 @@ final readonly class DisplayPdfTemplateCreationOrUpdateFormPresenter
 
     public static function forCreation(CSRFSynchronizerTokenInterface $token, \PFUser $user): self
     {
+        return self::createFromTemplate(
+            PdfTemplatePresenter::forCreation($user),
+            $token,
+        );
+    }
+
+    public static function forDuplication(
+        PdfTemplate $template,
+        CSRFSynchronizerTokenInterface $token,
+        \PFUser $user,
+    ): self {
+        return self::createFromTemplate(
+            PdfTemplatePresenter::forDuplication($template, $user),
+            $token,
+        );
+    }
+
+    private static function createFromTemplate(
+        PdfTemplatePresenter $template,
+        CSRFSynchronizerTokenInterface $token,
+    ): self {
         return new self(
             dgettext('tuleap-pdftemplate', 'Template creation'),
             'fa-solid fa-plus',
             IndexPdfTemplateController::ROUTE,
             DisplayPdfTemplateCreationFormController::ROUTE,
-            PdfTemplatePresenter::forCreation($user),
+            $template,
             $token,
         );
     }
