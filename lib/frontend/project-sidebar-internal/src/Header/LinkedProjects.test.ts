@@ -20,30 +20,42 @@
  * SOFTWARE.
  */
 
-import { describe, it, expect, vi } from "vitest";
+import { describe, it, expect, vi, beforeEach } from "vitest";
+import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import LinkedProjects from "./LinkedProjects.vue";
 import { example_config } from "../project-sidebar-example-config";
 import * as tlp_popovers from "@tuleap/tlp-popovers";
 import type { Popover } from "@tuleap/tlp-popovers";
-import * as strict_inject from "@tuleap/vue-strict-inject";
 import { ref } from "vue";
-
-vi.mock("@tuleap/vue-strict-inject");
+import type { Configuration } from "../configuration";
+import { SIDEBAR_CONFIGURATION } from "../injection-symbols";
 
 describe("LinkedProjects", () => {
+    let is_sidebar_collapsed: boolean;
+    beforeEach(() => {
+        is_sidebar_collapsed = false;
+    });
+
+    function getWrapper(config: Configuration): VueWrapper {
+        return shallowMount(LinkedProjects, {
+            propsData: {
+                is_sidebar_collapsed,
+            },
+            global: {
+                provide: {
+                    [SIDEBAR_CONFIGURATION.valueOf()]: ref(config),
+                },
+            },
+        });
+    }
+
     it("displays the linked projects with a popover", () => {
         const create_popover_spy = vi
             .spyOn(tlp_popovers, "createPopover")
             .mockReturnValue({} as Popover);
 
-        vi.spyOn(strict_inject, "strictInject").mockReturnValue(ref(example_config));
-
-        const wrapper = shallowMount(LinkedProjects, {
-            propsData: {
-                is_sidebar_collapsed: false,
-            },
-        });
+        const wrapper = getWrapper(example_config);
 
         expect(wrapper.element).toMatchSnapshot();
         expect(create_popover_spy).toHaveBeenCalled();
@@ -57,12 +69,7 @@ describe("LinkedProjects", () => {
                 linked_projects: null,
             },
         };
-        vi.spyOn(strict_inject, "strictInject").mockReturnValue(ref(config));
-        const wrapper = shallowMount(LinkedProjects, {
-            propsData: {
-                is_sidebar_collapsed: false,
-            },
-        });
+        const wrapper = getWrapper(config);
         expect(wrapper.element.textContent).toBe("");
     });
 
@@ -79,23 +86,19 @@ describe("LinkedProjects", () => {
 
             const projects = Array(nb).fill({ name: "acme" });
 
-            const config = {
+            const config: Configuration = {
                 ...example_config,
                 project: {
                     ...example_config.project,
                     linked_projects: {
-                        ...example_config.project.linked_projects,
+                        label: `${nb} aggregated projects`,
+                        is_in_children_projects_context: true,
                         projects,
                     },
                 },
             };
-            vi.spyOn(strict_inject, "strictInject").mockReturnValue(ref(config));
 
-            const wrapper = shallowMount(LinkedProjects, {
-                propsData: {
-                    is_sidebar_collapsed: false,
-                },
-            });
+            const wrapper = getWrapper(config);
 
             expect(wrapper.find("[data-test=nav-bar-linked-projects]").exists()).toBe(
                 expected_in_sidebar,
@@ -126,19 +129,15 @@ describe("LinkedProjects", () => {
                 project: {
                     ...example_config.project,
                     linked_projects: {
-                        ...example_config.project.linked_projects,
+                        label: `${nb} aggregated projects`,
+                        is_in_children_projects_context: true,
                         nb_max_projects_before_popover: 3,
                         projects,
                     },
                 },
             };
-            vi.spyOn(strict_inject, "strictInject").mockReturnValue(ref(config));
 
-            const wrapper = shallowMount(LinkedProjects, {
-                propsData: {
-                    is_sidebar_collapsed: false,
-                },
-            });
+            const wrapper = getWrapper(config);
 
             expect(wrapper.find("[data-test=nav-bar-linked-projects]").exists()).toBe(
                 expected_in_sidebar,
@@ -155,12 +154,8 @@ describe("LinkedProjects", () => {
         Then accessible attributes are added to the popover anchor
         So that popover can be displayed with keyboard`, () => {
         vi.spyOn(tlp_popovers, "createPopover").mockReturnValue({} as Popover);
-        vi.spyOn(strict_inject, "strictInject").mockReturnValue(ref({ ...example_config }));
-        const wrapper = shallowMount(LinkedProjects, {
-            propsData: {
-                is_sidebar_collapsed: true,
-            },
-        });
+        is_sidebar_collapsed = true;
+        const wrapper = getWrapper(example_config);
 
         expect(wrapper.find("[data-test=popover_anchor]").attributes("tabindex")).toBe("0");
         expect(wrapper.find("[data-test=popover_anchor]").attributes("role")).toBe("button");
@@ -171,13 +166,8 @@ describe("LinkedProjects", () => {
         Then accessible attributes are not added to the popover anchor
         Because we don't need to display a popover`, () => {
         vi.spyOn(tlp_popovers, "createPopover").mockReturnValue({} as Popover);
-        vi.spyOn(strict_inject, "strictInject").mockReturnValue(ref({ ...example_config }));
 
-        const wrapper = shallowMount(LinkedProjects, {
-            propsData: {
-                is_sidebar_collapsed: false,
-            },
-        });
+        const wrapper = getWrapper(example_config);
         expect(wrapper.find("[data-test=popover_anchor]").attributes("tabindex")).toBe("-1");
         expect(wrapper.find("[data-test=popover_anchor]").attributes("role")).toBe("");
     });
@@ -187,25 +177,19 @@ describe("LinkedProjects", () => {
         Then accessible attributes are added to the popover anchor
         So that popover can be displayed with keyboard`, () => {
         vi.spyOn(tlp_popovers, "createPopover").mockReturnValue({} as Popover);
-        vi.spyOn(strict_inject, "strictInject").mockReturnValue(
-            ref({
-                ...example_config,
-                project: {
-                    ...example_config.project,
-                    linked_projects: {
-                        ...example_config.project.linked_projects,
-                        nb_max_projects_before_popover: 3,
-                        projects: Array(20).fill({ name: "acme" }),
-                    },
+        const config: Configuration = {
+            ...example_config,
+            project: {
+                ...example_config.project,
+                linked_projects: {
+                    label: "20 aggregated projects",
+                    is_in_children_projects_context: true,
+                    projects: Array(20).fill({ name: "acme" }),
                 },
-            }),
-        );
-
-        const wrapper = shallowMount(LinkedProjects, {
-            propsData: {
-                is_sidebar_collapsed: false,
             },
-        });
+        };
+
+        const wrapper = getWrapper(config);
         expect(wrapper.find("[data-test=popover_anchor]").attributes("tabindex")).toBe("0");
         expect(wrapper.find("[data-test=popover_anchor]").attributes("role")).toBe("button");
     });

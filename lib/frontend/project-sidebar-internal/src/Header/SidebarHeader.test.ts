@@ -20,23 +20,31 @@
  * SOFTWARE.
  */
 
-import { describe, it, expect, vi } from "vitest";
+import { describe, expect, it } from "vitest";
+import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import SidebarHeader from "./SidebarHeader.vue";
 import { example_config } from "../project-sidebar-example-config";
-import * as strict_inject from "@tuleap/vue-strict-inject";
 import { ref } from "vue";
-
-vi.mock("@tuleap/vue-strict-inject");
+import type { Configuration } from "../configuration";
+import { SIDEBAR_CONFIGURATION } from "../injection-symbols";
 
 describe("SidebarHeader", () => {
-    it("displays the sidebar header", () => {
-        vi.spyOn(strict_inject, "strictInject").mockReturnValue(ref(example_config));
-        const wrapper = shallowMount(SidebarHeader, {
+    function getWrapper(config: Configuration): VueWrapper {
+        return shallowMount(SidebarHeader, {
             propsData: {
                 is_sidebar_collapsed: false,
             },
+            global: {
+                provide: {
+                    [SIDEBAR_CONFIGURATION.valueOf()]: ref(config),
+                },
+            },
         });
+    }
+
+    it("displays the sidebar header", () => {
+        const wrapper = getWrapper(example_config);
 
         expect(wrapper.element).toMatchSnapshot();
     });
@@ -44,12 +52,7 @@ describe("SidebarHeader", () => {
     it("does not display the administration link when the user is not a project administrator", () => {
         const config = example_config;
         config.user.is_project_administrator = false;
-        vi.spyOn(strict_inject, "strictInject").mockReturnValue(ref(config));
-        const wrapper = shallowMount(SidebarHeader, {
-            propsData: {
-                is_sidebar_collapsed: false,
-            },
-        });
+        const wrapper = getWrapper(config);
 
         expect(wrapper.find("[data-test=project-administration-link]").exists()).toBe(false);
     });
