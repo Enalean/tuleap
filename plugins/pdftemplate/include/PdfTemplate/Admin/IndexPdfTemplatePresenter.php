@@ -46,12 +46,13 @@ final readonly class IndexPdfTemplatePresenter
         public string $delete_url,
         array $templates,
         CSRFSynchronizerTokenInterface $token,
+        \PFUser $user,
     ) {
         $this->has_templates = count($templates) > 0;
         $this->csrf          = CSRFSynchronizerTokenPresenter::fromToken($token);
         $presenters          = [];
         foreach ($templates as $template) {
-            $presenters[] = PdfTemplatePresenter::fromPdfTemplate($template);
+            $presenters[] = PdfTemplatePresenter::fromPdfTemplate($template, $user);
         }
         $this->templates = $presenters;
     }

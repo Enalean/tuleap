@@ -235,7 +235,7 @@ class PdfTemplatePlugin extends Plugin
 
     private function getPdfTemplateDao(): PdfTemplateDao
     {
-        return new PdfTemplateDao($this->getPdfTemplateIdentifierFactory());
+        return new PdfTemplateDao($this->getPdfTemplateIdentifierFactory(), UserManager::instance());
     }
 
     private function getPdfTemplateIdentifierFactory(): PdfTemplateIdentifierFactory

@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\PdfTemplate\Admin;
 
 use HTTPRequest;
+use Tuleap\Date\RelativeDatesAssetsRetriever;
 use Tuleap\Export\Pdf\Template\Identifier\InvalidPdfTemplateIdentifierStringException;
 use Tuleap\Export\Pdf\Template\Identifier\PdfTemplateIdentifierFactory;
 use Tuleap\Layout\BaseLayout;
@@ -71,6 +72,7 @@ final readonly class DisplayPdfTemplateUpdateFormController implements Dispatcha
                 'src/index.ts'
             )
         );
+        $layout->addJavascriptAsset(RelativeDatesAssetsRetriever::getAsJavascriptAssets());
 
         $this->admin_page_renderer->renderAPresenter(
             $layout,
@@ -81,6 +83,7 @@ final readonly class DisplayPdfTemplateUpdateFormController implements Dispatcha
             DisplayPdfTemplateCreationOrUpdateFormPresenter::forUpdate(
                 $template,
                 $this->token_provider->getToken(),
+                $current_user,
             ),
         );
     }

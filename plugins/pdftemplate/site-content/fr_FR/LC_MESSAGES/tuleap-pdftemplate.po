@@ -105,5 +105,11 @@ msgstr "Cette opération ne pourra pas être annulée."
 msgid "Update template"
 msgstr "Mise à jour du modèle"
 
+msgid "Updated by"
+msgstr "Mis à jour par"
+
+msgid "Updated on"
+msgstr "Mis à jour le"
+
 msgid "You are about to delete the PDF template '%s'."
 msgstr "Vous êtes sur le point de supprimer le modèle PDF '%s'."

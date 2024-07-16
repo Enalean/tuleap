@@ -24,5 +24,11 @@ use Tuleap\Export\Pdf\Template\PdfTemplate;
 
 interface CreateTemplate
 {
-    public function create(string $label, string $description, string $style): PdfTemplate;
+    public function create(
+        string $label,
+        string $description,
+        string $style,
+        \PFUser $created_by,
+        \DateTimeImmutable $created_date,
+    ): PdfTemplate;
 }

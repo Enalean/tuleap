@@ -44,14 +44,14 @@ final readonly class DisplayPdfTemplateCreationOrUpdateFormPresenter
         $this->csrf = CSRFSynchronizerTokenPresenter::fromToken($token);
     }
 
-    public static function forCreation(CSRFSynchronizerTokenInterface $token): self
+    public static function forCreation(CSRFSynchronizerTokenInterface $token, \PFUser $user): self
     {
         return new self(
             dgettext('tuleap-pdftemplate', 'Template creation'),
             'fa-solid fa-plus',
             IndexPdfTemplateController::ROUTE,
             DisplayPdfTemplateCreationFormController::ROUTE,
-            PdfTemplatePresenter::forCreation(),
+            PdfTemplatePresenter::forCreation($user),
             $token,
         );
     }
@@ -59,8 +59,9 @@ final readonly class DisplayPdfTemplateCreationOrUpdateFormPresenter
     public static function forUpdate(
         PdfTemplate $template,
         CSRFSynchronizerTokenInterface $token,
+        \PFUser $user,
     ): self {
-        $presenter = PdfTemplatePresenter::fromPdfTemplate($template);
+        $presenter = PdfTemplatePresenter::fromPdfTemplate($template, $user);
 
         return new self(
             dgettext('tuleap-pdftemplate', 'Update template'),

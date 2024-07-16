@@ -66,6 +66,8 @@ final class CreatePdfTemplateController extends DispatchablePSR15Compatible
             $label,
             (string) ($parsed_body['description'] ?? ''),
             (string) ($parsed_body['style'] ?? ''),
+            $user,
+            new \DateTimeImmutable(),
         );
 
         $this->logger->info(

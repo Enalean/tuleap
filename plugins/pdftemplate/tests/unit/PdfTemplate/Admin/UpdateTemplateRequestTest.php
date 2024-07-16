@@ -24,7 +24,7 @@ namespace Tuleap\PdfTemplate\Admin;
 
 use Tuleap\DB\DatabaseUUIDV7Factory;
 use Tuleap\Export\Pdf\Template\Identifier\PdfTemplateIdentifierFactory;
-use Tuleap\Export\Pdf\Template\PdfTemplate;
+use Tuleap\Test\Builders\Export\Pdf\Template\PdfTemplateTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
 final class UpdateTemplateRequestTest extends TestCase
@@ -37,40 +37,40 @@ final class UpdateTemplateRequestTest extends TestCase
         self::assertEquals(
             [],
             (new UpdateTemplateRequest(
-                new PdfTemplate($identifier, 'label', 'description', 'style'),
-                new PdfTemplate($identifier, 'label', 'description', 'style'),
+                PdfTemplateTestBuilder::aTemplate()->withIdentifier($identifier)->build(),
+                PdfTemplateTestBuilder::aTemplate()->withIdentifier($identifier)->build(),
             ))->getChangedFields(),
         );
 
         self::assertEquals(
             ['label'],
             (new UpdateTemplateRequest(
-                new PdfTemplate($identifier, 'label', 'description', 'style'),
-                new PdfTemplate($identifier, 'update label', 'description', 'style'),
+                PdfTemplateTestBuilder::aTemplate()->withIdentifier($identifier)->withLabel('label')->build(),
+                PdfTemplateTestBuilder::aTemplate()->withIdentifier($identifier)->withLabel('update label')->build(),
             ))->getChangedFields(),
         );
 
         self::assertEquals(
             ['description'],
             (new UpdateTemplateRequest(
-                new PdfTemplate($identifier, 'label', 'description', 'style'),
-                new PdfTemplate($identifier, 'label', 'update description', 'style'),
+                PdfTemplateTestBuilder::aTemplate()->withIdentifier($identifier)->withDescription('description')->build(),
+                PdfTemplateTestBuilder::aTemplate()->withIdentifier($identifier)->withDescription('update description')->build(),
             ))->getChangedFields(),
         );
 
         self::assertEquals(
             ['style'],
             (new UpdateTemplateRequest(
-                new PdfTemplate($identifier, 'label', 'description', 'style'),
-                new PdfTemplate($identifier, 'label', 'description', 'updated style'),
+                PdfTemplateTestBuilder::aTemplate()->withIdentifier($identifier)->withStyle('style')->build(),
+                PdfTemplateTestBuilder::aTemplate()->withIdentifier($identifier)->withStyle('update style')->build(),
             ))->getChangedFields(),
         );
 
         self::assertEquals(
             ['label', 'style'],
             (new UpdateTemplateRequest(
-                new PdfTemplate($identifier, 'label', 'description', 'style'),
-                new PdfTemplate($identifier, 'updated label', 'description', 'updated style'),
+                PdfTemplateTestBuilder::aTemplate()->withIdentifier($identifier)->withLabel('label')->withStyle('style')->build(),
+                PdfTemplateTestBuilder::aTemplate()->withIdentifier($identifier)->withLabel('update label')->withStyle('update style')->build(),
             ))->getChangedFields(),
         );
     }

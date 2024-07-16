@@ -26,29 +26,39 @@ use Tuleap\DB\DataAccessObject;
 use Tuleap\Export\Pdf\Template\Identifier\PdfTemplateIdentifier;
 use Tuleap\Export\Pdf\Template\Identifier\PdfTemplateIdentifierFactory;
 use Tuleap\Export\Pdf\Template\PdfTemplate;
+use Tuleap\User\RetrieveUserById;
 
 final class PdfTemplateDao extends DataAccessObject implements RetrieveAllTemplates, CreateTemplate, DeleteTemplate, RetrieveTemplate, UpdateTemplate
 {
-    public function __construct(private readonly PdfTemplateIdentifierFactory $identifier_factory)
-    {
+    public function __construct(
+        private readonly PdfTemplateIdentifierFactory $identifier_factory,
+        private readonly RetrieveUserById $user_retriever,
+    ) {
         parent::__construct();
     }
 
-    public function create(string $label, string $description, string $style): PdfTemplate
-    {
+    public function create(
+        string $label,
+        string $description,
+        string $style,
+        \PFUser $created_by,
+        \DateTimeImmutable $created_date,
+    ): PdfTemplate {
         $identifier = $this->identifier_factory->buildIdentifier();
 
         $this->getDB()->insert(
             'plugin_pdftemplate',
             [
-                'id'          => $identifier->getBytes(),
-                'label'       => $label,
-                'description' => $description,
-                'style'       => $style,
+                'id'                => $identifier->getBytes(),
+                'label'             => $label,
+                'description'       => $description,
+                'style'             => $style,
+                'last_updated_by'   => $created_by->getId(),
+                'last_updated_date' => $created_date->getTimestamp(),
             ],
         );
 
-        return new PdfTemplate($identifier, $label, $description, $style);
+        return new PdfTemplate($identifier, $label, $description, $style, $created_by, $created_date);
     }
 
     public function retrieveAll(): array
@@ -94,7 +104,19 @@ final class PdfTemplateDao extends DataAccessObject implements RetrieveAllTempla
             $row['label'],
             $row['description'],
             $row['style'],
+            $this->getUser($row['last_updated_by']),
+            (new \DateTimeImmutable())->setTimestamp($row['last_updated_date']),
         );
+    }
+
+    private function getUser(int $id): \PFUser
+    {
+        $user = $this->user_retriever->getUserById($id);
+        if (! $user) {
+            throw new \Exception('Unable to find user ' . $id);
+        }
+
+        return $user;
     }
 
     public function update(PdfTemplate $template): void
@@ -102,9 +124,11 @@ final class PdfTemplateDao extends DataAccessObject implements RetrieveAllTempla
         $this->getDB()->update(
             'plugin_pdftemplate',
             [
-                'label'       => $template->label,
-                'description' => $template->description,
-                'style'       => $template->style,
+                'label'             => $template->label,
+                'description'       => $template->description,
+                'style'             => $template->style,
+                'last_updated_by'   => $template->last_updated_by->getId(),
+                'last_updated_date' => $template->last_updated_date->getTimestamp(),
             ],
             [
                 'id' => $template->identifier->getBytes(),

@@ -45,8 +45,13 @@ final class CreateTemplateStub implements CreateTemplate
         return $this->called;
     }
 
-    public function create(string $label, string $description, string $style): PdfTemplate
-    {
+    public function create(
+        string $label,
+        string $description,
+        string $style,
+        \PFUser $created_by,
+        \DateTimeImmutable $created_date,
+    ): PdfTemplate {
         $this->called = true;
 
         return new PdfTemplate(
@@ -54,6 +59,8 @@ final class CreateTemplateStub implements CreateTemplate
             $label,
             $description,
             $style,
+            $created_by,
+            $created_date,
         );
     }
 }

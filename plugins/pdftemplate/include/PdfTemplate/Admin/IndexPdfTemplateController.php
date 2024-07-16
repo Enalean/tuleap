@@ -68,6 +68,7 @@ final readonly class IndexPdfTemplateController implements DispatchableWithBurni
                 DeletePdfTemplateController::ROUTE,
                 $this->templates_retriever->retrieveAll(),
                 $this->token_provider->getToken(),
+                $current_user,
             ),
         );
     }

@@ -63,6 +63,7 @@ final readonly class DisplayPdfTemplateCreationFormController implements Dispatc
             'create-or-update-template',
             DisplayPdfTemplateCreationOrUpdateFormPresenter::forCreation(
                 $this->token_provider->getToken(),
+                $current_user,
             ),
         );
     }

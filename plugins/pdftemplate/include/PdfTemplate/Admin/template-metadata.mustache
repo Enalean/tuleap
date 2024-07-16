@@ -1,0 +1,26 @@
+<div class="tlp-property">
+    <label class="tlp-label">
+        {{# dgettext }} tuleap-pdftemplate | Updated by {{/ dgettext }}
+    </label>
+<p>
+    {{# last_updated_by }}
+        <div class="tlp-avatar tlp-avatar-small">
+            {{# has_avatar }}
+                <img src="{{ avatar_url }}">
+            {{/ has_avatar }}
+        </div>
+        {{ display_name }}
+    {{/ last_updated_by }}
+    </p>
+</div>
+
+<div class="tlp-property">
+    <label class="tlp-label">
+        {{# dgettext }} tuleap-pdftemplate | Updated on {{/ dgettext }}
+    </label>
+    <p>
+        {{# last_updated_date }}
+            {{> tlp_relative_date }}
+        {{/ last_updated_date }}
+    </p>
+</div>

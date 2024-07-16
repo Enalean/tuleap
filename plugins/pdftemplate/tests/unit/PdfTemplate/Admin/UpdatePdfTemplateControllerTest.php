@@ -25,11 +25,11 @@ namespace Tuleap\PdfTemplate\Admin;
 use Psr\Log\NullLogger;
 use Tuleap\DB\DatabaseUUIDV7Factory;
 use Tuleap\Export\Pdf\Template\Identifier\PdfTemplateIdentifierFactory;
-use Tuleap\Export\Pdf\Template\PdfTemplate;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Http\Response\RedirectWithFeedbackFactory;
 use Tuleap\Http\Server\NullServerRequest;
 use Tuleap\PdfTemplate\Stubs\UpdateTemplateStub;
+use Tuleap\Test\Builders\Export\Pdf\Template\PdfTemplateTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\Helpers\NoopSapiEmitter;
 use Tuleap\Test\PHPUnit\TestCase;
@@ -58,8 +58,8 @@ final class UpdatePdfTemplateControllerTest extends TestCase
         $request = (new NullServerRequest())
             ->withAttribute(\PFUser::class, $user)
             ->withAttribute(UpdateTemplateRequest::class, new UpdateTemplateRequest(
-                new PdfTemplate($identifier, 'label', 'description', 'style'),
-                new PdfTemplate($identifier, 'label', 'description', 'style'),
+                PdfTemplateTestBuilder::aTemplate()->withLabel('label')->build(),
+                PdfTemplateTestBuilder::aTemplate()->withLabel('label')->build(),
             ));
 
         $response = $controller->handle($request);
@@ -90,8 +90,8 @@ final class UpdatePdfTemplateControllerTest extends TestCase
         $request = (new NullServerRequest())
             ->withAttribute(\PFUser::class, $user)
             ->withAttribute(UpdateTemplateRequest::class, new UpdateTemplateRequest(
-                new PdfTemplate($identifier, 'label', 'description', 'style'),
-                new PdfTemplate($identifier, 'updated label', 'description', 'style'),
+                PdfTemplateTestBuilder::aTemplate()->withLabel('label')->build(),
+                PdfTemplateTestBuilder::aTemplate()->withLabel('updated label')->build(),
             ));
 
         $response = $controller->handle($request);

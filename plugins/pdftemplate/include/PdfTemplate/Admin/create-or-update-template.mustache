@@ -19,7 +19,13 @@
                 </a>
             </p>
 
-            {{> template-form-elements }}
+            {{# template }}
+                {{# is_update }}
+                    {{> template-metadata }}
+                {{/ is_update }}
+
+                {{> template-form-elements }}
+            {{/ template }}
         </section>
 
         <section class="tlp-pane-section tlp-pane-section-submit">

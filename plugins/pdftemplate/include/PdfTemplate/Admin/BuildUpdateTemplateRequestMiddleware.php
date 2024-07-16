@@ -72,7 +72,7 @@ final readonly class BuildUpdateTemplateRequestMiddleware implements MiddlewareI
         if (! $label) {
             return $this->redirect_with_feedback_factory->createResponseForUser(
                 $user,
-                PdfTemplatePresenter::fromPdfTemplate($original_template)->update_url,
+                PdfTemplatePresenter::fromPdfTemplate($original_template, $user)->update_url,
                 NewFeedback::error(dgettext('tuleap-pdftemplate', 'The template label is mandatory')),
             );
         }
@@ -86,6 +86,8 @@ final readonly class BuildUpdateTemplateRequestMiddleware implements MiddlewareI
                     $label,
                     (string) ($parsed_body['description'] ?? ''),
                     (string) ($parsed_body['style'] ?? ''),
+                    $user,
+                    new \DateTimeImmutable(),
                 )
             ),
         );
