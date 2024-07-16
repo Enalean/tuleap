@@ -60,13 +60,25 @@ msgstr ""
 msgid "Next"
 msgstr ""
 
+msgid "No artifact found"
+msgstr ""
+
 msgid "No matching artifacts found"
 msgstr ""
 
 msgid "No trackers selected"
 msgstr ""
 
+msgid "Please add trackers by clicking on \"No tracker selected\" above."
+msgstr ""
+
 msgid "Please choose…"
+msgstr ""
+
+msgid "Please create a new query by clicking on \"No tracker selected\" above."
+msgstr ""
+
+msgid "Please create a new query."
 msgstr ""
 
 msgid "Previous"
@@ -76,6 +88,9 @@ msgid "Project"
 msgstr "Projeto"
 
 msgid "Query"
+msgstr ""
+
+msgid "Query is empty"
 msgstr ""
 
 msgid "Report has been successfully saved"
@@ -100,6 +115,9 @@ msgid "Submitted on"
 msgstr ""
 
 msgid "The initial query contains trackers from inactive projects:"
+msgstr ""
+
+msgid "There is no artifact matching the query."
 msgstr ""
 
 msgid "Title"

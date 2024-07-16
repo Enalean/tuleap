@@ -47,6 +47,7 @@ import { Fault } from "@tuleap/fault";
 import { buildVueDompurifyHTMLDirective } from "vue-dompurify-html";
 import { TEXT_SELECTABLE_TYPE } from "../../api/cross-tracker-rest-api-types";
 import type { State } from "../../type";
+import EmptyState from "./EmptyState.vue";
 
 vi.useFakeTimers();
 
@@ -279,6 +280,21 @@ describe(`SelectableTable`, () => {
                 wrapper.findAll("[data-test=column-header]").map((header) => header.text()),
             ).toContain(NUMERIC_COLUMN_NAME);
             expect(wrapper.findAll("[data-test=cell]")).toHaveLength(4);
+        });
+    });
+    describe("Empty state", () => {
+        it("displays the empty state when there is no result", () => {
+            const table_result = {
+                table: new ArtifactsTableBuilder().build(),
+                total: 0,
+            };
+            const table_retriever = RetrieveArtifactsTableStub.withContent(
+                table_result,
+                table_result,
+            );
+
+            const wrapper = getWrapper(table_retriever, { is_report_saved: true });
+            expect(wrapper.findComponent(EmptyState).exists()).toBe(true);
         });
     });
 });
