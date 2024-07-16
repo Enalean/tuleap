@@ -59,17 +59,20 @@ const PendingArtifactSectionFactory = {
             tracker,
             title: {
                 ...tracker.title,
-                value: "",
+                value: tracker.title.default_value,
                 ...(tracker.title.type === "string"
                     ? { type: "string" }
                     : { type: "text", post_processed_value: "", format: "html" }),
             },
-            display_title: "",
+            display_title: tracker.title.default_value,
             description: {
                 ...tracker.description,
-                value: "",
+                value: tracker.description.default_value.content,
                 post_processed_value: "",
-                format: "html",
+                format: tracker.description.default_value.format,
+                ...(tracker.description.default_value.format === "commonmark"
+                    ? { commonmark: tracker.description.default_value.content }
+                    : {}),
             },
             attachments: tracker.file ? { ...tracker.file, file_descriptions: [] } : null,
         }),

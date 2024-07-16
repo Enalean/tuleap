@@ -108,6 +108,7 @@ describe("AddNewSectionButton", () => {
                             field_id: 1002,
                             label: "Description",
                             type: "text",
+                            default_value: { format: "html", content: "" },
                         },
                     }),
                 ],
@@ -136,6 +137,7 @@ describe("AddNewSectionButton", () => {
                     field_id: 1002,
                     label: "Description",
                     type: "text",
+                    default_value: { format: "html", content: "" },
                 },
             });
 
@@ -183,6 +185,7 @@ describe("AddNewSectionButton", () => {
                             field_id: 1001,
                             label: "Summary",
                             type: "string",
+                            default_value: "",
                         },
                         description: null,
                     }),
@@ -211,6 +214,7 @@ describe("AddNewSectionButton", () => {
                     field_id: 1001,
                     label: "Summary",
                     type: "string",
+                    default_value: "",
                 },
                 description: null,
             });
@@ -259,11 +263,13 @@ describe("AddNewSectionButton", () => {
                             field_id: 1001,
                             label: "Summary",
                             type: "string",
+                            default_value: "",
                         },
                         description: {
                             field_id: 1002,
                             label: "Description",
                             type: "text",
+                            default_value: { format: "html", content: "" },
                         },
                     }),
                 ],

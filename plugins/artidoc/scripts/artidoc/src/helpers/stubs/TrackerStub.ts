@@ -42,6 +42,7 @@ export const TrackerStub = {
             field_id: 1001,
             label: "Summary",
             type: "string",
+            default_value: "",
         },
     }),
 
@@ -51,6 +52,7 @@ export const TrackerStub = {
             field_id: 1002,
             label: "Details",
             type: "text",
+            default_value: { format: "html", content: "" },
         },
     }),
 
@@ -60,11 +62,13 @@ export const TrackerStub = {
             field_id: 1001,
             label: "Summary",
             type: "string",
+            default_value: "",
         },
         description: {
             field_id: 1002,
             label: "Details",
             type: "text",
+            default_value: { format: "html", content: "" },
         },
     }),
 };

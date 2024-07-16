@@ -38,9 +38,9 @@ final readonly class DocumentTrackerRepresentation
     private function __construct(
         public int $id,
         public string $label,
-        public ?DocumentTrackerFieldRepresentation $title,
-        public ?DocumentTrackerFieldRepresentation $description,
-        public ?DocumentTrackerFieldRepresentation $file,
+        public ?DocumentTrackerFieldStringRepresentation $title,
+        public ?DocumentTrackerFieldTextRepresentation $description,
+        public ?DocumentTrackerFieldFileRepresentation $file,
     ) {
     }
 
@@ -48,19 +48,19 @@ final readonly class DocumentTrackerRepresentation
     {
         $title_field = Tracker_Semantic_Title::load($tracker)->getField();
         $title       = $title_field && $title_field instanceof Tracker_FormElement_Field_String && $title_field->userCanSubmit($user)
-            ? new DocumentTrackerFieldRepresentation($title_field->getId(), $title_field->getLabel(), Tracker_FormElementFactory::instance()->getType($title_field))
+            ? new DocumentTrackerFieldStringRepresentation($title_field->getId(), $title_field->getLabel(), Tracker_FormElementFactory::instance()->getType($title_field), $title_field->getDefaultRESTValue())
             : null;
 
         $description_field = Tracker_Semantic_Description::load($tracker)->getField();
         $description       = $description_field && $description_field->userCanSubmit($user)
-            ? new DocumentTrackerFieldRepresentation($description_field->getId(), $description_field->getLabel(), Tracker_FormElementFactory::instance()->getType($title_field))
+            ? new DocumentTrackerFieldTextRepresentation($description_field->getId(), $description_field->getLabel(), Tracker_FormElementFactory::instance()->getType($description_field), $description_field->getDefaultRESTValue())
             : null;
 
         $file_upload_data = $file_upload_provider->getFileUploadData($tracker, null, $user);
 
         $file_field = $file_upload_data?->getField();
         $file       = $file_field && $file_field->userCanSubmit($user)
-            ? new DocumentTrackerFieldRepresentation($file_field->getId(), $file_field->getLabel(), Tracker_FormElementFactory::instance()->getType($file_field))
+            ? new DocumentTrackerFieldFileRepresentation($file_field->getId(), $file_field->getLabel(), Tracker_FormElementFactory::instance()->getType($file_field))
             : null;
         return new self($tracker->getId(), $tracker->getName(), $title, $description, $file);
     }
