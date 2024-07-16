@@ -56,6 +56,7 @@ use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Field\StaticList\Sta
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Field\Text\TextResultBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Field\UGroupList\UGroupListResultBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Field\UserList\UserListResultBuilder;
+use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Metadata\Date\MetadataDateResultBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Metadata\MetadataResultBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Metadata\Semantic\AssignedTo\AssignedToResultBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Metadata\Semantic\Status\StatusResultBuilder;
@@ -364,6 +365,7 @@ class crosstrackerPlugin extends Plugin
                 ),
                 new StatusResultBuilder(),
                 new AssignedToResultBuilder($user_manager, UserHelper::instance()),
+                new MetadataDateResultBuilder(),
             ),
         );
 

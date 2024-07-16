@@ -23,14 +23,19 @@ declare(strict_types=1);
 namespace Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Metadata;
 
 use Codendi_HTMLPurifier;
+use DateTime;
+use ForgeConfig;
 use LogicException;
 use PFUser;
 use Tracker;
+use Tuleap\Config\ConfigurationVariables;
+use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Field\Date\DateResultRepresentation;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Field\StaticList\StaticListRepresentation;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Field\StaticList\StaticListValueRepresentation;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Field\Text\TextResultRepresentation;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Field\UserList\UserListRepresentation;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Field\UserList\UserListValueRepresentation;
+use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Metadata\Date\MetadataDateResultBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Metadata\Semantic\AssignedTo\AssignedToResultBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Metadata\Semantic\Status\StatusResultBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Metadata\Text\MetadataTextResultBuilder;
@@ -38,6 +43,7 @@ use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\SelectedValue;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\SelectedValuesCollection;
 use Tuleap\CrossTracker\REST\v1\Representation\CrossTrackerSelectedRepresentation;
 use Tuleap\CrossTracker\REST\v1\Representation\CrossTrackerSelectedType;
+use Tuleap\ForgeConfigSandbox;
 use Tuleap\Markdown\CommonMarkInterpreter;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
@@ -52,11 +58,14 @@ use UserHelper;
 
 final class MetadataResultBuilderTest extends TestCase
 {
+    use ForgeConfigSandbox;
+
     private Tracker $first_tracker;
     private Tracker $second_tracker;
 
     protected function setUp(): void
     {
+        ForgeConfig::set(ConfigurationVariables::SERVER_TIMEZONE, 'Europe/Paris');
         $project              = ProjectTestBuilder::aProject()->withId(154)->build();
         $this->first_tracker  = TrackerTestBuilder::aTracker()->withId(38)->withProject($project)->build();
         $this->second_tracker = TrackerTestBuilder::aTracker()->withId(4)->withProject($project)->build();
@@ -85,6 +94,7 @@ final class MetadataResultBuilderTest extends TestCase
                 ),
                 $user_helper,
             ),
+            new MetadataDateResultBuilder(),
         );
 
         $user_helper->method('getDisplayNameFromUser')->willReturnCallback(static fn(PFUser $user) => $user->getRealName());
@@ -92,6 +102,7 @@ final class MetadataResultBuilderTest extends TestCase
         return $builder->getResult(
             $metadata,
             $selected_result,
+            UserTestBuilder::buildWithDefaults(),
         );
     }
 
@@ -246,6 +257,60 @@ EOL
                 new UserListValueRepresentation('Alice', 'https://example.com/alice', '/users/alice', false),
             ])),
             43 => new SelectedValue('@assigned_to', new UserListRepresentation([])),
+        ], $result->values);
+    }
+
+    public function testItReturnsValuesForSubmittedOnAlwaysThereField(): void
+    {
+        $first_date  = new DateTime('2024-06-12 11:30');
+        $second_date = new DateTime('2024-06-12 00:00');
+        $result      = $this->getSelectedResult(
+            new Metadata('submitted_on'),
+            RetrieveArtifactStub::withArtifacts(
+                ArtifactTestBuilder::anArtifact(51)->inTracker($this->first_tracker)->build(),
+                ArtifactTestBuilder::anArtifact(52)->inTracker($this->first_tracker)->build(),
+            ),
+            [
+                ['id' => 51, '@submitted_on' => $first_date->getTimestamp()],
+                ['id' => 52, '@submitted_on' => $second_date->getTimestamp()],
+            ],
+        );
+
+        self::assertEquals(
+            new CrossTrackerSelectedRepresentation('@submitted_on', CrossTrackerSelectedType::TYPE_DATE),
+            $result->selected,
+        );
+        self::assertCount(2, $result->values);
+        self::assertEqualsCanonicalizing([
+            51 => new SelectedValue('@submitted_on', new DateResultRepresentation($first_date->format(DATE_ATOM), true)),
+            52 => new SelectedValue('@submitted_on', new DateResultRepresentation($second_date->format(DATE_ATOM), true)),
+        ], $result->values);
+    }
+
+    public function testItReturnsValuesForLastUpdateDateAlwaysThereField(): void
+    {
+        $first_date  = new DateTime('2024-06-12 11:30');
+        $second_date = new DateTime('2024-06-12 00:00');
+        $result      = $this->getSelectedResult(
+            new Metadata('last_update_date'),
+            RetrieveArtifactStub::withArtifacts(
+                ArtifactTestBuilder::anArtifact(61)->inTracker($this->first_tracker)->build(),
+                ArtifactTestBuilder::anArtifact(62)->inTracker($this->first_tracker)->build(),
+            ),
+            [
+                ['id' => 61, '@last_update_date' => $first_date->getTimestamp()],
+                ['id' => 62, '@last_update_date' => $second_date->getTimestamp()],
+            ],
+        );
+
+        self::assertEquals(
+            new CrossTrackerSelectedRepresentation('@last_update_date', CrossTrackerSelectedType::TYPE_DATE),
+            $result->selected,
+        );
+        self::assertCount(2, $result->values);
+        self::assertEqualsCanonicalizing([
+            61 => new SelectedValue('@last_update_date', new DateResultRepresentation($first_date->format(DATE_ATOM), true)),
+            62 => new SelectedValue('@last_update_date', new DateResultRepresentation($second_date->format(DATE_ATOM), true)),
         ], $result->values);
     }
 }

@@ -76,6 +76,7 @@ final readonly class ResultBuilderVisitor implements SelectableVisitor
         return $this->metadata_result_builder->getResult(
             $metadata,
             $parameters->select_results,
+            $parameters->user,
         );
     }
 }
