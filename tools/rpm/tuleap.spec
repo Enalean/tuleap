@@ -522,16 +522,16 @@ Requires: %{name} = %{tuleap_version}-%{tuleap_release}%{?dist}, tuleap-plugin-t
 %description plugin-artidoc
 %{summary}.
 
-%endif
-
-%if %{with experimental}
-
 %package plugin-pdftemplate
 Summary: Allow to define templates for PDF export
 Group: Development/Tools
 Requires: %{name} = %{tuleap_version}-%{tuleap_release}%{?dist}
 %description plugin-pdftemplate
 %{summary}.
+
+%endif
+
+%if %{with experimental}
 
 %endif
 
@@ -613,11 +613,11 @@ done
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/webauthn
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/tracker_functions
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/artidoc
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/pdftemplate
 %endif
 
 %if %{with experimental}
 %else
-%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/pdftemplate
 %endif
 
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/themes/BurningParrot/composer.json
@@ -1437,13 +1437,13 @@ fi
 %defattr(-,root,root,-)
 %{APP_DIR}/plugins/artidoc
 
-%endif
-
-%if %{with experimental}
-
 %files plugin-pdftemplate
 %defattr(-,root,root,-)
 %{APP_DIR}/plugins/pdftemplate
+
+%endif
+
+%if %{with experimental}
 
 %endif
 
