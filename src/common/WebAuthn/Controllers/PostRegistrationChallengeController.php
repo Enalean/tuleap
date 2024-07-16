@@ -81,10 +81,11 @@ final class PostRegistrationChallengeController extends DispatchablePSR15Compati
             $this->relying_party_entity,
             $user_entity,
             $challenge,
-            $this->credential_parameters
-        )
-            ->setAttestation(PublicKeyCredentialCreationOptions::ATTESTATION_CONVEYANCE_PREFERENCE_NONE)
-            ->excludeCredentials(...$registered_sources);
+            $this->credential_parameters,
+            null,
+            PublicKeyCredentialCreationOptions::ATTESTATION_CONVEYANCE_PREFERENCE_NONE,
+            $registered_sources
+        );
 
         $this->challenge_dao->saveChallenge(
             (int) $current_user->getId(),

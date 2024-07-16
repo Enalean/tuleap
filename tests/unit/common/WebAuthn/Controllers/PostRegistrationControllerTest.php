@@ -44,6 +44,8 @@ use Webauthn\AttestationStatement\AttestationStatementSupportManager;
 use Webauthn\AttestationStatement\NoneAttestationStatementSupport;
 use Webauthn\AuthenticationExtensions\ExtensionOutputCheckerHandler;
 use Webauthn\AuthenticatorAttestationResponseValidator;
+use Webauthn\CeremonyStep\CeremonyStepManager;
+use Webauthn\CeremonyStep\CheckExtensions;
 use Webauthn\PublicKeyCredentialDescriptor;
 use Webauthn\PublicKeyCredentialLoader;
 use Webauthn\PublicKeyCredentialParameters;
@@ -177,7 +179,11 @@ final class PostRegistrationControllerTest extends TestCase
                 $attestation_statement_manager,
                 WebAuthnCredentialSourceDaoStub::withoutCredentialSources(),
                 null,
-                new ExtensionOutputCheckerHandler()
+                null,
+                null,
+                new CeremonyStepManager(
+                    [new CheckExtensions(new ExtensionOutputCheckerHandler())]
+                ),
             ),
             $response_factory,
             new RestlerErrorResponseBuilder($json_response_builder),

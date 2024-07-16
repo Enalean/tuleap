@@ -37,7 +37,7 @@ final class AuthenticatorPresenter
         WebAuthnCredentialSource $source,
         \PFUser $current_user,
     ) {
-        $this->id         = Base64UrlSafe::encode($source->getSource()->getPublicKeyCredentialId());
+        $this->id         = Base64UrlSafe::encode($source->getSource()->publicKeyCredentialId);
         $this->name       = $source->getName();
         $builder          = new TlpRelativeDatePresenterBuilder();
         $this->created_at = $builder->getTlpRelativeDatePresenterInBlockContext(

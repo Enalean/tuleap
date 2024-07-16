@@ -73,7 +73,7 @@ final class WebAuthnCredentialSourceDaoStub implements PublicKeyCredentialSource
 
     public function findOneByCredentialId(string $publicKeyCredentialId): ?PublicKeyCredentialSource
     {
-        if ($this->source !== null && $this->source->getPublicKeyCredentialId() === $publicKeyCredentialId) {
+        if ($this->source !== null && $this->source->publicKeyCredentialId === $publicKeyCredentialId) {
             return $this->source;
         }
 
@@ -114,7 +114,7 @@ final class WebAuthnCredentialSourceDaoStub implements PublicKeyCredentialSource
 
     public function saveCredentialSource(PublicKeyCredentialSource $publicKeyCredentialSource): void
     {
-        $this->sources_id[] = $publicKeyCredentialSource->getPublicKeyCredentialId();
+        $this->sources_id[] = $publicKeyCredentialSource->publicKeyCredentialId;
     }
 
     public function changeCredentialSourceName(string $public_key_credential_id, string $name): void
@@ -124,9 +124,9 @@ final class WebAuthnCredentialSourceDaoStub implements PublicKeyCredentialSource
 
     public function saveCredentialSourceWithName(PublicKeyCredentialSource $publicKeyCredentialSource, string $name): void
     {
-        $this->sources_id[] = $publicKeyCredentialSource->getPublicKeyCredentialId();
+        $this->sources_id[] = $publicKeyCredentialSource->publicKeyCredentialId;
 
-        $this->sources_name[$publicKeyCredentialSource->getPublicKeyCredentialId()] = $name;
+        $this->sources_name[$publicKeyCredentialSource->publicKeyCredentialId] = $name;
     }
 
     public function getAllByUserId(int $user_id): array
@@ -145,7 +145,7 @@ final class WebAuthnCredentialSourceDaoStub implements PublicKeyCredentialSource
 
     public function deleteCredentialSource(string $public_key_credential_id): void
     {
-        if ($this->source !== null && $this->source->getPublicKeyCredentialId() === $public_key_credential_id) {
+        if ($this->source !== null && $this->source->publicKeyCredentialId === $public_key_credential_id) {
             $this->source = null;
         } else {
             $this->sources_id = array_filter(

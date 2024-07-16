@@ -55,11 +55,11 @@ final class WebAuthnCredentialSourceDaoTest extends TestIntegrationTestCase
 
         $this->dao->saveCredentialSource($source);
 
-        $retrieved = $this->dao->findOneByCredentialId($source->getPublicKeyCredentialId());
+        $retrieved = $this->dao->findOneByCredentialId($source->publicKeyCredentialId);
         self::assertNotNull($retrieved);
         $this->assertSourceEquals($source, $retrieved);
 
-        $sources = $this->dao->getAllByUserId((int) $source->getUserHandle());
+        $sources = $this->dao->getAllByUserId((int) $source->userHandle);
         self::assertCount(1, $sources);
         $retrieved = $sources[0];
         $this->assertSourceEquals($source, $retrieved->getSource());
@@ -67,7 +67,7 @@ final class WebAuthnCredentialSourceDaoTest extends TestIntegrationTestCase
         self::assertNotNull($retrieved->getCreatedAt());
         self::assertNotNull($retrieved->getLastUse());
 
-        $retrieved = $this->dao->getCredentialSourceById($source->getPublicKeyCredentialId());
+        $retrieved = $this->dao->getCredentialSourceById($source->publicKeyCredentialId);
         self::assertTrue($retrieved->isValue());
         $retrieved = $retrieved->unwrapOr(null);
         $this->assertSourceEquals($source, $retrieved->getSource());
@@ -81,9 +81,9 @@ final class WebAuthnCredentialSourceDaoTest extends TestIntegrationTestCase
         $source = $this->generateSource(self::USER_ID);
 
         $this->dao->saveCredentialSource($source);
-        $this->dao->changeCredentialSourceName($source->getPublicKeyCredentialId(), 'MyAwesomeKey');
+        $this->dao->changeCredentialSourceName($source->publicKeyCredentialId, 'MyAwesomeKey');
 
-        $sources = $this->dao->getAllByUserId((int) $source->getUserHandle());
+        $sources = $this->dao->getAllByUserId((int) $source->userHandle);
         self::assertCount(1, $sources);
         self::assertSame('MyAwesomeKey', $sources[0]->getName());
     }
@@ -94,7 +94,7 @@ final class WebAuthnCredentialSourceDaoTest extends TestIntegrationTestCase
 
         $this->dao->saveCredentialSourceWithName($source, 'MyAwesomeKey');
 
-        $sources = $this->dao->getAllByUserId((int) $source->getUserHandle());
+        $sources = $this->dao->getAllByUserId((int) $source->userHandle);
         self::assertCount(1, $sources);
         self::assertSame('MyAwesomeKey', $sources[0]->getName());
     }
@@ -104,24 +104,24 @@ final class WebAuthnCredentialSourceDaoTest extends TestIntegrationTestCase
         $source = $this->generateSource(self::USER_ID);
         $this->dao->saveCredentialSource($source);
 
-        $this->dao->deleteCredentialSource($source->getPublicKeyCredentialId());
+        $this->dao->deleteCredentialSource($source->publicKeyCredentialId);
 
-        $retrieved = $this->dao->findOneByCredentialId($source->getPublicKeyCredentialId());
+        $retrieved = $this->dao->findOneByCredentialId($source->publicKeyCredentialId);
         self::assertNull($retrieved);
     }
 
     private function assertSourceEquals(PublicKeyCredentialSource $expected, PublicKeyCredentialSource $actual): void
     {
-        self::assertSame($expected->getPublicKeyCredentialId(), $actual->getPublicKeyCredentialId());
-        self::assertSame($expected->getType(), $actual->getType());
-        self::assertEqualsCanonicalizing($expected->getTransports(), $actual->getTransports());
-        self::assertSame($expected->getAttestationType(), $actual->getAttestationType());
-        self::assertEquals($expected->getTrustPath(), $actual->getTrustPath());
-        self::assertEquals($expected->getAaguid(), $actual->getAaguid());
-        self::assertSame($expected->getCredentialPublicKey(), $actual->getCredentialPublicKey());
-        self::assertSame($expected->getUserHandle(), $actual->getUserHandle());
-        self::assertSame($expected->getCounter(), $actual->getCounter());
-        self::assertEquals($expected->getOtherUI(), $actual->getOtherUI());
+        self::assertSame($expected->publicKeyCredentialId, $actual->publicKeyCredentialId);
+        self::assertSame($expected->type, $actual->type);
+        self::assertEqualsCanonicalizing($expected->transports, $actual->transports);
+        self::assertSame($expected->attestationType, $actual->attestationType);
+        self::assertEquals($expected->trustPath, $actual->trustPath);
+        self::assertEquals($expected->aaguid, $actual->aaguid);
+        self::assertSame($expected->credentialPublicKey, $actual->credentialPublicKey);
+        self::assertSame($expected->userHandle, $actual->userHandle);
+        self::assertSame($expected->counter, $actual->counter);
+        self::assertEquals($expected->otherUI, $actual->otherUI);
     }
 
     private function generateSource(int $user_id): PublicKeyCredentialSource

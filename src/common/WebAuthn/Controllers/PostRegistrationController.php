@@ -112,7 +112,7 @@ final class PostRegistrationController extends DispatchablePSR15Compatible
             return $this->error_response_builder->build(400, _('The result of passkey is not well formed'));
         }
 
-        $authentication_attestation_response = $public_key_credential->getResponse();
+        $authentication_attestation_response = $public_key_credential->response;
         if (! $authentication_attestation_response instanceof AuthenticatorAttestationResponse) {
             return $this->error_response_builder->build(400, _('The result of passkey is not for registration'));
         }
@@ -131,14 +131,16 @@ final class PostRegistrationController extends DispatchablePSR15Compatible
                         $this->relying_party_entity,
                         $user_entity,
                         $challenge,
-                        $this->credential_parameters
-                    )->setAttestation(PublicKeyCredentialCreationOptions::ATTESTATION_CONVEYANCE_PREFERENCE_NONE);
+                        $this->credential_parameters,
+                        null,
+                        PublicKeyCredentialCreationOptions::ATTESTATION_CONVEYANCE_PREFERENCE_NONE
+                    );
 
                     try {
                         $credential_source = $this->attestation_response_validator->check(
                             $authentication_attestation_response,
                             $options,
-                            $this->relying_party_entity->getId() ?? ''
+                            $this->relying_party_entity->id ?? ''
                         );
                     } catch (\Throwable $e) {
                         return $this->error_response_builder->build(400, _('The result of passkey is invalid'));
