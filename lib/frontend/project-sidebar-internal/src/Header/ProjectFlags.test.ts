@@ -20,26 +20,34 @@
  * SOFTWARE.
  */
 
-import { describe, it, expect, vi } from "vitest";
+import { describe, expect, it, vi } from "vitest";
+import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import ProjectFlags from "./ProjectFlags.vue";
 import { example_config } from "../project-sidebar-example-config";
 import { ref } from "vue";
-import * as tlp_popovers from "@tuleap/tlp-popovers";
 import type { Popover } from "@tuleap/tlp-popovers";
-import * as strict_inject from "@tuleap/vue-strict-inject";
-
-vi.mock("@tuleap/vue-strict-inject");
+import * as tlp_popovers from "@tuleap/tlp-popovers";
+import { SIDEBAR_CONFIGURATION } from "../injection-symbols";
+import type { Configuration } from "../configuration";
 
 describe("ProjectFlags", () => {
+    function getWrapper(config: Configuration): VueWrapper {
+        return shallowMount(ProjectFlags, {
+            global: {
+                provide: {
+                    [SIDEBAR_CONFIGURATION.valueOf()]: ref(config),
+                },
+            },
+        });
+    }
+
     it("displays the project flags with a popover", () => {
         const create_popover_spy = vi
             .spyOn(tlp_popovers, "createPopover")
             .mockReturnValue({} as Popover);
 
-        vi.spyOn(strict_inject, "strictInject").mockReturnValue(ref(example_config));
-
-        const wrapper = shallowMount(ProjectFlags);
+        const wrapper = getWrapper(example_config);
 
         expect(wrapper.element).toMatchSnapshot();
         expect(create_popover_spy).toHaveBeenCalled();
@@ -49,9 +57,7 @@ describe("ProjectFlags", () => {
         const config = example_config;
         config.project.flags = [];
 
-        vi.spyOn(strict_inject, "strictInject").mockReturnValue(ref(config));
-
-        const wrapper = shallowMount(ProjectFlags);
+        const wrapper = getWrapper(config);
 
         expect(wrapper.element.textContent).toBe("");
     });

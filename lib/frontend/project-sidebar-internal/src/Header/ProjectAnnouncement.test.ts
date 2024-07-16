@@ -20,30 +20,35 @@
  * SOFTWARE.
  */
 
-import { describe, it, expect, vi } from "vitest";
+import type { MockInstance } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
+import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import ProjectAnnouncement from "./ProjectAnnouncement.vue";
 import { SIDEBAR_CONFIGURATION, TRIGGER_SHOW_PROJECT_ANNOUNCEMENT } from "../injection-symbols";
 import { example_config } from "../project-sidebar-example-config";
 import { ref } from "vue";
-import * as strict_inject from "@tuleap/vue-strict-inject";
-
-vi.mock("@tuleap/vue-strict-inject");
+import type { Configuration } from "../configuration";
 
 describe("ProjectAnnouncement", () => {
-    it("displays show project announcement button", () => {
-        const trigger_announcement = vi.fn();
+    let trigger_announcement: MockInstance;
+    beforeEach(() => {
+        trigger_announcement = vi.fn();
+    });
 
-        vi.spyOn(strict_inject, "strictInject").mockImplementation((key) => {
-            switch (key) {
-                case SIDEBAR_CONFIGURATION:
-                    return ref(example_config);
-                case TRIGGER_SHOW_PROJECT_ANNOUNCEMENT:
-                    return trigger_announcement;
-            }
+    function getWrapper(config: Configuration): VueWrapper {
+        return shallowMount(ProjectAnnouncement, {
+            global: {
+                provide: {
+                    [SIDEBAR_CONFIGURATION.valueOf()]: ref(config),
+                    [TRIGGER_SHOW_PROJECT_ANNOUNCEMENT.valueOf()]: trigger_announcement,
+                },
+            },
         });
+    }
 
-        const wrapper = shallowMount(ProjectAnnouncement);
+    it("displays show project announcement button", () => {
+        const wrapper = getWrapper(example_config);
 
         const trigger_button = wrapper.find("button");
         expect(trigger_button.exists()).toBe(true);
@@ -55,16 +60,7 @@ describe("ProjectAnnouncement", () => {
         const config = example_config;
         config.project.has_project_announcement = false;
 
-        vi.spyOn(strict_inject, "strictInject").mockImplementation((key) => {
-            switch (key) {
-                case SIDEBAR_CONFIGURATION:
-                    return ref(config);
-                case TRIGGER_SHOW_PROJECT_ANNOUNCEMENT:
-                    return vi.fn();
-            }
-        });
-
-        const wrapper = shallowMount(ProjectAnnouncement);
+        const wrapper = getWrapper(config);
 
         expect(wrapper.find("button").exists()).toBe(false);
     });

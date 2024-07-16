@@ -20,20 +20,28 @@
  * SOFTWARE.
  */
 
-import { describe, it, expect, vi } from "vitest";
+import { describe, expect, it } from "vitest";
 import SidebarLogo from "./SidebarLogo.vue";
+import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import { example_config } from "./project-sidebar-example-config";
 import type { Configuration } from "./configuration";
-import * as strict_inject from "@tuleap/vue-strict-inject";
 import { ref } from "vue";
-
-vi.mock("@tuleap/vue-strict-inject");
+import { SIDEBAR_CONFIGURATION } from "./injection-symbols";
 
 describe("SidebarLogo", () => {
+    function getWrapper(config: Configuration): VueWrapper {
+        return shallowMount(SidebarLogo, {
+            global: {
+                provide: {
+                    [SIDEBAR_CONFIGURATION.valueOf()]: ref(config),
+                },
+            },
+        });
+    }
+
     it("displays default logo when no customization has been done", () => {
-        vi.spyOn(strict_inject, "strictInject").mockReturnValue(ref(example_config));
-        const wrapper = shallowMount(SidebarLogo);
+        const wrapper = getWrapper(example_config);
 
         const logo_link = wrapper.find("a");
         const logo_link_element = logo_link.element;
@@ -59,8 +67,7 @@ describe("SidebarLogo", () => {
                 },
             },
         };
-        vi.spyOn(strict_inject, "strictInject").mockReturnValue(ref(config));
-        const wrapper = shallowMount(SidebarLogo);
+        const wrapper = getWrapper(config);
 
         const logo_link = wrapper.find("a");
         const logo_link_element = logo_link.element;
@@ -90,8 +97,7 @@ describe("SidebarLogo", () => {
                 },
             },
         };
-        vi.spyOn(strict_inject, "strictInject").mockReturnValue(ref(config));
-        const wrapper = shallowMount(SidebarLogo);
+        const wrapper = getWrapper(config);
 
         const logo = wrapper.find("[data-test=legacy-logo]");
         expect(logo.exists()).toBe(true);

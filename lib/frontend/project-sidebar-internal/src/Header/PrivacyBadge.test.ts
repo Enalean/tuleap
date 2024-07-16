@@ -26,10 +26,8 @@ import PrivacyBadge from "./PrivacyBadge.vue";
 import { example_config } from "../project-sidebar-example-config";
 import * as tlp_popovers from "@tuleap/tlp-popovers";
 import type { Popover } from "@tuleap/tlp-popovers";
-import * as strict_inject from "@tuleap/vue-strict-inject";
 import { ref } from "vue";
-
-vi.mock("@tuleap/vue-strict-inject");
+import { SIDEBAR_CONFIGURATION } from "../injection-symbols";
 
 describe("PrivacyBadge", () => {
     it("displays the badge with its popover", () => {
@@ -37,9 +35,13 @@ describe("PrivacyBadge", () => {
             .spyOn(tlp_popovers, "createPopover")
             .mockReturnValue({} as Popover);
 
-        vi.spyOn(strict_inject, "strictInject").mockReturnValue(ref(example_config));
-
-        const wrapper = shallowMount(PrivacyBadge);
+        const wrapper = shallowMount(PrivacyBadge, {
+            global: {
+                provide: {
+                    [SIDEBAR_CONFIGURATION.valueOf()]: ref(example_config),
+                },
+            },
+        });
 
         expect(wrapper.element).toMatchSnapshot();
         expect(create_popover_spy).toHaveBeenCalled();
