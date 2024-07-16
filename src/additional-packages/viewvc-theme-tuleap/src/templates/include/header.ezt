@@ -20,7 +20,8 @@
         tuleap_breadcrumbs = document.querySelector('.main .breadcrumb');
 
     [].forEach.call(viewvc_breadcrumbs_steps, function (step) {
-        tuleap_breadcrumbs.appendChild(step.remove());
+        step.remove();
+        tuleap_breadcrumbs.appendChild(step);
     });
 })();
 </script>
