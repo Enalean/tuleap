@@ -20,188 +20,244 @@
 </div><!-- tuleap-viewvc-header -->
 <div class="tuleap-viewvc-body-diff">
 
-[if-any raw_diff]
-  <pre class="vc_raw_diff">[raw_diff]</pre>
-[end]
-
-[define left_view_href][if-any left.prefer_markup][left.view_href][else][if-any left.download_href][left.download_href][end][end][end]
-[define right_view_href][if-any right.prefer_markup][right.view_href][else][if-any right.download_href][right.download_href][end][end][end]
-
-[if-any changes]
-<table cellspacing="0" cellpadding="0" id="tuleap-viewvc-diff-changes">
-    <thead>
-      <tr>
-        <th></th>
-        <th>
-          [is left.path right.path][else][left.path][end]
-          revision [if-any left_view_href]<a href="[left_view_href]">[end][left.rev][if-any left_view_href]</a>[end][if-any left.author] by <em>[left.author]</em>[end],
-          [left.date]
-          [if-any left.tag]<br />Tag: [left.tag][end]
-        </th>
-        <th>
-          [is left.path right.path][else][right.path][end]
-          revision [if-any right_view_href]<a href="[right_view_href]">[end][right.rev][if-any right_view_href]</a>[end][if-any right.author] by <em>[right.author]</em>[end],
-          [right.date]
-          [if-any right.tag]<br />Tag: [right.tag][end]
-        </th>
-      </tr>
-    </thead>
-    <tbody>
-  [for changes]
-    [is changes.type "header"]
-      <tr class="tuleap-viewvc-diff-changes-chunk-header" id="h[changes.line_info_right]">
-        <td></td>
-        <td>
-          <strong>Line [changes.line_info_left]</strong>&nbsp;
-          <span class="vc_diff_chunk_extra">[changes.line_info_extra]</span>
-        </td>
-        <td>
-          <strong>Line [changes.line_info_right]</strong>&nbsp;
-          <span class="vc_diff_chunk_extra">[changes.line_info_extra]</span>
-        </td>
-      </tr>
+[if-any diffs]
+  [for diffs]
+    [is diffs.diff_block_format "anchor"]
+      <p id="[diffs.anchor]"/>
     [else]
-      [is changes.type "add"]
-        <tr>
-          <td class="vc_diff_line_number" id="l[changes.line_number]">[if-any right.annotate_href]<a href="[right.annotate_href]#l[changes.line_number]">[changes.line_number]</a>[else][changes.line_number][end]</td>
-          <td class="vc_diff_empty">&nbsp;</td>
-          <td class="vc_diff_add">&nbsp;[changes.right]</td>
+      [define msg_no_changes]<br/><strong>- No changes -</strong><br/>&nbsp;[end]
+      [define msg_binary]<br/><strong>- Binary content differs -</strong><br/>&nbsp;[end]
+      [define msg_error]<br/><strong>- ViewVC depends on rcsdiff and GNU diff to create this page. ViewVC cannot find GNU diff.
+      Even if you have GNU diff installed, the rcsdiff program must be configured and compiled with the GNU
+      diff location. -</strong><br/>&nbsp;[end]
+
+      [define left_view_href][if-any diffs.left.prefer_markup][diffs.left.view_href][else][if-any diffs.left.download_href][diffs.left.download_href][end][end][end]
+      [define right_view_href][if-any diffs.right.prefer_markup][diffs.right.view_href][else][if-any diffs.right.download_href][diffs.right.download_href][end][end][end]
+
+      [define left_header][is diffs.left.path diffs.right.path][else][diffs.left.path]<br/>[end]
+      [if-any diffs.propname]Property: <em>[diffs.propname]</em><br/>[end]
+      Revision [if-any left_view_href]<a href="[left_view_href]">[end][diffs.left.rev][if-any left_view_href]</a>[end][if-any diffs.left.author] by <em>[diffs.left.author]</em>[end],
+      [diffs.left.date]
+      [if-any diffs.left.tag]<br/>Tag: [diffs.left.tag][end][end]
+
+      [define right_header][is diffs.right.path diffs.left.path][else][diffs.right.path]<br/>[end]
+      [if-any diffs.propname]Property: <em>[diffs.propname]</em><br/>[end]
+      Revision [if-any right_view_href]<a href="[right_view_href]">[end][diffs.right.rev][if-any right_view_href]</a>[end][if-any diffs.right.author] by <em>[diffs.right.author]</em>[end],
+      [diffs.right.date]
+      [if-any diffs.right.tag]<br/>Tag: [diffs.right.tag][end][end]
+    [end]
+
+    [is diffs.diff_block_format "raw"]
+      <table cellspacing="0" cellpadding="0" style="margin-top: 1em;">
+        <tr class="vc_diff_header">
+          <th style="width:5%">&nbsp;</th><th style="width:95%; text-align:left;">[left_header]</th>
         </tr>
-      [else]
-        [is changes.type "remove"]
-          <tr>
-            <td></td>
-            <td class="vc_diff_remove">&nbsp;[changes.left]</td>
-            <td class="vc_diff_empty">&nbsp;</td>
+        <tr>
+          <th colspan="2" style="text-align:left;">vs.</th>
+        </tr>
+        <tr class="vc_diff_header">
+          <th style="width:5%">&nbsp;</th><th style="width:95%; text-align:left;">[right_header]</th>
+        </tr>
+        [is diffs.changes.type "no-changes"]
+          <tr class="vc_diff_empty">
+            <td colspan="2" style="text-align:center;">[msg_no_changes]</td>
           </tr>
         [else]
-          [is changes.type "change"]
-            <tr>
-              [if-any changes.have_right]
-                <td class="vc_diff_line_number" id="l[changes.line_number]">[if-any right.annotate_href]<a href="[right.annotate_href]#l[changes.line_number]">[changes.line_number]</a>[else][changes.line_number][end]</td>
-              [else]
-                <td></td>
-              [end]
-              [if-any changes.have_left]
-                <td class="vc_diff_change">&nbsp;[changes.left]</td>
-              [else]
-                <td class="vc_diff_change_empty">&nbsp;</td>
-              [end]
-              [if-any changes.have_right]
-                <td class="vc_diff_change">&nbsp;[changes.right]</td>
-              [else]
-                <td class="vc_diff_change_empty">&nbsp;</td>
-              [end]
+          [is diffs.changes.type "binary-diff"]
+            <tr class="vc_diff_empty">
+              <td colspan="2" style="text-align:center;">[msg_binary]</td>
             </tr>
           [else]
-            [is changes.type "no-changes"]
+            <tr><td colspan="2"><pre class="vc_raw_diff">[diffs.changes.raw]</pre></td></tr>
+          [end]
+        [end]
+      </table>
+    [end]
+
+    [is diffs.diff_block_format "sidebyside-1"]
+    <table cellspacing="0" cellpadding="0" id="tuleap-viewvc-diff-changes">
+      <tr class="vc_diff_header">
+        <th style="width:6%;"></th>
+        <th style="width:47%; vertical-align:top;">[left_header]</th>
+        <th style="width:47%; vertical-align:top;">[right_header]</th>
+      </tr>
+
+      [for diffs.changes]
+        [is diffs.changes.type "header"]
+          <tr class="tuleap-viewvc-diff-changes-chunk-header" id="h[diffs.changes.line_info_right]">
+            <td style="width:6%;"><strong>#</strong></td>
+            <td style="width:47%;">
+              <strong>Line [diffs.changes.line_info_left]</strong>&nbsp;
+              <span class="vc_diff_chunk_extra">[diffs.changes.line_info_extra]</span>
+            </td>
+            <td style="width:47%;">
+              <strong>Line [diffs.changes.line_info_right]</strong>&nbsp;
+              <span class="vc_diff_chunk_extra">[diffs.changes.line_info_extra]</span>
+            </td>
+          </tr>
+        [else]
+          [is diffs.changes.type "add"]
+            <tr>
+              <td class="vc_diff_line_number" id="l[diffs.changes.line_number]">[if-any diffs.right.annotate_href]<a href="[diffs.right.annotate_href]#l[diffs.changes.line_number]">[diffs.changes.line_number]</a>[else][diffs.changes.line_number][end]</td>
+              <td class="vc_diff_empty">&nbsp;</td>
+              <td class="vc_diff_add">&nbsp;[diffs.changes.right]</td>
+            </tr>
+          [else]
+            [is diffs.changes.type "remove"]
               <tr>
-                <td colspan="3">&nbsp;</td>
-              </tr>
-              <tr class="vc_diff_empty">
-                <td colspan="3" style="text-align:center;"><br />
-                <strong>- No changes -</strong><br />&nbsp; </td>
+                <td></td>
+                <td class="vc_diff_remove">&nbsp;[diffs.changes.left]</td>
+                <td class="vc_diff_empty">&nbsp;</td>
               </tr>
             [else]
-              [is changes.type "binary-diff"]
+              [is diffs.changes.type "change"]
                 <tr>
-                  <td colspan="3">&nbsp;</td>
-                </tr>
-                <tr class="vc_diff_empty">
-                  <td colspan="3" style="text-align:center;"><br />
-                  <strong>- Binary file revisions differ -</strong><br />&nbsp; </td>
+                  [if-any diffs.changes.have_right]
+                    <td class="vc_diff_line_number" id="l[diffs.changes.line_number]">[if-any diffs.right.annotate_href]<a href="[diffs.right.annotate_href]#l[diffs.changes.line_number]">[diffs.changes.line_number]</a>[else][diffs.changes.line_number][end]</td>
+                  [else]
+                    <td></td>
+                  [end]
+                  [if-any diffs.changes.have_left]
+                    <td class="vc_diff_change">&nbsp;[diffs.changes.left]</td>
+                  [else]
+                    <td class="vc_diff_change_empty">&nbsp;</td>
+                  [end]
+                  [if-any diffs.changes.have_right]
+                    <td class="vc_diff_change">&nbsp;[diffs.changes.right]</td>
+                  [else]
+                    <td class="vc_diff_change_empty">&nbsp;</td>
+                  [end]
                 </tr>
               [else]
-                [is changes.type "error"]
+                [is diffs.changes.type "no-changes"]
                   <tr>
                     <td colspan="3">&nbsp;</td>
                   </tr>
                   <tr class="vc_diff_empty">
-                    <td colspan="3" style="text-align:center;"> <br />
-                    <strong>- ViewVC depends on rcsdiff and GNU diff to create
-                    this page.  ViewVC cannot find GNU diff. Even if you
-                    have GNU diff installed, the rcsdiff program must be
-                    configured and compiled with the GNU diff location.
-                    -</strong> <br />&nbsp; </td>
+                    <td colspan="3" style="text-align:center;">[msg_no_changes]</td>
                   </tr>
                 [else]
-                  <tr>
-                    <td class="vc_diff_line_number" id="l[changes.line_number]">[if-any right.annotate_href]<a href="[right.annotate_href]#l[changes.line_number]">[changes.line_number]</a>[else][changes.line_number][end]</td>
-                    <td class="vc_diff_nochange">&nbsp;[changes.left]</td>
-                    <td class="vc_diff_nochange">&nbsp;[changes.right]</td>
-                  </tr>
+                  [is diffs.changes.type "binary-diff"]
+                    <tr>
+                      <td colspan="3">&nbsp;</td>
+                    </tr>
+                    <tr class="vc_diff_empty">
+                      <td colspan="3" style="text-align:center;">[msg_binary]</td>
+                    </tr>
+                  [else]
+                    [is diffs.changes.type "error"]
+                      <tr>
+                        <td colspan="3">&nbsp;</td>
+                      </tr>
+                      <tr class="vc_diff_empty">
+                        <td colspan="3" style="text-align:center;">[msg_error]</td>
+                      </tr>
+                    [else]
+                      <tr>
+                        <td class="vc_diff_line_number" id="l[diffs.changes.line_number]">[if-any diffs.right.annotate_href]<a href="[diffs.right.annotate_href]#l[diffs.changes.line_number]">[diffs.changes.line_number]</a>[else][diffs.changes.line_number][end]</td>
+                        <td class="vc_diff_nochange">&nbsp;[diffs.changes.left]</td>
+                        <td class="vc_diff_nochange">&nbsp;[diffs.changes.right]</td>
+                      </tr>
+                    [end]
+                  [end]
                 [end]
               [end]
             [end]
           [end]
         [end]
       [end]
+    </table>
+    [end]
+
+    [is diffs.diff_block_format "sidebyside-2"]
+      <table class="vc_idiff" style="margin-top: 1em;">
+        <colgroup><col style="width: 3%;"/><col class="content" style="width: 47%;"/></colgroup>
+        <colgroup><col style="width: 3%;"/><col class="content" style="width: 47%;"/></colgroup>
+        <thead>
+          <tr>
+            <th colspan="2">[left_header]</th>
+            <th colspan="2">[right_header]</th>
+          </tr>
+        </thead>
+        <tbody>
+          [for diffs.changes]
+            [is diffs.changes.type "no-changes"]
+              <tr class="vc_diff_empty">
+                <td colspan="4" style="text-align:center;">[msg_no_changes]</td>
+              </tr>
+            [else]
+              [is diffs.changes.type "binary-diff"]
+                <tr class="vc_diff_empty">
+                  <td colspan="4" style="text-align:center;">[msg_binary]</td>
+                </tr>
+              [else]
+                [if-any diffs.changes.gap]
+                  <tr>
+                    <th>&hellip;</th><th></th>
+                    <th>&hellip;</th><th></th>
+                  </tr>
+                [end]
+                <tr>
+                  [for diffs.changes.columns]
+                    <th>[diffs.changes.columns.line_number]</th><td[if-any diffs.changes.columns.line_number][else] class="vc_idiff_empty"[end]>[for diffs.changes.columns.segments][if-any diffs.changes.columns.segments.type]<span class="vc_idiff_[diffs.changes.columns.segments.type]">[diffs.changes.columns.segments.text]</span>[else][diffs.changes.columns.segments.text][end][end]</td>
+                  [end]
+                </tr>
+              [end]
+            [end]
+          [end]
+        </tbody>
+      </table>
+    [end]
+
+    [is diffs.diff_block_format "unified"]
+      <table class="vc_idiff" style="margin-top: 1em;">
+        <colgroup>
+          <col style="width: 3%;"/>
+          <col style="width: 3%;"/>
+          <col class="content" style="width: 94%;"/>
+        </colgroup>
+        <thead>
+          <tr class="vc_diff_header">
+            <th>&nbsp;</th><th colspan="2" style="width:95%; text-align:left;">[left_header]</th>
+          </tr>
+          <tr>
+            <th colspan="3" style="text-align:left;">vs.</th>
+          </tr>
+          <tr class="vc_diff_header">
+            <th>&nbsp;</th><th colspan="2" style="width:95%; text-align:left;">[right_header]</th>
+          </tr>
+        </thead>
+        <tbody>
+          [for diffs.changes]
+            [is diffs.changes.type "no-changes"]
+              <tr class="vc_diff_empty">
+                <td colspan="3" style="text-align:center;">[msg_no_changes]</td>
+              </tr>
+            [else]
+              [is diffs.changes.type "binary-diff"]
+                <tr class="vc_diff_empty">
+                  <td colspan="3" style="text-align:center;">[msg_binary]</td>
+                </tr>
+              [else]
+                [if-any diffs.changes.gap]
+                  <tr>
+                    <th>&hellip;</th>
+                    <th>&hellip;</th>
+                    <th></th>
+                  </tr>
+                [end]
+                <tr>
+                  <th>[diffs.changes.left_number]</th>
+                  <th>[diffs.changes.right_number]</th>
+                  <td[if-any diffs.changes.type] class="vc_idiff_[diffs.changes.type]"[end]>[for diffs.changes.segments][if-any diffs.changes.segments.type]<span class="vc_idiff_[diffs.changes.segments.type]">[diffs.changes.segments.text]</span>[else][diffs.changes.segments.text][end][end]</td>
+                </tr>
+              [end]
+            [end]
+          [end]
+        </tbody>
+      </table>
     [end]
   [end]
-  </tbody>
-</table>
-[end]
-
-[if-any sidebyside]
-  <table class="vc_idiff">
-    <colgroup><col /><col class="content" /></colgroup>
-    <colgroup><col /><col class="content" /></colgroup>
-    <thead>
-      <tr>
-        <th colspan="2">
-          [is left.path right.path][else][left.path][end]
-          Revision [left.rev]
-        </th>
-        <th colspan="2">
-          [is left.path right.path][else][right.path][end]
-          Revision [right.rev]
-        </th>
-      </tr>
-    </thead>
-    <tbody>
-      [for sidebyside]
-        [if-any sidebyside.gap]
-          <tr>
-            <th>&hellip;</th><th></th>
-            <th>&hellip;</th><th></th>
-          </tr>
-        [end]
-        <tr>
-          [for sidebyside.columns]
-            <th>[sidebyside.columns.line_number]</th><td[if-any sidebyside.columns.line_number][else] class="vc_idiff_empty"[end]>[for sidebyside.columns.segments][if-any sidebyside.columns.segments.type]<span class="vc_idiff_[sidebyside.columns.segments.type]">[sidebyside.columns.segments.text]</span>[else][sidebyside.columns.segments.text][end][end]</td>
-          [end]
-        </tr>
-      [end]
-    </tbody>
-  </table>
-[end]
-
-[if-any unified]
-  <table class="vc_idiff">
-    <thead>
-      <tr>
-        <th>r[left.rev]</th>
-        <th>r[right.rev]</th>
-        <th></th>
-      </tr>
-    </thead>
-    <tbody>
-      [for unified]
-        [if-any unified.gap]
-          <tr>
-            <th>&hellip;</th>
-            <th>&hellip;</th>
-            <th></th>
-          </tr>
-        [end]
-        <tr>
-          <th>[unified.left_number]</th>
-          <th>[unified.right_number]</th>
-          <td[if-any unified.type] class="vc_idiff_[unified.type]"[end]>[for unified.segments][if-any unified.segments.type]<span class="vc_idiff_[unified.segments.type]">[unified.segments.text]</span>[else][unified.segments.text][end][end]</td>
-        </tr>
-      [end]
-    </tbody>
-  </table>
 [end]
 
 <div id="tuleap-viewvc-diff-footer">
@@ -217,27 +273,6 @@
             <option value="s" [is diff_format "s"]selected="selected"[end]>Side by Side</option>
         </select>
     </form>
-    [if-any raw_diff]
-    [else]
-        <table style="border:solid #ccc 1px;" class="auto">
-            <tr>
-              <td>Legend:<br />
-                <table cellspacing="0" cellpadding="0">
-                  <tr>
-                    <td style="text-align:center; width: 50%; white-space: nowrap; padding: 0 4px;" class="vc_diff_remove">Removed from v.[left.rev]</td>
-                  </tr>
-                  <tr>
-                    <td style="text-align:center;" colspan="2" class="vc_diff_change">changed lines</td>
-                  </tr>
-                  <tr>
-                    <td >&nbsp;</td>
-                    <td style="text-align:center; width: 50%; white-space: nowrap; padding: 0 4px;" class="vc_diff_add">Added in v.[right.rev]</td>
-                  </tr>
-                </table>
-              </td>
-            </tr>
-        </table>
-    [end]
 </div>
 
 [include "include/footer.ezt"]
