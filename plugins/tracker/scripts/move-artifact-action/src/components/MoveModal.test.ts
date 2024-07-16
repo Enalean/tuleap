@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-import type { SpyInstance } from "vitest";
+import type { Mock } from "vitest";
 import { describe, expect, it, vi } from "vitest";
 import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
@@ -33,7 +33,7 @@ import DryRunPreview from "./DryRunPreview.vue";
 
 const artifact_id = 126;
 
-type MockedJquery = { on: SpyInstance; modal: SpyInstance };
+type MockedJquery = { on: Mock; modal: Mock };
 const mocked_jquery: MockedJquery = {
     on: vi.fn(),
     modal: vi.fn(),

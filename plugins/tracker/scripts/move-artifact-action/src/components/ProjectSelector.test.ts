@@ -18,7 +18,7 @@
  */
 
 import { vi, describe, beforeEach, it, expect } from "vitest";
-import type { SpyInstance } from "vitest";
+import type { MockInstance } from "vitest";
 import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import * as list_picker from "@tuleap/list-picker";
@@ -41,7 +41,7 @@ const projects = [
 ];
 
 describe("ProjectSelector", () => {
-    let createListPicker: SpyInstance, list_picker_instance: ListPicker;
+    let createListPicker: MockInstance, list_picker_instance: ListPicker;
 
     const getWrapper = (): VueWrapper => {
         return shallowMount(ProjectSelector, {

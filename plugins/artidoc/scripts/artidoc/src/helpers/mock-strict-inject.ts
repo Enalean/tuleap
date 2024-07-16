@@ -25,7 +25,10 @@ export function mockStrictInject(keys: [StrictInjectionKey<unknown>, unknown][])
     const map = new Map(keys);
 
     vi.spyOn(strict_inject, "strictInject").mockImplementation(
-        (key: StrictInjectionKey<unknown>): unknown => {
+        /* eslint-disable-next-line @typescript-eslint/no-explicit-any --
+           I do not care about being precise about generic types for the unit tests that will use this.
+           Please set up your inject correctly when using this. */
+        (key: StrictInjectionKey<any>): any => {
             const value = map.get(key);
             if (value === undefined) {
                 throw new Error("Unknown key " + String(key));

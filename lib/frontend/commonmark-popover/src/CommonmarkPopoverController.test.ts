@@ -18,7 +18,7 @@
  */
 
 import { describe, it, expect, beforeEach, vi } from "vitest";
-import type { SpyInstance } from "vitest";
+import type { MockInstance } from "vitest";
 import * as tlp_popovers from "@tuleap/tlp-popovers";
 import type { Popover } from "@tuleap/tlp-popovers";
 import type { ControlCommonmarkPopover } from "./CommonmarkPopoverController";
@@ -42,9 +42,9 @@ describe("CommonmarkPopoverController", () => {
     });
 
     describe("Popover instance management", () => {
-        let createPopover: SpyInstance,
-            destroyPopoverInstance: SpyInstance,
-            hidePopover: SpyInstance;
+        let createPopover: MockInstance,
+            destroyPopoverInstance: MockInstance,
+            hidePopover: MockInstance;
 
         beforeEach(() => {
             destroyPopoverInstance = vi.fn();

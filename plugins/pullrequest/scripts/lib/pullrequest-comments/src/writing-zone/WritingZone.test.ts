@@ -18,7 +18,7 @@
  */
 
 import { describe, it, expect, beforeEach, vi } from "vitest";
-import type { SpyInstance } from "vitest";
+import type { MockInstance } from "vitest";
 import { selectOrThrow } from "@tuleap/dom";
 import type { ElementContainingAWritingZone } from "../types";
 import type { ControlWritingZone } from "./WritingZoneController";
@@ -36,10 +36,10 @@ const project_id = 105;
 describe("WritingZone", () => {
     let doc: Document,
         focus_writing_zone_when_connected: boolean,
-        focusWritingZone: SpyInstance,
-        blurWritingZone: SpyInstance,
-        resetWritingZone: SpyInstance,
-        onTextareaInput: SpyInstance,
+        focusWritingZone: MockInstance,
+        blurWritingZone: MockInstance,
+        resetWritingZone: MockInstance,
+        onTextareaInput: MockInstance,
         writing_zone_controller: ControlWritingZone;
 
     beforeEach(() => {

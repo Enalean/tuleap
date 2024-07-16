@@ -17,12 +17,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { SpyInstance } from "vitest";
+import type { MockInstance } from "vitest";
 import { expect } from "vitest";
 import type { ListPickerItem } from "../type";
 
 export function expectChangeEventToHaveBeenFiredOnSourceSelectBox(
-    spy: SpyInstance,
+    spy: MockInstance,
     nb_times: number,
 ): void {
     if (nb_times === 0) {

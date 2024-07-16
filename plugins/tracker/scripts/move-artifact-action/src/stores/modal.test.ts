@@ -17,10 +17,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { describe, it, expect, beforeEach, vi } from "vitest";
-import { setActivePinia, createPinia } from "pinia";
-import type { SpyInstance } from "vitest";
-import { okAsync, errAsync } from "neverthrow";
+import type { MockInstance } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
+import { createPinia, setActivePinia } from "pinia";
+import { errAsync, okAsync } from "neverthrow";
 import { Fault } from "@tuleap/fault";
 import * as rest_querier from "../api/rest-querier";
 import type { DryRunState } from "../api/types";
@@ -33,7 +33,7 @@ const artifact_id = 101,
     tracker_id = 5;
 
 describe("modal store", () => {
-    let redirectTo: SpyInstance;
+    let redirectTo: MockInstance;
 
     beforeEach(() => {
         setActivePinia(createPinia());
@@ -73,7 +73,7 @@ describe("modal store", () => {
     });
 
     describe("move", () => {
-        let moveArtifact: SpyInstance;
+        let moveArtifact: MockInstance;
         beforeEach(() => {
             moveArtifact = vi.spyOn(rest_querier, "moveArtifact");
 
@@ -101,7 +101,7 @@ describe("modal store", () => {
     });
 
     describe("move dry run", () => {
-        let moveDryRunArtifact: SpyInstance, moveArtifact: SpyInstance;
+        let moveDryRunArtifact: MockInstance, moveArtifact: MockInstance;
 
         beforeEach(() => {
             moveDryRunArtifact = vi.spyOn(rest_querier, "moveDryRunArtifact");

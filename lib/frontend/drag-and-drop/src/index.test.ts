@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { SpyInstance } from "vitest";
+import type { MockInstance } from "vitest";
 import { describe, expect, it, afterEach, vi } from "vitest";
 import type { DrekkenovInitOptions } from "./index";
 import { init } from "./index";
@@ -40,7 +40,7 @@ vi.mock("./DrekkenovState", () => {
 describe(`drekkenov`, () => {
     afterEach(() => {
         state_create_start_handler_called = false;
-        const state_constructor = DrekkenovState as unknown as SpyInstance;
+        const state_constructor = DrekkenovState as unknown as MockInstance;
         state_constructor.mockClear();
     });
 

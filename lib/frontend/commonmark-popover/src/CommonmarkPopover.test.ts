@@ -18,7 +18,7 @@
  */
 
 import { describe, it, expect, beforeEach, vi } from "vitest";
-import type { SpyInstance } from "vitest";
+import type { MockInstance } from "vitest";
 import * as tlp_popovers from "@tuleap/tlp-popovers";
 import type { Popover } from "@tuleap/tlp-popovers";
 import type { InternalCommonmarkPopover } from "./CommonmarkPopover";
@@ -38,7 +38,7 @@ const noop = (): void => {
 vi.mock("@tuleap/tlp-popovers");
 
 describe("CommonmarkPopover", () => {
-    let doc: Document, initPopover: SpyInstance, destroyPopover: SpyInstance;
+    let doc: Document, initPopover: MockInstance, destroyPopover: MockInstance;
 
     beforeEach(() => {
         doc = document.implementation.createHTMLDocument();

@@ -17,12 +17,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { vi, describe, beforeEach, it, expect } from "vitest";
-import type { SpyInstance } from "vitest";
+import type { MockInstance } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
-import * as list_picker from "@tuleap/list-picker";
 import type { ListPicker } from "@tuleap/list-picker";
+import * as list_picker from "@tuleap/list-picker";
 import { getGlobalTestOptions } from "../../tests/global-options-for-tests";
 import { useSelectorsStore } from "../stores/selectors";
 import type { Tracker } from "../api/types";
@@ -42,7 +42,7 @@ const trackers: Tracker[] = [
 ];
 
 describe("TrackerSelector", () => {
-    let createListPicker: SpyInstance, list_picker_instance: ListPicker;
+    let createListPicker: MockInstance, list_picker_instance: ListPicker;
 
     const getWrapper = (tracker_id: number): VueWrapper => {
         return shallowMount(TrackerSelector, {
