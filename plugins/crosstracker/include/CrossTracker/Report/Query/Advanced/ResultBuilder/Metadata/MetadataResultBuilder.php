@@ -29,6 +29,7 @@ use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Metadata\Date\Metada
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Metadata\Semantic\AssignedTo\AssignedToResultBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Metadata\Semantic\Status\StatusResultBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Metadata\Text\MetadataTextResultBuilder;
+use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Metadata\User\MetadataUserResultBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\SelectedValuesCollection;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
 
@@ -39,6 +40,7 @@ final readonly class MetadataResultBuilder
         private StatusResultBuilder $status_builder,
         private AssignedToResultBuilder $assigned_to_builder,
         private MetadataDateResultBuilder $date_builder,
+        private MetadataUserResultBuilder $user_builder,
     ) {
     }
 
@@ -58,7 +60,7 @@ final readonly class MetadataResultBuilder
             AllowedMetadata::SUBMITTED_ON,
             AllowedMetadata::LAST_UPDATE_DATE => $this->date_builder->getResult($metadata, $select_results, $user),
             AllowedMetadata::SUBMITTED_BY,
-            AllowedMetadata::LAST_UPDATE_BY,
+            AllowedMetadata::LAST_UPDATE_BY   => $this->user_builder->getResult($metadata, $select_results),
             AllowedMetadata::ID               => new SelectedValuesCollection(null, []),
             default                           => throw new LogicException("Unknown metadata type: {$metadata->getName()}"),
         };

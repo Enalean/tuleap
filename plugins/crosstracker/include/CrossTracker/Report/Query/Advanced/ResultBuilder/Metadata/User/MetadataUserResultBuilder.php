@@ -20,19 +20,19 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Metadata\Semantic\AssignedTo;
+namespace Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Metadata\User;
 
 use LogicException;
-use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Field\UserList\UserListRepresentation;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Field\UserList\UserRepresentation;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\SelectedValue;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\SelectedValuesCollection;
 use Tuleap\CrossTracker\REST\v1\Representation\CrossTrackerSelectedRepresentation;
 use Tuleap\CrossTracker\REST\v1\Representation\CrossTrackerSelectedType;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
 use Tuleap\User\RetrieveUserById;
 use UserHelper;
 
-final readonly class AssignedToResultBuilder
+final readonly class MetadataUserResultBuilder
 {
     public function __construct(
         private RetrieveUserById $user_retriever,
@@ -40,15 +40,15 @@ final readonly class AssignedToResultBuilder
     ) {
     }
 
-    public function getResult(array $select_results): SelectedValuesCollection
+    public function getResult(Metadata $metadata, array $select_results): SelectedValuesCollection
     {
         $values = [];
-        $alias  = '@assigned_to';
+        $alias  = $metadata->getName();
 
         foreach ($select_results as $result) {
             $id = $result['id'];
-            if (! isset($values[$id])) {
-                $values[$id] = [];
+            if (isset($values[$id])) {
+                continue;
             }
 
             $value = $result[$alias];
@@ -59,12 +59,12 @@ final readonly class AssignedToResultBuilder
             if ($user === null) {
                 throw new LogicException("User $value not found");
             }
-            $values[$id][] = UserRepresentation::fromPFUser($user, $this->user_helper);
+            $values[$id] = new SelectedValue($metadata->getName(), UserRepresentation::fromPFUser($user, $this->user_helper));
         }
 
         return new SelectedValuesCollection(
-            new CrossTrackerSelectedRepresentation('@assigned_to', CrossTrackerSelectedType::TYPE_USER_LIST),
-            array_map(static fn(array $selected_values) => new SelectedValue('@assigned_to', new UserListRepresentation($selected_values)), $values),
+            new CrossTrackerSelectedRepresentation($metadata->getName(), CrossTrackerSelectedType::TYPE_USER),
+            $values,
         );
     }
 }

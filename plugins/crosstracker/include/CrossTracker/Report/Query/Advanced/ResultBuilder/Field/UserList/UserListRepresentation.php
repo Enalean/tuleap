@@ -30,7 +30,7 @@ use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\SelectedValueReprese
 final readonly class UserListRepresentation implements SelectedValueRepresentation
 {
     /**
-     * @var UserListValueRepresentation[]
+     * @var UserRepresentation[]
      */
     public array $value;
 

@@ -28,7 +28,7 @@ use Tracker;
 use Tuleap\CrossTracker\CrossTrackerReport;
 use Tuleap\CrossTracker\Report\Query\Advanced\CrossTrackerFieldTestCase;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Field\UserList\UserListRepresentation;
-use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Field\UserList\UserListValueRepresentation;
+use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Field\UserList\UserRepresentation;
 use Tuleap\CrossTracker\REST\v1\Representation\CrossTrackerReportContentRepresentation;
 use Tuleap\CrossTracker\Tests\Report\ArtifactReportFactoryInstantiator;
 use Tuleap\DB\DBFactory;
@@ -44,7 +44,7 @@ final class AssignedToSelectBuilderTest extends CrossTrackerFieldTestCase
      */
     private array $trackers;
     /**
-     * @var array<int, UserListValueRepresentation[]>
+     * @var array<int, UserRepresentation[]>
      */
     private array $expected_results;
 
@@ -94,8 +94,8 @@ final class AssignedToSelectBuilderTest extends CrossTrackerFieldTestCase
         $helper                 = UserHelper::instance();
         $this->expected_results = [
             $release_artifact_empty_id      => [],
-            $release_artifact_with_alice_id => [UserListValueRepresentation::fromPFUser($alice, $helper)],
-            $sprint_artifact_with_bob_id    => [UserListValueRepresentation::fromPFUser($bob, $helper)],
+            $release_artifact_with_alice_id => [UserRepresentation::fromPFUser($alice, $helper)],
+            $sprint_artifact_with_bob_id    => [UserRepresentation::fromPFUser($bob, $helper)],
         ];
         $tracker_builder->buildListValue(
             $release_artifact_with_alice_changeset,

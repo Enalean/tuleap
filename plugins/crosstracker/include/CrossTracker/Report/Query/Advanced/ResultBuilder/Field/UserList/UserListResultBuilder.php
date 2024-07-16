@@ -60,16 +60,16 @@ final readonly class UserListResultBuilder
                 if ($user === null) {
                     throw new LogicException("User {$result["user_list_value_$alias"]} not found");
                 }
-                $values[$id][] = UserListValueRepresentation::fromPFUser($user, $this->user_helper);
+                $values[$id][] = UserRepresentation::fromPFUser($user, $this->user_helper);
             } elseif ($result["user_list_open_$alias"] !== null) {
                 $user = $this->user_email_retriever->getUserByEmail((string) $result["user_list_open_$alias"]);
                 if ($user === null) {
                     $user = $this->user_name_retriever->getUserByUserName((string) $result["user_list_open_$alias"]);
                 }
                 if ($user === null) {
-                    $values[$id][] = UserListValueRepresentation::fromAnonymous((string) $result["user_list_open_$alias"]);
+                    $values[$id][] = UserRepresentation::fromAnonymous((string) $result["user_list_open_$alias"]);
                 } else {
-                    $values[$id][] = UserListValueRepresentation::fromPFUser($user, $this->user_helper);
+                    $values[$id][] = UserRepresentation::fromPFUser($user, $this->user_helper);
                 }
             }
         }
