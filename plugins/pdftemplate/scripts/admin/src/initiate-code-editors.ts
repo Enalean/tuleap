@@ -30,5 +30,6 @@ export function initiateCodeEditors(): CodeMirror.EditorFromTextArea | undefined
         extraKeys: { "Ctrl-Space": "autocomplete" },
         mode: "text/css",
         lineNumbers: true,
+        indentUnit: 4,
     });
 }
