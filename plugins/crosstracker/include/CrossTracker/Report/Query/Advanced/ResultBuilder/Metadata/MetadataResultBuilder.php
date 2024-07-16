@@ -25,6 +25,7 @@ namespace Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Metadata;
 use LogicException;
 use PFUser;
 use Tuleap\CrossTracker\Report\Query\Advanced\AllowedMetadata;
+use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Metadata\AlwaysThereField\ArtifactId\ArtifactIdResultBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Metadata\Date\MetadataDateResultBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Metadata\Semantic\AssignedTo\AssignedToResultBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Metadata\Semantic\Status\StatusResultBuilder;
@@ -41,6 +42,7 @@ final readonly class MetadataResultBuilder
         private AssignedToResultBuilder $assigned_to_builder,
         private MetadataDateResultBuilder $date_builder,
         private MetadataUserResultBuilder $user_builder,
+        private ArtifactIdResultBuilder $artifact_id_builder,
     ) {
     }
 
@@ -61,7 +63,7 @@ final readonly class MetadataResultBuilder
             AllowedMetadata::LAST_UPDATE_DATE => $this->date_builder->getResult($metadata, $select_results, $user),
             AllowedMetadata::SUBMITTED_BY,
             AllowedMetadata::LAST_UPDATE_BY   => $this->user_builder->getResult($metadata, $select_results),
-            AllowedMetadata::ID               => new SelectedValuesCollection(null, []),
+            AllowedMetadata::ID               => $this->artifact_id_builder->getResult($select_results),
             default                           => throw new LogicException("Unknown metadata type: {$metadata->getName()}"),
         };
     }
