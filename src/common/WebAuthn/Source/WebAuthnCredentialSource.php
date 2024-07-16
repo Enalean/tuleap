@@ -59,6 +59,6 @@ final class WebAuthnCredentialSource
 
     public function getUserId(): int
     {
-        return (int) $this->source->getUserHandle();
+        return (int) $this->source->userHandle;
     }
 }

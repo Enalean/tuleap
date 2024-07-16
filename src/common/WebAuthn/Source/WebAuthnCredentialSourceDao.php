@@ -52,7 +52,7 @@ final class WebAuthnCredentialSourceDao extends DataAccessObject implements Publ
                 FROM webauthn_credential_source
                 WHERE user_id = ?';
 
-        $rows = $this->getDB()->q($sql, (int) $publicKeyCredentialUserEntity->getId());
+        $rows = $this->getDB()->q($sql, (int) $publicKeyCredentialUserEntity->id);
 
         $res = [];
         foreach ($rows as $row) {
@@ -69,14 +69,14 @@ final class WebAuthnCredentialSourceDao extends DataAccessObject implements Publ
                 WHERE public_key_credential_id = ?';
 
         $time = new \DateTimeImmutable();
-        if ($this->getDB()->exists($sql, encode($publicKeyCredentialSource->getPublicKeyCredentialId()))) {
+        if ($this->getDB()->exists($sql, encode($publicKeyCredentialSource->publicKeyCredentialId))) {
             $this->getDB()->update(
                 'webauthn_credential_source',
                 [
                     ...$this->mapFromPublicKeyCredentialSource($publicKeyCredentialSource),
                     'last_use' => $time->getTimestamp(),
                 ],
-                ['public_key_credential_id' => encode($publicKeyCredentialSource->getPublicKeyCredentialId())]
+                ['public_key_credential_id' => encode($publicKeyCredentialSource->publicKeyCredentialId)]
             );
         } else {
             $this->getDB()->insert(
@@ -180,16 +180,16 @@ final class WebAuthnCredentialSourceDao extends DataAccessObject implements Publ
     private function mapFromPublicKeyCredentialSource(PublicKeyCredentialSource $source): array
     {
         return [
-            'public_key_credential_id' => encode($source->getPublicKeyCredentialId()),
-            'type' => $source->getType(),
-            'transports' => psl_json_encode($source->getTransports()),
-            'attestation_type' => $source->getAttestationType(),
-            'trust_path' => psl_json_encode($source->getTrustPath()),
-            'aaguid' => (string) $source->getAaguid(),
-            'credential_public_key' => $source->getCredentialPublicKey(),
-            'user_id' => (int) $source->getUserHandle(),
-            'counter' => $source->getCounter(),
-            'other_ui' => $source->getOtherUI() !== null ? psl_json_encode($source->getOtherUI()) : null,
+            'public_key_credential_id' => encode($source->publicKeyCredentialId),
+            'type' => $source->type,
+            'transports' => psl_json_encode($source->transports),
+            'attestation_type' => $source->attestationType,
+            'trust_path' => psl_json_encode($source->trustPath),
+            'aaguid' => $source->aaguid->toString(),
+            'credential_public_key' => $source->credentialPublicKey,
+            'user_id' => (int) $source->userHandle,
+            'counter' => $source->counter,
+            'other_ui' => $source->otherUI !== null ? psl_json_encode($source->otherUI) : null,
         ];
     }
 

@@ -116,7 +116,7 @@ final class DeleteSourceControllerTest extends TestCase
             $user_manager,
             WebAuthnCredentialSourceDaoStub::withoutCredentialSources()->withRealSource($source),
             [
-                'key_id' => Base64UrlSafe::encode($source->getPublicKeyCredentialId()),
+                'key_id' => Base64UrlSafe::encode($source->publicKeyCredentialId),
                 'csrf_token' => 'some token',
             ]
         );
@@ -135,7 +135,7 @@ final class DeleteSourceControllerTest extends TestCase
             $user_manager,
             WebAuthnCredentialSourceDaoStub::withoutCredentialSources()->withRealSource($source),
             [
-                'key_id' => Base64UrlSafe::encode($source->getPublicKeyCredentialId()),
+                'key_id' => Base64UrlSafe::encode($source->publicKeyCredentialId),
                 'csrf_token' => 'some token',
             ]
         );
@@ -156,7 +156,7 @@ final class DeleteSourceControllerTest extends TestCase
             $user_manager,
             WebAuthnCredentialSourceDaoStub::withoutCredentialSources()->withRealSource($source),
             [
-                'key_id' => Base64UrlSafe::encode($source->getPublicKeyCredentialId()),
+                'key_id' => Base64UrlSafe::encode($source->publicKeyCredentialId),
                 'csrf_token' => 'some token',
             ]
         );

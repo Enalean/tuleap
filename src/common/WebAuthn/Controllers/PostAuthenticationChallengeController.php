@@ -108,8 +108,7 @@ final class PostAuthenticationChallengeController extends DispatchablePSR15Compa
 
         $challenge = random_bytes(32);
 
-        $options = PublicKeyCredentialRequestOptions::create($challenge)
-            ->allowCredentials(...$authenticators);
+        $options = PublicKeyCredentialRequestOptions::create($challenge, null, $authenticators);
 
         $this->challenge_dao->saveChallenge(
             (int) $user->getId(),

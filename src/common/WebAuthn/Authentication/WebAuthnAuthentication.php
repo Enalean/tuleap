@@ -89,7 +89,7 @@ final class WebAuthnAuthentication
             return Result::err(Fault::fromMessage(_('The result of passkey is not well formed')));
         }
 
-        $authentication_assertion_response = $public_key_credential->getResponse();
+        $authentication_assertion_response = $public_key_credential->response;
         if (! $authentication_assertion_response instanceof AuthenticatorAssertionResponse) {
             return Result::err(Fault::fromMessage(_('The result of passkey is not for authentication')));
         }
@@ -98,15 +98,14 @@ final class WebAuthnAuthentication
             ->searchChallenge((int) $current_user->getId())
             ->mapOr(
                 function (string $challenge) use ($current_user, $public_key_credential, $authentication_assertion_response, $authenticators) {
-                    $options = PublicKeyCredentialRequestOptions::create($challenge)
-                        ->allowCredentials(...$authenticators);
+                    $options = PublicKeyCredentialRequestOptions::create($challenge, null, $authenticators);
 
                     try {
                         $this->assertion_response_validator->check(
-                            $public_key_credential->getRawId(),
+                            $public_key_credential->rawId,
                             $authentication_assertion_response,
                             $options,
-                            $this->relying_party_entity->getId() ?? '',
+                            $this->relying_party_entity->id ?? '',
                             (string) $current_user->getId()
                         );
                     } catch (\Throwable) {

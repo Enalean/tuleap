@@ -270,6 +270,8 @@ use Webauthn\AttestationStatement\NoneAttestationStatementSupport;
 use Webauthn\AuthenticationExtensions\ExtensionOutputCheckerHandler;
 use Webauthn\AuthenticatorAssertionResponseValidator;
 use Webauthn\AuthenticatorAttestationResponseValidator;
+use Webauthn\CeremonyStep\CeremonyStepManager;
+use Webauthn\CeremonyStep\CheckExtensions;
 use Webauthn\PublicKeyCredentialLoader;
 use Webauthn\PublicKeyCredentialRpEntity;
 
@@ -1365,7 +1367,11 @@ class RouteCollector
             $attestation_statement_manager,
             $source_dao,
             null,
-            new ExtensionOutputCheckerHandler()
+            null,
+            null,
+            new CeremonyStepManager(
+                [new CheckExtensions(new ExtensionOutputCheckerHandler())]
+            ),
         );
         $attestation_validator->setLogger($logger);
 
