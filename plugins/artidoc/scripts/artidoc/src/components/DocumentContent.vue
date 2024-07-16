@@ -46,7 +46,6 @@
 
 <script setup lang="ts">
 import type { ArtidocSection } from "@/helpers/artidoc-section.type";
-import { isArtifactSection } from "@/helpers/artidoc-section.type";
 import { AT_THE_END } from "@/stores/useSectionsStore";
 import AddNewSectionButton from "@/components/AddNewSectionButton.vue";
 import SectionContainer from "@/components/section/SectionContainer.vue";
@@ -62,7 +61,7 @@ const can_user_edit_document = strictInject(CAN_USER_EDIT_DOCUMENT);
 const has_add_button = can_user_edit_document;
 
 function getId(section: ArtidocSection): string {
-    return isArtifactSection(section) ? String(section.artifact.id) : "";
+    return `section-${section.id}`;
 }
 </script>
 

@@ -27,6 +27,7 @@ import ArtifactSectionFactory from "@/helpers/artifact-section.factory";
 import { InjectedSectionsStoreStub } from "@/helpers/stubs/InjectSectionsStoreStub";
 import { mockStrictInject } from "@/helpers/mock-strict-inject";
 import { SECTIONS_STORE } from "@/stores/sections-store-injection-key";
+import type { ArtidocSection } from "@/helpers/artidoc-section.type";
 
 describe("TableOfContents", () => {
     describe("when the sections are loading", () => {
@@ -64,19 +65,19 @@ describe("TableOfContents", () => {
 
     describe("when the sections are loaded", () => {
         let wrapper: VueWrapper<ComponentPublicInstance>;
+        let section_1: ArtidocSection, section_2: ArtidocSection;
         beforeAll(() => {
             const default_section = ArtifactSectionFactory.create();
+            section_1 = ArtifactSectionFactory.override({
+                artifact: { ...default_section.artifact, id: 1 },
+            });
+            section_2 = ArtifactSectionFactory.override({
+                artifact: { ...default_section.artifact, id: 2 },
+            });
             mockStrictInject([
                 [
                     SECTIONS_STORE,
-                    InjectedSectionsStoreStub.withLoadedSections([
-                        ArtifactSectionFactory.override({
-                            artifact: { ...default_section.artifact, id: 1 },
-                        }),
-                        ArtifactSectionFactory.override({
-                            artifact: { ...default_section.artifact, id: 2 },
-                        }),
-                    ]),
+                    InjectedSectionsStoreStub.withLoadedSections([section_1, section_2]),
                 ],
             ]);
 
@@ -96,8 +97,8 @@ describe("TableOfContents", () => {
             const list = wrapper.find("ol");
             const links = list.findAll("li a");
             expect(links.length).toBe(2);
-            expect(links[0].attributes().href).toBe("#1");
-            expect(links[1].attributes().href).toBe("#2");
+            expect(links[0].attributes().href).toBe(`#section-${section_1.id}`);
+            expect(links[1].attributes().href).toBe(`#section-${section_2.id}`);
         });
         it("should display the table of content title", () => {
             expect(wrapper.find("h1").text()).toBe("Table of contents");

@@ -29,26 +29,31 @@ import { CAN_USER_EDIT_DOCUMENT } from "@/can-user-edit-document-injection-key";
 import AddNewSectionButton from "./AddNewSectionButton.vue";
 import PendingArtifactSectionFactory from "@/helpers/pending-artifact-section.factory";
 import { SECTIONS_STORE } from "@/stores/sections-store-injection-key";
+import type { ArtidocSection } from "@/helpers/artidoc-section.type";
 
 describe("DocumentContent", () => {
     let sections_store: SectionsStore;
+    let section_1: ArtidocSection, section_2: ArtidocSection, section_3: ArtidocSection;
 
     beforeEach(() => {
         const default_artifact_section = ArtifactSectionFactory.create();
         const default_pending_artifact_section = PendingArtifactSectionFactory.create();
+        section_1 = ArtifactSectionFactory.override({
+            title: { ...default_artifact_section.title, value: "Title 1" },
+            artifact: { ...default_artifact_section.artifact, id: 1 },
+        });
+        section_2 = ArtifactSectionFactory.override({
+            title: { ...default_artifact_section.title, value: "Title 2" },
+            artifact: { ...default_artifact_section.artifact, id: 2 },
+        });
+        section_3 = PendingArtifactSectionFactory.override({
+            title: { ...default_pending_artifact_section.title, value: "Title 3" },
+        });
 
         sections_store = InjectedSectionsStoreStub.withLoadedSections([
-            ArtifactSectionFactory.override({
-                title: { ...default_artifact_section.title, value: "Title 1" },
-                artifact: { ...default_artifact_section.artifact, id: 1 },
-            }),
-            ArtifactSectionFactory.override({
-                title: { ...default_artifact_section.title, value: "Title 2" },
-                artifact: { ...default_artifact_section.artifact, id: 2 },
-            }),
-            PendingArtifactSectionFactory.override({
-                title: { ...default_pending_artifact_section.title, value: "Title 3" },
-            }),
+            section_1,
+            section_2,
+            section_3,
         ]);
     });
 
@@ -68,9 +73,9 @@ describe("DocumentContent", () => {
         ]);
         const list = shallowMount(DocumentContent).find("ol");
         const sections = list.findAll("li");
-        expect(sections[0].attributes().id).toBe("1");
-        expect(sections[1].attributes().id).toBe("2");
-        expect(sections[2].attributes().id).toBe("");
+        expect(sections[0].attributes().id).toBe(`section-${section_1.id}`);
+        expect(sections[1].attributes().id).toBe(`section-${section_2.id}`);
+        expect(sections[2].attributes().id).toBe(`section-${section_3.id}`);
     });
 
     it("should not display add new section button if user cannot edit the document", () => {

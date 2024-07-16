@@ -52,8 +52,7 @@ const { $gettext } = useGettext();
 
 const { sections, is_sections_loading } = strictInject(SECTIONS_STORE);
 
-const href = (section: ArtidocSection): string =>
-    isArtifactSection(section) ? `#${section.artifact.id}` : "";
+const href = (section: ArtidocSection): string => `#section-${section.id}`;
 </script>
 
 <style scoped lang="scss">
