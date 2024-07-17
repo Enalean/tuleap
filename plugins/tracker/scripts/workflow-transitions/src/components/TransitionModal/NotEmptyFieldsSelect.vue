@@ -29,7 +29,6 @@
             v-bind:disabled="is_modal_save_running"
             data-test="not-empty-field-select"
             ref="workflow_configuration_not_empty_fields"
-            v-on:change="updateNotEmptyFieldIds"
         >
             <option
                 v-for="field in writable_fields"
@@ -58,7 +57,6 @@ export default defineComponent({
     name: "NotEmptyFieldsSelect",
     data() {
         return {
-            not_empty_field_ids: [],
             not_empty_fields_list_picker: null,
         };
     },
@@ -74,11 +72,20 @@ export default defineComponent({
                     .sort((field1, field2) => compare(field1.label, field2.label));
             },
         }),
+        not_empty_field_ids: {
+            get() {
+                if (this.current_transition) {
+                    return this.current_transition.not_empty_field_ids;
+                }
+
+                return [];
+            },
+            set(value) {
+                this.$store.commit("transitionModal/updateNotEmptyFieldIds", value);
+            },
+        },
     },
     mounted() {
-        if (this.current_transition) {
-            this.not_empty_field_ids = this.current_transition.not_empty_field_ids;
-        }
         this.not_empty_fields_list_picker = createListPicker(
             this.$refs.workflow_configuration_not_empty_fields,
             {
@@ -90,11 +97,6 @@ export default defineComponent({
     },
     beforeDestroy() {
         this.not_empty_fields_list_picker.destroy();
-    },
-    methods: {
-        updateNotEmptyFieldIds() {
-            this.$store.commit("transitionModal/updateNotEmptyFieldIds", this.not_empty_field_ids);
-        },
     },
 });
 </script>
