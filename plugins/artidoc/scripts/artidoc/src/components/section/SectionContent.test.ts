@@ -28,19 +28,24 @@ import * as editor from "@/composables/useSectionEditor";
 import SectionHeaderSkeleton from "./header/SectionHeaderSkeleton.vue";
 import { InjectedSectionsStoreStub } from "@/helpers/stubs/InjectSectionsStoreStub";
 import { SectionEditorStub } from "@/helpers/stubs/SectionEditorStub";
-import { mockStrictInject } from "@/helpers/mock-strict-inject";
 import { SECTIONS_STORE } from "@/stores/sections-store-injection-key";
 
 describe("SectionContent", () => {
     describe("when the sections are loaded", () => {
         let wrapper: VueWrapper<ComponentPublicInstance>;
         beforeAll(() => {
-            mockStrictInject([[SECTIONS_STORE, InjectedSectionsStoreStub.withLoadedSections([])]]);
             vi.spyOn(editor, "useSectionEditor").mockReturnValue(
                 SectionEditorStub.withEditableSection(),
             );
 
             wrapper = shallowMount(SectionContent, {
+                global: {
+                    provide: {
+                        [SECTIONS_STORE.valueOf()]: InjectedSectionsStoreStub.withLoadedSections(
+                            [],
+                        ),
+                    },
+                },
                 props: {
                     section: ArtifactSectionFactory.create(),
                 },
@@ -60,12 +65,18 @@ describe("SectionContent", () => {
     describe("when the sections are loading", () => {
         let wrapper: VueWrapper<ComponentPublicInstance>;
         beforeAll(() => {
-            mockStrictInject([[SECTIONS_STORE, InjectedSectionsStoreStub.withLoadingSections()]]);
             vi.spyOn(editor, "useSectionEditor").mockReturnValue(
                 SectionEditorStub.withEditableSection(),
             );
 
             wrapper = shallowMount(SectionContent, {
+                global: {
+                    provide: {
+                        [SECTIONS_STORE.valueOf()]: InjectedSectionsStoreStub.withLoadingSections(
+                            [],
+                        ),
+                    },
+                },
                 props: {
                     section: ArtifactSectionFactory.create(),
                 },

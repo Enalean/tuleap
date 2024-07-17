@@ -24,7 +24,6 @@ import ArtifactSectionFactory from "@/helpers/artifact-section.factory";
 import SectionContainer from "@/components/section/SectionContainer.vue";
 import type { SectionsStore } from "@/stores/useSectionsStore";
 import { InjectedSectionsStoreStub } from "@/helpers/stubs/InjectSectionsStoreStub";
-import { mockStrictInject } from "@/helpers/mock-strict-inject";
 import { CAN_USER_EDIT_DOCUMENT } from "@/can-user-edit-document-injection-key";
 import AddNewSectionButton from "./AddNewSectionButton.vue";
 import PendingArtifactSectionFactory from "@/helpers/pending-artifact-section.factory";
@@ -58,20 +57,26 @@ describe("DocumentContent", () => {
     });
 
     it("should display the two sections", () => {
-        mockStrictInject([
-            [SECTIONS_STORE, sections_store],
-            [CAN_USER_EDIT_DOCUMENT, false],
-        ]);
-        const list = shallowMount(DocumentContent).find("ol");
+        const list = shallowMount(DocumentContent, {
+            global: {
+                provide: {
+                    [SECTIONS_STORE.valueOf()]: sections_store,
+                    [CAN_USER_EDIT_DOCUMENT.valueOf()]: false,
+                },
+            },
+        }).find("ol");
         expect(list.findAllComponents(SectionContainer)).toHaveLength(3);
     });
 
     it("sections should have an id for anchor feature except pending artifact section", () => {
-        mockStrictInject([
-            [SECTIONS_STORE, sections_store],
-            [CAN_USER_EDIT_DOCUMENT, false],
-        ]);
-        const list = shallowMount(DocumentContent).find("ol");
+        const list = shallowMount(DocumentContent, {
+            global: {
+                provide: {
+                    [SECTIONS_STORE.valueOf()]: sections_store,
+                    [CAN_USER_EDIT_DOCUMENT.valueOf()]: false,
+                },
+            },
+        }).find("ol");
         const sections = list.findAll("li");
         expect(sections[0].attributes().id).toBe(`section-${section_1.id}`);
         expect(sections[1].attributes().id).toBe(`section-${section_2.id}`);
@@ -79,22 +84,28 @@ describe("DocumentContent", () => {
     });
 
     it("should not display add new section button if user cannot edit the document", () => {
-        mockStrictInject([
-            [SECTIONS_STORE, sections_store],
-            [CAN_USER_EDIT_DOCUMENT, false],
-        ]);
-        expect(shallowMount(DocumentContent).findAllComponents(AddNewSectionButton)).toHaveLength(
-            0,
-        );
+        expect(
+            shallowMount(DocumentContent, {
+                global: {
+                    provide: {
+                        [SECTIONS_STORE.valueOf()]: sections_store,
+                        [CAN_USER_EDIT_DOCUMENT.valueOf()]: false,
+                    },
+                },
+            }).findAllComponents(AddNewSectionButton),
+        ).toHaveLength(0);
     });
 
     it("should display n+1 add new section button if user can edit the document", () => {
-        mockStrictInject([
-            [SECTIONS_STORE, sections_store],
-            [CAN_USER_EDIT_DOCUMENT, true],
-        ]);
-        expect(shallowMount(DocumentContent).findAllComponents(AddNewSectionButton)).toHaveLength(
-            4,
-        );
+        expect(
+            shallowMount(DocumentContent, {
+                global: {
+                    provide: {
+                        [SECTIONS_STORE.valueOf()]: sections_store,
+                        [CAN_USER_EDIT_DOCUMENT.valueOf()]: true,
+                    },
+                },
+            }).findAllComponents(AddNewSectionButton),
+        ).toHaveLength(4);
     });
 });

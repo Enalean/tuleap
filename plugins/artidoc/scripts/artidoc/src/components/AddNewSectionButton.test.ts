@@ -17,12 +17,15 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import type { Mock } from "vitest";
 import { describe, expect, it, vi } from "vitest";
+import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import AddNewSectionButton from "@/components/AddNewSectionButton.vue";
+import type { ConfigurationStore } from "@/stores/configuration-store";
 import { CONFIGURATION_STORE } from "@/stores/configuration-store";
 import { ConfigurationStoreStub } from "@/helpers/stubs/ConfigurationStoreStub";
-import { mockStrictInject } from "@/helpers/mock-strict-inject";
+import type { OpenConfigurationModalBus } from "@/composables/useOpenConfigurationModalBus";
 import {
     OPEN_CONFIGURATION_MODAL_BUS,
     useOpenConfigurationModalBus,
@@ -32,6 +35,23 @@ import { AT_THE_END } from "@/stores/useSectionsStore";
 import { TrackerStub } from "@/helpers/stubs/TrackerStub";
 
 describe("AddNewSectionButton", () => {
+    function getWrapper(
+        insert_section_callback: Mock,
+        configuration_store: ConfigurationStore,
+        bus: OpenConfigurationModalBus,
+    ): VueWrapper {
+        return shallowMount(AddNewSectionButton, {
+            props: { position: AT_THE_END, insert_section_callback },
+            global: {
+                plugins: [createGettext({ silent: true })],
+                provide: {
+                    [CONFIGURATION_STORE.valueOf()]: configuration_store,
+                    [OPEN_CONFIGURATION_MODAL_BUS.valueOf()]: bus,
+                },
+            },
+        });
+    }
+
     describe("when the tracker is not configured", () => {
         it("should ask to open the configuration modal on click", async () => {
             let has_modal_been_opened = false;
@@ -41,17 +61,13 @@ describe("AddNewSectionButton", () => {
                 has_modal_been_opened = true;
             });
 
-            mockStrictInject([
-                [CONFIGURATION_STORE, ConfigurationStoreStub.withSelectedTracker(null)],
-                [OPEN_CONFIGURATION_MODAL_BUS, bus],
-            ]);
-
             const insert_section_callback = vi.fn();
 
-            const wrapper = shallowMount(AddNewSectionButton, {
-                props: { position: AT_THE_END, insert_section_callback },
-                global: { plugins: [createGettext({ silent: true })] },
-            });
+            const wrapper = getWrapper(
+                insert_section_callback,
+                ConfigurationStoreStub.withSelectedTracker(null),
+                bus,
+            );
 
             await wrapper.find("button").trigger("click");
 
@@ -63,11 +79,6 @@ describe("AddNewSectionButton", () => {
             const bus = useOpenConfigurationModalBus();
             const store = ConfigurationStoreStub.withSelectedTracker(null);
 
-            mockStrictInject([
-                [CONFIGURATION_STORE, store],
-                [OPEN_CONFIGURATION_MODAL_BUS, bus],
-            ]);
-
             let has_modal_been_opened = false;
             bus.registerHandler((onSuccessfulSaved: () => void) => {
                 has_modal_been_opened = true;
@@ -77,10 +88,7 @@ describe("AddNewSectionButton", () => {
 
             const insert_section_callback = vi.fn();
 
-            const wrapper = shallowMount(AddNewSectionButton, {
-                props: { position: AT_THE_END, insert_section_callback },
-                global: { plugins: [createGettext({ silent: true })] },
-            });
+            const wrapper = getWrapper(insert_section_callback, store, bus);
 
             await wrapper.find("button").trigger("click");
 
@@ -97,30 +105,20 @@ describe("AddNewSectionButton", () => {
             bus.registerHandler(() => {
                 has_modal_been_opened = true;
             });
-
-            mockStrictInject([
-                [
-                    CONFIGURATION_STORE,
-                    ConfigurationStoreStub.withSelectedTracker({
-                        ...ConfigurationStoreStub.bugs,
-                        title: null,
-                        description: {
-                            field_id: 1002,
-                            label: "Description",
-                            type: "text",
-                            default_value: { format: "html", content: "" },
-                        },
-                    }),
-                ],
-                [OPEN_CONFIGURATION_MODAL_BUS, bus],
-            ]);
+            const store = ConfigurationStoreStub.withSelectedTracker({
+                ...ConfigurationStoreStub.bugs,
+                title: null,
+                description: {
+                    field_id: 1002,
+                    label: "Description",
+                    type: "text",
+                    default_value: { format: "html", content: "" },
+                },
+            });
 
             const insert_section_callback = vi.fn();
 
-            const wrapper = shallowMount(AddNewSectionButton, {
-                props: { position: AT_THE_END, insert_section_callback },
-                global: { plugins: [createGettext({ silent: true })] },
-            });
+            const wrapper = getWrapper(insert_section_callback, store, bus);
 
             await wrapper.find("button").trigger("click");
 
@@ -141,11 +139,6 @@ describe("AddNewSectionButton", () => {
                 },
             });
 
-            mockStrictInject([
-                [CONFIGURATION_STORE, store],
-                [OPEN_CONFIGURATION_MODAL_BUS, bus],
-            ]);
-
             let has_modal_been_opened = false;
             bus.registerHandler((onSuccessfulSaved: () => void) => {
                 has_modal_been_opened = true;
@@ -155,10 +148,7 @@ describe("AddNewSectionButton", () => {
 
             const insert_section_callback = vi.fn();
 
-            const wrapper = shallowMount(AddNewSectionButton, {
-                props: { position: AT_THE_END, insert_section_callback },
-                global: { plugins: [createGettext({ silent: true })] },
-            });
+            const wrapper = getWrapper(insert_section_callback, store, bus);
 
             await wrapper.find("button").trigger("click");
 
@@ -175,30 +165,20 @@ describe("AddNewSectionButton", () => {
             bus.registerHandler(() => {
                 has_modal_been_opened = true;
             });
-
-            mockStrictInject([
-                [
-                    CONFIGURATION_STORE,
-                    ConfigurationStoreStub.withSelectedTracker({
-                        ...ConfigurationStoreStub.bugs,
-                        title: {
-                            field_id: 1001,
-                            label: "Summary",
-                            type: "string",
-                            default_value: "",
-                        },
-                        description: null,
-                    }),
-                ],
-                [OPEN_CONFIGURATION_MODAL_BUS, bus],
-            ]);
+            const store = ConfigurationStoreStub.withSelectedTracker({
+                ...ConfigurationStoreStub.bugs,
+                title: {
+                    field_id: 1001,
+                    label: "Summary",
+                    type: "string",
+                    default_value: "",
+                },
+                description: null,
+            });
 
             const insert_section_callback = vi.fn();
 
-            const wrapper = shallowMount(AddNewSectionButton, {
-                props: { position: AT_THE_END, insert_section_callback },
-                global: { plugins: [createGettext({ silent: true })] },
-            });
+            const wrapper = getWrapper(insert_section_callback, store, bus);
 
             await wrapper.find("button").trigger("click");
 
@@ -219,11 +199,6 @@ describe("AddNewSectionButton", () => {
                 description: null,
             });
 
-            mockStrictInject([
-                [CONFIGURATION_STORE, store],
-                [OPEN_CONFIGURATION_MODAL_BUS, bus],
-            ]);
-
             let has_modal_been_opened = false;
             bus.registerHandler((onSuccessfulSaved: () => void) => {
                 has_modal_been_opened = true;
@@ -233,10 +208,7 @@ describe("AddNewSectionButton", () => {
 
             const insert_section_callback = vi.fn();
 
-            const wrapper = shallowMount(AddNewSectionButton, {
-                props: { position: AT_THE_END, insert_section_callback },
-                global: { plugins: [createGettext({ silent: true })] },
-            });
+            const wrapper = getWrapper(insert_section_callback, store, bus);
 
             await wrapper.find("button").trigger("click");
 
@@ -253,35 +225,25 @@ describe("AddNewSectionButton", () => {
             bus.registerHandler(() => {
                 has_modal_been_opened = true;
             });
-
-            mockStrictInject([
-                [
-                    CONFIGURATION_STORE,
-                    ConfigurationStoreStub.withSelectedTracker({
-                        ...ConfigurationStoreStub.bugs,
-                        title: {
-                            field_id: 1001,
-                            label: "Summary",
-                            type: "string",
-                            default_value: "",
-                        },
-                        description: {
-                            field_id: 1002,
-                            label: "Description",
-                            type: "text",
-                            default_value: { format: "html", content: "" },
-                        },
-                    }),
-                ],
-                [OPEN_CONFIGURATION_MODAL_BUS, bus],
-            ]);
+            const store = ConfigurationStoreStub.withSelectedTracker({
+                ...ConfigurationStoreStub.bugs,
+                title: {
+                    field_id: 1001,
+                    label: "Summary",
+                    type: "string",
+                    default_value: "",
+                },
+                description: {
+                    field_id: 1002,
+                    label: "Description",
+                    type: "text",
+                    default_value: { format: "html", content: "" },
+                },
+            });
 
             const insert_section_callback = vi.fn();
 
-            const wrapper = shallowMount(AddNewSectionButton, {
-                props: { position: AT_THE_END, insert_section_callback },
-                global: { plugins: [createGettext({ silent: true })] },
-            });
+            const wrapper = getWrapper(insert_section_callback, store, bus);
 
             await wrapper.find("button").trigger("click");
 

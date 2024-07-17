@@ -20,7 +20,6 @@
 import { describe, expect, it, vi } from "vitest";
 import { shallowMount } from "@vue/test-utils";
 import PdfExportMenuItem from "@/components/export/pdf/PdfExportMenuItem.vue";
-import { mockStrictInject } from "@/helpers/mock-strict-inject";
 import { PDF_TEMPLATES } from "@/pdf-templates-injection-key";
 import { createGettext } from "vue3-gettext";
 import { IS_USER_ANONYMOUS } from "@/is-user-anonymous";
@@ -30,23 +29,21 @@ vi.mock("@tuleap/tlp-dropdown");
 
 describe("PdfExportMenuItem", () => {
     it("should display disabled menuitem if user is anonymous", () => {
-        mockStrictInject([
-            [IS_USER_ANONYMOUS, true],
-            [
-                PDF_TEMPLATES,
-                [
-                    {
-                        id: "abc",
-                        label: "Blue template",
-                        description: "",
-                        style: "body { color: blue }",
-                    },
-                ],
-            ],
-        ]);
-
         const wrapper = shallowMount(PdfExportMenuItem, {
-            global: { plugins: [createGettext({ silent: true })] },
+            global: {
+                plugins: [createGettext({ silent: true })],
+                provide: {
+                    [IS_USER_ANONYMOUS.valueOf()]: true,
+                    [PDF_TEMPLATES.valueOf()]: [
+                        {
+                            id: "abc",
+                            label: "Blue template",
+                            description: "",
+                            style: "body { color: blue }",
+                        },
+                    ],
+                },
+            },
         });
 
         const button = wrapper.findAll("[role=menuitem]");
@@ -61,13 +58,14 @@ describe("PdfExportMenuItem", () => {
     it.each([[null], [[]]])(
         "should display disabled menuitem if no template defined: %s",
         (templates) => {
-            mockStrictInject([
-                [IS_USER_ANONYMOUS, false],
-                [PDF_TEMPLATES, templates],
-            ]);
-
             const wrapper = shallowMount(PdfExportMenuItem, {
-                global: { plugins: [createGettext({ silent: true })] },
+                global: {
+                    plugins: [createGettext({ silent: true })],
+                    provide: {
+                        [IS_USER_ANONYMOUS.valueOf()]: false,
+                        [PDF_TEMPLATES.valueOf()]: templates,
+                    },
+                },
             });
 
             const button = wrapper.findAll("[role=menuitem]");
@@ -81,23 +79,21 @@ describe("PdfExportMenuItem", () => {
     );
 
     it("should display one menuitem if one template", () => {
-        mockStrictInject([
-            [IS_USER_ANONYMOUS, false],
-            [
-                PDF_TEMPLATES,
-                [
-                    {
-                        id: "abc",
-                        label: "Blue template",
-                        description: "",
-                        style: "body { color: blue }",
-                    },
-                ],
-            ],
-        ]);
-
         const wrapper = shallowMount(PdfExportMenuItem, {
-            global: { plugins: [createGettext({ silent: true })] },
+            global: {
+                plugins: [createGettext({ silent: true })],
+                provide: {
+                    [IS_USER_ANONYMOUS.valueOf()]: false,
+                    [PDF_TEMPLATES.valueOf()]: [
+                        {
+                            id: "abc",
+                            label: "Blue template",
+                            description: "",
+                            style: "body { color: blue }",
+                        },
+                    ],
+                },
+            },
         });
 
         expect(wrapper.findAll("[role=menuitem]")).toHaveLength(1);
@@ -105,29 +101,27 @@ describe("PdfExportMenuItem", () => {
     });
 
     it("should display three menuitem if two template (one for each template + one for the submenu)", () => {
-        mockStrictInject([
-            [IS_USER_ANONYMOUS, false],
-            [
-                PDF_TEMPLATES,
-                [
-                    {
-                        id: "abc",
-                        label: "Blue template",
-                        description: "",
-                        style: "body { color: blue }",
-                    },
-                    {
-                        id: "def",
-                        label: "Red template",
-                        description: "",
-                        style: "body { color: red }",
-                    },
-                ],
-            ],
-        ]);
-
         const wrapper = shallowMount(PdfExportMenuItem, {
-            global: { plugins: [createGettext({ silent: true })] },
+            global: {
+                plugins: [createGettext({ silent: true })],
+                provide: {
+                    [IS_USER_ANONYMOUS.valueOf()]: false,
+                    [PDF_TEMPLATES.valueOf()]: [
+                        {
+                            id: "abc",
+                            label: "Blue template",
+                            description: "",
+                            style: "body { color: blue }",
+                        },
+                        {
+                            id: "def",
+                            label: "Red template",
+                            description: "",
+                            style: "body { color: red }",
+                        },
+                    ],
+                },
+            },
         });
 
         expect(wrapper.findAll("[role=menuitem]")).toHaveLength(3);

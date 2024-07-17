@@ -22,7 +22,6 @@ import { shallowMount } from "@vue/test-utils";
 import App from "@/App.vue";
 import DocumentView from "@/views/DocumentView.vue";
 import { InjectedSectionsStoreStub } from "@/helpers/stubs/InjectSectionsStoreStub";
-import { mockStrictInject } from "@/helpers/mock-strict-inject";
 import { CONFIGURATION_STORE } from "@/stores/configuration-store";
 import { ConfigurationStoreStub } from "@/helpers/stubs/ConfigurationStoreStub";
 import { CAN_USER_EDIT_DOCUMENT } from "@/can-user-edit-document-injection-key";
@@ -33,14 +32,18 @@ describe("App", () => {
     it("should display the document view", () => {
         const loadSections = vi.fn().mockReturnValue(Promise.resolve());
 
-        mockStrictInject([
-            [CONFIGURATION_STORE, ConfigurationStoreStub.withoutAllowedTrackers()],
-            [CAN_USER_EDIT_DOCUMENT, true],
-            [DOCUMENT_ID, 1],
-            [SECTIONS_STORE, InjectedSectionsStoreStub.withMockedLoadSections(loadSections)],
-        ]);
-
-        const wrapper = shallowMount(App);
+        const wrapper = shallowMount(App, {
+            global: {
+                provide: {
+                    [CONFIGURATION_STORE.valueOf()]:
+                        ConfigurationStoreStub.withoutAllowedTrackers(),
+                    [CAN_USER_EDIT_DOCUMENT.valueOf()]: true,
+                    [DOCUMENT_ID.valueOf()]: 1,
+                    [SECTIONS_STORE.valueOf()]:
+                        InjectedSectionsStoreStub.withMockedLoadSections(loadSections),
+                },
+            },
+        });
 
         expect(loadSections).toHaveBeenCalled();
         expect(wrapper.findComponent(DocumentView).exists()).toBe(true);

@@ -23,11 +23,8 @@ import SectionDescriptionEditor from "./SectionDescriptionEditor.vue";
 import type { ComponentPublicInstance } from "vue";
 import { CURRENT_LOCALE } from "@/locale-injection-key";
 import { userLocale } from "@/helpers/user-locale";
-import { mockStrictInject } from "@/helpers/mock-strict-inject";
 import { UPLOAD_MAX_SIZE } from "@/max-upload-size-injecion-keys";
 import { createGettext } from "vue3-gettext";
-
-vi.mock("@tuleap/vue-strict-inject");
 
 describe("SectionDescriptionEditor", () => {
     let wrapper: VueWrapper<ComponentPublicInstance>;
@@ -41,13 +38,14 @@ describe("SectionDescriptionEditor", () => {
             })),
         };
 
-        mockStrictInject([
-            [CURRENT_LOCALE, userLocale("fr_FR")],
-            [UPLOAD_MAX_SIZE, 1234567890],
-        ]);
-
         wrapper = shallowMount(SectionDescriptionEditor, {
-            global: { plugins: [createGettext({ silent: true })] },
+            global: {
+                plugins: [createGettext({ silent: true })],
+                provide: {
+                    [CURRENT_LOCALE.valueOf()]: userLocale("fr_FR"),
+                    [UPLOAD_MAX_SIZE.valueOf()]: 1234567890,
+                },
+            },
             props: {
                 section_id: "1abc",
                 editable_description: "<h1>description</h1>",

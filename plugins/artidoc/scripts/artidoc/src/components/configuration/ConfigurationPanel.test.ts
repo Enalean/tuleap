@@ -17,21 +17,26 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { describe, expect, it, vi } from "vitest";
-import * as strict_inject from "@tuleap/vue-strict-inject";
+import { describe, expect, it } from "vitest";
 import { ConfigurationStoreStub } from "@/helpers/stubs/ConfigurationStoreStub";
 import { shallowMount } from "@vue/test-utils";
 import { createGettext } from "vue3-gettext";
 import SuccessFeedback from "@/components/configuration/SuccessFeedback.vue";
 import ErrorFeedback from "@/components/configuration/ErrorFeedback.vue";
 import ConfigurationPanel from "@/components/configuration/ConfigurationPanel.vue";
+import { CONFIGURATION_STORE } from "@/stores/configuration-store";
+import { TITLE } from "@/title-injection-key";
 
 describe("ConfigurationPanel", () => {
     it("should display error feedback", () => {
-        vi.spyOn(strict_inject, "strictInject").mockReturnValue(ConfigurationStoreStub.withError());
-
         const wrapper = shallowMount(ConfigurationPanel, {
-            global: { plugins: [createGettext({ silent: true })] },
+            global: {
+                plugins: [createGettext({ silent: true })],
+                provide: {
+                    [TITLE.valueOf()]: "My Document",
+                    [CONFIGURATION_STORE.valueOf()]: ConfigurationStoreStub.withError(),
+                },
+            },
         });
 
         expect(wrapper.findComponent(SuccessFeedback).exists()).toBe(false);

@@ -18,6 +18,7 @@
  */
 
 import { describe, expect, it, vi } from "vitest";
+import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import ConfigurationModal from "@/components/configuration/ConfigurationModal.vue";
 import { ConfigurationStoreStub } from "@/helpers/stubs/ConfigurationStoreStub";
@@ -31,38 +32,35 @@ import {
     OPEN_CONFIGURATION_MODAL_BUS,
     useOpenConfigurationModalBus,
 } from "@/composables/useOpenConfigurationModalBus";
-import { mockStrictInject } from "@/helpers/mock-strict-inject";
-
-vi.mock("@tuleap/vue-strict-inject");
 
 describe("ConfigurationModal", () => {
-    function setupInjectionKeys(store: ConfigurationStore, bus: OpenConfigurationModalBus): void {
-        mockStrictInject([
-            [CONFIGURATION_STORE, store],
-            [OPEN_CONFIGURATION_MODAL_BUS, bus],
-        ]);
+    function getWrapper(store: ConfigurationStore, bus: OpenConfigurationModalBus): VueWrapper {
+        return shallowMount(ConfigurationModal, {
+            global: {
+                plugins: [createGettext({ silent: true })],
+                provide: {
+                    [CONFIGURATION_STORE.valueOf()]: store,
+                    [OPEN_CONFIGURATION_MODAL_BUS.valueOf()]: bus,
+                },
+            },
+        });
     }
 
     it("should display success feedback", () => {
-        setupInjectionKeys(
+        const wrapper = getWrapper(
             ConfigurationStoreStub.withSuccessfullSave(),
             useOpenConfigurationModalBus(),
         );
-
-        const wrapper = shallowMount(ConfigurationModal, {
-            global: { plugins: [createGettext({ silent: true })] },
-        });
 
         expect(wrapper.findComponent(SuccessFeedback).exists()).toBe(true);
         expect(wrapper.findComponent(ErrorFeedback).exists()).toBe(false);
     });
 
     it("should display error feedback", () => {
-        setupInjectionKeys(ConfigurationStoreStub.withError(), useOpenConfigurationModalBus());
-
-        const wrapper = shallowMount(ConfigurationModal, {
-            global: { plugins: [createGettext({ silent: true })] },
-        });
+        const wrapper = getWrapper(
+            ConfigurationStoreStub.withError(),
+            useOpenConfigurationModalBus(),
+        );
 
         expect(wrapper.findComponent(SuccessFeedback).exists()).toBe(false);
         expect(wrapper.findComponent(ErrorFeedback).exists()).toBe(true);
@@ -82,11 +80,7 @@ describe("ConfigurationModal", () => {
                 onSave();
             });
 
-        setupInjectionKeys(ConfigurationStoreStub.withMockedSavedConfiguration(save), bus);
-
-        const wrapper = shallowMount(ConfigurationModal, {
-            global: { plugins: [createGettext({ silent: true })] },
-        });
+        const wrapper = getWrapper(ConfigurationStoreStub.withMockedSavedConfiguration(save), bus);
 
         bus.openModal(onSuccessfulSaved);
 
