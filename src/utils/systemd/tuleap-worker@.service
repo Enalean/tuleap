@@ -1,6 +1,8 @@
 [Unit]
 Description=Tuleap worker instance %i
 Documentation=https://docs.tuleap.org
+StartLimitIntervalSec=0
+StartLimitBurst=0
 
 [Service]
 Type=simple
@@ -8,3 +10,4 @@ Environment=DISPLAY_ERRORS=true
 ExecStart=/usr/share/tuleap/src/utils/worker.php -v --id=%i
 User=codendiadm
 Restart=always
+RestartSec=5
