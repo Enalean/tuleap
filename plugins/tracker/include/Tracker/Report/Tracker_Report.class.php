@@ -1051,7 +1051,6 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
 
             if ($report_can_be_modified) {
                 $this->getTracker()->displayFooter($layout);
-                exit();
             }
         }
     }
