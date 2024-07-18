@@ -29,10 +29,7 @@ import type { PullRequest } from "@tuleap/plugin-pullrequest-rest-api-types";
 import * as tuleap_api from "../../api/tuleap-rest-querier";
 import { errAsync, okAsync } from "neverthrow";
 import { DISPLAY_TULEAP_API_ERROR, POST_PULL_REQUEST_UPDATE_CALLBACK } from "../../constants";
-import * as strict_inject from "@tuleap/vue-strict-inject";
 import { Fault } from "@tuleap/fault";
-
-vi.mock("@tuleap/vue-strict-inject");
 
 vi.mock("@tuleap/tlp-modal", () => ({
     createModal: vi.fn(),
@@ -42,9 +39,6 @@ vi.mock("@tuleap/tlp-modal", () => ({
 vi.useFakeTimers();
 
 const pull_request_id = 1;
-const noop = (): void => {
-    // do nothing
-};
 
 describe("PullRequestEditTitleModal", () => {
     let modal_instance: Modal,
@@ -52,19 +46,13 @@ describe("PullRequestEditTitleModal", () => {
         postPullRequestUpdateCallback: SpyInstance;
 
     const getWrapper = (pull_request_data: Partial<PullRequest> = {}): VueWrapper => {
-        vi.spyOn(strict_inject, "strictInject").mockImplementation((key) => {
-            switch (key) {
-                case DISPLAY_TULEAP_API_ERROR:
-                    return api_error_callback;
-                case POST_PULL_REQUEST_UPDATE_CALLBACK:
-                    return postPullRequestUpdateCallback;
-                default:
-                    return noop;
-            }
-        });
         return shallowMount(PullRequestEditTitleModal, {
             global: {
                 ...getGlobalTestOptions(),
+                provide: {
+                    [DISPLAY_TULEAP_API_ERROR.valueOf()]: api_error_callback,
+                    [POST_PULL_REQUEST_UPDATE_CALLBACK.valueOf()]: postPullRequestUpdateCallback,
+                },
             },
             props: {
                 pull_request_info: {

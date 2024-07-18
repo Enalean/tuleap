@@ -17,20 +17,19 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { describe, it, expect, beforeEach, vi } from "vitest";
-import { shallowMount } from "@vue/test-utils";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { VueWrapper } from "@vue/test-utils";
-import { okAsync, errAsync } from "neverthrow";
+import { shallowMount } from "@vue/test-utils";
+import { errAsync, okAsync } from "neverthrow";
 import { Fault } from "@tuleap/fault";
-import * as strict_inject from "@tuleap/vue-strict-inject";
 import * as tuleap_api from "../../../api/tuleap-rest-querier";
+import type { RelativeDatesDisplayPreference } from "@tuleap/tlp-relative-date";
 import {
-    PREFERENCE_RELATIVE_FIRST_ABSOLUTE_SHOWN,
     PREFERENCE_ABSOLUTE_FIRST_RELATIVE_SHOWN,
     PREFERENCE_ABSOLUTE_FIRST_RELATIVE_TOOLTIP,
+    PREFERENCE_RELATIVE_FIRST_ABSOLUTE_SHOWN,
     PREFERENCE_RELATIVE_FIRST_ABSOLUTE_TOOLTIP,
 } from "@tuleap/tlp-relative-date";
-import type { RelativeDatesDisplayPreference } from "@tuleap/tlp-relative-date";
 import type { PullRequest } from "@tuleap/plugin-pullrequest-rest-api-types";
 import PullRequestAbandonedState from "./PullRequestAbandonedState.vue";
 import { getGlobalTestOptions } from "../../../../tests/helpers/global-options-for-tests";
@@ -39,6 +38,7 @@ import {
     PULL_REQUEST_STATUS_MERGED,
     PULL_REQUEST_STATUS_REVIEW,
 } from "@tuleap/plugin-pullrequest-constants";
+import type { DisplayErrorCallback, PostPullRequestUpdateCallback } from "../../../constants";
 import {
     DISPLAY_TULEAP_API_ERROR,
     POST_PULL_REQUEST_UPDATE_CALLBACK,
@@ -46,9 +46,6 @@ import {
     USER_RELATIVE_DATE_DISPLAY_PREFERENCE_KEY,
 } from "../../../constants";
 
-import type { DisplayErrorCallback, PostPullRequestUpdateCallback } from "../../../constants";
-
-vi.mock("@tuleap/vue-strict-inject");
 vi.mock("./tuleap-rest-querier");
 
 describe("PullRequestAbandonedState", () => {
@@ -66,27 +63,18 @@ describe("PullRequestAbandonedState", () => {
         pull_request: PullRequest,
         relative_date_preference: RelativeDatesDisplayPreference = PREFERENCE_RELATIVE_FIRST_ABSOLUTE_SHOWN,
     ): VueWrapper => {
-        vi.spyOn(strict_inject, "strictInject").mockImplementation((key): unknown => {
-            switch (key) {
-                case DISPLAY_TULEAP_API_ERROR:
-                    return on_error_callback;
-                case POST_PULL_REQUEST_UPDATE_CALLBACK:
-                    return post_update_callback;
-                case PULL_REQUEST_ID_KEY:
-                    return current_pull_request_id;
-                case USER_RELATIVE_DATE_DISPLAY_PREFERENCE_KEY:
-                    return relative_date_preference;
-                default:
-                    throw new Error("Tried to strictInject a value while it was not mocked");
-            }
-        });
-
         return shallowMount(PullRequestAbandonedState, {
             global: {
+                ...getGlobalTestOptions(),
                 stubs: {
                     PullRequestRelativeDate: true,
                 },
-                ...getGlobalTestOptions(),
+                provide: {
+                    [DISPLAY_TULEAP_API_ERROR.valueOf()]: on_error_callback,
+                    [POST_PULL_REQUEST_UPDATE_CALLBACK.valueOf()]: post_update_callback,
+                    [PULL_REQUEST_ID_KEY.valueOf()]: current_pull_request_id,
+                    [USER_RELATIVE_DATE_DISPLAY_PREFERENCE_KEY.valueOf()]: relative_date_preference,
+                },
             },
             props: {
                 pull_request,

@@ -37,7 +37,6 @@ import * as tuleap_api from "../../../api/tuleap-rest-querier";
 import { getGlobalTestOptions } from "../../../../tests/helpers/global-options-for-tests";
 import PullRequestMergeButton from "./PullRequestMergeButton.vue";
 import PullRequestMergeWarningModal from "../abandon/PullRequestMergeWarningModal.vue";
-import * as strict_inject from "@tuleap/vue-strict-inject";
 import type { DisplayErrorCallback, PostPullRequestUpdateCallback } from "../../../constants";
 import {
     DISPLAY_TULEAP_API_ERROR,
@@ -65,7 +64,6 @@ const isButtonDisabled = (wrapper: VueWrapper): boolean =>
 const isButtonOutlined = (wrapper: VueWrapper): boolean =>
     wrapper.find("[data-test=merge-button]").classes("tlp-button-outline") === true;
 
-vi.mock("@tuleap/vue-strict-inject");
 vi.mock("./tuleap-rest-querier");
 
 describe("PullRequestMergeButton", () => {
@@ -80,24 +78,16 @@ describe("PullRequestMergeButton", () => {
     });
 
     const getWrapper = (pull_request_data: Partial<PullRequest> = {}): VueWrapper => {
-        vi.spyOn(strict_inject, "strictInject").mockImplementation((key): unknown => {
-            switch (key) {
-                case ARE_MERGE_COMMITS_ALLOWED_IN_REPOSITORY:
-                    return are_merge_commits_allowed_in_repository;
-                case DISPLAY_TULEAP_API_ERROR:
-                    return on_error_callback;
-                case POST_PULL_REQUEST_UPDATE_CALLBACK:
-                    return post_update_callback;
-                case PULL_REQUEST_ID_KEY:
-                    return current_pull_request_id;
-                default:
-                    throw new Error("Tried to strictInject a value while it was not mocked");
-            }
-        });
-
         return shallowMount(PullRequestMergeButton, {
             global: {
                 ...getGlobalTestOptions(),
+                provide: {
+                    [ARE_MERGE_COMMITS_ALLOWED_IN_REPOSITORY.valueOf()]:
+                        are_merge_commits_allowed_in_repository,
+                    [DISPLAY_TULEAP_API_ERROR.valueOf()]: on_error_callback,
+                    [POST_PULL_REQUEST_UPDATE_CALLBACK.valueOf()]: post_update_callback,
+                    [PULL_REQUEST_ID_KEY.valueOf()]: current_pull_request_id,
+                },
             },
             props: {
                 pull_request: getPullRequest(pull_request_data),

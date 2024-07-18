@@ -17,35 +17,25 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { describe, beforeEach, it, expect, vi } from "vitest";
-import { mount, shallowMount } from "@vue/test-utils";
+import { beforeEach, describe, expect, it } from "vitest";
 import type { VueWrapper } from "@vue/test-utils";
+import { mount, shallowMount } from "@vue/test-utils";
 import { PullRequestStub } from "@tuleap/plugin-pullrequest-stub";
 import type { PullRequest, PullRequestRepository } from "@tuleap/plugin-pullrequest-rest-api-types";
 import { getGlobalTestOptions } from "../../../tests/helpers/global-options-for-tests";
 import PullRequestReferences from "./PullRequestReferences.vue";
-import * as strict_inject from "@tuleap/vue-strict-inject";
 import { CURRENT_REPOSITORY_ID } from "../../constants";
-
-vi.mock("@tuleap/vue-strict-inject");
 
 const current_repository_id = 5;
 
 describe("PullRequestReferences", () => {
-    beforeEach(() => {
-        vi.spyOn(strict_inject, "strictInject").mockImplementation((key) => {
-            if (key !== CURRENT_REPOSITORY_ID) {
-                throw new Error("Tried to strictInject a value while it was not mocked");
-            }
-
-            return current_repository_id;
-        });
-    });
-
     it("should display a skeleton while the pull request is loading, and the references when finished", async () => {
         const wrapper = mount(PullRequestReferences, {
             global: {
                 ...getGlobalTestOptions(),
+                provide: {
+                    [CURRENT_REPOSITORY_ID.valueOf()]: current_repository_id,
+                },
             },
             props: {
                 pull_request_info: null,
@@ -93,6 +83,9 @@ describe("PullRequestReferences", () => {
             shallowMount(PullRequestReferences, {
                 global: {
                     ...getGlobalTestOptions(),
+                    provide: {
+                        [CURRENT_REPOSITORY_ID.valueOf()]: current_repository_id,
+                    },
                 },
                 props: {
                     pull_request_info,

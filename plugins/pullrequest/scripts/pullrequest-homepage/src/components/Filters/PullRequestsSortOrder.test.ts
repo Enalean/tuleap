@@ -18,25 +18,21 @@
  */
 
 import { shallowMount } from "@vue/test-utils";
-import { describe, it, expect, vi } from "vitest";
-import * as strict_inject from "@tuleap/vue-strict-inject";
+import { describe, expect, it } from "vitest";
 import { getGlobalTestOptions } from "../../../tests/global-options-for-tests";
 import {
     injected_pull_requests_sort_order,
-    StubInjectionSymbols,
-} from "../../../tests/injection-symbols-stub";
+    InjectionSymbolsStub,
+} from "../../../tests/InjectionSymbolsStub";
 import { SORT_ASCENDANT, SORT_DESCENDANT } from "../../injection-symbols";
 import PullRequestsSortOrder from "./PullRequestsSortOrder.vue";
 
 describe("PullRequestsSort", () => {
     it("When its value changes, then the PULL_REQUEST_SORT_ORDER should be updated with the currently selected value", () => {
-        vi.spyOn(strict_inject, "strictInject").mockImplementation(
-            StubInjectionSymbols.withDefaults(),
-        );
-
         const wrapper = shallowMount(PullRequestsSortOrder, {
             global: {
                 ...getGlobalTestOptions(),
+                provide: InjectionSymbolsStub.withDefaults(),
             },
         });
 

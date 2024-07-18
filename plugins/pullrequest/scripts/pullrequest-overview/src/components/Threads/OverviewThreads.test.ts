@@ -24,7 +24,6 @@ import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount, flushPromises } from "@vue/test-utils";
 import { Fault } from "@tuleap/fault";
 import { PREFERENCE_RELATIVE_FIRST_ABSOLUTE_SHOWN } from "@tuleap/tlp-relative-date";
-import * as strict_inject from "@tuleap/vue-strict-inject";
 import {
     PULL_REQUEST_COMMENT_ELEMENT_TAG_NAME,
     PULL_REQUEST_COMMENT_SKELETON_ELEMENT_TAG_NAME,
@@ -51,8 +50,6 @@ import {
 } from "../../constants";
 import OverviewThreads from "./OverviewThreads.vue";
 
-vi.mock("@tuleap/vue-strict-inject");
-
 async function setWrapperProps(wrapper: VueWrapper): Promise<void> {
     await wrapper.setProps({
         pull_request_info: {
@@ -72,30 +69,6 @@ describe("OverviewThreads", () => {
     });
 
     const getWrapper = (): VueWrapper => {
-        vi.spyOn(strict_inject, "strictInject").mockImplementation((key) => {
-            switch (key) {
-                case OVERVIEW_APP_BASE_URL_KEY:
-                    return new URL("https://example.com");
-                case DISPLAY_TULEAP_API_ERROR:
-                    return display_error_callback;
-                case PULL_REQUEST_ID_KEY:
-                    return 15;
-                case CURRENT_USER_ID:
-                    return 102;
-                case CURRENT_USER_AVATAR_URL:
-                    return "/url/to/user_102_profile_page.html";
-                case USER_DATE_TIME_FORMAT_KEY:
-                    return "d/m/Y H:i";
-                case USER_LOCALE_KEY:
-                    return "fr_FR";
-                case USER_RELATIVE_DATE_DISPLAY_PREFERENCE_KEY:
-                    return PREFERENCE_RELATIVE_FIRST_ABSOLUTE_SHOWN;
-                case PROJECT_ID:
-                    return 105;
-                default:
-                    throw new Error("Tried to strictInject a value while it was not mocked");
-            }
-        });
         return shallowMount(OverviewThreads, {
             global: {
                 ...getGlobalTestOptions(),
@@ -103,6 +76,18 @@ describe("OverviewThreads", () => {
                     [PULL_REQUEST_COMMENT_ELEMENT_TAG_NAME]: true,
                     [PULL_REQUEST_COMMENT_SKELETON_ELEMENT_TAG_NAME]: true,
                     [PULL_REQUEST_COMMENT_DESCRIPTION_ELEMENT_TAG_NAME]: true,
+                },
+                provide: {
+                    [OVERVIEW_APP_BASE_URL_KEY.valueOf()]: new URL("https://example.com"),
+                    [DISPLAY_TULEAP_API_ERROR.valueOf()]: display_error_callback,
+                    [PULL_REQUEST_ID_KEY.valueOf()]: 15,
+                    [CURRENT_USER_ID.valueOf()]: 102,
+                    [CURRENT_USER_AVATAR_URL.valueOf()]: "/url/to/user_102_profile_page.html",
+                    [USER_DATE_TIME_FORMAT_KEY.valueOf()]: "d/m/Y H:i",
+                    [USER_LOCALE_KEY.valueOf()]: "fr_FR",
+                    [USER_RELATIVE_DATE_DISPLAY_PREFERENCE_KEY.valueOf()]:
+                        PREFERENCE_RELATIVE_FIRST_ABSOLUTE_SHOWN,
+                    [PROJECT_ID.valueOf()]: 105,
                 },
             },
             props: {

@@ -17,9 +17,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { describe, it, expect, vi, beforeEach } from "vitest";
-import { shallowMount } from "@vue/test-utils";
+import { beforeEach, describe, expect, it } from "vitest";
 import type { VueWrapper } from "@vue/test-utils";
+import { shallowMount } from "@vue/test-utils";
 import type { PullRequest } from "@tuleap/plugin-pullrequest-rest-api-types";
 import {
     PULL_REQUEST_MERGE_STATUS_CONFLICT,
@@ -30,10 +30,8 @@ import {
     PULL_REQUEST_STATUS_MERGED,
     PULL_REQUEST_STATUS_REVIEW,
 } from "@tuleap/plugin-pullrequest-constants";
-import * as strict_inject from "@tuleap/vue-strict-inject";
 import { ARE_MERGE_COMMITS_ALLOWED_IN_REPOSITORY } from "../../constants";
 import { getGlobalTestOptions } from "../../../tests/helpers/global-options-for-tests";
-
 import PullRequestChangeStateActions from "./PullRequestChangeStateActions.vue";
 
 const getPullRequest = (pull_request_data: Partial<PullRequest>): PullRequest =>
@@ -46,8 +44,6 @@ const getPullRequest = (pull_request_data: Partial<PullRequest>): PullRequest =>
         ...pull_request_data,
     }) as PullRequest;
 
-vi.mock("@tuleap/vue-strict-inject");
-
 describe("PullRequestChangeStateActions", () => {
     let are_merge_commits_allowed_in_repository: boolean;
 
@@ -56,18 +52,13 @@ describe("PullRequestChangeStateActions", () => {
     });
 
     const getWrapper = (pull_request_data: Partial<PullRequest> = {}): VueWrapper => {
-        vi.spyOn(strict_inject, "strictInject").mockImplementation((key): unknown => {
-            switch (key) {
-                case ARE_MERGE_COMMITS_ALLOWED_IN_REPOSITORY:
-                    return are_merge_commits_allowed_in_repository;
-                default:
-                    throw new Error("Tried to strictInject a value while it was not mocked");
-            }
-        });
-
         return shallowMount(PullRequestChangeStateActions, {
             global: {
                 ...getGlobalTestOptions(),
+                provide: {
+                    [ARE_MERGE_COMMITS_ALLOWED_IN_REPOSITORY.valueOf()]:
+                        are_merge_commits_allowed_in_repository,
+                },
             },
             props: {
                 pull_request: getPullRequest(pull_request_data),

@@ -22,7 +22,6 @@ import { shallowMount } from "@vue/test-utils";
 import type { VueWrapper } from "@vue/test-utils";
 import { okAsync, errAsync } from "neverthrow";
 import { Fault } from "@tuleap/fault";
-import * as strict_inject from "@tuleap/vue-strict-inject";
 import * as tlp_modal from "@tuleap/tlp-modal";
 import type { Modal } from "@tuleap/tlp-modal";
 import type { User } from "@tuleap/plugin-pullrequest-rest-api-types";
@@ -51,7 +50,6 @@ const reviewers: ReadonlyArray<User> = [
     } as User,
 ];
 
-vi.mock("@tuleap/vue-strict-inject");
 vi.mock("@tuleap/tlp-modal", () => ({
     createModal: vi.fn(),
     EVENT_TLP_MODAL_HIDDEN: "tlp-modal-hidden",
@@ -82,23 +80,15 @@ describe("PullRequestManageReviewersModal", () => {
     });
 
     const getWrapper = (reviewers_list: ReadonlyArray<User>): VueWrapper => {
-        vi.spyOn(strict_inject, "strictInject").mockImplementation((key): unknown => {
-            switch (key) {
-                case PULL_REQUEST_ID_KEY:
-                    return pull_request_id;
-                case DISPLAY_TULEAP_API_ERROR:
-                    return display_api_error_callback;
-                case USER_LOCALE_KEY:
-                    return "pt_BR";
-                default:
-                    throw new Error("Tried to strictInject a value while it was not mocked");
-            }
-        });
-
         return shallowMount(PullRequestManageReviewersModal, {
             global: {
                 ...getGlobalTestOptions(),
                 stubs: { "tuleap-lazybox": LazyboxVueStub },
+                provide: {
+                    [PULL_REQUEST_ID_KEY.valueOf()]: pull_request_id,
+                    [DISPLAY_TULEAP_API_ERROR.valueOf()]: display_api_error_callback,
+                    [USER_LOCALE_KEY.valueOf()]: "pt_BR",
+                },
             },
             props: {
                 reviewers_list,

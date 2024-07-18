@@ -30,7 +30,6 @@ import type {
 } from "@tuleap/plugin-pullrequest-rest-api-types";
 import { errAsync, okAsync } from "neverthrow";
 import * as tuleap_api from "../../api/tuleap-rest-querier";
-import * as strict_inject from "@tuleap/vue-strict-inject";
 import { DISPLAY_TULEAP_API_ERROR, PULL_REQUEST_ID_KEY } from "../../constants";
 import { Fault } from "@tuleap/fault";
 import {
@@ -54,8 +53,6 @@ const reviewers: ReviewersCollection = {
     ],
 };
 
-vi.mock("@tuleap/vue-strict-inject");
-
 vi.useFakeTimers();
 
 describe("PullRequestReviewerList", () => {
@@ -66,22 +63,16 @@ describe("PullRequestReviewerList", () => {
     });
 
     const getWrapper = (pull_request: PullRequest | null = null): VueWrapper => {
-        vi.spyOn(strict_inject, "strictInject").mockImplementation((key) => {
-            switch (key) {
-                case DISPLAY_TULEAP_API_ERROR:
-                    return api_error_callback;
-                case PULL_REQUEST_ID_KEY:
-                    return 1;
-                default:
-                    throw new Error("Tried to strictInject a value while it was not mocked");
-            }
-        });
         return mount(PullRequestReviewerList, {
             global: {
+                ...getGlobalTestOptions(),
                 stubs: {
                     PullRequestManageReviewersModal: true,
                 },
-                ...getGlobalTestOptions(),
+                provide: {
+                    [DISPLAY_TULEAP_API_ERROR.valueOf()]: api_error_callback,
+                    [PULL_REQUEST_ID_KEY.valueOf()]: 1,
+                },
             },
             props: {
                 pull_request,

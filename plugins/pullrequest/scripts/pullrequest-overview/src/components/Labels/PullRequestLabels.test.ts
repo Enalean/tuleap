@@ -23,7 +23,6 @@ import { okAsync, errAsync } from "neverthrow";
 import { mount } from "@vue/test-utils";
 import type { VueWrapper } from "@vue/test-utils";
 import { Fault } from "@tuleap/fault";
-import * as strict_inject from "@tuleap/vue-strict-inject";
 import type { PullRequest, ProjectLabel } from "@tuleap/plugin-pullrequest-rest-api-types";
 import * as tuleap_api from "../../api/tuleap-rest-querier";
 import { getGlobalTestOptions } from "../../../tests/helpers/global-options-for-tests";
@@ -46,8 +45,6 @@ const labels: ProjectLabel[] = [
     },
 ];
 
-vi.mock("@tuleap/vue-strict-inject");
-
 vi.useFakeTimers();
 
 describe("PullRequestLabels", () => {
@@ -56,20 +53,13 @@ describe("PullRequestLabels", () => {
         is_git_reference_broken: boolean;
 
     const getWrapper = (): VueWrapper => {
-        vi.spyOn(strict_inject, "strictInject").mockImplementation((key) => {
-            switch (key) {
-                case PULL_REQUEST_ID_KEY:
-                    return pull_request_id;
-                case DISPLAY_TULEAP_API_ERROR:
-                    return display_error_callback;
-                default:
-                    throw new Error("Tried to strictInject a value while it was not mocked");
-            }
-        });
-
         const wrapper = mount(PullRequestLabels, {
             global: {
                 ...getGlobalTestOptions(),
+                provide: {
+                    [PULL_REQUEST_ID_KEY.valueOf()]: pull_request_id,
+                    [DISPLAY_TULEAP_API_ERROR.valueOf()]: display_error_callback,
+                },
             },
             props: {
                 pull_request: null,

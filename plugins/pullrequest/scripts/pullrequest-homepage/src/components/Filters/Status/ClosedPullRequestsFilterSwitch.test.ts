@@ -17,25 +17,21 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { describe, it, expect, vi } from "vitest";
+import { describe, expect, it } from "vitest";
 import { shallowMount } from "@vue/test-utils";
-import * as strict_inject from "@tuleap/vue-strict-inject";
 import {
     injected_show_closed_pull_requests,
-    StubInjectionSymbols,
-} from "../../../../tests/injection-symbols-stub";
+    InjectionSymbolsStub,
+} from "../../../../tests/InjectionSymbolsStub";
 import { getGlobalTestOptions } from "../../../../tests/global-options-for-tests";
 import ClosedPullRequestsFilterSwitch from "./ClosedPullRequestsFilterSwitch.vue";
 
 describe("ClosedPullRequestsFilterSwitch", () => {
     it("When the switch is toggled, then it should change the value of SHOW_CLOSED_PULL_REQUESTS", async () => {
-        vi.spyOn(strict_inject, "strictInject").mockImplementation(
-            StubInjectionSymbols.withDefaults(),
-        );
-
         const wrapper = shallowMount(ClosedPullRequestsFilterSwitch, {
             global: {
                 ...getGlobalTestOptions(),
+                provide: InjectionSymbolsStub.withDefaults(),
             },
         });
 
