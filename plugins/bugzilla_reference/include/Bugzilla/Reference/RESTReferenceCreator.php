@@ -98,7 +98,7 @@ class RESTReferenceCreator
         try {
             $response = $this->http_client->sendRequest($request);
         } catch (ClientExceptionInterface $e) {
-            $this->logger->error('Could not send HTTP request to Bugzilla server ' . $url, $e);
+            $this->logger->error('Could not send HTTP request to Bugzilla server ' . $url, ['exception' => $e]);
             return;
         }
 
