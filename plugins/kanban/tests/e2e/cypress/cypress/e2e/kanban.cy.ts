@@ -223,6 +223,11 @@ describe("Kanban service", () => {
             cy.get("[data-test=kanban-column-review]").within(() => {
                 cy.get("[data-test=kanban-item]").its("length").should("be.gte", 1);
             });
+
+            cy.log(`Cumulative flow diagram is displayed`);
+            cy.get("[data-test=show-report-modal]").click();
+            cy.log("asserting that chart legend is rendered");
+            cy.get("[data-test=cumulative-flow-chart]").contains("To be done");
         });
 
         it("can collapse column", function () {
