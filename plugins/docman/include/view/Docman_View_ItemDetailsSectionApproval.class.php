@@ -54,7 +54,7 @@ class Docman_View_ItemDetailsSectionApproval extends Docman_View_ItemDetailsSect
             $this->version = $request->get('version');
         }
 
-        $this->atf   = Docman_ApprovalTableFactoriesFactory::getFromItem($this->item, $this->version);
+        $this->atf   = (new Docman_ApprovalTableFactoriesFactory())->getFromItem($this->item, $this->version);
         $this->table = $this->atf->getTable();
     }
 

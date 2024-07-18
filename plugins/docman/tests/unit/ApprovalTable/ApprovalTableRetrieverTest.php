@@ -23,224 +23,175 @@ declare(strict_types=1);
 namespace Tuleap\Docman\ApprovalTable;
 
 use Docman_ApprovalTableFactoriesFactory;
+use Docman_ApprovalTableFileFactory;
+use Docman_ApprovalTableItem;
 use Docman_ApprovalTableItemFactory;
+use Docman_Item;
+use Docman_Version;
 use Docman_VersionFactory;
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\MockObject\MockObject;
+use Tuleap\Test\PHPUnit\TestCase;
 
-class ApprovalTableRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
+final class ApprovalTableRetrieverTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var Docman_VersionFactory|Mockery\MockInterface
-     */
-    private $version_factory;
-    /**
-     * @var ApprovalTableRetriever
-     */
-    private $approval_table_retriever;
-
-    /**
-     * @var Docman_ApprovalTableFactoriesFactory|Mockery\MockInterface
-     */
-    private $approval_table_factory;
+    private Docman_VersionFactory&MockObject $version_factory;
+    private ApprovalTableRetriever $approval_table_retriever;
+    private Docman_ApprovalTableFactoriesFactory&MockObject $approval_table_factory;
 
     protected function setUp(): void
     {
-        parent::setUp();
-
-        $this->approval_table_factory   = Mockery::mock(Docman_ApprovalTableFactoriesFactory::class);
-        $this->version_factory          = Mockery::mock(Docman_VersionFactory::class);
+        $this->approval_table_factory   = $this->createMock(Docman_ApprovalTableFactoriesFactory::class);
+        $this->version_factory          = $this->createMock(Docman_VersionFactory::class);
         $this->approval_table_retriever = new ApprovalTableRetriever($this->approval_table_factory, $this->version_factory);
     }
 
     public function testItReturnsNullWhenTableIsVersionedAndWhenNoVersionOfTableExists()
     {
-        $version = Mockery::mock(\Docman_Version::class);
-        $this->version_factory->shouldReceive('getCurrentVersionForItem')->andReturn($version);
-
         $version_id = 1;
-        $version->shouldReceive('getNumber')->andReturn($version_id);
+        $version    = new Docman_Version(['number' => $version_id]);
+        $this->version_factory->method('getCurrentVersionForItem')->willReturn($version);
 
-        $item          = Mockery::mock(\Docman_Item::class);
-        $table_factory = Mockery::mock(\Docman_ApprovalTableFileFactory::class);
-        $this->approval_table_factory->shouldReceive('getFromItem')->with($item, $version_id)->andReturn($table_factory);
-        $this->approval_table_factory->shouldReceive('isAVersionedApprovalTableFactory')->andReturn(true);
+        $item          = new Docman_Item();
+        $table_factory = $this->createMock(Docman_ApprovalTableFileFactory::class);
+        $this->approval_table_factory->method('getFromItem')->with($item, $version_id)->willReturn($table_factory);
 
-        $table_factory->shouldReceive('getLastTableForItem')->andReturn(null);
+        $table_factory->method('getLastTableForItem')->willReturn(null);
 
-        $this->assertEquals(null, $this->approval_table_retriever->retrieveByItem($item));
+        self::assertEquals(null, $this->approval_table_retriever->retrieveByItem($item));
     }
 
     public function testItReturnsTheLastTableWhenTableIsVersioned()
     {
-        $version = Mockery::mock(\Docman_Version::class);
-        $this->version_factory->shouldReceive('getCurrentVersionForItem')->andReturn($version);
-
         $version_id = 1;
-        $version->shouldReceive('getNumber')->andReturn($version_id);
+        $version    = new Docman_Version(['number' => $version_id]);
+        $this->version_factory->method('getCurrentVersionForItem')->willReturn($version);
 
-        $item          = Mockery::mock(\Docman_Item::class);
-        $table_factory = Mockery::mock(\Docman_ApprovalTableFileFactory::class);
-        $this->approval_table_factory->shouldReceive('getFromItem')->with($item, $version_id)->andReturn($table_factory);
+        $item          = new Docman_Item();
+        $table_factory = $this->createMock(Docman_ApprovalTableFileFactory::class);
+        $this->approval_table_factory->method('getFromItem')->with($item, $version_id)->willReturn($table_factory);
 
-        $table = Mockery::mock(\Docman_ApprovalTable::class);
-        $table_factory->shouldReceive('getLastTableForItem')->andReturn($table);
-        $table->shouldReceive('isDisabled')->andReturn(false);
+        $table = new Docman_ApprovalTableItem();
+        $table->setStatus(PLUGIN_DOCMAN_APPROVAL_TABLE_ENABLED);
+        $table_factory->method('getLastTableForItem')->willReturn($table);
 
-        $this->assertEquals($table, $this->approval_table_retriever->retrieveByItem($item));
+        self::assertEquals($table, $this->approval_table_retriever->retrieveByItem($item));
     }
 
     public function testItReturnsNullWhenFactoryDoesNotExistForItem()
     {
-        $version = Mockery::mock(\Docman_Version::class);
-        $this->version_factory->shouldReceive('getCurrentVersionForItem')->andReturn($version);
-
         $version_id = 1;
-        $version->shouldReceive('getNumber')->andReturn($version_id);
+        $version    = new Docman_Version(['number' => $version_id]);
+        $this->version_factory->method('getCurrentVersionForItem')->willReturn($version);
 
-        $item          = Mockery::mock(\Docman_Item::class);
-        $table_factory = Mockery::mock(\Docman_ApprovalTableItemFactory::class);
-        $this->approval_table_factory->shouldReceive('getFromItem')->with($item, $version_id)->andReturn($table_factory);
+        $item          = new Docman_Item();
+        $table_factory = $this->createMock(Docman_ApprovalTableItemFactory::class);
+        $this->approval_table_factory->method('getFromItem')->with($item, $version_id)->willReturn($table_factory);
+        $this->approval_table_factory->method('getSpecificFactoryFromItem')->with($item)->willReturn(null);
 
-        $this->approval_table_factory->shouldReceive('getSpecificFactoryFromItem')
-            ->with($item)
-            ->andReturn(null);
-
-        $this->assertEquals(null, $this->approval_table_retriever->retrieveByItem($item));
+        self::assertEquals(null, $this->approval_table_retriever->retrieveByItem($item));
     }
 
     public function testItReturnsNullWhenItemDoesNotHaveAnApprovalTable()
     {
-        $version = Mockery::mock(\Docman_Version::class);
-        $this->version_factory->shouldReceive('getCurrentVersionForItem')->andReturn($version);
-
         $version_id = 1;
-        $version->shouldReceive('getNumber')->andReturn($version_id);
+        $version    = new Docman_Version(['number' => $version_id]);
+        $this->version_factory->method('getCurrentVersionForItem')->willReturn($version);
 
-        $item          = Mockery::mock(\Docman_Item::class);
-        $table_factory = Mockery::mock(\Docman_ApprovalTableItemFactory::class);
-        $this->approval_table_factory->shouldReceive('getFromItem')->with($item, $version_id)->andReturn($table_factory);
+        $item          = new Docman_Item();
+        $table_factory = $this->createMock(Docman_ApprovalTableItemFactory::class);
+        $this->approval_table_factory->method('getFromItem')->with($item, $version_id)->willReturn($table_factory);
 
-        $factory = Mockery::mock(Docman_ApprovalTableItemFactory::class);
-        $factory->shouldReceive('getTable')->andReturn(null);
-        $this->approval_table_factory->shouldReceive('getSpecificFactoryFromItem')
-            ->with($item)
-            ->andReturn($factory);
+        $factory = $this->createMock(Docman_ApprovalTableItemFactory::class);
+        $factory->method('getTable')->willReturn(null);
+        $this->approval_table_factory->method('getSpecificFactoryFromItem')->with($item)->willReturn($factory);
 
-        $this->assertEquals(null, $this->approval_table_retriever->retrieveByItem($item));
+        self::assertEquals(null, $this->approval_table_retriever->retrieveByItem($item));
     }
 
     public function testItReturnsNullWhenItemApprovalTableIsDisabled()
     {
-        $version = Mockery::mock(\Docman_Version::class);
-        $this->version_factory->shouldReceive('getCurrentVersionForItem')->andReturn($version);
-
         $version_id = 1;
-        $version->shouldReceive('getNumber')->andReturn($version_id);
+        $version    = new Docman_Version(['number' => $version_id]);
+        $this->version_factory->method('getCurrentVersionForItem')->willReturn($version);
 
-        $item          = Mockery::mock(\Docman_Item::class);
-        $table_factory = Mockery::mock(\Docman_ApprovalTableItemFactory::class);
-        $this->approval_table_factory->shouldReceive('getFromItem')->with($item, $version_id)->andReturn($table_factory);
+        $item          = new Docman_Item();
+        $table_factory = $this->createMock(Docman_ApprovalTableItemFactory::class);
+        $this->approval_table_factory->method('getFromItem')->with($item, $version_id)->willReturn($table_factory);
 
-        $factory = Mockery::mock(Docman_ApprovalTableItemFactory::class);
-        $table   = Mockery::mock(\Docman_ApprovalTable::class);
-        $factory->shouldReceive('getTable')->andReturn($table);
-        $table->shouldReceive('isDisabled')->andReturn(true);
-        $this->approval_table_factory->shouldReceive('getSpecificFactoryFromItem')
-            ->with($item)
-            ->andReturn($factory);
+        $factory = $this->createMock(Docman_ApprovalTableItemFactory::class);
+        $table   = new Docman_ApprovalTableItem();
+        $table->setStatus(PLUGIN_DOCMAN_APPROVAL_TABLE_DISABLED);
+        $factory->method('getTable')->willReturn($table);
+        $this->approval_table_factory->method('getSpecificFactoryFromItem')->with($item)->willReturn($factory);
 
-        $this->assertEquals(null, $this->approval_table_retriever->retrieveByItem($item));
+        self::assertEquals(null, $this->approval_table_retriever->retrieveByItem($item));
     }
 
     public function testItReturnsApprovalTable()
     {
-        $version = Mockery::mock(\Docman_Version::class);
-        $this->version_factory->shouldReceive('getCurrentVersionForItem')->andReturn($version);
-
         $version_id = 1;
-        $version->shouldReceive('getNumber')->andReturn($version_id);
+        $version    = new Docman_Version(['number' => $version_id]);
+        $this->version_factory->method('getCurrentVersionForItem')->willReturn($version);
 
-        $item          = Mockery::mock(\Docman_Item::class);
-        $table_factory = Mockery::mock(\Docman_ApprovalTableItemFactory::class);
-        $this->approval_table_factory->shouldReceive('getFromItem')->with($item, $version_id)->andReturn($table_factory);
+        $item          = new Docman_Item();
+        $table_factory = $this->createMock(Docman_ApprovalTableItemFactory::class);
+        $this->approval_table_factory->method('getFromItem')->with($item, $version_id)->willReturn($table_factory);
 
-        $factory = Mockery::mock(Docman_ApprovalTableItemFactory::class);
-        $table   = Mockery::mock(\Docman_ApprovalTable::class);
-        $factory->shouldReceive('getTable')->andReturn($table);
-        $table->shouldReceive('isDisabled')->andReturn(false);
-        $this->approval_table_factory->shouldReceive('getSpecificFactoryFromItem')
-            ->with($item)
-            ->andReturn($factory);
+        $factory = $this->createMock(Docman_ApprovalTableItemFactory::class);
+        $table   = new Docman_ApprovalTableItem();
+        $table->setStatus(PLUGIN_DOCMAN_APPROVAL_TABLE_ENABLED);
+        $factory->method('getTable')->willReturn($table);
+        $this->approval_table_factory->method('getSpecificFactoryFromItem')->with($item)->willReturn($factory);
 
-        $this->assertEquals($table, $this->approval_table_retriever->retrieveByItem($item));
+        self::assertEquals($table, $this->approval_table_retriever->retrieveByItem($item));
     }
 
     public function testItReturnsTrueWhenTheItemHasAnApprovalTableRegardlessOfItsActivation(): void
     {
-        $version = Mockery::mock(\Docman_Version::class);
-        $this->version_factory->shouldReceive('getCurrentVersionForItem')->andReturn($version);
-
         $version_id = 1;
-        $version->shouldReceive('getNumber')->andReturn($version_id);
+        $version    = new Docman_Version(['number' => $version_id]);
+        $this->version_factory->method('getCurrentVersionForItem')->willReturn($version);
 
-        $item          = Mockery::mock(\Docman_Item::class);
-        $table_factory = Mockery::mock(\Docman_ApprovalTableItemFactory::class);
-        $this->approval_table_factory->shouldReceive('getFromItem')->with($item, $version_id)->andReturn($table_factory);
+        $item          = new Docman_Item();
+        $table_factory = $this->createMock(Docman_ApprovalTableItemFactory::class);
+        $this->approval_table_factory->method('getFromItem')->with($item, $version_id)->willReturn($table_factory);
 
-        $factory = Mockery::mock(Docman_ApprovalTableItemFactory::class);
-        $table   = Mockery::mock(\Docman_ApprovalTable::class);
+        $factory = $this->createMock(Docman_ApprovalTableItemFactory::class);
+        $table   = new Docman_ApprovalTableItem();
+        $this->approval_table_factory->method('getSpecificFactoryFromItem')->with($item)->willReturn($factory);
+        $factory->method('getTable')->willReturn($table);
 
-        $this->approval_table_factory->shouldReceive('getSpecificFactoryFromItem')
-            ->with($item)
-            ->andReturn($factory);
-
-        $factory->shouldReceive('getTable')->andReturn($table);
-
-        $this->assertTrue($this->approval_table_retriever->hasApprovalTable($item));
+        self::assertTrue($this->approval_table_retriever->hasApprovalTable($item));
     }
 
     public function testItReturnsFalseWhenTheItemHasNoApprovalTable(): void
     {
-        $version = Mockery::mock(\Docman_Version::class);
-        $this->version_factory->shouldReceive('getCurrentVersionForItem')->andReturn($version);
-
         $version_id = 1;
-        $version->shouldReceive('getNumber')->andReturn($version_id);
+        $version    = new Docman_Version(['number' => $version_id]);
+        $this->version_factory->method('getCurrentVersionForItem')->willReturn($version);
 
-        $item          = Mockery::mock(\Docman_Item::class);
-        $table_factory = Mockery::mock(\Docman_ApprovalTableItemFactory::class);
-        $this->approval_table_factory->shouldReceive('getFromItem')->with($item, $version_id)->andReturn($table_factory);
+        $item          = new Docman_Item();
+        $table_factory = $this->createMock(Docman_ApprovalTableItemFactory::class);
+        $this->approval_table_factory->method('getFromItem')->with($item, $version_id)->willReturn($table_factory);
 
-        $factory = Mockery::mock(Docman_ApprovalTableItemFactory::class);
+        $factory = $this->createMock(Docman_ApprovalTableItemFactory::class);
+        $this->approval_table_factory->method('getSpecificFactoryFromItem')->with($item)->willReturn($factory);
+        $factory->method('getTable')->willReturn(null);
 
-        $this->approval_table_factory->shouldReceive('getSpecificFactoryFromItem')
-            ->with($item)
-            ->andReturn($factory);
-
-        $factory->shouldReceive('getTable')->andReturn(null);
-
-        $this->assertFalse($this->approval_table_retriever->hasApprovalTable($item));
+        self::assertFalse($this->approval_table_retriever->hasApprovalTable($item));
     }
 
     public function testReturnsFalseWhenTheTableFactoryFailed(): void
     {
-        $version = Mockery::mock(\Docman_Version::class);
-        $this->version_factory->shouldReceive('getCurrentVersionForItem')->andReturn($version);
-
         $version_id = 1;
-        $version->shouldReceive('getNumber')->andReturn($version_id);
+        $version    = new Docman_Version(['number' => $version_id]);
+        $this->version_factory->method('getCurrentVersionForItem')->willReturn($version);
 
-        $item          = Mockery::mock(\Docman_Item::class);
-        $table_factory = Mockery::mock(\Docman_ApprovalTableItemFactory::class);
-        $this->approval_table_factory->shouldReceive('getFromItem')->with($item, $version_id)->andReturn($table_factory);
+        $item          = new Docman_Item();
+        $table_factory = $this->createMock(Docman_ApprovalTableItemFactory::class);
+        $this->approval_table_factory->method('getFromItem')->with($item, $version_id)->willReturn($table_factory);
+        $this->approval_table_factory->method('getSpecificFactoryFromItem')->with($item)->willReturn(null);
 
-        $this->approval_table_factory->shouldReceive('getSpecificFactoryFromItem')
-            ->with($item)
-            ->andReturn(null);
-
-        $this->assertFalse($this->approval_table_retriever->hasApprovalTable($item));
+        self::assertFalse($this->approval_table_retriever->hasApprovalTable($item));
     }
 }

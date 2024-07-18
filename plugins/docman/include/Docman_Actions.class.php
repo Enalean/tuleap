@@ -343,7 +343,7 @@ class Docman_Actions extends Actions
         $vImport->required();
         $import = $request->getValidated('app_table_import', $vImport, false);
         if ($import) {
-            $atf = Docman_ApprovalTableFactoriesFactory::getFromItem($item);
+            $atf = (new Docman_ApprovalTableFactoriesFactory())->getFromItem($item);
             $atf->createTable($user->getId(), $request->get('app_table_import'));
         }
     }
@@ -1833,7 +1833,7 @@ class Docman_Actions extends Actions
         $import      = $this->_controler->_actionParams['import'];
         $owner       = $this->_controler->_actionParams['table_owner'];
 
-        $atf      = Docman_ApprovalTableFactoriesFactory::getFromItem($item, $version);
+        $atf      = (new Docman_ApprovalTableFactoriesFactory())->getFromItem($item, $version);
         $table    = $atf->getTable();
         $oldTable = null;
         if ($table !== null) {
@@ -1888,7 +1888,7 @@ class Docman_Actions extends Actions
         // Params
         $item    = $this->_controler->_actionParams['item'];
         $version = $this->_controler->_actionParams['version'];
-        $atf     = Docman_ApprovalTableFactoriesFactory::getFromItem($item, $version);
+        $atf     = (new Docman_ApprovalTableFactoriesFactory())->getFromItem($item, $version);
         $deleted = $atf->deleteTable();
         if ($deleted) {
             $this->_controler->feedback->log('info', dgettext('tuleap-docman', 'Table successfully deleted.'));
