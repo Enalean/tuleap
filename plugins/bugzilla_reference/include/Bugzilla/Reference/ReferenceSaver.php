@@ -118,7 +118,7 @@ class ReferenceSaver
 
     public function edit(\Codendi_Request $request)
     {
-        $id                    = $request->get('id');
+        $id                    = (int) $request->get('id');
         $server                = trim($request->get('server'));
         $rest_api_url          = trim($request->get('rest_url'));
         $username              = $request->get('username');
@@ -154,6 +154,9 @@ class ReferenceSaver
         }
 
         $reference = $this->dao->getReferenceById($id);
+        if ($reference === null) {
+            throw new \RuntimeException('Bugzilla reference #' . $id . ' not found');
+        }
         if ($reference['api_key'] !== '') {
             return [SymmetricCrypto::encrypt(new ConcealedString($reference['api_key']), $this->encryption_key), false];
         }

@@ -18,101 +18,100 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Bugzilla\Reference;
 
-use Tuleap\DB\Compat\Legacy2018\LegacyDataAccessInterface;
+use Tuleap\DB\DataAccessObject;
 
-class Dao extends \DataAccessObject
+/**
+ * @psalm-type BugzillaReferenceRow = array{id:int, keyword:string, server:string, username:string, api_key:string, encrypted_api_key:string, has_api_key_always_been_encrypted:bool, are_followup_private:bool, rest_url:string}
+ */
+class Dao extends DataAccessObject
 {
-    public function __construct(?LegacyDataAccessInterface $da = null)
+    public function save(string $keyword, string $server, string $username, string $encrypted_api_key, bool $are_followups_private, string $rest_api_url): void
     {
-        parent::__construct($da);
-        $this->enableExceptionsOnError();
-    }
-
-    public function save($keyword, $server, $username, $encrypted_api_key, $are_followups_private, $rest_api_url)
-    {
-        $keyword               = $this->da->quoteSmart($keyword);
-        $server                = $this->da->quoteSmart($server);
-        $rest_api_url          = $this->da->quoteSmart($rest_api_url);
-        $username              = $this->da->quoteSmart($username);
-        $encrypted_api_key     = $this->da->quoteSmart($encrypted_api_key);
-        $are_followups_private = $this->da->escapeInt($are_followups_private);
-
         $sql_save = "INSERT INTO plugin_bugzilla_reference(keyword, server, username, api_key, encrypted_api_key, are_followup_private, rest_url)
-                      VALUES ($keyword, $server, $username, '', $encrypted_api_key, $are_followups_private, $rest_api_url)";
+                      VALUES (?, ?, ?, '', ?, ?, ?)";
 
-        return $this->update($sql_save);
+        $this->getDB()->run($sql_save, $keyword, $server, $username, $encrypted_api_key, $are_followups_private, $rest_api_url);
     }
 
-    public function searchAllReferences()
+    /**
+     * @psalm-return BugzillaReferenceRow[]
+     */
+    public function searchAllReferences(): array
     {
-        $sql = 'SELECT * FROM plugin_bugzilla_reference';
-
-        return $this->retrieve($sql);
+        return $this->getDB()->run(
+            'SELECT id, keyword, server, username, api_key, encrypted_api_key, has_api_key_always_been_encrypted, are_followup_private, rest_url
+                       FROM plugin_bugzilla_reference'
+        );
     }
 
-    public function searchReferenceByKeyword($keyword)
+    /**
+     * @psalm-return BugzillaReferenceRow|null
+     */
+    public function searchReferenceByKeyword(string $keyword): ?array
     {
-        $keyword = $this->da->quoteSmart($keyword);
+        $sql = 'SELECT id, keyword, server, username, api_key, encrypted_api_key, has_api_key_always_been_encrypted, are_followup_private, rest_url
+                FROM plugin_bugzilla_reference WHERE keyword = ?';
 
-        $sql = "SELECT * FROM plugin_bugzilla_reference WHERE keyword = $keyword";
-
-        return $this->retrieveFirstRow($sql);
+        return $this->getDB()->row($sql, $keyword);
     }
 
-    public function edit($id, $server, $username, $encrypted_api_key, $has_api_key_always_been_encrypted, $are_followups_private, $rest_api_url)
+    public function edit(int $id, string $server, string $username, string $encrypted_api_key, bool $has_api_key_always_been_encrypted, bool $are_followups_private, string $rest_api_url): void
     {
-        $id                                = $this->da->escapeInt($id);
-        $link                              = $this->da->quoteSmart($server . '/show_bug.cgi?id=$1');
-        $server                            = $this->da->quoteSmart($server);
-        $rest_api_url                      = $this->da->quoteSmart($rest_api_url);
-        $username                          = $this->da->quoteSmart($username);
-        $encrypted_api_key                 = $this->da->quoteSmart($encrypted_api_key);
-        $has_api_key_always_been_encrypted = $this->da->escapeInt($has_api_key_always_been_encrypted);
-        $are_followups_private             = $this->da->escapeInt($are_followups_private);
+        $this->getDB()->tryFlatTransaction(function () use ($id, $server, $rest_api_url, $username, $encrypted_api_key, $has_api_key_always_been_encrypted, $are_followups_private): void {
+            $this->getDB()->run(
+                'UPDATE plugin_bugzilla_reference SET
+                    server = ?,
+                    rest_url = ?,
+                    username = ?,
+                    api_key = "",
+                    encrypted_api_key = ?,
+                    has_api_key_always_been_encrypted = ?,
+                    are_followup_private = ?
+                    WHERE id = ?',
+                $server,
+                $rest_api_url,
+                $username,
+                $encrypted_api_key,
+                $has_api_key_always_been_encrypted,
+                $are_followups_private,
+                $id
+            );
 
-        $this->da->startTransaction();
+            $link = $server . '/show_bug.cgi?id=$1';
 
-        $sql = "UPDATE plugin_bugzilla_reference SET
-                  server = $server,
-                  rest_url = $rest_api_url,
-                  username = $username,
-                  api_key = '',
-                  encrypted_api_key = $encrypted_api_key,
-                  has_api_key_always_been_encrypted = $has_api_key_always_been_encrypted,
-                  are_followup_private = $are_followups_private
-                WHERE id = $id";
-
-        $this->update($sql);
-
-        $sql = "UPDATE reference AS ref
+            $this->getDB()->run(
+                "UPDATE reference AS ref
                     INNER JOIN plugin_bugzilla_reference AS bz ON (
                         bz.keyword = ref.keyword
                         AND ref.nature = 'bugzilla'
                         AND scope = 'S'
                     )
-                SET ref.link = $link
-                WHERE bz.id = $id";
-
-        $this->update($sql);
-
-        $this->commit();
+                SET ref.link = ?
+                WHERE bz.id = ?",
+                $link,
+                $id
+            );
+        });
     }
 
-    public function getReferenceById($id)
+    /**
+     * @psalm-return BugzillaReferenceRow|null
+     */
+    public function getReferenceById(int $id): ?array
     {
-        $id = $this->da->escapeInt($id);
-
-        $sql = "SELECT * FROM plugin_bugzilla_reference WHERE id = $id";
-
-        return $this->retrieveFirstRow($sql);
+        return $this->getDB()->row(
+            'SELECT id, keyword, server, username, api_key, encrypted_api_key, has_api_key_always_been_encrypted, are_followup_private, rest_url
+                       FROM plugin_bugzilla_reference WHERE id = ?',
+            $id
+        );
     }
 
-    public function delete($id)
+    public function delete(int $id): void
     {
-        $id = $this->da->escapeInt($id);
-
         $sql = "DELETE bugzilla, source_ref, target_ref, reference, reference_group
                 FROM plugin_bugzilla_reference AS bugzilla
                     LEFT JOIN cross_references AS source_ref ON (
@@ -129,8 +128,8 @@ class Dao extends \DataAccessObject
                     LEFT JOIN reference_group ON (
                         reference.id = reference_group.reference_id
                     )
-                WHERE bugzilla.id = $id";
+                WHERE bugzilla.id = ?";
 
-        return $this->update($sql);
+        $this->getDB()->run($sql, $id);
     }
 }
