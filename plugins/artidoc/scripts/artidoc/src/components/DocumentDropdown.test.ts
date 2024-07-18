@@ -18,8 +18,8 @@
  */
 
 import { describe, expect, it, vi } from "vitest";
-import { mockStrictInject } from "@/helpers/mock-strict-inject";
 import { CAN_USER_EDIT_DOCUMENT } from "@/can-user-edit-document-injection-key";
+import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import DocumentDropdown from "@/components/DocumentDropdown.vue";
 import { createGettext } from "vue3-gettext";
@@ -29,35 +29,35 @@ import { SECTIONS_STORE } from "@/stores/sections-store-injection-key";
 import { InjectedSectionsStoreStub } from "@/helpers/stubs/InjectSectionsStoreStub";
 import ArtifactSectionFactory from "@/helpers/artifact-section.factory";
 import PendingArtifactSectionFactory from "@/helpers/pending-artifact-section.factory";
+import type { SectionsStore } from "@/stores/useSectionsStore";
 
 vi.mock("@tuleap/tlp-dropdown");
 
-const options = {
-    global: {
-        plugins: [createGettext({ silent: true })],
-    },
-};
-
 describe("DocumentDropdown", () => {
+    function getWrapper(
+        can_user_edit_document: boolean,
+        sections_store: SectionsStore,
+    ): VueWrapper {
+        return shallowMount(DocumentDropdown, {
+            global: {
+                plugins: [createGettext({ silent: true })],
+                provide: {
+                    [CAN_USER_EDIT_DOCUMENT.valueOf()]: can_user_edit_document,
+                    [SECTIONS_STORE.valueOf()]: sections_store,
+                },
+            },
+        });
+    }
+
     describe("Document configuration", () => {
         it("should display configuration modal when user can edit document", () => {
-            mockStrictInject([
-                [CAN_USER_EDIT_DOCUMENT, true],
-                [SECTIONS_STORE, InjectedSectionsStoreStub.withLoadedSections([])],
-            ]);
-
-            const wrapper = shallowMount(DocumentDropdown, options);
+            const wrapper = getWrapper(true, InjectedSectionsStoreStub.withLoadedSections([]));
 
             expect(wrapper.findComponent(ConfigurationModal).exists()).toBe(true);
         });
 
         it("should not display configuration modal when user cannot edit document", () => {
-            mockStrictInject([
-                [CAN_USER_EDIT_DOCUMENT, false],
-                [SECTIONS_STORE, InjectedSectionsStoreStub.withLoadedSections([])],
-            ]);
-
-            const wrapper = shallowMount(DocumentDropdown, options);
+            const wrapper = getWrapper(false, InjectedSectionsStoreStub.withLoadedSections([]));
 
             expect(wrapper.findComponent(ConfigurationModal).exists()).toBe(false);
         });
@@ -65,65 +65,40 @@ describe("DocumentDropdown", () => {
 
     describe("PDF export", () => {
         it("should not display PDF export when the sections are being loaded", () => {
-            mockStrictInject([
-                [CAN_USER_EDIT_DOCUMENT, true],
-                [SECTIONS_STORE, InjectedSectionsStoreStub.withLoadingSections()],
-            ]);
-
-            const wrapper = shallowMount(DocumentDropdown, options);
+            const wrapper = getWrapper(true, InjectedSectionsStoreStub.withLoadingSections());
 
             expect(wrapper.findComponent(PdfExportMenuItem).exists()).toBe(false);
         });
 
         it("should not display PDF export when the loading of sections failed", () => {
-            mockStrictInject([
-                [CAN_USER_EDIT_DOCUMENT, true],
-                [SECTIONS_STORE, InjectedSectionsStoreStub.withSectionsInError()],
-            ]);
-
-            const wrapper = shallowMount(DocumentDropdown, options);
+            const wrapper = getWrapper(true, InjectedSectionsStoreStub.withSectionsInError());
 
             expect(wrapper.findComponent(PdfExportMenuItem).exists()).toBe(false);
         });
 
         it("should not display PDF export when there is no sections", () => {
-            mockStrictInject([
-                [CAN_USER_EDIT_DOCUMENT, true],
-                [SECTIONS_STORE, InjectedSectionsStoreStub.withLoadedSections([])],
-            ]);
-
-            const wrapper = shallowMount(DocumentDropdown, options);
+            const wrapper = getWrapper(true, InjectedSectionsStoreStub.withLoadedSections([]));
 
             expect(wrapper.findComponent(PdfExportMenuItem).exists()).toBe(false);
         });
 
         it("should display PDF export when there is at least one artifact section", () => {
-            mockStrictInject([
-                [CAN_USER_EDIT_DOCUMENT, true],
-                [
-                    SECTIONS_STORE,
-                    InjectedSectionsStoreStub.withLoadedSections([ArtifactSectionFactory.create()]),
-                ],
-            ]);
-
-            const wrapper = shallowMount(DocumentDropdown, options);
+            const wrapper = getWrapper(
+                true,
+                InjectedSectionsStoreStub.withLoadedSections([ArtifactSectionFactory.create()]),
+            );
 
             expect(wrapper.findComponent(PdfExportMenuItem).exists()).toBe(true);
         });
 
         it("should not display PDF export when there is only pending sections", () => {
-            mockStrictInject([
-                [CAN_USER_EDIT_DOCUMENT, true],
-                [
-                    SECTIONS_STORE,
-                    InjectedSectionsStoreStub.withLoadedSections([
-                        PendingArtifactSectionFactory.create(),
-                        PendingArtifactSectionFactory.create(),
-                    ]),
-                ],
-            ]);
-
-            const wrapper = shallowMount(DocumentDropdown, options);
+            const wrapper = getWrapper(
+                true,
+                InjectedSectionsStoreStub.withLoadedSections([
+                    PendingArtifactSectionFactory.create(),
+                    PendingArtifactSectionFactory.create(),
+                ]),
+            );
 
             expect(wrapper.findComponent(PdfExportMenuItem).exists()).toBe(false);
         });

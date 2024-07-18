@@ -25,7 +25,6 @@ import type { ComponentPublicInstance } from "vue";
 import TableOfContents from "./TableOfContents.vue";
 import ArtifactSectionFactory from "@/helpers/artifact-section.factory";
 import { InjectedSectionsStoreStub } from "@/helpers/stubs/InjectSectionsStoreStub";
-import { mockStrictInject } from "@/helpers/mock-strict-inject";
 import { SECTIONS_STORE } from "@/stores/sections-store-injection-key";
 import type { ArtidocSection } from "@/helpers/artidoc-section.type";
 
@@ -34,23 +33,20 @@ describe("TableOfContents", () => {
         let wrapper: VueWrapper<ComponentPublicInstance>;
         beforeAll(() => {
             const default_section = ArtifactSectionFactory.create();
-            mockStrictInject([
-                [
-                    SECTIONS_STORE,
-                    InjectedSectionsStoreStub.withLoadingSections([
-                        ArtifactSectionFactory.override({
-                            artifact: { ...default_section.artifact, id: 1 },
-                        }),
-                        ArtifactSectionFactory.override({
-                            artifact: { ...default_section.artifact, id: 2 },
-                        }),
-                    ]),
-                ],
-            ]);
 
             wrapper = shallowMount(TableOfContents, {
                 global: {
                     plugins: [createGettext({ silent: true })],
+                    provide: {
+                        [SECTIONS_STORE.valueOf()]: InjectedSectionsStoreStub.withLoadingSections([
+                            ArtifactSectionFactory.override({
+                                artifact: { ...default_section.artifact, id: 1 },
+                            }),
+                            ArtifactSectionFactory.override({
+                                artifact: { ...default_section.artifact, id: 2 },
+                            }),
+                        ]),
+                    },
                 },
             });
         });
@@ -74,16 +70,16 @@ describe("TableOfContents", () => {
             section_2 = ArtifactSectionFactory.override({
                 artifact: { ...default_section.artifact, id: 2 },
             });
-            mockStrictInject([
-                [
-                    SECTIONS_STORE,
-                    InjectedSectionsStoreStub.withLoadedSections([section_1, section_2]),
-                ],
-            ]);
 
             wrapper = shallowMount(TableOfContents, {
                 global: {
                     plugins: [createGettext({ silent: true })],
+                    provide: {
+                        [SECTIONS_STORE.valueOf()]: InjectedSectionsStoreStub.withLoadedSections([
+                            section_1,
+                            section_2,
+                        ]),
+                    },
                 },
             });
         });

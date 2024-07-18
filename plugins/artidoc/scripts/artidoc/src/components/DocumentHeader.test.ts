@@ -17,20 +17,21 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { describe, expect, it, vi } from "vitest";
+import { describe, expect, it } from "vitest";
 import { shallowMount } from "@vue/test-utils";
 import DocumentHeader from "@/components/DocumentHeader.vue";
 import DocumentDropdown from "@/components/DocumentDropdown.vue";
-import { mockStrictInject } from "@/helpers/mock-strict-inject";
 import { TITLE } from "@/title-injection-key";
-
-vi.mock("@tuleap/vue-strict-inject");
 
 describe("DocumentHeader", () => {
     it("should display dropdown for document", () => {
-        mockStrictInject([[TITLE, "My document"]]);
-
-        const wrapper = shallowMount(DocumentHeader);
+        const wrapper = shallowMount(DocumentHeader, {
+            global: {
+                provide: {
+                    [TITLE.valueOf()]: "My document",
+                },
+            },
+        });
 
         expect(wrapper.findComponent(DocumentDropdown).exists()).toBe(true);
     });

@@ -17,13 +17,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { shallowMount } from "@vue/test-utils";
 import SectionDescription from "./SectionDescription.vue";
 import SectionDescriptionSkeleton from "./SectionDescriptionSkeleton.vue";
 import { InjectedSectionsStoreStub } from "@/helpers/stubs/InjectSectionsStoreStub";
 import SectionDescriptionReadOnly from "./SectionDescriptionReadOnly.vue";
-import { mockStrictInject } from "@/helpers/mock-strict-inject";
 import { SECTIONS_STORE } from "@/stores/sections-store-injection-key";
 
 const default_props = {
@@ -38,11 +37,15 @@ const default_props = {
 };
 describe("SectionDescription", () => {
     describe("while the sections are loading", () => {
-        beforeEach(() => {
-            mockStrictInject([[SECTIONS_STORE, InjectedSectionsStoreStub.withLoadingSections()]]);
-        });
         it("should display the skeleton", () => {
             const wrapper = shallowMount(SectionDescription, {
+                global: {
+                    provide: {
+                        [SECTIONS_STORE.valueOf()]: InjectedSectionsStoreStub.withLoadingSections(
+                            [],
+                        ),
+                    },
+                },
                 props: { ...default_props },
             });
 
@@ -53,12 +56,15 @@ describe("SectionDescription", () => {
     });
 
     describe("when the sections are loaded", () => {
-        beforeEach(() => {
-            mockStrictInject([[SECTIONS_STORE, InjectedSectionsStoreStub.withLoadedSections([])]]);
-        });
         describe("when the editor mode is disabled", () => {
             it("should display the description", () => {
                 const wrapper = shallowMount(SectionDescription, {
+                    global: {
+                        provide: {
+                            [SECTIONS_STORE.valueOf()]:
+                                InjectedSectionsStoreStub.withLoadedSections([]),
+                        },
+                    },
                     props: default_props,
                 });
                 expect(wrapper.findComponent(SectionDescriptionReadOnly).exists()).toBe(true);
@@ -69,6 +75,12 @@ describe("SectionDescription", () => {
         describe("when the editor mode is enabled", () => {
             it("should display the editor", () => {
                 const wrapper = shallowMount(SectionDescription, {
+                    global: {
+                        provide: {
+                            [SECTIONS_STORE.valueOf()]:
+                                InjectedSectionsStoreStub.withLoadedSections([]),
+                        },
+                    },
                     props: { ...default_props, is_edit_mode: true },
                 });
 
