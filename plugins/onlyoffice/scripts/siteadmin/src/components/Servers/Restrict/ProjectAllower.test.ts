@@ -17,9 +17,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import type { Mock } from "vitest";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import * as fetch_result from "@tuleap/fetch-result";
-import * as strict_inject from "@tuleap/vue-strict-inject";
 
 const getSpy = vi.fn();
 vi.mock("@tuleap/fetch-result");
@@ -31,21 +31,37 @@ vi.mock("@tuleap/autocomplete-for-select2", () => {
         },
     };
 });
-vi.mock("@tuleap/vue-strict-inject");
 
 import { createGettext } from "vue3-gettext";
+import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import ProjectAllower from "./ProjectAllower.vue";
 import { errAsync, okAsync } from "neverthrow";
 import { Fault } from "@tuleap/fault";
 import { uri } from "@tuleap/fetch-result";
-import type { Config, Server } from "../../../type";
+import type { Config, Project, Server } from "../../../type";
 import MoveProjectConfirmationModal from "./MoveProjectConfirmationModal.vue";
+import { CONFIG } from "../../../injection-keys";
 
 describe("ProjectAllower", () => {
     beforeEach((): void => {
         vi.spyOn(fetch_result, "getJSON").mockImplementation(getSpy);
     });
+
+    function getWrapper(config: Config, server: Server, error: Mock): VueWrapper {
+        return shallowMount(ProjectAllower, {
+            global: {
+                plugins: [createGettext({ silent: true })],
+                provide: {
+                    [CONFIG.valueOf()]: config,
+                },
+            },
+            props: {
+                server,
+                error,
+            },
+        });
+    }
 
     it("should fetch project information and add it to the list", async () => {
         const server: Server = { id: 1 } as Server;
@@ -53,19 +69,12 @@ describe("ProjectAllower", () => {
         const error = vi.fn();
 
         getSpy.mockReturnValue(okAsync([{ id: 102, label: "ACME Corp", shortname: "acme" }]));
-        vi.spyOn(strict_inject, "strictInject").mockReturnValue({
-            servers: [server],
-        } as unknown as Config);
 
-        const wrapper = shallowMount(ProjectAllower, {
-            global: {
-                plugins: [createGettext({ silent: true })],
-            },
-            props: {
-                server,
-                error,
-            },
-        });
+        const wrapper = getWrapper(
+            { servers: [server] as ReadonlyArray<Server> } as Config,
+            server,
+            error,
+        );
 
         await wrapper.find({ ref: "select" }).setValue("ACME Corp (acme)");
         await wrapper.find("[data-test=button]").trigger("click");
@@ -87,19 +96,12 @@ describe("ProjectAllower", () => {
         const error = vi.fn();
 
         getSpy.mockReturnValue(okAsync([]));
-        vi.spyOn(strict_inject, "strictInject").mockReturnValue({
-            servers: [server],
-        } as unknown as Config);
 
-        const wrapper = shallowMount(ProjectAllower, {
-            global: {
-                plugins: [createGettext({ silent: true })],
-            },
-            props: {
-                server,
-                error,
-            },
-        });
+        const wrapper = getWrapper(
+            { servers: [server] as ReadonlyArray<Server> } as Config,
+            server,
+            error,
+        );
 
         await wrapper.find({ ref: "select" }).setValue("ACME Corp (acme)");
         await wrapper.find("[data-test=button]").trigger("click");
@@ -117,19 +119,12 @@ describe("ProjectAllower", () => {
         const error = vi.fn();
 
         getSpy.mockReturnValue(errAsync(Fault.fromMessage("Something went wrong")));
-        vi.spyOn(strict_inject, "strictInject").mockReturnValue({
-            servers: [server],
-        } as unknown as Config);
 
-        const wrapper = shallowMount(ProjectAllower, {
-            global: {
-                plugins: [createGettext({ silent: true })],
-            },
-            props: {
-                server,
-                error,
-            },
-        });
+        const wrapper = getWrapper(
+            { servers: [server] as ReadonlyArray<Server> } as Config,
+            server,
+            error,
+        );
 
         await wrapper.find({ ref: "select" }).setValue("ACME Corp (acme)");
         await wrapper.find("[data-test=button]").trigger("click");
@@ -152,19 +147,12 @@ describe("ProjectAllower", () => {
                 { id: 103, label: "ACME Corp clone", shortname: "acme" },
             ]),
         );
-        vi.spyOn(strict_inject, "strictInject").mockReturnValue({
-            servers: [server],
-        } as unknown as Config);
 
-        const wrapper = shallowMount(ProjectAllower, {
-            global: {
-                plugins: [createGettext({ silent: true })],
-            },
-            props: {
-                server,
-                error,
-            },
-        });
+        const wrapper = getWrapper(
+            { servers: [server] as ReadonlyArray<Server> } as Config,
+            server,
+            error,
+        );
 
         await wrapper.find({ ref: "select" }).setValue("ACME Corp (acme)");
         await wrapper.find("[data-test=button]").trigger("click");
@@ -180,30 +168,25 @@ describe("ProjectAllower", () => {
         const server: Server = {
             id: 1,
             is_project_restricted: true,
-            project_restrictions: [],
-        } as unknown as Server;
+            project_restrictions: [] as ReadonlyArray<Project>,
+        } as Server;
         const another_server: Server = {
             id: 2,
             is_project_restricted: true,
-            project_restrictions: [{ id: 102, label: "ACME Corp", url: "/projects/acme" }],
-        } as unknown as Server;
+            project_restrictions: [
+                { id: 102, label: "ACME Corp", url: "/projects/acme" },
+            ] as ReadonlyArray<Project>,
+        } as Server;
 
         const error = vi.fn();
 
         getSpy.mockReturnValue(okAsync([{ id: 102, label: "ACME Corp", shortname: "acme" }]));
-        vi.spyOn(strict_inject, "strictInject").mockReturnValue({
-            servers: [server, another_server],
-        } as unknown as Config);
 
-        const wrapper = shallowMount(ProjectAllower, {
-            global: {
-                plugins: [createGettext({ silent: true })],
-            },
-            props: {
-                server,
-                error,
-            },
-        });
+        const wrapper = getWrapper(
+            { servers: [server, another_server] as ReadonlyArray<Server> } as Config,
+            server,
+            error,
+        );
 
         await wrapper.find({ ref: "select" }).setValue("ACME Corp (acme)");
         await wrapper.find("[data-test=button]").trigger("click");

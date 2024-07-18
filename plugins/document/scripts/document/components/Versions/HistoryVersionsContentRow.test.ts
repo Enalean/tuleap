@@ -42,9 +42,8 @@ import { shallowMount } from "@vue/test-utils";
 import HistoryVersionsContentRow from "./HistoryVersionsContentRow.vue";
 import type { RestUser } from "../../api/rest-querier";
 import type { FileHistory, Item, ItemFile } from "../../type";
-import { FEEDBACK } from "../../injection-keys";
+import { FEEDBACK, SHOULD_DISPLAY_SOURCE_COLUMN_FOR_VERSIONS } from "../../injection-keys";
 import { getGlobalTestOptions } from "../../helpers/global-options-for-test";
-import * as strict_inject from "@tuleap/vue-strict-inject";
 
 describe("HistoryVersionsContentRow", () => {
     let location: Pick<Location, "reload">;
@@ -56,7 +55,6 @@ describe("HistoryVersionsContentRow", () => {
         has_more_than_one_version: boolean,
         authoring_tool = "",
     ): VueWrapper<InstanceType<typeof HistoryVersionsContentRow>> {
-        jest.spyOn(strict_inject, "strictInject").mockReturnValue(true);
         return shallowMount(HistoryVersionsContentRow, {
             props: {
                 item,
@@ -82,7 +80,8 @@ describe("HistoryVersionsContentRow", () => {
             global: {
                 ...getGlobalTestOptions({}),
                 provide: {
-                    [FEEDBACK as symbol]: { success },
+                    [FEEDBACK.valueOf()]: { success },
+                    [SHOULD_DISPLAY_SOURCE_COLUMN_FOR_VERSIONS.valueOf()]: true,
                 },
             },
         });

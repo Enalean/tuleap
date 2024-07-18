@@ -32,7 +32,7 @@ import { getGlobalTestOptions } from "../../helpers/global-options-for-test";
 import type { Item } from "../../type";
 import * as router from "vue-router";
 import type { RouteLocationNormalizedLoaded } from "vue-router";
-import * as strict_inject from "@tuleap/vue-strict-inject";
+import { SHOULD_DISPLAY_SOURCE_COLUMN_FOR_VERSIONS } from "../../injection-keys";
 
 jest.mock("vue-router");
 
@@ -60,8 +60,6 @@ describe("DisplayVersions", () => {
             } as Item);
         });
 
-        jest.spyOn(strict_inject, "strictInject").mockReturnValue(true);
-
         const wrapper = shallowMount(DisplayVersions, {
             global: {
                 ...getGlobalTestOptions({
@@ -70,6 +68,9 @@ describe("DisplayVersions", () => {
                     },
                 }),
                 stubs: ["router-link"],
+                provide: {
+                    [SHOULD_DISPLAY_SOURCE_COLUMN_FOR_VERSIONS.valueOf()]: true,
+                },
             },
         });
 

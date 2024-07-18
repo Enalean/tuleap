@@ -32,7 +32,6 @@ import {
 } from "../../../../constants";
 import emitter from "../../../../helpers/emitter";
 import { getGlobalTestOptions } from "../../../../helpers/global-options-for-test";
-import * as strict_inject from "@tuleap/vue-strict-inject";
 import { NEW_ITEMS_ALTERNATIVES, OTHER_ITEM_TYPES } from "../../../../injection-keys";
 
 jest.mock("../../../../helpers/emitter");
@@ -55,14 +54,6 @@ describe("NewItemMenuOptions", function () {
         create_new_item_alternatives: NewItemAlternativeArray = [],
         other_item_types: OtherItemTypeCollection = {},
     ): VueWrapper<InstanceType<typeof NewItemMenuOptions>> {
-        jest.spyOn(strict_inject, "strictInject").mockImplementation((key) => {
-            switch (key) {
-                case NEW_ITEMS_ALTERNATIVES:
-                    return create_new_item_alternatives;
-                case OTHER_ITEM_TYPES:
-                    return other_item_types;
-            }
-        });
         return shallowMount(NewItemMenuOptions, {
             props: {
                 item: CURRENT_FOLDER,
@@ -79,6 +70,10 @@ describe("NewItemMenuOptions", function () {
                         },
                     },
                 }),
+                provide: {
+                    [NEW_ITEMS_ALTERNATIVES.valueOf()]: create_new_item_alternatives,
+                    [OTHER_ITEM_TYPES.valueOf()]: other_item_types,
+                },
             },
         });
     }

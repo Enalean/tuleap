@@ -32,7 +32,7 @@ import type { RouteLocationNormalizedLoaded } from "vue-router";
 
 import * as router from "vue-router";
 import type { Item } from "../../type";
-import * as strict_inject from "@tuleap/vue-strict-inject";
+import { SHOULD_DISPLAY_SOURCE_COLUMN_FOR_VERSIONS } from "../../injection-keys";
 
 jest.mock("vue-router");
 
@@ -50,7 +50,6 @@ describe("DisplayHistory", () => {
 
     it("should display logs", async () => {
         load_document.mockReturnValue({ id: 10 } as Item);
-        jest.spyOn(strict_inject, "strictInject").mockReturnValue(true);
         const wrapper = shallowMount(DisplayHistory, {
             global: {
                 ...getGlobalTestOptions({
@@ -60,6 +59,9 @@ describe("DisplayHistory", () => {
                 }),
                 stubs: {
                     RouterLink: RouterLinkStub,
+                },
+                provide: {
+                    [SHOULD_DISPLAY_SOURCE_COLUMN_FOR_VERSIONS.valueOf()]: true,
                 },
             },
         });
@@ -81,7 +83,6 @@ describe("DisplayHistory", () => {
         `should display a Versions link for %s: %s`,
         async (type, should_versions_link_be_displayed) => {
             load_document.mockReturnValue({ id: 10, type } as Item);
-            jest.spyOn(strict_inject, "strictInject").mockReturnValue(true);
             const wrapper = shallowMount(DisplayHistory, {
                 global: {
                     ...getGlobalTestOptions({
@@ -91,6 +92,9 @@ describe("DisplayHistory", () => {
                     }),
                     stubs: {
                         RouterLink: RouterLinkStub,
+                    },
+                    provide: {
+                        [SHOULD_DISPLAY_SOURCE_COLUMN_FOR_VERSIONS.valueOf()]: true,
                     },
                 },
             });

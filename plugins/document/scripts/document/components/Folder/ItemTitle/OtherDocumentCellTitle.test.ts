@@ -22,7 +22,7 @@ import { shallowMount } from "@vue/test-utils";
 import OtherDocumentCellTitle from "./OtherDocumentCellTitle.vue";
 import type { OtherTypeProperties, Folder, OtherTypeItem, RootState } from "../../../type";
 import { getGlobalTestOptions } from "../../../helpers/global-options-for-test";
-import * as strict_inject from "@tuleap/vue-strict-inject";
+import { OTHER_ITEM_TYPES } from "../../../injection-keys";
 
 describe("OtherDocumentCellTitle", () => {
     function getWrapper(
@@ -39,15 +39,14 @@ describe("OtherDocumentCellTitle", () => {
                         } as Folder,
                     } as RootState,
                 }),
+                provide: {
+                    [OTHER_ITEM_TYPES.valueOf()]: {
+                        whatever: { title: "Whatever", icon: "whatever-icon " },
+                    },
+                },
             },
         });
     }
-
-    beforeEach(() => {
-        jest.spyOn(strict_inject, "strictInject").mockReturnValue({
-            whatever: { icon: "whatever-icon" },
-        });
-    });
 
     it(`Given other_type_properties is not set
         When we display item title
