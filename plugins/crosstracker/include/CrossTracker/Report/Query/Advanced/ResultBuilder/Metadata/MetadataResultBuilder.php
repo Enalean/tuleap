@@ -23,7 +23,9 @@ declare(strict_types=1);
 namespace Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Metadata;
 
 use LogicException;
+use PFUser;
 use Tuleap\CrossTracker\Report\Query\Advanced\AllowedMetadata;
+use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Metadata\Date\MetadataDateResultBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Metadata\Semantic\AssignedTo\AssignedToResultBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Metadata\Semantic\Status\StatusResultBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Metadata\Text\MetadataTextResultBuilder;
@@ -36,27 +38,29 @@ final readonly class MetadataResultBuilder
         private MetadataTextResultBuilder $text_builder,
         private StatusResultBuilder $status_builder,
         private AssignedToResultBuilder $assigned_to_builder,
+        private MetadataDateResultBuilder $date_builder,
     ) {
     }
 
     public function getResult(
         Metadata $metadata,
         array $select_results,
+        PFUser $user,
     ): SelectedValuesCollection {
         return match ($metadata->getName()) {
             // Semantics
             AllowedMetadata::TITLE,
-            AllowedMetadata::DESCRIPTION => $this->text_builder->getResult($metadata, $select_results),
-            AllowedMetadata::STATUS      => $this->status_builder->getResult($select_results),
-            AllowedMetadata::ASSIGNED_TO => $this->assigned_to_builder->getResult($select_results),
+            AllowedMetadata::DESCRIPTION      => $this->text_builder->getResult($metadata, $select_results),
+            AllowedMetadata::STATUS           => $this->status_builder->getResult($select_results),
+            AllowedMetadata::ASSIGNED_TO      => $this->assigned_to_builder->getResult($select_results),
 
             // Always there fields
             AllowedMetadata::SUBMITTED_ON,
-            AllowedMetadata::LAST_UPDATE_DATE,
+            AllowedMetadata::LAST_UPDATE_DATE => $this->date_builder->getResult($metadata, $select_results, $user),
             AllowedMetadata::SUBMITTED_BY,
             AllowedMetadata::LAST_UPDATE_BY,
-            AllowedMetadata::ID          => new SelectedValuesCollection(null, []),
-            default                      => throw new LogicException("Unknown metadata type: {$metadata->getName()}"),
+            AllowedMetadata::ID               => new SelectedValuesCollection(null, []),
+            default                           => throw new LogicException("Unknown metadata type: {$metadata->getName()}"),
         };
     }
 }

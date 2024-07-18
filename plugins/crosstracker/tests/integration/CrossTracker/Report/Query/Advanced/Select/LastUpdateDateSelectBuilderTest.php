@@ -23,30 +23,17 @@ declare(strict_types=1);
 namespace Tuleap\CrossTracker\Report\Query\Advanced\Select;
 
 use DateTimeImmutable;
+use DateTimeZone;
 use PFUser;
 use ProjectUGroup;
 use Tracker;
-use Tracker_FormElementFactory;
+use Tuleap\CrossTracker\CrossTrackerReport;
 use Tuleap\CrossTracker\Report\Query\Advanced\CrossTrackerFieldTestCase;
-use Tuleap\CrossTracker\Report\Query\Advanced\DuckTypedField\FieldTypeRetrieverWrapper;
-use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\CrossTrackerExpertQueryReportDao;
-use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Field\Date\DateSelectFromBuilder;
-use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Field\FieldSelectFromBuilder;
-use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Field\Numeric\NumericSelectFromBuilder;
-use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Field\StaticList\StaticListSelectFromBuilder;
-use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Field\Text\TextSelectFromBuilder;
-use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Field\UGroupList\UGroupListSelectFromBuilder;
-use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Field\UserList\UserListSelectFromBuilder;
-use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Metadata\MetadataSelectFromBuilder;
-use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Metadata\Semantic\AssignedTo\AssignedToSelectFromBuilder;
-use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Metadata\Semantic\Description\DescriptionSelectFromBuilder;
-use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Metadata\Semantic\Status\StatusSelectFromBuilder;
-use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Metadata\Semantic\Title\TitleSelectFromBuilder;
-use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilderVisitor;
+use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Field\Date\DateResultRepresentation;
+use Tuleap\CrossTracker\REST\v1\Representation\CrossTrackerReportContentRepresentation;
+use Tuleap\CrossTracker\Tests\Report\ArtifactReportFactoryInstantiator;
 use Tuleap\DB\DBFactory;
 use Tuleap\Test\Builders\CoreDatabaseBuilder;
-use Tuleap\Tracker\Permission\TrackersPermissionsRetriever;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
 use Tuleap\Tracker\Test\Builders\TrackerDatabaseBuilder;
 
 final class LastUpdateDateSelectBuilderTest extends CrossTrackerFieldTestCase
@@ -57,15 +44,9 @@ final class LastUpdateDateSelectBuilderTest extends CrossTrackerFieldTestCase
      */
     private array $trackers;
     /**
-     * @var list<int>
-     */
-    private array $artifact_ids;
-    /**
-     * @var array<int, ?int>
+     * @var array<int, string>
      */
     private array $expected_results;
-    private CrossTrackerExpertQueryReportDao $dao;
-    private SelectBuilderVisitor $builder;
 
     public function setUp(): void
     {
@@ -96,53 +77,51 @@ final class LastUpdateDateSelectBuilderTest extends CrossTrackerFieldTestCase
 
         $release_artifact_id = $tracker_builder->buildArtifact($release_tracker->getId());
         $sprint_artifact_id  = $tracker_builder->buildArtifact($sprint_tracker->getId());
-        $this->artifact_ids  = [$release_artifact_id, $sprint_artifact_id];
 
-        $release_date = (new DateTimeImmutable('2024-07-05 17:03'))->getTimestamp();
-        $sprint_date  = (new DateTimeImmutable('2024-12-24 02:58'))->getTimestamp();
-        $tracker_builder->buildLastChangeset($release_artifact_id, $release_date);
-        $tracker_builder->buildLastChangeset($sprint_artifact_id, $sprint_date);
+        $release_date = (new DateTimeImmutable('2024-07-05 17:03'));
+        $sprint_date  = (new DateTimeImmutable('2024-12-24 02:58'));
+        $tracker_builder->buildLastChangeset($release_artifact_id, $release_date->getTimestamp());
+        $tracker_builder->buildLastChangeset($sprint_artifact_id, $sprint_date->getTimestamp());
 
         $this->expected_results = [
-            $release_artifact_id => $release_date,
-            $sprint_artifact_id  => $sprint_date,
+            $release_artifact_id => $release_date->setTimezone(new DateTimeZone('UTC'))->format(DATE_ATOM),
+            $sprint_artifact_id  => $sprint_date->setTimezone(new DateTimeZone('UTC'))->format(DATE_ATOM),
         ];
+    }
 
-        $this->dao            = new CrossTrackerExpertQueryReportDao();
-        $form_element_factory = Tracker_FormElementFactory::instance();
-        $this->builder        = new SelectBuilderVisitor(
-            new FieldSelectFromBuilder(
-                $form_element_factory,
-                new FieldTypeRetrieverWrapper($form_element_factory),
-                TrackersPermissionsRetriever::build(),
-                new DateSelectFromBuilder(),
-                new TextSelectFromBuilder(),
-                new NumericSelectFromBuilder(),
-                new StaticListSelectFromBuilder(),
-                new UGroupListSelectFromBuilder(),
-                new UserListSelectFromBuilder(),
-            ),
-            new MetadataSelectFromBuilder(
-                new TitleSelectFromBuilder(),
-                new DescriptionSelectFromBuilder(),
-                new StatusSelectFromBuilder(),
-                new AssignedToSelectFromBuilder(),
-            ),
-        );
+    private function getQueryResults(CrossTrackerReport $report, PFUser $user): CrossTrackerReportContentRepresentation
+    {
+        $result = (new ArtifactReportFactoryInstantiator())
+            ->getFactory()
+            ->getArtifactsMatchingReport($report, $user, 10, 0, false);
+        assert($result instanceof CrossTrackerReportContentRepresentation);
+        return $result;
     }
 
     public function testItReturnsColumns(): void
     {
-        $fragments = $this->builder->buildSelectFrom([new Metadata('last_update_date')], $this->trackers, $this->user);
-        $results   = $this->dao->searchArtifactsColumnsMatchingIds($fragments, $this->artifact_ids);
-
-        self::assertCount(2, $results);
+        $result = $this->getQueryResults(
+            new CrossTrackerReport(
+                1,
+                "SELECT @last_update_date WHERE @last_update_date >= '1970-01-01'",
+                $this->trackers,
+            ),
+            $this->user,
+        );
+        self::assertSame(2, $result->getTotalSize());
+        self::assertCount(1, $result->selected);
+        self::assertSame('@last_update_date', $result->selected[0]->name);
         $values = [];
-        foreach ($results as $result) {
-            self::assertArrayHasKey('id', $result);
-            self::assertArrayHasKey('@last_update_date', $result);
-            $values[$result['id']] = $result['@last_update_date'];
+        foreach ($result->artifacts as $artifact) {
+            self::assertCount(1, $artifact);
+            self::assertArrayHasKey('@last_update_date', $artifact);
+            $value = $artifact['@last_update_date'];
+            self::assertInstanceOf(DateResultRepresentation::class, $value);
+            $values[] = $value->value;
         }
-        self::assertEqualsCanonicalizing($values, $this->expected_results);
+        self::assertEqualsCanonicalizing(
+            array_values($this->expected_results),
+            $values
+        );
     }
 }
