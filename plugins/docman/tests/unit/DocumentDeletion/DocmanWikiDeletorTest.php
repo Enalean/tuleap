@@ -20,52 +20,36 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Docman;
+namespace Tuleap\Docman\DocumentDeletion;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use Tuleap\Docman\DocumentDeletion\DocmanWikiDeletor;
+use Docman_ItemDao;
+use Docman_ItemFactory;
+use Docman_PermissionsManager;
+use Docman_Wiki;
+use EventManager;
+use PHPUnit\Framework\MockObject\MockObject;
+use Tuleap\Docman\DeleteFailedException;
+use Tuleap\Docman\DocmanReferencedWikiPageRetriever;
 use Tuleap\PHPWiki\WikiPage;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
 
-class DocmanWikiDeletorTest extends \Tuleap\Test\PHPUnit\TestCase
+final class DocmanWikiDeletorTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var \Docman_PermissionsManager
-     */
-    private $permissions_manager;
-
-    /**
-     * @var \Docman_ItemFactory
-     */
-    private $item_factory;
-
-    /**
-     * @var \EventManager
-     */
-    private $event_manager;
-
-    /**
-     * @var \Docman_ItemDao
-     */
-    private $item_dao;
-
-    /**
-     * @var DocmanWikiDeletor
-     */
-    private $wiki_deletor;
-    /**
-     * @var \Mockery\MockInterface|DocmanReferencedWikiPageRetriever
-     */
-    private $wiki_page_retriever;
+    private Docman_PermissionsManager&MockObject $permissions_manager;
+    private Docman_ItemFactory&MockObject $item_factory;
+    private EventManager&MockObject $event_manager;
+    private Docman_ItemDao&MockObject $item_dao;
+    private DocmanWikiDeletor $wiki_deletor;
+    private DocmanReferencedWikiPageRetriever&MockObject $wiki_page_retriever;
 
     protected function setUp(): void
     {
-        $this->permissions_manager = \Mockery::mock(\Docman_PermissionsManager::class);
-        $this->item_factory        = \Mockery::mock(\Docman_ItemFactory::class);
-        $this->event_manager       = \Mockery::mock(\EventManager::class);
-        $this->item_dao            = \Mockery::mock(\Docman_ItemDao::class);
-        $this->wiki_page_retriever = \Mockery::mock(DocmanReferencedWikiPageRetriever::class);
+        $this->permissions_manager = $this->createMock(Docman_PermissionsManager::class);
+        $this->item_factory        = $this->createMock(Docman_ItemFactory::class);
+        $this->event_manager       = $this->createMock(EventManager::class);
+        $this->item_dao            = $this->createMock(Docman_ItemDao::class);
+        $this->wiki_page_retriever = $this->createMock(DocmanReferencedWikiPageRetriever::class);
 
         $this->wiki_deletor = new DocmanWikiDeletor(
             $this->wiki_page_retriever,
@@ -76,162 +60,134 @@ class DocmanWikiDeletorTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-    protected function tearDown(): void
-    {
-        \Mockery::close();
-    }
-
     public function testItThrowsAnExceptionIfUserCannotDeleteTheWiki(): void
     {
-        $propagate_deletion_to_wiki_service = false;
-        $wiki_to_delete                     = \Mockery::mock(\Docman_Wiki::class);
-        $wiki_page                          = \Mockery::mock(WikiPage::class);
+        $wiki_to_delete = $this->createMock(Docman_Wiki::class);
+        $wiki_page      = $this->createMock(WikiPage::class);
 
-        $wiki_to_delete->shouldReceive('getId')->andReturns(169);
-        $wiki_to_delete->shouldReceive('getTitle')->andReturns('My kinky wiki');
+        $wiki_to_delete->method('getId')->willReturn(169);
+        $wiki_to_delete->method('getTitle')->willReturn('My kinky wiki');
 
-        $this->wiki_page_retriever
-            ->shouldReceive('retrieveAssociatedWikiPage')
-            ->with($wiki_to_delete)
-            ->andReturns($wiki_page);
+        $this->wiki_page_retriever->method('retrieveAssociatedWikiPage')->with($wiki_to_delete)->willReturn($wiki_page);
 
-        $wiki_page->shouldReceive('isReferenced')->andReturns(true);
-        $wiki_page->shouldReceive('getId')->andReturns(69);
+        $wiki_page->method('isReferenced')->willReturn(true);
+        $wiki_page->method('getId')->willReturn(69);
 
-        $this->permissions_manager->shouldReceive('userCanDelete')->andReturns(false);
-        $this->item_factory->shouldReceive('delete')->never();
+        $this->permissions_manager->method('userCanDelete')->willReturn(false);
+        $this->item_factory->expects(self::never())->method('delete');
 
-        $this->expectException(DeleteFailedException::class);
+        self::expectException(DeleteFailedException::class);
 
         $this->wiki_deletor->deleteWiki(
             $wiki_to_delete,
-            \Mockery::mock(\PFUser::class),
-            $propagate_deletion_to_wiki_service
+            UserTestBuilder::buildWithDefaults(),
+            false
         );
     }
 
     public function testItOnlyDeletesAWikiAndSendsWikiPageUpdatedEvent(): void
     {
-        $propagate_deletion_to_wiki_service = false;
-        $wiki_to_delete                     = \Mockery::mock(\Docman_Wiki::class);
-        $wiki_page                          = \Mockery::mock(WikiPage::class);
+        $wiki_to_delete = $this->createMock(Docman_Wiki::class);
+        $wiki_page      = $this->createMock(WikiPage::class);
 
-        $wiki_to_delete->shouldReceive('getId')->andReturns(169);
-        $wiki_to_delete->shouldReceive('getGroupId')->andReturns(104);
-        $wiki_to_delete->shouldReceive('getPagename')->andReturns('My kinky wiki');
+        $wiki_to_delete->method('getId')->willReturn(169);
+        $wiki_to_delete->method('getGroupId')->willReturn(104);
+        $wiki_to_delete->method('getPagename')->willReturn('My kinky wiki');
 
-        $this->wiki_page_retriever
-            ->shouldReceive('retrieveAssociatedWikiPage')
-            ->with($wiki_to_delete)
-            ->andReturns($wiki_page);
+        $this->wiki_page_retriever->method('retrieveAssociatedWikiPage')->with($wiki_to_delete)->willReturn($wiki_page);
 
-        $wiki_page->shouldReceive('isReferenced')->andReturns(true);
-        $wiki_page->shouldReceive('getId')->andReturns(69);
+        $wiki_page->method('isReferenced')->willReturn(true);
+        $wiki_page->method('getId')->willReturn(69);
 
-        $this->permissions_manager->shouldReceive('userCanDelete')->andReturns(true);
+        $this->permissions_manager->method('userCanDelete')->willReturn(true);
 
-        $this->item_factory->shouldReceive('delete')->with($wiki_to_delete)->atLeast()->once();
-        $this->item_factory->shouldReceive('getIdInWikiOfWikiPageItem');
+        $this->item_factory->expects(self::atLeastOnce())->method('delete')->with($wiki_to_delete);
+        $this->item_factory->method('getIdInWikiOfWikiPageItem');
 
-        $this->item_dao->shouldReceive('isWikiPageReferenced');
+        $this->item_dao->method('isWikiPageReferenced');
 
-        $this->event_manager->shouldReceive('processEvent')->with(
-            'wiki_page_updated',
-            \Mockery::any()
-        )->atLeast()->once();
+        $this->event_manager->expects(self::atLeastOnce())->method('processEvent')->with('wiki_page_updated', self::anything());
 
         $this->wiki_deletor->deleteWiki(
             $wiki_to_delete,
-            \Mockery::mock(\PFUser::class),
-            $propagate_deletion_to_wiki_service
+            UserTestBuilder::buildWithDefaults(),
+            false
         );
     }
 
     public function testItDeletesAWikiAndItsReferencedWikiPage(): void
     {
-        $propagate_deletion_to_wiki_service = true;
-        $wiki_to_delete                     = \Mockery::mock(\Docman_Wiki::class);
-        $wiki_page                          = \Mockery::mock(WikiPage::class);
+        $wiki_to_delete = $this->createMock(Docman_Wiki::class);
+        $wiki_page      = $this->createMock(WikiPage::class);
 
-        $wiki_to_delete->shouldReceive('getId')->andReturns(169);
-        $wiki_to_delete->shouldReceive('getGroupId')->andReturns(104);
-        $wiki_to_delete->shouldReceive('getPagename')->andReturns('My kinky wiki');
+        $wiki_to_delete->method('getId')->willReturn(169);
+        $wiki_to_delete->method('getGroupId')->willReturn(104);
+        $wiki_to_delete->method('getPagename')->willReturn('My kinky wiki');
 
-        $this->wiki_page_retriever
-            ->shouldReceive('retrieveAssociatedWikiPage')
-            ->with($wiki_to_delete)
-            ->andReturns($wiki_page);
+        $this->wiki_page_retriever->method('retrieveAssociatedWikiPage')->with($wiki_to_delete)->willReturn($wiki_page);
 
-        $wiki_page->shouldReceive('isReferenced')->andReturns(true);
-        $wiki_page->shouldReceive('getId')->andReturns(69);
+        $wiki_page->method('isReferenced')->willReturn(true);
+        $wiki_page->method('getId')->willReturn(69);
 
-        $this->permissions_manager->shouldReceive('userCanDelete')->andReturns(true);
+        $this->permissions_manager->method('userCanDelete')->willReturn(true);
 
-        $this->item_factory->shouldReceive('delete')->with($wiki_to_delete)->atLeast()->once();
-        $this->item_factory->shouldReceive('deleteWikiPage')->with('My kinky wiki', 104)->andReturns(true)->atLeast()->once();
+        $this->item_factory->expects(self::atLeastOnce())->method('delete')->with($wiki_to_delete);
+        $this->item_factory->expects(self::atLeastOnce())->method('deleteWikiPage')->with('My kinky wiki', 104)->willReturn(true);
 
         $this->wiki_deletor->deleteWiki(
             $wiki_to_delete,
-            \Mockery::mock(\PFUser::class),
-            $propagate_deletion_to_wiki_service
+            UserTestBuilder::buildWithDefaults(),
+            true
         );
     }
 
     public function testItThrowsExceptionWhenReferencedWikiPageHasNotBeenDeleted(): void
     {
-        $propagate_deletion_to_wiki_service = true;
-        $wiki_to_delete                     = \Mockery::mock(\Docman_Wiki::class);
-        $wiki_page                          = \Mockery::mock(WikiPage::class);
+        $wiki_to_delete = $this->createMock(Docman_Wiki::class);
+        $wiki_page      = $this->createMock(WikiPage::class);
 
-        $wiki_to_delete->shouldReceive('getId')->andReturns(169);
-        $wiki_to_delete->shouldReceive('getGroupId')->andReturns(104);
-        $wiki_to_delete->shouldReceive('getPagename')->andReturns('My kinky wiki');
+        $wiki_to_delete->method('getId')->willReturn(169);
+        $wiki_to_delete->method('getGroupId')->willReturn(104);
+        $wiki_to_delete->method('getPagename')->willReturn('My kinky wiki');
 
-        $this->wiki_page_retriever
-            ->shouldReceive('retrieveAssociatedWikiPage')
-            ->with($wiki_to_delete)
-            ->andReturns($wiki_page);
+        $this->wiki_page_retriever->method('retrieveAssociatedWikiPage')->with($wiki_to_delete)->willReturn($wiki_page);
 
-        $wiki_page->shouldReceive('isReferenced')->andReturns(true);
-        $wiki_page->shouldReceive('getId')->andReturns(69);
+        $wiki_page->method('isReferenced')->willReturn(true);
+        $wiki_page->method('getId')->willReturn(69);
 
-        $this->permissions_manager->shouldReceive('userCanDelete')->andReturns(true);
+        $this->permissions_manager->method('userCanDelete')->willReturn(true);
 
-        $this->item_factory->shouldReceive('delete')->with($wiki_to_delete);
-        $this->item_factory->shouldReceive('deleteWikiPage')->with('My kinky wiki', 104)->andReturns(false);
+        $this->item_factory->method('delete')->with($wiki_to_delete);
+        $this->item_factory->method('deleteWikiPage')->with('My kinky wiki', 104)->willReturn(false);
 
-        $this->expectException(DeleteFailedException::class);
+        self::expectException(DeleteFailedException::class);
 
         $this->wiki_deletor->deleteWiki(
             $wiki_to_delete,
-            \Mockery::mock(\PFUser::class),
-            $propagate_deletion_to_wiki_service
+            UserTestBuilder::buildWithDefaults(),
+            true
         );
     }
 
     public function testItDoesNotThrowsExceptionWhenTheReferencedWikiPageDoesNotExist(): void
     {
-        $propagate_deletion_to_wiki_service = true;
-        $wiki_to_delete                     = \Mockery::mock(\Docman_Wiki::class);
+        $wiki_to_delete = $this->createMock(Docman_Wiki::class);
 
-        $wiki_to_delete->shouldReceive('getId')->andReturns(169);
-        $wiki_to_delete->shouldReceive('getGroupId')->andReturns(104);
-        $wiki_to_delete->shouldReceive('getPagename')->andReturns('My kinky wiki');
+        $wiki_to_delete->method('getId')->willReturn(169);
+        $wiki_to_delete->method('getGroupId')->willReturn(104);
+        $wiki_to_delete->method('getPagename')->willReturn('My kinky wiki');
 
-        $this->wiki_page_retriever
-            ->shouldReceive('retrieveAssociatedWikiPage')
-            ->with($wiki_to_delete)
-            ->andReturns(null);
+        $this->wiki_page_retriever->method('retrieveAssociatedWikiPage')->with($wiki_to_delete)->willReturn(null);
 
-        $this->permissions_manager->shouldReceive('userCanDelete')->andReturns(true);
+        $this->permissions_manager->method('userCanDelete')->willReturn(true);
 
-        $this->item_factory->shouldReceive('delete')->with($wiki_to_delete);
-        $this->item_factory->shouldReceive('deleteWikiPage')->never();
+        $this->item_factory->method('delete')->with($wiki_to_delete);
+        $this->item_factory->expects(self::never())->method('deleteWikiPage');
 
         $this->wiki_deletor->deleteWiki(
             $wiki_to_delete,
-            \Mockery::mock(\PFUser::class),
-            $propagate_deletion_to_wiki_service
+            UserTestBuilder::buildWithDefaults(),
+            true
         );
     }
 }
