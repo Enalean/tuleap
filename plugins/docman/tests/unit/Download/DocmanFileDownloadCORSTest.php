@@ -22,27 +22,24 @@ declare(strict_types=1);
 
 namespace Tuleap\Docman\Download;
 
-use Mockery;
-use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Tuleap\Http\HTTPFactoryBuilder;
+use Tuleap\Http\Server\NullServerRequest;
+use Tuleap\Test\PHPUnit\TestCase;
 
-final class DocmanFileDownloadCORSTest extends \Tuleap\Test\PHPUnit\TestCase
+final class DocmanFileDownloadCORSTest extends TestCase
 {
-    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
     public function testResponseIsGeneratedOnOptionsRequest(): void
     {
         $file_download_cors_middleware = new DocmanFileDownloadCORS(HTTPFactoryBuilder::responseFactory());
 
-        $request = Mockery::mock(ServerRequestInterface::class);
-        $request->shouldReceive('getMethod')->andReturn('OPTIONS');
+        $request = (new NullServerRequest())->withMethod('OPTIONS');
 
-        $request_handler = Mockery::mock(RequestHandlerInterface::class);
-        $request_handler->shouldNotReceive('handle');
+        $request_handler = $this->createMock(RequestHandlerInterface::class);
+        $request_handler->expects(self::never())->method('handle');
 
         $response = $file_download_cors_middleware->process($request, $request_handler);
-        $this->assertEquals(['OPTIONS', 'GET'], $response->getHeader('Access-Control-Allow-Methods'));
+        self::assertEquals(['OPTIONS', 'GET'], $response->getHeader('Access-Control-Allow-Methods'));
     }
 
     public function testRequestIsGivenToTheNextRequestHandlerWhenItsNotAnOPTIONS(): void
@@ -50,13 +47,12 @@ final class DocmanFileDownloadCORSTest extends \Tuleap\Test\PHPUnit\TestCase
         $response_factory              = HTTPFactoryBuilder::responseFactory();
         $file_download_cors_middleware = new DocmanFileDownloadCORS($response_factory);
 
-        $request = Mockery::mock(ServerRequestInterface::class);
-        $request->shouldReceive('getMethod')->andReturn('GET');
+        $request = (new NullServerRequest())->withMethod('GET');
 
-        $request_handler = Mockery::mock(RequestHandlerInterface::class);
-        $request_handler->shouldReceive('handle')->once()->andReturn($response_factory->createResponse());
+        $request_handler = $this->createMock(RequestHandlerInterface::class);
+        $request_handler->expects(self::once())->method('handle')->willReturn($response_factory->createResponse());
 
         $response = $file_download_cors_middleware->process($request, $request_handler);
-        $this->assertEquals(['OPTIONS', 'GET'], $response->getHeader('Access-Control-Allow-Methods'));
+        self::assertEquals(['OPTIONS', 'GET'], $response->getHeader('Access-Control-Allow-Methods'));
     }
 }

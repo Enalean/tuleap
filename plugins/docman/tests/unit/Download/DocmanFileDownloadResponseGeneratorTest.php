@@ -26,40 +26,24 @@ use Docman_File;
 use Docman_PermissionsManager;
 use Docman_Version;
 use Docman_VersionFactory;
-use Mockery;
-use Mockery\MockInterface;
 use org\bovigo\vfs\vfsStream;
 use PFUser;
-use Psr\Http\Message\ServerRequestInterface;
+use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Http\Response\BinaryFileResponseBuilder;
+use Tuleap\Http\Server\NullServerRequest;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
 
-final class DocmanFileDownloadResponseGeneratorTest extends \Tuleap\Test\PHPUnit\TestCase
+final class DocmanFileDownloadResponseGeneratorTest extends TestCase
 {
-    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
     private const TEST_PROJECT_ID = 101;
 
-    /**
-     * @var BinaryFileResponseBuilder
-     */
-    private $binary_file_response_factory;
-    /**
-     * @var Docman_VersionFactory|MockInterface
-     */
-    private $version_factory;
-    /**
-     * @var PFUser|MockInterface
-     */
-    private $current_user;
-    /**
-     * @var Docman_File|MockInterface
-     */
-    private $docman_file;
-    /**
-     * @var Docman_PermissionsManager|MockInterface
-     */
-    private $permissions_manager;
+    private BinaryFileResponseBuilder $binary_file_response_factory;
+    private Docman_VersionFactory&MockObject $version_factory;
+    private PFUser $current_user;
+    private Docman_File $docman_file;
+    private Docman_PermissionsManager&MockObject $permissions_manager;
 
     protected function setUp(): void
     {
@@ -67,11 +51,10 @@ final class DocmanFileDownloadResponseGeneratorTest extends \Tuleap\Test\PHPUnit
             HTTPFactoryBuilder::responseFactory(),
             HTTPFactoryBuilder::streamFactory()
         );
-        $this->version_factory              = Mockery::mock(Docman_VersionFactory::class);
-        $this->current_user                 = Mockery::mock(PFUser::class);
-        $this->docman_file                  = Mockery::mock(Docman_File::class);
-        $this->docman_file->shouldReceive('getGroupId')->andReturn(self::TEST_PROJECT_ID);
-        $this->permissions_manager = Mockery::mock(Docman_PermissionsManager::class);
+        $this->version_factory              = $this->createMock(Docman_VersionFactory::class);
+        $this->current_user                 = UserTestBuilder::buildWithId(456);
+        $this->docman_file                  = new Docman_File(['group_id' => self::TEST_PROJECT_ID]);
+        $this->permissions_manager          = $this->createMock(Docman_PermissionsManager::class);
         Docman_PermissionsManager::setInstance(self::TEST_PROJECT_ID, $this->permissions_manager);
     }
 
@@ -84,13 +67,12 @@ final class DocmanFileDownloadResponseGeneratorTest extends \Tuleap\Test\PHPUnit
     {
         $response_generator = new DocmanFileDownloadResponseGenerator($this->version_factory, $this->binary_file_response_factory);
 
-        $this->docman_file->shouldReceive('getId')->andReturn(1);
-        $this->current_user->shouldReceive('getId')->andReturn(456);
-        $this->permissions_manager->shouldReceive('userCanAccess')->andReturn(false);
+        $this->docman_file->setId(1);
+        $this->permissions_manager->method('userCanAccess')->willReturn(false);
 
-        $this->expectException(UserCannotAccessFileException::class);
+        self::expectException(UserCannotAccessFileException::class);
         $response_generator->generateResponse(
-            Mockery::mock(ServerRequestInterface::class),
+            new NullServerRequest(),
             $this->current_user,
             $this->docman_file,
             null
@@ -105,16 +87,15 @@ final class DocmanFileDownloadResponseGeneratorTest extends \Tuleap\Test\PHPUnit
     {
         $response_generator = new DocmanFileDownloadResponseGenerator($this->version_factory, $this->binary_file_response_factory);
 
-        $this->docman_file->shouldReceive('getId')->andReturn(1);
-        $this->current_user->shouldReceive('getId')->andReturn(456);
-        $this->permissions_manager->shouldReceive('userCanAccess')->andReturn(true);
+        $this->docman_file->setId(1);
+        $this->permissions_manager->method('userCanAccess')->willReturn(true);
 
-        $this->docman_file->shouldReceive('getCurrentVersion')->andReturn(null);
-        $this->version_factory->shouldReceive('getSpecificVersion')->andReturn(null);
+        $this->docman_file->setCurrentVersion(null);
+        $this->version_factory->method('getSpecificVersion')->willReturn(null);
 
-        $this->expectException(VersionNotFoundException::class);
+        self::expectException(VersionNotFoundException::class);
         $response_generator->generateResponse(
-            Mockery::mock(ServerRequestInterface::class),
+            new NullServerRequest(),
             $this->current_user,
             $this->docman_file,
             $version_id
@@ -125,21 +106,16 @@ final class DocmanFileDownloadResponseGeneratorTest extends \Tuleap\Test\PHPUnit
     {
         $response_generator = new DocmanFileDownloadResponseGenerator($this->version_factory, $this->binary_file_response_factory);
 
-        $this->docman_file->shouldReceive('getId')->andReturn(1);
-        $this->current_user->shouldReceive('getId')->andReturn(456);
-        $this->permissions_manager->shouldReceive('userCanAccess')->andReturn(true);
-
-        $version = Mockery::mock(Docman_Version::class);
-        $version->shouldReceive('getId')->andReturn(1);
-        $version->shouldReceive('getItemId')->andReturn(1);
-        $this->docman_file->shouldReceive('getCurrentVersion')->andReturn($version);
+        $this->docman_file->setId(1);
+        $this->permissions_manager->method('userCanAccess')->willReturn(true);
 
         $directory = vfsStream::setup()->url();
-        $version->shouldReceive('getPath')->andReturn($directory . '/mydoc');
+        $version   = new Docman_Version(['id' => 1, 'item_id' => 1, 'path' => $directory . '/mydoc']);
+        $this->docman_file->setCurrentVersion($version);
 
-        $this->expectException(FileDoesNotExistException::class);
+        self::expectException(FileDoesNotExistException::class);
         $response_generator->generateResponse(
-            Mockery::mock(ServerRequestInterface::class),
+            new NullServerRequest(),
             $this->current_user,
             $this->docman_file,
             null
@@ -150,29 +126,24 @@ final class DocmanFileDownloadResponseGeneratorTest extends \Tuleap\Test\PHPUnit
     {
         $response_generator = new DocmanFileDownloadResponseGenerator($this->version_factory, $this->binary_file_response_factory);
 
-        $this->docman_file->shouldReceive('getId')->andReturn(1);
-        $this->current_user->shouldReceive('getId')->andReturn(456);
-        $this->permissions_manager->shouldReceive('userCanAccess')->andReturn(true);
-
-        $version = Mockery::mock(Docman_Version::class);
-        $version->shouldReceive('getId')->andReturn(1);
-        $version->shouldReceive('getItemId')->andReturn(1);
-        $this->docman_file->shouldReceive('getCurrentVersion')->andReturn($version);
+        $this->docman_file->setId(1);
+        $this->permissions_manager->method('userCanAccess')->willReturn(true);
 
         $directory = vfsStream::setup()->url();
         $path      = $directory . '/mydoc';
+        $version   = $this->createMock(Docman_Version::class);
+        $version->method('getId')->willReturn(1);
+        $version->method('getItemId')->willReturn(1);
+        $version->method('getPath')->willReturn($path);
+        $version->method('getFilename')->willReturn('mydoc');
+        $version->method('getFiletype')->willReturn('application/octet-stream');
+        $this->docman_file->setCurrentVersion($version);
         touch($path);
-        $version->shouldReceive('getPath')->andReturn($path);
-        $version->shouldReceive('getFilename')->andReturn('mydoc');
-        $version->shouldReceive('getFiletype')->andReturn('application/octet-stream');
 
-        $version->shouldReceive('preDownload')->once();
-
-        $request = Mockery::mock(ServerRequestInterface::class);
-        $request->shouldReceive('getHeaderLine')->andReturn('');
+        $version->expects(self::once())->method('preDownload');
 
         $response_generator->generateResponse(
-            $request,
+            new NullServerRequest(),
             $this->current_user,
             $this->docman_file,
             null
