@@ -60,7 +60,6 @@
             <file>../../src/core/info.php</file>
             <file>../../src/core/make_links.php</file>
             <file>../../src/core/robots.php</file>
-            <file>../../src/core/sparklines.php</file>
             <file>../../src/core/toggler.php</file>
         </exclude>
     </coverage>

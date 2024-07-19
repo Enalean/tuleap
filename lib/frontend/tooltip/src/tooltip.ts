@@ -28,15 +28,13 @@ interface SemiStructuredContent {
     readonly body_as_html: string;
 }
 
-type SparklineHrefCollection = Record<string, HTMLAnchorElement[]>;
-
 function isSemiStructuredContent(
     content: string | SemiStructuredContent,
 ): content is SemiStructuredContent {
     return typeof content !== "string";
 }
 
-export const loadOnlyTooltipOnAnchorElement = function (
+export const loadTooltipOnAnchorElement = function (
     element: HTMLAnchorElement,
     at_cursor_position?: boolean,
 ): void {
@@ -48,21 +46,13 @@ export const loadOnlyTooltipOnAnchorElement = function (
 };
 
 export const loadTooltips = function (element?: HTMLElement, at_cursor_position?: boolean): void {
-    const sparkline_hrefs: SparklineHrefCollection = {};
-
     const targets = (element || document).querySelectorAll(selectors.join(","));
 
     targets.forEach(function (a) {
         if (a instanceof HTMLAnchorElement) {
-            loadOnlyTooltipOnAnchorElement(a, at_cursor_position);
-            if (sparkline_hrefs[a.href]) {
-                sparkline_hrefs[a.href].push(a);
-            } else {
-                sparkline_hrefs[a.href] = [a];
-            }
+            loadTooltipOnAnchorElement(a, at_cursor_position);
         }
     });
-    loadSparklines(sparkline_hrefs);
 };
 
 // So that window.codendi.Tooltip.load is defined;
@@ -206,43 +196,4 @@ export async function retrieveTooltipData(
     return content_type.toLowerCase().startsWith("application/json")
         ? response.json()
         : response.text();
-}
-
-function loadSparklines(sparkline_hrefs: SparklineHrefCollection): void {
-    const hrefs = Object.keys(sparkline_hrefs);
-
-    if (hrefs.length) {
-        const sparklines = hrefs.reduce((sparklines, href) => {
-            sparklines.append("sparklines[]", href);
-
-            return sparklines;
-        }, new FormData());
-
-        fetch(`/sparklines.php`, {
-            method: "post",
-            body: sparklines,
-        })
-            .then((response) => {
-                if (response.status !== 200) {
-                    return {};
-                }
-
-                return response.json();
-            })
-            .then((data: Record<string, string>) => {
-                for (const href in data) {
-                    sparkline_hrefs[href].forEach(function (a) {
-                        const img = document.createElement("img");
-                        img.src = data[href];
-                        img.style.verticalAlign = "middle";
-                        img.style.paddingRight = "2px";
-                        img.style.width = "10px";
-                        img.style.height = "10px";
-
-                        const img_container = a.querySelector(".cross-reference-title") || a;
-                        img_container.prepend(img);
-                    });
-                }
-            });
-    }
 }

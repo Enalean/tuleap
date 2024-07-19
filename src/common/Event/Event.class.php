@@ -252,20 +252,6 @@ class Event // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
     public const TOGGLE = 'toggle';
 
     /**
-     * Let display a sparkline next to a cross reference
-     *
-     * Parameters:
-     *   'reference' => the Reference
-     *   'keyword'   => the keyword used
-     *   'group_id'  => the group_id
-     *   'val'       => the val of the cross ref
-     *
-     * Expected result:
-     *   'sparkline' => The url to the sparkline image
-     */
-    public const AJAX_REFERENCE_SPARKLINE = 'ajax_reference_sparkline';
-
-    /**
      * Say if we can display a [remove] button on a given wiki page
      *
      * Parameters:

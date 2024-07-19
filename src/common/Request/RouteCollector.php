@@ -1511,7 +1511,6 @@ class RouteCollector
         $r->get('/info.php', $this->getLegacyControllerHandler(__DIR__ . '/../../core/info.php'));
         $r->get('/robots.txt', [self::class, 'getRobotsTxt']);
         $r->post('/make_links.php', $this->getLegacyControllerHandler(__DIR__ . '/../../core/make_links.php'));
-        $r->post('/sparklines.php', $this->getLegacyControllerHandler(__DIR__ . '/../../core/sparklines.php'));
         $r->get('/toggler.php', $this->getLegacyControllerHandler(__DIR__ . '/../../core/toggler.php'));
         $r->post('/help_menu_opened', [self::class, 'postHelpMenuOpened']);
 

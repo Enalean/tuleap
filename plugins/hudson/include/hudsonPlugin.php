@@ -62,7 +62,6 @@ class hudsonPlugin extends PluginWithLegacyInternalRouting implements \Tuleap\Pr
 
         $this->addHook(NatureCollection::NAME);
         $this->addHook(\Tuleap\Reference\ReferenceGetTooltipContentEvent::NAME);
-        $this->addHook(Event::AJAX_REFERENCE_SPARKLINE, 'ajax_reference_sparkline');
         $this->addHook('statistics_collector', 'statistics_collector');
         $this->addHook(CrossReferenceByNatureOrganizer::NAME);
     }
@@ -370,64 +369,6 @@ class hudsonPlugin extends PluginWithLegacyInternalRouting implements \Tuleap\Pr
                     }
                 } else {
                     $event->setOutput('<span class="error">' . dgettext('tuleap-hudson', 'Error: Jenkins object not found.') . '</span>');
-                }
-                break;
-        }
-    }
-
-    public function ajax_reference_sparkline($params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-    {
-        require_once('HudsonJob.class.php');
-        require_once('HudsonBuild.class.php');
-        require_once('hudson_Widget_JobLastBuilds.class.php');
-
-        $ref = $params['reference'];
-        switch ($ref->getNature()) {
-            case 'hudson_build':
-                $val      = $params['val'];
-                $group_id = $params['group_id'];
-                $job_dao  = new PluginHudsonJobDao(CodendiDataAccess::instance());
-                if (strpos($val, '/') !== false) {
-                    $arr      = explode('/', $val);
-                    $job_name = $arr[0];
-                    $build_id = $arr[1];
-                    $dar      = $job_dao->searchByJobName($job_name, $group_id);
-                } else {
-                    $build_id = $val;
-                    $dar      = $job_dao->searchByGroupID($group_id);
-                    if ($dar->rowCount() != 1) {
-                        $dar = null;
-                    }
-                }
-                if ($dar && $dar->valid()) {
-                    $row = $dar->current();
-                    try {
-                        $build               = new HudsonBuild(
-                            $row['job_url'] . '/' . $build_id . '/',
-                            HttpClientFactory::createClient(),
-                            HTTPFactoryBuilder::requestFactory()
-                        );
-                        $params['sparkline'] = $build->getStatusIcon();
-                    } catch (Exception $e) {
-                    }
-                }
-                break;
-            case 'hudson_job':
-                $job_dao  = new PluginHudsonJobDao(CodendiDataAccess::instance());
-                $job_name = $params['val'];
-                $group_id = $params['group_id'];
-                $dar      = $job_dao->searchByJobName($job_name, $group_id);
-                if ($dar->valid()) {
-                    $row = $dar->current();
-                    try {
-                        $minimal_job_factory = $this->getMinimalHudsonJobFactory();
-                        $job_builder         = new HudsonJobBuilder(HTTPFactoryBuilder::requestFactory(), HttpClientFactory::createAsyncClient());
-                        $job                 = $job_builder->getHudsonJob(
-                            $minimal_job_factory->getMinimalHudsonJob($row['job_url'], '')
-                        );
-                        $params['sparkline'] = $job->getStatusIcon();
-                    } catch (Exception $e) {
-                    }
                 }
                 break;
         }
