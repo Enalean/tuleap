@@ -17,14 +17,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { describe, it, expect, vi } from "vitest";
+import { describe, expect, it } from "vitest";
 import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import WidgetQueryDisplayer from "./WidgetQueryDisplayer.vue";
 import { getGlobalTestOptions } from "../../tests/global-options-for-tests";
-import * as strict_inject from "@tuleap/vue-strict-inject";
 import type { User } from "@tuleap/core-rest-api-types";
-import { RetrieveQueryStub, injected_query } from "../../tests/stubs/RetrieveQueryStub";
+import { injected_query, RetrieveQueryStub } from "../../tests/stubs/RetrieveQueryStub";
+import { RETRIEVE_QUERY } from "../injection-symbols";
 
 const mireillelabeille: User = {
     id: 101,
@@ -44,13 +44,12 @@ describe("Given a timetracking management widget query displayer", () => {
     let users_list: User[] = [];
 
     function getWidgetQueryDisplayerInstance(): VueWrapper {
-        vi.spyOn(strict_inject, "strictInject").mockReturnValue(
-            RetrieveQueryStub.withDefaults(users_list),
-        );
-
         return shallowMount(WidgetQueryDisplayer, {
             global: {
                 ...getGlobalTestOptions(),
+                provide: {
+                    [RETRIEVE_QUERY.valueOf()]: RetrieveQueryStub.withDefaults(users_list),
+                },
             },
         });
     }

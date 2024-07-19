@@ -16,12 +16,10 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-import { vi, describe, beforeEach, it, expect } from "vitest";
-
 import type { SpyInstance } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
-import * as strict_inject from "@tuleap/vue-strict-inject";
 import { getGlobalTestOptions } from "../../tests/global-options-for-tests";
 import { useModalStore } from "../stores/modal";
 import { useSelectorsStore } from "../stores/selectors";
@@ -45,26 +43,17 @@ vi.mock("jquery", () => ({
     default: (): MockedJquery => mocked_jquery,
 }));
 
-vi.mock("@tuleap/vue-strict-inject");
-
 describe("MoveModal", () => {
     const getWrapper = (): VueWrapper => {
         return shallowMount(MoveModal, {
             global: {
                 ...getGlobalTestOptions(),
+                provide: {
+                    [ARTIFACT_ID.valueOf()]: artifact_id,
+                },
             },
         });
     };
-
-    beforeEach(() => {
-        vi.spyOn(strict_inject, "strictInject").mockImplementation((key) => {
-            if (key !== ARTIFACT_ID) {
-                throw new Error(`Tried to inject ${key} while it was not mocked.`);
-            }
-
-            return artifact_id;
-        });
-    });
 
     describe("mounted()", () => {
         it("should create a modal", () => {
