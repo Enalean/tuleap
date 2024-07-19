@@ -25,166 +25,149 @@ namespace Tuleap\Docman\Download;
 use Docman_File;
 use Docman_Item;
 use Docman_ItemFactory;
-use Mockery;
-use Psr\Http\Message\ServerRequestInterface;
+use PHPUnit\Framework\MockObject\MockObject;
+use Psr\Log\NullLogger;
 use Tuleap\Http\HTTPFactoryBuilder;
+use Tuleap\Http\Server\NullServerRequest;
 use Tuleap\Request\NotFoundException;
-use Laminas\HttpHandlerRunner\Emitter\EmitterInterface;
 use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\Helpers\NoopSapiEmitter;
+use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\CurrentRequestUserProviderStub;
 
-final class DocmanFileDownloadControllerTest extends \Tuleap\Test\PHPUnit\TestCase
+final class DocmanFileDownloadControllerTest extends TestCase
 {
-    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
-    /**
-     * @var Mockery\MockInterface|EmitterInterface
-     */
-    private $emitter;
-    /**
-     * @var Docman_ItemFactory|Mockery\MockInterface
-     */
-    private $item_factory;
-    /**
-     * @var DocmanFileDownloadResponseGenerator|Mockery\MockInterface
-     */
-    private $response_generator;
+    private Docman_ItemFactory&MockObject $item_factory;
+    private DocmanFileDownloadResponseGenerator&MockObject $response_generator;
 
     protected function setUp(): void
     {
-        $this->emitter            = Mockery::mock(EmitterInterface::class);
-        $this->item_factory       = Mockery::mock(Docman_ItemFactory::class);
-        $this->response_generator = Mockery::mock(DocmanFileDownloadResponseGenerator::class);
+        $this->item_factory       = $this->createMock(Docman_ItemFactory::class);
+        $this->response_generator = $this->createMock(DocmanFileDownloadResponseGenerator::class);
     }
 
     public function testDownloadFailsWhenTheFileCanNotBeFound(): void
     {
         $controller = new DocmanFileDownloadController(
-            $this->emitter,
+            new NoopSapiEmitter(),
             $this->item_factory,
             $this->response_generator,
             new CurrentRequestUserProviderStub(UserTestBuilder::buildWithDefaults()),
-            new \Psr\Log\NullLogger()
+            new NullLogger()
         );
 
-        $this->item_factory->shouldReceive('getItemFromDb')->andReturn(null);
+        $this->item_factory->method('getItemFromDb')->willReturn(null);
 
-        $request = Mockery::mock(ServerRequestInterface::class);
-        $request->shouldReceive('getAttribute')->with('file_id')->andReturn('1');
+        $request = (new NullServerRequest())->withAttribute('file_id', '1');
 
-        $this->expectException(NotFoundException::class);
+        self::expectException(NotFoundException::class);
         $controller->handle($request);
     }
 
     public function testOnlyAFileCanBeDownloaded(): void
     {
         $controller = new DocmanFileDownloadController(
-            $this->emitter,
+            new NoopSapiEmitter(),
             $this->item_factory,
             $this->response_generator,
             new CurrentRequestUserProviderStub(UserTestBuilder::buildWithDefaults()),
-            new \Psr\Log\NullLogger()
+            new NullLogger()
         );
 
-        $this->item_factory->shouldReceive('getItemFromDb')->andReturn(Mockery::mock(Docman_Item::class));
+        $this->item_factory->method('getItemFromDb')->willReturn(new Docman_Item());
 
-        $request = Mockery::mock(ServerRequestInterface::class);
-        $request->shouldReceive('getAttribute')->with('file_id')->andReturn('1');
+        $request = (new NullServerRequest())->withAttribute('file_id', '1');
 
-        $this->expectException(NotFoundException::class);
+        self::expectException(NotFoundException::class);
         $controller->handle($request);
     }
 
     public function testDownloadFailsWhenRequestedVersionCannotBeFound(): void
     {
         $controller = new DocmanFileDownloadController(
-            $this->emitter,
+            new NoopSapiEmitter(),
             $this->item_factory,
             $this->response_generator,
             new CurrentRequestUserProviderStub(UserTestBuilder::buildWithDefaults()),
-            new \Psr\Log\NullLogger()
+            new NullLogger()
         );
 
-        $docman_file = Mockery::mock(Docman_File::class);
-        $docman_file->shouldReceive('getId')->andReturn('1');
-        $this->item_factory->shouldReceive('getItemFromDb')->andReturn($docman_file);
+        $docman_file = new Docman_File(['item_id' => '1']);
+        $this->item_factory->method('getItemFromDb')->willReturn($docman_file);
 
-        $request = Mockery::mock(ServerRequestInterface::class);
-        $request->shouldReceive('getAttribute')->with('file_id')->andReturn('1');
-        $request->shouldReceive('getAttribute')->with('version_id')->andReturn('1');
+        $request = (new NullServerRequest())
+            ->withAttribute('file_id', '1')
+            ->withAttribute('version_id', '1');
 
-        $this->response_generator->shouldReceive('generateResponse')->andThrow(new VersionNotFoundException($docman_file, 1));
+        $this->response_generator->method('generateResponse')->willThrowException(new VersionNotFoundException($docman_file, 1));
 
-        $this->expectException(NotFoundException::class);
-        $this->expectExceptionMessageMatches('/version/');
+        self::expectException(NotFoundException::class);
+        self::expectExceptionMessageMatches('/version/');
         $controller->handle($request);
     }
 
     public function testDownloadFailsWhenNoCurrentUserCanBeFoundWithTheRequest(): void
     {
         $controller = new DocmanFileDownloadController(
-            $this->emitter,
+            new NoopSapiEmitter(),
             $this->item_factory,
             $this->response_generator,
             new CurrentRequestUserProviderStub(null),
-            new \Psr\Log\NullLogger()
+            new NullLogger()
         );
 
-        $docman_file = Mockery::mock(Docman_File::class);
-        $docman_file->shouldReceive('getId')->andReturn('1');
-        $this->item_factory->shouldReceive('getItemFromDb')->andReturn($docman_file);
+        $docman_file = new Docman_File(['item_id' => '1']);
+        $this->item_factory->method('getItemFromDb')->willReturn($docman_file);
 
-        $request = Mockery::mock(ServerRequestInterface::class);
-        $request->shouldReceive('getAttribute')->with('file_id')->andReturn('1');
-        $request->shouldReceive('getAttribute')->with('version_id')->andReturn('1');
+        $request = (new NullServerRequest())
+            ->withAttribute('file_id', '1')
+            ->withAttribute('version_id', '1');
 
-        $this->expectException(NotFoundException::class);
+        self::expectException(NotFoundException::class);
         $controller->handle($request);
     }
 
     public function testDownloadFailsWhenResponseCannotBeGenerated(): void
     {
         $controller = new DocmanFileDownloadController(
-            $this->emitter,
+            new NoopSapiEmitter(),
             $this->item_factory,
             $this->response_generator,
             new CurrentRequestUserProviderStub(UserTestBuilder::buildWithDefaults()),
-            new \Psr\Log\NullLogger()
+            new NullLogger()
         );
 
-        $this->item_factory->shouldReceive('getItemFromDb')->andReturn(Mockery::mock(Docman_File::class));
+        $this->item_factory->method('getItemFromDb')->willReturn(new Docman_File());
 
-        $request = Mockery::mock(ServerRequestInterface::class);
-        $request->shouldReceive('getAttribute')->with('file_id')->andReturn('1');
-        $request->shouldReceive('getAttribute')->with('version_id')->andReturn(null);
+        $request = (new NullServerRequest())
+            ->withAttribute('file_id', '1')
+            ->withAttribute('version_id', null);
 
-        $this->response_generator->shouldReceive('generateResponse')->andThrow(
-            Mockery::mock(FileDownloadException::class)
-        );
+        $this->response_generator->method('generateResponse')->willThrowException($this->createMock(FileDownloadException::class));
 
-        $this->expectException(NotFoundException::class);
+        self::expectException(NotFoundException::class);
         $controller->handle($request);
     }
 
     public function testFileItemCanBeDownloaded(): void
     {
         $controller = new DocmanFileDownloadController(
-            $this->emitter,
+            new NoopSapiEmitter(),
             $this->item_factory,
             $this->response_generator,
             new CurrentRequestUserProviderStub(UserTestBuilder::buildWithDefaults()),
-            new \Psr\Log\NullLogger()
+            new NullLogger()
         );
 
-        $this->item_factory->shouldReceive('getItemFromDb')->andReturn(Mockery::mock(Docman_File::class));
+        $this->item_factory->method('getItemFromDb')->willReturn(new Docman_File());
 
-        $request = Mockery::mock(ServerRequestInterface::class);
-        $request->shouldReceive('getAttribute')->with('file_id')->andReturn('1');
-        $request->shouldReceive('getAttribute')->with('version_id')->andReturn(null);
+        $request = (new NullServerRequest())
+            ->withAttribute('file_id', '1')
+            ->withAttribute('version_id', null);
 
         $expected_response = HTTPFactoryBuilder::responseFactory()->createResponse();
-        $this->response_generator->shouldReceive('generateResponse')->andReturn($expected_response);
+        $this->response_generator->method('generateResponse')->willReturn($expected_response);
 
-        $this->assertSame($expected_response, $controller->handle($request));
+        self::assertSame($expected_response, $controller->handle($request));
     }
 }
