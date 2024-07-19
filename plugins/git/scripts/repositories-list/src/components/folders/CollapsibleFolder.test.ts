@@ -24,6 +24,7 @@ import CollapsibleFolder from "./CollapsibleFolder.vue";
 import type { Folder, Repository } from "../../type";
 import GitRepository from "../GitRepository.vue";
 import { createLocalVueForTests } from "../../helpers/local-vue-for-tests";
+import type Vue from "vue";
 
 describe("CollapsibleFolder", () => {
     async function instantiateComponent(propsData: {
@@ -31,7 +32,7 @@ describe("CollapsibleFolder", () => {
         is_base_folder?: boolean;
         children: Array<Folder | Repository>;
         label?: string;
-    }): Promise<Wrapper<CollapsibleFolder>> {
+    }): Promise<Wrapper<Vue>> {
         return shallowMount(CollapsibleFolder, {
             propsData,
             mocks: {
@@ -49,6 +50,7 @@ describe("CollapsibleFolder", () => {
             is_root_folder: true,
             is_base_folder: false,
             children: [],
+            label: "",
         });
 
         expect(wrapper.find("[data-test=git-repository-list-folder-icon]").exists()).toBeFalsy();
@@ -83,7 +85,9 @@ describe("CollapsibleFolder", () => {
     it("When children is repository, Then GitRepository is rendered", async () => {
         const wrapper = await instantiateComponent({
             is_root_folder: true,
+            is_base_folder: false,
             children: [{ id: 10 } as Repository],
+            label: "",
         });
 
         expect(wrapper.findComponent(GitRepository).exists()).toBeTruthy();
@@ -93,7 +97,9 @@ describe("CollapsibleFolder", () => {
     it("When children is folder, Then CollapsibleFolder is rendered", async () => {
         const wrapper = await instantiateComponent({
             is_root_folder: true,
-            children: [{ label: "folder", is_folder: true } as Folder],
+            is_base_folder: false,
+            children: [{ label: "folder", is_folder: true, children: [] } as Folder],
+            label: "",
         });
 
         expect(wrapper.findComponent(GitRepository).exists()).toBeFalsy();

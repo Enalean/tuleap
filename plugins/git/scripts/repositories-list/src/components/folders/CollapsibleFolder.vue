@@ -20,8 +20,8 @@
 <template>
     <div
         v-bind:class="{
-            'git-repository-list-folder': !is_root_folder,
-            'git-repository-list-base-folder': is_base_folder,
+            'git-repository-list-folder': !props.is_root_folder,
+            'git-repository-list-base-folder': props.is_base_folder,
         }"
     >
         <div
@@ -31,7 +31,7 @@
         >
             <i
                 data-test="git-repository-list-folder-icon"
-                v-if="!is_root_folder"
+                v-if="!props.is_root_folder"
                 v-bind:class="{
                     'fa fa-fw fa-caret-down': !is_folder_collapsed,
                     'fa fa-fw fa-caret-right': is_folder_collapsed,
@@ -39,14 +39,14 @@
             ></i>
             <h2
                 class="git-repository-list-folder-label"
-                v-if="!is_root_folder"
+                v-if="!props.is_root_folder"
                 data-test="git-repository-list-folder-label"
             >
                 <i class="far fa-folder"></i>
                 {{ label }}
             </h2>
         </div>
-        <template v-for="child in children">
+        <template v-for="child in props.children">
             <git-repository
                 v-if="!('is_folder' in child)"
                 v-show="!is_folder_collapsed"
@@ -59,36 +59,35 @@
                 v-bind:key="child.label"
                 v-bind:label="child.label"
                 v-bind:children="child.children"
-                v-bind:is_base_folder="is_root_folder"
+                v-bind:is_base_folder="props.is_root_folder"
+                v-bind:is_root_folder="false"
                 data-test="git-repository-collapsible-folder"
             />
         </template>
     </div>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
 import GitRepository from "../GitRepository.vue";
-import { Component, Prop } from "vue-property-decorator";
-import Vue from "vue";
-import type { Folder, Repository } from "../../type";
+import type { Folder, FormattedGitLabRepository, Repository } from "../../type";
+import { ref } from "vue";
 
-// The name attributes is needed because this component is recursive
-// See https://github.com/kaorun343/vue-property-decorator/issues/102
-@Component({ name: "CollapsibleFolder", components: { GitRepository, CollapsibleFolder } })
-export default class CollapsibleFolder extends Vue {
-    @Prop({ required: false, default: undefined })
-    readonly label: undefined | string;
-    @Prop({ required: false, default: false })
-    readonly is_root_folder!: boolean;
-    @Prop({ required: false, default: false })
-    readonly is_base_folder!: boolean;
-    @Prop({ required: true })
-    readonly children!: Array<Folder | Repository>;
+const props = defineProps<{
+    label: string;
+    is_root_folder: boolean;
+    is_base_folder: boolean;
+    children: Array<Folder | Repository | FormattedGitLabRepository>;
+}>();
 
-    is_folder_collapsed = false;
+let is_folder_collapsed = ref(false);
 
-    collapseFolder(): void {
-        this.is_folder_collapsed = !this.is_folder_collapsed;
-    }
+function collapseFolder(): void {
+    is_folder_collapsed.value = !is_folder_collapsed.value;
 }
+</script>
+<script lang="ts">
+export default {
+    name: "CollapsibleFolder",
+    inheritAttrs: false,
+};
 </script>
