@@ -16,6 +16,7 @@
                           name="expert_query"
                           placeholder="{{ query_placeholder }}"
                           data-allowed-fields="{{ allowed_fields_names_json_encoded }}"
+                          data-test="expert-query"
                           {{^ is_query_modifiable }}readonly{{/ is_query_modifiable }}
                 >{{ expert_query }}</textarea>
                 <p class="help"><i class="fa fa-question-circle"></i> {{ query_tooltip }}</p>

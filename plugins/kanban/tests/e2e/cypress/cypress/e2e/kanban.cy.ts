@@ -128,6 +128,131 @@ describe("Kanban service", () => {
                 .contains("Activities")
                 .should("not.exist");
         });
+
+        it(`kanban in project dashboard`, function () {
+            cy.projectAdministratorSession();
+            const project_name = `filtered-${now}`;
+            cy.createNewPublicProject(project_name, "kanban").then((project_id) => {
+                const TITLE_FIELD_NAME = "title";
+                cy.getTrackerIdFromREST(project_id, "activity").then((tracker_id) => {
+                    cy.createArtifact({
+                        tracker_id: tracker_id,
+                        artifact_title: "an artifact with title",
+                        artifact_status: "To be done",
+                        title_field_name: TITLE_FIELD_NAME,
+                    });
+
+                    cy.createArtifact({
+                        tracker_id: tracker_id,
+                        artifact_title: "bla bla",
+                        artifact_status: "To be done",
+                        title_field_name: TITLE_FIELD_NAME,
+                    });
+                });
+            });
+            cy.projectAdministratorSession();
+
+            cy.visit(`/projects/${project_name}`);
+            cy.log("create some empty dashboard in order to add multiple widgets");
+            cy.get("[data-test=dashboard-add-button]").click();
+            cy.get("[data-test=dashboard-add-input-name]").type(`tab-${now}`);
+            cy.get("[data-test=dashboard-add-button-submit]").click();
+
+            cy.get("[data-test=dashboard-add-button]").click();
+            cy.get("[data-test=dashboard-add-input-name]").type(`other-${now}`);
+            cy.get("[data-test=dashboard-add-button-submit]").click();
+
+            cy.log("kanban can be added into dashboard");
+            cy.get("[data-test=project-sidebar]").shadow().contains("Activities").click();
+
+            cy.get("[data-test=add-kanban-to-dashboard]").click();
+            cy.get("[data-test=project-dashboard]").eq(1).click();
+            cy.get("[data-test=feedback]").contains("The widget has been added successfully");
+
+            cy.log("create some filter to have filtered kanban");
+            cy.visitProjectService(project_name, "Tracker");
+            cy.get("[data-test=tracker-link-activity]").click();
+            cy.get("[data-test=expert-mode]").click();
+
+            // eslint-disable-next-line cypress/require-data-selectors
+            cy.get(".CodeMirror-code").type("title='title'");
+            cy.get("[data-test=expert-query-submit-button]").click();
+            cy.get("[data-test=tracker_report_save_dropdown]").click();
+            cy.get("[data-test=tracker_report_options]").first().click();
+            cy.get("[data-test=tracker_report_updater_duplicate]").first().click();
+            cy.get("[data-test=report-name-input]").type("My custom report");
+            cy.get("[data-test=save-new-report]").click();
+            cy.get("[data-test=tracker_report_options]").first().click();
+            cy.get("[data-test=tracker_report_updater_scope]").click();
+
+            cy.log("Kanban can be filtered based on tracker report");
+            cy.visitProjectService(project_name, "Kanban");
+            cy.get("[data-test=go-to-kanban]").click();
+            cy.get("[data-test=kanban-header-edit-button]").click();
+
+            cy.get("[data-test=edit-filter-reports] + .select2-container").click();
+            // eslint-disable-next-line cypress/require-data-selectors
+            cy.get(".select2-search__field").type(`My custom report`, { force: true });
+            // eslint-disable-next-line cypress/require-data-selectors
+            cy.get(".select2-results__option").click();
+            // eslint-disable-next-line cypress/require-data-selectors
+            cy.get(".select2-search__field").type(`Activities`, { force: true });
+            // eslint-disable-next-line cypress/require-data-selectors
+            cy.get(".select2-results__option").click();
+            cy.get("[data-test=save-reports]").click();
+            // eslint-disable-next-line cypress/require-data-selectors
+            cy.get("body").type("{esc}");
+
+            cy.get("[data-test=kanban-item]").should("have.length", 2);
+            cy.get("[data-test=show-report-modal]").click();
+
+            cy.log("asserting that chart legend is rendered");
+            cy.get("[data-test=cumulative-flow-chart]").contains("To be done");
+            cy.log("force the popup to load by hovering elements in graph");
+            // eslint-disable-next-line cypress/require-data-selectors
+            cy.get(".tick").last().contains(2);
+            // eslint-disable-next-line cypress/require-data-selectors
+            cy.get("body").type("{esc}");
+
+            cy.get("[data-test=kanban-filter]").select(`My custom report`);
+
+            cy.get("[data-test=show-report-modal]").click();
+            // eslint-disable-next-line cypress/require-data-selectors
+            cy.get(".tick").last().contains(1);
+            // eslint-disable-next-line cypress/require-data-selectors
+            cy.get("body").type("{esc}");
+
+            cy.log("Filtered kanban can be added to dashboard");
+            cy.get('[data-test="add-kanban-to-dashboard"]').click();
+            cy.get("[data-test=project-dashboard]").last().click();
+            cy.get("[data-test=feedback]").contains("The widget has been added successfully");
+
+            cy.get("[data-test=kanban-item]").should("have.length", 1);
+
+            cy.log("Filtered kanban can be edited");
+            cy.get("[data-test=edit-widget]").click({ force: true });
+            cy.get("[data-test=kanban-reports-list]").select("Activities");
+            cy.get("[data-test=save-edit-widget]").click();
+            cy.get("[data-test=kanban-item]").should("have.length", 1);
+            cy.get("[data-test=dashboard-title]").contains("Activities - Activities");
+
+            cy.get("[data-test=edit-widget]").click({ force: true });
+            cy.get("[data-test=kanban-reports-list]").select("My custom report");
+            cy.get("[data-test=save-edit-widget]").click();
+            cy.get("[data-test=kanban-item]").should("have.length", 1);
+            cy.get("[data-test=dashboard-title]").contains("Activities - My custom report");
+
+            cy.log("When report is deleted kanban is no longer filtered");
+            cy.visitProjectService(project_name, "Tracker");
+            cy.get("[data-test=tracker-link-activity]").click();
+
+            cy.get("[data-test=tracker_report_options]").first().click();
+            cy.get("[data-test=tracker_report_updater_delete]").click();
+
+            cy.visit(`/projects/${project_name}`);
+            cy.get("[data-test=dashboard-tab]").last().click();
+            cy.get("[data-test=kanban-item]").should("have.length", 2);
+        });
     });
 
     context("As Project member", function () {
