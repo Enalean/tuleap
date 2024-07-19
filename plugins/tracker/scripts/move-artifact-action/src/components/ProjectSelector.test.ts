@@ -23,13 +23,10 @@ import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import * as list_picker from "@tuleap/list-picker";
 import type { ListPicker } from "@tuleap/list-picker";
-import * as strict_inject from "@tuleap/vue-strict-inject";
 import { getGlobalTestOptions } from "../../tests/global-options-for-tests";
 import { useSelectorsStore } from "../stores/selectors";
 import { PROJECT_ID } from "../injection-symbols";
 import ProjectSelector from "./ProjectSelector.vue";
-
-vi.mock("@tuleap/vue-strict-inject");
 
 const current_project_id = 217;
 const projects = [
@@ -47,14 +44,6 @@ describe("ProjectSelector", () => {
     let createListPicker: SpyInstance, list_picker_instance: ListPicker;
 
     const getWrapper = (): VueWrapper => {
-        vi.spyOn(strict_inject, "strictInject").mockImplementation((key) => {
-            if (key !== PROJECT_ID) {
-                throw new Error(`Tried to inject ${key} while it was not mocked.`);
-            }
-
-            return current_project_id;
-        });
-
         return shallowMount(ProjectSelector, {
             global: {
                 ...getGlobalTestOptions({
@@ -64,6 +53,9 @@ describe("ProjectSelector", () => {
                         },
                     },
                 }),
+                provide: {
+                    [PROJECT_ID.valueOf()]: current_project_id,
+                },
             },
         });
     };

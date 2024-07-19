@@ -23,7 +23,6 @@ import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import * as list_picker from "@tuleap/list-picker";
 import type { ListPicker } from "@tuleap/list-picker";
-import * as strict_inject from "@tuleap/vue-strict-inject";
 import { getGlobalTestOptions } from "../../tests/global-options-for-tests";
 import { useSelectorsStore } from "../stores/selectors";
 import type { Tracker } from "../api/types";
@@ -42,20 +41,10 @@ const trackers: Tracker[] = [
     },
 ];
 
-vi.mock("@tuleap/vue-strict-inject");
-
 describe("TrackerSelector", () => {
     let createListPicker: SpyInstance, list_picker_instance: ListPicker;
 
     const getWrapper = (tracker_id: number): VueWrapper => {
-        vi.spyOn(strict_inject, "strictInject").mockImplementation((key) => {
-            if (key !== TRACKER_ID) {
-                throw new Error(`Tried to inject ${key} while it was not mocked.`);
-            }
-
-            return tracker_id;
-        });
-
         return shallowMount(TrackerSelector, {
             global: {
                 ...getGlobalTestOptions({
@@ -65,6 +54,9 @@ describe("TrackerSelector", () => {
                         },
                     },
                 }),
+                provide: {
+                    [TRACKER_ID.valueOf()]: tracker_id,
+                },
             },
         });
     };

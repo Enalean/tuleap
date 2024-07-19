@@ -17,17 +17,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { describe, it, expect, vi } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import WidgetQueryEditor from "./WidgetQueryEditor.vue";
 import { getGlobalTestOptions } from "../../tests/global-options-for-tests";
 import { PredefinedTimePeriodsVueStub } from "../../tests/stubs/PredefinedTimePeriodsVueStub";
-import * as strict_inject from "@tuleap/vue-strict-inject";
 import { LazyboxVueStub } from "../../tests/stubs/LazyboxVueStub";
 import type { User } from "@tuleap/core-rest-api-types";
 import type { Query } from "../query/QueryRetriever";
 import { RetrieveQueryStub } from "../../tests/stubs/RetrieveQueryStub";
+import { RETRIEVE_QUERY, USER_LOCALE_KEY } from "../injection-symbols";
 
 vi.mock("tlp", () => ({
     datePicker: (): { setDate(): void } => ({
@@ -60,7 +60,6 @@ describe("Given a timetracking management widget query editor", () => {
 
     function getWidgetQueryEditorInstance(): VueWrapper {
         query_retriever = RetrieveQueryStub.withDefaults(users_list);
-        vi.spyOn(strict_inject, "strictInject").mockReturnValue(query_retriever);
 
         return shallowMount(WidgetQueryEditor, {
             global: {
@@ -68,6 +67,10 @@ describe("Given a timetracking management widget query editor", () => {
                 stubs: {
                     "tuleap-predefined-time-period-select": PredefinedTimePeriodsVueStub,
                     "tuleap-lazybox": LazyboxVueStub,
+                },
+                provide: {
+                    [RETRIEVE_QUERY.valueOf()]: query_retriever,
+                    [USER_LOCALE_KEY.valueOf()]: "en_US",
                 },
             },
         });
