@@ -36,33 +36,40 @@ import HistoryVersionsErrorState from "./HistoryVersionsErrorState.vue";
 import HistoryVersionsEmptyState from "./HistoryVersionsEmptyState.vue";
 import HistoryVersionsContent from "./HistoryVersionsContent.vue";
 import HistoryVersionsContentForLink from "./HistoryVersionsContentForLink.vue";
+import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import type {
     Embedded,
     EmbeddedFileVersion,
     FileHistory,
+    Item,
     ItemFile,
     Link,
     LinkVersion,
 } from "../../type";
-import * as strict_inject from "@tuleap/vue-strict-inject";
+import { SHOULD_DISPLAY_SOURCE_COLUMN_FOR_VERSIONS } from "../../injection-keys";
 
 jest.useFakeTimers();
 
 describe("HistoryVersions", () => {
-    beforeEach(() => {
-        jest.spyOn(strict_inject, "strictInject").mockReturnValue(false);
-    });
+    function getWrapper(item: Item): VueWrapper {
+        return shallowMount(HistoryVersions, {
+            props: {
+                item,
+            },
+            global: {
+                ...getGlobalTestOptions({}),
+                provide: {
+                    [SHOULD_DISPLAY_SOURCE_COLUMN_FOR_VERSIONS.valueOf()]: false,
+                },
+            },
+        });
+    }
 
     it("should display a loading state", () => {
         getAllFileVersionHistory.mockReturnValue(okAsync([]));
 
-        const wrapper = shallowMount(HistoryVersions, {
-            props: {
-                item: { id: 42 } as ItemFile,
-            },
-            global: { ...getGlobalTestOptions({}) },
-        });
+        const wrapper = getWrapper({ id: 42 } as ItemFile);
 
         expect(wrapper.findComponent(HistoryVersionsLoadingState).exists()).toBe(true);
         expect(wrapper.findComponent(HistoryVersionsErrorState).exists()).toBe(false);
@@ -73,12 +80,7 @@ describe("HistoryVersions", () => {
     it("should display an empty state", async () => {
         getAllFileVersionHistory.mockReturnValue(okAsync([]));
 
-        const wrapper = shallowMount(HistoryVersions, {
-            props: {
-                item: { id: 42 } as ItemFile,
-            },
-            global: { ...getGlobalTestOptions({}) },
-        });
+        const wrapper = getWrapper({ id: 42 } as ItemFile);
 
         await jest.runOnlyPendingTimersAsync();
 
@@ -91,12 +93,7 @@ describe("HistoryVersions", () => {
     it("should display an error state", async () => {
         getAllFileVersionHistory.mockReturnValue(errAsync(Error("You cannot!")));
 
-        const wrapper = shallowMount(HistoryVersions, {
-            props: {
-                item: { id: 42 } as ItemFile,
-            },
-            global: { ...getGlobalTestOptions({}) },
-        });
+        const wrapper = getWrapper({ id: 42 } as ItemFile);
 
         await jest.runOnlyPendingTimersAsync();
 
@@ -109,12 +106,7 @@ describe("HistoryVersions", () => {
     it("should display content", async () => {
         getAllFileVersionHistory.mockReturnValue(okAsync([{} as FileHistory]));
 
-        const wrapper = shallowMount(HistoryVersions, {
-            props: {
-                item: { id: 42, type: "file" } as ItemFile,
-            },
-            global: { ...getGlobalTestOptions({}) },
-        });
+        const wrapper = getWrapper({ id: 42, type: "file" } as ItemFile);
 
         await jest.runOnlyPendingTimersAsync();
 
@@ -127,12 +119,7 @@ describe("HistoryVersions", () => {
     it("should display content for a Link", async () => {
         getAllLinkVersionHistory.mockReturnValue(okAsync([{} as LinkVersion]));
 
-        const wrapper = shallowMount(HistoryVersions, {
-            props: {
-                item: { id: 42, type: "link" } as Link,
-            },
-            global: { ...getGlobalTestOptions({}) },
-        });
+        const wrapper = getWrapper({ id: 42, type: "link" } as Link);
 
         await jest.runOnlyPendingTimersAsync();
 
@@ -145,12 +132,7 @@ describe("HistoryVersions", () => {
     it("should display content for an embedded file", async () => {
         getAllEmbeddedFileVersionHistory.mockReturnValue(okAsync([{} as EmbeddedFileVersion]));
 
-        const wrapper = shallowMount(HistoryVersions, {
-            props: {
-                item: { id: 42, type: "embedded" } as Embedded,
-            },
-            global: { ...getGlobalTestOptions({}) },
-        });
+        const wrapper = getWrapper({ id: 42, type: "embedded" } as Embedded);
 
         await jest.runOnlyPendingTimersAsync();
 

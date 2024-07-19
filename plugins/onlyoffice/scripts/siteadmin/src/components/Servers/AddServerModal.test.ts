@@ -30,20 +30,17 @@ vi.mock("@tuleap/autocomplete-for-select2", () => {
 import { shallowMount } from "@vue/test-utils";
 import AddServerModal from "./AddServerModal.vue";
 import { createGettext } from "vue3-gettext";
-import type { Config } from "../../type";
-import * as strict_inject from "@tuleap/vue-strict-inject";
-
-vi.mock("@tuleap/vue-strict-inject");
+import { CONFIG } from "../../injection-keys";
 
 describe("AddServerModal", () => {
     describe("warns about possible loss of data", () => {
         it("should display a warning if there is one server unrestricted", () => {
-            vi.spyOn(strict_inject, "strictInject").mockReturnValue({
-                servers: [{ id: 1, is_project_restricted: false }],
-            } as unknown as Config);
             const wrapper = shallowMount(AddServerModal, {
                 global: {
                     plugins: [createGettext({ silent: true })],
+                    provide: {
+                        [CONFIG.valueOf()]: { servers: [{ id: 1, is_project_restricted: false }] },
+                    },
                 },
             });
 
@@ -51,12 +48,12 @@ describe("AddServerModal", () => {
         });
 
         it("should not display a warning if there is no existing server", () => {
-            vi.spyOn(strict_inject, "strictInject").mockReturnValue({
-                servers: [],
-            } as unknown as Config);
             const wrapper = shallowMount(AddServerModal, {
                 global: {
                     plugins: [createGettext({ silent: true })],
+                    provide: {
+                        [CONFIG.valueOf()]: { servers: [] },
+                    },
                 },
             });
 
@@ -64,12 +61,12 @@ describe("AddServerModal", () => {
         });
 
         it("should not display a warning if the existing server is already restricted", () => {
-            vi.spyOn(strict_inject, "strictInject").mockReturnValue({
-                servers: [{ id: 1, is_project_restricted: true }],
-            } as unknown as Config);
             const wrapper = shallowMount(AddServerModal, {
                 global: {
                     plugins: [createGettext({ silent: true })],
+                    provide: {
+                        [CONFIG.valueOf()]: { servers: [{ id: 1, is_project_restricted: true }] },
+                    },
                 },
             });
 
@@ -77,15 +74,17 @@ describe("AddServerModal", () => {
         });
 
         it("should not display a warning if there are more than one existing server", () => {
-            vi.spyOn(strict_inject, "strictInject").mockReturnValue({
-                servers: [
-                    { id: 1, is_project_restricted: true },
-                    { id: 2, is_project_restricted: true },
-                ],
-            } as unknown as Config);
             const wrapper = shallowMount(AddServerModal, {
                 global: {
                     plugins: [createGettext({ silent: true })],
+                    provide: {
+                        [CONFIG.valueOf()]: {
+                            servers: [
+                                { id: 1, is_project_restricted: true },
+                                { id: 2, is_project_restricted: true },
+                            ],
+                        },
+                    },
                 },
             });
 
