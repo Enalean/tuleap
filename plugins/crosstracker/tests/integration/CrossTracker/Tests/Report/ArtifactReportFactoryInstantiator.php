@@ -59,6 +59,7 @@ use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Field\StaticList\Sta
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Field\Text\TextResultBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Field\UGroupList\UGroupListResultBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Field\UserList\UserListResultBuilder;
+use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Metadata\AlwaysThereField\ArtifactId\ArtifactIdResultBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Metadata\Date\MetadataDateResultBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Metadata\MetadataResultBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Metadata\Semantic\AssignedTo\AssignedToResultBuilder;
@@ -283,6 +284,7 @@ final class ArtifactReportFactoryInstantiator
                 new AssignedToResultBuilder($user_manager, UserHelper::instance()),
                 new MetadataDateResultBuilder(),
                 new MetadataUserResultBuilder($user_manager, UserHelper::instance()),
+                new ArtifactIdResultBuilder(),
             ),
         );
 

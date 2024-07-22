@@ -39,7 +39,6 @@ use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilderVisitor;
 use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilderVisitor;
 use Tuleap\CrossTracker\REST\v1\Representation\CrossTrackerReportContentRepresentation;
 use Tuleap\CrossTracker\REST\v1\Representation\CrossTrackerSelectedRepresentation;
-use Tuleap\REST\RESTLogger;
 use Tuleap\Tracker\Artifact\RetrieveArtifact;
 use Tuleap\Tracker\Report\Query\Advanced\ExpertQueryValidator;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Query;
@@ -50,7 +49,6 @@ use Tuleap\Tracker\Report\Query\Advanced\SearchablesDoNotExistException;
 use Tuleap\Tracker\Report\Query\Advanced\SelectablesAreInvalidException;
 use Tuleap\Tracker\Report\Query\Advanced\SelectablesDoNotExistException;
 use Tuleap\Tracker\REST\v1\ArtifactMatchingReportCollection;
-use function Psl\Json\encode as psl_json_encode;
 
 final readonly class CrossTrackerArtifactReportFactory
 {
@@ -204,13 +202,11 @@ final readonly class CrossTrackerArtifactReportFactory
             array_map(static fn(array $row) => $row['id'], $artifact_ids),
         );
 
-        RESTLogger::getLogger()->debug(psl_json_encode($select_results, true)); // Temporary for debugging
-
         if ($static_return) {
             return $this->buildCollectionOfArtifacts($select_results, $total_size);
         }
-            $results = $this->result_builder->buildResult($query->getSelect(), $trackers, $current_user, $select_results);
-            return $this->buildReportContentRepresentation($results, $total_size);
+        $results = $this->result_builder->buildResult($query->getSelect(), $trackers, $current_user, $select_results);
+        return $this->buildReportContentRepresentation($results, $total_size);
     }
 
     /**

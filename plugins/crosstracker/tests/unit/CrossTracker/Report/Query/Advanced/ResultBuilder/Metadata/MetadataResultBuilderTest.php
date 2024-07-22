@@ -30,11 +30,13 @@ use PFUser;
 use Tracker;
 use Tuleap\Config\ConfigurationVariables;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Field\Date\DateResultRepresentation;
+use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Field\Numeric\NumericResultRepresentation;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Field\StaticList\StaticListRepresentation;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Field\StaticList\StaticListValueRepresentation;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Field\Text\TextResultRepresentation;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Field\UserList\UserListRepresentation;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Field\UserList\UserRepresentation;
+use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Metadata\AlwaysThereField\ArtifactId\ArtifactIdResultBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Metadata\Date\MetadataDateResultBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Metadata\Semantic\AssignedTo\AssignedToResultBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Metadata\Semantic\Status\StatusResultBuilder;
@@ -95,6 +97,7 @@ final class MetadataResultBuilderTest extends TestCase
             new AssignedToResultBuilder($user_retriever, $user_helper),
             new MetadataDateResultBuilder(),
             new MetadataUserResultBuilder($user_retriever, $user_helper),
+            new ArtifactIdResultBuilder(),
         );
 
         $user_helper->method('getDisplayNameFromUser')->willReturnCallback(static fn(PFUser $user) => $user->getRealName());
@@ -104,18 +107,6 @@ final class MetadataResultBuilderTest extends TestCase
             $selected_result,
             UserTestBuilder::buildWithDefaults(),
         );
-    }
-
-    public function testItReturnsEmptyAsNothingHasBennImplemented(): void
-    {
-        $result = $this->getSelectedResult(
-            new Metadata('id'),
-            RetrieveArtifactStub::withNoArtifact(),
-            [],
-        );
-
-        self::assertNull($result->selected);
-        self::assertEmpty($result->values);
     }
 
     public function testItThrowsIfUnknownMetadata(): void
@@ -361,6 +352,31 @@ EOL
         self::assertEqualsCanonicalizing([
             81 => new SelectedValue('@last_update_by', new UserRepresentation('Jean Eude', 'https://example.com/jean', '/users/jean', false)),
             82 => new SelectedValue('@last_update_by', new UserRepresentation('Alice', 'https://example.com/alice', '/users/alice', false)),
+        ], $result->values);
+    }
+
+    public function testItReturnsValuesForArtifactIdAlwaysThereField(): void
+    {
+        $result = $this->getSelectedResult(
+            new Metadata('id'),
+            RetrieveArtifactStub::withArtifacts(
+                ArtifactTestBuilder::anArtifact(91)->inTracker($this->first_tracker)->build(),
+                ArtifactTestBuilder::anArtifact(92)->inTracker($this->first_tracker)->build(),
+            ),
+            [
+                ['id' => 91, '@id' => 91],
+                ['id' => 92, '@id' => 92],
+            ],
+        );
+
+        self::assertEquals(
+            new CrossTrackerSelectedRepresentation('@id', CrossTrackerSelectedType::TYPE_NUMERIC),
+            $result->selected,
+        );
+        self::assertCount(2, $result->values);
+        self::assertEqualsCanonicalizing([
+            91 => new SelectedValue('@id', new NumericResultRepresentation(91)),
+            92 => new SelectedValue('@id', new NumericResultRepresentation(92)),
         ], $result->values);
     }
 }
