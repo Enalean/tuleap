@@ -23,68 +23,53 @@ declare(strict_types=1);
 
 namespace Tuleap\Docman\Metadata\Owner;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PFUser;
+use PHPUnit\Framework\MockObject\MockObject;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
 use UserManager;
 
-final class OwnerRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
+final class OwnerRetrieverTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var \Mockery\MockInterface|UserManager
-     */
-    private $user_manager;
-    /**
-     * @var OwnerRetriever
-     */
-    private $owner_check;
+    private UserManager&MockObject $user_manager;
+    private OwnerRetriever $owner_check;
 
     protected function setUp(): void
     {
-        $this->user_manager = Mockery::mock(UserManager::class);
-
-        $this->owner_check = new OwnerRetriever($this->user_manager);
+        $this->user_manager = $this->createMock(UserManager::class);
+        $this->owner_check  = new OwnerRetriever($this->user_manager);
     }
 
     public function testGetOwnerIdFromLoginRetrievesCorrectUser(): void
     {
         $user_login = 'peraltaj';
-        $user       = Mockery::mock(PFUser::class);
-        $user->shouldReceive('isAlive')->AndReturn(true);
+        $user       = UserTestBuilder::anActiveUser()->withId(10)->build();
 
-        $this->user_manager->shouldReceive('findUser')->with($user_login)->andReturn($user);
-        $this->user_manager->shouldReceive('getUserById')->with(10)->andReturn($user);
-
-        $user->shouldReceive('getId')->andReturn(10);
+        $this->user_manager->method('findUser')->with($user_login)->willReturn($user);
+        $this->user_manager->method('getUserById')->with(10)->willReturn($user);
 
         $new_owner_id = $this->owner_check->getOwnerIdFromLoginName($user_login);
 
-        $this->assertEquals(10, $new_owner_id);
-        $this->assertSame($user, $this->owner_check->getUserFromRepresentationId(10));
+        self::assertEquals(10, $new_owner_id);
+        self::assertSame($user, $this->owner_check->getUserFromRepresentationId(10));
     }
 
     public function testUserNeedsToBeFoundToBeMarkedAsOwner(): void
     {
-        $this->user_manager->shouldReceive('findUser')->andReturn(null);
-        $this->user_manager->shouldReceive('getUserById')->andReturn(null);
+        $this->user_manager->method('findUser')->willReturn(null);
+        $this->user_manager->method('getUserById')->willReturn(null);
 
-        $this->assertNull($this->owner_check->getOwnerIdFromLoginName('Anonymous'));
-        $this->assertNull($this->owner_check->getUserFromRepresentationId(0));
+        self::assertNull($this->owner_check->getOwnerIdFromLoginName('Anonymous'));
+        self::assertNull($this->owner_check->getUserFromRepresentationId(0));
     }
 
     public function testNotAliveUserCanNotBeConsideredAsOwner(): void
     {
-        $user = Mockery::mock(PFUser::class);
-        $user->shouldReceive('isAlive')->AndReturn(false);
+        $user = UserTestBuilder::anAnonymousUser()->build();
 
-        $this->user_manager->shouldReceive('findUser')->andReturn($user);
-        $this->user_manager->shouldReceive('getUserById')->andReturn($user);
+        $this->user_manager->method('findUser')->willReturn($user);
+        $this->user_manager->method('getUserById')->willReturn($user);
 
-        $user->shouldReceive('getId')->never();
-
-        $this->assertNull($this->owner_check->getOwnerIdFromLoginName('peraltaj'));
-        $this->assertNull($this->owner_check->getUserFromRepresentationId(10));
+        self::assertNull($this->owner_check->getOwnerIdFromLoginName('peraltaj'));
+        self::assertNull($this->owner_check->getUserFromRepresentationId(10));
     }
 }

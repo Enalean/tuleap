@@ -24,51 +24,45 @@ namespace Tuleap\Docman\Metadata;
 
 use Docman_MetadataValueList;
 use Docman_MetadataValueScalar;
-use Mockery;
+use LogicException;
+use Tuleap\Test\PHPUnit\TestCase;
 
-class DocmanMetadataTypeValueFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
+final class DocmanMetadataTypeValueFactoryTest extends TestCase
 {
-    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
-    /**
-     * @var Mockery\MockInterface|DocmanMetadataTypeValueFactory
-     */
-    private $type_value_factory;
+    private DocmanMetadataTypeValueFactory $type_value_factory;
 
     protected function setUp(): void
     {
-        parent::setUp();
-
         $this->type_value_factory = new DocmanMetadataTypeValueFactory();
     }
 
     public function testItReturnsAScalarValueForTextType(): void
     {
         $metadata_value = $this->type_value_factory->createFromType(PLUGIN_DOCMAN_METADATA_TYPE_TEXT);
-        $this->assertInstanceOf(Docman_MetadataValueScalar::class, $metadata_value);
+        self::assertInstanceOf(Docman_MetadataValueScalar::class, $metadata_value);
     }
 
     public function testItReturnsAScalarValueForStringType(): void
     {
         $metadata_value = $this->type_value_factory->createFromType(PLUGIN_DOCMAN_METADATA_TYPE_STRING);
-        $this->assertInstanceOf(Docman_MetadataValueScalar::class, $metadata_value);
+        self::assertInstanceOf(Docman_MetadataValueScalar::class, $metadata_value);
     }
 
     public function testItReturnsAScalarValueForDateType(): void
     {
         $metadata_value = $this->type_value_factory->createFromType(PLUGIN_DOCMAN_METADATA_TYPE_DATE);
-        $this->assertInstanceOf(Docman_MetadataValueScalar::class, $metadata_value);
+        self::assertInstanceOf(Docman_MetadataValueScalar::class, $metadata_value);
     }
 
     public function testItReturnsAListValueForListType(): void
     {
         $metadata_value = $this->type_value_factory->createFromType(PLUGIN_DOCMAN_METADATA_TYPE_LIST);
-        $this->assertInstanceOf(Docman_MetadataValueList::class, $metadata_value);
+        self::assertInstanceOf(Docman_MetadataValueList::class, $metadata_value);
     }
 
     public function testItThrowsAnExceptionWhenTypeIsNotFound(): void
     {
-        $this->expectException(\LogicException::class);
+        self::expectException(LogicException::class);
         $this->type_value_factory->createFromType(1233);
     }
 }

@@ -24,37 +24,21 @@ namespace Tuleap\Docman\Metadata;
 
 use Docman_Metadata;
 use Docman_MetadataValueList;
-use Mockery;
+use PHPUnit\Framework\MockObject\MockObject;
+use Tuleap\Test\PHPUnit\TestCase;
 
-class MetadataValueCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
+final class MetadataValueCreatorTest extends TestCase
 {
-    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
-    /**
-     * @var Mockery\MockInterface|MetadataValueStore
-     */
-    private $store;
-    /**
-     * @var MetadataValueCreator
-     */
-    private $creator;
-    /**
-     * @var \Mockery\MockInterface|MetadataValueObjectFactory
-     */
-    private $metadata_value_object_factory;
-
-    /**
-     * @var \Mockery\MockInterface|DocmanMetadataInputValidator
-     */
-    private $validator;
+    private MetadataValueStore&MockObject $store;
+    private MetadataValueCreator $creator;
+    private MetadataValueObjectFactory&MockObject $metadata_value_object_factory;
+    private DocmanMetadataInputValidator&MockObject $validator;
 
     protected function setUp(): void
     {
-        parent::setUp();
-
-        $this->validator                     = Mockery::mock(DocmanMetadataInputValidator::class);
-        $this->metadata_value_object_factory = Mockery::mock(MetadataValueObjectFactory::class);
-        $this->store                         = Mockery::mock(MetadataValueStore::class);
+        $this->validator                     = $this->createMock(DocmanMetadataInputValidator::class);
+        $this->metadata_value_object_factory = $this->createMock(MetadataValueObjectFactory::class);
+        $this->store                         = $this->createMock(MetadataValueStore::class);
 
         $this->creator = new MetadataValueCreator(
             $this->validator,
@@ -65,18 +49,16 @@ class MetadataValueCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItValidateAndCreateAMetadataObject(): void
     {
-        $metadata_value = \Mockery::mock(Docman_MetadataValueList::class);
+        $metadata_value = $this->createMock(Docman_MetadataValueList::class);
 
-        $this->metadata_value_object_factory->shouldReceive('createMetadataValueObjectWithCorrectValue')->andReturn($metadata_value);
+        $this->metadata_value_object_factory->method('createMetadataValueObjectWithCorrectValue')->willReturn($metadata_value);
 
-        $this->store->shouldReceive('storeMetadata')->withArgs([$metadata_value, 102])->once();
+        $this->store->expects(self::once())->method('storeMetadata')->with($metadata_value, 102);
 
-        $metadata_to_create = Mockery::mock(Docman_Metadata::class);
-        $metadata_to_create->shouldReceive('getId')->andReturn(1);
-        $metadata_to_create->shouldReceive('getType')->andReturn(PLUGIN_DOCMAN_METADATA_TYPE_LIST);
-        $metadata_to_create->shouldReceive('getGroupId')->andReturn(102);
+        $metadata_to_create = new Docman_Metadata();
+        $metadata_to_create->initFromRow(['id' => 1, 'type' => PLUGIN_DOCMAN_METADATA_TYPE_LIST, 'group_id' => 102]);
 
-        $this->validator->shouldReceive('validateInput')->withArgs([$metadata_to_create, 'new value'])->once();
+        $this->validator->expects(self::once())->method('validateInput')->with($metadata_to_create, 'new value');
 
         $this->creator->createMetadataObject($metadata_to_create, 1000, 'new value');
     }
