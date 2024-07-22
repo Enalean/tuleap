@@ -86,7 +86,10 @@
                             />
                         </div>
 
-                        <field-description v-model="field_description" />
+                        <field-description
+                            v-bind:field_description_value="field_description"
+                            v-on:input="(new_value) => (field_description = new_value)"
+                        />
                         <trove-category-list
                             v-model="trove_cats"
                             v-for="trovecat in root_store.trove_categories"

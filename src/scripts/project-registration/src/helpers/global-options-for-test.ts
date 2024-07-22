@@ -1,5 +1,5 @@
-/*
- * Copyright (c) Enalean, 2023-Present. All Rights Reserved.
+/**
+ * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,8 +17,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare module "*.vue" {
-    import type { DefineComponent } from "vue";
-    const component: DefineComponent;
-    export default component;
+import type { MountingOptions } from "@vue/test-utils";
+import { createGettext } from "vue3-gettext";
+import type { Pinia } from "pinia";
+import { createTestingPinia } from "@pinia/testing";
+
+export function getGlobalTestOptions(pinia?: Pinia): MountingOptions<unknown>["global"] {
+    return {
+        plugins: [createGettext({ silent: true }), pinia || createTestingPinia()],
+    };
 }

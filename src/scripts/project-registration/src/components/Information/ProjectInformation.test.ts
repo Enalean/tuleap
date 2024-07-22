@@ -18,15 +18,14 @@
  *
  */
 
-import type { Wrapper } from "@vue/test-utils";
+import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
-import { createProjectRegistrationLocalVue } from "../../helpers/local-vue-for-tests";
 import ProjectInformation from "./ProjectInformation.vue";
 import ProjectInformationSvg from "./ProjectInformationSvg.vue";
 import ProjectInformationFooter from "./ProjectInformationFooter.vue";
 import ProjectName from "./Input/ProjectName.vue";
 import ProjectInformationInputPrivacyList from "./Input/ProjectInformationInputPrivacyList.vue";
-import type VueRouter from "vue-router";
+import type { Router } from "vue-router";
 import * as location_helper from "../../helpers/location-helper";
 import { defineStore } from "pinia";
 import { createTestingPinia } from "@pinia/testing";
@@ -35,6 +34,7 @@ import type { ProjectArchiveTemplateData, TemplateData } from "../../type";
 import * as router from "../../helpers/use-router";
 import { ACCESS_PRIVATE, ACCESS_PUBLIC } from "../../constant";
 import emitter from "../../helpers/emitter";
+import { getGlobalTestOptions } from "../../helpers/global-options-for-test";
 
 jest.useFakeTimers();
 
@@ -54,13 +54,13 @@ describe("ProjectInformation -", () => {
         push_route_spy = jest.fn();
 
         jest.spyOn(router, "useRouter").mockImplementation(() => {
-            return { push: push_route_spy } as unknown as VueRouter;
+            return { push: push_route_spy } as unknown as Router;
         });
     });
 
-    async function getWrapper(
+    function getWrapper(
         selected_company_template: TemplateData | ProjectArchiveTemplateData | null = null,
-    ): Promise<Wrapper<Vue, Element>> {
+    ): VueWrapper {
         const useStore = defineStore("root", {
             state: () => ({
                 is_template_selected,
@@ -89,8 +89,10 @@ describe("ProjectInformation -", () => {
         useStore(pinia);
 
         return shallowMount(ProjectInformation, {
-            localVue: await createProjectRegistrationLocalVue(),
-            pinia,
+            global: {
+                ...getGlobalTestOptions(pinia),
+                stubs: ["router-link"],
+            },
         });
     }
 
@@ -166,12 +168,6 @@ describe("ProjectInformation -", () => {
         };
 
         are_restricted_users_allowed = true;
-        wrapper.vm.$data.selected_visibility = "public";
-
-        wrapper.vm.$data.name_properties = {
-            slugified_name: "this-is-a-test",
-            name: "this is a test",
-        };
 
         await wrapper.get("[data-test=project-registration-form]").trigger("submit.prevent");
 

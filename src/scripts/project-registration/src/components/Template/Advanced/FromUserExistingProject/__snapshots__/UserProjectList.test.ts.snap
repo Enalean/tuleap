@@ -1,15 +1,9 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`UserProjectList Spawns the UserProjectList component 1`] = `
-<div class="tlp-form-element"><select id="from-another-project" name="from-another-project" class="tlp-select tlp-select-adjusted user-project-list-select">
-    <option disabled="disabled" value="">
-      Please choose a project...
-    </option>
-    <option value="101">
-      My A project
-    </option>
-    <option value="102">
-      My B project
-    </option>
+<div class="tlp-form-element"><select class="tlp-select tlp-select-adjusted user-project-list-select" id="from-another-project" name="from-another-project">
+    <option disabled="" selected="" value="">Please choose a project...</option>
+    <option value="101">My A project</option>
+    <option value="102">My B project</option>
   </select></div>
 `;

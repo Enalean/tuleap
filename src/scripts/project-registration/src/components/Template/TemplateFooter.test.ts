@@ -18,20 +18,25 @@
  *
  */
 
-import type { Wrapper } from "@vue/test-utils";
+import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
-import { createProjectRegistrationLocalVue } from "../../helpers/local-vue-for-tests";
 import * as element_checker from "../../helpers/is-element-in-viewport";
-import VueRouter from "vue-router";
+import type VueRouter from "vue-router";
+import { createRouter, createWebHistory } from "vue-router";
 import TemplateFooter from "./TemplateFooter.vue";
 import { defineStore } from "pinia";
 import { createTestingPinia } from "@pinia/testing";
+import AllProjectTemplates from "./AllProjectTemplates.vue";
+import ProjectInformation from "../Information/ProjectInformation.vue";
+import { createGettext } from "vue3-gettext";
+
+jest.useFakeTimers();
 
 let is_template_selected = false;
 describe("TemplateFooter", () => {
-    let router: VueRouter;
+    let router: VueRouter.Router;
 
-    async function createWrapper(): Promise<Wrapper<Vue, Element>> {
+    function createWrapper(): VueWrapper {
         const useStore = defineStore("root", {
             getters: {
                 is_template_selected: () => (): boolean => {
@@ -43,30 +48,33 @@ describe("TemplateFooter", () => {
         const pinia = createTestingPinia();
         useStore(pinia);
 
-        router = new VueRouter({
+        router = createRouter({
+            history: createWebHistory(),
             routes: [
                 {
                     path: "/",
                     name: "template",
+                    component: AllProjectTemplates,
                 },
                 {
                     path: "/information",
                     name: "information",
+                    component: ProjectInformation,
                 },
             ],
         });
 
         return shallowMount(TemplateFooter, {
-            localVue: await createProjectRegistrationLocalVue(),
-            router,
-            pinia,
+            global: {
+                plugins: [router, pinia, createGettext({ silent: true })],
+            },
         });
     }
 
     describe("Next button", () => {
-        it(`Enables the 'Next' button when template is selected`, async () => {
+        it(`Enables the 'Next' button when template is selected`, () => {
             is_template_selected = true;
-            const wrapper = await createWrapper();
+            const wrapper = createWrapper();
 
             const next_button: HTMLButtonElement = wrapper.get(
                 "[data-test=project-registration-next-button]",
@@ -75,21 +83,25 @@ describe("TemplateFooter", () => {
             expect(next_button.getAttribute("disabled")).toBeNull();
         });
 
-        it(`Go to 'Project information' step when the 'Next' button is clicked`, async () => {
+        it(`Go to 'Project information' step when the 'Next' button is clicked`, () => {
             is_template_selected = true;
-            const wrapper = await createWrapper();
+
+            const wrapper = createWrapper();
+            const push = jest.spyOn(router, "push");
+
             wrapper.get("[data-test=project-registration-next-button]").trigger("click");
 
-            expect(wrapper.vm.$route.name).toBe("information");
+            // expect(wrapper.vm.$route.name).toBe("information");
+            expect(push).toHaveBeenCalledWith({ name: "information" });
         });
     });
 
     describe("pinned_class", () => {
-        it("Should have pinned class on scroll when element is NOT visible", async () => {
+        it("Should have pinned class on scroll when element is NOT visible", () => {
             jest.spyOn(element_checker, "isElementInViewport").mockReturnValue(false);
 
             is_template_selected = true;
-            const wrapper = await createWrapper();
+            const wrapper = createWrapper();
 
             const template_footer: HTMLElement = wrapper.get("[data-test=project-template-footer]")
                 .element as unknown as HTMLElement;
@@ -99,7 +111,9 @@ describe("TemplateFooter", () => {
 
         it("Should NOT have pinned class on scroll when element is already visible", async () => {
             is_template_selected = true;
-            const wrapper = await createWrapper();
+            const wrapper = createWrapper();
+
+            await jest.runOnlyPendingTimersAsync();
 
             const template_footer: HTMLElement = wrapper.get("[data-test=project-template-footer]")
                 .element as unknown as HTMLElement;
@@ -108,7 +122,10 @@ describe("TemplateFooter", () => {
         });
 
         it("Should NOT have pinned class when no template have been selected", async () => {
-            const wrapper = await createWrapper();
+            const wrapper = createWrapper();
+
+            await jest.runOnlyPendingTimersAsync();
+
             const template_footer: HTMLElement = wrapper.get("[data-test=project-template-footer]")
                 .element as unknown as HTMLElement;
 

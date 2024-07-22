@@ -18,20 +18,19 @@
  *
  */
 
-import type { Wrapper } from "@vue/test-utils";
-import { createLocalVue, shallowMount } from "@vue/test-utils";
-import { createProjectRegistrationLocalVue } from "../../../helpers/local-vue-for-tests";
+import type { VueWrapper } from "@vue/test-utils";
+import { shallowMount } from "@vue/test-utils";
 import TemplateCardContent from "../TemplateCard.vue";
 import TuleapTemplateList from "./TuleapTemplateList.vue";
 import type { TemplateData } from "../../../type";
 import { defineStore } from "pinia";
 import { createTestingPinia } from "@pinia/testing";
+import { getGlobalTestOptions } from "../../../helpers/global-options-for-test";
 
 describe("TuleapTemplateList", () => {
-    let local_vue = createLocalVue();
-    let wrapper: Wrapper<Vue, Element>;
+    let wrapper: VueWrapper;
 
-    async function createWrapper(tuleap_templates: TemplateData[]): Promise<Wrapper<Vue, Element>> {
+    function createWrapper(tuleap_templates: TemplateData[]): VueWrapper {
         const useStore = defineStore("root", {
             state: () => ({
                 tuleap_templates,
@@ -41,11 +40,10 @@ describe("TuleapTemplateList", () => {
         const pinia = createTestingPinia();
         useStore(pinia);
 
-        local_vue = await createProjectRegistrationLocalVue();
-
         return shallowMount(TuleapTemplateList, {
-            localVue: local_vue,
-            pinia,
+            global: {
+                ...getGlobalTestOptions(pinia),
+            },
         });
     }
 

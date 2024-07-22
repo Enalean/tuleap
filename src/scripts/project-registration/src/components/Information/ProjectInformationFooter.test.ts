@@ -18,20 +18,20 @@
  *
  */
 
-import type { Wrapper } from "@vue/test-utils";
+import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
-import { createProjectRegistrationLocalVue } from "../../helpers/local-vue-for-tests";
 import ProjectInformationFooter from "./ProjectInformationFooter.vue";
 import { defineStore } from "pinia";
 import { createTestingPinia } from "@pinia/testing";
 import { jest } from "@jest/globals";
 import { useStore } from "../../stores/root";
+import { getGlobalTestOptions } from "../../helpers/global-options-for-test";
 
 describe("ProjectInformationFooter", () => {
     const resetProjectCreationError = jest.fn();
     let is_creating_project = false;
 
-    async function getWrapper(has_error: boolean = false): Promise<Wrapper<Vue, Element>> {
+    function getWrapper(has_error: boolean = false): VueWrapper {
         const useStore = defineStore("root", {
             state: () => ({
                 is_creating_project,
@@ -47,21 +47,23 @@ describe("ProjectInformationFooter", () => {
         useStore(pinia);
 
         return shallowMount(ProjectInformationFooter, {
-            localVue: await createProjectRegistrationLocalVue(),
-            pinia,
+            global: {
+                ...getGlobalTestOptions(pinia),
+                stubs: ["router-link"],
+            },
         });
     }
 
     it(`reset the project creation error when the 'Back' button is clicked`, async () => {
-        const wrapper = await getWrapper();
+        const wrapper = getWrapper();
         const store = useStore();
         await wrapper.get("[data-test=project-registration-back-button]").trigger("click");
         expect(store.resetProjectCreationError).toHaveBeenCalled();
     });
 
-    it(`Displays spinner when project is creating`, async () => {
+    it(`Displays spinner when project is creating`, () => {
         is_creating_project = true;
-        const wrapper = await getWrapper();
+        const wrapper = getWrapper();
 
         expect(wrapper.get("[data-test=project-submission-icon]").classes()).toEqual([
             "fa",
@@ -71,9 +73,9 @@ describe("ProjectInformationFooter", () => {
         ]);
     });
 
-    it(`Does not display spinner by default`, async () => {
+    it(`Does not display spinner by default`, () => {
         is_creating_project = false;
-        const wrapper = await getWrapper();
+        const wrapper = getWrapper();
 
         expect(wrapper.get("[data-test=project-submission-icon]").classes()).toEqual([
             "fa",
@@ -82,10 +84,10 @@ describe("ProjectInformationFooter", () => {
         ]);
     });
 
-    it(`disable the submission button when the project is being created and there is no error displayed`, async () => {
+    it(`disable the submission button when the project is being created and there is no error displayed`, () => {
         is_creating_project = true;
         const has_error = false;
-        const wrapper = await getWrapper(has_error);
+        const wrapper = getWrapper(has_error);
 
         const submit_button = wrapper.get<HTMLButtonElement>(
             "[data-test=project-registration-next-button]",

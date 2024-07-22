@@ -18,14 +18,15 @@
  *
  */
 
-import type { Wrapper } from "@vue/test-utils";
+import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import TemplateCard from "./TemplateCard.vue";
 import type { TemplateData } from "../../type";
-import { createProjectRegistrationLocalVue } from "../../helpers/local-vue-for-tests";
 import { defineStore } from "pinia";
 import { createTestingPinia } from "@pinia/testing";
 import { useStore } from "../../stores/root";
+import { getGlobalTestOptions } from "../../helpers/global-options-for-test";
+import { buildVueDompurifyHTMLDirective } from "vue-dompurify-html";
 
 describe("CardWithChildren", () => {
     let setSelectedTemplate: jest.Mock;
@@ -36,7 +37,7 @@ describe("CardWithChildren", () => {
         is_currently_selected = false;
     });
 
-    async function createWrapper(tuleap_template: TemplateData): Promise<Wrapper<Vue, Element>> {
+    function createWrapper(tuleap_template: TemplateData): VueWrapper {
         const useStore = defineStore("root", {
             getters: {
                 is_currently_selected_template: () => (): boolean => {
@@ -52,13 +53,17 @@ describe("CardWithChildren", () => {
         useStore(pinia);
 
         return shallowMount(TemplateCard, {
-            localVue: await createProjectRegistrationLocalVue(),
+            global: {
+                ...getGlobalTestOptions(pinia),
+                directives: {
+                    "dompurify-html": buildVueDompurifyHTMLDirective(),
+                },
+            },
             propsData: { template: tuleap_template },
-            pinia,
         });
     }
 
-    it(`display cards`, async () => {
+    it(`display cards`, () => {
         const tuleap_template: TemplateData = {
             title: "scrum",
             description: "scrum desc",
@@ -66,12 +71,12 @@ describe("CardWithChildren", () => {
             glyph: "<svg></svg>",
             is_built_in: true,
         };
-        const wrapper = await createWrapper(tuleap_template);
+        const wrapper = createWrapper(tuleap_template);
 
         expect(wrapper.find("[data-test=scrum-template-svg]").exists()).toBeTruthy();
     });
 
-    it(`checks the input`, async () => {
+    it(`checks the input`, () => {
         const tuleap_template: TemplateData = {
             title: "scrum",
             description: "scrum desc",
@@ -79,7 +84,7 @@ describe("CardWithChildren", () => {
             glyph: "<svg></svg>",
             is_built_in: true,
         };
-        const wrapper = await createWrapper(tuleap_template);
+        const wrapper = createWrapper(tuleap_template);
 
         wrapper.get("[data-test=project-registration-card-label]").trigger("click");
 
@@ -88,7 +93,7 @@ describe("CardWithChildren", () => {
         expect(radio.checked).toBe(true);
     });
 
-    it(`stores the template when the template is choosen`, async () => {
+    it(`stores the template when the template is choosen`, () => {
         const tuleap_template: TemplateData = {
             title: "scrum",
             description: "scrum desc",
@@ -97,7 +102,7 @@ describe("CardWithChildren", () => {
             is_built_in: true,
         };
 
-        const wrapper = await createWrapper(tuleap_template);
+        const wrapper = createWrapper(tuleap_template);
         const store = useStore();
 
         wrapper.get("[data-test=project-registration-radio]").trigger("change");
@@ -105,7 +110,7 @@ describe("CardWithChildren", () => {
         expect(store.setSelectedTemplate).toHaveBeenCalledWith(tuleap_template);
     });
 
-    it("should check the input when the current template is selected", async () => {
+    it("should check the input when the current template is selected", () => {
         const tuleap_template: TemplateData = {
             title: "scrum",
             description: "scrum desc",
@@ -116,7 +121,7 @@ describe("CardWithChildren", () => {
 
         is_currently_selected = true;
 
-        const wrapper = await createWrapper(tuleap_template);
+        const wrapper = createWrapper(tuleap_template);
 
         const radio = wrapper.get("[data-test=project-registration-radio]").element;
         if (!(radio instanceof HTMLInputElement)) {

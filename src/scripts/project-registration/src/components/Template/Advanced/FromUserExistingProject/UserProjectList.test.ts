@@ -17,18 +17,17 @@
  *  along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { createProjectRegistrationLocalVue } from "../../../../helpers/local-vue-for-tests";
 import UserProjectList from "./UserProjectList.vue";
-import type { Wrapper } from "@vue/test-utils";
+import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import type { TemplateData } from "../../../../type";
 import { defineStore } from "pinia";
 import { createTestingPinia } from "@pinia/testing";
-import type Vue from "vue";
 import { selectOrThrow } from "@tuleap/dom";
+import { getGlobalTestOptions } from "../../../../helpers/global-options-for-test";
 
 describe("UserProjectList", () => {
-    let wrapper: Wrapper<Vue, Element>,
+    let wrapper: VueWrapper,
         project_list: Array<TemplateData>,
         project_a: TemplateData,
         selectedCompanyTemplate: TemplateData | null;
@@ -55,7 +54,7 @@ describe("UserProjectList", () => {
         project_list = [project_a, project_b];
     });
 
-    async function getWrapper(): Promise<Wrapper<Vue, Element>> {
+    function getWrapper(): VueWrapper {
         const useStore = defineStore("root", {
             actions: {
                 setSelectedTemplate: () => set_selected_template_mock,
@@ -66,22 +65,23 @@ describe("UserProjectList", () => {
         useStore(pinia);
 
         return shallowMount(UserProjectList, {
-            localVue: await createProjectRegistrationLocalVue(),
-            pinia,
+            global: {
+                ...getGlobalTestOptions(pinia),
+            },
             propsData: { projectList: project_list, selectedCompanyTemplate },
         });
     }
 
-    it("Spawns the UserProjectList component", async () => {
+    it("Spawns the UserProjectList component", () => {
         selectedCompanyTemplate = null;
-        wrapper = await getWrapper();
+        wrapper = getWrapper();
 
         expect(wrapper).toMatchSnapshot();
     });
 
-    it("Should select the previously selected project by default when one has been previously selected", async () => {
+    it("Should select the previously selected project by default when one has been previously selected", () => {
         selectedCompanyTemplate = project_a;
-        wrapper = await getWrapper();
+        wrapper = getWrapper();
 
         const option = selectOrThrow(
             wrapper.element,
@@ -92,19 +92,10 @@ describe("UserProjectList", () => {
         expect(option.selected).toBe(true);
     });
 
-    it("Should reset the selection when the currently selected template has been reset", async () => {
-        selectedCompanyTemplate = project_a;
-        wrapper = await getWrapper();
-
-        wrapper.vm.$data.selected_project = null;
-
-        expect(wrapper.vm.$data.selected_project).toBeNull();
-    });
-
-    it(`displays a message when user is not administrator of any project`, async () => {
+    it(`displays a message when user is not administrator of any project`, () => {
         project_list = [];
         selectedCompanyTemplate = project_a;
-        wrapper = await getWrapper();
+        wrapper = getWrapper();
 
         expect(wrapper.find("[data-test=from-another-project]").exists()).toBeFalsy();
         expect(wrapper.find("[data-test=no-project-list]").exists()).toBeTruthy();

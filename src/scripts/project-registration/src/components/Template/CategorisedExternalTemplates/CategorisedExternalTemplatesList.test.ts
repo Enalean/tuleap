@@ -17,49 +17,57 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { Wrapper } from "@vue/test-utils";
+import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 
-import { createProjectRegistrationLocalVue } from "../../../helpers/local-vue-for-tests";
 import TemplateCardContent from "../TemplateCard.vue";
 import CategorisedExternalTemplatesList from "./CategorisedExternalTemplatesList.vue";
+import { getGlobalTestOptions } from "../../../helpers/global-options-for-test";
 
+function getWrapper(): VueWrapper {
+    return shallowMount(CategorisedExternalTemplatesList, {
+        global: {
+            ...getGlobalTestOptions(),
+        },
+        propsData: {
+            templates: [
+                {
+                    id: "program",
+                    title: "SAFe - Program",
+                    description: "SAFe - Program",
+                    glyph: "<svg>SAFe Program</svg>",
+                    is_built_in: true,
+                    template_category: {
+                        shortname: "SAFe",
+                        label: "Program/Teams",
+                        should_case_of_label_be_respected: false,
+                    },
+                },
+                {
+                    id: "teams",
+                    title: "SAFe - Teams",
+                    description: "SAFe - Teams",
+                    glyph: "<svg>SAFe Teams</svg>",
+                    is_built_in: true,
+                    template_category: {
+                        shortname: "SAFe",
+                        label: "Program/Teams",
+                        should_case_of_label_be_respected: false,
+                    },
+                },
+            ],
+        },
+    });
+}
 describe("CategorisedExternalTemplatesList", () => {
-    async function getWrapper(): Promise<Wrapper<Vue, Element>> {
-        return shallowMount(CategorisedExternalTemplatesList, {
-            localVue: await createProjectRegistrationLocalVue(),
-            propsData: {
-                templates: [
-                    {
-                        id: "program",
-                        title: "SAFe - Program",
-                        description: "SAFe - Program",
-                        glyph: "<svg>SAFe Program</svg>",
-                        is_built_in: true,
-                        template_category: {
-                            shortname: "SAFe",
-                            label: "Program/Teams",
-                        },
-                    },
-                    {
-                        id: "teams",
-                        title: "SAFe - Teams",
-                        description: "SAFe - Teams",
-                        glyph: "<svg>SAFe Teams</svg>",
-                        is_built_in: true,
-                        template_category: {
-                            shortname: "SAFe",
-                            label: "Program/Teams",
-                        },
-                    },
-                ],
-            },
-        });
-    }
-
+    it(`spawns the components and sub components`, () => {
+        const wrapper = getWrapper();
+        expect(wrapper.findComponent(TemplateCardContent).exists()).toBe(true);
+        expect(wrapper.findAllComponents(TemplateCardContent)).toHaveLength(2);
+    });
     describe("has several project templates -", () => {
-        it(`spawns the components and sub components`, async () => {
-            const wrapper = await getWrapper();
+        it(`spawns the components and sub components`, () => {
+            const wrapper = getWrapper();
             expect(wrapper.findComponent(TemplateCardContent).exists()).toBe(true);
             expect(wrapper.findAllComponents(TemplateCardContent)).toHaveLength(2);
         });

@@ -18,20 +18,19 @@
  *
  */
 
-import type { Wrapper } from "@vue/test-utils";
-import { createLocalVue, shallowMount } from "@vue/test-utils";
-import { createProjectRegistrationLocalVue } from "../../../helpers/local-vue-for-tests";
+import type { VueWrapper } from "@vue/test-utils";
+import { shallowMount } from "@vue/test-utils";
 import TemplateCardContent from "../TemplateCard.vue";
 import CompanyTemplateList from "./CompanyTemplateList.vue";
 import { defineStore } from "pinia";
 import { createTestingPinia } from "@pinia/testing";
+import { getGlobalTestOptions } from "../../../helpers/global-options-for-test";
 
 describe("CompanyTemplateList", () => {
-    let local_vue = createLocalVue();
-    let wrapper: Wrapper<Vue, Element>;
+    let wrapper: VueWrapper;
 
     describe("has several project templates -", () => {
-        beforeEach(async () => {
+        beforeEach(() => {
             const company_templates = [
                 {
                     id: "10",
@@ -59,11 +58,11 @@ describe("CompanyTemplateList", () => {
             const pinia = createTestingPinia();
             useStore(pinia);
 
-            local_vue = await createProjectRegistrationLocalVue();
-
             wrapper = shallowMount(CompanyTemplateList, {
-                localVue: local_vue,
-                pinia,
+                global: {
+                    ...getGlobalTestOptions(pinia),
+                    stubs: ["router-link"],
+                },
             });
         });
 

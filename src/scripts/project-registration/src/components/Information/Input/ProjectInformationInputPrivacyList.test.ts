@@ -17,18 +17,18 @@
  * along with Tuleap. If not, see http://www.gnu.org/licenses/.
  *
  */
-import type { Wrapper } from "@vue/test-utils";
+import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
-import { createProjectRegistrationLocalVue } from "../../../helpers/local-vue-for-tests";
 import ProjectInformationInputPrivacyList from "./ProjectInformationInputPrivacyList.vue";
 import * as list_picker from "@tuleap/list-picker";
 import { defineStore } from "pinia";
 import { createTestingPinia } from "@pinia/testing";
+import { getGlobalTestOptions } from "../../../helpers/global-options-for-test";
 
-async function getWrapper(
+function getWrapper(
     project_default_visibility: string,
     are_restricted_users_allowed: boolean,
-): Promise<Wrapper<Vue, Element>> {
+): VueWrapper {
     const useStore = defineStore("root", {
         state: () => ({
             project_default_visibility,
@@ -39,11 +39,12 @@ async function getWrapper(
     const pinia = createTestingPinia();
     useStore(pinia);
 
-    const wrapper = shallowMount(ProjectInformationInputPrivacyList, {
-        localVue: await createProjectRegistrationLocalVue(),
+    return shallowMount(ProjectInformationInputPrivacyList, {
+        global: {
+            ...getGlobalTestOptions(pinia),
+        },
         pinia,
     });
-    return wrapper;
 }
 
 describe("ProjectInformationInputPrivacyList", () => {
@@ -56,16 +57,16 @@ describe("ProjectInformationInputPrivacyList", () => {
     });
 
     describe("Displayed options depends on platform configuration -", () => {
-        it("Displays only public and private when platform does not allow restricted", async () => {
-            const wrapper = await getWrapper("private", false);
+        it("Displays only public and private when platform does not allow restricted", () => {
+            const wrapper = getWrapper("private", false);
             expect(wrapper.find("[data-test=unrestricted]").exists()).toBe(false);
             expect(wrapper.find("[data-test=private]").exists()).toBe(true);
             expect(wrapper.find("[data-test=private-wo-restr]").exists()).toBe(false);
             expect(wrapper.find("[data-test=public]").exists()).toBe(true);
         });
 
-        it("Displays all options when restricted are allowed", async () => {
-            const wrapper = await getWrapper("private", true);
+        it("Displays all options when restricted are allowed", () => {
+            const wrapper = getWrapper("private", true);
             expect(wrapper.find("[data-test=private]").exists()).toBe(true);
             expect(wrapper.find("[data-test=private-wo-restr]").exists()).toBe(true);
             expect(wrapper.find("[data-test=unrestricted]").exists()).toBe(true);

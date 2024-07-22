@@ -18,16 +18,16 @@
  *
  */
 
-import type { Wrapper } from "@vue/test-utils";
+import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
-import { createProjectRegistrationLocalVue } from "../../../helpers/local-vue-for-tests";
 import ProjectShortName from "./ProjectShortName.vue";
 import { defineStore } from "pinia";
 import { createTestingPinia } from "@pinia/testing";
 import emitter from "../../../helpers/emitter";
+import { getGlobalTestOptions } from "../../../helpers/global-options-for-test";
 
 describe("ProjectShortName", () => {
-    async function createWrapper(error: boolean): Promise<Wrapper<Vue, Element>> {
+    function createWrapper(error: boolean): VueWrapper {
         const useStore = defineStore("root", {
             getters: {
                 has_error: () => error,
@@ -38,14 +38,16 @@ describe("ProjectShortName", () => {
         useStore(pinia);
 
         return shallowMount(ProjectShortName, {
-            localVue: await createProjectRegistrationLocalVue(),
+            global: {
+                ...getGlobalTestOptions(pinia),
+            },
             pinia,
         });
     }
 
     describe("Slug display", () => {
-        it(`Does not display anything if project shortname is empty`, async () => {
-            const wrapper = await createWrapper(false);
+        it(`Does not display anything if project shortname is empty`, () => {
+            const wrapper = createWrapper(false);
             expect(wrapper.find("[data-test=project-shortname-slugified-section]").exists()).toBe(
                 false,
             );
@@ -56,7 +58,7 @@ describe("ProjectShortName", () => {
         });
 
         it(`Display the edit mode when there is an error`, async () => {
-            const wrapper = await createWrapper(true);
+            const wrapper = createWrapper(true);
 
             expect(wrapper.find("[data-test=project-shortname-slugified-section]").exists()).toBe(
                 false,
@@ -71,7 +73,7 @@ describe("ProjectShortName", () => {
         });
 
         it(`Displays slugged project name`, async () => {
-            const wrapper = await createWrapper(false);
+            const wrapper = createWrapper(false);
 
             await emitter.emit("slugify-project-name", "My project");
 
@@ -89,7 +91,7 @@ describe("ProjectShortName", () => {
         it(`Has an error when shortname has less than 3 characters`, async () => {
             const event_bus_emit = jest.spyOn(emitter, "emit");
 
-            const wrapper = await createWrapper(false);
+            const wrapper = createWrapper(false);
 
             await emitter.emit("slugify-project-name", "My");
 
@@ -103,7 +105,7 @@ describe("ProjectShortName", () => {
 
         it(`Has no error when shortname has exactly 30 characters`, async () => {
             const event_bus_emit = jest.spyOn(emitter, "emit");
-            const wrapper = await createWrapper(false);
+            const wrapper = createWrapper(false);
 
             await emitter.emit("slugify-project-name", "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
 
@@ -117,7 +119,7 @@ describe("ProjectShortName", () => {
 
         it(`Truncates slugified shortname to 30 characters`, async () => {
             const event_bus_emit = jest.spyOn(emitter, "emit");
-            const wrapper = await createWrapper(false);
+            const wrapper = createWrapper(false);
 
             await emitter.emit("slugify-project-name", "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaabbbbb");
 
@@ -131,7 +133,7 @@ describe("ProjectShortName", () => {
 
         it(`Has an error when shortname start by a numerical character`, async () => {
             const event_bus_emit = jest.spyOn(emitter, "emit");
-            const wrapper = await createWrapper(false);
+            const wrapper = createWrapper(false);
 
             await emitter.emit("slugify-project-name", "0My project");
 
@@ -146,7 +148,7 @@ describe("ProjectShortName", () => {
         it(`Store and validate the project name`, async () => {
             const event_bus_emit = jest.spyOn(emitter, "emit");
 
-            const wrapper = await createWrapper(false);
+            const wrapper = createWrapper(false);
             await emitter.emit("slugify-project-name", "my project name");
 
             expect(wrapper.find("[data-test=has-error-slug]").exists()).toBe(false);
@@ -160,7 +162,7 @@ describe("ProjectShortName", () => {
         it(`Slugified project name handle correctly the accents`, async () => {
             const event_bus_emit = jest.spyOn(emitter, "emit");
 
-            const wrapper = await createWrapper(false);
+            const wrapper = createWrapper(false);
             await emitter.emit("slugify-project-name", "accentué ç è é ù ë");
 
             expect(wrapper.find("[data-test=has-error-slug]").exists()).toBe(false);
@@ -174,7 +176,7 @@ describe("ProjectShortName", () => {
         it(`Slugified project name should be lower case`, async () => {
             const event_bus_emit = jest.spyOn(emitter, "emit");
 
-            const wrapper = await createWrapper(false);
+            const wrapper = createWrapper(false);
             await emitter.emit("slugify-project-name", "My Project Short Name");
 
             expect(wrapper.find("[data-test=has-error-slug]").exists()).toBe(false);
@@ -188,7 +190,7 @@ describe("ProjectShortName", () => {
         it(`Slugified project name handle correctly the special characters`, async () => {
             const event_bus_emit = jest.spyOn(emitter, "emit");
 
-            const wrapper = await createWrapper(false);
+            const wrapper = createWrapper(false);
             await emitter.emit("slugify-project-name", "valid 11.11");
 
             expect(wrapper.find("[data-test=has-error-slug]").exists()).toBe(false);
@@ -201,7 +203,7 @@ describe("ProjectShortName", () => {
 
         it(`Slugified project name does not repeat replacement when special characters are siblings`, async () => {
             const event_bus_emit = jest.spyOn(emitter, "emit");
-            const wrapper = await createWrapper(false);
+            const wrapper = createWrapper(false);
             await emitter.emit("slugify-project-name", "valid'*_©®11");
 
             expect(wrapper.find("[data-test=has-error-slug]").exists()).toBe(false);
@@ -214,7 +216,7 @@ describe("ProjectShortName", () => {
 
         it(`Does not slugify in edit mode`, async () => {
             const event_bus_emit = jest.spyOn(emitter, "emit");
-            const wrapper = await createWrapper(false);
+            const wrapper = createWrapper(false);
             await emitter.emit("slugify-project-name", "test-project!!!!");
 
             expect(wrapper.find("[data-test=has-error-slug]").exists()).toBe(false);
@@ -229,7 +231,7 @@ describe("ProjectShortName", () => {
     describe("Project shortname update", () => {
         it(`Validate string but not calls slugify when shortname is in edit mode`, async () => {
             const event_bus_emit = jest.spyOn(emitter, "emit");
-            const wrapper = await createWrapper(false);
+            const wrapper = createWrapper(false);
             await emitter.emit("slugify-project-name", "Accentué ç è é ù ë");
 
             await wrapper.get("[data-test=project-shortname-slugified-section]").trigger("click");

@@ -32,6 +32,7 @@
             v-bind:placeholder="$gettext('My useful project description')"
             v-bind:required="root_store.is_description_required"
             v-on:input="onInput"
+            v-bind:value="field_description_value"
             data-test="project-description"
         />
     </div>
@@ -39,6 +40,10 @@
 
 <script setup lang="ts">
 import { useStore } from "../../../stores/root";
+
+defineProps<{
+    field_description_value: string;
+}>();
 
 const root_store = useStore();
 

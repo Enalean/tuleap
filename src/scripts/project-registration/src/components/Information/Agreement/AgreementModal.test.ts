@@ -19,12 +19,13 @@
  */
 
 import { shallowMount } from "@vue/test-utils";
-import { createProjectRegistrationLocalVue } from "../../../helpers/local-vue-for-tests";
 import AgreementModal from "./AgreementModal.vue";
 import * as rest_querier from "../../../api/rest-querier";
 import * as tlp from "tlp";
 import type { Modal } from "tlp";
 import emitter from "../../../helpers/emitter";
+import { getGlobalTestOptions } from "../../../helpers/global-options-for-test";
+import { buildVueDompurifyHTMLDirective } from "vue-dompurify-html";
 
 jest.mock("tlp", () => {
     return {
@@ -34,7 +35,7 @@ jest.mock("tlp", () => {
 });
 
 describe("AgreementModal -", () => {
-    it("Load policy agreement content and display it in the modal", async () => {
+    it("Load policy agreement content and display it in the modal", () => {
         const modal_show = jest.fn();
 
         jest.spyOn(tlp, "createModal").mockImplementation(() => {
@@ -48,7 +49,12 @@ describe("AgreementModal -", () => {
             .mockReturnValue(Promise.resolve("My custom tos"));
 
         shallowMount(AgreementModal, {
-            localVue: await createProjectRegistrationLocalVue(),
+            global: {
+                ...getGlobalTestOptions(),
+                directives: {
+                    "dompurify-html": buildVueDompurifyHTMLDirective(),
+                },
+            },
         });
 
         emitter.emit("show-agreement");

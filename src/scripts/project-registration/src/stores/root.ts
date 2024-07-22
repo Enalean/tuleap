@@ -88,7 +88,7 @@ export const useStore = defineStore("root", {
 
         async createProjectFromArchive(
             project_properties: ProjectProperties,
-            router: VueRouter,
+            router: VueRouter.Router,
         ): Promise<ProjectReference | ProjectArchiveReference> {
             let response;
             try {

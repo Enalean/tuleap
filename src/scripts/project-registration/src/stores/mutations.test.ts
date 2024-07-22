@@ -24,7 +24,8 @@ import { useStore } from "./root";
 import * as rest_querier from "../api/rest-querier";
 import * as uploadFile from "../helpers/upload-file";
 import type { ProjectArchiveReference, ProjectReference } from "@tuleap/core-rest-api-types";
-import VueRouter from "vue-router";
+import { createRouter, createWebHistory } from "vue-router";
+import ProjectOngoingCreation from "../components/Template/Advanced/FromProjectArchive/ProjectOnGoingCreation/ProjectOngoingCreation.vue";
 
 describe("mutation", () => {
     beforeEach(() => {
@@ -90,11 +91,13 @@ describe("mutation", () => {
 
     describe("createProjectFromArchive() -", () => {
         it("Creates the project from an archive", async () => {
-            const router = new VueRouter({
+            const router = createRouter({
+                history: createWebHistory(),
                 routes: [
                     {
                         path: "/from-archive-creation",
                         name: "from-archive-creation",
+                        component: ProjectOngoingCreation,
                     },
                 ],
             });
