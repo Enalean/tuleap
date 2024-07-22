@@ -16,7 +16,6 @@
     "@tuleap/tlp-fetch": "workspace:*",
     "@tuleap/tlp-swatch-colors": "workspace:*",
     "@tuleap/vue3-gettext-init": "workspace:*",
-    "@vue/composition-api": "^1.7.2",
     "d3-array": "^3.0.1",
     "d3-selection": "^3.0.0",
     "d3-shape": "^3.0.1",
@@ -32,11 +31,8 @@
     "@types/d3-array": "^2.12.1",
     "@types/d3-selection": "^2.0.0",
     "@types/d3-shape": "^2.1.0",
-    "@types/sprintf-js": "^1.1.2",
     "@vitejs/plugin-vue": "^4.2.3",
-    "@vue/test-utils": "^2.2.10",
-    "vue-class-component": "^7.2.6",
-    "vue-property-decorator": "^9.1.2"
+    "@vue/test-utils": "^2.2.10"
   },
   "scripts": {
     "typecheck": "vue-tsc --noEmit",
