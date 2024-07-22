@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { datePicker } from "tlp";
+import { datePicker } from "@tuleap/tlp-date-picker";
 import { createPopover } from "@tuleap/tlp-popovers";
 import { createDropdown } from "@tuleap/tlp-dropdown";
 import CodeMirror from "codemirror";

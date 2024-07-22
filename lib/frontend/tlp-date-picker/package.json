@@ -1,0 +1,32 @@
+{
+  "author": "Enalean Team",
+  "name": "@tuleap/tlp-date-picker",
+  "homepage": "https://tuleap.org",
+  "license": "GPL-2.0-or-later",
+  "private": true,
+  "type": "module",
+  "types": "./dist/main.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/main.d.ts",
+      "import": "./dist/en_US.js",
+      "require": "./dist/en_US.cjs",
+      "default": "./scss/main.scss"
+    },
+    "./fr_FR": {
+      "types": "./dist/main.d.ts",
+      "import": "./dist/fr_FR.js"
+    }
+  },
+  "dependencies": {
+    "flatpickr": "^4.6.9"
+  },
+  "devDependencies": {
+    "@tuleap/build-system-configurator": "workspace:*"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "build": "vite build",
+    "watch": "vite build --watch --mode development --minify false"
+  }
+}

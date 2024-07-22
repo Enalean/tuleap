@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -17,16 +17,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export * from "@tuleap/tlp-popovers";
-export * from "@tuleap/tlp-modal";
-export * from "@tuleap/tlp-date-picker";
+import flatpickr from "flatpickr";
+import { French } from "flatpickr/dist/l10n/fr.js";
 
-export { default as locale } from "./default_locale";
+flatpickr.localize(French);
 
-import jQuery from "jquery";
-// Many scripts still depend on jQuery being on window
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
-window.jQuery = jQuery;
-
-export * from "../vendor-overrides/select2";
+export * from "./flatpickr";

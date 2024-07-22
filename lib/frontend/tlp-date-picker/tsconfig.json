@@ -1,8 +1,7 @@
 {
     "extends": "@tuleap/build-system-configurator/tsc/tsconfig-for-libraries.json",
     "compilerOptions": {
-        "lib": ["DOM", "ES2015"],
-        "moduleResolution": "Bundler"
+        "lib": ["ES2015", "DOM"]
     },
     "include": ["src/**/*"]
 }

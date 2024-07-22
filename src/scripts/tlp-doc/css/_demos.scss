@@ -18,8 +18,11 @@
  */
 
 @use "sass:map";
+@use "@tuleap/list-picker";
+@use "@tuleap/lazybox";
 @use "@tuleap/tlp-swatch-colors";
 @use "@tuleap/tlp-dropdown";
+@use "@tuleap/tlp-date-picker";
 @use "@tuleap/tlp/src/scss/variables/colors/common-colors";
 
 $editor-scrollbar-color: rgb(241 241 241);
