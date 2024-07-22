@@ -12,6 +12,7 @@
     "@tuleap/tlp": "workspace:*",
     "@tuleap/tlp-badge": "workspace:*",
     "@tuleap/tlp-button": "workspace:^",
+    "@tuleap/tlp-popovers": "workspace:^",
     "@tuleap/tlp-relative-date": "workspace:*",
     "@tuleap/tlp-styles": "workspace:^",
     "@tuleap/tlp-swatch-colors": "workspace:^"

@@ -1,0 +1,60 @@
+import { Canvas, Meta, Controls } from "@storybook/blocks";
+import * as PopoverStories from "./tlp-popover.stories";
+
+<Meta of={PopoverStories}/>
+
+# Popovers
+
+<code>.tlp-popover</code><br/><br/>
+
+<code>tlp.createPopover(trigger: HTMLElement, element: HTMLElement, option = \{}): Popover</code>
+
+## Parameters
+
+- <code>HTMLElement</code> trigger
+- <code>Element</code> popover content
+- (Optional) \{ Object } options.  Contains:
+    - \{ String } <code>placement</code>, defaults to <code>"bottom"</code>.
+        Overrides corresponding <code>data-placement</code> attribute.
+    - \{ String } <code>trigger</code>, defaults to <code>"hover"</code>.
+        If <code>"click"</code>, popover is displayed on click instead of mouseover.
+        Overrides corresponding <code>data-trigger</code> attribute.
+    - \{ Element } <code>anchor</code>, defaults to <code>trigger</code> parameter.
+        The arrow of the popover will be attached to the anchor.
+
+<code>popover.hide(): void</code>
+Hide the popover programmatically.
+
+<code>popover.destroy():void</code>
+Destroys the popover and removes event listeners. The popover will not show up again.
+
+<Canvas withToolbar={true} of={PopoverStories.Popover}></Canvas>
+
+<Controls></Controls>
+
+#### Typescript example
+
+```typescript
+import { createPopover } from "@tuleap/tlp-popovers";
+
+createPopover(
+        document.getElementById("popover-example"),
+        document.getElementById("popover-example-content")
+    );
+```
+
+## With anchor
+
+<Canvas withToolbar={true} of={PopoverStories.PopoverWithAnchor}></Canvas>
+
+#### Typescript example
+
+```typescript
+import { createPopover } from "@tuleap/tlp-popovers";
+
+createPopover(
+        document.getElementById("popover-anchor-example-trigger"),
+        document.getElementById("popover-example-content"),
+        { anchor: document.getElementById("popover-anchor-example") }
+    );
+```
