@@ -30,4 +30,5 @@ enum CrossTrackerSelectedType: string
     case TYPE_STATIC_LIST     = 'list_static';
     case TYPE_USER_GROUP_LIST = 'list_user_group';
     case TYPE_USER_LIST       = 'list_user';
+    case TYPE_USER            = 'user';
 }

@@ -23,13 +23,14 @@ declare(strict_types=1);
 namespace Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Field\UserList;
 
 use PFUser;
+use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\SelectedValueRepresentation;
 use Tuleap\ServerHostname;
 use UserHelper;
 
 /**
  * @psalm-immutable
  */
-final readonly class UserListValueRepresentation
+final readonly class UserRepresentation implements SelectedValueRepresentation
 {
     public function __construct(
         public string $display_name,

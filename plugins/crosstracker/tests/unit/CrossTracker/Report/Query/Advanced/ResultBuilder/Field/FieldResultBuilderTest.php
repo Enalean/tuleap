@@ -44,7 +44,7 @@ use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Field\UGroupList\UGr
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Field\UGroupList\UGroupListValueRepresentation;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Field\UserList\UserListRepresentation;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Field\UserList\UserListResultBuilder;
-use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Field\UserList\UserListValueRepresentation;
+use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Field\UserList\UserRepresentation;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\SelectedValue;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\SelectedValuesCollection;
 use Tuleap\CrossTracker\REST\v1\Representation\CrossTrackerSelectedRepresentation;
@@ -488,11 +488,11 @@ EOL
         self::assertCount(3, $values);
         self::assertEqualsCanonicalizing([
             61 => new SelectedValue(self::FIELD_NAME, new UserListRepresentation([
-                new UserListValueRepresentation('Fabrice', 'https://example.com/fabrice', '/users/fabDu38', false),
+                new UserRepresentation('Fabrice', 'https://example.com/fabrice', '/users/fabDu38', false),
             ])),
             62 => new SelectedValue(self::FIELD_NAME, new UserListRepresentation([
-                new UserListValueRepresentation('Eugénie', 'https://example.com/eugenie', '/users/gege', false),
-                new UserListValueRepresentation('windmill@example.com', 'https://' . PFUser::DEFAULT_AVATAR_URL, null, true),
+                new UserRepresentation('Eugénie', 'https://example.com/eugenie', '/users/gege', false),
+                new UserRepresentation('windmill@example.com', 'https://' . PFUser::DEFAULT_AVATAR_URL, null, true),
             ])),
             63 => new SelectedValue(self::FIELD_NAME, new UserListRepresentation([])),
         ], $values);

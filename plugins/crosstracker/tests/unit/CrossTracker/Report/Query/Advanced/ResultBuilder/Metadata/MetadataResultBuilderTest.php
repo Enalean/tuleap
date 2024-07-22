@@ -34,11 +34,12 @@ use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Field\StaticList\Sta
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Field\StaticList\StaticListValueRepresentation;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Field\Text\TextResultRepresentation;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Field\UserList\UserListRepresentation;
-use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Field\UserList\UserListValueRepresentation;
+use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Field\UserList\UserRepresentation;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Metadata\Date\MetadataDateResultBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Metadata\Semantic\AssignedTo\AssignedToResultBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Metadata\Semantic\Status\StatusResultBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Metadata\Text\MetadataTextResultBuilder;
+use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Metadata\User\MetadataUserResultBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\SelectedValue;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\SelectedValuesCollection;
 use Tuleap\CrossTracker\REST\v1\Representation\CrossTrackerSelectedRepresentation;
@@ -76,9 +77,13 @@ final class MetadataResultBuilderTest extends TestCase
         RetrieveArtifactStub $artifact_retriever,
         array $selected_result,
     ): SelectedValuesCollection {
-        $purifier    = Codendi_HTMLPurifier::instance();
-        $user_helper = $this->createMock(UserHelper::class);
-        $builder     = new MetadataResultBuilder(
+        $purifier       = Codendi_HTMLPurifier::instance();
+        $user_helper    = $this->createMock(UserHelper::class);
+        $user_retriever = RetrieveUserByIdStub::withUsers(
+            UserTestBuilder::aUser()->withId(135)->withUserName('jean')->withRealName('Jean Eude')->withAvatarUrl('https://example.com/jean')->build(),
+            UserTestBuilder::aUser()->withId(145)->withUserName('alice')->withRealName('Alice')->withAvatarUrl('https://example.com/alice')->build(),
+        );
+        $builder        = new MetadataResultBuilder(
             new MetadataTextResultBuilder(
                 $artifact_retriever,
                 new TextValueInterpreter(
@@ -87,14 +92,9 @@ final class MetadataResultBuilderTest extends TestCase
                 ),
             ),
             new StatusResultBuilder(),
-            new AssignedToResultBuilder(
-                RetrieveUserByIdStub::withUsers(
-                    UserTestBuilder::aUser()->withId(135)->withUserName('jean')->withRealName('Jean Eude')->withAvatarUrl('https://example.com/jean')->build(),
-                    UserTestBuilder::aUser()->withId(145)->withUserName('alice')->withRealName('Alice')->withAvatarUrl('https://example.com/alice')->build(),
-                ),
-                $user_helper,
-            ),
+            new AssignedToResultBuilder($user_retriever, $user_helper),
             new MetadataDateResultBuilder(),
+            new MetadataUserResultBuilder($user_retriever, $user_helper),
         );
 
         $user_helper->method('getDisplayNameFromUser')->willReturnCallback(static fn(PFUser $user) => $user->getRealName());
@@ -250,11 +250,11 @@ EOL
         self::assertCount(3, $result->values);
         self::assertEqualsCanonicalizing([
             41 => new SelectedValue('@assigned_to', new UserListRepresentation([
-                new UserListValueRepresentation('Jean Eude', 'https://example.com/jean', '/users/jean', false),
+                new UserRepresentation('Jean Eude', 'https://example.com/jean', '/users/jean', false),
             ])),
             42 => new SelectedValue('@assigned_to', new UserListRepresentation([
-                new UserListValueRepresentation('Jean Eude', 'https://example.com/jean', '/users/jean', false),
-                new UserListValueRepresentation('Alice', 'https://example.com/alice', '/users/alice', false),
+                new UserRepresentation('Jean Eude', 'https://example.com/jean', '/users/jean', false),
+                new UserRepresentation('Alice', 'https://example.com/alice', '/users/alice', false),
             ])),
             43 => new SelectedValue('@assigned_to', new UserListRepresentation([])),
         ], $result->values);
@@ -311,6 +311,56 @@ EOL
         self::assertEqualsCanonicalizing([
             61 => new SelectedValue('@last_update_date', new DateResultRepresentation($first_date->format(DATE_ATOM), true)),
             62 => new SelectedValue('@last_update_date', new DateResultRepresentation($second_date->format(DATE_ATOM), true)),
+        ], $result->values);
+    }
+
+    public function testItReturnsValuesForSubmittedByAlwaysThereField(): void
+    {
+        $result = $this->getSelectedResult(
+            new Metadata('submitted_by'),
+            RetrieveArtifactStub::withArtifacts(
+                ArtifactTestBuilder::anArtifact(71)->inTracker($this->first_tracker)->build(),
+                ArtifactTestBuilder::anArtifact(72)->inTracker($this->first_tracker)->build(),
+            ),
+            [
+                ['id' => 71, '@submitted_by' => 135],
+                ['id' => 72, '@submitted_by' => 145],
+            ],
+        );
+
+        self::assertEquals(
+            new CrossTrackerSelectedRepresentation('@submitted_by', CrossTrackerSelectedType::TYPE_USER),
+            $result->selected,
+        );
+        self::assertCount(2, $result->values);
+        self::assertEqualsCanonicalizing([
+            71 => new SelectedValue('@submitted_by', new UserRepresentation('Jean Eude', 'https://example.com/jean', '/users/jean', false)),
+            72 => new SelectedValue('@submitted_by', new UserRepresentation('Alice', 'https://example.com/alice', '/users/alice', false)),
+        ], $result->values);
+    }
+
+    public function testItReturnsValuesForLastUpdateByAlwaysThereField(): void
+    {
+        $result = $this->getSelectedResult(
+            new Metadata('last_update_by'),
+            RetrieveArtifactStub::withArtifacts(
+                ArtifactTestBuilder::anArtifact(81)->inTracker($this->first_tracker)->build(),
+                ArtifactTestBuilder::anArtifact(82)->inTracker($this->first_tracker)->build(),
+            ),
+            [
+                ['id' => 81, '@last_update_by' => 135],
+                ['id' => 82, '@last_update_by' => 145],
+            ],
+        );
+
+        self::assertEquals(
+            new CrossTrackerSelectedRepresentation('@last_update_by', CrossTrackerSelectedType::TYPE_USER),
+            $result->selected,
+        );
+        self::assertCount(2, $result->values);
+        self::assertEqualsCanonicalizing([
+            81 => new SelectedValue('@last_update_by', new UserRepresentation('Jean Eude', 'https://example.com/jean', '/users/jean', false)),
+            82 => new SelectedValue('@last_update_by', new UserRepresentation('Alice', 'https://example.com/alice', '/users/alice', false)),
         ], $result->values);
     }
 }
