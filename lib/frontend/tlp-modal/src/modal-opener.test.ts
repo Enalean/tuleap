@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { SpyInstance } from "vitest";
+import type { MockInstance } from "vitest";
 import { describe, it, expect, beforeEach, vi } from "vitest";
 import * as modal from "./modal";
 import {
@@ -27,7 +27,7 @@ import {
 } from "./modal-opener";
 
 describe(`Modal Opener`, () => {
-    let doc: Document, createModal: SpyInstance;
+    let doc: Document, createModal: MockInstance;
     beforeEach(() => {
         doc = createLocalDocument();
         createModal = vi.spyOn(modal, "createModal");

@@ -18,7 +18,7 @@
  */
 
 import { describe, it, expect, beforeEach, vi } from "vitest";
-import type { SpyInstance } from "vitest";
+import type { MockInstance } from "vitest";
 import { okAsync, errAsync } from "neverthrow";
 import { mount } from "@vue/test-utils";
 import type { VueWrapper } from "@vue/test-utils";
@@ -48,7 +48,7 @@ const labels: ProjectLabel[] = [
 vi.useFakeTimers();
 
 describe("PullRequestLabels", () => {
-    let display_error_callback: SpyInstance,
+    let display_error_callback: MockInstance,
         user_can_update_labels: boolean,
         is_git_reference_broken: boolean;
 

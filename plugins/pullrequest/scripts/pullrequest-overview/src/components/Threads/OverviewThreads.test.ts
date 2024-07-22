@@ -18,7 +18,7 @@
  */
 
 import { describe, it, expect, beforeEach, vi } from "vitest";
-import type { SpyInstance } from "vitest";
+import type { MockInstance } from "vitest";
 import { okAsync, errAsync } from "neverthrow";
 import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount, flushPromises } from "@vue/test-utils";
@@ -62,7 +62,7 @@ async function setWrapperProps(wrapper: VueWrapper): Promise<void> {
 }
 
 describe("OverviewThreads", () => {
-    let display_error_callback: SpyInstance;
+    let display_error_callback: MockInstance;
 
     beforeEach(() => {
         display_error_callback = vi.fn();

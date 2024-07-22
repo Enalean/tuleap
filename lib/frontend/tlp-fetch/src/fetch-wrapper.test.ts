@@ -18,12 +18,12 @@
  */
 
 import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
-import type { SpyInstance } from "vitest";
+import type { MockInstance } from "vitest";
 import * as wrapper from "./fetch-wrapper";
 import { mockFetchSuccess } from "../mocks/tlp-fetch-mock-helper";
 
 describe(`fetch-wrapper`, () => {
-    let globalFetch: SpyInstance;
+    let globalFetch: MockInstance;
     beforeEach(() => {
         window.fetch = globalFetch = vi.fn();
     });

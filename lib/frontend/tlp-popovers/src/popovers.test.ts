@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { SpyInstance } from "vitest";
+import type { MockInstance } from "vitest";
 import { describe, it, beforeEach, afterEach, expect, vi } from "vitest";
 
 import type { Popover } from "./popovers";
@@ -46,8 +46,8 @@ describe(`Popovers`, () => {
     let trigger_element: HTMLElement, content_element: HTMLElement;
     let doc: Document;
     let cleanup: () => void;
-    let computePosition: SpyInstance;
-    let dispatchEvent: SpyInstance;
+    let computePosition: MockInstance;
+    let dispatchEvent: MockInstance;
 
     beforeEach(() => {
         doc = createLocalDocument();
@@ -55,9 +55,9 @@ describe(`Popovers`, () => {
         content_element = doc.createElement("div");
         doc.body.append(trigger_element, content_element);
         cleanup = vi.fn();
-        const auto_update_spy = floating_ui.autoUpdate as unknown as SpyInstance;
+        const auto_update_spy = floating_ui.autoUpdate as unknown as MockInstance;
         auto_update_spy.mockReturnValue(cleanup);
-        computePosition = floating_ui.computePosition as unknown as SpyInstance;
+        computePosition = floating_ui.computePosition as unknown as MockInstance;
         computePosition.mockResolvedValue({
             x: 10,
             y: 20,
@@ -723,6 +723,6 @@ function expectThePopoverToBeHidden(content_element: HTMLElement): void {
     expect(content_element.classList.contains(POPOVER_SHOWN_CLASS_NAME)).toBe(false);
 }
 
-function getEventType(dispatchEvent: SpyInstance, call_number = 1): string {
+function getEventType(dispatchEvent: MockInstance, call_number = 1): string {
     return dispatchEvent.mock.calls[call_number - 1][0].type;
 }

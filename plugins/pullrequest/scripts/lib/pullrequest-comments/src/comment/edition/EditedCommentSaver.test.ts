@@ -18,7 +18,7 @@
  */
 
 import { describe, it, expect, beforeEach, vi } from "vitest";
-import type { SpyInstance } from "vitest";
+import type { MockInstance } from "vitest";
 import * as tuleap_api from "@tuleap/fetch-result";
 import { uri } from "@tuleap/fetch-result";
 import { EditionFormPresenter } from "./EditionFormPresenter";
@@ -28,7 +28,7 @@ import { EditedCommentSaver } from "./EditedCommentSaver";
 const comment_id = 110;
 
 describe("EditedCommentSaver", () => {
-    let patchSpy: SpyInstance;
+    let patchSpy: MockInstance;
 
     beforeEach(() => {
         patchSpy = vi.spyOn(tuleap_api, "patchJSON");

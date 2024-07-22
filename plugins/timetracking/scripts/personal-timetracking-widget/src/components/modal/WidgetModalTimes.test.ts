@@ -36,7 +36,7 @@ describe("Given a personal timetracking widget modal", () => {
             props: {
                 artifact: current_artifact,
                 project: {} as ProjectResponse,
-                times: [] as PersonalTime[],
+                times: [{}] as PersonalTime[],
             },
         });
     }

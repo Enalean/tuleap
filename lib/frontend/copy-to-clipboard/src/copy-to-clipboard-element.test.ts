@@ -17,13 +17,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { SpyInstance } from "vitest";
+import type { MockInstance } from "vitest";
 import { describe, it, beforeAll, beforeEach, expect, vi } from "vitest";
 import { CopyToClipboardElement } from "./copy-to-clipboard-element";
 import * as clipboard from "./clipboard";
 
 describe("copy-to-clipboard element", () => {
-    let writeTextToClipboardSpy: SpyInstance;
+    let writeTextToClipboardSpy: MockInstance;
 
     beforeAll(() => {
         window.customElements.define("copy-to-clipboard", CopyToClipboardElement);

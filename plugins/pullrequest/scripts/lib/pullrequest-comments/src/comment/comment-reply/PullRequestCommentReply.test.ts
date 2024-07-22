@@ -18,7 +18,7 @@
  */
 
 import { describe, it, expect, beforeEach, vi } from "vitest";
-import type { SpyInstance } from "vitest";
+import type { MockInstance } from "vitest";
 import * as tooltip from "@tuleap/tooltip";
 import type { HostElement } from "./PullRequestCommentReply";
 import { after_render_once_descriptor, element_height_descriptor } from "./PullRequestCommentReply";
@@ -30,7 +30,7 @@ vi.mock("@tuleap/tooltip", () => ({
 }));
 
 describe("PullRequestCommentReply", () => {
-    let loadTooltips: SpyInstance;
+    let loadTooltips: MockInstance;
 
     beforeEach(() => {
         loadTooltips = vi.spyOn(tooltip, "loadTooltips").mockImplementation(() => {

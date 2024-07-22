@@ -18,7 +18,7 @@
  */
 
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import type { SpyInstance } from "vitest";
+import type { MockInstance } from "vitest";
 import type { VueWrapper, DOMWrapper } from "@vue/test-utils";
 import { mount } from "@vue/test-utils";
 import PullRequestReviewerList from "./PullRequestReviewerList.vue";
@@ -56,7 +56,7 @@ const reviewers: ReviewersCollection = {
 vi.useFakeTimers();
 
 describe("PullRequestReviewerList", () => {
-    let api_error_callback: SpyInstance;
+    let api_error_callback: MockInstance;
 
     beforeEach(() => {
         api_error_callback = vi.fn();

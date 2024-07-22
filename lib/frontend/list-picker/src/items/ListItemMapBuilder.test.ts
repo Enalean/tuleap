@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import type { MockInstance } from "vitest";
 import { describe, it, expect, beforeEach, vi } from "vitest";
 import {
     appendGroupedOptionsToSourceSelectBox,
@@ -258,15 +259,16 @@ describe("ListItemBuilder", () => {
         let options: ListPickerOptions;
         beforeEach(() => {
             options = {
-                items_template_formatter: vi
-                    .fn()
-                    .mockReturnValue(Promise.resolve("A beautiful template")),
+                items_template_formatter: (html): TemplateResult => html`A beautiful template`,
             };
             builder = new ListItemMapBuilder(select, options);
         });
 
         it("should call it for each item once and cache the templates", () => {
-            const itemsTemplateFormatter = vi.spyOn(options, "items_template_formatter");
+            const itemsTemplateFormatter: MockInstance = vi.spyOn(
+                options,
+                "items_template_formatter",
+            );
             appendSimpleOptionsToSourceSelectBox(select);
             builder.buildListPickerItemsMap();
 

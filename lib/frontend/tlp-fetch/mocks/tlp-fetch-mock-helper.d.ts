@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { SpyInstance } from "vitest";
+import type { MockInstance } from "vitest";
 import type { get, recursiveGet, options, head, post, put, del, patch } from "../src/fetch-wrapper";
 
 interface MockFetchSuccessOptions {
@@ -33,14 +33,14 @@ interface MockFetchErrorOptions {
 
 type MockedTlpFetchFunction<TypeOfArrayItem> =
     | jest.SpyInstance<Promise<Response | Array<TypeOfArrayItem>>>
-    | SpyInstance<Parameters<typeof get>, Promise<Response>>
-    | SpyInstance<Parameters<typeof options>, Promise<Response>>
-    | SpyInstance<Parameters<typeof head>, Promise<Response>>
-    | SpyInstance<Parameters<typeof post>, Promise<Response>>
-    | SpyInstance<Parameters<typeof put>, Promise<Response>>
-    | SpyInstance<Parameters<typeof del>, Promise<Response>>
-    | SpyInstance<Parameters<typeof patch>, Promise<Response>>
-    | SpyInstance<Parameters<typeof recursiveGet>, Promise<Array<TypeOfArrayItem>>>;
+    | MockInstance<Parameters<typeof get>, Promise<Response>>
+    | MockInstance<Parameters<typeof options>, Promise<Response>>
+    | MockInstance<Parameters<typeof head>, Promise<Response>>
+    | MockInstance<Parameters<typeof post>, Promise<Response>>
+    | MockInstance<Parameters<typeof put>, Promise<Response>>
+    | MockInstance<Parameters<typeof del>, Promise<Response>>
+    | MockInstance<Parameters<typeof patch>, Promise<Response>>
+    | MockInstance<Parameters<typeof recursiveGet>, Promise<Array<TypeOfArrayItem>>>;
 
 export function mockFetchSuccess<TypeOfArrayItem>(
     mocked_function: MockedTlpFetchFunction<TypeOfArrayItem>,

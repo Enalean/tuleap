@@ -18,7 +18,7 @@
  */
 
 import { vi, describe, beforeEach, it, expect } from "vitest";
-import type { SpyInstance } from "vitest";
+import type { MockInstance } from "vitest";
 import type { Result } from "neverthrow";
 import { okAsync } from "neverthrow";
 import * as fetch_result from "@tuleap/fetch-result";
@@ -34,7 +34,7 @@ function expectOkResult(result: Result<unknown, Fault>): void {
 }
 
 describe("API querier", () => {
-    let getAllJSON: SpyInstance, patchJSON: SpyInstance;
+    let getAllJSON: MockInstance, patchJSON: MockInstance;
 
     beforeEach(() => {
         getAllJSON = vi.spyOn(fetch_result, "getAllJSON");

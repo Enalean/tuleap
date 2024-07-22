@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { SpyInstance } from "vitest";
+import type { MockInstance } from "vitest";
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { shallowMount } from "@vue/test-utils";
 import type { VueWrapper } from "@vue/test-utils";
@@ -42,8 +42,8 @@ const pull_request_id = 1;
 
 describe("PullRequestEditTitleModal", () => {
     let modal_instance: Modal,
-        api_error_callback: SpyInstance,
-        postPullRequestUpdateCallback: SpyInstance;
+        api_error_callback: MockInstance,
+        postPullRequestUpdateCallback: MockInstance;
 
     const getWrapper = (pull_request_data: Partial<PullRequest> = {}): VueWrapper => {
         return shallowMount(PullRequestEditTitleModal, {

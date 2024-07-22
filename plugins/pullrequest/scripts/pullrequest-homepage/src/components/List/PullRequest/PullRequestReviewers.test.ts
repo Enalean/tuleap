@@ -18,7 +18,7 @@
  */
 
 import { describe, beforeEach, it, expect, vi } from "vitest";
-import type { SpyInstance } from "vitest";
+import type { MockInstance } from "vitest";
 import { shallowMount } from "@vue/test-utils";
 import type { VueWrapper } from "@vue/test-utils";
 import * as tlp_dropdown from "@tuleap/tlp-dropdown";
@@ -40,7 +40,7 @@ vi.mock("@tuleap/tlp-dropdown", () => ({
 }));
 
 describe("PullRequestReviewers", () => {
-    let createDropdown: SpyInstance;
+    let createDropdown: MockInstance;
 
     beforeEach(() => {
         createDropdown = vi.spyOn(tlp_dropdown, "createDropdown");

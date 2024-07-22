@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { SpyInstance } from "vitest";
+import type { MockInstance } from "vitest";
 import { describe, it, beforeEach, afterEach, expect, vi } from "vitest";
 import type {
     AfterDropListener,
@@ -57,9 +57,9 @@ describe(`DrekkenovState`, () => {
     });
 
     afterEach(() => {
-        const ongoing_drag_constructor = OngoingDrag as unknown as SpyInstance;
+        const ongoing_drag_constructor = OngoingDrag as unknown as MockInstance;
         ongoing_drag_constructor.mockClear();
-        const document_constructor = DocumentEventsHandler as unknown as SpyInstance;
+        const document_constructor = DocumentEventsHandler as unknown as MockInstance;
         document_constructor.mockClear();
     });
 
@@ -105,7 +105,7 @@ describe(`DrekkenovState`, () => {
         it(`creates an OngoingDrag, a DropGhost, drag handlers and a DocumentEventsHandler,
             and attaches drag/drop listeners on the document`, () => {
             const drop_ghost = {} as DropGhost;
-            (DropGhost.create as unknown as SpyInstance).mockReturnValue(drop_ghost);
+            (DropGhost.create as unknown as MockInstance).mockReturnValue(drop_ghost);
             const handlers = {} as DragDropHandlers;
             const handlersFactory = vi
                 .spyOn(handlers_factory_module, "handlersFactory")
@@ -122,7 +122,7 @@ describe(`DrekkenovState`, () => {
 
             state.startDrag(drag_start_context);
 
-            const ongoing_drag_constructor = OngoingDrag as unknown as SpyInstance;
+            const ongoing_drag_constructor = OngoingDrag as unknown as MockInstance;
 
             expect(ongoing_drag_constructor).toHaveBeenCalledWith(state, drag_start_context);
             expect(DropGhost.create).toHaveBeenCalledWith(
@@ -136,7 +136,7 @@ describe(`DrekkenovState`, () => {
                 drop_ghost,
             );
 
-            const document_constructor = DocumentEventsHandler as unknown as SpyInstance;
+            const document_constructor = DocumentEventsHandler as unknown as MockInstance;
             expect(document_constructor).toHaveBeenCalledWith(state, handlers, doc);
             expect(DocumentEventsHandler.prototype.attachDragDropListeners).toHaveBeenCalled();
         });
