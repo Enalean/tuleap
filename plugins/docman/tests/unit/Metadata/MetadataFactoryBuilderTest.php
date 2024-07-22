@@ -24,24 +24,18 @@ namespace Tuleap\Docman\Metadata;
 
 use Docman_Item;
 use Docman_MetadataFactory;
-use Mockery;
+use Tuleap\Test\PHPUnit\TestCase;
 
-final class MetadataFactoryBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
+final class MetadataFactoryBuilderTest extends TestCase
 {
-    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
     public function testMetadataFactoryIsInitializedCorrectly(): void
     {
-        $item       = Mockery::mock(Docman_Item::class);
+        $item       = new Docman_Item(['group_id' => '102']);
         $project_id = '102';
-        $item->shouldReceive('getGroupId')->andReturn($project_id);
 
         $factory_builder = new MetadataFactoryBuilder();
 
         $expected_factory = new Docman_MetadataFactory($project_id);
-        $this->assertEquals(
-            $expected_factory,
-            $factory_builder->getMetadataFactoryForItem($item)
-        );
+        self::assertEquals($expected_factory, $factory_builder->getMetadataFactoryForItem($item));
     }
 }

@@ -23,32 +23,26 @@ declare(strict_types=1);
 namespace Tuleap\Docman\Metadata\ListOfValuesElement;
 
 use Docman_MetadataListOfValuesElementDao;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\MockObject\MockObject;
+use Tuleap\Test\PHPUnit\TestCase;
 
-class MetadataListOfValuesElementListBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
+final class MetadataListOfValuesElementListBuilderTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var Docman_MetadataListOfValuesElementDao|\Mockery\MockInterface
-     */
-    private $dao;
+    private Docman_MetadataListOfValuesElementDao&MockObject $dao;
 
     protected function setUp(): void
     {
-        parent::setUp();
-        $this->dao = \Mockery::mock(Docman_MetadataListOfValuesElementDao::class);
+        $this->dao = $this->createMock(Docman_MetadataListOfValuesElementDao::class);
     }
 
     public function testBuildListOfListValuesElement(): void
     {
-        $id          = 1;
-        $only_active = false;
+        $id = 1;
 
         $value     = ['value_id' => 1, 'name' => 'value'];
         $value_two = ['value_id' => 2, 'name' => 'name value 2'];
 
-        $this->dao->shouldReceive('searchByFieldId')->withArgs([$id, $only_active])->andReturn([$value, $value_two]);
+        $this->dao->method('searchByFieldId')->with($id, false)->willReturn([$value, $value_two]);
 
         $element = new \Docman_MetadataListOfValuesElement();
         $element->initFromRow($value);
@@ -59,8 +53,8 @@ class MetadataListOfValuesElementListBuilderTest extends \Tuleap\Test\PHPUnit\Te
 
         $list_of_elements_builder = new MetadataListOfValuesElementListBuilder($this->dao);
 
-        $list_of_elements = $list_of_elements_builder->build($id, $only_active);
+        $list_of_elements = $list_of_elements_builder->build($id, false);
 
-        $this->assertEquals($expected_list_of_elements, $list_of_elements);
+        self::assertEquals($expected_list_of_elements, $list_of_elements);
     }
 }
