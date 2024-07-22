@@ -18,35 +18,34 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 declare(strict_types=1);
 
 namespace Tuleap\Docman\ExternalLinks;
 
 use Docman_HTTPController;
 use Docman_ItemDao;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use HTTPRequest;
+use Project;
 use Tuleap\Request\NotFoundException;
 use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
 
-final class DocmanHTTPControllerProxyTest extends \Tuleap\Test\PHPUnit\TestCase
+final class DocmanHTTPControllerProxyTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     public function testThrowsNotFoundWhenProjectCannotBeIdentifierFromTheRequest(): void
     {
         $controller_proxy = new DocmanHTTPControllerProxy(
-            \Mockery::mock(ExternalLinkParametersExtractor::class),
-            \Mockery::mock(Docman_HTTPController::class),
-            \Mockery::mock(Docman_ItemDao::class)
+            $this->createMock(ExternalLinkParametersExtractor::class),
+            $this->createMock(Docman_HTTPController::class),
+            $this->createMock(Docman_ItemDao::class)
         );
 
-        $request = \Mockery::mock(\HTTPRequest::class);
-        $project = \Mockery::mock(\Project::class);
-        $project->shouldReceive('getID')->andReturn(null);
-        $request->shouldReceive('getProject')->andReturn($project);
+        $request = new HTTPRequest();
+        $project = $this->createMock(Project::class);
+        $project->method('getID')->willReturn(null);
+        $request->setProject($project);
 
-        $this->expectException(NotFoundException::class);
+        self::expectException(NotFoundException::class);
         $controller_proxy->process($request, UserTestBuilder::aUser()->build());
     }
 }

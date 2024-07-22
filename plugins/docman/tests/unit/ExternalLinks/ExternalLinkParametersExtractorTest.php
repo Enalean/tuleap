@@ -23,53 +23,42 @@ declare(strict_types=1);
 namespace Tuleap\Docman\ExternalLinks;
 
 use HTTPRequest;
-use Mockery;
+use Tuleap\Test\PHPUnit\TestCase;
 
-class ExternalLinkParametersExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
+final class ExternalLinkParametersExtractorTest extends TestCase
 {
-    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
-    public function testItReturnZeroWhenFolderIdIsNotProvided()
+    public function testItReturnZeroWhenFolderIdIsNotProvided(): void
     {
-        $request         = Mockery::mock(HTTPRequest::class);
+        $request         = new HTTPRequest();
         $request->params = [];
-
-        $extractor = new ExternalLinkParametersExtractor();
-        $this->assertEquals(
-            $extractor->extractFolderIdFromParams($request),
-            0
-        );
+        $extractor       = new ExternalLinkParametersExtractor();
+        self::assertEquals(0, $extractor->extractFolderIdFromParams($request));
     }
 
-    public function testItExtractFolderIdFromParameters()
+    public function testItExtractFolderIdFromParameters(): void
     {
-        $request         = Mockery::mock(HTTPRequest::class);
+        $request         = new HTTPRequest();
         $request->params = [
             'action' => 'show',
             'id'     => 100,
         ];
         $extractor       = new ExternalLinkParametersExtractor();
-        $this->assertEquals(
-            $extractor->extractFolderIdFromParams($request),
-            100
-        );
+        self::assertEquals(100, $extractor->extractFolderIdFromParams($request));
     }
 
-    public function testItShouldReturnTrueAndProcessEventIfSwitchOldUIParameterIsNotPresent()
+    public function testItShouldReturnTrueAndProcessEventIfSwitchOldUIParameterIsNotPresent(): void
     {
-        $request         = Mockery::mock(HTTPRequest::class);
+        $request         = new HTTPRequest();
         $request->params = [];
         $extractor       = new ExternalLinkParametersExtractor();
-        $this->assertTrue($extractor->extractRequestIsForOldUIParams($request));
+        self::assertTrue($extractor->extractRequestIsForOldUIParams($request));
     }
 
-    public function testItShouldReturnFalseAndNotRaiseEventWhenSwitchToOldUIIsPresent()
+    public function testItShouldReturnFalseAndNotRaiseEventWhenSwitchToOldUIIsPresent(): void
     {
-        $request         = Mockery::mock(HTTPRequest::class);
-        $request->params = [
-            'switcholdui' => true,
-        ];
+        $request         = new HTTPRequest();
+        $request->params = ['switcholdui' => true];
         $extractor       = new ExternalLinkParametersExtractor();
-        $this->assertTrue($extractor->extractRequestIsForOldUIParams($request));
+        self::assertTrue($extractor->extractRequestIsForOldUIParams($request));
     }
 }
