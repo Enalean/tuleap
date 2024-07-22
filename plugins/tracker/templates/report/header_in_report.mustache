@@ -40,11 +40,11 @@
                     <h3 id="tracker_report_updater_saveas-modal-label">{{ save_report_as }}</h3>
                 </div>
                 <div class="modal-body">
-                    <label for="report_copy_name_input">{{ report_name }} <input id="report_copy_name_input" type="text" name="report_copy_name" placeholder="{{ copy_of }}" /></label>
+                    <label for="report_copy_name_input">{{ report_name }} <input id="report_copy_name_input" data-test="report-name-input" type="text" name="report_copy_name" placeholder="{{ copy_of }}" /></label>
                 </div>
                 <div class="modal-footer">
                     <button class="btn" type="button" data-dismiss="modal">{{ cancel }}</button>
-                    <button class="btn btn-primary" type="submit" name="save_new_report">{{ save_new_report }}</button>
+                    <button class="btn btn-primary" type="submit" data-test="save-new-report" name="save_new_report">{{ save_new_report }}</button>
                 </div>
             </form>
         </div>

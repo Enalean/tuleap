@@ -5,6 +5,7 @@
                 id="kanban-filter"
                 ng-model="filter_tracker_report.selected_item"
                 ng-change="filter_tracker_report.changeFilter()"
+                data-test="kanban-filter"
         >
             <option value="0" translate>None</option>
             <option ng-repeat="filter in filter_tracker_report.getSelectableReports()" value="{{ filter.id }}">

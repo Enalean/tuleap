@@ -1,5 +1,7 @@
 <div class="tlp-dropdown dashboard-dropdown kanban-header-add-to-dashboard" ng-show="add_to_dashboard.showDashboardButton()">
-    <a type="button" id="dashboard-dropdown-button" class="tlp-button-primary tlp-button-outline tlp-button-small">
+    <a type="button" id="dashboard-dropdown-button"
+       data-test="add-kanban-to-dashboard"
+       class="tlp-button-primary tlp-button-outline tlp-button-small">
         <i class="fas fa-tachometer-alt tlp-button-icon"></i>
         {{ add_to_dashboard.dashboard_dropdown.dashboard }}
         <i class="fa fa-caret-down tlp-button-icon-right"></i>
@@ -23,6 +25,7 @@
                    href="{{ add_to_dashboard.dashboard_dropdown.project_dashboard_url }}&dashboard-id={{ project_dashboard.id }}&tracker_report_id={{ add_to_dashboard.report_id }}"
                    class="tlp-dropdown-menu-item"
                    role="menuitem"
+                   data-test="project-dashboard"
                 >
                     {{ project_dashboard.name }}
                 </a>
