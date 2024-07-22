@@ -35,9 +35,6 @@ dependencies:
   '@tuleap/vue3-gettext-init':
     specifier: workspace:*
     version: link:../../../../lib/frontend/vue3-gettext-init
-  '@vue/composition-api':
-    specifier: ^1.7.2
-    version: 1.7.2(vue@3.4.19)
   d3-array:
     specifier: ^3.0.1
     version: 3.0.1
@@ -49,13 +46,13 @@ dependencies:
     version: 3.0.1
   pinia:
     specifier: ^2.0.21
-    version: 2.0.21(@vue/composition-api@1.7.2)(vue@3.4.19)
+    version: 2.0.21(vue@3.4.19)
   vue:
     specifier: ^3.3.4
     version: 3.4.19
   vue-dompurify-html:
     specifier: ^4.0.0
-    version: 4.0.0(@vue/composition-api@1.7.2)(vue@3.4.19)
+    version: 4.0.0(vue@3.4.19)
   vue3-gettext:
     specifier: ^2.4.0
     version: 2.4.0(vue@3.4.19)
@@ -63,7 +60,7 @@ dependencies:
 devDependencies:
   '@pinia/testing':
     specifier: ^0.1.3
-    version: 0.1.3(@vue/composition-api@1.7.2)(pinia@2.0.21)(vue@3.4.19)
+    version: 0.1.3(pinia@2.0.21)(vue@3.4.19)
   '@tuleap/build-system-configurator':
     specifier: workspace:*
     version: link:../../../../lib/frontend/build-system-configurator
@@ -79,21 +76,12 @@ devDependencies:
   '@types/d3-shape':
     specifier: ^2.1.0
     version: 2.1.0
-  '@types/sprintf-js':
-    specifier: ^1.1.2
-    version: 1.1.2
   '@vitejs/plugin-vue':
     specifier: ^4.2.3
     version: 4.6.2(vue@3.4.19)
   '@vue/test-utils':
     specifier: ^2.2.10
     version: 2.4.4(vue@3.4.19)
-  vue-class-component:
-    specifier: ^7.2.6
-    version: 7.2.6(vue@3.4.19)
-  vue-property-decorator:
-    specifier: ^9.1.2
-    version: 9.1.2(vue-class-component@7.2.6)(vue@3.4.19)
 
 packages:
 
@@ -156,13 +144,13 @@ packages:
     resolution: {integrity: sha512-XuySG1E38YScSJoMlqovLru4KTUNSjgVTIjyh7qMX6aNN5HY5Ct5LhRJdxO79JtTzKfzV/bnWpz+zquYrISsvw==}
     dev: true
 
-  /@pinia/testing@0.1.3(@vue/composition-api@1.7.2)(pinia@2.0.21)(vue@3.4.19):
+  /@pinia/testing@0.1.3(pinia@2.0.21)(vue@3.4.19):
     resolution: {integrity: sha512-D2Ds2s69kKFaRf2KCcP1NhNZEg5+we59aRyQalwRm7ygWfLM25nDH66267U3hNvRUOTx8ofL24GzodZkOmB5xw==}
     peerDependencies:
       pinia: '>=2.1.5'
     dependencies:
-      pinia: 2.0.21(@vue/composition-api@1.7.2)(vue@3.4.19)
-      vue-demi: 0.14.5(@vue/composition-api@1.7.2)(vue@3.4.19)
+      pinia: 2.0.21(vue@3.4.19)
+      vue-demi: 0.14.5(vue@3.4.19)
     transitivePeerDependencies:
       - '@vue/composition-api'
       - vue
@@ -218,10 +206,6 @@ packages:
     resolution: {integrity: sha512-kUNnecmtkunAoQ3CnjmMkzNU/gtxG8guhi+Fk2U/kOpIKjIMKnXGp4IJCgQJrXSgMsWYimYG4TGjz/UzbGEBTw==}
     dev: false
 
-  /@types/sprintf-js@1.1.2:
-    resolution: {integrity: sha512-hkgzYF+qnIl8uTO8rmUSVSfQ8BIfMXC4yJAF4n8BE758YsKBZvFC4NumnAegj7KmylP0liEZNpb9RRGFMbFejA==}
-    dev: true
-
   /@vitejs/plugin-vue@4.6.2(vue@3.4.19):
     resolution: {integrity: sha512-kqf7SGFoG+80aZG6Pf+gsZIVvGSCKE98JbiWqcCV9cThtg91Jav0yvYFC9Zb+jKetNGF6ZKeoaxgZfND21fWKw==}
     engines: {node: ^14.18.0 || >=16.0.0}
@@ -265,13 +249,6 @@ packages:
     dependencies:
       '@vue/compiler-dom': 3.4.19
       '@vue/shared': 3.4.19
-
-  /@vue/composition-api@1.7.2(vue@3.4.19):
-    resolution: {integrity: sha512-M8jm9J/laYrYT02665HkZ5l2fWTK4dcVg3BsDHm/pfz+MjDYwX+9FUaZyGwEyXEDonQYRCo0H7aLgdklcIELjw==}
-    peerDependencies:
-      vue: '>= 2.5 < 2.7'
-    dependencies:
-      vue: 3.4.19
 
   /@vue/devtools-api@6.5.0:
     resolution: {integrity: sha512-o9KfBeaBmCKl10usN4crU53fYtC1r7jJwdGKjPT24t348rHxgfpZ0xL3Xm/gLUYnc0oTp8LAmrxOeLyu6tbk2Q==}
@@ -800,7 +777,7 @@ packages:
   /picocolors@1.0.0:
     resolution: {integrity: sha512-1fygroTLlHu66zi26VoTDv8yRgm0Fccecssto+MhsZ0D/DGW2sm8E8AjW7NU5VVTRt5GxbeZ5qBuJr+HyLYkjQ==}
 
-  /pinia@2.0.21(@vue/composition-api@1.7.2)(vue@3.4.19):
+  /pinia@2.0.21(vue@3.4.19):
     resolution: {integrity: sha512-6ol04PtL29O0Z6JHI47O3JUSoyOJ7Og0rstXrHVMZSP4zAldsQBXJCNF0i/H7m8vp/Hjd/CSmuPl7C5QAwpeWQ==}
     peerDependencies:
       '@vue/composition-api': ^1.4.0
@@ -812,10 +789,9 @@ packages:
       typescript:
         optional: true
     dependencies:
-      '@vue/composition-api': 1.7.2(vue@3.4.19)
       '@vue/devtools-api': 6.5.0
       vue: 3.4.19
-      vue-demi: 0.13.11(@vue/composition-api@1.7.2)(vue@3.4.19)
+      vue-demi: 0.13.11(vue@3.4.19)
 
   /pofile@1.0.11:
     resolution: {integrity: sha512-Vy9eH1dRD9wHjYt/QqXcTz+RnX/zg53xK+KljFSX30PvdDMb2z+c6uDUeblUGqqJgz3QFsdlA0IJvHziPmWtQg==}
@@ -940,19 +916,11 @@ packages:
     resolution: {integrity: sha512-JlCMO+ehdEIKqlFxk6IfVoAUVmgz7cU7zD/h9XZ0qzeosSHmUJVOzSQvvYSYWXkFXC+IfLKSIffhv0sVZup6pA==}
     dev: false
 
-  /vue-class-component@7.2.6(vue@3.4.19):
-    resolution: {integrity: sha512-+eaQXVrAm/LldalI272PpDe3+i4mPis0ORiMYxF6Ae4hyuCh15W8Idet7wPUEs4N4YptgFHGys4UrgNQOMyO6w==}
-    peerDependencies:
-      vue: ^2.0.0
-    dependencies:
-      vue: 3.4.19
-    dev: true
-
   /vue-component-type-helpers@1.8.27:
     resolution: {integrity: sha512-0vOfAtI67UjeO1G6UiX5Kd76CqaQ67wrRZiOe7UAb9Jm6GzlUr/fC7CV90XfwapJRjpCMaZFhv1V0ajWRmE9Dg==}
     dev: true
 
-  /vue-demi@0.13.11(@vue/composition-api@1.7.2)(vue@3.4.19):
+  /vue-demi@0.13.11(vue@3.4.19):
     resolution: {integrity: sha512-IR8HoEEGM65YY3ZJYAjMlKygDQn25D5ajNFNoKh9RSDMQtlzCxtfQjdQgv9jjK+m3377SsJXY8ysq8kLCZL25A==}
     engines: {node: '>=12'}
     hasBin: true
@@ -964,10 +932,9 @@ packages:
       '@vue/composition-api':
         optional: true
     dependencies:
-      '@vue/composition-api': 1.7.2(vue@3.4.19)
       vue: 3.4.19
 
-  /vue-demi@0.14.5(@vue/composition-api@1.7.2)(vue@3.4.19):
+  /vue-demi@0.14.5(vue@3.4.19):
     resolution: {integrity: sha512-o9NUVpl/YlsGJ7t+xuqJKx8EBGf1quRhCiT6D/J0pfwmk9zUwYkC7yrF4SZCe6fETvSM3UNL2edcbYrSyc4QHA==}
     engines: {node: '>=12'}
     hasBin: true
@@ -979,31 +946,20 @@ packages:
       '@vue/composition-api':
         optional: true
     dependencies:
-      '@vue/composition-api': 1.7.2(vue@3.4.19)
       vue: 3.4.19
     dev: true
 
-  /vue-dompurify-html@4.0.0(@vue/composition-api@1.7.2)(vue@3.4.19):
+  /vue-dompurify-html@4.0.0(vue@3.4.19):
     resolution: {integrity: sha512-yLxmZSoVNM+ZpRXwbrq6mwY7xidRd6W4P2/W8zLBdXSQckpmPVvmDaJALYH0jm0CgibNJbe4+E5j6wzOKwRKvg==}
     peerDependencies:
       vue: ^2.7.0 || ^3.0.0
     dependencies:
       dompurify: 3.1.4
       vue: 3.4.19
-      vue-demi: 0.13.11(@vue/composition-api@1.7.2)(vue@3.4.19)
+      vue-demi: 0.13.11(vue@3.4.19)
     transitivePeerDependencies:
       - '@vue/composition-api'
     dev: false
-
-  /vue-property-decorator@9.1.2(vue-class-component@7.2.6)(vue@3.4.19):
-    resolution: {integrity: sha512-xYA8MkZynPBGd/w5QFJ2d/NM0z/YeegMqYTphy7NJQXbZcuU6FC6AOdUAcy4SXP+YnkerC6AfH+ldg7PDk9ESQ==}
-    peerDependencies:
-      vue: '*'
-      vue-class-component: '*'
-    dependencies:
-      vue: 3.4.19
-      vue-class-component: 7.2.6(vue@3.4.19)
-    dev: true
 
   /vue3-gettext@2.4.0(vue@3.4.19):
     resolution: {integrity: sha512-xnCndk88nzC+EiUJpNKykUulvPhivM1AQuT6oa72PA4DUOFPjJvpy5hZ/GbxLUJiqvYJebMDMTWywCJwIw+biA==}
