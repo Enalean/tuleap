@@ -38,7 +38,7 @@
     $assets-base-path: "@tuleap/tlp-styles/"
 );
 @use "./components/forms-select2";
-@use "@tuleap/tlp-date-picker";
+@use "@tuleap/tlp-date-picker/style";
 @use "./components/tooltips";
 @use "./components/switch";
 @use "./components/illustration";
