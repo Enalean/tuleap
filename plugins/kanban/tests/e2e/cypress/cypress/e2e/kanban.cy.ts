@@ -353,6 +353,17 @@ describe("Kanban service", () => {
             cy.get("[data-test=show-report-modal]").click();
             cy.log("asserting that chart legend is rendered");
             cy.get("[data-test=cumulative-flow-chart]").contains("To be done");
+            // eslint-disable-next-line cypress/require-data-selectors
+            cy.get("body").type("{esc}");
+
+            cy.log(`I can add kanban into my personal dashboard`);
+            cy.get("[data-test=add-kanban-to-dashboard]").click();
+            cy.get("[data-test=user-dashboard]").last().click();
+            cy.get("[data-test=feedback]").contains("The widget has been added successfully");
+
+            cy.get("[data-test=dashboard-widget-plugin_agiledashboard_my_kanban]").click();
+            cy.get("[data-test=delete-widget]").first().click({ force: true });
+            cy.get("[data-test=delete-widget-button]").first().click();
         });
 
         it("can collapse column", function () {
