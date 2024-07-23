@@ -20,13 +20,14 @@
  */
 declare(strict_types=1);
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+namespace Tuleap\Docman\Metadata;
 
-//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
-class MetadataListOfValuesElementDaoTest extends \Tuleap\Test\PHPUnit\TestCase
+use Docman_MetadataListOfValuesElementDao;
+use Tuleap\DB\Compat\Legacy2018\LegacyDataAccessInterface;
+use Tuleap\Test\PHPUnit\TestCase;
+
+final class MetadataListOfValuesElementDaoTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     public function testUpdate(): void
     {
         // Data
@@ -37,24 +38,25 @@ class MetadataListOfValuesElementDaoTest extends \Tuleap\Test\PHPUnit\TestCase
         $rank        = 12;
         $status      = 'A';
 
-         // Setup
-        $dao = \Mockery::mock(Docman_MetadataListOfValuesElementDao::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $dao->shouldReceive('prepareLoveRanking')->andReturns(15);
-        $dao->da = \Mockery::spy(\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessInterface::class);
-        $dao->da->shouldReceive('quoteSmart')->with($name)->andReturns("'$name'");
-        $dao->da->shouldReceive('quoteSmart')->with($description)->andReturns("'$description'");
-        $dao->da->shouldReceive('quoteSmart')->with($status)->andReturns("'$status'");
+        // Setup
+        $dao = $this->createPartialMock(Docman_MetadataListOfValuesElementDao::class, [
+            'prepareLoveRanking',
+            'update',
+        ]);
+        $dao->method('prepareLoveRanking')->willReturn(15);
+        $dao->da = $this->createMock(LegacyDataAccessInterface::class);
+        $dao->da->method('quoteSmart')->willReturnCallback(static fn(string $name) => "'$name'");
 
         $sql_update = 'UPDATE plugin_docman_metadata_love AS love' .
-            " SET love.name = '" . $name . "'" .
-            "  , love.description = '" . $description . "'" .
-            '  , love.`rank` = 15' .
-            "  , love.status = '" . $status . "'" .
-            ' WHERE love.value_id = ' . $valueId;
-        $dao->shouldReceive('update')->with($sql_update)->once()->andReturns(true);
+                      " SET love.name = '" . $name . "'" .
+                      "  , love.description = '" . $description . "'" .
+                      '  , love.`rank` = 15' .
+                      "  , love.status = '" . $status . "'" .
+                      ' WHERE love.value_id = ' . $valueId;
+        $dao->expects(self::once())->method('update')->with($sql_update)->willReturn(true);
 
         $val = $dao->updateElement($metadataId, $valueId, $name, $description, $rank, $status);
-        $this->assertTrue($val);
+        self::assertTrue($val);
     }
 
     public function testDeleteByMetadataId(): void
@@ -62,13 +64,15 @@ class MetadataListOfValuesElementDaoTest extends \Tuleap\Test\PHPUnit\TestCase
         // Data
         $metadataId = 1444;
 
-         // Setup
-        $dao        = \Mockery::mock(Docman_MetadataListOfValuesElementDao::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $dao->da    = \Mockery::spy(\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessInterface::class);
+        // Setup
+        $dao        = $this->createPartialMock(Docman_MetadataListOfValuesElementDao::class, [
+            'update',
+        ]);
+        $dao->da    = $this->createMock(LegacyDataAccessInterface::class);
         $sql_update = "UPDATE plugin_docman_metadata_love AS love SET status = 'D' WHERE value_id IN (  SELECT value_id   FROM plugin_docman_metadata_love_md AS lovemd   WHERE lovemd.field_id = " . $metadataId . '     AND lovemd.value_id > 100  )';
-        $dao->shouldReceive('update')->with($sql_update)->once()->andReturns(true);
+        $dao->expects(self::once())->method('update')->with($sql_update)->willReturn(true);
 
         $val = $dao->deleteByMetadataId($metadataId);
-        $this->assertTrue($val);
+        self::assertTrue($val);
     }
 }

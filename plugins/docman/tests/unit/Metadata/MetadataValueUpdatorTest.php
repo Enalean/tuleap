@@ -22,45 +22,27 @@ declare(strict_types=1);
 
 namespace Tuleap\Docman\Metadata;
 
+use ArrayIterator;
 use Docman_Metadata;
 use Docman_MetadataValueDao;
 use Docman_MetadataValueList;
-use Mockery;
+use PHPUnit\Framework\MockObject\MockObject;
+use Tuleap\Test\PHPUnit\TestCase;
 
-class MetadataValueUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
+final class MetadataValueUpdatorTest extends TestCase
 {
-    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
-    /**
-     * @var Docman_MetadataValueDao|Mockery\MockInterface
-     */
-    private $metadata_value_dao;
-    /**
-     * @var Mockery\MockInterface|MetadataValueStore
-     */
-    private $store;
-    /**
-     * @var MetadataValueCreator
-     */
-    private $updator;
-    /**
-     * @var \Mockery\MockInterface|MetadataValueObjectFactory
-     */
-    private $metadata_value_object_factory;
-
-    /**
-     * @var \Mockery\MockInterface|DocmanMetadataInputValidator
-     */
-    private $validator;
+    private Docman_MetadataValueDao&MockObject $metadata_value_dao;
+    private MetadataValueStore&MockObject $store;
+    private MetadataValueCreator|MetadataValueUpdator $updator;
+    private MetadataValueObjectFactory &MockObject $metadata_value_object_factory;
+    private DocmanMetadataInputValidator&MockObject $validator;
 
     protected function setUp(): void
     {
-        parent::setUp();
-
-        $this->validator                     = Mockery::mock(DocmanMetadataInputValidator::class);
-        $this->metadata_value_object_factory = Mockery::mock(MetadataValueObjectFactory::class);
-        $this->metadata_value_dao            = Mockery::mock(Docman_MetadataValueDao::class);
-        $this->store                         = Mockery::mock(MetadataValueStore::class);
+        $this->validator                     = $this->createMock(DocmanMetadataInputValidator::class);
+        $this->metadata_value_object_factory = $this->createMock(MetadataValueObjectFactory::class);
+        $this->metadata_value_dao            = $this->createMock(Docman_MetadataValueDao::class);
+        $this->store                         = $this->createMock(MetadataValueStore::class);
 
         $this->updator = new MetadataValueUpdator(
             $this->validator,
@@ -72,60 +54,50 @@ class MetadataValueUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItCreateNewMetadataValueIfItemDoesNotHaveThisMetadataSet(): void
     {
-        $metadata_value = \Mockery::mock(Docman_MetadataValueList::class);
-        $metadata_value->shouldReceive('getFieldId')->andReturn(1);
-        $metadata_value->shouldReceive('getItemId')->andReturn(100);
+        $metadata_value = new Docman_MetadataValueList();
+        $metadata_value->setFieldId(1);
+        $metadata_value->setItemId(100);
 
-        $this->metadata_value_object_factory->shouldReceive('createMetadataValueObjectWithCorrectValue')->andReturn(
-            $metadata_value
-        );
+        $this->metadata_value_object_factory->method('createMetadataValueObjectWithCorrectValue')->willReturn($metadata_value);
 
-        $this->store->shouldReceive('storeMetadata')->withArgs([$metadata_value, 102])->once();
-        $this->store->shouldReceive('updateMetadata')->never();
+        $this->store->expects(self::once())->method('storeMetadata')->with($metadata_value, 102);
+        $this->store->expects(self::never())->method('updateMetadata');
 
-        $metadata_to_create = Mockery::mock(Docman_Metadata::class);
-        $metadata_to_create->shouldReceive('getId')->andReturn(1);
-        $metadata_to_create->shouldReceive('getType')->andReturn(PLUGIN_DOCMAN_METADATA_TYPE_LIST);
-        $metadata_to_create->shouldReceive('getGroupId')->andReturn(102);
+        $metadata_to_create = new Docman_Metadata();
+        $metadata_to_create->setId(1);
+        $metadata_to_create->setType(PLUGIN_DOCMAN_METADATA_TYPE_LIST);
+        $metadata_to_create->setGroupId(102);
 
-        $this->metadata_value_dao->shouldReceive('searchById')->withArgs([1, 100])->andReturn(
-            new \ArrayIterator()
-        )->once();
+        $this->metadata_value_dao->expects(self::once())->method('searchById')->with(1, 100)->willReturn(new ArrayIterator());
 
-        $this->validator->shouldReceive('validateInput')->withArgs([$metadata_to_create, 'new value'])->once();
+        $this->validator->expects(self::once())->method('validateInput')->with($metadata_to_create, 'new value');
 
         $this->updator->updateMetadata($metadata_to_create, 1000, 'new value');
     }
 
     public function testItUpdateExistingMetadataValue(): void
     {
-        $metadata_value = \Mockery::mock(Docman_MetadataValueList::class);
-        $metadata_value->shouldReceive('getFieldId')->andReturn(1);
-        $metadata_value->shouldReceive('getItemId')->andReturn(100);
+        $metadata_value = new Docman_MetadataValueList();
+        $metadata_value->setFieldId(1);
+        $metadata_value->setItemId(100);
 
-        $this->metadata_value_object_factory->shouldReceive('createMetadataValueObjectWithCorrectValue')->andReturn(
-            $metadata_value
-        );
+        $this->metadata_value_object_factory->method('createMetadataValueObjectWithCorrectValue')->willReturn($metadata_value);
 
-        $this->store->shouldReceive('storeMetadata')->never();
-        $this->store->shouldReceive('updateMetadata')->withArgs([$metadata_value, 102])->once();
+        $this->store->expects(self::never())->method('storeMetadata');
+        $this->store->expects(self::once())->method('updateMetadata')->with($metadata_value, 102);
 
-        $metadata_to_create = Mockery::mock(Docman_Metadata::class);
-        $metadata_to_create->shouldReceive('getId')->andReturn(1);
-        $metadata_to_create->shouldReceive('getType')->andReturn(PLUGIN_DOCMAN_METADATA_TYPE_LIST);
-        $metadata_to_create->shouldReceive('getGroupId')->andReturn(102);
+        $metadata_to_create = new Docman_Metadata();
+        $metadata_to_create->setId(1);
+        $metadata_to_create->setType(PLUGIN_DOCMAN_METADATA_TYPE_LIST);
+        $metadata_to_create->setGroupId(102);
 
-        $this->metadata_value_dao->shouldReceive('searchById')->withArgs([1, 100])->andReturn(
-            new \ArrayIterator(
-                [
-                    'field_id' => 1,
-                    'item_id'  => 100,
-                    'value'    => 'old value',
-                ]
-            )
-        )->once();
+        $this->metadata_value_dao->expects(self::once())->method('searchById')->with(1, 100)->willReturn(new ArrayIterator([
+            'field_id' => 1,
+            'item_id'  => 100,
+            'value'    => 'old value',
+        ]));
 
-        $this->validator->shouldReceive('validateInput')->withArgs([$metadata_to_create, 'new value'])->once();
+        $this->validator->expects(self::once())->method('validateInput')->with($metadata_to_create, 'new value');
 
         $this->updator->updateMetadata($metadata_to_create, 1000, 'new value');
     }

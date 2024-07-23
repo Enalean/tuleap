@@ -23,34 +23,24 @@ declare(strict_types=1);
 namespace Tuleap\Docman\Metadata;
 
 use ArrayIterator;
+use Docman_MetadataListOfValuesElement;
 use Docman_MetadataValueDao;
 use Docman_MetadataValueList;
-use Mockery;
+use Docman_MetadataValueScalar;
+use PHPUnit\Framework\MockObject\MockObject;
 use ReferenceManager;
+use Tuleap\Test\PHPUnit\TestCase;
 
-class MetadataValueStoreTest extends \Tuleap\Test\PHPUnit\TestCase
+final class MetadataValueStoreTest extends TestCase
 {
-    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
-    /**
-     * @var Mockery\MockInterface|MetadataValueStore
-     */
-    private $store;
-    /**
-     * @var \Mockery\MockInterface|ReferenceManager
-     */
-    private $reference_manager;
-    /**
-     * @var Docman_MetadataValueDao|\Mockery\MockInterface
-     */
-    private $metadata_value_dao;
+    private MetadataValueStore $store;
+    private ReferenceManager&MockObject $reference_manager;
+    private Docman_MetadataValueDao&MockObject $metadata_value_dao;
 
     protected function setUp(): void
     {
-        parent::setUp();
-
-        $this->metadata_value_dao = Mockery::mock(Docman_MetadataValueDao::class);
-        $this->reference_manager  = Mockery::mock(ReferenceManager::class);
+        $this->metadata_value_dao = $this->createMock(Docman_MetadataValueDao::class);
+        $this->reference_manager  = $this->createMock(ReferenceManager::class);
 
         $this->store = new MetadataValueStore(
             $this->metadata_value_dao,
@@ -60,87 +50,79 @@ class MetadataValueStoreTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItStoreListMetadata(): void
     {
-        $list_value = \Mockery::mock(\Docman_MetadataListOfValuesElement::class);
-        $list_value->shouldReceive('getId')->andReturn(42);
+        $list_value = new Docman_MetadataListOfValuesElement();
+        $list_value->setId(42);
 
-        $metadata_value = \Mockery::mock(Docman_MetadataValueList::class);
-        $metadata_value->shouldReceive('getValue')->andReturn(
-            new ArrayIterator([$list_value])
-        );
-        $metadata_value->shouldReceive('getItemId')->andReturn(1);
-        $metadata_value->shouldReceive('getFieldId')->andReturn(10);
-        $metadata_value->shouldReceive('getType')->andReturn(PLUGIN_DOCMAN_METADATA_TYPE_LIST);
+        $metadata_value = new Docman_MetadataValueList();
+        $metadata_value->setValue(new ArrayIterator([$list_value]));
+        $metadata_value->setItemId(1);
+        $metadata_value->setFieldId(10);
 
-        $this->metadata_value_dao->shouldReceive('create')->once();
-        $this->reference_manager->shouldReceive('extractCrossRef')->never();
+        $this->metadata_value_dao->expects(self::once())->method('create');
+        $this->reference_manager->expects(self::never())->method('extractCrossRef');
         $this->store->storeMetadata($metadata_value, 102);
     }
 
     public function testItStoreTextMetadata(): void
     {
-        $metadata_value = \Mockery::mock(\Docman_MetadataValueScalar::class);
-        $metadata_value->shouldReceive('getItemId')->andReturn(1);
-        $metadata_value->shouldReceive('getFieldId')->andReturn(10);
-        $metadata_value->shouldReceive('getType')->andReturn(PLUGIN_DOCMAN_METADATA_TYPE_TEXT);
-        $metadata_value->shouldReceive('getValue')->andReturn('text value');
+        $metadata_value = new Docman_MetadataValueScalar();
+        $metadata_value->setItemId(1);
+        $metadata_value->setFieldId(10);
+        $metadata_value->setType(PLUGIN_DOCMAN_METADATA_TYPE_TEXT);
+        $metadata_value->setValue('text value');
 
-        $metadata_value->shouldReceive('getType')->andReturn(PLUGIN_DOCMAN_METADATA_TYPE_TEXT);
-        $this->metadata_value_dao->shouldReceive('create')->once();
-        $this->reference_manager->shouldReceive('extractCrossRef')->once();
+        $this->metadata_value_dao->expects(self::once())->method('create');
+        $this->reference_manager->expects(self::once())->method('extractCrossRef');
 
         $this->store->storeMetadata($metadata_value, 102);
     }
 
     public function testStoreThrowsExceptionIfMetadataIsNotFound(): void
     {
-        $metadata_value = \Mockery::mock(\Docman_MetadataValueScalar::class);
-        $metadata_value->shouldReceive('getType')->andReturn(1233);
+        $metadata_value = new Docman_MetadataValueScalar();
+        $metadata_value->setType(1233);
 
-        $this->expectException(MetadataDoesNotExistException::class);
+        self::expectException(MetadataDoesNotExistException::class);
         $this->store->storeMetadata($metadata_value, 102);
     }
 
     public function testItUpdateListMetadata(): void
     {
-        $list_value = \Mockery::mock(\Docman_MetadataListOfValuesElement::class);
-        $list_value->shouldReceive('getId')->andReturn(42);
+        $list_value = new Docman_MetadataListOfValuesElement();
+        $list_value->setId(42);
 
-        $metadata_value = \Mockery::mock(Docman_MetadataValueList::class);
-        $metadata_value->shouldReceive('getValue')->andReturn(
-            new ArrayIterator([$list_value])
-        );
-        $metadata_value->shouldReceive('getItemId')->andReturn(1);
-        $metadata_value->shouldReceive('getFieldId')->andReturn(10);
-        $metadata_value->shouldReceive('getType')->andReturn(PLUGIN_DOCMAN_METADATA_TYPE_LIST);
+        $metadata_value = new Docman_MetadataValueList();
+        $metadata_value->setValue(new ArrayIterator([$list_value]));
+        $metadata_value->setItemId(1);
+        $metadata_value->setFieldId(10);
 
-        $this->metadata_value_dao->shouldReceive('delete')->withArgs([10, 1])->once();
+        $this->metadata_value_dao->expects(self::once())->method('delete')->with(10, 1);
 
-        $this->metadata_value_dao->shouldReceive('create')->once();
-        $this->reference_manager->shouldReceive('extractCrossRef')->never();
+        $this->metadata_value_dao->expects(self::once())->method('create');
+        $this->reference_manager->expects(self::never())->method('extractCrossRef');
         $this->store->updateMetadata($metadata_value, 102);
     }
 
     public function testItUpdateTextMetadata(): void
     {
-        $metadata_value = \Mockery::mock(\Docman_MetadataValueScalar::class);
-        $metadata_value->shouldReceive('getItemId')->andReturn(1);
-        $metadata_value->shouldReceive('getFieldId')->andReturn(10);
-        $metadata_value->shouldReceive('getType')->andReturn(PLUGIN_DOCMAN_METADATA_TYPE_TEXT);
-        $metadata_value->shouldReceive('getValue')->andReturn('text value');
+        $metadata_value = new Docman_MetadataValueScalar();
+        $metadata_value->setItemId(1);
+        $metadata_value->setFieldId(10);
+        $metadata_value->setType(PLUGIN_DOCMAN_METADATA_TYPE_TEXT);
+        $metadata_value->setValue('text value');
 
-        $metadata_value->shouldReceive('getType')->andReturn(PLUGIN_DOCMAN_METADATA_TYPE_TEXT);
-        $this->metadata_value_dao->shouldReceive('updateValue')->once();
-        $this->reference_manager->shouldReceive('extractCrossRef')->once();
+        $this->metadata_value_dao->expects(self::once())->method('updateValue');
+        $this->reference_manager->expects(self::once())->method('extractCrossRef');
 
         $this->store->updateMetadata($metadata_value, 102);
     }
 
     public function testUpdateThrowsExceptionIfMetadataIsNotFound(): void
     {
-        $metadata_value = \Mockery::mock(\Docman_MetadataValueScalar::class);
-        $metadata_value->shouldReceive('getType')->andReturn(1233);
+        $metadata_value = new Docman_MetadataValueScalar();
+        $metadata_value->setType(1233);
 
-        $this->expectException(MetadataDoesNotExistException::class);
+        self::expectException(MetadataDoesNotExistException::class);
         $this->store->updateMetadata($metadata_value, 102);
     }
 }
