@@ -18,8 +18,12 @@
   -->
 
 <template>
-    <div class="overflow-wrapper">
-        <div class="cross-tracker-loader" v-if="is_loading" data-test="loading"></div>
+    <empty-state
+        v-if="total === 0 && !is_loading"
+        v-bind:writing_cross_tracker_report="writing_cross_tracker_report"
+    />
+    <div class="cross-tracker-loader" v-if="is_loading" data-test="loading"></div>
+    <div class="overflow-wrapper" v-if="total > 0">
         <div class="selectable-table" v-if="!is_loading">
             <div class="headers-cell" v-for="column_name of columns" v-bind:key="column_name">
                 <span class="header-text" data-test="column-header">{{ column_name }}</span>
@@ -30,8 +34,11 @@
                 <div
                     class="cell"
                     v-for="column_name of columns"
-                    v-bind:key="column_name"
-                    v-bind:class="{ 'even-row': isEvenRow(index), 'odd-row': !isEvenRow(index) }"
+                    v-bind:key="column_name + index"
+                    v-bind:class="{
+                        'even-row': isEvenRow(index),
+                        'odd-row': !isEvenRow(index),
+                    }"
                     data-test="cell-row"
                 >
                     <!-- eslint-enable vue/valid-v-for eslint is not happy about nested v-for -->
@@ -71,6 +78,7 @@ import type { ResultAsync } from "neverthrow";
 import type { Fault } from "@tuleap/fault";
 import type { ArtifactsTableWithTotal } from "../../domain/RetrieveArtifactsTable";
 import SelectablePagination from "./SelectablePagination.vue";
+import EmptyState from "./EmptyState.vue";
 
 const artifacts_retriever = strictInject(RETRIEVE_ARTIFACTS_TABLE);
 const date_formatter = strictInject(DATE_FORMATTER);
