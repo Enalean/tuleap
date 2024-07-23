@@ -20,25 +20,16 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Field\StaticList;
-
-use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\SelectedValueRepresentation;
+namespace Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Representations;
 
 /**
  * @psalm-immutable
  */
-final readonly class StaticListRepresentation implements SelectedValueRepresentation
+final readonly class StaticListValueRepresentation
 {
-    /**
-     * @var StaticListValueRepresentation[]
-     */
-    public array $value;
-
-    /**
-     * @param StaticListValueRepresentation[] $value
-     */
-    public function __construct(array $value)
-    {
-        $this->value = array_unique($value, SORT_REGULAR);
+    public function __construct(
+        public string $label,
+        public ?string $color,
+    ) {
     }
 }

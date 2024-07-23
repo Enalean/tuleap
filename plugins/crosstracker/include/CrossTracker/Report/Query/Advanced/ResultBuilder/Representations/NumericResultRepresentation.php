@@ -20,22 +20,14 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Field\UGroupList;
+namespace Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Representations;
 
-use ProjectUGroup;
+use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\SelectedValueRepresentation;
 
-/**
- * @psalm-immutable
- */
-final readonly class UGroupListValueRepresentation
+final readonly class NumericResultRepresentation implements SelectedValueRepresentation
 {
     public function __construct(
-        public string $label,
+        public int|float|null $value,
     ) {
-    }
-
-    public static function fromProjectUGroup(ProjectUGroup $user_group): self
-    {
-        return new self($user_group->getTranslatedName());
     }
 }

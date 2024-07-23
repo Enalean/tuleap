@@ -20,16 +20,22 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Field\StaticList;
+namespace Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Representations;
+
+use ProjectUGroup;
 
 /**
  * @psalm-immutable
  */
-final readonly class StaticListValueRepresentation
+final readonly class UGroupListValueRepresentation
 {
     public function __construct(
         public string $label,
-        public ?string $color,
     ) {
+    }
+
+    public static function fromProjectUGroup(ProjectUGroup $user_group): self
+    {
+        return new self($user_group->getTranslatedName());
     }
 }

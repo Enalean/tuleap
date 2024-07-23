@@ -24,6 +24,8 @@ namespace Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Field\UGroupLi
 
 use LogicException;
 use Tuleap\CrossTracker\Report\Query\Advanced\DuckTypedField\Select\DuckTypedFieldSelect;
+use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Representations\UGroupListRepresentation;
+use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Representations\UGroupListValueRepresentation;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\SelectedValue;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\SelectedValuesCollection;
 use Tuleap\CrossTracker\Report\Query\Advanced\SelectResultKey;
