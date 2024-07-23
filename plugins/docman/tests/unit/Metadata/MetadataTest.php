@@ -21,13 +21,17 @@
 
 declare(strict_types=1);
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+namespace Tuleap\Docman\Metadata;
 
-//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
-class MetadataTest extends \Tuleap\Test\PHPUnit\TestCase
+use ArrayIterator;
+use Docman_ListMetadata;
+use Docman_Metadata;
+use Docman_MetadataFactory;
+use Docman_MetadataListOfValuesElementFactory;
+use Tuleap\Test\PHPUnit\TestCase;
+
+final class MetadataTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     public function testCloneOneMetadata(): void
     {
         // Parameters
@@ -38,23 +42,22 @@ class MetadataTest extends \Tuleap\Test\PHPUnit\TestCase
         $metadataMapping = [];
 
         // Factory to test
-        $srcMdF = \Mockery::mock(Docman_MetadataFactory::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $srcMdF = $this->createPartialMock(Docman_MetadataFactory::class, [
+            '_getMetadataFactory',
+            '_getListOfValuesElementFactory',
+        ]);
 
-        $eventManager = \Mockery::spy(EventManager::class);
-        $srcMdF->shouldReceive('_getEventManager')->andReturns($eventManager);
+        $dstMdF = $this->createMock(Docman_MetadataFactory::class);
+        $dstMdF->expects(self::once())->method('create')->willReturn(401);
 
-        $dstMdF = \Mockery::spy(Docman_MetadataFactory::class);
-        $dstMdF->shouldReceive('create')->once()->andReturns(401);
+        $iter = new ArrayIterator();
+        $dstMdF->method('findByName')->willReturn($iter);
+        $srcMdF->expects(self::once())->method('_getMetadataFactory')->with($dstGroupId)->willReturn($dstMdF);
 
-        $iter = \Mockery::spy(ArrayIterator::class);
-        $iter->shouldReceive('count')->andReturns(0);
-        $dstMdF->shouldReceive('findByName')->andReturns($iter);
-        $srcMdF->shouldReceive('_getMetadataFactory')->with($dstGroupId)->once()->andReturns($dstMdF);
-
-        $srcMdF->shouldReceive('_getListOfValuesElementFactory')->never();
+        $srcMdF->expects(self::never())->method('_getListOfValuesElementFactory');
 
         $srcMdF->_cloneOneMetadata($dstGroupId, $srcMd, $metadataMapping);
-        $this->assertEquals(401, $metadataMapping['md'][301]);
+        self::assertEquals(401, $metadataMapping['md'][301]);
     }
 
     public function testCloneOneMetadataList(): void
@@ -67,28 +70,27 @@ class MetadataTest extends \Tuleap\Test\PHPUnit\TestCase
         $metadataMapping = [];
 
         // Factory to test
-        $srcMdF = \Mockery::mock(Docman_MetadataFactory::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $srcMdF = $this->createPartialMock(Docman_MetadataFactory::class, [
+            '_getMetadataFactory',
+            '_getListOfValuesElementFactory',
+        ]);
 
-        $eventManager = \Mockery::spy(EventManager::class);
-        $srcMdF->shouldReceive('_getEventManager')->andReturns($eventManager);
+        $dstMdF = $this->createMock(Docman_MetadataFactory::class);
+        $dstMdF->expects(self::once())->method('create')->willReturn(401);
 
-        $dstMdF = \Mockery::spy(Docman_MetadataFactory::class);
-        $dstMdF->shouldReceive('create')->once()->andReturns(401);
+        $iter = new ArrayIterator();
+        $dstMdF->method('findByName')->willReturn($iter);
+        $srcMdF->expects(self::once())->method('_getMetadataFactory')->with($dstGroupId)->willReturn($dstMdF);
 
-        $iter = \Mockery::spy(ArrayIterator::class);
-        $iter->shouldReceive('count')->andReturns(0);
-        $dstMdF->shouldReceive('findByName')->andReturns($iter);
-        $srcMdF->shouldReceive('_getMetadataFactory')->with($dstGroupId)->once()->andReturns($dstMdF);
-
-        $dstLoveF      = \Mockery::spy(Docman_MetadataListOfValuesElementFactory::class);
+        $dstLoveF      = $this->createMock(Docman_MetadataListOfValuesElementFactory::class);
         $valuesMapping = [101 => 201, 102 => 202];
-        $dstLoveF->shouldReceive('cloneValues')->once()->andReturns($valuesMapping);
-        $srcMdF->shouldReceive('_getListOfValuesElementFactory')->with(301)->once()->andReturns($dstLoveF);
+        $dstLoveF->expects(self::once())->method('cloneValues')->willReturn($valuesMapping);
+        $srcMdF->expects(self::once())->method('_getListOfValuesElementFactory')->with(301)->willReturn($dstLoveF);
 
         $srcMdF->_cloneOneMetadata($dstGroupId, $srcMd, $metadataMapping);
-        $this->assertEquals(401, $metadataMapping['md'][301]);
-        $this->assertEquals(201, $metadataMapping['love'][101]);
-        $this->assertEquals(202, $metadataMapping['love'][102]);
+        self::assertEquals(401, $metadataMapping['md'][301]);
+        self::assertEquals(201, $metadataMapping['love'][101]);
+        self::assertEquals(202, $metadataMapping['love'][102]);
     }
 
     /**
@@ -101,53 +103,51 @@ class MetadataTest extends \Tuleap\Test\PHPUnit\TestCase
         $metadataMapping         = [];
         $metadataMapping['love'] = [];
 
-        $findIter = \Mockery::spy(ArrayIterator::class);
-        $findIter->shouldReceive('count')->andReturns(0);
+        $findIter = new ArrayIterator();
 
         // Factory to test
-        $srcMdF = \Mockery::mock(Docman_MetadataFactory::class)->makePartial()->shouldAllowMockingProtectedMethods();
-
-        $eventManager = \Mockery::spy(EventManager::class);
-        $srcMdF->shouldReceive('_getEventManager')->andReturns($eventManager);
+        $srcMdF = $this->createPartialMock(Docman_MetadataFactory::class, [
+            '_getMetadataFactory',
+            '_getListOfValuesElementFactory',
+        ]);
 
         // First Call setup
         $srcMd1 = new Docman_ListMetadata();
         $srcMd1->setId(301);
         $srcMd1->setType(PLUGIN_DOCMAN_METADATA_TYPE_LIST);
 
-        $dstMdF1 = \Mockery::spy(Docman_MetadataFactory::class);
-        $dstMdF1->shouldReceive('create')->once()->andReturns(401);
-        $dstMdF1->shouldReceive('findByName')->andReturns($findIter);
-        $srcMdF->shouldReceive('_getMetadataFactory')->once()->andReturns($dstMdF1);
+        $dstMdF1 = $this->createMock(Docman_MetadataFactory::class);
+        $dstMdF1->expects(self::once())->method('create')->willReturn(401);
+        $dstMdF1->method('findByName')->willReturn($findIter);
 
-        $dstLoveF1 = \Mockery::spy(Docman_MetadataListOfValuesElementFactory::class);
-        $dstLoveF1->shouldReceive('cloneValues')->andReturns([101 => 201, 102 => 202]);
-        $srcMdF->shouldReceive('_getListOfValuesElementFactory')->once()->andReturns($dstLoveF1);
+        $dstLoveF1 = $this->createMock(Docman_MetadataListOfValuesElementFactory::class);
+        $dstLoveF1->method('cloneValues')->willReturn([101 => 201, 102 => 202]);
 
         // Second call setup
         $srcMd2 = new Docman_ListMetadata();
         $srcMd2->setId(302);
         $srcMd2->setType(PLUGIN_DOCMAN_METADATA_TYPE_LIST);
 
-        $dstMdF2 = \Mockery::spy(Docman_MetadataFactory::class);
-        $dstMdF2->shouldReceive('create')->once()->andReturns(402);
-        $dstMdF2->shouldReceive('findByName')->andReturns($findIter);
-        $srcMdF->shouldReceive('_getMetadataFactory')->once()->andReturns($dstMdF2);
+        $dstMdF2 = $this->createMock(Docman_MetadataFactory::class);
+        $dstMdF2->expects(self::once())->method('create')->willReturn(402);
+        $dstMdF2->method('findByName')->willReturn($findIter);
 
-        $dstLoveF2 = \Mockery::spy(Docman_MetadataListOfValuesElementFactory::class);
-        $dstLoveF2->shouldReceive('cloneValues')->andReturns([103 => 203, 104 => 204]);
-        $srcMdF->shouldReceive('_getListOfValuesElementFactory')->once()->andReturns($dstLoveF2);
+        $dstLoveF2 = $this->createMock(Docman_MetadataListOfValuesElementFactory::class);
+        $dstLoveF2->method('cloneValues')->willReturn([103 => 203, 104 => 204]);
+
+        $srcMdF->expects(self::exactly(2))->method('_getMetadataFactory')->willReturnOnConsecutiveCalls($dstMdF1, $dstMdF2);
+        $srcMdF->expects(self::exactly(2))->method('_getListOfValuesElementFactory')->willReturnOnConsecutiveCalls($dstLoveF1, $dstLoveF2);
 
         // Run test
         $srcMdF->_cloneOneMetadata($dstGroupId, $srcMd1, $metadataMapping);
         $srcMdF->_cloneOneMetadata($dstGroupId, $srcMd2, $metadataMapping);
 
-        $this->assertEquals(401, $metadataMapping['md'][301]);
-        $this->assertEquals(402, $metadataMapping['md'][302]);
-        $this->assertEquals(201, $metadataMapping['love'][101]);
-        $this->assertEquals(202, $metadataMapping['love'][102]);
-        $this->assertEquals(203, $metadataMapping['love'][103]);
-        $this->assertEquals(204, $metadataMapping['love'][104]);
+        self::assertEquals(401, $metadataMapping['md'][301]);
+        self::assertEquals(402, $metadataMapping['md'][302]);
+        self::assertEquals(201, $metadataMapping['love'][101]);
+        self::assertEquals(202, $metadataMapping['love'][102]);
+        self::assertEquals(203, $metadataMapping['love'][103]);
+        self::assertEquals(204, $metadataMapping['love'][104]);
     }
 
     public function testCloneRealMetadata(): void
@@ -157,7 +157,10 @@ class MetadataTest extends \Tuleap\Test\PHPUnit\TestCase
         $metadataMapping = [];
 
         // Factory to test
-        $srcMdF = \Mockery::mock(Docman_MetadataFactory::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $srcMdF = $this->createPartialMock(Docman_MetadataFactory::class, [
+            'getRealMetadataList',
+            '_cloneOneMetadata',
+        ]);
 
         $srcMd1 = new Docman_ListMetadata();
         $srcMd1->setId(301);
@@ -165,11 +168,13 @@ class MetadataTest extends \Tuleap\Test\PHPUnit\TestCase
         $srcMd2 = new Docman_Metadata();
         $srcMd2->setId(302);
         $srcMd2->setType(PLUGIN_DOCMAN_METADATA_TYPE_STRING);
-        $srcMdF->shouldReceive('getRealMetadataList')->with(false)->once()->andReturns([$srcMd1, $srcMd2]);
+        $srcMdF->expects(self::once())->method('getRealMetadataList')->with(false)->willReturn([$srcMd1, $srcMd2]);
 
-        $srcMdF->shouldReceive('_cloneOneMetadata')->times(2);
-        $srcMdF->shouldReceive('_cloneOneMetadata')->with($dstGroupId, $srcMd1, $metadataMapping)->ordered();
-        $srcMdF->shouldReceive('_cloneOneMetadata')->with($dstGroupId, $srcMd2, $metadataMapping)->ordered();
+        $srcMdF->expects(self::exactly(2))->method('_cloneOneMetadata')
+            ->withConsecutive(
+                [$dstGroupId, $srcMd1, $metadataMapping],
+                [$dstGroupId, $srcMd2, $metadataMapping],
+            );
 
         // Run the test
         $srcMdF->_cloneRealMetadata($dstGroupId, $metadataMapping);

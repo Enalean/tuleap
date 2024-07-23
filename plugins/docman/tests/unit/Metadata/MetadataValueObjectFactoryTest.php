@@ -23,31 +23,15 @@ declare(strict_types=1);
 namespace Tuleap\Docman\Metadata;
 
 use Docman_MetadataListOfValuesElement;
-use Mockery;
+use Tuleap\Test\PHPUnit\TestCase;
 
-class MetadataValueObjectFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
+final class MetadataValueObjectFactoryTest extends TestCase
 {
-    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
-    /**
-     * @var MetadataValueObjectFactory
-     */
-    private $metadata_object_value_factory;
-
-    /**
-     * @var Mockery\MockInterface|DocmanMetadataTypeValueFactory
-     */
-    private $metadata_type_value_factory;
+    private MetadataValueObjectFactory $metadata_object_value_factory;
 
     protected function setUp(): void
     {
-        parent::setUp();
-
-        $this->metadata_type_value_factory = new DocmanMetadataTypeValueFactory();
-
-        $this->metadata_object_value_factory = new MetadataValueObjectFactory(
-            $this->metadata_type_value_factory
-        );
+        $this->metadata_object_value_factory = new MetadataValueObjectFactory(new DocmanMetadataTypeValueFactory());
     }
 
     public function testItCreateCorrectValueForTextValue(): void
@@ -64,7 +48,7 @@ class MetadataValueObjectFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
             $value
         );
 
-        $this->assertEquals($metadata_object_value->getValue(), $value);
+        self::assertEquals($value, $metadata_object_value->getValue());
     }
 
     public function testItCreateCorrectValueForListWithSingleValue(): void
@@ -83,8 +67,8 @@ class MetadataValueObjectFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $values = $metadata_object_value->getValue();
 
-        $this->assertInstanceOf(Docman_MetadataListOfValuesElement::class, $values[0]);
-        $this->assertEquals(count($values), 1);
+        self::assertInstanceOf(Docman_MetadataListOfValuesElement::class, $values[0]);
+        self::assertEquals(1, count($values));
     }
 
     public function testItCreateCorrectValueForListWithMultipleValues(): void
@@ -103,8 +87,8 @@ class MetadataValueObjectFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $values = $metadata_object_value->getValue();
 
-        $this->assertInstanceOf(Docman_MetadataListOfValuesElement::class, $values[0]);
-        $this->assertInstanceOf(Docman_MetadataListOfValuesElement::class, $values[1]);
-        $this->assertEquals(count($values), 2);
+        self::assertInstanceOf(Docman_MetadataListOfValuesElement::class, $values[0]);
+        self::assertInstanceOf(Docman_MetadataListOfValuesElement::class, $values[1]);
+        self::assertEquals(2, count($values));
     }
 }

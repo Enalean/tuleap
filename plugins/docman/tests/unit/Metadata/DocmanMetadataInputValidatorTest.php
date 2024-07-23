@@ -24,120 +24,113 @@ namespace Tuleap\Docman\Metadata;
 
 use DateTime;
 use Docman_Metadata;
-use Mockery;
+use Tuleap\Test\PHPUnit\TestCase;
 
-class DocmanMetadataInputValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
+final class DocmanMetadataInputValidatorTest extends TestCase
 {
-    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
-    /**
-     * @var DocmanMetadataInputValidator
-     */
-    private $validator;
+    private DocmanMetadataInputValidator $validator;
 
     protected function setUp(): void
     {
-        parent::setUp();
-
         $this->validator = new DocmanMetadataInputValidator();
     }
 
     public function testItDoesNothingForTextMetadata(): void
     {
-        $metadata = Mockery::mock(Docman_Metadata::class);
-        $metadata->shouldReceive('getType')->andReturn(PLUGIN_DOCMAN_METADATA_TYPE_TEXT);
+        $metadata = new Docman_Metadata();
+        $metadata->setType(PLUGIN_DOCMAN_METADATA_TYPE_TEXT);
 
         $value = 'text';
 
         $validated_input = $this->validator->validateInput($metadata, $value);
 
-        $this->assertEquals($validated_input, $value);
+        self::assertEquals($value, $validated_input);
     }
 
     public function testItDoesNothingForStringMetadata(): void
     {
-        $metadata = Mockery::mock(Docman_Metadata::class);
-        $metadata->shouldReceive('getType')->andReturn(PLUGIN_DOCMAN_METADATA_TYPE_STRING);
+        $metadata = new Docman_Metadata();
+        $metadata->setType(PLUGIN_DOCMAN_METADATA_TYPE_STRING);
 
         $value = 'string';
 
         $validated_input = $this->validator->validateInput($metadata, $value);
 
-        $this->assertEquals($validated_input, $value);
+        self::assertEquals($value, $validated_input);
     }
 
     public function testItExtractTimestampFromDate(): void
     {
-        $metadata = Mockery::mock(Docman_Metadata::class);
-        $metadata->shouldReceive('getType')->andReturn(PLUGIN_DOCMAN_METADATA_TYPE_DATE);
+        $metadata = new Docman_Metadata();
+        $metadata->setType(PLUGIN_DOCMAN_METADATA_TYPE_DATE);
 
         $value = '2019-08-02';
 
         $validated_input = $this->validator->validateInput($metadata, $value);
 
         $expected_date = DateTime::createFromFormat('Y-m-d H:i:s', '2019-08-02 00:00:00');
-        $this->assertEquals($validated_input, $expected_date->getTimestamp());
+        self::assertEquals($expected_date->getTimestamp(), $validated_input);
     }
 
     public function testItTransformDateToZeroIfDateIsNotParsable(): void
     {
-        $metadata = Mockery::mock(Docman_Metadata::class);
-        $metadata->shouldReceive('getType')->andReturn(PLUGIN_DOCMAN_METADATA_TYPE_DATE);
+        $metadata = new Docman_Metadata();
+        $metadata->setType(PLUGIN_DOCMAN_METADATA_TYPE_DATE);
 
         $value = 'aaa';
 
         $validated_input = $this->validator->validateInput($metadata, $value);
 
-        $this->assertEquals($validated_input, 0);
+        self::assertEquals(0, $validated_input);
     }
 
     public function testItReturnsATimestamp(): void
     {
-        $metadata = Mockery::mock(Docman_Metadata::class);
-        $metadata->shouldReceive('getType')->andReturn(PLUGIN_DOCMAN_METADATA_TYPE_DATE);
+        $metadata = new Docman_Metadata();
+        $metadata->setType(PLUGIN_DOCMAN_METADATA_TYPE_DATE);
 
         $value = '1564750064';
 
         $validated_input = $this->validator->validateInput($metadata, $value);
 
-        $this->assertEquals($validated_input, $value);
+        self::assertEquals($value, $validated_input);
     }
 
     public function testItDoesNothingForMultipleValues(): void
     {
-        $metadata = Mockery::mock(Docman_Metadata::class);
-        $metadata->shouldReceive('getType')->andReturn(PLUGIN_DOCMAN_METADATA_TYPE_LIST);
-        $metadata->shouldReceive('isMultipleValuesAllowed')->andReturn(true);
+        $metadata = new Docman_Metadata();
+        $metadata->setType(PLUGIN_DOCMAN_METADATA_TYPE_LIST);
+        $metadata->setIsMultipleValuesAllowed(true);
 
         $value = [100, 101];
 
         $validated_input = $this->validator->validateInput($metadata, $value);
 
-        $this->assertEquals($validated_input, $value);
+        self::assertEquals($value, $validated_input);
     }
 
     public function testItReturnsFirstValueForSingleListWithMultipleValues(): void
     {
-        $metadata = Mockery::mock(Docman_Metadata::class);
-        $metadata->shouldReceive('getType')->andReturn(PLUGIN_DOCMAN_METADATA_TYPE_LIST);
-        $metadata->shouldReceive('isMultipleValuesAllowed')->andReturn(false);
+        $metadata = new Docman_Metadata();
+        $metadata->setType(PLUGIN_DOCMAN_METADATA_TYPE_LIST);
+        $metadata->setIsMultipleValuesAllowed(false);
 
         $value = [101, 102];
 
         $validated_input = $this->validator->validateInput($metadata, $value);
 
-        $this->assertEquals($validated_input, 101);
+        self::assertEquals(101, $validated_input);
     }
 
     public function testItDoesNothingSimpleListWithOnlyOneValue(): void
     {
-        $metadata = Mockery::mock(Docman_Metadata::class);
-        $metadata->shouldReceive('getType')->andReturn(PLUGIN_DOCMAN_METADATA_TYPE_LIST);
-        $metadata->shouldReceive('isMultipleValuesAllowed')->andReturn(false);
+        $metadata = new Docman_Metadata();
+        $metadata->setType(PLUGIN_DOCMAN_METADATA_TYPE_LIST);
+        $metadata->setIsMultipleValuesAllowed(false);
         $value = 101;
 
         $validated_input = $this->validator->validateInput($metadata, $value);
 
-        $this->assertEquals($validated_input, 101);
+        self::assertEquals(101, $validated_input);
     }
 }
