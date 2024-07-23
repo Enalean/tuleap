@@ -25,30 +25,25 @@
     <div class="cross-tracker-loader" v-if="is_loading" data-test="loading"></div>
     <div class="overflow-wrapper" v-if="total > 0">
         <div class="selectable-table" v-if="!is_loading">
-            <div class="headers-cell" v-for="column_name of columns" v-bind:key="column_name">
-                <span class="header-text" data-test="column-header">{{ column_name }}</span>
-            </div>
-            <!-- eslint-disable-next-line vue/require-v-for-key Columns are all variable, there is nothing static to bind to key -->
+            <span
+                class="headers-cell"
+                v-for="column_name of columns"
+                v-bind:key="column_name"
+                data-test="column-header"
+                >{{ column_name }}</span
+            >
             <template v-for="(row_map, index) of rows">
-                <!-- eslint-disable vue/valid-v-for eslint is not happy about nested v-for -->
-                <div
-                    class="cell"
+                <span
                     v-for="column_name of columns"
                     v-bind:key="column_name + index"
+                    class="cell"
                     v-bind:class="{
                         'even-row': isEvenRow(index),
                         'odd-row': !isEvenRow(index),
                     }"
-                    data-test="cell-row"
-                >
-                    <!-- eslint-enable vue/valid-v-for eslint is not happy about nested v-for -->
-                    <span
-                        class="cell-text"
-                        data-test="cell"
-                        v-dompurify-html="renderCell(row_map, column_name)"
-                    >
-                    </span>
-                </div>
+                    data-test="cell"
+                    v-dompurify-html="renderCell(row_map, column_name)"
+                ></span>
             </template>
         </div>
     </div>
@@ -197,7 +192,8 @@ function isEvenRow(index: number): boolean {
 
 @mixin -cell-template {
     display: flex;
-    align-items: center;
+    flex-direction: column;
+    justify-content: center;
     padding: calc(
         8px - (4px * var(--tlp-is-condensed))
     ); // Match empty cells 32px height (or 24px in condensed mode)
