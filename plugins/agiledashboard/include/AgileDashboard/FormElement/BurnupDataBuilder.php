@@ -79,7 +79,7 @@ class BurnupDataBuilder
         $date_period          = DatePeriodWithOpenDays::buildFromDuration($start->getTimestamp(), $date_period->getDuration());
         $is_under_calculation = $this->cache_checker->isBurnupUnderCalculation(
             $artifact,
-            $this->date_retriever->getWorkedDaysToCacheForPeriod($date_period, new DateTime()),
+            $this->date_retriever->getWorkedDaysToCacheForPeriod($date_period, new DateTime('yesterday')),
             $user,
         );
         $burnup_data          = new BurnupData($date_period, $is_under_calculation);
