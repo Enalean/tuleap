@@ -31,7 +31,8 @@ $tlp-pagination-margin: 2px;
     margin: 0 $tlp-pagination-margin;
     border-radius: 50%;
 
-    > .fas {
+    > .fas,
+    .fa-solid {
         line-height: 38px;
     }
 }

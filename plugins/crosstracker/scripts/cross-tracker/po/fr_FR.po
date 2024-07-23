@@ -13,6 +13,9 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Generator: Poedit 3.4.4\n"
 
+msgid "%{from} – %{to} of %{total}"
+msgstr "%{from} – %{to} sur %{total}"
+
 msgid "Add"
 msgstr "Ajouter"
 
@@ -28,17 +31,11 @@ msgstr "ID de l'artéfact"
 msgid "Assigned to"
 msgstr "Assigné à"
 
-msgid "Begin"
-msgstr "Début"
-
 msgid "Cancel"
 msgstr "Annuler"
 
 msgid "Description"
 msgstr "Description"
-
-msgid "End"
-msgstr "Fin"
 
 msgid "Error while fetching the list of projects you are member of: %{error}"
 msgstr ""
@@ -56,10 +53,16 @@ msgstr "Exemple : @title = 'valeur'"
 msgid "Export CSV"
 msgstr "Export CSV"
 
+msgid "First"
+msgstr "Premier"
+
 msgid "If you update the query these trackers will be removed from it."
 msgstr ""
 "Si vous mettez à jour cette requête ces outils de suivi seront supprimés de "
 "la recherche."
+
+msgid "Last"
+msgstr "Dernier"
 
 msgid "Last update by"
 msgstr "Mis à jour par"
@@ -156,6 +159,3 @@ msgstr ""
 "Vous pouvez utiliser : AND, OR, WITH PARENT, WITHOUT PARENT, WITH CHILDREN, "
 "WITHOUT CHILDREN, BETWEEN(), NOW(), MYSELF(), OPEN(), IN(), NOT IN(), "
 "parenthèses. Ctrl + Espace active l’auto-complétion."
-
-msgid "of"
-msgstr "sur"

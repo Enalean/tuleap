@@ -19,59 +19,47 @@
 
 <template>
     <div class="tlp-pagination">
-        <a
+        <button
+            type="button"
             class="tlp-button-primary tlp-button-outline tlp-pagination-button"
-            v-bind:class="{ disabled: offset <= 0 }"
-            role="button"
-            v-bind:title="$gettext('Begin')"
+            v-bind:disabled="offset <= 0"
+            v-bind:title="$gettext('First')"
             v-on:click="firstPage"
             data-test="first-page-button"
         >
             <i class="fa-solid fa-angles-left" aria-hidden="true"></i>
-        </a>
-        <a
+        </button>
+        <button
+            type="button"
             class="tlp-button-primary tlp-button-outline tlp-pagination-button"
-            v-bind:class="{ disabled: offset <= 0 }"
-            role="button"
+            v-bind:disabled="offset <= 0"
             v-bind:title="$gettext('Previous')"
             v-on:click="previousPage"
             data-test="previous-page-button"
         >
             <i class="fa-solid fa-angle-left" aria-hidden="true"></i>
-        </a>
-
-        <span class="tlp-pagination-pages">
-            <span
-                class="tlp-pagination-number"
-                data-test="selectable-pagination-number-first-element"
-                >{{ total_number > 0 ? offset + 1 : 0 }}
-            </span>
-            –
-            <span class="tlp-pagination-number">{{ current_page_max_number }}</span>
-            {{ $gettext("of") }}
-            <span class="tlp-pagination-number">{{ total_number }}</span>
-        </span>
-
-        <a
+        </button>
+        <span class="tlp-pagination-pages" v-dompurify-html="pages"></span>
+        <button
+            type="button"
             class="tlp-button-primary tlp-button-outline tlp-pagination-button"
-            role="button"
+            v-bind:disabled="offset + limit >= total_number"
             v-bind:title="$gettext('Next')"
-            v-bind:class="{ disabled: offset + limit >= total_number }"
             v-on:click="nextPage"
             data-test="next-page-button"
         >
             <i class="fa-solid fa-angle-right" aria-hidden="true"></i>
-        </a>
-        <a
+        </button>
+        <button
+            type="button"
             class="tlp-button-primary tlp-button-outline tlp-pagination-button"
-            role="button"
-            v-bind:title="$gettext('End')"
-            v-bind:class="{ disabled: offset + limit >= total_number }"
+            v-bind:disabled="offset + limit >= total_number"
+            v-bind:title="$gettext('Last')"
             v-on:click="lastPage"
             data-test="last-page-button"
         >
             <i class="fa-solid fa-angles-right" aria-hidden="true"></i>
-        </a>
+        </button>
     </div>
 </template>
 
@@ -85,7 +73,7 @@ const props = defineProps<{
     offset: number;
 }>();
 
-const { $gettext } = useGettext();
+const { $gettext, interpolate } = useGettext();
 
 const current_page_max_number = computed(() => {
     if (props.offset + props.limit >= props.total_number) {
@@ -93,6 +81,20 @@ const current_page_max_number = computed(() => {
     }
     return props.limit + props.offset;
 });
+
+const pages = computed((): string =>
+    interpolate(
+        $gettext(`%{from} – %{to} of %{total}`).replace(
+            /(%\{(?:from|to|total)})/g,
+            `<span class="tlp-pagination-number">$1</span>`,
+        ),
+        {
+            from: props.total_number > 0 ? props.offset + 1 : 0,
+            to: current_page_max_number.value,
+            total: props.total_number,
+        },
+    ),
+);
 
 const emit = defineEmits<{
     (e: "new-page", new_offset: number): void;
@@ -117,4 +119,8 @@ function previousPage(): void {
 function lastPage(): void {
     emit("new-page", props.total_number - props.limit);
 }
+
+defineExpose({
+    pages,
+});
 </script>
