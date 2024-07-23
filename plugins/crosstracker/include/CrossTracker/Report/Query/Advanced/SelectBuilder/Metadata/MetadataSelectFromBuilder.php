@@ -57,6 +57,11 @@ final readonly class MetadataSelectFromBuilder
             AllowedMetadata::SUBMITTED_BY     => new ParametrizedSelectFrom("artifact.submitted_by AS '@submitted_by'", '', []),
             AllowedMetadata::LAST_UPDATE_BY   => new ParametrizedSelectFrom("changeset.submitted_by AS '@last_update_by'", '', []),
             AllowedMetadata::ID               => new ParametrizedSelectFrom("artifact.id AS '@id'", '', []),
+
+            // Custom fields
+            AllowedMetadata::PROJECT_NAME,
+            AllowedMetadata::TRACKER_NAME,
+            AllowedMetadata::PRETTY_TITLE     => new ParametrizedSelectFrom('', '', []),
             default                           => throw new LogicException("Unknown metadata type: {$metadata->getName()}"),
         };
     }

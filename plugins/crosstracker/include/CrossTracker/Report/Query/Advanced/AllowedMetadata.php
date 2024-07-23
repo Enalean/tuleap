@@ -31,8 +31,11 @@ final class AllowedMetadata
     public const LAST_UPDATE_BY   = '@last_update_by';
     public const ASSIGNED_TO      = '@assigned_to';
     public const ID               = '@id';
+    public const PROJECT_NAME     = '@project.name';
+    public const TRACKER_NAME     = '@tracker.name';
+    public const PRETTY_TITLE     = '@pretty_title';
 
-    public const NAMES = [
+    public const SEARCHABLE_NAMES = [
         self::TITLE,
         self::DESCRIPTION,
         self::STATUS,
@@ -42,5 +45,20 @@ final class AllowedMetadata
         self::LAST_UPDATE_BY,
         self::ASSIGNED_TO,
         self::ID,
+    ];
+
+    public const SELECTABLE_NAMES = [
+        self::TITLE,
+        self::DESCRIPTION,
+        self::STATUS,
+        self::SUBMITTED_ON,
+        self::LAST_UPDATE_DATE,
+        self::SUBMITTED_BY,
+        self::LAST_UPDATE_BY,
+        self::ASSIGNED_TO,
+        self::ID,
+        self::PROJECT_NAME,
+        self::TRACKER_NAME,
+        self::PRETTY_TITLE,
     ];
 }

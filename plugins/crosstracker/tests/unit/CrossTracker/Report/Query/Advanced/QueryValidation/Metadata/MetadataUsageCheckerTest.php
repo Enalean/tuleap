@@ -32,6 +32,7 @@ use Tracker_Semantic_TitleDao;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
+use Tuleap\Tracker\Test\Builders\Fields\IntFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class MetadataUsageCheckerTest extends TestCase
@@ -205,6 +206,64 @@ final class MetadataUsageCheckerTest extends TestCase
 
         $metadata = new Metadata('submitted_on');
 
+        $this->checker->checkMetadataIsUsedByAllTrackers($metadata, $this->trackers, $this->user);
+    }
+
+    public function testProjectNameIsAlwaysGood(): void
+    {
+        self::expectNotToPerformAssertions();
+
+        $metadata = new Metadata('project.name');
+        $this->checker->checkMetadataIsUsedByAllTrackers($metadata, $this->trackers, $this->user);
+    }
+
+    public function testTrackerNameIsAlwaysGood(): void
+    {
+        self::expectNotToPerformAssertions();
+
+        $metadata = new Metadata('tracker.name');
+        $this->checker->checkMetadataIsUsedByAllTrackers($metadata, $this->trackers, $this->user);
+    }
+
+    public function testItShouldRaiseAnErrorIfSemanticTitleIsNotDefinedForPrettyTitle(): void
+    {
+        $this->title_dao->method('getNbOfTrackerWithoutSemanticTitleDefined')->willReturn(2);
+
+        self::expectException(TitleIsMissingInAllTrackersException::class);
+
+        $metadata = new Metadata('pretty_title');
+        $this->checker->checkMetadataIsUsedByAllTrackers($metadata, $this->trackers, $this->user);
+    }
+
+    public function testItShouldRaiseAnErrorIfFieldArtifactIdIsNotDefinedForPrettyTitle(): void
+    {
+        $this->title_dao->method('getNbOfTrackerWithoutSemanticTitleDefined')->willReturn(0);
+
+        $fields_map = [
+            [$this->tracker_101, 'aid', true, []],
+            [$this->tracker_102, 'aid', true, []],
+        ];
+        $this->form_element_factory->method('getFormElementsByType')->willReturnMap($fields_map);
+
+        self::expectException(ArtifactIdIsMissingInAllTrackersException::class);
+
+        $metadata = new Metadata('pretty_title');
+        $this->checker->checkMetadataIsUsedByAllTrackers($metadata, $this->trackers, $this->user);
+    }
+
+    public function testItShouldNotRaiseAnErrorIfAllIsGoodForPrettyTitle(): void
+    {
+        self::expectNotToPerformAssertions();
+
+        $this->title_dao->method('getNbOfTrackerWithoutSemanticTitleDefined')->willReturn(0);
+
+        $fields_map = [
+            [$this->tracker_101, 'aid', true, [IntFieldBuilder::anIntField(1)->withReadPermission($this->user, true)->build()]],
+            [$this->tracker_102, 'aid', true, [IntFieldBuilder::anIntField(2)->withReadPermission($this->user, true)->build()]],
+        ];
+        $this->form_element_factory->method('getFormElementsByType')->willReturnMap($fields_map);
+
+        $metadata = new Metadata('pretty_title');
         $this->checker->checkMetadataIsUsedByAllTrackers($metadata, $this->trackers, $this->user);
     }
 }

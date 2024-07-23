@@ -64,6 +64,11 @@ final readonly class MetadataResultBuilder
             AllowedMetadata::SUBMITTED_BY,
             AllowedMetadata::LAST_UPDATE_BY   => $this->user_builder->getResult($metadata, $select_results),
             AllowedMetadata::ID               => $this->artifact_id_builder->getResult($select_results),
+
+            // Custom fields
+            AllowedMetadata::PROJECT_NAME,
+            AllowedMetadata::TRACKER_NAME,
+            AllowedMetadata::PRETTY_TITLE     => new SelectedValuesCollection(null, []),
             default                           => throw new LogicException("Unknown metadata type: {$metadata->getName()}"),
         };
     }
