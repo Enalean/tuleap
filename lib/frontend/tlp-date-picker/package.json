@@ -16,7 +16,8 @@
     "./fr_FR": {
       "types": "./dist/main.d.ts",
       "import": "./dist/fr_FR.js"
-    }
+    },
+    "./style": "./scss/main.scss"
   },
   "dependencies": {
     "flatpickr": "^4.6.9"

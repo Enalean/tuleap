@@ -1,0 +1,27 @@
+import { Canvas, Meta } from "@storybook/blocks";
+
+import * as DatePickerStories from "./tlp-input-date.stories";
+
+<Meta of={DatePickerStories}/>
+
+# Date/time picker
+
+<code>.tlp-input-date</code>
+
+Date/time picker is based on <a href="https://flatpickr.js.org/">flatpickr</a>.
+
+## Date
+
+<Canvas withToolbar={true} of={DatePickerStories.DatePicker}></Canvas>
+
+#### Typescript example
+
+```typescript
+import { datePicker } from "@tuleap/tlp-date-picker";
+
+datePicker(document.querySelector("#date-picker"));
+```
+
+## Date and time
+
+<Canvas withToolbar={true} of={DatePickerStories.DateTimePicker}></Canvas>
