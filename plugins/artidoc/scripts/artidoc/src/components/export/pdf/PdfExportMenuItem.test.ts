@@ -17,23 +17,37 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { describe, expect, it, vi } from "vitest";
+import { describe, beforeEach, expect, it, vi } from "vitest";
 import { shallowMount } from "@vue/test-utils";
 import PdfExportMenuItem from "@/components/export/pdf/PdfExportMenuItem.vue";
 import { PDF_TEMPLATES } from "@/pdf-templates-injection-key";
 import { createGettext } from "vue3-gettext";
 import { IS_USER_ANONYMOUS } from "@/is-user-anonymous";
 import PrinterVersion from "@/components/print/PrinterVersion.vue";
+import type { SectionEditorsCollection } from "@/composables/useSectionEditorsCollection";
+import {
+    EDITORS_COLLECTION,
+    useSectionEditorsCollection,
+} from "@/composables/useSectionEditorsCollection";
+import { SectionEditorStub } from "@/helpers/stubs/SectionEditorStub";
+import ArtifactSectionFactory from "@/helpers/artifact-section.factory";
 
 vi.mock("@tuleap/tlp-dropdown");
 
 describe("PdfExportMenuItem", () => {
+    let editors_collection: SectionEditorsCollection;
+
+    beforeEach(() => {
+        editors_collection = useSectionEditorsCollection();
+    });
+
     it("should display disabled menuitem if user is anonymous", () => {
         const wrapper = shallowMount(PdfExportMenuItem, {
             global: {
                 plugins: [createGettext({ silent: true })],
                 provide: {
                     [IS_USER_ANONYMOUS.valueOf()]: true,
+                    [EDITORS_COLLECTION.valueOf()]: editors_collection,
                     [PDF_TEMPLATES.valueOf()]: [
                         {
                             id: "abc",
@@ -63,6 +77,7 @@ describe("PdfExportMenuItem", () => {
                     plugins: [createGettext({ silent: true })],
                     provide: {
                         [IS_USER_ANONYMOUS.valueOf()]: false,
+                        [EDITORS_COLLECTION.valueOf()]: editors_collection,
                         [PDF_TEMPLATES.valueOf()]: templates,
                     },
                 },
@@ -78,12 +93,41 @@ describe("PdfExportMenuItem", () => {
         },
     );
 
+    it("should display disabled menuitem when at least one section is in edition mode", () => {
+        editors_collection.addEditor(
+            ArtifactSectionFactory.create(),
+            SectionEditorStub.inEditMode(),
+        );
+
+        const wrapper = shallowMount(PdfExportMenuItem, {
+            global: {
+                plugins: [createGettext({ silent: true })],
+                provide: {
+                    [IS_USER_ANONYMOUS.valueOf()]: false,
+                    [EDITORS_COLLECTION.valueOf()]: editors_collection,
+                    [PDF_TEMPLATES.valueOf()]: [
+                        {
+                            id: "abc",
+                            label: "Blue template",
+                            description: "",
+                            style: "body { color: blue }",
+                        },
+                    ],
+                },
+            },
+        });
+
+        expect(wrapper.findAll("[role=menuitem]")).toHaveLength(1);
+        expect(wrapper.findComponent(PrinterVersion).exists()).toBe(false);
+    });
+
     it("should display one menuitem if one template", () => {
         const wrapper = shallowMount(PdfExportMenuItem, {
             global: {
                 plugins: [createGettext({ silent: true })],
                 provide: {
                     [IS_USER_ANONYMOUS.valueOf()]: false,
+                    [EDITORS_COLLECTION.valueOf()]: editors_collection,
                     [PDF_TEMPLATES.valueOf()]: [
                         {
                             id: "abc",
@@ -106,6 +150,7 @@ describe("PdfExportMenuItem", () => {
                 plugins: [createGettext({ silent: true })],
                 provide: {
                     [IS_USER_ANONYMOUS.valueOf()]: false,
+                    [EDITORS_COLLECTION.valueOf()]: editors_collection,
                     [PDF_TEMPLATES.valueOf()]: [
                         {
                             id: "abc",
