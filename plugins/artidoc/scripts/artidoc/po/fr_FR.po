@@ -123,6 +123,11 @@ msgstr "Section sans titre"
 msgid "Table of contents"
 msgstr "Table des matières"
 
+msgid "The document is being edited. Please save your work beforehand."
+msgstr ""
+"Le document est en cours d'édition. Veuillez au préalable sauvegarder votre "
+"travail."
+
 msgid ""
 "The section you are trying to update does not exist or you don't have "
 "anymore access to it."

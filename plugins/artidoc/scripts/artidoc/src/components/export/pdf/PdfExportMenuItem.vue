@@ -25,7 +25,7 @@
         disabled
         class="tlp-dropdown-menu-item tlp-dropdown-menu-item-disabled"
         role="menuitem"
-        v-bind:title="disabled_option_title"
+        v-bind:title="getDisabledOptionTitle()"
     >
         <i class="fa-regular fa-file-pdf fa-fw" aria-hidden="true"></i>
         {{ export_in_pdf }}
@@ -74,18 +74,20 @@
 </template>
 
 <script setup lang="ts">
+import { computed, onMounted, ref } from "vue";
 import { useGettext } from "vue3-gettext";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import { PDF_TEMPLATES } from "@/pdf-templates-injection-key";
 import type { PdfTemplate } from "@tuleap/print-as-pdf";
 import { printAsPdf } from "@tuleap/print-as-pdf";
-import { onMounted, ref } from "vue";
 import { createDropdown } from "@tuleap/tlp-dropdown";
 import { IS_USER_ANONYMOUS } from "@/is-user-anonymous";
 import PrinterVersion from "@/components/print/PrinterVersion.vue";
+import { EDITORS_COLLECTION } from "@/composables/useSectionEditorsCollection";
 
 const pdf_templates = strictInject(PDF_TEMPLATES);
 const is_user_anonymous = strictInject(IS_USER_ANONYMOUS);
+const editors_collection = strictInject(EDITORS_COLLECTION);
 
 const has_more_than_one_template = pdf_templates !== null && pdf_templates.length > 1;
 
@@ -95,10 +97,19 @@ const export_in_pdf = $gettext("Export document in PDF");
 
 const has_pdf_templates = pdf_templates !== null && pdf_templates.length > 0;
 
-const is_option_disabled = is_user_anonymous || !has_pdf_templates;
-const disabled_option_title = is_user_anonymous
-    ? $gettext("Please log in in order to be able to export as PDF")
-    : $gettext("No template was defined for export, please contact site administrator");
+const is_option_disabled = computed(
+    (): boolean =>
+        is_user_anonymous || !has_pdf_templates || editors_collection.hasAtLeastOneEditorOpened(),
+);
+const getDisabledOptionTitle = (): string => {
+    if (editors_collection.hasAtLeastOneEditorOpened()) {
+        return $gettext("The document is being edited. Please save your work beforehand.");
+    }
+
+    return is_user_anonymous
+        ? $gettext("Please log in in order to be able to export as PDF")
+        : $gettext("No template was defined for export, please contact site administrator");
+};
 
 function printUsingFirstTemplate(): void {
     if (pdf_templates === null || pdf_templates.length === 0) {
