@@ -25,20 +25,31 @@ import "@tuleap/tlp-button";
 type SwitchProps = {
     in_form: boolean;
     form_label: string;
-    size: string;
+    size: "default" | "large" | "mini";
     disabled: boolean;
-    checked: boolean;
+    state: "checked" | "unchecked" | "loading";
 };
 
 const SWITCH_SIZES = ["default", "large", "mini"];
+const SWITCH_STATES = ["checked", "unchecked", "loading"];
 
-function getClasses(args: SwitchProps): string {
-    const classes = [`tlp-switch`];
+function getSizeClasses(args: SwitchProps): string {
+    const classes = ["tlp-switch"];
     if (args.size !== "default") {
         classes.push(`tlp-switch-${args.size}`);
     }
     return classes.join(" ");
 }
+
+function getButtonClasses(args: SwitchProps): string {
+    const classes = ["tlp-switch-button"];
+    if (args.state === "loading") {
+        classes.push("loading");
+    }
+    return classes.join(" ");
+}
+
+const isChecked = (args: SwitchProps): boolean => args.state === "checked";
 
 function getTemplate(args: SwitchProps): TemplateResult {
     if (args.in_form) {
@@ -46,17 +57,17 @@ function getTemplate(args: SwitchProps): TemplateResult {
         return html`
 <div class="tlp-form-element">
     <label class="tlp-label" for="toggle">${args.form_label}</label>
-    <div class=${getClasses(args)}>
-        <input type="checkbox" id="toggle" class="tlp-switch-checkbox" ?disabled=${args.disabled} ?checked=${args.checked}>
-        <label for="toggle" class="tlp-switch-button"></label>
+    <div class=${getSizeClasses(args)}>
+        <input type="checkbox" id="toggle" class="tlp-switch-checkbox" ?disabled=${args.disabled} ?checked=${isChecked(args)}>
+        <label for="toggle" class=${getButtonClasses(args)}></label>
     </div>
 </div>`;
     }
     //prettier-ignore
     return html`
-<div class=${getClasses(args)}>
-    <input type="checkbox" id="toggle" class="tlp-switch-checkbox" ?disabled=${args.disabled} ?checked=${args.checked}>
-    <label for="toggle" class="tlp-switch-button"></label>
+<div class=${getSizeClasses(args)}>
+    <input type="checkbox" id="toggle" class="tlp-switch-checkbox" ?disabled=${args.disabled} ?checked=${isChecked(args)}>
+    <label for="toggle" class=${getButtonClasses(args)}></label>
 </div>`;
 }
 
@@ -70,7 +81,7 @@ const meta: Meta<SwitchProps> = {
         form_label: "Activate advanced mode",
         size: "default",
         disabled: false,
-        checked: true,
+        state: "checked",
     },
     argTypes: {
         in_form: {
@@ -100,11 +111,13 @@ const meta: Meta<SwitchProps> = {
                 type: { summary: undefined },
             },
         },
-        checked: {
-            name: "Checked",
-            description: "Add checked attribute.",
+        state: {
+            name: "State",
+            description: `The current state of the switch. When "loading", applies the class`,
+            control: "select",
+            options: SWITCH_STATES,
             table: {
-                type: { summary: undefined },
+                type: { summary: ".loading" },
             },
         },
     },
