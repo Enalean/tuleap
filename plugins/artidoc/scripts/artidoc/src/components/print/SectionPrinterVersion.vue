@@ -25,6 +25,7 @@
             v-bind:title="editable_title"
             v-bind:input_current_title="noop"
             v-bind:is_edit_mode="false"
+            v-bind:is_print_mode="true"
         />
         <section-description
             v-bind:editable_description="editable_description"
@@ -35,6 +36,7 @@
             v-bind:add_attachment_to_waiting_list="noop"
             v-bind:upload_url="upload_url"
             v-bind:is_image_upload_allowed="is_image_upload_allowed"
+            v-bind:is_print_mode="true"
         />
     </article>
 </template>

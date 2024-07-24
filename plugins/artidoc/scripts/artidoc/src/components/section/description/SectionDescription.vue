@@ -20,7 +20,7 @@
 
 <template>
     <section-description-skeleton v-if="is_sections_loading" />
-    <template v-else-if="is_edit_mode || is_prose_mirror">
+    <template v-else-if="(is_edit_mode || is_prose_mirror) && !is_print_mode">
         <component
             v-bind:is="async_editor"
             v-bind:upload_url="upload_url"
@@ -46,16 +46,22 @@ import { strictInject } from "@tuleap/vue-strict-inject";
 import { SECTIONS_STORE } from "@/stores/sections-store-injection-key";
 import { EDITOR_CHOICE } from "@/helpers/editor-choice";
 
-defineProps<{
-    add_attachment_to_waiting_list: AttachmentFile["addAttachmentToWaitingList"];
-    upload_url: string;
-    editable_description: string;
-    readonly_description: string;
-    is_edit_mode: boolean;
-    toggle_has_been_canceled: boolean;
-    is_image_upload_allowed: boolean;
-    input_current_description: EditorSectionContent["inputCurrentDescription"];
-}>();
+withDefaults(
+    defineProps<{
+        add_attachment_to_waiting_list: AttachmentFile["addAttachmentToWaitingList"];
+        upload_url: string;
+        editable_description: string;
+        readonly_description: string;
+        is_edit_mode: boolean;
+        toggle_has_been_canceled: boolean;
+        is_image_upload_allowed: boolean;
+        input_current_description: EditorSectionContent["inputCurrentDescription"];
+        is_print_mode?: boolean;
+    }>(),
+    {
+        is_print_mode: false,
+    },
+);
 
 const { is_sections_loading } = strictInject(SECTIONS_STORE);
 const { is_prose_mirror } = strictInject(EDITOR_CHOICE);

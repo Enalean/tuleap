@@ -27,7 +27,7 @@
                     'disable-border': is_prose_mirror,
                     'add-hover-effect': is_prose_mirror,
                 }"
-                v-if="is_edit_mode || is_prose_mirror"
+                v-if="(is_edit_mode || is_prose_mirror) && !is_print_mode"
                 v-model="title_to_edit"
                 v-on:input="onTitleChange"
                 v-bind:placeholder="placeholder"
@@ -50,11 +50,17 @@ import type { EditorSectionContent } from "@/composables/useEditorSectionContent
 import { strictInject } from "@tuleap/vue-strict-inject";
 import { EDITOR_CHOICE } from "@/helpers/editor-choice";
 
-const props = defineProps<{
-    title: string;
-    is_edit_mode: boolean;
-    input_current_title: EditorSectionContent["inputCurrentTitle"];
-}>();
+const props = withDefaults(
+    defineProps<{
+        title: string;
+        is_edit_mode: boolean;
+        input_current_title: EditorSectionContent["inputCurrentTitle"];
+        is_print_mode?: boolean;
+    }>(),
+    {
+        is_print_mode: false,
+    },
+);
 
 const { scrollToAnchor } = useScrollToAnchor();
 const { $gettext } = useGettext();
