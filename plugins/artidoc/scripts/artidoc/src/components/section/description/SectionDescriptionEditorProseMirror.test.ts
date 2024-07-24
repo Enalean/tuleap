@@ -19,19 +19,38 @@
 import { beforeAll, describe, expect, it, vi } from "vitest";
 import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
+import { ref } from "vue";
 import type { ComponentPublicInstance } from "vue";
 import SectionDescriptionEditorProseMirror from "@/components/section/description/SectionDescriptionEditorProseMirror.vue";
 import VueDOMPurifyHTML from "vue-dompurify-html";
+import * as upload_file from "@/composables/useUploadFile";
+import NotificationBar from "@/components/section/description/NotificationBar.vue";
 
 describe("SectionDescriptionEditorProseMirror", () => {
     let wrapper: VueWrapper<ComponentPublicInstance>;
 
     beforeAll(() => {
+        vi.spyOn(upload_file, "useUploadFile").mockReturnValue({
+            file_upload_options: {
+                upload_url: "upload_url",
+                max_size_upload: 1234,
+                onStartCallback: vi.fn(),
+                onErrorCallback: vi.fn(),
+                onSuccessCallback: vi.fn(),
+                onProgressCallback: vi.fn(),
+            },
+            error_message: ref(null),
+            upload_progress: ref(0),
+            resetProgressCallback: vi.fn(),
+        });
         wrapper = shallowMount(SectionDescriptionEditorProseMirror, {
             props: {
                 editable_description: "<h1>description</h1>",
                 input_current_description: vi.fn(),
                 toggle_has_been_canceled: false,
+                upload_url: "",
+                is_image_upload_allowed: true,
+                add_attachment_to_waiting_list: vi.fn(),
             },
             global: {
                 plugins: [VueDOMPurifyHTML],
@@ -45,5 +64,8 @@ describe("SectionDescriptionEditorProseMirror", () => {
     });
     it("should focus the editor", () => {
         expect(wrapper.find(".ProseMirror-focused").exists()).toBe(true);
+    });
+    it("should have a notification bar", () => {
+        expect(wrapper.findComponent(NotificationBar).exists()).toBe(true);
     });
 });

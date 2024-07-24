@@ -150,6 +150,9 @@ msgstr "Tracker"
 msgid "Unable to upload the image"
 msgstr "Impossible de téléverser l'image"
 
+msgid "Upload image progress: %{ upload_progress }%"
+msgstr "Progression du téléversement: %{ upload_progress }%"
+
 msgid "You are not allowed to paste images here"
 msgstr "Vous ne pouvez pas ajouter d'images ici"
 

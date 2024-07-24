@@ -18,3 +18,4 @@
  */
 
 export * from "./input";
+export * from "./drop-file";
