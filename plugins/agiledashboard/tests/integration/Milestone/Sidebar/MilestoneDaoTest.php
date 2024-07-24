@@ -36,13 +36,13 @@ final class MilestoneDaoTest extends TestIntegrationTestCase
     private int $milestone_id             = 0;
     private int $release_tracker_id       = 0;
     private int $sprint_tracker_id        = 0;
-    private int $other_tracker_id         = 0;
     private int $milestone_changeset_id   = 0;
     private int $project_id               = 0;
     private int $artifact_link_field_id   = 0;
     private int $sprint_id                = 0;
     private int $sprint_last_changeset_id = 0;
-    private int $list_field_id            = 0;
+    private int $release_list_field_id    = 0;
+    private int $sprint_list_field_id     = 0;
     /**
      * @var array{
      *     open: array<int>,
@@ -71,11 +71,21 @@ final class MilestoneDaoTest extends TestIntegrationTestCase
         $this->project_id             = (int) $core_builder->buildProject()->getID();
         $this->release_tracker_id     = $this->tracker_builder->buildTracker($this->project_id, 'Release')->getId();
         $this->sprint_tracker_id      = $this->tracker_builder->buildTracker($this->project_id, 'Sprint')->getId();
-        $this->other_tracker_id       = $this->tracker_builder->buildTracker($this->project_id, 'Other')->getId();
-        $this->list_field_id          = $this->tracker_builder->buildStaticListField($this->sprint_tracker_id, 'list_field', 'sb');
+        $this->release_list_field_id  = $this->tracker_builder->buildStaticListField($this->release_tracker_id, 'list_field', 'sb');
+        $this->sprint_list_field_id   = $this->tracker_builder->buildStaticListField($this->sprint_tracker_id, 'list_field', 'sb');
         $this->artifact_link_field_id = $this->tracker_builder->buildArtifactLinkField($this->release_tracker_id);
-        $this->release_status_values  = $this->tracker_builder->buildOpenAndClosedValuesForField($this->list_field_id, $this->release_tracker_id, ['Open'], ['Closed']);
-        $this->sprint_status_values   = $this->tracker_builder->buildOpenAndClosedValuesForField($this->list_field_id, $this->sprint_tracker_id, ['Open'], ['Closed']);
+        $this->release_status_values  = $this->tracker_builder->buildOpenAndClosedValuesForField(
+            $this->release_list_field_id,
+            $this->release_tracker_id,
+            ['Open'],
+            ['Closed']
+        );
+        $this->sprint_status_values   = $this->tracker_builder->buildOpenAndClosedValuesForField(
+            $this->sprint_list_field_id,
+            $this->sprint_tracker_id,
+            ['Open'],
+            ['Closed']
+        );
         $this->builder->buildPlanning($this->project_id, $this->release_tracker_id);
         $this->builder->buildPlanning($this->project_id, $this->sprint_tracker_id);
     }
@@ -215,14 +225,19 @@ final class MilestoneDaoTest extends TestIntegrationTestCase
         ], $result[0]);
     }
 
+    /**
+     * release
+     *  | -> sprint without is_child
+     *  ` -> 'child' - other tracker NOT in planning
+     */
     public function testItRetrievesOnlyMilestoneInBacklogPlanning(): void
     {
-        $this->createMilestoneOutOfPlanning();
+        $this->createSubMilestonesThatShouldNotBeFound();
 
         $result = $this->dao->retrieveMilestonesWithSubMilestones($this->project_id, $this->release_tracker_id);
 
-        self::assertCount(1, $result);
-        self::assertEquals([
+        self::assertCount(2, $result);
+        $expected_milestone_row = [
             'parent_id'                             => $this->milestone_id,
             'parent_tracker'                        => $this->release_tracker_id,
             'parent_changeset'                      => $this->milestone_changeset_id,
@@ -237,12 +252,14 @@ final class MilestoneDaoTest extends TestIntegrationTestCase
             'submilestone_submitted_on'             => null,
             'submilestone_use_artifact_permissions' => null,
             'submilestone_per_tracker_artifact_id'  => null,
-        ], $result[0]);
+        ];
+        self::assertSame($expected_milestone_row, $result[0]);
+        self::assertSame($expected_milestone_row, $result[1]);
     }
 
     public function testItRetrievesOnlyNotDeletedMilestones(): void
     {
-        $this->createMilestoneInDeletedTracker();
+        $this->createSubMilestoneInDeletedTracker();
 
         $result = $this->dao->retrieveMilestonesWithSubMilestones($this->project_id, $this->release_tracker_id);
 
@@ -294,7 +311,7 @@ final class MilestoneDaoTest extends TestIntegrationTestCase
     {
         $this->milestone_id           = $this->tracker_builder->buildArtifact($this->release_tracker_id);
         $this->milestone_changeset_id = $this->tracker_builder->buildLastChangeset($this->milestone_id);
-        $this->tracker_builder->addStatusValueForArtifact($this->list_field_id, $this->milestone_changeset_id, $this->release_status_values['open'][0]);
+        $this->tracker_builder->addStatusValueForArtifact($this->release_list_field_id, $this->milestone_changeset_id, $this->release_status_values['open'][0]);
     }
 
     private function createMilestoneWithOpenSubMilestone(): void
@@ -310,8 +327,14 @@ final class MilestoneDaoTest extends TestIntegrationTestCase
         $this->sprint_id                = $this->tracker_builder->buildArtifact($this->sprint_tracker_id);
         $this->sprint_last_changeset_id = $this->tracker_builder->buildLastChangeset($this->sprint_id);
 
-        $this->tracker_builder->addStatusValueForArtifact($this->list_field_id, $this->sprint_last_changeset_id, $this->sprint_status_values['open'][0]);
-        $this->tracker_builder->buildArtifactLinkValue($this->project_id, $this->sprint_id, $this->milestone_changeset_id, $this->artifact_link_field_id, '_is_child');
+        $this->tracker_builder->addStatusValueForArtifact($this->sprint_list_field_id, $this->sprint_last_changeset_id, $this->sprint_status_values['open'][0]);
+        $this->tracker_builder->buildArtifactLinkValue(
+            $this->project_id,
+            $this->milestone_changeset_id,
+            $this->artifact_link_field_id,
+            $this->sprint_id,
+            '_is_child'
+        );
     }
 
     private function createMilestoneWithClosedSubMilestone(): void
@@ -320,45 +343,82 @@ final class MilestoneDaoTest extends TestIntegrationTestCase
 
         $this->sprint_id                 = $this->tracker_builder->buildArtifact($this->sprint_tracker_id);
         $closed_sprint_last_changeset_id = $this->tracker_builder->buildLastChangeset($this->sprint_id);
-        $this->tracker_builder->addStatusValueForArtifact($this->list_field_id, $closed_sprint_last_changeset_id, $this->sprint_status_values['closed'][0]);
+        $this->tracker_builder->addStatusValueForArtifact($this->sprint_list_field_id, $closed_sprint_last_changeset_id, $this->sprint_status_values['closed'][0]);
 
-        $this->tracker_builder->buildArtifactLinkValue($this->project_id, $this->sprint_id, $this->milestone_changeset_id, $this->artifact_link_field_id, '_is_child');
+        $this->tracker_builder->buildArtifactLinkValue(
+            $this->project_id,
+            $this->milestone_changeset_id,
+            $this->artifact_link_field_id,
+            $this->sprint_id,
+            '_is_child'
+        );
     }
 
     private function createClosedMilestone(): void
     {
         $this->milestone_id           = $this->tracker_builder->buildArtifact($this->release_tracker_id);
         $this->milestone_changeset_id = $this->tracker_builder->buildLastChangeset($this->milestone_id);
-        $this->tracker_builder->addStatusValueForArtifact($this->list_field_id, $this->milestone_changeset_id, $this->release_status_values['closed'][0]);
+        $this->tracker_builder->addStatusValueForArtifact($this->release_list_field_id, $this->milestone_changeset_id, $this->release_status_values['closed'][0]);
     }
 
-    private function createMilestoneOutOfPlanning(): void
+    private function createSubMilestoneWithUntypedArtifactLink(): void
     {
-        $this->createMilestone();
-        $artifact_is_child                  = $this->tracker_builder->buildArtifact($this->other_tracker_id);
-        $artifact_is_child_changeset_id     = $this->tracker_builder->buildLastChangeset($artifact_is_child);
-        $artifact_without_link              = $this->tracker_builder->buildArtifact($this->sprint_tracker_id);
-        $artifact_without_link_changeset_id = $this->tracker_builder->buildLastChangeset($artifact_without_link);
-
-        $this->tracker_builder->buildArtifactLinkValue($this->project_id, $artifact_is_child, $artifact_is_child_changeset_id, $this->artifact_link_field_id, '_is_child');
-        $this->tracker_builder->buildArtifactLinkValue($this->project_id, $artifact_without_link, $artifact_without_link_changeset_id, $this->artifact_link_field_id, '');
-    }
-
-    private function createMilestoneInDeletedTracker(): void
-    {
-        $this->createMilestone();
-        $db                             = DBFactory::getMainTuleapDBConnection()->getDB();
-        $deleted_tracker_id             = (int) $db->insertReturnId(
-            'tracker',
-            [
-                'group_id'      => $this->project_id,
-                'name'          => 'deleted',
-                'status'        => 'A',
-                'deletion_date' => '12234567890',
-            ]
+        $this->builder->buildHierarchy($this->release_tracker_id, $this->sprint_tracker_id);
+        $this->sprint_id                = $this->tracker_builder->buildArtifact($this->sprint_tracker_id);
+        $this->sprint_last_changeset_id = $this->tracker_builder->buildLastChangeset($this->sprint_id);
+        $this->tracker_builder->addStatusValueForArtifact(
+            $this->sprint_list_field_id,
+            $this->sprint_last_changeset_id,
+            $this->sprint_status_values['open'][0]
         );
-        $artifact_id                    = $this->tracker_builder->buildArtifact($deleted_tracker_id);
-        $artifact_is_child_changeset_id = $this->tracker_builder->buildLastChangeset($deleted_tracker_id);
-        $this->tracker_builder->buildArtifactLinkValue($this->project_id, $artifact_id, $artifact_is_child_changeset_id, $this->artifact_link_field_id, '_is_child');
+        $this->tracker_builder->buildArtifactLinkValue(
+            $this->project_id,
+            $this->milestone_changeset_id,
+            $this->artifact_link_field_id,
+            $this->sprint_id,
+            ''
+        );
+    }
+
+    private function createSubMilestoneOutOfPlanning(): void
+    {
+        $other_tracker_id = $this->tracker_builder->buildTracker($this->project_id, 'Other')->getId();
+        $this->builder->buildHierarchy($this->release_tracker_id, $other_tracker_id);
+        $other_list_field_id = $this->tracker_builder->buildStaticListField($this->release_tracker_id, 'list_field', 'sb');
+        $other_status_values = $this->tracker_builder->buildOpenAndClosedValuesForField(
+            $other_list_field_id,
+            $other_tracker_id,
+            ['Open'],
+            ['Closed']
+        );
+
+        $artifact_is_child  = $this->tracker_builder->buildArtifact($other_tracker_id);
+        $other_changeset_id = $this->tracker_builder->buildLastChangeset($artifact_is_child);
+        $this->tracker_builder->addStatusValueForArtifact(
+            $other_list_field_id,
+            $other_changeset_id,
+            $other_status_values['open'][0]
+        );
+        $this->tracker_builder->buildArtifactLinkValue(
+            $this->project_id,
+            $this->milestone_changeset_id,
+            $this->artifact_link_field_id,
+            $artifact_is_child,
+            '_is_child'
+        );
+    }
+
+    private function createSubMilestonesThatShouldNotBeFound(): void
+    {
+        $this->createMilestone();
+        $this->createSubMilestoneOutOfPlanning();
+        $this->createSubMilestoneWithUntypedArtifactLink();
+    }
+
+    private function createSubMilestoneInDeletedTracker(): void
+    {
+        $this->createMilestoneWithOpenSubMilestone();
+        $db = DBFactory::getMainTuleapDBConnection()->getDB();
+        $db->update('tracker', ['deletion_date' => '123456'], ['id' => $this->sprint_tracker_id]);
     }
 }

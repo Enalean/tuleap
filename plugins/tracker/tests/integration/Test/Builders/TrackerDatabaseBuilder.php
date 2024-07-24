@@ -632,16 +632,21 @@ final class TrackerDatabaseBuilder
         );
     }
 
-    public function buildArtifactLinkValue(int $project_id, int $artifact_id, int $parent_changeset_id, int $artifact_link_field_id, string $type): void
-    {
-        $changeset_value_id = $this->buildChangesetValue($parent_changeset_id, $artifact_link_field_id);
+    public function buildArtifactLinkValue(
+        int $project_id,
+        int $source_changeset_id,
+        int $source_artifact_link_field_id,
+        int $target_artifact_id,
+        string $type,
+    ): void {
+        $changeset_value_id = $this->buildChangesetValue($source_changeset_id, $source_artifact_link_field_id);
 
         $this->db->insert(
             'tracker_changeset_value_artifactlink',
             [
                 'changeset_value_id' => $changeset_value_id,
                 'nature'             => $type,
-                'artifact_id'        => $artifact_id,
+                'artifact_id'        => $target_artifact_id,
                 'keyword'            => 'release',
                 'group_id'           => $project_id,
             ]
