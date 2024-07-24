@@ -157,15 +157,13 @@ describe(`SelectableTable`, () => {
             await vi.runOnlyPendingTimersAsync();
 
             expect(wrapper.find("[data-test=loading").exists()).toBe(false);
-            expect(
-                wrapper.findAll("[data-test=column-header]").map((header) => header.text()),
-            ).toContain(DATE_COLUMN_NAME);
-            expect(
-                wrapper.findAll("[data-test=column-header]").map((header) => header.text()),
-            ).toContain(NUMERIC_COLUMN_NAME);
-            expect(
-                wrapper.findAll("[data-test=column-header]").map((header) => header.text()),
-            ).toContain(TEXT_COLUMN_NAME);
+            const headers = wrapper
+                .findAll("[data-test=column-header]")
+                .map((header) => header.text());
+
+            expect(headers).toContain(DATE_COLUMN_NAME);
+            expect(headers).toContain(NUMERIC_COLUMN_NAME);
+            expect(headers).toContain(TEXT_COLUMN_NAME);
             expect(wrapper.findAll("[data-test=cell]")).toHaveLength(6);
         });
 
@@ -273,12 +271,11 @@ describe(`SelectableTable`, () => {
 
             await vi.runOnlyPendingTimersAsync();
 
-            expect(
-                wrapper.findAll("[data-test=column-header]").map((header) => header.text()),
-            ).toContain(DATE_COLUMN_NAME);
-            expect(
-                wrapper.findAll("[data-test=column-header]").map((header) => header.text()),
-            ).toContain(NUMERIC_COLUMN_NAME);
+            const headers = wrapper
+                .findAll("[data-test=column-header]")
+                .map((header) => header.text());
+            expect(headers).toContain(DATE_COLUMN_NAME);
+            expect(headers).toContain(NUMERIC_COLUMN_NAME);
             expect(wrapper.findAll("[data-test=cell]")).toHaveLength(4);
         });
     });
