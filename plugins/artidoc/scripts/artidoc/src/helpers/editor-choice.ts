@@ -18,14 +18,16 @@
  */
 
 import type { StrictInjectionKey } from "@tuleap/vue-strict-inject";
-import type { Ref } from "vue";
-import { watch, ref } from "vue";
+import { computed, watch, ref } from "vue";
+import type { ComputedRef, Ref } from "vue";
 
 export const EDITOR_CHOICE: StrictInjectionKey<EditorChoice> = Symbol("editor-choice");
 
 interface EditorChoice {
     readonly has_more_than_one_editor: boolean;
     readonly current_editor: Ref<"legacy" | "nextgen">;
+    readonly is_prose_mirror: ComputedRef<boolean>;
+    readonly has_switch_been_triggered: Ref<boolean>;
 }
 export function editorChoice(is_next_gen_editor_enabled: boolean): EditorChoice {
     const KEY = "artidoc-editor-choice";
@@ -34,13 +36,19 @@ export function editorChoice(is_next_gen_editor_enabled: boolean): EditorChoice 
     const current_editor: EditorChoice["current_editor"] = ref(
         last_use === "legacy" || last_use === "nextgen" ? last_use : "legacy",
     );
+    const has_switch_been_triggered = ref(false);
 
     watch(current_editor, () => {
         window.localStorage.setItem(KEY, current_editor.value);
+        has_switch_been_triggered.value = !has_switch_been_triggered.value;
     });
+
+    const is_prose_mirror = computed(() => window.localStorage.getItem(KEY) === "nextgen");
 
     return {
         has_more_than_one_editor: is_next_gen_editor_enabled,
         current_editor,
+        is_prose_mirror,
+        has_switch_been_triggered: has_switch_been_triggered,
     };
 }

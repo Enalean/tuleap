@@ -20,12 +20,13 @@
 
 <template>
     <section-description-skeleton v-if="is_sections_loading" />
-    <template v-else-if="is_edit_mode">
+    <template v-else-if="is_edit_mode || is_prose_mirror">
         <component
             v-bind:is="async_editor"
             v-bind:upload_url="upload_url"
             v-bind:add_attachment_to_waiting_list="add_attachment_to_waiting_list"
             v-bind:editable_description="editable_description"
+            v-bind:toggle_has_been_canceled="toggle_has_been_canceled"
             v-bind:input_current_description="input_current_description"
             v-bind:readonly_value="readonly_description"
             v-bind:is_image_upload_allowed="is_image_upload_allowed"
@@ -43,6 +44,7 @@ import type { EditorSectionContent } from "@/composables/useEditorSectionContent
 import type { AttachmentFile } from "@/composables/useAttachmentFile";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import { SECTIONS_STORE } from "@/stores/sections-store-injection-key";
+import { EDITOR_CHOICE } from "@/helpers/editor-choice";
 
 defineProps<{
     add_attachment_to_waiting_list: AttachmentFile["addAttachmentToWaitingList"];
@@ -50,17 +52,25 @@ defineProps<{
     editable_description: string;
     readonly_description: string;
     is_edit_mode: boolean;
+    toggle_has_been_canceled: boolean;
     is_image_upload_allowed: boolean;
     input_current_description: EditorSectionContent["inputCurrentDescription"];
 }>();
 
 const { is_sections_loading } = strictInject(SECTIONS_STORE);
+const { is_prose_mirror } = strictInject(EDITOR_CHOICE);
 
-const async_editor = defineAsyncComponent({
-    loader: () => import("./SectionDescriptionEditor.vue"),
-    loadingComponent: SectionDescriptionReadOnly,
-    delay: 0,
-});
+const async_editor = is_prose_mirror.value
+    ? defineAsyncComponent({
+          loader: () => import("./SectionDescriptionEditorProseMirror.vue"),
+          loadingComponent: SectionDescriptionReadOnly,
+          delay: 0,
+      })
+    : defineAsyncComponent({
+          loader: () => import("./SectionDescriptionEditor.vue"),
+          loadingComponent: SectionDescriptionReadOnly,
+          delay: 0,
+      });
 
 onMounted(() => {
     loadTooltips();

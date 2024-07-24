@@ -21,11 +21,13 @@ import { describe, expect, it } from "vitest";
 import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import type { ComponentPublicInstance } from "vue";
+import { ref } from "vue";
 import { createGettext } from "vue3-gettext";
 import { SectionEditorStub } from "@/helpers/stubs/SectionEditorStub";
 import type { SectionEditor } from "@/composables/useSectionEditor";
 import SectionFooter from "./SectionFooter.vue";
 import ArtifactSectionFactory from "@/helpers/artifact-section.factory";
+import { EDITOR_CHOICE } from "@/helpers/editor-choice";
 
 describe("SectionFooter", () => {
     function getWrapper(editor: SectionEditor): VueWrapper<ComponentPublicInstance> {
@@ -34,7 +36,12 @@ describe("SectionFooter", () => {
                 editor,
                 section: ArtifactSectionFactory.create(),
             },
-            global: { plugins: [createGettext({ silent: true })] },
+            global: {
+                plugins: [createGettext({ silent: true })],
+                provide: {
+                    [EDITOR_CHOICE.valueOf()]: { is_prose_mirror: ref(false) },
+                },
+            },
         });
     }
 
@@ -47,6 +54,16 @@ describe("SectionFooter", () => {
     });
 
     describe("when the section is editable", () => {
+        describe("when prose mirror is disable", () => {
+            it("should add a background", () => {
+                expect(
+                    getWrapper(SectionEditorStub.withEditableSection())
+                        .find(".section-footer-with-background")
+                        .exists(),
+                ).toBe(true);
+            });
+        });
+
         it("should display the footer", () => {
             expect(getWrapper(SectionEditorStub.withEditableSection()).find("div").exists()).toBe(
                 true,

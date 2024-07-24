@@ -30,12 +30,24 @@
                 Nextgen (prosemirror)
                 <i class="fa-solid fa-flask" role="img" title="Beta (under construction)"></i>
             </label>
+            <label v-if="has_switch_been_triggered" class="tlp-label info-message">{{
+                $gettext("You have to reload the browser")
+            }}</label>
         </div>
     </div>
 </template>
 <script setup lang="ts">
 import { strictInject } from "@tuleap/vue-strict-inject";
 import { EDITOR_CHOICE } from "@/helpers/editor-choice";
+import { useGettext } from "vue3-gettext";
 
-const { has_more_than_one_editor, current_editor } = strictInject(EDITOR_CHOICE);
+const { $gettext } = useGettext();
+const { has_more_than_one_editor, current_editor, has_switch_been_triggered } =
+    strictInject(EDITOR_CHOICE);
 </script>
+
+<style lang="scss" scoped>
+.info-message {
+    color: var(--tlp-danger-dark-color);
+}
+</style>

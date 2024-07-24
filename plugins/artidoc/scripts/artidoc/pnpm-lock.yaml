@@ -29,6 +29,9 @@ dependencies:
   '@tuleap/project-background':
     specifier: workspace:^
     version: link:../../../../lib/frontend/project-background
+  '@tuleap/prose-mirror-editor':
+    specifier: workspace:*
+    version: link:../../../../lib/frontend/editor
   '@tuleap/tlp-dropdown':
     specifier: workspace:*
     version: link:../../../../lib/frontend/tlp-dropdown

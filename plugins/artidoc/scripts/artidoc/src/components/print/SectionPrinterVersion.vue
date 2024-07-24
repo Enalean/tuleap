@@ -30,6 +30,7 @@
             v-bind:editable_description="editable_description"
             v-bind:readonly_description="readonly_description"
             v-bind:input_current_description="noop"
+            v-bind:toggle_has_been_canceled="false"
             v-bind:is_edit_mode="false"
             v-bind:add_attachment_to_waiting_list="noop"
             v-bind:upload_url="upload_url"
@@ -47,7 +48,12 @@ import { useEditorSectionContent } from "@/composables/useEditorSectionContent";
 
 const props = defineProps<{ section: ArtifactSection }>();
 
-const content = computed(() => useEditorSectionContent(ref(props.section)));
+const content = computed(() =>
+    useEditorSectionContent(ref(props.section), {
+        showActionsButtons: noop,
+        hideActionsButtons: noop,
+    }),
+);
 
 const editable_title = computed(() => content.value.editable_title.value);
 const readonly_description = computed(() => content.value.getReadonlyDescription());

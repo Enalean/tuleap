@@ -19,7 +19,11 @@
 -->
 
 <template>
-    <div v-if="is_section_editable" class="section-footer">
+    <div
+        v-if="is_section_editable"
+        class="section-footer"
+        v-bind:class="{ 'section-footer-with-background': !is_prose_mirror }"
+    >
         <not-found-error v-if="is_not_found" />
         <generic-error
             v-else-if="is_in_error"
@@ -42,11 +46,15 @@ import NotFoundError from "./NotFoundError.vue";
 import OutdatedSectionWarning from "./OutdatedSectionWarning.vue";
 import GenericError from "./GenericError.vue";
 import type { ArtidocSection } from "@/helpers/artidoc-section.type";
+import { strictInject } from "@tuleap/vue-strict-inject";
+import { EDITOR_CHOICE } from "@/helpers/editor-choice";
 
 const props = defineProps<{ section: ArtidocSection; editor: SectionEditor }>();
 
 const { error_message, is_outdated, is_in_error, is_not_found } = props.editor.editor_error;
 const { is_section_editable } = props.editor.editor_state;
+
+const { is_prose_mirror } = strictInject(EDITOR_CHOICE);
 </script>
 
 <style scoped lang="scss">
@@ -57,6 +65,9 @@ const { is_section_editable } = props.editor.editor_state;
     z-index: zindex.$footer;
     bottom: 0;
     padding: var(--tlp-medium-spacing) 0;
-    background: var(--tuleap-artidoc-section-background);
+
+    &-with-background {
+        background: var(--tuleap-artidoc-section-background);
+    }
 }
 </style>

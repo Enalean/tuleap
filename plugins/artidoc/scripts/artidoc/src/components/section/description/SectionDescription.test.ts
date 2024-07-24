@@ -24,6 +24,8 @@ import SectionDescriptionSkeleton from "./SectionDescriptionSkeleton.vue";
 import { InjectedSectionsStoreStub } from "@/helpers/stubs/InjectSectionsStoreStub";
 import SectionDescriptionReadOnly from "./SectionDescriptionReadOnly.vue";
 import { SECTIONS_STORE } from "@/stores/sections-store-injection-key";
+import { EDITOR_CHOICE } from "@/helpers/editor-choice";
+import { ref } from "vue";
 
 const default_props = {
     editable_description: "Lorem ipsum",
@@ -34,6 +36,7 @@ const default_props = {
     add_attachment_to_waiting_list: vi.fn(),
     input_current_description: vi.fn(),
     is_image_upload_allowed: true,
+    toggle_has_been_canceled: false,
 };
 describe("SectionDescription", () => {
     describe("while the sections are loading", () => {
@@ -44,6 +47,7 @@ describe("SectionDescription", () => {
                         [SECTIONS_STORE.valueOf()]: InjectedSectionsStoreStub.withLoadingSections(
                             [],
                         ),
+                        [EDITOR_CHOICE.valueOf()]: { is_prose_mirror: ref(false) },
                     },
                 },
                 props: { ...default_props },
@@ -63,6 +67,7 @@ describe("SectionDescription", () => {
                         provide: {
                             [SECTIONS_STORE.valueOf()]:
                                 InjectedSectionsStoreStub.withLoadedSections([]),
+                            [EDITOR_CHOICE.valueOf()]: { is_prose_mirror: ref(false) },
                         },
                     },
                     props: default_props,
@@ -70,6 +75,24 @@ describe("SectionDescription", () => {
                 expect(wrapper.findComponent(SectionDescriptionReadOnly).exists()).toBe(true);
                 expect(wrapper.findComponent(SectionDescriptionSkeleton).exists()).toBe(false);
                 expect(wrapper.find("[data-test=editor]").exists()).toBe(false);
+            });
+            describe("when prose mirror is enabled", () => {
+                it("should display the editor", () => {
+                    const wrapper = shallowMount(SectionDescription, {
+                        global: {
+                            provide: {
+                                [SECTIONS_STORE.valueOf()]:
+                                    InjectedSectionsStoreStub.withLoadedSections([]),
+                                [EDITOR_CHOICE.valueOf()]: { is_prose_mirror: ref(true) },
+                            },
+                        },
+                        props: { ...default_props, is_edit_mode: false },
+                    });
+
+                    expect(wrapper.findComponent(SectionDescriptionReadOnly).exists()).toBe(false);
+                    expect(wrapper.findComponent(SectionDescriptionSkeleton).exists()).toBe(false);
+                    expect(wrapper.find("[data-test=editor]").exists()).toBe(true);
+                });
             });
         });
         describe("when the editor mode is enabled", () => {
@@ -79,6 +102,7 @@ describe("SectionDescription", () => {
                         provide: {
                             [SECTIONS_STORE.valueOf()]:
                                 InjectedSectionsStoreStub.withLoadedSections([]),
+                            [EDITOR_CHOICE.valueOf()]: { is_prose_mirror: ref(false) },
                         },
                     },
                     props: { ...default_props, is_edit_mode: true },

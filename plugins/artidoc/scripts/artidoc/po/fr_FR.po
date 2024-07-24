@@ -195,6 +195,9 @@ msgstr "Vous ne pouvez pas lire ou éditer ce document"
 msgid "You don't have access to this document"
 msgstr "Vous n'avez pas les droits d'accès à ce document"
 
+msgid "You have to reload the browser"
+msgstr "Vous devez rafraîchir votre navigateur"
+
 msgid ""
 "You should reload the page to have a clean state (you will loose your "
 "modifications though)."

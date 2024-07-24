@@ -21,6 +21,8 @@ import type { Ref } from "vue";
 import { computed, ref } from "vue";
 import { convertDescriptionToHtml } from "@/helpers/convert-description-to-html";
 import type { ArtidocSection } from "@/helpers/artidoc-section.type";
+import { strictInject } from "@tuleap/vue-strict-inject";
+import { EDITOR_CHOICE } from "@/helpers/editor-choice";
 
 export type EditorSectionContent = {
     inputCurrentTitle: (new_value: string) => void;
@@ -31,7 +33,10 @@ export type EditorSectionContent = {
     resetContent: () => void;
 };
 
-export function useEditorSectionContent(section: Ref<ArtidocSection>): EditorSectionContent {
+export function useEditorSectionContent(
+    section: Ref<ArtidocSection>,
+    callbacks: { showActionsButtons: () => void; hideActionsButtons: () => void },
+): EditorSectionContent {
     const original_description = computed(() =>
         convertDescriptionToHtml(section.value.description),
     );
@@ -40,11 +45,29 @@ export function useEditorSectionContent(section: Ref<ArtidocSection>): EditorSec
     const editable_description = ref(original_description.value);
     const readonly_description = computed(() => section.value.description.post_processed_value);
 
+    const { is_prose_mirror } = strictInject(EDITOR_CHOICE);
+
     const inputCurrentDescription = (new_value: string): void => {
+        const is_there_any_change = new_value !== original_description.value;
+        if (is_prose_mirror.value) {
+            if (is_there_any_change) {
+                callbacks.showActionsButtons();
+            } else {
+                callbacks.hideActionsButtons();
+            }
+        }
         editable_description.value = new_value;
     };
 
     const inputCurrentTitle = (new_value: string): void => {
+        const is_there_any_change = new_value !== original_title.value;
+        if (is_prose_mirror.value) {
+            if (is_there_any_change) {
+                callbacks.showActionsButtons();
+            } else {
+                callbacks.hideActionsButtons();
+            }
+        }
         editable_title.value = new_value;
     };
 

@@ -33,6 +33,7 @@ import { useRefreshSection } from "@/composables/useRefreshSection";
 import type { AttachmentFile } from "@/composables/useAttachmentFile";
 import { SECTIONS_STORE } from "@/stores/sections-store-injection-key";
 import { EDITORS_COLLECTION } from "@/composables/useSectionEditorsCollection";
+import { EDITOR_CHOICE } from "@/helpers/editor-choice";
 
 export type SectionEditorActions = {
     enableEditor: () => void;
@@ -46,6 +47,7 @@ export type EditorState = {
     is_image_upload_allowed: ComputedRef<boolean>;
     is_section_editable: ComputedRef<boolean>;
     is_section_in_edit_mode: Ref<boolean>;
+    toggle_has_been_canceled: Ref<boolean>;
     isJustRefreshed: () => boolean;
     isBeingSaved: () => boolean;
     isJustSaved: () => boolean;
@@ -65,9 +67,11 @@ export function useSectionEditor(
 ): SectionEditor {
     const editors_collection = strictInject(EDITORS_COLLECTION);
     const can_user_edit_document = strictInject(CAN_USER_EDIT_DOCUMENT);
+    const { is_prose_mirror } = strictInject(EDITOR_CHOICE);
+
     const current_section: Ref<ArtidocSection> = ref(section);
     const editor_errors_handler = useEditorErrors();
-    const editor_section_content = useEditorSectionContent(current_section);
+
     const is_image_upload_allowed = computed(
         () =>
             current_section.value.attachments !== null &&
@@ -118,6 +122,15 @@ export function useSectionEditor(
         is_section_in_edit_mode.value = new_value;
     };
 
+    const editor_section_content = useEditorSectionContent(current_section, {
+        showActionsButtons: () => {
+            setEditMode(true);
+        },
+        hideActionsButtons: () => {
+            setEditMode(false);
+        },
+    });
+
     const { save, forceSave, isBeingSaved, isJustSaved } = useSaveSection(editor_errors_handler, {
         updateSectionStore: updateSection,
         updateCurrentSection,
@@ -140,12 +153,14 @@ export function useSectionEditor(
         editor_errors_handler.resetErrorStates();
     }
 
+    const toggle_has_been_canceled = ref(false);
     function cancelEditor(tracker: Tracker | null): void {
         closeEditor();
-        if (isPendingArtifactSection(current_section.value)) {
+        if (!is_prose_mirror.value && isPendingArtifactSection(current_section.value)) {
             editors_collection.removeEditor(current_section.value);
             removeSection(current_section.value, tracker);
         }
+        toggle_has_been_canceled.value = !toggle_has_been_canceled.value;
     }
 
     const forceSaveEditor = (): void => {
@@ -175,6 +190,7 @@ export function useSectionEditor(
             is_image_upload_allowed: is_image_upload_allowed,
             is_section_editable,
             is_section_in_edit_mode,
+            toggle_has_been_canceled,
             isJustRefreshed,
             isJustSaved,
             isBeingSaved,
