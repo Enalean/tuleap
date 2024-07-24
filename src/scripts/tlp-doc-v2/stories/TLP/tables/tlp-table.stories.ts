@@ -397,7 +397,7 @@ function getTemplate(args: TableProps): TemplateResult {
 }
 
 const meta: Meta<TableProps> = {
-    title: "TLP/Tables/tables",
+    title: "TLP/Tables/Tables",
     parameters: {
         controls: {
             exclude: ["filterable"],

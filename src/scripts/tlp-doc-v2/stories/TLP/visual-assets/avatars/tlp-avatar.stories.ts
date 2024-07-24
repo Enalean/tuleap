@@ -26,7 +26,7 @@ type AvatarProps = {
     all_variations: boolean;
 };
 
-const avatar_image = new URL("../../../images/random_avatar.jpg", import.meta.url).href;
+const avatar_image = new URL("../../../../images/random_avatar.jpg", import.meta.url).href;
 const SIZES = ["jumbo", "extra-large", "large", "default", "medium", "small", "mini"];
 const new_line = "\n";
 
