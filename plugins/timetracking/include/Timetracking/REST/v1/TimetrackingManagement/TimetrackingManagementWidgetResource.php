@@ -40,9 +40,11 @@ final class TimetrackingManagementWidgetResource extends AuthenticatedResource
 
     private function getPUTHandler(): QueryPUTHandler
     {
+        $dao = new Dao();
+
         return (new QueryPUTHandler(
-            new QueryTimePeriodChecker(),
-            new TimetrackingManagementWidgetSaver(new Dao())
+            new FromPayloadPeriodBuilder(),
+            new TimetrackingManagementWidgetSaver($dao, $dao)
         ));
     }
 
@@ -58,6 +60,14 @@ final class TimetrackingManagementWidgetResource extends AuthenticatedResource
      * {<br>
      * &nbsp;"start_date": "2024-06-06T00:00:00z",<br>
      * &nbsp;"end_date": "2024-06-06T00:00:00z"<br>
+     * }
+     * </pre>
+     *
+     * or with predefined time period:
+     * <br>
+     * <pre>
+     * {<br>
+     * &nbsp;"predefined_time_period": "yesterday"<br>
      * }
      * </pre>
      *

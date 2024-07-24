@@ -27,7 +27,25 @@ namespace Tuleap\Timetracking\REST\v1\TimetrackingManagement;
  */
 final class QueryPUTRepresentation
 {
-    public function __construct(public string $start_date, public string $end_date)
+    /**
+     * @var string | null $start_date {@from body} {@required false}
+     */
+    public ?string $start_date = null;
+
+    /**
+     * @var string | null $end_date {@from body} {@required false}
+     */
+    public ?string $end_date = null;
+
+    /**
+     * @var string | null $predefined_time_period {@from body} {@required false} {@choice today,yesterday,this_week,last_7_days,last_week,last_month}
+     */
+    public ?string $predefined_time_period = null;
+
+    public function __construct(?string $start_date, ?string $end_date, ?string $predefined_time_period)
     {
+        $this->start_date             = $start_date;
+        $this->end_date               = $end_date;
+        $this->predefined_time_period = $predefined_time_period;
     }
 }

@@ -22,31 +22,15 @@ declare(strict_types=1);
 
 namespace Tuleap\Timetracking\REST\v1\TimetrackingManagement;
 
-use DateTime;
-use DateTimeImmutable;
-use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
-use Tuleap\NeverThrow\Ok;
-use Tuleap\NeverThrow\Result;
 
-final readonly class QueryTimePeriodChecker
+/**
+ * @psalm-immutable
+ */
+final readonly class QueryPredefinedTimePeriodAndDatesProvidedFault extends Fault
 {
-    /**
-     * @return Ok<Period>|Err<Fault>
-     */
-    public function ensureTimePeriodIsValid(string $start_date, string $end_date): Ok|Err
+    public static function build(): Fault
     {
-        $period_start = DateTimeImmutable::createFromFormat(DateTime::ATOM, $start_date);
-        $period_end   = DateTimeImmutable::createFromFormat(DateTime::ATOM, $end_date);
-
-        if (! $period_start || ! $period_end) {
-            return Result::err(QueryInvalidDateFormatFault::build());
-        }
-
-        if ($period_start > $period_end) {
-            return Result::err(QueryEndDateLesserThanStartDateFault::build());
-        }
-
-        return Result::ok(new Period($period_start, $period_end));
+        return new self('Please enter a predefined_time_period OR a start_date and end_date');
     }
 }

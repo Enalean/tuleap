@@ -23,28 +23,38 @@ declare(strict_types=1);
 namespace Tuleap\Timetracking\Tests\Stub;
 
 use DateTimeImmutable;
-use Tuleap\Timetracking\REST\v1\TimetrackingManagement\SaveQuery;
+use Error;
+use Tuleap\Timetracking\REST\v1\TimetrackingManagement\SaveQueryWithDates;
 
-final class SaveQueryStub implements SaveQuery
+final class SaveQueryWithDatesStub implements SaveQueryWithDates
 {
     private bool $has_been_called = false;
 
-    private function __construct()
+    private function __construct(private bool $should_not_be_called)
     {
     }
 
     public static function build(): self
     {
-        return new self();
+        return new self(false);
     }
 
-    public function getHasBeenCalled(): bool
+    public static function shouldNotBeCalled(): self
+    {
+        return new self(true);
+    }
+
+    public function hasBeenCalled(): bool
     {
         return $this->has_been_called;
     }
 
     public function saveQueryWithDates(int $widget_id, DateTimeImmutable $start_date, DateTimeImmutable $end_date): void
     {
+        if ($this->should_not_be_called) {
+            throw new Error("Shouldn't have been called");
+        }
+
         $this->has_been_called = true;
     }
 }
