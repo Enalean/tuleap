@@ -32,6 +32,7 @@ This log lists the architectural decisions for Tuleap. You will find bellow the 
 * [ADR-0026](0026-integration-tests-teardown.md) - Avoiding shared data for database integration tests
 * [ADR-0027](0027-component-documentation.md) - Choice of tool to present the Components documentation
 * [ADR-0028](0028-prevent-data-loss.md) - Strategies to mitigate risks of data loss in database
+* [ADR-0029](0029-wysiwyg-text-editor.md) - Choice of WYSIWYG text editor
 
 <!-- adrlogstop -->
 
