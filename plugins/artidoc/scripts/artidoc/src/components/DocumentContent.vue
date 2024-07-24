@@ -20,7 +20,7 @@
 
 <template>
     <editor-choice />
-    <ol>
+    <ol ref="sections_container">
         <li
             v-for="(section, index) in sections"
             v-bind:key="section.internal_id"
@@ -45,6 +45,7 @@
 </template>
 
 <script setup lang="ts">
+import { ref, onMounted } from "vue";
 import type { ArtidocSection } from "@/helpers/artidoc-section.type";
 import { AT_THE_END } from "@/stores/useSectionsStore";
 import AddNewSectionButton from "@/components/AddNewSectionButton.vue";
@@ -53,16 +54,27 @@ import { strictInject } from "@tuleap/vue-strict-inject";
 import { CAN_USER_EDIT_DOCUMENT } from "@/can-user-edit-document-injection-key";
 import { SECTIONS_STORE } from "@/stores/sections-store-injection-key";
 import EditorChoice from "@/components/EditorChoice.vue";
+import { onScrollStickSectionNumbers } from "@/helpers/on-scroll-stick-section-numbers";
 
 const { sections, insertSection } = strictInject(SECTIONS_STORE);
 
 const can_user_edit_document = strictInject(CAN_USER_EDIT_DOCUMENT);
+
+const sections_container = ref<HTMLOListElement>();
 
 const has_add_button = can_user_edit_document;
 
 function getId(section: ArtidocSection): string {
     return `section-${section.id}`;
 }
+
+onMounted(() => {
+    if (sections_container.value === undefined) {
+        return;
+    }
+
+    onScrollStickSectionNumbers(sections_container.value);
+});
 </script>
 
 <style lang="scss" scoped>
@@ -137,5 +149,12 @@ li::before {
     font-style: italic;
     font-weight: 600;
     text-align: right;
+}
+
+li[data-is-sticking="true"]::before,
+li[data-is-sticking="true"]:first-child::before {
+    display: inline-block;
+    position: sticky;
+    top: calc(#{$magic-number-to-align-li-number-with-title} + 45px);
 }
 </style>
