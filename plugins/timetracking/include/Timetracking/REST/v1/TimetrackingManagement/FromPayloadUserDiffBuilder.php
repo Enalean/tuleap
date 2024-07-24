@@ -25,25 +25,33 @@ namespace Tuleap\Timetracking\REST\v1\TimetrackingManagement;
 use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
+use Tuleap\NeverThrow\Result;
 
-final readonly class QueryPUTHandler
+final readonly class FromPayloadUserDiffBuilder
 {
     public function __construct(
-        private FromPayloadPeriodBuilder $data_checker,
-        private FromPayloadUserDiffBuilder $user_diff_builder,
-        private TimetrackingManagementWidgetSaver $timetracking_management_widget_saver,
+        private CheckThatUserIsActive $check_that_user_is_active,
+        private GetQueryUsers $dao,
     ) {
     }
 
     /**
-     * @return Ok<true>|Err<Fault>
+     * @return Ok<UserDiff>|Err<Fault>
      */
-    public function handle(int $widget_id, QueryPUTRepresentation $representation): Ok|Err
+    public function getUserDiff(int $widget_id, array $users): Ok|Err
     {
-        return $this->user_diff_builder->getUserDiff($widget_id, $representation->users)
-            ->andThen(function (UserDiff $user_diff) use ($widget_id, $representation) {
-                return $this->data_checker->getValidatedPeriod($representation)
-                    ->andThen(fn (Period $period) => $this->timetracking_management_widget_saver->save($widget_id, $period, $user_diff));
-            });
+        $user_ids = [];
+        foreach ($users as $user_representation) {
+            $user_ids[] = $user_representation['id'];
+        }
+
+        foreach ($user_ids as $user_id) {
+            if (! $this->check_that_user_is_active->checkThatUserIsActive($user_id)) {
+                return Result::err(QueryInvalidUserIdFault::build($user_id));
+            }
+        }
+
+        $currently_saved_users = $this->dao->getQueryUsers($widget_id);
+        return Result::ok(new UserDiff(array_diff($user_ids, $currently_saved_users), array_diff($currently_saved_users, $user_ids)));
     }
 }

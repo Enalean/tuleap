@@ -22,12 +22,10 @@ declare(strict_types=1);
 
 namespace Tuleap\Timetracking\REST\v1\TimetrackingManagement;
 
-interface SaveQueryWithPredefinedTimePeriod
+/**
+ * @psalm-immutable
+ */
+final class QueryUserRepresentation
 {
-    public function saveQueryWithPredefinedTimePeriod(
-        int $widget_id,
-        PredefinedTimePeriod $predefined_time_period,
-        array $user_ids_to_insert,
-        array $user_ids_to_remove,
-    ): void;
+    public int $id;
 }

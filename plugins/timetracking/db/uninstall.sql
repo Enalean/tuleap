@@ -6,3 +6,4 @@ DROP TABLE IF EXISTS plugin_timetracking_overview_report_tracker;
 DROP TABLE IF EXISTS plugin_timetracking_overview_report;
 DROP TABLE IF EXISTS plugin_timetracking_overview_widget;
 DROP TABLE IF EXISTS plugin_timetracking_management_query;
+DROP TABLE IF EXISTS plugin_timetracking_management_query_users;

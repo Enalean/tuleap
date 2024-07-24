@@ -20,14 +20,21 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Timetracking\REST\v1\TimetrackingManagement;
-
-interface SaveQueryWithPredefinedTimePeriod
+//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+final class b202407121511_add_timetracking_management_query_users_table extends \Tuleap\ForgeUpgrade\Bucket
 {
-    public function saveQueryWithPredefinedTimePeriod(
-        int $widget_id,
-        PredefinedTimePeriod $predefined_time_period,
-        array $user_ids_to_insert,
-        array $user_ids_to_remove,
-    ): void;
+    public function description()
+    {
+        return 'Add timetracking management query users table';
+    }
+
+    public function up()
+    {
+        $sql = 'CREATE TABLE plugin_timetracking_management_query_users (
+                widget_id INT(11) NOT NULL,
+                user_id INT(11) NOT NULL,
+                PRIMARY KEY (widget_id, user_id)
+                ) ENGINE=InnoDB;';
+        $this->api->createTable('plugin_timetracking_management_query_users', $sql);
+    }
 }

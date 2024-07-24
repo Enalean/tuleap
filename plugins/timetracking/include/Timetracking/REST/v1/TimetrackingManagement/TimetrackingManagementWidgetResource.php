@@ -44,6 +44,7 @@ final class TimetrackingManagementWidgetResource extends AuthenticatedResource
 
         return (new QueryPUTHandler(
             new FromPayloadPeriodBuilder(),
+            new FromPayloadUserDiffBuilder(new QueryUserChecker(), $dao),
             new TimetrackingManagementWidgetSaver($dao, $dao)
         ));
     }
@@ -59,7 +60,11 @@ final class TimetrackingManagementWidgetResource extends AuthenticatedResource
      * <pre>
      * {<br>
      * &nbsp;"start_date": "2024-06-06T00:00:00z",<br>
-     * &nbsp;"end_date": "2024-06-06T00:00:00z"<br>
+     * &nbsp;"end_date": "2024-06-06T00:00:00z",<br>
+     * &nbsp;"users": [<br>
+     * &nbsp;&nbsp;{"id": 101},<br>
+     * &nbsp;&nbsp;{"id": 102}<br>
+     * &nbsp;]<br>
      * }
      * </pre>
      *
@@ -67,7 +72,11 @@ final class TimetrackingManagementWidgetResource extends AuthenticatedResource
      * <br>
      * <pre>
      * {<br>
-     * &nbsp;"predefined_time_period": "yesterday"<br>
+     * &nbsp;"predefined_time_period": "yesterday",<br>
+     * &nbsp;"users": [<br>
+     * &nbsp;&nbsp;{"id": 101},<br>
+     * &nbsp;&nbsp;{"id": 102}<br>
+     * &nbsp;]<br>
      * }
      * </pre>
      *

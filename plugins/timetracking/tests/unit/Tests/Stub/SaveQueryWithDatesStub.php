@@ -49,7 +49,7 @@ final class SaveQueryWithDatesStub implements SaveQueryWithDates
         return $this->has_been_called;
     }
 
-    public function saveQueryWithDates(int $widget_id, DateTimeImmutable $start_date, DateTimeImmutable $end_date): void
+    public function saveQueryWithDates(int $widget_id, DateTimeImmutable $start_date, DateTimeImmutable $end_date, array $user_ids_to_insert, array $user_ids_to_remove,): void
     {
         if ($this->should_not_be_called) {
             throw new Error("Shouldn't have been called");

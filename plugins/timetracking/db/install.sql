@@ -43,3 +43,9 @@ CREATE TABLE plugin_timetracking_management_query (
     end_date INT(11),
     predefined_time_period VARCHAR(255)
 ) ENGINE=InnoDB;
+
+CREATE TABLE plugin_timetracking_management_query_users (
+    widget_id INT(11) NOT NULL,
+    user_id INT(11) NOT NULL,
+    PRIMARY KEY (widget_id, user_id)
+) ENGINE=InnoDB;

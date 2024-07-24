@@ -27,81 +27,183 @@ use DateTimeImmutable;
 use Tuleap\NeverThrow\Result;
 use Tuleap\Test\PHPUnit\TestCase;
 
-final class QueryTimePeriodCheckerTest extends TestCase
+final class FromPayloadPeriodBuilderTest extends TestCase
 {
     public function testItReturnsAFaultWhenPredefinedTimePeriodAndTwoDatesAreProvided(): void
     {
-        $result = (new FromPayloadPeriodBuilder())->getValidatedPeriod(new QueryPUTRepresentation('2024-06-26T15:46:00z', '2024-06-26T15:46:00z', 'today'));
+        $result = (new FromPayloadPeriodBuilder())
+            ->getValidatedPeriod(
+                new QueryPUTRepresentation(
+                    '2024-06-26T15:46:00z',
+                    '2024-06-26T15:46:00z',
+                    'today',
+                    []
+                )
+            );
+
         self::assertTrue(Result::isErr($result));
         self::assertInstanceOf(QueryPredefinedTimePeriodAndDatesProvidedFault::class, $result->error);
     }
 
     public function testItReturnsAFaultWhenPredefinedTimePeriodAndStartDateAreProvided(): void
     {
-        $result = (new FromPayloadPeriodBuilder())->getValidatedPeriod(new QueryPUTRepresentation('start_date', '', 'today'));
+        $result = (new FromPayloadPeriodBuilder())
+            ->getValidatedPeriod(
+                new QueryPUTRepresentation(
+                    'start_date',
+                    '',
+                    'today',
+                    []
+                )
+            );
+
         self::assertTrue(Result::isErr($result));
         self::assertInstanceOf(QueryPredefinedTimePeriodAndDatesProvidedFault::class, $result->error);
     }
 
     public function testItReturnsAFaultWhenPredefinedTimePeriodAndEndDateAreProvided(): void
     {
-        $result = (new FromPayloadPeriodBuilder())->getValidatedPeriod(new QueryPUTRepresentation('', '2024-06-26T15:46:00z', 'today'));
+        $result = (new FromPayloadPeriodBuilder())
+            ->getValidatedPeriod(
+                new QueryPUTRepresentation(
+                    '',
+                    '2024-06-26T15:46:00z',
+                    'today',
+                    []
+                )
+            );
+
         self::assertTrue(Result::isErr($result));
         self::assertInstanceOf(QueryPredefinedTimePeriodAndDatesProvidedFault::class, $result->error);
     }
 
     public function testItReturnsAPredefinedTimePeriodWhenValidPredefinedTimePeriodIsProvided(): void
     {
-        $result = (new FromPayloadPeriodBuilder())->getValidatedPeriod(new QueryPUTRepresentation(null, null, 'last_week'));
+        $result = (new FromPayloadPeriodBuilder())
+            ->getValidatedPeriod(
+                new QueryPUTRepresentation(
+                    null,
+                    null,
+                    'last_week',
+                    [
+                        ['id' => 101],
+                        ['id' => 102],
+                    ]
+                )
+            );
+
         self::assertTrue(Result::isOk($result));
         self::assertEquals(PredefinedTimePeriod::LAST_WEEK, $result->value->getPeriod());
     }
 
     public function testItReturnsAFaultWhenNothingIsProvided(): void
     {
-        $result = (new FromPayloadPeriodBuilder())->getValidatedPeriod(new QueryPUTRepresentation(null, null, null));
+        $result = (new FromPayloadPeriodBuilder())
+            ->getValidatedPeriod(
+                new QueryPUTRepresentation(
+                    null,
+                    null,
+                    null,
+                    []
+                )
+            );
+
         self::assertTrue(Result::isErr($result));
         self::assertInstanceOf(QueryPredefinedTimePeriodAndDatesProvidedFault::class, $result->error);
     }
 
     public function testItReturnsAFaultWhenOnlyStartDateIsProvided(): void
     {
-        $result = (new FromPayloadPeriodBuilder())->getValidatedPeriod(new QueryPUTRepresentation('hello', null, null));
+        $result = (new FromPayloadPeriodBuilder())
+            ->getValidatedPeriod(
+                new QueryPUTRepresentation(
+                    'hello',
+                    null,
+                    null,
+                    []
+                )
+            );
+
         self::assertTrue(Result::isErr($result));
         self::assertInstanceOf(QueryOnlyOneDateProvidedFault::class, $result->error);
     }
 
     public function testItReturnsAFaultWhenOnlyEndDateIsProvided(): void
     {
-        $result = (new FromPayloadPeriodBuilder())->getValidatedPeriod(new QueryPUTRepresentation(null, '2024-06-26T15:46:00z', null));
+        $result = (new FromPayloadPeriodBuilder())
+            ->getValidatedPeriod(
+                new QueryPUTRepresentation(
+                    null,
+                    '2024-06-26T15:46:00z',
+                    null,
+                    []
+                )
+            );
+
         self::assertTrue(Result::isErr($result));
         self::assertInstanceOf(QueryOnlyOneDateProvidedFault::class, $result->error);
     }
 
     public function testItReturnsAFaultWhenStartDateAndEndDateAreInvalid(): void
     {
-        $result = (new FromPayloadPeriodBuilder())->getValidatedPeriod(new QueryPUTRepresentation('start', 'end', null));
+        $result = (new FromPayloadPeriodBuilder())
+            ->getValidatedPeriod(
+                new QueryPUTRepresentation(
+                    'start',
+                    'end',
+                    null,
+                    []
+                )
+            );
+
         self::assertTrue(Result::isErr($result));
         self::assertInstanceOf(QueryInvalidDateFormatFault::class, $result->error);
     }
 
     public function testItReturnsAFaultWhenStartDateIsInvalid(): void
     {
-        $result = (new FromPayloadPeriodBuilder())->getValidatedPeriod(new QueryPUTRepresentation('start', '2024-06-26T15:46:00z', null));
+        $result = (new FromPayloadPeriodBuilder())
+            ->getValidatedPeriod(
+                new QueryPUTRepresentation(
+                    'start',
+                    '2024-06-26T15:46:00z',
+                    null,
+                    []
+                )
+            );
+
         self::assertTrue(Result::isErr($result));
         self::assertInstanceOf(QueryInvalidDateFormatFault::class, $result->error);
     }
 
     public function testItReturnsAFaultWhenEndDateIsInvalid(): void
     {
-        $result = (new FromPayloadPeriodBuilder())->getValidatedPeriod(new QueryPUTRepresentation('2024-06-26T15:46:00z', 'end', null));
+        $result = (new FromPayloadPeriodBuilder())
+            ->getValidatedPeriod(
+                new QueryPUTRepresentation(
+                    '2024-06-26T15:46:00z',
+                    'end',
+                    null,
+                    []
+                )
+            );
+
         self::assertTrue(Result::isErr($result));
         self::assertInstanceOf(QueryInvalidDateFormatFault::class, $result->error);
     }
 
     public function testItReturnsAFaultWhenEndDateIsLesserThanStartDate(): void
     {
-        $result = (new FromPayloadPeriodBuilder())->getValidatedPeriod(new QueryPUTRepresentation('2024-06-27T15:46:00z', '2024-06-26T15:46:00z', null));
+        $result = (new FromPayloadPeriodBuilder())
+            ->getValidatedPeriod(
+                new QueryPUTRepresentation(
+                    '2024-06-27T15:46:00z',
+                    '2024-06-26T15:46:00z',
+                    null,
+                    []
+                )
+            );
+
         self::assertTrue(Result::isErr($result));
         self::assertInstanceOf(QueryEndDateLesserThanStartDateFault::class, $result->error);
     }
@@ -111,7 +213,18 @@ final class QueryTimePeriodCheckerTest extends TestCase
         $start_date = '2024-06-26T15:46:00z';
         $end_date   = '2024-06-26T15:46:00z';
 
-        $result = (new FromPayloadPeriodBuilder())->getValidatedPeriod(new QueryPUTRepresentation($start_date, $end_date, null));
+        $result = (new FromPayloadPeriodBuilder())
+            ->getValidatedPeriod(
+                new QueryPUTRepresentation(
+                    $start_date,
+                    $end_date,
+                    null,
+                    [
+                        ['id' => 101],
+                        ['id' => 102],
+                    ]
+                )
+            );
 
         $start_date_immutable = DateTimeImmutable::createFromFormat(DateTime::ATOM, $start_date);
         $end_date_immutable   = DateTimeImmutable::createFromFormat(DateTime::ATOM, $end_date);

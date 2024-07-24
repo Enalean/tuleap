@@ -22,12 +22,15 @@ declare(strict_types=1);
 
 namespace Tuleap\Timetracking\REST\v1\TimetrackingManagement;
 
-interface SaveQueryWithPredefinedTimePeriod
+final class QueryUserChecker implements CheckThatUserIsActive
 {
-    public function saveQueryWithPredefinedTimePeriod(
-        int $widget_id,
-        PredefinedTimePeriod $predefined_time_period,
-        array $user_ids_to_insert,
-        array $user_ids_to_remove,
-    ): void;
+    public function checkThatUserIsActive(int $user_id): bool
+    {
+        $user = \UserManager::instance()->getUserById($user_id);
+        if (! $user || ! $user->isActive()) {
+            return false;
+        }
+
+        return true;
+    }
 }
