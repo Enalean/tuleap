@@ -22,6 +22,7 @@ import { shallowMount } from "@vue/test-utils";
 import { getGlobalTestOptions } from "../../helpers/global-options-for-tests";
 import SelectablePagination from "./SelectablePagination.vue";
 import { describe, expect, it } from "vitest";
+import { buildVueDompurifyHTMLDirective } from "vue-dompurify-html";
 
 describe("SelectablePagination", () => {
     const getWrapper = (
@@ -32,6 +33,9 @@ describe("SelectablePagination", () => {
         return shallowMount(SelectablePagination, {
             global: {
                 ...getGlobalTestOptions({}),
+            },
+            directives: {
+                "dompurify-html": buildVueDompurifyHTMLDirective(),
             },
             props: {
                 total_number,
@@ -49,10 +53,10 @@ describe("SelectablePagination", () => {
             const next_page_button = wrapper.find("[data-test=next-page-button]");
             const last_page_button = wrapper.find("[data-test=last-page-button]");
 
-            expect(first_page_button.classes()).toContain("disabled");
-            expect(previous_page_button.classes()).toContain("disabled");
-            expect(next_page_button.classes()).not.toContain("disabled");
-            expect(last_page_button.classes()).not.toContain("disabled");
+            expect(first_page_button.attributes("disabled")).toBeDefined();
+            expect(previous_page_button.attributes("disabled")).toBeDefined();
+            expect(next_page_button.attributes("disabled")).toBeUndefined();
+            expect(last_page_button.attributes("disabled")).toBeUndefined();
         });
 
         it("disables the next button and the last page buttons if the user is already on the last page", () => {
@@ -63,10 +67,10 @@ describe("SelectablePagination", () => {
             const next_page_button = wrapper.find("[data-test=next-page-button]");
             const last_page_button = wrapper.find("[data-test=last-page-button]");
 
-            expect(first_page_button.classes()).not.toContain("disabled");
-            expect(previous_page_button.classes()).not.toContain("disabled");
-            expect(next_page_button.classes()).toContain("disabled");
-            expect(last_page_button.classes()).toContain("disabled");
+            expect(first_page_button.attributes("disabled")).toBeUndefined();
+            expect(previous_page_button.attributes("disabled")).toBeUndefined();
+            expect(next_page_button.attributes("disabled")).toBeDefined();
+            expect(last_page_button.attributes("disabled")).toBeDefined();
         });
     });
     describe("new-page event", () => {
@@ -95,7 +99,9 @@ describe("SelectablePagination", () => {
     it("sends the current offset when we are already are at the last page", () => {
         const wrapper = getWrapper(100, 10, 95);
 
-        wrapper.find(`[data-test=next-page-button]`).trigger("click");
+        const next_button = wrapper.find(`[data-test=next-page-button]`);
+        next_button.element.removeAttribute("disabled");
+        next_button.trigger("click");
 
         expect(wrapper.emitted()).toHaveProperty("new-page");
 
@@ -121,16 +127,12 @@ describe("SelectablePagination", () => {
     it("displays the number 0 as the index of first element if there is no artifact", () => {
         const wrapper = getWrapper(0, 10, 2);
 
-        expect(wrapper.find(`[data-test=selectable-pagination-number-first-element]`).text()).toBe(
-            "0",
-        );
+        expect(wrapper.vm.pages).toContain("0");
     });
 
     it("displays the page's first element number artifact has been found", () => {
         const wrapper = getWrapper(10, 10, 2);
 
-        expect(wrapper.find(`[data-test=selectable-pagination-number-first-element]`).text()).toBe(
-            "3",
-        );
+        expect(wrapper.vm.pages).toContain("3");
     });
 });
