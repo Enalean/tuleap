@@ -379,4 +379,58 @@ EOL
             92 => new SelectedValue('@id', new NumericResultRepresentation(92)),
         ], $result->values);
     }
+
+    public function testItReturnsEmptyForProjectName(): void
+    {
+        $result = $this->getSelectedResult(
+            new Metadata('project.name'),
+            RetrieveArtifactStub::withArtifacts(
+                ArtifactTestBuilder::anArtifact(101)->inTracker($this->first_tracker)->build(),
+                ArtifactTestBuilder::anArtifact(102)->inTracker($this->second_tracker)->build(),
+            ),
+            [
+                ['id' => 101, '@project.name' => 'Project 101', '@project.icon' => null],
+                ['id' => 102, '@project.name' => 'Project with', '@project.icon' => '\u2694\ufe0f'],
+            ]
+        );
+
+        self::assertNull($result->selected);
+        self::assertEmpty($result->values);
+    }
+
+    public function testItReturnsEmptyForTrackerName(): void
+    {
+        $result = $this->getSelectedResult(
+            new Metadata('tracker.name'),
+            RetrieveArtifactStub::withArtifacts(
+                ArtifactTestBuilder::anArtifact(111)->inTracker($this->first_tracker)->build(),
+                ArtifactTestBuilder::anArtifact(112)->inTracker($this->second_tracker)->build(),
+            ),
+            [
+                ['id' => 111, '@tracker.name' => 'Tracker 38'],
+                ['id' => 112, '@tracker.name' => 'Tracker 4'],
+            ]
+        );
+
+        self::assertNull($result->selected);
+        self::assertEmpty($result->values);
+    }
+
+    public function testItReturnsEmptyForPrettyTitle(): void
+    {
+        $result = $this->getSelectedResult(
+            new Metadata('pretty_title'),
+            RetrieveArtifactStub::withArtifacts(
+                ArtifactTestBuilder::anArtifact(121)->inTracker($this->first_tracker)->build(),
+                ArtifactTestBuilder::anArtifact(122)->inTracker($this->second_tracker)->build(),
+            ),
+            [
+                ['id' => 121, '@tracker.name' => 'Tracker 38', '@tracker.color' => 'inca_silver', '@id' => 121, '@title' => 'title', '@title_format' => 'text'],
+                ['id' => 122, '@tracker.name' => 'Tracker 4', '@tracker.color' => 'inca_silver', '@id' => 122, '@title' => 'title', '@title_format' => 'text'],
+            ]
+        );
+
+        self::assertNull($result->selected);
+        self::assertEmpty($result->values);
+    }
 }

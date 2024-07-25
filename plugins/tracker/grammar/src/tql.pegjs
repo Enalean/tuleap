@@ -270,7 +270,7 @@ Field
     }
 
 Metadata
-    = '@' name:$[a-zA-Z0-9_]+ {
+    = '@' name:$[a-zA-Z0-9_\.]+ {
         return new Metadata($name);
     }
 

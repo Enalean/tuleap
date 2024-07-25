@@ -70,6 +70,10 @@ final class MetadataUsageChecker implements CheckMetadataUsage
             AllowedMetadata::SUBMITTED_BY     => $this->checkSubmittedByIsUsedByAtLeastOneTracker($trackers, $user),
             AllowedMetadata::LAST_UPDATE_BY   => $this->checkLastUpdateByIsUsedByAtLeastOneTracker($trackers, $user),
             AllowedMetadata::ID               => $this->checkArtifactIdIsUsedByAtLeastOneTracker($trackers, $user),
+
+            AllowedMetadata::PROJECT_NAME,
+            AllowedMetadata::TRACKER_NAME     => null, // Nothing to check
+            AllowedMetadata::PRETTY_TITLE     => $this->checkPrettyTitleIsUsedByAtLeastOneTracker($trackers, $user),
             default                           => throw new LogicException("Unknown metadata type: {$metadata->getName()}"),
         };
     }
@@ -186,6 +190,16 @@ final class MetadataUsageChecker implements CheckMetadataUsage
         if ($count === count($trackers)) {
             throw new ArtifactIdIsMissingInAllTrackersException();
         }
+    }
+
+    /**
+     * @throws TitleIsMissingInAllTrackersException
+     * @throws ArtifactIdIsMissingInAllTrackersException
+     */
+    private function checkPrettyTitleIsUsedByAtLeastOneTracker(array $trackers, PFUser $user): void
+    {
+        $this->checkTitleIsUsedByAtLeastOneTracker(self::getTrackerIds($trackers));
+        $this->checkArtifactIdIsUsedByAtLeastOneTracker($trackers, $user);
     }
 
     /**

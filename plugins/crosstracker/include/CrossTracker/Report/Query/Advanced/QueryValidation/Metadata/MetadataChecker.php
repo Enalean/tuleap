@@ -43,7 +43,7 @@ final readonly class MetadataChecker
         Comparison $comparison,
         InvalidComparisonCollectorParameters $collector_parameters,
     ): void {
-        if (! in_array($metadata->getName(), AllowedMetadata::NAMES, true)) {
+        if (! in_array($metadata->getName(), AllowedMetadata::SEARCHABLE_NAMES, true)) {
             $collector_parameters->getInvalidSearchablesCollection()->addNonexistentSearchable($metadata->getName());
             return;
         }
@@ -59,7 +59,7 @@ final readonly class MetadataChecker
         Metadata $metadata,
         InvalidSelectableCollectorParameters $collector_parameters,
     ): void {
-        if (! in_array($metadata->getName(), AllowedMetadata::NAMES, true)) {
+        if (! in_array($metadata->getName(), AllowedMetadata::SELECTABLE_NAMES, true)) {
             $collector_parameters->invalid_selectables_collection->addNonExistentSelectable($metadata->getName());
             return;
         }
