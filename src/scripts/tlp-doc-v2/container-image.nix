@@ -24,7 +24,7 @@ let
         add_header Cross-Origin-Resource-Policy "same-origin" always;
         add_header Cross-Origin-Opener-Policy "same-origin" always;
         add_header Vary "Sec-Fetch-Site" always;
-        add_header Content-Security-Policy "default-src 'none'; script-src 'self' 'unsafe-eval'; script-src-elem 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; style-src-elem 'self' 'unsafe-inline'; img-src 'self'; font-src 'self'; connect-src 'self'; media-src 'self'; frame-src 'self'; block-all-mixed-content; disown-opener; base-uri 'none'" always;
+        add_header Content-Security-Policy "default-src 'none'; script-src 'self' 'unsafe-eval'; script-src-elem 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; style-src-elem 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; media-src 'self'; frame-src 'self'; block-all-mixed-content; base-uri 'none'" always;
         sendfile on;
         tcp_nopush on;
         tcp_nodelay on;
