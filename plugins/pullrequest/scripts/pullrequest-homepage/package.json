@@ -22,7 +22,6 @@
     "@tuleap/vue-strict-inject": "workspace:*",
     "@tuleap/vue3-gettext-init": "workspace:*",
     "hybrids": "^9.0.0",
-    "moment": "^2.29.4",
     "neverthrow": "^6.0.0",
     "vue": "^3.3.4",
     "vue-dompurify-html": "^5.0.0",

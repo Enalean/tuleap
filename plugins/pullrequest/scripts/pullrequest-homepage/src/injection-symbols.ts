@@ -18,6 +18,7 @@
  */
 
 import type { Ref } from "vue";
+import type { LocaleString } from "@tuleap/date-helper";
 import type { StrictInjectionKey } from "@tuleap/vue-strict-inject";
 import type { Fault } from "@tuleap/fault";
 import type { RelativeDatesDisplayPreference } from "@tuleap/tlp-relative-date";
@@ -36,9 +37,8 @@ export const REPOSITORY_ID: StrictInjectionKey<number> = Symbol("repository_id")
 export const PROJECT_ID: StrictInjectionKey<number> = Symbol("project_id");
 export const CURRENT_USER_ID: StrictInjectionKey<number> = Symbol("current_user_id");
 export const BASE_URL: StrictInjectionKey<URL> = Symbol("base_url");
-export const USER_LOCALE_KEY: StrictInjectionKey<string> = Symbol("user_locale");
-export const USER_DATE_TIME_FORMAT_KEY: StrictInjectionKey<string> =
-    Symbol("user_date_time_format");
+export const USER_LOCALE_KEY: StrictInjectionKey<LocaleString> = Symbol("user_locale");
+export const USER_TIMEZONE_KEY: StrictInjectionKey<string> = Symbol("user_timezone");
 export const USER_RELATIVE_DATE_DISPLAY_PREFERENCE_KEY: StrictInjectionKey<RelativeDatesDisplayPreference> =
     Symbol("user_relative_date_display_preference");
 export const DISPLAY_TULEAP_API_ERROR: StrictInjectionKey<DisplayErrorCallback> =

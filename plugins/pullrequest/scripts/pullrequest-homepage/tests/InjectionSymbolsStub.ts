@@ -31,9 +31,9 @@ import {
     SHOW_CLOSED_PULL_REQUESTS,
     SHOW_PULL_REQUESTS_RELATED_TO_ME,
     SORT_DESCENDANT,
-    USER_DATE_TIME_FORMAT_KEY,
     USER_LOCALE_KEY,
     USER_RELATIVE_DATE_DISPLAY_PREFERENCE_KEY,
+    USER_TIMEZONE_KEY,
 } from "../src/injection-symbols";
 
 const noop = (): void => {
@@ -62,7 +62,7 @@ const buildDefaultProvide = (tuleap_api_error_callback: DisplayErrorCallback): P
         [CURRENT_USER_ID.valueOf()]: injected_current_user_id,
         [BASE_URL.valueOf()]: injected_base_url,
         [USER_LOCALE_KEY.valueOf()]: injected_user_locale,
-        [USER_DATE_TIME_FORMAT_KEY.valueOf()]: "d/m/Y H:i",
+        [USER_TIMEZONE_KEY.valueOf()]: "Europe/Paris",
         [USER_RELATIVE_DATE_DISPLAY_PREFERENCE_KEY.valueOf()]:
             PREFERENCE_RELATIVE_FIRST_ABSOLUTE_SHOWN,
         [DISPLAY_TULEAP_API_ERROR.valueOf()]: tuleap_api_error_callback,
