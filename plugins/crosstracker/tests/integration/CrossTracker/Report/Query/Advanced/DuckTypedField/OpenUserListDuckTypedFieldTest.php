@@ -54,7 +54,7 @@ final class OpenUserListDuckTypedFieldTest extends CrossTrackerFieldTestCase
         $db                   = DBFactory::getMainTuleapDBConnection()->getDB();
         $tracker_builder      = new TrackerDatabaseBuilder($db);
         $core_builder         = new CoreDatabaseBuilder($db);
-        $project              = $core_builder->buildProject();
+        $project              = $core_builder->buildProject('project_name');
         $project_id           = (int) $project->getID();
         $this->project_member = $core_builder->buildUser('project_member', 'Project Member', 'project_member@example.com');
         $core_builder->addUserToProjectMembers((int) $this->project_member->getId(), $project_id);

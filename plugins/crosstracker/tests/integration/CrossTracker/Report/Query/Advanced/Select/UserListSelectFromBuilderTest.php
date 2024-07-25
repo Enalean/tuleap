@@ -56,7 +56,7 @@ final class UserListSelectFromBuilderTest extends CrossTrackerFieldTestCase
         $tracker_builder = new TrackerDatabaseBuilder($db);
         $core_builder    = new CoreDatabaseBuilder($db);
 
-        $project       = $core_builder->buildProject();
+        $project       = $core_builder->buildProject('project_name');
         $project_id    = (int) $project->getID();
         $this->user    = $core_builder->buildUser('project_member', 'Project Member', 'project_member@example.com');
         $project_admin = $core_builder->buildUser('project_admin', 'Project Admin', 'project_admin@example.com');

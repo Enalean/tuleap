@@ -57,7 +57,7 @@ final class LastUpdateDateMetadataTest extends CrossTrackerFieldTestCase
         $tracker_builder = new TrackerDatabaseBuilder($db);
         $core_builder    = new CoreDatabaseBuilder($db);
 
-        $project              = $core_builder->buildProject();
+        $project              = $core_builder->buildProject('project_name');
         $project_id           = (int) $project->getID();
         $this->project_member = $core_builder->buildUser('project_member', 'Project Member', 'project_member@example.com');
         $this->project_admin  = $core_builder->buildUser('project_admin', 'Project Admin', 'project_admin@example.com');

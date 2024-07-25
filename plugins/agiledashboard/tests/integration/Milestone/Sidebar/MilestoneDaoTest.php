@@ -68,7 +68,7 @@ final class MilestoneDaoTest extends TestIntegrationTestCase
         $core_builder          = new CoreDatabaseBuilder($db);
         $this->tracker_builder = new TrackerDatabaseBuilder($db);
 
-        $this->project_id             = (int) $core_builder->buildProject()->getID();
+        $this->project_id             = (int) $core_builder->buildProject('project_name')->getID();
         $this->release_tracker_id     = $this->tracker_builder->buildTracker($this->project_id, 'Release')->getId();
         $this->sprint_tracker_id      = $this->tracker_builder->buildTracker($this->project_id, 'Sprint')->getId();
         $this->release_list_field_id  = $this->tracker_builder->buildStaticListField($this->release_tracker_id, 'list_field', 'sb');
