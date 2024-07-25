@@ -84,4 +84,9 @@ reason = "No impact in our situation, unplugin-vue2-script-setup will be removed
 id = "GHSA-7fh5-64p2-3v2j" # CVE-2023-44270
 reason = "@vue/component-compiler-utils will be removed when the Vue 2 migration is completed."
 
+# vue-template-compiler (Vue 2)
+[[IgnoredVulns]]
+id = "GHSA-g3ch-rx76-35fx" # CVE-2024-6783
+reason = "No direct exploitation path, template are not compiled at runtime. The migration to move away from Vue 2 is underway."
+
 ### TO BE FIXED
