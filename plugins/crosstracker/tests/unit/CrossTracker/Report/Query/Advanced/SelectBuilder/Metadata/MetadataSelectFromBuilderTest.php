@@ -118,12 +118,10 @@ final class MetadataSelectFromBuilderTest extends TestCase
         self::assertNotEmpty($result->getFrom());
     }
 
-    public function testItReturnsEmptyForTrackerName(): void
+    public function testItReturnsSQLForTrackerName(): void
     {
         $result = $this->getSelectFrom(new Metadata('tracker.name'));
-        self::assertEmpty($result->getSelect());
-        self::assertEmpty($result->getFrom());
-        self::assertEmpty($result->getFromParameters());
+        self::assertNotEmpty($result->getSelect());
     }
 
     public function testItReturnsEmptyForPrettyTitle(): void

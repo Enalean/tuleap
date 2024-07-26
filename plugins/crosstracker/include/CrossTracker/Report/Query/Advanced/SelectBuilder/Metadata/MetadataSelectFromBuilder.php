@@ -62,7 +62,7 @@ final readonly class MetadataSelectFromBuilder
 
             // Custom fields
             AllowedMetadata::PROJECT_NAME     => $this->project_name_builder->getSelectFrom(),
-            AllowedMetadata::TRACKER_NAME,
+            AllowedMetadata::TRACKER_NAME     => new ParametrizedSelectFrom("tracker.name AS '@tracker.name', tracker.color AS '@tracker.color'", '', []),
             AllowedMetadata::PRETTY_TITLE     => new ParametrizedSelectFrom('', '', []),
             default                           => throw new LogicException("Unknown metadata type: {$metadata->getName()}"),
         };
