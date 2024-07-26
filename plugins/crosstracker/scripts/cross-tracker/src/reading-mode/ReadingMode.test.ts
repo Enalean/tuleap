@@ -22,6 +22,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import { errAsync, okAsync } from "neverthrow";
+import { ref } from "vue";
 import { Fault } from "@tuleap/fault";
 import ReadingMode from "./ReadingMode.vue";
 import BackendCrossTrackerReport from "../backend-cross-tracker-report";
@@ -29,14 +30,14 @@ import ReadingCrossTrackerReport from "./reading-cross-tracker-report";
 import * as rest_querier from "../api/rest-querier";
 import type { Report, State, TrackerAndProject } from "../type";
 import { getGlobalTestOptions } from "../helpers/global-options-for-tests";
+import { REPORT_STATE } from "../injection-symbols";
 
 describe("ReadingMode", () => {
     let backend_cross_tracker_report: BackendCrossTrackerReport,
         reading_cross_tracker_report: ReadingCrossTrackerReport,
         is_user_admin: boolean,
         has_error_message: boolean,
-        errorSpy: Mock,
-        discardSpy: Mock;
+        errorSpy: Mock;
 
     beforeEach(() => {
         backend_cross_tracker_report = new BackendCrossTrackerReport();
@@ -44,7 +45,6 @@ describe("ReadingMode", () => {
         is_user_admin = true;
         has_error_message = false;
         errorSpy = vi.fn();
-        discardSpy = vi.fn();
     });
 
     function instantiateComponent(): VueWrapper<InstanceType<typeof ReadingMode>> {
@@ -53,12 +53,16 @@ describe("ReadingMode", () => {
             getters: { has_error_message: () => has_error_message },
             mutations: {
                 setErrorMessage: errorSpy,
-                discardUnsavedReport: discardSpy,
             },
         };
 
         return shallowMount(ReadingMode, {
-            global: { ...getGlobalTestOptions(store_options) },
+            global: {
+                ...getGlobalTestOptions(store_options),
+                provide: {
+                    [REPORT_STATE.valueOf()]: ref("result-preview"),
+                },
+            },
             props: {
                 backend_cross_tracker_report,
                 reading_cross_tracker_report,
@@ -141,15 +145,13 @@ describe("ReadingMode", () => {
         });
     });
 
-    describe("cancelReport() -", () => {
-        it("when I click on 'Cancel', then the reading report will be reset", async () => {
-            const duplicateReading = vi.spyOn(reading_cross_tracker_report, "duplicateFromReport");
+    describe("cancelReport()", () => {
+        it(`when the report is unsaved and I click on "Cancel", then an event will be emitted`, async () => {
             const wrapper = instantiateComponent();
 
             await wrapper.get("[data-test=cross-tracker-cancel-report]").trigger("click");
 
-            expect(duplicateReading).toHaveBeenCalledWith(backend_cross_tracker_report);
-            expect(discardSpy).toHaveBeenCalled();
+            expect(wrapper.emitted("discard-unsaved-report")).toBeDefined();
         });
     });
 });

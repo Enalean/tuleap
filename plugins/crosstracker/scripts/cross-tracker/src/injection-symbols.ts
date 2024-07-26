@@ -18,12 +18,15 @@
  */
 
 import type { StrictInjectionKey } from "@tuleap/vue-strict-inject";
-import type { RetrieveProjects } from "./domain/RetrieveProjects";
 import type { IntlFormatter } from "@tuleap/date-helper";
+import type { Ref } from "vue";
+import type { RetrieveProjects } from "./domain/RetrieveProjects";
 import type { RetrieveArtifactsTable } from "./domain/RetrieveArtifactsTable";
+import type { ReportState } from "./domain/ReportState";
 
 export const RETRIEVE_PROJECTS: StrictInjectionKey<RetrieveProjects> = Symbol("RetrieveProjects");
 export const DATE_FORMATTER: StrictInjectionKey<IntlFormatter> = Symbol("DateFormatter");
 export const DATE_TIME_FORMATTER: StrictInjectionKey<IntlFormatter> = Symbol("DateTimeFormatter");
 export const RETRIEVE_ARTIFACTS_TABLE: StrictInjectionKey<RetrieveArtifactsTable> =
     Symbol("RetrieveArtifactsTable");
+export const REPORT_STATE: StrictInjectionKey<Ref<ReportState>> = Symbol("report_state");

@@ -86,17 +86,15 @@ import ExportButton from "../ExportCSVButton.vue";
 import { getQueryResult, getReportContent } from "../../api/rest-querier";
 import type WritingCrossTrackerReport from "../../writing-mode/writing-cross-tracker-report";
 import type { Artifact, ArtifactsCollection, State } from "../../type";
-import { DATE_FORMATTER } from "../../injection-symbols";
+import { DATE_FORMATTER, REPORT_STATE } from "../../injection-symbols";
 
 const props = defineProps<{ writing_cross_tracker_report: WritingCrossTrackerReport }>();
 
-const { reading_mode, is_report_saved, report_id } = useState<
-    Pick<State, "reading_mode" | "is_report_saved" | "report_id">
->(["reading_mode", "is_report_saved", "report_id"]);
+const report_state = strictInject(REPORT_STATE);
+const date_formatter = strictInject(DATE_FORMATTER);
+const { report_id } = useState<Pick<State, "report_id">>(["report_id"]);
 const { setErrorMessage } = useMutations(["setErrorMessage"]);
 const { $gettext } = useGettext();
-
-const date_formatter = strictInject(DATE_FORMATTER);
 
 const is_loading = ref(true);
 let artifacts: Ref<Artifact[]> = ref([]);
@@ -108,13 +106,13 @@ const limit = 30;
 const is_table_empty = computed(() => !is_loading.value && artifacts.value.length === 0);
 
 const should_show_export_button = computed(
-    () => reading_mode.value === true && is_report_saved.value === true && !is_table_empty.value,
+    () => report_state.value === "report-saved" && !is_table_empty.value,
 );
 
 watch(
-    () => [reading_mode.value, is_report_saved.value],
+    () => report_state.value,
     () => {
-        if (reading_mode.value === true) {
+        if (report_state.value === "report-saved" || report_state.value === "result-preview") {
             refreshArtifactList();
         }
     },
@@ -169,7 +167,7 @@ function loadArtifacts(): void {
 }
 
 function getArtifactsFromReportOrUnsavedQuery(): ResultAsync<ArtifactsCollection, Fault> {
-    if (is_report_saved.value === true) {
+    if (report_state.value === "report-saved") {
         return getReportContent(report_id.value, limit, current_offset);
     }
 

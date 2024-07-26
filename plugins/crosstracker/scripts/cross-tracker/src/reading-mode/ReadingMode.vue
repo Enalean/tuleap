@@ -36,7 +36,7 @@
             {{ props.reading_cross_tracker_report.expert_query }}
         </div>
     </div>
-    <div class="reading-mode-actions" v-if="!is_report_saved">
+    <div class="reading-mode-actions" v-if="report_state === 'result-preview'">
         <button
             type="button"
             class="tlp-button-primary tlp-button-outline reading-mode-actions-cancel"
@@ -49,7 +49,7 @@
             type="button"
             class="tlp-button-primary"
             v-on:click="saveReport()"
-            v-bind:class="{ disabled: is_save_disabled }"
+            v-bind:disabled="is_save_disabled"
             data-test="cross-tracker-save-report"
         >
             <i
@@ -68,12 +68,15 @@
 import { computed, ref } from "vue";
 import { useGetters, useMutations, useState } from "vuex-composition-helpers";
 import { useGettext } from "vue3-gettext";
+import { strictInject } from "@tuleap/vue-strict-inject";
 import TrackerListReadingMode from "./TrackerListReadingMode.vue";
 import { updateReport } from "../api/rest-querier";
 import type ReadingCrossTrackerReport from "./reading-cross-tracker-report";
 import type { Report, State } from "../type";
 import type BackendCrossTrackerReport from "../backend-cross-tracker-report";
+import { REPORT_STATE } from "../injection-symbols";
 
+const report_state = strictInject(REPORT_STATE);
 const { $gettext } = useGettext();
 
 const props = defineProps<{
@@ -84,18 +87,17 @@ const props = defineProps<{
 const emit = defineEmits<{
     (e: "switch-to-writing-mode"): void;
     (e: "saved"): void;
+    (e: "discard-unsaved-report"): void;
 }>();
 
-const { is_report_saved, report_id, is_user_admin } = useState<
-    Pick<State, "is_report_saved" | "report_id" | "is_user_admin">
->(["is_report_saved", "report_id", "is_user_admin"]);
+const { report_id, is_user_admin } = useState<Pick<State, "report_id" | "is_user_admin">>([
+    "report_id",
+    "is_user_admin",
+]);
 
 const { has_error_message } = useGetters(["has_error_message"]);
 
-const { setErrorMessage, discardUnsavedReport } = useMutations([
-    "setErrorMessage",
-    "discardUnsavedReport",
-]);
+const { setErrorMessage } = useMutations(["setErrorMessage"]);
 
 const is_loading = ref(false);
 
@@ -141,7 +143,6 @@ function saveReport(): void {
 }
 
 function cancelReport(): void {
-    props.reading_cross_tracker_report.duplicateFromReport(props.backend_cross_tracker_report);
-    discardUnsavedReport();
+    emit("discard-unsaved-report");
 }
 </script>

@@ -28,26 +28,9 @@ export function resetFeedbacks(state: State): void {
     state.success_message = null;
 }
 
-export function switchToReadingMode(state: State, saved_state: boolean): void {
-    resetFeedbacks(state);
-    state.reading_mode = true;
-    state.is_report_saved = saved_state;
-}
-
-export function switchToWritingMode(state: State): void {
-    resetFeedbacks(state);
-    state.reading_mode = false;
-}
-
-export function switchReportToSaved(state: State, message: string): void {
+export function setSuccessMessage(state: State, message: string): void {
     state.success_message = message;
     state.error_message = null;
-    state.is_report_saved = true;
-}
-
-export function discardUnsavedReport(state: State): void {
-    resetFeedbacks(state);
-    state.is_report_saved = true;
 }
 
 export function setInvalidTrackers(state: State, invalid_trackers: InvalidTracker[]): void {

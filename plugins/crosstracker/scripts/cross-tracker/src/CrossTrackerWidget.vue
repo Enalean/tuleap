@@ -34,9 +34,10 @@
         v-bind:reading_cross_tracker_report="reading_cross_tracker_report"
         v-on:switch-to-writing-mode="handleSwitchWriting"
         v-on:saved="reportSaved"
+        v-on:discard-unsaved-report="unsavedReportDiscarded"
     />
     <writing-mode
-        v-if="!reading_mode"
+        v-if="report_state === 'edit-query'"
         v-bind:writing_cross_tracker_report="writing_cross_tracker_report"
         v-on:switch-to-reading-mode="handleSwitchReading"
     />
@@ -52,7 +53,7 @@
     </template>
 </template>
 <script setup lang="ts">
-import { computed, onMounted, ref } from "vue";
+import { computed, onMounted, ref, provide } from "vue";
 import { useGetters, useMutations, useState } from "vuex-composition-helpers";
 import { useGettext } from "vue3-gettext";
 import ArtifactTable from "./components/table/ArtifactTable.vue";
@@ -67,28 +68,28 @@ import type BackendCrossTrackerReport from "./backend-cross-tracker-report";
 import type ReadingCrossTrackerReport from "./reading-mode/reading-cross-tracker-report";
 import type { Report, State } from "./type";
 import SelectableTable from "./components/selectable-table/SelectableTable.vue";
+import type { ReportState } from "./domain/ReportState";
+import { REPORT_STATE } from "./injection-symbols";
 
 const gettext_provider = useGettext();
 
-const { reading_mode, report_id, success_message, is_user_admin } = useState<
-    Pick<State, "reading_mode" | "report_id" | "success_message" | "is_user_admin">
->(["reading_mode", "report_id", "success_message", "is_user_admin"]);
+const { report_id, success_message, is_user_admin } = useState<
+    Pick<State, "report_id" | "success_message" | "is_user_admin">
+>(["report_id", "success_message", "is_user_admin"]);
 
 const { has_success_message } = useGetters(["has_success_message"]);
 const {
     setInvalidTrackers,
     setErrorMessage,
-    switchToWritingMode,
-    switchToReadingMode,
     resetInvalidTrackerList,
-    switchReportToSaved,
+    setSuccessMessage,
+    resetFeedbacks,
 } = useMutations([
     "setInvalidTrackers",
     "setErrorMessage",
-    "switchToWritingMode",
-    "switchToReadingMode",
     "resetInvalidTrackerList",
-    "switchReportToSaved",
+    "setSuccessMessage",
+    "resetFeedbacks",
 ]);
 
 const props = defineProps<{
@@ -97,10 +98,16 @@ const props = defineProps<{
     writing_cross_tracker_report: WritingCrossTrackerReport;
 }>();
 
+const report_state = ref<ReportState>("report-saved");
+provide(REPORT_STATE, report_state);
 const is_loading = ref(true);
 const is_using_select = ref(false);
 
-const is_reading_mode_shown = computed(() => reading_mode.value === true && !is_loading.value);
+const is_reading_mode_shown = computed(
+    () =>
+        (report_state.value === "report-saved" || report_state.value === "result-preview") &&
+        !is_loading.value,
+);
 
 function initReports(): void {
     props.reading_cross_tracker_report.duplicateFromReport(props.backend_cross_tracker_report);
@@ -140,23 +147,37 @@ function handleSwitchWriting(): void {
     }
 
     props.writing_cross_tracker_report.duplicateFromReport(props.reading_cross_tracker_report);
-    switchToWritingMode();
+    report_state.value = "edit-query";
+    resetFeedbacks();
 }
 
 function handleSwitchReading(event: SaveEvent): void {
     if (event.saved_state) {
         props.writing_cross_tracker_report.duplicateFromReport(props.reading_cross_tracker_report);
+        report_state.value = "report-saved";
     } else {
         props.reading_cross_tracker_report.duplicateFromWritingReport(
             props.writing_cross_tracker_report,
         );
+        report_state.value = "result-preview";
     }
-    switchToReadingMode(event.saved_state);
+    resetFeedbacks();
 }
 
 function reportSaved(): void {
     initReports();
     resetInvalidTrackerList();
-    switchReportToSaved(gettext_provider.$gettext("Report has been successfully saved"));
+    report_state.value = "report-saved";
+    setSuccessMessage(gettext_provider.$gettext("Report has been successfully saved"));
 }
+
+function unsavedReportDiscarded(): void {
+    props.reading_cross_tracker_report.duplicateFromReport(props.backend_cross_tracker_report);
+    report_state.value = "report-saved";
+    resetFeedbacks();
+}
+
+defineExpose({
+    report_state,
+});
 </script>

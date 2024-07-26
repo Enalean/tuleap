@@ -34,8 +34,6 @@ export type State = {
     error_message: string | null;
     success_message: string | null;
     invalid_trackers: ReadonlyArray<InvalidTracker>;
-    reading_mode: boolean;
-    is_report_saved: boolean;
     is_user_admin: boolean;
     report_id: number;
 };

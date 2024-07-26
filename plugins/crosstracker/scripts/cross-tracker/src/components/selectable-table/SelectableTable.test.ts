@@ -24,7 +24,7 @@ import { shallowMount } from "@vue/test-utils";
 import { Option } from "@tuleap/option";
 import { IntlFormatter } from "@tuleap/date-helper";
 import { en_US_LOCALE } from "@tuleap/core-constants";
-import { nextTick } from "vue";
+import { nextTick, ref } from "vue";
 import SelectableTable from "./SelectableTable.vue";
 import { getGlobalTestOptions } from "../../helpers/global-options-for-tests";
 import WritingCrossTrackerReport from "../../writing-mode/writing-cross-tracker-report";
@@ -33,6 +33,7 @@ import { TrackerInfoStub } from "../../../tests/stubs/TrackerInfoStub";
 import {
     DATE_FORMATTER,
     DATE_TIME_FORMATTER,
+    REPORT_STATE,
     RETRIEVE_ARTIFACTS_TABLE,
 } from "../../injection-symbols";
 import { DATE_CELL, NUMERIC_CELL, TEXT_CELL } from "../../domain/ArtifactsTable";
@@ -45,9 +46,8 @@ import type {
 } from "../../domain/RetrieveArtifactsTable";
 import { Fault } from "@tuleap/fault";
 import { buildVueDompurifyHTMLDirective } from "vue-dompurify-html";
-import { TEXT_SELECTABLE_TYPE } from "../../api/cross-tracker-rest-api-types";
-import type { State } from "../../type";
 import EmptyState from "./EmptyState.vue";
+import type { ReportState } from "../../domain/ReportState";
 
 vi.useFakeTimers();
 
@@ -64,7 +64,7 @@ describe(`SelectableTable`, () => {
 
     const getWrapper = (
         table_retriever: RetrieveArtifactsTable,
-        state: Partial<State> = {},
+        report_state: ReportState,
     ): VueWrapper<InstanceType<typeof SelectableTable>> => {
         const writing_cross_tracker_report = new WritingCrossTrackerReport();
         writing_cross_tracker_report.expert_query = `SELECT start_date WHERE start_date != ''`;
@@ -76,7 +76,6 @@ describe(`SelectableTable`, () => {
         return shallowMount(SelectableTable, {
             global: {
                 ...getGlobalTestOptions({
-                    state: state as State,
                     mutations: {
                         setErrorMessage: errorSpy,
                     },
@@ -92,6 +91,7 @@ describe(`SelectableTable`, () => {
                         "date-with-time",
                     ),
                     [RETRIEVE_ARTIFACTS_TABLE.valueOf()]: table_retriever,
+                    [REPORT_STATE.valueOf()]: ref(report_state),
                 },
             },
             props: {
@@ -100,7 +100,7 @@ describe(`SelectableTable`, () => {
         });
     };
 
-    describe(`onMounted() - `, () => {
+    describe(`onMounted()`, () => {
         it(`will retrieve the query result,
             will show a loading spinner
             and will show a table-like grid with the selected columns and artifact values`, async () => {
@@ -149,7 +149,7 @@ describe(`SelectableTable`, () => {
                 table_result,
             );
 
-            const wrapper = getWrapper(table_retriever);
+            const wrapper = getWrapper(table_retriever, "report-saved");
 
             await nextTick();
             expect(wrapper.find("[data-test=loading]").exists()).toBe(true);
@@ -173,7 +173,7 @@ describe(`SelectableTable`, () => {
                 Fault.fromMessage(error_message),
             );
 
-            getWrapper(table_retriever);
+            getWrapper(table_retriever, "report-saved");
 
             await vi.runOnlyPendingTimersAsync();
 
@@ -181,7 +181,7 @@ describe(`SelectableTable`, () => {
             expect(errorSpy.mock.calls[0][1]).toContain(error_message);
         });
     });
-    describe("loadArtifact() -", () => {
+    describe("loadArtifact()", () => {
         let initial_report_with_total: ArtifactsTableWithTotal;
         let query_report_with_total: ArtifactsTableWithTotal;
         beforeEach(() => {
@@ -229,7 +229,7 @@ describe(`SelectableTable`, () => {
                 .withArtifactRow(
                     new ArtifactRowBuilder()
                         .addCell(TEXT_COLUMN_NAME, {
-                            type: TEXT_SELECTABLE_TYPE,
+                            type: TEXT_CELL,
                             value: Option.fromValue("hehe"),
                         })
                         .build(),
@@ -252,7 +252,7 @@ describe(`SelectableTable`, () => {
                 initial_report_with_total,
             );
 
-            const wrapper = getWrapper(table_retriever, { is_report_saved: false });
+            const wrapper = getWrapper(table_retriever, "result-preview");
 
             await vi.runOnlyPendingTimersAsync();
 
@@ -267,7 +267,7 @@ describe(`SelectableTable`, () => {
                 initial_report_with_total,
             );
 
-            const wrapper = getWrapper(table_retriever, { is_report_saved: true });
+            const wrapper = getWrapper(table_retriever, "report-saved");
 
             await vi.runOnlyPendingTimersAsync();
 
@@ -290,7 +290,7 @@ describe(`SelectableTable`, () => {
                 table_result,
             );
 
-            const wrapper = getWrapper(table_retriever, { is_report_saved: true });
+            const wrapper = getWrapper(table_retriever, "report-saved");
             expect(wrapper.findComponent(EmptyState).exists()).toBe(true);
         });
     });
