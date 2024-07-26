@@ -69,7 +69,7 @@ function getTemplate(args: BadgeProps): TemplateResult {
 }
 
 const meta: Meta<BadgeProps> = {
-    title: "TLP/Visual Assets/Badges",
+    title: "TLP/Visual assets/Badges",
     parameters: {
         controls: {
             exclude: ["all_variations", "on_dark_background"],
