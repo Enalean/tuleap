@@ -28,6 +28,7 @@ use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Metadata\Semantic\As
 use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Metadata\Semantic\Description\DescriptionSelectFromBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Metadata\Semantic\Status\StatusSelectFromBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Metadata\Semantic\Title\TitleSelectFromBuilder;
+use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Metadata\Special\PrettyTitle\PrettyTitleSelectFromBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Metadata\Special\ProjectName\ProjectNameSelectFromBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
@@ -42,6 +43,7 @@ final class MetadataSelectFromBuilderTest extends TestCase
             new StatusSelectFromBuilder(),
             new AssignedToSelectFromBuilder(),
             new ProjectNameSelectFromBuilder(),
+            new PrettyTitleSelectFromBuilder(),
         );
 
         return $builder->getSelectFrom($metadata);
@@ -124,11 +126,10 @@ final class MetadataSelectFromBuilderTest extends TestCase
         self::assertNotEmpty($result->getSelect());
     }
 
-    public function testItReturnsEmptyForPrettyTitle(): void
+    public function testItReturnsSQLForPrettyTitle(): void
     {
         $result = $this->getSelectFrom(new Metadata('pretty_title'));
-        self::assertEmpty($result->getSelect());
-        self::assertEmpty($result->getFrom());
-        self::assertEmpty($result->getFromParameters());
+        self::assertNotEmpty($result->getSelect());
+        self::assertNotEmpty($result->getFrom());
     }
 }

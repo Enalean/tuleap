@@ -29,6 +29,7 @@ use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Metadata\Semantic\As
 use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Metadata\Semantic\Description\DescriptionSelectFromBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Metadata\Semantic\Status\StatusSelectFromBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Metadata\Semantic\Title\TitleSelectFromBuilder;
+use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Metadata\Special\PrettyTitle\PrettyTitleSelectFromBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Metadata\Special\ProjectName\ProjectNameSelectFromBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\ParametrizedSelectFrom;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
@@ -41,6 +42,7 @@ final readonly class MetadataSelectFromBuilder
         private StatusSelectFromBuilder $status_builder,
         private AssignedToSelectFromBuilder $assigned_to_builder,
         private ProjectNameSelectFromBuilder $project_name_builder,
+        private PrettyTitleSelectFromBuilder $pretty_title_builder,
     ) {
     }
 
@@ -63,7 +65,7 @@ final readonly class MetadataSelectFromBuilder
             // Custom fields
             AllowedMetadata::PROJECT_NAME     => $this->project_name_builder->getSelectFrom(),
             AllowedMetadata::TRACKER_NAME     => new ParametrizedSelectFrom("tracker.name AS '@tracker.name', tracker.color AS '@tracker.color'", '', []),
-            AllowedMetadata::PRETTY_TITLE     => new ParametrizedSelectFrom('', '', []),
+            AllowedMetadata::PRETTY_TITLE     => $this->pretty_title_builder->getSelectFrom(),
             default                           => throw new LogicException("Unknown metadata type: {$metadata->getName()}"),
         };
     }
