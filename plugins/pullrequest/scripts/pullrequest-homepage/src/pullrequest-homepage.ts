@@ -20,6 +20,7 @@
 import { createApp, ref } from "vue";
 import { createGettext } from "vue3-gettext";
 import VueDOMPurifyHTML from "vue-dompurify-html";
+import { getLocaleOrThrow, getTimezoneOrThrow } from "@tuleap/date-helper";
 import { getDatasetItemOrThrow } from "@tuleap/dom";
 import { getPOFileFromLocaleWithoutExtension, initVueGettext } from "@tuleap/vue3-gettext-init";
 import { buildBaseUrl } from "./urls/base-url-builders";
@@ -30,12 +31,12 @@ import {
     PULL_REQUEST_SORT_ORDER,
     REPOSITORY_ID,
     SHOW_CLOSED_PULL_REQUESTS,
-    USER_DATE_TIME_FORMAT_KEY,
     USER_LOCALE_KEY,
     USER_RELATIVE_DATE_DISPLAY_PREFERENCE_KEY,
     SORT_DESCENDANT,
     SHOW_PULL_REQUESTS_RELATED_TO_ME,
     CURRENT_USER_ID,
+    USER_TIMEZONE_KEY,
 } from "./injection-symbols";
 
 export const init = async (mount_point: HTMLElement): Promise<void> => {
@@ -49,8 +50,8 @@ export const init = async (mount_point: HTMLElement): Promise<void> => {
         .provide(PROJECT_ID, project_id)
         .provide(CURRENT_USER_ID, user_id)
         .provide(BASE_URL, base_url)
-        .provide(USER_LOCALE_KEY, getDatasetItemOrThrow(document.body, "userLocale"))
-        .provide(USER_DATE_TIME_FORMAT_KEY, getDatasetItemOrThrow(document.body, "dateTimeFormat"))
+        .provide(USER_LOCALE_KEY, getLocaleOrThrow(document))
+        .provide(USER_TIMEZONE_KEY, getTimezoneOrThrow(document))
         .provide(
             USER_RELATIVE_DATE_DISPLAY_PREFERENCE_KEY,
             getDatasetItemOrThrow(mount_point, "relativeDateDisplay"),
