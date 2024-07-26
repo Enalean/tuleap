@@ -92,6 +92,7 @@ import {
     NOTIFY_FAULT,
     REPORT_STATE,
 } from "../../injection-symbols";
+import { ArtifactsRetrievalFault } from "../../domain/ArtifactsRetrievalFault";
 
 const props = defineProps<{ writing_cross_tracker_report: WritingCrossTrackerReport }>();
 
@@ -151,7 +152,7 @@ function loadArtifacts(): void {
             },
             (fault) => {
                 is_load_more_displayed.value = false;
-                notifyFault(fault);
+                notifyFault(ArtifactsRetrievalFault(fault));
             },
         )
         .then(() => {

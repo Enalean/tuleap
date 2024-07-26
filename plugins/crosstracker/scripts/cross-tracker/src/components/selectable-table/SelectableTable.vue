@@ -73,6 +73,7 @@ import type { Fault } from "@tuleap/fault";
 import type { ArtifactsTableWithTotal } from "../../domain/RetrieveArtifactsTable";
 import SelectablePagination from "./SelectablePagination.vue";
 import EmptyState from "./EmptyState.vue";
+import { ArtifactsRetrievalFault } from "../../domain/ArtifactsRetrievalFault";
 
 const artifacts_retriever = strictInject(RETRIEVE_ARTIFACTS_TABLE);
 const date_formatter = strictInject(DATE_FORMATTER);
@@ -123,7 +124,7 @@ function loadArtifacts(): void {
                 total.value = report_with_total.total;
             },
             (fault) => {
-                notifyFault(fault);
+                notifyFault(ArtifactsRetrievalFault(fault));
             },
         )
         .then(() => {

@@ -86,6 +86,7 @@ describe("ExportCSVButton", () => {
             await wrapper.find("[data-test=export-csv-button]").trigger("click");
 
             expect(errorSpy).toHaveBeenCalled();
+            expect(errorSpy.mock.calls[0][0].isCSVExport()).toBe(true);
         });
     });
 });

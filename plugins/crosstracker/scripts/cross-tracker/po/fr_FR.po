@@ -37,6 +37,13 @@ msgstr "Annuler"
 msgid "Description"
 msgstr "Description"
 
+msgid "Error while exporting the report to CSV: %{error}"
+msgstr "Erreur pendant l'export du rapport en CSV : %{error}"
+
+msgid "Error while fetching the artifacts matching the query: %{error}"
+msgstr ""
+"Erreur à la récupération des artéfacts correspondant à la requête : %{error}"
+
 msgid "Error while fetching the list of projects you are member of: %{error}"
 msgstr ""
 "Erreur à la récupération de la liste des projets dont vous êtes membre : "
@@ -46,6 +53,12 @@ msgid "Error while fetching the list of trackers of this project: %{error}"
 msgstr ""
 "Erreur à la récupération de la liste des outils de suivi de ce projet : "
 "%{error}"
+
+msgid "Error while fetching the report: %{error}"
+msgstr "Erreur à la récupération du rapport : %{error}"
+
+msgid "Error while saving the report: %{error}"
+msgstr "Erreur pendant la sauvegarde du rapport : %{error}"
 
 msgid "Example: @title = 'value'"
 msgstr "Exemple : @title = 'valeur'"

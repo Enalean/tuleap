@@ -75,6 +75,7 @@ import type ReadingCrossTrackerReport from "./reading-cross-tracker-report";
 import type { Report, State } from "../type";
 import type BackendCrossTrackerReport from "../backend-cross-tracker-report";
 import { NOTIFY_FAULT, REPORT_STATE } from "../injection-symbols";
+import { SaveReportFault } from "../domain/SaveReportFault";
 
 const { $gettext } = useGettext();
 const report_state = strictInject(REPORT_STATE);
@@ -130,7 +131,7 @@ function saveReport(): void {
                 emit("saved");
             },
             (fault) => {
-                notifyFault(fault);
+                notifyFault(SaveReportFault(fault));
             },
         )
         .then(() => {

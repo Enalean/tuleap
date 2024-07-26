@@ -48,6 +48,34 @@ const error_message = computed<Option<string>>(() =>
                 true,
             );
         }
+        if ("isArtifactsRetrieval" in fault && fault.isArtifactsRetrieval() === true) {
+            return $gettext(
+                "Error while fetching the artifacts matching the query: %{error}",
+                { error: String(fault) },
+                true,
+            );
+        }
+        if ("isReportRetrieval" in fault && fault.isReportRetrieval() === true) {
+            return $gettext(
+                "Error while fetching the report: %{error}",
+                { error: String(fault) },
+                true,
+            );
+        }
+        if ("isSaveReport" in fault && fault.isSaveReport() === true) {
+            return $gettext(
+                "Error while saving the report: %{error}",
+                { error: String(fault) },
+                true,
+            );
+        }
+        if ("isCSVExport" in fault && fault.isCSVExport() === true) {
+            return $gettext(
+                "Error while exporting the report to CSV: %{error}",
+                { error: String(fault) },
+                true,
+            );
+        }
         if ("isMaxTrackersSelected" in fault && fault.isMaxTrackersSelected() === true) {
             return $gettext("Tracker selection is limited to 25 trackers");
         }

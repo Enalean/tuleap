@@ -121,6 +121,7 @@ describe("ArtifactTable", () => {
             await vi.runOnlyPendingTimersAsync();
 
             expect(errorSpy).toHaveBeenCalled();
+            expect(errorSpy.mock.calls[0][0].isArtifactsRetrieval()).toBe(true);
         });
 
         it(`Given the user does not have the permission to see all the matching artifacts on a call,
