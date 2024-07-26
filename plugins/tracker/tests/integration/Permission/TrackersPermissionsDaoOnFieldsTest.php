@@ -43,7 +43,7 @@ final class TrackersPermissionsDaoOnFieldsTest extends TestIntegrationTestCase
         $core_builder    = new CoreDatabaseBuilder($db);
         $tracker_builder = new TrackerDatabaseBuilder($db);
 
-        $project = $core_builder->buildProject();
+        $project = $core_builder->buildProject('project_name');
 
         $tracker         = $tracker_builder->buildTracker((int) $project->getID(), 'Release');
         $this->field1_id = $tracker_builder->buildIntField($tracker->getId(), 'field1');

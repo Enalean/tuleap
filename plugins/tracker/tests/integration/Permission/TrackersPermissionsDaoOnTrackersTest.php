@@ -45,7 +45,7 @@ final class TrackersPermissionsDaoOnTrackersTest extends TestIntegrationTestCase
         $core_builder    = new CoreDatabaseBuilder($db);
         $tracker_builder = new TrackerDatabaseBuilder($db);
 
-        $project = $core_builder->buildProject();
+        $project = $core_builder->buildProject('project_name');
 
         $this->tracker1_id = $tracker_builder->buildTracker((int) $project->getID(), 'Tracker 1')->getId();
         $this->tracker2_id = $tracker_builder->buildTracker((int) $project->getID(), 'Tracker 2')->getId();

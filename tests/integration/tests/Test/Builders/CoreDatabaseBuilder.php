@@ -36,13 +36,14 @@ final class CoreDatabaseBuilder
         $this->user_permissions_dao = new UserPermissionsDao();
     }
 
-    public function buildProject(): Project
+    public function buildProject(string $name, string $icon = ''): Project
     {
         $row         = [
-            'group_name'      => 'cross tracker',
+            'group_name'      => $name,
             'access'          => 'public',
             'status'          => 'A',
-            'unix_group_name' => 'cross-tracker-comparison',
+            'unix_group_name' => "cross-tracker-comparison-$name",
+            'icon_codepoint'  => $icon,
         ];
         $project_id  = (int) $this->db->insertReturnId(
             'groups',

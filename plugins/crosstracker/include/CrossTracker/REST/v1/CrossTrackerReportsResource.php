@@ -91,6 +91,7 @@ use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Metadata\Semantic\As
 use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Metadata\Semantic\Description\DescriptionSelectFromBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Metadata\Semantic\Status\StatusSelectFromBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Metadata\Semantic\Title\TitleSelectFromBuilder;
+use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Metadata\Special\ProjectName\ProjectNameSelectFromBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilderVisitor;
 use Tuleap\CrossTracker\REST\v1\Representation\CrossTrackerReportContentRepresentation;
 use Tuleap\CrossTracker\REST\v1\Representation\LegacyCrossTrackerReportContentRepresentation;
@@ -265,6 +266,7 @@ final class CrossTrackerReportsResource extends AuthenticatedResource
                     new DescriptionSelectFromBuilder(),
                     new StatusSelectFromBuilder(),
                     new AssignedToSelectFromBuilder(),
+                    new ProjectNameSelectFromBuilder(),
                 ),
             );
             $purifier               = \Codendi_HTMLPurifier::instance();

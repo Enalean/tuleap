@@ -29,6 +29,7 @@ use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Metadata\Semantic\As
 use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Metadata\Semantic\Description\DescriptionSelectFromBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Metadata\Semantic\Status\StatusSelectFromBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Metadata\Semantic\Title\TitleSelectFromBuilder;
+use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Metadata\Special\ProjectName\ProjectNameSelectFromBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\ParametrizedSelectFrom;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
 
@@ -39,6 +40,7 @@ final readonly class MetadataSelectFromBuilder
         private DescriptionSelectFromBuilder $description_builder,
         private StatusSelectFromBuilder $status_builder,
         private AssignedToSelectFromBuilder $assigned_to_builder,
+        private ProjectNameSelectFromBuilder $project_name_builder,
     ) {
     }
 
@@ -59,7 +61,7 @@ final readonly class MetadataSelectFromBuilder
             AllowedMetadata::ID               => new ParametrizedSelectFrom("artifact.id AS '@id'", '', []),
 
             // Custom fields
-            AllowedMetadata::PROJECT_NAME,
+            AllowedMetadata::PROJECT_NAME     => $this->project_name_builder->getSelectFrom(),
             AllowedMetadata::TRACKER_NAME,
             AllowedMetadata::PRETTY_TITLE     => new ParametrizedSelectFrom('', '', []),
             default                           => throw new LogicException("Unknown metadata type: {$metadata->getName()}"),

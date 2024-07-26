@@ -49,7 +49,7 @@ final class TrackersPermissionsDaoOnArtifactsTest extends TestIntegrationTestCas
         $tracker_builder = new TrackerDatabaseBuilder($db);
         $this->dao       = new TrackersPermissionsDao();
 
-        $project = $core_builder->buildProject();
+        $project = $core_builder->buildProject('project_name');
 
         $story_tracker = $tracker_builder->buildTracker((int) $project->getID(), 'Story Tracker')->getId();
         $task_tracker  = $tracker_builder->buildTracker((int) $project->getID(), 'Task Tracker')->getId();
