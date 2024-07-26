@@ -22,67 +22,15 @@ import * as mutations from "./mutations";
 import type { State } from "../type";
 
 describe("mutations", () => {
-    describe("discardUnsavedReport()", () => {
-        it("When I discard the unsaved report, then feedbacks will be hidden and the report will be set to saved", () => {
+    describe("setSuccessMessage()", () => {
+        it("Given a success message, then the success message will be set and the error message will be hidden", () => {
             const state = {
-                is_report_saved: false,
-                error_message: "Bad request",
-                success_message: "Hurrah",
-            } as State;
-
-            mutations.discardUnsavedReport(state);
-
-            expect(state.is_report_saved).toBe(true);
-            expect(state.success_message).toBeNull();
-            expect(state.error_message).toBeNull();
-        });
-    });
-
-    describe("switchToReadingMode()", () => {
-        it("Given a report 'saved' state, then the feedbacks will be hidden, reading mode will be true and the report 'saved' state will be updated", () => {
-            const state = {
-                reading_mode: false,
-                is_report_saved: false,
-                error_message: "Bad request",
-                success_message: "Yay",
-            } as State;
-
-            mutations.switchToReadingMode(state, true);
-
-            expect(state.reading_mode).toBe(true);
-            expect(state.is_report_saved).toBe(true);
-            expect(state.success_message).toBeNull();
-            expect(state.error_message).toBeNull();
-        });
-    });
-
-    describe("switchToWritingMode()", () => {
-        it("the feedbacks will be hidden and reading mode will be false", () => {
-            const state = {
-                reading_mode: true,
-                error_message: "Forbidden",
-                success_message: "Huzzah",
-            } as State;
-
-            mutations.switchToWritingMode(state);
-
-            expect(state.reading_mode).toBe(false);
-            expect(state.success_message).toBeNull();
-            expect(state.error_message).toBeNull();
-        });
-    });
-
-    describe("switchReportToSaved()", () => {
-        it("Given a success message, then the success message will be set, the error message will be hidden and the report will be marked as saved", () => {
-            const state = {
-                is_report_saved: false,
                 error_message: "impeccant",
                 success_message: null,
             } as State;
 
-            mutations.switchReportToSaved(state, "Great success");
+            mutations.setSuccessMessage(state, "Great success");
 
-            expect(state.is_report_saved).toBe(true);
             expect(state.error_message).toBeNull();
             expect(state.success_message).toBe("Great success");
         });

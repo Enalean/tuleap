@@ -58,17 +58,17 @@
 <script setup lang="ts">
 import { onMounted, ref, watch } from "vue";
 import { strictInject } from "@tuleap/vue-strict-inject";
-import { useMutations, useState } from "vuex-composition-helpers";
+import { useMutations } from "vuex-composition-helpers";
 import { useGettext } from "vue3-gettext";
 import {
     DATE_FORMATTER,
     DATE_TIME_FORMATTER,
+    REPORT_STATE,
     RETRIEVE_ARTIFACTS_TABLE,
 } from "../../injection-symbols";
 import type WritingCrossTrackerReport from "../../writing-mode/writing-cross-tracker-report";
 import type { ArtifactRow, ArtifactsTable } from "../../domain/ArtifactsTable";
 import { DATE_CELL, NUMERIC_CELL, TEXT_CELL } from "../../domain/ArtifactsTable";
-import type { State } from "../../type";
 import type { ResultAsync } from "neverthrow";
 import type { Fault } from "@tuleap/fault";
 import type { ArtifactsTableWithTotal } from "../../domain/RetrieveArtifactsTable";
@@ -78,14 +78,11 @@ import EmptyState from "./EmptyState.vue";
 const artifacts_retriever = strictInject(RETRIEVE_ARTIFACTS_TABLE);
 const date_formatter = strictInject(DATE_FORMATTER);
 const date_time_formatter = strictInject(DATE_TIME_FORMATTER);
+const report_state = strictInject(REPORT_STATE);
 
 const props = defineProps<{
     writing_cross_tracker_report: WritingCrossTrackerReport;
 }>();
-
-const { reading_mode, is_report_saved } = useState<Pick<State, "reading_mode" | "is_report_saved">>(
-    ["reading_mode", "is_report_saved"],
-);
 
 const { setErrorMessage } = useMutations(["setErrorMessage"]);
 const { $gettext } = useGettext();
@@ -98,9 +95,9 @@ let offset = 0;
 const limit = 30;
 
 watch(
-    () => [reading_mode.value, is_report_saved.value],
+    () => report_state.value,
     () => {
-        if (reading_mode.value === true) {
+        if (report_state.value === "report-saved" || report_state.value === "result-preview") {
             refreshArtifactList();
         }
     },
@@ -143,7 +140,7 @@ function loadArtifacts(): void {
 }
 
 function getArtifactsFromReportOrUnsavedQuery(): ResultAsync<ArtifactsTableWithTotal, Fault> {
-    if (is_report_saved.value === true) {
+    if (report_state.value === "report-saved") {
         return artifacts_retriever.getSelectableReportContent(limit, offset);
     }
 

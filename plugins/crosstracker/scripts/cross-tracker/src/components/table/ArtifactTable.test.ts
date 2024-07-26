@@ -21,6 +21,7 @@ import type { Mock } from "vitest";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
+import { ref } from "vue";
 import { getGlobalTestOptions } from "../../helpers/global-options-for-tests";
 import { errAsync, okAsync } from "neverthrow";
 import { Fault } from "@tuleap/fault";
@@ -29,10 +30,11 @@ import { en_US_LOCALE } from "@tuleap/core-constants";
 import WritingCrossTrackerReport from "../../writing-mode/writing-cross-tracker-report";
 import ArtifactTable from "./ArtifactTable.vue";
 import * as rest_querier from "../../api/rest-querier";
-import type { Artifact, State } from "../../type";
+import type { Artifact } from "../../type";
 import ArtifactTableRow from "./ArtifactTableRow.vue";
 import { TuleapAPIFaultStub } from "../../../tests/stubs/TuleapAPIFaultStub";
-import { DATE_FORMATTER } from "../../injection-symbols";
+import { DATE_FORMATTER, REPORT_STATE } from "../../injection-symbols";
+import type { ReportState } from "../../domain/ReportState";
 
 vi.useFakeTimers();
 
@@ -43,18 +45,18 @@ describe("ArtifactTable", () => {
         errorSpy = vi.fn();
     });
 
-    function getWrapper(state: Partial<State>): VueWrapper<InstanceType<typeof ArtifactTable>> {
+    function getWrapper(report_state: ReportState): VueWrapper<InstanceType<typeof ArtifactTable>> {
         const date_formatter = IntlFormatter(en_US_LOCALE, "Europe/Paris", "date");
         return shallowMount(ArtifactTable, {
             global: {
                 ...getGlobalTestOptions({
-                    state: state as State,
                     mutations: {
                         setErrorMessage: errorSpy,
                     },
                 }),
                 provide: {
                     [DATE_FORMATTER.valueOf()]: date_formatter,
+                    [REPORT_STATE.valueOf()]: ref(report_state),
                 },
             },
             props: {
@@ -68,7 +70,7 @@ describe("ArtifactTable", () => {
             const getReportContent = vi
                 .spyOn(rest_querier, "getReportContent")
                 .mockReturnValue(okAsync({ artifacts: [], total: 0 }));
-            getWrapper({ is_report_saved: true });
+            getWrapper("report-saved");
             expect(getReportContent).toHaveBeenCalled();
         });
 
@@ -76,7 +78,7 @@ describe("ArtifactTable", () => {
             const getQueryResult = vi
                 .spyOn(rest_querier, "getQueryResult")
                 .mockReturnValue(okAsync({ artifacts: [], total: 0 }));
-            getWrapper({ is_report_saved: false });
+            getWrapper("result-preview");
             expect(getQueryResult).toHaveBeenCalled();
         });
 
@@ -85,7 +87,7 @@ describe("ArtifactTable", () => {
             vi.spyOn(rest_querier, "getReportContent").mockReturnValue(
                 errAsync(Fault.fromMessage(error_message)),
             );
-            getWrapper({ is_report_saved: true });
+            getWrapper("report-saved");
             await vi.runOnlyPendingTimersAsync();
 
             expect(errorSpy).toHaveBeenCalled();
@@ -97,7 +99,7 @@ describe("ArtifactTable", () => {
             vi.spyOn(rest_querier, "getReportContent").mockReturnValue(
                 errAsync(TuleapAPIFaultStub.fromMessage(error_message)),
             );
-            getWrapper({ is_report_saved: true });
+            getWrapper("report-saved");
             await vi.runOnlyPendingTimersAsync();
 
             expect(errorSpy).toHaveBeenCalled();
@@ -112,7 +114,7 @@ describe("ArtifactTable", () => {
             const getReportContent = vi
                 .spyOn(rest_querier, "getReportContent")
                 .mockReturnValueOnce(okAsync(first_batch));
-            const wrapper = getWrapper({ is_report_saved: true });
+            const wrapper = getWrapper("report-saved");
             await vi.runOnlyPendingTimersAsync();
 
             expect(wrapper.findAllComponents(ArtifactTableRow)).toHaveLength(1);
