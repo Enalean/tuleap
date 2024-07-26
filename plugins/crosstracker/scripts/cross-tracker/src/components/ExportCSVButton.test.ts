@@ -29,6 +29,7 @@ import * as download_helper from "../helpers/download-helper";
 import * as bom_helper from "../helpers/bom-helper";
 import { getGlobalTestOptions } from "../helpers/global-options-for-tests";
 import type { State } from "../type";
+import { CLEAR_FEEDBACKS, NOTIFY_FAULT } from "../injection-symbols";
 
 const REPORT_ID = 36;
 describe("ExportCSVButton", () => {
@@ -42,15 +43,16 @@ describe("ExportCSVButton", () => {
     function getWrapper(): VueWrapper<InstanceType<typeof ExportCSVButton>> {
         const store_options = {
             state: { report_id: REPORT_ID } as State,
-            getters: { should_display_export_button: () => true },
-            mutations: {
-                resetFeedbacks: resetSpy,
-                setErrorMessage: errorSpy,
-            },
         };
 
         return shallowMount(ExportCSVButton, {
-            global: { ...getGlobalTestOptions(store_options) },
+            global: {
+                ...getGlobalTestOptions(store_options),
+                provide: {
+                    [NOTIFY_FAULT.valueOf()]: errorSpy,
+                    [CLEAR_FEEDBACKS.valueOf()]: resetSpy,
+                },
+            },
         });
     }
 
@@ -76,16 +78,14 @@ describe("ExportCSVButton", () => {
         });
 
         it("When there is a REST error, then it will be shown", async () => {
-            const error_message = "Report with id 90 not found";
             const wrapper = getWrapper();
             vi.spyOn(rest_querier, "getCSVReport").mockReturnValue(
-                errAsync(Fault.fromMessage(error_message)),
+                errAsync(Fault.fromMessage("Report with id 90 not found")),
             );
 
             await wrapper.find("[data-test=export-csv-button]").trigger("click");
 
             expect(errorSpy).toHaveBeenCalled();
-            expect(errorSpy.mock.calls[0][1]).toContain(error_message);
         });
     });
 });

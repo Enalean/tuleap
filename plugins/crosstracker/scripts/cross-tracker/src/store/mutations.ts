@@ -19,20 +19,6 @@
 
 import type { State, InvalidTracker } from "../type";
 
-export function setErrorMessage(state: State, message: string): void {
-    state.error_message = message;
-}
-
-export function resetFeedbacks(state: State): void {
-    state.error_message = null;
-    state.success_message = null;
-}
-
-export function setSuccessMessage(state: State, message: string): void {
-    state.success_message = message;
-    state.error_message = null;
-}
-
 export function setInvalidTrackers(state: State, invalid_trackers: InvalidTracker[]): void {
     state.invalid_trackers = invalid_trackers;
 }

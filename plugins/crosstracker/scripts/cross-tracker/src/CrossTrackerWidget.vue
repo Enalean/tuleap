@@ -18,20 +18,21 @@
   -->
 
 <template>
-    <error-message />
+    <error-message v-bind:fault="current_fault" />
     <error-inactive-project-message />
     <div
         class="tlp-alert-info cross-tracker-report-success"
-        v-if="has_success_message"
+        v-if="current_success.isValue()"
         data-test="cross-tracker-report-success"
     >
-        {{ success_message }}
+        {{ current_success.unwrapOr("") }}
     </div>
     <div class="cross-tracker-loader" v-if="is_loading"></div>
     <reading-mode
         v-if="is_reading_mode_shown"
         v-bind:backend_cross_tracker_report="backend_cross_tracker_report"
         v-bind:reading_cross_tracker_report="reading_cross_tracker_report"
+        v-bind:has_error="has_error"
         v-on:switch-to-writing-mode="handleSwitchWriting"
         v-on:saved="reportSaved"
         v-on:discard-unsaved-report="unsavedReportDiscarded"
@@ -69,27 +70,25 @@ import type ReadingCrossTrackerReport from "./reading-mode/reading-cross-tracker
 import type { Report, State } from "./type";
 import SelectableTable from "./components/selectable-table/SelectableTable.vue";
 import type { ReportState } from "./domain/ReportState";
-import { REPORT_STATE } from "./injection-symbols";
+import {
+    CLEAR_FEEDBACKS,
+    IS_CSV_EXPORT_ALLOWED,
+    NOTIFY_FAULT,
+    REPORT_STATE,
+} from "./injection-symbols";
+import { useFeedbacks } from "./composables/useFeedbacks";
 
 const gettext_provider = useGettext();
 
-const { report_id, success_message, is_user_admin } = useState<
-    Pick<State, "report_id" | "success_message" | "is_user_admin">
->(["report_id", "success_message", "is_user_admin"]);
+const { report_id, is_user_admin } = useState<Pick<State, "report_id" | "is_user_admin">>([
+    "report_id",
+    "is_user_admin",
+]);
 
-const { has_success_message } = useGetters(["has_success_message"]);
-const {
-    setInvalidTrackers,
-    setErrorMessage,
-    resetInvalidTrackerList,
-    setSuccessMessage,
-    resetFeedbacks,
-} = useMutations([
+const { has_invalid_trackers } = useGetters(["has_invalid_trackers"]);
+const { setInvalidTrackers, resetInvalidTrackerList } = useMutations([
     "setInvalidTrackers",
-    "setErrorMessage",
     "resetInvalidTrackerList",
-    "setSuccessMessage",
-    "resetFeedbacks",
 ]);
 
 const props = defineProps<{
@@ -109,6 +108,23 @@ const is_reading_mode_shown = computed(
         !is_loading.value,
 );
 
+const { current_fault, current_success, notifyFault, notifySuccess, clearFeedbacks } =
+    useFeedbacks();
+provide(NOTIFY_FAULT, notifyFault);
+provide(CLEAR_FEEDBACKS, clearFeedbacks);
+const has_error = computed<boolean>(() => current_fault.value.isValue());
+
+const is_csv_export_allowed = computed<boolean>(() => {
+    if (report_state.value !== "report-saved" || has_error.value === true) {
+        return false;
+    }
+    if (!is_user_admin) {
+        return true;
+    }
+    return has_invalid_trackers.value === false;
+});
+provide(IS_CSV_EXPORT_ALLOWED, is_csv_export_allowed);
+
 function initReports(): void {
     props.reading_cross_tracker_report.duplicateFromReport(props.backend_cross_tracker_report);
     props.writing_cross_tracker_report.duplicateFromReport(props.reading_cross_tracker_report);
@@ -126,7 +142,7 @@ function loadBackendReport(): void {
                 }
             },
             (fault) => {
-                setErrorMessage(String(fault));
+                notifyFault(fault);
             },
         )
         .then(() => {
@@ -148,7 +164,7 @@ function handleSwitchWriting(): void {
 
     props.writing_cross_tracker_report.duplicateFromReport(props.reading_cross_tracker_report);
     report_state.value = "edit-query";
-    resetFeedbacks();
+    clearFeedbacks();
 }
 
 function handleSwitchReading(event: SaveEvent): void {
@@ -161,23 +177,27 @@ function handleSwitchReading(event: SaveEvent): void {
         );
         report_state.value = "result-preview";
     }
-    resetFeedbacks();
+    clearFeedbacks();
 }
 
 function reportSaved(): void {
     initReports();
     resetInvalidTrackerList();
     report_state.value = "report-saved";
-    setSuccessMessage(gettext_provider.$gettext("Report has been successfully saved"));
+    clearFeedbacks();
+    notifySuccess(gettext_provider.$gettext("Report has been successfully saved"));
 }
 
 function unsavedReportDiscarded(): void {
     props.reading_cross_tracker_report.duplicateFromReport(props.backend_cross_tracker_report);
     report_state.value = "report-saved";
-    resetFeedbacks();
+    clearFeedbacks();
 }
 
 defineExpose({
     report_state,
+    current_fault,
+    current_success,
+    is_csv_export_allowed,
 });
 </script>

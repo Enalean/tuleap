@@ -17,11 +17,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Fault } from "@tuleap/fault";
+import type { Fault } from "@tuleap/fault";
 
-export const TuleapAPIFaultStub = {
-    fromMessage: (message: string): Fault => ({
-        isTuleapAPIFault: () => true,
-        ...Fault.fromMessage(message),
-    }),
-};
+export const TrackersRetrievalFault = (previous: Fault): Fault => ({
+    ...previous,
+    isTrackersRetrieval: () => true,
+});

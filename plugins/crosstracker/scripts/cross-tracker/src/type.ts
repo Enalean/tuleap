@@ -31,8 +31,6 @@ export type TrackerInfo = Pick<TrackerResponseWithProject, "id" | "label">;
 export type ProjectInfo = Pick<TrackerProjectRepresentation, "id" | "uri" | "label">;
 
 export type State = {
-    error_message: string | null;
-    success_message: string | null;
     invalid_trackers: ReadonlyArray<InvalidTracker>;
     is_user_admin: boolean;
     report_id: number;

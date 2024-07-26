@@ -30,6 +30,7 @@ import {
 import type { ProjectInfo, State, TrackerInfo, TrackerToUpdate } from "../type";
 import TrackerListWritingMode from "./TrackerListWritingMode.vue";
 import TrackerSelection from "./TrackerSelection.vue";
+import { CLEAR_FEEDBACKS, NOTIFY_FAULT } from "../injection-symbols";
 
 describe("WritingMode", () => {
     let resetSpy: Mock, errorSpy: Mock;
@@ -44,17 +45,19 @@ describe("WritingMode", () => {
     ): VueWrapper<InstanceType<typeof WritingMode>> {
         const store_options = {
             state: { is_user_admin: true } as State,
-            mutations: {
-                resetFeedbacks: resetSpy,
-                setErrorMessage: errorSpy,
-            },
         };
 
         return shallowMount(WritingMode, {
             props: {
                 writing_cross_tracker_report,
             },
-            global: { ...getGlobalTestOptions(store_options) },
+            global: {
+                ...getGlobalTestOptions(store_options),
+                provide: {
+                    [CLEAR_FEEDBACKS.valueOf()]: resetSpy,
+                    [NOTIFY_FAULT.valueOf()]: errorSpy,
+                },
+            },
         });
     }
 
@@ -187,7 +190,8 @@ describe("WritingMode", () => {
                 selected_tracker,
             });
 
-            expect(errorSpy).toHaveBeenCalledWith(expect.any(Object), expect.any(String));
+            expect(errorSpy).toHaveBeenCalled();
+            expect(errorSpy.mock.calls[0][0].isMaxTrackersSelected()).toBe(true);
         });
     });
 });

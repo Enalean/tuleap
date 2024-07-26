@@ -30,30 +30,26 @@ import ReadingCrossTrackerReport from "./reading-cross-tracker-report";
 import * as rest_querier from "../api/rest-querier";
 import type { Report, State, TrackerAndProject } from "../type";
 import { getGlobalTestOptions } from "../helpers/global-options-for-tests";
-import { REPORT_STATE } from "../injection-symbols";
+import { NOTIFY_FAULT, REPORT_STATE } from "../injection-symbols";
 
 describe("ReadingMode", () => {
     let backend_cross_tracker_report: BackendCrossTrackerReport,
         reading_cross_tracker_report: ReadingCrossTrackerReport,
         is_user_admin: boolean,
-        has_error_message: boolean,
+        has_error: boolean,
         errorSpy: Mock;
 
     beforeEach(() => {
         backend_cross_tracker_report = new BackendCrossTrackerReport();
         reading_cross_tracker_report = new ReadingCrossTrackerReport();
         is_user_admin = true;
-        has_error_message = false;
+        has_error = false;
         errorSpy = vi.fn();
     });
 
     function instantiateComponent(): VueWrapper<InstanceType<typeof ReadingMode>> {
         const store_options = {
             state: { is_user_admin } as State,
-            getters: { has_error_message: () => has_error_message },
-            mutations: {
-                setErrorMessage: errorSpy,
-            },
         };
 
         return shallowMount(ReadingMode, {
@@ -61,9 +57,11 @@ describe("ReadingMode", () => {
                 ...getGlobalTestOptions(store_options),
                 provide: {
                     [REPORT_STATE.valueOf()]: ref("result-preview"),
+                    [NOTIFY_FAULT.valueOf()]: errorSpy,
                 },
             },
             props: {
+                has_error,
                 backend_cross_tracker_report,
                 reading_cross_tracker_report,
             },
@@ -121,7 +119,7 @@ describe("ReadingMode", () => {
         });
 
         it("Given the report is in error, then nothing will happen", async () => {
-            has_error_message = true;
+            has_error = true;
             const updateReport = vi.spyOn(rest_querier, "updateReport");
 
             const wrapper = instantiateComponent();
@@ -131,9 +129,8 @@ describe("ReadingMode", () => {
         });
 
         it("When there is a REST error, then it will be shown", async () => {
-            const error_message = "Report not found";
             vi.spyOn(rest_querier, "updateReport").mockReturnValue(
-                errAsync(Fault.fromMessage(error_message)),
+                errAsync(Fault.fromMessage("Report not found")),
             );
 
             const wrapper = instantiateComponent();
@@ -141,7 +138,6 @@ describe("ReadingMode", () => {
             await wrapper.get("[data-test=cross-tracker-save-report]").trigger("click");
 
             expect(errorSpy).toHaveBeenCalled();
-            expect(errorSpy.mock.calls[0][1]).toContain(error_message);
         });
     });
 

@@ -33,6 +33,7 @@ import { TrackerInfoStub } from "../../../tests/stubs/TrackerInfoStub";
 import {
     DATE_FORMATTER,
     DATE_TIME_FORMATTER,
+    NOTIFY_FAULT,
     REPORT_STATE,
     RETRIEVE_ARTIFACTS_TABLE,
 } from "../../injection-symbols";
@@ -75,11 +76,7 @@ describe(`SelectableTable`, () => {
 
         return shallowMount(SelectableTable, {
             global: {
-                ...getGlobalTestOptions({
-                    mutations: {
-                        setErrorMessage: errorSpy,
-                    },
-                }),
+                ...getGlobalTestOptions({}),
                 directives: {
                     "dompurify-html": buildVueDompurifyHTMLDirective(),
                 },
@@ -92,6 +89,7 @@ describe(`SelectableTable`, () => {
                     ),
                     [RETRIEVE_ARTIFACTS_TABLE.valueOf()]: table_retriever,
                     [REPORT_STATE.valueOf()]: ref(report_state),
+                    [NOTIFY_FAULT.valueOf()]: errorSpy,
                 },
             },
             props: {
@@ -168,9 +166,8 @@ describe(`SelectableTable`, () => {
         });
 
         it(`when there is a REST error, it will be shown`, async () => {
-            const error_message = "Bad Request: invalid searchable";
             const table_retriever = RetrieveArtifactsTableStub.withFault(
-                Fault.fromMessage(error_message),
+                Fault.fromMessage("Bad Request: invalid searchable"),
             );
 
             getWrapper(table_retriever, "report-saved");
@@ -178,7 +175,6 @@ describe(`SelectableTable`, () => {
             await vi.runOnlyPendingTimersAsync();
 
             expect(errorSpy).toHaveBeenCalled();
-            expect(errorSpy.mock.calls[0][1]).toContain(error_message);
         });
     });
     describe("loadArtifact()", () => {

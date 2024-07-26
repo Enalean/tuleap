@@ -58,11 +58,10 @@
 <script setup lang="ts">
 import { onMounted, ref, watch } from "vue";
 import { strictInject } from "@tuleap/vue-strict-inject";
-import { useMutations } from "vuex-composition-helpers";
-import { useGettext } from "vue3-gettext";
 import {
     DATE_FORMATTER,
     DATE_TIME_FORMATTER,
+    NOTIFY_FAULT,
     REPORT_STATE,
     RETRIEVE_ARTIFACTS_TABLE,
 } from "../../injection-symbols";
@@ -79,13 +78,11 @@ const artifacts_retriever = strictInject(RETRIEVE_ARTIFACTS_TABLE);
 const date_formatter = strictInject(DATE_FORMATTER);
 const date_time_formatter = strictInject(DATE_TIME_FORMATTER);
 const report_state = strictInject(REPORT_STATE);
+const notifyFault = strictInject(NOTIFY_FAULT);
 
 const props = defineProps<{
     writing_cross_tracker_report: WritingCrossTrackerReport;
 }>();
-
-const { setErrorMessage } = useMutations(["setErrorMessage"]);
-const { $gettext } = useGettext();
 
 const is_loading = ref(false);
 const columns = ref<ArtifactsTable["columns"]>(new Set());
@@ -94,14 +91,11 @@ const total = ref(0);
 let offset = 0;
 const limit = 30;
 
-watch(
-    () => report_state.value,
-    () => {
-        if (report_state.value === "report-saved" || report_state.value === "result-preview") {
-            refreshArtifactList();
-        }
-    },
-);
+watch(report_state, () => {
+    if (report_state.value === "report-saved" || report_state.value === "result-preview") {
+        refreshArtifactList();
+    }
+});
 
 function handleNewPage(new_offset: number): void {
     offset = new_offset;
@@ -129,9 +123,7 @@ function loadArtifacts(): void {
                 total.value = report_with_total.total;
             },
             (fault) => {
-                setErrorMessage(
-                    $gettext("An error occurred: %{error}", { error: String(fault) }, true),
-                );
+                notifyFault(fault);
             },
         )
         .then(() => {

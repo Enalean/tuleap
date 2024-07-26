@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2018 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2024-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,21 +17,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { createStore } from "vuex";
-import type { Store } from "vuex";
-import * as getters from "./getters";
-import * as mutations from "./mutations";
-import type { State } from "../type";
+import type { Fault } from "@tuleap/fault";
 
-export function createInitializedStore(report_id: number, is_user_admin: boolean): Store<State> {
-    const state: State = {
-        report_id,
-        is_user_admin,
-        invalid_trackers: [],
-    };
-    return createStore({
-        getters,
-        mutations,
-        state,
-    });
-}
+export const ProjectsRetrievalFault = (previous: Fault): Fault => ({
+    ...previous,
+    isProjectsRetrieval: () => true,
+});

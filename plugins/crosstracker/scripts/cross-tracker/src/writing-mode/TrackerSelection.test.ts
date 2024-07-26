@@ -31,7 +31,7 @@ import type { ProjectInfo, SelectedTracker, State, TrackerInfo } from "../type";
 import type { RetrieveProjects } from "../domain/RetrieveProjects";
 import { RetrieveProjectsStub } from "../../tests/stubs/RetrieveProjectsStub";
 import { ProjectInfoStub } from "../../tests/stubs/ProjectInfoStub";
-import { RETRIEVE_PROJECTS } from "../injection-symbols";
+import { NOTIFY_FAULT, RETRIEVE_PROJECTS } from "../injection-symbols";
 
 vi.useFakeTimers();
 
@@ -53,9 +53,6 @@ describe("TrackerSelection", () => {
     ): VueWrapper<InstanceType<typeof TrackerSelection>> {
         const store_options = {
             state: { is_user_admin: true } as State,
-            mutations: {
-                setErrorMessage: errorSpy,
-            },
         };
 
         return shallowMount(TrackerSelection, {
@@ -65,6 +62,7 @@ describe("TrackerSelection", () => {
             global: {
                 ...getGlobalTestOptions(store_options),
                 provide: {
+                    [NOTIFY_FAULT.valueOf()]: errorSpy,
                     [RETRIEVE_PROJECTS.valueOf()]: projects_retriever,
                 },
             },
@@ -92,14 +90,13 @@ describe("TrackerSelection", () => {
         });
 
         it("Displays an error when rest route fails", async () => {
-            const error_message = "Not Found";
-            projects_retriever = RetrieveProjectsStub.withFault(Fault.fromMessage(error_message));
+            projects_retriever = RetrieveProjectsStub.withFault(Fault.fromMessage("Not Found"));
 
             const wrapper = getWrapper();
             await vi.runOnlyPendingTimersAsync();
 
             expect(errorSpy).toHaveBeenCalled();
-            expect(errorSpy.mock.calls[0][1]).toContain(error_message);
+            expect(errorSpy.mock.calls[0][0].isProjectsRetrieval()).toBe(true);
 
             expect(wrapper.find("[data-test=tracker-loader]").classes()).not.toContain("fa-spin");
         });
@@ -134,16 +131,15 @@ describe("TrackerSelection", () => {
         });
 
         it("when there is a REST error, it will be displayed", async () => {
-            const error_message = "Not Found";
             vi.spyOn(rest_querier, "getTrackersOfProject").mockReturnValue(
-                errAsync(Fault.fromMessage(error_message)),
+                errAsync(Fault.fromMessage("Not Found")),
             );
 
             getWrapper();
             await vi.runOnlyPendingTimersAsync();
 
             expect(errorSpy).toHaveBeenCalled();
-            expect(errorSpy.mock.calls[0][1]).toContain(error_message);
+            expect(errorSpy.mock.calls[0][0].isTrackersRetrieval()).toBe(true);
         });
     });
 

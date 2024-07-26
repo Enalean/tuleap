@@ -66,7 +66,7 @@
 </template>
 <script setup lang="ts">
 import { computed, ref } from "vue";
-import { useGetters, useMutations, useState } from "vuex-composition-helpers";
+import { useState } from "vuex-composition-helpers";
 import { useGettext } from "vue3-gettext";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import TrackerListReadingMode from "./TrackerListReadingMode.vue";
@@ -74,12 +74,14 @@ import { updateReport } from "../api/rest-querier";
 import type ReadingCrossTrackerReport from "./reading-cross-tracker-report";
 import type { Report, State } from "../type";
 import type BackendCrossTrackerReport from "../backend-cross-tracker-report";
-import { REPORT_STATE } from "../injection-symbols";
+import { NOTIFY_FAULT, REPORT_STATE } from "../injection-symbols";
 
-const report_state = strictInject(REPORT_STATE);
 const { $gettext } = useGettext();
+const report_state = strictInject(REPORT_STATE);
+const notifyFault = strictInject(NOTIFY_FAULT);
 
 const props = defineProps<{
+    has_error: boolean;
     reading_cross_tracker_report: ReadingCrossTrackerReport;
     backend_cross_tracker_report: BackendCrossTrackerReport;
 }>();
@@ -95,15 +97,9 @@ const { report_id, is_user_admin } = useState<Pick<State, "report_id" | "is_user
     "is_user_admin",
 ]);
 
-const { has_error_message } = useGetters(["has_error_message"]);
-
-const { setErrorMessage } = useMutations(["setErrorMessage"]);
-
 const is_loading = ref(false);
 
-const is_save_disabled = computed(
-    () => is_loading.value === true || has_error_message.value === true,
-);
+const is_save_disabled = computed(() => is_loading.value === true || props.has_error);
 
 const is_expert_query_not_empty = computed(
     () => props.reading_cross_tracker_report.expert_query !== "",
@@ -134,7 +130,7 @@ function saveReport(): void {
                 emit("saved");
             },
             (fault) => {
-                setErrorMessage(String(fault));
+                notifyFault(fault);
             },
         )
         .then(() => {
