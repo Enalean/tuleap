@@ -19,9 +19,7 @@
     "neverthrow": "6.0.0",
     "vue": "^3.3.4",
     "vue-dompurify-html": "^5.1.0",
-    "vue3-gettext": "2.4.0",
-    "vuex": "^4.1.0",
-    "vuex-composition-helpers": "^2.0.1"
+    "vue3-gettext": "2.4.0"
   },
   "devDependencies": {
     "@tuleap/build-system-configurator": "workspace:*",

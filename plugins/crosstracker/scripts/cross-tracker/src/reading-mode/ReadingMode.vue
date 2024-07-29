@@ -66,20 +66,21 @@
 </template>
 <script setup lang="ts">
 import { computed, ref } from "vue";
-import { useState } from "vuex-composition-helpers";
 import { useGettext } from "vue3-gettext";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import TrackerListReadingMode from "./TrackerListReadingMode.vue";
 import { updateReport } from "../api/rest-querier";
 import type ReadingCrossTrackerReport from "./reading-cross-tracker-report";
-import type { Report, State } from "../type";
+import type { Report } from "../type";
 import type BackendCrossTrackerReport from "../backend-cross-tracker-report";
-import { NOTIFY_FAULT, REPORT_STATE } from "../injection-symbols";
+import { IS_USER_ADMIN, NOTIFY_FAULT, REPORT_ID, REPORT_STATE } from "../injection-symbols";
 import { SaveReportFault } from "../domain/SaveReportFault";
 
 const { $gettext } = useGettext();
 const report_state = strictInject(REPORT_STATE);
 const notifyFault = strictInject(NOTIFY_FAULT);
+const report_id = strictInject(REPORT_ID);
+const is_user_admin = strictInject(IS_USER_ADMIN);
 
 const props = defineProps<{
     has_error: boolean;
@@ -93,11 +94,6 @@ const emit = defineEmits<{
     (e: "discard-unsaved-report"): void;
 }>();
 
-const { report_id, is_user_admin } = useState<Pick<State, "report_id" | "is_user_admin">>([
-    "report_id",
-    "is_user_admin",
-]);
-
 const is_loading = ref(false);
 
 const is_save_disabled = computed(() => is_loading.value === true || props.has_error);
@@ -107,7 +103,7 @@ const is_expert_query_not_empty = computed(
 );
 
 function switchToWritingMode(): void {
-    if (!is_user_admin.value) {
+    if (!is_user_admin) {
         return;
     }
     emit("switch-to-writing-mode");
@@ -124,7 +120,7 @@ function saveReport(): void {
     const tracker_ids = props.backend_cross_tracker_report.getTrackerIds();
     const new_expert_query = props.backend_cross_tracker_report.getExpertQuery();
 
-    updateReport(report_id.value, tracker_ids, new_expert_query)
+    updateReport(report_id, tracker_ids, new_expert_query)
         .match(
             (report: Report) => {
                 props.backend_cross_tracker_report.init(report.trackers, report.expert_query);

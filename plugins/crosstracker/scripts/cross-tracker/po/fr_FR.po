@@ -69,10 +69,10 @@ msgstr "Export CSV"
 msgid "First"
 msgstr "Premier"
 
-msgid "If you update the query these trackers will be removed from it."
+msgid "If you update the query, these trackers will be removed from it."
 msgstr ""
-"Si vous mettez à jour cette requête ces outils de suivi seront supprimés de "
-"la recherche."
+"Si vous modifiez cette requête, ces outils de suivi seront supprimés de la "
+"recherche."
 
 msgid "Last"
 msgstr "Dernier"

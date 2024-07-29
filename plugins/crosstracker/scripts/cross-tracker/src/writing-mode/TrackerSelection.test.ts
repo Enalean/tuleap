@@ -27,7 +27,7 @@ import { Fault } from "@tuleap/fault";
 import { getGlobalTestOptions } from "../helpers/global-options-for-tests";
 import TrackerSelection from "./TrackerSelection.vue";
 import * as rest_querier from "../api/rest-querier";
-import type { ProjectInfo, SelectedTracker, State, TrackerInfo } from "../type";
+import type { ProjectInfo, SelectedTracker, TrackerInfo } from "../type";
 import type { RetrieveProjects } from "../domain/RetrieveProjects";
 import { RetrieveProjectsStub } from "../../tests/stubs/RetrieveProjectsStub";
 import { ProjectInfoStub } from "../../tests/stubs/ProjectInfoStub";
@@ -51,16 +51,12 @@ describe("TrackerSelection", () => {
     function getWrapper(
         selected_trackers: Array<SelectedTracker> = [],
     ): VueWrapper<InstanceType<typeof TrackerSelection>> {
-        const store_options = {
-            state: { is_user_admin: true } as State,
-        };
-
         return shallowMount(TrackerSelection, {
             props: {
                 selected_trackers,
             },
             global: {
-                ...getGlobalTestOptions(store_options),
+                ...getGlobalTestOptions(),
                 provide: {
                     [NOTIFY_FAULT.valueOf()]: errorSpy,
                     [RETRIEVE_PROJECTS.valueOf()]: projects_retriever,

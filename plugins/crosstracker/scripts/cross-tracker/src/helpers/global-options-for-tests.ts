@@ -19,14 +19,9 @@
 
 import type { MountingOptions } from "@vue/test-utils";
 import { createGettext } from "vue3-gettext";
-import type { StoreOptions } from "vuex";
-import { createStore } from "vuex";
-import type { State } from "../type";
 
-export function getGlobalTestOptions(
-    store_options: StoreOptions<State>,
-): MountingOptions<unknown>["global"] {
+export function getGlobalTestOptions(): MountingOptions<unknown>["global"] {
     return {
-        plugins: [createGettext({ silent: true }), createStore(store_options)],
+        plugins: [createGettext({ silent: true })],
     };
 }

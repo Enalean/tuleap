@@ -76,7 +76,7 @@ describe(`SelectableTable`, () => {
 
         return shallowMount(SelectableTable, {
             global: {
-                ...getGlobalTestOptions({}),
+                ...getGlobalTestOptions(),
                 directives: {
                     "dompurify-html": buildVueDompurifyHTMLDirective(),
                 },

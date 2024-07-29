@@ -32,7 +32,7 @@ describe("SelectablePagination", () => {
     ): VueWrapper<InstanceType<typeof SelectablePagination>> => {
         return shallowMount(SelectablePagination, {
             global: {
-                ...getGlobalTestOptions({}),
+                ...getGlobalTestOptions(),
             },
             directives: {
                 "dompurify-html": buildVueDompurifyHTMLDirective(),

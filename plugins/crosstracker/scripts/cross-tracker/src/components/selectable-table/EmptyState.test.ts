@@ -32,7 +32,7 @@ describe("EmptyState", () => {
     ): VueWrapper<InstanceType<typeof EmptyState>> => {
         return shallowMount(EmptyState, {
             global: {
-                ...getGlobalTestOptions({}),
+                ...getGlobalTestOptions(),
             },
             props: {
                 writing_cross_tracker_report,

@@ -47,12 +47,6 @@ dependencies:
   vue3-gettext:
     specifier: 2.4.0
     version: 2.4.0(vue@3.3.4)
-  vuex:
-    specifier: ^4.1.0
-    version: 4.1.0(vue@3.3.4)
-  vuex-composition-helpers:
-    specifier: ^2.0.1
-    version: 2.0.3(vue@3.3.4)(vuex@4.1.0)
 
 devDependencies:
   '@tuleap/build-system-configurator':
@@ -195,10 +189,6 @@ packages:
     dependencies:
       '@vue/compiler-dom': 3.3.4
       '@vue/shared': 3.3.4
-
-  /@vue/devtools-api@6.6.2:
-    resolution: {integrity: sha512-134clD8u7cBBXdmBbXI282gHGF7T/eAbD/G7mAK2llQF62IbI4ny28IVamZVMoJSvfImC2Xxnj732hXkJvUj6g==}
-    dev: false
 
   /@vue/reactivity-transform@3.3.4:
     resolution: {integrity: sha512-MXgwjako4nu5WFLAjpBnCj/ieqcjE2aJBINUNQzkZQfzIZA4xn+0fV1tIYBJvvva3N3OvKGofRLvQIwEQPpaXw==}
@@ -721,25 +711,6 @@ packages:
       '@vue/runtime-dom': 3.3.4
       '@vue/server-renderer': 3.3.4(vue@3.3.4)
       '@vue/shared': 3.3.4
-
-  /vuex-composition-helpers@2.0.3(vue@3.3.4)(vuex@4.1.0):
-    resolution: {integrity: sha512-tIkGHfUqA3dzq8ePBXUXfZldqgZOXr6hb6TF6M5bhR/5ls2fsqhPJiOygC40UKZe4w6pP7cJ1HiLrZaYckz4nw==}
-    peerDependencies:
-      vue: '>= 3.0.5'
-      vuex: '>= 4.0.0'
-    dependencies:
-      vue: 3.3.4
-      vuex: 4.1.0(vue@3.3.4)
-    dev: false
-
-  /vuex@4.1.0(vue@3.3.4):
-    resolution: {integrity: sha512-hmV6UerDrPcgbSy9ORAtNXDr9M4wlNP4pEFKye4ujJF8oqgFFuxDCdOLS3eNoRTtq5O3hoBDh9Doj1bQMYHRbQ==}
-    peerDependencies:
-      vue: ^3.2.0
-    dependencies:
-      '@vue/devtools-api': 6.6.2
-      vue: 3.3.4
-    dev: false
 
   /wrappy@1.0.2:
     resolution: {integrity: sha512-l4Sp/DRseor9wL6EvV2+TuQn63dMkPjZ/sp9XkghTEbV9KlPS1xUsZ3u7/IQO4wxtcFB4bgpQPRcR3QCvezPcQ==}

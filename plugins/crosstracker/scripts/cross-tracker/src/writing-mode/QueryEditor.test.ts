@@ -36,7 +36,7 @@ describe("QueryEditor", () => {
             props: {
                 writing_cross_tracker_report,
             },
-            global: { ...getGlobalTestOptions({}) },
+            global: { ...getGlobalTestOptions() },
         });
     }
 

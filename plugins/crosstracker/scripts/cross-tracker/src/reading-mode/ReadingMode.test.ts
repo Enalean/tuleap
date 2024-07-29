@@ -28,9 +28,9 @@ import ReadingMode from "./ReadingMode.vue";
 import BackendCrossTrackerReport from "../backend-cross-tracker-report";
 import ReadingCrossTrackerReport from "./reading-cross-tracker-report";
 import * as rest_querier from "../api/rest-querier";
-import type { Report, State, TrackerAndProject } from "../type";
+import type { Report, TrackerAndProject } from "../type";
 import { getGlobalTestOptions } from "../helpers/global-options-for-tests";
-import { NOTIFY_FAULT, REPORT_STATE } from "../injection-symbols";
+import { IS_USER_ADMIN, NOTIFY_FAULT, REPORT_ID, REPORT_STATE } from "../injection-symbols";
 
 describe("ReadingMode", () => {
     let backend_cross_tracker_report: BackendCrossTrackerReport,
@@ -48,16 +48,14 @@ describe("ReadingMode", () => {
     });
 
     function instantiateComponent(): VueWrapper<InstanceType<typeof ReadingMode>> {
-        const store_options = {
-            state: { is_user_admin } as State,
-        };
-
         return shallowMount(ReadingMode, {
             global: {
-                ...getGlobalTestOptions(store_options),
+                ...getGlobalTestOptions(),
                 provide: {
                     [REPORT_STATE.valueOf()]: ref("result-preview"),
                     [NOTIFY_FAULT.valueOf()]: errorSpy,
+                    [REPORT_ID.valueOf()]: 875,
+                    [IS_USER_ADMIN.valueOf()]: is_user_admin,
                 },
             },
             props: {
