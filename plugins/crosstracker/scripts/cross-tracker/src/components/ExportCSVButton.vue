@@ -22,7 +22,6 @@
         type="button"
         class="tlp-button-primary tlp-button-small tlp-button-outline tlp-table-actions-element"
         v-bind:disabled="is_loading"
-        v-if="should_display_export_button"
         v-on:click="exportCSV()"
         data-test="export-csv-button"
     >
@@ -36,21 +35,24 @@
 </template>
 <script setup lang="ts">
 import { ref } from "vue";
-import { useGetters, useMutations, useState } from "vuex-composition-helpers";
+import { useState } from "vuex-composition-helpers";
+import { strictInject } from "@tuleap/vue-strict-inject";
 import { useGettext } from "vue3-gettext";
 import { download } from "../helpers/download-helper";
 import { addBOM } from "../helpers/bom-helper";
 import { getCSVReport } from "../api/rest-querier";
+import { CLEAR_FEEDBACKS, NOTIFY_FAULT } from "../injection-symbols";
+
+const notifyFault = strictInject(NOTIFY_FAULT);
+const clearFeedbacks = strictInject(CLEAR_FEEDBACKS);
 
 const is_loading = ref(false);
 const { report_id } = useState(["report_id"]);
-const { should_display_export_button } = useGetters(["should_display_export_button"]);
-const { resetFeedbacks, setErrorMessage } = useMutations(["resetFeedbacks", "setErrorMessage"]);
 const { $gettext } = useGettext();
 
 function exportCSV(): void {
     is_loading.value = true;
-    resetFeedbacks();
+    clearFeedbacks();
     getCSVReport(report_id.value)
         .match(
             (report) => {
@@ -62,9 +64,7 @@ function exportCSV(): void {
                 );
             },
             (fault) => {
-                setErrorMessage(
-                    $gettext("An error occurred: %{error}", { error: String(fault) }, true),
-                );
+                notifyFault(fault);
             },
         )
         .then(() => {

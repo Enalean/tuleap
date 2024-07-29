@@ -54,8 +54,8 @@
 </template>
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
-import { useMutations } from "vuex-composition-helpers";
 import { useGettext } from "vue3-gettext";
+import { strictInject } from "@tuleap/vue-strict-inject";
 import QueryEditor from "./QueryEditor.vue";
 import type { AddTrackerToSelectionCommand } from "./TrackerSelection.vue";
 import TrackerSelection from "./TrackerSelection.vue";
@@ -63,16 +63,20 @@ import TrackerListWritingMode from "./TrackerListWritingMode.vue";
 import type WritingCrossTrackerReport from "./writing-cross-tracker-report";
 import { TooManyTrackersSelectedError } from "./writing-cross-tracker-report";
 import type { TrackerToUpdate } from "../type";
+import { CLEAR_FEEDBACKS, NOTIFY_FAULT } from "../injection-symbols";
+import { TooManyTrackersSelectedFault } from "../domain/TooManyTrackersSelectedFault";
 
 export type SaveEvent = { readonly saved_state: boolean };
 
 const { $gettext } = useGettext();
 
+const notifyFault = strictInject(NOTIFY_FAULT);
+const clearFeedbacks = strictInject(CLEAR_FEEDBACKS);
+
 const props = defineProps<{ writing_cross_tracker_report: WritingCrossTrackerReport }>();
 const emit = defineEmits<{
     (e: "switch-to-reading-mode", payload: SaveEvent): void;
 }>();
-const { setErrorMessage, resetFeedbacks } = useMutations(["setErrorMessage", "resetFeedbacks"]);
 
 const selected_trackers = ref<ReadonlyArray<TrackerToUpdate>>([]);
 
@@ -109,7 +113,7 @@ function addTrackerToSelection(payload: AddTrackerToSelectionCommand): void {
         updateSelectedTrackers();
     } catch (error) {
         if (error instanceof TooManyTrackersSelectedError) {
-            setErrorMessage($gettext("Tracker selection is limited to 25 trackers"));
+            notifyFault(TooManyTrackersSelectedFault());
         } else {
             throw error;
         }
@@ -119,7 +123,7 @@ function addTrackerToSelection(payload: AddTrackerToSelectionCommand): void {
 function removeTrackerFromSelection(tracker: TrackerToUpdate): void {
     props.writing_cross_tracker_report.removeTracker(tracker.tracker_id);
     updateSelectedTrackers();
-    resetFeedbacks();
+    clearFeedbacks();
 }
 
 defineExpose({

@@ -94,13 +94,14 @@
 </template>
 <script setup lang="ts">
 import { computed, onMounted, ref, watch } from "vue";
-import { useMutations } from "vuex-composition-helpers";
 import { useGettext } from "vue3-gettext";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import { getTrackersOfProject } from "../api/rest-querier";
 import type { ProjectInfo, SelectedTracker, TrackerInfo } from "../type";
-import { RETRIEVE_PROJECTS } from "../injection-symbols";
+import { NOTIFY_FAULT, RETRIEVE_PROJECTS } from "../injection-symbols";
 import { ProjectIdentifier } from "../domain/ProjectIdentifier";
+import { ProjectsRetrievalFault } from "../domain/ProjectsRetrievalFault";
+import { TrackersRetrievalFault } from "../domain/TrackersRetrievalFault";
 
 type TrackerSelectOption = TrackerInfo & {
     readonly disabled: boolean;
@@ -117,7 +118,7 @@ const props = defineProps<{ selected_trackers: ReadonlyArray<SelectedTracker> }>
 const emit = defineEmits<{
     (e: "tracker-added", add: AddTrackerToSelectionCommand): void;
 }>();
-const { setErrorMessage } = useMutations(["setErrorMessage"]);
+const notifyFault = strictInject(NOTIFY_FAULT);
 const projects_retriever = strictInject(RETRIEVE_PROJECTS);
 
 const projects = ref<ReadonlyArray<ProjectInfo>>([]);
@@ -151,15 +152,7 @@ function loadProjects(): void {
                 projects.value = sorted_projects;
                 selected_project.value = sorted_projects[0];
             },
-            (fault) => {
-                setErrorMessage(
-                    $gettext(
-                        "Error while fetching the list of projects you are member of: %{error}",
-                        { error: String(fault) },
-                        true,
-                    ),
-                );
-            },
+            (fault) => notifyFault(ProjectsRetrievalFault(fault)),
         )
         .then(() => {
             is_loader_shown.value = false;
@@ -173,15 +166,7 @@ function loadTrackers(project_id: ProjectIdentifier): void {
             (fetched_trackers) => {
                 trackers.value = fetched_trackers;
             },
-            (fault) => {
-                setErrorMessage(
-                    $gettext(
-                        "Error while fetching the list of trackers of this project: %{error}",
-                        { error: String(fault) },
-                        true,
-                    ),
-                );
-            },
+            (fault) => notifyFault(TrackersRetrievalFault(fault)),
         )
         .then(() => {
             is_loader_shown.value = false;

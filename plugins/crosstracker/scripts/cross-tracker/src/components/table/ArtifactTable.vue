@@ -76,7 +76,7 @@
 <script setup lang="ts">
 import type { Ref } from "vue";
 import { computed, onMounted, ref, watch } from "vue";
-import { useMutations, useState } from "vuex-composition-helpers";
+import { useState } from "vuex-composition-helpers";
 import { useGettext } from "vue3-gettext";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import type { Fault } from "@tuleap/fault";
@@ -86,14 +86,20 @@ import ExportButton from "../ExportCSVButton.vue";
 import { getQueryResult, getReportContent } from "../../api/rest-querier";
 import type WritingCrossTrackerReport from "../../writing-mode/writing-cross-tracker-report";
 import type { Artifact, ArtifactsCollection, State } from "../../type";
-import { DATE_FORMATTER, REPORT_STATE } from "../../injection-symbols";
+import {
+    DATE_FORMATTER,
+    IS_CSV_EXPORT_ALLOWED,
+    NOTIFY_FAULT,
+    REPORT_STATE,
+} from "../../injection-symbols";
 
 const props = defineProps<{ writing_cross_tracker_report: WritingCrossTrackerReport }>();
 
 const report_state = strictInject(REPORT_STATE);
 const date_formatter = strictInject(DATE_FORMATTER);
+const is_csv_export_allowed = strictInject(IS_CSV_EXPORT_ALLOWED);
+const notifyFault = strictInject(NOTIFY_FAULT);
 const { report_id } = useState<Pick<State, "report_id">>(["report_id"]);
-const { setErrorMessage } = useMutations(["setErrorMessage"]);
 const { $gettext } = useGettext();
 
 const is_loading = ref(true);
@@ -106,17 +112,14 @@ const limit = 30;
 const is_table_empty = computed(() => !is_loading.value && artifacts.value.length === 0);
 
 const should_show_export_button = computed(
-    () => report_state.value === "report-saved" && !is_table_empty.value,
+    () => is_csv_export_allowed.value && !is_table_empty.value,
 );
 
-watch(
-    () => report_state.value,
-    () => {
-        if (report_state.value === "report-saved" || report_state.value === "result-preview") {
-            refreshArtifactList();
-        }
-    },
-);
+watch(report_state, () => {
+    if (report_state.value === "report-saved" || report_state.value === "result-preview") {
+        refreshArtifactList();
+    }
+});
 
 onMounted(() => {
     is_loading.value = true;
@@ -137,9 +140,6 @@ function refreshArtifactList(): void {
     loadArtifacts();
 }
 
-const isTuleapAPIFault = (fault: Fault): boolean =>
-    "isTuleapAPIFault" in fault && fault.isTuleapAPIFault() === true;
-
 function loadArtifacts(): void {
     getArtifactsFromReportOrUnsavedQuery()
         .match(
@@ -151,13 +151,7 @@ function loadArtifacts(): void {
             },
             (fault) => {
                 is_load_more_displayed.value = false;
-                if (isTuleapAPIFault(fault)) {
-                    setErrorMessage(String(fault));
-                    return;
-                }
-                setErrorMessage(
-                    $gettext("An error occurred: %{error}", { error: String(fault) }, true),
-                );
+                notifyFault(fault);
             },
         )
         .then(() => {

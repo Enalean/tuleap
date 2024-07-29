@@ -32,31 +32,35 @@ import ArtifactTable from "./ArtifactTable.vue";
 import * as rest_querier from "../../api/rest-querier";
 import type { Artifact } from "../../type";
 import ArtifactTableRow from "./ArtifactTableRow.vue";
-import { TuleapAPIFaultStub } from "../../../tests/stubs/TuleapAPIFaultStub";
-import { DATE_FORMATTER, REPORT_STATE } from "../../injection-symbols";
+import {
+    DATE_FORMATTER,
+    IS_CSV_EXPORT_ALLOWED,
+    NOTIFY_FAULT,
+    REPORT_STATE,
+} from "../../injection-symbols";
 import type { ReportState } from "../../domain/ReportState";
+import ExportCSVButton from "../ExportCSVButton.vue";
 
 vi.useFakeTimers();
 
 describe("ArtifactTable", () => {
-    let errorSpy: Mock;
+    let errorSpy: Mock, is_csv_export_allowed: boolean;
 
     beforeEach(() => {
         errorSpy = vi.fn();
+        is_csv_export_allowed = true;
     });
 
     function getWrapper(report_state: ReportState): VueWrapper<InstanceType<typeof ArtifactTable>> {
         const date_formatter = IntlFormatter(en_US_LOCALE, "Europe/Paris", "date");
         return shallowMount(ArtifactTable, {
             global: {
-                ...getGlobalTestOptions({
-                    mutations: {
-                        setErrorMessage: errorSpy,
-                    },
-                }),
+                ...getGlobalTestOptions({}),
                 provide: {
                     [DATE_FORMATTER.valueOf()]: date_formatter,
                     [REPORT_STATE.valueOf()]: ref(report_state),
+                    [IS_CSV_EXPORT_ALLOWED.valueOf()]: ref(is_csv_export_allowed),
+                    [NOTIFY_FAULT.valueOf()]: errorSpy,
                 },
             },
             props: {
@@ -65,7 +69,34 @@ describe("ArtifactTable", () => {
         });
     }
 
-    describe("loadArtifacts() -", () => {
+    describe(`render`, () => {
+        it(`when the table is empty, it will NOT display the CSV export button`, async () => {
+            vi.spyOn(rest_querier, "getReportContent").mockReturnValue(
+                okAsync({ artifacts: [], total: 0 }),
+            );
+
+            const wrapper = getWrapper("report-saved");
+            await vi.runOnlyPendingTimersAsync();
+
+            expect(wrapper.findComponent(ExportCSVButton).exists()).toBe(false);
+        });
+
+        it(`does not show the CSV export button when told not to`, () => {
+            is_csv_export_allowed = false;
+
+            const wrapper = getWrapper("report-saved");
+
+            expect(wrapper.findComponent(ExportCSVButton).exists()).toBe(false);
+        });
+
+        it(`shows the CSV export button otherwise`, () => {
+            const wrapper = getWrapper("report-saved");
+
+            expect(wrapper.findComponent(ExportCSVButton).exists()).toBe(true);
+        });
+    });
+
+    describe("loadArtifacts()", () => {
         it("Given report is saved, it loads artifacts of report", () => {
             const getReportContent = vi
                 .spyOn(rest_querier, "getReportContent")
@@ -83,27 +114,13 @@ describe("ArtifactTable", () => {
         });
 
         it("when there is a REST error, it will be displayed", async () => {
-            const error_message = "Internal Server Error";
             vi.spyOn(rest_querier, "getReportContent").mockReturnValue(
-                errAsync(Fault.fromMessage(error_message)),
+                errAsync(Fault.fromMessage("Internal Server Error")),
             );
             getWrapper("report-saved");
             await vi.runOnlyPendingTimersAsync();
 
             expect(errorSpy).toHaveBeenCalled();
-            expect(errorSpy.mock.calls[0][1]).toContain(error_message);
-        });
-
-        it("when there is a Tuleap API error, it will be shown", async () => {
-            const error_message = "Error while parsing the query";
-            vi.spyOn(rest_querier, "getReportContent").mockReturnValue(
-                errAsync(TuleapAPIFaultStub.fromMessage(error_message)),
-            );
-            getWrapper("report-saved");
-            await vi.runOnlyPendingTimersAsync();
-
-            expect(errorSpy).toHaveBeenCalled();
-            expect(errorSpy.mock.calls[0][1]).toContain(error_message);
         });
 
         it(`Given the user does not have the permission to see all the matching artifacts on a call,
