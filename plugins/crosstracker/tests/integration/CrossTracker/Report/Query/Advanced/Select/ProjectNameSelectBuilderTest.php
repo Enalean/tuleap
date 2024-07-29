@@ -22,30 +22,30 @@ declare(strict_types=1);
 
 namespace Tuleap\CrossTracker\Report\Query\Advanced\Select;
 
+use PFUser;
+use ProjectUGroup;
+use Tracker;
+use Tuleap\CrossTracker\CrossTrackerReport;
 use Tuleap\CrossTracker\Report\Query\Advanced\CrossTrackerFieldTestCase;
-use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\CrossTrackerExpertQueryReportDao;
-use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Metadata\MetadataSelectFromBuilder;
-use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Metadata\Semantic\AssignedTo\AssignedToSelectFromBuilder;
-use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Metadata\Semantic\Description\DescriptionSelectFromBuilder;
-use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Metadata\Semantic\Status\StatusSelectFromBuilder;
-use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Metadata\Semantic\Title\TitleSelectFromBuilder;
-use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Metadata\Special\PrettyTitle\PrettyTitleSelectFromBuilder;
-use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Metadata\Special\ProjectName\ProjectNameSelectFromBuilder;
+use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Representations\ProjectRepresentation;
+use Tuleap\CrossTracker\REST\v1\Representation\CrossTrackerReportContentRepresentation;
+use Tuleap\CrossTracker\Tests\Report\ArtifactReportFactoryInstantiator;
 use Tuleap\DB\DBFactory;
+use Tuleap\Project\Icons\EmojiCodepointConverter;
 use Tuleap\Test\Builders\CoreDatabaseBuilder;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
 use Tuleap\Tracker\Test\Builders\TrackerDatabaseBuilder;
 
 final class ProjectNameSelectBuilderTest extends CrossTrackerFieldTestCase
 {
+    private PFUser $user;
     /**
-     * @var array<int, array>
+     * @var Tracker[]
+     */
+    private array $trackers;
+    /**
+     * @var array<int, ProjectRepresentation>
      */
     private array $expected_values;
-    /**
-     * @var list<int>
-     */
-    private array $artifact_ids;
 
     public function setUp(): void
     {
@@ -55,51 +55,71 @@ final class ProjectNameSelectBuilderTest extends CrossTrackerFieldTestCase
 
         $project_1    = $core_builder->buildProject('My project');
         $project_1_id = (int) $project_1->getId();
-        $project_2    = $core_builder->buildProject('Another project', '"\u2694\ufe0f"');
+        $project_2    = $core_builder->buildProject('Another project', EmojiCodepointConverter::convertEmojiToStoreFormat('⚔️'));
         $project_2_id = (int) $project_2->getId();
-        $user         = $core_builder->buildUser('project_member', 'Project Member', 'project_member@example.com');
-        $core_builder->addUserToProjectMembers((int) $user->getId(), $project_1_id);
-        $core_builder->addUserToProjectMembers((int) $user->getId(), $project_2_id);
+        $this->user   = $core_builder->buildUser('project_member', 'Project Member', 'project_member@example.com');
+        $core_builder->addUserToProjectMembers((int) $this->user->getId(), $project_1_id);
+        $core_builder->addUserToProjectMembers((int) $this->user->getId(), $project_2_id);
 
         $release_tracker = $tracker_builder->buildTracker($project_1_id, 'Release');
         $sprint_tracker  = $tracker_builder->buildTracker($project_2_id, 'Sprint');
+        $this->trackers  = [$release_tracker, $sprint_tracker];
+
+        $release_artifact_id_field_id = $tracker_builder->buildArtifactIdField($release_tracker->getId());
+        $sprint_artifact_id_field_id  = $tracker_builder->buildArtifactIdField($sprint_tracker->getId());
+
+        $tracker_builder->setReadPermission(
+            $release_artifact_id_field_id,
+            ProjectUGroup::PROJECT_MEMBERS
+        );
+        $tracker_builder->setReadPermission(
+            $sprint_artifact_id_field_id,
+            ProjectUGroup::PROJECT_MEMBERS
+        );
 
         $release_artifact_id = $tracker_builder->buildArtifact($release_tracker->getId());
         $sprint_artifact_id  = $tracker_builder->buildArtifact($sprint_tracker->getId());
-        $this->artifact_ids  = [$release_artifact_id, $sprint_artifact_id];
         $tracker_builder->buildLastChangeset($release_artifact_id);
         $tracker_builder->buildLastChangeset($sprint_artifact_id);
 
         $this->expected_values = [
-            $release_artifact_id => ['@project.name' => 'My project', '@project.icon' => ''],
-            $sprint_artifact_id  => ['@project.name' => 'Another project', '@project.icon' => '"\u2694\ufe0f"'],
+            $release_artifact_id => new ProjectRepresentation('My project', ''),
+            $sprint_artifact_id  => new ProjectRepresentation('Another project', '⚔️'),
         ];
+    }
+
+    private function getQueryResults(CrossTrackerReport $report, PFUser $user): CrossTrackerReportContentRepresentation
+    {
+        $result = (new ArtifactReportFactoryInstantiator())
+            ->getFactory()
+            ->getArtifactsMatchingReport($report, $user, 10, 0, false);
+        assert($result instanceof CrossTrackerReportContentRepresentation);
+        return $result;
     }
 
     public function testItReturnsColumns(): void
     {
-        $dao     = new CrossTrackerExpertQueryReportDao();
-        $builder = new MetadataSelectFromBuilder(
-            new TitleSelectFromBuilder(),
-            new DescriptionSelectFromBuilder(),
-            new StatusSelectFromBuilder(),
-            new AssignedToSelectFromBuilder(),
-            new ProjectNameSelectFromBuilder(),
-            new PrettyTitleSelectFromBuilder(),
-        );
-        $results = $dao->searchArtifactsColumnsMatchingIds(
-            $builder->getSelectFrom(new Metadata('project.name')),
-            $this->artifact_ids,
+        $result = $this->getQueryResults(
+            new CrossTrackerReport(
+                1,
+                'SELECT @project.name WHERE @id >= 1',
+                $this->trackers,
+            ),
+            $this->user,
         );
 
-        self::assertCount(2, $results);
-        foreach ($results as $result) {
-            self::assertArrayHasKey('id', $result);
-            $id = $result['id'];
-            self::assertArrayHasKey('@project.name', $result);
-            self::assertArrayHasKey('@project.icon', $result);
-            self::assertSame($this->expected_values[$id]['@project.name'], $result['@project.name']);
-            self::assertSame($this->expected_values[$id]['@project.icon'], $result['@project.icon']);
+        self::assertSame(2, $result->getTotalSize());
+        self::assertCount(1, $result->selected);
+        self::assertSame('@project.name', $result->selected[0]->name);
+        self::assertSame('project', $result->selected[0]->type);
+        $values = [];
+        foreach ($result->artifacts as $artifact) {
+            self::assertCount(1, $artifact);
+            self::assertArrayHasKey('@project.name', $artifact);
+            $value = $artifact['@project.name'];
+            self::assertInstanceOf(ProjectRepresentation::class, $value);
+            $values[] = $value;
         }
+        self::assertEqualsCanonicalizing(array_values($this->expected_values), $values);
     }
 }
