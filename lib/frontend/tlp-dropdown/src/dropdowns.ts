@@ -55,14 +55,16 @@ export const createDropdown = (
 
 export class Dropdown {
     private readonly doc: Document;
-    private readonly trigger_element: Element;
+    readonly trigger_element: Element;
     private readonly anchor_element: Element;
-    private readonly dropdown_menu: HTMLElement;
+    readonly dropdown_menu: HTMLElement;
     private readonly keyboard: boolean;
     is_shown: boolean;
     private readonly shown_event: CustomEvent<{ target: HTMLElement }>;
     private readonly hidden_event: CustomEvent<{ target: HTMLElement }>;
     private readonly event_listeners: EventListener[];
+    private readonly document_event_handler: EventListenerObject;
+    private readonly trigger_event_handler: EventListenerObject;
     private readonly cleanup: () => void;
 
     constructor(doc: Document, trigger_element: Element, options: Partial<DropdownOptions> = {}) {
@@ -100,6 +102,8 @@ export class Dropdown {
         });
         this.event_listeners = [];
 
+        this.document_event_handler = DocumentEventHandler(this);
+        this.trigger_event_handler = TriggerEventHandler(this);
         this.listenOpenEvents(trigger);
         this.listenCloseEvents(trigger);
     }
@@ -185,58 +189,21 @@ export class Dropdown {
     }
 
     listenOpenEvents(trigger: TriggerType): void {
-        this.trigger_element.addEventListener("click", (event) => {
-            event.preventDefault();
-            this.toggle();
-        });
+        this.trigger_element.addEventListener("click", this.trigger_event_handler);
 
         if (trigger === TRIGGER_HOVER_AND_CLICK) {
-            this.trigger_element.addEventListener("mouseenter", () => {
-                if (this.is_shown) {
-                    return;
-                }
-
-                this.show();
-            });
+            this.trigger_element.addEventListener("mouseenter", this.trigger_event_handler);
         }
     }
 
     listenCloseEvents(trigger: TriggerType): void {
-        this.doc.addEventListener("click", (event) => {
-            if (!(event.target instanceof Element)) {
-                return;
-            }
-            if (
-                this.is_shown &&
-                !this.dropdown_menu.contains(event.target) &&
-                !this.trigger_element.contains(event.target)
-            ) {
-                this.hide();
-            }
-        });
+        this.doc.addEventListener("click", this.document_event_handler);
 
         if (trigger === TRIGGER_HOVER_AND_CLICK) {
-            this.trigger_element.addEventListener("mouseleave", () => {
-                if (this.is_shown) {
-                    this.hide();
-                }
-            });
+            this.trigger_element.addEventListener("mouseleave", this.trigger_event_handler);
         }
-
         if (this.keyboard) {
-            this.doc.addEventListener("keyup", (event) => {
-                if (event.key !== "Escape") {
-                    return;
-                }
-
-                if (isInputElement(event.target)) {
-                    return;
-                }
-
-                if (this.is_shown) {
-                    this.hide();
-                }
-            });
+            this.doc.addEventListener("keyup", this.document_event_handler);
         }
     }
 
@@ -260,6 +227,91 @@ export class Dropdown {
             }
         }
     }
+
+    destroy(): void {
+        this.trigger_element.removeEventListener("mouseleave", this.trigger_event_handler);
+        this.trigger_element.removeEventListener("mouseenter", this.trigger_event_handler);
+        this.trigger_element.removeEventListener("click", this.trigger_event_handler);
+        this.doc.removeEventListener("click", this.document_event_handler);
+        this.doc.removeEventListener("keyup", this.document_event_handler);
+    }
+}
+
+function TriggerEventHandler(dropdown: Dropdown): EventListenerObject {
+    const handleClick = (event: Event): void => {
+        event.preventDefault();
+        dropdown.toggle();
+    };
+
+    const handleMouseEnter = (): void => {
+        if (dropdown.is_shown) {
+            return;
+        }
+        dropdown.show();
+    };
+
+    const handleMouseLeave = (): void => {
+        if (dropdown.is_shown) {
+            dropdown.hide();
+        }
+    };
+
+    return {
+        handleEvent(event: Event): void {
+            if (event.type === "mouseleave") {
+                handleMouseLeave();
+                return;
+            }
+            if (event.type === "mouseenter") {
+                handleMouseEnter();
+                return;
+            }
+            if (event.type === "click") {
+                handleClick(event);
+            }
+        },
+    };
+}
+
+function DocumentEventHandler(dropdown: Dropdown): EventListenerObject {
+    const handleClick = (event: Event): void => {
+        if (!(event.target instanceof Element)) {
+            return;
+        }
+        if (
+            dropdown.is_shown &&
+            !dropdown.dropdown_menu.contains(event.target) &&
+            !dropdown.trigger_element.contains(event.target)
+        ) {
+            dropdown.hide();
+        }
+    };
+
+    const handleKeyUp = (event: KeyboardEvent): void => {
+        if (event.key !== "Escape") {
+            return;
+        }
+
+        if (isInputElement(event.target)) {
+            return;
+        }
+
+        if (dropdown.is_shown) {
+            dropdown.hide();
+        }
+    };
+
+    return {
+        handleEvent(event: Event): void {
+            if (event.type === "click") {
+                handleClick(event);
+                return;
+            }
+            if (event.type === "keyup" && event instanceof KeyboardEvent) {
+                handleKeyUp(event);
+            }
+        },
+    };
 }
 
 function isInputElement(eventTarget: EventTarget | null): boolean {

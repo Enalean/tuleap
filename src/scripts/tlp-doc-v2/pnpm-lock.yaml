@@ -40,6 +40,9 @@ dependencies:
   '@tuleap/tlp-date-picker':
     specifier: workspace:^
     version: link:../../../lib/frontend/tlp-date-picker
+  '@tuleap/tlp-dropdown':
+    specifier: workspace:^
+    version: link:../../../lib/frontend/tlp-dropdown
   '@tuleap/tlp-popovers':
     specifier: workspace:^
     version: link:../../../lib/frontend/tlp-popovers
