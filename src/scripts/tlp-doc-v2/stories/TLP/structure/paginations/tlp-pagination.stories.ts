@@ -20,54 +20,80 @@
 import type { Meta, StoryObj } from "@storybook/web-components";
 import { html, type TemplateResult } from "lit";
 
-function getTemplate(): TemplateResult {
+type PaginationProps = {
+    offset: number;
+    limit: number;
+    total: number;
+};
+
+function getTemplate(args: PaginationProps): TemplateResult {
+    const page_end_index = Math.min(args.offset + args.limit, args.total);
     // prettier-ignore
     return html`
 <div class="tlp-pagination">
-    <a
+    <button
+        type="button"
         class="tlp-button-primary tlp-button-outline tlp-pagination-button"
-        role="button"
-        title="Begin"
+        title="First"
+        ?disabled="${args.offset <= 0}"
     >
         <i class="fa-solid fa-angles-left" aria-hidden="true"></i>
-    </a>
-    <a
+    </button>
+    <button
+        type="button"
         class="tlp-button-primary tlp-button-outline tlp-pagination-button"
-        role="button"
         title="Previous"
+        ?disabled="${args.offset <= 0}"
     >
         <i class="fa-solid fa-angle-left" aria-hidden="true"></i>
-    </a>
-
+    </button>
     <span class="tlp-pagination-pages">
-        <span class="tlp-pagination-number">51</span>
+        <span class="tlp-pagination-number">${args.offset}</span>
         –
-        <span class="tlp-pagination-number">79</span>
+        <span class="tlp-pagination-number">${page_end_index}</span>
         of
-        <span class="tlp-pagination-number">79</span>
+        <span class="tlp-pagination-number">${args.total}</span>
     </span>
-
-    <a
-        class="tlp-button-primary tlp-button-outline tlp-pagination-button disabled"
-        role="button"
+    <button
+        type="button"
+        class="tlp-button-primary tlp-button-outline tlp-pagination-button"
         title="Next"
+        ?disabled="${args.offset + args.limit >= args.total}"
     >
         <i class="fa-solid fa-angle-right" aria-hidden="true"></i>
-    </a>
-    <a
-        class="tlp-button-primary tlp-button-outline tlp-pagination-button disabled"
-        role="button"
-        title="End"
+    </button>
+    <button
+        type="button"
+        class="tlp-button-primary tlp-button-outline tlp-pagination-button"
+        title="Last"
+        ?disabled="${args.offset + args.limit >= args.total}"
     >
         <i class="fa-solid fa-angles-right" aria-hidden="true"></i>
-    </a>
+    </button>
 </div>`
 }
 
-const meta: Meta = {
+const meta: Meta<PaginationProps> = {
     title: "TLP/Structure & Navigation/Pagination",
-    render: () => {
-        return getTemplate();
+    render: (args) => getTemplate(args),
+    args: {
+        offset: 31,
+        limit: 30,
+        total: 79,
+    },
+    argTypes: {
+        offset: {
+            name: "Offset",
+            description: "The starting index of the current page",
+        },
+        limit: {
+            name: "Limit",
+            description: "The number of items per page",
+        },
+        total: {
+            name: "Total",
+            description: "The total number of items",
+        },
     },
 };
 export default meta;
