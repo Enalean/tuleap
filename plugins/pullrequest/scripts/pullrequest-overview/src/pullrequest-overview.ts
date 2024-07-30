@@ -21,20 +21,21 @@ import { createApp, readonly } from "vue";
 import { getPOFileFromLocaleWithoutExtension, initVueGettext } from "@tuleap/vue3-gettext-init";
 import { createGettext } from "vue3-gettext";
 import { getDatasetItemOrThrow } from "@tuleap/dom";
+import { getLocaleOrThrow, getTimezoneOrThrow } from "@tuleap/date-helper";
 import { createOverviewRouter } from "./router/router";
 import { buildBaseUrl } from "./router/base-url-builders";
 import VueDOMPurifyHTML from "vue-dompurify-html";
 import OverviewApp from "./components/OverviewApp.vue";
 import {
+    ARE_MERGE_COMMITS_ALLOWED_IN_REPOSITORY,
+    CURRENT_REPOSITORY_ID,
     CURRENT_USER_AVATAR_URL,
     CURRENT_USER_ID,
-    ARE_MERGE_COMMITS_ALLOWED_IN_REPOSITORY,
     OVERVIEW_APP_BASE_URL_KEY,
-    USER_DATE_TIME_FORMAT_KEY,
+    PROJECT_ID,
     USER_LOCALE_KEY,
     USER_RELATIVE_DATE_DISPLAY_PREFERENCE_KEY,
-    PROJECT_ID,
-    CURRENT_REPOSITORY_ID,
+    USER_TIMEZONE_KEY,
 } from "./constants";
 
 export async function init(mount_point: HTMLElement): Promise<void> {
@@ -44,8 +45,8 @@ export async function init(mount_point: HTMLElement): Promise<void> {
 
     createApp(OverviewApp)
         .provide(OVERVIEW_APP_BASE_URL_KEY, readonly(base_url))
-        .provide(USER_LOCALE_KEY, getDatasetItemOrThrow(document.body, "userLocale"))
-        .provide(USER_DATE_TIME_FORMAT_KEY, getDatasetItemOrThrow(document.body, "dateTimeFormat"))
+        .provide(USER_LOCALE_KEY, getLocaleOrThrow(document))
+        .provide(USER_TIMEZONE_KEY, getTimezoneOrThrow(document))
         .provide(
             CURRENT_USER_ID,
             Number.parseInt(getDatasetItemOrThrow(document.body, "userId"), 10),

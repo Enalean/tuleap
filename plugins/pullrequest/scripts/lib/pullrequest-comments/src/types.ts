@@ -19,14 +19,15 @@
 
 import type { RelativeDatesDisplayPreference } from "@tuleap/tlp-relative-date";
 import type { Fault } from "@tuleap/fault";
+import type { LocaleString } from "@tuleap/date-helper";
 import type { ControlWritingZone } from "./writing-zone/WritingZoneController";
 
 export interface CurrentPullRequestUserPresenter {
     readonly user_id: number;
     readonly avatar_url: string;
-    readonly preferred_date_format: string;
+    readonly timezone: string;
     readonly preferred_relative_date_display: RelativeDatesDisplayPreference;
-    readonly user_locale: string;
+    readonly user_locale: LocaleString;
 }
 
 export type PullRequestCommentErrorCallback = (fault: Fault) => void;

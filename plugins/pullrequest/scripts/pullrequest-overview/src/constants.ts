@@ -22,6 +22,7 @@ import type { Fault } from "@tuleap/fault";
 import type { PullRequestCommentPresenter } from "@tuleap/plugin-pullrequest-comments";
 import type { StrictInjectionKey } from "@tuleap/vue-strict-inject";
 import type { PullRequest } from "@tuleap/plugin-pullrequest-rest-api-types";
+import type { LocaleString } from "@tuleap/date-helper";
 
 export type DisplayErrorCallback = (fault: Fault) => void;
 type DisplayNewlyCreatedGlobalCommentCallback = (comment: PullRequestCommentPresenter) => void;
@@ -29,9 +30,8 @@ export type PostPullRequestUpdateCallback = (updated_pull_request: PullRequest) 
 
 export const OVERVIEW_APP_BASE_URL_KEY: StrictInjectionKey<URL> = Symbol("overview_app_base_url");
 export const PULL_REQUEST_ID_KEY: StrictInjectionKey<number> = Symbol("pull_request_id");
-export const USER_LOCALE_KEY: StrictInjectionKey<string> = Symbol("user_local");
-export const USER_DATE_TIME_FORMAT_KEY: StrictInjectionKey<string> =
-    Symbol("user_date_time_format");
+export const USER_LOCALE_KEY: StrictInjectionKey<LocaleString> = Symbol();
+export const USER_TIMEZONE_KEY: StrictInjectionKey<string> = Symbol();
 export const USER_RELATIVE_DATE_DISPLAY_PREFERENCE_KEY: StrictInjectionKey<RelativeDatesDisplayPreference> =
     Symbol("user_relative_date_display_preference");
 export const CURRENT_USER_ID: StrictInjectionKey<number> = Symbol("current_user");

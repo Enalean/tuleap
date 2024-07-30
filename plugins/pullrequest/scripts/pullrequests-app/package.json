@@ -26,7 +26,6 @@
     "angular-sanitize": "^1.8.2",
     "codemirror": "^5.62.0",
     "hybrids": "^9.0.0",
-    "moment": "^2.29.4",
     "neverthrow": "6.0.0",
     "sprintf-js": "^1.1.2"
   },

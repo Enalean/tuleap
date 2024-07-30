@@ -17,26 +17,28 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import moment from "moment";
-import { relativeDatePlacement, relativeDatePreference } from "@tuleap/tlp-relative-date";
-import { formatFromPhpToMoment } from "@tuleap/date-helper";
 import type { RelativeDatesDisplayPreference } from "@tuleap/tlp-relative-date";
+import { relativeDatePlacement, relativeDatePreference } from "@tuleap/tlp-relative-date";
+import type { LocaleString } from "@tuleap/date-helper";
+import { IntlFormatter } from "@tuleap/date-helper";
 
 export interface HelpRelativeDatesDisplay {
-    getRelativeDatePreference: () => string;
-    getRelativeDatePlacement: () => string;
-    getUserLocale: () => string;
-    getFormattedDateUsingPreferredUserFormat: (date: string) => string;
+    getRelativeDatePreference(): string;
+    getRelativeDatePlacement(): string;
+    getUserLocale(): string;
+    getFormattedDateUsingPreferredUserFormat(date: string): string;
 }
 
 export const RelativeDatesHelper = (
-    date_format: string,
+    timezone: string,
     relative_date_display: RelativeDatesDisplayPreference,
-    user_locale: string,
-): HelpRelativeDatesDisplay => ({
-    getRelativeDatePreference: (): string => relativeDatePreference(relative_date_display),
-    getRelativeDatePlacement: (): string => relativeDatePlacement(relative_date_display, "right"),
-    getUserLocale: (): string => user_locale,
-    getFormattedDateUsingPreferredUserFormat: (date: string): string =>
-        moment(date).format(formatFromPhpToMoment(date_format)),
-});
+    user_locale: LocaleString,
+): HelpRelativeDatesDisplay => {
+    const formatter = IntlFormatter(user_locale, timezone, "date-with-time");
+    return {
+        getRelativeDatePreference: () => relativeDatePreference(relative_date_display),
+        getRelativeDatePlacement: () => relativeDatePlacement(relative_date_display, "right"),
+        getUserLocale: () => user_locale,
+        getFormattedDateUsingPreferredUserFormat: (date) => formatter.format(date),
+    };
+};

@@ -24,7 +24,6 @@
     "@tuleap/tooltip": "workspace:*",
     "dompurify": "^3.1.4",
     "hybrids": "^9.0.0",
-    "moment": "^2.29.4",
     "neverthrow": "6.0.0"
   },
   "devDependencies": {

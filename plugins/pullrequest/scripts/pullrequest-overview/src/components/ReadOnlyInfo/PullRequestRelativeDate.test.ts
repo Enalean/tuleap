@@ -21,9 +21,9 @@ import { describe, expect, it } from "vitest";
 import { shallowMount } from "@vue/test-utils";
 import PullRequestRelativeDate from "./PullRequestRelativeDate.vue";
 import {
-    USER_DATE_TIME_FORMAT_KEY,
     USER_LOCALE_KEY,
     USER_RELATIVE_DATE_DISPLAY_PREFERENCE_KEY,
+    USER_TIMEZONE_KEY,
 } from "../../constants";
 import { PREFERENCE_RELATIVE_FIRST_ABSOLUTE_SHOWN } from "@tuleap/tlp-relative-date";
 
@@ -35,7 +35,7 @@ describe("PullRequestRelativeDate", () => {
                     "tlp-relative-date": true,
                 },
                 provide: {
-                    [USER_DATE_TIME_FORMAT_KEY.valueOf()]: "d/m/Y H:i",
+                    [USER_TIMEZONE_KEY.valueOf()]: "Europe/Paris",
                     [USER_RELATIVE_DATE_DISPLAY_PREFERENCE_KEY.valueOf()]:
                         PREFERENCE_RELATIVE_FIRST_ABSOLUTE_SHOWN,
                     [USER_LOCALE_KEY.valueOf()]: "fr_FR",

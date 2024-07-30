@@ -24,13 +24,13 @@ describe("PullRequestCurrentUserPresenterBuilder", () => {
         const user_id = 104;
         const avatar_url = "url/to/current/user/avatar.png";
         const user_locale = "fr_FR";
-        const preferred_date_format = "Y/M/D H:m";
+        const timezone = "Europe/Paris";
         const preferred_relative_date_display = "absolute_first-relative_tooltip";
         const presenter = PullRequestCurrentUserPresenterBuilder.fromUserInfo(
             user_id,
             avatar_url,
             user_locale,
-            preferred_date_format,
+            timezone,
             preferred_relative_date_display,
         );
 
@@ -38,7 +38,7 @@ describe("PullRequestCurrentUserPresenterBuilder", () => {
             user_id,
             avatar_url,
             user_locale,
-            preferred_date_format,
+            timezone,
             preferred_relative_date_display,
         });
     });

@@ -24,7 +24,7 @@ const base_user_presenter: CurrentPullRequestUserPresenter = {
     user_id: 104,
     avatar_url: "url/to/avatar.png",
     user_locale: "fr_FR",
-    preferred_date_format: "Y/M/D H:m",
+    timezone: "Europe/Paris",
     preferred_relative_date_display: PREFERENCE_ABSOLUTE_FIRST_RELATIVE_SHOWN,
 };
 

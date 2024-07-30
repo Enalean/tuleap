@@ -17,26 +17,28 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { relativeDatePlacement, relativeDatePreference } from "@tuleap/tlp-relative-date";
 import type { RelativeDatesDisplayPreference } from "@tuleap/tlp-relative-date";
-import moment from "moment";
-import { formatFromPhpToMoment } from "@tuleap/date-helper";
+import { relativeDatePlacement, relativeDatePreference } from "@tuleap/tlp-relative-date";
+import type { LocaleString } from "@tuleap/date-helper";
+import { IntlFormatter } from "@tuleap/date-helper";
 
 interface HelpRelativeDatesDisplay {
-    getRelativeDatePreference: () => string;
-    getRelativeDatePlacement: () => string;
-    getUserLocale: () => string;
-    getFormatDateUsingPreferredUserFormat: (date: string) => string;
+    getRelativeDatePreference(): string;
+    getRelativeDatePlacement(): string;
+    getUserLocale(): LocaleString;
+    getFormatDateUsingPreferredUserFormat(date: string): string;
 }
 
 export const RelativeDateHelper = (
-    date_format: string,
+    timezone: string,
     relative_date_display: RelativeDatesDisplayPreference,
-    user_locale: string,
-): HelpRelativeDatesDisplay => ({
-    getRelativeDatePreference: (): string => relativeDatePreference(relative_date_display),
-    getRelativeDatePlacement: (): string => relativeDatePlacement(relative_date_display, "right"),
-    getUserLocale: (): string => user_locale,
-    getFormatDateUsingPreferredUserFormat: (date: string): string =>
-        moment(date).format(formatFromPhpToMoment(date_format)),
-});
+    user_locale: LocaleString,
+): HelpRelativeDatesDisplay => {
+    const formatter = IntlFormatter(user_locale, timezone, "date-with-time");
+    return {
+        getRelativeDatePreference: () => relativeDatePreference(relative_date_display),
+        getRelativeDatePlacement: () => relativeDatePlacement(relative_date_display, "right"),
+        getUserLocale: () => user_locale,
+        getFormatDateUsingPreferredUserFormat: (date) => formatter.format(date),
+    };
+};

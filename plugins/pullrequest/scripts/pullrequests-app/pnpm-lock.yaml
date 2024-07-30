@@ -68,9 +68,6 @@ dependencies:
   hybrids:
     specifier: ^9.0.0
     version: 9.0.0
-  moment:
-    specifier: ^2.29.4
-    version: 2.29.4
   neverthrow:
     specifier: 6.0.0
     version: 6.0.0
@@ -155,10 +152,6 @@ packages:
     resolution: {integrity: sha512-BEwhBvhJlUB3cKJJbnrKrsdr871T1VC/tDL5Umeuoy4DWz9ssJNldgYot4QP8zHPPxUlUpGv+41QYq9m4kzQ5g==}
     engines: {node: '>=18.0.0'}
     hasBin: true
-    dev: false
-
-  /moment@2.29.4:
-    resolution: {integrity: sha512-5LC9SOxjSc2HF6vO2CyuTDNivEdoz2IvyJJGj6X8DJ0eFyfszE0QiEd+iXmBvUP3WHxSjFH/vIsA0EN00cgr8w==}
     dev: false
 
   /neverthrow@6.0.0:

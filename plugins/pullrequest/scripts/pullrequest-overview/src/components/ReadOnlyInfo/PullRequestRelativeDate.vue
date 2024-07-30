@@ -32,37 +32,36 @@
 </template>
 
 <script setup lang="ts">
-import moment from "moment";
 import { computed } from "vue";
-import { formatFromPhpToMoment } from "@tuleap/date-helper";
-import { relativeDatePlacement, relativeDatePreference } from "@tuleap/tlp-relative-date";
+import { IntlFormatter } from "@tuleap/date-helper";
 import type { RelativeDatesDisplayPreference } from "@tuleap/tlp-relative-date";
+import { relativeDatePlacement, relativeDatePreference } from "@tuleap/tlp-relative-date";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import {
-    USER_DATE_TIME_FORMAT_KEY,
     USER_LOCALE_KEY,
     USER_RELATIVE_DATE_DISPLAY_PREFERENCE_KEY,
+    USER_TIMEZONE_KEY,
 } from "../../constants";
 
 const props = defineProps<{
     date: string;
 }>();
 
-const date_time_format: string = strictInject(USER_DATE_TIME_FORMAT_KEY);
+const timezone = strictInject(USER_TIMEZONE_KEY);
 const relative_date_display: RelativeDatesDisplayPreference = strictInject(
     USER_RELATIVE_DATE_DISPLAY_PREFERENCE_KEY,
 );
-const user_locale: string = strictInject(USER_LOCALE_KEY);
+const user_locale = strictInject(USER_LOCALE_KEY);
 
-const formatted_full_date = computed((): string => {
-    return moment(props.date).format(formatFromPhpToMoment(date_time_format));
-});
+const formatter = IntlFormatter(user_locale, timezone, "date-with-time");
 
-const relative_date_preference = computed((): string => {
-    return relativeDatePreference(relative_date_display);
-});
+const formatted_full_date = computed<string>(() => formatter.format(props.date));
 
-const relative_date_placement = computed((): string => {
-    return relativeDatePlacement(relative_date_display, "right");
-});
+const relative_date_preference = computed<string>(() =>
+    relativeDatePreference(relative_date_display),
+);
+
+const relative_date_placement = computed<string>(() =>
+    relativeDatePlacement(relative_date_display, "right"),
+);
 </script>

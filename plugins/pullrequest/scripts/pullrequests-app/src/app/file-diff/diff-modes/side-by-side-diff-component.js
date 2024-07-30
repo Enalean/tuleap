@@ -122,7 +122,7 @@ function controller($element, $scope, SharedPropertiesService) {
                     SharedPropertiesService.getUserId(),
                     SharedPropertiesService.getUserAvatarUrl(),
                     SharedPropertiesService.getUserLocale(),
-                    SharedPropertiesService.getDateTimeFormat(),
+                    SharedPropertiesService.getTimezone(),
                     SharedPropertiesService.getRelativeDateDisplay(),
                 ),
                 PullRequestPresenterBuilder.fromPullRequest(
