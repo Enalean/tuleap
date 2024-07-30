@@ -8,6 +8,12 @@ dependencies:
   '@tuleap/dom':
     specifier: workspace:^
     version: link:../../../../lib/frontend/dom
+  '@tuleap/fault':
+    specifier: workspace:^
+    version: link:../../../../lib/frontend/fault
+  '@tuleap/fetch-result':
+    specifier: workspace:^
+    version: link:../../../../lib/frontend/fetch-result
   '@tuleap/lazybox':
     specifier: workspace:*
     version: link:../../../../lib/frontend/lazybox
@@ -29,6 +35,9 @@ dependencies:
   '@tuleap/vue3-gettext-init':
     specifier: workspace:*
     version: link:../../../../lib/frontend/vue3-gettext-init
+  neverthrow:
+    specifier: 6.0.0
+    version: 6.0.0
   vue:
     specifier: ^3.4.27
     version: 3.4.27
@@ -599,6 +608,10 @@ packages:
     resolution: {integrity: sha512-eSRppjcPIatRIMC1U6UngP8XFcz8MQWGQdt1MTBQ7NaAmvXDfvNxbvWV3x2y6CdEUciCSsDHDQZbhYaB8QEo2g==}
     engines: {node: ^10 || ^12 || ^13.7 || ^14 || >=15.0.1}
     hasBin: true
+
+  /neverthrow@6.0.0:
+    resolution: {integrity: sha512-kPZKRs4VkdloCGQXPoP84q4sT/1Z+lYM61AXyV8wWa2hnuo5KpPBF2S3crSFnMrOgUISmEBP8Vo/ngGZX60NhA==}
+    dev: false
 
   /nopt@7.2.1:
     resolution: {integrity: sha512-taM24ViiimT/XntxbPyJQzCG+p4EKOpgD3mxFwW38mGjVUrfERQOeY4EDHjdnptttfHuHQXFx+lTP08Q+mLa/w==}

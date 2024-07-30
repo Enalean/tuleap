@@ -119,4 +119,13 @@ final class Dao extends DataAccessObject implements SaveQueryWithDates, SaveQuer
 
         return $this->getDB()->row($sql, $widget_id);
     }
+
+    public function searchQueryByWidgetId(int $widget_id): array
+    {
+        $sql = 'SELECT *
+                FROM plugin_timetracking_management_query
+                WHERE id = ?';
+
+        return $this->getDB()->run($sql, $widget_id);
+    }
 }

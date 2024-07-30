@@ -20,7 +20,7 @@ import { createApp } from "vue";
 import TimetrackingManagementWidget from "./components/TimetrackingManagementWidget.vue";
 import { createGettext } from "vue3-gettext";
 import { getPOFileFromLocaleWithoutExtension, initVueGettext } from "@tuleap/vue3-gettext-init";
-import { RETRIEVE_QUERY, USER_LOCALE_KEY } from "./injection-symbols";
+import { RETRIEVE_QUERY, USER_LOCALE_KEY, WIDGET_ID } from "./injection-symbols";
 import { QueryRetriever } from "./query/QueryRetriever";
 import { getDatasetItemOrThrow } from "@tuleap/dom";
 
@@ -42,5 +42,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         )
         .provide(USER_LOCALE_KEY, getDatasetItemOrThrow(document.body, "userLocale"))
         .provide(RETRIEVE_QUERY, QueryRetriever())
+        .provide(WIDGET_ID, Number.parseInt(getDatasetItemOrThrow(mount_point, "widgetId"), 10))
         .mount(mount_point);
 });

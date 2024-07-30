@@ -23,10 +23,23 @@ import { shallowMount } from "@vue/test-utils";
 import WidgetQueryEditor from "./WidgetQueryEditor.vue";
 import WidgetQueryDisplayer from "./WidgetQueryDisplayer.vue";
 import TimetrackingManagementWidget from "./TimetrackingManagementWidget.vue";
+import { RETRIEVE_QUERY } from "../injection-symbols";
+import type { Query } from "../query/QueryRetriever";
+import { RetrieveQueryStub } from "../../tests/stubs/RetrieveQueryStub";
+import WidgetQuerySaveRequest from "./WidgetQuerySaveRequest.vue";
 
 describe("Given a Timetracking Management Widget", () => {
+    let query_retriever: Query;
     function getTimetrackingManagementWidgetInstance(): VueWrapper {
-        return shallowMount(TimetrackingManagementWidget);
+        query_retriever = RetrieveQueryStub.withDefaults([]);
+
+        return shallowMount(TimetrackingManagementWidget, {
+            global: {
+                provide: {
+                    [RETRIEVE_QUERY.valueOf()]: query_retriever,
+                },
+            },
+        });
     }
 
     it("When the query displayer is clicked, then the query editor should be displayed but not query displayer", async () => {
@@ -50,5 +63,16 @@ describe("Given a Timetracking Management Widget", () => {
 
         expect(wrapper.findComponent(WidgetQueryDisplayer).exists()).toBeTruthy();
         expect(wrapper.findComponent(WidgetQueryEditor).exists()).toBeFalsy();
+    });
+
+    it("When the query is not being edited and the query has been modified, then the query save request should be displayed", async () => {
+        const wrapper = getTimetrackingManagementWidgetInstance();
+
+        await wrapper.findComponent(WidgetQueryDisplayer).trigger("click");
+        await wrapper.findComponent(WidgetQueryEditor).vm.$emit("closeEditMode");
+
+        expect(wrapper.findComponent(WidgetQueryEditor).exists()).toBeFalsy();
+        expect(wrapper.findComponent(WidgetQueryDisplayer).exists()).toBeTruthy();
+        expect(wrapper.findComponent(WidgetQuerySaveRequest).exists()).toBeTruthy();
     });
 });

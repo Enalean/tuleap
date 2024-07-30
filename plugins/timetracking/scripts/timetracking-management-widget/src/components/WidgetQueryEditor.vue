@@ -175,6 +175,7 @@ const setDatesAndCloseEditMode = (): void => {
             currently_selected_users.value,
         );
     }
+    query.has_the_query_been_modified.value = true;
     emit("closeEditMode");
 };
 

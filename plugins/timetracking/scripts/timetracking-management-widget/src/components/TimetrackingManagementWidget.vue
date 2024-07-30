@@ -23,12 +23,17 @@
         v-on:click="is_query_being_edited = true"
     />
     <widget-query-editor v-else v-on:close-edit-mode="is_query_being_edited = false" />
+    <widget-query-save-request v-show="!is_query_being_edited && has_the_query_been_modified" />
 </template>
 
 <script setup lang="ts">
 import WidgetQueryDisplayer from "./WidgetQueryDisplayer.vue";
 import WidgetQueryEditor from "./WidgetQueryEditor.vue";
 import { ref } from "vue";
+import WidgetQuerySaveRequest from "./WidgetQuerySaveRequest.vue";
+import { strictInject } from "@tuleap/vue-strict-inject";
+import { RETRIEVE_QUERY } from "../injection-symbols";
 
 const is_query_being_edited = ref(false);
+const { has_the_query_been_modified } = strictInject(RETRIEVE_QUERY);
 </script>

@@ -19,6 +19,9 @@
 
 import type { StrictInjectionKey } from "@tuleap/vue-strict-inject";
 import type { Query } from "./query/QueryRetriever";
+
 export const RETRIEVE_QUERY: StrictInjectionKey<Query> = Symbol("Query");
 
 export const USER_LOCALE_KEY: StrictInjectionKey<string> = Symbol("user_locale");
+
+export const WIDGET_ID: StrictInjectionKey<number> = Symbol("widget_id");
