@@ -32,23 +32,22 @@ import WritingCrossTrackerReport from "./writing-mode/writing-cross-tracker-repo
 import * as rest_querier from "./api/rest-querier";
 import ReadingMode from "./reading-mode/ReadingMode.vue";
 import WritingMode from "./writing-mode/WritingMode.vue";
-import type { InvalidTracker, State, TrackerAndProject } from "./type";
-
-const noop = (): void => {
-    //Do nothing
-};
+import type { InvalidTracker, TrackerAndProject } from "./type";
+import { IS_USER_ADMIN, REPORT_ID } from "./injection-symbols";
 
 vi.useFakeTimers();
 
 describe("CrossTrackerWidget", () => {
     let backend_cross_tracker_report: BackendCrossTrackerReport,
         reading_cross_tracker_report: ReadingCrossTrackerReport,
-        writing_cross_tracker_report: WritingCrossTrackerReport;
+        writing_cross_tracker_report: WritingCrossTrackerReport,
+        is_user_admin: boolean;
 
     beforeEach(() => {
         backend_cross_tracker_report = new BackendCrossTrackerReport();
         reading_cross_tracker_report = new ReadingCrossTrackerReport();
         writing_cross_tracker_report = new WritingCrossTrackerReport();
+        is_user_admin = true;
 
         vi.spyOn(rest_querier, "getReport").mockReturnValue(
             okAsync({
@@ -59,30 +58,20 @@ describe("CrossTrackerWidget", () => {
         );
     });
 
-    function getWrapper(state: {
-        is_user_admin: boolean;
-        invalid_trackers?: ReadonlyArray<InvalidTracker>;
-    }): VueWrapper<InstanceType<typeof CrossTrackerWidget>> {
-        const store_options = {
-            state: {
-                ...state,
-            } as State,
-            getters: {
-                has_invalid_trackers: () => (state.invalid_trackers?.length ?? 0) > 0,
-            },
-            mutations: {
-                resetInvalidTrackerList: noop,
-                setInvalidTrackers: noop,
-            },
-        };
-
+    function getWrapper(): VueWrapper<InstanceType<typeof CrossTrackerWidget>> {
         return shallowMount(CrossTrackerWidget, {
             props: {
                 writing_cross_tracker_report,
                 backend_cross_tracker_report,
                 reading_cross_tracker_report,
             },
-            global: { ...getGlobalTestOptions(store_options) },
+            global: {
+                ...getGlobalTestOptions(),
+                provide: {
+                    [REPORT_ID.valueOf()]: 96,
+                    [IS_USER_ADMIN.valueOf()]: is_user_admin,
+                },
+            },
         });
     }
 
@@ -93,7 +82,7 @@ describe("CrossTrackerWidget", () => {
             and the writing report will be updated
             and it will clear the feedback messages`, async () => {
             const duplicate = vi.spyOn(writing_cross_tracker_report, "duplicateFromReport");
-            const wrapper = getWrapper({ is_user_admin: true });
+            const wrapper = getWrapper();
             await vi.runOnlyPendingTimersAsync();
 
             wrapper.findComponent(ReadingMode).vm.$emit("switch-to-writing-mode");
@@ -105,8 +94,9 @@ describe("CrossTrackerWidget", () => {
 
         it(`Given I am not admin,
             when I try to switch to writing mode, then nothing will happen`, async () => {
+            is_user_admin = false;
             const duplicate = vi.spyOn(writing_cross_tracker_report, "duplicateFromReport");
-            const wrapper = getWrapper({ is_user_admin: false });
+            const wrapper = getWrapper();
             await vi.runOnlyPendingTimersAsync();
             duplicate.mockReset(); // It is called once during onMounted
 
@@ -123,7 +113,7 @@ describe("CrossTrackerWidget", () => {
             then the report will be back to its "report-saved" state
             and the writing report will be reset`, async () => {
             const duplicate = vi.spyOn(writing_cross_tracker_report, "duplicateFromReport");
-            const wrapper = getWrapper({ is_user_admin: true });
+            const wrapper = getWrapper();
             await vi.runOnlyPendingTimersAsync();
 
             wrapper.findComponent(ReadingMode).vm.$emit("switch-to-writing-mode");
@@ -144,7 +134,7 @@ describe("CrossTrackerWidget", () => {
             and the reading report will be updated
             and it will clear the feedback messages`, async () => {
             const duplicate = vi.spyOn(reading_cross_tracker_report, "duplicateFromWritingReport");
-            const wrapper = getWrapper({ is_user_admin: true });
+            const wrapper = getWrapper();
             await vi.runOnlyPendingTimersAsync();
 
             wrapper.findComponent(ReadingMode).vm.$emit("switch-to-writing-mode");
@@ -164,7 +154,7 @@ describe("CrossTrackerWidget", () => {
         it(`when the report is saved,
             then the reports will be updated
             and it will set a success message`, async () => {
-            const wrapper = getWrapper({ is_user_admin: true });
+            const wrapper = getWrapper();
             const duplicateReading = vi.spyOn(reading_cross_tracker_report, "duplicateFromReport");
             const duplicateWriting = vi.spyOn(writing_cross_tracker_report, "duplicateFromReport");
             await vi.runOnlyPendingTimersAsync();
@@ -189,7 +179,7 @@ describe("CrossTrackerWidget", () => {
         it(`Given a report that has been modified,
             when its changes are discarded,
             then it will restore the reading report and clear the feedback messages`, async () => {
-            const wrapper = getWrapper({ is_user_admin: true });
+            const wrapper = getWrapper();
             const duplicateReading = vi.spyOn(reading_cross_tracker_report, "duplicateFromReport");
             await vi.runOnlyPendingTimersAsync();
 
@@ -227,7 +217,7 @@ describe("CrossTrackerWidget", () => {
             const init = vi.spyOn(backend_cross_tracker_report, "init");
             const duplicateReading = vi.spyOn(reading_cross_tracker_report, "duplicateFromReport");
             const duplicateWriting = vi.spyOn(writing_cross_tracker_report, "duplicateFromReport");
-            getWrapper({ is_user_admin: true });
+            getWrapper();
             await vi.runOnlyPendingTimersAsync();
 
             expect(init).toHaveBeenCalledWith(trackers, expert_query);
@@ -239,7 +229,7 @@ describe("CrossTrackerWidget", () => {
             vi.spyOn(rest_querier, "getReport").mockReturnValue(
                 errAsync(Fault.fromMessage("Report 41 not found")),
             );
-            const wrapper = getWrapper({ is_user_admin: true });
+            const wrapper = getWrapper();
             await vi.runOnlyPendingTimersAsync();
 
             expect(wrapper.vm.current_fault.unwrapOr(null)?.isReportRetrieval()).toBe(true);
@@ -248,7 +238,7 @@ describe("CrossTrackerWidget", () => {
 
     describe(`isCSVExportAllowed`, () => {
         it(`when the report state is not "report-saved", it does not allow CSV export`, async () => {
-            const wrapper = getWrapper({ is_user_admin: true });
+            const wrapper = getWrapper();
             await vi.runOnlyPendingTimersAsync();
 
             wrapper.findComponent(ReadingMode).vm.$emit("switch-to-writing-mode");
@@ -258,7 +248,7 @@ describe("CrossTrackerWidget", () => {
         });
 
         it(`when there was an error, it does not allow CSV export`, () => {
-            const wrapper = getWrapper({ is_user_admin: true });
+            const wrapper = getWrapper();
             wrapper.vm.current_fault = Option.fromValue(Fault.fromMessage("Ooops"));
 
             expect(wrapper.vm.is_csv_export_allowed).toBe(false);
@@ -266,25 +256,28 @@ describe("CrossTrackerWidget", () => {
 
         it(`when user is NOT admin and there is no error,
             it allows CSV export`, () => {
-            const wrapper = getWrapper({ is_user_admin: false });
+            is_user_admin = false;
+            const wrapper = getWrapper();
 
             expect(wrapper.vm.is_csv_export_allowed).toBe(true);
         });
 
         it(`when user is admin and there are invalid trackers selected in the report,
-            it does not allow CSV export`, () => {
+            it does not allow CSV export`, async () => {
             const invalid_trackers: ReadonlyArray<InvalidTracker> = [{ id: 315 } as InvalidTracker];
-            const wrapper = getWrapper({
-                is_user_admin: true,
-                invalid_trackers,
-            });
+            vi.spyOn(rest_querier, "getReport").mockReturnValue(
+                okAsync({ trackers: [], expert_query: "", invalid_trackers }),
+            );
+
+            const wrapper = getWrapper();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(wrapper.vm.is_csv_export_allowed).toBe(false);
         });
 
         it(`when user is admin and there are no invalid trackers,
             it allows CSV export`, () => {
-            const wrapper = getWrapper({ is_user_admin: true });
+            const wrapper = getWrapper();
 
             expect(wrapper.vm.is_csv_export_allowed).toBe(true);
         });

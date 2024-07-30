@@ -30,12 +30,6 @@ export type InvalidTracker = {
 export type TrackerInfo = Pick<TrackerResponseWithProject, "id" | "label">;
 export type ProjectInfo = Pick<TrackerProjectRepresentation, "id" | "uri" | "label">;
 
-export type State = {
-    invalid_trackers: ReadonlyArray<InvalidTracker>;
-    is_user_admin: boolean;
-    report_id: number;
-};
-
 export type SelectedTracker = {
     readonly tracker_id: number;
 };

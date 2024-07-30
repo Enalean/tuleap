@@ -25,13 +25,13 @@ import type { RetrieveArtifactsTable } from "./domain/RetrieveArtifactsTable";
 import type { ReportState } from "./domain/ReportState";
 import type { NotifyFaultCallback, ClearFeedbacksCallback } from "./composables/useFeedbacks";
 
-export const RETRIEVE_PROJECTS: StrictInjectionKey<RetrieveProjects> = Symbol("RetrieveProjects");
-export const DATE_FORMATTER: StrictInjectionKey<IntlFormatter> = Symbol("DateFormatter");
-export const DATE_TIME_FORMATTER: StrictInjectionKey<IntlFormatter> = Symbol("DateTimeFormatter");
-export const RETRIEVE_ARTIFACTS_TABLE: StrictInjectionKey<RetrieveArtifactsTable> =
-    Symbol("RetrieveArtifactsTable");
-export const REPORT_STATE: StrictInjectionKey<Ref<ReportState>> = Symbol("report_state");
-export const NOTIFY_FAULT: StrictInjectionKey<NotifyFaultCallback> = Symbol("notifyFault");
-export const CLEAR_FEEDBACKS: StrictInjectionKey<ClearFeedbacksCallback> = Symbol("clearFeedbacks");
-export const IS_CSV_EXPORT_ALLOWED: StrictInjectionKey<Ref<boolean>> =
-    Symbol("is_csv_export_allowed");
+export const RETRIEVE_PROJECTS: StrictInjectionKey<RetrieveProjects> = Symbol();
+export const DATE_FORMATTER: StrictInjectionKey<IntlFormatter> = Symbol();
+export const DATE_TIME_FORMATTER: StrictInjectionKey<IntlFormatter> = Symbol();
+export const RETRIEVE_ARTIFACTS_TABLE: StrictInjectionKey<RetrieveArtifactsTable> = Symbol();
+export const REPORT_STATE: StrictInjectionKey<Ref<ReportState>> = Symbol();
+export const NOTIFY_FAULT: StrictInjectionKey<NotifyFaultCallback> = Symbol();
+export const CLEAR_FEEDBACKS: StrictInjectionKey<ClearFeedbacksCallback> = Symbol();
+export const IS_CSV_EXPORT_ALLOWED: StrictInjectionKey<Ref<boolean>> = Symbol();
+export const REPORT_ID: StrictInjectionKey<number> = Symbol();
+export const IS_USER_ADMIN: StrictInjectionKey<boolean> = Symbol();

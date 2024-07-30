@@ -36,6 +36,7 @@ import {
     DATE_FORMATTER,
     IS_CSV_EXPORT_ALLOWED,
     NOTIFY_FAULT,
+    REPORT_ID,
     REPORT_STATE,
 } from "../../injection-symbols";
 import type { ReportState } from "../../domain/ReportState";
@@ -55,12 +56,13 @@ describe("ArtifactTable", () => {
         const date_formatter = IntlFormatter(en_US_LOCALE, "Europe/Paris", "date");
         return shallowMount(ArtifactTable, {
             global: {
-                ...getGlobalTestOptions({}),
+                ...getGlobalTestOptions(),
                 provide: {
                     [DATE_FORMATTER.valueOf()]: date_formatter,
                     [REPORT_STATE.valueOf()]: ref(report_state),
                     [IS_CSV_EXPORT_ALLOWED.valueOf()]: ref(is_csv_export_allowed),
                     [NOTIFY_FAULT.valueOf()]: errorSpy,
+                    [REPORT_ID.valueOf()]: 472,
                 },
             },
             props: {

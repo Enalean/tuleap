@@ -27,7 +27,7 @@ import {
     default as WritingCrossTrackerReport,
     TooManyTrackersSelectedError,
 } from "./writing-cross-tracker-report";
-import type { ProjectInfo, State, TrackerInfo, TrackerToUpdate } from "../type";
+import type { ProjectInfo, TrackerInfo, TrackerToUpdate } from "../type";
 import TrackerListWritingMode from "./TrackerListWritingMode.vue";
 import TrackerSelection from "./TrackerSelection.vue";
 import { CLEAR_FEEDBACKS, NOTIFY_FAULT } from "../injection-symbols";
@@ -43,16 +43,12 @@ describe("WritingMode", () => {
     function getWrapper(
         writing_cross_tracker_report: WritingCrossTrackerReport,
     ): VueWrapper<InstanceType<typeof WritingMode>> {
-        const store_options = {
-            state: { is_user_admin: true } as State,
-        };
-
         return shallowMount(WritingMode, {
             props: {
                 writing_cross_tracker_report,
             },
             global: {
-                ...getGlobalTestOptions(store_options),
+                ...getGlobalTestOptions(),
                 provide: {
                     [CLEAR_FEEDBACKS.valueOf()]: resetSpy,
                     [NOTIFY_FAULT.valueOf()]: errorSpy,

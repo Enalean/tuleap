@@ -35,34 +35,29 @@
 </template>
 <script setup lang="ts">
 import { ref } from "vue";
-import { useState } from "vuex-composition-helpers";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import { useGettext } from "vue3-gettext";
 import { download } from "../helpers/download-helper";
 import { addBOM } from "../helpers/bom-helper";
 import { getCSVReport } from "../api/rest-querier";
-import { CLEAR_FEEDBACKS, NOTIFY_FAULT } from "../injection-symbols";
+import { CLEAR_FEEDBACKS, NOTIFY_FAULT, REPORT_ID } from "../injection-symbols";
 import { CSVExportFault } from "../domain/CSVExportFault";
 
 const notifyFault = strictInject(NOTIFY_FAULT);
 const clearFeedbacks = strictInject(CLEAR_FEEDBACKS);
+const report_id = strictInject(REPORT_ID);
 
 const is_loading = ref(false);
-const { report_id } = useState(["report_id"]);
 const { $gettext } = useGettext();
 
 function exportCSV(): void {
     is_loading.value = true;
     clearFeedbacks();
-    getCSVReport(report_id.value)
+    getCSVReport(report_id)
         .match(
             (report) => {
                 const report_with_bom = addBOM(report);
-                download(
-                    report_with_bom,
-                    `export-${report_id.value}.csv`,
-                    "text/csv;encoding:utf-8",
-                );
+                download(report_with_bom, `export-${report_id}.csv`, "text/csv;encoding:utf-8");
             },
             (fault) => {
                 notifyFault(CSVExportFault(fault));

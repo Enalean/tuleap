@@ -19,7 +19,7 @@
 
 <template>
     <error-message v-bind:fault="current_fault" />
-    <error-inactive-project-message />
+    <error-inactive-project-message v-bind:invalid_trackers="invalid_trackers" />
     <div
         class="tlp-alert-info cross-tracker-report-success"
         v-if="current_success.isValue()"
@@ -54,9 +54,9 @@
     </template>
 </template>
 <script setup lang="ts">
-import { computed, onMounted, ref, provide } from "vue";
-import { useGetters, useMutations, useState } from "vuex-composition-helpers";
+import { computed, onMounted, provide, ref } from "vue";
 import { useGettext } from "vue3-gettext";
+import { strictInject } from "@tuleap/vue-strict-inject";
 import ArtifactTable from "./components/table/ArtifactTable.vue";
 import ReadingMode from "./reading-mode/ReadingMode.vue";
 import type { SaveEvent } from "./writing-mode/WritingMode.vue";
@@ -67,30 +67,24 @@ import { getReport, isFeatureFlagEnabled } from "./api/rest-querier";
 import type WritingCrossTrackerReport from "./writing-mode/writing-cross-tracker-report";
 import type BackendCrossTrackerReport from "./backend-cross-tracker-report";
 import type ReadingCrossTrackerReport from "./reading-mode/reading-cross-tracker-report";
-import type { Report, State } from "./type";
+import type { InvalidTracker, Report } from "./type";
 import SelectableTable from "./components/selectable-table/SelectableTable.vue";
 import type { ReportState } from "./domain/ReportState";
 import {
     CLEAR_FEEDBACKS,
     IS_CSV_EXPORT_ALLOWED,
+    IS_USER_ADMIN,
     NOTIFY_FAULT,
+    REPORT_ID,
     REPORT_STATE,
 } from "./injection-symbols";
 import { useFeedbacks } from "./composables/useFeedbacks";
 import { ReportRetrievalFault } from "./domain/ReportRetrievalFault";
 
+const report_id = strictInject(REPORT_ID);
+const is_user_admin = strictInject(IS_USER_ADMIN);
+
 const gettext_provider = useGettext();
-
-const { report_id, is_user_admin } = useState<Pick<State, "report_id" | "is_user_admin">>([
-    "report_id",
-    "is_user_admin",
-]);
-
-const { has_invalid_trackers } = useGetters(["has_invalid_trackers"]);
-const { setInvalidTrackers, resetInvalidTrackerList } = useMutations([
-    "setInvalidTrackers",
-    "resetInvalidTrackerList",
-]);
 
 const props = defineProps<{
     backend_cross_tracker_report: BackendCrossTrackerReport;
@@ -101,6 +95,7 @@ const props = defineProps<{
 const report_state = ref<ReportState>("report-saved");
 provide(REPORT_STATE, report_state);
 const is_loading = ref(true);
+const invalid_trackers = ref<ReadonlyArray<InvalidTracker>>([]);
 const is_using_select = ref(false);
 
 const is_reading_mode_shown = computed(
@@ -122,7 +117,7 @@ const is_csv_export_allowed = computed<boolean>(() => {
     if (!is_user_admin) {
         return true;
     }
-    return has_invalid_trackers.value === false;
+    return invalid_trackers.value.length === 0;
 });
 provide(IS_CSV_EXPORT_ALLOWED, is_csv_export_allowed);
 
@@ -133,13 +128,13 @@ function initReports(): void {
 
 function loadBackendReport(): void {
     is_loading.value = true;
-    getReport(report_id.value)
+    getReport(report_id)
         .match(
             (report: Report) => {
                 props.backend_cross_tracker_report.init(report.trackers, report.expert_query);
                 initReports();
                 if (report.invalid_trackers.length > 0) {
-                    setInvalidTrackers(report.invalid_trackers);
+                    invalid_trackers.value = report.invalid_trackers;
                 }
             },
             (fault) => {
@@ -159,7 +154,7 @@ onMounted(() => {
 });
 
 function handleSwitchWriting(): void {
-    if (!is_user_admin.value) {
+    if (!is_user_admin) {
         return;
     }
 
@@ -183,7 +178,7 @@ function handleSwitchReading(event: SaveEvent): void {
 
 function reportSaved(): void {
     initReports();
-    resetInvalidTrackerList();
+    invalid_trackers.value = [];
     report_state.value = "report-saved";
     clearFeedbacks();
     notifySuccess(gettext_provider.$gettext("Report has been successfully saved"));

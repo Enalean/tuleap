@@ -22,7 +22,6 @@ import { createApp } from "vue";
 import { getPOFileFromLocaleWithoutExtension, initVueGettext } from "@tuleap/vue3-gettext-init";
 import { createGettext } from "vue3-gettext";
 import { getLocaleOrThrow, getTimezoneOrThrow, IntlFormatter } from "@tuleap/date-helper";
-import { createInitializedStore } from "./store";
 import ReadingCrossTrackerReport from "./reading-mode/reading-cross-tracker-report";
 import WritingCrossTrackerReport from "./writing-mode/writing-cross-tracker-report";
 import BackendCrossTrackerReport from "./backend-cross-tracker-report";
@@ -33,6 +32,8 @@ import { ProjectsCache } from "./writing-mode/ProjectsCache";
 import {
     DATE_FORMATTER,
     DATE_TIME_FORMATTER,
+    IS_USER_ADMIN,
+    REPORT_ID,
     RETRIEVE_ARTIFACTS_TABLE,
     RETRIEVE_PROJECTS,
 } from "./injection-symbols";
@@ -85,7 +86,6 @@ document.addEventListener("DOMContentLoaded", async () => {
             writing_cross_tracker_report: writing_report,
         })
             .use(gettext_plugin)
-            .use(createInitializedStore(report_id, is_widget_admin))
             .use(VueDOMPurifyHTML)
             .provide(RETRIEVE_PROJECTS, projects_cache)
             .provide(DATE_FORMATTER, date_formatter)
@@ -94,6 +94,8 @@ document.addEventListener("DOMContentLoaded", async () => {
                 RETRIEVE_ARTIFACTS_TABLE,
                 ArtifactsTableRetriever(ArtifactsTableBuilder(), report_id),
             )
+            .provide(REPORT_ID, report_id)
+            .provide(IS_USER_ADMIN, is_widget_admin)
             .mount(vue_mount_point);
     }
 });

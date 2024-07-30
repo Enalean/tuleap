@@ -28,10 +28,9 @@ import * as rest_querier from "../api/rest-querier";
 import * as download_helper from "../helpers/download-helper";
 import * as bom_helper from "../helpers/bom-helper";
 import { getGlobalTestOptions } from "../helpers/global-options-for-tests";
-import type { State } from "../type";
-import { CLEAR_FEEDBACKS, NOTIFY_FAULT } from "../injection-symbols";
+import { CLEAR_FEEDBACKS, NOTIFY_FAULT, REPORT_ID } from "../injection-symbols";
 
-const REPORT_ID = 36;
+const report_id = 36;
 describe("ExportCSVButton", () => {
     let resetSpy: Mock, errorSpy: Mock;
 
@@ -41,16 +40,13 @@ describe("ExportCSVButton", () => {
     });
 
     function getWrapper(): VueWrapper<InstanceType<typeof ExportCSVButton>> {
-        const store_options = {
-            state: { report_id: REPORT_ID } as State,
-        };
-
         return shallowMount(ExportCSVButton, {
             global: {
-                ...getGlobalTestOptions(store_options),
+                ...getGlobalTestOptions(),
                 provide: {
                     [NOTIFY_FAULT.valueOf()]: errorSpy,
                     [CLEAR_FEEDBACKS.valueOf()]: resetSpy,
+                    [REPORT_ID.valueOf()]: report_id,
                 },
             },
         });
@@ -73,7 +69,7 @@ describe("ExportCSVButton", () => {
             await wrapper.find("[data-test=export-csv-button]").trigger("click");
 
             expect(resetSpy).toHaveBeenCalled();
-            expect(getCSVReport).toHaveBeenCalledWith(REPORT_ID);
+            expect(getCSVReport).toHaveBeenCalledWith(report_id);
             expect(download).toHaveBeenCalledWith(csv, "export-36.csv", "text/csv;encoding:utf-8");
         });
 

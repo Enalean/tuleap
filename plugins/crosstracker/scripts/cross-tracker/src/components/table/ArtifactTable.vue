@@ -76,7 +76,6 @@
 <script setup lang="ts">
 import type { Ref } from "vue";
 import { computed, onMounted, ref, watch } from "vue";
-import { useState } from "vuex-composition-helpers";
 import { useGettext } from "vue3-gettext";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import type { Fault } from "@tuleap/fault";
@@ -85,11 +84,12 @@ import ArtifactTableRow from "./ArtifactTableRow.vue";
 import ExportButton from "../ExportCSVButton.vue";
 import { getQueryResult, getReportContent } from "../../api/rest-querier";
 import type WritingCrossTrackerReport from "../../writing-mode/writing-cross-tracker-report";
-import type { Artifact, ArtifactsCollection, State } from "../../type";
+import type { Artifact, ArtifactsCollection } from "../../type";
 import {
     DATE_FORMATTER,
     IS_CSV_EXPORT_ALLOWED,
     NOTIFY_FAULT,
+    REPORT_ID,
     REPORT_STATE,
 } from "../../injection-symbols";
 import { ArtifactsRetrievalFault } from "../../domain/ArtifactsRetrievalFault";
@@ -100,7 +100,8 @@ const report_state = strictInject(REPORT_STATE);
 const date_formatter = strictInject(DATE_FORMATTER);
 const is_csv_export_allowed = strictInject(IS_CSV_EXPORT_ALLOWED);
 const notifyFault = strictInject(NOTIFY_FAULT);
-const { report_id } = useState<Pick<State, "report_id">>(["report_id"]);
+const report_id = strictInject(REPORT_ID);
+
 const { $gettext } = useGettext();
 
 const is_loading = ref(true);
@@ -163,11 +164,11 @@ function loadArtifacts(): void {
 
 function getArtifactsFromReportOrUnsavedQuery(): ResultAsync<ArtifactsCollection, Fault> {
     if (report_state.value === "report-saved") {
-        return getReportContent(report_id.value, limit, current_offset);
+        return getReportContent(report_id, limit, current_offset);
     }
 
     return getQueryResult(
-        report_id.value,
+        report_id,
         props.writing_cross_tracker_report.getTrackerIds(),
         props.writing_cross_tracker_report.expert_query,
         limit,
