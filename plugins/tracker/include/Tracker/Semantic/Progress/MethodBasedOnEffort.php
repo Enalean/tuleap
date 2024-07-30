@@ -141,7 +141,7 @@ class MethodBasedOnEffort implements IComputeProgression
     private function getNumericFieldValue(\Tracker_FormElement_Field_Numeric $numeric_field, Artifact $artifact, \PFUser $user): ?float
     {
         if ($numeric_field instanceof \Tracker_FormElement_Field_Computed) {
-            return $numeric_field->getComputedValue($user, $artifact);
+            return $numeric_field->getComputedValue($user, $artifact) ?? 0.0;
         }
 
         $last_changeset = $numeric_field->getLastChangesetValue($artifact);
