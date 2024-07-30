@@ -61,10 +61,8 @@ import type { AddTrackerToSelectionCommand } from "./TrackerSelection.vue";
 import TrackerSelection from "./TrackerSelection.vue";
 import TrackerListWritingMode from "./TrackerListWritingMode.vue";
 import type WritingCrossTrackerReport from "./writing-cross-tracker-report";
-import { TooManyTrackersSelectedError } from "./writing-cross-tracker-report";
 import type { TrackerToUpdate } from "../type";
 import { CLEAR_FEEDBACKS, NOTIFY_FAULT } from "../injection-symbols";
-import { TooManyTrackersSelectedFault } from "../domain/TooManyTrackersSelectedFault";
 
 export type SaveEvent = { readonly saved_state: boolean };
 
@@ -105,19 +103,9 @@ onMounted(() => {
 });
 
 function addTrackerToSelection(payload: AddTrackerToSelectionCommand): void {
-    try {
-        props.writing_cross_tracker_report.addTracker(
-            payload.selected_project,
-            payload.selected_tracker,
-        );
-        updateSelectedTrackers();
-    } catch (error) {
-        if (error instanceof TooManyTrackersSelectedError) {
-            notifyFault(TooManyTrackersSelectedFault());
-        } else {
-            throw error;
-        }
-    }
+    props.writing_cross_tracker_report
+        .addTracker(payload.selected_project, payload.selected_tracker)
+        .match(updateSelectedTrackers, notifyFault);
 }
 
 function removeTrackerFromSelection(tracker: TrackerToUpdate): void {

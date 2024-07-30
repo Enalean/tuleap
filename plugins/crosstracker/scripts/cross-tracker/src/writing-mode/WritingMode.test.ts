@@ -21,16 +21,15 @@ import type { Mock } from "vitest";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
+import { err } from "neverthrow";
 import { getGlobalTestOptions } from "../helpers/global-options-for-tests";
 import WritingMode from "./WritingMode.vue";
-import {
-    default as WritingCrossTrackerReport,
-    TooManyTrackersSelectedError,
-} from "./writing-cross-tracker-report";
+import { default as WritingCrossTrackerReport } from "./writing-cross-tracker-report";
 import type { ProjectInfo, TrackerInfo, TrackerToUpdate } from "../type";
 import TrackerListWritingMode from "./TrackerListWritingMode.vue";
 import TrackerSelection from "./TrackerSelection.vue";
 import { CLEAR_FEEDBACKS, NOTIFY_FAULT } from "../injection-symbols";
+import { TooManyTrackersSelectedFault } from "../domain/TooManyTrackersSelectedFault";
 
 describe("WritingMode", () => {
     let resetSpy: Mock, errorSpy: Mock;
@@ -174,9 +173,9 @@ describe("WritingMode", () => {
 
         it("Given I had already added 25 trackers, when I try to add another, then an error will be shown", () => {
             const writing_cross_tracker_report = new WritingCrossTrackerReport();
-            vi.spyOn(writing_cross_tracker_report, "addTracker").mockImplementation(() => {
-                throw new TooManyTrackersSelectedError();
-            });
+            vi.spyOn(writing_cross_tracker_report, "addTracker").mockReturnValue(
+                err(TooManyTrackersSelectedFault()),
+            );
             const wrapper = getWrapper(writing_cross_tracker_report);
             const selected_project = { id: 656, label: "ergatogyne" } as ProjectInfo;
             const selected_tracker = { id: 53, label: "observingly" } as TrackerInfo;

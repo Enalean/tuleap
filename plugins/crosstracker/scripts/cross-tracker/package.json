@@ -15,7 +15,6 @@
     "@tuleap/tlp-badge": "workspace:^",
     "@tuleap/vue-strict-inject": "workspace:^",
     "@tuleap/vue3-gettext-init": "workspace:^",
-    "extendable-error": "^0.1.7",
     "neverthrow": "6.0.0",
     "vue": "^3.3.4",
     "vue-dompurify-html": "^5.1.0",
