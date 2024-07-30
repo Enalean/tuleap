@@ -22,30 +22,29 @@ declare(strict_types=1);
 
 namespace Tuleap\CrossTracker\Report\Query\Advanced\Select;
 
+use PFUser;
+use ProjectUGroup;
+use Tracker;
+use Tuleap\CrossTracker\CrossTrackerReport;
 use Tuleap\CrossTracker\Report\Query\Advanced\CrossTrackerFieldTestCase;
-use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\CrossTrackerExpertQueryReportDao;
-use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Metadata\MetadataSelectFromBuilder;
-use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Metadata\Semantic\AssignedTo\AssignedToSelectFromBuilder;
-use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Metadata\Semantic\Description\DescriptionSelectFromBuilder;
-use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Metadata\Semantic\Status\StatusSelectFromBuilder;
-use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Metadata\Semantic\Title\TitleSelectFromBuilder;
-use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Metadata\Special\PrettyTitle\PrettyTitleSelectFromBuilder;
-use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Metadata\Special\ProjectName\ProjectNameSelectFromBuilder;
+use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Representations\TrackerRepresentation;
+use Tuleap\CrossTracker\REST\v1\Representation\CrossTrackerReportContentRepresentation;
+use Tuleap\CrossTracker\Tests\Report\ArtifactReportFactoryInstantiator;
 use Tuleap\DB\DBFactory;
 use Tuleap\Test\Builders\CoreDatabaseBuilder;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
 use Tuleap\Tracker\Test\Builders\TrackerDatabaseBuilder;
 
 final class TrackerNameSelectBuilderTest extends CrossTrackerFieldTestCase
 {
+    private PFUser $user;
     /**
-     * @var array<int, array>
+     * @var Tracker[]
+     */
+    private array $trackers;
+    /**
+     * @var array<int, TrackerRepresentation>
      */
     private array $expected_values;
-    /**
-     * @var list<int>
-     */
-    private array $artifact_ids;
 
     public function setUp(): void
     {
@@ -55,48 +54,68 @@ final class TrackerNameSelectBuilderTest extends CrossTrackerFieldTestCase
 
         $project    = $core_builder->buildProject('My project');
         $project_id = (int) $project->getId();
-        $user       = $core_builder->buildUser('project_member', 'Project Member', 'project_member@example.com');
-        $core_builder->addUserToProjectMembers((int) $user->getId(), $project_id);
+        $this->user = $core_builder->buildUser('project_member', 'Project Member', 'project_member@example.com');
+        $core_builder->addUserToProjectMembers((int) $this->user->getId(), $project_id);
 
         $release_tracker = $tracker_builder->buildTracker($project_id, 'Release');
-        $sprint_tracker  = $tracker_builder->buildTracker($project_id, 'Sprint');
+        $sprint_tracker  = $tracker_builder->buildTracker($project_id, 'Sprint', 'fiesta-red');
+        $this->trackers  = [$release_tracker, $sprint_tracker];
+
+        $release_artifact_id_field_id = $tracker_builder->buildArtifactIdField($release_tracker->getId());
+        $sprint_artifact_id_field_id  = $tracker_builder->buildArtifactIdField($sprint_tracker->getId());
+
+        $tracker_builder->setReadPermission(
+            $release_artifact_id_field_id,
+            ProjectUGroup::PROJECT_MEMBERS
+        );
+        $tracker_builder->setReadPermission(
+            $sprint_artifact_id_field_id,
+            ProjectUGroup::PROJECT_MEMBERS
+        );
 
         $release_artifact_id = $tracker_builder->buildArtifact($release_tracker->getId());
         $sprint_artifact_id  = $tracker_builder->buildArtifact($sprint_tracker->getId());
-        $this->artifact_ids  = [$release_artifact_id, $sprint_artifact_id];
         $tracker_builder->buildLastChangeset($release_artifact_id);
         $tracker_builder->buildLastChangeset($sprint_artifact_id);
 
         $this->expected_values = [
-            $release_artifact_id => ['@tracker.name' => 'Release', '@tracker.color' => 'inca-silver'],
-            $sprint_artifact_id  => ['@tracker.name' => 'Sprint', '@tracker.color' => 'inca-silver'],
+            $release_artifact_id => new TrackerRepresentation('Release', 'inca-silver'),
+            $sprint_artifact_id  => new TrackerRepresentation('Sprint', 'fiesta-red'),
         ];
+    }
+
+    private function getQueryResults(CrossTrackerReport $report, PFUser $user): CrossTrackerReportContentRepresentation
+    {
+        $result = (new ArtifactReportFactoryInstantiator())
+            ->getFactory()
+            ->getArtifactsMatchingReport($report, $user, 10, 0, false);
+        assert($result instanceof CrossTrackerReportContentRepresentation);
+        return $result;
     }
 
     public function testItReturnsColumns(): void
     {
-        $dao     = new CrossTrackerExpertQueryReportDao();
-        $builder = new MetadataSelectFromBuilder(
-            new TitleSelectFromBuilder(),
-            new DescriptionSelectFromBuilder(),
-            new StatusSelectFromBuilder(),
-            new AssignedToSelectFromBuilder(),
-            new ProjectNameSelectFromBuilder(),
-            new PrettyTitleSelectFromBuilder(),
-        );
-        $results = $dao->searchArtifactsColumnsMatchingIds(
-            $builder->getSelectFrom(new Metadata('tracker.name')),
-            $this->artifact_ids,
+        $result = $this->getQueryResults(
+            new CrossTrackerReport(
+                1,
+                'SELECT @tracker.name WHERE @id >= 1',
+                $this->trackers,
+            ),
+            $this->user,
         );
 
-        self::assertCount(2, $results);
-        foreach ($results as $result) {
-            self::assertArrayHasKey('id', $result);
-            $id = $result['id'];
-            self::assertArrayHasKey('@tracker.name', $result);
-            self::assertArrayHasKey('@tracker.color', $result);
-            self::assertSame($this->expected_values[$id]['@tracker.name'], $result['@tracker.name']);
-            self::assertSame($this->expected_values[$id]['@tracker.color'], $result['@tracker.color']);
+        self::assertSame(2, $result->getTotalSize());
+        self::assertCount(1, $result->selected);
+        self::assertSame('@tracker.name', $result->selected[0]->name);
+        self::assertSame('tracker', $result->selected[0]->type);
+        $values = [];
+        foreach ($result->artifacts as $artifact) {
+            self::assertCount(1, $artifact);
+            self::assertArrayHasKey('@tracker.name', $artifact);
+            $value = $artifact['@tracker.name'];
+            self::assertInstanceOf(TrackerRepresentation::class, $value);
+            $values[] = $value;
         }
+        self::assertEqualsCanonicalizing(array_values($this->expected_values), $values);
     }
 }
