@@ -19,9 +19,12 @@
 
 <template>
     <empty-state
-        v-if="total === 0 && !is_loading"
+        v-if="is_table_empty"
         v-bind:writing_cross_tracker_report="writing_cross_tracker_report"
     />
+    <div class="export-button-box" v-if="should_show_export_button">
+        <export-button />
+    </div>
     <div class="cross-tracker-loader" v-if="is_loading" data-test="loading"></div>
     <div class="overflow-wrapper" v-if="total > 0">
         <div class="selectable-table" v-if="!is_loading">
@@ -56,11 +59,12 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref, watch } from "vue";
+import { computed, onMounted, ref, watch } from "vue";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import {
     DATE_FORMATTER,
     DATE_TIME_FORMATTER,
+    IS_CSV_EXPORT_ALLOWED,
     NOTIFY_FAULT,
     REPORT_STATE,
     RETRIEVE_ARTIFACTS_TABLE,
@@ -74,12 +78,14 @@ import type { ArtifactsTableWithTotal } from "../../domain/RetrieveArtifactsTabl
 import SelectablePagination from "./SelectablePagination.vue";
 import EmptyState from "./EmptyState.vue";
 import { ArtifactsRetrievalFault } from "../../domain/ArtifactsRetrievalFault";
+import ExportButton from "../ExportCSVButton.vue";
 
 const artifacts_retriever = strictInject(RETRIEVE_ARTIFACTS_TABLE);
 const date_formatter = strictInject(DATE_FORMATTER);
 const date_time_formatter = strictInject(DATE_TIME_FORMATTER);
 const report_state = strictInject(REPORT_STATE);
 const notifyFault = strictInject(NOTIFY_FAULT);
+const is_csv_export_allowed = strictInject(IS_CSV_EXPORT_ALLOWED);
 
 const props = defineProps<{
     writing_cross_tracker_report: WritingCrossTrackerReport;
@@ -91,6 +97,12 @@ const rows = ref<ArtifactsTable["rows"]>([]);
 const total = ref(0);
 let offset = 0;
 const limit = 30;
+
+const is_table_empty = computed<boolean>(() => !is_loading.value && total.value === 0);
+
+const should_show_export_button = computed<boolean>(
+    () => is_csv_export_allowed.value && !is_table_empty.value,
+);
 
 watch(report_state, () => {
     if (report_state.value === "report-saved" || report_state.value === "result-preview") {
@@ -167,7 +179,12 @@ function isEvenRow(index: number): boolean {
 </script>
 
 <style scoped lang="scss">
+.export-button-box {
+    margin: var(--tlp-medium-spacing) 0 0;
+}
+
 .overflow-wrapper {
+    margin: var(--tlp-medium-spacing) var(--tlp-medium-spacing) 0;
     overflow-y: auto;
 }
 
@@ -177,7 +194,6 @@ function isEvenRow(index: number): boolean {
     grid-template-rows:
         [headers] var(--tlp-x-large-spacing)
         auto;
-    margin: var(--tlp-medium-spacing) var(--tlp-medium-spacing) 0;
 }
 
 @mixin -cell-template {
