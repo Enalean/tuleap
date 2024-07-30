@@ -1,9 +1,0 @@
-{
-  "label": "Fly Over",
-  "children": [
-    "tooltips",
-    "popovers",
-    "dropdowns",
-    "modals"
-  ]
-}

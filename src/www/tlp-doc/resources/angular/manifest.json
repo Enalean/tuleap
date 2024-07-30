@@ -1,7 +1,0 @@
-{
-    "label": "Angular",
-    "children": [
-        "prerequisites",
-        "tlp-modal-service"
-    ]
-}

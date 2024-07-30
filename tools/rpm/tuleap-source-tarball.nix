@@ -38,7 +38,6 @@ let
           plugins/*/tests
           /lib/
           !src/scripts/*/frontend-assets/
-          /src/scripts/tlp-doc/
           /src/scripts/tlp-doc-v2/
           /plugins/*/scripts/lib/
           !plugins/*/backend-assets

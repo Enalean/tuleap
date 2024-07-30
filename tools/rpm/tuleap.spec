@@ -630,7 +630,6 @@ done
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/themes/FlamingParrot/css
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/themes/FlamingParrot/images
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/themes/common
-%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/www/tlp-doc
 
 # Configuration
 %{__install} -d $RPM_BUILD_ROOT/etc/%{APP_NAME}

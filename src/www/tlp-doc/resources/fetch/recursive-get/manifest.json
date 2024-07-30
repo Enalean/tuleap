@@ -1,4 +1,0 @@
-{
-    "label": "recursiveGet",
-    "shortcode": "(@tuleap/tlp-fetch).recursiveGet(url_to_query, options)"
-}
