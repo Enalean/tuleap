@@ -41,6 +41,8 @@ final class PdfTemplateDao extends DataAccessObject implements RetrieveAllTempla
         string $label,
         string $description,
         string $style,
+        string $header_content,
+        string $footer_content,
         \PFUser $created_by,
         \DateTimeImmutable $created_date,
     ): PdfTemplate {
@@ -53,12 +55,14 @@ final class PdfTemplateDao extends DataAccessObject implements RetrieveAllTempla
                 'label'             => $label,
                 'description'       => $description,
                 'style'             => $style,
+                'header_content'    => $header_content,
+                'footer_content'    => $footer_content,
                 'last_updated_by'   => $created_by->getId(),
                 'last_updated_date' => $created_date->getTimestamp(),
             ],
         );
 
-        return new PdfTemplate($identifier, $label, $description, $style, $created_by, $created_date);
+        return new PdfTemplate($identifier, $label, $description, $style, $header_content, $footer_content, $created_by, $created_date);
     }
 
     public function retrieveAll(): array
@@ -104,6 +108,8 @@ final class PdfTemplateDao extends DataAccessObject implements RetrieveAllTempla
             $row['label'],
             $row['description'],
             $row['style'],
+            $row['header_content'],
+            $row['footer_content'],
             $this->getUser($row['last_updated_by']),
             (new \DateTimeImmutable())->setTimestamp($row['last_updated_date']),
         );
@@ -127,6 +133,8 @@ final class PdfTemplateDao extends DataAccessObject implements RetrieveAllTempla
                 'label'             => $template->label,
                 'description'       => $template->description,
                 'style'             => $template->style,
+                'header_content'    => $template->header_content,
+                'footer_content'    => $template->footer_content,
                 'last_updated_by'   => $template->last_updated_by->getId(),
                 'last_updated_date' => $template->last_updated_date->getTimestamp(),
             ],

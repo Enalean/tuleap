@@ -33,6 +33,8 @@ final class PdfTemplateTestBuilder
     private string $label;
     private string $description;
     private string $style;
+    private string $header_content;
+    private string $footer_content;
     private \PFUser $last_updated_by;
     private \DateTimeImmutable $last_updated_date;
     private PdfTemplateIdentifier $identifier;
@@ -42,6 +44,9 @@ final class PdfTemplateTestBuilder
         $this->identifier        = (new PdfTemplateIdentifierFactory(new DatabaseUUIDV7Factory()))->buildIdentifier();
         $this->label             = 'Black template';
         $this->description       = '';
+        $this->style             = 'body { color: black; }';
+        $this->header_content    = '<em>For authorized eyes only</em>';
+        $this->footer_content    = '<em>Do not share this document</em>';
         $this->style             = 'body { color: black; }';
         $this->last_updated_by   = UserTestBuilder::buildWithDefaults();
         $this->last_updated_date = new \DateTimeImmutable();
@@ -100,6 +105,22 @@ final class PdfTemplateTestBuilder
         return $self;
     }
 
+    public function withHeaderContent(string $header_content): self
+    {
+        $self                 = clone $this;
+        $self->header_content = $header_content;
+
+        return $self;
+    }
+
+    public function withFooterContent(string $footer_content): self
+    {
+        $self                 = clone $this;
+        $self->footer_content = $footer_content;
+
+        return $self;
+    }
+
     public function build(): PdfTemplate
     {
         return new PdfTemplate(
@@ -107,6 +128,8 @@ final class PdfTemplateTestBuilder
             $this->label,
             $this->description,
             $this->style,
+            $this->header_content,
+            $this->footer_content,
             $this->last_updated_by,
             $this->last_updated_date,
         );

@@ -20,8 +20,33 @@
 import type { PdfTemplate } from "@tuleap/print-as-pdf";
 import { printAsPdf } from "@tuleap/print-as-pdf";
 import type CodeMirror from "codemirror";
+import DOMPurify from "dompurify";
 
-export function initiatePrintPreview(style: CodeMirror.EditorFromTextArea): void {
+function appendHeaderAndFooterContent(
+    header_content_editor: CodeMirror.EditorFromTextArea,
+    footer_content_editor: CodeMirror.EditorFromTextArea,
+): void {
+    const document_header = document.getElementById("fake-document-header");
+    if (!(document_header instanceof HTMLElement)) {
+        throw new Error("Cannot find document header element");
+    }
+
+    const document_footer = document.getElementById("fake-document-footer");
+    if (!(document_footer instanceof HTMLElement)) {
+        throw new Error("Cannot find document footer element");
+    }
+
+    // eslint-disable-next-line no-unsanitized/property
+    document_header.innerHTML = DOMPurify.sanitize(header_content_editor.getValue());
+    // eslint-disable-next-line no-unsanitized/property
+    document_footer.innerHTML = DOMPurify.sanitize(footer_content_editor.getValue());
+}
+
+export function initiatePrintPreview(
+    style: CodeMirror.EditorFromTextArea,
+    header_content_editor: CodeMirror.EditorFromTextArea,
+    footer_content_editor: CodeMirror.EditorFromTextArea,
+): void {
     const button = document.getElementById("pdftemplate-print-preview");
     if (!(button instanceof HTMLButtonElement)) {
         return;
@@ -43,6 +68,8 @@ export function initiatePrintPreview(style: CodeMirror.EditorFromTextArea): void
     }
 
     button.addEventListener("click", () => {
+        appendHeaderAndFooterContent(header_content_editor, footer_content_editor);
+
         const template: PdfTemplate = {
             id: "",
             label: label.value,

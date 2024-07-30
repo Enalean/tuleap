@@ -1,5 +1,6 @@
 body {
     --main-color: #f57c13;
+    --dimmed-color: #667080;
 
     font-size: 12pt;
     overflow: visible !important;
@@ -21,6 +22,57 @@ a:link, a:visited {
 	text-decoration: underline;
 }
 
+.document-header-space, .document-header {
+    height: 40px;
+}
+
+.document-footer-space, .document-footer {
+    height: 40px;
+}
+
+.document-header-space {
+    padding-bottom: 20px;
+}
+
+.document-footer-space {
+    padding-top: 20px;
+}
+
+.document-header, .document-footer {
+    position: fixed;
+    display: flex;
+    justify-content: center;
+    inset: auto 0;
+}
+
+.document-header {
+    top: 0;
+    align-items: flex-start;
+    border-bottom: 1px solid var(--main-color);
+}
+
+.document-footer {
+    bottom: 0;
+    align-items: flex-end;
+    border-top: 1px solid var(--main-color);
+}
+
+.custom-header-content {
+    color: var(--dimmed-color);
+    font-size: 9pt;
+}
+
+.custom-footer-content {
+    color: var(--dimmed-color);
+    font-size: 9pt;
+    font-style: italic;
+}
+
+.document-page {
+    break-after: page;
+    display: table-row-group;
+}
+
 .document-title {
     font-size: 20pt;
     border-top: 1pt solid var(--main-color);
@@ -28,11 +80,6 @@ a:link, a:visited {
     margin-top: 10cm;
     padding: 4rem;
     text-align: center;
-}
-
-.table-of-contents,
-.document-content {
-    break-before: page;
 }
 
 .table-of-contents > h1 {

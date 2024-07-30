@@ -73,5 +73,21 @@ final class UpdateTemplateRequestTest extends TestCase
                 PdfTemplateTestBuilder::aTemplate()->withIdentifier($identifier)->withLabel('update label')->withStyle('update style')->build(),
             ))->getChangedFields(),
         );
+
+        self::assertEquals(
+            ['header_content'],
+            (new UpdateTemplateRequest(
+                PdfTemplateTestBuilder::aTemplate()->withIdentifier($identifier)->withHeaderContent('<span>Header</span>')->build(),
+                PdfTemplateTestBuilder::aTemplate()->withIdentifier($identifier)->withHeaderContent('<span>Updated header</span>')->build(),
+            ))->getChangedFields(),
+        );
+
+        self::assertEquals(
+            ['footer_content'],
+            (new UpdateTemplateRequest(
+                PdfTemplateTestBuilder::aTemplate()->withIdentifier($identifier)->withFooterContent('<span>Footer</span>')->build(),
+                PdfTemplateTestBuilder::aTemplate()->withIdentifier($identifier)->withFooterContent('<span>Updated Footer</span>')->build(),
+            ))->getChangedFields(),
+        );
     }
 }
