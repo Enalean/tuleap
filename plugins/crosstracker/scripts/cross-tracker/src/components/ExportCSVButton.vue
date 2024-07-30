@@ -42,6 +42,7 @@ import { download } from "../helpers/download-helper";
 import { addBOM } from "../helpers/bom-helper";
 import { getCSVReport } from "../api/rest-querier";
 import { CLEAR_FEEDBACKS, NOTIFY_FAULT } from "../injection-symbols";
+import { CSVExportFault } from "../domain/CSVExportFault";
 
 const notifyFault = strictInject(NOTIFY_FAULT);
 const clearFeedbacks = strictInject(CLEAR_FEEDBACKS);
@@ -64,7 +65,7 @@ function exportCSV(): void {
                 );
             },
             (fault) => {
-                notifyFault(fault);
+                notifyFault(CSVExportFault(fault));
             },
         )
         .then(() => {

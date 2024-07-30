@@ -138,6 +138,7 @@ describe("ReadingMode", () => {
             await wrapper.get("[data-test=cross-tracker-save-report]").trigger("click");
 
             expect(errorSpy).toHaveBeenCalled();
+            expect(errorSpy.mock.calls[0][0].isSaveReport()).toBe(true);
         });
     });
 

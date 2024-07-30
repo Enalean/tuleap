@@ -242,7 +242,7 @@ describe("CrossTrackerWidget", () => {
             const wrapper = getWrapper({ is_user_admin: true });
             await vi.runOnlyPendingTimersAsync();
 
-            expect(wrapper.vm.current_fault.unwrapOr(null)).not.toBe(null);
+            expect(wrapper.vm.current_fault.unwrapOr(null)?.isReportRetrieval()).toBe(true);
         });
     });
 

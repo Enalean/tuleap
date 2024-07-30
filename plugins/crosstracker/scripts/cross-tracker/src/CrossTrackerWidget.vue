@@ -77,6 +77,7 @@ import {
     REPORT_STATE,
 } from "./injection-symbols";
 import { useFeedbacks } from "./composables/useFeedbacks";
+import { ReportRetrievalFault } from "./domain/ReportRetrievalFault";
 
 const gettext_provider = useGettext();
 
@@ -142,7 +143,7 @@ function loadBackendReport(): void {
                 }
             },
             (fault) => {
-                notifyFault(fault);
+                notifyFault(ReportRetrievalFault(fault));
             },
         )
         .then(() => {

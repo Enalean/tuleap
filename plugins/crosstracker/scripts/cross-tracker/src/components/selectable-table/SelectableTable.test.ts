@@ -175,6 +175,7 @@ describe(`SelectableTable`, () => {
             await vi.runOnlyPendingTimersAsync();
 
             expect(errorSpy).toHaveBeenCalled();
+            expect(errorSpy.mock.calls[0][0].isArtifactsRetrieval()).toBe(true);
         });
     });
     describe("loadArtifact()", () => {

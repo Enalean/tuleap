@@ -30,10 +30,22 @@ msgstr "Cancelar"
 msgid "Description"
 msgstr "Descrição"
 
+msgid "Error while exporting the report to CSV: %{error}"
+msgstr ""
+
+msgid "Error while fetching the artifacts matching the query: %{error}"
+msgstr ""
+
 msgid "Error while fetching the list of projects you are member of: %{error}"
 msgstr ""
 
 msgid "Error while fetching the list of trackers of this project: %{error}"
+msgstr ""
+
+msgid "Error while fetching the report: %{error}"
+msgstr ""
+
+msgid "Error while saving the report: %{error}"
 msgstr ""
 
 msgid "Example: @title = 'value'"
