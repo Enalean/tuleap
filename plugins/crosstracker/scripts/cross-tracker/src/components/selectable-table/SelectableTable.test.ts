@@ -33,6 +33,7 @@ import { TrackerInfoStub } from "../../../tests/stubs/TrackerInfoStub";
 import {
     DATE_FORMATTER,
     DATE_TIME_FORMATTER,
+    IS_CSV_EXPORT_ALLOWED,
     NOTIFY_FAULT,
     REPORT_STATE,
     RETRIEVE_ARTIFACTS_TABLE,
@@ -49,6 +50,7 @@ import { Fault } from "@tuleap/fault";
 import { buildVueDompurifyHTMLDirective } from "vue-dompurify-html";
 import EmptyState from "./EmptyState.vue";
 import type { ReportState } from "../../domain/ReportState";
+import ExportCSVButton from "../ExportCSVButton.vue";
 
 vi.useFakeTimers();
 
@@ -57,15 +59,16 @@ const NUMERIC_COLUMN_NAME = "remaining_effort";
 const TEXT_COLUMN_NAME = "details";
 
 describe(`SelectableTable`, () => {
-    let errorSpy: Mock;
+    let errorSpy: Mock, report_state: ReportState, is_csv_export_allowed: boolean;
 
     beforeEach(() => {
         errorSpy = vi.fn();
+        report_state = "report-saved";
+        is_csv_export_allowed = true;
     });
 
     const getWrapper = (
         table_retriever: RetrieveArtifactsTable,
-        report_state: ReportState,
     ): VueWrapper<InstanceType<typeof SelectableTable>> => {
         const writing_cross_tracker_report = new WritingCrossTrackerReport();
         writing_cross_tracker_report.expert_query = `SELECT start_date WHERE start_date != ''`;
@@ -90,6 +93,7 @@ describe(`SelectableTable`, () => {
                     [RETRIEVE_ARTIFACTS_TABLE.valueOf()]: table_retriever,
                     [REPORT_STATE.valueOf()]: ref(report_state),
                     [NOTIFY_FAULT.valueOf()]: errorSpy,
+                    [IS_CSV_EXPORT_ALLOWED.valueOf()]: ref(is_csv_export_allowed),
                 },
             },
             props: {
@@ -97,6 +101,55 @@ describe(`SelectableTable`, () => {
             },
         });
     };
+
+    describe(`render`, () => {
+        let table_retriever: RetrieveArtifactsTable;
+
+        beforeEach(() => {
+            const not_empty_table = new ArtifactsTableBuilder()
+                .withColumn("title")
+                .withArtifactRow(
+                    new ArtifactRowBuilder()
+                        .addCell("title", {
+                            type: TEXT_CELL,
+                            value: Option.fromValue("eupepticism uninodal"),
+                        })
+                        .build(),
+                )
+                .build();
+            table_retriever = RetrieveArtifactsTableStub.withContent(
+                { table: not_empty_table, total: 1 },
+                { table: not_empty_table, total: 1 },
+            );
+        });
+
+        it(`when the table is empty, it will NOT display the CSV export button`, async () => {
+            const table = new ArtifactsTableBuilder().build();
+
+            const wrapper = getWrapper(
+                RetrieveArtifactsTableStub.withContent({ table, total: 0 }, { table, total: 0 }),
+            );
+            await vi.runOnlyPendingTimersAsync();
+
+            expect(wrapper.findComponent(ExportCSVButton).exists()).toBe(false);
+        });
+
+        it(`does not show the CSV export button when told not to`, async () => {
+            is_csv_export_allowed = false;
+
+            const wrapper = getWrapper(table_retriever);
+            await vi.runOnlyPendingTimersAsync();
+
+            expect(wrapper.findComponent(ExportCSVButton).exists()).toBe(false);
+        });
+
+        it(`shows the CSV export button otherwise`, async () => {
+            const wrapper = getWrapper(table_retriever);
+            await vi.runOnlyPendingTimersAsync();
+
+            expect(wrapper.findComponent(ExportCSVButton).exists()).toBe(true);
+        });
+    });
 
     describe(`onMounted()`, () => {
         it(`will retrieve the query result,
@@ -147,7 +200,7 @@ describe(`SelectableTable`, () => {
                 table_result,
             );
 
-            const wrapper = getWrapper(table_retriever, "report-saved");
+            const wrapper = getWrapper(table_retriever);
 
             await nextTick();
             expect(wrapper.find("[data-test=loading]").exists()).toBe(true);
@@ -170,7 +223,7 @@ describe(`SelectableTable`, () => {
                 Fault.fromMessage("Bad Request: invalid searchable"),
             );
 
-            getWrapper(table_retriever, "report-saved");
+            getWrapper(table_retriever);
 
             await vi.runOnlyPendingTimersAsync();
 
@@ -248,8 +301,8 @@ describe(`SelectableTable`, () => {
                 query_report_with_total,
                 initial_report_with_total,
             );
-
-            const wrapper = getWrapper(table_retriever, "result-preview");
+            report_state = "result-preview";
+            const wrapper = getWrapper(table_retriever);
 
             await vi.runOnlyPendingTimersAsync();
 
@@ -264,7 +317,7 @@ describe(`SelectableTable`, () => {
                 initial_report_with_total,
             );
 
-            const wrapper = getWrapper(table_retriever, "report-saved");
+            const wrapper = getWrapper(table_retriever);
 
             await vi.runOnlyPendingTimersAsync();
 
@@ -287,7 +340,7 @@ describe(`SelectableTable`, () => {
                 table_result,
             );
 
-            const wrapper = getWrapper(table_retriever, "report-saved");
+            const wrapper = getWrapper(table_retriever);
             expect(wrapper.findComponent(EmptyState).exists()).toBe(true);
         });
     });
