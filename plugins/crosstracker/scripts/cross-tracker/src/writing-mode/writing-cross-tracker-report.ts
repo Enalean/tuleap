@@ -17,9 +17,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import ExtendableError from "extendable-error";
-import type { ProjectInfo, TrackerInfo, TrackerAndProject } from "../type";
+import type { Result } from "neverthrow";
+import { err, ok } from "neverthrow";
+import type { Fault } from "@tuleap/fault";
+import type { ProjectInfo, TrackerAndProject, TrackerInfo } from "../type";
 import type ReadingCrossTrackerReport from "../reading-mode/reading-cross-tracker-report";
+import { TooManyTrackersSelectedFault } from "../domain/TooManyTrackersSelectedFault";
 
 export default class WritingCrossTrackerReport {
     trackers: Map<number, TrackerAndProject>;
@@ -30,16 +33,14 @@ export default class WritingCrossTrackerReport {
         this.expert_query = "";
     }
 
-    addTracker(project: ProjectInfo, tracker: TrackerInfo): void {
+    addTracker(project: ProjectInfo, tracker: TrackerInfo): Result<null, Fault> {
         if (this.trackers.size === 25) {
-            throw new TooManyTrackersSelectedError();
-        }
-        if (this.trackers.has(tracker.id)) {
-            throw new CannotAddTheSameTrackerTwiceError();
+            return err(TooManyTrackersSelectedFault());
         }
 
         const tracker_and_project: TrackerAndProject = { project, tracker };
         this.trackers.set(tracker.id, tracker_and_project);
+        return ok(null);
     }
 
     removeTracker(tracker_id: number): void {
@@ -63,6 +64,3 @@ export default class WritingCrossTrackerReport {
         this.expert_query = expert_query;
     }
 }
-
-export class TooManyTrackersSelectedError extends ExtendableError {}
-export class CannotAddTheSameTrackerTwiceError extends ExtendableError {}
