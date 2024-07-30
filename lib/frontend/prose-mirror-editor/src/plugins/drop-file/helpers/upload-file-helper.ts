@@ -17,10 +17,13 @@
  *  along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { FileUploadOptions } from "../types";
+import type { FileUploadOptions, OnGoingUploadFile } from "../types";
 import { type DetailedError, Upload } from "tus-js-client";
+import { computedProgress } from "./progress-computation-helper";
 
 export function uploadFile(
+    files: Map<number, OnGoingUploadFile>,
+    file_id: number,
     file: File,
     upload_href: string,
     onProgressCallback: FileUploadOptions["onProgressCallback"],
@@ -33,7 +36,8 @@ export function uploadFile(
                 filetype: file.type,
             },
             onProgress: (bytes_sent: number, bytes_total: number): void => {
-                onProgressCallback(bytes_sent, bytes_total);
+                const progress = computedProgress(files, file_id, bytes_sent, bytes_total);
+                onProgressCallback(progress);
             },
             onSuccess: (): void => {
                 return resolve();

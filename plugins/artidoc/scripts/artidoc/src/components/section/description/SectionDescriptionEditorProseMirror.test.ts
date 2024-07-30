@@ -19,28 +19,30 @@
 import { beforeAll, describe, expect, it, vi } from "vitest";
 import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
+import type { Ref, ComponentPublicInstance } from "vue";
 import { ref } from "vue";
-import type { ComponentPublicInstance } from "vue";
 import SectionDescriptionEditorProseMirror from "@/components/section/description/SectionDescriptionEditorProseMirror.vue";
 import VueDOMPurifyHTML from "vue-dompurify-html";
 import * as upload_file from "@/composables/useUploadFile";
 import NotificationBar from "@/components/section/description/NotificationBar.vue";
+import type { OnGoingUploadFile } from "@tuleap/prose-mirror-editor";
 
 describe("SectionDescriptionEditorProseMirror", () => {
     let wrapper: VueWrapper<ComponentPublicInstance>;
 
     beforeAll(() => {
+        const upload_files: Ref<Map<number, OnGoingUploadFile>> = ref(new Map());
         vi.spyOn(upload_file, "useUploadFile").mockReturnValue({
+            progress: ref(0),
             file_upload_options: {
                 upload_url: "upload_url",
                 max_size_upload: 1234,
-                onStartCallback: vi.fn(),
+                upload_files: upload_files.value,
                 onErrorCallback: vi.fn(),
-                onSuccessCallback: vi.fn(),
                 onProgressCallback: vi.fn(),
+                onSuccessCallback: vi.fn(),
             },
             error_message: ref(null),
-            upload_progress: ref(0),
             resetProgressCallback: vi.fn(),
         });
         wrapper = shallowMount(SectionDescriptionEditorProseMirror, {

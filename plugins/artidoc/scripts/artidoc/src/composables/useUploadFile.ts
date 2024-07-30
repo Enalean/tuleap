@@ -21,6 +21,7 @@ import type {
     FileUploadOptions,
     MaxSizeUploadExceededError,
     UploadError,
+    OnGoingUploadFile,
 } from "@tuleap/prose-mirror-editor";
 import { ref } from "vue";
 import type { Ref } from "vue";
@@ -30,9 +31,9 @@ import type { AttachmentFile } from "@/composables/useAttachmentFile";
 
 export type UseUploadFileType = {
     file_upload_options: FileUploadOptions;
-    resetProgressCallback: () => void;
-    upload_progress: Ref<number>;
     error_message: Ref<string | null>;
+    progress: Ref<number>;
+    resetProgressCallback: () => void;
 };
 
 export function useUploadFile(
@@ -41,7 +42,9 @@ export function useUploadFile(
 ): UseUploadFileType {
     const error_message: Ref<string | null> = ref(null);
     const upload_max_size = strictInject(UPLOAD_MAX_SIZE);
-    const onStartCallback = (): void => {};
+    const progress = ref(0);
+    const upload_files: Ref<Map<number, OnGoingUploadFile>> = ref(new Map());
+
     const onErrorCallback = (error: UploadError | MaxSizeUploadExceededError): void => {
         error_message.value = error.message;
     };
@@ -50,21 +53,20 @@ export function useUploadFile(
         error_message.value = "";
     };
 
-    const upload_progress = ref(0);
-    const onProgressCallback = (bytes_sent: number, bytes_total: number): void => {
-        upload_progress.value = Math.round((bytes_sent / bytes_total) * 100);
+    const onProgressCallback = (global_progress: number): void => {
+        progress.value = global_progress;
     };
     const resetProgressCallback = (): void => {
-        upload_progress.value = 0;
+        progress.value = 0;
     };
 
     const file_upload_options: FileUploadOptions = {
         upload_url: upload_url,
         max_size_upload: upload_max_size,
-        onStartCallback,
+        upload_files: upload_files.value,
         onErrorCallback,
         onSuccessCallback,
         onProgressCallback,
     };
-    return { file_upload_options, error_message, upload_progress, resetProgressCallback };
+    return { file_upload_options, error_message, progress, resetProgressCallback };
 }

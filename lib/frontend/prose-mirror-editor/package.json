@@ -30,7 +30,8 @@
   },
   "devDependencies": {
     "@tuleap/build-system-configurator": "workspace:*",
-    "@tuleap/po-gettext-plugin": "workspace:^"
+    "@tuleap/po-gettext-plugin": "workspace:^",
+    "@types/uuid": "^9.0.8"
   },
   "scripts": {
     "build": "vite build",

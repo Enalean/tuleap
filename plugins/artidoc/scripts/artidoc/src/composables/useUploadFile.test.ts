@@ -34,7 +34,6 @@ describe("useUploadFile", () => {
 
             expect(file_upload_options.upload_url).toBe("upload_url");
             expect(file_upload_options.max_size_upload).toBe(222);
-            expect(file_upload_options.onStartCallback).toBeDefined();
             expect(file_upload_options.onErrorCallback).toBeDefined();
             expect(file_upload_options.onSuccessCallback).toBeDefined();
             expect(file_upload_options.onProgressCallback).toBeDefined();
@@ -53,30 +52,26 @@ describe("useUploadFile", () => {
 
     describe("upload_progress", () => {
         describe("while the upload is in progress", () => {
-            it("should return the upload percentage", () => {
-                const { file_upload_options, upload_progress } = useUploadFile(
-                    "upload_url",
-                    vi.fn(),
-                );
+            it("update progress", () => {
+                const { file_upload_options, progress } = useUploadFile("upload_url", vi.fn());
 
-                file_upload_options.onProgressCallback(123, 888);
+                file_upload_options.onProgressCallback(88);
 
-                expect(upload_progress.value).toBe(14);
+                expect(progress.value).toBe(88);
             });
         });
         describe("resetProgressCallback", () => {
-            it("should reset the upload percentage", () => {
-                const { upload_progress, resetProgressCallback } = useUploadFile(
+            it("should reset progress", () => {
+                const { resetProgressCallback, progress, file_upload_options } = useUploadFile(
                     "upload_url",
                     vi.fn(),
                 );
 
-                upload_progress.value = 5;
-                expect(upload_progress.value).toBe(5);
+                file_upload_options.onProgressCallback(88);
+                expect(progress.value).toBe(88);
 
                 resetProgressCallback();
-
-                expect(upload_progress.value).toBe(0);
+                expect(progress.value).toBe(0);
             });
         });
     });

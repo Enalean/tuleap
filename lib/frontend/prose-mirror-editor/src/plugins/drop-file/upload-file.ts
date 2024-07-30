@@ -18,7 +18,7 @@
  */
 import type { FileUploadOptions } from "./types";
 import { InvalidFileUploadError, MaxSizeUploadExceededError, UploadError } from "./types";
-import { uploadFile } from "./helpers/upload-file-helper-helper";
+import { uploadFile } from "./helpers/upload-file-helper";
 import { postJSON, rawUri, uri } from "@tuleap/fetch-result";
 
 export const VALID_FILE_TYPES = [
@@ -39,14 +39,12 @@ export type PostFileResponse = {
 export function fileUploadHandler(options: FileUploadOptions) {
     return function handler(event: DragEvent): void {
         event.preventDefault();
-        // Note: Drop multiple file seems to not work with ProseMirror.
-        // It won't trigger an error but the DragEvent always returns only one file.
         const files = event.dataTransfer?.files;
-        if (!files || files.length !== 1) {
+        if (!files) {
             options.onErrorCallback(new UploadError());
             return;
         }
-        uploadAndDisplayFileInEditor(files[0], options);
+        uploadAndDisplayFileInEditor(files, options);
     };
 }
 
@@ -55,50 +53,62 @@ export function isFileTypeValid(file: File): boolean {
 }
 
 export async function uploadAndDisplayFileInEditor(
-    file: File,
+    files: FileList,
     options: FileUploadOptions,
 ): Promise<void> {
     const {
         upload_url,
         max_size_upload,
-        onStartCallback,
+        upload_files,
         onErrorCallback,
         onSuccessCallback,
         onProgressCallback,
     } = options;
 
-    onStartCallback();
-    if (file.size > max_size_upload) {
-        onErrorCallback(new MaxSizeUploadExceededError(max_size_upload));
-        return;
-    }
+    let file_index = 0;
+    for (const file of files) {
+        if (file.size > max_size_upload) {
+            onErrorCallback(new MaxSizeUploadExceededError(max_size_upload));
+            return;
+        }
 
-    if (!isFileTypeValid(file)) {
-        onErrorCallback(new InvalidFileUploadError());
-        return;
-    }
+        if (!isFileTypeValid(file)) {
+            onErrorCallback(new InvalidFileUploadError());
+            return;
+        }
 
-    await postJSON<PostFileResponse>(uri`${rawUri(upload_url)}`, {
-        name: file.name,
-        file_size: file.size,
-        file_type: file.type,
-    }).match(
-        async (response) => {
-            if (!response.upload_href) {
+        upload_files.set(file_index, { file_name: file.name, progress: 0 });
+
+        await postJSON<PostFileResponse>(uri`${rawUri(upload_url)}`, {
+            name: file.name,
+            file_size: file.size,
+            file_type: file.type,
+        }).match(
+            async (response) => {
+                if (!response.upload_href) {
+                    onErrorCallback(new UploadError());
+                    return;
+                }
+
+                try {
+                    await uploadFile(
+                        upload_files,
+                        file_index,
+                        file,
+                        response.upload_href,
+                        onProgressCallback,
+                    );
+                } catch (error) {
+                    onErrorCallback(new UploadError());
+                    throw error;
+                }
+                onSuccessCallback(response.id, response.download_href);
+            },
+            () => {
                 onErrorCallback(new UploadError());
-                return;
-            }
+            },
+        );
 
-            try {
-                await uploadFile(file, response.upload_href, onProgressCallback);
-            } catch (error) {
-                onErrorCallback(new UploadError());
-                throw error;
-            }
-            onSuccessCallback(response.id, response.download_href);
-        },
-        () => {
-            onErrorCallback(new UploadError());
-        },
-    );
+        file_index++;
+    }
 }

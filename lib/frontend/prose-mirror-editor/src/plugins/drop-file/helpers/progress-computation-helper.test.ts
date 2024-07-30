@@ -17,24 +17,20 @@
  *  along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type {
-    InvalidFileUploadError,
-    MaxSizeUploadExceededError,
-    UploadError,
-} from "./upload-file.error";
+import { describe, expect, it } from "vitest";
+import { computedProgress } from "./progress-computation-helper";
+import type { OnGoingUploadFile } from "../types";
 
-export type OnGoingUploadFile = {
-    file_name: string;
-    progress: number;
-};
+describe("computedProgress", () => {
+    it("should computed progress of upload for files", () => {
+        const files: Map<number, OnGoingUploadFile> = new Map();
+        files.set(1, { file_name: "aa", progress: 0 });
+        files.set(2, { file_name: "bb", progress: 0 });
 
-export type FileUploadOptions = {
-    upload_url: string;
-    max_size_upload: number;
-    upload_files: Map<number, OnGoingUploadFile>;
-    onErrorCallback: (
-        error: UploadError | MaxSizeUploadExceededError | InvalidFileUploadError,
-    ) => void;
-    onSuccessCallback: (id: number, download_href: string) => void;
-    onProgressCallback: (global_progress: number) => void;
-};
+        let progress = 0;
+        progress = computedProgress(files, 1, 10, 100);
+        expect(progress).toBe(5);
+        progress = computedProgress(files, 2, 20, 40);
+        expect(progress).toBe(30);
+    });
+});
