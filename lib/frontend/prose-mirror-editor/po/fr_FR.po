@@ -22,3 +22,6 @@ msgstr ""
 
 msgid "Max upload size exceeded"
 msgstr "La taille maximale de téléversement dépassée"
+
+msgid "Toggle strong style `Ctrl+b`"
+msgstr "Passer en gras `Ctrl+b`"

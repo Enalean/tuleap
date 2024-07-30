@@ -17,6 +17,25 @@
  *  along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export * from "./input";
-export * from "./toolbar";
-export * from "./drop-file";
+import { keymap } from "prosemirror-keymap";
+import { baseKeymap } from "prosemirror-commands";
+import type { Plugin } from "prosemirror-state";
+import { menuBar } from "prosemirror-menu";
+import { buildMenuItems } from "./menu";
+import { buildKeymap } from "./keymap";
+import { custom_schema } from "../../custom_schema";
+
+export { buildMenuItems, buildKeymap };
+
+export function setupToolbar(): Plugin[] {
+    const plugins = [keymap(buildKeymap(custom_schema)), keymap(baseKeymap)];
+
+    plugins.push(
+        menuBar({
+            floating: true,
+            content: buildMenuItems(custom_schema).fullMenu,
+        }),
+    );
+
+    return plugins;
+}
