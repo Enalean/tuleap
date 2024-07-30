@@ -35,7 +35,7 @@ final class TrackerDatabaseBuilder
     {
     }
 
-    public function buildTracker(int $project_id, string $name): Tracker
+    public function buildTracker(int $project_id, string $name, string $color = 'inca-silver'): Tracker
     {
         $factory    = \TrackerFactory::instance();
         $tracker_id = (int) $this->db->insertReturnId(
@@ -44,6 +44,7 @@ final class TrackerDatabaseBuilder
                 'group_id' => $project_id,
                 'name'     => $name,
                 'status'   => 'A',
+                'color'    => $color,
             ]
         );
         $tracker    = $factory->getTrackerById($tracker_id);

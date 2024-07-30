@@ -34,6 +34,7 @@ use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Metadata\Date\Metada
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Metadata\Semantic\AssignedTo\AssignedToResultBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Metadata\Semantic\Status\StatusResultBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Metadata\Special\ProjectName\ProjectNameResultBuilder;
+use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Metadata\Special\TrackerName\TrackerNameResultBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Metadata\Text\MetadataTextResultBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Metadata\User\MetadataUserResultBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Representations\DateResultRepresentation;
@@ -42,6 +43,7 @@ use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Representations\Proj
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Representations\StaticListRepresentation;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Representations\StaticListValueRepresentation;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Representations\TextResultRepresentation;
+use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Representations\TrackerRepresentation;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Representations\UserListRepresentation;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Representations\UserRepresentation;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\SelectedValue;
@@ -102,6 +104,7 @@ final class MetadataResultBuilderTest extends TestCase
             new MetadataUserResultBuilder($user_retriever, $user_helper),
             new ArtifactIdResultBuilder(),
             new ProjectNameResultBuilder(),
+            new TrackerNameResultBuilder(),
         );
 
         $user_helper->method('getDisplayNameFromUser')->willReturnCallback(static fn(PFUser $user) => $user->getRealName());
@@ -409,7 +412,7 @@ EOL
         ], $result->values);
     }
 
-    public function testItReturnsEmptyForTrackerName(): void
+    public function testItReturnsValuesForTrackerName(): void
     {
         $result = $this->getSelectedResult(
             new Metadata('tracker.name'),
@@ -418,13 +421,20 @@ EOL
                 ArtifactTestBuilder::anArtifact(112)->inTracker($this->second_tracker)->build(),
             ),
             [
-                ['id' => 111, '@tracker.name' => 'Tracker 38'],
-                ['id' => 112, '@tracker.name' => 'Tracker 4'],
+                ['id' => 111, '@tracker.name' => 'Tracker 38', '@tracker.color' => 'neon-green'],
+                ['id' => 112, '@tracker.name' => 'Tracker 4', '@tracker.color' => 'deep-blue'],
             ]
         );
 
-        self::assertNull($result->selected);
-        self::assertEmpty($result->values);
+        self::assertEquals(
+            new CrossTrackerSelectedRepresentation('@tracker.name', CrossTrackerSelectedType::TYPE_TRACKER),
+            $result->selected,
+        );
+        self::assertCount(2, $result->values);
+        self::assertEqualsCanonicalizing([
+            111 => new SelectedValue('@tracker.name', new TrackerRepresentation('Tracker 38', 'neon-green')),
+            112 => new SelectedValue('@tracker.name', new TrackerRepresentation('Tracker 4', 'deep-blue')),
+        ], $result->values);
     }
 
     public function testItReturnsEmptyForPrettyTitle(): void

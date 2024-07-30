@@ -62,6 +62,7 @@ use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Metadata\MetadataRes
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Metadata\Semantic\AssignedTo\AssignedToResultBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Metadata\Semantic\Status\StatusResultBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Metadata\Special\ProjectName\ProjectNameResultBuilder;
+use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Metadata\Special\TrackerName\TrackerNameResultBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Metadata\Text\MetadataTextResultBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Metadata\User\MetadataUserResultBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilderVisitor;
@@ -376,6 +377,7 @@ class crosstrackerPlugin extends Plugin
                 new MetadataUserResultBuilder($user_manager, UserHelper::instance()),
                 new ArtifactIdResultBuilder(),
                 new ProjectNameResultBuilder(),
+                new TrackerNameResultBuilder(),
             ),
         );
 
