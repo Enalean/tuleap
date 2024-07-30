@@ -33,10 +33,12 @@ use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Metadata\AlwaysThere
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Metadata\Date\MetadataDateResultBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Metadata\Semantic\AssignedTo\AssignedToResultBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Metadata\Semantic\Status\StatusResultBuilder;
+use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Metadata\Special\ProjectName\ProjectNameResultBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Metadata\Text\MetadataTextResultBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Metadata\User\MetadataUserResultBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Representations\DateResultRepresentation;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Representations\NumericResultRepresentation;
+use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Representations\ProjectRepresentation;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Representations\StaticListRepresentation;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Representations\StaticListValueRepresentation;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Representations\TextResultRepresentation;
@@ -48,6 +50,7 @@ use Tuleap\CrossTracker\REST\v1\Representation\CrossTrackerSelectedRepresentatio
 use Tuleap\CrossTracker\REST\v1\Representation\CrossTrackerSelectedType;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\Markdown\CommonMarkInterpreter;
+use Tuleap\Project\Icons\EmojiCodepointConverter;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
@@ -98,6 +101,7 @@ final class MetadataResultBuilderTest extends TestCase
             new MetadataDateResultBuilder(),
             new MetadataUserResultBuilder($user_retriever, $user_helper),
             new ArtifactIdResultBuilder(),
+            new ProjectNameResultBuilder(),
         );
 
         $user_helper->method('getDisplayNameFromUser')->willReturnCallback(static fn(PFUser $user) => $user->getRealName());
@@ -380,7 +384,7 @@ EOL
         ], $result->values);
     }
 
-    public function testItReturnsEmptyForProjectName(): void
+    public function testItReturnsValuesForProjectName(): void
     {
         $result = $this->getSelectedResult(
             new Metadata('project.name'),
@@ -390,12 +394,19 @@ EOL
             ),
             [
                 ['id' => 101, '@project.name' => 'Project 101', '@project.icon' => null],
-                ['id' => 102, '@project.name' => 'Project with', '@project.icon' => '\u2694\ufe0f'],
+                ['id' => 102, '@project.name' => 'Project with icon', '@project.icon' => EmojiCodepointConverter::convertEmojiToStoreFormat('⚔️')],
             ]
         );
 
-        self::assertNull($result->selected);
-        self::assertEmpty($result->values);
+        self::assertEquals(
+            new CrossTrackerSelectedRepresentation('@project.name', CrossTrackerSelectedType::TYPE_PROJECT),
+            $result->selected,
+        );
+        self::assertCount(2, $result->values);
+        self::assertEqualsCanonicalizing([
+            101 => new SelectedValue('@project.name', new ProjectRepresentation('Project 101', '')),
+            102 => new SelectedValue('@project.name', new ProjectRepresentation('Project with icon', '⚔️')),
+        ], $result->values);
     }
 
     public function testItReturnsEmptyForTrackerName(): void

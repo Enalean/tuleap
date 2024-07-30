@@ -29,6 +29,7 @@ use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Metadata\AlwaysThere
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Metadata\Date\MetadataDateResultBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Metadata\Semantic\AssignedTo\AssignedToResultBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Metadata\Semantic\Status\StatusResultBuilder;
+use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Metadata\Special\ProjectName\ProjectNameResultBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Metadata\Text\MetadataTextResultBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Metadata\User\MetadataUserResultBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\SelectedValuesCollection;
@@ -43,6 +44,7 @@ final readonly class MetadataResultBuilder
         private MetadataDateResultBuilder $date_builder,
         private MetadataUserResultBuilder $user_builder,
         private ArtifactIdResultBuilder $artifact_id_builder,
+        private ProjectNameResultBuilder $project_name_builder,
     ) {
     }
 
@@ -66,7 +68,7 @@ final readonly class MetadataResultBuilder
             AllowedMetadata::ID               => $this->artifact_id_builder->getResult($select_results),
 
             // Custom fields
-            AllowedMetadata::PROJECT_NAME,
+            AllowedMetadata::PROJECT_NAME     => $this->project_name_builder->getResult($select_results),
             AllowedMetadata::TRACKER_NAME,
             AllowedMetadata::PRETTY_TITLE     => new SelectedValuesCollection(null, []),
             default                           => throw new LogicException("Unknown metadata type: {$metadata->getName()}"),
