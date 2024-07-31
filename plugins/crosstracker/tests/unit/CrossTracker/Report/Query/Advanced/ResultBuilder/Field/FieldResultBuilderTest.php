@@ -251,7 +251,7 @@ final class FieldResultBuilderTest extends TestCase
 <p>V-Series.R</p>\n
 EOL
             )),
-            23 => new SelectedValue(self::FIELD_NAME, new TextResultRepresentation(null)),
+            23 => new SelectedValue(self::FIELD_NAME, new TextResultRepresentation('')),
         ], $result->values);
     }
 

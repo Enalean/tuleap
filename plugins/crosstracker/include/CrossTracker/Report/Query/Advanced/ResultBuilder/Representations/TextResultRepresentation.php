@@ -26,7 +26,7 @@ use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\SelectedValueReprese
 final class TextResultRepresentation implements SelectedValueRepresentation
 {
     public function __construct(
-        public ?string $value,
+        public string $value,
     ) {
     }
 }

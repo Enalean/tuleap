@@ -55,7 +55,7 @@ final readonly class TextResultBuilder
             $format = $result["format_$alias"];
 
             if ($value === null) {
-                $values[$id] = new SelectedValue($field->name, new TextResultRepresentation(null));
+                $values[$id] = new SelectedValue($field->name, new TextResultRepresentation(''));
                 continue;
             }
 

@@ -54,7 +54,7 @@ final readonly class MetadataTextResultBuilder
             $format = $result[$alias . '_format'];
 
             if ($value === null) {
-                $values[$id] = new SelectedValue($metadata->getName(), new TextResultRepresentation(null));
+                $values[$id] = new SelectedValue($metadata->getName(), new TextResultRepresentation(''));
                 continue;
             }
 
