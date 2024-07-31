@@ -47,7 +47,7 @@
             v-bind:aria-label="submenu_label"
         >
             <button
-                v-for="template in pdf_templates"
+                v-for="template in pdf_templates.list.value"
                 v-bind:key="template.id"
                 type="button"
                 v-on:click="printUsingTemplate(template)"
@@ -77,7 +77,7 @@
 import { computed, onMounted, ref } from "vue";
 import { useGettext } from "vue3-gettext";
 import { strictInject } from "@tuleap/vue-strict-inject";
-import { PDF_TEMPLATES } from "@/pdf-templates-injection-key";
+import { PDF_TEMPLATES_STORE } from "@/stores/pdf-templates-store";
 import type { PdfTemplate } from "@tuleap/print-as-pdf";
 import { printAsPdf } from "@tuleap/print-as-pdf";
 import { createDropdown } from "@tuleap/tlp-dropdown";
@@ -85,17 +85,17 @@ import { IS_USER_ANONYMOUS } from "@/is-user-anonymous";
 import PrinterVersion from "@/components/print/PrinterVersion.vue";
 import { EDITORS_COLLECTION } from "@/composables/useSectionEditorsCollection";
 
-const pdf_templates = strictInject(PDF_TEMPLATES);
+const pdf_templates = strictInject(PDF_TEMPLATES_STORE);
 const is_user_anonymous = strictInject(IS_USER_ANONYMOUS);
 const editors_collection = strictInject(EDITORS_COLLECTION);
 
-const has_more_than_one_template = pdf_templates !== null && pdf_templates.length > 1;
+const has_more_than_one_template = pdf_templates.list.value.length > 1;
 
 const { $gettext } = useGettext();
 const submenu_label = $gettext("Available templates");
 const export_in_pdf = $gettext("Export document in PDF");
 
-const has_pdf_templates = pdf_templates !== null && pdf_templates.length > 0;
+const has_pdf_templates = pdf_templates.list.value.length > 0;
 
 const is_option_disabled = computed(
     (): boolean =>
@@ -112,11 +112,11 @@ const getDisabledOptionTitle = (): string => {
 };
 
 function printUsingFirstTemplate(): void {
-    if (pdf_templates === null || pdf_templates.length === 0) {
+    if (pdf_templates.list.value.length === 0) {
         return;
     }
 
-    printUsingTemplate(pdf_templates[0]);
+    printUsingTemplate(pdf_templates.list.value[0]);
 }
 
 function printUsingTemplate(template: PdfTemplate): void {
@@ -125,7 +125,10 @@ function printUsingTemplate(template: PdfTemplate): void {
         return;
     }
 
-    printAsPdf(printable, template);
+    pdf_templates.setSelectedPdfTemplate(template);
+    setTimeout(() => {
+        printAsPdf(printable, template);
+    });
 }
 
 const trigger = ref<HTMLElement | null>(null);

@@ -75,6 +75,8 @@ export function initiatePrintPreview(
             label: label.value,
             description: description.value,
             style: style.getValue(),
+            header_content: "",
+            footer_content: "",
         };
 
         printAsPdf(fake_document, template);

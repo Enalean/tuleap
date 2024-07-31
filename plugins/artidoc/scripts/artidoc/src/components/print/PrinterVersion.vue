@@ -19,24 +19,62 @@
 -->
 
 <template>
-    <div class="document-layout" id="artidoc-print-version">
-        <h1 class="document-title">
-            {{ title }}
-        </h1>
-        <aside>
-            <table-of-contents />
-        </aside>
-        <section class="document-content">
-            <ol>
-                <li
-                    v-for="section in saved_sections"
-                    v-bind:key="section.id"
-                    class="document-section"
-                >
-                    <section-printer-version v-bind:section="section" />
-                </li>
-            </ol>
-        </section>
+    <div id="artidoc-print-version">
+        <table style="border: 0">
+            <thead style="display: table-header-group; border: 0">
+                <tr style="border: 0">
+                    <td style="border: 0">
+                        <div class="document-header-space">&nbsp;</div>
+                    </td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr style="border: 0">
+                    <td style="border: 0">
+                        <div class="document-page">
+                            <h1 class="document-title">
+                                {{ title }}
+                            </h1>
+                        </div>
+                        <div class="document-page">
+                            <aside>
+                                <table-of-contents />
+                            </aside>
+                        </div>
+                        <div class="document-page">
+                            <section class="document-content">
+                                <ol>
+                                    <li
+                                        v-for="section in saved_sections"
+                                        v-bind:key="section.id"
+                                        class="document-section"
+                                    >
+                                        <section-printer-version v-bind:section="section" />
+                                    </li>
+                                </ol>
+                            </section>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+            <tfoot style="display: table-footer-group; border: 0">
+                <tr style="border: 0">
+                    <td style="border: 0">
+                        <div class="document-footer-space">&nbsp;</div>
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+        <div
+            class="document-header"
+            v-if="pdf_templates.selected_template.value"
+            v-dompurify-html="pdf_templates.selected_template.value.header_content"
+        ></div>
+        <div
+            class="document-footer"
+            v-if="pdf_templates.selected_template.value"
+            v-dompurify-html="pdf_templates.selected_template.value.footer_content"
+        ></div>
     </div>
 </template>
 
@@ -46,8 +84,10 @@ import { strictInject } from "@tuleap/vue-strict-inject";
 import { SECTIONS_STORE } from "@/stores/sections-store-injection-key";
 import SectionPrinterVersion from "@/components/print/SectionPrinterVersion.vue";
 import { TITLE } from "@/title-injection-key";
+import { PDF_TEMPLATES_STORE } from "@/stores/pdf-templates-store";
 
 const { saved_sections } = strictInject(SECTIONS_STORE);
+const pdf_templates = strictInject(PDF_TEMPLATES_STORE);
 const title = strictInject(TITLE);
 </script>
 

@@ -20,7 +20,6 @@
 import { describe, beforeEach, expect, it, vi } from "vitest";
 import { shallowMount } from "@vue/test-utils";
 import PdfExportMenuItem from "@/components/export/pdf/PdfExportMenuItem.vue";
-import { PDF_TEMPLATES } from "@/pdf-templates-injection-key";
 import { createGettext } from "vue3-gettext";
 import { IS_USER_ANONYMOUS } from "@/is-user-anonymous";
 import PrinterVersion from "@/components/print/PrinterVersion.vue";
@@ -31,6 +30,8 @@ import {
 } from "@/composables/useSectionEditorsCollection";
 import { SectionEditorStub } from "@/helpers/stubs/SectionEditorStub";
 import ArtifactSectionFactory from "@/helpers/artifact-section.factory";
+import { initPdfTemplatesStore, PDF_TEMPLATES_STORE } from "@/stores/pdf-templates-store";
+import { PdfTemplateStub } from "@/helpers/stubs/PdfTemplateStub";
 
 vi.mock("@tuleap/tlp-dropdown");
 
@@ -48,14 +49,9 @@ describe("PdfExportMenuItem", () => {
                 provide: {
                     [IS_USER_ANONYMOUS.valueOf()]: true,
                     [EDITORS_COLLECTION.valueOf()]: editors_collection,
-                    [PDF_TEMPLATES.valueOf()]: [
-                        {
-                            id: "abc",
-                            label: "Blue template",
-                            description: "",
-                            style: "body { color: blue }",
-                        },
-                    ],
+                    [PDF_TEMPLATES_STORE.valueOf()]: initPdfTemplatesStore([
+                        PdfTemplateStub.blueTemplate(),
+                    ]),
                 },
             },
         });
@@ -78,7 +74,7 @@ describe("PdfExportMenuItem", () => {
                     provide: {
                         [IS_USER_ANONYMOUS.valueOf()]: false,
                         [EDITORS_COLLECTION.valueOf()]: editors_collection,
-                        [PDF_TEMPLATES.valueOf()]: templates,
+                        [PDF_TEMPLATES_STORE.valueOf()]: initPdfTemplatesStore(templates),
                     },
                 },
             });
@@ -105,14 +101,9 @@ describe("PdfExportMenuItem", () => {
                 provide: {
                     [IS_USER_ANONYMOUS.valueOf()]: false,
                     [EDITORS_COLLECTION.valueOf()]: editors_collection,
-                    [PDF_TEMPLATES.valueOf()]: [
-                        {
-                            id: "abc",
-                            label: "Blue template",
-                            description: "",
-                            style: "body { color: blue }",
-                        },
-                    ],
+                    [PDF_TEMPLATES_STORE.valueOf()]: initPdfTemplatesStore([
+                        PdfTemplateStub.blueTemplate(),
+                    ]),
                 },
             },
         });
@@ -128,14 +119,9 @@ describe("PdfExportMenuItem", () => {
                 provide: {
                     [IS_USER_ANONYMOUS.valueOf()]: false,
                     [EDITORS_COLLECTION.valueOf()]: editors_collection,
-                    [PDF_TEMPLATES.valueOf()]: [
-                        {
-                            id: "abc",
-                            label: "Blue template",
-                            description: "",
-                            style: "body { color: blue }",
-                        },
-                    ],
+                    [PDF_TEMPLATES_STORE.valueOf()]: initPdfTemplatesStore([
+                        PdfTemplateStub.blueTemplate(),
+                    ]),
                 },
             },
         });
@@ -151,20 +137,10 @@ describe("PdfExportMenuItem", () => {
                 provide: {
                     [IS_USER_ANONYMOUS.valueOf()]: false,
                     [EDITORS_COLLECTION.valueOf()]: editors_collection,
-                    [PDF_TEMPLATES.valueOf()]: [
-                        {
-                            id: "abc",
-                            label: "Blue template",
-                            description: "",
-                            style: "body { color: blue }",
-                        },
-                        {
-                            id: "def",
-                            label: "Red template",
-                            description: "",
-                            style: "body { color: red }",
-                        },
-                    ],
+                    [PDF_TEMPLATES_STORE.valueOf()]: initPdfTemplatesStore([
+                        PdfTemplateStub.blueTemplate(),
+                        PdfTemplateStub.redTemplate(),
+                    ]),
                 },
             },
         });
