@@ -152,7 +152,7 @@ final class MetadataResultBuilderTest extends TestCase
 <p><strong>Title</strong></p>\n
 EOL
             )),
-            13 => new SelectedValue('@title', new TextResultRepresentation(null)),
+            13 => new SelectedValue('@title', new TextResultRepresentation('')),
         ], $result->values);
     }
 
@@ -184,7 +184,7 @@ EOL
 <p>World!</p>\n
 EOL
             )),
-            23 => new SelectedValue('@description', new TextResultRepresentation(null)),
+            23 => new SelectedValue('@description', new TextResultRepresentation('')),
         ], $result->values);
     }
 
