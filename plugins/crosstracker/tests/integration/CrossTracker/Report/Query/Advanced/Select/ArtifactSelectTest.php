@@ -27,15 +27,14 @@ use ProjectUGroup;
 use Tracker;
 use Tuleap\CrossTracker\CrossTrackerReport;
 use Tuleap\CrossTracker\Report\Query\Advanced\CrossTrackerFieldTestCase;
-use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Representations\StaticListRepresentation;
-use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Representations\StaticListValueRepresentation;
+use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Representations\ArtifactRepresentation;
 use Tuleap\CrossTracker\REST\v1\Representation\CrossTrackerReportContentRepresentation;
 use Tuleap\CrossTracker\Tests\Report\ArtifactReportFactoryInstantiator;
 use Tuleap\DB\DBFactory;
 use Tuleap\Test\Builders\CoreDatabaseBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerDatabaseBuilder;
 
-final class StatusSelectBuilderTest extends CrossTrackerFieldTestCase
+final class ArtifactSelectTest extends CrossTrackerFieldTestCase
 {
     private PFUser $user;
     /**
@@ -43,7 +42,7 @@ final class StatusSelectBuilderTest extends CrossTrackerFieldTestCase
      */
     private array $trackers;
     /**
-     * @var array<int, StaticListValueRepresentation[]>
+     * @var array<int, ArtifactRepresentation>
      */
     private array $expected_results;
 
@@ -62,39 +61,28 @@ final class StatusSelectBuilderTest extends CrossTrackerFieldTestCase
         $sprint_tracker  = $tracker_builder->buildTracker($project_id, 'Sprint');
         $this->trackers  = [$release_tracker, $sprint_tracker];
 
-        $release_status_field_id = $tracker_builder->buildStaticListField($release_tracker->getId(), 'field_status', 'sb');
-        $release_status_values   = $tracker_builder->buildOpenAndClosedValuesForField($release_status_field_id, $release_tracker->getId(), ['Open'], ['Closed']);
-        $sprint_status_field_id  = $tracker_builder->buildStaticListField($sprint_tracker->getId(), 'field_status', 'sb');
-        $sprint_status_values    = $tracker_builder->buildOpenAndClosedValuesForField($sprint_status_field_id, $sprint_tracker->getId(), ['Open'], ['Closed', 'Also closed']);
+        $release_artifact_id_field_id = $tracker_builder->buildArtifactIdField($release_tracker->getId());
+        $sprint_artifact_id_field_id  = $tracker_builder->buildArtifactIdField($sprint_tracker->getId());
 
         $tracker_builder->setReadPermission(
-            $release_status_field_id,
+            $release_artifact_id_field_id,
             ProjectUGroup::PROJECT_MEMBERS
         );
         $tracker_builder->setReadPermission(
-            $sprint_status_field_id,
+            $sprint_artifact_id_field_id,
             ProjectUGroup::PROJECT_MEMBERS
         );
 
-        $release_artifact_empty_id = $tracker_builder->buildArtifact($release_tracker->getId());
-        $release_artifact_open_id  = $tracker_builder->buildArtifact($release_tracker->getId());
-        $sprint_artifact_closed_id = $tracker_builder->buildArtifact($sprint_tracker->getId());
+        $release_artifact_id = $tracker_builder->buildArtifact($release_tracker->getId());
+        $sprint_artifact_id  = $tracker_builder->buildArtifact($sprint_tracker->getId());
 
-        $tracker_builder->buildLastChangeset($release_artifact_empty_id);
-        $release_artifact_open_changeset  = $tracker_builder->buildLastChangeset($release_artifact_open_id);
-        $sprint_artifact_closed_changeset = $tracker_builder->buildLastChangeset($sprint_artifact_closed_id);
+        $tracker_builder->buildLastChangeset($release_artifact_id);
+        $tracker_builder->buildLastChangeset($sprint_artifact_id);
 
         $this->expected_results = [
-            $release_artifact_empty_id => [],
-            $release_artifact_open_id  => [new StaticListValueRepresentation('Open', null)],
-            $sprint_artifact_closed_id => [
-                new StaticListValueRepresentation('Closed', null),
-                new StaticListValueRepresentation('Also closed', null),
-            ],
+            $release_artifact_id => new ArtifactRepresentation("/plugins/tracker/?aid=$release_artifact_id"),
+            $sprint_artifact_id  => new ArtifactRepresentation("/plugins/tracker/?aid=$sprint_artifact_id"),
         ];
-        $tracker_builder->buildListValue($release_artifact_open_changeset, $release_status_field_id, $release_status_values['open'][0]);
-        $tracker_builder->buildListValue($sprint_artifact_closed_changeset, $sprint_status_field_id, $sprint_status_values['closed'][0]);
-        $tracker_builder->buildListValue($sprint_artifact_closed_changeset, $sprint_status_field_id, $sprint_status_values['closed'][1]);
     }
 
     private function getQueryResults(CrossTrackerReport $report, PFUser $user): CrossTrackerReportContentRepresentation
@@ -106,31 +94,29 @@ final class StatusSelectBuilderTest extends CrossTrackerFieldTestCase
         return $result;
     }
 
-    public function testItReturnsColumns(): void
+    public function testItReturnsArtifactColumn(): void
     {
         $result = $this->getQueryResults(
             new CrossTrackerReport(
                 1,
-                "SELECT @status WHERE field_status = '' OR field_status != ''",
+                'SELECT @id WHERE @id >= 1',
                 $this->trackers,
             ),
             $this->user,
         );
-        self::assertSame(3, $result->getTotalSize());
+
+        self::assertSame(2, $result->getTotalSize());
         self::assertCount(2, $result->selected);
-        self::assertSame('@status', $result->selected[1]->name);
-        self::assertSame('list_static', $result->selected[1]->type);
+        self::assertSame('@artifact', $result->selected[0]->name);
+        self::assertSame('artifact', $result->selected[0]->type);
         $values = [];
         foreach ($result->artifacts as $artifact) {
             self::assertCount(2, $artifact);
-            self::assertArrayHasKey('@status', $artifact);
-            $value = $artifact['@status'];
-            self::assertInstanceOf(StaticListRepresentation::class, $value);
-            $values[] = $value->value;
+            self::assertArrayHasKey('@artifact', $artifact);
+            $value = $artifact['@artifact'];
+            self::assertInstanceOf(ArtifactRepresentation::class, $value);
+            $values[] = $value;
         }
-        self::assertEqualsCanonicalizing(
-            array_values($this->expected_results),
-            $values
-        );
+        self::assertEqualsCanonicalizing(array_values($this->expected_results), $values);
     }
 }

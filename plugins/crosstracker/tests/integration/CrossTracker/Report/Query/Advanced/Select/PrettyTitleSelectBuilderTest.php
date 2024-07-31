@@ -139,12 +139,12 @@ final class PrettyTitleSelectBuilderTest extends CrossTrackerFieldTestCase
         );
 
         self::assertSame(2, $result->getTotalSize());
-        self::assertCount(1, $result->selected);
-        self::assertSame('@pretty_title', $result->selected[0]->name);
-        self::assertSame('pretty_title', $result->selected[0]->type);
+        self::assertCount(2, $result->selected);
+        self::assertSame('@pretty_title', $result->selected[1]->name);
+        self::assertSame('pretty_title', $result->selected[1]->type);
         $values = [];
         foreach ($result->artifacts as $artifact) {
-            self::assertCount(1, $artifact);
+            self::assertCount(2, $artifact);
             self::assertArrayHasKey('@pretty_title', $artifact);
             $value = $artifact['@pretty_title'];
             self::assertInstanceOf(PrettyTitleRepresentation::class, $value);

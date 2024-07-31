@@ -128,11 +128,12 @@ final class TextSelectFromBuilderTest extends CrossTrackerFieldTestCase
             $this->user,
         );
         self::assertSame(2, $result->getTotalSize());
-        self::assertCount(1, $result->selected);
-        self::assertSame('text_field', $result->selected[0]->name);
+        self::assertCount(2, $result->selected);
+        self::assertSame('text_field', $result->selected[1]->name);
+        self::assertSame('text', $result->selected[1]->type);
         $values = [];
         foreach ($result->artifacts as $artifact) {
-            self::assertCount(1, $artifact);
+            self::assertCount(2, $artifact);
             self::assertArrayHasKey('text_field', $artifact);
             $value = $artifact['text_field'];
             self::assertInstanceOf(TextResultRepresentation::class, $value);

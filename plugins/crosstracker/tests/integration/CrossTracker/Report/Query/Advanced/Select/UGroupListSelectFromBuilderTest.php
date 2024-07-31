@@ -161,12 +161,12 @@ final class UGroupListSelectFromBuilderTest extends CrossTrackerFieldTestCase
         );
 
         self::assertSame(3, $result->getTotalSize());
-        self::assertCount(1, $result->selected);
-        self::assertSame('ugroup_list_field', $result->selected[0]->name);
-        self::assertSame('list_user_group', $result->selected[0]->type);
+        self::assertCount(2, $result->selected);
+        self::assertSame('ugroup_list_field', $result->selected[1]->name);
+        self::assertSame('list_user_group', $result->selected[1]->type);
         $values = [];
         foreach ($result->artifacts as $artifact) {
-            self::assertCount(1, $artifact);
+            self::assertCount(2, $artifact);
             self::assertArrayHasKey('ugroup_list_field', $artifact);
             $value = $artifact['ugroup_list_field'];
             self::assertInstanceOf(UGroupListRepresentation::class, $value);

@@ -109,12 +109,12 @@ final class ProjectNameSelectBuilderTest extends CrossTrackerFieldTestCase
         );
 
         self::assertSame(2, $result->getTotalSize());
-        self::assertCount(1, $result->selected);
-        self::assertSame('@project.name', $result->selected[0]->name);
-        self::assertSame('project', $result->selected[0]->type);
+        self::assertCount(2, $result->selected);
+        self::assertSame('@project.name', $result->selected[1]->name);
+        self::assertSame('project', $result->selected[1]->type);
         $values = [];
         foreach ($result->artifacts as $artifact) {
-            self::assertCount(1, $artifact);
+            self::assertCount(2, $artifact);
             self::assertArrayHasKey('@project.name', $artifact);
             $value = $artifact['@project.name'];
             self::assertInstanceOf(ProjectRepresentation::class, $value);

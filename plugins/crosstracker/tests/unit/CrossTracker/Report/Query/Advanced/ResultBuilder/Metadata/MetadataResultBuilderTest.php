@@ -38,6 +38,7 @@ use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Metadata\Special\Pro
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Metadata\Special\TrackerName\TrackerNameResultBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Metadata\Text\MetadataTextResultBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Metadata\User\MetadataUserResultBuilder;
+use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Representations\ArtifactRepresentation;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Representations\DateResultRepresentation;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Representations\NumericResultRepresentation;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Representations\PrettyTitleRepresentation;
@@ -103,6 +104,7 @@ final class MetadataResultBuilderTest extends TestCase
             new ProjectNameResultBuilder(),
             new TrackerNameResultBuilder(),
             new PrettyTitleResultBuilder($artifact_retriever, $text_value_interpreter),
+            new ArtifactResultBuilder($artifact_retriever),
         );
 
         $user_helper->method('getDisplayNameFromUser')->willReturnCallback(static fn(PFUser $user) => $user->getRealName());
@@ -460,6 +462,31 @@ EOL
             121 => new SelectedValue('@pretty_title', new PrettyTitleRepresentation('tracker_38', 'inca-silver', 121, 'title 121')),
             122 => new SelectedValue('@pretty_title', new PrettyTitleRepresentation('tracker_4', 'neon-green', 122, 'title 122')),
             123 => new SelectedValue('@pretty_title', new PrettyTitleRepresentation('tracker_4', 'neon-green', 123, '')),
+        ], $result->values);
+    }
+
+    public function testItReturnsValuesForArtifact(): void
+    {
+        $result = $this->getSelectedResult(
+            new Metadata('artifact'),
+            RetrieveArtifactStub::withArtifacts(
+                ArtifactTestBuilder::anArtifact(131)->inTracker($this->first_tracker)->build(),
+                ArtifactTestBuilder::anArtifact(132)->inTracker($this->second_tracker)->build(),
+            ),
+            [
+                ['id' => 131],
+                ['id' => 132],
+            ]
+        );
+
+        self::assertEquals(
+            new CrossTrackerSelectedRepresentation('@artifact', CrossTrackerSelectedType::TYPE_ARTIFACT),
+            $result->selected,
+        );
+        self::assertCount(2, $result->values);
+        self::assertEqualsCanonicalizing([
+            131 => new SelectedValue('@artifact', new ArtifactRepresentation('/plugins/tracker/?aid=131')),
+            132 => new SelectedValue('@artifact', new ArtifactRepresentation('/plugins/tracker/?aid=132')),
         ], $result->values);
     }
 }

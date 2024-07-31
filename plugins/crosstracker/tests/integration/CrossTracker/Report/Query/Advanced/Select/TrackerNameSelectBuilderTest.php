@@ -105,12 +105,12 @@ final class TrackerNameSelectBuilderTest extends CrossTrackerFieldTestCase
         );
 
         self::assertSame(2, $result->getTotalSize());
-        self::assertCount(1, $result->selected);
-        self::assertSame('@tracker.name', $result->selected[0]->name);
-        self::assertSame('tracker', $result->selected[0]->type);
+        self::assertCount(2, $result->selected);
+        self::assertSame('@tracker.name', $result->selected[1]->name);
+        self::assertSame('tracker', $result->selected[1]->type);
         $values = [];
         foreach ($result->artifacts as $artifact) {
-            self::assertCount(1, $artifact);
+            self::assertCount(2, $artifact);
             self::assertArrayHasKey('@tracker.name', $artifact);
             $value = $artifact['@tracker.name'];
             self::assertInstanceOf(TrackerRepresentation::class, $value);

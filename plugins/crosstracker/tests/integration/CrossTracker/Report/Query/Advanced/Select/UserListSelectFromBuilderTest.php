@@ -155,12 +155,12 @@ final class UserListSelectFromBuilderTest extends CrossTrackerFieldTestCase
         );
 
         self::assertSame(3, $result->getTotalSize());
-        self::assertCount(1, $result->selected);
-        self::assertSame('user_list_field', $result->selected[0]->name);
-        self::assertSame('list_user', $result->selected[0]->type);
+        self::assertCount(2, $result->selected);
+        self::assertSame('user_list_field', $result->selected[1]->name);
+        self::assertSame('list_user', $result->selected[1]->type);
         $values = [];
         foreach ($result->artifacts as $artifact) {
-            self::assertCount(1, $artifact);
+            self::assertCount(2, $artifact);
             self::assertArrayHasKey('user_list_field', $artifact);
             $value = $artifact['user_list_field'];
             self::assertInstanceOf(UserListRepresentation::class, $value);

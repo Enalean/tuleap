@@ -106,12 +106,12 @@ final class ArtifactIdSelectBuilderTest extends CrossTrackerFieldTestCase
         );
 
         self::assertSame(2, $result->getTotalSize());
-        self::assertCount(1, $result->selected);
-        self::assertSame('@id', $result->selected[0]->name);
-        self::assertSame('numeric', $result->selected[0]->type);
+        self::assertCount(2, $result->selected);
+        self::assertSame('@id', $result->selected[1]->name);
+        self::assertSame('numeric', $result->selected[1]->type);
         $values = [];
         foreach ($result->artifacts as $artifact) {
-            self::assertCount(1, $artifact);
+            self::assertCount(2, $artifact);
             self::assertArrayHasKey('@id', $artifact);
             $value = $artifact['@id'];
             self::assertInstanceOf(NumericResultRepresentation::class, $value);
