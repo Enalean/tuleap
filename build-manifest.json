@@ -40,6 +40,10 @@
         "invite-buddies": {
             "src": "src/scripts/main/src/invite-buddies/",
             "po": "src/scripts/main/src/invite-buddies/po"
+        },
+        "prose-mirror": {
+            "src": "lib/frontend/prose-mirror-editor/src",
+            "po": "lib/frontend/prose-mirror-editor/po"
         }
     },
     "gettext-vue3": {

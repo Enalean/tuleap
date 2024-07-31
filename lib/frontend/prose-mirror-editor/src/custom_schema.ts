@@ -16,22 +16,12 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-import { vite, viteDtsPlugin } from "@tuleap/build-system-configurator";
-import * as path from "node:path";
-import POGettextPlugin from "@tuleap/po-gettext-plugin";
-export default vite.defineLibConfig({
-    build: {
-        lib: {
-            entry: path.resolve(__dirname, "src/index.ts"),
-            name: "prose-mirror-editor",
-        },
-        rollupOptions: {
-            output: {
-                globals: {
-                    "@tuleap/gettext": "@tuleap/gettext",
-                },
-            },
-        },
-    },
-    plugins: [POGettextPlugin.vite(), viteDtsPlugin()],
+
+import { Schema } from "prosemirror-model";
+import { addListNodes } from "prosemirror-schema-list";
+import { schema } from "prosemirror-schema-basic";
+
+export const custom_schema: Schema = new Schema({
+    nodes: addListNodes(schema.spec.nodes, "paragraph block*", "block"),
+    marks: schema.spec.marks,
 });
