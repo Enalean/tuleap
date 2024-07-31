@@ -28,6 +28,7 @@ use Tracker_FormElement;
 use Tracker_FormElement_Field_List;
 use Tracker_FormElementFactory;
 use Tuleap\Tracker\Artifact\Artifact;
+use function Psl\Str\lowercase;
 
 final class TrackerDatabaseBuilder
 {
@@ -41,10 +42,11 @@ final class TrackerDatabaseBuilder
         $tracker_id = (int) $this->db->insertReturnId(
             'tracker',
             [
-                'group_id' => $project_id,
-                'name'     => $name,
-                'status'   => 'A',
-                'color'    => $color,
+                'group_id'  => $project_id,
+                'name'      => $name,
+                'item_name' => lowercase($name),
+                'status'    => 'A',
+                'color'     => $color,
             ]
         );
         $tracker    = $factory->getTrackerById($tracker_id);

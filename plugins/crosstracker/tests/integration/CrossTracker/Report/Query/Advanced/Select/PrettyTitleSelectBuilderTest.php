@@ -22,29 +22,29 @@ declare(strict_types=1);
 
 namespace Tuleap\CrossTracker\Report\Query\Advanced\Select;
 
+use Codendi_HTMLPurifier;
+use PFUser;
 use ProjectUGroup;
+use Tracker;
+use Tuleap\CrossTracker\CrossTrackerReport;
 use Tuleap\CrossTracker\Report\Query\Advanced\CrossTrackerFieldTestCase;
-use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\CrossTrackerExpertQueryReportDao;
-use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Metadata\MetadataSelectFromBuilder;
-use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Metadata\Semantic\AssignedTo\AssignedToSelectFromBuilder;
-use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Metadata\Semantic\Description\DescriptionSelectFromBuilder;
-use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Metadata\Semantic\Status\StatusSelectFromBuilder;
-use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Metadata\Semantic\Title\TitleSelectFromBuilder;
-use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Metadata\Special\PrettyTitle\PrettyTitleSelectFromBuilder;
-use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Metadata\Special\ProjectName\ProjectNameSelectFromBuilder;
+use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Representations\PrettyTitleRepresentation;
+use Tuleap\CrossTracker\REST\v1\Representation\CrossTrackerReportContentRepresentation;
+use Tuleap\CrossTracker\Tests\Report\ArtifactReportFactoryInstantiator;
 use Tuleap\DB\DBFactory;
+use Tuleap\Markdown\CommonMarkInterpreter;
 use Tuleap\Test\Builders\CoreDatabaseBuilder;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
 use Tuleap\Tracker\Test\Builders\TrackerDatabaseBuilder;
 
 final class PrettyTitleSelectBuilderTest extends CrossTrackerFieldTestCase
 {
+    private PFUser $user;
     /**
-     * @var list<int>
+     * @var Tracker[]
      */
-    private array $artifact_ids;
+    private array $trackers;
     /**
-     * @var array<int, array>
+     * @var array<int, PrettyTitleRepresentation>
      */
     private array $expected_values;
 
@@ -56,11 +56,12 @@ final class PrettyTitleSelectBuilderTest extends CrossTrackerFieldTestCase
 
         $project    = $core_builder->buildProject('project_name');
         $project_id = (int) $project->getID();
-        $user       = $core_builder->buildUser('project_member', 'Project Member', 'project_member@example.com');
-        $core_builder->addUserToProjectMembers((int) $user->getId(), $project_id);
+        $this->user = $core_builder->buildUser('project_member', 'Project Member', 'project_member@example.com');
+        $core_builder->addUserToProjectMembers((int) $this->user->getId(), $project_id);
 
-        $release_tracker = $tracker_builder->buildTracker($project_id, 'Release');
-        $sprint_tracker  = $tracker_builder->buildTracker($project_id, 'Sprint');
+        $release_tracker = $tracker_builder->buildTracker($project_id, 'Release', 'deep-blue');
+        $sprint_tracker  = $tracker_builder->buildTracker($project_id, 'Sprint', 'ultra-violet');
+        $this->trackers  = [$release_tracker, $sprint_tracker];
 
         $release_text_field_id = $tracker_builder->buildTextField(
             $release_tracker->getId(),
@@ -72,6 +73,8 @@ final class PrettyTitleSelectBuilderTest extends CrossTrackerFieldTestCase
             'text_field',
         );
         $tracker_builder->buildTitleSemantic($sprint_tracker->getId(), $sprint_text_field_id);
+        $release_artifact_id_field_id = $tracker_builder->buildArtifactIdField($release_tracker->getId());
+        $sprint_artifact_id_field_id  = $tracker_builder->buildArtifactIdField($sprint_tracker->getId());
 
         $tracker_builder->setReadPermission(
             $release_text_field_id,
@@ -81,70 +84,72 @@ final class PrettyTitleSelectBuilderTest extends CrossTrackerFieldTestCase
             $sprint_text_field_id,
             ProjectUGroup::PROJECT_MEMBERS
         );
+        $tracker_builder->setReadPermission(
+            $release_artifact_id_field_id,
+            ProjectUGroup::PROJECT_MEMBERS
+        );
+        $tracker_builder->setReadPermission(
+            $sprint_artifact_id_field_id,
+            ProjectUGroup::PROJECT_MEMBERS
+        );
 
-        $release_artifact_with_text_id = $tracker_builder->buildArtifact($release_tracker->getId());
-        $sprint_artifact_with_text_id  = $tracker_builder->buildArtifact($sprint_tracker->getId());
-        $this->artifact_ids            = [$release_artifact_with_text_id, $sprint_artifact_with_text_id];
+        $release_artifact_id = $tracker_builder->buildArtifact($release_tracker->getId());
+        $sprint_artifact_id  = $tracker_builder->buildArtifact($sprint_tracker->getId());
 
-        $release_artifact_with_text_changeset = $tracker_builder->buildLastChangeset($release_artifact_with_text_id);
-        $sprint_artifact_with_text_changeset  = $tracker_builder->buildLastChangeset($sprint_artifact_with_text_id);
+        $release_artifact_changeset = $tracker_builder->buildLastChangeset($release_artifact_id);
+        $sprint_artifact_changeset  = $tracker_builder->buildLastChangeset($sprint_artifact_id);
 
-        $this->expected_values = [
-            $release_artifact_with_text_id => [
-                '@pretty_title.tracker' => 'Release',
-                '@pretty_title.color'   => 'inca-silver',
-                '@pretty_title'         => 'Hello World!',
-                '@pretty_title.format'  => 'text',
-            ],
-            $sprint_artifact_with_text_id  => [
-                '@pretty_title.tracker' => 'Sprint',
-                '@pretty_title.color'   => 'inca-silver',
-                '@pretty_title'         => '**Title**',
-                '@pretty_title.format'  => 'commonmark',
-            ],
+        $commonmark_interpreter = CommonMarkInterpreter::build(Codendi_HTMLPurifier::instance());
+        $this->expected_values  = [
+            $release_artifact_id => new PrettyTitleRepresentation('release', 'deep-blue', $release_artifact_id, 'Hello World!'),
+            $sprint_artifact_id  => new PrettyTitleRepresentation('sprint', 'ultra-violet', $sprint_artifact_id, $commonmark_interpreter->getInterpretedContentWithReferences('**Title**', $project_id)),
         ];
         $tracker_builder->buildTextValue(
-            $release_artifact_with_text_changeset,
+            $release_artifact_changeset,
             $release_text_field_id,
             'Hello World!',
             'text'
         );
         $tracker_builder->buildTextValue(
-            $sprint_artifact_with_text_changeset,
+            $sprint_artifact_changeset,
             $sprint_text_field_id,
             '**Title**',
             'commonmark'
         );
     }
 
+    private function getQueryResults(CrossTrackerReport $report, PFUser $user): CrossTrackerReportContentRepresentation
+    {
+        $result = (new ArtifactReportFactoryInstantiator())
+            ->getFactory()
+            ->getArtifactsMatchingReport($report, $user, 10, 0, false);
+        assert($result instanceof CrossTrackerReportContentRepresentation);
+        return $result;
+    }
+
     public function testItReturnsColumns(): void
     {
-        $dao     = new CrossTrackerExpertQueryReportDao();
-        $builder = new MetadataSelectFromBuilder(
-            new TitleSelectFromBuilder(),
-            new DescriptionSelectFromBuilder(),
-            new StatusSelectFromBuilder(),
-            new AssignedToSelectFromBuilder(),
-            new ProjectNameSelectFromBuilder(),
-            new PrettyTitleSelectFromBuilder(),
-        );
-        $results = $dao->searchArtifactsColumnsMatchingIds(
-            $builder->getSelectFrom(new Metadata('pretty_title')),
-            $this->artifact_ids,
+        $result = $this->getQueryResults(
+            new CrossTrackerReport(
+                1,
+                "SELECT @pretty_title WHERE @title != ''",
+                $this->trackers,
+            ),
+            $this->user,
         );
 
-        self::assertCount(2, $results);
-        foreach ($results as $result) {
-            self::assertArrayHasKey('id', $result);
-            $id = $result['id'];
-            self::assertArrayHasKey('@pretty_title.tracker', $result);
-            self::assertArrayHasKey('@pretty_title.color', $result);
-            self::assertArrayHasKey('@pretty_title', $result);
-            self::assertArrayHasKey('@pretty_title.format', $result);
-            self::assertSame($this->expected_values[$id]['@pretty_title.tracker'], $result['@pretty_title.tracker']);
-            self::assertSame($this->expected_values[$id]['@pretty_title.color'], $result['@pretty_title.color']);
-            self::assertSame($this->expected_values[$id]['@pretty_title'], $result['@pretty_title']);
-            self::assertSame($this->expected_values[$id]['@pretty_title.format'], $result['@pretty_title.format']);
+        self::assertSame(2, $result->getTotalSize());
+        self::assertCount(1, $result->selected);
+        self::assertSame('@pretty_title', $result->selected[0]->name);
+        self::assertSame('pretty_title', $result->selected[0]->type);
+        $values = [];
+        foreach ($result->artifacts as $artifact) {
+            self::assertCount(1, $artifact);
+            self::assertArrayHasKey('@pretty_title', $artifact);
+            $value = $artifact['@pretty_title'];
+            self::assertInstanceOf(PrettyTitleRepresentation::class, $value);
+            $values[] = $value;
         }
+        self::assertEqualsCanonicalizing(array_values($this->expected_values), $values);
     }
 }

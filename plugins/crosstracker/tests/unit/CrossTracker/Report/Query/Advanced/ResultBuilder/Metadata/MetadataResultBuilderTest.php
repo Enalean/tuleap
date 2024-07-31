@@ -33,12 +33,14 @@ use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Metadata\AlwaysThere
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Metadata\Date\MetadataDateResultBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Metadata\Semantic\AssignedTo\AssignedToResultBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Metadata\Semantic\Status\StatusResultBuilder;
+use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Metadata\Special\PrettyTitle\PrettyTitleResultBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Metadata\Special\ProjectName\ProjectNameResultBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Metadata\Special\TrackerName\TrackerNameResultBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Metadata\Text\MetadataTextResultBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Metadata\User\MetadataUserResultBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Representations\DateResultRepresentation;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Representations\NumericResultRepresentation;
+use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Representations\PrettyTitleRepresentation;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Representations\ProjectRepresentation;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Representations\StaticListRepresentation;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Representations\StaticListValueRepresentation;
@@ -84,20 +86,15 @@ final class MetadataResultBuilderTest extends TestCase
         RetrieveArtifactStub $artifact_retriever,
         array $selected_result,
     ): SelectedValuesCollection {
-        $purifier       = Codendi_HTMLPurifier::instance();
-        $user_helper    = $this->createMock(UserHelper::class);
-        $user_retriever = RetrieveUserByIdStub::withUsers(
+        $purifier               = Codendi_HTMLPurifier::instance();
+        $user_helper            = $this->createMock(UserHelper::class);
+        $user_retriever         = RetrieveUserByIdStub::withUsers(
             UserTestBuilder::aUser()->withId(135)->withUserName('jean')->withRealName('Jean Eude')->withAvatarUrl('https://example.com/jean')->build(),
             UserTestBuilder::aUser()->withId(145)->withUserName('alice')->withRealName('Alice')->withAvatarUrl('https://example.com/alice')->build(),
         );
-        $builder        = new MetadataResultBuilder(
-            new MetadataTextResultBuilder(
-                $artifact_retriever,
-                new TextValueInterpreter(
-                    $purifier,
-                    CommonMarkInterpreter::build($purifier),
-                ),
-            ),
+        $text_value_interpreter = new TextValueInterpreter($purifier, CommonMarkInterpreter::build($purifier));
+        $builder                = new MetadataResultBuilder(
+            new MetadataTextResultBuilder($artifact_retriever, $text_value_interpreter),
             new StatusResultBuilder(),
             new AssignedToResultBuilder($user_retriever, $user_helper),
             new MetadataDateResultBuilder(),
@@ -105,6 +102,7 @@ final class MetadataResultBuilderTest extends TestCase
             new ArtifactIdResultBuilder(),
             new ProjectNameResultBuilder(),
             new TrackerNameResultBuilder(),
+            new PrettyTitleResultBuilder($artifact_retriever, $text_value_interpreter),
         );
 
         $user_helper->method('getDisplayNameFromUser')->willReturnCallback(static fn(PFUser $user) => $user->getRealName());
@@ -437,21 +435,31 @@ EOL
         ], $result->values);
     }
 
-    public function testItReturnsEmptyForPrettyTitle(): void
+    public function testItReturnsValuesForPrettyTitle(): void
     {
         $result = $this->getSelectedResult(
             new Metadata('pretty_title'),
             RetrieveArtifactStub::withArtifacts(
                 ArtifactTestBuilder::anArtifact(121)->inTracker($this->first_tracker)->build(),
                 ArtifactTestBuilder::anArtifact(122)->inTracker($this->second_tracker)->build(),
+                ArtifactTestBuilder::anArtifact(123)->inTracker($this->second_tracker)->build(),
             ),
             [
-                ['id' => 121, '@tracker.name' => 'Tracker 38', '@tracker.color' => 'inca_silver', '@id' => 121, '@title' => 'title', '@title_format' => 'text'],
-                ['id' => 122, '@tracker.name' => 'Tracker 4', '@tracker.color' => 'inca_silver', '@id' => 122, '@title' => 'title', '@title_format' => 'text'],
+                ['id' => 121, '@pretty_title.tracker' => 'tracker_38', '@pretty_title.color' => 'inca-silver', '@pretty_title' => 'title 121', '@pretty_title.format' => 'text'],
+                ['id' => 122, '@pretty_title.tracker' => 'tracker_4', '@pretty_title.color' => 'neon-green', '@pretty_title' => 'title 122', '@pretty_title.format' => 'text'],
+                ['id' => 123, '@pretty_title.tracker' => 'tracker_4', '@pretty_title.color' => 'neon-green', '@pretty_title' => null, '@pretty_title.format' => null],
             ]
         );
 
-        self::assertNull($result->selected);
-        self::assertEmpty($result->values);
+        self::assertEquals(
+            new CrossTrackerSelectedRepresentation('@pretty_title', CrossTrackerSelectedType::TYPE_PRETTY_TITLE),
+            $result->selected,
+        );
+        self::assertCount(3, $result->values);
+        self::assertEqualsCanonicalizing([
+            121 => new SelectedValue('@pretty_title', new PrettyTitleRepresentation('tracker_38', 'inca-silver', 121, 'title 121')),
+            122 => new SelectedValue('@pretty_title', new PrettyTitleRepresentation('tracker_4', 'neon-green', 122, 'title 122')),
+            123 => new SelectedValue('@pretty_title', new PrettyTitleRepresentation('tracker_4', 'neon-green', 123, '')),
+        ], $result->values);
     }
 }
