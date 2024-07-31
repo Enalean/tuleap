@@ -58,7 +58,7 @@ function getParagraph(): TemplateResult {
 </p>
 
 <p>
-    <a href="#">Normal link</a>
+    <a href="https://example.com">Normal link</a>
 </p>
 
 <blockquote>

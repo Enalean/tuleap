@@ -64,9 +64,9 @@ function getTemplate(args: PaneProps): TemplateResult {
             </h1>
         </div>${tabs ? html`
         <nav class="tlp-tabs">
-              <a class="tlp-tab">Overview</a>
-              <a class="tlp-tab tlp-tab-active">Comments</a>
-              <a class="tlp-tab">History</a>
+              <a href="https://example.com" class="tlp-tab">Overview</a>
+              <a href="https://example.com" class="tlp-tab tlp-tab-active">Comments</a>
+              <a href="https://example.com" class="tlp-tab">History</a>
         </nav>` : ``}
         <section class="tlp-pane-section">
             <p>${content}</p>${table ? html`
