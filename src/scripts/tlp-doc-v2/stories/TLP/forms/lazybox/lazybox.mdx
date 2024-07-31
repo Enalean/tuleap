@@ -8,7 +8,7 @@ import * as LazyboxStories from "./lazybox.stories";
 Lazybox displays groups of items that can be fetched separately from each other and lets users select items among them. It is &quot;lazy&quot; because you need to tell it what to do. If you don't call any of the methods, it will stay a blank box with an empty dropdown. It is a toolkit to build an auto-completer.
 
 If you need an auto-completer, a way to search among a lot of values fetched asynchronously, if each group of items can be fetched separately from the others, if you need to add new values dynamically, you should use it.
-It has no built-in <code>&lt;select&gt;</code> element, it is not linked to <code>&lt;form&gt;</code> validation / submit. If you need that, please use <a href="/?path=/docs/tlp-forms-list-picker--docs">List picker</a> or add the values to a hidden <code >&lt;input&gt;</code> by yourself.
+It has no built-in <code>&lt;select&gt;</code> element, it is not linked to <code>&lt;form&gt;</code> validation / submit. If you need that, please use [List picker][list picker] or add the values to a hidden <code >&lt;input&gt;</code> by yourself.
 
 ## Options
 - <code>is_multiple: boolean</code>: Single value selection when set to false, multiple values selection when set to true.
@@ -291,3 +291,5 @@ lazybox.options = {
 lazybox.replaceDropdownContent([users_group]);
 lazybox.replaceSelection([users[0]]);
 ```
+
+[list picker]: ?path=/docs/tlp-forms-list-picker--docs
