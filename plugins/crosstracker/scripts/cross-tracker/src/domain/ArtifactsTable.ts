@@ -36,7 +36,7 @@ type NumericCell = {
 
 type TextCell = {
     readonly type: typeof TEXT_CELL;
-    readonly value: Option<string>;
+    readonly value: string;
 };
 
 export type Cell = DateCell | NumericCell | TextCell;

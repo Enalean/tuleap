@@ -112,7 +112,7 @@ describe(`SelectableTable`, () => {
                     new ArtifactRowBuilder()
                         .addCell("title", {
                             type: TEXT_CELL,
-                            value: Option.fromValue("eupepticism uninodal"),
+                            value: "eupepticism uninodal",
                         })
                         .build(),
                 )
@@ -172,7 +172,7 @@ describe(`SelectableTable`, () => {
                         })
                         .addCell(TEXT_COLUMN_NAME, {
                             type: TEXT_CELL,
-                            value: Option.fromValue("<span>Griffith</span>"),
+                            value: "<p>Griffith</p>",
                         })
                         .build(),
                 )
@@ -272,7 +272,7 @@ describe(`SelectableTable`, () => {
                     new ArtifactRowBuilder()
                         .addCell(TEXT_COLUMN_NAME, {
                             type: TEXT_CELL,
-                            value: Option.fromValue("not hehehe"),
+                            value: "not hehehe",
                         })
                         .build(),
                 )
@@ -280,7 +280,7 @@ describe(`SelectableTable`, () => {
                     new ArtifactRowBuilder()
                         .addCell(TEXT_COLUMN_NAME, {
                             type: TEXT_CELL,
-                            value: Option.fromValue("hehe"),
+                            value: "hehe",
                         })
                         .build(),
                 )

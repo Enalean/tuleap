@@ -53,8 +53,7 @@ const isNumericSelectableRepresentation = (
 
 const isTextSelectableRepresentation = (
     representation: SelectableRepresentation,
-): representation is TextSelectableRepresentation =>
-    representation.value === null || typeof representation.value === "string";
+): representation is TextSelectableRepresentation => typeof representation.value === "string";
 
 function buildCell(
     selectable: Selectable,
@@ -97,7 +96,7 @@ function buildCell(
             }
             return ok({
                 type: TEXT_CELL,
-                value: Option.fromNullable(artifact_value.value),
+                value: artifact_value.value,
             });
         default:
             return err(Fault.fromMessage(`Selectable type is not supported`));

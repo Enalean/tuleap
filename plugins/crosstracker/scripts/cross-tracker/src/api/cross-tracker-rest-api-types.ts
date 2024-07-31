@@ -48,7 +48,7 @@ export type NumericSelectableRepresentation = {
 };
 
 export type TextSelectableRepresentation = {
-    readonly value: string | null;
+    readonly value: string;
 };
 
 export type SelectableRepresentation =

@@ -165,10 +165,12 @@ function renderCell(row: ArtifactRow, column_name: string): string {
     if (cell.type === DATE_CELL) {
         const formatter = cell.with_time ? date_time_formatter : date_formatter;
         return cell.value.mapOr(formatter.format, "");
-    } else if (cell.type === NUMERIC_CELL) {
+    }
+    if (cell.type === NUMERIC_CELL) {
         return String(cell.value.unwrapOr(""));
-    } else if (cell.type === TEXT_CELL) {
-        return cell.value.unwrapOr("");
+    }
+    if (cell.type === TEXT_CELL) {
+        return cell.value;
     }
     return "";
 }
