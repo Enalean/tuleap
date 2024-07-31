@@ -47,7 +47,7 @@ final class SaveQueryWithPredefinedTimePeriodStub implements SaveQueryWithPredef
         return $this->has_been_called;
     }
 
-    public function saveQueryWithPredefinedTimePeriod(int $widget_id, PredefinedTimePeriod $predefined_time_period): void
+    public function saveQueryWithPredefinedTimePeriod(int $widget_id, PredefinedTimePeriod $predefined_time_period, array $user_ids_to_insert, array $user_ids_to_remove): void
     {
         if ($this->should_not_be_called) {
             throw new Error("Shouldn't have been called");

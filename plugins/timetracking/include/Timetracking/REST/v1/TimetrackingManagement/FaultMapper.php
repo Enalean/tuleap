@@ -36,7 +36,8 @@ final class FaultMapper
             QueryEndDateLesserThanStartDateFault::class,
                 QueryInvalidDateFormatFault::class,
                 QueryOnlyOneDateProvidedFault::class,
-                QueryPredefinedTimePeriodAndDatesProvidedFault::class
+                QueryPredefinedTimePeriodAndDatesProvidedFault::class,
+                QueryInvalidUserIdFault::class
             => 400,
             default => 500,
         };

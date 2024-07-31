@@ -42,10 +42,17 @@ final class QueryPUTRepresentation
      */
     public ?string $predefined_time_period = null;
 
-    public function __construct(?string $start_date, ?string $end_date, ?string $predefined_time_period)
+    /**
+     * @var QueryUserRepresentation[] $users {@from body} {@required false}
+     * @psalm-param QueryUserRepresentation[] $users
+     */
+    public array $users = [];
+
+    public function __construct(?string $start_date, ?string $end_date, ?string $predefined_time_period, array $users)
     {
         $this->start_date             = $start_date;
         $this->end_date               = $end_date;
         $this->predefined_time_period = $predefined_time_period;
+        $this->users                  = $users;
     }
 }

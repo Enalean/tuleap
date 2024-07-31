@@ -38,15 +38,15 @@ final readonly class TimetrackingManagementWidgetSaver
     /**
      * @return Ok<true>|Err<Fault>
      */
-    public function save(int $widget_id, Period $period): Ok|Err
+    public function save(int $widget_id, Period $period, UserDiff $user_diff): Ok|Err
     {
         if ($period->isPredefined() && $period->getPeriod()) {
-            $this->save_with_time_period->saveQueryWithPredefinedTimePeriod($widget_id, $period->getPeriod());
+            $this->save_with_time_period->saveQueryWithPredefinedTimePeriod($widget_id, $period->getPeriod(), $user_diff->getUserIdsToInsert(), $user_diff->getUserIdsToRemove());
             return Result::ok(true);
         }
 
         if ($period->getStartDate() && $period->getEndDate()) {
-            $this->save_with_dates->saveQueryWithDates($widget_id, $period->getStartDate(), $period->getEndDate());
+            $this->save_with_dates->saveQueryWithDates($widget_id, $period->getStartDate(), $period->getEndDate(), $user_diff->getUserIdsToInsert(), $user_diff->getUserIdsToRemove());
         }
         return Result::ok(true);
     }

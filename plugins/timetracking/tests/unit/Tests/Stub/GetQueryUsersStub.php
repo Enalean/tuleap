@@ -20,14 +20,23 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Timetracking\REST\v1\TimetrackingManagement;
+namespace Tuleap\Timetracking\Tests\Stub;
 
-interface SaveQueryWithPredefinedTimePeriod
+use Tuleap\Timetracking\REST\v1\TimetrackingManagement\GetQueryUsers;
+
+final readonly class GetQueryUsersStub implements GetQueryUsers
 {
-    public function saveQueryWithPredefinedTimePeriod(
-        int $widget_id,
-        PredefinedTimePeriod $predefined_time_period,
-        array $user_ids_to_insert,
-        array $user_ids_to_remove,
-    ): void;
+    public function __construct(private array $users)
+    {
+    }
+
+    public function getQueryUsers(int $widget_id): array
+    {
+        return $this->users;
+    }
+
+    public static function withUserIds(?int ...$user_ids): self
+    {
+        return new self([...$user_ids]);
+    }
 }

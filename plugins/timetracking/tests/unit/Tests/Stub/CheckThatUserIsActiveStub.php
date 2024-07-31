@@ -20,14 +20,23 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Timetracking\REST\v1\TimetrackingManagement;
+namespace Tuleap\Timetracking\Tests\Stub;
 
-interface SaveQueryWithPredefinedTimePeriod
+use Tuleap\Timetracking\REST\v1\TimetrackingManagement\CheckThatUserIsActive;
+
+final readonly class CheckThatUserIsActiveStub implements CheckThatUserIsActive
 {
-    public function saveQueryWithPredefinedTimePeriod(
-        int $widget_id,
-        PredefinedTimePeriod $predefined_time_period,
-        array $user_ids_to_insert,
-        array $user_ids_to_remove,
-    ): void;
+    public function __construct(private array $active_users_ids)
+    {
+    }
+
+    public function checkThatUserIsActive(int $user_id): bool
+    {
+        return in_array($user_id, $this->active_users_ids);
+    }
+
+    public static function withActiveUsers(int ...$users_ids): self
+    {
+        return new self([...$users_ids]);
+    }
 }

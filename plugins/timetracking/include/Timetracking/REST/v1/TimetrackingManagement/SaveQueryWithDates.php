@@ -26,5 +26,11 @@ use DateTimeImmutable;
 
 interface SaveQueryWithDates
 {
-    public function saveQueryWithDates(int $widget_id, DateTimeImmutable $start_date, DateTimeImmutable $end_date): void;
+    public function saveQueryWithDates(
+        int $widget_id,
+        DateTimeImmutable $start_date,
+        DateTimeImmutable $end_date,
+        array $user_ids_to_insert,
+        array $user_ids_to_remove,
+    ): void;
 }

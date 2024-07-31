@@ -22,12 +22,15 @@ declare(strict_types=1);
 
 namespace Tuleap\Timetracking\REST\v1\TimetrackingManagement;
 
-interface SaveQueryWithPredefinedTimePeriod
+use Tuleap\NeverThrow\Fault;
+
+/**
+ * @psalm-immutable
+ */
+final readonly class QueryInvalidUserIdFault extends Fault
 {
-    public function saveQueryWithPredefinedTimePeriod(
-        int $widget_id,
-        PredefinedTimePeriod $predefined_time_period,
-        array $user_ids_to_insert,
-        array $user_ids_to_remove,
-    ): void;
+    public static function build(int $invalid_id): Fault
+    {
+        return new self(sprintf('User with id #%d not found.', $invalid_id));
+    }
 }

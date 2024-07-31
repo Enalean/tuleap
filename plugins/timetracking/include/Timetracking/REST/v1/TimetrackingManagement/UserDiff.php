@@ -22,12 +22,21 @@ declare(strict_types=1);
 
 namespace Tuleap\Timetracking\REST\v1\TimetrackingManagement;
 
-interface SaveQueryWithPredefinedTimePeriod
+final readonly class UserDiff
 {
-    public function saveQueryWithPredefinedTimePeriod(
-        int $widget_id,
-        PredefinedTimePeriod $predefined_time_period,
-        array $user_ids_to_insert,
-        array $user_ids_to_remove,
-    ): void;
+    public function __construct(
+        private array $user_ids_to_insert,
+        private array $user_ids_to_remove,
+    ) {
+    }
+
+    public function getUserIdsToInsert(): array
+    {
+        return $this->user_ids_to_insert;
+    }
+
+    public function getUserIdsToRemove(): array
+    {
+        return $this->user_ids_to_remove;
+    }
 }
