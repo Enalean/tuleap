@@ -154,7 +154,7 @@ const meta: Meta<PopoverProps> = {
     },
     decorators: [
         (story, { args }: { args: PopoverProps }): TemplateResult =>
-            html`<div class="wrapper">
+            html`<div class="popover-wrapper">
                 <tuleap-popover-wrapper
                     .trigger=${args.trigger}
                     .placement=${args.placement}

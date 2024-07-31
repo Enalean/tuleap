@@ -19,20 +19,16 @@
 
 @use "@tuleap/tlp-dropdown";
 
-.wrapper {
+.dropdown-wrapper {
     display: flex;
-    position: relative;
     align-items: start;
     justify-content: center;
-    width: 100%;
     height: 300px;
 }
 
-.wrapper-top-align {
+.dropdown-wrapper-top-align {
     display: flex;
-    position: relative;
     align-items: end;
     justify-content: center;
-    width: 100%;
     height: 300px;
 }

@@ -17,19 +17,18 @@
  *  along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-.wrapper {
+.modal-wrapper {
     display: flex;
-    position: relative;
     align-items: center;
     justify-content: center;
-    min-width: 1000px;
-    min-height: 300px;
+    width: 1000px;
+    height: 300px;
 }
 
-.medium-wrapper {
-    min-height: 500px;
+.modal-medium-wrapper {
+    height: 500px;
 }
 
-.big-wrapper {
-    min-height: 800px;
+.modal-big-wrapper {
+    height: 800px;
 }

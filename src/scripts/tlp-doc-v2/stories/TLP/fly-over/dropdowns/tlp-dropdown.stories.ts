@@ -255,7 +255,7 @@ const meta: Meta<DropdownProps> = {
     },
     decorators: [
         (story, { args }: { args: DropdownProps }): TemplateResult =>
-            html`<div class=${args.top_align ? "wrapper-top-align" : "wrapper"}>
+            html`<div class=${args.top_align ? "dropdown-wrapper-top-align" : "dropdown-wrapper"}>
                 <tuleap-dropdown-wrapper
                     ?submenu=${args.story === "with submenu"}
                     .trigger=${args.trigger}
