@@ -126,12 +126,12 @@ final class NumericSelectBuilderTest extends CrossTrackerFieldTestCase
         );
 
         self::assertSame(3, $result->getTotalSize());
-        self::assertCount(1, $result->selected);
-        self::assertSame('numeric_field', $result->selected[0]->name);
-        self::assertSame('numeric', $result->selected[0]->type);
+        self::assertCount(2, $result->selected);
+        self::assertSame('numeric_field', $result->selected[1]->name);
+        self::assertSame('numeric', $result->selected[1]->type);
         $values = [];
         foreach ($result->artifacts as $artifact) {
-            self::assertCount(1, $artifact);
+            self::assertCount(2, $artifact);
             self::assertArrayHasKey('numeric_field', $artifact);
             $value = $artifact['numeric_field'];
             self::assertInstanceOf(NumericResultRepresentation::class, $value);

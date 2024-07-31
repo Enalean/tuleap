@@ -49,6 +49,7 @@ final readonly class MetadataResultBuilder
         private ProjectNameResultBuilder $project_name_builder,
         private TrackerNameResultBuilder $tracker_name_builder,
         private PrettyTitleResultBuilder $pretty_title_builder,
+        private ArtifactResultBuilder $artifact_builder,
     ) {
     }
 
@@ -75,6 +76,8 @@ final readonly class MetadataResultBuilder
             AllowedMetadata::PROJECT_NAME     => $this->project_name_builder->getResult($select_results),
             AllowedMetadata::TRACKER_NAME     => $this->tracker_name_builder->getResult($select_results),
             AllowedMetadata::PRETTY_TITLE     => $this->pretty_title_builder->getResult($select_results),
+
+            '@artifact'                       => $this->artifact_builder->getResult($select_results),
             default                           => throw new LogicException("Unknown metadata type: {$metadata->getName()}"),
         };
     }

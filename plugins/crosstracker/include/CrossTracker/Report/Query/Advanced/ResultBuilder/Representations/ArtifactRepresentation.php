@@ -20,19 +20,17 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\CrossTracker\REST\v1\Representation;
+namespace Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Representations;
 
-enum CrossTrackerSelectedType: string
+use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\SelectedValueRepresentation;
+
+/**
+ * @psalm-immutable
+ */
+final readonly class ArtifactRepresentation implements SelectedValueRepresentation
 {
-    case TYPE_DATE            = 'date';
-    case TYPE_TEXT            = 'text';
-    case TYPE_NUMERIC         = 'numeric';
-    case TYPE_STATIC_LIST     = 'list_static';
-    case TYPE_USER_GROUP_LIST = 'list_user_group';
-    case TYPE_USER_LIST       = 'list_user';
-    case TYPE_USER            = 'user';
-    case TYPE_PROJECT         = 'project';
-    case TYPE_TRACKER         = 'tracker';
-    case TYPE_PRETTY_TITLE    = 'pretty_title';
-    case TYPE_ARTIFACT        = 'artifact';
+    public function __construct(
+        public string $uri,
+    ) {
+    }
 }

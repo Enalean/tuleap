@@ -109,11 +109,12 @@ final class LastUpdateDateSelectBuilderTest extends CrossTrackerFieldTestCase
             $this->user,
         );
         self::assertSame(2, $result->getTotalSize());
-        self::assertCount(1, $result->selected);
-        self::assertSame('@last_update_date', $result->selected[0]->name);
+        self::assertCount(2, $result->selected);
+        self::assertSame('@last_update_date', $result->selected[1]->name);
+        self::assertSame('date', $result->selected[1]->type);
         $values = [];
         foreach ($result->artifacts as $artifact) {
-            self::assertCount(1, $artifact);
+            self::assertCount(2, $artifact);
             self::assertArrayHasKey('@last_update_date', $artifact);
             $value = $artifact['@last_update_date'];
             self::assertInstanceOf(DateResultRepresentation::class, $value);

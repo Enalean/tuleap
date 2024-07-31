@@ -109,11 +109,12 @@ final class SubmittedOnSelectBuilderTest extends CrossTrackerFieldTestCase
             $this->user,
         );
         self::assertSame(2, $result->getTotalSize());
-        self::assertCount(1, $result->selected);
-        self::assertSame('@submitted_on', $result->selected[0]->name);
+        self::assertCount(2, $result->selected);
+        self::assertSame('@submitted_on', $result->selected[1]->name);
+        self::assertSame('date', $result->selected[1]->type);
         $values = [];
         foreach ($result->artifacts as $artifact) {
-            self::assertCount(1, $artifact);
+            self::assertCount(2, $artifact);
             self::assertArrayHasKey('@submitted_on', $artifact);
             $value = $artifact['@submitted_on'];
             self::assertInstanceOf(DateResultRepresentation::class, $value);

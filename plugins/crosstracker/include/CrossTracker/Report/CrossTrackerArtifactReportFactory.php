@@ -41,6 +41,7 @@ use Tuleap\CrossTracker\REST\v1\Representation\CrossTrackerReportContentRepresen
 use Tuleap\CrossTracker\REST\v1\Representation\CrossTrackerSelectedRepresentation;
 use Tuleap\Tracker\Artifact\RetrieveArtifact;
 use Tuleap\Tracker\Report\Query\Advanced\ExpertQueryValidator;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Query;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\SyntaxError;
 use Tuleap\Tracker\Report\Query\Advanced\ParserCacheProxy;
@@ -205,7 +206,7 @@ final readonly class CrossTrackerArtifactReportFactory
         if ($static_return) {
             return $this->buildCollectionOfArtifacts($select_results, $total_size);
         }
-        $results = $this->result_builder->buildResult($query->getSelect(), $trackers, $current_user, $select_results);
+        $results = $this->result_builder->buildResult([new Metadata('artifact'), ...$query->getSelect()], $trackers, $current_user, $select_results);
         return $this->buildReportContentRepresentation($results, $total_size);
     }
 

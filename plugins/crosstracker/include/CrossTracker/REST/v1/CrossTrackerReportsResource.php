@@ -72,6 +72,7 @@ use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Field\Text\TextResul
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Field\UGroupList\UGroupListResultBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Field\UserList\UserListResultBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Metadata\AlwaysThereField\ArtifactId\ArtifactIdResultBuilder;
+use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Metadata\ArtifactResultBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Metadata\Date\MetadataDateResultBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Metadata\MetadataResultBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Metadata\Semantic\AssignedTo\AssignedToResultBuilder;
@@ -310,6 +311,7 @@ final class CrossTrackerReportsResource extends AuthenticatedResource
                     new ProjectNameResultBuilder(),
                     new TrackerNameResultBuilder(),
                     new PrettyTitleResultBuilder($tracker_artifact_factory, $text_value_interpreter),
+                    new ArtifactResultBuilder($tracker_artifact_factory),
                 ),
             );
 
