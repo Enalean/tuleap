@@ -36,7 +36,7 @@ describe("CommentHeaderTemplate", () => {
 
     beforeEach(() => {
         relative_date_helper = RelativeDatesHelper(
-            "Y-m-d H:i",
+            "Europe/Paris",
             PREFERENCE_ABSOLUTE_FIRST_RELATIVE_SHOWN,
             "en_US",
         );

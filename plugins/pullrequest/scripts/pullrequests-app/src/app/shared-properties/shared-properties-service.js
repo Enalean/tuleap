@@ -13,7 +13,7 @@ function SharedPropertiesService() {
         nb_pull_request_badge: null,
         is_there_at_least_one_pull_request: null,
         is_merge_commit_allowed: null,
-        date_time_format: "",
+        timezone: "",
         user_locale: "",
         relative_date_display: "",
     };
@@ -32,7 +32,7 @@ function SharedPropertiesService() {
         getUserAvatarUrl,
         setUserAvatarUrl,
         getNbPullRequestBadge,
-        getDateTimeFormat,
+        getTimezone,
         getUserLocale,
         getRelativeDateDisplay,
         setNbPullRequestBadge,
@@ -40,7 +40,7 @@ function SharedPropertiesService() {
         setIsThereAtLeastOnePullRequest,
         isMergeCommitAllowed,
         setIsMergeCommitAllowed,
-        setDateTimeFormat,
+        setTimezone,
         setUserLocale,
         setRelativeDateDisplay,
     };
@@ -89,8 +89,8 @@ function SharedPropertiesService() {
         return property.nb_pull_request_badge;
     }
 
-    function getDateTimeFormat() {
-        return property.date_time_format;
+    function getTimezone() {
+        return property.timezone;
     }
 
     function getUserLocale() {
@@ -121,8 +121,8 @@ function SharedPropertiesService() {
         property.is_merge_commit_allowed = Boolean(is_merge_commit_allowed);
     }
 
-    function setDateTimeFormat(date_time_format) {
-        property.date_time_format = date_time_format;
+    function setTimezone(timezone) {
+        property.timezone = timezone;
     }
 
     function setUserLocale(user_locale) {

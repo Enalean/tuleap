@@ -17,23 +17,23 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { describe, it, expect, beforeEach, vi } from "vitest";
 import type { MockInstance } from "vitest";
-import { okAsync, errAsync } from "neverthrow";
+import { beforeEach, describe, expect, it, vi } from "vitest";
+import { errAsync, okAsync } from "neverthrow";
 import type { VueWrapper } from "@vue/test-utils";
-import { shallowMount, flushPromises } from "@vue/test-utils";
+import { flushPromises, shallowMount } from "@vue/test-utils";
 import { Fault } from "@tuleap/fault";
 import { PREFERENCE_RELATIVE_FIRST_ABSOLUTE_SHOWN } from "@tuleap/tlp-relative-date";
 import {
+    PULL_REQUEST_COMMENT_DESCRIPTION_ELEMENT_TAG_NAME,
     PULL_REQUEST_COMMENT_ELEMENT_TAG_NAME,
     PULL_REQUEST_COMMENT_SKELETON_ELEMENT_TAG_NAME,
-    PULL_REQUEST_COMMENT_DESCRIPTION_ELEMENT_TAG_NAME,
 } from "@tuleap/plugin-pullrequest-comments";
 import type { TimelineItem } from "@tuleap/plugin-pullrequest-rest-api-types";
 import {
-    TYPE_GLOBAL_COMMENT,
     EVENT_TYPE_MERGE,
     TYPE_EVENT_PULLREQUEST_ACTION,
+    TYPE_GLOBAL_COMMENT,
 } from "@tuleap/plugin-pullrequest-constants";
 import { getGlobalTestOptions } from "../../../tests/helpers/global-options-for-tests";
 import * as tuleap_api from "../../api/tuleap-rest-querier";
@@ -44,9 +44,9 @@ import {
     OVERVIEW_APP_BASE_URL_KEY,
     PROJECT_ID,
     PULL_REQUEST_ID_KEY,
-    USER_DATE_TIME_FORMAT_KEY,
     USER_LOCALE_KEY,
     USER_RELATIVE_DATE_DISPLAY_PREFERENCE_KEY,
+    USER_TIMEZONE_KEY,
 } from "../../constants";
 import OverviewThreads from "./OverviewThreads.vue";
 
@@ -83,7 +83,7 @@ describe("OverviewThreads", () => {
                     [PULL_REQUEST_ID_KEY.valueOf()]: 15,
                     [CURRENT_USER_ID.valueOf()]: 102,
                     [CURRENT_USER_AVATAR_URL.valueOf()]: "/url/to/user_102_profile_page.html",
-                    [USER_DATE_TIME_FORMAT_KEY.valueOf()]: "d/m/Y H:i",
+                    [USER_TIMEZONE_KEY.valueOf()]: "Europe/Paris",
                     [USER_LOCALE_KEY.valueOf()]: "fr_FR",
                     [USER_RELATIVE_DATE_DISPLAY_PREFERENCE_KEY.valueOf()]:
                         PREFERENCE_RELATIVE_FIRST_ABSOLUTE_SHOWN,

@@ -1,6 +1,6 @@
 import { sprintf } from "sprintf-js";
-import moment from "moment";
 import { RelativeDateHelper } from "../helpers/date-helpers";
+import { IntlFormatter } from "@tuleap/date-helper";
 
 export default CommitsController;
 
@@ -29,7 +29,7 @@ function CommitsController(
         shouldDisplayWarningMessage,
         shouldDisplayListOfCommits,
         relative_date_helper: RelativeDateHelper(
-            SharedPropertiesService.getDateTimeFormat(),
+            SharedPropertiesService.getTimezone(),
             SharedPropertiesService.getRelativeDateDisplay(),
             SharedPropertiesService.getUserLocale(),
         ),
@@ -75,6 +75,11 @@ function CommitsController(
     function augmentMetadata(commit) {
         let avatar_url = null;
         let display_name = commit.author_name;
+        const formatter = IntlFormatter(
+            SharedPropertiesService.getUserLocale(),
+            SharedPropertiesService.getTimezone(),
+            "date-with-time",
+        );
 
         if (commit.author) {
             avatar_url = commit.author.avatar_url;
@@ -94,7 +99,7 @@ function CommitsController(
                 ? gettextCatalog.getString("Continuous integration status: Success on %s")
                 : gettextCatalog.getString("Continuous integration status: Failure on %s");
 
-            return sprintf(message, moment(commit.commit_status.date).format("YYYY-MM-DD HH:mm"));
+            return sprintf(message, formatter.format(commit.commit_status.date));
         };
 
         return {

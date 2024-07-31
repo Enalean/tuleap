@@ -53,7 +53,7 @@ define<InternalTimelineEvent>({
     relative_date_helper: (host, relative_date_display) =>
         relative_date_display ??
         RelativeDatesHelper(
-            host.current_user.preferred_date_format,
+            host.current_user.timezone,
             host.current_user.preferred_relative_date_display,
             host.current_user.user_locale,
         ),

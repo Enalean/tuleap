@@ -61,7 +61,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, provide, watch } from "vue";
+import { provide, reactive, ref, watch } from "vue";
 import type { RelativeDatesDisplayPreference } from "@tuleap/tlp-relative-date";
 import type {
     ActionOnPullRequestEvent,
@@ -71,38 +71,37 @@ import type {
 } from "@tuleap/plugin-pullrequest-rest-api-types";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import {
-    PULL_REQUEST_ID_KEY,
-    CURRENT_USER_ID,
     CURRENT_USER_AVATAR_URL,
-    USER_DATE_TIME_FORMAT_KEY,
-    USER_RELATIVE_DATE_DISPLAY_PREFERENCE_KEY,
-    USER_LOCALE_KEY,
-    OVERVIEW_APP_BASE_URL_KEY,
-    DISPLAY_TULEAP_API_ERROR,
+    CURRENT_USER_ID,
     DISPLAY_NEWLY_CREATED_GLOBAL_COMMENT,
+    DISPLAY_TULEAP_API_ERROR,
+    OVERVIEW_APP_BASE_URL_KEY,
     PROJECT_ID,
+    PULL_REQUEST_ID_KEY,
+    USER_LOCALE_KEY,
+    USER_RELATIVE_DATE_DISPLAY_PREFERENCE_KEY,
+    USER_TIMEZONE_KEY,
 } from "../../constants";
 import { fetchPullRequestTimelineItems } from "../../api/tuleap-rest-querier";
 import { CommentPresenterBuilder } from "./CommentPresenterBuilder";
 
 import OverviewNewCommentForm from "./OverviewNewCommentForm.vue";
 
+import type {
+    ControlPullRequestComment,
+    ControlPullRequestDescriptionComment,
+    CurrentPullRequestUserPresenter,
+    PullRequestCommentPresenter,
+    PullRequestDescriptionCommentPresenter,
+    PullRequestPresenter,
+    StorePullRequestCommentReplies,
+} from "@tuleap/plugin-pullrequest-comments";
 import {
+    NewReplySaver,
     PullRequestCommentController,
     PullRequestCommentRepliesStore,
-    NewReplySaver,
-    PullRequestDescriptionCommentSaver,
     PullRequestDescriptionCommentController,
-} from "@tuleap/plugin-pullrequest-comments";
-
-import type {
-    PullRequestCommentPresenter,
-    ControlPullRequestComment,
-    CurrentPullRequestUserPresenter,
-    PullRequestPresenter,
-    ControlPullRequestDescriptionComment,
-    StorePullRequestCommentReplies,
-    PullRequestDescriptionCommentPresenter,
+    PullRequestDescriptionCommentSaver,
 } from "@tuleap/plugin-pullrequest-comments";
 import {
     PULL_REQUEST_ACTIONS_LIST,
@@ -126,8 +125,8 @@ const pull_request_id: number = strictInject(PULL_REQUEST_ID_KEY);
 const user_id: number = strictInject(CURRENT_USER_ID);
 const project_id: number = strictInject(PROJECT_ID);
 const avatar_url: string = strictInject(CURRENT_USER_AVATAR_URL);
-const date_time_format: string = strictInject(USER_DATE_TIME_FORMAT_KEY);
-const user_locale: string = strictInject(USER_LOCALE_KEY);
+const user_locale = strictInject(USER_LOCALE_KEY);
+const user_timezone = strictInject(USER_TIMEZONE_KEY);
 const relative_date_display: RelativeDatesDisplayPreference = strictInject(
     USER_RELATIVE_DATE_DISPLAY_PREFERENCE_KEY,
 );
@@ -140,7 +139,7 @@ const current_user_presenter = ref<CurrentPullRequestUserPresenter>({
     user_id,
     avatar_url,
     user_locale,
-    preferred_date_format: date_time_format,
+    timezone: user_timezone,
     preferred_relative_date_display: relative_date_display,
 });
 const current_pull_request_presenter = ref<PullRequestPresenter>({

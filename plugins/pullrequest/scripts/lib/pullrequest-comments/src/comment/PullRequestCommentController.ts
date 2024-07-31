@@ -88,7 +88,7 @@ export const PullRequestCommentController = (
         },
         getRelativeDateHelper: (): HelpRelativeDatesDisplay =>
             RelativeDatesHelper(
-                current_user.preferred_date_format,
+                current_user.timezone,
                 current_user.preferred_relative_date_display,
                 current_user.user_locale,
             ),
