@@ -1,0 +1,241 @@
+import { Canvas, Meta, Controls} from "@storybook/blocks";
+
+import * as modalStories from "./tlp-modal.stories";
+
+<Meta of={modalStories} />
+
+# Modal
+
+<code>.tlp-modal</code>
+
+- When there are both cancel and primary action buttons, then the primary button is always on the right.
+- Buttons that have <code>data-dismiss="modal"</code> attribute in the modal will close it.
+- A click on the backdrop or hitting the Escape key will also close the modal.
+- You can then call <code>show()</code>, <code>hide()</code>, or <code>toggle()</code> methods on a modal instance.
+
+<Canvas of={modalStories.Modal}/>
+
+<Controls/>
+
+#### Typescript example
+
+```typescript
+import { createModal } from "@tuleap/tlp-modal";
+
+const modal_element = document.getElementById("modal");
+const modal = createModal(modal_element, {
+    destroy_on_hide: true,
+    keyboard: true,
+    dismiss_on_backdrop_click: true
+});
+
+modal.addEventListener("tlp-modal-shown", callback);
+modal.addEventListener("tlp-modal-hidden", callback);
+modal.removeEventListener("tlp-modal-hidden", callback);
+
+function callback(event) {
+    // Do something...
+}
+
+document.getElementById("modal-button").addEventListener("click", () => {
+    modal.show();
+});
+```
+
+## Events
+
+<table>
+    <thead>
+    <tr>
+        <th scope="col">Type</th>
+        <th scope="col">When is it dispatched</th>
+        <th scope="col">Target</th>
+        <th scope="col">Cancelable</th>
+        <th scope="col">Bubbles</th>
+        <th scope="col">Effect</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <th scope="row"><code>tlp-modal-shown</code></th>
+        <td>On <code>modal.show()</code></td>
+        <td><code>document</code> and the <code>Modal</code> instance</td>
+        <td>No</td>
+        <td>No</td>
+        <td>None</td>
+    </tr>
+    <tr>
+        <th scope="row"><code>tlp-modal-will-hide</code></th>
+        <td>After clicking on the backdrop, after clicking on a <code>data-dismiss="modal"</code> button, after pressing the Escape key</td>
+        <td>the <code>Modal</code> instance</td>
+        <td>Yes</td>
+        <td>No</td>
+        <td>If you cancel it with <code>event.preventDefault()</code>, the modal will NOT be hidden.</td>
+    </tr>
+    <tr>
+        <th scope="row"><code>tlp-modal-hidden</code></th>
+        <td>On <code>modal.hide()</code></td>
+        <td><code>document</code> and the <code>Modal</code> instance</td>
+        <td>No</td>
+        <td>No</td>
+        <td>None</td>
+    </tr>
+    </tbody>
+</table>
+
+## Modal with events
+
+<Canvas of={modalStories.WithEvents}/>
+
+#### Typescript example
+
+```typescript
+import { createModal,  EVENT_TLP_MODAL_WILL_HIDE } from "@tuleap/tlp-modal";
+
+const modal_element = document.getElementById("modal");
+const modal = createModal(modal_element);
+
+document.getElementById("modal-button").addEventListener("click", () => {
+    modal.show();
+});
+
+modal.addEventListener(EVENT_TLP_MODAL_WILL_HIDE, (event) => {
+    event.preventDefault();
+    const should_hide = window.confirm("You may lose your work. Close the modal?");
+    if (should_hide) {
+        modal.hide();
+    }
+});
+```
+
+## Modal with sections
+
+<Canvas of={modalStories.WithSections}/>
+
+## Modal with big action buttons
+
+To be able to use large buttons on the footer you should use the class <code>tlp-modal-footer-large</code>.
+
+<Canvas of={modalStories.WithBigActionButtons}/>
+
+## Modal with big content
+
+<Canvas of={modalStories.WithBigContent}/>
+
+## Modal with data-modal-focus attribute
+
+Elements that have data-modal-focus attribute in the modal will take focus when it opens.
+
+<Canvas of={modalStories.WithDataModalFocusAttribute}/>
+
+
+## Simplified usage with Typescript
+
+In Typescript context, you can leverage the helper functions of our lib to simplify common patterns of modals: Several use cases are supported.
+
+## openTargetModalIdOnClick()
+
+Useful when you have only one modal and only one button.
+
+Arguments:
+
+- \{ Document } document
+- \{ String } button_id
+The button element MUST have an attribute named <code>data-target-modal-id</code> that references the modal element. On click of this button, it will open that modal.
+- (Optional) \{ Function } beforeModalOpenCallback: (clicked_button: HTMLElement) => void
+A callback that will receive a single argument: \{ HTMLElement } clicked_button. The button that was clicked.
+If provided, it will be called just before opening the modal.
+
+## openAllTargetModalsOnClick()
+
+Useful when you have many buttons and have one modal per button.
+
+Arguments:
+
+- \{ Document } document
+- \{ String } buttons_selector. A CSS selector to select multiple buttons. Each of these buttons will open its own modal on click.
+The button element MUST have an attribute named <code>data-target-modal-id</code> that references its modal element. On click of this button, it will open that modal.
+
+#### Typescript example
+
+```typescript
+import { openTargetModalIdOnClick, openAllTargetModalsOnClick } from "@tuleap/tlp-modal";
+
+const DELETE_BUTTON_ID = "delete-button";
+const EDIT_BUTTONS_SELECTOR = "[data-edit-app-button]";
+openTargetModalIdOnClick(document, DELETE_BUTTON_ID);
+openAllTargetModalsOnClick(document, EDIT_BUTTONS_SELECTOR);
+```
+
+## openModalAndReplacePlaceholders()
+
+Useful in situations where you have many buttons and you want to open a single modal and replace placeholders in it. It handles two types of placeholders: hidden inputs and paragraphs.
+
+Hidden input can be replaced with the ID of the thing you want to edit/delete with the modal.
+
+Paragraph can be replaced with a translated string containing the label of the thing you want to edit/delete with the modal.
+
+Arguments:
+
+- \{ Object } options. Contains:
+  - \{ Document } document
+  - \{ String } buttons_selector. A CSS selector to select multiple buttons. Each of these buttons will open the modal on click.
+  - \{ String } modal_element_id. The HTML id of the modal element.
+  - \{ Object } hidden_input_replacement. Contains:
+    - \{ String } input_id. The HTML id of the hidden input in the modal that will be filled.
+    - \{ Function } hiddenInputReplaceCallback: (clicked_button: HTMLElement) => string<br/>
+    A callback that will receive a single argument: \{ HTMLElement } clicked_button. The button that was clicked.<br/>
+    It MUST return a string. For example, it can retrieve a <code>data-app-id</code> attribute from the button and return its value.<br/>
+    The hidden input's <code>value</code> will be filled with the callback's return value.
+
+  - \{ Object } paragraph_replacement. Contains:
+    - \{ String } paragraph_id. The HTML id of the paragraph in the modal that will be replaced.
+    - \{ Function } paragraphReplaceCallback: (clicked_button: HTMLElement) => string<br/>
+    A callback that will receive a single argument: \{ HTMLElement } clicked_button. The button that was clicked.<br/>
+    It MUST return a string. For example, it can retrieve a <code>data-app-name</code> attribute from the button and return it in a translated string.<br/>
+    The paragraph's <code>textContent</code> will be filled with the callback's return value.
+
+#### Typescript example
+
+```typescript
+import { openModalAndReplacePlaceholders } from "@tuleap/tlp-modal";
+
+const hiddenInputReplaceCallback = (clicked_button: HTMLElement): string => {
+    if (!clicked_button.dataset.appId) {
+        throw new Error("Missing data-app-id attribute on button");
+    }
+
+    return clicked_button.dataset.appId;
+};
+
+const buildDeletionReplaceCallback = (gettext_provider: GetText) => (
+    clicked_button: HTMLElement
+): string => {
+    if (!clicked_button.dataset.appName) {
+        throw new Error("Missing data-app-name attribute on button");
+    }
+    return sprintf(
+        gettext_provider.gettext("You are about to delete %s. Please, confirm your action."),
+        clicked_button.dataset.appName
+    );
+};
+
+const DELETE_BUTTONS_SELECTOR = "[data-delete-app-button]";
+const DELETE_APP_MODAL_ID = "delete-app-modal";
+const DELETE_MODAL_HIDDEN_INPUT_ID = "delete-modal-app-id";
+const DELETE_MODAL_DESCRIPTION = "delete-modal-app-name";
+
+openModalAndReplacePlaceholders({
+    document: document,
+    buttons_selector: DELETE_BUTTONS_SELECTOR,
+    modal_element_id: DELETE_APP_MODAL_ID,
+    hidden_input_replacement: {
+        input_id: DELETE_MODAL_HIDDEN_INPUT_ID,
+        hiddenInputReplaceCallback
+    },
+    paragraph_replacement: {
+        paragraph_id: DELETE_MODAL_DESCRIPTION,
+        paragraphReplaceCallback: buildDeletionReplaceCallback(gettext_provider)
+    }
+});
+```

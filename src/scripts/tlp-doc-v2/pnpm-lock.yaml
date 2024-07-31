@@ -43,6 +43,9 @@ dependencies:
   '@tuleap/tlp-dropdown':
     specifier: workspace:^
     version: link:../../../lib/frontend/tlp-dropdown
+  '@tuleap/tlp-modal':
+    specifier: workspace:^
+    version: link:../../../lib/frontend/tlp-modal
   '@tuleap/tlp-popovers':
     specifier: workspace:^
     version: link:../../../lib/frontend/tlp-popovers
