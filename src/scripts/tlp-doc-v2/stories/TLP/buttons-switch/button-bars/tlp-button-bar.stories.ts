@@ -84,9 +84,6 @@ function getTemplate(args: ButtonBarProps): TemplateResult {
 
 const meta: Meta<ButtonBarProps> = {
     title: "TLP/Buttons & Switch/Button Bars",
-    parameters: {
-        layout: "padded",
-    },
     render: (args) => {
         return getTemplate(args);
     },

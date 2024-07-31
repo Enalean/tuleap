@@ -19,6 +19,7 @@
 
 import type { Meta, StoryObj } from "@storybook/web-components";
 import { html, type TemplateResult } from "lit";
+import "./tlp-tabs.scss";
 
 type TabsProps = {
     vertical: boolean;
@@ -132,6 +133,10 @@ const meta: Meta<TabsProps> = {
         with_icon: false,
         with_menu: false,
     },
+    decorators: [
+        (story, { args }: { args: TabsProps }): TemplateResult =>
+            args.with_menu ? html`<div class="tabs-wrapper">${story()}</div>` : html`${story()}`,
+    ],
 };
 export default meta;
 type Story = StoryObj;

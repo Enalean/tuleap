@@ -17,11 +17,9 @@
  *  along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-.wrapper {
+.popover-wrapper {
     display: flex;
-    position: relative;
     align-items: center;
     justify-content: center;
-    width: 100%;
-    height: 300px;
+    height: 350px;
 }

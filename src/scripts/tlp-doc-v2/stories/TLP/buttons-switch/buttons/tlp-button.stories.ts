@@ -23,6 +23,7 @@ import { html } from "lit";
 import { USER_INTERFACE_EMPHASIS_COLORS } from "@tuleap/core-constants";
 import type { UserInterfaceEmphasisColorName } from "@tuleap/core-constants";
 import "@tuleap/tlp-button";
+import "./tlp-button.scss";
 
 type ButtonProps = {
     type: UserInterfaceEmphasisColorName;
@@ -104,7 +105,6 @@ function getInput(args: ButtonProps): TemplateResult {
 const meta: Meta<ButtonProps> = {
     title: "TLP/Buttons & Switch/Buttons",
     parameters: {
-        layout: "padded",
         controls: {
             exclude: ["ellipsis_button"],
         },
@@ -198,6 +198,7 @@ const meta: Meta<ButtonProps> = {
             if: { arg: "element", neq: "input" },
         },
     },
+    decorators: [(story): TemplateResult => html`<div class="button-wrapper">${story()}</div>`],
 };
 
 export default meta;

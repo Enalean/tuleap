@@ -31,7 +31,7 @@ type ModalProps = {
     subtitle: string;
     content: string;
     user_interface_color: "primary" | UserInterfaceColorName;
-    size: "default" | "medium-size" | "full-screen";
+    size: "default" | "medium-sized" | "full-screen";
     buttonText: string;
     keyboard: boolean;
     destroy_on_hide: boolean;
@@ -46,16 +46,16 @@ type ModalProps = {
 };
 
 function getWrapperClass(args: ModalProps): string {
-    const classes = ["wrapper"];
+    const classes = ["modal-wrapper"];
     if (args.story === "big content") {
-        classes.push("big-wrapper");
+        classes.push("modal-big-wrapper");
     }
     if (
         args.story === "data-modal-focus attribute" ||
         args.story === "with sections" ||
         args.story === "events"
     ) {
-        classes.push("medium-wrapper");
+        classes.push("modal-medium-wrapper");
     }
     return classes.join(" ");
 }
@@ -230,9 +230,9 @@ const meta: Meta<ModalProps> = {
             name: "Size",
             description: "Add the class",
             control: "select",
-            options: ["default", "medium-size", "full-screen"],
+            options: ["default", "medium-sized", "full-screen"],
             table: {
-                type: { summary: ".tlp-modal-medium-size or .tlp-modal-full-screen" },
+                type: { summary: ".tlp-modal-medium-sized or .tlp-modal-full-screen" },
             },
         },
         user_interface_color: {
