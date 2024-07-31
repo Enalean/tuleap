@@ -61,6 +61,7 @@ use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Metadata\Date\Metada
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Metadata\MetadataResultBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Metadata\Semantic\AssignedTo\AssignedToResultBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Metadata\Semantic\Status\StatusResultBuilder;
+use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Metadata\Special\PrettyTitle\PrettyTitleResultBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Metadata\Special\ProjectName\ProjectNameResultBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Metadata\Special\TrackerName\TrackerNameResultBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Metadata\Text\MetadataTextResultBuilder;
@@ -378,6 +379,7 @@ class crosstrackerPlugin extends Plugin
                 new ArtifactIdResultBuilder(),
                 new ProjectNameResultBuilder(),
                 new TrackerNameResultBuilder(),
+                new PrettyTitleResultBuilder($artifact_factory, $text_value_interpreter),
             ),
         );
 

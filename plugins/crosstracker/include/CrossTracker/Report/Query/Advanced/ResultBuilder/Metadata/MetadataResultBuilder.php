@@ -29,6 +29,7 @@ use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Metadata\AlwaysThere
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Metadata\Date\MetadataDateResultBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Metadata\Semantic\AssignedTo\AssignedToResultBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Metadata\Semantic\Status\StatusResultBuilder;
+use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Metadata\Special\PrettyTitle\PrettyTitleResultBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Metadata\Special\ProjectName\ProjectNameResultBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Metadata\Special\TrackerName\TrackerNameResultBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Metadata\Text\MetadataTextResultBuilder;
@@ -47,6 +48,7 @@ final readonly class MetadataResultBuilder
         private ArtifactIdResultBuilder $artifact_id_builder,
         private ProjectNameResultBuilder $project_name_builder,
         private TrackerNameResultBuilder $tracker_name_builder,
+        private PrettyTitleResultBuilder $pretty_title_builder,
     ) {
     }
 
@@ -72,7 +74,7 @@ final readonly class MetadataResultBuilder
             // Custom fields
             AllowedMetadata::PROJECT_NAME     => $this->project_name_builder->getResult($select_results),
             AllowedMetadata::TRACKER_NAME     => $this->tracker_name_builder->getResult($select_results),
-            AllowedMetadata::PRETTY_TITLE     => new SelectedValuesCollection(null, []),
+            AllowedMetadata::PRETTY_TITLE     => $this->pretty_title_builder->getResult($select_results),
             default                           => throw new LogicException("Unknown metadata type: {$metadata->getName()}"),
         };
     }
