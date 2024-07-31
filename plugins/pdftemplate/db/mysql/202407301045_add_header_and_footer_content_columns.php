@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2024 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2024 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,19 +18,22 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\PdfTemplate;
+declare(strict_types=1);
 
-use Tuleap\Export\Pdf\Template\PdfTemplate;
-
-interface CreateTemplate
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+final class b202407301045_add_header_and_footer_content_columns extends \Tuleap\ForgeUpgrade\Bucket
 {
-    public function create(
-        string $label,
-        string $description,
-        string $style,
-        string $header_content,
-        string $footer_content,
-        \PFUser $created_by,
-        \DateTimeImmutable $created_date,
-    ): PdfTemplate;
+    public function description(): string
+    {
+        return 'Add header and footer content columns';
+    }
+
+    public function up(): void
+    {
+        $this->api->dbh->exec('
+            ALTER TABLE plugin_pdftemplate
+            ADD COLUMN header_content TEXT NOT NULL,
+            ADD COLUMN footer_content TEXT NOT NULL
+        ');
+    }
 }

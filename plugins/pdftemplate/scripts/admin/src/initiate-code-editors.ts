@@ -19,17 +19,35 @@
 
 import CodeMirror from "codemirror";
 import "codemirror/mode/css/css.js";
+import "codemirror/mode/htmlmixed/htmlmixed.js";
 
-export function initiateCodeEditors(): CodeMirror.EditorFromTextArea | undefined {
-    const styling = document.getElementById("input-style");
-    if (!(styling instanceof HTMLTextAreaElement)) {
+type EditorMode = "text/css" | "htmlmixed";
+
+function instantiateEditor(
+    textarea_id: string,
+    mode: EditorMode,
+): CodeMirror.EditorFromTextArea | undefined {
+    const textarea = document.getElementById(textarea_id);
+    if (!(textarea instanceof HTMLTextAreaElement)) {
         return;
     }
 
-    return CodeMirror.fromTextArea(styling, {
+    return CodeMirror.fromTextArea(textarea, {
         extraKeys: { "Ctrl-Space": "autocomplete" },
-        mode: "text/css",
+        mode,
         lineNumbers: true,
         indentUnit: 4,
     });
+}
+
+export function initiateStylesCodeEditor(): CodeMirror.EditorFromTextArea | undefined {
+    return instantiateEditor("input-style", "text/css");
+}
+
+export function initiateHeaderContentCodeEditor(): CodeMirror.EditorFromTextArea | undefined {
+    return instantiateEditor("input-header-content", "htmlmixed");
+}
+
+export function initiateFooterContentCodeEditor(): CodeMirror.EditorFromTextArea | undefined {
+    return instantiateEditor("input-footer-content", "htmlmixed");
 }

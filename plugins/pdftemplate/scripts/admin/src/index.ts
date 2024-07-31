@@ -18,14 +18,21 @@
  */
 
 import "./admin.scss";
-import { initiateCodeEditors } from "./initiate-code-editors";
+import {
+    initiateStylesCodeEditor,
+    initiateHeaderContentCodeEditor,
+    initiateFooterContentCodeEditor,
+} from "./initiate-code-editors";
 import { initiateModals } from "./initiate-modals";
 import { initiatePrintPreview } from "./initiate-print-preview";
 
 document.addEventListener("DOMContentLoaded", () => {
-    const style = initiateCodeEditors();
+    const style = initiateStylesCodeEditor();
+    const header_content = initiateHeaderContentCodeEditor();
+    const footer_content = initiateFooterContentCodeEditor();
     initiateModals(document);
-    if (style) {
-        initiatePrintPreview(style);
+
+    if (style && header_content && footer_content) {
+        initiatePrintPreview(style, header_content, footer_content);
     }
 });

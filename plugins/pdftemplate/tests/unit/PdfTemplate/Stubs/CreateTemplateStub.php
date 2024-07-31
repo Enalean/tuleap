@@ -49,6 +49,8 @@ final class CreateTemplateStub implements CreateTemplate
         string $label,
         string $description,
         string $style,
+        string $header_content,
+        string $footer_content,
         \PFUser $created_by,
         \DateTimeImmutable $created_date,
     ): PdfTemplate {
@@ -59,6 +61,8 @@ final class CreateTemplateStub implements CreateTemplate
             $label,
             $description,
             $style,
+            $header_content,
+            $footer_content,
             $created_by,
             $created_date,
         );

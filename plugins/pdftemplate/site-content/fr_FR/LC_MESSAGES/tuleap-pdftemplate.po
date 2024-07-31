@@ -42,8 +42,14 @@ msgstr "Dupliquer"
 msgid "Edit"
 msgstr "Éditer"
 
+msgid "Footer"
+msgstr "Pied de page"
+
 msgid "General styling"
 msgstr "Style général"
+
+msgid "Header"
+msgstr "Entête"
 
 msgid "Label"
 msgstr "Label"

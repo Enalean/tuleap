@@ -42,6 +42,8 @@ final readonly class PdfTemplatePresenter
         public string $label,
         public string $description,
         public string $style,
+        public string $header_content,
+        public string $footer_content,
         public UserPresenter $last_updated_by,
         public TlpRelativeDatePresenter $last_updated_date,
     ) {
@@ -59,6 +61,8 @@ final readonly class PdfTemplatePresenter
             $template->label,
             $template->description,
             $template->style,
+            $template->header_content,
+            $template->footer_content,
             UserPresenter::fromUser($template->last_updated_by),
             $builder->getTlpRelativeDatePresenterInInlineContext($template->last_updated_date, $user),
         );
@@ -73,6 +77,8 @@ final readonly class PdfTemplatePresenter
             '',
             '',
             file_get_contents(__DIR__ . '/../Default/pdf-template-default.css'),
+            file_get_contents(__DIR__ . '/../Default/pdf-template-default-header.html'),
+            file_get_contents(__DIR__ . '/../Default/pdf-template-default-footer.html'),
             UserPresenter::fromUser($user),
             $builder->getTlpRelativeDatePresenterInInlineContext(new \DateTimeImmutable(), $user),
         );
@@ -87,6 +93,8 @@ final readonly class PdfTemplatePresenter
             '',
             '',
             $source->style,
+            $source->header_content,
+            $source->footer_content,
             UserPresenter::fromUser($user),
             $builder->getTlpRelativeDatePresenterInInlineContext(new \DateTimeImmutable(), $user),
         );

@@ -26,6 +26,30 @@
 </div>
 
 <div class="tlp-form-element">
+    <label for="input-header-content" class="tlp-label">
+        {{# dgettext }} tuleap-pdftemplate | Header {{/ dgettext }}
+    </label>
+    <textarea
+        id="input-header-content"
+        name="header-content"
+        rows="2"
+        class="tlp-textarea"
+    >{{ header_content }}</textarea>
+</div>
+
+<div class="tlp-form-element">
+    <label for="input-footer-content" class="tlp-label">
+        {{# dgettext }} tuleap-pdftemplate | Footer {{/ dgettext }}
+    </label>
+    <textarea
+        id="input-footer-content"
+        name="footer-content"
+        rows="2"
+        class="tlp-textarea"
+    >{{ footer_content }}</textarea>
+</div>
+
+<div class="tlp-form-element">
     <label class="tlp-label" for="input-style">
         {{# dgettext }} tuleap-pdftemplate | General styling {{/ dgettext }}
     </label>
