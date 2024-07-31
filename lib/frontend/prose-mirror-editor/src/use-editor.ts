@@ -19,11 +19,10 @@
 
 import type { Plugin } from "prosemirror-state";
 import { EditorState } from "prosemirror-state";
-import { keymap } from "prosemirror-keymap";
-import { baseKeymap } from "prosemirror-commands";
 import { EditorView } from "prosemirror-view";
 import { DOMParser } from "prosemirror-model";
 import { custom_schema } from "./custom_schema";
+import { setupToolbar } from "./plugins";
 import { getLocaleWithDefault, initGettextSync } from "@tuleap/gettext";
 import fr_FR from "../po/fr_FR.po";
 
@@ -44,7 +43,7 @@ export function useEditor(
     externals_plugins: Plugin[],
     initial_content: HTMLElement,
 ): UseEditorType {
-    const plugins: Plugin[] = externals_plugins.concat(keymap(baseKeymap));
+    const plugins: Plugin[] = externals_plugins.concat(setupToolbar());
     const state: EditorState = getState(initial_content);
     const editor: EditorView = new EditorView(query_selector, {
         state,
