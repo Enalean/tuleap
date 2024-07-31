@@ -1,118 +1,125 @@
-<h1>{{# dgettext }} tuleap-pdftemplate | PDF Template {{/ dgettext }}</h1>
-<section class="tlp-pane">
-    <div class="tlp-pane-container">
-        <div class="tlp-pane-header">
-            <h1 class="tlp-pane-title">
-                <i class="tlp-pane-title-icon fa-solid fa-list" aria-hidden="true"></i>
-                {{# dgettext }} tuleap-pdftemplate | Templates {{/ dgettext }}
-            </h1>
-        </div>
-        <section class="tlp-pane-section">
-            <p>
-                {{# dgettext }} tuleap-pdftemplate | Templates defined here will be used to produce PDF documents. {{/ dgettext }}
-                {{# dgettext }} tuleap-pdftemplate | This is useful to match your company design guidelines for example. {{/ dgettext }}
-            </p>
-            <div class="tlp-table-actions">
-                <a href="{{ create_url }}" class="tlp-button-primary">
-                    <i class="fa-solid fa-plus tlp-button-icon" aria-hidden="true"></i>
-                    {{# dgettext }} tuleap-pdftemplate | Create template {{/ dgettext }}
-                </a>
+<h1 class="pdftemplate-admin-title">
+    {{# dgettext }} tuleap-pdftemplate | PDF Template {{/ dgettext }}
+</h1>
+
+{{> navigation }}
+
+<div class="tlp-framed-horizontally">
+    <section class="tlp-pane">
+        <div class="tlp-pane-container">
+            <div class="tlp-pane-header">
+                <h1 class="tlp-pane-title">
+                    <i class="tlp-pane-title-icon fa-solid fa-list" aria-hidden="true"></i>
+                    {{# dgettext }} tuleap-pdftemplate | Templates {{/ dgettext }}
+                </h1>
             </div>
-            <table class="tlp-table">
-                <thead>
-                    <tr>
-                        <th>{{# dgettext }} tuleap-pdftemplate | Label {{/ dgettext }}</th>
-                        <th class="pdftemplate-admin-description-column">
-                            {{# dgettext }} tuleap-pdftemplate | Description {{/ dgettext }}
-                        </th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {{# has_templates }}
-                        {{# templates }}
+            <section class="tlp-pane-section">
+                <p>
+                    {{# dgettext }} tuleap-pdftemplate | Templates defined here will be used to produce PDF documents. {{/ dgettext }}
+                    {{# dgettext }} tuleap-pdftemplate | This is useful to match your company design guidelines for example. {{/ dgettext }}
+                </p>
+                <div class="tlp-table-actions">
+                    <a href="{{ create_url }}" class="tlp-button-primary">
+                        <i class="fa-solid fa-plus tlp-button-icon" aria-hidden="true"></i>
+                        {{# dgettext }} tuleap-pdftemplate | Create template {{/ dgettext }}
+                    </a>
+                </div>
+                <table class="tlp-table">
+                    <thead>
+                        <tr>
+                            <th>{{# dgettext }} tuleap-pdftemplate | Label {{/ dgettext }}</th>
+                            <th class="pdftemplate-admin-description-column">
+                                {{# dgettext }} tuleap-pdftemplate | Description {{/ dgettext }}
+                            </th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{# has_templates }}
+                            {{# templates }}
+                                <tr>
+                                    <td class="pdftemplate-admin-description-label">{{ label }}</td>
+                                    <td>{{ description }}</td>
+                                    <td class="tlp-table-cell-actions">
+                                        <a href="{{ update_url }}"
+                                           class="tlp-table-cell-actions-button tlp-button-primary tlp-button-outline tlp-button-small"
+                                        >
+                                            <i class="fa-solid fa-pencil tlp-button-icon" aria-hidden="true"></i>
+                                            {{# dgettext }} tuleap-pdftemplate | Edit {{/ dgettext }}
+                                        </a>
+
+                                        <a href="{{ duplicate_url }}"
+                                           class="tlp-table-cell-actions-button tlp-button-primary tlp-button-outline tlp-button-small"
+                                        >
+                                            <i class="fa-solid fa-copy tlp-button-icon" aria-hidden="true"></i>
+                                            {{# dgettext }} tuleap-pdftemplate | Duplicate {{/ dgettext }}
+                                        </a>
+
+                                        <button type="button"
+                                                class="tlp-table-cell-actions-button tlp-button-danger tlp-button-outline tlp-button-small pdftemplate-delete-button"
+                                                data-target-modal-id="pdftemplate-remove-{{ id }}"
+                                        >
+                                            <i class="fa-regular fa-trash-can tlp-button-icon" aria-hidden="true"></i>
+                                            {{# dgettext }} tuleap-pdftemplate | Delete {{/ dgettext }}
+                                        </button>
+
+                                        <div id="pdftemplate-remove-{{ id }}"
+                                             class="tlp-modal tlp-modal-danger"
+                                             role="dialog"
+                                             aria-labelledby="pdftemplate-remove-{{ id }}-label"
+                                        >
+                                            <form action="{{ delete_url }}" method="post">
+                                                <div class="tlp-modal-header">
+                                                    <h1 class="tlp-modal-title" id="pdftemplate-remove-{{ id }}-label">
+                                                        {{# dgettext }} tuleap-pdftemplate | Delete %s | {{ label }}{{/ dgettext }}
+                                                    </h1>
+                                                    <button class="tlp-modal-close"
+                                                            type="button"
+                                                            data-dismiss="modal"
+                                                            aria-label="{{# dgettext }} tuleap-pdftemplate | Close{{/ dgettext }}"
+                                                    >
+                                                        <i class="fa-solid fa-xmark tlp-modal-close-icon" role="img"></i>
+                                                    </button>
+                                                </div>
+                                                <div class="tlp-modal-body">
+                                                    {{# csrf }}
+                                                        {{> csrf_token_input }}
+                                                    {{/ csrf }}
+                                                    <input type="hidden" name="id" value="{{ id }}">
+
+                                                    <p>
+                                                        {{# dgettext }} tuleap-pdftemplate | You are about to delete the PDF template '%s'. | {{ label }}{{/ dgettext }}
+                                                        {{# dgettext }} tuleap-pdftemplate | This operation cannot be undone.{{/ dgettext }}
+                                                    </p>
+                                                    <p>
+                                                        {{# dgettext }} tuleap-pdftemplate | Please confirm your action.{{/ dgettext }}
+                                                    </p>
+                                                </div>
+                                                <div class="tlp-modal-footer">
+                                                    <button type="button" class="tlp-button-danger tlp-button-outline tlp-modal-action" data-dismiss="modal">
+                                                        {{# dgettext }} tuleap-pdftemplate | Cancel{{/ dgettext }}
+                                                    </button>
+                                                    <button type="submit" class="tlp-button-danger tlp-modal-action">
+                                                        <i class="fa-regular fa-trash-can tlp-button-icon" aria-hidden="true"></i>
+                                                        {{# dgettext }} tuleap-pdftemplate | Delete %s | {{ label }}{{/ dgettext }}
+                                                    </button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </td>
+                                </tr>
+                            {{/ templates }}
+                        {{/ has_templates }}
+                        {{^ has_templates }}
                             <tr>
-                                <td class="pdftemplate-admin-description-label">{{ label }}</td>
-                                <td>{{ description }}</td>
-                                <td class="tlp-table-cell-actions">
-                                    <a href="{{ update_url }}"
-                                       class="tlp-table-cell-actions-button tlp-button-primary tlp-button-outline tlp-button-small"
-                                    >
-                                        <i class="fa-solid fa-pencil tlp-button-icon" aria-hidden="true"></i>
-                                        {{# dgettext }} tuleap-pdftemplate | Edit {{/ dgettext }}
-                                    </a>
-
-                                    <a href="{{ duplicate_url }}"
-                                       class="tlp-table-cell-actions-button tlp-button-primary tlp-button-outline tlp-button-small"
-                                    >
-                                        <i class="fa-solid fa-copy tlp-button-icon" aria-hidden="true"></i>
-                                        {{# dgettext }} tuleap-pdftemplate | Duplicate {{/ dgettext }}
-                                    </a>
-
-                                    <button type="button"
-                                            class="tlp-table-cell-actions-button tlp-button-danger tlp-button-outline tlp-button-small pdftemplate-delete-button"
-                                            data-target-modal-id="pdftemplate-remove-{{ id }}"
-                                    >
-                                        <i class="fa-regular fa-trash-can tlp-button-icon" aria-hidden="true"></i>
-                                        {{# dgettext }} tuleap-pdftemplate | Delete {{/ dgettext }}
-                                    </button>
-
-                                    <div id="pdftemplate-remove-{{ id }}"
-                                         class="tlp-modal tlp-modal-danger"
-                                         role="dialog"
-                                         aria-labelledby="pdftemplate-remove-{{ id }}-label"
-                                    >
-                                        <form action="{{ delete_url }}" method="post">
-                                            <div class="tlp-modal-header">
-                                                <h1 class="tlp-modal-title" id="pdftemplate-remove-{{ id }}-label">
-                                                    {{# dgettext }} tuleap-pdftemplate | Delete %s | {{ label }}{{/ dgettext }}
-                                                </h1>
-                                                <button class="tlp-modal-close"
-                                                        type="button"
-                                                        data-dismiss="modal"
-                                                        aria-label="{{# dgettext }} tuleap-pdftemplate | Close{{/ dgettext }}"
-                                                >
-                                                    <i class="fa-solid fa-xmark tlp-modal-close-icon" role="img"></i>
-                                                </button>
-                                            </div>
-                                            <div class="tlp-modal-body">
-                                                {{# csrf }}
-                                                    {{> csrf_token_input }}
-                                                {{/ csrf }}
-                                                <input type="hidden" name="id" value="{{ id }}">
-
-                                                <p>
-                                                    {{# dgettext }} tuleap-pdftemplate | You are about to delete the PDF template '%s'. | {{ label }}{{/ dgettext }}
-                                                    {{# dgettext }} tuleap-pdftemplate | This operation cannot be undone.{{/ dgettext }}
-                                                </p>
-                                                <p>
-                                                    {{# dgettext }} tuleap-pdftemplate | Please confirm your action.{{/ dgettext }}
-                                                </p>
-                                            </div>
-                                            <div class="tlp-modal-footer">
-                                                <button type="button" class="tlp-button-danger tlp-button-outline tlp-modal-action" data-dismiss="modal">
-                                                    {{# dgettext }} tuleap-pdftemplate | Cancel{{/ dgettext }}
-                                                </button>
-                                                <button type="submit" class="tlp-button-danger tlp-modal-action">
-                                                    <i class="fa-regular fa-trash-can tlp-button-icon" aria-hidden="true"></i>
-                                                    {{# dgettext }} tuleap-pdftemplate | Delete %s | {{ label }}{{/ dgettext }}
-                                                </button>
-                                            </div>
-                                        </form>
-                                    </div>
+                                <td colspan="3" class="tlp-table-cell-empty">
+                                    {{# dgettext }} tuleap-pdftemplate | There isn't any templates defined {{/ dgettext }}
                                 </td>
                             </tr>
-                        {{/ templates }}
-                    {{/ has_templates }}
-                    {{^ has_templates }}
-                        <tr>
-                            <td colspan="3" class="tlp-table-cell-empty">
-                                {{# dgettext }} tuleap-pdftemplate | There isn't any templates defined {{/ dgettext }}
-                            </td>
-                        </tr>
-                    {{/ has_templates }}
-                </tbody>
-            </table>
-        </section>
-    </div>
-</section>
+                        {{/ has_templates }}
+                    </tbody>
+                </table>
+            </section>
+        </div>
+    </section>
+</div>

@@ -51,8 +51,21 @@ msgstr "Style général"
 msgid "Header"
 msgstr "Entête"
 
+msgid "Images"
+msgstr "Images"
+
+msgid "Images library"
+msgstr "Bibliothèque d'images"
+
+msgid "Images uploaded here can be used inside PDF templates."
+msgstr ""
+"Les images téléversées ici peuvent être utilisées dans les modèles PDF."
+
 msgid "Label"
 msgstr "Label"
+
+msgid "Name"
+msgstr "Nom"
 
 msgid "No changes for template"
 msgstr "Aucun changement pour le modèle"
@@ -75,6 +88,9 @@ msgstr "Retour à la liste des modèles"
 msgid "Save"
 msgstr "Sauvegarder"
 
+msgid "Size"
+msgstr "Taille"
+
 msgid "Technical documentation"
 msgstr "Documentation technique"
 
@@ -87,6 +103,9 @@ msgstr "Modèles"
 msgid "Templates defined here will be used to produce PDF documents."
 msgstr ""
 "Les modèles définis ici seront utilisés pour produire les documents PDF."
+
+msgid "Templates list"
+msgstr "Liste des modèles"
 
 msgid "The template has been created"
 msgstr "Le modèle a été créé"
@@ -102,6 +121,9 @@ msgstr "Le label du modèle est obligatoire"
 
 msgid "There isn't any templates defined"
 msgstr "Il n'y a pas de modèle défini"
+
+msgid "This can be used to include a logo, or a background image."
+msgstr "Ça peut être utile pour inclure un logo, ou une image de fond."
 
 msgid "This is useful to match your company design guidelines for example."
 msgstr ""
@@ -119,6 +141,9 @@ msgstr "Mis à jour par"
 
 msgid "Updated on"
 msgstr "Mis à jour le"
+
+msgid "Upload image"
+msgstr "Téléverser une image"
 
 msgid "You are about to delete the PDF template '%s'."
 msgstr "Vous êtes sur le point de supprimer le modèle PDF '%s'."

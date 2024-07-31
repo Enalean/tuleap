@@ -42,6 +42,7 @@ final readonly class IndexPdfTemplatePresenter
      * @param list<PdfTemplate> $templates
      */
     public function __construct(
+        public Navigation $navigation,
         public string $create_url,
         public string $delete_url,
         array $templates,
