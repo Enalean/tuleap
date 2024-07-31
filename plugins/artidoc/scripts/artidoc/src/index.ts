@@ -41,7 +41,7 @@ import {
     EDITORS_COLLECTION,
     useSectionEditorsCollection,
 } from "@/composables/useSectionEditorsCollection";
-import { PDF_TEMPLATES } from "@/pdf-templates-injection-key";
+import { PDF_TEMPLATES_STORE, initPdfTemplatesStore } from "@/stores/pdf-templates-store";
 import { IS_USER_ANONYMOUS } from "@/is-user-anonymous";
 import { EDITOR_CHOICE, editorChoice } from "@/helpers/editor-choice";
 
@@ -93,7 +93,10 @@ document.addEventListener("DOMContentLoaded", async () => {
             sections_store,
         ),
     );
-    app.provide(PDF_TEMPLATES, JSON.parse(getDatasetItemOrThrow(vue_mount_point, "pdfTemplates")));
+    app.provide(
+        PDF_TEMPLATES_STORE,
+        initPdfTemplatesStore(JSON.parse(getDatasetItemOrThrow(vue_mount_point, "pdfTemplates"))),
+    );
     app.provide(IS_USER_ANONYMOUS, Number(getDatasetItemOrThrow(document.body, "userId")) === 0);
 
     app.use(gettext);

@@ -24,6 +24,8 @@ export interface PdfTemplate {
     readonly label: string;
     readonly description: string;
     readonly style: string;
+    readonly header_content: string;
+    readonly footer_content: string;
 }
 
 export function printAsPdf(printable: HTMLElement, template: PdfTemplate): void {
