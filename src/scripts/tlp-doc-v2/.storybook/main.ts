@@ -21,16 +21,7 @@ import type { StorybookConfig } from "@storybook/web-components-vite";
 
 const config: StorybookConfig = {
     framework: "@storybook/web-components-vite",
-    stories: [
-        "../stories/**/*.mdx",
-        "../stories/**/*.stories.ts",
-        "../../../../lib/frontend/*/src/**/*.mdx",
-        "../../../../lib/frontend/*/src/**/*.stories.ts",
-        "../*/src/**/*.mdx",
-        "../*/src/**/*.stories.ts",
-        "../../../../plugins/*/scripts/*/src/**/*.mdx",
-        "../../../../plugins/*/scripts/*/src/**/*.stories.ts",
-    ],
+    stories: ["../stories/**/*.mdx", "../stories/**/*.stories.ts"],
     addons: [
         "@storybook/addon-essentials",
         "@storybook/addon-interactions",
