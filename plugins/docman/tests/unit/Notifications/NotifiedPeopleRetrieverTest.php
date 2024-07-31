@@ -18,101 +18,118 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Docman\Notifications;
 
+use ArrayIterator;
+use Docman_Item;
 use Docman_ItemFactory;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\MockObject\MockObject;
 use Project;
+use ProjectUGroup;
+use TestHelper;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\Builders\ProjectUGroupTestBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
 use UGroupManager;
 
-class NotifiedPeopleRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
+final class NotifiedPeopleRetrieverTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /** @var  UsersRetriever */
-    private $retriever;
-    /** @var  UsersToNotifyDao */
-    private $notified_users_dao;
-    /** @var  UgroupsToNotifyDao */
-    private $notified_ugroups_dao;
-    /** @var  UGroupManager */
-    private $ugroup_manager;
-    /** @var  Docman_ItemFactory */
-    private $item_factory;
-    /** @var  Project */
-    private $project;
-
-    private $user_id;
-    private $item_id;
-    private $parent_item_id;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|\ProjectUGroup
-     */
-    private $custom_ugroup;
+    private NotifiedPeopleRetriever $retriever;
+    private UsersToNotifyDao&MockObject $notified_users_dao;
+    private UgroupsToNotifyDao&MockObject $notified_ugroups_dao;
+    private Docman_ItemFactory&MockObject $item_factory;
+    private Project $project;
+    private int $user_id;
+    private int $item_id;
+    private int $parent_item_id;
+    private ProjectUGroup $custom_ugroup;
 
     protected function setUp(): void
     {
-        parent::setUp();
+        $this->project = ProjectTestBuilder::aProject()->build();
 
-        $this->project = \Mockery::spy(
-            \Project::class,
-            ['getID' => false, 'getUserName' => false, 'isPublic' => false]
-        );
-
-        $this->notified_users_dao   = \Mockery::spy(\Tuleap\Docman\Notifications\UsersToNotifyDao::class);
-        $this->notified_ugroups_dao = \Mockery::spy(\Tuleap\Docman\Notifications\UgroupsToNotifyDao::class);
-        $this->ugroup_manager       = \Mockery::spy(\UGroupManager::class);
-        $this->item_factory         = \Mockery::spy(\Docman_ItemFactory::class);
+        $this->notified_users_dao   = $this->createMock(UsersToNotifyDao::class);
+        $this->notified_ugroups_dao = $this->createMock(UgroupsToNotifyDao::class);
+        $ugroup_manager             = $this->createMock(UGroupManager::class);
+        $this->item_factory         = $this->createMock(Docman_ItemFactory::class);
 
         $this->retriever = new NotifiedPeopleRetriever(
             $this->notified_users_dao,
             $this->notified_ugroups_dao,
             $this->item_factory,
-            $this->ugroup_manager
+            $ugroup_manager
         );
 
         $this->user_id        = 105;
         $this->item_id        = 66;
         $this->parent_item_id = 65;
 
-        $this->custom_ugroup = \Mockery::mock(\ProjectUGroup::class);
-        $this->ugroup_manager->shouldReceive('getUGroup')->with($this->project, 169)->andReturns($this->custom_ugroup);
+        $this->custom_ugroup = ProjectUGroupTestBuilder::aCustomUserGroup(169)->withProject($this->project)->build();
+        $ugroup_manager->method('getUGroup')->with($this->project, 169)->willReturn($this->custom_ugroup);
     }
 
     public function testItNotifiesUsersListeningToItem(): void
     {
-        $this->userDaoReturnsItemIdAndUser105($this->item_id);
-        $this->ugroupDaoReturnsFalse($this->item_id);
+        $this->notified_users_dao->method('searchUserIdByObjectIdAndType')
+            ->with($this->item_id, PLUGIN_DOCMAN_NOTIFICATION)
+            ->willReturn(TestHelper::arrayToDar([
+                'item_id' => $this->item_id,
+                'user_id' => $this->user_id,
+                'type'    => PLUGIN_DOCMAN_NOTIFICATION,
+            ]));
+        $this->notified_ugroups_dao->method('searchUgroupsByItemIdAndType')
+            ->with($this->item_id, PLUGIN_DOCMAN_NOTIFICATION)
+            ->willReturn(TestHelper::arrayToDar(false));
 
-        $this->itemExistsinDb();
+        $docman_item = new Docman_Item();
+        $docman_item->setParentId($this->parent_item_id);
+        $this->item_factory->method('getItemFromDb')->willReturnCallback(fn(int $item_id) => match ($item_id) {
+            $this->item_id => $docman_item,
+            default        => null,
+        });
 
         $result = $this->retriever->getNotifiedUsers($this->project, $this->item_id);
 
-        $expected_result = new \ArrayIterator(
-            [
-                $this->user_id => [
-                    'item_id' => $this->item_id,
-                    'user_id' => $this->user_id,
-                    'type'    => PLUGIN_DOCMAN_NOTIFICATION,
-                ],
-            ]
-        );
-        $this->assertEquals(iterator_to_array($expected_result), iterator_to_array($result));
+        $expected_result = new ArrayIterator([
+            $this->user_id => [
+                'item_id' => $this->item_id,
+                'user_id' => $this->user_id,
+                'type'    => PLUGIN_DOCMAN_NOTIFICATION,
+            ],
+        ]);
+        self::assertEquals(iterator_to_array($expected_result), iterator_to_array($result));
     }
 
     public function testItNotifiesUsersListeningToParentOfItem(): void
     {
-        $this->userDaoReturnsFalse($this->item_id);
-        $this->ugroupDaoReturnsFalse($this->item_id);
-        $this->userDaoReturnsItemIdAndUser105ByCascade($this->parent_item_id);
-        $this->ugroupDaoReturnsFalse($this->parent_item_id);
+        $this->notified_users_dao->method('searchUserIdByObjectIdAndType')->willReturnCallback(fn(int $item_id, string $type) => match (true) {
+            $item_id === $this->item_id && $type === PLUGIN_DOCMAN_NOTIFICATION                => TestHelper::arrayToDar(false),
+            $item_id === $this->parent_item_id && $type === PLUGIN_DOCMAN_NOTIFICATION_CASCADE => TestHelper::arrayToDar([
+                'item_id' => $this->parent_item_id,
+                'user_id' => $this->user_id,
+                'type'    => PLUGIN_DOCMAN_NOTIFICATION_CASCADE,
+            ]),
+        });
+        $this->notified_ugroups_dao->method('searchUgroupsByItemIdAndType')->willReturnCallback(fn(int $item_id, string $type) => match ($item_id) {
+            $this->item_id,
+            $this->parent_item_id => TestHelper::arrayToDar(false),
+        });
 
-        $this->itemExistsinDb();
-        $this->parentItemExistsInDb();
+        $docman_item = new Docman_Item();
+        $docman_item->setParentId($this->parent_item_id);
+        $parent_docman_item = new Docman_Item();
+        $this->item_factory->method('getItemFromDb')->willReturnCallback(fn(?int $item_id) => match ($item_id) {
+            $this->item_id        => $docman_item,
+            $this->parent_item_id => $parent_docman_item,
+            default               => null,
+        });
 
         $result = $this->retriever->getNotifiedUsers($this->project, $this->item_id);
 
-        $expected_result = new \ArrayIterator(
+        $expected_result = new ArrayIterator(
             [
                 $this->user_id => [
                     'item_id' => '65',
@@ -127,191 +144,139 @@ class NotifiedPeopleRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItDoesNotNotifyTwiceTheSameUser(): void
     {
-        $this->userDaoReturnsItemIdAndUser105($this->item_id);
-        $this->ugroupDaoReturnsFalse($this->item_id);
-        $this->userDaoReturnsItemIdAndUser105ByCascade($this->parent_item_id);
-        $this->ugroupDaoReturnsFalse($this->parent_item_id);
+        $this->notified_users_dao->method('searchUserIdByObjectIdAndType')->willReturnCallback(fn(int $item_id, string $type) => match (true) {
+            $item_id === $this->item_id && $type === PLUGIN_DOCMAN_NOTIFICATION                => TestHelper::arrayToDar([
+                'item_id' => $this->item_id,
+                'user_id' => $this->user_id,
+                'type'    => PLUGIN_DOCMAN_NOTIFICATION,
+            ]),
+            $item_id === $this->parent_item_id && $type === PLUGIN_DOCMAN_NOTIFICATION_CASCADE => TestHelper::arrayToDar([
+                'item_id' => $this->parent_item_id,
+                'user_id' => $this->user_id,
+                'type'    => PLUGIN_DOCMAN_NOTIFICATION_CASCADE,
+            ]),
+        });
+        $this->notified_ugroups_dao->method('searchUgroupsByItemIdAndType')->willReturnCallback(fn(int $item_id, string $type) => match ($item_id) {
+            $this->item_id,
+            $this->parent_item_id => TestHelper::arrayToDar(false),
+        });
 
-        $this->itemExistsinDb();
-        $this->parentItemExistsInDb();
+        $docman_item = new Docman_Item();
+        $docman_item->setParentId($this->parent_item_id);
+        $parent_docman_item = new Docman_Item();
+        $this->item_factory->method('getItemFromDb')->willReturnCallback(fn(?int $item_id) => match ($item_id) {
+            $this->item_id        => $docman_item,
+            $this->parent_item_id => $parent_docman_item,
+            default               => null,
+        });
 
         $result = $this->retriever->getNotifiedUsers($this->project, $this->item_id);
 
-        $expected_result = new \ArrayIterator(
-            [
-                $this->user_id => [
-                    'item_id' => '65',
-                    'user_id' => $this->user_id,
-                    'type'    => PLUGIN_DOCMAN_NOTIFICATION_CASCADE,
+        $expected_result = new ArrayIterator([
+            $this->user_id => [
+                'item_id' => '65',
+                'user_id' => $this->user_id,
+                'type'    => PLUGIN_DOCMAN_NOTIFICATION_CASCADE,
 
-                ],
-            ]
-        );
-        $this->assertEquals(iterator_to_array($expected_result), iterator_to_array($result));
+            ],
+        ]);
+        self::assertEquals(iterator_to_array($expected_result), iterator_to_array($result));
     }
 
     public function testItNotifiesUgroupMembersListeningToItem(): void
     {
-        $this->userDaoReturnsFalse($this->item_id);
-        $this->ugroupDaoReturnsUgroup169($this->item_id);
+        $this->notified_users_dao->method('searchUserIdByObjectIdAndType')
+            ->with($this->item_id, PLUGIN_DOCMAN_NOTIFICATION)
+            ->willReturn(TestHelper::arrayToDar(false));
+        $this->notified_ugroups_dao->method('searchUgroupsByItemIdAndType')
+            ->with($this->item_id, PLUGIN_DOCMAN_NOTIFICATION)
+            ->willReturn(TestHelper::arrayToDar(['ugroup_id' => 169]));
 
-        $this->itemExistsinDb();
+        $docman_item = new Docman_Item();
+        $docman_item->setParentId($this->parent_item_id);
+        $this->item_factory->method('getItemFromDb')->willReturnCallback(fn(?int $item_id) => match ($item_id) {
+            $this->item_id => $docman_item,
+            default        => null,
+        });
 
-        $user = \Mockery::mock(\PFUser::class);
-        $user->shouldReceive('getId')->andReturn($this->user_id);
-        $this->custom_ugroup->shouldReceive('getMembers')->andReturn([$user]);
+        $this->custom_ugroup->setMembers(UserTestBuilder::buildWithId($this->user_id));
 
         $result = $this->retriever->getNotifiedUsers($this->project, $this->item_id);
 
-        $expected_result = new \ArrayIterator(
-            [
-                $this->user_id => [
-                    'item_id' => $this->item_id,
-                    'user_id' => $this->user_id,
-                    'type'    => PLUGIN_DOCMAN_NOTIFICATION,
-                ],
-            ]
-        );
-        $this->assertEquals(iterator_to_array($expected_result), iterator_to_array($result));
+        $expected_result = new ArrayIterator([
+            $this->user_id => [
+                'item_id' => $this->item_id,
+                'user_id' => $this->user_id,
+                'type'    => PLUGIN_DOCMAN_NOTIFICATION,
+            ],
+        ]);
+        self::assertEquals(iterator_to_array($expected_result), iterator_to_array($result));
     }
 
     public function testItNotifiesUgroupMembersListeningToParentOfItem(): void
     {
-        $this->userDaoReturnsFalse($this->item_id);
-        $this->ugroupDaoReturnsFalse($this->item_id);
-        $this->userDaoReturnsFalseByCascade($this->parent_item_id);
-        $this->ugroupDaoReturnsUgroup169ByCascade($this->parent_item_id);
+        $this->notified_users_dao->method('searchUserIdByObjectIdAndType')
+            ->willReturn(TestHelper::arrayToDar(false));
 
-        $this->itemExistsinDb();
-        $this->parentItemExistsInDb();
+        $this->notified_ugroups_dao->method('searchUgroupsByItemIdAndType')->willReturnCallback(fn(int $item_id, string $type) => match ($item_id) {
+            $this->item_id        => TestHelper::arrayToDar(false),
+            $this->parent_item_id => TestHelper::arrayToDar(['ugroup_id' => 169]),
+        });
 
-        $user = \Mockery::mock(\PFUser::class);
-        $user->shouldReceive('getId')->andReturn($this->user_id);
-        $this->custom_ugroup->shouldReceive('getMembers')->andReturn([$user]);
+        $docman_item = new Docman_Item();
+        $docman_item->setParentId($this->parent_item_id);
+        $parent_docman_item = new Docman_Item();
+        $this->item_factory->method('getItemFromDb')->willReturnCallback(fn(?int $item_id) => match ($item_id) {
+            $this->item_id        => $docman_item,
+            $this->parent_item_id => $parent_docman_item,
+            default               => null,
+        });
+
+        $this->custom_ugroup->setMembers(UserTestBuilder::buildWithId($this->user_id));
 
         $result = $this->retriever->getNotifiedUsers($this->project, $this->item_id);
 
-        $expected_result = new \ArrayIterator(
-            [
-                $this->user_id => [
-                    'item_id' => '65',
-                    'user_id' => $this->user_id,
-                    'type'    => PLUGIN_DOCMAN_NOTIFICATION_CASCADE,
-                ],
-            ]
-        );
-        $this->assertEquals(iterator_to_array($expected_result), iterator_to_array($result));
+        $expected_result = new ArrayIterator([
+            $this->user_id => [
+                'item_id' => '65',
+                'user_id' => $this->user_id,
+                'type'    => PLUGIN_DOCMAN_NOTIFICATION_CASCADE,
+            ],
+        ]);
+        self::assertEquals(iterator_to_array($expected_result), iterator_to_array($result));
     }
 
     public function testItDoesNotNotifyTwiceTheSameUserInUgroupAndInList(): void
     {
-        $this->userDaoReturnsItemIdAndUser105($this->item_id);
-        $this->ugroupDaoReturnsUgroup169($this->item_id);
+        $this->notified_users_dao->method('searchUserIdByObjectIdAndType')
+            ->with($this->item_id, PLUGIN_DOCMAN_NOTIFICATION)
+            ->willReturn(TestHelper::arrayToDar([
+                'item_id' => $this->item_id,
+                'user_id' => $this->user_id,
+                'type'    => PLUGIN_DOCMAN_NOTIFICATION,
+            ]));
+        $this->notified_ugroups_dao->method('searchUgroupsByItemIdAndType')
+            ->with($this->item_id, PLUGIN_DOCMAN_NOTIFICATION)
+            ->willReturn(TestHelper::arrayToDar(['ugroup_id' => 169]));
 
-        $this->itemExistsinDb();
+        $docman_item = new Docman_Item();
+        $docman_item->setParentId($this->parent_item_id);
+        $this->item_factory->method('getItemFromDb')->willReturnCallback(fn(?int $item_id) => match ($item_id) {
+            $this->item_id => $docman_item,
+            default        => null,
+        });
 
-        $user = \Mockery::mock(\PFUser::class);
-        $user->shouldReceive('getId')->andReturn($this->user_id);
-        $this->custom_ugroup->shouldReceive('getMembers')->andReturn([$user]);
+        $this->custom_ugroup->setMembers(UserTestBuilder::buildWithId($this->user_id));
 
         $result = $this->retriever->getNotifiedUsers($this->project, $this->item_id);
 
-        $expected_result = new \ArrayIterator(
-            [
-                $this->user_id => [
-                    'item_id' => $this->item_id,
-                    'user_id' => $this->user_id,
-                    'type'    => PLUGIN_DOCMAN_NOTIFICATION,
-                ],
-            ]
-        );
-        $this->assertEquals(iterator_to_array($expected_result), iterator_to_array($result));
-    }
-
-    private function userDaoReturnsFalse($item_id): void
-    {
-        $this->notified_users_dao->shouldReceive('searchUserIdByObjectIdAndType')->with(
-            $item_id,
-            PLUGIN_DOCMAN_NOTIFICATION
-        )->andReturns(\TestHelper::arrayToDar(false));
-    }
-
-    private function userDaoReturnsFalseByCascade($item_id): void
-    {
-        $this->notified_users_dao->shouldReceive('searchUserIdByObjectIdAndType')->with(
-            $item_id,
-            PLUGIN_DOCMAN_NOTIFICATION_CASCADE
-        )->andReturns(\TestHelper::arrayToDar(false));
-    }
-
-    private function userDaoReturnsItemIdAndUser105($item_id): void
-    {
-        $this->notified_users_dao->shouldReceive('searchUserIdByObjectIdAndType')->with(
-            $item_id,
-            PLUGIN_DOCMAN_NOTIFICATION
-        )->andReturns(
-            \TestHelper::arrayToDar(
-                [
-                    'item_id' => $item_id,
-                    'user_id' => $this->user_id,
-                    'type'    => PLUGIN_DOCMAN_NOTIFICATION,
-                ]
-            )
-        );
-    }
-
-    private function userDaoReturnsItemIdAndUser105ByCascade($item_id): void
-    {
-        $this->notified_users_dao->shouldReceive('searchUserIdByObjectIdAndType')->with(
-            $item_id,
-            PLUGIN_DOCMAN_NOTIFICATION_CASCADE
-        )->andReturns(
-            \TestHelper::arrayToDar(
-                [
-                    'item_id' => $item_id,
-                    'user_id' => $this->user_id,
-                    'type'    => PLUGIN_DOCMAN_NOTIFICATION_CASCADE,
-                ]
-            )
-        );
-    }
-
-    private function ugroupDaoReturnsFalse($item_id): void
-    {
-        $this->notified_ugroups_dao->shouldReceive('searchUgroupsByItemIdAndType')->with(
-            $item_id,
-            PLUGIN_DOCMAN_NOTIFICATION
-        )->andReturns(\TestHelper::arrayToDar(false));
-    }
-
-    private function ugroupDaoReturnsUgroup169($item_id): void
-    {
-        $this->notified_ugroups_dao->shouldReceive('searchUgroupsByItemIdAndType')->with(
-            $item_id,
-            PLUGIN_DOCMAN_NOTIFICATION
-        )->andReturns(\TestHelper::arrayToDar(['ugroup_id' => 169]));
-    }
-
-    private function ugroupDaoReturnsUgroup169ByCascade($item_id): void
-    {
-        $this->notified_ugroups_dao->shouldReceive('searchUgroupsByItemIdAndType')->with(
-            $item_id,
-            PLUGIN_DOCMAN_NOTIFICATION_CASCADE
-        )->andReturns(\TestHelper::arrayToDar(['ugroup_id' => 169]));
-    }
-
-    private function itemExistsinDb(): void
-    {
-        $docman_item = \Mockery::spy(\Docman_Item::class);
-        $docman_item->shouldReceive('getParentId')->andReturns($this->parent_item_id);
-        $this->item_factory->shouldReceive('getItemFromDb')->with($this->item_id)->andReturns($docman_item);
-    }
-
-    private function parentItemExistsInDb(): void
-    {
-        $parent_docman_item = \Mockery::spy(\Docman_Item::class);
-        $this->item_factory->shouldReceive('getItemFromDb')->with($this->parent_item_id)->andReturns(
-            $parent_docman_item
-        );
+        $expected_result = new ArrayIterator([
+            $this->user_id => [
+                'item_id' => $this->item_id,
+                'user_id' => $this->user_id,
+                'type'    => PLUGIN_DOCMAN_NOTIFICATION,
+            ],
+        ]);
+        self::assertEquals(iterator_to_array($expected_result), iterator_to_array($result));
     }
 }
