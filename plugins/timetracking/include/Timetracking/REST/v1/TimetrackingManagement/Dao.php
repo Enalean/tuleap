@@ -26,7 +26,7 @@ use DateTimeImmutable;
 use ParagonIE\EasyDB\EasyStatement;
 use Tuleap\DB\DataAccessObject;
 
-final class Dao extends DataAccessObject implements SaveQueryWithDates, SaveQueryWithPredefinedTimePeriod, GetQueryUsers
+final class Dao extends DataAccessObject implements SaveQueryWithDates, SaveQueryWithPredefinedTimePeriod, GetQueryUsers, GetWidgetInformation
 {
     public function create(PredefinedTimePeriod $predefined_time_period): int
     {
@@ -97,5 +97,26 @@ final class Dao extends DataAccessObject implements SaveQueryWithDates, SaveQuer
                 FROM plugin_timetracking_management_query_users
                 WHERE widget_id = ?';
         return $this->getDB()->column($sql, [$widget_id]);
+    }
+
+    public function getWidgetInformation(int $widget_id): ?array
+    {
+        $sql = 'SELECT dashboard_id, user_id
+                FROM plugin_timetracking_management_query
+                         INNER JOIN dashboards_lines_columns_widgets AS widget
+                                    ON plugin_timetracking_management_query.id = widget.content_id
+                         INNER JOIN dashboards_lines_columns
+                                    ON widget.column_id = dashboards_lines_columns.id
+                         INNER JOIN dashboards_lines
+                                    ON dashboards_lines_columns.line_id = dashboards_lines.id
+                         LEFT JOIN user_dashboards
+                                   ON user_dashboards.id = dashboards_lines.dashboard_id
+                         LEFT JOIN project_dashboards
+                                   ON project_dashboards.id = dashboards_lines.dashboard_id
+                WHERE plugin_timetracking_management_query.id = ?
+                  AND widget.name = "timetracking-management-widget"
+                  AND dashboard_type = "user"';
+
+        return $this->getDB()->row($sql, $widget_id);
     }
 }

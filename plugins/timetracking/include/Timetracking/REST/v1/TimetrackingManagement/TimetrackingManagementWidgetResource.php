@@ -45,7 +45,8 @@ final class TimetrackingManagementWidgetResource extends AuthenticatedResource
         return (new QueryPUTHandler(
             new FromPayloadPeriodBuilder(),
             new FromPayloadUserDiffBuilder(new QueryUserChecker(), $dao),
-            new TimetrackingManagementWidgetSaver($dao, $dao)
+            new TimetrackingManagementWidgetSaver($dao, $dao),
+            new PermissionChecker($dao),
         ));
     }
 

@@ -27,6 +27,7 @@ use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Timetracking\Tests\Stub\CheckPermissionStub;
 use Tuleap\Timetracking\Tests\Stub\CheckThatUserIsActiveStub;
 use Tuleap\Timetracking\Tests\Stub\GetQueryUsersStub;
 use Tuleap\Timetracking\Tests\Stub\SaveQueryWithDatesStub;
@@ -34,6 +35,13 @@ use Tuleap\Timetracking\Tests\Stub\SaveQueryWithPredefinedTimePeriodStub;
 
 final class QueryPUTHandlerTest extends TestCase
 {
+    private CheckPermissionStub $check_permission_stub;
+
+    protected function setUp(): void
+    {
+        $this->check_permission_stub = CheckPermissionStub::withPermission();
+    }
+
     /**
      * @return Ok<true> | Err<Fault>
      */
@@ -57,6 +65,7 @@ final class QueryPUTHandlerTest extends TestCase
                 SaveQueryWithDatesStub::build(),
                 SaveQueryWithPredefinedTimePeriodStub::build()
             ),
+            $this->check_permission_stub,
         );
         return $handler->handle($widget_id, $representation);
     }
@@ -139,5 +148,15 @@ final class QueryPUTHandlerTest extends TestCase
 
         self::assertTrue(Result::isErr($result));
         self::assertInstanceOf(QueryInvalidUserIdFault::class, $result->error);
+    }
+
+    public function testFaultWhenCurrentUserIsNotTheWidgetOwner(): void
+    {
+        $this->check_permission_stub = CheckPermissionStub::withoutPermission();
+
+        $result = $this->handle(null, null, 'last_week', [['id' => 101], ['id' => 102]]);
+
+        self::assertTrue(Result::isErr($result));
+        self::assertInstanceOf(WidgetNotFoundFault::class, $result->error);
     }
 }

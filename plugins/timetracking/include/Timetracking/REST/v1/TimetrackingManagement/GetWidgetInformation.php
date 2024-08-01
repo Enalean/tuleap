@@ -22,26 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Timetracking\REST\v1\TimetrackingManagement;
 
-use Luracast\Restler\RestException;
-use Tuleap\NeverThrow\Fault;
-
-final class FaultMapper
+interface GetWidgetInformation
 {
-    /**
-     * @throws RestException
-     */
-    public static function mapToRestException(Fault $fault): void
-    {
-        $status_code = match ($fault::class) {
-            QueryEndDateLesserThanStartDateFault::class,
-                QueryInvalidDateFormatFault::class,
-                QueryOnlyOneDateProvidedFault::class,
-                QueryPredefinedTimePeriodAndDatesProvidedFault::class,
-                QueryInvalidUserIdFault::class
-            => 400,
-            WidgetNotFoundFault::class => 404,
-            default => 500,
-        };
-        throw new RestException($status_code, (string) $fault);
-    }
+    public function getWidgetInformation(int $widget_id): ?array;
 }

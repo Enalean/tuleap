@@ -22,26 +22,27 @@ declare(strict_types=1);
 
 namespace Tuleap\Timetracking\REST\v1\TimetrackingManagement;
 
-use Luracast\Restler\RestException;
+use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
+use Tuleap\NeverThrow\Ok;
+use Tuleap\NeverThrow\Result;
 
-final class FaultMapper
+final readonly class PermissionChecker implements CheckPermission
 {
-    /**
-     * @throws RestException
-     */
-    public static function mapToRestException(Fault $fault): void
+    public function __construct(private GetWidgetInformation $dao)
     {
-        $status_code = match ($fault::class) {
-            QueryEndDateLesserThanStartDateFault::class,
-                QueryInvalidDateFormatFault::class,
-                QueryOnlyOneDateProvidedFault::class,
-                QueryPredefinedTimePeriodAndDatesProvidedFault::class,
-                QueryInvalidUserIdFault::class
-            => 400,
-            WidgetNotFoundFault::class => 404,
-            default => 500,
-        };
-        throw new RestException($status_code, (string) $fault);
+    }
+
+    /**
+     * @return Ok<true>|Err<Fault>
+     */
+    public function checkThatCurrentUserCanUpdateTheQuery(int $widget_id, \PFUser $current_user): Ok|Err
+    {
+        $widget_information = $this->dao->getWidgetInformation($widget_id);
+        if ($widget_information !== null && $widget_information['user_id'] === $current_user->getId()) {
+            return Result::ok(true);
+        }
+
+        return Result::err(WidgetNotFoundFault::build());
     }
 }
