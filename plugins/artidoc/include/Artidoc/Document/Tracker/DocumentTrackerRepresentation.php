@@ -28,6 +28,7 @@ use Tracker_FormElement_Field_String;
 use Tracker_FormElementFactory;
 use Tracker_Semantic_Description;
 use Tracker_Semantic_Title;
+use Tuleap\Project\REST\MinimalProjectRepresentation;
 use Tuleap\Tracker\Artifact\GetFileUploadData;
 
 /**
@@ -41,6 +42,7 @@ final readonly class DocumentTrackerRepresentation
         public ?DocumentTrackerFieldStringRepresentation $title,
         public ?DocumentTrackerFieldTextRepresentation $description,
         public ?DocumentTrackerFieldFileRepresentation $file,
+        public MinimalProjectRepresentation $project,
     ) {
     }
 
@@ -62,6 +64,9 @@ final readonly class DocumentTrackerRepresentation
         $file       = $file_field && $file_field->userCanSubmit($user)
             ? new DocumentTrackerFieldFileRepresentation($file_field->getId(), $file_field->getLabel(), Tracker_FormElementFactory::instance()->getType($file_field))
             : null;
-        return new self($tracker->getId(), $tracker->getName(), $title, $description, $file);
+
+        $project = new MinimalProjectRepresentation($tracker->getProject());
+
+        return new self($tracker->getId(), $tracker->getName(), $title, $description, $file, $project);
     }
 }

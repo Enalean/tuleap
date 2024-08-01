@@ -54,6 +54,7 @@
                 v-bind:upload_url="upload_url"
                 v-bind:is_image_upload_allowed="is_image_upload_allowed"
                 v-bind:upload_file="upload_file"
+                v-bind:project_id="getProjectId()"
             />
             <section-footer v-bind:editor="editor" v-bind:section="section" />
         </article>
@@ -62,6 +63,7 @@
 
 <script setup lang="ts">
 import type { ArtidocSection } from "@/helpers/artidoc-section.type";
+import { isPendingArtifactSection, isArtifactSection } from "@/helpers/artidoc-section.type";
 import SectionHeader from "./header/SectionHeader.vue";
 import SectionDescription from "./description/SectionDescription.vue";
 import { useSectionEditor } from "@/composables/useSectionEditor";
@@ -121,6 +123,14 @@ const {
     editable_description,
     getReadonlyDescription,
 } = editor.editor_section_content;
+
+function getProjectId(): number {
+    if (isArtifactSection(props.section)) {
+        return props.section.artifact.tracker.project.id;
+    }
+
+    return isPendingArtifactSection(props.section) ? props.section.tracker.project.id : 0;
+}
 </script>
 
 <style lang="scss" scoped>

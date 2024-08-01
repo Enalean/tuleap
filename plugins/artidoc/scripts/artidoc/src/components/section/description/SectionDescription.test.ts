@@ -38,6 +38,7 @@ const default_props = {
     input_current_description: vi.fn(),
     is_image_upload_allowed: true,
     upload_file: UploadFileStub.uploadNotInProgress(),
+    project_id: 101,
 };
 describe("SectionDescription", () => {
     describe("while the sections are loading", () => {

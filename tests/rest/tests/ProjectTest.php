@@ -1913,4 +1913,34 @@ class ProjectTest extends ProjectBase
         self::assertNotEmpty($response_json['styles']['content']);
         self::assertJson($response_json['project_sidebar']['config']);
     }
+
+    public function testPOSTExtractCrossReferences(): void
+    {
+        $post_resource = json_encode([
+            'text'       => 'This is a text with art #1',
+        ]);
+        $response      = $this->getResponseByName(
+            REST_TestDataBuilder::TEST_USER_1_NAME,
+            $this->request_factory->createRequest(
+                'POST',
+                'projects/' . $this->project_public_member_id . '/extract_references'
+            )->withBody(
+                $this->stream_factory->createStream(
+                    $post_resource
+                )
+            )
+        );
+        self::assertEquals(200, $response->getStatusCode());
+
+        $response_json = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
+        self::assertEquals('art #1', $response_json[0]['text']);
+        self::assertStringContainsString('https://localhost/goto?key=art&val=1&group_id=', $response_json[0]['link']);
+    }
+
+    public function testOPTIONSCrossReference(): void
+    {
+        $response = $this->getResponse($this->request_factory->createRequest('OPTIONS', 'projects/' . $this->project_public_member_id . '/extract_references'));
+
+        self::assertEqualsCanonicalizing(['OPTIONS', 'POST'], explode(', ', $response->getHeaderLine('Allow')));
+    }
 }

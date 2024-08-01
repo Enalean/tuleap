@@ -24,7 +24,12 @@ import { DOMParser } from "prosemirror-model";
 import { dropCursor } from "prosemirror-dropcursor";
 import { custom_schema } from "./custom_schema";
 import type { PluginDropFile } from "./plugins";
-import { initLinkPopoverPlugin, initPluginInput, setupToolbar } from "./plugins";
+import {
+    initLinkPopoverPlugin,
+    initPluginTransformInput,
+    initPluginInput,
+    setupToolbar,
+} from "./plugins";
 import type { GetText } from "@tuleap/gettext";
 
 import {
@@ -45,6 +50,7 @@ export async function useEditor(
     setupUploadPlugin: (gettext_provider: GetText) => PluginDropFile,
     onChange: (new_text_content: string) => void,
     initial_content: HTMLElement,
+    project_id: number,
 ): Promise<UseEditorType> {
     const gettext_provider = await initGettext(
         getLocaleWithDefault(document),
@@ -61,6 +67,7 @@ export async function useEditor(
         dropCursor(),
         initLinkPopoverPlugin(gettext_provider, editor_id),
         ...setupToolbar(gettext_provider, editor_id),
+        initPluginTransformInput(project_id),
     ];
 
     const state: EditorState = getState(initial_content);
@@ -77,7 +84,7 @@ export async function useEditor(
         editor.updateState(state);
     }
 
-    function getState(initial_content: HTMLElement): EditorState {
+    function getState(initial_content: Node): EditorState {
         return EditorState.create({
             doc: DOMParser.fromSchema(custom_schema).parse(initial_content),
             schema: custom_schema,

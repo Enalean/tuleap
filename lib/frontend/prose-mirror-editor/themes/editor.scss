@@ -55,3 +55,9 @@
     margin-bottom: var(--tlp-small-spacing);
 }
 /* stylelint-enable selector-class-pattern */
+
+.cross-reference-link {
+    color: var(--tlp-main-color);
+    text-decoration: none;
+    cursor: pointer;
+}
