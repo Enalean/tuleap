@@ -70,6 +70,9 @@ export const TQL_cross_tracker_autocomplete_keywords = [
     "@submitted_by",
     "@assigned_to",
     "@id",
+    "@project.name",
+    "@tracker.name",
+    "@pretty_title",
 ];
 
 const cross_tracker_allowed_keywords = {
@@ -83,6 +86,9 @@ const cross_tracker_allowed_keywords = {
         "@submitted_by",
         "@assigned_to",
         "@id",
+        "@project.name",
+        "@tracker.name",
+        "@pretty_title",
     ],
 };
 export const TQL_cross_tracker_mode_definition = buildModeDefinition(
