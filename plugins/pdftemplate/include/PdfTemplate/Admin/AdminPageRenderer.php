@@ -52,8 +52,7 @@ final class AdminPageRenderer implements RenderAPresenter
         \PFUser $user,
         string $title,
     ): void {
-        $configuration = HeaderConfigurationBuilder::get($title)
-            ->withMainClass(['tlp-framed']);
+        $configuration = HeaderConfigurationBuilder::get($title);
 
         if ($user->isSuperUser()) {
             $configuration = $configuration->inSiteAdministration(

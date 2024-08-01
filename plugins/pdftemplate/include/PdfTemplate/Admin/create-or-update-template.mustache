@@ -1,47 +1,54 @@
-<h1>{{# dgettext }} tuleap-pdftemplate | PDF Template {{/ dgettext }}</h1>
-<section class="tlp-pane">
-    <form method="post" action="{{ save_url }}" class="tlp-pane-container">
-        <div class="tlp-pane-header">
-            <h1 class="tlp-pane-title">
-                <i class="tlp-pane-title-icon {{ icon }}" aria-hidden="true"></i>
-                {{ title }}
-            </h1>
-        </div>
-        <section class="tlp-pane-section">
-            {{# csrf }}
-                {{> csrf_token_input }}
-            {{/ csrf }}
+<h1 class="pdftemplate-admin-title">
+    {{# dgettext }} tuleap-pdftemplate | PDF Template {{/ dgettext }}
+</h1>
 
-            <p>
-                <a href="{{ index_url }}" class="pdftemplate-admin-back-link">
-                    <i class="fa-solid fa-arrow-left-long pdftemplate-admin-back-link-icon" aria-hidden="true"></i><!--
-                    -->{{# dgettext }} tuleap-pdftemplate | Return to templates list {{/ dgettext }}
-                </a>
-            </p>
+{{> navigation }}
 
-            {{# template }}
-                {{# is_update }}
-                    {{> template-metadata }}
-                {{/ is_update }}
-
-                {{> template-form-elements }}
-            {{/ template }}
-        </section>
-
-        <section class="tlp-pane-section tlp-pane-section-submit">
-            <button type="submit" class="tlp-button-primary">
-                <i class="fa-solid fa-save tlp-button-icon" aria-hidden="true"></i>
-                {{# dgettext }} tuleap-pdftemplate | Save {{/ dgettext }}
-            </button>
-
-            <button type="button" class="tlp-button-primary tlp-button-outline" id="pdftemplate-print-preview">
-                <i class="fa-regular fa-file-pdf tlp-button-icon" aria-hidden="true"></i>
-                {{# dgettext }} tuleap-pdftemplate | Preview {{/ dgettext }}
-            </button>
-
-            <div id="pdftemplate-print-preview-fake-document" class="pdftemplate-print-preview-fake-document">
-                {{> print-preview-fake-document }}
+<div class="tlp-framed-horizontally">
+    <section class="tlp-pane">
+        <form method="post" action="{{ save_url }}" class="tlp-pane-container">
+            <div class="tlp-pane-header">
+                <h1 class="tlp-pane-title">
+                    <i class="tlp-pane-title-icon {{ icon }}" aria-hidden="true"></i>
+                    {{ title }}
+                </h1>
             </div>
-        </section>
-    </form>
-</section>
+            <section class="tlp-pane-section">
+                {{# csrf }}
+                    {{> csrf_token_input }}
+                {{/ csrf }}
+
+                <p>
+                    <a href="{{ index_url }}" class="pdftemplate-admin-back-link">
+                        <i class="fa-solid fa-arrow-left-long pdftemplate-admin-back-link-icon" aria-hidden="true"></i><!--
+                        -->{{# dgettext }} tuleap-pdftemplate | Return to templates list {{/ dgettext }}
+                    </a>
+                </p>
+
+                {{# template }}
+                    {{# is_update }}
+                        {{> template-metadata }}
+                    {{/ is_update }}
+
+                    {{> template-form-elements }}
+                {{/ template }}
+            </section>
+
+            <section class="tlp-pane-section tlp-pane-section-submit">
+                <button type="submit" class="tlp-button-primary">
+                    <i class="fa-solid fa-save tlp-button-icon" aria-hidden="true"></i>
+                    {{# dgettext }} tuleap-pdftemplate | Save {{/ dgettext }}
+                </button>
+
+                <button type="button" class="tlp-button-primary tlp-button-outline" id="pdftemplate-print-preview">
+                    <i class="fa-regular fa-file-pdf tlp-button-icon" aria-hidden="true"></i>
+                    {{# dgettext }} tuleap-pdftemplate | Preview {{/ dgettext }}
+                </button>
+
+                <div id="pdftemplate-print-preview-fake-document" class="pdftemplate-print-preview-fake-document">
+                    {{> print-preview-fake-document }}
+                </div>
+            </section>
+        </form>
+    </section>
+</div>

@@ -38,6 +38,7 @@ use Tuleap\PdfTemplate\Admin\DeletePdfTemplateController;
 use Tuleap\PdfTemplate\Admin\DisplayPdfTemplateCreationFormController;
 use Tuleap\PdfTemplate\Admin\DisplayPdfTemplateDuplicateFormController;
 use Tuleap\PdfTemplate\Admin\DisplayPdfTemplateUpdateFormController;
+use Tuleap\PdfTemplate\Admin\Image\IndexImagesController;
 use Tuleap\PdfTemplate\Admin\IndexPdfTemplateController;
 use Tuleap\PdfTemplate\Admin\ManagePdfTemplates;
 use Tuleap\PdfTemplate\Admin\RejectNonNonPdfTemplateManagerMiddleware;
@@ -102,6 +103,10 @@ class PdfTemplatePlugin extends Plugin
     public function collectRoutesEvent(CollectRoutesEvent $event): void
     {
         $event->getRouteCollector()->get(
+            IndexImagesController::ROUTE,
+            $this->getRouteHandler('indexAdminImagesController'),
+        );
+        $event->getRouteCollector()->get(
             IndexPdfTemplateController::ROUTE,
             $this->getRouteHandler('indexAdminController'),
         );
@@ -128,6 +133,14 @@ class PdfTemplatePlugin extends Plugin
         $event->getRouteCollector()->get(
             DisplayPdfTemplateDuplicateFormController::ROUTE . '/{id:[A-Fa-f0-9-]+}',
             $this->getRouteHandler('displayDuplicateAdminController'),
+        );
+    }
+
+    public function indexAdminImagesController(): DispatchableWithRequest
+    {
+        return new IndexImagesController(
+            new AdminPageRenderer(),
+            $this->getUserCanManageTemplatesChecker(),
         );
     }
 
