@@ -24,6 +24,7 @@ import { Option } from "@tuleap/option";
 import type {
     DateSelectableRepresentation,
     NumericSelectableRepresentation,
+    ProjectSelectableRepresentation,
     Selectable,
     SelectableArtifactRepresentation,
     SelectableReportContentRepresentation,
@@ -33,10 +34,11 @@ import type {
 import {
     DATE_SELECTABLE_TYPE,
     NUMERIC_SELECTABLE_TYPE,
+    PROJECT_SELECTABLE_TYPE,
     TEXT_SELECTABLE_TYPE,
 } from "./cross-tracker-rest-api-types";
 import type { ArtifactsTable, Cell } from "../domain/ArtifactsTable";
-import { DATE_CELL, NUMERIC_CELL, TEXT_CELL } from "../domain/ArtifactsTable";
+import { DATE_CELL, NUMERIC_CELL, PROJECT_CELL, TEXT_CELL } from "../domain/ArtifactsTable";
 
 export type ArtifactsTableBuilder = {
     mapReportToArtifactsTable(report: SelectableReportContentRepresentation): ArtifactsTable;
@@ -49,11 +51,26 @@ const isDateSelectableRepresentation = (
 const isNumericSelectableRepresentation = (
     representation: SelectableRepresentation,
 ): representation is NumericSelectableRepresentation =>
-    representation.value === null || typeof representation.value === "number";
+    "value" in representation &&
+    (representation.value === null || typeof representation.value === "number");
 
 const isTextSelectableRepresentation = (
     representation: SelectableRepresentation,
-): representation is TextSelectableRepresentation => typeof representation.value === "string";
+): representation is TextSelectableRepresentation =>
+    "value" in representation && typeof representation.value === "string";
+
+const isProjectSelectableRepresentation = (
+    representation: SelectableRepresentation,
+): representation is ProjectSelectableRepresentation => "icon" in representation;
+
+/**
+ * Throw instead of returning an err, because the format of the Selected representation
+ * does not match what is expected. Either there was a breaking change in the JSON format
+ * on the backend, or there is a problem while adding support for a new format type
+ * (during development). In either case, we should warn the developers so that they can fix it.
+ */
+const getErrorMessageToWarnTuleapDevs = (selectable: Selectable): string =>
+    `Expected artifact value for ${selectable.name} to be a ${selectable.type} format, but it was not`;
 
 function buildCell(
     selectable: Selectable,
@@ -63,11 +80,7 @@ function buildCell(
     switch (selectable.type) {
         case DATE_SELECTABLE_TYPE:
             if (!isDateSelectableRepresentation(artifact_value)) {
-                // This is likely a developer mistake in the backend,
-                // we throw so that Tuleap devs can hear about it and fix it
-                throw Error(
-                    `Expected Artifact value for ${selectable.name} to be a date format, but it was not`,
-                );
+                throw Error(getErrorMessageToWarnTuleapDevs(selectable));
             }
             return ok({
                 type: DATE_CELL,
@@ -76,11 +89,7 @@ function buildCell(
             });
         case NUMERIC_SELECTABLE_TYPE:
             if (!isNumericSelectableRepresentation(artifact_value)) {
-                // This is likely a developer mistake in the backend,
-                // we throw so that Tuleap devs can hear about it and fix it
-                throw Error(
-                    `Expected Artifact value for ${selectable.name} to be a number format, but it was not`,
-                );
+                throw Error(getErrorMessageToWarnTuleapDevs(selectable));
             }
             return ok({
                 type: NUMERIC_CELL,
@@ -88,15 +97,20 @@ function buildCell(
             });
         case TEXT_SELECTABLE_TYPE:
             if (!isTextSelectableRepresentation(artifact_value)) {
-                // This is likely a developer mistake in the backend,
-                // we throw so that Tuleap devs can hear about it and fix it
-                throw Error(
-                    `Expected Artifact value for ${selectable.name} to be a text format, but it was not`,
-                );
+                throw Error(getErrorMessageToWarnTuleapDevs(selectable));
             }
             return ok({
                 type: TEXT_CELL,
                 value: artifact_value.value,
+            });
+        case PROJECT_SELECTABLE_TYPE:
+            if (!isProjectSelectableRepresentation(artifact_value)) {
+                throw Error(getErrorMessageToWarnTuleapDevs(selectable));
+            }
+            return ok({
+                type: PROJECT_CELL,
+                name: artifact_value.name,
+                icon: artifact_value.icon,
             });
         default:
             return err(Fault.fromMessage(`Selectable type is not supported`));

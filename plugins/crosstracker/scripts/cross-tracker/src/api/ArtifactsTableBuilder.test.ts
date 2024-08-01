@@ -21,10 +21,11 @@ import { describe, expect, it } from "vitest";
 import {
     DATE_SELECTABLE_TYPE,
     NUMERIC_SELECTABLE_TYPE,
+    PROJECT_SELECTABLE_TYPE,
     TEXT_SELECTABLE_TYPE,
 } from "./cross-tracker-rest-api-types";
 import { ArtifactsTableBuilder } from "./ArtifactsTableBuilder";
-import { DATE_CELL, NUMERIC_CELL, TEXT_CELL } from "../domain/ArtifactsTable";
+import { DATE_CELL, NUMERIC_CELL, PROJECT_CELL, TEXT_CELL } from "../domain/ArtifactsTable";
 
 describe(`ArtifactsTableBuilder`, () => {
     describe(`mapReportToArtifactsTable()`, () => {
@@ -39,109 +40,189 @@ describe(`ArtifactsTableBuilder`, () => {
             const int_value = 10;
             const numeric_column = "remaining_effort";
 
-            const text_value = "<p>Griffith II</p>";
-            const text_column = "details";
-
             const table = ArtifactsTableBuilder().mapReportToArtifactsTable({
                 selected: [
                     { type: DATE_SELECTABLE_TYPE, name: date_column },
                     { type: NUMERIC_SELECTABLE_TYPE, name: numeric_column },
-                    { type: TEXT_SELECTABLE_TYPE, name: text_column },
                 ],
                 artifacts: [
                     {
-                        start_date: { value: first_date, with_time: false },
-                        remaining_effort: { value: float_value },
-                        details: { value: text_value },
+                        [date_column]: { value: first_date, with_time: false },
+                        [numeric_column]: { value: float_value },
                     },
                     {
-                        start_date: { value: second_date, with_time: true },
-                        remaining_effort: { value: int_value },
-                        details: { value: "" },
+                        [date_column]: { value: second_date, with_time: true },
+                        [numeric_column]: { value: int_value },
                     },
                 ],
             });
 
-            expect(table.columns.size).toBe(3);
+            expect(table.columns.size).toBe(2);
 
             expect(table.columns.has(date_column)).toBe(true);
             expect(table.columns.has(numeric_column)).toBe(true);
-            expect(table.columns.has(text_column)).toBe(true);
 
             expect(table.rows).toHaveLength(2);
 
             const [first_row, second_row] = table.rows;
 
             const date_value_first_row = first_row.get(date_column);
-            if (!date_value_first_row || date_value_first_row.type !== DATE_CELL) {
+            if (date_value_first_row?.type !== DATE_CELL) {
                 throw Error("Expected to find first date value");
             }
-            expect(date_value_first_row.type).toBe(DATE_CELL);
             expect(date_value_first_row.value.unwrapOr(null)).toBe(first_date);
-            expect(date_value_first_row.with_time).toBe(false);
 
             const numeric_value_first_row = first_row.get(numeric_column);
-            if (!numeric_value_first_row || numeric_value_first_row.type !== NUMERIC_CELL) {
+            if (numeric_value_first_row?.type !== NUMERIC_CELL) {
                 throw Error("Expected to find first numeric value");
             }
             expect(numeric_value_first_row.value.unwrapOr(null)).toBe(float_value);
 
-            const text_value_first_row = first_row.get(text_column);
-            if (!text_value_first_row || text_value_first_row.type !== TEXT_CELL) {
-                throw Error("Expected to find first text value");
-            }
-            expect(text_value_first_row.value).toBe(text_value);
-
             const date_value_second_row = second_row.get(date_column);
-            if (!date_value_second_row || date_value_second_row.type !== DATE_CELL) {
+            if (date_value_second_row?.type !== DATE_CELL) {
                 throw Error("Expected to find second date value");
             }
-            expect(date_value_second_row.type).toBe(DATE_CELL);
+            expect(date_value_second_row.value.unwrapOr(null)).toBe(second_date);
+
+            const numeric_value_second_row = second_row.get(numeric_column);
+            if (numeric_value_second_row?.type !== NUMERIC_CELL) {
+                throw Error("Expected to find second numeric value");
+            }
+            expect(numeric_value_second_row.value.unwrapOr(null)).toBe(int_value);
+        });
+
+        it(`builds a table with "date" selectables`, () => {
+            const first_date = "2022-09-15T00:00:00+06:00";
+            const second_date = "2018-09-23T23:26:36+09:00";
+            const date_column = "start_date";
+
+            const table = ArtifactsTableBuilder().mapReportToArtifactsTable({
+                selected: [{ type: DATE_SELECTABLE_TYPE, name: date_column }],
+                artifacts: [
+                    { [date_column]: { value: first_date, with_time: false } },
+                    { [date_column]: { value: second_date, with_time: true } },
+                    { [date_column]: { value: null, with_time: false } },
+                ],
+            });
+
+            expect(table.columns.has(date_column)).toBe(true);
+            expect(table.rows).toHaveLength(3);
+            const [first_row, second_row, third_row] = table.rows;
+            const date_value_first_row = first_row.get(date_column);
+            if (date_value_first_row?.type !== DATE_CELL) {
+                throw Error("Expected to find first date value");
+            }
+            expect(date_value_first_row.value.unwrapOr(null)).toBe(first_date);
+            expect(date_value_first_row.with_time).toBe(false);
+
+            const date_value_second_row = second_row.get(date_column);
+            if (date_value_second_row?.type !== DATE_CELL) {
+                throw Error("Expected to find second date value");
+            }
             expect(date_value_second_row.value.unwrapOr(null)).toBe(second_date);
             expect(date_value_second_row.with_time).toBe(true);
 
+            const date_value_third_row = third_row.get(date_column);
+            if (date_value_third_row?.type !== DATE_CELL) {
+                throw Error("Expected to find third date value");
+            }
+            expect(date_value_third_row.value.isNothing()).toBe(true);
+            expect(date_value_third_row.with_time).toBe(false);
+        });
+
+        it(`builds a table with "numeric" selectables`, () => {
+            const float_value = 15.2;
+            const int_value = 10;
+            const numeric_column = "remaining_effort";
+
+            const table = ArtifactsTableBuilder().mapReportToArtifactsTable({
+                selected: [{ type: NUMERIC_SELECTABLE_TYPE, name: numeric_column }],
+                artifacts: [
+                    { [numeric_column]: { value: float_value } },
+                    { [numeric_column]: { value: int_value } },
+                    { [numeric_column]: { value: null } },
+                ],
+            });
+
+            expect(table.columns.has(numeric_column)).toBe(true);
+            expect(table.rows).toHaveLength(3);
+            const [first_row, second_row, third_row] = table.rows;
+            const numeric_value_first_row = first_row.get(numeric_column);
+            if (numeric_value_first_row?.type !== NUMERIC_CELL) {
+                throw Error("Expected to find first numeric value");
+            }
+            expect(numeric_value_first_row.value.unwrapOr(null)).toBe(float_value);
+
             const numeric_value_second_row = second_row.get(numeric_column);
-            if (!numeric_value_second_row || numeric_value_second_row.type !== NUMERIC_CELL) {
+            if (numeric_value_second_row?.type !== NUMERIC_CELL) {
                 throw Error("Expected to find second numeric value");
             }
             expect(numeric_value_second_row.value.unwrapOr(null)).toBe(int_value);
 
+            const numeric_value_third_row = third_row.get(numeric_column);
+            if (numeric_value_third_row?.type !== NUMERIC_CELL) {
+                throw Error("Expected to find third numeric value");
+            }
+            expect(numeric_value_third_row.value.isNothing()).toBe(true);
+        });
+
+        it(`builds a table with "text" selectables`, () => {
+            const text_value = "<p>Griffith II</p>";
+            const text_column = "details";
+
+            const table = ArtifactsTableBuilder().mapReportToArtifactsTable({
+                selected: [{ type: TEXT_SELECTABLE_TYPE, name: text_column }],
+                artifacts: [
+                    { [text_column]: { value: text_value } },
+                    { [text_column]: { value: "" } },
+                ],
+            });
+
+            expect(table.columns.has(text_column)).toBe(true);
+            expect(table.rows).toHaveLength(2);
+            const [first_row, second_row] = table.rows;
+            const text_value_first_row = first_row.get(text_column);
+            if (text_value_first_row?.type !== TEXT_CELL) {
+                throw Error("Expected to find first text value");
+            }
+            expect(text_value_first_row.value).toBe(text_value);
+
             const text_value_second_row = second_row.get(text_column);
-            if (!text_value_second_row || text_value_second_row.type !== TEXT_CELL) {
+            if (text_value_second_row?.type !== TEXT_CELL) {
                 throw Error("Expected to find second text value");
             }
             expect(text_value_second_row.value).toBe("");
         });
 
-        it(`when the artifact has a null "date" value for the given selectable,
-            it will build a Cell with Nothing`, () => {
+        it(`builds a table with "project" selectables`, () => {
+            const first_project = { icon: "", name: "Minimum Butter" };
+            const second_project = { icon: "🖍️", name: "Teal Creek" };
+            const project_column = "@project.name";
+
             const table = ArtifactsTableBuilder().mapReportToArtifactsTable({
-                selected: [{ type: DATE_SELECTABLE_TYPE, name: "start_date" }],
-                artifacts: [{ start_date: { value: null, with_time: false } }],
+                selected: [{ type: PROJECT_SELECTABLE_TYPE, name: project_column }],
+                artifacts: [
+                    { [project_column]: first_project },
+                    { [project_column]: second_project },
+                ],
             });
 
-            const date_value = table.rows[0].get("start_date");
-            if (!date_value || date_value.type !== DATE_CELL) {
-                throw Error("Expected to find date value");
+            expect(table.columns.has(project_column)).toBe(true);
+            expect(table.rows).toHaveLength(2);
+            const [first_row, second_row] = table.rows;
+            const project_first_row = first_row.get(project_column);
+            if (project_first_row?.type !== PROJECT_CELL) {
+                throw Error("Expected to find first project name");
             }
+            expect(project_first_row.icon).toBe(first_project.icon);
+            expect(project_first_row.name).toBe(first_project.name);
 
-            expect(date_value.type).toBe(DATE_CELL);
-            expect(date_value.value.isNothing()).toBe(true);
-            expect(date_value.with_time).toBe(false);
-        });
-
-        it(`when the artifact has a null "numeric" value for the given selectable,
-            it will build a Cell with Nothing`, () => {
-            const table = ArtifactsTableBuilder().mapReportToArtifactsTable({
-                selected: [{ type: NUMERIC_SELECTABLE_TYPE, name: "remaining_effort" }],
-                artifacts: [{ remaining_effort: { value: null } }],
-            });
-
-            const numeric_cell = table.rows[0].get("remaining_effort");
-            if (!numeric_cell || numeric_cell.type !== NUMERIC_CELL) {
-                throw Error("Expected to find date value");
+            const project_second_row = second_row.get(project_column);
+            if (project_second_row?.type !== PROJECT_CELL) {
+                throw Error("Expected to find second project name");
             }
-            expect(numeric_cell.value.isNothing()).toBe(true);
+            expect(project_second_row.icon).toBe(second_project.icon);
+            expect(project_second_row.name).toBe(second_project.name);
         });
 
         it(`given a report content representation with an unsupported selectable type,
@@ -156,17 +237,20 @@ describe(`ArtifactsTableBuilder`, () => {
             expect(table.rows[0].size).toBe(0);
         });
 
-        it.each([
-            ["date", DATE_SELECTABLE_TYPE, "ritualist"],
-            ["numeric", NUMERIC_SELECTABLE_TYPE, "ritualist"],
-            ["text", TEXT_SELECTABLE_TYPE, 12],
-        ])(
+        function* generateBrokenSelectedValues(): Generator<[string, Record<string, unknown>]> {
+            yield [DATE_SELECTABLE_TYPE, { value: "ritualist" }];
+            yield [NUMERIC_SELECTABLE_TYPE, { value: "ritualist" }];
+            yield [TEXT_SELECTABLE_TYPE, { value: 12 }];
+            yield [PROJECT_SELECTABLE_TYPE, { value: 12 }];
+        }
+
+        it.each([...generateBrokenSelectedValues()])(
             `when the artifact value does not match the %s representation, it will throw an error`,
-            (_type, selected_type, value) => {
+            (selected_type, representation) => {
                 expect(() =>
                     ArtifactsTableBuilder().mapReportToArtifactsTable({
                         selected: [{ type: selected_type, name: "makeress" }],
-                        artifacts: [{ makeress: { value } }],
+                        artifacts: [{ makeress: representation }],
                     }),
                 ).toThrow();
             },
