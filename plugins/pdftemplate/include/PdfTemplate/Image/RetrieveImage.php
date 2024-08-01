@@ -1,3 +1,4 @@
+<?php
 /**
  * Copyright (c) Enalean, 2024 - Present. All Rights Reserved.
  *
@@ -17,10 +18,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-.pdftemplate-admin-images-input-file {
-    display: none;
-}
+namespace Tuleap\PdfTemplate\Image;
 
-.pdftemplate-admin-images-preview {
-    text-align: center;
+use Tuleap\PdfTemplate\Image\Identifier\PdfTemplateImageIdentifier;
+
+interface RetrieveImage
+{
+    public function retrieveImage(PdfTemplateImageIdentifier $identifier): ?PdfTemplateImage;
 }

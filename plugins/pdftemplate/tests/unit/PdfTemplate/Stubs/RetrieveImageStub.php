@@ -1,3 +1,4 @@
+<?php
 /**
  * Copyright (c) Enalean, 2024 - Present. All Rights Reserved.
  *
@@ -17,10 +18,32 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-.pdftemplate-admin-images-input-file {
-    display: none;
-}
+declare(strict_types=1);
 
-.pdftemplate-admin-images-preview {
-    text-align: center;
+namespace Tuleap\PdfTemplate\Stubs;
+
+use Tuleap\PdfTemplate\Image\Identifier\PdfTemplateImageIdentifier;
+use Tuleap\PdfTemplate\Image\PdfTemplateImage;
+use Tuleap\PdfTemplate\Image\RetrieveImage;
+
+final readonly class RetrieveImageStub implements RetrieveImage
+{
+    private function __construct(private ?PdfTemplateImage $image)
+    {
+    }
+
+    public static function withMatchingImage(PdfTemplateImage $image): self
+    {
+        return new self($image);
+    }
+
+    public static function withoutMatchingImage(): self
+    {
+        return new self(null);
+    }
+
+    public function retrieveImage(PdfTemplateImageIdentifier $identifier): ?PdfTemplateImage
+    {
+        return $this->image;
+    }
 }

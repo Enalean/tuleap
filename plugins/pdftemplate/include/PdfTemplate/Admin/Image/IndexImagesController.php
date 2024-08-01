@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\PdfTemplate\Admin\Image;
 
 use HTTPRequest;
+use Tuleap\Date\RelativeDatesAssetsRetriever;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\IncludeViteAssets;
 use Tuleap\Layout\JavascriptViteAsset;
@@ -30,6 +31,8 @@ use Tuleap\PdfTemplate\Admin\CSRFTokenProvider;
 use Tuleap\PdfTemplate\Admin\Navigation;
 use Tuleap\PdfTemplate\Admin\RenderAPresenter;
 use Tuleap\PdfTemplate\Admin\UserCanManageTemplatesChecker;
+use Tuleap\PdfTemplate\Image\PdfTemplateImage;
+use Tuleap\PdfTemplate\Image\RetrieveAllImages;
 use Tuleap\Request\DispatchableWithBurningParrot;
 use Tuleap\Request\DispatchableWithRequest;
 
@@ -41,6 +44,7 @@ final class IndexImagesController implements DispatchableWithBurningParrot, Disp
         private RenderAPresenter $admin_page_renderer,
         private UserCanManageTemplatesChecker $can_manage_templates_checker,
         private CSRFTokenProvider $token_provider,
+        private RetrieveAllImages $retriever,
     ) {
     }
 
@@ -58,6 +62,7 @@ final class IndexImagesController implements DispatchableWithBurningParrot, Disp
                 'src/index.ts'
             )
         );
+        $layout->addJavascriptAsset(RelativeDatesAssetsRetriever::getAsJavascriptAssets());
 
         $this->admin_page_renderer->renderAPresenter(
             $layout,
@@ -68,6 +73,10 @@ final class IndexImagesController implements DispatchableWithBurningParrot, Disp
             new IndexImagesPresenter(
                 Navigation::inImages(),
                 $this->token_provider->getToken(),
+                array_map(
+                    fn (PdfTemplateImage $image) => PdfTemplateImagePresenter::fromImage($image, $current_user),
+                    $this->retriever->retrieveAll(),
+                ),
             ),
         );
     }

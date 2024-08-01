@@ -20,5 +20,8 @@
 import { openAllTargetModalsOnClick } from "@tuleap/tlp-modal";
 
 export function initiateModals(doc: Document): void {
-    openAllTargetModalsOnClick(doc, ".pdftemplate-delete-button");
+    openAllTargetModalsOnClick(
+        doc,
+        ".pdftemplate-delete-button, .pdftemplate-admin-images-preview-button",
+    );
 }

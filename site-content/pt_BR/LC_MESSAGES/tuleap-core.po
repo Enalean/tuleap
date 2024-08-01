@@ -85,10 +85,34 @@ msgstr[0] "%d Projeto agregado"
 msgstr[1] "%d Projetos agregados"
 
 #, php-format
+msgid "%d B"
+msgstr ""
+
+#, php-format
+msgid "%d GB"
+msgstr ""
+
+#, php-format
+msgid "%d MB"
+msgstr ""
+
+#, php-format
+msgid "%d PB"
+msgstr ""
+
+#, php-format
 msgid "%d Parent project"
 msgid_plural "%d Parent projects"
 msgstr[0] "%d Projeto Pai"
 msgstr[1] "%d Projetos Pai"
+
+#, php-format
+msgid "%d TB"
+msgstr ""
+
+#, php-format
+msgid "%d kB"
+msgstr ""
 
 #, php-format
 msgid "%d member"

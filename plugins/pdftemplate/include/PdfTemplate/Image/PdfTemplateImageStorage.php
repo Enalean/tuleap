@@ -40,7 +40,7 @@ final class PdfTemplateImageStorage implements StorePdfTemplateImage
         return move_uploaded_file($uploaded_path, $destination);
     }
 
-    private function getPath(PdfTemplateImageIdentifier $identifier): string
+    public function getPath(PdfTemplateImageIdentifier $identifier): string
     {
         return ForgeConfig::get('sys_data_dir') . self::STORAGE_PATH . $identifier->toString();
     }

@@ -30,12 +30,18 @@ final readonly class IndexImagesPresenter
 {
     public string $upload_url;
     public CSRFSynchronizerTokenPresenter $csrf;
+    public bool $has_images;
 
+    /**
+     * @param list<PdfTemplateImagePresenter> $images
+     */
     public function __construct(
         public Navigation $navigation,
         CSRFSynchronizerTokenInterface $token,
+        public array $images,
     ) {
         $this->upload_url = UploadImageController::ROUTE;
         $this->csrf       = CSRFSynchronizerTokenPresenter::fromToken($token);
+        $this->has_images = count($images) > 0;
     }
 }

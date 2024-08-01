@@ -33,6 +33,9 @@ msgstr "Créer et éditer des modèles de PDF"
 msgid "Create template"
 msgstr "Créer un modèle"
 
+msgid "Date"
+msgstr "Date"
+
 msgid "Delete"
 msgstr "Supprimer"
 
@@ -131,6 +134,9 @@ msgstr "Le label du modèle est obligatoire"
 msgid "There isn't any templates defined"
 msgstr "Il n'y a pas de modèle défini"
 
+msgid "There isn't any uploaded image yet."
+msgstr "Il n'y a pas encore d'image téléversée."
+
 msgid "This can be used to include a logo, or a background image."
 msgstr "Ça peut être utile pour inclure un logo, ou une image de fond."
 
@@ -153,6 +159,9 @@ msgstr "Mis à jour le"
 
 msgid "Upload image"
 msgstr "Téléverser une image"
+
+msgid "Uploaded by"
+msgstr "Téléversée par"
 
 msgid "You are about to delete the PDF template '%s'."
 msgstr "Vous êtes sur le point de supprimer le modèle PDF '%s'."
