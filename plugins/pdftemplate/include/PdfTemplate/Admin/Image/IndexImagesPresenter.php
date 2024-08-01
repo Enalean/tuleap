@@ -22,12 +22,20 @@ declare(strict_types=1);
 
 namespace Tuleap\PdfTemplate\Admin\Image;
 
+use Tuleap\CSRFSynchronizerTokenPresenter;
 use Tuleap\PdfTemplate\Admin\Navigation;
+use Tuleap\Request\CSRFSynchronizerTokenInterface;
 
 final readonly class IndexImagesPresenter
 {
+    public string $upload_url;
+    public CSRFSynchronizerTokenPresenter $csrf;
+
     public function __construct(
         public Navigation $navigation,
+        CSRFSynchronizerTokenInterface $token,
     ) {
+        $this->upload_url = UploadImageController::ROUTE;
+        $this->csrf       = CSRFSynchronizerTokenPresenter::fromToken($token);
     }
 }

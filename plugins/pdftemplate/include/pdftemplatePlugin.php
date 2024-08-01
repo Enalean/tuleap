@@ -39,11 +39,15 @@ use Tuleap\PdfTemplate\Admin\DisplayPdfTemplateCreationFormController;
 use Tuleap\PdfTemplate\Admin\DisplayPdfTemplateDuplicateFormController;
 use Tuleap\PdfTemplate\Admin\DisplayPdfTemplateUpdateFormController;
 use Tuleap\PdfTemplate\Admin\Image\IndexImagesController;
+use Tuleap\PdfTemplate\Admin\Image\UploadImageController;
 use Tuleap\PdfTemplate\Admin\IndexPdfTemplateController;
 use Tuleap\PdfTemplate\Admin\ManagePdfTemplates;
 use Tuleap\PdfTemplate\Admin\RejectNonNonPdfTemplateManagerMiddleware;
 use Tuleap\PdfTemplate\Admin\UpdatePdfTemplateController;
 use Tuleap\PdfTemplate\Admin\UserCanManageTemplatesChecker;
+use Tuleap\PdfTemplate\Image\Identifier\PdfTemplateImageIdentifierFactory;
+use Tuleap\PdfTemplate\Image\PdfTemplateImageDao;
+use Tuleap\PdfTemplate\Image\PdfTemplateImageStorage;
 use Tuleap\PdfTemplate\PdfTemplateDao;
 use Tuleap\PdfTemplate\PdfTemplateForUserRetriever;
 use Tuleap\Plugin\ListeningToEventClass;
@@ -134,6 +138,30 @@ class PdfTemplatePlugin extends Plugin
             DisplayPdfTemplateDuplicateFormController::ROUTE . '/{id:[A-Fa-f0-9-]+}',
             $this->getRouteHandler('displayDuplicateAdminController'),
         );
+        $event->getRouteCollector()->post(
+            UploadImageController::ROUTE,
+            $this->getRouteHandler('uploadImageController'),
+        );
+    }
+
+    public function uploadImageController(): DispatchableWithRequest
+    {
+        return new UploadImageController(
+            new RedirectWithFeedbackFactory(
+                HTTPFactoryBuilder::responseFactory(),
+                new FeedbackSerializer(new FeedbackDao()),
+            ),
+            $this->getImageDao(),
+            $this->getImageIdentifierFactory(),
+            new PdfTemplateImageStorage(),
+            BackendLogger::getDefaultLogger(),
+            new SapiEmitter(),
+            new RejectNonNonPdfTemplateManagerMiddleware(
+                UserManager::instance(),
+                $this->getUserCanManageTemplatesChecker(),
+            ),
+            new CheckCSRFMiddleware(new AdministrationCSRFTokenProvider()),
+        );
     }
 
     public function indexAdminImagesController(): DispatchableWithRequest
@@ -141,6 +169,7 @@ class PdfTemplatePlugin extends Plugin
         return new IndexImagesController(
             new AdminPageRenderer(),
             $this->getUserCanManageTemplatesChecker(),
+            new AdministrationCSRFTokenProvider(),
         );
     }
 
@@ -270,5 +299,15 @@ class PdfTemplatePlugin extends Plugin
     private function getPdfTemplateIdentifierFactory(): PdfTemplateIdentifierFactory
     {
         return new PdfTemplateIdentifierFactory(new DatabaseUUIDV7Factory());
+    }
+
+    private function getImageDao(): PdfTemplateImageDao
+    {
+        return new PdfTemplateImageDao($this->getImageIdentifierFactory(), UserManager::instance());
+    }
+
+    private function getImageIdentifierFactory(): PdfTemplateImageIdentifierFactory
+    {
+        return new PdfTemplateImageIdentifierFactory(new DatabaseUUIDV7Factory());
     }
 }

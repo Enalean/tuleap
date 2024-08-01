@@ -845,6 +845,10 @@ done
 # Plugin Tracker CCE
 %{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/tracker_functions
 
+# Plugin pdftemplate
+%{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/pdftemplate
+%{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/pdftemplate/images
+
 %endif
 
 %if %{with experimental}
@@ -1440,6 +1444,8 @@ fi
 %files plugin-pdftemplate
 %defattr(-,root,root,-)
 %{APP_DIR}/plugins/pdftemplate
+%dir %attr(0700,%{APP_USER},%{APP_USER}) %{APP_DATA_DIR}/pdftemplate
+%dir %attr(0700,%{APP_USER},%{APP_USER}) %{APP_DATA_DIR}/pdftemplate/images
 
 %endif
 

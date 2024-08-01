@@ -11,3 +11,14 @@ CREATE TABLE plugin_pdftemplate
     last_updated_by   INT          NOT NULL,
     INDEX idx_label (label(10))
 ) ENGINE = InnoDB;
+
+DROP TABLE IF EXISTS plugin_pdftemplate_image;
+CREATE TABLE plugin_pdftemplate_image
+(
+    id                BINARY(16)   NOT NULL PRIMARY KEY,
+    filename          VARCHAR(255) NOT NULL,
+    filesize          INT          NOT NULL,
+    last_updated_date INT          NOT NULL,
+    last_updated_by   INT          NOT NULL,
+    INDEX idx_filename (filename(10))
+) ENGINE = InnoDB;

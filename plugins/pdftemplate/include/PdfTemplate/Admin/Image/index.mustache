@@ -18,12 +18,25 @@
                     {{# dgettext }} tuleap-pdftemplate | Images uploaded here can be used inside PDF templates. {{/ dgettext }}
                     {{# dgettext }} tuleap-pdftemplate | This can be used to include a logo, or a background image. {{/ dgettext }}
                 </p>
-                <div class="tlp-table-actions">
-                    <button type="button" disabled class="tlp-button-primary">
+
+                <form action="{{ upload_url }}" method="POST" class="tlp-table-actions" enctype="multipart/form-data">
+                    {{# csrf }}
+                        {{> csrf_token_input }}
+                    {{/ csrf }}
+
+                    <label for="input-file" disabled class="tlp-button-primary">
                         <i class="fa-solid fa-upload tlp-button-icon" aria-hidden="true"></i>
                         {{# dgettext }} tuleap-pdftemplate | Upload image {{/ dgettext }}
-                    </button>
-                </div>
+                    </label>
+                    <input type="file"
+                           id="input-file"
+                           name="image"
+                           accept="image/png, image/gif, image/jpeg"
+                           class="pdftemplate-admin-images-input-file"
+                           onchange="this.form.submit()"
+                    />
+                </form>
+
                 <table class="tlp-table">
                     <thead>
                     <tr>

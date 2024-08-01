@@ -26,6 +26,7 @@ use HTTPRequest;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\IncludeViteAssets;
 use Tuleap\Layout\JavascriptViteAsset;
+use Tuleap\PdfTemplate\Admin\CSRFTokenProvider;
 use Tuleap\PdfTemplate\Admin\Navigation;
 use Tuleap\PdfTemplate\Admin\RenderAPresenter;
 use Tuleap\PdfTemplate\Admin\UserCanManageTemplatesChecker;
@@ -39,6 +40,7 @@ final class IndexImagesController implements DispatchableWithBurningParrot, Disp
     public function __construct(
         private RenderAPresenter $admin_page_renderer,
         private UserCanManageTemplatesChecker $can_manage_templates_checker,
+        private CSRFTokenProvider $token_provider,
     ) {
     }
 
@@ -65,6 +67,7 @@ final class IndexImagesController implements DispatchableWithBurningParrot, Disp
             'Image/index',
             new IndexImagesPresenter(
                 Navigation::inImages(),
+                $this->token_provider->getToken(),
             ),
         );
     }
