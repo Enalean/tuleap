@@ -29,7 +29,7 @@
                 <a
                     v-else-if="isArtifactSection(section)"
                     v-bind:href="href(section)"
-                    class="section-title"
+                    class="table-of-content-section-title"
                 >
                     {{ section.display_title }}
                 </a>
@@ -75,7 +75,8 @@ li {
     margin: 0 0 var(--tlp-small-spacing);
 }
 
-.section-title {
+.section-title,
+.table-of-content-section-title {
     color: var(--tlp-dark-color);
     font-size: 0.875rem;
     font-weight: 600;
