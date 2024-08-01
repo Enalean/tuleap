@@ -20,6 +20,7 @@ import type { MarkSpec, DOMOutputSpec } from "prosemirror-model";
 import { Schema } from "prosemirror-model";
 
 const strongDOM: DOMOutputSpec = ["strong", 0];
+const emDOM: DOMOutputSpec = ["em", 0];
 
 export const nodes = {};
 
@@ -40,8 +41,22 @@ const strong: MarkSpec = {
         return strongDOM;
     },
 };
+
+const em: MarkSpec = {
+    parseDOM: [
+        { tag: "i" },
+        { tag: "em" },
+        { style: "font-style=italic" },
+        { style: "font-style=normal", clearMark: (m) => m.type.name === "em" },
+    ],
+    toDOM() {
+        return emDOM;
+    },
+};
+
 export const marks = {
     strong,
+    em,
 };
 
 export const schema = new Schema({ nodes, marks });

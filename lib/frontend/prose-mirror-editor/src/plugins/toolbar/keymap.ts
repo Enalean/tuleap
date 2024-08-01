@@ -27,7 +27,7 @@ export function buildKeymap(
     map_keys?: { [key: string]: false | string },
 ): ProseMirrorKeyMap {
     const keys: ProseMirrorKeyMap = {};
-    const type: MarkType = schema.marks.strong;
+    let type: MarkType;
 
     function bind(key: string, cmd: Command): void {
         if (map_keys) {
@@ -43,8 +43,13 @@ export function buildKeymap(
         }
     }
 
+    type = schema.marks.strong;
     bind("Mod-b", toggleMark(type));
     bind("Mod-B", toggleMark(type));
+
+    type = schema.marks.em;
+    bind("Mod-i", toggleMark(type));
+    bind("Mod-I", toggleMark(type));
 
     return keys;
 }

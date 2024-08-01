@@ -58,26 +58,23 @@ function markItem(markType: MarkType, options: Partial<MenuItemSpec>): MenuItem 
 
 type MenuItemResult = {
     toggleStrong?: MenuItem;
+    toggleEm?: MenuItem;
     fullMenu: MenuElement[][];
 };
 
 export function buildMenuItems(schema: Schema): MenuItemResult {
-    const menu_item: MenuItemResult = {
-        fullMenu: [[]],
+    return {
+        fullMenu: [
+            [
+                markItem(schema.marks.strong, {
+                    title: gettext_provider.gettext("Toggle strong style `Ctrl+b`"),
+                    icon: icons.strong,
+                }),
+                markItem(schema.marks.em, {
+                    title: gettext_provider.gettext("Toggle embedded style `Ctrl+i`"),
+                    icon: icons.em,
+                }),
+            ],
+        ],
     };
-    let mark: MarkType | undefined;
-    let toggle_strong: MenuItem | null = null;
-
-    if ((mark = schema.marks.strong)) {
-        toggle_strong = markItem(mark, {
-            title: gettext_provider.gettext("Toggle strong style `Ctrl+b`"),
-            icon: icons.strong,
-        });
-    }
-
-    if (toggle_strong) {
-        menu_item.fullMenu = [[toggle_strong]];
-    }
-
-    return menu_item;
 }
