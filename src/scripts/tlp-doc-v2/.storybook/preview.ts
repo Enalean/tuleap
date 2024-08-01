@@ -60,6 +60,51 @@ const preview: Preview = {
         docs: {
             source: { excludeDecorators: true },
         },
+        options: {
+            storySort: {
+                order: [
+                    "introduction",
+                    "TLP",
+                    [
+                        "Structure & Navigation",
+                        ["Layout", "Panes", "Cards", "Alerts", "Tabs", "Wizards", "Pagination"],
+                        "Visual assets",
+                        [
+                            "Colors",
+                            "Illustrations",
+                            "Avatars",
+                            "Typography",
+                            "Relative dates",
+                            "Iconography",
+                            "Badges",
+                            "Skeleton screens",
+                        ],
+                        "Buttons & Switch",
+                        ["Buttons", "Button Bars", "Switch"],
+                        "Forms",
+                        [
+                            "Good Practices",
+                            "Properties",
+                            "Inputs",
+                            "Search",
+                            "Textarea",
+                            "List picker",
+                            "Lazybox",
+                            "LazyAutocompleter",
+                            "Selects",
+                            "Checkboxes",
+                            "Radios",
+                            "Prepends",
+                            "Appends",
+                            "Date picker",
+                        ],
+                        "Tables",
+                        "Fly Over",
+                        ["Tooltips", "Popovers", "Dropdowns", "Modals"],
+                    ],
+                ],
+            },
+        },
     },
     globalTypes: {
         theme: {
