@@ -88,11 +88,23 @@ final readonly class TrackersPermissionsRetriever implements RetrieveUserPermiss
             return new UserPermissionsOnItems($user, $permission, $fields, []);
         }
 
-        $results = $this->fields_dao->searchUserGroupsPermissionOnFields(
-            $this->getUserUGroupsFromFields($user, $fields),
+        $user_groups_id = $this->getUserUGroupsFromFields($user, $fields);
+        $results        = $this->fields_dao->searchUserGroupsPermissionOnFields(
+            $user_groups_id,
             array_map(static fn(Tracker_FormElement $element) => $element->getId(), $fields),
             $permission->value
         );
+        if ($permission === FieldPermissionType::PERMISSION_READ) {
+            // If user has permission update, it has also permission read
+            $results = array_merge(
+                $results,
+                $this->fields_dao->searchUserGroupsPermissionOnFields(
+                    $user_groups_id,
+                    array_map(static fn(Tracker_FormElement $element) => $element->getId(), $fields),
+                    FieldPermissionType::PERMISSION_UPDATE->value,
+                ),
+            );
+        }
 
         $allowed     = [];
         $not_allowed = [];
