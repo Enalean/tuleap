@@ -15,6 +15,12 @@ msgstr ""
 msgid "Allow to define templates for PDF export"
 msgstr "Permet de définir des modèles pour l'export PDF"
 
+msgid "An error occurred while storing your image."
+msgstr "Une erreur est survenue lors du stockage de votre image."
+
+msgid "An error occurred while uploading your image."
+msgstr "Une erreur est survenue lors du téléversement de votre image."
+
 msgid "Cancel"
 msgstr "Annuler"
 
@@ -106,6 +112,9 @@ msgstr ""
 
 msgid "Templates list"
 msgstr "Liste des modèles"
+
+msgid "The image has been uploaded."
+msgstr "L'image a été téléversée."
 
 msgid "The template has been created"
 msgstr "Le modèle a été créé"
