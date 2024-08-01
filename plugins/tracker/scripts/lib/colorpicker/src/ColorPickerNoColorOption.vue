@@ -42,7 +42,7 @@ const emit = defineEmits<{
     (e: "color-update", value: string): void;
 }>();
 
-function updateColor() {
+function updateColor(): void {
     emit("color-update", "");
 }
 </script>
