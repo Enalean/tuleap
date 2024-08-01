@@ -22,6 +22,7 @@ import type { Option } from "@tuleap/option";
 export const DATE_CELL = "date";
 export const NUMERIC_CELL = "numeric";
 export const TEXT_CELL = "text";
+export const PROJECT_CELL = "project";
 
 type DateCell = {
     readonly type: typeof DATE_CELL;
@@ -39,7 +40,13 @@ type TextCell = {
     readonly value: string;
 };
 
-export type Cell = DateCell | NumericCell | TextCell;
+type ProjectCell = {
+    readonly type: typeof PROJECT_CELL;
+    readonly name: string;
+    readonly icon: string;
+};
+
+export type Cell = DateCell | NumericCell | TextCell | ProjectCell;
 
 export type ArtifactRow = Map<string, Cell>;
 

@@ -33,20 +33,27 @@
                 v-for="column_name of columns"
                 v-bind:key="column_name"
                 data-test="column-header"
-                >{{ column_name }}</span
+                >{{ getColumnName(column_name) }}</span
             >
             <template v-for="(row_map, index) of rows">
-                <span
-                    v-for="column_name of columns"
-                    v-bind:key="column_name + index"
-                    class="cell"
-                    v-bind:class="{
-                        'even-row': isEvenRow(index),
-                        'odd-row': !isEvenRow(index),
-                    }"
-                    data-test="cell"
-                    v-dompurify-html="renderCell(row_map, column_name)"
-                ></span>
+                <template v-for="column_name of columns">
+                    <text-cell
+                        v-if="row_map.get(column_name)?.type === TEXT_CELL"
+                        v-bind:key="column_name + index"
+                        v-bind:cell="row_map.get(column_name)"
+                        class="cell"
+                        v-bind:class="getEvenOddClass(index)"
+                        data-test="cell"
+                    />
+                    <span
+                        v-if="row_map.get(column_name)?.type !== TEXT_CELL"
+                        v-bind:key="column_name + index"
+                        class="cell"
+                        v-bind:class="getEvenOddClass(index)"
+                        data-test="cell"
+                        >{{ renderCell(row_map, column_name) }}</span
+                    >
+                </template>
             </template>
         </div>
     </div>
@@ -71,14 +78,20 @@ import {
 } from "../../injection-symbols";
 import type WritingCrossTrackerReport from "../../writing-mode/writing-cross-tracker-report";
 import type { ArtifactRow, ArtifactsTable } from "../../domain/ArtifactsTable";
-import { DATE_CELL, NUMERIC_CELL, TEXT_CELL } from "../../domain/ArtifactsTable";
+import { DATE_CELL, NUMERIC_CELL, PROJECT_CELL, TEXT_CELL } from "../../domain/ArtifactsTable";
 import type { ResultAsync } from "neverthrow";
 import type { Fault } from "@tuleap/fault";
+import { useGettext } from "vue3-gettext";
 import type { ArtifactsTableWithTotal } from "../../domain/RetrieveArtifactsTable";
 import SelectablePagination from "./SelectablePagination.vue";
 import EmptyState from "./EmptyState.vue";
 import { ArtifactsRetrievalFault } from "../../domain/ArtifactsRetrievalFault";
 import ExportButton from "../ExportCSVButton.vue";
+import TextCell from "./TextCell.vue";
+import type { ColumnName } from "../../domain/ColumnName";
+import { PROJECT_COLUMN_NAME } from "../../domain/ColumnName";
+
+const { $gettext } = useGettext();
 
 const artifacts_retriever = strictInject(RETRIEVE_ARTIFACTS_TABLE);
 const date_formatter = strictInject(DATE_FORMATTER);
@@ -157,6 +170,13 @@ function getArtifactsFromReportOrUnsavedQuery(): ResultAsync<ArtifactsTableWithT
     );
 }
 
+const getColumnName = (name: ColumnName): string => {
+    if (name === PROJECT_COLUMN_NAME) {
+        return $gettext("Project");
+    }
+    return name;
+};
+
 function renderCell(row: ArtifactRow, column_name: string): string {
     const cell = row.get(column_name);
     if (!cell) {
@@ -169,15 +189,16 @@ function renderCell(row: ArtifactRow, column_name: string): string {
     if (cell.type === NUMERIC_CELL) {
         return String(cell.value.unwrapOr(""));
     }
-    if (cell.type === TEXT_CELL) {
-        return cell.value;
+    if (cell.type === PROJECT_CELL) {
+        return cell.icon !== "" ? cell.icon + " " + cell.name : cell.name;
     }
     return "";
 }
 
-function isEvenRow(index: number): boolean {
-    return index % 2 === 0;
-}
+const getEvenOddClass = (index: number): Record<string, boolean> => ({
+    "even-row": index % 2 === 0,
+    "odd-row": index % 2 !== 0,
+});
 </script>
 
 <style scoped lang="scss">

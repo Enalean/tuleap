@@ -35,6 +35,7 @@ export type ReportContentRepresentation = {
 export const DATE_SELECTABLE_TYPE = "date";
 export const NUMERIC_SELECTABLE_TYPE = "numeric";
 export const TEXT_SELECTABLE_TYPE = "text";
+export const PROJECT_SELECTABLE_TYPE = "project";
 
 type UnsupportedSelectableRepresentation = Record<string, unknown>;
 
@@ -51,38 +52,49 @@ export type TextSelectableRepresentation = {
     readonly value: string;
 };
 
+export type ProjectSelectableRepresentation = {
+    readonly name: string;
+    readonly icon: string;
+};
+
 export type SelectableRepresentation =
     | DateSelectableRepresentation
     | NumericSelectableRepresentation
     | TextSelectableRepresentation
+    | ProjectSelectableRepresentation
     | UnsupportedSelectableRepresentation;
 
 export type SelectableArtifactRepresentation = Record<string, SelectableRepresentation>;
 
-type UnsupportedSelectable = {
+interface BaseSelectable {
+    readonly name: string;
+}
+
+interface UnsupportedSelectable extends BaseSelectable {
     readonly type: string;
-    readonly name: string;
-};
+}
 
-type DateSelectable = {
+interface DateSelectable extends BaseSelectable {
     readonly type: typeof DATE_SELECTABLE_TYPE;
-    readonly name: string;
-};
+}
 
-type NumericSelectable = {
+interface NumericSelectable extends BaseSelectable {
     readonly type: typeof NUMERIC_SELECTABLE_TYPE;
-    readonly name: string;
-};
+}
 
-type TextSelectable = {
+interface TextSelectable extends BaseSelectable {
     readonly type: typeof TEXT_SELECTABLE_TYPE;
-    readonly name: string;
-};
+}
+
+interface ProjectSelectable extends BaseSelectable {
+    readonly type: typeof PROJECT_SELECTABLE_TYPE;
+}
 
 export type Selectable =
     | DateSelectable
     | NumericSelectable
     | TextSelectable
+    | ProjectSelectable
     | UnsupportedSelectable;
 
 export type SelectableReportContentRepresentation = {
