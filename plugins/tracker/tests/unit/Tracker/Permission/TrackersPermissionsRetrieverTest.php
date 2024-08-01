@@ -108,6 +108,36 @@ final class TrackersPermissionsRetrieverTest extends TestCase
         self::assertEqualsCanonicalizing([$field2], $result->not_allowed);
     }
 
+    public function testItReturnsAllowedReadFieldsEvenIfOnlyUpdatePermission(): void
+    {
+        $user                  = $this->createMock(PFUser::class);
+        $project               = ProjectTestBuilder::aProject()->withId(101)->build();
+        $tracker               = TrackerTestBuilder::aTracker()->withId(201)->withProject($project)->build();
+        $field1                = IntFieldBuilder::anIntField(301)->inTracker($tracker)->build();
+        $field2                = IntFieldBuilder::anIntField(302)->inTracker($tracker)->build();
+        $field3                = IntFieldBuilder::anIntField(303)->inTracker($tracker)->build();
+        $field4                = IntFieldBuilder::anIntField(304)->inTracker($tracker)->build();
+        $permissions_on_fields = $this->createMock(SearchUserGroupsPermissionOnFields::class);
+        $permissions           = new TrackersPermissionsRetriever(
+            $permissions_on_fields,
+            SearchUserGroupsPermissionOnTrackersStub::build(),
+            SearchUserGroupsPermissionOnArtifactsStub::buildEmpty(),
+            CheckUserCanAccessProjectStub::build(),
+            EventDispatcherStub::withIdentityCallback(),
+            RetrieveUserByIdStub::withNoUser(),
+        );
+
+        $user->method('getUgroups')->willReturn([]);
+        $permissions_on_fields->expects(self::exactly(2))->method('searchUserGroupsPermissionOnFields')
+            ->willReturnCallback(static fn(array $user_groups_id, array $fields_id, string $permission) => match ($permission) {
+                FieldPermissionType::PERMISSION_READ->value   => [],
+                FieldPermissionType::PERMISSION_UPDATE->value => [301, 303, 304],
+            });
+        $result = $permissions->retrieveUserPermissionOnFields($user, [$field1, $field2, $field3, $field4], FieldPermissionType::PERMISSION_READ);
+        self::assertEqualsCanonicalizing([$field1, $field3, $field4], $result->allowed);
+        self::assertEqualsCanonicalizing([$field2], $result->not_allowed);
+    }
+
     public static function provideSpecialUsers(): iterable
     {
         yield 'Tracker_Workflow_WorkflowUser' => [new Tracker_Workflow_WorkflowUser()];

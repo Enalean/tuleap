@@ -23,6 +23,8 @@ declare(strict_types=1);
 namespace Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\DuckTypedField;
 
 use BaseLanguageFactory;
+use PFUser;
+use Tracker;
 use Tuleap\CrossTracker\Report\Query\Advanced\DuckTypedField\FieldNotFoundInAnyTrackerFault;
 use Tuleap\CrossTracker\Report\Query\Advanced\DuckTypedField\FieldTypesAreIncompatibleFault;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSelectableCollectorParameters;
@@ -35,6 +37,7 @@ use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\LegacyTabTranslationsSupport;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\FormElement\Field\ListFields\OpenListValueDao;
+use Tuleap\Tracker\Permission\FieldPermissionType;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\EqualComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Field;
@@ -70,17 +73,19 @@ final class DuckTypedFieldCheckerTest extends TestCase
     use LegacyTabTranslationsSupport;
 
     private const FIELD_NAME = 'toto';
-    private \Tracker $first_tracker;
-    private \Tracker $second_tracker;
-    private \PFUser $user;
+    private Tracker $first_tracker;
+    private Tracker $second_tracker;
+    private PFUser $user;
     private RetrieveUsedFieldsStub $fields_retriever;
+    private RetrieveUserPermissionOnFieldsStub $user_permission_on_fields;
 
     protected function setUp(): void
     {
-        $this->first_tracker    = TrackerTestBuilder::aTracker()->withId(86)->build();
-        $this->second_tracker   = TrackerTestBuilder::aTracker()->withId(94)->build();
-        $this->user             = UserTestBuilder::buildWithId(103);
-        $this->fields_retriever = RetrieveUsedFieldsStub::withFields(
+        $this->first_tracker             = TrackerTestBuilder::aTracker()->withId(86)->build();
+        $this->second_tracker            = TrackerTestBuilder::aTracker()->withId(94)->build();
+        $this->user                      = UserTestBuilder::buildWithId(103);
+        $this->user_permission_on_fields = RetrieveUserPermissionOnFieldsStub::build();
+        $this->fields_retriever          = RetrieveUsedFieldsStub::withFields(
             IntFieldBuilder::anIntField(841)
                 ->withName(self::FIELD_NAME)
                 ->inTracker($this->first_tracker)
@@ -132,7 +137,7 @@ final class DuckTypedFieldCheckerTest extends TestCase
                 new ArtifactSubmitterChecker(UserManager::instance()),
                 true,
             ),
-            RetrieveUserPermissionOnFieldsStub::build(),
+            $this->user_permission_on_fields,
         );
     }
 
@@ -316,15 +321,15 @@ final class DuckTypedFieldCheckerTest extends TestCase
             DateFieldBuilder::aDateField(156)
                 ->withName(self::FIELD_NAME)
                 ->inTracker($this->first_tracker)
-                ->withReadPermission($this->user, true)
                 ->build(),
             DateFieldBuilder::aDateField(189)
                 ->withTime()
                 ->withName(self::FIELD_NAME)
                 ->inTracker($this->second_tracker)
-                ->withReadPermission($this->user, true)
                 ->build(),
         );
+        $this->user_permission_on_fields->withPermissionOn([156], FieldPermissionType::PERMISSION_READ);
+        $this->user_permission_on_fields->withPermissionOn([189], FieldPermissionType::PERMISSION_UPDATE);
 
         self::assertTrue(Result::isOk($this->checkForSelect()));
     }

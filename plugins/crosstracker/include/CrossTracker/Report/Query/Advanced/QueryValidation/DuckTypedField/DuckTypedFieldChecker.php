@@ -36,7 +36,6 @@ use Tuleap\Tracker\FormElement\Field\RetrieveUsedFields;
 use Tuleap\Tracker\FormElement\RetrieveFieldType;
 use Tuleap\Tracker\Permission\FieldPermissionType;
 use Tuleap\Tracker\Permission\RetrieveUserPermissionOnFields;
-use Tuleap\Tracker\Permission\TrackersPermissionsRetriever;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Field;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\InvalidFieldChecker;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\InvalidFieldException;
@@ -96,27 +95,17 @@ final readonly class DuckTypedFieldChecker
         $tracker_ids = $collector_parameters->getTrackersIds();
         $user        = $collector_parameters->user;
 
-        if (TrackersPermissionsRetriever::isEnabled()) {
-            $fields = array_filter(
-                array_map(
-                    fn(int $tracker_id) => $this->retrieve_used_fields->getUsedFieldByName($tracker_id, $field->getName()),
-                    $tracker_ids,
-                ),
-                static fn(?Tracker_FormElement_Field $field) => $field !== null,
-            );
+        $fields = array_filter(
+            array_map(
+                fn(int $tracker_id) => $this->retrieve_used_fields->getUsedFieldByName($tracker_id, $field->getName()),
+                $tracker_ids,
+            ),
+            static fn(?Tracker_FormElement_Field $field) => $field !== null,
+        );
 
-            $fields_user_can_read = $this->user_permission_on_fields
-                ->retrieveUserPermissionOnFields($user, $fields, FieldPermissionType::PERMISSION_READ)
-                ->allowed;
-        } else {
-            $fields_user_can_read = [];
-            foreach ($tracker_ids as $tracker_id) {
-                $used_field = $this->retrieve_used_fields->getUsedFieldByName($tracker_id, $field->getName());
-                if ($used_field && $used_field->userCanRead($user)) {
-                    $fields_user_can_read[] = $used_field;
-                }
-            }
-        }
+        $fields_user_can_read = $this->user_permission_on_fields
+            ->retrieveUserPermissionOnFields($user, $fields, FieldPermissionType::PERMISSION_READ)
+            ->allowed;
 
         return DuckTypedFieldSelect::build(
             new FieldTypeRetrieverWrapper($this->retrieve_field_type),
