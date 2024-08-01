@@ -30,15 +30,23 @@ import type {
     SelectableReportContentRepresentation,
     SelectableRepresentation,
     TextSelectableRepresentation,
+    TrackerSelectableRepresentation,
 } from "./cross-tracker-rest-api-types";
 import {
+    TRACKER_SELECTABLE_TYPE,
     DATE_SELECTABLE_TYPE,
     NUMERIC_SELECTABLE_TYPE,
     PROJECT_SELECTABLE_TYPE,
     TEXT_SELECTABLE_TYPE,
 } from "./cross-tracker-rest-api-types";
 import type { ArtifactsTable, Cell } from "../domain/ArtifactsTable";
-import { DATE_CELL, NUMERIC_CELL, PROJECT_CELL, TEXT_CELL } from "../domain/ArtifactsTable";
+import {
+    TRACKER_CELL,
+    DATE_CELL,
+    NUMERIC_CELL,
+    PROJECT_CELL,
+    TEXT_CELL,
+} from "../domain/ArtifactsTable";
 
 export type ArtifactsTableBuilder = {
     mapReportToArtifactsTable(report: SelectableReportContentRepresentation): ArtifactsTable;
@@ -62,6 +70,10 @@ const isTextSelectableRepresentation = (
 const isProjectSelectableRepresentation = (
     representation: SelectableRepresentation,
 ): representation is ProjectSelectableRepresentation => "icon" in representation;
+
+const isTrackerSelectableRepresentation = (
+    representation: SelectableRepresentation,
+): representation is TrackerSelectableRepresentation => "color" in representation;
 
 /**
  * Throw instead of returning an err, because the format of the Selected representation
@@ -111,6 +123,15 @@ function buildCell(
                 type: PROJECT_CELL,
                 name: artifact_value.name,
                 icon: artifact_value.icon,
+            });
+        case TRACKER_SELECTABLE_TYPE:
+            if (!isTrackerSelectableRepresentation(artifact_value)) {
+                throw Error(getErrorMessageToWarnTuleapDevs(selectable));
+            }
+            return ok({
+                type: TRACKER_CELL,
+                name: artifact_value.name,
+                color: artifact_value.color,
             });
         default:
             return err(Fault.fromMessage(`Selectable type is not supported`));

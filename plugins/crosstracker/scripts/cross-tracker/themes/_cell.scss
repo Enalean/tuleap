@@ -1,4 +1,4 @@
-/*
+/**
  * Copyright (c) Enalean, 2024-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -17,7 +17,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export const PROJECT_COLUMN_NAME = "@project.name";
-export const TRACKER_COLUMN_NAME = "@tracker.name";
-
-export type ColumnName = typeof PROJECT_COLUMN_NAME | typeof TRACKER_COLUMN_NAME | string;
+@mixin cell-template {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: calc(
+        8px - (4px * var(--tlp-is-condensed))
+    ); // Match empty cells 32px height (or 24px in condensed mode)
+}
