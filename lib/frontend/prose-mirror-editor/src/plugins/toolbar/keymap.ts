@@ -51,5 +51,8 @@ export function buildKeymap(
     bind("Mod-i", toggleMark(type));
     bind("Mod-I", toggleMark(type));
 
+    type = schema.marks.code;
+    bind("Mod-`", toggleMark(type));
+
     return keys;
 }

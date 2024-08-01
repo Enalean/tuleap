@@ -24,11 +24,16 @@ import { menuBar } from "prosemirror-menu";
 import { buildMenuItems } from "./menu";
 import { buildKeymap } from "./keymap";
 import { custom_schema } from "../../custom_schema";
+import { buildInputRules } from "./input-rules";
 
 export { buildMenuItems, buildKeymap };
 
 export function setupToolbar(): Plugin[] {
-    const plugins = [keymap(buildKeymap(custom_schema)), keymap(baseKeymap)];
+    const plugins = [
+        keymap(buildKeymap(custom_schema)),
+        keymap(baseKeymap),
+        buildInputRules(custom_schema),
+    ];
 
     plugins.push(
         menuBar({
