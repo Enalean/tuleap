@@ -26,6 +26,9 @@ use HTTPRequest;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\IncludeViteAssets;
 use Tuleap\Layout\JavascriptViteAsset;
+use Tuleap\PdfTemplate\Image\DisplayImagePresenter;
+use Tuleap\PdfTemplate\Image\PdfTemplateImage;
+use Tuleap\PdfTemplate\Image\RetrieveAllImages;
 use Tuleap\Request\DispatchableWithBurningParrot;
 use Tuleap\Request\DispatchableWithRequest;
 
@@ -37,6 +40,7 @@ final readonly class DisplayPdfTemplateCreationFormController implements Dispatc
         private RenderAPresenter $admin_page_renderer,
         private UserCanManageTemplatesChecker $can_manage_templates_checker,
         private CSRFTokenProvider $token_provider,
+        private RetrieveAllImages $images_retriever,
     ) {
     }
 
@@ -64,6 +68,10 @@ final readonly class DisplayPdfTemplateCreationFormController implements Dispatc
             DisplayPdfTemplateCreationOrUpdateFormPresenter::forCreation(
                 $this->token_provider->getToken(),
                 $current_user,
+                array_map(
+                    static fn (PdfTemplateImage $image) => DisplayImagePresenter::fromImage($image),
+                    $this->images_retriever->retrieveAll(),
+                ),
             ),
         );
     }

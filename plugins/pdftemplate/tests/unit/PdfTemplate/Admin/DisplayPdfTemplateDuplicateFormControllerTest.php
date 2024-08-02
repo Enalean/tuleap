@@ -27,6 +27,7 @@ use Tuleap\Export\Pdf\Template\Identifier\PdfTemplateIdentifierFactory;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\PdfTemplate\Stubs\CSRFTokenProviderStub;
 use Tuleap\PdfTemplate\Stubs\RenderAPresenterStub;
+use Tuleap\PdfTemplate\Stubs\RetrieveAllImagesStub;
 use Tuleap\PdfTemplate\Stubs\RetrieveTemplateStub;
 use Tuleap\Request\NotFoundException;
 use Tuleap\Test\Builders\Export\Pdf\Template\PdfTemplateTestBuilder;
@@ -64,6 +65,7 @@ final class DisplayPdfTemplateDuplicateFormControllerTest extends TestCase
             new PdfTemplateIdentifierFactory(new DatabaseUUIDV7Factory()),
             RetrieveTemplateStub::withMatchingTemplate($template),
             CSRFTokenProviderStub::withToken(CSRFSynchronizerTokenStub::buildSelf()),
+            RetrieveAllImagesStub::withoutImages(),
         );
 
         $user = UserTestBuilder::anActiveUser()->build();
@@ -95,6 +97,7 @@ final class DisplayPdfTemplateDuplicateFormControllerTest extends TestCase
             new PdfTemplateIdentifierFactory(new DatabaseUUIDV7Factory()),
             RetrieveTemplateStub::withMatchingTemplate($template),
             CSRFTokenProviderStub::withToken(CSRFSynchronizerTokenStub::buildSelf()),
+            RetrieveAllImagesStub::withoutImages(),
         );
 
         $user = UserTestBuilder::buildSiteAdministrator();
@@ -124,6 +127,7 @@ final class DisplayPdfTemplateDuplicateFormControllerTest extends TestCase
             new PdfTemplateIdentifierFactory(new DatabaseUUIDV7Factory()),
             RetrieveTemplateStub::withMatchingTemplate($template),
             CSRFTokenProviderStub::withToken(CSRFSynchronizerTokenStub::buildSelf()),
+            RetrieveAllImagesStub::withoutImages(),
         );
 
         $user = UserTestBuilder::anActiveUser()->build();
@@ -153,6 +157,7 @@ final class DisplayPdfTemplateDuplicateFormControllerTest extends TestCase
             new PdfTemplateIdentifierFactory(new DatabaseUUIDV7Factory()),
             RetrieveTemplateStub::withMatchingTemplate($template),
             CSRFTokenProviderStub::withToken(CSRFSynchronizerTokenStub::buildSelf()),
+            RetrieveAllImagesStub::withoutImages(),
         );
 
         $user = UserTestBuilder::buildSiteAdministrator();
@@ -184,6 +189,7 @@ final class DisplayPdfTemplateDuplicateFormControllerTest extends TestCase
             new PdfTemplateIdentifierFactory(new DatabaseUUIDV7Factory()),
             RetrieveTemplateStub::withoutMatchingTemplate(),
             CSRFTokenProviderStub::withToken(CSRFSynchronizerTokenStub::buildSelf()),
+            RetrieveAllImagesStub::withoutImages(),
         );
 
         $user = UserTestBuilder::buildSiteAdministrator();

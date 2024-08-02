@@ -37,6 +37,7 @@ function instantiateEditor(
         mode,
         lineNumbers: true,
         indentUnit: 4,
+        lineWrapping: true,
     });
 }
 

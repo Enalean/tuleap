@@ -25,6 +25,7 @@ namespace Tuleap\PdfTemplate\Admin;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\PdfTemplate\Stubs\CSRFTokenProviderStub;
 use Tuleap\PdfTemplate\Stubs\RenderAPresenterStub;
+use Tuleap\PdfTemplate\Stubs\RetrieveAllImagesStub;
 use Tuleap\Request\NotFoundException;
 use Tuleap\Test\Builders\HTTPRequestBuilder;
 use Tuleap\Test\Builders\LayoutInspector;
@@ -56,6 +57,7 @@ final class DisplayPdfTemplateCreationFormControllerTest extends TestCase
                 ForgePermissionsRetrieverStub::withoutPermission(),
             ),
             CSRFTokenProviderStub::withToken(CSRFSynchronizerTokenStub::buildSelf()),
+            RetrieveAllImagesStub::withoutImages(),
         );
 
         $user = UserTestBuilder::anActiveUser()->build();
@@ -81,6 +83,7 @@ final class DisplayPdfTemplateCreationFormControllerTest extends TestCase
                 ForgePermissionsRetrieverStub::withoutPermission(),
             ),
             CSRFTokenProviderStub::withToken(CSRFSynchronizerTokenStub::buildSelf()),
+            RetrieveAllImagesStub::withoutImages(),
         );
 
         $user = UserTestBuilder::buildSiteAdministrator();
@@ -104,6 +107,7 @@ final class DisplayPdfTemplateCreationFormControllerTest extends TestCase
                 ForgePermissionsRetrieverStub::withPermission(),
             ),
             CSRFTokenProviderStub::withToken(CSRFSynchronizerTokenStub::buildSelf()),
+            RetrieveAllImagesStub::withoutImages(),
         );
 
         $user = UserTestBuilder::anActiveUser()->build();
