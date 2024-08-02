@@ -22,7 +22,7 @@ import { shallowMount } from "@vue/test-utils";
 import { getGlobalTestOptions } from "../../../tests/global-options-for-tests";
 import WidgetModalContent from "./WidgetModalContent.vue";
 import { usePersonalTimetrackingWidgetStore } from "../../store/root";
-import type { Artifact, PersonalTime } from "@tuleap/plugin-timetracking-rest-api-types";
+import type { Artifact } from "@tuleap/plugin-timetracking-rest-api-types";
 import type { ProjectResponse } from "@tuleap/core-rest-api-types";
 
 describe("Given a personal timetracking widget modal", () => {
@@ -33,7 +33,6 @@ describe("Given a personal timetracking widget modal", () => {
             props: {
                 artifact: {} as Artifact,
                 project: {} as ProjectResponse,
-                timeData: {} as PersonalTime,
             },
             global: {
                 ...getGlobalTestOptions({

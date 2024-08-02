@@ -46,7 +46,6 @@
                 data-test="modal-content"
                 v-bind:artifact="artifact"
                 v-bind:project="project"
-                v-bind:time-data="times[0]"
             />
             <div class="tlp-modal-footer tlp-modal-footer-large">
                 <button

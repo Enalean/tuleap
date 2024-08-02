@@ -41,7 +41,7 @@
             >
                 {{ feedback_message }}
             </div>
-            <widget-modal-table v-bind:artifact="artifact" v-bind:time-data="timeData" />
+            <widget-modal-table v-bind:artifact="artifact" />
         </div>
     </div>
 </template>
@@ -57,7 +57,7 @@ import WidgetModalTable from "./WidgetModalTable.vue";
 import WidgetLinkToArtifact from "../WidgetLinkToArtifact.vue";
 import { usePersonalTimetrackingWidgetStore } from "../../store/root";
 import { computed } from "vue";
-import type { Artifact, PersonalTime } from "@tuleap/plugin-timetracking-rest-api-types";
+import type { Artifact } from "@tuleap/plugin-timetracking-rest-api-types";
 import type { ProjectResponse } from "@tuleap/core-rest-api-types";
 import { useGettext } from "vue3-gettext";
 
@@ -66,7 +66,6 @@ const { $gettext } = useGettext();
 defineProps<{
     artifact: Artifact;
     project: ProjectResponse;
-    timeData: PersonalTime;
 }>();
 
 const personal_store = usePersonalTimetrackingWidgetStore();

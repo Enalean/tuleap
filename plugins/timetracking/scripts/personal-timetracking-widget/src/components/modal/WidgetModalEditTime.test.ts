@@ -35,7 +35,7 @@ describe("Given a personal timetracking widget modal", () => {
     function getWrapperInstance(time_data?: PersonalTime): VueWrapper {
         return shallowMount(WidgetModalEditTime, {
             props: {
-                timeData: time_data,
+                time_data: time_data,
                 artifact: current_artifact,
             },
             global: {

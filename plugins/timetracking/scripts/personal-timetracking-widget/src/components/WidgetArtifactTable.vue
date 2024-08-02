@@ -58,7 +58,7 @@
                 <artifact-table-row
                     v-for="(time, index) in personal_store.times"
                     v-bind:key="index"
-                    v-bind:time-data="time"
+                    v-bind:time_data="time"
                 />
             </tbody>
             <tfoot v-if="has_data_to_display" data-test="table-foot">

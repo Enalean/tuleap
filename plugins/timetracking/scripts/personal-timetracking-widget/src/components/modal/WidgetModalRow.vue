@@ -20,15 +20,15 @@
 <template>
     <widget-modal-edit-time
         v-if="edit_mode"
-        v-bind:time-data="timeData"
+        v-bind:time_data="time_data"
         v-on:swap-mode="swapEditMode"
         v-on:validate-time="editTime"
-        v-bind:artifact="timeData.artifact"
+        v-bind:artifact="time_data.artifact"
     />
     <tr v-else>
         <td>{{ time_date }}</td>
-        <td class="timetracking-detail-modal-step" v-bind:title="timeData.step">
-            {{ timeData.step }}
+        <td class="timetracking-detail-modal-step" v-bind:title="time_data.step">
+            {{ time_data.step }}
         </td>
         <td class="timetracking-details-modal-buttons">
             <span>{{ minutes }}</span>
@@ -40,7 +40,7 @@
                 >
                     <i class="fas fa-pencil-alt"></i>
                 </button>
-                <widget-modal-delete-popover v-bind:time-id="timeData.id" />
+                <widget-modal-delete-popover v-bind:time_id="time_data.id" />
             </span>
         </td>
     </tr>
@@ -57,7 +57,7 @@ import { computed, ref } from "vue";
 import type { PersonalTime } from "@tuleap/plugin-timetracking-rest-api-types";
 
 const props = defineProps<{
-    timeData: PersonalTime;
+    time_data: PersonalTime;
 }>();
 
 const personal_store = usePersonalTimetrackingWidgetStore();
@@ -65,11 +65,11 @@ const personal_store = usePersonalTimetrackingWidgetStore();
 const edit_mode = ref(false);
 
 const minutes = computed((): string => {
-    return formatMinutes(props.timeData.minutes);
+    return formatMinutes(props.time_data.minutes);
 });
 const time_date = computed((): string => {
     return formatDateUsingPreferredUserFormat(
-        new Date(props.timeData.date),
+        new Date(props.time_data.date),
         personal_store.user_locale,
     );
 });

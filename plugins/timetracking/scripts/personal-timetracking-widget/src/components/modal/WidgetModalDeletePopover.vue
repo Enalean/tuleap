@@ -68,7 +68,7 @@ import { useGettext } from "vue3-gettext";
 
 const { $gettext } = useGettext();
 const props = defineProps<{
-    timeId: number;
+    time_id: number;
 }>();
 
 const popover_button: Ref<HTMLElement | undefined> = ref();
@@ -88,6 +88,6 @@ onMounted(() => {
 });
 
 const removeTime = (): void => {
-    personal_store.deleteTime(props.timeId);
+    personal_store.deleteTime(props.time_id);
 };
 </script>
