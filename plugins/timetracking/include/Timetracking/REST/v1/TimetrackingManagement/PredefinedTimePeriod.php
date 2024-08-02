@@ -24,10 +24,10 @@ namespace Tuleap\Timetracking\REST\v1\TimetrackingManagement;
 
 enum PredefinedTimePeriod: string
 {
-    case TODAY       = 'today';
-    case YESTERDAY   = 'yesterday';
-    case THIS_WEEK   = 'this_week';
-    case LAST_7_DAYS = 'last_7_days';
-    case LAST_WEEK   = 'last_week';
-    case LAST_MONTH  = 'last_month';
+    case TODAY        = 'today';
+    case YESTERDAY    = 'yesterday';
+    case CURRENT_WEEK = 'current_week';
+    case LAST_7_DAYS  = 'last_7_days';
+    case LAST_WEEK    = 'last_week';
+    case LAST_MONTH   = 'last_month';
 }
