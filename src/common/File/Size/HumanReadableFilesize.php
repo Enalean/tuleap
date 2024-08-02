@@ -1,3 +1,4 @@
+<?php
 /**
  * Copyright (c) Enalean, 2024 - Present. All Rights Reserved.
  *
@@ -17,10 +18,29 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-.pdftemplate-admin-images-input-file {
-    display: none;
-}
+declare(strict_types=1);
 
-.pdftemplate-admin-images-preview {
-    text-align: center;
+namespace Tuleap\File\Size;
+
+final class HumanReadableFilesize
+{
+    public static function convert(int $bytes): string
+    {
+        $display_units = [_('%d B'), _('%d kB'), _('%d MB'), _('%d GB'), _('%d TB'), _('%d PB')];
+
+        if ($bytes > 0) {
+            $unit = (int) floor(log($bytes) / log(1024));
+            if ($unit < 0) {
+                $unit = 0;
+            } elseif ($unit > 5) {
+                $unit = 5;
+            }
+            $displayed_size = round($bytes / (1024 ** floor($unit)), 2);
+        } else {
+            $unit           = 0;
+            $displayed_size = 0;
+        }
+
+        return sprintf($display_units[$unit], $displayed_size);
+    }
 }

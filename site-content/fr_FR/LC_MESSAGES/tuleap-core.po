@@ -85,10 +85,34 @@ msgstr[0] "%d Projet regroupé"
 msgstr[1] "%d Projets regroupés"
 
 #, php-format
+msgid "%d B"
+msgstr "%d o"
+
+#, php-format
+msgid "%d GB"
+msgstr "%d Go"
+
+#, php-format
+msgid "%d MB"
+msgstr "%d Mo"
+
+#, php-format
+msgid "%d PB"
+msgstr "%d Po"
+
+#, php-format
 msgid "%d Parent project"
 msgid_plural "%d Parent projects"
 msgstr[0] "%d Projet parent"
 msgstr[1] "%d Projets parents"
+
+#, php-format
+msgid "%d TB"
+msgstr "%d To"
+
+#, php-format
+msgid "%d kB"
+msgstr "%d Ko"
 
 #, php-format
 msgid "%d member"

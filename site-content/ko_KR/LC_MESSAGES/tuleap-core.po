@@ -82,9 +82,33 @@ msgid_plural "%d Aggregated projects"
 msgstr[0] "%d개의 집계된 프로젝트"
 
 #, php-format
+msgid "%d B"
+msgstr ""
+
+#, php-format
+msgid "%d GB"
+msgstr ""
+
+#, php-format
+msgid "%d MB"
+msgstr ""
+
+#, php-format
+msgid "%d PB"
+msgstr ""
+
+#, php-format
 msgid "%d Parent project"
 msgid_plural "%d Parent projects"
 msgstr[0] "%d개의 상위 프로젝트"
+
+#, php-format
+msgid "%d TB"
+msgstr ""
+
+#, php-format
+msgid "%d kB"
+msgstr ""
 
 #, php-format
 msgid "%d member"

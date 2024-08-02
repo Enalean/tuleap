@@ -27,6 +27,7 @@ use Tuleap\DB\DatabaseUUIDV7Factory;
 use Tuleap\Export\Pdf\Template\GetPdfTemplatesEvent;
 use Tuleap\Export\Pdf\Template\Identifier\PdfTemplateIdentifierFactory;
 use Tuleap\Http\HTTPFactoryBuilder;
+use Tuleap\Http\Response\BinaryFileResponseBuilder;
 use Tuleap\Http\Response\RedirectWithFeedbackFactory;
 use Tuleap\Layout\Feedback\FeedbackSerializer;
 use Tuleap\PdfTemplate\Admin\AdministrationCSRFTokenProvider;
@@ -47,7 +48,10 @@ use Tuleap\PdfTemplate\Admin\UpdatePdfTemplateController;
 use Tuleap\PdfTemplate\Admin\UserCanManageTemplatesChecker;
 use Tuleap\PdfTemplate\Image\Identifier\PdfTemplateImageIdentifierFactory;
 use Tuleap\PdfTemplate\Image\PdfTemplateImageDao;
+use Tuleap\PdfTemplate\Image\PdfTemplateImageDisplayController;
 use Tuleap\PdfTemplate\Image\PdfTemplateImageStorage;
+use Tuleap\PdfTemplate\Image\RejectAnonymousMiddleware;
+use Tuleap\PdfTemplate\Image\RetrieveImageMiddleware;
 use Tuleap\PdfTemplate\PdfTemplateDao;
 use Tuleap\PdfTemplate\PdfTemplateForUserRetriever;
 use Tuleap\Plugin\ListeningToEventClass;
@@ -142,6 +146,21 @@ class PdfTemplatePlugin extends Plugin
             UploadImageController::ROUTE,
             $this->getRouteHandler('uploadImageController'),
         );
+        $event->getRouteCollector()->get(
+            PdfTemplateImageDisplayController::ROUTE . '/{id:[A-Fa-f0-9-]+}',
+            $this->getRouteHandler('displayImageController'),
+        );
+    }
+
+    public function displayImageController(): DispatchableWithRequest
+    {
+        return new PdfTemplateImageDisplayController(
+            new BinaryFileResponseBuilder(HTTPFactoryBuilder::responseFactory(), HTTPFactoryBuilder::streamFactory()),
+            new PdfTemplateImageStorage(),
+            new SapiEmitter(),
+            new RejectAnonymousMiddleware(UserManager::instance()),
+            new RetrieveImageMiddleware($this->getImageIdentifierFactory(), $this->getImageDao()),
+        );
     }
 
     public function uploadImageController(): DispatchableWithRequest
@@ -170,6 +189,7 @@ class PdfTemplatePlugin extends Plugin
             new AdminPageRenderer(),
             $this->getUserCanManageTemplatesChecker(),
             new AdministrationCSRFTokenProvider(),
+            $this->getImageDao(),
         );
     }
 

@@ -27,7 +27,7 @@ use Tuleap\PdfTemplate\Image\Identifier\PdfTemplateImageIdentifier;
 use Tuleap\PdfTemplate\Image\Identifier\PdfTemplateImageIdentifierFactory;
 use Tuleap\User\RetrieveUserById;
 
-final class PdfTemplateImageDao extends DataAccessObject implements CreateImage, RetrieveAllImages
+final class PdfTemplateImageDao extends DataAccessObject implements CreateImage, RetrieveAllImages, RetrieveImage
 {
     public function __construct(
         private PdfTemplateImageIdentifierFactory $identifier_factory,
@@ -88,5 +88,19 @@ final class PdfTemplateImageDao extends DataAccessObject implements CreateImage,
         }
 
         return $user;
+    }
+
+    public function retrieveImage(PdfTemplateImageIdentifier $identifier): ?PdfTemplateImage
+    {
+        $row = $this->getDB()->row(
+            'SELECT * FROM plugin_pdftemplate_image WHERE id = ?',
+            $identifier->getBytes(),
+        );
+
+        if (! $row) {
+            return null;
+        }
+
+        return $this->instantiatePdfTemplateImageFromRow($row);
     }
 }

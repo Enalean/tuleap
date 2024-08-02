@@ -39,20 +39,93 @@
 
                 <table class="tlp-table">
                     <thead>
-                    <tr>
-                        <th>{{# dgettext }} tuleap-pdftemplate | Name {{/ dgettext }}</th>
-                        <th>
-                            {{# dgettext }} tuleap-pdftemplate | Size {{/ dgettext }}
-                        </th>
-                        <th></th>
-                    </tr>
+                        <tr>
+                            <th>{{# dgettext }} tuleap-pdftemplate | Name {{/ dgettext }}</th>
+                            <th>
+                                {{# dgettext }} tuleap-pdftemplate | Size {{/ dgettext }}
+                            </th>
+                            <th>
+                                {{# dgettext }} tuleap-pdftemplate | Uploaded by {{/ dgettext }}
+                            </th>
+                            <th>
+                                {{# dgettext }} tuleap-pdftemplate | Date {{/ dgettext }}
+                            </th>
+                            <th></th>
+                        </tr>
                     </thead>
                     <tbody>
-                    <tr>
-                        <td colspan="3" class="tlp-table-cell-empty">
-                            Under construction
-                        </td>
-                    </tr>
+                    {{# has_images }}
+                        {{# images }}
+                            <tr>
+                                <td>
+                                    {{ filename }}
+                                </td>
+                                <td>
+                                    {{ filesize }}
+                                </td>
+                                <td>
+                                    {{# last_updated_by }}
+                                        <div class="tlp-avatar tlp-avatar-small">
+                                            {{# has_avatar }}
+                                                <img src="{{ avatar_url }}">
+                                            {{/ has_avatar }}
+                                        </div>
+                                        {{ display_name }}
+                                    {{/ last_updated_by }}
+                                </td>
+                                <td>
+                                    {{# last_updated_date }}
+                                        {{> tlp_relative_date }}
+                                    {{/ last_updated_date }}
+                                </td>
+                                <td class="tlp-table-cell-actions">
+                                    <button href="{{ href }}"
+                                            class="tlp-table-cell-actions-button tlp-button-primary tlp-button-outline tlp-button-small pdftemplate-admin-images-preview-button"
+                                            data-target-modal-id="pdftemplate-image-preview-{{ id }}"
+                                    >
+                                        <i class="fa-solid fa-eye tlp-button-icon" aria-hidden="true"></i>
+                                        {{# dgettext }} tuleap-pdftemplate | Preview {{/ dgettext }}
+                                    </button>
+
+                                    <div id="pdftemplate-image-preview-{{ id }}"
+                                         role="dialog"
+                                         aria-labelledby="pdftemplate-image-preview-{{ id }}-label"
+                                         class="tlp-modal"
+                                    >
+                                        <div class="tlp-modal-header">
+                                            <h1 class="tlp-modal-title" id="pdftemplate-image-preview-{{ id }}-label">
+                                                {{# dgettext }} tuleap-pdftemplate | Preview {{/ dgettext }}
+                                            </h1>
+                                            <button class="tlp-modal-close"
+                                                    type="button"
+                                                    data-dismiss="modal"
+                                                    aria-label="{{# dgettext }} tuleap-pdftemplate | Close {{/ dgettext }}"
+                                            >
+                                                <i class="fa-solid fa-xmark tlp-modal-close-icon" role="img" title="{{# dgettext }} tuleap-pdftemplate | Close {{/ dgettext }}"></i>
+                                            </button>
+                                        </div>
+                                        <div class="tlp-modal-body pdftemplate-admin-images-preview">
+                                            <img src="{{ href }}">
+                                        </div>
+                                        <div class="tlp-modal-footer">
+                                            <button id="button-close" type="button" data-dismiss="modal" class="tlp-button-primary tlp-button-outline tlp-modal-action">
+                                                {{# dgettext }} tuleap-pdftemplate | Close {{/ dgettext }}
+                                            </button>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        {{/ images }}
+                    {{/ has_images }}
+                    {{^ has_images }}
+                        <tr>
+                            <td colspan="5" class="tlp-table-cell-empty">
+                                {{# dgettext }} tuleap-pdftemplate | There isn't any uploaded image yet. {{/ dgettext }}
+                            </td>
+                        </tr>
+                    {{/ has_images }}
+                    </tbody>
+                </table>
             </section>
         </div>
     </section>
