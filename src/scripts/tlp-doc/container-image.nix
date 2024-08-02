@@ -33,7 +33,7 @@ let
     }
   '';
 in pkgs.dockerTools.buildLayeredImage {
-  name = "tlp-doc-v2";
+  name = "tlp-doc";
   tag = "latest";
   contents = [
     pkgs.fakeNss

@@ -38,7 +38,7 @@ let
           plugins/*/tests
           /lib/
           !src/scripts/*/frontend-assets/
-          /src/scripts/tlp-doc-v2/
+          /src/scripts/tlp-doc/
           /plugins/*/scripts/lib/
           !plugins/*/backend-assets
           !plugins/*/*/backend-assets
