@@ -4,5 +4,5 @@
 **/node_modules/*
 **/vendor/*
 src/scripts/tlp/src/fonts/font-awesome-4.7.0/
-src/scripts/tlp-doc-v2/storybook-static/
+src/scripts/tlp-doc/storybook-static/
 src/www/scripts/select2/select2.scss
