@@ -42,6 +42,9 @@ msgstr "Supprimer"
 msgid "Delete %s"
 msgstr "Supprimer %s"
 
+msgid "Delete image"
+msgstr "Supprimer l'image"
+
 msgid "Description"
 msgstr "Description"
 
@@ -59,6 +62,12 @@ msgstr "Style général"
 
 msgid "Header"
 msgstr "Entête"
+
+msgid "If you delete the image then the template might appear broken."
+msgid_plural "If you delete the image then the templates might appear broken."
+msgstr[0] "Si vous supprimez l'image alors le modèle pourra apparaître cassé."
+msgstr[1] ""
+"Si vous supprimez l'image alors les modèles pourront apparaître cassés."
 
 msgid "Images"
 msgstr "Images"
@@ -116,6 +125,9 @@ msgstr ""
 msgid "Templates list"
 msgstr "Liste des modèles"
 
+msgid "The image has been deleted."
+msgstr "L'image a été supprimée."
+
 msgid "The image has been uploaded."
 msgstr "L'image a été téléversée."
 
@@ -139,6 +151,11 @@ msgstr "Il n'y a pas encore d'image téléversée."
 
 msgid "This can be used to include a logo, or a background image."
 msgstr "Ça peut être utile pour inclure un logo, ou une image de fond."
+
+msgid "This image seems to be used by the following template:"
+msgid_plural "This image seems to be used by the following templates:"
+msgstr[0] "Cette image semble utilisée par le modèle suivant :"
+msgstr[1] "Cette image semble utilisée par les modèles suivants :"
 
 msgid "This is useful to match your company design guidelines for example."
 msgstr ""
@@ -165,3 +182,6 @@ msgstr "Téléversée par"
 
 msgid "You are about to delete the PDF template '%s'."
 msgstr "Vous êtes sur le point de supprimer le modèle PDF '%s'."
+
+msgid "You are about to delete the image %s."
+msgstr "Vous êtes sur le point de supprimer l'image %s."

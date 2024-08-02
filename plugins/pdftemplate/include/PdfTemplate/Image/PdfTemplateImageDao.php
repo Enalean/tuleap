@@ -27,7 +27,7 @@ use Tuleap\PdfTemplate\Image\Identifier\PdfTemplateImageIdentifier;
 use Tuleap\PdfTemplate\Image\Identifier\PdfTemplateImageIdentifierFactory;
 use Tuleap\User\RetrieveUserById;
 
-final class PdfTemplateImageDao extends DataAccessObject implements CreateImage, RetrieveAllImages, RetrieveImage
+final class PdfTemplateImageDao extends DataAccessObject implements CreateImage, RetrieveAllImages, RetrieveImage, DeleteImage
 {
     public function __construct(
         private PdfTemplateImageIdentifierFactory $identifier_factory,
@@ -102,5 +102,15 @@ final class PdfTemplateImageDao extends DataAccessObject implements CreateImage,
         }
 
         return $this->instantiatePdfTemplateImageFromRow($row);
+    }
+
+    public function deleteImage(PdfTemplateImage $image): void
+    {
+        $this->getDB()->delete(
+            'plugin_pdftemplate_image',
+            [
+                'id' => $image->identifier->getBytes(),
+            ]
+        );
     }
 }

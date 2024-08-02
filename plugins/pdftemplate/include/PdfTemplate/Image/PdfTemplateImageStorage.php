@@ -26,7 +26,7 @@ use ForgeConfig;
 use Tuleap\PdfTemplate\Admin\Image\StorePdfTemplateImage;
 use Tuleap\PdfTemplate\Image\Identifier\PdfTemplateImageIdentifier;
 
-final class PdfTemplateImageStorage implements StorePdfTemplateImage
+final class PdfTemplateImageStorage implements StorePdfTemplateImage, DeleteImageFromStorage
 {
     private const STORAGE_PATH = '/pdftemplate/images/';
 
@@ -43,5 +43,13 @@ final class PdfTemplateImageStorage implements StorePdfTemplateImage
     public function getPath(PdfTemplateImageIdentifier $identifier): string
     {
         return ForgeConfig::get('sys_data_dir') . self::STORAGE_PATH . $identifier->toString();
+    }
+
+    public function delete(PdfTemplateImage $image): void
+    {
+        $path = $this->getPath($image->identifier);
+        if (is_file($path)) {
+            unlink($path);
+        }
     }
 }
