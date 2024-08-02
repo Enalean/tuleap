@@ -18,6 +18,7 @@
     "@tuleap/gettext": "workspace:^",
     "neverthrow": "6.0.0",
     "prosemirror-commands": "^1.5.2",
+    "prosemirror-inputrules": "^1.4.0",
     "prosemirror-keymap": "^1.2.2",
     "prosemirror-menu": "^1.2.4",
     "prosemirror-model": "^1.21.3",

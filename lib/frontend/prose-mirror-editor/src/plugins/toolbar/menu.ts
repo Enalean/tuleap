@@ -59,6 +59,7 @@ function markItem(markType: MarkType, options: Partial<MenuItemSpec>): MenuItem 
 type MenuItemResult = {
     toggleStrong?: MenuItem;
     toggleEm?: MenuItem;
+    toggleCode?: MenuItem;
     fullMenu: MenuElement[][];
 };
 
@@ -73,6 +74,10 @@ export function buildMenuItems(schema: Schema): MenuItemResult {
                 markItem(schema.marks.em, {
                     title: gettext_provider.gettext("Toggle embedded style `Ctrl+i`"),
                     icon: icons.em,
+                }),
+                markItem(schema.marks.code, {
+                    title: gettext_provider.gettext("Toggle code Ctrl+`"),
+                    icon: icons.code,
                 }),
             ],
         ],

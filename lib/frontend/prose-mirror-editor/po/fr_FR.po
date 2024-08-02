@@ -23,6 +23,9 @@ msgstr ""
 msgid "Max upload size exceeded"
 msgstr "La taille maximale de téléversement dépassée"
 
+msgid "Toggle code Ctrl+`"
+msgstr "Passer en bloc code Ctrl+`"
+
 msgid "Toggle embedded style `Ctrl+i`"
 msgstr "Passer en italique `Ctrl+i`"
 
