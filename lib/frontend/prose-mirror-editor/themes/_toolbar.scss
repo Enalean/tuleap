@@ -18,12 +18,37 @@
  */
 
 /* stylelint-disable selector-class-pattern */
-
 .ProseMirror-menubar {
     display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    padding: var(--tlp-small-spacing);
+    border: 1px solid var(--tlp-form-element-border-color);
+    border-top-left-radius: var(--tlp-form-element-border-radius);
+    border-top-right-radius: var(--tlp-form-element-border-radius);
+    background-color: var(--tlp-white-color);
+    gap: var(--tlp-small-spacing);
+}
+
+.ProseMirror-menu-active {
+    background: var(--tlp-main-color-lighter-90);
 }
 
 .ProseMirror-menuitem {
-    margin: 0 var(--tlp-medium-spacing);
+    display: flex;
+}
+
+.ProseMirror-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--tlp-small-spacing);
+    vertical-align: middle;
+    cursor: pointer;
+
+    svg {
+        height: 1em;
+        fill: var(--tlp-typo-default-text-color);
+    }
 }
 /* stylelint-enable selector-class-pattern */

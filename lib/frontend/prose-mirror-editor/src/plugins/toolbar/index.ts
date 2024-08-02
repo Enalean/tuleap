@@ -37,7 +37,6 @@ export function setupToolbar(): Plugin[] {
 
     plugins.push(
         menuBar({
-            floating: true,
             content: buildMenuItems(custom_schema).fullMenu,
         }),
     );
