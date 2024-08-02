@@ -25,11 +25,16 @@ import { toggleMark } from "prosemirror-commands";
 import type { GetText } from "@tuleap/gettext";
 import { v4 as uuidv4 } from "uuid";
 import { linkItem, unlinkItem } from "./links/link-menu-item-builder";
+import { wrapListItem } from "./list/list-menu-item-builder";
 
-function cmdItem(cmd: Command, options: MenuItemSpec): MenuItem {
+export function cmdItem(cmd: Command, options: MenuItemSpec): MenuItem {
     const passed_options: MenuItemSpec = options;
     passed_options.label = options.label ? options.label : "";
-    passed_options.run = cmd;
+    if (options.run) {
+        passed_options.run = options.run;
+    } else {
+        passed_options.run = cmd;
+    }
 
     if (!options.enable && !options.select) {
         passed_options[options.enable ? "enable" : "select"] = (state): boolean => cmd(state);
@@ -61,6 +66,8 @@ function markItem(markType: MarkType, options: Partial<MenuItemSpec>): MenuItem 
 type MenuItemResult = {
     toggleStrong?: MenuItem;
     toggleEm?: MenuItem;
+    wrapBulletList?: MenuItem;
+    wrapOrderedList?: MenuItem;
     toggleCode?: MenuItem;
     toggleLink?: MenuItem;
     fullMenu: MenuElement[][];
@@ -85,7 +92,24 @@ export function buildMenuItems(schema: Schema, gettext_provider: GetText): MenuI
                     title: gettext_provider.gettext("Wrap in block quote `Ctrl->`"),
                     icon: icons.blockquote,
                 }),
-
+                wrapListItem(
+                    schema.nodes.bullet_list,
+                    {
+                        title: gettext_provider.gettext("Wrap in bullet list `Shift+Ctrl+8`"),
+                        icon: icons.bulletList,
+                    },
+                    schema.nodes.ordered_list,
+                    "fa-list",
+                ),
+                wrapListItem(
+                    schema.nodes.ordered_list,
+                    {
+                        title: gettext_provider.gettext("Wrap in ordered list `Shift+Ctrl+9`"),
+                        icon: icons.orderedList,
+                    },
+                    schema.nodes.bullet_list,
+                    "fa-list-ol",
+                ),
                 markItem(schema.marks.code, {
                     title: gettext_provider.gettext("Toggle code Ctrl+`"),
                     icon: icons.code,
