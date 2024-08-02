@@ -130,7 +130,7 @@ final class DateSelectBuilderTest extends CrossTrackerFieldTestCase
     {
         $result = (new ArtifactReportFactoryInstantiator())
             ->getFactory()
-            ->getArtifactsMatchingReport($report, $user, 10, 0, false);
+            ->getArtifactsMatchingReport($report, $user, 10, 0);
         assert($result instanceof CrossTrackerReportContentRepresentation);
         return $result;
     }
@@ -142,6 +142,7 @@ final class DateSelectBuilderTest extends CrossTrackerFieldTestCase
                 1,
                 "SELECT date_field WHERE date_field = '' OR date_field != ''",
                 $this->trackers,
+                true,
             ),
             $this->user,
         );

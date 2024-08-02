@@ -109,7 +109,7 @@ final class NumericSelectBuilderTest extends CrossTrackerFieldTestCase
     {
         $result = (new ArtifactReportFactoryInstantiator())
             ->getFactory()
-            ->getArtifactsMatchingReport($report, $user, 10, 0, false);
+            ->getArtifactsMatchingReport($report, $user, 10, 0);
         assert($result instanceof CrossTrackerReportContentRepresentation);
         return $result;
     }
@@ -121,6 +121,7 @@ final class NumericSelectBuilderTest extends CrossTrackerFieldTestCase
                 1,
                 "SELECT numeric_field WHERE numeric_field = '' OR numeric_field != ''",
                 $this->trackers,
+                true,
             ),
             $this->user,
         );

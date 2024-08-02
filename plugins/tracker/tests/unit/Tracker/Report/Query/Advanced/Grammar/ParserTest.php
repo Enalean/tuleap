@@ -21,14 +21,10 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Report\Query\Advanced\Grammar;
 
-use ForgeConfig;
-use Tuleap\ForgeConfigSandbox;
 use Tuleap\Test\PHPUnit\TestCase;
 
 final class ParserTest extends TestCase
 {
-    use ForgeConfigSandbox;
-
     public function testItThrowsASyntaxErrorIfQueryIsEmpty(): void
     {
         self::expectException(SyntaxError::class);
@@ -65,19 +61,8 @@ final class ParserTest extends TestCase
         $parser->parse('field-name = "value"');
     }
 
-    public function testItFailIfSelectIsNotEnabled(): void
+    public function testSelectField(): void
     {
-        ForgeConfig::setFeatureFlag(Query::ENABLE_SELECT, 0);
-
-        $parser = new Parser();
-        self::expectExceptionMessage('SELECT syntax cannot be used');
-        $parser->parse('SELECT field WHERE field = "value"');
-    }
-
-    public function testItDoesNotFailIfSelectIsEnabled(): void
-    {
-        ForgeConfig::setFeatureFlag(Query::ENABLE_SELECT, 1);
-
         $parser   = new Parser();
         $result   = $parser->parse('SELECT field WHERE field = "value"');
         $expected = new Query(
@@ -95,8 +80,6 @@ final class ParserTest extends TestCase
 
     public function testSelectAcceptMultipleField(): void
     {
-        ForgeConfig::setFeatureFlag(Query::ENABLE_SELECT, 1);
-
         $parser   = new Parser();
         $result   = $parser->parse('SELECT @id, @title, category WHERE @status = OPEN()');
         $expected = new Query(
@@ -114,8 +97,6 @@ final class ParserTest extends TestCase
 
     public function testItFailIfSelectEndWithComma(): void
     {
-        ForgeConfig::setFeatureFlag(Query::ENABLE_SELECT, 1);
-
         $parser = new Parser();
         self::expectException(SyntaxError::class);
         $parser->parse('SELECT field, WHERE field = "value"');

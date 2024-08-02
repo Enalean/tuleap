@@ -20,26 +20,25 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\Report\Query\Advanced\Grammar;
-
-final readonly class Query
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+final class b202408020857_add_column_expert_mode extends \Tuleap\ForgeUpgrade\Bucket
 {
-    /**
-     * @param list<Selectable> $select
-     */
-    public function __construct(
-        private array $select,
-        private Logical $condition,
-    ) {
+    public function description(): string
+    {
+        return 'Add column expert_mode to table plugin_crosstracker_report';
     }
 
-    public function getSelect(): array
+    public function up(): void
     {
-        return $this->select;
-    }
+        if ($this->api->columnNameExists('plugin_crosstracker_report', 'expert_mode')) {
+            return;
+        }
 
-    public function getCondition(): Logical
-    {
-        return $this->condition;
+        $sql = <<<SQL
+        ALTER TABLE plugin_crosstracker_report
+        ADD COLUMN expert_mode BOOL NOT NULL DEFAULT false
+        SQL;
+
+        $this->api->dbh->exec($sql);
     }
 }

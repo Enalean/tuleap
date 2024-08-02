@@ -42,7 +42,11 @@ export const ArtifactsTableRetriever = (
                 params: {
                     limit,
                     offset,
-                    query: JSON.stringify({ trackers_id: tracker_ids, expert_query }),
+                    report_mode: "expert",
+                    query: JSON.stringify({
+                        trackers_id: tracker_ids,
+                        expert_query,
+                    }),
                 },
             }).andThen((response) => {
                 const total = Number.parseInt(response.headers.get("X-PAGINATION-SIZE") ?? "0", 10);
@@ -57,6 +61,7 @@ export const ArtifactsTableRetriever = (
                 params: {
                     limit,
                     offset,
+                    report_mode: "expert",
                 },
             }).andThen((response) => {
                 const total = Number.parseInt(response.headers.get("X-PAGINATION-SIZE") ?? "0", 10);

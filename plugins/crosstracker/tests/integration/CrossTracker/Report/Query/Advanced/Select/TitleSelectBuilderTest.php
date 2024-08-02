@@ -113,7 +113,7 @@ final class TitleSelectBuilderTest extends CrossTrackerFieldTestCase
     {
         $result = (new ArtifactReportFactoryInstantiator())
             ->getFactory()
-            ->getArtifactsMatchingReport($report, $user, 10, 0, false);
+            ->getArtifactsMatchingReport($report, $user, 10, 0);
         assert($result instanceof CrossTrackerReportContentRepresentation);
         return $result;
     }
@@ -125,6 +125,7 @@ final class TitleSelectBuilderTest extends CrossTrackerFieldTestCase
                 1,
                 "SELECT @title WHERE @title = '' OR @title != ''",
                 $this->trackers,
+                true,
             ),
             $this->user,
         );

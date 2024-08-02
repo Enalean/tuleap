@@ -89,7 +89,7 @@ final class ArtifactIdSelectBuilderTest extends CrossTrackerFieldTestCase
     {
         $result = (new ArtifactReportFactoryInstantiator())
             ->getFactory()
-            ->getArtifactsMatchingReport($report, $user, 10, 0, false);
+            ->getArtifactsMatchingReport($report, $user, 10, 0);
         assert($result instanceof CrossTrackerReportContentRepresentation);
         return $result;
     }
@@ -101,6 +101,7 @@ final class ArtifactIdSelectBuilderTest extends CrossTrackerFieldTestCase
                 1,
                 'SELECT @id WHERE @id >= 1',
                 $this->trackers,
+                true,
             ),
             $this->user,
         );

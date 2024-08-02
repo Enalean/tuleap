@@ -130,7 +130,7 @@ final class TextDuckTypedFieldTest extends CrossTrackerFieldTestCase
     {
         $result = (new ArtifactReportFactoryInstantiator())
             ->getFactory()
-            ->getArtifactsMatchingReport($report, $user, 10, 0, true);
+            ->getArtifactsMatchingReport($report, $user, 10, 0);
         assert($result instanceof ArtifactMatchingReportCollection);
         return array_values(array_map(static fn(Artifact $artifact) => $artifact->getId(), $result->getArtifacts()));
     }
@@ -142,6 +142,7 @@ final class TextDuckTypedFieldTest extends CrossTrackerFieldTestCase
                 1,
                 "text_field = ''",
                 [$this->release_tracker, $this->sprint_tracker],
+                false,
             ),
             $this->project_member,
         );
@@ -157,6 +158,7 @@ final class TextDuckTypedFieldTest extends CrossTrackerFieldTestCase
                 1,
                 "text_field = 'obscur'",
                 [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
+                false,
             ),
             $this->project_member,
         );
@@ -172,6 +174,7 @@ final class TextDuckTypedFieldTest extends CrossTrackerFieldTestCase
                 1,
                 "text_field = 'obscur'",
                 [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
+                false,
             ),
             $this->project_admin,
         );
@@ -187,6 +190,7 @@ final class TextDuckTypedFieldTest extends CrossTrackerFieldTestCase
                 1,
                 "text_field = 'a like% value'",
                 [$this->release_tracker, $this->sprint_tracker],
+                false,
             ),
             $this->project_member,
         );
@@ -202,6 +206,7 @@ final class TextDuckTypedFieldTest extends CrossTrackerFieldTestCase
                 1,
                 "text_field = 'obscur' OR text_field = ''",
                 [$this->release_tracker, $this->sprint_tracker],
+                false,
             ),
             $this->project_member,
         );
@@ -220,6 +225,7 @@ final class TextDuckTypedFieldTest extends CrossTrackerFieldTestCase
                 1,
                 "text_field != ''",
                 [$this->release_tracker, $this->sprint_tracker],
+                false,
             ),
             $this->project_member,
         );
@@ -238,6 +244,7 @@ final class TextDuckTypedFieldTest extends CrossTrackerFieldTestCase
                 1,
                 "text_field != 'value'",
                 [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
+                false,
             ),
             $this->project_member,
         );
@@ -256,6 +263,7 @@ final class TextDuckTypedFieldTest extends CrossTrackerFieldTestCase
                 1,
                 "text_field != 'value'",
                 [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
+                false,
             ),
             $this->project_admin,
         );
@@ -275,6 +283,7 @@ final class TextDuckTypedFieldTest extends CrossTrackerFieldTestCase
                 1,
                 "text_field != 'obscurement' AND text_field != ''",
                 [$this->release_tracker, $this->sprint_tracker],
+                false,
             ),
             $this->project_member,
         );

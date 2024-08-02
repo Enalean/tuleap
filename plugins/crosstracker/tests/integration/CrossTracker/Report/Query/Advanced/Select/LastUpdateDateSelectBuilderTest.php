@@ -93,7 +93,7 @@ final class LastUpdateDateSelectBuilderTest extends CrossTrackerFieldTestCase
     {
         $result = (new ArtifactReportFactoryInstantiator())
             ->getFactory()
-            ->getArtifactsMatchingReport($report, $user, 10, 0, false);
+            ->getArtifactsMatchingReport($report, $user, 10, 0);
         assert($result instanceof CrossTrackerReportContentRepresentation);
         return $result;
     }
@@ -105,6 +105,7 @@ final class LastUpdateDateSelectBuilderTest extends CrossTrackerFieldTestCase
                 1,
                 "SELECT @last_update_date WHERE @last_update_date >= '1970-01-01'",
                 $this->trackers,
+                true,
             ),
             $this->user,
         );

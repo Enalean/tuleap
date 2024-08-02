@@ -23,10 +23,12 @@ import type WritingCrossTrackerReport from "../writing-mode/writing-cross-tracke
 export default class ReadingCrossTrackerReport {
     trackers: Map<number, TrackerAndProject>;
     expert_query: string;
+    expert_mode: boolean;
 
     constructor() {
         this.trackers = new Map();
         this.expert_query = "";
+        this.expert_mode = false;
     }
 
     getTrackers(): ReadonlyArray<TrackerAndProject> {
@@ -40,10 +42,12 @@ export default class ReadingCrossTrackerReport {
     duplicateFromReport(report: BackendCrossTrackerReport): void {
         this.trackers = report.trackers;
         this.expert_query = report.expert_query;
+        this.expert_mode = report.expert_mode;
     }
 
     duplicateFromWritingReport(report: WritingCrossTrackerReport): void {
         this.trackers = report.trackers;
         this.expert_query = report.expert_query;
+        this.expert_mode = report.expert_mode;
     }
 }

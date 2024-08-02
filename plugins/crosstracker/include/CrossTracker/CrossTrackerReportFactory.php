@@ -24,33 +24,23 @@ use TrackerFactory;
 
 class CrossTrackerReportFactory
 {
-    /**
-     * @var CrossTrackerReportDao
-     */
-    private $report_dao;
-    /**
-     * @var TrackerFactory
-     */
-    private $tracker_factory;
-
-    public function __construct(CrossTrackerReportDao $report_dao, TrackerFactory $tracker_factory)
-    {
-        $this->report_dao      = $report_dao;
-        $this->tracker_factory = $tracker_factory;
+    public function __construct(
+        private readonly CrossTrackerReportDao $report_dao,
+        private readonly TrackerFactory $tracker_factory,
+    ) {
     }
 
     /**
-     * @param $id
-     * @return CrossTrackerReport
      * @throws CrossTrackerReportNotFoundException
      */
-    public function getById($id)
+    public function getById($id): CrossTrackerReport
     {
         $report_row = $this->report_dao->searchReportById($id);
         if (! $report_row) {
             throw new CrossTrackerReportNotFoundException();
         }
         $expert_query = $report_row['expert_query'];
+        $expert_mode  = $report_row['expert_mode'];
 
         $report_trackers = [];
         $tracker_rows    = $this->report_dao->searchReportTrackersById($id);
@@ -61,6 +51,6 @@ class CrossTrackerReportFactory
             }
         }
 
-        return new CrossTrackerReport($id, $expert_query, $report_trackers);
+        return new CrossTrackerReport($id, $expert_query, $report_trackers, $expert_mode);
     }
 }

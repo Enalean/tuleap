@@ -18,8 +18,7 @@
  */
 
 import { describe, expect, it, vi } from "vitest";
-import { errAsync, okAsync } from "neverthrow";
-import { Fault } from "@tuleap/fault";
+import { okAsync } from "neverthrow";
 import * as fetch_result from "@tuleap/fetch-result";
 import type { TrackerReference } from "./cross-tracker-rest-api-types";
 import {
@@ -29,7 +28,6 @@ import {
     getReportContent,
     getSortedProjectsIAmMemberOf,
     getTrackersOfProject,
-    isFeatureFlagEnabled,
     updateReport,
 } from "./rest-querier";
 import { ProjectIdentifier } from "../domain/ProjectIdentifier";
@@ -99,36 +97,12 @@ describe("rest-querier", () => {
 
             expect(getResponse).toHaveBeenCalledWith(
                 fetch_result.uri`/api/v1/cross_tracker_reports/${report_id}/content`,
-                { params: { limit, offset, return_format: "static" } },
+                { params: { limit, offset } },
             );
             if (!result.isOk()) {
                 throw Error("Expected an Ok");
             }
             expect(result.value).toStrictEqual({ artifacts: collection.artifacts, total });
-        });
-    });
-
-    describe(`isFeatureFlagEnabled()`, () => {
-        it(`asks the backend if the TQL select feature flag is enabled and returns true or false`, async () => {
-            const getJSON = vi
-                .spyOn(fetch_result, "getJSON")
-                .mockReturnValue(okAsync({ value: "1" }));
-
-            const result = await isFeatureFlagEnabled();
-
-            expect(result).toBe(true);
-            expect(getJSON).toHaveBeenCalledWith(
-                fetch_result.uri`/feature_flag?name=feature_flag_enable_tql_select`,
-            );
-        });
-
-        it(`when there is any error, it will ignore it and return false,
-            so that user can fallback to default functionality`, () => {
-            vi.spyOn(fetch_result, "getJSON").mockReturnValue(
-                errAsync(Fault.fromMessage("Not Found")),
-            );
-
-            expect(isFeatureFlagEnabled()).resolves.toBe(false);
         });
     });
 
@@ -150,11 +124,13 @@ describe("rest-querier", () => {
             const report_id = 72;
             const trackers_id = [16, 80, 6];
             const expert_query = '@title = "stalky"';
+            const expert_mode = false;
 
             const result = await getQueryResult(
                 report_id,
                 trackers_id,
                 expert_query,
+                expert_mode,
                 limit,
                 offset,
             );
@@ -165,8 +141,8 @@ describe("rest-querier", () => {
                     params: {
                         limit,
                         offset,
+                        report_mode: "default",
                         query: JSON.stringify({ trackers_id, expert_query }),
-                        return_format: "static",
                     },
                 },
             );
@@ -202,6 +178,7 @@ describe("rest-querier", () => {
                     report_id,
                     [first_tracker.id, second_tracker.id],
                     expert_query,
+                    false,
                 );
 
                 expect(putJSON).toHaveBeenCalledWith(

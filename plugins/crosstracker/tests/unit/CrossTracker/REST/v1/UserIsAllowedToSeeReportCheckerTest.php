@@ -24,7 +24,6 @@ namespace Tuleap\CrossTracker\REST\v1;
 
 use Luracast\Restler\RestException;
 use PFUser;
-use PHPUnit\Framework\MockObject\MockObject;
 use Tracker;
 use Tuleap\CrossTracker\CrossTrackerReport;
 use Tuleap\CrossTracker\Permission\CrossTrackerPermissionGate;
@@ -64,7 +63,7 @@ final class UserIsAllowedToSeeReportCheckerTest extends TestCase
         $this->url_verification =  CheckUserCanAccessProjectStub::build();
     }
 
-    private function checkUserIsAllowedToSeeReport(Tracker|MockObject $tracker): void
+    private function checkUserIsAllowedToSeeReport(Tracker $tracker): void
     {
         $user_is_allowed_to_see_report_checker = new UserIsAllowedToSeeReportChecker(
             $this->cross_tracker_dao,
@@ -83,6 +82,7 @@ final class UserIsAllowedToSeeReportCheckerTest extends TestCase
                 1,
                 '',
                 [$tracker],
+                false,
             ),
         );
     }

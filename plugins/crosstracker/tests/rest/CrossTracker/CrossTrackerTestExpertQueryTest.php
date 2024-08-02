@@ -18,11 +18,13 @@
  *  along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\CrossTracker\REST\v1;
 
 use RestBase;
 
-class CrossTrackerTestExpertQueryTest extends RestBase
+final class CrossTrackerTestExpertQueryTest extends RestBase
 {
     public function setUp(): void
     {
@@ -31,280 +33,85 @@ class CrossTrackerTestExpertQueryTest extends RestBase
         $this->getEpicArtifactIds();
     }
 
-    public function testNonEmptyTitle()
-    {
-        $params = [
-            'trackers_id'  => [$this->epic_tracker_id],
-            'expert_query' => ' @title != "" ',
-        ];
-
-        $response = $this->getResponse($this->request_factory->createRequest('PUT', 'cross_tracker_reports/1')->withBody($this->stream_factory->createStream(json_encode($params))));
-        $this->assertEquals($response->getStatusCode(), 201);
-
-        $cross_tracker_report = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
-
-        $this->assertEquals(
-            $cross_tracker_report['expert_query'],
-            '@title != ""'
-        );
-
-        $this->allEpicArtifactsMustBeRetrievedByQuery();
-    }
-
-    /**
-     * @depends testNonEmptyTitle
-     */
-    public function testMultipleTitles()
-    {
-        $params = [
-            'trackers_id'  => [$this->epic_tracker_id],
-            'expert_query' => ' @title = "first" OR @title = "third" ',
-        ];
-
-        $response = $this->getResponse($this->request_factory->createRequest('PUT', 'cross_tracker_reports/1')->withBody($this->stream_factory->createStream(json_encode($params))));
-        $this->assertEquals($response->getStatusCode(), 201);
-
-        $cross_tracker_report = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
-
-        $this->assertEquals(
-            $cross_tracker_report['expert_query'],
-            '@title = "first" OR @title = "third"'
-        );
-
-        $this->getMatchingEpicArtifactByIds([
-            $this->epic_artifact_ids[3],
-            $this->epic_artifact_ids[1],
-        ]);
-    }
-
-    /**
-     * @depends testMultipleTitles
-     */
-    public function testEmptyDescription()
-    {
-        $params = [
-            'trackers_id'  => [$this->epic_tracker_id],
-            'expert_query' => ' @description = "" ',
-        ];
-
-        $response = $this->getResponse($this->request_factory->createRequest('PUT', 'cross_tracker_reports/1')->withBody($this->stream_factory->createStream(json_encode($params))));
-        $this->assertEquals($response->getStatusCode(), 201);
-
-        $cross_tracker_report = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
-
-        $this->assertEquals(
-            $cross_tracker_report['expert_query'],
-            '@description = ""'
-        );
-
-        $this->getMatchingEpicArtifactByIds([
-            $this->epic_artifact_ids[8],
-        ]);
-    }
-
-    /**
-     * @depends testEmptyDescription
-     */
-    public function testEmptyDescriptionWithNotEmptyTitle()
-    {
-        $params = [
-            'trackers_id'  => [$this->epic_tracker_id],
-            'expert_query' => ' @description = "" AND @title != "" ',
-        ];
-
-        $response = $this->getResponse($this->request_factory->createRequest('PUT', 'cross_tracker_reports/1')->withBody($this->stream_factory->createStream(json_encode($params))));
-        $this->assertEquals($response->getStatusCode(), 201);
-
-        $cross_tracker_report = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
-
-        $this->assertEquals(
-            $cross_tracker_report['expert_query'],
-            '@description = "" AND @title != ""'
-        );
-
-        $this->getMatchingEpicArtifactByIds([
-            $this->epic_artifact_ids[8],
-        ]);
-    }
-
-    public function testSubmittedByEqualsNotEmpty()
-    {
-        $params = [
-            'trackers_id'  => [ $this->epic_tracker_id ],
-            'expert_query' => ' @submitted_by = "rest_api_tester_1"',
-        ];
-
-        $response = $this->getResponse($this->request_factory->createRequest('PUT', 'cross_tracker_reports/1')->withBody($this->stream_factory->createStream(json_encode($params))));
-        $this->assertEquals($response->getStatusCode(), 201);
-
-        $cross_tracker_report = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
-
-        $this->assertEquals(
-            $cross_tracker_report['expert_query'],
-            '@submitted_by = "rest_api_tester_1"'
-        );
-
-        $this->getMatchingEpicArtifactByIds([
-            $this->epic_artifact_ids[8],
-            $this->epic_artifact_ids[7],
-            $this->epic_artifact_ids[6],
-            $this->epic_artifact_ids[5],
-            $this->epic_artifact_ids[4],
-            $this->epic_artifact_ids[3],
-            $this->epic_artifact_ids[2],
-            $this->epic_artifact_ids[1],
-        ]);
-    }
-
-    /**
-     * @depends testSubmittedByEqualsNotEmpty
-     */
-    public function testSubmittedByNotEqualsNotEmpty()
-    {
-        $params = [
-            'trackers_id'  => [ $this->epic_tracker_id ],
-            'expert_query' => ' @submitted_by != "rest_api_tester_1"',
-        ];
-
-        $response = $this->getResponse($this->request_factory->createRequest('PUT', 'cross_tracker_reports/1')->withBody($this->stream_factory->createStream(json_encode($params))));
-        $this->assertEquals($response->getStatusCode(), 201);
-
-        $cross_tracker_report = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
-
-        $this->assertEquals(
-            $cross_tracker_report['expert_query'],
-            '@submitted_by != "rest_api_tester_1"'
-        );
-
-        $this->getMatchingEpicArtifactByIds([]);
-    }
-
-    public function testLastUpdateByNotEmpty()
-    {
-        $params = [
-            'trackers_id'  => [ $this->epic_tracker_id ],
-            'expert_query' => ' @last_update_by = "rest_api_tester_1"',
-        ];
-
-        $response = $this->getResponse($this->request_factory->createRequest('PUT', 'cross_tracker_reports/1')->withBody($this->stream_factory->createStream(json_encode($params))));
-        $this->assertEquals($response->getStatusCode(), 201);
-
-        $cross_tracker_report = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
-
-        $this->assertEquals(
-            $cross_tracker_report['expert_query'],
-            '@last_update_by = "rest_api_tester_1"'
-        );
-
-        $this->getMatchingEpicArtifactByIds([
-            $this->epic_artifact_ids[8],
-            $this->epic_artifact_ids[7],
-            $this->epic_artifact_ids[6],
-            $this->epic_artifact_ids[5],
-            $this->epic_artifact_ids[4],
-            $this->epic_artifact_ids[3],
-            $this->epic_artifact_ids[2],
-            $this->epic_artifact_ids[1],
-        ]);
-    }
-
-    public function testAssignedToNotEmpty()
-    {
-        $params = [
-            'trackers_id'  => [ $this->epic_tracker_id ],
-            'expert_query' => ' @assigned_to = "rest_api_tester_1"',
-        ];
-
-        $response = $this->getResponse($this->request_factory->createRequest('PUT', 'cross_tracker_reports/1')->withBody($this->stream_factory->createStream(json_encode($params))));
-        $this->assertEquals($response->getStatusCode(), 201);
-
-        $cross_tracker_report = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
-
-        $this->assertEquals(
-            $cross_tracker_report['expert_query'],
-            '@assigned_to = "rest_api_tester_1"'
-        );
-
-        $this->getMatchingEpicArtifactByIds([
-            $this->epic_artifact_ids[3],
-        ]);
-    }
-
     public function testWithParent(): void
     {
         $params = [
-            'trackers_id'  => [ $this->epic_tracker_id ],
+            'trackers_id'  => [$this->epic_tracker_id],
             'expert_query' => 'WITH PARENT',
+            'report_mode'  => 'default',
         ];
 
         $response = $this->getResponse($this->request_factory->createRequest('PUT', 'cross_tracker_reports/1')->withBody($this->stream_factory->createStream(json_encode($params))));
-        $this->assertEquals($response->getStatusCode(), 201);
+        self::assertEquals(201, $response->getStatusCode());
 
         $cross_tracker_report = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
-        $this->assertEquals(
-            $cross_tracker_report['expert_query'],
-            'WITH PARENT'
+        self::assertEquals(
+            'WITH PARENT',
+            $cross_tracker_report['expert_query']
         );
 
-        $this->getMatchingEpicArtifactByIds([]);
+        self::assertEmpty($this->getMatchingArtifactsFromJson());
     }
 
     public function testWithParentArtifact(): void
     {
         $params = [
-            'trackers_id'  => [ $this->epic_tracker_id ],
+            'trackers_id'  => [$this->epic_tracker_id],
             'expert_query' => 'WITH PARENT ARTIFACT = 123',
+            'report_mode'  => 'default',
         ];
 
         $response = $this->getResponse($this->request_factory->createRequest('PUT', 'cross_tracker_reports/1')->withBody($this->stream_factory->createStream(json_encode($params))));
-        $this->assertEquals($response->getStatusCode(), 201);
+        self::assertEquals(201, $response->getStatusCode());
 
         $cross_tracker_report = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
-        $this->assertEquals(
-            $cross_tracker_report['expert_query'],
-            'WITH PARENT ARTIFACT = 123'
+        self::assertEquals(
+            'WITH PARENT ARTIFACT = 123',
+            $cross_tracker_report['expert_query']
         );
 
-        $this->getMatchingEpicArtifactByIds([]);
+        self::assertEmpty($this->getMatchingArtifactsFromJson());
     }
 
     public function testWithParentTracker(): void
     {
         $params = [
-            'trackers_id'  => [ $this->epic_tracker_id ],
+            'trackers_id'  => [$this->epic_tracker_id],
             'expert_query' => 'WITH PARENT TRACKER = "epic"',
+            'report_mode'  => 'default',
         ];
 
         $response = $this->getResponse($this->request_factory->createRequest('PUT', 'cross_tracker_reports/1')->withBody($this->stream_factory->createStream(json_encode($params))));
-        $this->assertEquals($response->getStatusCode(), 201);
+        self::assertEquals(201, $response->getStatusCode());
 
         $cross_tracker_report = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
-        $this->assertEquals(
-            $cross_tracker_report['expert_query'],
-            'WITH PARENT TRACKER = "epic"'
+        self::assertEquals(
+            'WITH PARENT TRACKER = "epic"',
+            $cross_tracker_report['expert_query']
         );
 
-        $this->getMatchingEpicArtifactByIds([]);
+        self::assertEmpty($this->getMatchingArtifactsFromJson());
     }
 
     public function testWithoutParent(): void
     {
         $params = [
-            'trackers_id'  => [ $this->epic_tracker_id ],
+            'trackers_id'  => [$this->epic_tracker_id],
             'expert_query' => 'WITHOUT PARENT',
+            'report_mode'  => 'default',
         ];
 
         $response = $this->getResponse($this->request_factory->createRequest('PUT', 'cross_tracker_reports/1')->withBody($this->stream_factory->createStream(json_encode($params))));
-        $this->assertEquals($response->getStatusCode(), 201);
+        self::assertEquals(201, $response->getStatusCode());
 
         $cross_tracker_report = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
-        $this->assertEquals(
-            $cross_tracker_report['expert_query'],
-            'WITHOUT PARENT'
+        self::assertEquals(
+            'WITHOUT PARENT',
+            $cross_tracker_report['expert_query']
         );
 
         $this->allEpicArtifactsMustBeRetrievedByQuery();
@@ -313,18 +120,19 @@ class CrossTrackerTestExpertQueryTest extends RestBase
     public function testWithoutParentArtifact(): void
     {
         $params = [
-            'trackers_id'  => [ $this->epic_tracker_id ],
+            'trackers_id'  => [$this->epic_tracker_id],
             'expert_query' => 'WITHOUT PARENT ARTIFACT = 123',
+            'report_mode'  => 'default',
         ];
 
         $response = $this->getResponse($this->request_factory->createRequest('PUT', 'cross_tracker_reports/1')->withBody($this->stream_factory->createStream(json_encode($params))));
-        $this->assertEquals($response->getStatusCode(), 201);
+        self::assertEquals(201, $response->getStatusCode());
 
         $cross_tracker_report = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
-        $this->assertEquals(
-            $cross_tracker_report['expert_query'],
-            'WITHOUT PARENT ARTIFACT = 123'
+        self::assertEquals(
+            'WITHOUT PARENT ARTIFACT = 123',
+            $cross_tracker_report['expert_query']
         );
 
         $this->allEpicArtifactsMustBeRetrievedByQuery();
@@ -333,18 +141,19 @@ class CrossTrackerTestExpertQueryTest extends RestBase
     public function testWithoutParentTracker(): void
     {
         $params = [
-            'trackers_id'  => [ $this->epic_tracker_id ],
+            'trackers_id'  => [$this->epic_tracker_id],
             'expert_query' => 'WITHOUT PARENT TRACKER = "epic"',
+            'report_mode'  => 'default',
         ];
 
         $response = $this->getResponse($this->request_factory->createRequest('PUT', 'cross_tracker_reports/1')->withBody($this->stream_factory->createStream(json_encode($params))));
-        $this->assertEquals($response->getStatusCode(), 201);
+        self::assertEquals(201, $response->getStatusCode());
 
         $cross_tracker_report = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
-        $this->assertEquals(
-            $cross_tracker_report['expert_query'],
-            'WITHOUT PARENT TRACKER = "epic"'
+        self::assertEquals(
+            'WITHOUT PARENT TRACKER = "epic"',
+            $cross_tracker_report['expert_query']
         );
 
         $this->allEpicArtifactsMustBeRetrievedByQuery();
@@ -353,78 +162,82 @@ class CrossTrackerTestExpertQueryTest extends RestBase
     public function testIsLinkedFrom(): void
     {
         $params = [
-            'trackers_id'  => [ $this->epic_tracker_id ],
+            'trackers_id'  => [$this->epic_tracker_id],
             'expert_query' => 'IS LINKED FROM WITH TYPE "_is_child"',
+            'report_mode'  => 'default',
         ];
 
         $response = $this->getResponse($this->request_factory->createRequest('PUT', 'cross_tracker_reports/1')->withBody($this->stream_factory->createStream(json_encode($params))));
-        $this->assertEquals($response->getStatusCode(), 201);
+        self::assertEquals(201, $response->getStatusCode());
 
         $cross_tracker_report = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
-        $this->assertEquals(
-            $cross_tracker_report['expert_query'],
-            'IS LINKED FROM WITH TYPE "_is_child"'
+        self::assertEquals(
+            'IS LINKED FROM WITH TYPE "_is_child"',
+            $cross_tracker_report['expert_query']
         );
 
-        $this->getMatchingEpicArtifactByIds([]);
+        self::assertEmpty($this->getMatchingArtifactsFromJson());
     }
 
     public function testIsLinkedFromArtifact(): void
     {
         $params = [
-            'trackers_id'  => [ $this->epic_tracker_id ],
+            'trackers_id'  => [$this->epic_tracker_id],
             'expert_query' => 'IS LINKED FROM ARTIFACT = 123 WITH TYPE "_is_child"',
+            'report_mode'  => 'default',
         ];
 
         $response = $this->getResponse($this->request_factory->createRequest('PUT', 'cross_tracker_reports/1')->withBody($this->stream_factory->createStream(json_encode($params))));
-        $this->assertEquals($response->getStatusCode(), 201);
+        self::assertEquals(201, $response->getStatusCode());
 
         $cross_tracker_report = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
-        $this->assertEquals(
-            $cross_tracker_report['expert_query'],
-            'IS LINKED FROM ARTIFACT = 123 WITH TYPE "_is_child"'
+        self::assertEquals(
+            'IS LINKED FROM ARTIFACT = 123 WITH TYPE "_is_child"',
+            $cross_tracker_report['expert_query']
         );
 
-        $this->getMatchingEpicArtifactByIds([]);
+        self::assertEmpty($this->getMatchingArtifactsFromJson());
     }
 
     public function testIsLinkedFromTracker(): void
     {
         $params = [
-            'trackers_id'  => [ $this->epic_tracker_id ],
+            'trackers_id'  => [$this->epic_tracker_id],
             'expert_query' => 'IS LINKED FROM TRACKER = "epic" WITH TYPE "_is_child"',
+            'report_mode'  => 'default',
         ];
 
         $response = $this->getResponse($this->request_factory->createRequest('PUT', 'cross_tracker_reports/1')->withBody($this->stream_factory->createStream(json_encode($params))));
-        $this->assertEquals($response->getStatusCode(), 201);
+        self::assertEquals(201, $response->getStatusCode());
 
         $cross_tracker_report = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
-        $this->assertEquals(
-            $cross_tracker_report['expert_query'],
-            'IS LINKED FROM TRACKER = "epic" WITH TYPE "_is_child"'
+        self::assertEquals(
+            'IS LINKED FROM TRACKER = "epic" WITH TYPE "_is_child"',
+            $cross_tracker_report['expert_query']
         );
 
-        $this->getMatchingEpicArtifactByIds([]);
+        self::assertEmpty($this->getMatchingArtifactsFromJson());
     }
 
     public function testIsNotLinkedFrom(): void
     {
         $params = [
-            'trackers_id'  => [ $this->epic_tracker_id ],
+            'trackers_id'  => [$this->epic_tracker_id],
             'expert_query' => 'IS NOT LINKED FROM WITH TYPE "_is_child"',
+            'report_mode'  => 'default',
         ];
 
         $response = $this->getResponse($this->request_factory->createRequest('PUT', 'cross_tracker_reports/1')->withBody($this->stream_factory->createStream(json_encode($params))));
-        $this->assertEquals($response->getStatusCode(), 201);
+        self::assertEquals(201, $response->getStatusCode());
 
         $cross_tracker_report = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
-        $this->assertEquals(
-            $cross_tracker_report['expert_query'],
-            'IS NOT LINKED FROM WITH TYPE "_is_child"'
+        self::assertEquals(
+            'IS NOT LINKED FROM WITH TYPE "_is_child"',
+            $cross_tracker_report['expert_query']
         );
 
         $this->allEpicArtifactsMustBeRetrievedByQuery();
@@ -433,18 +246,19 @@ class CrossTrackerTestExpertQueryTest extends RestBase
     public function testIsNotLinkedFromArtifact(): void
     {
         $params = [
-            'trackers_id'  => [ $this->epic_tracker_id ],
+            'trackers_id'  => [$this->epic_tracker_id],
             'expert_query' => 'IS NOT LINKED FROM ARTIFACT = 123 WITH TYPE "_is_child"',
+            'report_mode'  => 'default',
         ];
 
         $response = $this->getResponse($this->request_factory->createRequest('PUT', 'cross_tracker_reports/1')->withBody($this->stream_factory->createStream(json_encode($params))));
-        $this->assertEquals($response->getStatusCode(), 201);
+        self::assertEquals(201, $response->getStatusCode());
 
         $cross_tracker_report = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
-        $this->assertEquals(
-            $cross_tracker_report['expert_query'],
-            'IS NOT LINKED FROM ARTIFACT = 123 WITH TYPE "_is_child"'
+        self::assertEquals(
+            'IS NOT LINKED FROM ARTIFACT = 123 WITH TYPE "_is_child"',
+            $cross_tracker_report['expert_query']
         );
 
         $this->allEpicArtifactsMustBeRetrievedByQuery();
@@ -453,18 +267,19 @@ class CrossTrackerTestExpertQueryTest extends RestBase
     public function testIsNotLinkedFromTracker(): void
     {
         $params = [
-            'trackers_id'  => [ $this->epic_tracker_id ],
+            'trackers_id'  => [$this->epic_tracker_id],
             'expert_query' => 'IS NOT LINKED FROM TRACKER = "epic" WITH TYPE "_is_child"',
+            'report_mode'  => 'default',
         ];
 
         $response = $this->getResponse($this->request_factory->createRequest('PUT', 'cross_tracker_reports/1')->withBody($this->stream_factory->createStream(json_encode($params))));
-        $this->assertEquals($response->getStatusCode(), 201);
+        self::assertEquals(201, $response->getStatusCode());
 
         $cross_tracker_report = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
-        $this->assertEquals(
-            $cross_tracker_report['expert_query'],
-            'IS NOT LINKED FROM TRACKER = "epic" WITH TYPE "_is_child"'
+        self::assertEquals(
+            'IS NOT LINKED FROM TRACKER = "epic" WITH TYPE "_is_child"',
+            $cross_tracker_report['expert_query']
         );
 
         $this->allEpicArtifactsMustBeRetrievedByQuery();
@@ -473,78 +288,82 @@ class CrossTrackerTestExpertQueryTest extends RestBase
     public function testWithChildren(): void
     {
         $params = [
-            'trackers_id'  => [ $this->epic_tracker_id ],
+            'trackers_id'  => [$this->epic_tracker_id],
             'expert_query' => 'WITH CHILDREN',
+            'report_mode'  => 'default',
         ];
 
         $response = $this->getResponse($this->request_factory->createRequest('PUT', 'cross_tracker_reports/1')->withBody($this->stream_factory->createStream(json_encode($params))));
-        $this->assertEquals($response->getStatusCode(), 201);
+        self::assertEquals(201, $response->getStatusCode());
 
         $cross_tracker_report = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
-        $this->assertEquals(
-            $cross_tracker_report['expert_query'],
-            'WITH CHILDREN'
+        self::assertEquals(
+            'WITH CHILDREN',
+            $cross_tracker_report['expert_query']
         );
 
-        $this->getMatchingEpicArtifactByIds([]);
+        self::assertEmpty($this->getMatchingArtifactsFromJson());
     }
 
     public function testWithChildrenArtifact(): void
     {
         $params = [
-            'trackers_id'  => [ $this->epic_tracker_id ],
+            'trackers_id'  => [$this->epic_tracker_id],
             'expert_query' => 'WITH CHILDREN ARTIFACT = 123',
+            'report_mode'  => 'default',
         ];
 
         $response = $this->getResponse($this->request_factory->createRequest('PUT', 'cross_tracker_reports/1')->withBody($this->stream_factory->createStream(json_encode($params))));
-        $this->assertEquals($response->getStatusCode(), 201);
+        self::assertEquals(201, $response->getStatusCode());
 
         $cross_tracker_report = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
-        $this->assertEquals(
-            $cross_tracker_report['expert_query'],
-            'WITH CHILDREN ARTIFACT = 123'
+        self::assertEquals(
+            'WITH CHILDREN ARTIFACT = 123',
+            $cross_tracker_report['expert_query']
         );
 
-        $this->getMatchingEpicArtifactByIds([]);
+        self::assertEmpty($this->getMatchingArtifactsFromJson());
     }
 
     public function testWithChildrenTracker(): void
     {
         $params = [
-            'trackers_id'  => [ $this->epic_tracker_id ],
+            'trackers_id'  => [$this->epic_tracker_id],
             'expert_query' => 'WITH CHILDREN TRACKER = "epic"',
+            'report_mode'  => 'default',
         ];
 
         $response = $this->getResponse($this->request_factory->createRequest('PUT', 'cross_tracker_reports/1')->withBody($this->stream_factory->createStream(json_encode($params))));
-        $this->assertEquals($response->getStatusCode(), 201);
+        self::assertEquals(201, $response->getStatusCode());
 
         $cross_tracker_report = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
-        $this->assertEquals(
-            $cross_tracker_report['expert_query'],
-            'WITH CHILDREN TRACKER = "epic"'
+        self::assertEquals(
+            'WITH CHILDREN TRACKER = "epic"',
+            $cross_tracker_report['expert_query']
         );
 
-        $this->getMatchingEpicArtifactByIds([]);
+        self::assertEmpty($this->getMatchingArtifactsFromJson());
     }
 
     public function testWithoutChildren(): void
     {
         $params = [
-            'trackers_id'  => [ $this->epic_tracker_id ],
+            'trackers_id'  => [$this->epic_tracker_id],
             'expert_query' => 'WITHOUT CHILDREN',
+            'report_mode'  => 'default',
         ];
 
         $response = $this->getResponse($this->request_factory->createRequest('PUT', 'cross_tracker_reports/1')->withBody($this->stream_factory->createStream(json_encode($params))));
-        $this->assertEquals($response->getStatusCode(), 201);
+        self::assertEquals(201, $response->getStatusCode());
 
         $cross_tracker_report = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
-        $this->assertEquals(
-            $cross_tracker_report['expert_query'],
-            'WITHOUT CHILDREN'
+        self::assertEquals(
+            'WITHOUT CHILDREN',
+            $cross_tracker_report['expert_query']
         );
 
         $this->allEpicArtifactsMustBeRetrievedByQuery();
@@ -553,18 +372,19 @@ class CrossTrackerTestExpertQueryTest extends RestBase
     public function testWithoutChildrenArtifact(): void
     {
         $params = [
-            'trackers_id'  => [ $this->epic_tracker_id ],
+            'trackers_id'  => [$this->epic_tracker_id],
             'expert_query' => 'WITHOUT CHILDREN ARTIFACT = 123',
+            'report_mode'  => 'default',
         ];
 
         $response = $this->getResponse($this->request_factory->createRequest('PUT', 'cross_tracker_reports/1')->withBody($this->stream_factory->createStream(json_encode($params))));
-        $this->assertEquals($response->getStatusCode(), 201);
+        self::assertEquals(201, $response->getStatusCode());
 
         $cross_tracker_report = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
-        $this->assertEquals(
-            $cross_tracker_report['expert_query'],
-            'WITHOUT CHILDREN ARTIFACT = 123'
+        self::assertEquals(
+            'WITHOUT CHILDREN ARTIFACT = 123',
+            $cross_tracker_report['expert_query']
         );
 
         $this->allEpicArtifactsMustBeRetrievedByQuery();
@@ -573,18 +393,19 @@ class CrossTrackerTestExpertQueryTest extends RestBase
     public function testWithoutChildrenTracker(): void
     {
         $params = [
-            'trackers_id'  => [ $this->epic_tracker_id ],
+            'trackers_id'  => [$this->epic_tracker_id],
             'expert_query' => 'WITHOUT CHILDREN TRACKER = "epic"',
+            'report_mode'  => 'default',
         ];
 
         $response = $this->getResponse($this->request_factory->createRequest('PUT', 'cross_tracker_reports/1')->withBody($this->stream_factory->createStream(json_encode($params))));
-        $this->assertEquals($response->getStatusCode(), 201);
+        self::assertEquals(201, $response->getStatusCode());
 
         $cross_tracker_report = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
-        $this->assertEquals(
-            $cross_tracker_report['expert_query'],
-            'WITHOUT CHILDREN TRACKER = "epic"'
+        self::assertEquals(
+            'WITHOUT CHILDREN TRACKER = "epic"',
+            $cross_tracker_report['expert_query']
         );
 
         $this->allEpicArtifactsMustBeRetrievedByQuery();
@@ -593,118 +414,124 @@ class CrossTrackerTestExpertQueryTest extends RestBase
     public function testIsLinkedToWithType(): void
     {
         $params = [
-            'trackers_id'  => [ $this->epic_tracker_id ],
+            'trackers_id'  => [$this->epic_tracker_id],
             'expert_query' => 'IS LINKED TO WITH TYPE "_is_child"',
+            'report_mode'  => 'default',
         ];
 
         $response = $this->getResponse($this->request_factory->createRequest('PUT', 'cross_tracker_reports/1')->withBody($this->stream_factory->createStream(json_encode($params))));
-        $this->assertEquals($response->getStatusCode(), 201);
+        self::assertEquals(201, $response->getStatusCode());
 
         $cross_tracker_report = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
-        $this->assertEquals(
-            $cross_tracker_report['expert_query'],
-            'IS LINKED TO WITH TYPE "_is_child"'
+        self::assertEquals(
+            'IS LINKED TO WITH TYPE "_is_child"',
+            $cross_tracker_report['expert_query']
         );
 
-        $this->getMatchingEpicArtifactByIds([]);
+        self::assertEmpty($this->getMatchingArtifactsFromJson());
     }
 
     public function testIsLinkedToArtifact(): void
     {
         $params = [
-            'trackers_id'  => [ $this->epic_tracker_id ],
+            'trackers_id'  => [$this->epic_tracker_id],
             'expert_query' => 'IS LINKED TO ARTIFACT = 123 WITH TYPE "_is_child"',
+            'report_mode'  => 'default',
         ];
 
         $response = $this->getResponse($this->request_factory->createRequest('PUT', 'cross_tracker_reports/1')->withBody($this->stream_factory->createStream(json_encode($params))));
-        $this->assertEquals($response->getStatusCode(), 201);
+        self::assertEquals(201, $response->getStatusCode());
 
         $cross_tracker_report = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
-        $this->assertEquals(
-            $cross_tracker_report['expert_query'],
-            'IS LINKED TO ARTIFACT = 123 WITH TYPE "_is_child"'
+        self::assertEquals(
+            'IS LINKED TO ARTIFACT = 123 WITH TYPE "_is_child"',
+            $cross_tracker_report['expert_query']
         );
 
-        $this->getMatchingEpicArtifactByIds([]);
+        self::assertEmpty($this->getMatchingArtifactsFromJson());
     }
 
     public function testIsLinkedToTracker(): void
     {
         $params = [
-            'trackers_id'  => [ $this->epic_tracker_id ],
+            'trackers_id'  => [$this->epic_tracker_id],
             'expert_query' => 'IS LINKED TO TRACKER = "epic" WITH TYPE "_is_child"',
+            'report_mode'  => 'default',
         ];
 
         $response = $this->getResponse($this->request_factory->createRequest('PUT', 'cross_tracker_reports/1')->withBody($this->stream_factory->createStream(json_encode($params))));
-        $this->assertEquals($response->getStatusCode(), 201);
+        self::assertEquals(201, $response->getStatusCode());
 
         $cross_tracker_report = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
-        $this->assertEquals(
-            $cross_tracker_report['expert_query'],
-            'IS LINKED TO TRACKER = "epic" WITH TYPE "_is_child"'
+        self::assertEquals(
+            'IS LINKED TO TRACKER = "epic" WITH TYPE "_is_child"',
+            $cross_tracker_report['expert_query']
         );
 
-        $this->getMatchingEpicArtifactByIds([]);
+        self::assertEmpty($this->getMatchingArtifactsFromJson());
     }
 
     public function testIsLinkedToNotTracker(): void
     {
         $params = [
-            'trackers_id'  => [ $this->epic_tracker_id ],
+            'trackers_id'  => [$this->epic_tracker_id],
             'expert_query' => 'IS LINKED TO TRACKER != "epic" WITH TYPE "_is_child"',
+            'report_mode'  => 'default',
         ];
 
         $response = $this->getResponse($this->request_factory->createRequest('PUT', 'cross_tracker_reports/1')->withBody($this->stream_factory->createStream(json_encode($params))));
-        $this->assertEquals($response->getStatusCode(), 201);
+        self::assertEquals(201, $response->getStatusCode());
 
         $cross_tracker_report = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
-        $this->assertEquals(
-            $cross_tracker_report['expert_query'],
-            'IS LINKED TO TRACKER != "epic" WITH TYPE "_is_child"'
+        self::assertEquals(
+            'IS LINKED TO TRACKER != "epic" WITH TYPE "_is_child"',
+            $cross_tracker_report['expert_query']
         );
 
-        $this->getMatchingEpicArtifactByIds([]);
+        self::assertEmpty($this->getMatchingArtifactsFromJson());
     }
 
     public function testIsLinkedTo(): void
     {
         $params = [
-            'trackers_id'  => [ $this->epic_tracker_id ],
+            'trackers_id'  => [$this->epic_tracker_id],
             'expert_query' => 'IS LINKED TO',
+            'report_mode'  => 'default',
         ];
 
         $response = $this->getResponse($this->request_factory->createRequest('PUT', 'cross_tracker_reports/1')->withBody($this->stream_factory->createStream(json_encode($params))));
-        $this->assertEquals($response->getStatusCode(), 201);
+        self::assertEquals(201, $response->getStatusCode());
 
         $cross_tracker_report = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
-        $this->assertEquals(
-            $cross_tracker_report['expert_query'],
-            'IS LINKED TO'
+        self::assertEquals(
+            'IS LINKED TO',
+            $cross_tracker_report['expert_query']
         );
 
-        $this->getMatchingEpicArtifactByIds([]);
+        self::assertEmpty($this->getMatchingArtifactsFromJson());
     }
 
     public function testIsNotLinkedToWithType(): void
     {
         $params = [
-            'trackers_id'  => [ $this->epic_tracker_id ],
+            'trackers_id'  => [$this->epic_tracker_id],
             'expert_query' => 'IS NOT LINKED TO WITH TYPE "_is_child"',
+            'report_mode'  => 'default',
         ];
 
         $response = $this->getResponse($this->request_factory->createRequest('PUT', 'cross_tracker_reports/1')->withBody($this->stream_factory->createStream(json_encode($params))));
-        $this->assertEquals($response->getStatusCode(), 201);
+        self::assertEquals(201, $response->getStatusCode());
 
         $cross_tracker_report = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
-        $this->assertEquals(
-            $cross_tracker_report['expert_query'],
-            'IS NOT LINKED TO WITH TYPE "_is_child"'
+        self::assertEquals(
+            'IS NOT LINKED TO WITH TYPE "_is_child"',
+            $cross_tracker_report['expert_query']
         );
 
         $this->allEpicArtifactsMustBeRetrievedByQuery();
@@ -713,18 +540,19 @@ class CrossTrackerTestExpertQueryTest extends RestBase
     public function testIsNotLinkedToArtifact(): void
     {
         $params = [
-            'trackers_id'  => [ $this->epic_tracker_id ],
+            'trackers_id'  => [$this->epic_tracker_id],
             'expert_query' => 'IS NOT LINKED TO ARTIFACT = 123 WITH TYPE "_is_child"',
+            'report_mode'  => 'default',
         ];
 
         $response = $this->getResponse($this->request_factory->createRequest('PUT', 'cross_tracker_reports/1')->withBody($this->stream_factory->createStream(json_encode($params))));
-        $this->assertEquals($response->getStatusCode(), 201);
+        self::assertEquals(201, $response->getStatusCode());
 
         $cross_tracker_report = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
-        $this->assertEquals(
-            $cross_tracker_report['expert_query'],
-            'IS NOT LINKED TO ARTIFACT = 123 WITH TYPE "_is_child"'
+        self::assertEquals(
+            'IS NOT LINKED TO ARTIFACT = 123 WITH TYPE "_is_child"',
+            $cross_tracker_report['expert_query']
         );
 
         $this->allEpicArtifactsMustBeRetrievedByQuery();
@@ -733,18 +561,19 @@ class CrossTrackerTestExpertQueryTest extends RestBase
     public function testIsNotLinkedToTracker(): void
     {
         $params = [
-            'trackers_id'  => [ $this->epic_tracker_id ],
+            'trackers_id'  => [$this->epic_tracker_id],
             'expert_query' => 'IS NOT LINKED TO TRACKER = "epic" WITH TYPE "_is_child"',
+            'report_mode'  => 'default',
         ];
 
         $response = $this->getResponse($this->request_factory->createRequest('PUT', 'cross_tracker_reports/1')->withBody($this->stream_factory->createStream(json_encode($params))));
-        $this->assertEquals($response->getStatusCode(), 201);
+        self::assertEquals(201, $response->getStatusCode());
 
         $cross_tracker_report = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
-        $this->assertEquals(
-            $cross_tracker_report['expert_query'],
-            'IS NOT LINKED TO TRACKER = "epic" WITH TYPE "_is_child"'
+        self::assertEquals(
+            'IS NOT LINKED TO TRACKER = "epic" WITH TYPE "_is_child"',
+            $cross_tracker_report['expert_query']
         );
 
         $this->allEpicArtifactsMustBeRetrievedByQuery();
@@ -753,14 +582,15 @@ class CrossTrackerTestExpertQueryTest extends RestBase
     public function testIsNotLinkedToNotTracker(): void
     {
         $params = [
-            'trackers_id'  => [ $this->epic_tracker_id ],
+            'trackers_id'  => [$this->epic_tracker_id],
             'expert_query' => 'IS NOT LINKED TO TRACKER != "epic" WITH TYPE "_is_child"',
+            'report_mode'  => 'default',
         ];
 
         $response = $this->getResponse($this->request_factory->createRequest('PUT', 'cross_tracker_reports/1')->withBody($this->stream_factory->createStream(json_encode($params))));
-        $this->assertEquals(400, $response->getStatusCode());
+        self::assertEquals(400, $response->getStatusCode());
         $body = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
-        $this->assertStringContainsString(
+        self::assertStringContainsString(
             'Double negative',
             $body['error']['message']
         );
@@ -769,18 +599,19 @@ class CrossTrackerTestExpertQueryTest extends RestBase
     public function testIsNotLinkedTo(): void
     {
         $params = [
-            'trackers_id'  => [ $this->epic_tracker_id ],
+            'trackers_id'  => [$this->epic_tracker_id],
             'expert_query' => 'IS NOT LINKED TO',
+            'report_mode'  => 'default',
         ];
 
         $response = $this->getResponse($this->request_factory->createRequest('PUT', 'cross_tracker_reports/1')->withBody($this->stream_factory->createStream(json_encode($params))));
-        $this->assertEquals($response->getStatusCode(), 201);
+        self::assertEquals(201, $response->getStatusCode());
 
         $cross_tracker_report = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
-        $this->assertEquals(
-            $cross_tracker_report['expert_query'],
-            'IS NOT LINKED TO'
+        self::assertEquals(
+            'IS NOT LINKED TO',
+            $cross_tracker_report['expert_query']
         );
 
         $this->allEpicArtifactsMustBeRetrievedByQuery();
@@ -788,53 +619,36 @@ class CrossTrackerTestExpertQueryTest extends RestBase
 
     private function getMatchingArtifactsFromJson()
     {
-        $response = $this->getResponse($this->request_factory->createRequest('GET', 'cross_tracker_reports/1/content?limit=50&offset=0&return_format=static'));
+        $response = $this->getResponse($this->request_factory->createRequest('GET', 'cross_tracker_reports/1/content?limit=50&offset=0&report_mode=default'));
 
-        $this->assertEquals($response->getStatusCode(), 200);
+        self::assertEquals(200, $response->getStatusCode());
         $cross_tracker_artifacts = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         return $cross_tracker_artifacts['artifacts'];
     }
 
-    private function allEpicArtifactsMustBeRetrievedByQuery()
+    private function allEpicArtifactsMustBeRetrievedByQuery(): void
     {
         $cross_tracker_artifacts = $this->getMatchingArtifactsFromJson();
 
-        $this->assertEquals(
-            count($cross_tracker_artifacts),
-            8
-        );
+        self::assertCount(8, $cross_tracker_artifacts);
 
-        $this->assertEquals($cross_tracker_artifacts[0]['id'], $this->epic_artifact_ids[8]);
-        $this->assertEquals($cross_tracker_artifacts[1]['id'], $this->epic_artifact_ids[7]);
-        $this->assertEquals($cross_tracker_artifacts[2]['id'], $this->epic_artifact_ids[6]);
-        $this->assertEquals($cross_tracker_artifacts[3]['id'], $this->epic_artifact_ids[5]);
-        $this->assertEquals($cross_tracker_artifacts[4]['id'], $this->epic_artifact_ids[4]);
-        $this->assertEquals($cross_tracker_artifacts[5]['id'], $this->epic_artifact_ids[3]);
-        $this->assertEquals($cross_tracker_artifacts[6]['id'], $this->epic_artifact_ids[2]);
-        $this->assertEquals($cross_tracker_artifacts[7]['id'], $this->epic_artifact_ids[1]);
+        self::assertEquals($cross_tracker_artifacts[0]['id'], $this->epic_artifact_ids[8]);
+        self::assertEquals($cross_tracker_artifacts[1]['id'], $this->epic_artifact_ids[7]);
+        self::assertEquals($cross_tracker_artifacts[2]['id'], $this->epic_artifact_ids[6]);
+        self::assertEquals($cross_tracker_artifacts[3]['id'], $this->epic_artifact_ids[5]);
+        self::assertEquals($cross_tracker_artifacts[4]['id'], $this->epic_artifact_ids[4]);
+        self::assertEquals($cross_tracker_artifacts[5]['id'], $this->epic_artifact_ids[3]);
+        self::assertEquals($cross_tracker_artifacts[6]['id'], $this->epic_artifact_ids[2]);
+        self::assertEquals($cross_tracker_artifacts[7]['id'], $this->epic_artifact_ids[1]);
 
-        $this->assertNotEmpty($cross_tracker_artifacts[0]['title']);
-        $this->assertNotEmpty($cross_tracker_artifacts[1]['title']);
-        $this->assertNotEmpty($cross_tracker_artifacts[2]['title']);
-        $this->assertNotEmpty($cross_tracker_artifacts[3]['title']);
-        $this->assertNotEmpty($cross_tracker_artifacts[4]['title']);
-        $this->assertNotEmpty($cross_tracker_artifacts[5]['title']);
-        $this->assertNotEmpty($cross_tracker_artifacts[6]['title']);
-        $this->assertNotEmpty($cross_tracker_artifacts[7]['title']);
-    }
-
-    private function getMatchingEpicArtifactByIds(array $artifact_ids)
-    {
-        $cross_tracker_artifacts = $this->getMatchingArtifactsFromJson();
-
-        $this->assertEquals(
-            count($cross_tracker_artifacts),
-            count($artifact_ids)
-        );
-
-        foreach ($artifact_ids as $key => $artifact_id) {
-            $this->assertEquals($cross_tracker_artifacts[$key]['id'], $artifact_id);
-        }
+        self::assertNotEmpty($cross_tracker_artifacts[0]['title']);
+        self::assertNotEmpty($cross_tracker_artifacts[1]['title']);
+        self::assertNotEmpty($cross_tracker_artifacts[2]['title']);
+        self::assertNotEmpty($cross_tracker_artifacts[3]['title']);
+        self::assertNotEmpty($cross_tracker_artifacts[4]['title']);
+        self::assertNotEmpty($cross_tracker_artifacts[5]['title']);
+        self::assertNotEmpty($cross_tracker_artifacts[6]['title']);
+        self::assertNotEmpty($cross_tracker_artifacts[7]['title']);
     }
 }

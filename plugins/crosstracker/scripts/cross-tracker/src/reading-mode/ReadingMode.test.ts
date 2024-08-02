@@ -100,7 +100,7 @@ describe("ReadingMode", () => {
                 { tracker: { id: 17 }, project: { id: 138 } } as TrackerAndProject,
             ];
             const expert_query = '@description != ""';
-            const report = { trackers, expert_query } as Report;
+            const report = { trackers, expert_query, expert_mode: false } as Report;
 
             const updateReport = vi
                 .spyOn(rest_querier, "updateReport")
@@ -111,7 +111,7 @@ describe("ReadingMode", () => {
 
             expect(duplicateBackend).toHaveBeenCalledWith(reading_cross_tracker_report);
             expect(updateReport).toHaveBeenCalled();
-            expect(initBackend).toHaveBeenCalledWith(trackers, expert_query);
+            expect(initBackend).toHaveBeenCalledWith(trackers, expert_query, false);
             const emitted = wrapper.emitted("saved");
             expect(emitted).toBeDefined();
         });

@@ -1915,6 +1915,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
         );
         $validator->validateExpertQuery(
             $this->expert_query,
+            false,
             new InvalidSearchablesCollectionBuilder($this->getCollector()),
             new InvalidSelectablesCollectionBuilder(),
         );

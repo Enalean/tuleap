@@ -129,7 +129,7 @@ final class DescriptionMetadataTest extends CrossTrackerFieldTestCase
     {
         $result = (new ArtifactReportFactoryInstantiator())
             ->getFactory()
-            ->getArtifactsMatchingReport($report, $user, 10, 0, true);
+            ->getArtifactsMatchingReport($report, $user, 10, 0);
         assert($result instanceof ArtifactMatchingReportCollection);
         return array_values(array_map(static fn(Artifact $artifact) => $artifact->getId(), $result->getArtifacts()));
     }
@@ -141,6 +141,7 @@ final class DescriptionMetadataTest extends CrossTrackerFieldTestCase
                 1,
                 "@description = ''",
                 [$this->release_tracker, $this->sprint_tracker],
+                false,
             ),
             $this->project_member
         );
@@ -156,6 +157,7 @@ final class DescriptionMetadataTest extends CrossTrackerFieldTestCase
                 1,
                 "@description = 'description'",
                 [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
+                false,
             ),
             $this->project_member
         );
@@ -171,6 +173,7 @@ final class DescriptionMetadataTest extends CrossTrackerFieldTestCase
                 1,
                 "@description = 'description'",
                 [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
+                false,
             ),
             $this->project_admin
         );
@@ -186,6 +189,7 @@ final class DescriptionMetadataTest extends CrossTrackerFieldTestCase
                 1,
                 "@description = 'description' OR @description = 'long'",
                 [$this->release_tracker, $this->sprint_tracker],
+                false,
             ),
             $this->project_member
         );
@@ -201,6 +205,7 @@ final class DescriptionMetadataTest extends CrossTrackerFieldTestCase
                 1,
                 "@description != ''",
                 [$this->release_tracker, $this->sprint_tracker],
+                false,
             ),
             $this->project_member
         );
@@ -216,6 +221,7 @@ final class DescriptionMetadataTest extends CrossTrackerFieldTestCase
                 1,
                 "@description != 'long'",
                 [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
+                false,
             ),
             $this->project_member
         );
@@ -234,6 +240,7 @@ final class DescriptionMetadataTest extends CrossTrackerFieldTestCase
                 1,
                 "@description != 'long'",
                 [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
+                false,
             ),
             $this->project_admin
         );
@@ -253,6 +260,7 @@ final class DescriptionMetadataTest extends CrossTrackerFieldTestCase
                 1,
                 "@description != 'long' AND @description != ''",
                 [$this->release_tracker, $this->sprint_tracker],
+                false,
             ),
             $this->project_member
         );

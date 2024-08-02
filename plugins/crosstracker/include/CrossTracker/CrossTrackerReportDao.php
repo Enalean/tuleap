@@ -50,14 +50,14 @@ class CrossTrackerReportDao extends DataAccessObject implements SearchCrossTrack
         return $this->getDB()->lastInsertId();
     }
 
-    public function updateReport($report_id, array $trackers, $expert_query)
+    public function updateReport($report_id, array $trackers, $expert_query, bool $expert_mode)
     {
         $this->getDB()->beginTransaction();
 
         try {
             $this->getDB()->run('DELETE FROM plugin_crosstracker_report_tracker WHERE report_id = ?', $report_id);
             $this->addTrackersToReport($trackers, $report_id);
-            $this->updateExpertQuery($report_id, $expert_query);
+            $this->updateExpertQuery($report_id, $expert_query, $expert_mode);
         } catch (\PDOException $ex) {
             $this->getDB()->rollBack();
             return;
@@ -66,10 +66,10 @@ class CrossTrackerReportDao extends DataAccessObject implements SearchCrossTrack
         $this->getDB()->commit();
     }
 
-    private function updateExpertQuery($report_id, $expert_query)
+    private function updateExpertQuery($report_id, $expert_query, bool $expert_mode)
     {
-        $sql = 'REPLACE INTO plugin_crosstracker_report (id, expert_query) VALUES (?, ?)';
-        $this->getDB()->run($sql, $report_id, $expert_query);
+        $sql = 'REPLACE INTO plugin_crosstracker_report (id, expert_query, expert_mode) VALUES (?, ?, ?)';
+        $this->getDB()->run($sql, $report_id, $expert_query, $expert_mode);
     }
 
     /**
