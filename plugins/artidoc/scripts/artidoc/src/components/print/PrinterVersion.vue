@@ -38,7 +38,7 @@
                         </div>
                         <div class="document-page">
                             <aside>
-                                <table-of-contents />
+                                <table-of-contents v-bind:is_print_mode="true" />
                             </aside>
                         </div>
                         <div class="document-page">
@@ -48,6 +48,7 @@
                                         v-for="section in saved_sections"
                                         v-bind:key="section.id"
                                         class="document-section"
+                                        v-bind:id="`pdf-section-${section.id}`"
                                     >
                                         <section-printer-version v-bind:section="section" />
                                     </li>

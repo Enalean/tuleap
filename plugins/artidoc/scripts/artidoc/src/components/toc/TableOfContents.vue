@@ -48,11 +48,19 @@ import { isArtifactSection } from "@/helpers/artidoc-section.type";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import { SECTIONS_STORE } from "@/stores/sections-store-injection-key";
 
+const props = withDefaults(
+    defineProps<{
+        is_print_mode?: boolean;
+    }>(),
+    { is_print_mode: false },
+);
+
 const { $gettext } = useGettext();
 
 const { sections, is_sections_loading } = strictInject(SECTIONS_STORE);
 
-const href = (section: ArtidocSection): string => `#section-${section.id}`;
+const href = (section: ArtidocSection): string =>
+    !props.is_print_mode ? `#section-${section.id}` : `#pdf-section-${section.id}`;
 </script>
 
 <style scoped lang="scss">
