@@ -51,12 +51,12 @@ final readonly class Navigation
         return new self(
             [
                 [
-                    'label'     => dgettext('tuleap_pdftemplate', 'Templates list'),
+                    'label'     => dgettext('tuleap-pdftemplate', 'Templates list'),
                     'href'      => IndexPdfTemplateController::ROUTE,
                     'is_active' => self::PANE_TEMPLATES === $active,
                 ],
                 [
-                    'label'     => dgettext('tuleap_pdftemplate', 'Images library'),
+                    'label'     => dgettext('tuleap-pdftemplate', 'Images library'),
                     'href'      => IndexImagesController::ROUTE,
                     'is_active' => self::PANE_IMAGES === $active,
                 ],
