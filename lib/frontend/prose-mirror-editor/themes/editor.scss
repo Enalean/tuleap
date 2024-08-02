@@ -18,18 +18,48 @@
  */
 @use "./toolbar";
 
-/* stylelint-disable selector-class-pattern */
-
-.ProseMirror {
-    padding: 8px var(--tlp-form-element-padding-horizontal);
+#editor,
+.editor {
+    position: relative;
+    z-index: 2;
     border-radius: var(--tlp-form-element-border-radius);
+    background-color: var(--tlp-white-color);
+    box-shadow: var(--tlp-sticky-header-shadow);
 }
 
-.ProseMirror:hover {
-    transition:
-        border-color var(--tlp-form-element-border-transition-duration) linear,
-        box-shadow 0.35s;
-    border-color: var(--tlp-main-color);
-    box-shadow: var(--tlp-shadow-focus);
+/* stylelint-disable selector-class-pattern */
+.ProseMirror {
+    padding: var(--tlp-form-element-padding-horizontal);
+    border-right: 1px solid var(--tlp-form-element-border-color);
+    border-bottom: 1px solid var(--tlp-form-element-border-color);
+    border-left: 1px solid var(--tlp-form-element-border-color);
+    border-bottom-right-radius: var(--tlp-form-element-border-radius);
+    border-bottom-left-radius: var(--tlp-form-element-border-radius);
+    word-wrap: break-word;
+    white-space: pre-wrap;
+
+    &:hover {
+        transition:
+            border-color var(--tlp-form-element-border-transition-duration) linear,
+            box-shadow 0.35s;
+        border-color: var(--tlp-main-color);
+        box-shadow: var(--tlp-shadow-focus);
+    }
+}
+
+.ProseMirror pre {
+    white-space: pre-wrap;
+}
+
+.ProseMirror li > p {
+    margin: 0;
+}
+
+.ProseMirror a {
+    cursor: pointer;
+}
+
+.ProseMirror p {
+    margin-bottom: var(--tlp-small-spacing);
 }
 /* stylelint-enable selector-class-pattern */
