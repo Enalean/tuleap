@@ -45,6 +45,7 @@ final class IndexImagesController implements DispatchableWithBurningParrot, Disp
         private UserCanManageTemplatesChecker $can_manage_templates_checker,
         private CSRFTokenProvider $token_provider,
         private RetrieveAllImages $retriever,
+        private UsageDetector $usage_detector,
     ) {
     }
 
@@ -74,7 +75,7 @@ final class IndexImagesController implements DispatchableWithBurningParrot, Disp
                 Navigation::inImages(),
                 $this->token_provider->getToken(),
                 array_map(
-                    fn (PdfTemplateImage $image) => PdfTemplateImagePresenter::fromImage($image, $current_user),
+                    fn (PdfTemplateImage $image) => PdfTemplateImagePresenter::fromImage($image, $current_user, $this->usage_detector),
                     $this->retriever->retrieveAll(),
                 ),
             ),

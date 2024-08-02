@@ -31,7 +31,7 @@ use Tuleap\Test\Stubs\RetrieveUserByIdStub;
 
 final class PdfTemplateImageDaoTest extends TestIntegrationTestCase
 {
-    public function testTemplatesAreRetrievedOrderedByFilname(): void
+    public function testImagesAreRetrievedOrderedByFilname(): void
     {
         $alice = UserTestBuilder::aUser()->build();
 
@@ -48,5 +48,33 @@ final class PdfTemplateImageDaoTest extends TestIntegrationTestCase
         self::assertCount(2, $templates);
         self::assertEquals('another logo.gif', $templates[0]->filename);
         self::assertEquals('the logo.png', $templates[1]->filename);
+    }
+
+    public function testImageDeletion(): void
+    {
+        $alice = UserTestBuilder::aUser()->build();
+
+        $identifier_factory = new PdfTemplateImageIdentifierFactory(new DatabaseUUIDV7Factory());
+        $dao                = new PdfTemplateImageDao($identifier_factory, RetrieveUserByIdStub::withUser($alice));
+
+        $identifier1 = $identifier_factory->buildIdentifier();
+        $image1      = $dao->create($identifier1, 'the logo.png', 123, $alice, new DateTimeImmutable());
+
+        $identifier2 = $identifier_factory->buildIdentifier();
+        $image2      = $dao->create($identifier2, 'another logo.gif', 456, $alice, new DateTimeImmutable());
+
+        $this->assertSameImages($image1, $dao->retrieveImage($identifier1));
+        $this->assertSameImages($image2, $dao->retrieveImage($identifier2));
+
+        $dao->deleteImage($image1);
+
+        self::assertNull($dao->retrieveImage($identifier1));
+        $this->assertSameImages($image2, $dao->retrieveImage($identifier2));
+    }
+
+    private function assertSameImages(PdfTemplateImage $expected, ?PdfTemplateImage $image): void
+    {
+        self::assertNotNull($image);
+        self::assertSame($expected->identifier->toString(), $image->identifier->toString());
     }
 }

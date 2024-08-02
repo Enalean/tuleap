@@ -1,4 +1,5 @@
-/*
+<?php
+/**
  * Copyright (c) Enalean, 2024 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -17,11 +18,31 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { openAllTargetModalsOnClick } from "@tuleap/tlp-modal";
+declare(strict_types=1);
 
-export function initiateModals(doc: Document): void {
-    openAllTargetModalsOnClick(
-        doc,
-        ".pdftemplate-delete-button, .pdftemplate-admin-images-preview-button, .pdftemplate-admin-images-delete-button",
-    );
+namespace Tuleap\PdfTemplate\Stubs;
+
+use Tuleap\PdfTemplate\Image\DeleteImage;
+use Tuleap\PdfTemplate\Image\PdfTemplateImage;
+
+final class DeleteImageStub implements DeleteImage
+{
+    private function __construct(private bool $deleted)
+    {
+    }
+
+    public static function build(): self
+    {
+        return new self(false);
+    }
+
+    public function deleteImage(PdfTemplateImage $image): void
+    {
+        $this->deleted = true;
+    }
+
+    public function isDeleted(): bool
+    {
+        return $this->deleted;
+    }
 }

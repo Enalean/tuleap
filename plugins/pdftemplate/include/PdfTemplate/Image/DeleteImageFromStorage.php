@@ -1,4 +1,5 @@
-/*
+<?php
+/**
  * Copyright (c) Enalean, 2024 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -17,11 +18,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { openAllTargetModalsOnClick } from "@tuleap/tlp-modal";
+namespace Tuleap\PdfTemplate\Image;
 
-export function initiateModals(doc: Document): void {
-    openAllTargetModalsOnClick(
-        doc,
-        ".pdftemplate-delete-button, .pdftemplate-admin-images-preview-button, .pdftemplate-admin-images-delete-button",
-    );
+interface DeleteImageFromStorage
+{
+    public function delete(PdfTemplateImage $image): void;
 }

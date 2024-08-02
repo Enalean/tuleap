@@ -39,8 +39,10 @@ use Tuleap\PdfTemplate\Admin\DeletePdfTemplateController;
 use Tuleap\PdfTemplate\Admin\DisplayPdfTemplateCreationFormController;
 use Tuleap\PdfTemplate\Admin\DisplayPdfTemplateDuplicateFormController;
 use Tuleap\PdfTemplate\Admin\DisplayPdfTemplateUpdateFormController;
+use Tuleap\PdfTemplate\Admin\Image\DeleteImageController;
 use Tuleap\PdfTemplate\Admin\Image\IndexImagesController;
 use Tuleap\PdfTemplate\Admin\Image\UploadImageController;
+use Tuleap\PdfTemplate\Admin\Image\UsageDetector;
 use Tuleap\PdfTemplate\Admin\IndexPdfTemplateController;
 use Tuleap\PdfTemplate\Admin\ManagePdfTemplates;
 use Tuleap\PdfTemplate\Admin\RejectNonNonPdfTemplateManagerMiddleware;
@@ -49,6 +51,7 @@ use Tuleap\PdfTemplate\Admin\UserCanManageTemplatesChecker;
 use Tuleap\PdfTemplate\Image\Identifier\PdfTemplateImageIdentifierFactory;
 use Tuleap\PdfTemplate\Image\PdfTemplateImageDao;
 use Tuleap\PdfTemplate\Image\PdfTemplateImageDisplayController;
+use Tuleap\PdfTemplate\Image\PdfTemplateImageHrefBuilder;
 use Tuleap\PdfTemplate\Image\PdfTemplateImageStorage;
 use Tuleap\PdfTemplate\Image\RejectAnonymousMiddleware;
 use Tuleap\PdfTemplate\Image\RetrieveImageMiddleware;
@@ -146,6 +149,10 @@ class PdfTemplatePlugin extends Plugin
             UploadImageController::ROUTE,
             $this->getRouteHandler('uploadImageController'),
         );
+        $event->getRouteCollector()->post(
+            DeleteImageController::ROUTE . '/{id:[A-Fa-f0-9-]+}',
+            $this->getRouteHandler('deleteImageController'),
+        );
         $event->getRouteCollector()->get(
             PdfTemplateImageDisplayController::ROUTE . '/{id:[A-Fa-f0-9-]+}',
             $this->getRouteHandler('displayImageController'),
@@ -183,6 +190,26 @@ class PdfTemplatePlugin extends Plugin
         );
     }
 
+    public function deleteImageController(): DispatchableWithRequest
+    {
+        return new DeleteImageController(
+            new RedirectWithFeedbackFactory(
+                HTTPFactoryBuilder::responseFactory(),
+                new FeedbackSerializer(new FeedbackDao()),
+            ),
+            new PdfTemplateImageStorage(),
+            $this->getImageDao(),
+            BackendLogger::getDefaultLogger(),
+            new SapiEmitter(),
+            new RejectNonNonPdfTemplateManagerMiddleware(
+                UserManager::instance(),
+                $this->getUserCanManageTemplatesChecker(),
+            ),
+            new CheckCSRFMiddleware(new AdministrationCSRFTokenProvider()),
+            new RetrieveImageMiddleware($this->getImageIdentifierFactory(), $this->getImageDao()),
+        );
+    }
+
     public function indexAdminImagesController(): DispatchableWithRequest
     {
         return new IndexImagesController(
@@ -190,6 +217,10 @@ class PdfTemplatePlugin extends Plugin
             $this->getUserCanManageTemplatesChecker(),
             new AdministrationCSRFTokenProvider(),
             $this->getImageDao(),
+            new UsageDetector(
+                $this->getPdfTemplateDao(),
+                new PdfTemplateImageHrefBuilder(),
+            )
         );
     }
 

@@ -24,13 +24,22 @@ namespace Tuleap\PdfTemplate\Admin\Image;
 
 use Tuleap\Date\TlpRelativeDatePresenter;
 use Tuleap\Date\TlpRelativeDatePresenterBuilder;
+use Tuleap\Export\Pdf\Template\PdfTemplate;
 use Tuleap\File\Size\HumanReadableFilesize;
+use Tuleap\PdfTemplate\Admin\PdfTemplatePresenter;
 use Tuleap\PdfTemplate\Image\PdfTemplateImage;
 use Tuleap\PdfTemplate\Image\PdfTemplateImageHrefBuilder;
 use Tuleap\User\Admin\UserPresenter;
 
 final readonly class PdfTemplateImagePresenter
 {
+    public string $delete_url;
+    public int $nb_usages;
+    public bool $is_used;
+
+    /**
+     * @param list<PdfTemplatePresenter> $usages
+     */
     private function __construct(
         public string $id,
         public string $filename,
@@ -38,12 +47,17 @@ final readonly class PdfTemplateImagePresenter
         public string $href,
         public UserPresenter $last_updated_by,
         public TlpRelativeDatePresenter $last_updated_date,
+        public array $usages,
     ) {
+        $this->delete_url = DeleteImageController::ROUTE . '/' . $this->id;
+        $this->nb_usages  = count($this->usages);
+        $this->is_used    = $this->nb_usages > 0;
     }
 
     public static function fromImage(
         PdfTemplateImage $image,
         \PFUser $user,
+        UsageDetector $usage_detector,
     ): self {
         $href_builder = new PdfTemplateImageHrefBuilder();
         $date_builder = new TlpRelativeDatePresenterBuilder();
@@ -55,6 +69,10 @@ final readonly class PdfTemplateImagePresenter
             $href_builder->getImageHref($image),
             UserPresenter::fromUser($image->last_updated_by),
             $date_builder->getTlpRelativeDatePresenterInBlockContext($image->last_updated_date, $user),
+            array_map(
+                fn (PdfTemplate $template) => PdfTemplatePresenter::fromPdfTemplate($template, $user),
+                $usage_detector->getUsages($image),
+            ),
         );
     }
 }
