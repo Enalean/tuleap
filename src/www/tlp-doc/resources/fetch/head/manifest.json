@@ -1,4 +1,0 @@
-{
-    "label": "head",
-    "shortcode": "(@tuleap/tlp-fetch).head(url_to_query, options)"
-}

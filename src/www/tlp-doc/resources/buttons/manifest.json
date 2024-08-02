@@ -1,8 +1,0 @@
-{
-  "label": "Buttons & Switch",
-  "children": [
-    "btn",
-    "bar",
-    "switch"
-  ]
-}

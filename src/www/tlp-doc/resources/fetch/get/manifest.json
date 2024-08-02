@@ -1,4 +1,0 @@
-{
-    "label": "get",
-    "shortcode": "(@tuleap/tlp-fetch).get(url_to_query, options)"
-}

@@ -1,4 +1,0 @@
-{
-    "label": "del",
-    "shortcode": "(@tuleap/tlp-fetch).del(url_to_query, options)"
-}

@@ -10,7 +10,6 @@ nbproject
 *.pot
 src/vendor/
 src/tuleap-cfg/vendor/
-src/www/tlp-doc/dist/
 src/themes/*/vendor/
 plugins/*/vendor/
 tools/utils/*/vendor/
