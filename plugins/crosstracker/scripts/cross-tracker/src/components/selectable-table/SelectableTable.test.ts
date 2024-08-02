@@ -51,6 +51,7 @@ import { buildVueDompurifyHTMLDirective } from "vue-dompurify-html";
 import EmptyState from "./EmptyState.vue";
 import type { ReportState } from "../../domain/ReportState";
 import ExportCSVButton from "../ExportCSVButton.vue";
+import SelectableCell from "./SelectableCell.vue";
 
 vi.useFakeTimers();
 
@@ -215,7 +216,7 @@ describe(`SelectableTable`, () => {
             expect(headers).toContain(DATE_COLUMN_NAME);
             expect(headers).toContain(NUMERIC_COLUMN_NAME);
             expect(headers).toContain(TEXT_COLUMN_NAME);
-            expect(wrapper.findAll("[data-test=cell]")).toHaveLength(6);
+            expect(wrapper.findAllComponents(SelectableCell)).toHaveLength(6);
         });
 
         it(`when there is a REST error, it will be shown`, async () => {
@@ -309,7 +310,7 @@ describe(`SelectableTable`, () => {
             expect(
                 wrapper.findAll("[data-test=column-header]").map((header) => header.text()),
             ).toContain(TEXT_COLUMN_NAME);
-            expect(wrapper.findAll("[data-test=cell]")).toHaveLength(2);
+            expect(wrapper.findAllComponents(SelectableCell)).toHaveLength(2);
         });
         it("returns the saved report, if the current report is saved", async () => {
             const table_retriever = RetrieveArtifactsTableStub.withContent(
@@ -326,7 +327,7 @@ describe(`SelectableTable`, () => {
                 .map((header) => header.text());
             expect(headers).toContain(DATE_COLUMN_NAME);
             expect(headers).toContain(NUMERIC_COLUMN_NAME);
-            expect(wrapper.findAll("[data-test=cell]")).toHaveLength(4);
+            expect(wrapper.findAllComponents(SelectableCell)).toHaveLength(4);
         });
     });
     describe("Empty state", () => {

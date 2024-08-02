@@ -19,6 +19,7 @@
 
 import type { TrackerResponseWithProject } from "@tuleap/plugin-tracker-rest-api-types";
 import type { Artifact } from "../type";
+import type { ColorName } from "@tuleap/core-constants";
 
 export type TrackerReference = Pick<TrackerResponseWithProject, "id" | "label" | "project">;
 
@@ -36,6 +37,7 @@ export const DATE_SELECTABLE_TYPE = "date";
 export const NUMERIC_SELECTABLE_TYPE = "numeric";
 export const TEXT_SELECTABLE_TYPE = "text";
 export const PROJECT_SELECTABLE_TYPE = "project";
+export const TRACKER_SELECTABLE_TYPE = "tracker";
 
 type UnsupportedSelectableRepresentation = Record<string, unknown>;
 
@@ -57,11 +59,17 @@ export type ProjectSelectableRepresentation = {
     readonly icon: string;
 };
 
+export type TrackerSelectableRepresentation = {
+    readonly name: string;
+    readonly color: ColorName;
+};
+
 export type SelectableRepresentation =
     | DateSelectableRepresentation
     | NumericSelectableRepresentation
     | TextSelectableRepresentation
     | ProjectSelectableRepresentation
+    | TrackerSelectableRepresentation
     | UnsupportedSelectableRepresentation;
 
 export type SelectableArtifactRepresentation = Record<string, SelectableRepresentation>;
@@ -90,11 +98,16 @@ interface ProjectSelectable extends BaseSelectable {
     readonly type: typeof PROJECT_SELECTABLE_TYPE;
 }
 
+interface TrackerSelectable extends BaseSelectable {
+    readonly type: typeof TRACKER_SELECTABLE_TYPE;
+}
+
 export type Selectable =
     | DateSelectable
     | NumericSelectable
     | TextSelectable
     | ProjectSelectable
+    | TrackerSelectable
     | UnsupportedSelectable;
 
 export type SelectableReportContentRepresentation = {

@@ -36,24 +36,12 @@
                 >{{ getColumnName(column_name) }}</span
             >
             <template v-for="(row_map, index) of rows">
-                <template v-for="column_name of columns">
-                    <text-cell
-                        v-if="row_map.get(column_name)?.type === TEXT_CELL"
-                        v-bind:key="column_name + index"
-                        v-bind:cell="row_map.get(column_name)"
-                        class="cell"
-                        v-bind:class="getEvenOddClass(index)"
-                        data-test="cell"
-                    />
-                    <span
-                        v-if="row_map.get(column_name)?.type !== TEXT_CELL"
-                        v-bind:key="column_name + index"
-                        class="cell"
-                        v-bind:class="getEvenOddClass(index)"
-                        data-test="cell"
-                        >{{ renderCell(row_map, column_name) }}</span
-                    >
-                </template>
+                <selectable-cell
+                    v-for="column_name of columns"
+                    v-bind:key="column_name + index"
+                    v-bind:cell="row_map.get(column_name)"
+                    v-bind:even="isEven(index)"
+                />
             </template>
         </div>
     </div>
@@ -69,16 +57,13 @@
 import { computed, onMounted, ref, watch } from "vue";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import {
-    DATE_FORMATTER,
-    DATE_TIME_FORMATTER,
     IS_CSV_EXPORT_ALLOWED,
     NOTIFY_FAULT,
     REPORT_STATE,
     RETRIEVE_ARTIFACTS_TABLE,
 } from "../../injection-symbols";
 import type WritingCrossTrackerReport from "../../writing-mode/writing-cross-tracker-report";
-import type { ArtifactRow, ArtifactsTable } from "../../domain/ArtifactsTable";
-import { DATE_CELL, NUMERIC_CELL, PROJECT_CELL, TEXT_CELL } from "../../domain/ArtifactsTable";
+import type { ArtifactsTable } from "../../domain/ArtifactsTable";
 import type { ResultAsync } from "neverthrow";
 import type { Fault } from "@tuleap/fault";
 import { useGettext } from "vue3-gettext";
@@ -87,15 +72,13 @@ import SelectablePagination from "./SelectablePagination.vue";
 import EmptyState from "./EmptyState.vue";
 import { ArtifactsRetrievalFault } from "../../domain/ArtifactsRetrievalFault";
 import ExportButton from "../ExportCSVButton.vue";
-import TextCell from "./TextCell.vue";
+import SelectableCell from "./SelectableCell.vue";
 import type { ColumnName } from "../../domain/ColumnName";
-import { PROJECT_COLUMN_NAME } from "../../domain/ColumnName";
+import { TRACKER_COLUMN_NAME, PROJECT_COLUMN_NAME } from "../../domain/ColumnName";
 
 const { $gettext } = useGettext();
 
 const artifacts_retriever = strictInject(RETRIEVE_ARTIFACTS_TABLE);
-const date_formatter = strictInject(DATE_FORMATTER);
-const date_time_formatter = strictInject(DATE_TIME_FORMATTER);
 const report_state = strictInject(REPORT_STATE);
 const notifyFault = strictInject(NOTIFY_FAULT);
 const is_csv_export_allowed = strictInject(IS_CSV_EXPORT_ALLOWED);
@@ -174,34 +157,18 @@ const getColumnName = (name: ColumnName): string => {
     if (name === PROJECT_COLUMN_NAME) {
         return $gettext("Project");
     }
+    if (name === TRACKER_COLUMN_NAME) {
+        return $gettext("Tracker");
+    }
     return name;
 };
 
-function renderCell(row: ArtifactRow, column_name: string): string {
-    const cell = row.get(column_name);
-    if (!cell) {
-        return "";
-    }
-    if (cell.type === DATE_CELL) {
-        const formatter = cell.with_time ? date_time_formatter : date_formatter;
-        return cell.value.mapOr(formatter.format, "");
-    }
-    if (cell.type === NUMERIC_CELL) {
-        return String(cell.value.unwrapOr(""));
-    }
-    if (cell.type === PROJECT_CELL) {
-        return cell.icon !== "" ? cell.icon + " " + cell.name : cell.name;
-    }
-    return "";
-}
-
-const getEvenOddClass = (index: number): Record<string, boolean> => ({
-    "even-row": index % 2 === 0,
-    "odd-row": index % 2 !== 0,
-});
+const isEven = (index: number): boolean => index % 2 === 0;
 </script>
 
 <style scoped lang="scss">
+@use "../../../themes/cell";
+
 .export-button-box {
     margin: var(--tlp-medium-spacing) 0 0;
 }
@@ -219,34 +186,11 @@ const getEvenOddClass = (index: number): Record<string, boolean> => ({
         auto;
 }
 
-@mixin -cell-template {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    padding: calc(
-        8px - (4px * var(--tlp-is-condensed))
-    ); // Match empty cells 32px height (or 24px in condensed mode)
-}
-
 .headers-cell {
-    @include -cell-template;
+    @include cell.cell-template;
 
     grid-row: headers;
     border-bottom: 2px solid var(--tlp-main-color);
     color: var(--tlp-main-color);
-}
-
-.cell {
-    @include -cell-template;
-
-    min-height: var(--tlp-x-large-spacing);
-}
-
-.even-row {
-    background: var(--tlp-table-row-background-even);
-}
-
-.odd-row {
-    background: var(--tlp-table-row-background-odd);
 }
 </style>

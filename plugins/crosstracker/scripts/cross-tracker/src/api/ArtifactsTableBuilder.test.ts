@@ -23,9 +23,17 @@ import {
     NUMERIC_SELECTABLE_TYPE,
     PROJECT_SELECTABLE_TYPE,
     TEXT_SELECTABLE_TYPE,
+    TRACKER_SELECTABLE_TYPE,
 } from "./cross-tracker-rest-api-types";
 import { ArtifactsTableBuilder } from "./ArtifactsTableBuilder";
-import { DATE_CELL, NUMERIC_CELL, PROJECT_CELL, TEXT_CELL } from "../domain/ArtifactsTable";
+import {
+    DATE_CELL,
+    NUMERIC_CELL,
+    PROJECT_CELL,
+    TEXT_CELL,
+    TRACKER_CELL,
+} from "../domain/ArtifactsTable";
+import { PROJECT_COLUMN_NAME, TRACKER_COLUMN_NAME } from "../domain/ColumnName";
 
 describe(`ArtifactsTableBuilder`, () => {
     describe(`mapReportToArtifactsTable()`, () => {
@@ -197,7 +205,7 @@ describe(`ArtifactsTableBuilder`, () => {
         it(`builds a table with "project" selectables`, () => {
             const first_project = { icon: "", name: "Minimum Butter" };
             const second_project = { icon: "🖍️", name: "Teal Creek" };
-            const project_column = "@project.name";
+            const project_column = PROJECT_COLUMN_NAME;
 
             const table = ArtifactsTableBuilder().mapReportToArtifactsTable({
                 selected: [{ type: PROJECT_SELECTABLE_TYPE, name: project_column }],
@@ -225,6 +233,37 @@ describe(`ArtifactsTableBuilder`, () => {
             expect(project_second_row.name).toBe(second_project.name);
         });
 
+        it(`builds a table with "tracker" selectables`, () => {
+            const first_tracker = { color: "army-green", name: "Releases" };
+            const second_tracker = { color: "inca-silver", name: "Activities" };
+            const tracker_column = TRACKER_COLUMN_NAME;
+
+            const table = ArtifactsTableBuilder().mapReportToArtifactsTable({
+                selected: [{ type: TRACKER_SELECTABLE_TYPE, name: tracker_column }],
+                artifacts: [
+                    { [tracker_column]: first_tracker },
+                    { [tracker_column]: second_tracker },
+                ],
+            });
+
+            expect(table.columns.has(tracker_column)).toBe(true);
+            expect(table.rows).toHaveLength(2);
+            const [first_row, second_row] = table.rows;
+            const tracker_first_row = first_row.get(tracker_column);
+            if (tracker_first_row?.type !== TRACKER_CELL) {
+                throw Error("Expected to find first tracker name");
+            }
+            expect(tracker_first_row.name).toBe(first_tracker.name);
+            expect(tracker_first_row.color).toBe(first_tracker.color);
+
+            const tracker_second_row = second_row.get(tracker_column);
+            if (tracker_second_row?.type !== TRACKER_CELL) {
+                throw Error("Expected to find second tracker name");
+            }
+            expect(tracker_second_row.name).toBe(second_tracker.name);
+            expect(tracker_second_row.color).toBe(second_tracker.color);
+        });
+
         it(`given a report content representation with an unsupported selectable type,
             it will NOT include it in the columns of the table
             and will NOT include it in the rows`, () => {
@@ -242,6 +281,7 @@ describe(`ArtifactsTableBuilder`, () => {
             yield [NUMERIC_SELECTABLE_TYPE, { value: "ritualist" }];
             yield [TEXT_SELECTABLE_TYPE, { value: 12 }];
             yield [PROJECT_SELECTABLE_TYPE, { value: 12 }];
+            yield [TRACKER_SELECTABLE_TYPE, { value: 12 }];
         }
 
         it.each([...generateBrokenSelectedValues()])(
