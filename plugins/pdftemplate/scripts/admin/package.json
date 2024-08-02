@@ -5,6 +5,7 @@
   "license": "GPL-2.0-or-later",
   "private": true,
   "dependencies": {
+    "@tuleap/copy-to-clipboard": "workspace:^",
     "@tuleap/print-as-pdf": "workspace:^",
     "codemirror": "^5.62.0",
     "dompurify": "^3.1.4"

@@ -24,3 +24,50 @@
 .pdftemplate-admin-images-preview {
     text-align: center;
 }
+
+.pdftemplate-admin-template-images {
+    --pdftemplate-transition-image: opacity ease-in-out 250ms;
+
+    min-width: 30%;
+    background: var(--tlp-background-color-transparent-50);
+}
+
+.pdftemplate-admin-template-images-gallery {
+    display: flex;
+    gap: var(--tlp-medium-spacing);
+    flex-wrap: wrap;
+    margin: 0 0 var(--tlp-medium-spacing);
+}
+
+.pdftemplate-admin-template-image-wrapper {
+    display: inline-flex;
+    position: relative;
+    align-items: center;
+    justify-content: center;
+    height: 150px;
+
+    &:hover {
+        > .pdftemplate-admin-template-image {
+            opacity: 0.5;
+        }
+
+        > .pdftemplate-admin-template-image-copy-icon {
+            opacity: 1;
+        }
+    }
+}
+
+.pdftemplate-admin-template-image {
+    max-width: 200px;
+    max-height: 100%;
+    transition: var(--pdftemplate-transition-image);
+}
+
+.pdftemplate-admin-template-image-copy-icon {
+    position: absolute;
+    right: var(--tlp-small-spacing);
+    bottom: var(--tlp-small-spacing);
+    transition: var(--pdftemplate-transition-image);
+    opacity: 0;
+    color: var(--tlp-dimmed-color);
+}

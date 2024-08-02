@@ -240,6 +240,7 @@ class PdfTemplatePlugin extends Plugin
             new AdminPageRenderer(),
             $this->getUserCanManageTemplatesChecker(),
             new AdministrationCSRFTokenProvider(),
+            $this->getImageDao(),
         );
     }
 
@@ -251,6 +252,7 @@ class PdfTemplatePlugin extends Plugin
             $this->getPdfTemplateIdentifierFactory(),
             $this->getPdfTemplateDao(),
             new AdministrationCSRFTokenProvider(),
+            $this->getImageDao(),
         );
     }
 
@@ -262,6 +264,7 @@ class PdfTemplatePlugin extends Plugin
             $this->getPdfTemplateIdentifierFactory(),
             $this->getPdfTemplateDao(),
             new AdministrationCSRFTokenProvider(),
+            $this->getImageDao(),
         );
     }
 

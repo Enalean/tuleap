@@ -24,6 +24,8 @@ namespace Tuleap\PdfTemplate\Admin;
 
 use Tuleap\CSRFSynchronizerTokenPresenter;
 use Tuleap\Export\Pdf\Template\PdfTemplate;
+use Tuleap\PdfTemplate\Admin\Image\IndexImagesController;
+use Tuleap\PdfTemplate\Image\DisplayImagePresenter;
 use Tuleap\Request\CSRFSynchronizerTokenInterface;
 
 /**
@@ -32,41 +34,64 @@ use Tuleap\Request\CSRFSynchronizerTokenInterface;
 final readonly class DisplayPdfTemplateCreationOrUpdateFormPresenter
 {
     public CSRFSynchronizerTokenPresenter $csrf;
+    public bool $has_images;
 
+    /**
+     * @param list<DisplayImagePresenter> $images
+     */
     private function __construct(
         public Navigation $navigation,
         public string $title,
         public string $icon,
         public string $index_url,
         public string $save_url,
+        public string $images_url,
         public PdfTemplatePresenter $template,
         CSRFSynchronizerTokenInterface $token,
+        public array $images,
     ) {
-        $this->csrf = CSRFSynchronizerTokenPresenter::fromToken($token);
+        $this->csrf       = CSRFSynchronizerTokenPresenter::fromToken($token);
+        $this->has_images = count($images) > 0;
     }
 
-    public static function forCreation(CSRFSynchronizerTokenInterface $token, \PFUser $user): self
-    {
+    /**
+     * @param list<DisplayImagePresenter> $images
+     */
+    public static function forCreation(
+        CSRFSynchronizerTokenInterface $token,
+        \PFUser $user,
+        array $images,
+    ): self {
         return self::createFromTemplate(
             PdfTemplatePresenter::forCreation($user),
             $token,
+            $images,
         );
     }
 
+    /**
+     * @param list<DisplayImagePresenter> $images
+     */
     public static function forDuplication(
         PdfTemplate $template,
         CSRFSynchronizerTokenInterface $token,
         \PFUser $user,
+        array $images,
     ): self {
         return self::createFromTemplate(
             PdfTemplatePresenter::forDuplication($template, $user),
             $token,
+            $images,
         );
     }
 
+    /**
+     * @param list<DisplayImagePresenter> $images
+     */
     private static function createFromTemplate(
         PdfTemplatePresenter $template,
         CSRFSynchronizerTokenInterface $token,
+        array $images,
     ): self {
         return new self(
             Navigation::inTemplates(),
@@ -74,15 +99,21 @@ final readonly class DisplayPdfTemplateCreationOrUpdateFormPresenter
             'fa-solid fa-plus',
             IndexPdfTemplateController::ROUTE,
             DisplayPdfTemplateCreationFormController::ROUTE,
+            IndexImagesController::ROUTE,
             $template,
             $token,
+            $images,
         );
     }
 
+    /**
+     * @param list<DisplayImagePresenter> $images
+     */
     public static function forUpdate(
         PdfTemplate $template,
         CSRFSynchronizerTokenInterface $token,
         \PFUser $user,
+        array $images,
     ): self {
         $presenter = PdfTemplatePresenter::fromPdfTemplate($template, $user);
 
@@ -92,8 +123,10 @@ final readonly class DisplayPdfTemplateCreationOrUpdateFormPresenter
             'fa-solid fa-pencil',
             IndexPdfTemplateController::ROUTE,
             $presenter->update_url,
+            IndexImagesController::ROUTE,
             $presenter,
             $token,
+            $images,
         );
     }
 }

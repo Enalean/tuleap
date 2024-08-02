@@ -25,12 +25,14 @@ import {
 } from "./initiate-code-editors";
 import { initiateModals } from "./initiate-modals";
 import { initiatePrintPreview } from "./initiate-print-preview";
+import { initiateCopyImageUrl } from "./initiate-copy-image-url";
 
 document.addEventListener("DOMContentLoaded", () => {
     const style = initiateStylesCodeEditor();
     const header_content = initiateHeaderContentCodeEditor();
     const footer_content = initiateFooterContentCodeEditor();
     initiateModals(document);
+    initiateCopyImageUrl();
 
     if (style && header_content && footer_content) {
         initiatePrintPreview(style, header_content, footer_content);

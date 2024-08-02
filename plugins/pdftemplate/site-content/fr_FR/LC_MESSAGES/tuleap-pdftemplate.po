@@ -27,6 +27,9 @@ msgstr "Annuler"
 msgid "Close"
 msgstr "Fermer"
 
+msgid "Copy image URL to clipboard"
+msgstr "Copier l'URL de l'image dans le presse papier"
+
 msgid "Create and edit PDF templates"
 msgstr "Créer et éditer des modèles de PDF"
 
@@ -69,8 +72,18 @@ msgstr[0] "Si vous supprimez l'image alors le modèle pourra apparaître cassé.
 msgstr[1] ""
 "Si vous supprimez l'image alors les modèles pourront apparaître cassés."
 
+msgid "Image URL copied !"
+msgstr "URL de l'image copiée !"
+
 msgid "Images"
 msgstr "Images"
+
+msgid "Images can be used in the template by copy pasting their URL."
+msgstr ""
+"Les images peuvent être utilisées par le modèle en copiant collant leur URL."
+
+msgid "Images gallery"
+msgstr "Galerie d'images"
 
 msgid "Images library"
 msgstr "Bibliothèque d'images"
@@ -185,3 +198,11 @@ msgstr "Vous êtes sur le point de supprimer le modèle PDF '%s'."
 
 msgid "You are about to delete the image %s."
 msgstr "Vous êtes sur le point de supprimer l'image %s."
+
+msgid "You can add or remove images in the %simages library%s."
+msgstr ""
+"Vous pouvez ajouter ou supprimer des images dans la %sbibliothèque "
+"d'images%s."
+
+msgid "Your library is empty."
+msgstr "Votre bibliothèque est vide."

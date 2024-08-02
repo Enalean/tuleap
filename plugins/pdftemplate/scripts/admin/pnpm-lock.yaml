@@ -5,6 +5,9 @@ settings:
   excludeLinksFromLockfile: false
 
 dependencies:
+  '@tuleap/copy-to-clipboard':
+    specifier: workspace:^
+    version: link:../../../../lib/frontend/copy-to-clipboard
   '@tuleap/print-as-pdf':
     specifier: workspace:^
     version: link:../../../../lib/frontend/print-as-pdf
