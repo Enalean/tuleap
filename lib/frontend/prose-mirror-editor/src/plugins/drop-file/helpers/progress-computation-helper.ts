@@ -17,24 +17,25 @@
  *  along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type {
-    InvalidFileUploadError,
-    MaxSizeUploadExceededError,
-    UploadError,
-} from "./upload-file.error";
+import type { OnGoingUploadFile } from "../types";
 
-export type OnGoingUploadFile = {
-    file_name: string;
-    progress: number;
-};
+export function computedProgress(
+    files: Map<number, OnGoingUploadFile>,
+    id: number,
+    bytes_sent: number,
+    bytes_total: number,
+): number {
+    if (files.size === 0) {
+        return 0;
+    }
 
-export type FileUploadOptions = {
-    upload_url: string;
-    max_size_upload: number;
-    upload_files: Map<number, OnGoingUploadFile>;
-    onErrorCallback: (
-        error: UploadError | MaxSizeUploadExceededError | InvalidFileUploadError,
-    ) => void;
-    onSuccessCallback: (id: number, download_href: string) => void;
-    onProgressCallback: (global_progress: number) => void;
-};
+    let sum_progress = 0;
+    files.forEach((file, key) => {
+        if (key === id) {
+            file.progress = Math.round((bytes_sent / bytes_total) * 100);
+        }
+        sum_progress += file.progress;
+    });
+
+    return Math.round(sum_progress / files.size);
+}
