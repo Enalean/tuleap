@@ -24,190 +24,193 @@ declare(strict_types=1);
 
 namespace Tuleap\Docman\PermissionManager;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Docman_PermissionsManager;
-use Mockery;
 use PermissionsManager;
 use PFUser;
+use PHPUnit\Framework\MockObject\MockObject;
 use Project;
 use Tuleap\Project\ProjectAccessChecker;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
 
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
-class PermissionsManagerPerfTest extends \Tuleap\Test\PHPUnit\TestCase
+final class PermissionsManagerPerfTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|PFUser
-     */
-    private $user;
-    /**
-     * @var Mockery\Mock
-     */
-    private $docmanPm;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ProjectAccessChecker
-     */
-    private $project_access_checker;
+    private Docman_PermissionsManager&MockObject $permissions_manager;
+    private ProjectAccessChecker&MockObject $project_access_checker;
+    private Project $project;
 
     public function setUp(): void
     {
-        parent::setUp();
-
-        $this->user     = \Mockery::spy(PFUser::class);
-        $this->docmanPm = \Mockery::mock(Docman_PermissionsManager::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $project        = Mockery::mock(Project::class);
-        $project->shouldReceive('getID')->andReturn('102');
-        $this->project_access_checker = Mockery::mock(ProjectAccessChecker::class);
-        $this->docmanPm->allows(['_itemIsLockedForUser' => false]);
-        $this->docmanPm->shouldReceive('getProject')->andReturn($project);
-        $this->docmanPm->shouldReceive('getProjectAccessChecker')->andReturn($this->project_access_checker);
+        $this->permissions_manager    = $this->createPartialMock(Docman_PermissionsManager::class, [
+            '_itemIsLockedForUser',
+            'getProject',
+            'getProjectAccessChecker',
+            '_isUserDocmanAdmin',
+            '_getPermissionManagerInstance',
+        ]);
+        $this->project                = ProjectTestBuilder::aProject()->withId(102)->build();
+        $this->project_access_checker = $this->createMock(ProjectAccessChecker::class);
+        $this->permissions_manager->method('_itemIsLockedForUser')->willReturn(false);
+        $this->permissions_manager->method('getProject')->willReturn($this->project);
+        $this->permissions_manager->method('getProjectAccessChecker')->willReturn($this->project_access_checker);
     }
 
     public function testSuperAdminHasAllAccess(): void
     {
-        $this->project_access_checker->shouldReceive('checkUserCanAccessProject');
-        $this->user->allows(['isSuperUser' => true]);
+        $this->project_access_checker->method('checkUserCanAccessProject');
+        $user = UserTestBuilder::buildSiteAdministrator();
 
         // no _isUserDocmanAdmin call
-        $this->docmanPm->shouldReceive('_isUserDocmanAdmin')->never();
+        $this->permissions_manager->expects(self::never())->method('_isUserDocmanAdmin');
 
         // no userHasPerms call
-        $pm = \Mockery::spy(PermissionsManager::class);
-        $pm->expects()->userHasPermission()->never();
-        $this->docmanPm->allows(['_getPermissionManagerInstance' => $pm]);
+        $pm = $this->createMock(PermissionsManager::class);
+        $pm->expects(self::never())->method('userHasPermission');
+        $this->permissions_manager->method('_getPermissionManagerInstance')->willReturn($pm);
 
-        $this->docmanPm->userCanRead($this->user, 32432413);
-        $this->docmanPm->userCanWrite($this->user, 324324234313);
-        $this->docmanPm->userCanManage($this->user, 324324423413);
-        $this->docmanPm->userCanAdmin($this->user, 324324423413);
+        $this->permissions_manager->userCanRead($user, 32432413);
+        $this->permissions_manager->userCanWrite($user, 324324234313);
+        $this->permissions_manager->userCanManage($user, 324324423413);
+        $this->permissions_manager->userCanAdmin($user);
     }
 
     public function testProjectAdminHasAllAccess(): void
     {
-        $this->project_access_checker->shouldReceive('checkUserCanAccessProject');
-        $this->user->allows(['isSuperUser' => false]);
-        $this->user->allows(['isAdmin' => true]);
+        $this->project_access_checker->method('checkUserCanAccessProject');
+        $user = UserTestBuilder::aUser()->withoutSiteAdministrator()->withAdministratorOf($this->project)->build();
 
         // no _isUserDocmanAdmin call
-        $this->docmanPm->shouldReceive('_isUserDocmanAdmin')->never();
+        $this->permissions_manager->expects(self::never())->method('_isUserDocmanAdmin');
 
         // no userHasPerms call
-        $pm = \Mockery::spy(PermissionsManager::class);
-        $pm->expects()->userHasPermission()->never();
-        $this->docmanPm->allows(['_getPermissionManagerInstance' => $pm]);
+        $pm = $this->createMock(PermissionsManager::class);
+        $pm->expects(self::never())->method('userHasPermission');
+        $this->permissions_manager->method('_getPermissionManagerInstance')->willReturn($pm);
 
-        $this->docmanPm->userCanRead($this->user, 32432413);
-        $this->docmanPm->userCanWrite($this->user, 324324234313);
-        $this->docmanPm->userCanManage($this->user, 324324423413);
-        $this->docmanPm->userCanAdmin($this->user, 324324423413);
+        $this->permissions_manager->userCanRead($user, 32432413);
+        $this->permissions_manager->userCanWrite($user, 324324234313);
+        $this->permissions_manager->userCanManage($user, 324324423413);
+        $this->permissions_manager->userCanAdmin($user);
     }
 
     public function testDocmanAdminHasAllAccess(): void
     {
-        $this->project_access_checker->shouldReceive('checkUserCanAccessProject');
-        $this->user->allows(['isSuperUser' => false]);
+        $this->project_access_checker->method('checkUserCanAccessProject');
+        $user = UserTestBuilder::aUser()->withoutSiteAdministrator()->build();
 
         // one _isUserDocmanAdmin call
-        $this->docmanPm->shouldReceive('_isUserDocmanAdmin')->once()->andReturns(true);
+        $this->permissions_manager->expects(self::once())->method('_isUserDocmanAdmin')->willReturn(true);
 
         // no userHasPerms call
-        $pm = \Mockery::spy(PermissionsManager::class);
-        $pm->expects()->userHasPermission()->never();
-        $this->docmanPm->allows(['_getPermissionManagerInstance' => $pm]);
+        $pm = $this->createMock(PermissionsManager::class);
+        $pm->expects(self::never())->method('userHasPermission');
+        $this->permissions_manager->method('_getPermissionManagerInstance')->willReturn($pm);
 
-        $this->docmanPm->userCanRead($this->user, 32432413);
-        $this->docmanPm->userCanWrite($this->user, 324324234313);
-        $this->docmanPm->userCanManage($this->user, 324324423413);
-        $this->docmanPm->userCanAdmin($this->user, 324324423413);
+        $this->permissions_manager->userCanRead($user, 32432413);
+        $this->permissions_manager->userCanWrite($user, 324324234313);
+        $this->permissions_manager->userCanManage($user, 324324423413);
+        $this->permissions_manager->userCanAdmin($user);
     }
 
     public function testManageRightGivesReadAndWriteRights(): void
     {
-        $this->project_access_checker->shouldReceive('checkUserCanAccessProject');
+        $this->project_access_checker->method('checkUserCanAccessProject');
         // user is not super admin
-        $this->user->allows(['isSuperUser' => false]);
-        $this->user->allows(['getUgroups' => ['test']]);
+        $user = $this->createMock(PFUser::class);
+        $user->method('isSuperUser')->willReturn(false);
+        $user->method('getUgroups')->willReturn(['test']);
+        $user->method('getId');
+        $user->method('isAdmin');
 
         $itemId = 78903;
 
         // one _isUserDocmanAdmin call
-        $this->docmanPm->shouldReceive('_isUserDocmanAdmin')->once()->andReturns(false);
+        $this->permissions_manager->expects(self::once())->method('_isUserDocmanAdmin')->willReturn(false);
 
         // 1 userHasPerm call
-        $pm = \Mockery::spy(PermissionsManager::class);
-        $pm->shouldReceive('userHasPermission')->once()->andReturns(true);
-        $this->docmanPm->allows(['_getPermissionManagerInstance' => $pm]);
+        $pm = $this->createMock(PermissionsManager::class);
+        $pm->expects(self::once())->method('userHasPermission')->willReturn(true);
+        $this->permissions_manager->method('_getPermissionManagerInstance')->willReturn($pm);
 
         // test manage
-        $this->docmanPm->userCanManage($this->user, $itemId);
+        $this->permissions_manager->userCanManage($user, $itemId);
 
         // test write
-        $this->docmanPm->userCanWrite($this->user, $itemId);
+        $this->permissions_manager->userCanWrite($user, $itemId);
 
         // test read
-        $this->docmanPm->userCanRead($this->user, $itemId);
+        $this->permissions_manager->userCanRead($user, $itemId);
     }
 
     public function testWriteRightGivesReadRights(): void
     {
-        $this->project_access_checker->shouldReceive('checkUserCanAccessProject');
+        $this->project_access_checker->method('checkUserCanAccessProject');
         // user is not super admin
-        $this->user->allows(['isSuperUser' => false]);
-        $this->user->allows(['getUgroups' => ['test']]);
+        $user = $this->createMock(PFUser::class);
+        $user->method('isSuperUser')->willReturn(false);
+        $user->method('getUgroups')->willReturn(['test']);
+        $user->method('getId');
+        $user->method('isAdmin');
 
         $itemId = 78903;
 
-        $this->docmanPm->shouldReceive('_isUserDocmanAdmin')->once()->andReturns(false);
+        $this->permissions_manager->expects(self::once())->method('_isUserDocmanAdmin')->willReturn(false);
 
         // 2 userHasPerm call
-        $pm = \Mockery::spy(PermissionsManager::class);
-        $pm->shouldReceive('userHasPermission')->once()->andReturns(true);
-        $this->docmanPm->allows(['_getPermissionManagerInstance' => $pm]);
+        $pm = $this->createMock(PermissionsManager::class);
+        $pm->expects(self::once())->method('userHasPermission')->willReturn(true);
+        $this->permissions_manager->method('_getPermissionManagerInstance')->willReturn($pm);
 
         // test write
-        $this->docmanPm->userCanWrite($this->user, $itemId);
+        $this->permissions_manager->userCanWrite($user, $itemId);
 
         // test read
-        $this->docmanPm->userCanRead($this->user, $itemId);
+        $this->permissions_manager->userCanRead($user, $itemId);
     }
 
     public function testOnReadTestManageRightGivesReadAndWriteRights(): void
     {
-        $this->project_access_checker->shouldReceive('checkUserCanAccessProject');
-        $this->docmanPm->shouldReceive('_isUserDocmanAdmin')->once()->andReturns(false);
+        $this->project_access_checker->method('checkUserCanAccessProject');
+        $this->permissions_manager->expects(self::once())->method('_isUserDocmanAdmin')->willReturn(false);
 
         // user is not super admin
-        $this->user->allows(['isSuperUser' => false]);
-        $this->user->allows(['getUgroups' => ['test']]);
+        $user = $this->createMock(PFUser::class);
+        $user->method('isSuperUser')->willReturn(false);
+        $user->method('getUgroups')->willReturn(['test']);
+        $user->method('getId');
+        $user->method('isAdmin');
 
         $itemId = 78903;
 
-        $pm = \Mockery::spy(PermissionsManager::class);
-        $pm->shouldReceive('userHasPermission')->with($itemId, 'PLUGIN_DOCMAN_MANAGE', ['test'])->once()->andReturns(
-            true
-        );
-        $pm->shouldReceive('userHasPermission')->times(2);
-        $this->docmanPm->allows(['_getPermissionManagerInstance' => $pm]);
+        $pm = $this->createMock(PermissionsManager::class);
+        $pm->expects(self::exactly(3))->method('userHasPermission')->willReturnCallback(static fn(int $item_id, string $type, array $ugroups) => match (true) {
+            $item_id === $itemId && $type === 'PLUGIN_DOCMAN_MANAGE' && $ugroups === ['test'] => true,
+            default                                                                           => false,
+        });
+        $this->permissions_manager->method('_getPermissionManagerInstance')->willReturn($pm);
 
         // test read
-        $this->docmanPm->userCanRead($this->user, $itemId);
+        $this->permissions_manager->userCanRead($user, $itemId);
 
         // test write
-        $this->docmanPm->userCanWrite($this->user, $itemId);
+        $this->permissions_manager->userCanWrite($user, $itemId);
 
         // test Manage
-        $this->docmanPm->userCanManage($this->user, $itemId);
+        $this->permissions_manager->userCanManage($user, $itemId);
     }
 
     public function testOnReadTestWriteRightGivesReadAndWriteRights(): void
     {
-        $this->project_access_checker->shouldReceive('checkUserCanAccessProject');
+        $this->project_access_checker->method('checkUserCanAccessProject');
         // user is not docman admin
-        $this->docmanPm->shouldReceive('_isUserDocmanAdmin')->once()->andReturns(false);
+        $this->permissions_manager->expects(self::once())->method('_isUserDocmanAdmin')->willReturn(false);
         // user is not super admin
-        $this->user->allows(['isSuperUser' => false]);
-        $this->user->allows(['getUgroups' => ['test']]);
+        $user = $this->createMock(PFUser::class);
+        $user->method('isSuperUser')->willReturn(false);
+        $user->method('getUgroups')->willReturn(['test']);
+        $user->method('getId');
+        $user->method('isAdmin');
 
         $itemId = 78903;
 
@@ -218,46 +221,50 @@ class PermissionsManagerPerfTest extends \Tuleap\Test\PHPUnit\TestCase
         //    write perm (not lock).
         // userCanWrite
         // 3. one for WRITE (and eventually lock, but not in this test).
-        $pm = \Mockery::spy(PermissionsManager::class);
-        $pm->shouldReceive('userHasPermission')->with($itemId, 'PLUGIN_DOCMAN_WRITE', ['test'])->once()->andReturns(
-            true
-        );
-        $pm->shouldReceive('userHasPermission')->times(3);
-        $this->docmanPm->allows(['_getPermissionManagerInstance' => $pm]);
+        $pm = $this->createMock(PermissionsManager::class);
+        $pm->expects(self::exactly(3))->method('userHasPermission')->willReturnCallback(static fn(int $item_id, string $type, array $ugroups) => match (true) {
+            $item_id === $itemId && $type === 'PLUGIN_DOCMAN_WRITE' && $ugroups === ['test'] => true,
+            default                                                                          => false,
+        });
+        $this->permissions_manager->method('_getPermissionManagerInstance')->willReturn($pm);
 
         // test read
-        $this->docmanPm->userCanRead($this->user, $itemId);
+        $this->permissions_manager->userCanRead($user, $itemId);
 
         // test write
-        $this->docmanPm->userCanWrite($this->user, $itemId);
+        $this->permissions_manager->userCanWrite($user, $itemId);
     }
 
     public function testOnWriteTestManageRightGivesReadAndWriteRights(): void
     {
-        $this->project_access_checker->shouldReceive('checkUserCanAccessProject');
+        $this->project_access_checker->method('checkUserCanAccessProject');
         // user is not docman admin
-        $this->docmanPm->shouldReceive('_isUserDocmanAdmin')->once()->andReturns(false);
+        $this->permissions_manager->expects(self::once())->method('_isUserDocmanAdmin')->willReturn(false);
         // user is not super admin
-        $this->user->allows(['isSuperUser' => false]);
-        $this->user->allows(['getUgroups' => ['test']]);
+        $user = $this->createMock(PFUser::class);
+        $user->method('isSuperUser')->willReturn(false);
+        $user->method('getUgroups')->willReturn(['test']);
+        $user->method('getId');
+        $user->method('isAdmin');
 
         $itemId = 78903;
 
         // 2 userHasPerm call
-        $pm = \Mockery::spy(PermissionsManager::class);
-        $pm->shouldReceive('userHasPermission')->with($itemId, 'PLUGIN_DOCMAN_MANAGE', ['test'])->once()->andReturns(
-            true
-        );
-        $pm->shouldReceive('userHasPermission')->once();
-        $this->docmanPm->allows(['_getPermissionManagerInstance' => $pm]);
+        $pm = $this->createMock(PermissionsManager::class);
+        $pm->expects(self::exactly(2))->method('userHasPermission')
+            ->willReturnCallback(static fn(int $item_id, string $type, array $ugroups) => match (true) {
+                $item_id === $itemId && $type === 'PLUGIN_DOCMAN_MANAGE' && $ugroups === ['test'] => true,
+                default                                                                           => false,
+            });
+        $this->permissions_manager->method('_getPermissionManagerInstance')->willReturn($pm);
 
         // test write
-        $this->docmanPm->userCanWrite($this->user, $itemId);
+        $this->permissions_manager->userCanWrite($user, $itemId);
 
         // test manage
-        $this->docmanPm->userCanManage($this->user, $itemId);
+        $this->permissions_manager->userCanManage($user, $itemId);
 
         // test read
-        $this->docmanPm->userCanRead($this->user, $itemId);
+        $this->permissions_manager->userCanRead($user, $itemId);
     }
 }
