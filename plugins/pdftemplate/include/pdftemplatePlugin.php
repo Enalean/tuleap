@@ -21,6 +21,7 @@
 declare(strict_types=1);
 
 use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
+use Psr\Log\LoggerInterface;
 use Tuleap\Admin\SiteAdministrationAddOption;
 use Tuleap\Admin\SiteAdministrationPluginOption;
 use Tuleap\DB\DatabaseUUIDV7Factory;
@@ -180,7 +181,7 @@ class PdfTemplatePlugin extends Plugin
             $this->getImageDao(),
             $this->getImageIdentifierFactory(),
             new PdfTemplateImageStorage(),
-            BackendLogger::getDefaultLogger(),
+            $this->getLogger(),
             new SapiEmitter(),
             new RejectNonNonPdfTemplateManagerMiddleware(
                 UserManager::instance(),
@@ -199,7 +200,7 @@ class PdfTemplatePlugin extends Plugin
             ),
             new PdfTemplateImageStorage(),
             $this->getImageDao(),
-            BackendLogger::getDefaultLogger(),
+            $this->getLogger(),
             new SapiEmitter(),
             new RejectNonNonPdfTemplateManagerMiddleware(
                 UserManager::instance(),
@@ -275,7 +276,7 @@ class PdfTemplatePlugin extends Plugin
                 HTTPFactoryBuilder::responseFactory(),
                 new FeedbackSerializer(new FeedbackDao()),
             ),
-            BackendLogger::getDefaultLogger(),
+            $this->getLogger(),
             $this->getPdfTemplateDao(),
             new SapiEmitter(),
             new RejectNonNonPdfTemplateManagerMiddleware(
@@ -295,7 +296,7 @@ class PdfTemplatePlugin extends Plugin
 
         return new UpdatePdfTemplateController(
             $redirect_with_feedback_factory,
-            BackendLogger::getDefaultLogger(),
+            $this->getLogger(),
             $this->getPdfTemplateDao(),
             new SapiEmitter(),
             new RejectNonNonPdfTemplateManagerMiddleware(
@@ -318,7 +319,7 @@ class PdfTemplatePlugin extends Plugin
                 HTTPFactoryBuilder::responseFactory(),
                 new FeedbackSerializer(new FeedbackDao()),
             ),
-            BackendLogger::getDefaultLogger(),
+            $this->getLogger(),
             $this->getPdfTemplateDao(),
             $this->getPdfTemplateIdentifierFactory(),
             new SapiEmitter(),
@@ -363,5 +364,10 @@ class PdfTemplatePlugin extends Plugin
     private function getImageIdentifierFactory(): PdfTemplateImageIdentifierFactory
     {
         return new PdfTemplateImageIdentifierFactory(new DatabaseUUIDV7Factory());
+    }
+
+    private function getLogger(): LoggerInterface
+    {
+        return BackendLogger::getDefaultLogger('pdftemplate_syslog');
     }
 }
