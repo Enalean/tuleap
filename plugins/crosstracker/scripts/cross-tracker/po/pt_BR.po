@@ -30,6 +30,9 @@ msgstr "Cancelar"
 msgid "Description"
 msgstr "Descrição"
 
+msgid "Edit"
+msgstr ""
+
 msgid "Error while exporting the report to CSV: %{error}"
 msgstr ""
 

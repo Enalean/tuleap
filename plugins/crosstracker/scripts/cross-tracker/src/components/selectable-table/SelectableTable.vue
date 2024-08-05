@@ -35,11 +35,12 @@
                 data-test="column-header"
                 >{{ getColumnName(column_name) }}</span
             >
-            <template v-for="(row_map, index) of rows">
+            <template v-for="(row, index) of rows" v-bind:key="row.uri">
+                <edit-cell v-bind:uri="row.uri" v-bind:even="isEven(index)" />
                 <selectable-cell
                     v-for="column_name of columns"
                     v-bind:key="column_name + index"
-                    v-bind:cell="row_map.get(column_name)"
+                    v-bind:cell="row.cells.get(column_name)"
                     v-bind:even="isEven(index)"
                 />
             </template>
@@ -74,7 +75,12 @@ import { ArtifactsRetrievalFault } from "../../domain/ArtifactsRetrievalFault";
 import ExportButton from "../ExportCSVButton.vue";
 import SelectableCell from "./SelectableCell.vue";
 import type { ColumnName } from "../../domain/ColumnName";
-import { TRACKER_COLUMN_NAME, PROJECT_COLUMN_NAME } from "../../domain/ColumnName";
+import {
+    ARTIFACT_COLUMN_NAME,
+    PROJECT_COLUMN_NAME,
+    TRACKER_COLUMN_NAME,
+} from "../../domain/ColumnName";
+import EditCell from "./EditCell.vue";
 
 const { $gettext } = useGettext();
 
@@ -160,6 +166,9 @@ const getColumnName = (name: ColumnName): string => {
     if (name === TRACKER_COLUMN_NAME) {
         return $gettext("Tracker");
     }
+    if (name === ARTIFACT_COLUMN_NAME) {
+        return "";
+    }
     return name;
 };
 
@@ -180,7 +189,9 @@ const isEven = (index: number): boolean => index % 2 === 0;
 
 .selectable-table {
     display: grid;
-    grid-template-columns: auto;
+    grid-template-columns:
+        [edit] 80px
+        auto;
     grid-template-rows:
         [headers] var(--tlp-x-large-spacing)
         auto;

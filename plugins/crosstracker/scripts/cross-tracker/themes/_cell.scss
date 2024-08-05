@@ -25,3 +25,11 @@
         8px - (4px * var(--tlp-is-condensed))
     ); // Match empty cells 32px height (or 24px in condensed mode)
 }
+
+.even-row {
+    background: var(--tlp-table-row-background-even);
+}
+
+.odd-row {
+    background: var(--tlp-table-row-background-odd);
+}
