@@ -21,9 +21,10 @@ import { describe, expect, it, vi } from "vitest";
 import * as fetch_result from "@tuleap/fetch-result";
 import { okAsync } from "neverthrow";
 import { ArtifactsTableRetriever } from "./ArtifactsTableRetriever";
-import type { SelectableReportContentRepresentation } from "./cross-tracker-rest-api-types";
 import type { RetrieveArtifactsTable } from "../domain/RetrieveArtifactsTable";
 import { ArtifactsTableBuilder } from "./ArtifactsTableBuilder";
+import { SelectableReportContentRepresentationStub } from "../../tests/builders/SelectableReportContentRepresentationStub";
+import { ArtifactRepresentationStub } from "../../tests/builders/ArtifactRepresentationStub";
 
 describe(`ArtifactsTableRetriever`, () => {
     describe(`getSelectableQueryResult()`, () => {
@@ -43,13 +44,17 @@ describe(`ArtifactsTableRetriever`, () => {
             const date_field_name = "start_date";
             const total = 45;
             const first_date_value = "2022-04-27T11:54:15+07:00";
-            const report_content: SelectableReportContentRepresentation = {
-                artifacts: [
-                    { start_date: { value: first_date_value, with_time: true } },
-                    { start_date: { value: null, with_time: false } },
+            const report_content = SelectableReportContentRepresentationStub.build(
+                [{ type: "date", name: date_field_name }],
+                [
+                    ArtifactRepresentationStub.build({
+                        [date_field_name]: { value: first_date_value, with_time: true },
+                    }),
+                    ArtifactRepresentationStub.build({
+                        [date_field_name]: { value: null, with_time: false },
+                    }),
                 ],
-                selected: [{ type: "date", name: date_field_name }],
-            };
+            );
             const getResponse = vi.spyOn(fetch_result, "getResponse").mockReturnValue(
                 okAsync({
                     headers: new Headers({ "X-PAGINATION-SIZE": String(total) }),
@@ -79,7 +84,7 @@ describe(`ArtifactsTableRetriever`, () => {
             }
             expect(result.value.total).toBe(total);
             const table = result.value.table;
-            expect(table.columns.size).toBe(1);
+            expect(table.columns).toHaveLength(2);
             expect(table.rows).toHaveLength(2);
         });
         it(`will return organized in ArtifactsTable
@@ -88,13 +93,17 @@ describe(`ArtifactsTableRetriever`, () => {
             const date_field_name = "start_date";
             const total = 45;
             const first_date_value = "2022-04-27T11:54:15+07:00";
-            const report_content: SelectableReportContentRepresentation = {
-                artifacts: [
-                    { start_date: { value: first_date_value, with_time: true } },
-                    { start_date: { value: null, with_time: false } },
+            const report_content = SelectableReportContentRepresentationStub.build(
+                [{ type: "date", name: date_field_name }],
+                [
+                    ArtifactRepresentationStub.build({
+                        [date_field_name]: { value: first_date_value, with_time: true },
+                    }),
+                    ArtifactRepresentationStub.build({
+                        [date_field_name]: { value: null, with_time: false },
+                    }),
                 ],
-                selected: [{ type: "date", name: date_field_name }],
-            };
+            );
             const getResponse = vi.spyOn(fetch_result, "getResponse").mockReturnValue(
                 okAsync({
                     headers: new Headers({ "X-PAGINATION-SIZE": String(total) }),
@@ -118,7 +127,7 @@ describe(`ArtifactsTableRetriever`, () => {
             }
             expect(result.value.total).toBe(total);
             const table = result.value.table;
-            expect(table.columns.size).toBe(1);
+            expect(table.columns).toHaveLength(2);
             expect(table.rows).toHaveLength(2);
         });
     });

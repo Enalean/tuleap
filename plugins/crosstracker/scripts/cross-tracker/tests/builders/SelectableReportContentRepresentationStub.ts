@@ -17,17 +17,20 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { ArtifactRow, Cell } from "../../src/domain/ArtifactsTable";
+import type {
+    ArtifactRepresentation,
+    Selectable,
+    SelectableReportContentRepresentation,
+} from "../../src/api/cross-tracker-rest-api-types";
+import { ARTIFACT_SELECTABLE_TYPE } from "../../src/api/cross-tracker-rest-api-types";
+import { ARTIFACT_COLUMN_NAME } from "../../src/domain/ColumnName";
 
-export class ArtifactRowBuilder {
-    #row: ArtifactRow = { uri: "/plugins/tracker/?aid=698", cells: new Map() };
-
-    public addCell(column_name: string, cell: Cell): this {
-        this.#row.cells.set(column_name, cell);
-        return this;
-    }
-
-    public build(): ArtifactRow {
-        return this.#row;
-    }
-}
+export const SelectableReportContentRepresentationStub = {
+    build: (
+        selected: ReadonlyArray<Selectable>,
+        artifacts: ReadonlyArray<ArtifactRepresentation>,
+    ): SelectableReportContentRepresentation => ({
+        selected: [{ type: ARTIFACT_SELECTABLE_TYPE, name: ARTIFACT_COLUMN_NAME }, ...selected],
+        artifacts,
+    }),
+};

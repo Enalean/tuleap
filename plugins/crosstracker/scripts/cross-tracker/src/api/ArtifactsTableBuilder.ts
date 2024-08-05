@@ -22,35 +22,54 @@ import { err, ok } from "neverthrow";
 import { Fault } from "@tuleap/fault";
 import { Option } from "@tuleap/option";
 import type {
+    ArtifactRepresentation,
+    ArtifactSelectable,
+    ArtifactSelectableRepresentation,
     DateSelectableRepresentation,
     NumericSelectableRepresentation,
     ProjectSelectableRepresentation,
     Selectable,
-    SelectableArtifactRepresentation,
     SelectableReportContentRepresentation,
     SelectableRepresentation,
     TextSelectableRepresentation,
     TrackerSelectableRepresentation,
 } from "./cross-tracker-rest-api-types";
 import {
-    TRACKER_SELECTABLE_TYPE,
+    ARTIFACT_SELECTABLE_TYPE,
     DATE_SELECTABLE_TYPE,
     NUMERIC_SELECTABLE_TYPE,
     PROJECT_SELECTABLE_TYPE,
     TEXT_SELECTABLE_TYPE,
+    TRACKER_SELECTABLE_TYPE,
 } from "./cross-tracker-rest-api-types";
-import type { ArtifactsTable, Cell } from "../domain/ArtifactsTable";
+import type { ArtifactRow, ArtifactsTable, Cell } from "../domain/ArtifactsTable";
 import {
-    TRACKER_CELL,
     DATE_CELL,
     NUMERIC_CELL,
     PROJECT_CELL,
     TEXT_CELL,
+    TRACKER_CELL,
 } from "../domain/ArtifactsTable";
 
 export type ArtifactsTableBuilder = {
     mapReportToArtifactsTable(report: SelectableReportContentRepresentation): ArtifactsTable;
 };
+
+function findArtifactSelectable(selected: ReadonlyArray<Selectable>): ArtifactSelectable {
+    return Option.fromNullable(
+        selected.find(
+            (selectable): selectable is ArtifactSelectable =>
+                selectable.type === ARTIFACT_SELECTABLE_TYPE,
+        ),
+    ).match(
+        (selectable) => selectable,
+        () => {
+            throw Error(
+                "Expected to find the @artifact column in the list of selected columns, but could not find it",
+            );
+        },
+    );
+}
 
 const isDateSelectableRepresentation = (
     representation: SelectableRepresentation,
@@ -75,6 +94,10 @@ const isTrackerSelectableRepresentation = (
     representation: SelectableRepresentation,
 ): representation is TrackerSelectableRepresentation => "color" in representation;
 
+const isArtifactSelectableRepresentation = (
+    representation: SelectableRepresentation,
+): representation is ArtifactSelectableRepresentation => "uri" in representation;
+
 /**
  * Throw instead of returning an err, because the format of the Selected representation
  * does not match what is expected. Either there was a breaking change in the JSON format
@@ -84,10 +107,15 @@ const isTrackerSelectableRepresentation = (
 const getErrorMessageToWarnTuleapDevs = (selectable: Selectable): string =>
     `Expected artifact value for ${selectable.name} to be a ${selectable.type} format, but it was not`;
 
-function buildCell(
-    selectable: Selectable,
-    artifact: SelectableArtifactRepresentation,
-): Result<Cell, Fault> {
+function findArtifactURI(selectable: ArtifactSelectable, artifact: ArtifactRepresentation): string {
+    const artifact_value = artifact[selectable.name];
+    if (!isArtifactSelectableRepresentation(artifact_value)) {
+        throw Error(getErrorMessageToWarnTuleapDevs(selectable));
+    }
+    return artifact_value.uri;
+}
+
+function buildCell(selectable: Selectable, artifact: ArtifactRepresentation): Result<Cell, Fault> {
     const artifact_value = artifact[selectable.name];
     switch (selectable.type) {
         case DATE_SELECTABLE_TYPE:
@@ -141,17 +169,19 @@ function buildCell(
 export const ArtifactsTableBuilder = (): ArtifactsTableBuilder => {
     return {
         mapReportToArtifactsTable(report): ArtifactsTable {
+            const artifact_selectable = findArtifactSelectable(report.selected);
             const initial_table: ArtifactsTable = {
-                columns: new Set(),
+                columns: new Set([artifact_selectable.name]),
                 rows: [],
             };
             return report.artifacts.reduce((accumulator, artifact) => {
-                const row = new Map<string, Cell>();
+                const artifact_uri = findArtifactURI(artifact_selectable, artifact);
+                const row: ArtifactRow = { uri: artifact_uri, cells: new Map<string, Cell>() };
                 for (const selectable of report.selected) {
                     // Filter out unsupported selectable
                     buildCell(selectable, artifact).map((cell) => {
                         accumulator.columns.add(selectable.name);
-                        row.set(selectable.name, cell);
+                        row.cells.set(selectable.name, cell);
                     });
                 }
                 return {

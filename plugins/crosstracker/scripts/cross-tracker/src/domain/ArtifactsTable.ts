@@ -19,6 +19,7 @@
 
 import type { Option } from "@tuleap/option";
 import type { ColorName } from "@tuleap/core-constants";
+import type { ColumnName } from "./ColumnName";
 
 export const DATE_CELL = "date";
 export const NUMERIC_CELL = "numeric";
@@ -56,9 +57,12 @@ export type TrackerCell = {
 
 export type Cell = DateCell | NumericCell | TextCell | ProjectCell | TrackerCell;
 
-export type ArtifactRow = Map<string, Cell>;
+export type ArtifactRow = {
+    readonly uri: string;
+    readonly cells: Map<ColumnName, Cell>;
+};
 
 export type ArtifactsTable = {
-    readonly columns: Set<string>;
+    readonly columns: Set<ColumnName>;
     readonly rows: ReadonlyArray<ArtifactRow>;
 };

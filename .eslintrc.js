@@ -300,9 +300,11 @@ module.exports = {
             ],
             extends: ["plugin:vue/vue3-recommended"],
             rules: {
+                "vue/html-closing-bracket-newline": "off", // Conflict with Prettier
                 "vue/html-indent": "off", // Conflict with Prettier
                 "vue/max-attributes-per-line": "off", // Conflict with Prettier
                 "vue/no-multiple-template-root": "off", // Specific to Vue 2
+                "vue/no-v-for-template-key": "off", // Specific to Vue 2
                 "vue/no-v-model-argument": "off", // Specific to Vue 2
                 // Priority B: Strongly Recommended (Improving Readability)
                 "vue/html-self-closing": [

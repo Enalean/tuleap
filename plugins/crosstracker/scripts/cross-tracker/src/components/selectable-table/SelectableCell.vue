@@ -88,12 +88,4 @@ const getBadgeClass = (cell: TrackerCell): string => `tracker-badge tlp-badge-${
 
     min-height: var(--tlp-x-large-spacing);
 }
-
-.even-row {
-    background: var(--tlp-table-row-background-even);
-}
-
-.odd-row {
-    background: var(--tlp-table-row-background-odd);
-}
 </style>

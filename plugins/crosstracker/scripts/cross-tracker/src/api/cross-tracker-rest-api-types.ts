@@ -38,6 +38,7 @@ export const NUMERIC_SELECTABLE_TYPE = "numeric";
 export const TEXT_SELECTABLE_TYPE = "text";
 export const PROJECT_SELECTABLE_TYPE = "project";
 export const TRACKER_SELECTABLE_TYPE = "tracker";
+export const ARTIFACT_SELECTABLE_TYPE = "artifact";
 
 type UnsupportedSelectableRepresentation = Record<string, unknown>;
 
@@ -64,15 +65,20 @@ export type TrackerSelectableRepresentation = {
     readonly color: ColorName;
 };
 
+export type ArtifactSelectableRepresentation = {
+    readonly uri: string;
+};
+
 export type SelectableRepresentation =
     | DateSelectableRepresentation
     | NumericSelectableRepresentation
     | TextSelectableRepresentation
     | ProjectSelectableRepresentation
     | TrackerSelectableRepresentation
+    | ArtifactSelectableRepresentation
     | UnsupportedSelectableRepresentation;
 
-export type SelectableArtifactRepresentation = Record<string, SelectableRepresentation>;
+export type ArtifactRepresentation = Record<string, SelectableRepresentation>;
 
 interface BaseSelectable {
     readonly name: string;
@@ -102,15 +108,20 @@ interface TrackerSelectable extends BaseSelectable {
     readonly type: typeof TRACKER_SELECTABLE_TYPE;
 }
 
+export interface ArtifactSelectable extends BaseSelectable {
+    readonly type: typeof ARTIFACT_SELECTABLE_TYPE;
+}
+
 export type Selectable =
     | DateSelectable
     | NumericSelectable
     | TextSelectable
     | ProjectSelectable
     | TrackerSelectable
+    | ArtifactSelectable
     | UnsupportedSelectable;
 
 export type SelectableReportContentRepresentation = {
-    readonly artifacts: ReadonlyArray<SelectableArtifactRepresentation>;
+    readonly artifacts: ReadonlyArray<ArtifactRepresentation>;
     readonly selected: ReadonlyArray<Selectable>;
 };
