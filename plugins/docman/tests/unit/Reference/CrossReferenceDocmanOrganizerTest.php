@@ -22,35 +22,25 @@ declare(strict_types=1);
 
 namespace Tuleap\Docman\Reference;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PFUser;
-use Project;
+use Docman_Folder;
+use PHPUnit\Framework\MockObject\MockObject;
 use ProjectManager;
 use Tuleap\Reference\CrossReferenceByNatureOrganizer;
 use Tuleap\Reference\CrossReferencePresenter;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
 
-class CrossReferenceDocmanOrganizerTest extends \Tuleap\Test\PHPUnit\TestCase
+final class CrossReferenceDocmanOrganizerTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ProjectManager
-     */
-    private $project_manager;
-    /**
-     * @var CrossReferenceDocmanOrganizer
-     */
-    private $organizer;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|DocumentFromReferenceValueFinder
-     */
-    private $finder;
+    private ProjectManager&MockObject $project_manager;
+    private CrossReferenceDocmanOrganizer $organizer;
+    private DocumentFromReferenceValueFinder&MockObject $finder;
 
     protected function setUp(): void
     {
-        $this->project_manager = Mockery::mock(ProjectManager::class);
-        $this->finder          = Mockery::mock(DocumentFromReferenceValueFinder::class);
+        $this->project_manager = $this->createMock(ProjectManager::class);
+        $this->finder          = $this->createMock(DocumentFromReferenceValueFinder::class);
 
         $this->organizer = new CrossReferenceDocmanOrganizer(
             $this->project_manager,
@@ -61,42 +51,36 @@ class CrossReferenceDocmanOrganizerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItDoesNotOrganizeCrossReferencesItDoesNotKnow(): void
     {
-        $user = Mockery::mock(PFUser::class);
+        $user = UserTestBuilder::buildWithDefaults();
 
-        $by_nature_organizer = Mockery::mock(CrossReferenceByNatureOrganizer::class)
-            ->shouldReceive(
-                [
-                    'getCurrentUser'              => $user,
-                    'getCrossReferencePresenters' => [
-                        new CrossReferencePresenter(
-                            1,
-                            'git',
-                            'another_title',
-                            'url',
-                            'delete_url',
-                            1,
-                            'whatever',
-                            null,
-                            [],
-                            null,
-                        ),
-                    ],
-                ]
-            )->getMock();
+        $by_nature_organizer = $this->createMock(CrossReferenceByNatureOrganizer::class);
+        $by_nature_organizer->method('getCurrentUser')->willReturn($user);
+        $by_nature_organizer->method('getCrossReferencePresenters')->willReturn([
+            new CrossReferencePresenter(
+                1,
+                'git',
+                'another_title',
+                'url',
+                'delete_url',
+                1,
+                'whatever',
+                null,
+                [],
+                null,
+            ),
+        ]);
 
-        $by_nature_organizer->shouldReceive('moveCrossReferenceToSection')->never();
+        $by_nature_organizer->expects(self::never())->method('moveCrossReferenceToSection');
 
         $this->organizer->organizeDocumentReferences($by_nature_organizer);
     }
 
     public function testItDoesNotOrganizeArtifactCrossReferencesIfArtifactCannotBeFound(): void
     {
-        $user    = Mockery::mock(PFUser::class);
-        $project = Mockery::mock(Project::class);
+        $user    = UserTestBuilder::buildWithDefaults();
+        $project = ProjectTestBuilder::aProject()->build();
 
-        $this->project_manager
-            ->shouldReceive(['getProject' => $project])
-            ->getMock();
+        $this->project_manager->method('getProject')->willReturn($project);
         $a_ref = new CrossReferencePresenter(
             1,
             'document',
@@ -110,36 +94,23 @@ class CrossReferenceDocmanOrganizerTest extends \Tuleap\Test\PHPUnit\TestCase
             null,
         );
 
-        $this->finder
-            ->shouldReceive('findItem')
-            ->with($project, $user, '123')
-            ->andReturnNull();
+        $this->finder->method('findItem')->with($project, $user, '123')->willReturn(null);
 
-        $by_nature_organizer = Mockery::mock(CrossReferenceByNatureOrganizer::class)
-            ->shouldReceive(
-                [
-                    'getCurrentUser'              => $user,
-                    'getCrossReferencePresenters' => [$a_ref],
-                ]
-            )->getMock();
-
-        $by_nature_organizer->shouldReceive('moveCrossReferenceToSection')->never();
-        $by_nature_organizer
-            ->shouldReceive('removeUnreadableCrossReference')
-            ->with($a_ref)
-            ->once();
+        $by_nature_organizer = $this->createMock(CrossReferenceByNatureOrganizer::class);
+        $by_nature_organizer->method('getCurrentUser')->willReturn($user);
+        $by_nature_organizer->method('getCrossReferencePresenters')->willReturn([$a_ref]);
+        $by_nature_organizer->expects(self::never())->method('moveCrossReferenceToSection');
+        $by_nature_organizer->expects(self::once())->method('removeUnreadableCrossReference')->with($a_ref);
 
         $this->organizer->organizeDocumentReferences($by_nature_organizer);
     }
 
     public function testItMovesArtifactCrossReferenceToAnUnlabelledSectionWithATitleBadge(): void
     {
-        $user    = Mockery::mock(PFUser::class);
-        $project = Mockery::mock(Project::class);
+        $user    = UserTestBuilder::buildWithDefaults();
+        $project = ProjectTestBuilder::aProject()->build();
 
-        $this->project_manager
-            ->shouldReceive(['getProject' => $project])
-            ->getMock();
+        $this->project_manager->method('getProject')->willReturn($project);
 
         $a_ref = new CrossReferencePresenter(
             1,
@@ -154,36 +125,23 @@ class CrossReferenceDocmanOrganizerTest extends \Tuleap\Test\PHPUnit\TestCase
             null,
         );
 
-        $this->finder
-            ->shouldReceive('findItem')
-            ->with($project, $user, '123')
-            ->andReturn(new \Docman_Folder(['title' => 'Lorem ipsum']));
+        $this->finder->method('findItem')->with($project, $user, '123')->willReturn(new Docman_Folder(['title' => 'Lorem ipsum']));
 
-        $by_nature_organizer = Mockery::mock(CrossReferenceByNatureOrganizer::class)
-            ->shouldReceive(
-                [
-                    'getCurrentUser'              => $user,
-                    'getCrossReferencePresenters' => [$a_ref],
-                ]
-            )->getMock();
+        $by_nature_organizer = $this->createMock(CrossReferenceByNatureOrganizer::class);
+        $by_nature_organizer->method('getCurrentUser')->willReturn($user);
+        $by_nature_organizer->method('getCrossReferencePresenters')->willReturn([$a_ref]);
 
-        $by_nature_organizer
-            ->shouldReceive('moveCrossReferenceToSection')
-            ->with(
-                Mockery::on(
-                    function (CrossReferencePresenter $presenter) {
-                        return $presenter->id === 1
-                            && $presenter->title === 'Lorem ipsum'
-                            && $presenter->title_badge->icon === 'fa fa-folder'
-                            && $presenter->title_badge->color === 'inca-silver';
-                    }
-                ),
-                ''
-            )
-            ->once();
-        $by_nature_organizer
-            ->shouldReceive('removeUnreadableCrossReference')
-            ->never();
+        $by_nature_organizer->expects(self::once())
+            ->method('moveCrossReferenceToSection')
+            ->with(self::callback(
+                static fn(CrossReferencePresenter $presenter) => (
+                    $presenter->id === 1
+                    && $presenter->title === 'Lorem ipsum'
+                    && $presenter->title_badge->icon === 'fa fa-folder'
+                    && $presenter->title_badge->color === 'inca-silver'
+                )
+            ), '');
+        $by_nature_organizer->expects(self::never())->method('removeUnreadableCrossReference');
 
         $this->organizer->organizeDocumentReferences($by_nature_organizer);
     }
