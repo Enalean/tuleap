@@ -29,13 +29,13 @@
             <a v-bind:href="/projects/ + project.shortname">{{ project.label }}</a>
         </td>
         <td class="tlp-table-cell-numeric">
-            {{ personal_store.get_formatted_aggregated_time(timeData) }}
+            {{ personal_store.get_formatted_aggregated_time(time_data) }}
         </td>
 
         <widget-modal-times
             v-bind:artifact="artifact"
             v-bind:project="project"
-            v-bind:times="timeData"
+            v-bind:times="time_data"
         />
     </tr>
 </template>
@@ -47,12 +47,12 @@ import WidgetModalTimes from "./modal/WidgetModalTimes.vue";
 import WidgetLinkToArtifact from "./WidgetLinkToArtifact.vue";
 
 const props = defineProps<{
-    timeData: PersonalTime[];
+    time_data: PersonalTime[];
 }>();
 
 const personal_store = usePersonalTimetrackingWidgetStore();
-const artifact = ref(props.timeData[0].artifact);
-const project = ref(props.timeData[0].project);
+const artifact = ref(props.time_data[0].artifact);
+const project = ref(props.time_data[0].project);
 </script>
 
 <style scoped lang="scss">

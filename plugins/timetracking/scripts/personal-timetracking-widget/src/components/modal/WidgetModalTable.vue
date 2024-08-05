@@ -33,12 +33,12 @@
                 v-on:validate-time="addNewTime"
                 data-test="edit-time-with-row"
                 v-bind:artifact="artifact"
-                v-bind:time-data="undefined"
+                v-bind:time_data="undefined"
             />
             <widget-modal-row
                 v-for="time in personal_store.current_times"
                 v-bind:key="time.id"
-                v-bind:time-data="time"
+                v-bind:time_data="time"
             />
         </tbody>
         <tbody v-else data-test="table-body-without-row">
@@ -48,7 +48,7 @@
                 v-on:validate-time="addNewTime"
                 data-test="edit-time-without-row"
                 v-bind:artifact="artifact"
-                v-bind:time-data="undefined"
+                v-bind:time_data="undefined"
             />
             <tr>
                 <td colspan="4" class="tlp-table-cell-empty">
@@ -74,13 +74,12 @@ import WidgetModalRow from "./WidgetModalRow.vue";
 import WidgetModalEditTime from "./WidgetModalEditTime.vue";
 import { usePersonalTimetrackingWidgetStore } from "../../store/root";
 import { computed } from "vue";
-import type { Artifact, PersonalTime } from "@tuleap/plugin-timetracking-rest-api-types";
+import type { Artifact } from "@tuleap/plugin-timetracking-rest-api-types";
 import { useGettext } from "vue3-gettext";
 
 const { $gettext } = useGettext();
 defineProps<{
     artifact: Artifact;
-    timeData: PersonalTime;
 }>();
 
 const personal_store = usePersonalTimetrackingWidgetStore();

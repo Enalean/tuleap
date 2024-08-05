@@ -42,7 +42,6 @@ describe("Given a personal timetracking widget modal", () => {
             },
             props: {
                 artifact: {} as Artifact,
-                timeData: {} as PersonalTime,
             },
         });
     }

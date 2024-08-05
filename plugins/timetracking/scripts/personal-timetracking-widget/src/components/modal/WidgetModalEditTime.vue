@@ -92,18 +92,18 @@ import { useGettext } from "vue3-gettext";
 
 const { $gettext } = useGettext();
 const props = defineProps<{
-    timeData: PersonalTime | undefined;
+    time_data: PersonalTime | undefined;
     artifact: Artifact;
 }>();
 
 const date = ref(
-    props.timeData
-        ? formatDatetimeToYearMonthDay(new Date(props.timeData.date))
+    props.time_data
+        ? formatDatetimeToYearMonthDay(new Date(props.time_data.date))
         : formatDatetimeToYearMonthDay(new Date()),
 );
-const step = ref(props.timeData && props.timeData.step ? props.timeData.step : "");
+const step = ref(props.time_data && props.time_data.step ? props.time_data.step : "");
 const time = ref(
-    props.timeData && props.timeData.minutes ? formatMinutes(props.timeData.minutes) : "",
+    props.time_data && props.time_data.minutes ? formatMinutes(props.time_data.minutes) : "",
 );
 const error_message = ref<string>("");
 const is_loading = ref(false);
@@ -144,7 +144,7 @@ const validateNewTime = (): void => {
         }
         is_loading.value = true;
 
-        const id = props.timeData && props.timeData.id ? props.timeData.id : props.artifact.id;
+        const id = props.time_data && props.time_data.id ? props.time_data.id : props.artifact.id;
         emit("validate-time", date.value, id, time.value, step.value);
     } else {
         error_message.value = $gettext("Please check time's format (hh:mm)");

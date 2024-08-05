@@ -26,8 +26,8 @@ import WidgetWritingMode from "./WidgetWritingMode.vue";
 import WidgetArtifactTable from "./WidgetArtifactTable.vue";
 import { getGlobalTestOptions } from "../../tests/global-options-for-tests";
 
-const userId = 102;
-const userLocale = "fr_FR";
+const user_id = 102;
+const user_locale = "fr_FR";
 
 describe("Given a personal timetracking widget", () => {
     let reading_mode: boolean;
@@ -35,8 +35,8 @@ describe("Given a personal timetracking widget", () => {
     function getPersonalWidgetInstance(): VueWrapper {
         return shallowMount(TimetrackingWidget, {
             props: {
-                userId,
-                userLocale,
+                user_id: user_id,
+                user_locale: user_locale,
             },
             global: {
                 ...getGlobalTestOptions({

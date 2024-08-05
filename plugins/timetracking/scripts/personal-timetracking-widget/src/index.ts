@@ -34,8 +34,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     createApp(TimetrackingWidget, {
-        userId: parseInt(document.body.dataset.userId, 10),
-        userLocale: document.body.dataset.userLocale ?? "en-US",
+        user_id: parseInt(document.body.dataset.userId, 10),
+        user_locale: document.body.dataset.userLocale ?? "en-US",
     })
         .use(
             await initVueGettext(createGettext, (locale: string) => {

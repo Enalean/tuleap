@@ -179,7 +179,7 @@ module.exports = {
             files: [
                 "plugins/document/**/*.vue",
                 "plugins/tracker/**/*.vue",
-                "plugins/timetracking/**/*.vue",
+                "plugins/timetracking/scripts/timetracking-overview-widget/**/*.vue",
                 "plugins/svn/**/*.vue",
                 "plugins/pullrequest/scripts/create-pullrequest-button/**/*.vue",
                 "plugins/label/**/*.vue",
