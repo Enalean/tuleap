@@ -18,6 +18,10 @@
  */
 
 import print from "print-js";
+import { ok, err } from "neverthrow";
+import type { Result } from "neverthrow";
+import DOMPurify from "dompurify";
+import { Fault } from "@tuleap/fault";
 
 export interface PdfTemplate {
     readonly id: string;
@@ -29,11 +33,65 @@ export interface PdfTemplate {
     readonly footer_content: string;
 }
 
-export function printAsPdf(printable: HTMLElement, template: PdfTemplate): void {
-    print({
-        printable,
-        type: "html",
-        scanStyles: false,
-        style: template.style,
-    });
-}
+export type PdfTemplateVariables = {
+    readonly DOCUMENT_TITLE?: string;
+};
+
+const replaceVariables = (html: string, variables: PdfTemplateVariables): string => {
+    // eslint-disable-next-line no-template-curly-in-string
+    return html.replace("${DOCUMENT_TITLE}", variables.DOCUMENT_TITLE ?? "");
+};
+
+const injectContent = (
+    printable: HTMLElement,
+    container_id: string,
+    content: string,
+    variables: PdfTemplateVariables,
+): Result<null, Fault> => {
+    if (content.length === 0) {
+        return ok(null);
+    }
+
+    const container = printable.querySelector(`#${container_id}`);
+    if (!container) {
+        return err(Fault.fromMessage(`#${container_id} not found.`));
+    }
+
+    // eslint-disable-next-line no-unsanitized/property
+    container.innerHTML = DOMPurify.sanitize(replaceVariables(content, variables));
+    return ok(null);
+};
+
+const processPrint = (printable: HTMLElement, template: PdfTemplate): Result<null, Fault> => {
+    try {
+        print({
+            printable,
+            type: "html",
+            scanStyles: false,
+            style: template.style,
+        });
+    } catch (e: unknown) {
+        if (e instanceof Error) {
+            return err(Fault.fromError(e));
+        }
+
+        return err(Fault.fromMessage("Unknown error."));
+    }
+
+    return ok(null);
+};
+
+export const printAsPdf = (
+    printable: HTMLElement,
+    template: PdfTemplate,
+    variables: PdfTemplateVariables,
+): Result<null, Fault> =>
+    injectContent(printable, "document-title-page", template.title_page_content, variables)
+        .andThen(() =>
+            injectContent(printable, "document-header", template.header_content, variables),
+        )
+        .andThen(() =>
+            injectContent(printable, "document-footer", template.footer_content, variables),
+        )
+        .andThen(() => processPrint(printable, template))
+        .mapErr((fault: Fault) => Fault.fromMessage(`Failed to print document as pdf: ${fault}`));

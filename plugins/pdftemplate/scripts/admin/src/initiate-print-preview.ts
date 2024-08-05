@@ -20,50 +20,6 @@
 import type { PdfTemplate } from "@tuleap/print-as-pdf";
 import { printAsPdf } from "@tuleap/print-as-pdf";
 import type CodeMirror from "codemirror";
-import DOMPurify from "dompurify";
-
-function appendHeaderAndFooterContent(
-    title_page_content_editor: CodeMirror.EditorFromTextArea,
-    header_content_editor: CodeMirror.EditorFromTextArea,
-    footer_content_editor: CodeMirror.EditorFromTextArea,
-): void {
-    const document_title_page = document.getElementById("fake-document-title-page");
-    if (!(document_title_page instanceof HTMLElement)) {
-        throw new Error("Cannot find document title page element");
-    }
-
-    const document_header = document.getElementById("fake-document-header");
-    if (!(document_header instanceof HTMLElement)) {
-        throw new Error("Cannot find document header element");
-    }
-
-    const document_footer = document.getElementById("fake-document-footer");
-    if (!(document_footer instanceof HTMLElement)) {
-        throw new Error("Cannot find document footer element");
-    }
-
-    // eslint-disable-next-line no-unsanitized/property
-    document_title_page.innerHTML = DOMPurify.sanitize(
-        highlightVariables(title_page_content_editor.getValue()),
-    );
-    // eslint-disable-next-line no-unsanitized/property
-    document_header.innerHTML = DOMPurify.sanitize(
-        highlightVariables(header_content_editor.getValue()),
-    );
-    // eslint-disable-next-line no-unsanitized/property
-    document_footer.innerHTML = DOMPurify.sanitize(
-        highlightVariables(footer_content_editor.getValue()),
-    );
-}
-
-function highlightVariables(html: string): string {
-    return html.replace(
-        // eslint-disable-next-line no-template-curly-in-string
-        "${DOCUMENT_TITLE}",
-        // eslint-disable-next-line no-template-curly-in-string
-        "<span class='pdftemplate-preview-variable'>${DOCUMENT_TITLE}</span>",
-    );
-}
 
 export function initiatePrintPreview(
     style: CodeMirror.EditorFromTextArea,
@@ -92,12 +48,6 @@ export function initiatePrintPreview(
     }
 
     button.addEventListener("click", () => {
-        appendHeaderAndFooterContent(
-            title_page_content_editor,
-            header_content_editor,
-            footer_content_editor,
-        );
-
         const template: PdfTemplate = {
             id: "",
             label: label.value,
@@ -112,11 +62,17 @@ export function initiatePrintPreview(
                     padding: 5px 8px;
                 }
             `,
-            title_page_content: "",
-            header_content: "",
-            footer_content: "",
+            title_page_content: title_page_content_editor.getValue(),
+            header_content: header_content_editor.getValue(),
+            footer_content: footer_content_editor.getValue(),
         };
 
-        printAsPdf(fake_document, template);
+        printAsPdf(fake_document, template, {
+            // eslint-disable-next-line no-template-curly-in-string
+            DOCUMENT_TITLE: "<span class='pdftemplate-preview-variable'>${DOCUMENT_TITLE}</span>",
+        }).mapErr(
+            // eslint-disable-next-line no-console
+            (fault) => console.error(fault.toString()),
+        );
     });
 }

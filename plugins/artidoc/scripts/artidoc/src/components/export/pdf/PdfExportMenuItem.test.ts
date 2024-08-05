@@ -32,6 +32,7 @@ import { SectionEditorStub } from "@/helpers/stubs/SectionEditorStub";
 import ArtifactSectionFactory from "@/helpers/artifact-section.factory";
 import { initPdfTemplatesStore, PDF_TEMPLATES_STORE } from "@/stores/pdf-templates-store";
 import { PdfTemplateStub } from "@/helpers/stubs/PdfTemplateStub";
+import { TITLE } from "@/title-injection-key";
 
 vi.mock("@tuleap/tlp-dropdown");
 
@@ -49,6 +50,7 @@ describe("PdfExportMenuItem", () => {
                 provide: {
                     [IS_USER_ANONYMOUS.valueOf()]: true,
                     [EDITORS_COLLECTION.valueOf()]: editors_collection,
+                    [TITLE.valueOf()]: "Test document",
                     [PDF_TEMPLATES_STORE.valueOf()]: initPdfTemplatesStore([
                         PdfTemplateStub.blueTemplate(),
                     ]),
@@ -74,6 +76,7 @@ describe("PdfExportMenuItem", () => {
                     provide: {
                         [IS_USER_ANONYMOUS.valueOf()]: false,
                         [EDITORS_COLLECTION.valueOf()]: editors_collection,
+                        [TITLE.valueOf()]: "Test document",
                         [PDF_TEMPLATES_STORE.valueOf()]: initPdfTemplatesStore(templates),
                     },
                 },
@@ -101,6 +104,7 @@ describe("PdfExportMenuItem", () => {
                 provide: {
                     [IS_USER_ANONYMOUS.valueOf()]: false,
                     [EDITORS_COLLECTION.valueOf()]: editors_collection,
+                    [TITLE.valueOf()]: "Test document",
                     [PDF_TEMPLATES_STORE.valueOf()]: initPdfTemplatesStore([
                         PdfTemplateStub.blueTemplate(),
                     ]),
@@ -119,6 +123,7 @@ describe("PdfExportMenuItem", () => {
                 provide: {
                     [IS_USER_ANONYMOUS.valueOf()]: false,
                     [EDITORS_COLLECTION.valueOf()]: editors_collection,
+                    [TITLE.valueOf()]: "Test document",
                     [PDF_TEMPLATES_STORE.valueOf()]: initPdfTemplatesStore([
                         PdfTemplateStub.blueTemplate(),
                     ]),
@@ -137,6 +142,7 @@ describe("PdfExportMenuItem", () => {
                 provide: {
                     [IS_USER_ANONYMOUS.valueOf()]: false,
                     [EDITORS_COLLECTION.valueOf()]: editors_collection,
+                    [TITLE.valueOf()]: "Test document",
                     [PDF_TEMPLATES_STORE.valueOf()]: initPdfTemplatesStore([
                         PdfTemplateStub.blueTemplate(),
                         PdfTemplateStub.redTemplate(),

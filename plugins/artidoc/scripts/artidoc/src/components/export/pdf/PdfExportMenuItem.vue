@@ -84,10 +84,12 @@ import { createDropdown } from "@tuleap/tlp-dropdown";
 import { IS_USER_ANONYMOUS } from "@/is-user-anonymous";
 import PrinterVersion from "@/components/print/PrinterVersion.vue";
 import { EDITORS_COLLECTION } from "@/composables/useSectionEditorsCollection";
+import { TITLE } from "@/title-injection-key";
 
 const pdf_templates = strictInject(PDF_TEMPLATES_STORE);
 const is_user_anonymous = strictInject(IS_USER_ANONYMOUS);
 const editors_collection = strictInject(EDITORS_COLLECTION);
+const title = strictInject(TITLE);
 
 const has_more_than_one_template = pdf_templates.list.value.length > 1;
 
@@ -126,8 +128,12 @@ function printUsingTemplate(template: PdfTemplate): void {
     }
 
     pdf_templates.setSelectedPdfTemplate(template);
+
     setTimeout(() => {
-        printAsPdf(printable, template);
+        printAsPdf(printable, template, { DOCUMENT_TITLE: title }).mapErr((fault) => {
+            // eslint-disable-next-line no-console
+            console.error(fault.toString());
+        });
     });
 }
 
