@@ -20,6 +20,7 @@
 import "./admin.scss";
 import {
     initiateStylesCodeEditor,
+    initiateTitlePageContentCodeEditor,
     initiateHeaderContentCodeEditor,
     initiateFooterContentCodeEditor,
 } from "./initiate-code-editors";
@@ -29,12 +30,13 @@ import { initiateCopyImageUrl } from "./initiate-copy-image-url";
 
 document.addEventListener("DOMContentLoaded", () => {
     const style = initiateStylesCodeEditor();
+    const title_page_content = initiateTitlePageContentCodeEditor();
     const header_content = initiateHeaderContentCodeEditor();
     const footer_content = initiateFooterContentCodeEditor();
     initiateModals(document);
     initiateCopyImageUrl();
 
-    if (style && header_content && footer_content) {
-        initiatePrintPreview(style, header_content, footer_content);
+    if (style && title_page_content && header_content && footer_content) {
+        initiatePrintPreview(style, title_page_content, header_content, footer_content);
     }
 });

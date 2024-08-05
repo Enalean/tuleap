@@ -30,6 +30,9 @@ msgstr "Fermer"
 msgid "Copy image URL to clipboard"
 msgstr "Copier l'URL de l'image dans le presse papier"
 
+msgid "Cover page"
+msgstr "Page de garde"
+
 msgid "Create and edit PDF templates"
 msgstr "Créer et éditer des modèles de PDF"
 

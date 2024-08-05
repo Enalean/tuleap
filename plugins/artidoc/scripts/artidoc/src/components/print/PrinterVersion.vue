@@ -31,11 +31,11 @@
             <tbody>
                 <tr style="border: 0">
                     <td style="border: 0">
-                        <div class="document-page">
-                            <h1 class="document-title">
-                                {{ title }}
-                            </h1>
-                        </div>
+                        <div
+                            class="document-page"
+                            v-if="title_page_content"
+                            v-dompurify-html="title_page_content"
+                        ></div>
                         <div class="document-page">
                             <aside>
                                 <table-of-contents v-bind:is_print_mode="true" />
@@ -66,16 +66,8 @@
                 </tr>
             </tfoot>
         </table>
-        <div
-            class="document-header"
-            v-if="pdf_templates.selected_template.value"
-            v-dompurify-html="pdf_templates.selected_template.value.header_content"
-        ></div>
-        <div
-            class="document-footer"
-            v-if="pdf_templates.selected_template.value"
-            v-dompurify-html="pdf_templates.selected_template.value.footer_content"
-        ></div>
+        <div class="document-header" v-if="header_content" v-dompurify-html="header_content"></div>
+        <div class="document-footer" v-if="footer_content" v-dompurify-html="footer_content"></div>
     </div>
 </template>
 
@@ -86,10 +78,32 @@ import { SECTIONS_STORE } from "@/stores/sections-store-injection-key";
 import SectionPrinterVersion from "@/components/print/SectionPrinterVersion.vue";
 import { TITLE } from "@/title-injection-key";
 import { PDF_TEMPLATES_STORE } from "@/stores/pdf-templates-store";
+import { computed } from "vue";
 
 const { saved_sections } = strictInject(SECTIONS_STORE);
 const pdf_templates = strictInject(PDF_TEMPLATES_STORE);
 const title = strictInject(TITLE);
+
+const title_page_content = computed(() =>
+    replaceVariables(pdf_templates.selected_template.value?.title_page_content),
+);
+
+const header_content = computed(() =>
+    replaceVariables(pdf_templates.selected_template.value?.header_content),
+);
+
+const footer_content = computed(() =>
+    replaceVariables(pdf_templates.selected_template.value?.footer_content),
+);
+
+function replaceVariables(html: string | undefined): string | undefined {
+    if (html === undefined) {
+        return undefined;
+    }
+
+    // eslint-disable-next-line no-template-curly-in-string
+    return html.replace("${DOCUMENT_TITLE}", title);
+}
 </script>
 
 <style lang="scss" scoped>

@@ -26,6 +26,18 @@
 </div>
 
 <div class="tlp-form-element">
+    <label for="input-title-page-content" class="tlp-label">
+        {{# dgettext }} tuleap-pdftemplate | Cover page {{/ dgettext }}
+    </label>
+    <textarea
+        id="input-title-page-content"
+        name="title-page-content"
+        rows="2"
+        class="tlp-textarea"
+    >{{ title_page_content }}</textarea>
+</div>
+
+<div class="tlp-form-element">
     <label for="input-header-content" class="tlp-label">
         {{# dgettext }} tuleap-pdftemplate | Header {{/ dgettext }}
     </label>

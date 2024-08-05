@@ -1,5 +1,6 @@
-/*
- * Copyright (c) Enalean, 2024 - Present. All Rights Reserved.
+<?php
+/**
+ * Copyright (c) Enalean, 2024 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,23 +18,21 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import print from "print-js";
+declare(strict_types=1);
 
-export interface PdfTemplate {
-    readonly id: string;
-    readonly label: string;
-    readonly description: string;
-    readonly style: string;
-    readonly title_page_content: string;
-    readonly header_content: string;
-    readonly footer_content: string;
-}
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+final class b202408050851_add_title_page_content_column extends \Tuleap\ForgeUpgrade\Bucket
+{
+    public function description(): string
+    {
+        return 'Add title_page_content column';
+    }
 
-export function printAsPdf(printable: HTMLElement, template: PdfTemplate): void {
-    print({
-        printable,
-        type: "html",
-        scanStyles: false,
-        style: template.style,
-    });
+    public function up(): void
+    {
+        $this->api->dbh->exec('
+            ALTER TABLE plugin_pdftemplate
+            ADD COLUMN title_page_content TEXT NOT NULL
+        ');
+    }
 }

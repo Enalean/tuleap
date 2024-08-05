@@ -41,6 +41,7 @@ final class PdfTemplateDao extends DataAccessObject implements RetrieveAllTempla
         string $label,
         string $description,
         string $style,
+        string $title_page_content,
         string $header_content,
         string $footer_content,
         \PFUser $created_by,
@@ -51,18 +52,29 @@ final class PdfTemplateDao extends DataAccessObject implements RetrieveAllTempla
         $this->getDB()->insert(
             'plugin_pdftemplate',
             [
-                'id'                => $identifier->getBytes(),
-                'label'             => $label,
-                'description'       => $description,
-                'style'             => $style,
-                'header_content'    => $header_content,
-                'footer_content'    => $footer_content,
-                'last_updated_by'   => $created_by->getId(),
-                'last_updated_date' => $created_date->getTimestamp(),
+                'id'                 => $identifier->getBytes(),
+                'label'              => $label,
+                'description'        => $description,
+                'style'              => $style,
+                'title_page_content' => $title_page_content,
+                'header_content'     => $header_content,
+                'footer_content'     => $footer_content,
+                'last_updated_by'    => $created_by->getId(),
+                'last_updated_date'  => $created_date->getTimestamp(),
             ],
         );
 
-        return new PdfTemplate($identifier, $label, $description, $style, $header_content, $footer_content, $created_by, $created_date);
+        return new PdfTemplate(
+            $identifier,
+            $label,
+            $description,
+            $style,
+            $title_page_content,
+            $header_content,
+            $footer_content,
+            $created_by,
+            $created_date,
+        );
     }
 
     public function retrieveAll(): array
@@ -108,6 +120,7 @@ final class PdfTemplateDao extends DataAccessObject implements RetrieveAllTempla
             $row['label'],
             $row['description'],
             $row['style'],
+            $row['title_page_content'],
             $row['header_content'],
             $row['footer_content'],
             $this->getUser($row['last_updated_by']),
@@ -130,13 +143,14 @@ final class PdfTemplateDao extends DataAccessObject implements RetrieveAllTempla
         $this->getDB()->update(
             'plugin_pdftemplate',
             [
-                'label'             => $template->label,
-                'description'       => $template->description,
-                'style'             => $template->style,
-                'header_content'    => $template->header_content,
-                'footer_content'    => $template->footer_content,
-                'last_updated_by'   => $template->last_updated_by->getId(),
-                'last_updated_date' => $template->last_updated_date->getTimestamp(),
+                'label'              => $template->label,
+                'description'        => $template->description,
+                'style'              => $template->style,
+                'title_page_content' => $template->title_page_content,
+                'header_content'     => $template->header_content,
+                'footer_content'     => $template->footer_content,
+                'last_updated_by'    => $template->last_updated_by->getId(),
+                'last_updated_date'  => $template->last_updated_date->getTimestamp(),
             ],
             [
                 'id' => $template->identifier->getBytes(),

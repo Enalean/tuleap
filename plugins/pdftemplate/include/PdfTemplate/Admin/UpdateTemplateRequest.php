@@ -50,6 +50,9 @@ final readonly class UpdateTemplateRequest
         if ($this->submitted->style !== $this->original->style) {
             $changes[] = 'style';
         }
+        if ($this->submitted->title_page_content !== $this->original->title_page_content) {
+            $changes[] = 'title_page_content';
+        }
         if ($this->submitted->header_content !== $this->original->header_content) {
             $changes[] = 'header_content';
         }
