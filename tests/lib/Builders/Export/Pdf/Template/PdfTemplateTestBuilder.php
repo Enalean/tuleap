@@ -33,6 +33,7 @@ final class PdfTemplateTestBuilder
     private string $label;
     private string $description;
     private string $style;
+    private string $title_page_content;
     private string $header_content;
     private string $footer_content;
     private \PFUser $last_updated_by;
@@ -41,15 +42,16 @@ final class PdfTemplateTestBuilder
 
     public function __construct()
     {
-        $this->identifier        = (new PdfTemplateIdentifierFactory(new DatabaseUUIDV7Factory()))->buildIdentifier();
-        $this->label             = 'Black template';
-        $this->description       = '';
-        $this->style             = 'body { color: black; }';
-        $this->header_content    = '<em>For authorized eyes only</em>';
-        $this->footer_content    = '<em>Do not share this document</em>';
-        $this->style             = 'body { color: black; }';
-        $this->last_updated_by   = UserTestBuilder::buildWithDefaults();
-        $this->last_updated_date = new \DateTimeImmutable();
+        $this->identifier         = (new PdfTemplateIdentifierFactory(new DatabaseUUIDV7Factory()))->buildIdentifier();
+        $this->label              = 'Black template';
+        $this->description        = '';
+        $this->style              = 'body { color: black; }';
+        $this->title_page_content = '<h1>Document title</h1>';
+        $this->header_content     = '<em>For authorized eyes only</em>';
+        $this->footer_content     = '<em>Do not share this document</em>';
+        $this->style              = 'body { color: black; }';
+        $this->last_updated_by    = UserTestBuilder::buildWithDefaults();
+        $this->last_updated_date  = new \DateTimeImmutable();
     }
 
     public static function aTemplate(): self
@@ -105,6 +107,14 @@ final class PdfTemplateTestBuilder
         return $self;
     }
 
+    public function withTitlePageContent(string $title_page_content): self
+    {
+        $self                     = clone $this;
+        $self->title_page_content = $title_page_content;
+
+        return $self;
+    }
+
     public function withHeaderContent(string $header_content): self
     {
         $self                 = clone $this;
@@ -128,6 +138,7 @@ final class PdfTemplateTestBuilder
             $this->label,
             $this->description,
             $this->style,
+            $this->title_page_content,
             $this->header_content,
             $this->footer_content,
             $this->last_updated_by,

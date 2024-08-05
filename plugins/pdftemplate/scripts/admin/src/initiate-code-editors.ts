@@ -29,7 +29,7 @@ function instantiateEditor(
 ): CodeMirror.EditorFromTextArea | undefined {
     const textarea = document.getElementById(textarea_id);
     if (!(textarea instanceof HTMLTextAreaElement)) {
-        return;
+        return undefined;
     }
 
     return CodeMirror.fromTextArea(textarea, {
@@ -43,6 +43,10 @@ function instantiateEditor(
 
 export function initiateStylesCodeEditor(): CodeMirror.EditorFromTextArea | undefined {
     return instantiateEditor("input-style", "text/css");
+}
+
+export function initiateTitlePageContentCodeEditor(): CodeMirror.EditorFromTextArea | undefined {
+    return instantiateEditor("input-title-page-content", "htmlmixed");
 }
 
 export function initiateHeaderContentCodeEditor(): CodeMirror.EditorFromTextArea | undefined {

@@ -86,6 +86,7 @@ final readonly class BuildUpdateTemplateRequestMiddleware implements MiddlewareI
                     $label,
                     (string) ($parsed_body['description'] ?? ''),
                     (string) ($parsed_body['style'] ?? ''),
+                    (string) ($parsed_body['title-page-content'] ?? ''),
                     (string) ($parsed_body['header-content'] ?? ''),
                     (string) ($parsed_body['footer-content'] ?? ''),
                     $user,

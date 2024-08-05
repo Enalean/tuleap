@@ -23,9 +23,15 @@ import type CodeMirror from "codemirror";
 import DOMPurify from "dompurify";
 
 function appendHeaderAndFooterContent(
+    title_page_content_editor: CodeMirror.EditorFromTextArea,
     header_content_editor: CodeMirror.EditorFromTextArea,
     footer_content_editor: CodeMirror.EditorFromTextArea,
 ): void {
+    const document_title_page = document.getElementById("fake-document-title-page");
+    if (!(document_title_page instanceof HTMLElement)) {
+        throw new Error("Cannot find document title page element");
+    }
+
     const document_header = document.getElementById("fake-document-header");
     if (!(document_header instanceof HTMLElement)) {
         throw new Error("Cannot find document header element");
@@ -37,13 +43,31 @@ function appendHeaderAndFooterContent(
     }
 
     // eslint-disable-next-line no-unsanitized/property
-    document_header.innerHTML = DOMPurify.sanitize(header_content_editor.getValue());
+    document_title_page.innerHTML = DOMPurify.sanitize(
+        highlightVariables(title_page_content_editor.getValue()),
+    );
     // eslint-disable-next-line no-unsanitized/property
-    document_footer.innerHTML = DOMPurify.sanitize(footer_content_editor.getValue());
+    document_header.innerHTML = DOMPurify.sanitize(
+        highlightVariables(header_content_editor.getValue()),
+    );
+    // eslint-disable-next-line no-unsanitized/property
+    document_footer.innerHTML = DOMPurify.sanitize(
+        highlightVariables(footer_content_editor.getValue()),
+    );
+}
+
+function highlightVariables(html: string): string {
+    return html.replace(
+        // eslint-disable-next-line no-template-curly-in-string
+        "${DOCUMENT_TITLE}",
+        // eslint-disable-next-line no-template-curly-in-string
+        "<span class='pdftemplate-preview-variable'>${DOCUMENT_TITLE}</span>",
+    );
 }
 
 export function initiatePrintPreview(
     style: CodeMirror.EditorFromTextArea,
+    title_page_content_editor: CodeMirror.EditorFromTextArea,
     header_content_editor: CodeMirror.EditorFromTextArea,
     footer_content_editor: CodeMirror.EditorFromTextArea,
 ): void {
@@ -68,13 +92,27 @@ export function initiatePrintPreview(
     }
 
     button.addEventListener("click", () => {
-        appendHeaderAndFooterContent(header_content_editor, footer_content_editor);
+        appendHeaderAndFooterContent(
+            title_page_content_editor,
+            header_content_editor,
+            footer_content_editor,
+        );
 
         const template: PdfTemplate = {
             id: "",
             label: label.value,
             description: description.value,
-            style: style.getValue(),
+            style:
+                style.getValue() +
+                `
+                .pdftemplate-preview-variable {
+                    background: rgba(213, 216, 220, 0.5);
+                    color: rgb(88, 88, 88);
+                    border-radius: 3px;
+                    padding: 5px 8px;
+                }
+            `,
+            title_page_content: "",
             header_content: "",
             footer_content: "",
         };

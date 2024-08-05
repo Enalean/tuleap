@@ -28,6 +28,7 @@ interface CreateTemplate
         string $label,
         string $description,
         string $style,
+        string $title_page_content,
         string $header_content,
         string $footer_content,
         \PFUser $created_by,

@@ -34,6 +34,7 @@ final readonly class PdfTemplate
         public string $label,
         public string $description,
         public string $style,
+        public string $title_page_content,
         public string $header_content,
         public string $footer_content,
         public \PFUser $last_updated_by,
