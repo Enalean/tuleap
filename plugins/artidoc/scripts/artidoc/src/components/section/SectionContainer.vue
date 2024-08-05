@@ -70,7 +70,7 @@ defineProps<{ section: ArtidocSection }>();
     transition: background-color 75ms ease-in-out;
     background: var(--tuleap-artidoc-section-background);
 
-    &:has(.cke) {
+    &:has(.document-section-cancel-save-buttons) {
         --tuleap-artidoc-section-background: var(--tlp-main-color-lighter-90);
 
         &:has(.document-section-is-in-error) {

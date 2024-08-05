@@ -18,7 +18,7 @@
 -
 -->
 <template>
-    <div v-if="is_edit_mode">
+    <div v-if="is_edit_mode" class="document-section-cancel-save-buttons">
         <button
             v-on:click="onCancel"
             type="button"
