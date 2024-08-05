@@ -7,14 +7,12 @@
   "dependencies": {
     "@tuleap/copy-to-clipboard": "workspace:^",
     "@tuleap/print-as-pdf": "workspace:^",
-    "codemirror": "^5.62.0",
-    "dompurify": "^3.1.4"
+    "codemirror": "^5.62.0"
   },
   "devDependencies": {
     "@tuleap/build-system-configurator": "workspace:^",
     "@tuleap/tlp-modal": "workspace:^",
-    "@types/codemirror": "^5.60.15",
-    "@types/dompurify": "^3.0.5"
+    "@types/codemirror": "^5.60.15"
   },
   "scripts": {
     "typecheck": "tsc --noEmit",

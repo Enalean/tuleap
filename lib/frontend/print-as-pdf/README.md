@@ -15,5 +15,5 @@ pnpm i @tuleap/print-as-pdf
 ```typescript
 import { printAsPdf } from "@tuleap/print-as-pdf";
 
-printAsPdf(dom_element, pdf_template);
+printAsPdf(dom_element, pdf_template, template_variables);
 ```
