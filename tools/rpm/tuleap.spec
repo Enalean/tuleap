@@ -845,6 +845,7 @@ done
 %{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/tracker_functions
 
 # Plugin pdftemplate
+%{__install} plugins/pdftemplate/etc/logrotate.syslog.dist $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_pdftemplate
 %{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/pdftemplate
 %{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/pdftemplate/images
 
