@@ -38,7 +38,7 @@ final class QueryPUTRepresentation
     public ?string $end_date = null;
 
     /**
-     * @var string | null $predefined_time_period {@from body} {@required false} {@choice today,yesterday,this_week,last_7_days,last_week,last_month}
+     * @var string | null $predefined_time_period {@from body} {@required false} {@choice today,yesterday,current_week,last_7_days,last_week,last_month}
      */
     public ?string $predefined_time_period = null;
 
