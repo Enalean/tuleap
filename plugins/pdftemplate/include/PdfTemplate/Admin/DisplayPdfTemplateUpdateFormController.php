@@ -33,6 +33,7 @@ use Tuleap\PdfTemplate\Image\DisplayImagePresenter;
 use Tuleap\PdfTemplate\Image\PdfTemplateImage;
 use Tuleap\PdfTemplate\Image\RetrieveAllImages;
 use Tuleap\PdfTemplate\RetrieveTemplate;
+use Tuleap\PdfTemplate\Variable\VariableMisusageInTemplateDetector;
 use Tuleap\Request\DispatchableWithBurningParrot;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\NotFoundException;
@@ -48,6 +49,7 @@ final readonly class DisplayPdfTemplateUpdateFormController implements Dispatcha
         private RetrieveTemplate $retriever,
         private CSRFTokenProvider $token_provider,
         private RetrieveAllImages $images_retriever,
+        private readonly VariableMisusageInTemplateDetector $variable_misusage_detector,
     ) {
     }
 
@@ -65,6 +67,10 @@ final readonly class DisplayPdfTemplateUpdateFormController implements Dispatcha
         $template = $this->retriever->retrieveTemplate($identifier);
         if (! $template) {
             throw new NotFoundException();
+        }
+
+        foreach ($this->variable_misusage_detector->detectVariableMisusages($template) as $misusage) {
+            $layout->addFeedback(\Feedback::WARN, $misusage);
         }
 
         $layout->addJavascriptAsset(

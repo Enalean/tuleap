@@ -24,5 +24,5 @@ namespace Tuleap\Layout\Feedback;
 
 interface ISerializeFeedback
 {
-    public function serialize(\PFUser $user, NewFeedback $feedback): void;
+    public function serialize(\PFUser $user, NewFeedback ...$feedbacks): void;
 }

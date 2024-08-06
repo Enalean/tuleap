@@ -58,6 +58,8 @@ use Tuleap\PdfTemplate\Image\RejectAnonymousMiddleware;
 use Tuleap\PdfTemplate\Image\RetrieveImageMiddleware;
 use Tuleap\PdfTemplate\PdfTemplateDao;
 use Tuleap\PdfTemplate\PdfTemplateForUserRetriever;
+use Tuleap\PdfTemplate\Variable\VariableMisusageCollector;
+use Tuleap\PdfTemplate\Variable\VariableMisusageInTemplateDetector;
 use Tuleap\Plugin\ListeningToEventClass;
 use Tuleap\Plugin\ListeningToEventName;
 use Tuleap\Request\CollectRoutesEvent;
@@ -254,6 +256,7 @@ class PdfTemplatePlugin extends Plugin
             $this->getPdfTemplateDao(),
             new AdministrationCSRFTokenProvider(),
             $this->getImageDao(),
+            new VariableMisusageInTemplateDetector(new VariableMisusageCollector()),
         );
     }
 
@@ -278,6 +281,7 @@ class PdfTemplatePlugin extends Plugin
             ),
             $this->getLogger(),
             $this->getPdfTemplateDao(),
+            new VariableMisusageInTemplateDetector(new VariableMisusageCollector()),
             new SapiEmitter(),
             new RejectNonNonPdfTemplateManagerMiddleware(
                 UserManager::instance(),
@@ -298,6 +302,7 @@ class PdfTemplatePlugin extends Plugin
             $redirect_with_feedback_factory,
             $this->getLogger(),
             $this->getPdfTemplateDao(),
+            new VariableMisusageInTemplateDetector(new VariableMisusageCollector()),
             new SapiEmitter(),
             new RejectNonNonPdfTemplateManagerMiddleware(
                 UserManager::instance(),

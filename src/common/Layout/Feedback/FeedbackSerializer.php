@@ -34,15 +34,17 @@ class FeedbackSerializer implements ISerializeFeedback
         $this->dao = $feedback_dao;
     }
 
-    public function serialize(\PFUser $user, NewFeedback $feedback): void
+    public function serialize(\PFUser $user, NewFeedback ...$feedbacks): void
     {
-        $logs = [
+        $logs = array_map(
+            static fn ($feedback) =>
             [
                 'level'  => $feedback->getLevel(),
                 'msg'    => $feedback->getMessage(),
                 'purify' => CODENDI_PURIFIER_CONVERT_HTML,
             ],
-        ];
+            $feedbacks
+        );
         $this->dao->create($user->getSessionId(), $logs);
     }
 }
