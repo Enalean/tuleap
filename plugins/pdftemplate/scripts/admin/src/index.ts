@@ -26,7 +26,8 @@ import {
 } from "./initiate-code-editors";
 import { initiateModals } from "./initiate-modals";
 import { initiatePrintPreview } from "./initiate-print-preview";
-import { initiateCopyImageUrl } from "./initiate-copy-image-url";
+import { initiateCopyToClipboard } from "./initiate-copy-to-clipboard";
+import { initiatePopovers } from "./initiate-popovers";
 
 document.addEventListener("DOMContentLoaded", () => {
     const style = initiateStylesCodeEditor();
@@ -34,7 +35,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const header_content = initiateHeaderContentCodeEditor();
     const footer_content = initiateFooterContentCodeEditor();
     initiateModals(document);
-    initiateCopyImageUrl();
+    initiateCopyToClipboard();
+    initiatePopovers();
 
     if (style && title_page_content && header_content && footer_content) {
         initiatePrintPreview(style, title_page_content, header_content, footer_content);

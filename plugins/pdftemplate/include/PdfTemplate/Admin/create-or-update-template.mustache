@@ -58,21 +58,6 @@
             </div>
             <section class="tlp-pane-section">
                 {{# has_images }}
-                    <div class="pdftemplate-admin-template-images-gallery">
-                        {{# images }}
-                            <copy-to-clipboard
-                                value="{{ href }}"
-                                class="pdftemplate-admin-template-image-copy tlp-tooltip tlp-tooltip-left"
-                                data-tlp-tooltip="{{# dgettext }} tuleap-pdftemplate | Copy image URL to clipboard {{/ dgettext }}"
-                                data-tlp-tooltip-copied="{{# dgettext }} tuleap-pdftemplate | Image URL copied ! {{/ dgettext }}"
-                            >
-                                <div class="tlp-card tlp-card-selectable pdftemplate-admin-template-image-wrapper">
-                                    <img src="{{ href }}" alt="{{ filename }}" class="pdftemplate-admin-template-image">
-                                    <i class="fa-solid fa-copy pdftemplate-admin-template-image-copy-icon" role="img"></i>
-                                </div>
-                            </copy-to-clipboard>
-                        {{/ images }}
-                    </div>
                     <p class="tlp-text-muted">
                         {{# dgettext }}
                             tuleap-pdftemplate |
@@ -86,6 +71,21 @@
                             </a>
                         {{/ dgettext }}
                     </p>
+                    <div class="pdftemplate-admin-template-images-gallery">
+                        {{# images }}
+                            <copy-to-clipboard
+                                value="{{ href }}"
+                                class="pdftemplate-admin-template-copy tlp-tooltip tlp-tooltip-left"
+                                data-tlp-tooltip="{{# dgettext }} tuleap-pdftemplate | Copy image URL to clipboard {{/ dgettext }}"
+                                data-tlp-tooltip-copied="{{# dgettext }} tuleap-pdftemplate | Image URL copied! {{/ dgettext }}"
+                            >
+                                <div class="tlp-card tlp-card-selectable pdftemplate-admin-template-image-wrapper">
+                                    <img src="{{ href }}" alt="{{ filename }}" class="pdftemplate-admin-template-image">
+                                    <i class="fa-solid fa-copy pdftemplate-admin-template-copy-icon pdftemplate-admin-template-copy-image-icon" role="img"></i>
+                                </div>
+                            </copy-to-clipboard>
+                        {{/ images }}
+                    </div>
                 {{/ has_images }}
                 {{^ has_images }}
                     <div class="empty-state-pane">

@@ -26,6 +26,8 @@ use Tuleap\CSRFSynchronizerTokenPresenter;
 use Tuleap\Export\Pdf\Template\PdfTemplate;
 use Tuleap\PdfTemplate\Admin\Image\IndexImagesController;
 use Tuleap\PdfTemplate\Image\DisplayImagePresenter;
+use Tuleap\PdfTemplate\Variable\Variable;
+use Tuleap\PdfTemplate\Variable\VariablePresenter;
 use Tuleap\Request\CSRFSynchronizerTokenInterface;
 
 /**
@@ -35,6 +37,10 @@ final readonly class DisplayPdfTemplateCreationOrUpdateFormPresenter
 {
     public CSRFSynchronizerTokenPresenter $csrf;
     public bool $has_images;
+    /**
+     * @var list<VariablePresenter>
+     */
+    public array $variables;
 
     /**
      * @param list<DisplayImagePresenter> $images
@@ -52,6 +58,7 @@ final readonly class DisplayPdfTemplateCreationOrUpdateFormPresenter
     ) {
         $this->csrf       = CSRFSynchronizerTokenPresenter::fromToken($token);
         $this->has_images = count($images) > 0;
+        $this->variables  = Variable::getPresenters();
     }
 
     /**

@@ -11,6 +11,9 @@ dependencies:
   '@tuleap/print-as-pdf':
     specifier: workspace:^
     version: link:../../../../lib/frontend/print-as-pdf
+  '@tuleap/tlp-popovers':
+    specifier: workspace:^
+    version: link:../../../../lib/frontend/tlp-popovers
   codemirror:
     specifier: ^5.62.0
     version: 5.65.16

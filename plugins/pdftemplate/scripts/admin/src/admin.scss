@@ -49,3 +49,23 @@
 .pdftemplate-print-preview-fake-document {
     display: none;
 }
+
+.pdftemplate-admin-popover {
+    width: auto;
+    max-width: 600px;
+}
+
+.pdftemplate-admin-popover-trigger {
+    transition: color ease-in-out 250ms;
+    color: var(--tlp-dimmed-color);
+    font-size: 0.8125rem;
+    cursor: pointer;
+
+    &:hover {
+        color: var(--tlp-typo-default-text-color);
+    }
+}
+
+.pdftemplate-admin-template-variable {
+    cursor: pointer;
+}
