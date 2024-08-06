@@ -20,6 +20,9 @@
 import type { PredefinedTimePeriod } from "@tuleap/plugin-timetracking-predefined-time-periods";
 import { TODAY } from "@tuleap/plugin-timetracking-predefined-time-periods";
 import type { User } from "@tuleap/core-rest-api-types";
+import type { Ref } from "vue";
+import { ref } from "vue";
+import { putQuery } from "../api/rest-querier";
 
 export type TimetrackingManagementQuery = {
     start_date: string;
@@ -36,6 +39,8 @@ export type Query = {
         period: PredefinedTimePeriod | "",
         users: User[],
     ) => void;
+    has_the_query_been_modified: Ref<boolean>;
+    saveQuery: (widget_id: number) => void;
 };
 
 export const QueryRetriever = (): Query => {
@@ -43,6 +48,7 @@ export const QueryRetriever = (): Query => {
     let end_date = new Date().toISOString().split("T")[0];
     let predefined_period: PredefinedTimePeriod | "" = TODAY;
     let users_list: User[] = [];
+    const has_the_query_been_modified = ref(false);
 
     const getQuery = (): TimetrackingManagementQuery => {
         return {
@@ -65,8 +71,14 @@ export const QueryRetriever = (): Query => {
         users_list = users;
     };
 
+    const saveQuery = (widget_id: number): void => {
+        putQuery(widget_id, getQuery());
+    };
+
     return {
         getQuery,
         setQuery,
+        has_the_query_been_modified,
+        saveQuery,
     };
 };

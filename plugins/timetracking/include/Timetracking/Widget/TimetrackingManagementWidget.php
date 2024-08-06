@@ -74,7 +74,7 @@ class TimetrackingManagementWidget extends Widget
     public function getContent(): string
     {
         $renderer = TemplateRendererFactory::build()->getRenderer(TIMETRACKING_TEMPLATE_DIR);
-        return $renderer->renderToString('timetracking-management', []);
+        return $renderer->renderToString('timetracking-management', ['widget_id' => $this->content_id]);
     }
 
     public function getIcon(): string
@@ -109,5 +109,13 @@ class TimetrackingManagementWidget extends Widget
     public function destroy($id): void
     {
         $this->dao->delete((int) $id);
+    }
+
+    /**
+     * @param string $id
+     */
+    public function loadContent($id): void
+    {
+        $this->content_id = $this->dao->searchQueryByWidgetId((int) $id)[0]['id'];
     }
 }

@@ -7,6 +7,9 @@ msgstr "Du"
 msgid "No user selected"
 msgstr "Aucun utilisateur sélectionné"
 
+msgid "Save query"
+msgstr "Enregistrer la requête"
+
 msgid "Search"
 msgstr "Rechercher"
 
