@@ -35,6 +35,24 @@
         rows="2"
         class="tlp-textarea"
     >{{ title_page_content }}</textarea>
+    <p class="tlp-text-info">
+        {{# dgettext }} tuleap-pdftemplate | The cover page, or title page, is the first page of the document.{{/ dgettext }}
+
+        {{# dgettext }} tuleap-pdftemplate | It is generally used to display metadata about the document (document title), and can be enhanced with logo or background images.{{/ dgettext }}
+
+        {{# dgettext }} tuleap-pdftemplate | Variables can be used. {{/ dgettext }}
+        <span class="pdftemplate-admin-popover-trigger"
+              data-target-popover-id="input-title-page-content-popover"
+              data-placement="right"
+              data-trigger="hover"
+        >
+                    <i class="fa-solid fa-circle-question" role="img"></i>
+                </span>
+    </p>
+
+    <section id="input-title-page-content-popover" class="tlp-popover pdftemplate-admin-popover">
+        {{> variables-popover }}
+    </section>
 </div>
 
 <div class="tlp-form-element">
@@ -47,6 +65,22 @@
         rows="2"
         class="tlp-textarea"
     >{{ header_content }}</textarea>
+    <p class="tlp-text-info">
+        {{# dgettext }} tuleap-pdftemplate | The header is displayed at the top of every pages of the document.{{/ dgettext }}
+
+        {{# dgettext }} tuleap-pdftemplate | Variables can be used. {{/ dgettext }}
+        <span class="pdftemplate-admin-popover-trigger"
+              data-target-popover-id="input-header-content-popover"
+              data-placement="right"
+              data-trigger="hover"
+        >
+            <i class="fa-solid fa-circle-question" role="img"></i>
+        </span>
+    </p>
+
+    <section id="input-header-content-popover" class="tlp-popover pdftemplate-admin-popover">
+        {{> variables-popover }}
+    </section>
 </div>
 
 <div class="tlp-form-element">
@@ -59,6 +93,22 @@
         rows="2"
         class="tlp-textarea"
     >{{ footer_content }}</textarea>
+    <p class="tlp-text-info">
+        {{# dgettext }} tuleap-pdftemplate | The footer is displayed at the bottom of every pages of the document.{{/ dgettext }}
+
+        {{# dgettext }} tuleap-pdftemplate | Variables can be used. {{/ dgettext }}
+        <span class="pdftemplate-admin-popover-trigger"
+              data-target-popover-id="input-footer-content-popover"
+              data-placement="right"
+              data-trigger="hover"
+        >
+            <i class="fa-solid fa-circle-question" role="img"></i>
+        </span>
+    </p>
+
+    <section id="input-footer-content-popover" class="tlp-popover pdftemplate-admin-popover">
+        {{> variables-popover }}
+    </section>
 </div>
 
 <div class="tlp-form-element">
@@ -71,4 +121,9 @@
         class="tlp-textarea"
         rows="20"
     >{{ style }}</textarea>
+    <p class="tlp-text-info">
+        {{# dgettext }} tuleap-pdftemplate | CSS rules that are used to shape the style of the document.{{/ dgettext }}
+
+        {{# dgettext }} tuleap-pdftemplate | Interpretation of those rules will depend on the browser used to generate the document.{{/ dgettext }}
+    </p>
 </div>

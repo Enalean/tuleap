@@ -51,7 +51,7 @@
             opacity: 0.5;
         }
 
-        > .pdftemplate-admin-template-image-copy-icon {
+        > .pdftemplate-admin-template-copy-image-icon {
             opacity: 1;
         }
     }
@@ -63,7 +63,7 @@
     transition: var(--pdftemplate-transition-image);
 }
 
-.pdftemplate-admin-template-image-copy-icon {
+.pdftemplate-admin-template-copy-image-icon {
     position: absolute;
     right: var(--tlp-small-spacing);
     bottom: var(--tlp-small-spacing);

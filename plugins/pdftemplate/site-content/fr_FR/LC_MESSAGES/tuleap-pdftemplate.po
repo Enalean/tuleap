@@ -21,14 +21,23 @@ msgstr "Une erreur est survenue lors du stockage de votre image."
 msgid "An error occurred while uploading your image."
 msgstr "Une erreur est survenue lors du téléversement de votre image."
 
+msgid "CSS rules that are used to shape the style of the document."
+msgstr "Règles CSS qui sont utilisées pour mettre en forme le document."
+
 msgid "Cancel"
 msgstr "Annuler"
 
 msgid "Close"
 msgstr "Fermer"
 
+msgid "Copy"
+msgstr "Copier"
+
 msgid "Copy image URL to clipboard"
 msgstr "Copier l'URL de l'image dans le presse papier"
+
+msgid "Copy variable to clipboard"
+msgstr "Copier la variable dans le presse-papier"
 
 msgid "Cover page"
 msgstr "Page de garde"
@@ -75,7 +84,7 @@ msgstr[0] "Si vous supprimez l'image alors le modèle pourra apparaître cassé.
 msgstr[1] ""
 "Si vous supprimez l'image alors les modèles pourront apparaître cassés."
 
-msgid "Image URL copied !"
+msgid "Image URL copied!"
 msgstr "URL de l'image copiée !"
 
 msgid "Images"
@@ -94,6 +103,21 @@ msgstr "Bibliothèque d'images"
 msgid "Images uploaded here can be used inside PDF templates."
 msgstr ""
 "Les images téléversées ici peuvent être utilisées dans les modèles PDF."
+
+msgid ""
+"Interpretation of those rules will depend on the browser used to generate "
+"the document."
+msgstr ""
+"L'interprétation de ces règles dépendent du navigateur utilisé pour générer "
+"le document."
+
+msgid ""
+"It is generally used to display metadata about the document (document "
+"title), and can be enhanced with logo or background images."
+msgstr ""
+"Elle est généralement utilisée pour afficher des informations à propos du "
+"document (titre du document), et peut être agrémentée avec des logos ou des "
+"images d'arrière plan."
 
 msgid "Label"
 msgstr "Label"
@@ -141,6 +165,15 @@ msgstr ""
 msgid "Templates list"
 msgstr "Liste des modèles"
 
+msgid "The cover page, or title page, is the first page of the document."
+msgstr "La page de garde, ou page de titre, est la première page du document."
+
+msgid "The footer is displayed at the bottom of every pages of the document."
+msgstr "Le pied de page est affiché en bas de chaque page du document."
+
+msgid "The header is displayed at the top of every pages of the document."
+msgstr "L'entête est affichée en haut de chaque page du document."
+
 msgid "The image has been deleted."
 msgstr "L'image a été supprimée."
 
@@ -165,6 +198,10 @@ msgstr "Il n'y a pas de modèle défini"
 msgid "There isn't any uploaded image yet."
 msgstr "Il n'y a pas encore d'image téléversée."
 
+msgid "They will be dynamically replaced during generation of the document."
+msgstr ""
+"Elles seront remplacées dynamiquement lors de la génération du document."
+
 msgid "This can be used to include a logo, or a background image."
 msgstr "Ça peut être utile pour inclure un logo, ou une image de fond."
 
@@ -181,6 +218,9 @@ msgstr ""
 msgid "This operation cannot be undone."
 msgstr "Cette opération ne pourra pas être annulée."
 
+msgid "Title of the generated document"
+msgstr "Titre du document généré"
+
 msgid "Update template"
 msgstr "Mise à jour du modèle"
 
@@ -195,6 +235,20 @@ msgstr "Téléverser une image"
 
 msgid "Uploaded by"
 msgstr "Téléversée par"
+
+msgid "Variable copied!"
+msgstr "Variable copiée !"
+
+msgid "Variables"
+msgstr "Variables"
+
+msgid "Variables can be used in cover page, header, and footer."
+msgstr ""
+"Les variables peuvent être utilisées dans la page de garde, l'entête, et le "
+"pied de page."
+
+msgid "Variables can be used."
+msgstr "Les variables peuvent être utilisées."
 
 msgid "You are about to delete the PDF template '%s'."
 msgstr "Vous êtes sur le point de supprimer le modèle PDF '%s'."

@@ -1,0 +1,57 @@
+<div class="tlp-popover-arrow"></div>
+<div class="tlp-popover-header">
+    <h1 class="tlp-popover-title">
+        {{# dgettext }} tuleap-pdftemplate | Variables {{/ dgettext }}
+    </h1>
+</div>
+<div class="tlp-popover-body">
+    <p>
+        {{# dgettext }} tuleap-pdftemplate | Variables can be used in cover page, header, and footer. {{/ dgettext }}
+
+        {{# dgettext }} tuleap-pdftemplate | They will be dynamically replaced during generation of the document. {{/ dgettext }}
+    </p>
+
+    <table class="tlp-table">
+        <thead>
+        <tr>
+            <th>
+                {{# dgettext }} tuleap-pdftemplate | Name {{/ dgettext }}
+            </th>
+            <th>
+                {{# dgettext }} tuleap-pdftemplate | Description {{/ dgettext }}
+            </th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        {{# variables }}
+            <tr>
+                <td>
+                    <copy-to-clipboard
+                        value="{{ name }}"
+                        class="pdftemplate-admin-template-copy tlp-tooltip tlp-tooltip-left"
+                        data-tlp-tooltip="{{# dgettext }} tuleap-pdftemplate | Copy variable to clipboard {{/ dgettext }}"
+                        data-tlp-tooltip-copied="{{# dgettext }} tuleap-pdftemplate | Variable copied! {{/ dgettext }}"
+                    >
+                        <code class="pdftemplate-admin-template-variable">{{ name }}</code>
+                    </copy-to-clipboard>
+                </td>
+                <td>{{ description }}</td>
+                <td class="tlp-table-cell-actions">
+                    <copy-to-clipboard
+                        value="{{ name }}"
+                        class="pdftemplate-admin-template-copy tlp-tooltip tlp-tooltip-left"
+                        data-tlp-tooltip="{{# dgettext }} tuleap-pdftemplate | Copy variable to clipboard {{/ dgettext }}"
+                        data-tlp-tooltip-copied="{{# dgettext }} tuleap-pdftemplate | Variable copied! {{/ dgettext }}"
+                    >
+                        <button type="button" class="tlp-button-primary tlp-button-outline tlp-button-small tlp-table-cell-actions-button">
+                            <i class="fa-solid fa-copy tlp-button-icon pdftemplate-admin-template-copy-icon" aria-hidden="true"></i>
+                            {{# dgettext }} tuleap-pdftemplate | Copy {{/ dgettext }}
+                        </button>
+                    </copy-to-clipboard>
+                </td>
+            </tr>
+        {{/ variables }}
+        </tbody>
+    </table>
+</div>
