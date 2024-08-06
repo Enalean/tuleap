@@ -18,6 +18,9 @@
  */
 
 const { defineAngularMocksJestConfiguration } = require("@tuleap/build-system-configurator");
+const process = require("node:process");
+
+process.env.DISABLE_TS_TYPECHECK = "true";
 
 const jest_base_config = defineAngularMocksJestConfiguration();
 module.exports = {
