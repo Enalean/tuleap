@@ -20,6 +20,7 @@
 import type { PdfTemplate } from "@tuleap/print-as-pdf";
 import { printAsPdf } from "@tuleap/print-as-pdf";
 import type CodeMirror from "codemirror";
+import { createModal } from "@tuleap/tlp-modal";
 
 export function initiatePrintPreview(
     style: CodeMirror.EditorFromTextArea,
@@ -47,6 +48,16 @@ export function initiatePrintPreview(
         throw Error("Cannot found description textarea");
     }
 
+    const modal = document.getElementById("pdftemplate-admin-template-error-modal");
+    if (!modal) {
+        throw Error("Cannot find error modal");
+    }
+
+    const details = document.getElementById("pdftemplate-admin-template-error-modal-details");
+    if (!details) {
+        throw Error("Cannot find error modal details");
+    }
+
     button.addEventListener("click", () => {
         const template: PdfTemplate = {
             id: "",
@@ -70,9 +81,12 @@ export function initiatePrintPreview(
         printAsPdf(fake_document, template, {
             // eslint-disable-next-line no-template-curly-in-string
             DOCUMENT_TITLE: "<span class='pdftemplate-preview-variable'>${DOCUMENT_TITLE}</span>",
-        }).mapErr(
-            // eslint-disable-next-line no-console
-            (fault) => console.error(fault.toString()),
-        );
+        }).mapErr((fault) => {
+            details.innerText = fault.toString();
+
+            createModal(modal, {
+                destroy_on_hide: true,
+            }).show();
+        });
     });
 }
