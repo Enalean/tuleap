@@ -27,6 +27,7 @@ import type {
     ArtifactSelectableRepresentation,
     DateSelectableRepresentation,
     NumericSelectableRepresentation,
+    PrettyTitleSelectableRepresentation,
     ProjectSelectableRepresentation,
     Selectable,
     SelectableReportContentRepresentation,
@@ -38,6 +39,7 @@ import {
     ARTIFACT_SELECTABLE_TYPE,
     DATE_SELECTABLE_TYPE,
     NUMERIC_SELECTABLE_TYPE,
+    PRETTY_TITLE_SELECTABLE_TYPE,
     PROJECT_SELECTABLE_TYPE,
     TEXT_SELECTABLE_TYPE,
     TRACKER_SELECTABLE_TYPE,
@@ -46,6 +48,7 @@ import type { ArtifactRow, ArtifactsTable, Cell } from "../domain/ArtifactsTable
 import {
     DATE_CELL,
     NUMERIC_CELL,
+    PRETTY_TITLE_CELL,
     PROJECT_CELL,
     TEXT_CELL,
     TRACKER_CELL,
@@ -93,6 +96,10 @@ const isProjectSelectableRepresentation = (
 const isTrackerSelectableRepresentation = (
     representation: SelectableRepresentation,
 ): representation is TrackerSelectableRepresentation => "color" in representation;
+
+const isPrettyTitleSelectableRepresentation = (
+    representation: SelectableRepresentation,
+): representation is PrettyTitleSelectableRepresentation => "tracker_name" in representation;
 
 const isArtifactSelectableRepresentation = (
     representation: SelectableRepresentation,
@@ -149,8 +156,7 @@ function buildCell(selectable: Selectable, artifact: ArtifactRepresentation): Re
             }
             return ok({
                 type: PROJECT_CELL,
-                name: artifact_value.name,
-                icon: artifact_value.icon,
+                ...artifact_value,
             });
         case TRACKER_SELECTABLE_TYPE:
             if (!isTrackerSelectableRepresentation(artifact_value)) {
@@ -158,8 +164,15 @@ function buildCell(selectable: Selectable, artifact: ArtifactRepresentation): Re
             }
             return ok({
                 type: TRACKER_CELL,
-                name: artifact_value.name,
-                color: artifact_value.color,
+                ...artifact_value,
+            });
+        case PRETTY_TITLE_SELECTABLE_TYPE:
+            if (!isPrettyTitleSelectableRepresentation(artifact_value)) {
+                throw Error(getErrorMessageToWarnTuleapDevs(selectable));
+            }
+            return ok({
+                type: PRETTY_TITLE_CELL,
+                ...artifact_value,
             });
         default:
             return err(Fault.fromMessage(`Selectable type is not supported`));

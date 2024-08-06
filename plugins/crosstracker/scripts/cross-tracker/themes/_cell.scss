@@ -19,8 +19,7 @@
 
 @mixin cell-template {
     display: flex;
-    flex-direction: column;
-    justify-content: center;
+    align-items: center;
     padding: calc(
         8px - (4px * var(--tlp-is-condensed))
     ); // Match empty cells 32px height (or 24px in condensed mode)

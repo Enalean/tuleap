@@ -22,23 +22,14 @@ declare(strict_types=1);
 
 namespace Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Metadata\Special\PrettyTitle;
 
-use LogicException;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Representations\PrettyTitleRepresentation;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\SelectedValue;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\SelectedValuesCollection;
 use Tuleap\CrossTracker\REST\v1\Representation\CrossTrackerSelectedRepresentation;
 use Tuleap\CrossTracker\REST\v1\Representation\CrossTrackerSelectedType;
-use Tuleap\Tracker\Artifact\ChangesetValue\Text\TextValueInterpreter;
-use Tuleap\Tracker\Artifact\RetrieveArtifact;
 
 final readonly class PrettyTitleResultBuilder
 {
-    public function __construct(
-        private RetrieveArtifact $artifact_retriever,
-        private TextValueInterpreter $text_value_interpreter,
-    ) {
-    }
-
     public function getResult(array $select_results): SelectedValuesCollection
     {
         $values = [];
@@ -52,20 +43,8 @@ final readonly class PrettyTitleResultBuilder
             $tracker_name  = $result['@pretty_title.tracker'];
             $tracker_color = $result['@pretty_title.color'];
             $title         = $result['@pretty_title'];
-            $format        = $result['@pretty_title.format'];
 
-            $artifact = $this->artifact_retriever->getArtifactById($id);
-            if ($artifact === null) {
-                throw new LogicException("Artifact #$id not found");
-            }
-
-            if ($title === null) {
-                $title = '';
-            } else {
-                $title = $this->text_value_interpreter->interpretValueAccordingToFormat($format, $title, (int) $artifact->getTracker()->getGroupId());
-            }
-
-            $values[$id] = new SelectedValue('@pretty_title', new PrettyTitleRepresentation($tracker_name, $tracker_color, $id, $title));
+            $values[$id] = new SelectedValue('@pretty_title', new PrettyTitleRepresentation($tracker_name, $tracker_color, $id, $title ?? ''));
         }
 
         return new SelectedValuesCollection(

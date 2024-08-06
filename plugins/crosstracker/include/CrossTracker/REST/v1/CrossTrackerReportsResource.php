@@ -310,7 +310,7 @@ final class CrossTrackerReportsResource extends AuthenticatedResource
                     new ArtifactIdResultBuilder(),
                     new ProjectNameResultBuilder(),
                     new TrackerNameResultBuilder(),
-                    new PrettyTitleResultBuilder($tracker_artifact_factory, $text_value_interpreter),
+                    new PrettyTitleResultBuilder(),
                     new ArtifactResultBuilder($tracker_artifact_factory),
                 ),
             );

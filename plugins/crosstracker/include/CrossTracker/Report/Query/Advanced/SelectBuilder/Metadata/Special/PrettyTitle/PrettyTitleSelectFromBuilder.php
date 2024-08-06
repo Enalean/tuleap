@@ -29,7 +29,7 @@ final class PrettyTitleSelectFromBuilder
 {
     public function getSelectFrom(): IProvideParametrizedSelectAndFromSQLFragments
     {
-        $select = "tracker.item_name AS '@pretty_title.tracker', tracker.color AS '@pretty_title.color', pretty_title.value AS '@pretty_title', pretty_title.body_format AS '@pretty_title.format'";
+        $select = "tracker.item_name AS '@pretty_title.tracker', tracker.color AS '@pretty_title.color', pretty_title.value AS '@pretty_title'";
         $from   = <<<EOSQL
         LEFT JOIN tracker_semantic_title AS pretty_title_semantic ON (pretty_title_semantic.tracker_id = artifact.tracker_id)
         LEFT JOIN tracker_field AS pretty_title_field ON (pretty_title_field.id = pretty_title_semantic.field_id)

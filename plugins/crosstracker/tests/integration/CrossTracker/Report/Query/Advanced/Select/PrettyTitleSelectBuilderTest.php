@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\CrossTracker\Report\Query\Advanced\Select;
 
-use Codendi_HTMLPurifier;
 use PFUser;
 use ProjectUGroup;
 use Tracker;
@@ -32,7 +31,6 @@ use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Representations\Pret
 use Tuleap\CrossTracker\REST\v1\Representation\CrossTrackerReportContentRepresentation;
 use Tuleap\CrossTracker\Tests\Report\ArtifactReportFactoryInstantiator;
 use Tuleap\DB\DBFactory;
-use Tuleap\Markdown\CommonMarkInterpreter;
 use Tuleap\Test\Builders\CoreDatabaseBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerDatabaseBuilder;
 
@@ -99,10 +97,9 @@ final class PrettyTitleSelectBuilderTest extends CrossTrackerFieldTestCase
         $release_artifact_changeset = $tracker_builder->buildLastChangeset($release_artifact_id);
         $sprint_artifact_changeset  = $tracker_builder->buildLastChangeset($sprint_artifact_id);
 
-        $commonmark_interpreter = CommonMarkInterpreter::build(Codendi_HTMLPurifier::instance());
-        $this->expected_values  = [
+        $this->expected_values = [
             $release_artifact_id => new PrettyTitleRepresentation('release', 'deep-blue', $release_artifact_id, 'Hello World!'),
-            $sprint_artifact_id  => new PrettyTitleRepresentation('sprint', 'ultra-violet', $sprint_artifact_id, $commonmark_interpreter->getInterpretedContentWithReferences('**Title**', $project_id)),
+            $sprint_artifact_id  => new PrettyTitleRepresentation('sprint', 'ultra-violet', $sprint_artifact_id, '**Title**'),
         ];
         $tracker_builder->buildTextValue(
             $release_artifact_changeset,

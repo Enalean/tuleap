@@ -38,6 +38,7 @@ export const NUMERIC_SELECTABLE_TYPE = "numeric";
 export const TEXT_SELECTABLE_TYPE = "text";
 export const PROJECT_SELECTABLE_TYPE = "project";
 export const TRACKER_SELECTABLE_TYPE = "tracker";
+export const PRETTY_TITLE_SELECTABLE_TYPE = "pretty_title";
 export const ARTIFACT_SELECTABLE_TYPE = "artifact";
 
 type UnsupportedSelectableRepresentation = Record<string, unknown>;
@@ -65,6 +66,13 @@ export type TrackerSelectableRepresentation = {
     readonly color: ColorName;
 };
 
+export type PrettyTitleSelectableRepresentation = {
+    readonly tracker_name: string;
+    readonly color: ColorName;
+    readonly artifact_id: number;
+    readonly title: string;
+};
+
 export type ArtifactSelectableRepresentation = {
     readonly uri: string;
 };
@@ -75,6 +83,7 @@ export type SelectableRepresentation =
     | TextSelectableRepresentation
     | ProjectSelectableRepresentation
     | TrackerSelectableRepresentation
+    | PrettyTitleSelectableRepresentation
     | ArtifactSelectableRepresentation
     | UnsupportedSelectableRepresentation;
 
@@ -108,6 +117,10 @@ interface TrackerSelectable extends BaseSelectable {
     readonly type: typeof TRACKER_SELECTABLE_TYPE;
 }
 
+interface PrettyTitleSelectable extends BaseSelectable {
+    readonly type: typeof PRETTY_TITLE_SELECTABLE_TYPE;
+}
+
 export interface ArtifactSelectable extends BaseSelectable {
     readonly type: typeof ARTIFACT_SELECTABLE_TYPE;
 }
@@ -118,6 +131,7 @@ export type Selectable =
     | TextSelectable
     | ProjectSelectable
     | TrackerSelectable
+    | PrettyTitleSelectable
     | ArtifactSelectable
     | UnsupportedSelectable;
 

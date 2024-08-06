@@ -26,6 +26,7 @@ export const NUMERIC_CELL = "numeric";
 export const TEXT_CELL = "text";
 export const PROJECT_CELL = "project";
 export const TRACKER_CELL = "tracker";
+export const PRETTY_TITLE_CELL = "pretty_title";
 
 type DateCell = {
     readonly type: typeof DATE_CELL;
@@ -55,7 +56,15 @@ export type TrackerCell = {
     readonly color: ColorName;
 };
 
-export type Cell = DateCell | NumericCell | TextCell | ProjectCell | TrackerCell;
+export type PrettyTitleCell = {
+    readonly type: typeof PRETTY_TITLE_CELL;
+    readonly tracker_name: string;
+    readonly color: ColorName;
+    readonly artifact_id: number;
+    readonly title: string;
+};
+
+export type Cell = DateCell | NumericCell | TextCell | ProjectCell | TrackerCell | PrettyTitleCell;
 
 export type ArtifactRow = {
     readonly uri: string;

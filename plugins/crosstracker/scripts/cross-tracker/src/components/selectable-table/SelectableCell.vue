@@ -21,17 +21,38 @@
     <template v-if="props.cell !== undefined">
         <span
             v-if="props.cell.type === TEXT_CELL"
-            class="cell"
+            class="cell text-cell"
             v-bind:class="getEvenOddClass()"
+            data-test="cell"
             v-dompurify-html="props.cell.value"
         ></span>
-        <span v-if="props.cell.type === TRACKER_CELL" class="cell" v-bind:class="getEvenOddClass()"
+        <span
+            v-if="props.cell.type === TRACKER_CELL"
+            class="cell"
+            v-bind:class="getEvenOddClass()"
+            data-test="cell"
             ><span v-bind:class="getBadgeClass(props.cell)">{{ props.cell.name }}</span></span
         >
         <span
-            v-if="props.cell.type !== TEXT_CELL && props.cell.type !== TRACKER_CELL"
+            v-if="props.cell.type === PRETTY_TITLE_CELL"
             class="cell"
             v-bind:class="getEvenOddClass()"
+            data-test="cell"
+            ><a v-bind:href="props.artifact_uri"
+                ><span v-bind:class="getCrossRefBadgeClass(props.cell)"
+                    >{{ props.cell.tracker_name }} #{{ props.cell.artifact_id }}</span
+                >{{ props.cell.title }}</a
+            ></span
+        >
+        <span
+            v-if="
+                props.cell.type === DATE_CELL ||
+                props.cell.type === NUMERIC_CELL ||
+                props.cell.type === PROJECT_CELL
+            "
+            class="cell"
+            v-bind:class="getEvenOddClass()"
+            data-test="cell"
             >{{ renderCell(props.cell) }}</span
         >
     </template>
@@ -39,10 +60,11 @@
 
 <script setup lang="ts">
 import { strictInject } from "@tuleap/vue-strict-inject";
-import type { Cell, TrackerCell } from "../../domain/ArtifactsTable";
+import type { Cell, PrettyTitleCell, TrackerCell } from "../../domain/ArtifactsTable";
 import {
     DATE_CELL,
     NUMERIC_CELL,
+    PRETTY_TITLE_CELL,
     PROJECT_CELL,
     TEXT_CELL,
     TRACKER_CELL,
@@ -54,6 +76,7 @@ const date_time_formatter = strictInject(DATE_TIME_FORMATTER);
 
 const props = defineProps<{
     cell: Cell | undefined;
+    artifact_uri: string;
     even: boolean;
 }>();
 
@@ -73,19 +96,27 @@ function renderCell(cell: Cell): string {
 
 const getEvenOddClass = (): string => (props.even ? `even-row` : `odd-row`);
 
-const getBadgeClass = (cell: TrackerCell): string => `tracker-badge tlp-badge-${cell.color}`;
+const getBadgeClass = (cell: TrackerCell): string => `tlp-badge-${cell.color}`;
+
+const getCrossRefBadgeClass = (cell: PrettyTitleCell): string =>
+    `cross-ref-badge tlp-swatch-${cell.color}`;
 </script>
 
 <style scoped lang="scss">
 @use "../../../themes/cell";
 
-.tracker-badge {
-    width: min-content;
-}
-
 .cell {
     @include cell.cell-template;
 
     min-height: var(--tlp-x-large-spacing);
+}
+
+.text-cell {
+    flex-direction: column;
+    justify-content: center;
+}
+
+.cross-ref-badge {
+    margin: 0 5px 0 0;
 }
 </style>

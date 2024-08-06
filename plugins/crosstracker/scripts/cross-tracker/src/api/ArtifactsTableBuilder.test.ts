@@ -19,8 +19,10 @@
 
 import { describe, expect, it } from "vitest";
 import {
+    ARTIFACT_SELECTABLE_TYPE,
     DATE_SELECTABLE_TYPE,
     NUMERIC_SELECTABLE_TYPE,
+    PRETTY_TITLE_SELECTABLE_TYPE,
     PROJECT_SELECTABLE_TYPE,
     TEXT_SELECTABLE_TYPE,
     TRACKER_SELECTABLE_TYPE,
@@ -29,12 +31,14 @@ import { ArtifactsTableBuilder } from "./ArtifactsTableBuilder";
 import {
     DATE_CELL,
     NUMERIC_CELL,
+    PRETTY_TITLE_CELL,
     PROJECT_CELL,
     TEXT_CELL,
     TRACKER_CELL,
 } from "../domain/ArtifactsTable";
 import {
     ARTIFACT_COLUMN_NAME,
+    PRETTY_TITLE_COLUMN_NAME,
     PROJECT_COLUMN_NAME,
     TRACKER_COLUMN_NAME,
 } from "../domain/ColumnName";
@@ -302,6 +306,53 @@ describe(`ArtifactsTableBuilder`, () => {
             expect(tracker_second_row.color).toBe(second_tracker.color);
         });
 
+        it(`builds a table with "pretty_title" selectables`, () => {
+            const first_title = {
+                tracker_name: "releases",
+                color: "teddy-brown",
+                artifact_id: 418,
+                title: "Concordity knifeway",
+            };
+            const second_title = {
+                tracker_name: "activities",
+                color: "daphne-blue",
+                artifact_id: 314,
+                title: "",
+            };
+            const title_column = PRETTY_TITLE_COLUMN_NAME;
+
+            const table = ArtifactsTableBuilder().mapReportToArtifactsTable(
+                SelectableReportContentRepresentationStub.build(
+                    [{ type: PRETTY_TITLE_SELECTABLE_TYPE, name: title_column }],
+                    [
+                        ArtifactRepresentationStub.build({ [title_column]: first_title }),
+                        ArtifactRepresentationStub.build({ [title_column]: second_title }),
+                    ],
+                ),
+            );
+
+            expect(table.columns.has(title_column)).toBe(true);
+            expect(table.rows).toHaveLength(2);
+            const [first_row, second_row] = table.rows;
+            const title_first_row = first_row.cells.get(title_column);
+            if (title_first_row?.type !== PRETTY_TITLE_CELL) {
+                throw Error("Expected to find first title name");
+            }
+            expect(title_first_row.tracker_name).toBe(first_title.tracker_name);
+            expect(title_first_row.color).toBe(first_title.color);
+            expect(title_first_row.artifact_id).toBe(first_title.artifact_id);
+            expect(title_first_row.title).toBe(first_title.title);
+
+            const title_second_row = second_row.cells.get(title_column);
+            if (title_second_row?.type !== PRETTY_TITLE_CELL) {
+                throw Error("Expected to find second title name");
+            }
+            expect(title_second_row.tracker_name).toBe(second_title.tracker_name);
+            expect(title_second_row.color).toBe(second_title.color);
+            expect(title_second_row.artifact_id).toBe(second_title.artifact_id);
+            expect(title_second_row.title).toBe(second_title.title);
+        });
+
         it(`given a report content representation with an unsupported selectable type,
             it will NOT include it in the columns of the table
             and will NOT include it in the rows`, () => {
@@ -325,6 +376,7 @@ describe(`ArtifactsTableBuilder`, () => {
             yield [TEXT_SELECTABLE_TYPE, { value: 12 }];
             yield [PROJECT_SELECTABLE_TYPE, { value: 12 }];
             yield [TRACKER_SELECTABLE_TYPE, { value: 12 }];
+            yield [PRETTY_TITLE_SELECTABLE_TYPE, { value: 12 }];
         }
 
         it.each([...generateBrokenSelectedValues()])(
@@ -340,5 +392,20 @@ describe(`ArtifactsTableBuilder`, () => {
                 ).toThrow();
             },
         );
+
+        it(`when the artifact representation does not have an @artifact selected, it will throw an error`, () => {
+            expect(() =>
+                ArtifactsTableBuilder().mapReportToArtifactsTable({ selected: [], artifacts: [] }),
+            ).toThrow();
+        });
+
+        it(`when the artifact value does not match the @artifact representation, it will throw an error`, () => {
+            expect(() =>
+                ArtifactsTableBuilder().mapReportToArtifactsTable({
+                    selected: [{ type: ARTIFACT_SELECTABLE_TYPE, name: ARTIFACT_COLUMN_NAME }],
+                    artifacts: [{ [ARTIFACT_COLUMN_NAME]: { uri_is_missing: true } }],
+                }),
+            ).toThrow();
+        });
     });
 });

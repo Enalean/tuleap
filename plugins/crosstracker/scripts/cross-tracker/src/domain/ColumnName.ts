@@ -19,10 +19,12 @@
 
 export const PROJECT_COLUMN_NAME = "@project.name";
 export const TRACKER_COLUMN_NAME = "@tracker.name";
+export const PRETTY_TITLE_COLUMN_NAME = "@pretty_title";
 export const ARTIFACT_COLUMN_NAME = "@artifact";
 
 export type ColumnName =
     | typeof PROJECT_COLUMN_NAME
     | typeof TRACKER_COLUMN_NAME
+    | typeof PRETTY_TITLE_COLUMN_NAME
     | typeof ARTIFACT_COLUMN_NAME
     | string;
