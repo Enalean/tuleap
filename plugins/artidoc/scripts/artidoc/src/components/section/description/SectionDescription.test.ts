@@ -85,6 +85,11 @@ describe("SectionDescription", () => {
                                     InjectedSectionsStoreStub.withLoadedSections([]),
                                 [EDITOR_CHOICE.valueOf()]: { is_prose_mirror: ref(true) },
                             },
+                            stubs: {
+                                async_editor: {
+                                    template: "<span/>",
+                                },
+                            },
                         },
                         props: { ...default_props, is_edit_mode: false },
                     });
