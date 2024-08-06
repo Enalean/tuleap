@@ -78,8 +78,13 @@ import SelectableCell from "./SelectableCell.vue";
 import type { ColumnName } from "../../domain/ColumnName";
 import {
     ARTIFACT_COLUMN_NAME,
+    ARTIFACT_ID_COLUMN_NAME,
+    DESCRIPTION_COLUMN_NAME,
+    LAST_UPDATE_DATE_COLUMN_NAME,
     PRETTY_TITLE_COLUMN_NAME,
     PROJECT_COLUMN_NAME,
+    SUBMITTED_ON_COLUMN_NAME,
+    TITLE_COLUMN_NAME,
     TRACKER_COLUMN_NAME,
 } from "../../domain/ColumnName";
 import EditCell from "./EditCell.vue";
@@ -162,6 +167,21 @@ function getArtifactsFromReportOrUnsavedQuery(): ResultAsync<ArtifactsTableWithT
 }
 
 const getColumnName = (name: ColumnName): string => {
+    if (name === TITLE_COLUMN_NAME) {
+        return $gettext("Title");
+    }
+    if (name === DESCRIPTION_COLUMN_NAME) {
+        return $gettext("Description");
+    }
+    if (name === ARTIFACT_ID_COLUMN_NAME) {
+        return $gettext("Id");
+    }
+    if (name === SUBMITTED_ON_COLUMN_NAME) {
+        return $gettext("Submitted on");
+    }
+    if (name === LAST_UPDATE_DATE_COLUMN_NAME) {
+        return $gettext("Last update date");
+    }
     if (name === PROJECT_COLUMN_NAME) {
         return $gettext("Project");
     }

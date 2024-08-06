@@ -17,12 +17,22 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+export const TITLE_COLUMN_NAME = "@title";
+export const DESCRIPTION_COLUMN_NAME = "@description";
+export const ARTIFACT_ID_COLUMN_NAME = "@id";
+export const SUBMITTED_ON_COLUMN_NAME = "@submitted_on";
+export const LAST_UPDATE_DATE_COLUMN_NAME = "@last_update_date";
 export const PROJECT_COLUMN_NAME = "@project.name";
 export const TRACKER_COLUMN_NAME = "@tracker.name";
 export const PRETTY_TITLE_COLUMN_NAME = "@pretty_title";
 export const ARTIFACT_COLUMN_NAME = "@artifact";
 
 export type ColumnName =
+    | typeof TITLE_COLUMN_NAME
+    | typeof DESCRIPTION_COLUMN_NAME
+    | typeof ARTIFACT_ID_COLUMN_NAME
+    | typeof SUBMITTED_ON_COLUMN_NAME
+    | typeof LAST_UPDATE_DATE_COLUMN_NAME
     | typeof PROJECT_COLUMN_NAME
     | typeof TRACKER_COLUMN_NAME
     | typeof PRETTY_TITLE_COLUMN_NAME
