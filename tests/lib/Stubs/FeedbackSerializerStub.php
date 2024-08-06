@@ -41,9 +41,11 @@ final class FeedbackSerializerStub implements ISerializeFeedback
         return new self();
     }
 
-    public function serialize(\PFUser $user, NewFeedback $feedback): void
+    public function serialize(\PFUser $user, NewFeedback ...$feedbacks): void
     {
-        $this->captured_feedbacks[] = $feedback;
+        foreach ($feedbacks as $feedback) {
+            $this->captured_feedbacks[] = $feedback;
+        }
     }
 
     /**

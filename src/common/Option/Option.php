@@ -90,17 +90,18 @@ final readonly class Option
     }
 
     /**
-     * @psalm-param callable(Value): void $value_fn
-     * @psalm-param callable(): void      $nothing_fn
+     * @template TReturn
+     * @psalm-param callable(Value): TReturn $value_fn
+     * @psalm-param callable(): TReturn      $nothing_fn
+     * @return TReturn
      */
-    public function match(callable $value_fn, callable $nothing_fn): void
+    public function match(callable $value_fn, callable $nothing_fn): mixed
     {
         if (! $this->has_value) {
-            $nothing_fn();
-            return;
+            return $nothing_fn();
         }
 
-        $value_fn($this->value);
+        return $value_fn($this->value);
     }
 
     /**

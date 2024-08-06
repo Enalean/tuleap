@@ -29,6 +29,8 @@ use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Http\Response\RedirectWithFeedbackFactory;
 use Tuleap\Http\Server\NullServerRequest;
 use Tuleap\PdfTemplate\Stubs\UpdateTemplateStub;
+use Tuleap\PdfTemplate\Variable\VariableMisusageCollector;
+use Tuleap\PdfTemplate\Variable\VariableMisusageInTemplateDetector;
 use Tuleap\Test\Builders\Export\Pdf\Template\PdfTemplateTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\Helpers\NoopSapiEmitter;
@@ -50,6 +52,7 @@ final class UpdatePdfTemplateControllerTest extends TestCase
             new RedirectWithFeedbackFactory(HTTPFactoryBuilder::responseFactory(), $feedback_serializer),
             new NullLogger(),
             $updator,
+            new VariableMisusageInTemplateDetector(new VariableMisusageCollector()),
             new NoopSapiEmitter(),
         );
 
@@ -82,6 +85,7 @@ final class UpdatePdfTemplateControllerTest extends TestCase
             new RedirectWithFeedbackFactory(HTTPFactoryBuilder::responseFactory(), $feedback_serializer),
             new NullLogger(),
             $updator,
+            new VariableMisusageInTemplateDetector(new VariableMisusageCollector()),
             new NoopSapiEmitter(),
         );
 

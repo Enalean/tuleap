@@ -42,6 +42,10 @@ msgstr "Copier la variable dans le presse-papier"
 msgid "Cover page"
 msgstr "Page de garde"
 
+#, php-format
+msgid "Cover page: %s"
+msgstr "Page de garde : %s"
+
 msgid "Create and edit PDF templates"
 msgstr "Créer et éditer des modèles de PDF"
 
@@ -72,11 +76,19 @@ msgstr "Éditer"
 msgid "Footer"
 msgstr "Pied de page"
 
+#, php-format
+msgid "Footer: %s"
+msgstr "Pied de page : %s"
+
 msgid "General styling"
 msgstr "Style général"
 
 msgid "Header"
 msgstr "Entête"
+
+#, php-format
+msgid "Header: %s"
+msgstr "Entête : %s"
 
 msgid "If you delete the image then the template might appear broken."
 msgid_plural "If you delete the image then the templates might appear broken."
@@ -149,6 +161,22 @@ msgstr "Sauvegarder"
 msgid "Size"
 msgstr "Taille"
 
+#, php-format
+msgid ""
+"Syntax error with variable %s, the variable must be in uppercase. Expected: "
+"%s."
+msgstr ""
+"Erreur de syntaxe avec la variable %s, la variable doit être écrite en "
+"majuscules. Attendu : %s."
+
+#, php-format
+msgid ""
+"Syntax error with variable %s: spaces are not allowed, the variable will not "
+"be interpreted. Expected: %s."
+msgstr ""
+"Erreur de syntaxe avec la variable %s : les espaces ne sont pas autorisés, "
+"la variable ne sera pas interprétée. Attendu : %s."
+
 msgid "Technical documentation"
 msgstr "Documentation technique"
 
@@ -220,6 +248,10 @@ msgstr "Cette opération ne pourra pas être annulée."
 
 msgid "Title of the generated document"
 msgstr "Titre du document généré"
+
+#, php-format
+msgid "Unknown variable %s, the variable will not be interpreted."
+msgstr "Variable %s inconnue, la variable ne sera pas interprétée."
 
 msgid "Update template"
 msgstr "Mise à jour du modèle"

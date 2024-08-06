@@ -30,6 +30,7 @@ use Psr\Log\LoggerInterface;
 use Tuleap\Http\Response\RedirectWithFeedbackFactory;
 use Tuleap\Layout\Feedback\NewFeedback;
 use Tuleap\PdfTemplate\UpdateTemplate;
+use Tuleap\PdfTemplate\Variable\VariableMisusageInTemplateDetector;
 use Tuleap\Request\DispatchablePSR15Compatible;
 
 final class UpdatePdfTemplateController extends DispatchablePSR15Compatible
@@ -38,6 +39,7 @@ final class UpdatePdfTemplateController extends DispatchablePSR15Compatible
         private readonly RedirectWithFeedbackFactory $redirect_with_feedback_factory,
         private readonly LoggerInterface $logger,
         private readonly UpdateTemplate $updator,
+        private readonly VariableMisusageInTemplateDetector $variable_misusage_detector,
         EmitterInterface $emitter,
         MiddlewareInterface ...$middleware_stack,
     ) {
@@ -82,6 +84,10 @@ final class UpdatePdfTemplateController extends DispatchablePSR15Compatible
             $user,
             IndexPdfTemplateController::ROUTE,
             NewFeedback::success(dgettext('tuleap-pdftemplate', 'The template has been updated')),
+            ...array_map(
+                static fn (string $misusage) => NewFeedback::warn($misusage),
+                $this->variable_misusage_detector->detectVariableMisusages($template->submitted),
+            ),
         );
     }
 }

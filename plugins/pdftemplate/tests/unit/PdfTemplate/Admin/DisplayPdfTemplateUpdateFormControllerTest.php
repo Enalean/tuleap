@@ -29,6 +29,8 @@ use Tuleap\PdfTemplate\Stubs\CSRFTokenProviderStub;
 use Tuleap\PdfTemplate\Stubs\RenderAPresenterStub;
 use Tuleap\PdfTemplate\Stubs\RetrieveAllImagesStub;
 use Tuleap\PdfTemplate\Stubs\RetrieveTemplateStub;
+use Tuleap\PdfTemplate\Variable\VariableMisusageCollector;
+use Tuleap\PdfTemplate\Variable\VariableMisusageInTemplateDetector;
 use Tuleap\Request\NotFoundException;
 use Tuleap\Test\Builders\Export\Pdf\Template\PdfTemplateTestBuilder;
 use Tuleap\Test\Builders\HTTPRequestBuilder;
@@ -66,6 +68,7 @@ final class DisplayPdfTemplateUpdateFormControllerTest extends TestCase
             RetrieveTemplateStub::withMatchingTemplate($template),
             CSRFTokenProviderStub::withToken(CSRFSynchronizerTokenStub::buildSelf()),
             RetrieveAllImagesStub::withoutImages(),
+            new VariableMisusageInTemplateDetector(new VariableMisusageCollector()),
         );
 
         $user = UserTestBuilder::anActiveUser()->build();
@@ -98,6 +101,7 @@ final class DisplayPdfTemplateUpdateFormControllerTest extends TestCase
             RetrieveTemplateStub::withMatchingTemplate($template),
             CSRFTokenProviderStub::withToken(CSRFSynchronizerTokenStub::buildSelf()),
             RetrieveAllImagesStub::withoutImages(),
+            new VariableMisusageInTemplateDetector(new VariableMisusageCollector()),
         );
 
         $user = UserTestBuilder::buildSiteAdministrator();
@@ -128,6 +132,7 @@ final class DisplayPdfTemplateUpdateFormControllerTest extends TestCase
             RetrieveTemplateStub::withMatchingTemplate($template),
             CSRFTokenProviderStub::withToken(CSRFSynchronizerTokenStub::buildSelf()),
             RetrieveAllImagesStub::withoutImages(),
+            new VariableMisusageInTemplateDetector(new VariableMisusageCollector()),
         );
 
         $user = UserTestBuilder::anActiveUser()->build();
@@ -158,6 +163,7 @@ final class DisplayPdfTemplateUpdateFormControllerTest extends TestCase
             RetrieveTemplateStub::withMatchingTemplate($template),
             CSRFTokenProviderStub::withToken(CSRFSynchronizerTokenStub::buildSelf()),
             RetrieveAllImagesStub::withoutImages(),
+            new VariableMisusageInTemplateDetector(new VariableMisusageCollector()),
         );
 
         $user = UserTestBuilder::buildSiteAdministrator();
@@ -190,6 +196,7 @@ final class DisplayPdfTemplateUpdateFormControllerTest extends TestCase
             RetrieveTemplateStub::withoutMatchingTemplate(),
             CSRFTokenProviderStub::withToken(CSRFSynchronizerTokenStub::buildSelf()),
             RetrieveAllImagesStub::withoutImages(),
+            new VariableMisusageInTemplateDetector(new VariableMisusageCollector()),
         );
 
         $user = UserTestBuilder::buildSiteAdministrator();
