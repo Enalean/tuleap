@@ -846,6 +846,8 @@ done
 
 # Plugin pdftemplate
 %{__install} plugins/pdftemplate/etc/logrotate.syslog.dist $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_pdftemplate
+%{__sed} -i "s~%PROJECT_NAME%~%{APP_NAME}~g" $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_pdftemplate
+%{__sed} -i "s~%%APP_USER%%~%{APP_USER}~g" $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_pdftemplate
 %{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/pdftemplate
 %{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/pdftemplate/images
 
@@ -1446,6 +1448,8 @@ fi
 %{APP_DIR}/plugins/pdftemplate
 %dir %attr(0700,%{APP_USER},%{APP_USER}) %{APP_DATA_DIR}/pdftemplate
 %dir %attr(0700,%{APP_USER},%{APP_USER}) %{APP_DATA_DIR}/pdftemplate/images
+%attr(00644,root,root) /etc/logrotate.d/%{APP_NAME}_pdftemplate
+%config(noreplace) /etc/logrotate.d/%{APP_NAME}_pdftemplate
 
 %endif
 
