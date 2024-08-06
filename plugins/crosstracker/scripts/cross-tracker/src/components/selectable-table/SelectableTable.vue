@@ -41,6 +41,7 @@
                     v-for="column_name of columns"
                     v-bind:key="column_name + index"
                     v-bind:cell="row.cells.get(column_name)"
+                    v-bind:artifact_uri="row.uri"
                     v-bind:even="isEven(index)"
                 />
             </template>
@@ -77,6 +78,7 @@ import SelectableCell from "./SelectableCell.vue";
 import type { ColumnName } from "../../domain/ColumnName";
 import {
     ARTIFACT_COLUMN_NAME,
+    PRETTY_TITLE_COLUMN_NAME,
     PROJECT_COLUMN_NAME,
     TRACKER_COLUMN_NAME,
 } from "../../domain/ColumnName";
@@ -165,6 +167,9 @@ const getColumnName = (name: ColumnName): string => {
     }
     if (name === TRACKER_COLUMN_NAME) {
         return $gettext("Tracker");
+    }
+    if (name === PRETTY_TITLE_COLUMN_NAME) {
+        return $gettext("Artifact");
     }
     if (name === ARTIFACT_COLUMN_NAME) {
         return "";

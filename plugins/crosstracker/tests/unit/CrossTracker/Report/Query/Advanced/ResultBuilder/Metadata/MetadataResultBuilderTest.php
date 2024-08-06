@@ -103,7 +103,7 @@ final class MetadataResultBuilderTest extends TestCase
             new ArtifactIdResultBuilder(),
             new ProjectNameResultBuilder(),
             new TrackerNameResultBuilder(),
-            new PrettyTitleResultBuilder($artifact_retriever, $text_value_interpreter),
+            new PrettyTitleResultBuilder(),
             new ArtifactResultBuilder($artifact_retriever),
         );
 

@@ -295,7 +295,7 @@ final class ArtifactReportFactoryInstantiator
                 new ArtifactIdResultBuilder(),
                 new ProjectNameResultBuilder(),
                 new TrackerNameResultBuilder(),
-                new PrettyTitleResultBuilder($artifact_factory, $text_value_interpreter),
+                new PrettyTitleResultBuilder(),
                 new ArtifactResultBuilder($artifact_factory),
             ),
         );
