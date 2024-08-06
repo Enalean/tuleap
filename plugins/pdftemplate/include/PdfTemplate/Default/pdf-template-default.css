@@ -1,14 +1,24 @@
+/* Colors */
 body {
+    /* Color used for border color (header/footer separation, titles, …) */
     --main-color: #f57c13;
+    /* Color used for text in header and footer */
     --dimmed-color: #667080;
-
-    font-size: 12pt;
-    overflow: visible !important;
-    margin: 0;
 }
 
-h1, h2, h3, h4, h5, h6 {
-    font-family: system-ui, "Segoe UI", roboto, oxygen, ubuntu, cantarell, "Helvetica Neue", arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+/* Cover page */
+.document-title {
+    font-size: 20pt;
+    border-top: 1pt solid var(--main-color);
+    border-bottom: 1pt solid var(--main-color);
+    margin-top: 10cm;
+    padding: 4rem;
+    text-align: center;
+}
+
+/* Font size */
+body {
+    font-size: 12pt;
 }
 
 h1 { font-size: 18pt; }
@@ -17,12 +27,11 @@ h3 { font-size: 14pt; }
 h4 { font-size: 13pt; }
 h6 { font-size: 12pt; }
 
-a:link, a:visited {
-	color: #00c;
-	font-weight: bold;
-	text-decoration: underline;
+h1, h2, h3, h4, h5, h6 {
+    font-family: system-ui, "Segoe UI", roboto, oxygen, ubuntu, cantarell, "Helvetica Neue", arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
 }
 
+/* Header & footer */
 .document-header-space, .document-header {
     height: 40px;
 }
@@ -69,25 +78,13 @@ a:link, a:visited {
     font-style: italic;
 }
 
-.document-page {
-    break-after: page;
-    display: table-row-group;
-}
-
-.document-title {
-    font-size: 20pt;
-    border-top: 1pt solid var(--main-color);
-    border-bottom: 1pt solid var(--main-color);
-    margin-top: 10cm;
-    padding: 4rem;
-    text-align: center;
-}
-
+/* Table of content */
 .table-of-contents > h1 {
     border-bottom: 1pt solid var(--main-color);
     text-align: center;
 }
 
+/* Sections content */
 .document-content > ol {
     list-style: none;
     padding: 0;
@@ -106,6 +103,23 @@ a:link, a:visited {
         display: inline;
         content: counter(section) ". ";
     }
+}
+
+/* General style */
+body {
+    overflow: visible !important;
+    margin: 0;
+}
+
+a:link, a:visited {
+    color: #00c;
+    font-weight: bold;
+    text-decoration: underline;
+}
+
+.document-page {
+    break-after: page;
+    display: table-row-group;
 }
 
 table {
