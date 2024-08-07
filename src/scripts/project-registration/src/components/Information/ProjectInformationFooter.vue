@@ -24,7 +24,7 @@
             <div>
                 <router-link
                     to="/new"
-                    v-on:click.native="resetProjectCreationError"
+                    v-on:click="resetProjectCreationError"
                     class="project-registration-back-button"
                     data-test="project-registration-back-button"
                 >

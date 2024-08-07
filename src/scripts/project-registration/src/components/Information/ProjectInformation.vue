@@ -44,7 +44,7 @@
                         <nav class="tlp-wizard">
                             <router-link
                                 v-bind:to="{ name: 'template' }"
-                                v-on:click.native="resetProjectCreationError"
+                                v-on:click="resetProjectCreationError"
                                 class="tlp-wizard-step-previous"
                             >
                                 {{ $gettext("Template") }}
