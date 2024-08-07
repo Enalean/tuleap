@@ -31,101 +31,79 @@ use Docman_MetadataFactory;
 use Docman_PermissionsManager;
 use EventManager;
 use Luracast\Restler\RestException;
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PFUser;
+use PHPUnit\Framework\MockObject\MockObject;
 use ProjectManager;
 use RuntimeException;
 use Tuleap\Docman\ItemType\DoesItemHasExpectedTypeVisitor;
 use Tuleap\Docman\Metadata\MetadataFactoryBuilder;
 use Tuleap\Docman\Upload\Document\DocumentOngoingUploadRetriever;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
 
-final class DocmanItemCopierTest extends \Tuleap\Test\PHPUnit\TestCase
+final class DocmanItemCopierTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var Docman_ItemFactory|Mockery\MockInterface
-     */
-    private $item_factory;
-    /**
-     * @var Docman_PermissionsManager|Mockery\MockInterface
-     */
-    private $permission_manager;
-    /**
-     * @var Mockery\MockInterface|MetadataFactoryBuilder
-     */
-    private $metadata_factory_builder;
-    /**
-     * @var EventManager|Mockery\MockInterface
-     */
-    private $event_manager;
-
-    /**
-     * @var DocmanItemCopier
-     */
-    private $item_copier;
+    private Docman_ItemFactory&MockObject $item_factory;
+    private Docman_PermissionsManager&MockObject $permission_manager;
+    private EventManager&MockObject $event_manager;
+    private DocmanItemCopier $item_copier;
 
     protected function setUp(): void
     {
-        $this->item_factory             = Mockery::mock(Docman_ItemFactory::class);
-        $this->permission_manager       = Mockery::mock(Docman_PermissionsManager::class);
-        $this->metadata_factory_builder = Mockery::mock(MetadataFactoryBuilder::class);
-        $this->event_manager            = Mockery::mock(EventManager::class);
+        $this->item_factory       = $this->createMock(Docman_ItemFactory::class);
+        $this->permission_manager = $this->createMock(Docman_PermissionsManager::class);
+        $metadata_factory_builder = $this->createMock(MetadataFactoryBuilder::class);
+        $this->event_manager      = $this->createMock(EventManager::class);
 
-        $metadata_factory = Mockery::mock(Docman_MetadataFactory::class);
-        $metadata_factory->shouldReceive('getMetadataMapping');
-        $this->metadata_factory_builder->shouldReceive('getMetadataFactoryForItem')->andReturn($metadata_factory);
+        $metadata_factory = $this->createMock(Docman_MetadataFactory::class);
+        $metadata_factory->method('getMetadataMapping');
+        $metadata_factory_builder->method('getMetadataFactoryForItem')->willReturn($metadata_factory);
 
         $this->item_copier = new DocmanItemCopier(
             $this->item_factory,
             new BeforeCopyVisitor(
                 new DoesItemHasExpectedTypeVisitor(Docman_Item::class),
                 $this->item_factory,
-                Mockery::mock(DocumentOngoingUploadRetriever::class)
+                $this->createMock(DocumentOngoingUploadRetriever::class)
             ),
             $this->permission_manager,
-            $this->metadata_factory_builder,
+            $metadata_factory_builder,
             $this->event_manager,
-            Mockery::mock(ProjectManager::class),
-            Mockery::mock(Docman_LinkVersionFactory::class),
-            '/'
+            $this->createMock(ProjectManager::class),
+            $this->createMock(Docman_LinkVersionFactory::class),
+            '/',
         );
     }
 
     public function testAnItemCanBeCopied(): void
     {
-        $destination_folder                = Mockery::mock(Docman_Folder::class);
+        $destination_folder                = new Docman_Folder(['item_id' => 963, 'group_id' => 102]);
         $copy_item_representation          = new DocmanCopyItemRepresentation();
         $copy_item_representation->item_id = 741;
 
-        $item_to_copy = Mockery::mock(Docman_Item::class);
-        $this->item_factory->shouldReceive('getItemFromDb')->andReturn($item_to_copy);
+        $item_to_copy = $this->createMock(Docman_Item::class);
+        $item_to_copy->method('getId')->willReturn(741);
+        $item_to_copy->method('getGroupId')->willReturn(102);
+        $this->item_factory->method('getItemFromDb')->willReturn($item_to_copy);
 
-        $destination_folder->shouldReceive('getId')->andReturn(963);
-        $item_to_copy->shouldReceive('getId')->andReturn(741);
-        $destination_folder->shouldReceive('getGroupId')->andReturn('102');
-        $item_to_copy->shouldReceive('getGroupId')->andReturn('102');
+        $this->permission_manager->method('userCanAccess')->willReturn(true);
 
-        $this->permission_manager->shouldReceive('userCanAccess')->andReturn(true);
+        $this->item_factory->method('cloneItems')->willReturn([741 => 999]);
 
-        $this->item_factory->shouldReceive('cloneItems')->andReturn([741 => 999]);
+        $item_to_copy->method('getTitle')->willReturn('Title');
+        $item_to_copy->method('accept')
+            ->with(self::isInstanceOf(BeforeCopyVisitor::class), self::anything())
+            ->willReturn(new ItemBeingCopiedExpectation('Title'));
 
-        $item_to_copy->shouldReceive('getTitle')->andReturn('Title');
-        $item_to_copy->shouldReceive('accept')
-            ->with(Mockery::type(BeforeCopyVisitor::class), Mockery::any())
-            ->andReturn(new ItemBeingCopiedExpectation('Title'));
-
-        $this->event_manager->shouldReceive('processEvent')->with('send_notifications');
+        $this->event_manager->method('processEvent')->with('send_notifications');
 
         $representation_copy = $this->item_copier->copyItem(
             new DateTimeImmutable(),
             $destination_folder,
-            Mockery::mock(PFUser::class),
+            UserTestBuilder::buildWithDefaults(),
             $copy_item_representation
         );
 
-        $this->assertEquals($representation_copy->id, 999);
+        self::assertEquals(999, $representation_copy->id);
     }
 
     public function testCanNotCopyAnItemThatDoesNotExist(): void
@@ -133,14 +111,14 @@ final class DocmanItemCopierTest extends \Tuleap\Test\PHPUnit\TestCase
         $copy_item_representation          = new DocmanCopyItemRepresentation();
         $copy_item_representation->item_id = 741;
 
-        $this->item_factory->shouldReceive('getItemFromDb')->andReturn(null);
+        $this->item_factory->method('getItemFromDb')->willReturn(null);
 
-        $this->expectException(RestException::class);
-        $this->expectExceptionCode(404);
+        self::expectException(RestException::class);
+        self::expectExceptionCode(404);
         $this->item_copier->copyItem(
             new DateTimeImmutable(),
-            Mockery::mock(Docman_Folder::class),
-            Mockery::mock(PFUser::class),
+            new Docman_Folder(),
+            UserTestBuilder::buildWithDefaults(),
             $copy_item_representation
         );
     }
@@ -150,18 +128,17 @@ final class DocmanItemCopierTest extends \Tuleap\Test\PHPUnit\TestCase
         $copy_item_representation          = new DocmanCopyItemRepresentation();
         $copy_item_representation->item_id = 741;
 
-        $item_to_copy = Mockery::mock(Docman_Item::class);
-        $item_to_copy->shouldReceive('getId')->andReturn(741);
-        $this->item_factory->shouldReceive('getItemFromDb')->andReturn($item_to_copy);
+        $item_to_copy = new Docman_Item(['item_id' => 741]);
+        $this->item_factory->method('getItemFromDb')->willReturn($item_to_copy);
 
-        $this->permission_manager->shouldReceive('userCanAccess')->andReturn(false);
+        $this->permission_manager->method('userCanAccess')->willReturn(false);
 
-        $this->expectException(RestException::class);
-        $this->expectExceptionCode(404);
+        self::expectException(RestException::class);
+        self::expectExceptionCode(404);
         $this->item_copier->copyItem(
             new DateTimeImmutable(),
-            Mockery::mock(Docman_Folder::class),
-            Mockery::mock(PFUser::class),
+            new Docman_Folder(),
+            UserTestBuilder::buildWithDefaults(),
             $copy_item_representation
         );
     }
@@ -171,96 +148,85 @@ final class DocmanItemCopierTest extends \Tuleap\Test\PHPUnit\TestCase
         $copy_item_representation          = new DocmanCopyItemRepresentation();
         $copy_item_representation->item_id = 741;
 
-        $item_to_copy = Mockery::mock(Docman_Item::class);
-        $item_to_copy->shouldReceive('getId')->andReturn(741);
-        $this->item_factory->shouldReceive('getItemFromDb')->andReturn($item_to_copy);
+        $item_to_copy = new Docman_Item(['item_id' => 741, 'group_id' => 102]);
+        $this->item_factory->method('getItemFromDb')->willReturn($item_to_copy);
 
-        $this->permission_manager->shouldReceive('userCanAccess')->andReturn(true);
+        $this->permission_manager->method('userCanAccess')->willReturn(true);
 
-        $destination_folder = Mockery::mock(Docman_Folder::class);
-        $destination_folder->shouldReceive('getId')->andReturn(963);
-        $item_to_copy->shouldReceive('getId')->andReturn(741);
-        $destination_folder->shouldReceive('getGroupId')->andReturn('103');
-        $item_to_copy->shouldReceive('getGroupId')->andReturn('102');
+        $destination_folder = new Docman_Folder(['item_id' => 963, 'group_id' => 103]);
 
-        $this->expectException(RestException::class);
-        $this->expectExceptionCode(400);
+        self::expectException(RestException::class);
+        self::expectExceptionCode(400);
         $this->item_copier->copyItem(
             new DateTimeImmutable(),
             $destination_folder,
-            Mockery::mock(PFUser::class),
+            UserTestBuilder::buildWithDefaults(),
             $copy_item_representation
         );
     }
 
     public function testItemTitleIsUpdatedIfADuplicateExistsInTheDestinationFolder(): void
     {
-        $destination_folder                = Mockery::mock(Docman_Folder::class);
+        $destination_folder                = new Docman_Folder(['item_id' => 963, 'group_id' => 102]);
         $copy_item_representation          = new DocmanCopyItemRepresentation();
         $copy_item_representation->item_id = 741;
 
-        $item_to_copy = Mockery::mock(Docman_Item::class);
-        $this->item_factory->shouldReceive('getItemFromDb')->andReturn($item_to_copy);
+        $item_to_copy = $this->createMock(Docman_Item::class);
+        $this->item_factory->method('getItemFromDb')->willReturn($item_to_copy);
 
-        $destination_folder->shouldReceive('getId')->andReturn(963);
-        $item_to_copy->shouldReceive('getId')->andReturn(741);
-        $destination_folder->shouldReceive('getGroupId')->andReturn('102');
-        $item_to_copy->shouldReceive('getGroupId')->andReturn('102');
+        $item_to_copy->method('getId')->willReturn(741);
+        $item_to_copy->method('getGroupId')->willReturn(102);
 
-        $this->permission_manager->shouldReceive('userCanAccess')->andReturn(true);
+        $this->permission_manager->method('userCanAccess')->willReturn(true);
 
-        $this->item_factory->shouldReceive('cloneItems')->andReturn([741 => 999]);
+        $this->item_factory->method('cloneItems')->willReturn([741 => 999]);
 
-        $item_to_copy->shouldReceive('getTitle')->andReturn('Title');
+        $item_to_copy->method('getTitle')->willReturn('Title');
         $item_copy_expectation = new ItemBeingCopiedExpectation('Copy of Title');
-        $item_to_copy->shouldReceive('accept')
-            ->with(Mockery::type(BeforeCopyVisitor::class), Mockery::any())
-            ->andReturn($item_copy_expectation);
-        $this->item_factory->shouldReceive('update')->withArgs(function (array $row) use ($item_copy_expectation): bool {
-            $this->assertEquals($row['title'], $item_copy_expectation->getExpectedTitle());
-            return true;
-        });
+        $item_to_copy->method('accept')
+            ->with(self::isInstanceOf(BeforeCopyVisitor::class), self::anything())
+            ->willReturn($item_copy_expectation);
+        $this->item_factory->method('update')
+            ->with(self::callback(static fn(array $row) => $row['title'] === $item_copy_expectation->getExpectedTitle()));
 
-        $this->event_manager->shouldReceive('processEvent')->with('send_notifications');
+        $this->event_manager->method('processEvent')->with('send_notifications');
 
         $representation_copy = $this->item_copier->copyItem(
             new DateTimeImmutable(),
             $destination_folder,
-            Mockery::mock(PFUser::class),
+            UserTestBuilder::buildWithDefaults(),
             $copy_item_representation
         );
 
-        $this->assertEquals($representation_copy->id, 999);
+        self::assertEquals(999, $representation_copy->id);
     }
 
     public function testCloneIsInterruptedWhenItemDoesNotAppearToHaveBeenCloned(): void
     {
-        $destination_folder                = Mockery::mock(Docman_Folder::class);
+        $destination_folder                = new Docman_Folder(['item_id' => 963, 'group_id' => 102]);
         $copy_item_representation          = new DocmanCopyItemRepresentation();
         $copy_item_representation->item_id = 741;
 
-        $item_to_copy = Mockery::mock(Docman_Item::class);
-        $this->item_factory->shouldReceive('getItemFromDb')->andReturn($item_to_copy);
+        $item_to_copy = $this->createMock(Docman_Item::class);
+        $this->item_factory->method('getItemFromDb')->willReturn($item_to_copy);
 
-        $destination_folder->shouldReceive('getId')->andReturn(963);
-        $item_to_copy->shouldReceive('getId')->andReturn(741);
-        $destination_folder->shouldReceive('getGroupId')->andReturn('102');
-        $item_to_copy->shouldReceive('getGroupId')->andReturn('102');
+        $item_to_copy->method('getId')->willReturn(741);
+        $item_to_copy->method('getGroupId')->willReturn(102);
 
-        $this->permission_manager->shouldReceive('userCanAccess')->andReturn(true);
+        $this->permission_manager->method('userCanAccess')->willReturn(true);
 
-        $item_to_copy->shouldReceive('getTitle')->andReturn('Title');
-        $item_to_copy->shouldReceive('accept')
-            ->with(Mockery::type(BeforeCopyVisitor::class), Mockery::any())
-            ->andReturn(new ItemBeingCopiedExpectation('Title'));
+        $item_to_copy->method('getTitle')->willReturn('Title');
+        $item_to_copy->method('accept')
+            ->with(self::isInstanceOf(BeforeCopyVisitor::class), self::anything())
+            ->willReturn(new ItemBeingCopiedExpectation('Title'));
 
-        $this->item_factory->shouldReceive('cloneItems')->andReturn([]);
+        $this->item_factory->method('cloneItems')->willReturn([]);
 
-        $this->expectException(RuntimeException::class);
+        self::expectException(RuntimeException::class);
         $this->item_copier->copyItem(
             new DateTimeImmutable(),
             $destination_folder,
-            Mockery::mock(PFUser::class),
+            UserTestBuilder::buildWithDefaults(),
             $copy_item_representation
         );
     }
