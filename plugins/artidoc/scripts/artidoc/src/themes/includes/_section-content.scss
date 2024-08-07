@@ -17,21 +17,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@use "./includes/project-background";
-@use "./includes/ckeditor-overrides";
-@use "./includes/section-content";
+.document-section {
+    ul {
+        list-style-type: disc;
+    }
 
-.artidoc-header-title {
-    margin: 0;
-}
+    :is(ol, ul, menu, dir) ul {
+        list-style-type: circle;
+    }
 
-:root {
-    --header-height: 5vh;
-    --table-of-content-header-height: 10vh;
-    --help-dropdown-button-height: 15vh;
-    --available-height-for-sidebar: calc(
-        100vh - var(--header-height) - var(--table-of-content-header-height) - var(
-                --help-dropdown-button-height
-            )
-    );
+    :is(ol, ul, menu, dir) :is(ol, ul, menu, dir) ul {
+        list-style-type: square;
+    }
 }
