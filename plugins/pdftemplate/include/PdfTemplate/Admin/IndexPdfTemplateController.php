@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\PdfTemplate\Admin;
 
 use HTTPRequest;
+use Tuleap\Date\RelativeDatesAssetsRetriever;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\IncludeViteAssets;
 use Tuleap\Layout\JavascriptViteAsset;
@@ -56,6 +57,7 @@ final readonly class IndexPdfTemplateController implements DispatchableWithBurni
                 'src/index.ts'
             )
         );
+        $layout->addJavascriptAsset(RelativeDatesAssetsRetriever::getAsJavascriptAssets());
 
         $this->admin_page_renderer->renderAPresenter(
             $layout,
