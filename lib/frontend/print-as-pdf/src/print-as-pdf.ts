@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import print from "print-js";
+import print from "print-js/src/index.js";
 import { ok, err } from "neverthrow";
 import type { Result } from "neverthrow";
 import DOMPurify from "dompurify";
