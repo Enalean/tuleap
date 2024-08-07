@@ -34,6 +34,7 @@ import type {
     SelectableRepresentation,
     TextSelectableRepresentation,
     TrackerSelectableRepresentation,
+    UserSelectableRepresentation,
 } from "./cross-tracker-rest-api-types";
 import {
     ARTIFACT_SELECTABLE_TYPE,
@@ -43,9 +44,11 @@ import {
     PROJECT_SELECTABLE_TYPE,
     TEXT_SELECTABLE_TYPE,
     TRACKER_SELECTABLE_TYPE,
+    USER_SELECTABLE_TYPE,
 } from "./cross-tracker-rest-api-types";
 import type { ArtifactRow, ArtifactsTable, Cell } from "../domain/ArtifactsTable";
 import {
+    USER_CELL,
     DATE_CELL,
     NUMERIC_CELL,
     PRETTY_TITLE_CELL,
@@ -88,6 +91,10 @@ const isTextSelectableRepresentation = (
     representation: SelectableRepresentation,
 ): representation is TextSelectableRepresentation =>
     "value" in representation && typeof representation.value === "string";
+
+const isUserSelectableRepresentation = (
+    representation: SelectableRepresentation,
+): representation is UserSelectableRepresentation => "user_url" in representation;
 
 const isProjectSelectableRepresentation = (
     representation: SelectableRepresentation,
@@ -149,6 +156,16 @@ function buildCell(selectable: Selectable, artifact: ArtifactRepresentation): Re
             return ok({
                 type: TEXT_CELL,
                 value: artifact_value.value,
+            });
+        case USER_SELECTABLE_TYPE:
+            if (!isUserSelectableRepresentation(artifact_value)) {
+                throw Error(getErrorMessageToWarnTuleapDevs(selectable));
+            }
+            return ok({
+                type: USER_CELL,
+                display_name: artifact_value.display_name,
+                avatar_uri: artifact_value.avatar_url,
+                user_uri: Option.fromNullable(artifact_value.user_url),
             });
         case PROJECT_SELECTABLE_TYPE:
             if (!isProjectSelectableRepresentation(artifact_value)) {

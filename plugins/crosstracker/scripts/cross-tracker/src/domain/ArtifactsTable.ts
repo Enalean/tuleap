@@ -24,6 +24,7 @@ import type { ColumnName } from "./ColumnName";
 export const DATE_CELL = "date";
 export const NUMERIC_CELL = "numeric";
 export const TEXT_CELL = "text";
+export const USER_CELL = "user";
 export const PROJECT_CELL = "project";
 export const TRACKER_CELL = "tracker";
 export const PRETTY_TITLE_CELL = "pretty_title";
@@ -42,6 +43,13 @@ type NumericCell = {
 type TextCell = {
     readonly type: typeof TEXT_CELL;
     readonly value: string;
+};
+
+type UserCell = {
+    readonly type: typeof USER_CELL;
+    readonly display_name: string;
+    readonly avatar_uri: string;
+    readonly user_uri: Option<string>;
 };
 
 type ProjectCell = {
@@ -64,7 +72,14 @@ export type PrettyTitleCell = {
     readonly title: string;
 };
 
-export type Cell = DateCell | NumericCell | TextCell | ProjectCell | TrackerCell | PrettyTitleCell;
+export type Cell =
+    | DateCell
+    | NumericCell
+    | TextCell
+    | UserCell
+    | ProjectCell
+    | TrackerCell
+    | PrettyTitleCell;
 
 export type ArtifactRow = {
     readonly uri: string;

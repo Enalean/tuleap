@@ -80,9 +80,11 @@ import {
     ARTIFACT_COLUMN_NAME,
     ARTIFACT_ID_COLUMN_NAME,
     DESCRIPTION_COLUMN_NAME,
+    LAST_UPDATE_BY_COLUMN_NAME,
     LAST_UPDATE_DATE_COLUMN_NAME,
     PRETTY_TITLE_COLUMN_NAME,
     PROJECT_COLUMN_NAME,
+    SUBMITTED_BY_COLUMN_NAME,
     SUBMITTED_ON_COLUMN_NAME,
     TITLE_COLUMN_NAME,
     TRACKER_COLUMN_NAME,
@@ -179,8 +181,14 @@ const getColumnName = (name: ColumnName): string => {
     if (name === SUBMITTED_ON_COLUMN_NAME) {
         return $gettext("Submitted on");
     }
+    if (name === SUBMITTED_BY_COLUMN_NAME) {
+        return $gettext("Submitted by");
+    }
     if (name === LAST_UPDATE_DATE_COLUMN_NAME) {
         return $gettext("Last update date");
+    }
+    if (name === LAST_UPDATE_BY_COLUMN_NAME) {
+        return $gettext("Last update by");
     }
     if (name === PROJECT_COLUMN_NAME) {
         return $gettext("Project");

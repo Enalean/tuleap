@@ -27,6 +27,22 @@
             v-dompurify-html="props.cell.value"
         ></span>
         <span
+            v-if="props.cell.type === USER_CELL"
+            class="cell"
+            v-bind:class="getEvenOddClass()"
+            data-test="cell"
+            ><a v-if="props.cell.user_uri.isValue()" v-bind:href="props.cell.user_uri.unwrapOr('')"
+                ><span class="tlp-avatar-small"
+                    ><img
+                        v-bind:alt="$gettext('User avatar')"
+                        v-bind:src="props.cell.avatar_uri" /></span
+                >{{ props.cell.display_name }}</a
+            >
+            <span v-if="!props.cell.user_uri.isValue()"
+                ><span class="tlp-avatar-small"></span>{{ props.cell.display_name }}</span
+            >
+        </span>
+        <span
             v-if="props.cell.type === TRACKER_CELL"
             class="cell"
             v-bind:class="getEvenOddClass()"
@@ -62,6 +78,7 @@
 import { strictInject } from "@tuleap/vue-strict-inject";
 import type { Cell, PrettyTitleCell, TrackerCell } from "../../domain/ArtifactsTable";
 import {
+    USER_CELL,
     DATE_CELL,
     NUMERIC_CELL,
     PRETTY_TITLE_CELL,
@@ -117,6 +134,10 @@ const getCrossRefBadgeClass = (cell: PrettyTitleCell): string =>
 }
 
 .cross-ref-badge {
+    margin: 0 5px 0 0;
+}
+
+.tlp-avatar-small {
     margin: 0 5px 0 0;
 }
 </style>

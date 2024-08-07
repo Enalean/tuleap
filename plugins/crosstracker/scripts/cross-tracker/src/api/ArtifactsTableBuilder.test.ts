@@ -26,6 +26,7 @@ import {
     PROJECT_SELECTABLE_TYPE,
     TEXT_SELECTABLE_TYPE,
     TRACKER_SELECTABLE_TYPE,
+    USER_SELECTABLE_TYPE,
 } from "./cross-tracker-rest-api-types";
 import { ArtifactsTableBuilder } from "./ArtifactsTableBuilder";
 import {
@@ -35,11 +36,13 @@ import {
     PROJECT_CELL,
     TEXT_CELL,
     TRACKER_CELL,
+    USER_CELL,
 } from "../domain/ArtifactsTable";
 import {
     ARTIFACT_COLUMN_NAME,
     PRETTY_TITLE_COLUMN_NAME,
     PROJECT_COLUMN_NAME,
+    SUBMITTED_BY_COLUMN_NAME,
     TRACKER_COLUMN_NAME,
 } from "../domain/ColumnName";
 import { SelectableReportContentRepresentationStub } from "../../tests/builders/SelectableReportContentRepresentationStub";
@@ -240,6 +243,52 @@ describe(`ArtifactsTableBuilder`, () => {
             expect(text_value_second_row.value).toBe("");
         });
 
+        it(`builds a table with "user" selectables`, () => {
+            const first_user = {
+                display_name: "Paula Muhammed (pmuhammed)",
+                avatar_url: "https://example.com/users/pmuhammed/avatar.png",
+                user_url: "/users/pmuhammed",
+                is_anonymous: false,
+            };
+
+            const second_user = {
+                display_name: "Anonymous user",
+                avatar_url: "https://example.com/themes/common/images/avatar_default.png",
+                user_url: null,
+                is_anonymous: true,
+            };
+            const user_column = SUBMITTED_BY_COLUMN_NAME;
+
+            const table = ArtifactsTableBuilder().mapReportToArtifactsTable(
+                SelectableReportContentRepresentationStub.build(
+                    [{ type: USER_SELECTABLE_TYPE, name: user_column }],
+                    [
+                        ArtifactRepresentationStub.build({ [user_column]: first_user }),
+                        ArtifactRepresentationStub.build({ [user_column]: second_user }),
+                    ],
+                ),
+            );
+
+            expect(table.columns.has(user_column)).toBe(true);
+            expect(table.rows).toHaveLength(2);
+            const [first_row, second_row] = table.rows;
+            const user_value_first_row = first_row.cells.get(user_column);
+            if (user_value_first_row?.type !== USER_CELL) {
+                throw Error("Expected to find first user value");
+            }
+            expect(user_value_first_row.display_name).toBe(first_user.display_name);
+            expect(user_value_first_row.avatar_uri).toBe(first_user.avatar_url);
+            expect(user_value_first_row.user_uri.unwrapOr(null)).toBe(first_user.user_url);
+
+            const user_value_second_row = second_row.cells.get(user_column);
+            if (user_value_second_row?.type !== USER_CELL) {
+                throw Error("Expected to find second user value");
+            }
+            expect(user_value_second_row.display_name).toBe(second_user.display_name);
+            expect(user_value_second_row.avatar_uri).toBe(second_user.avatar_url);
+            expect(user_value_second_row.user_uri.isNothing()).toBe(true);
+        });
+
         it(`builds a table with "project" selectables`, () => {
             const first_project = { icon: "", name: "Minimum Butter" };
             const second_project = { icon: "🖍️", name: "Teal Creek" };
@@ -374,6 +423,7 @@ describe(`ArtifactsTableBuilder`, () => {
             yield [DATE_SELECTABLE_TYPE, { value: "ritualist" }];
             yield [NUMERIC_SELECTABLE_TYPE, { value: "ritualist" }];
             yield [TEXT_SELECTABLE_TYPE, { value: 12 }];
+            yield [USER_SELECTABLE_TYPE, { value: 12 }];
             yield [PROJECT_SELECTABLE_TYPE, { value: 12 }];
             yield [TRACKER_SELECTABLE_TYPE, { value: 12 }];
             yield [PRETTY_TITLE_SELECTABLE_TYPE, { value: 12 }];

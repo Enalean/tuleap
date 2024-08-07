@@ -21,7 +21,9 @@ export const TITLE_COLUMN_NAME = "@title";
 export const DESCRIPTION_COLUMN_NAME = "@description";
 export const ARTIFACT_ID_COLUMN_NAME = "@id";
 export const SUBMITTED_ON_COLUMN_NAME = "@submitted_on";
+export const SUBMITTED_BY_COLUMN_NAME = "@submitted_by";
 export const LAST_UPDATE_DATE_COLUMN_NAME = "@last_update_date";
+export const LAST_UPDATE_BY_COLUMN_NAME = "@last_update_by";
 export const PROJECT_COLUMN_NAME = "@project.name";
 export const TRACKER_COLUMN_NAME = "@tracker.name";
 export const PRETTY_TITLE_COLUMN_NAME = "@pretty_title";
@@ -32,7 +34,9 @@ export type ColumnName =
     | typeof DESCRIPTION_COLUMN_NAME
     | typeof ARTIFACT_ID_COLUMN_NAME
     | typeof SUBMITTED_ON_COLUMN_NAME
+    | typeof SUBMITTED_BY_COLUMN_NAME
     | typeof LAST_UPDATE_DATE_COLUMN_NAME
+    | typeof LAST_UPDATE_BY_COLUMN_NAME
     | typeof PROJECT_COLUMN_NAME
     | typeof TRACKER_COLUMN_NAME
     | typeof PRETTY_TITLE_COLUMN_NAME
