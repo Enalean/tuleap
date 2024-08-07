@@ -110,4 +110,32 @@
             </section>
         </div>
     </section>
+
+    <div id="pdftemplate-admin-template-error-modal"
+         role="dialog"
+         aria-labelledby="pdftemplate-admin-template-error-modal-label"
+         class="tlp-modal tlp-modal-danger"
+    >
+        <div class="tlp-modal-header">
+            <h1 class="tlp-modal-title" id="pdftemplate-admin-template-error-modal-label">
+                {{# dgettext }} tuleap-pdftemplate | Preview error {{/ dgettext }}
+            </h1>
+            <button class="tlp-modal-close"
+                    type="button"
+                    data-dismiss="modal"
+                    aria-label="{{# dgettext }} tuleap-pdftemplate | Close {{/ dgettext }}"
+            >
+                <i class="fa-solid fa-xmark tlp-modal-close-icon" role="img"></i>
+            </button>
+        </div>
+        <div class="tlp-modal-body">
+            <p>{{# dgettext }} tuleap-pdftemplate | An error occurred while trying to generate the PDF preview {{/ dgettext }}</p>
+            <pre id="pdftemplate-admin-template-error-modal-details"></pre>
+        </div>
+        <div class="tlp-modal-footer">
+            <button id="button-close" type="button" data-dismiss="modal" class="tlp-button-danger tlp-button-outline tlp-modal-action">
+                {{# dgettext }} tuleap-pdftemplate | Close {{/ dgettext }}
+            </button>
+        </div>
+    </div>
 </div>
