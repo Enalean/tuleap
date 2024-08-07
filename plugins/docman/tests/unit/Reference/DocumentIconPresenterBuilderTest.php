@@ -22,21 +22,21 @@ declare(strict_types=1);
 
 namespace Tuleap\Docman\Reference;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use Docman_Folder;
+use Docman_Link;
+use Tuleap\Test\PHPUnit\TestCase;
 
-class DocumentIconPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
+final class DocumentIconPresenterBuilderTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     public function testBuildForItem(): void
     {
         $builder = new DocumentIconPresenterBuilder();
 
-        $folder_icon = $builder->buildForItem(new \Docman_Folder());
+        $folder_icon = $builder->buildForItem(new Docman_Folder());
         self::assertEquals('fa fa-folder', $folder_icon->icon);
         self::assertEquals('inca-silver', $folder_icon->color);
 
-        $link_icon = $builder->buildForItem(new \Docman_Link());
+        $link_icon = $builder->buildForItem(new Docman_Link());
         self::assertEquals('fa fa-link', $link_icon->icon);
         self::assertEquals('flamingo-pink', $link_icon->color);
     }
