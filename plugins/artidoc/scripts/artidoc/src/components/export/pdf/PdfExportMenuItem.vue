@@ -71,6 +71,43 @@
     </button>
 
     <printer-version v-if="!is_option_disabled" />
+
+    <div
+        ref="error_modal"
+        role="dialog"
+        aria-labelledby="pdftemplate-admin-template-error-modal-label"
+        class="tlp-modal tlp-modal-danger"
+    >
+        <div class="tlp-modal-header">
+            <h1 class="tlp-modal-title" id="pdftemplate-admin-template-error-modal-label">
+                {{ $gettext("Export error") }}
+            </h1>
+            <button
+                class="tlp-modal-close"
+                type="button"
+                data-dismiss="modal"
+                v-bind:aria-label="close_label"
+            >
+                <i class="fa-solid fa-xmark tlp-modal-close-icon" role="img"></i>
+            </button>
+        </div>
+        <div class="tlp-modal-body">
+            <p>
+                {{ $gettext("An error occurred while trying to export the document as PDF.") }}
+            </p>
+            <pre>{{ error_details }}</pre>
+        </div>
+        <div class="tlp-modal-footer">
+            <button
+                id="button-close"
+                type="button"
+                data-dismiss="modal"
+                class="tlp-button-danger tlp-button-outline tlp-modal-action"
+            >
+                {{ close_label }}
+            </button>
+        </div>
+    </div>
 </template>
 
 <script setup lang="ts">
@@ -85,6 +122,7 @@ import { IS_USER_ANONYMOUS } from "@/is-user-anonymous";
 import PrinterVersion from "@/components/print/PrinterVersion.vue";
 import { EDITORS_COLLECTION } from "@/composables/useSectionEditorsCollection";
 import { TITLE } from "@/title-injection-key";
+import { createModal } from "@tuleap/tlp-modal";
 
 const pdf_templates = strictInject(PDF_TEMPLATES_STORE);
 const is_user_anonymous = strictInject(IS_USER_ANONYMOUS);
@@ -96,6 +134,7 @@ const has_more_than_one_template = pdf_templates.list.value.length > 1;
 const { $gettext } = useGettext();
 const submenu_label = $gettext("Available templates");
 const export_in_pdf = $gettext("Export document in PDF");
+const close_label = $gettext("Close");
 
 const has_pdf_templates = pdf_templates.list.value.length > 0;
 
@@ -121,6 +160,9 @@ function printUsingFirstTemplate(): void {
     printUsingTemplate(pdf_templates.list.value[0]);
 }
 
+const error_modal = ref<HTMLElement | undefined>(undefined);
+const error_details = ref("");
+
 function printUsingTemplate(template: PdfTemplate): void {
     const printable = document.getElementById("artidoc-print-version");
     if (!printable) {
@@ -131,8 +173,15 @@ function printUsingTemplate(template: PdfTemplate): void {
 
     setTimeout(() => {
         printAsPdf(printable, template, { DOCUMENT_TITLE: title }).mapErr((fault) => {
-            // eslint-disable-next-line no-console
-            console.error(fault.toString());
+            if (!error_modal.value) {
+                return;
+            }
+
+            error_details.value = fault.toString();
+
+            createModal(error_modal.value, {
+                destroy_on_hide: true,
+            }).show();
         });
     });
 }

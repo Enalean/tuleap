@@ -15,6 +15,9 @@ msgstr ""
 msgid "Add new section"
 msgstr "Créer une nouvelle section"
 
+msgid "An error occurred while trying to export the document as PDF."
+msgstr "Une erreur est survenue lors de l'export du document en PDF."
+
 msgid "An error occurred while trying to save the configuration."
 msgstr "Une erreur est survenue lors de la sauvegarde de la configuration."
 
@@ -67,6 +70,9 @@ msgstr "Détails de l'erreur"
 msgid "Export document in PDF"
 msgstr "Exporter le document en PDF"
 
+msgid "Export error"
+msgstr "Erreur d'export"
+
 msgid "Force save"
 msgstr "Forcer la sauvegarde"
 
@@ -86,7 +92,7 @@ msgstr "Charger la nouvelle section"
 msgid "No template was defined for export, please contact site administrator"
 msgstr ""
 "Aucun modèles n'a été défini pour l'export, veuillez contacter "
-"l'administrateur de la plateforme."
+"l'administrateur de la plateforme"
 
 msgid ""
 "Note: the tracker must have a title semantic (string field), a description "
