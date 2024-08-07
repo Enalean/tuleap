@@ -105,7 +105,7 @@ const webpack_config_for_flaming_parrot_code = {
             webpack_configurator.rule_po_files,
         ],
     },
-    plugins: [manifest_plugin, webpack_configurator.getTypescriptCheckerPlugin(false)],
+    plugins: [manifest_plugin],
 };
 
 const webpack_config_for_rich_text_editor = {
@@ -163,11 +163,7 @@ const webpack_config_for_burning_parrot_code = {
             webpack_configurator.rule_mustache_files,
         ],
     },
-    plugins: [
-        manifest_plugin,
-        webpack_configurator.getTypescriptCheckerPlugin(false),
-        webpack_configurator.getMomentLocalePlugin(),
-    ],
+    plugins: [manifest_plugin, webpack_configurator.getMomentLocalePlugin()],
     resolve: {
         extensions: [".ts", ".js"],
     },
