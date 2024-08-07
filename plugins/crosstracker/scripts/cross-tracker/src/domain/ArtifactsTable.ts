@@ -25,6 +25,7 @@ export const DATE_CELL = "date";
 export const NUMERIC_CELL = "numeric";
 export const TEXT_CELL = "text";
 export const USER_CELL = "user";
+export const STATIC_LIST_CELL = "list_static";
 export const PROJECT_CELL = "project";
 export const TRACKER_CELL = "tracker";
 export const PRETTY_TITLE_CELL = "pretty_title";
@@ -52,6 +53,16 @@ type UserCell = {
     readonly user_uri: Option<string>;
 };
 
+type StaticListCellValue = {
+    readonly label: string;
+    readonly color: Option<ColorName>;
+};
+
+type StaticListCell = {
+    readonly type: typeof STATIC_LIST_CELL;
+    readonly value: ReadonlyArray<StaticListCellValue>;
+};
+
 type ProjectCell = {
     readonly type: typeof PROJECT_CELL;
     readonly name: string;
@@ -77,6 +88,7 @@ export type Cell =
     | NumericCell
     | TextCell
     | UserCell
+    | StaticListCell
     | ProjectCell
     | TrackerCell
     | PrettyTitleCell;

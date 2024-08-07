@@ -43,11 +43,24 @@
             >
         </span>
         <span
+            v-if="props.cell.type === STATIC_LIST_CELL"
+            class="cell list-cell"
+            v-bind:class="getEvenOddClass()"
+            data-test="cell"
+        >
+            <span
+                v-for="list_value of props.cell.value"
+                v-bind:key="list_value.label"
+                v-bind:class="getOptionalBadgeClass(list_value.color)"
+                >{{ list_value.label }}</span
+            >
+        </span>
+        <span
             v-if="props.cell.type === TRACKER_CELL"
             class="cell"
             v-bind:class="getEvenOddClass()"
             data-test="cell"
-            ><span v-bind:class="getBadgeClass(props.cell)">{{ props.cell.name }}</span></span
+            ><span v-bind:class="getBadgeClass(props.cell.color)">{{ props.cell.name }}</span></span
         >
         <span
             v-if="props.cell.type === PRETTY_TITLE_CELL"
@@ -76,15 +89,18 @@
 
 <script setup lang="ts">
 import { strictInject } from "@tuleap/vue-strict-inject";
-import type { Cell, PrettyTitleCell, TrackerCell } from "../../domain/ArtifactsTable";
+import type { ColorName } from "@tuleap/core-constants";
+import type { Option } from "@tuleap/option";
+import type { Cell, PrettyTitleCell } from "../../domain/ArtifactsTable";
 import {
-    USER_CELL,
     DATE_CELL,
     NUMERIC_CELL,
     PRETTY_TITLE_CELL,
     PROJECT_CELL,
+    STATIC_LIST_CELL,
     TEXT_CELL,
     TRACKER_CELL,
+    USER_CELL,
 } from "../../domain/ArtifactsTable";
 import { DATE_FORMATTER, DATE_TIME_FORMATTER } from "../../injection-symbols";
 
@@ -113,7 +129,10 @@ function renderCell(cell: Cell): string {
 
 const getEvenOddClass = (): string => (props.even ? `even-row` : `odd-row`);
 
-const getBadgeClass = (cell: TrackerCell): string => `tlp-badge-${cell.color}`;
+const getBadgeClass = (color: ColorName): string => `tlp-badge-${color} tlp-badge-outline`;
+
+const getOptionalBadgeClass = (option: Option<ColorName>): string =>
+    option.mapOr(getBadgeClass, "tlp-badge-secondary tlp-badge-outline");
 
 const getCrossRefBadgeClass = (cell: PrettyTitleCell): string =>
     `cross-ref-badge tlp-swatch-${cell.color}`;
@@ -131,6 +150,11 @@ const getCrossRefBadgeClass = (cell: PrettyTitleCell): string =>
 .text-cell {
     flex-direction: column;
     justify-content: center;
+}
+
+.list-cell {
+    gap: 3px;
+    flex-wrap: wrap;
 }
 
 .cross-ref-badge {

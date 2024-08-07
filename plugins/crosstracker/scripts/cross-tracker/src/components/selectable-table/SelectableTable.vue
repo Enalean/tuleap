@@ -84,6 +84,7 @@ import {
     LAST_UPDATE_DATE_COLUMN_NAME,
     PRETTY_TITLE_COLUMN_NAME,
     PROJECT_COLUMN_NAME,
+    STATUS_COLUMN_NAME,
     SUBMITTED_BY_COLUMN_NAME,
     SUBMITTED_ON_COLUMN_NAME,
     TITLE_COLUMN_NAME,
@@ -174,6 +175,9 @@ const getColumnName = (name: ColumnName): string => {
     }
     if (name === DESCRIPTION_COLUMN_NAME) {
         return $gettext("Description");
+    }
+    if (name === STATUS_COLUMN_NAME) {
+        return $gettext("Status");
     }
     if (name === ARTIFACT_ID_COLUMN_NAME) {
         return $gettext("Id");
