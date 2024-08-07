@@ -22,7 +22,6 @@
     "@tuleap/vue3-gettext-init": "workspace:*",
     "marked": "^4.0.10",
     "neverthrow": "6.0.0",
-    "print-js": "^1.6.0",
     "scroll-into-view-if-needed": "^3.1.0",
     "turndown": "^7.0.0",
     "uuid": "^8.3.2",

@@ -28,8 +28,14 @@
                     <thead>
                         <tr>
                             <th>{{# dgettext }} tuleap-pdftemplate | Label {{/ dgettext }}</th>
-                            <th class="pdftemplate-admin-description-column">
+                            <th>
                                 {{# dgettext }} tuleap-pdftemplate | Description {{/ dgettext }}
+                            </th>
+                            <th>
+                                {{# dgettext }} tuleap-pdftemplate | Updated by {{/ dgettext }}
+                            </th>
+                            <th>
+                                {{# dgettext }} tuleap-pdftemplate | Date {{/ dgettext }}
                             </th>
                             <th></th>
                         </tr>
@@ -38,8 +44,23 @@
                         {{# has_templates }}
                             {{# templates }}
                                 <tr>
-                                    <td class="pdftemplate-admin-description-label">{{ label }}</td>
+                                    <td>{{ label }}</td>
                                     <td>{{ description }}</td>
+                                    <td>
+                                        {{# last_updated_by }}
+                                            <div class="tlp-avatar tlp-avatar-small">
+                                                {{# has_avatar }}
+                                                    <img src="{{ avatar_url }}">
+                                                {{/ has_avatar }}
+                                            </div>
+                                            {{ display_name }}
+                                        {{/ last_updated_by }}
+                                    </td>
+                                    <td>
+                                        {{# last_updated_date_block }}
+                                            {{> tlp_relative_date }}
+                                        {{/ last_updated_date_block }}
+                                    </td>
                                     <td class="tlp-table-cell-actions">
                                         <a href="{{ update_url }}"
                                            class="tlp-table-cell-actions-button tlp-button-primary tlp-button-outline tlp-button-small"
@@ -112,7 +133,7 @@
                         {{/ has_templates }}
                         {{^ has_templates }}
                             <tr>
-                                <td colspan="3" class="tlp-table-cell-empty">
+                                <td colspan="5" class="tlp-table-cell-empty">
                                     {{# dgettext }} tuleap-pdftemplate | There isn't any templates defined {{/ dgettext }}
                                 </td>
                             </tr>

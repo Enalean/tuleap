@@ -46,7 +46,8 @@ final readonly class PdfTemplatePresenter
         public string $header_content,
         public string $footer_content,
         public UserPresenter $last_updated_by,
-        public TlpRelativeDatePresenter $last_updated_date,
+        public TlpRelativeDatePresenter $last_updated_date_inline,
+        public TlpRelativeDatePresenter $last_updated_date_block,
     ) {
         $this->update_url    = DisplayPdfTemplateUpdateFormController::ROUTE . '/' . urlencode($id);
         $this->duplicate_url = DisplayPdfTemplateDuplicateFormController::ROUTE . '/' . urlencode($id);
@@ -67,6 +68,7 @@ final readonly class PdfTemplatePresenter
             $template->footer_content,
             UserPresenter::fromUser($template->last_updated_by),
             $builder->getTlpRelativeDatePresenterInInlineContext($template->last_updated_date, $user),
+            $builder->getTlpRelativeDatePresenterInBlockContext($template->last_updated_date, $user),
         );
     }
 
@@ -84,6 +86,7 @@ final readonly class PdfTemplatePresenter
             file_get_contents(__DIR__ . '/../Default/pdf-template-default-footer.html'),
             UserPresenter::fromUser($user),
             $builder->getTlpRelativeDatePresenterInInlineContext(new \DateTimeImmutable(), $user),
+            $builder->getTlpRelativeDatePresenterInBlockContext(new \DateTimeImmutable(), $user),
         );
     }
 
@@ -101,6 +104,7 @@ final readonly class PdfTemplatePresenter
             $source->footer_content,
             UserPresenter::fromUser($user),
             $builder->getTlpRelativeDatePresenterInInlineContext(new \DateTimeImmutable(), $user),
+            $builder->getTlpRelativeDatePresenterInBlockContext(new \DateTimeImmutable(), $user),
         );
     }
 }

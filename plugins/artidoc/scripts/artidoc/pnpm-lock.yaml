@@ -53,9 +53,6 @@ dependencies:
   neverthrow:
     specifier: 6.0.0
     version: 6.0.0
-  print-js:
-    specifier: ^1.6.0
-    version: 1.6.0
   scroll-into-view-if-needed:
     specifier: ^3.1.0
     version: 3.1.0
@@ -779,10 +776,6 @@ packages:
       nanoid: 3.3.7
       picocolors: 1.0.0
       source-map-js: 1.2.0
-
-  /print-js@1.6.0:
-    resolution: {integrity: sha512-BfnOIzSKbqGRtO4o0rnj/K3681BSd2QUrsIZy/+WdCIugjIswjmx3lDEZpXB2ruGf9d4b3YNINri81+J0FsBWg==}
-    dev: false
 
   /proto-list@1.2.4:
     resolution: {integrity: sha512-vtK/94akxsTMhe0/cbfpR+syPuszcuwhqVjJq26CuNDgFGj682oRBXOP5MJpv2r7JtE8MsiepGIqvvOTBwn2vA==}
