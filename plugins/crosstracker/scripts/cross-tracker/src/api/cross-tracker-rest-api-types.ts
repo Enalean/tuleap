@@ -36,6 +36,7 @@ export type ReportContentRepresentation = {
 export const DATE_SELECTABLE_TYPE = "date";
 export const NUMERIC_SELECTABLE_TYPE = "numeric";
 export const TEXT_SELECTABLE_TYPE = "text";
+export const USER_SELECTABLE_TYPE = "user";
 export const PROJECT_SELECTABLE_TYPE = "project";
 export const TRACKER_SELECTABLE_TYPE = "tracker";
 export const PRETTY_TITLE_SELECTABLE_TYPE = "pretty_title";
@@ -54,6 +55,13 @@ export type NumericSelectableRepresentation = {
 
 export type TextSelectableRepresentation = {
     readonly value: string;
+};
+
+export type UserSelectableRepresentation = {
+    readonly display_name: string;
+    readonly avatar_url: string;
+    readonly user_url: string | null;
+    readonly is_anonymous: boolean;
 };
 
 export type ProjectSelectableRepresentation = {
@@ -81,6 +89,7 @@ export type SelectableRepresentation =
     | DateSelectableRepresentation
     | NumericSelectableRepresentation
     | TextSelectableRepresentation
+    | UserSelectableRepresentation
     | ProjectSelectableRepresentation
     | TrackerSelectableRepresentation
     | PrettyTitleSelectableRepresentation
@@ -109,6 +118,10 @@ interface TextSelectable extends BaseSelectable {
     readonly type: typeof TEXT_SELECTABLE_TYPE;
 }
 
+interface UserSelectable extends BaseSelectable {
+    readonly type: typeof USER_SELECTABLE_TYPE;
+}
+
 interface ProjectSelectable extends BaseSelectable {
     readonly type: typeof PROJECT_SELECTABLE_TYPE;
 }
@@ -129,6 +142,7 @@ export type Selectable =
     | DateSelectable
     | NumericSelectable
     | TextSelectable
+    | UserSelectable
     | ProjectSelectable
     | TrackerSelectable
     | PrettyTitleSelectable

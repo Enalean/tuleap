@@ -170,6 +170,9 @@ msgstr "Outil de suivi"
 msgid "Tracker selection is limited to 25 trackers"
 msgstr "Vous ne pouvez pas sélectionner plus de 25 outils de suivi"
 
+msgid "User avatar"
+msgstr "Avatar de l'utilisateur"
+
 msgid ""
 "You can use: AND, OR, WITH PARENT, WITHOUT PARENT, WITH CHILDREN, WITHOUT "
 "CHILDREN, BETWEEN(), NOW(), MYSELF(), OPEN(), IN(), NOT IN(), parenthesis. "

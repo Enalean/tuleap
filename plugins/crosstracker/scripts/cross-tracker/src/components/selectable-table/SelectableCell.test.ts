@@ -27,6 +27,7 @@ import SelectableCell from "./SelectableCell.vue";
 import { getGlobalTestOptions } from "../../helpers/global-options-for-tests";
 import type { Cell } from "../../domain/ArtifactsTable";
 import {
+    USER_CELL,
     DATE_CELL,
     NUMERIC_CELL,
     PRETTY_TITLE_CELL,
@@ -82,8 +83,36 @@ describe(`SelectableCell`, () => {
             expect(wrapper.get("a").attributes("href")).toBe(artifact_uri);
         });
 
-        function* generateCells(): Generator<[Cell]> {
+        describe(`when the cell is a user`, () => {
+            it(`renders a link to the user URI and an img with the avatar URI`, () => {
+                const user_uri = "/users/mcastro";
+                const avatar_uri = "https://example.com/users/mcastro/avatar.png";
+                const wrapper = getWrapper({
+                    type: USER_CELL,
+                    display_name: "Mario Castro (mcastro)",
+                    user_uri: Option.fromValue(user_uri),
+                    avatar_uri,
+                });
+
+                expect(wrapper.get("a").attributes("href")).toBe(user_uri);
+                expect(wrapper.get("img").attributes("src")).toBe(avatar_uri);
+            });
+
+            it(`does not render a link when the user is anonymous`, () => {
+                const wrapper = getWrapper({
+                    type: USER_CELL,
+                    display_name: "Anonymous user",
+                    user_uri: Option.nothing(),
+                    avatar_uri: "https://example.com/themes/common/images/avatar_default.png",
+                });
+
+                expect(wrapper.find("a").exists()).toBe(false);
+            });
+        });
+
+        function* generateCells(): Generator<[string, Cell]> {
             yield [
+                PRETTY_TITLE_CELL,
                 {
                     type: PRETTY_TITLE_CELL,
                     title: "earthmaking",
@@ -92,11 +121,24 @@ describe(`SelectableCell`, () => {
                     color: "inca-silver",
                 },
             ];
-            yield [{ type: TRACKER_CELL, name: "ancientism", color: "peggy-pink" }];
-            yield [{ type: TEXT_CELL, value: "nassellarian amphistomoid" }];
-            yield [{ type: NUMERIC_CELL, value: Option.fromValue(31) }];
-            yield [{ type: PROJECT_CELL, name: "unpresentably shakiness", icon: "🧪" }];
             yield [
+                USER_CELL,
+                {
+                    type: USER_CELL,
+                    display_name: "Xiaodong Kang (xkang)",
+                    user_uri: Option.fromValue("/users/xkang"),
+                    avatar_uri: "https://example.com/themes/common/images/avatar_default.png",
+                },
+            ];
+            yield [TRACKER_CELL, { type: TRACKER_CELL, name: "ancientism", color: "peggy-pink" }];
+            yield [TEXT_CELL, { type: TEXT_CELL, value: "nassellarian amphistomoid" }];
+            yield [NUMERIC_CELL, { type: NUMERIC_CELL, value: Option.fromValue(31) }];
+            yield [
+                PROJECT_CELL,
+                { type: PROJECT_CELL, name: "unpresentably shakiness", icon: "🧪" },
+            ];
+            yield [
+                DATE_CELL,
                 {
                     type: DATE_CELL,
                     value: Option.fromValue("1999-09-10T03:43:04+01:00"),
@@ -105,16 +147,22 @@ describe(`SelectableCell`, () => {
             ];
         }
 
-        it.each([...generateCells()])(`sets the even class when the row is even`, (cell) => {
-            is_even = true;
-            const wrapper = getWrapper(cell);
-            expect(wrapper.get("[data-test=cell]").classes()).toContain("even-row");
-        });
+        it.each([...generateCells()])(
+            `sets the even class when the row is even for a %s cell`,
+            (_cell_type, cell) => {
+                is_even = true;
+                const wrapper = getWrapper(cell);
+                expect(wrapper.get("[data-test=cell]").classes()).toContain("even-row");
+            },
+        );
 
-        it.each([...generateCells()])(`sets the odd class when the row is odd`, (cell) => {
-            is_even = false;
-            const wrapper = getWrapper(cell);
-            expect(wrapper.get("[data-test=cell]").classes()).toContain("odd-row");
-        });
+        it.each([...generateCells()])(
+            `sets the odd class when the row is odd for a %s cell`,
+            (_cell_type, cell) => {
+                is_even = false;
+                const wrapper = getWrapper(cell);
+                expect(wrapper.get("[data-test=cell]").classes()).toContain("odd-row");
+            },
+        );
     });
 });
