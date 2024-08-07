@@ -38,7 +38,7 @@ const template_variables = { DOCUMENT_TITLE: "Test document" };
 
 const mocks = vi.hoisted(() => ({ print: vi.fn() }));
 
-vi.mock("print-js", () => ({
+vi.mock("print-js/src/index.js", () => ({
     default: mocks.print,
 }));
 

@@ -30,5 +30,10 @@
     "build": "vite build",
     "watch": "vite build --watch --mode development --minify false",
     "test": "vitest"
+  },
+  "pnpm": {
+    "patchedDependencies": {
+      "print-js@1.6.0": "patches/print-js@1.6.0.patch"
+    }
   }
 }

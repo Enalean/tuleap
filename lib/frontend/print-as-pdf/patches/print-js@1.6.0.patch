@@ -1,0 +1,13 @@
+diff --git a/src/js/print.js b/src/js/print.js
+index e09e69f52c803896864a78fa86e001e3bbce8093..7799ea46e010b721e31f298b3b01b9a24f8f4e2b 100644
+--- a/src/js/print.js
++++ b/src/js/print.js
+@@ -91,7 +91,7 @@ function loadIframeImages (images) {
+ function loadIframeImage (image) {
+   return new Promise(resolve => {
+     const pollImage = () => {
+-      !image || typeof image.naturalWidth === 'undefined' || image.naturalWidth === 0 || !image.complete
++      (!image || !image.complete) && (typeof image.naturalWidth === 'undefined' || image.naturalWidth === 0)
+         ? setTimeout(pollImage, 500)
+         : resolve()
+     }
