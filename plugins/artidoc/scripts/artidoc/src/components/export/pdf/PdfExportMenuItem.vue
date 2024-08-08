@@ -30,35 +30,10 @@
         <i class="fa-regular fa-file-pdf fa-fw" aria-hidden="true"></i>
         {{ export_in_pdf }}
     </button>
-    <div
+    <pdf-export-menu-templates-dropdown
         v-else-if="has_more_than_one_template"
-        class="tlp-dropdown-menu-item tlp-dropdown-menu-item-submenu"
-        id="dropdown-menu-example-options-submenu-1"
-        aria-haspopup="true"
-        role="menuitem"
-        ref="trigger"
-    >
-        <i class="fa-regular fa-file-pdf fa-fw" aria-hidden="true"></i>
-        {{ export_in_pdf }}
-        <div
-            class="tlp-dropdown-menu tlp-dropdown-submenu tlp-dropdown-menu-side"
-            role="menu"
-            ref="submenu"
-            v-bind:aria-label="submenu_label"
-        >
-            <button
-                v-for="template in pdf_templates.list.value"
-                v-bind:key="template.id"
-                type="button"
-                v-on:click="printUsingTemplate(template)"
-                class="tlp-dropdown-menu-item"
-                role="menuitem"
-                v-bind:title="template.description"
-            >
-                {{ template.label }}
-            </button>
-        </div>
-    </div>
+        v-bind:print-using-template="printUsingTemplate"
+    />
     <button
         v-else
         type="button"
@@ -111,18 +86,18 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, ref } from "vue";
+import { computed, ref } from "vue";
 import { useGettext } from "vue3-gettext";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import { PDF_TEMPLATES_STORE } from "@/stores/pdf-templates-store";
 import type { PdfTemplate } from "@tuleap/print-as-pdf";
 import { printAsPdf } from "@tuleap/print-as-pdf";
-import { createDropdown } from "@tuleap/tlp-dropdown";
 import { IS_USER_ANONYMOUS } from "@/is-user-anonymous";
 import PrinterVersion from "@/components/print/PrinterVersion.vue";
 import { EDITORS_COLLECTION } from "@/composables/useSectionEditorsCollection";
 import { TITLE } from "@/title-injection-key";
 import { createModal } from "@tuleap/tlp-modal";
+import PdfExportMenuTemplatesDropdown from "./PdfExportMenuTemplatesDropdown.vue";
 
 const pdf_templates = strictInject(PDF_TEMPLATES_STORE);
 const is_user_anonymous = strictInject(IS_USER_ANONYMOUS);
@@ -132,7 +107,7 @@ const title = strictInject(TITLE);
 const has_more_than_one_template = pdf_templates.list.value.length > 1;
 
 const { $gettext } = useGettext();
-const submenu_label = $gettext("Available templates");
+
 const export_in_pdf = $gettext("Export document in PDF");
 const close_label = $gettext("Close");
 
@@ -185,17 +160,4 @@ function printUsingTemplate(template: PdfTemplate): void {
         });
     });
 }
-
-const trigger = ref<HTMLElement | null>(null);
-const submenu = ref<HTMLElement | null>(null);
-
-onMounted(() => {
-    if (trigger.value && submenu.value) {
-        createDropdown(trigger.value, {
-            keyboard: false,
-            trigger: "hover-and-click",
-            dropdown_menu: submenu.value,
-        });
-    }
-});
 </script>

@@ -17,12 +17,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { describe, beforeEach, expect, it, vi } from "vitest";
+import { describe, beforeEach, expect, it } from "vitest";
 import { shallowMount } from "@vue/test-utils";
 import PdfExportMenuItem from "@/components/export/pdf/PdfExportMenuItem.vue";
 import { createGettext } from "vue3-gettext";
 import { IS_USER_ANONYMOUS } from "@/is-user-anonymous";
 import PrinterVersion from "@/components/print/PrinterVersion.vue";
+import PdfExportMenuTemplatesDropdown from "./PdfExportMenuTemplatesDropdown.vue";
 import type { SectionEditorsCollection } from "@/composables/useSectionEditorsCollection";
 import {
     EDITORS_COLLECTION,
@@ -33,8 +34,6 @@ import ArtifactSectionFactory from "@/helpers/artifact-section.factory";
 import { initPdfTemplatesStore, PDF_TEMPLATES_STORE } from "@/stores/pdf-templates-store";
 import { PdfTemplateStub } from "@/helpers/stubs/PdfTemplateStub";
 import { TITLE } from "@/title-injection-key";
-
-vi.mock("@tuleap/tlp-dropdown");
 
 describe("PdfExportMenuItem", () => {
     let editors_collection: SectionEditorsCollection;
@@ -135,7 +134,7 @@ describe("PdfExportMenuItem", () => {
         expect(wrapper.findComponent(PrinterVersion).exists()).toBe(true);
     });
 
-    it("should display three menuitem if two template (one for each template + one for the submenu)", () => {
+    it("should display the PdfExportMenuTemplatesDropdown when there are more than one template", () => {
         const wrapper = shallowMount(PdfExportMenuItem, {
             global: {
                 plugins: [createGettext({ silent: true })],
@@ -151,7 +150,7 @@ describe("PdfExportMenuItem", () => {
             },
         });
 
-        expect(wrapper.findAll("[role=menuitem]")).toHaveLength(3);
+        expect(wrapper.findComponent(PdfExportMenuTemplatesDropdown).exists()).toBe(true);
         expect(wrapper.findComponent(PrinterVersion).exists()).toBe(true);
     });
 });
