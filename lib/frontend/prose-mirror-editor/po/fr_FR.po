@@ -31,3 +31,6 @@ msgstr "Passer en italique `Ctrl+i`"
 
 msgid "Toggle strong style `Ctrl+b`"
 msgstr "Passer en gras `Ctrl+b`"
+
+msgid "Wrap in block quote `Ctrl->`"
+msgstr "Passer en mode citation Ctrl->`"

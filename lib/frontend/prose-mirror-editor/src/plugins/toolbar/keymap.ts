@@ -17,7 +17,7 @@
  *  along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { toggleMark } from "prosemirror-commands";
+import { toggleMark, wrapIn } from "prosemirror-commands";
 import type { Command } from "prosemirror-state";
 import type { MarkType, Schema } from "prosemirror-model";
 
@@ -54,5 +54,7 @@ export function buildKeymap(
     type = schema.marks.code;
     bind("Mod-`", toggleMark(type));
 
+    const node_type = schema.nodes.blockquote;
+    bind("Mod->", wrapIn(node_type));
     return keys;
 }
