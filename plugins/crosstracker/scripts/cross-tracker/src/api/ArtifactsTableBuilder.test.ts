@@ -27,6 +27,7 @@ import {
     STATIC_LIST_SELECTABLE_TYPE,
     TEXT_SELECTABLE_TYPE,
     TRACKER_SELECTABLE_TYPE,
+    USER_GROUP_LIST_SELECTABLE_TYPE,
     USER_LIST_SELECTABLE_TYPE,
     USER_SELECTABLE_TYPE,
 } from "./cross-tracker-rest-api-types";
@@ -40,6 +41,7 @@ import {
     TEXT_CELL,
     TRACKER_CELL,
     USER_CELL,
+    USER_GROUP_LIST_CELL,
     USER_LIST_CELL,
 } from "../domain/ArtifactsTable";
 import {
@@ -421,6 +423,54 @@ describe(`ArtifactsTableBuilder`, () => {
             expect(list_value_third_row.value).toHaveLength(0);
         });
 
+        it(`builds a table with "list_user_group" selectables`, () => {
+            const first_user_group = { label: "Developers" };
+            const second_user_group = { label: "Project Members" };
+            const third_user_group = { label: "integrators" };
+            const list_column = "notified_team";
+
+            const table = ArtifactsTableBuilder().mapReportToArtifactsTable(
+                SelectableReportContentRepresentationStub.build(
+                    [{ type: USER_GROUP_LIST_SELECTABLE_TYPE, name: list_column }],
+                    [
+                        ArtifactRepresentationStub.build({
+                            [list_column]: { value: [first_user_group] },
+                        }),
+                        ArtifactRepresentationStub.build({
+                            [list_column]: { value: [second_user_group, third_user_group] },
+                        }),
+                        ArtifactRepresentationStub.build({
+                            [list_column]: { value: [] },
+                        }),
+                    ],
+                ),
+            );
+
+            expect(table.columns.has(list_column)).toBe(true);
+            expect(table.rows).toHaveLength(3);
+            const [first_row, second_row, third_row] = table.rows;
+            const list_value_first_row = first_row.cells.get(list_column);
+            if (list_value_first_row?.type !== USER_GROUP_LIST_CELL) {
+                throw Error("Expected to find first user group list cell");
+            }
+            expect(list_value_first_row.value).toHaveLength(1);
+            expect(list_value_first_row.value[0].label).toBe(first_user_group.label);
+
+            const list_value_second_row = second_row.cells.get(list_column);
+            if (list_value_second_row?.type !== USER_GROUP_LIST_CELL) {
+                throw Error("Expected to find second user group list cell");
+            }
+            expect(list_value_second_row.value).toHaveLength(2);
+            expect(list_value_second_row.value[0].label).toBe(second_user_group.label);
+            expect(list_value_second_row.value[1].label).toBe(third_user_group.label);
+
+            const list_value_third_row = third_row.cells.get(list_column);
+            if (list_value_third_row?.type !== USER_GROUP_LIST_CELL) {
+                throw Error("Expected to find third user group list cell");
+            }
+            expect(list_value_third_row.value).toHaveLength(0);
+        });
+
         it(`builds a table with "project" selectables`, () => {
             const first_project = { icon: "", name: "Minimum Butter" };
             const second_project = { icon: "🖍️", name: "Teal Creek" };
@@ -558,6 +608,7 @@ describe(`ArtifactsTableBuilder`, () => {
             yield [USER_SELECTABLE_TYPE, { value: 12 }];
             yield [STATIC_LIST_SELECTABLE_TYPE, { value: 12 }];
             yield [USER_LIST_SELECTABLE_TYPE, { value: 12 }];
+            yield [USER_GROUP_LIST_SELECTABLE_TYPE, { value: 12 }];
             yield [PROJECT_SELECTABLE_TYPE, { value: 12 }];
             yield [TRACKER_SELECTABLE_TYPE, { value: 12 }];
             yield [PRETTY_TITLE_SELECTABLE_TYPE, { value: 12 }];

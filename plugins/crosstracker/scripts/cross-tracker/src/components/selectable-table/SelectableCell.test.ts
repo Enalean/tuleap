@@ -27,15 +27,16 @@ import SelectableCell from "./SelectableCell.vue";
 import { getGlobalTestOptions } from "../../helpers/global-options-for-tests";
 import type { Cell } from "../../domain/ArtifactsTable";
 import {
-    USER_LIST_CELL,
-    STATIC_LIST_CELL,
-    USER_CELL,
     DATE_CELL,
     NUMERIC_CELL,
     PRETTY_TITLE_CELL,
     PROJECT_CELL,
+    STATIC_LIST_CELL,
     TEXT_CELL,
     TRACKER_CELL,
+    USER_CELL,
+    USER_GROUP_LIST_CELL,
+    USER_LIST_CELL,
 } from "../../domain/ArtifactsTable";
 import { DATE_FORMATTER, DATE_TIME_FORMATTER } from "../../injection-symbols";
 
@@ -122,6 +123,7 @@ describe(`SelectableCell`, () => {
             ];
             yield [STATIC_LIST_CELL, { type: STATIC_LIST_CELL, value: [] }];
             yield [USER_LIST_CELL, { type: USER_LIST_CELL, value: [] }];
+            yield [USER_GROUP_LIST_CELL, { type: USER_GROUP_LIST_CELL, value: [] }];
         }
 
         it.each([...generateCells()])(

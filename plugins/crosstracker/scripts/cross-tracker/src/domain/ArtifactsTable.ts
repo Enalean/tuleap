@@ -27,6 +27,7 @@ export const TEXT_CELL = "text";
 export const USER_CELL = "user";
 export const STATIC_LIST_CELL = "list_static";
 export const USER_LIST_CELL = "list_user";
+export const USER_GROUP_LIST_CELL = "list_user_group";
 export const PROJECT_CELL = "project";
 export const TRACKER_CELL = "tracker";
 export const PRETTY_TITLE_CELL = "pretty_title";
@@ -72,6 +73,11 @@ type UserListCell = {
     readonly value: ReadonlyArray<UserCellValue>;
 };
 
+type UserGroupListCell = {
+    readonly type: typeof USER_GROUP_LIST_CELL;
+    readonly value: ReadonlyArray<{ readonly label: string }>;
+};
+
 type ProjectCell = {
     readonly type: typeof PROJECT_CELL;
     readonly name: string;
@@ -99,6 +105,7 @@ export type Cell =
     | UserCell
     | StaticListCell
     | UserListCell
+    | UserGroupListCell
     | ProjectCell
     | TrackerCell
     | PrettyTitleCell;

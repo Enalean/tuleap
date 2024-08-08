@@ -39,6 +39,7 @@ export const TEXT_SELECTABLE_TYPE = "text";
 export const USER_SELECTABLE_TYPE = "user";
 export const STATIC_LIST_SELECTABLE_TYPE = "list_static";
 export const USER_LIST_SELECTABLE_TYPE = "list_user";
+export const USER_GROUP_LIST_SELECTABLE_TYPE = "list_user_group";
 export const PROJECT_SELECTABLE_TYPE = "project";
 export const TRACKER_SELECTABLE_TYPE = "tracker";
 export const PRETTY_TITLE_SELECTABLE_TYPE = "pretty_title";
@@ -77,6 +78,10 @@ export type UserListSelectableRepresentation = {
     readonly value: ReadonlyArray<UserSelectableRepresentation>;
 };
 
+export type UserGroupListSelectableRepresentation = {
+    readonly value: ReadonlyArray<{ readonly label: string }>;
+};
+
 export type ProjectSelectableRepresentation = {
     readonly name: string;
     readonly icon: string;
@@ -105,6 +110,7 @@ export type SelectableRepresentation =
     | UserSelectableRepresentation
     | StaticListSelectableRepresentation
     | UserListSelectableRepresentation
+    | UserGroupListSelectableRepresentation
     | ProjectSelectableRepresentation
     | TrackerSelectableRepresentation
     | PrettyTitleSelectableRepresentation
@@ -145,6 +151,10 @@ interface UserListSelectable extends BaseSelectable {
     readonly type: typeof USER_LIST_SELECTABLE_TYPE;
 }
 
+interface UserGroupListSelectable extends BaseSelectable {
+    readonly type: typeof USER_GROUP_LIST_SELECTABLE_TYPE;
+}
+
 interface ProjectSelectable extends BaseSelectable {
     readonly type: typeof PROJECT_SELECTABLE_TYPE;
 }
@@ -168,6 +178,7 @@ export type Selectable =
     | UserSelectable
     | StaticListSelectable
     | UserListSelectable
+    | UserGroupListSelectable
     | ProjectSelectable
     | TrackerSelectable
     | PrettyTitleSelectable
