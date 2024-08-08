@@ -27,6 +27,7 @@ import {
     STATIC_LIST_SELECTABLE_TYPE,
     TEXT_SELECTABLE_TYPE,
     TRACKER_SELECTABLE_TYPE,
+    USER_LIST_SELECTABLE_TYPE,
     USER_SELECTABLE_TYPE,
 } from "./cross-tracker-rest-api-types";
 import { ArtifactsTableBuilder } from "./ArtifactsTableBuilder";
@@ -39,9 +40,11 @@ import {
     TEXT_CELL,
     TRACKER_CELL,
     USER_CELL,
+    USER_LIST_CELL,
 } from "../domain/ArtifactsTable";
 import {
     ARTIFACT_COLUMN_NAME,
+    ASSIGNED_TO_COLUMN_NAME,
     PRETTY_TITLE_COLUMN_NAME,
     PROJECT_COLUMN_NAME,
     STATUS_COLUMN_NAME,
@@ -293,10 +296,9 @@ describe(`ArtifactsTableBuilder`, () => {
         });
 
         it(`builds a table with "list_static" selectables `, () => {
-            const first_list_item = { label: "Done", color: "chrome-silver" };
+            const first_list_item = { label: "baggy", color: null };
             const second_list_item = { label: "Authorized", color: "sherwood-green" };
             const third_list_item = { label: "Restricted", color: "fiesta-red" };
-            const fourth_list_item = { label: "baggy", color: null };
             const list_column = STATUS_COLUMN_NAME;
 
             const table = ArtifactsTableBuilder().mapReportToArtifactsTable(
@@ -310,7 +312,7 @@ describe(`ArtifactsTableBuilder`, () => {
                             [list_column]: { value: [second_list_item, third_list_item] },
                         }),
                         ArtifactRepresentationStub.build({
-                            [list_column]: { value: [fourth_list_item] },
+                            [list_column]: { value: [] },
                         }),
                     ],
                 ),
@@ -325,7 +327,7 @@ describe(`ArtifactsTableBuilder`, () => {
             }
             expect(list_value_first_row.value).toHaveLength(1);
             expect(list_value_first_row.value[0].label).toBe(first_list_item.label);
-            expect(list_value_first_row.value[0].color.unwrapOr(null)).toBe(first_list_item.color);
+            expect(list_value_first_row.value[0].color.isNothing()).toBe(true);
 
             const list_value_second_row = second_row.cells.get(list_column);
             if (list_value_second_row?.type !== STATIC_LIST_CELL) {
@@ -343,9 +345,80 @@ describe(`ArtifactsTableBuilder`, () => {
             if (list_value_third_row?.type !== STATIC_LIST_CELL) {
                 throw Error("Expected to find third static list cell");
             }
-            expect(list_value_third_row.value).toHaveLength(1);
-            expect(list_value_third_row.value[0].label).toBe(fourth_list_item.label);
-            expect(list_value_third_row.value[0].color.isNothing()).toBe(true);
+            expect(list_value_third_row.value).toHaveLength(0);
+        });
+
+        it(`builds a table with "list_user" selectables`, () => {
+            const first_user = {
+                display_name: "Anonymous user",
+                avatar_url: "https://example.com/themes/common/images/avatar_default.png",
+                user_url: null,
+                is_anonymous: true,
+            };
+
+            const second_user = {
+                display_name: "David Lopez (dlopez)",
+                avatar_url: "https://example.com/users/dlopez/avatar.png",
+                user_url: "/users/dlopez",
+                is_anonymous: false,
+            };
+
+            const third_user = {
+                display_name: "Shan Long (slong)",
+                avatar_url: "https://example.com/users/slong/avatar.png",
+                user_url: "/users/slong",
+                is_anonymous: false,
+            };
+            const list_column = ASSIGNED_TO_COLUMN_NAME;
+
+            const table = ArtifactsTableBuilder().mapReportToArtifactsTable(
+                SelectableReportContentRepresentationStub.build(
+                    [{ type: USER_LIST_SELECTABLE_TYPE, name: list_column }],
+                    [
+                        ArtifactRepresentationStub.build({
+                            [list_column]: { value: [first_user] },
+                        }),
+                        ArtifactRepresentationStub.build({
+                            [list_column]: { value: [second_user, third_user] },
+                        }),
+                        ArtifactRepresentationStub.build({ [list_column]: { value: [] } }),
+                    ],
+                ),
+            );
+
+            expect(table.columns.has(list_column)).toBe(true);
+            expect(table.rows).toHaveLength(3);
+            const [first_row, second_row, third_row] = table.rows;
+            const list_value_first_row = first_row.cells.get(list_column);
+            if (list_value_first_row?.type !== USER_LIST_CELL) {
+                throw Error("Expected to find first user list cell");
+            }
+            expect(list_value_first_row.value).toHaveLength(1);
+            expect(list_value_first_row.value[0].display_name).toBe(first_user.display_name);
+            expect(list_value_first_row.value[0].avatar_uri).toBe(first_user.avatar_url);
+            expect(list_value_first_row.value[0].user_uri.isNothing()).toBe(true);
+
+            const list_value_second_row = second_row.cells.get(list_column);
+            if (list_value_second_row?.type !== USER_LIST_CELL) {
+                throw Error("Expected to find second user list cell");
+            }
+            expect(list_value_second_row.value).toHaveLength(2);
+            expect(list_value_second_row.value[0].display_name).toBe(second_user.display_name);
+            expect(list_value_second_row.value[0].avatar_uri).toBe(second_user.avatar_url);
+            expect(list_value_second_row.value[0].user_uri.unwrapOr(null)).toBe(
+                second_user.user_url,
+            );
+            expect(list_value_second_row.value[1].display_name).toBe(third_user.display_name);
+            expect(list_value_second_row.value[1].avatar_uri).toBe(third_user.avatar_url);
+            expect(list_value_second_row.value[1].user_uri.unwrapOr(null)).toBe(
+                third_user.user_url,
+            );
+
+            const list_value_third_row = third_row.cells.get(list_column);
+            if (list_value_third_row?.type !== USER_LIST_CELL) {
+                throw Error("Expected to find third user list cell");
+            }
+            expect(list_value_third_row.value).toHaveLength(0);
         });
 
         it(`builds a table with "project" selectables`, () => {
@@ -484,6 +557,7 @@ describe(`ArtifactsTableBuilder`, () => {
             yield [TEXT_SELECTABLE_TYPE, { value: 12 }];
             yield [USER_SELECTABLE_TYPE, { value: 12 }];
             yield [STATIC_LIST_SELECTABLE_TYPE, { value: 12 }];
+            yield [USER_LIST_SELECTABLE_TYPE, { value: 12 }];
             yield [PROJECT_SELECTABLE_TYPE, { value: 12 }];
             yield [TRACKER_SELECTABLE_TYPE, { value: 12 }];
             yield [PRETTY_TITLE_SELECTABLE_TYPE, { value: 12 }];

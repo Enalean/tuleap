@@ -49,7 +49,7 @@
 <script setup lang="ts">
 import { computed } from "vue";
 import type { Artifact } from "../../type";
-import ListBindUser from "../ListBindUser.vue";
+import ListBindUser from "./ListBindUser.vue";
 
 const props = defineProps<{ artifact: Artifact }>();
 const badge_color = computed(() => `tlp-swatch-${props.artifact.badge.color}`);

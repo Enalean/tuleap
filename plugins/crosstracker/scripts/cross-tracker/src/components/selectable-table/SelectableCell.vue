@@ -31,16 +31,7 @@
             class="cell"
             v-bind:class="getEvenOddClass()"
             data-test="cell"
-            ><a v-if="props.cell.user_uri.isValue()" v-bind:href="props.cell.user_uri.unwrapOr('')"
-                ><span class="tlp-avatar-small"
-                    ><img
-                        v-bind:alt="$gettext('User avatar')"
-                        v-bind:src="props.cell.avatar_uri" /></span
-                >{{ props.cell.display_name }}</a
-            >
-            <span v-if="!props.cell.user_uri.isValue()"
-                ><span class="tlp-avatar-small"></span>{{ props.cell.display_name }}</span
-            >
+            ><user-value v-bind:user="props.cell" />
         </span>
         <span
             v-if="props.cell.type === STATIC_LIST_CELL"
@@ -54,6 +45,18 @@
                 v-bind:class="getOptionalBadgeClass(list_value.color)"
                 >{{ list_value.label }}</span
             >
+        </span>
+        <span
+            v-if="props.cell.type === USER_LIST_CELL"
+            class="cell list-cell"
+            v-bind:class="getEvenOddClass()"
+            data-test="cell"
+        >
+            <user-value
+                v-for="list_value of props.cell.value"
+                v-bind:key="list_value.display_name"
+                v-bind:user="list_value"
+            />
         </span>
         <span
             v-if="props.cell.type === TRACKER_CELL"
@@ -93,6 +96,7 @@ import type { ColorName } from "@tuleap/core-constants";
 import type { Option } from "@tuleap/option";
 import type { Cell, PrettyTitleCell } from "../../domain/ArtifactsTable";
 import {
+    USER_LIST_CELL,
     DATE_CELL,
     NUMERIC_CELL,
     PRETTY_TITLE_CELL,
@@ -103,6 +107,7 @@ import {
     USER_CELL,
 } from "../../domain/ArtifactsTable";
 import { DATE_FORMATTER, DATE_TIME_FORMATTER } from "../../injection-symbols";
+import UserValue from "./UserValue.vue";
 
 const date_formatter = strictInject(DATE_FORMATTER);
 const date_time_formatter = strictInject(DATE_TIME_FORMATTER);
@@ -158,10 +163,6 @@ const getCrossRefBadgeClass = (cell: PrettyTitleCell): string =>
 }
 
 .cross-ref-badge {
-    margin: 0 5px 0 0;
-}
-
-.tlp-avatar-small {
     margin: 0 5px 0 0;
 }
 </style>

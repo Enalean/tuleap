@@ -20,6 +20,7 @@
 export const TITLE_COLUMN_NAME = "@title";
 export const DESCRIPTION_COLUMN_NAME = "@description";
 export const STATUS_COLUMN_NAME = "@status";
+export const ASSIGNED_TO_COLUMN_NAME = "@assigned_to";
 export const ARTIFACT_ID_COLUMN_NAME = "@id";
 export const SUBMITTED_ON_COLUMN_NAME = "@submitted_on";
 export const SUBMITTED_BY_COLUMN_NAME = "@submitted_by";
@@ -34,6 +35,7 @@ export type ColumnName =
     | typeof TITLE_COLUMN_NAME
     | typeof DESCRIPTION_COLUMN_NAME
     | typeof STATUS_COLUMN_NAME
+    | typeof ASSIGNED_TO_COLUMN_NAME
     | typeof ARTIFACT_ID_COLUMN_NAME
     | typeof SUBMITTED_ON_COLUMN_NAME
     | typeof SUBMITTED_BY_COLUMN_NAME

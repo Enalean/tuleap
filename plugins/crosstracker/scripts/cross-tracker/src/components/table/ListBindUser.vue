@@ -23,7 +23,7 @@
     }}</a>
 </template>
 <script setup lang="ts">
-import type { User } from "../type";
+import type { User } from "../../type";
 
 const props = defineProps<{ user: User }>();
 </script>

@@ -35,6 +35,7 @@ import type {
     StaticListSelectableRepresentation,
     TextSelectableRepresentation,
     TrackerSelectableRepresentation,
+    UserListSelectableRepresentation,
     UserSelectableRepresentation,
 } from "./cross-tracker-rest-api-types";
 import {
@@ -46,15 +47,17 @@ import {
     STATIC_LIST_SELECTABLE_TYPE,
     TEXT_SELECTABLE_TYPE,
     TRACKER_SELECTABLE_TYPE,
+    USER_LIST_SELECTABLE_TYPE,
     USER_SELECTABLE_TYPE,
 } from "./cross-tracker-rest-api-types";
-import type { ArtifactRow, ArtifactsTable, Cell } from "../domain/ArtifactsTable";
+import type { ArtifactRow, ArtifactsTable, Cell, UserCellValue } from "../domain/ArtifactsTable";
 import {
-    STATIC_LIST_CELL,
+    USER_LIST_CELL,
     DATE_CELL,
     NUMERIC_CELL,
     PRETTY_TITLE_CELL,
     PROJECT_CELL,
+    STATIC_LIST_CELL,
     TEXT_CELL,
     TRACKER_CELL,
     USER_CELL,
@@ -102,7 +105,12 @@ const isUserSelectableRepresentation = (
 const isStaticListRepresentation = (
     representation: SelectableRepresentation,
 ): representation is StaticListSelectableRepresentation =>
-    "value" in representation && typeof representation.value === "object";
+    "value" in representation && Array.isArray(representation.value);
+
+const isUserListRepresentation = (
+    representation: SelectableRepresentation,
+): representation is UserListSelectableRepresentation =>
+    "value" in representation && Array.isArray(representation.value);
 
 const isProjectSelectableRepresentation = (
     representation: SelectableRepresentation,
@@ -136,6 +144,12 @@ function findArtifactURI(selectable: ArtifactSelectable, artifact: ArtifactRepre
     }
     return artifact_value.uri;
 }
+
+const mapUserRepresentationToUser = (user: UserSelectableRepresentation): UserCellValue => ({
+    display_name: user.display_name,
+    avatar_uri: user.avatar_url,
+    user_uri: Option.fromNullable(user.user_url),
+});
 
 function buildCell(selectable: Selectable, artifact: ArtifactRepresentation): Result<Cell, Fault> {
     const artifact_value = artifact[selectable.name];
@@ -171,9 +185,7 @@ function buildCell(selectable: Selectable, artifact: ArtifactRepresentation): Re
             }
             return ok({
                 type: USER_CELL,
-                display_name: artifact_value.display_name,
-                avatar_uri: artifact_value.avatar_url,
-                user_uri: Option.fromNullable(artifact_value.user_url),
+                ...mapUserRepresentationToUser(artifact_value),
             });
         case STATIC_LIST_SELECTABLE_TYPE:
             if (!isStaticListRepresentation(artifact_value)) {
@@ -185,6 +197,14 @@ function buildCell(selectable: Selectable, artifact: ArtifactRepresentation): Re
                     label: list_value.label,
                     color: Option.fromNullable(list_value.color),
                 })),
+            });
+        case USER_LIST_SELECTABLE_TYPE:
+            if (!isUserListRepresentation(artifact_value)) {
+                throw Error(getErrorMessageToWarnTuleapDevs(selectable));
+            }
+            return ok({
+                type: USER_LIST_CELL,
+                value: artifact_value.value.map(mapUserRepresentationToUser),
             });
         case PROJECT_SELECTABLE_TYPE:
             if (!isProjectSelectableRepresentation(artifact_value)) {

@@ -79,6 +79,7 @@ import type { ColumnName } from "../../domain/ColumnName";
 import {
     ARTIFACT_COLUMN_NAME,
     ARTIFACT_ID_COLUMN_NAME,
+    ASSIGNED_TO_COLUMN_NAME,
     DESCRIPTION_COLUMN_NAME,
     LAST_UPDATE_BY_COLUMN_NAME,
     LAST_UPDATE_DATE_COLUMN_NAME,
@@ -178,6 +179,9 @@ const getColumnName = (name: ColumnName): string => {
     }
     if (name === STATUS_COLUMN_NAME) {
         return $gettext("Status");
+    }
+    if (name === ASSIGNED_TO_COLUMN_NAME) {
+        return $gettext("Assigned to");
     }
     if (name === ARTIFACT_ID_COLUMN_NAME) {
         return $gettext("Id");
