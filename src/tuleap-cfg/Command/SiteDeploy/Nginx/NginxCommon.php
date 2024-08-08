@@ -51,7 +51,7 @@ class NginxCommon
         if (! file_exists($cert_filepath)) {
             $this->logger->info("Generate self-signed certificate in $cert_filepath");
             Process::fromShellCommandline(
-                '( cat "$OPENSSL_CONF_FILE"; echo "[SAN]" ; echo "subjectAltName=DNS:' . $server_name . '" ) | openssl req -batch -nodes -x509 -newkey rsa:4096 -keyout ' . $key_filepath . ' -out ' . $cert_filepath . ' -days 365 -subj "/CN=' . $server_name . '" -extensions SAN -extensions root_ca -config /dev/stdin',
+                '( cat "$OPENSSL_CONF_FILE"; echo "[SAN]" ; echo "subjectAltName=DNS:' . $server_name . '" ) | openssl req -batch -nodes -x509 -newkey ec -pkeyopt ec_paramgen_curve:prime256v1 -keyout ' . $key_filepath . ' -out ' . $cert_filepath . ' -days 365 -subj "/" -extensions SAN -extensions root_ca -config /dev/stdin',
                 null,
                 ['OPENSSL_CONF_FILE' => __DIR__ . '/openssl-conf-self-signed-cert.cnf']
             )
