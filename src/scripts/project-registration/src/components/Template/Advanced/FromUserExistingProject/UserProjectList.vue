@@ -19,7 +19,7 @@
 
 <template>
     <div class="tlp-form-element">
-        <span v-if="props.projectList.length === 0" data-test="no-project-list">
+        <span v-if="props.project_list.length === 0" data-test="no-project-list">
             {{ $gettext("You are not administrator of any project.") }}
         </span>
         <select
@@ -34,7 +34,7 @@
                 {{ $gettext("Please choose a project...") }}
             </option>
             <option
-                v-for="project in props.projectList"
+                v-for="project in props.project_list"
                 v-bind:value="project.id"
                 v-bind:key="project.id"
                 v-bind:data-test="`select-project-${project.id}`"
@@ -65,29 +65,29 @@ const default_option = {
 const selected_project: Ref<TemplateData> = ref(default_option);
 
 const props = defineProps<{
-    projectList: Array<TemplateData>;
-    selectedCompanyTemplate: null | TemplateData;
+    project_list: Array<TemplateData>;
+    selected_company_template: null | TemplateData;
 }>();
 
 watch(
-    () => props.selectedCompanyTemplate,
+    () => props.selected_company_template,
     (): void => {
-        if (props.selectedCompanyTemplate === null) {
+        if (props.selected_company_template === null) {
             selected_project.value = default_option;
         }
     },
 );
 
 onMounted((): void => {
-    if (props.selectedCompanyTemplate !== null) {
-        selected_project.value = props.selectedCompanyTemplate;
+    if (props.selected_company_template !== null) {
+        selected_project.value = props.selected_company_template;
     }
 });
 
 function storeSelectedTemplate(event: Event): void {
     if (event.target instanceof HTMLSelectElement) {
         const selected_template_id: number = Number.parseInt(event.target.value, 10);
-        const selected_template = props.projectList.find(
+        const selected_template = props.project_list.find(
             (project: TemplateData) => selected_template_id === Number.parseInt(project.id, 10),
         );
         if (selected_template === undefined) {

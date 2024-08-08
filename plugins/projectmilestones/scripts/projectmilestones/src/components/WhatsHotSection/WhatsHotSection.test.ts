@@ -39,7 +39,7 @@ function getPersonalWidgetInstance(
     useStore(pinia);
 
     const component_options = {
-        propsData: {
+        props: {
             project_id,
         },
         global: {

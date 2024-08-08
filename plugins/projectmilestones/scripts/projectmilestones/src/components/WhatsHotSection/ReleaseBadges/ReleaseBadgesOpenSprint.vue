@@ -23,7 +23,7 @@
             <i class="project-release-open-sprint-badge-icon-toggle fa" />
             <div
                 class="project-release-info-badge project-release-info-badge-open-sprint tlp-badge-primary"
-                v-bind:class="{ 'tlp-badge-outline': isPastRelease || not_in_progress }"
+                v-bind:class="{ 'tlp-badge-outline': is_past_release || not_in_progress }"
                 data-test="sprint-label"
             >
                 <i class="fa fa-map-signs tlp-badge-icon" />
@@ -42,7 +42,7 @@ import { computed } from "vue";
 import type { MilestoneData } from "../../../type";
 import ReleaseButtonsDescription from "../ReleaseDescription/ReleaseButtonsDescription.vue";
 
-const props = defineProps<{ sprint_data: MilestoneData; isPastRelease: boolean }>();
+const props = defineProps<{ sprint_data: MilestoneData; is_past_release: boolean }>();
 
 const not_in_progress = computed((): boolean => {
     if (props.sprint_data.start_date === null) {

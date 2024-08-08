@@ -58,7 +58,7 @@ describe("ReleaseBadgesAllSprints", () => {
             global: {
                 ...getGlobalTestOptions(pinia),
             },
-            propsData: { release_data, isPastRelease: false },
+            props: { release_data, is_past_release: false },
         });
     }
 

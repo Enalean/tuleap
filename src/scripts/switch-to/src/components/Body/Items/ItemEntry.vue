@@ -109,7 +109,7 @@ import ItemBadge from "./ItemBadge.vue";
 
 const props = defineProps<{
     entry: ItemDefinition;
-    changeFocusCallback: (payload: FocusFromItemPayload) => void;
+    change_focus_callback: (payload: FocusFromItemPayload) => void;
     location: Location;
 }>();
 
@@ -184,7 +184,7 @@ function changeFocus(event: KeyboardEvent): void {
         case "ArrowDown":
         case "ArrowLeft":
             event.preventDefault();
-            props.changeFocusCallback({ entry: props.entry, key: event.key });
+            props.change_focus_callback({ entry: props.entry, key: event.key });
             break;
         default:
     }

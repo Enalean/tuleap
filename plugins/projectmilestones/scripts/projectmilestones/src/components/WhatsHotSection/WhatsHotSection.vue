@@ -23,10 +23,10 @@
         <release-displayer
             v-for="(milestone, index) in root_store.current_milestones"
             v-bind:key="milestone.id"
-            v-bind:is-open="index === 0"
+            v-bind:is_open="index === 0"
             v-bind:release_data="milestone"
             v-bind:data-test="`current-milestones-test-${milestone.label}`"
-            v-bind:is-past-release="false"
+            v-bind:is_past_release="false"
         />
     </div>
 </template>

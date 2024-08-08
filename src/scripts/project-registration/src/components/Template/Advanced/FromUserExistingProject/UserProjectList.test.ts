@@ -30,7 +30,7 @@ describe("UserProjectList", () => {
     let wrapper: VueWrapper,
         project_list: Array<TemplateData>,
         project_a: TemplateData,
-        selectedCompanyTemplate: TemplateData | null;
+        selected_company_template: TemplateData | null;
 
     const set_selected_template_mock = jest.fn();
 
@@ -68,19 +68,19 @@ describe("UserProjectList", () => {
             global: {
                 ...getGlobalTestOptions(pinia),
             },
-            propsData: { projectList: project_list, selectedCompanyTemplate },
+            props: { project_list, selected_company_template },
         });
     }
 
     it("Spawns the UserProjectList component", () => {
-        selectedCompanyTemplate = null;
+        selected_company_template = null;
         wrapper = getWrapper();
 
         expect(wrapper).toMatchSnapshot();
     });
 
     it("Should select the previously selected project by default when one has been previously selected", () => {
-        selectedCompanyTemplate = project_a;
+        selected_company_template = project_a;
         wrapper = getWrapper();
 
         const option = selectOrThrow(
@@ -94,7 +94,7 @@ describe("UserProjectList", () => {
 
     it(`displays a message when user is not administrator of any project`, () => {
         project_list = [];
-        selectedCompanyTemplate = project_a;
+        selected_company_template = project_a;
         wrapper = getWrapper();
 
         expect(wrapper.find("[data-test=from-another-project]").exists()).toBeFalsy();

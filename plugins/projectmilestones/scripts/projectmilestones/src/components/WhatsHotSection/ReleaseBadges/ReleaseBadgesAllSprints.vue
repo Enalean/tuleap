@@ -26,7 +26,7 @@
         <i class="project-release-open-sprint-badge-icon-toggle fa" />
         <div
             class="project-release-info-badge project-release-info-badge-open-sprint tlp-badge-primary"
-            v-bind:class="{ 'tlp-badge-outline': isPastRelease }"
+            v-bind:class="{ 'tlp-badge-outline': is_past_release }"
             data-test="badge-sprint"
         >
             <i class="fa fa-map-signs tlp-badge-icon" />
@@ -43,7 +43,11 @@ import { useStore } from "../../../stores/root";
 
 const root_store = useStore();
 
-const props = defineProps<{ release_data: MilestoneData; isPastRelease: boolean }>();
+const props = defineProps<{ release_data: MilestoneData; is_past_release: boolean }>();
+
+defineEmits<{
+    (e: "on-click-open-sprints-details"): void;
+}>();
 
 const tracker_submilestone_label = computed((): string => {
     return getTrackerSubmilestoneLabel(props.release_data);

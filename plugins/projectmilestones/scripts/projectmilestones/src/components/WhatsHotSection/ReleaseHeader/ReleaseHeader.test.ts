@@ -47,10 +47,10 @@ describe("ReleaseHeader", () => {
         } as MilestoneData;
 
         const component_options = {
-            propsData: {
+            props: {
                 release_data,
-                isLoading: is_loading,
-                isPastRelease: is_past_release,
+                is_loading,
+                is_past_release,
             },
             global: {
                 ...getGlobalTestOptions(),

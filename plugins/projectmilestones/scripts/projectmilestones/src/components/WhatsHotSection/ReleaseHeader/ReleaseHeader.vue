@@ -30,12 +30,12 @@
         </span>
         <div class="release-spacer"></div>
         <div
-            v-if="isLoading"
+            v-if="is_loading"
             class="tlp-skeleton-text release-remaining-disabled"
             data-test="display-skeleton"
         ></div>
         <div
-            v-else-if="!isPastRelease"
+            v-else-if="!is_past_release"
             class="release-remaining-effort-badges"
             data-test="is-current-release"
         >
@@ -65,8 +65,12 @@ import { getUserLocale } from "../../../helpers/user-locale-helper";
 
 const props = defineProps<{
     release_data: MilestoneData;
-    isLoading: boolean;
-    isPastRelease: boolean;
+    is_loading: boolean;
+    is_past_release: boolean;
+}>();
+
+defineEmits<{
+    (e: "toggle-release-details"): void;
 }>();
 
 function formatDate(date: string | null): string {

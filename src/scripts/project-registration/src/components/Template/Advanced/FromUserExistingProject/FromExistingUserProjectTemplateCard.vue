@@ -64,8 +64,8 @@
                 </div>
                 <user-project-list
                     v-else-if="root_store.is_advanced_option_selected(option_name)"
-                    v-bind:project-list="root_store.projects_user_is_admin_of"
-                    v-bind:selected-company-template="root_store.selected_company_template"
+                    v-bind:project_list="root_store.projects_user_is_admin_of"
+                    v-bind:selected_company_template="root_store.selected_company_template"
                     data-test="user-project-list"
                 />
             </div>
