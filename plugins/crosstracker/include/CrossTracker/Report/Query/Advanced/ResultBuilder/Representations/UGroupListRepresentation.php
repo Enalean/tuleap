@@ -30,12 +30,12 @@ use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\SelectedValueReprese
 final readonly class UGroupListRepresentation implements SelectedValueRepresentation
 {
     /**
-     * @var UGroupListValueRepresentation[]
+     * @var list<UGroupListValueRepresentation>
      */
     public array $value;
 
     public function __construct(array $value)
     {
-        $this->value = array_unique($value, SORT_REGULAR);
+        $this->value = array_values(array_unique($value, SORT_REGULAR));
     }
 }

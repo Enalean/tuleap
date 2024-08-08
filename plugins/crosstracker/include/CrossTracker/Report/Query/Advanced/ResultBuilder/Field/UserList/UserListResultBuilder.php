@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Field\UserList;
 
 use LogicException;
+use Tracker_FormElement_Field_List_Bind;
 use Tuleap\CrossTracker\Report\Query\Advanced\DuckTypedField\Select\DuckTypedFieldSelect;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Representations\UserListRepresentation;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Representations\UserRepresentation;
@@ -58,6 +59,9 @@ final readonly class UserListResultBuilder
             }
 
             if ($result["user_list_value_$alias"] !== null) {
+                if ((int) $result["user_list_value_$alias"] === Tracker_FormElement_Field_List_Bind::NONE_VALUE) {
+                    continue;
+                }
                 $user = $this->user_id_retriever->getUserById((int) $result["user_list_value_$alias"]);
                 if ($user === null) {
                     throw new LogicException("User {$result["user_list_value_$alias"]} not found");
