@@ -53,7 +53,7 @@ describe("ItemEntry", () => {
                     },
                     badges: [] as ReadonlyArray<ItemBadge>,
                 } as ItemDefinition,
-                changeFocusCallback: jest.fn(),
+                change_focus_callback: jest.fn(),
                 location: window.location,
             },
             global: getGlobalTestOptions(),
@@ -79,7 +79,7 @@ describe("ItemEntry", () => {
                         { label: "Other", color: null },
                     ] as ReadonlyArray<ItemBadge>,
                 } as ItemDefinition,
-                changeFocusCallback: jest.fn(),
+                change_focus_callback: jest.fn(),
                 location: window.location,
             },
             global: getGlobalTestOptions(),
@@ -110,7 +110,7 @@ describe("ItemEntry", () => {
                     },
                     badges: [] as ReadonlyArray<ItemBadge>,
                 } as ItemDefinition,
-                changeFocusCallback: jest.fn(),
+                change_focus_callback: jest.fn(),
                 location: window.location,
             },
             global: getGlobalTestOptions(),
@@ -132,7 +132,7 @@ describe("ItemEntry", () => {
                     },
                     badges: [] as ReadonlyArray<ItemBadge>,
                 } as ItemDefinition,
-                changeFocusCallback: jest.fn(),
+                change_focus_callback: jest.fn(),
                 location: window.location,
             },
             global: getGlobalTestOptions(),
@@ -155,11 +155,11 @@ describe("ItemEntry", () => {
                 badges: [] as ReadonlyArray<ItemBadge>,
             } as ItemDefinition;
 
-            const changeFocusCallback = jest.fn();
+            const change_focus_callback = jest.fn();
             const wrapper = shallowMount(ItemEntry, {
                 props: {
                     entry,
-                    changeFocusCallback,
+                    change_focus_callback,
                     location: window.location,
                 },
                 global: getGlobalTestOptions(),
@@ -167,7 +167,7 @@ describe("ItemEntry", () => {
 
             await wrapper.find("[data-test=entry-link]").trigger("keydown", { key });
 
-            expect(changeFocusCallback).toHaveBeenCalledWith({
+            expect(change_focus_callback).toHaveBeenCalledWith({
                 entry,
                 key,
             });
@@ -199,7 +199,7 @@ describe("ItemEntry", () => {
         const wrapper = shallowMount(ItemEntry, {
             props: {
                 entry,
-                changeFocusCallback: jest.fn(),
+                change_focus_callback: jest.fn(),
                 location: window.location,
             },
             global: getGlobalTestOptions(pinia),
@@ -243,7 +243,7 @@ describe("ItemEntry", () => {
                     badges: [] as ReadonlyArray<ItemBadge>,
                     cropped_content: null,
                 } as ItemDefinition,
-                changeFocusCallback: jest.fn(),
+                change_focus_callback: jest.fn(),
                 location: window.location,
             },
         });
@@ -279,7 +279,7 @@ describe("ItemEntry", () => {
                     badges: [] as ReadonlyArray<ItemBadge>,
                     cropped_content: null,
                 } as ItemDefinition,
-                changeFocusCallback: jest.fn(),
+                change_focus_callback: jest.fn(),
                 location: window.location,
             },
         });
@@ -315,7 +315,7 @@ describe("ItemEntry", () => {
                     badges: [] as ReadonlyArray<ItemBadge>,
                     cropped_content: null,
                 } as ItemDefinition,
-                changeFocusCallback: jest.fn(),
+                change_focus_callback: jest.fn(),
                 location: window.location,
             },
         });
@@ -351,7 +351,7 @@ describe("ItemEntry", () => {
                     badges: [] as ReadonlyArray<ItemBadge>,
                     cropped_content: "... excerpt ...",
                 } as ItemDefinition,
-                changeFocusCallback: jest.fn(),
+                change_focus_callback: jest.fn(),
                 location: window.location,
             },
         });
@@ -388,7 +388,7 @@ describe("ItemEntry", () => {
                     badges: [] as ReadonlyArray<ItemBadge>,
                     cropped_content: "... excerpt ...",
                 } as ItemDefinition,
-                changeFocusCallback: jest.fn(),
+                change_focus_callback: jest.fn(),
                 location: window.location,
             },
         });
@@ -417,7 +417,7 @@ describe("ItemEntry", () => {
                     },
                     badges: [] as ReadonlyArray<ItemBadge>,
                 } as ItemDefinition,
-                changeFocusCallback: jest.fn(),
+                change_focus_callback: jest.fn(),
                 location,
             },
             global: getGlobalTestOptions(),
@@ -443,7 +443,7 @@ describe("ItemEntry", () => {
                     },
                     badges: [] as ReadonlyArray<ItemBadge>,
                 } as ItemDefinition,
-                changeFocusCallback: jest.fn(),
+                change_focus_callback: jest.fn(),
                 location,
             },
             global: getGlobalTestOptions(),

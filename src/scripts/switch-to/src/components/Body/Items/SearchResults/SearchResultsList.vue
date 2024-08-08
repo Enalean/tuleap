@@ -24,7 +24,7 @@
             v-for="(item, key) of fulltext_search_results"
             v-bind:key="key"
             v-bind:entry="item"
-            v-bind:change-focus-callback="changeFocus"
+            v-bind:change_focus_callback="changeFocus"
             v-bind:location="location"
         />
         <button

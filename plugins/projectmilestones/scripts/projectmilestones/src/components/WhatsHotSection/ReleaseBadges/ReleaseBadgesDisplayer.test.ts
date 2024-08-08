@@ -33,7 +33,7 @@ describe("ReleaseBadgesDisplayer", () => {
             global: {
                 ...getGlobalTestOptions(),
             },
-            propsData: { release_data, isOpen: true, isPastRelease: false },
+            props: { release_data, is_open: true, is_past_release: false },
         });
     }
 

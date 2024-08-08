@@ -42,7 +42,7 @@
                     v-for="entry of filtered_history.entries"
                     v-bind:key="entry.html_url"
                     v-bind:entry="entry"
-                    v-bind:change-focus-callback="changeFocus"
+                    v-bind:change_focus_callback="changeFocus"
                     v-bind:location="location"
                 />
             </nav>

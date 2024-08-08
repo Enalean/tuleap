@@ -40,7 +40,7 @@
                 <release-badges-all-sprints
                     v-if="should_display_all_sprints_badge"
                     v-bind:release_data="release_data"
-                    v-bind:is-past-release="isPastRelease"
+                    v-bind:is_past_release="is_past_release"
                     v-on:on-click-open-sprints-details="on_click_open_sprints_details()"
                     data-test="badge-sprint"
                 />
@@ -49,7 +49,7 @@
                     v-for="sprint in release_data.open_sprints"
                     v-bind:key="sprint.id"
                     v-bind:sprint_data="sprint"
-                    v-bind:is-past-release="isPastRelease"
+                    v-bind:is_past_release="is_past_release"
                 />
             </div>
             <i
@@ -91,14 +91,14 @@ const root_store = useStore();
 
 const props = defineProps<{
     release_data: MilestoneData;
-    isOpen: boolean;
-    isPastRelease: boolean;
+    is_open: boolean;
+    is_past_release: boolean;
 }>();
 
 const open_sprints_details = ref(false);
 
 onMounted((): void => {
-    open_sprints_details.value = props.isOpen;
+    open_sprints_details.value = props.is_open;
 });
 
 const display_badge_all_sprint = computed((): boolean => {

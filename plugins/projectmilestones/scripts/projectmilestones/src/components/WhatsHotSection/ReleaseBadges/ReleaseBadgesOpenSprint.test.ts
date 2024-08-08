@@ -54,9 +54,9 @@ describe("ReleaseBadgesOpenSprint", () => {
             global: {
                 ...getGlobalTestOptions(),
             },
-            propsData: {
+            props: {
                 sprint_data,
-                isPastRelease: false,
+                is_past_release: false,
             },
         });
     }

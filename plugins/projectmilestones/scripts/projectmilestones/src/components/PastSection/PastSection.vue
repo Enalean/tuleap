@@ -26,8 +26,8 @@
             v-if="root_store.last_release"
             v-bind:key="root_store.last_release.id"
             v-bind:release_data="root_store.last_release"
-            v-bind:is-past-release="true"
-            v-bind:is-open="false"
+            v-bind:is_past_release="true"
+            v-bind:is_open="false"
         />
         <span class="project-release-label"> {{ $gettext("Past") }} </span>
         <div class="project-other-releases">

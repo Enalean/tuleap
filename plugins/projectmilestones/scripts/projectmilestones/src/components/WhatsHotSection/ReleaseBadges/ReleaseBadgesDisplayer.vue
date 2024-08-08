@@ -22,8 +22,8 @@
         <release-badges-displayer-if-open-sprints
             v-if="open_sprints_exist"
             v-bind:release_data="release_data"
-            v-bind:is-open="isOpen"
-            v-bind:is-past-release="isPastRelease"
+            v-bind:is_open="is_open"
+            v-bind:is_past_release="is_past_release"
         />
         <release-badges-displayer-if-only-closed-sprints
             v-else
@@ -41,8 +41,8 @@ import { openSprintsExist } from "../../../helpers/milestones-sprints-helper";
 
 const props = defineProps<{
     release_data: MilestoneData;
-    isOpen: boolean;
-    isPastRelease: boolean;
+    is_open: boolean;
+    is_past_release: boolean;
 }>();
 
 const open_sprints_exist = computed((): boolean => {

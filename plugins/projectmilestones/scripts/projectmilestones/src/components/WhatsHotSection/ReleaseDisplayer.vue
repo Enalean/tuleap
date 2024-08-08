@@ -21,7 +21,7 @@
     <div
         class="project-release"
         v-bind:class="{
-            'project-release-toggle-closed': !is_open,
+            'project-release-toggle-closed': !ref_is_open,
             'tlp-tooltip tlp-tooltip-top': is_loading,
         }"
         v-bind:data-tlp-tooltip="$gettext('Loading data...')"
@@ -29,19 +29,19 @@
         <release-header
             v-on:toggle-release-details="toggleReleaseDetails()"
             v-bind:release_data="displayed_release"
-            v-bind:is-loading="is_loading"
-            v-bind:class="{ 'project-release-toggle-closed': !is_open, disabled: is_loading }"
-            v-bind:is-past-release="isPastRelease"
+            v-bind:is_loading="is_loading"
+            v-bind:class="{ 'project-release-toggle-closed': !ref_is_open, disabled: is_loading }"
+            v-bind:is_past_release="is_past_release"
         />
-        <div v-if="is_open" data-test="toggle-open" class="release-toggle">
+        <div v-if="ref_is_open" data-test="toggle-open" class="release-toggle">
             <div v-if="has_error" class="tlp-alert-danger" data-test="show-error-message">
                 {{ error_message }}
             </div>
             <div v-else data-test="display-release-data">
                 <release-badges-displayer
                     v-bind:release_data="displayed_release"
-                    v-bind:is-open="isOpen"
-                    v-bind:is-past-release="isPastRelease"
+                    v-bind:is_open="is_open"
+                    v-bind:is_past_release="is_past_release"
                 />
                 <release-description v-bind:release_data="displayed_release" />
             </div>
@@ -67,11 +67,11 @@ const gettext_provider = useGettext();
 
 const props = defineProps<{
     release_data: MilestoneData;
-    isPastRelease: boolean;
-    isOpen: boolean;
+    is_past_release: boolean;
+    is_open: boolean;
 }>();
 
-let is_open = ref(false);
+const ref_is_open = ref(false);
 let is_loading = ref(true);
 let error_message: Ref<string | null> = ref(null);
 let release_data_enhanced: Ref<MilestoneData | null> = ref(null);
@@ -86,9 +86,9 @@ const displayed_release = computed((): MilestoneData => {
 onMounted(async () => {
     try {
         release_data_enhanced.value = await root_store.getEnhancedMilestones(props.release_data);
-        is_open.value = props.isOpen;
+        ref_is_open.value = props.is_open;
         if (
-            props.isPastRelease &&
+            props.is_past_release &&
             is_testplan_activated(props.release_data) &&
             release_data_enhanced.value !== null
         ) {
@@ -117,8 +117,8 @@ async function handle_error(rest_error: unknown): Promise<void> {
 }
 
 function toggleReleaseDetails(): void {
-    if (!is_loading.value || is_open.value) {
-        is_open.value = !is_open.value;
+    if (!is_loading.value || ref_is_open.value) {
+        ref_is_open.value = !ref_is_open.value;
     }
 }
 </script>

@@ -66,10 +66,10 @@ describe("ReleaseBadgesDisplayerIfOpenSprints", () => {
             global: {
                 ...getGlobalTestOptions(pinia),
             },
-            propsData: {
+            props: {
                 release_data,
-                isOpen: is_open,
-                isPastRelease: false,
+                is_open: is_open,
+                is_past_release: false,
             },
         });
     }
