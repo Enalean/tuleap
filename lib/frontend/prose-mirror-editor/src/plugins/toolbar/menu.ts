@@ -18,7 +18,7 @@
  */
 
 import type { MenuElement, MenuItemSpec } from "prosemirror-menu";
-import { icons, MenuItem } from "prosemirror-menu";
+import { wrapItem, icons, MenuItem } from "prosemirror-menu";
 import type { EditorState, Command } from "prosemirror-state";
 import type { Schema, MarkType } from "prosemirror-model";
 import { toggleMark } from "prosemirror-commands";
@@ -75,6 +75,12 @@ export function buildMenuItems(schema: Schema): MenuItemResult {
                     title: gettext_provider.gettext("Toggle embedded style `Ctrl+i`"),
                     icon: icons.em,
                 }),
+
+                wrapItem(schema.nodes.blockquote, {
+                    title: gettext_provider.gettext("Wrap in block quote `Ctrl->`"),
+                    icon: icons.blockquote,
+                }),
+
                 markItem(schema.marks.code, {
                     title: gettext_provider.gettext("Toggle code Ctrl+`"),
                     icon: icons.code,
