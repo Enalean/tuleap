@@ -20,92 +20,53 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Docman\REST\v1\Files;
+namespace Tuleap\Docman\REST\v1\EmbeddedFiles;
 
+use DateTimeImmutable;
 use DateTimeZone;
 use Docman_EmbeddedFile;
+use Docman_Empty;
 use Docman_FileStorage;
+use Docman_ItemFactory;
 use Docman_Version;
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use Docman_VersionFactory;
 use Tuleap\DB\DBTransactionExecutor;
 use Tuleap\Docman\REST\v1\DocmanItemUpdator;
-use Tuleap\Docman\REST\v1\EmbeddedFiles\DocmanEmbeddedFilesPATCHRepresentation;
-use Tuleap\Docman\REST\v1\EmbeddedFiles\EmbeddedFilePropertiesFullRepresentation;
-use Tuleap\Docman\REST\v1\EmbeddedFiles\EmbeddedFileVersionCreator;
-use Tuleap\Docman\REST\v1\EmbeddedFiles\EmbeddedPropertiesPOSTPATCHRepresentation;
 use Tuleap\Docman\REST\v1\PostUpdateEventAdder;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
 
-class EmbeddedFileVersionCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
+final class EmbeddedFileVersionCreatorTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var EmbeddedFileVersionCreator
-     */
-    private $embedded_updator;
-    /**
-     * @var Mockery\MockInterface|DBTransactionExecutor
-     */
-    private $transaction_executor;
-    /**
-     * @var Mockery\MockInterface|DocmanItemUpdator
-     */
-    private $updator;
-    /**
-     * @var \Docman_ItemFactory|Mockery\MockInterface
-     */
-    private $item_factory;
-    /**
-     * @var \Docman_VersionFactory|Mockery\MockInterface
-     */
-    private $version_factory;
-    /**
-     * @var Docman_FileStorage|Mockery\MockInterface
-     */
-    private $file_storage;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|PostUpdateEventAdder
-     */
-    private $post_update_event_adder;
+    private EmbeddedFileVersionCreator $embedded_updator;
+    private DBTransactionExecutor $transaction_executor;
 
     protected function setUp(): void
     {
-        parent::setUp();
-
-        $this->file_storage            = Mockery::mock(Docman_FileStorage::class);
-        $this->version_factory         = Mockery::mock(\Docman_VersionFactory::class);
-        $this->item_factory            = Mockery::mock(\Docman_ItemFactory::class);
-        $this->updator                 = Mockery::mock(DocmanItemUpdator::class);
-        $this->transaction_executor    = Mockery::mock(DBTransactionExecutor::class);
-        $this->post_update_event_adder = Mockery::mock(PostUpdateEventAdder::class);
+        $this->transaction_executor = $this->createMock(DBTransactionExecutor::class);
 
         $this->embedded_updator = new EmbeddedFileVersionCreator(
-            $this->file_storage,
-            $this->version_factory,
-            $this->item_factory,
-            $this->updator,
+            $this->createMock(Docman_FileStorage::class),
+            $this->createMock(Docman_VersionFactory::class),
+            $this->createMock(Docman_ItemFactory::class),
+            $this->createMock(DocmanItemUpdator::class),
             $this->transaction_executor,
-            $this->post_update_event_adder
+            $this->createMock(PostUpdateEventAdder::class)
         );
     }
 
     public function testItShouldStoreTheNewVersionWhenEmbeddedFileRepresentationIsCorrect(): void
     {
-        $item = Mockery::mock(Docman_EmbeddedFile::class);
-        $item->shouldReceive('getId')->andReturn(1);
-        $user = Mockery::mock(\PFUser::class);
-        $user->shouldReceive('getId')->andReturn(101);
+        $item = new Docman_EmbeddedFile(['item_id' => 1]);
+        $user = UserTestBuilder::buildWithId(101);
 
-        $date                        = new \DateTimeImmutable();
+        $date                        = new DateTimeImmutable();
         $date                        = $date->setTimezone(new DateTimeZone('GMT+1'));
         $date                        = $date->setTime(0, 0, 0);
         $obsolescence_date           = $date->modify('+1 day');
         $obsolescence_date_formatted = $obsolescence_date->format('Y-m-d');
 
-        $file_version = Mockery::mock(Docman_Version::class);
-        $file_version->shouldReceive('getFiletype')->andReturn('file');
-        $file_version->shouldReceive('getNumber')->andReturn(123);
+        $file_version = new Docman_Version(['filetype' => 'file', 'number' => 123]);
 
         $representation                        = new DocmanEmbeddedFilesPATCHRepresentation();
         $representation->change_log            = 'changelog';
@@ -119,7 +80,7 @@ class EmbeddedFileVersionCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $representation->status                = 'rejected';
         $representation->obsolescence_date     = $obsolescence_date_formatted;
 
-        $this->transaction_executor->shouldReceive('execute')->once();
+        $this->transaction_executor->expects(self::once())->method('execute');
 
         $this->embedded_updator->createEmbeddedFileVersion(
             $item,
@@ -135,16 +96,14 @@ class EmbeddedFileVersionCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItShouldCreateAVersionOfEmbeddedFileFromAnEmptyDocument(): void
     {
-        $item = Mockery::mock(\Docman_Empty::class);
-        $item->shouldReceive('getId')->andReturn(1);
-        $user = Mockery::mock(\PFUser::class);
-        $user->shouldReceive('getId')->andReturn(101);
+        $item = new Docman_Empty(['item_id' => 1]);
+        $user = UserTestBuilder::buildWithId(101);
 
         $representation          = new EmbeddedPropertiesPOSTPATCHRepresentation();
         $representation->content = 'We will send Mowgli takes the medal';
 
-        $current_time = new \DateTimeImmutable();
-        $this->transaction_executor->shouldReceive('execute')->once();
+        $current_time = new DateTimeImmutable();
+        $this->transaction_executor->expects(self::once())->method('execute');
 
         $this->embedded_updator->createEmbeddedFileVersionFromEmpty(
             $item,

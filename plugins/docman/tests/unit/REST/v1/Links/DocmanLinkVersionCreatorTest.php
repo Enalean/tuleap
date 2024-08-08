@@ -20,100 +20,52 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Docman\REST\v1\Files;
+namespace Tuleap\Docman\REST\v1\Links;
 
+use DateTimeImmutable;
 use DateTimeZone;
+use Docman_Empty;
 use Docman_ItemFactory;
 use Docman_Link;
 use Docman_LinkVersion;
+use Docman_LinkVersionFactory;
 use Docman_VersionFactory;
 use EventManager;
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\DB\DBTransactionExecutor;
 use Tuleap\Docman\REST\v1\DocmanItemUpdator;
-use Tuleap\Docman\REST\v1\Links\DocmanLinkPATCHRepresentation;
-use Tuleap\Docman\REST\v1\Links\DocmanLinkVersionCreator;
-use Tuleap\Docman\REST\v1\Links\LinkPropertiesPOSTPATCHRepresentation;
-use Tuleap\Docman\REST\v1\Links\LinkPropertiesRepresentation;
 use Tuleap\Docman\REST\v1\PostUpdateEventAdder;
 use Tuleap\Docman\Version\LinkVersionDataUpdator;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
 
-class DocmanLinkVersionCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
+final class DocmanLinkVersionCreatorTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-
-    /**
-     * @var Docman_VersionFactory|Mockery\MockInterface
-     */
-    private $version_factory;
-    /**
-     * @var Mockery\MockInterface|DocmanItemUpdator
-     */
-    private $updator;
-    /**
-     * @var Docman_ItemFactory|Mockery\MockInterface
-     */
-    private $item_factory;
-    /**
-     * @var EventManager|Mockery\MockInterface
-     */
-    private $event_manager;
-    /**
-     * @var \Docman_LinkVersionFactory|Mockery\MockInterface
-     */
-    private $docman_link_version_factory;
-    /**
-     * @var Mockery\MockInterface|DBTransactionExecutor
-     */
-    private $transaction_executor;
-    /**
-     * @var DocmanLinkVersionCreator
-     */
-    private $version_creator;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|PostUpdateEventAdder
-     */
-    private $post_update_event_adder;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|LinkVersionDataUpdator
-     */
-    private $link_data_updator;
+    private DBTransactionExecutor&MockObject $transaction_executor;
+    private DocmanLinkVersionCreator $version_creator;
 
     protected function setUp(): void
     {
-        parent::setUp();
-
-        $this->version_factory             = Mockery::mock(Docman_VersionFactory::class);
-        $this->updator                     = Mockery::mock(DocmanItemUpdator::class);
-        $this->item_factory                = Mockery::mock(Docman_ItemFactory::class);
-        $this->event_manager               = Mockery::mock(EventManager::class);
-        $this->docman_link_version_factory = Mockery::mock(\Docman_LinkVersionFactory::class);
-        $this->transaction_executor        = Mockery::mock(DBTransactionExecutor::class);
-        $this->post_update_event_adder     = Mockery::mock(PostUpdateEventAdder::class);
-        $this->link_data_updator           = Mockery::mock(LinkVersionDataUpdator::class);
-
-        $this->version_creator = new DocmanLinkVersionCreator(
-            $this->version_factory,
-            $this->updator,
-            $this->item_factory,
-            $this->event_manager,
-            $this->docman_link_version_factory,
+        $this->transaction_executor = $this->createMock(DBTransactionExecutor::class);
+        $this->version_creator      = new DocmanLinkVersionCreator(
+            $this->createMock(Docman_VersionFactory::class),
+            $this->createMock(DocmanItemUpdator::class),
+            $this->createMock(Docman_ItemFactory::class),
+            $this->createMock(EventManager::class),
+            $this->createMock(Docman_LinkVersionFactory::class),
             $this->transaction_executor,
-            $this->post_update_event_adder,
-            $this->link_data_updator
+            $this->createMock(PostUpdateEventAdder::class),
+            $this->createMock(LinkVersionDataUpdator::class)
         );
     }
 
     public function testItShouldStoreTheNewVersionWhenLinkRepresentationIsCorrect(): void
     {
-        $item = Mockery::mock(Docman_Link::class);
-        $item->shouldReceive('getId')->andReturn(1);
-        $user = Mockery::mock(\PFUser::class);
-        $user->shouldReceive('getId')->andReturn(101);
+        $item = $this->createMock(Docman_Link::class);
+        $item->method('getId')->willReturn(1);
+        $user = UserTestBuilder::buildWithId(101);
 
-        $date                        = new \DateTimeImmutable();
+        $date                        = new DateTimeImmutable();
         $date                        = $date->setTimezone(new DateTimeZone('GMT+1'));
         $date                        = $date->setTime(0, 0, 0);
         $obsolescence_date           = $date->modify('+1 day');
@@ -123,14 +75,14 @@ class DocmanLinkVersionCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $representation->change_log       = 'changelog';
         $representation->version_title    = 'version title';
         $representation->should_lock_file = false;
-        $docman_link                      = \Mockery::mock(Docman_LinkVersion::class);
-        $docman_link->shouldReceive('getLink')->andReturn('https://example.com');
+        $docman_link                      = $this->createMock(Docman_LinkVersion::class);
+        $docman_link->method('getLink')->willReturn('https://example.com');
         $representation->link_properties       = LinkPropertiesRepresentation::build($docman_link);
         $representation->approval_table_action = 'copy';
         $representation->status                = 'rejected';
         $representation->obsolescence_date     = $obsolescence_date_formatted;
 
-        $this->transaction_executor->shouldReceive('execute')->once();
+        $this->transaction_executor->expects(self::once())->method('execute');
 
         $this->version_creator->createLinkVersion(
             $item,
@@ -146,16 +98,14 @@ class DocmanLinkVersionCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItShouldStoreANewLinkVersionDocumentFromAnEmptyDocument(): void
     {
-        $item = Mockery::mock(\Docman_Empty::class);
-        $item->shouldReceive('getId')->andReturn(1);
-        $user = Mockery::mock(\PFUser::class);
-        $user->shouldReceive('getId')->andReturn(101);
+        $item = new Docman_Empty(['item_id' => 1]);
+        $user = UserTestBuilder::buildWithId(101);
 
         $representation           = new LinkPropertiesPOSTPATCHRepresentation();
         $representation->link_url = 'https://example.test';
 
-        $this->transaction_executor->shouldReceive('execute')->once();
+        $this->transaction_executor->expects(self::once())->method('execute');
 
-        $this->version_creator->createLinkVersionFromEmpty($item, $user, $representation, new \DateTimeImmutable());
+        $this->version_creator->createLinkVersionFromEmpty($item, $user, $representation, new DateTimeImmutable());
     }
 }
