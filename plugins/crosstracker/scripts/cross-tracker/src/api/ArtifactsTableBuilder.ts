@@ -32,6 +32,7 @@ import type {
     Selectable,
     SelectableReportContentRepresentation,
     SelectableRepresentation,
+    StaticListSelectableRepresentation,
     TextSelectableRepresentation,
     TrackerSelectableRepresentation,
     UserSelectableRepresentation,
@@ -42,19 +43,21 @@ import {
     NUMERIC_SELECTABLE_TYPE,
     PRETTY_TITLE_SELECTABLE_TYPE,
     PROJECT_SELECTABLE_TYPE,
+    STATIC_LIST_SELECTABLE_TYPE,
     TEXT_SELECTABLE_TYPE,
     TRACKER_SELECTABLE_TYPE,
     USER_SELECTABLE_TYPE,
 } from "./cross-tracker-rest-api-types";
 import type { ArtifactRow, ArtifactsTable, Cell } from "../domain/ArtifactsTable";
 import {
-    USER_CELL,
+    STATIC_LIST_CELL,
     DATE_CELL,
     NUMERIC_CELL,
     PRETTY_TITLE_CELL,
     PROJECT_CELL,
     TEXT_CELL,
     TRACKER_CELL,
+    USER_CELL,
 } from "../domain/ArtifactsTable";
 
 export type ArtifactsTableBuilder = {
@@ -95,6 +98,11 @@ const isTextSelectableRepresentation = (
 const isUserSelectableRepresentation = (
     representation: SelectableRepresentation,
 ): representation is UserSelectableRepresentation => "user_url" in representation;
+
+const isStaticListRepresentation = (
+    representation: SelectableRepresentation,
+): representation is StaticListSelectableRepresentation =>
+    "value" in representation && typeof representation.value === "object";
 
 const isProjectSelectableRepresentation = (
     representation: SelectableRepresentation,
@@ -166,6 +174,17 @@ function buildCell(selectable: Selectable, artifact: ArtifactRepresentation): Re
                 display_name: artifact_value.display_name,
                 avatar_uri: artifact_value.avatar_url,
                 user_uri: Option.fromNullable(artifact_value.user_url),
+            });
+        case STATIC_LIST_SELECTABLE_TYPE:
+            if (!isStaticListRepresentation(artifact_value)) {
+                throw Error(getErrorMessageToWarnTuleapDevs(selectable));
+            }
+            return ok({
+                type: STATIC_LIST_CELL,
+                value: artifact_value.value.map((list_value) => ({
+                    label: list_value.label,
+                    color: Option.fromNullable(list_value.color),
+                })),
             });
         case PROJECT_SELECTABLE_TYPE:
             if (!isProjectSelectableRepresentation(artifact_value)) {

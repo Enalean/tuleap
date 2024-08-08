@@ -23,10 +23,12 @@ import { shallowMount } from "@vue/test-utils";
 import { buildVueDompurifyHTMLDirective } from "vue-dompurify-html";
 import { IntlFormatter } from "@tuleap/date-helper";
 import { Option } from "@tuleap/option";
+import type { ColorName } from "@tuleap/core-constants";
 import SelectableCell from "./SelectableCell.vue";
 import { getGlobalTestOptions } from "../../helpers/global-options-for-tests";
 import type { Cell } from "../../domain/ArtifactsTable";
 import {
+    STATIC_LIST_CELL,
     USER_CELL,
     DATE_CELL,
     NUMERIC_CELL,
@@ -143,6 +145,13 @@ describe(`SelectableCell`, () => {
                     type: DATE_CELL,
                     value: Option.fromValue("1999-09-10T03:43:04+01:00"),
                     with_time: true,
+                },
+            ];
+            yield [
+                STATIC_LIST_CELL,
+                {
+                    type: STATIC_LIST_CELL,
+                    value: [{ label: "Ongoing", color: Option.fromValue<ColorName>("army-green") }],
                 },
             ];
         }

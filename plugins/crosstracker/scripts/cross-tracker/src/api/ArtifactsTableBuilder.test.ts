@@ -24,6 +24,7 @@ import {
     NUMERIC_SELECTABLE_TYPE,
     PRETTY_TITLE_SELECTABLE_TYPE,
     PROJECT_SELECTABLE_TYPE,
+    STATIC_LIST_SELECTABLE_TYPE,
     TEXT_SELECTABLE_TYPE,
     TRACKER_SELECTABLE_TYPE,
     USER_SELECTABLE_TYPE,
@@ -34,6 +35,7 @@ import {
     NUMERIC_CELL,
     PRETTY_TITLE_CELL,
     PROJECT_CELL,
+    STATIC_LIST_CELL,
     TEXT_CELL,
     TRACKER_CELL,
     USER_CELL,
@@ -42,6 +44,7 @@ import {
     ARTIFACT_COLUMN_NAME,
     PRETTY_TITLE_COLUMN_NAME,
     PROJECT_COLUMN_NAME,
+    STATUS_COLUMN_NAME,
     SUBMITTED_BY_COLUMN_NAME,
     TRACKER_COLUMN_NAME,
 } from "../domain/ColumnName";
@@ -289,6 +292,62 @@ describe(`ArtifactsTableBuilder`, () => {
             expect(user_value_second_row.user_uri.isNothing()).toBe(true);
         });
 
+        it(`builds a table with "list_static" selectables `, () => {
+            const first_list_item = { label: "Done", color: "chrome-silver" };
+            const second_list_item = { label: "Authorized", color: "sherwood-green" };
+            const third_list_item = { label: "Restricted", color: "fiesta-red" };
+            const fourth_list_item = { label: "baggy", color: null };
+            const list_column = STATUS_COLUMN_NAME;
+
+            const table = ArtifactsTableBuilder().mapReportToArtifactsTable(
+                SelectableReportContentRepresentationStub.build(
+                    [{ type: STATIC_LIST_SELECTABLE_TYPE, name: list_column }],
+                    [
+                        ArtifactRepresentationStub.build({
+                            [list_column]: { value: [first_list_item] },
+                        }),
+                        ArtifactRepresentationStub.build({
+                            [list_column]: { value: [second_list_item, third_list_item] },
+                        }),
+                        ArtifactRepresentationStub.build({
+                            [list_column]: { value: [fourth_list_item] },
+                        }),
+                    ],
+                ),
+            );
+
+            expect(table.columns.has(list_column)).toBe(true);
+            expect(table.rows).toHaveLength(3);
+            const [first_row, second_row, third_row] = table.rows;
+            const list_value_first_row = first_row.cells.get(list_column);
+            if (list_value_first_row?.type !== STATIC_LIST_CELL) {
+                throw Error("Expected to find first static list cell");
+            }
+            expect(list_value_first_row.value).toHaveLength(1);
+            expect(list_value_first_row.value[0].label).toBe(first_list_item.label);
+            expect(list_value_first_row.value[0].color.unwrapOr(null)).toBe(first_list_item.color);
+
+            const list_value_second_row = second_row.cells.get(list_column);
+            if (list_value_second_row?.type !== STATIC_LIST_CELL) {
+                throw Error("Expected to find second static list cell");
+            }
+            expect(list_value_second_row.value).toHaveLength(2);
+            expect(list_value_second_row.value[0].label).toBe(second_list_item.label);
+            expect(list_value_second_row.value[0].color.unwrapOr(null)).toBe(
+                second_list_item.color,
+            );
+            expect(list_value_second_row.value[1].label).toBe(third_list_item.label);
+            expect(list_value_second_row.value[1].color.unwrapOr(null)).toBe(third_list_item.color);
+
+            const list_value_third_row = third_row.cells.get(list_column);
+            if (list_value_third_row?.type !== STATIC_LIST_CELL) {
+                throw Error("Expected to find third static list cell");
+            }
+            expect(list_value_third_row.value).toHaveLength(1);
+            expect(list_value_third_row.value[0].label).toBe(fourth_list_item.label);
+            expect(list_value_third_row.value[0].color.isNothing()).toBe(true);
+        });
+
         it(`builds a table with "project" selectables`, () => {
             const first_project = { icon: "", name: "Minimum Butter" };
             const second_project = { icon: "🖍️", name: "Teal Creek" };
@@ -424,6 +483,7 @@ describe(`ArtifactsTableBuilder`, () => {
             yield [NUMERIC_SELECTABLE_TYPE, { value: "ritualist" }];
             yield [TEXT_SELECTABLE_TYPE, { value: 12 }];
             yield [USER_SELECTABLE_TYPE, { value: 12 }];
+            yield [STATIC_LIST_SELECTABLE_TYPE, { value: 12 }];
             yield [PROJECT_SELECTABLE_TYPE, { value: 12 }];
             yield [TRACKER_SELECTABLE_TYPE, { value: 12 }];
             yield [PRETTY_TITLE_SELECTABLE_TYPE, { value: 12 }];
