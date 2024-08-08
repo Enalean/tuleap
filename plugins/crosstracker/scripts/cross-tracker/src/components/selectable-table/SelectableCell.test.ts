@@ -23,11 +23,11 @@ import { shallowMount } from "@vue/test-utils";
 import { buildVueDompurifyHTMLDirective } from "vue-dompurify-html";
 import { IntlFormatter } from "@tuleap/date-helper";
 import { Option } from "@tuleap/option";
-import type { ColorName } from "@tuleap/core-constants";
 import SelectableCell from "./SelectableCell.vue";
 import { getGlobalTestOptions } from "../../helpers/global-options-for-tests";
 import type { Cell } from "../../domain/ArtifactsTable";
 import {
+    USER_LIST_CELL,
     STATIC_LIST_CELL,
     USER_CELL,
     DATE_CELL,
@@ -85,33 +85,6 @@ describe(`SelectableCell`, () => {
             expect(wrapper.get("a").attributes("href")).toBe(artifact_uri);
         });
 
-        describe(`when the cell is a user`, () => {
-            it(`renders a link to the user URI and an img with the avatar URI`, () => {
-                const user_uri = "/users/mcastro";
-                const avatar_uri = "https://example.com/users/mcastro/avatar.png";
-                const wrapper = getWrapper({
-                    type: USER_CELL,
-                    display_name: "Mario Castro (mcastro)",
-                    user_uri: Option.fromValue(user_uri),
-                    avatar_uri,
-                });
-
-                expect(wrapper.get("a").attributes("href")).toBe(user_uri);
-                expect(wrapper.get("img").attributes("src")).toBe(avatar_uri);
-            });
-
-            it(`does not render a link when the user is anonymous`, () => {
-                const wrapper = getWrapper({
-                    type: USER_CELL,
-                    display_name: "Anonymous user",
-                    user_uri: Option.nothing(),
-                    avatar_uri: "https://example.com/themes/common/images/avatar_default.png",
-                });
-
-                expect(wrapper.find("a").exists()).toBe(false);
-            });
-        });
-
         function* generateCells(): Generator<[string, Cell]> {
             yield [
                 PRETTY_TITLE_CELL,
@@ -147,13 +120,8 @@ describe(`SelectableCell`, () => {
                     with_time: true,
                 },
             ];
-            yield [
-                STATIC_LIST_CELL,
-                {
-                    type: STATIC_LIST_CELL,
-                    value: [{ label: "Ongoing", color: Option.fromValue<ColorName>("army-green") }],
-                },
-            ];
+            yield [STATIC_LIST_CELL, { type: STATIC_LIST_CELL, value: [] }];
+            yield [USER_LIST_CELL, { type: USER_LIST_CELL, value: [] }];
         }
 
         it.each([...generateCells()])(
