@@ -6,6 +6,7 @@
   "private": true,
   "dependencies": {
     "@tuleap/copy-to-clipboard": "workspace:^",
+    "@tuleap/dom": "workspace:^",
     "@tuleap/print-as-pdf": "workspace:^",
     "@tuleap/tlp-popovers": "workspace:^",
     "codemirror": "^5.62.0"

@@ -11,8 +11,11 @@ patchedDependencies:
 
 dependencies:
   '@tuleap/fault':
-    specifier: workspace:*
+    specifier: workspace:^
     version: link:../fault
+  '@tuleap/html-escaper':
+    specifier: workspace:^
+    version: link:../html-escaper
   dompurify:
     specifier: ^3.1.4
     version: 3.1.6
@@ -25,7 +28,7 @@ dependencies:
 
 devDependencies:
   '@tuleap/build-system-configurator':
-    specifier: workspace:*
+    specifier: workspace:^
     version: link:../build-system-configurator
   '@types/dompurify':
     specifier: ^3.0.5
