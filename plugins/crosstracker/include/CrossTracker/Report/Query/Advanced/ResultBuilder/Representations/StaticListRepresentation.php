@@ -30,7 +30,7 @@ use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\SelectedValueReprese
 final readonly class StaticListRepresentation implements SelectedValueRepresentation
 {
     /**
-     * @var StaticListValueRepresentation[]
+     * @var list<StaticListValueRepresentation>
      */
     public array $value;
 
@@ -39,6 +39,6 @@ final readonly class StaticListRepresentation implements SelectedValueRepresenta
      */
     public function __construct(array $value)
     {
-        $this->value = array_unique($value, SORT_REGULAR);
+        $this->value = array_values(array_unique($value, SORT_REGULAR));
     }
 }

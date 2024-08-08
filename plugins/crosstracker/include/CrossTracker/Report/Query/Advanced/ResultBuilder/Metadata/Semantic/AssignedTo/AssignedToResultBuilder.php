@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Metadata\Semantic\AssignedTo;
 
 use LogicException;
+use Tracker_FormElement_Field_List_Bind;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Representations\UserListRepresentation;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Representations\UserRepresentation;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\SelectedValue;
@@ -52,7 +53,7 @@ final readonly class AssignedToResultBuilder
             }
 
             $value = $result[$alias];
-            if (! is_int($value)) {
+            if (! is_int($value) || $value === Tracker_FormElement_Field_List_Bind::NONE_VALUE) {
                 continue;
             }
             $user = $this->user_retriever->getUserById($value);
