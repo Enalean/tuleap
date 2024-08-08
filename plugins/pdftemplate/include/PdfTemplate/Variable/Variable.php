@@ -49,4 +49,25 @@ enum Variable: string
             self::DocumentTitle => dgettext('tuleap-pdftemplate', 'Title of the generated document'),
         };
     }
+
+    /**
+     * @return array<string, string>
+     */
+    public static function getDefaultForPreview(): array
+    {
+        $variables = self::cases();
+
+        return array_combine(
+            array_map(
+                static fn (self $variable) => $variable->value,
+                $variables,
+            ),
+            array_map(
+                static fn(self $variable) => match ($variable) {
+                    self::DocumentTitle => dgettext('tuleap-pdftemplate', 'Document title'),
+                },
+                $variables,
+            ),
+        );
+    }
 }

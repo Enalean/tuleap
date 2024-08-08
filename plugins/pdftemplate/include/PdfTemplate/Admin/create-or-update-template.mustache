@@ -40,7 +40,11 @@
                     {{# dgettext }} tuleap-pdftemplate | Save {{/ dgettext }}
                 </button>
 
-                <button type="button" class="tlp-button-primary tlp-button-outline" id="pdftemplate-print-preview">
+                <button type="button"
+                        class="tlp-button-primary tlp-button-outline"
+                        id="pdftemplate-print-preview"
+                        data-variables="{{ variables_for_preview }}"
+                >
                     <i class="fa-regular fa-file-pdf tlp-button-icon" aria-hidden="true"></i>
                     {{# dgettext }} tuleap-pdftemplate | Preview {{/ dgettext }}
                 </button>

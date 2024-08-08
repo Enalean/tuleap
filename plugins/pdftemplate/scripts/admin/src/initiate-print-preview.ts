@@ -21,6 +21,7 @@ import type { PdfTemplate } from "@tuleap/print-as-pdf";
 import { printAsPdf } from "@tuleap/print-as-pdf";
 import type CodeMirror from "codemirror";
 import { createModal } from "@tuleap/tlp-modal";
+import { getDatasetItemOrThrow } from "@tuleap/dom";
 
 export function initiatePrintPreview(
     style: CodeMirror.EditorFromTextArea,
@@ -63,25 +64,17 @@ export function initiatePrintPreview(
             id: "",
             label: label.value,
             description: description.value,
-            style:
-                style.getValue() +
-                `
-                .pdftemplate-preview-variable {
-                    background: rgba(213, 216, 220, 0.5);
-                    color: rgb(88, 88, 88);
-                    border-radius: 3px;
-                    padding: 5px 8px;
-                }
-            `,
+            style: style.getValue(),
             title_page_content: title_page_content_editor.getValue(),
             header_content: header_content_editor.getValue(),
             footer_content: footer_content_editor.getValue(),
         };
 
-        printAsPdf(fake_document, template, {
-            // eslint-disable-next-line no-template-curly-in-string
-            DOCUMENT_TITLE: "<span class='pdftemplate-preview-variable'>${DOCUMENT_TITLE}</span>",
-        }).mapErr((fault) => {
+        printAsPdf(
+            fake_document,
+            template,
+            JSON.parse(getDatasetItemOrThrow(button, "variables")),
+        ).mapErr((fault) => {
             details.innerText = fault.toString();
 
             createModal(modal, {

@@ -41,6 +41,7 @@ final readonly class DisplayPdfTemplateCreationOrUpdateFormPresenter
      * @var list<VariablePresenter>
      */
     public array $variables;
+    public string $variables_for_preview;
 
     /**
      * @param list<DisplayImagePresenter> $images
@@ -56,9 +57,10 @@ final readonly class DisplayPdfTemplateCreationOrUpdateFormPresenter
         CSRFSynchronizerTokenInterface $token,
         public array $images,
     ) {
-        $this->csrf       = CSRFSynchronizerTokenPresenter::fromToken($token);
-        $this->has_images = count($images) > 0;
-        $this->variables  = Variable::getPresenters();
+        $this->csrf                  = CSRFSynchronizerTokenPresenter::fromToken($token);
+        $this->has_images            = count($images) > 0;
+        $this->variables             = Variable::getPresenters();
+        $this->variables_for_preview = json_encode(Variable::getDefaultForPreview());
     }
 
     /**

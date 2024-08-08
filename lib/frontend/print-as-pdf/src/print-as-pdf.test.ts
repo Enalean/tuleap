@@ -34,7 +34,7 @@ const template = {
     footer_content: "<span>Footer content of ${DOCUMENT_TITLE}</span>",
 };
 
-const template_variables = { DOCUMENT_TITLE: "Test document" };
+const template_variables = { DOCUMENT_TITLE: "Test <b> document" };
 
 const mocks = vi.hoisted(() => ({ print: vi.fn() }));
 
@@ -66,13 +66,13 @@ describe("print-as-pdf", () => {
         }
 
         expect(printable.querySelector("#document-title-page")?.innerHTML).toBe(
-            "<h1>Test document</h1>",
+            "<h1>Test &lt;b&gt; document</h1>",
         );
         expect(printable.querySelector("#document-header")?.innerHTML).toBe(
-            "<span>Header content of Test document</span>",
+            "<span>Header content of Test &lt;b&gt; document</span>",
         );
         expect(printable.querySelector("#document-footer")?.innerHTML).toBe(
-            "<span>Footer content of Test document</span>",
+            "<span>Footer content of Test &lt;b&gt; document</span>",
         );
 
         expect(mocks.print).toHaveBeenCalledOnce();

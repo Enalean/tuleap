@@ -22,6 +22,7 @@ import { ok, err } from "neverthrow";
 import type { Result } from "neverthrow";
 import DOMPurify from "dompurify";
 import { Fault } from "@tuleap/fault";
+import { escaper } from "@tuleap/html-escaper";
 
 export interface PdfTemplate {
     readonly id: string;
@@ -39,7 +40,7 @@ export type PdfTemplateVariables = {
 
 const replaceVariables = (html: string, variables: PdfTemplateVariables): string => {
     // eslint-disable-next-line no-template-curly-in-string
-    return html.replace("${DOCUMENT_TITLE}", variables.DOCUMENT_TITLE ?? "");
+    return html.replace("${DOCUMENT_TITLE}", escaper.html(variables.DOCUMENT_TITLE ?? ""));
 };
 
 const injectContent = (

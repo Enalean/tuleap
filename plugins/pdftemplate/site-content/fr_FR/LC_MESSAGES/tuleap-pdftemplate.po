@@ -71,6 +71,9 @@ msgstr "Supprimer l'image"
 msgid "Description"
 msgstr "Description"
 
+msgid "Document title"
+msgstr "Titre du document"
+
 msgid "Duplicate"
 msgstr "Dupliquer"
 
