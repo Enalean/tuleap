@@ -23,11 +23,14 @@ import type { ColorName } from "@tuleap/core-constants";
 
 export type TrackerReference = Pick<TrackerResponseWithProject, "id" | "label" | "project">;
 
+export const EXPERT_MODE = "expert";
+export const DEFAULT_MODE = "default";
+
 export type ReportRepresentation = {
     readonly trackers: ReadonlyArray<TrackerReference>;
     readonly expert_query: string;
     readonly invalid_trackers: ReadonlyArray<TrackerReference>;
-    readonly report_mode: string;
+    readonly report_mode: typeof EXPERT_MODE | typeof DEFAULT_MODE;
 };
 
 export type ReportContentRepresentation = {
