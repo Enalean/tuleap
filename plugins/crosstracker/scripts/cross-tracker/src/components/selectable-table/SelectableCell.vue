@@ -59,6 +59,18 @@
             />
         </span>
         <span
+            v-if="props.cell.type === USER_GROUP_LIST_CELL"
+            class="cell list-cell"
+            v-bind:class="getEvenOddClass()"
+            data-test="cell"
+            ><span
+                v-for="list_value of props.cell.value"
+                v-bind:key="list_value.label"
+                class="user-group"
+                >{{ list_value.label }}</span
+            ></span
+        >
+        <span
             v-if="props.cell.type === TRACKER_CELL"
             class="cell"
             v-bind:class="getEvenOddClass()"
@@ -96,7 +108,6 @@ import type { ColorName } from "@tuleap/core-constants";
 import type { Option } from "@tuleap/option";
 import type { Cell, PrettyTitleCell } from "../../domain/ArtifactsTable";
 import {
-    USER_LIST_CELL,
     DATE_CELL,
     NUMERIC_CELL,
     PRETTY_TITLE_CELL,
@@ -105,6 +116,8 @@ import {
     TEXT_CELL,
     TRACKER_CELL,
     USER_CELL,
+    USER_GROUP_LIST_CELL,
+    USER_LIST_CELL,
 } from "../../domain/ArtifactsTable";
 import { DATE_FORMATTER, DATE_TIME_FORMATTER } from "../../injection-symbols";
 import UserValue from "./UserValue.vue";
@@ -160,6 +173,10 @@ const getCrossRefBadgeClass = (cell: PrettyTitleCell): string =>
 .list-cell {
     gap: 3px;
     flex-wrap: wrap;
+}
+
+.user-group:not(:last-child)::after {
+    content: ", ";
 }
 
 .cross-ref-badge {

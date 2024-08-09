@@ -35,6 +35,7 @@ import type {
     StaticListSelectableRepresentation,
     TextSelectableRepresentation,
     TrackerSelectableRepresentation,
+    UserGroupListSelectableRepresentation,
     UserListSelectableRepresentation,
     UserSelectableRepresentation,
 } from "./cross-tracker-rest-api-types";
@@ -47,12 +48,12 @@ import {
     STATIC_LIST_SELECTABLE_TYPE,
     TEXT_SELECTABLE_TYPE,
     TRACKER_SELECTABLE_TYPE,
+    USER_GROUP_LIST_SELECTABLE_TYPE,
     USER_LIST_SELECTABLE_TYPE,
     USER_SELECTABLE_TYPE,
 } from "./cross-tracker-rest-api-types";
 import type { ArtifactRow, ArtifactsTable, Cell, UserCellValue } from "../domain/ArtifactsTable";
 import {
-    USER_LIST_CELL,
     DATE_CELL,
     NUMERIC_CELL,
     PRETTY_TITLE_CELL,
@@ -61,6 +62,8 @@ import {
     TEXT_CELL,
     TRACKER_CELL,
     USER_CELL,
+    USER_GROUP_LIST_CELL,
+    USER_LIST_CELL,
 } from "../domain/ArtifactsTable";
 
 export type ArtifactsTableBuilder = {
@@ -110,6 +113,11 @@ const isStaticListRepresentation = (
 const isUserListRepresentation = (
     representation: SelectableRepresentation,
 ): representation is UserListSelectableRepresentation =>
+    "value" in representation && Array.isArray(representation.value);
+
+const isUserGroupListRepresentation = (
+    representation: SelectableRepresentation,
+): representation is UserGroupListSelectableRepresentation =>
     "value" in representation && Array.isArray(representation.value);
 
 const isProjectSelectableRepresentation = (
@@ -205,6 +213,14 @@ function buildCell(selectable: Selectable, artifact: ArtifactRepresentation): Re
             return ok({
                 type: USER_LIST_CELL,
                 value: artifact_value.value.map(mapUserRepresentationToUser),
+            });
+        case USER_GROUP_LIST_SELECTABLE_TYPE:
+            if (!isUserGroupListRepresentation(artifact_value)) {
+                throw Error(getErrorMessageToWarnTuleapDevs(selectable));
+            }
+            return ok({
+                type: USER_GROUP_LIST_CELL,
+                ...artifact_value,
             });
         case PROJECT_SELECTABLE_TYPE:
             if (!isProjectSelectableRepresentation(artifact_value)) {
