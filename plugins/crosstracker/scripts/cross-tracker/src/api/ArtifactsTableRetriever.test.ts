@@ -25,6 +25,7 @@ import type { RetrieveArtifactsTable } from "../domain/RetrieveArtifactsTable";
 import { ArtifactsTableBuilder } from "./ArtifactsTableBuilder";
 import { SelectableReportContentRepresentationStub } from "../../tests/builders/SelectableReportContentRepresentationStub";
 import { ArtifactRepresentationStub } from "../../tests/builders/ArtifactRepresentationStub";
+import { EXPERT_MODE } from "./cross-tracker-rest-api-types";
 
 describe(`ArtifactsTableRetriever`, () => {
     describe(`getSelectableQueryResult()`, () => {
@@ -75,7 +76,7 @@ describe(`ArtifactsTableRetriever`, () => {
                     params: {
                         limit,
                         offset,
-                        report_mode: "expert",
+                        report_mode: EXPERT_MODE,
                         query: JSON.stringify({
                             trackers_id: tracker_ids,
                             expert_query,
@@ -123,7 +124,7 @@ describe(`ArtifactsTableRetriever`, () => {
                     params: {
                         limit,
                         offset,
-                        report_mode: "expert",
+                        report_mode: EXPERT_MODE,
                     },
                 },
             );
