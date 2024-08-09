@@ -218,17 +218,22 @@ final class OnlyOfficeCallbackResponseJWTParser implements OnlyOfficeCallbackRes
                 )
             );
         }
-        $history = $claims->get('history');
-        if (! is_array($history) || ! isset($history['serverVersion']) || ! is_string($history['serverVersion'])) {
-            return Result::err(
-                Fault::fromMessage(
-                    sprintf(
-                        'Invalid or missing `history` key (got "%s") in the ONLYOFFICE JWT callback claims',
-                        var_export($history, true)
+        $history        = $claims->get('history');
+        $server_version = 'N/A';
+        if (isset($history['serverVersion'])) {
+            if (! is_string($history['serverVersion'])) {
+                return Result::err(
+                    Fault::fromMessage(
+                        sprintf(
+                            'Invalid `history.serverVersion` key (got "%s") in the ONLYOFFICE JWT callback claims',
+                            var_export($history['serverVersion'], true)
+                        )
                     )
-                )
-            );
+                );
+            }
+            $server_version = $history['serverVersion'];
         }
+
         $author_identifiers = [];
         if (isset($history['changes']) && is_array($history['changes'])) {
             foreach ($history['changes'] as $change) {
@@ -248,7 +253,7 @@ final class OnlyOfficeCallbackResponseJWTParser implements OnlyOfficeCallbackRes
 
         return Result::ok(
             Option::fromValue(
-                new OnlyOfficeCallbackSaveResponseData($download_url, $history['serverVersion'], $author_identifiers)
+                new OnlyOfficeCallbackSaveResponseData($download_url, $server_version, $author_identifiers)
             )
         );
     }
