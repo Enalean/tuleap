@@ -20,6 +20,8 @@
 import type { FileUploadOptions, OnGoingUploadFile } from "../types";
 import { type DetailedError, Upload } from "tus-js-client";
 import { computedProgress } from "./progress-computation-helper";
+import { Option } from "@tuleap/option";
+import type { OngoingUpload } from "../plugin-drop-file";
 
 export function uploadFile(
     files: Map<number, OnGoingUploadFile>,
@@ -27,7 +29,7 @@ export function uploadFile(
     file: File,
     upload_href: string,
     onProgressCallback: FileUploadOptions["onProgressCallback"],
-): Promise<void> {
+): Promise<Option<OngoingUpload>> {
     return new Promise((resolve, reject): void => {
         const uploader = new Upload(file, {
             uploadUrl: upload_href,
@@ -40,12 +42,20 @@ export function uploadFile(
                 onProgressCallback(progress);
             },
             onSuccess: (): void => {
-                return resolve();
+                return resolve(Option.nothing<OngoingUpload>());
             },
             onError: (error: Error | DetailedError): void => {
                 return reject(error);
             },
         });
         uploader.start();
+
+        resolve(
+            Option.fromValue({
+                cancel: () => {
+                    uploader.abort();
+                },
+            }),
+        );
     });
 }

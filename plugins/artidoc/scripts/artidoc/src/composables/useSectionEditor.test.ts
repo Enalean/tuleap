@@ -182,19 +182,6 @@ describe("useSectionEditor", () => {
                     expect(store_stub.removeSection).toHaveBeenCalled();
                 });
             });
-
-            it("should indicate that cancel button has been triggered", () => {
-                const { editor_actions, editor_state } = useSectionEditor(
-                    PendingArtifactSectionFactory.create(),
-                    merge_artifacts,
-                    set_waiting_list,
-                );
-                editor_actions.cancelEditor(null);
-
-                expect(editor_state.toggle_has_been_canceled.value).toBe(true);
-                editor_actions.cancelEditor(null);
-                expect(editor_state.toggle_has_been_canceled.value).toBe(false);
-            });
         });
     });
     describe("editor_error", () => {

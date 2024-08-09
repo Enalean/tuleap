@@ -20,6 +20,8 @@ import type { FileUploadOptions } from "./types";
 import { InvalidFileUploadError, MaxSizeUploadExceededError, UploadError } from "./types";
 import { uploadFile } from "./helpers/upload-file-helper";
 import { postJSON, rawUri, uri } from "@tuleap/fetch-result";
+import type { OngoingUpload } from "./plugin-drop-file";
+import { Option } from "@tuleap/option";
 
 export const VALID_FILE_TYPES = [
     "image/png",
@@ -37,14 +39,14 @@ export type PostFileResponse = {
 };
 
 export function fileUploadHandler(options: FileUploadOptions) {
-    return function handler(event: DragEvent): void {
+    return function handler(event: DragEvent): Promise<Option<ReadonlyArray<OngoingUpload>>> {
         event.preventDefault();
         const files = event.dataTransfer?.files;
         if (!files) {
             options.onErrorCallback(new UploadError());
-            return;
+            return Promise.resolve(Option.nothing<ReadonlyArray<OngoingUpload>>());
         }
-        uploadAndDisplayFileInEditor(files, options);
+        return uploadAndDisplayFileInEditor(files, options);
     };
 }
 
@@ -55,7 +57,7 @@ export function isFileTypeValid(file: File): boolean {
 export async function uploadAndDisplayFileInEditor(
     files: FileList,
     options: FileUploadOptions,
-): Promise<void> {
+): Promise<Option<ReadonlyArray<OngoingUpload>>> {
     const {
         upload_url,
         max_size_upload,
@@ -66,49 +68,60 @@ export async function uploadAndDisplayFileInEditor(
     } = options;
 
     let file_index = 0;
+    const ongoing_uploads: OngoingUpload[] = [];
     for (const file of files) {
         if (file.size > max_size_upload) {
             onErrorCallback(new MaxSizeUploadExceededError(max_size_upload));
-            return;
+            return Promise.resolve(Option.fromValue(ongoing_uploads));
         }
 
         if (!isFileTypeValid(file)) {
             onErrorCallback(new InvalidFileUploadError());
-            return;
+            return Promise.resolve(Option.fromValue(ongoing_uploads));
         }
 
         upload_files.set(file_index, { file_name: file.name, progress: 0 });
-
-        await postJSON<PostFileResponse>(uri`${rawUri(upload_url)}`, {
-            name: file.name,
-            file_size: file.size,
-            file_type: file.type,
-        }).match(
-            async (response) => {
+        const optional_ongoing_upload: Option<OngoingUpload> = await postJSON<PostFileResponse>(
+            uri`${rawUri(upload_url)}`,
+            {
+                name: file.name,
+                file_size: file.size,
+                file_type: file.type,
+            },
+        ).match(
+            async (response): Promise<Option<OngoingUpload>> => {
                 if (!response.upload_href) {
                     onErrorCallback(new UploadError());
-                    return;
+                    return Promise.resolve(Option.nothing<OngoingUpload>());
                 }
 
                 try {
-                    await uploadFile(
+                    const ongoing_upload = await uploadFile(
                         upload_files,
                         file_index,
                         file,
                         response.upload_href,
                         onProgressCallback,
                     );
+                    onSuccessCallback(response.id, response.download_href);
+
+                    return ongoing_upload;
                 } catch (error) {
                     onErrorCallback(new UploadError());
                     throw error;
                 }
-                onSuccessCallback(response.id, response.download_href);
             },
-            () => {
+            (): Promise<Option<OngoingUpload>> => {
                 onErrorCallback(new UploadError());
+                return Promise.resolve(Option.nothing<OngoingUpload>());
             },
         );
+        optional_ongoing_upload.apply((ongoing_upload) => {
+            ongoing_uploads.push(ongoing_upload);
+        });
 
         file_index++;
     }
+
+    return Promise.resolve(Option.fromValue([...ongoing_uploads]));
 }

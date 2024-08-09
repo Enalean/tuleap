@@ -27,7 +27,6 @@ export const SectionEditorStub = {
             is_image_upload_allowed: computed(() => false),
             is_section_editable: computed(() => false),
             is_section_in_edit_mode: ref(false),
-            toggle_has_been_canceled: ref(false),
             isBeingSaved: () => false,
             isJustSaved: () => false,
             isJustRefreshed: () => false,

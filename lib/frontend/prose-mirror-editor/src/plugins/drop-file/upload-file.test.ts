@@ -25,6 +25,8 @@ import type { FileUploadOptions, OnGoingUploadFile } from "./types";
 import * as fetch_result from "@tuleap/fetch-result";
 import * as download_file from "./helpers/upload-file-helper";
 import { okAsync } from "neverthrow";
+import { Option } from "@tuleap/option";
+import type { OngoingUpload } from "./plugin-drop-file";
 
 describe("uploadFile", () => {
     describe("uploadAndDisplayFileInEditor", () => {
@@ -57,7 +59,9 @@ describe("uploadFile", () => {
                 } as unknown),
             );
 
-            uploadFileMock = vi.spyOn(download_file, "uploadFile").mockResolvedValue();
+            uploadFileMock = vi
+                .spyOn(download_file, "uploadFile")
+                .mockResolvedValue(Option.nothing<OngoingUpload>());
             file = new File(["123"], "file_name.png", { type: "image/png" });
             other_file = new File(["456"], "other.png", { type: "image/png" });
             const upload_files: Map<number, OnGoingUploadFile> = new Map();

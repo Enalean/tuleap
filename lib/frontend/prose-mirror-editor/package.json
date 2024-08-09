@@ -16,6 +16,7 @@
     "@tuleap/fault": "workspace:^",
     "@tuleap/fetch-result": "workspace:^",
     "@tuleap/gettext": "workspace:^",
+    "@tuleap/option": "workspace:^",
     "neverthrow": "6.0.0",
     "prosemirror-commands": "^1.5.2",
     "prosemirror-inputrules": "^1.4.0",

@@ -46,7 +46,7 @@ const props = defineProps<{
     upload_url: string;
     is_image_upload_allowed: boolean;
     add_attachment_to_waiting_list: AttachmentFile["addAttachmentToWaitingList"];
-    toggle_has_been_canceled: boolean;
+    is_edit_mode: boolean;
     editable_description: string;
     input_current_description: EditorSectionContent["inputCurrentDescription"];
 }>();
@@ -65,7 +65,8 @@ const { file_upload_options, error_message, progress, resetProgressCallback } = 
     props.add_attachment_to_waiting_list,
 );
 
-const plugins = ref([initPluginInput(onChange), initPluginDropFile(file_upload_options)]);
+const upload_plugin = initPluginDropFile(file_upload_options);
+const plugins = ref([initPluginInput(onChange), upload_plugin]);
 
 function convertDescriptionToHTML(description: string): HTMLElement {
     const parser = new DOMParser();
@@ -74,8 +75,13 @@ function convertDescriptionToHTML(description: string): HTMLElement {
 
 // each time cancel button is clicked, this props is updated to trigger resetContent
 watch(
-    () => props.toggle_has_been_canceled,
+    () => props.is_edit_mode,
     () => {
+        if (!props.is_edit_mode) {
+            upload_plugin.cancelOngoingUpload();
+            resetProgressCallback();
+        }
+
         if (editorView.value && useEditorInstance) {
             useEditorInstance.resetContent(convertDescriptionToHTML(props.editable_description));
         }
