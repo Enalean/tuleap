@@ -32,7 +32,7 @@
     </button>
     <pdf-export-menu-templates-dropdown
         v-else-if="has_more_than_one_template"
-        v-bind:print-using-template="printUsingTemplate"
+        v-bind:print_using_template="printUsingTemplate"
     />
     <button
         v-else

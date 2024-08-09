@@ -45,7 +45,7 @@ describe("PdfExportMenuTemplatesDropdown", () => {
                 },
             },
             propsData: {
-                printUsingTemplate,
+                print_using_template: printUsingTemplate,
             },
         });
 

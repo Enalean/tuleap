@@ -36,7 +36,7 @@
                 v-for="template in pdf_templates.list.value"
                 v-bind:key="template.id"
                 type="button"
-                v-on:click="printUsingTemplate(template)"
+                v-on:click="print_using_template(template)"
                 class="tlp-dropdown-menu-item"
                 role="menuitem"
                 data-test="pdf-template-button"
@@ -66,7 +66,7 @@ const trigger = ref<HTMLElement | null>(null);
 const submenu = ref<HTMLElement | null>(null);
 
 defineProps<{
-    printUsingTemplate(template: PdfTemplate): void;
+    print_using_template(template: PdfTemplate): void;
 }>();
 
 onMounted(() => {
