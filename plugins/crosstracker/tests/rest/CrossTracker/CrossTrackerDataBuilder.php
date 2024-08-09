@@ -19,19 +19,22 @@
  *
  */
 
-namespace Tuleap\CrossTracker;
+declare(strict_types=1);
+
+namespace Tuleap\CrossTracker\REST\v1;
 
 use EventManager;
 use REST_TestDataBuilder;
+use Tuleap\CrossTracker\CrossTrackerReportDao;
 use Tuleap\Dashboard\Widget\DashboardWidgetDao;
 use Tuleap\Widget\WidgetFactory;
 use User_ForgeUserGroupPermissionsDao;
 use User_ForgeUserGroupPermissionsManager;
 use UserManager;
 
-class CrossTrackerDataBuilder extends REST_TestDataBuilder
+final class CrossTrackerDataBuilder extends REST_TestDataBuilder
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->instanciateFactories();
 
@@ -57,10 +60,7 @@ class CrossTrackerDataBuilder extends REST_TestDataBuilder
         $widget_dao->create($test_user_1_id, 'g', 3, 'crosstrackersearch', $project_report_id);
     }
 
-    /**
-     * @return \Tracker
-     */
-    private function getKanbanTracker()
+    private function getKanbanTracker(): \Tracker
     {
         return $this->getTrackerInProjectPrivateMember(self::KANBAN_TRACKER_SHORTNAME);
     }
