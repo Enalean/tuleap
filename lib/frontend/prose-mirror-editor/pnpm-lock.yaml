@@ -17,6 +17,9 @@ dependencies:
   '@tuleap/option':
     specifier: workspace:^
     version: link:../option
+  '@tuleap/tlp-popovers':
+    specifier: workspace:^
+    version: link:../tlp-popovers
   neverthrow:
     specifier: 6.0.0
     version: 6.0.0
@@ -53,6 +56,9 @@ dependencies:
   tus-js-client:
     specifier: ^4.1.0
     version: 4.1.0
+  uuid:
+    specifier: ^8.3.2
+    version: 8.3.2
 
 devDependencies:
   '@tuleap/build-system-configurator':
@@ -61,11 +67,24 @@ devDependencies:
   '@tuleap/po-gettext-plugin':
     specifier: workspace:^
     version: link:../po-gettext-plugin
+  '@types/dompurify':
+    specifier: ^3.0.5
+    version: 3.0.5
   '@types/uuid':
     specifier: ^9.0.8
     version: 9.0.8
 
 packages:
+
+  /@types/dompurify@3.0.5:
+    resolution: {integrity: sha512-1Wg0g3BtQF7sSb27fJQAKck1HECM6zV1EB66j8JH9i3LCjYabJa0FSdiSgsD5K/RbrsR0SiraKacLB+T8ZVYAg==}
+    dependencies:
+      '@types/trusted-types': 2.0.7
+    dev: true
+
+  /@types/trusted-types@2.0.7:
+    resolution: {integrity: sha512-ScaPdn1dQczgbl0QFTeTOmVHFULt394XJgOQNoyVhZ6r2vLnMLJfBPd53SB52T/3G36VI1/g2MZaX0cwDuXsfw==}
+    dev: true
 
   /@types/uuid@9.0.8:
     resolution: {integrity: sha512-jg+97EGIcY9AGHJJRaaPVgetKDsrTgbRjQ5Msgjh/DQKEFl0DtyRr/VCOyD1T2R1MNeWPK/u7JoGhlDZnKBAfA==}
@@ -282,6 +301,11 @@ packages:
     dependencies:
       querystringify: 2.2.0
       requires-port: 1.0.0
+    dev: false
+
+  /uuid@8.3.2:
+    resolution: {integrity: sha512-+NYs2QeMWy+GWFOEm9xnn6HCDp0l7QBD7ml8zLUmJ+93Q5NF0NocErnwkTkXVFNiX3/fpC6afS8Dhb/gz7R7eg==}
+    hasBin: true
     dev: false
 
   /w3c-keyname@2.2.8:

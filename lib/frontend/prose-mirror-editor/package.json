@@ -17,6 +17,7 @@
     "@tuleap/fetch-result": "workspace:^",
     "@tuleap/gettext": "workspace:^",
     "@tuleap/option": "workspace:^",
+    "@tuleap/tlp-popovers": "workspace:^",
     "neverthrow": "6.0.0",
     "prosemirror-commands": "^1.5.2",
     "prosemirror-inputrules": "^1.4.0",
@@ -28,11 +29,13 @@
     "prosemirror-state": "^1.4.3",
     "prosemirror-transform": "^1.9.0",
     "prosemirror-view": "^1.33.8",
-    "tus-js-client": "^4.1.0"
+    "tus-js-client": "^4.1.0",
+    "uuid": "^8.3.2"
   },
   "devDependencies": {
     "@tuleap/build-system-configurator": "workspace:*",
     "@tuleap/po-gettext-plugin": "workspace:^",
+    "@types/dompurify": "^3.0.5",
     "@types/uuid": "^9.0.8"
   },
   "scripts": {

@@ -51,4 +51,10 @@
         fill: var(--tlp-typo-default-text-color);
     }
 }
+
 /* stylelint-enable selector-class-pattern */
+
+.prose-mirror-icon-disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
