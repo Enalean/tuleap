@@ -22,6 +22,7 @@ namespace Tuleap\CrossTracker\Report\SimilarField;
 
 use Tuleap\CrossTracker\CrossTrackerReport;
 use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class SimilarFieldsMatcherTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -31,8 +32,7 @@ final class SimilarFieldsMatcherTest extends \Tuleap\Test\PHPUnit\TestCase
     private $form_element_factory;
     private SimilarFieldsMatcher $matcher;
     private \PFUser $user;
-    /** @var CrossTrackerReport&\PHPUnit\Framework\MockObject\MockObject */
-    private $report;
+    private CrossTrackerReport $report;
     /** @var SimilarFieldsFilter&\PHPUnit\Framework\MockObject\MockObject */
     private $similar_fields_filter;
     /** @var BindNameVisitor&\PHPUnit\Framework\MockObject\MockObject */
@@ -43,7 +43,10 @@ final class SimilarFieldsMatcherTest extends \Tuleap\Test\PHPUnit\TestCase
         parent::setUp();
         $this->similar_fields_dao    = $this->createMock(SupportedFieldsDao::class);
         $this->form_element_factory  = $this->createMock(\Tracker_FormElementFactory::class);
-        $this->report                = $this->createMock(CrossTrackerReport::class);
+        $this->report                = new CrossTrackerReport(1, '', [
+            TrackerTestBuilder::aTracker()->withId(91)->build(),
+            TrackerTestBuilder::aTracker()->withId(26)->build(),
+        ], false);
         $this->user                  = UserTestBuilder::aUser()->build();
         $this->similar_fields_filter = $this->createMock(SimilarFieldsFilter::class);
 
@@ -67,7 +70,6 @@ final class SimilarFieldsMatcherTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testMatchingFieldsAreRetrieved(): void
     {
-        $this->report->method('getTrackerIds')->willReturn([91, 26]);
         $first_field_row  = ['formElement_type' => 'string'];
         $second_field_row = ['formElement_type' => 'string'];
         $this->similar_fields_dao->method('searchByTrackerIds')
@@ -92,7 +94,6 @@ final class SimilarFieldsMatcherTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testMatchingFieldsWithoutEnoughPermissionsAreLeftOut(): void
     {
-        $this->report->method('getTrackerIds')->willReturn([91, 26]);
         $first_field_row  = ['formElement_type' => 'string'];
         $second_field_row = ['formElement_type' => 'string'];
         $this->similar_fields_dao->method('searchByTrackerIds')

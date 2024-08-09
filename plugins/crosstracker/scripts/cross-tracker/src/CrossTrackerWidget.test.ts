@@ -54,6 +54,7 @@ describe("CrossTrackerWidget", () => {
                 trackers: [],
                 expert_query: "",
                 invalid_trackers: [],
+                expert_mode: false,
             }),
         );
     });
@@ -212,7 +213,7 @@ describe("CrossTrackerWidget", () => {
             const invalid_trackers = [{ id: 956 } as InvalidTracker];
             const expert_query = '@title != ""';
             vi.spyOn(rest_querier, "getReport").mockReturnValue(
-                okAsync({ trackers, expert_query, invalid_trackers }),
+                okAsync({ trackers, expert_query, invalid_trackers, expert_mode: false }),
             );
             const init = vi.spyOn(backend_cross_tracker_report, "init");
             const duplicateReading = vi.spyOn(reading_cross_tracker_report, "duplicateFromReport");
@@ -220,7 +221,7 @@ describe("CrossTrackerWidget", () => {
             getWrapper();
             await vi.runOnlyPendingTimersAsync();
 
-            expect(init).toHaveBeenCalledWith(trackers, expert_query);
+            expect(init).toHaveBeenCalledWith(trackers, expert_query, false);
             expect(duplicateReading).toHaveBeenCalledWith(backend_cross_tracker_report);
             expect(duplicateWriting).toHaveBeenCalledWith(reading_cross_tracker_report);
         });
@@ -266,7 +267,7 @@ describe("CrossTrackerWidget", () => {
             it does not allow CSV export`, async () => {
             const invalid_trackers: ReadonlyArray<InvalidTracker> = [{ id: 315 } as InvalidTracker];
             vi.spyOn(rest_querier, "getReport").mockReturnValue(
-                okAsync({ trackers: [], expert_query: "", invalid_trackers }),
+                okAsync({ trackers: [], expert_query: "", invalid_trackers, expert_mode: false }),
             );
 
             const wrapper = getWrapper();

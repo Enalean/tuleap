@@ -149,7 +149,6 @@ class CSVExportController implements DispatchableWithRequest
                 $current_user,
                 $limit,
                 $offset,
-                true,
             );
             assert($collection instanceof ArtifactMatchingReportCollection);
             $similar_fields = $this->similar_fields_matcher->getSimilarFieldsCollection($report, $current_user);

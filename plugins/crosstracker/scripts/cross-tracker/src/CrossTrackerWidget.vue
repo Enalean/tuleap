@@ -44,11 +44,11 @@
     />
     <template v-if="!is_loading">
         <artifact-table
-            v-if="!is_using_select"
+            v-if="!writing_cross_tracker_report.expert_mode"
             v-bind:writing_cross_tracker_report="writing_cross_tracker_report"
         />
         <selectable-table
-            v-if="is_using_select"
+            v-if="writing_cross_tracker_report.expert_mode"
             v-bind:writing_cross_tracker_report="writing_cross_tracker_report"
         />
     </template>
@@ -63,7 +63,7 @@ import type { SaveEvent } from "./writing-mode/WritingMode.vue";
 import WritingMode from "./writing-mode/WritingMode.vue";
 import ErrorMessage from "./components/ErrorMessage.vue";
 import ErrorInactiveProjectMessage from "./components/ErrorInactiveProjectMessage.vue";
-import { getReport, isFeatureFlagEnabled } from "./api/rest-querier";
+import { getReport } from "./api/rest-querier";
 import type WritingCrossTrackerReport from "./writing-mode/writing-cross-tracker-report";
 import type BackendCrossTrackerReport from "./backend-cross-tracker-report";
 import type ReadingCrossTrackerReport from "./reading-mode/reading-cross-tracker-report";
@@ -96,7 +96,6 @@ const report_state = ref<ReportState>("report-saved");
 provide(REPORT_STATE, report_state);
 const is_loading = ref(true);
 const invalid_trackers = ref<ReadonlyArray<InvalidTracker>>([]);
-const is_using_select = ref(false);
 
 const is_reading_mode_shown = computed(
     () =>
@@ -131,7 +130,11 @@ function loadBackendReport(): void {
     getReport(report_id)
         .match(
             (report: Report) => {
-                props.backend_cross_tracker_report.init(report.trackers, report.expert_query);
+                props.backend_cross_tracker_report.init(
+                    report.trackers,
+                    report.expert_query,
+                    report.expert_mode,
+                );
                 initReports();
                 if (report.invalid_trackers.length > 0) {
                     invalid_trackers.value = report.invalid_trackers;
@@ -148,9 +151,6 @@ function loadBackendReport(): void {
 
 onMounted(() => {
     loadBackendReport();
-    isFeatureFlagEnabled().then((enabled) => {
-        is_using_select.value = enabled;
-    });
 });
 
 function handleSwitchWriting(): void {

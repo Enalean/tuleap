@@ -1,7 +1,8 @@
 DROP TABLE IF EXISTS plugin_crosstracker_report;
 CREATE TABLE plugin_crosstracker_report (
     id INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    expert_query TEXT NOT NULL DEFAULT ''
+    expert_query TEXT NOT NULL DEFAULT '',
+    expert_mode BOOL NOT NULL DEFAULT false
 ) ENGINE=InnoDB;
 
 DROP TABLE IF EXISTS plugin_crosstracker_report_tracker;

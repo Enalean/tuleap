@@ -119,7 +119,7 @@ final class PrettyTitleSelectBuilderTest extends CrossTrackerFieldTestCase
     {
         $result = (new ArtifactReportFactoryInstantiator())
             ->getFactory()
-            ->getArtifactsMatchingReport($report, $user, 10, 0, false);
+            ->getArtifactsMatchingReport($report, $user, 10, 0);
         assert($result instanceof CrossTrackerReportContentRepresentation);
         return $result;
     }
@@ -131,6 +131,7 @@ final class PrettyTitleSelectBuilderTest extends CrossTrackerFieldTestCase
                 1,
                 "SELECT @pretty_title WHERE @title != ''",
                 $this->trackers,
+                true,
             ),
             $this->user,
         );

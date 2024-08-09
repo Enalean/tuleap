@@ -23,8 +23,8 @@ declare(strict_types=1);
 namespace Tuleap\CrossTracker\REST\v1;
 
 use PFUser;
-use Tuleap\REST\JsonCast;
 use Tuleap\CrossTracker\CrossTrackerReport;
+use Tuleap\REST\JsonCast;
 use Tuleap\Tracker\REST\TrackerReference;
 
 /**
@@ -32,7 +32,9 @@ use Tuleap\Tracker\REST\TrackerReference;
  */
 class CrossTrackerReportRepresentation
 {
-    public const ROUTE = 'cross_tracker_reports';
+    public const ROUTE        = 'cross_tracker_reports';
+    public const MODE_DEFAULT = 'default';
+    public const MODE_EXPERT  = 'expert';
 
     /**
      * @var int
@@ -56,18 +58,24 @@ class CrossTrackerReportRepresentation
      * @var array {@type TrackerReference}
      */
     public $invalid_trackers = [];
+    /**
+     * @var self::MODE_*
+     */
+    public string $report_mode;
 
     /**
      * @param TrackerReference[] $trackers
      * @param TrackerReference[] $invalid_trackers
+     * @param self::MODE_* $report_mode
      */
-    private function __construct(int $id, string $expert_query, array $trackers, array $invalid_trackers)
+    private function __construct(int $id, string $expert_query, array $trackers, array $invalid_trackers, string $report_mode)
     {
         $this->id               = $id;
         $this->uri              = self::ROUTE . '/' . $this->id;
         $this->expert_query     = $expert_query;
         $this->trackers         = $trackers;
         $this->invalid_trackers = $invalid_trackers;
+        $this->report_mode      = $report_mode;
     }
 
     public static function fromReport(CrossTrackerReport $report, PFUser $user): self
@@ -93,7 +101,8 @@ class CrossTrackerReportRepresentation
             JsonCast::toInt($report->getId()),
             $report->getExpertQuery(),
             $trackers,
-            $invalid_trackers
+            $invalid_trackers,
+            $report->isExpert() ? self::MODE_EXPERT : self::MODE_DEFAULT,
         );
     }
 }

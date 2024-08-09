@@ -153,7 +153,7 @@ final class AssignedToMetadataTest extends CrossTrackerFieldTestCase
     {
         $result = (new ArtifactReportFactoryInstantiator())
             ->getFactory()
-            ->getArtifactsMatchingReport($report, $user, 10, 0, true);
+            ->getArtifactsMatchingReport($report, $user, 10, 0);
         assert($result instanceof ArtifactMatchingReportCollection);
         return array_values(array_map(static fn(Artifact $artifact) => $artifact->getId(), $result->getArtifacts()));
     }
@@ -165,6 +165,7 @@ final class AssignedToMetadataTest extends CrossTrackerFieldTestCase
                 1,
                 "@assigned_to = ''",
                 [$this->release_tracker, $this->sprint_tracker],
+                false,
             ),
             $this->project_member
         );
@@ -180,6 +181,7 @@ final class AssignedToMetadataTest extends CrossTrackerFieldTestCase
                 1,
                 "@assigned_to = 'alice'",
                 [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
+                false,
             ),
             $this->project_member
         );
@@ -195,6 +197,7 @@ final class AssignedToMetadataTest extends CrossTrackerFieldTestCase
                 1,
                 "@assigned_to = 'alice'",
                 [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
+                false,
             ),
             $this->project_admin
         );
@@ -210,6 +213,7 @@ final class AssignedToMetadataTest extends CrossTrackerFieldTestCase
                 1,
                 '@assigned_to = MYSELF()',
                 [$this->release_tracker, $this->sprint_tracker],
+                false,
             ),
             $this->alice
         );
@@ -225,6 +229,7 @@ final class AssignedToMetadataTest extends CrossTrackerFieldTestCase
                 1,
                 "@assigned_to = 'alice' AND @assigned_to = 'bob'",
                 [$this->release_tracker, $this->sprint_tracker],
+                false,
             ),
             $this->project_member
         );
@@ -240,6 +245,7 @@ final class AssignedToMetadataTest extends CrossTrackerFieldTestCase
                 1,
                 "@assigned_to != ''",
                 [$this->release_tracker, $this->sprint_tracker],
+                false,
             ),
             $this->project_member
         );
@@ -255,6 +261,7 @@ final class AssignedToMetadataTest extends CrossTrackerFieldTestCase
                 1,
                 "@assigned_to != 'bob'",
                 [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
+                false,
             ),
             $this->project_member
         );
@@ -270,6 +277,7 @@ final class AssignedToMetadataTest extends CrossTrackerFieldTestCase
                 1,
                 "@assigned_to != 'bob'",
                 [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
+                false,
             ),
             $this->project_admin
         );
@@ -289,6 +297,7 @@ final class AssignedToMetadataTest extends CrossTrackerFieldTestCase
                 1,
                 '@assigned_to != MYSELF()',
                 [$this->release_tracker, $this->sprint_tracker],
+                false,
             ),
             $this->alice
         );
@@ -304,6 +313,7 @@ final class AssignedToMetadataTest extends CrossTrackerFieldTestCase
                 1,
                 "@assigned_to != 'alice' AND @assigned_to != 'bob'",
                 [$this->release_tracker, $this->sprint_tracker],
+                false,
             ),
             $this->project_member
         );
@@ -319,6 +329,7 @@ final class AssignedToMetadataTest extends CrossTrackerFieldTestCase
                 1,
                 "@assigned_to IN('alice')",
                 [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
+                false,
             ),
             $this->project_member
         );
@@ -334,6 +345,7 @@ final class AssignedToMetadataTest extends CrossTrackerFieldTestCase
                 1,
                 "@assigned_to IN('alice')",
                 [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
+                false,
             ),
             $this->project_admin
         );
@@ -349,6 +361,7 @@ final class AssignedToMetadataTest extends CrossTrackerFieldTestCase
                 1,
                 '@assigned_to IN(MYSELF())',
                 [$this->release_tracker, $this->sprint_tracker],
+                false,
             ),
             $this->alice
         );
@@ -364,6 +377,7 @@ final class AssignedToMetadataTest extends CrossTrackerFieldTestCase
                 1,
                 "@assigned_to IN(MYSELF(), 'bob')",
                 [$this->release_tracker, $this->sprint_tracker],
+                false,
             ),
             $this->alice
         );
@@ -379,6 +393,7 @@ final class AssignedToMetadataTest extends CrossTrackerFieldTestCase
                 1,
                 "@assigned_to IN('alice', 'bob')",
                 [$this->release_tracker, $this->sprint_tracker],
+                false,
             ),
             $this->project_member
         );
@@ -394,6 +409,7 @@ final class AssignedToMetadataTest extends CrossTrackerFieldTestCase
                 1,
                 "@assigned_to IN('alice') OR @assigned_to IN('bob')",
                 [$this->release_tracker, $this->sprint_tracker],
+                false,
             ),
             $this->project_member
         );
@@ -409,6 +425,7 @@ final class AssignedToMetadataTest extends CrossTrackerFieldTestCase
                 1,
                 "@assigned_to NOT IN('bob')",
                 [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
+                false,
             ),
             $this->project_member
         );
@@ -424,6 +441,7 @@ final class AssignedToMetadataTest extends CrossTrackerFieldTestCase
                 1,
                 "@assigned_to NOT IN('bob')",
                 [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
+                false,
             ),
             $this->project_admin
         );
@@ -443,6 +461,7 @@ final class AssignedToMetadataTest extends CrossTrackerFieldTestCase
                 1,
                 '@assigned_to NOT IN(MYSELF())',
                 [$this->release_tracker, $this->sprint_tracker],
+                false,
             ),
             $this->alice
         );
@@ -458,6 +477,7 @@ final class AssignedToMetadataTest extends CrossTrackerFieldTestCase
                 1,
                 "@assigned_to NOT IN(MYSELF(), 'bob')",
                 [$this->release_tracker, $this->sprint_tracker],
+                false,
             ),
             $this->alice
         );
@@ -473,6 +493,7 @@ final class AssignedToMetadataTest extends CrossTrackerFieldTestCase
                 1,
                 "@assigned_to NOT IN('bob', 'alice')",
                 [$this->release_tracker, $this->sprint_tracker],
+                false,
             ),
             $this->project_member
         );
@@ -488,6 +509,7 @@ final class AssignedToMetadataTest extends CrossTrackerFieldTestCase
                 1,
                 "@assigned_to NOT IN('bob') AND @assigned_to NOT IN('alice')",
                 [$this->release_tracker, $this->sprint_tracker],
+                false,
             ),
             $this->project_member
         );

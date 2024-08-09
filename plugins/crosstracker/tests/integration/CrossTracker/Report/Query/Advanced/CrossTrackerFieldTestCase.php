@@ -25,7 +25,6 @@ namespace Tuleap\CrossTracker\Report\Query\Advanced;
 use ForgeConfig;
 use Tuleap\TemporaryTestDirectory;
 use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\Query;
 
 abstract class CrossTrackerFieldTestCase extends TestIntegrationTestCase
 {
@@ -36,7 +35,6 @@ abstract class CrossTrackerFieldTestCase extends TestIntegrationTestCase
      */
     protected function generateForgeConfig(): void
     {
-        ForgeConfig::setFeatureFlag(Query::ENABLE_SELECT, '1');
         ForgeConfig::set('sys_supported_languages', 'en_US,fr_FR');
         ForgeConfig::set('sys_lang', 'en_US');
         ForgeConfig::set('codendi_cache_dir', $this->getTmpDir());

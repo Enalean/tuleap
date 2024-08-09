@@ -27,10 +27,12 @@ import { TooManyTrackersSelectedFault } from "../domain/TooManyTrackersSelectedF
 export default class WritingCrossTrackerReport {
     trackers: Map<number, TrackerAndProject>;
     expert_query: string;
+    expert_mode: boolean;
 
     constructor() {
         this.trackers = new Map();
         this.expert_query = "";
+        this.expert_mode = false;
     }
 
     addTracker(project: ProjectInfo, tracker: TrackerInfo): Result<null, Fault> {
@@ -50,6 +52,7 @@ export default class WritingCrossTrackerReport {
     duplicateFromReport(report: ReadingCrossTrackerReport): void {
         this.trackers = new Map(report.trackers);
         this.expert_query = report.expert_query;
+        this.expert_mode = report.expert_mode;
     }
 
     getTrackerIds(): Array<number> {

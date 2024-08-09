@@ -114,7 +114,7 @@ final class LastUpdateDateMetadataTest extends CrossTrackerFieldTestCase
     {
         $result = (new ArtifactReportFactoryInstantiator())
             ->getFactory()
-            ->getArtifactsMatchingReport($report, $user, 10, 0, true);
+            ->getArtifactsMatchingReport($report, $user, 10, 0);
         assert($result instanceof ArtifactMatchingReportCollection);
         return array_values(array_map(static fn(Artifact $artifact) => $artifact->getId(), $result->getArtifacts()));
     }
@@ -126,6 +126,7 @@ final class LastUpdateDateMetadataTest extends CrossTrackerFieldTestCase
                 1,
                 "@last_update_date = '2023-03-08'",
                 [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
+                false,
             ),
             $this->project_member
         );
@@ -141,6 +142,7 @@ final class LastUpdateDateMetadataTest extends CrossTrackerFieldTestCase
                 1,
                 "@last_update_date = '2023-03-08'",
                 [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
+                false,
             ),
             $this->project_admin
         );
@@ -156,6 +158,7 @@ final class LastUpdateDateMetadataTest extends CrossTrackerFieldTestCase
                 1,
                 "@last_update_date = '2023-03-08 10:25'",
                 [$this->release_tracker, $this->sprint_tracker],
+                false,
             ),
             $this->project_member
         );
@@ -171,6 +174,7 @@ final class LastUpdateDateMetadataTest extends CrossTrackerFieldTestCase
                 1,
                 "@last_update_date = '2023-03-08' OR @last_update_date = '1970-01-01'",
                 [$this->release_tracker, $this->sprint_tracker],
+                false,
             ),
             $this->project_member
         );
@@ -186,6 +190,7 @@ final class LastUpdateDateMetadataTest extends CrossTrackerFieldTestCase
                 1,
                 "@last_update_date != '2023-03-08'",
                 [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
+                false,
             ),
             $this->project_member
         );
@@ -201,6 +206,7 @@ final class LastUpdateDateMetadataTest extends CrossTrackerFieldTestCase
                 1,
                 "@last_update_date != '2023-03-08'",
                 [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
+                false,
             ),
             $this->project_admin
         );
@@ -216,6 +222,7 @@ final class LastUpdateDateMetadataTest extends CrossTrackerFieldTestCase
                 1,
                 "@last_update_date != '2023-03-08 10:25'",
                 [$this->release_tracker, $this->sprint_tracker],
+                false,
             ),
             $this->project_member
         );
@@ -231,6 +238,7 @@ final class LastUpdateDateMetadataTest extends CrossTrackerFieldTestCase
                 1,
                 "@last_update_date != '2023-03-08' AND @last_update_date != '1970-01-01'",
                 [$this->release_tracker, $this->sprint_tracker],
+                false,
             ),
             $this->project_member
         );
@@ -246,6 +254,7 @@ final class LastUpdateDateMetadataTest extends CrossTrackerFieldTestCase
                 1,
                 "@last_update_date < '2023-03-09'",
                 [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
+                false,
             ),
             $this->project_member
         );
@@ -261,6 +270,7 @@ final class LastUpdateDateMetadataTest extends CrossTrackerFieldTestCase
                 1,
                 "@last_update_date < '2023-03-09'",
                 [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
+                false,
             ),
             $this->project_admin
         );
@@ -276,6 +286,7 @@ final class LastUpdateDateMetadataTest extends CrossTrackerFieldTestCase
                 1,
                 "@last_update_date < '2023-03-08 15:52'",
                 [$this->release_tracker, $this->sprint_tracker],
+                false,
             ),
             $this->project_member
         );
@@ -291,6 +302,7 @@ final class LastUpdateDateMetadataTest extends CrossTrackerFieldTestCase
                 1,
                 '@last_update_date < NOW()',
                 [$this->release_tracker, $this->sprint_tracker],
+                false,
             ),
             $this->project_member
         );
@@ -306,6 +318,7 @@ final class LastUpdateDateMetadataTest extends CrossTrackerFieldTestCase
                 1,
                 "@last_update_date < NOW() OR @last_update_date < '1970-01-01'",
                 [$this->release_tracker, $this->sprint_tracker],
+                false,
             ),
             $this->project_member
         );
@@ -321,6 +334,7 @@ final class LastUpdateDateMetadataTest extends CrossTrackerFieldTestCase
                 1,
                 "@last_update_date <= '2023-03-08'",
                 [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
+                false,
             ),
             $this->project_member
         );
@@ -336,6 +350,7 @@ final class LastUpdateDateMetadataTest extends CrossTrackerFieldTestCase
                 1,
                 "@last_update_date <= '2023-03-08'",
                 [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
+                false,
             ),
             $this->project_admin
         );
@@ -351,6 +366,7 @@ final class LastUpdateDateMetadataTest extends CrossTrackerFieldTestCase
                 1,
                 "@last_update_date <= '2023-03-08 15:52'",
                 [$this->release_tracker, $this->sprint_tracker],
+                false,
             ),
             $this->project_member
         );
@@ -366,6 +382,7 @@ final class LastUpdateDateMetadataTest extends CrossTrackerFieldTestCase
                 1,
                 '@last_update_date <= NOW()',
                 [$this->release_tracker, $this->sprint_tracker],
+                false,
             ),
             $this->project_member
         );
@@ -384,6 +401,7 @@ final class LastUpdateDateMetadataTest extends CrossTrackerFieldTestCase
                 1,
                 "@last_update_date <= NOW() OR @last_update_date <= '1970-01-01'",
                 [$this->release_tracker, $this->sprint_tracker],
+                false,
             ),
             $this->project_member
         );
@@ -402,6 +420,7 @@ final class LastUpdateDateMetadataTest extends CrossTrackerFieldTestCase
                 1,
                 "@last_update_date > '2023-03-08'",
                 [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
+                false,
             ),
             $this->project_member
         );
@@ -417,6 +436,7 @@ final class LastUpdateDateMetadataTest extends CrossTrackerFieldTestCase
                 1,
                 "@last_update_date > '2023-03-08'",
                 [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
+                false,
             ),
             $this->project_admin
         );
@@ -432,6 +452,7 @@ final class LastUpdateDateMetadataTest extends CrossTrackerFieldTestCase
                 1,
                 "@last_update_date > '2023-03-08 10:25'",
                 [$this->release_tracker, $this->sprint_tracker],
+                false,
             ),
             $this->project_member
         );
@@ -447,6 +468,7 @@ final class LastUpdateDateMetadataTest extends CrossTrackerFieldTestCase
                 1,
                 '@last_update_date > NOW() - 1d',
                 [$this->release_tracker, $this->sprint_tracker],
+                false,
             ),
             $this->project_member
         );
@@ -462,6 +484,7 @@ final class LastUpdateDateMetadataTest extends CrossTrackerFieldTestCase
                 1,
                 "@last_update_date > '2023-03-08' OR @last_update_date > NOW()",
                 [$this->release_tracker, $this->sprint_tracker],
+                false,
             ),
             $this->project_member
         );
@@ -477,6 +500,7 @@ final class LastUpdateDateMetadataTest extends CrossTrackerFieldTestCase
                 1,
                 "@last_update_date >= '2023-03-08'",
                 [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
+                false,
             ),
             $this->project_member
         );
@@ -495,6 +519,7 @@ final class LastUpdateDateMetadataTest extends CrossTrackerFieldTestCase
                 1,
                 "@last_update_date >= '2023-03-08'",
                 [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
+                false,
             ),
             $this->project_admin
         );
@@ -514,6 +539,7 @@ final class LastUpdateDateMetadataTest extends CrossTrackerFieldTestCase
                 1,
                 "@last_update_date >= '2023-03-08 10:25'",
                 [$this->release_tracker, $this->sprint_tracker],
+                false,
             ),
             $this->project_member
         );
@@ -532,6 +558,7 @@ final class LastUpdateDateMetadataTest extends CrossTrackerFieldTestCase
                 1,
                 '@last_update_date >= NOW()',
                 [$this->release_tracker, $this->sprint_tracker],
+                false,
             ),
             $this->project_member
         );
@@ -547,6 +574,7 @@ final class LastUpdateDateMetadataTest extends CrossTrackerFieldTestCase
                 1,
                 "@last_update_date >= '2023-03-08' OR @last_update_date >= NOW()",
                 [$this->release_tracker, $this->sprint_tracker],
+                false,
             ),
             $this->project_member
         );
@@ -565,6 +593,7 @@ final class LastUpdateDateMetadataTest extends CrossTrackerFieldTestCase
                 1,
                 "@last_update_date BETWEEN('2023-03-08 02:47', '2023-03-08 12:16')",
                 [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
+                false,
             ),
             $this->project_member
         );
@@ -580,6 +609,7 @@ final class LastUpdateDateMetadataTest extends CrossTrackerFieldTestCase
                 1,
                 "@last_update_date BETWEEN('2023-03-08 02:47', '2023-03-08 12:16')",
                 [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
+                false,
             ),
             $this->project_admin
         );
@@ -595,6 +625,7 @@ final class LastUpdateDateMetadataTest extends CrossTrackerFieldTestCase
                 1,
                 "@last_update_date BETWEEN('2023-03-01', '2023-03-31')",
                 [$this->release_tracker, $this->sprint_tracker],
+                false,
             ),
             $this->project_member
         );
@@ -610,6 +641,7 @@ final class LastUpdateDateMetadataTest extends CrossTrackerFieldTestCase
                 1,
                 '@last_update_date BETWEEN(NOW() - 1d, NOW() + 1d)',
                 [$this->release_tracker, $this->sprint_tracker],
+                false,
             ),
             $this->project_member
         );
@@ -625,6 +657,7 @@ final class LastUpdateDateMetadataTest extends CrossTrackerFieldTestCase
                 1,
                 "@last_update_date BETWEEN(NOW() - 1d, NOW() + 1d) OR @last_update_date BETWEEN('2023-03-01', '2023-03-31')",
                 [$this->release_tracker, $this->sprint_tracker],
+                false,
             ),
             $this->project_member
         );

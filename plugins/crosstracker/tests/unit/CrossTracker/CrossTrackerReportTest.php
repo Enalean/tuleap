@@ -39,7 +39,8 @@ final class CrossTrackerReportTest extends \Tuleap\Test\PHPUnit\TestCase
         $report = new CrossTrackerReport(
             1,
             '',
-            [$tracker_in_active_project, $tracker_in_suspended_project, $tracker_without_known_project]
+            [$tracker_in_active_project, $tracker_in_suspended_project, $tracker_without_known_project],
+            false,
         );
 
         self::assertSame([$tracker_in_active_project], $report->getTrackers());
@@ -54,7 +55,7 @@ final class CrossTrackerReportTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $tracker = TrackerTestBuilder::aTracker()->withProject($project)->build();
 
-        $report = new CrossTrackerReport(1, '', [$tracker]);
+        $report = new CrossTrackerReport(1, '', [$tracker], false);
 
         $report->getTrackers();
         $report->getTrackers();
@@ -64,7 +65,7 @@ final class CrossTrackerReportTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testReportWithoutTrackers(): void
     {
-        $report = new CrossTrackerReport(1, '', []);
+        $report = new CrossTrackerReport(1, '', [], false);
         self::assertSame([], $report->getTrackerIds());
         self::assertSame([], $report->getTrackers());
         self::assertSame([], $report->getInvalidTrackers());

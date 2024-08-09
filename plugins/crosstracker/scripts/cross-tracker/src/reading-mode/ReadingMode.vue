@@ -120,10 +120,19 @@ function saveReport(): void {
     const tracker_ids = props.backend_cross_tracker_report.getTrackerIds();
     const new_expert_query = props.backend_cross_tracker_report.getExpertQuery();
 
-    updateReport(report_id, tracker_ids, new_expert_query)
+    updateReport(
+        report_id,
+        tracker_ids,
+        new_expert_query,
+        props.reading_cross_tracker_report.expert_mode,
+    )
         .match(
             (report: Report) => {
-                props.backend_cross_tracker_report.init(report.trackers, report.expert_query);
+                props.backend_cross_tracker_report.init(
+                    report.trackers,
+                    report.expert_query,
+                    report.expert_mode,
+                );
                 emit("saved");
             },
             (fault) => {

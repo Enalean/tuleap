@@ -144,7 +144,7 @@ final class UGroupListSelectFromBuilderTest extends CrossTrackerFieldTestCase
     {
         $result = (new ArtifactReportFactoryInstantiator())
             ->getFactory()
-            ->getArtifactsMatchingReport($report, $user, 10, 0, false);
+            ->getArtifactsMatchingReport($report, $user, 10, 0);
         assert($result instanceof CrossTrackerReportContentRepresentation);
         return $result;
     }
@@ -156,6 +156,7 @@ final class UGroupListSelectFromBuilderTest extends CrossTrackerFieldTestCase
                 1,
                 "SELECT ugroup_list_field WHERE ugroup_list_field = '' OR ugroup_list_field != ''",
                 $this->trackers,
+                true,
             ),
             $this->user,
         );

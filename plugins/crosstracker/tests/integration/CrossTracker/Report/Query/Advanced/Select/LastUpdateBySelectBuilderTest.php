@@ -96,7 +96,7 @@ final class LastUpdateBySelectBuilderTest extends CrossTrackerFieldTestCase
     {
         $result = (new ArtifactReportFactoryInstantiator())
             ->getFactory()
-            ->getArtifactsMatchingReport($report, $user, 10, 0, false);
+            ->getArtifactsMatchingReport($report, $user, 10, 0);
         assert($result instanceof CrossTrackerReportContentRepresentation);
         return $result;
     }
@@ -108,6 +108,7 @@ final class LastUpdateBySelectBuilderTest extends CrossTrackerFieldTestCase
                 1,
                 "SELECT @last_update_by WHERE @last_update_by = 'bob' OR @last_update_by != 'bob'",
                 $this->trackers,
+                true,
             ),
             $this->user,
         );

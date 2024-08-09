@@ -119,7 +119,7 @@ final class StatusMetadataTest extends CrossTrackerFieldTestCase
     {
         $result = (new ArtifactReportFactoryInstantiator())
             ->getFactory()
-            ->getArtifactsMatchingReport($report, $user, 10, 0, true);
+            ->getArtifactsMatchingReport($report, $user, 10, 0);
         assert($result instanceof ArtifactMatchingReportCollection);
         return array_values(array_map(static fn(Artifact $artifact) => $artifact->getId(), $result->getArtifacts()));
     }
@@ -131,6 +131,7 @@ final class StatusMetadataTest extends CrossTrackerFieldTestCase
                 1,
                 '@status = OPEN()',
                 [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
+                false,
             ),
             $this->project_member
         );
@@ -146,6 +147,7 @@ final class StatusMetadataTest extends CrossTrackerFieldTestCase
                 1,
                 '@status = OPEN()',
                 [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
+                false,
             ),
             $this->project_admin
         );
@@ -161,6 +163,7 @@ final class StatusMetadataTest extends CrossTrackerFieldTestCase
                 1,
                 '@status = OPEN() OR @status = OPEN()',
                 [$this->release_tracker, $this->sprint_tracker],
+                false,
             ),
             $this->project_member
         );
@@ -176,6 +179,7 @@ final class StatusMetadataTest extends CrossTrackerFieldTestCase
                 1,
                 '@status != OPEN()',
                 [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
+                false,
             ),
             $this->project_member
         );
@@ -191,6 +195,7 @@ final class StatusMetadataTest extends CrossTrackerFieldTestCase
                 1,
                 '@status != OPEN()',
                 [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
+                false,
             ),
             $this->project_admin
         );
@@ -206,6 +211,7 @@ final class StatusMetadataTest extends CrossTrackerFieldTestCase
                 1,
                 '@status != OPEN() AND @status != OPEN()',
                 [$this->release_tracker, $this->sprint_tracker],
+                false,
             ),
             $this->project_member
         );

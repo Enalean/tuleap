@@ -112,7 +112,7 @@ final class TextSelectFromBuilderTest extends CrossTrackerFieldTestCase
     {
         $result = (new ArtifactReportFactoryInstantiator())
             ->getFactory()
-            ->getArtifactsMatchingReport($report, $user, 10, 0, false);
+            ->getArtifactsMatchingReport($report, $user, 10, 0);
         assert($result instanceof CrossTrackerReportContentRepresentation);
         return $result;
     }
@@ -124,6 +124,7 @@ final class TextSelectFromBuilderTest extends CrossTrackerFieldTestCase
                 1,
                 "SELECT text_field WHERE text_field = '' OR text_field != ''",
                 $this->trackers,
+                true,
             ),
             $this->user,
         );

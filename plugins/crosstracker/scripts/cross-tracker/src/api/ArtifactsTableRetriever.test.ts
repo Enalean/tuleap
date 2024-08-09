@@ -75,7 +75,11 @@ describe(`ArtifactsTableRetriever`, () => {
                     params: {
                         limit,
                         offset,
-                        query: JSON.stringify({ trackers_id: tracker_ids, expert_query }),
+                        report_mode: "expert",
+                        query: JSON.stringify({
+                            trackers_id: tracker_ids,
+                            expert_query,
+                        }),
                     },
                 },
             );
@@ -119,6 +123,7 @@ describe(`ArtifactsTableRetriever`, () => {
                     params: {
                         limit,
                         offset,
+                        report_mode: "expert",
                     },
                 },
             );

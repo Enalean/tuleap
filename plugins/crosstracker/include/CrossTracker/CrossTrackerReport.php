@@ -20,56 +20,53 @@
 
 namespace Tuleap\CrossTracker;
 
+use Project;
 use Tracker;
+use Tracker_FormElement_Field;
 
 class CrossTrackerReport
 {
     /**
-     * @var int
+     * @var Tracker[]|null
      */
-    private $id;
-
-    /** @var string */
-    private $expert_query;
-
-    /**
-     * @var Tracker[]
-     */
-    private $trackers;
+    private ?array $valid_trackers;
     /**
      * @var Tracker[]|null
      */
-    private $valid_trackers;
-    /**
-     * @var Tracker[]|null
-     */
-    private $invalid_trackers;
+    private ?array $invalid_trackers;
 
-    public function __construct($id, $expert_query, array $trackers)
-    {
-        $this->id           = $id;
-        $this->expert_query = $expert_query;
-        $this->trackers     = $trackers;
+    /**
+     * @param Tracker[] $trackers
+     */
+    public function __construct(
+        private readonly int $id,
+        private readonly string $expert_query,
+        private readonly array $trackers,
+        private readonly bool $expert,
+    ) {
+        $this->valid_trackers   = null;
+        $this->invalid_trackers = null;
     }
 
-    /**
-     * @return int
-     */
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
 
-    /** @return string */
-    public function getExpertQuery()
+    public function getExpertQuery(): string
     {
         return $this->expert_query;
     }
 
+    public function isExpert(): bool
+    {
+        return $this->expert;
+    }
+
     /**
-     * @return \Project[]
+     * @return Project[]
      */
-    public function getProjects()
+    public function getProjects(): array
     {
         $projects = [];
         foreach ($this->getTrackers() as $tracker) {
@@ -82,7 +79,7 @@ class CrossTrackerReport
     /**
      * @return Tracker[]
      */
-    public function getTrackers()
+    public function getTrackers(): array
     {
         if ($this->valid_trackers === null) {
             $this->populateValidityTrackers();
@@ -93,7 +90,7 @@ class CrossTrackerReport
     /**
      * @return Tracker[]
      */
-    public function getInvalidTrackers()
+    public function getInvalidTrackers(): array
     {
         if ($this->invalid_trackers === null) {
             $this->populateValidityTrackers();
@@ -105,7 +102,7 @@ class CrossTrackerReport
      * @psalm-assert !null $this->valid_trackers
      * @psalm-assert !null $this->invalid_trackers
      */
-    private function populateValidityTrackers()
+    private function populateValidityTrackers(): void
     {
         $this->valid_trackers   = [];
         $this->invalid_trackers = [];
@@ -120,9 +117,9 @@ class CrossTrackerReport
     }
 
     /**
-     * @return \Tracker_FormElement_Field[]
+     * @return Tracker_FormElement_Field[]
      */
-    public function getColumnFields()
+    public function getColumnFields(): array
     {
         $fields = [];
         foreach ($this->getTrackers() as $tracker) {
@@ -139,9 +136,9 @@ class CrossTrackerReport
     }
 
     /**
-     * @return \Tracker_FormElement_Field[]
+     * @return Tracker_FormElement_Field[]
      */
-    public function getSearchFields()
+    public function getSearchFields(): array
     {
         $fields = [];
         foreach ($this->getTrackers() as $tracker) {
@@ -156,7 +153,7 @@ class CrossTrackerReport
     /**
      * @return int[]
      */
-    public function getTrackerIds()
+    public function getTrackerIds(): array
     {
         return array_map(function (Tracker $tracker) {
             return $tracker->getId();

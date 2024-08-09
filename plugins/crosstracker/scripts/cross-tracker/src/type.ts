@@ -49,6 +49,7 @@ export type Report = {
     readonly trackers: ReadonlyArray<TrackerAndProject>;
     readonly expert_query: string;
     readonly invalid_trackers: ReadonlyArray<InvalidTracker>;
+    readonly expert_mode: boolean;
 };
 
 export type ArtifactsCollection = {

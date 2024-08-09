@@ -22,23 +22,32 @@ import type ReadingCrossTrackerReport from "./reading-mode/reading-cross-tracker
 
 export default class BackendCrossTrackerReport {
     expert_query: string;
+    expert_mode: boolean;
     trackers: Map<number, TrackerAndProject>;
+
     constructor() {
         this.trackers = new Map();
         this.expert_query = "";
+        this.expert_mode = false;
     }
 
-    init(trackers: ReadonlyArray<TrackerAndProject>, expert_query: string): void {
+    init(
+        trackers: ReadonlyArray<TrackerAndProject>,
+        expert_query: string,
+        expert_mode: boolean,
+    ): void {
         this.trackers.clear();
         for (const tracker_with_project of trackers) {
             this.trackers.set(tracker_with_project.tracker.id, tracker_with_project);
         }
         this.expert_query = expert_query;
+        this.expert_mode = expert_mode;
     }
 
     duplicateFromReport(report: ReadingCrossTrackerReport): void {
         this.trackers = new Map(report.trackers);
         this.expert_query = report.expert_query;
+        this.expert_mode = report.expert_mode;
     }
 
     getTrackerIds(): Array<number> {

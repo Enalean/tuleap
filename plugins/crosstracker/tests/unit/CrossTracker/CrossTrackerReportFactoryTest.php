@@ -52,7 +52,7 @@ final class CrossTrackerReportFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItDoesNotThrowsAnExceptionWhenTrackerIsNotFound(): void
     {
         $this->report_dao->method('searchReportById')->willReturn(
-            ['id' => 1, 'expert_query' => '']
+            ['id' => 1, 'expert_query' => '', 'expert_mode' => false]
         );
 
         $this->report_dao->method('searchReportTrackersById')->willReturn(
@@ -67,7 +67,7 @@ final class CrossTrackerReportFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
             [2, $this->tracker],
         ]);
 
-        $expected_result = new CrossTrackerReport(1, '', [$this->tracker]);
+        $expected_result = new CrossTrackerReport(1, '', [$this->tracker], false);
 
         self::assertEquals(
             $this->cross_tracker_factory->getById(1),

@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\CrossTracker\REST\v1;
 
 use BaseLanguageFactory;
+use Codendi_HTMLPurifier;
 use Exception;
 use Luracast\Restler\RestException;
 use PFUser;
@@ -151,8 +152,8 @@ use UserManager;
 
 final class CrossTrackerReportsResource extends AuthenticatedResource
 {
-    public const MAX_LIMIT          = 50;
-    private const FORMAT_SELECTABLE = 'selectable';
+    public const  MAX_LIMIT   = 50;
+    private const MODE_EXPERT = 'expert';
 
     private UserManager $user_manager;
 
@@ -220,13 +221,13 @@ final class CrossTrackerReportsResource extends AuthenticatedResource
      * @param string|null $query
      *                      With a property "trackers_id" to search artifacts presents in given trackers.
      *                      With a property "expert_query" to customize the search. {@required false}
+     * @param string|null $report_mode Mode of the report. {@from path}{@choice default,expert}{@required false}
      * @param int $limit Number of elements displayed per page {@from path}{@min 1}{@max 50}
      * @param int $offset Position of the first element to display {@from path}{@min 0}
-     * @param string $return_format Format of the returned payload. Default is 'selectable' {@from path}{@choice selectable,static}
      *
      * @throws RestException 404
      */
-    public function getIdContent(int $id, ?string $query, int $limit = self::MAX_LIMIT, int $offset = 0, string $return_format = self::FORMAT_SELECTABLE): LegacyCrossTrackerReportContentRepresentation|CrossTrackerReportContentRepresentation
+    public function getIdContent(int $id, ?string $query, ?string $report_mode = null, int $limit = self::MAX_LIMIT, int $offset = 0): LegacyCrossTrackerReportContentRepresentation|CrossTrackerReportContentRepresentation
     {
         $this->checkAccess();
         Header::allowOptionsGet();
@@ -237,15 +238,16 @@ final class CrossTrackerReportsResource extends AuthenticatedResource
 
             $query_parser = new QueryParameterParser(new JsonDecoder());
 
-            $trackers = $this->getTrackersFromRoute($query, $report, $query_parser);
+            $expert_mode = $report_mode === null ? $report->isExpert() : $report_mode === self::MODE_EXPERT;
+            $trackers    = $this->getTrackersFromRoute($query, $report, $query_parser);
             if (count($trackers) === 0) {
-                if ($return_format === self::FORMAT_SELECTABLE) {
+                if ($expert_mode) {
                     return new CrossTrackerReportContentRepresentation([], [], 0);
                 }
                 return new LegacyCrossTrackerReportContentRepresentation([]);
             }
             $expert_query    = $this->getExpertQueryFromRoute($query, $report, $query_parser);
-            $expected_report = new CrossTrackerReport($report->getId(), $expert_query, $trackers);
+            $expected_report = new CrossTrackerReport($report->getId(), $expert_query, $trackers, $expert_mode);
 
             $this->getUserIsAllowedToSeeReportChecker()->checkUserIsAllowedToSeeReport($current_user, $expected_report);
 
@@ -275,7 +277,7 @@ final class CrossTrackerReportsResource extends AuthenticatedResource
                     new PrettyTitleSelectFromBuilder(),
                 ),
             );
-            $purifier               = \Codendi_HTMLPurifier::instance();
+            $purifier               = Codendi_HTMLPurifier::instance();
             $text_value_interpreter = new TextValueInterpreter(
                 $purifier,
                 CommonMarkInterpreter::build($purifier),
@@ -335,10 +337,9 @@ final class CrossTrackerReportsResource extends AuthenticatedResource
                 $current_user,
                 $limit,
                 $offset,
-                $return_format !== self::FORMAT_SELECTABLE,
             );
 
-            if ($return_format === self::FORMAT_SELECTABLE) {
+            if ($expected_report->isExpert()) {
                 assert($artifacts instanceof CrossTrackerReportContentRepresentation);
                 $this->sendPaginationHeaders($limit, $offset, $artifacts->getTotalSize());
                 return $artifacts;
@@ -426,14 +427,19 @@ final class CrossTrackerReportsResource extends AuthenticatedResource
      * <pre>
      * {<br>
      *   &nbsp;"trackers_id": [1, 2, 3],<br>
-     *   &nbsp;"expert_query": ""<br>
+     *   &nbsp;"expert_query": "",<br>
+     *   &nbsp;"report_mode": "default"<br>
      * }<br>
      * </pre>
+     *
+     * ⚠️ WARNING: Expert mode of Cross Tracker Report is not yet stable,
+     * future release may break your report.
      *
      * @url PUT {id}
      *
      * @param int $id Id of the report
-     * @param array {@max 25}  $trackers_id  Tracker id to link to report
+     * @param array $trackers_id Tracker id to link to report {@max 25}
+     * @param string $report_mode Mode of the report. Default value is "default" {@choice default,expert}{@example default}
      * @param string $expert_query The TQL query saved with the report
      *
      * @status 201
@@ -443,7 +449,7 @@ final class CrossTrackerReportsResource extends AuthenticatedResource
      * @throws RestException 400
      * @throws RestException 404
      */
-    protected function put(int $id, array $trackers_id, string $expert_query = ''): CrossTrackerReportRepresentation
+    protected function put(int $id, array $trackers_id, string $report_mode = 'default', string $expert_query = ''): CrossTrackerReportRepresentation
     {
         $this->sendAllowHeaders();
 
@@ -452,14 +458,14 @@ final class CrossTrackerReportsResource extends AuthenticatedResource
             $tracker_extractor = new TrackerReportExtractor(TrackerFactory::instance());
             $trackers          = $tracker_extractor->extractTrackers($trackers_id);
 
-            $this->checkQueryIsValid($trackers, $expert_query, $current_user);
+            $this->checkQueryIsValid($trackers, $expert_query, $report_mode === self::MODE_EXPERT, $current_user);
 
             $report          = $this->getReport($id);
-            $expected_report = new CrossTrackerReport($report->getId(), $expert_query, $trackers);
+            $expected_report = new CrossTrackerReport($report->getId(), $expert_query, $trackers, $report_mode === self::MODE_EXPERT);
 
             $this->getUserIsAllowedToSeeReportChecker()->checkUserIsAllowedToSeeReport($current_user, $expected_report);
 
-            $this->getCrossTrackerDao()->updateReport($id, $trackers, $expert_query);
+            $this->getCrossTrackerDao()->updateReport($id, $trackers, $expert_query, $expected_report->isExpert());
         } catch (CrossTrackerReportNotFoundException $exception) {
             throw new RestException(404, "Report $id not found");
         } catch (TrackerNotFoundException $exception) {
@@ -475,7 +481,7 @@ final class CrossTrackerReportsResource extends AuthenticatedResource
      * @param Tracker[] $trackers
      * @throws RestException
      */
-    private function checkQueryIsValid(array $trackers, string $expert_query, PFUser $user): void
+    private function checkQueryIsValid(array $trackers, string $expert_query, bool $expert_mode, PFUser $user): void
     {
         if ($expert_query === '') {
             return;
@@ -484,6 +490,7 @@ final class CrossTrackerReportsResource extends AuthenticatedResource
         try {
             $this->getExpertQueryValidator()->validateExpertQuery(
                 $expert_query,
+                $expert_mode,
                 new InvalidSearchablesCollectionBuilder($this->getInvalidComparisonsCollector(), $trackers, $user),
                 new InvalidSelectablesCollectionBuilder(
                     new InvalidSelectablesCollectorVisitor($this->getDuckTypedFieldChecker(), $this->getMetadataChecker()),
@@ -496,7 +503,11 @@ final class CrossTrackerReportsResource extends AuthenticatedResource
         } catch (SearchablesAreInvalidException $exception) {
             throw new RestException(400, $exception->getMessage());
         } catch (SyntaxError $exception) {
-            throw new RestException(400, $exception->getMessage());
+            throw new RestException(
+                400,
+                null,
+                ['i18n_error_message' => dgettext('tuleap-crosstracker', 'Error while parsing the query')]
+            );
         } catch (LimitSizeIsExceededException $exception) {
             throw new RestException(400, $exception->getMessage());
         } catch (Exception $exception) {

@@ -73,44 +73,38 @@ final readonly class CrossTrackerArtifactReportFactory
      * @throws SelectablesAreInvalidException
      * @throws SelectablesDoNotExistException
      * @throws SyntaxError
-     *
-     * @psalm-return ($static_return is true ? ArtifactMatchingReportCollection : CrossTrackerReportContentRepresentation)
      */
     public function getArtifactsMatchingReport(
         CrossTrackerReport $report,
         PFUser $current_user,
         int $limit,
         int $offset,
-        bool $static_return,
     ): ArtifactMatchingReportCollection|CrossTrackerReportContentRepresentation {
         if ($report->getExpertQuery() === '') {
-            if (! Query::isSelectEnabled()) {
-                return $this->getArtifactsFromGivenTrackers(
-                    $this->getOnlyActiveTrackersInActiveProjects($report->getTrackers()),
-                    $limit,
-                    $offset
-                );
+            if ($report->isExpert()) {
+                return new CrossTrackerReportContentRepresentation([], [], 0);
             }
-            if ($static_return) {
-                return new ArtifactMatchingReportCollection([], 0);
-            }
-            return new CrossTrackerReportContentRepresentation([], [], 0);
+
+            return $this->getArtifactsFromGivenTrackers(
+                $this->getOnlyActiveTrackersInActiveProjects($report->getTrackers()),
+                $limit,
+                $offset
+            );
         } else {
-            if (! Query::isSelectEnabled()) {
-                return $this->getArtifactsMatchingExpertQuery(
+            if ($report->isExpert()) {
+                return $this->getArtifactsMatchingExpertQueryWithSelect(
                     $report,
                     $current_user,
                     $limit,
-                    $offset
+                    $offset,
                 );
             }
 
-            return $this->getArtifactsMatchingExpertQueryWithSelect(
+            return $this->getArtifactsMatchingExpertQuery(
                 $report,
                 $current_user,
                 $limit,
-                $offset,
-                $static_return,
+                $offset
             );
         }
     }
@@ -164,16 +158,13 @@ final readonly class CrossTrackerArtifactReportFactory
      * @throws SelectablesAreInvalidException
      * @throws SyntaxError
      * @throws SelectablesDoNotExistException
-     *
-     * @psalm-return ($static_return is true ? ArtifactMatchingReportCollection : CrossTrackerReportContentRepresentation)
      */
     private function getArtifactsMatchingExpertQueryWithSelect(
         CrossTrackerReport $report,
         PFUser $current_user,
         int $limit,
         int $offset,
-        bool $static_return,
-    ): ArtifactMatchingReportCollection|CrossTrackerReportContentRepresentation {
+    ): CrossTrackerReportContentRepresentation {
         $trackers = $this->getOnlyActiveTrackersInActiveProjects($report->getTrackers());
         $query    = $this->getQueryFromReport($report, $current_user, $trackers);
 
@@ -191,9 +182,6 @@ final readonly class CrossTrackerArtifactReportFactory
         );
 
         if ($artifact_ids === []) {
-            if ($static_return) {
-                return new ArtifactMatchingReportCollection([], 0);
-            }
             return new CrossTrackerReportContentRepresentation([], [], 0);
         }
 
@@ -203,9 +191,6 @@ final readonly class CrossTrackerArtifactReportFactory
             array_map(static fn(array $row) => $row['id'], $artifact_ids),
         );
 
-        if ($static_return) {
-            return $this->buildCollectionOfArtifacts($select_results, $total_size);
-        }
         $results = $this->result_builder->buildResult([new Metadata('artifact'), ...$query->getSelect()], $trackers, $current_user, $select_results);
         return $this->buildReportContentRepresentation($results, $total_size);
     }
@@ -226,6 +211,7 @@ final readonly class CrossTrackerArtifactReportFactory
         $expert_query = $report->getExpertQuery();
         $this->expert_query_validator->validateExpertQuery(
             $expert_query,
+            $report->isExpert(),
             new InvalidSearchablesCollectionBuilder($this->term_collector, $trackers, $current_user),
             new InvalidSelectablesCollectionBuilder($this->selectables_collector, $trackers, $current_user),
         );

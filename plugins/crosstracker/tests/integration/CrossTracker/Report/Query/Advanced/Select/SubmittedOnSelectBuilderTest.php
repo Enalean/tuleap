@@ -93,7 +93,7 @@ final class SubmittedOnSelectBuilderTest extends CrossTrackerFieldTestCase
     {
         $result = (new ArtifactReportFactoryInstantiator())
             ->getFactory()
-            ->getArtifactsMatchingReport($report, $user, 10, 0, false);
+            ->getArtifactsMatchingReport($report, $user, 10, 0);
         assert($result instanceof CrossTrackerReportContentRepresentation);
         return $result;
     }
@@ -105,6 +105,7 @@ final class SubmittedOnSelectBuilderTest extends CrossTrackerFieldTestCase
                 1,
                 "SELECT @submitted_on WHERE @submitted_on >= '1970-01-01'",
                 $this->trackers,
+                true,
             ),
             $this->user,
         );

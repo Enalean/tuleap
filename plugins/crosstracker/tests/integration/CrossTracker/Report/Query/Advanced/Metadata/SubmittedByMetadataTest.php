@@ -124,7 +124,7 @@ final class SubmittedByMetadataTest extends CrossTrackerFieldTestCase
     {
         $result = (new ArtifactReportFactoryInstantiator())
             ->getFactory()
-            ->getArtifactsMatchingReport($report, $user, 10, 0, true);
+            ->getArtifactsMatchingReport($report, $user, 10, 0);
         assert($result instanceof ArtifactMatchingReportCollection);
         return array_values(array_map(static fn(Artifact $artifact) => $artifact->getId(), $result->getArtifacts()));
     }
@@ -136,6 +136,7 @@ final class SubmittedByMetadataTest extends CrossTrackerFieldTestCase
                 1,
                 "@submitted_by = 'bob'",
                 [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
+                false,
             ),
             $this->project_member,
         );
@@ -151,6 +152,7 @@ final class SubmittedByMetadataTest extends CrossTrackerFieldTestCase
                 1,
                 "@submitted_by = 'bob'",
                 [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
+                false,
             ),
             $this->project_admin,
         );
@@ -166,6 +168,7 @@ final class SubmittedByMetadataTest extends CrossTrackerFieldTestCase
                 1,
                 '@submitted_by = MYSELF()',
                 [$this->release_tracker, $this->sprint_tracker],
+                false,
             ),
             $this->alice,
         );
@@ -181,6 +184,7 @@ final class SubmittedByMetadataTest extends CrossTrackerFieldTestCase
                 1,
                 "@submitted_by = 'bob' OR @submitted_by = 'alice'",
                 [$this->release_tracker, $this->sprint_tracker],
+                false,
             ),
             $this->project_member,
         );
@@ -199,6 +203,7 @@ final class SubmittedByMetadataTest extends CrossTrackerFieldTestCase
                 1,
                 "@submitted_by != 'bob'",
                 [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
+                false,
             ),
             $this->project_member,
         );
@@ -214,6 +219,7 @@ final class SubmittedByMetadataTest extends CrossTrackerFieldTestCase
                 1,
                 "@submitted_by != 'bob'",
                 [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
+                false,
             ),
             $this->project_admin,
         );
@@ -233,6 +239,7 @@ final class SubmittedByMetadataTest extends CrossTrackerFieldTestCase
                 1,
                 '@submitted_by != MYSELF()',
                 [$this->release_tracker, $this->sprint_tracker],
+                false,
             ),
             $this->alice,
         );
@@ -248,6 +255,7 @@ final class SubmittedByMetadataTest extends CrossTrackerFieldTestCase
                 1,
                 "@submitted_by != 'bob' AND @submitted_by != 'alice'",
                 [$this->release_tracker, $this->sprint_tracker],
+                false,
             ),
             $this->project_member,
         );
@@ -263,6 +271,7 @@ final class SubmittedByMetadataTest extends CrossTrackerFieldTestCase
                 1,
                 "@submitted_by IN('bob')",
                 [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
+                false,
             ),
             $this->project_member,
         );
@@ -278,6 +287,7 @@ final class SubmittedByMetadataTest extends CrossTrackerFieldTestCase
                 1,
                 "@submitted_by IN('bob')",
                 [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
+                false,
             ),
             $this->project_admin,
         );
@@ -293,6 +303,7 @@ final class SubmittedByMetadataTest extends CrossTrackerFieldTestCase
                 1,
                 '@submitted_by IN(MYSELF())',
                 [$this->release_tracker, $this->sprint_tracker],
+                false,
             ),
             $this->alice,
         );
@@ -308,6 +319,7 @@ final class SubmittedByMetadataTest extends CrossTrackerFieldTestCase
                 1,
                 "@submitted_by IN('bob', MYSELF())",
                 [$this->release_tracker, $this->sprint_tracker],
+                false,
             ),
             $this->alice,
         );
@@ -326,6 +338,7 @@ final class SubmittedByMetadataTest extends CrossTrackerFieldTestCase
                 1,
                 "@submitted_by IN('bob') OR @submitted_by IN('charles')",
                 [$this->release_tracker, $this->sprint_tracker],
+                false,
             ),
             $this->project_member,
         );
@@ -341,6 +354,7 @@ final class SubmittedByMetadataTest extends CrossTrackerFieldTestCase
                 1,
                 "@submitted_by NOT IN('bob')",
                 [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
+                false,
             ),
             $this->project_member,
         );
@@ -356,6 +370,7 @@ final class SubmittedByMetadataTest extends CrossTrackerFieldTestCase
                 1,
                 "@submitted_by NOT IN('bob')",
                 [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
+                false,
             ),
             $this->project_admin,
         );
@@ -375,6 +390,7 @@ final class SubmittedByMetadataTest extends CrossTrackerFieldTestCase
                 1,
                 '@submitted_by NOT IN(MYSELF())',
                 [$this->release_tracker, $this->sprint_tracker],
+                false,
             ),
             $this->alice,
         );
@@ -390,6 +406,7 @@ final class SubmittedByMetadataTest extends CrossTrackerFieldTestCase
                 1,
                 "@submitted_by NOT IN('bob', 'alice')",
                 [$this->release_tracker, $this->sprint_tracker],
+                false,
             ),
             $this->alice,
         );
@@ -405,6 +422,7 @@ final class SubmittedByMetadataTest extends CrossTrackerFieldTestCase
                 1,
                 "@submitted_by NOT IN('bob') AND @submitted_by NOT IN('alice')",
                 [$this->release_tracker, $this->sprint_tracker],
+                false,
             ),
             $this->project_member,
         );

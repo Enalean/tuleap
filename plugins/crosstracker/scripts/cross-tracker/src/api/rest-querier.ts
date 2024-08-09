@@ -37,7 +37,6 @@ import type {
     TrackerAndProject,
     TrackerInfo,
 } from "../type";
-import type { FeatureFlagResponse } from "@tuleap/core-rest-api-types";
 import type { TrackerProjectRepresentation } from "@tuleap/plugin-tracker-rest-api-types";
 import type { ProjectIdentifier } from "../domain/ProjectIdentifier";
 import type {
@@ -63,6 +62,7 @@ export function getReport(report_id: number): ResultAsync<Report, Fault> {
                 expert_query: report.expert_query,
                 trackers: mapToTrackerAndProject(report.trackers),
                 invalid_trackers: report.invalid_trackers,
+                expert_mode: report.report_mode === "expert",
             };
         },
     );
@@ -77,7 +77,6 @@ export function getReportContent(
         params: {
             limit,
             offset,
-            return_format: "static",
         },
     }).andThen((response) => {
         const total = Number.parseInt(response.headers.get("X-PAGINATION-SIZE") ?? "0", 10);
@@ -92,6 +91,7 @@ export function getQueryResult(
     report_id: number,
     trackers_id: Array<number>,
     expert_query: string,
+    expert_mode: boolean,
     limit: number,
     offset: number,
 ): ResultAsync<ArtifactsCollection, Fault> {
@@ -99,8 +99,8 @@ export function getQueryResult(
         params: {
             limit,
             offset,
+            report_mode: expert_mode ? "expert" : "default",
             query: JSON.stringify({ trackers_id, expert_query }),
-            return_format: "static",
         },
     }).andThen((response) => {
         const total = Number.parseInt(response.headers.get("X-PAGINATION-SIZE") ?? "0", 10);
@@ -111,28 +111,22 @@ export function getQueryResult(
     });
 }
 
-export function isFeatureFlagEnabled(): PromiseLike<boolean> {
-    return getJSON<FeatureFlagResponse>(
-        uri`/feature_flag?name=feature_flag_enable_tql_select`,
-    ).match(
-        (response) => response.value === "1",
-        () => false,
-    );
-}
-
 export function updateReport(
     report_id: number,
     trackers_id: Array<number>,
     expert_query: string,
+    expert_mode: boolean,
 ): ResultAsync<Report, Fault> {
     return putJSON<ReportRepresentation>(uri`/api/v1/cross_tracker_reports/${report_id}`, {
         trackers_id,
         expert_query,
+        report_mode: expert_mode ? "expert" : "default",
     }).map((report): Report => {
         return {
             expert_query: report.expert_query,
             trackers: mapToTrackerAndProject(report.trackers),
             invalid_trackers: report.invalid_trackers,
+            expert_mode: report.report_mode === "expert",
         };
     });
 }

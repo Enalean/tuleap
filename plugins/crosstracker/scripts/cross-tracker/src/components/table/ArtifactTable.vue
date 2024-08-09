@@ -35,7 +35,9 @@
             </thead>
             <tbody v-if="is_loading" key="loading">
                 <tr>
-                    <td colspan="6"><div class="cross-tracker-loader"></div></td>
+                    <td colspan="6">
+                        <div class="cross-tracker-loader"></div>
+                    </td>
                 </tr>
             </tbody>
             <tbody v-if="is_table_empty" key="empty" data-test="cross-tracker-no-results">
@@ -171,6 +173,7 @@ function getArtifactsFromReportOrUnsavedQuery(): ResultAsync<ArtifactsCollection
         report_id,
         props.writing_cross_tracker_report.getTrackerIds(),
         props.writing_cross_tracker_report.expert_query,
+        props.writing_cross_tracker_report.expert_mode,
         limit,
         current_offset,
     );
