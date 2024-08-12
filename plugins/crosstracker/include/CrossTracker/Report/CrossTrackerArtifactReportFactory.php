@@ -27,6 +27,7 @@ use PFUser;
 use Tracker;
 use Tuleap\CrossTracker\CrossTrackerArtifactReportDao;
 use Tuleap\CrossTracker\CrossTrackerReport;
+use Tuleap\CrossTracker\Report\Query\Advanced\ExpertQueryIsEmptyException;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSearchablesCollectionBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSelectablesCollectionBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSelectablesCollectorVisitor;
@@ -73,6 +74,7 @@ final readonly class CrossTrackerArtifactReportFactory
      * @throws SelectablesAreInvalidException
      * @throws SelectablesDoNotExistException
      * @throws SyntaxError
+     * @throws ExpertQueryIsEmptyException
      */
     public function getArtifactsMatchingReport(
         CrossTrackerReport $report,
@@ -82,7 +84,7 @@ final readonly class CrossTrackerArtifactReportFactory
     ): ArtifactMatchingReportCollection|CrossTrackerReportContentRepresentation {
         if ($report->getExpertQuery() === '') {
             if ($report->isExpert()) {
-                return new CrossTrackerReportContentRepresentation([], [], 0);
+                throw new ExpertQueryIsEmptyException();
             }
 
             return $this->getArtifactsFromGivenTrackers(
