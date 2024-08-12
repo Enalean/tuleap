@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<files psalm-version="5.23.1@8471a896ccea3526b26d082f4461eeea467f10a4">
+<files psalm-version="5.25.0@01a8eb06b9e9cc6cfb6a320bf9fb14331919d505">
   <file src="plugins/agiledashboard/include/AgileDashboard/AdminChartsPresenter.php">
     <PossiblyInvalidPropertyAssignmentValue>
       <code><![CDATA[$project->getID()]]></code>
@@ -290,7 +290,6 @@
       <code><![CDATA[cleanUpDirectlyPlannedItemsInArtifact]]></code>
       <code><![CDATA[getAllArtifactNotInTopBacklogInTracker]]></code>
       <code><![CDATA[getAllTopBacklogItemsForProjectSortedByRank]]></code>
-      <code><![CDATA[getTopBacklogItemsForProjectSortedByRank]]></code>
     </MissingReturnType>
   </file>
   <file src="plugins/agiledashboard/include/AgileDashboard/ExplicitBacklog/CreateTrackerFromXMLChecker.php">
@@ -2554,6 +2553,7 @@
       <code><![CDATA[$t = Util::nestedValue(self::DATA_TYPE_ALIAS, strtolower($info->contentType))]]></code>
       <code><![CDATA[$t = Util::nestedValue(self::DATA_TYPE_ALIAS, strtolower($info->type))]]></code>
       <code><![CDATA[empty($base)]]></code>
+      <code><![CDATA[empty($children[0]['children'])]]></code>
       <code><![CDATA[empty($return)]]></code>
     </RiskyTruthyFalsyComparison>
   </file>
@@ -2650,6 +2650,12 @@
     <MissingReturnType>
       <code><![CDATA[delete]]></code>
     </MissingReturnType>
+  </file>
+  <file src="plugins/baseline/include/Domain/RoleAssignmentsHistorySaver.php">
+    <RiskyTruthyFalsyComparison>
+      <code><![CDATA[empty($assignments_by_roles[RoleBaselineAdmin::NAME])]]></code>
+      <code><![CDATA[empty($assignments_by_roles[RoleBaselineReader::NAME])]]></code>
+    </RiskyTruthyFalsyComparison>
   </file>
   <file src="plugins/baseline/include/REST/BaselineArtifactRepresentation.php">
     <PossiblyNullArgument>
@@ -3448,68 +3454,7 @@
       <code><![CDATA[checkUserIsSiteAdmin]]></code>
     </MissingReturnType>
   </file>
-  <file src="plugins/bugzilla_reference/include/Bugzilla/Reference/Dao.php">
-    <DeprecatedMethod>
-      <code><![CDATA[commit]]></code>
-      <code><![CDATA[enableExceptionsOnError]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[parent::__construct($da)]]></code>
-      <code><![CDATA[quoteSmart]]></code>
-      <code><![CDATA[quoteSmart]]></code>
-      <code><![CDATA[quoteSmart]]></code>
-      <code><![CDATA[quoteSmart]]></code>
-      <code><![CDATA[quoteSmart]]></code>
-      <code><![CDATA[quoteSmart]]></code>
-      <code><![CDATA[quoteSmart]]></code>
-      <code><![CDATA[quoteSmart]]></code>
-      <code><![CDATA[quoteSmart]]></code>
-      <code><![CDATA[quoteSmart]]></code>
-      <code><![CDATA[quoteSmart]]></code>
-      <code><![CDATA[retrieve]]></code>
-      <code><![CDATA[retrieveFirstRow]]></code>
-      <code><![CDATA[retrieveFirstRow]]></code>
-      <code><![CDATA[startTransaction]]></code>
-      <code><![CDATA[update]]></code>
-      <code><![CDATA[update]]></code>
-      <code><![CDATA[update]]></code>
-      <code><![CDATA[update]]></code>
-    </DeprecatedMethod>
-    <MissingParamType>
-      <code><![CDATA[$are_followups_private]]></code>
-      <code><![CDATA[$are_followups_private]]></code>
-      <code><![CDATA[$encrypted_api_key]]></code>
-      <code><![CDATA[$encrypted_api_key]]></code>
-      <code><![CDATA[$has_api_key_always_been_encrypted]]></code>
-      <code><![CDATA[$id]]></code>
-      <code><![CDATA[$id]]></code>
-      <code><![CDATA[$id]]></code>
-      <code><![CDATA[$keyword]]></code>
-      <code><![CDATA[$keyword]]></code>
-      <code><![CDATA[$rest_api_url]]></code>
-      <code><![CDATA[$rest_api_url]]></code>
-      <code><![CDATA[$server]]></code>
-      <code><![CDATA[$server]]></code>
-      <code><![CDATA[$username]]></code>
-      <code><![CDATA[$username]]></code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code><![CDATA[delete]]></code>
-      <code><![CDATA[edit]]></code>
-      <code><![CDATA[getReferenceById]]></code>
-      <code><![CDATA[save]]></code>
-      <code><![CDATA[searchAllReferences]]></code>
-      <code><![CDATA[searchReferenceByKeyword]]></code>
-    </MissingReturnType>
-  </file>
   <file src="plugins/bugzilla_reference/include/Bugzilla/Reference/RESTReferenceCreator.php">
-    <InvalidArgument>
-      <code><![CDATA[$e]]></code>
-    </InvalidArgument>
     <MissingReturnType>
       <code><![CDATA[getBaseUrl]]></code>
       <code><![CDATA[getLinkToSource]]></code>
@@ -5423,15 +5368,6 @@
       <code><![CDATA[searchArtifactsFromTracker]]></code>
     </MissingReturnType>
   </file>
-  <file src="plugins/crosstracker/include/CrossTracker/CrossTrackerReport.php">
-    <MissingParamType>
-      <code><![CDATA[$expert_query]]></code>
-      <code><![CDATA[$id]]></code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code><![CDATA[populateValidityTrackers]]></code>
-    </MissingReturnType>
-  </file>
   <file src="plugins/crosstracker/include/CrossTracker/CrossTrackerReportDao.php">
     <MissingParamType>
       <code><![CDATA[$content_id]]></code>
@@ -5466,41 +5402,12 @@
       <code><![CDATA[$user]]></code>
     </MissingParamType>
   </file>
-  <file src="plugins/crosstracker/include/CrossTracker/REST/ResourcesInjector.php">
-    <MissingReturnType>
-      <code><![CDATA[populate]]></code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/crosstracker/include/CrossTracker/REST/v1/CrossTrackerReportRepresentation.php">
-    <InvalidDocblock>
-      <code><![CDATA[public $invalid_trackers = [];]]></code>
-      <code><![CDATA[public $trackers = [];]]></code>
-    </InvalidDocblock>
-    <MissingPropertyType>
-      <code><![CDATA[$invalid_trackers]]></code>
-      <code><![CDATA[$trackers]]></code>
-    </MissingPropertyType>
-  </file>
   <file src="plugins/crosstracker/include/CrossTracker/REST/v1/CrossTrackerReportsResource.php">
-    <InvalidDocblock>
-      <code><![CDATA[array {@max 25}]]></code>
-    </InvalidDocblock>
     <MissingParamType>
-      <code><![CDATA[$expert_query]]></code>
-      <code><![CDATA[$id]]></code>
       <code><![CDATA[$limit]]></code>
       <code><![CDATA[$offset]]></code>
-      <code><![CDATA[$query]]></code>
-      <code><![CDATA[$query_parameter]]></code>
       <code><![CDATA[$size]]></code>
     </MissingParamType>
-    <MissingReturnType>
-      <code><![CDATA[checkQueryIsValid]]></code>
-      <code><![CDATA[getExpertQueryFromRoute]]></code>
-      <code><![CDATA[optionsId]]></code>
-      <code><![CDATA[sendAllowHeaders]]></code>
-      <code><![CDATA[sendPaginationHeaders]]></code>
-    </MissingReturnType>
   </file>
   <file src="plugins/crosstracker/include/CrossTracker/Report/CSV/CSVRepresentation.php">
     <MissingReturnType>
@@ -5756,15 +5663,6 @@
       <code><![CDATA[isUnique]]></code>
       <code><![CDATA[loadContent]]></code>
     </MissingReturnType>
-  </file>
-  <file src="plugins/crosstracker/include/CrossTracker/Widget/ProjectCrossTrackerSearchPresenter.php">
-    <MissingParamType>
-      <code><![CDATA[$is_admin]]></code>
-      <code><![CDATA[$report_id]]></code>
-    </MissingParamType>
-    <MissingPropertyType>
-      <code><![CDATA[$date_format]]></code>
-    </MissingPropertyType>
   </file>
   <file src="plugins/crosstracker/include/CrossTracker/Widget/WidgetPermissionChecker.php">
     <PossiblyInvalidArgument>
@@ -22317,17 +22215,11 @@
       <code><![CDATA[addHook]]></code>
       <code><![CDATA[addHook]]></code>
       <code><![CDATA[addHook]]></code>
-      <code><![CDATA[addHook]]></code>
-      <code><![CDATA[current]]></code>
-      <code><![CDATA[current]]></code>
       <code><![CDATA[current]]></code>
       <code><![CDATA[current]]></code>
       <code><![CDATA[getRow]]></code>
       <code><![CDATA[isError]]></code>
       <code><![CDATA[rowCount]]></code>
-      <code><![CDATA[rowCount]]></code>
-      <code><![CDATA[valid]]></code>
-      <code><![CDATA[valid]]></code>
       <code><![CDATA[valid]]></code>
       <code><![CDATA[valid]]></code>
     </DeprecatedMethod>
@@ -22335,13 +22227,11 @@
       <code><![CDATA[$id]]></code>
       <code><![CDATA[$params]]></code>
       <code><![CDATA[$params]]></code>
-      <code><![CDATA[$params]]></code>
     </MissingParamType>
     <MissingPropertyType>
       <code><![CDATA[$hudsonJobFactory]]></code>
     </MissingPropertyType>
     <MissingReturnType>
-      <code><![CDATA[ajax_reference_sparkline]]></code>
       <code><![CDATA[canIncludeStylesheets]]></code>
       <code><![CDATA[cssFile]]></code>
       <code><![CDATA[getMinimalHudsonJobFactory]]></code>
@@ -23712,6 +23602,9 @@
     <MissingTemplateParam>
       <code><![CDATA[SeekableIterator]]></code>
     </MissingTemplateParam>
+    <ParamNameMismatch>
+      <code><![CDATA[$pos]]></code>
+    </ParamNameMismatch>
   </file>
   <file src="plugins/ldap/include/LDAP_AdministrationPresenter.class.php">
     <MissingParamType>
@@ -36120,9 +36013,6 @@
     <MissingReturnType>
       <code><![CDATA[getFullRESTRepresentation]]></code>
     </MissingReturnType>
-    <PossiblyInvalidArgument>
-      <code><![CDATA[$this->field->getTracker()->getProject()->getID()]]></code>
-    </PossiblyInvalidArgument>
     <RedundantCastGivenDocblockType>
       <code><![CDATA[(string) $this->text]]></code>
     </RedundantCastGivenDocblockType>
@@ -40513,7 +40403,6 @@
       <code><![CDATA[fetchComputedValueWithLabel]]></code>
       <code><![CDATA[fetchSubmitForOverlay]]></code>
       <code><![CDATA[getComputedValueWithNoLabel]]></code>
-      <code><![CDATA[getComputedValueWithNoStopOnManualValue]]></code>
       <code><![CDATA[getDefaultRESTValue]]></code>
       <code><![CDATA[getFieldEmptyMessage]]></code>
       <code><![CDATA[getHiddenArtifactValueForEdition]]></code>
@@ -47400,7 +47289,6 @@
       <code><![CDATA[createFormElement]]></code>
       <code><![CDATA[displayAdminCSVImport]]></code>
       <code><![CDATA[displayAdminCSVImportHeader]]></code>
-      <code><![CDATA[displayAdminClean]]></code>
       <code><![CDATA[displayAdminFooter]]></code>
       <code><![CDATA[displayAdminFormElements]]></code>
       <code><![CDATA[displayAdminFormElementsHeader]]></code>
@@ -59998,25 +59886,6 @@
       <code><![CDATA[$ugroups]]></code>
     </PossiblyNullArgument>
   </file>
-  <file src="src/common/Queue/Redis/EventMessageForPersistentQueue.php">
-    <MissingReturnType>
-      <code><![CDATA[getPayload]]></code>
-    </MissingReturnType>
-  </file>
-  <file src="src/common/Queue/Redis/RedisEventMessageForPersistentQueue.php">
-    <MissingParamType>
-      <code><![CDATA[$content]]></code>
-      <code><![CDATA[$content]]></code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code><![CDATA[getPayload]]></code>
-    </MissingReturnType>
-  </file>
-  <file src="src/common/Queue/Redis/RedisPersistentQueue.php">
-    <PossiblyInvalidArgument>
-      <code><![CDATA[$queue_size]]></code>
-    </PossiblyInvalidArgument>
-  </file>
   <file src="src/common/Queue/Worker.php">
     <MissingParamType>
       <code><![CDATA[$error_msg]]></code>
@@ -60780,11 +60649,6 @@
       <code><![CDATA[setUsername]]></code>
     </MissingReturnType>
   </file>
-  <file src="src/common/SVNCore/SHA1CollisionDetector.php">
-    <MissingParamType>
-      <code><![CDATA[$handle_resource]]></code>
-    </MissingParamType>
-  </file>
   <file src="src/common/SVNCore/SVNAccessFileSectionParser.php">
     <RiskyTruthyFalsyComparison>
       <code><![CDATA[empty($this->ugroupNewName)]]></code>
@@ -61299,15 +61163,12 @@
     <MissingParamType>
       <code><![CDATA[$action]]></code>
       <code><![CDATA[$action]]></code>
-      <code><![CDATA[$action]]></code>
-      <code><![CDATA[$service]]></code>
       <code><![CDATA[$service]]></code>
       <code><![CDATA[$service]]></code>
     </MissingParamType>
     <MissingReturnType>
       <code><![CDATA[execute]]></code>
       <code><![CDATA[getInitMode]]></code>
-      <code><![CDATA[service]]></code>
       <code><![CDATA[systemctl]]></code>
     </MissingReturnType>
   </file>
@@ -78432,23 +78293,6 @@
     <RiskyTruthyFalsyComparison>
       <code><![CDATA[$current_user->user->getPreference('sidebar_state')]]></code>
       <code><![CDATA[$edition_default_format]]></code>
-    </RiskyTruthyFalsyComparison>
-  </file>
-  <file src="src/www/tlp-doc/index.php">
-    <InvalidArrayOffset>
-      <code><![CDATA[$sections[$_GET['section']]]]></code>
-      <code><![CDATA[[$_GET['section'] => true]]]></code>
-      <code><![CDATA[[$current_section => $sections[$current_section]]]]></code>
-    </InvalidArrayOffset>
-    <LessSpecificReturnStatement>
-      <code><![CDATA[$discovery]]></code>
-    </LessSpecificReturnStatement>
-    <MoreSpecificReturnType>
-      <code><![CDATA[list<mixed>]]></code>
-    </MoreSpecificReturnType>
-    <RiskyTruthyFalsyComparison>
-      <code><![CDATA[! $content]]></code>
-      <code><![CDATA[$documentation]]></code>
     </RiskyTruthyFalsyComparison>
   </file>
   <file src="src/www/tos/privacy.php">
