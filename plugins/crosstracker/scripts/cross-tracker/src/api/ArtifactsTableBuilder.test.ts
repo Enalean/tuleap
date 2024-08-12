@@ -628,10 +628,13 @@ describe(`ArtifactsTableBuilder`, () => {
             },
         );
 
-        it(`when the artifact representation does not have an @artifact selected, it will throw an error`, () => {
-            expect(() =>
-                ArtifactsTableBuilder().mapReportToArtifactsTable({ selected: [], artifacts: [] }),
-            ).toThrow();
+        it(`allows an empty report so that we can show an empty state screen`, () => {
+            const table = ArtifactsTableBuilder().mapReportToArtifactsTable({
+                selected: [],
+                artifacts: [],
+            });
+            expect(table.columns).toHaveLength(0);
+            expect(table.rows).toHaveLength(0);
         });
 
         it(`when the artifact value does not match the @artifact representation, it will throw an error`, () => {

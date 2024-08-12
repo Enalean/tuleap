@@ -70,19 +70,12 @@ export type ArtifactsTableBuilder = {
     mapReportToArtifactsTable(report: SelectableReportContentRepresentation): ArtifactsTable;
 };
 
-function findArtifactSelectable(selected: ReadonlyArray<Selectable>): ArtifactSelectable {
+function findArtifactSelectable(selected: ReadonlyArray<Selectable>): Option<ArtifactSelectable> {
     return Option.fromNullable(
         selected.find(
             (selectable): selectable is ArtifactSelectable =>
                 selectable.type === ARTIFACT_SELECTABLE_TYPE,
         ),
-    ).match(
-        (selectable) => selectable,
-        () => {
-            throw Error(
-                "Expected to find the @artifact column in the list of selected columns, but could not find it",
-            );
-        },
     );
 }
 
@@ -254,25 +247,27 @@ function buildCell(selectable: Selectable, artifact: ArtifactRepresentation): Re
 export const ArtifactsTableBuilder = (): ArtifactsTableBuilder => {
     return {
         mapReportToArtifactsTable(report): ArtifactsTable {
-            const artifact_selectable = findArtifactSelectable(report.selected);
             const initial_table: ArtifactsTable = {
-                columns: new Set([artifact_selectable.name]),
+                columns: new Set(),
                 rows: [],
             };
-            return report.artifacts.reduce((accumulator, artifact) => {
-                const artifact_uri = findArtifactURI(artifact_selectable, artifact);
-                const row: ArtifactRow = { uri: artifact_uri, cells: new Map<string, Cell>() };
-                for (const selectable of report.selected) {
-                    // Filter out unsupported selectable
-                    buildCell(selectable, artifact).map((cell) => {
-                        accumulator.columns.add(selectable.name);
-                        row.cells.set(selectable.name, cell);
-                    });
-                }
-                return {
-                    columns: accumulator.columns,
-                    rows: accumulator.rows.concat([row]),
-                };
+            return findArtifactSelectable(report.selected).mapOr((artifact_selectable) => {
+                initial_table.columns.add(artifact_selectable.name);
+                return report.artifacts.reduce((accumulator, artifact) => {
+                    const artifact_uri = findArtifactURI(artifact_selectable, artifact);
+                    const row: ArtifactRow = { uri: artifact_uri, cells: new Map<string, Cell>() };
+                    for (const selectable of report.selected) {
+                        // Filter out unsupported selectable
+                        buildCell(selectable, artifact).map((cell) => {
+                            accumulator.columns.add(selectable.name);
+                            row.cells.set(selectable.name, cell);
+                        });
+                    }
+                    return {
+                        columns: accumulator.columns,
+                        rows: accumulator.rows.concat([row]),
+                    };
+                }, initial_table);
             }, initial_table);
         },
     };
