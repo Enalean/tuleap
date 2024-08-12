@@ -32,18 +32,18 @@ use Tuleap\include\CheckUserCanAccessProject;
 use Tuleap\Project\ProjectByIDFactory;
 use Tuleap\REST\ProjectAuthorization;
 
-final class UserIsAllowedToSeeReportChecker
+final readonly class UserIsAllowedToSeeReportChecker
 {
     public function __construct(
-        private readonly SearchCrossTrackerWidget $cross_tracker_dao,
-        private readonly ProjectByIDFactory $project_manager,
-        private readonly CheckUserCanAccessProject $url_verification,
-        private readonly CrossTrackerPermissionGate $cross_tracker_permission_gate,
+        private SearchCrossTrackerWidget $cross_tracker_dao,
+        private ProjectByIDFactory $project_manager,
+        private CheckUserCanAccessProject $url_verification,
+        private CrossTrackerPermissionGate $cross_tracker_permission_gate,
     ) {
     }
 
     /**
-     * @throws \Luracast\Restler\RestException
+     * @throws RestException
      */
     public function checkUserIsAllowedToSeeReport(PFUser $user, CrossTrackerReport $report): void
     {

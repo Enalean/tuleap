@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2024-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,19 +20,17 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\CrossTracker\REST;
-
-use Luracast\Restler\Restler;
-use Tuleap\CrossTracker\REST\v1\CrossTrackerReportRepresentation;
-use Tuleap\CrossTracker\REST\v1\CrossTrackerReportsResource;
+namespace Tuleap\CrossTracker\REST\v1;
 
 /**
- * Inject resource into restler
+ * @psalm-immutable
  */
-final class ResourcesInjector
+final readonly class CrossTrackerArtifactBadgeRepresentation
 {
-    public function populate(Restler $restler): void
-    {
-        $restler->addAPIClass(CrossTrackerReportsResource::class, CrossTrackerReportRepresentation::ROUTE);
+    public function __construct(
+        public string $uri,
+        public string $color,
+        public string $cross_ref,
+    ) {
     }
 }

@@ -19,86 +19,39 @@
  *
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\CrossTracker\REST\v1;
 
+use PFUser;
 use Tuleap\Project\REST\ProjectReference;
 use Tuleap\REST\JsonCast;
+use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\REST\TrackerReference;
 use Tuleap\User\REST\MinimalUserRepresentation;
 
 /**
  * @psalm-immutable
  */
-class CrossTrackerArtifactReportRepresentation
+final readonly class CrossTrackerArtifactReportRepresentation
 {
     /**
-     * @var int
+     * @param MinimalUserRepresentation[] $assigned_to
      */
-    public $id;
-
-    /**
-     * @var string
-     */
-    public $title;
-
-    /**
-     * @var string | null
-     */
-    public $status;
-
-    /**
-     * @var string
-     */
-    public $last_update_date;
-
-    /**
-     * @var MinimalUserRepresentation|null
-     */
-    public $submitted_by;
-
-    /**
-     * @var MinimalUserRepresentation[]
-     */
-    public $assigned_to;
-
-    /**
-     * @var TrackerReference
-     */
-    public $tracker;
-
-    /**
-     * @var array
-     */
-    public $badge;
-
-    /**
-     * @var ProjectReference
-     */
-    public $project;
-
     private function __construct(
-        int $id,
-        string $title,
-        ?string $status,
-        string $last_update_date,
-        ?MinimalUserRepresentation $submitted_by,
-        array $assigned_to,
-        TrackerReference $tracker,
-        array $badge,
-        ProjectReference $project,
+        public int $id,
+        public string $title,
+        public ?string $status,
+        public string $last_update_date,
+        public ?MinimalUserRepresentation $submitted_by,
+        public array $assigned_to,
+        public TrackerReference $tracker,
+        public CrossTrackerArtifactBadgeRepresentation $badge,
+        public ProjectReference $project,
     ) {
-        $this->id               = $id;
-        $this->title            = $title;
-        $this->status           = $status;
-        $this->last_update_date = $last_update_date;
-        $this->submitted_by     = $submitted_by;
-        $this->assigned_to      = $assigned_to;
-        $this->tracker          = $tracker;
-        $this->badge            = $badge;
-        $this->project          = $project;
     }
 
-    public static function build(\Tuleap\Tracker\Artifact\Artifact $artifact, \PFUser $user): self
+    public static function build(Artifact $artifact, PFUser $user): self
     {
         $assigned_to = [];
         foreach ($artifact->getAssignedTo($user) as $user_assigned_to) {
@@ -115,11 +68,11 @@ class CrossTrackerArtifactReportRepresentation
             MinimalUserRepresentation::build($artifact->getSubmittedByUser()),
             $assigned_to,
             TrackerReference::build($tracker),
-            [
-                'uri'       => $artifact->getUri(),
-                'color'     => $artifact->getTracker()->getColor()->getName(),
-                'cross_ref' => $artifact->getXRef(),
-            ],
+            new CrossTrackerArtifactBadgeRepresentation(
+                $artifact->getUri(),
+                $artifact->getTracker()->getColor()->getName(),
+                $artifact->getXRef(),
+            ),
             new ProjectReference($tracker->getProject()),
         );
     }

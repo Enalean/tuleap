@@ -19,45 +19,33 @@
  *
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\CrossTracker\REST\v1;
 
 /**
  * @psalm-immutable
  */
-class PaginatedCollectionOfCrossTrackerArtifacts
+final readonly class PaginatedCollectionOfCrossTrackerArtifacts
 {
     /**
-     * @var CrossTrackerArtifactReportRepresentation[]
-     */
-    private $cross_tracker_artifacts;
-
-    /**
-     * @var int
-     */
-    private $total_size;
-
-    /**
      * @param CrossTrackerArtifactReportRepresentation[] $cross_tracker_artifacts
-     * @param int                                        $total_size
      */
-    public function __construct(array $cross_tracker_artifacts, $total_size)
-    {
-        $this->cross_tracker_artifacts = $cross_tracker_artifacts;
-        $this->total_size              = $total_size;
+    public function __construct(
+        private array $cross_tracker_artifacts,
+        private int $total_size,
+    ) {
     }
 
     /**
      * @return CrossTrackerArtifactReportRepresentation[]
      */
-    public function getArtifacts()
+    public function getArtifacts(): array
     {
         return $this->cross_tracker_artifacts;
     }
 
-    /**
-     * @return int
-     */
-    public function getTotalSize()
+    public function getTotalSize(): int
     {
         return $this->total_size;
     }

@@ -18,16 +18,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\CrossTracker\REST\v1;
 
+use PFUser;
 use Tuleap\Tracker\REST\v1\ArtifactMatchingReportCollection;
 
-class ArtifactRepresentationFactory
+final class ArtifactRepresentationFactory
 {
-    /**
-     * @return PaginatedCollectionOfCrossTrackerArtifacts
-     */
-    public function buildRepresentationsForReport(ArtifactMatchingReportCollection $collection, \PFUser $current_user)
+    public function buildRepresentationsForReport(ArtifactMatchingReportCollection $collection, PFUser $current_user): PaginatedCollectionOfCrossTrackerArtifacts
     {
         $representations = [];
         foreach ($collection->getArtifacts() as $artifact) {
