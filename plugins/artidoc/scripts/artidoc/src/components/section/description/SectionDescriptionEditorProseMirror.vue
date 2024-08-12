@@ -80,10 +80,11 @@ watch(
         if (!props.is_edit_mode) {
             upload_plugin.cancelOngoingUpload();
             resetProgressCallback();
-        }
-
-        if (editorView.value && useEditorInstance) {
-            useEditorInstance.resetContent(convertDescriptionToHTML(props.editable_description));
+            if (editorView.value && useEditorInstance) {
+                useEditorInstance.resetContent(
+                    convertDescriptionToHTML(props.editable_description),
+                );
+            }
         }
     },
 );
