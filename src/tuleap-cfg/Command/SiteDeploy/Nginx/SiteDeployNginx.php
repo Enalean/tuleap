@@ -69,7 +69,7 @@ class SiteDeployNginx
 
         $this->logger->info('Start configuration');
 
-        $this->common->deployConfigurationChunks();
+        $this->common->deployConfigurationChunks($this->server_name);
 
         if (! file_exists($this->nginx_base_dir . '/conf.d/tuleap.conf')) {
             $this->logger->info('Generate tuleap.conf');

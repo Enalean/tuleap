@@ -23,6 +23,8 @@ namespace TuleapCfg\Command\SiteDeploy\Nginx;
 use DirectoryIterator;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Process\Process;
+use Psl\File;
+use Psl\Str;
 
 class NginxCommon
 {
@@ -67,18 +69,43 @@ class NginxCommon
         }
     }
 
-    public function deployConfigurationChunks(): void
+    public function deployConfigurationChunks(string $server_name): void
     {
         $this->logger->info("Deploy configuration chunks in {$this->nginx_base_dir}");
-        $this->copyTuleapGeneralSettings();
+        $this->copyTuleapGeneralSettings($server_name);
         $this->copyTuleapDotD();
         $this->copyTuleapPlugins();
     }
 
-    private function copyTuleapGeneralSettings(): void
+    private function copyTuleapGeneralSettings(string $server_name): void
     {
         $this->logger->info("Deploy global settings chunk in {$this->nginx_base_dir}");
-        copy($this->tuleap_base_dir . '/src/etc/nginx/tuleap-managed-global-settings.conf', $this->nginx_base_dir . '/conf.d/tuleap-managed-global-settings.conf');
+
+        $global_settings_template = File\read($this->tuleap_base_dir . '/src/etc/nginx/tuleap-managed-global-settings.conf');
+        $global_settings          = Str\replace($global_settings_template, '%hash_bucket_size%', (string) $this->computeServerNameHashBucketSize($server_name));
+
+        File\write($this->nginx_base_dir . '/conf.d/tuleap-managed-global-settings.conf', $global_settings, File\WriteMode::TRUNCATE);
+    }
+
+    private function computeServerNameHashBucketSize(string $server_name): int
+    {
+        $hash_bucket_size = 32;
+
+        // \posix_sysconf() is PHP 8.3+
+        $getconf_process = new Process(['getconf', 'LEVEL1_DCACHE_LINESIZE']);
+        $getconf_process->run();
+        if ($getconf_process->isSuccessful()) {
+            $hash_bucket_size = (int) $getconf_process->getOutput();
+        }
+
+        $server_name_length = strlen($server_name);
+
+        if ($hash_bucket_size >= $server_name_length) {
+            return $hash_bucket_size;
+        }
+
+        $closest_power_of_two_fitting_server_name_length = (int) pow(2, ceil(log($server_name_length, 2)));
+        return $closest_power_of_two_fitting_server_name_length;
     }
 
     private function copyTuleapDotD(): void
@@ -130,19 +157,6 @@ class NginxCommon
         );
     }
 
-    public function deployMainNginxConf(): void
-    {
-        if (! $this->hasTuleapMarker()) {
-            $this->backupOriginalFile($this->nginx_base_dir . '/nginx.conf');
-            copy($this->tuleap_base_dir . '/src/etc/nginx/nginx.conf', $this->nginx_base_dir . '/nginx.conf');
-        }
-    }
-
-    private function hasTuleapMarker(): bool
-    {
-        return strpos(file_get_contents($this->nginx_base_dir . '/nginx.conf'), '# Replaced for Tuleap usage') !== false;
-    }
-
     public function replacePlaceHolderInto(string $template_path, string $target_path, array $variables, array $values): void
     {
         file_put_contents(
@@ -153,13 +167,6 @@ class NginxCommon
                 file_get_contents($template_path)
             )
         );
-    }
-
-    private function backupOriginalFile(string $file): void
-    {
-        if (! file_exists($file . '.orig')) {
-            copy($file, $file . '.orig');
-        }
     }
 
     private function createDirectoryIfNotExists(string $directory): void
