@@ -104,7 +104,9 @@ use Tuleap\CrossTracker\REST\v1\Representation\LegacyCrossTrackerReportContentRe
 use Tuleap\DB\DBFactory;
 use Tuleap\Markdown\CommonMarkInterpreter;
 use Tuleap\REST\AuthenticatedResource;
+use Tuleap\REST\Exceptions\InvalidJsonException;
 use Tuleap\REST\Header;
+use Tuleap\REST\I18NRestException;
 use Tuleap\REST\JsonDecoder;
 use Tuleap\REST\QueryParameterException;
 use Tuleap\REST\QueryParameterParser;
@@ -155,7 +157,7 @@ final class CrossTrackerReportsResource extends AuthenticatedResource
     public const  MAX_LIMIT   = 50;
     private const MODE_EXPERT = 'expert';
 
-    private UserManager $user_manager;
+    private readonly UserManager $user_manager;
 
     public function __construct()
     {
@@ -191,8 +193,8 @@ final class CrossTrackerReportsResource extends AuthenticatedResource
         try {
             $report         = $this->getReport($id);
             $representation = $this->getReportRepresentation($report, $this->user_manager->getCurrentUser());
-        } catch (CrossTrackerReportNotFoundException $exception) {
-            throw new RestException(404, "Report $id not found");
+        } catch (CrossTrackerReportNotFoundException) {
+            throw new I18NRestException(404, sprintf(dgettext('tuleap-crosstracker', 'Report with id %d not found'), $id));
         }
 
         $this->sendAllowHeaders();
@@ -354,30 +356,21 @@ final class CrossTrackerReportsResource extends AuthenticatedResource
 
                 return new LegacyCrossTrackerReportContentRepresentation($representations->getArtifacts());
             }
-        } catch (CrossTrackerReportNotFoundException $exception) {
-            throw new RestException(404, null, ['i18n_error_message' => 'Report not found']);
+        } catch (CrossTrackerReportNotFoundException) {
+            throw new I18NRestException(404, dgettext('tuleap-crosstracker', 'Report not found'));
         } catch (TrackerNotFoundException | TrackerDuplicateException $exception) {
-            throw new RestException(400, null, ['i18n_error_message' => $exception->getMessage()]);
-        } catch (SyntaxError $exception) {
-            throw new RestException(
-                400,
-                null,
-                ['i18n_error_message' => dgettext('tuleap-crosstracker', 'Error while parsing the query')]
-            );
-        } catch (LimitSizeIsExceededException $exception) {
-            throw new RestException(
-                400,
-                null,
-                ['i18n_error_message' => dgettext(
-                    'tuleap-tracker',
-                    'The query is considered too complex to be executed by the server. Please simplify it (e.g remove comparisons) to continue.'
-                ),
-                ]
-            );
+            throw new I18NRestException(400, $exception->getMessage());
+        } catch (SyntaxError) {
+            throw new I18NRestException(400, dgettext('tuleap-crosstracker', 'Error while parsing the query'));
+        } catch (LimitSizeIsExceededException) {
+            throw new I18NRestException(400, dgettext(
+                'tuleap-tracker',
+                'The query is considered too complex to be executed by the server. Please simplify it (e.g remove comparisons) to continue.'
+            ));
         } catch (SearchablesDoNotExistException | SelectablesDoNotExistException | SelectablesMustBeUniqueException $exception) {
-            throw new RestException(400, null, ['i18n_error_message' => $exception->getI18NExceptionMessage()]);
+            throw new I18NRestException(400, $exception->getI18NExceptionMessage());
         } catch (SearchablesAreInvalidException | SelectablesAreInvalidException $exception) {
-            throw new RestException(400, null, ['i18n_error_message' => $exception->getMessage()]);
+            throw new I18NRestException(400, $exception->getMessage());
         }
     }
 
@@ -466,11 +459,9 @@ final class CrossTrackerReportsResource extends AuthenticatedResource
             $this->getUserIsAllowedToSeeReportChecker()->checkUserIsAllowedToSeeReport($current_user, $expected_report);
 
             $this->getCrossTrackerDao()->updateReport($id, $trackers, $expert_query, $expected_report->isExpert());
-        } catch (CrossTrackerReportNotFoundException $exception) {
-            throw new RestException(404, "Report $id not found");
-        } catch (TrackerNotFoundException $exception) {
-            throw new RestException(400, $exception->getMessage());
-        } catch (TrackerDuplicateException $exception) {
+        } catch (CrossTrackerReportNotFoundException) {
+            throw new I18NRestException(404, sprintf(dgettext('tuleap-crosstracker', 'Report with id %d not found'), $id));
+        } catch (TrackerNotFoundException | TrackerDuplicateException $exception) {
             throw new RestException(400, $exception->getMessage());
         }
 
@@ -498,16 +489,10 @@ final class CrossTrackerReportsResource extends AuthenticatedResource
                     $user
                 ),
             );
-        } catch (SearchablesDoNotExistException $exception) {
+        } catch (SearchablesDoNotExistException | SearchablesAreInvalidException $exception) {
             throw new RestException(400, $exception->getMessage());
-        } catch (SearchablesAreInvalidException $exception) {
-            throw new RestException(400, $exception->getMessage());
-        } catch (SyntaxError $exception) {
-            throw new RestException(
-                400,
-                null,
-                ['i18n_error_message' => dgettext('tuleap-crosstracker', 'Error while parsing the query')]
-            );
+        } catch (SyntaxError) {
+            throw new I18NRestException(400, dgettext('tuleap-crosstracker', 'Error while parsing the query'));
         } catch (LimitSizeIsExceededException $exception) {
             throw new RestException(400, $exception->getMessage());
         } catch (Exception $exception) {
@@ -533,8 +518,9 @@ final class CrossTrackerReportsResource extends AuthenticatedResource
     /**
      *
      * @return Tracker[]
-     * @throws RestException 400
-     *
+     * @throws RestException
+     * @throws TrackerDuplicateException
+     * @throws TrackerNotFoundException
      */
     private function getTrackersFromRoute(
         ?string $query,
@@ -556,6 +542,10 @@ final class CrossTrackerReportsResource extends AuthenticatedResource
         return $tracker_extractor->extractTrackers($trackers_id);
     }
 
+    /**
+     * @throws InvalidJsonException
+     * @throws RestException
+     */
     private function getExpertQueryFromRoute(
         ?string $query_parameter,
         CrossTrackerReport $report,
@@ -619,7 +609,7 @@ final class CrossTrackerReportsResource extends AuthenticatedResource
         $list_field_bind_value_normalizer = new ListFieldBindValueNormalizer();
         $ugroup_label_converter           = new UgroupLabelConverter(
             $list_field_bind_value_normalizer,
-            new \BaseLanguageFactory()
+            new BaseLanguageFactory()
         );
         $bind_labels_extractor            = new CollectionOfNormalizedBindLabelsExtractor(
             $list_field_bind_value_normalizer,

@@ -30,52 +30,25 @@ use Tuleap\Tracker\REST\TrackerReference;
 /**
  * @psalm-immutable
  */
-class CrossTrackerReportRepresentation
+final readonly class CrossTrackerReportRepresentation
 {
     public const ROUTE        = 'cross_tracker_reports';
     public const MODE_DEFAULT = 'default';
     public const MODE_EXPERT  = 'expert';
 
     /**
-     * @var int
-     */
-    public $id;
-
-    /**
-     * @var string
-     */
-    public $uri;
-
-    /** @var string */
-    public $expert_query;
-
-    /**
-     * @var array {@type TrackerReference}
-     */
-    public $trackers = [];
-
-    /**
-     * @var array {@type TrackerReference}
-     */
-    public $invalid_trackers = [];
-    /**
-     * @var self::MODE_*
-     */
-    public string $report_mode;
-
-    /**
      * @param TrackerReference[] $trackers
      * @param TrackerReference[] $invalid_trackers
      * @param self::MODE_* $report_mode
      */
-    private function __construct(int $id, string $expert_query, array $trackers, array $invalid_trackers, string $report_mode)
-    {
-        $this->id               = $id;
-        $this->uri              = self::ROUTE . '/' . $this->id;
-        $this->expert_query     = $expert_query;
-        $this->trackers         = $trackers;
-        $this->invalid_trackers = $invalid_trackers;
-        $this->report_mode      = $report_mode;
+    private function __construct(
+        public int $id,
+        public string $uri,
+        public string $expert_query,
+        public array $trackers,
+        public array $invalid_trackers,
+        public string $report_mode,
+    ) {
     }
 
     public static function fromReport(CrossTrackerReport $report, PFUser $user): self
@@ -85,20 +58,18 @@ class CrossTrackerReportRepresentation
 
         foreach ($report->getTrackers() as $tracker) {
             if ($tracker->userCanView($user)) {
-                $tracker_reference = TrackerReference::build($tracker);
-
-                $trackers[] = $tracker_reference;
+                $trackers[] = TrackerReference::build($tracker);
             }
         }
 
         foreach ($report->getInvalidTrackers() as $invalid_tracker) {
-            $tracker_reference = TrackerReference::build($invalid_tracker);
-
-            $invalid_trackers[] = $tracker_reference;
+            $invalid_trackers[] = TrackerReference::build($invalid_tracker);
         }
 
+        $report_id = JsonCast::toInt($report->getId());
         return new self(
-            JsonCast::toInt($report->getId()),
+            $report_id,
+            self::ROUTE . '/' . $report_id,
             $report->getExpertQuery(),
             $trackers,
             $invalid_trackers,

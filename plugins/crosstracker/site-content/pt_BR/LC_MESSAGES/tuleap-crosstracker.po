@@ -134,6 +134,9 @@ msgstr ""
 msgid "Project not found"
 msgstr ""
 
+msgid "Report not found"
+msgstr ""
+
 #, php-format
 msgid "Report with id %d not found"
 msgstr ""
