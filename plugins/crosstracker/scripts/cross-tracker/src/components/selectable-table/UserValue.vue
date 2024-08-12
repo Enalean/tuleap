@@ -43,7 +43,11 @@ const props = defineProps<{
 </script>
 
 <style scoped lang="scss">
+@use "../../../themes/links";
+
 .user {
+    @include links.link;
+
     display: flex;
     align-items: center;
 }

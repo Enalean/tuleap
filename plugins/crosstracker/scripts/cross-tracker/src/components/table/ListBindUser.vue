@@ -18,12 +18,23 @@
   -->
 
 <template>
-    <a v-bind:href="props.user.user_url" class="cross-tracker-list-bind-user">{{
-        props.user.display_name
-    }}</a>
+    <a v-bind:href="props.user.user_url" class="link">{{ props.user.display_name }}</a>
 </template>
+
 <script setup lang="ts">
 import type { User } from "../../type";
 
 const props = defineProps<{ user: User }>();
 </script>
+
+<style scoped lang="scss">
+@use "../../../themes/links";
+
+.link {
+    @include links.link;
+
+    &:not(:last-child)::after {
+        content: ", ";
+    }
+}
+</style>

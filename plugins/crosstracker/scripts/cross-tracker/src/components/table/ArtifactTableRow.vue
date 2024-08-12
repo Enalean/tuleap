@@ -20,25 +20,26 @@
 <template>
     <tr>
         <td data-test="cross-tracker-results-artifact">
-            <a class="direct-link-to-artifact" v-bind:href="props.artifact.badge.uri">
-                <span class="cross-ref-badge link-to-tracker-badge" v-bind:class="badge_color">{{
+            <a class="link" v-bind:href="props.artifact.badge.uri">
+                <span v-bind:class="getCrossRefBadgeClass(props.artifact)">{{
                     props.artifact.badge.cross_ref
                 }}</span
                 >{{ props.artifact.title }}
             </a>
         </td>
         <td>
-            <a v-bind:href="'/' + props.artifact.project.uri" class="cross-tracker-project">{{
+            <a v-bind:href="'/' + props.artifact.project.uri" class="link">{{
                 props.artifact.project.label
             }}</a>
         </td>
         <td>{{ props.artifact.status }}</td>
-        <td class="cross-tracker-last-update-date">
+        <td class="dimmed">
             {{ props.artifact.formatted_last_update_date }}
         </td>
-        <td><list-bind-user v-bind:user="props.artifact.submitted_by" /></td>
+        <td><list-bind-user class="dimmed" v-bind:user="props.artifact.submitted_by" /></td>
         <td>
             <list-bind-user
+                class="dimmed"
                 v-for="user in props.artifact.assigned_to"
                 v-bind:user="user"
                 v-bind:key="user.id"
@@ -46,11 +47,31 @@
         </td>
     </tr>
 </template>
+
 <script setup lang="ts">
-import { computed } from "vue";
 import type { Artifact } from "../../type";
 import ListBindUser from "./ListBindUser.vue";
 
 const props = defineProps<{ artifact: Artifact }>();
-const badge_color = computed(() => `tlp-swatch-${props.artifact.badge.color}`);
+
+const getCrossRefBadgeClass = (artifact: Artifact): string =>
+    `cross-ref-badge tlp-swatch-${artifact.badge.color}`;
 </script>
+
+<style scoped lang="scss">
+@use "../../../themes/links";
+@use "../../../themes/badges";
+
+.link {
+    @include links.link;
+}
+
+.cross-ref-badge {
+    @include badges.badge;
+}
+
+.dimmed {
+    color: var(--tlp-dimmed-color);
+    font-size: 0.875rem;
+}
+</style>

@@ -82,7 +82,7 @@
             class="cell"
             v-bind:class="getEvenOddClass()"
             data-test="cell"
-            ><a v-bind:href="props.artifact_uri"
+            ><a v-bind:href="props.artifact_uri" class="link"
                 ><span v-bind:class="getCrossRefBadgeClass(props.cell)"
                     >{{ props.cell.tracker_name }} #{{ props.cell.artifact_id }}</span
                 >{{ props.cell.title }}</a
@@ -158,6 +158,8 @@ const getCrossRefBadgeClass = (cell: PrettyTitleCell): string =>
 
 <style scoped lang="scss">
 @use "../../../themes/cell";
+@use "../../../themes/links";
+@use "../../../themes/badges";
 
 .cell {
     @include cell.cell-template;
@@ -175,11 +177,15 @@ const getCrossRefBadgeClass = (cell: PrettyTitleCell): string =>
     flex-wrap: wrap;
 }
 
-.user-group:not(:last-child)::after {
-    content: ", ";
+.link {
+    @include links.link;
 }
 
 .cross-ref-badge {
-    margin: 0 5px 0 0;
+    @include badges.badge;
+}
+
+.user-group:not(:last-child)::after {
+    content: ", ";
 }
 </style>

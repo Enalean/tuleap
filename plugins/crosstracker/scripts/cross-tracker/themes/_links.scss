@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2017 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2024-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,24 +17,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@use "./reading-mode";
-@use "./writing-mode";
+@mixin link {
+    color: unset;
 
-.cross-tracker-loader {
-    height: 100px;
-    background: url("@tuleap/burningparrot-theme/images/spinner.gif") no-repeat center center;
-}
-
-.cross-tracker-artifacts-table {
-    margin: var(--tlp-medium-spacing) var(--tlp-medium-spacing) 0;
-}
-
-.cross-tracker-report-error,
-.cross-tracker-report-success {
-    margin: var(--tlp-medium-spacing);
-}
-
-.cross-tracker-report-archive-icon {
-    margin: 0 3px 0 0;
-    font-size: 10px;
+    &:hover,
+    &:focus {
+        color: var(--tlp-main-color);
+    }
 }
