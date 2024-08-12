@@ -18,7 +18,7 @@
  */
 
 CREATE TABLE IF NOT EXISTS plugin_fts_meilisearch_item (
-    id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    id BINARY(16) NOT NULL PRIMARY KEY,
     type VARCHAR(255) NOT NULL,
     project_id INT(11),
     INDEX idx_type(type),
@@ -26,7 +26,7 @@ CREATE TABLE IF NOT EXISTS plugin_fts_meilisearch_item (
 ) ENGINE=InnoDB;
 
 CREATE TABLE IF NOT EXISTS plugin_fts_meilisearch_metadata (
-    item_id INT(11) UNSIGNED NOT NULL,
+    item_id BINARY(16) NOT NULL,
     name VARCHAR(255) NOT NULL,
     value VARCHAR(255) NOT NULL,
     INDEX idx_key_value(name, value),

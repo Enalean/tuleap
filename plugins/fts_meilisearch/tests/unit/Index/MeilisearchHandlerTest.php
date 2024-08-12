@@ -55,7 +55,7 @@ final class MeilisearchHandlerTest extends TestCase
         $item_1 = new PlaintextItemToIndex('type_1', 102, 'content', ['A' => 'A']);
         $item_2 = new PlaintextItemToIndex('type_2', 102, 'content', ['A' => 'A']);
 
-        $this->metadata_dao->expects(self::exactly(2))->method('saveItemMetadata')->willReturn(1, 2);
+        $this->metadata_dao->expects(self::exactly(2))->method('saveItemMetadata')->willReturn('uuid1', 'uuid2');
         $this->client_index->expects(self::once())->method('addDocuments');
 
         $this->handler->indexItems($item_1, $item_2);
@@ -66,8 +66,8 @@ final class MeilisearchHandlerTest extends TestCase
         $item_1 = new PlaintextItemToIndex('type_1', 102, '', ['A' => 'A']);
         $item_2 = new PlaintextItemToIndex('type_2', 102, '', ['A' => 'B']);
 
-        $this->metadata_dao->expects(self::exactly(2))->method('searchMatchingEntries')->willReturnOnConsecutiveCalls([], [2]);
-        $this->metadata_dao->expects(self::once())->method('deleteIndexedItemsFromIDs')->with([2]);
+        $this->metadata_dao->expects(self::exactly(2))->method('searchMatchingEntries')->willReturnOnConsecutiveCalls([], ['uuid2']);
+        $this->metadata_dao->expects(self::once())->method('deleteIndexedItemsFromIDs')->with(['uuid2']);
         $this->client_index->expects(self::once())->method('deleteDocuments');
 
         $this->handler->indexItems($item_1, $item_2);
@@ -75,7 +75,7 @@ final class MeilisearchHandlerTest extends TestCase
 
     public function testDeletesItem(): void
     {
-        $this->metadata_dao->method('searchMatchingEntries')->willReturn([1, 2]);
+        $this->metadata_dao->method('searchMatchingEntries')->willReturn(['uuid1', 'uuid2']);
 
         $this->client_index->expects(self::once())->method('deleteDocuments');
         $this->metadata_dao->expects(self::once())->method('deleteIndexedItemsFromIDs');
@@ -85,7 +85,7 @@ final class MeilisearchHandlerTest extends TestCase
 
     public function testDeletesItemAssociatedToAProject(): void
     {
-        $this->metadata_dao->method('searchMatchingEntriesByProjectID')->willReturn([1, 2]);
+        $this->metadata_dao->method('searchMatchingEntriesByProjectID')->willReturn(['uuid1', 'uuid2']);
 
         $this->client_index->expects(self::once())->method('deleteDocuments');
         $this->metadata_dao->expects(self::once())->method('deleteIndexedItemsFromIDs');

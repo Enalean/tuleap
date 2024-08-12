@@ -10,16 +10,16 @@ let
     targets = [ buildTargetRust ];
   };
   zigCC = pkgs.writeShellScriptBin "zigcc" ''
-    ${pkgs.zig}/bin/zig cc -target ${baseArchTarget}-linux-musl $@
+    ${pkgs.zig}/bin/zig cc $@ -target ${baseArchTarget}-linux-musl
   '';
   tuleapMeilisearchBin = pkgs.stdenvNoCC.mkDerivation rec {
     pname = "tuleap-meilisearch";
-    version = "1.7.6";
+    version = "1.9.0";
     src = pkgs.fetchFromGitHub {
       owner = "meilisearch";
       repo = "MeiliSearch";
       rev = "v${version}";
-      hash = "sha256-LsJM7zkoiu5LZb/rhnZaAS/wVNH8b6YZ+vNEE1wVIIk=";
+      hash = "sha256-fPXhayS8OKiiiDvVvBry3njZ74/W6oVL0p85Z5qf3KA=";
     };
     cargoDeps = pkgs.rustPlatform.importCargoLock {
       lockFile = "${src.out}/Cargo.lock";

@@ -31,12 +31,12 @@ use Tuleap\Search\IndexedItemsToRemove;
 
 class MeilisearchMetadataDAO extends DataAccessObject
 {
-    public function saveItemMetadata(PlaintextItemToIndex $item): int
+    public function saveItemMetadata(PlaintextItemToIndex $item): string
     {
         $existing_entries = $this->searchMatchingEntries($item);
 
         return $this->getDB()->tryFlatTransaction(
-            function () use ($item, $existing_entries): int {
+            function () use ($item, $existing_entries): string {
                 $nb_existing_entries = count($existing_entries);
 
                 if ($nb_existing_entries > 1) {
@@ -59,25 +59,25 @@ class MeilisearchMetadataDAO extends DataAccessObject
     }
 
     /**
-     * @return int[]
+     * @return string[]
      */
     public function searchMatchingEntries(PlaintextItemToIndex|IndexedItemsToRemove $item): array
     {
         $metadata_statement_filter = $this->getFilterSearchIDFromMetadata($item->metadata);
 
         return $this->getDB()->column(
-            "SELECT id FROM plugin_fts_meilisearch_item WHERE type=? AND $metadata_statement_filter FOR SHARE",
+            "SELECT BIN_TO_UUID(id) FROM plugin_fts_meilisearch_item WHERE type=? AND $metadata_statement_filter FOR SHARE",
             array_merge([$item->type], $metadata_statement_filter->values())
         );
     }
 
     /**
-     * @return int[]
+     * @return string[]
      */
     public function searchMatchingEntriesByProjectID(int $project_id): array
     {
         return $this->getDB()->column(
-            'SELECT id FROM plugin_fts_meilisearch_item WHERE project_id = ? FOR SHARE',
+            'SELECT BIN_TO_UUID(id) FROM plugin_fts_meilisearch_item WHERE project_id = ? FOR SHARE',
             [$project_id]
         );
     }
@@ -100,22 +100,28 @@ class MeilisearchMetadataDAO extends DataAccessObject
         return $metadata_statement_filter;
     }
 
-    private function createNewEntry(PlaintextItemToIndex $item): int
+    private function createNewEntry(PlaintextItemToIndex $item): string
     {
-        $id                 = $this->getDB()->insertReturnId('plugin_fts_meilisearch_item', ['type' => $item->type, 'project_id' => $item->project_id]);
+        $id = $this->uuid_factory->buildUUIDBytes();
+        $this->getDB()->insert('plugin_fts_meilisearch_item', ['id' => $id, 'type' => $item->type, 'project_id' => $item->project_id]);
         $metadata_to_insert = [];
         foreach ($item->metadata as $name => $value) {
             $metadata_to_insert[] = ['item_id' => $id, 'name' => $name, 'value' => $value];
         }
         $this->getDB()->insertMany('plugin_fts_meilisearch_metadata', $metadata_to_insert);
 
-        return (int) $id;
+        return $this->uuid_factory->buildUUIDFromBytesData($id)->toString();
     }
 
-    public function deleteIndexedItemsFromIDs(array $ids_to_remove): void
+    public function deleteIndexedItemsFromIDs(array $encoded_uuids_to_remove): void
     {
-        if (count($ids_to_remove) === 0) {
+        if (count($encoded_uuids_to_remove) === 0) {
             return;
+        }
+
+        $ids_to_remove = [];
+        foreach ($encoded_uuids_to_remove as $encoded_uuid_to_remove) {
+            $ids_to_remove[] = $this->uuid_factory->buildUUIDFromHexadecimalString($encoded_uuid_to_remove)->getBytes();
         }
 
         $this->getDB()->tryFlatTransaction(
@@ -131,10 +137,15 @@ class MeilisearchMetadataDAO extends DataAccessObject
     /**
      * @return IndexedItemFound[]
      */
-    public function searchMatchingResultsByItemIDs(array $item_ids, array $cropped_content_by_id): array
+    public function searchMatchingResultsByItemIDs(array $encoded_item_ids, array $cropped_content_by_encoded_id): array
     {
-        $ids_statement = EasyStatement::open()->in('plugin_fts_meilisearch_item.id IN (?*)', $item_ids);
-        /** @psalm-var array<int,string> $type_rows_by_id */
+        $item_ids = [];
+        foreach ($encoded_item_ids as $encoded_item_id) {
+            $item_ids[$encoded_item_id] = $this->uuid_factory->buildUUIDFromHexadecimalString($encoded_item_id)->getBytes();
+        }
+
+        $ids_statement = EasyStatement::open()->in('plugin_fts_meilisearch_item.id IN (?*)', array_values($item_ids));
+        /** @psalm-var array<string,string> $type_rows_by_id */
         $type_rows_by_id = $this->getDB()->safeQuery(
             "SELECT plugin_fts_meilisearch_item.id, plugin_fts_meilisearch_item.type
                 FROM plugin_fts_meilisearch_item
@@ -145,9 +156,9 @@ class MeilisearchMetadataDAO extends DataAccessObject
 
         $statement_metadata_filter = EasyStatement::open()->in(
             'plugin_fts_meilisearch_metadata.item_id IN (?*)',
-            $item_ids,
+            array_values($item_ids),
         );
-        /** @psalm-var array<int,array{name: non-empty-string, value: string}[]> $metadata_rows_by_id */
+        /** @psalm-var array<string,array{name: non-empty-string, value: string}[]> $metadata_rows_by_id */
         $metadata_rows_by_id = $this->getDB()->safeQuery(
             "SELECT plugin_fts_meilisearch_metadata.item_id, plugin_fts_meilisearch_metadata.name, plugin_fts_meilisearch_metadata.value
             FROM plugin_fts_meilisearch_metadata
@@ -157,7 +168,7 @@ class MeilisearchMetadataDAO extends DataAccessObject
         );
 
         $results = [];
-        foreach ($item_ids as $item_id) {
+        foreach ($item_ids as $encoded_item_id => $item_id) {
             $type = $type_rows_by_id[$item_id] ?? '';
             if ($type === '') {
                 continue;
@@ -172,7 +183,7 @@ class MeilisearchMetadataDAO extends DataAccessObject
                 continue;
             }
 
-            $results[] = new IndexedItemFound($type, $metadata_key_value, $cropped_content_by_id[$item_id] ?? null);
+            $results[] = new IndexedItemFound($type, $metadata_key_value, $cropped_content_by_encoded_id[$encoded_item_id] ?? null);
         }
 
         return $results;
