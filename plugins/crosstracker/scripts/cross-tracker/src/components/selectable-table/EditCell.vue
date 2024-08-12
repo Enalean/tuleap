@@ -19,7 +19,7 @@
 
 <template>
     <span class="cell" v-bind:class="getEvenOddClass()" data-test="edit-cell"
-        ><a v-bind:href="uri"
+        ><a v-bind:href="uri" class="link"
             ><i class="fa-solid fa-edit icon" aria-hidden="true"></i>{{ $gettext("Edit") }}</a
         ></span
     >
@@ -40,11 +40,16 @@ const getEvenOddClass = (): string => (props.even ? `even-row` : `odd-row`);
 
 <style scoped lang="scss">
 @use "../../../themes/cell";
+@use "../../../themes/links";
 
 .cell {
     @include cell.cell-template;
 
     grid-column: edit;
+}
+
+.link {
+    @include links.link;
 }
 
 .icon {
