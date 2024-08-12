@@ -156,6 +156,9 @@ msgstr "Recherche multi trackers"
 msgid "Error while parsing the query"
 msgstr "Erreur pendant l'analyse de la requête"
 
+msgid "Expert query is required and cannot be empty"
+msgstr "La requête expert est obligatoire et ne peut pas être vide"
+
 #, php-format
 msgid ""
 "Field '%s' is present in trackers '%s' but their types cannot be compared. "

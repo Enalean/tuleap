@@ -44,6 +44,7 @@ use Tuleap\CrossTracker\CrossTrackerReportNotFoundException;
 use Tuleap\CrossTracker\Permission\CrossTrackerPermissionGate;
 use Tuleap\CrossTracker\Report\CrossTrackerArtifactReportFactory;
 use Tuleap\CrossTracker\Report\Query\Advanced\DuckTypedField\FieldTypeRetrieverWrapper;
+use Tuleap\CrossTracker\Report\Query\Advanced\ExpertQueryIsEmptyException;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSearchableCollectorVisitor;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSearchablesCollectionBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSelectablesCollectionBuilder;
@@ -371,6 +372,8 @@ final class CrossTrackerReportsResource extends AuthenticatedResource
             throw new I18NRestException(400, $exception->getI18NExceptionMessage());
         } catch (SearchablesAreInvalidException | SelectablesAreInvalidException $exception) {
             throw new I18NRestException(400, $exception->getMessage());
+        } catch (ExpertQueryIsEmptyException) {
+            throw new I18NRestException(400, dgettext('tuleap-crosstracker', 'Expert query is required and cannot be empty'));
         }
     }
 
@@ -475,6 +478,10 @@ final class CrossTrackerReportsResource extends AuthenticatedResource
     private function checkQueryIsValid(array $trackers, string $expert_query, bool $expert_mode, PFUser $user): void
     {
         if ($expert_query === '') {
+            if ($expert_mode) {
+                throw new I18NRestException(400, dgettext('tuleap-crosstracker', 'Expert query is required and cannot be empty'));
+            }
+
             return;
         }
 
