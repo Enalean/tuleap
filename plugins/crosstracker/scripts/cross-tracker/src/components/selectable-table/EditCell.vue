@@ -19,10 +19,9 @@
 
 <template>
     <span class="cell" v-bind:class="getEvenOddClass()" data-test="edit-cell"
-        ><a v-bind:href="uri" class="link"
-            ><i class="fa-solid fa-edit icon" aria-hidden="true"></i>{{ $gettext("Edit") }}</a
-        ></span
-    >
+        ><a v-bind:href="uri" v-bind:title="$gettext('Edit')" class="link"
+            ><i class="fa-solid fa-fw fa-edit" role="img"></i></a
+    ></span>
 </template>
 
 <script setup lang="ts">
@@ -50,9 +49,5 @@ const getEvenOddClass = (): string => (props.even ? `even-row` : `odd-row`);
 
 .link {
     @include links.link;
-}
-
-.icon {
-    margin: 0 5px 0 0;
 }
 </style>
