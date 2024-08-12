@@ -36,7 +36,6 @@ const default_props = {
     add_attachment_to_waiting_list: vi.fn(),
     input_current_description: vi.fn(),
     is_image_upload_allowed: true,
-    toggle_has_been_canceled: false,
 };
 describe("SectionDescription", () => {
     describe("while the sections are loading", () => {

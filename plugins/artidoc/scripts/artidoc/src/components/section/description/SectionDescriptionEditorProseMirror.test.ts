@@ -21,7 +21,7 @@ import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import type { Ref, ComponentPublicInstance } from "vue";
 import { ref } from "vue";
-import SectionDescriptionEditorProseMirror from "@/components/section/description/SectionDescriptionEditorProseMirror.vue";
+import SectionDescriptionEditorProseMirror from "./SectionDescriptionEditorProseMirror.vue";
 import VueDOMPurifyHTML from "vue-dompurify-html";
 import * as upload_file from "@/composables/useUploadFile";
 import NotificationBar from "@/components/section/description/NotificationBar.vue";
@@ -49,7 +49,7 @@ describe("SectionDescriptionEditorProseMirror", () => {
             props: {
                 editable_description: "<h1>description</h1>",
                 input_current_description: vi.fn(),
-                toggle_has_been_canceled: false,
+                is_edit_mode: false,
                 upload_url: "",
                 is_image_upload_allowed: true,
                 add_attachment_to_waiting_list: vi.fn(),

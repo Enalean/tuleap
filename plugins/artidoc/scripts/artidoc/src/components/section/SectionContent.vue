@@ -52,7 +52,6 @@
                 v-bind:is_edit_mode="is_section_in_edit_mode"
                 v-bind:add_attachment_to_waiting_list="addAttachmentToWaitingList"
                 v-bind:upload_url="upload_url"
-                v-bind:toggle_has_been_canceled="toggle_has_been_canceled"
                 v-bind:is_image_upload_allowed="is_image_upload_allowed"
             />
             <section-footer v-bind:editor="editor" v-bind:section="section" />
@@ -91,7 +90,6 @@ const {
     isJustRefreshed,
     isJustSaved,
     isBeingSaved,
-    toggle_has_been_canceled,
     is_image_upload_allowed,
 } = editor.editor_state;
 const { is_in_error, is_outdated } = editor.editor_error;

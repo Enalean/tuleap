@@ -22,6 +22,7 @@ import { Plugin } from "prosemirror-state";
 import { custom_schema } from "../../custom_schema";
 import { fileUploadHandler } from "./upload-file";
 import type { FileUploadOptions } from "./types";
+import type { Option } from "@tuleap/option";
 
 function insertFile(view: EditorView, url: string): void {
     const { state, dispatch } = view;
@@ -32,23 +33,56 @@ function insertFile(view: EditorView, url: string): void {
     dispatch(transaction);
 }
 
-function handleDrop(view: EditorView, event: DragEvent, options: FileUploadOptions): void {
+export interface OngoingUpload {
+    readonly cancel: () => void;
+}
+
+function handleDrop(
+    view: EditorView,
+    event: DragEvent,
+    options: FileUploadOptions,
+): Promise<Option<ReadonlyArray<OngoingUpload>>> {
     const success_callback_with_insert_file = (id: number, download_href: string): void => {
         insertFile(view, download_href);
         options.onSuccessCallback(id, download_href);
     };
-    fileUploadHandler({ ...options, onSuccessCallback: success_callback_with_insert_file })(event);
+    return fileUploadHandler({ ...options, onSuccessCallback: success_callback_with_insert_file })(
+        event,
+    );
 }
 
-export function initPluginDropFile(options: FileUploadOptions): Plugin {
-    return new Plugin({
-        props: {
-            handleDOMEvents: {
-                drop: (view: EditorView, event: DragEvent): boolean => {
-                    handleDrop(view, event, options);
-                    return true;
+class PluginDropFile extends Plugin {
+    ongoing_uploads: Array<{ cancel: () => void }>;
+
+    constructor(options: FileUploadOptions) {
+        super({
+            props: {
+                handleDOMEvents: {
+                    drop: (view: EditorView, event: DragEvent): boolean => {
+                        handleDrop(view, event, options).then((optional_ongoing_uploads) => {
+                            optional_ongoing_uploads.apply((ongoing_uploads) => {
+                                ongoing_uploads.forEach((ongoing_upload) => {
+                                    this.ongoing_uploads.push(ongoing_upload);
+                                });
+                            });
+                        });
+                        return true;
+                    },
                 },
             },
-        },
-    });
+        });
+        this.ongoing_uploads = [];
+    }
+
+    destroy(): void {
+        this.cancelOngoingUpload();
+    }
+
+    public cancelOngoingUpload(): void {
+        this.ongoing_uploads.forEach((upload) => upload.cancel());
+    }
+}
+
+export function initPluginDropFile(options: FileUploadOptions): PluginDropFile {
+    return new PluginDropFile(options);
 }

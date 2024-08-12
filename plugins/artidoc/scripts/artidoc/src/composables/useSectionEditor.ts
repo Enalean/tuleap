@@ -47,7 +47,6 @@ export type EditorState = {
     is_image_upload_allowed: ComputedRef<boolean>;
     is_section_editable: ComputedRef<boolean>;
     is_section_in_edit_mode: Ref<boolean>;
-    toggle_has_been_canceled: Ref<boolean>;
     isJustRefreshed: () => boolean;
     isBeingSaved: () => boolean;
     isJustSaved: () => boolean;
@@ -153,14 +152,12 @@ export function useSectionEditor(
         editor_errors_handler.resetErrorStates();
     }
 
-    const toggle_has_been_canceled = ref(false);
     function cancelEditor(tracker: Tracker | null): void {
         closeEditor();
         if (!is_prose_mirror.value && isPendingArtifactSection(current_section.value)) {
             editors_collection.removeEditor(current_section.value);
             removeSection(current_section.value, tracker);
         }
-        toggle_has_been_canceled.value = !toggle_has_been_canceled.value;
     }
 
     const forceSaveEditor = (): void => {
@@ -190,7 +187,6 @@ export function useSectionEditor(
             is_image_upload_allowed: is_image_upload_allowed,
             is_section_editable,
             is_section_in_edit_mode,
-            toggle_has_been_canceled,
             isJustRefreshed,
             isJustSaved,
             isBeingSaved,
