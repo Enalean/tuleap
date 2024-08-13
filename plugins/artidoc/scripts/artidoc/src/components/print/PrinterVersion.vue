@@ -20,17 +20,17 @@
 
 <template>
     <div id="artidoc-print-version">
-        <table style="border: 0">
+        <table style="width: 100%; border-collapse: collapse; border: 0">
             <thead style="display: table-header-group; border: 0">
                 <tr style="border: 0">
-                    <td style="border: 0">
+                    <td style="padding: 0; border: 0">
                         <div class="document-header-space">&nbsp;</div>
                     </td>
                 </tr>
             </thead>
             <tbody>
                 <tr style="border: 0">
-                    <td style="border: 0">
+                    <td style="padding: 0; border: 0">
                         <div
                             id="document-title-page"
                             class="document-page"
@@ -60,7 +60,7 @@
             </tbody>
             <tfoot style="display: table-footer-group; border: 0">
                 <tr style="border: 0">
-                    <td style="border: 0">
+                    <td style="padding: 0; border: 0">
                         <div class="document-footer-space">&nbsp;</div>
                     </td>
                 </tr>
