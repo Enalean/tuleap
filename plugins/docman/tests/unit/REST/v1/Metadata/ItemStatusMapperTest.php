@@ -22,41 +22,37 @@ declare(strict_types=1);
 
 namespace Tuleap\Docman\REST\v1\Metadata;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use Docman_Item;
+use Docman_SettingsBo;
+use PHPUnit\Framework\MockObject\MockObject;
+use Tuleap\Test\PHPUnit\TestCase;
 
-final class ItemStatusMapperTest extends \Tuleap\Test\PHPUnit\TestCase
+final class ItemStatusMapperTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-
-    /**
-     * @var \Docman_SettingsBo|\Mockery\MockInterface
-     */
-    private $docman_setting_bo;
+    private Docman_SettingsBo&MockObject $docman_setting_bo;
 
     public function setUp(): void
     {
-        parent::setUp();
-        $this->docman_setting_bo = \Mockery::mock(\Docman_SettingsBo::class);
+        $this->docman_setting_bo = $this->createMock(Docman_SettingsBo::class);
     }
 
     public function testStatusIDCanBeFoundWhenAValidValueIsGiven(): void
     {
         $mapper = new ItemStatusMapper($this->docman_setting_bo);
 
-        $this->docman_setting_bo->shouldReceive('getMetadataUsage')->andReturn('1');
+        $this->docman_setting_bo->method('getMetadataUsage')->willReturn('1');
         $status = $mapper->getItemStatusIdFromItemStatusString('rejected');
 
-        $this->assertEquals(PLUGIN_DOCMAN_ITEM_STATUS_REJECTED, $status);
+        self::assertEquals(PLUGIN_DOCMAN_ITEM_STATUS_REJECTED, $status);
     }
 
     public function testTryingToFindIDForAnUnknownValueThrowsAnException(): void
     {
         $mapper = new ItemStatusMapper($this->docman_setting_bo);
 
-        $this->docman_setting_bo->shouldReceive('getMetadataUsage')->andReturn('1');
-        $this->expectException(HardCodedMetadataException::class);
-        $this->expectExceptionMessage('Status swang is invalid');
+        $this->docman_setting_bo->method('getMetadataUsage')->willReturn('1');
+        self::expectException(HardCodedMetadataException::class);
+        self::expectExceptionMessage('Status swang is invalid');
         $mapper->getItemStatusIdFromItemStatusString('swang');
     }
 
@@ -64,10 +60,10 @@ final class ItemStatusMapperTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $mapper = new ItemStatusMapper($this->docman_setting_bo);
 
-        $this->docman_setting_bo->shouldReceive('getMetadataUsage')->andReturn('1');
+        $this->docman_setting_bo->method('getMetadataUsage')->willReturn('1');
 
-        $this->expectException(HardCodedMetadataException::class);
-        $this->expectExceptionMessage('Status null is invalid');
+        self::expectException(HardCodedMetadataException::class);
+        self::expectExceptionMessage('Status null is invalid');
         $mapper->getItemStatusIdFromItemStatusString(null);
     }
 
@@ -75,46 +71,43 @@ final class ItemStatusMapperTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $mapper = new ItemStatusMapper($this->docman_setting_bo);
 
-        $this->docman_setting_bo->shouldReceive('getMetadataUsage')->andReturn('0');
+        $this->docman_setting_bo->method('getMetadataUsage')->willReturn('0');
 
-        $this->expectException(HardCodedMetadataException::class);
-        $this->expectExceptionMessage('Status is not enabled for project');
+        self::expectException(HardCodedMetadataException::class);
+        self::expectExceptionMessage('Status is not enabled for project');
         $mapper->getItemStatusIdFromItemStatusString('rejected');
     }
 
     public function testInheritanceStatusIDCanBeFoundWhenAValidValueIsGiven(): void
     {
         $mapper = new ItemStatusMapper($this->docman_setting_bo);
-        $parent = \Mockery::mock(\Docman_Item::class);
-        $parent->shouldReceive('getStatus')->never();
+        $parent = new Docman_Item();
 
-        $this->docman_setting_bo->shouldReceive('getMetadataUsage')->andReturn('1');
+        $this->docman_setting_bo->method('getMetadataUsage')->willReturn('1');
         $status = $mapper->getItemStatusWithParentInheritance($parent, 'rejected');
 
-        $this->assertEquals(PLUGIN_DOCMAN_ITEM_STATUS_REJECTED, $status);
+        self::assertEquals(PLUGIN_DOCMAN_ITEM_STATUS_REJECTED, $status);
     }
 
     public function testInheritanceTryingToFindIDForAnUnknownValueThrowsAnException(): void
     {
         $mapper = new ItemStatusMapper($this->docman_setting_bo);
-        $parent = \Mockery::mock(\Docman_Item::class);
-        $parent->shouldReceive('getStatus')->never();
+        $parent = new Docman_Item();
 
-        $this->docman_setting_bo->shouldReceive('getMetadataUsage')->andReturn('1');
-        $this->expectException(HardCodedMetadataException::class);
-        $this->expectExceptionMessage('Status swang is invalid');
+        $this->docman_setting_bo->method('getMetadataUsage')->willReturn('1');
+        self::expectException(HardCodedMetadataException::class);
+        self::expectExceptionMessage('Status swang is invalid');
         $mapper->getItemStatusWithParentInheritance($parent, 'swang');
     }
 
     public function testInheritanceTryingToFindIDForNullThrowsAnException(): void
     {
         $mapper = new ItemStatusMapper($this->docman_setting_bo);
-        $parent = \Mockery::mock(\Docman_Item::class);
-        $parent->shouldReceive('getStatus')->once()->andReturn(PLUGIN_DOCMAN_ITEM_STATUS_REJECTED);
+        $parent = new Docman_Item(['status' => PLUGIN_DOCMAN_ITEM_STATUS_REJECTED]);
 
-        $this->docman_setting_bo->shouldReceive('getMetadataUsage')->andReturn('1');
+        $this->docman_setting_bo->method('getMetadataUsage')->willReturn('1');
 
-        $this->assertEquals(
+        self::assertEquals(
             PLUGIN_DOCMAN_ITEM_STATUS_REJECTED,
             $mapper->getItemStatusWithParentInheritance($parent, null)
         );
@@ -123,26 +116,24 @@ final class ItemStatusMapperTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testInheritanceStatusIDExistsButTheMetadataIsNotEnabledThrowsExpection(): void
     {
         $mapper = new ItemStatusMapper($this->docman_setting_bo);
-        $parent = \Mockery::mock(\Docman_Item::class);
-        $parent->shouldReceive('getStatus')->never();
+        $parent = new Docman_Item();
 
-        $this->docman_setting_bo->shouldReceive('getMetadataUsage')->andReturn('0');
+        $this->docman_setting_bo->method('getMetadataUsage')->willReturn('0');
 
-        $this->expectException(HardCodedMetadataException::class);
-        $this->expectExceptionMessage('Status is not enabled for project');
+        self::expectException(HardCodedMetadataException::class);
+        self::expectExceptionMessage('Status is not enabled for project');
         $mapper->getItemStatusWithParentInheritance($parent, 'rejected');
     }
 
     public function testInheritanceStatusIsInheritedFromParent(): void
     {
         $mapper = new ItemStatusMapper($this->docman_setting_bo);
-        $parent = \Mockery::mock(\Docman_Item::class);
-        $parent->shouldReceive('getStatus')->never();
+        $parent = new Docman_Item();
 
-        $this->docman_setting_bo->shouldReceive('getMetadataUsage')->andReturn('0');
+        $this->docman_setting_bo->method('getMetadataUsage')->willReturn('0');
 
-        $this->expectException(HardCodedMetadataException::class);
-        $this->expectExceptionMessage('Status is not enabled for project');
+        self::expectException(HardCodedMetadataException::class);
+        self::expectExceptionMessage('Status is not enabled for project');
         $mapper->getItemStatusWithParentInheritance($parent, 'rejected');
     }
 
@@ -150,10 +141,10 @@ final class ItemStatusMapperTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $mapper = new ItemStatusMapper($this->docman_setting_bo);
 
-        $this->docman_setting_bo->shouldReceive('getMetadataUsage')->andReturn('1');
+        $this->docman_setting_bo->method('getMetadataUsage')->willReturn('1');
 
         $status = $mapper->getItemStatusFromItemStatusNumber(PLUGIN_DOCMAN_ITEM_STATUS_APPROVED);
 
-        $this->assertEquals(ItemStatusMapper::ITEM_STATUS_APPROVED, $status);
+        self::assertEquals(ItemStatusMapper::ITEM_STATUS_APPROVED, $status);
     }
 }
