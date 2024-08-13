@@ -81,7 +81,7 @@ final class ParserTest extends TestCase
     public function testSelectAcceptMultipleField(): void
     {
         $parser   = new Parser();
-        $result   = $parser->parse('SELECT @id, @title, category WHERE @status = OPEN()');
+        $result   = $parser->parse('SELECT @id, @title , category WHERE @status = OPEN()');
         $expected = new Query(
             [new Metadata('id'), new Metadata('title'), new Field('category')],
             new OrExpression(

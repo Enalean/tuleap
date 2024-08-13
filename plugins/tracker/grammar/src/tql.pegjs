@@ -56,7 +56,7 @@ select
     }
 
 SelectableList
-    = "," _ selectable:Selectable { return $selectable; }
+    = _ "," _ selectable:Selectable { return $selectable; }
 
 Selectable = Field / Metadata
 
