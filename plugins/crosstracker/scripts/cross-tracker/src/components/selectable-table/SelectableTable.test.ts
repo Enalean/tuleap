@@ -50,7 +50,6 @@ import { Fault } from "@tuleap/fault";
 import { buildVueDompurifyHTMLDirective } from "vue-dompurify-html";
 import EmptyState from "./EmptyState.vue";
 import type { ReportState } from "../../domain/ReportState";
-import ExportCSVButton from "../ExportCSVButton.vue";
 import SelectableCell from "./SelectableCell.vue";
 
 vi.useFakeTimers();
@@ -102,55 +101,6 @@ describe(`SelectableTable`, () => {
             },
         });
     };
-
-    describe(`render`, () => {
-        let table_retriever: RetrieveArtifactsTable;
-
-        beforeEach(() => {
-            const not_empty_table = new ArtifactsTableBuilder()
-                .withColumn("title")
-                .withArtifactRow(
-                    new ArtifactRowBuilder()
-                        .addCell("title", {
-                            type: TEXT_CELL,
-                            value: "eupepticism uninodal",
-                        })
-                        .build(),
-                )
-                .build();
-            table_retriever = RetrieveArtifactsTableStub.withContent(
-                { table: not_empty_table, total: 1 },
-                { table: not_empty_table, total: 1 },
-            );
-        });
-
-        it(`when the table is empty, it will NOT display the CSV export button`, async () => {
-            const table = new ArtifactsTableBuilder().build();
-
-            const wrapper = getWrapper(
-                RetrieveArtifactsTableStub.withContent({ table, total: 0 }, { table, total: 0 }),
-            );
-            await vi.runOnlyPendingTimersAsync();
-
-            expect(wrapper.findComponent(ExportCSVButton).exists()).toBe(false);
-        });
-
-        it(`does not show the CSV export button when told not to`, async () => {
-            is_csv_export_allowed = false;
-
-            const wrapper = getWrapper(table_retriever);
-            await vi.runOnlyPendingTimersAsync();
-
-            expect(wrapper.findComponent(ExportCSVButton).exists()).toBe(false);
-        });
-
-        it(`shows the CSV export button otherwise`, async () => {
-            const wrapper = getWrapper(table_retriever);
-            await vi.runOnlyPendingTimersAsync();
-
-            expect(wrapper.findComponent(ExportCSVButton).exists()).toBe(true);
-        });
-    });
 
     describe(`onMounted()`, () => {
         it(`will retrieve the query result,

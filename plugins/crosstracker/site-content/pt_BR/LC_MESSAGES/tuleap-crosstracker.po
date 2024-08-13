@@ -113,6 +113,9 @@ msgstr ""
 msgid "Anonymous user"
 msgstr ""
 
+msgid "CSV export of expert report is not supported"
+msgstr ""
+
 msgid "Cross trackers search"
 msgstr ""
 
