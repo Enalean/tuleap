@@ -20,7 +20,7 @@ let
       runHook postInstall
     '';
   };
-  mediawikiCurrent = buildMediawikiTarball { version = "1.39.7"; tuleapUsage = "current-lts"; srcHash = "sha256-K+gVaBfVxWn9Ylc0KidvkdflMNHA3OETS3vysJ7K5Wk="; };
+  mediawikiCurrent = buildMediawikiTarball { version = "1.39.8"; tuleapUsage = "current-lts"; srcHash = "sha256-rSf8yOY2F5wryiH/5hnW0uYtNDkNaCiwZ3/HaG5qCmo="; };
   mediawiki135 = buildMediawikiTarball { version = "1.35.13"; tuleapUsage = "1.35"; srcHash = "sha256-KpcAzhk9sZMtt74+G/3fE11iLUOZumvW0FcORR22O2E="; };
   buildMediawikiSkinsAndExtensions = mediawiki: pkgs.stdenvNoCC.mkDerivation rec {
     name = "mediawiki-tuleap-skins-extensions-${mediawiki.tuleapUsage}";
