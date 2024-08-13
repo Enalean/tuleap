@@ -22,55 +22,48 @@ declare(strict_types=1);
 
 namespace Tuleap\Docman\REST\v1\Metadata;
 
+use Docman_ListMetadata;
+use Docman_Metadata;
+use Docman_MetadataFactory;
 use Docman_MetadataListOfValuesElement;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\Docman\Metadata\ListOfValuesElement\MetadataListOfValuesElementListBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
 
-class CustomMetadataCollectionBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
+final class CustomMetadataCollectionBuilderTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var \Docman_MetadataFactory|\Mockery\MockInterface
-     */
-    private $metadata_factory;
-    /**
-     * @var MetadataListOfValuesElementListBuilder|\Mockery\MockInterface
-     */
-    private $list_of_value_builder;
+    private Docman_MetadataFactory&MockObject $metadata_factory;
+    private MetadataListOfValuesElementListBuilder&MockObject $list_of_value_builder;
 
     protected function setUp(): void
     {
-        parent::setUp();
-        $this->metadata_factory      = \Mockery::mock(\Docman_MetadataFactory::class);
-        $this->list_of_value_builder = \Mockery::mock(MetadataListOfValuesElementListBuilder::class);
+        $this->metadata_factory      = $this->createMock(Docman_MetadataFactory::class);
+        $this->list_of_value_builder = $this->createMock(MetadataListOfValuesElementListBuilder::class);
     }
 
     public function testBuildCollectionOfMetadata(): void
     {
         $builder = new CustomMetadataCollectionBuilder($this->metadata_factory, $this->list_of_value_builder);
 
-        $list_metadata = \Mockery::mock(\Docman_ListMetadata::class);
-        $metadata      = \Mockery::mock(\Docman_Metadata::class);
+        $list_metadata = new Docman_ListMetadata();
+        $list_metadata->setId(1);
+        $list_metadata->setLabel('label list');
+        $list_metadata->setName('name list');
+        $list_metadata->setDescription('');
+        $list_metadata->setType(PLUGIN_DOCMAN_METADATA_TYPE_LIST);
+        $list_metadata->setIsEmptyAllowed(false);
+        $list_metadata->setIsMultipleValuesAllowed(false);
+        $list_metadata->setUseIt(PLUGIN_DOCMAN_METADATA_USED);
+        $metadata = new Docman_Metadata();
+        $metadata->setLabel('label');
+        $metadata->setName('name');
+        $metadata->setDescription('');
+        $metadata->setType(PLUGIN_DOCMAN_METADATA_TYPE_TEXT);
+        $metadata->setIsEmptyAllowed(false);
+        $metadata->setIsMultipleValuesAllowed(false);
+        $metadata->setUseIt(PLUGIN_DOCMAN_METADATA_USED);
 
-        $list_metadata->shouldReceive('getId')->andReturn(1);
-        $list_metadata->shouldReceive('getLabel')->andReturn('label list');
-        $metadata->shouldReceive('getLabel')->andReturn('label');
-        $list_metadata->shouldReceive('getName')->andReturn('name list');
-        $metadata->shouldReceive('getName')->andReturn('name');
-        $list_metadata->shouldReceive('getDescription')->andReturn('');
-        $metadata->shouldReceive('getDescription')->andReturn('');
-        $list_metadata->shouldReceive('getType')->andReturn(PLUGIN_DOCMAN_METADATA_TYPE_LIST);
-        $metadata->shouldReceive('getType')->andReturn(PLUGIN_DOCMAN_METADATA_TYPE_TEXT);
-        $list_metadata->shouldReceive('isEmptyAllowed')->andReturn(false);
-        $metadata->shouldReceive('isEmptyAllowed')->andReturn(false);
-        $list_metadata->shouldReceive('isMultipleValuesAllowed')->andReturn(false);
-        $metadata->shouldReceive('isMultipleValuesAllowed')->andReturn(false);
-        $list_metadata->shouldReceive('isUsed')->andReturn(true);
-        $metadata->shouldReceive('isUsed')->andReturn(true);
-
-        $metadata_list = [$list_metadata, $metadata];
-        $this->metadata_factory->shouldReceive('getRealMetadataList')->andReturn($metadata_list);
+        $this->metadata_factory->method('getRealMetadataList')->willReturn([$list_metadata, $metadata]);
 
         $element = new Docman_MetadataListOfValuesElement();
         $element->initFromRow(['value_id' => 1, 'name' => 'value']);
@@ -79,31 +72,31 @@ class CustomMetadataCollectionBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $element_two->initFromRow(['value_id' => 2, 'name' => 'an other value']);
 
         $value_representation = new DocmanMetadataListValueRepresentation();
-        $value_representation->build($element->getId(), $element->getName());
+        $value_representation->build((int) $element->getId(), (string) $element->getName());
 
         $value_two_representation = new DocmanMetadataListValueRepresentation();
-        $value_two_representation->build($element_two->getId(), $element_two->getName());
+        $value_two_representation->build((int) $element_two->getId(), (string) $element_two->getName());
 
         $metadata_list_representation = new ProjectConfiguredMetadataRepresentation();
         $metadata_list_representation->build(
-            $list_metadata->getLabel(),
-            $list_metadata->getName(),
+            (string) $list_metadata->getLabel(),
+            (string) $list_metadata->getName(),
             $list_metadata->getDescription(),
-            $list_metadata->getType(),
+            (int) $list_metadata->getType(),
             $list_metadata->isEmptyAllowed(),
             $list_metadata->isMultipleValuesAllowed(),
             $list_metadata->isUsed(),
             [$value_representation, $value_two_representation]
         );
 
-        $this->list_of_value_builder->shouldReceive('build')->withArgs([$list_metadata->getId(), true])->andReturn([$element, $element_two]);
+        $this->list_of_value_builder->method('build')->with($list_metadata->getId(), true)->willReturn([$element, $element_two]);
 
         $metadata_representation = new ProjectConfiguredMetadataRepresentation();
         $metadata_representation->build(
-            $metadata->getLabel(),
-            $metadata->getName(),
+            (string) $metadata->getLabel(),
+            (string) $metadata->getName(),
             $metadata->getDescription(),
-            $metadata->getType(),
+            (int) $metadata->getType(),
             $metadata->isEmptyAllowed(),
             $metadata->isMultipleValuesAllowed(),
             $metadata->isUsed(),
@@ -114,6 +107,6 @@ class CustomMetadataCollectionBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $custom_metadata_representation = $builder->build();
 
-        $this->assertEquals($expected_content, $custom_metadata_representation);
+        self::assertEquals($expected_content, $custom_metadata_representation);
     }
 }
