@@ -25,73 +25,56 @@ namespace Tuleap\Docman\REST\v1\Lock;
 use Docman_File;
 use Docman_LockFactory;
 use Docman_PermissionsManager;
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
+use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\REST\I18NRestException;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
 
-class RestLockUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
+final class RestLockUpdaterTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var \Mockery\MockInterface|PFUser
-     */
-    private $user;
-    /**
-     * @var Docman_File|\Mockery\MockInterface
-     */
-    private $item;
-    /**
-     * @var \Tuleap\Docman\REST\v1\Lock\RestLockUpdater
-     */
-    private $updater;
-    /**
-     * @var Docman_PermissionsManager|\Mockery\MockInterface
-     */
-    private $permissions_manager;
-    /**
-     * @var Docman_LockFactory|\Mockery\MockInterface
-     */
-    private $lock_factory;
+    private PFUser $user;
+    private Docman_File $item;
+    private RestLockUpdater $updater;
+    private Docman_PermissionsManager&MockObject $permissions_manager;
+    private Docman_LockFactory&MockObject $lock_factory;
 
     public function setUp(): void
     {
-        $this->lock_factory        = Mockery::mock(Docman_LockFactory::class);
-        $this->permissions_manager = Mockery::mock(Docman_PermissionsManager::class);
+        $this->lock_factory        = $this->createMock(Docman_LockFactory::class);
+        $this->permissions_manager = $this->createMock(Docman_PermissionsManager::class);
         $this->updater             = new RestLockUpdater($this->lock_factory, $this->permissions_manager);
 
-        $this->item = Mockery::mock(Docman_File::class);
-        $this->item->shouldReceive('getId')->andReturn(10);
-        $this->user = Mockery::mock(PFUser::class);
+        $this->item = new Docman_File(['item_id' => 10]);
+        $this->user = UserTestBuilder::buildWithDefaults();
     }
 
     public function testUserCannotAddALockOnAlreadyLockedDocument(): void
     {
-        $this->lock_factory->shouldReceive('itemIsLockedByItemId')->andReturn(true);
-        $this->expectException(I18NRestException::class);
-        $this->lock_factory->shouldReceive('lock')->never();
+        $this->lock_factory->method('itemIsLockedByItemId')->willReturn(true);
+        self::expectException(I18NRestException::class);
+        $this->lock_factory->expects(self::never())->method('lock');
         $this->updater->lockItem($this->item, $this->user);
     }
 
     public function testUserCanLockADocument(): void
     {
-        $this->lock_factory->shouldReceive('itemIsLockedByItemId')->andReturn(false);
-        $this->lock_factory->shouldReceive('lock')->once();
+        $this->lock_factory->method('itemIsLockedByItemId')->willReturn(false);
+        $this->lock_factory->expects(self::once())->method('lock');
         $this->updater->lockItem($this->item, $this->user);
     }
 
     public function testUserCannotUnlockADocumentIfHeHasNoSufficentPermission(): void
     {
-        $this->permissions_manager->shouldReceive('_itemIsLockedForUser')->andReturn(true);
-        $this->expectException(I18NRestException::class);
+        $this->permissions_manager->method('_itemIsLockedForUser')->willReturn(true);
+        self::expectException(I18NRestException::class);
         $this->updater->unlockItem($this->item, $this->user);
     }
 
     public function testUserCanUnLockADocument(): void
     {
-        $this->permissions_manager->shouldReceive('_itemIsLockedForUser')->andReturn(false);
-        $this->lock_factory->shouldReceive('unlock')->once();
+        $this->permissions_manager->method('_itemIsLockedForUser')->willReturn(false);
+        $this->lock_factory->expects(self::once())->method('unlock');
         $this->updater->unlockItem($this->item, $this->user);
     }
 }
