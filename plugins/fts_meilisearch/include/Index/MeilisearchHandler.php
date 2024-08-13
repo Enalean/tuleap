@@ -61,7 +61,7 @@ final class MeilisearchHandler implements SearchIndexedItem, InsertPlaintextItem
     }
 
     /**
-     * @return array{id:int,content:string}
+     * @return array{id:string,content:string}
      */
     private function mapItemToIndexToMeilisearchDocument(PlaintextItemToIndex $item): array
     {
