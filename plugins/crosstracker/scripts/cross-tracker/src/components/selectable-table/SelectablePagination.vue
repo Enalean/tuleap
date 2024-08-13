@@ -124,3 +124,9 @@ defineExpose({
     pages,
 });
 </script>
+
+<style scoped lang="scss">
+.tlp-pagination {
+    margin: var(--tlp-medium-spacing) 0 0 0;
+}
+</style>

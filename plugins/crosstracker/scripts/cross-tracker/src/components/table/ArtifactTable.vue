@@ -18,60 +18,58 @@
   -->
 
 <template>
-    <div class="cross-tracker-artifacts-table">
-        <div class="tlp-table-actions" v-if="should_show_export_button">
-            <export-button />
-        </div>
-        <table class="tlp-table">
-            <thead>
-                <tr>
-                    <th>{{ $gettext("Artifact") }}</th>
-                    <th>{{ $gettext("Project") }}</th>
-                    <th>{{ $gettext("Status") }}</th>
-                    <th>{{ $gettext("Last update date") }}</th>
-                    <th>{{ $gettext("Submitted by") }}</th>
-                    <th>{{ $gettext("Assigned to") }}</th>
-                </tr>
-            </thead>
-            <tbody v-if="is_loading" key="loading">
-                <tr>
-                    <td colspan="6">
-                        <div class="cross-tracker-loader"></div>
-                    </td>
-                </tr>
-            </tbody>
-            <tbody v-if="is_table_empty" key="empty" data-test="cross-tracker-no-results">
-                <tr>
-                    <td colspan="6" class="tlp-table-cell-empty">
-                        {{ $gettext("No matching artifacts found") }}
-                    </td>
-                </tr>
-            </tbody>
-            <tbody v-else key="loaded" data-test="cross-tracker-results">
-                <artifact-table-row
-                    v-for="artifact of artifacts"
-                    v-bind:artifact="artifact"
-                    v-bind:key="artifact.id"
-                />
-            </tbody>
-        </table>
-        <div class="tlp-pagination">
-            <button
-                class="tlp-button-primary tlp-button-outline tlp-button-small"
-                type="button"
-                v-if="is_load_more_displayed"
-                v-on:click="loadMoreArtifacts()"
-                v-bind:disabled="is_loading_more"
-                data-test="load-more"
-            >
-                <i
-                    aria-hidden="true"
-                    v-if="is_loading_more"
-                    class="tlp-button-icon fa-solid fa-circle-notch fa-spin"
-                ></i>
-                {{ $gettext("Load more") }}
-            </button>
-        </div>
+    <div class="tlp-table-actions" v-if="should_show_export_button">
+        <export-button />
+    </div>
+    <table class="tlp-table">
+        <thead>
+            <tr>
+                <th>{{ $gettext("Artifact") }}</th>
+                <th>{{ $gettext("Project") }}</th>
+                <th>{{ $gettext("Status") }}</th>
+                <th>{{ $gettext("Last update date") }}</th>
+                <th>{{ $gettext("Submitted by") }}</th>
+                <th>{{ $gettext("Assigned to") }}</th>
+            </tr>
+        </thead>
+        <tbody v-if="is_loading" key="loading">
+            <tr>
+                <td colspan="6">
+                    <div class="cross-tracker-loader"></div>
+                </td>
+            </tr>
+        </tbody>
+        <tbody v-if="is_table_empty" key="empty" data-test="cross-tracker-no-results">
+            <tr>
+                <td colspan="6" class="tlp-table-cell-empty">
+                    {{ $gettext("No matching artifacts found") }}
+                </td>
+            </tr>
+        </tbody>
+        <tbody v-else key="loaded" data-test="cross-tracker-results">
+            <artifact-table-row
+                v-for="artifact of artifacts"
+                v-bind:artifact="artifact"
+                v-bind:key="artifact.id"
+            />
+        </tbody>
+    </table>
+    <div class="tlp-pagination">
+        <button
+            class="tlp-button-primary tlp-button-outline tlp-button-small"
+            type="button"
+            v-if="is_load_more_displayed"
+            v-on:click="loadMoreArtifacts()"
+            v-bind:disabled="is_loading_more"
+            data-test="load-more"
+        >
+            <i
+                aria-hidden="true"
+                v-if="is_loading_more"
+                class="tlp-button-icon fa-solid fa-circle-notch fa-spin"
+            ></i>
+            {{ $gettext("Load more") }}
+        </button>
     </div>
 </template>
 
@@ -186,3 +184,13 @@ function formatArtifacts(artifacts: ReadonlyArray<Artifact>): ReadonlyArray<Arti
     });
 }
 </script>
+
+<style scoped lang="scss">
+.tlp-table-actions {
+    margin: var(--tlp-medium-spacing) 0 0 var(--tlp-medium-spacing);
+}
+
+.tlp-table {
+    margin-top: var(--tlp-medium-spacing);
+}
+</style>

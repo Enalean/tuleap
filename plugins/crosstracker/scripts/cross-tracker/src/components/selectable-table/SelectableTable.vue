@@ -220,18 +220,19 @@ const isEven = (index: number): boolean => index % 2 === 0;
 @use "../../../themes/cell";
 
 .export-button-box {
-    margin: var(--tlp-medium-spacing) 0 0;
+    margin: var(--tlp-medium-spacing) 0 0 var(--tlp-medium-spacing);
 }
 
 .overflow-wrapper {
-    margin: var(--tlp-medium-spacing) var(--tlp-medium-spacing) 0;
+    margin: var(--tlp-medium-spacing) calc(-1 * var(--tlp-medium-spacing)) 0
+        calc(-1 * var(--tlp-medium-spacing));
     overflow-y: auto;
 }
 
 .selectable-table {
     display: grid;
     grid-template-columns:
-        [edit] 80px
+        [edit] min-content
         auto;
     grid-template-rows:
         [headers] var(--tlp-x-large-spacing)
@@ -244,5 +245,6 @@ const isEven = (index: number): boolean => index % 2 === 0;
     grid-row: headers;
     border-bottom: 2px solid var(--tlp-main-color);
     color: var(--tlp-main-color);
+    white-space: nowrap;
 }
 </style>
