@@ -18,7 +18,7 @@
   -->
 
 <template>
-    <div class="cross-tracker-reading-mode-trackers-list">
+    <div class="list">
         <div class="cross-tracker-reading-mode-trackers">
             <div
                 class="cross-tracker-reading-mode-tracker"
@@ -67,3 +67,10 @@ const trackers = computed((): ReadonlyArray<TrackerWithProject> => {
     });
 });
 </script>
+
+<style scoped lang="scss">
+.list {
+    display: flex;
+    flex-direction: row;
+}
+</style>

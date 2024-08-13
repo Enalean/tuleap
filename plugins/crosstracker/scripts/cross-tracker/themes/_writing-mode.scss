@@ -20,11 +20,6 @@
 @use "./query-edition";
 @use "@tuleap/tlp-badge/badge-with-remove-button";
 
-.cross-tracker-writing-mode {
-    padding: var(--tlp-medium-spacing);
-    border-bottom: 1px solid var(--tlp-neutral-light-color);
-}
-
 .cross-tracker-selector {
     display: flex;
 
@@ -51,13 +46,4 @@
 
 .cross-tracker-report-archive-icon {
     margin: 0 3px 0 5px;
-}
-
-.writing-mode-actions {
-    display: flex;
-    justify-content: center;
-}
-
-.writing-mode-actions-cancel {
-    margin: 0 var(--tlp-medium-spacing) 0 0;
 }
