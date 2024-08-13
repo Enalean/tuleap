@@ -142,6 +142,9 @@ class CSVExportController implements DispatchableWithRequest
     {
         try {
             $report = $this->report_factory->getById($report_id);
+            if ($report->isExpert()) {
+                throw new BadRequestException(dgettext('tuleap-crosstracker', 'CSV export of expert report is not supported'));
+            }
 
             $this->checkUserIsAllowedToSeeReport($current_user, $report);
             $collection = $this->artifact_report_factory->getArtifactsMatchingReport(

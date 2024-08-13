@@ -22,9 +22,6 @@
         v-if="is_table_empty"
         v-bind:writing_cross_tracker_report="writing_cross_tracker_report"
     />
-    <div class="export-button-box" v-if="should_show_export_button">
-        <export-button />
-    </div>
     <div class="cross-tracker-loader" v-if="is_loading" data-test="loading"></div>
     <div class="overflow-wrapper" v-if="total > 0">
         <div class="selectable-table" v-if="!is_loading">
@@ -58,12 +55,7 @@
 <script setup lang="ts">
 import { computed, onMounted, ref, watch } from "vue";
 import { strictInject } from "@tuleap/vue-strict-inject";
-import {
-    IS_CSV_EXPORT_ALLOWED,
-    NOTIFY_FAULT,
-    REPORT_STATE,
-    RETRIEVE_ARTIFACTS_TABLE,
-} from "../../injection-symbols";
+import { NOTIFY_FAULT, REPORT_STATE, RETRIEVE_ARTIFACTS_TABLE } from "../../injection-symbols";
 import type WritingCrossTrackerReport from "../../writing-mode/writing-cross-tracker-report";
 import type { ArtifactsTable } from "../../domain/ArtifactsTable";
 import type { ResultAsync } from "neverthrow";
@@ -73,7 +65,6 @@ import type { ArtifactsTableWithTotal } from "../../domain/RetrieveArtifactsTabl
 import SelectablePagination from "./SelectablePagination.vue";
 import EmptyState from "./EmptyState.vue";
 import { ArtifactsRetrievalFault } from "../../domain/ArtifactsRetrievalFault";
-import ExportButton from "../ExportCSVButton.vue";
 import SelectableCell from "./SelectableCell.vue";
 import type { ColumnName } from "../../domain/ColumnName";
 import {
@@ -98,7 +89,6 @@ const { $gettext } = useGettext();
 const artifacts_retriever = strictInject(RETRIEVE_ARTIFACTS_TABLE);
 const report_state = strictInject(REPORT_STATE);
 const notifyFault = strictInject(NOTIFY_FAULT);
-const is_csv_export_allowed = strictInject(IS_CSV_EXPORT_ALLOWED);
 
 const props = defineProps<{
     writing_cross_tracker_report: WritingCrossTrackerReport;
@@ -112,10 +102,6 @@ let offset = 0;
 const limit = 30;
 
 const is_table_empty = computed<boolean>(() => !is_loading.value && total.value === 0);
-
-const should_show_export_button = computed<boolean>(
-    () => is_csv_export_allowed.value && !is_table_empty.value,
-);
 
 watch(report_state, () => {
     if (report_state.value === "report-saved" || report_state.value === "result-preview") {
