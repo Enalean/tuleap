@@ -18,7 +18,7 @@
   -->
 
 <template>
-    <div class="cross-tracker-writing-mode">
+    <div class="writing-mode">
         <tracker-selection
             v-bind:selected_trackers="selected_trackers"
             v-on:tracker-added="addTrackerToSelection"
@@ -31,10 +31,10 @@
             v-bind:writing_cross_tracker_report="writing_cross_tracker_report"
             v-on:trigger-search="search"
         />
-        <div class="writing-mode-actions">
+        <div class="actions">
             <button
                 type="button"
-                class="tlp-button-primary tlp-button-outline writing-mode-actions-cancel"
+                class="tlp-button-primary tlp-button-outline"
                 v-on:click="cancel"
                 data-test="writing-mode-cancel-button"
             >
@@ -118,3 +118,16 @@ defineExpose({
     selected_trackers,
 });
 </script>
+
+<style scoped lang="scss">
+.writing-mode {
+    padding-bottom: var(--tlp-medium-spacing);
+    border-bottom: 1px solid var(--tlp-neutral-light-color);
+}
+
+.actions {
+    display: flex;
+    justify-content: center;
+    gap: var(--tlp-medium-spacing);
+}
+</style>

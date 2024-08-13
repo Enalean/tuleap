@@ -17,29 +17,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-.reading-mode-report {
-    display: flex;
-    flex-direction: column;
-    color: var(--tlp-main-color);
-    font-size: 15px;
-
-    &:hover:not(.disabled) {
-        margin: 0;
-        background-color: var(--tlp-main-color-transparent-80);
-        cursor: pointer;
-    }
-}
-
-.reading-mode-query {
-    margin: 0 var(--tlp-medium-spacing) var(--tlp-medium-spacing);
-}
-
-.cross-tracker-reading-mode-trackers-list {
-    display: flex;
-    flex-direction: row;
-    margin: var(--tlp-medium-spacing) var(--tlp-medium-spacing) var(--tlp-small-spacing);
-}
-
 .cross-tracker-reading-mode-trackers {
     display: flex;
     flex-wrap: wrap;
@@ -68,15 +45,4 @@
 .cross-tracker-reading-mode-trackers-empty {
     margin: 0 0 0 var(--tlp-medium-spacing);
     font-style: italic;
-}
-
-.reading-mode-actions {
-    display: flex;
-    justify-content: center;
-    padding: var(--tlp-small-spacing) var(--tlp-medium-spacing) var(--tlp-medium-spacing);
-    border-bottom: 1px solid var(--tlp-neutral-light-color);
-}
-
-.reading-mode-actions-cancel {
-    margin: 0 var(--tlp-medium-spacing) 0 0;
 }

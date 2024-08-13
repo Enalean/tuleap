@@ -19,7 +19,7 @@
 
 <template>
     <div
-        class="reading-mode-report"
+        class="report"
         v-bind:class="{ disabled: !is_user_admin }"
         v-on:click="switchToWritingMode"
         data-test="cross-tracker-reading-mode"
@@ -28,18 +28,14 @@
             v-bind:reading_cross_tracker_report="props.reading_cross_tracker_report"
             data-test="tracker-list-reading-mode"
         />
-        <div
-            class="reading-mode-query"
-            v-if="is_expert_query_not_empty"
-            data-test="tql-reading-mode-query"
-        >
+        <div v-if="is_expert_query_not_empty" data-test="tql-reading-mode-query">
             {{ props.reading_cross_tracker_report.expert_query }}
         </div>
     </div>
-    <div class="reading-mode-actions" v-if="report_state === 'result-preview'">
+    <div class="actions" v-if="report_state === 'result-preview'">
         <button
             type="button"
-            class="tlp-button-primary tlp-button-outline reading-mode-actions-cancel"
+            class="tlp-button-primary tlp-button-outline"
             v-on:click="cancelReport()"
             data-test="cross-tracker-cancel-report"
         >
@@ -148,3 +144,27 @@ function cancelReport(): void {
     emit("discard-unsaved-report");
 }
 </script>
+
+<style scoped lang="scss">
+.report {
+    display: flex;
+    flex-direction: column;
+    gap: var(--tlp-medium-spacing);
+    color: var(--tlp-main-color);
+    font-size: 0.9375rem;
+
+    &:hover:not(.disabled) {
+        background-color: var(--tlp-main-color-transparent-80);
+        cursor: pointer;
+    }
+}
+
+.actions {
+    display: flex;
+    justify-content: center;
+    gap: var(--tlp-medium-spacing);
+    margin: var(--tlp-medium-spacing) 0 0 0;
+    padding-bottom: var(--tlp-medium-spacing);
+    border-bottom: 1px solid var(--tlp-neutral-light-color);
+}
+</style>

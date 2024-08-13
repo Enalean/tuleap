@@ -220,7 +220,7 @@ const isEven = (index: number): boolean => index % 2 === 0;
 @use "../../../themes/cell";
 
 .export-button-box {
-    margin: var(--tlp-medium-spacing) 0 0 var(--tlp-medium-spacing);
+    margin: var(--tlp-medium-spacing) 0 0 0;
 }
 
 .overflow-wrapper {

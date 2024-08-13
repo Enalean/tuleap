@@ -187,7 +187,7 @@ function formatArtifacts(artifacts: ReadonlyArray<Artifact>): ReadonlyArray<Arti
 
 <style scoped lang="scss">
 .tlp-table-actions {
-    margin: var(--tlp-medium-spacing) 0 0 var(--tlp-medium-spacing);
+    margin: var(--tlp-medium-spacing) 0 0 0;
 }
 
 .tlp-table {
