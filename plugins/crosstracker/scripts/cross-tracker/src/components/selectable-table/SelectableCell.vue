@@ -19,13 +19,13 @@
 
 <template>
     <template v-if="props.cell !== undefined">
-        <span
+        <text-cell
             v-if="props.cell.type === TEXT_CELL"
-            class="cell text-cell"
+            class="cell"
             v-bind:class="getEvenOddClass()"
+            v-bind:text="props.cell.value"
             data-test="cell"
-            v-dompurify-html="props.cell.value"
-        ></span>
+        />
         <span
             v-if="props.cell.type === USER_CELL"
             class="cell"
@@ -121,6 +121,7 @@ import {
 } from "../../domain/ArtifactsTable";
 import { DATE_FORMATTER, DATE_TIME_FORMATTER } from "../../injection-symbols";
 import UserValue from "./UserValue.vue";
+import TextCell from "./TextCell.vue";
 
 const date_formatter = strictInject(DATE_FORMATTER);
 const date_time_formatter = strictInject(DATE_TIME_FORMATTER);
@@ -165,11 +166,6 @@ const getCrossRefBadgeClass = (cell: PrettyTitleCell): string =>
     @include cell.cell-template;
 
     min-height: var(--tlp-x-large-spacing);
-}
-
-.text-cell {
-    flex-direction: column;
-    justify-content: center;
 }
 
 .list-cell {

@@ -13,6 +13,7 @@
     "@tuleap/option": "workspace:^",
     "@tuleap/plugin-tracker-tql-codemirror": "workspace:*",
     "@tuleap/tlp-badge": "workspace:^",
+    "@tuleap/tooltip": "workspace:^",
     "@tuleap/vue-strict-inject": "workspace:^",
     "@tuleap/vue3-gettext-init": "workspace:^",
     "neverthrow": "6.0.0",
