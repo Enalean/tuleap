@@ -233,7 +233,7 @@ function checkThatProgramAndTeamsAreCorrect(
     );
 
     checkPIExistsInReleases("My first PI", team_project_name);
-    checkMirrorIterationExistsInSprint("My first PI", "Iteration One", team_project_name);
+    checkMirrorIterationExistsInSprint("My first PI", "Iteration One");
 
     cy.log("Check that user story linked to feature has been planned in mirror program increment");
     cy.visitProjectService(team_project_name, "Backlog");
@@ -247,9 +247,14 @@ function checkPIExistsInReleases(expected_text: string, team_project_name: strin
         cy.log(
             `Check that mirror program increment ${expected_text} has been created (attempt ${number_of_attempts}/${max_attempts})`,
         );
-        return cy
-            .get("[data-test=milestone]")
-            .then((milestone) => milestone.text().includes(expected_text));
+        cy.get("[data-test=milestones-loading]").should("not.exist");
+        return cy.wrap(Cypress.$("body")).then(($body) => {
+            const $milestones = $body.find("[data-test=milestone]");
+            if ($milestones.length < 1) {
+                return false;
+            }
+            return $milestones.first().text().includes(expected_text);
+        });
     };
     cy.reloadUntilCondition(
         reloadCallback,
@@ -258,25 +263,25 @@ function checkPIExistsInReleases(expected_text: string, team_project_name: strin
     );
 }
 
-function checkMirrorIterationExistsInSprint(
-    parent_pi: string,
-    expected_text: string,
-    team_project_name: string,
-): void {
-    cy.get("[data-test=milestone]")
-        .contains(parent_pi)
-        .click()
-        .get("[data-test=go-to-submilestone-planning]")
-        .click();
+function checkMirrorIterationExistsInSprint(parent_pi_name: string, expected_text: string): void {
+    cy.getContains("[data-test=milestone]", parent_pi_name).click();
+    cy.get("[data-test=go-to-submilestone-planning]").click();
 
-    const reloadCallback = (): void => cy.visitProjectService(team_project_name, "Backlog");
+    const reloadCallback = (): void => {
+        cy.reload();
+    };
     const conditionCallback: ConditionPredicate = (number_of_attempts, max_attempts) => {
         cy.log(
             `Check that mirror iteration ${expected_text} has been created (attempt ${number_of_attempts}/${max_attempts})`,
         );
-        return cy
-            .get("[data-test=milestone]")
-            .then((home_sprints) => home_sprints.text().includes(expected_text));
+        cy.get("[data-test=milestones-loading]").should("not.exist");
+        return cy.wrap(Cypress.$("body")).then(($body) => {
+            const $milestones = $body.find("[data-test=milestone]");
+            if ($milestones.length < 1) {
+                return false;
+            }
+            return $milestones.first().text().includes(expected_text);
+        });
     };
     cy.reloadUntilCondition(
         reloadCallback,
@@ -307,11 +312,7 @@ function checkThatMirrorsAreSynchronized(team_project_name: string): void {
     cy.visitProjectService(team_project_name, "Backlog");
 
     checkPIExistsInReleases("My first PI updated", team_project_name);
-    checkMirrorIterationExistsInSprint(
-        "My first PI updated",
-        "Iteration One updated",
-        team_project_name,
-    );
+    checkMirrorIterationExistsInSprint("My first PI updated", "Iteration One updated");
 }
 
 function selectLabelInListPickerDropdown(
