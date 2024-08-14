@@ -27,6 +27,7 @@
         <div class="editor" ref="area_editor">
             <notification-bar
                 v-bind:upload_progress="progress"
+                v-bind:is_in_progress="is_in_progress"
                 v-bind:reset_progress="resetProgressCallback"
                 v-bind:message="error_message"
             />
@@ -62,10 +63,8 @@ const onChange = (new_text_content: string): void => {
     props.input_current_description(new_text_content);
 };
 
-const { file_upload_options, error_message, progress, resetProgressCallback } = useUploadFile(
-    props.upload_url,
-    props.add_attachment_to_waiting_list,
-);
+const { file_upload_options, error_message, progress, is_in_progress, resetProgressCallback } =
+    useUploadFile(props.upload_url, props.add_attachment_to_waiting_list);
 
 function setupUploadPlugin(gettext_provider: GetText): PluginDropFile {
     return initPluginDropFile(file_upload_options, gettext_provider);

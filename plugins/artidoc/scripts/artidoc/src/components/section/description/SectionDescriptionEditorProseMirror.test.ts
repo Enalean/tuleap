@@ -34,6 +34,7 @@ describe("SectionDescriptionEditorProseMirror", () => {
         const upload_files: Ref<Map<number, OnGoingUploadFile>> = ref(new Map());
         vi.spyOn(upload_file, "useUploadFile").mockReturnValue({
             progress: ref(0),
+            is_in_progress: ref(false),
             file_upload_options: {
                 upload_url: "upload_url",
                 max_size_upload: 1234,

@@ -67,15 +67,15 @@ describe("useUploadFile", () => {
         });
         describe("resetProgressCallback", () => {
             it("should reset progress", () => {
-                const { resetProgressCallback, progress, file_upload_options } = useUploadFile(
-                    "upload_url",
-                    vi.fn(),
-                );
+                const { resetProgressCallback, progress, is_in_progress, file_upload_options } =
+                    useUploadFile("upload_url", vi.fn());
 
                 file_upload_options.onProgressCallback(88);
                 expect(progress.value).toBe(88);
+                expect(is_in_progress.value).toBe(true);
 
                 resetProgressCallback();
+                expect(is_in_progress.value).toBe(false);
                 expect(progress.value).toBe(0);
             });
         });
