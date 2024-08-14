@@ -36,7 +36,7 @@
                         <div class="tlp-form-element">
                             <label class="tlp-label" for="gitlab_server">
                                 {{ $gettext("GitLab server URL") }}
-                                <i class="fas fa-asterisk" aria-hidden="true"></i>
+                                <i class="fa-solid fa-asterisk" aria-hidden="true"></i>
                             </label>
                             <input
                                 type="url"
@@ -55,7 +55,7 @@
                         <div class="tlp-form-element">
                             <label class="tlp-label" for="gitlab_project_token">
                                 {{ $gettext("GitLab access token (personal or group)") }}
-                                <i class="fas fa-asterisk" aria-hidden="true"></i>
+                                <i class="fa-solid fa-asterisk" aria-hidden="true"></i>
                             </label>
                             <input
                                 type="password"
@@ -90,7 +90,10 @@
                                 class="tlp-button-primary tlp-button-outline"
                                 data-test="gitlab-group-link-cancel-button"
                             >
-                                <i class="fas fa-arrow-left tlp-button-icon" aria-hidden="true"></i>
+                                <i
+                                    class="fa-solid fa-arrow-left tlp-button-icon"
+                                    aria-hidden="true"
+                                ></i>
                                 {{ $gettext("Cancel") }}
                             </button>
                             <button
@@ -102,10 +105,10 @@
                             >
                                 {{ $gettext("Fetch GitLab groups") }}
                                 <i
-                                    class="fas fa-arrow-right tlp-button-icon tlp-button-icon-right"
+                                    class="tlp-button-icon-right"
                                     v-bind:class="{
-                                        'fas fa-arrow-right': !is_fetching_groups,
-                                        'fas fa-spin fa-circle-notch': is_fetching_groups,
+                                        'fa-solid fa-arrow-right': !is_fetching_groups,
+                                        'fa-solid fa-spin fa-circle-notch': is_fetching_groups,
                                     }"
                                     aria-hidden="true"
                                 ></i>

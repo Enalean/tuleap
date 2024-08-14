@@ -84,7 +84,7 @@
                                 {{ $gettext("Prefix") }}
                                 <i
                                     v-if="is_branch_name_prefix_required"
-                                    class="fas fa-asterisk"
+                                    class="fa-solid fa-asterisk"
                                     aria-hidden="true"
                                     data-test="branch-name-prefix-required-flag"
                                 ></i>
@@ -104,7 +104,10 @@
                                 v-bind:to="{ name: STEP_GITLAB_GROUP }"
                                 class="tlp-button-primary tlp-button-outline"
                             >
-                                <i class="fas fa-arrow-left tlp-button-icon" aria-hidden="true"></i>
+                                <i
+                                    class="fa-solid fa-arrow-left tlp-button-icon"
+                                    aria-hidden="true"
+                                ></i>
                                 {{ $gettext("Back") }}
                             </router-link>
                             <button

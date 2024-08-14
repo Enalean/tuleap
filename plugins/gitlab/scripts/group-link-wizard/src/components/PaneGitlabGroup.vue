@@ -101,7 +101,10 @@
                                 v-bind:to="{ name: STEP_GITLAB_SERVER }"
                                 class="tlp-button-primary tlp-button-outline"
                             >
-                                <i class="fas fa-arrow-left tlp-button-icon" aria-hidden="true"></i>
+                                <i
+                                    class="fa-solid fa-arrow-left tlp-button-icon"
+                                    aria-hidden="true"
+                                ></i>
                                 {{ $gettext("Back") }}
                             </router-link>
                             <button
@@ -113,7 +116,7 @@
                             >
                                 {{ $gettext("Configure selected group") }}
                                 <i
-                                    class="fas fa-arrow-right tlp-button-icon tlp-button-icon-right"
+                                    class="fa-solid fa-arrow-right tlp-button-icon-right"
                                     aria-hidden="true"
                                 ></i>
                             </button>
