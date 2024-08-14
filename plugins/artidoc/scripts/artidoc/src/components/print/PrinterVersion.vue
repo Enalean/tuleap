@@ -43,6 +43,10 @@
                         </div>
                         <div class="document-page">
                             <section class="document-content">
+                                <img
+                                    src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAuIwAAAABAQMAAADTaEu9AAAAA1BMVEX///+nxBvIAAAAG0lEQVQYGe3BAQEAAACCoP6vdkjAAAAAAADgQxcTAAGjL+moAAAAAElFTkSuQmCC"
+                                    style="visibility: hidden"
+                                />
                                 <ol>
                                     <li
                                         v-for="section in saved_sections"
