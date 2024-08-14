@@ -203,3 +203,15 @@ defineExpose({
     trackers,
 });
 </script>
+
+<style lang="scss" scoped>
+.cross-tracker-selector {
+    display: flex;
+    gap: var(--tlp-x-large-spacing);
+    margin: 0 0 var(--tlp-small-spacing);
+}
+
+.tlp-form-element {
+    margin: 0;
+}
+</style>

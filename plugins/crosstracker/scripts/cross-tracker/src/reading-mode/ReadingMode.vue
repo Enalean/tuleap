@@ -149,9 +149,12 @@ function cancelReport(): void {
 .report {
     display: flex;
     flex-direction: column;
-    gap: var(--tlp-medium-spacing);
+    margin: calc(-1 * var(--tlp-small-spacing));
+    padding: var(--tlp-small-spacing);
+    border-radius: var(--tlp-small-radius);
     color: var(--tlp-main-color);
     font-size: 0.9375rem;
+    gap: var(--tlp-medium-spacing);
 
     &:hover:not(.disabled) {
         background-color: var(--tlp-main-color-transparent-80);

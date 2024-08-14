@@ -19,14 +19,16 @@
 
 <template>
     <div class="writing-mode">
-        <tracker-selection
-            v-bind:selected_trackers="selected_trackers"
-            v-on:tracker-added="addTrackerToSelection"
-        />
-        <tracker-list-writing-mode
-            v-bind:trackers="selected_trackers"
-            v-on:tracker-removed="removeTrackerFromSelection"
-        />
+        <div>
+            <tracker-selection
+                v-bind:selected_trackers="selected_trackers"
+                v-on:tracker-added="addTrackerToSelection"
+            />
+            <tracker-list-writing-mode
+                v-bind:trackers="selected_trackers"
+                v-on:tracker-removed="removeTrackerFromSelection"
+            />
+        </div>
         <query-editor
             v-bind:writing_cross_tracker_report="writing_cross_tracker_report"
             v-on:trigger-search="search"
@@ -121,8 +123,9 @@ defineExpose({
 
 <style scoped lang="scss">
 .writing-mode {
-    padding-bottom: var(--tlp-medium-spacing);
-    border-bottom: 1px solid var(--tlp-neutral-light-color);
+    display: flex;
+    flex-direction: column;
+    gap: var(--tlp-medium-spacing);
 }
 
 .actions {

@@ -53,6 +53,7 @@ class DashboardWidgetPresenter
     /** @var CssAssetCollection */
     public $stylesheet_dependencies;
     public bool $can_be_minimized;
+    public bool $is_managing_its_own_section;
 
     public function __construct(
         Dashboard $dashboard,
@@ -85,6 +86,8 @@ class DashboardWidgetPresenter
         $this->javascript_dependencies = $widget->getJavascriptDependencies();
         $this->javascript_assets       = $widget->getJavascriptAssets();
         $this->stylesheet_dependencies = $widget->getStylesheetDependencies();
+
+        $this->is_managing_its_own_section = $widget->isManagingItsOwnSection();
 
         $this->has_actions = $this->has_rss || $can_update_dashboards;
 

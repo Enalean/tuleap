@@ -27,19 +27,25 @@
         <div class="selectable-table" v-if="!is_loading">
             <span
                 class="headers-cell"
-                v-for="column_name of columns"
+                v-for="(column_name, column_index) of columns"
                 v-bind:key="column_name"
+                v-bind:class="{
+                    'is-last-cell-of-row': isLastCellOfRow(column_index, columns.size),
+                }"
                 data-test="column-header"
                 >{{ getColumnName(column_name) }}</span
             >
             <template v-for="(row, index) of rows" v-bind:key="row.uri">
                 <edit-cell v-bind:uri="row.uri" v-bind:even="isEven(index)" />
                 <selectable-cell
-                    v-for="column_name of columns"
+                    v-for="(column_name, column_index) of columns"
                     v-bind:key="column_name + index"
                     v-bind:cell="row.cells.get(column_name)"
                     v-bind:artifact_uri="row.uri"
                     v-bind:even="isEven(index)"
+                    v-bind:class="{
+                        'is-last-cell-of-row': isLastCellOfRow(column_index, columns.size),
+                    }"
                 />
             </template>
         </div>
@@ -200,6 +206,10 @@ const getColumnName = (name: ColumnName): string => {
 };
 
 const isEven = (index: number): boolean => index % 2 === 0;
+
+function isLastCellOfRow(index: number, size: number): boolean {
+    return index + 1 === size;
+}
 </script>
 
 <style scoped lang="scss">
@@ -210,8 +220,7 @@ const isEven = (index: number): boolean => index % 2 === 0;
 }
 
 .overflow-wrapper {
-    margin: var(--tlp-medium-spacing) calc(-1 * var(--tlp-medium-spacing)) 0
-        calc(-1 * var(--tlp-medium-spacing));
+    margin: 0 calc(-1 * var(--tlp-medium-spacing));
     overflow-y: auto;
 }
 
@@ -232,5 +241,9 @@ const isEven = (index: number): boolean => index % 2 === 0;
     border-bottom: 2px solid var(--tlp-main-color);
     color: var(--tlp-main-color);
     white-space: nowrap;
+}
+
+.is-last-cell-of-row {
+    padding-right: var(--tlp-medium-spacing);
 }
 </style>

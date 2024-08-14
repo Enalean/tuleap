@@ -45,6 +45,7 @@ const getEvenOddClass = (): string => (props.even ? `even-row` : `odd-row`);
     @include cell.cell-template;
 
     grid-column: edit;
+    padding-left: var(--tlp-medium-spacing);
 }
 
 .link {

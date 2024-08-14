@@ -18,31 +18,36 @@
   -->
 
 <template>
-    <error-message v-bind:fault="current_fault" />
-    <error-inactive-project-message v-bind:invalid_trackers="invalid_trackers" />
-    <div
-        class="tlp-alert-info cross-tracker-report-success"
-        v-if="current_success.isValue()"
-        data-test="cross-tracker-report-success"
+    <section
+        class="tlp-pane-section"
+        v-bind:class="{ 'reading-mode-shown': is_reading_mode_shown }"
     >
-        {{ current_success.unwrapOr("") }}
-    </div>
-    <div class="cross-tracker-loader" v-if="is_loading"></div>
-    <reading-mode
-        v-if="is_reading_mode_shown"
-        v-bind:backend_cross_tracker_report="backend_cross_tracker_report"
-        v-bind:reading_cross_tracker_report="reading_cross_tracker_report"
-        v-bind:has_error="has_error"
-        v-on:switch-to-writing-mode="handleSwitchWriting"
-        v-on:saved="reportSaved"
-        v-on:discard-unsaved-report="unsavedReportDiscarded"
-    />
-    <writing-mode
-        v-if="report_state === 'edit-query'"
-        v-bind:writing_cross_tracker_report="writing_cross_tracker_report"
-        v-on:switch-to-reading-mode="handleSwitchReading"
-    />
-    <template v-if="!is_loading">
+        <error-message v-bind:fault="current_fault" />
+        <error-inactive-project-message v-bind:invalid_trackers="invalid_trackers" />
+        <div
+            class="tlp-alert-success cross-tracker-report-success"
+            v-if="current_success.isValue()"
+            data-test="cross-tracker-report-success"
+        >
+            {{ current_success.unwrapOr("") }}
+        </div>
+        <div class="cross-tracker-loader" v-if="is_loading"></div>
+        <reading-mode
+            v-if="is_reading_mode_shown"
+            v-bind:backend_cross_tracker_report="backend_cross_tracker_report"
+            v-bind:reading_cross_tracker_report="reading_cross_tracker_report"
+            v-bind:has_error="has_error"
+            v-on:switch-to-writing-mode="handleSwitchWriting"
+            v-on:saved="reportSaved"
+            v-on:discard-unsaved-report="unsavedReportDiscarded"
+        />
+        <writing-mode
+            v-if="report_state === 'edit-query'"
+            v-bind:writing_cross_tracker_report="writing_cross_tracker_report"
+            v-on:switch-to-reading-mode="handleSwitchReading"
+        />
+    </section>
+    <section class="tlp-pane-section" v-if="!is_loading">
         <artifact-table
             v-if="!writing_cross_tracker_report.expert_mode"
             v-bind:writing_cross_tracker_report="writing_cross_tracker_report"
@@ -51,7 +56,7 @@
             v-if="writing_cross_tracker_report.expert_mode"
             v-bind:writing_cross_tracker_report="writing_cross_tracker_report"
         />
-    </template>
+    </section>
 </template>
 <script setup lang="ts">
 import { computed, onMounted, provide, ref } from "vue";
@@ -197,3 +202,9 @@ defineExpose({
     is_csv_export_allowed,
 });
 </script>
+
+<style lang="scss" scoped>
+.reading-mode-shown {
+    border: 0;
+}
+</style>
