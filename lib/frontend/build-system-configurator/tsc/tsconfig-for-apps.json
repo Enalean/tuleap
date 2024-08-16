@@ -1,8 +1,8 @@
 {
     "compilerOptions": {
-        "target": "ES2019",
+        "target": "ES2020",
         "module": "es2020",
-        "lib": ["ES2015", "ES2016", "ES2017", "ES2018", "ES2019", "ES2020", "ES2021", "DOM", "DOM.Iterable"],
+        "lib": ["ES2020", "ES2021", "DOM", "DOM.Iterable"],
         "sourceMap": true,
         "importHelpers": true,
         "strict": true,
