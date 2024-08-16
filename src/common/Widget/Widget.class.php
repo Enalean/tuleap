@@ -297,4 +297,9 @@ use Tuleap\Project\MappingRegistry;
     {
         return null;
     }
+
+    public function isManagingItsOwnSection(): bool
+    {
+        return false;
+    }
 }

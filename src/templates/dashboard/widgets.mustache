@@ -102,7 +102,9 @@
                                 {{/ can_update_dashboards }}
                                 {{^ is_minimized }}
                                     <section class="
-                                        tlp-pane-section
+                                        {{^ is_managing_its_own_section }}
+                                            tlp-pane-section
+                                        {{/ is_managing_its_own_section }}
                                         dashboard-widget-content
                                         dashboard-widget-content-{{ widget_name }}
                                         {{# is_content_loaded_asynchronously }}

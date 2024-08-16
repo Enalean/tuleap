@@ -179,4 +179,9 @@ class ProjectCrossTrackerSearch extends Widget
     {
         return new CrossTrackerReportDao();
     }
+
+    public function isManagingItsOwnSection(): bool
+    {
+        return true;
+    }
 }
