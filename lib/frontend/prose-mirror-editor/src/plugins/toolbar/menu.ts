@@ -22,7 +22,7 @@ import { wrapItem, icons, MenuItem } from "prosemirror-menu";
 import type { EditorState, Command } from "prosemirror-state";
 import type { Schema, MarkType } from "prosemirror-model";
 import { toggleMark } from "prosemirror-commands";
-import { gettext_provider } from "../../use-editor";
+import type { GetText } from "@tuleap/gettext";
 
 function cmdItem(cmd: Command, options: MenuItemSpec): MenuItem {
     const passed_options: MenuItemSpec = options;
@@ -63,7 +63,7 @@ type MenuItemResult = {
     fullMenu: MenuElement[][];
 };
 
-export function buildMenuItems(schema: Schema): MenuItemResult {
+export function buildMenuItems(schema: Schema, gettext_provider: GetText): MenuItemResult {
     return {
         fullMenu: [
             [

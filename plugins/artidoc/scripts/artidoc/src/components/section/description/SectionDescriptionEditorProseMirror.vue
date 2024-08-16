@@ -36,11 +36,13 @@
 <script setup lang="ts">
 import { onMounted, ref, watch } from "vue";
 import type { EditorView, UseEditorType } from "@tuleap/prose-mirror-editor";
-import { initPluginInput, initPluginDropFile, useEditor } from "@tuleap/prose-mirror-editor";
+import { initPluginDropFile, useEditor } from "@tuleap/prose-mirror-editor";
 import type { EditorSectionContent } from "@/composables/useEditorSectionContent";
 import type { AttachmentFile } from "@/composables/useAttachmentFile";
 import { useUploadFile } from "@/composables/useUploadFile";
 import NotificationBar from "@/components/section/description/NotificationBar.vue";
+import type { GetText } from "@tuleap/gettext";
+import type { PluginDropFile } from "@tuleap/prose-mirror-editor/dist";
 
 const props = defineProps<{
     upload_url: string;
@@ -65,8 +67,9 @@ const { file_upload_options, error_message, progress, resetProgressCallback } = 
     props.add_attachment_to_waiting_list,
 );
 
-const upload_plugin = initPluginDropFile(file_upload_options);
-const plugins = ref([initPluginInput(onChange), upload_plugin]);
+function setupUploadPlugin(gettext_provider: GetText): PluginDropFile {
+    return initPluginDropFile(file_upload_options, gettext_provider);
+}
 
 function convertDescriptionToHTML(description: string): HTMLElement {
     const parser = new DOMParser();
@@ -78,7 +81,6 @@ watch(
     () => props.is_edit_mode,
     () => {
         if (!props.is_edit_mode) {
-            upload_plugin.cancelOngoingUpload();
             resetProgressCallback();
             if (editorView.value && useEditorInstance) {
                 useEditorInstance.resetContent(
@@ -89,9 +91,14 @@ watch(
     },
 );
 
-onMounted(() => {
+onMounted(async () => {
     if (area_editor.value && content_editor.value) {
-        useEditorInstance = useEditor(area_editor.value, plugins.value, content_editor.value);
+        useEditorInstance = await useEditor(
+            area_editor.value,
+            setupUploadPlugin,
+            onChange,
+            content_editor.value,
+        );
         editorView.value = useEditorInstance.editor;
     }
 });

@@ -22,15 +22,14 @@ import { EditorState } from "prosemirror-state";
 import { EditorView } from "prosemirror-view";
 import { DOMParser } from "prosemirror-model";
 import { custom_schema } from "./custom_schema";
-import { setupToolbar } from "./plugins";
-import { getLocaleWithDefault, initGettextSync } from "@tuleap/gettext";
-import fr_FR from "../po/fr_FR.po";
-
-export const gettext_provider = initGettextSync(
-    "prose-mirror",
-    { fr_FR },
-    getLocaleWithDefault(document),
-);
+import type { PluginDropFile } from "./plugins";
+import { initPluginInput, setupToolbar } from "./plugins";
+import type { GetText } from "@tuleap/gettext";
+import {
+    getLocaleWithDefault,
+    getPOFileFromLocaleWithoutExtension,
+    initGettext,
+} from "@tuleap/gettext";
 
 export type UseEditorType = {
     editor: EditorView;
@@ -38,12 +37,26 @@ export type UseEditorType = {
     resetContent: (initialContent: HTMLElement) => void;
 };
 
-export function useEditor(
+export async function useEditor(
     query_selector: HTMLElement,
-    externals_plugins: Plugin[],
+    setupUploadPlugin: (gettext_provider: GetText) => PluginDropFile,
+    onChange: (new_text_content: string) => void,
     initial_content: HTMLElement,
-): UseEditorType {
-    const plugins: Plugin[] = externals_plugins.concat(setupToolbar());
+): Promise<UseEditorType> {
+    const gettext_provider = await initGettext(
+        getLocaleWithDefault(document),
+        "prose-mirror",
+        (locale) => import(`../po/${getPOFileFromLocaleWithoutExtension(locale)}.po`),
+    );
+
+    const upload_plugin = setupUploadPlugin(gettext_provider);
+
+    const plugins: Plugin[] = [
+        initPluginInput(onChange),
+        upload_plugin,
+        ...setupToolbar(gettext_provider),
+    ];
+
     const state: EditorState = getState(initial_content);
     const editor: EditorView = new EditorView(query_selector, {
         state,
@@ -53,6 +66,7 @@ export function useEditor(
     });
 
     function resetContent(initial_content: HTMLElement): void {
+        upload_plugin.cancelOngoingUpload();
         const state = getState(initial_content);
         editor.updateState(state);
     }

@@ -25,10 +25,11 @@ import { buildMenuItems } from "./menu";
 import { buildKeymap } from "./keymap";
 import { custom_schema } from "../../custom_schema";
 import { buildInputRules } from "./input-rules";
+import type { GetText } from "@tuleap/gettext";
 
 export { buildMenuItems, buildKeymap };
 
-export function setupToolbar(): Plugin[] {
+export function setupToolbar(gettext_provider: GetText): Plugin[] {
     const plugins = [
         keymap(buildKeymap(custom_schema)),
         keymap(baseKeymap),
@@ -37,7 +38,7 @@ export function setupToolbar(): Plugin[] {
 
     plugins.push(
         menuBar({
-            content: buildMenuItems(custom_schema).fullMenu,
+            content: buildMenuItems(custom_schema, gettext_provider).fullMenu,
         }),
     );
 

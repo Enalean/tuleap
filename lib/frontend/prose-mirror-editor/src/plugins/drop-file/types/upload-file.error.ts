@@ -17,11 +17,11 @@
  *  along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { gettext_provider } from "../../../use-editor";
+import type { GetText } from "@tuleap/gettext";
 
 export class MaxSizeUploadExceededError extends Error {
     public max_size_upload: number;
-    constructor(max_size_upload: number) {
+    constructor(max_size_upload: number, gettext_provider: GetText) {
         super();
         this.name = "MaxSizeUploadExceededError";
         this.max_size_upload = max_size_upload;
@@ -29,7 +29,7 @@ export class MaxSizeUploadExceededError extends Error {
     }
 }
 export class UploadError extends Error {
-    constructor() {
+    constructor(gettext_provider: GetText) {
         super();
         this.name = "UploadError";
         this.message = gettext_provider.gettext("An error occurred during upload");
@@ -37,7 +37,7 @@ export class UploadError extends Error {
 }
 
 export class InvalidFileUploadError extends Error {
-    constructor() {
+    constructor(gettext_provider: GetText) {
         super();
         this.name = "InvalidFileUploadError";
         this.message = gettext_provider.gettext("File type is invalid, you can only upload images");

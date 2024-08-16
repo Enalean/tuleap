@@ -22,6 +22,7 @@ import { uploadFile } from "./helpers/upload-file-helper";
 import { postJSON, rawUri, uri } from "@tuleap/fetch-result";
 import type { OngoingUpload } from "./plugin-drop-file";
 import { Option } from "@tuleap/option";
+import type { GetText } from "@tuleap/gettext";
 
 export const VALID_FILE_TYPES = [
     "image/png",
@@ -38,25 +39,26 @@ export type PostFileResponse = {
     upload_href: string;
 };
 
-export function fileUploadHandler(options: FileUploadOptions) {
+export function fileUploadHandler(options: FileUploadOptions, gettext_provider: GetText) {
     return function handler(event: DragEvent): Promise<Option<ReadonlyArray<OngoingUpload>>> {
         event.preventDefault();
         const files = event.dataTransfer?.files;
         if (!files) {
-            options.onErrorCallback(new UploadError());
+            options.onErrorCallback(new UploadError(gettext_provider));
             return Promise.resolve(Option.nothing<ReadonlyArray<OngoingUpload>>());
         }
-        return uploadAndDisplayFileInEditor(files, options);
+        return uploadAndDisplayFileInEditor(files, options, gettext_provider);
     };
 }
 
-export function isFileTypeValid(file: File): boolean {
+function isFileTypeValid(file: File): boolean {
     return VALID_FILE_TYPES.includes(file.type);
 }
 
 export async function uploadAndDisplayFileInEditor(
     files: FileList,
     options: FileUploadOptions,
+    gettext_provider: GetText,
 ): Promise<Option<ReadonlyArray<OngoingUpload>>> {
     const {
         upload_url,
@@ -71,12 +73,12 @@ export async function uploadAndDisplayFileInEditor(
     const ongoing_uploads: OngoingUpload[] = [];
     for (const file of files) {
         if (file.size > max_size_upload) {
-            onErrorCallback(new MaxSizeUploadExceededError(max_size_upload));
+            onErrorCallback(new MaxSizeUploadExceededError(max_size_upload, gettext_provider));
             return Promise.resolve(Option.fromValue(ongoing_uploads));
         }
 
         if (!isFileTypeValid(file)) {
-            onErrorCallback(new InvalidFileUploadError());
+            onErrorCallback(new InvalidFileUploadError(gettext_provider));
             return Promise.resolve(Option.fromValue(ongoing_uploads));
         }
 
@@ -91,7 +93,7 @@ export async function uploadAndDisplayFileInEditor(
         ).match(
             async (response): Promise<Option<OngoingUpload>> => {
                 if (!response.upload_href) {
-                    onErrorCallback(new UploadError());
+                    onErrorCallback(new UploadError(gettext_provider));
                     return Promise.resolve(Option.nothing<OngoingUpload>());
                 }
 
@@ -107,12 +109,12 @@ export async function uploadAndDisplayFileInEditor(
 
                     return ongoing_upload;
                 } catch (error) {
-                    onErrorCallback(new UploadError());
+                    onErrorCallback(new UploadError(gettext_provider));
                     throw error;
                 }
             },
             (): Promise<Option<OngoingUpload>> => {
-                onErrorCallback(new UploadError());
+                onErrorCallback(new UploadError(gettext_provider));
                 return Promise.resolve(Option.nothing<OngoingUpload>());
             },
         );
