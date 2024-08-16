@@ -30,7 +30,7 @@
                 <tbody>
                 {{# has_notifications }}
                     {{# notifications }}
-                        <tr data-target-input-id="edit_email_{{ notification_id }}">
+                        <tr data-target-input-id="edit_email_{{ notification_id }}" data-test="tr-edit-notification">
                             <td>
                                 <div class="svn-notifications-checkbox-cell-read">
                                     <div>{{ path }}</div>
@@ -52,7 +52,7 @@
                                     <div class="svn-notification-email-list">
                                         {{# ugroups_to_be_notified }}
                                             <span class="svn-notification-email-list-entry">
-                                            <i class="fa fa-users svn-notification-email-list-group-icon"></i>
+                                            <i class="fa fa-users svn-notification-email-list-group-icon" data-test="group-icon"></i>
                                                 {{ label }}<span class="svn-notification-email-list-separator">, </span>
                                             </span>
                                         {{/ ugroups_to_be_notified }}
@@ -74,6 +74,7 @@
                                 <div class="svn-notifications-checkbox-cell-write svn-notifications-checkbox-cell-hidden">
                                     <input type="text"
                                            id="edit_email_{{ notification_id }}"
+                                           data-test="edit-svn-email"
                                            class="edit_email autocompleter-users-and-ugroups-input"
                                            name="notification_update[{{ notification_id }}][emails]"
                                            data-project-id="{{ project_id }}"
@@ -96,6 +97,7 @@
                                             data-placement="bottom"
                                             data-html="true"
                                             data-popover-id="svn-notification-cannot-save-{{ notification_id }}-popover"
+                                            data-test="svn-edit-notifications"
                                     >
                                         {{ save }}
                                     </button>
@@ -107,7 +109,7 @@
                                     <button type="button" name="submit" class="btn svn-notification-edit-hide">{{ cancel }}</button>
                                 </div>
                                 <div class="svn-notifications-checkbox-cell-read">
-                                    <a href="#" class="svn-notification-edit-show svn-notification-edit">
+                                    <a href="#" class="svn-notification-edit-show svn-notification-edit" data-test="edit-svn-notifications">
                                         <i class="fas fa-pencil-alt"></i>
                                         {{ edit }}
                                     </a>
@@ -151,6 +153,7 @@
                     <td class="notification-path">
                         <input type="text"
                                id="add_path"
+                               data-test="svn-add-path"
                                name="notification_add[path]"
                                class="input-path"
                                placeholder="{{ label_path }}"
@@ -159,6 +162,7 @@
                     <td>
                         <input type="text"
                                id="add_email"
+                               data-test="svn-add-email"
                                name="notification_add[emails]"
                                class="autocompleter-users-and-ugroups-input"
                                placeholder="{{ new_notification_placeholder }}"
@@ -177,6 +181,7 @@
                                 data-placement="bottom"
                                 data-html="true"
                                 data-popover-id="svn-notification-cannot-save-popover"
+                                data-test="svn-save-notifications"
                         >
                             {{ save }}
                         </button>
@@ -190,7 +195,7 @@
                 </tr>
                 </tbody>
             </table>
-            <button type="button" class="btn" id="svn-notifications-add">
+            <button type="button" class="btn" id="svn-notifications-add" data-test="svn-notifications-add">
                 <i class="fa fa-plus"></i>
                 {{ add_notification }}
             </button>
