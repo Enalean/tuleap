@@ -1,11 +1,20 @@
 {
-    "name": "tuleap/plugin-taskboard",
-    "autoload": {
-        "psr-4": {
-            "Tuleap\\Taskboard\\": "include/"
-        }
-    },
-    "config": {
-        "sort-packages": true
+  "name": "tuleap/plugin-taskboard",
+  "autoload": {
+    "psr-4": {
+      "Tuleap\\Taskboard\\": "include/"
     }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Tuleap\\Taskboard\\": [
+        "tests/unit",
+        "tests/integration"
+      ],
+      "Tuleap\\Taskboard\\REST\\": ["tests/rest"]
+    }
+  },
+  "config": {
+    "sort-packages": true
+  }
 }
