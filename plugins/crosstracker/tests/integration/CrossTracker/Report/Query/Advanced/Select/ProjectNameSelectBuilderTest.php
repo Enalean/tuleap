@@ -102,7 +102,7 @@ final class ProjectNameSelectBuilderTest extends CrossTrackerFieldTestCase
         $result = $this->getQueryResults(
             new CrossTrackerReport(
                 1,
-                'SELECT @project.name WHERE @id >= 1',
+                'SELECT @project.name FROM @project = "self" WHERE @id >= 1',
                 $this->trackers,
                 true,
             ),

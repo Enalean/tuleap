@@ -106,7 +106,7 @@ final class SubmittedBySelectBuilderTest extends CrossTrackerFieldTestCase
         $result = $this->getQueryResults(
             new CrossTrackerReport(
                 1,
-                "SELECT @submitted_by WHERE @submitted_by = 'bob' OR @submitted_by != 'bob'",
+                "SELECT @submitted_by FROM @project = 'self' WHERE @submitted_by = 'bob' OR @submitted_by != 'bob'",
                 $this->trackers,
                 true,
             ),

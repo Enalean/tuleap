@@ -123,7 +123,7 @@ final class TitleSelectBuilderTest extends CrossTrackerFieldTestCase
         $result = $this->getQueryResults(
             new CrossTrackerReport(
                 1,
-                "SELECT @title WHERE @title = '' OR @title != ''",
+                "SELECT @title FROM @project = 'self' WHERE @title = '' OR @title != ''",
                 $this->trackers,
                 true,
             ),

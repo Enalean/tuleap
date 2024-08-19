@@ -103,7 +103,7 @@ final class SubmittedOnSelectBuilderTest extends CrossTrackerFieldTestCase
         $result = $this->getQueryResults(
             new CrossTrackerReport(
                 1,
-                "SELECT @submitted_on WHERE @submitted_on >= '1970-01-01'",
+                "SELECT @submitted_on FROM @project = 'self' WHERE @submitted_on >= '1970-01-01'",
                 $this->trackers,
                 true,
             ),

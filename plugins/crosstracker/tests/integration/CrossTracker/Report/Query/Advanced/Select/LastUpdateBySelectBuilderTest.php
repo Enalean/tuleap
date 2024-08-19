@@ -106,7 +106,7 @@ final class LastUpdateBySelectBuilderTest extends CrossTrackerFieldTestCase
         $result = $this->getQueryResults(
             new CrossTrackerReport(
                 1,
-                "SELECT @last_update_by WHERE @last_update_by = 'bob' OR @last_update_by != 'bob'",
+                "SELECT @last_update_by FROM @project = 'self' WHERE @last_update_by = 'bob' OR @last_update_by != 'bob'",
                 $this->trackers,
                 true,
             ),

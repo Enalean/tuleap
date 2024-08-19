@@ -148,7 +148,7 @@ final class UserListSelectFromBuilderTest extends CrossTrackerFieldTestCase
         $result = $this->getQueryResults(
             new CrossTrackerReport(
                 1,
-                "SELECT user_list_field WHERE user_list_field = '' OR user_list_field != ''",
+                "SELECT user_list_field FROM @project = 'self' WHERE user_list_field = '' OR user_list_field != ''",
                 $this->trackers,
                 true,
             ),

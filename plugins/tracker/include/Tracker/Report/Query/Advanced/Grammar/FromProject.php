@@ -22,29 +22,20 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Report\Query\Advanced\Grammar;
 
-final readonly class Query
+final readonly class FromProject implements FromSomething
 {
-    /**
-     * @param list<Selectable> $select
-     */
     public function __construct(
-        private array $select,
-        private ?From $from,
-        private Logical $condition,
+        private string $target,
+        private FromProjectCondition $condition,
     ) {
     }
 
-    public function getSelect(): array
+    public function getTarget(): string
     {
-        return $this->select;
+        return $this->target;
     }
 
-    public function getFrom(): ?From
-    {
-        return $this->from;
-    }
-
-    public function getCondition(): Logical
+    public function getCondition(): FromProjectCondition
     {
         return $this->condition;
     }

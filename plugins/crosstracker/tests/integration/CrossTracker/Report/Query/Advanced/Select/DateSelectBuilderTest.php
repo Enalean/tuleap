@@ -140,7 +140,7 @@ final class DateSelectBuilderTest extends CrossTrackerFieldTestCase
         $result = $this->getQueryResults(
             new CrossTrackerReport(
                 1,
-                "SELECT date_field WHERE date_field = '' OR date_field != ''",
+                "SELECT date_field FROM @project = 'self' WHERE date_field = '' OR date_field != ''",
                 $this->trackers,
                 true,
             ),

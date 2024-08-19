@@ -154,7 +154,7 @@ final class UGroupListSelectFromBuilderTest extends CrossTrackerFieldTestCase
         $result = $this->getQueryResults(
             new CrossTrackerReport(
                 1,
-                "SELECT ugroup_list_field WHERE ugroup_list_field = '' OR ugroup_list_field != ''",
+                "SELECT ugroup_list_field FROM @project = 'self' WHERE ugroup_list_field = '' OR ugroup_list_field != ''",
                 $this->trackers,
                 true,
             ),
