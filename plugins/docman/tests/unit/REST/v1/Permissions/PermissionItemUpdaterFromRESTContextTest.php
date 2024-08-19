@@ -26,36 +26,23 @@ use Docman_Folder;
 use Docman_Item;
 use Docman_PermissionsManager;
 use Luracast\Restler\RestException;
-use Mockery;
-use PFUser;
+use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\Docman\Permissions\PermissionItemUpdater;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
 
-final class PermissionItemUpdaterFromRESTContextTest extends \Tuleap\Test\PHPUnit\TestCase
+final class PermissionItemUpdaterFromRESTContextTest extends TestCase
 {
-    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
-    /**
-     * @var Mockery\MockInterface|PermissionItemUpdater
-     */
-    private $permissions_item_updater;
-    /**
-     * @var Docman_PermissionsManager|Mockery\MockInterface
-     */
-    private $permissions_manager;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|DocmanItemPermissionsForGroupsSetFactory
-     */
-    private $permissions_for_groups_set_factory;
-    /**
-     * @var PermissionItemUpdaterFromRESTContext
-     */
-    private $permissions_item_updater_rest;
+    private PermissionItemUpdater&MockObject $permissions_item_updater;
+    private Docman_PermissionsManager&MockObject $permissions_manager;
+    private DocmanItemPermissionsForGroupsSetFactory&MockObject $permissions_for_groups_set_factory;
+    private PermissionItemUpdaterFromRESTContext $permissions_item_updater_rest;
 
     protected function setUp(): void
     {
-        $this->permissions_item_updater           = Mockery::mock(PermissionItemUpdater::class);
-        $this->permissions_manager                = Mockery::mock(Docman_PermissionsManager::class);
-        $this->permissions_for_groups_set_factory = Mockery::mock(DocmanItemPermissionsForGroupsSetFactory::class);
+        $this->permissions_item_updater           = $this->createMock(PermissionItemUpdater::class);
+        $this->permissions_manager                = $this->createMock(Docman_PermissionsManager::class);
+        $this->permissions_for_groups_set_factory = $this->createMock(DocmanItemPermissionsForGroupsSetFactory::class);
 
         $this->permissions_item_updater_rest = new PermissionItemUpdaterFromRESTContext(
             $this->permissions_item_updater,
@@ -66,109 +53,103 @@ final class PermissionItemUpdaterFromRESTContextTest extends \Tuleap\Test\PHPUni
 
     public function testPermissionsCanBeUpdated(): void
     {
-        $item           = Mockery::mock(Docman_Item::class);
+        $item           = new Docman_Item(['item_id' => 18]);
         $representation = new DocmanItemPermissionsForGroupsSetRepresentation();
 
-        $item->shouldReceive('getId')->andReturn(18);
-        $this->permissions_manager->shouldReceive('userCanManage')->andReturn(true);
-        $this->permissions_for_groups_set_factory->shouldReceive('fromRepresentation')
-            ->andReturn(new DocmanItemPermissionsForGroupsSet([]));
+        $this->permissions_manager->method('userCanManage')->willReturn(true);
+        $this->permissions_for_groups_set_factory->method('fromRepresentation')
+            ->willReturn(new DocmanItemPermissionsForGroupsSet([]));
 
-        $this->permissions_item_updater->shouldReceive('updateItemPermissions')->once();
+        $this->permissions_item_updater->expects(self::once())->method('updateItemPermissions');
 
         $this->permissions_item_updater_rest->updateItemPermissions(
             $item,
-            Mockery::mock(PFUser::class),
+            UserTestBuilder::buildWithDefaults(),
             $representation
         );
     }
 
     public function testPermissionsUpdateOfAFolderIsNotAppliedOnChildrenWhenNotRequested(): void
     {
-        $folder = Mockery::mock(Docman_Folder::class);
-        $folder->shouldReceive('getId')->andReturn(18);
-        $this->permissions_manager->shouldReceive('userCanManage')->andReturn(true);
+        $folder = new Docman_Folder(['item_id' => 18]);
+        $this->permissions_manager->method('userCanManage')->willReturn(true);
 
-        $this->permissions_for_groups_set_factory->shouldReceive('fromRepresentation')
-            ->andReturn(new DocmanItemPermissionsForGroupsSet([]));
+        $this->permissions_for_groups_set_factory->method('fromRepresentation')
+            ->willReturn(new DocmanItemPermissionsForGroupsSet([]));
 
         $representation                                = new DocmanFolderPermissionsForGroupsPUTRepresentation();
         $representation->apply_permissions_on_children = false;
 
-        $this->permissions_item_updater->shouldReceive('updateItemPermissions')->once();
+        $this->permissions_item_updater->expects(self::once())->method('updateItemPermissions');
 
         $this->permissions_item_updater_rest->updateFolderPermissions(
             $folder,
-            Mockery::mock(PFUser::class),
+            UserTestBuilder::buildWithDefaults(),
             $representation
         );
     }
 
     public function testPermissionsUpdateOfAFolderIsAppliedOnChildrenWhenRequested(): void
     {
-        $folder = Mockery::mock(Docman_Folder::class);
-        $folder->shouldReceive('getId')->andReturn(18);
-        $this->permissions_manager->shouldReceive('userCanManage')->andReturn(true);
-        $this->permissions_for_groups_set_factory->shouldReceive('fromRepresentation')
-            ->andReturn(new DocmanItemPermissionsForGroupsSet([]));
+        $folder = new Docman_Folder(['item_id' => 18]);
+        $this->permissions_manager->method('userCanManage')->willReturn(true);
+        $this->permissions_for_groups_set_factory->method('fromRepresentation')
+            ->willReturn(new DocmanItemPermissionsForGroupsSet([]));
 
         $representation                                = new DocmanFolderPermissionsForGroupsPUTRepresentation();
         $representation->apply_permissions_on_children = true;
 
-        $this->permissions_item_updater->shouldReceive('updateFolderAndChildrenPermissions')->once();
+        $this->permissions_item_updater->expects(self::once())->method('updateFolderAndChildrenPermissions');
 
         $this->permissions_item_updater_rest->updateFolderPermissions(
             $folder,
-            Mockery::mock(PFUser::class),
+            UserTestBuilder::buildWithDefaults(),
             $representation
         );
     }
 
     public function testUpdateIsRejectedIfTheUserCanNotManageTheItem(): void
     {
-        $item = Mockery::mock(Docman_Item::class);
-        $item->shouldReceive('getId')->andReturn(78);
+        $item = new Docman_Item(['item_id' => 78]);
 
-        $this->permissions_manager->shouldReceive('userCanManage')->andReturn(false);
+        $this->permissions_manager->method('userCanManage')->willReturn(false);
 
-        $this->expectException(RestException::class);
-        $this->expectExceptionCode(403);
+        self::expectException(RestException::class);
+        self::expectExceptionCode(403);
 
         $this->permissions_item_updater_rest->updateItemPermissions(
             $item,
-            Mockery::mock(PFUser::class),
+            UserTestBuilder::buildWithDefaults(),
             new DocmanItemPermissionsForGroupsSetRepresentation()
         );
     }
 
     public function testUpdateItemPermissionsIsRejectedWhenTheUserCanNotManageIt(): void
     {
-        $item = Mockery::mock(Docman_Item::class);
-        $item->shouldReceive('getId')->andReturn(77);
+        $item = new Docman_Item(['item_id' => 77]);
 
-        $this->permissions_manager->shouldReceive('userCanManage')->andReturn(false);
+        $this->permissions_manager->method('userCanManage')->willReturn(false);
 
-        $this->expectException(RestException::class);
-        $this->expectExceptionCode(403);
+        self::expectException(RestException::class);
+        self::expectExceptionCode(403);
         $this->permissions_item_updater_rest->updateItemPermissions(
             $item,
-            Mockery::mock(PFUser::class),
+            UserTestBuilder::buildWithDefaults(),
             new DocmanItemPermissionsForGroupsSetRepresentation()
         );
     }
 
     public function testUpdateFolderPermissionsIsRejectedWhenTheUserCanNotManageIt(): void
     {
-        $folder = Mockery::mock(Docman_Folder::class);
-        $folder->shouldReceive('getId')->andReturn(77);
+        $folder = new Docman_Folder(['item_id' => 77]);
 
-        $this->permissions_manager->shouldReceive('userCanManage')->andReturn(false);
+        $this->permissions_manager->method('userCanManage')->willReturn(false);
 
-        $this->expectException(RestException::class);
-        $this->expectExceptionCode(403);
+        self::expectException(RestException::class);
+        self::expectExceptionCode(403);
         $this->permissions_item_updater_rest->updateFolderPermissions(
             $folder,
-            Mockery::mock(PFUser::class),
+            UserTestBuilder::buildWithDefaults(),
             new DocmanFolderPermissionsForGroupsPUTRepresentation()
         );
     }

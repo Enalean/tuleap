@@ -25,44 +25,29 @@ namespace Tuleap\Docman\REST\v1\Permissions;
 use Docman_Item;
 use Docman_PermissionsManager;
 use IPermissionsManagerNG;
-use Mockery;
-use PFUser;
+use PHPUnit\Framework\MockObject\MockObject;
 use Project;
 use ProjectManager;
 use ProjectUGroup;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
 use UGroupManager;
 
-final class DocmanItemPermissionsForGroupsBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
+final class DocmanItemPermissionsForGroupsBuilderTest extends TestCase
 {
-    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
-    /**
-     * @var Docman_PermissionsManager|Mockery\MockInterface
-     */
-    private $docman_permissions_manager;
-    /**
-     * @var Mockery\MockInterface|ProjectManager
-     */
-    private $project_manager;
-    /**
-     * @var IPermissionsManagerNG|Mockery\MockInterface
-     */
-    private $permissions_manager;
-    /**
-     * @var Mockery\MockInterface|UGroupManager
-     */
-    private $ugroup_manager;
-    /**
-     * @var DocmanItemPermissionsForGroupsBuilder
-     */
-    private $builder;
+    private Docman_PermissionsManager&MockObject $docman_permissions_manager;
+    private ProjectManager&MockObject $project_manager;
+    private IPermissionsManagerNG&MockObject $permissions_manager;
+    private UGroupManager&MockObject $ugroup_manager;
+    private DocmanItemPermissionsForGroupsBuilder $builder;
 
     protected function setUp(): void
     {
-        $this->docman_permissions_manager = Mockery::mock(Docman_PermissionsManager::class);
-        $this->project_manager            = Mockery::mock(ProjectManager::class);
-        $this->permissions_manager        = Mockery::mock(IPermissionsManagerNG::class);
-        $this->ugroup_manager             = Mockery::mock(UGroupManager::class);
+        $this->docman_permissions_manager = $this->createMock(Docman_PermissionsManager::class);
+        $this->project_manager            = $this->createMock(ProjectManager::class);
+        $this->permissions_manager        = $this->createMock(IPermissionsManagerNG::class);
+        $this->ugroup_manager             = $this->createMock(UGroupManager::class);
 
         $this->builder = new DocmanItemPermissionsForGroupsBuilder(
             $this->docman_permissions_manager,
@@ -74,29 +59,21 @@ final class DocmanItemPermissionsForGroupsBuilderTest extends \Tuleap\Test\PHPUn
 
     public function testDoNotBuildPermissionsRepresentationIfTheUserCanNotManageTheItem(): void
     {
-        $this->docman_permissions_manager->shouldReceive('userCanManage')->andReturn(false);
+        $this->docman_permissions_manager->method('userCanManage')->willReturn(false);
 
-        $item = Mockery::mock(Docman_Item::class);
-        $item->shouldReceive('getId')->andReturn(123);
-
-        $this->assertNull($this->builder->getRepresentation(
-            Mockery::mock(PFUser::class),
-            $item
+        self::assertNull($this->builder->getRepresentation(
+            UserTestBuilder::buildWithDefaults(),
+            new Docman_Item(['item_id' => 123])
         ));
     }
 
     public function testRepresentationHaveTheUGroupsForDifferentTypesOfPermissions(): void
     {
-        $this->docman_permissions_manager->shouldReceive('userCanManage')->andReturn(true);
+        $this->docman_permissions_manager->method('userCanManage')->willReturn(true);
 
         $project_id = 789;
-        $item       = Mockery::mock(Docman_Item::class);
-        $item->shouldReceive('getId')->andReturn(123);
-        $item->shouldReceive('getGroupId')->andReturn($project_id);
-
-        $project = Mockery::mock(Project::class);
-        $project->shouldReceive('getID')->andReturn($project_id);
-        $this->project_manager->shouldReceive('getProject')->andReturn($project);
+        $project    = ProjectTestBuilder::aProject()->withId($project_id)->build();
+        $this->project_manager->method('getProject')->willReturn($project);
 
         $ugroup_project_member = new ProjectUGroup([
             'ugroup_id' => ProjectUGroup::PROJECT_MEMBERS,
@@ -110,28 +87,27 @@ final class DocmanItemPermissionsForGroupsBuilderTest extends \Tuleap\Test\PHPUn
             'group_id'  => $project_id,
         ]);
 
-        $this->permissions_manager->shouldReceive('getAuthorizedUGroupIdsForProjectWithoutDefaultValues')
-            ->with($project, 123, Docman_PermissionsManager::ITEM_PERMISSION_TYPE_READ)
-            ->andReturn([]);
-        $this->permissions_manager->shouldReceive('getAuthorizedUGroupIdsForProjectWithoutDefaultValues')
-            ->with($project, 123, Docman_PermissionsManager::ITEM_PERMISSION_TYPE_WRITE)
-            ->andReturn([ProjectUGroup::PROJECT_MEMBERS, $ugroup_static_id]);
-        $this->permissions_manager->shouldReceive('getAuthorizedUGroupIdsForProjectWithoutDefaultValues')
-            ->with($project, 123, Docman_PermissionsManager::ITEM_PERMISSION_TYPE_MANAGE)
-            ->andReturn([]);
+        $this->permissions_manager->method('getAuthorizedUGroupIdsForProjectWithoutDefaultValues')
+            ->willReturnCallback(static fn(Project $project, int $object_id, string $type) => match ($type) {
+                Docman_PermissionsManager::ITEM_PERMISSION_TYPE_MANAGE,
+                Docman_PermissionsManager::ITEM_PERMISSION_TYPE_READ  => [],
+                Docman_PermissionsManager::ITEM_PERMISSION_TYPE_WRITE => [ProjectUGroup::PROJECT_MEMBERS, $ugroup_static_id],
+            });
 
-        $this->ugroup_manager->shouldReceive('getUGroup')
-            ->with($project, ProjectUGroup::PROJECT_MEMBERS)
-            ->andReturn($ugroup_project_member);
-        $this->ugroup_manager->shouldReceive('getUGroup')
-            ->with($project, $ugroup_static_id)
-            ->andReturn($ugroup_static);
+        $this->ugroup_manager->method('getUGroup')
+            ->willReturnCallback(static fn(Project $project, int $ugroup_id) => match ($ugroup_id) {
+                ProjectUGroup::PROJECT_MEMBERS => $ugroup_project_member,
+                $ugroup_static_id              => $ugroup_static,
+            });
 
-        $representation = $this->builder->getRepresentation(Mockery::mock(PFUser::class), $item);
-        $this->assertEmpty($representation->can_read);
-        $this->assertEmpty($representation->can_manage);
-        $this->assertCount(2, $representation->can_write);
-        $this->assertEquals($ugroup_project_member->getNormalizedName(), $representation->can_write[0]->label);
-        $this->assertEquals($ugroup_static->getNormalizedName(), $representation->can_write[1]->label);
+        $representation = $this->builder->getRepresentation(
+            UserTestBuilder::buildWithDefaults(),
+            new Docman_Item(['item_id' => 123, 'group_id' => $project_id]),
+        );
+        self::assertEmpty($representation->can_read);
+        self::assertEmpty($representation->can_manage);
+        self::assertCount(2, $representation->can_write);
+        self::assertEquals($ugroup_project_member->getNormalizedName(), $representation->can_write[0]->label);
+        self::assertEquals($ugroup_static->getNormalizedName(), $representation->can_write[1]->label);
     }
 }
