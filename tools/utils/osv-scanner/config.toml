@@ -90,10 +90,3 @@ id = "GHSA-g3ch-rx76-35fx" # CVE-2024-6783
 reason = "No direct exploitation path, template are not compiled at runtime. The migration to move away from Vue 2 is underway."
 
 ### TO BE FIXED
-
-# API Explorer
-## axios
-[[IgnoredVulns]]
-id = "GHSA-8hc4-vh64-cxmj" # CVE-2024-39338
-reason = "No server side usage of axios in the API Explorer so no SSRF."
-ignoreUntil = 2024-09-13
