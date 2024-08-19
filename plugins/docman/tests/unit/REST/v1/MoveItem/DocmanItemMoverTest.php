@@ -29,45 +29,33 @@ use Docman_ItemFactory;
 use Docman_PermissionsManager;
 use EventManager;
 use Luracast\Restler\RestException;
-use Mockery;
 use PFUser;
+use PHPUnit\Framework\MockObject\MockObject;
 use RuntimeException;
 use Tuleap\Docman\ItemType\DoesItemHasExpectedTypeVisitor;
 use Tuleap\Docman\Upload\Document\DocumentOngoingUploadRetriever;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
 
-final class DocmanItemMoverTest extends \Tuleap\Test\PHPUnit\TestCase
+final class DocmanItemMoverTest extends TestCase
 {
-    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
-    /**
-     * @var Docman_ItemFactory|Mockery\MockInterface
-     */
-    private $item_factory;
-    /**
-     * @var Docman_PermissionsManager|Mockery\MockInterface
-     */
-    private $permissions_manager;
-    /**
-     * @var DocmanItemMover
-     */
-    private $item_mover;
-    /**
-     * @var EventManager|Mockery\MockInterface
-     */
-    private $event_manager;
+    private Docman_ItemFactory&MockObject $item_factory;
+    private Docman_PermissionsManager&MockObject $permissions_manager;
+    private DocmanItemMover $item_mover;
+    private EventManager&MockObject $event_manager;
 
     protected function setUp(): void
     {
-        $this->item_factory        = Mockery::mock(Docman_ItemFactory::class);
-        $this->permissions_manager = Mockery::mock(Docman_PermissionsManager::class);
-        $this->event_manager       = Mockery::mock(EventManager::class);
+        $this->item_factory        = $this->createMock(Docman_ItemFactory::class);
+        $this->permissions_manager = $this->createMock(Docman_PermissionsManager::class);
+        $this->event_manager       = $this->createMock(EventManager::class);
 
         $this->item_mover = new DocmanItemMover(
             $this->item_factory,
             new BeforeMoveVisitor(
                 new DoesItemHasExpectedTypeVisitor(Docman_Item::class),
                 $this->item_factory,
-                Mockery::mock(DocumentOngoingUploadRetriever::class)
+                $this->createMock(DocumentOngoingUploadRetriever::class)
             ),
             $this->permissions_manager,
             $this->event_manager
@@ -80,29 +68,25 @@ final class DocmanItemMoverTest extends \Tuleap\Test\PHPUnit\TestCase
         $representation                        = new DocmanMoveItemRepresentation();
         $representation->destination_folder_id = $destination_folder_id;
 
-        $destination_folder = Mockery::mock(Docman_Folder::class);
-        $destination_folder->shouldReceive('getId')->andReturn($destination_folder_id);
-        $this->item_factory->shouldReceive('getItemFromDb')->with($destination_folder_id)->andReturn($destination_folder);
+        $destination_folder = new Docman_Folder(['item_id' => $destination_folder_id, 'group_id' => 102]);
+        $this->item_factory->method('getItemFromDb')->with($destination_folder_id)->willReturn($destination_folder);
 
-        $this->permissions_manager->shouldReceive('userCanAccess')->andReturn(true);
-        $this->permissions_manager->shouldReceive('userCanWrite')->andReturn(true);
+        $this->permissions_manager->method('userCanAccess')->willReturn(true);
+        $this->permissions_manager->method('userCanWrite')->willReturn(true);
 
-        $item_to_move = Mockery::mock(Docman_Item::class);
-        $item_to_move->shouldReceive('getId')->andReturn(123);
-        $item_to_move->shouldReceive('getGroupId')->andReturn(102);
-        $destination_folder->shouldReceive('getGroupId')->andReturn(102);
-        $item_to_move->shouldReceive('getParentId')->andReturn(146);
+        $item_to_move = $this->createMock(Docman_Item::class);
+        $item_to_move->method('getId')->willReturn(123);
+        $item_to_move->method('getGroupId')->willReturn(102);
+        $item_to_move->method('getParentId')->willReturn(146);
+        $item_to_move->method('accept')->with(self::isInstanceOf(BeforeMoveVisitor::class), self::anything());
 
-        $item_to_move->shouldReceive('accept')
-            ->with(Mockery::type(BeforeMoveVisitor::class), Mockery::any());
-
-        $this->item_factory->shouldReceive('moveWithDefaultOrdering')->once()->andReturn(true);
-        $this->event_manager->shouldReceive('processEvent')->with('send_notifications')->atLeast()->once();
+        $this->item_factory->expects(self::once())->method('moveWithDefaultOrdering')->willReturn(true);
+        $this->event_manager->expects(self::atLeastOnce())->method('processEvent')->with('send_notifications');
 
         $this->item_mover->moveItem(
             new DateTimeImmutable(),
             $item_to_move,
-            Mockery::mock(PFUser::class),
+            UserTestBuilder::buildWithDefaults(),
             $representation
         );
     }
@@ -112,14 +96,14 @@ final class DocmanItemMoverTest extends \Tuleap\Test\PHPUnit\TestCase
         $representation                        = new DocmanMoveItemRepresentation();
         $representation->destination_folder_id = 147;
 
-        $this->item_factory->shouldReceive('getItemFromDb')->andReturn(null);
+        $this->item_factory->method('getItemFromDb')->willReturn(null);
 
-        $this->expectException(RestException::class);
-        $this->expectExceptionCode(404);
+        self::expectException(RestException::class);
+        self::expectExceptionCode(404);
         $this->item_mover->moveItem(
             new DateTimeImmutable(),
-            Mockery::mock(Docman_Item::class),
-            Mockery::mock(PFUser::class),
+            new Docman_Item(),
+            UserTestBuilder::buildWithDefaults(),
             $representation
         );
     }
@@ -129,16 +113,16 @@ final class DocmanItemMoverTest extends \Tuleap\Test\PHPUnit\TestCase
         $representation                        = new DocmanMoveItemRepresentation();
         $representation->destination_folder_id = 147;
 
-        $this->item_factory->shouldReceive('getItemFromDb')->andReturn(Mockery::mock(Docman_Folder::class));
+        $this->item_factory->method('getItemFromDb')->willReturn(new Docman_Folder());
 
-        $this->permissions_manager->shouldReceive('userCanAccess')->andReturn(false);
+        $this->permissions_manager->method('userCanAccess')->willReturn(false);
 
-        $this->expectException(RestException::class);
-        $this->expectExceptionCode(404);
+        self::expectException(RestException::class);
+        self::expectExceptionCode(404);
         $this->item_mover->moveItem(
             new DateTimeImmutable(),
-            Mockery::mock(Docman_Item::class),
-            Mockery::mock(PFUser::class),
+            new Docman_Item(),
+            UserTestBuilder::buildWithDefaults(),
             $representation
         );
     }
@@ -149,21 +133,19 @@ final class DocmanItemMoverTest extends \Tuleap\Test\PHPUnit\TestCase
         $representation                        = new DocmanMoveItemRepresentation();
         $representation->destination_folder_id = $destination_folder_id;
 
-        $destination_folder = Mockery::mock(Docman_Folder::class);
-        $this->item_factory->shouldReceive('getItemFromDb')->with($destination_folder_id)->andReturn($destination_folder);
+        $destination_folder = new Docman_Folder(['group_id' => 103]);
+        $this->item_factory->method('getItemFromDb')->with($destination_folder_id)->willReturn($destination_folder);
 
-        $this->permissions_manager->shouldReceive('userCanAccess')->andReturn(true);
+        $this->permissions_manager->method('userCanAccess')->willReturn(true);
 
-        $item_to_move = Mockery::mock(Docman_Item::class);
-        $item_to_move->shouldReceive('getGroupId')->andReturn(102);
-        $destination_folder->shouldReceive('getGroupId')->andReturn(103);
+        $item_to_move = new Docman_Item(['group_id' => 102]);
 
-        $this->expectException(RestException::class);
-        $this->expectExceptionCode(400);
+        self::expectException(RestException::class);
+        self::expectExceptionCode(400);
         $this->item_mover->moveItem(
             new DateTimeImmutable(),
             $item_to_move,
-            Mockery::mock(PFUser::class),
+            UserTestBuilder::buildWithDefaults(),
             $representation
         );
     }
@@ -174,23 +156,19 @@ final class DocmanItemMoverTest extends \Tuleap\Test\PHPUnit\TestCase
         $representation                        = new DocmanMoveItemRepresentation();
         $representation->destination_folder_id = $destination_folder_id;
 
-        $destination_folder = Mockery::mock(Docman_Folder::class);
-        $destination_folder->shouldReceive('getId')->andReturn($destination_folder_id);
-        $this->item_factory->shouldReceive('getItemFromDb')->with($destination_folder_id)->andReturn($destination_folder);
+        $destination_folder = new Docman_Folder(['item_id' => $destination_folder_id, 'group_id' => 102]);
+        $this->item_factory->method('getItemFromDb')->with($destination_folder_id)->willReturn($destination_folder);
 
-        $this->permissions_manager->shouldReceive('userCanAccess')->andReturn(true);
+        $this->permissions_manager->method('userCanAccess')->willReturn(true);
 
-        $item_to_move = Mockery::mock(Docman_Item::class);
-        $item_to_move->shouldReceive('getGroupId')->andReturn(102);
-        $destination_folder->shouldReceive('getGroupId')->andReturn(102);
-        $item_to_move->shouldReceive('getParentId')->andReturn($destination_folder_id);
+        $item_to_move = new Docman_Item(['group_id' => 102, 'parent_id' => $destination_folder_id]);
 
-        $this->expectException(RestException::class);
-        $this->expectExceptionCode(400);
+        self::expectException(RestException::class);
+        self::expectExceptionCode(400);
         $this->item_mover->moveItem(
             new DateTimeImmutable(),
             $item_to_move,
-            Mockery::mock(PFUser::class),
+            UserTestBuilder::buildWithDefaults(),
             $representation
         );
     }
@@ -201,25 +179,20 @@ final class DocmanItemMoverTest extends \Tuleap\Test\PHPUnit\TestCase
         $representation                        = new DocmanMoveItemRepresentation();
         $representation->destination_folder_id = $destination_id;
 
-        $destination = Mockery::mock(Docman_Item::class);
-        $destination->shouldReceive('getId')->andReturn($destination_id);
-        $this->item_factory->shouldReceive('getItemFromDb')->with($destination_id)->andReturn($destination);
+        $destination = new Docman_Item(['item_id' => $destination_id, 'group_id' => 102]);
+        $this->item_factory->method('getItemFromDb')->with($destination_id)->willReturn($destination);
 
-        $this->permissions_manager->shouldReceive('userCanAccess')->andReturn(true);
-        $this->permissions_manager->shouldReceive('userCanWrite')->andReturn(true);
+        $this->permissions_manager->method('userCanAccess')->willReturn(true);
+        $this->permissions_manager->method('userCanWrite')->willReturn(true);
 
-        $item_to_move = Mockery::mock(Docman_Item::class);
-        $item_to_move->shouldReceive('getId')->andReturn(123);
-        $item_to_move->shouldReceive('getGroupId')->andReturn(102);
-        $destination->shouldReceive('getGroupId')->andReturn(102);
-        $item_to_move->shouldReceive('getParentId')->andReturn(146);
+        $item_to_move = new Docman_Item(['item_id' => 123, 'group_id' => 102, 'parent_id' => 146]);
 
-        $this->expectException(RestException::class);
-        $this->expectExceptionCode(400);
+        self::expectException(RestException::class);
+        self::expectExceptionCode(400);
         $this->item_mover->moveItem(
             new DateTimeImmutable(),
             $item_to_move,
-            Mockery::mock(PFUser::class),
+            UserTestBuilder::buildWithDefaults(),
             $representation
         );
     }
@@ -230,27 +203,24 @@ final class DocmanItemMoverTest extends \Tuleap\Test\PHPUnit\TestCase
         $representation                        = new DocmanMoveItemRepresentation();
         $representation->destination_folder_id = $destination_folder_id;
 
-        $user = Mockery::mock(PFUser::class);
+        $user = UserTestBuilder::buildWithDefaults();
 
-        $destination_folder = Mockery::mock(Docman_Folder::class);
-        $destination_folder->shouldReceive('getId')->andReturn($destination_folder_id);
-        $this->item_factory->shouldReceive('getItemFromDb')->with($destination_folder_id)->andReturn($destination_folder);
+        $destination_folder = new Docman_Folder(['item_id' => $destination_folder_id, 'group_id' => 102]);
+        $this->item_factory->method('getItemFromDb')->with($destination_folder_id)->willReturn($destination_folder);
 
-        $item_to_move    = Mockery::mock(Docman_Item::class);
+        $item_to_move    = $this->createMock(Docman_Item::class);
         $item_to_move_id = 123;
-        $item_to_move->shouldReceive('getId')->andReturn($item_to_move_id);
-        $item_to_move->shouldReceive('getGroupId')->andReturn(102);
-        $destination_folder->shouldReceive('getGroupId')->andReturn(102);
-        $item_to_move->shouldReceive('getParentId')->andReturn(146);
+        $item_to_move->method('getId')->willReturn($item_to_move_id);
+        $item_to_move->method('getGroupId')->willReturn(102);
+        $item_to_move->method('getParentId')->willReturn(146);
 
-        $this->permissions_manager->shouldReceive('userCanAccess')->andReturn(true);
-        $this->permissions_manager->shouldReceive('userCanWrite')->with($user, $item_to_move_id)->andReturn(false);
+        $this->permissions_manager->method('userCanAccess')->willReturn(true);
+        $this->permissions_manager->method('userCanWrite')->with($user, $item_to_move_id)->willReturn(false);
 
-        $item_to_move->shouldReceive('accept')
-            ->with(Mockery::type(BeforeMoveVisitor::class), Mockery::any());
+        $item_to_move->method('accept')->with(self::isInstanceOf(BeforeMoveVisitor::class), self::anything());
 
-        $this->expectException(RestException::class);
-        $this->expectExceptionCode(403);
+        self::expectException(RestException::class);
+        self::expectExceptionCode(403);
         $this->item_mover->moveItem(
             new DateTimeImmutable(),
             $item_to_move,
@@ -265,28 +235,24 @@ final class DocmanItemMoverTest extends \Tuleap\Test\PHPUnit\TestCase
         $representation                        = new DocmanMoveItemRepresentation();
         $representation->destination_folder_id = $destination_folder_id;
 
-        $user = Mockery::mock(PFUser::class);
+        $user = UserTestBuilder::buildWithDefaults();
 
-        $destination_folder = Mockery::mock(Docman_Folder::class);
-        $destination_folder->shouldReceive('getId')->andReturn($destination_folder_id);
-        $this->item_factory->shouldReceive('getItemFromDb')->with($destination_folder_id)->andReturn($destination_folder);
+        $destination_folder = new Docman_Folder(['item_id' => $destination_folder_id, 'group_id' => 102]);
+        $this->item_factory->method('getItemFromDb')->with($destination_folder_id)->willReturn($destination_folder);
 
-        $item_to_move    = Mockery::mock(Docman_Item::class);
+        $item_to_move    = $this->createMock(Docman_Item::class);
         $item_to_move_id = 123;
-        $item_to_move->shouldReceive('getId')->andReturn($item_to_move_id);
-        $item_to_move->shouldReceive('getGroupId')->andReturn(102);
-        $destination_folder->shouldReceive('getGroupId')->andReturn(102);
-        $item_to_move->shouldReceive('getParentId')->andReturn(146);
+        $item_to_move->method('getId')->willReturn($item_to_move_id);
+        $item_to_move->method('getGroupId')->willReturn(102);
+        $item_to_move->method('getParentId')->willReturn(146);
 
-        $this->permissions_manager->shouldReceive('userCanAccess')->andReturn(true);
-        $this->permissions_manager->shouldReceive('userCanWrite')->with($user, $item_to_move_id)->andReturn(true);
-        $this->permissions_manager->shouldReceive('userCanWrite')->with($user, $destination_folder_id)->andReturn(false);
+        $this->permissions_manager->method('userCanAccess')->willReturn(true);
+        $this->permissions_manager->method('userCanWrite')->willReturnCallback(static fn(PFUser $user, int $item_id) => $item_id === $item_to_move_id);
 
-        $item_to_move->shouldReceive('accept')
-            ->with(Mockery::type(BeforeMoveVisitor::class), Mockery::any());
+        $item_to_move->method('accept')->with(self::isInstanceOf(BeforeMoveVisitor::class), self::anything());
 
-        $this->expectException(RestException::class);
-        $this->expectExceptionCode(403);
+        self::expectException(RestException::class);
+        self::expectExceptionCode(403);
         $this->item_mover->moveItem(
             new DateTimeImmutable(),
             $item_to_move,
@@ -301,29 +267,25 @@ final class DocmanItemMoverTest extends \Tuleap\Test\PHPUnit\TestCase
         $representation                        = new DocmanMoveItemRepresentation();
         $representation->destination_folder_id = $destination_folder_id;
 
-        $destination_folder = Mockery::mock(Docman_Folder::class);
-        $destination_folder->shouldReceive('getId')->andReturn($destination_folder_id);
-        $this->item_factory->shouldReceive('getItemFromDb')->with($destination_folder_id)->andReturn($destination_folder);
+        $destination_folder = new Docman_Folder(['item_id' => $destination_folder_id, 'group_id' => 102]);
+        $this->item_factory->method('getItemFromDb')->with($destination_folder_id)->willReturn($destination_folder);
 
-        $this->permissions_manager->shouldReceive('userCanAccess')->andReturn(true);
-        $this->permissions_manager->shouldReceive('userCanWrite')->andReturn(true);
+        $this->permissions_manager->method('userCanAccess')->willReturn(true);
+        $this->permissions_manager->method('userCanWrite')->willReturn(true);
 
-        $item_to_move = Mockery::mock(Docman_Item::class);
-        $item_to_move->shouldReceive('getId')->andReturn(789);
-        $item_to_move->shouldReceive('getGroupId')->andReturn(102);
-        $destination_folder->shouldReceive('getGroupId')->andReturn(102);
-        $item_to_move->shouldReceive('getParentId')->andReturn(146);
+        $item_to_move = $this->createMock(Docman_Item::class);
+        $item_to_move->method('getId')->willReturn(789);
+        $item_to_move->method('getGroupId')->willReturn(102);
+        $item_to_move->method('getParentId')->willReturn(146);
+        $item_to_move->method('accept')->with(self::isInstanceOf(BeforeMoveVisitor::class), self::anything());
 
-        $item_to_move->shouldReceive('accept')
-            ->with(Mockery::type(BeforeMoveVisitor::class), Mockery::any());
-
-        $this->item_factory->shouldReceive('moveWithDefaultOrdering')->andReturn(false);
+        $this->item_factory->method('moveWithDefaultOrdering')->willReturn(false);
 
         $this->expectException(RuntimeException::class);
         $this->item_mover->moveItem(
             new DateTimeImmutable(),
             $item_to_move,
-            Mockery::mock(PFUser::class),
+            UserTestBuilder::buildWithDefaults(),
             $representation
         );
     }

@@ -31,15 +31,14 @@ use Docman_Item;
 use Docman_ItemFactory;
 use Docman_Link;
 use Docman_Wiki;
+use Generator;
 use Luracast\Restler\RestException;
-use Mockery;
 use Tuleap\Docman\ItemType\DoesItemHasExpectedTypeVisitor;
 use Tuleap\Docman\Upload\Document\DocumentOngoingUploadRetriever;
+use Tuleap\Test\PHPUnit\TestCase;
 
-final class BeforeMoveVisitorTest extends \Tuleap\Test\PHPUnit\TestCase
+final class BeforeMoveVisitorTest extends TestCase
 {
-    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
     /**
      * @dataProvider dataProviderProcessableDocumentClasses
      */
@@ -47,11 +46,11 @@ final class BeforeMoveVisitorTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->expectNotToPerformAssertions();
 
-        $item_factory = Mockery::mock(Docman_ItemFactory::class);
-        $item_factory->shouldReceive('doesTitleCorrespondToExistingDocument')->andReturn(false);
-        $item_factory->shouldReceive('isMoveable')->andReturn(true);
-        $document_ongoing_upload_retriever = Mockery::mock(DocumentOngoingUploadRetriever::class);
-        $document_ongoing_upload_retriever->shouldReceive('isThereAlreadyAnUploadOngoing')->andReturn(false);
+        $item_factory = $this->createMock(Docman_ItemFactory::class);
+        $item_factory->method('doesTitleCorrespondToExistingDocument')->willReturn(false);
+        $item_factory->method('isMoveable')->willReturn(true);
+        $document_ongoing_upload_retriever = $this->createMock(DocumentOngoingUploadRetriever::class);
+        $document_ongoing_upload_retriever->method('isThereAlreadyAnUploadOngoing')->willReturn(false);
 
         $before_move_visitor = new BeforeMoveVisitor(
             new DoesItemHasExpectedTypeVisitor($processed_document_class),
@@ -59,14 +58,11 @@ final class BeforeMoveVisitorTest extends \Tuleap\Test\PHPUnit\TestCase
             $document_ongoing_upload_retriever
         );
 
-        $destination_folder = Mockery::mock(Docman_Folder::class);
-        $destination_folder->shouldReceive('getId')->andReturn(147);
-
         $document = new $processed_document_class();
         $document->setTitle('Title');
         $document->accept(
             $before_move_visitor,
-            ['destination' => $destination_folder, 'current_time' => new DateTimeImmutable()]
+            ['destination' => new Docman_Folder(['item_id' => 147]), 'current_time' => new DateTimeImmutable()]
         );
     }
 
@@ -77,8 +73,8 @@ final class BeforeMoveVisitorTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $before_move_visitor = new BeforeMoveVisitor(
             new DoesItemHasExpectedTypeVisitor(Docman_Item::class),
-            Mockery::mock(Docman_ItemFactory::class),
-            Mockery::mock(DocumentOngoingUploadRetriever::class)
+            $this->createMock(Docman_ItemFactory::class),
+            $this->createMock(DocumentOngoingUploadRetriever::class)
         );
 
         $item = new $processed_item_class();
@@ -87,7 +83,7 @@ final class BeforeMoveVisitorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->expectExceptionCode(400);
         $item->accept(
             $before_move_visitor,
-            ['destination' => Mockery::mock(Docman_Folder::class), 'current_time' => new DateTimeImmutable()]
+            ['destination' => new Docman_Folder(), 'current_time' => new DateTimeImmutable()]
         );
     }
 
@@ -96,22 +92,22 @@ final class BeforeMoveVisitorTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     public function testProcessingOfAnItemIsRejectedIfItIsNotMovable(string $processed_item_class): void
     {
-        $item_factory = Mockery::mock(Docman_ItemFactory::class);
-        $item_factory->shouldReceive('isMoveable')->andReturn(false);
+        $item_factory = $this->createMock(Docman_ItemFactory::class);
+        $item_factory->method('isMoveable')->willReturn(false);
 
         $before_move_visitor = new BeforeMoveVisitor(
             new DoesItemHasExpectedTypeVisitor($processed_item_class),
             $item_factory,
-            Mockery::mock(DocumentOngoingUploadRetriever::class)
+            $this->createMock(DocumentOngoingUploadRetriever::class)
         );
 
         $item = new $processed_item_class();
 
-        $this->expectException(RestException::class);
-        $this->expectExceptionCode(400);
+        self::expectException(RestException::class);
+        self::expectExceptionCode(400);
         $item->accept(
             $before_move_visitor,
-            ['destination' => Mockery::mock(Docman_Folder::class), 'current_time' => new DateTimeImmutable()]
+            ['destination' => new Docman_Folder(), 'current_time' => new DateTimeImmutable()]
         );
     }
 
@@ -120,27 +116,24 @@ final class BeforeMoveVisitorTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     public function testProcessingOfADocumentIsRejectedWhenTheNameIsAlreadyUsedInTheDestinationFolder(string $processed_document_class): void
     {
-        $item_factory = Mockery::mock(Docman_ItemFactory::class);
-        $item_factory->shouldReceive('isMoveable')->andReturn(true);
-        $item_factory->shouldReceive('doesTitleCorrespondToExistingDocument')->andReturn(true);
+        $item_factory = $this->createMock(Docman_ItemFactory::class);
+        $item_factory->method('isMoveable')->willReturn(true);
+        $item_factory->method('doesTitleCorrespondToExistingDocument')->willReturn(true);
 
         $before_move_visitor = new BeforeMoveVisitor(
             new DoesItemHasExpectedTypeVisitor($processed_document_class),
             $item_factory,
-            Mockery::mock(DocumentOngoingUploadRetriever::class)
+            $this->createMock(DocumentOngoingUploadRetriever::class)
         );
 
         $document = new $processed_document_class();
         $document->setTitle('Title');
 
-        $destination_folder = Mockery::mock(Docman_Folder::class);
-        $destination_folder->shouldReceive('getId')->andReturn(147);
-
-        $this->expectException(RestException::class);
-        $this->expectExceptionCode(400);
+        self::expectException(RestException::class);
+        self::expectExceptionCode(400);
         $document->accept(
             $before_move_visitor,
-            ['destination' => $destination_folder, 'current_time' => new DateTimeImmutable()]
+            ['destination' => new Docman_Folder(['item_id' => 147]), 'current_time' => new DateTimeImmutable()]
         );
     }
 
@@ -149,11 +142,11 @@ final class BeforeMoveVisitorTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     public function testProcessingOfADocumentIsRejectedWhenTheNameIsUsedByAnOngoingUploadInTheDestinationFolder(string $processed_document_class): void
     {
-        $item_factory = Mockery::mock(Docman_ItemFactory::class);
-        $item_factory->shouldReceive('isMoveable')->andReturn(true);
-        $item_factory->shouldReceive('doesTitleCorrespondToExistingDocument')->andReturn(false);
-        $document_ongoing_upload_retriever = Mockery::mock(DocumentOngoingUploadRetriever::class);
-        $document_ongoing_upload_retriever->shouldReceive('isThereAlreadyAnUploadOngoing')->andReturn(true);
+        $item_factory = $this->createMock(Docman_ItemFactory::class);
+        $item_factory->method('isMoveable')->willReturn(true);
+        $item_factory->method('doesTitleCorrespondToExistingDocument')->willReturn(false);
+        $document_ongoing_upload_retriever = $this->createMock(DocumentOngoingUploadRetriever::class);
+        $document_ongoing_upload_retriever->method('isThereAlreadyAnUploadOngoing')->willReturn(true);
 
         $before_move_visitor = new BeforeMoveVisitor(
             new DoesItemHasExpectedTypeVisitor($processed_document_class),
@@ -164,94 +157,82 @@ final class BeforeMoveVisitorTest extends \Tuleap\Test\PHPUnit\TestCase
         $document = new $processed_document_class();
         $document->setTitle('Title');
 
-        $destination_folder = Mockery::mock(Docman_Folder::class);
-        $destination_folder->shouldReceive('getId')->andReturn(147);
-
-        $this->expectException(RestException::class);
-        $this->expectExceptionCode(409);
+        self::expectException(RestException::class);
+        self::expectExceptionCode(409);
         $document->accept(
             $before_move_visitor,
-            ['destination' => $destination_folder, 'current_time' => new DateTimeImmutable()]
+            ['destination' => new Docman_Folder(['item_id' => 147]), 'current_time' => new DateTimeImmutable()]
         );
     }
 
     public function testProcessingOfAFolderIsRejectedWhenTheNameIsAlreadyUsedByAnotherFolderInTheDestinationFolder(): void
     {
-        $item_factory = Mockery::mock(Docman_ItemFactory::class);
-        $item_factory->shouldReceive('isMoveable')->andReturn(true);
-        $item_factory->shouldReceive('doesTitleCorrespondToExistingFolder')->andReturn(true);
+        $item_factory = $this->createMock(Docman_ItemFactory::class);
+        $item_factory->method('isMoveable')->willReturn(true);
+        $item_factory->method('doesTitleCorrespondToExistingFolder')->willReturn(true);
 
         $before_move_visitor = new BeforeMoveVisitor(
             new DoesItemHasExpectedTypeVisitor(Docman_Folder::class),
             $item_factory,
-            Mockery::mock(DocumentOngoingUploadRetriever::class)
+            $this->createMock(DocumentOngoingUploadRetriever::class)
         );
 
         $folder_to_move = new Docman_Folder();
         $folder_to_move->setTitle('Title');
 
-        $destination_folder = Mockery::mock(Docman_Folder::class);
-        $destination_folder->shouldReceive('getId')->andReturn(147);
-
-        $this->expectException(RestException::class);
-        $this->expectExceptionCode(400);
+        self::expectException(RestException::class);
+        self::expectExceptionCode(400);
         $folder_to_move->accept(
             $before_move_visitor,
-            ['destination' => $destination_folder, 'current_time' => new DateTimeImmutable()]
+            ['destination' => new Docman_Folder(['item_id' => 147]), 'current_time' => new DateTimeImmutable()]
         );
     }
 
     public function testProcessingOfAFolderIsRejectedWhenTheDestinationFolderIsItself(): void
     {
-        $item_factory = Mockery::mock(Docman_ItemFactory::class);
-        $item_factory->shouldReceive('isMoveable')->andReturn(true);
-        $item_factory->shouldReceive('doesTitleCorrespondToExistingFolder')->andReturn(false);
+        $item_factory = $this->createMock(Docman_ItemFactory::class);
+        $item_factory->method('isMoveable')->willReturn(true);
+        $item_factory->method('doesTitleCorrespondToExistingFolder')->willReturn(false);
 
         $before_move_visitor = new BeforeMoveVisitor(
             new DoesItemHasExpectedTypeVisitor(Docman_Folder::class),
             $item_factory,
-            Mockery::mock(DocumentOngoingUploadRetriever::class)
+            $this->createMock(DocumentOngoingUploadRetriever::class)
         );
 
         $folder_to_move = new Docman_Folder();
         $folder_to_move->setTitle('Title');
         $folder_to_move->setId(147);
 
-        $destination_folder = Mockery::mock(Docman_Folder::class);
-        $destination_folder->shouldReceive('getId')->andReturn(147);
-
-        $this->expectException(RestException::class);
-        $this->expectExceptionCode(400);
+        self::expectException(RestException::class);
+        self::expectExceptionCode(400);
         $folder_to_move->accept(
             $before_move_visitor,
-            ['destination' => $destination_folder, 'current_time' => new DateTimeImmutable()]
+            ['destination' => new Docman_Folder(['item_id' => 147]), 'current_time' => new DateTimeImmutable()]
         );
     }
 
     public function testProcessingOfAFolderIsRejectedWhenTheDestinationFolderIsOneOfTheChild(): void
     {
-        $item_factory = Mockery::mock(Docman_ItemFactory::class);
-        $item_factory->shouldReceive('isMoveable')->andReturn(true);
-        $item_factory->shouldReceive('doesTitleCorrespondToExistingFolder')->andReturn(false);
-        $item_factory->shouldReceive('isInSubtree')->andReturn(true);
+        $item_factory = $this->createMock(Docman_ItemFactory::class);
+        $item_factory->method('isMoveable')->willReturn(true);
+        $item_factory->method('doesTitleCorrespondToExistingFolder')->willReturn(false);
+        $item_factory->method('isInSubtree')->willReturn(true);
 
         $before_move_visitor = new BeforeMoveVisitor(
             new DoesItemHasExpectedTypeVisitor(Docman_Folder::class),
             $item_factory,
-            Mockery::mock(DocumentOngoingUploadRetriever::class)
+            $this->createMock(DocumentOngoingUploadRetriever::class)
         );
 
         $folder_to_move = new Docman_Folder();
         $folder_to_move->setTitle('Title');
 
-        $destination_folder = Mockery::mock(Docman_Folder::class);
-        $destination_folder->shouldReceive('getId')->andReturn(147);
-
-        $this->expectException(RestException::class);
-        $this->expectExceptionCode(400);
+        self::expectException(RestException::class);
+        self::expectExceptionCode(400);
         $folder_to_move->accept(
             $before_move_visitor,
-            ['destination' => $destination_folder, 'current_time' => new DateTimeImmutable()]
+            ['destination' => new Docman_Folder(['item_id' => 147]), 'current_time' => new DateTimeImmutable()]
         );
     }
 
@@ -266,7 +247,7 @@ final class BeforeMoveVisitorTest extends \Tuleap\Test\PHPUnit\TestCase
         ];
     }
 
-    public static function dataProviderProcessableItemClasses(): ?\Generator
+    public static function dataProviderProcessableItemClasses(): ?Generator
     {
         yield [Docman_Folder::class];
         yield from self::dataProviderProcessableDocumentClasses();
