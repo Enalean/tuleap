@@ -20,7 +20,6 @@
 import { beforeEach, describe, expect, it } from "vitest";
 import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
-import { buildVueDompurifyHTMLDirective } from "vue-dompurify-html";
 import { IntlFormatter } from "@tuleap/date-helper";
 import { Option } from "@tuleap/option";
 import SelectableCell from "./SelectableCell.vue";
@@ -52,9 +51,6 @@ describe(`SelectableCell`, () => {
         return shallowMount(SelectableCell, {
             global: {
                 ...getGlobalTestOptions(),
-                directives: {
-                    "dompurify-html": buildVueDompurifyHTMLDirective(),
-                },
                 provide: {
                     [DATE_FORMATTER.valueOf()]: IntlFormatter("en_US", "Europe/Paris", "date"),
                     [DATE_TIME_FORMATTER.valueOf()]: IntlFormatter(
