@@ -145,7 +145,7 @@ final class StaticListSelectBuilderTest extends CrossTrackerFieldTestCase
         $result = $this->getQueryResults(
             new CrossTrackerReport(
                 1,
-                "SELECT list_field WHERE list_field = '' OR list_field != ''",
+                "SELECT list_field FROM @project = 'self' WHERE list_field = '' OR list_field != ''",
                 $this->trackers,
                 true,
             ),

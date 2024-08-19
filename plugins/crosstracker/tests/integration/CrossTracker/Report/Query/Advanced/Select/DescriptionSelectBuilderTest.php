@@ -123,7 +123,7 @@ final class DescriptionSelectBuilderTest extends CrossTrackerFieldTestCase
         $result = $this->getQueryResults(
             new CrossTrackerReport(
                 1,
-                "SELECT @description WHERE @description = '' OR @description != ''",
+                "SELECT @description FROM @project = 'self' WHERE @description = '' OR @description != ''",
                 $this->trackers,
                 true,
             ),

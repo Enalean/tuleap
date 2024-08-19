@@ -36,17 +36,17 @@ summary = 'ありがとう' or
 */
 
 query
-    = query_with_only_condition
-        / query_with_select
+    = default_query
+        / expert_query
 
-query_with_only_condition
+default_query
     = condition:or_expression {
-        return new Query([], $condition);
+        return new Query([], null, $condition);
     }
 
-query_with_select
-    = select:select _ "where"i _ condition:or_expression {
-        return new Query($select, $condition);
+expert_query
+    = select:select _ from:from _ "where"i _ condition:or_expression {
+        return new Query($select, $from, $condition);
     }
 
 select
@@ -59,6 +59,61 @@ SelectableList
     = _ "," _ selectable:Selectable { return $selectable; }
 
 Selectable = Field / Metadata
+
+from
+    = "from"i _ left:from_condition _ right:from_right? {
+        return new From($left, $right);
+    }
+
+from_right
+    = "and"i _ right:from_condition { return $right; }
+
+from_condition
+    = from_project / from_tracker
+
+from_project
+    = target:from_project_target _ condition:from_project_condition {
+        return new FromProject($target, $condition);
+    }
+
+from_project_target
+    = "@project.name" / "@project.category" / "@project"
+
+from_project_condition
+    = from_project_equal / from_project_in
+
+from_project_equal
+    = "=" _ value:String {
+        return new FromProjectEqual($value->getValue());
+    }
+
+from_project_in
+    = "in"i _ "(" _ first:String _ list:(StringList *) _ ")" {
+        array_unshift($list, $first->getValue());
+        return new FromProjectIn($list);
+    }
+
+from_tracker
+    = "@tracker.name" _ condition:from_tracker_condition {
+        return new FromTracker("@tracker.name", $condition);
+    }
+
+from_tracker_condition
+    = from_tracker_equal / from_tracker_in
+
+from_tracker_equal
+    = "=" _ value:String {
+        return new FromTrackerEqual($value->getValue());
+    }
+
+from_tracker_in
+    = "in"i _ "(" _ first:String _ list:(StringList *) _ ")" {
+        array_unshift($list, $first->getValue());
+        return new FromTrackerIn($list);
+    }
+
+StringList
+    = _ "," _ value:String { return $value->getValue(); }
 
 or_expression
     = _ expression:and_expression _ tail:or? {

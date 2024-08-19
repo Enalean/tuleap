@@ -22,30 +22,21 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Report\Query\Advanced\Grammar;
 
-final readonly class Query
+final readonly class From
 {
-    /**
-     * @param list<Selectable> $select
-     */
     public function __construct(
-        private array $select,
-        private ?From $from,
-        private Logical $condition,
+        private FromSomething $left,
+        private ?FromSomething $right,
     ) {
     }
 
-    public function getSelect(): array
+    public function getLeft(): FromSomething
     {
-        return $this->select;
+        return $this->left;
     }
 
-    public function getFrom(): ?From
+    public function getRight(): ?FromSomething
     {
-        return $this->from;
-    }
-
-    public function getCondition(): Logical
-    {
-        return $this->condition;
+        return $this->right;
     }
 }

@@ -111,7 +111,7 @@ final class StatusSelectBuilderTest extends CrossTrackerFieldTestCase
         $result = $this->getQueryResults(
             new CrossTrackerReport(
                 1,
-                "SELECT @status WHERE field_status = '' OR field_status != ''",
+                "SELECT @status FROM @project = 'self' WHERE field_status = '' OR field_status != ''",
                 $this->trackers,
                 true,
             ),

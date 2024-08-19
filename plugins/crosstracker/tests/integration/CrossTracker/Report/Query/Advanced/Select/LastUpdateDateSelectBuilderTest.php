@@ -103,7 +103,7 @@ final class LastUpdateDateSelectBuilderTest extends CrossTrackerFieldTestCase
         $result = $this->getQueryResults(
             new CrossTrackerReport(
                 1,
-                "SELECT @last_update_date WHERE @last_update_date >= '1970-01-01'",
+                "SELECT @last_update_date FROM @project = 'self' WHERE @last_update_date >= '1970-01-01'",
                 $this->trackers,
                 true,
             ),

@@ -119,7 +119,7 @@ final class NumericSelectBuilderTest extends CrossTrackerFieldTestCase
         $result = $this->getQueryResults(
             new CrossTrackerReport(
                 1,
-                "SELECT numeric_field WHERE numeric_field = '' OR numeric_field != ''",
+                "SELECT numeric_field FROM @project = 'self' WHERE numeric_field = '' OR numeric_field != ''",
                 $this->trackers,
                 true,
             ),

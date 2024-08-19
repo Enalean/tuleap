@@ -99,7 +99,7 @@ final class ArtifactIdSelectBuilderTest extends CrossTrackerFieldTestCase
         $result = $this->getQueryResults(
             new CrossTrackerReport(
                 1,
-                'SELECT @id WHERE @id >= 1',
+                'SELECT @id FROM @project = "self" WHERE @id >= 1',
                 $this->trackers,
                 true,
             ),

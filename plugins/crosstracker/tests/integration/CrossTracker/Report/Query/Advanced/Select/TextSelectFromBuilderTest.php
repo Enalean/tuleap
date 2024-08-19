@@ -122,7 +122,7 @@ final class TextSelectFromBuilderTest extends CrossTrackerFieldTestCase
         $result = $this->getQueryResults(
             new CrossTrackerReport(
                 1,
-                "SELECT text_field WHERE text_field = '' OR text_field != ''",
+                "SELECT text_field FROM @project = 'self' WHERE text_field = '' OR text_field != ''",
                 $this->trackers,
                 true,
             ),

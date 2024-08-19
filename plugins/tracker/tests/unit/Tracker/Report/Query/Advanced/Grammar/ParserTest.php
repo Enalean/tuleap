@@ -36,7 +36,7 @@ final class ParserTest extends TestCase
     {
         $parser   = new Parser();
         $result   = $parser->parse('field = "value"');
-        $expected = new Query([], new OrExpression(
+        $expected = new Query([], null, new OrExpression(
             new AndExpression(
                 new EqualComparison(new Field('field'), new SimpleValueWrapper('value')),
                 null
@@ -64,9 +64,10 @@ final class ParserTest extends TestCase
     public function testSelectField(): void
     {
         $parser   = new Parser();
-        $result   = $parser->parse('SELECT field WHERE field = "value"');
+        $result   = $parser->parse('SELECT field FROM @tracker.name = "something" WHERE field = "value"');
         $expected = new Query(
             [new Field('field')],
+            new From(new FromTracker('@tracker.name', new FromTrackerEqual('something')), null),
             new OrExpression(
                 new AndExpression(
                     new EqualComparison(new Field('field'), new SimpleValueWrapper('value')),
@@ -81,9 +82,10 @@ final class ParserTest extends TestCase
     public function testSelectAcceptMultipleField(): void
     {
         $parser   = new Parser();
-        $result   = $parser->parse('SELECT @id, @title , category WHERE @status = OPEN()');
+        $result   = $parser->parse('SELECT @id, @title , category FROM @tracker.name =   "something" WHERE @status = OPEN()');
         $expected = new Query(
             [new Metadata('id'), new Metadata('title'), new Field('category')],
+            new From(new FromTracker('@tracker.name', new FromTrackerEqual('something')), null),
             new OrExpression(
                 new AndExpression(
                     new EqualComparison(new Metadata('status'), new StatusOpenValueWrapper()),
@@ -91,6 +93,192 @@ final class ParserTest extends TestCase
                 ),
                 null
             )
+        );
+        self::assertEquals($expected, $result);
+    }
+
+    public function testFromTrackerNameEqual(): void
+    {
+        $parser   = new Parser();
+        $result   = $parser->parse('SELECT @id FROM @tracker.name = "user_story" WHERE @id >= 1');
+        $expected = new Query(
+            [new Metadata('id')],
+            new From(new FromTracker('@tracker.name', new FromTrackerEqual('user_story')), null),
+            new OrExpression(
+                new AndExpression(
+                    new GreaterThanOrEqualComparison(new Metadata('id'), new SimpleValueWrapper(1)),
+                    null,
+                ),
+                null,
+            ),
+        );
+        self::assertEquals($expected, $result);
+    }
+
+    public function testFromTrackerNameIn(): void
+    {
+        $parser   = new Parser();
+        $result   = $parser->parse('SELECT @id FROM @tracker.name In ("user_story", "bug") WHERE @id >= 1');
+        $expected = new Query(
+            [new Metadata('id')],
+            new From(new FromTracker('@tracker.name', new FromTrackerIn(['user_story', 'bug'])), null),
+            new OrExpression(
+                new AndExpression(
+                    new GreaterThanOrEqualComparison(new Metadata('id'), new SimpleValueWrapper(1)),
+                    null,
+                ),
+                null,
+            ),
+        );
+        self::assertEquals($expected, $result);
+    }
+
+    public function testFromProjectSelf(): void
+    {
+        $parser   = new Parser();
+        $result   = $parser->parse('SELECT @id FROM @project = "self" WHERE @id >= 1');
+        $expected = new Query(
+            [new Metadata('id')],
+            new From(new FromProject('@project', new FromProjectEqual('self')), null),
+            new OrExpression(
+                new AndExpression(
+                    new GreaterThanOrEqualComparison(new Metadata('id'), new SimpleValueWrapper(1)),
+                    null,
+                ),
+                null,
+            ),
+        );
+        self::assertEquals($expected, $result);
+    }
+
+    public function testFromProjectAggregated(): void
+    {
+        $parser   = new Parser();
+        $result   = $parser->parse('SELECT @id FROM @project = "aggregated" WHERE @id >= 1');
+        $expected = new Query(
+            [new Metadata('id')],
+            new From(new FromProject('@project', new FromProjectEqual('aggregated')), null),
+            new OrExpression(
+                new AndExpression(
+                    new GreaterThanOrEqualComparison(new Metadata('id'), new SimpleValueWrapper(1)),
+                    null,
+                ),
+                null,
+            ),
+        );
+        self::assertEquals($expected, $result);
+    }
+
+    public function testFromProjectNameEqual(): void
+    {
+        $parser   = new Parser();
+        $result   = $parser->parse('SELECT @id FROM @project.name = "fabulous_project" WHERE @id >= 1');
+        $expected = new Query(
+            [new Metadata('id')],
+            new From(new FromProject('@project.name', new FromProjectEqual('fabulous_project')), null),
+            new OrExpression(
+                new AndExpression(
+                    new GreaterThanOrEqualComparison(new Metadata('id'), new SimpleValueWrapper(1)),
+                    null,
+                ),
+                null,
+            ),
+        );
+        self::assertEquals($expected, $result);
+    }
+
+    public function testFromProjectNameIn(): void
+    {
+        $parser   = new Parser();
+        $result   = $parser->parse('SELECT @id FROM @project.name IN("MyAwesomeProject" ,  "fabulous_project") WHERE @id >= 1');
+        $expected = new Query(
+            [new Metadata('id')],
+            new From(new FromProject('@project.name', new FromProjectIn(['MyAwesomeProject', 'fabulous_project'])), null),
+            new OrExpression(
+                new AndExpression(
+                    new GreaterThanOrEqualComparison(new Metadata('id'), new SimpleValueWrapper(1)),
+                    null,
+                ),
+                null,
+            ),
+        );
+        self::assertEquals($expected, $result);
+    }
+
+    public function testFromProjectCategoryEqual(): void
+    {
+        $parser   = new Parser();
+        $result   = $parser->parse('SELECT @id FROM @project.category = "topic::power" WHERE @id >= 1');
+        $expected = new Query(
+            [new Metadata('id')],
+            new From(new FromProject('@project.category', new FromProjectEqual('topic::power')), null),
+            new OrExpression(
+                new AndExpression(
+                    new GreaterThanOrEqualComparison(new Metadata('id'), new SimpleValueWrapper(1)),
+                    null,
+                ),
+                null,
+            ),
+        );
+        self::assertEquals($expected, $result);
+    }
+
+    public function testFromProjectCategoryIn(): void
+    {
+        $parser   = new Parser();
+        $result   = $parser->parse('SELECT @id FROM @project.category IN("topic::sla" ,  "open_source", "active") WHERE @id >= 1');
+        $expected = new Query(
+            [new Metadata('id')],
+            new From(new FromProject('@project.category', new FromProjectIn(['topic::sla', 'open_source', 'active'])), null),
+            new OrExpression(
+                new AndExpression(
+                    new GreaterThanOrEqualComparison(new Metadata('id'), new SimpleValueWrapper(1)),
+                    null,
+                ),
+                null,
+            ),
+        );
+        self::assertEquals($expected, $result);
+    }
+
+    public function testFromTrackerAndProject(): void
+    {
+        $parser   = new Parser();
+        $result   = $parser->parse('SELECT @id FROM @tracker.name = "user_story" AND @project.name = "fabulous_project" WHERE @id >= 1');
+        $expected = new Query(
+            [new Metadata('id')],
+            new From(
+                new FromTracker('@tracker.name', new FromTrackerEqual('user_story')),
+                new FromProject('@project.name', new FromProjectEqual('fabulous_project')),
+            ),
+            new OrExpression(
+                new AndExpression(
+                    new GreaterThanOrEqualComparison(new Metadata('id'), new SimpleValueWrapper(1)),
+                    null,
+                ),
+                null,
+            ),
+        );
+        self::assertEquals($expected, $result);
+    }
+
+    public function testFromProjectAndTracker(): void
+    {
+        $parser   = new Parser();
+        $result   = $parser->parse('SELECT @id FROM @project.name = "fabulous_project" AND @tracker.name = "user_story" WHERE @id >= 1');
+        $expected = new Query(
+            [new Metadata('id')],
+            new From(
+                new FromProject('@project.name', new FromProjectEqual('fabulous_project')),
+                new FromTracker('@tracker.name', new FromTrackerEqual('user_story')),
+            ),
+            new OrExpression(
+                new AndExpression(
+                    new GreaterThanOrEqualComparison(new Metadata('id'), new SimpleValueWrapper(1)),
+                    null,
+                ),
+                null,
+            ),
         );
         self::assertEquals($expected, $result);
     }

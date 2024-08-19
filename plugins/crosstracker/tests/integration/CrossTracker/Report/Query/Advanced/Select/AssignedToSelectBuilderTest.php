@@ -123,7 +123,7 @@ final class AssignedToSelectBuilderTest extends CrossTrackerFieldTestCase
         $result = $this->getQueryResults(
             new CrossTrackerReport(
                 1,
-                "SELECT @assigned_to WHERE field_assignee = '' OR field_assignee != ''",
+                "SELECT @assigned_to FROM @project = 'self' WHERE field_assignee = '' OR field_assignee != ''",
                 $this->trackers,
                 true,
             ),

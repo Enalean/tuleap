@@ -129,7 +129,7 @@ final class PrettyTitleSelectBuilderTest extends CrossTrackerFieldTestCase
         $result = $this->getQueryResults(
             new CrossTrackerReport(
                 1,
-                "SELECT @pretty_title WHERE @title != ''",
+                "SELECT @pretty_title FROM @project = 'self' WHERE @title != ''",
                 $this->trackers,
                 true,
             ),
