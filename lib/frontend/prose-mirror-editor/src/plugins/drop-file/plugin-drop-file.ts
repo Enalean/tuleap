@@ -23,6 +23,7 @@ import { custom_schema } from "../../custom_schema";
 import { fileUploadHandler } from "./upload-file";
 import type { FileUploadOptions } from "./types";
 import type { Option } from "@tuleap/option";
+import type { GetText } from "@tuleap/gettext";
 
 function insertFile(view: EditorView, url: string): void {
     const { state, dispatch } = view;
@@ -41,31 +42,35 @@ function handleDrop(
     view: EditorView,
     event: DragEvent,
     options: FileUploadOptions,
+    gettext_provider: GetText,
 ): Promise<Option<ReadonlyArray<OngoingUpload>>> {
     const success_callback_with_insert_file = (id: number, download_href: string): void => {
         insertFile(view, download_href);
         options.onSuccessCallback(id, download_href);
     };
-    return fileUploadHandler({ ...options, onSuccessCallback: success_callback_with_insert_file })(
-        event,
-    );
+    return fileUploadHandler(
+        { ...options, onSuccessCallback: success_callback_with_insert_file },
+        gettext_provider,
+    )(event);
 }
 
-class PluginDropFile extends Plugin {
+export class PluginDropFile extends Plugin {
     ongoing_uploads: Array<{ cancel: () => void }>;
 
-    constructor(options: FileUploadOptions) {
+    constructor(options: FileUploadOptions, gettext_provider: GetText) {
         super({
             props: {
                 handleDOMEvents: {
                     drop: (view: EditorView, event: DragEvent): boolean => {
-                        handleDrop(view, event, options).then((optional_ongoing_uploads) => {
-                            optional_ongoing_uploads.apply((ongoing_uploads) => {
-                                ongoing_uploads.forEach((ongoing_upload) => {
-                                    this.ongoing_uploads.push(ongoing_upload);
+                        handleDrop(view, event, options, gettext_provider).then(
+                            (optional_ongoing_uploads) => {
+                                optional_ongoing_uploads.apply((ongoing_uploads) => {
+                                    ongoing_uploads.forEach((ongoing_upload) => {
+                                        this.ongoing_uploads.push(ongoing_upload);
+                                    });
                                 });
-                            });
-                        });
+                            },
+                        );
                         return true;
                     },
                 },
@@ -83,6 +88,9 @@ class PluginDropFile extends Plugin {
     }
 }
 
-export function initPluginDropFile(options: FileUploadOptions): PluginDropFile {
-    return new PluginDropFile(options);
+export function initPluginDropFile(
+    options: FileUploadOptions,
+    gettext_provider: GetText,
+): PluginDropFile {
+    return new PluginDropFile(options, gettext_provider);
 }

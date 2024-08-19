@@ -27,6 +27,11 @@ import * as download_file from "./helpers/upload-file-helper";
 import { okAsync } from "neverthrow";
 import { Option } from "@tuleap/option";
 import type { OngoingUpload } from "./plugin-drop-file";
+import type { GetText } from "@tuleap/gettext";
+
+const gettext_provider = {
+    gettext: vi.fn(),
+} as unknown as GetText;
 
 describe("uploadFile", () => {
     describe("uploadAndDisplayFileInEditor", () => {
@@ -78,12 +83,16 @@ describe("uploadFile", () => {
 
         describe("when file size exceeds max upload size", () => {
             it("should call error callback with max size upload exceeded error", () => {
-                uploadAndDisplayFileInEditor(mockFileList([file, other_file]), {
-                    ...options,
-                    max_size_upload: 1,
-                });
+                uploadAndDisplayFileInEditor(
+                    mockFileList([file, other_file]),
+                    {
+                        ...options,
+                        max_size_upload: 1,
+                    },
+                    gettext_provider,
+                );
                 expect(options.onErrorCallback).toHaveBeenCalledWith(
-                    new MaxSizeUploadExceededError(max_size_upload),
+                    new MaxSizeUploadExceededError(max_size_upload, gettext_provider),
                 );
             });
         });
@@ -94,13 +103,23 @@ describe("uploadFile", () => {
                     type: "application/pdf",
                 });
 
-                uploadAndDisplayFileInEditor(mockFileList([file_with_invalid_type]), options);
-                expect(options.onErrorCallback).toHaveBeenCalledWith(new InvalidFileUploadError());
+                uploadAndDisplayFileInEditor(
+                    mockFileList([file_with_invalid_type]),
+                    options,
+                    gettext_provider,
+                );
+                expect(options.onErrorCallback).toHaveBeenCalledWith(
+                    new InvalidFileUploadError(gettext_provider),
+                );
             });
         });
 
         it("should upload file on server", async () => {
-            await uploadAndDisplayFileInEditor(mockFileList([file, other_file]), options);
+            await uploadAndDisplayFileInEditor(
+                mockFileList([file, other_file]),
+                options,
+                gettext_provider,
+            );
             expect(uploadFileOnServerMock).toHaveBeenCalledWith(expect.anything(), {
                 file_size: 3,
                 file_type: "image/png",
@@ -116,13 +135,23 @@ describe("uploadFile", () => {
                         download_href: "download_href",
                     } as unknown),
                 );
-                await uploadAndDisplayFileInEditor(mockFileList([file, other_file]), options);
-                expect(options.onErrorCallback).toHaveBeenCalledWith(new UploadError());
+                await uploadAndDisplayFileInEditor(
+                    mockFileList([file, other_file]),
+                    options,
+                    gettext_provider,
+                );
+                expect(options.onErrorCallback).toHaveBeenCalledWith(
+                    new UploadError(gettext_provider),
+                );
             });
         });
 
         it("should download file with tus client", async () => {
-            await uploadAndDisplayFileInEditor(mockFileList([file, other_file]), options);
+            await uploadAndDisplayFileInEditor(
+                mockFileList([file, other_file]),
+                options,
+                gettext_provider,
+            );
             const files = new Map();
             files.set(0, { file_name: file.name, progress: 0 });
             files.set(1, { file_name: other_file.name, progress: 0 });
@@ -146,14 +175,16 @@ describe("uploadFile", () => {
             it("should call error callback with an upload error", async () => {
                 uploadFileMock.mockRejectedValueOnce(new Error());
                 await expect(() =>
-                    uploadAndDisplayFileInEditor(mockFileList([file]), options),
+                    uploadAndDisplayFileInEditor(mockFileList([file]), options, gettext_provider),
                 ).rejects.toThrowError();
-                expect(options.onErrorCallback).toHaveBeenCalledWith(new UploadError());
+                expect(options.onErrorCallback).toHaveBeenCalledWith(
+                    new UploadError(gettext_provider),
+                );
             });
         });
 
         it("should call success callback", async () => {
-            await uploadAndDisplayFileInEditor(mockFileList([file]), options);
+            await uploadAndDisplayFileInEditor(mockFileList([file]), options, gettext_provider);
             expect(options.onSuccessCallback).toHaveBeenCalledWith(1, "download_href");
         });
     });

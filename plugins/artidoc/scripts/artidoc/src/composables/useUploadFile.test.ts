@@ -22,6 +22,11 @@ import { useUploadFile } from "@/composables/useUploadFile";
 import { mockStrictInject } from "@/helpers/mock-strict-inject";
 import { UPLOAD_MAX_SIZE } from "@/max-upload-size-injecion-keys";
 import { UploadError } from "@tuleap/prose-mirror-editor";
+import type { GetText } from "@tuleap/gettext";
+
+const gettext_provider = {
+    gettext: (msgid: string) => msgid,
+} as unknown as GetText;
 
 describe("useUploadFile", () => {
     beforeEach(() => {
@@ -44,7 +49,7 @@ describe("useUploadFile", () => {
         it("should return the upload error message", () => {
             const { file_upload_options, error_message } = useUploadFile("upload_url", vi.fn());
 
-            file_upload_options.onErrorCallback(new UploadError());
+            file_upload_options.onErrorCallback(new UploadError(gettext_provider));
 
             expect(error_message.value).toBe("An error occurred during upload");
         });
