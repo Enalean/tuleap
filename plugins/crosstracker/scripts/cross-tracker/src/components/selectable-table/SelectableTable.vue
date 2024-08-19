@@ -232,6 +232,7 @@ function isLastCellOfRow(index: number, size: number): boolean {
     grid-template-rows:
         [headers] var(--tlp-x-large-spacing)
         auto;
+    font-size: 0.875rem;
 }
 
 .headers-cell {
