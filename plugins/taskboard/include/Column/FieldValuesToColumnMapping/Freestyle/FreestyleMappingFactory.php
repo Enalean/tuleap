@@ -24,23 +24,16 @@ namespace Tuleap\Taskboard\Column\FieldValuesToColumnMapping\Freestyle;
 
 use Cardwall_Column;
 use Tracker_FormElement_Field_Selectbox;
-use Tracker_FormElementFactory;
 use Tuleap\Taskboard\Column\FieldValuesToColumnMapping\EmptyMappedValues;
 use Tuleap\Taskboard\Column\FieldValuesToColumnMapping\MappedValues;
 use Tuleap\Taskboard\Column\FieldValuesToColumnMapping\MappedValuesInterface;
 use Tuleap\Taskboard\Tracker\TaskboardTracker;
+use Tuleap\Tracker\FormElement\Field\ListFields\RetrieveUsedListField;
 
 class FreestyleMappingFactory
 {
-    /** @var FreestyleMappingDao */
-    private $dao;
-    /** @var Tracker_FormElementFactory */
-    private $form_element_factory;
-
-    public function __construct(FreestyleMappingDao $dao, Tracker_FormElementFactory $form_element_factory)
+    public function __construct(private FreestyleMappingDao $dao, private RetrieveUsedListField $list_field_retriever)
     {
-        $this->dao                  = $dao;
-        $this->form_element_factory = $form_element_factory;
     }
 
     public function getMappedField(TaskboardTracker $taskboard_tracker): ?Tracker_FormElement_Field_Selectbox
@@ -49,7 +42,7 @@ class FreestyleMappingFactory
         if ($field_id === null) {
             return null;
         }
-        $field = $this->form_element_factory->getUsedListFieldById($taskboard_tracker->getTracker(), $field_id);
+        $field = $this->list_field_retriever->getUsedListFieldById($taskboard_tracker->getTracker(), $field_id);
         if ($field instanceof \Tracker_FormElement_Field_Selectbox) {
             return $field;
         }

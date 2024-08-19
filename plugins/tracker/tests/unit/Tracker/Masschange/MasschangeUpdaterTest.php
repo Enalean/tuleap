@@ -32,7 +32,6 @@ use Tracker_Artifact_Changeset;
 use Tracker_Artifact_ChangesetValue;
 use Tracker_ArtifactDao;
 use Tracker_ArtifactFactory;
-use Tracker_FormElement_Field_List;
 use Tracker_FormElementFactory;
 use Tracker_MasschangeDataValueExtractor;
 use Tracker_Report;
@@ -40,6 +39,7 @@ use Tracker_Rule_List;
 use Tracker_RuleFactory;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
 
 final class MasschangeUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -192,13 +192,10 @@ final class MasschangeUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
         $rule_2->shouldReceive('getTargetFieldId')->andReturn(3203);
         $rules_factory->shouldReceive('getAllListRulesByTrackerWithOrder')->andReturn([$rule_1, $rule_2]);
 
-        $form_element_factory = Mockery::mock(Tracker_FormElementFactory::class);
-        $source_field_rule1   = Mockery::mock(Tracker_FormElement_Field_List::class);
-        $source_field_rule1->shouldReceive('getId')->andReturn(3201);
-        $source_and_target_field_both_rules = Mockery::mock(Tracker_FormElement_Field_List::class);
-        $source_and_target_field_both_rules->shouldReceive('getId')->andReturn(3202);
-        $target_field_rule2 = Mockery::mock(Tracker_FormElement_Field_List::class);
-        $target_field_rule2->shouldReceive('getId')->andReturn(3203);
+        $form_element_factory               = Mockery::mock(Tracker_FormElementFactory::class);
+        $source_field_rule1                 = ListFieldBuilder::aListField(3201)->build();
+        $source_and_target_field_both_rules = ListFieldBuilder::aListField(3202)->build();
+        $target_field_rule2                 = ListFieldBuilder::aListField(3203)->build();
         $form_element_factory->shouldReceive('getUsedListFieldById')->with($tracker, 3201)->andReturn($source_field_rule1);
         $form_element_factory->shouldReceive('getUsedListFieldById')->with($tracker, 3202)->andReturn($source_and_target_field_both_rules);
         $form_element_factory->shouldReceive('getUsedListFieldById')->with($tracker, 3203)->andReturn($target_field_rule2);
@@ -211,15 +208,12 @@ final class MasschangeUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $changeset_value_source_rule1 = Mockery::mock(Tracker_Artifact_ChangesetValue::class);
         $changeset_value_source_rule1->shouldReceive('getValue')->andReturn([321]);
-        $source_field_rule1->shouldReceive('isNone')->andReturn(false);
         $last_changeset->shouldReceive('getValue')->with($source_field_rule1)->andReturn($changeset_value_source_rule1);
         $changeset_value_source_and_target = Mockery::mock(Tracker_Artifact_ChangesetValue::class);
         $changeset_value_source_and_target->shouldReceive('getValue')->andReturn('');
-        $source_and_target_field_both_rules->shouldReceive('isNone')->andReturn(true);
         $last_changeset->shouldReceive('getValue')->with($source_and_target_field_both_rules)->andReturn($changeset_value_source_and_target);
         $target_value_rule2 = Mockery::mock(Tracker_Artifact_ChangesetValue::class);
         $target_value_rule2->shouldReceive('getValue')->andReturn([333, 334]);
-        $target_field_rule2->shouldReceive('isNone')->andReturn(false);
         $last_changeset->shouldReceive('getValue')->with($target_field_rule2)->andReturn($target_value_rule2);
 
         $artifact->shouldReceive('createNewChangeset')->with(
