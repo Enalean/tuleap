@@ -19,7 +19,7 @@
   -->
 <template>
     <div>
-        <span v-if="upload_progress > 0" class="tlp-alert-info">{{ upload_message }}</span>
+        <span v-if="is_in_progress" class="tlp-alert-info">{{ upload_message }}</span>
         <span v-else-if="message" class="tlp-alert-danger">
             {{ message }}
         </span>
@@ -30,26 +30,25 @@ import { computed, toRefs, watch } from "vue";
 import { useGettext } from "vue3-gettext";
 
 const { $gettext, interpolate } = useGettext();
+export type NotificationBarProps = {
+    upload_progress?: number;
+    is_in_progress: boolean;
+    message?: string | null;
+    reset_progress: () => void;
+};
 
-const props = withDefaults(
-    defineProps<{
-        upload_progress?: number;
-        message?: string | null;
-        reset_progress: () => void;
-    }>(),
-    {
-        upload_progress: 0,
-        message: "",
-    },
-);
+const props = withDefaults(defineProps<NotificationBarProps>(), {
+    upload_progress: 0,
+    message: "",
+});
 
-const { upload_progress } = toRefs(props);
+const { upload_progress, is_in_progress } = toRefs(props);
 
 watch(upload_progress, () => {
     if (upload_progress.value === 100) {
         setTimeout(() => {
             props.reset_progress();
-        });
+        }, 1_500);
     }
 });
 

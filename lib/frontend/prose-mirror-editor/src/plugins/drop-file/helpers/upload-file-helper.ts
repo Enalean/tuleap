@@ -30,8 +30,9 @@ export function uploadFile(
     upload_href: string,
     onProgressCallback: FileUploadOptions["onProgressCallback"],
 ): Promise<Option<OngoingUpload>> {
+    let uploader: Upload | null;
     return new Promise((resolve, reject): void => {
-        const uploader = new Upload(file, {
+        uploader = new Upload(file, {
             uploadUrl: upload_href,
             metadata: {
                 filename: file.name,
@@ -49,13 +50,14 @@ export function uploadFile(
             },
         });
         uploader.start();
-
-        resolve(
-            Option.fromValue({
-                cancel: () => {
-                    uploader.abort();
-                },
-            }),
-        );
+    }).then(() => {
+        if (!uploader) {
+            throw new Error("The uploader has not been initialized properly.");
+        }
+        return Option.fromValue({
+            cancel: () => {
+                uploader?.abort();
+            },
+        });
     });
 }

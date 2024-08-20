@@ -33,6 +33,7 @@ export type UseUploadFileType = {
     file_upload_options: FileUploadOptions;
     error_message: Ref<string | null>;
     progress: Ref<number>;
+    is_in_progress: Ref<boolean>;
     resetProgressCallback: () => void;
 };
 
@@ -43,6 +44,7 @@ export function useUploadFile(
     const error_message: Ref<string | null> = ref(null);
     const upload_max_size = strictInject(UPLOAD_MAX_SIZE);
     const progress = ref(0);
+    const is_in_progress = ref(false);
     const upload_files: Ref<Map<number, OnGoingUploadFile>> = ref(new Map());
 
     const onErrorCallback = (error: UploadError | MaxSizeUploadExceededError): void => {
@@ -54,10 +56,12 @@ export function useUploadFile(
     };
 
     const onProgressCallback = (global_progress: number): void => {
+        is_in_progress.value = true;
         progress.value = global_progress;
     };
     const resetProgressCallback = (): void => {
         progress.value = 0;
+        is_in_progress.value = false;
     };
 
     const file_upload_options: FileUploadOptions = {
@@ -68,5 +72,5 @@ export function useUploadFile(
         onSuccessCallback,
         onProgressCallback,
     };
-    return { file_upload_options, error_message, progress, resetProgressCallback };
+    return { file_upload_options, error_message, progress, is_in_progress, resetProgressCallback };
 }
