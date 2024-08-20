@@ -84,15 +84,16 @@ describe("Document filename pattern", () => {
         cy.get("[data-test=document-dropdown-create-new-version-button]").click({ force: true });
         cy.wait("@loadVersions");
 
-        cy.get("[data-test=document-history]").find("tr").should("have.length", 6);
-
-        cy.get("[data-test=download-version]").first().click();
-        cy.get("[data-test=version-file-name]")
-            .eq(1)
-            .then((version_one) => {
-                const download_folder = Cypress.config("downloadsFolder");
-                cy.readFile(download_folder + "/" + version_one.html()).should("exist");
-                cy.readFile(download_folder + "/" + version_one.html()).should("eq", "ee\n");
+        cy.get("[data-test=document-history-file]").should("have.length", 5);
+        cy.get("[data-test=document-history-file]")
+            .first()
+            .within(() => {
+                cy.get("[data-test=download-version]").click();
+                cy.get("[data-test=version-file-name]").then((version_one) => {
+                    const download_folder = Cypress.config("downloadsFolder");
+                    cy.readFile(download_folder + "/" + version_one.html()).should("exist");
+                    cy.readFile(download_folder + "/" + version_one.html()).should("eq", "ee\n");
+                });
             });
 
         cy.log("Go to all versions page");
