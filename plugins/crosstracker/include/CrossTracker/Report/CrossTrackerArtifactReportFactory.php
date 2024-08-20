@@ -97,7 +97,7 @@ final readonly class CrossTrackerArtifactReportFactory
             );
         } else {
             if ($report->isExpert()) {
-                return $this->getArtifactsMatchingExpertQueryWithSelect(
+                return $this->getArtifactsMatchingExpertQuery(
                     $report,
                     $current_user,
                     $limit,
@@ -105,7 +105,7 @@ final readonly class CrossTrackerArtifactReportFactory
                 );
             }
 
-            return $this->getArtifactsMatchingExpertQuery(
+            return $this->getArtifactsMatchingDefaultQuery(
                 $report,
                 $current_user,
                 $limit,
@@ -138,7 +138,7 @@ final readonly class CrossTrackerArtifactReportFactory
      * @throws SelectablesAreInvalidException
      * @throws FromIsInvalidException
      */
-    private function getArtifactsMatchingExpertQuery(
+    private function getArtifactsMatchingDefaultQuery(
         CrossTrackerReport $report,
         PFUser $current_user,
         int $limit,
@@ -166,7 +166,7 @@ final readonly class CrossTrackerArtifactReportFactory
      * @throws SelectablesDoNotExistException
      * @throws FromIsInvalidException
      */
-    private function getArtifactsMatchingExpertQueryWithSelect(
+    private function getArtifactsMatchingExpertQuery(
         CrossTrackerReport $report,
         PFUser $current_user,
         int $limit,
