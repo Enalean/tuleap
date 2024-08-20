@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Report\Query\Advanced;
 
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\From;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Logical;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Selectable;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\SyntaxError;
@@ -40,12 +41,14 @@ final readonly class ExpertQueryValidator
      * @throws SyntaxError
      * @throws SelectablesDoNotExistException
      * @throws SelectablesAreInvalidException
+     * @throws FromIsInvalidException
      */
     public function validateExpertQuery(
         string $expert_query,
         bool $expert_mode,
         IBuildInvalidSearchablesCollection $invalid_searchables_collection_builder,
         IBuildInvalidSelectablesCollection $invalid_selectables_collection_builder,
+        IBuildInvalidFromCollection $invalid_from_collection_builder,
     ): void {
         $query     = $this->parser->parse($expert_query);
         $condition = $query->getCondition();
@@ -53,6 +56,7 @@ final readonly class ExpertQueryValidator
 
         $this->checkSearchables($condition, $invalid_searchables_collection_builder);
         $this->checkSelectables($query->getSelect(), $expert_mode, $invalid_selectables_collection_builder);
+        $this->checkFrom($query->getFrom(), $expert_mode, $invalid_from_collection_builder);
     }
 
     /**
@@ -100,6 +104,33 @@ final readonly class ExpertQueryValidator
 
         if ($invalid_selectables_collection->getInvalidSelectablesErrors() !== []) {
             throw new SelectablesAreInvalidException($invalid_selectables_collection->getInvalidSelectablesErrors());
+        }
+    }
+
+    /**
+     * @throws SyntaxError
+     * @throws FromIsInvalidException
+     */
+    private function checkFrom(
+        ?From $from,
+        bool $expert_mode,
+        IBuildInvalidFromCollection $invalid_from_collection_builder,
+    ): void {
+        if ($expert_mode) {
+            if ($from === null) { // From is mandatory in expert mode
+                throw new SyntaxError('', '', '', 0, 0, 0);
+            }
+
+            $invalid_from_collection = $invalid_from_collection_builder->buildCollectionOfInvalidFrom($from);
+            if ($invalid_from_collection->getInvalidFrom() !== []) {
+                throw new FromIsInvalidException($invalid_from_collection->getInvalidFrom());
+            }
+
+            return;
+        }
+
+        if ($from !== null) { // From is invalid in default mode
+            throw new SyntaxError('', '', '', 0, 0, 0);
         }
     }
 }
