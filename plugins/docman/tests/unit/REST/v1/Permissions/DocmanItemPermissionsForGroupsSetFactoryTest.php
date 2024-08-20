@@ -24,39 +24,27 @@ namespace Tuleap\Docman\REST\v1\Permissions;
 
 use Docman_Item;
 use Luracast\Restler\RestException;
-use Mockery;
+use PHPUnit\Framework\MockObject\MockObject;
 use ProjectManager;
 use ProjectUGroup;
 use Tuleap\Docman\Permissions\PermissionItemUpdater;
 use Tuleap\Project\REST\UserGroupRetriever;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
 use UGroupManager;
 
-final class DocmanItemPermissionsForGroupsSetFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
+final class DocmanItemPermissionsForGroupsSetFactoryTest extends TestCase
 {
-    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|UGroupManager
-     */
-    private $ugroup_manager;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|UserGroupRetriever
-     */
-    private $ugroup_retriever;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ProjectManager
-     */
-    private $project_manager;
-    /**
-     * @var DocmanItemPermissionsForGroupsSetFactory
-     */
-    private $permissions_for_groups_set_factory;
+    private UGroupManager&MockObject $ugroup_manager;
+    private UserGroupRetriever&MockObject $ugroup_retriever;
+    private ProjectManager&MockObject $project_manager;
+    private DocmanItemPermissionsForGroupsSetFactory $permissions_for_groups_set_factory;
 
     protected function setUp(): void
     {
-        $this->ugroup_manager   = Mockery::mock(UGroupManager::class);
-        $this->ugroup_retriever = Mockery::mock(UserGroupRetriever::class);
-        $this->project_manager  = Mockery::mock(ProjectManager::class);
+        $this->ugroup_manager   = $this->createMock(UGroupManager::class);
+        $this->ugroup_retriever = $this->createMock(UserGroupRetriever::class);
+        $this->project_manager  = $this->createMock(ProjectManager::class);
 
         $this->permissions_for_groups_set_factory = new DocmanItemPermissionsForGroupsSetFactory(
             $this->ugroup_manager,
@@ -67,7 +55,7 @@ final class DocmanItemPermissionsForGroupsSetFactoryTest extends \Tuleap\Test\PH
 
     public function testTransformationFromRepresentationWithValidData(): void
     {
-        $item                                       = Mockery::mock(Docman_Item::class);
+        $item                                       = new Docman_Item(['item_id' => 18, 'group_id' => 102]);
         $representation                             = new DocmanItemPermissionsForGroupsSetRepresentation();
         $register_users_read_representation         = new MinimalUserGroupRepresentationForUpdate();
         $project_member_write_representation        = new MinimalUserGroupRepresentationForUpdate();
@@ -79,31 +67,33 @@ final class DocmanItemPermissionsForGroupsSetFactoryTest extends \Tuleap\Test\PH
         $user_group_management_representation_2->id = '137';
         $representation->can_read                   = [$register_users_read_representation, $project_member_write_representation];
         $representation->can_write                  = [$project_member_write_representation];
-        $representation->can_manage                 = [
-            $user_group_management_representation_2,
-            $user_group_management_representation_1,
-        ];
+        $representation->can_manage                 = [$user_group_management_representation_2, $user_group_management_representation_1];
 
-        $item->shouldReceive('getId')->andReturn(18);
-        $item->shouldReceive('getGroupId')->andReturn(102);
-        $this->project_manager->shouldReceive('getProject')->andReturn(Mockery::mock(\Project::class));
+        $this->project_manager->method('getProject')->willReturn(ProjectTestBuilder::aProject()->build());
 
-        $ugroup_manager_1 = $this->getUGroupMock($user_group_management_representation_1->id, 136, 102, true);
-        $ugroup_manager_2 = $this->getUGroupMock($user_group_management_representation_2->id, 137, 102, true);
-        $project_members  = $this->getUGroupMock($project_member_write_representation->id, ProjectUGroup::PROJECT_MEMBERS, 102, false);
-        $registered_users = $this->getUGroupMock($register_users_read_representation->id, ProjectUGroup::REGISTERED, null, false);
-
-        $this->ugroup_manager->shouldReceive('getUGroups')->andReturn([
+        $ugroup_manager_1 = $this->getUGroupMock(136, 102, true);
+        $ugroup_manager_2 = $this->getUGroupMock(137, 102, true);
+        $project_members  = $this->getUGroupMock(ProjectUGroup::PROJECT_MEMBERS, 102, false);
+        $registered_users = $this->getUGroupMock(ProjectUGroup::REGISTERED, null, false);
+        $project_u_group  = $this->getUGroupMock(ProjectUGroup::PROJECT_ADMIN, 102, false);
+        $this->ugroup_retriever->method('getExistingUserGroup')->willReturnCallback(static fn(string $id) => match ($id) {
+            $user_group_management_representation_1->id => $ugroup_manager_1,
+            $user_group_management_representation_2->id => $ugroup_manager_2,
+            $project_member_write_representation->id    => $project_members,
+            $register_users_read_representation->id     => $registered_users,
+            '102_' . ProjectUGroup::PROJECT_ADMIN       => $project_u_group,
+        });
+        $this->ugroup_manager->method('getUGroups')->willReturn([
             $ugroup_manager_1,
             $ugroup_manager_2,
             $project_members,
             $registered_users,
-            $this->getUGroupMock('102_' . ProjectUGroup::PROJECT_ADMIN, ProjectUGroup::PROJECT_ADMIN, 102, false),
+            $project_u_group,
         ]);
 
         $permissions_set = $this->permissions_for_groups_set_factory->fromRepresentation($item, $representation);
 
-        $this->assertEquals(
+        self::assertEquals(
             [
                 ProjectUGroup::REGISTERED      => PermissionItemUpdater::PERMISSION_DEFINITION_READ,
                 ProjectUGroup::PROJECT_MEMBERS => PermissionItemUpdater::PERMISSION_DEFINITION_WRITE,
@@ -117,78 +107,72 @@ final class DocmanItemPermissionsForGroupsSetFactoryTest extends \Tuleap\Test\PH
 
     public function testTransformationFromRepresentationFailsWhenAnUserGroupDoesNotExist(): void
     {
-        $item                          = Mockery::mock(Docman_Item::class);
+        $item                          = new Docman_Item(['item_id' => 18, 'group_id' => 102]);
         $representation                = new DocmanItemPermissionsForGroupsSetRepresentation();
         $user_group_representation     = new MinimalUserGroupRepresentationForUpdate();
         $user_group_representation->id = '999';
         $representation->can_read      = [$user_group_representation];
 
-        $item->shouldReceive('getId')->andReturn(18);
-        $item->shouldReceive('getGroupId')->andReturn(102);
-        $this->project_manager->shouldReceive('getProject')->andReturn(Mockery::mock(\Project::class));
+        $this->project_manager->method('getProject')->willReturn(ProjectTestBuilder::aProject()->build());
 
-        $this->ugroup_manager->shouldReceive('getUGroups')->andReturn([]);
-        $ugroup_not_found = Mockery::mock(ProjectUGroup::class);
-        $ugroup_not_found->shouldReceive('getId')->andReturn(0);
-        $this->ugroup_retriever->shouldReceive('getExistingUserGroup')
-            ->with($user_group_representation->id)->andThrow(new RestException(404));
+        $this->ugroup_manager->method('getUGroups')->willReturn([]);
+        $ugroup_not_found = $this->createMock(ProjectUGroup::class);
+        $ugroup_not_found->method('getId')->willReturn(0);
+        $this->ugroup_retriever->method('getExistingUserGroup')
+            ->with($user_group_representation->id)->willThrowException(new RestException(404));
 
-        $this->expectException(RestException::class);
-        $this->expectExceptionCode(400);
+        self::expectException(RestException::class);
+        self::expectExceptionCode(400);
 
         $this->permissions_for_groups_set_factory->fromRepresentation($item, $representation);
     }
 
     public function testTransformationFromRepresentationFailsWhenAnUserGroupIsFromADifferentProject(): void
     {
-        $item                          = Mockery::mock(Docman_Item::class);
+        $item                          = new Docman_Item(['item_id' => 18, 'group_id' => 102]);
         $representation                = new DocmanItemPermissionsForGroupsSetRepresentation();
         $user_group_representation     = new MinimalUserGroupRepresentationForUpdate();
         $user_group_representation->id = '103_3';
         $representation->can_write     = [$user_group_representation];
 
-        $item->shouldReceive('getId')->andReturn(18);
-        $item->shouldReceive('getGroupId')->andReturn(102);
-        $this->project_manager->shouldReceive('getProject')->andReturn(Mockery::mock(\Project::class));
+        $this->project_manager->method('getProject')->willReturn(ProjectTestBuilder::aProject()->build());
 
-        $this->ugroup_manager->shouldReceive('getUGroups')->andReturn([]);
-        $this->getUGroupMock($user_group_representation->id, 3, 103, false);
+        $this->ugroup_manager->method('getUGroups')->willReturn([]);
+        $ugroup = $this->getUGroupMock(3, 103, false);
+        $this->ugroup_retriever->method('getExistingUserGroup')->with($user_group_representation->id)->willReturn($ugroup);
 
-        $this->expectException(RestException::class);
-        $this->expectExceptionCode(400);
+        self::expectException(RestException::class);
+        self::expectExceptionCode(400);
 
         $this->permissions_for_groups_set_factory->fromRepresentation($item, $representation);
     }
 
     public function testTransformationFromRepresentationFailsWhenAnIncorrectUGroupIdentifierIsGiven(): void
     {
-        $item                          = Mockery::mock(Docman_Item::class);
+        $item                          = new Docman_Item(['item_id' => 77, 'group_id' => 102]);
         $representation                = new DocmanItemPermissionsForGroupsSetRepresentation();
         $user_group_representation     = new MinimalUserGroupRepresentationForUpdate();
         $user_group_representation->id = 'invalid_ugroup_identifier';
         $representation->can_read      = [$user_group_representation];
 
-        $item->shouldReceive('getId')->andReturn(77);
-        $item->shouldReceive('getGroupId')->andReturn(102);
-        $this->project_manager->shouldReceive('getProject')->andReturn(Mockery::mock(\Project::class));
+        $this->project_manager->method('getProject')->willReturn(ProjectTestBuilder::aProject()->build());
 
-        $this->ugroup_manager->shouldReceive('getUGroups')->andReturn([]);
-        $this->ugroup_retriever->shouldReceive('getExistingUserGroup')
-            ->with($user_group_representation->id)->andThrow(new RestException(400));
+        $this->ugroup_manager->method('getUGroups')->willReturn([]);
+        $this->ugroup_retriever->method('getExistingUserGroup')
+            ->with($user_group_representation->id)->willThrowException(new RestException(400));
 
-        $this->expectException(RestException::class);
-        $this->expectExceptionCode(400);
+        self::expectException(RestException::class);
+        self::expectExceptionCode(400);
 
         $this->permissions_for_groups_set_factory->fromRepresentation($item, $representation);
     }
 
-    private function getUGroupMock(string $identifier, int $id, ?int $project_id, bool $is_static): ProjectUGroup
+    private function getUGroupMock(int $id, ?int $project_id, bool $is_static): ProjectUGroup
     {
-        $ugroup_mock = Mockery::mock(ProjectUGroup::class);
-        $ugroup_mock->shouldReceive('getId')->andReturn($id);
-        $ugroup_mock->shouldReceive('isStatic')->andReturn($is_static);
-        $ugroup_mock->shouldReceive('getProjectId')->andReturn($project_id);
-        $this->ugroup_retriever->shouldReceive('getExistingUserGroup')->with($identifier)->andReturn($ugroup_mock);
+        $ugroup_mock = $this->createMock(ProjectUGroup::class);
+        $ugroup_mock->method('getId')->willReturn($id);
+        $ugroup_mock->method('isStatic')->willReturn($is_static);
+        $ugroup_mock->method('getProjectId')->willReturn($project_id);
         return $ugroup_mock;
     }
 }
