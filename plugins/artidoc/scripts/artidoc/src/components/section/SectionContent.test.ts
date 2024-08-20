@@ -25,10 +25,12 @@ import ArtifactSectionFactory from "@/helpers/artifact-section.factory";
 import SectionHeader from "./header/SectionHeader.vue";
 import SectionDescription from "./description/SectionDescription.vue";
 import * as editor from "@/composables/useSectionEditor";
+import * as upload_file from "@/composables/useUploadFile";
 import SectionHeaderSkeleton from "./header/SectionHeaderSkeleton.vue";
 import { InjectedSectionsStoreStub } from "@/helpers/stubs/InjectSectionsStoreStub";
 import { SectionEditorStub } from "@/helpers/stubs/SectionEditorStub";
 import { SECTIONS_STORE } from "@/stores/sections-store-injection-key";
+import { UploadFileStub } from "@/helpers/stubs/UploadFileStub";
 
 describe("SectionContent", () => {
     describe("when the sections are loaded", () => {
@@ -36,6 +38,9 @@ describe("SectionContent", () => {
         beforeAll(() => {
             vi.spyOn(editor, "useSectionEditor").mockReturnValue(
                 SectionEditorStub.withEditableSection(),
+            );
+            vi.spyOn(upload_file, "useUploadFile").mockReturnValue(
+                UploadFileStub.uploadNotInProgress(),
             );
 
             wrapper = shallowMount(SectionContent, {
@@ -67,6 +72,9 @@ describe("SectionContent", () => {
         beforeAll(() => {
             vi.spyOn(editor, "useSectionEditor").mockReturnValue(
                 SectionEditorStub.withEditableSection(),
+            );
+            vi.spyOn(upload_file, "useUploadFile").mockReturnValue(
+                UploadFileStub.uploadNotInProgress(),
             );
 
             wrapper = shallowMount(SectionContent, {

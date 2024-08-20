@@ -66,9 +66,15 @@ describe("useSectionEditor", () => {
 
     describe("editor_state", () => {
         it("should return editor states", () => {
-            const { editor_state } = useSectionEditor(section, merge_artifacts, set_waiting_list);
+            const { editor_state } = useSectionEditor(
+                section,
+                merge_artifacts,
+                set_waiting_list,
+                ref(true),
+            );
 
             expect(editor_state.is_image_upload_allowed.value).toEqual(true);
+            expect(editor_state.is_save_allowed.value).toEqual(false);
             expect(editor_state.is_section_editable.value).toEqual(true);
             expect(editor_state.is_section_in_edit_mode.value).toEqual(false);
             expect(editor_state.isJustRefreshed()).toEqual(false);
@@ -104,6 +110,7 @@ describe("useSectionEditor", () => {
                     section,
                     merge_artifacts,
                     set_waiting_list,
+                    ref(false),
                 );
                 expect(editor_state.is_section_in_edit_mode.value).toEqual(false);
                 expect(editors_collection.hasAtLeastOneEditorOpened()).toBe(false);
@@ -121,6 +128,7 @@ describe("useSectionEditor", () => {
                     section,
                     merge_artifacts,
                     set_waiting_list,
+                    ref(false),
                 );
                 editor_actions.saveEditor();
 
@@ -133,6 +141,7 @@ describe("useSectionEditor", () => {
                     section,
                     merge_artifacts,
                     set_waiting_list,
+                    ref(false),
                 );
                 editor_actions.forceSaveEditor();
 
@@ -145,6 +154,7 @@ describe("useSectionEditor", () => {
                     section,
                     merge_artifacts,
                     set_waiting_list,
+                    ref(false),
                 );
                 editor_actions.refreshSection();
 
@@ -157,6 +167,7 @@ describe("useSectionEditor", () => {
                     section,
                     merge_artifacts,
                     set_waiting_list,
+                    ref(false),
                 );
                 editor_state.is_section_in_edit_mode.value = true;
                 editor_section_content.inputCurrentDescription("the description changed");
@@ -176,6 +187,7 @@ describe("useSectionEditor", () => {
                         PendingArtifactSectionFactory.create(),
                         merge_artifacts,
                         set_waiting_list,
+                        ref(false),
                     );
                     editor_actions.cancelEditor(null);
 
@@ -188,7 +200,12 @@ describe("useSectionEditor", () => {
         it("should enable editor", () => {
             const editor_error_handler = vi.spyOn(editorError, "useEditorErrors");
 
-            const { editor_error } = useSectionEditor(section, merge_artifacts, set_waiting_list);
+            const { editor_error } = useSectionEditor(
+                section,
+                merge_artifacts,
+                set_waiting_list,
+                ref(false),
+            );
             expect(editor_error_handler).toHaveBeenCalledOnce();
             expect(editor_error).toBeDefined();
         });
@@ -201,6 +218,7 @@ describe("useSectionEditor", () => {
                 section,
                 merge_artifacts,
                 set_waiting_list,
+                ref(false),
             );
             expect(editor_content).toHaveBeenCalledOnce();
             expect(editor_section_content).toBeDefined();

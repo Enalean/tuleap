@@ -20,6 +20,7 @@
 import { describe, expect, it } from "vitest";
 import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
+import { computed } from "vue";
 import type { ComponentPublicInstance } from "vue";
 import { createGettext } from "vue3-gettext";
 import { SectionEditorStub } from "@/helpers/stubs/SectionEditorStub";
@@ -55,6 +56,35 @@ describe("SectionEditorSaveCancelButtons", () => {
     describe("when the edit mode is on", () => {
         it("should display buttons", () => {
             expect(getWrapper(SectionEditorStub.inEditMode()).find("button").exists()).toBe(true);
+        });
+    });
+
+    describe("when save is not allowed", () => {
+        it("should disable save button", () => {
+            const wrapper = getWrapper(SectionEditorStub.inEditMode());
+            const save_button = wrapper
+                .findAll("button")
+                .find((button) => button.text().includes("Save"));
+            expect(save_button?.exists()).toBe(true);
+            expect(save_button?.element.disabled).toBe(true);
+        });
+    });
+
+    describe("when save is allowed", () => {
+        it("should enable save button", () => {
+            const editor_stub = SectionEditorStub.inEditMode();
+            const wrapper = getWrapper({
+                ...editor_stub,
+                editor_state: {
+                    ...editor_stub.editor_state,
+                    is_save_allowed: computed(() => true),
+                },
+            });
+            const save_button = wrapper
+                .findAll("button")
+                .find((button) => button.text().includes("Save"));
+            expect(save_button?.exists()).toBe(true);
+            expect(save_button?.element.disabled).toBe(false);
         });
     });
 });

@@ -53,6 +53,7 @@
                 v-bind:add_attachment_to_waiting_list="addAttachmentToWaitingList"
                 v-bind:upload_url="upload_url"
                 v-bind:is_image_upload_allowed="is_image_upload_allowed"
+                v-bind:upload_file="upload_file"
             />
             <section-footer v-bind:editor="editor" v-bind:section="section" />
         </article>
@@ -71,6 +72,8 @@ import { useAttachmentFile } from "@/composables/useAttachmentFile";
 import { ref } from "vue";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import { SECTIONS_STORE } from "@/stores/sections-store-injection-key";
+import type { UseUploadFileType } from "@/composables/useUploadFile";
+import { useUploadFile } from "@/composables/useUploadFile";
 
 const props = defineProps<{ section: ArtidocSection }>();
 
@@ -83,7 +86,14 @@ const {
     setWaitingListAttachments,
 } = useAttachmentFile(ref(props.section.attachments ? props.section.attachments.field_id : 0));
 
-const editor = useSectionEditor(props.section, mergeArtifactAttachments, setWaitingListAttachments);
+const upload_file: UseUploadFileType = useUploadFile(upload_url, addAttachmentToWaitingList);
+
+const editor = useSectionEditor(
+    props.section,
+    mergeArtifactAttachments,
+    setWaitingListAttachments,
+    upload_file.is_in_progress,
+);
 
 const {
     is_section_in_edit_mode,

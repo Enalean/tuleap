@@ -24,6 +24,7 @@ const noop = (): void => {};
 export const SectionEditorStub = {
     withoutEditableSection: (): SectionEditor => ({
         editor_state: {
+            is_save_allowed: computed(() => false),
             is_image_upload_allowed: computed(() => false),
             is_section_editable: computed(() => false),
             is_section_in_edit_mode: ref(false),
