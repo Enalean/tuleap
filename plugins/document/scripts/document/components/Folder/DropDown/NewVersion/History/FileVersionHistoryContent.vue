@@ -18,7 +18,7 @@
   -->
 
 <template>
-    <tr>
+    <tr data-test="document-history-file">
         <td>
             <a v-bind:href="encodeURI(props.version.download_href)" data-test="download-version">{{
                 props.version.number

@@ -36,7 +36,7 @@
                 <i class="fa-solid fa-right-long"></i>
             </router-link>
         </p>
-        <table class="tlp-table" v-if="!get_has_error" data-test="document-history">
+        <table class="tlp-table" v-if="!get_has_error">
             <thead>
                 <tr>
                     <th class="document-file-version-version">
