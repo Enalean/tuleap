@@ -3008,6 +3008,17 @@ msgstr "Texte"
 msgid "That tracker does not exist."
 msgstr "Cet outil de suivi n'existe pas."
 
+#, php-format
+msgid "The 'FROM' part of the query is invalid, it contains an error: '%s'"
+msgid_plural ""
+"The 'FROM' part of the query is invalid, it contains some error: '%s'"
+msgstr[0] ""
+"La partie 'FROM' de votre requête est invalide, elle contient une erreur : "
+"'%s'"
+msgstr[1] ""
+"La partie 'FROM' de votre requête est invalide, elle contient des erreurs : "
+"'%s'"
+
 msgid "The 'job_url' attribute must be a valid URL."
 msgstr "L'attribut 'job_url' doit être une URL valide."
 
