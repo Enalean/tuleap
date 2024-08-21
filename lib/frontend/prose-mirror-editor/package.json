@@ -5,13 +5,16 @@
   "license": "GPL-2.0-or-later",
   "private": true,
   "type": "module",
-  "files": [
-    "dist"
-  ],
-  "module": "dist/prose-mirror-editor.js",
-  "main": "dist/prose-mirror-editor.umd.cjs",
-  "types": "dist/prose-mirror-editor.d.ts",
-  "style": "dist/style.css",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/prose-mirror-editor.js",
+      "require": "./dist/prose-mirror-editor.umd.cjs",
+      "types": "./dist/index.d.ts",
+      "style": "./dist/style.css"
+    },
+    "./style": "./dist/style.css"
+  },
   "dependencies": {
     "@tuleap/fault": "workspace:^",
     "@tuleap/fetch-result": "workspace:^",

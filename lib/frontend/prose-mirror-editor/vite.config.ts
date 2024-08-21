@@ -26,9 +26,22 @@ export default vite.defineLibConfig({
             name: "prose-mirror-editor",
         },
         rollupOptions: {
+            external: [
+                "@tuleap/fault",
+                "@tuleap/fetch-result",
+                "@tuleap/gettext",
+                "@tuleap/option",
+                "neverthrow",
+                "tus-js-client",
+            ],
             output: {
                 globals: {
-                    "@tuleap/gettext": "@tuleap/gettext",
+                    "@tuleap/fault": "Fault",
+                    "@tuleap/fetch-result": "FetchResult",
+                    "@tuleap/gettext": "TuleapGettext",
+                    "@tuleap/option": "Option",
+                    neverthrow: "neverthrow",
+                    "tus-js-client": "tus",
                 },
             },
         },
