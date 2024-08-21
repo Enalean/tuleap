@@ -21,6 +21,7 @@ import type { Plugin } from "prosemirror-state";
 import { EditorState } from "prosemirror-state";
 import { EditorView } from "prosemirror-view";
 import { DOMParser } from "prosemirror-model";
+import { dropCursor } from "prosemirror-dropcursor";
 import { custom_schema } from "./custom_schema";
 import type { PluginDropFile } from "./plugins";
 import { initPluginInput, setupToolbar } from "./plugins";
@@ -55,6 +56,7 @@ export async function useEditor(
     const plugins: Plugin[] = [
         initPluginInput(onChange),
         upload_plugin,
+        dropCursor(),
         ...setupToolbar(gettext_provider),
     ];
 
