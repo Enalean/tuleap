@@ -24,21 +24,27 @@ namespace Tuleap\Taskboard\Column\FieldValuesToColumnMapping\Freestyle;
 
 use Cardwall_Column;
 use Tuleap\DB\DataAccessObject;
+use Tuleap\Option\Option;
 use Tuleap\Taskboard\Tracker\TaskboardTracker;
 
-class FreestyleMappingDao extends DataAccessObject
+class FreestyleMappingDao extends DataAccessObject implements SearchMappedField
 {
-    public function searchMappedField(TaskboardTracker $taskboard_tracker): ?int
+    public function searchMappedField(TaskboardTracker $taskboard_tracker): Option
     {
         $sql = 'SELECT field_id
             FROM plugin_cardwall_on_top_column_mapping_field
             WHERE cardwall_tracker_id = ?
                   AND tracker_id = ?';
-        return $this->getDB()->cell(
+
+        $mapped_field_id = $this->getDB()->cell(
             $sql,
             $taskboard_tracker->getMilestoneTrackerId(),
             $taskboard_tracker->getTrackerId()
-        ) ?: null;
+        );
+        if ($mapped_field_id === false) {
+            return Option::nothing(\Psl\Type\int());
+        }
+        return Option::fromValue($mapped_field_id);
     }
 
     public function doesFreestyleMappingExist(TaskboardTracker $taskboard_tracker): bool

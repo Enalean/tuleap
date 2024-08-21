@@ -117,7 +117,7 @@ final class FreestyleMappingDaoTest extends \Tuleap\Test\PHPUnit\TestIntegration
         self::assertTrue($this->dao->doesFreestyleMappingExist($user_stories_tracker));
 
         $mapped_field = $this->dao->searchMappedField($user_stories_tracker);
-        self::assertSame(self::USER_STORIES_STATUS_FIELD_ID, $mapped_field);
+        self::assertSame(self::USER_STORIES_STATUS_FIELD_ID, $mapped_field->unwrapOr(null));
 
         $values_mapped_to_todo = $this->dao->searchMappedFieldValuesForColumn(
             $user_stories_tracker,
@@ -145,7 +145,7 @@ final class FreestyleMappingDaoTest extends \Tuleap\Test\PHPUnit\TestIntegration
         self::assertTrue($this->dao->doesFreestyleMappingExist($tasks_tracker));
 
         $mapped_field = $this->dao->searchMappedField($tasks_tracker);
-        self::assertSame(self::TASKS_STATUS_FIELD_ID, $mapped_field);
+        self::assertSame(self::TASKS_STATUS_FIELD_ID, $mapped_field->unwrapOr(null));
 
         $values_mapped_to_todo = $this->dao->searchMappedFieldValuesForColumn($tasks_tracker, $this->todo_column);
         self::assertCount(1, $values_mapped_to_todo);
@@ -164,7 +164,8 @@ final class FreestyleMappingDaoTest extends \Tuleap\Test\PHPUnit\TestIntegration
         );
         self::assertFalse($this->dao->doesFreestyleMappingExist($tracker_without_mapping));
 
-        self::assertNull($this->dao->searchMappedField($tracker_without_mapping));
+        $mapped_field = $this->dao->searchMappedField($tracker_without_mapping);
+        self::assertTrue($mapped_field->isNothing());
 
         self::assertEmpty($this->dao->searchMappedFieldValuesForColumn($tracker_without_mapping, $this->todo_column));
     }

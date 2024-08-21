@@ -23,55 +23,63 @@ declare(strict_types=1);
 namespace Tuleap\Taskboard\Column\FieldValuesToColumnMapping;
 
 use PHPUnit\Framework\MockObject\MockObject;
-use Tuleap\Taskboard\Column\FieldValuesToColumnMapping\Freestyle\FreestyleMappingFactory;
+use Tuleap\Taskboard\Column\FieldValuesToColumnMapping\Freestyle\FreestyleMappedFieldRetriever;
+use Tuleap\Taskboard\Column\FieldValuesToColumnMapping\Freestyle\SearchMappedFieldStub;
 use Tuleap\Taskboard\Tracker\TaskboardTracker;
+use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
+use Tuleap\Tracker\Test\Stub\Tracker\FormElement\Field\ListFields\RetrieveUsedListFieldStub;
 
 final class MappedFieldRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private MappedFieldRetriever $mapped_field_retriever;
     private \Cardwall_FieldProviders_SemanticStatusFieldRetriever&MockObject $status_retriever;
-    private MockObject&FreestyleMappingFactory $freestyle_mapping_factory;
+    private RetrieveUsedListFieldStub $form_element_factory;
+    private SearchMappedFieldStub $search_mapped_field;
+    private \Tracker $user_stories_tracker;
 
     protected function setUp(): void
     {
-        $this->status_retriever          = $this->createMock(\Cardwall_FieldProviders_SemanticStatusFieldRetriever::class);
-        $this->freestyle_mapping_factory = $this->createMock(FreestyleMappingFactory::class);
-        $this->mapped_field_retriever    = new MappedFieldRetriever(
-            $this->status_retriever,
-            $this->freestyle_mapping_factory
+        $this->status_retriever     = $this->createMock(
+            \Cardwall_FieldProviders_SemanticStatusFieldRetriever::class
         );
+        $this->form_element_factory = RetrieveUsedListFieldStub::withNoField();
+        $this->search_mapped_field  = SearchMappedFieldStub::withNoField();
+
+        $this->user_stories_tracker = TrackerTestBuilder::aTracker()->withId(64)->build();
+    }
+
+    private function getField(): ?\Tracker_FormElement_Field_Selectbox
+    {
+        $taskboard_tracker = new TaskboardTracker(
+            TrackerTestBuilder::aTracker()->build(),
+            $this->user_stories_tracker
+        );
+        $retriever         = new MappedFieldRetriever(
+            $this->status_retriever,
+            new FreestyleMappedFieldRetriever($this->search_mapped_field, $this->form_element_factory)
+        );
+        return $retriever->getField($taskboard_tracker);
     }
 
     public function testReturnsFreestyleMappedField(): void
     {
-        $taskboard_tracker = new TaskboardTracker(TrackerTestBuilder::aTracker()->build(), TrackerTestBuilder::aTracker()->build());
-        $field             = $this->createMock(\Tracker_FormElement_Field_Selectbox::class);
-        $this->freestyle_mapping_factory->expects(self::once())
-            ->method('getMappedField')
-            ->with($taskboard_tracker)
-            ->willReturn($field);
+        $this->search_mapped_field  = SearchMappedFieldStub::withMappedField(747);
+        $field                      = ListFieldBuilder::aListField(747)->build();
+        $this->form_element_factory = RetrieveUsedListFieldStub::withField($field);
 
-        $result = $this->mapped_field_retriever->getField($taskboard_tracker);
+        $result = $this->getField();
         self::assertSame($field, $result);
     }
 
     public function testReturnsStatusSemanticWhenNoMapping(): void
     {
-        $tracker           = TrackerTestBuilder::aTracker()->build();
-        $taskboard_tracker = new TaskboardTracker(TrackerTestBuilder::aTracker()->build(), $tracker);
-        $field             = $this->createMock(\Tracker_FormElement_Field_Selectbox::class);
-        $this->freestyle_mapping_factory->expects(self::once())
-            ->method('getMappedField')
-            ->with($taskboard_tracker)
-            ->willReturn(null);
+        $field = ListFieldBuilder::aListField(133)->build();
         $this->status_retriever->expects(self::once())
             ->method('getField')
-            ->with($tracker)
+            ->with($this->user_stories_tracker)
             ->willReturn($field);
 
-        $result = $this->mapped_field_retriever->getField($taskboard_tracker);
-
+        $result = $this->getField();
         self::assertSame($field, $result);
     }
 }

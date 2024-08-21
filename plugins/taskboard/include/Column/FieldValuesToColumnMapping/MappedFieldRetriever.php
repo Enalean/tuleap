@@ -22,35 +22,16 @@ declare(strict_types=1);
 
 namespace Tuleap\Taskboard\Column\FieldValuesToColumnMapping;
 
-use Cardwall_FieldProviders_SemanticStatusFieldRetriever;
 use Tracker_FormElement_Field_Selectbox;
-use Tuleap\Taskboard\Column\FieldValuesToColumnMapping\Freestyle\FreestyleMappingDao;
-use Tuleap\Taskboard\Column\FieldValuesToColumnMapping\Freestyle\FreestyleMappingFactory;
+use Tuleap\Taskboard\Column\FieldValuesToColumnMapping\Freestyle\FreestyleMappedFieldRetriever;
 use Tuleap\Taskboard\Tracker\TaskboardTracker;
 
 class MappedFieldRetriever
 {
-    /**
-     * @var Cardwall_FieldProviders_SemanticStatusFieldRetriever
-     */
-    private $semantic_status_provider;
-    /** @var FreestyleMappingFactory */
-    private $freestyle_mapping_factory;
-
     public function __construct(
-        Cardwall_FieldProviders_SemanticStatusFieldRetriever $semantic_status_provider,
-        FreestyleMappingFactory $freestyle_mapping_factory,
+        private \Cardwall_FieldProviders_SemanticStatusFieldRetriever $semantic_status_provider,
+        private FreestyleMappedFieldRetriever $freestyle_mapping_factory,
     ) {
-        $this->semantic_status_provider  = $semantic_status_provider;
-        $this->freestyle_mapping_factory = $freestyle_mapping_factory;
-    }
-
-    public static function build(): self
-    {
-        return new self(
-            new Cardwall_FieldProviders_SemanticStatusFieldRetriever(),
-            new FreestyleMappingFactory(new FreestyleMappingDao(), \Tracker_FormElementFactory::instance())
-        );
     }
 
     /**
@@ -58,7 +39,7 @@ class MappedFieldRetriever
      * - The field bound to the status semantic
      * - The field chosen by the user to represent columns in the TaskBoard
      *
-     * Since the this field can be a list field of any type, we cannot name if precisely.
+     * Since this field can be a list field of any type, we cannot name it precisely.
      */
     public function getField(TaskboardTracker $taskboard_tracker): ?Tracker_FormElement_Field_Selectbox
     {

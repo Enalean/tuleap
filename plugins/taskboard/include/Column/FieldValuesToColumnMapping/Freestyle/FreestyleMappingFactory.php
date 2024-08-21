@@ -23,30 +23,15 @@ declare(strict_types=1);
 namespace Tuleap\Taskboard\Column\FieldValuesToColumnMapping\Freestyle;
 
 use Cardwall_Column;
-use Tracker_FormElement_Field_Selectbox;
 use Tuleap\Taskboard\Column\FieldValuesToColumnMapping\EmptyMappedValues;
 use Tuleap\Taskboard\Column\FieldValuesToColumnMapping\MappedValues;
 use Tuleap\Taskboard\Column\FieldValuesToColumnMapping\MappedValuesInterface;
 use Tuleap\Taskboard\Tracker\TaskboardTracker;
-use Tuleap\Tracker\FormElement\Field\ListFields\RetrieveUsedListField;
 
 class FreestyleMappingFactory
 {
-    public function __construct(private FreestyleMappingDao $dao, private RetrieveUsedListField $list_field_retriever)
+    public function __construct(private FreestyleMappingDao $dao)
     {
-    }
-
-    public function getMappedField(TaskboardTracker $taskboard_tracker): ?Tracker_FormElement_Field_Selectbox
-    {
-        $field_id = $this->dao->searchMappedField($taskboard_tracker);
-        if ($field_id === null) {
-            return null;
-        }
-        $field = $this->list_field_retriever->getUsedListFieldById($taskboard_tracker->getTracker(), $field_id);
-        if ($field instanceof \Tracker_FormElement_Field_Selectbox) {
-            return $field;
-        }
-        return null;
     }
 
     public function doesFreestyleMappingExist(TaskboardTracker $taskboard_tracker): bool

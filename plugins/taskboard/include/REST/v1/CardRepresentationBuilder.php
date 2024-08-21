@@ -22,12 +22,16 @@ declare(strict_types=1);
 
 namespace Tuleap\Taskboard\REST\v1;
 
+use Cardwall_FieldProviders_SemanticStatusFieldRetriever;
 use Cardwall_Semantic_CardFields;
 use PFUser;
 use Tracker_FormElement_Field_List_BindValue;
 use Tuleap\AgileDashboard\RemainingEffortValueRetriever;
 use Tuleap\Cardwall\BackgroundColor\BackgroundColorBuilder;
 use Tuleap\Taskboard\Column\FieldValuesToColumnMapping\ArtifactMappedFieldValueRetriever;
+use Tuleap\Taskboard\Column\FieldValuesToColumnMapping\Freestyle\FreestyleMappedFieldRetriever;
+use Tuleap\Taskboard\Column\FieldValuesToColumnMapping\Freestyle\FreestyleMappingDao;
+use Tuleap\Taskboard\Column\FieldValuesToColumnMapping\MappedFieldRetriever;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDecoratorRetriever;
 use Tuleap\User\REST\MinimalUserRepresentation;
@@ -149,9 +153,18 @@ class CardRepresentationBuilder
     {
         $form_element_factory = \Tracker_FormElementFactory::instance();
 
+        $freestyle_mapping_dao = new FreestyleMappingDao();
         return new CardRepresentationBuilder(
             new BackgroundColorBuilder(new BindDecoratorRetriever()),
-            ArtifactMappedFieldValueRetriever::build(),
+            new ArtifactMappedFieldValueRetriever(
+                new MappedFieldRetriever(
+                    new Cardwall_FieldProviders_SemanticStatusFieldRetriever(),
+                    new FreestyleMappedFieldRetriever(
+                        $freestyle_mapping_dao,
+                        $form_element_factory
+                    )
+                )
+            ),
             new RemainingEffortRepresentationBuilder(
                 new RemainingEffortValueRetriever($form_element_factory),
                 $form_element_factory

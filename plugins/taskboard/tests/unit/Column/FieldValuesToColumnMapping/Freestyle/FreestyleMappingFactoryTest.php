@@ -24,86 +24,20 @@ namespace Tuleap\Taskboard\Column\FieldValuesToColumnMapping\Freestyle;
 
 use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\Taskboard\Tracker\TaskboardTracker;
-use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
-use Tuleap\Tracker\Test\Builders\Fields\OpenListFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
-use Tuleap\Tracker\Test\Stub\Tracker\FormElement\Field\ListFields\RetrieveUsedListFieldStub;
 
 final class FreestyleMappingFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private MockObject&FreestyleMappingDao $dao;
-    private RetrieveUsedListFieldStub $list_field_retriever;
 
     protected function setUp(): void
     {
-        $this->dao                  = $this->createMock(FreestyleMappingDao::class);
-        $this->list_field_retriever = RetrieveUsedListFieldStub::withNoField();
+        $this->dao = $this->createMock(FreestyleMappingDao::class);
     }
 
     private function getFactory(): FreestyleMappingFactory
     {
-        return new FreestyleMappingFactory($this->dao, $this->list_field_retriever);
-    }
-
-    public function testGetMappedFieldReturnsNullWhenNoMapping(): void
-    {
-        $taskboard_tracker = new TaskboardTracker(TrackerTestBuilder::aTracker()->build(), TrackerTestBuilder::aTracker()->build());
-        $this->dao->expects(self::once())
-            ->method('searchMappedField')
-            ->with($taskboard_tracker)
-            ->willReturn(null);
-
-        $result = $this->getFactory()->getMappedField($taskboard_tracker);
-        self::assertNull($result);
-    }
-
-    public function testGetMappedFieldReturnsNullWhenFieldIsNotSelectbox(): void
-    {
-        $tracker           = TrackerTestBuilder::aTracker()->build();
-        $taskboard_tracker = new TaskboardTracker(TrackerTestBuilder::aTracker()->build(), $tracker);
-        $this->dao->expects(self::once())
-            ->method('searchMappedField')
-            ->with($taskboard_tracker)
-            ->willReturn(123);
-        $field                      = OpenListFieldBuilder::anOpenListField()->withId(123)->build();
-        $this->list_field_retriever = RetrieveUsedListFieldStub::withField($field);
-
-        $result = $this->getFactory()->getMappedField($taskboard_tracker);
-        self::assertNull($result);
-    }
-
-    public function testGetMappedFieldReturnsMappedSelectbox(): void
-    {
-        $taskboard_tracker = new TaskboardTracker(
-            TrackerTestBuilder::aTracker()->build(),
-            TrackerTestBuilder::aTracker()->build()
-        );
-        $this->dao->expects(self::once())
-            ->method('searchMappedField')
-            ->with($taskboard_tracker)
-            ->willReturn(123);
-        $field                      = ListFieldBuilder::aListField(123)->build();
-        $this->list_field_retriever = RetrieveUsedListFieldStub::withField($field);
-
-        $result = $this->getFactory()->getMappedField($taskboard_tracker);
-        self::assertSame($field, $result);
-    }
-
-    public function testGetMappedFieldReturnsMappedMultiSelectbox(): void
-    {
-        $taskboard_tracker = new TaskboardTracker(
-            TrackerTestBuilder::aTracker()->build(),
-            TrackerTestBuilder::aTracker()->build()
-        );
-        $this->dao->expects(self::once())
-            ->method('searchMappedField')
-            ->with($taskboard_tracker)
-            ->willReturn(123);
-        $field                      = ListFieldBuilder::aListField(123)->withMultipleValues()->build();
-        $this->list_field_retriever = RetrieveUsedListFieldStub::withField($field);
-
-        $result = $this->getFactory()->getMappedField($taskboard_tracker);
-        self::assertSame($field, $result);
+        return new FreestyleMappingFactory($this->dao);
     }
 
     public function testDoesFreestyleMappingExistDelegatesToDAO(): void
