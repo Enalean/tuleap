@@ -20,76 +20,62 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Docman\REST\v1\Files;
+namespace Tuleap\Docman\REST\v1\Wiki;
 
+use DateTimeImmutable;
 use DateTimeZone;
 use Docman_ItemFactory;
+use Docman_VersionFactory;
 use Docman_Wiki;
 use EventManager;
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use Tuleap\DB\DBTransactionExecutor;
+use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\Docman\REST\v1\DocmanItemUpdator;
-use Tuleap\Docman\REST\v1\Wiki\DocmanWikiPATCHRepresentation;
-use Tuleap\Docman\REST\v1\Wiki\DocmanWikiVersionCreator;
-use Tuleap\Docman\REST\v1\Wiki\WikiPropertiesPOSTPATCHRepresentation;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
+use Tuleap\Test\PHPUnit\TestCase;
 
-class DocmanWikiUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
+final class DocmanWikiUpdatorTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var \Docman_VersionFactory|Mockery\MockInterface
-     */
-    private $version_factory;
-    /**
-     * @var Docman_ItemFactory|Mockery\MockInterface
-     */
-    private $docman_item_factory;
-    /**
-     * @var EventManager|Mockery\MockInterface
-     */
-    private $event_manager;
-    /**
-     * @var Mockery\MockInterface|DocmanItemUpdator
-     */
-    private $updator;
-    /**
-     * @var Mockery\MockInterface|DBTransactionExecutor
-     */
-    private $transaction_executor;
-    /**
-     * @var DocmanWikiVersionCreator
-     */
-    public $wiki_updator;
+    private DocmanWikiVersionCreator $wiki_updator;
+    private Docman_VersionFactory&MockObject $version_factory;
+    private Docman_ItemFactory&MockObject $docman_item_factory;
+    private EventManager&MockObject $event_manager;
+    private DocmanItemUpdator&MockObject $updator;
 
     protected function setUp(): void
     {
-        parent::setUp();
-
-        $this->version_factory      = Mockery::mock(\Docman_VersionFactory::class);
-        $this->docman_item_factory  = Mockery::mock(Docman_ItemFactory::class);
-        $this->event_manager        = Mockery::mock(\EventManager::class);
-        $this->updator              = Mockery::mock(DocmanItemUpdator::class);
-        $this->transaction_executor = Mockery::mock(DBTransactionExecutor::class);
+        $this->version_factory     = $this->createMock(Docman_VersionFactory::class);
+        $this->docman_item_factory = $this->createMock(Docman_ItemFactory::class);
+        $this->event_manager       = $this->createMock(EventManager::class);
+        $this->updator             = $this->createMock(DocmanItemUpdator::class);
 
         $this->wiki_updator = new DocmanWikiVersionCreator(
             $this->version_factory,
             $this->docman_item_factory,
             $this->event_manager,
             $this->updator,
-            $this->transaction_executor
+            new DBTransactionExecutorPassthrough(),
         );
     }
 
     public function testItShouldStoreTheNewVersionWhenFileRepresentationIsCorrect(): void
     {
-        $item = Mockery::mock(Docman_Wiki::class);
-        $item->shouldReceive('getId')->andReturn(1);
-        $user = Mockery::mock(\PFUser::class);
-        $user->shouldReceive('getId')->andReturn(101);
+        self::expectNotToPerformAssertions();
 
-        $date                        = new \DateTimeImmutable();
+        $item = $this->createMock(Docman_Wiki::class);
+        $item->method('getId')->willReturn(1);
+        $item->method('getPagename')->willReturn('');
+        $item->method('getGroupId')->willReturn(101);
+        $user = UserTestBuilder::buildWithId(101);
+
+        $this->version_factory->method('getNextVersionNumber')->willReturn(1);
+        $this->version_factory->method('getCurrentVersionForItem');
+        $this->docman_item_factory->method('update');
+        $this->docman_item_factory->method('getWikiPageReferencers')->willReturn([]);
+        $this->event_manager->method('processEvent');
+        $this->updator->method('updateCommonDataWithoutApprovalTable');
+
+        $date                        = new DateTimeImmutable();
         $date                        = $date->setTimezone(new DateTimeZone('GMT+1'));
         $date                        = $date->setTime(0, 0, 0);
         $obsolescence_date           = $date->modify('+1 day');
@@ -101,8 +87,6 @@ class DocmanWikiUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $representation->wiki_properties->page_name = 'wiki name';
         $representation->status                     = 'rejected';
         $representation->obsolescence_date          = $obsolescence_date_formatted;
-
-        $this->transaction_executor->shouldReceive('execute')->once();
 
         $this->wiki_updator->createWikiVersion($item, $user, $representation, 102, $date->getTimestamp(), 'title', '');
     }
