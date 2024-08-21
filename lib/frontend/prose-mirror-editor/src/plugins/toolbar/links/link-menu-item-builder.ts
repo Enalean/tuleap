@@ -24,8 +24,10 @@ import { MenuItem } from "prosemirror-menu";
 import type { EditorView } from "prosemirror-view";
 import { buildPopover } from "./popover-link";
 import { updateInputValues } from "./input-value-updater";
-import { toggleMark } from "prosemirror-commands";
 import { markActive } from "../menu";
+import { getWrappingNodeInfo } from "../helper/node-info-retriever";
+import { schema } from "prosemirror-schema-basic";
+import { removeLink } from "./remove-link";
 
 export function linkItem(
     markType: MarkType,
@@ -73,7 +75,12 @@ export function unlinkItem(markType: MarkType, popover_element_id: string): Menu
     return new MenuItem({
         active(state): boolean {
             const icon = document.getElementById(unlink_icon_id);
-            const { from, to } = state.selection;
+            const wrapping_node_info = getWrappingNodeInfo(
+                state.selection.$from,
+                schema.marks.link,
+                state,
+            );
+            const { from, to } = wrapping_node_info;
             if (!icon) {
                 return false;
             }
@@ -93,10 +100,8 @@ export function unlinkItem(markType: MarkType, popover_element_id: string): Menu
             return icon;
         },
         run(state, dispatch, view, event): void {
-            if (markActive(state, markType)) {
-                event.preventDefault();
-                toggleMark(markType)(state, dispatch);
-            }
+            event.preventDefault();
+            removeLink(state, markType, dispatch);
         },
     });
 }

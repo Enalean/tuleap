@@ -20,6 +20,41 @@
 
 import type { GetText } from "@tuleap/gettext";
 import type { EditorState } from "prosemirror-state";
+import type { NodeInformation } from "../helper/node-info-retriever";
+import { getWrappingNodeInfo } from "../helper/node-info-retriever";
+
+function updateHrefAndReturnWhenALinkHaveBeenUpdated(
+    state: EditorState,
+    wrapping_node_info: NodeInformation,
+    doc: Document,
+    link_href_id: string,
+): boolean {
+    if (
+        !state.doc.rangeHasMark(
+            wrapping_node_info.from,
+            wrapping_node_info.to,
+            state.schema.marks.link,
+        )
+    ) {
+        return false;
+    }
+    const popover_href = doc.getElementById(link_href_id);
+    if (!(popover_href instanceof HTMLInputElement)) {
+        return false;
+    }
+    state.doc.nodesBetween(wrapping_node_info.from, wrapping_node_info.to, (node) => {
+        if (state.schema.marks.link.isInSet(node.marks)) {
+            node.marks.forEach((mark) => {
+                if (mark.type.name === "link") {
+                    popover_href.value = mark.attrs.href;
+                    return true;
+                }
+            });
+        }
+    });
+
+    return false;
+}
 
 export function updateInputValues(
     doc: Document,
@@ -30,34 +65,27 @@ export function updateInputValues(
     gettext_provider: GetText,
     state: EditorState,
 ): void {
-    const existing_value = state.doc.cut(state.selection.from, state.selection.to);
+    const wrapping_node_info = getWrappingNodeInfo(
+        state.selection.$from,
+        state.schema.marks.link,
+        state,
+    );
+
     const title = doc.getElementById(link_title_id);
     if (title instanceof HTMLInputElement) {
-        title.value = title ? existing_value.textContent : "";
+        title.value = title ? wrapping_node_info.corresponding_node.textContent : "";
     }
     const popover_href = doc.getElementById(link_href_id);
     if (popover_href instanceof HTMLInputElement) {
         popover_href.value = "";
     }
 
-    let is_existing = false;
-
-    const { from, to } = state.selection;
-    if (state.doc.rangeHasMark(from, to, state.schema.marks.link)) {
-        const popover_href = doc.getElementById(link_href_id);
-        if (popover_href instanceof HTMLInputElement) {
-            state.doc.nodesBetween(from, to, (node) => {
-                if (state.schema.marks.link.isInSet(node.marks)) {
-                    node.marks.forEach((mark) => {
-                        if (mark.type.name === "link") {
-                            popover_href.value = mark.attrs.href;
-                            is_existing = true;
-                        }
-                    });
-                }
-            });
-        }
-    }
+    const is_existing = updateHrefAndReturnWhenALinkHaveBeenUpdated(
+        state,
+        wrapping_node_info,
+        doc,
+        link_href_id,
+    );
 
     const popover_title = doc.getElementById(popover_title_id);
     const submit_popover = doc.getElementById(popover_submit_id);
