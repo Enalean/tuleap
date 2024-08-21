@@ -38,6 +38,9 @@ use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\REST\I18NRestException;
 use Tuleap\Search\ItemToIndexQueueEventBased;
+use Tuleap\Taskboard\Column\FieldValuesToColumnMapping\Freestyle\FreestyleMappingDao;
+use Tuleap\Taskboard\Column\FieldValuesToColumnMapping\Freestyle\FreestyleMappedFieldRetriever;
+use Tuleap\Taskboard\Column\FieldValuesToColumnMapping\Freestyle\FreestyleMappingFactory;
 use Tuleap\Taskboard\Column\FieldValuesToColumnMapping\MappedFieldRetriever;
 use Tuleap\Taskboard\Column\FieldValuesToColumnMapping\MappedValuesRetriever;
 use Tuleap\Taskboard\Column\InvalidColumnException;
@@ -52,9 +55,9 @@ use Tuleap\Tracker\Artifact\Changeset\Comment\CommentCreator;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupPermissionDao;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupPermissionInserter;
 use Tuleap\Tracker\Artifact\Changeset\FieldsToBeSavedInSpecificOrderRetriever;
-use Tuleap\Tracker\Artifact\Changeset\NewChangesetPostProcessor;
 use Tuleap\Tracker\Artifact\Changeset\NewChangesetCreator;
 use Tuleap\Tracker\Artifact\Changeset\NewChangesetFieldValueSaver;
+use Tuleap\Tracker\Artifact\Changeset\NewChangesetPostProcessor;
 use Tuleap\Tracker\Artifact\Changeset\NewChangesetValidator;
 use Tuleap\Tracker\Artifact\Changeset\PostCreation\ActionsQueuer;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\ArtifactForwardLinksRetriever;
@@ -154,7 +157,9 @@ class CardMappedFieldUpdater
             ),
         );
 
-        $column_dao = new Cardwall_OnTop_ColumnDao();
+        $column_dao               = new Cardwall_OnTop_ColumnDao();
+        $freestyle_mapping_dao    = new FreestyleMappingDao();
+        $semantic_status_provider = new \Cardwall_FieldProviders_SemanticStatusFieldRetriever();
         return new self(
             new Cardwall_OnTop_Config_ColumnFactory($column_dao),
             new MilestoneTrackerRetriever($column_dao, TrackerFactory::instance()),
@@ -174,8 +179,14 @@ class CardMappedFieldUpdater
                 $changeset_creator,
                 new ArtifactRestUpdateConditionsChecker(),
             ),
-            MappedFieldRetriever::build(),
-            MappedValuesRetriever::build(),
+            new MappedFieldRetriever(
+                $semantic_status_provider,
+                new FreestyleMappedFieldRetriever($freestyle_mapping_dao, $form_element_factory)
+            ),
+            new MappedValuesRetriever(
+                new FreestyleMappingFactory($freestyle_mapping_dao),
+                $semantic_status_provider
+            ),
             new FirstPossibleValueInListRetriever(
                 new FirstValidValueAccordingToDependenciesRetriever(
                     $form_element_factory

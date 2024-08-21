@@ -43,6 +43,7 @@ use Tuleap\Taskboard\AgileDashboard\TaskboardUsageDao;
 use Tuleap\Taskboard\AgileDashboard\TaskboardUsageDuplicator;
 use Tuleap\Taskboard\Board\BoardPresenterBuilder;
 use Tuleap\Taskboard\Column\ColumnPresenterCollectionRetriever;
+use Tuleap\Taskboard\Column\FieldValuesToColumnMapping\Freestyle\FreestyleMappingDao;
 use Tuleap\Taskboard\REST\ResourcesInjector;
 use Tuleap\Taskboard\Routing\MilestoneExtractor;
 use Tuleap\Taskboard\Tracker\TrackerPresenterCollectionBuilder;
@@ -105,6 +106,8 @@ class taskboardPlugin extends Plugin
 
         $header_options_inserter = new CurrentContextSectionToHeaderOptionsInserter();
 
+        $freestyle_mapping_dao = new FreestyleMappingDao();
+        $form_element_factory  = \Tracker_FormElementFactory::instance();
         return new \Tuleap\Taskboard\Routing\TaskboardController(
             new MilestoneExtractor(
                 $agiledashboard_plugin->getMilestoneFactory(),
@@ -116,7 +119,17 @@ class taskboardPlugin extends Plugin
                 $agiledashboard_plugin->getMilestonePaneFactory(),
                 ColumnPresenterCollectionRetriever::build(),
                 new AgileDashboard_BacklogItemDao(),
-                TrackerPresenterCollectionBuilder::build(),
+                new TrackerPresenterCollectionBuilder(
+                    \Tuleap\Taskboard\Tracker\TrackerCollectionRetriever::build(),
+                    new \Tuleap\Taskboard\Column\FieldValuesToColumnMapping\MappedFieldRetriever(
+                        new \Cardwall_FieldProviders_SemanticStatusFieldRetriever(),
+                        new \Tuleap\Taskboard\Column\FieldValuesToColumnMapping\Freestyle\FreestyleMappedFieldRetriever(
+                            $freestyle_mapping_dao,
+                            $form_element_factory
+                        )
+                    ),
+                    new \Tuleap\Taskboard\Tracker\AddInPlaceRetriever($form_element_factory),
+                ),
                 Tracker_ArtifactFactory::instance()
             ),
             new IncludeViteAssets(

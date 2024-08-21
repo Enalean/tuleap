@@ -25,7 +25,6 @@ namespace Tuleap\Taskboard\Column\FieldValuesToColumnMapping;
 use Cardwall_Column;
 use Cardwall_FieldProviders_SemanticStatusFieldRetriever;
 use Tracker;
-use Tuleap\Taskboard\Column\FieldValuesToColumnMapping\Freestyle\FreestyleMappingDao;
 use Tuleap\Taskboard\Column\FieldValuesToColumnMapping\Freestyle\FreestyleMappingFactory;
 use Tuleap\Taskboard\Tracker\TaskboardTracker;
 
@@ -42,14 +41,6 @@ class MappedValuesRetriever
     ) {
         $this->freestyle_mapping_factory = $freestyle_mapping_factory;
         $this->status_retriever          = $status_retriever;
-    }
-
-    public static function build(): self
-    {
-        return new self(
-            new FreestyleMappingFactory(new FreestyleMappingDao(), \Tracker_FormElementFactory::instance()),
-            new Cardwall_FieldProviders_SemanticStatusFieldRetriever()
-        );
     }
 
     public function getValuesMappedToColumn(

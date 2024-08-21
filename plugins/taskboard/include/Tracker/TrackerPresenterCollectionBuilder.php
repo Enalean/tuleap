@@ -45,17 +45,6 @@ class TrackerPresenterCollectionBuilder
         $this->add_in_place_retriever = $add_in_place_tracker_retriever;
     }
 
-    public static function build(): self
-    {
-        return new self(
-            TrackerCollectionRetriever::build(),
-            MappedFieldRetriever::build(),
-            new AddInPlaceRetriever(
-                \Tracker_FormElementFactory::instance()
-            )
-        );
-    }
-
     /**
      * @return TrackerPresenter[]
      */

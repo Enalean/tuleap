@@ -37,11 +37,6 @@ class ArtifactMappedFieldValueRetriever
         $this->mapped_field_retriever = $mapped_field_retriever;
     }
 
-    public static function build(): self
-    {
-        return new self(MappedFieldRetriever::build());
-    }
-
     public function getValueAtLastChangeset(
         \Planning_Milestone $milestone,
         \Tuleap\Tracker\Artifact\Artifact $artifact,
