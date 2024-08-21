@@ -46,6 +46,8 @@ use Tuleap\CrossTracker\Report\CrossTrackerArtifactReportFactory;
 use Tuleap\CrossTracker\Report\Query\Advanced\DuckTypedField\FieldTypeRetrieverWrapper;
 use Tuleap\CrossTracker\Report\Query\Advanced\ExpertQueryIsEmptyException;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidFromCollectionBuilder;
+use Tuleap\CrossTracker\Report\Query\Advanced\InvalidFromProjectCollectorVisitor;
+use Tuleap\CrossTracker\Report\Query\Advanced\InvalidFromTrackerCollectorVisitor;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSearchableCollectorVisitor;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSearchablesCollectionBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSelectablesCollectionBuilder;
@@ -499,7 +501,10 @@ final class CrossTrackerReportsResource extends AuthenticatedResource
                     $trackers,
                     $user
                 ),
-                new InvalidFromCollectionBuilder(),
+                new InvalidFromCollectionBuilder(
+                    new InvalidFromTrackerCollectorVisitor(),
+                    new InvalidFromProjectCollectorVisitor(),
+                ),
             );
         } catch (SearchablesDoNotExistException | SearchablesAreInvalidException $exception) {
             throw new RestException(400, $exception->getMessage());

@@ -153,6 +153,12 @@ msgstr ""
 msgid "Search into multiple trackers and multiple projects."
 msgstr ""
 
+msgid ""
+"The both conditions of 'FROM' must be on \"tracker\" and \"project\". If you "
+"want to search on several trackers or projects, please use 'IN' operator "
+"instead. (e.g @tracker.name IN('t1', ...))"
+msgstr ""
+
 #, php-format
 msgid "The maximum value for 'limit' is %d"
 msgstr ""
@@ -167,6 +173,12 @@ msgid "You cannot access all the fields used to filter the search"
 msgstr ""
 
 msgid "You cannot access all trackers of the search"
+msgstr ""
+
+#, php-format
+msgid ""
+"You cannot search on '%s', please refer to the documentation about the "
+"'FROM' syntax part."
 msgstr ""
 
 msgid "You don't have permission to access this project"

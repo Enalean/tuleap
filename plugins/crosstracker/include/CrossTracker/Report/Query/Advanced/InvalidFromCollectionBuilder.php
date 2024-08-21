@@ -23,13 +23,69 @@ declare(strict_types=1);
 namespace Tuleap\CrossTracker\Report\Query\Advanced;
 
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\From;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\FromProject;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\FromSomethingVisitor;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\FromTracker;
 use Tuleap\Tracker\Report\Query\Advanced\IBuildInvalidFromCollection;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFromCollection;
 
-final class InvalidFromCollectionBuilder implements IBuildInvalidFromCollection
+/**
+ * @template-implements FromSomethingVisitor<InvalidFromCollectionParameters, void>
+ */
+final readonly class InvalidFromCollectionBuilder implements IBuildInvalidFromCollection, FromSomethingVisitor
 {
+    public function __construct(
+        private InvalidFromTrackerCollectorVisitor $from_tracker_condition_visitor,
+        private InvalidFromProjectCollectorVisitor $from_project_condition_visitor,
+    ) {
+    }
+
     public function buildCollectionOfInvalidFrom(From $from): InvalidFromCollection
     {
-        return new InvalidFromCollection();
+        $collection = new InvalidFromCollection();
+        if ($from->getRight() !== null && $from->getLeft()::class === $from->getRight()::class) {
+            $collection->addInvalidFrom(dgettext(
+                'tuleap-crosstracker',
+                'The both conditions of \'FROM\' must be on "tracker" and "project". If you want to search on several trackers or projects, please use \'IN\' operator instead. (e.g @tracker.name IN(\'t1\', ...))',
+            ));
+            return $collection;
+        }
+
+        $from->getLeft()->acceptFromSomethingVisitor($this, new InvalidFromCollectionParameters($collection));
+        $from->getRight()?->acceptFromSomethingVisitor($this, new InvalidFromCollectionParameters($collection));
+
+        return $collection;
+    }
+
+    public function visitTracker(FromTracker $from_tracker, $parameters)
+    {
+        if (! in_array($from_tracker->getTarget(), AllowedFrom::ALLOWED_TRACKER)) {
+            $parameters->collection->addInvalidFrom(sprintf(
+                dgettext('tuleap-crosstracker', "You cannot search on '%s', please refer to the documentation about the 'FROM' syntax part."),
+                $from_tracker->getTarget(),
+            ));
+            return;
+        }
+
+        $from_tracker->getCondition()->acceptFromTrackerConditionVisitor(
+            $this->from_tracker_condition_visitor,
+            new InvalidFromTrackerCollectorParameters($from_tracker, $parameters->collection),
+        );
+    }
+
+    public function visitProject(FromProject $from_project, $parameters)
+    {
+        if (! in_array($from_project->getTarget(), AllowedFrom::ALLOWED_PROJECT)) {
+            $parameters->collection->addInvalidFrom(sprintf(
+                dgettext('tuleap-crosstracker', "You cannot search on '%s', please refer to the documentation about the 'FROM' syntax part."),
+                $from_project->getTarget(),
+            ));
+            return;
+        }
+
+        $from_project->getCondition()->acceptFromProjectConditionVisitor(
+            $this->from_project_condition_visitor,
+            new InvalidFromProjectCollectorParameters($from_project, $parameters->collection),
+        );
     }
 }

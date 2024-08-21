@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 3.4.2\n"
+"X-Generator: Poedit 3.4.4\n"
 
 #, php-format
 msgid "%s cannot be compared to '%s'."
@@ -193,6 +193,16 @@ msgstr "Permet la recherche d'artéfacts à travers plusieurs outils de suivi"
 msgid "Search into multiple trackers and multiple projects."
 msgstr "Rechercher dans plusieurs outils de suivi et plusieurs projets."
 
+msgid ""
+"The both conditions of 'FROM' must be on \"tracker\" and \"project\". If you "
+"want to search on several trackers or projects, please use 'IN' operator "
+"instead. (e.g @tracker.name IN('t1', ...))"
+msgstr ""
+"Les deux condition du 'FROM' doivent être sur \"outil de suivi\" et "
+"\"projet\". Si vous souhaitez chercher sur plusieurs outils de suivi ou "
+"projets, veuillez utiliser l'opérateur 'IN' à la place (ex @tracker.name "
+"IN('t1', ...))"
+
 #, php-format
 msgid "The maximum value for 'limit' is %d"
 msgstr "La valeur maximum pour 'limit' est %d"
@@ -213,6 +223,14 @@ msgstr ""
 msgid "You cannot access all trackers of the search"
 msgstr ""
 "Vous ne pouvez pas accéder à tous les outils de suivi de cette recherche"
+
+#, php-format
+msgid ""
+"You cannot search on '%s', please refer to the documentation about the "
+"'FROM' syntax part."
+msgstr ""
+"Vous ne pouvez pas chercher sur '%s', référez vous à la documentation sur la "
+"syntaxe du 'FROM'."
 
 msgid "You don't have permission to access this project"
 msgstr "Vous n'avez pas la permission d'accéder à ce projet"

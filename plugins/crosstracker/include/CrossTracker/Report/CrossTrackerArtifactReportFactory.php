@@ -29,6 +29,8 @@ use Tuleap\CrossTracker\CrossTrackerArtifactReportDao;
 use Tuleap\CrossTracker\CrossTrackerReport;
 use Tuleap\CrossTracker\Report\Query\Advanced\ExpertQueryIsEmptyException;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidFromCollectionBuilder;
+use Tuleap\CrossTracker\Report\Query\Advanced\InvalidFromProjectCollectorVisitor;
+use Tuleap\CrossTracker\Report\Query\Advanced\InvalidFromTrackerCollectorVisitor;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSearchablesCollectionBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSelectablesCollectionBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSelectablesCollectorVisitor;
@@ -222,7 +224,10 @@ final readonly class CrossTrackerArtifactReportFactory
             $report->isExpert(),
             new InvalidSearchablesCollectionBuilder($this->term_collector, $trackers, $current_user),
             new InvalidSelectablesCollectionBuilder($this->selectables_collector, $trackers, $current_user),
-            new InvalidFromCollectionBuilder(),
+            new InvalidFromCollectionBuilder(
+                new InvalidFromTrackerCollectorVisitor(),
+                new InvalidFromProjectCollectorVisitor(),
+            ),
         );
         return $this->parser->parse($expert_query);
     }

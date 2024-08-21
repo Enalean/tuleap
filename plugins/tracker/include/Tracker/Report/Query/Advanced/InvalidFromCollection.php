@@ -29,6 +29,11 @@ final class InvalidFromCollection
      */
     private array $invalid_from = [];
 
+    public function addInvalidFrom(string $i18n_message): void
+    {
+        $this->invalid_from[] = $i18n_message;
+    }
+
     /**
      * @return list<string>
      */

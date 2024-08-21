@@ -24,4 +24,12 @@ namespace Tuleap\Tracker\Report\Query\Advanced\Grammar;
 
 interface FromTrackerCondition
 {
+    /**
+     * @template ReturnType
+     * @template Parameters of VisitorParameters
+     * @param FromTrackerConditionVisitor<Parameters, ReturnType> $visitor
+     * @param Parameters $parameters
+     * @return ReturnType
+     */
+    public function acceptFromTrackerConditionVisitor(FromTrackerConditionVisitor $visitor, $parameters);
 }
