@@ -28,7 +28,7 @@
                 <span v-if="is_sections_loading" class="tlp-skeleton-text"></span>
                 <a
                     v-else-if="isArtifactSection(section)"
-                    v-bind:href="href(section)"
+                    v-bind:href="`#section-${section.id}`"
                     class="table-of-content-section-title"
                 >
                     {{ section.display_title }}
@@ -43,24 +43,13 @@
 
 <script setup lang="ts">
 import { useGettext } from "vue3-gettext";
-import type { ArtidocSection } from "@/helpers/artidoc-section.type";
 import { isArtifactSection } from "@/helpers/artidoc-section.type";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import { SECTIONS_STORE } from "@/stores/sections-store-injection-key";
 
-const props = withDefaults(
-    defineProps<{
-        is_print_mode?: boolean;
-    }>(),
-    { is_print_mode: false },
-);
-
 const { $gettext } = useGettext();
 
 const { sections, is_sections_loading } = strictInject(SECTIONS_STORE);
-
-const href = (section: ArtidocSection): string =>
-    !props.is_print_mode ? `#section-${section.id}` : `#pdf-section-${section.id}`;
 </script>
 
 <style scoped lang="scss">

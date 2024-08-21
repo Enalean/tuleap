@@ -37,9 +37,23 @@
                             v-if="has_title_page_content"
                         ></div>
                         <div class="document-page">
-                            <aside>
-                                <table-of-contents v-bind:is_print_mode="true" />
-                            </aside>
+                            <h1>Table of contents</h1>
+                            <ol>
+                                <li
+                                    v-for="section in saved_sections"
+                                    v-bind:key="'toc-' + section.id"
+                                >
+                                    <a
+                                        v-if="are_internal_links_allowed"
+                                        v-bind:href="`#pdf-section-${section.id}`"
+                                    >
+                                        {{ section.display_title }}
+                                    </a>
+                                    <template v-else>
+                                        {{ section.display_title }}
+                                    </template>
+                                </li>
+                            </ol>
                         </div>
                         <div class="document-page">
                             <section class="document-content">
@@ -76,7 +90,6 @@
 </template>
 
 <script setup lang="ts">
-import TableOfContents from "@/components/toc/TableOfContents.vue";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import { SECTIONS_STORE } from "@/stores/sections-store-injection-key";
 import SectionPrinterVersion from "@/components/print/SectionPrinterVersion.vue";
@@ -89,6 +102,9 @@ const pdf_templates = strictInject(PDF_TEMPLATES_STORE);
 const has_title_page_content = computed(
     () => pdf_templates.selected_template.value?.title_page_content !== "",
 );
+
+const is_firefox = navigator.userAgent.toLowerCase().includes("firefox");
+const are_internal_links_allowed = !is_firefox;
 </script>
 
 <style lang="scss" scoped>
