@@ -21,6 +21,7 @@
 @use "@tuleap/burningparrot-sign-in";
 
 $homepage-small-screen-width: 850px;
+$homepage-huge-screen-width: 3000px;
 
 /* stylelint-disable-next-line selector-no-qualifying-type */
 body.homepage > #main-container {
@@ -106,12 +107,19 @@ body.homepage > #main-container {
     fill: var(--tlp-dark-color);
 }
 
+$text-shadow-so-that-text-over-dark-background-is-somewhat-visible:
+    1px 1px 0 var(--tlp-white-color),
+    -1px 1px 0 var(--tlp-white-color),
+    1px -1px 0 var(--tlp-white-color),
+    -1px -1px 0 var(--tlp-white-color);
+
 .homepage-welcome-title {
     margin: 0 0 30px;
     color: var(--tlp-dark-color);
     font-size: 30px;
     font-weight: 600;
     line-height: 38px;
+    text-shadow: $text-shadow-so-that-text-over-dark-background-is-somewhat-visible;
 }
 
 .homepage-welcome-text {
@@ -119,6 +127,7 @@ body.homepage > #main-container {
     color: var(--tlp-dark-color);
     font-size: 18px;
     line-height: 30px;
+    text-shadow: $text-shadow-so-that-text-over-dark-background-is-somewhat-visible;
 
     > p {
         margin: 0 0 16px;
@@ -166,6 +175,11 @@ body.homepage > #main-container {
 
 .homepage-background-illustration {
     position: absolute;
+
+    @media screen and (min-width: $homepage-huge-screen-width) {
+        transform: scale(1.5);
+        transform-origin: bottom left;
+    }
 }
 
 .homepage-background-illustration-background {
