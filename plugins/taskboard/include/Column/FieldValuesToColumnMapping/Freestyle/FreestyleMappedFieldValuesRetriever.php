@@ -23,34 +23,34 @@ declare(strict_types=1);
 namespace Tuleap\Taskboard\Column\FieldValuesToColumnMapping\Freestyle;
 
 use Cardwall_Column;
+use Tuleap\Option\Option;
 use Tuleap\Taskboard\Column\FieldValuesToColumnMapping\EmptyMappedValues;
 use Tuleap\Taskboard\Column\FieldValuesToColumnMapping\MappedValues;
-use Tuleap\Taskboard\Column\FieldValuesToColumnMapping\MappedValuesInterface;
 use Tuleap\Taskboard\Tracker\TaskboardTracker;
 
-class FreestyleMappingFactory
+final readonly class FreestyleMappedFieldValuesRetriever
 {
-    public function __construct(private FreestyleMappingDao $dao)
-    {
+    public function __construct(
+        private VerifyMappingExists $verify_mapping_exists,
+        private SearchMappedFieldValuesForColumn $search_values,
+    ) {
     }
 
-    public function doesFreestyleMappingExist(TaskboardTracker $taskboard_tracker): bool
-    {
-        return $this->dao->doesFreestyleMappingExist($taskboard_tracker);
-    }
-
+    /**
+     * Returns Nothing when there is no freestyle mapping for the given trackers
+     * @return Option<EmptyMappedValues>|Option<MappedValues>
+     */
     public function getValuesMappedToColumn(
         TaskboardTracker $taskboard_tracker,
         Cardwall_Column $column,
-    ): MappedValuesInterface {
-        $rows = $this->dao->searchMappedFieldValuesForColumn($taskboard_tracker, $column);
-        if (empty($rows)) {
-            return new EmptyMappedValues();
+    ): Option {
+        if (! $this->verify_mapping_exists->doesFreestyleMappingExist($taskboard_tracker)) {
+            return Option::nothing(MappedValues::class);
         }
-        $field_value_ids = [];
-        foreach ($rows as $row) {
-            $field_value_ids[] = (int) $row['value_id'];
+        $bind_value_ids = $this->search_values->searchMappedFieldValuesForColumn($taskboard_tracker, $column);
+        if ($bind_value_ids === []) {
+            return Option::fromValue(new EmptyMappedValues());
         }
-        return new MappedValues($field_value_ids);
+        return Option::fromValue(new MappedValues($bind_value_ids));
     }
 }

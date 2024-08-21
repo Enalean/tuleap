@@ -124,15 +124,15 @@ final class FreestyleMappingDaoTest extends \Tuleap\Test\PHPUnit\TestIntegration
             $this->todo_column
         );
         self::assertCount(1, $values_mapped_to_todo);
-        self::assertSame(self::USER_STORIES_STATUS_TODO_ID, $values_mapped_to_todo[0]['value_id']);
+        self::assertSame(self::USER_STORIES_STATUS_TODO_ID, $values_mapped_to_todo[0]);
 
         $values_mapped_to_ongoing = $this->dao->searchMappedFieldValuesForColumn(
             $user_stories_tracker,
             $this->ongoing_column
         );
         self::assertCount(2, $values_mapped_to_ongoing);
-        self::assertSame(self::USER_STORIES_STATUS_ONGOING_ID, $values_mapped_to_ongoing[0]['value_id']);
-        self::assertSame(self::USER_STORIES_STATUS_WAITING_ID, $values_mapped_to_ongoing[1]['value_id']);
+        self::assertSame(self::USER_STORIES_STATUS_ONGOING_ID, $values_mapped_to_ongoing[0]);
+        self::assertSame(self::USER_STORIES_STATUS_WAITING_ID, $values_mapped_to_ongoing[1]);
     }
 
     public function testItFindsMappedFieldValuesForOtherTracker(): void
@@ -149,11 +149,11 @@ final class FreestyleMappingDaoTest extends \Tuleap\Test\PHPUnit\TestIntegration
 
         $values_mapped_to_todo = $this->dao->searchMappedFieldValuesForColumn($tasks_tracker, $this->todo_column);
         self::assertCount(1, $values_mapped_to_todo);
-        self::assertSame(self::TASKS_STATUS_TODO_ID, $values_mapped_to_todo[0]['value_id']);
+        self::assertSame(self::TASKS_STATUS_TODO_ID, $values_mapped_to_todo[0]);
 
         $values_mapped_to_ongoing = $this->dao->searchMappedFieldValuesForColumn($tasks_tracker, $this->ongoing_column);
         self::assertCount(1, $values_mapped_to_ongoing);
-        self::assertSame(self::TASKS_STATUS_ONGOING_ID, $values_mapped_to_ongoing[0]['value_id']);
+        self::assertSame(self::TASKS_STATUS_ONGOING_ID, $values_mapped_to_ongoing[0]);
     }
 
     public function testItDoesNotFindTrackerWithNoMapping(): void

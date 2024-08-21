@@ -27,15 +27,14 @@ use Tuleap\DB\DataAccessObject;
 use Tuleap\Option\Option;
 use Tuleap\Taskboard\Tracker\TaskboardTracker;
 
-class FreestyleMappingDao extends DataAccessObject implements SearchMappedField
+final class FreestyleMappingDao extends DataAccessObject implements SearchMappedField, SearchMappedFieldValuesForColumn, VerifyMappingExists
 {
     public function searchMappedField(TaskboardTracker $taskboard_tracker): Option
     {
-        $sql = 'SELECT field_id
+        $sql             = 'SELECT field_id
             FROM plugin_cardwall_on_top_column_mapping_field
             WHERE cardwall_tracker_id = ?
                   AND tracker_id = ?';
-
         $mapped_field_id = $this->getDB()->cell(
             $sql,
             $taskboard_tracker->getMilestoneTrackerId(),
@@ -64,7 +63,7 @@ class FreestyleMappingDao extends DataAccessObject implements SearchMappedField
         TaskboardTracker $taskboard_tracker,
         Cardwall_Column $column,
     ): array {
-        $sql = 'SELECT mapped_value.value_id
+        $sql                 = 'SELECT mapped_value.value_id
             FROM plugin_cardwall_on_top_column_mapping_field AS mapping_field
                  INNER JOIN plugin_cardwall_on_top_column_mapping_field_value AS mapped_value
             ON (mapping_field.cardwall_tracker_id = mapped_value.cardwall_tracker_id
@@ -72,11 +71,16 @@ class FreestyleMappingDao extends DataAccessObject implements SearchMappedField
             WHERE mapping_field.cardwall_tracker_id = ?
                   AND mapping_field.tracker_id = ?
                   AND mapped_value.column_id = ?';
-        return $this->getDB()->run(
+        $rows                = $this->getDB()->run(
             $sql,
             $taskboard_tracker->getMilestoneTrackerId(),
             $taskboard_tracker->getTrackerId(),
             $column->getId()
         );
+        $flat_bind_value_ids = [];
+        foreach ($rows as $row) {
+            $flat_bind_value_ids[] = $row['value_id'];
+        }
+        return $flat_bind_value_ids;
     }
 }
