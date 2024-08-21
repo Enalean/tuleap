@@ -22,32 +22,31 @@ declare(strict_types=1);
 
 namespace Tuleap\Docman\REST;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use Project;
+use Tuleap\Test\PHPUnit\TestCase;
 
-final class ResourcesInjectorTest extends \Tuleap\Test\PHPUnit\TestCase
+final class ResourcesInjectorTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     public function testProjectResourcesAreInjectedWhenTheProjectUsesTheDocumentManagerService(): void
     {
         $resources = [];
 
-        $project = \Mockery::mock(\Project::class);
-        $project->shouldReceive('usesService')->andReturn(true);
-        $project->shouldReceive('getID')->andReturn(102);
+        $project = $this->createMock(Project::class);
+        $project->method('usesService')->willReturn(true);
+        $project->method('getID')->willReturn(102);
 
         ResourcesInjector::declareProjectResources($resources, $project);
-        $this->assertNotEmpty($resources);
+        self::assertNotEmpty($resources);
     }
 
     public function testProjectResourcesAreNotInjectedWhenTheProjectDoesNotUseTheDocumentManagerService(): void
     {
         $resources = [];
 
-        $project = \Mockery::mock(\Project::class);
-        $project->shouldReceive('usesService')->andReturn(false);
+        $project = $this->createMock(Project::class);
+        $project->method('usesService')->willReturn(false);
 
         ResourcesInjector::declareProjectResources($resources, $project);
-        $this->assertEmpty($resources);
+        self::assertEmpty($resources);
     }
 }
