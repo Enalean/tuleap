@@ -13,15 +13,33 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 
+msgid "Add or update link"
+msgstr "Ajouter ou modifier un lien"
+
 msgid "An error occurred during upload"
 msgstr "Une erreur est survenue durant le téléversement"
+
+msgid "Cancel"
+msgstr "Annuler"
+
+msgid "Create"
+msgstr "Créer"
+
+msgid "Create a link"
+msgstr "Créer un lien"
 
 msgid "File type is invalid, you can only upload images"
 msgstr ""
 "Le type de fichier est invalide, vous pouvez téléverser uniquement des images"
 
+msgid "Link"
+msgstr "Lien"
+
 msgid "Max upload size exceeded"
 msgstr "La taille maximale de téléversement dépassée"
+
+msgid "Text"
+msgstr "Texte"
 
 msgid "Toggle code Ctrl+`"
 msgstr "Passer en bloc code Ctrl+`"
@@ -31,6 +49,9 @@ msgstr "Passer en italique `Ctrl+i`"
 
 msgid "Toggle strong style `Ctrl+b`"
 msgstr "Passer en gras `Ctrl+b`"
+
+msgid "Update link"
+msgstr "Modifier le lien"
 
 msgid "Wrap in block quote `Ctrl->`"
 msgstr "Passer en mode citation Ctrl->`"

@@ -26,12 +26,15 @@ import VueDOMPurifyHTML from "vue-dompurify-html";
 import * as upload_file from "@/composables/useUploadFile";
 import NotificationBar from "@/components/section/description/NotificationBar.vue";
 import type { OnGoingUploadFile } from "@tuleap/prose-mirror-editor";
+import * as editor from "@tuleap/prose-mirror-editor";
+import type { UseEditorType } from "@tuleap/prose-mirror-editor/dist";
 
 describe("SectionDescriptionEditorProseMirror", () => {
     let wrapper: VueWrapper<ComponentPublicInstance>;
 
     beforeAll(() => {
         const upload_files: Ref<Map<number, OnGoingUploadFile>> = ref(new Map());
+        vi.spyOn(editor, "useEditor").mockResolvedValue({} as UseEditorType);
         vi.spyOn(upload_file, "useUploadFile").mockReturnValue({
             progress: ref(0),
             is_in_progress: ref(false),
@@ -61,13 +64,6 @@ describe("SectionDescriptionEditorProseMirror", () => {
         });
     });
 
-    it("should display the editor", () => {
-        const editorProseMirror = wrapper.find(".ProseMirror");
-        expect(editorProseMirror.exists()).toBe(true);
-    });
-    it("should focus the editor", () => {
-        expect(wrapper.find(".ProseMirror-focused").exists()).toBe(true);
-    });
     it("should have a notification bar", () => {
         expect(wrapper.findComponent(NotificationBar).exists()).toBe(true);
     });

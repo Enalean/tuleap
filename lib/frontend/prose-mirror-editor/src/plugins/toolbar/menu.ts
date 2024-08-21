@@ -23,6 +23,8 @@ import type { EditorState, Command } from "prosemirror-state";
 import type { Schema, MarkType } from "prosemirror-model";
 import { toggleMark } from "prosemirror-commands";
 import type { GetText } from "@tuleap/gettext";
+import { v4 as uuidv4 } from "uuid";
+import { linkItem, unlinkItem } from "./links/link-menu-item-builder";
 
 function cmdItem(cmd: Command, options: MenuItemSpec): MenuItem {
     const passed_options: MenuItemSpec = options;
@@ -36,7 +38,7 @@ function cmdItem(cmd: Command, options: MenuItemSpec): MenuItem {
     return new MenuItem(passed_options);
 }
 
-function markActive(state: EditorState, type: MarkType): boolean {
+export function markActive(state: EditorState, type: MarkType): boolean {
     const { from, $from, to, empty } = state.selection;
     if (empty) {
         return Boolean(type.isInSet(state.storedMarks || $from.marks()));
@@ -60,10 +62,13 @@ type MenuItemResult = {
     toggleStrong?: MenuItem;
     toggleEm?: MenuItem;
     toggleCode?: MenuItem;
+    toggleLink?: MenuItem;
     fullMenu: MenuElement[][];
 };
 
 export function buildMenuItems(schema: Schema, gettext_provider: GetText): MenuItemResult {
+    const editor_id = uuidv4();
+
     return {
         fullMenu: [
             [
@@ -85,6 +90,9 @@ export function buildMenuItems(schema: Schema, gettext_provider: GetText): MenuI
                     title: gettext_provider.gettext("Toggle code Ctrl+`"),
                     icon: icons.code,
                 }),
+
+                linkItem(schema.marks.link, editor_id, gettext_provider),
+                unlinkItem(schema.marks.link, editor_id),
             ],
         ],
     };

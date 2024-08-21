@@ -25,6 +25,7 @@ import { custom_schema } from "./custom_schema";
 import type { PluginDropFile } from "./plugins";
 import { initPluginInput, setupToolbar } from "./plugins";
 import type { GetText } from "@tuleap/gettext";
+
 import {
     getLocaleWithDefault,
     getPOFileFromLocaleWithoutExtension,
