@@ -41,11 +41,13 @@ final class ForFloat implements FieldFromWhereBuilder
         $changeset_value_float_alias = "CVFloat_{$field_id}_{$suffix}";
         $changeset_value_alias       = "CV_{$field_id}_{$suffix}";
 
+        $parameters = [];
         if ($value === '') {
             $condition = "$changeset_value_float_alias.value IS NOT NULL";
         } else {
-            $condition = "($changeset_value_float_alias.value IS NULL
+            $condition  = "($changeset_value_float_alias.value IS NULL
                 OR $changeset_value_float_alias.value != ?)";
+            $parameters = [$value];
         }
 
         return $this->from_where_builder->getFromWhere(
@@ -54,7 +56,7 @@ final class ForFloat implements FieldFromWhereBuilder
             $changeset_value_float_alias,
             'tracker_changeset_value_float',
             $condition,
-            [$value],
+            $parameters,
         );
     }
 }
