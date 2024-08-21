@@ -23,37 +23,25 @@ declare(strict_types=1);
 namespace Tuleap\Docman\REST\v1\Service;
 
 use Docman_PermissionsManager;
-use Mockery;
-use PFUser;
+use PHPUnit\Framework\MockObject\MockObject;
+use Project;
 use Tuleap\Docman\REST\v1\ItemRepresentation;
 use Tuleap\Docman\REST\v1\ItemRepresentationBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
 
-final class DocmanServiceRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
+final class DocmanServiceRepresentationBuilderTest extends TestCase
 {
-    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
-    /**
-     * @var Mockery\MockInterface|ItemRepresentationBuilder
-     */
-    private $item_representation_builder;
-    /**
-     * @var Docman_PermissionsManager|Mockery\MockInterface
-     */
-    private $docman_permissions_manager;
-    /**
-     * @var Mockery\MockInterface|DocmanServicePermissionsForGroupsBuilder
-     */
-    private $service_permissions_for_group_builder;
-    /**
-     * @var DocmanServiceRepresentationBuilder
-     */
-    private $builder;
+    private ItemRepresentationBuilder&MockObject $item_representation_builder;
+    private Docman_PermissionsManager&MockObject $docman_permissions_manager;
+    private DocmanServicePermissionsForGroupsBuilder&MockObject $service_permissions_for_group_builder;
+    private DocmanServiceRepresentationBuilder $builder;
 
     protected function setUp(): void
     {
-        $this->item_representation_builder           = Mockery::mock(ItemRepresentationBuilder::class);
-        $this->docman_permissions_manager            = Mockery::mock(Docman_PermissionsManager::class);
-        $this->service_permissions_for_group_builder = Mockery::mock(DocmanServicePermissionsForGroupsBuilder::class);
+        $this->item_representation_builder           = $this->createMock(ItemRepresentationBuilder::class);
+        $this->docman_permissions_manager            = $this->createMock(Docman_PermissionsManager::class);
+        $this->service_permissions_for_group_builder = $this->createMock(DocmanServicePermissionsForGroupsBuilder::class);
 
         $this->builder = new DocmanServiceRepresentationBuilder(
             $this->item_representation_builder,
@@ -64,55 +52,55 @@ final class DocmanServiceRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\
 
     public function testServiceRepresentationHasAllTheInformationWhenTheUserCanAdministrateTheDocumentManager(): void
     {
-        $project = Mockery::mock(\Project::class);
-        $project->shouldReceive('usesService')->andReturn(true);
+        $project = $this->createMock(Project::class);
+        $project->method('usesService')->willReturn(true);
 
-        $root_item_representation = Mockery::mock(ItemRepresentation::class);
-        $this->item_representation_builder->shouldReceive('buildRootId')->andReturn($root_item_representation);
+        $root_item_representation = $this->createMock(ItemRepresentation::class);
+        $this->item_representation_builder->method('buildRootId')->willReturn($root_item_representation);
 
-        $this->docman_permissions_manager->shouldReceive('userCanAdmin')->andReturn(true);
+        $this->docman_permissions_manager->method('userCanAdmin')->willReturn(true);
 
         $permissions_for_groups_representation = DocmanServicePermissionsForGroupsRepresentation::build([]);
-        $this->service_permissions_for_group_builder->shouldReceive('getServicePermissionsForGroupRepresentation')
-            ->andReturn($permissions_for_groups_representation);
+        $this->service_permissions_for_group_builder->method('getServicePermissionsForGroupRepresentation')
+            ->willReturn($permissions_for_groups_representation);
 
-        $representation = $this->builder->getServiceRepresentation($project, Mockery::mock(PFUser::class));
-        $this->assertEquals($root_item_representation, $representation->root_item);
-        $this->assertEquals($permissions_for_groups_representation, $representation->permissions_for_groups);
+        $representation = $this->builder->getServiceRepresentation($project, UserTestBuilder::buildWithDefaults());
+        self::assertEquals($root_item_representation, $representation->root_item);
+        self::assertEquals($permissions_for_groups_representation, $representation->permissions_for_groups);
     }
 
     public function testServiceRepresentationCanNoBeGeneratedWhenTheProjectDoesNotUseTheDocumentManager(): void
     {
-        $project = Mockery::mock(\Project::class);
-        $project->shouldReceive('usesService')->andReturn(false);
+        $project = $this->createMock(Project::class);
+        $project->method('usesService')->willReturn(false);
 
-        $this->assertNull($this->builder->getServiceRepresentation($project, Mockery::mock(PFUser::class)));
+        self::assertNull($this->builder->getServiceRepresentation($project, UserTestBuilder::buildWithDefaults()));
     }
 
     public function testServiceRepresentationIsEmptyIfTheRootItemCanNotBeAccessed(): void
     {
-        $project = Mockery::mock(\Project::class);
-        $project->shouldReceive('usesService')->andReturn(true);
+        $project = $this->createMock(Project::class);
+        $project->method('usesService')->willReturn(true);
 
-        $this->item_representation_builder->shouldReceive('buildRootId')->andReturn(null);
+        $this->item_representation_builder->method('buildRootId')->willReturn(null);
 
-        $representation = $this->builder->getServiceRepresentation($project, Mockery::mock(PFUser::class));
-        $this->assertNull($representation->root_item);
-        $this->assertNull($representation->permissions_for_groups);
+        $representation = $this->builder->getServiceRepresentation($project, UserTestBuilder::buildWithDefaults());
+        self::assertNull($representation->root_item);
+        self::assertNull($representation->permissions_for_groups);
     }
 
     public function testServiceRepresentationOnlyHaveInformationAboutTheRootItemifTheUserCanNotAdministrateTheDocumentManager(): void
     {
-        $project = Mockery::mock(\Project::class);
-        $project->shouldReceive('usesService')->andReturn(true);
+        $project = $this->createMock(Project::class);
+        $project->method('usesService')->willReturn(true);
 
-        $root_item_representation = Mockery::mock(ItemRepresentation::class);
-        $this->item_representation_builder->shouldReceive('buildRootId')->andReturn($root_item_representation);
+        $root_item_representation = $this->createMock(ItemRepresentation::class);
+        $this->item_representation_builder->method('buildRootId')->willReturn($root_item_representation);
 
-        $this->docman_permissions_manager->shouldReceive('userCanAdmin')->andReturn(false);
+        $this->docman_permissions_manager->method('userCanAdmin')->willReturn(false);
 
-        $representation = $this->builder->getServiceRepresentation($project, Mockery::mock(PFUser::class));
-        $this->assertEquals($root_item_representation, $representation->root_item);
-        $this->assertNull($representation->permissions_for_groups);
+        $representation = $this->builder->getServiceRepresentation($project, UserTestBuilder::buildWithDefaults());
+        self::assertEquals($root_item_representation, $representation->root_item);
+        self::assertNull($representation->permissions_for_groups);
     }
 }
