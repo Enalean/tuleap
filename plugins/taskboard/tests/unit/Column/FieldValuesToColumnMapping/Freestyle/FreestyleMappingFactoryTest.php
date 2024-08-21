@@ -23,21 +23,26 @@ declare(strict_types=1);
 namespace Tuleap\Taskboard\Column\FieldValuesToColumnMapping\Freestyle;
 
 use PHPUnit\Framework\MockObject\MockObject;
-use Tracker_FormElementFactory;
 use Tuleap\Taskboard\Tracker\TaskboardTracker;
+use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\OpenListFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
+use Tuleap\Tracker\Test\Stub\Tracker\FormElement\Field\ListFields\RetrieveUsedListFieldStub;
 
 final class FreestyleMappingFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private FreestyleMappingFactory $freestyle_mapping_factory;
     private MockObject&FreestyleMappingDao $dao;
-    private MockObject&Tracker_FormElementFactory $form_element_factory;
+    private RetrieveUsedListFieldStub $list_field_retriever;
 
     protected function setUp(): void
     {
-        $this->dao                       = $this->createMock(FreestyleMappingDao::class);
-        $this->form_element_factory      = $this->createMock(Tracker_FormElementFactory::class);
-        $this->freestyle_mapping_factory = new FreestyleMappingFactory($this->dao, $this->form_element_factory);
+        $this->dao                  = $this->createMock(FreestyleMappingDao::class);
+        $this->list_field_retriever = RetrieveUsedListFieldStub::withNoField();
+    }
+
+    private function getFactory(): FreestyleMappingFactory
+    {
+        return new FreestyleMappingFactory($this->dao, $this->list_field_retriever);
     }
 
     public function testGetMappedFieldReturnsNullWhenNoMapping(): void
@@ -48,7 +53,7 @@ final class FreestyleMappingFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
             ->with($taskboard_tracker)
             ->willReturn(null);
 
-        $result = $this->freestyle_mapping_factory->getMappedField($taskboard_tracker);
+        $result = $this->getFactory()->getMappedField($taskboard_tracker);
         self::assertNull($result);
     }
 
@@ -60,51 +65,44 @@ final class FreestyleMappingFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
             ->method('searchMappedField')
             ->with($taskboard_tracker)
             ->willReturn(123);
-        $field = $this->createMock(\Tracker_FormElement_Field_OpenList::class);
-        $this->form_element_factory->expects(self::once())
-            ->method('getUsedListFieldById')
-            ->with($tracker, 123)
-            ->willReturn($field);
+        $field                      = OpenListFieldBuilder::anOpenListField()->withId(123)->build();
+        $this->list_field_retriever = RetrieveUsedListFieldStub::withField($field);
 
-        $result = $this->freestyle_mapping_factory->getMappedField($taskboard_tracker);
+        $result = $this->getFactory()->getMappedField($taskboard_tracker);
         self::assertNull($result);
     }
 
     public function testGetMappedFieldReturnsMappedSelectbox(): void
     {
-        $tracker           = TrackerTestBuilder::aTracker()->build();
-        $taskboard_tracker = new TaskboardTracker(TrackerTestBuilder::aTracker()->build(), $tracker);
+        $taskboard_tracker = new TaskboardTracker(
+            TrackerTestBuilder::aTracker()->build(),
+            TrackerTestBuilder::aTracker()->build()
+        );
         $this->dao->expects(self::once())
             ->method('searchMappedField')
             ->with($taskboard_tracker)
             ->willReturn(123);
-        $field = $this->createMock(\Tracker_FormElement_Field_Selectbox::class);
-        $this->form_element_factory->expects(self::once())
-            ->method('getUsedListFieldById')
-            ->with($tracker, 123)
-            ->willReturn($field);
+        $field                      = ListFieldBuilder::aListField(123)->build();
+        $this->list_field_retriever = RetrieveUsedListFieldStub::withField($field);
 
-        $result = $this->freestyle_mapping_factory->getMappedField($taskboard_tracker);
-        self::assertNotNull($result);
+        $result = $this->getFactory()->getMappedField($taskboard_tracker);
         self::assertSame($field, $result);
     }
 
     public function testGetMappedFieldReturnsMappedMultiSelectbox(): void
     {
-        $tracker           = TrackerTestBuilder::aTracker()->build();
-        $taskboard_tracker = new TaskboardTracker(TrackerTestBuilder::aTracker()->build(), $tracker);
+        $taskboard_tracker = new TaskboardTracker(
+            TrackerTestBuilder::aTracker()->build(),
+            TrackerTestBuilder::aTracker()->build()
+        );
         $this->dao->expects(self::once())
             ->method('searchMappedField')
             ->with($taskboard_tracker)
             ->willReturn(123);
-        $field = $this->createMock(\Tracker_FormElement_Field_MultiSelectbox::class);
-        $this->form_element_factory->expects(self::once())
-            ->method('getUsedListFieldById')
-            ->with($tracker, 123)
-            ->willReturn($field);
+        $field                      = ListFieldBuilder::aListField(123)->withMultipleValues()->build();
+        $this->list_field_retriever = RetrieveUsedListFieldStub::withField($field);
 
-        $result = $this->freestyle_mapping_factory->getMappedField($taskboard_tracker);
-        self::assertNotNull($result);
+        $result = $this->getFactory()->getMappedField($taskboard_tracker);
         self::assertSame($field, $result);
     }
 
@@ -116,7 +114,7 @@ final class FreestyleMappingFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
             ->with($taskboard_tracker)
             ->willReturn(true);
 
-        self::assertTrue($this->freestyle_mapping_factory->doesFreestyleMappingExist($taskboard_tracker));
+        self::assertTrue($this->getFactory()->doesFreestyleMappingExist($taskboard_tracker));
     }
 
     public function testGetValuesMappedToColumnReturnsEmpty(): void
@@ -128,7 +126,7 @@ final class FreestyleMappingFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
             ->with($taskboard_tracker, $todo_column)
             ->willReturn([]);
 
-        $result = $this->freestyle_mapping_factory->getValuesMappedToColumn($taskboard_tracker, $todo_column);
+        $result = $this->getFactory()->getValuesMappedToColumn($taskboard_tracker, $todo_column);
         self::assertSame(0, count($result->getValueIds()));
     }
 
@@ -141,7 +139,7 @@ final class FreestyleMappingFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
             ->with($taskboard_tracker, $todo_column)
             ->willReturn([['value_id' => 123], ['value_id' => 127]]);
 
-        $result        = $this->freestyle_mapping_factory->getValuesMappedToColumn($taskboard_tracker, $todo_column);
+        $result        = $this->getFactory()->getValuesMappedToColumn($taskboard_tracker, $todo_column);
         $mapped_values = $result->getValueIds();
         self::assertSame(2, count($mapped_values));
         self::assertSame([123, 127], $mapped_values);

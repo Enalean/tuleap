@@ -25,6 +25,7 @@ use Tuleap\Tracker\FormElement\Event\ImportExternalElement;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\RetrieveAnArtifactLinkField;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\RetrieveUsedArtifactLinkFields;
 use Tuleap\Tracker\FormElement\Field\FieldDao;
+use Tuleap\Tracker\FormElement\Field\ListFields\RetrieveUsedListField;
 use Tuleap\Tracker\FormElement\Field\RetrieveUsedFields;
 use Tuleap\Tracker\FormElement\Field\Shareable\PropagatePropertiesDao;
 use Tuleap\Tracker\FormElement\FieldNameFormatter;
@@ -35,7 +36,7 @@ use Tuleap\Tracker\XML\TrackerXmlImportFeedbackCollector;
 
 require_once __DIR__ . '/../../tracker_permissions.php';
 
-class Tracker_FormElementFactory implements RetrieveUsedFields, AddDefaultValuesToFieldsData, RetrieveUsedArtifactLinkFields, RetrieveFormElementsForTracker, RetrieveFieldType, RetrieveAnArtifactLinkField //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+class Tracker_FormElementFactory implements RetrieveUsedFields, AddDefaultValuesToFieldsData, RetrieveUsedArtifactLinkFields, RetrieveFormElementsForTracker, RetrieveFieldType, RetrieveAnArtifactLinkField, RetrieveUsedListField //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
     public const FIELD_STRING_TYPE                 = 'string';
     public const FIELD_TEXT_TYPE                   = 'text';
@@ -839,9 +840,19 @@ class Tracker_FormElementFactory implements RetrieveUsedFields, AddDefaultValues
             ->instanciateWith([$this, 'getCachedInstanceFromRow']);
     }
 
-    public function getUsedListFieldById($tracker, $field_id)
-    {
-        return $this->getUsedFieldByIdAndType($tracker, $field_id, ['sb', 'msb', 'tbl', 'cb', 'rb']);
+    public function getUsedListFieldById(
+        \Tracker $tracker,
+        int $field_id,
+    ): \Tracker_FormElement_Field_Selectbox|\Tracker_FormElement_Field_OpenList|null {
+        $field = $this->getUsedFieldByIdAndType(
+            $tracker,
+            $field_id,
+            [self::FIELD_SELECT_BOX_TYPE, self::FIELD_MULTI_SELECT_BOX_TYPE, self::FIELD_OPEN_LIST_TYPE, self::FIELD_CHECKBOX_TYPE, self::FIELD_RADIO_BUTTON_TYPE]
+        );
+        assert(
+            $field === null || $field instanceof \Tracker_FormElement_Field_Selectbox || $field instanceof \Tracker_FormElement_Field_OpenList
+        );
+        return $field;
     }
 
     public function getUsedSbFields($tracker)
