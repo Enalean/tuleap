@@ -6,7 +6,8 @@
 let
   baseArchTarget = "x86_64";
   buildTargetRust = "${baseArchTarget}-unknown-linux-musl";
-  rustBinWithMuslTarget = pkgs.rust-bin.stable.latest.minimal.override {
+  # Meilisearch does not currently build with Rust 1.80+ so pin Rust 1.79 for now
+  rustBinWithMuslTarget = pkgs.rust-bin.stable."1.79.0".minimal.override {
     targets = [ buildTargetRust ];
   };
   zigCC = pkgs.writeShellScriptBin "zigcc" ''
