@@ -24,9 +24,9 @@ namespace Tuleap\Taskboard\Column\FieldValuesToColumnMapping;
 
 use Cardwall_Column;
 use Planning_Milestone;
+use Tuleap\Taskboard\Column\FieldValuesToColumnMapping\Freestyle\FreestyleMappedFieldValuesRetriever;
 use Tuleap\Taskboard\Column\FieldValuesToColumnMapping\Freestyle\FreestyleMappingDao;
 use Tuleap\Taskboard\Column\FieldValuesToColumnMapping\Freestyle\FreestyleMappedFieldRetriever;
-use Tuleap\Taskboard\Column\FieldValuesToColumnMapping\Freestyle\FreestyleMappingFactory;
 use Tuleap\Taskboard\Tracker\TaskboardTracker;
 use Tuleap\Taskboard\Tracker\TrackerCollectionRetriever;
 
@@ -60,7 +60,7 @@ class TrackerMappingPresenterBuilder
                 new FreestyleMappedFieldRetriever($freestyle_mapping_dao, \Tracker_FormElementFactory::instance())
             ),
             new MappedValuesRetriever(
-                new FreestyleMappingFactory($freestyle_mapping_dao),
+                new FreestyleMappedFieldValuesRetriever($freestyle_mapping_dao, $freestyle_mapping_dao),
                 $semantic_status_provider
             )
         );

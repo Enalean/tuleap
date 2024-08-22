@@ -20,40 +20,37 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Cardwall\Test\Builders;
+namespace Tuleap\Taskboard\Column\FieldValuesToColumnMapping\Freestyle;
 
-final class ColumnTestBuilder
+use Cardwall_Column;
+use Tuleap\Taskboard\Tracker\TaskboardTracker;
+
+final readonly class SearchMappedFieldValuesForColumnStub implements SearchMappedFieldValuesForColumn
 {
-    private int $id       = 45;
-    private string $label = 'Todo';
-
-    private function __construct()
+    /**
+     * @param list<int> $bind_value_ids
+     */
+    private function __construct(private array $bind_value_ids)
     {
     }
 
-    public static function aColumn(): self
+    /**
+     * @param list<int> $bind_value_ids
+     */
+    public static function withValues(array $bind_value_ids): self
     {
-        return new self();
+        return new self($bind_value_ids);
     }
 
-    public function withId(int $id): self
+    public static function withNoMappedValue(): self
     {
-        $this->id = $id;
-        return $this;
+        return new self([]);
     }
 
-    public function withLabel(string $label): self
-    {
-        $this->label = $label;
-        return $this;
-    }
-
-    public function build(): \Cardwall_Column
-    {
-        return new \Cardwall_Column(
-            $this->id,
-            $this->label,
-            \Cardwall_OnTop_Config_ColumnFactory::DEFAULT_HEADER_COLOR,
-        );
+    public function searchMappedFieldValuesForColumn(
+        TaskboardTracker $taskboard_tracker,
+        Cardwall_Column $column,
+    ): array {
+        return $this->bind_value_ids;
     }
 }

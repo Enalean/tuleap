@@ -23,34 +23,26 @@ declare(strict_types=1);
 namespace Tuleap\Taskboard\Column\FieldValuesToColumnMapping;
 
 use Cardwall_Column;
-use Cardwall_FieldProviders_SemanticStatusFieldRetriever;
 use Tracker;
-use Tuleap\Taskboard\Column\FieldValuesToColumnMapping\Freestyle\FreestyleMappingFactory;
+use Tuleap\Taskboard\Column\FieldValuesToColumnMapping\Freestyle\FreestyleMappedFieldValuesRetriever;
 use Tuleap\Taskboard\Tracker\TaskboardTracker;
 
 class MappedValuesRetriever
 {
-    /** @var FreestyleMappingFactory */
-    private $freestyle_mapping_factory;
-    /** @var Cardwall_FieldProviders_SemanticStatusFieldRetriever */
-    private $status_retriever;
-
     public function __construct(
-        FreestyleMappingFactory $freestyle_mapping_factory,
-        Cardwall_FieldProviders_SemanticStatusFieldRetriever $status_retriever,
+        private FreestyleMappedFieldValuesRetriever $freestyle_retriever,
+        private \Cardwall_FieldProviders_SemanticStatusFieldRetriever $status_retriever,
     ) {
-        $this->freestyle_mapping_factory = $freestyle_mapping_factory;
-        $this->status_retriever          = $status_retriever;
     }
 
     public function getValuesMappedToColumn(
         TaskboardTracker $taskboard_tracker,
         Cardwall_Column $column,
     ): MappedValuesInterface {
-        if ($this->freestyle_mapping_factory->doesFreestyleMappingExist($taskboard_tracker)) {
-            return $this->freestyle_mapping_factory->getValuesMappedToColumn($taskboard_tracker, $column);
-        }
-        return $this->matchStatusValuesByDuckTyping($taskboard_tracker->getTracker(), $column);
+        return $this->freestyle_retriever->getValuesMappedToColumn($taskboard_tracker, $column)->match(
+            static fn($freestyle_mapped_values) => $freestyle_mapped_values,
+            fn() => $this->matchStatusValuesByDuckTyping($taskboard_tracker->getTracker(), $column)
+        );
     }
 
     private function matchStatusValuesByDuckTyping(Tracker $tracker, Cardwall_Column $column): MappedValuesInterface

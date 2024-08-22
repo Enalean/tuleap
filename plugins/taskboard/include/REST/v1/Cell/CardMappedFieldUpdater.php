@@ -38,9 +38,9 @@ use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\REST\I18NRestException;
 use Tuleap\Search\ItemToIndexQueueEventBased;
+use Tuleap\Taskboard\Column\FieldValuesToColumnMapping\Freestyle\FreestyleMappedFieldValuesRetriever;
 use Tuleap\Taskboard\Column\FieldValuesToColumnMapping\Freestyle\FreestyleMappingDao;
 use Tuleap\Taskboard\Column\FieldValuesToColumnMapping\Freestyle\FreestyleMappedFieldRetriever;
-use Tuleap\Taskboard\Column\FieldValuesToColumnMapping\Freestyle\FreestyleMappingFactory;
 use Tuleap\Taskboard\Column\FieldValuesToColumnMapping\MappedFieldRetriever;
 use Tuleap\Taskboard\Column\FieldValuesToColumnMapping\MappedValuesRetriever;
 use Tuleap\Taskboard\Column\InvalidColumnException;
@@ -184,7 +184,7 @@ class CardMappedFieldUpdater
                 new FreestyleMappedFieldRetriever($freestyle_mapping_dao, $form_element_factory)
             ),
             new MappedValuesRetriever(
-                new FreestyleMappingFactory($freestyle_mapping_dao),
+                new FreestyleMappedFieldValuesRetriever($freestyle_mapping_dao, $freestyle_mapping_dao),
                 $semantic_status_provider
             ),
             new FirstPossibleValueInListRetriever(

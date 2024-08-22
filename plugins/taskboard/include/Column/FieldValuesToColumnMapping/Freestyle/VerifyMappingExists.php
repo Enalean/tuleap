@@ -20,40 +20,11 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Cardwall\Test\Builders;
+namespace Tuleap\Taskboard\Column\FieldValuesToColumnMapping\Freestyle;
 
-final class ColumnTestBuilder
+use Tuleap\Taskboard\Tracker\TaskboardTracker;
+
+interface VerifyMappingExists
 {
-    private int $id       = 45;
-    private string $label = 'Todo';
-
-    private function __construct()
-    {
-    }
-
-    public static function aColumn(): self
-    {
-        return new self();
-    }
-
-    public function withId(int $id): self
-    {
-        $this->id = $id;
-        return $this;
-    }
-
-    public function withLabel(string $label): self
-    {
-        $this->label = $label;
-        return $this;
-    }
-
-    public function build(): \Cardwall_Column
-    {
-        return new \Cardwall_Column(
-            $this->id,
-            $this->label,
-            \Cardwall_OnTop_Config_ColumnFactory::DEFAULT_HEADER_COLOR,
-        );
-    }
+    public function doesFreestyleMappingExist(TaskboardTracker $taskboard_tracker): bool;
 }
