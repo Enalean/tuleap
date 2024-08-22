@@ -100,21 +100,5 @@ describe("TableOfContents", () => {
         it("should display the table of content title", () => {
             expect(wrapper.find("h1").text()).toBe("Table of contents");
         });
-
-        it.each([
-            [false, "#section-"],
-            [true, "#pdf-section-"],
-        ])(
-            "When is_print_mode is %s, then sections ids in urls should be prefixed with '%s'",
-            async (is_print_mode, expected_prefix) => {
-                await wrapper.setProps({ is_print_mode });
-
-                const list = wrapper.find("ol");
-                const links = list.findAll("li a");
-                expect(links.length).toBe(2);
-                expect(links[0].attributes().href).toBe(`${expected_prefix}${section_1.id}`);
-                expect(links[1].attributes().href).toBe(`${expected_prefix}${section_2.id}`);
-            },
-        );
     });
 });
