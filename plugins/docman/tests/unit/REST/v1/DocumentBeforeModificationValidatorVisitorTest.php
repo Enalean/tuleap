@@ -30,107 +30,88 @@ use Docman_Item;
 use Docman_Link;
 use Docman_PermissionsManager;
 use Docman_Wiki;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PFUser;
+use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\Docman\ItemType\DoesItemHasExpectedTypeVisitor;
+use Tuleap\REST\I18NRestException;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
 
-class DocumentBeforeModificationValidatorVisitorTest extends \Tuleap\Test\PHPUnit\TestCase
+final class DocumentBeforeModificationValidatorVisitorTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var Docman_Item|\Mockery\MockInterface
-     */
-    private $item;
-    /**
-     * @var \Mockery\MockInterface|PFUser
-     */
-    private $current_user;
-    /**
-     * @var Docman_PermissionsManager|\Mockery\MockInterface
-     */
-    private $permission_manager;
-    /**
-     * @var DocumentBeforeModificationValidatorVisitor
-     */
-    private $validator_visitor;
+    private Docman_PermissionsManager&MockObject $permission_manager;
+    private DocumentBeforeModificationValidatorVisitor $validator_visitor;
 
     public function setUp(): void
     {
-        parent::setUp();
-
-        $this->permission_manager = \Mockery::mock(Docman_PermissionsManager::class);
-        $this->current_user       = \Mockery::mock(PFUser::class);
-        $this->item               = \Mockery::mock(Docman_Item::class);
-        $this->item->shouldReceive('getId')->andReturn(1);
-        $this->validator_visitor = new DocumentBeforeModificationValidatorVisitor(
+        $this->permission_manager = $this->createMock(Docman_PermissionsManager::class);
+        $this->validator_visitor  = new DocumentBeforeModificationValidatorVisitor(
             $this->permission_manager,
-            $this->current_user,
-            $this->item,
+            UserTestBuilder::buildWithDefaults(),
+            new Docman_Item(['item_id' => 1]),
             new DoesItemHasExpectedTypeVisitor(Docman_File::class)
         );
     }
 
-    public function testItThrowsErrorWhenExpectingAFileAndGivenItemIsLink()
+    public function testItThrowsErrorWhenExpectingAFileAndGivenItemIsLink(): void
     {
         $link_item = new Docman_Link();
 
-        $this->expectException(\Tuleap\REST\I18NRestException::class);
+        self::expectException(I18NRestException::class);
 
         $link_item->accept($this->validator_visitor);
     }
 
-    public function testItThrowsErrorWhenExpectingAFileAndGivenItemIsEmbeddedFile()
+    public function testItThrowsErrorWhenExpectingAFileAndGivenItemIsEmbeddedFile(): void
     {
         $embedded_file_item = new Docman_EmbeddedFile();
 
-        $this->expectException(\Tuleap\REST\I18NRestException::class);
+        self::expectException(I18NRestException::class);
 
         $embedded_file_item->accept($this->validator_visitor);
     }
 
-    public function testItThrowsErrorWhenExpectingAFileAndGivenItemIsEmptyDocument()
+    public function testItThrowsErrorWhenExpectingAFileAndGivenItemIsEmptyDocument(): void
     {
         $empty_item = new Docman_Empty();
 
-        $this->expectException(\Tuleap\REST\I18NRestException::class);
+        self::expectException(I18NRestException::class);
 
         $empty_item->accept($this->validator_visitor);
     }
 
-    public function testItThrowsErrorWhenExpectingAFileAndGivenItemIsWiki()
+    public function testItThrowsErrorWhenExpectingAFileAndGivenItemIsWiki(): void
     {
         $wiki_item = new Docman_Wiki();
 
-        $this->expectException(\Tuleap\REST\I18NRestException::class);
+        self::expectException(I18NRestException::class);
 
         $wiki_item->accept($this->validator_visitor);
     }
 
-    public function testItThrowsErrorWhenExpectingAFileAndGivenItemIsFolder()
+    public function testItThrowsErrorWhenExpectingAFileAndGivenItemIsFolder(): void
     {
         $folder_item = new Docman_Folder();
 
-        $this->expectException(\Tuleap\REST\I18NRestException::class);
+        self::expectException(I18NRestException::class);
 
         $folder_item->accept($this->validator_visitor);
     }
 
-    public function testItThrowsErrorWhenExpectingAFileAndGivenItemIsGeneric()
+    public function testItThrowsErrorWhenExpectingAFileAndGivenItemIsGeneric(): void
     {
         $item = new Docman_Item();
 
-        $this->expectException(\Tuleap\REST\I18NRestException::class);
+        self::expectException(I18NRestException::class);
 
         $item->accept($this->validator_visitor);
     }
 
-    public function testItDoesNotThrowErrorWhenExpectingAFileAndGivenItemIsAFile()
+    public function testItDoesNotThrowErrorWhenExpectingAFileAndGivenItemIsAFile(): void
     {
-        $this->expectNotToPerformAssertions();
+        self::expectNotToPerformAssertions();
         $file_item = new Docman_File();
 
-        $this->permission_manager->shouldReceive('userCanWrite')->andReturn(true);
+        $this->permission_manager->method('userCanWrite')->willReturn(true);
 
         $file_item->accept($this->validator_visitor);
     }
@@ -139,8 +120,8 @@ class DocumentBeforeModificationValidatorVisitorTest extends \Tuleap\Test\PHPUni
     {
         $file_item = new Docman_File();
 
-        $this->permission_manager->shouldReceive('userCanWrite')->andReturn(false);
-        $this->expectException(\Tuleap\REST\I18NRestException::class);
+        $this->permission_manager->method('userCanWrite')->willReturn(false);
+        self::expectException(I18NRestException::class);
 
         $file_item->accept($this->validator_visitor);
     }
