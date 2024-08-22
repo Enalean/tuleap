@@ -185,14 +185,14 @@ final readonly class CrossTrackerArtifactReportFactory
             $offset
         );
 
+        if ($artifact_ids === []) {
+            return new CrossTrackerReportContentRepresentation([], [], 0);
+        }
+
         $total_size = $this->expert_query_dao->countArtifactsMatchingQuery(
             $additional_from_where,
             $this->getTrackersId($trackers),
         );
-
-        if ($artifact_ids === []) {
-            return new CrossTrackerReportContentRepresentation([], [], 0);
-        }
 
         $additional_select_from = $this->select_builder->buildSelectFrom($query->getSelect(), $trackers, $current_user);
         $select_results         = $this->expert_query_dao->searchArtifactsColumnsMatchingIds(
