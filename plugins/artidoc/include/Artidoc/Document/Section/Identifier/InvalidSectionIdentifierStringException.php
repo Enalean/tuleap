@@ -24,8 +24,8 @@ namespace Tuleap\Artidoc\Document\Section\Identifier;
 
 final class InvalidSectionIdentifierStringException extends \Exception
 {
-    public function __construct(\Exception $previous)
+    public function __construct(string $section_identifier)
     {
-        parent::__construct($previous->getMessage(), (int) $previous->getCode(), $previous);
+        parent::__construct($section_identifier . ' is not a valid section identifier');
     }
 }

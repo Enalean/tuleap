@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\DB;
 
 use Ramsey\Uuid\Rfc4122\UuidV7;
+use Tuleap\Option\Option;
 
 final class DatabaseUUIDV7Factory implements DatabaseUUIDFactory
 {
@@ -41,12 +42,15 @@ final class DatabaseUUIDV7Factory implements DatabaseUUIDFactory
         return new UUIDFromRamseyUUIDLibrary(UuidV7::fromBytes($bytes));
     }
 
-    public function buildUUIDFromHexadecimalString(string $string): UUID
+    public function buildUUIDFromHexadecimalString(string $string): Option
     {
         try {
-            return new UUIDFromRamseyUUIDLibrary(UuidV7::fromString($string));
+            /** @psalm-var UUID $uuid */
+            $uuid = new UUIDFromRamseyUUIDLibrary(UuidV7::fromString($string));
         } catch (\Ramsey\Uuid\Exception\InvalidUuidStringException $exception) {
-            throw InvalidUuidStringException::fromException($exception);
+            return Option::nothing(UUID::class);
         }
+
+        return Option::fromValue($uuid);
     }
 }

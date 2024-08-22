@@ -25,6 +25,7 @@ namespace Tuleap\FullTextSearchMeilisearch\Index;
 use ParagonIE\EasyDB\EasyDB;
 use ParagonIE\EasyDB\EasyStatement;
 use Tuleap\DB\DataAccessObject;
+use Tuleap\DB\UUID;
 use Tuleap\FullTextSearchCommon\Index\PlaintextItemToIndex;
 use Tuleap\Search\IndexedItemFound;
 use Tuleap\Search\IndexedItemsToRemove;
@@ -121,7 +122,12 @@ class MeilisearchMetadataDAO extends DataAccessObject
 
         $ids_to_remove = [];
         foreach ($encoded_uuids_to_remove as $encoded_uuid_to_remove) {
-            $ids_to_remove[] = $this->uuid_factory->buildUUIDFromHexadecimalString($encoded_uuid_to_remove)->getBytes();
+            $this->uuid_factory->buildUUIDFromHexadecimalString($encoded_uuid_to_remove)
+                ->apply(
+                    function (UUID $uuid) use (&$ids_to_remove): void {
+                        $ids_to_remove[] = $uuid->getBytes();
+                    }
+                );
         }
 
         $this->getDB()->tryFlatTransaction(
@@ -141,7 +147,12 @@ class MeilisearchMetadataDAO extends DataAccessObject
     {
         $item_ids = [];
         foreach ($encoded_item_ids as $encoded_item_id) {
-            $item_ids[$encoded_item_id] = $this->uuid_factory->buildUUIDFromHexadecimalString($encoded_item_id)->getBytes();
+            $this->uuid_factory->buildUUIDFromHexadecimalString($encoded_item_id)
+                ->apply(
+                    function (UUID $uuid) use (&$item_ids, $encoded_item_id): void {
+                        $item_ids[$encoded_item_id] = $uuid->getBytes();
+                    }
+                );
         }
 
         $ids_statement = EasyStatement::open()->in('plugin_fts_meilisearch_item.id IN (?*)', array_values($item_ids));

@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\Bugzilla\Reference;
 
 use Tuleap\DB\DataAccessObject;
-use Tuleap\DB\InvalidUuidStringException;
 use Tuleap\DB\UUID;
 
 /**
@@ -86,14 +85,10 @@ class Dao extends DataAccessObject
 
     public function edit(string $uuid_hex, string $server, string $username, string $encrypted_api_key, bool $has_api_key_always_been_encrypted, bool $are_followups_private, string $rest_api_url): void
     {
-        try {
-            $uuid = $this->uuid_factory->buildUUIDFromHexadecimalString($uuid_hex);
-        } catch (InvalidUuidStringException $e) {
-            return;
-        }
-        $this->getDB()->tryFlatTransaction(function () use ($uuid, $server, $rest_api_url, $username, $encrypted_api_key, $has_api_key_always_been_encrypted, $are_followups_private): void {
-            $this->getDB()->run(
-                'UPDATE plugin_bugzilla_reference SET
+        $this->uuid_factory->buildUUIDFromHexadecimalString($uuid_hex)->apply(
+            fn(UUID $uuid) => $this->getDB()->tryFlatTransaction(function () use ($uuid, $server, $rest_api_url, $username, $encrypted_api_key, $has_api_key_always_been_encrypted, $are_followups_private): void {
+                $this->getDB()->run(
+                    'UPDATE plugin_bugzilla_reference SET
                     server = ?,
                     rest_url = ?,
                     username = ?,
@@ -102,19 +97,19 @@ class Dao extends DataAccessObject
                     has_api_key_always_been_encrypted = ?,
                     are_followup_private = ?
                     WHERE id = ?',
-                $server,
-                $rest_api_url,
-                $username,
-                $encrypted_api_key,
-                $has_api_key_always_been_encrypted,
-                $are_followups_private,
-                $uuid->getBytes()
-            );
+                    $server,
+                    $rest_api_url,
+                    $username,
+                    $encrypted_api_key,
+                    $has_api_key_always_been_encrypted,
+                    $are_followups_private,
+                    $uuid->getBytes()
+                );
 
-            $link = $server . '/show_bug.cgi?id=$1';
+                $link = $server . '/show_bug.cgi?id=$1';
 
-            $this->getDB()->run(
-                "UPDATE reference AS ref
+                $this->getDB()->run(
+                    "UPDATE reference AS ref
                     INNER JOIN plugin_bugzilla_reference AS bz ON (
                         bz.keyword = ref.keyword
                         AND ref.nature = 'bugzilla'
@@ -122,10 +117,11 @@ class Dao extends DataAccessObject
                     )
                 SET ref.link = ?
                 WHERE bz.id = ?",
-                $link,
-                $uuid->getBytes()
-            );
-        });
+                    $link,
+                    $uuid->getBytes()
+                );
+            })
+        );
     }
 
     /**
@@ -133,48 +129,50 @@ class Dao extends DataAccessObject
      */
     public function getReferenceById(string $uuid_hex): ?array
     {
-        try {
-            $uuid = $this->uuid_factory->buildUUIDFromHexadecimalString($uuid_hex);
-        } catch (InvalidUuidStringException $e) {
-            return null;
-        }
-        $row = $this->getDB()->row(
-            'SELECT id, keyword, server, username, api_key, encrypted_api_key, has_api_key_always_been_encrypted, are_followup_private, rest_url
+        return $this->uuid_factory->buildUUIDFromHexadecimalString($uuid_hex)
+            ->mapOr(
+                /** @return BugzillaReferenceRow|null */
+                function (UUID $uuid): ?array {
+                    $row = $this->getDB()->row(
+                        'SELECT id, keyword, server, username, api_key, encrypted_api_key, has_api_key_always_been_encrypted, are_followup_private, rest_url
                        FROM plugin_bugzilla_reference WHERE id = ?',
-            $uuid->getBytes()
-        );
-        if ($row === null) {
-            return null;
-        }
-        $row['id'] = $uuid;
-        return $row;
+                        $uuid->getBytes()
+                    );
+                    if ($row === null) {
+                        return null;
+                    }
+                    $row['id'] = $uuid;
+                    return $row;
+                },
+                null
+            );
     }
 
     public function delete(string $uuid_hex): void
     {
-        try {
-            $uuid = $this->uuid_factory->buildUUIDFromHexadecimalString($uuid_hex);
-        } catch (InvalidUuidStringException $e) {
-            return;
-        }
-        $sql = "DELETE bugzilla, source_ref, target_ref, reference, reference_group
-                FROM plugin_bugzilla_reference AS bugzilla
-                    LEFT JOIN cross_references AS source_ref ON (
-                        source_ref.source_type = 'bugzilla' AND source_ref.source_keyword = bugzilla.keyword
-                    )
-                    LEFT JOIN cross_references AS target_ref ON (
-                        target_ref.target_type = 'bugzilla' AND target_ref.target_keyword = bugzilla.keyword
-                    )
-                    LEFT JOIN reference ON (
-                        reference.keyword = bugzilla.keyword
-                        AND reference.nature = 'bugzilla'
-                        AND reference.scope = 'S'
-                    )
-                    LEFT JOIN reference_group ON (
-                        reference.id = reference_group.reference_id
-                    )
-                WHERE bugzilla.id = ?";
+        $this->uuid_factory->buildUUIDFromHexadecimalString($uuid_hex)
+            ->apply(
+                function (UUID $uuid): void {
+                    $sql = "DELETE bugzilla, source_ref, target_ref, reference, reference_group
+                            FROM plugin_bugzilla_reference AS bugzilla
+                                LEFT JOIN cross_references AS source_ref ON (
+                                    source_ref.source_type = 'bugzilla' AND source_ref.source_keyword = bugzilla.keyword
+                                )
+                                LEFT JOIN cross_references AS target_ref ON (
+                                    target_ref.target_type = 'bugzilla' AND target_ref.target_keyword = bugzilla.keyword
+                                )
+                                LEFT JOIN reference ON (
+                                    reference.keyword = bugzilla.keyword
+                                    AND reference.nature = 'bugzilla'
+                                    AND reference.scope = 'S'
+                                )
+                                LEFT JOIN reference_group ON (
+                                    reference.id = reference_group.reference_id
+                                )
+                            WHERE bugzilla.id = ?";
 
-        $this->getDB()->run($sql, $uuid->getBytes());
+                    $this->getDB()->run($sql, $uuid->getBytes());
+                }
+            );
     }
 }
