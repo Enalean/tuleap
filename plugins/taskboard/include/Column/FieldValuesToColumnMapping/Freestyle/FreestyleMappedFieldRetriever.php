@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Taskboard\Column\FieldValuesToColumnMapping\Freestyle;
 
-use Tracker_FormElement_Field_Selectbox;
+use Tuleap\Option\Option;
 use Tuleap\Taskboard\Tracker\TaskboardTracker;
 use Tuleap\Tracker\FormElement\Field\ListFields\RetrieveUsedListField;
 
@@ -34,15 +34,18 @@ final readonly class FreestyleMappedFieldRetriever
     ) {
     }
 
-    public function getMappedField(TaskboardTracker $taskboard_tracker): ?Tracker_FormElement_Field_Selectbox
+    /**
+     * @return Option<\Tracker_FormElement_Field_Selectbox>
+     */
+    public function getMappedField(TaskboardTracker $taskboard_tracker): Option
     {
         return $this->search_mapped_field->searchMappedField($taskboard_tracker)
-            ->mapOr(function (int $field_id) use ($taskboard_tracker): ?\Tracker_FormElement_Field_Selectbox {
+            ->andThen(function (int $field_id) use ($taskboard_tracker) {
                 $field = $this->form_element_factory->getUsedListFieldById($taskboard_tracker->getTracker(), $field_id);
                 if ($field instanceof \Tracker_FormElement_Field_Selectbox) {
-                    return $field;
+                    return Option::fromValue($field);
                 }
-                return null;
-            }, null);
+                return Option::nothing(\Tracker_FormElement_Field_Selectbox::class);
+            });
     }
 }

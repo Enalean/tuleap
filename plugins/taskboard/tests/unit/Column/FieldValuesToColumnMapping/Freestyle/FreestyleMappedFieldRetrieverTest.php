@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Taskboard\Column\FieldValuesToColumnMapping\Freestyle;
 
+use Tuleap\Option\Option;
 use Tuleap\Taskboard\Tracker\TaskboardTracker;
 use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\OpenListFieldBuilder;
@@ -32,54 +33,55 @@ final class FreestyleMappedFieldRetrieverTest extends \Tuleap\Test\PHPUnit\TestC
 {
     private SearchMappedFieldStub $search_mapped_field;
     private RetrieveUsedListFieldStub $form_element_factory;
+    private TaskboardTracker $taskboard_tracker;
 
     protected function setUp(): void
     {
         $this->search_mapped_field  = SearchMappedFieldStub::withNoField();
         $this->form_element_factory = RetrieveUsedListFieldStub::withNoField();
-    }
-
-    private function getMappedField(): ?\Tracker_FormElement_Field_Selectbox
-    {
-        $taskboard_tracker = new TaskboardTracker(
+        $this->taskboard_tracker    = new TaskboardTracker(
             TrackerTestBuilder::aTracker()->withId(276)->build(),
             TrackerTestBuilder::aTracker()->withId(587)->build()
         );
-
-        $retriever = new FreestyleMappedFieldRetriever($this->search_mapped_field, $this->form_element_factory);
-        return $retriever->getMappedField($taskboard_tracker);
     }
 
-    public function testGetMappedFieldReturnsNullWhenNoMapping(): void
+    /** @return Option<\Tracker_FormElement_Field_Selectbox> */
+    private function getMappedField(): Option
+    {
+        $retriever = new FreestyleMappedFieldRetriever($this->search_mapped_field, $this->form_element_factory);
+        return $retriever->getMappedField($this->taskboard_tracker);
+    }
+
+    public function testGetMappedFieldReturnsNothingWhenNoMapping(): void
     {
         $this->search_mapped_field = SearchMappedFieldStub::withNoField();
-        self::assertNull($this->getMappedField());
+        self::assertTrue($this->getMappedField()->isNothing());
     }
 
-    public function testGetMappedFieldReturnsNullWhenFieldIsNotSelectbox(): void
+    public function testGetMappedFieldReturnsNothingWhenFieldIsNotSelectbox(): void
     {
-        $this->search_mapped_field  = SearchMappedFieldStub::withMappedField(123);
+        $this->search_mapped_field  = SearchMappedFieldStub::withMappedField($this->taskboard_tracker, 123);
         $field                      = OpenListFieldBuilder::anOpenListField()->withId(123)->build();
         $this->form_element_factory = RetrieveUsedListFieldStub::withField($field);
 
-        self::assertNull($this->getMappedField());
+        self::assertTrue($this->getMappedField()->isNothing());
     }
 
     public function testGetMappedFieldReturnsMappedSelectbox(): void
     {
-        $this->search_mapped_field  = SearchMappedFieldStub::withMappedField(123);
+        $this->search_mapped_field  = SearchMappedFieldStub::withMappedField($this->taskboard_tracker, 123);
         $field                      = ListFieldBuilder::aListField(123)->build();
         $this->form_element_factory = RetrieveUsedListFieldStub::withField($field);
 
-        self::assertSame($field, $this->getMappedField());
+        self::assertSame($field, $this->getMappedField()->unwrapOr(null));
     }
 
     public function testGetMappedFieldReturnsMappedMultiSelectbox(): void
     {
-        $this->search_mapped_field  = SearchMappedFieldStub::withMappedField(123);
+        $this->search_mapped_field  = SearchMappedFieldStub::withMappedField($this->taskboard_tracker, 123);
         $field                      = ListFieldBuilder::aListField(123)->withMultipleValues()->build();
         $this->form_element_factory = RetrieveUsedListFieldStub::withField($field);
 
-        self::assertSame($field, $this->getMappedField());
+        self::assertSame($field, $this->getMappedField()->unwrapOr(null));
     }
 }

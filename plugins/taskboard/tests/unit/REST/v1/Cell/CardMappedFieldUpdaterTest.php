@@ -32,6 +32,8 @@ use Tuleap\GlobalLanguageMock;
 use Tuleap\GlobalResponseMock;
 use Tuleap\REST\I18NRestException;
 use Tuleap\Taskboard\Column\FieldValuesToColumnMapping\EmptyMappedValues;
+use Tuleap\Taskboard\Column\FieldValuesToColumnMapping\Freestyle\FreestyleMappedFieldRetriever;
+use Tuleap\Taskboard\Column\FieldValuesToColumnMapping\Freestyle\SearchMappedFieldStub;
 use Tuleap\Taskboard\Column\FieldValuesToColumnMapping\MappedFieldRetriever;
 use Tuleap\Taskboard\Column\FieldValuesToColumnMapping\MappedValues;
 use Tuleap\Taskboard\Column\FieldValuesToColumnMapping\MappedValuesRetriever;
@@ -42,6 +44,7 @@ use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\REST\Artifact\ArtifactUpdater;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
+use Tuleap\Tracker\Test\Stub\Tracker\FormElement\Field\ListFields\RetrieveUsedListFieldStub;
 use Tuleap\Tracker\Workflow\FirstPossibleValueInListRetriever;
 use Tuleap\Tracker\Workflow\NoPossibleValueException;
 
@@ -50,16 +53,17 @@ final class CardMappedFieldUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
     use GlobalResponseMock;
     use GlobalLanguageMock;
 
-    private CardMappedFieldUpdater $updater;
     private MockObject&Cardwall_OnTop_Config_ColumnFactory $column_factory;
     private MockObject&MilestoneTrackerRetriever $milestone_tracker_retriever;
     private MockObject&AddValidator $add_validator;
     private MockObject&ArtifactUpdater $artifact_updater;
-    private MockObject&MappedFieldRetriever $mapped_field_retriever;
+    private SearchMappedFieldStub $search_mapped_field;
+    private RetrieveUsedListFieldStub $list_field_retriever;
     private MockObject&MappedValuesRetriever $mapped_values_retriever;
 
     private Artifact $swimlane_artifact;
-    private MockObject&Artifact $artifact_to_add;
+    private Artifact $artifact_to_add;
+    private \Tracker $tracker_of_artifact_to_add;
     private PFUser $current_user;
     private Tracker_FormElement_Field_Selectbox&MockObject $mapped_field;
     private FirstPossibleValueInListRetriever&MockObject $first_possible_value_retriever;
@@ -71,22 +75,49 @@ final class CardMappedFieldUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->milestone_tracker_retriever    = $this->createMock(MilestoneTrackerRetriever::class);
         $this->add_validator                  = $this->createMock(AddValidator::class);
         $this->artifact_updater               = $this->createMock(ArtifactUpdater::class);
-        $this->mapped_field_retriever         = $this->createMock(MappedFieldRetriever::class);
+        $this->search_mapped_field            = SearchMappedFieldStub::withNoField();
+        $this->list_field_retriever           = RetrieveUsedListFieldStub::withNoField();
         $this->mapped_values_retriever        = $this->createMock(MappedValuesRetriever::class);
         $this->first_possible_value_retriever = $this->createMock(FirstPossibleValueInListRetriever::class);
-        $this->updater                        = new CardMappedFieldUpdater(
+
+        $this->swimlane_artifact = ArtifactTestBuilder::anArtifact(1)->build();
+        $this->current_user      = UserTestBuilder::aUser()->build();
+
+        $this->tracker_of_artifact_to_add = TrackerTestBuilder::aTracker()
+            ->withId(90)
+            ->withName('Tasks')
+            ->build();
+        $this->artifact_to_add            = ArtifactTestBuilder::anArtifact(481)
+            ->inTracker($this->tracker_of_artifact_to_add)->build();
+    }
+
+    private function update(int $column_id): void
+    {
+        $status_retriever = $this->createStub(\Cardwall_FieldProviders_SemanticStatusFieldRetriever::class);
+        $status_retriever->method('getField')->willReturn(null);
+
+        $updater = new CardMappedFieldUpdater(
             $this->column_factory,
             $this->milestone_tracker_retriever,
             $this->add_validator,
             $this->artifact_updater,
-            $this->mapped_field_retriever,
+            new MappedFieldRetriever(
+                $status_retriever,
+                new FreestyleMappedFieldRetriever(
+                    $this->search_mapped_field,
+                    $this->list_field_retriever,
+                )
+            ),
             $this->mapped_values_retriever,
             $this->first_possible_value_retriever
         );
 
-        $this->swimlane_artifact = ArtifactTestBuilder::anArtifact(1)->build();
-        $this->artifact_to_add   = $this->createMock(Artifact::class);
-        $this->current_user      = UserTestBuilder::aUser()->build();
+        $updater->updateCardMappedField(
+            $this->swimlane_artifact,
+            $column_id,
+            $this->artifact_to_add,
+            $this->current_user
+        );
     }
 
     public function testUpdateCardMappedFieldThrowsWhenColumnCantBeFound(): void
@@ -108,11 +139,7 @@ final class CardMappedFieldUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->milestone_tracker_retriever->method('getMilestoneTrackerOfColumn')
             ->with($done_column)
             ->willReturn($milestone_tracker);
-        $tracker = TrackerTestBuilder::aTracker()->withName('Tasks')->build();
-        $this->artifact_to_add->method('getTracker')
-            ->willReturn($tracker);
-        $this->mapped_field_retriever->method('getField')
-            ->willReturn(null);
+        $this->search_mapped_field = SearchMappedFieldStub::withNoField();
 
         $this->artifact_updater->expects(self::never())->method('update');
         $this->expectException(I18NRestException::class);
@@ -252,12 +279,12 @@ final class CardMappedFieldUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->mapped_values_retriever->method('getValuesMappedToColumn')
             ->willReturn($mapped_values);
 
-          $this->first_possible_value_retriever->method('getFirstPossibleValue')->with(
-              $this->artifact_to_add,
-              $this->mapped_field,
-              $mapped_values,
-              $this->current_user,
-          )->willReturn(1024);
+        $this->first_possible_value_retriever->method('getFirstPossibleValue')->with(
+            $this->artifact_to_add,
+            $this->mapped_field,
+            $mapped_values,
+            $this->current_user,
+        )->willReturn(1024);
 
         $this->artifact_updater->expects(self::once())
             ->method('update')
@@ -305,9 +332,6 @@ final class CardMappedFieldUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
         bool $can_update_mapped_field,
     ): void {
         $milestone_tracker = TrackerTestBuilder::aTracker()->withId(76)->build();
-        $tracker           = TrackerTestBuilder::aTracker()->withName('Tasks')->build();
-        $this->artifact_to_add->method('getTracker')
-            ->willReturn($tracker);
         $this->milestone_tracker_retriever->method('getMilestoneTrackerOfColumn')
             ->with($done_column)
             ->willReturn($milestone_tracker);
@@ -320,24 +344,11 @@ final class CardMappedFieldUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->mapped_field->method('getId')
             ->willReturn($field_id);
 
-        $this->mapped_field_retriever->method('getField')
-            ->with(self::callback(
-                function (TaskboardTracker $arg) use ($milestone_tracker, $tracker): bool {
-                    return $arg->getMilestoneTrackerId() === $milestone_tracker->getId()
-                        && $arg->getTracker() === $tracker;
-                }
-            ))
-            ->willReturn($this->mapped_field);
-    }
-
-    private function update(int $column_id): void
-    {
-        $this->updater->updateCardMappedField(
-            $this->swimlane_artifact,
-            $column_id,
-            $this->artifact_to_add,
-            $this->current_user
+        $this->search_mapped_field  = SearchMappedFieldStub::withMappedField(
+            new TaskboardTracker($milestone_tracker, $this->tracker_of_artifact_to_add),
+            $field_id
         );
+        $this->list_field_retriever = RetrieveUsedListFieldStub::withField($this->mapped_field);
     }
 
     private function artifactsAreValid(): void

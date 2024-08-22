@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Taskboard\Column\FieldValuesToColumnMapping;
 
 use PHPUnit\Framework\MockObject\MockObject;
+use Tuleap\Option\Option;
 use Tuleap\Taskboard\Column\FieldValuesToColumnMapping\Freestyle\FreestyleMappedFieldRetriever;
 use Tuleap\Taskboard\Column\FieldValuesToColumnMapping\Freestyle\SearchMappedFieldStub;
 use Tuleap\Taskboard\Tracker\TaskboardTracker;
@@ -36,6 +37,7 @@ final class MappedFieldRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
     private RetrieveUsedListFieldStub $form_element_factory;
     private SearchMappedFieldStub $search_mapped_field;
     private \Tracker $user_stories_tracker;
+    private TaskboardTracker $taskboard_tracker;
 
     protected function setUp(): void
     {
@@ -46,32 +48,32 @@ final class MappedFieldRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->search_mapped_field  = SearchMappedFieldStub::withNoField();
 
         $this->user_stories_tracker = TrackerTestBuilder::aTracker()->withId(64)->build();
-    }
-
-    private function getField(): ?\Tracker_FormElement_Field_Selectbox
-    {
-        $taskboard_tracker = new TaskboardTracker(
-            TrackerTestBuilder::aTracker()->build(),
+        $this->taskboard_tracker    = new TaskboardTracker(
+            TrackerTestBuilder::aTracker()->withId(17)->build(),
             $this->user_stories_tracker
         );
-        $retriever         = new MappedFieldRetriever(
+    }
+
+    /** @return Option<\Tracker_FormElement_Field_Selectbox> */
+    private function getField(): Option
+    {
+        $retriever = new MappedFieldRetriever(
             $this->status_retriever,
             new FreestyleMappedFieldRetriever($this->search_mapped_field, $this->form_element_factory)
         );
-        return $retriever->getField($taskboard_tracker);
+        return $retriever->getField($this->taskboard_tracker);
     }
 
-    public function testReturnsFreestyleMappedField(): void
+    public function testItReturnsFreestyleMappedField(): void
     {
-        $this->search_mapped_field  = SearchMappedFieldStub::withMappedField(747);
+        $this->search_mapped_field  = SearchMappedFieldStub::withMappedField($this->taskboard_tracker, 747);
         $field                      = ListFieldBuilder::aListField(747)->build();
         $this->form_element_factory = RetrieveUsedListFieldStub::withField($field);
 
-        $result = $this->getField();
-        self::assertSame($field, $result);
+        self::assertSame($field, $this->getField()->unwrapOr(null));
     }
 
-    public function testReturnsStatusSemanticWhenNoMapping(): void
+    public function testItReturnsStatusSemanticWhenNoFreestyleMapping(): void
     {
         $field = ListFieldBuilder::aListField(133)->build();
         $this->status_retriever->expects(self::once())
@@ -79,7 +81,13 @@ final class MappedFieldRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             ->with($this->user_stories_tracker)
             ->willReturn($field);
 
-        $result = $this->getField();
-        self::assertSame($field, $result);
+        self::assertSame($field, $this->getField()->unwrapOr(null));
+    }
+
+    public function testItReturnsNothingWhenNoFreestyleMappingAndNoStatusSemantic(): void
+    {
+        $this->status_retriever->method('getField')->willReturn(null);
+
+        self::assertTrue($this->getField()->isNothing());
     }
 }

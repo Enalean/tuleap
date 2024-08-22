@@ -26,27 +26,39 @@ use Tuleap\Tracker\FormElement\Field\ListFields\RetrieveUsedListField;
 
 final class RetrieveUsedListFieldStub implements RetrieveUsedListField
 {
-    private function __construct(private \Tracker_FormElement_Field_Selectbox|\Tracker_FormElement_Field_OpenList|null $field)
+    /**
+     * @param array<int, \Tracker_FormElement_Field_Selectbox|\Tracker_FormElement_Field_OpenList> $fields
+     */
+    private function __construct(private array $fields)
     {
     }
 
     public static function withField(
         \Tracker_FormElement_Field_Selectbox|\Tracker_FormElement_Field_OpenList $field,
     ): self {
-        return new self($field);
+        return new self([$field]);
+    }
+
+    public static function withFields(
+        \Tracker_FormElement_Field_Selectbox|\Tracker_FormElement_Field_OpenList $field,
+        \Tracker_FormElement_Field_Selectbox|\Tracker_FormElement_Field_OpenList ...$other_fields,
+    ): self {
+        return new self([$field, ...$other_fields]);
     }
 
     public static function withNoField(): self
     {
-        return new self(null);
+        return new self([]);
     }
 
     public function getUsedListFieldById(
         \Tracker $tracker,
         int $field_id,
     ): \Tracker_FormElement_Field_Selectbox|\Tracker_FormElement_Field_OpenList|null {
-        if ($field_id === $this->field?->getId()) {
-            return $this->field;
+        foreach ($this->fields as $field) {
+            if ($field_id === $field->getId()) {
+                return $field;
+            }
         }
         return null;
     }

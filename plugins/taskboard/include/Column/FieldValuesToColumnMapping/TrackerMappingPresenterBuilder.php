@@ -83,7 +83,8 @@ class TrackerMappingPresenterBuilder
         Cardwall_Column $column,
     ): TrackerMappingPresenter {
         $value_mapping_presenters = [];
-        $field                    = $this->mapped_field_retriever->getField($taskboard_tracker);
+        $field_id                 = $this->mapped_field_retriever->getField($taskboard_tracker)
+            ->mapOr(static fn($field) => $field->getId(), null);
         $mapped_values            = $this->mapped_values_retriever->getValuesMappedToColumn(
             $taskboard_tracker,
             $column
@@ -91,7 +92,6 @@ class TrackerMappingPresenterBuilder
         foreach ($mapped_values->getValueIds() as $value_id) {
             $value_mapping_presenters[] = new ListFieldValuePresenter((int) $value_id);
         }
-        $field_id = $field !== null ? (int) $field->getId() : null;
 
         return new TrackerMappingPresenter($taskboard_tracker->getTrackerId(), $field_id, $value_mapping_presenters);
     }
