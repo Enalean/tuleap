@@ -25,7 +25,7 @@ namespace Tuleap\CrossTracker\Report\Query\Advanced\Metadata;
 use PFUser;
 use ProjectUGroup;
 use Tracker;
-use Tuleap\CrossTracker\CrossTrackerReport;
+use Tuleap\CrossTracker\CrossTrackerDefaultReport;
 use Tuleap\CrossTracker\Report\Query\Advanced\CrossTrackerFieldTestCase;
 use Tuleap\CrossTracker\Tests\Report\ArtifactReportFactoryInstantiator;
 use Tuleap\DB\DBFactory;
@@ -115,7 +115,7 @@ final class StatusMetadataTest extends CrossTrackerFieldTestCase
      * @throws SearchablesDoNotExistException
      * @throws SearchablesAreInvalidException
      */
-    private function getMatchingArtifactIds(CrossTrackerReport $report, PFUser $user): array
+    private function getMatchingArtifactIds(CrossTrackerDefaultReport $report, PFUser $user): array
     {
         $result = (new ArtifactReportFactoryInstantiator())
             ->getFactory()
@@ -127,7 +127,7 @@ final class StatusMetadataTest extends CrossTrackerFieldTestCase
     public function testEqualOpen(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerReport(
+            new CrossTrackerDefaultReport(
                 1,
                 '@status = OPEN()',
                 [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
@@ -143,7 +143,7 @@ final class StatusMetadataTest extends CrossTrackerFieldTestCase
     public function testPermissionsEqualOpen(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerReport(
+            new CrossTrackerDefaultReport(
                 1,
                 '@status = OPEN()',
                 [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
@@ -159,7 +159,7 @@ final class StatusMetadataTest extends CrossTrackerFieldTestCase
     public function testMultipleEqual(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerReport(
+            new CrossTrackerDefaultReport(
                 1,
                 '@status = OPEN() OR @status = OPEN()',
                 [$this->release_tracker, $this->sprint_tracker],
@@ -175,7 +175,7 @@ final class StatusMetadataTest extends CrossTrackerFieldTestCase
     public function testNotEqualOpen(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerReport(
+            new CrossTrackerDefaultReport(
                 1,
                 '@status != OPEN()',
                 [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
@@ -191,7 +191,7 @@ final class StatusMetadataTest extends CrossTrackerFieldTestCase
     public function testPermissionsNotEqual(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerReport(
+            new CrossTrackerDefaultReport(
                 1,
                 '@status != OPEN()',
                 [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
@@ -207,7 +207,7 @@ final class StatusMetadataTest extends CrossTrackerFieldTestCase
     public function testMultipleNotEqual(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerReport(
+            new CrossTrackerDefaultReport(
                 1,
                 '@status != OPEN() AND @status != OPEN()',
                 [$this->release_tracker, $this->sprint_tracker],

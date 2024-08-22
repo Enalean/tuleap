@@ -23,7 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\CrossTracker\Report\Query\Advanced\DuckTypedField;
 
 use Tracker;
-use Tuleap\CrossTracker\CrossTrackerReport;
+use Tuleap\CrossTracker\CrossTrackerDefaultReport;
 use Tuleap\CrossTracker\Report\Query\Advanced\CrossTrackerFieldTestCase;
 use Tuleap\CrossTracker\Tests\Report\ArtifactReportFactoryInstantiator;
 use Tuleap\DB\DBFactory;
@@ -125,7 +125,7 @@ final class NumericDuckTypedFieldTest extends CrossTrackerFieldTestCase
      * @throws SearchablesDoNotExistException
      * @throws SearchablesAreInvalidException
      */
-    private function getMatchingArtifactIds(CrossTrackerReport $report, \PFUser $user): array
+    private function getMatchingArtifactIds(CrossTrackerDefaultReport $report, \PFUser $user): array
     {
         $result = (new ArtifactReportFactoryInstantiator())
             ->getFactory()
@@ -137,7 +137,7 @@ final class NumericDuckTypedFieldTest extends CrossTrackerFieldTestCase
     public function testEqualEmpty(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerReport(
+            new CrossTrackerDefaultReport(
                 1,
                 "initial_effort=''",
                 [$this->release_tracker, $this->sprint_tracker],
@@ -153,7 +153,7 @@ final class NumericDuckTypedFieldTest extends CrossTrackerFieldTestCase
     public function testEqualValue(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerReport(
+            new CrossTrackerDefaultReport(
                 1,
                 'initial_effort = 5',
                 [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
@@ -169,7 +169,7 @@ final class NumericDuckTypedFieldTest extends CrossTrackerFieldTestCase
     public function testPermissionsEqual(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerReport(
+            new CrossTrackerDefaultReport(
                 1,
                 'initial_effort = 5',
                 [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
@@ -188,7 +188,7 @@ final class NumericDuckTypedFieldTest extends CrossTrackerFieldTestCase
     public function testMultipleEqual(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerReport(
+            new CrossTrackerDefaultReport(
                 1,
                 "initial_effort = '' OR initial_effort = 5",
                 [$this->release_tracker, $this->sprint_tracker],
@@ -207,7 +207,7 @@ final class NumericDuckTypedFieldTest extends CrossTrackerFieldTestCase
     public function testNotEqualEmpty(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerReport(
+            new CrossTrackerDefaultReport(
                 1,
                 "initial_effort != ''",
                 [$this->release_tracker, $this->sprint_tracker],
@@ -226,7 +226,7 @@ final class NumericDuckTypedFieldTest extends CrossTrackerFieldTestCase
     public function testNotEqualValue(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerReport(
+            new CrossTrackerDefaultReport(
                 1,
                 'initial_effort != 5',
                 [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
@@ -245,7 +245,7 @@ final class NumericDuckTypedFieldTest extends CrossTrackerFieldTestCase
     public function testPermissionsNotEqual(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerReport(
+            new CrossTrackerDefaultReport(
                 1,
                 'initial_effort != 5',
                 [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
@@ -265,7 +265,7 @@ final class NumericDuckTypedFieldTest extends CrossTrackerFieldTestCase
     public function testMultipleNotEqual(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerReport(
+            new CrossTrackerDefaultReport(
                 1,
                 "initial_effort != 5 AND initial_effort != ''",
                 [$this->release_tracker, $this->sprint_tracker],
@@ -281,7 +281,7 @@ final class NumericDuckTypedFieldTest extends CrossTrackerFieldTestCase
     public function testLesserThan(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerReport(
+            new CrossTrackerDefaultReport(
                 1,
                 'initial_effort < 5',
                 [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
@@ -297,7 +297,7 @@ final class NumericDuckTypedFieldTest extends CrossTrackerFieldTestCase
     public function testPermissionsLesserThan(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerReport(
+            new CrossTrackerDefaultReport(
                 1,
                 'initial_effort < 5',
                 [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
@@ -313,7 +313,7 @@ final class NumericDuckTypedFieldTest extends CrossTrackerFieldTestCase
     public function testMultipleLesserThan(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerReport(
+            new CrossTrackerDefaultReport(
                 1,
                 'initial_effort < 5 OR initial_effort < 8',
                 [$this->release_tracker, $this->sprint_tracker],
@@ -332,7 +332,7 @@ final class NumericDuckTypedFieldTest extends CrossTrackerFieldTestCase
     public function testLesserThanOrEqual(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerReport(
+            new CrossTrackerDefaultReport(
                 1,
                 'initial_effort <= 5',
                 [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
@@ -351,7 +351,7 @@ final class NumericDuckTypedFieldTest extends CrossTrackerFieldTestCase
     public function testPermissionsLesserThanOrEqual(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerReport(
+            new CrossTrackerDefaultReport(
                 1,
                 'initial_effort <= 5',
                 [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
@@ -371,7 +371,7 @@ final class NumericDuckTypedFieldTest extends CrossTrackerFieldTestCase
     public function testMultipleLesserThanOrEqual(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerReport(
+            new CrossTrackerDefaultReport(
                 1,
                 'initial_effort <= 5 OR initial_effort <= 8',
                 [$this->release_tracker, $this->sprint_tracker],
@@ -390,7 +390,7 @@ final class NumericDuckTypedFieldTest extends CrossTrackerFieldTestCase
     public function testGreaterThan(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerReport(
+            new CrossTrackerDefaultReport(
                 1,
                 'initial_effort > 3',
                 [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
@@ -406,7 +406,7 @@ final class NumericDuckTypedFieldTest extends CrossTrackerFieldTestCase
     public function testPermissionsGreaterThan(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerReport(
+            new CrossTrackerDefaultReport(
                 1,
                 'initial_effort > 3',
                 [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
@@ -422,7 +422,7 @@ final class NumericDuckTypedFieldTest extends CrossTrackerFieldTestCase
     public function testMultipleGreaterThan(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerReport(
+            new CrossTrackerDefaultReport(
                 1,
                 'initial_effort > 3 OR initial_effort > 1',
                 [$this->release_tracker, $this->sprint_tracker],
@@ -441,7 +441,7 @@ final class NumericDuckTypedFieldTest extends CrossTrackerFieldTestCase
     public function testGreaterThanOrEqual(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerReport(
+            new CrossTrackerDefaultReport(
                 1,
                 'initial_effort >= 3',
                 [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
@@ -460,7 +460,7 @@ final class NumericDuckTypedFieldTest extends CrossTrackerFieldTestCase
     public function testPermissionsGreaterThanOrEqual(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerReport(
+            new CrossTrackerDefaultReport(
                 1,
                 'initial_effort >= 3',
                 [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
@@ -480,7 +480,7 @@ final class NumericDuckTypedFieldTest extends CrossTrackerFieldTestCase
     public function testMultipleGreaterThanOrEqual(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerReport(
+            new CrossTrackerDefaultReport(
                 1,
                 'initial_effort >= 3 OR initial_effort >= 5',
                 [$this->release_tracker, $this->sprint_tracker],
@@ -499,7 +499,7 @@ final class NumericDuckTypedFieldTest extends CrossTrackerFieldTestCase
     public function testBetween(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerReport(
+            new CrossTrackerDefaultReport(
                 1,
                 'initial_effort BETWEEN(2, 4)',
                 [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
@@ -515,7 +515,7 @@ final class NumericDuckTypedFieldTest extends CrossTrackerFieldTestCase
     public function testPermissionsBetween(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerReport(
+            new CrossTrackerDefaultReport(
                 1,
                 'initial_effort BETWEEN(2, 4)',
                 [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
@@ -531,7 +531,7 @@ final class NumericDuckTypedFieldTest extends CrossTrackerFieldTestCase
     public function testMultipleBetween(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerReport(
+            new CrossTrackerDefaultReport(
                 1,
                 'initial_effort BETWEEN(2, 4) OR initial_effort BETWEEN(5, 8)',
                 [$this->release_tracker, $this->sprint_tracker],
@@ -550,7 +550,7 @@ final class NumericDuckTypedFieldTest extends CrossTrackerFieldTestCase
     public function testIntegerFieldComparisonIsValid(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerReport(
+            new CrossTrackerDefaultReport(
                 1,
                 'initial_effort > 3.00',
                 [$this->release_tracker, $this->sprint_tracker],

@@ -23,7 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\CrossTracker\REST\v1;
 
 use PFUser;
-use Tuleap\CrossTracker\CrossTrackerReport;
+use Tuleap\CrossTracker\CrossTrackerDefaultReport;
 use Tuleap\REST\JsonCast;
 use Tuleap\Tracker\REST\TrackerReference;
 
@@ -51,7 +51,7 @@ final readonly class CrossTrackerReportRepresentation
     ) {
     }
 
-    public static function fromReport(CrossTrackerReport $report, PFUser $user): self
+    public static function fromReport(CrossTrackerDefaultReport $report, PFUser $user): self
     {
         $trackers         = [];
         $invalid_trackers = [];

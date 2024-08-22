@@ -24,7 +24,7 @@ use Project;
 use Tracker;
 use Tracker_FormElement_Field;
 
-class CrossTrackerReport
+class CrossTrackerDefaultReport
 {
     /**
      * @var Tracker[]|null

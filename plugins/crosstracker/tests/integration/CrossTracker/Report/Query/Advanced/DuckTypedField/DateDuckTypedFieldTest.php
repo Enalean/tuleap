@@ -26,7 +26,7 @@ use DateTime;
 use PFUser;
 use ProjectUGroup;
 use Tracker;
-use Tuleap\CrossTracker\CrossTrackerReport;
+use Tuleap\CrossTracker\CrossTrackerDefaultReport;
 use Tuleap\CrossTracker\Report\Query\Advanced\CrossTrackerFieldTestCase;
 use Tuleap\CrossTracker\Tests\Report\ArtifactReportFactoryInstantiator;
 use Tuleap\DB\DBFactory;
@@ -147,7 +147,7 @@ final class DateDuckTypedFieldTest extends CrossTrackerFieldTestCase
      * @throws SearchablesDoNotExistException
      * @throws SearchablesAreInvalidException
      */
-    private function getMatchingArtifactIds(CrossTrackerReport $report, PFUser $user): array
+    private function getMatchingArtifactIds(CrossTrackerDefaultReport $report, PFUser $user): array
     {
         $result = (new ArtifactReportFactoryInstantiator())
             ->getFactory()
@@ -159,7 +159,7 @@ final class DateDuckTypedFieldTest extends CrossTrackerFieldTestCase
     public function testEqualEmpty(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerReport(
+            new CrossTrackerDefaultReport(
                 1,
                 "date_field = ''",
                 [$this->release_tracker, $this->sprint_tracker],
@@ -175,7 +175,7 @@ final class DateDuckTypedFieldTest extends CrossTrackerFieldTestCase
     public function testEqualValue(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerReport(
+            new CrossTrackerDefaultReport(
                 1,
                 "date_field = '2023-02-12'",
                 [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
@@ -191,7 +191,7 @@ final class DateDuckTypedFieldTest extends CrossTrackerFieldTestCase
     public function testPermissionsEqual(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerReport(
+            new CrossTrackerDefaultReport(
                 1,
                 "date_field = '2023-02-12'",
                 [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
@@ -207,7 +207,7 @@ final class DateDuckTypedFieldTest extends CrossTrackerFieldTestCase
     public function testEqualToday(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerReport(
+            new CrossTrackerDefaultReport(
                 1,
                 'date_field = NOW()',
                 [$this->release_tracker, $this->sprint_tracker],
@@ -223,7 +223,7 @@ final class DateDuckTypedFieldTest extends CrossTrackerFieldTestCase
     public function testMultipleEqual(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerReport(
+            new CrossTrackerDefaultReport(
                 1,
                 "date_field = '2023-02-12' OR date_field = '2023-03-12'",
                 [$this->release_tracker, $this->sprint_tracker],
@@ -239,7 +239,7 @@ final class DateDuckTypedFieldTest extends CrossTrackerFieldTestCase
     public function testNotEqualEmpty(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerReport(
+            new CrossTrackerDefaultReport(
                 1,
                 "date_field != ''",
                 [$this->release_tracker, $this->sprint_tracker],
@@ -258,7 +258,7 @@ final class DateDuckTypedFieldTest extends CrossTrackerFieldTestCase
     public function testNotEqual(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerReport(
+            new CrossTrackerDefaultReport(
                 1,
                 "date_field != '2023-02-12'",
                 [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
@@ -278,7 +278,7 @@ final class DateDuckTypedFieldTest extends CrossTrackerFieldTestCase
     public function testPermissionsNotEqual(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerReport(
+            new CrossTrackerDefaultReport(
                 1,
                 "date_field != '2023-03-12'",
                 [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
@@ -298,7 +298,7 @@ final class DateDuckTypedFieldTest extends CrossTrackerFieldTestCase
     public function testNotEqualToday(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerReport(
+            new CrossTrackerDefaultReport(
                 1,
                 'date_field != NOW()',
                 [$this->release_tracker, $this->sprint_tracker],
@@ -318,7 +318,7 @@ final class DateDuckTypedFieldTest extends CrossTrackerFieldTestCase
     public function testMultipleNotEqual(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerReport(
+            new CrossTrackerDefaultReport(
                 1,
                 "date_field != '2023-02-12' AND date_field != ''",
                 [$this->release_tracker, $this->sprint_tracker],
@@ -334,7 +334,7 @@ final class DateDuckTypedFieldTest extends CrossTrackerFieldTestCase
     public function testLesserThanValue(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerReport(
+            new CrossTrackerDefaultReport(
                 1,
                 "date_field < '2023-03-12'",
                 [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
@@ -350,7 +350,7 @@ final class DateDuckTypedFieldTest extends CrossTrackerFieldTestCase
     public function testPermissionsLesserThan(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerReport(
+            new CrossTrackerDefaultReport(
                 1,
                 "date_field < '2023-03-12'",
                 [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
@@ -366,7 +366,7 @@ final class DateDuckTypedFieldTest extends CrossTrackerFieldTestCase
     public function testMultipleLesserThan(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerReport(
+            new CrossTrackerDefaultReport(
                 1,
                 "date_field < '2023-03-12' AND date_field < NOW()",
                 [$this->release_tracker, $this->sprint_tracker],
@@ -382,7 +382,7 @@ final class DateDuckTypedFieldTest extends CrossTrackerFieldTestCase
     public function testLesserThanToday(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerReport(
+            new CrossTrackerDefaultReport(
                 1,
                 'date_field < NOW()',
                 [$this->release_tracker, $this->sprint_tracker],
@@ -398,7 +398,7 @@ final class DateDuckTypedFieldTest extends CrossTrackerFieldTestCase
     public function testLesserThanOrEqualValue(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerReport(
+            new CrossTrackerDefaultReport(
                 1,
                 "date_field <= '2023-03-12'",
                 [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
@@ -414,7 +414,7 @@ final class DateDuckTypedFieldTest extends CrossTrackerFieldTestCase
     public function testPermissionsLesserThanOrEqual(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerReport(
+            new CrossTrackerDefaultReport(
                 1,
                 "date_field <= '2023-03-12'",
                 [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
@@ -432,7 +432,7 @@ final class DateDuckTypedFieldTest extends CrossTrackerFieldTestCase
     public function testMultipleLesserThanOrEqual(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerReport(
+            new CrossTrackerDefaultReport(
                 1,
                 "date_field <= '2023-03-12' AND date_field <= NOW()",
                 [$this->release_tracker, $this->sprint_tracker],
@@ -448,7 +448,7 @@ final class DateDuckTypedFieldTest extends CrossTrackerFieldTestCase
     public function testLesserThanOrEqualToday(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerReport(
+            new CrossTrackerDefaultReport(
                 1,
                 'date_field <= NOW()',
                 [$this->release_tracker, $this->sprint_tracker],
@@ -464,7 +464,7 @@ final class DateDuckTypedFieldTest extends CrossTrackerFieldTestCase
     public function testGreaterThanValue(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerReport(
+            new CrossTrackerDefaultReport(
                 1,
                 "date_field > '2023-02-11'",
                 [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
@@ -483,7 +483,7 @@ final class DateDuckTypedFieldTest extends CrossTrackerFieldTestCase
     public function testPermissionsGreaterThan(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerReport(
+            new CrossTrackerDefaultReport(
                 1,
                 "date_field > '2023-02-11'",
                 [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
@@ -503,7 +503,7 @@ final class DateDuckTypedFieldTest extends CrossTrackerFieldTestCase
     public function testMultipleGreaterThan(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerReport(
+            new CrossTrackerDefaultReport(
                 1,
                 "date_field > '2023-02-12' AND date_field > '2023-03-12'",
                 [$this->release_tracker, $this->sprint_tracker],
@@ -519,7 +519,7 @@ final class DateDuckTypedFieldTest extends CrossTrackerFieldTestCase
     public function testGreaterThanToday(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerReport(
+            new CrossTrackerDefaultReport(
                 1,
                 'date_field > NOW()',
                 [$this->release_tracker, $this->sprint_tracker],
@@ -535,7 +535,7 @@ final class DateDuckTypedFieldTest extends CrossTrackerFieldTestCase
     public function testGreaterThanOrEqualValue(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerReport(
+            new CrossTrackerDefaultReport(
                 1,
                 "date_field >= '2023-02-12'",
                 [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
@@ -554,7 +554,7 @@ final class DateDuckTypedFieldTest extends CrossTrackerFieldTestCase
     public function testPermissionsGreaterThanOrEqual(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerReport(
+            new CrossTrackerDefaultReport(
                 1,
                 "date_field >= '2023-02-12'",
                 [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
@@ -574,7 +574,7 @@ final class DateDuckTypedFieldTest extends CrossTrackerFieldTestCase
     public function testMultipleGreaterThanOrEqual(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerReport(
+            new CrossTrackerDefaultReport(
                 1,
                 "date_field >= '2023-02-12' AND date_field >= '2023-03-12'",
                 [$this->release_tracker, $this->sprint_tracker],
@@ -590,7 +590,7 @@ final class DateDuckTypedFieldTest extends CrossTrackerFieldTestCase
     public function testGreaterThanOrEqualToday(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerReport(
+            new CrossTrackerDefaultReport(
                 1,
                 'date_field >= NOW()',
                 [$this->release_tracker, $this->sprint_tracker],
@@ -606,7 +606,7 @@ final class DateDuckTypedFieldTest extends CrossTrackerFieldTestCase
     public function testBetweenValues(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerReport(
+            new CrossTrackerDefaultReport(
                 1,
                 "date_field BETWEEN('2023-02-01', '2023-03-31')",
                 [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
@@ -622,7 +622,7 @@ final class DateDuckTypedFieldTest extends CrossTrackerFieldTestCase
     public function testPermissionsBetween(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerReport(
+            new CrossTrackerDefaultReport(
                 1,
                 "date_field BETWEEN('2023-02-01', '2023-03-31')",
                 [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
@@ -640,7 +640,7 @@ final class DateDuckTypedFieldTest extends CrossTrackerFieldTestCase
     public function testMultipleBetween(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerReport(
+            new CrossTrackerDefaultReport(
                 1,
                 "date_field BETWEEN('2023-02-01', '2023-02-28') OR date_field BETWEEN(NOW() - 1w, NOW())",
                 [$this->release_tracker, $this->sprint_tracker],
@@ -656,7 +656,7 @@ final class DateDuckTypedFieldTest extends CrossTrackerFieldTestCase
     public function testBetweenYesterdayAndTomorrow(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerReport(
+            new CrossTrackerDefaultReport(
                 1,
                 'date_field BETWEEN(NOW() - 1d, NOW() + 1d)',
                 [$this->release_tracker, $this->sprint_tracker],

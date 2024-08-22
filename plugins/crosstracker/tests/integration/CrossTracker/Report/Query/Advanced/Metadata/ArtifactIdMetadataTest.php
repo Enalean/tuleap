@@ -25,7 +25,7 @@ namespace Tuleap\CrossTracker\Report\Query\Advanced\Metadata;
 use PFUser;
 use ProjectUGroup;
 use Tracker;
-use Tuleap\CrossTracker\CrossTrackerReport;
+use Tuleap\CrossTracker\CrossTrackerDefaultReport;
 use Tuleap\CrossTracker\Report\Query\Advanced\CrossTrackerFieldTestCase;
 use Tuleap\CrossTracker\Tests\Report\ArtifactReportFactoryInstantiator;
 use Tuleap\DB\DBFactory;
@@ -100,7 +100,7 @@ final class ArtifactIdMetadataTest extends CrossTrackerFieldTestCase
      * @throws SearchablesDoNotExistException
      * @throws SearchablesAreInvalidException
      */
-    private function getMatchingArtifactIds(CrossTrackerReport $report, PFUser $user): array
+    private function getMatchingArtifactIds(CrossTrackerDefaultReport $report, PFUser $user): array
     {
         $result = (new ArtifactReportFactoryInstantiator())
             ->getFactory()
@@ -112,7 +112,7 @@ final class ArtifactIdMetadataTest extends CrossTrackerFieldTestCase
     public function testEqual(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerReport(
+            new CrossTrackerDefaultReport(
                 1,
                 sprintf('@id = %d', $this->release_artifact_1_id),
                 [$this->release_tracker, $this->sprint_tracker],
@@ -128,7 +128,7 @@ final class ArtifactIdMetadataTest extends CrossTrackerFieldTestCase
     public function testMultipleEqual(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerReport(
+            new CrossTrackerDefaultReport(
                 1,
                 sprintf('@id = %d OR @id = %d', $this->release_artifact_1_id, $this->sprint_artifact_1_id),
                 [$this->release_tracker, $this->sprint_tracker],
@@ -144,7 +144,7 @@ final class ArtifactIdMetadataTest extends CrossTrackerFieldTestCase
     public function testPermissionsEqual(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerReport(
+            new CrossTrackerDefaultReport(
                 1,
                 sprintf('@id = %d', $this->sprint_artifact_1_id),
                 [$this->release_tracker, $this->sprint_tracker],
@@ -159,7 +159,7 @@ final class ArtifactIdMetadataTest extends CrossTrackerFieldTestCase
     public function testNotEqual(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerReport(
+            new CrossTrackerDefaultReport(
                 1,
                 sprintf('@id != %d', $this->release_artifact_1_id),
                 [$this->release_tracker, $this->sprint_tracker],
@@ -175,7 +175,7 @@ final class ArtifactIdMetadataTest extends CrossTrackerFieldTestCase
     public function testMultipleNotEqual(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerReport(
+            new CrossTrackerDefaultReport(
                 1,
                 sprintf('@id != %d AND @id != %d', $this->release_artifact_1_id, $this->sprint_artifact_1_id),
                 [$this->release_tracker, $this->sprint_tracker],
@@ -191,7 +191,7 @@ final class ArtifactIdMetadataTest extends CrossTrackerFieldTestCase
     public function testPermissionsNotEqual(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerReport(
+            new CrossTrackerDefaultReport(
                 1,
                 sprintf('@id != %d', $this->release_artifact_1_id),
                 [$this->release_tracker, $this->sprint_tracker],
@@ -207,7 +207,7 @@ final class ArtifactIdMetadataTest extends CrossTrackerFieldTestCase
     public function testLesserThan(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerReport(
+            new CrossTrackerDefaultReport(
                 1,
                 sprintf('@id < %d', $this->release_artifact_3_id),
                 [$this->release_tracker, $this->sprint_tracker],
@@ -223,7 +223,7 @@ final class ArtifactIdMetadataTest extends CrossTrackerFieldTestCase
     public function testMultipleLesserThan(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerReport(
+            new CrossTrackerDefaultReport(
                 1,
                 sprintf('@id < %d AND @id < %d', $this->release_artifact_2_id, $this->release_artifact_3_id),
                 [$this->release_tracker, $this->sprint_tracker],
@@ -239,7 +239,7 @@ final class ArtifactIdMetadataTest extends CrossTrackerFieldTestCase
     public function testPermissionsLesserThan(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerReport(
+            new CrossTrackerDefaultReport(
                 1,
                 sprintf('@id < %d', $this->release_artifact_3_id),
                 [$this->release_tracker, $this->sprint_tracker],
@@ -255,7 +255,7 @@ final class ArtifactIdMetadataTest extends CrossTrackerFieldTestCase
     public function testLesserThanOrEqual(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerReport(
+            new CrossTrackerDefaultReport(
                 1,
                 sprintf('@id <= %d', $this->release_artifact_2_id),
                 [$this->release_tracker, $this->sprint_tracker],
@@ -271,7 +271,7 @@ final class ArtifactIdMetadataTest extends CrossTrackerFieldTestCase
     public function testMultipleLesserThanOrEqual(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerReport(
+            new CrossTrackerDefaultReport(
                 1,
                 sprintf('@id <= %d AND @id <= %d', $this->release_artifact_1_id, $this->release_artifact_2_id),
                 [$this->release_tracker, $this->sprint_tracker],
@@ -287,7 +287,7 @@ final class ArtifactIdMetadataTest extends CrossTrackerFieldTestCase
     public function testPermissionsLesserThanOrEqual(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerReport(
+            new CrossTrackerDefaultReport(
                 1,
                 sprintf('@id <= %d', $this->release_artifact_2_id),
                 [$this->release_tracker, $this->sprint_tracker],
@@ -303,7 +303,7 @@ final class ArtifactIdMetadataTest extends CrossTrackerFieldTestCase
     public function testGreaterThan(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerReport(
+            new CrossTrackerDefaultReport(
                 1,
                 sprintf('@id > %d', $this->release_artifact_1_id),
                 [$this->release_tracker, $this->sprint_tracker],
@@ -319,7 +319,7 @@ final class ArtifactIdMetadataTest extends CrossTrackerFieldTestCase
     public function testMultipleGreaterThan(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerReport(
+            new CrossTrackerDefaultReport(
                 1,
                 sprintf('@id > %d AND @id > %d', $this->release_artifact_1_id, $this->release_artifact_2_id),
                 [$this->release_tracker, $this->sprint_tracker],
@@ -335,7 +335,7 @@ final class ArtifactIdMetadataTest extends CrossTrackerFieldTestCase
     public function testPermissionsGreaterThan(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerReport(
+            new CrossTrackerDefaultReport(
                 1,
                 sprintf('@id > %d', $this->release_artifact_1_id),
                 [$this->release_tracker, $this->sprint_tracker],
@@ -351,7 +351,7 @@ final class ArtifactIdMetadataTest extends CrossTrackerFieldTestCase
     public function testGreaterThanOrEqual(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerReport(
+            new CrossTrackerDefaultReport(
                 1,
                 sprintf('@id >= %d', $this->release_artifact_2_id),
                 [$this->release_tracker, $this->sprint_tracker],
@@ -367,7 +367,7 @@ final class ArtifactIdMetadataTest extends CrossTrackerFieldTestCase
     public function testMultipleGreaterThanOrEqual(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerReport(
+            new CrossTrackerDefaultReport(
                 1,
                 sprintf('@id >= %d AND @id >= %d', $this->release_artifact_1_id, $this->release_artifact_2_id),
                 [$this->release_tracker, $this->sprint_tracker],
@@ -383,7 +383,7 @@ final class ArtifactIdMetadataTest extends CrossTrackerFieldTestCase
     public function testPermissionsGreaterThanOrEqual(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerReport(
+            new CrossTrackerDefaultReport(
                 1,
                 sprintf('@id >= %d', $this->release_artifact_1_id),
                 [$this->release_tracker, $this->sprint_tracker],
@@ -399,7 +399,7 @@ final class ArtifactIdMetadataTest extends CrossTrackerFieldTestCase
     public function testBetween(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerReport(
+            new CrossTrackerDefaultReport(
                 1,
                 sprintf('@id BETWEEN(%d, %d)', $this->sprint_artifact_1_id, $this->sprint_artifact_2_id),
                 [$this->release_tracker, $this->sprint_tracker],
@@ -421,7 +421,7 @@ final class ArtifactIdMetadataTest extends CrossTrackerFieldTestCase
     public function testMultipleBetween(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerReport(
+            new CrossTrackerDefaultReport(
                 1,
                 sprintf(
                     '%s OR %s',
@@ -446,7 +446,7 @@ final class ArtifactIdMetadataTest extends CrossTrackerFieldTestCase
     public function testPermissionsBetween(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerReport(
+            new CrossTrackerDefaultReport(
                 1,
                 sprintf('@id BETWEEN(%d, %d)', $this->sprint_artifact_1_id, $this->sprint_artifact_2_id),
                 [$this->release_tracker, $this->sprint_tracker],

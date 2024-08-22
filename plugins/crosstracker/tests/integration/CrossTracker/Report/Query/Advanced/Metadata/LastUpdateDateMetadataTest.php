@@ -26,7 +26,7 @@ use DateTime;
 use PFUser;
 use ProjectUGroup;
 use Tracker;
-use Tuleap\CrossTracker\CrossTrackerReport;
+use Tuleap\CrossTracker\CrossTrackerDefaultReport;
 use Tuleap\CrossTracker\Report\Query\Advanced\CrossTrackerFieldTestCase;
 use Tuleap\CrossTracker\Tests\Report\ArtifactReportFactoryInstantiator;
 use Tuleap\DB\DBFactory;
@@ -110,7 +110,7 @@ final class LastUpdateDateMetadataTest extends CrossTrackerFieldTestCase
      * @throws SearchablesDoNotExistException
      * @throws SearchablesAreInvalidException
      */
-    private function getMatchingArtifactIds(CrossTrackerReport $report, PFUser $user): array
+    private function getMatchingArtifactIds(CrossTrackerDefaultReport $report, PFUser $user): array
     {
         $result = (new ArtifactReportFactoryInstantiator())
             ->getFactory()
@@ -122,7 +122,7 @@ final class LastUpdateDateMetadataTest extends CrossTrackerFieldTestCase
     public function testEqualDate(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerReport(
+            new CrossTrackerDefaultReport(
                 1,
                 "@last_update_date = '2023-03-08'",
                 [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
@@ -138,7 +138,7 @@ final class LastUpdateDateMetadataTest extends CrossTrackerFieldTestCase
     public function testPermissionsEqual(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerReport(
+            new CrossTrackerDefaultReport(
                 1,
                 "@last_update_date = '2023-03-08'",
                 [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
@@ -154,7 +154,7 @@ final class LastUpdateDateMetadataTest extends CrossTrackerFieldTestCase
     public function testEqualDatetime(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerReport(
+            new CrossTrackerDefaultReport(
                 1,
                 "@last_update_date = '2023-03-08 10:25'",
                 [$this->release_tracker, $this->sprint_tracker],
@@ -170,7 +170,7 @@ final class LastUpdateDateMetadataTest extends CrossTrackerFieldTestCase
     public function testMultipleEqual(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerReport(
+            new CrossTrackerDefaultReport(
                 1,
                 "@last_update_date = '2023-03-08' OR @last_update_date = '1970-01-01'",
                 [$this->release_tracker, $this->sprint_tracker],
@@ -186,7 +186,7 @@ final class LastUpdateDateMetadataTest extends CrossTrackerFieldTestCase
     public function testNotEqualDate(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerReport(
+            new CrossTrackerDefaultReport(
                 1,
                 "@last_update_date != '2023-03-08'",
                 [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
@@ -202,7 +202,7 @@ final class LastUpdateDateMetadataTest extends CrossTrackerFieldTestCase
     public function testPermissionsNotEqual(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerReport(
+            new CrossTrackerDefaultReport(
                 1,
                 "@last_update_date != '2023-03-08'",
                 [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
@@ -218,7 +218,7 @@ final class LastUpdateDateMetadataTest extends CrossTrackerFieldTestCase
     public function testNotEqualDatetime(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerReport(
+            new CrossTrackerDefaultReport(
                 1,
                 "@last_update_date != '2023-03-08 10:25'",
                 [$this->release_tracker, $this->sprint_tracker],
@@ -234,7 +234,7 @@ final class LastUpdateDateMetadataTest extends CrossTrackerFieldTestCase
     public function testMultipleNotEqual(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerReport(
+            new CrossTrackerDefaultReport(
                 1,
                 "@last_update_date != '2023-03-08' AND @last_update_date != '1970-01-01'",
                 [$this->release_tracker, $this->sprint_tracker],
@@ -250,7 +250,7 @@ final class LastUpdateDateMetadataTest extends CrossTrackerFieldTestCase
     public function testLesserThanDate(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerReport(
+            new CrossTrackerDefaultReport(
                 1,
                 "@last_update_date < '2023-03-09'",
                 [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
@@ -266,7 +266,7 @@ final class LastUpdateDateMetadataTest extends CrossTrackerFieldTestCase
     public function testPermissionsLesserThan(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerReport(
+            new CrossTrackerDefaultReport(
                 1,
                 "@last_update_date < '2023-03-09'",
                 [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
@@ -282,7 +282,7 @@ final class LastUpdateDateMetadataTest extends CrossTrackerFieldTestCase
     public function testLesserThanDatetime(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerReport(
+            new CrossTrackerDefaultReport(
                 1,
                 "@last_update_date < '2023-03-08 15:52'",
                 [$this->release_tracker, $this->sprint_tracker],
@@ -298,7 +298,7 @@ final class LastUpdateDateMetadataTest extends CrossTrackerFieldTestCase
     public function testLesserThanToday(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerReport(
+            new CrossTrackerDefaultReport(
                 1,
                 '@last_update_date < NOW()',
                 [$this->release_tracker, $this->sprint_tracker],
@@ -314,7 +314,7 @@ final class LastUpdateDateMetadataTest extends CrossTrackerFieldTestCase
     public function testMultipleLesserThan(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerReport(
+            new CrossTrackerDefaultReport(
                 1,
                 "@last_update_date < NOW() OR @last_update_date < '1970-01-01'",
                 [$this->release_tracker, $this->sprint_tracker],
@@ -330,7 +330,7 @@ final class LastUpdateDateMetadataTest extends CrossTrackerFieldTestCase
     public function testLesserThanOrEqualDate(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerReport(
+            new CrossTrackerDefaultReport(
                 1,
                 "@last_update_date <= '2023-03-08'",
                 [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
@@ -346,7 +346,7 @@ final class LastUpdateDateMetadataTest extends CrossTrackerFieldTestCase
     public function testPermissionsLesserThanOrEqual(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerReport(
+            new CrossTrackerDefaultReport(
                 1,
                 "@last_update_date <= '2023-03-08'",
                 [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
@@ -362,7 +362,7 @@ final class LastUpdateDateMetadataTest extends CrossTrackerFieldTestCase
     public function testLesserThanOrEqualDatetime(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerReport(
+            new CrossTrackerDefaultReport(
                 1,
                 "@last_update_date <= '2023-03-08 15:52'",
                 [$this->release_tracker, $this->sprint_tracker],
@@ -378,7 +378,7 @@ final class LastUpdateDateMetadataTest extends CrossTrackerFieldTestCase
     public function testLesserThanOrEqualToday(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerReport(
+            new CrossTrackerDefaultReport(
                 1,
                 '@last_update_date <= NOW()',
                 [$this->release_tracker, $this->sprint_tracker],
@@ -397,7 +397,7 @@ final class LastUpdateDateMetadataTest extends CrossTrackerFieldTestCase
     public function testMultipleLesserThanOrEqual(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerReport(
+            new CrossTrackerDefaultReport(
                 1,
                 "@last_update_date <= NOW() OR @last_update_date <= '1970-01-01'",
                 [$this->release_tracker, $this->sprint_tracker],
@@ -416,7 +416,7 @@ final class LastUpdateDateMetadataTest extends CrossTrackerFieldTestCase
     public function testGreaterThanDate(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerReport(
+            new CrossTrackerDefaultReport(
                 1,
                 "@last_update_date > '2023-03-08'",
                 [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
@@ -432,7 +432,7 @@ final class LastUpdateDateMetadataTest extends CrossTrackerFieldTestCase
     public function testPermissionsGreaterThan(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerReport(
+            new CrossTrackerDefaultReport(
                 1,
                 "@last_update_date > '2023-03-08'",
                 [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
@@ -448,7 +448,7 @@ final class LastUpdateDateMetadataTest extends CrossTrackerFieldTestCase
     public function testGreaterThanDatetime(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerReport(
+            new CrossTrackerDefaultReport(
                 1,
                 "@last_update_date > '2023-03-08 10:25'",
                 [$this->release_tracker, $this->sprint_tracker],
@@ -464,7 +464,7 @@ final class LastUpdateDateMetadataTest extends CrossTrackerFieldTestCase
     public function testGreaterThanYesterday(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerReport(
+            new CrossTrackerDefaultReport(
                 1,
                 '@last_update_date > NOW() - 1d',
                 [$this->release_tracker, $this->sprint_tracker],
@@ -480,7 +480,7 @@ final class LastUpdateDateMetadataTest extends CrossTrackerFieldTestCase
     public function testMultipleGreaterThan(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerReport(
+            new CrossTrackerDefaultReport(
                 1,
                 "@last_update_date > '2023-03-08' OR @last_update_date > NOW()",
                 [$this->release_tracker, $this->sprint_tracker],
@@ -496,7 +496,7 @@ final class LastUpdateDateMetadataTest extends CrossTrackerFieldTestCase
     public function testGreaterThanOrEqualDate(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerReport(
+            new CrossTrackerDefaultReport(
                 1,
                 "@last_update_date >= '2023-03-08'",
                 [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
@@ -515,7 +515,7 @@ final class LastUpdateDateMetadataTest extends CrossTrackerFieldTestCase
     public function testPermissionsGreaterThanOrEqual(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerReport(
+            new CrossTrackerDefaultReport(
                 1,
                 "@last_update_date >= '2023-03-08'",
                 [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
@@ -535,7 +535,7 @@ final class LastUpdateDateMetadataTest extends CrossTrackerFieldTestCase
     public function testGreaterThanOrEqualDatetime(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerReport(
+            new CrossTrackerDefaultReport(
                 1,
                 "@last_update_date >= '2023-03-08 10:25'",
                 [$this->release_tracker, $this->sprint_tracker],
@@ -554,7 +554,7 @@ final class LastUpdateDateMetadataTest extends CrossTrackerFieldTestCase
     public function testGreaterThanOrEqualToday(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerReport(
+            new CrossTrackerDefaultReport(
                 1,
                 '@last_update_date >= NOW()',
                 [$this->release_tracker, $this->sprint_tracker],
@@ -570,7 +570,7 @@ final class LastUpdateDateMetadataTest extends CrossTrackerFieldTestCase
     public function testMultipleGreaterThanOrEqual(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerReport(
+            new CrossTrackerDefaultReport(
                 1,
                 "@last_update_date >= '2023-03-08' OR @last_update_date >= NOW()",
                 [$this->release_tracker, $this->sprint_tracker],
@@ -589,7 +589,7 @@ final class LastUpdateDateMetadataTest extends CrossTrackerFieldTestCase
     public function testBetweenDatetime(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerReport(
+            new CrossTrackerDefaultReport(
                 1,
                 "@last_update_date BETWEEN('2023-03-08 02:47', '2023-03-08 12:16')",
                 [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
@@ -605,7 +605,7 @@ final class LastUpdateDateMetadataTest extends CrossTrackerFieldTestCase
     public function testPermissionsBetween(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerReport(
+            new CrossTrackerDefaultReport(
                 1,
                 "@last_update_date BETWEEN('2023-03-08 02:47', '2023-03-08 12:16')",
                 [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
@@ -621,7 +621,7 @@ final class LastUpdateDateMetadataTest extends CrossTrackerFieldTestCase
     public function testBetweenDate(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerReport(
+            new CrossTrackerDefaultReport(
                 1,
                 "@last_update_date BETWEEN('2023-03-01', '2023-03-31')",
                 [$this->release_tracker, $this->sprint_tracker],
@@ -637,7 +637,7 @@ final class LastUpdateDateMetadataTest extends CrossTrackerFieldTestCase
     public function testBetweenYesterdayAndTomorrow(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerReport(
+            new CrossTrackerDefaultReport(
                 1,
                 '@last_update_date BETWEEN(NOW() - 1d, NOW() + 1d)',
                 [$this->release_tracker, $this->sprint_tracker],
@@ -653,7 +653,7 @@ final class LastUpdateDateMetadataTest extends CrossTrackerFieldTestCase
     public function testMultipleBetween(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerReport(
+            new CrossTrackerDefaultReport(
                 1,
                 "@last_update_date BETWEEN(NOW() - 1d, NOW() + 1d) OR @last_update_date BETWEEN('2023-03-01', '2023-03-31')",
                 [$this->release_tracker, $this->sprint_tracker],

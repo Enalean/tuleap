@@ -23,7 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\CrossTracker\Permission;
 
 use ForgeConfig;
-use Tuleap\CrossTracker\CrossTrackerReport;
+use Tuleap\CrossTracker\CrossTrackerDefaultReport;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
@@ -56,7 +56,7 @@ final class CrossTrackerPermissionGateTest extends TestCase
         $tracker      = TrackerTestBuilder::aTracker()->build();
         $column_field = ListFieldBuilder::aListField(101)->build();
         $search_field = ListFieldBuilder::aListField(102)->build();
-        $report       = $this->createMock(CrossTrackerReport::class);
+        $report       = $this->createMock(CrossTrackerDefaultReport::class);
         $report->method('getProjects')->willReturn([$project]);
         $report->method('getTrackers')->willReturn([$tracker]);
         $report->method('getColumnFields')->willReturn([$column_field]);
@@ -77,7 +77,7 @@ final class CrossTrackerPermissionGateTest extends TestCase
         $project1 = ProjectTestBuilder::aProject()->withId(101)->build();
         $project2 = ProjectTestBuilder::aProject()->withId(102)->build();
 
-        $report = $this->createMock(CrossTrackerReport::class);
+        $report = $this->createMock(CrossTrackerDefaultReport::class);
         $report->method('getProjects')->willReturn([$project1, $project2]);
 
         $permission_gate = new CrossTrackerPermissionGate(
@@ -102,7 +102,7 @@ final class CrossTrackerPermissionGateTest extends TestCase
 
         $project = ProjectTestBuilder::aProject()->build();
 
-        $report = $this->createMock(CrossTrackerReport::class);
+        $report = $this->createMock(CrossTrackerDefaultReport::class);
         $report->method('getProjects')->willReturn([$project]);
         $report->method('getTrackers')->willReturn([$tracker1, $tracker2]);
 
@@ -126,7 +126,7 @@ final class CrossTrackerPermissionGateTest extends TestCase
 
         $column_field1 = ListFieldBuilder::aListField(101)->build();
         $column_field2 = ListFieldBuilder::aListField(102)->build();
-        $report        = $this->createMock(CrossTrackerReport::class);
+        $report        = $this->createMock(CrossTrackerDefaultReport::class);
         $report->method('getProjects')->willReturn([$project]);
         $report->method('getTrackers')->willReturn([$tracker]);
         $report->method('getColumnFields')->willReturn([$column_field1, $column_field2]);
@@ -152,7 +152,7 @@ final class CrossTrackerPermissionGateTest extends TestCase
         $column_field  = ListFieldBuilder::aListField(101)->build();
         $search_field1 = ListFieldBuilder::aListField(102)->build();
         $search_field2 = ListFieldBuilder::aListField(103)->build();
-        $report        = $this->createMock(CrossTrackerReport::class);
+        $report        = $this->createMock(CrossTrackerDefaultReport::class);
         $report->method('getProjects')->willReturn([$project]);
         $report->method('getTrackers')->willReturn([$tracker]);
         $report->method('getColumnFields')->willReturn([$column_field]);
@@ -181,7 +181,7 @@ final class CrossTrackerPermissionGateTest extends TestCase
         $project1 = ProjectTestBuilder::aProject()->withId(101)->build();
         $project2 = ProjectTestBuilder::aProject()->withId(102)->build();
 
-        $report = $this->createMock(CrossTrackerReport::class);
+        $report = $this->createMock(CrossTrackerDefaultReport::class);
         $report->method('getProjects')->willReturn([$project1, $project2]);
         $report->method('getTrackers')->willReturn([$tracker1, $tracker2]);
         $report->method('getColumnFields')->willReturn([]);
