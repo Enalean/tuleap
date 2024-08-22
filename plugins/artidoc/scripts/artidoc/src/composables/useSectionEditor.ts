@@ -47,6 +47,7 @@ export type EditorState = {
     is_image_upload_allowed: ComputedRef<boolean>;
     is_section_editable: ComputedRef<boolean>;
     is_section_in_edit_mode: Ref<boolean>;
+    is_save_allowed: Ref<boolean>;
     isJustRefreshed: () => boolean;
     isBeingSaved: () => boolean;
     isJustSaved: () => boolean;
@@ -63,6 +64,7 @@ export function useSectionEditor(
     section: ArtidocSection,
     mergeArtifactAttachments: AttachmentFile["mergeArtifactAttachments"],
     setWaitingListAttachments: AttachmentFile["setWaitingListAttachments"],
+    is_upload_in_progress: Ref<boolean>,
 ): SectionEditor {
     const editors_collection = strictInject(EDITORS_COLLECTION);
     const can_user_edit_document = strictInject(CAN_USER_EDIT_DOCUMENT);
@@ -160,7 +162,11 @@ export function useSectionEditor(
         }
     }
 
+    const is_save_allowed = computed(() => !is_upload_in_progress.value);
     const forceSaveEditor = (): void => {
+        if (!is_save_allowed.value) {
+            return;
+        }
         forceSave(current_section.value, {
             title: editor_section_content.editable_title.value,
             description: editor_section_content.editable_description.value,
@@ -168,6 +174,9 @@ export function useSectionEditor(
     };
 
     const saveEditor = (): void => {
+        if (!is_save_allowed.value) {
+            return;
+        }
         save(current_section.value, {
             title: editor_section_content.editable_title.value,
             description: editor_section_content.editable_description.value,
@@ -187,6 +196,7 @@ export function useSectionEditor(
             is_image_upload_allowed: is_image_upload_allowed,
             is_section_editable,
             is_section_in_edit_mode,
+            is_save_allowed,
             isJustRefreshed,
             isJustSaved,
             isBeingSaved,

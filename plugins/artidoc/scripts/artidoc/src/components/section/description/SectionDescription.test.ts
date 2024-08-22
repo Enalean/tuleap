@@ -26,6 +26,7 @@ import SectionDescriptionReadOnly from "./SectionDescriptionReadOnly.vue";
 import { SECTIONS_STORE } from "@/stores/sections-store-injection-key";
 import { EDITOR_CHOICE } from "@/helpers/editor-choice";
 import { ref } from "vue";
+import { UploadFileStub } from "@/helpers/stubs/UploadFileStub";
 
 const default_props = {
     editable_description: "Lorem ipsum",
@@ -36,6 +37,7 @@ const default_props = {
     add_attachment_to_waiting_list: vi.fn(),
     input_current_description: vi.fn(),
     is_image_upload_allowed: true,
+    upload_file: UploadFileStub.uploadNotInProgress(),
 };
 describe("SectionDescription", () => {
     describe("while the sections are loading", () => {

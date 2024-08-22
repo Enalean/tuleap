@@ -30,6 +30,7 @@
             v-bind:input_current_description="input_current_description"
             v-bind:readonly_value="readonly_description"
             v-bind:is_image_upload_allowed="is_image_upload_allowed"
+            v-bind:upload_file="upload_file"
             data-test="editor"
         />
     </template>
@@ -45,6 +46,7 @@ import type { AttachmentFile } from "@/composables/useAttachmentFile";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import { SECTIONS_STORE } from "@/stores/sections-store-injection-key";
 import { EDITOR_CHOICE } from "@/helpers/editor-choice";
+import type { UseUploadFileType } from "@/composables/useUploadFile";
 
 withDefaults(
     defineProps<{
@@ -56,6 +58,7 @@ withDefaults(
         is_image_upload_allowed: boolean;
         input_current_description: EditorSectionContent["inputCurrentDescription"];
         is_print_mode?: boolean;
+        upload_file: UseUploadFileType;
     }>(),
     {
         is_print_mode: false,

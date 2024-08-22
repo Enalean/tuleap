@@ -27,7 +27,12 @@
             <i class="fa-solid fa-xmark tlp-button-icon" aria-hidden="true"></i>
             <span>{{ $gettext("Cancel") }}</span>
         </button>
-        <button v-on:click="saveEditor" type="button" class="tlp-button-primary tlp-button-large">
+        <button
+            v-on:click="saveEditor"
+            v-bind:disabled="!is_save_allowed"
+            type="button"
+            class="tlp-button-primary tlp-button-large"
+        >
             <i class="fa-solid fa-floppy-disk tlp-button-icon" aria-hidden="true"></i>
             <span>{{ $gettext("Save") }}</span>
         </button>
@@ -49,6 +54,7 @@ const { selected_tracker } = strictInject(CONFIGURATION_STORE);
 const { $gettext } = useGettext();
 const { cancelEditor, saveEditor } = props.editor.editor_actions;
 const is_edit_mode = props.editor.editor_state.is_section_in_edit_mode;
+const is_save_allowed = props.editor.editor_state.is_save_allowed;
 
 function onCancel(): void {
     cancelEditor(selected_tracker.value);

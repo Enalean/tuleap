@@ -39,19 +39,16 @@ import { onMounted, ref, watch } from "vue";
 import type { EditorView, UseEditorType } from "@tuleap/prose-mirror-editor";
 import { initPluginDropFile, useEditor } from "@tuleap/prose-mirror-editor";
 import type { EditorSectionContent } from "@/composables/useEditorSectionContent";
-import type { AttachmentFile } from "@/composables/useAttachmentFile";
-import { useUploadFile } from "@/composables/useUploadFile";
 import NotificationBar from "@/components/section/description/NotificationBar.vue";
 import type { GetText } from "@tuleap/gettext";
 import type { PluginDropFile } from "@tuleap/prose-mirror-editor/dist";
+import type { UseUploadFileType } from "@/composables/useUploadFile";
 
 const props = defineProps<{
-    upload_url: string;
-    is_image_upload_allowed: boolean;
-    add_attachment_to_waiting_list: AttachmentFile["addAttachmentToWaitingList"];
     is_edit_mode: boolean;
     editable_description: string;
     input_current_description: EditorSectionContent["inputCurrentDescription"];
+    upload_file: UseUploadFileType;
 }>();
 
 let useEditorInstance: UseEditorType | undefined;
@@ -64,8 +61,7 @@ const onChange = (new_text_content: string): void => {
 };
 
 const { file_upload_options, error_message, progress, is_in_progress, resetProgressCallback } =
-    useUploadFile(props.upload_url, props.add_attachment_to_waiting_list);
-
+    props.upload_file;
 function setupUploadPlugin(gettext_provider: GetText): PluginDropFile {
     return initPluginDropFile(file_upload_options, gettext_provider);
 }

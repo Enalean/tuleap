@@ -36,6 +36,7 @@
             v-bind:upload_url="upload_url"
             v-bind:is_image_upload_allowed="is_image_upload_allowed"
             v-bind:is_print_mode="true"
+            v-bind:upload_file="UploadFileStub.uploadNotInProgress()"
         />
     </article>
 </template>
@@ -46,6 +47,7 @@ import SectionHeader from "@/components/section/header/SectionHeader.vue";
 import SectionDescription from "@/components/section/description/SectionDescription.vue";
 import { computed, ref } from "vue";
 import { useEditorSectionContent } from "@/composables/useEditorSectionContent";
+import { UploadFileStub } from "@/helpers/stubs/UploadFileStub";
 
 const props = defineProps<{ section: ArtifactSection }>();
 
