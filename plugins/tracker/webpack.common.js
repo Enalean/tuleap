@@ -31,7 +31,6 @@ const config_for_flaming_parrot = {
     entry: {
         "modal-v2": "./scripts/modal-v2/modal-in-place.js",
         "tracker-header": "./scripts/header/header.ts",
-        "tracker-creation-success": "./scripts/tracker-creation-success-modal/index.ts",
         "tracker-report-expert-mode": "./scripts/report/index.js",
     },
     context,

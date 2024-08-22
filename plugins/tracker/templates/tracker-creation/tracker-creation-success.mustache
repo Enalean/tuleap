@@ -1,34 +1,39 @@
-<div class="modal fade"
-     id="tracker-creation-success-modal"
-     tabindex="-1"
-     role="dialog"
-     aria-labelledby="tracker-created"
-     aria-hidden="true"
-     data-test="tracker-creation-modal-success"
+<div
+    class="tlp-modal"
+    id="tracker-creation-success-modal"
+    role="dialog"
+    aria-labelledby="tracker-created"
+    data-test="tracker-creation-modal-success"
 >
-    <div class="modal-body">
+    <div class="tlp-modal-body tracker-creation-success-body">
         {{> tracker-creation-success-illustration }}
 
-        <h2 id="tracker-created">
-            {{# dgettext }}
-                tuleap-tracker | Congratulations!
-            {{/ dgettext }}
+        <h2 id="tracker-created" class="tracker-created">
+            {{# dgettext }} tuleap-tracker | Congratulations! {{/ dgettext }}
         </h2>
         <p>
-            {{#dgettext}}
-                tuleap-tracker | The <strong>%s</strong> tracker has been successfully created. | {{tracker_name }}
-            {{/dgettext}}
+            {{# dgettext }} tuleap-tracker | The %s tracker has been created
+                successfully. | <strong>{{ tracker_name }}</strong>
+            {{/ dgettext }}
         </p>
     </div>
-    <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">
-            {{# dgettext }}tuleap-tracker | Start using my tracker {{/ dgettext }}
+    <div class="tlp-modal-footer">
+        <button
+            type="button"
+            class="tlp-button-secondary tlp-modal-action tracker-creation-success-start"
+            data-dismiss="modal"
+        >
+            {{# dgettext }} tuleap-tracker | Start using my tracker {{/ dgettext }}
         </button>
-        <a class="btn btn-primary" href="{{ tracker_admin_url }}">
+        <a
+            class="tlp-button-primary tlp-modal-action tracker-creation-success-config"
+            href="{{ tracker_admin_url }}"
+        >
             {{# dgettext }} tuleap-tracker | Continue configuration {{/ dgettext }}
-            <i class="fas fa-long-arrow-alt-right tracker-creation-success-modal-icon"
-                aria-hidden="true">
-            </i>
+            <i
+                class="fa-solid fa-long-arrow-alt-right tlp-button-icon-right"
+                aria-hidden="true"
+            ></i>
         </a>
     </div>
 </div>
