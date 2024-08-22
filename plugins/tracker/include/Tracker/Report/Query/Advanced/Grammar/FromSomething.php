@@ -24,4 +24,12 @@ namespace Tuleap\Tracker\Report\Query\Advanced\Grammar;
 
 interface FromSomething
 {
+    /**
+     * @template ReturnType
+     * @template Parameters of VisitorParameters
+     * @param FromSomethingVisitor<Parameters, ReturnType> $visitor
+     * @param Parameters $parameters
+     * @return ReturnType
+     */
+    public function acceptFromSomethingVisitor(FromSomethingVisitor $visitor, $parameters);
 }

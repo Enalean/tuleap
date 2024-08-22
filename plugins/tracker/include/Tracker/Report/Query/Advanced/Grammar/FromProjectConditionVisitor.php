@@ -22,26 +22,21 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Report\Query\Advanced\Grammar;
 
-final readonly class FromTracker implements FromSomething
+/**
+ * @template Parameters of VisitorParameters
+ * @template ReturnType
+ */
+interface FromProjectConditionVisitor
 {
-    public function __construct(
-        private string $target,
-        private FromTrackerCondition $condition,
-    ) {
-    }
+    /**
+     * @param Parameters $parameters
+     * @return ReturnType
+     */
+    public function visitEqual(FromProjectEqual $project_equal, $parameters);
 
-    public function getTarget(): string
-    {
-        return $this->target;
-    }
-
-    public function getCondition(): FromTrackerCondition
-    {
-        return $this->condition;
-    }
-
-    public function acceptFromSomethingVisitor(FromSomethingVisitor $visitor, $parameters)
-    {
-        return $visitor->visitTracker($this, $parameters);
-    }
+    /**
+     * @param Parameters $parameters
+     * @return ReturnType
+     */
+    public function visitIn(FromProjectIn $project_in, $parameters);
 }

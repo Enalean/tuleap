@@ -20,28 +20,17 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\Report\Query\Advanced\Grammar;
+namespace Tuleap\CrossTracker\Report\Query\Advanced;
 
-final readonly class FromTracker implements FromSomething
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\FromProject;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\VisitorParameters;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidFromCollection;
+
+final class InvalidFromProjectCollectorParameters implements VisitorParameters
 {
     public function __construct(
-        private string $target,
-        private FromTrackerCondition $condition,
+        public FromProject $from_project,
+        public InvalidFromCollection $collection,
     ) {
-    }
-
-    public function getTarget(): string
-    {
-        return $this->target;
-    }
-
-    public function getCondition(): FromTrackerCondition
-    {
-        return $this->condition;
-    }
-
-    public function acceptFromSomethingVisitor(FromSomethingVisitor $visitor, $parameters)
-    {
-        return $visitor->visitTracker($this, $parameters);
     }
 }

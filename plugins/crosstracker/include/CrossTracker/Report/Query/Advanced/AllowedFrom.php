@@ -20,28 +20,16 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\Report\Query\Advanced\Grammar;
+namespace Tuleap\CrossTracker\Report\Query\Advanced;
 
-final readonly class FromTracker implements FromSomething
+final class AllowedFrom
 {
-    public function __construct(
-        private string $target,
-        private FromTrackerCondition $condition,
-    ) {
-    }
+    public const PROJECT          = '@project';
+    public const PROJECT_NAME     = '@project.name';
+    public const PROJECT_CATEGORY = '@project.category';
 
-    public function getTarget(): string
-    {
-        return $this->target;
-    }
+    public const TRACKER_NAME = '@tracker.name';
 
-    public function getCondition(): FromTrackerCondition
-    {
-        return $this->condition;
-    }
-
-    public function acceptFromSomethingVisitor(FromSomethingVisitor $visitor, $parameters)
-    {
-        return $visitor->visitTracker($this, $parameters);
-    }
+    public const ALLOWED_PROJECT = [self::PROJECT, self::PROJECT_NAME, self::PROJECT_CATEGORY];
+    public const ALLOWED_TRACKER = [self::TRACKER_NAME];
 }
