@@ -1,5 +1,5 @@
 CREATE TABLE plugin_bugzilla_reference (
-    id INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    id BINARY(16) NOT NULL PRIMARY KEY,
     keyword VARCHAR(255) NOT NULL,
     server VARCHAR(255) NOT NULL,
     username VARCHAR(255) NOT NULL,

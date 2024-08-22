@@ -212,8 +212,8 @@ class BucketDb
      */
     public function addNewUUIDColumnToReplaceAutoIncrementedID(
         string $table_name,
-        string $autoincrement_id_column_name = 'id',
-        string $uuid_column_name = 'uuid',
+        string $autoincrement_id_column_name,
+        string $uuid_column_name,
     ): void {
         $this->createAndPopulateNewUUIDColumn(
             $table_name,

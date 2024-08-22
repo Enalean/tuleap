@@ -181,21 +181,15 @@ class Controller
         $GLOBALS['Response']->redirect(BUGZILLA_REFERENCE_BASE_URL . '/admin/');
     }
 
-    public function deleteReference(\Codendi_Request $request)
+    public function deleteReference(\Codendi_Request $request): void
     {
         $this->csrf_token->check();
+        $this->reference_destructor->delete($request);
 
-        if ($this->reference_destructor->delete($request)) {
-            $GLOBALS['Response']->addFeedback(
-                Feedback::INFO,
-                dgettext('tuleap-bugzilla_reference', 'Reference has been successfully removed')
-            );
-        } else {
-            $GLOBALS['Response']->addFeedback(
-                Feedback::ERROR,
-                dgettext('tuleap-bugzilla_reference', 'An error occured while removing reference')
-            );
-        }
+        $GLOBALS['Response']->addFeedback(
+            Feedback::INFO,
+            dgettext('tuleap-bugzilla_reference', 'Reference has been successfully removed')
+        );
 
         $GLOBALS['Response']->redirect(BUGZILLA_REFERENCE_BASE_URL . '/admin/');
     }

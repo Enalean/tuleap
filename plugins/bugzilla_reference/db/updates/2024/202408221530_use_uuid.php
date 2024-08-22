@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2024-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,24 +18,19 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Bugzilla\Reference;
+declare(strict_types=1);
 
-class ReferenceDestructor
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+final class b202408221530_use_uuid extends \Tuleap\ForgeUpgrade\Bucket
 {
-    /**
-     * @var Dao
-     */
-    private $dao;
-
-    public function __construct(Dao $dao)
+    public function description(): string
     {
-        $this->dao = $dao;
+        return 'Replace the auto-incremented ID with UUID';
     }
 
-    public function delete(\Codendi_Request $request): void
+    public function up(): void
     {
-        $id = $request->get('id');
-
-        $this->dao->delete($id);
+        $this->api->addNewUUIDColumnToReplaceAutoIncrementedID('plugin_bugzilla_reference', 'id', 'uuid');
+        $this->api->dbh->exec('ALTER TABLE plugin_bugzilla_reference DROP COLUMN id, RENAME COLUMN uuid TO id, ADD PRIMARY KEY (id)');
     }
 }
