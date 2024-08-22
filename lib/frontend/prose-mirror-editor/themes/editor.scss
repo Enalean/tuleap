@@ -24,7 +24,6 @@
     z-index: 2;
     border-radius: var(--tlp-form-element-border-radius);
     background-color: var(--tlp-white-color);
-    box-shadow: var(--tlp-sticky-header-shadow);
 }
 
 /* stylelint-disable selector-class-pattern */
@@ -37,14 +36,6 @@
     border-bottom-left-radius: var(--tlp-form-element-border-radius);
     word-wrap: break-word;
     white-space: pre-wrap;
-
-    &:hover {
-        transition:
-            border-color var(--tlp-form-element-border-transition-duration) linear,
-            box-shadow 0.35s;
-        border-color: var(--tlp-main-color);
-        box-shadow: var(--tlp-shadow-focus);
-    }
 }
 
 .ProseMirror pre {
