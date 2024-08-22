@@ -192,7 +192,7 @@ final class CrossTrackerReportsResource extends AuthenticatedResource
      *
      * @throws RestException 404
      */
-    public function getId(int $id): CrossTrackerReportRepresentation
+    public function getId(int $id): CrossTrackerDefaultReportRepresentation
     {
         $this->checkAccess();
         try {
@@ -451,7 +451,7 @@ final class CrossTrackerReportsResource extends AuthenticatedResource
      * @throws RestException 400
      * @throws RestException 404
      */
-    protected function put(int $id, array $trackers_id, string $report_mode = 'default', string $expert_query = ''): CrossTrackerReportRepresentation
+    protected function put(int $id, array $trackers_id, string $report_mode = 'default', string $expert_query = ''): CrossTrackerDefaultReportRepresentation
     {
         $this->sendAllowHeaders();
 
@@ -524,9 +524,9 @@ final class CrossTrackerReportsResource extends AuthenticatedResource
         Header::allowOptionsGetPut();
     }
 
-    private function getReportRepresentation(CrossTrackerDefaultReport $report, PFUser $user): CrossTrackerReportRepresentation
+    private function getReportRepresentation(CrossTrackerDefaultReport $report, PFUser $user): CrossTrackerDefaultReportRepresentation
     {
-        return CrossTrackerReportRepresentation::fromReport($report, $user);
+        return CrossTrackerDefaultReportRepresentation::fromReport($report, $user);
     }
 
     private function sendPaginationHeaders($limit, $offset, $size): void
