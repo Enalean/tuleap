@@ -18,69 +18,61 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Docman\REST\v1;
 
+use ArrayIterator;
 use Codendi_HTMLPurifier;
+use Docman_Item;
 use Docman_ListMetadata;
 use Docman_Metadata;
 use Docman_MetadataFactory;
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use Tuleap\Docman\REST\v1\Metadata\MetadataListValueRepresentation;
+use Docman_MetadataListOfValuesElement;
 use Tuleap\Docman\REST\v1\Metadata\ItemMetadataRepresentation;
+use Tuleap\Docman\REST\v1\Metadata\MetadataListValueRepresentation;
 use Tuleap\Docman\REST\v1\Metadata\MetadataRepresentationBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
 use UserHelper;
 
-class MetadataRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
+final class MetadataRepresentationBuilderTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     public function testItBuildMetadataWithoutBasicProperties(): void
     {
-        $item = Mockery::mock(\Docman_Item::class);
+        $item = new Docman_Item();
 
-        $factory       = Mockery::mock(Docman_MetadataFactory::class);
-        $html_purifier = Mockery::mock(Codendi_HTMLPurifier::class);
-        $builder       = new MetadataRepresentationBuilder($factory, $html_purifier, Mockery::mock(UserHelper::class));
+        $factory       = $this->createMock(Docman_MetadataFactory::class);
+        $html_purifier = $this->createMock(Codendi_HTMLPurifier::class);
+        $builder       = new MetadataRepresentationBuilder($factory, $html_purifier, $this->createMock(UserHelper::class));
 
-        $simple_metadata = Mockery::mock(Docman_Metadata::class);
-        $simple_metadata->shouldReceive('getValue')->andReturn('my simple value');
-        $simple_metadata->shouldReceive('isMultipleValuesAllowed')->andReturn(false);
-        $simple_metadata->shouldReceive('getName')->andReturn('simple metadata label');
-        $simple_metadata->shouldReceive('getType')->andReturn(PLUGIN_DOCMAN_METADATA_TYPE_TEXT);
-        $simple_metadata->shouldReceive('isEmptyAllowed')->andReturn(true);
-        $simple_metadata->shouldReceive('getLabel')->andReturn('simple_metadata_label');
-        $simple_metadata->shouldReceive('getGroupId')->andReturn(102);
-        $simple_metadata->shouldReceive('isSpecial')->andReturn(false);
+        $simple_metadata = new Docman_Metadata();
+        $simple_metadata->setValue('my simple value');
+        $simple_metadata->setIsMultipleValuesAllowed(false);
+        $simple_metadata->setName('simple metadata label');
+        $simple_metadata->setType(PLUGIN_DOCMAN_METADATA_TYPE_TEXT);
+        $simple_metadata->setisEmptyAllowed(true);
+        $simple_metadata->setLabel('simple_metadata_label');
+        $simple_metadata->setGroupId(102);
+        $simple_metadata->setSpecial(false);
 
-        $value1 = Mockery::mock(\Docman_MetadataListOfValuesElement::class);
-        $value1->shouldReceive('getId')->andReturn(1);
-        $value1->shouldReceive('getMetadataValue')->andReturn('My value 1');
-        $value2 = Mockery::mock(\Docman_MetadataListOfValuesElement::class);
-        $value2->shouldReceive('getId')->andReturn(100);
-        $value2->shouldReceive('getMetadataValue')->andReturn('None');
-        $list_metadata = Mockery::mock(Docman_ListMetadata::class);
-        $list_metadata->shouldReceive('getValue')->andReturn(
-            new \ArrayIterator([
-                $value1,
-                $value2,
-            ])
-        );
-        $list_metadata->shouldReceive('isMultipleValuesAllowed')->andReturn(true);
-        $list_metadata->shouldReceive('getName')->andReturn('list metadata label');
-        $list_metadata->shouldReceive('getType')->andReturn(PLUGIN_DOCMAN_METADATA_TYPE_LIST);
-        $list_metadata->shouldReceive('isEmptyAllowed')->andReturn(false);
-        $list_metadata->shouldReceive('getLabel')->andReturn('list_metadata_label');
-        $list_metadata->shouldReceive('isSpecial')->andReturn(false);
+        $value1 = new Docman_MetadataListOfValuesElement();
+        $value1->setId(1);
+        $value1->setName('My value 1');
+        $value2 = new Docman_MetadataListOfValuesElement();
+        $value2->setId(100);
+        $list_metadata = new Docman_ListMetadata();
+        $list_metadata->setValue(new ArrayIterator([$value1, $value2]));
+        $list_metadata->setIsMultipleValuesAllowed(true);
+        $list_metadata->setName('list metadata label');
+        $list_metadata->setType(PLUGIN_DOCMAN_METADATA_TYPE_LIST);
+        $list_metadata->setIsEmptyAllowed(false);
+        $list_metadata->setLabel('list_metadata_label');
+        $list_metadata->setSpecial(false);
 
-        $factory->shouldReceive('appendItemMetadataList');
-        $item->shouldReceive('getMetadata')->andReturn(
-            [
-                $simple_metadata,
-                $list_metadata,
-            ]
-        );
-        $html_purifier->shouldReceive('purifyTextWithReferences')->andReturn('value with references');
+        $factory->method('appendItemMetadataList');
+        $item->addMetadata($simple_metadata);
+        $item->addMetadata($list_metadata);
+        $html_purifier->method('purifyTextWithReferences')->willReturn('value with references');
 
         $representation = $builder->build($item);
 
@@ -110,32 +102,31 @@ class MetadataRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             ),
         ];
 
-        $this->assertEquals($expected_representation, $representation);
+        self::assertEquals($expected_representation, $representation);
     }
 
     public function testMetadataWithDatePropertyIsCorrectlyBuilt(): void
     {
-        $item = Mockery::mock(\Docman_Item::class);
+        $item = new Docman_Item();
 
-        $factory = Mockery::mock(Docman_MetadataFactory::class);
+        $factory = $this->createMock(Docman_MetadataFactory::class);
         $builder = new MetadataRepresentationBuilder(
             $factory,
-            Mockery::mock(Codendi_HTMLPurifier::class),
-            Mockery::mock(UserHelper::class)
+            $this->createMock(Codendi_HTMLPurifier::class),
+            $this->createMock(UserHelper::class)
         );
 
-        $date_metadata = Mockery::mock(Docman_Metadata::class);
-        $date_metadata->shouldReceive('getValue')->andReturn('1');
-        $date_metadata->shouldReceive('isMultipleValuesAllowed')->andReturn(false);
-        $date_metadata->shouldReceive('getName')->andReturn('date metadata name');
-        $date_metadata->shouldReceive('getType')->andReturn(PLUGIN_DOCMAN_METADATA_TYPE_DATE);
-        $date_metadata->shouldReceive('isEmptyAllowed')->andReturn(true);
-        $date_metadata->shouldReceive('getLabel')->andReturn('date metadata label');
-        $date_metadata->shouldReceive('isSpecial')->andReturn(false);
+        $date_metadata = new Docman_Metadata();
+        $date_metadata->setValue('1');
+        $date_metadata->setIsMultipleValuesAllowed(false);
+        $date_metadata->setName('date metadata name');
+        $date_metadata->setType(PLUGIN_DOCMAN_METADATA_TYPE_DATE);
+        $date_metadata->setIsEmptyAllowed(true);
+        $date_metadata->setLabel('date metadata label');
+        $date_metadata->setSpecial(false);
 
-        $factory->shouldReceive('appendItemMetadataList');
-
-        $item->shouldReceive('getMetadata')->andReturn([$date_metadata]);
+        $factory->method('appendItemMetadataList');
+        $item->addMetadata($date_metadata);
 
         $representation          = $builder->build($item);
         $expected_representation = new ItemMetadataRepresentation(
@@ -149,7 +140,7 @@ class MetadataRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             'date metadata label'
         );
 
-        $this->assertEquals([$expected_representation], $representation);
+        self::assertEquals([$expected_representation], $representation);
     }
 
     /**
@@ -158,27 +149,26 @@ class MetadataRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     public function testMetadataWithDatePropertyButWithoutActualValueIsCorrectlyBuilt($value): void
     {
-        $item = Mockery::mock(\Docman_Item::class);
+        $item = new Docman_Item();
 
-        $factory = Mockery::mock(Docman_MetadataFactory::class);
+        $factory = $this->createMock(Docman_MetadataFactory::class);
         $builder = new MetadataRepresentationBuilder(
             $factory,
-            Mockery::mock(Codendi_HTMLPurifier::class),
-            Mockery::mock(UserHelper::class)
+            $this->createMock(Codendi_HTMLPurifier::class),
+            $this->createMock(UserHelper::class)
         );
 
-        $date_metadata = Mockery::mock(Docman_Metadata::class);
-        $date_metadata->shouldReceive('getValue')->andReturn($value);
-        $date_metadata->shouldReceive('isMultipleValuesAllowed')->andReturn(false);
-        $date_metadata->shouldReceive('getName')->andReturn('date metadata name');
-        $date_metadata->shouldReceive('getType')->andReturn(PLUGIN_DOCMAN_METADATA_TYPE_DATE);
-        $date_metadata->shouldReceive('isEmptyAllowed')->andReturn(true);
-        $date_metadata->shouldReceive('getLabel')->andReturn('date metadata label');
-        $date_metadata->shouldReceive('isSpecial')->andReturn(false);
+        $date_metadata = new Docman_Metadata();
+        $date_metadata->setValue($value);
+        $date_metadata->setIsMultipleValuesAllowed(false);
+        $date_metadata->setName('date metadata name');
+        $date_metadata->setType(PLUGIN_DOCMAN_METADATA_TYPE_DATE);
+        $date_metadata->setIsEmptyAllowed(true);
+        $date_metadata->setLabel('date metadata label');
+        $date_metadata->setSpecial(false);
 
-        $factory->shouldReceive('appendItemMetadataList');
-
-        $item->shouldReceive('getMetadata')->andReturn([$date_metadata]);
+        $factory->method('appendItemMetadataList');
+        $item->addMetadata($date_metadata);
 
         $representation          = $builder->build($item);
         $expected_representation = new ItemMetadataRepresentation(
@@ -192,36 +182,35 @@ class MetadataRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             'date metadata label'
         );
 
-        $this->assertEquals([$expected_representation], $representation);
+        self::assertEquals([$expected_representation], $representation);
     }
 
     public function testMetadataOwnerPropertyIsCorrectlyBuilt(): void
     {
-        $item = Mockery::mock(\Docman_Item::class);
+        $item = new Docman_Item();
 
-        $factory     = Mockery::mock(Docman_MetadataFactory::class);
-        $user_helper = Mockery::mock(UserHelper::class);
+        $factory     = $this->createMock(Docman_MetadataFactory::class);
+        $user_helper = $this->createMock(UserHelper::class);
         $builder     = new MetadataRepresentationBuilder(
             $factory,
-            Mockery::mock(Codendi_HTMLPurifier::class),
+            $this->createMock(Codendi_HTMLPurifier::class),
             $user_helper
         );
 
-        $owner_metadata = Mockery::mock(Docman_Metadata::class);
-        $owner_metadata->shouldReceive('getValue')->andReturn('1');
-        $owner_metadata->shouldReceive('isMultipleValuesAllowed')->andReturn(false);
-        $owner_metadata->shouldReceive('getName')->andReturn('owner');
-        $owner_metadata->shouldReceive('getType')->andReturn(PLUGIN_DOCMAN_METADATA_TYPE_STRING);
-        $owner_metadata->shouldReceive('isEmptyAllowed')->andReturn(true);
-        $owner_metadata->shouldReceive('getLabel')->andReturn('owner');
-        $owner_metadata->shouldReceive('isSpecial')->andReturn(false);
+        $owner_metadata = new Docman_Metadata();
+        $owner_metadata->setValue('1');
+        $owner_metadata->setIsMultipleValuesAllowed(false);
+        $owner_metadata->setName('owner');
+        $owner_metadata->setType(PLUGIN_DOCMAN_METADATA_TYPE_STRING);
+        $owner_metadata->setIsEmptyAllowed(true);
+        $owner_metadata->setLabel('owner');
+        $owner_metadata->setSpecial(false);
 
-        $factory->shouldReceive('appendItemMetadataList');
+        $factory->method('appendItemMetadataList');
+        $item->addMetadata($owner_metadata);
 
-        $item->shouldReceive('getMetadata')->andReturn([$owner_metadata]);
-
-        $user_helper->shouldReceive('getDisplayNameFromUserId')->andReturn('user display name');
-        $user_helper->shouldReceive('getLinkOnUserFromUserId')->andReturn('user display name with link');
+        $user_helper->method('getDisplayNameFromUserId')->willReturn('user display name');
+        $user_helper->method('getLinkOnUserFromUserId')->willReturn('user display name with link');
 
         $representation          = $builder->build($item);
         $expected_representation = new ItemMetadataRepresentation(
@@ -235,6 +224,6 @@ class MetadataRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             'owner'
         );
 
-        $this->assertEquals([$expected_representation], $representation);
+        self::assertEquals([$expected_representation], $representation);
     }
 }
