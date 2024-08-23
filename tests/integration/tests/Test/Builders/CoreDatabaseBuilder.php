@@ -42,7 +42,7 @@ final class CoreDatabaseBuilder
             'group_name'      => $name,
             'access'          => 'public',
             'status'          => 'A',
-            'unix_group_name' => "cross-tracker-comparison-$name",
+            'unix_group_name' => $name,
             'icon_codepoint'  => $icon,
         ];
         $project_id  = (int) $this->db->insertReturnId(

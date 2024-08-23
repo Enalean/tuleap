@@ -38,10 +38,6 @@ final class TrackerNameSelectBuilderTest extends CrossTrackerFieldTestCase
 {
     private PFUser $user;
     /**
-     * @var Tracker[]
-     */
-    private array $trackers;
-    /**
      * @var array<int, TrackerRepresentation>
      */
     private array $expected_values;
@@ -60,7 +56,8 @@ final class TrackerNameSelectBuilderTest extends CrossTrackerFieldTestCase
 
         $release_tracker = $tracker_builder->buildTracker($project_id, 'Release');
         $sprint_tracker  = $tracker_builder->buildTracker($project_id, 'Sprint', 'fiesta-red');
-        $this->trackers  = [$release_tracker, $sprint_tracker];
+        $tracker_builder->setViewPermissionOnTracker($release_tracker->getId(), Tracker::PERMISSION_FULL, ProjectUGroup::PROJECT_MEMBERS);
+        $tracker_builder->setViewPermissionOnTracker($sprint_tracker->getId(), Tracker::PERMISSION_FULL, ProjectUGroup::PROJECT_MEMBERS);
 
         $release_artifact_id_field_id = $tracker_builder->buildArtifactIdField($release_tracker->getId());
         $sprint_artifact_id_field_id  = $tracker_builder->buildArtifactIdField($sprint_tracker->getId());
@@ -100,7 +97,6 @@ final class TrackerNameSelectBuilderTest extends CrossTrackerFieldTestCase
             new CrossTrackerExpertReport(
                 1,
                 'SELECT @tracker.name FROM @project = "self" WHERE @id >= 1',
-                $this->trackers,
             ),
             $this->user,
         );

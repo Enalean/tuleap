@@ -1,0 +1,135 @@
+<?php
+/**
+ * Copyright (c) Enalean, 2024-Present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+declare(strict_types=1);
+
+namespace Tuleap\CrossTracker\Report\Query\Advanced\From;
+
+use PFUser;
+use ProjectUGroup;
+use Tracker;
+use Tuleap\CrossTracker\CrossTrackerExpertReport;
+use Tuleap\CrossTracker\Report\Query\Advanced\CrossTrackerFieldTestCase;
+use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Representations\TrackerRepresentation;
+use Tuleap\CrossTracker\REST\v1\Representation\CrossTrackerReportContentRepresentation;
+use Tuleap\CrossTracker\Tests\Report\ArtifactReportFactoryInstantiator;
+use Tuleap\DB\DBFactory;
+use Tuleap\Test\Builders\CoreDatabaseBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerDatabaseBuilder;
+
+final class FromProjectTest extends CrossTrackerFieldTestCase
+{
+    private PFUser $user_member;
+    private PFUser $user_admin;
+
+    protected function setUp(): void
+    {
+        $db              = DBFactory::getMainTuleapDBConnection()->getDB();
+        $core_builder    = new CoreDatabaseBuilder($db);
+        $tracker_builder = new TrackerDatabaseBuilder($db);
+
+        $project_1         = $core_builder->buildProject('project_1');
+        $project_1_id      = (int) $project_1->getId();
+        $project_2         = $core_builder->buildProject('project_2');
+        $project_2_id      = (int) $project_2->getId();
+        $this->user_member = $core_builder->buildUser('bob', 'Bob', 'bob@example.com');
+        $this->user_admin  = $core_builder->buildUser('admin', 'Admin', 'admin@example.com');
+        $core_builder->addUserToProjectMembers((int) $this->user_member->getId(), $project_1_id);
+        $core_builder->addUserToProjectMembers((int) $this->user_member->getId(), $project_2_id);
+        $core_builder->addUserToProjectMembers((int) $this->user_admin->getId(), $project_1_id);
+        $core_builder->addUserToProjectAdmins((int) $this->user_admin->getId(), $project_1_id);
+        $core_builder->addUserToProjectMembers((int) $this->user_admin->getId(), $project_2_id);
+        $core_builder->addUserToProjectAdmins((int) $this->user_admin->getId(), $project_2_id);
+
+        $tracker_1  = $tracker_builder->buildTracker($project_1_id, 'Tracker 1');
+        $tracker_11 = $tracker_builder->buildTracker($project_1_id, 'Tracker 1.1');
+        $tracker_2  = $tracker_builder->buildTracker($project_2_id, 'Tracker 2');
+        $tracker_builder->setViewPermissionOnTracker($tracker_1->getId(), Tracker::PERMISSION_FULL, ProjectUGroup::PROJECT_MEMBERS);
+        $tracker_builder->setViewPermissionOnTracker($tracker_11->getId(), Tracker::PERMISSION_FULL, ProjectUGroup::PROJECT_ADMIN);
+        $tracker_builder->setViewPermissionOnTracker($tracker_2->getId(), Tracker::PERMISSION_FULL, ProjectUGroup::PROJECT_MEMBERS);
+
+        $artifact_id_field_1  = $tracker_builder->buildArtifactIdField($tracker_1->getId());
+        $artifact_id_field_11 = $tracker_builder->buildArtifactIdField($tracker_11->getId());
+        $artifact_id_field_2  = $tracker_builder->buildArtifactIdField($tracker_2->getId());
+        $tracker_builder->setReadPermission($artifact_id_field_1, ProjectUGroup::PROJECT_MEMBERS);
+        $tracker_builder->setReadPermission($artifact_id_field_11, ProjectUGroup::PROJECT_MEMBERS);
+        $tracker_builder->setReadPermission($artifact_id_field_2, ProjectUGroup::PROJECT_MEMBERS);
+
+        $artifact_1 = $tracker_builder->buildArtifact($tracker_1->getId());
+        $tracker_builder->buildLastChangeset($artifact_1);
+        $artifact_11 = $tracker_builder->buildArtifact($tracker_11->getId());
+        $tracker_builder->buildLastChangeset($artifact_11);
+        $artifact_2 = $tracker_builder->buildArtifact($tracker_2->getId());
+        $tracker_builder->buildLastChangeset($artifact_2);
+
+        $this->addReportToProject(1, $project_1_id);
+        $this->addReportToProject(2, $project_2_id);
+    }
+
+    private function getQueryResults(CrossTrackerExpertReport $report, PFUser $user): CrossTrackerReportContentRepresentation
+    {
+        $result = (new ArtifactReportFactoryInstantiator())
+            ->getFactory()
+            ->getArtifactsMatchingReport($report, $user, 10, 0);
+        assert($result instanceof CrossTrackerReportContentRepresentation);
+        return $result;
+    }
+
+    /**
+     * @param list<string> $expected
+     */
+    private function assertItContainsTrackers(array $expected, CrossTrackerReportContentRepresentation $result): void
+    {
+        $found = [];
+        foreach ($result->artifacts as $artifact) {
+            self::assertArrayHasKey('@tracker.name', $artifact);
+            $name = $artifact['@tracker.name'];
+            self::assertInstanceOf(TrackerRepresentation::class, $name);
+            if (! in_array($name->name, $found, true)) {
+                $found[] = $name->name;
+            }
+        }
+        self::assertEqualsCanonicalizing($expected, $found);
+    }
+
+    public function testItGetTrackerFromProjectSelf(): void
+    {
+        $result = $this->getQueryResults(
+            new CrossTrackerExpertReport(1, 'SELECT @tracker.name FROM @project = "self" WHERE @id >= 1'),
+            $this->user_member,
+        );
+        $this->assertItContainsTrackers(['Tracker 1'], $result);
+
+        $result = $this->getQueryResults(
+            new CrossTrackerExpertReport(2, 'SELECT @tracker.name FROM @project = "self" WHERE @id >= 1'),
+            $this->user_member,
+        );
+        $this->assertItContainsTrackers(['Tracker 2'], $result);
+    }
+
+    public function testPermissionsProjectSelf(): void
+    {
+        $result = $this->getQueryResults(
+            new CrossTrackerExpertReport(1, 'SELECT @tracker.name FROM @project = "self" WHERE @id >= 1'),
+            $this->user_admin,
+        );
+        $this->assertItContainsTrackers(['Tracker 1', 'Tracker 1.1'], $result);
+    }
+}

@@ -24,8 +24,11 @@ declare(strict_types=1);
 namespace Tuleap\CrossTracker\REST\v1;
 
 use EventManager;
+use LogicException;
 use REST_TestDataBuilder;
+use Tracker;
 use Tuleap\CrossTracker\CrossTrackerReportDao;
+use Tuleap\Dashboard\Project\ProjectDashboardDao;
 use Tuleap\Dashboard\Widget\DashboardWidgetDao;
 use Tuleap\Widget\WidgetFactory;
 use User_ForgeUserGroupPermissionsDao;
@@ -52,15 +55,23 @@ final class CrossTrackerDataBuilder extends REST_TestDataBuilder
             )
         );
 
+        $project_dashboard_dao = new ProjectDashboardDao($widget_dao);
+        $dashboards            = $project_dashboard_dao->searchAllProjectDashboards(
+            (int) $this->getTrackerInProjectPrivateMember(self::EPICS_TRACKER_SHORTNAME)->getProject()->getID()
+        );
+        if ($dashboards === []) {
+            throw new LogicException('Project private member has no dashboards');
+        }
+
         $test_user_1_id = $this->user_manager->getUserByUserName(self::TEST_USER_1_NAME)->getId();
 
         $user_report_id = $cross_tracker_saver->create();
         $widget_dao->create($test_user_1_id, 'u', 2, 'crosstrackersearch', $user_report_id);
         $project_report_id = $cross_tracker_saver->create();
-        $widget_dao->create($test_user_1_id, 'g', 3, 'crosstrackersearch', $project_report_id);
+        $widget_dao->create($dashboards[0]['project_id'], 'g', $dashboards[0]['id'], 'crosstrackersearch', $project_report_id);
     }
 
-    private function getKanbanTracker(): \Tracker
+    private function getKanbanTracker(): Tracker
     {
         return $this->getTrackerInProjectPrivateMember(self::KANBAN_TRACKER_SHORTNAME);
     }

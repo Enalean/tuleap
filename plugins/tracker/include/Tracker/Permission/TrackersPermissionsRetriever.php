@@ -24,7 +24,6 @@ namespace Tuleap\Tracker\Permission;
 
 use EventManager;
 use ForgeConfig;
-use LogicException;
 use PFUser;
 use Project;
 use Project_AccessException;
@@ -121,10 +120,6 @@ final readonly class TrackersPermissionsRetriever implements RetrieveUserPermiss
 
     public function retrieveUserPermissionOnTrackers(PFUser $user, array $trackers, TrackerPermissionType $permission): UserPermissionsOnItems
     {
-        if (! self::isEnabled()) {
-            throw new LogicException('Trackers permissions on tracker are disabled by feature flag.');
-        }
-
         if ($trackers === []) {
             return new UserPermissionsOnItems($user, $permission, [], []);
         }

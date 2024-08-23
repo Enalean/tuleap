@@ -22,8 +22,10 @@ declare(strict_types=1);
 
 namespace Tuleap\CrossTracker\REST\v1;
 
+use Psr\Http\Message\ResponseInterface;
 use REST_TestDataBuilder;
 use RestBase;
+use TestDataBuilder;
 use function Psl\Json\decode;
 use function Psl\Json\encode;
 
@@ -55,7 +57,7 @@ final class CrossTrackerTest extends RestBase
         $this->assertGetIdReport($response);
     }
 
-    private function assertGetIdReport(\Psr\Http\Message\ResponseInterface $response): void
+    private function assertGetIdReport(ResponseInterface $response): void
     {
         $expected_cross_tracker = [
             'id'               => 1,
@@ -69,7 +71,7 @@ final class CrossTrackerTest extends RestBase
                     'project' => [
                         'id'    => $this->project_private_member_id,
                         'uri'   => 'projects/' . $this->project_private_member_id,
-                        'label' => REST_TestDataBuilder::PROJECT_PRIVATE_MEMBER_LABEL,
+                        'label' => TestDataBuilder::PROJECT_PRIVATE_MEMBER_LABEL,
                         'icon' => '',
                     ],
                 ],
@@ -104,7 +106,7 @@ final class CrossTrackerTest extends RestBase
                     'project' => [
                         'id'    => $this->project_private_member_id,
                         'uri'   => 'projects/' . $this->project_private_member_id,
-                        'label' => REST_TestDataBuilder::PROJECT_PRIVATE_MEMBER_LABEL,
+                        'label' => TestDataBuilder::PROJECT_PRIVATE_MEMBER_LABEL,
                         'icon' => '',
                     ],
                 ],
@@ -166,11 +168,11 @@ final class CrossTrackerTest extends RestBase
 
     public function testGetContentIdWithExpertMode(): void
     {
-        $query    = encode(
-            ['trackers_id' => [$this->epic_tracker_id], 'expert_query' => 'SELECT @id FROM @project.category = "open" WHERE @id >= 1']
-        );
+        $query    = encode([
+            'expert_query' => "SELECT @id FROM @project = 'self' WHERE @id = {$this->epic_artifact_ids[1]}",
+        ]);
         $response = $this->getResponse(
-            $this->request_factory->createRequest('GET', 'cross_tracker_reports/1/content?report_mode=expert&limit=50&offset=0&query=' . urlencode($query))
+            $this->request_factory->createRequest('GET', 'cross_tracker_reports/3/content?report_mode=expert&limit=50&offset=0&query=' . urlencode($query)),
         );
 
         self::assertSame(200, $response->getStatusCode());
@@ -179,15 +181,8 @@ final class CrossTrackerTest extends RestBase
         self::assertSame('@artifact', $report['selected'][0]['name']);
         self::assertSame('@id', $report['selected'][1]['name']);
 
-        self::assertCount(8, $report['artifacts']);
-        self::assertEquals($this->epic_artifact_ids[8], $report['artifacts'][0]['@id']['value']);
-        self::assertEquals($this->epic_artifact_ids[7], $report['artifacts'][1]['@id']['value']);
-        self::assertEquals($this->epic_artifact_ids[6], $report['artifacts'][2]['@id']['value']);
-        self::assertEquals($this->epic_artifact_ids[5], $report['artifacts'][3]['@id']['value']);
-        self::assertEquals($this->epic_artifact_ids[4], $report['artifacts'][4]['@id']['value']);
-        self::assertEquals($this->epic_artifact_ids[3], $report['artifacts'][5]['@id']['value']);
-        self::assertEquals($this->epic_artifact_ids[2], $report['artifacts'][6]['@id']['value']);
-        self::assertEquals($this->epic_artifact_ids[1], $report['artifacts'][7]['@id']['value']);
+        self::assertCount(1, $report['artifacts']);
+        self::assertEquals($this->epic_artifact_ids[1], $report['artifacts'][0]['@id']['value']);
     }
 
     public function testGetReportWithoutArtifacts(): void

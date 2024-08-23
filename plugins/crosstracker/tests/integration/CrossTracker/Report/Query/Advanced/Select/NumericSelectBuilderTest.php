@@ -37,10 +37,6 @@ use Tuleap\Tracker\Test\Builders\TrackerDatabaseBuilder;
 final class NumericSelectBuilderTest extends CrossTrackerFieldTestCase
 {
     /**
-     * @var Tracker[]
-     */
-    private array $trackers;
-    /**
      * @var array<int, int|float|null>
      */
     private array $expected_values;
@@ -60,7 +56,8 @@ final class NumericSelectBuilderTest extends CrossTrackerFieldTestCase
 
         $release_tracker = $tracker_builder->buildTracker($project_id, 'Release');
         $sprint_tracker  = $tracker_builder->buildTracker($project_id, 'Sprint');
-        $this->trackers  = [$release_tracker, $sprint_tracker];
+        $tracker_builder->setViewPermissionOnTracker($release_tracker->getId(), Tracker::PERMISSION_FULL, ProjectUGroup::PROJECT_MEMBERS);
+        $tracker_builder->setViewPermissionOnTracker($sprint_tracker->getId(), Tracker::PERMISSION_FULL, ProjectUGroup::PROJECT_MEMBERS);
 
         $release_int_field_id  = $tracker_builder->buildIntField(
             $release_tracker->getId(),
@@ -121,7 +118,6 @@ final class NumericSelectBuilderTest extends CrossTrackerFieldTestCase
             new CrossTrackerExpertReport(
                 1,
                 "SELECT numeric_field FROM @project = 'self' WHERE numeric_field = '' OR numeric_field != ''",
-                $this->trackers,
             ),
             $this->user,
         );

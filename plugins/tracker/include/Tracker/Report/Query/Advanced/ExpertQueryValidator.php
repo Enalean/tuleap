@@ -41,14 +41,12 @@ final readonly class ExpertQueryValidator
      * @throws SyntaxError
      * @throws SelectablesDoNotExistException
      * @throws SelectablesAreInvalidException
-     * @throws FromIsInvalidException
      */
     public function validateExpertQuery(
         string $expert_query,
         bool $expert_mode,
         IBuildInvalidSearchablesCollection $invalid_searchables_collection_builder,
         IBuildInvalidSelectablesCollection $invalid_selectables_collection_builder,
-        IBuildInvalidFromCollection $invalid_from_collection_builder,
     ): void {
         $query     = $this->parser->parse($expert_query);
         $condition = $query->getCondition();
@@ -56,6 +54,18 @@ final readonly class ExpertQueryValidator
 
         $this->checkSearchables($condition, $invalid_searchables_collection_builder);
         $this->checkSelectables($query->getSelect(), $expert_mode, $invalid_selectables_collection_builder);
+    }
+
+    /**
+     * @throws FromIsInvalidException
+     * @throws SyntaxError
+     */
+    public function validateFromQuery(
+        string $expert_query,
+        bool $expert_mode,
+        IBuildInvalidFromCollection $invalid_from_collection_builder,
+    ): void {
+        $query = $this->parser->parse($expert_query);
         $this->checkFrom($query->getFrom(), $expert_mode, $invalid_from_collection_builder);
     }
 

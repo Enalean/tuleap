@@ -41,10 +41,6 @@ use UserManager;
 final class UserListSelectFromBuilderTest extends CrossTrackerFieldTestCase
 {
     /**
-     * @var Tracker[]
-     */
-    private array $trackers;
-    /**
      * @var array<int, UserRepresentation[]>
      */
     private array $expected_values;
@@ -72,7 +68,8 @@ final class UserListSelectFromBuilderTest extends CrossTrackerFieldTestCase
 
         $release_tracker = $tracker_builder->buildTracker($project_id, 'Release');
         $sprint_tracker  = $tracker_builder->buildTracker($project_id, 'Sprint');
-        $this->trackers  = [$release_tracker, $sprint_tracker];
+        $tracker_builder->setViewPermissionOnTracker($release_tracker->getId(), Tracker::PERMISSION_FULL, ProjectUGroup::PROJECT_MEMBERS);
+        $tracker_builder->setViewPermissionOnTracker($sprint_tracker->getId(), Tracker::PERMISSION_FULL, ProjectUGroup::PROJECT_MEMBERS);
 
         $release_user_static_list_field_id = $tracker_builder->buildUserListField(
             $release_tracker->getId(),
@@ -150,7 +147,6 @@ final class UserListSelectFromBuilderTest extends CrossTrackerFieldTestCase
             new CrossTrackerExpertReport(
                 1,
                 "SELECT user_list_field FROM @project = 'self' WHERE user_list_field = '' OR user_list_field != ''",
-                $this->trackers,
             ),
             $this->user,
         );

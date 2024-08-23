@@ -19,6 +19,7 @@
  */
 
 declare(strict_types=1);
+
 namespace Tuleap\CrossTracker;
 
 use Project;
@@ -27,13 +28,9 @@ use Tracker_FormElement_Field;
 
 final readonly class CrossTrackerExpertReport implements CrossTrackerReport
 {
-    /**
-     * @param Tracker[] $trackers
-     */
     public function __construct(
         private int $id,
         private string $expert_query,
-        private array $trackers,
     ) {
     }
 
@@ -70,7 +67,7 @@ final readonly class CrossTrackerExpertReport implements CrossTrackerReport
      */
     public function getTrackers(): array
     {
-        return $this->trackers;
+        return [];
     }
 
     /**
@@ -105,15 +102,5 @@ final readonly class CrossTrackerExpertReport implements CrossTrackerReport
             }
         }
         return array_values($fields);
-    }
-
-    /**
-     * @return int[]
-     */
-    public function getTrackerIds(): array
-    {
-        return array_map(function (Tracker $tracker) {
-            return $tracker->getId();
-        }, $this->trackers);
     }
 }

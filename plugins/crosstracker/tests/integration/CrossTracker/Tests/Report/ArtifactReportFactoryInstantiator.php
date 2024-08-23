@@ -24,15 +24,20 @@ namespace Tuleap\CrossTracker\Tests\Report;
 
 use BaseLanguageFactory;
 use Codendi_HTMLPurifier;
+use EventManager;
 use Tracker_ArtifactFactory;
 use Tracker_FormElementFactory;
 use Tracker_Semantic_ContributorDao;
 use Tracker_Semantic_DescriptionDao;
 use Tracker_Semantic_StatusDao;
 use Tracker_Semantic_TitleDao;
+use TrackerFactory;
 use Tuleap\CrossTracker\CrossTrackerArtifactReportDao;
 use Tuleap\CrossTracker\Report\CrossTrackerArtifactReportFactory;
 use Tuleap\CrossTracker\Report\Query\Advanced\DuckTypedField\FieldTypeRetrieverWrapper;
+use Tuleap\CrossTracker\Report\Query\Advanced\FromBuilder\FromProjectBuilderVisitor;
+use Tuleap\CrossTracker\Report\Query\Advanced\FromBuilder\FromTrackerBuilderVisitor;
+use Tuleap\CrossTracker\Report\Query\Advanced\FromBuilderVisitor;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSearchableCollectorVisitor;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSelectablesCollectorVisitor;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidTermCollectorVisitor;
@@ -86,6 +91,10 @@ use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Metadata\Semantic\Ti
 use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Metadata\Special\PrettyTitle\PrettyTitleSelectFromBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Metadata\Special\ProjectName\ProjectNameSelectFromBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilderVisitor;
+use Tuleap\CrossTracker\Report\Query\Advanced\WidgetInProjectChecker;
+use Tuleap\CrossTracker\Report\ReportTrackersRetriever;
+use Tuleap\Dashboard\Project\ProjectDashboardDao;
+use Tuleap\Dashboard\Widget\DashboardWidgetDao;
 use Tuleap\DB\DBFactory;
 use Tuleap\Markdown\CommonMarkInterpreter;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
@@ -114,7 +123,10 @@ use Tuleap\Tracker\Report\Query\Advanced\SizeValidatorVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\UgroupLabelConverter;
 use Tuleap\Tracker\Report\TrackerReportConfig;
 use Tuleap\Tracker\Report\TrackerReportConfigDao;
+use Tuleap\Widget\WidgetFactory;
 use UGroupManager;
+use User_ForgeUserGroupPermissionsDao;
+use User_ForgeUserGroupPermissionsManager;
 use UserHelper;
 use UserManager;
 
@@ -299,7 +311,18 @@ final class ArtifactReportFactoryInstantiator
                 new ArtifactResultBuilder($artifact_factory),
             ),
         );
+        $from_builder_visitor     = new FromBuilderVisitor(
+            new FromTrackerBuilderVisitor(),
+            new FromProjectBuilderVisitor(new ProjectDashboardDao(new DashboardWidgetDao(
+                new WidgetFactory(
+                    $user_manager,
+                    new User_ForgeUserGroupPermissionsManager(new User_ForgeUserGroupPermissionsDao()),
+                    EventManager::instance(),
+                )
+            ))),
+        );
 
+        $expert_query_dao = new CrossTrackerExpertQueryReportDao();
         return new CrossTrackerArtifactReportFactory(
             new CrossTrackerArtifactReportDao(),
             $artifact_factory,
@@ -308,9 +331,24 @@ final class ArtifactReportFactoryInstantiator
             $select_builder_visitor,
             $result_builder_visitor,
             $parser,
-            new CrossTrackerExpertQueryReportDao(),
+            $expert_query_dao,
             $invalid_comparisons_collector,
             $invalid_selectables_collector,
+            new ReportTrackersRetriever(
+                $validator,
+                $parser,
+                $from_builder_visitor,
+                $trackers_permissions,
+                $expert_query_dao,
+                TrackerFactory::instance(),
+                new WidgetInProjectChecker(new ProjectDashboardDao(new DashboardWidgetDao(
+                    new WidgetFactory(
+                        UserManager::instance(),
+                        new User_ForgeUserGroupPermissionsManager(new User_ForgeUserGroupPermissionsDao()),
+                        EventManager::instance(),
+                    )
+                ))),
+            ),
         );
     }
 }

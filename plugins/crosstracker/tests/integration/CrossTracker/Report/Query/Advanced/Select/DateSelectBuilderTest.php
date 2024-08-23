@@ -38,10 +38,6 @@ use Tuleap\Tracker\Test\Builders\TrackerDatabaseBuilder;
 final class DateSelectBuilderTest extends CrossTrackerFieldTestCase
 {
     /**
-     * @var Tracker[]
-     */
-    private array $trackers;
-    /**
      * @var array<int, ?int>
      */
     private array $expected_values;
@@ -61,7 +57,8 @@ final class DateSelectBuilderTest extends CrossTrackerFieldTestCase
 
         $release_tracker = $tracker_builder->buildTracker($project_id, 'Release');
         $sprint_tracker  = $tracker_builder->buildTracker($project_id, 'Sprint');
-        $this->trackers  = [$release_tracker, $sprint_tracker];
+        $tracker_builder->setViewPermissionOnTracker($release_tracker->getId(), Tracker::PERMISSION_FULL, ProjectUGroup::PROJECT_MEMBERS);
+        $tracker_builder->setViewPermissionOnTracker($sprint_tracker->getId(), Tracker::PERMISSION_FULL, ProjectUGroup::PROJECT_MEMBERS);
 
         $release_date_field_id = $tracker_builder->buildDateField(
             $release_tracker->getId(),
@@ -142,7 +139,6 @@ final class DateSelectBuilderTest extends CrossTrackerFieldTestCase
             new CrossTrackerExpertReport(
                 1,
                 "SELECT date_field FROM @project = 'self' WHERE date_field = '' OR date_field != ''",
-                $this->trackers,
             ),
             $this->user,
         );

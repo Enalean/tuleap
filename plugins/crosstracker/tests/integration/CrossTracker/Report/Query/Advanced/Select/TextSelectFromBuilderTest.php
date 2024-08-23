@@ -19,6 +19,7 @@
  */
 
 declare(strict_types=1);
+
 namespace Tuleap\CrossTracker\Report\Query\Advanced\Select;
 
 use PFUser;
@@ -36,10 +37,6 @@ use Tuleap\Tracker\Test\Builders\TrackerDatabaseBuilder;
 
 final class TextSelectFromBuilderTest extends CrossTrackerFieldTestCase
 {
-    /**
-     * @var Tracker[]
-     */
-    private array $trackers;
     /**
      * @var array<int, ?string>
      */
@@ -60,7 +57,8 @@ final class TextSelectFromBuilderTest extends CrossTrackerFieldTestCase
 
         $release_tracker = $tracker_builder->buildTracker($project_id, 'Release');
         $sprint_tracker  = $tracker_builder->buildTracker($project_id, 'Sprint');
-        $this->trackers  = [$release_tracker, $sprint_tracker];
+        $tracker_builder->setViewPermissionOnTracker($release_tracker->getId(), Tracker::PERMISSION_FULL, ProjectUGroup::PROJECT_MEMBERS);
+        $tracker_builder->setViewPermissionOnTracker($sprint_tracker->getId(), Tracker::PERMISSION_FULL, ProjectUGroup::PROJECT_MEMBERS);
 
         $release_text_field_id = $tracker_builder->buildTextField(
             $release_tracker->getId(),
@@ -91,8 +89,8 @@ final class TextSelectFromBuilderTest extends CrossTrackerFieldTestCase
         $commonmark_interpreter = CommonMarkInterpreter::build(\Codendi_HTMLPurifier::instance());
 
         $this->expected_values = [
-            $release_artifact_with_text_id  => '911 GT3 RS',
-            $sprint_artifact_with_text_id   =>  $commonmark_interpreter->getInterpretedContentWithReferences('718 Cayman GT4 RS', $project_id),
+            $release_artifact_with_text_id => '911 GT3 RS',
+            $sprint_artifact_with_text_id  => $commonmark_interpreter->getInterpretedContentWithReferences('718 Cayman GT4 RS', $project_id),
         ];
         $tracker_builder->buildTextValue(
             $release_artifact_with_text_changeset,
@@ -124,7 +122,6 @@ final class TextSelectFromBuilderTest extends CrossTrackerFieldTestCase
             new CrossTrackerExpertReport(
                 1,
                 "SELECT text_field FROM @project = 'self' WHERE text_field = '' OR text_field != ''",
-                $this->trackers,
             ),
             $this->user,
         );

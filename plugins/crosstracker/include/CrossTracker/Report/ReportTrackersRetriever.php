@@ -1,0 +1,112 @@
+<?php
+/**
+ * Copyright (c) Enalean, 2024-Present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+declare(strict_types=1);
+
+namespace Tuleap\CrossTracker\Report;
+
+use LogicException;
+use PFUser;
+use Tracker;
+use Tuleap\CrossTracker\CrossTrackerReport;
+use Tuleap\CrossTracker\Report\Query\Advanced\FromBuilderVisitor;
+use Tuleap\CrossTracker\Report\Query\Advanced\InvalidFromCollectionBuilder;
+use Tuleap\CrossTracker\Report\Query\Advanced\InvalidFromProjectCollectorVisitor;
+use Tuleap\CrossTracker\Report\Query\Advanced\InvalidFromTrackerCollectorVisitor;
+use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\CrossTrackerExpertQueryReportDao;
+use Tuleap\CrossTracker\Report\Query\Advanced\WidgetInProjectChecker;
+use Tuleap\Tracker\Artifact\RetrieveTracker;
+use Tuleap\Tracker\Permission\RetrieveUserPermissionOnTrackers;
+use Tuleap\Tracker\Permission\TrackerPermissionType;
+use Tuleap\Tracker\Report\Query\Advanced\ExpertQueryValidator;
+use Tuleap\Tracker\Report\Query\Advanced\FromIsInvalidException;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\SyntaxError;
+use Tuleap\Tracker\Report\Query\Advanced\ParserCacheProxy;
+
+final readonly class ReportTrackersRetriever implements RetrieveReportTrackers
+{
+    public function __construct(
+        private ExpertQueryValidator $expert_query_validator,
+        private ParserCacheProxy $parser,
+        private FromBuilderVisitor $from_builder,
+        private RetrieveUserPermissionOnTrackers $trackers_permissions,
+        private CrossTrackerExpertQueryReportDao $expert_query_dao,
+        private RetrieveTracker $tracker_factory,
+        private WidgetInProjectChecker $in_project_checker,
+    ) {
+    }
+
+    /**
+     * @throws FromIsInvalidException
+     * @throws SyntaxError
+     */
+    public function getReportTrackers(CrossTrackerReport $report, PFUser $current_user, int $limit): array
+    {
+        return $report->isExpert() ? $this->retrieveForExpertReport($report, $current_user, $limit) : $report->getTrackers();
+    }
+
+    /**
+     * @return Tracker[]
+     * @throws SyntaxError
+     * @throws FromIsInvalidException
+     */
+    private function retrieveForExpertReport(CrossTrackerReport $report, PFUser $current_user, int $limit): array
+    {
+        $expert_query = $report->getExpertQuery();
+        $this->expert_query_validator->validateFromQuery(
+            $expert_query,
+            $report->isExpert(),
+            new InvalidFromCollectionBuilder(
+                new InvalidFromTrackerCollectorVisitor($this->in_project_checker),
+                new InvalidFromProjectCollectorVisitor($this->in_project_checker),
+                $report->getId(),
+            ),
+        );
+
+        $query = $this->parser->parse($expert_query);
+        assert($query->getFrom() !== null); // From part is checked for expert query, so it cannot be null
+        $additional_from = $this->from_builder->buildFromWhere($query->getFrom(), $report->getId());
+        return $this->trackers_permissions->retrieveUserPermissionOnTrackers(
+            $current_user,
+            $this->getTrackers(array_map(
+                static fn(array $row): int => $row['id'],
+                $this->expert_query_dao->searchTrackersIdsMatchingQuery($additional_from, $limit),
+            )),
+            TrackerPermissionType::PERMISSION_VIEW,
+        )->allowed;
+    }
+
+    /**
+     * @param int[] $trackers_ids
+     * @return Tracker[]
+     */
+    private function getTrackers(array $trackers_ids): array
+    {
+        $trackers = [];
+        foreach ($trackers_ids as $id) {
+            $tracker = $this->tracker_factory->getTrackerById($id);
+            if ($tracker === null) {
+                throw new LogicException("Tracker #$id found in db but unable to found it again");
+            }
+            $trackers[] = $tracker;
+        }
+        return $trackers;
+    }
+}

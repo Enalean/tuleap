@@ -48,7 +48,6 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\SyntaxError;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ListFields\ArtifactSubmitterChecker;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ListFields\CollectionOfNormalizedBindLabelsExtractor;
-use Tuleap\Tracker\Report\Query\Advanced\InvalidFromCollectionBuilder;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidMetadata;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidSearchableCollectorVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidSearchablesCollection;
@@ -1920,7 +1919,6 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
             false,
             new InvalidSearchablesCollectionBuilder($this->getCollector()),
             new InvalidSelectablesCollectionBuilder(),
-            new InvalidFromCollectionBuilder(),
         );
     }
 

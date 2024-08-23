@@ -40,10 +40,6 @@ final class AssignedToSelectBuilderTest extends CrossTrackerFieldTestCase
 {
     private PFUser $user;
     /**
-     * @var Tracker[]
-     */
-    private array $trackers;
-    /**
      * @var array<int, UserRepresentation[]>
      */
     private array $expected_results;
@@ -67,7 +63,8 @@ final class AssignedToSelectBuilderTest extends CrossTrackerFieldTestCase
 
         $release_tracker = $tracker_builder->buildTracker($project_id, 'Release');
         $sprint_tracker  = $tracker_builder->buildTracker($project_id, 'Sprint');
-        $this->trackers  = [$release_tracker, $sprint_tracker];
+        $tracker_builder->setViewPermissionOnTracker($release_tracker->getId(), Tracker::PERMISSION_FULL, ProjectUGroup::PROJECT_MEMBERS);
+        $tracker_builder->setViewPermissionOnTracker($sprint_tracker->getId(), Tracker::PERMISSION_FULL, ProjectUGroup::PROJECT_MEMBERS);
 
         $release_assignee_field_id = $tracker_builder->buildUserListField($release_tracker->getId(), 'field_assignee', 'sb');
         $sprint_assignee_field_id  = $tracker_builder->buildUserListField($sprint_tracker->getId(), 'field_assignee', 'msb');
@@ -125,7 +122,6 @@ final class AssignedToSelectBuilderTest extends CrossTrackerFieldTestCase
             new CrossTrackerExpertReport(
                 1,
                 "SELECT @assigned_to FROM @project = 'self' WHERE field_assignee = '' OR field_assignee != ''",
-                $this->trackers,
             ),
             $this->user,
         );
