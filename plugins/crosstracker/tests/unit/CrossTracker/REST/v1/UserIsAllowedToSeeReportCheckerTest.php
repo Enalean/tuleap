@@ -25,7 +25,7 @@ namespace Tuleap\CrossTracker\REST\v1;
 use Luracast\Restler\RestException;
 use PFUser;
 use Tracker;
-use Tuleap\CrossTracker\CrossTrackerReport;
+use Tuleap\CrossTracker\CrossTrackerDefaultReport;
 use Tuleap\CrossTracker\Permission\CrossTrackerPermissionGate;
 use Tuleap\CrossTracker\SearchCrossTrackerWidgetStub;
 use Tuleap\Test\Builders\ProjectTestBuilder;
@@ -78,7 +78,7 @@ final class UserIsAllowedToSeeReportCheckerTest extends TestCase
 
         $user_is_allowed_to_see_report_checker->checkUserIsAllowedToSeeReport(
             $this->user,
-            new CrossTrackerReport(
+            new CrossTrackerDefaultReport(
                 1,
                 '',
                 [$tracker],

@@ -25,7 +25,7 @@ namespace Tuleap\CrossTracker\Report\Query\Advanced\Metadata;
 use PFUser;
 use ProjectUGroup;
 use Tracker;
-use Tuleap\CrossTracker\CrossTrackerReport;
+use Tuleap\CrossTracker\CrossTrackerDefaultReport;
 use Tuleap\CrossTracker\Report\Query\Advanced\CrossTrackerFieldTestCase;
 use Tuleap\CrossTracker\Tests\Report\ArtifactReportFactoryInstantiator;
 use Tuleap\DB\DBFactory;
@@ -120,7 +120,7 @@ final class SubmittedByMetadataTest extends CrossTrackerFieldTestCase
      * @throws SearchablesDoNotExistException
      * @throws SearchablesAreInvalidException
      */
-    private function getMatchingArtifactIds(CrossTrackerReport $report, PFUser $user): array
+    private function getMatchingArtifactIds(CrossTrackerDefaultReport $report, PFUser $user): array
     {
         $result = (new ArtifactReportFactoryInstantiator())
             ->getFactory()
@@ -132,7 +132,7 @@ final class SubmittedByMetadataTest extends CrossTrackerFieldTestCase
     public function testEqualUser(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerReport(
+            new CrossTrackerDefaultReport(
                 1,
                 "@submitted_by = 'bob'",
                 [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
@@ -148,7 +148,7 @@ final class SubmittedByMetadataTest extends CrossTrackerFieldTestCase
     public function testPermissionsEqual(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerReport(
+            new CrossTrackerDefaultReport(
                 1,
                 "@submitted_by = 'bob'",
                 [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
@@ -164,7 +164,7 @@ final class SubmittedByMetadataTest extends CrossTrackerFieldTestCase
     public function testEqualMyself(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerReport(
+            new CrossTrackerDefaultReport(
                 1,
                 '@submitted_by = MYSELF()',
                 [$this->release_tracker, $this->sprint_tracker],
@@ -180,7 +180,7 @@ final class SubmittedByMetadataTest extends CrossTrackerFieldTestCase
     public function testMultipleEqual(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerReport(
+            new CrossTrackerDefaultReport(
                 1,
                 "@submitted_by = 'bob' OR @submitted_by = 'alice'",
                 [$this->release_tracker, $this->sprint_tracker],
@@ -199,7 +199,7 @@ final class SubmittedByMetadataTest extends CrossTrackerFieldTestCase
     public function testNotEqualUser(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerReport(
+            new CrossTrackerDefaultReport(
                 1,
                 "@submitted_by != 'bob'",
                 [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
@@ -215,7 +215,7 @@ final class SubmittedByMetadataTest extends CrossTrackerFieldTestCase
     public function testPermissionsNotEqual(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerReport(
+            new CrossTrackerDefaultReport(
                 1,
                 "@submitted_by != 'bob'",
                 [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
@@ -235,7 +235,7 @@ final class SubmittedByMetadataTest extends CrossTrackerFieldTestCase
     public function testNotEqualMyself(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerReport(
+            new CrossTrackerDefaultReport(
                 1,
                 '@submitted_by != MYSELF()',
                 [$this->release_tracker, $this->sprint_tracker],
@@ -251,7 +251,7 @@ final class SubmittedByMetadataTest extends CrossTrackerFieldTestCase
     public function testMultipleNotEqual(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerReport(
+            new CrossTrackerDefaultReport(
                 1,
                 "@submitted_by != 'bob' AND @submitted_by != 'alice'",
                 [$this->release_tracker, $this->sprint_tracker],
@@ -267,7 +267,7 @@ final class SubmittedByMetadataTest extends CrossTrackerFieldTestCase
     public function testInUser(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerReport(
+            new CrossTrackerDefaultReport(
                 1,
                 "@submitted_by IN('bob')",
                 [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
@@ -283,7 +283,7 @@ final class SubmittedByMetadataTest extends CrossTrackerFieldTestCase
     public function testPermissionsIn(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerReport(
+            new CrossTrackerDefaultReport(
                 1,
                 "@submitted_by IN('bob')",
                 [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
@@ -299,7 +299,7 @@ final class SubmittedByMetadataTest extends CrossTrackerFieldTestCase
     public function testInMyself(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerReport(
+            new CrossTrackerDefaultReport(
                 1,
                 '@submitted_by IN(MYSELF())',
                 [$this->release_tracker, $this->sprint_tracker],
@@ -315,7 +315,7 @@ final class SubmittedByMetadataTest extends CrossTrackerFieldTestCase
     public function testInMultiple(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerReport(
+            new CrossTrackerDefaultReport(
                 1,
                 "@submitted_by IN('bob', MYSELF())",
                 [$this->release_tracker, $this->sprint_tracker],
@@ -334,7 +334,7 @@ final class SubmittedByMetadataTest extends CrossTrackerFieldTestCase
     public function testMultipleIn(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerReport(
+            new CrossTrackerDefaultReport(
                 1,
                 "@submitted_by IN('bob') OR @submitted_by IN('charles')",
                 [$this->release_tracker, $this->sprint_tracker],
@@ -350,7 +350,7 @@ final class SubmittedByMetadataTest extends CrossTrackerFieldTestCase
     public function testNotInUser(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerReport(
+            new CrossTrackerDefaultReport(
                 1,
                 "@submitted_by NOT IN('bob')",
                 [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
@@ -366,7 +366,7 @@ final class SubmittedByMetadataTest extends CrossTrackerFieldTestCase
     public function testPermissionsNotIn(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerReport(
+            new CrossTrackerDefaultReport(
                 1,
                 "@submitted_by NOT IN('bob')",
                 [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
@@ -386,7 +386,7 @@ final class SubmittedByMetadataTest extends CrossTrackerFieldTestCase
     public function testNotInMyself(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerReport(
+            new CrossTrackerDefaultReport(
                 1,
                 '@submitted_by NOT IN(MYSELF())',
                 [$this->release_tracker, $this->sprint_tracker],
@@ -402,7 +402,7 @@ final class SubmittedByMetadataTest extends CrossTrackerFieldTestCase
     public function testNotInMultiple(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerReport(
+            new CrossTrackerDefaultReport(
                 1,
                 "@submitted_by NOT IN('bob', 'alice')",
                 [$this->release_tracker, $this->sprint_tracker],
@@ -418,7 +418,7 @@ final class SubmittedByMetadataTest extends CrossTrackerFieldTestCase
     public function testMultipleNotIn(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerReport(
+            new CrossTrackerDefaultReport(
                 1,
                 "@submitted_by NOT IN('bob') AND @submitted_by NOT IN('alice')",
                 [$this->release_tracker, $this->sprint_tracker],

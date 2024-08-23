@@ -26,7 +26,7 @@ namespace Tuleap\CrossTracker\Report;
 use PFUser;
 use Tracker;
 use Tuleap\CrossTracker\CrossTrackerArtifactReportDao;
-use Tuleap\CrossTracker\CrossTrackerReport;
+use Tuleap\CrossTracker\CrossTrackerDefaultReport;
 use Tuleap\CrossTracker\Report\Query\Advanced\ExpertQueryIsEmptyException;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidFromCollectionBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidFromProjectCollectorVisitor;
@@ -82,7 +82,7 @@ final readonly class CrossTrackerArtifactReportFactory
      * @throws FromIsInvalidException
      */
     public function getArtifactsMatchingReport(
-        CrossTrackerReport $report,
+        CrossTrackerDefaultReport $report,
         PFUser $current_user,
         int $limit,
         int $offset,
@@ -141,7 +141,7 @@ final readonly class CrossTrackerArtifactReportFactory
      * @throws FromIsInvalidException
      */
     private function getArtifactsMatchingDefaultQuery(
-        CrossTrackerReport $report,
+        CrossTrackerDefaultReport $report,
         PFUser $current_user,
         int $limit,
         int $offset,
@@ -169,7 +169,7 @@ final readonly class CrossTrackerArtifactReportFactory
      * @throws FromIsInvalidException
      */
     private function getArtifactsMatchingExpertQuery(
-        CrossTrackerReport $report,
+        CrossTrackerDefaultReport $report,
         PFUser $current_user,
         int $limit,
         int $offset,
@@ -214,7 +214,7 @@ final readonly class CrossTrackerArtifactReportFactory
      * @throws FromIsInvalidException
      */
     private function getQueryFromReport(
-        CrossTrackerReport $report,
+        CrossTrackerDefaultReport $report,
         PFUser $current_user,
         array $trackers,
     ): Query {

@@ -25,7 +25,7 @@ use PFUser;
 use Project_AccessException;
 use Project_AccessProjectNotFoundException;
 use ProjectManager;
-use Tuleap\CrossTracker\CrossTrackerReport;
+use Tuleap\CrossTracker\CrossTrackerDefaultReport;
 use Tuleap\CrossTracker\CrossTrackerReportDao;
 use Tuleap\CrossTracker\CrossTrackerReportFactory;
 use Tuleap\CrossTracker\CrossTrackerReportNotFoundException;
@@ -215,7 +215,7 @@ class CSVExportController implements DispatchableWithRequest
      * @throws ForbiddenException
      * @throws NotFoundException
      */
-    private function checkUserIsAllowedToSeeReport(PFUser $user, CrossTrackerReport $report): void
+    private function checkUserIsAllowedToSeeReport(PFUser $user, CrossTrackerDefaultReport $report): void
     {
         $widget = $this->cross_tracker_dao->searchCrossTrackerWidgetByCrossTrackerReportId($report->getId());
         if (

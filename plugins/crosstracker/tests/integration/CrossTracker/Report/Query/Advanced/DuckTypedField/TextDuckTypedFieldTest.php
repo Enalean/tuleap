@@ -25,7 +25,7 @@ namespace Tuleap\CrossTracker\Report\Query\Advanced\DuckTypedField;
 use PFUser;
 use ProjectUGroup;
 use Tracker;
-use Tuleap\CrossTracker\CrossTrackerReport;
+use Tuleap\CrossTracker\CrossTrackerDefaultReport;
 use Tuleap\CrossTracker\Report\Query\Advanced\CrossTrackerFieldTestCase;
 use Tuleap\CrossTracker\Tests\Report\ArtifactReportFactoryInstantiator;
 use Tuleap\DB\DBFactory;
@@ -126,7 +126,7 @@ final class TextDuckTypedFieldTest extends CrossTrackerFieldTestCase
      * @throws SearchablesDoNotExistException
      * @throws SearchablesAreInvalidException
      */
-    private function getMatchingArtifactIds(CrossTrackerReport $report, PFUser $user): array
+    private function getMatchingArtifactIds(CrossTrackerDefaultReport $report, PFUser $user): array
     {
         $result = (new ArtifactReportFactoryInstantiator())
             ->getFactory()
@@ -138,7 +138,7 @@ final class TextDuckTypedFieldTest extends CrossTrackerFieldTestCase
     public function testEqualEmpty(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerReport(
+            new CrossTrackerDefaultReport(
                 1,
                 "text_field = ''",
                 [$this->release_tracker, $this->sprint_tracker],
@@ -154,7 +154,7 @@ final class TextDuckTypedFieldTest extends CrossTrackerFieldTestCase
     public function testEqualValue(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerReport(
+            new CrossTrackerDefaultReport(
                 1,
                 "text_field = 'obscur'",
                 [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
@@ -170,7 +170,7 @@ final class TextDuckTypedFieldTest extends CrossTrackerFieldTestCase
     public function testPermissionsEqual(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerReport(
+            new CrossTrackerDefaultReport(
                 1,
                 "text_field = 'obscur'",
                 [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
@@ -186,7 +186,7 @@ final class TextDuckTypedFieldTest extends CrossTrackerFieldTestCase
     public function testEqualValueLike(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerReport(
+            new CrossTrackerDefaultReport(
                 1,
                 "text_field = 'a like% value'",
                 [$this->release_tracker, $this->sprint_tracker],
@@ -202,7 +202,7 @@ final class TextDuckTypedFieldTest extends CrossTrackerFieldTestCase
     public function testMultipleEqual(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerReport(
+            new CrossTrackerDefaultReport(
                 1,
                 "text_field = 'obscur' OR text_field = ''",
                 [$this->release_tracker, $this->sprint_tracker],
@@ -221,7 +221,7 @@ final class TextDuckTypedFieldTest extends CrossTrackerFieldTestCase
     public function testNotEqualEmpty(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerReport(
+            new CrossTrackerDefaultReport(
                 1,
                 "text_field != ''",
                 [$this->release_tracker, $this->sprint_tracker],
@@ -240,7 +240,7 @@ final class TextDuckTypedFieldTest extends CrossTrackerFieldTestCase
     public function testNotEqualValue(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerReport(
+            new CrossTrackerDefaultReport(
                 1,
                 "text_field != 'value'",
                 [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
@@ -259,7 +259,7 @@ final class TextDuckTypedFieldTest extends CrossTrackerFieldTestCase
     public function testPermissionsNotEqual(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerReport(
+            new CrossTrackerDefaultReport(
                 1,
                 "text_field != 'value'",
                 [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
@@ -279,7 +279,7 @@ final class TextDuckTypedFieldTest extends CrossTrackerFieldTestCase
     public function testMultipleNotEqual(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerReport(
+            new CrossTrackerDefaultReport(
                 1,
                 "text_field != 'obscurement' AND text_field != ''",
                 [$this->release_tracker, $this->sprint_tracker],

@@ -67,7 +67,7 @@ final class CrossTrackerReportFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
             [2, $this->tracker],
         ]);
 
-        $expected_result = new CrossTrackerReport(1, '', [$this->tracker], false);
+        $expected_result = new CrossTrackerDefaultReport(1, '', [$this->tracker], false);
 
         self::assertEquals(
             $this->cross_tracker_factory->getById(1),

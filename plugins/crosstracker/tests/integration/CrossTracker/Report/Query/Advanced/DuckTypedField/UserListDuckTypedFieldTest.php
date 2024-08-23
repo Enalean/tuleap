@@ -26,7 +26,7 @@ use PFUser;
 use ProjectUGroup;
 use Tracker;
 use Tracker_FormElement_Field_List;
-use Tuleap\CrossTracker\CrossTrackerReport;
+use Tuleap\CrossTracker\CrossTrackerDefaultReport;
 use Tuleap\CrossTracker\Report\Query\Advanced\CrossTrackerFieldTestCase;
 use Tuleap\CrossTracker\Tests\Report\ArtifactReportFactoryInstantiator;
 use Tuleap\DB\DBFactory;
@@ -144,7 +144,7 @@ final class UserListDuckTypedFieldTest extends CrossTrackerFieldTestCase
      * @throws SearchablesDoNotExistException
      * @throws SearchablesAreInvalidException
      */
-    private function getMatchingArtifactIds(CrossTrackerReport $report, PFUser $user): array
+    private function getMatchingArtifactIds(CrossTrackerDefaultReport $report, PFUser $user): array
     {
         $result = (new ArtifactReportFactoryInstantiator())
             ->getFactory()
@@ -156,7 +156,7 @@ final class UserListDuckTypedFieldTest extends CrossTrackerFieldTestCase
     public function testEqualEmpty(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerReport(
+            new CrossTrackerDefaultReport(
                 1,
                 "user_field = ''",
                 [$this->release_tracker, $this->sprint_tracker],
@@ -172,7 +172,7 @@ final class UserListDuckTypedFieldTest extends CrossTrackerFieldTestCase
     public function testEqualUser(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerReport(
+            new CrossTrackerDefaultReport(
                 1,
                 "user_field = 'alice'",
                 [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
@@ -188,7 +188,7 @@ final class UserListDuckTypedFieldTest extends CrossTrackerFieldTestCase
     public function testPermissionsEqual(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerReport(
+            new CrossTrackerDefaultReport(
                 1,
                 "user_field = 'alice'",
                 [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
@@ -204,7 +204,7 @@ final class UserListDuckTypedFieldTest extends CrossTrackerFieldTestCase
     public function testEqualMyself(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerReport(
+            new CrossTrackerDefaultReport(
                 1,
                 'user_field = MYSELF()',
                 [$this->release_tracker, $this->sprint_tracker],
@@ -220,7 +220,7 @@ final class UserListDuckTypedFieldTest extends CrossTrackerFieldTestCase
     public function testMultipleEqual(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerReport(
+            new CrossTrackerDefaultReport(
                 1,
                 "user_field = 'alice' AND user_field = 'bob'",
                 [$this->release_tracker, $this->sprint_tracker],
@@ -236,7 +236,7 @@ final class UserListDuckTypedFieldTest extends CrossTrackerFieldTestCase
     public function testNotEqualEmpty(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerReport(
+            new CrossTrackerDefaultReport(
                 1,
                 "user_field != ''",
                 [$this->release_tracker, $this->sprint_tracker],
@@ -252,7 +252,7 @@ final class UserListDuckTypedFieldTest extends CrossTrackerFieldTestCase
     public function testNotEqualUser(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerReport(
+            new CrossTrackerDefaultReport(
                 1,
                 "user_field != 'bob'",
                 [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
@@ -268,7 +268,7 @@ final class UserListDuckTypedFieldTest extends CrossTrackerFieldTestCase
     public function testPermissionsNotEqual(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerReport(
+            new CrossTrackerDefaultReport(
                 1,
                 "user_field != 'bob'",
                 [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
@@ -288,7 +288,7 @@ final class UserListDuckTypedFieldTest extends CrossTrackerFieldTestCase
     public function testNotEqualMyself(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerReport(
+            new CrossTrackerDefaultReport(
                 1,
                 'user_field != MYSELF()',
                 [$this->release_tracker, $this->sprint_tracker],
@@ -304,7 +304,7 @@ final class UserListDuckTypedFieldTest extends CrossTrackerFieldTestCase
     public function testMultipleNotEqual(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerReport(
+            new CrossTrackerDefaultReport(
                 1,
                 "user_field != 'alice' AND user_field != 'bob'",
                 [$this->release_tracker, $this->sprint_tracker],
@@ -320,7 +320,7 @@ final class UserListDuckTypedFieldTest extends CrossTrackerFieldTestCase
     public function testInUser(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerReport(
+            new CrossTrackerDefaultReport(
                 1,
                 "user_field IN('alice')",
                 [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
@@ -336,7 +336,7 @@ final class UserListDuckTypedFieldTest extends CrossTrackerFieldTestCase
     public function testPermissionsIn(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerReport(
+            new CrossTrackerDefaultReport(
                 1,
                 "user_field IN('alice')",
                 [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
@@ -352,7 +352,7 @@ final class UserListDuckTypedFieldTest extends CrossTrackerFieldTestCase
     public function testInMyself(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerReport(
+            new CrossTrackerDefaultReport(
                 1,
                 'user_field IN(MYSELF())',
                 [$this->release_tracker, $this->sprint_tracker],
@@ -368,7 +368,7 @@ final class UserListDuckTypedFieldTest extends CrossTrackerFieldTestCase
     public function testInMyselfUser(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerReport(
+            new CrossTrackerDefaultReport(
                 1,
                 "user_field IN(MYSELF(), 'bob')",
                 [$this->release_tracker, $this->sprint_tracker],
@@ -384,7 +384,7 @@ final class UserListDuckTypedFieldTest extends CrossTrackerFieldTestCase
     public function testInMultipleUser(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerReport(
+            new CrossTrackerDefaultReport(
                 1,
                 "user_field IN('alice', 'bob')",
                 [$this->release_tracker, $this->sprint_tracker],
@@ -400,7 +400,7 @@ final class UserListDuckTypedFieldTest extends CrossTrackerFieldTestCase
     public function testMultipleIn(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerReport(
+            new CrossTrackerDefaultReport(
                 1,
                 "user_field IN('alice') OR user_field IN('bob')",
                 [$this->release_tracker, $this->sprint_tracker],
@@ -416,7 +416,7 @@ final class UserListDuckTypedFieldTest extends CrossTrackerFieldTestCase
     public function testNotInUser(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerReport(
+            new CrossTrackerDefaultReport(
                 1,
                 "user_field NOT IN('bob')",
                 [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
@@ -432,7 +432,7 @@ final class UserListDuckTypedFieldTest extends CrossTrackerFieldTestCase
     public function testPermissionsNotIn(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerReport(
+            new CrossTrackerDefaultReport(
                 1,
                 "user_field NOT IN('bob')",
                 [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
@@ -452,7 +452,7 @@ final class UserListDuckTypedFieldTest extends CrossTrackerFieldTestCase
     public function testNotInMyself(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerReport(
+            new CrossTrackerDefaultReport(
                 1,
                 'user_field NOT IN(MYSELF())',
                 [$this->release_tracker, $this->sprint_tracker],
@@ -468,7 +468,7 @@ final class UserListDuckTypedFieldTest extends CrossTrackerFieldTestCase
     public function testNotInMyselfUser(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerReport(
+            new CrossTrackerDefaultReport(
                 1,
                 "user_field NOT IN(MYSELF(), 'bob')",
                 [$this->release_tracker, $this->sprint_tracker],
@@ -484,7 +484,7 @@ final class UserListDuckTypedFieldTest extends CrossTrackerFieldTestCase
     public function testNotInMultipleUser(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerReport(
+            new CrossTrackerDefaultReport(
                 1,
                 "user_field NOT IN('bob', 'alice')",
                 [$this->release_tracker, $this->sprint_tracker],
@@ -500,7 +500,7 @@ final class UserListDuckTypedFieldTest extends CrossTrackerFieldTestCase
     public function testMultipleNotIn(): void
     {
         $artifacts = $this->getMatchingArtifactIds(
-            new CrossTrackerReport(
+            new CrossTrackerDefaultReport(
                 1,
                 "user_field NOT IN('bob') AND user_field NOT IN('alice')",
                 [$this->release_tracker, $this->sprint_tracker],

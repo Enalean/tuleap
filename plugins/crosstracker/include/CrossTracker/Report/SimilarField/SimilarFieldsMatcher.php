@@ -20,7 +20,7 @@
 
 namespace Tuleap\CrossTracker\Report\SimilarField;
 
-use Tuleap\CrossTracker\CrossTrackerReport;
+use Tuleap\CrossTracker\CrossTrackerDefaultReport;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindParameters;
 
 class SimilarFieldsMatcher
@@ -49,7 +49,7 @@ class SimilarFieldsMatcher
     /**
      * @return SimilarFieldCollection
      */
-    public function getSimilarFieldsCollection(CrossTrackerReport $report, \PFUser $user)
+    public function getSimilarFieldsCollection(CrossTrackerDefaultReport $report, \PFUser $user)
     {
         $rows = $this->similar_fields_dao->searchByTrackerIds($report->getTrackerIds());
 
