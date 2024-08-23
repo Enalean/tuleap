@@ -22,85 +22,115 @@ declare(strict_types=1);
 
 namespace Tuleap\CrossTracker\Report\Query\Advanced;
 
+use Tuleap\Dashboard\Project\IRetrieveProjectFromWidget;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Test\Stubs\Dashboard\Project\IRetrieveProjectFromWidgetStub;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\From;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\FromProject;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\FromProjectEqual;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\FromProjectIn;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\FromTracker;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\FromTrackerEqual;
 
 final class InvalidFromCollectionBuilderTest extends TestCase
 {
-    private InvalidFromCollectionBuilder $builder;
+    private IRetrieveProjectFromWidget $project_from_widget;
 
     protected function setUp(): void
     {
-        $this->builder = new InvalidFromCollectionBuilder(
+        $this->project_from_widget = IRetrieveProjectFromWidgetStub::buildWithoutProjectId();
+    }
+
+    /**
+     * @return list<string>
+     */
+    private function getInvalidFrom(
+        From $from,
+    ): array {
+        $builder = new InvalidFromCollectionBuilder(
             new InvalidFromTrackerCollectorVisitor(),
-            new InvalidFromProjectCollectorVisitor(),
+            new InvalidFromProjectCollectorVisitor($this->project_from_widget),
+            2,
         );
+
+        return $builder->buildCollectionOfInvalidFrom($from)->getInvalidFrom();
     }
 
     public function testItRefusesUnknownFromProject(): void
     {
-        $result = $this->builder
-            ->buildCollectionOfInvalidFrom(new From(new FromProject('blabla', new FromProjectEqual('')), null))
-            ->getInvalidFrom();
+        $result = $this->getInvalidFrom(new From(new FromProject('blabla', new FromProjectEqual('')), null));
         self::assertNotEmpty($result);
         self::assertStringContainsStringIgnoringCase("You cannot search on 'blabla'", $result[0]);
     }
 
     public function testItRefusesUnknownFromTracker(): void
     {
-        $result = $this->builder
-            ->buildCollectionOfInvalidFrom(new From(new FromTracker('blabla', new FromTrackerEqual('')), null))
-            ->getInvalidFrom();
+        $result = $this->getInvalidFrom(new From(new FromTracker('blabla', new FromTrackerEqual('')), null));
         self::assertNotEmpty($result);
         self::assertStringContainsStringIgnoringCase("You cannot search on 'blabla'", $result[0]);
     }
 
     public function testItRefusesTwoFromProject(): void
     {
-        $result = $this->builder
-            ->buildCollectionOfInvalidFrom(new From(
-                new FromProject('@project', new FromProjectEqual('self')),
-                new FromProject('@project', new FromProjectEqual('self')),
-            ))
-            ->getInvalidFrom();
+        $result = $this->getInvalidFrom(new From(
+            new FromProject('@project', new FromProjectEqual('self')),
+            new FromProject('@project', new FromProjectEqual('self')),
+        ));
         self::assertNotEmpty($result);
         self::assertStringContainsStringIgnoringCase('The both conditions of \'FROM\' must be on "tracker" and "project"', $result[0]);
     }
 
     public function testItRefusesTwoFromTracker(): void
     {
-        $result = $this->builder
-            ->buildCollectionOfInvalidFrom(new From(
-                new FromTracker('@tracker.name', new FromTrackerEqual('release')),
-                new FromTracker('@tracker.name', new FromTrackerEqual('release')),
-            ))
-            ->getInvalidFrom();
+        $result = $this->getInvalidFrom(new From(
+            new FromTracker('@tracker.name', new FromTrackerEqual('release')),
+            new FromTracker('@tracker.name', new FromTrackerEqual('release')),
+        ));
         self::assertNotEmpty($result);
         self::assertStringContainsStringIgnoringCase('The both conditions of \'FROM\' must be on "tracker" and "project"', $result[0]);
     }
 
     public function testItReturnsEmptyForProjectAndTrackerAsNothingHasBeenImplemented(): void
     {
-        $result = $this->builder->buildCollectionOfInvalidFrom(new From(
-            new FromProject('@project', new FromProjectEqual('')),
+        $this->project_from_widget = IRetrieveProjectFromWidgetStub::buildWithProjectId(1);
+        $result                    = $this->getInvalidFrom(new From(
+            new FromProject('@project', new FromProjectEqual('self')),
             new FromTracker('@tracker.name', new FromTrackerEqual('')),
         ));
-        self::assertEmpty($result->getInvalidFrom());
+        self::assertEmpty($result);
     }
 
-    public function testItReturnsEmptyForProjectHasNothingAsBeenImplemented(): void
+    public function testItReturnsErrorWhenUsingProjectIn(): void
     {
-        $result = $this->builder->buildCollectionOfInvalidFrom(new From(new FromProject('@project', new FromProjectEqual('')), null));
-        self::assertEmpty($result->getInvalidFrom());
+        $result = $this->getInvalidFrom(new From(new FromProject('@project', new FromProjectIn([])), null));
+        self::assertCount(1, $result);
+        self::assertEquals("You cannot use '@project IN(...)'", $result[0]);
+    }
+
+    public function testItReturnsErrorWhenProjectSelfOutsideProject(): void
+    {
+        $result = $this->getInvalidFrom(new From(new FromProject('@project', new FromProjectEqual('self')), null));
+        self::assertCount(1, $result);
+        self::assertEquals("You cannot use @project = 'self' in the context of a personal dashboard", $result[0]);
+    }
+
+    public function testItReturnsEmptyWhenProjectSelfInsideProject(): void
+    {
+        $this->project_from_widget = IRetrieveProjectFromWidgetStub::buildWithProjectId(1);
+        $result                    = $this->getInvalidFrom(new From(new FromProject('@project', new FromProjectEqual('self')), null));
+        self::assertEmpty($result);
+    }
+
+    public function testItReturnsErrorForProjectAggregatedAsNothingHasBeenImplemented(): void
+    {
+        $result = $this->getInvalidFrom(new From(new FromProject('@project', new FromProjectEqual('aggregated')), null));
+        self::assertCount(1, $result);
+        self::assertEquals("Only @project = 'self' is supported", $result[0]);
     }
 
     public function testItReturnsEmptyForTrackerAsNothingHasBeenImplemented(): void
     {
-        $result = $this->builder->buildCollectionOfInvalidFrom(new From(new FromTracker('@tracker.name', new FromTrackerEqual('')), null));
-        self::assertEmpty($result->getInvalidFrom());
+        $result = $this->getInvalidFrom(new From(new FromTracker('@tracker.name', new FromTrackerEqual('')), null));
+        self::assertEmpty($result);
     }
 }

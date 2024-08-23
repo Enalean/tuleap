@@ -37,6 +37,7 @@ final readonly class InvalidFromCollectionBuilder implements IBuildInvalidFromCo
     public function __construct(
         private InvalidFromTrackerCollectorVisitor $from_tracker_condition_visitor,
         private InvalidFromProjectCollectorVisitor $from_project_condition_visitor,
+        private int $report_id,
     ) {
     }
 
@@ -51,13 +52,13 @@ final readonly class InvalidFromCollectionBuilder implements IBuildInvalidFromCo
             return $collection;
         }
 
-        $from->getLeft()->acceptFromSomethingVisitor($this, new InvalidFromCollectionParameters($collection));
-        $from->getRight()?->acceptFromSomethingVisitor($this, new InvalidFromCollectionParameters($collection));
+        $from->getLeft()->acceptFromSomethingVisitor($this, new InvalidFromCollectionParameters($collection, $this->report_id));
+        $from->getRight()?->acceptFromSomethingVisitor($this, new InvalidFromCollectionParameters($collection, $this->report_id));
 
         return $collection;
     }
 
-    public function visitTracker(FromTracker $from_tracker, $parameters)
+    public function visitTracker(FromTracker $from_tracker, $parameters): void
     {
         if (! in_array($from_tracker->getTarget(), AllowedFrom::ALLOWED_TRACKER)) {
             $parameters->collection->addInvalidFrom(sprintf(
@@ -73,7 +74,7 @@ final readonly class InvalidFromCollectionBuilder implements IBuildInvalidFromCo
         );
     }
 
-    public function visitProject(FromProject $from_project, $parameters)
+    public function visitProject(FromProject $from_project, $parameters): void
     {
         if (! in_array($from_project->getTarget(), AllowedFrom::ALLOWED_PROJECT)) {
             $parameters->collection->addInvalidFrom(sprintf(
@@ -85,7 +86,7 @@ final readonly class InvalidFromCollectionBuilder implements IBuildInvalidFromCo
 
         $from_project->getCondition()->acceptFromProjectConditionVisitor(
             $this->from_project_condition_visitor,
-            new InvalidFromProjectCollectorParameters($from_project, $parameters->collection),
+            new InvalidFromProjectCollectorParameters($from_project, $parameters->collection, $parameters->report_id),
         );
     }
 }

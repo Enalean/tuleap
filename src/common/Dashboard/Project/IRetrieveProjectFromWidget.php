@@ -20,16 +20,9 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\CrossTracker\Report\Query\Advanced;
+namespace Tuleap\Dashboard\Project;
 
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\VisitorParameters;
-use Tuleap\Tracker\Report\Query\Advanced\InvalidFromCollection;
-
-final class InvalidFromCollectionParameters implements VisitorParameters
+interface IRetrieveProjectFromWidget
 {
-    public function __construct(
-        public InvalidFromCollection $collection,
-        public int $report_id,
-    ) {
-    }
+    public function searchProjectIdFromWidgetIdAndType(int $widget_content_id, string $widget_name): ?int;
 }

@@ -20,16 +20,29 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\CrossTracker\Report\Query\Advanced;
+namespace Tuleap\Test\Stubs\Dashboard\Project;
 
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\VisitorParameters;
-use Tuleap\Tracker\Report\Query\Advanced\InvalidFromCollection;
+use Tuleap\Dashboard\Project\IRetrieveProjectFromWidget;
 
-final class InvalidFromCollectionParameters implements VisitorParameters
+final readonly class IRetrieveProjectFromWidgetStub implements IRetrieveProjectFromWidget
 {
-    public function __construct(
-        public InvalidFromCollection $collection,
-        public int $report_id,
+    private function __construct(
+        private ?int $project_id,
     ) {
+    }
+
+    public static function buildWithProjectId(int $project_id): self
+    {
+        return new self($project_id);
+    }
+
+    public static function buildWithoutProjectId(): self
+    {
+        return new self(null);
+    }
+
+    public function searchProjectIdFromWidgetIdAndType(int $widget_content_id, string $widget_name): ?int
+    {
+        return $this->project_id;
     }
 }

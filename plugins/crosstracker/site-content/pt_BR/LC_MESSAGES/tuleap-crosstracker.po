@@ -137,6 +137,9 @@ msgstr ""
 msgid "Invalid value for 'offset'. It must be an integer"
 msgstr ""
 
+msgid "Only @project = 'self' is supported"
+msgstr ""
+
 msgid "Project not found"
 msgstr ""
 
@@ -179,6 +182,12 @@ msgstr ""
 msgid ""
 "You cannot search on '%s', please refer to the documentation about the "
 "'FROM' syntax part."
+msgstr ""
+
+msgid "You cannot use '@project IN(...)'"
+msgstr ""
+
+msgid "You cannot use @project = 'self' in the context of a personal dashboard"
 msgstr ""
 
 msgid "You don't have permission to access this project"

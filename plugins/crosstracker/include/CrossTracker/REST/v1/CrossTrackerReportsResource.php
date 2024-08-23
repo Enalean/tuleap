@@ -24,6 +24,7 @@ namespace Tuleap\CrossTracker\REST\v1;
 
 use BaseLanguageFactory;
 use Codendi_HTMLPurifier;
+use EventManager;
 use Exception;
 use Luracast\Restler\RestException;
 use PFUser;
@@ -105,6 +106,8 @@ use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Metadata\Special\Pro
 use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilderVisitor;
 use Tuleap\CrossTracker\REST\v1\Representation\CrossTrackerReportContentRepresentation;
 use Tuleap\CrossTracker\REST\v1\Representation\LegacyCrossTrackerReportContentRepresentation;
+use Tuleap\Dashboard\Project\ProjectDashboardDao;
+use Tuleap\Dashboard\Widget\DashboardWidgetDao;
 use Tuleap\DB\DBFactory;
 use Tuleap\Markdown\CommonMarkInterpreter;
 use Tuleap\REST\AuthenticatedResource;
@@ -152,8 +155,11 @@ use Tuleap\Tracker\Report\TrackerReportConfig;
 use Tuleap\Tracker\Report\TrackerReportConfigDao;
 use Tuleap\Tracker\Report\TrackerReportExtractor;
 use Tuleap\Tracker\REST\v1\ArtifactMatchingReportCollection;
+use Tuleap\Widget\WidgetFactory;
 use UGroupManager;
 use URLVerification;
+use User_ForgeUserGroupPermissionsDao;
+use User_ForgeUserGroupPermissionsManager;
 use UserHelper;
 use UserManager;
 
@@ -460,7 +466,7 @@ final class CrossTrackerReportsResource extends AuthenticatedResource
             $tracker_extractor = new TrackerReportExtractor(TrackerFactory::instance());
             $trackers          = $tracker_extractor->extractTrackers($trackers_id);
 
-            $this->checkQueryIsValid($trackers, $expert_query, $report_mode === self::MODE_EXPERT, $current_user);
+            $this->checkQueryIsValid($trackers, $expert_query, $report_mode === self::MODE_EXPERT, $current_user, $id);
 
             $report          = $this->getReport($id);
             $expected_report = new CrossTrackerDefaultReport($report->getId(), $expert_query, $trackers, $report_mode === self::MODE_EXPERT);
@@ -481,7 +487,7 @@ final class CrossTrackerReportsResource extends AuthenticatedResource
      * @param Tracker[] $trackers
      * @throws RestException
      */
-    private function checkQueryIsValid(array $trackers, string $expert_query, bool $expert_mode, PFUser $user): void
+    private function checkQueryIsValid(array $trackers, string $expert_query, bool $expert_mode, PFUser $user, int $report_id): void
     {
         if ($expert_query === '') {
             if ($expert_mode) {
@@ -503,7 +509,14 @@ final class CrossTrackerReportsResource extends AuthenticatedResource
                 ),
                 new InvalidFromCollectionBuilder(
                     new InvalidFromTrackerCollectorVisitor(),
-                    new InvalidFromProjectCollectorVisitor(),
+                    new InvalidFromProjectCollectorVisitor(new ProjectDashboardDao(new DashboardWidgetDao(
+                        new WidgetFactory(
+                            $this->user_manager,
+                            new User_ForgeUserGroupPermissionsManager(new User_ForgeUserGroupPermissionsDao()),
+                            EventManager::instance(),
+                        )
+                    ))),
+                    $report_id,
                 ),
             );
         } catch (SearchablesDoNotExistException | SearchablesAreInvalidException $exception) {

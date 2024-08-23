@@ -167,7 +167,7 @@ final class CrossTrackerTest extends RestBase
     public function testGetContentIdWithExpertMode(): void
     {
         $query    = encode(
-            ['trackers_id' => [$this->epic_tracker_id], 'expert_query' => 'SELECT @id FROM @project = "self" WHERE @id >= 1']
+            ['trackers_id' => [$this->epic_tracker_id], 'expert_query' => 'SELECT @id FROM @tracker.name = "epic" WHERE @id >= 1']
         );
         $response = $this->getResponse(
             $this->request_factory->createRequest('GET', 'cross_tracker_reports/1/content?report_mode=expert&limit=50&offset=0&query=' . urlencode($query))

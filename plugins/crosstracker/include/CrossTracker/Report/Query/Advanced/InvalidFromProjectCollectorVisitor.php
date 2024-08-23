@@ -23,6 +23,8 @@ declare(strict_types=1);
 namespace Tuleap\CrossTracker\Report\Query\Advanced;
 
 use LogicException;
+use Tuleap\CrossTracker\Widget\ProjectCrossTrackerSearch;
+use Tuleap\Dashboard\Project\IRetrieveProjectFromWidget;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\FromProjectConditionVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\FromProjectEqual;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\FromProjectIn;
@@ -30,26 +32,50 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\FromProjectIn;
 /**
  * @template-implements FromProjectConditionVisitor<InvalidFromProjectCollectorParameters, void>
  */
-final class InvalidFromProjectCollectorVisitor implements FromProjectConditionVisitor
+final readonly class InvalidFromProjectCollectorVisitor implements FromProjectConditionVisitor
 {
-    public function visitEqual(FromProjectEqual $project_equal, $parameters)
+    public function __construct(
+        private IRetrieveProjectFromWidget $project_id_retriever,
+    ) {
+    }
+
+    public function visitEqual(FromProjectEqual $project_equal, $parameters): void
     {
         $from_project = $parameters->from_project;
 
         match ($from_project->getTarget()) {
-            AllowedFrom::PROJECT,
+            AllowedFrom::PROJECT          => $this->checkProjectEqual($project_equal, $parameters),
             AllowedFrom::PROJECT_NAME,
             AllowedFrom::PROJECT_CATEGORY => null,
             default                       => throw new LogicException("Unknown FROM project: {$from_project->getTarget()}"),
         };
     }
 
-    public function visitIn(FromProjectIn $project_in, $parameters)
+    private function checkProjectEqual(FromProjectEqual $project_equal, InvalidFromProjectCollectorParameters $parameters): void
+    {
+        if ($project_equal->getValue() !== AllowedFrom::PROJECT_SELF) {
+            $parameters->collection->addInvalidFrom(dgettext(
+                'tuleap-crosstracker',
+                "Only @project = 'self' is supported",
+            ));
+            return;
+        }
+
+        $project_id = $this->project_id_retriever->searchProjectIdFromWidgetIdAndType($parameters->report_id, ProjectCrossTrackerSearch::NAME);
+        if ($project_id === null) {
+            $parameters->collection->addInvalidFrom(dgettext(
+                'tuleap-crosstracker',
+                "You cannot use @project = 'self' in the context of a personal dashboard",
+            ));
+        }
+    }
+
+    public function visitIn(FromProjectIn $project_in, $parameters): void
     {
         $from_project = $parameters->from_project;
 
         match ($from_project->getTarget()) {
-            AllowedFrom::PROJECT,
+            AllowedFrom::PROJECT          => $parameters->collection->addInvalidFrom(dgettext('tuleap-crosstracker', "You cannot use '@project IN(...)'")),
             AllowedFrom::PROJECT_NAME,
             AllowedFrom::PROJECT_CATEGORY => null,
             default                       => throw new LogicException("Unknown FROM project: {$from_project->getTarget()}"),

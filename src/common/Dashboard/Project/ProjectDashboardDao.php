@@ -23,7 +23,7 @@ namespace Tuleap\Dashboard\Project;
 use Tuleap\Dashboard\Widget\DashboardWidgetDao;
 use Tuleap\DB\DataAccessObject;
 
-class ProjectDashboardDao extends DataAccessObject
+class ProjectDashboardDao extends DataAccessObject implements IRetrieveProjectFromWidget
 {
     public function __construct(private readonly DashboardWidgetDao $widget_dao)
     {
@@ -43,7 +43,7 @@ class ProjectDashboardDao extends DataAccessObject
     {
         return (int) $this->getDB()->insertReturnId('project_dashboards', [
             'project_id' => $project_id,
-            'name' => $name,
+            'name'       => $name,
         ]);
     }
 
@@ -95,5 +95,20 @@ class ProjectDashboardDao extends DataAccessObject
         $this->getDB()->run($sql, $new_project_id, $template_id, $template_dashboard_id);
 
         return (int) $this->getDB()->lastInsertId();
+    }
+
+    public function searchProjectIdFromWidgetIdAndType(int $widget_content_id, string $widget_name): ?int
+    {
+        $sql = <<<SQL
+        SELECT project_dashboards.project_id
+        FROM dashboards_lines_columns_widgets AS dlcw
+        INNER JOIN dashboards_lines_columns AS dlc ON (dlc.id = dlcw.column_id)
+        INNER JOIN dashboards_lines AS dl ON (dl.id = dlc.line_id AND dl.dashboard_type = 'project')
+        INNER JOIN project_dashboards ON (project_dashboards.id = dl.dashboard_id)
+        WHERE dlcw.content_id = ? AND dlcw.name = ?
+        SQL;
+
+        $row = $this->getDB()->row($sql, $widget_content_id, $widget_name);
+        return $row ? $row['project_id'] : null;
     }
 }
