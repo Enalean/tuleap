@@ -30,7 +30,7 @@ use Tuleap\Tracker\REST\TrackerReference;
 /**
  * @psalm-immutable
  */
-final readonly class CrossTrackerReportRepresentation
+final readonly class CrossTrackerDefaultReportRepresentation
 {
     public const ROUTE        = 'cross_tracker_reports';
     public const MODE_DEFAULT = 'default';
