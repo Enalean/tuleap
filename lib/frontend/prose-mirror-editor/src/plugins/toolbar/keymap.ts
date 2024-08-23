@@ -17,9 +17,12 @@
  *  along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { toggleMark, wrapIn } from "prosemirror-commands";
+import { chainCommands, exitCode, lift, toggleMark, wrapIn } from "prosemirror-commands";
 import type { Command } from "prosemirror-state";
-import type { MarkType, Schema } from "prosemirror-model";
+import { TextSelection } from "prosemirror-state";
+import type { MarkType, NodeType, Schema } from "prosemirror-model";
+import { liftListItem, sinkListItem, splitListItem, wrapInList } from "prosemirror-schema-list";
+import { isSelectionAList } from "./list/is-list-checker";
 
 export type ProseMirrorKeyMap = { [key: string]: Command };
 export function buildKeymap(
@@ -27,7 +30,8 @@ export function buildKeymap(
     map_keys?: { [key: string]: false | string },
 ): ProseMirrorKeyMap {
     const keys: ProseMirrorKeyMap = {};
-    let type: MarkType;
+    let mark_type: MarkType;
+    let node_type: NodeType;
 
     function bind(key: string, cmd: Command): void {
         if (map_keys) {
@@ -43,18 +47,64 @@ export function buildKeymap(
         }
     }
 
-    type = schema.marks.strong;
-    bind("Mod-b", toggleMark(type));
-    bind("Mod-B", toggleMark(type));
+    mark_type = schema.marks.strong;
+    bind("Mod-b", toggleMark(mark_type));
+    bind("Mod-B", toggleMark(mark_type));
 
-    type = schema.marks.em;
-    bind("Mod-i", toggleMark(type));
-    bind("Mod-I", toggleMark(type));
+    mark_type = schema.marks.em;
+    bind("Mod-i", toggleMark(mark_type));
+    bind("Mod-I", toggleMark(mark_type));
 
-    type = schema.marks.code;
-    bind("Mod-`", toggleMark(type));
+    mark_type = schema.marks.code;
+    bind("Mod-`", toggleMark(mark_type));
 
-    const node_type = schema.nodes.blockquote;
+    const listCommand = chainCommands(exitCode, (state, dispatch) => {
+        const node_type = schema.nodes.bullet_list;
+        if (isSelectionAList(state, node_type)) {
+            return lift(state, dispatch);
+        }
+
+        const wrapFunction = wrapInList(node_type);
+        return wrapFunction(state, dispatch);
+    });
+
+    const olistCommand = chainCommands(exitCode, (state, dispatch) => {
+        const node_type = schema.nodes.ordered_list;
+        if (isSelectionAList(state, node_type)) {
+            return lift(state, dispatch);
+        }
+
+        const wrapFunction = wrapInList(node_type);
+        return wrapFunction(state, dispatch);
+    });
+
+    node_type = schema.nodes.bullet_list;
+    bind("Shift-Ctrl-8", listCommand);
+
+    node_type = schema.nodes.ordered_list;
+    bind("Shift-Ctrl-9", olistCommand);
+
+    node_type = schema.nodes.paragraph;
+    const br = node_type,
+        cmd = chainCommands(exitCode, (state, dispatch) => {
+            if (dispatch) {
+                const transaction = state.tr.replaceSelectionWith(br.create());
+                transaction.setSelection(
+                    TextSelection.near(transaction.doc.resolve(state.tr.selection.from + 1)),
+                );
+                dispatch(transaction.scrollIntoView());
+            }
+            return true;
+        });
+    bind("Mod-Enter", cmd);
+    bind("Shift-Enter", cmd);
+
+    node_type = schema.nodes.list_item;
+    bind("Enter", splitListItem(node_type));
+    bind("Shift-Tab", liftListItem(node_type));
+    bind("Tab", sinkListItem(node_type));
+
+    node_type = schema.nodes.blockquote;
     bind("Mod->", wrapIn(node_type));
     return keys;
 }

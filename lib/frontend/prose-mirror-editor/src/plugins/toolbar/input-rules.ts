@@ -19,13 +19,32 @@
 
 import type { Plugin } from "prosemirror-state";
 import type { InputRule } from "prosemirror-inputrules";
-import { inputRules, textblockTypeInputRule } from "prosemirror-inputrules";
+import { wrappingInputRule, inputRules, textblockTypeInputRule } from "prosemirror-inputrules";
 import type { NodeType, Schema } from "prosemirror-model";
 
-export function codeBlockRule(nodeType: NodeType): InputRule {
+function codeBlockRule(nodeType: NodeType): InputRule {
     return textblockTypeInputRule(/^```$/, nodeType);
 }
 
+function orderedListRule(nodeType: NodeType): InputRule {
+    return wrappingInputRule(
+        /^(\d+)\.\s$/,
+        nodeType,
+        (match) => ({ order: Number(match[1]) }),
+        (match, node) => node.childCount + node.attrs.order === Number(match[1]),
+    );
+}
+
+function bulletListRule(nodeType: NodeType): InputRule {
+    return wrappingInputRule(/^\s*([-+*])\s$/, nodeType);
+}
+
 export function buildInputRules(schema: Schema): Plugin {
-    return inputRules({ rules: [codeBlockRule(schema.nodes.code_block)] });
+    return inputRules({
+        rules: [
+            codeBlockRule(schema.nodes.code_block),
+            orderedListRule(schema.nodes.ordered_list),
+            bulletListRule(schema.nodes.bullet_list),
+        ],
+    });
 }
