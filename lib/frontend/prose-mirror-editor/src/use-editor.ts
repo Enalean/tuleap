@@ -32,6 +32,7 @@ import {
     getPOFileFromLocaleWithoutExtension,
     initGettext,
 } from "@tuleap/gettext";
+import { v4 as uuidv4 } from "uuid";
 
 export type UseEditorType = {
     editor: EditorView;
@@ -53,11 +54,12 @@ export async function useEditor(
 
     const upload_plugin = setupUploadPlugin(gettext_provider);
 
+    const editor_id = uuidv4();
     const plugins: Plugin[] = [
         initPluginInput(onChange),
         upload_plugin,
         dropCursor(),
-        ...setupToolbar(gettext_provider),
+        ...setupToolbar(gettext_provider, editor_id),
     ];
 
     const state: EditorState = getState(initial_content);

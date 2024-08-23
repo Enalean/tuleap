@@ -38,7 +38,7 @@ describe("remove links", () => {
         state = EditorState.create({
             doc: DOMParser.fromSchema(custom_schema).parse(editor_content),
             schema: custom_schema,
-            ...setupToolbar(gettext_provider),
+            ...setupToolbar(gettext_provider, "1"),
         });
 
         state.tr.setSelection(new NodeSelection(state.doc.resolve(22)));
@@ -56,7 +56,7 @@ describe("remove links", () => {
         state = EditorState.create({
             doc: DOMParser.fromSchema(custom_schema).parse(editor_content),
             schema: custom_schema,
-            ...setupToolbar(gettext_provider),
+            ...setupToolbar(gettext_provider, "1"),
         });
 
         state.tr.setSelection(new TextSelection(state.doc.resolve(22), state.doc.resolve(24)));

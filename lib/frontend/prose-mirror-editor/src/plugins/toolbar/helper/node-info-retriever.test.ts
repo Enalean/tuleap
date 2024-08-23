@@ -35,7 +35,7 @@ describe("getWrappingNodeInfo", () => {
         state = EditorState.create({
             doc: DOMParser.fromSchema(custom_schema).parse(editor_content),
             schema: custom_schema,
-            ...setupToolbar(gettext_provider),
+            ...setupToolbar(gettext_provider, "1"),
         });
     });
 
