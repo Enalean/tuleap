@@ -23,53 +23,38 @@ declare(strict_types=1);
 
 namespace Tuleap\Docman\REST\v1;
 
+use Docman_EmbeddedFile;
+use Docman_Empty;
+use Docman_File;
+use Docman_Folder;
 use Docman_ItemFactory;
+use Docman_Link;
+use Docman_LinkVersion;
 use Docman_LinkVersionFactory;
+use Docman_Version;
 use Docman_VersionFactory;
+use Docman_Wiki;
 use EventManager;
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
 
-class ItemRepresentationVisitorTest extends \Tuleap\Test\PHPUnit\TestCase
+final class ItemRepresentationVisitorTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var EventManager|Mockery\LegacyMockInterface|Mockery\MockInterface
-     */
-    private $event_manager;
-    /**
-     * @var Docman_VersionFactory|Mockery\LegacyMockInterface|Mockery\MockInterface
-     */
-    private $docman_version_factory;
-    /**
-     * @var Docman_LinkVersionFactory|Mockery\LegacyMockInterface|Mockery\MockInterface
-     */
-    private $link_version_factory;
-
-    /**
-     * @var Docman_ItemFactory|Mockery\LegacyMockInterface|Mockery\MockInterface
-     */
-    private $item_factory;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ItemRepresentationBuilder
-     */
-    private $item_representation_builder;
-    /**
-     * @var ItemRepresentationVisitor
-     */
-    private $item_visitor;
+    private EventManager&MockObject $event_manager;
+    private Docman_VersionFactory&MockObject $docman_version_factory;
+    private Docman_LinkVersionFactory&MockObject $link_version_factory;
+    private Docman_ItemFactory&MockObject $item_factory;
+    private ItemRepresentationBuilder&MockObject $item_representation_builder;
+    private ItemRepresentationVisitor $item_visitor;
 
     protected function setUp(): void
     {
-        parent::setUp();
-
-        $this->item_representation_builder = Mockery::mock(ItemRepresentationBuilder::class);
-        $this->item_factory                = Mockery::mock(Docman_ItemFactory::class);
-        $this->link_version_factory        = Mockery::mock(Docman_LinkVersionFactory::class);
-        $this->docman_version_factory      = Mockery::mock(Docman_VersionFactory::class);
-        $this->event_manager               = Mockery::mock(EventManager::class);
+        $this->item_representation_builder = $this->createMock(ItemRepresentationBuilder::class);
+        $this->item_factory                = $this->createMock(Docman_ItemFactory::class);
+        $this->link_version_factory        = $this->createMock(Docman_LinkVersionFactory::class);
+        $this->docman_version_factory      = $this->createMock(Docman_VersionFactory::class);
+        $this->event_manager               = $this->createMock(EventManager::class);
         $event_adder                       = $this->createMock(DocmanItemsEventAdder::class);
         $event_adder->expects(self::once())->method('addLogEvents');
         $this->item_visitor = new ItemRepresentationVisitor(
@@ -84,148 +69,137 @@ class ItemRepresentationVisitorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItVisitAFolder(): void
     {
-        $item   = Mockery::mock(\Docman_Folder::class);
+        $item   = new Docman_Folder();
         $params = ['current_user' => UserTestBuilder::buildWithDefaults()];
 
-        $this->item_representation_builder->shouldReceive('buildItemRepresentation')->withArgs(
-            [
-                $item,
-                $params['current_user'],
-                ItemRepresentation::TYPE_FOLDER,
-                null,
-                null,
-                null,
-                null,
-                null,
-            ]
-        )->once();
+        $this->item_representation_builder->expects(self::once())->method('buildItemRepresentation')->with(
+            $item,
+            $params['current_user'],
+            ItemRepresentation::TYPE_FOLDER,
+            null,
+            null,
+            null,
+            null,
+            null,
+        );
 
         $this->item_visitor->visitFolder($item, $params);
     }
 
     public function testItVisitAFolderAndReturnsItsSize(): void
     {
-        $folder = Mockery::mock(\Docman_Folder::class);
+        $folder = new Docman_Folder();
         $user   = UserTestBuilder::buildWithDefaults();
         $params = [
             'current_user' => $user,
-            'with_size' => true,
+            'with_size'    => true,
         ];
 
-        $this->item_factory->shouldReceive('getItemTree')->with(
+        $this->item_factory->method('getItemTree')->with(
             $folder,
             $user,
             false,
             true
         );
 
-        $folder->shouldReceive('accept');
-
-        $this->item_representation_builder->shouldReceive('buildItemRepresentation')->once();
+        $this->item_representation_builder->expects(self::once())->method('buildItemRepresentation');
 
         $this->item_visitor->visitFolder($folder, $params);
     }
 
     public function testItVisitAWiki(): void
     {
-        $item = Mockery::mock(\Docman_Wiki::class);
-        $item->shouldReceive('getPagename')->atLeast()->andReturn('A wiki page');
-        $item->shouldReceive('getGroupId')->once()->andReturn(102);
+        $item = new Docman_Wiki(['wiki_page' => 'A wiki page', 'group_id' => 102]);
 
-        $this->item_factory->shouldReceive('getIdInWikiOfWikiPageItem')->withArgs(['A wiki page', 102])->once(
-        )->andReturn(10);
+        $this->item_factory->expects(self::once())->method('getIdInWikiOfWikiPageItem')->with('A wiki page', 102)->willReturn(10);
 
         $params = ['current_user' => UserTestBuilder::buildWithDefaults()];
 
-        $this->item_representation_builder->shouldReceive('buildItemRepresentation')->once();
+        $this->item_representation_builder->expects(self::once())->method('buildItemRepresentation');
 
         $this->item_visitor->visitWiki($item, $params);
     }
 
     public function testItVisitALink(): void
     {
-        $item   = Mockery::mock(\Docman_Link::class);
+        $item   = new Docman_Link(['link_url' => '']);
         $params = ['current_user' => UserTestBuilder::buildWithDefaults()];
 
-        $this->item_representation_builder->shouldReceive('buildItemRepresentation')->once();
+        $this->item_representation_builder->expects(self::once())->method('buildItemRepresentation');
 
-        $this->link_version_factory->shouldReceive('getLatestVersion')->never();
+        $this->link_version_factory->expects(self::never())->method('getLatestVersion');
 
         $this->item_visitor->visitLink($item, $params);
     }
 
     public function testItVisitALinkAndStoreTheAccess(): void
     {
-        $item = Mockery::mock(\Docman_Link::class);
-        $item->shouldReceive('getGroupId')->once();
+        $item = new Docman_Link(['link_url' => '']);
 
-        $version = Mockery::mock(\Docman_Version::class);
-        $version->shouldReceive('getNumber')->andReturn(1);
+        $version = $this->createMock(Docman_LinkVersion::class);
+        $version->method('getNumber')->willReturn(1);
 
-        $item->shouldReceive('getCurrentVersion')->andReturn($version);
+        $item->setCurrentVersion($version);
         $params = ['current_user' => UserTestBuilder::buildWithDefaults(), 'is_a_direct_access' => true];
 
-        $this->item_representation_builder->shouldReceive('buildItemRepresentation')->once();
+        $this->item_representation_builder->expects(self::once())->method('buildItemRepresentation');
 
-        $this->link_version_factory->shouldReceive('getLatestVersion')->once();
+        $this->link_version_factory->expects(self::once())->method('getLatestVersion');
 
-        $this->event_manager->shouldReceive('processEvent')->once();
+        $this->event_manager->expects(self::once())->method('processEvent');
 
         $this->item_visitor->visitLink($item, $params);
     }
 
     public function testItVisitAFile(): void
     {
-        $item   = Mockery::mock(\Docman_File::class);
+        $item   = new Docman_File();
         $params = ['current_user' => UserTestBuilder::buildWithDefaults()];
 
-        $this->item_representation_builder->shouldReceive('buildItemRepresentation')->once();
+        $this->item_representation_builder->expects(self::once())->method('buildItemRepresentation');
 
-        $this->docman_version_factory->shouldReceive('getCurrentVersionForItem')->once();
+        $this->docman_version_factory->expects(self::once())->method('getCurrentVersionForItem');
 
         $this->item_visitor->visitFile($item, $params);
     }
 
     public function testItVisitAnEmbeddedFile(): void
     {
-        $item   = Mockery::mock(\Docman_EmbeddedFile::class);
+        $item   = new Docman_EmbeddedFile();
         $params = ['current_user' => UserTestBuilder::buildWithDefaults()];
 
-        $this->item_representation_builder->shouldReceive('buildItemRepresentation')->once();
+        $this->item_representation_builder->expects(self::once())->method('buildItemRepresentation');
 
-        $this->docman_version_factory->shouldReceive('getCurrentVersionForItem')->once();
+        $this->docman_version_factory->expects(self::once())->method('getCurrentVersionForItem');
 
-        $this->event_manager->shouldReceive('processEvent')->never();
+        $this->event_manager->expects(self::never())->method('processEvent');
 
         $this->item_visitor->visitEmbeddedFile($item, $params);
     }
 
     public function testItVisitAnEmbeddedFileAndStoreTheAccess(): void
     {
-        $item = Mockery::mock(\Docman_EmbeddedFile::class);
-        $item->shouldReceive('getGroupId')->once();
+        $item    = new Docman_EmbeddedFile();
+        $version = new Docman_Version(['number' => 1]);
+        $item->setCurrentVersion($version);
 
-        $version = Mockery::mock(\Docman_Version::class);
-        $version->shouldReceive('getNumber')->andReturn(1);
-
-        $item->shouldReceive('getCurrentVersion')->andReturn($version);
         $params = ['current_user' => UserTestBuilder::buildWithDefaults(), 'is_a_direct_access' => true];
 
-        $this->item_representation_builder->shouldReceive('buildItemRepresentation')->once();
+        $this->item_representation_builder->expects(self::once())->method('buildItemRepresentation');
 
-        $this->docman_version_factory->shouldReceive('getCurrentVersionForItem')->once();
+        $this->docman_version_factory->expects(self::once())->method('getCurrentVersionForItem');
 
-        $this->event_manager->shouldReceive('processEvent')->once();
+        $this->event_manager->expects(self::once())->method('processEvent');
 
         $this->item_visitor->visitEmbeddedFile($item, $params);
     }
 
     public function testItVisitAnEmpty(): void
     {
-        $item   = Mockery::mock(\Docman_Empty::class);
+        $item   = new Docman_Empty();
         $params = ['current_user' => UserTestBuilder::buildWithDefaults()];
 
-        $this->item_representation_builder->shouldReceive('buildItemRepresentation')->once();
+        $this->item_representation_builder->expects(self::once())->method('buildItemRepresentation');
 
         $this->item_visitor->visitEmpty($item, $params);
     }
