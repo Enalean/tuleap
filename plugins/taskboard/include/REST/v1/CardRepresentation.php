@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Taskboard\REST\v1;
 
 use Tuleap\Cardwall\BackgroundColor\BackgroundColor;
+use Tuleap\Option\Option;
 use Tuleap\REST\JsonCast;
 use Tuleap\Taskboard\AgileDashboard\TaskboardPaneInfo;
 use Tuleap\Tracker\Artifact\Artifact;
@@ -98,6 +99,7 @@ class CardRepresentation
     /**
      * @param MinimalUserRepresentation[] $assignees
      * @psalm-param list<MinimalUserRepresentation> $assignees
+     * @param Option<MappedListValueRepresentation> $mapped_list_value
      */
     private function __construct(
         Artifact $artifact,
@@ -109,7 +111,7 @@ class CardRepresentation
         BackgroundColor $background_color,
         int $rank,
         array $assignees,
-        ?MappedListValueRepresentation $mapped_list_value,
+        Option $mapped_list_value,
         ?float $initial_effort,
         ?RemainingEffortRepresentation $remaining_effort,
         bool $is_collapsed,
@@ -125,7 +127,7 @@ class CardRepresentation
         $this->background_color  = (string) $background_color->getBackgroundColorName();
         $this->assignees         = $assignees;
         $this->has_children      = $artifact_has_children;
-        $this->mapped_list_value = $mapped_list_value;
+        $this->mapped_list_value = $mapped_list_value->unwrapOr(null);
         $this->initial_effort    = $initial_effort;
         $this->remaining_effort  = $remaining_effort;
         $this->is_open           = $artifact_is_open;
@@ -143,16 +145,17 @@ class CardRepresentation
     }
 
     /**
-     * @param mixed|null $initial_effort
      * @param MinimalUserRepresentation[] $assignees
      * @psalm-param list<MinimalUserRepresentation> $assignees
+     * @param Option<MappedListValueRepresentation> $mapped_list_value
+     * @param mixed|null $initial_effort
      */
     public static function build(
         Artifact $artifact,
         BackgroundColor $background_color,
         int $rank,
         array $assignees,
-        ?MappedListValueRepresentation $mapped_list_value,
+        Option $mapped_list_value,
         $initial_effort,
         ?RemainingEffortRepresentation $remaining_effort,
         bool $is_collapsed,

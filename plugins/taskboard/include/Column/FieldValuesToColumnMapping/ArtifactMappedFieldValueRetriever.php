@@ -22,46 +22,44 @@ declare(strict_types=1);
 
 namespace Tuleap\Taskboard\Column\FieldValuesToColumnMapping;
 
-use Tracker_FormElement_Field_List_BindValue;
+use Tuleap\Option\Option;
 use Tuleap\Taskboard\Tracker\TaskboardTracker;
 use Tuleap\Tracker\Artifact\Artifact;
 
-class ArtifactMappedFieldValueRetriever
+final readonly class ArtifactMappedFieldValueRetriever
 {
     public function __construct(private MappedFieldRetriever $mapped_field_retriever)
     {
     }
 
-    public function getValueAtLastChangeset(
+    /** @return Option<\Tracker_FormElement_Field_List_BindValue> */
+    public function getFirstValueAtLastChangeset(
         \Planning_Milestone $milestone,
         Artifact $artifact,
         \PFUser $user,
-    ): ?Tracker_FormElement_Field_List_BindValue {
+    ): Option {
         $taskboard_tracker = new TaskboardTracker($milestone->getArtifact()->getTracker(), $artifact->getTracker());
         return $this->mapped_field_retriever->getField($taskboard_tracker)
-            ->mapOr(function (\Tracker_FormElement_Field_Selectbox $mapped_field) use ($artifact, $user) {
+            ->andThen(function (\Tracker_FormElement_Field_Selectbox $mapped_field) use ($artifact, $user) {
                 if (! $mapped_field->userCanRead($user)) {
-                    return null;
+                    return Option::nothing(\Tracker_FormElement_Field_List_BindValue::class);
                 }
 
                 $last_changeset = $artifact->getLastChangeset();
                 if (! $last_changeset) {
-                    return null;
+                    return Option::nothing(\Tracker_FormElement_Field_List_BindValue::class);
                 }
 
                 $value = $last_changeset->getValue($mapped_field);
-                if (! $value instanceof \Tracker_Artifact_ChangesetValue_List) {
-                    return null;
+                if (! ($value instanceof \Tracker_Artifact_ChangesetValue_List)) {
+                    return Option::nothing(\Tracker_FormElement_Field_List_BindValue::class);
                 }
 
-                $values = $value->getListValues();
+                $values = array_values($value->getListValues());
                 if (count($values) === 0) {
-                    return null;
+                    return Option::nothing(\Tracker_FormElement_Field_List_BindValue::class);
                 }
-
-                reset($values);
-
-                return current($values);
-            }, null);
+                return Option::fromValue($values[0]);
+            });
     }
 }

@@ -24,6 +24,7 @@ namespace Tuleap\Taskboard\Column\FieldValuesToColumnMapping;
 
 use PHPUnit\Framework\MockObject\Stub;
 use Tuleap\AgileDashboard\Test\Builders\PlanningBuilder;
+use Tuleap\Option\Option;
 use Tuleap\Taskboard\Column\FieldValuesToColumnMapping\Freestyle\FreestyleMappedFieldRetriever;
 use Tuleap\Taskboard\Column\FieldValuesToColumnMapping\Freestyle\SearchMappedFieldStub;
 use Tuleap\Taskboard\Tracker\TaskboardTracker;
@@ -60,7 +61,8 @@ final class ArtifactMappedFieldValueRetrieverTest extends \Tuleap\Test\PHPUnit\T
         $this->status_provider = $this->createStub(\Cardwall_FieldProviders_SemanticStatusFieldRetriever::class);
     }
 
-    private function getValue(): ?\Tracker_FormElement_Field_List_BindValue
+    /** @return Option<\Tracker_FormElement_Field_List_BindValue> */
+    private function getValue(): Option
     {
         $release_tracker  = TrackerTestBuilder::aTracker()->withId(68)->build();
         $release_artifact = ArtifactTestBuilder::anArtifact(1)->inTracker($release_tracker)->build();
@@ -83,34 +85,34 @@ final class ArtifactMappedFieldValueRetrieverTest extends \Tuleap\Test\PHPUnit\T
                 )
             )
         );
-        return $retriever->getValueAtLastChangeset($milestone, $this->user_story_artifact, $this->user);
+        return $retriever->getFirstValueAtLastChangeset($milestone, $this->user_story_artifact, $this->user);
     }
 
-    public function testReturnsNullWhenNoMappedField(): void
+    public function testItReturnsNothingWhenNoMappedField(): void
     {
         $this->field_retriever = RetrieveUsedListFieldStub::withNoField();
         $this->status_provider->method('getField')->willReturn(null);
 
-        self::assertNull($this->getValue());
+        self::assertTrue($this->getValue()->isNothing());
     }
 
-    public function testReturnsNullWhenUserCantReadMappedField(): void
+    public function testItReturnsNothingWhenUserCannotReadMappedField(): void
     {
         $this->field_retriever = RetrieveUsedListFieldStub::withField(
             ListFieldBuilder::aListField(self::FIELD_ID)->withReadPermission($this->user, false)->build(),
         );
 
-        self::assertNull($this->getValue());
+        self::assertTrue($this->getValue()->isNothing());
     }
 
-    public function testReturnsNullWhenNoLastChangeset(): void
+    public function testItReturnsNothingWhenNoLastChangeset(): void
     {
         $this->user_story_artifact->setChangesets([]);
 
-        self::assertNull($this->getValue());
+        self::assertTrue($this->getValue()->isNothing());
     }
 
-    public function testReturnsNullWhenValueIsNotListValue(): void
+    public function testItReturnsNothingWhenValueIsNotListValue(): void
     {
         $mapped_field          = ListFieldBuilder::aListField(self::FIELD_ID)->withReadPermission($this->user, true)->build();
         $this->field_retriever = RetrieveUsedListFieldStub::withField($mapped_field);
@@ -122,10 +124,10 @@ final class ArtifactMappedFieldValueRetrieverTest extends \Tuleap\Test\PHPUnit\T
             ->build();
         $last_changeset->setFieldValue($mapped_field, null);
 
-        self::assertNull($this->getValue());
+        self::assertTrue($this->getValue()->isNothing());
     }
 
-    public function testReturnsNullWhenValueIsEmpty(): void
+    public function testItReturnsNothingWhenValueIsEmpty(): void
     {
         $mapped_field          = ListFieldBuilder::aListField(self::FIELD_ID)->withReadPermission($this->user, true)->build();
         $this->field_retriever = RetrieveUsedListFieldStub::withField($mapped_field);
@@ -139,10 +141,10 @@ final class ArtifactMappedFieldValueRetrieverTest extends \Tuleap\Test\PHPUnit\T
             ->withValues([])
             ->build();
 
-        self::assertNull($this->getValue());
+        self::assertTrue($this->getValue()->isNothing());
     }
 
-    public function testReturnsFirstValueOfMappedField(): void
+    public function testItReturnsFirstValueOfMappedField(): void
     {
         $mapped_field          = ListFieldBuilder::aListField(self::FIELD_ID)->withReadPermission($this->user, true)->build();
         $list_bind             = ListStaticBindBuilder::aStaticBind($mapped_field)
@@ -161,6 +163,6 @@ final class ArtifactMappedFieldValueRetrieverTest extends \Tuleap\Test\PHPUnit\T
             ->withValues([$first_list_value, $list_bind->getValue(9086)])
             ->build();
 
-        self::assertSame($first_list_value, $this->getValue());
+        self::assertSame($first_list_value, $this->getValue()->unwrapOr(null));
     }
 }

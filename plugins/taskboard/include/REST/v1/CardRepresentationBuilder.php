@@ -22,43 +22,21 @@ declare(strict_types=1);
 
 namespace Tuleap\Taskboard\REST\v1;
 
-use Cardwall_FieldProviders_SemanticStatusFieldRetriever;
 use Cardwall_Semantic_CardFields;
 use PFUser;
-use Tracker_FormElement_Field_List_BindValue;
-use Tuleap\AgileDashboard\RemainingEffortValueRetriever;
 use Tuleap\Cardwall\BackgroundColor\BackgroundColorBuilder;
+use Tuleap\Option\Option;
 use Tuleap\Taskboard\Column\FieldValuesToColumnMapping\ArtifactMappedFieldValueRetriever;
-use Tuleap\Taskboard\Column\FieldValuesToColumnMapping\Freestyle\FreestyleMappedFieldRetriever;
-use Tuleap\Taskboard\Column\FieldValuesToColumnMapping\Freestyle\FreestyleMappingDao;
-use Tuleap\Taskboard\Column\FieldValuesToColumnMapping\MappedFieldRetriever;
 use Tuleap\Tracker\Artifact\Artifact;
-use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDecoratorRetriever;
 use Tuleap\User\REST\MinimalUserRepresentation;
 
-class CardRepresentationBuilder
+final readonly class CardRepresentationBuilder
 {
-    /**
-     * @var BackgroundColorBuilder
-     */
-    private $background_color_builder;
-    /**
-     * @var ArtifactMappedFieldValueRetriever
-     */
-    private $mapped_field_value_retriever;
-    /**
-     * @var RemainingEffortRepresentationBuilder
-     */
-    private $remaining_effort_representation_builder;
-
     public function __construct(
-        BackgroundColorBuilder $background_color_builder,
-        ArtifactMappedFieldValueRetriever $mapped_field_value_retriever,
-        RemainingEffortRepresentationBuilder $remaining_effort_representation_builder,
+        private BackgroundColorBuilder $background_color_builder,
+        private ArtifactMappedFieldValueRetriever $mapped_field_value_retriever,
+        private RemainingEffortRepresentationBuilder $remaining_effort_representation_builder,
     ) {
-        $this->background_color_builder                = $background_color_builder;
-        $this->mapped_field_value_retriever            = $mapped_field_value_retriever;
-        $this->remaining_effort_representation_builder = $remaining_effort_representation_builder;
     }
 
     public function build(
@@ -88,17 +66,14 @@ class CardRepresentationBuilder
         );
     }
 
+    /** @return Option<MappedListValueRepresentation> */
     private function getMappedListValue(
         \Planning_ArtifactMilestone $milestone,
         Artifact $artifact,
         PFUser $user,
-    ): ?MappedListValueRepresentation {
-        $mapped_list_value = $this->mapped_field_value_retriever->getValueAtLastChangeset($milestone, $artifact, $user);
-        if (! $mapped_list_value instanceof Tracker_FormElement_Field_List_BindValue) {
-            return null;
-        }
-
-        return MappedListValueRepresentation::build($mapped_list_value);
+    ): Option {
+        return $this->mapped_field_value_retriever->getFirstValueAtLastChangeset($milestone, $artifact, $user)
+            ->map(MappedListValueRepresentation::build(...));
     }
 
     /**
@@ -147,29 +122,6 @@ class CardRepresentationBuilder
         }
 
         return reset($list_values)->getLabel();
-    }
-
-    public static function buildSelf(): self
-    {
-        $form_element_factory = \Tracker_FormElementFactory::instance();
-
-        $freestyle_mapping_dao = new FreestyleMappingDao();
-        return new CardRepresentationBuilder(
-            new BackgroundColorBuilder(new BindDecoratorRetriever()),
-            new ArtifactMappedFieldValueRetriever(
-                new MappedFieldRetriever(
-                    new Cardwall_FieldProviders_SemanticStatusFieldRetriever(),
-                    new FreestyleMappedFieldRetriever(
-                        $freestyle_mapping_dao,
-                        $form_element_factory
-                    )
-                )
-            ),
-            new RemainingEffortRepresentationBuilder(
-                new RemainingEffortValueRetriever($form_element_factory),
-                $form_element_factory
-            )
-        );
     }
 
     private function isCollapsed(PFUser $user, Artifact $artifact, \Planning_ArtifactMilestone $milestone): bool
