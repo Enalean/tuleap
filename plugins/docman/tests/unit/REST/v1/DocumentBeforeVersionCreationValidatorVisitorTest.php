@@ -32,49 +32,31 @@ use Docman_Link;
 use Docman_PermissionsManager;
 use Docman_Wiki;
 use Luracast\Restler\RestException;
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PFUser;
+use PHPUnit\Framework\MockObject\MockObject;
+use Service;
 use Tuleap\Docman\ApprovalTable\ApprovalTableException;
 use Tuleap\Docman\ApprovalTable\ApprovalTableRetriever;
 use Tuleap\Docman\ApprovalTable\ApprovalTableUpdateActionChecker;
 use Tuleap\Docman\ApprovalTable\ApprovalTableUpdater;
-use Project;
 use Tuleap\REST\I18NRestException;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
 
-class DocumentBeforeVersionCreationValidatorVisitorTest extends \Tuleap\Test\PHPUnit\TestCase
+final class DocumentBeforeVersionCreationValidatorVisitorTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var Mockery\MockInterface|ApprovalTableRetriever
-     */
-    private $approval_retriever;
-    /**
-     * @var Docman_ItemFactory|Mockery\MockInterface
-     */
-    private $docamn_factory;
-    /**
-     * @var \Mockery\MockInterface|ApprovalTableUpdateActionChecker
-     */
-    private $approval_checker;
-    /**
-     * @var Docman_PermissionsManager|\Mockery\MockInterface
-     */
-    private $permission_manager;
-    /**
-     * @var DocumentBeforeModificationValidatorVisitor
-     */
-    private $validator_visitor;
+    private ApprovalTableRetriever&MockObject $approval_retriever;
+    private Docman_ItemFactory&MockObject $docamn_factory;
+    private ApprovalTableUpdateActionChecker&MockObject $approval_checker;
+    private Docman_PermissionsManager&MockObject $permission_manager;
+    private DocumentBeforeVersionCreationValidatorVisitor $validator_visitor;
 
     protected function setUp(): void
     {
-        parent::setUp();
-
-        $this->approval_checker   = Mockery::mock(ApprovalTableUpdateActionChecker::class);
-        $this->approval_retriever = Mockery::mock(ApprovalTableRetriever::class);
-        $this->permission_manager = Mockery::mock(Docman_PermissionsManager::class);
-        $this->docamn_factory     = Mockery::mock(Docman_ItemFactory::class);
+        $this->approval_checker   = $this->createMock(ApprovalTableUpdateActionChecker::class);
+        $this->approval_retriever = $this->createMock(ApprovalTableRetriever::class);
+        $this->permission_manager = $this->createMock(Docman_PermissionsManager::class);
+        $this->docamn_factory     = $this->createMock(Docman_ItemFactory::class);
         $this->validator_visitor  = new DocumentBeforeVersionCreationValidatorVisitor(
             $this->permission_manager,
             $this->approval_checker,
@@ -83,97 +65,97 @@ class DocumentBeforeVersionCreationValidatorVisitorTest extends \Tuleap\Test\PHP
         );
     }
 
-    public function testItThrowsErrorWhenExpectingAFileAndGivenItemIsLink()
+    public function testItThrowsErrorWhenExpectingAFileAndGivenItemIsLink(): void
     {
         $link_item = new Docman_Link();
 
-        $this->expectException(\Tuleap\REST\I18NRestException::class);
+        self::expectException(I18NRestException::class);
 
         $params = [
             'approval_table_action' => ApprovalTableUpdater::APPROVAL_TABLE_UPDATE_COPY,
-            'user'                  => Mockery::mock(PFUser::class),
+            'user'                  => UserTestBuilder::buildWithDefaults(),
             'document_type'         => Docman_File::class,
-            'item'                  => Mockery::mock(Docman_File::class),
+            'item'                  => new Docman_File(),
             'title'                 => 'my document title',
         ];
         $link_item->accept($this->validator_visitor, $params);
     }
 
-    public function testItThrowsErrorWhenExpectingAFileAndGivenItemIsEmbeddedFile()
+    public function testItThrowsErrorWhenExpectingAFileAndGivenItemIsEmbeddedFile(): void
     {
         $embedded_file_item = new Docman_EmbeddedFile();
 
-        $this->expectException(\Tuleap\REST\I18NRestException::class);
+        self::expectException(I18NRestException::class);
 
         $params = [
             'approval_table_action' => ApprovalTableUpdater::APPROVAL_TABLE_UPDATE_COPY,
-            'user'                  => Mockery::mock(PFUser::class),
+            'user'                  => UserTestBuilder::buildWithDefaults(),
             'document_type'         => Docman_File::class,
-            'item'                  => Mockery::mock(Docman_File::class),
+            'item'                  => new Docman_File(),
             'title'                 => 'my document title',
         ];
         $embedded_file_item->accept($this->validator_visitor, $params);
     }
 
-    public function testItThrowsErrorWhenExpectingAFileAndGivenItemIsEmptyDocument()
+    public function testItThrowsErrorWhenExpectingAFileAndGivenItemIsEmptyDocument(): void
     {
         $empty_item = new Docman_Empty();
 
-        $this->expectException(\Tuleap\REST\I18NRestException::class);
+        self::expectException(I18NRestException::class);
 
         $params = [
             'approval_table_action' => ApprovalTableUpdater::APPROVAL_TABLE_UPDATE_COPY,
-            'user'                  => Mockery::mock(PFUser::class),
+            'user'                  => UserTestBuilder::buildWithDefaults(),
             'document_type'         => Docman_File::class,
-            'item'                  => Mockery::mock(Docman_File::class),
+            'item'                  => new Docman_File(),
             'title'                 => 'my document title',
         ];
         $empty_item->accept($this->validator_visitor, $params);
     }
 
-    public function testItThrowsErrorWhenExpectingAFileAndGivenItemIsWiki()
+    public function testItThrowsErrorWhenExpectingAFileAndGivenItemIsWiki(): void
     {
         $wiki_item = new Docman_Wiki();
 
-        $this->expectException(\Tuleap\REST\I18NRestException::class);
+        self::expectException(I18NRestException::class);
 
         $params = [
             'approval_table_action' => ApprovalTableUpdater::APPROVAL_TABLE_UPDATE_COPY,
-            'user'                  => Mockery::mock(PFUser::class),
+            'user'                  => UserTestBuilder::buildWithDefaults(),
             'document_type'         => Docman_File::class,
-            'item'                  => Mockery::mock(Docman_File::class),
+            'item'                  => new Docman_File(),
             'title'                 => 'my document title',
         ];
         $wiki_item->accept($this->validator_visitor, $params);
     }
 
-    public function testItThrowsErrorWhenExpectingAFileAndGivenItemIsFolder()
+    public function testItThrowsErrorWhenExpectingAFileAndGivenItemIsFolder(): void
     {
         $folder_item = new Docman_Folder();
 
-        $this->expectException(\Tuleap\REST\I18NRestException::class);
+        self::expectException(I18NRestException::class);
 
         $params = [
             'approval_table_action' => ApprovalTableUpdater::APPROVAL_TABLE_UPDATE_COPY,
-            'user'                  => Mockery::mock(PFUser::class),
+            'user'                  => UserTestBuilder::buildWithDefaults(),
             'document_type'         => Docman_File::class,
-            'item'                  => Mockery::mock(Docman_File::class),
+            'item'                  => new Docman_File(),
             'title'                 => 'my document title',
         ];
         $folder_item->accept($this->validator_visitor, $params);
     }
 
-    public function testItThrowsErrorWhenExpectingAFileAndGivenItemIsGeneric()
+    public function testItThrowsErrorWhenExpectingAFileAndGivenItemIsGeneric(): void
     {
         $item = new Docman_Item();
 
-        $this->expectException(\Tuleap\REST\I18NRestException::class);
+        self::expectException(I18NRestException::class);
 
         $params = [
             'approval_table_action' => ApprovalTableUpdater::APPROVAL_TABLE_UPDATE_COPY,
-            'user'                  => Mockery::mock(PFUser::class),
+            'user'                  => UserTestBuilder::buildWithDefaults(),
             'document_type'         => Docman_File::class,
-            'item'                  => Mockery::mock(Docman_File::class),
+            'item'                  => new Docman_File(),
             'title'                 => 'my document title',
         ];
         $item->accept($this->validator_visitor, $params);
@@ -183,15 +165,15 @@ class DocumentBeforeVersionCreationValidatorVisitorTest extends \Tuleap\Test\PHP
     {
         $file_item = new Docman_File();
 
-        $this->permission_manager->shouldReceive('userCanWrite')->andReturn(false);
-        $this->docamn_factory->shouldReceive('doesTitleCorrespondToExistingDocument')->andReturn(false);
-        $this->expectException(\Tuleap\REST\I18NRestException::class);
+        $this->permission_manager->method('userCanWrite')->willReturn(false);
+        $this->docamn_factory->method('doesTitleCorrespondToExistingDocument')->willReturn(false);
+        self::expectException(I18NRestException::class);
 
         $params = [
             'approval_table_action' => ApprovalTableUpdater::APPROVAL_TABLE_UPDATE_COPY,
-            'user'                  => Mockery::mock(PFUser::class),
+            'user'                  => UserTestBuilder::buildWithDefaults(),
             'document_type'         => Docman_File::class,
-            'item'                  => Mockery::mock(Docman_File::class),
+            'item'                  => new Docman_File(),
             'title'                 => 'my document title',
         ];
         $file_item->accept($this->validator_visitor, $params);
@@ -201,20 +183,20 @@ class DocumentBeforeVersionCreationValidatorVisitorTest extends \Tuleap\Test\PHP
     {
         $file_item = new Docman_File();
 
-        $this->permission_manager->shouldReceive('userCanWrite')->andReturn(true);
-        $this->docamn_factory->shouldReceive('doesTitleCorrespondToExistingDocument')->andReturn(false);
-        $this->approval_checker->shouldReceive('checkApprovalTableForItem')->andThrow(
+        $this->permission_manager->method('userCanWrite')->willReturn(true);
+        $this->docamn_factory->method('doesTitleCorrespondToExistingDocument')->willReturn(false);
+        $this->approval_checker->method('checkApprovalTableForItem')->willThrowException(
             ApprovalTableException::approvalTableActionIsMandatory('item title')
         );
-        $this->permission_manager->shouldReceive('_itemIsLockedForUser')->andReturn(false);
+        $this->permission_manager->method('_itemIsLockedForUser')->willReturn(false);
 
-        $this->expectException(ApprovalTableException::class);
+        self::expectException(ApprovalTableException::class);
 
         $params = [
             'approval_table_action' => ApprovalTableUpdater::APPROVAL_TABLE_UPDATE_COPY,
-            'user'                  => Mockery::mock(PFUser::class),
+            'user'                  => UserTestBuilder::buildWithDefaults(),
             'document_type'         => Docman_File::class,
-            'item'                  => Mockery::mock(Docman_File::class),
+            'item'                  => new Docman_File(),
             'title'                 => 'my document title',
         ];
         $file_item->accept($this->validator_visitor, $params);
@@ -224,20 +206,20 @@ class DocumentBeforeVersionCreationValidatorVisitorTest extends \Tuleap\Test\PHP
     {
         $file_item = new Docman_File();
 
-        $this->permission_manager->shouldReceive('userCanWrite')->andReturn(true);
-        $this->docamn_factory->shouldReceive('doesTitleCorrespondToExistingDocument')->andReturn(true);
-        $this->approval_checker->shouldReceive('checkApprovalTableForItem')->andThrow(
+        $this->permission_manager->method('userCanWrite')->willReturn(true);
+        $this->docamn_factory->method('doesTitleCorrespondToExistingDocument')->willReturn(true);
+        $this->approval_checker->method('checkApprovalTableForItem')->willThrowException(
             ApprovalTableException::approvalTableActionIsMandatory('item title')
         );
-        $this->permission_manager->shouldReceive('_itemIsLockedForUser')->andReturn(false);
+        $this->permission_manager->method('_itemIsLockedForUser')->willReturn(false);
 
-        $this->expectException(RestException::class);
+        self::expectException(RestException::class);
 
         $params = [
             'approval_table_action' => ApprovalTableUpdater::APPROVAL_TABLE_UPDATE_COPY,
-            'user'                  => Mockery::mock(PFUser::class),
+            'user'                  => UserTestBuilder::buildWithDefaults(),
             'document_type'         => Docman_File::class,
-            'item'                  => Mockery::mock(Docman_File::class),
+            'item'                  => new Docman_File(),
             'title'                 => 'my document title',
         ];
         $file_item->accept($this->validator_visitor, $params);
@@ -247,20 +229,20 @@ class DocumentBeforeVersionCreationValidatorVisitorTest extends \Tuleap\Test\PHP
     {
         $file_item = new Docman_Folder();
 
-        $this->permission_manager->shouldReceive('userCanWrite')->andReturn(true);
-        $this->docamn_factory->shouldReceive('doesTitleCorrespondToExistingFolder')->andReturn(true);
-        $this->approval_checker->shouldReceive('checkApprovalTableForItem')->andThrow(
+        $this->permission_manager->method('userCanWrite')->willReturn(true);
+        $this->docamn_factory->method('doesTitleCorrespondToExistingFolder')->willReturn(true);
+        $this->approval_checker->method('checkApprovalTableForItem')->willThrowException(
             ApprovalTableException::approvalTableActionIsMandatory('item title')
         );
-        $this->permission_manager->shouldReceive('_itemIsLockedForUser')->andReturn(false);
+        $this->permission_manager->method('_itemIsLockedForUser')->willReturn(false);
 
-        $this->expectException(RestException::class);
+        self::expectException(RestException::class);
 
         $params = [
             'approval_table_action' => ApprovalTableUpdater::APPROVAL_TABLE_UPDATE_COPY,
-            'user'                  => Mockery::mock(PFUser::class),
+            'user'                  => UserTestBuilder::buildWithDefaults(),
             'document_type'         => Docman_Folder::class,
-            'item'                  => Mockery::mock(Docman_Folder::class),
+            'item'                  => new Docman_Folder(),
             'title'                 => 'my document title',
         ];
         $file_item->accept($this->validator_visitor, $params);
@@ -270,18 +252,18 @@ class DocumentBeforeVersionCreationValidatorVisitorTest extends \Tuleap\Test\PHP
     {
         $file_item = new Docman_File();
 
-        $this->permission_manager->shouldReceive('userCanWrite')->andReturn(true);
-        $this->docamn_factory->shouldReceive('doesTitleCorrespondToExistingDocument')->andReturn(false);
-        $this->approval_checker->shouldReceive('checkApprovalTableForItem')->andReturn(true);
-        $this->permission_manager->shouldReceive('_itemIsLockedForUser')->andReturn(true);
+        $this->permission_manager->method('userCanWrite')->willReturn(true);
+        $this->docamn_factory->method('doesTitleCorrespondToExistingDocument')->willReturn(false);
+        $this->approval_checker->method('checkApprovalTableForItem');
+        $this->permission_manager->method('_itemIsLockedForUser')->willReturn(true);
 
-        $this->expectException(I18NRestException::class);
+        self::expectException(I18NRestException::class);
 
         $params = [
             'approval_table_action' => ApprovalTableUpdater::APPROVAL_TABLE_UPDATE_COPY,
-            'user'                  => Mockery::mock(PFUser::class),
+            'user'                  => UserTestBuilder::buildWithDefaults(),
             'document_type'         => Docman_File::class,
-            'item'                  => Mockery::mock(Docman_File::class),
+            'item'                  => new Docman_File(),
             'title'                 => 'my document title',
         ];
         $file_item->accept($this->validator_visitor, $params);
@@ -289,20 +271,20 @@ class DocumentBeforeVersionCreationValidatorVisitorTest extends \Tuleap\Test\PHP
 
     public function testVisitorDoesNotReturnExceptionIsEverythingIsAlright(): void
     {
-        $this->expectNotToPerformAssertions();
+        self::expectNotToPerformAssertions();
 
         $file_item = new Docman_File();
 
-        $this->permission_manager->shouldReceive('userCanWrite')->andReturn(true);
-        $this->docamn_factory->shouldReceive('doesTitleCorrespondToExistingDocument')->andReturn(false);
-        $this->approval_checker->shouldReceive('checkApprovalTableForItem')->andReturn(true);
-        $this->permission_manager->shouldReceive('_itemIsLockedForUser')->andReturn(false);
+        $this->permission_manager->method('userCanWrite')->willReturn(true);
+        $this->docamn_factory->method('doesTitleCorrespondToExistingDocument')->willReturn(false);
+        $this->approval_checker->method('checkApprovalTableForItem');
+        $this->permission_manager->method('_itemIsLockedForUser')->willReturn(false);
 
         $params = [
             'approval_table_action' => ApprovalTableUpdater::APPROVAL_TABLE_UPDATE_COPY,
-            'user'                  => Mockery::mock(PFUser::class),
+            'user'                  => UserTestBuilder::buildWithDefaults(),
             'document_type'         => Docman_File::class,
-            'item'                  => Mockery::mock(Docman_File::class),
+            'item'                  => new Docman_File(),
             'title'                 => 'my document title',
         ];
         $file_item->accept($this->validator_visitor, $params);
@@ -312,23 +294,21 @@ class DocumentBeforeVersionCreationValidatorVisitorTest extends \Tuleap\Test\PHP
     {
         $file_item = new Docman_Wiki();
 
-        $this->permission_manager->shouldReceive('userCanWrite')->andReturn(true);
-        $this->docamn_factory->shouldReceive('doesTitleCorrespondToExistingDocument')->andReturn(false);
-        $this->approval_checker->shouldReceive('checkApprovalTableForItem')->andReturn(true);
-        $this->permission_manager->shouldReceive('_itemIsLockedForUser')->andReturn(false);
+        $this->permission_manager->method('userCanWrite')->willReturn(true);
+        $this->docamn_factory->method('doesTitleCorrespondToExistingDocument')->willReturn(false);
+        $this->approval_checker->method('checkApprovalTableForItem');
+        $this->permission_manager->method('_itemIsLockedForUser')->willReturn(false);
 
-        $project = Mockery::mock(Project::class);
-        $project->shouldReceive('usesWiki')->andReturn(false);
-        $project->shouldReceive('getUnixName')->andReturn('my project');
-        $params = [
-            'user'                  => Mockery::mock(PFUser::class),
-            'document_type'         => Docman_Wiki::class,
-            'item'                  => Mockery::mock(Docman_Wiki::class),
-            'title'                 => 'my document title',
-            'project'               => $project,
+        $project = ProjectTestBuilder::aProject()->withUnixName('my project')->withoutServices()->build();
+        $params  = [
+            'user'          => UserTestBuilder::buildWithDefaults(),
+            'document_type' => Docman_Wiki::class,
+            'item'          => new Docman_Wiki(),
+            'title'         => 'my document title',
+            'project'       => $project,
         ];
 
-        $this->expectException(RestException::class);
+        self::expectException(RestException::class);
         $file_item->accept($this->validator_visitor, $params);
     }
 
@@ -336,24 +316,23 @@ class DocumentBeforeVersionCreationValidatorVisitorTest extends \Tuleap\Test\PHP
     {
         $file_item = new Docman_Wiki();
 
-        $this->permission_manager->shouldReceive('userCanWrite')->andReturn(true);
-        $this->docamn_factory->shouldReceive('doesTitleCorrespondToExistingDocument')->andReturn(false);
-        $this->approval_checker->shouldReceive('checkApprovalTableForItem')->andReturn(true);
-        $this->permission_manager->shouldReceive('_itemIsLockedForUser')->andReturn(false);
-        $this->approval_retriever->shouldReceive('hasApprovalTable')->andReturn(true);
+        $this->permission_manager->method('userCanWrite')->willReturn(true);
+        $this->docamn_factory->method('doesTitleCorrespondToExistingDocument')->willReturn(false);
+        $this->approval_checker->method('checkApprovalTableForItem');
+        $this->permission_manager->method('_itemIsLockedForUser')->willReturn(false);
+        $this->approval_retriever->method('hasApprovalTable')->willReturn(true);
 
-        $project = Mockery::mock(Project::class);
-        $project->shouldReceive('usesWiki')->andReturn(true);
-        $params = [
+        $project = ProjectTestBuilder::aProject()->withUsedService(Service::WIKI)->build();
+        $params  = [
             'approval_table_action' => ApprovalTableUpdater::APPROVAL_TABLE_UPDATE_COPY,
-            'user'                  => Mockery::mock(PFUser::class),
+            'user'                  => UserTestBuilder::buildWithDefaults(),
             'document_type'         => Docman_Wiki::class,
-            'item'                  => Mockery::mock(Docman_Wiki::class),
+            'item'                  => new Docman_Wiki(),
             'title'                 => 'my document title',
             'project'               => $project,
         ];
 
-        $this->expectException(I18NRestException::class);
+        self::expectException(I18NRestException::class);
         $file_item->accept($this->validator_visitor, $params);
     }
 }
