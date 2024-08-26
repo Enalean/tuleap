@@ -27,7 +27,7 @@ use Tuleap\Taskboard\Tracker\TaskboardTracker;
 
 final readonly class SearchMappedFieldStub implements SearchMappedField
 {
-    /** @param list<array{int, int, int}> $mapped_field_ids */
+    /** @param list<array{TaskboardTracker, int}> $mapped_field_ids */
     private function __construct(private array $mapped_field_ids)
     {
     }
@@ -35,7 +35,7 @@ final readonly class SearchMappedFieldStub implements SearchMappedField
     public static function withMappedField(TaskboardTracker $taskboard_tracker, int $mapped_field_id): self
     {
         return new self([
-            [$taskboard_tracker->getMilestoneTrackerId(), $taskboard_tracker->getTrackerId(), $mapped_field_id],
+            [$taskboard_tracker, $mapped_field_id],
         ]);
     }
 
@@ -47,7 +47,7 @@ final readonly class SearchMappedFieldStub implements SearchMappedField
     {
         $mappings = [];
         foreach ([$mapped_field_ids, ...$other_mapped_field_ids] as $mapping) {
-            $mappings[] = [$mapping[0]->getMilestoneTrackerId(), $mapping[0]->getTrackerId(), $mapping[1]];
+            $mappings[] = [$mapping[0], $mapping[1]];
         }
         return new self($mappings);
     }
@@ -60,8 +60,11 @@ final readonly class SearchMappedFieldStub implements SearchMappedField
     public function searchMappedField(TaskboardTracker $taskboard_tracker): Option
     {
         foreach ($this->mapped_field_ids as $mapping) {
-            if ($mapping[0] === $taskboard_tracker->getMilestoneTrackerId() && $mapping[1] === $taskboard_tracker->getTrackerId()) {
-                return Option::fromValue($mapping[2]);
+            if (
+                $mapping[0]->getMilestoneTrackerId() === $taskboard_tracker->getMilestoneTrackerId()
+                && $mapping[0]->getTrackerId() === $taskboard_tracker->getTrackerId()
+            ) {
+                return Option::fromValue($mapping[1]);
             }
         }
         return Option::nothing(\Psl\Type\int());

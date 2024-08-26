@@ -28,18 +28,36 @@ use Tuleap\Taskboard\Tracker\TaskboardTracker;
 final readonly class SearchMappedFieldValuesForColumnStub implements SearchMappedFieldValuesForColumn
 {
     /**
-     * @param list<int> $bind_value_ids
+     * @param list<array{TaskboardTracker, \Cardwall_Column, list<int>}> $mapped_values
      */
-    private function __construct(private array $bind_value_ids)
+    private function __construct(private array $mapped_values)
     {
     }
 
     /**
      * @param list<int> $bind_value_ids
      */
-    public static function withValues(array $bind_value_ids): self
+    public static function withValues(
+        TaskboardTracker $taskboard_tracker,
+        \Cardwall_Column $column,
+        array $bind_value_ids,
+    ): self {
+        return new self([
+            [$taskboard_tracker, $column, $bind_value_ids],
+        ]);
+    }
+
+    /**
+     * @param array{TaskboardTracker, \Cardwall_Column, list<int>} $mapped_bind_value_ids
+     * @param array{TaskboardTracker, \Cardwall_Column, list<int>} ...$other_mapped_bind_value_ids
+     */
+    public static function withMappings(array $mapped_bind_value_ids, array ...$other_mapped_bind_value_ids): self
     {
-        return new self($bind_value_ids);
+        $mappings = [];
+        foreach ([$mapped_bind_value_ids, ...$other_mapped_bind_value_ids] as $mapping) {
+            $mappings[] = [$mapping[0], $mapping[1], $mapping[2]];
+        }
+        return new self($mappings);
     }
 
     public static function withNoMappedValue(): self
@@ -51,6 +69,15 @@ final readonly class SearchMappedFieldValuesForColumnStub implements SearchMappe
         TaskboardTracker $taskboard_tracker,
         Cardwall_Column $column,
     ): array {
-        return $this->bind_value_ids;
+        foreach ($this->mapped_values as $mapping) {
+            if (
+                $mapping[0]->getMilestoneTrackerId() === $taskboard_tracker->getMilestoneTrackerId()
+                && $mapping[0]->getTrackerId() === $taskboard_tracker->getTrackerId()
+                && $mapping[1]->getId() === $column->getId()
+            ) {
+                return $mapping[2];
+            }
+        }
+        return [];
     }
 }

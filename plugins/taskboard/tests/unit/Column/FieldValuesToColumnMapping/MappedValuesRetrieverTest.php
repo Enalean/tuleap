@@ -23,14 +23,14 @@ declare(strict_types=1);
 namespace Tuleap\Taskboard\Column\FieldValuesToColumnMapping;
 
 use PHPUnit\Framework\MockObject\MockObject;
-use Tracker;
-use Tracker_FormElement_Field_List_Bind_StaticValue;
-use Tracker_FormElement_Field_Selectbox;
 use Tuleap\Cardwall\Test\Builders\ColumnTestBuilder;
+use Tuleap\Option\Option;
 use Tuleap\Taskboard\Column\FieldValuesToColumnMapping\Freestyle\FreestyleMappedFieldValuesRetriever;
 use Tuleap\Taskboard\Column\FieldValuesToColumnMapping\Freestyle\SearchMappedFieldValuesForColumnStub;
 use Tuleap\Taskboard\Column\FieldValuesToColumnMapping\Freestyle\VerifyMappingExistsStub;
 use Tuleap\Taskboard\Tracker\TaskboardTracker;
+use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticBindBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class MappedValuesRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -39,7 +39,9 @@ final class MappedValuesRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
     private \Cardwall_FieldProviders_SemanticStatusFieldRetriever&MockObject $status_retriever;
     private VerifyMappingExistsStub $verify_mapping_exists;
     private SearchMappedFieldValuesForColumnStub $search_values;
-    private Tracker $user_stories_tracker;
+    private \Tracker $user_stories_tracker;
+    private TaskboardTracker $taskboard_tracker;
+    private \Cardwall_Column $column;
 
     protected function setUp(): void
     {
@@ -48,13 +50,16 @@ final class MappedValuesRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->search_values         = SearchMappedFieldValuesForColumnStub::withNoMappedValue();
 
         $this->user_stories_tracker = TrackerTestBuilder::aTracker()->withId(164)->build();
+        $this->taskboard_tracker    = new TaskboardTracker(
+            TrackerTestBuilder::aTracker()->build(),
+            $this->user_stories_tracker
+        );
+        $this->column               = ColumnTestBuilder::aColumn()->withLabel(self::ON_GOING_COLUMN_LABEL)->build();
     }
 
-    private function getMappedValues(): MappedValuesInterface
+    /** @return Option<MappedValues | EmptyMappedValues> | Option<MappedValues> */
+    private function getMappedValues(): Option
     {
-        $taskboard_tracker = new TaskboardTracker(TrackerTestBuilder::aTracker()->build(), $this->user_stories_tracker);
-        $ongoing_column    = ColumnTestBuilder::aColumn()->withLabel(self::ON_GOING_COLUMN_LABEL)->build();
-
         $retriever = new MappedValuesRetriever(
             new FreestyleMappedFieldValuesRetriever(
                 $this->verify_mapping_exists,
@@ -63,58 +68,57 @@ final class MappedValuesRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->status_retriever
         );
 
-        return $retriever->getValuesMappedToColumn($taskboard_tracker, $ongoing_column);
+        return $retriever->getValuesMappedToColumn($this->taskboard_tracker, $this->column);
     }
 
-    public function testGetValuesMappedToColumnReturnsFreestyleMappingWhenItExists(): void
+    public function testItReturnsFreestyleMappingFirst(): void
     {
         $this->verify_mapping_exists = VerifyMappingExistsStub::withMapping();
-        $this->search_values         = SearchMappedFieldValuesForColumnStub::withValues([231, 856]);
+        $this->search_values         = SearchMappedFieldValuesForColumnStub::withValues(
+            $this->taskboard_tracker,
+            $this->column,
+            [231, 856]
+        );
 
-        $result = $this->getMappedValues();
-        self::assertSame([231, 856], $result->getValueIds());
+        $result = $this->getMappedValues()->unwrapOr(null);
+        self::assertSame([231, 856], $result?->getValueIds());
     }
 
-    public function testGetValuesMappedToColumnReturnsEmptyWhenNoStatusSemantic(): void
+    public function testItReturnsNothingWhenNoStatusSemantic(): void
     {
+        $this->verify_mapping_exists = VerifyMappingExistsStub::withNoMapping();
         $this->status_retriever->expects(self::once())
             ->method('getField')
             ->with($this->user_stories_tracker)
             ->willReturn(null);
 
-        $result = $this->getMappedValues();
-        self::assertEmpty($result->getValueIds());
+        self::assertTrue($this->getMappedValues()->isNothing());
     }
 
-    public function testGetValuesMappedToColumnReturnsEmptyWhenStatusHasNoVisibleValues(): void
+    public function testItReturnsNothingWhenStatusHasNoVisibleValues(): void
     {
-        $status_field = $this->createMock(Tracker_FormElement_Field_Selectbox::class);
-        $status_field->expects(self::once())
-            ->method('getVisibleValuesPlusNoneIfAny')
-            ->willReturn([]);
+        $status_field = ListStaticBindBuilder::aStaticBind(
+            ListFieldBuilder::aListField(225)->build()
+        )->withStaticValues([])->build()->getField();
         $this->status_retriever->expects(self::once())
             ->method('getField')
             ->with($this->user_stories_tracker)
             ->willReturn($status_field);
 
-        $result = $this->getMappedValues();
-        self::assertEmpty($result->getValueIds());
+        self::assertTrue($this->getMappedValues()->isNothing());
     }
 
-    public function testGetValuesMappedToColumnReturnsTheStatusValueWithTheSameLabelAsTheGivenColumn(): void
+    public function testItReturnsTheStatusValueWithTheSameLabelAsTheGivenColumn(): void
     {
-        $todo_list_value    = new Tracker_FormElement_Field_List_Bind_StaticValue(564, 'Todo', '', 1, false);
-        $ongoing_list_value = new Tracker_FormElement_Field_List_Bind_StaticValue(756, self::ON_GOING_COLUMN_LABEL, '', 2, false);
-        $status_field       = $this->createMock(Tracker_FormElement_Field_Selectbox::class);
-        $status_field->expects(self::once())
-            ->method('getVisibleValuesPlusNoneIfAny')
-            ->willReturn([$todo_list_value, $ongoing_list_value]);
+        $status_field = ListStaticBindBuilder::aStaticBind(
+            ListFieldBuilder::aListField(975)->thatIsRequired()->build()
+        )->withStaticValues([564 => 'Todo', 756 => self::ON_GOING_COLUMN_LABEL])->build()->getField();
         $this->status_retriever->expects(self::once())
             ->method('getField')
             ->with($this->user_stories_tracker)
             ->willReturn($status_field);
 
-        $result = $this->getMappedValues();
-        self::assertSame([756], $result->getValueIds());
+        $result = $this->getMappedValues()->unwrapOr(null);
+        self::assertSame([756], $result?->getValueIds());
     }
 }

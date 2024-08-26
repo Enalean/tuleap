@@ -24,46 +24,16 @@ namespace Tuleap\Taskboard\Column\FieldValuesToColumnMapping;
 
 use Cardwall_Column;
 use Planning_Milestone;
-use Tuleap\Taskboard\Column\FieldValuesToColumnMapping\Freestyle\FreestyleMappedFieldValuesRetriever;
-use Tuleap\Taskboard\Column\FieldValuesToColumnMapping\Freestyle\FreestyleMappingDao;
-use Tuleap\Taskboard\Column\FieldValuesToColumnMapping\Freestyle\FreestyleMappedFieldRetriever;
 use Tuleap\Taskboard\Tracker\TaskboardTracker;
 use Tuleap\Taskboard\Tracker\TrackerCollectionRetriever;
 
 class TrackerMappingPresenterBuilder
 {
-    /** @var TrackerCollectionRetriever */
-    private $trackers_retriever;
-    /** @var MappedFieldRetriever */
-    private $mapped_field_retriever;
-    /** @var MappedValuesRetriever */
-    private $mapped_values_retriever;
-
     public function __construct(
-        TrackerCollectionRetriever $trackers_retriever,
-        MappedFieldRetriever $mapped_field_retriever,
-        MappedValuesRetriever $mapped_values_retriever,
+        private TrackerCollectionRetriever $trackers_retriever,
+        private MappedFieldRetriever $mapped_field_retriever,
+        private MappedValuesRetriever $mapped_values_retriever,
     ) {
-        $this->trackers_retriever      = $trackers_retriever;
-        $this->mapped_field_retriever  = $mapped_field_retriever;
-        $this->mapped_values_retriever = $mapped_values_retriever;
-    }
-
-    public static function build(): self
-    {
-        $freestyle_mapping_dao    = new FreestyleMappingDao();
-        $semantic_status_provider = new \Cardwall_FieldProviders_SemanticStatusFieldRetriever();
-        return new self(
-            TrackerCollectionRetriever::build(),
-            new MappedFieldRetriever(
-                $semantic_status_provider,
-                new FreestyleMappedFieldRetriever($freestyle_mapping_dao, \Tracker_FormElementFactory::instance())
-            ),
-            new MappedValuesRetriever(
-                new FreestyleMappedFieldValuesRetriever($freestyle_mapping_dao, $freestyle_mapping_dao),
-                $semantic_status_provider
-            )
-        );
     }
 
     /**
@@ -82,16 +52,17 @@ class TrackerMappingPresenterBuilder
         TaskboardTracker $taskboard_tracker,
         Cardwall_Column $column,
     ): TrackerMappingPresenter {
-        $value_mapping_presenters = [];
-        $field_id                 = $this->mapped_field_retriever->getField($taskboard_tracker)
+        $field_id = $this->mapped_field_retriever->getField($taskboard_tracker)
             ->mapOr(static fn($field) => $field->getId(), null);
-        $mapped_values            = $this->mapped_values_retriever->getValuesMappedToColumn(
-            $taskboard_tracker,
-            $column
-        );
-        foreach ($mapped_values->getValueIds() as $value_id) {
-            $value_mapping_presenters[] = new ListFieldValuePresenter((int) $value_id);
-        }
+
+        $value_mapping_presenters = $this->mapped_values_retriever->getValuesMappedToColumn($taskboard_tracker, $column)
+            ->mapOr(static function ($mapped_values) {
+                $presenters = [];
+                foreach ($mapped_values->getValueIds() as $value_id) {
+                    $presenters[] = new ListFieldValuePresenter((int) $value_id);
+                }
+                return $presenters;
+            }, []);
 
         return new TrackerMappingPresenter($taskboard_tracker->getTrackerId(), $field_id, $value_mapping_presenters);
     }

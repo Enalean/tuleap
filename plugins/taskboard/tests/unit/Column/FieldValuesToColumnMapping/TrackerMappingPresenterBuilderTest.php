@@ -22,11 +22,14 @@ declare(strict_types=1);
 
 namespace Tuleap\Taskboard\Column\FieldValuesToColumnMapping;
 
-use Cardwall_Column;
 use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\AgileDashboard\Test\Builders\PlanningBuilder;
+use Tuleap\Cardwall\Test\Builders\ColumnTestBuilder;
 use Tuleap\Taskboard\Column\FieldValuesToColumnMapping\Freestyle\FreestyleMappedFieldRetriever;
+use Tuleap\Taskboard\Column\FieldValuesToColumnMapping\Freestyle\FreestyleMappedFieldValuesRetriever;
 use Tuleap\Taskboard\Column\FieldValuesToColumnMapping\Freestyle\SearchMappedFieldStub;
+use Tuleap\Taskboard\Column\FieldValuesToColumnMapping\Freestyle\SearchMappedFieldValuesForColumnStub;
+use Tuleap\Taskboard\Column\FieldValuesToColumnMapping\Freestyle\VerifyMappingExistsStub;
 use Tuleap\Taskboard\Tracker\TaskboardTracker;
 use Tuleap\Taskboard\Tracker\TrackerCollection;
 use Tuleap\Taskboard\Tracker\TrackerCollectionRetriever;
@@ -45,16 +48,16 @@ final class TrackerMappingPresenterBuilderTest extends \Tuleap\Test\PHPUnit\Test
     private SearchMappedFieldStub $search_mapped_field;
     private RetrieveUsedListFieldStub $field_retriever;
     private MockObject&TrackerCollectionRetriever $trackers_retriever;
-    private MockObject&MappedValuesRetriever $mapped_values_retriever;
+    private SearchMappedFieldValuesForColumnStub $search_values;
     private \Planning_Milestone $milestone;
     private \Cardwall_Column $ongoing_column;
 
     protected function setUp(): void
     {
-        $this->search_mapped_field     = SearchMappedFieldStub::withNoField();
-        $this->field_retriever         = RetrieveUsedListFieldStub::withNoField();
-        $this->trackers_retriever      = $this->createMock(TrackerCollectionRetriever::class);
-        $this->mapped_values_retriever = $this->createMock(MappedValuesRetriever::class);
+        $this->search_mapped_field = SearchMappedFieldStub::withNoField();
+        $this->field_retriever     = RetrieveUsedListFieldStub::withNoField();
+        $this->trackers_retriever  = $this->createMock(TrackerCollectionRetriever::class);
+        $this->search_values       = SearchMappedFieldValuesForColumnStub::withNoMappedValue();
 
         $project_id           = 174;
         $this->milestone      = new \Planning_ArtifactMilestone(
@@ -62,22 +65,30 @@ final class TrackerMappingPresenterBuilderTest extends \Tuleap\Test\PHPUnit\Test
             PlanningBuilder::aPlanning($project_id)->build(),
             ArtifactTestBuilder::anArtifact(645)->build()
         );
-        $this->ongoing_column = new \Cardwall_Column(25, 'On Going', 'graffiti-yellow');
+        $this->ongoing_column = ColumnTestBuilder::aColumn()->withId(25)->build();
     }
 
     /** @return TrackerMappingPresenter[] */
     private function buildMappings(): array
     {
+        $status_retriever = $this->createStub(\Cardwall_FieldProviders_SemanticStatusFieldRetriever::class);
+
         $builder = new TrackerMappingPresenterBuilder(
             $this->trackers_retriever,
             new MappedFieldRetriever(
-                $this->createStub(\Cardwall_FieldProviders_SemanticStatusFieldRetriever::class),
+                $status_retriever,
                 new FreestyleMappedFieldRetriever(
                     $this->search_mapped_field,
                     $this->field_retriever
                 )
             ),
-            $this->mapped_values_retriever
+            new MappedValuesRetriever(
+                new FreestyleMappedFieldValuesRetriever(
+                    VerifyMappingExistsStub::withMapping(),
+                    $this->search_values
+                ),
+                $status_retriever
+            )
         );
         return $builder->buildMappings($this->milestone, $this->ongoing_column);
     }
@@ -105,17 +116,18 @@ final class TrackerMappingPresenterBuilderTest extends \Tuleap\Test\PHPUnit\Test
         $this->field_retriever     = RetrieveUsedListFieldStub::withField(
             ListFieldBuilder::aListField(self::FIRST_MAPPED_FIELD_ID)->build()
         );
-        $this->search_mapped_field = SearchMappedFieldStub::withMappedField($taskboard_tracker, self::FIRST_MAPPED_FIELD_ID);
-        $this->mockMappedValues([], $taskboard_tracker, $this->ongoing_column);
-
-        $result = $this->buildMappings();
+        $this->search_mapped_field = SearchMappedFieldStub::withMappedField(
+            $taskboard_tracker,
+            self::FIRST_MAPPED_FIELD_ID
+        );
+        $this->search_values       = SearchMappedFieldValuesForColumnStub::withNoMappedValue();
 
         $expected_empty_mapping = new TrackerMappingPresenter(
             self::USER_STORIES_TRACKER_ID,
             self::FIRST_MAPPED_FIELD_ID,
             []
         );
-        self::assertEquals([$expected_empty_mapping], $result);
+        self::assertEquals([$expected_empty_mapping], $this->buildMappings());
     }
 
     public function testBuildMappingsReturnsMappingsForGivenColumn(): void
@@ -131,17 +143,22 @@ final class TrackerMappingPresenterBuilderTest extends \Tuleap\Test\PHPUnit\Test
         $this->field_retriever     = RetrieveUsedListFieldStub::withField(
             ListFieldBuilder::aListField(self::FIRST_MAPPED_FIELD_ID)->build()
         );
-        $this->search_mapped_field = SearchMappedFieldStub::withMappedField($taskboard_tracker, self::FIRST_MAPPED_FIELD_ID);
-        $this->mockMappedValues([1674], $taskboard_tracker, $this->ongoing_column);
-
-        $result = $this->buildMappings();
+        $this->search_mapped_field = SearchMappedFieldStub::withMappedField(
+            $taskboard_tracker,
+            self::FIRST_MAPPED_FIELD_ID
+        );
+        $this->search_values       = SearchMappedFieldValuesForColumnStub::withValues(
+            $taskboard_tracker,
+            $this->ongoing_column,
+            [1674]
+        );
 
         $expected_mapping = new TrackerMappingPresenter(
             self::USER_STORIES_TRACKER_ID,
             self::FIRST_MAPPED_FIELD_ID,
             [new ListFieldValuePresenter(1674)]
         );
-        self::assertEquals([$expected_mapping], $result);
+        self::assertEquals([$expected_mapping], $this->buildMappings());
     }
 
     public function testBuildMappingsMultipleTrackers(): void
@@ -168,45 +185,21 @@ final class TrackerMappingPresenterBuilderTest extends \Tuleap\Test\PHPUnit\Test
             ListFieldBuilder::aListField(self::FIRST_MAPPED_FIELD_ID)->build(),
             ListFieldBuilder::aListField(self::SECOND_MAPPED_FIELD_ID)->build()
         );
-        $this->mapped_values_retriever
-            ->method('getValuesMappedToColumn')
-            ->willReturnMap([
-                [$first_taskboard_tracker, $this->ongoing_column, new MappedValues([1674])],
-                [$second_taskboard_tracker, $this->ongoing_column, new MappedValues([1857, 1858])],
-            ]);
+        $this->search_values       = SearchMappedFieldValuesForColumnStub::withMappings(
+            [$first_taskboard_tracker, $this->ongoing_column, [1674]],
+            [$second_taskboard_tracker, $this->ongoing_column, [1857, 1858]]
+        );
 
-        $result = $this->buildMappings();
-
-        $expected_first_mapping  = new TrackerMappingPresenter(self::USER_STORIES_TRACKER_ID, self::FIRST_MAPPED_FIELD_ID, [new ListFieldValuePresenter(1674)]);
+        $expected_first_mapping  = new TrackerMappingPresenter(
+            self::USER_STORIES_TRACKER_ID,
+            self::FIRST_MAPPED_FIELD_ID,
+            [new ListFieldValuePresenter(1674)]
+        );
         $expected_second_mapping = new TrackerMappingPresenter(
             self::TASKS_TRACKER_ID,
             self::SECOND_MAPPED_FIELD_ID,
             [new ListFieldValuePresenter(1857), new ListFieldValuePresenter(1858)]
         );
-        self::assertEquals([$expected_first_mapping, $expected_second_mapping], $result);
-    }
-
-    private function mockMappedValues(
-        array $value_ids,
-        TaskboardTracker $taskboard_tracker,
-        Cardwall_Column $column,
-    ): void {
-        $mapped_values = new MappedValues($value_ids);
-        $this->mapped_values_retriever
-            ->expects(self::once())
-            ->method('getValuesMappedToColumn')
-            ->with(
-                self::callback(
-                    function (TaskboardTracker $arg) use ($taskboard_tracker): bool {
-                        return $arg->getTrackerId() === $taskboard_tracker->getTrackerId();
-                    }
-                ),
-                self::callback(
-                    function (Cardwall_Column $col_arg) use ($column): bool {
-                        return $col_arg === $column;
-                    }
-                ),
-            )
-            ->willReturn($mapped_values);
+        self::assertEquals([$expected_first_mapping, $expected_second_mapping], $this->buildMappings());
     }
 }

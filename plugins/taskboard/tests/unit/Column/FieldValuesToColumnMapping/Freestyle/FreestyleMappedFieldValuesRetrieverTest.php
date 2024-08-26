@@ -34,11 +34,19 @@ final class FreestyleMappedFieldValuesRetrieverTest extends TestCase
 {
     private VerifyMappingExistsStub $verify_mapping_exists;
     private SearchMappedFieldValuesForColumnStub $search_values;
+    private TaskboardTracker $taskboard_tracker;
+    private \Cardwall_Column $column;
 
     protected function setUp(): void
     {
         $this->verify_mapping_exists = VerifyMappingExistsStub::withNoMapping();
         $this->search_values         = SearchMappedFieldValuesForColumnStub::withNoMappedValue();
+
+        $this->taskboard_tracker = new TaskboardTracker(
+            TrackerTestBuilder::aTracker()->withId(736)->build(),
+            TrackerTestBuilder::aTracker()->withId(246)->build(),
+        );
+        $this->column            = ColumnTestBuilder::aColumn()->build();
     }
 
     /**
@@ -46,28 +54,21 @@ final class FreestyleMappedFieldValuesRetrieverTest extends TestCase
      */
     private function getValues(): Option
     {
-        $taskboard_tracker = new TaskboardTracker(
-            TrackerTestBuilder::aTracker()->withId(736)->build(),
-            TrackerTestBuilder::aTracker()->withId(246)->build(),
-        );
-
-        $column = ColumnTestBuilder::aColumn()->build();
-
         $retriever = new FreestyleMappedFieldValuesRetriever(
             $this->verify_mapping_exists,
             $this->search_values,
         );
-        return $retriever->getValuesMappedToColumn($taskboard_tracker, $column);
+        return $retriever->getValuesMappedToColumn($this->taskboard_tracker, $this->column);
     }
 
-    public function testGetValuesMappedToColumnReturnsNothingWhenNoMapping(): void
+    public function testItReturnsNothingWhenNoMapping(): void
     {
         $this->verify_mapping_exists = VerifyMappingExistsStub::withNoMapping();
 
         self::assertTrue($this->getValues()->isNothing());
     }
 
-    public function testGetValuesMappedToColumnReturnsEmptyMappingWhenNoMappedValues(): void
+    public function testItReturnsEmptyMappingWhenNoMappedValues(): void
     {
         $this->verify_mapping_exists = VerifyMappingExistsStub::withMapping();
         $this->search_values         = SearchMappedFieldValuesForColumnStub::withNoMappedValue();
@@ -77,10 +78,14 @@ final class FreestyleMappedFieldValuesRetrieverTest extends TestCase
         self::assertEmpty($result->getValueIds());
     }
 
-    public function testGetValuesMappedToColumnReturnsValues(): void
+    public function testItReturnsValues(): void
     {
         $this->verify_mapping_exists = VerifyMappingExistsStub::withMapping();
-        $this->search_values         = SearchMappedFieldValuesForColumnStub::withValues([123, 127]);
+        $this->search_values         = SearchMappedFieldValuesForColumnStub::withValues(
+            $this->taskboard_tracker,
+            $this->column,
+            [123, 127]
+        );
 
         self::assertSame([123, 127], $this->getValues()->unwrapOr(null)?->getValueIds());
     }

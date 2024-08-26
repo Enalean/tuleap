@@ -24,10 +24,11 @@ namespace Tuleap\Taskboard\Column\FieldValuesToColumnMapping;
 
 use Cardwall_Column;
 use Tracker;
+use Tuleap\Option\Option;
 use Tuleap\Taskboard\Column\FieldValuesToColumnMapping\Freestyle\FreestyleMappedFieldValuesRetriever;
 use Tuleap\Taskboard\Tracker\TaskboardTracker;
 
-class MappedValuesRetriever
+final readonly class MappedValuesRetriever
 {
     public function __construct(
         private FreestyleMappedFieldValuesRetriever $freestyle_retriever,
@@ -35,27 +36,28 @@ class MappedValuesRetriever
     ) {
     }
 
+    /** @return Option<MappedValues | EmptyMappedValues> | Option<MappedValues> */
     public function getValuesMappedToColumn(
         TaskboardTracker $taskboard_tracker,
         Cardwall_Column $column,
-    ): MappedValuesInterface {
-        return $this->freestyle_retriever->getValuesMappedToColumn($taskboard_tracker, $column)->match(
-            static fn($freestyle_mapped_values) => $freestyle_mapped_values,
-            fn() => $this->matchStatusValuesByDuckTyping($taskboard_tracker->getTracker(), $column)
-        );
+    ): Option {
+        return $this->freestyle_retriever->getValuesMappedToColumn($taskboard_tracker, $column)
+            ->orElse(
+                fn() => $this->matchStatusValuesByDuckTyping($taskboard_tracker->getTracker(), $column)
+            );
     }
 
-    private function matchStatusValuesByDuckTyping(Tracker $tracker, Cardwall_Column $column): MappedValuesInterface
+    /** @return Option<MappedValues> */
+    private function matchStatusValuesByDuckTyping(Tracker $tracker, Cardwall_Column $column): Option
     {
-        $status_field = $this->status_retriever->getField($tracker);
-        if (! $status_field) {
-            return new EmptyMappedValues();
-        }
-        foreach ($status_field->getVisibleValuesPlusNoneIfAny() as $value) {
-            if ($column->getLabel() === $value->getLabel()) {
-                return new MappedValues([(int) $value->getId()]);
-            }
-        }
-        return new EmptyMappedValues();
+        return Option::fromNullable($this->status_retriever->getField($tracker))
+            ->andThen(static function ($status_field) use ($column) {
+                foreach ($status_field->getVisibleValuesPlusNoneIfAny() as $value) {
+                    if ($column->getLabel() === $value->getLabel()) {
+                        return Option::fromValue(new MappedValues([(int) $value->getId()]));
+                    }
+                }
+                return Option::nothing(MappedValues::class);
+            });
     }
 }

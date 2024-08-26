@@ -314,13 +314,35 @@ class CardMappedFieldUpdater
         Cardwall_Column $column,
         PFUser $user,
     ): int {
-        $mapped_values = $this->mapped_values_retriever->getValuesMappedToColumn(
-            $taskboard_tracker,
-            $column
-        );
-
-        if ($mapped_values->isEmpty()) {
-            throw new I18NRestException(
+        return $this->mapped_values_retriever->getValuesMappedToColumn($taskboard_tracker, $column)
+            ->match(function ($mapped_values) use ($mapped_field, $artifact_to_add, $taskboard_tracker, $column, $user) {
+                if ($mapped_values->isEmpty()) {
+                    throw new I18NRestException(
+                        400,
+                        sprintf(
+                            dgettext(
+                                'tuleap-taskboard',
+                                'Tracker %s has no value mapped to column %s, please check its configuration.'
+                            ),
+                            $taskboard_tracker->getTracker()->getName(),
+                            $column->getLabel()
+                        )
+                    );
+                }
+                try {
+                    return $this->first_possible_value_retriever->getFirstPossibleValue(
+                        $artifact_to_add,
+                        $mapped_field,
+                        $mapped_values,
+                        $user
+                    );
+                } catch (NoPossibleValueException $exception) {
+                    throw new I18NRestException(
+                        400,
+                        $exception->getMessage()
+                    );
+                }
+            }, static fn () => throw new I18NRestException(
                 400,
                 sprintf(
                     dgettext(
@@ -330,22 +352,7 @@ class CardMappedFieldUpdater
                     $taskboard_tracker->getTracker()->getName(),
                     $column->getLabel()
                 )
-            );
-        }
-
-        try {
-            return $this->first_possible_value_retriever->getFirstPossibleValue(
-                $artifact_to_add,
-                $mapped_field,
-                $mapped_values,
-                $user
-            );
-        } catch (NoPossibleValueException $exception) {
-            throw new I18NRestException(
-                400,
-                $exception->getMessage()
-            );
-        }
+            ));
     }
 
     /**
