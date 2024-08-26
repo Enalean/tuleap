@@ -177,6 +177,9 @@ msgstr "La valeur pour 'limit' est incorrecte. 'limit' doit être un entier"
 msgid "Invalid value for 'offset'. It must be an integer"
 msgstr "La valeur pour 'offset' est incorrecte. 'offset' doit être un entier"
 
+msgid "Only @project = 'self' is supported"
+msgstr "Seulement @project = 'self' est supporté"
+
 msgid "Project not found"
 msgstr "Le projet n'a pas été trouvé"
 
@@ -231,6 +234,14 @@ msgid ""
 msgstr ""
 "Vous ne pouvez pas chercher sur '%s', référez vous à la documentation sur la "
 "syntaxe du 'FROM'."
+
+msgid "You cannot use '@project IN(...)'"
+msgstr "Vous ne pouvez pas utiliser '@project IN(...)'"
+
+msgid "You cannot use @project = 'self' in the context of a personal dashboard"
+msgstr ""
+"Vous ne pouvez pas utiliser @project = 'self' dans le contexte d'un tableau "
+"de bord personnel"
 
 msgid "You don't have permission to access this project"
 msgstr "Vous n'avez pas la permission d'accéder à ce projet"

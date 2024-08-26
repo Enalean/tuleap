@@ -63,6 +63,7 @@ final class UserListSelectFromBuilderTest extends CrossTrackerFieldTestCase
         $core_builder->addUserToProjectMembers((int) $this->user->getId(), $project_id);
         $core_builder->addUserToProjectMembers((int) $project_admin->getId(), $project_id);
         $core_builder->addUserToProjectAdmins((int) $project_admin->getId(), $project_id);
+        $this->addReportToProject(1, $project_id);
 
         $alice = $core_builder->buildUser('alice', 'Alice', 'alice@example.com');
         $core_builder->addUserToProjectMembers((int) $alice->getId(), $project_id);

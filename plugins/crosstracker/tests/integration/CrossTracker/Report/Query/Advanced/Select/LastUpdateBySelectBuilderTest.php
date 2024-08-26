@@ -57,6 +57,7 @@ final class LastUpdateBySelectBuilderTest extends CrossTrackerFieldTestCase
         $project_id = (int) $project->getID();
         $this->user = $core_builder->buildUser('project_member', 'Project Member', 'project_member@example.com');
         $core_builder->addUserToProjectMembers((int) $this->user->getId(), $project_id);
+        $this->addReportToProject(1, $project_id);
 
         $alice = $core_builder->buildUser('alice', 'Alice', 'alice@example.com');
         $bob   = $core_builder->buildUser('bob', 'Bob', 'bob@example.com');

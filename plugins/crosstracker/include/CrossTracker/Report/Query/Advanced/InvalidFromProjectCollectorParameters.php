@@ -31,6 +31,7 @@ final class InvalidFromProjectCollectorParameters implements VisitorParameters
     public function __construct(
         public FromProject $from_project,
         public InvalidFromCollection $collection,
+        public int $report_id,
     ) {
     }
 }

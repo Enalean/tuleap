@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace Tuleap\CrossTracker\Report;
 
+use EventManager;
 use PFUser;
 use Tracker;
 use Tuleap\CrossTracker\CrossTrackerArtifactReportDao;
@@ -43,6 +44,8 @@ use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilderVisitor;
 use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilderVisitor;
 use Tuleap\CrossTracker\REST\v1\Representation\CrossTrackerReportContentRepresentation;
 use Tuleap\CrossTracker\REST\v1\Representation\CrossTrackerSelectedRepresentation;
+use Tuleap\Dashboard\Project\ProjectDashboardDao;
+use Tuleap\Dashboard\Widget\DashboardWidgetDao;
 use Tuleap\Tracker\Artifact\RetrieveArtifact;
 use Tuleap\Tracker\Report\Query\Advanced\ExpertQueryValidator;
 use Tuleap\Tracker\Report\Query\Advanced\FromIsInvalidException;
@@ -55,6 +58,10 @@ use Tuleap\Tracker\Report\Query\Advanced\SearchablesDoNotExistException;
 use Tuleap\Tracker\Report\Query\Advanced\SelectablesAreInvalidException;
 use Tuleap\Tracker\Report\Query\Advanced\SelectablesDoNotExistException;
 use Tuleap\Tracker\REST\v1\ArtifactMatchingReportCollection;
+use Tuleap\Widget\WidgetFactory;
+use User_ForgeUserGroupPermissionsDao;
+use User_ForgeUserGroupPermissionsManager;
+use UserManager;
 
 final readonly class CrossTrackerArtifactReportFactory
 {
@@ -226,7 +233,14 @@ final readonly class CrossTrackerArtifactReportFactory
             new InvalidSelectablesCollectionBuilder($this->selectables_collector, $trackers, $current_user),
             new InvalidFromCollectionBuilder(
                 new InvalidFromTrackerCollectorVisitor(),
-                new InvalidFromProjectCollectorVisitor(),
+                new InvalidFromProjectCollectorVisitor(new ProjectDashboardDao(new DashboardWidgetDao(
+                    new WidgetFactory(
+                        UserManager::instance(),
+                        new User_ForgeUserGroupPermissionsManager(new User_ForgeUserGroupPermissionsDao()),
+                        EventManager::instance(),
+                    )
+                ))),
+                $report->getId(),
             ),
         );
         return $this->parser->parse($expert_query);

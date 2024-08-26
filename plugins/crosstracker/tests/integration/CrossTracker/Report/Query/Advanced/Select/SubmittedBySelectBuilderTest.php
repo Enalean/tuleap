@@ -62,6 +62,7 @@ final class SubmittedBySelectBuilderTest extends CrossTrackerFieldTestCase
         $bob   = $core_builder->buildUser('bob', 'Bob', 'bob@example.com');
         $core_builder->addUserToProjectMembers((int) $alice->getId(), $project_id);
         $core_builder->addUserToProjectMembers((int) $bob->getId(), $project_id);
+        $this->addReportToProject(1, $project_id);
 
         $release_tracker = $tracker_builder->buildTracker($project_id, 'Release');
         $sprint_tracker  = $tracker_builder->buildTracker($project_id, 'Sprint');
