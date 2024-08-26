@@ -118,7 +118,7 @@ class ReferenceSaver
 
     public function edit(\Codendi_Request $request)
     {
-        $id                    = (int) $request->get('id');
+        $id                    = (string) $request->get('id');
         $server                = trim($request->get('server'));
         $rest_api_url          = trim($request->get('rest_url'));
         $username              = $request->get('username');
@@ -147,7 +147,7 @@ class ReferenceSaver
         );
     }
 
-    private function getAPIKeyToStoreWithEncryptionStatus($id, $api_key)
+    private function getAPIKeyToStoreWithEncryptionStatus(string $id, $api_key)
     {
         if ($api_key !== '') {
             return [SymmetricCrypto::encrypt(new ConcealedString($api_key), $this->encryption_key), true];

@@ -12,9 +12,6 @@ msgstr ""
 msgid "Add reference"
 msgstr ""
 
-msgid "An error occured while removing reference"
-msgstr ""
-
 msgid "Bugzilla"
 msgstr ""
 

@@ -18,9 +18,6 @@ msgstr "Clé API"
 msgid "Add reference"
 msgstr "Ajouter une référence"
 
-msgid "An error occured while removing reference"
-msgstr "Une erreur est survenue lors de la suppression de la référence"
-
 msgid "Bugzilla"
 msgstr "Bugzilla"
 

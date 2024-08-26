@@ -23,18 +23,29 @@ declare(strict_types=1);
 namespace Tuleap\Bugzilla\Reference;
 
 use Tuleap\DB\DataAccessObject;
+use Tuleap\DB\InvalidUuidStringException;
+use Tuleap\DB\UUID;
 
 /**
- * @psalm-type BugzillaReferenceRow = array{id:int, keyword:string, server:string, username:string, api_key:string, encrypted_api_key:string, has_api_key_always_been_encrypted:bool, are_followup_private:bool, rest_url:string}
+ * @psalm-type BugzillaReferenceRow = array{id:UUID, keyword:string, server:string, username:string, api_key:string, encrypted_api_key:string, has_api_key_always_been_encrypted:bool, are_followup_private:bool, rest_url:string}
  */
 class Dao extends DataAccessObject
 {
     public function save(string $keyword, string $server, string $username, string $encrypted_api_key, bool $are_followups_private, string $rest_api_url): void
     {
-        $sql_save = "INSERT INTO plugin_bugzilla_reference(keyword, server, username, api_key, encrypted_api_key, are_followup_private, rest_url)
-                      VALUES (?, ?, ?, '', ?, ?, ?)";
+        $sql_save = "INSERT INTO plugin_bugzilla_reference(id, keyword, server, username, api_key, encrypted_api_key, are_followup_private, rest_url)
+                      VALUES (?, ?, ?, ?, '', ?, ?, ?)";
 
-        $this->getDB()->run($sql_save, $keyword, $server, $username, $encrypted_api_key, $are_followups_private, $rest_api_url);
+        $this->getDB()->run(
+            $sql_save,
+            $this->uuid_factory->buildUUIDBytes(),
+            $keyword,
+            $server,
+            $username,
+            $encrypted_api_key,
+            $are_followups_private,
+            $rest_api_url
+        );
     }
 
     /**
@@ -42,10 +53,19 @@ class Dao extends DataAccessObject
      */
     public function searchAllReferences(): array
     {
-        return $this->getDB()->run(
+        $result = $this->getDB()->run(
             'SELECT id, keyword, server, username, api_key, encrypted_api_key, has_api_key_always_been_encrypted, are_followup_private, rest_url
                        FROM plugin_bugzilla_reference'
         );
+
+        $rows = [];
+
+        foreach ($result as $row) {
+            $row['id'] = $this->uuid_factory->buildUUIDFromBytesData($row['id']);
+            $rows[]    = $row;
+        }
+
+        return $rows;
     }
 
     /**
@@ -56,12 +76,22 @@ class Dao extends DataAccessObject
         $sql = 'SELECT id, keyword, server, username, api_key, encrypted_api_key, has_api_key_always_been_encrypted, are_followup_private, rest_url
                 FROM plugin_bugzilla_reference WHERE keyword = ?';
 
-        return $this->getDB()->row($sql, $keyword);
+        $row = $this->getDB()->row($sql, $keyword);
+        if ($row === null) {
+            return null;
+        }
+        $row['id'] = $this->uuid_factory->buildUUIDFromBytesData($row['id']);
+        return $row;
     }
 
-    public function edit(int $id, string $server, string $username, string $encrypted_api_key, bool $has_api_key_always_been_encrypted, bool $are_followups_private, string $rest_api_url): void
+    public function edit(string $uuid_hex, string $server, string $username, string $encrypted_api_key, bool $has_api_key_always_been_encrypted, bool $are_followups_private, string $rest_api_url): void
     {
-        $this->getDB()->tryFlatTransaction(function () use ($id, $server, $rest_api_url, $username, $encrypted_api_key, $has_api_key_always_been_encrypted, $are_followups_private): void {
+        try {
+            $uuid = $this->uuid_factory->buildUUIDFromHexadecimalString($uuid_hex);
+        } catch (InvalidUuidStringException $e) {
+            return;
+        }
+        $this->getDB()->tryFlatTransaction(function () use ($uuid, $server, $rest_api_url, $username, $encrypted_api_key, $has_api_key_always_been_encrypted, $are_followups_private): void {
             $this->getDB()->run(
                 'UPDATE plugin_bugzilla_reference SET
                     server = ?,
@@ -78,7 +108,7 @@ class Dao extends DataAccessObject
                 $encrypted_api_key,
                 $has_api_key_always_been_encrypted,
                 $are_followups_private,
-                $id
+                $uuid->getBytes()
             );
 
             $link = $server . '/show_bug.cgi?id=$1';
@@ -93,7 +123,7 @@ class Dao extends DataAccessObject
                 SET ref.link = ?
                 WHERE bz.id = ?",
                 $link,
-                $id
+                $uuid->getBytes()
             );
         });
     }
@@ -101,17 +131,32 @@ class Dao extends DataAccessObject
     /**
      * @psalm-return BugzillaReferenceRow|null
      */
-    public function getReferenceById(int $id): ?array
+    public function getReferenceById(string $uuid_hex): ?array
     {
-        return $this->getDB()->row(
+        try {
+            $uuid = $this->uuid_factory->buildUUIDFromHexadecimalString($uuid_hex);
+        } catch (InvalidUuidStringException $e) {
+            return null;
+        }
+        $row = $this->getDB()->row(
             'SELECT id, keyword, server, username, api_key, encrypted_api_key, has_api_key_always_been_encrypted, are_followup_private, rest_url
                        FROM plugin_bugzilla_reference WHERE id = ?',
-            $id
+            $uuid->getBytes()
         );
+        if ($row === null) {
+            return null;
+        }
+        $row['id'] = $uuid;
+        return $row;
     }
 
-    public function delete(int $id): void
+    public function delete(string $uuid_hex): void
     {
+        try {
+            $uuid = $this->uuid_factory->buildUUIDFromHexadecimalString($uuid_hex);
+        } catch (InvalidUuidStringException $e) {
+            return;
+        }
         $sql = "DELETE bugzilla, source_ref, target_ref, reference, reference_group
                 FROM plugin_bugzilla_reference AS bugzilla
                     LEFT JOIN cross_references AS source_ref ON (
@@ -130,6 +175,6 @@ class Dao extends DataAccessObject
                     )
                 WHERE bugzilla.id = ?";
 
-        $this->getDB()->run($sql, $id);
+        $this->getDB()->run($sql, $uuid->getBytes());
     }
 }

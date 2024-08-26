@@ -63,7 +63,7 @@ class ReferenceRetriever
         }
 
         return new Reference(
-            $references['id'],
+            $references['id']->toString(),
             $references['keyword'],
             $references['server'],
             $references['username'],

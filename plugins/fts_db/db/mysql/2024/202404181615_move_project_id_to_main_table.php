@@ -30,7 +30,7 @@ final class b202404181615_move_project_id_to_main_table extends \Tuleap\ForgeUpg
 
     public function up(): void
     {
-        $this->api->addNewUUIDColumnToReplaceAutoIncrementedID('plugin_fts_db_search');
+        $this->api->addNewUUIDColumnToReplaceAutoIncrementedID('plugin_fts_db_search', 'id', 'uuid');
 
         $this->api->createAndPopulateNewUUIDColumn(
             'plugin_fts_db_metadata',
