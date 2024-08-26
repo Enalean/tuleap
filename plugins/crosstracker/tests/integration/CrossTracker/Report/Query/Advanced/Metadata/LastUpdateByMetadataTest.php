@@ -137,7 +137,6 @@ final class LastUpdateByMetadataTest extends CrossTrackerFieldTestCase
                 1,
                 "@last_update_by = 'bob'",
                 [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
-                false,
             ),
             $this->project_member,
         );
@@ -153,7 +152,6 @@ final class LastUpdateByMetadataTest extends CrossTrackerFieldTestCase
                 1,
                 "@last_update_by = 'bob'",
                 [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
-                false,
             ),
             $this->project_admin,
         );
@@ -169,7 +167,6 @@ final class LastUpdateByMetadataTest extends CrossTrackerFieldTestCase
                 1,
                 '@last_update_by = MYSELF()',
                 [$this->release_tracker, $this->sprint_tracker],
-                false,
             ),
             $this->alice,
         );
@@ -185,7 +182,6 @@ final class LastUpdateByMetadataTest extends CrossTrackerFieldTestCase
                 1,
                 "@last_update_by = 'bob' OR @last_update_by = 'alice'",
                 [$this->release_tracker, $this->sprint_tracker],
-                false,
             ),
             $this->project_member,
         );
@@ -204,7 +200,6 @@ final class LastUpdateByMetadataTest extends CrossTrackerFieldTestCase
                 1,
                 "@last_update_by != 'bob'",
                 [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
-                false,
             ),
             $this->project_member,
         );
@@ -220,7 +215,6 @@ final class LastUpdateByMetadataTest extends CrossTrackerFieldTestCase
                 1,
                 "@last_update_by != 'bob'",
                 [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
-                false,
             ),
             $this->project_admin,
         );
@@ -240,7 +234,6 @@ final class LastUpdateByMetadataTest extends CrossTrackerFieldTestCase
                 1,
                 '@last_update_by != MYSELF()',
                 [$this->release_tracker, $this->sprint_tracker],
-                false,
             ),
             $this->alice,
         );
@@ -256,7 +249,6 @@ final class LastUpdateByMetadataTest extends CrossTrackerFieldTestCase
                 1,
                 "@last_update_by != 'bob' AND @last_update_by != 'alice'",
                 [$this->release_tracker, $this->sprint_tracker],
-                false,
             ),
             $this->project_member,
         );
@@ -272,7 +264,6 @@ final class LastUpdateByMetadataTest extends CrossTrackerFieldTestCase
                 1,
                 "@last_update_by IN('bob')",
                 [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
-                false,
             ),
             $this->project_member,
         );
@@ -288,7 +279,6 @@ final class LastUpdateByMetadataTest extends CrossTrackerFieldTestCase
                 1,
                 "@last_update_by IN('bob')",
                 [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
-                false,
             ),
             $this->project_admin,
         );
@@ -304,7 +294,6 @@ final class LastUpdateByMetadataTest extends CrossTrackerFieldTestCase
                 1,
                 '@last_update_by IN(MYSELF())',
                 [$this->release_tracker, $this->sprint_tracker],
-                false,
             ),
             $this->alice,
         );
@@ -320,7 +309,6 @@ final class LastUpdateByMetadataTest extends CrossTrackerFieldTestCase
                 1,
                 "@last_update_by IN('bob', MYSELF())",
                 [$this->release_tracker, $this->sprint_tracker],
-                false,
             ),
             $this->alice,
         );
@@ -339,7 +327,6 @@ final class LastUpdateByMetadataTest extends CrossTrackerFieldTestCase
                 1,
                 "@last_update_by IN('bob') OR @last_update_by IN('charles')",
                 [$this->release_tracker, $this->sprint_tracker],
-                false,
             ),
             $this->project_member,
         );
@@ -355,7 +342,6 @@ final class LastUpdateByMetadataTest extends CrossTrackerFieldTestCase
                 1,
                 "@last_update_by NOT IN('bob')",
                 [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
-                false,
             ),
             $this->project_member,
         );
@@ -371,7 +357,6 @@ final class LastUpdateByMetadataTest extends CrossTrackerFieldTestCase
                 1,
                 "@last_update_by NOT IN('bob')",
                 [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
-                false,
             ),
             $this->project_admin,
         );
@@ -391,7 +376,6 @@ final class LastUpdateByMetadataTest extends CrossTrackerFieldTestCase
                 1,
                 '@last_update_by NOT IN(MYSELF())',
                 [$this->release_tracker, $this->sprint_tracker],
-                false,
             ),
             $this->alice,
         );
@@ -407,7 +391,6 @@ final class LastUpdateByMetadataTest extends CrossTrackerFieldTestCase
                 1,
                 "@last_update_by NOT IN('bob', 'alice')",
                 [$this->release_tracker, $this->sprint_tracker],
-                false,
             ),
             $this->alice,
         );
@@ -423,7 +406,6 @@ final class LastUpdateByMetadataTest extends CrossTrackerFieldTestCase
                 1,
                 "@last_update_by NOT IN('bob') AND @last_update_by NOT IN('alice')",
                 [$this->release_tracker, $this->sprint_tracker],
-                false,
             ),
             $this->project_member,
         );

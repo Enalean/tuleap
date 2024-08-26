@@ -30,12 +30,8 @@ use Tuleap\Tracker\REST\TrackerReference;
 /**
  * @psalm-immutable
  */
-final readonly class CrossTrackerDefaultReportRepresentation
+final readonly class CrossTrackerDefaultReportRepresentation implements CrossTrackerReportRepresentation
 {
-    public const ROUTE        = 'cross_tracker_reports';
-    public const MODE_DEFAULT = 'default';
-    public const MODE_EXPERT  = 'expert';
-
     /**
      * @param TrackerReference[] $trackers
      * @param TrackerReference[] $invalid_trackers
@@ -69,11 +65,11 @@ final readonly class CrossTrackerDefaultReportRepresentation
         $report_id = JsonCast::toInt($report->getId());
         return new self(
             $report_id,
-            self::ROUTE . '/' . $report_id,
+            CrossTrackerReportsResource::ROUTE . '/' . $report_id,
             $report->getExpertQuery(),
             $trackers,
             $invalid_trackers,
-            $report->isExpert() ? self::MODE_EXPERT : self::MODE_DEFAULT,
+            self::MODE_DEFAULT,
         );
     }
 }

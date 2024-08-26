@@ -26,7 +26,7 @@ use PFUser;
 use ProjectUGroup;
 use Tracker;
 use Tracker_FormElementFactory;
-use Tuleap\CrossTracker\CrossTrackerDefaultReport;
+use Tuleap\CrossTracker\CrossTrackerExpertReport;
 use Tuleap\CrossTracker\Report\Query\Advanced\CrossTrackerFieldTestCase;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Representations\StaticListRepresentation;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Representations\StaticListValueRepresentation;
@@ -132,7 +132,7 @@ final class StaticListSelectBuilderTest extends CrossTrackerFieldTestCase
         );
     }
 
-    private function getQueryResults(CrossTrackerDefaultReport $report, PFUser $user): CrossTrackerReportContentRepresentation
+    private function getQueryResults(CrossTrackerExpertReport $report, PFUser $user): CrossTrackerReportContentRepresentation
     {
         $result = (new ArtifactReportFactoryInstantiator())
             ->getFactory()
@@ -144,11 +144,10 @@ final class StaticListSelectBuilderTest extends CrossTrackerFieldTestCase
     public function testItReturnsColumns(): void
     {
         $result = $this->getQueryResults(
-            new CrossTrackerDefaultReport(
+            new CrossTrackerExpertReport(
                 1,
                 "SELECT list_field FROM @project = 'self' WHERE list_field = '' OR list_field != ''",
                 $this->trackers,
-                true,
             ),
             $this->user,
         );

@@ -141,7 +141,6 @@ final class TitleMetadataTest extends CrossTrackerFieldTestCase
                 1,
                 "@title = ''",
                 [$this->release_tracker, $this->sprint_tracker],
-                false,
             ),
             $this->project_member
         );
@@ -157,7 +156,6 @@ final class TitleMetadataTest extends CrossTrackerFieldTestCase
                 1,
                 "@title = 'title'",
                 [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
-                false,
             ),
             $this->project_member
         );
@@ -173,7 +171,6 @@ final class TitleMetadataTest extends CrossTrackerFieldTestCase
                 1,
                 "@title = 'title'",
                 [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
-                false,
             ),
             $this->project_admin
         );
@@ -189,7 +186,6 @@ final class TitleMetadataTest extends CrossTrackerFieldTestCase
                 1,
                 "@title = 'title' OR @title = 'MyArtifact'",
                 [$this->release_tracker, $this->sprint_tracker],
-                false,
             ),
             $this->project_member
         );
@@ -205,7 +201,6 @@ final class TitleMetadataTest extends CrossTrackerFieldTestCase
                 1,
                 "@title != ''",
                 [$this->release_tracker, $this->sprint_tracker],
-                false,
             ),
             $this->project_member
         );
@@ -221,7 +216,6 @@ final class TitleMetadataTest extends CrossTrackerFieldTestCase
                 1,
                 "@title != 'MyArtifact'",
                 [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
-                false,
             ),
             $this->project_member
         );
@@ -240,7 +234,6 @@ final class TitleMetadataTest extends CrossTrackerFieldTestCase
                 1,
                 "@title != 'MyArtifact'",
                 [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
-                false,
             ),
             $this->project_admin
         );
@@ -260,7 +253,6 @@ final class TitleMetadataTest extends CrossTrackerFieldTestCase
                 1,
                 "@title != 'MyArtifact' AND @title != ''",
                 [$this->release_tracker, $this->sprint_tracker],
-                false,
             ),
             $this->project_member
         );

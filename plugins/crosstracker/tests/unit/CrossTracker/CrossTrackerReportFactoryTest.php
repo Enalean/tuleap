@@ -21,9 +21,10 @@
 namespace Tuleap\CrossTracker;
 
 use PHPUnit\Framework\MockObject\MockObject;
+use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
-final class CrossTrackerReportFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
+final class CrossTrackerReportFactoryTest extends TestCase
 {
     private \Tracker $tracker;
     private CrossTrackerReportFactory $cross_tracker_factory;
@@ -39,21 +40,6 @@ final class CrossTrackerReportFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->cross_tracker_factory = new CrossTrackerReportFactory($this->report_dao, $this->tracker_factory);
 
         $this->tracker = TrackerTestBuilder::aTracker()->withId(2)->build();
-    }
-
-    public function testItThrowsAnExceptionWhenReportIsNotFound(): void
-    {
-        $this->report_dao->method('searchReportById')->willReturn(false);
-        $this->expectException(\Tuleap\CrossTracker\CrossTrackerReportNotFoundException::class);
-
-        $this->cross_tracker_factory->getById(1);
-    }
-
-    public function testItDoesNotThrowsAnExceptionWhenTrackerIsNotFound(): void
-    {
-        $this->report_dao->method('searchReportById')->willReturn(
-            ['id' => 1, 'expert_query' => '', 'expert_mode' => false]
-        );
 
         $this->report_dao->method('searchReportTrackersById')->willReturn(
             [
@@ -66,12 +52,48 @@ final class CrossTrackerReportFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
             [1, null],
             [2, $this->tracker],
         ]);
+    }
 
-        $expected_result = new CrossTrackerDefaultReport(1, '', [$this->tracker], false);
+    private function getById(bool $is_expert_mode): CrossTrackerReport
+    {
+        $this->report_dao->method('searchReportById')->willReturn(
+            ['id' => 1, 'expert_query' => '', 'expert_mode' => $is_expert_mode]
+        );
 
-        self::assertEquals(
-            $this->cross_tracker_factory->getById(1),
-            $expected_result
+        return $this->cross_tracker_factory->getById(1);
+    }
+
+    public function testItThrowsAnExceptionWhenReportIsNotFound(): void
+    {
+        $this->report_dao->method('searchReportById')->willReturn(false);
+        $this->expectException(\Tuleap\CrossTracker\CrossTrackerReportNotFoundException::class);
+
+        $this->getById(false);
+    }
+
+    public function testItReturnsADefaultCrossTrackerReport(): void
+    {
+        $expected_result = new CrossTrackerDefaultReport(1, '', [$this->tracker]);
+
+        $result = $this->getById(false);
+
+        self::assertInstanceOf(CrossTrackerDefaultReport::class, $result);
+        self::assertEqualsCanonicalizing(
+            $expected_result,
+            $result,
+        );
+    }
+
+    public function testItReturnsAnExpertCrossTrackerReport(): void
+    {
+        $expected_result = new CrossTrackerExpertReport(1, '', [$this->tracker]);
+
+        $result = $this->getById(true);
+
+        self::assertInstanceOf(CrossTrackerExpertReport::class, $result);
+        self::assertEqualsCanonicalizing(
+            $expected_result,
+            $result,
         );
     }
 }

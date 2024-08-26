@@ -82,7 +82,6 @@ final class UserIsAllowedToSeeReportCheckerTest extends TestCase
                 1,
                 '',
                 [$tracker],
-                false,
             ),
         );
     }

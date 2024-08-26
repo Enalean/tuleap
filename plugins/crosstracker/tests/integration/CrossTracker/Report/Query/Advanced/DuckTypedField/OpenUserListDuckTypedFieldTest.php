@@ -144,7 +144,6 @@ final class OpenUserListDuckTypedFieldTest extends CrossTrackerFieldTestCase
                 1,
                 "user_field = ''",
                 [$this->release_tracker, $this->sprint_tracker],
-                false,
             ),
             $this->project_member
         );
@@ -160,7 +159,6 @@ final class OpenUserListDuckTypedFieldTest extends CrossTrackerFieldTestCase
                 1,
                 "user_field = 'alice'",
                 [$this->release_tracker, $this->sprint_tracker],
-                false,
             ),
             $this->project_member
         );
@@ -176,7 +174,6 @@ final class OpenUserListDuckTypedFieldTest extends CrossTrackerFieldTestCase
                 1,
                 'user_field = MYSELF()',
                 [$this->release_tracker, $this->sprint_tracker],
-                false,
             ),
             $this->alice
         );
@@ -192,7 +189,6 @@ final class OpenUserListDuckTypedFieldTest extends CrossTrackerFieldTestCase
                 1,
                 "user_field = 'alice' AND user_field = 'bob@example.com'",
                 [$this->release_tracker, $this->sprint_tracker],
-                false,
             ),
             $this->project_member
         );
@@ -208,7 +204,6 @@ final class OpenUserListDuckTypedFieldTest extends CrossTrackerFieldTestCase
                 1,
                 "user_field != ''",
                 [$this->release_tracker, $this->sprint_tracker],
-                false,
             ),
             $this->project_member
         );
@@ -224,7 +219,6 @@ final class OpenUserListDuckTypedFieldTest extends CrossTrackerFieldTestCase
                 1,
                 "user_field != 'bob@example.com'",
                 [$this->release_tracker, $this->sprint_tracker],
-                false,
             ),
             $this->project_member
         );
@@ -240,7 +234,6 @@ final class OpenUserListDuckTypedFieldTest extends CrossTrackerFieldTestCase
                 1,
                 'user_field != MYSELF()',
                 [$this->release_tracker, $this->sprint_tracker],
-                false,
             ),
             $this->alice
         );
@@ -256,7 +249,6 @@ final class OpenUserListDuckTypedFieldTest extends CrossTrackerFieldTestCase
                 1,
                 "user_field != 'alice' AND user_field != 'bob@example.com'",
                 [$this->release_tracker, $this->sprint_tracker],
-                false,
             ),
             $this->project_member
         );
@@ -272,7 +264,6 @@ final class OpenUserListDuckTypedFieldTest extends CrossTrackerFieldTestCase
                 1,
                 "user_field IN('alice')",
                 [$this->release_tracker, $this->sprint_tracker],
-                false,
             ),
             $this->project_member
         );
@@ -288,7 +279,6 @@ final class OpenUserListDuckTypedFieldTest extends CrossTrackerFieldTestCase
                 1,
                 'user_field IN(MYSELF())',
                 [$this->release_tracker, $this->sprint_tracker],
-                false,
             ),
             $this->alice
         );
@@ -304,7 +294,6 @@ final class OpenUserListDuckTypedFieldTest extends CrossTrackerFieldTestCase
                 1,
                 "user_field IN(MYSELF(), 'bob@example.com')",
                 [$this->release_tracker, $this->sprint_tracker],
-                false,
             ),
             $this->alice
         );
@@ -320,7 +309,6 @@ final class OpenUserListDuckTypedFieldTest extends CrossTrackerFieldTestCase
                 1,
                 "user_field IN('alice', 'bob@example.com')",
                 [$this->release_tracker, $this->sprint_tracker],
-                false,
             ),
             $this->project_member
         );
@@ -336,7 +324,6 @@ final class OpenUserListDuckTypedFieldTest extends CrossTrackerFieldTestCase
                 1,
                 "user_field IN('alice') OR user_field IN('bob@example.com')",
                 [$this->release_tracker, $this->sprint_tracker],
-                false,
             ),
             $this->project_member
         );
@@ -352,7 +339,6 @@ final class OpenUserListDuckTypedFieldTest extends CrossTrackerFieldTestCase
                 1,
                 "user_field NOT IN('bob@example.com')",
                 [$this->release_tracker, $this->sprint_tracker],
-                false,
             ),
             $this->project_member
         );
@@ -368,7 +354,6 @@ final class OpenUserListDuckTypedFieldTest extends CrossTrackerFieldTestCase
                 1,
                 'user_field NOT IN(MYSELF())',
                 [$this->release_tracker, $this->sprint_tracker],
-                false,
             ),
             $this->alice
         );
@@ -384,7 +369,6 @@ final class OpenUserListDuckTypedFieldTest extends CrossTrackerFieldTestCase
                 1,
                 "user_field NOT IN(MYSELF(), 'bob@example.com')",
                 [$this->release_tracker, $this->sprint_tracker],
-                false,
             ),
             $this->alice
         );
@@ -400,7 +384,6 @@ final class OpenUserListDuckTypedFieldTest extends CrossTrackerFieldTestCase
                 1,
                 "user_field NOT IN('bob@example.com', 'alice')",
                 [$this->release_tracker, $this->sprint_tracker],
-                false,
             ),
             $this->project_member
         );
@@ -416,7 +399,6 @@ final class OpenUserListDuckTypedFieldTest extends CrossTrackerFieldTestCase
                 1,
                 "user_field NOT IN('bob@example.com') AND user_field NOT IN('alice')",
                 [$this->release_tracker, $this->sprint_tracker],
-                false,
             ),
             $this->project_member
         );

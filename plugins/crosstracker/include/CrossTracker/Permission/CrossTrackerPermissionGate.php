@@ -27,7 +27,7 @@ use Project;
 use Project_AccessException;
 use Tracker;
 use Tracker_FormElement_Field;
-use Tuleap\CrossTracker\CrossTrackerDefaultReport;
+use Tuleap\CrossTracker\CrossTrackerReport;
 use Tuleap\include\CheckUserCanAccessProject;
 use Tuleap\Tracker\Permission\FieldPermissionType;
 use Tuleap\Tracker\Permission\RetrieveUserPermissionOnFields;
@@ -47,7 +47,7 @@ final readonly class CrossTrackerPermissionGate
     /**
      * @throws CrossTrackerUnauthorizedException
      */
-    public function check(PFUser $user, CrossTrackerDefaultReport $report): void
+    public function check(PFUser $user, CrossTrackerReport $report): void
     {
         $this->checkProjectsAuthorization($user, $report->getProjects());
         $this->checkTrackersAuthorization($user, $report->getTrackers());

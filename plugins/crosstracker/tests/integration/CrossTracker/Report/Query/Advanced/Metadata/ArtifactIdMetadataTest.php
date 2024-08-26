@@ -116,7 +116,6 @@ final class ArtifactIdMetadataTest extends CrossTrackerFieldTestCase
                 1,
                 sprintf('@id = %d', $this->release_artifact_1_id),
                 [$this->release_tracker, $this->sprint_tracker],
-                false,
             ),
             $this->project_member
         );
@@ -132,7 +131,6 @@ final class ArtifactIdMetadataTest extends CrossTrackerFieldTestCase
                 1,
                 sprintf('@id = %d OR @id = %d', $this->release_artifact_1_id, $this->sprint_artifact_1_id),
                 [$this->release_tracker, $this->sprint_tracker],
-                false,
             ),
             $this->project_admin
         );
@@ -148,7 +146,6 @@ final class ArtifactIdMetadataTest extends CrossTrackerFieldTestCase
                 1,
                 sprintf('@id = %d', $this->sprint_artifact_1_id),
                 [$this->release_tracker, $this->sprint_tracker],
-                false,
             ),
             $this->project_member
         );
@@ -163,7 +160,6 @@ final class ArtifactIdMetadataTest extends CrossTrackerFieldTestCase
                 1,
                 sprintf('@id != %d', $this->release_artifact_1_id),
                 [$this->release_tracker, $this->sprint_tracker],
-                false,
             ),
             $this->project_admin
         );
@@ -179,7 +175,6 @@ final class ArtifactIdMetadataTest extends CrossTrackerFieldTestCase
                 1,
                 sprintf('@id != %d AND @id != %d', $this->release_artifact_1_id, $this->sprint_artifact_1_id),
                 [$this->release_tracker, $this->sprint_tracker],
-                false,
             ),
             $this->project_admin
         );
@@ -195,7 +190,6 @@ final class ArtifactIdMetadataTest extends CrossTrackerFieldTestCase
                 1,
                 sprintf('@id != %d', $this->release_artifact_1_id),
                 [$this->release_tracker, $this->sprint_tracker],
-                false,
             ),
             $this->project_member
         );
@@ -211,7 +205,6 @@ final class ArtifactIdMetadataTest extends CrossTrackerFieldTestCase
                 1,
                 sprintf('@id < %d', $this->release_artifact_3_id),
                 [$this->release_tracker, $this->sprint_tracker],
-                false,
             ),
             $this->project_admin
         );
@@ -227,7 +220,6 @@ final class ArtifactIdMetadataTest extends CrossTrackerFieldTestCase
                 1,
                 sprintf('@id < %d AND @id < %d', $this->release_artifact_2_id, $this->release_artifact_3_id),
                 [$this->release_tracker, $this->sprint_tracker],
-                false,
             ),
             $this->project_admin
         );
@@ -243,7 +235,6 @@ final class ArtifactIdMetadataTest extends CrossTrackerFieldTestCase
                 1,
                 sprintf('@id < %d', $this->release_artifact_3_id),
                 [$this->release_tracker, $this->sprint_tracker],
-                false,
             ),
             $this->project_member
         );
@@ -259,7 +250,6 @@ final class ArtifactIdMetadataTest extends CrossTrackerFieldTestCase
                 1,
                 sprintf('@id <= %d', $this->release_artifact_2_id),
                 [$this->release_tracker, $this->sprint_tracker],
-                false,
             ),
             $this->project_admin
         );
@@ -275,7 +265,6 @@ final class ArtifactIdMetadataTest extends CrossTrackerFieldTestCase
                 1,
                 sprintf('@id <= %d AND @id <= %d', $this->release_artifact_1_id, $this->release_artifact_2_id),
                 [$this->release_tracker, $this->sprint_tracker],
-                false,
             ),
             $this->project_admin
         );
@@ -291,7 +280,6 @@ final class ArtifactIdMetadataTest extends CrossTrackerFieldTestCase
                 1,
                 sprintf('@id <= %d', $this->release_artifact_2_id),
                 [$this->release_tracker, $this->sprint_tracker],
-                false,
             ),
             $this->project_member
         );
@@ -307,7 +295,6 @@ final class ArtifactIdMetadataTest extends CrossTrackerFieldTestCase
                 1,
                 sprintf('@id > %d', $this->release_artifact_1_id),
                 [$this->release_tracker, $this->sprint_tracker],
-                false,
             ),
             $this->project_admin
         );
@@ -323,7 +310,6 @@ final class ArtifactIdMetadataTest extends CrossTrackerFieldTestCase
                 1,
                 sprintf('@id > %d AND @id > %d', $this->release_artifact_1_id, $this->release_artifact_2_id),
                 [$this->release_tracker, $this->sprint_tracker],
-                false,
             ),
             $this->project_admin
         );
@@ -339,7 +325,6 @@ final class ArtifactIdMetadataTest extends CrossTrackerFieldTestCase
                 1,
                 sprintf('@id > %d', $this->release_artifact_1_id),
                 [$this->release_tracker, $this->sprint_tracker],
-                false,
             ),
             $this->project_member
         );
@@ -355,7 +340,6 @@ final class ArtifactIdMetadataTest extends CrossTrackerFieldTestCase
                 1,
                 sprintf('@id >= %d', $this->release_artifact_2_id),
                 [$this->release_tracker, $this->sprint_tracker],
-                false,
             ),
             $this->project_admin
         );
@@ -371,7 +355,6 @@ final class ArtifactIdMetadataTest extends CrossTrackerFieldTestCase
                 1,
                 sprintf('@id >= %d AND @id >= %d', $this->release_artifact_1_id, $this->release_artifact_2_id),
                 [$this->release_tracker, $this->sprint_tracker],
-                false,
             ),
             $this->project_admin
         );
@@ -387,7 +370,6 @@ final class ArtifactIdMetadataTest extends CrossTrackerFieldTestCase
                 1,
                 sprintf('@id >= %d', $this->release_artifact_1_id),
                 [$this->release_tracker, $this->sprint_tracker],
-                false,
             ),
             $this->project_member
         );
@@ -403,7 +385,6 @@ final class ArtifactIdMetadataTest extends CrossTrackerFieldTestCase
                 1,
                 sprintf('@id BETWEEN(%d, %d)', $this->sprint_artifact_1_id, $this->sprint_artifact_2_id),
                 [$this->release_tracker, $this->sprint_tracker],
-                false,
             ),
             $this->project_admin
         );
@@ -429,7 +410,6 @@ final class ArtifactIdMetadataTest extends CrossTrackerFieldTestCase
                     sprintf('@id BETWEEN(%d, %d)', $this->release_artifact_3_id, $this->sprint_artifact_2_id),
                 ),
                 [$this->release_tracker, $this->sprint_tracker],
-                false,
             ),
             $this->project_admin
         );
@@ -450,7 +430,6 @@ final class ArtifactIdMetadataTest extends CrossTrackerFieldTestCase
                 1,
                 sprintf('@id BETWEEN(%d, %d)', $this->sprint_artifact_1_id, $this->sprint_artifact_2_id),
                 [$this->release_tracker, $this->sprint_tracker],
-                false,
             ),
             $this->project_member
         );

@@ -163,7 +163,6 @@ final class UGroupListDuckTypedFieldTest extends CrossTrackerFieldTestCase
                 1,
                 "ugroup_field = ''",
                 [$this->release_tracker, $this->sprint_tracker],
-                false,
             ),
             $this->project_member
         );
@@ -179,7 +178,6 @@ final class UGroupListDuckTypedFieldTest extends CrossTrackerFieldTestCase
                 1,
                 "ugroup_field = 'Project members'",
                 [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
-                false,
             ),
             $this->project_member
         );
@@ -195,7 +193,6 @@ final class UGroupListDuckTypedFieldTest extends CrossTrackerFieldTestCase
                 1,
                 "ugroup_field = 'Project members'",
                 [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
-                false,
             ),
             $this->project_admin
         );
@@ -211,7 +208,6 @@ final class UGroupListDuckTypedFieldTest extends CrossTrackerFieldTestCase
                 1,
                 "ugroup_field = 'MyStaticUGroup'",
                 [$this->release_tracker, $this->sprint_tracker],
-                false,
             ),
             $this->project_member
         );
@@ -227,7 +223,6 @@ final class UGroupListDuckTypedFieldTest extends CrossTrackerFieldTestCase
                 1,
                 "ugroup_field = 'MyStaticUGroup' AND ugroup_field = 'Project members'",
                 [$this->release_tracker, $this->sprint_tracker],
-                false,
             ),
             $this->project_member
         );
@@ -243,7 +238,6 @@ final class UGroupListDuckTypedFieldTest extends CrossTrackerFieldTestCase
                 1,
                 "ugroup_field != ''",
                 [$this->release_tracker, $this->sprint_tracker],
-                false,
             ),
             $this->project_member
         );
@@ -259,7 +253,6 @@ final class UGroupListDuckTypedFieldTest extends CrossTrackerFieldTestCase
                 1,
                 "ugroup_field != 'Project administrators'",
                 [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
-                false,
             ),
             $this->project_member
         );
@@ -278,7 +271,6 @@ final class UGroupListDuckTypedFieldTest extends CrossTrackerFieldTestCase
                 1,
                 "ugroup_field != 'Project administrators'",
                 [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
-                false,
             ),
             $this->project_admin
         );
@@ -298,7 +290,6 @@ final class UGroupListDuckTypedFieldTest extends CrossTrackerFieldTestCase
                 1,
                 "ugroup_field != 'MyStaticUGroup'",
                 [$this->release_tracker, $this->sprint_tracker],
-                false,
             ),
             $this->project_member
         );
@@ -317,7 +308,6 @@ final class UGroupListDuckTypedFieldTest extends CrossTrackerFieldTestCase
                 1,
                 "ugroup_field != 'MyStaticUGroup' AND ugroup_field != 'Project members'",
                 [$this->release_tracker, $this->sprint_tracker],
-                false,
             ),
             $this->project_member
         );
@@ -333,7 +323,6 @@ final class UGroupListDuckTypedFieldTest extends CrossTrackerFieldTestCase
                 1,
                 "ugroup_field IN('Project members')",
                 [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
-                false,
             ),
             $this->project_member
         );
@@ -349,7 +338,6 @@ final class UGroupListDuckTypedFieldTest extends CrossTrackerFieldTestCase
                 1,
                 "ugroup_field IN('Project members')",
                 [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
-                false,
             ),
             $this->project_admin
         );
@@ -365,7 +353,6 @@ final class UGroupListDuckTypedFieldTest extends CrossTrackerFieldTestCase
                 1,
                 "ugroup_field IN('MyStaticUGroup', 'Project members')",
                 [$this->release_tracker, $this->sprint_tracker],
-                false,
             ),
             $this->project_member
         );
@@ -381,7 +368,6 @@ final class UGroupListDuckTypedFieldTest extends CrossTrackerFieldTestCase
                 1,
                 "ugroup_field IN('MyStaticUGroup') AND ugroup_field IN('Project members')",
                 [$this->release_tracker, $this->sprint_tracker],
-                false,
             ),
             $this->project_member
         );
@@ -397,7 +383,6 @@ final class UGroupListDuckTypedFieldTest extends CrossTrackerFieldTestCase
                 1,
                 "ugroup_field NOT IN('MyStaticUGroup')",
                 [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
-                false,
             ),
             $this->project_member
         );
@@ -413,7 +398,6 @@ final class UGroupListDuckTypedFieldTest extends CrossTrackerFieldTestCase
                 1,
                 "ugroup_field NOT IN('MyStaticUGroup')",
                 [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
-                false,
             ),
             $this->project_admin
         );
@@ -433,7 +417,6 @@ final class UGroupListDuckTypedFieldTest extends CrossTrackerFieldTestCase
                 1,
                 "ugroup_field NOT IN('MyStaticUGroup', 'Project members')",
                 [$this->release_tracker, $this->sprint_tracker],
-                false,
             ),
             $this->project_member
         );
@@ -449,7 +432,6 @@ final class UGroupListDuckTypedFieldTest extends CrossTrackerFieldTestCase
                 1,
                 "ugroup_field NOT IN('MyStaticUGroup') AND ugroup_field NOT IN('Project members')",
                 [$this->release_tracker, $this->sprint_tracker],
-                false,
             ),
             $this->project_member
         );

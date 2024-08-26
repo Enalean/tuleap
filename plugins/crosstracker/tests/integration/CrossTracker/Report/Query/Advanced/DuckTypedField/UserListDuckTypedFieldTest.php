@@ -160,7 +160,6 @@ final class UserListDuckTypedFieldTest extends CrossTrackerFieldTestCase
                 1,
                 "user_field = ''",
                 [$this->release_tracker, $this->sprint_tracker],
-                false,
             ),
             $this->project_member
         );
@@ -176,7 +175,6 @@ final class UserListDuckTypedFieldTest extends CrossTrackerFieldTestCase
                 1,
                 "user_field = 'alice'",
                 [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
-                false,
             ),
             $this->project_member
         );
@@ -192,7 +190,6 @@ final class UserListDuckTypedFieldTest extends CrossTrackerFieldTestCase
                 1,
                 "user_field = 'alice'",
                 [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
-                false,
             ),
             $this->project_admin
         );
@@ -208,7 +205,6 @@ final class UserListDuckTypedFieldTest extends CrossTrackerFieldTestCase
                 1,
                 'user_field = MYSELF()',
                 [$this->release_tracker, $this->sprint_tracker],
-                false,
             ),
             $this->alice
         );
@@ -224,7 +220,6 @@ final class UserListDuckTypedFieldTest extends CrossTrackerFieldTestCase
                 1,
                 "user_field = 'alice' AND user_field = 'bob'",
                 [$this->release_tracker, $this->sprint_tracker],
-                false,
             ),
             $this->project_member
         );
@@ -240,7 +235,6 @@ final class UserListDuckTypedFieldTest extends CrossTrackerFieldTestCase
                 1,
                 "user_field != ''",
                 [$this->release_tracker, $this->sprint_tracker],
-                false,
             ),
             $this->project_member
         );
@@ -256,7 +250,6 @@ final class UserListDuckTypedFieldTest extends CrossTrackerFieldTestCase
                 1,
                 "user_field != 'bob'",
                 [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
-                false,
             ),
             $this->project_member
         );
@@ -272,7 +265,6 @@ final class UserListDuckTypedFieldTest extends CrossTrackerFieldTestCase
                 1,
                 "user_field != 'bob'",
                 [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
-                false,
             ),
             $this->project_admin
         );
@@ -292,7 +284,6 @@ final class UserListDuckTypedFieldTest extends CrossTrackerFieldTestCase
                 1,
                 'user_field != MYSELF()',
                 [$this->release_tracker, $this->sprint_tracker],
-                false,
             ),
             $this->alice
         );
@@ -308,7 +299,6 @@ final class UserListDuckTypedFieldTest extends CrossTrackerFieldTestCase
                 1,
                 "user_field != 'alice' AND user_field != 'bob'",
                 [$this->release_tracker, $this->sprint_tracker],
-                false,
             ),
             $this->project_member
         );
@@ -324,7 +314,6 @@ final class UserListDuckTypedFieldTest extends CrossTrackerFieldTestCase
                 1,
                 "user_field IN('alice')",
                 [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
-                false,
             ),
             $this->project_member
         );
@@ -340,7 +329,6 @@ final class UserListDuckTypedFieldTest extends CrossTrackerFieldTestCase
                 1,
                 "user_field IN('alice')",
                 [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
-                false,
             ),
             $this->project_admin
         );
@@ -356,7 +344,6 @@ final class UserListDuckTypedFieldTest extends CrossTrackerFieldTestCase
                 1,
                 'user_field IN(MYSELF())',
                 [$this->release_tracker, $this->sprint_tracker],
-                false,
             ),
             $this->alice
         );
@@ -372,7 +359,6 @@ final class UserListDuckTypedFieldTest extends CrossTrackerFieldTestCase
                 1,
                 "user_field IN(MYSELF(), 'bob')",
                 [$this->release_tracker, $this->sprint_tracker],
-                false,
             ),
             $this->alice
         );
@@ -388,7 +374,6 @@ final class UserListDuckTypedFieldTest extends CrossTrackerFieldTestCase
                 1,
                 "user_field IN('alice', 'bob')",
                 [$this->release_tracker, $this->sprint_tracker],
-                false,
             ),
             $this->project_member
         );
@@ -404,7 +389,6 @@ final class UserListDuckTypedFieldTest extends CrossTrackerFieldTestCase
                 1,
                 "user_field IN('alice') OR user_field IN('bob')",
                 [$this->release_tracker, $this->sprint_tracker],
-                false,
             ),
             $this->project_member
         );
@@ -420,7 +404,6 @@ final class UserListDuckTypedFieldTest extends CrossTrackerFieldTestCase
                 1,
                 "user_field NOT IN('bob')",
                 [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
-                false,
             ),
             $this->project_member
         );
@@ -436,7 +419,6 @@ final class UserListDuckTypedFieldTest extends CrossTrackerFieldTestCase
                 1,
                 "user_field NOT IN('bob')",
                 [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
-                false,
             ),
             $this->project_admin
         );
@@ -456,7 +438,6 @@ final class UserListDuckTypedFieldTest extends CrossTrackerFieldTestCase
                 1,
                 'user_field NOT IN(MYSELF())',
                 [$this->release_tracker, $this->sprint_tracker],
-                false,
             ),
             $this->alice
         );
@@ -472,7 +453,6 @@ final class UserListDuckTypedFieldTest extends CrossTrackerFieldTestCase
                 1,
                 "user_field NOT IN(MYSELF(), 'bob')",
                 [$this->release_tracker, $this->sprint_tracker],
-                false,
             ),
             $this->alice
         );
@@ -488,7 +468,6 @@ final class UserListDuckTypedFieldTest extends CrossTrackerFieldTestCase
                 1,
                 "user_field NOT IN('bob', 'alice')",
                 [$this->release_tracker, $this->sprint_tracker],
-                false,
             ),
             $this->project_member
         );
@@ -504,7 +483,6 @@ final class UserListDuckTypedFieldTest extends CrossTrackerFieldTestCase
                 1,
                 "user_field NOT IN('bob') AND user_field NOT IN('alice')",
                 [$this->release_tracker, $this->sprint_tracker],
-                false,
             ),
             $this->project_member
         );

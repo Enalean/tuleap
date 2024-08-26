@@ -25,7 +25,7 @@ namespace Tuleap\CrossTracker\Report\Query\Advanced\Select;
 use PFUser;
 use ProjectUGroup;
 use Tracker;
-use Tuleap\CrossTracker\CrossTrackerDefaultReport;
+use Tuleap\CrossTracker\CrossTrackerExpertReport;
 use Tuleap\CrossTracker\Report\Query\Advanced\CrossTrackerFieldTestCase;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Representations\UserListRepresentation;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Representations\UserRepresentation;
@@ -110,7 +110,7 @@ final class AssignedToSelectBuilderTest extends CrossTrackerFieldTestCase
         );
     }
 
-    private function getQueryResults(CrossTrackerDefaultReport $report, PFUser $user): CrossTrackerReportContentRepresentation
+    private function getQueryResults(CrossTrackerExpertReport $report, PFUser $user): CrossTrackerReportContentRepresentation
     {
         $result = (new ArtifactReportFactoryInstantiator())
             ->getFactory()
@@ -122,11 +122,10 @@ final class AssignedToSelectBuilderTest extends CrossTrackerFieldTestCase
     public function testItReturnsColumns(): void
     {
         $result = $this->getQueryResults(
-            new CrossTrackerDefaultReport(
+            new CrossTrackerExpertReport(
                 1,
                 "SELECT @assigned_to FROM @project = 'self' WHERE field_assignee = '' OR field_assignee != ''",
                 $this->trackers,
-                true,
             ),
             $this->user,
         );

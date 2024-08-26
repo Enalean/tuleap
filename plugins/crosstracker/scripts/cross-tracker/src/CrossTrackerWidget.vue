@@ -141,7 +141,7 @@ function loadBackendReport(): void {
                     report.expert_mode,
                 );
                 initReports();
-                if (report.invalid_trackers.length > 0) {
+                if (!report.expert_mode && report.invalid_trackers.length > 0) {
                     invalid_trackers.value = report.invalid_trackers;
                 }
             },
