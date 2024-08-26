@@ -23,6 +23,8 @@ import { createPopover } from "@tuleap/tlp-popovers";
 import type { EditorView } from "prosemirror-view";
 import { createAndInsertField } from "./fields-adder";
 import type { GetText } from "@tuleap/gettext";
+import { TextSelection } from "prosemirror-state";
+import { getWrappingNodeInfo } from "../helper/node-info-retriever";
 
 export type TextField = {
     id: string;
@@ -165,6 +167,18 @@ export function addListeners(
         if (attrs) {
             popover.hide();
             const schema = view.state.schema;
+            const wrapping_node_info = getWrappingNodeInfo(
+                view.state.selection.$from,
+                schema.marks.link,
+                view.state,
+            );
+
+            if (!wrapping_node_info.is_creating_node) {
+                const from = view.state.doc.resolve(wrapping_node_info.from);
+                const to = view.state.doc.resolve(wrapping_node_info.to);
+                view.dispatch(view.state.tr.setSelection(new TextSelection(from, to)));
+            }
+
             const node = schema.text(attrs.title, [schema.marks.link.create(attrs)]);
             view.dispatch(view.state.tr.replaceSelectionWith(node, false));
             view.focus();
