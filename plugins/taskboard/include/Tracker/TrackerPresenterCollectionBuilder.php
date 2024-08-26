@@ -104,11 +104,9 @@ class TrackerPresenterCollectionBuilder
     {
         return $tracker_collection->reduce(
             function (MappedFieldsCollection $collection, TaskboardTracker $taskboard_tracker) {
-                $mapped_field = $this->mapped_field_retriever->getField($taskboard_tracker);
-                if ($mapped_field) {
-                    $collection->put($taskboard_tracker->getTracker(), $mapped_field);
-                }
-
+                $this->mapped_field_retriever->getField($taskboard_tracker)->apply(
+                    static fn($mapped_field) => $collection->put($taskboard_tracker->getTracker(), $mapped_field)
+                );
                 return $collection;
             },
             new MappedFieldsCollection()

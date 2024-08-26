@@ -24,51 +24,44 @@ namespace Tuleap\Taskboard\Column\FieldValuesToColumnMapping;
 
 use Tracker_FormElement_Field_List_BindValue;
 use Tuleap\Taskboard\Tracker\TaskboardTracker;
+use Tuleap\Tracker\Artifact\Artifact;
 
 class ArtifactMappedFieldValueRetriever
 {
-    /**
-     * @var MappedFieldRetriever
-     */
-    private $mapped_field_retriever;
-
-    public function __construct(MappedFieldRetriever $mapped_field_retriever)
+    public function __construct(private MappedFieldRetriever $mapped_field_retriever)
     {
-        $this->mapped_field_retriever = $mapped_field_retriever;
     }
 
     public function getValueAtLastChangeset(
         \Planning_Milestone $milestone,
-        \Tuleap\Tracker\Artifact\Artifact $artifact,
+        Artifact $artifact,
         \PFUser $user,
     ): ?Tracker_FormElement_Field_List_BindValue {
         $taskboard_tracker = new TaskboardTracker($milestone->getArtifact()->getTracker(), $artifact->getTracker());
-        $mapped_field      = $this->mapped_field_retriever->getField($taskboard_tracker);
-        if (! $mapped_field) {
-            return null;
-        }
+        return $this->mapped_field_retriever->getField($taskboard_tracker)
+            ->mapOr(function (\Tracker_FormElement_Field_Selectbox $mapped_field) use ($artifact, $user) {
+                if (! $mapped_field->userCanRead($user)) {
+                    return null;
+                }
 
-        if (! $mapped_field->userCanRead($user)) {
-            return null;
-        }
+                $last_changeset = $artifact->getLastChangeset();
+                if (! $last_changeset) {
+                    return null;
+                }
 
-        $last_changeset = $artifact->getLastChangeset();
-        if (! $last_changeset) {
-            return null;
-        }
+                $value = $last_changeset->getValue($mapped_field);
+                if (! $value instanceof \Tracker_Artifact_ChangesetValue_List) {
+                    return null;
+                }
 
-        $value = $last_changeset->getValue($mapped_field);
-        if (! $value instanceof \Tracker_Artifact_ChangesetValue_List) {
-            return null;
-        }
+                $values = $value->getListValues();
+                if (count($values) === 0) {
+                    return null;
+                }
 
-        $values = $value->getListValues();
-        if (count($values) === 0) {
-            return null;
-        }
+                reset($values);
 
-        reset($values);
-
-        return current($values);
+                return current($values);
+            }, null);
     }
 }

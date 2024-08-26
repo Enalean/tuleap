@@ -22,15 +22,15 @@ declare(strict_types=1);
 
 namespace Tuleap\Taskboard\Column\FieldValuesToColumnMapping;
 
-use Tracker_FormElement_Field_Selectbox;
+use Tuleap\Option\Option;
 use Tuleap\Taskboard\Column\FieldValuesToColumnMapping\Freestyle\FreestyleMappedFieldRetriever;
 use Tuleap\Taskboard\Tracker\TaskboardTracker;
 
-class MappedFieldRetriever
+final readonly class MappedFieldRetriever
 {
     public function __construct(
         private \Cardwall_FieldProviders_SemanticStatusFieldRetriever $semantic_status_provider,
-        private FreestyleMappedFieldRetriever $freestyle_mapping_factory,
+        private FreestyleMappedFieldRetriever $freestyle_mapped_field_retriever,
     ) {
     }
 
@@ -40,13 +40,13 @@ class MappedFieldRetriever
      * - The field chosen by the user to represent columns in the TaskBoard
      *
      * Since this field can be a list field of any type, we cannot name it precisely.
+     * @return Option<\Tracker_FormElement_Field_Selectbox>
      */
-    public function getField(TaskboardTracker $taskboard_tracker): ?Tracker_FormElement_Field_Selectbox
+    public function getField(TaskboardTracker $taskboard_tracker): Option
     {
-        $mapped_field = $this->freestyle_mapping_factory->getMappedField($taskboard_tracker);
-        if ($mapped_field) {
-            return $mapped_field;
-        }
-        return $this->semantic_status_provider->getField($taskboard_tracker->getTracker());
+        return $this->freestyle_mapped_field_retriever->getMappedField($taskboard_tracker)
+            ->orElse(fn() => Option::fromNullable(
+                $this->semantic_status_provider->getField($taskboard_tracker->getTracker())
+            ));
     }
 }

@@ -279,9 +279,19 @@ class CardMappedFieldUpdater
         Cardwall_Column $column,
         PFUser $current_user,
     ): Tracker_FormElement_Field_Selectbox {
-        $mapped_field = $this->mapped_field_retriever->getField($taskboard_tracker);
-        if ($mapped_field === null) {
-            throw new I18NRestException(
+        return $this->mapped_field_retriever->getField($taskboard_tracker)
+            ->match(function ($mapped_field) use ($current_user): \Tracker_FormElement_Field_Selectbox {
+                if (! $mapped_field->userCanUpdate($current_user)) {
+                    throw new I18NRestException(
+                        403,
+                        sprintf(
+                            dgettext('tuleap-taskboard', "You don't have permission to update the %s field."),
+                            $mapped_field->getLabel()
+                        )
+                    );
+                }
+                return $mapped_field;
+            }, fn() => throw new I18NRestException(
                 400,
                 sprintf(
                     dgettext(
@@ -291,19 +301,7 @@ class CardMappedFieldUpdater
                     $taskboard_tracker->getTracker()->getName(),
                     $column->getLabel()
                 )
-            );
-        }
-        if (! $mapped_field->userCanUpdate($current_user)) {
-            throw new I18NRestException(
-                403,
-                sprintf(
-                    dgettext('tuleap-taskboard', "You don't have permission to update the %s field."),
-                    $mapped_field->getLabel()
-                )
-            );
-        }
-
-        return $mapped_field;
+            ));
     }
 
     /**
