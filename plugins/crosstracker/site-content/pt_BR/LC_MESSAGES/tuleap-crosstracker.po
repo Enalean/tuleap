@@ -64,6 +64,9 @@ msgid ""
 "'limit' and 'offset' are required parameters. Please add them in the query."
 msgstr ""
 
+msgid "@project.category cannot be empty"
+msgstr ""
+
 msgid "@tracker.name cannot be empty"
 msgstr ""
 

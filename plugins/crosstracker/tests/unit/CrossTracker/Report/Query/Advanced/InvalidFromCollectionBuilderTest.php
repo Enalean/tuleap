@@ -130,6 +130,40 @@ final class InvalidFromCollectionBuilderTest extends TestCase
         self::assertEquals("Only @project = 'self' is supported", $result[0]);
     }
 
+    public function testItReturnsErrorForProjectNameAsNothingHasBeenImplemented(): void
+    {
+        $result = $this->getInvalidFrom(new From(new FromProject('@project.name', new FromProjectEqual('')), null));
+        self::assertCount(1, $result);
+        self::assertEquals('@project.name is not supported yet', $result[0]);
+
+        $result = $this->getInvalidFrom(new From(new FromProject('@project.name', new FromProjectIn([])), null));
+        self::assertCount(1, $result);
+        self::assertEquals('@project.name is not supported yet', $result[0]);
+    }
+
+    public function testItReturnsErrorWhenProjectCategoryEqualEmpty(): void
+    {
+        $result = $this->getInvalidFrom(new From(new FromProject('@project.category', new FromProjectEqual('')), null));
+        self::assertCount(1, $result);
+        self::assertEquals('@project.category cannot be empty', $result[0]);
+    }
+
+    public function testItReturnsErrorWhenProjectCategoryInEmpty(): void
+    {
+        $result = $this->getInvalidFrom(new From(new FromProject('@project.category', new FromProjectIn(['some', '', 'empty'])), null));
+        self::assertCount(1, $result);
+        self::assertEquals('@project.category cannot be empty', $result[0]);
+    }
+
+    public function testItReturnsEmptyWhenProjectCategoryIsValid(): void
+    {
+        $result = $this->getInvalidFrom(new From(new FromProject('@project.category', new FromProjectEqual('some')), null));
+        self::assertEmpty($result);
+
+        $result = $this->getInvalidFrom(new From(new FromProject('@project.category', new FromProjectIn(['some', 'value'])), null));
+        self::assertEmpty($result);
+    }
+
     public function testItReturnsErrorWhenTrackerNameOutsideProjectWithoutProjectCondition(): void
     {
         $result = $this->getInvalidFrom(new From(new FromTracker('@tracker.name', new FromTrackerEqual('release')), null));

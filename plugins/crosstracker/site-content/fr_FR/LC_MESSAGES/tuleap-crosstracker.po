@@ -74,6 +74,9 @@ msgstr ""
 "'limit' et 'offset' sont des paramètres requis. Merci de les ajouter à la "
 "requête."
 
+msgid "@project.category cannot be empty"
+msgstr "@project.category ne peut pas être vide"
+
 msgid "@tracker.name cannot be empty"
 msgstr "@tracker.name ne peut pas être vide"
 

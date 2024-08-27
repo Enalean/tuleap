@@ -43,8 +43,8 @@ final readonly class InvalidFromProjectCollectorVisitor implements FromProjectCo
 
         match ($from_project->getTarget()) {
             AllowedFrom::PROJECT          => $this->checkProjectEqual($project_equal, $parameters),
-            AllowedFrom::PROJECT_NAME,
-            AllowedFrom::PROJECT_CATEGORY => null,
+            AllowedFrom::PROJECT_NAME     => $parameters->collection->addInvalidFrom('@project.name is not supported yet'),
+            AllowedFrom::PROJECT_CATEGORY => $this->checkProjectCategories([$project_equal->getValue()], $parameters),
             default                       => throw new LogicException("Unknown FROM project: {$from_project->getTarget()}"),
         };
     }
@@ -67,14 +67,27 @@ final readonly class InvalidFromProjectCollectorVisitor implements FromProjectCo
         }
     }
 
+    /**
+     * @param list<string> $categories
+     */
+    private function checkProjectCategories(array $categories, InvalidFromProjectCollectorParameters $parameters): void
+    {
+        foreach ($categories as $category) {
+            if ($category === '') {
+                $parameters->collection->addInvalidFrom(dgettext('tuleap-crosstracker', '@project.category cannot be empty'));
+                return;
+            }
+        }
+    }
+
     public function visitIn(FromProjectIn $project_in, $parameters): void
     {
         $from_project = $parameters->from_project;
 
         match ($from_project->getTarget()) {
             AllowedFrom::PROJECT          => $parameters->collection->addInvalidFrom(dgettext('tuleap-crosstracker', "You cannot use '@project IN(...)'")),
-            AllowedFrom::PROJECT_NAME,
-            AllowedFrom::PROJECT_CATEGORY => null,
+            AllowedFrom::PROJECT_NAME     => $parameters->collection->addInvalidFrom('@project.name is not supported yet'),
+            AllowedFrom::PROJECT_CATEGORY => $this->checkProjectCategories($project_in->getValues(), $parameters),
             default                       => throw new LogicException("Unknown FROM project: {$from_project->getTarget()}"),
         };
     }
