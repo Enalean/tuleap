@@ -23,8 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\CrossTracker\Report\Query\Advanced;
 
 use LogicException;
-use Tuleap\CrossTracker\Widget\ProjectCrossTrackerSearch;
-use Tuleap\Dashboard\Project\IRetrieveProjectFromWidget;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\FromProjectConditionVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\FromProjectEqual;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\FromProjectIn;
@@ -35,7 +33,7 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\FromProjectIn;
 final readonly class InvalidFromProjectCollectorVisitor implements FromProjectConditionVisitor
 {
     public function __construct(
-        private IRetrieveProjectFromWidget $project_id_retriever,
+        private WidgetInProjectChecker $in_project_checker,
     ) {
     }
 
@@ -61,8 +59,7 @@ final readonly class InvalidFromProjectCollectorVisitor implements FromProjectCo
             return;
         }
 
-        $project_id = $this->project_id_retriever->searchProjectIdFromWidgetIdAndType($parameters->report_id, ProjectCrossTrackerSearch::NAME);
-        if ($project_id === null) {
+        if (! $this->in_project_checker->isWidgetInProjectDashboard($parameters->report_id)) {
             $parameters->collection->addInvalidFrom(dgettext(
                 'tuleap-crosstracker',
                 "You cannot use @project = 'self' in the context of a personal dashboard",

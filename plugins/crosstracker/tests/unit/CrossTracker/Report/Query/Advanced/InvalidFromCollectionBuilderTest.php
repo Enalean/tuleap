@@ -31,6 +31,7 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\FromProjectEqual;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\FromProjectIn;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\FromTracker;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\FromTrackerEqual;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\FromTrackerIn;
 
 final class InvalidFromCollectionBuilderTest extends TestCase
 {
@@ -47,9 +48,10 @@ final class InvalidFromCollectionBuilderTest extends TestCase
     private function getInvalidFrom(
         From $from,
     ): array {
-        $builder = new InvalidFromCollectionBuilder(
-            new InvalidFromTrackerCollectorVisitor(),
-            new InvalidFromProjectCollectorVisitor($this->project_from_widget),
+        $in_project_checker = new WidgetInProjectChecker($this->project_from_widget);
+        $builder            = new InvalidFromCollectionBuilder(
+            new InvalidFromTrackerCollectorVisitor($in_project_checker),
+            new InvalidFromProjectCollectorVisitor($in_project_checker),
             2,
         );
 
@@ -95,7 +97,7 @@ final class InvalidFromCollectionBuilderTest extends TestCase
         $this->project_from_widget = IRetrieveProjectFromWidgetStub::buildWithProjectId(1);
         $result                    = $this->getInvalidFrom(new From(
             new FromProject('@project', new FromProjectEqual('self')),
-            new FromTracker('@tracker.name', new FromTrackerEqual('')),
+            new FromTracker('@tracker.name', new FromTrackerEqual('release')),
         ));
         self::assertEmpty($result);
     }
@@ -128,9 +130,38 @@ final class InvalidFromCollectionBuilderTest extends TestCase
         self::assertEquals("Only @project = 'self' is supported", $result[0]);
     }
 
-    public function testItReturnsEmptyForTrackerAsNothingHasBeenImplemented(): void
+    public function testItReturnsErrorWhenTrackerNameOutsideProjectWithoutProjectCondition(): void
     {
-        $result = $this->getInvalidFrom(new From(new FromTracker('@tracker.name', new FromTrackerEqual('')), null));
-        self::assertEmpty($result);
+        $result = $this->getInvalidFrom(new From(new FromTracker('@tracker.name', new FromTrackerEqual('release')), null));
+        self::assertCount(1, $result);
+        self::assertEquals('In the context of a personal dashboard, you must provide a @project condition in the FROM part of your query', $result[0]);
+
+        $result = $this->getInvalidFrom(new From(new FromTracker('@tracker.name', new FromTrackerIn(['release'])), null));
+        self::assertCount(1, $result);
+        self::assertEquals('In the context of a personal dashboard, you must provide a @project condition in the FROM part of your query', $result[0]);
+    }
+
+    public function testItReturnsEmptyWhenTrackerNameWithProjectCondition(): void
+    {
+        self::assertEmpty($this->getInvalidFrom(new From(
+            new FromTracker('@tracker.name', new FromTrackerEqual('release')),
+            new FromProject('@project.category', new FromProjectEqual('some')),
+        )));
+        self::assertEmpty($this->getInvalidFrom(new From(
+            new FromTracker('@tracker.name', new FromTrackerIn(['release'])),
+            new FromProject('@project.category', new FromProjectEqual('some')),
+        )));
+    }
+
+    public function testItReturnsErrorWhenTrackerNameIsEmpty(): void
+    {
+        $this->project_from_widget = IRetrieveProjectFromWidgetStub::buildWithProjectId(1);
+        $result                    = $this->getInvalidFrom(new From(new FromTracker('@tracker.name', new FromTrackerEqual('')), null));
+        self::assertCount(1, $result);
+        self::assertEquals('@tracker.name cannot be empty', $result[0]);
+
+        $result = $this->getInvalidFrom(new From(new FromTracker('@tracker.name', new FromTrackerIn(['release', '', 'sprint'])), null));
+        self::assertCount(1, $result);
+        self::assertEquals('@tracker.name cannot be empty', $result[0]);
     }
 }
