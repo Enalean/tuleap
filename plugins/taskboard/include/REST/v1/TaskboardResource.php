@@ -23,15 +23,23 @@ declare(strict_types=1);
 namespace Tuleap\Taskboard\REST\v1;
 
 use AgileDashboard_BacklogItemDao;
+use Cardwall_FieldProviders_SemanticStatusFieldRetriever;
 use Luracast\Restler\RestException;
 use PFUser;
 use Planning_ArtifactMilestone;
 use Tracker_ArtifactFactory;
+use Tuleap\AgileDashboard\RemainingEffortValueRetriever;
+use Tuleap\Cardwall\BackgroundColor\BackgroundColorBuilder;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\Taskboard\AgileDashboard\MilestoneIsAllowedChecker;
 use Tuleap\Taskboard\AgileDashboard\MilestoneIsNotAllowedException;
+use Tuleap\Taskboard\Column\FieldValuesToColumnMapping\ArtifactMappedFieldValueRetriever;
+use Tuleap\Taskboard\Column\FieldValuesToColumnMapping\Freestyle\FreestyleMappedFieldRetriever;
+use Tuleap\Taskboard\Column\FieldValuesToColumnMapping\Freestyle\FreestyleMappingDao;
+use Tuleap\Taskboard\Column\FieldValuesToColumnMapping\MappedFieldRetriever;
 use Tuleap\Taskboard\REST\v1\Columns\ColumnsGetter;
+use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDecoratorRetriever;
 use UserManager;
 
 class TaskboardResource extends AuthenticatedResource
@@ -88,7 +96,24 @@ class TaskboardResource extends AuthenticatedResource
         $this->sendCardsAllowHeaders();
         $this->checkAccess();
 
-        $card_representation_builder = CardRepresentationBuilder::buildSelf();
+        $form_element_factory        = \Tracker_FormElementFactory::instance();
+        $freestyle_mapping_dao       = new FreestyleMappingDao();
+        $card_representation_builder = new CardRepresentationBuilder(
+            new BackgroundColorBuilder(new BindDecoratorRetriever()),
+            new ArtifactMappedFieldValueRetriever(
+                new MappedFieldRetriever(
+                    new Cardwall_FieldProviders_SemanticStatusFieldRetriever(),
+                    new FreestyleMappedFieldRetriever(
+                        $freestyle_mapping_dao,
+                        $form_element_factory
+                    )
+                )
+            ),
+            new RemainingEffortRepresentationBuilder(
+                new RemainingEffortValueRetriever($form_element_factory),
+                $form_element_factory
+            )
+        );
 
         $user        = $this->user_manager->getCurrentUser();
         $collection  = [];

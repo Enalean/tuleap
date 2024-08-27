@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Taskboard\REST\v1;
 
 use AgileDashboardPlugin;
+use Cardwall_FieldProviders_SemanticStatusFieldRetriever;
 use Cardwall_OnTop_Dao;
 use Luracast\Restler\RestException;
 use PFUser;
@@ -32,15 +33,22 @@ use RuntimeException;
 use Tracker_Artifact_PriorityManager;
 use Tracker_ArtifactDao;
 use Tracker_ArtifactFactory;
+use Tuleap\AgileDashboard\RemainingEffortValueRetriever;
+use Tuleap\Cardwall\BackgroundColor\BackgroundColorBuilder;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\Taskboard\AgileDashboard\MilestoneIsAllowedChecker;
 use Tuleap\Taskboard\AgileDashboard\MilestoneIsNotAllowedException;
 use Tuleap\Taskboard\AgileDashboard\TaskboardUsage;
 use Tuleap\Taskboard\AgileDashboard\TaskboardUsageDao;
+use Tuleap\Taskboard\Column\FieldValuesToColumnMapping\ArtifactMappedFieldValueRetriever;
+use Tuleap\Taskboard\Column\FieldValuesToColumnMapping\Freestyle\FreestyleMappedFieldRetriever;
+use Tuleap\Taskboard\Column\FieldValuesToColumnMapping\Freestyle\FreestyleMappingDao;
+use Tuleap\Taskboard\Column\FieldValuesToColumnMapping\MappedFieldRetriever;
 use Tuleap\Taskboard\REST\v1\Card\CardPatcher;
 use Tuleap\Taskboard\REST\v1\Card\CardPatchRepresentation;
 use Tuleap\Tracker\Artifact\SlicedArtifactsBuilder;
+use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDecoratorRetriever;
 use UserManager;
 
 class TaskboardCardResource extends AuthenticatedResource
@@ -132,7 +140,24 @@ class TaskboardCardResource extends AuthenticatedResource
         $milestone = $this->getMilestone($user, $milestone_id);
         $artifact  = $this->getArtifact($user, $id);
 
-        $card_representation_builder = CardRepresentationBuilder::buildSelf();
+        $form_element_factory        = \Tracker_FormElementFactory::instance();
+        $freestyle_mapping_dao       = new FreestyleMappingDao();
+        $card_representation_builder = new CardRepresentationBuilder(
+            new BackgroundColorBuilder(new BindDecoratorRetriever()),
+            new ArtifactMappedFieldValueRetriever(
+                new MappedFieldRetriever(
+                    new Cardwall_FieldProviders_SemanticStatusFieldRetriever(),
+                    new FreestyleMappedFieldRetriever(
+                        $freestyle_mapping_dao,
+                        $form_element_factory
+                    )
+                )
+            ),
+            new RemainingEffortRepresentationBuilder(
+                new RemainingEffortValueRetriever($form_element_factory),
+                $form_element_factory
+            )
+        );
 
         $collection      = [];
         $sliced_children = $this->sliced_artifacts_builder->getSlicedChildrenArtifactsForUser(
@@ -187,7 +212,24 @@ class TaskboardCardResource extends AuthenticatedResource
         $milestone = $this->getMilestone($user, $milestone_id);
         $artifact  = $this->getArtifact($user, $id);
 
-        $card_representation_builder = CardRepresentationBuilder::buildSelf();
+        $form_element_factory        = \Tracker_FormElementFactory::instance();
+        $freestyle_mapping_dao       = new FreestyleMappingDao();
+        $card_representation_builder = new CardRepresentationBuilder(
+            new BackgroundColorBuilder(new BindDecoratorRetriever()),
+            new ArtifactMappedFieldValueRetriever(
+                new MappedFieldRetriever(
+                    new Cardwall_FieldProviders_SemanticStatusFieldRetriever(),
+                    new FreestyleMappedFieldRetriever(
+                        $freestyle_mapping_dao,
+                        $form_element_factory
+                    )
+                )
+            ),
+            new RemainingEffortRepresentationBuilder(
+                new RemainingEffortValueRetriever($form_element_factory),
+                $form_element_factory
+            )
+        );
         $priority_manager            = Tracker_Artifact_PriorityManager::build();
 
         $rank = (int) $priority_manager->getGlobalRank($id);
