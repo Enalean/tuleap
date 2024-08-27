@@ -19,6 +19,7 @@
  */
 
 use Tuleap\Cardwall\BackgroundColor\BackgroundColorBuilder;
+use Tuleap\Cardwall\OnTop\Config\ColumnCollection;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDecoratorRetriever;
 
 /**
@@ -38,7 +39,7 @@ class Cardwall_RawBoardBuilder
         Tracker_ArtifactFactory $artifact_factory,
         Planning_Milestone $milestone,
         Cardwall_OnTop_Config $config,
-        Cardwall_OnTop_Config_ColumnCollection $columns,
+        ColumnCollection $columns,
     ) {
         $planning       = $milestone->getPlanning();
         $field_provider = new Cardwall_OnTop_Config_MappedFieldProvider(
@@ -92,7 +93,7 @@ class Cardwall_RawBoardBuilder
         return new Cardwall_UserPreferences_UserPreferencesDisplayUser($display_avatars);
     }
 
-    private function getMappingCollection(Planning $planning, Cardwall_OnTop_Config_ColumnCollection $columns, Cardwall_FieldProviders_IProvideFieldGivenAnArtifact $field_provider, Cardwall_OnTop_Config $config)
+    private function getMappingCollection(Planning $planning, ColumnCollection $columns, Cardwall_FieldProviders_IProvideFieldGivenAnArtifact $field_provider, Cardwall_OnTop_Config $config)
     {
         $trackers_used_on_cardwall = [];
 

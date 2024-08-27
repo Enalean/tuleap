@@ -18,6 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Cardwall\OnTop\Config\ColumnCollection;
 use Tuleap\Tracker\Artifact\Artifact;
 
 /**
@@ -51,10 +52,10 @@ interface Cardwall_OnTop_IConfig
         Cardwall_Column $column,
     );
 
-    public function getCardwallMappings(array $fields, Cardwall_OnTop_Config_ColumnCollection $cardwall_columns);
+    public function getCardwallMappings(array $fields, ColumnCollection $cardwall_columns);
 
     public function fillMappingsWithOnTopMappings(
         Cardwall_MappingCollection $mappings,
-        Cardwall_OnTop_Config_ColumnCollection $columns,
+        ColumnCollection $columns,
     );
 }

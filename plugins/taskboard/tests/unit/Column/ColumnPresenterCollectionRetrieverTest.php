@@ -23,63 +23,70 @@ declare(strict_types=1);
 namespace Tuleap\Taskboard\Column;
 
 use Cardwall_Column;
-use Cardwall_OnTop_Config_ColumnFactory;
-use PFUser;
 use PHPUnit\Framework\MockObject\MockObject;
-use Planning;
-use Planning_Milestone;
-use Tracker;
+use Tuleap\AgileDashboard\Test\Builders\PlanningBuilder;
+use Tuleap\Cardwall\OnTop\Config\ColumnCollection;
+use Tuleap\Cardwall\OnTop\Config\ColumnFactory;
 use Tuleap\Taskboard\Column\FieldValuesToColumnMapping\TrackerMappingPresenterBuilder;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
-class ColumnPresenterCollectionRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
+final class ColumnPresenterCollectionRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private ColumnPresenterCollectionRetriever $collection_retriever;
-    private Cardwall_OnTop_Config_ColumnFactory&MockObject $column_factory;
+    private ColumnFactory&MockObject $column_factory;
     private TrackerMappingPresenterBuilder&MockObject $mappings_builder;
+    private \Tracker $release_tracker;
+    private \Planning_ArtifactMilestone $milestone;
 
     protected function setUp(): void
     {
-        $this->column_factory       = $this->createMock(Cardwall_OnTop_Config_ColumnFactory::class);
-        $this->mappings_builder     = $this->createMock(TrackerMappingPresenterBuilder::class);
-        $this->collection_retriever = new ColumnPresenterCollectionRetriever(
+        $this->column_factory   = $this->createMock(ColumnFactory::class);
+        $this->mappings_builder = $this->createMock(TrackerMappingPresenterBuilder::class);
+
+        $this->release_tracker = TrackerTestBuilder::aTracker()->withId(290)->build();
+
+        $project_id      = 110;
+        $this->milestone = new \Planning_ArtifactMilestone(
+            ProjectTestBuilder::aProject()->withId($project_id)->build(),
+            PlanningBuilder::aPlanning($project_id)->withMilestoneTracker($this->release_tracker)->build(),
+            ArtifactTestBuilder::anArtifact(42)->build(),
+        );
+    }
+
+    private function getPresenters(\PFUser $user): array
+    {
+        $retriever = new ColumnPresenterCollectionRetriever(
             $this->column_factory,
             $this->mappings_builder
         );
+        return $retriever->getColumns($user, $this->milestone);
     }
 
     public function testEmptyCollection(): void
     {
-        $milestone_tracker = $this->createMock(Tracker::class);
-        $milestone         = $this->mockMilestone($milestone_tracker);
         $this->column_factory->expects(self::once())
             ->method('getDashboardColumns')
-            ->with($milestone_tracker)
-            ->willReturn([]);
+            ->with($this->release_tracker)
+            ->willReturn(new ColumnCollection());
 
         $user = UserTestBuilder::aUser()->build();
 
-        $collection = $this->collection_retriever->getColumns($user, $milestone);
-
-        self::assertEmpty($collection);
+        self::assertEmpty($this->getPresenters($user));
     }
 
     public function testCollection(): void
     {
-        $milestone_tracker = $this->createMock(Tracker::class);
-        $milestone         = $this->mockMilestone($milestone_tracker);
-        $milestone->expects(self::atLeast(1))
-            ->method('getArtifactId')
-            ->willReturn(42);
         $todo_column    = new Cardwall_Column(2, 'To do', 'fiesta-red');
         $ongoing_column = new Cardwall_Column(4, 'On going', '');
         $done_column    = new Cardwall_Column(6, 'Done', 'rgb(135,219,239)');
         $this->column_factory->expects(self::once())
             ->method('getDashboardColumns')
-            ->with($milestone_tracker)
-            ->willReturn([$todo_column, $ongoing_column, $done_column]);
+            ->with($this->release_tracker)
+            ->willReturn(new ColumnCollection([$todo_column, $ongoing_column, $done_column]));
 
-        $user = $this->createMock(PFUser::class);
+        $user = $this->createMock(\PFUser::class);
         $user->method('getPreference')
             ->willReturnMap([
                 ['plugin_taskboard_collapse_column_42_2', false],
@@ -87,27 +94,18 @@ class ColumnPresenterCollectionRetrieverTest extends \Tuleap\Test\PHPUnit\TestCa
                 ['plugin_taskboard_collapse_column_42_6', '1'],
             ]);
 
-        $this->mappings_builder->method('buildMappings')->with($milestone, self::callback(
-            function (Cardwall_Column $column): bool {
+        $this->mappings_builder->method('buildMappings')->with($this->milestone, self::callback(
+            static function (Cardwall_Column $column): bool {
                 $column_id = $column->getId();
                 return $column_id === 2 || $column_id === 4 || $column_id === 6;
             }
         ))->willReturn([]);
 
-        $collection = $this->collection_retriever->getColumns($user, $milestone);
+        $collection = $this->getPresenters($user);
 
         self::assertCount(3, $collection);
         self::assertFalse($collection[0]->is_collapsed);
         self::assertFalse($collection[1]->is_collapsed);
         self::assertTrue($collection[2]->is_collapsed);
-    }
-
-    private function mockMilestone(Tracker $milestone_tracker): Planning_Milestone&MockObject
-    {
-        $planning = $this->createMock(Planning::class);
-        $planning->expects(self::once())->method('getPlanningTracker')->willReturn($milestone_tracker);
-        $milestone = $this->createMock(Planning_Milestone::class);
-        $milestone->expects(self::once())->method('getPlanning')->willReturn($planning);
-        return $milestone;
     }
 }

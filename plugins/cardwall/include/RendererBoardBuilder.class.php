@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Cardwall\OnTop\Config\ColumnCollection;
+
 class Cardwall_RendererBoardBuilder
 {
     /** @var Cardwall_CardInCellPresenterBuilder */
@@ -38,12 +40,12 @@ class Cardwall_RendererBoardBuilder
     /**
      * Get the board
      */
-    public function getBoard(array $artifact_ids, Cardwall_OnTop_Config_ColumnCollection $columns, Cardwall_MappingCollection $mapping_collection): Cardwall_Board
+    public function getBoard(array $artifact_ids, ColumnCollection $columns, Cardwall_MappingCollection $mapping_collection): Cardwall_Board
     {
         return new Cardwall_Board($this->getSwimlines($artifact_ids, $columns), $columns, $mapping_collection);
     }
 
-    private function getSwimlines(array $artifact_ids, Cardwall_OnTop_Config_ColumnCollection $columns)
+    private function getSwimlines(array $artifact_ids, ColumnCollection $columns)
     {
         return [new Cardwall_SwimlineTrackerRenderer($this->swimline_factory->getCells(
             $columns,

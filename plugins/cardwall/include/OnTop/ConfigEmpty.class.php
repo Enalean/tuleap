@@ -18,6 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Cardwall\OnTop\Config\ColumnCollection;
 use Tuleap\Tracker\Artifact\Artifact;
 
 /**
@@ -48,25 +49,25 @@ class Cardwall_OnTop_ConfigEmpty implements Cardwall_OnTop_IConfig
     /**
      * Get Frestyle columns for Cardwall_OnTop, or status columns if none
      *
-     * @return Cardwall_OnTop_Config_ColumnCollection
+     * @return ColumnCollection
      */
     public function getDashboardColumns()
     {
-        return false;
+        return new ColumnCollection();
     }
 
     /**
      * Get Columns from the values of a $field
-     * @return Cardwall_OnTop_Config_ColumnCollection
+     * @return ColumnCollection
      */
     public function getRendererColumns(Tracker_FormElement_Field_List $cardwall_field)
     {
-        return false;
+        return new ColumnCollection();
     }
 
     public function getFilteredRendererColumns(Tracker_FormElement_Field_List $cardwall_field, array $filter)
     {
-        return;
+        return new ColumnCollection();
     }
 
     public function getMappings()
@@ -104,14 +105,14 @@ class Cardwall_OnTop_ConfigEmpty implements Cardwall_OnTop_IConfig
      *
      * @return Cardwall_MappingCollection
      */
-    public function getCardwallMappings(array $fields, Cardwall_OnTop_Config_ColumnCollection $cardwall_columns)
+    public function getCardwallMappings(array $fields, ColumnCollection $cardwall_columns)
     {
         return false;
     }
 
     public function fillMappingsWithOnTopMappings(
         Cardwall_MappingCollection $mappings,
-        Cardwall_OnTop_Config_ColumnCollection $columns,
+        ColumnCollection $columns,
     ) {
     }
 }

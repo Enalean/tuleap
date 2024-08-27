@@ -18,6 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Cardwall\OnTop\Config\ColumnCollection;
 
 class Cardwall_OnTop_Config_TrackerMappingFactory
 {
@@ -67,7 +68,7 @@ class Cardwall_OnTop_Config_TrackerMappingFactory
      *
      * @return Cardwall_OnTop_Config_TrackerMapping[]
      */
-    public function getMappings(Tracker $tracker, Cardwall_OnTop_Config_ColumnCollection $columns)
+    public function getMappings(Tracker $tracker, ColumnCollection $columns)
     {
         $mappings = [];
         foreach ($this->dao->searchMappingFields($tracker->getId()) as $row) {
@@ -76,7 +77,7 @@ class Cardwall_OnTop_Config_TrackerMappingFactory
         return $mappings;
     }
 
-    private function instantiateMappingFromRow(Tracker $tracker, array &$mappings, array $row, Cardwall_OnTop_Config_ColumnCollection $columns)
+    private function instantiateMappingFromRow(Tracker $tracker, array &$mappings, array $row, ColumnCollection $columns)
     {
         $mapping_tracker = $this->tracker_factory->getTrackerById($row['tracker_id']);
         if ($mapping_tracker && $mapping_tracker->getId() != $tracker->getId()) {
@@ -100,7 +101,7 @@ class Cardwall_OnTop_Config_TrackerMappingFactory
     /**
      * @return Cardwall_OnTop_Config_TrackerMapping
      */
-    private function instantiateMappingStatus(Tracker_FormElement_Field_List $status_field, Tracker $mapping_tracker, array $available_fields, Cardwall_OnTop_Config_ColumnCollection $columns)
+    private function instantiateMappingStatus(Tracker_FormElement_Field_List $status_field, Tracker $mapping_tracker, array $available_fields, ColumnCollection $columns)
     {
         $mapping_values = $this->value_mapping_factory->getStatusMappings($mapping_tracker, $columns);
         return new Cardwall_OnTop_Config_TrackerMappingStatus(

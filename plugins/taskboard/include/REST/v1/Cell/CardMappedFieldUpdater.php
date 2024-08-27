@@ -24,7 +24,6 @@ namespace Tuleap\Taskboard\REST\v1\Cell;
 
 use Cardwall_Column;
 use Cardwall_OnTop_ColumnDao;
-use Cardwall_OnTop_Config_ColumnFactory;
 use Luracast\Restler\RestException;
 use PFUser;
 use Tracker;
@@ -34,13 +33,14 @@ use Tracker_FormElement_InvalidFieldException;
 use Tracker_FormElement_InvalidFieldValueException;
 use Tracker_NoChangeException;
 use TrackerFactory;
+use Tuleap\Cardwall\OnTop\Config\ColumnFactory;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\REST\I18NRestException;
 use Tuleap\Search\ItemToIndexQueueEventBased;
+use Tuleap\Taskboard\Column\FieldValuesToColumnMapping\Freestyle\FreestyleMappedFieldRetriever;
 use Tuleap\Taskboard\Column\FieldValuesToColumnMapping\Freestyle\FreestyleMappedFieldValuesRetriever;
 use Tuleap\Taskboard\Column\FieldValuesToColumnMapping\Freestyle\FreestyleMappingDao;
-use Tuleap\Taskboard\Column\FieldValuesToColumnMapping\Freestyle\FreestyleMappedFieldRetriever;
 use Tuleap\Taskboard\Column\FieldValuesToColumnMapping\MappedFieldRetriever;
 use Tuleap\Taskboard\Column\FieldValuesToColumnMapping\MappedValuesRetriever;
 use Tuleap\Taskboard\Column\InvalidColumnException;
@@ -91,7 +91,7 @@ use Workflow_Transition_ConditionFactory;
 class CardMappedFieldUpdater
 {
     public function __construct(
-        private Cardwall_OnTop_Config_ColumnFactory $column_factory,
+        private ColumnFactory $column_factory,
         private MilestoneTrackerRetriever $milestone_tracker_retriever,
         private AddValidator $add_validator,
         private ArtifactUpdater $artifact_updater,
@@ -161,7 +161,7 @@ class CardMappedFieldUpdater
         $freestyle_mapping_dao    = new FreestyleMappingDao();
         $semantic_status_provider = new \Cardwall_FieldProviders_SemanticStatusFieldRetriever();
         return new self(
-            new Cardwall_OnTop_Config_ColumnFactory($column_dao),
+            new ColumnFactory($column_dao),
             new MilestoneTrackerRetriever($column_dao, TrackerFactory::instance()),
             new AddValidator(),
             new ArtifactUpdater(

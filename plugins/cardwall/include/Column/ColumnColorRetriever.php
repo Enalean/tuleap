@@ -22,6 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\Cardwall\Column;
 
+use Tuleap\Cardwall\OnTop\Config\ColumnFactory;
+
 class ColumnColorRetriever
 {
     public static function getHeaderColorNameOrRGB(array $row): string
@@ -37,7 +39,7 @@ class ColumnColorRetriever
             return "rgb($r, $g, $b)";
         }
 
-        return \Cardwall_OnTop_Config_ColumnFactory::DEFAULT_HEADER_COLOR;
+        return ColumnFactory::DEFAULT_HEADER_COLOR;
     }
 
     public static function getHeaderColorNameOrHex(array $row): string

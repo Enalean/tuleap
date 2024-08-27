@@ -20,6 +20,7 @@
 
 use Tuleap\Cardwall\AccentColor\AccentColorBuilder;
 use Tuleap\Cardwall\BackgroundColor\BackgroundColorBuilder;
+use Tuleap\Cardwall\OnTop\Config\ColumnCollection;
 use Tuleap\Date\RelativeDatesAssetsRetriever;
 use Tuleap\Layout\CssAssetCollection;
 use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
@@ -137,7 +138,7 @@ class Cardwall_Renderer extends Tracker_Report_Renderer
         $redirect_parameter = 'cardwall[renderer][' . $this->report->id . ']=' . $this->id;
 
         if ($this->field === null) {
-            $board = new Cardwall_Board([], new Cardwall_OnTop_Config_ColumnCollection(), new Cardwall_MappingCollection());
+            $board = new Cardwall_Board([], new ColumnCollection(), new Cardwall_MappingCollection());
         } else {
             $field_provider     = new Cardwall_FieldProviders_CustomFieldRetriever($this->field);
             $column_preferences = new Cardwall_UserPreferences_Autostack_AutostackRenderer($user, $this->report);

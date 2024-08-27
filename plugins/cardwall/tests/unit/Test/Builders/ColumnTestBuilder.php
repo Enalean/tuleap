@@ -22,6 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\Cardwall\Test\Builders;
 
+use Tuleap\Cardwall\OnTop\Config\ColumnFactory;
+
 final class ColumnTestBuilder
 {
     private int $id       = 45;
@@ -53,7 +55,7 @@ final class ColumnTestBuilder
         return new \Cardwall_Column(
             $this->id,
             $this->label,
-            \Cardwall_OnTop_Config_ColumnFactory::DEFAULT_HEADER_COLOR,
+            ColumnFactory::DEFAULT_HEADER_COLOR,
         );
     }
 }

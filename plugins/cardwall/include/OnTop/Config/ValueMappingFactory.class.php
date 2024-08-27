@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Cardwall\OnTop\Config\ColumnCollection;
+
 require_once dirname(__FILE__) . '/../../constants.php';
 
 class Cardwall_OnTop_Config_ValueMappingFactory
@@ -43,7 +45,7 @@ class Cardwall_OnTop_Config_ValueMappingFactory
     /**
      * @return array of Cardwall_OnTop_Config_ValueMapping
      */
-    public function getStatusMappings(Tracker $mapping_tracker, Cardwall_OnTop_Config_ColumnCollection $columns)
+    public function getStatusMappings(Tracker $mapping_tracker, ColumnCollection $columns)
     {
         $mappings      = [];
         $status_values = $this->getStatusValuesIndexedByLabel($mapping_tracker);

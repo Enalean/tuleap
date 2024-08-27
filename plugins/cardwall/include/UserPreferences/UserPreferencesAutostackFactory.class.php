@@ -22,9 +22,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Cardwall\OnTop\Config\ColumnCollection;
+
 class Cardwall_UserPreferences_UserPreferencesAutostackFactory
 {
-    public function setAutostack(Cardwall_OnTop_Config_ColumnCollection $columns, Cardwall_UserPreferences_UserPreferencesAutostack $autostack_preferences)
+    public function setAutostack(ColumnCollection $columns, Cardwall_UserPreferences_UserPreferencesAutostack $autostack_preferences)
     {
         $cardwall_has_preferences = false;
         foreach ($columns as $column) {
@@ -37,7 +39,7 @@ class Cardwall_UserPreferences_UserPreferencesAutostackFactory
         }
     }
 
-    private function forceAutoStackOnDone(Cardwall_OnTop_Config_ColumnCollection $columns, Cardwall_UserPreferences_UserPreferencesAutostack $autostack_preferences)
+    private function forceAutoStackOnDone(ColumnCollection $columns, Cardwall_UserPreferences_UserPreferencesAutostack $autostack_preferences)
     {
         foreach ($columns as $column) {
             if (strcasecmp($column->label, 'done') == 0) {

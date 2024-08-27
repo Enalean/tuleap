@@ -22,6 +22,7 @@ use Tuleap\Cardwall\AccentColor\AccentColor;
 use Tuleap\Cardwall\AccentColor\AccentColorBuilder;
 use Tuleap\Cardwall\BackgroundColor\BackgroundColor;
 use Tuleap\Cardwall\BackgroundColor\BackgroundColorBuilder;
+use Tuleap\Cardwall\OnTop\Config\ColumnCollection;
 use Tuleap\Cardwall\Semantic\BackgroundColorFieldRetriever;
 use Tuleap\Tracker\Artifact\Artifact;
 
@@ -157,7 +158,7 @@ class Cardwall_SingleCardBuilder
         );
     }
 
-    private function getColumnId(Artifact $artifact, Cardwall_OnTop_Config_ColumnCollection $columns, Cardwall_OnTop_Config $config, Cardwall_FieldProviders_IProvideFieldGivenAnArtifact $field_provider)
+    private function getColumnId(Artifact $artifact, ColumnCollection $columns, Cardwall_OnTop_Config $config, Cardwall_FieldProviders_IProvideFieldGivenAnArtifact $field_provider)
     {
         foreach ($columns as $column) {
             if ($config->isInColumn($artifact, $field_provider, $column)) {
@@ -210,7 +211,7 @@ class Cardwall_SingleCardBuilder
         Cardwall_OnTop_Config $config,
         Artifact $artifact,
         Cardwall_FieldProviders_IProvideFieldGivenAnArtifact $field_provider,
-        Cardwall_OnTop_Config_ColumnCollection $columns,
+        ColumnCollection $columns,
     ) {
         $field         = $field_provider->getField($artifact->getTracker());
         $status_fields = [];

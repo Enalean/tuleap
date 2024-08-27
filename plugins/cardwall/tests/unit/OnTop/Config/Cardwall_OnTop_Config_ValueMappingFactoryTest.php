@@ -24,7 +24,6 @@ namespace Tuleap\Cardwall\OnTop\Config;
 
 use Cardwall_Column;
 use Cardwall_OnTop_ColumnMappingFieldValueDao;
-use Cardwall_OnTop_Config_ColumnFreestyleCollection;
 use Cardwall_OnTop_Config_ValueMappingFactory;
 use TestHelper;
 use Tracker;
@@ -119,7 +118,7 @@ final class Cardwall_OnTop_Config_ValueMappingFactoryTest extends TestCase // ph
 
     public function testItLoadStatusValues(): void
     {
-        $columns = new Cardwall_OnTop_Config_ColumnFreestyleCollection([
+        $columns = new ColumnCollection([
             new Cardwall_Column(1, 'Todo', 'white'),
             new Cardwall_Column(2, 'In Progress', 'white'),
             new Cardwall_Column(3, 'Done', 'white'),
