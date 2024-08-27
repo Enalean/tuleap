@@ -22,6 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\DB;
 
+use Tuleap\Option\Option;
+
 interface DatabaseUUIDFactory
 {
     public function buildUUIDBytes(): string;
@@ -31,7 +33,7 @@ interface DatabaseUUIDFactory
     public function buildUUIDFromBytesData(string $bytes): UUID;
 
     /**
-     * @throws InvalidUuidStringException
+     * @return Option<UUID>
      */
-    public function buildUUIDFromHexadecimalString(string $string): UUID;
+    public function buildUUIDFromHexadecimalString(string $string): Option;
 }

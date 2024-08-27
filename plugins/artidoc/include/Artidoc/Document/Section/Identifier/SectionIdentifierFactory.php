@@ -23,9 +23,8 @@ declare(strict_types=1);
 namespace Tuleap\Artidoc\Document\Section\Identifier;
 
 use Tuleap\DB\DatabaseUUIDFactory;
-use Tuleap\DB\InvalidUuidStringException;
 
-final class SectionIdentifierFactory
+final readonly class SectionIdentifierFactory
 {
     public function __construct(private DatabaseUUIDFactory $uuid_factory)
     {
@@ -48,10 +47,10 @@ final class SectionIdentifierFactory
      */
     public function buildFromHexadecimalString(string $string): SectionIdentifier
     {
-        try {
-            return SectionIdentifier::fromUUID($this->uuid_factory->buildUUIDFromHexadecimalString($string));
-        } catch (InvalidUuidStringException $e) {
-            throw new InvalidSectionIdentifierStringException($e);
-        }
+        return $this->uuid_factory->buildUUIDFromHexadecimalString($string)
+            ->match(
+                SectionIdentifier::fromUUID(...),
+                static fn () => throw new InvalidSectionIdentifierStringException($string)
+            );
     }
 }

@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\PdfTemplate\Image\Identifier;
 
 use Tuleap\DB\DatabaseUUIDFactory;
-use Tuleap\DB\InvalidUuidStringException;
 
 final class PdfTemplateImageIdentifierFactory
 {
@@ -48,10 +47,10 @@ final class PdfTemplateImageIdentifierFactory
      */
     public function buildFromHexadecimalString(string $string): PdfTemplateImageIdentifier
     {
-        try {
-            return PdfTemplateImageIdentifier::fromUUID($this->uuid_factory->buildUUIDFromHexadecimalString($string));
-        } catch (InvalidUuidStringException $e) {
-            throw new InvalidPdfTemplateImageIdentifierStringException($e);
-        }
+        return $this->uuid_factory->buildUUIDFromHexadecimalString($string)
+            ->match(
+                PdfTemplateImageIdentifier::fromUUID(...),
+                static fn () => throw new InvalidPdfTemplateImageIdentifierStringException($string)
+            );
     }
 }

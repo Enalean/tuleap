@@ -24,8 +24,8 @@ namespace Tuleap\PdfTemplate\Image\Identifier;
 
 final class InvalidPdfTemplateImageIdentifierStringException extends \Exception
 {
-    public function __construct(\Exception $previous)
+    public function __construct(string $image_identifier)
     {
-        parent::__construct($previous->getMessage(), (int) $previous->getCode(), $previous);
+        parent::__construct($image_identifier . ' is not a valid image template identifier');
     }
 }
