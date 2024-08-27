@@ -24,11 +24,11 @@ namespace Tuleap\Taskboard\Column\FieldValuesToColumnMapping;
 
 final class MappedValues implements MappedValuesInterface
 {
-    /** @var int[] */
+    /** @var list<int> */
     private $value_ids;
 
     /**
-     * @param int[] $value_ids
+     * @param list<int> $value_ids
      */
     public function __construct(array $value_ids)
     {
@@ -36,7 +36,7 @@ final class MappedValues implements MappedValuesInterface
     }
 
     /**
-     * @return int[]
+     * @return list<int>
      */
     public function getValueIds(): array
     {
@@ -46,6 +46,11 @@ final class MappedValues implements MappedValuesInterface
     public function isEmpty(): bool
     {
         return empty($this->value_ids);
+    }
+
+    public function contains(int $bind_value_id): bool
+    {
+        return in_array($bind_value_id, $this->value_ids, true);
     }
 
     public function getFirstValue(): int

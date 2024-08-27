@@ -45,4 +45,14 @@ final class MappedValuesTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         self::assertFalse($this->mapped_values->isEmpty());
     }
+
+    public function testContainsReturnsTrue(): void
+    {
+        self::assertTrue($this->mapped_values->contains(123));
+    }
+
+    public function testContainsReturnsFalse(): void
+    {
+        self::assertFalse($this->mapped_values->contains(832));
+    }
 }

@@ -34,11 +34,11 @@ final readonly class ArtifactMappedFieldValueRetriever
 
     /** @return Option<\Tracker_FormElement_Field_List_BindValue> */
     public function getFirstValueAtLastChangeset(
-        \Planning_Milestone $milestone,
+        \Tracker $milestone_tracker,
         Artifact $artifact,
         \PFUser $user,
     ): Option {
-        $taskboard_tracker = new TaskboardTracker($milestone->getArtifact()->getTracker(), $artifact->getTracker());
+        $taskboard_tracker = new TaskboardTracker($milestone_tracker, $artifact->getTracker());
         return $this->mapped_field_retriever->getField($taskboard_tracker)
             ->andThen(function (\Tracker_FormElement_Field_Selectbox $mapped_field) use ($artifact, $user) {
                 if (! $mapped_field->userCanRead($user)) {

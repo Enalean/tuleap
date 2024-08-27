@@ -25,4 +25,6 @@ use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindValueIdCollection;
 interface MappedValuesInterface extends BindValueIdCollection
 {
     public function isEmpty(): bool;
+
+    public function contains(int $bind_value_id): bool;
 }

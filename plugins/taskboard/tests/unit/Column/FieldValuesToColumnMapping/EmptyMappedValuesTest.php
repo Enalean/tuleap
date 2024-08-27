@@ -41,6 +41,11 @@ final class EmptyMappedValuesTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertTrue($this->empty_mapped_values->isEmpty());
     }
 
+    public function testContainsReturnsFalse(): void
+    {
+        self::assertFalse($this->empty_mapped_values->contains(86));
+    }
+
     public function testGetFirstValueThrowsRuntimeException(): void
     {
         $this->expectException(\RuntimeException::class);
