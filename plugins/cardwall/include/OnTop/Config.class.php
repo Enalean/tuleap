@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Cardwall\OnTop\Config\ColumnFactory;
+use Tuleap\Cardwall\OnTop\Config\ColumnCollection;
 use Tuleap\Tracker\Artifact\Artifact;
 
 /**
@@ -36,7 +38,7 @@ class Cardwall_OnTop_Config implements Cardwall_OnTop_IConfig
     private $dao;
 
     /**
-     * @var Cardwall_OnTop_Config_ColumnFactory
+     * @var ColumnFactory
      */
     private $column_factory;
 
@@ -53,7 +55,7 @@ class Cardwall_OnTop_Config implements Cardwall_OnTop_IConfig
     public function __construct(
         Tracker $tracker,
         Cardwall_OnTop_Dao $dao,
-        Cardwall_OnTop_Config_ColumnFactory $column_factory,
+        ColumnFactory $column_factory,
         Cardwall_OnTop_Config_TrackerMappingFactory $tracker_mapping_factory,
     ) {
         $this->tracker                 = $tracker;
@@ -90,7 +92,7 @@ class Cardwall_OnTop_Config implements Cardwall_OnTop_IConfig
     /**
      * Get Frestyle columns for Cardwall_OnTop, or status columns if none
      *
-     * @return Cardwall_OnTop_Config_ColumnCollection
+     * @return ColumnCollection
      */
     public function getDashboardColumns()
     {
@@ -99,7 +101,7 @@ class Cardwall_OnTop_Config implements Cardwall_OnTop_IConfig
 
     /**
      * Get Columns from the values of a $field
-     * @return Cardwall_OnTop_Config_ColumnCollection
+     * @return ColumnCollection
      */
     public function getRendererColumns(Tracker_FormElement_Field_List $cardwall_field)
     {
@@ -107,7 +109,7 @@ class Cardwall_OnTop_Config implements Cardwall_OnTop_IConfig
     }
 
     /**
-     * @return Cardwall_OnTop_Config_ColumnCollection
+     * @return ColumnCollection
      */
     public function getFilteredRendererColumns(Tracker_FormElement_Field_List $cardwall_field, array $filter)
     {
@@ -165,7 +167,7 @@ class Cardwall_OnTop_Config implements Cardwall_OnTop_IConfig
      *
      * @return Cardwall_MappingCollection
      */
-    public function getCardwallMappings(array $fields, Cardwall_OnTop_Config_ColumnCollection $cardwall_columns)
+    public function getCardwallMappings(array $fields, ColumnCollection $cardwall_columns)
     {
         $mappings = new Cardwall_MappingCollection();
         $this->fillMappingsByDuckType($mappings, $fields, $cardwall_columns);
@@ -176,7 +178,7 @@ class Cardwall_OnTop_Config implements Cardwall_OnTop_IConfig
     private function fillMappingsByDuckType(
         Cardwall_MappingCollection $mappings,
         array $fields,
-        Cardwall_OnTop_Config_ColumnCollection $columns,
+        ColumnCollection $columns,
     ) {
         foreach ($fields as $status_field) {
             foreach ($status_field->getVisibleValuesPlusNoneIfAny() as $value) {
@@ -191,7 +193,7 @@ class Cardwall_OnTop_Config implements Cardwall_OnTop_IConfig
 
     public function fillMappingsWithOnTopMappings(
         Cardwall_MappingCollection $mappings,
-        Cardwall_OnTop_Config_ColumnCollection $columns,
+        ColumnCollection $columns,
     ) {
         foreach ($this->getMappings() as $field_mapping) {
             foreach ($field_mapping->getValueMappings() as $value_mapping) {

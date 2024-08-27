@@ -24,7 +24,6 @@ namespace Tuleap\Cardwall\OnTop\Config;
 
 use Cardwall_Column;
 use Cardwall_OnTop_ColumnMappingFieldDao;
-use Cardwall_OnTop_Config_ColumnFreestyleCollection;
 use Cardwall_OnTop_Config_TrackerMappingFactory;
 use Cardwall_OnTop_Config_TrackerMappingFreestyle;
 use Cardwall_OnTop_Config_TrackerMappingNoField;
@@ -53,7 +52,7 @@ final class Cardwall_OnTop_Config_TrackerMappingFactoryTest extends TestCase // 
     private Tracker $tracker_20;
     private Cardwall_OnTop_ColumnMappingFieldDao&MockObject $dao;
     private Cardwall_OnTop_Config_ValueMappingFactory&MockObject $value_mapping_factory;
-    private Cardwall_OnTop_Config_ColumnFreestyleCollection $columns;
+    private ColumnCollection $columns;
     private Cardwall_OnTop_Config_TrackerMappingFactory $factory;
 
     protected function setUp(): void
@@ -102,7 +101,7 @@ final class Cardwall_OnTop_Config_TrackerMappingFactoryTest extends TestCase // 
         $this->dao                   = $this->createMock(Cardwall_OnTop_ColumnMappingFieldDao::class);
         $this->value_mapping_factory = $this->createMock(Cardwall_OnTop_Config_ValueMappingFactory::class);
 
-        $this->columns = new Cardwall_OnTop_Config_ColumnFreestyleCollection([
+        $this->columns = new ColumnCollection([
             new Cardwall_Column(1, 'Todo', 'white'),
             new Cardwall_Column(2, 'On Going', 'white'),
             new Cardwall_Column(3, 'Done', 'white'),

@@ -18,25 +18,28 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
+namespace Tuleap\Cardwall\OnTop\Config;
+
 /**
  * Wrapper of array of columns
+ * @template-implements \ArrayAccess<int, \Cardwall_Column>
+ * @template-implements \IteratorAggregate<int, \Cardwall_Column>
  */
-class Cardwall_OnTop_Config_ColumnCollection implements ArrayAccess, IteratorAggregate, Countable
+final class ColumnCollection implements \ArrayAccess, \IteratorAggregate, \Countable
 {
     /**
-     * @var array
+     * @param array<\Cardwall_Column> $columns
      */
-    private $columns;
-
-    public function __construct(array $columns = [])
+    public function __construct(private array $columns = [])
     {
-        $this->columns = $columns;
     }
 
     /**
-     * @see ArrayAccess
+     * @see \ArrayAccess
      */
-    public function offsetSet($offset, $value): void
+    public function offsetSet(mixed $offset, mixed $value): void
     {
         if (is_null($offset)) {
             $this->columns[] = $value;
@@ -46,68 +49,71 @@ class Cardwall_OnTop_Config_ColumnCollection implements ArrayAccess, IteratorAgg
     }
 
     /**
-     * @see ArrayAccess
+     * @see \ArrayAccess
      */
-    public function offsetExists($offset): bool
+    public function offsetExists(mixed $offset): bool
     {
         return isset($this->columns[$offset]);
     }
 
     /**
-     * @see ArrayAccess
+     * @see \ArrayAccess
      */
-    public function offsetUnset($offset): void
+    public function offsetUnset(mixed $offset): void
     {
         unset($this->columns[$offset]);
     }
 
     /**
-     * @see ArrayAccess
+     * @see \ArrayAccess
      */
-    public function offsetGet($offset): mixed
+    public function offsetGet(mixed $offset): ?\Cardwall_Column
     {
-        return isset($this->columns[$offset]) ? $this->columns[$offset] : null;
+        return $this->columns[$offset] ?? null;
     }
 
     /**
-     * @see IteratorAggregate
+     * @see \IteratorAggregate
      */
-    public function getIterator(): Traversable
+    public function getIterator(): \Traversable
     {
-        return new ArrayIterator($this->columns);
+        return new \ArrayIterator($this->columns);
     }
 
     /**
-     * @see Countable
+     * @see \Countable
      */
     public function count(): int
     {
         return count($this->columns);
     }
 
-    public function getColumnById($id)
+    public function getColumnById(int $id): ?\Cardwall_Column
     {
         foreach ($this->columns as $column) {
             if ($column->id == $id) {
                 return $column;
             }
         }
+        return null;
     }
 
-    public function getColumnByLabel($label)
+    public function getColumnByLabel(string $label): ?\Cardwall_Column
     {
         foreach ($this->columns as $column) {
             if ($column->label == $label) {
                 return $column;
             }
         }
+        return null;
     }
 
-    public function getRestValue()
+    /** @return list<\AgileDashboard_ColumnRepresentation> */
+    public function getRestValue(): array
     {
         $column_representations = [];
         foreach ($this->columns as $column) {
-            $column_representation = new AgileDashboard_ColumnRepresentation();
+            $column_representation = new \AgileDashboard_ColumnRepresentation();
             $column_representation->build($column);
             $column_representations[] = $column_representation;
         }

@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Cardwall\OnTop\Config\ColumnFactory;
+
 class Cardwall_OnTop_ConfigFactory
 {
     /**
@@ -54,7 +56,7 @@ class Cardwall_OnTop_ConfigFactory
      */
     public function getOnTopConfig(Tracker $tracker)
     {
-        $column_factory = new Cardwall_OnTop_Config_ColumnFactory($this->getOnTopColumnDao());
+        $column_factory = new ColumnFactory($this->getOnTopColumnDao());
 
         $value_mapping_factory = new Cardwall_OnTop_Config_ValueMappingFactory(
             $this->element_factory,

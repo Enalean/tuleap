@@ -22,6 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\Cardwall\Column;
 
+use Tuleap\Cardwall\OnTop\Config\ColumnFactory;
+
 final class ColumnColorRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testGetHeaderColorNameOrRGBReturnsRGBColor(): void
@@ -53,7 +55,7 @@ final class ColumnColorRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $row   = ['bg_red' => 255, 'bg_green' => null, 'bg_blue' => 0, 'tlp_color_name' => null];
         $color = ColumnColorRetriever::getHeaderColorNameOrRGB($row);
 
-        self::assertSame(\Cardwall_OnTop_Config_ColumnFactory::DEFAULT_HEADER_COLOR, $color);
+        self::assertSame(ColumnFactory::DEFAULT_HEADER_COLOR, $color);
     }
 
     public function testGetHeaderColorNameOrHexReturnsHexColor(): void

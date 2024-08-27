@@ -27,7 +27,6 @@ use Cardwall_Board;
 use Cardwall_CardInCellPresenter;
 use Cardwall_CardInCellPresenterBuilder;
 use Cardwall_MappingCollection;
-use Cardwall_OnTop_Config_ColumnCollection;
 use Cardwall_PaneBoardBuilder;
 use Cardwall_Swimline;
 use Cardwall_SwimlineFactory;
@@ -36,6 +35,7 @@ use PFUser;
 use PHPUnit\Framework\MockObject\MockObject;
 use TestHelper;
 use Tracker_ArtifactFactory;
+use Tuleap\Cardwall\OnTop\Config\ColumnCollection;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\Artifact;
@@ -50,7 +50,7 @@ final class Cardwall_PaneBuilderTest extends TestCase // phpcs:ignore Squiz.Clas
     private Artifact $milestone_artifact;
     private Cardwall_SwimlineFactory&MockObject $swimline_factory;
     private Cardwall_MappingCollection&MockObject $mapping_collection;
-    private Cardwall_OnTop_Config_ColumnCollection&MockObject $columns;
+    private ColumnCollection $columns;
 
     protected function setUp(): void
     {
@@ -61,7 +61,7 @@ final class Cardwall_PaneBuilderTest extends TestCase // phpcs:ignore Squiz.Clas
         $this->user                           = UserTestBuilder::buildWithDefaults();
         $this->milestone_artifact             = ArtifactTestBuilder::anArtifact(1)->build();
         $this->mapping_collection             = $this->createMock(Cardwall_MappingCollection::class);
-        $this->columns                        = $this->createMock(Cardwall_OnTop_Config_ColumnCollection::class);
+        $this->columns                        = new ColumnCollection();
     }
 
     public function testItReturnsAnEmptyBoard(): void

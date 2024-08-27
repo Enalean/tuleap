@@ -18,6 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Cardwall\OnTop\Config\ColumnCollection;
 use Tuleap\Tracker\Artifact\Artifact;
 
 /**
@@ -43,7 +44,7 @@ class Cardwall_PaneBoardBuilder
      *
      * @return \Cardwall_Board
      */
-    public function getBoard(PFUser $user, Artifact $milestone_artifact, Cardwall_OnTop_Config_ColumnCollection $columns, Cardwall_MappingCollection $mapping_collection)
+    public function getBoard(PFUser $user, Artifact $milestone_artifact, ColumnCollection $columns, Cardwall_MappingCollection $mapping_collection)
     {
         return new Cardwall_Board(
             $this->getSwimlines($user, $milestone_artifact, $columns),
@@ -58,7 +59,7 @@ class Cardwall_PaneBoardBuilder
      *
      * @return Cardwall_Swimline[]
      */
-    private function getSwimlines(PFUser $user, Artifact $milestone_artifact, Cardwall_OnTop_Config_ColumnCollection $columns)
+    private function getSwimlines(PFUser $user, Artifact $milestone_artifact, ColumnCollection $columns)
     {
         $swimlines = [];
         foreach ($this->dao->getBacklogArtifacts($milestone_artifact->getId()) as $row) {
@@ -70,7 +71,7 @@ class Cardwall_PaneBoardBuilder
         return $swimlines;
     }
 
-    private function buildSwimlineForArtifact(PFUser $user, Artifact $artifact, Cardwall_OnTop_Config_ColumnCollection $columns)
+    private function buildSwimlineForArtifact(PFUser $user, Artifact $artifact, ColumnCollection $columns)
     {
         $artifact_presenter = $this->presenter_builder->getCardInCellPresenter($artifact, $artifact->getId());
         $children           = $artifact->getChildrenForUser($user);
@@ -83,7 +84,7 @@ class Cardwall_PaneBoardBuilder
         }
     }
 
-    private function buildSwimlineSolo(Artifact $artifact, Cardwall_CardInCellPresenter $artifact_presenter, Cardwall_OnTop_Config_ColumnCollection $columns)
+    private function buildSwimlineSolo(Artifact $artifact, Cardwall_CardInCellPresenter $artifact_presenter, ColumnCollection $columns)
     {
         $cells = $this->swimline_factory->getCells($columns, [$artifact_presenter]);
 
@@ -108,7 +109,7 @@ class Cardwall_PaneBoardBuilder
         return true;
     }
 
-    private function buildSwimline(Cardwall_CardInCellPresenter $artifact_presenter, Cardwall_OnTop_Config_ColumnCollection $columns, array $children_presenters)
+    private function buildSwimline(Cardwall_CardInCellPresenter $artifact_presenter, ColumnCollection $columns, array $children_presenters)
     {
         return new Cardwall_Swimline(
             $artifact_presenter,

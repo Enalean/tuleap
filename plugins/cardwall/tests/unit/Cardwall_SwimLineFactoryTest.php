@@ -26,10 +26,9 @@ use Cardwall_CardInCellPresenter;
 use Cardwall_Column;
 use Cardwall_FieldProviders_IProvideFieldGivenAnArtifact;
 use Cardwall_OnTop_Config;
-use Cardwall_OnTop_Config_ColumnCollection;
-use Cardwall_OnTop_Config_ColumnFreestyleCollection;
 use Cardwall_SwimlineFactory;
 use PHPUnit\Framework\MockObject\MockObject;
+use Tuleap\Cardwall\OnTop\Config\ColumnCollection;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 
@@ -46,7 +45,7 @@ final class Cardwall_SwimLineFactoryTest extends TestCase // phpcs:ignore Squiz.
 
     public function testItReturnsAnEmptyArrayIfThereAreNoColumnsAndNoPresenters(): void
     {
-        $columns    = new Cardwall_OnTop_Config_ColumnFreestyleCollection();
+        $columns    = new ColumnCollection();
         $presenters = [];
         $swimlines  = $this->factory->getCells($columns, $presenters);
         self::assertSame([], $swimlines);
@@ -54,7 +53,7 @@ final class Cardwall_SwimLineFactoryTest extends TestCase // phpcs:ignore Squiz.
 
     public function testItReturnsAnEmptyArrayIfThereAreNoColumnsButSomePresenters(): void
     {
-        $columns    = new Cardwall_OnTop_Config_ColumnFreestyleCollection();
+        $columns    = new ColumnCollection();
         $presenters = [$this->createMock(Cardwall_CardInCellPresenter::class)];
         $swimlines  = $this->factory->getCells($columns, $presenters);
         self::assertSame([], $swimlines);
@@ -66,7 +65,7 @@ final class Cardwall_SwimLineFactoryTest extends TestCase // phpcs:ignore Squiz.
         $mocked_column->method('getId')->willReturn(44);
         $mocked_column->method('isAutostacked')->willReturn(true);
 
-        $columns    = new Cardwall_OnTop_Config_ColumnFreestyleCollection([$mocked_column]);
+        $columns    = new ColumnCollection([$mocked_column]);
         $presenters = [];
         $swimlines  = $this->factory->getCells($columns, $presenters);
         $expected   = [['column_id' => 44, 'column_stacked' => true, 'cardincell_presenters' => []]];
@@ -80,7 +79,7 @@ final class Cardwall_SwimLineFactoryTest extends TestCase // phpcs:ignore Squiz.
         $label                 = $bgcolor = null;
         $column1               = new Cardwall_Column(55, $label, $bgcolor);
         $column2               = new Cardwall_Column(100, $label, $bgcolor);
-        $columns               = new Cardwall_OnTop_Config_ColumnCollection([$column1, $column2]);
+        $columns               = new ColumnCollection([$column1, $column2]);
         $cardincell_presenter1 = $this->createMock(Cardwall_CardInCellPresenter::class);
         $cardincell_presenter1->method('getArtifact')->willReturn($artifact1);
         $cardincell_presenter2 = $this->createMock(Cardwall_CardInCellPresenter::class);
@@ -107,7 +106,7 @@ final class Cardwall_SwimLineFactoryTest extends TestCase // phpcs:ignore Squiz.
     {
         $artifact             = ArtifactTestBuilder::anArtifact(1)->build();
         $column               = new Cardwall_Column(55, null, null);
-        $columns              = new Cardwall_OnTop_Config_ColumnCollection();
+        $columns              = new ColumnCollection();
         $columns[]            = $column;
         $cardincell_presenter = $this->createMock(Cardwall_CardInCellPresenter::class);
         $cardincell_presenter->method('getArtifact')->willReturn($artifact);

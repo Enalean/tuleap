@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Cardwall\OnTop\Config\ColumnCollection;
+
 /**
  * A board that contains swimlines (with cards) and columns
  */
@@ -29,7 +31,7 @@ class Cardwall_Board
     public $swimlines;
 
     /**
-     * @var Cardwall_OnTop_Config_ColumnCollection
+     * @var ColumnCollection
      */
     public $columns;
 
@@ -41,7 +43,7 @@ class Cardwall_Board
     /**
      * @param array of Cardwall_Swimline             $swimlines
      */
-    public function __construct(array $swimlines, Cardwall_OnTop_Config_ColumnCollection $columns, Cardwall_MappingCollection $mappings)
+    public function __construct(array $swimlines, ColumnCollection $columns, Cardwall_MappingCollection $mappings)
     {
         $this->swimlines = $swimlines;
         $this->columns   = $columns;

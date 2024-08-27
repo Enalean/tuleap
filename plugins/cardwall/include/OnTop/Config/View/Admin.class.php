@@ -51,9 +51,4 @@ class Cardwall_OnTop_Config_View_Admin
 
         return $html;
     }
-
-    public function visitColumnFreestyleCollection($collection, Cardwall_OnTop_Config $config)
-    {
-        return new Cardwall_OnTop_Config_View_ColumnDefinition($config);
-    }
 }

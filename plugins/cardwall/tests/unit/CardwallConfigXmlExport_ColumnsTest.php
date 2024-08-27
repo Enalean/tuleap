@@ -24,7 +24,6 @@ namespace Tuleap\Cardwall;
 
 use Cardwall_Column;
 use Cardwall_OnTop_Config;
-use Cardwall_OnTop_Config_ColumnCollection;
 use Cardwall_OnTop_Config_TrackerMappingFreestyle;
 use Cardwall_OnTop_Config_ValueMapping;
 use Cardwall_OnTop_ConfigFactory;
@@ -32,6 +31,7 @@ use CardwallConfigXmlExport;
 use PHPUnit\Framework\MockObject\MockObject;
 use SimpleXMLElement;
 use TrackerFactory;
+use Tuleap\Cardwall\OnTop\Config\ColumnCollection;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
@@ -67,7 +67,7 @@ final class CardwallConfigXmlExport_ColumnsTest extends TestCase // phpcs:ignore
 
     public function testItDumpsNoColumnsWhenNoColumnsDefined(): void
     {
-        $this->cardwall_config->method('getDashboardColumns')->willReturn(new Cardwall_OnTop_Config_ColumnCollection([]));
+        $this->cardwall_config->method('getDashboardColumns')->willReturn(new ColumnCollection([]));
         $this->cardwall_config->method('getMappings')->willReturn([]);
 
         $this->xml_exporter->export($this->root);
@@ -76,7 +76,7 @@ final class CardwallConfigXmlExport_ColumnsTest extends TestCase // phpcs:ignore
 
     public function testItDumpsColumnsAsDefined(): void
     {
-        $this->cardwall_config->method('getDashboardColumns')->willReturn(new Cardwall_OnTop_Config_ColumnCollection([
+        $this->cardwall_config->method('getDashboardColumns')->willReturn(new ColumnCollection([
             new Cardwall_Column(112, 'Todo', 'red'),
             new Cardwall_Column(113, 'On going', 'fiesta-red'),
             new Cardwall_Column(113, 'On going', 'rgb(255,255,255)'),
@@ -92,7 +92,7 @@ final class CardwallConfigXmlExport_ColumnsTest extends TestCase // phpcs:ignore
 
     public function testItDumpsColumnsAsDefinedWithMappings(): void
     {
-        $this->cardwall_config->method('getDashboardColumns')->willReturn(new Cardwall_OnTop_Config_ColumnCollection([
+        $this->cardwall_config->method('getDashboardColumns')->willReturn(new ColumnCollection([
             new Cardwall_Column(112, 'Todo', 'red'),
             new Cardwall_Column(113, 'On going', 'fiesta-red'),
             new Cardwall_Column(113, 'On going', 'rgb(255,255,255)'),

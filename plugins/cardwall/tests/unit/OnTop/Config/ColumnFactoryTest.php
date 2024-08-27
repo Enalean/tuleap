@@ -23,8 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\Cardwall\OnTop\Config;
 
 use Cardwall_OnTop_ColumnDao;
-use Cardwall_OnTop_Config_ColumnFactory;
-use Cardwall_OnTop_Config_ColumnFreestyleCollection;
 use PHPUnit\Framework\MockObject\MockObject;
 use TestHelper;
 use Tracker;
@@ -37,13 +35,13 @@ final class ColumnFactoryTest extends TestCase
 {
     private Tracker $tracker;
     private Cardwall_OnTop_ColumnDao&MockObject $dao;
-    private Cardwall_OnTop_Config_ColumnFactory $factory;
+    private ColumnFactory $factory;
 
     protected function setUp(): void
     {
         $this->tracker = TrackerTestBuilder::aTracker()->withId(42)->build();
         $this->dao     = $this->createMock(Cardwall_OnTop_ColumnDao::class);
-        $this->factory = new Cardwall_OnTop_Config_ColumnFactory($this->dao);
+        $this->factory = new ColumnFactory($this->dao);
     }
 
     public function testItBuildsColumnsFromTheDataStorage(): void
@@ -78,8 +76,7 @@ final class ColumnFactoryTest extends TestCase
             ]);
         $columns = $this->factory->getDashboardColumns($this->tracker);
 
-        self::assertInstanceOf(Cardwall_OnTop_Config_ColumnFreestyleCollection::class, $columns);
-        self::assertSame(3, count($columns));
+        self::assertCount(3, $columns);
         self::assertSame('On Going', $columns[1]->getLabel());
         self::assertSame('rgb(123, 12, 10)', $columns[0]->getHeadercolor());
         self::assertSame('rgb(248,248,248)', $columns[1]->getHeadercolor());
@@ -88,15 +85,14 @@ final class ColumnFactoryTest extends TestCase
         self::assertSame('peggy-pink', $columns[2]->getHeadercolor());
     }
 
-    public function testItBuildsAnEmptyFreestyleCollection(): void
+    public function testItBuildsAnEmptyCollection(): void
     {
         $this->dao->method('searchColumnsByTrackerId')
             ->with(42)
             ->willReturn([]);
         $columns = $this->factory->getDashboardColumns($this->tracker);
 
-        self::assertInstanceOf(Cardwall_OnTop_Config_ColumnFreestyleCollection::class, $columns);
-        self::assertSame(0, count($columns));
+        self::assertCount(0, $columns);
     }
 
     public function testGetColumnByIdReturnsNullWhenColumnCantBeFound(): void
@@ -126,14 +122,12 @@ final class ColumnFactoryTest extends TestCase
 
     public function testItShouldNotFatalErrorOnInvalidBindValue(): void
     {
-        self::expectNotToPerformAssertions();
         $filter = [123, 234];
         $field  = ListStaticBindBuilder::aStaticBind(
             ListFieldBuilder::aListField(692)->build()
         )->build()->getField();
 
-        $dao            = $this->createMock(Cardwall_OnTop_ColumnDao::class);
-        $column_factory = new Cardwall_OnTop_Config_ColumnFactory($dao);
-        $column_factory->getFilteredRendererColumns($field, $filter);
+        $this->expectNotToPerformAssertions();
+        $this->factory->getFilteredRendererColumns($field, $filter);
     }
 }

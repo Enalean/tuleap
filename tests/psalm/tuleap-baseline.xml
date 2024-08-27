@@ -3380,7 +3380,6 @@
   <file src="plugins/bugzilla_reference/include/Bugzilla/Administration/Controller.php">
     <MissingReturnType>
       <code><![CDATA[addReference]]></code>
-      <code><![CDATA[deleteReference]]></code>
       <code><![CDATA[display]]></code>
       <code><![CDATA[editReference]]></code>
       <code><![CDATA[getPresenters]]></code>
@@ -3487,11 +3486,6 @@
       <code><![CDATA[getUsername]]></code>
     </MissingReturnType>
   </file>
-  <file src="plugins/bugzilla_reference/include/Bugzilla/Reference/ReferenceDestructor.php">
-    <MissingReturnType>
-      <code><![CDATA[delete]]></code>
-    </MissingReturnType>
-  </file>
   <file src="plugins/bugzilla_reference/include/Bugzilla/Reference/ReferenceRetriever.php">
     <MissingParamType>
       <code><![CDATA[$keyword]]></code>
@@ -3504,7 +3498,6 @@
   <file src="plugins/bugzilla_reference/include/Bugzilla/Reference/ReferenceSaver.php">
     <MissingParamType>
       <code><![CDATA[$api_key]]></code>
-      <code><![CDATA[$id]]></code>
       <code><![CDATA[$keyword]]></code>
       <code><![CDATA[$keyword]]></code>
       <code><![CDATA[$rest_api_url]]></code>
@@ -4170,62 +4163,10 @@
       <code><![CDATA[isInColumn]]></code>
     </MissingReturnType>
   </file>
-  <file src="plugins/cardwall/include/OnTop/Config/ColumnCollection.class.php">
-    <MissingParamType>
-      <code><![CDATA[$id]]></code>
-      <code><![CDATA[$label]]></code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code><![CDATA[getColumnById]]></code>
-      <code><![CDATA[getColumnByLabel]]></code>
-      <code><![CDATA[getRestValue]]></code>
-    </MissingReturnType>
-    <MissingTemplateParam>
-      <code><![CDATA[ArrayAccess]]></code>
-      <code><![CDATA[IteratorAggregate]]></code>
-    </MissingTemplateParam>
-  </file>
-  <file src="plugins/cardwall/include/OnTop/Config/ColumnFactory.class.php">
+  <file src="plugins/cardwall/include/OnTop/Config/ColumnFactory.php">
     <DeprecatedMethod>
       <code><![CDATA[getRow]]></code>
     </DeprecatedMethod>
-    <MissingParamType>
-      <code><![CDATA[$decorators]]></code>
-      <code><![CDATA[$value]]></code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code><![CDATA[fillColumnsFor]]></code>
-      <code><![CDATA[getColumnHeaderColor]]></code>
-      <code><![CDATA[getFieldBindValues]]></code>
-      <code><![CDATA[getFilteredRendererColumns]]></code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/cardwall/include/OnTop/Config/ColumnFreestyleCollection.class.php">
-    <MissingParamType>
-      <code><![CDATA[$parameter]]></code>
-      <code><![CDATA[$visitor]]></code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code><![CDATA[accept]]></code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/cardwall/include/OnTop/Config/ColumnStatusCollection.class.php">
-    <MissingParamType>
-      <code><![CDATA[$parameter]]></code>
-      <code><![CDATA[$visitor]]></code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code><![CDATA[accept]]></code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/cardwall/include/OnTop/Config/ColumnsVisitor.class.php">
-    <MissingParamType>
-      <code><![CDATA[$parameter]]></code>
-      <code><![CDATA[$visitor]]></code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code><![CDATA[accept]]></code>
-    </MissingReturnType>
   </file>
   <file src="plugins/cardwall/include/OnTop/Config/Command/DeleteMappingFields.class.php">
     <MissingParamType>
@@ -4379,13 +4320,11 @@
   </file>
   <file src="plugins/cardwall/include/OnTop/Config/View/Admin.class.php">
     <MissingParamType>
-      <code><![CDATA[$collection]]></code>
       <code><![CDATA[$config]]></code>
     </MissingParamType>
     <MissingReturnType>
       <code><![CDATA[displayAdminOnTop]]></code>
       <code><![CDATA[generateAdminForm]]></code>
-      <code><![CDATA[visitColumnFreestyleCollection]]></code>
     </MissingReturnType>
   </file>
   <file src="plugins/cardwall/include/OnTop/Config/View/ColumnDefinition.class.php">
@@ -4440,13 +4379,9 @@
   <file src="plugins/cardwall/include/OnTop/ConfigEmpty.class.php">
     <FalsableReturnStatement>
       <code><![CDATA[false]]></code>
-      <code><![CDATA[false]]></code>
-      <code><![CDATA[false]]></code>
     </FalsableReturnStatement>
     <InvalidFalsableReturnType>
       <code><![CDATA[Cardwall_MappingCollection]]></code>
-      <code><![CDATA[Cardwall_OnTop_Config_ColumnCollection]]></code>
-      <code><![CDATA[Cardwall_OnTop_Config_ColumnCollection]]></code>
     </InvalidFalsableReturnType>
     <InvalidNullableReturnType>
       <code><![CDATA[Cardwall_OnTop_Config_TrackerMapping]]></code>
@@ -31930,7 +31865,6 @@
   </file>
   <file src="plugins/taskboard/include/Column/FieldValuesToColumnMapping/TrackerMappingPresenterBuilder.php">
     <RedundantCastGivenDocblockType>
-      <code><![CDATA[(int) $field->getId()]]></code>
       <code><![CDATA[(int) $value_id]]></code>
     </RedundantCastGivenDocblockType>
   </file>
@@ -39766,7 +39700,6 @@
       <code><![CDATA[$field_id]]></code>
       <code><![CDATA[$field_id]]></code>
       <code><![CDATA[$field_id]]></code>
-      <code><![CDATA[$field_id]]></code>
       <code><![CDATA[$field_mapping]]></code>
       <code><![CDATA[$field_mapping]]></code>
       <code><![CDATA[$field_mapping]]></code>
@@ -39802,7 +39735,6 @@
       <code><![CDATA[$parent_id]]></code>
       <code><![CDATA[$parent_id]]></code>
       <code><![CDATA[$row]]></code>
-      <code><![CDATA[$tracker]]></code>
       <code><![CDATA[$tracker]]></code>
       <code><![CDATA[$tracker]]></code>
       <code><![CDATA[$tracker]]></code>
@@ -39859,7 +39791,6 @@
       <code><![CDATA[getUnusedFormElementForTracker]]></code>
       <code><![CDATA[getUsedFieldByIdAndType]]></code>
       <code><![CDATA[getUsedFieldsForExpertModeUserCanRead]]></code>
-      <code><![CDATA[getUsedListFieldById]]></code>
       <code><![CDATA[getUsedSbFields]]></code>
       <code><![CDATA[getUsedTextFieldById]]></code>
       <code><![CDATA[getUsedUserClosedListFieldById]]></code>

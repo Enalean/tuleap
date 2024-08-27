@@ -18,47 +18,46 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
+namespace Tuleap\Cardwall\OnTop\Config;
+
+use Cardwall_Column;
+use Tracker;
+use Tracker_FormElement_Field_List;
+use Tracker_FormElement_Field_List_Bind_StaticValue_None;
+use Tracker_FormElement_InvalidFieldValueException;
 use Tuleap\Cardwall\Column\ColumnColorRetriever;
 
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
-class Cardwall_OnTop_Config_ColumnFactory
+class ColumnFactory
 {
     public const DEFAULT_HEADER_COLOR = 'rgb(248,248,248)';
 
-    /**
-     * @var Cardwall_OnTop_ColumnDao
-     */
-    private $dao;
-
-    public function __construct(Cardwall_OnTop_ColumnDao $dao)
+    public function __construct(private \Cardwall_OnTop_ColumnDao $dao)
     {
-        $this->dao = $dao;
     }
 
     /**
      * Get columns for Cardwall_OnTop
-     *
-     * @return Cardwall_OnTop_Config_ColumnCollection
      */
-    public function getDashboardColumns(Tracker $tracker)
+    public function getDashboardColumns(Tracker $tracker): ColumnCollection
     {
         return $this->getColumnsFromDao($tracker);
     }
 
     /**
      * Get Columns from the values of a $field
-     * @return Cardwall_OnTop_Config_ColumnCollection
      */
-    public function getRendererColumns(Tracker_FormElement_Field_List $field)
+    public function getRendererColumns(Tracker_FormElement_Field_List $field): ColumnCollection
     {
-        $columns = new Cardwall_OnTop_Config_ColumnCollection();
+        $columns = new ColumnCollection();
         $this->fillColumnsFor($columns, $field, []);
         return $columns;
     }
 
-    public function getFilteredRendererColumns(Tracker_FormElement_Field_List $field, array $filter)
+    public function getFilteredRendererColumns(Tracker_FormElement_Field_List $field, array $filter): ColumnCollection
     {
-        $columns = new Cardwall_OnTop_Config_ColumnCollection();
+        $columns = new ColumnCollection();
         $this->fillColumnsFor($columns, $field, $filter);
         return $columns;
     }
@@ -75,10 +74,10 @@ class Cardwall_OnTop_Config_ColumnFactory
     }
 
     private function fillColumnsFor(
-        Cardwall_OnTop_Config_ColumnCollection &$columns,
+        ColumnCollection $columns,
         Tracker_FormElement_Field_List $field,
         array $filter,
-    ) {
+    ): void {
         $decorators = $field->getDecorators();
         foreach ($this->getFieldBindValues($field, $filter) as $value) {
             $header_color = $this->getColumnHeaderColor($value, $decorators);
@@ -89,7 +88,7 @@ class Cardwall_OnTop_Config_ColumnFactory
     private function getFieldBindValues(
         Tracker_FormElement_Field_List $field,
         array $filter,
-    ) {
+    ): array {
         if (count($filter) === 0) {
             return $field->getVisibleValuesPlusNoneIfAny();
         }
@@ -109,12 +108,9 @@ class Cardwall_OnTop_Config_ColumnFactory
         return $field_values;
     }
 
-    /**
-     * @return Cardwall_OnTop_Config_ColumnCollection
-     */
-    private function getColumnsFromDao(Tracker $tracker)
+    private function getColumnsFromDao(Tracker $tracker): ColumnCollection
     {
-        $columns = new Cardwall_OnTop_Config_ColumnFreestyleCollection();
+        $columns = new ColumnCollection();
         foreach ($this->dao->searchColumnsByTrackerId($tracker->getId()) as $row) {
             $header_color = ColumnColorRetriever::getHeaderColorNameOrRGB($row);
             $columns[]    = new Cardwall_Column($row['id'], $row['label'], $header_color);
@@ -122,7 +118,10 @@ class Cardwall_OnTop_Config_ColumnFactory
         return $columns;
     }
 
-    private function getColumnHeaderColor($value, $decorators)
+    /**
+     * @param array<\Tracker_FormElement_Field_List_BindDecorator> $decorators
+     */
+    private function getColumnHeaderColor(\Tracker_FormElement_Field_List_BindValue $value, array $decorators): string
     {
         $id           = (int) $value->getId();
         $header_color = self::DEFAULT_HEADER_COLOR;

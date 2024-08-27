@@ -24,8 +24,8 @@ namespace Tuleap\Taskboard\Column;
 
 use Cardwall_Column;
 use Cardwall_OnTop_ColumnDao;
-use Cardwall_OnTop_Config_ColumnFactory;
 use PFUser;
+use Tuleap\Cardwall\OnTop\Config\ColumnFactory;
 use Tuleap\Taskboard\Column\FieldValuesToColumnMapping\Freestyle\FreestyleMappedFieldRetriever;
 use Tuleap\Taskboard\Column\FieldValuesToColumnMapping\Freestyle\FreestyleMappedFieldValuesRetriever;
 use Tuleap\Taskboard\Column\FieldValuesToColumnMapping\Freestyle\FreestyleMappingDao;
@@ -36,13 +36,13 @@ use Tuleap\Taskboard\Tracker\TrackerCollectionRetriever;
 
 class ColumnPresenterCollectionRetriever
 {
-    /** @var Cardwall_OnTop_Config_ColumnFactory */
+    /** @var ColumnFactory */
     private $column_factory;
     /** @var TrackerMappingPresenterBuilder */
     private $tracker_mapping_builder;
 
     public function __construct(
-        Cardwall_OnTop_Config_ColumnFactory $column_factory,
+        ColumnFactory $column_factory,
         TrackerMappingPresenterBuilder $tracker_mapping_builder,
     ) {
         $this->column_factory          = $column_factory;
@@ -54,7 +54,7 @@ class ColumnPresenterCollectionRetriever
         $freestyle_mapping_dao    = new FreestyleMappingDao();
         $semantic_status_provider = new \Cardwall_FieldProviders_SemanticStatusFieldRetriever();
         return new self(
-            new Cardwall_OnTop_Config_ColumnFactory(new Cardwall_OnTop_ColumnDao()),
+            new ColumnFactory(new Cardwall_OnTop_ColumnDao()),
             new TrackerMappingPresenterBuilder(
                 TrackerCollectionRetriever::build(),
                 new MappedFieldRetriever(

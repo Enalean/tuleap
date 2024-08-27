@@ -23,11 +23,11 @@ declare(strict_types=1);
 namespace Tuleap\Taskboard\REST\v1\Cell;
 
 use Cardwall_Column;
-use Cardwall_OnTop_Config_ColumnFactory;
 use Luracast\Restler\RestException;
 use PFUser;
 use PHPUnit\Framework\MockObject\MockObject;
 use Tracker_FormElement_Field_Selectbox;
+use Tuleap\Cardwall\OnTop\Config\ColumnFactory;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\GlobalResponseMock;
 use Tuleap\REST\I18NRestException;
@@ -55,7 +55,7 @@ final class CardMappedFieldUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
     use GlobalResponseMock;
     use GlobalLanguageMock;
 
-    private MockObject&Cardwall_OnTop_Config_ColumnFactory $column_factory;
+    private MockObject&ColumnFactory $column_factory;
     private MockObject&MilestoneTrackerRetriever $milestone_tracker_retriever;
     private MockObject&AddValidator $add_validator;
     private MockObject&ArtifactUpdater $artifact_updater;
@@ -73,7 +73,7 @@ final class CardMappedFieldUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
     protected function setUp(): void
     {
         $this->mapped_field                   = $this->createMock(Tracker_FormElement_Field_Selectbox::class);
-        $this->column_factory                 = $this->createMock(Cardwall_OnTop_Config_ColumnFactory::class);
+        $this->column_factory                 = $this->createMock(ColumnFactory::class);
         $this->milestone_tracker_retriever    = $this->createMock(MilestoneTrackerRetriever::class);
         $this->add_validator                  = $this->createMock(AddValidator::class);
         $this->artifact_updater               = $this->createMock(ArtifactUpdater::class);

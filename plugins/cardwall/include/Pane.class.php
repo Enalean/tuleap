@@ -21,6 +21,7 @@
 use Tuleap\AgileDashboard\ExplicitBacklog\ArtifactsInExplicitBacklogDao;
 use Tuleap\AgileDashboard\RemainingEffortValueRetriever;
 use Tuleap\Cardwall\Agiledashboard\CardwallPaneInfo;
+use Tuleap\Cardwall\OnTop\Config\ColumnCollection;
 use Tuleap\Tracker\Artifact\Artifact;
 
 /**
@@ -133,7 +134,7 @@ class Cardwall_Pane extends AgileDashboard_Pane
     /**
      * @return Cardwall_PaneContentPresenter
      */
-    private function getPresenterUsingMappedFields(Cardwall_OnTop_Config_ColumnCollection $columns)
+    private function getPresenterUsingMappedFields(ColumnCollection $columns)
     {
         $planning = $this->milestone->getPlanning();
 

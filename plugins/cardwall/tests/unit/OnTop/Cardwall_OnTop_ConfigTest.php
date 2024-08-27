@@ -20,6 +20,8 @@
 
 declare(strict_types=1);
 
+use Tuleap\Cardwall\OnTop\Config\ColumnCollection;
+use Tuleap\Cardwall\Test\Builders\ColumnTestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
@@ -69,10 +71,13 @@ final class Cardwall_OnTop_ConfigTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $tracker                 = $this->buildTracker(4);
         $dao                     = $this->createStub(\Cardwall_OnTop_Dao::class);
-        $column_factory          = $this->createStub(\Cardwall_OnTop_Config_ColumnFactory::class);
+        $column_factory          = $this->createStub(\Tuleap\Cardwall\OnTop\Config\ColumnFactory::class);
         $tracker_mapping_factory = $this->createStub(\Cardwall_OnTop_Config_TrackerMappingFactory::class);
 
-        $columns = new Cardwall_OnTop_Config_ColumnCollection(['of', 'columns']);
+        $columns = new ColumnCollection([
+            ColumnTestBuilder::aColumn()->withLabel('of')->build(),
+            ColumnTestBuilder::aColumn()->withLabel('columns')->build(),
+        ]);
         $column_factory->method('getDashboardColumns')->with($tracker)->willReturn($columns);
         $tracker_mapping_factory->expects(self::once())->method('getMappings')->with($tracker, $columns)->willReturn('whatever');
 
@@ -86,10 +91,10 @@ final class Cardwall_OnTop_ConfigTest extends \Tuleap\Test\PHPUnit\TestCase
         $mapping_tracker = $this->buildTracker(2);
 
         $dao                     = $this->createStub(\Cardwall_OnTop_Dao::class);
-        $column_factory          = $this->createStub(\Cardwall_OnTop_Config_ColumnFactory::class);
+        $column_factory          = $this->createStub(\Tuleap\Cardwall\OnTop\Config\ColumnFactory::class);
         $tracker_mapping_factory = $this->createStub(\Cardwall_OnTop_Config_TrackerMappingFactory::class);
         $tracker_mapping_factory->method('getMappings')->willReturn([]);
-        $column_factory->method('getDashboardColumns')->with($tracker)->willReturn(new Cardwall_OnTop_Config_ColumnCollection());
+        $column_factory->method('getDashboardColumns')->with($tracker)->willReturn(new ColumnCollection());
         $config = new Cardwall_OnTop_Config($tracker, $dao, $column_factory, $tracker_mapping_factory);
 
         self::assertNull($config->getMappingFor($mapping_tracker));
@@ -101,11 +106,11 @@ final class Cardwall_OnTop_ConfigTest extends \Tuleap\Test\PHPUnit\TestCase
         $mapping_tracker = $this->buildTracker(99);
 
         $dao                     = $this->createStub(\Cardwall_OnTop_Dao::class);
-        $column_factory          = $this->createStub(\Cardwall_OnTop_Config_ColumnFactory::class);
+        $column_factory          = $this->createStub(\Tuleap\Cardwall\OnTop\Config\ColumnFactory::class);
         $mapping                 = $this->createStub(\Cardwall_OnTop_Config_TrackerMapping::class);
         $tracker_mapping_factory = $this->createMock(\Cardwall_OnTop_Config_TrackerMappingFactory::class);
         $tracker_mapping_factory->method('getMappings')->willReturn([99 => $mapping]);
-        $column_factory->method('getDashboardColumns')->with($tracker)->willReturn(new Cardwall_OnTop_Config_ColumnCollection());
+        $column_factory->method('getDashboardColumns')->with($tracker)->willReturn(new ColumnCollection());
         $config = new Cardwall_OnTop_Config($tracker, $dao, $column_factory, $tracker_mapping_factory);
         self::assertEquals($mapping, $config->getMappingFor($mapping_tracker));
     }

@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Cardwall\OnTop\Config\ColumnCollection;
+
 require_once 'Swimline.class.php';
 require_once 'OnTop/Config.class.php';
 require_once 'FieldProviders/IProvideFieldGivenAnArtifact.class.php';
@@ -46,7 +48,7 @@ class Cardwall_SwimlineFactory
      * @param array of Cardwall_CardInCellPresenter $potential_presenters
      * @return array
      */
-    public function getCells(Cardwall_OnTop_Config_ColumnCollection $columns, array $potential_presenters)
+    public function getCells(ColumnCollection $columns, array $potential_presenters)
     {
         $cells = [];
         foreach ($columns as $column) {

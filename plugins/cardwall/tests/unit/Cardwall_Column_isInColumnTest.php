@@ -25,13 +25,13 @@ namespace Tuleap\Cardwall;
 use Cardwall_Column;
 use Cardwall_FieldProviders_IProvideFieldGivenAnArtifact;
 use Cardwall_OnTop_Config;
-use Cardwall_OnTop_Config_ColumnCollection;
-use Cardwall_OnTop_Config_ColumnFactory;
 use Cardwall_OnTop_Config_TrackerMappingFactory;
 use Cardwall_OnTop_Dao;
 use PHPUnit\Framework\MockObject\MockObject;
 use Tracker_Artifact_Changeset_Null;
 use Tracker_FormElement_Field_MultiSelectbox;
+use Tuleap\Cardwall\OnTop\Config\ColumnFactory;
+use Tuleap\Cardwall\OnTop\Config\ColumnCollection;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
@@ -56,10 +56,10 @@ final class Cardwall_Column_isInColumnTest extends TestCase // phpcs:ignore Squi
         $this->field_provider = $this->createMock(Cardwall_FieldProviders_IProvideFieldGivenAnArtifact::class);
         $this->field_provider->method('getField')->with($tracker)->willReturn($this->field);
         $dao                     = $this->createMock(Cardwall_OnTop_Dao::class);
-        $column_factory          = $this->createMock(Cardwall_OnTop_Config_ColumnFactory::class);
+        $column_factory          = $this->createMock(ColumnFactory::class);
         $tracker_mapping_factory = $this->createMock(Cardwall_OnTop_Config_TrackerMappingFactory::class);
 
-        $column_factory->method('getDashboardColumns')->with($tracker)->willReturn(new Cardwall_OnTop_Config_ColumnCollection());
+        $column_factory->method('getDashboardColumns')->with($tracker)->willReturn(new ColumnCollection());
         $tracker_mapping_factory->method('getMappings');
 
         $this->config = new Cardwall_OnTop_Config($tracker, $dao, $column_factory, $tracker_mapping_factory);
