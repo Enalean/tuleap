@@ -39,6 +39,8 @@ use Tracker_Semantic_TitleDao;
 use TrackerFactory;
 use Tuleap\CrossTracker\CrossTrackerArtifactReportDao;
 use Tuleap\CrossTracker\CrossTrackerDefaultReport;
+use Tuleap\CrossTracker\CrossTrackerExpertReport;
+use Tuleap\CrossTracker\CrossTrackerReport;
 use Tuleap\CrossTracker\CrossTrackerReportDao;
 use Tuleap\CrossTracker\CrossTrackerReportFactory;
 use Tuleap\CrossTracker\CrossTrackerReportNotFoundException;
@@ -165,8 +167,9 @@ use UserManager;
 
 final class CrossTrackerReportsResource extends AuthenticatedResource
 {
-    public const  MAX_LIMIT   = 50;
-    private const MODE_EXPERT = 'expert';
+    public const ROUTE = 'cross_tracker_reports';
+
+    public const  MAX_LIMIT = 50;
 
     private readonly UserManager $user_manager;
 
@@ -198,7 +201,7 @@ final class CrossTrackerReportsResource extends AuthenticatedResource
      *
      * @throws RestException 404
      */
-    public function getId(int $id): CrossTrackerDefaultReportRepresentation
+    public function getId(int $id): CrossTrackerReportRepresentation
     {
         $this->checkAccess();
         try {
@@ -251,7 +254,7 @@ final class CrossTrackerReportsResource extends AuthenticatedResource
 
             $query_parser = new QueryParameterParser(new JsonDecoder());
 
-            $expert_mode = $report_mode === null ? $report->isExpert() : $report_mode === self::MODE_EXPERT;
+            $expert_mode = $report_mode === null ? $report->isExpert() : $report_mode === CrossTrackerReportRepresentation::MODE_EXPERT;
             $trackers    = $this->getTrackersFromRoute($query, $report, $query_parser);
             if (count($trackers) === 0) {
                 if ($expert_mode) {
@@ -259,8 +262,13 @@ final class CrossTrackerReportsResource extends AuthenticatedResource
                 }
                 return new LegacyCrossTrackerReportContentRepresentation([]);
             }
-            $expert_query    = $this->getExpertQueryFromRoute($query, $report, $query_parser);
-            $expected_report = new CrossTrackerDefaultReport($report->getId(), $expert_query, $trackers, $expert_mode);
+            $expert_query = $this->getExpertQueryFromRoute($query, $report, $query_parser);
+
+            if ($report_mode === CrossTrackerReportRepresentation::MODE_EXPERT) {
+                $expected_report = new CrossTrackerExpertReport($report->getId(), $expert_query, $trackers);
+            } else {
+                $expected_report = new CrossTrackerDefaultReport($report->getId(), $expert_query, $trackers);
+            }
 
             $this->getUserIsAllowedToSeeReportChecker()->checkUserIsAllowedToSeeReport($current_user, $expected_report);
 
@@ -457,7 +465,7 @@ final class CrossTrackerReportsResource extends AuthenticatedResource
      * @throws RestException 400
      * @throws RestException 404
      */
-    protected function put(int $id, array $trackers_id, string $report_mode = 'default', string $expert_query = ''): CrossTrackerDefaultReportRepresentation
+    protected function put(int $id, array $trackers_id, string $report_mode = 'default', string $expert_query = ''): CrossTrackerReportRepresentation
     {
         $this->sendAllowHeaders();
 
@@ -466,10 +474,14 @@ final class CrossTrackerReportsResource extends AuthenticatedResource
             $tracker_extractor = new TrackerReportExtractor(TrackerFactory::instance());
             $trackers          = $tracker_extractor->extractTrackers($trackers_id);
 
-            $this->checkQueryIsValid($trackers, $expert_query, $report_mode === self::MODE_EXPERT, $current_user, $id);
+            $this->checkQueryIsValid($trackers, $expert_query, $report_mode === CrossTrackerReportRepresentation::MODE_EXPERT, $current_user, $id);
 
-            $report          = $this->getReport($id);
-            $expected_report = new CrossTrackerDefaultReport($report->getId(), $expert_query, $trackers, $report_mode === self::MODE_EXPERT);
+            $report = $this->getReport($id);
+            if ($report_mode === CrossTrackerReportRepresentation::MODE_EXPERT) {
+                $expected_report = new CrossTrackerExpertReport($report->getId(), $expert_query, $trackers);
+            } else {
+                $expected_report = new CrossTrackerDefaultReport($report->getId(), $expert_query, $trackers);
+            }
 
             $this->getUserIsAllowedToSeeReportChecker()->checkUserIsAllowedToSeeReport($current_user, $expected_report);
 
@@ -537,9 +549,13 @@ final class CrossTrackerReportsResource extends AuthenticatedResource
         Header::allowOptionsGetPut();
     }
 
-    private function getReportRepresentation(CrossTrackerDefaultReport $report, PFUser $user): CrossTrackerDefaultReportRepresentation
+    private function getReportRepresentation(CrossTrackerReport $report, PFUser $user): CrossTrackerReportRepresentation
     {
-        return CrossTrackerDefaultReportRepresentation::fromReport($report, $user);
+        return match ($report::class) {
+            CrossTrackerExpertReport::class => CrossTrackerExpertReportRepresentation::fromReport($report, $user),
+            CrossTrackerDefaultReport::class => CrossTrackerDefaultReportRepresentation::fromReport($report, $user),
+            default => throw new \LogicException('Unexpected report type'),
+        };
     }
 
     private function sendPaginationHeaders($limit, $offset, $size): void
@@ -556,7 +572,7 @@ final class CrossTrackerReportsResource extends AuthenticatedResource
      */
     private function getTrackersFromRoute(
         ?string $query,
-        CrossTrackerDefaultReport $report,
+        CrossTrackerReport $report,
         QueryParameterParser $query_parser,
     ): array {
         if ($query === null || $query === '') {
@@ -580,7 +596,7 @@ final class CrossTrackerReportsResource extends AuthenticatedResource
      */
     private function getExpertQueryFromRoute(
         ?string $query_parameter,
-        CrossTrackerDefaultReport $report,
+        CrossTrackerReport $report,
         QueryParameterParser $query_parser,
     ): string {
         if ($query_parameter === null || $query_parameter === '') {
@@ -621,7 +637,7 @@ final class CrossTrackerReportsResource extends AuthenticatedResource
      * @throws CrossTrackerReportNotFoundException
      * @throws RestException 403
      */
-    private function getReport(int $id): CrossTrackerDefaultReport
+    private function getReport(int $id): CrossTrackerReport
     {
         $report_factory = new CrossTrackerReportFactory(
             new CrossTrackerReportDao(),

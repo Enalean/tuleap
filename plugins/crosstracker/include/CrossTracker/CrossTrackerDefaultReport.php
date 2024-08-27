@@ -24,7 +24,7 @@ use Project;
 use Tracker;
 use Tracker_FormElement_Field;
 
-class CrossTrackerDefaultReport
+class CrossTrackerDefaultReport implements CrossTrackerReport
 {
     /**
      * @var Tracker[]|null
@@ -42,7 +42,6 @@ class CrossTrackerDefaultReport
         private readonly int $id,
         private readonly string $expert_query,
         private readonly array $trackers,
-        private readonly bool $expert,
     ) {
         $this->valid_trackers   = null;
         $this->invalid_trackers = null;
@@ -60,7 +59,7 @@ class CrossTrackerDefaultReport
 
     public function isExpert(): bool
     {
-        return $this->expert;
+        return false;
     }
 
     /**

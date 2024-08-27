@@ -163,7 +163,6 @@ final class DatetimeDuckTypedFieldTest extends CrossTrackerFieldTestCase
                 1,
                 "date_field = ''",
                 [$this->release_tracker, $this->sprint_tracker],
-                false,
             ),
             $this->project_member
         );
@@ -179,7 +178,6 @@ final class DatetimeDuckTypedFieldTest extends CrossTrackerFieldTestCase
                 1,
                 "date_field = '2023-02-12 10:25'",
                 [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
-                false,
             ),
             $this->project_member
         );
@@ -195,7 +193,6 @@ final class DatetimeDuckTypedFieldTest extends CrossTrackerFieldTestCase
                 1,
                 "date_field = '2023-02-12 10:25'",
                 [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
-                false,
             ),
             $this->project_admin
         );
@@ -211,7 +208,6 @@ final class DatetimeDuckTypedFieldTest extends CrossTrackerFieldTestCase
                 1,
                 "date_field = '2023-02-12'",
                 [$this->release_tracker, $this->sprint_tracker],
-                false,
             ),
             $this->project_member
         );
@@ -227,7 +223,6 @@ final class DatetimeDuckTypedFieldTest extends CrossTrackerFieldTestCase
                 1,
                 'date_field = NOW()',
                 [$this->release_tracker, $this->sprint_tracker],
-                false,
             ),
             $this->project_member
         );
@@ -243,7 +238,6 @@ final class DatetimeDuckTypedFieldTest extends CrossTrackerFieldTestCase
                 1,
                 "date_field = '2023-02-12 10:25' OR date_field = '2023-02-12 14:53'",
                 [$this->release_tracker, $this->sprint_tracker],
-                false,
             ),
             $this->project_member
         );
@@ -259,7 +253,6 @@ final class DatetimeDuckTypedFieldTest extends CrossTrackerFieldTestCase
                 1,
                 "date_field != ''",
                 [$this->release_tracker, $this->sprint_tracker],
-                false,
             ),
             $this->project_member
         );
@@ -278,7 +271,6 @@ final class DatetimeDuckTypedFieldTest extends CrossTrackerFieldTestCase
                 1,
                 "date_field != '2023-02-12 14:53'",
                 [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
-                false,
             ),
             $this->project_member
         );
@@ -297,7 +289,6 @@ final class DatetimeDuckTypedFieldTest extends CrossTrackerFieldTestCase
                 1,
                 "date_field != '2023-02-12 14:53'",
                 [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
-                false,
             ),
             $this->project_admin
         );
@@ -317,7 +308,6 @@ final class DatetimeDuckTypedFieldTest extends CrossTrackerFieldTestCase
                 1,
                 "date_field != '2023-02-12'",
                 [$this->release_tracker, $this->sprint_tracker],
-                false,
             ),
             $this->project_member
         );
@@ -336,7 +326,6 @@ final class DatetimeDuckTypedFieldTest extends CrossTrackerFieldTestCase
                 1,
                 'date_field != NOW()',
                 [$this->release_tracker, $this->sprint_tracker],
-                false,
             ),
             $this->project_member
         );
@@ -355,7 +344,6 @@ final class DatetimeDuckTypedFieldTest extends CrossTrackerFieldTestCase
                 1,
                 "date_field != '' AND date_field != '2023-02-12 14:53'",
                 [$this->release_tracker, $this->sprint_tracker],
-                false,
             ),
             $this->project_member
         );
@@ -371,7 +359,6 @@ final class DatetimeDuckTypedFieldTest extends CrossTrackerFieldTestCase
                 1,
                 "date_field < '2023-02-12 14:53'",
                 [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
-                false,
             ),
             $this->project_member
         );
@@ -387,7 +374,6 @@ final class DatetimeDuckTypedFieldTest extends CrossTrackerFieldTestCase
                 1,
                 "date_field < '2023-02-12 14:53'",
                 [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
-                false,
             ),
             $this->project_admin
         );
@@ -403,7 +389,6 @@ final class DatetimeDuckTypedFieldTest extends CrossTrackerFieldTestCase
                 1,
                 "date_field < '2023-02-13'",
                 [$this->release_tracker, $this->sprint_tracker],
-                false,
             ),
             $this->project_member
         );
@@ -419,7 +404,6 @@ final class DatetimeDuckTypedFieldTest extends CrossTrackerFieldTestCase
                 1,
                 'date_field < NOW()',
                 [$this->release_tracker, $this->sprint_tracker],
-                false,
             ),
             $this->project_member
         );
@@ -435,7 +419,6 @@ final class DatetimeDuckTypedFieldTest extends CrossTrackerFieldTestCase
                 1,
                 "date_field < '2023-02-12 14:53' AND date_field < '2023-02-12 12:00'",
                 [$this->release_tracker, $this->sprint_tracker],
-                false,
             ),
             $this->project_member
         );
@@ -451,7 +434,6 @@ final class DatetimeDuckTypedFieldTest extends CrossTrackerFieldTestCase
                 1,
                 "date_field <= '2023-02-12 14:53'",
                 [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
-                false,
             ),
             $this->project_member
         );
@@ -467,7 +449,6 @@ final class DatetimeDuckTypedFieldTest extends CrossTrackerFieldTestCase
                 1,
                 "date_field <= '2023-02-12 14:53'",
                 [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
-                false,
             ),
             $this->project_admin
         );
@@ -483,7 +464,6 @@ final class DatetimeDuckTypedFieldTest extends CrossTrackerFieldTestCase
                 1,
                 "date_field <= '2023-02-12'",
                 [$this->release_tracker, $this->sprint_tracker],
-                false,
             ),
             $this->project_member
         );
@@ -499,7 +479,6 @@ final class DatetimeDuckTypedFieldTest extends CrossTrackerFieldTestCase
                 1,
                 'date_field <= NOW()',
                 [$this->release_tracker, $this->sprint_tracker],
-                false,
             ),
             $this->project_member
         );
@@ -515,7 +494,6 @@ final class DatetimeDuckTypedFieldTest extends CrossTrackerFieldTestCase
                 1,
                 "date_field <= '2023-02-12 14:53' OR date_field <= '2023-02-12 12:00'",
                 [$this->release_tracker, $this->sprint_tracker],
-                false,
             ),
             $this->project_member
         );
@@ -531,7 +509,6 @@ final class DatetimeDuckTypedFieldTest extends CrossTrackerFieldTestCase
                 1,
                 "date_field > '2023-02-12 10:24'",
                 [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
-                false,
             ),
             $this->project_member
         );
@@ -550,7 +527,6 @@ final class DatetimeDuckTypedFieldTest extends CrossTrackerFieldTestCase
                 1,
                 "date_field > '2023-02-12 10:24'",
                 [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
-                false,
             ),
             $this->project_admin
         );
@@ -570,7 +546,6 @@ final class DatetimeDuckTypedFieldTest extends CrossTrackerFieldTestCase
                 1,
                 "date_field > '2023-02-12'",
                 [$this->release_tracker, $this->sprint_tracker],
-                false,
             ),
             $this->project_member
         );
@@ -586,7 +561,6 @@ final class DatetimeDuckTypedFieldTest extends CrossTrackerFieldTestCase
                 1,
                 'date_field > NOW()',
                 [$this->release_tracker, $this->sprint_tracker],
-                false,
             ),
             $this->project_member
         );
@@ -602,7 +576,6 @@ final class DatetimeDuckTypedFieldTest extends CrossTrackerFieldTestCase
                 1,
                 "date_field > '2023-02-12 14:53' OR date_field > NOW()",
                 [$this->release_tracker, $this->sprint_tracker],
-                false,
             ),
             $this->project_member
         );
@@ -618,7 +591,6 @@ final class DatetimeDuckTypedFieldTest extends CrossTrackerFieldTestCase
                 1,
                 "date_field >= '2023-02-12 10:25'",
                 [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
-                false,
             ),
             $this->project_member
         );
@@ -637,7 +609,6 @@ final class DatetimeDuckTypedFieldTest extends CrossTrackerFieldTestCase
                 1,
                 "date_field >= '2023-02-12 10:25'",
                 [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
-                false,
             ),
             $this->project_admin
         );
@@ -657,7 +628,6 @@ final class DatetimeDuckTypedFieldTest extends CrossTrackerFieldTestCase
                 1,
                 "date_field >= '2023-02-12'",
                 [$this->release_tracker, $this->sprint_tracker],
-                false,
             ),
             $this->project_member
         );
@@ -676,7 +646,6 @@ final class DatetimeDuckTypedFieldTest extends CrossTrackerFieldTestCase
                 1,
                 'date_field >= NOW()',
                 [$this->release_tracker, $this->sprint_tracker],
-                false,
             ),
             $this->project_member
         );
@@ -692,7 +661,6 @@ final class DatetimeDuckTypedFieldTest extends CrossTrackerFieldTestCase
                 1,
                 "date_field >= '2023-02-12 14:53' AND date_field >= NOW()",
                 [$this->release_tracker, $this->sprint_tracker],
-                false,
             ),
             $this->project_member
         );
@@ -708,7 +676,6 @@ final class DatetimeDuckTypedFieldTest extends CrossTrackerFieldTestCase
                 1,
                 "date_field BETWEEN('2023-02-12 02:00', '2023-02-12 17:00')",
                 [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
-                false,
             ),
             $this->project_member
         );
@@ -724,7 +691,6 @@ final class DatetimeDuckTypedFieldTest extends CrossTrackerFieldTestCase
                 1,
                 "date_field BETWEEN('2023-02-12 02:00', '2023-02-12 17:00')",
                 [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
-                false,
             ),
             $this->project_admin
         );
@@ -740,7 +706,6 @@ final class DatetimeDuckTypedFieldTest extends CrossTrackerFieldTestCase
                 1,
                 "date_field BETWEEN('2023-02-11', '2023-02-13')",
                 [$this->release_tracker, $this->sprint_tracker],
-                false,
             ),
             $this->project_member
         );
@@ -756,7 +721,6 @@ final class DatetimeDuckTypedFieldTest extends CrossTrackerFieldTestCase
                 1,
                 'date_field BETWEEN(NOW() - 1d, NOW() + 1d)',
                 [$this->release_tracker, $this->sprint_tracker],
-                false,
             ),
             $this->project_member
         );
@@ -772,7 +736,6 @@ final class DatetimeDuckTypedFieldTest extends CrossTrackerFieldTestCase
                 1,
                 "date_field BETWEEN('2023-02-12 02:00', '2023-02-12 12:00') OR date_field BETWEEN(NOW(), NOW())",
                 [$this->release_tracker, $this->sprint_tracker],
-                false,
             ),
             $this->project_member
         );

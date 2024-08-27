@@ -26,6 +26,7 @@ use Project_AccessException;
 use Project_AccessProjectNotFoundException;
 use ProjectManager;
 use Tuleap\CrossTracker\CrossTrackerDefaultReport;
+use Tuleap\CrossTracker\CrossTrackerReport;
 use Tuleap\CrossTracker\CrossTrackerReportDao;
 use Tuleap\CrossTracker\CrossTrackerReportFactory;
 use Tuleap\CrossTracker\CrossTrackerReportNotFoundException;
@@ -154,6 +155,7 @@ class CSVExportController implements DispatchableWithRequest
                 $offset,
             );
             assert($collection instanceof ArtifactMatchingReportCollection);
+            assert($report instanceof CrossTrackerDefaultReport);
             $similar_fields = $this->similar_fields_matcher->getSimilarFieldsCollection($report, $current_user);
             return $this->csv_representation_factory->buildRepresentations(
                 $collection,
@@ -215,7 +217,7 @@ class CSVExportController implements DispatchableWithRequest
      * @throws ForbiddenException
      * @throws NotFoundException
      */
-    private function checkUserIsAllowedToSeeReport(PFUser $user, CrossTrackerDefaultReport $report): void
+    private function checkUserIsAllowedToSeeReport(PFUser $user, CrossTrackerReport $report): void
     {
         $widget = $this->cross_tracker_dao->searchCrossTrackerWidgetByCrossTrackerReportId($report->getId());
         if (

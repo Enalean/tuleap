@@ -141,7 +141,6 @@ final class NumericDuckTypedFieldTest extends CrossTrackerFieldTestCase
                 1,
                 "initial_effort=''",
                 [$this->release_tracker, $this->sprint_tracker],
-                false,
             ),
             $this->project_member
         );
@@ -157,7 +156,6 @@ final class NumericDuckTypedFieldTest extends CrossTrackerFieldTestCase
                 1,
                 'initial_effort = 5',
                 [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
-                false,
             ),
             $this->project_member
         );
@@ -173,7 +171,6 @@ final class NumericDuckTypedFieldTest extends CrossTrackerFieldTestCase
                 1,
                 'initial_effort = 5',
                 [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
-                false,
             ),
             $this->project_admin
         );
@@ -192,7 +189,6 @@ final class NumericDuckTypedFieldTest extends CrossTrackerFieldTestCase
                 1,
                 "initial_effort = '' OR initial_effort = 5",
                 [$this->release_tracker, $this->sprint_tracker],
-                false,
             ),
             $this->project_member
         );
@@ -211,7 +207,6 @@ final class NumericDuckTypedFieldTest extends CrossTrackerFieldTestCase
                 1,
                 "initial_effort != ''",
                 [$this->release_tracker, $this->sprint_tracker],
-                false,
             ),
             $this->project_member
         );
@@ -230,7 +225,6 @@ final class NumericDuckTypedFieldTest extends CrossTrackerFieldTestCase
                 1,
                 'initial_effort != 5',
                 [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
-                false,
             ),
             $this->project_member
         );
@@ -249,7 +243,6 @@ final class NumericDuckTypedFieldTest extends CrossTrackerFieldTestCase
                 1,
                 'initial_effort != 5',
                 [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
-                false,
             ),
             $this->project_admin
         );
@@ -269,7 +262,6 @@ final class NumericDuckTypedFieldTest extends CrossTrackerFieldTestCase
                 1,
                 "initial_effort != 5 AND initial_effort != ''",
                 [$this->release_tracker, $this->sprint_tracker],
-                false,
             ),
             $this->project_member
         );
@@ -285,7 +277,6 @@ final class NumericDuckTypedFieldTest extends CrossTrackerFieldTestCase
                 1,
                 'initial_effort < 5',
                 [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
-                false,
             ),
             $this->project_member
         );
@@ -301,7 +292,6 @@ final class NumericDuckTypedFieldTest extends CrossTrackerFieldTestCase
                 1,
                 'initial_effort < 5',
                 [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
-                false,
             ),
             $this->project_admin
         );
@@ -317,7 +307,6 @@ final class NumericDuckTypedFieldTest extends CrossTrackerFieldTestCase
                 1,
                 'initial_effort < 5 OR initial_effort < 8',
                 [$this->release_tracker, $this->sprint_tracker],
-                false,
             ),
             $this->project_member
         );
@@ -336,7 +325,6 @@ final class NumericDuckTypedFieldTest extends CrossTrackerFieldTestCase
                 1,
                 'initial_effort <= 5',
                 [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
-                false,
             ),
             $this->project_member
         );
@@ -355,7 +343,6 @@ final class NumericDuckTypedFieldTest extends CrossTrackerFieldTestCase
                 1,
                 'initial_effort <= 5',
                 [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
-                false,
             ),
             $this->project_admin
         );
@@ -375,7 +362,6 @@ final class NumericDuckTypedFieldTest extends CrossTrackerFieldTestCase
                 1,
                 'initial_effort <= 5 OR initial_effort <= 8',
                 [$this->release_tracker, $this->sprint_tracker],
-                false,
             ),
             $this->project_member
         );
@@ -394,7 +380,6 @@ final class NumericDuckTypedFieldTest extends CrossTrackerFieldTestCase
                 1,
                 'initial_effort > 3',
                 [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
-                false,
             ),
             $this->project_member
         );
@@ -410,7 +395,6 @@ final class NumericDuckTypedFieldTest extends CrossTrackerFieldTestCase
                 1,
                 'initial_effort > 3',
                 [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
-                false,
             ),
             $this->project_admin
         );
@@ -426,7 +410,6 @@ final class NumericDuckTypedFieldTest extends CrossTrackerFieldTestCase
                 1,
                 'initial_effort > 3 OR initial_effort > 1',
                 [$this->release_tracker, $this->sprint_tracker],
-                false,
             ),
             $this->project_member
         );
@@ -445,7 +428,6 @@ final class NumericDuckTypedFieldTest extends CrossTrackerFieldTestCase
                 1,
                 'initial_effort >= 3',
                 [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
-                false,
             ),
             $this->project_member
         );
@@ -464,7 +446,6 @@ final class NumericDuckTypedFieldTest extends CrossTrackerFieldTestCase
                 1,
                 'initial_effort >= 3',
                 [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
-                false,
             ),
             $this->project_admin
         );
@@ -484,7 +465,6 @@ final class NumericDuckTypedFieldTest extends CrossTrackerFieldTestCase
                 1,
                 'initial_effort >= 3 OR initial_effort >= 5',
                 [$this->release_tracker, $this->sprint_tracker],
-                false,
             ),
             $this->project_member
         );
@@ -503,7 +483,6 @@ final class NumericDuckTypedFieldTest extends CrossTrackerFieldTestCase
                 1,
                 'initial_effort BETWEEN(2, 4)',
                 [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
-                false,
             ),
             $this->project_member
         );
@@ -519,7 +498,6 @@ final class NumericDuckTypedFieldTest extends CrossTrackerFieldTestCase
                 1,
                 'initial_effort BETWEEN(2, 4)',
                 [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
-                false,
             ),
             $this->project_admin
         );
@@ -535,7 +513,6 @@ final class NumericDuckTypedFieldTest extends CrossTrackerFieldTestCase
                 1,
                 'initial_effort BETWEEN(2, 4) OR initial_effort BETWEEN(5, 8)',
                 [$this->release_tracker, $this->sprint_tracker],
-                false,
             ),
             $this->project_member
         );
@@ -554,7 +531,6 @@ final class NumericDuckTypedFieldTest extends CrossTrackerFieldTestCase
                 1,
                 'initial_effort > 3.00',
                 [$this->release_tracker, $this->sprint_tracker],
-                false,
             ),
             $this->project_member
         );

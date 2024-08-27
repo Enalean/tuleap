@@ -33,7 +33,7 @@ class CrossTrackerReportFactory
     /**
      * @throws CrossTrackerReportNotFoundException
      */
-    public function getById($id): CrossTrackerDefaultReport
+    public function getById($id): CrossTrackerReport
     {
         $report_row = $this->report_dao->searchReportById($id);
         if (! $report_row) {
@@ -51,6 +51,10 @@ class CrossTrackerReportFactory
             }
         }
 
-        return new CrossTrackerDefaultReport($id, $expert_query, $report_trackers, $expert_mode);
+        if ($expert_mode) {
+            return new CrossTrackerExpertReport($id, $expert_query, $report_trackers);
+        }
+
+        return new CrossTrackerDefaultReport($id, $expert_query, $report_trackers);
     }
 }

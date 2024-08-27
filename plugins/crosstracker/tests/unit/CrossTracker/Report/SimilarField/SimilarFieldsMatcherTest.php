@@ -46,7 +46,7 @@ final class SimilarFieldsMatcherTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->report                = new CrossTrackerDefaultReport(1, '', [
             TrackerTestBuilder::aTracker()->withId(91)->build(),
             TrackerTestBuilder::aTracker()->withId(26)->build(),
-        ], false);
+        ]);
         $this->user                  = UserTestBuilder::aUser()->build();
         $this->similar_fields_filter = $this->createMock(SimilarFieldsFilter::class);
 

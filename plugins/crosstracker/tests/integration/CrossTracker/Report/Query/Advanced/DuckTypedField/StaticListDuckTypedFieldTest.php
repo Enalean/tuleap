@@ -171,7 +171,6 @@ final class StaticListDuckTypedFieldTest extends CrossTrackerFieldTestCase
                 1,
                 "list_field = ''",
                 [$this->release_tracker, $this->sprint_tracker],
-                false,
             ),
             $this->project_member
         );
@@ -187,7 +186,6 @@ final class StaticListDuckTypedFieldTest extends CrossTrackerFieldTestCase
                 1,
                 "list_field = 'cheese'",
                 [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
-                false,
             ),
             $this->project_member
         );
@@ -203,7 +201,6 @@ final class StaticListDuckTypedFieldTest extends CrossTrackerFieldTestCase
                 1,
                 "list_field = 'cheese'",
                 [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
-                false,
             ),
             $this->project_admin
         );
@@ -223,7 +220,6 @@ final class StaticListDuckTypedFieldTest extends CrossTrackerFieldTestCase
                 1,
                 "list_field = 'cheese' OR list_field = 'lead'",
                 [$this->release_tracker, $this->sprint_tracker],
-                false,
             ),
             $this->project_member
         );
@@ -242,7 +238,6 @@ final class StaticListDuckTypedFieldTest extends CrossTrackerFieldTestCase
                 1,
                 "list_field = 'cheese' AND list_field = 'lead'",
                 [$this->release_tracker, $this->sprint_tracker],
-                false,
             ),
             $this->project_member
         );
@@ -258,7 +253,6 @@ final class StaticListDuckTypedFieldTest extends CrossTrackerFieldTestCase
                 1,
                 "list_field != ''",
                 [$this->release_tracker, $this->sprint_tracker],
-                false,
             ),
             $this->project_member
         );
@@ -277,7 +271,6 @@ final class StaticListDuckTypedFieldTest extends CrossTrackerFieldTestCase
                 1,
                 "list_field != 'lead'",
                 [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
-                false,
             ),
             $this->project_member
         );
@@ -296,7 +289,6 @@ final class StaticListDuckTypedFieldTest extends CrossTrackerFieldTestCase
                 1,
                 "list_field != 'lead'",
                 [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
-                false,
             ),
             $this->project_admin
         );
@@ -316,7 +308,6 @@ final class StaticListDuckTypedFieldTest extends CrossTrackerFieldTestCase
                 1,
                 "list_field != 'cheese' AND list_field != 'lead'",
                 [$this->release_tracker, $this->sprint_tracker],
-                false,
             ),
             $this->project_member
         );
@@ -332,7 +323,6 @@ final class StaticListDuckTypedFieldTest extends CrossTrackerFieldTestCase
                 1,
                 "list_field IN('cheese')",
                 [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
-                false,
             ),
             $this->project_member
         );
@@ -348,7 +338,6 @@ final class StaticListDuckTypedFieldTest extends CrossTrackerFieldTestCase
                 1,
                 "list_field IN('cheese')",
                 [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
-                false,
             ),
             $this->project_admin
         );
@@ -368,7 +357,6 @@ final class StaticListDuckTypedFieldTest extends CrossTrackerFieldTestCase
                 1,
                 "list_field IN('lead', 'cheese')",
                 [$this->release_tracker, $this->sprint_tracker],
-                false,
             ),
             $this->project_member
         );
@@ -387,7 +375,6 @@ final class StaticListDuckTypedFieldTest extends CrossTrackerFieldTestCase
                 1,
                 "list_field IN('lead') AND list_field IN('cheese')",
                 [$this->release_tracker, $this->sprint_tracker],
-                false,
             ),
             $this->project_member
         );
@@ -403,7 +390,6 @@ final class StaticListDuckTypedFieldTest extends CrossTrackerFieldTestCase
                 1,
                 "list_field NOT IN('lead')",
                 [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
-                false,
             ),
             $this->project_member
         );
@@ -422,7 +408,6 @@ final class StaticListDuckTypedFieldTest extends CrossTrackerFieldTestCase
                 1,
                 "list_field NOT IN('lead')",
                 [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
-                false,
             ),
             $this->project_admin
         );
@@ -442,7 +427,6 @@ final class StaticListDuckTypedFieldTest extends CrossTrackerFieldTestCase
                 1,
                 "list_field NOT IN('lead', 'cheese')",
                 [$this->release_tracker, $this->sprint_tracker],
-                false,
             ),
             $this->project_member
         );
@@ -458,7 +442,6 @@ final class StaticListDuckTypedFieldTest extends CrossTrackerFieldTestCase
                 1,
                 "list_field NOT IN('lead') AND list_field NOT IN ('cheese')",
                 [$this->release_tracker, $this->sprint_tracker],
-                false,
             ),
             $this->project_member
         );

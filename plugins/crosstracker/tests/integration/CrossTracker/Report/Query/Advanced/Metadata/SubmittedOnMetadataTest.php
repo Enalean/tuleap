@@ -126,7 +126,6 @@ final class SubmittedOnMetadataTest extends CrossTrackerFieldTestCase
                 1,
                 "@submitted_on = '2023-03-08'",
                 [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
-                false,
             ),
             $this->project_member
         );
@@ -142,7 +141,6 @@ final class SubmittedOnMetadataTest extends CrossTrackerFieldTestCase
                 1,
                 "@submitted_on = '2023-03-08'",
                 [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
-                false,
             ),
             $this->project_admin
         );
@@ -158,7 +156,6 @@ final class SubmittedOnMetadataTest extends CrossTrackerFieldTestCase
                 1,
                 "@submitted_on = '2023-03-08 10:25'",
                 [$this->release_tracker, $this->sprint_tracker],
-                false,
             ),
             $this->project_member
         );
@@ -174,7 +171,6 @@ final class SubmittedOnMetadataTest extends CrossTrackerFieldTestCase
                 1,
                 "@submitted_on = '2023-03-08' OR @submitted_on = '1970-01-01'",
                 [$this->release_tracker, $this->sprint_tracker],
-                false,
             ),
             $this->project_member
         );
@@ -190,7 +186,6 @@ final class SubmittedOnMetadataTest extends CrossTrackerFieldTestCase
                 1,
                 "@submitted_on != '2023-03-08'",
                 [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
-                false,
             ),
             $this->project_member
         );
@@ -206,7 +201,6 @@ final class SubmittedOnMetadataTest extends CrossTrackerFieldTestCase
                 1,
                 "@submitted_on != '2023-03-08'",
                 [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
-                false,
             ),
             $this->project_admin
         );
@@ -222,7 +216,6 @@ final class SubmittedOnMetadataTest extends CrossTrackerFieldTestCase
                 1,
                 "@submitted_on != '2023-03-08 10:25'",
                 [$this->release_tracker, $this->sprint_tracker],
-                false,
             ),
             $this->project_member
         );
@@ -238,7 +231,6 @@ final class SubmittedOnMetadataTest extends CrossTrackerFieldTestCase
                 1,
                 "@submitted_on != '2023-03-08' AND @submitted_on != '1970-01-01'",
                 [$this->release_tracker, $this->sprint_tracker],
-                false,
             ),
             $this->project_member
         );
@@ -254,7 +246,6 @@ final class SubmittedOnMetadataTest extends CrossTrackerFieldTestCase
                 1,
                 "@submitted_on < '2023-03-09'",
                 [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
-                false,
             ),
             $this->project_member
         );
@@ -270,7 +261,6 @@ final class SubmittedOnMetadataTest extends CrossTrackerFieldTestCase
                 1,
                 "@submitted_on < '2023-03-09'",
                 [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
-                false,
             ),
             $this->project_admin
         );
@@ -286,7 +276,6 @@ final class SubmittedOnMetadataTest extends CrossTrackerFieldTestCase
                 1,
                 "@submitted_on < '2023-03-08 15:52'",
                 [$this->release_tracker, $this->sprint_tracker],
-                false,
             ),
             $this->project_member
         );
@@ -302,7 +291,6 @@ final class SubmittedOnMetadataTest extends CrossTrackerFieldTestCase
                 1,
                 '@submitted_on < NOW()',
                 [$this->release_tracker, $this->sprint_tracker],
-                false,
             ),
             $this->project_member
         );
@@ -318,7 +306,6 @@ final class SubmittedOnMetadataTest extends CrossTrackerFieldTestCase
                 1,
                 "@submitted_on < NOW() OR @submitted_on < '1970-01-01'",
                 [$this->release_tracker, $this->sprint_tracker],
-                false,
             ),
             $this->project_member
         );
@@ -334,7 +321,6 @@ final class SubmittedOnMetadataTest extends CrossTrackerFieldTestCase
                 1,
                 "@submitted_on <= '2023-03-08'",
                 [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
-                false,
             ),
             $this->project_member
         );
@@ -350,7 +336,6 @@ final class SubmittedOnMetadataTest extends CrossTrackerFieldTestCase
                 1,
                 "@submitted_on <= '2023-03-08'",
                 [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
-                false,
             ),
             $this->project_admin
         );
@@ -366,7 +351,6 @@ final class SubmittedOnMetadataTest extends CrossTrackerFieldTestCase
                 1,
                 "@submitted_on <= '2023-03-08 15:52'",
                 [$this->release_tracker, $this->sprint_tracker],
-                false,
             ),
             $this->project_member
         );
@@ -382,7 +366,6 @@ final class SubmittedOnMetadataTest extends CrossTrackerFieldTestCase
                 1,
                 '@submitted_on <= NOW()',
                 [$this->release_tracker, $this->sprint_tracker],
-                false,
             ),
             $this->project_member
         );
@@ -401,7 +384,6 @@ final class SubmittedOnMetadataTest extends CrossTrackerFieldTestCase
                 1,
                 "@submitted_on <= NOW() OR @submitted_on <= '1970-01-01'",
                 [$this->release_tracker, $this->sprint_tracker],
-                false,
             ),
             $this->project_member
         );
@@ -420,7 +402,6 @@ final class SubmittedOnMetadataTest extends CrossTrackerFieldTestCase
                 1,
                 "@submitted_on > '2023-03-08'",
                 [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
-                false,
             ),
             $this->project_member
         );
@@ -436,7 +417,6 @@ final class SubmittedOnMetadataTest extends CrossTrackerFieldTestCase
                 1,
                 "@submitted_on > '2023-03-08'",
                 [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
-                false,
             ),
             $this->project_admin
         );
@@ -452,7 +432,6 @@ final class SubmittedOnMetadataTest extends CrossTrackerFieldTestCase
                 1,
                 "@submitted_on > '2023-03-08 10:25'",
                 [$this->release_tracker, $this->sprint_tracker],
-                false,
             ),
             $this->project_member
         );
@@ -468,7 +447,6 @@ final class SubmittedOnMetadataTest extends CrossTrackerFieldTestCase
                 1,
                 '@submitted_on > NOW() - 1d',
                 [$this->release_tracker, $this->sprint_tracker],
-                false,
             ),
             $this->project_member
         );
@@ -484,7 +462,6 @@ final class SubmittedOnMetadataTest extends CrossTrackerFieldTestCase
                 1,
                 "@submitted_on > '2023-03-08' OR @submitted_on > NOW()",
                 [$this->release_tracker, $this->sprint_tracker],
-                false,
             ),
             $this->project_member
         );
@@ -500,7 +477,6 @@ final class SubmittedOnMetadataTest extends CrossTrackerFieldTestCase
                 1,
                 "@submitted_on >= '2023-03-08'",
                 [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
-                false,
             ),
             $this->project_member
         );
@@ -519,7 +495,6 @@ final class SubmittedOnMetadataTest extends CrossTrackerFieldTestCase
                 1,
                 "@submitted_on >= '2023-03-08'",
                 [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
-                false,
             ),
             $this->project_admin
         );
@@ -539,7 +514,6 @@ final class SubmittedOnMetadataTest extends CrossTrackerFieldTestCase
                 1,
                 "@submitted_on >= '2023-03-08 10:25'",
                 [$this->release_tracker, $this->sprint_tracker],
-                false,
             ),
             $this->project_member
         );
@@ -558,7 +532,6 @@ final class SubmittedOnMetadataTest extends CrossTrackerFieldTestCase
                 1,
                 '@submitted_on >= NOW()',
                 [$this->release_tracker, $this->sprint_tracker],
-                false,
             ),
             $this->project_member
         );
@@ -574,7 +547,6 @@ final class SubmittedOnMetadataTest extends CrossTrackerFieldTestCase
                 1,
                 "@submitted_on >= '2023-03-08' OR @submitted_on >= NOW()",
                 [$this->release_tracker, $this->sprint_tracker],
-                false,
             ),
             $this->project_member
         );
@@ -593,7 +565,6 @@ final class SubmittedOnMetadataTest extends CrossTrackerFieldTestCase
                 1,
                 "@submitted_on BETWEEN('2023-03-08 02:47', '2023-03-08 12:16')",
                 [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
-                false,
             ),
             $this->project_member
         );
@@ -609,7 +580,6 @@ final class SubmittedOnMetadataTest extends CrossTrackerFieldTestCase
                 1,
                 "@submitted_on BETWEEN('2023-03-08 02:47', '2023-03-08 12:16')",
                 [$this->release_tracker, $this->sprint_tracker, $this->task_tracker],
-                false,
             ),
             $this->project_admin
         );
@@ -625,7 +595,6 @@ final class SubmittedOnMetadataTest extends CrossTrackerFieldTestCase
                 1,
                 "@submitted_on BETWEEN('2023-03-01', '2023-03-31')",
                 [$this->release_tracker, $this->sprint_tracker],
-                false,
             ),
             $this->project_member
         );
@@ -641,7 +610,6 @@ final class SubmittedOnMetadataTest extends CrossTrackerFieldTestCase
                 1,
                 '@submitted_on BETWEEN(NOW() - 1d, NOW() + 1d)',
                 [$this->release_tracker, $this->sprint_tracker],
-                false,
             ),
             $this->project_member
         );
@@ -657,7 +625,6 @@ final class SubmittedOnMetadataTest extends CrossTrackerFieldTestCase
                 1,
                 "@submitted_on BETWEEN(NOW() - 1d, NOW() + 1d) OR @submitted_on BETWEEN('2023-03-01', '2023-03-31')",
                 [$this->release_tracker, $this->sprint_tracker],
-                false,
             ),
             $this->project_member
         );
