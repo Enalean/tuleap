@@ -90,9 +90,3 @@ id = "GHSA-g3ch-rx76-35fx" # CVE-2024-6783
 reason = "No direct exploitation path, template are not compiled at runtime. The migration to move away from Vue 2 is underway."
 
 ### TO BE FIXED
-
-## micromatch
-[[IgnoredVulns]]
-id = "GHSA-952p-6rrq-rcjv" # CVE-2024-4067
-reason = "ReDoS. No risk, micromatch is used as a dev dep, it only processes trusted inputs."
-ignoreUntil = 2024-09-22
