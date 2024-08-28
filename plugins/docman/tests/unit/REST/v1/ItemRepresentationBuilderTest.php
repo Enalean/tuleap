@@ -23,9 +23,13 @@ declare(strict_types=1);
 namespace Tuleap\Docman\REST\v1;
 
 use Codendi_HTMLPurifier;
+use Docman_ApprovalTableFile;
+use Docman_Item;
 use Docman_ItemDao;
 use Docman_ItemFactory;
-use Mockery;
+use Docman_LockFactory;
+use Docman_PermissionsManager;
+use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\Docman\ApprovalTable\ApprovalTableRetriever;
 use Tuleap\Docman\ApprovalTable\ApprovalTableStateMapper;
 use Tuleap\Docman\REST\v1\Metadata\ItemMetadataRepresentation;
@@ -33,118 +37,69 @@ use Tuleap\Docman\REST\v1\Metadata\MetadataRepresentationBuilder;
 use Tuleap\Docman\REST\v1\Permissions\DocmanItemPermissionsForGroupsBuilder;
 use Tuleap\Docman\REST\v1\Permissions\DocmanItemPermissionsForGroupsRepresentation;
 use Tuleap\GlobalLanguageMock;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
+use UserManager;
 
-class ItemRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
+final class ItemRepresentationBuilderTest extends TestCase
 {
-    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
     use GlobalLanguageMock;
 
-    /**
-     * @var Mockery\MockInterface|ApprovalTableRetriever
-     */
-    private $approval_table_retriever;
-    /**
-     * @var Mockery\MockInterface|MetadataRepresentationBuilder
-     */
-    private $metadata_representation_builder;
-
-    /**
-     * @var Docman_ItemDao
-     */
-    private $dao;
-    /**
-     * @var \UserManager
-     */
-    private $user_manager;
-    /**
-     * @var Docman_ItemFactory
-     */
-    private $docman_item_factory;
-    /**
-     * @var \Docman_PermissionsManager
-     */
-    private $permissions_manager;
-    /**
-     * @var \Docman_LockFactory
-     */
-    private $lock_factory;
-
-    /**
-     * @var ItemRepresentationBuilder
-     */
-    private $item_representation_builder;
-
-    /**
-     * @var ApprovalTableStateMapper
-     */
-    private $approval_table_state_mapper;
-
-    /**
-     * @var Mockery\MockInterface|DocmanItemPermissionsForGroupsBuilder
-     */
-    private $item_permissions_for_groups_builder;
-    /**
-     * @var Codendi_HTMLPurifier|Mockery\MockInterface
-     */
-    private $html_purifier;
+    private ApprovalTableRetriever&MockObject $approval_table_retriever;
+    private MetadataRepresentationBuilder&MockObject $metadata_representation_builder;
+    private UserManager&MockObject $user_manager;
+    private Docman_PermissionsManager&MockObject $permissions_manager;
+    private Docman_LockFactory&MockObject $lock_factory;
+    private ItemRepresentationBuilder $item_representation_builder;
+    private DocmanItemPermissionsForGroupsBuilder&MockObject $item_permissions_for_groups_builder;
+    private Codendi_HTMLPurifier&MockObject $html_purifier;
 
     protected function setUp(): void
     {
-        parent::setUp();
-
-        $this->dao                         = Mockery::Mock(Docman_ItemDao::class);
-        $this->user_manager                = Mockery::Mock(\UserManager::class);
-        $this->docman_item_factory         = Mockery::Mock(Docman_ItemFactory::class);
-        $this->permissions_manager         = Mockery::Mock(\Docman_PermissionsManager::class);
-        $this->lock_factory                = Mockery::Mock(\Docman_LockFactory::class);
-        $this->approval_table_state_mapper = new ApprovalTableStateMapper();
-
-        $this->docman_item_factory                 = Mockery::Mock(Docman_ItemFactory::class);
-        $this->permissions_manager                 = Mockery::Mock(\Docman_PermissionsManager::class);
-        $this->lock_factory                        = Mockery::Mock(\Docman_LockFactory::class);
-        $this->metadata_representation_builder     = Mockery::mock(MetadataRepresentationBuilder::class);
-        $this->approval_table_retriever            = Mockery::mock(ApprovalTableRetriever::class);
-        $this->item_permissions_for_groups_builder = Mockery::mock(DocmanItemPermissionsForGroupsBuilder::class);
-        $this->html_purifier                       = Mockery::mock(Codendi_HTMLPurifier::class);
+        $this->user_manager                        = $this->createMock(UserManager::class);
+        $this->permissions_manager                 = $this->createMock(Docman_PermissionsManager::class);
+        $this->lock_factory                        = $this->createMock(Docman_LockFactory::class);
+        $this->permissions_manager                 = $this->createMock(Docman_PermissionsManager::class);
+        $this->lock_factory                        = $this->createMock(Docman_LockFactory::class);
+        $this->metadata_representation_builder     = $this->createMock(MetadataRepresentationBuilder::class);
+        $this->approval_table_retriever            = $this->createMock(ApprovalTableRetriever::class);
+        $this->item_permissions_for_groups_builder = $this->createMock(DocmanItemPermissionsForGroupsBuilder::class);
+        $this->html_purifier                       = $this->createMock(Codendi_HTMLPurifier::class);
 
         $this->item_representation_builder = new ItemRepresentationBuilder(
-            $this->dao,
+            $this->createMock(Docman_ItemDao::class),
             $this->user_manager,
-            $this->docman_item_factory,
+            $this->createMock(Docman_ItemFactory::class),
             $this->permissions_manager,
             $this->lock_factory,
-            $this->approval_table_state_mapper,
+            new ApprovalTableStateMapper(),
             $this->metadata_representation_builder,
             $this->approval_table_retriever,
             $this->item_permissions_for_groups_builder,
             $this->html_purifier
         );
 
-        \UserManager::setInstance($this->user_manager);
+        UserManager::setInstance($this->user_manager);
     }
 
     protected function tearDown(): void
     {
-        \UserManager::clearInstance();
+        UserManager::clearInstance();
     }
 
     public function testItBuildsAnItemRepresentationOfAnItem(): void
     {
         $owner_id       = 123;
         $docman_item_id = 666;
-        $current_user   = Mockery::mock(\PFUser::class);
-        $current_user->shouldReceive('getId')->andReturns($owner_id);
-        $current_user->shouldReceive('getUserName')->andReturns('toto');
-        $current_user->shouldReceive('getUserName')->andReturns('toto');
-        $current_user->shouldReceive('getRealName')->andReturns('toto');
-        $current_user->shouldReceive('isAnonymous')->andReturns(false);
-        $current_user->shouldReceive('isNone')->andReturns(false);
-        $current_user->shouldReceive('getLdapId')->andReturns('');
-        $current_user->shouldReceive('getAvatarUrl')->andReturns('some/avatar/url');
-        $current_user->shouldReceive('hasAvatar')->andReturns(false);
-        $this->user_manager->shouldReceive('getCurrentUser')->andReturns($current_user);
-        $current_user->shouldReceive('getPreference')->with('username_display')->andReturns('toto');
-        $this->html_purifier->shouldReceive('purifyTextWithReferences')->andReturn('description with processed ref');
+        $current_user   = UserTestBuilder::anActiveUser()
+            ->withId($owner_id)
+            ->withUserName('toto')
+            ->withRealName('toto')
+            ->withLdapId('')
+            ->withAvatarUrl('some/avatar/url')
+            ->build();
+        $this->user_manager->method('getCurrentUser')->willReturn($current_user);
+        $this->html_purifier->method('purifyTextWithReferences')->willReturn('description with processed ref');
 
         $metadata_representation = new ItemMetadataRepresentation(
             'metadata name',
@@ -156,52 +111,36 @@ class ItemRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             false,
             'metadata'
         );
-        $this->metadata_representation_builder->shouldReceive('build')->andReturn([$metadata_representation]);
+        $this->metadata_representation_builder->method('build')->willReturn([$metadata_representation]);
 
-        $docman_item = new \Docman_Item();
+        $docman_item = new Docman_Item();
         $docman_item->setId($docman_item_id);
         $docman_item->setTitle('My file.txt');
         $docman_item->setOwnerId($owner_id);
 
-        $item_approval_table = Mockery::Mock(\Docman_ApprovalTableFile::class);
-        $item_approval_table->shouldReceive('getOwner')->andReturns($owner_id);
-        $item_approval_table->shouldReceive('getDate')->andReturns(1549462600);
-        $item_approval_table->shouldReceive('isEnabled')->andReturns(true);
-        $item_approval_table->shouldReceive('getApprovalState')->andReturns(0);
-        $item_approval_table->shouldReceive('getId')->andReturn(10);
+        $item_approval_table = $this->createMock(Docman_ApprovalTableFile::class);
+        $item_approval_table->method('getOwner')->willReturn($owner_id);
+        $item_approval_table->method('getDate')->willReturn(1549462600);
+        $item_approval_table->method('isEnabled')->willReturn(true);
+        $item_approval_table->method('getApprovalState')->willReturn(0);
+        $item_approval_table->method('getId')->willReturn(10);
 
-        $this->approval_table_retriever->shouldReceive('hasApprovalTable')->with($docman_item)->andReturn(
-            true
-        );
+        $this->approval_table_retriever->method('hasApprovalTable')->with($docman_item)->willReturn(true);
 
-        $this->approval_table_retriever->shouldReceive('retrieveByItem')->with($docman_item)->andReturn(
-            $item_approval_table
-        );
+        $this->approval_table_retriever->method('retrieveByItem')->with($docman_item)->willReturn($item_approval_table);
 
-        $this->user_manager->shouldReceive('getUserById')
-            ->withArgs([$owner_id])
-            ->andReturns($current_user);
+        $this->user_manager->method('getUserById')->with($owner_id)->willReturn($current_user);
 
-        $this->permissions_manager->shouldReceive('userCanWrite')
-            ->withArgs([$current_user, $docman_item_id])
-            ->andReturns(true);
+        $this->permissions_manager->method('userCanWrite')->with($current_user, $docman_item_id)->willReturn(true);
+        $this->permissions_manager->method('userCanManage')->with($current_user, $docman_item_id)->willReturn(true);
+        $this->permissions_manager->method('userCanDelete')->with($current_user, $docman_item)->willReturn(true);
 
-        $this->permissions_manager->shouldReceive('userCanManage')
-            ->withArgs([$current_user, $docman_item_id])
-            ->andReturns(true);
-
-        $this->permissions_manager->shouldReceive('userCanDelete')
-            ->withArgs([$current_user, $docman_item])
-            ->andReturns(true);
-
-        $this->lock_factory->shouldReceive('getLockInfoForItem')
-            ->withArgs([$docman_item])
-            ->andReturns(['user_id' => $owner_id, 'lock_date' => 1549461600]);
+        $this->lock_factory->method('getLockInfoForItem')
+            ->with($docman_item)->willReturn(['user_id' => $owner_id, 'lock_date' => 1549461600]);
 
         $permissions_for_groups_representation = new DocmanItemPermissionsForGroupsRepresentation();
-        $this->item_permissions_for_groups_builder->shouldReceive('getRepresentation')
-            ->with($current_user, $docman_item)
-            ->andReturn($permissions_for_groups_representation);
+        $this->item_permissions_for_groups_builder->method('getRepresentation')
+            ->with($current_user, $docman_item)->willReturn($permissions_for_groups_representation);
 
         $representation = $this->item_representation_builder->buildItemRepresentation(
             $docman_item,
@@ -209,27 +148,27 @@ class ItemRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             ItemRepresentation::TYPE_FILE
         );
 
-        $this->assertEquals($representation->title, 'My file.txt');
-        $this->assertEquals($representation->is_expanded, false);
-        $this->assertEquals($representation->user_can_write, true);
-        $this->assertEquals($representation->user_can_delete, true);
-        $this->assertEquals($representation->can_user_manage, true);
-        $this->assertEquals($representation->lock_info->locked_by->id, $owner_id);
-        $this->assertEquals($representation->lock_info->lock_date, '2019-02-06T15:00:00+01:00');
-        $this->assertEquals($representation->file_properties, null);
-        $this->assertEquals($representation->embedded_file_properties, null);
-        $this->assertEquals($representation->link_properties, null);
-        $this->assertEquals($representation->wiki_properties, null);
-        $this->assertEquals($representation->permissions_for_groups, $permissions_for_groups_representation);
+        self::assertEquals('My file.txt', $representation->title);
+        self::assertFalse($representation->is_expanded);
+        self::assertTrue($representation->user_can_write);
+        self::assertTrue($representation->user_can_delete);
+        self::assertTrue($representation->can_user_manage);
+        self::assertEquals($owner_id, $representation->lock_info->locked_by->id);
+        self::assertEquals('2019-02-06T15:00:00+01:00', $representation->lock_info->lock_date);
+        self::assertNull($representation->file_properties);
+        self::assertNull($representation->embedded_file_properties);
+        self::assertNull($representation->link_properties);
+        self::assertNull($representation->wiki_properties);
+        self::assertEquals($permissions_for_groups_representation, $representation->permissions_for_groups);
 
-        $this->assertEquals($representation->approval_table->id, 10);
-        $this->assertEquals($representation->approval_table->approval_state, 'Not yet');
-        $this->assertEquals($representation->approval_table->table_owner->id, $owner_id);
-        $this->assertEquals($representation->approval_table->approval_request_date, '2019-02-06T15:16:40+01:00');
-        $this->assertEquals($representation->approval_table->has_been_approved, false);
-        $this->assertEquals($representation->metadata[0]->value, '2019-02-06T15:00:00+01:00');
-        $this->assertEquals($representation->metadata[0]->post_processed_value, '2019-02-06T15:00:00+01:00');
-        $this->assertEquals($representation->metadata[0]->name, 'metadata name');
-        $this->assertEquals($representation->metadata[0]->type, 'date');
+        self::assertEquals(10, $representation->approval_table->id);
+        self::assertEquals('Not yet', $representation->approval_table->approval_state);
+        self::assertEquals($owner_id, $representation->approval_table->table_owner->id);
+        self::assertEquals('2019-02-06T15:16:40+01:00', $representation->approval_table->approval_request_date);
+        self::assertFalse($representation->approval_table->has_been_approved);
+        self::assertEquals('2019-02-06T15:00:00+01:00', $representation->metadata[0]->value);
+        self::assertEquals('2019-02-06T15:00:00+01:00', $representation->metadata[0]->post_processed_value);
+        self::assertEquals('metadata name', $representation->metadata[0]->name);
+        self::assertEquals('date', $representation->metadata[0]->type);
     }
 }
