@@ -841,6 +841,12 @@ msgstr ""
 "Categorizar o seu projeto ajudará potenciais desenvolvedores e usuários a "
 "encontrarem-no e participarem."
 
+msgid "Category full name cannot contain '::'."
+msgstr ""
+
+msgid "Category short name cannot contain '::'."
+msgstr ""
+
 msgid "Change Forum Status"
 msgstr "Alterar o Status do Fórum"
 
@@ -4762,6 +4768,12 @@ msgstr "Você precisa ser um administrador de projeto para editar este widget."
 
 msgid "You must explain the purpose of your registration."
 msgstr "Você deve explicar o propósito da sua inscrição."
+
+msgid "You must provide category full name."
+msgstr ""
+
+msgid "You must provide category short name."
+msgstr ""
 
 msgid "You must supply a password."
 msgstr "Você deve fornecer uma senha."
