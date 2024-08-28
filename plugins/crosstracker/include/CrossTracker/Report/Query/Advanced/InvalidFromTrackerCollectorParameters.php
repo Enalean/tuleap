@@ -31,6 +31,8 @@ final class InvalidFromTrackerCollectorParameters implements VisitorParameters
     public function __construct(
         public FromTracker $from_tracker,
         public InvalidFromCollection $collection,
+        public bool $is_tracker_condition_alone,
+        public int $report_id,
     ) {
     }
 }

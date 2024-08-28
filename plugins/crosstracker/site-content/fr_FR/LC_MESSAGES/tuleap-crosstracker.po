@@ -74,6 +74,9 @@ msgstr ""
 "'limit' et 'offset' sont des paramètres requis. Merci de les ajouter à la "
 "requête."
 
+msgid "@tracker.name cannot be empty"
+msgstr "@tracker.name ne peut pas être vide"
+
 msgid ""
 "All trackers involved in the query do not expose a last update by field. "
 "Please refine your query or check the configuration of the trackers."
@@ -170,6 +173,13 @@ msgstr ""
 "Le champ '%s' est présent dans les outils de suivi '%s' mais leurs types ne "
 "peuvent pas être comparés. Veuillez modifier votre requête ou vérifier la "
 "configuration des outils de suivi."
+
+msgid ""
+"In the context of a personal dashboard, you must provide a @project "
+"condition in the FROM part of your query"
+msgstr ""
+"Dans le contexte d'un tableau de bord personnel, vous devez fournir une "
+"condition sur @project dans la partie FROM de votre requête"
 
 msgid "Invalid value for 'limit'. It must be an integer"
 msgstr "La valeur pour 'limit' est incorrecte. 'limit' doit être un entier"

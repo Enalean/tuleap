@@ -52,8 +52,8 @@ final readonly class InvalidFromCollectionBuilder implements IBuildInvalidFromCo
             return $collection;
         }
 
-        $from->getLeft()->acceptFromSomethingVisitor($this, new InvalidFromCollectionParameters($collection, $this->report_id));
-        $from->getRight()?->acceptFromSomethingVisitor($this, new InvalidFromCollectionParameters($collection, $this->report_id));
+        $from->getLeft()->acceptFromSomethingVisitor($this, new InvalidFromCollectionParameters($collection, $this->report_id, $from->getRight() === null));
+        $from->getRight()?->acceptFromSomethingVisitor($this, new InvalidFromCollectionParameters($collection, $this->report_id, false));
 
         return $collection;
     }
@@ -70,7 +70,7 @@ final readonly class InvalidFromCollectionBuilder implements IBuildInvalidFromCo
 
         $from_tracker->getCondition()->acceptFromTrackerConditionVisitor(
             $this->from_tracker_condition_visitor,
-            new InvalidFromTrackerCollectorParameters($from_tracker, $parameters->collection),
+            new InvalidFromTrackerCollectorParameters($from_tracker, $parameters->collection, $parameters->is_condition_alone, $parameters->report_id),
         );
     }
 

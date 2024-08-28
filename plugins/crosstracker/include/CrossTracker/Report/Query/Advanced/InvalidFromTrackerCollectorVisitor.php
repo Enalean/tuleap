@@ -30,25 +30,50 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\FromTrackerIn;
 /**
  * @template-implements FromTrackerConditionVisitor<InvalidFromTrackerCollectorParameters, void>
  */
-final class InvalidFromTrackerCollectorVisitor implements FromTrackerConditionVisitor
+final readonly class InvalidFromTrackerCollectorVisitor implements FromTrackerConditionVisitor
 {
-    public function visitEqual(FromTrackerEqual $tracker_equal, $parameters)
+    public function __construct(
+        private WidgetInProjectChecker $in_project_checker,
+    ) {
+    }
+
+    public function visitEqual(FromTrackerEqual $tracker_equal, $parameters): void
     {
         $from_tracker = $parameters->from_tracker;
 
         match ($from_tracker->getTarget()) {
-            AllowedFrom::TRACKER_NAME => null,
+            AllowedFrom::TRACKER_NAME => $this->checkTrackerName([$tracker_equal->getValue()], $parameters),
             default                   => throw new LogicException("Unknown FROM tracker: {$from_tracker->getTarget()}"),
         };
     }
 
-    public function visitIn(FromTrackerIn $tracker_in, $parameters)
+    public function visitIn(FromTrackerIn $tracker_in, $parameters): void
     {
         $from_tracker = $parameters->from_tracker;
 
         match ($from_tracker->getTarget()) {
-            AllowedFrom::TRACKER_NAME => null,
+            AllowedFrom::TRACKER_NAME => $this->checkTrackerName($tracker_in->getValues(), $parameters),
             default                   => throw new LogicException("Unknown FROM tracker: {$from_tracker->getTarget()}"),
         };
+    }
+
+    private function checkTrackerName(array $names, InvalidFromTrackerCollectorParameters $parameters): void
+    {
+        if ($parameters->is_tracker_condition_alone) {
+            if (! $this->in_project_checker->isWidgetInProjectDashboard($parameters->report_id)) {
+                $parameters->collection->addInvalidFrom(dgettext(
+                    'tuleap-crosstracker',
+                    'In the context of a personal dashboard, you must provide a @project condition in the FROM part of your query',
+                ));
+                return;
+            }
+        }
+
+        foreach ($names as $name) {
+            if ($name === '') {
+                $parameters->collection->addInvalidFrom(dgettext('tuleap-crosstracker', '@tracker.name cannot be empty'));
+                return;
+            }
+        }
     }
 }

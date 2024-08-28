@@ -22,15 +22,17 @@ declare(strict_types=1);
 
 namespace Tuleap\CrossTracker\Report\Query\Advanced;
 
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\VisitorParameters;
-use Tuleap\Tracker\Report\Query\Advanced\InvalidFromCollection;
+use Tuleap\CrossTracker\Widget\ProjectCrossTrackerSearch;
+use Tuleap\Dashboard\Project\IRetrieveProjectFromWidget;
 
-final class InvalidFromCollectionParameters implements VisitorParameters
+final readonly class WidgetInProjectChecker
 {
-    public function __construct(
-        public InvalidFromCollection $collection,
-        public int $report_id,
-        public bool $is_condition_alone,
-    ) {
+    public function __construct(private IRetrieveProjectFromWidget $project_id_retriever)
+    {
+    }
+
+    public function isWidgetInProjectDashboard(int $report_id): bool
+    {
+        return $this->project_id_retriever->searchProjectIdFromWidgetIdAndType($report_id, ProjectCrossTrackerSearch::NAME) !== null;
     }
 }

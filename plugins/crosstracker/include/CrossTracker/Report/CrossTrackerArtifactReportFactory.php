@@ -42,6 +42,7 @@ use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\SelectedValueReprese
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\SelectedValuesCollection;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilderVisitor;
 use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilderVisitor;
+use Tuleap\CrossTracker\Report\Query\Advanced\WidgetInProjectChecker;
 use Tuleap\CrossTracker\REST\v1\Representation\CrossTrackerReportContentRepresentation;
 use Tuleap\CrossTracker\REST\v1\Representation\CrossTrackerSelectedRepresentation;
 use Tuleap\Dashboard\Project\ProjectDashboardDao;
@@ -225,21 +226,22 @@ final readonly class CrossTrackerArtifactReportFactory
         PFUser $current_user,
         array $trackers,
     ): Query {
-        $expert_query = $report->getExpertQuery();
+        $expert_query       = $report->getExpertQuery();
+        $in_project_checker = new WidgetInProjectChecker(new ProjectDashboardDao(new DashboardWidgetDao(
+            new WidgetFactory(
+                UserManager::instance(),
+                new User_ForgeUserGroupPermissionsManager(new User_ForgeUserGroupPermissionsDao()),
+                EventManager::instance(),
+            )
+        )));
         $this->expert_query_validator->validateExpertQuery(
             $expert_query,
             $report->isExpert(),
             new InvalidSearchablesCollectionBuilder($this->term_collector, $trackers, $current_user),
             new InvalidSelectablesCollectionBuilder($this->selectables_collector, $trackers, $current_user),
             new InvalidFromCollectionBuilder(
-                new InvalidFromTrackerCollectorVisitor(),
-                new InvalidFromProjectCollectorVisitor(new ProjectDashboardDao(new DashboardWidgetDao(
-                    new WidgetFactory(
-                        UserManager::instance(),
-                        new User_ForgeUserGroupPermissionsManager(new User_ForgeUserGroupPermissionsDao()),
-                        EventManager::instance(),
-                    )
-                ))),
+                new InvalidFromTrackerCollectorVisitor($in_project_checker),
+                new InvalidFromProjectCollectorVisitor($in_project_checker),
                 $report->getId(),
             ),
         );
