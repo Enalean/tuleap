@@ -23,9 +23,8 @@ import { createPopover } from "@tuleap/tlp-popovers";
 import type { EditorView } from "prosemirror-view";
 import { createAndInsertField } from "../popover/fields-adder";
 import type { GetText } from "@tuleap/gettext";
-import { TextSelection } from "prosemirror-state";
-import { getWrappingNodeInfo } from "../helper/node-info-retriever";
 import { buildTrigger, getFooter, getHeader } from "../popover/common-builder";
+import { custom_schema } from "../../../custom_schema";
 
 export type TextField = {
     id: string;
@@ -41,18 +40,18 @@ export type TextField = {
 
 let popover: Popover | null = null;
 
-export function buildPopover(
+export function buildImagePopover(
     popover_element_id: string,
     view: EditorView,
     doc: Document,
-    link_title_id: string,
-    link_href_id: string,
+    image_alt_id: string,
+    image_src_id: string,
     popover_title_id: string,
     popover_submit_id: string,
     gettext_provider: GetText,
 ): HTMLElement {
     const container = doc.createElement("div");
-    const trigger = buildTrigger(doc, popover_element_id, "fa-link");
+    const trigger = buildTrigger(doc, popover_element_id, "fa-image");
     container.appendChild(trigger);
 
     const popover_content = doc.body.appendChild(doc.createElement("form"));
@@ -62,10 +61,10 @@ export function buildPopover(
     arrow.classList.add("tlp-popover-arrow");
 
     popover_content.appendChild(
-        getHeader(doc, popover_title_id, gettext_provider.gettext("Create a link")),
+        getHeader(doc, popover_title_id, gettext_provider.gettext("Add an image")),
     );
 
-    const popover_body = buildPopoverBody(link_title_id, link_href_id, doc, gettext_provider);
+    const popover_body = buildPopoverBody(image_alt_id, image_src_id, doc, gettext_provider);
     popover_content.appendChild(popover_body);
 
     popover_content.appendChild(getFooter(doc, popover_submit_id, gettext_provider));
@@ -75,44 +74,44 @@ export function buildPopover(
         trigger: "click",
         placement: "bottom-start",
     });
-    addListeners(popover, popover_content, view, link_title_id, link_href_id);
+    addListeners(popover, popover_content, view, image_alt_id, image_src_id);
     doc.body.appendChild(container);
 
     return trigger;
 }
 
 function buildPopoverBody(
-    link_title_id: string,
-    link_href_id: string,
+    image_alt_id: string,
+    image_src_id: string,
     doc: Document,
     gettext_provider: GetText,
 ): HTMLDivElement {
     const popover_body = document.createElement("div");
     popover_body.className = "tlp-popover-body";
 
-    const href: TextField = {
+    const src: TextField = {
         placeholder: "https://example.com",
-        label: gettext_provider.gettext("Link"),
+        label: gettext_provider.gettext("Image source"),
         required: true,
         type: "url",
         focus: true,
-        id: link_href_id,
-        name: "input-href",
+        id: image_src_id,
+        name: "input-src",
         value: "",
         pattern: "https?://.+",
     };
-    const title: TextField = {
-        placeholder: gettext_provider.gettext("Text"),
-        label: gettext_provider.gettext("Text"),
+    const alt: TextField = {
+        placeholder: gettext_provider.gettext("Title"),
+        label: gettext_provider.gettext("Title"),
         type: "input",
         required: false,
         focus: false,
-        id: link_title_id,
+        id: image_alt_id,
         name: "input-text",
         value: "",
     };
 
-    createAndInsertField([href, title], popover_body, doc);
+    createAndInsertField([src, alt], popover_body, doc);
 
     return popover_body;
 }
@@ -121,48 +120,37 @@ export function addListeners(
     popover: Popover,
     form: HTMLFormElement,
     view: EditorView,
-    link_title_id: string,
-    link_href_id: string,
+    image_alt_id: string,
+    image_src_id: string,
 ): void {
     const submit = (event: Event): boolean => {
         event.preventDefault();
-        const attrs = getValues(link_title_id, link_href_id);
+        const attrs = getValues(image_alt_id, image_src_id);
         if (attrs) {
             popover.hide();
-            const schema = view.state.schema;
-            const wrapping_node_info = getWrappingNodeInfo(
-                view.state.selection.$from,
-                schema.marks.link,
-                view.state,
-            );
-
-            if (!wrapping_node_info.is_creating_node) {
-                const from = view.state.doc.resolve(wrapping_node_info.from);
-                const to = view.state.doc.resolve(wrapping_node_info.to);
-                view.dispatch(view.state.tr.setSelection(new TextSelection(from, to)));
-            }
-
-            const node = schema.text(attrs.title, [schema.marks.link.create(attrs)]);
-            view.dispatch(view.state.tr.replaceSelectionWith(node, false));
-            view.focus();
+            const { state, dispatch } = view;
+            const node = custom_schema.nodes.image.create(attrs);
+            const transaction = state.tr.replaceSelectionWith(node);
+            dispatch(transaction);
         }
 
         return true;
     };
 
     function getValues(
-        link_title_id: string,
-        link_href_id: string,
-    ): { href: string; title: string } {
-        const result = { href: "", title: "" };
+        image_alt_id: string,
+        image_src_id: string,
+    ): { src: string; alt: string; title: string } {
+        const result = { src: "", alt: "", title: "" };
 
-        const href = document.getElementById(link_href_id);
-        if (href instanceof HTMLInputElement) {
-            result.href = href.value;
+        const src = document.getElementById(image_src_id);
+        if (src instanceof HTMLInputElement) {
+            result.src = src.value;
         }
-        const title = document.getElementById(link_title_id);
-        if (title instanceof HTMLInputElement) {
-            result.title = title.value.trim() ? title.value : result.href;
+        const alt = document.getElementById(image_alt_id);
+        if (alt instanceof HTMLInputElement) {
+            result.alt = alt.value.trim() ? alt.value : result.src;
+            result.title = alt.value.trim() ? alt.value : result.src;
         }
 
         return result;

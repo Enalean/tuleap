@@ -13,6 +13,12 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 
+msgid "Add an image"
+msgstr "Ajouter une image"
+
+msgid "Add or update image"
+msgstr "Ajouter ou modifier une image"
+
 msgid "Add or update link"
 msgstr "Ajouter ou modifier un lien"
 
@@ -37,6 +43,9 @@ msgstr "Créer un lien"
 msgid "File type is invalid, you can only upload images"
 msgstr ""
 "Le type de fichier est invalide, vous pouvez téléverser uniquement des images"
+
+msgid "Image source"
+msgstr "Source de l'image"
 
 msgid "Link"
 msgstr "Lien"
