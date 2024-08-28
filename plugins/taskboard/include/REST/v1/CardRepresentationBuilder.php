@@ -48,7 +48,7 @@ final readonly class CardRepresentationBuilder
         $card_fields_semantic = Cardwall_Semantic_CardFields::load($artifact->getTracker());
         $background_color     = $this->background_color_builder->build($card_fields_semantic, $artifact, $user);
         $assignees            = $this->getAssignees($artifact, $user);
-        $mapped_list_value    = $this->getMappedListValue($milestone, $artifact, $user);
+        $mapped_list_value    = $this->getMappedListValue($milestone->getArtifact()->getTracker(), $artifact, $user);
         $initial_effort       = $this->getInitialEffort($artifact, $user);
         $remaining_effort     = $this->remaining_effort_representation_builder->getRemainingEffort($user, $artifact);
 
@@ -68,11 +68,11 @@ final readonly class CardRepresentationBuilder
 
     /** @return Option<MappedListValueRepresentation> */
     private function getMappedListValue(
-        \Planning_ArtifactMilestone $milestone,
+        \Tracker $milestone_tracker,
         Artifact $artifact,
         PFUser $user,
     ): Option {
-        return $this->mapped_field_value_retriever->getFirstValueAtLastChangeset($milestone, $artifact, $user)
+        return $this->mapped_field_value_retriever->getFirstValueAtLastChangeset($milestone_tracker, $artifact, $user)
             ->map(MappedListValueRepresentation::build(...));
     }
 

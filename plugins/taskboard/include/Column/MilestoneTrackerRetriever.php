@@ -45,7 +45,7 @@ class MilestoneTrackerRetriever
      */
     public function getMilestoneTrackerOfColumn(Cardwall_Column $column): Tracker
     {
-        $dar = $this->dao->searchByColumnId($column->getId());
+        $dar = $this->dao->searchByColumnId((int) $column->getId());
         if ($dar === false) {
             throw new InvalidColumnException();
         }

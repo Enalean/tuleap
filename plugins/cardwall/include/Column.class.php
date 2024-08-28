@@ -24,7 +24,7 @@
 class Cardwall_Column
 {
     /**
-     * @var int
+     * @var int|string
      */
     public $id;
 
@@ -129,7 +129,7 @@ class Cardwall_Column
     }
 
     /**
-     * @return int
+     * @return int|string
      */
     public function getId()
     {

@@ -37,6 +37,11 @@ final class EmptyMappedValues implements MappedValuesInterface
         return true;
     }
 
+    public function contains(int $bind_value_id): bool
+    {
+        return false;
+    }
+
     public function getFirstValue(): int
     {
         throw new \RuntimeException();

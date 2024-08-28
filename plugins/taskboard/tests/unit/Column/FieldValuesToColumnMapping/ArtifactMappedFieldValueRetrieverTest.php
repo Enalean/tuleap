@@ -23,12 +23,10 @@ declare(strict_types=1);
 namespace Tuleap\Taskboard\Column\FieldValuesToColumnMapping;
 
 use PHPUnit\Framework\MockObject\Stub;
-use Tuleap\AgileDashboard\Test\Builders\PlanningBuilder;
 use Tuleap\Option\Option;
 use Tuleap\Taskboard\Column\FieldValuesToColumnMapping\Freestyle\FreestyleMappedFieldRetriever;
 use Tuleap\Taskboard\Column\FieldValuesToColumnMapping\Freestyle\SearchMappedFieldStub;
 use Tuleap\Taskboard\Tracker\TaskboardTracker;
-use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
@@ -64,16 +62,7 @@ final class ArtifactMappedFieldValueRetrieverTest extends \Tuleap\Test\PHPUnit\T
     /** @return Option<\Tracker_FormElement_Field_List_BindValue> */
     private function getValue(): Option
     {
-        $release_tracker  = TrackerTestBuilder::aTracker()->withId(68)->build();
-        $release_artifact = ArtifactTestBuilder::anArtifact(1)->inTracker($release_tracker)->build();
-
-        $project_id = 122;
-        $milestone  = new \Planning_ArtifactMilestone(
-            ProjectTestBuilder::aProject()->withId($project_id)->build(),
-            PlanningBuilder::aPlanning($project_id)->build(),
-            $release_artifact
-        );
-
+        $release_tracker   = TrackerTestBuilder::aTracker()->withId(68)->build();
         $taskboard_tracker = new TaskboardTracker($release_tracker, $this->user_story_tracker);
 
         $retriever = new ArtifactMappedFieldValueRetriever(
@@ -85,7 +74,7 @@ final class ArtifactMappedFieldValueRetrieverTest extends \Tuleap\Test\PHPUnit\T
                 )
             )
         );
-        return $retriever->getFirstValueAtLastChangeset($milestone, $this->user_story_artifact, $this->user);
+        return $retriever->getFirstValueAtLastChangeset($release_tracker, $this->user_story_artifact, $this->user);
     }
 
     public function testItReturnsNothingWhenNoMappedField(): void
