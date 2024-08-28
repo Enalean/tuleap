@@ -26,7 +26,7 @@ import { shallowMount } from "@vue/test-utils";
 import { createLocalVueForTests } from "../../helpers/local-vue-for-tests";
 
 describe("DisplayModeSwitcher", () => {
-    async function createWrapper(display_mode: string): Promise<Wrapper<DisplayModeSwitcher>> {
+    async function createWrapper(display_mode: string): Promise<Wrapper<Vue>> {
         return shallowMount(DisplayModeSwitcher, {
             localVue: await createLocalVueForTests(),
             mocks: {

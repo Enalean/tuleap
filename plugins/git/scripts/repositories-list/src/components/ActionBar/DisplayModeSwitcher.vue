@@ -24,7 +24,7 @@
                 name="display-mode-switch"
                 id="git-repository-list-switch-last-update"
                 class="tlp-button-bar-checkbox"
-                v-bind:value="repositories_sorted_by_last_update()"
+                v-bind:value="repositories_sorted_by_last_update"
                 v-model="current_display_mode"
                 v-bind:disabled="isLoading"
             />
@@ -47,7 +47,7 @@
                 name="display-mode-switch"
                 id="git-repository-list-switch-path"
                 class="tlp-button-bar-checkbox"
-                v-bind:value="repositories_sorted_by_path()"
+                v-bind:value="repositories_sorted_by_path"
                 v-model="current_display_mode"
                 v-bind:disabled="isLoading"
             />
@@ -63,36 +63,25 @@
         </div>
     </div>
 </template>
-<script lang="ts">
-import { REPOSITORIES_SORTED_BY_LAST_UPDATE, REPOSITORIES_SORTED_BY_PATH } from "../../constants";
-import { Component, Watch } from "vue-property-decorator";
-import Vue from "vue";
-import { Getter, State } from "vuex-class";
+<script setup lang="ts">
+import {
+    REPOSITORIES_SORTED_BY_LAST_UPDATE as repositories_sorted_by_last_update,
+    REPOSITORIES_SORTED_BY_PATH as repositories_sorted_by_path,
+} from "../../constants";
+import { onMounted, ref, watch } from "vue";
+import { useActions, useGetters, useState } from "vuex-composition-helpers";
 
-@Component
-export default class DisplayModeSwitcher extends Vue {
-    @Getter
-    readonly isLoading!: boolean;
+const { isLoading } = useGetters(["isLoading"]);
+const { setDisplayMode } = useActions(["setDisplayMode"]);
+const { display_mode } = useState(["display_mode"]);
+const current_display_mode = ref<string | null>(null);
 
-    @State
-    readonly display_mode!: string;
+onMounted((): void => {
+    current_display_mode.value =
+        display_mode.value !== "" ? display_mode.value : repositories_sorted_by_last_update;
+});
 
-    current_display_mode: string | null = null;
-
-    mounted(): void {
-        this.current_display_mode = this.display_mode;
-    }
-
-    repositories_sorted_by_last_update(): string {
-        return REPOSITORIES_SORTED_BY_LAST_UPDATE;
-    }
-    repositories_sorted_by_path(): string {
-        return REPOSITORIES_SORTED_BY_PATH;
-    }
-
-    @Watch("current_display_mode")
-    public updateDisplayMode(value: string) {
-        this.$store.dispatch("setDisplayMode", value);
-    }
-}
+watch(current_display_mode, (value: string | null) => {
+    setDisplayMode(value);
+});
 </script>
