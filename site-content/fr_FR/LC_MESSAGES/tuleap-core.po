@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 3.0.1\n"
+"X-Generator: Poedit 3.4.4\n"
 
 msgid " New user"
 msgstr " Nouvel utilisateur"
@@ -859,6 +859,12 @@ msgid ""
 msgstr ""
 "Catégoriser votre projet permettra aux développeurs et utilisateurs de plus "
 "facilement le trouver et y participer."
+
+msgid "Category full name cannot contain '::'."
+msgstr "Le nom complet de la catégorie ne peut pas contenir '::'."
+
+msgid "Category short name cannot contain '::'."
+msgstr "Le nom court de la catégorie ne peut pas contenir '::'."
 
 msgid "Change Forum Status"
 msgstr "Changer le statut du forum"
@@ -4867,6 +4873,12 @@ msgstr ""
 msgid "You must explain the purpose of your registration."
 msgstr ""
 "Vous devez indiquer la raison pour laquelle vous souhaitez créer un compte."
+
+msgid "You must provide category full name."
+msgstr "Vous devez fournir le nom complet de la catégorie."
+
+msgid "You must provide category short name."
+msgstr "Vous devez fournir le nom court de la catégorie."
 
 msgid "You must supply a password."
 msgstr "Vous devez donner un mot de passe."

@@ -20,6 +20,7 @@
 
 namespace Tuleap\Trove;
 
+use Feedback;
 use HTTPRequest;
 use TroveCatDao;
 use TroveCatFactory;
@@ -68,20 +69,37 @@ class TroveCatListController implements DispatchableWithRequest
         $csrf_token = new \CSRFSynchronizerToken('/admin/project-creation/categories');
         $csrf_token->check();
 
-        switch ($request->get('action')) {
-            case 'update':
-                $this->update($request);
-                break;
-            case 'add':
-                $this->add($request);
-                break;
-            case 'delete':
-                $this->delete($request);
-                break;
+        try {
+            switch ($request->get('action')) {
+                case 'update':
+                    $this->update($request);
+                    break;
+                case 'add':
+                    $this->add($request);
+                    break;
+                case 'delete':
+                    $this->delete($request);
+                    break;
+            }
+        } catch (TroveCatMissingFullNameException) {
+            $layout->addFeedback(Feedback::ERROR, _('You must provide category full name.'));
+        } catch (TroveCatWrongFullNameException) {
+            $layout->addFeedback(Feedback::ERROR, _("Category full name cannot contain '::'."));
+        } catch (TroveCatMissingShortNameException) {
+            $layout->addFeedback(Feedback::ERROR, _('You must provide category short name.'));
+        } catch (TroveCatWrongShortNameException) {
+            $layout->addFeedback(Feedback::ERROR, _("Category short name cannot contain '::'."));
         }
+
         $layout->redirect('/admin/project-creation/categories');
     }
 
+    /**
+     * @throws TroveCatMissingFullNameException
+     * @throws TroveCatMissingShortNameException
+     * @throws TroveCatWrongShortNameException
+     * @throws TroveCatWrongFullNameException
+     */
     private function add(HTTPRequest $request)
     {
         $trove_category = $this->formatTroveCategoriesFromRequest($request);
@@ -189,6 +207,8 @@ class TroveCatListController implements DispatchableWithRequest
     /**
      * @throws TroveCatMissingFullNameException
      * @throws TroveCatMissingShortNameException
+     * @throws TroveCatWrongShortNameException
+     * @throws TroveCatWrongFullNameException
      */
     private function formatTroveCategoriesFromRequest(HTTPRequest $request)
     {
@@ -201,9 +221,15 @@ class TroveCatListController implements DispatchableWithRequest
         if (! $request->get('fullname')) {
             throw new TroveCatMissingFullNameException();
         }
+        if (str_contains($request->get('fullname'), '::')) {
+            throw new TroveCatWrongFullNameException();
+        }
 
         if (! $request->get('shortname')) {
             throw new TroveCatMissingShortNameException();
+        }
+        if (str_contains($request->get('shortname'), '::')) {
+            throw new TroveCatWrongShortNameException();
         }
 
         $nb_max_values = (int) $request->get('nb-max-values');
