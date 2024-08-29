@@ -19,7 +19,6 @@
 
 <template>
     <section
-        v-if="is_section_displayed"
         class="tlp-pane-section pullrequest-overview-actions-bottom"
         data-test="state-action-buttons"
     >
@@ -50,10 +49,8 @@ import PullRequestAbandonButton from "./abandon/PullRequestAbandonButton.vue";
 import PullRequestAlreadyMergedState from "./merge/PullRequestAlreadyMergedState.vue";
 import PullRequestAbandonedState from "./abandon/PullRequestAbandonedState.vue";
 import {
-    isPullRequestAlreadyMerged,
     isFastForwardMerge,
     isMergeConflicting,
-    isPullRequestAbandoned,
     isPullRequestInReview,
     isSameReferenceMerge,
     isUnknownMerge,
@@ -75,13 +72,13 @@ const merge_status_warning = computed(() => {
 
     if (isUnknownMerge(props.pull_request)) {
         return $gettext(
-            "Pull request mergeability with destination is not determined. You can merge on the command line and push to destination.",
+            "This pull request's ability to merge with the destination branch is not determined. You can merge on the command line and push to destination.",
         );
     }
 
     if (isSameReferenceMerge(props.pull_request)) {
         return $gettext(
-            "Pull request cannot be merged because source and destination branches have the very same content.",
+            "This pull request cannot be merged because source and destination branches have the very same content.",
         );
     }
 
@@ -107,20 +104,12 @@ const merge_status_error = computed(() => {
 
     if (isMergeConflicting(props.pull_request)) {
         return $gettext(
-            "Pull request can not be merged automatically due to conflicts with destination. Resolve conflicts on the command line and update the pull request.",
+            "This pull request cannot be merged automatically due to conflicts with the destination branch. Resolve conflicts on the command line and update the pull request.",
         );
     }
 
     return "";
 });
-
-const is_section_displayed = computed(
-    () =>
-        isPullRequestBroken(props.pull_request) ||
-        isPullRequestAlreadyMerged(props.pull_request) ||
-        isPullRequestAbandoned(props.pull_request) ||
-        (isPullRequestInReview(props.pull_request) && props.pull_request.user_can_merge),
-);
 </script>
 
 <style lang="scss">

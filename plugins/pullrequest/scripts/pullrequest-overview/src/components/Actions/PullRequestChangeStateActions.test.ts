@@ -27,7 +27,6 @@ import {
     PULL_REQUEST_MERGE_STATUS_NOT_FF,
     PULL_REQUEST_MERGE_STATUS_UNKNOWN,
     PULL_REQUEST_STATUS_ABANDON,
-    PULL_REQUEST_STATUS_MERGED,
     PULL_REQUEST_STATUS_REVIEW,
 } from "@tuleap/plugin-pullrequest-constants";
 import { ARE_MERGE_COMMITS_ALLOWED_IN_REPOSITORY } from "../../constants";
@@ -65,33 +64,6 @@ describe("PullRequestChangeStateActions", () => {
             },
         });
     };
-
-    describe("Hidden/displayed section", () => {
-        it("Should not be rendered when the pull-request is in review and the user has not the permission to merge", () => {
-            const wrapper = getWrapper({
-                status: PULL_REQUEST_STATUS_REVIEW,
-                user_can_merge: false,
-            });
-
-            expect(wrapper.element.children).toBeUndefined();
-        });
-
-        it.each([
-            [
-                "when the pull-request is in review and the user can merge",
-                {
-                    status: PULL_REQUEST_STATUS_REVIEW,
-                    user_can_merge: true,
-                },
-            ],
-            ["when the pull-request is already merged", { status: PULL_REQUEST_STATUS_MERGED }],
-            ["when the pull-request is abandoned", { status: PULL_REQUEST_STATUS_ABANDON }],
-        ])("Should be rendered %s", (when, pull_request_data) => {
-            const wrapper = getWrapper(pull_request_data);
-
-            expect(wrapper.find("[data-test=state-action-buttons]").exists()).toBe(true);
-        });
-    });
 
     describe("Warnings", () => {
         it("displays a warning when the merge destination is unknown", () => {
