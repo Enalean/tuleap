@@ -66,4 +66,8 @@ export default class WritingCrossTrackerReport {
     setExpertQuery(expert_query: string): void {
         this.expert_query = expert_query;
     }
+
+    toggleExpertMode(): void {
+        this.expert_mode = !this.expert_mode;
+    }
 }

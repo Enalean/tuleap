@@ -19,6 +19,7 @@
 
 <template>
     <div class="writing-mode">
+        <switch-mode-input v-bind:writing_cross_tracker_report="writing_cross_tracker_report" />
         <div>
             <tracker-selection
                 v-bind:selected_trackers="selected_trackers"
@@ -65,6 +66,7 @@ import TrackerListWritingMode from "./TrackerListWritingMode.vue";
 import type WritingCrossTrackerReport from "./writing-cross-tracker-report";
 import type { TrackerToUpdate } from "../type";
 import { CLEAR_FEEDBACKS, NOTIFY_FAULT } from "../injection-symbols";
+import SwitchModeInput from "../components/SwitchModeInput.vue";
 
 export type SaveEvent = { readonly saved_state: boolean };
 

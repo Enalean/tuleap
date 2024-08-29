@@ -49,11 +49,11 @@
     </section>
     <section class="tlp-pane-section" v-if="!is_loading">
         <artifact-table
-            v-if="!writing_cross_tracker_report.expert_mode"
+            v-if="!isExpertMode()"
             v-bind:writing_cross_tracker_report="writing_cross_tracker_report"
         />
         <selectable-table
-            v-if="writing_cross_tracker_report.expert_mode"
+            v-if="isExpertMode()"
             v-bind:writing_cross_tracker_report="writing_cross_tracker_report"
         />
     </section>
@@ -157,6 +157,12 @@ function loadBackendReport(): void {
 onMounted(() => {
     loadBackendReport();
 });
+
+function isExpertMode(): boolean {
+    return is_reading_mode_shown.value
+        ? props.reading_cross_tracker_report.expert_mode
+        : props.writing_cross_tracker_report.expert_mode;
+}
 
 function handleSwitchWriting(): void {
     if (!is_user_admin) {
