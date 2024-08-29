@@ -23,10 +23,12 @@ import { TextSelection } from "prosemirror-state";
 import type { MarkType, NodeType, Schema } from "prosemirror-model";
 import { liftListItem, sinkListItem, splitListItem, wrapInList } from "prosemirror-schema-list";
 import { isSelectionAList } from "./list/is-list-checker";
+import { getHeadingCommand } from "./text-style/transform-text";
 
 export type ProseMirrorKeyMap = { [key: string]: Command };
 export function buildKeymap(
     schema: Schema,
+    nb_heading: number,
     map_keys?: { [key: string]: false | string },
 ): ProseMirrorKeyMap {
     const keys: ProseMirrorKeyMap = {};
@@ -98,6 +100,10 @@ export function buildKeymap(
         });
     bind("Mod-Enter", cmd);
     bind("Shift-Enter", cmd);
+
+    Array.from({ length: nb_heading }, (_, i) => i).forEach((index) => {
+        bind(`Ctrl-Shift-${index + 1}`, getHeadingCommand(index + 1));
+    });
 
     node_type = schema.nodes.list_item;
     bind("Enter", splitListItem(node_type));

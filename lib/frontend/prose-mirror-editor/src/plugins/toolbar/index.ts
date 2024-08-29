@@ -26,19 +26,23 @@ import { buildKeymap } from "./keymap";
 import { custom_schema } from "../../custom_schema";
 import { buildInputRules } from "./input-rules";
 import type { GetText } from "@tuleap/gettext";
+import { initPluginTextStyle } from "./text-style";
 
 export { buildMenuItems, buildKeymap };
 
-export function setupToolbar(gettext_provider: GetText): Plugin[] {
+export const NB_HEADING = 6;
+
+export function setupToolbar(gettext_provider: GetText, editor_id: string): Plugin[] {
     const plugins = [
-        keymap(buildKeymap(custom_schema)),
+        keymap(buildKeymap(custom_schema, NB_HEADING)),
         keymap(baseKeymap),
         buildInputRules(custom_schema),
+        initPluginTextStyle(editor_id, gettext_provider),
     ];
 
     plugins.push(
         menuBar({
-            content: buildMenuItems(custom_schema, gettext_provider).fullMenu,
+            content: buildMenuItems(custom_schema, gettext_provider, editor_id).fullMenu,
         }),
     );
 

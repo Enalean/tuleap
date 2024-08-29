@@ -22,6 +22,12 @@ msgstr "Une erreur est survenue durant le téléversement"
 msgid "Cancel"
 msgstr "Annuler"
 
+msgid "Change to heading"
+msgstr "Changer le texte en titre"
+
+msgid "Change to plain text"
+msgstr "Changer en texte"
+
 msgid "Create"
 msgstr "Créer"
 
@@ -38,8 +44,17 @@ msgstr "Lien"
 msgid "Max upload size exceeded"
 msgstr "La taille maximale de téléversement dépassée"
 
+msgid "Normal text"
+msgstr "Texte"
+
+msgid "Styles"
+msgstr "Styles"
+
 msgid "Text"
 msgstr "Texte"
+
+msgid "Title"
+msgstr "Titre"
 
 msgid "Toggle code Ctrl+`"
 msgstr "Passer en bloc code Ctrl+`"
@@ -61,3 +76,9 @@ msgstr "Transformer en liste à puces `Shift+Ctrl+8`"
 
 msgid "Wrap in ordered list `Shift+Ctrl+9`"
 msgstr "Transformer en liste numérotée `Shift+Ctrl+9`"
+
+msgid "paragraph"
+msgstr "paragraphe"
+
+msgid "title"
+msgstr "titre"

@@ -17,15 +17,15 @@
  *  along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { MenuElement, MenuItemSpec } from "prosemirror-menu";
 import { wrapItem, icons, MenuItem } from "prosemirror-menu";
+import type { MenuElement, MenuItemSpec } from "prosemirror-menu";
 import type { EditorState, Command } from "prosemirror-state";
 import type { Schema, MarkType } from "prosemirror-model";
 import { toggleMark } from "prosemirror-commands";
 import type { GetText } from "@tuleap/gettext";
-import { v4 as uuidv4 } from "uuid";
 import { linkItem, unlinkItem } from "./links/link-menu-item-builder";
 import { wrapListItem } from "./list/list-menu-item-builder";
+import { getTextStyleDropdownMenu } from "./text-style";
 
 export function cmdItem(cmd: Command, options: MenuItemSpec): MenuItem {
     const passed_options: MenuItemSpec = options;
@@ -73,9 +73,11 @@ type MenuItemResult = {
     fullMenu: MenuElement[][];
 };
 
-export function buildMenuItems(schema: Schema, gettext_provider: GetText): MenuItemResult {
-    const editor_id = uuidv4();
-
+export function buildMenuItems(
+    schema: Schema,
+    gettext_provider: GetText,
+    editor_id: string,
+): MenuItemResult {
     return {
         fullMenu: [
             [
@@ -114,7 +116,7 @@ export function buildMenuItems(schema: Schema, gettext_provider: GetText): MenuI
                     title: gettext_provider.gettext("Toggle code Ctrl+`"),
                     icon: icons.code,
                 }),
-
+                getTextStyleDropdownMenu(schema, editor_id, gettext_provider),
                 linkItem(schema.marks.link, editor_id, gettext_provider),
                 unlinkItem(schema.marks.link, editor_id),
             ],
