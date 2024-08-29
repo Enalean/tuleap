@@ -18,18 +18,24 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Docman\REST\v1;
 
+use DateTimeImmutable;
 use Docman_EmbeddedFile;
 use Docman_Empty;
 use Docman_Folder;
+use Docman_Item;
+use Docman_ItemFactory;
 use Docman_Link;
 use Docman_LinkVersion;
 use Docman_MetadataValueDao;
 use Docman_Wiki;
 use Luracast\Restler\RestException;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\MockObject\MockObject;
 use Psr\EventDispatcher\EventDispatcherInterface;
+use Service;
 use Tuleap\Docman\Item\OtherDocument;
 use Tuleap\Docman\REST\v1\EmbeddedFiles\DocmanEmbeddedPOSTRepresentation;
 use Tuleap\Docman\REST\v1\EmbeddedFiles\EmbeddedPropertiesPOSTPATCHRepresentation;
@@ -58,83 +64,36 @@ use Tuleap\Docman\Upload\Document\DocumentToUpload;
 use Tuleap\Docman\Upload\Document\DocumentToUploadCreator;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\EventDispatcherStub;
 
-final class DocmanItemCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
+final class DocmanItemCreatorTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var Docman_MetadataValueDao|\Mockery\MockInterface
-     */
-    private $metadata_value_dao;
-
-    /**
-     * @var DocmanItemCreator
-     */
-    private $item_creator;
-    /**
-     * @var \Mockery\MockInterface|CustomMetadataRepresentationRetriever
-     */
-    private $custom_metadata_checker;
-    /**
-     * @var \Mockery\MockInterface|DocmanLinksValidityChecker
-     */
-    private $link_validity_checker;
-    /**
-     * @var \Mockery\MockInterface|AfterItemCreationVisitor
-     */
-    private $creator_visitor;
-    /**
-     * @var \Docman_ItemFactory|\Mockery\MockInterface
-     */
-    private $item_factory;
-    /**
-     * @var \Mockery\MockInterface|DocumentOngoingUploadRetriever
-     */
-    private $document_ongoing_upload_retriever;
-    /**
-     * @var \Mockery\MockInterface|DocumentToUploadCreator
-     */
-    private $document_to_upload_creator;
-    /**
-     * @var \Mockery\MockInterface|EmptyFileToUploadFinisher
-     */
-    private $empty_file_to_upload_finisher;
-    /**
-     * @var \Mockery\MockInterface|ItemStatusMapper
-     */
-    private $item_status_mapper;
-    /**
-     * @var \Mockery\MockInterface|HardcodedMetadataObsolescenceDateRetriever
-     */
-    private $metadata_obsolesence_date_retriever;
-    /**
-     * @var \Mockery\MockInterface|DocmanItemPermissionsForGroupsSetFactory
-     */
-    private $permissions_for_groups_set_factory;
+    private Docman_MetadataValueDao&MockObject $metadata_value_dao;
+    private CustomMetadataRepresentationRetriever&MockObject $custom_metadata_checker;
+    private DocmanLinksValidityChecker&MockObject $link_validity_checker;
+    private AfterItemCreationVisitor&MockObject $creator_visitor;
+    private Docman_ItemFactory&MockObject $item_factory;
+    private DocumentOngoingUploadRetriever&MockObject $document_ongoing_upload_retriever;
+    private DocumentToUploadCreator&MockObject $document_to_upload_creator;
+    private EmptyFileToUploadFinisher&MockObject $empty_file_to_upload_finisher;
+    private ItemStatusMapper&MockObject $item_status_mapper;
+    private HardcodedMetadataObsolescenceDateRetriever&MockObject $metadata_obsolesence_date_retriever;
+    private DocmanItemPermissionsForGroupsSetFactory&MockObject $permissions_for_groups_set_factory;
 
     protected function setUp(): void
     {
-        $this->creator_visitor = \Mockery::mock(AfterItemCreationVisitor::class);
-
-        $this->item_factory                      = \Mockery::mock(\Docman_ItemFactory::class);
-        $this->document_ongoing_upload_retriever = \Mockery::mock(DocumentOngoingUploadRetriever::class);
-        $this->document_to_upload_creator        = \Mockery::mock(DocumentToUploadCreator::class);
-
-        $this->empty_file_to_upload_finisher = \Mockery::mock(EmptyFileToUploadFinisher::class);
-
-        $this->link_validity_checker = \Mockery::mock(DocmanLinksValidityChecker::class);
-
-        $this->item_status_mapper = \Mockery::mock(ItemStatusMapper::class);
-
-        $this->metadata_obsolesence_date_retriever = \Mockery::mock(HardcodedMetadataObsolescenceDateRetriever::class);
-
-        $this->custom_metadata_checker = \Mockery::mock(CustomMetadataRepresentationRetriever::class);
-
-        $this->metadata_value_dao = \Mockery::mock(Docman_MetadataValueDao::class);
-
-        $this->permissions_for_groups_set_factory = \Mockery::mock(DocmanItemPermissionsForGroupsSetFactory::class);
+        $this->creator_visitor                     = $this->createMock(AfterItemCreationVisitor::class);
+        $this->item_factory                        = $this->createMock(Docman_ItemFactory::class);
+        $this->document_ongoing_upload_retriever   = $this->createMock(DocumentOngoingUploadRetriever::class);
+        $this->document_to_upload_creator          = $this->createMock(DocumentToUploadCreator::class);
+        $this->empty_file_to_upload_finisher       = $this->createMock(EmptyFileToUploadFinisher::class);
+        $this->link_validity_checker               = $this->createMock(DocmanLinksValidityChecker::class);
+        $this->item_status_mapper                  = $this->createMock(ItemStatusMapper::class);
+        $this->metadata_obsolesence_date_retriever = $this->createMock(HardcodedMetadataObsolescenceDateRetriever::class);
+        $this->custom_metadata_checker             = $this->createMock(CustomMetadataRepresentationRetriever::class);
+        $this->metadata_value_dao                  = $this->createMock(Docman_MetadataValueDao::class);
+        $this->permissions_for_groups_set_factory  = $this->createMock(DocmanItemPermissionsForGroupsSetFactory::class);
     }
 
     private function getItemCreator(EventDispatcherInterface $dispatcher): DocmanItemCreator
@@ -160,58 +119,48 @@ final class DocmanItemCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     public function testEmptyDocumentCanBeCreated(?DocmanItemPermissionsForGroupsSetRepresentation $permissions_for_groups_set): void
     {
-        $parent_item  = \Mockery::mock(\Docman_Item::class);
-        $user         = \Mockery::mock(\PFUser::class);
-        $project      = \Mockery::mock(\Project::class);
-        $current_time = new \DateTimeImmutable();
+        $parent_item  = new Docman_Item(['item_id' => 11]);
+        $user         = UserTestBuilder::buildWithId(222);
+        $project      = ProjectTestBuilder::aProject()->withId(102)->build();
+        $current_time = new DateTimeImmutable();
 
         $post_representation                         = new DocmanEmptyPOSTRepresentation();
         $post_representation->title                  = 'Title';
         $post_representation->permissions_for_groups = $permissions_for_groups_set;
 
-        $this->document_ongoing_upload_retriever->shouldReceive('isThereAlreadyAnUploadOngoing')->andReturns(false);
-        $parent_item->shouldReceive('getId')->andReturns(11);
-        $user->shouldReceive('getId')->andReturns(222);
-        $project->shouldReceive('getID')->andReturns(102);
+        $this->document_ongoing_upload_retriever->method('isThereAlreadyAnUploadOngoing')->willReturn(false);
 
-        $this->item_status_mapper->shouldReceive('getItemStatusWithParentInheritance')
-            ->andReturn(PLUGIN_DOCMAN_ITEM_STATUS_NONE);
+        $this->item_status_mapper->method('getItemStatusWithParentInheritance')->willReturn(PLUGIN_DOCMAN_ITEM_STATUS_NONE);
 
         $this->metadata_obsolesence_date_retriever
-            ->shouldReceive('getTimeStampOfDateWithoutPeriodValidity')
-            ->withArgs([ItemRepresentation::OBSOLESCENCE_DATE_NONE, $current_time])
-            ->andReturn((int) ItemRepresentation::OBSOLESCENCE_DATE_NONE);
+            ->method('getTimeStampOfDateWithoutPeriodValidity')
+            ->with(ItemRepresentation::OBSOLESCENCE_DATE_NONE, $current_time)
+            ->willReturn((int) ItemRepresentation::OBSOLESCENCE_DATE_NONE);
 
-        $created_item = \Mockery::mock(Docman_Empty::class);
-        $created_item->shouldReceive('getId')->andReturns(12);
-        $created_item->shouldReceive('getParentId')->andReturns(11);
-        $created_item->makePartial();
+        $created_item = new Docman_Empty(['item_id' => 12, 'parent_id' => 11]);
 
-        $this->item_factory
-            ->shouldReceive('createWithoutOrdering')
-            ->with('Title', '', 11, 100, 0, 222, PLUGIN_DOCMAN_ITEM_TYPE_EMPTY, '', \Mockery::any(), \Mockery::any(), null, null)
-            ->once()
-            ->andReturns($created_item);
+        $this->item_factory->expects(self::once())->method('createWithoutOrdering')
+            ->with('Title', '', 11, 100, 0, 222, PLUGIN_DOCMAN_ITEM_TYPE_EMPTY, '', self::anything(), self::anything(), null, null)
+            ->willReturn($created_item);
 
-        $this->item_factory->shouldReceive('doesTitleCorrespondToExistingDocument')->andReturn(false);
+        $this->item_factory->method('doesTitleCorrespondToExistingDocument')->willReturn(false);
 
         if ($permissions_for_groups_set !== null) {
-            $this->permissions_for_groups_set_factory->shouldReceive('fromRepresentation')
-                ->once()
-                ->andReturn(new DocmanItemPermissionsForGroupsSet([]));
+            $this->permissions_for_groups_set_factory->expects(self::once())->method('fromRepresentation')
+                ->willReturn(new DocmanItemPermissionsForGroupsSet([]));
         }
 
-        $this->creator_visitor->shouldReceive('visitEmpty')
-            ->withArgs(function (Docman_Empty $item, array $params) use ($permissions_for_groups_set): bool {
+        $this->creator_visitor->expects(self::once())->method('visitEmpty')
+            ->with(self::isInstanceOf(Docman_Empty::class), self::callback(function (array $params) use ($permissions_for_groups_set): bool {
                 if ($permissions_for_groups_set === null) {
-                    $this->assertNull($params['permissions_for_groups']);
+                    self::assertNull($params['permissions_for_groups']);
                 } else {
-                    $this->assertNotNull($params['permissions_for_groups']);
+                    self::assertNotNull($params['permissions_for_groups']);
                 }
                 return true;
-            })->once();
+            }));
 
-        $this->custom_metadata_checker->shouldReceive('checkAndRetrieveFormattedRepresentation')->andReturn(
+        $this->custom_metadata_checker->method('checkAndRetrieveFormattedRepresentation')->willReturn(
             MetadataToCreate::buildMetadataRepresentation([], false)
         );
 
@@ -225,7 +174,7 @@ final class DocmanItemCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
                 $project
             );
 
-        $this->assertSame(12, $created_item_representation->id);
+        self::assertSame(12, $created_item_representation->id);
     }
 
     /**
@@ -236,53 +185,49 @@ final class DocmanItemCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $parent_item  = new Docman_Folder(['item_id' => 11]);
         $user         = UserTestBuilder::aUser()->withId(222)->build();
         $project      = ProjectTestBuilder::aProject()->withId(102)->build();
-        $current_time = new \DateTimeImmutable();
+        $current_time = new DateTimeImmutable();
 
         $post_representation                         = new DocmanOtherTypePOSTRepresentation();
         $post_representation->title                  = 'Title';
         $post_representation->permissions_for_groups = $permissions_for_groups_set;
         $post_representation->type                   = 'whatever';
 
-        $this->document_ongoing_upload_retriever->shouldReceive('isThereAlreadyAnUploadOngoing')->andReturns(false);
+        $this->document_ongoing_upload_retriever->method('isThereAlreadyAnUploadOngoing')->willReturn(false);
 
-        $this->item_status_mapper->shouldReceive('getItemStatusWithParentInheritance')
-            ->andReturn(PLUGIN_DOCMAN_ITEM_STATUS_NONE);
+        $this->item_status_mapper->method('getItemStatusWithParentInheritance')
+            ->willReturn(PLUGIN_DOCMAN_ITEM_STATUS_NONE);
 
         $this->metadata_obsolesence_date_retriever
-            ->shouldReceive('getTimeStampOfDateWithoutPeriodValidity')
-            ->withArgs([ItemRepresentation::OBSOLESCENCE_DATE_NONE, $current_time])
-            ->andReturn((int) ItemRepresentation::OBSOLESCENCE_DATE_NONE);
+            ->method('getTimeStampOfDateWithoutPeriodValidity')
+            ->with(ItemRepresentation::OBSOLESCENCE_DATE_NONE, $current_time)
+            ->willReturn((int) ItemRepresentation::OBSOLESCENCE_DATE_NONE);
 
-        $created_item = \Mockery::mock(OtherDocument::class);
-        $created_item->shouldReceive('getId')->andReturns(12);
-        $created_item->shouldReceive('getParentId')->andReturns(11);
-        $created_item->makePartial();
+        $created_item = $this->createPartialMock(OtherDocument::class, ['getId', 'getParentId']);
+        $created_item->method('getId')->willReturn(12);
+        $created_item->method('getParentId')->willReturn(11);
 
-        $this->item_factory
-            ->shouldReceive('createWithoutOrdering')
-            ->with('Title', '', 11, 100, 0, 222, \Docman_Item::TYPE_OTHER, 'whatever', \Mockery::any(), \Mockery::any(), null, null)
-            ->once()
-            ->andReturns($created_item);
+        $this->item_factory->expects(self::once())->method('createWithoutOrdering')
+            ->with('Title', '', 11, 100, 0, 222, Docman_Item::TYPE_OTHER, 'whatever', self::anything(), self::anything(), null, null)
+            ->willReturn($created_item);
 
-        $this->item_factory->shouldReceive('doesTitleCorrespondToExistingDocument')->andReturn(false);
+        $this->item_factory->method('doesTitleCorrespondToExistingDocument')->willReturn(false);
 
         if ($permissions_for_groups_set !== null) {
-            $this->permissions_for_groups_set_factory->shouldReceive('fromRepresentation')
-                ->once()
-                ->andReturn(new DocmanItemPermissionsForGroupsSet([]));
+            $this->permissions_for_groups_set_factory->expects(self::once())->method('fromRepresentation')
+                ->willReturn(new DocmanItemPermissionsForGroupsSet([]));
         }
 
-        $this->creator_visitor->shouldReceive('visitOtherDocument')
-            ->withArgs(function (OtherDocument $item, array $params) use ($permissions_for_groups_set): bool {
+        $this->creator_visitor->expects(self::once())->method('visitOtherDocument')
+            ->with(self::isInstanceOf(OtherDocument::class), self::callback(function (array $params) use ($permissions_for_groups_set): bool {
                 if ($permissions_for_groups_set === null) {
-                    $this->assertNull($params['permissions_for_groups']);
+                    self::assertNull($params['permissions_for_groups']);
                 } else {
-                    $this->assertNotNull($params['permissions_for_groups']);
+                    self::assertNotNull($params['permissions_for_groups']);
                 }
                 return true;
-            })->once();
+            }));
 
-        $this->custom_metadata_checker->shouldReceive('checkAndRetrieveFormattedRepresentation')->andReturn(
+        $this->custom_metadata_checker->method('checkAndRetrieveFormattedRepresentation')->willReturn(
             MetadataToCreate::buildMetadataRepresentation([], false)
         );
 
@@ -302,7 +247,7 @@ final class DocmanItemCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
                 $project
             );
 
-        $this->assertSame(12, $created_item_representation->id);
+        self::assertSame(12, $created_item_representation->id);
     }
 
     /**
@@ -313,46 +258,34 @@ final class DocmanItemCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $parent_item  = new Docman_Folder(['item_id' => 11]);
         $user         = UserTestBuilder::aUser()->withId(222)->build();
         $project      = ProjectTestBuilder::aProject()->withId(102)->build();
-        $current_time = new \DateTimeImmutable();
+        $current_time = new DateTimeImmutable();
 
         $post_representation                         = new DocmanOtherTypePOSTRepresentation();
         $post_representation->title                  = 'Title';
         $post_representation->permissions_for_groups = $permissions_for_groups_set;
         $post_representation->type                   = 'whatever';
 
-        $this->document_ongoing_upload_retriever->shouldReceive('isThereAlreadyAnUploadOngoing')->andReturns(false);
+        $this->document_ongoing_upload_retriever->method('isThereAlreadyAnUploadOngoing')->willReturn(false);
 
-        $this->item_status_mapper->shouldReceive('getItemStatusWithParentInheritance')
-            ->andReturn(PLUGIN_DOCMAN_ITEM_STATUS_NONE);
+        $this->item_status_mapper->method('getItemStatusWithParentInheritance')->willReturn(PLUGIN_DOCMAN_ITEM_STATUS_NONE);
 
-        $this->metadata_obsolesence_date_retriever
-            ->shouldReceive('getTimeStampOfDateWithoutPeriodValidity')
-            ->withArgs([ItemRepresentation::OBSOLESCENCE_DATE_NONE, $current_time])
-            ->andReturn((int) ItemRepresentation::OBSOLESCENCE_DATE_NONE);
+        $this->metadata_obsolesence_date_retriever->method('getTimeStampOfDateWithoutPeriodValidity')
+            ->with(ItemRepresentation::OBSOLESCENCE_DATE_NONE, $current_time)
+            ->willReturn((int) ItemRepresentation::OBSOLESCENCE_DATE_NONE);
 
-        $created_item = \Mockery::mock(OtherDocument::class);
-        $created_item->shouldReceive('getId')->andReturns(12);
-        $created_item->shouldReceive('getParentId')->andReturns(11);
-        $created_item->makePartial();
+        $created_item = $this->createPartialMock(OtherDocument::class, ['getId', 'getParentId']);
+        $created_item->method('getId')->willReturn(12);
+        $created_item->method('getParentId')->willReturn(11);
 
-        $this->item_factory->shouldReceive('createWithoutOrdering')->never();
+        $this->item_factory->expects(self::never())->method('createWithoutOrdering');
+        $this->item_factory->method('doesTitleCorrespondToExistingDocument')->willReturn(false);
+        $this->creator_visitor->expects(self::never())->method('visitOtherDocument');
+        $this->custom_metadata_checker->expects(self::never())->method('checkAndRetrieveFormattedRepresentation');
 
-        $this->item_factory->shouldReceive('doesTitleCorrespondToExistingDocument')->andReturn(false);
+        self::expectException(RestException::class);
+        self::expectExceptionCode(400);
 
-        $this->creator_visitor->shouldReceive('visitOtherDocument')->never();
-
-        $this->custom_metadata_checker->shouldReceive('checkAndRetrieveFormattedRepresentation')->never();
-
-        $this->expectException(RestException::class);
-        $this->expectExceptionCode(400);
-
-        $this->getItemCreator(EventDispatcherStub::withCallback(function (object $event): object {
-            if ($event instanceof VerifyOtherTypeIsSupported) {
-                // we don't know the type, do nothing
-            }
-
-                return $event;
-        }))
+        $this->getItemCreator(EventDispatcherStub::withCallback(static fn(object $event) => $event))
             ->createOtherType(
                 $parent_item,
                 $user,
@@ -367,10 +300,10 @@ final class DocmanItemCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     public function testWikiDocumentCanBeCreated(?DocmanItemPermissionsForGroupsSetRepresentation $permissions_for_groups_set): void
     {
-        $parent_item  = \Mockery::mock(\Docman_Item::class);
-        $user         = \Mockery::mock(\PFUser::class);
-        $project      = \Mockery::mock(\Project::class);
-        $current_time = new \DateTimeImmutable();
+        $parent_item  = new Docman_Item(['item_id' => 11]);
+        $user         = UserTestBuilder::buildWithId(222);
+        $project      = ProjectTestBuilder::aProject()->withId(102)->withUsedService(Service::WIKI)->build();
+        $current_time = new DateTimeImmutable();
 
         $post_representation                             = new DocmanWikiPOSTRepresentation();
         $post_representation->title                      = 'Title';
@@ -378,50 +311,36 @@ final class DocmanItemCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $post_representation->wiki_properties->page_name = 'Monchichi';
         $post_representation->permissions_for_groups     = $permissions_for_groups_set;
 
-        $this->document_ongoing_upload_retriever->shouldReceive('isThereAlreadyAnUploadOngoing')->andReturns(false);
-        $parent_item->shouldReceive('getId')->andReturns(11);
-        $user->shouldReceive('getId')->andReturns(222);
-        $project->shouldReceive('getID')->andReturns(102);
-        $project->shouldReceive('usesWiki')->andReturn(true);
+        $this->document_ongoing_upload_retriever->method('isThereAlreadyAnUploadOngoing')->willReturn(false);
 
-        $this->item_status_mapper->shouldReceive('getItemStatusWithParentInheritance')->andReturn(
-            PLUGIN_DOCMAN_ITEM_STATUS_NONE
-        );
+        $this->item_status_mapper->method('getItemStatusWithParentInheritance')->willReturn(PLUGIN_DOCMAN_ITEM_STATUS_NONE);
 
-        $this->metadata_obsolesence_date_retriever->shouldReceive('getTimeStampOfDateWithoutPeriodValidity')->andReturn(
-            (int) ItemRepresentation::OBSOLESCENCE_DATE_NONE
-        );
+        $this->metadata_obsolesence_date_retriever->method('getTimeStampOfDateWithoutPeriodValidity')->willReturn((int) ItemRepresentation::OBSOLESCENCE_DATE_NONE);
 
-        $created_item = \Mockery::mock(Docman_Wiki::class);
-        $created_item->shouldReceive('getId')->andReturns(12);
-        $created_item->shouldReceive('getParentId')->andReturns(11);
-        $created_item->makePartial();
+        $created_item = new Docman_Wiki(['item_id' => 12, 'parent_id' => 11, 'wiki_page' => '']);
 
         if ($permissions_for_groups_set !== null) {
-            $this->permissions_for_groups_set_factory->shouldReceive('fromRepresentation')
-                ->once()
-                ->andReturn(new DocmanItemPermissionsForGroupsSet([]));
+            $this->permissions_for_groups_set_factory->expects(self::once())->method('fromRepresentation')
+                ->willReturn(new DocmanItemPermissionsForGroupsSet([]));
         }
 
-        $this->creator_visitor->shouldReceive('visitWiki')
-            ->withArgs(function (Docman_Wiki $item, array $params) use ($permissions_for_groups_set): bool {
+        $this->creator_visitor->expects(self::once())->method('visitWiki')
+            ->with(self::isInstanceOf(Docman_Wiki::class), self::callback(function (array $params) use ($permissions_for_groups_set): bool {
                 if ($permissions_for_groups_set === null) {
-                    $this->assertNull($params['permissions_for_groups']);
+                    self::assertNull($params['permissions_for_groups']);
                 } else {
-                    $this->assertNotNull($params['permissions_for_groups']);
+                    self::assertNotNull($params['permissions_for_groups']);
                 }
                 return true;
-            })->once();
+            }));
 
-        $this->item_factory
-            ->shouldReceive('createWithoutOrdering')
-            ->with('Title', '', 11, 100, (int) ItemRepresentation::OBSOLESCENCE_DATE_NONE, 222, PLUGIN_DOCMAN_ITEM_TYPE_WIKI, '', \Mockery::any(), \Mockery::any(), 'Monchichi', null)
-            ->once()
-            ->andReturns($created_item);
+        $this->item_factory->expects(self::once())->method('createWithoutOrdering')
+            ->with('Title', '', 11, 100, (int) ItemRepresentation::OBSOLESCENCE_DATE_NONE, 222, PLUGIN_DOCMAN_ITEM_TYPE_WIKI, '', self::anything(), self::anything(), 'Monchichi', null)
+            ->willReturn($created_item);
 
-        $this->item_factory->shouldReceive('doesTitleCorrespondToExistingDocument')->andReturn(false);
+        $this->item_factory->method('doesTitleCorrespondToExistingDocument')->willReturn(false);
 
-        $this->custom_metadata_checker->shouldReceive('checkAndRetrieveFormattedRepresentation')->andReturn(
+        $this->custom_metadata_checker->method('checkAndRetrieveFormattedRepresentation')->willReturn(
             MetadataToCreate::buildMetadataRepresentation([], false)
         );
 
@@ -435,46 +354,33 @@ final class DocmanItemCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
                 $project
             );
 
-        $this->assertSame(12, $created_item_representation->id);
+        self::assertSame(12, $created_item_representation->id);
     }
 
     public function testWikiDocumentCannotBeCreatedIfServiceWikiIsNotAvailable(): void
     {
-        $parent_item  = \Mockery::mock(\Docman_Item::class);
-        $user         = \Mockery::mock(\PFUser::class);
-        $project      = \Mockery::mock(\Project::class);
-        $current_time = new \DateTimeImmutable();
+        $parent_item  = new Docman_Item(['item_id' => 11]);
+        $user         = UserTestBuilder::buildWithId(222);
+        $project      = ProjectTestBuilder::aProject()->withId(102)->withoutServices()->build();
+        $current_time = new DateTimeImmutable();
 
         $post_representation                             = new DocmanWikiPOSTRepresentation();
         $post_representation->title                      = 'Title';
         $post_representation->wiki_properties            = new WikiPropertiesPOSTPATCHRepresentation();
         $post_representation->wiki_properties->page_name = 'Monchichi';
 
-        $this->document_ongoing_upload_retriever->shouldReceive('isThereAlreadyAnUploadOngoing')->andReturns(false);
-        $parent_item->shouldReceive('getId')->andReturns(11);
-        $user->shouldReceive('getId')->andReturns(222);
-        $project->shouldReceive('getID')->andReturns(102);
+        $this->document_ongoing_upload_retriever->method('isThereAlreadyAnUploadOngoing')->willReturn(false);
 
-        $created_item = \Mockery::mock(Docman_Empty::class);
-        $created_item->shouldReceive('getId')->andReturns(12);
-        $created_item->shouldReceive('getParentId')->andReturns(11);
-        $created_item->makePartial();
+        $this->item_factory->expects(self::never())->method('createWithoutOrdering');
 
-        $this->item_factory
-            ->shouldReceive('createWithoutOrdering')
-            ->never();
-
-        $project->shouldReceive('usesWiki')->andReturn(false);
-        $project->shouldReceive('getUnixName')->once();
-
-        $this->custom_metadata_checker->shouldReceive('checkAndRetrieveFormattedRepresentation')->andReturn(
+        $this->custom_metadata_checker->method('checkAndRetrieveFormattedRepresentation')->willReturn(
             MetadataToCreate::buildMetadataRepresentation([], false)
         );
 
-        $this->item_factory->shouldReceive('doesTitleCorrespondToExistingDocument')->andReturn(false);
+        $this->item_factory->method('doesTitleCorrespondToExistingDocument')->willReturn(false);
 
-        $this->expectException(RestException::class);
-        $this->expectExceptionCode(400);
+        self::expectException(RestException::class);
+        self::expectExceptionCode(400);
 
         $this
             ->getItemCreator(EventDispatcherStub::withIdentityCallback())
@@ -489,11 +395,9 @@ final class DocmanItemCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testFileDocumentCanBeCreated(): void
     {
-        $parent_item = \Mockery::mock(\Docman_Item::class);
-        $parent_item->shouldReceive('getId')->andReturns(3);
-        $parent_item->shouldReceive('getGroupId')->andReturns(104);
-        $user         = \Mockery::mock(\PFUser::class);
-        $current_time = new \DateTimeImmutable();
+        $parent_item  = new Docman_Item(['item_id' => 3, 'group_id' => 104]);
+        $user         = UserTestBuilder::buildWithDefaults();
+        $current_time = new DateTimeImmutable();
 
         $post_representation                            = new DocmanPOSTFilesRepresentation();
         $post_representation->title                     = 'Title';
@@ -503,17 +407,13 @@ final class DocmanItemCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $file_properties_post_representation->file_name = 'myfile';
         $post_representation->file_properties           = $file_properties_post_representation;
 
-        $this->document_to_upload_creator->shouldReceive('create')->once()->andReturns(new DocumentToUpload(12));
+        $this->document_to_upload_creator->expects(self::once())->method('create')->willReturn(new DocumentToUpload(12));
 
-        $this->item_status_mapper->shouldReceive('getItemStatusWithParentInheritance')->andReturn(
-            PLUGIN_DOCMAN_ITEM_STATUS_NONE
-        );
+        $this->item_status_mapper->method('getItemStatusWithParentInheritance')->willReturn(PLUGIN_DOCMAN_ITEM_STATUS_NONE);
 
-        $this->metadata_obsolesence_date_retriever->shouldReceive('getTimeStampOfDateWithoutPeriodValidity')->andReturn(
-            (int) ItemRepresentation::OBSOLESCENCE_DATE_NONE
-        );
+        $this->metadata_obsolesence_date_retriever->method('getTimeStampOfDateWithoutPeriodValidity')->willReturn((int) ItemRepresentation::OBSOLESCENCE_DATE_NONE);
 
-        $this->item_factory->shouldReceive('doesTitleCorrespondToExistingDocument')->andReturn(false);
+        $this->item_factory->method('doesTitleCorrespondToExistingDocument')->willReturn(false);
 
         $metadata_to_create = MetadataToCreate::buildMetadataRepresentation([], false);
 
@@ -532,16 +432,15 @@ final class DocmanItemCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
                 null
             );
 
-        $this->assertSame(12, $created_item_representation->id);
-        $this->assertNotNull($created_item_representation->file_properties);
+        self::assertSame(12, $created_item_representation->id);
+        self::assertNotNull($created_item_representation->file_properties);
     }
 
     public function testItThrowsAnExceptionWhenDocumentHasSameNameThanCreatedFile(): void
     {
-        $parent_item = \Mockery::mock(\Docman_Item::class);
-        $parent_item->shouldReceive('getId')->andReturns(3);
-        $user         = \Mockery::mock(\PFUser::class);
-        $current_time = new \DateTimeImmutable();
+        $parent_item  = new Docman_Item(['item_id' => 3]);
+        $user         = UserTestBuilder::buildWithDefaults();
+        $current_time = new DateTimeImmutable();
 
         $post_representation                            = new DocmanPOSTFilesRepresentation();
         $post_representation->title                     = 'Title';
@@ -551,19 +450,18 @@ final class DocmanItemCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $file_properties_post_representation->file_name = 'myfile';
         $post_representation->file_properties           = $file_properties_post_representation;
 
-        $this->document_to_upload_creator->shouldReceive('create')->never();
+        $this->document_to_upload_creator->expects(self::never())->method('create');
 
-        $this->item_factory->shouldReceive('doesTitleCorrespondToExistingDocument')->andReturn(true);
+        $this->item_factory->method('doesTitleCorrespondToExistingDocument')->willReturn(true);
 
-        $this->custom_metadata_checker->shouldReceive('checkAndRetrieveFormattedRepresentation')->never();
+        $this->custom_metadata_checker->expects(self::never())->method('checkAndRetrieveFormattedRepresentation');
 
         $metadata_to_create = MetadataToCreate::buildMetadataRepresentation([], false);
 
-        $this->expectException(RestException::class);
-        $this->expectExceptionCode(400);
+        self::expectException(RestException::class);
+        self::expectExceptionCode(400);
 
-        $this
-            ->getItemCreator(EventDispatcherStub::withIdentityCallback())
+        $this->getItemCreator(EventDispatcherStub::withIdentityCallback())
             ->createFileDocument(
                 $parent_item,
                 $user,
@@ -580,28 +478,26 @@ final class DocmanItemCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testDocumentCreationWhenAFileIsBeingUploadedForItIsRejected(): void
     {
-        $parent_item = \Mockery::mock(\Docman_Item::class);
-        $parent_item->shouldReceive('getId')->andReturn(1);
-        $user         = \Mockery::mock(\PFUser::class);
-        $project      = \Mockery::mock(\Project::class);
-        $current_time = new \DateTimeImmutable();
+        $parent_item  = new Docman_Item(['item_id' => 1]);
+        $user         = UserTestBuilder::buildWithDefaults();
+        $project      = ProjectTestBuilder::aProject()->build();
+        $current_time = new DateTimeImmutable();
 
         $post_representation        = new DocmanEmptyPOSTRepresentation();
         $post_representation->title = 'Title';
 
-        $this->item_factory->shouldReceive('doesTitleCorrespondToExistingDocument')->andReturn(false);
+        $this->item_factory->method('doesTitleCorrespondToExistingDocument')->willReturn(false);
 
-        $this->document_ongoing_upload_retriever->shouldReceive('isThereAlreadyAnUploadOngoing')->andReturns(true);
+        $this->document_ongoing_upload_retriever->method('isThereAlreadyAnUploadOngoing')->willReturn(true);
 
-        $this->custom_metadata_checker->shouldReceive('checkAndRetrieveFormattedRepresentation')->andReturn(
+        $this->custom_metadata_checker->method('checkAndRetrieveFormattedRepresentation')->willReturn(
             MetadataToCreate::buildMetadataRepresentation([], false)
         );
 
-        $this->expectException(RestException::class);
-        $this->expectExceptionCode(409);
+        self::expectException(RestException::class);
+        self::expectExceptionCode(409);
 
-        $this
-            ->getItemCreator(EventDispatcherStub::withIdentityCallback())
+        $this->getItemCreator(EventDispatcherStub::withIdentityCallback())
             ->createEmpty(
                 $parent_item,
                 $user,
@@ -616,53 +512,42 @@ final class DocmanItemCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     public function testLinkDocumentCanBeCreated(?DocmanItemPermissionsForGroupsSetRepresentation $permissions_for_groups_set): void
     {
-        $parent_item  = \Mockery::mock(\Docman_Item::class);
-        $user         = \Mockery::mock(\PFUser::class);
-        $project      = \Mockery::mock(\Project::class);
-        $current_time = new \DateTimeImmutable();
+        $parent_item  = new Docman_Item(['item_id' => 11]);
+        $user         = UserTestBuilder::buildWithId(222);
+        $project      = ProjectTestBuilder::aProject()->withId(102)->build();
+        $current_time = new DateTimeImmutable();
 
         $post_representation        = new DocmanLinkPOSTRepresentation();
         $post_representation->title = 'Mie faboulouse linke';
-        $docman_link                = \Mockery::mock(Docman_LinkVersion::class);
-        $docman_link->shouldReceive('getLink')->andReturn('https://my.example.test');
+        $docman_link                = $this->createMock(Docman_LinkVersion::class);
+        $docman_link->method('getLink')->willReturn('https://my.example.test');
         $post_representation->link_properties        = LinkPropertiesRepresentation::build($docman_link);
         $post_representation->permissions_for_groups = $permissions_for_groups_set;
 
-        $this->document_ongoing_upload_retriever->shouldReceive('isThereAlreadyAnUploadOngoing')->andReturns(false);
-        $parent_item->shouldReceive('getId')->andReturns(11);
-        $user->shouldReceive('getId')->andReturns(222);
-        $project->shouldReceive('getID')->andReturns(102);
+        $this->document_ongoing_upload_retriever->method('isThereAlreadyAnUploadOngoing')->willReturn(false);
 
-        $this->item_status_mapper->shouldReceive('getItemStatusWithParentInheritance')
-            ->andReturn(PLUGIN_DOCMAN_ITEM_STATUS_NONE);
+        $this->item_status_mapper->method('getItemStatusWithParentInheritance')->willReturn(PLUGIN_DOCMAN_ITEM_STATUS_NONE);
 
-        $this->metadata_obsolesence_date_retriever->shouldReceive('getTimeStampOfDateWithoutPeriodValidity')->andReturn(
-            (int) ItemRepresentation::OBSOLESCENCE_DATE_NONE
-        );
+        $this->metadata_obsolesence_date_retriever->method('getTimeStampOfDateWithoutPeriodValidity')->willReturn((int) ItemRepresentation::OBSOLESCENCE_DATE_NONE);
 
         if ($permissions_for_groups_set !== null) {
-            $this->permissions_for_groups_set_factory->shouldReceive('fromRepresentation')
-                ->once()
-                ->andReturn(new DocmanItemPermissionsForGroupsSet([]));
+            $this->permissions_for_groups_set_factory->expects(self::once())->method('fromRepresentation')
+                ->willReturn(new DocmanItemPermissionsForGroupsSet([]));
         }
 
-        $this->creator_visitor->shouldReceive('visitLink')
-            ->withArgs(function (Docman_Link $item, array $params) use ($permissions_for_groups_set): bool {
+        $this->creator_visitor->expects(self::once())->method('visitLink')
+            ->with(self::isInstanceOf(Docman_Link::class), self::callback(function (array $params) use ($permissions_for_groups_set): bool {
                 if ($permissions_for_groups_set === null) {
-                    $this->assertNull($params['permissions_for_groups']);
+                    self::assertNull($params['permissions_for_groups']);
                 } else {
-                    $this->assertNotNull($params['permissions_for_groups']);
+                    self::assertNotNull($params['permissions_for_groups']);
                 }
                 return true;
-            })->once();
+            }));
 
-        $created_item = \Mockery::mock(Docman_Link::class);
-        $created_item->shouldReceive('getId')->andReturns(12);
-        $created_item->shouldReceive('getParentId')->andReturns(11);
-        $created_item->makePartial();
+        $created_item = new Docman_Link(['item_id' => 12, 'parent_id' => 11, 'link_url' => '']);
 
-        $this->item_factory
-            ->shouldReceive('createWithoutOrdering')
+        $this->item_factory->expects(self::once())->method('createWithoutOrdering')
             ->with(
                 'Mie faboulouse linke',
                 '',
@@ -672,24 +557,22 @@ final class DocmanItemCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
                 222,
                 PLUGIN_DOCMAN_ITEM_TYPE_LINK,
                 '',
-                \Mockery::any(),
-                \Mockery::any(),
+                self::anything(),
+                self::anything(),
                 null,
                 'https://my.example.test'
             )
-            ->once()
-            ->andReturns($created_item);
+            ->willReturn($created_item);
 
-        $this->item_factory->shouldReceive('doesTitleCorrespondToExistingDocument')->andReturn(false);
+        $this->item_factory->method('doesTitleCorrespondToExistingDocument')->willReturn(false);
 
-        $this->link_validity_checker->shouldReceive('checkLinkValidity');
+        $this->link_validity_checker->method('checkLinkValidity');
 
-        $this->custom_metadata_checker->shouldReceive('checkAndRetrieveFormattedRepresentation')->andReturn(
+        $this->custom_metadata_checker->method('checkAndRetrieveFormattedRepresentation')->willReturn(
             MetadataToCreate::buildMetadataRepresentation([], false)
         );
 
-        $created_item_representation = $this
-            ->getItemCreator(EventDispatcherStub::withIdentityCallback())
+        $created_item_representation = $this->getItemCreator(EventDispatcherStub::withIdentityCallback())
             ->createLink(
                 $parent_item,
                 $user,
@@ -698,7 +581,7 @@ final class DocmanItemCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
                 $project
             );
 
-        $this->assertSame(12, $created_item_representation->id);
+        self::assertSame(12, $created_item_representation->id);
     }
 
     /**
@@ -706,63 +589,50 @@ final class DocmanItemCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     public function testFolderCanBeCreated(?DocmanItemPermissionsForGroupsSetRepresentation $permissions_for_groups_set): void
     {
-        $parent_item  = \Mockery::mock(\Docman_Item::class);
-        $user         = \Mockery::mock(\PFUser::class);
-        $project      = \Mockery::mock(\Project::class);
-        $current_time = new \DateTimeImmutable();
+        $parent_item  = new Docman_Item(['item_id' => 11]);
+        $user         = UserTestBuilder::buildWithId(222);
+        $project      = ProjectTestBuilder::aProject()->withId(102)->build();
+        $current_time = new DateTimeImmutable();
 
         $post_representation                         = new DocmanFolderPOSTRepresentation();
         $post_representation->title                  = 'Title';
         $post_representation->description            = '';
         $post_representation->permissions_for_groups = $permissions_for_groups_set;
 
-        $this->document_ongoing_upload_retriever->shouldReceive('isThereAlreadyAnUploadOngoing')->andReturns(false);
-        $parent_item->shouldReceive('getId')->andReturns(11);
-        $user->shouldReceive('getId')->andReturns(222);
-        $project->shouldReceive('getID')->andReturns(102);
+        $this->document_ongoing_upload_retriever->method('isThereAlreadyAnUploadOngoing')->willReturn(false);
 
-        $this->item_status_mapper->shouldReceive('getItemStatusWithParentInheritance')
-            ->andReturn(PLUGIN_DOCMAN_ITEM_STATUS_NONE);
+        $this->item_status_mapper->method('getItemStatusWithParentInheritance')->willReturn(PLUGIN_DOCMAN_ITEM_STATUS_NONE);
 
-        $this->metadata_obsolesence_date_retriever->shouldReceive('getTimeStampOfDateWithoutPeriodValidity')->andReturn(
-            (int) ItemRepresentation::OBSOLESCENCE_DATE_NONE
-        );
+        $this->metadata_obsolesence_date_retriever->method('getTimeStampOfDateWithoutPeriodValidity')->willReturn((int) ItemRepresentation::OBSOLESCENCE_DATE_NONE);
 
         if ($permissions_for_groups_set !== null) {
-            $this->permissions_for_groups_set_factory->shouldReceive('fromRepresentation')
-                ->once()
-                ->andReturn(new DocmanItemPermissionsForGroupsSet([]));
+            $this->permissions_for_groups_set_factory->expects(self::once())->method('fromRepresentation')
+                ->willReturn(new DocmanItemPermissionsForGroupsSet([]));
         }
 
-        $this->creator_visitor->shouldReceive('visitFolder')
-            ->withArgs(function (Docman_Folder $item, array $params) use ($permissions_for_groups_set): bool {
+        $this->creator_visitor->expects(self::once())->method('visitFolder')
+            ->with(self::isInstanceOf(Docman_Folder::class), self::callback(function (array $params) use ($permissions_for_groups_set): bool {
                 if ($permissions_for_groups_set === null) {
-                    $this->assertNull($params['permissions_for_groups']);
+                    self::assertNull($params['permissions_for_groups']);
                 } else {
-                    $this->assertNotNull($params['permissions_for_groups']);
+                    self::assertNotNull($params['permissions_for_groups']);
                 }
                 return true;
-            })->once();
+            }));
 
-        $created_item = \Mockery::mock(Docman_Folder::class);
-        $created_item->shouldReceive('getId')->andReturns(12);
-        $created_item->shouldReceive('getParentId')->andReturns(11);
-        $created_item->makePartial();
+        $created_item = new Docman_Folder(['item_id' => 12, 'parent_id' => 11]);
 
-        $this->item_factory
-            ->shouldReceive('createWithoutOrdering')
-            ->with('Title', '', 11, 100, 0, 222, PLUGIN_DOCMAN_ITEM_TYPE_FOLDER, '', \Mockery::any(), \Mockery::any(), null, null)
-            ->once()
-            ->andReturns($created_item);
+        $this->item_factory->expects(self::once())->method('createWithoutOrdering')
+            ->with('Title', '', 11, 100, 0, 222, PLUGIN_DOCMAN_ITEM_TYPE_FOLDER, '', self::anything(), self::anything(), null, null)
+            ->willReturn($created_item);
 
-        $this->item_factory->shouldReceive('doesTitleCorrespondToExistingFolder')->andReturn(false);
+        $this->item_factory->method('doesTitleCorrespondToExistingFolder')->willReturn(false);
 
-        $this->custom_metadata_checker->shouldReceive('checkAndRetrieveFormattedRepresentation')->andReturn(
+        $this->custom_metadata_checker->method('checkAndRetrieveFormattedRepresentation')->willReturn(
             MetadataToCreate::buildMetadataRepresentation([], false)
         );
 
-        $created_item_representation = $this
-            ->getItemCreator(EventDispatcherStub::withIdentityCallback())
+        $created_item_representation = $this->getItemCreator(EventDispatcherStub::withIdentityCallback())
             ->createFolder(
                 $parent_item,
                 $user,
@@ -771,7 +641,7 @@ final class DocmanItemCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
                 $project
             );
 
-        $this->assertSame(12, $created_item_representation->id);
+        self::assertSame(12, $created_item_representation->id);
     }
 
     /**
@@ -779,10 +649,10 @@ final class DocmanItemCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     public function testEmbeddedFileCanBeCreated(?DocmanItemPermissionsForGroupsSetRepresentation $permissions_for_groups_set): void
     {
-        $parent_item  = \Mockery::mock(\Docman_Item::class);
-        $user         = \Mockery::mock(\PFUser::class);
-        $project      = \Mockery::mock(\Project::class);
-        $current_time = new \DateTimeImmutable();
+        $parent_item  = new Docman_Item(['item_id' => 11]);
+        $user         = UserTestBuilder::buildWithId(222);
+        $project      = ProjectTestBuilder::aProject()->withId(102)->build();
+        $current_time = new DateTimeImmutable();
 
         $post_representation                               = new DocmanEmbeddedPOSTRepresentation();
         $post_representation->title                        = 'Embedded file';
@@ -790,56 +660,41 @@ final class DocmanItemCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $post_representation->embedded_properties->content = 'My original content :)';
         $post_representation->permissions_for_groups       = $permissions_for_groups_set;
 
-        $this->document_ongoing_upload_retriever->shouldReceive('isThereAlreadyAnUploadOngoing')->andReturns(false);
-        $parent_item->shouldReceive('getId')->andReturns(11);
-        $user->shouldReceive('getId')->andReturns(222);
-        $project->shouldReceive('getID')->andReturns(102);
+        $this->document_ongoing_upload_retriever->method('isThereAlreadyAnUploadOngoing')->willReturn(false);
 
-        $this->item_status_mapper->shouldReceive('getItemStatusWithParentInheritance')->andReturn(
-            PLUGIN_DOCMAN_ITEM_STATUS_NONE
-        );
+        $this->item_status_mapper->method('getItemStatusWithParentInheritance')->willReturn(PLUGIN_DOCMAN_ITEM_STATUS_NONE);
 
-        $this->metadata_obsolesence_date_retriever->shouldReceive('getTimeStampOfDateWithoutPeriodValidity')->andReturn(
-            (int) ItemRepresentation::OBSOLESCENCE_DATE_NONE
-        );
+        $this->metadata_obsolesence_date_retriever->method('getTimeStampOfDateWithoutPeriodValidity')->willReturn((int) ItemRepresentation::OBSOLESCENCE_DATE_NONE);
 
         if ($permissions_for_groups_set !== null) {
-            $this->permissions_for_groups_set_factory->shouldReceive('fromRepresentation')
-                ->once()
-                ->andReturn(new DocmanItemPermissionsForGroupsSet([]));
+            $this->permissions_for_groups_set_factory->expects(self::once())->method('fromRepresentation')
+                ->willReturn(new DocmanItemPermissionsForGroupsSet([]));
         }
 
-        $this->creator_visitor->shouldReceive('visitEmbeddedFile')
-            ->withArgs(function (Docman_EmbeddedFile $item, array $params) use ($permissions_for_groups_set): bool {
+        $this->creator_visitor->expects(self::once())->method('visitEmbeddedFile')
+            ->with(self::isInstanceOf(Docman_EmbeddedFile::class), self::callback(function (array $params) use ($permissions_for_groups_set): bool {
                 if ($permissions_for_groups_set === null) {
-                    $this->assertNull($params['permissions_for_groups']);
+                    self::assertNull($params['permissions_for_groups']);
                 } else {
-                    $this->assertNotNull($params['permissions_for_groups']);
+                    self::assertNotNull($params['permissions_for_groups']);
                 }
                 return true;
-            })->once();
+            }));
 
-        $created_item = \Mockery::mock(Docman_EmbeddedFile::class);
-        $created_item->shouldReceive('getId')->andReturns(12);
-        $created_item->shouldReceive('getParentId')->andReturns(11);
-        $created_item->shouldReceive('getGroupId')->andReturn(102);
-        $created_item->makePartial();
+        $created_item = new Docman_EmbeddedFile(['item_id' => 12, 'parent_id' => 11, 'group_id' => 102]);
 
-        $this->item_factory
-            ->shouldReceive('createWithoutOrdering')
-            ->with('Embedded file', '', 11, 100, 0, 222, PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE, '', \Mockery::any(), \Mockery::any(), null, null)
-            ->once()
-            ->andReturns($created_item);
+        $this->item_factory->expects(self::once())->method('createWithoutOrdering')
+            ->with('Embedded file', '', 11, 100, 0, 222, PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE, '', self::anything(), self::anything(), null, null)
+            ->willReturn($created_item);
 
-        $this->item_factory->shouldReceive('doesTitleCorrespondToExistingFolder')->andReturn(false);
-        $this->item_factory->shouldReceive('doesTitleCorrespondToExistingDocument')->andReturn(false);
+        $this->item_factory->method('doesTitleCorrespondToExistingFolder')->willReturn(false);
+        $this->item_factory->method('doesTitleCorrespondToExistingDocument')->willReturn(false);
 
-        $this->custom_metadata_checker->shouldReceive('checkAndRetrieveFormattedRepresentation')->andReturn(
+        $this->custom_metadata_checker->method('checkAndRetrieveFormattedRepresentation')->willReturn(
             MetadataToCreate::buildMetadataRepresentation([], false)
         );
 
-        $created_item_representation = $this
-            ->getItemCreator(EventDispatcherStub::withIdentityCallback())
+        $created_item_representation = $this->getItemCreator(EventDispatcherStub::withIdentityCallback())
             ->createEmbedded(
                 $parent_item,
                 $user,
@@ -848,29 +703,27 @@ final class DocmanItemCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
                 $project
             );
 
-        $this->assertSame(12, $created_item_representation->id);
+        self::assertSame(12, $created_item_representation->id);
     }
 
     public function testItemAreRejectedIfItemWIthSameNameAlreadyExists(): void
     {
-        $parent_item = \Mockery::mock(\Docman_Item::class);
-        $parent_item->shouldReceive('getId')->andReturn(1);
-        $user         = \Mockery::mock(\PFUser::class);
-        $project      = \Mockery::mock(\Project::class);
-        $current_time = new \DateTimeImmutable();
+        $parent_item  = new Docman_Item(['item_id' => 1]);
+        $user         = UserTestBuilder::buildWithDefaults();
+        $project      = ProjectTestBuilder::aProject()->build();
+        $current_time = new DateTimeImmutable();
 
         $post_representation        = new DocmanEmptyPOSTRepresentation();
         $post_representation->title = 'Title';
 
-        $this->item_factory->shouldReceive('doesTitleCorrespondToExistingDocument')->andReturn(true);
+        $this->item_factory->method('doesTitleCorrespondToExistingDocument')->willReturn(true);
 
-        $this->custom_metadata_checker->shouldReceive('checkAndRetrieveFormattedRepresentation')->never();
+        $this->custom_metadata_checker->expects(self::never())->method('checkAndRetrieveFormattedRepresentation');
 
-        $this->expectException(RestException::class);
-        $this->expectExceptionCode(400);
+        self::expectException(RestException::class);
+        self::expectExceptionCode(400);
 
-        $this
-            ->getItemCreator(EventDispatcherStub::withIdentityCallback())
+        $this->getItemCreator(EventDispatcherStub::withIdentityCallback())
             ->createEmpty(
                 $parent_item,
                 $user,
@@ -882,49 +735,37 @@ final class DocmanItemCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItThrowsExceptionIfTheStatusMetadataIsNotUsedButSetInTheRepresentation(): void
     {
-        $parent_item = \Mockery::mock(\Docman_Item::class);
-        $parent_item->shouldReceive('getId')->andReturn(1);
-        $user         = \Mockery::mock(\PFUser::class);
-        $project      = \Mockery::mock(\Project::class);
-        $current_time = new \DateTimeImmutable();
+        $parent_item  = new Docman_Item(['item_id' => 11]);
+        $user         = UserTestBuilder::buildWithId(222);
+        $project      = ProjectTestBuilder::aProject()->withId(102)->build();
+        $current_time = new DateTimeImmutable();
 
         $post_representation              = new DocmanFolderPOSTRepresentation();
         $post_representation->title       = 'Title';
         $post_representation->description = '';
         $post_representation->status      = 'approved';
 
-        $this->document_ongoing_upload_retriever->shouldReceive('isThereAlreadyAnUploadOngoing')->andReturns(false);
-        $parent_item->shouldReceive('getId')->andReturns(11);
-        $user->shouldReceive('getId')->andReturns(222);
-        $project->shouldReceive('getID')->andReturns(102);
+        $this->document_ongoing_upload_retriever->method('isThereAlreadyAnUploadOngoing')->willReturn(false);
 
-        $this->item_status_mapper->shouldReceive('getItemStatusWithParentInheritance')->andThrow(
+        $this->item_status_mapper->method('getItemStatusWithParentInheritance')->willThrowException(
             HardCodedMetadataException::itemStatusNotAvailable()
         );
 
-        $this->metadata_obsolesence_date_retriever->shouldReceive('getTimeStampOfDateWithoutPeriodValidity')->never();
+        $this->metadata_obsolesence_date_retriever->expects(self::never())->method('getTimeStampOfDateWithoutPeriodValidity');
 
-        $created_item = \Mockery::mock(Docman_Folder::class);
-        $created_item->shouldReceive('getId')->andReturns(12);
-        $created_item->shouldReceive('getParentId')->andReturns(11);
-        $created_item->makePartial();
+        $this->item_factory->expects(self::never())->method('createWithoutOrdering');
 
-        $this->item_factory
-            ->shouldReceive('createWithoutOrdering')
-            ->never();
+        $this->item_factory->method('doesTitleCorrespondToExistingFolder')->willReturn(false);
 
-        $this->item_factory->shouldReceive('doesTitleCorrespondToExistingFolder')->andReturn(false);
-
-        $this->creator_visitor->shouldReceive('visitFolder')->never();
-        $this->custom_metadata_checker->shouldReceive('checkAndRetrieveFormattedRepresentation')->andReturn(
+        $this->creator_visitor->expects(self::never())->method('visitFolder');
+        $this->custom_metadata_checker->method('checkAndRetrieveFormattedRepresentation')->willReturn(
             MetadataToCreate::buildMetadataRepresentation([], false)
         );
 
-        $this->expectException(HardCodedMetadataException::class);
-        $this->expectExceptionMessage('Status is not enabled for project');
+        self::expectException(HardCodedMetadataException::class);
+        self::expectExceptionMessage('Status is not enabled for project');
 
-        $this
-            ->getItemCreator(EventDispatcherStub::withIdentityCallback())
+        $this->getItemCreator(EventDispatcherStub::withIdentityCallback())
             ->createFolder(
                 $parent_item,
                 $user,
@@ -936,39 +777,26 @@ final class DocmanItemCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testFolderCanBeCreatedWithStatus(): void
     {
-        $parent_item  = \Mockery::mock(\Docman_Item::class);
-        $user         = \Mockery::mock(\PFUser::class);
-        $project      = \Mockery::mock(\Project::class);
-        $current_time = new \DateTimeImmutable();
+        $parent_item  = new Docman_Item(['item_id' => 11]);
+        $user         = UserTestBuilder::buildWithId(222);
+        $project      = ProjectTestBuilder::aProject()->withId(102)->build();
+        $current_time = new DateTimeImmutable();
 
         $post_representation              = new DocmanFolderPOSTRepresentation();
         $post_representation->title       = 'Title';
         $post_representation->description = '';
         $post_representation->status      = 'approved';
 
-        $this->document_ongoing_upload_retriever->shouldReceive('isThereAlreadyAnUploadOngoing')->andReturns(false);
-        $parent_item->shouldReceive('getId')->andReturns(11);
-        $user->shouldReceive('getId')->andReturns(222);
-        $project->shouldReceive('getID')->andReturns(102);
+        $this->document_ongoing_upload_retriever->method('isThereAlreadyAnUploadOngoing')->willReturn(false);
 
-        $this->item_status_mapper->shouldReceive('getItemStatusWithParentInheritance')->with(
-            $parent_item,
-            $post_representation->status
-        )->andReturn(
-            PLUGIN_DOCMAN_ITEM_STATUS_APPROVED
-        );
+        $this->item_status_mapper->method('getItemStatusWithParentInheritance')->with($parent_item, $post_representation->status)
+            ->willReturn(PLUGIN_DOCMAN_ITEM_STATUS_APPROVED);
 
-        $this->metadata_obsolesence_date_retriever->shouldReceive('getTimeStampOfDateWithoutPeriodValidity')->andReturn(
-            (int) ItemRepresentation::OBSOLESCENCE_DATE_NONE
-        );
+        $this->metadata_obsolesence_date_retriever->method('getTimeStampOfDateWithoutPeriodValidity')->willReturn((int) ItemRepresentation::OBSOLESCENCE_DATE_NONE);
 
-        $created_item = \Mockery::mock(Docman_Folder::class);
-        $created_item->shouldReceive('getId')->andReturns(12);
-        $created_item->shouldReceive('getParentId')->andReturns(11);
-        $created_item->makePartial();
+        $created_item = new Docman_Folder(['item_id' => 12, 'parent_id' => 11]);
 
-        $this->item_factory
-            ->shouldReceive('createWithoutOrdering')
+        $this->item_factory->expects(self::once())->method('createWithoutOrdering')
             ->with(
                 'Title',
                 '',
@@ -978,23 +806,21 @@ final class DocmanItemCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
                 222,
                 PLUGIN_DOCMAN_ITEM_TYPE_FOLDER,
                 '',
-                \Mockery::any(),
-                \Mockery::any(),
+                self::anything(),
+                self::anything(),
                 null,
                 null
             )
-            ->once()
-            ->andReturns($created_item);
+            ->willReturn($created_item);
 
-        $this->item_factory->shouldReceive('doesTitleCorrespondToExistingFolder')->andReturn(false);
+        $this->item_factory->method('doesTitleCorrespondToExistingFolder')->willReturn(false);
 
-        $this->creator_visitor->shouldReceive('visitFolder')->once();
-        $this->custom_metadata_checker->shouldReceive('checkAndRetrieveFormattedRepresentation')->andReturn(
+        $this->creator_visitor->expects(self::once())->method('visitFolder');
+        $this->custom_metadata_checker->method('checkAndRetrieveFormattedRepresentation')->willReturn(
             MetadataToCreate::buildMetadataRepresentation([], false)
         );
 
-        $created_item_representation = $this
-            ->getItemCreator(EventDispatcherStub::withIdentityCallback())
+        $created_item_representation = $this->getItemCreator(EventDispatcherStub::withIdentityCallback())
             ->createFolder(
                 $parent_item,
                 $user,
@@ -1003,59 +829,44 @@ final class DocmanItemCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
                 $project
             );
 
-        $this->assertSame(12, $created_item_representation->id);
+        self::assertSame(12, $created_item_representation->id);
     }
 
     public function testCreateEmptyDocumentWithStatusAndObsolescenceDate(): void
     {
-        $parent_item  = \Mockery::mock(\Docman_Item::class);
-        $user         = \Mockery::mock(\PFUser::class);
-        $project      = \Mockery::mock(\Project::class);
-        $current_time = new \DateTimeImmutable();
+        $parent_item  = new Docman_Item(['item_id' => 11]);
+        $user         = UserTestBuilder::buildWithId(222);
+        $project      = ProjectTestBuilder::aProject()->withId(102)->build();
+        $current_time = new DateTimeImmutable();
 
         $post_representation                    = new DocmanEmptyPOSTRepresentation();
         $post_representation->title             = 'Title';
         $post_representation->status            = 'approved';
         $post_representation->obsolescence_date = '2019-10-11';
 
-        $this->document_ongoing_upload_retriever->shouldReceive('isThereAlreadyAnUploadOngoing')->andReturns(false);
-        $parent_item->shouldReceive('getId')->andReturns(11);
-        $user->shouldReceive('getId')->andReturns(222);
-        $project->shouldReceive('getID')->andReturns(102);
+        $this->document_ongoing_upload_retriever->method('isThereAlreadyAnUploadOngoing')->willReturn(false);
 
-        $this->item_status_mapper->shouldReceive('getItemStatusWithParentInheritance')
-            ->andReturn(PLUGIN_DOCMAN_ITEM_STATUS_NONE);
+        $this->item_status_mapper->method('getItemStatusWithParentInheritance')->willReturn(PLUGIN_DOCMAN_ITEM_STATUS_NONE);
 
         $obsolescence_date_time_stamp = 123456;
-        $this->metadata_obsolesence_date_retriever->shouldReceive('getTimeStampOfDateWithoutPeriodValidity')
-            ->withArgs(
-                [
-                    $post_representation->obsolescence_date,
-                    $current_time,
-                ]
-            )
-            ->andReturn($obsolescence_date_time_stamp);
+        $this->metadata_obsolesence_date_retriever->method('getTimeStampOfDateWithoutPeriodValidity')
+            ->with($post_representation->obsolescence_date, $current_time)
+            ->willReturn($obsolescence_date_time_stamp);
 
-        $created_item = \Mockery::mock(Docman_Empty::class);
-        $created_item->shouldReceive('getId')->andReturns(12);
-        $created_item->shouldReceive('getParentId')->andReturns(11);
-        $created_item->makePartial();
+        $created_item = new Docman_Empty(['item_id' => 12, 'parent_id' => 11]);
 
-        $this->item_factory
-            ->shouldReceive('createWithoutOrdering')
-            ->with('Title', '', 11, 100, $obsolescence_date_time_stamp, 222, PLUGIN_DOCMAN_ITEM_TYPE_EMPTY, '', \Mockery::any(), \Mockery::any(), null, null)
-            ->once()
-            ->andReturns($created_item);
+        $this->item_factory->expects(self::once())->method('createWithoutOrdering')
+            ->with('Title', '', 11, 100, $obsolescence_date_time_stamp, 222, PLUGIN_DOCMAN_ITEM_TYPE_EMPTY, '', self::anything(), self::anything(), null, null)
+            ->willReturn($created_item);
 
-        $this->item_factory->shouldReceive('doesTitleCorrespondToExistingDocument')->andReturn(false);
+        $this->item_factory->method('doesTitleCorrespondToExistingDocument')->willReturn(false);
 
-        $this->creator_visitor->shouldReceive('visitEmpty')->once();
-        $this->custom_metadata_checker->shouldReceive('checkAndRetrieveFormattedRepresentation')->andReturn(
+        $this->creator_visitor->expects(self::once())->method('visitEmpty');
+        $this->custom_metadata_checker->method('checkAndRetrieveFormattedRepresentation')->willReturn(
             MetadataToCreate::buildMetadataRepresentation([], false)
         );
 
-        $created_item_representation = $this
-            ->getItemCreator(EventDispatcherStub::withIdentityCallback())
+        $created_item_representation = $this->getItemCreator(EventDispatcherStub::withIdentityCallback())
             ->createEmpty(
                 $parent_item,
                 $user,
@@ -1064,15 +875,15 @@ final class DocmanItemCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
                 $project
             );
 
-        $this->assertSame(12, $created_item_representation->id);
+        self::assertSame(12, $created_item_representation->id);
     }
 
     public function testCreateEmbeddedDocumentWithStatusAndObsolescenceDate(): void
     {
-        $parent_item  = \Mockery::mock(\Docman_Item::class);
-        $user         = \Mockery::mock(\PFUser::class);
-        $project      = \Mockery::mock(\Project::class);
-        $current_time = new \DateTimeImmutable();
+        $parent_item  = new Docman_Item(['item_id' => 11]);
+        $user         = UserTestBuilder::buildWithId(222);
+        $project      = ProjectTestBuilder::aProject()->withId(102)->build();
+        $current_time = new DateTimeImmutable();
 
         $post_representation                               = new DocmanEmbeddedPOSTRepresentation();
         $post_representation->title                        = 'Embedded file with status and Obsolescence date';
@@ -1081,31 +892,18 @@ final class DocmanItemCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $post_representation->status                       = 'approved';
         $post_representation->obsolescence_date            = '2019-10-11';
 
-        $this->document_ongoing_upload_retriever->shouldReceive('isThereAlreadyAnUploadOngoing')->andReturns(false);
-        $parent_item->shouldReceive('getId')->andReturns(11);
-        $user->shouldReceive('getId')->andReturns(222);
-        $project->shouldReceive('getID')->andReturns(102);
+        $this->document_ongoing_upload_retriever->method('isThereAlreadyAnUploadOngoing')->willReturn(false);
 
-        $this->item_status_mapper->shouldReceive('getItemStatusWithParentInheritance')
-            ->andReturn(PLUGIN_DOCMAN_ITEM_STATUS_APPROVED);
+        $this->item_status_mapper->method('getItemStatusWithParentInheritance')->willReturn(PLUGIN_DOCMAN_ITEM_STATUS_APPROVED);
 
         $obsolescence_date_time_stamp = 123456;
-        $this->metadata_obsolesence_date_retriever->shouldReceive('getTimeStampOfDateWithoutPeriodValidity')
-            ->withArgs(
-                [
-                    $post_representation->obsolescence_date,
-                    $current_time,
-                ]
-            )
-            ->andReturn($obsolescence_date_time_stamp);
+        $this->metadata_obsolesence_date_retriever->method('getTimeStampOfDateWithoutPeriodValidity')
+            ->with($post_representation->obsolescence_date, $current_time)
+            ->willReturn($obsolescence_date_time_stamp);
 
-        $created_item = \Mockery::mock(Docman_Empty::class);
-        $created_item->shouldReceive('getId')->andReturns(12);
-        $created_item->shouldReceive('getParentId')->andReturns(11);
-        $created_item->makePartial();
+        $created_item = new Docman_Empty(['item_id' => 12, 'parent_id' => 11]);
 
-        $this->item_factory
-            ->shouldReceive('createWithoutOrdering')
+        $this->item_factory->expects(self::once())->method('createWithoutOrdering')
             ->with(
                 'Embedded file with status and Obsolescence date',
                 '',
@@ -1115,23 +913,21 @@ final class DocmanItemCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
                 222,
                 PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE,
                 '',
-                \Mockery::any(),
-                \Mockery::any(),
+                self::anything(),
+                self::anything(),
                 null,
                 null
             )
-            ->once()
-            ->andReturns($created_item);
+            ->willReturn($created_item);
 
-        $this->item_factory->shouldReceive('doesTitleCorrespondToExistingDocument')->andReturn(false);
+        $this->item_factory->method('doesTitleCorrespondToExistingDocument')->willReturn(false);
 
-        $this->creator_visitor->shouldReceive('visitEmpty')->once();
-        $this->custom_metadata_checker->shouldReceive('checkAndRetrieveFormattedRepresentation')->andReturn(
+        $this->creator_visitor->expects(self::once())->method('visitEmpty');
+        $this->custom_metadata_checker->method('checkAndRetrieveFormattedRepresentation')->willReturn(
             MetadataToCreate::buildMetadataRepresentation([], false)
         );
 
-        $created_item_representation = $this
-            ->getItemCreator(EventDispatcherStub::withIdentityCallback())
+        $created_item_representation = $this->getItemCreator(EventDispatcherStub::withIdentityCallback())
             ->createEmbedded(
                 $parent_item,
                 $user,
@@ -1140,49 +936,36 @@ final class DocmanItemCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
                 $project
             );
 
-        $this->assertSame(12, $created_item_representation->id);
+        self::assertSame(12, $created_item_representation->id);
     }
 
     public function testCreateLinkDocumentWithStatusAndObsolescenceDate(): void
     {
-        $parent_item  = \Mockery::mock(\Docman_Item::class);
-        $user         = \Mockery::mock(\PFUser::class);
-        $project      = \Mockery::mock(\Project::class);
-        $current_time = new \DateTimeImmutable();
+        $parent_item  = new Docman_Item(['item_id' => 11]);
+        $user         = UserTestBuilder::buildWithId(222);
+        $project      = ProjectTestBuilder::aProject()->withId(102)->build();
+        $current_time = new DateTimeImmutable();
 
         $post_representation        = new DocmanLinkPOSTRepresentation();
         $post_representation->title = 'Link with status and Obsolescence date';
-        $docman_link                = \Mockery::mock(Docman_LinkVersion::class);
-        $docman_link->shouldReceive('getLink')->andReturn('https://my.example.test');
+        $docman_link                = $this->createMock(Docman_LinkVersion::class);
+        $docman_link->method('getLink')->willReturn('https://my.example.test');
         $post_representation->link_properties   = LinkPropertiesRepresentation::build($docman_link);
         $post_representation->status            = 'approved';
         $post_representation->obsolescence_date = '2019-10-11';
 
-        $this->document_ongoing_upload_retriever->shouldReceive('isThereAlreadyAnUploadOngoing')->andReturns(false);
-        $parent_item->shouldReceive('getId')->andReturns(11);
-        $user->shouldReceive('getId')->andReturns(222);
-        $project->shouldReceive('getID')->andReturns(102);
+        $this->document_ongoing_upload_retriever->method('isThereAlreadyAnUploadOngoing')->willReturn(false);
 
-        $this->item_status_mapper->shouldReceive('getItemStatusWithParentInheritance')
-            ->andReturn(PLUGIN_DOCMAN_ITEM_STATUS_REJECTED);
+        $this->item_status_mapper->method('getItemStatusWithParentInheritance')->willReturn(PLUGIN_DOCMAN_ITEM_STATUS_REJECTED);
 
         $obsolescence_date_time_stamp = 123456;
-        $this->metadata_obsolesence_date_retriever->shouldReceive('getTimeStampOfDateWithoutPeriodValidity')
-            ->withArgs(
-                [
-                    $post_representation->obsolescence_date,
-                    $current_time,
-                ]
-            )
-            ->andReturn($obsolescence_date_time_stamp);
+        $this->metadata_obsolesence_date_retriever->method('getTimeStampOfDateWithoutPeriodValidity')
+            ->with($post_representation->obsolescence_date, $current_time)
+            ->willReturn($obsolescence_date_time_stamp);
 
-        $created_item = \Mockery::mock(Docman_Link::class);
-        $created_item->shouldReceive('getId')->andReturns(12);
-        $created_item->shouldReceive('getParentId')->andReturns(11);
-        $created_item->makePartial();
+        $created_item = new Docman_Link(['item_id' => 12, 'parent_id' => 11, 'link_url' => '']);
 
-        $this->item_factory
-            ->shouldReceive('createWithoutOrdering')
+        $this->item_factory->expects(self::once())->method('createWithoutOrdering')
             ->with(
                 'Link with status and Obsolescence date',
                 '',
@@ -1192,25 +975,23 @@ final class DocmanItemCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
                 222,
                 PLUGIN_DOCMAN_ITEM_TYPE_LINK,
                 '',
-                \Mockery::any(),
-                \Mockery::any(),
+                self::anything(),
+                self::anything(),
                 null,
                 'https://my.example.test'
             )
-            ->once()
-            ->andReturns($created_item);
+            ->willReturn($created_item);
 
-        $this->item_factory->shouldReceive('doesTitleCorrespondToExistingDocument')->andReturn(false);
+        $this->item_factory->method('doesTitleCorrespondToExistingDocument')->willReturn(false);
 
-        $this->creator_visitor->shouldReceive('visitLink')->once();
-        $this->custom_metadata_checker->shouldReceive('checkAndRetrieveFormattedRepresentation')->andReturn(
+        $this->creator_visitor->expects(self::once())->method('visitLink');
+        $this->custom_metadata_checker->method('checkAndRetrieveFormattedRepresentation')->willReturn(
             MetadataToCreate::buildMetadataRepresentation([], false)
         );
 
-        $this->link_validity_checker->shouldReceive('checkLinkValidity')->once();
+        $this->link_validity_checker->expects(self::once())->method('checkLinkValidity');
 
-        $created_item_representation = $this
-            ->getItemCreator(EventDispatcherStub::withIdentityCallback())
+        $created_item_representation = $this->getItemCreator(EventDispatcherStub::withIdentityCallback())
             ->createLink(
                 $parent_item,
                 $user,
@@ -1219,15 +1000,15 @@ final class DocmanItemCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
                 $project
             );
 
-        $this->assertSame(12, $created_item_representation->id);
+        self::assertSame(12, $created_item_representation->id);
     }
 
     public function testWikiDocumentCanBeCreatedWithStatusAndObsolescenceDate(): void
     {
-        $parent_item  = \Mockery::mock(\Docman_Item::class);
-        $user         = \Mockery::mock(\PFUser::class);
-        $project      = \Mockery::mock(\Project::class);
-        $current_time = new \DateTimeImmutable();
+        $parent_item  = new Docman_Item(['item_id' => 11]);
+        $user         = UserTestBuilder::buildWithId(222);
+        $project      = ProjectTestBuilder::aProject()->withId(102)->withUsedService(Service::WIKI)->build();
+        $current_time = new DateTimeImmutable();
 
         $post_representation                             = new DocmanWikiPOSTRepresentation();
         $post_representation->title                      = 'wiki';
@@ -1236,33 +1017,18 @@ final class DocmanItemCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $post_representation->status                     = 'rejected';
         $post_representation->obsolescence_date          = '2019-10-11';
 
-        $this->document_ongoing_upload_retriever->shouldReceive('isThereAlreadyAnUploadOngoing')->andReturns(false);
-        $parent_item->shouldReceive('getId')->andReturns(11);
-        $user->shouldReceive('getId')->andReturns(222);
-        $project->shouldReceive('getID')->andReturns(102);
-        $project->shouldReceive('usesWiki')->andReturn(true);
+        $this->document_ongoing_upload_retriever->method('isThereAlreadyAnUploadOngoing')->willReturn(false);
 
-        $this->item_status_mapper->shouldReceive('getItemStatusWithParentInheritance')->andReturn(
-            PLUGIN_DOCMAN_ITEM_STATUS_REJECTED
-        );
+        $this->item_status_mapper->method('getItemStatusWithParentInheritance')->willReturn(PLUGIN_DOCMAN_ITEM_STATUS_REJECTED);
 
         $obsolescence_date_time_stamp = 123456;
-        $this->metadata_obsolesence_date_retriever->shouldReceive('getTimeStampOfDateWithoutPeriodValidity')
-            ->withArgs(
-                [
-                    $post_representation->obsolescence_date,
-                    $current_time,
-                ]
-            )
-            ->andReturn($obsolescence_date_time_stamp);
+        $this->metadata_obsolesence_date_retriever->method('getTimeStampOfDateWithoutPeriodValidity')
+            ->with($post_representation->obsolescence_date, $current_time)
+            ->willReturn($obsolescence_date_time_stamp);
 
-        $created_item = \Mockery::mock(Docman_Wiki::class);
-        $created_item->shouldReceive('getId')->andReturns(12);
-        $created_item->shouldReceive('getParentId')->andReturns(11);
-        $created_item->makePartial();
+        $created_item = new Docman_Wiki(['item_id' => 12, 'parent_id' => 11, 'wiki_page' => '']);
 
-        $this->item_factory
-            ->shouldReceive('createWithoutOrdering')
+        $this->item_factory->expects(self::once())->method('createWithoutOrdering')
             ->with(
                 'wiki',
                 '',
@@ -1272,23 +1038,21 @@ final class DocmanItemCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
                 222,
                 PLUGIN_DOCMAN_ITEM_TYPE_WIKI,
                 '',
-                \Mockery::any(),
-                \Mockery::any(),
+                self::anything(),
+                self::anything(),
                 'Monchocho',
                 null
             )
-            ->once()
-            ->andReturns($created_item);
+            ->willReturn($created_item);
 
-        $this->item_factory->shouldReceive('doesTitleCorrespondToExistingDocument')->andReturn(false);
+        $this->item_factory->method('doesTitleCorrespondToExistingDocument')->willReturn(false);
 
-        $this->creator_visitor->shouldReceive('visitWiki')->once();
-        $this->custom_metadata_checker->shouldReceive('checkAndRetrieveFormattedRepresentation')->andReturn(
+        $this->creator_visitor->expects(self::once())->method('visitWiki');
+        $this->custom_metadata_checker->method('checkAndRetrieveFormattedRepresentation')->willReturn(
             MetadataToCreate::buildMetadataRepresentation([], false)
         );
 
-        $created_item_representation = $this
-            ->getItemCreator(EventDispatcherStub::withIdentityCallback())
+        $created_item_representation = $this->getItemCreator(EventDispatcherStub::withIdentityCallback())
             ->createWiki(
                 $parent_item,
                 $user,
@@ -1297,16 +1061,14 @@ final class DocmanItemCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
                 $project
             );
 
-        $this->assertSame(12, $created_item_representation->id);
+        self::assertSame(12, $created_item_representation->id);
     }
 
     public function testFileDocumentCanBeCreatedWithStatusAndObsolescenceDate(): void
     {
-        $parent_item = \Mockery::mock(\Docman_Item::class);
-        $parent_item->shouldReceive('getId')->andReturns(3);
-        $parent_item->shouldReceive('getGroupId')->andReturns(101);
-        $user         = \Mockery::mock(\PFUser::class);
-        $current_time = new \DateTimeImmutable();
+        $parent_item  = new Docman_Item(['item_id' => 3, 'group_id' => 101]);
+        $user         = UserTestBuilder::buildWithDefaults();
+        $current_time = new DateTimeImmutable();
 
         $post_representation                            = new DocmanPOSTFilesRepresentation();
         $post_representation->title                     = 'Title';
@@ -1318,28 +1080,20 @@ final class DocmanItemCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $file_properties_post_representation->file_name = 'myfile';
         $post_representation->file_properties           = $file_properties_post_representation;
 
-        $this->document_to_upload_creator->shouldReceive('create')->once()->andReturns(new DocumentToUpload(12));
+        $this->document_to_upload_creator->expects(self::once())->method('create')->willReturn(new DocumentToUpload(12));
 
-        $this->item_status_mapper->shouldReceive('getItemStatusWithParentInheritance')->andReturn(
-            PLUGIN_DOCMAN_ITEM_STATUS_NONE
-        );
+        $this->item_status_mapper->method('getItemStatusWithParentInheritance')->willReturn(PLUGIN_DOCMAN_ITEM_STATUS_NONE);
 
         $obsolescence_date_time_stamp = 123456;
-        $this->metadata_obsolesence_date_retriever->shouldReceive('getTimeStampOfDateWithoutPeriodValidity')
-            ->withArgs(
-                [
-                    $post_representation->obsolescence_date,
-                    $current_time,
-                ]
-            )
-            ->andReturn($obsolescence_date_time_stamp);
+        $this->metadata_obsolesence_date_retriever->method('getTimeStampOfDateWithoutPeriodValidity')
+            ->with($post_representation->obsolescence_date, $current_time)
+            ->willReturn($obsolescence_date_time_stamp);
 
-        $this->item_factory->shouldReceive('doesTitleCorrespondToExistingDocument')->andReturn(false);
-        $this->custom_metadata_checker->shouldReceive('checkAndRetrieveFormattedRepresentation')->never();
+        $this->item_factory->method('doesTitleCorrespondToExistingDocument')->willReturn(false);
+        $this->custom_metadata_checker->expects(self::never())->method('checkAndRetrieveFormattedRepresentation');
 
         $metadata_to_create          = MetadataToCreate::buildMetadataRepresentation([], false);
-        $created_item_representation = $this
-            ->getItemCreator(EventDispatcherStub::withIdentityCallback())
+        $created_item_representation = $this->getItemCreator(EventDispatcherStub::withIdentityCallback())
             ->createFileDocument(
                 $parent_item,
                 $user,
@@ -1353,8 +1107,8 @@ final class DocmanItemCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
                 null
             );
 
-        $this->assertSame(12, $created_item_representation->id);
-        $this->assertNotNull($created_item_representation->file_properties);
+        self::assertSame(12, $created_item_representation->id);
+        self::assertNotNull($created_item_representation->file_properties);
     }
 
     public static function permissionsForGroupsSetRepresentationDataProvider(): array
