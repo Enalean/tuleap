@@ -26,6 +26,7 @@ import type { GetText } from "@tuleap/gettext";
 import { linkItem, unlinkItem } from "./links/link-menu-item-builder";
 import { wrapListItem } from "./list/list-menu-item-builder";
 import { getTextStyleDropdownMenu } from "./text-style";
+import { imageItem } from "./image/image-menu-item-builder";
 
 export function cmdItem(cmd: Command, options: MenuItemSpec): MenuItem {
     const passed_options: MenuItemSpec = options;
@@ -119,6 +120,8 @@ export function buildMenuItems(
                 getTextStyleDropdownMenu(schema, editor_id, gettext_provider),
                 linkItem(schema.marks.link, editor_id, gettext_provider),
                 unlinkItem(schema.marks.link, editor_id),
+
+                imageItem(schema.nodes.image, editor_id, gettext_provider),
             ],
         ],
     };

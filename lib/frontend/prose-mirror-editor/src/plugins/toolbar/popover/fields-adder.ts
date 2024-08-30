@@ -18,7 +18,7 @@
  *
  */
 
-import type { TextField } from "./popover-link";
+import type { TextField } from "../links/popover-link";
 
 export function createAndInsertField(
     fields: Array<TextField>,

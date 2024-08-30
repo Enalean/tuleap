@@ -20,7 +20,7 @@
 
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { TextField } from "./popover-link";
-import { createAndInsertField } from "./fields-adder";
+import { createAndInsertField } from "../popover/fields-adder";
 import { updateInputValues } from "./input-value-updater";
 import { DOMParser, type Node } from "prosemirror-model";
 import { createLocalDocument, gettext_provider } from "../../../helpers/helper-for-test";
