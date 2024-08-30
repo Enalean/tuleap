@@ -18,13 +18,12 @@
   -->
 
 <template>
-    <span
-        class="tlp-badge-danger"
-        v-if="pull_request.is_git_reference_broken"
-        data-test="broken-git-ref-badge"
-    >
-        <i class="fa-solid fa-triangle-exclamation tlp-badge-icon"></i>{{ $gettext("Error") }}
-    </span>
+    <div v-if="pull_request.is_git_reference_broken" class="wrapper">
+        <span class="tlp-badge-danger" data-test="broken-git-ref-badge">
+            <i class="fa-solid fa-triangle-exclamation tlp-badge-icon" aria-hidden="true"></i
+            >{{ $gettext("Error") }}</span
+        >
+    </div>
 </template>
 
 <script setup lang="ts">
@@ -37,3 +36,11 @@ defineProps<{
     pull_request: PullRequest;
 }>();
 </script>
+
+<style scoped lang="scss">
+.wrapper {
+    display: flex;
+    flex: 0 1 25%;
+    justify-content: flex-end;
+}
+</style>

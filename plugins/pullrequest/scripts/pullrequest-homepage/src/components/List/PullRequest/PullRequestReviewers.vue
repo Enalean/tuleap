@@ -104,9 +104,8 @@ onMounted(() => {
 <style scoped lang="scss">
 .pull-request-card-reviewers {
     display: flex;
-    flex: 15% 0 0;
-    align-items: flex-start;
-    padding: 0 var(--tlp-medium-spacing);
+    flex: 0 1 15%;
+    margin-top: -5px;
 }
 
 .pull-request-card-reviewers-overlap-container {
@@ -123,7 +122,7 @@ onMounted(() => {
     border: $border-width solid var(--tlp-white-color);
 
     &:not(:first-child) {
-        margin-left: calc(-#{$border-width} * 2);
+        margin-left: #{$border-width * -2};
     }
 }
 
