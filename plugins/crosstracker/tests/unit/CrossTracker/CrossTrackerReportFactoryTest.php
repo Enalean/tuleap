@@ -86,7 +86,7 @@ final class CrossTrackerReportFactoryTest extends TestCase
 
     public function testItReturnsAnExpertCrossTrackerReport(): void
     {
-        $expected_result = new CrossTrackerExpertReport(1, '', [$this->tracker]);
+        $expected_result = new CrossTrackerExpertReport(1, '');
 
         $result = $this->getById(true);
 

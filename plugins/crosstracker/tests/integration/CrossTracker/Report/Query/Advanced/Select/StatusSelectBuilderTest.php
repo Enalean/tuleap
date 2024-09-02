@@ -39,10 +39,6 @@ final class StatusSelectBuilderTest extends CrossTrackerFieldTestCase
 {
     private PFUser $user;
     /**
-     * @var Tracker[]
-     */
-    private array $trackers;
-    /**
      * @var array<int, StaticListValueRepresentation[]>
      */
     private array $expected_results;
@@ -61,7 +57,8 @@ final class StatusSelectBuilderTest extends CrossTrackerFieldTestCase
 
         $release_tracker = $tracker_builder->buildTracker($project_id, 'Release');
         $sprint_tracker  = $tracker_builder->buildTracker($project_id, 'Sprint');
-        $this->trackers  = [$release_tracker, $sprint_tracker];
+        $tracker_builder->setViewPermissionOnTracker($release_tracker->getId(), Tracker::PERMISSION_FULL, ProjectUGroup::PROJECT_MEMBERS);
+        $tracker_builder->setViewPermissionOnTracker($sprint_tracker->getId(), Tracker::PERMISSION_FULL, ProjectUGroup::PROJECT_MEMBERS);
 
         $release_status_field_id = $tracker_builder->buildStaticListField($release_tracker->getId(), 'field_status', 'sb');
         $release_status_values   = $tracker_builder->buildOpenAndClosedValuesForField($release_status_field_id, $release_tracker->getId(), ['Open'], ['Closed']);
@@ -113,7 +110,6 @@ final class StatusSelectBuilderTest extends CrossTrackerFieldTestCase
             new CrossTrackerExpertReport(
                 1,
                 "SELECT @status FROM @project = 'self' WHERE field_status = '' OR field_status != ''",
-                $this->trackers,
             ),
             $this->user,
         );

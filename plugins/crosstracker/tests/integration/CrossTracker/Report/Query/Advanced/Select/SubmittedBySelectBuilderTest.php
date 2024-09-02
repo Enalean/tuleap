@@ -39,10 +39,6 @@ final class SubmittedBySelectBuilderTest extends CrossTrackerFieldTestCase
 {
     private PFUser $user;
     /**
-     * @var Tracker[]
-     */
-    private array $trackers;
-    /**
      * @var array<int, UserRepresentation>
      */
     private array $expected_results;
@@ -66,7 +62,8 @@ final class SubmittedBySelectBuilderTest extends CrossTrackerFieldTestCase
 
         $release_tracker = $tracker_builder->buildTracker($project_id, 'Release');
         $sprint_tracker  = $tracker_builder->buildTracker($project_id, 'Sprint');
-        $this->trackers  = [$release_tracker, $sprint_tracker];
+        $tracker_builder->setViewPermissionOnTracker($release_tracker->getId(), Tracker::PERMISSION_FULL, ProjectUGroup::PROJECT_MEMBERS);
+        $tracker_builder->setViewPermissionOnTracker($sprint_tracker->getId(), Tracker::PERMISSION_FULL, ProjectUGroup::PROJECT_MEMBERS);
 
         $release_submitted_by_field_id = $tracker_builder->buildSubmittedByField($release_tracker->getId());
         $sprint_submitted_by_field_id  = $tracker_builder->buildSubmittedByField($sprint_tracker->getId());
@@ -108,7 +105,6 @@ final class SubmittedBySelectBuilderTest extends CrossTrackerFieldTestCase
             new CrossTrackerExpertReport(
                 1,
                 "SELECT @submitted_by FROM @project = 'self' WHERE @submitted_by = 'bob' OR @submitted_by != 'bob'",
-                $this->trackers,
             ),
             $this->user,
         );

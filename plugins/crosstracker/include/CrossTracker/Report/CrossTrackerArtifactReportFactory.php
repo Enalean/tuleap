@@ -23,15 +23,14 @@ declare(strict_types=1);
 
 namespace Tuleap\CrossTracker\Report;
 
-use EventManager;
+use ForgeConfig;
 use PFUser;
 use Tracker;
+use Tuleap\Config\ConfigKey;
+use Tuleap\Config\ConfigKeyInt;
 use Tuleap\CrossTracker\CrossTrackerArtifactReportDao;
 use Tuleap\CrossTracker\CrossTrackerReport;
 use Tuleap\CrossTracker\Report\Query\Advanced\ExpertQueryIsEmptyException;
-use Tuleap\CrossTracker\Report\Query\Advanced\InvalidFromCollectionBuilder;
-use Tuleap\CrossTracker\Report\Query\Advanced\InvalidFromProjectCollectorVisitor;
-use Tuleap\CrossTracker\Report\Query\Advanced\InvalidFromTrackerCollectorVisitor;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSearchablesCollectionBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSelectablesCollectionBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSelectablesCollectorVisitor;
@@ -42,11 +41,8 @@ use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\SelectedValueReprese
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\SelectedValuesCollection;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilderVisitor;
 use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilderVisitor;
-use Tuleap\CrossTracker\Report\Query\Advanced\WidgetInProjectChecker;
 use Tuleap\CrossTracker\REST\v1\Representation\CrossTrackerReportContentRepresentation;
 use Tuleap\CrossTracker\REST\v1\Representation\CrossTrackerSelectedRepresentation;
-use Tuleap\Dashboard\Project\ProjectDashboardDao;
-use Tuleap\Dashboard\Widget\DashboardWidgetDao;
 use Tuleap\Tracker\Artifact\RetrieveArtifact;
 use Tuleap\Tracker\Report\Query\Advanced\ExpertQueryValidator;
 use Tuleap\Tracker\Report\Query\Advanced\FromIsInvalidException;
@@ -59,13 +55,13 @@ use Tuleap\Tracker\Report\Query\Advanced\SearchablesDoNotExistException;
 use Tuleap\Tracker\Report\Query\Advanced\SelectablesAreInvalidException;
 use Tuleap\Tracker\Report\Query\Advanced\SelectablesDoNotExistException;
 use Tuleap\Tracker\REST\v1\ArtifactMatchingReportCollection;
-use Tuleap\Widget\WidgetFactory;
-use User_ForgeUserGroupPermissionsDao;
-use User_ForgeUserGroupPermissionsManager;
-use UserManager;
 
 final readonly class CrossTrackerArtifactReportFactory
 {
+    #[ConfigKey('Configure the maximum quantity of tracker a cross tracker search expert query can use (default to 0 for no limit)')]
+    #[ConfigKeyInt(0)]
+    public const MAX_TRACKER_FROM = 'crosstracker_maximum_tracker_get_from';
+
     public function __construct(
         private CrossTrackerArtifactReportDao $artifact_report_dao,
         private RetrieveArtifact $artifact_factory,
@@ -77,6 +73,7 @@ final readonly class CrossTrackerArtifactReportFactory
         private CrossTrackerExpertQueryReportDao $expert_query_dao,
         private InvalidTermCollectorVisitor $term_collector,
         private InvalidSelectablesCollectorVisitor $selectables_collector,
+        private RetrieveReportTrackers $report_trackers_retriever,
     ) {
     }
 
@@ -146,7 +143,6 @@ final readonly class CrossTrackerArtifactReportFactory
      * @throws SyntaxError
      * @throws SelectablesDoNotExistException
      * @throws SelectablesAreInvalidException
-     * @throws FromIsInvalidException
      */
     private function getArtifactsMatchingDefaultQuery(
         CrossTrackerReport $report,
@@ -182,8 +178,12 @@ final readonly class CrossTrackerArtifactReportFactory
         int $limit,
         int $offset,
     ): CrossTrackerReportContentRepresentation {
-        $trackers = $this->getOnlyActiveTrackersInActiveProjects($report->getTrackers());
-        $query    = $this->getQueryFromReport($report, $current_user, $trackers);
+        $trackers = $this->report_trackers_retriever->getReportTrackers($report, $current_user, ForgeConfig::getInt(self::MAX_TRACKER_FROM));
+        if ($trackers === []) {
+            throw new FromIsInvalidException([dgettext('tuleap-crosstracker', 'No tracker found')]);
+        }
+
+        $query = $this->getQueryFromReport($report, $current_user, $trackers);
 
         $additional_from_where = $this->query_builder->buildFromWhere($query->getCondition(), $trackers, $current_user);
         $artifact_ids          = $this->expert_query_dao->searchArtifactsIdsMatchingQuery(
@@ -219,31 +219,18 @@ final readonly class CrossTrackerArtifactReportFactory
      * @throws SelectablesAreInvalidException
      * @throws SyntaxError
      * @throws SelectablesDoNotExistException
-     * @throws FromIsInvalidException
      */
     private function getQueryFromReport(
         CrossTrackerReport $report,
         PFUser $current_user,
         array $trackers,
     ): Query {
-        $expert_query       = $report->getExpertQuery();
-        $in_project_checker = new WidgetInProjectChecker(new ProjectDashboardDao(new DashboardWidgetDao(
-            new WidgetFactory(
-                UserManager::instance(),
-                new User_ForgeUserGroupPermissionsManager(new User_ForgeUserGroupPermissionsDao()),
-                EventManager::instance(),
-            )
-        )));
+        $expert_query = $report->getExpertQuery();
         $this->expert_query_validator->validateExpertQuery(
             $expert_query,
             $report->isExpert(),
             new InvalidSearchablesCollectionBuilder($this->term_collector, $trackers, $current_user),
             new InvalidSelectablesCollectionBuilder($this->selectables_collector, $trackers, $current_user),
-            new InvalidFromCollectionBuilder(
-                new InvalidFromTrackerCollectorVisitor($in_project_checker),
-                new InvalidFromProjectCollectorVisitor($in_project_checker),
-                $report->getId(),
-            ),
         );
         return $this->parser->parse($expert_query);
     }

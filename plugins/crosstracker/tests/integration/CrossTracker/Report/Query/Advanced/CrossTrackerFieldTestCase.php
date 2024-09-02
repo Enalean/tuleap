@@ -47,6 +47,15 @@ abstract class CrossTrackerFieldTestCase extends TestIntegrationTestCase
         ForgeConfig::set('sys_lang', 'en_US');
         ForgeConfig::set('codendi_cache_dir', $this->getTmpDir());
         ForgeConfig::set('sys_incdir', __DIR__ . '/../../../../../../../../site-content');
+        $_SERVER['REQUEST_URI'] = '';
+    }
+
+    /**
+     * @after
+     */
+    protected function unsetServer(): void
+    {
+        unset($_SERVER['REQUEST_URI']);
     }
 
     protected function addReportToProject(int $report_id, int $project_id): void

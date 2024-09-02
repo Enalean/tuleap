@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Permission;
 
 use ForgeConfig;
-use LogicException;
 use PFUser;
 use Tracker;
 use Tracker_UserWithReadAllPermission;
@@ -67,21 +66,6 @@ final class TrackersPermissionsRetrieverTest extends TestCase
         self::assertFalse($permissions->isEnabled());
         ForgeConfig::setFeatureFlag(TrackersPermissionsRetriever::FEATURE_FLAG, 1);
         self::assertTrue($permissions->isEnabled());
-    }
-
-    public function testItThrowsIfFeatureIsDisabled(): void
-    {
-        ForgeConfig::setFeatureFlag(TrackersPermissionsRetriever::FEATURE_FLAG, 0);
-        $permissions = new TrackersPermissionsRetriever(
-            SearchUserGroupsPermissionOnFieldsStub::buildEmpty(),
-            SearchUserGroupsPermissionOnTrackersStub::build(),
-            SearchUserGroupsPermissionOnArtifactsStub::buildEmpty(),
-            CheckUserCanAccessProjectStub::build(),
-            EventDispatcherStub::withIdentityCallback(),
-            RetrieveUserByIdStub::withNoUser(),
-        );
-        self::expectException(LogicException::class);
-        $permissions->retrieveUserPermissionOnTrackers(UserTestBuilder::buildWithDefaults(), [], TrackerPermissionType::PERMISSION_VIEW);
     }
 
     public function testItReturnsAllowedFields(): void

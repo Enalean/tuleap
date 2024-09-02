@@ -41,6 +41,9 @@ class CrossTrackerReportFactory
         }
         $expert_query = $report_row['expert_query'];
         $expert_mode  = $report_row['expert_mode'];
+        if ($expert_mode) {
+            return new CrossTrackerExpertReport($id, $expert_query);
+        }
 
         $report_trackers = [];
         $tracker_rows    = $this->report_dao->searchReportTrackersById($id);
@@ -49,10 +52,6 @@ class CrossTrackerReportFactory
             if ($tracker !== null) {
                 $report_trackers[] = $tracker;
             }
-        }
-
-        if ($expert_mode) {
-            return new CrossTrackerExpertReport($id, $expert_query, $report_trackers);
         }
 
         return new CrossTrackerDefaultReport($id, $expert_query, $report_trackers);

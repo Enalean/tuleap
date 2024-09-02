@@ -38,10 +38,6 @@ final class PrettyTitleSelectBuilderTest extends CrossTrackerFieldTestCase
 {
     private PFUser $user;
     /**
-     * @var Tracker[]
-     */
-    private array $trackers;
-    /**
      * @var array<int, PrettyTitleRepresentation>
      */
     private array $expected_values;
@@ -60,7 +56,8 @@ final class PrettyTitleSelectBuilderTest extends CrossTrackerFieldTestCase
 
         $release_tracker = $tracker_builder->buildTracker($project_id, 'Release', 'deep-blue');
         $sprint_tracker  = $tracker_builder->buildTracker($project_id, 'Sprint', 'ultra-violet');
-        $this->trackers  = [$release_tracker, $sprint_tracker];
+        $tracker_builder->setViewPermissionOnTracker($release_tracker->getId(), Tracker::PERMISSION_FULL, ProjectUGroup::PROJECT_MEMBERS);
+        $tracker_builder->setViewPermissionOnTracker($sprint_tracker->getId(), Tracker::PERMISSION_FULL, ProjectUGroup::PROJECT_MEMBERS);
 
         $release_text_field_id = $tracker_builder->buildTextField(
             $release_tracker->getId(),
@@ -131,7 +128,6 @@ final class PrettyTitleSelectBuilderTest extends CrossTrackerFieldTestCase
             new CrossTrackerExpertReport(
                 1,
                 "SELECT @pretty_title FROM @project = 'self' WHERE @title != ''",
-                $this->trackers,
             ),
             $this->user,
         );

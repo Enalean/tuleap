@@ -190,6 +190,9 @@ msgstr "La valeur pour 'limit' est incorrecte. 'limit' doit être un entier"
 msgid "Invalid value for 'offset'. It must be an integer"
 msgstr "La valeur pour 'offset' est incorrecte. 'offset' doit être un entier"
 
+msgid "No tracker found"
+msgstr "Aucun outils de suivi trouvé"
+
 msgid "Only @project = 'self' is supported"
 msgstr "Seulement @project = 'self' est supporté"
 

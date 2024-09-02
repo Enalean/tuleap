@@ -40,10 +40,6 @@ use Tuleap\Tracker\Test\Builders\TrackerDatabaseBuilder;
 final class UGroupListSelectFromBuilderTest extends CrossTrackerFieldTestCase
 {
     /**
-     * @var Tracker[]
-     */
-    private array $trackers;
-    /**
      * @var array<int, UGroupListValueRepresentation[]>
      */
     private array $expected_values;
@@ -65,7 +61,8 @@ final class UGroupListSelectFromBuilderTest extends CrossTrackerFieldTestCase
 
         $release_tracker = $tracker_builder->buildTracker($project_id, 'Release');
         $sprint_tracker  = $tracker_builder->buildTracker($project_id, 'Sprint');
-        $this->trackers  = [$release_tracker, $sprint_tracker];
+        $tracker_builder->setViewPermissionOnTracker($release_tracker->getId(), Tracker::PERMISSION_FULL, ProjectUGroup::PROJECT_MEMBERS);
+        $tracker_builder->setViewPermissionOnTracker($sprint_tracker->getId(), Tracker::PERMISSION_FULL, ProjectUGroup::PROJECT_MEMBERS);
 
         $release_ugroup_static_list_field_id = $tracker_builder->buildUserGroupListField(
             $release_tracker->getId(),
@@ -156,7 +153,6 @@ final class UGroupListSelectFromBuilderTest extends CrossTrackerFieldTestCase
             new CrossTrackerExpertReport(
                 1,
                 "SELECT ugroup_list_field FROM @project = 'self' WHERE ugroup_list_field = '' OR ugroup_list_field != ''",
-                $this->trackers,
             ),
             $this->user,
         );

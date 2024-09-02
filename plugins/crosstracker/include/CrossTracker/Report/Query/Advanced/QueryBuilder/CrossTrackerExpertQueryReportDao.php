@@ -160,12 +160,12 @@ final class CrossTrackerExpertQueryReportDao extends DataAccessObject
         IProvideParametrizedFromAndWhereSQLFragments $from_where,
         array $tracker_ids,
     ): int {
-            $from  = $from_where->getFrom();
-            $where = $from_where->getWhere();
+        $from  = $from_where->getFrom();
+        $where = $from_where->getWhere();
 
-            $tracker_ids_statement = EasyStatement::open()->in('tracker_artifact.tracker_id IN (?*)', $tracker_ids);
+        $tracker_ids_statement = EasyStatement::open()->in('tracker_artifact.tracker_id IN (?*)', $tracker_ids);
 
-            $sql = <<<EOSQL
+        $sql = <<<EOSQL
             SELECT count(tracker_artifact.id) AS nb_of_artifact
             FROM tracker_artifact
             INNER JOIN tracker ON (tracker_artifact.tracker_id = tracker.id)
@@ -191,5 +191,45 @@ final class CrossTrackerExpertQueryReportDao extends DataAccessObject
         ];
 
         return $this->getDB()->single($sql, $parameters);
+    }
+
+    /**
+     * @return list<array{id:int}>
+     */
+    public function searchTrackersIdsMatchingQuery(
+        IProvideParametrizedFromAndWhereSQLFragments $from_where,
+        int $limit,
+    ): array {
+        $sql_limit  = '';
+        $parameters = [];
+        if ($limit > 0) {
+            $sql_limit    = 'LIMIT ?';
+            $parameters[] = $limit;
+        }
+
+        $from  = $from_where->getFrom();
+        $where = $from_where->getWhere();
+
+        if ($where === '') {
+            $where = '1=1';
+        }
+
+        $sql = <<<SQL
+        SELECT tracker.id
+        FROM tracker
+        INNER JOIN `groups` AS project ON (project.group_id = tracker.group_id)
+        $from
+        WHERE tracker.deletion_date IS NULL AND project.status = 'A'
+            AND $where
+        $sql_limit
+        SQL;
+
+        $parameters = [
+            ...$from_where->getFromParameters(),
+            ...$from_where->getWhereParameters(),
+            ...$parameters,
+        ];
+
+        return $this->getDB()->q($sql, ...$parameters);
     }
 }

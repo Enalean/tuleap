@@ -40,10 +40,6 @@ final class LastUpdateDateSelectBuilderTest extends CrossTrackerFieldTestCase
 {
     private PFUser $user;
     /**
-     * @var Tracker[]
-     */
-    private array $trackers;
-    /**
      * @var array<int, string>
      */
     private array $expected_results;
@@ -62,7 +58,8 @@ final class LastUpdateDateSelectBuilderTest extends CrossTrackerFieldTestCase
 
         $release_tracker = $tracker_builder->buildTracker($project_id, 'Release');
         $sprint_tracker  = $tracker_builder->buildTracker($project_id, 'Sprint');
-        $this->trackers  = [$release_tracker, $sprint_tracker];
+        $tracker_builder->setViewPermissionOnTracker($release_tracker->getId(), Tracker::PERMISSION_FULL, ProjectUGroup::PROJECT_MEMBERS);
+        $tracker_builder->setViewPermissionOnTracker($sprint_tracker->getId(), Tracker::PERMISSION_FULL, ProjectUGroup::PROJECT_MEMBERS);
 
         $release_last_update_date_field_id = $tracker_builder->buildLastUpdateDateField($release_tracker->getId());
         $sprint_last_update_date_field_id  = $tracker_builder->buildLastUpdateDateField($sprint_tracker->getId());
@@ -105,7 +102,6 @@ final class LastUpdateDateSelectBuilderTest extends CrossTrackerFieldTestCase
             new CrossTrackerExpertReport(
                 1,
                 "SELECT @last_update_date FROM @project = 'self' WHERE @last_update_date >= '1970-01-01'",
-                $this->trackers,
             ),
             $this->user,
         );

@@ -38,10 +38,6 @@ final class ArtifactSelectTest extends CrossTrackerFieldTestCase
 {
     private PFUser $user;
     /**
-     * @var Tracker[]
-     */
-    private array $trackers;
-    /**
      * @var array<int, ArtifactRepresentation>
      */
     private array $expected_results;
@@ -60,7 +56,8 @@ final class ArtifactSelectTest extends CrossTrackerFieldTestCase
 
         $release_tracker = $tracker_builder->buildTracker($project_id, 'Release');
         $sprint_tracker  = $tracker_builder->buildTracker($project_id, 'Sprint');
-        $this->trackers  = [$release_tracker, $sprint_tracker];
+        $tracker_builder->setViewPermissionOnTracker($release_tracker->getId(), Tracker::PERMISSION_FULL, ProjectUGroup::PROJECT_MEMBERS);
+        $tracker_builder->setViewPermissionOnTracker($sprint_tracker->getId(), Tracker::PERMISSION_FULL, ProjectUGroup::PROJECT_MEMBERS);
 
         $release_artifact_id_field_id = $tracker_builder->buildArtifactIdField($release_tracker->getId());
         $sprint_artifact_id_field_id  = $tracker_builder->buildArtifactIdField($sprint_tracker->getId());
@@ -98,11 +95,7 @@ final class ArtifactSelectTest extends CrossTrackerFieldTestCase
     public function testItReturnsArtifactColumn(): void
     {
         $result = $this->getQueryResults(
-            new CrossTrackerExpertReport(
-                1,
-                'SELECT @id FROM @project = "self" WHERE @id >= 1',
-                $this->trackers,
-            ),
+            new CrossTrackerExpertReport(1, 'SELECT @id FROM @project = "self" WHERE @id >= 1'),
             $this->user,
         );
 

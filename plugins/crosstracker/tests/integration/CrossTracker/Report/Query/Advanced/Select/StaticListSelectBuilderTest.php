@@ -39,10 +39,6 @@ use Tuleap\Tracker\Test\Builders\TrackerDatabaseBuilder;
 final class StaticListSelectBuilderTest extends CrossTrackerFieldTestCase
 {
     /**
-     * @var Tracker[]
-     */
-    private array $trackers;
-    /**
      * @var array<int, StaticListValueRepresentation[]>
      */
     private array $expected_values;
@@ -62,7 +58,8 @@ final class StaticListSelectBuilderTest extends CrossTrackerFieldTestCase
 
         $release_tracker = $tracker_builder->buildTracker($project_id, 'Release');
         $sprint_tracker  = $tracker_builder->buildTracker($project_id, 'Sprint');
-        $this->trackers  = [$release_tracker, $sprint_tracker];
+        $tracker_builder->setViewPermissionOnTracker($release_tracker->getId(), Tracker::PERMISSION_FULL, ProjectUGroup::PROJECT_MEMBERS);
+        $tracker_builder->setViewPermissionOnTracker($sprint_tracker->getId(), Tracker::PERMISSION_FULL, ProjectUGroup::PROJECT_MEMBERS);
 
         $release_static_list_field_id = $tracker_builder->buildStaticListField(
             $release_tracker->getId(),
@@ -147,7 +144,6 @@ final class StaticListSelectBuilderTest extends CrossTrackerFieldTestCase
             new CrossTrackerExpertReport(
                 1,
                 "SELECT list_field FROM @project = 'self' WHERE list_field = '' OR list_field != ''",
-                $this->trackers,
             ),
             $this->user,
         );

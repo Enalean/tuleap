@@ -18,6 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Config\GetConfigKeys;
 use Tuleap\CrossTracker\CrossTrackerArtifactReportDao;
 use Tuleap\CrossTracker\CrossTrackerReportDao;
 use Tuleap\CrossTracker\CrossTrackerReportFactory;
@@ -30,6 +31,9 @@ use Tuleap\CrossTracker\Report\CSV\Format\BindToValueVisitor;
 use Tuleap\CrossTracker\Report\CSV\Format\CSVFormatterVisitor;
 use Tuleap\CrossTracker\Report\CSV\SimilarFieldsFormatter;
 use Tuleap\CrossTracker\Report\Query\Advanced\DuckTypedField\FieldTypeRetrieverWrapper;
+use Tuleap\CrossTracker\Report\Query\Advanced\FromBuilder\FromProjectBuilderVisitor;
+use Tuleap\CrossTracker\Report\Query\Advanced\FromBuilder\FromTrackerBuilderVisitor;
+use Tuleap\CrossTracker\Report\Query\Advanced\FromBuilderVisitor;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSearchableCollectorVisitor;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSelectablesCollectorVisitor;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidTermCollectorVisitor;
@@ -83,12 +87,16 @@ use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Metadata\Semantic\Ti
 use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Metadata\Special\PrettyTitle\PrettyTitleSelectFromBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Metadata\Special\ProjectName\ProjectNameSelectFromBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilderVisitor;
+use Tuleap\CrossTracker\Report\Query\Advanced\WidgetInProjectChecker;
+use Tuleap\CrossTracker\Report\ReportTrackersRetriever;
 use Tuleap\CrossTracker\Report\SimilarField\BindNameVisitor;
 use Tuleap\CrossTracker\Report\SimilarField\SimilarFieldsFilter;
 use Tuleap\CrossTracker\Report\SimilarField\SimilarFieldsMatcher;
 use Tuleap\CrossTracker\Report\SimilarField\SupportedFieldsDao;
 use Tuleap\CrossTracker\REST\ResourcesInjector;
 use Tuleap\CrossTracker\Widget\ProjectCrossTrackerSearch;
+use Tuleap\Dashboard\Project\ProjectDashboardDao;
+use Tuleap\Dashboard\Widget\DashboardWidgetDao;
 use Tuleap\DB\DBFactory;
 use Tuleap\Markdown\CommonMarkInterpreter;
 use Tuleap\Plugin\ListeningToEventClass;
@@ -124,6 +132,7 @@ use Tuleap\Tracker\Report\TrackerReportConfigDao;
 use Tuleap\Widget\Event\GetProjectWidgetList;
 use Tuleap\Widget\Event\GetUserWidgetList;
 use Tuleap\Widget\Event\GetWidget;
+use Tuleap\Widget\WidgetFactory;
 
 require_once __DIR__ . '/../../tracker/include/trackerPlugin.php';
 require_once __DIR__ . '/../vendor/autoload.php';
@@ -196,6 +205,12 @@ class crosstrackerPlugin extends Plugin
         foreach ($dao->searchTrackersIdUsedByCrossTrackerByProjectId($params['project_id']) as $row) {
             $params['tracker_ids_list'][] = $row['id'];
         }
+    }
+
+    #[ListeningToEventClass]
+    public function getConfigKeys(GetConfigKeys $config_keys): void
+    {
+        $config_keys->addConfigClass(CrossTrackerArtifactReportFactory::class);
     }
 
     #[ListeningToEventClass]
@@ -384,7 +399,18 @@ class crosstrackerPlugin extends Plugin
                 new ArtifactResultBuilder($artifact_factory),
             ),
         );
+        $from_builder_visitor    = new FromBuilderVisitor(
+            new FromTrackerBuilderVisitor(),
+            new FromProjectBuilderVisitor(new ProjectDashboardDao(new DashboardWidgetDao(
+                new WidgetFactory(
+                    $user_manager,
+                    new User_ForgeUserGroupPermissionsManager(new User_ForgeUserGroupPermissionsDao()),
+                    EventManager::instance(),
+                )
+            ))),
+        );
 
+        $expert_query_dao               = new CrossTrackerExpertQueryReportDao();
         $cross_tracker_artifact_factory = new CrossTrackerArtifactReportFactory(
             new CrossTrackerArtifactReportDao(),
             Tracker_ArtifactFactory::instance(),
@@ -393,9 +419,24 @@ class crosstrackerPlugin extends Plugin
             $select_builder_visitor,
             $result_builder_visitor,
             $parser,
-            new CrossTrackerExpertQueryReportDao(),
+            $expert_query_dao,
             $invalid_comparisons_collector,
             $invalid_selectables_collector,
+            new ReportTrackersRetriever(
+                $validator,
+                $parser,
+                $from_builder_visitor,
+                $trackers_permissions,
+                $expert_query_dao,
+                TrackerFactory::instance(),
+                new WidgetInProjectChecker(new ProjectDashboardDao(new DashboardWidgetDao(
+                    new WidgetFactory(
+                        UserManager::instance(),
+                        new User_ForgeUserGroupPermissionsManager(new User_ForgeUserGroupPermissionsDao()),
+                        EventManager::instance(),
+                    )
+                ))),
+            ),
         );
 
         $report_dao = new CrossTrackerReportDao();

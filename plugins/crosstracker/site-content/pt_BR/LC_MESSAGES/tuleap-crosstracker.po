@@ -148,6 +148,9 @@ msgstr ""
 msgid "Invalid value for 'offset'. It must be an integer"
 msgstr ""
 
+msgid "No tracker found"
+msgstr ""
+
 msgid "Only @project = 'self' is supported"
 msgstr ""
 

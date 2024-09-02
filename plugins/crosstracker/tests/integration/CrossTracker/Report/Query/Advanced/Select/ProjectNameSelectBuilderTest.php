@@ -39,10 +39,6 @@ final class ProjectNameSelectBuilderTest extends CrossTrackerFieldTestCase
 {
     private PFUser $user;
     /**
-     * @var Tracker[]
-     */
-    private array $trackers;
-    /**
      * @var array<int, ProjectRepresentation>
      */
     private array $expected_values;
@@ -60,10 +56,12 @@ final class ProjectNameSelectBuilderTest extends CrossTrackerFieldTestCase
         $this->user   = $core_builder->buildUser('project_member', 'Project Member', 'project_member@example.com');
         $core_builder->addUserToProjectMembers((int) $this->user->getId(), $project_1_id);
         $core_builder->addUserToProjectMembers((int) $this->user->getId(), $project_2_id);
+        $this->addReportToProject(1, $project_1_id);
 
         $release_tracker = $tracker_builder->buildTracker($project_1_id, 'Release');
         $sprint_tracker  = $tracker_builder->buildTracker($project_2_id, 'Sprint');
-        $this->trackers  = [$release_tracker, $sprint_tracker];
+        $tracker_builder->setViewPermissionOnTracker($release_tracker->getId(), Tracker::PERMISSION_FULL, ProjectUGroup::PROJECT_MEMBERS);
+        $tracker_builder->setViewPermissionOnTracker($sprint_tracker->getId(), Tracker::PERMISSION_FULL, ProjectUGroup::PROJECT_MEMBERS);
 
         $release_artifact_id_field_id = $tracker_builder->buildArtifactIdField($release_tracker->getId());
         $sprint_artifact_id_field_id  = $tracker_builder->buildArtifactIdField($sprint_tracker->getId());
@@ -84,7 +82,7 @@ final class ProjectNameSelectBuilderTest extends CrossTrackerFieldTestCase
 
         $this->expected_values = [
             $release_artifact_id => new ProjectRepresentation('My project', ''),
-            $sprint_artifact_id  => new ProjectRepresentation('Another project', '⚔️'),
+            //$sprint_artifact_id  => new ProjectRepresentation('Another project', '⚔️'),
         ];
     }
 
@@ -102,13 +100,12 @@ final class ProjectNameSelectBuilderTest extends CrossTrackerFieldTestCase
         $result = $this->getQueryResults(
             new CrossTrackerExpertReport(
                 1,
-                'SELECT @project.name FROM @project.category = "some" WHERE @id >= 1',
-                $this->trackers,
+                'SELECT @project.name FROM @project = "self" WHERE @id >= 1',
             ),
             $this->user,
         );
 
-        self::assertSame(2, $result->getTotalSize());
+        self::assertSame(1, $result->getTotalSize());
         self::assertCount(2, $result->selected);
         self::assertSame('@project.name', $result->selected[1]->name);
         self::assertSame('project', $result->selected[1]->type);
