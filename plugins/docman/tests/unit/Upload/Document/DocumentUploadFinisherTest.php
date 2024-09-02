@@ -18,53 +18,57 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Docman\Upload\Document;
 
+use Docman_File;
+use Docman_FileStorage;
+use Docman_ItemDao;
 use Docman_ItemFactory;
+use Docman_MIMETypeDetector;
+use Docman_Version;
 use Docman_VersionFactory;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use EventManager;
 use org\bovigo\vfs\vfsStream;
+use PHPUnit\Framework\MockObject\MockObject;
+use ProjectManager;
+use Psr\Log\NullLogger;
 use Tuleap\Docman\PostUpdate\PostUpdateFileHandler;
 use Tuleap\Docman\REST\v1\DocmanItemsEventAdder;
 use Tuleap\Http\Server\NullServerRequest;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
+use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Upload\FileAlreadyUploadedInformation;
 use Tuleap\Upload\FileBeingUploadedInformation;
 use Tuleap\Upload\UploadPathAllocator;
+use UserManager;
 
-final class DocumentUploadFinisherTest extends \Tuleap\Test\PHPUnit\TestCase
+final class DocumentUploadFinisherTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|DocmanItemsEventAdder
-     */
-    private $event_adder;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface
-     */
-    private $project_manager;
-    private $logger;
-    private $item_factory;
-    private $version_factory;
-    private $event_manager;
-    private $on_going_upload_dao;
-    private $item_dao;
-    private $file_storage;
-    private $user_manager;
+    private DocmanItemsEventAdder&MockObject $event_adder;
+    private ProjectManager&MockObject $project_manager;
+    private Docman_ItemFactory&MockObject $item_factory;
+    private Docman_VersionFactory&MockObject $version_factory;
+    private EventManager&MockObject $event_manager;
+    private DocumentOngoingUploadDAO&MockObject $on_going_upload_dao;
+    private Docman_ItemDao&MockObject $item_dao;
+    private Docman_FileStorage&MockObject $file_storage;
+    private UserManager&MockObject $user_manager;
 
     protected function setUp(): void
     {
-        $this->logger              = \Mockery::mock(\Psr\Log\LoggerInterface::class);
-        $this->item_factory        = \Mockery::mock(Docman_ItemFactory::class);
-        $this->version_factory     = \Mockery::mock(Docman_VersionFactory::class);
-        $this->event_manager       = \Mockery::mock(\EventManager::class);
-        $this->on_going_upload_dao = \Mockery::mock(DocumentOngoingUploadDAO::class);
-        $this->item_dao            = \Mockery::mock(\Docman_ItemDao::class);
-        $this->file_storage        = \Mockery::mock(\Docman_FileStorage::class);
-        $this->user_manager        = \Mockery::mock(\UserManager::class);
-        $this->event_adder         = \Mockery::mock(DocmanItemsEventAdder::class);
-        $this->project_manager     = \Mockery::mock(\ProjectManager::instance());
+        $this->item_factory        = $this->createMock(Docman_ItemFactory::class);
+        $this->version_factory     = $this->createMock(Docman_VersionFactory::class);
+        $this->event_manager       = $this->createMock(EventManager::class);
+        $this->on_going_upload_dao = $this->createMock(DocumentOngoingUploadDAO::class);
+        $this->item_dao            = $this->createMock(Docman_ItemDao::class);
+        $this->file_storage        = $this->createMock(Docman_FileStorage::class);
+        $this->user_manager        = $this->createMock(UserManager::class);
+        $this->event_adder         = $this->createMock(DocmanItemsEventAdder::class);
+        $this->project_manager     = $this->createMock(ProjectManager::class);
     }
 
     public function testDocumentIsAddedToTheDocumentManagerWhenTheUploadIsComplete(): void
@@ -74,7 +78,7 @@ final class DocumentUploadFinisherTest extends \Tuleap\Test\PHPUnit\TestCase
         $path_allocator = new UploadPathAllocator($root->url() . '/document');
 
         $upload_finisher = new DocumentUploadFinisher(
-            $this->logger,
+            new NullLogger(),
             $path_allocator,
             $this->item_factory,
             $this->version_factory,
@@ -82,7 +86,7 @@ final class DocumentUploadFinisherTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->on_going_upload_dao,
             $this->item_dao,
             $this->file_storage,
-            new \Docman_MIMETypeDetector(),
+            new Docman_MIMETypeDetector(),
             $this->user_manager,
             new DBTransactionExecutorPassthrough(),
             new PostUpdateFileHandler($this->version_factory, $this->event_adder, $this->project_manager, $this->event_manager),
@@ -93,46 +97,43 @@ final class DocumentUploadFinisherTest extends \Tuleap\Test\PHPUnit\TestCase
         $path_item_being_uploaded = $path_allocator->getPathForItemBeingUploaded($file_information);
         mkdir(dirname($path_item_being_uploaded), 0777, true);
         touch($path_item_being_uploaded);
-        $item = $this->createStub(\Docman_File::class);
+        $item = $this->createStub(Docman_File::class);
         $item->method('getOwnerId')->willReturn(333);
         $item->method('getGroupId')->willReturn(102);
         $item->method('getParentId')->willReturn(3);
         $item->method('accept')->willReturn(true);
-        $this->item_factory->shouldReceive('getItemFromDB')->andReturns(null, $item);
-        $this->on_going_upload_dao->shouldReceive('searchDocumentOngoingUploadByItemID')->andReturns(
-            [
-                'item_id'           => $item_id_being_created,
-                'parent_id'         => 3,
-                'group_id'          => 102,
-                'user_id'           => 101,
-                'title'             => 'Title',
-                'description'       => 'Description',
-                'filename'          => 'Filename',
-                'filesize'          => 123,
-                'filetype'          => 'Filetype',
-                'status'            => 'approved',
-                'obsolescence_date' => '2020-03-06',
-            ]
-        );
-        $this->on_going_upload_dao->shouldReceive('deleteByItemID')->once();
-        $this->item_factory->shouldReceive('create')->once()->andReturns(true);
+        $this->item_factory->method('getItemFromDB')->willReturn(null, $item);
+        $this->on_going_upload_dao->method('searchDocumentOngoingUploadByItemID')->willReturn([
+            'item_id'           => $item_id_being_created,
+            'parent_id'         => 3,
+            'group_id'          => 102,
+            'user_id'           => 101,
+            'title'             => 'Title',
+            'description'       => 'Description',
+            'filename'          => 'Filename',
+            'filesize'          => 123,
+            'filetype'          => 'Filetype',
+            'status'            => 'approved',
+            'obsolescence_date' => '2020-03-06',
+        ]);
+        $this->on_going_upload_dao->expects(self::once())->method('deleteByItemID');
+        $this->item_factory->expects(self::once())->method('create')->willReturn(true);
         $created_docman_file = $root->url() . '/created_file';
         touch($created_docman_file);
-        $this->file_storage->shouldReceive('copy')->once()->andReturns($created_docman_file);
-        $this->version_factory->shouldReceive('create')->once()->andReturns(true);
-        $this->version_factory->shouldReceive('getCurrentVersionForItem')->andReturns(\Mockery::mock(\Docman_Version::class));
-        $this->event_manager->shouldReceive('processEvent');
-        $this->user_manager->shouldReceive('getUserByID')->andReturns(\Mockery::mock(\PFUser::class));
-        $this->logger->shouldReceive('debug');
-        $project = \Mockery::mock(\Project::class);
-        $this->project_manager->shouldReceive('getProjectById')->andReturn($project);
-        $this->event_adder->shouldReceive('addNotificationEvents')->withArgs([$project])->once();
-        $this->event_adder->shouldReceive('addLogEvents');
+        $this->file_storage->expects(self::once())->method('copy')->willReturn($created_docman_file);
+        $this->version_factory->expects(self::once())->method('create')->willReturn(true);
+        $this->version_factory->method('getCurrentVersionForItem')->willReturn(new Docman_Version());
+        $this->event_manager->method('processEvent');
+        $this->user_manager->method('getUserByID')->willReturn(UserTestBuilder::buildWithDefaults());
+        $project = ProjectTestBuilder::aProject()->build();
+        $this->project_manager->method('getProjectById')->willReturn($project);
+        $this->event_adder->expects(self::once())->method('addNotificationEvents')->with($project);
+        $this->event_adder->method('addLogEvents');
 
         $file_information = new FileAlreadyUploadedInformation($item_id_being_created, 'Filename', 123);
 
         $upload_finisher->finishUpload(new NullServerRequest(), $file_information);
 
-        $this->assertFileDoesNotExist($path_item_being_uploaded);
+        self::assertFileDoesNotExist($path_item_being_uploaded);
     }
 }
