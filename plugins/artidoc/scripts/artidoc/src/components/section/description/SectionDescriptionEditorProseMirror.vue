@@ -24,14 +24,7 @@
             style="display: none"
             v-dompurify-html="editable_description"
         ></div>
-        <div class="editor" ref="area_editor">
-            <notification-bar
-                v-bind:upload_progress="progress"
-                v-bind:is_in_progress="is_in_progress"
-                v-bind:reset_progress="resetProgressCallback"
-                v-bind:message="error_message"
-            />
-        </div>
+        <div class="editor" ref="area_editor"></div>
     </div>
 </template>
 <script setup lang="ts">
@@ -39,7 +32,6 @@ import { onMounted, ref, watch } from "vue";
 import type { EditorView, UseEditorType, PluginDropFile } from "@tuleap/prose-mirror-editor";
 import { initPluginDropFile, useEditor } from "@tuleap/prose-mirror-editor";
 import type { EditorSectionContent } from "@/composables/useEditorSectionContent";
-import NotificationBar from "@/components/section/description/NotificationBar.vue";
 import type { GetText } from "@tuleap/gettext";
 import type { UseUploadFileType } from "@/composables/useUploadFile";
 
@@ -59,8 +51,7 @@ const onChange = (new_text_content: string): void => {
     props.input_current_description(new_text_content);
 };
 
-const { file_upload_options, error_message, progress, is_in_progress, resetProgressCallback } =
-    props.upload_file;
+const { file_upload_options, resetProgressCallback } = props.upload_file;
 function setupUploadPlugin(gettext_provider: GetText): PluginDropFile {
     return initPluginDropFile(file_upload_options, gettext_provider);
 }

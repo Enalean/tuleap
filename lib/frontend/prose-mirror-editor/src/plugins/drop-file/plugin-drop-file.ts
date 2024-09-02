@@ -24,6 +24,7 @@ import { fileUploadHandler } from "./upload-file";
 import type { FileUploadOptions } from "./types";
 import type { Option } from "@tuleap/option";
 import type { GetText } from "@tuleap/gettext";
+import type { Upload } from "tus-js-client";
 
 function insertFile(view: EditorView, url: string): void {
     const { state, dispatch } = view;
@@ -43,6 +44,7 @@ function handleDrop(
     event: DragEvent,
     options: FileUploadOptions,
     gettext_provider: GetText,
+    uploaders: Array<Upload>,
 ): Promise<Option<ReadonlyArray<OngoingUpload>>> {
     const success_callback_with_insert_file = (id: number, download_href: string): void => {
         insertFile(view, download_href);
@@ -51,40 +53,37 @@ function handleDrop(
     return fileUploadHandler(
         { ...options, onSuccessCallback: success_callback_with_insert_file },
         gettext_provider,
+        uploaders,
     )(event);
 }
 
 export class PluginDropFile extends Plugin {
-    ongoing_uploads: Array<{ cancel: () => void }>;
+    uploaders: Array<Upload>;
 
     constructor(options: FileUploadOptions, gettext_provider: GetText) {
         super({
             props: {
                 handleDOMEvents: {
                     drop: (view: EditorView, event: DragEvent): boolean => {
-                        handleDrop(view, event, options, gettext_provider).then(
-                            (optional_ongoing_uploads) => {
-                                optional_ongoing_uploads.apply((ongoing_uploads) => {
-                                    ongoing_uploads.forEach((ongoing_upload) => {
-                                        this.ongoing_uploads.push(ongoing_upload);
-                                    });
-                                });
-                            },
-                        );
+                        handleDrop(view, event, options, gettext_provider, this.uploaders);
                         return true;
                     },
                 },
             },
         });
-        this.ongoing_uploads = [];
+        this.uploaders = [];
     }
 
-    destroy(): void {
-        this.cancelOngoingUpload();
+    async destroy(): Promise<void> {
+        await this.cancelOngoingUpload();
     }
 
-    public cancelOngoingUpload(): void {
-        this.ongoing_uploads.forEach((upload) => upload.cancel());
+    public async cancelOngoingUpload(): Promise<void> {
+        for (let i = 0; i < this.uploaders.length; i++) {
+            await this.uploaders[i].abort(true);
+        }
+
+        this.uploaders = [];
     }
 }
 

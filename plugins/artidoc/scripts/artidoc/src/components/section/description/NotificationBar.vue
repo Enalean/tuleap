@@ -19,22 +19,23 @@
   -->
 <template>
     <div>
-        <span v-if="is_in_progress" class="tlp-alert-info">{{ upload_message }}</span>
-        <span v-else-if="message" class="tlp-alert-danger">
+        <span v-if="message" class="tlp-alert-danger">
             {{ message }}
         </span>
+        <span v-else class="tlp-alert-info">{{ upload_message }}</span>
     </div>
 </template>
 <script setup lang="ts">
 import { computed, toRefs, watch } from "vue";
-import { useGettext } from "vue3-gettext";
+import { strictInject } from "@tuleap/vue-strict-inject";
+import type { UploadFileStoreType } from "@/stores/useUploadFileStore";
+import { UPLOAD_FILE_STORE } from "@/stores/upload-file-store-injection-key";
 
-const { $gettext, interpolate } = useGettext();
 export type NotificationBarProps = {
     upload_progress?: number;
-    is_in_progress: boolean;
     message?: string | null;
-    reset_progress: () => void;
+    file_name: string;
+    file_id: string;
 };
 
 const props = withDefaults(defineProps<NotificationBarProps>(), {
@@ -42,21 +43,18 @@ const props = withDefaults(defineProps<NotificationBarProps>(), {
     message: "",
 });
 
-const { upload_progress, is_in_progress } = toRefs(props);
+const { file_name, upload_progress, message } = toRefs(props);
+const { deleteFinishedUpload } = strictInject<UploadFileStoreType>(UPLOAD_FILE_STORE);
 
 watch(upload_progress, () => {
     if (upload_progress.value === 100) {
         setTimeout(() => {
-            props.reset_progress();
-        }, 1_500);
+            deleteFinishedUpload(props.file_id);
+        }, 3_000);
     }
 });
 
-const upload_message = computed(() =>
-    interpolate($gettext("Upload image progress: %{ upload_progress }%"), {
-        upload_progress: String(upload_progress.value),
-    }),
-);
+const upload_message = computed(() => `${file_name.value} : ${upload_progress.value}%`);
 </script>
 <style lang="scss" scoped>
 @use "pkg:@tuleap/burningparrot-theme/css/includes/global-variables";
@@ -66,7 +64,6 @@ $title-height: 65px;
 div {
     display: flex;
     position: sticky;
-    top: calc(#{global-variables.$navbar-height} + var(--tlp-medium-spacing) + #{$title-height});
     justify-content: center;
 }
 </style>

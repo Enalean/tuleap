@@ -39,6 +39,9 @@ import {
 } from "@/composables/useSectionEditorsCollection";
 import { EDITOR_CHOICE } from "@/helpers/editor-choice";
 import { ref } from "vue";
+import { UPLOAD_FILE_STORE } from "@/stores/upload-file-store-injection-key";
+import { UploadFileStoreStub } from "@/helpers/stubs/UploadFileStoreStub";
+import type { UploadFileStoreType } from "@/stores/useUploadFileStore";
 
 const section = ArtifactSectionFactory.create();
 const merge_artifacts = vi.fn();
@@ -48,6 +51,7 @@ const remove_section = vi.fn();
 describe("useSectionEditor", () => {
     let store_stub: SectionsStore;
     let editors_collection: SectionEditorsCollection;
+    let upload_file_store_stub: UploadFileStoreType;
 
     beforeEach(() => {
         store_stub = {
@@ -55,12 +59,17 @@ describe("useSectionEditor", () => {
             removeSection: remove_section,
         };
         editors_collection = useSectionEditorsCollection();
+        upload_file_store_stub = {
+            ...UploadFileStoreStub.uploadInProgress(),
+            cancelSectionUploads: vi.fn(),
+        };
         mockStrictInject([
             [CAN_USER_EDIT_DOCUMENT, true],
             [DOCUMENT_ID, 1],
             [SECTIONS_STORE, store_stub],
             [EDITORS_COLLECTION, editors_collection],
             [EDITOR_CHOICE, { is_prose_mirror: ref(false) }],
+            [UPLOAD_FILE_STORE, upload_file_store_stub],
         ]);
     });
 
@@ -185,6 +194,18 @@ describe("useSectionEditor", () => {
                     section.description.value,
                 );
                 expect(store_stub.removeSection).not.toHaveBeenCalled();
+            });
+            it("should cancel file uploads", () => {
+                const { editor_actions } = useSectionEditor(
+                    section,
+                    merge_artifacts,
+                    set_waiting_list,
+                    ref(false),
+                    vi.fn(),
+                );
+                editor_actions.cancelEditor(null);
+
+                expect(upload_file_store_stub.cancelSectionUploads).toHaveBeenCalledOnce();
             });
 
             describe("when prose mirror is disable", () => {

@@ -24,11 +24,11 @@ import { Option } from "@tuleap/option";
 import type { OngoingUpload } from "../plugin-drop-file";
 
 export function uploadFile(
-    files: Map<number, OnGoingUploadFile>,
-    file_id: number,
+    files: OnGoingUploadFile[],
     file: File,
     upload_href: string,
     onProgressCallback: FileUploadOptions["onProgressCallback"],
+    uploaders: Array<Upload>,
 ): Promise<Option<OngoingUpload>> {
     let uploader: Upload | null;
     return new Promise((resolve, reject): void => {
@@ -39,8 +39,8 @@ export function uploadFile(
                 filetype: file.type,
             },
             onProgress: (bytes_sent: number, bytes_total: number): void => {
-                const progress = computedProgress(files, file_id, bytes_sent, bytes_total);
-                onProgressCallback(progress);
+                const progress = computedProgress(files, file.name, bytes_sent, bytes_total);
+                onProgressCallback(file.name, progress);
             },
             onSuccess: (): void => {
                 return resolve(Option.nothing<OngoingUpload>());
@@ -50,6 +50,7 @@ export function uploadFile(
             },
         });
         uploader.start();
+        uploaders.push(uploader);
     }).then(() => {
         if (!uploader) {
             throw new Error("The uploader has not been initialized properly.");

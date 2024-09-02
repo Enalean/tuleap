@@ -37,7 +37,7 @@ import { v4 as uuidv4 } from "uuid";
 export type UseEditorType = {
     editor: EditorView;
     state: EditorState;
-    resetContent: (initialContent: HTMLElement) => void;
+    resetContent: (initialContent: HTMLElement) => Promise<void>;
 };
 
 export async function useEditor(
@@ -71,8 +71,8 @@ export async function useEditor(
         },
     });
 
-    function resetContent(initial_content: HTMLElement): void {
-        upload_plugin.cancelOngoingUpload();
+    async function resetContent(initial_content: HTMLElement): Promise<void> {
+        await upload_plugin.cancelOngoingUpload();
         const state = getState(initial_content);
         editor.updateState(state);
     }

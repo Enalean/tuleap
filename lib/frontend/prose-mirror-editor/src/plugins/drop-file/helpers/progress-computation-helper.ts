@@ -20,22 +20,22 @@
 import type { OnGoingUploadFile } from "../types";
 
 export function computedProgress(
-    files: Map<number, OnGoingUploadFile>,
-    id: number,
+    files: OnGoingUploadFile[],
+    file_name: string,
     bytes_sent: number,
     bytes_total: number,
 ): number {
-    if (files.size === 0) {
+    if (files.length === 0) {
         return 0;
     }
 
     let sum_progress = 0;
-    files.forEach((file, key) => {
-        if (key === id) {
+    files.forEach((file) => {
+        if (file.file_name === file_name) {
             file.progress = Math.round((bytes_sent / bytes_total) * 100);
         }
         sum_progress += file.progress;
     });
 
-    return Math.round(sum_progress / files.size);
+    return Math.round(sum_progress / files.length);
 }
