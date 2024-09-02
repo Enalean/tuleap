@@ -53,6 +53,10 @@ reason = "ckeditor4 samples are not shipped."
 id = "GHSA-mw2c-vx6j-mg76" # CVE-2024-24816
 reason = "ckeditor4 samples are not shipped."
 
+[[IgnoredVulns]]
+id = "GHSA-7r32-vfj5-c2jv" # CVE-2024-43407
+reason = "ckeditor4 code snippet GeSHi."
+
 # src/additional-packages/wasmtime-wrapper-lib/Cargo.lock
 ## atty
 [[IgnoredVulns]]
