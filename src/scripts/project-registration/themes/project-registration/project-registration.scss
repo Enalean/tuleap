@@ -101,13 +101,13 @@ $template-category-inactive-tab-right-margin: calc(
     margin: 0 var(--tlp-medium-spacing) 0 0;
     color: var(--tlp-dimmed-color);
     cursor: pointer;
+}
+
+.project-registration-back-icon {
+    margin: 0 5px 0 0;
 
     &:hover {
         text-decoration: none;
-
-        > .project-registration-back-button-text {
-            text-decoration: underline;
-        }
     }
 }
 
