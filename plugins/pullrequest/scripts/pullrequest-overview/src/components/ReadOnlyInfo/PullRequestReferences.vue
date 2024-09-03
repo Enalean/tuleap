@@ -37,7 +37,7 @@
         >
             <span data-test="pull-request-source-branch">{{ branch_src }}</span>
             <i
-                class="fa-solid fa-fw fa-long-arrow-alt-right pull-request-source-destination-icon"
+                class="fa-solid fa-long-arrow-alt-right pull-request-source-destination-icon"
                 aria-hidden="true"
             ></i>
             <span data-test="pull-request-destination-branch">{{ branch_dest }}</span>
@@ -94,6 +94,7 @@ const branch_dest = computed((): string => {
 }
 
 .pull-request-source-destination-icon {
+    padding: 0 4px;
     font-size: 0.8em;
 }
 </style>

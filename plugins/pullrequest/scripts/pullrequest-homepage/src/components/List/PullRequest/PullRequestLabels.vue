@@ -65,9 +65,9 @@ if (!props.pull_request.is_git_reference_broken) {
 <style scoped lang="scss">
 .pull-request-card-labels {
     display: flex;
-    flex: 25% 0 0;
-    gap: 4px;
+    flex: 0 1 25%;
     flex-wrap: wrap;
     justify-content: flex-end;
+    gap: 4px;
 }
 </style>

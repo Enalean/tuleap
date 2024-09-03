@@ -25,6 +25,7 @@
         data-test="pull-request-card"
     >
         <pull-request-summary v-bind:pull_request="pull_request" />
+        <pull-request-branches v-bind:pull_request="pull_request" />
         <pull-request-reviewers v-bind:pull_request="pull_request" />
         <pull-request-broken-badge v-bind:pull_request="pull_request" />
         <pull-request-labels v-bind:pull_request="pull_request" />
@@ -41,6 +42,7 @@ import PullRequestBrokenBadge from "./PullRequestBrokenBadge.vue";
 import PullRequestSummary from "./PullRequestSummary.vue";
 import PullRequestLabels from "./PullRequestLabels.vue";
 import PullRequestReviewers from "./PullRequestReviewers.vue";
+import PullRequestBranches from "./PullRequestBranches.vue";
 
 const props = defineProps<{
     pull_request: PullRequest;
@@ -55,6 +57,6 @@ const overview_url = buildPullRequestOverviewUrl(base_url, props.pull_request.id
 .pull-request-homepage-card {
     display: flex;
     align-items: flex-start;
-    justify-content: space-between;
+    gap: var(--tlp-medium-spacing);
 }
 </style>
