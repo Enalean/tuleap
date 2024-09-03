@@ -58,6 +58,17 @@ final class FromProjectTest extends CrossTrackerFieldTestCase
         $core_builder->addUserToProjectMembers((int) $this->user_admin->getId(), $project_2_id);
         $core_builder->addUserToProjectAdmins((int) $this->user_admin->getId(), $project_2_id);
 
+        /**
+         * type
+         *   |-> foo
+         *   `-> bar
+         */
+        $core_builder->buildTroveCat('Type', 'Type');
+        $foo_id = $core_builder->buildTroveCat('Foo', 'Type :: Foo');
+        $bar_id = $core_builder->buildTroveCat('Bar', 'Type :: Bar');
+        $core_builder->addTroveCatToProject($foo_id, $project_1_id);
+        $core_builder->addTroveCatToProject($bar_id, $project_2_id);
+
         $tracker_1  = $tracker_builder->buildTracker($project_1_id, 'Tracker 1');
         $tracker_11 = $tracker_builder->buildTracker($project_1_id, 'Tracker 1.1');
         $tracker_2  = $tracker_builder->buildTracker($project_2_id, 'Tracker 2');
@@ -131,5 +142,32 @@ final class FromProjectTest extends CrossTrackerFieldTestCase
             $this->user_admin,
         );
         $this->assertItContainsTrackers(['Tracker 1', 'Tracker 1.1'], $result);
+    }
+
+    public function testProjectCategoryEqual(): void
+    {
+        $result = $this->getQueryResults(
+            new CrossTrackerExpertReport(1, 'SELECT @tracker.name FROM @project.category = "Type::Foo" WHERE @id >= 1'),
+            $this->user_member,
+        );
+        $this->assertItContainsTrackers(['Tracker 1'], $result);
+    }
+
+    public function testProjectCategoryEqualLike(): void
+    {
+        $result = $this->getQueryResults(
+            new CrossTrackerExpertReport(1, 'SELECT @tracker.name FROM @project.category = "Type" WHERE @id >= 1'),
+            $this->user_member,
+        );
+        $this->assertItContainsTrackers(['Tracker 1', 'Tracker 2'], $result);
+    }
+
+    public function testProjectCategoryIn(): void
+    {
+        $result = $this->getQueryResults(
+            new CrossTrackerExpertReport(1, 'SELECT @tracker.name FROM @project.category IN("Type::Foo", "Type::Bar") WHERE @id >= 1'),
+            $this->user_member,
+        );
+        $this->assertItContainsTrackers(['Tracker 1', 'Tracker 2'], $result);
     }
 }

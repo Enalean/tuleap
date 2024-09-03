@@ -94,4 +94,28 @@ final class CoreDatabaseBuilder
     {
         $this->user_permissions_dao->addUserAsProjectAdmin($project_id, $user_id);
     }
+
+    public function buildTroveCat(string $name, string $fullpath): int
+    {
+        return (int) $this->db->insertReturnId(
+            'trove_cat',
+            [
+                'shortname'   => $name,
+                'fullname'    => $name,
+                'description' => 'Description',
+                'fullpath'    => $fullpath,
+            ],
+        );
+    }
+
+    public function addTroveCatToProject(int $trove_cat_id, int $project_id): void
+    {
+        $this->db->insert(
+            'trove_group_link',
+            [
+                'trove_cat_id' => $trove_cat_id,
+                'group_id'     => $project_id,
+            ],
+        );
+    }
 }
