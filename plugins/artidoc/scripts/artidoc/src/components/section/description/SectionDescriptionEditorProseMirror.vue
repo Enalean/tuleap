@@ -36,12 +36,11 @@
 </template>
 <script setup lang="ts">
 import { onMounted, ref, watch } from "vue";
-import type { EditorView, UseEditorType } from "@tuleap/prose-mirror-editor";
+import type { EditorView, UseEditorType, PluginDropFile } from "@tuleap/prose-mirror-editor";
 import { initPluginDropFile, useEditor } from "@tuleap/prose-mirror-editor";
 import type { EditorSectionContent } from "@/composables/useEditorSectionContent";
 import NotificationBar from "@/components/section/description/NotificationBar.vue";
 import type { GetText } from "@tuleap/gettext";
-import type { PluginDropFile } from "@tuleap/prose-mirror-editor/dist";
 import type { UseUploadFileType } from "@/composables/useUploadFile";
 
 const props = defineProps<{

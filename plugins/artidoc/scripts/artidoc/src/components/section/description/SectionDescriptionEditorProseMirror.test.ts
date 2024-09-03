@@ -25,7 +25,7 @@ import VueDOMPurifyHTML from "vue-dompurify-html";
 import NotificationBar from "@/components/section/description/NotificationBar.vue";
 import { UploadFileStub } from "@/helpers/stubs/UploadFileStub";
 import * as editor from "@tuleap/prose-mirror-editor";
-import type { UseEditorType } from "@tuleap/prose-mirror-editor/dist";
+import type { UseEditorType } from "@tuleap/prose-mirror-editor";
 
 describe("SectionDescriptionEditorProseMirror", () => {
     let wrapper: VueWrapper<ComponentPublicInstance>;
