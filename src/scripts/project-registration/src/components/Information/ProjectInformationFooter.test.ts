@@ -65,11 +65,11 @@ describe("ProjectInformationFooter", () => {
         is_creating_project = true;
         const wrapper = getWrapper();
 
-        expect(wrapper.get("[data-test=project-submission-icon]").classes()).toEqual([
-            "fa",
+        expect(wrapper.get("[data-test=project-submission-icon]").classes()).toStrictEqual([
             "tlp-button-icon-right",
+            "fa-solid",
             "fa-spin",
-            "fa-circle-o-notch",
+            "fa-circle-notch",
         ]);
     });
 
@@ -77,10 +77,10 @@ describe("ProjectInformationFooter", () => {
         is_creating_project = false;
         const wrapper = getWrapper();
 
-        expect(wrapper.get("[data-test=project-submission-icon]").classes()).toEqual([
-            "fa",
+        expect(wrapper.get("[data-test=project-submission-icon]").classes()).toStrictEqual([
             "tlp-button-icon-right",
-            "fa-arrow-circle-o-right",
+            "fa-regular",
+            "fa-circle-right",
         ]);
     });
 

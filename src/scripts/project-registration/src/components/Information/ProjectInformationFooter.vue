@@ -27,20 +27,25 @@
                     v-on:click="resetProjectCreationError"
                     class="project-registration-back-button"
                     data-test="project-registration-back-button"
+                    ><i
+                        class="fa-solid fa-long-arrow-alt-left project-registration-back-icon"
+                        aria-hidden="true"
+                    ></i
+                    >{{ $gettext("Back") }}</router-link
                 >
-                    <i class="fas fa-long-arrow-alt-left"></i>
-                    <span class="project-registration-back-button-text">{{
-                        $gettext("Back")
-                    }}</span>
-                </router-link>
                 <button
                     type="submit"
                     class="tlp-button-primary tlp-button-large tlp-form-element-disabled project-registration-next-button"
                     data-test="project-registration-next-button"
                     v-bind:disabled="root_store.is_creating_project && !root_store.has_error"
                 >
-                    <span>{{ $gettext("Start my project") }}</span>
-                    <i v-bind:class="get_icon" data-test="project-submission-icon" />
+                    {{ $gettext("Start my project")
+                    }}<i
+                        class="tlp-button-icon-right"
+                        v-bind:class="get_icon"
+                        data-test="project-submission-icon"
+                        aria-hidden="true"
+                    />
                 </button>
             </div>
         </div>
@@ -55,10 +60,9 @@ const root_store = useStore();
 
 const get_icon = computed((): string => {
     if (!root_store.is_creating_project) {
-        return "fa tlp-button-icon-right fa-arrow-circle-o-right";
+        return "fa-regular fa-circle-right";
     }
-
-    return "fa tlp-button-icon-right fa-spin fa-circle-o-notch";
+    return "fa-solid fa-spin fa-circle-notch";
 });
 
 function resetProjectCreationError(): void {

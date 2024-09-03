@@ -28,10 +28,10 @@
         </h1>
         <p class="empty-state-text" v-dompurify-html="message_creation"></p>
 
-        <a class="tlp-button-primary tlp-button-large empty-state-action" href="/my/">
-            <i class="fa-solid fa-reply tlp-button-icon"></i>
-            <span>{{ $gettext("Go to my home page") }}</span>
-        </a>
+        <a class="tlp-button-primary tlp-button-large empty-state-action" href="/my/"
+            ><i class="fa-solid fa-reply tlp-button-icon" aria-hidden="true"></i
+            >{{ $gettext("Go to my home page") }}</a
+        >
     </div>
 </template>
 

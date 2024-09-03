@@ -33,8 +33,11 @@
                 v-bind:disabled="!root_store.is_template_selected"
                 v-on:click.prevent="goToInformationPage"
             >
-                <span>{{ $gettext("Next") }} </span>
-                <i class="fas fa-long-arrow-alt-right tlp-button-icon-right"></i>
+                {{ $gettext("Next")
+                }}<i
+                    class="fa-solid fa-long-arrow-alt-right tlp-button-icon-right"
+                    aria-hidden="true"
+                ></i>
             </button>
         </div>
     </div>
