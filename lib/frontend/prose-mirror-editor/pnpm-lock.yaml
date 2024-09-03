@@ -20,6 +20,9 @@ dependencies:
   '@tuleap/tlp-popovers':
     specifier: workspace:^
     version: link:../tlp-popovers
+  dompurify:
+    specifier: ^3.1.4
+    version: 3.1.6
   neverthrow:
     specifier: 6.0.0
     version: 6.0.0
@@ -110,6 +113,10 @@ packages:
 
   /custom-error-instance@2.1.1:
     resolution: {integrity: sha512-p6JFxJc3M4OTD2li2qaHkDCw9SfMw82Ldr6OC9Je1aXiGfhx2W8p3GaoeaGrPJTUN9NirTM/KTxHWMUdR1rsUg==}
+    dev: false
+
+  /dompurify@3.1.6:
+    resolution: {integrity: sha512-cTOAhc36AalkjtBpfG6O8JimdTMWNXjiePT2xQH/ppBGi/4uIpmj8eKyIkMJErXWARyINV/sB38yf8JCLF5pbQ==}
     dev: false
 
   /graceful-fs@4.2.11:

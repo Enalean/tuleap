@@ -1,4 +1,4 @@
-/*
+/**
  *  Copyright (c) Enalean, 2024 - Present. All Rights Reserved.
  *
  *  This file is a part of Tuleap.
@@ -17,7 +17,10 @@
  *  along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export * from "./input";
-export * from "./toolbar";
-export * from "./link-popover";
-export * from "./drop-file";
+.prose-mirror-editor-popover-links {
+    width: auto;
+
+    > .tlp-popover-body {
+        padding: var(--tlp-small-spacing);
+    }
+}

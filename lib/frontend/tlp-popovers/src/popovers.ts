@@ -47,6 +47,7 @@ type Trigger = "click" | "hover" | "focus";
 export type PopoverOptions = Partial<Configuration>;
 
 export interface Popover {
+    show(): void;
     hide(): void;
     destroy(): void;
 }
@@ -88,6 +89,12 @@ export function createPopover(
         hide: (): void => {
             hidePopover(popover_content);
             cleanup();
+        },
+        show: (): void => {
+            hideAllShownPopovers(doc);
+            // In the current context, the opening is not performed by a DOM event
+            // Thus, we need to wait until that all popovers have been closed before we can open it manually.
+            setTimeout(() => showPopover(popover_content, updatePositionOfContent));
         },
     };
 }

@@ -59,6 +59,7 @@ describe(`CommonmarkSyntaxHelper`, () => {
     describe(`disconnect()`, () => {
         it(`destroys the popover`, () => {
             const fake_popover = {
+                show: emptyFunction,
                 destroy: emptyFunction,
                 hide: emptyFunction,
             };

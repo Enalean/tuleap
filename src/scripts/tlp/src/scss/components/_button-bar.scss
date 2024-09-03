@@ -44,6 +44,25 @@
     &:not(:first-child, :last-child) > [class*="tlp-button"] {
         border-radius: 0;
     }
+
+    > a[class*="tlp-button"] {
+        height: buttons.$tlp-button-normal-height;
+    }
+
+    // stylelint-disable-next-line selector-no-qualifying-type
+    > a.tlp-button-large[class*="tlp-button"] {
+        height: buttons.$tlp-button-large-height;
+    }
+
+    // stylelint-disable-next-line selector-no-qualifying-type
+    > a.tlp-button-small[class*="tlp-button"] {
+        height: buttons.$tlp-button-small-height;
+    }
+
+    // stylelint-disable-next-line selector-no-qualifying-type
+    > a.tlp-button-mini[class*="tlp-button"] {
+        height: buttons.$tlp-button-mini-height;
+    }
 }
 
 .tlp-button-bar-checkbox {
