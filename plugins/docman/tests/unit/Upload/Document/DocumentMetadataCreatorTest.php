@@ -24,34 +24,21 @@ namespace Tuleap\Docman\Upload\Document;
 
 use Docman_MetadataDao;
 use LogicException;
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\MockObject\MockObject;
 use TestHelper;
 use Tuleap\Docman\Metadata\MetadataValueCreator;
+use Tuleap\Test\PHPUnit\TestCase;
 
-class DocumentMetadataCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
+final class DocumentMetadataCreatorTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var Mockery\MockInterface|MetadataValueCreator
-     */
-    private $value_creator;
-    /**
-     * @var DocumentMetadataCreator
-     */
-    private $creator;
-    /**
-     * @var Docman_MetadataDao|Mockery\MockInterface
-     */
-    private $metadata_dao;
+    private MetadataValueCreator&MockObject $value_creator;
+    private DocumentMetadataCreator $creator;
+    private Docman_MetadataDao&MockObject $metadata_dao;
 
     protected function setUp(): void
     {
-        parent::setUp();
-
-        $this->value_creator = Mockery::mock(MetadataValueCreator::class);
-        $this->metadata_dao  = Mockery::mock(Docman_MetadataDao::class);
+        $this->value_creator = $this->createMock(MetadataValueCreator::class);
+        $this->metadata_dao  = $this->createMock(Docman_MetadataDao::class);
 
         $this->creator = new DocumentMetadataCreator(
             $this->value_creator,
@@ -61,18 +48,17 @@ class DocumentMetadataCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItThrowALogicalExceptionWhenMetadataDoesNotExists(): void
     {
-        $this->metadata_dao->shouldReceive('searchById')->andReturn(false);
+        $this->metadata_dao->method('searchById')->willReturn(false);
 
-        $this->expectException(LogicException::class);
+        self::expectException(LogicException::class);
 
         $this->creator->storeItemCustomMetadata(1, [['id' => 5, 'value' => 'abcde']]);
     }
 
     public function testItDoesNotStoreWhenMetadataIsAnEmptyArray(): void
     {
-        $this->metadata_dao->shouldReceive('searchById')->never();
-
-        $this->value_creator->shouldReceive('createMetadataObject')->never();
+        $this->metadata_dao->expects(self::never())->method('searchById');
+        $this->value_creator->expects(self::never())->method('createMetadataObject');
 
         $this->creator->storeItemCustomMetadata(1, []);
     }
@@ -80,16 +66,10 @@ class DocumentMetadataCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItStoreMetadata(): void
     {
         $metadata_list = [['id' => 10, 'value' => 'Text']];
-        $this->metadata_dao->shouldReceive('searchById')
-            ->andReturn(
-                TestHelper::arrayToDar(
-                    [
-                        'data_type' => PLUGIN_DOCMAN_METADATA_TYPE_TEXT,
-                    ]
-                )
-            );
+        $this->metadata_dao->method('searchById')
+            ->willReturn(TestHelper::arrayToDar(['data_type' => PLUGIN_DOCMAN_METADATA_TYPE_TEXT]));
 
-        $this->value_creator->shouldReceive('createMetadataObject')->once();
+        $this->value_creator->expects(self::once())->method('createMetadataObject');
 
         $this->creator->storeItemCustomMetadata(1, $metadata_list);
     }

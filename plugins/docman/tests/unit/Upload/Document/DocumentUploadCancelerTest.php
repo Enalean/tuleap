@@ -22,50 +22,48 @@ declare(strict_types=1);
 
 namespace Tuleap\Docman\Upload\Document;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use org\bovigo\vfs\vfsStream;
+use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tus\TusFileInformation;
 use Tuleap\Upload\UploadPathAllocator;
 
-class DocumentUploadCancelerTest extends \Tuleap\Test\PHPUnit\TestCase
+final class DocumentUploadCancelerTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     public function testDocumentBeingUploadedIsCleanedWhenTheUploadIsCancelled(): void
     {
         $path_allocator = new UploadPathAllocator(vfsStream::setup()->url() . '/document');
-        $dao            = \Mockery::mock(DocumentOngoingUploadDAO::class);
+        $dao            = $this->createMock(DocumentOngoingUploadDAO::class);
 
         $canceler = new DocumentUploadCanceler($path_allocator, $dao);
 
-        $file_information = \Mockery::mock(TusFileInformation::class);
+        $file_information = $this->createMock(TusFileInformation::class);
         $item_id          = 12;
-        $file_information->shouldReceive('getID')->andReturns($item_id);
+        $file_information->method('getID')->willReturn($item_id);
         $item_path = $path_allocator->getPathForItemBeingUploaded($file_information);
         mkdir(dirname($item_path), 0777, true);
         touch($path_allocator->getPathForItemBeingUploaded($file_information));
 
-        $dao->shouldReceive('deleteByItemID')->once();
+        $dao->expects(self::once())->method('deleteByItemID');
 
         $canceler->terminateUpload($file_information);
-        $this->assertFileDoesNotExist($item_path);
+        self::assertFileDoesNotExist($item_path);
     }
 
     public function testCancellingAnUploadThatHasNotYetStartedDoesNotGiveAWarning(): void
     {
         $path_allocator = new UploadPathAllocator(vfsStream::setup()->url() . '/document');
-        $dao            = \Mockery::mock(DocumentOngoingUploadDAO::class);
+        $dao            = $this->createMock(DocumentOngoingUploadDAO::class);
 
         $canceler = new DocumentUploadCanceler($path_allocator, $dao);
 
-        $file_information = \Mockery::mock(TusFileInformation::class);
+        $file_information = $this->createMock(TusFileInformation::class);
         $item_id          = 12;
-        $file_information->shouldReceive('getID')->andReturns($item_id);
+        $file_information->method('getID')->willReturn($item_id);
         $item_path = $path_allocator->getPathForItemBeingUploaded($file_information);
 
-        $dao->shouldReceive('deleteByItemID')->once();
+        $dao->expects(self::once())->method('deleteByItemID');
 
         $canceler->terminateUpload($file_information);
-        $this->assertFileDoesNotExist($item_path);
+        self::assertFileDoesNotExist($item_path);
     }
 }
