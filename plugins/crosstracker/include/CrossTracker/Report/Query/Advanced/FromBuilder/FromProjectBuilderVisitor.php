@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\CrossTracker\Report\Query\Advanced\FromBuilder;
 
 use LogicException;
+use ParagonIE\EasyDB\EasyStatement;
 use Tuleap\CrossTracker\Report\Query\Advanced\AllowedFrom;
 use Tuleap\CrossTracker\Widget\ProjectCrossTrackerSearch;
 use Tuleap\Dashboard\Project\IRetrieveProjectFromWidget;
@@ -48,8 +49,8 @@ final readonly class FromProjectBuilderVisitor implements FromProjectConditionVi
 
         return match ($from_project->getTarget()) {
             AllowedFrom::PROJECT          => $this->buildFromProjectEqual($project_equal, $parameters),
-            AllowedFrom::PROJECT_NAME,
-            AllowedFrom::PROJECT_CATEGORY => new ParametrizedFromWhere('', '', [], []),
+            AllowedFrom::PROJECT_NAME     => throw new LogicException('Should not be called: @project.name is not yet implemented'),
+            AllowedFrom::PROJECT_CATEGORY => $this->buildFromProjectCategoryEqual($project_equal->getValue()),
             default                       => throw new LogicException("Unknown FROM project: {$from_project->getTarget()}"),
         };
     }
@@ -64,11 +65,59 @@ final readonly class FromProjectBuilderVisitor implements FromProjectConditionVi
             return new ParametrizedFromWhere('', 'project.group_id = ?', [], [$project_id]);
         }
 
-        return new ParametrizedFromWhere('', '', [], []);
+        throw new LogicException('Should not be here: already catched by the FROM query validation');
+    }
+
+    private function buildFromProjectCategoryEqual(string $category): IProvideParametrizedFromAndWhereSQLFragments
+    {
+        $formatted_category = self::formatCategory($category) . '%';
+
+        $from = <<<SQL
+        INNER JOIN trove_group_link AS tgl ON (tgl.group_id = project.group_id)
+        INNER JOIN trove_cat AS tc ON (tc.trove_cat_id = tgl.trove_cat_id AND tc.fullpath LIKE ?)
+        SQL;
+
+        return new ParametrizedFromWhere($from, '', [$formatted_category], []);
     }
 
     public function visitIn(FromProjectIn $project_in, $parameters): IProvideParametrizedFromAndWhereSQLFragments
     {
-        return new ParametrizedFromWhere('', '', [], []);
+        $from_project = $parameters->from_project;
+
+        return match ($from_project->getTarget()) {
+            AllowedFrom::PROJECT_NAME,
+            AllowedFrom::PROJECT          => throw new LogicException('Should not be called'),
+            AllowedFrom::PROJECT_CATEGORY => $this->buildFromProjectCategoryIn($project_in->getValues()),
+            default                       => throw new LogicException("Unknown FROM project: {$from_project->getTarget()}"),
+        };
+    }
+
+    /**
+     * @param list<string> $categories
+     */
+    private function buildFromProjectCategoryIn(array $categories): IProvideParametrizedFromAndWhereSQLFragments
+    {
+        $trove_cat_statement = EasyStatement::open()->in(
+            'tc.fullpath IN(?*)',
+            array_map(self::formatCategory(...), $categories),
+        );
+
+        $from = <<<SQL
+        INNER JOIN trove_group_link AS tgl ON (tgl.group_id = project.group_id)
+        INNER JOIN trove_cat AS tc ON (tc.trove_cat_id = tgl.trove_cat_id AND $trove_cat_statement)
+        SQL;
+
+        return new ParametrizedFromWhere($from, '', array_values($trove_cat_statement->values()), []);
+    }
+
+    private static function formatCategory(string $category): string
+    {
+        return implode(
+            ' :: ',
+            array_map(
+                static fn(string $part): string => trim($part),
+                explode('::', $category),
+            )
+        );
     }
 }
