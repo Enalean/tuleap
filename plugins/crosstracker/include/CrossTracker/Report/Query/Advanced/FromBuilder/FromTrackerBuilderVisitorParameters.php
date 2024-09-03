@@ -29,6 +29,8 @@ final readonly class FromTrackerBuilderVisitorParameters implements VisitorParam
 {
     public function __construct(
         public FromTracker $from_tracker,
+        public int $report_id,
+        public bool $is_tracker_condition_alone,
     ) {
     }
 }

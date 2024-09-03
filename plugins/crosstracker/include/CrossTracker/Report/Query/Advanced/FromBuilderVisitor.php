@@ -46,11 +46,11 @@ final readonly class FromBuilderVisitor implements FromSomethingVisitor
 
     public function buildFromWhere(From $from, int $report_id): IProvideParametrizedFromAndWhereSQLFragments
     {
-        $left = $from->getLeft()->acceptFromSomethingVisitor($this, new FromBuilderVisitorParameters($report_id));
+        $left = $from->getLeft()->acceptFromSomethingVisitor($this, new FromBuilderVisitorParameters($report_id, $from->getRight() === null));
         if ($from->getRight() === null) {
             return $left;
         }
-        $right = $from->getRight()->acceptFromSomethingVisitor($this, new FromBuilderVisitorParameters($report_id));
+        $right = $from->getRight()->acceptFromSomethingVisitor($this, new FromBuilderVisitorParameters($report_id, false));
 
         return new ParametrizedAndFromWhere($left, $right);
     }
@@ -59,7 +59,7 @@ final readonly class FromBuilderVisitor implements FromSomethingVisitor
     {
         return $from_tracker->getCondition()->acceptFromTrackerConditionVisitor(
             $this->tracker_builder,
-            new FromTrackerBuilderVisitorParameters($from_tracker),
+            new FromTrackerBuilderVisitorParameters($from_tracker, $parameters->report_id, $parameters->is_condition_alone),
         );
     }
 

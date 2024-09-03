@@ -22,6 +22,11 @@ declare(strict_types=1);
 
 namespace Tuleap\CrossTracker\Report\Query\Advanced\FromBuilder;
 
+use LogicException;
+use ParagonIE\EasyDB\EasyStatement;
+use Tuleap\CrossTracker\Report\Query\Advanced\AllowedFrom;
+use Tuleap\CrossTracker\Widget\ProjectCrossTrackerSearch;
+use Tuleap\Dashboard\Project\IRetrieveProjectFromWidget;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\FromTrackerConditionVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\FromTrackerEqual;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\FromTrackerIn;
@@ -31,15 +36,52 @@ use Tuleap\Tracker\Report\Query\ParametrizedFromWhere;
 /**
  * @template-implements FromTrackerConditionVisitor<FromTrackerBuilderVisitorParameters, IProvideParametrizedFromAndWhereSQLFragments>
  */
-final class FromTrackerBuilderVisitor implements FromTrackerConditionVisitor
+final readonly class FromTrackerBuilderVisitor implements FromTrackerConditionVisitor
 {
+    public function __construct(
+        private IRetrieveProjectFromWidget $project_id_retriever,
+    ) {
+    }
+
     public function visitEqual(FromTrackerEqual $tracker_equal, $parameters): IProvideParametrizedFromAndWhereSQLFragments
     {
-        return new ParametrizedFromWhere('', '', [], []);
+        $from_tracker = $parameters->from_tracker;
+
+        return match ($from_tracker->getTarget()) {
+            AllowedFrom::TRACKER_NAME => $this->buildTrackerName([$tracker_equal->getValue()], $parameters),
+            default                   => throw new LogicException("Unknown FROM tracker: {$from_tracker->getTarget()}"),
+        };
     }
 
     public function visitIn(FromTrackerIn $tracker_in, $parameters): IProvideParametrizedFromAndWhereSQLFragments
     {
-        return new ParametrizedFromWhere('', '', [], []);
+        $from_tracker = $parameters->from_tracker;
+
+        return match ($from_tracker->getTarget()) {
+            AllowedFrom::TRACKER_NAME => $this->buildTrackerName($tracker_in->getValues(), $parameters),
+            default                   => throw new LogicException("Unknown FROM tracker: {$from_tracker->getTarget()}"),
+        };
+    }
+
+    /**
+     * @param list<string> $names
+     */
+    private function buildTrackerName(array $names, FromTrackerBuilderVisitorParameters $parameters): IProvideParametrizedFromAndWhereSQLFragments
+    {
+        $name_statement   = EasyStatement::open()->in('tracker.item_name IN (?*)', $names);
+        $where            = (string) $name_statement;
+        $where_parameters = $names;
+
+        if ($parameters->is_tracker_condition_alone) {
+            $widget_id  = $parameters->report_id;
+            $project_id = $this->project_id_retriever->searchProjectIdFromWidgetIdAndType($widget_id, ProjectCrossTrackerSearch::NAME);
+            if ($project_id === null) {
+                throw new LogicException('Project id not found');
+            }
+            $where             .= ' AND project.group_id = ?';
+            $where_parameters[] = $project_id;
+        }
+
+        return new ParametrizedFromWhere('', $where, [], $where_parameters);
     }
 }

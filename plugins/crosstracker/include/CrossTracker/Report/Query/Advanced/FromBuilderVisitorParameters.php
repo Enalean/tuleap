@@ -28,6 +28,7 @@ final readonly class FromBuilderVisitorParameters implements VisitorParameters
 {
     public function __construct(
         public int $report_id,
+        public bool $is_condition_alone,
     ) {
     }
 }

@@ -311,15 +311,16 @@ final class ArtifactReportFactoryInstantiator
                 new ArtifactResultBuilder($artifact_factory),
             ),
         );
+        $project_id_retriever     = new ProjectDashboardDao(new DashboardWidgetDao(
+            new WidgetFactory(
+                $user_manager,
+                new User_ForgeUserGroupPermissionsManager(new User_ForgeUserGroupPermissionsDao()),
+                EventManager::instance(),
+            )
+        ));
         $from_builder_visitor     = new FromBuilderVisitor(
-            new FromTrackerBuilderVisitor(),
-            new FromProjectBuilderVisitor(new ProjectDashboardDao(new DashboardWidgetDao(
-                new WidgetFactory(
-                    $user_manager,
-                    new User_ForgeUserGroupPermissionsManager(new User_ForgeUserGroupPermissionsDao()),
-                    EventManager::instance(),
-                )
-            ))),
+            new FromTrackerBuilderVisitor($project_id_retriever),
+            new FromProjectBuilderVisitor($project_id_retriever),
         );
 
         $expert_query_dao = new CrossTrackerExpertQueryReportDao();
