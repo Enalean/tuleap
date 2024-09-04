@@ -30,7 +30,7 @@ import TrackerListWritingMode from "./TrackerListWritingMode.vue";
 import TrackerSelection from "./TrackerSelection.vue";
 import { CLEAR_FEEDBACKS, NOTIFY_FAULT } from "../injection-symbols";
 import { TooManyTrackersSelectedFault } from "../domain/TooManyTrackersSelectedFault";
-
+import { nextTick } from "vue";
 describe("WritingMode", () => {
     let resetSpy: Mock, errorSpy: Mock;
 
@@ -188,5 +188,25 @@ describe("WritingMode", () => {
             expect(errorSpy).toHaveBeenCalled();
             expect(errorSpy.mock.calls[0][0].isMaxTrackersSelected()).toBe(true);
         });
+    });
+    describe("Tracker selection display", () => {
+        it.each([
+            ["displays", false, true],
+            ["does display", true, false],
+        ])(
+            `%s display the tracker list according to the expert mode`,
+            async (format_title, is_expert_mode, is_tracker_list_component_exist) => {
+                const writing_cross_tracker_report = new WritingCrossTrackerReport();
+                writing_cross_tracker_report.expert_mode = is_expert_mode;
+                const wrapper = getWrapper(writing_cross_tracker_report);
+                await nextTick();
+                expect(wrapper.findComponent(TrackerSelection).exists()).toBe(
+                    is_tracker_list_component_exist,
+                );
+                expect(wrapper.findComponent(TrackerListWritingMode).exists()).toBe(
+                    is_tracker_list_component_exist,
+                );
+            },
+        );
     });
 });

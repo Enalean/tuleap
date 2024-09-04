@@ -31,6 +31,7 @@ import * as rest_querier from "../api/rest-querier";
 import type { Report, TrackerAndProject } from "../type";
 import { getGlobalTestOptions } from "../helpers/global-options-for-tests";
 import { IS_USER_ADMIN, NOTIFY_FAULT, REPORT_ID, REPORT_STATE } from "../injection-symbols";
+import TrackerListReadingMode from "./TrackerListReadingMode.vue";
 
 describe("ReadingMode", () => {
     let backend_cross_tracker_report: BackendCrossTrackerReport,
@@ -148,5 +149,20 @@ describe("ReadingMode", () => {
 
             expect(wrapper.emitted("discard-unsaved-report")).toBeDefined();
         });
+    });
+    describe("Tracker selection display", () => {
+        it.each([
+            ["displays", false, true],
+            ["does display", true, false],
+        ])(
+            `%s display the tracker list according to the expert mode`,
+            (format_title, is_expert_mode, is_tracker_list_component_exist) => {
+                reading_cross_tracker_report.expert_mode = is_expert_mode;
+                const wrapper = instantiateComponent();
+                expect(wrapper.findComponent(TrackerListReadingMode).exists()).toBe(
+                    is_tracker_list_component_exist,
+                );
+            },
+        );
     });
 });

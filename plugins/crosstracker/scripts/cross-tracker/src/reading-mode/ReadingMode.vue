@@ -27,6 +27,7 @@
         <tracker-list-reading-mode
             v-bind:reading_cross_tracker_report="props.reading_cross_tracker_report"
             data-test="tracker-list-reading-mode"
+            v-if="!props.reading_cross_tracker_report.expert_mode"
         />
         <div v-if="is_expert_query_not_empty" data-test="tql-reading-mode-query">
             {{ props.reading_cross_tracker_report.expert_query }}

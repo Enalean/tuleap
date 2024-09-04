@@ -62,4 +62,21 @@ describe("SwitchModeInput", () => {
             expect(input.checked).toBe(false);
         });
     });
+
+    describe("Emit switch mode event", () => {
+        it("will send the switch mode event when the switch is clicked", () => {
+            const report = new WritingCrossTrackerReport();
+            const wrapper = getWrapper(report);
+
+            wrapper.find("[data-test=switch-to-expert-input]").trigger("click");
+
+            expect(wrapper.emitted()).toHaveProperty("switch-to-query-mode");
+            const event = wrapper.emitted("switch-to-query-mode");
+            if (event === undefined) {
+                throw Error("The 'switch-to-query-mode' event should be emitted");
+            }
+            const expected_payload = { is_expert_mode: true };
+            expect(event[0][0]).toStrictEqual(expected_payload);
+        });
+    });
 });
