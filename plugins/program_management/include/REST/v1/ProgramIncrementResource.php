@@ -47,10 +47,10 @@ use Tuleap\ProgramManagement\Adapter\Program\Feature\Content\FeatureHasPlannedUs
 use Tuleap\ProgramManagement\Adapter\Program\Feature\FeatureChecker;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\FeatureDAO;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\ArtifactsLinkedToParentDao;
+use Tuleap\ProgramManagement\Adapter\Program\Plan\CachedProgramBuilder;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\CanPrioritizeFeaturesDAO;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\PlanDao;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\PrioritizeFeaturesPermissionVerifier;
-use Tuleap\ProgramManagement\Adapter\Program\Plan\ProgramAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\PlanningAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\ProgramDaoProject;
 use Tuleap\ProgramManagement\Adapter\Team\MirroredTimeboxes\MirroredTimeboxesDao;
@@ -212,7 +212,7 @@ final class ProgramIncrementResource extends AuthenticatedResource
         $form_element_factory    = \Tracker_FormElementFactory::instance();
         $field_retriever         = new FormElementFactoryAdapter($tracker_retriever, $form_element_factory);
         $project_manager_adapter = new ProjectManagerAdapter(ProjectManager::instance(), $user_retriever);
-        $program_adapter         = ProgramAdapter::instance();
+        $program_adapter         = CachedProgramBuilder::instance();
         $visibility_verifier     = new ArtifactVisibleVerifier($artifact_factory, $user_retriever);
 
         $artifact_link_updater = new ArtifactLinkUpdater(

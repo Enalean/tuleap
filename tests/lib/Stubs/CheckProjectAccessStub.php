@@ -27,24 +27,15 @@ use Tuleap\Project\ProjectAccessSuspendedException;
 
 final class CheckProjectAccessStub implements CheckProjectAccess
 {
-    private bool $is_not_found;
-    private bool $is_suspended;
-    private bool $is_deleted;
-    private bool $is_user_restricted;
-    private bool $is_private;
+    private int $call_count = 0;
 
     private function __construct(
-        bool $is_not_found,
-        bool $is_suspended,
-        bool $is_deleted,
-        bool $is_user_restricted,
-        bool $is_private,
+        private readonly bool $is_not_found,
+        private readonly bool $is_suspended,
+        private readonly bool $is_deleted,
+        private readonly bool $is_user_restricted,
+        private readonly bool $is_private,
     ) {
-        $this->is_not_found       = $is_not_found;
-        $this->is_suspended       = $is_suspended;
-        $this->is_deleted         = $is_deleted;
-        $this->is_user_restricted = $is_user_restricted;
-        $this->is_private         = $is_private;
     }
 
     public static function withValidAccess(): self
@@ -79,6 +70,7 @@ final class CheckProjectAccessStub implements CheckProjectAccess
 
     public function checkUserCanAccessProject(\PFUser $user, \Project $project): void
     {
+        $this->call_count++;
         if ($this->is_not_found) {
             throw new \Project_AccessProjectNotFoundException();
         }
@@ -94,5 +86,10 @@ final class CheckProjectAccessStub implements CheckProjectAccess
         if ($this->is_private) {
             throw new \Project_AccessPrivateException();
         }
+    }
+
+    public function getCallCount(): int
+    {
+        return $this->call_count;
     }
 }

@@ -44,10 +44,10 @@ use Tuleap\ProgramManagement\Adapter\Program\Feature\BackgroundColorRetriever;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Content\FeatureHasPlannedUserStoriesVerifier;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\FeaturesDao;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\ArtifactsLinkedToParentDao;
+use Tuleap\ProgramManagement\Adapter\Program\Plan\CachedProgramBuilder;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\CanPrioritizeFeaturesDAO;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\PlanDao;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\PrioritizeFeaturesPermissionVerifier;
-use Tuleap\ProgramManagement\Adapter\Program\Plan\ProgramAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\TrackerConfigurationChecker;
 use Tuleap\ProgramManagement\Adapter\Program\PlanningAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\ProgramDaoProject;
@@ -74,7 +74,6 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncr
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\UserCanPlanInProgramIncrementVerifier;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\CannotManipulateTopBacklog;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\TopBacklogChange;
-use Tuleap\ProgramManagement\Domain\Program\Plan\BuildProgram;
 use Tuleap\ProgramManagement\Domain\Program\Plan\CannotPlanIntoItselfException;
 use Tuleap\ProgramManagement\Domain\Program\Plan\InvalidProgramUserGroup;
 use Tuleap\ProgramManagement\Domain\Program\Plan\PlanChange;
@@ -109,7 +108,6 @@ final class ProjectResource extends AuthenticatedResource
     private CreateTeam $team_creator;
     private \UserManager $user_manager;
     private ProgramIncrementsSearcher $program_increments_builder;
-    private BuildProgram $build_program;
     private UserManagerAdapter $user_manager_adapter;
     private PrioritizeFeaturesPermissionVerifier $features_permission_verifier;
     private FeatureHasPlannedUserStoriesVerifier $user_story_linked_verifier;
@@ -136,7 +134,6 @@ final class ProjectResource extends AuthenticatedResource
             new RestrictedUserCanAccessProjectVerifier(),
             \EventManager::instance()
         );
-        $this->build_program    = ProgramAdapter::instance();
 
         $team_adapter       = new TeamAdapter(
             $project_manager_adapter,
@@ -169,9 +166,10 @@ final class ProjectResource extends AuthenticatedResource
 
         $program_increments_dao = new ProgramIncrementsDAO();
         $update_verifier        = new UserCanUpdateTimeboxVerifier($artifact_retriever, $this->user_manager_adapter);
+        $program_builder        = CachedProgramBuilder::instance();
 
         $this->program_increments_builder = new ProgramIncrementsSearcher(
-            $this->build_program,
+            $program_builder,
             $program_increments_dao,
             $program_increments_dao,
             new ArtifactVisibleVerifier($artifact_factory, $this->user_manager_adapter),
@@ -192,7 +190,7 @@ final class ProjectResource extends AuthenticatedResource
                     $program_increments_dao,
                     new UserCanLinkToProgramIncrementVerifier($this->user_manager_adapter, $field_retriever),
                     $program_dao,
-                    $this->build_program,
+                    $program_builder,
                     new VisibleTeamSearcher(
                         $program_dao,
                         $this->user_manager_adapter,
@@ -369,7 +367,7 @@ final class ProjectResource extends AuthenticatedResource
         $visibility_verifier            = new ArtifactVisibleVerifier($artifact_factory, $user_retriever);
 
         $program_backlog_searcher = new ProgramBacklogSearcher(
-            ProgramAdapter::instance(),
+            CachedProgramBuilder::instance(),
             new FeaturesDao(),
             $visibility_verifier,
             new TitleValueRetriever($artifact_retriever),
@@ -467,6 +465,7 @@ final class ProjectResource extends AuthenticatedResource
             $feature_ids_to_add[] = $feature_to_add->id;
         }
 
+        $program_builder     = CachedProgramBuilder::instance();
         $artifact_factory    = \Tracker_ArtifactFactory::instance();
         $priority_manager    = \Tracker_Artifact_PriorityManager::build();
         $top_backlog_updater = new ProcessTopBacklogChange(
@@ -485,7 +484,7 @@ final class ProjectResource extends AuthenticatedResource
 
         try {
             $user_identifier = UserProxy::buildFromPFUser($this->user_manager->getCurrentUser());
-            $program         = ProgramIdentifier::fromId($this->build_program, $id, $user_identifier, null);
+            $program         = ProgramIdentifier::fromId($program_builder, $id, $user_identifier, null);
             $top_backlog_updater->processTopBacklogChangeForAProgram(
                 $program,
                 new TopBacklogChange(

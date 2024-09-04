@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Tests\Stub;
 
-use Tuleap\ProgramManagement\Domain\Permissions\PermissionBypass;
 use Tuleap\ProgramManagement\Domain\Program\Plan\ProjectIsAProgramOrUsedInPlanChecker;
 use Tuleap\ProgramManagement\Domain\Program\Plan\ProgramAccessException;
 use Tuleap\ProgramManagement\Domain\Program\Plan\ProjectIsNotAProgramException;
@@ -46,7 +45,7 @@ final class ProjectIsAProgramOrUsedInPlanCheckerStub implements ProjectIsAProgra
         return new self(true, true);
     }
 
-    public function ensureProjectIsAProgramOrIsPartOfPlan(int $project_id, UserIdentifier $user, ?PermissionBypass $bypass): void
+    public function ensureProjectIsAProgramOrIsPartOfPlan(int $project_id, UserIdentifier $user): void
     {
         if (! $this->is_a_program) {
             throw new ProjectIsNotAProgramException($project_id);
