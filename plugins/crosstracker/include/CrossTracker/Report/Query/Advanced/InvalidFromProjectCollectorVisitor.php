@@ -43,7 +43,7 @@ final readonly class InvalidFromProjectCollectorVisitor implements FromProjectCo
 
         match ($from_project->getTarget()) {
             AllowedFrom::PROJECT          => $this->checkProjectEqual($project_equal, $parameters),
-            AllowedFrom::PROJECT_NAME     => $parameters->collection->addInvalidFrom('@project.name is not supported yet'),
+            AllowedFrom::PROJECT_NAME     => $this->checkProjectNames([$project_equal->getValue()], $parameters),
             AllowedFrom::PROJECT_CATEGORY => $this->checkProjectCategories([$project_equal->getValue()], $parameters),
             default                       => throw new LogicException("Unknown FROM project: {$from_project->getTarget()}"),
         };
@@ -80,13 +80,25 @@ final readonly class InvalidFromProjectCollectorVisitor implements FromProjectCo
         }
     }
 
+    /**
+     * @param list<string> $names
+     */
+    private function checkProjectNames(array $names, InvalidFromProjectCollectorParameters $parameters): void
+    {
+        foreach ($names as $name) {
+            if ($name === '') {
+                $parameters->collection->addInvalidFrom(dgettext('tuleap-crosstracker', '@project.name cannot be empty'));
+            }
+        }
+    }
+
     public function visitIn(FromProjectIn $project_in, $parameters): void
     {
         $from_project = $parameters->from_project;
 
         match ($from_project->getTarget()) {
             AllowedFrom::PROJECT          => $parameters->collection->addInvalidFrom(dgettext('tuleap-crosstracker', "You cannot use '@project IN(...)'")),
-            AllowedFrom::PROJECT_NAME     => $parameters->collection->addInvalidFrom('@project.name is not supported yet'),
+            AllowedFrom::PROJECT_NAME     => $this->checkProjectNames($project_in->getValues(), $parameters),
             AllowedFrom::PROJECT_CATEGORY => $this->checkProjectCategories($project_in->getValues(), $parameters),
             default                       => throw new LogicException("Unknown FROM project: {$from_project->getTarget()}"),
         };

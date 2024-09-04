@@ -130,15 +130,27 @@ final class InvalidFromCollectionBuilderTest extends TestCase
         self::assertEquals("Only @project = 'self' is supported", $result[0]);
     }
 
-    public function testItReturnsErrorForProjectNameAsNothingHasBeenImplemented(): void
+    public function testItReturnsErrorWhenProjectNameEqualEmpty(): void
     {
         $result = $this->getInvalidFrom(new From(new FromProject('@project.name', new FromProjectEqual('')), null));
         self::assertCount(1, $result);
-        self::assertEquals('@project.name is not supported yet', $result[0]);
+        self::assertEquals('@project.name cannot be empty', $result[0]);
+    }
 
-        $result = $this->getInvalidFrom(new From(new FromProject('@project.name', new FromProjectIn([])), null));
+    public function testItReturnsErrorWhenProjectNameInEmpty(): void
+    {
+        $result = $this->getInvalidFrom(new From(new FromProject('@project.name', new FromProjectIn(['My project', ''])), null));
         self::assertCount(1, $result);
-        self::assertEquals('@project.name is not supported yet', $result[0]);
+        self::assertEquals('@project.name cannot be empty', $result[0]);
+    }
+
+    public function testItReturnsEmptyWhenProjectNameIsValid(): void
+    {
+        $result = $this->getInvalidFrom(new From(new FromProject('@project.name', new FromProjectEqual('Project name')), null));
+        self::assertEmpty($result);
+
+        $result = $this->getInvalidFrom(new From(new FromProject('@project.name', new FromProjectIn(['My project', 'Awesome project'])), null));
+        self::assertEmpty($result);
     }
 
     public function testItReturnsErrorWhenProjectCategoryEqualEmpty(): void
