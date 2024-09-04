@@ -23,6 +23,9 @@ dependencies:
   '@tuleap/tlp-popovers':
     specifier: workspace:^
     version: link:../tlp-popovers
+  '@tuleap/tooltip':
+    specifier: workspace:^
+    version: link:../tooltip
   '@tuleap/url-sanitizer':
     specifier: workspace:*
     version: link:../url-sanitizer

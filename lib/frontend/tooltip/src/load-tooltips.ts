@@ -17,27 +17,46 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import type { Tooltip } from "./type";
+import { elementWithCrossrefHref } from "./element-with-crossref-href";
 import { createTooltip } from "./create-tooltip";
+import type { Option } from "@tuleap/option";
 
-const selectors = ["a.cross-reference", "a[class^=direct-link-to]"];
+const selectors = [".cross-reference", "a[class^=direct-link-to]"];
 
 export const loadTooltipOnAnchorElement = function (
     element: HTMLAnchorElement,
     at_cursor_position?: boolean,
 ): void {
+    loadTooltipOnElement(element, Boolean(at_cursor_position));
+};
+
+const stored_tooltips = new WeakMap<HTMLElement | Document, Tooltip[]>();
+export const loadTooltips = function (element?: HTMLElement, at_cursor_position?: boolean): void {
+    const container = element || document;
+
+    stored_tooltips.get(container)?.forEach((tooltip: Tooltip) => tooltip.destroy());
+
+    const targets = container.querySelectorAll(selectors.join(","));
+
+    const tooltips: Tooltip[] = [];
+    targets.forEach(function (a) {
+        if (!(a instanceof HTMLElement)) {
+            return;
+        }
+
+        loadTooltipOnElement(a, Boolean(at_cursor_position)).apply((tooltip: Tooltip) => {
+            tooltips.push(tooltip);
+        });
+    });
+
+    stored_tooltips.set(container, tooltips);
+};
+
+function loadTooltipOnElement(element: HTMLElement, at_cursor_position: boolean): Option<Tooltip> {
     const options = {
-        at_cursor_position: Boolean(at_cursor_position),
+        at_cursor_position,
     };
 
-    createTooltip(element, options);
-};
-
-export const loadTooltips = function (element?: HTMLElement, at_cursor_position?: boolean): void {
-    const targets = (element || document).querySelectorAll(selectors.join(","));
-
-    targets.forEach(function (a) {
-        if (a instanceof HTMLAnchorElement) {
-            loadTooltipOnAnchorElement(a, at_cursor_position);
-        }
-    });
-};
+    return elementWithCrossrefHref(element).map((crossref) => createTooltip(crossref, options));
+}

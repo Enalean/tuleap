@@ -163,7 +163,7 @@ describe("references decorator for whole document", () => {
             to,
             type: {
                 attrs: {
-                    class: "cross-reference-link",
+                    class: "cross-reference",
                     "data-href": cross_reference.link,
                 },
                 spec: {

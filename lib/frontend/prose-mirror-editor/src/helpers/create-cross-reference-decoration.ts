@@ -32,7 +32,7 @@ export const createCrossReferenceDecoration = (
         reference_position.from,
         reference_position.to,
         {
-            class: "cross-reference-link",
+            class: "cross-reference",
             "data-href": reference.link,
         },
         { type: CROSS_REFERENCE_DECORATION_TYPE },
