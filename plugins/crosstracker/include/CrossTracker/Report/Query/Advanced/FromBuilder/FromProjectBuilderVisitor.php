@@ -85,8 +85,8 @@ final readonly class FromProjectBuilderVisitor implements FromProjectConditionVi
         $from_project = $parameters->from_project;
 
         return match ($from_project->getTarget()) {
-            AllowedFrom::PROJECT_NAME,
-            AllowedFrom::PROJECT          => throw new LogicException('Should not be called'),
+            AllowedFrom::PROJECT_NAME     => throw new LogicException('Should not be called: @project.name is not yet implemented'),
+            AllowedFrom::PROJECT          => throw new LogicException('Should not be called: already catched by the FROM query validation'),
             AllowedFrom::PROJECT_CATEGORY => $this->buildFromProjectCategoryIn($project_in->getValues()),
             default                       => throw new LogicException("Unknown FROM project: {$from_project->getTarget()}"),
         };

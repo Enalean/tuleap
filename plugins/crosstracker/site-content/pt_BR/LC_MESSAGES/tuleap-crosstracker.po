@@ -67,6 +67,9 @@ msgstr ""
 msgid "@project.category cannot be empty"
 msgstr ""
 
+msgid "@project.name cannot be empty"
+msgstr ""
+
 msgid "@tracker.name cannot be empty"
 msgstr ""
 
