@@ -22,46 +22,42 @@ declare(strict_types=1);
 
 namespace Tuleap\Docman\Upload\Version;
 
+use DateTimeImmutable;
+use Docman_Item;
 use DocmanPlugin;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use ForgeConfig;
+use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\Docman\Upload\UploadCreationConflictException;
 use Tuleap\Docman\Upload\UploadCreationFileMismatchException;
 use Tuleap\Docman\Upload\UploadMaxSizeExceededException;
+use Tuleap\ForgeConfigSandbox;
+use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
+use Tuleap\Test\PHPUnit\TestCase;
 
-class VersionToUploadCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
+final class VersionToUploadCreatorTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
+    use ForgeConfigSandbox;
 
-    private $dao;
+    private DocumentOnGoingVersionToUploadDAO&MockObject $dao;
 
     public function setUp(): void
     {
-        \ForgeConfig::store();
-
-        $this->dao = \Mockery::mock(DocumentOnGoingVersionToUploadDAO::class);
+        $this->dao = $this->createMock(DocumentOnGoingVersionToUploadDAO::class);
     }
 
-    public function tearDown(): void
-    {
-        \ForgeConfig::restore();
-    }
-
-    public function testCreation()
+    public function testCreation(): void
     {
         $creator = new VersionToUploadCreator($this->dao, new DBTransactionExecutorPassthrough());
 
-        \ForgeConfig::set(DocmanPlugin::PLUGIN_DOCMAN_MAX_FILE_SIZE_SETTING, '999999');
-        $item = \Mockery::mock(\Docman_Item::class);
-        $item->shouldReceive('getId')->andReturns(11);
-        $user = \Mockery::mock(\PFUser::class);
-        $user->shouldReceive('getId')->andReturns(102);
-        $current_time = new \DateTimeImmutable();
+        ForgeConfig::set(DocmanPlugin::PLUGIN_DOCMAN_MAX_FILE_SIZE_SETTING, '999999');
+        $item         = new Docman_Item(['item_id' => 11]);
+        $user         = UserTestBuilder::buildWithId(102);
+        $current_time = new DateTimeImmutable();
 
-        $this->dao->shouldReceive('searchDocumentVersionOngoingUploadByItemIdAndExpirationDate')->andReturns([]);
-        $this->dao->shouldReceive('saveDocumentVersionOngoingUpload')->once()->andReturns(12);
+        $this->dao->method('searchDocumentVersionOngoingUploadByItemIdAndExpirationDate')->willReturn([]);
+        $this->dao->expects(self::once())->method('saveDocumentVersionOngoingUpload')->willReturn(12);
 
-        $is_file_locked     = false;
         $document_to_upload = $creator->create(
             $item,
             $user,
@@ -70,7 +66,7 @@ class VersionToUploadCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             'changelog',
             'filename',
             123456,
-            $is_file_locked,
+            false,
             101,
             155815815,
             'My new title',
@@ -78,27 +74,22 @@ class VersionToUploadCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             'copy'
         );
 
-        $this->assertSame(12, $document_to_upload->getVersionId());
+        self::assertSame(12, $document_to_upload->getVersionId());
     }
 
-    public function testANewItemIsNotCreatedIfAnUploadIsOngoingWithTheSameFile()
+    public function testANewItemIsNotCreatedIfAnUploadIsOngoingWithTheSameFile(): void
     {
         $creator = new VersionToUploadCreator($this->dao, new DBTransactionExecutorPassthrough());
 
-        \ForgeConfig::set(DocmanPlugin::PLUGIN_DOCMAN_MAX_FILE_SIZE_SETTING, '999999');
-        $parent_item = \Mockery::mock(\Docman_Item::class);
-        $parent_item->shouldReceive('getId')->andReturns(11);
-        $user = \Mockery::mock(\PFUser::class);
-        $user->shouldReceive('getId')->andReturns(102);
-        $current_time = new \DateTimeImmutable();
+        ForgeConfig::set(DocmanPlugin::PLUGIN_DOCMAN_MAX_FILE_SIZE_SETTING, '999999');
+        $parent_item  = new Docman_Item(['item_id' => 11]);
+        $user         = UserTestBuilder::buildWithId(102);
+        $current_time = new DateTimeImmutable();
 
-        $this->dao->shouldReceive('searchDocumentVersionOngoingUploadByItemIdAndExpirationDate')->andReturns(
-            [
-                ['id' => 12, 'user_id' => 102, 'filename' => 'filename', 'filesize' => 123456],
-            ]
-        );
+        $this->dao->method('searchDocumentVersionOngoingUploadByItemIdAndExpirationDate')->willReturn([
+            ['id' => 12, 'user_id' => 102, 'filename' => 'filename', 'filesize' => 123456],
+        ]);
 
-        $is_file_locked     = false;
         $document_to_upload = $creator->create(
             $parent_item,
             $user,
@@ -107,7 +98,7 @@ class VersionToUploadCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             'changelog',
             'filename',
             123456,
-            $is_file_locked,
+            false,
             101,
             155815815,
             'My new title',
@@ -115,29 +106,22 @@ class VersionToUploadCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             'copy'
         );
 
-        $this->assertSame(12, $document_to_upload->getVersionId());
+        self::assertSame(12, $document_to_upload->getVersionId());
     }
 
-    public function testCreationIsRejectedWhenAnotherUserIsCreatingTheDocument()
+    public function testCreationIsRejectedWhenAnotherUserIsCreatingTheDocument(): void
     {
         $creator = new VersionToUploadCreator($this->dao, new DBTransactionExecutorPassthrough());
 
-        \ForgeConfig::set(DocmanPlugin::PLUGIN_DOCMAN_MAX_FILE_SIZE_SETTING, '999999');
-        $parent_item = \Mockery::mock(\Docman_Item::class);
-        $parent_item->shouldReceive('getId')->andReturns(11);
-        $user = \Mockery::mock(\PFUser::class);
-        $user->shouldReceive('getId')->andReturns(102);
-        $current_time = new \DateTimeImmutable();
+        ForgeConfig::set(DocmanPlugin::PLUGIN_DOCMAN_MAX_FILE_SIZE_SETTING, '999999');
+        $parent_item  = new Docman_Item(['item_id' => 11]);
+        $user         = UserTestBuilder::buildWithId(102);
+        $current_time = new DateTimeImmutable();
 
-        $this->dao->shouldReceive('searchDocumentVersionOngoingUploadByItemIdAndExpirationDate')->andReturns(
-            [
-                ['user_id' => 103],
-            ]
-        );
+        $this->dao->method('searchDocumentVersionOngoingUploadByItemIdAndExpirationDate')->willReturn([['user_id' => 103]]);
 
-        $this->expectException(UploadCreationConflictException::class);
+        self::expectException(UploadCreationConflictException::class);
 
-        $is_file_locked = false;
         $creator->create(
             $parent_item,
             $user,
@@ -146,7 +130,7 @@ class VersionToUploadCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             'changelog',
             'filename',
             123456,
-            $is_file_locked,
+            false,
             101,
             155815815,
             'My new title',
@@ -155,26 +139,21 @@ class VersionToUploadCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-    public function testCreationIsRejectedWhenTheUserIsAlreadyCreatingTheDocumentWithAnotherFile()
+    public function testCreationIsRejectedWhenTheUserIsAlreadyCreatingTheDocumentWithAnotherFile(): void
     {
         $creator = new VersionToUploadCreator($this->dao, new DBTransactionExecutorPassthrough());
 
-        \ForgeConfig::set(DocmanPlugin::PLUGIN_DOCMAN_MAX_FILE_SIZE_SETTING, '999999');
-        $parent_item = \Mockery::mock(\Docman_Item::class);
-        $parent_item->shouldReceive('getId')->andReturns(11);
-        $user = \Mockery::mock(\PFUser::class);
-        $user->shouldReceive('getId')->andReturns(102);
-        $current_time = new \DateTimeImmutable();
+        ForgeConfig::set(DocmanPlugin::PLUGIN_DOCMAN_MAX_FILE_SIZE_SETTING, '999999');
+        $parent_item  = new Docman_Item(['item_id' => 11]);
+        $user         = UserTestBuilder::buildWithId(102);
+        $current_time = new DateTimeImmutable();
 
-        $this->dao->shouldReceive('searchDocumentVersionOngoingUploadByItemIdAndExpirationDate')->andReturns(
-            [
-                ['user_id' => 102, 'filename' => 'filename1', 'filesize' => 123456],
-            ]
-        );
+        $this->dao->method('searchDocumentVersionOngoingUploadByItemIdAndExpirationDate')->willReturn([
+            ['user_id' => 102, 'filename' => 'filename1', 'filesize' => 123456],
+        ]);
 
-        $this->expectException(UploadCreationFileMismatchException::class);
+        self::expectException(UploadCreationFileMismatchException::class);
 
-        $is_file_locked = false;
         $creator->create(
             $parent_item,
             $user,
@@ -183,7 +162,7 @@ class VersionToUploadCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             'changelog',
             'filename2',
             789,
-            $is_file_locked,
+            false,
             101,
             155815815,
             'My new title',
@@ -192,18 +171,17 @@ class VersionToUploadCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-    public function testCreationIsRejectedIfTheFileIsBiggerThanTheConfigurationLimit()
+    public function testCreationIsRejectedIfTheFileIsBiggerThanTheConfigurationLimit(): void
     {
         $creator = new VersionToUploadCreator($this->dao, new DBTransactionExecutorPassthrough());
 
-        \ForgeConfig::set(DocmanPlugin::PLUGIN_DOCMAN_MAX_FILE_SIZE_SETTING, '1');
-        $parent_item  = \Mockery::mock(\Docman_Item::class);
-        $user         = \Mockery::mock(\PFUser::class);
-        $current_time = new \DateTimeImmutable();
+        ForgeConfig::set(DocmanPlugin::PLUGIN_DOCMAN_MAX_FILE_SIZE_SETTING, '1');
+        $parent_item  = new Docman_Item();
+        $user         = UserTestBuilder::buildWithDefaults();
+        $current_time = new DateTimeImmutable();
 
-        $this->expectException(UploadMaxSizeExceededException::class);
+        self::expectException(UploadMaxSizeExceededException::class);
 
-        $is_file_locked = false;
         $creator->create(
             $parent_item,
             $user,
@@ -212,7 +190,7 @@ class VersionToUploadCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             'changelog',
             'filename',
             2,
-            $is_file_locked,
+            false,
             101,
             155815815,
             'My new title',
