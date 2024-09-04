@@ -20,10 +20,8 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Adapter\Program\Admin\TimeboxTrackerConfiguration;
+namespace Tuleap\ProgramManagement\Domain\Program\Admin\Configuration;
 
-use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\PotentialTimeboxTrackerConfigurationCollection;
-use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ProgramSelectOptionConfiguration;
 use Tuleap\ProgramManagement\Domain\Program\Admin\PotentialTrackerCollection;
 use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramForAdministrationIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\IterationTracker\IterationTrackerIdentifier;

@@ -20,10 +20,9 @@
 
 declare(strict_types=1);
 
-namespace Adapter\Program\Feature;
+namespace Tuleap\ProgramManagement\Adapter\Program\Feature;
 
 use Psr\Log\NullLogger;
-use Tuleap\ProgramManagement\Adapter\Program\Feature\UserStoriesInMirroredProgramIncrementsPlanner;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Links\SearchFeaturesInChangeset;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\ProgramIncrementChanged;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\SearchArtifactsLinks;
@@ -33,8 +32,8 @@ use Tuleap\ProgramManagement\Tests\Builder\ProgramIncrementUpdateBuilder;
 use Tuleap\ProgramManagement\Tests\Builder\TeamIdentifierBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\PlanUserStoryInOneMirrorStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveMirroredProgramIncrementFromTeamStub;
-use Tuleap\ProgramManagement\Tests\Stub\SearchFeaturesInChangesetStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchArtifactsLinksStub;
+use Tuleap\ProgramManagement\Tests\Stub\SearchFeaturesInChangesetStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchFeaturesStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchMirroredTimeboxesStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsVisibleArtifactStub;

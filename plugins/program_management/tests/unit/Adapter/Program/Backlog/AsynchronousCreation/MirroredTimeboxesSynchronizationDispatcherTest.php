@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation;
 
 use PHPUnit\Framework\MockObject\Stub;
@@ -25,7 +27,7 @@ use Tuleap\ProgramManagement\Tests\Stub\CommandTeamSynchronizationStub;
 use Tuleap\Queue\PersistentQueue;
 use Tuleap\Queue\QueueFactory;
 
-class MirroredTimeboxesSynchronizationDispatcherTest extends \Tuleap\Test\PHPUnit\TestCase
+final class MirroredTimeboxesSynchronizationDispatcherTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const PROGRAM_ID = 1;
     private const TEAM_ID    = 123;

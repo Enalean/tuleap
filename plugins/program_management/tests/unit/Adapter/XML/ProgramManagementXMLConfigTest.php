@@ -19,6 +19,8 @@
  *
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\ProgramManagement\Adapter\XML;
 
 use Tuleap\ProgramManagement\Tests\Builder\ProgramForAdministrationIdentifierBuilder;

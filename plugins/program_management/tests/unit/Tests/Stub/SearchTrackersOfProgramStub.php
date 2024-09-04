@@ -19,6 +19,7 @@
  */
 
 declare(strict_types=1);
+
 namespace Tuleap\ProgramManagement\Tests\Stub;
 
 use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramForAdministrationIdentifier;

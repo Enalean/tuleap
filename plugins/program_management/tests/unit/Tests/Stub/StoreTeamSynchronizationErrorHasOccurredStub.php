@@ -19,30 +19,30 @@
  *
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\ProgramManagement\Tests\Stub;
 
-use Tuleap\ProgramManagement\Domain\Program\Backlog\TeamSynchronization\VerifyTeamSynchronizationHasError;
-use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
-use Tuleap\ProgramManagement\Domain\ProjectReference;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\TeamSynchronization\StoreTeamSynchronizationErrorHasOccurred;
 
-final class VerifyTeamSynchronizationHasErrorStub implements VerifyTeamSynchronizationHasError
+final class StoreTeamSynchronizationErrorHasOccurredStub implements StoreTeamSynchronizationErrorHasOccurred
 {
-    private function __construct(private bool $has_error)
+    private function __construct(private int $call_count)
     {
     }
 
-    public static function buildWithoutError(): self
+    public static function withCount(): self
     {
-        return new self(false);
+        return new self(0);
     }
 
-    public static function buildWithError(): self
+    public function storeErrorHasOccurred(int $program_id, int $team_id): void
     {
-        return new self(true);
+        $this->call_count++;
     }
 
-    public function hasASynchronizationError(ProgramIdentifier $program_identifier, ProjectReference $team_identifier): bool
+    public function getCallCount(): int
     {
-        return $this->has_error;
+        return $this->call_count;
     }
 }

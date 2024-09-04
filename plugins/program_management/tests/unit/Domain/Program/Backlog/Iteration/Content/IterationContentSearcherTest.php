@@ -21,10 +21,8 @@
 
 declare(strict_types=1);
 
-namespace Domain\Program\Backlog\Iteration\Content;
+namespace Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration\Content;
 
-use Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration\Content\IterationContentSearcher;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration\Content\SearchUserStoryPlannedInIteration;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration\IterationNotFoundException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\UserStory\RetrieveTrackerFromUserStory;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\UserStory\RetrieveUserStoryCrossRef;

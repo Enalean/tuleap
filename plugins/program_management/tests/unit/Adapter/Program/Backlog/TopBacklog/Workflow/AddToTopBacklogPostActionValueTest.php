@@ -20,7 +20,6 @@
 
 declare(strict_types=1);
 
-
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\Workflow;
 
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\PostActionVisitor;

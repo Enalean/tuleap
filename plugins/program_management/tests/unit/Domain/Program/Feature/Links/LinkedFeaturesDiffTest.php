@@ -18,14 +18,15 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\ProgramManagement\Adapter\Program\Feature\Links;
+declare(strict_types=1);
+
+namespace Tuleap\ProgramManagement\Domain\Program\Feature\Links;
 
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\ProgramIncrementChanged;
-use Tuleap\ProgramManagement\Domain\Program\Feature\Links\LinkedFeaturesDiff;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIncrementUpdateBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\SearchFeaturesInChangesetStub;
 
-class LinkedFeaturesDiffTest extends \Tuleap\Test\PHPUnit\TestCase
+final class LinkedFeaturesDiffTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItBuildsAFeaturesDiffFromChangesets(): void
     {
