@@ -66,6 +66,9 @@ msgstr "Erreur pendant la sauvegarde du rapport : %{error}"
 msgid "Example: @title = 'value'"
 msgstr "Exemple : @title = 'valeur'"
 
+msgid "Expert mode"
+msgstr "Mode expert"
+
 msgid "Export CSV"
 msgstr "Export CSV"
 
