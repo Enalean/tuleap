@@ -22,9 +22,19 @@ declare(strict_types=1);
 
 namespace Tuleap\CrossTracker\Report\Query\Advanced;
 
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Tuleap\Dashboard\Project\IRetrieveProjectFromWidget;
+use Tuleap\Project\ProjectByIDFactory;
+use Tuleap\Project\Sidebar\CollectLinkedProjects;
+use Tuleap\Project\Sidebar\LinkedProjectsCollection;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Test\Stubs\CheckProjectAccessStub;
 use Tuleap\Test\Stubs\Dashboard\Project\IRetrieveProjectFromWidgetStub;
+use Tuleap\Test\Stubs\EventDispatcherStub;
+use Tuleap\Test\Stubs\ProjectByIDFactoryStub;
+use Tuleap\Test\Stubs\SearchLinkedProjectsStub;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\From;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\FromProject;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\FromProjectEqual;
@@ -36,10 +46,14 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\FromTrackerIn;
 final class InvalidFromCollectionBuilderTest extends TestCase
 {
     private IRetrieveProjectFromWidget $project_from_widget;
+    private ProjectByIDFactory $project_factory;
+    private EventDispatcherInterface $event_dispatcher;
 
     protected function setUp(): void
     {
         $this->project_from_widget = IRetrieveProjectFromWidgetStub::buildWithoutProjectId();
+        $this->project_factory     = ProjectByIDFactoryStub::buildWithoutProject();
+        $this->event_dispatcher    = EventDispatcherStub::withIdentityCallback();
     }
 
     /**
@@ -51,11 +65,16 @@ final class InvalidFromCollectionBuilderTest extends TestCase
         $in_project_checker = new WidgetInProjectChecker($this->project_from_widget);
         $builder            = new InvalidFromCollectionBuilder(
             new InvalidFromTrackerCollectorVisitor($in_project_checker),
-            new InvalidFromProjectCollectorVisitor($in_project_checker),
+            new InvalidFromProjectCollectorVisitor(
+                $in_project_checker,
+                $this->project_from_widget,
+                $this->project_factory,
+                $this->event_dispatcher,
+            ),
             2,
         );
 
-        return $builder->buildCollectionOfInvalidFrom($from)->getInvalidFrom();
+        return $builder->buildCollectionOfInvalidFrom($from, UserTestBuilder::buildWithDefaults())->getInvalidFrom();
     }
 
     public function testItRefusesUnknownFromProject(): void
@@ -123,11 +142,42 @@ final class InvalidFromCollectionBuilderTest extends TestCase
         self::assertEmpty($result);
     }
 
-    public function testItReturnsErrorForProjectAggregatedAsNothingHasBeenImplemented(): void
+    public function testItReturnsErrorWhenProjectAggregatedOutsideProject(): void
     {
         $result = $this->getInvalidFrom(new From(new FromProject('@project', new FromProjectEqual('aggregated')), null));
         self::assertCount(1, $result);
-        self::assertEquals("Only @project = 'self' is supported", $result[0]);
+        self::assertEquals("You cannot use @project = 'aggregated' in the context of a personal dashboard", $result[0]);
+    }
+
+    public function testItReturnsErrorWhenProjectAggregatedInsideNormalProject(): void
+    {
+        $this->project_from_widget = IRetrieveProjectFromWidgetStub::buildWithProjectId(101);
+        $this->project_factory     = ProjectByIDFactoryStub::buildWith(ProjectTestBuilder::aProject()->withId(101)->build());
+        $result                    = $this->getInvalidFrom(new From(new FromProject('@project', new FromProjectEqual('aggregated')), null));
+        self::assertCount(1, $result);
+        self::assertEquals("You cannot use @project = 'aggregated' in a project without service program enabled", $result[0]);
+    }
+
+    public function testItReturnsEmptyWhenProjectAggregatedInsideProgramProject(): void
+    {
+        $this->project_from_widget = IRetrieveProjectFromWidgetStub::buildWithProjectId(101);
+        $project                   = ProjectTestBuilder::aProject()->withId(101)->build();
+        $this->project_factory     = ProjectByIDFactoryStub::buildWith($project);
+        $user                      = UserTestBuilder::buildWithDefaults();
+        $new_event                 = new CollectLinkedProjects($project, $user);
+        $collection                = LinkedProjectsCollection::fromSourceProject(
+            SearchLinkedProjectsStub::withValidProjects($project),
+            CheckProjectAccessStub::withValidAccess(),
+            $project,
+            $user,
+        );
+        $new_event->addChildrenProjects($collection);
+        $this->event_dispatcher = EventDispatcherStub::withCallback(static fn(object $event) => match ($event::class) {
+            CollectLinkedProjects::class => $new_event,
+            default                      => $event,
+        });
+        $result                 = $this->getInvalidFrom(new From(new FromProject('@project', new FromProjectEqual('aggregated')), null));
+        self::assertEmpty($result);
     }
 
     public function testItReturnsErrorWhenProjectNameEqualEmpty(): void

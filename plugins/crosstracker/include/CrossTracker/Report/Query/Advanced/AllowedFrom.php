@@ -33,5 +33,6 @@ final class AllowedFrom
     public const ALLOWED_PROJECT = [self::PROJECT, self::PROJECT_NAME, self::PROJECT_CATEGORY];
     public const ALLOWED_TRACKER = [self::TRACKER_NAME];
 
-    public const PROJECT_SELF = 'self';
+    public const PROJECT_SELF       = 'self';
+    public const PROJECT_AGGREGATED = 'aggregated';
 }

@@ -65,6 +65,10 @@ final readonly class FromProjectBuilderVisitor implements FromProjectConditionVi
             return new ParametrizedFromWhere('', 'project.group_id = ?', [], [$project_id]);
         }
 
+        if ($project_equal->getValue() === AllowedFrom::PROJECT_AGGREGATED) {
+            throw new LogicException("@project = 'aggregated' is not yet implemented");
+        }
+
         throw new LogicException('Should not be here: already catched by the FROM query validation');
     }
 

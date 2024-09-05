@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\CrossTracker\Report\Query\Advanced;
 
+use PFUser;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\From;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\FromProject;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\FromSomethingVisitor;
@@ -41,7 +42,7 @@ final readonly class InvalidFromCollectionBuilder implements IBuildInvalidFromCo
     ) {
     }
 
-    public function buildCollectionOfInvalidFrom(From $from): InvalidFromCollection
+    public function buildCollectionOfInvalidFrom(From $from, PFUser $user): InvalidFromCollection
     {
         $collection = new InvalidFromCollection();
         if ($from->getRight() !== null && $from->getLeft()::class === $from->getRight()::class) {
@@ -52,8 +53,8 @@ final readonly class InvalidFromCollectionBuilder implements IBuildInvalidFromCo
             return $collection;
         }
 
-        $from->getLeft()->acceptFromSomethingVisitor($this, new InvalidFromCollectionParameters($collection, $this->report_id, $from->getRight() === null));
-        $from->getRight()?->acceptFromSomethingVisitor($this, new InvalidFromCollectionParameters($collection, $this->report_id, false));
+        $from->getLeft()->acceptFromSomethingVisitor($this, new InvalidFromCollectionParameters($collection, $this->report_id, $from->getRight() === null, $user));
+        $from->getRight()?->acceptFromSomethingVisitor($this, new InvalidFromCollectionParameters($collection, $this->report_id, false, $user));
 
         return $collection;
     }
@@ -86,7 +87,7 @@ final readonly class InvalidFromCollectionBuilder implements IBuildInvalidFromCo
 
         $from_project->getCondition()->acceptFromProjectConditionVisitor(
             $this->from_project_condition_visitor,
-            new InvalidFromProjectCollectorParameters($from_project, $parameters->collection, $parameters->report_id),
+            new InvalidFromProjectCollectorParameters($from_project, $parameters->collection, $parameters->report_id, $parameters->user),
         );
     }
 }

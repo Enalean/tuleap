@@ -23,11 +23,12 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Report\Query\Advanced;
 
 use LogicException;
+use PFUser;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\From;
 
 final class InvalidFromCollectionBuilder implements IBuildInvalidFromCollection
 {
-    public function buildCollectionOfInvalidFrom(From $from): InvalidFromCollection
+    public function buildCollectionOfInvalidFrom(From $from, PFUser $user): InvalidFromCollection
     {
         throw new LogicException('Should not be called in Tracker report context');
     }

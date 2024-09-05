@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Report\Query\Advanced;
 
+use PFUser;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\From;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Logical;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Selectable;
@@ -64,9 +65,10 @@ final readonly class ExpertQueryValidator
         string $expert_query,
         bool $expert_mode,
         IBuildInvalidFromCollection $invalid_from_collection_builder,
+        PFUser $user,
     ): void {
         $query = $this->parser->parse($expert_query);
-        $this->checkFrom($query->getFrom(), $expert_mode, $invalid_from_collection_builder);
+        $this->checkFrom($query->getFrom(), $expert_mode, $invalid_from_collection_builder, $user);
     }
 
     /**
@@ -125,13 +127,14 @@ final readonly class ExpertQueryValidator
         ?From $from,
         bool $expert_mode,
         IBuildInvalidFromCollection $invalid_from_collection_builder,
+        PFUser $user,
     ): void {
         if ($expert_mode) {
             if ($from === null) { // From is mandatory in expert mode
                 throw new SyntaxError('', '', '', 0, 0, 0);
             }
 
-            $invalid_from_collection = $invalid_from_collection_builder->buildCollectionOfInvalidFrom($from);
+            $invalid_from_collection = $invalid_from_collection_builder->buildCollectionOfInvalidFrom($from, $user);
             if ($invalid_from_collection->getInvalidFrom() !== []) {
                 throw new FromIsInvalidException($invalid_from_collection->getInvalidFrom());
             }

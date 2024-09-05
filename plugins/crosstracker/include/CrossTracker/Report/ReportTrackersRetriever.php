@@ -24,6 +24,7 @@ namespace Tuleap\CrossTracker\Report;
 
 use LogicException;
 use PFUser;
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Tracker;
 use Tuleap\CrossTracker\CrossTrackerReport;
 use Tuleap\CrossTracker\Report\Query\Advanced\FromBuilderVisitor;
@@ -32,6 +33,8 @@ use Tuleap\CrossTracker\Report\Query\Advanced\InvalidFromProjectCollectorVisitor
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidFromTrackerCollectorVisitor;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\CrossTrackerExpertQueryReportDao;
 use Tuleap\CrossTracker\Report\Query\Advanced\WidgetInProjectChecker;
+use Tuleap\Dashboard\Project\IRetrieveProjectFromWidget;
+use Tuleap\Project\ProjectByIDFactory;
 use Tuleap\Tracker\Artifact\RetrieveTracker;
 use Tuleap\Tracker\Permission\RetrieveUserPermissionOnTrackers;
 use Tuleap\Tracker\Permission\TrackerPermissionType;
@@ -50,6 +53,9 @@ final readonly class ReportTrackersRetriever implements RetrieveReportTrackers
         private CrossTrackerExpertQueryReportDao $expert_query_dao,
         private RetrieveTracker $tracker_factory,
         private WidgetInProjectChecker $in_project_checker,
+        private IRetrieveProjectFromWidget $project_id_retriever,
+        private ProjectByIDFactory $project_factory,
+        private EventDispatcherInterface $event_dispatcher,
     ) {
     }
 
@@ -75,9 +81,15 @@ final readonly class ReportTrackersRetriever implements RetrieveReportTrackers
             $report->isExpert(),
             new InvalidFromCollectionBuilder(
                 new InvalidFromTrackerCollectorVisitor($this->in_project_checker),
-                new InvalidFromProjectCollectorVisitor($this->in_project_checker),
+                new InvalidFromProjectCollectorVisitor(
+                    $this->in_project_checker,
+                    $this->project_id_retriever,
+                    $this->project_factory,
+                    $this->event_dispatcher,
+                ),
                 $report->getId(),
             ),
+            $current_user,
         );
 
         $query = $this->parser->parse($expert_query);

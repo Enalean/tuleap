@@ -204,6 +204,15 @@ msgstr ""
 msgid "You cannot use '@project IN(...)'"
 msgstr ""
 
+msgid ""
+"You cannot use @project = 'aggregated' in a project without service program "
+"enabled"
+msgstr ""
+
+msgid ""
+"You cannot use @project = 'aggregated' in the context of a personal dashboard"
+msgstr ""
+
 msgid "You cannot use @project = 'self' in the context of a personal dashboard"
 msgstr ""
 

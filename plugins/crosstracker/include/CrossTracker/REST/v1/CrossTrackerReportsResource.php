@@ -748,6 +748,13 @@ final class CrossTrackerReportsResource extends AuthenticatedResource
 
     private function getReportTrackersRetriever(): ReportTrackersRetriever
     {
+        $project_dashboard_dao = new ProjectDashboardDao(new DashboardWidgetDao(
+            new WidgetFactory(
+                UserManager::instance(),
+                new User_ForgeUserGroupPermissionsManager(new User_ForgeUserGroupPermissionsDao()),
+                EventManager::instance(),
+            )
+        ));
         return new ReportTrackersRetriever(
             $this->getExpertQueryValidator(),
             $this->getParser(),
@@ -755,13 +762,10 @@ final class CrossTrackerReportsResource extends AuthenticatedResource
             TrackersPermissionsRetriever::build(),
             new CrossTrackerExpertQueryReportDao(),
             TrackerFactory::instance(),
-            new WidgetInProjectChecker(new ProjectDashboardDao(new DashboardWidgetDao(
-                new WidgetFactory(
-                    UserManager::instance(),
-                    new User_ForgeUserGroupPermissionsManager(new User_ForgeUserGroupPermissionsDao()),
-                    EventManager::instance(),
-                )
-            ))),
+            new WidgetInProjectChecker($project_dashboard_dao),
+            $project_dashboard_dao,
+            ProjectManager::instance(),
+            EventManager::instance(),
         );
     }
 }

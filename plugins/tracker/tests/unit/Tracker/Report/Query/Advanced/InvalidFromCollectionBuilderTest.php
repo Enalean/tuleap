@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Report\Query\Advanced;
 
 use LogicException;
+use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\From;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\FromProject;
@@ -34,6 +35,9 @@ final class InvalidFromCollectionBuilderTest extends TestCase
     {
         $builder = new InvalidFromCollectionBuilder();
         self::expectException(LogicException::class);
-        $builder->buildCollectionOfInvalidFrom(new From(new FromProject('@project', new FromProjectEqual('self')), null));
+        $builder->buildCollectionOfInvalidFrom(
+            new From(new FromProject('@project', new FromProjectEqual('self')), null),
+            UserTestBuilder::buildWithDefaults(),
+        );
     }
 }

@@ -399,11 +399,12 @@ class crosstrackerPlugin extends Plugin
                 new ArtifactResultBuilder($artifact_factory),
             ),
         );
+        $event_manager           = EventManager::instance();
         $project_id_retriever    = new ProjectDashboardDao(new DashboardWidgetDao(
             new WidgetFactory(
                 $user_manager,
                 new User_ForgeUserGroupPermissionsManager(new User_ForgeUserGroupPermissionsDao()),
-                EventManager::instance(),
+                $event_manager,
             )
         ));
         $from_builder_visitor    = new FromBuilderVisitor(
@@ -412,6 +413,14 @@ class crosstrackerPlugin extends Plugin
         );
 
         $expert_query_dao               = new CrossTrackerExpertQueryReportDao();
+        $project_dashboard_dao          = new ProjectDashboardDao(new DashboardWidgetDao(
+            new WidgetFactory(
+                UserManager::instance(),
+                new User_ForgeUserGroupPermissionsManager(new User_ForgeUserGroupPermissionsDao()),
+                $event_manager,
+            )
+        ));
+        $project_manager                = ProjectManager::instance();
         $cross_tracker_artifact_factory = new CrossTrackerArtifactReportFactory(
             new CrossTrackerArtifactReportDao(),
             Tracker_ArtifactFactory::instance(),
@@ -430,13 +439,10 @@ class crosstrackerPlugin extends Plugin
                 $trackers_permissions,
                 $expert_query_dao,
                 TrackerFactory::instance(),
-                new WidgetInProjectChecker(new ProjectDashboardDao(new DashboardWidgetDao(
-                    new WidgetFactory(
-                        UserManager::instance(),
-                        new User_ForgeUserGroupPermissionsManager(new User_ForgeUserGroupPermissionsDao()),
-                        EventManager::instance(),
-                    )
-                ))),
+                new WidgetInProjectChecker($project_dashboard_dao),
+                $project_dashboard_dao,
+                $project_manager,
+                $event_manager,
             ),
         );
 
@@ -460,7 +466,7 @@ class crosstrackerPlugin extends Plugin
             $cross_tracker_artifact_factory,
             $representation_factory,
             $report_dao,
-            ProjectManager::instance(),
+            $project_manager,
             new CrossTrackerPermissionGate(
                 new URLVerification(),
                 $trackers_permissions_retriever,

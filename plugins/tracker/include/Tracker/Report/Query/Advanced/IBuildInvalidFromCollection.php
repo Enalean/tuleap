@@ -22,9 +22,10 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Report\Query\Advanced;
 
+use PFUser;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\From;
 
 interface IBuildInvalidFromCollection
 {
-    public function buildCollectionOfInvalidFrom(From $from): InvalidFromCollection;
+    public function buildCollectionOfInvalidFrom(From $from, PFUser $user): InvalidFromCollection;
 }
