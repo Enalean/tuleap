@@ -65,7 +65,7 @@ final class VisibleTeamSearcherTest extends TestCase
         return new VisibleTeamSearcher(
             $this->teams_searcher,
             RetrieveUserStub::withGenericUser(),
-            RetrieveFullProjectStub::withSuccessiveProjects(
+            RetrieveFullProjectStub::withProjects(
                 ProjectTestBuilder::aProject()->withId(self::FIRST_TEAM_ID)->build(),
                 ProjectTestBuilder::aProject()->withId(self::SECOND_TEAM_ID)->build(),
             ),

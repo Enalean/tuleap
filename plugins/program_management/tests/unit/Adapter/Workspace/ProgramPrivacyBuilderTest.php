@@ -41,12 +41,10 @@ final class ProgramPrivacyBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             ->withAccess(\Project::ACCESS_PUBLIC)
             ->build();
 
-        $retrieve_full_project = RetrieveFullProjectStub::withProject($project);
-
-        $builder = new ProgramPrivacyBuilder($retrieve_full_project);
+        $builder = new ProgramPrivacyBuilder(RetrieveFullProjectStub::withProject($project));
 
         $program_privacy = $builder->build(
-            ProgramIdentifierBuilder::build()
+            ProgramIdentifierBuilder::buildWithId(101)
         );
 
         self::assertEquals(

@@ -92,7 +92,7 @@ final class ProgramAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItSucceedWhenProgramIsAProjectAndUsesCache(): void
     {
         $this->project_access_checker->expects(self::once())->method('checkUserCanAccessProject');
-        $this->retrieve_full_project = RetrieveFullProjectStub::withSuccessiveProjects($this->project, $this->project);
+        $this->retrieve_full_project = RetrieveFullProjectStub::withProjects($this->project, $this->project);
 
         $adapter =  $this->getAdapter();
 

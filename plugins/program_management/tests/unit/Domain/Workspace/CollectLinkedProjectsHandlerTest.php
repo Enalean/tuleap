@@ -99,18 +99,16 @@ final class CollectLinkedProjectsHandlerTest extends TestCase
 
     private function buildEventForProgram(): CollectLinkedProjectsProxy
     {
-        $red_team              = ProjectTestBuilder::aProject()->build();
-        $blue_team             = ProjectTestBuilder::aProject()->build();
-        $retrieve_full_project = RetrieveFullProjectStub::withSuccessiveProjects($red_team, $blue_team);
-        $teams_searcher        = new TeamsSearcher(
+        $red_team       = ProjectTestBuilder::aProject()->withId(103)->build();
+        $blue_team      = ProjectTestBuilder::aProject()->withId(104)->build();
+        $teams_searcher = new TeamsSearcher(
             SearchTeamsOfProgramStub::withTeamIds(103, 104),
-            $retrieve_full_project
+            RetrieveFullProjectStub::withProjects($red_team, $blue_team)
         );
 
-        $retrieve_full_project = RetrieveFullProjectStub::withoutProject();
-        $programs_searcher     = new ProgramsSearcher(
+        $programs_searcher = new ProgramsSearcher(
             SearchProgramsOfTeamStub::withNoPrograms(),
-            $retrieve_full_project
+            RetrieveFullProjectStub::withoutProject()
         );
 
         return CollectLinkedProjectsProxy::fromCollectLinkedProjects(
@@ -123,20 +121,16 @@ final class CollectLinkedProjectsHandlerTest extends TestCase
 
     private function buildEventForTeam(): CollectLinkedProjectsProxy
     {
-        $red_program  = ProjectTestBuilder::aProject()->build();
-        $blue_program = ProjectTestBuilder::aProject()->build();
-
-        $retrieve_full_project = RetrieveFullProjectStub::withoutProject();
-        $teams_searcher        = new TeamsSearcher(
+        $red_program    = ProjectTestBuilder::aProject()->withId(110)->build();
+        $blue_program   = ProjectTestBuilder::aProject()->withId(111)->build();
+        $teams_searcher = new TeamsSearcher(
             SearchTeamsOfProgramStub::withNoTeams(),
-            $retrieve_full_project
+            RetrieveFullProjectStub::withoutProject()
         );
-
-        $retrieve_full_project = RetrieveFullProjectStub::withSuccessiveProjects($red_program, $blue_program);
 
         $programs_searcher = new ProgramsSearcher(
             SearchProgramsOfTeamStub::buildPrograms(110, 111),
-            $retrieve_full_project
+            RetrieveFullProjectStub::withProjects($red_program, $blue_program)
         );
 
         return CollectLinkedProjectsProxy::fromCollectLinkedProjects(

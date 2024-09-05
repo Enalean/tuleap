@@ -51,7 +51,7 @@ final class CanSubmitNewArtifactHandlerTest extends TestCase
         $iteration_creator_checker         = IterationCreatorCheckerBuilder::build();
         $program_builder                   = BuildProgramStub::stubValidProgram();
         $user                              = UserTestBuilder::aUser()->build();
-        $project                           = ProjectTestBuilder::aProject()->withId(101)->build();
+        $project                           = ProjectTestBuilder::aProject()->withId(104)->build();
         $tracker                           = TrackerTestBuilder::aTracker()->withId(98)
             ->withProject($project)
             ->build();

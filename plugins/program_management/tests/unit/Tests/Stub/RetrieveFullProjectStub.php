@@ -27,7 +27,8 @@ use Tuleap\ProgramManagement\Adapter\Workspace\RetrieveFullProject;
 
 final class RetrieveFullProjectStub implements RetrieveFullProject
 {
-    public function __construct(private array $project)
+    /** @param list<\Project> $projects */
+    public function __construct(private array $projects)
     {
     }
 
@@ -43,16 +44,18 @@ final class RetrieveFullProjectStub implements RetrieveFullProject
 
     public function getProject(int $project_id): \Project
     {
-        if (count($this->project) > 0) {
-            return array_shift($this->project);
+        foreach ($this->projects as $project) {
+            if ((int) $project->getID() === $project_id) {
+                return $project;
+            }
         }
-        throw new \LogicException('No project configured');
+        throw new \LogicException("No project with id #$project_id");
     }
 
     /**
      * @no-named-arguments
      */
-    public static function withSuccessiveProjects(\Project $first_project, \Project ...$other_projects): self
+    public static function withProjects(\Project $first_project, \Project ...$other_projects): self
     {
         return new self([$first_project, ...$other_projects]);
     }
