@@ -39,12 +39,10 @@ final class ProgramFlagsBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             new ProjectFlagPresenter('Flag 3', 'Description of Flag 3'),
         ]);
 
-        $retrieve_full_project = RetrieveFullProjectStub::withProject(ProjectTestBuilder::aProject()->build());
-
         $flags = (new ProgramFlagsBuilder(
             $external_flags_builder,
-            $retrieve_full_project
-        ))->build(ProgramIdentifierBuilder::build());
+            RetrieveFullProjectStub::withProject(ProjectTestBuilder::aProject()->withId(193)->build())
+        ))->build(ProgramIdentifierBuilder::buildWithId(193));
 
         self::assertCount(3, $flags);
         self::assertEquals(ProgramFlag::fromLabelAndDescription('Flag 1', 'Description of Flag 1'), $flags[0]);

@@ -47,7 +47,7 @@ final class CollectLinkedProjectsProxyTest extends TestCase
         $this->source_project = ProjectTestBuilder::aProject()->withId(101)->build();
         $linked_project       = ProjectTestBuilder::aProject()->withId(102)->build();
 
-        $retrieve_full_project = RetrieveFullProjectStub::withSuccessiveProjects($this->source_project, $linked_project);
+        $retrieve_full_project = RetrieveFullProjectStub::withProjects($this->source_project, $linked_project);
 
         $this->teams_searcher    = new TeamsSearcher(
             SearchTeamsOfProgramStub::withTeamIds((int) $linked_project->getID()),
@@ -99,9 +99,9 @@ final class CollectLinkedProjectsProxyTest extends TestCase
 
     private function setProgramContext(): void
     {
-        $red_team              = ProjectTestBuilder::aProject()->build();
-        $blue_team             = ProjectTestBuilder::aProject()->build();
-        $retrieve_full_project = RetrieveFullProjectStub::withSuccessiveProjects($red_team, $blue_team);
+        $red_team              = ProjectTestBuilder::aProject()->withId(103)->build();
+        $blue_team             = ProjectTestBuilder::aProject()->withId(104)->build();
+        $retrieve_full_project = RetrieveFullProjectStub::withProjects($red_team, $blue_team);
         $this->teams_searcher  = new TeamsSearcher(
             SearchTeamsOfProgramStub::withTeamIds(103, 104),
             $retrieve_full_project
@@ -110,9 +110,9 @@ final class CollectLinkedProjectsProxyTest extends TestCase
 
     private function setTeamContext(): void
     {
-        $red_program             = ProjectTestBuilder::aProject()->build();
-        $blue_program            = ProjectTestBuilder::aProject()->build();
-        $retrieve_full_project   = RetrieveFullProjectStub::withSuccessiveProjects($red_program, $blue_program);
+        $red_program             = ProjectTestBuilder::aProject()->withId(110)->build();
+        $blue_program            = ProjectTestBuilder::aProject()->withId(111)->build();
+        $retrieve_full_project   = RetrieveFullProjectStub::withProjects($red_program, $blue_program);
         $this->programs_searcher = new ProgramsSearcher(
             SearchProgramsOfTeamStub::buildPrograms(110, 111),
             $retrieve_full_project

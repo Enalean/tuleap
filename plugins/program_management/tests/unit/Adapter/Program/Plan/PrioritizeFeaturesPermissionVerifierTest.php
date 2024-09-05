@@ -52,7 +52,7 @@ final class PrioritizeFeaturesPermissionVerifierTest extends \Tuleap\Test\PHPUni
         $this->user_identifier              = UserIdentifierStub::buildGenericUser();
         $this->program_identifier           = ProgramIdentifierBuilder::buildWithId(102);
         $this->retrieve_full_project        = RetrieveFullProjectStub::withProject(
-            ProjectTestBuilder::aProject()->build()
+            ProjectTestBuilder::aProject()->withId(102)->build()
         );
         $this->verify_user_is_program_admin = VerifyUserIsProgramAdminStub::withNotAdmin();
     }

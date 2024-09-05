@@ -50,7 +50,7 @@ final class TeamsSearcherTest extends TestCase
         $team_red  = ProjectTestBuilder::aProject()->withId(102)->build();
         $team_blue = ProjectTestBuilder::aProject()->withId(103)->build();
 
-        $this->retrieve_full_project = RetrieveFullProjectStub::withSuccessiveProjects($team_red, $team_blue);
+        $this->retrieve_full_project = RetrieveFullProjectStub::withProjects($team_red, $team_blue);
 
         $program = ProjectTestBuilder::aProject()->withId(101)->build();
         $teams   = $this->getSearcher()->searchLinkedProjects($program);
