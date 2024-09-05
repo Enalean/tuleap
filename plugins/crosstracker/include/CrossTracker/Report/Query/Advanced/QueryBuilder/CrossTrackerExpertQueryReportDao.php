@@ -222,6 +222,7 @@ final class CrossTrackerExpertQueryReportDao extends DataAccessObject
         WHERE tracker.deletion_date IS NULL AND project.status = 'A'
             AND $where
         $sql_limit
+        GROUP BY tracker.id
         SQL;
 
         $parameters = [
