@@ -746,7 +746,7 @@ final class CrossTrackerReportsResource extends AuthenticatedResource
         );
     }
 
-    public function getReportTrackersRetriever(): ReportTrackersRetriever
+    private function getReportTrackersRetriever(): ReportTrackersRetriever
     {
         return new ReportTrackersRetriever(
             $this->getExpertQueryValidator(),
