@@ -18,13 +18,15 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\ProgramManagement\Adapter\Events;
 
 use ColinODell\PsrTestLogger\TestLogger;
 use Tuleap\Queue\WorkerEvent;
 use Tuleap\Queue\WorkerEventContent;
 
-class TeamSynchronizationEventProxyTest extends \Tuleap\Test\PHPUnit\TestCase
+final class TeamSynchronizationEventProxyTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private TestLogger $logger;
 

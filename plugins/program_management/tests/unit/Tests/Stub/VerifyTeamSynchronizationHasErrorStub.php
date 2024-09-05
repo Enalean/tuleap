@@ -19,30 +19,32 @@
  *
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\ProgramManagement\Tests\Stub;
 
-use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrement;
-use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\SearchMirrorTimeboxesFromProgram;
-use Tuleap\ProgramManagement\Domain\Workspace\ProjectIdentifier;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\TeamSynchronization\VerifyTeamSynchronizationHasError;
+use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
+use Tuleap\ProgramManagement\Domain\ProjectReference;
 
-final class SearchMirrorTimeboxesFromProgramStub implements SearchMirrorTimeboxesFromProgram
+final class VerifyTeamSynchronizationHasErrorStub implements VerifyTeamSynchronizationHasError
 {
-    private function __construct(private bool $has_missing_mirror)
+    private function __construct(private bool $has_error)
     {
     }
 
-    public static function buildWithMissingMirror(): self
+    public static function buildWithoutError(): self
     {
         return new self(false);
     }
 
-    public static function buildWithoutMissingMirror(): self
+    public static function buildWithError(): self
     {
         return new self(true);
     }
 
-    public function hasMirroredTimeboxesFromProgram(ProjectIdentifier $team, ProgramIncrement $program_increment): bool
+    public function hasASynchronizationError(ProgramIdentifier $program_identifier, ProjectReference $team_identifier): bool
     {
-        return $this->has_missing_mirror;
+        return $this->has_error;
     }
 }

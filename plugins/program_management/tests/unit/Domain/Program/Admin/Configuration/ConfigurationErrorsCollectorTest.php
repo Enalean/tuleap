@@ -21,10 +21,8 @@
 
 declare(strict_types=1);
 
+namespace Tuleap\ProgramManagement\Domain\Program\Admin\Configuration;
 
-namespace Tuleap\ProgramManagement\Adapter\Program\Admin\Configuration;
-
-use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ConfigurationErrorsCollector;
 use Tuleap\ProgramManagement\Tests\Stub\ProjectReferenceStub;
 use Tuleap\ProgramManagement\Tests\Stub\TrackerReferenceStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsTeamStub;

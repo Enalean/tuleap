@@ -21,11 +21,10 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Adapter\Redirections;
+namespace Tuleap\ProgramManagement\Adapter\Events;
 
 use Tracker_Artifact_Redirect;
 use Tuleap\GlobalResponseMock;
-use Tuleap\ProgramManagement\Adapter\Events\BuildRedirectFormActionEventProxy;
 use Tuleap\ProgramManagement\Domain\Redirections\IterationRedirectionParameters;
 use Tuleap\ProgramManagement\Domain\Redirections\ProgramRedirectionParameters;
 use Tuleap\ProgramManagement\Tests\Stub\IterationRedirectionParametersStub;

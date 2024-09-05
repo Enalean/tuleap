@@ -28,10 +28,16 @@ use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 
 final class SearchOpenFeaturesStub implements SearchOpenFeatures
 {
+    /**
+     * @param list<array{artifact_id: int, program_id: int, title: string}> $open_features
+     */
     private function __construct(private array $open_features, public array $program_identifiers)
     {
     }
 
+    /**
+     * @param list<array{artifact_id: int, program_id: int, title: string}> $open_features
+     */
     public static function withRows(array $open_features): self
     {
         return new self($open_features, []);

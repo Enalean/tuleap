@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\ProgramManagement\Domain\ArtifactLinks;
 
 use Tuleap\ProgramManagement\Tests\Stub\ArtifactIdentifierStub;
@@ -26,7 +28,7 @@ use Tuleap\ProgramManagement\Tests\Stub\SearchLinkedArtifactsStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsIterationStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsProgramIncrementStub;
 
-class ArtifactMoveConditionCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
+final class ArtifactMoveConditionCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const ARTIFACT_ID = 105;
 

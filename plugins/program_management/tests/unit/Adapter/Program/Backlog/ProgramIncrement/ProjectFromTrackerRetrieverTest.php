@@ -21,7 +21,6 @@
 
 declare(strict_types=1);
 
-
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement;
 
 use Tuleap\ProgramManagement\Domain\TrackerReference;

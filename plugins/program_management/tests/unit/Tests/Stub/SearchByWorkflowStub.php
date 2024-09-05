@@ -21,34 +21,35 @@
 
 declare(strict_types=1);
 
-
 namespace Tuleap\ProgramManagement\Tests\Stub;
 
-use Tuleap\ProgramManagement\Domain\Team\Creation\BuildTeam;
-use Tuleap\ProgramManagement\Domain\Team\TeamAccessException;
-use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\SearchByWorkflow;
+use Tuleap\ProgramManagement\Domain\Workspace\Tracker\Workflow\WorkflowIdentifier;
 
-final class BuildTeamStub implements BuildTeam
+final class SearchByWorkflowStub implements SearchByWorkflow
 {
-    private function __construct(private bool $is_team)
+    /**
+     * @param list<array{id: int, transition_id: int}> $transitions
+     */
+    private function __construct(private array $transitions)
     {
     }
 
-    public static function withValidTeam(): self
+    /**
+     * @param list<array{id: int, transition_id: int}> $transitions
+     */
+    public static function withTransitions(array $transitions): self
     {
-        return new self(true);
+        return new self($transitions);
     }
 
-    public function checkProjectIsATeam(int $team_id, UserIdentifier $user_identifier): void
+    public static function withoutTransitions(): self
     {
-        if (! $this->is_team) {
-            throw new TeamAccessException($team_id);
-        }
+        return new self([]);
     }
 
-    public function checkProjectIsATeamForRestTestInitialization(int $team_id): void
+    public function searchByWorkflowId(WorkflowIdentifier $workflow_identifier): array
     {
-        // should never be implemented
-        throw new \LogicException();
+        return $this->transitions;
     }
 }

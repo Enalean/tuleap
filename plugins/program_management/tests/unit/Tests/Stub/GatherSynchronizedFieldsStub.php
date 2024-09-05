@@ -84,19 +84,22 @@ final class GatherSynchronizedFieldsStub implements GatherSynchronizedFields
                 $artifact_links[] = $preparation->artifact_link;
             }
         }
-        $duration_stub   = ! empty($durations)
+        $duration_stub      = $durations !== []
             ? RetrieveEndPeriodFieldStub::withDurationFields(...$durations)
             : RetrieveEndPeriodFieldStub::withError();
-        $end_period_stub = ! empty($end_dates)
+        $end_period_stub    = $end_dates !== []
             ? RetrieveEndPeriodFieldStub::withEndDateFields(...$end_dates)
             : $duration_stub;
+        $artifact_link_stub = $artifact_links !== []
+            ? RetrieveArtifactLinkFieldStub::withFields(...$artifact_links)
+            : RetrieveArtifactLinkFieldStub::withError();
         return new self(
             RetrieveTitleFieldStub::withFields(...$titles),
             RetrieveDescriptionFieldStub::withFields(...$descriptions),
             RetrieveStatusFieldStub::withFields(...$statuses),
             RetrieveStartDateFieldStub::withFields(...$start_dates),
             $end_period_stub,
-            RetrieveArtifactLinkFieldStub::withFields(...$artifact_links)
+            $artifact_link_stub,
         );
     }
 
