@@ -170,4 +170,22 @@ final class FromProjectTest extends CrossTrackerFieldTestCase
         );
         $this->assertItContainsTrackers(['Tracker 1', 'Tracker 2'], $result);
     }
+
+    public function testProjectNameEqual(): void
+    {
+        $result = $this->getQueryResults(
+            new CrossTrackerExpertReport(1, 'SELECT @tracker.name FROM @project.name = "project_2" WHERE @id >= 1'),
+            $this->user_member,
+        );
+        $this->assertItContainsTrackers(['Tracker 2'], $result);
+    }
+
+    public function testProjectNameIn(): void
+    {
+        $result = $this->getQueryResults(
+            new CrossTrackerExpertReport(1, 'SELECT @tracker.name FROM @project.name IN("project_1", "project_2") WHERE @id >= 1'),
+            $this->user_member,
+        );
+        $this->assertItContainsTrackers(['Tracker 1', 'Tracker 2'], $result);
+    }
 }

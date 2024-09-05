@@ -49,7 +49,7 @@ final readonly class FromProjectBuilderVisitor implements FromProjectConditionVi
 
         return match ($from_project->getTarget()) {
             AllowedFrom::PROJECT          => $this->buildFromProjectEqual($project_equal, $parameters),
-            AllowedFrom::PROJECT_NAME     => throw new LogicException('Should not be called: @project.name is not yet implemented'),
+            AllowedFrom::PROJECT_NAME     => $this->buildFromProjectName([$project_equal->getValue()]),
             AllowedFrom::PROJECT_CATEGORY => $this->buildFromProjectCategoryEqual($project_equal->getValue()),
             default                       => throw new LogicException("Unknown FROM project: {$from_project->getTarget()}"),
         };
@@ -80,12 +80,25 @@ final readonly class FromProjectBuilderVisitor implements FromProjectConditionVi
         return new ParametrizedFromWhere($from, '', [$formatted_category], []);
     }
 
+    /**
+     * @param list<string> $names
+     */
+    private function buildFromProjectName(array $names): IProvideParametrizedFromAndWhereSQLFragments
+    {
+        return new ParametrizedFromWhere(
+            '',
+            EasyStatement::open()->in('project.unix_group_name IN (?*)', $names),
+            [],
+            $names,
+        );
+    }
+
     public function visitIn(FromProjectIn $project_in, $parameters): IProvideParametrizedFromAndWhereSQLFragments
     {
         $from_project = $parameters->from_project;
 
         return match ($from_project->getTarget()) {
-            AllowedFrom::PROJECT_NAME     => throw new LogicException('Should not be called: @project.name is not yet implemented'),
+            AllowedFrom::PROJECT_NAME     => $this->buildFromProjectName($project_in->getValues()),
             AllowedFrom::PROJECT          => throw new LogicException('Should not be called: already catched by the FROM query validation'),
             AllowedFrom::PROJECT_CATEGORY => $this->buildFromProjectCategoryIn($project_in->getValues()),
             default                       => throw new LogicException("Unknown FROM project: {$from_project->getTarget()}"),
