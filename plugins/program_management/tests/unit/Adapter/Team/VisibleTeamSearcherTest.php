@@ -36,6 +36,7 @@ use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsTeamOfProgramStub;
 use Tuleap\Project\CheckProjectAccess;
 use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\CheckProjectAccessStub;
 
@@ -45,6 +46,7 @@ final class VisibleTeamSearcherTest extends TestCase
 
     private const FIRST_TEAM_ID  = 184;
     private const SECOND_TEAM_ID = 101;
+    private const USER_ID        = 745;
     private SearchTeamsOfProgramStub $teams_searcher;
     private CheckProjectAccess $access_checker;
     private ProgramIdentifier $program;
@@ -56,7 +58,7 @@ final class VisibleTeamSearcherTest extends TestCase
         $this->teams_searcher            = SearchTeamsOfProgramStub::withTeamIds(self::FIRST_TEAM_ID, self::SECOND_TEAM_ID);
         $this->access_checker            = CheckProjectAccessStub::withValidAccess();
         $this->program                   = ProgramIdentifierBuilder::build();
-        $this->user                      = UserIdentifierStub::buildGenericUser();
+        $this->user                      = UserIdentifierStub::withId(self::USER_ID);
         $this->verify_is_team_of_program = VerifyIsTeamOfProgramStub::withTeamAggregatedByProgram();
     }
 
@@ -64,7 +66,7 @@ final class VisibleTeamSearcherTest extends TestCase
     {
         return new VisibleTeamSearcher(
             $this->teams_searcher,
-            RetrieveUserStub::withGenericUser(),
+            RetrieveUserStub::withUser(UserTestBuilder::buildWithId(self::USER_ID)),
             RetrieveFullProjectStub::withProjects(
                 ProjectTestBuilder::aProject()->withId(self::FIRST_TEAM_ID)->build(),
                 ProjectTestBuilder::aProject()->withId(self::SECOND_TEAM_ID)->build(),

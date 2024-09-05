@@ -23,18 +23,18 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Fields;
 
+use PHPUnit\Framework\MockObject\Stub;
 use Tracker_FormElementFactory;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\FieldNotFoundException;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveUserStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
+use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\Test\Builders\Fields\StringFieldBuilder;
 
 final class FieldPermissionsVerifierTest extends TestCase
 {
-    /**
-     * @var \PHPUnit\Framework\MockObject\Stub&Tracker_FormElementFactory
-     */
-    private $form_element_factory;
+    private Tracker_FormElementFactory & Stub $form_element_factory;
     private FieldPermissionsVerifier $permission_verifier;
     private UserIdentifierStub $user_identifier;
     private \Tracker_FormElement_Field_String $full_field;
@@ -42,25 +42,14 @@ final class FieldPermissionsVerifierTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->user_identifier      = UserIdentifierStub::buildGenericUser();
-        $user                       = $this->createMock(\PFUser::class);
-        $retrieve_user              = RetrieveUserStub::buildMockedSuperUser($user);
+        $this->user_identifier      = UserIdentifierStub::withId(110);
+        $retrieve_user              = RetrieveUserStub::withUser(
+            UserTestBuilder::aUser()->withSiteAdministrator()->withId(110)->build()
+        );
         $this->form_element_factory = $this->createStub(Tracker_FormElementFactory::class);
 
         $this->permission_verifier = new FieldPermissionsVerifier($retrieve_user, $this->form_element_factory);
-        $this->full_field          = new \Tracker_FormElement_Field_String(
-            1,
-            10,
-            1000,
-            'string',
-            'string',
-            'Irrelevant',
-            true,
-            'P',
-            true,
-            '',
-            2
-        );
+        $this->full_field          = StringFieldBuilder::aStringField(1)->build();
         $this->field               = TitleFieldReferenceProxy::fromTrackerField($this->full_field);
     }
 

@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog;
 
+use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Content\FeatureRemovalProcessor;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureHasPlannedUserStoryException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureNotFoundException;
@@ -44,20 +45,11 @@ use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 
 final class ProcessTopBacklogChangeTest extends \Tuleap\Test\PHPUnit\TestCase
 {
+    private const USER_ID = 101;
     private \PFUser $user;
-    private RetrieveUserStub $retrieve_user;
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&\Tracker_ArtifactFactory
-     */
-    private $artifact_factory;
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&TopBacklogStore
-     */
-    private $dao;
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&ArtifactLinkUpdater
-     */
-    private $artifact_link_updater;
+    private \Tracker_ArtifactFactory & MockObject $artifact_factory;
+    private TopBacklogStore & MockObject $dao;
+    private ArtifactLinkUpdater & MockObject $artifact_link_updater;
     private SearchProgramIncrementLinkedToFeature $program_increment_dao;
     private OrderFeatureRankStub $feature_orderer;
     private UserIdentifierStub $user_identifier;
@@ -72,9 +64,8 @@ final class ProcessTopBacklogChangeTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->artifact_link_updater    = $this->createMock(ArtifactLinkUpdater::class);
         $this->program_increment_dao    = SearchProgramIncrementLinkedToFeatureStub::withoutLink();
         $this->feature_orderer          = OrderFeatureRankStub::withCount();
-        $this->user                     = UserTestBuilder::buildWithDefaults();
-        $this->retrieve_user            = RetrieveUserStub::withUser($this->user);
-        $this->user_identifier          = UserIdentifierStub::withId(101);
+        $this->user                     = UserTestBuilder::buildWithId(self::USER_ID);
+        $this->user_identifier          = UserIdentifierStub::withId(self::USER_ID);
         $this->visible_feature_verifier = VerifyFeatureIsVisibleByProgramStub::withAlwaysVisibleFeatures();
         $this->story_verifier           = VerifyHasAtLeastOnePlannedUserStoryStub::withNothingPlanned();
 
@@ -93,7 +84,7 @@ final class ProcessTopBacklogChangeTest extends \Tuleap\Test\PHPUnit\TestCase
                 $this->program_increment_dao,
                 $this->artifact_factory,
                 $this->artifact_link_updater,
-                $this->retrieve_user
+                RetrieveUserStub::withUser($this->user),
             ),
         );
     }
@@ -143,10 +134,18 @@ final class ProcessTopBacklogChangeTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->program_increment_dao = SearchProgramIncrementLinkedToFeatureStub::with([['id' => 63]]);
         $program_increment           = ArtifactTestBuilder::anArtifact(63)->build();
-        $this->artifact_factory->expects(self::once())->method('getArtifactById')->with(63)->willReturn($program_increment);
+        $this->artifact_factory->expects(self::once())->method('getArtifactById')->with(63)->willReturn(
+            $program_increment
+        );
 
         $this->dao->expects(self::once())->method('addArtifactsToTheExplicitTopBacklog');
-        $this->artifact_link_updater->expects(self::once())->method('updateArtifactLinks')->with($this->user, $program_increment, [], [964], '');
+        $this->artifact_link_updater->expects(self::once())->method('updateArtifactLinks')->with(
+            $this->user,
+            $program_increment,
+            [],
+            [964],
+            ''
+        );
 
         $this->getProcessor()->processTopBacklogChangeForAProgram(
             ProgramIdentifierBuilder::buildWithId(102),

@@ -32,12 +32,15 @@ use Tuleap\ProgramManagement\Tests\Stub\ArtifactIdentifierStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveTimeboxFromMirroredTimeboxStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveUserStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class SourceArtifactNatureAnalyzerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const TIMEBOX_ID = 247;
+    private const USER_ID    = 144;
     private RetrieveTimeboxFromMirroredTimeboxStub $timebox_retriever;
     /**
      * @var Stub&\Tracker_ArtifactFactory
@@ -48,8 +51,8 @@ final class SourceArtifactNatureAnalyzerTest extends \Tuleap\Test\PHPUnit\TestCa
 
     protected function setUp(): void
     {
-        $this->user_identifier = UserIdentifierStub::buildGenericUser();
-        $this->project         = new \Project(['group_id' => 101, 'group_name' => 'A project', 'unix_group_name' => 'a_project', 'icon_codepoint' => '']);
+        $this->user_identifier = UserIdentifierStub::withId(self::USER_ID);
+        $this->project         = ProjectTestBuilder::aProject()->withId(101)->build();
 
         $this->timebox_retriever = RetrieveTimeboxFromMirroredTimeboxStub::withTimebox(self::TIMEBOX_ID);
         $this->artifact_factory  = $this->createStub(\Tracker_ArtifactFactory::class);
@@ -60,7 +63,7 @@ final class SourceArtifactNatureAnalyzerTest extends \Tuleap\Test\PHPUnit\TestCa
         return new SourceArtifactNatureAnalyzer(
             $this->timebox_retriever,
             $this->artifact_factory,
-            RetrieveUserStub::withGenericUser()
+            RetrieveUserStub::withUser(UserTestBuilder::buildWithId(self::USER_ID))
         );
     }
 

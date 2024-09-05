@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Content;
 
+use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Content\AddFeatureException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Content\FeatureAddition;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementNotFoundException;
@@ -34,6 +35,7 @@ use Tuleap\ProgramManagement\Tests\Stub\RetrieveUserStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyCanBePlannedInProgramIncrementStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyPrioritizeFeaturesPermissionStub;
+use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkUpdater;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
@@ -43,11 +45,9 @@ final class FeatureAdditionProcessorTest extends \Tuleap\Test\PHPUnit\TestCase
     private const PROGRAM_INCREMENT_ID = 37;
     private const FEATURE_ID           = 76;
     private const PROGRAM_ID           = 110;
+    private const USER_ID              = 123;
     private RetrieveFullArtifactStub $artifact_retriever;
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&ArtifactLinkUpdater
-     */
-    private $artifact_link_updater;
+    private ArtifactLinkUpdater & MockObject $artifact_link_updater;
     private Artifact $artifact;
 
     protected function setUp(): void
@@ -62,7 +62,7 @@ final class FeatureAdditionProcessorTest extends \Tuleap\Test\PHPUnit\TestCase
         return new FeatureAdditionProcessor(
             $this->artifact_retriever,
             $this->artifact_link_updater,
-            RetrieveUserStub::withGenericUser()
+            RetrieveUserStub::withUser(UserTestBuilder::buildWithId(self::USER_ID))
         );
     }
 
@@ -112,7 +112,7 @@ final class FeatureAdditionProcessorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     private function buildFeatureAddition(): FeatureAddition
     {
-        $user              = UserIdentifierStub::buildGenericUser();
+        $user              = UserIdentifierStub::withId(self::USER_ID);
         $program           = ProgramIdentifierBuilder::buildWithId(self::PROGRAM_ID);
         $program_increment = ProgramIncrementIdentifierBuilder::buildWithIdAndUser(self::PROGRAM_INCREMENT_ID, $user);
 

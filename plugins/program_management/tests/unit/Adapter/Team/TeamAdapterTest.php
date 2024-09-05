@@ -22,47 +22,44 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Team;
 
+use PHPUnit\Framework\MockObject\Stub;
 use Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao;
 use Tuleap\GlobalLanguageMock;
-use Tuleap\ProgramManagement\Adapter\Workspace\RetrieveFullProject;
-use Tuleap\ProgramManagement\Domain\Program\VerifyIsProgram;
 use Tuleap\ProgramManagement\Domain\Team\ProjectIsAProgramException;
 use Tuleap\ProgramManagement\Domain\Team\TeamAccessException;
 use Tuleap\ProgramManagement\Domain\Team\TeamMustHaveExplicitBacklogEnabledException;
-use Tuleap\ProgramManagement\Adapter\Workspace\RetrieveUser;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveFullProjectStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveUserStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsProgramStub;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
 
 final class TeamAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use GlobalLanguageMock;
 
     private const TEAM_ID = 202;
-    private VerifyIsProgram $program_verifier;
-    /**
-     * @var \PHPUnit\Framework\MockObject\Stub&ExplicitBacklogDao
-     */
-    private $explicit_backlog_dao;
-    private RetrieveFullProject $retrieve_full_project;
+    private const USER_ID = 192;
+    private VerifyIsProgramStub $program_verifier;
+    private ExplicitBacklogDao & Stub $explicit_backlog_dao;
+    private RetrieveUserStub $retrieve_user;
     private \Project $team_project;
-    private UserIdentifierStub $user_identifier;
-    /**
-     * @var \PFUser&\PHPUnit\Framework\MockObject\MockObject
-     */
-    private $user;
 
     protected function setUp(): void
     {
         $this->explicit_backlog_dao = $this->createStub(ExplicitBacklogDao::class);
-        $this->program_verifier     = VerifyIsProgramStub::withValidProgram();
-        $this->user                 = $this->createMock(\PFUser::class);
-        $this->user_identifier      = UserIdentifierStub::buildGenericUser();
+        $this->program_verifier     = VerifyIsProgramStub::withNotValidProgram();
 
-        $this->team_project          = new \Project(['group_id' => self::TEAM_ID, 'status' => 'A', 'access' => 'public', 'unix_group_name' => 'a_project', 'group_name' => 'A project', 'icon_codepoint' => '']);
-        $this->retrieve_full_project = RetrieveFullProjectStub::withProject($this->team_project);
+        $this->team_project = ProjectTestBuilder::aProject()->withId(self::TEAM_ID)->build();
 
+        $user = UserTestBuilder::aUser()
+            ->withId(self::USER_ID)
+            ->withoutSiteAdministrator()
+            ->withAdministratorOf($this->team_project)
+            ->build();
+
+        $this->retrieve_user    = RetrieveUserStub::withUser($user);
         $_SERVER['REQUEST_URI'] = '/';
         $GLOBALS['Language']->method('getText')->willReturn('');
     }
@@ -72,48 +69,51 @@ final class TeamAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
         unset($_SERVER['REQUEST_URI']);
     }
 
-    private function getAdapter(RetrieveUser $retrieve_user): TeamAdapter
+    private function check(): void
     {
-        return new TeamAdapter($this->retrieve_full_project, $this->program_verifier, $this->explicit_backlog_dao, $retrieve_user);
+        $adapter = new TeamAdapter(
+            RetrieveFullProjectStub::withProject($this->team_project),
+            $this->program_verifier,
+            $this->explicit_backlog_dao,
+            $this->retrieve_user
+        );
+        $adapter->checkProjectIsATeam(self::TEAM_ID, UserIdentifierStub::withId(self::USER_ID));
     }
 
     public function testItThrowsErrorWhenUserIsNotProjectAdmin(): void
     {
-        $this->user->method('isMember')->with(self::TEAM_ID)->willReturn(false);
-        $this->user->method('isAnonymous')->willReturn(false);
-        $this->user->method('isSuperUser')->willReturn(false);
-        $this->user->method('isRestricted')->willReturn(false);
+        $this->retrieve_user = RetrieveUserStub::withUser(
+            UserTestBuilder::aUser()
+                ->withId(self::USER_ID)
+                ->withoutSiteAdministrator()
+                ->withMemberOf($this->team_project)
+                ->build()
+        );
 
         $this->expectException(TeamAccessException::class);
-        $this->getAdapter(RetrieveUserStub::buildMockedRegularUser($this->user))
-            ->checkProjectIsATeam(self::TEAM_ID, $this->user_identifier);
+        $this->check();
     }
 
     public function testItThrowExceptionWhenTeamProjectIsAlreadyAProgram(): void
     {
+        $this->program_verifier = VerifyIsProgramStub::withValidProgram();
         $this->expectException(ProjectIsAProgramException::class);
-        $this->getAdapter(RetrieveUserStub::buildUserWhoCanAccessProjectAndIsProjectAdmin($this->user))
-            ->checkProjectIsATeam(self::TEAM_ID, $this->user_identifier);
+        $this->check();
     }
 
     public function testThrowsExceptionWhenTeamProjectDoesNotHaveTheExplicitBacklogModeEnabled(): void
     {
-        $this->program_verifier = VerifyIsProgramStub::withNotValidProgram();
         $this->explicit_backlog_dao->method('isProjectUsingExplicitBacklog')->willReturn(false);
 
         $this->expectException(TeamMustHaveExplicitBacklogEnabledException::class);
-        $this->getAdapter(RetrieveUserStub::buildUserWhoCanAccessProjectAndIsProjectAdmin($this->user))
-            ->checkProjectIsATeam(self::TEAM_ID, $this->user_identifier);
+        $this->check();
     }
 
     public function testItChecksAProjectCanBecomeATeam(): void
     {
-        $this->program_verifier = VerifyIsProgramStub::withNotValidProgram();
         $this->explicit_backlog_dao->method('isProjectUsingExplicitBacklog')->willReturn(true);
 
-        $this->getAdapter(RetrieveUserStub::buildUserWhoCanAccessProjectAndIsProjectAdmin($this->user))
-            ->checkProjectIsATeam(self::TEAM_ID, $this->user_identifier);
-
         $this->expectNotToPerformAssertions();
+        $this->check();
     }
 }

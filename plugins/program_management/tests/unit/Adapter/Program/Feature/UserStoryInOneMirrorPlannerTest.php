@@ -22,6 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Feature;
 
+use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use Psr\Log\NullLogger;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\Content\FeaturePlanChange;
 use Tuleap\ProgramManagement\Tests\Builder\MirroredProgramIncrementIdentifierBuilder;
@@ -31,6 +33,7 @@ use Tuleap\ProgramManagement\Tests\Stub\RetrieveUserStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchArtifactsLinksStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Test\Builders\Fields\ArtifactLinkFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
@@ -38,20 +41,11 @@ use Tuleap\Tracker\Test\Stub\CreateNewChangesetStub;
 
 final class UserStoryInOneMirrorPlannerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private RetrieveFullArtifactStub $retrieve_full_artifact;
-    private NullLogger $logger;
+    private const USER_ID = 666;
     private UserStoryInOneMirrorPlanner $planner;
     private CreateNewChangesetStub $create_new_changeset;
-
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&Artifact
-     */
-    private $artifact;
-
-    /**
-     * @var \PHPUnit\Framework\MockObject\Stub&\Tracker_FormElementFactory
-     */
-    private $form_element_factory;
+    private Artifact & MockObject $artifact;
+    private \Tracker_FormElementFactory & Stub $form_element_factory;
 
     protected function setUp(): void
     {
@@ -59,16 +53,14 @@ final class UserStoryInOneMirrorPlannerTest extends \Tuleap\Test\PHPUnit\TestCas
         $this->artifact->method('getTracker')->willReturn(TrackerTestBuilder::aTracker()->withProject(ProjectTestBuilder::aProject()->withId(1)->build())->build());
         $this->artifact->method('getId')->willReturn(1234);
 
-        $this->logger               = new NullLogger();
         $this->create_new_changeset = CreateNewChangesetStub::withNullReturnChangeset();
         $this->form_element_factory = $this->createStub(\Tracker_FormElementFactory::class);
 
-        $this->retrieve_full_artifact = RetrieveFullArtifactStub::withArtifact($this->artifact);
-        $this->planner                = new UserStoryInOneMirrorPlanner(
-            $this->retrieve_full_artifact,
-            $this->logger,
+        $this->planner = new UserStoryInOneMirrorPlanner(
+            RetrieveFullArtifactStub::withArtifact($this->artifact),
+            new NullLogger(),
             $this->create_new_changeset,
-            RetrieveUserStub::withGenericUser(),
+            RetrieveUserStub::withUser(UserTestBuilder::buildWithId(self::USER_ID)),
             $this->form_element_factory
         );
     }
@@ -83,9 +75,14 @@ final class UserStoryInOneMirrorPlannerTest extends \Tuleap\Test\PHPUnit\TestCas
             ArtifactLinkFieldBuilder::anArtifactLinkField(1)->build()
         );
 
-        $this->planner->planInOneMirror($program_identifier, $mirrored_program_increment, $feature_change, UserIdentifierStub::withId(666));
+        $this->planner->planInOneMirror(
+            $program_identifier,
+            $mirrored_program_increment,
+            $feature_change,
+            UserIdentifierStub::withId(self::USER_ID)
+        );
 
-        self::assertEquals(1, $this->create_new_changeset->getCallsCount());
+        self::assertSame(1, $this->create_new_changeset->getCallsCount());
     }
 
     public function testItDoesNothingWhenArtifactLinkIsNotFound(): void
@@ -97,8 +94,13 @@ final class UserStoryInOneMirrorPlannerTest extends \Tuleap\Test\PHPUnit\TestCas
         $this->form_element_factory->method('getAnArtifactLinkField')->willReturn(null);
 
         $this->artifact->expects(self::never())->method('createNewChangeset');
-        $this->planner->planInOneMirror($program_identifier, $mirrored_program_increment, $feature_change, UserIdentifierStub::withId(666));
+        $this->planner->planInOneMirror(
+            $program_identifier,
+            $mirrored_program_increment,
+            $feature_change,
+            UserIdentifierStub::withId(self::USER_ID)
+        );
 
-        self::assertEquals(0, $this->create_new_changeset->getCallsCount());
+        self::assertSame(0, $this->create_new_changeset->getCallsCount());
     }
 }

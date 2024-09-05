@@ -23,49 +23,44 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\Timebox;
 
-use Tuleap\ProgramManagement\Domain\Program\Backlog\TimeboxIdentifier;
+use PHPUnit\Framework\MockObject\Stub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveFullArtifactStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveUserStub;
 use Tuleap\ProgramManagement\Tests\Stub\TimeboxIdentifierStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
+use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\Artifact;
 
 final class UserCanUpdateTimeboxVerifierTest extends TestCase
 {
-    /**
-     * @var \PHPUnit\Framework\MockObject\Stub&Artifact
-     */
-    private $artifact;
-    private TimeboxIdentifier $artifact_identifier;
-    private UserIdentifierStub $user_identifier;
+    private Artifact & Stub $artifact;
 
     protected function setUp(): void
     {
-        $this->artifact            = $this->createStub(Artifact::class);
-        $this->artifact_identifier = TimeboxIdentifierStub::withId(1);
-        $this->user_identifier     = UserIdentifierStub::buildGenericUser();
+        $this->artifact = $this->createStub(Artifact::class);
     }
 
-    private function getVerifier(): UserCanUpdateTimeboxVerifier
+    private function verify(): bool
     {
-        return new UserCanUpdateTimeboxVerifier(
+        $verifier = new UserCanUpdateTimeboxVerifier(
             RetrieveFullArtifactStub::withArtifact($this->artifact),
-            RetrieveUserStub::withGenericUser()
+            RetrieveUserStub::withUser(UserTestBuilder::buildWithId(789))
         );
+        return $verifier->canUserUpdate(TimeboxIdentifierStub::withId(1), UserIdentifierStub::withId(789));
     }
 
     public function testItReturnsTrue(): void
     {
         $this->artifact->method('userCanUpdate')->willReturn(true);
 
-        self::assertTrue($this->getVerifier()->canUserUpdate($this->artifact_identifier, $this->user_identifier));
+        self::assertTrue($this->verify());
     }
 
     public function testItReturnsFalse(): void
     {
         $this->artifact->method('userCanUpdate')->willReturn(false);
 
-        self::assertFalse($this->getVerifier()->canUserUpdate($this->artifact_identifier, $this->user_identifier));
+        self::assertFalse($this->verify());
     }
 }

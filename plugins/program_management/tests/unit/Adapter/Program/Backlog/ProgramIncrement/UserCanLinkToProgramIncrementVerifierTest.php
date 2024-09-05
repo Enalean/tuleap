@@ -27,9 +27,11 @@ use Tuleap\ProgramManagement\Tests\Builder\ProgramIncrementTrackerIdentifierBuil
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveFullArtifactLinkFieldStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveUserStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
+use Tuleap\Test\Builders\UserTestBuilder;
 
 final class UserCanLinkToProgramIncrementVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
 {
+    private const USER_ID = 477;
     /**
      * @var \PHPUnit\Framework\MockObject\Stub&\Tracker_FormElement_Field_ArtifactLink
      */
@@ -43,13 +45,13 @@ final class UserCanLinkToProgramIncrementVerifierTest extends \Tuleap\Test\PHPUn
         $this->field                     = $this->createStub(\Tracker_FormElement_Field_ArtifactLink::class);
         $this->field_retriever           = RetrieveFullArtifactLinkFieldStub::withField($this->field);
         $this->program_increment_tracker = ProgramIncrementTrackerIdentifierBuilder::buildWithId(48);
-        $this->user                      = UserIdentifierStub::buildGenericUser();
+        $this->user                      = UserIdentifierStub::withId(self::USER_ID);
     }
 
     private function getVerifier(): UserCanLinkToProgramIncrementVerifier
     {
         return new UserCanLinkToProgramIncrementVerifier(
-            RetrieveUserStub::withGenericUser(),
+            RetrieveUserStub::withUser(UserTestBuilder::buildWithId(self::USER_ID)),
             $this->field_retriever
         );
     }

@@ -22,32 +22,43 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\ProgramIncrementTracker;
 
+use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker\RetrieveProgramIncrementTracker;
 use Tuleap\ProgramManagement\Domain\Program\Plan\ProgramHasNoProgramIncrementTrackerException;
-use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\ProgramTrackerNotFoundException;
-use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
+use Tuleap\ProgramManagement\Domain\TrackerReference;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIdentifierBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveProgramIncrementTrackerStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveUserStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
+use Tuleap\Test\Builders\UserTestBuilder;
 
 final class VisibleProgramIncrementTrackerRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&\TrackerFactory
-     */
-    private $tracker_factory;
-    private UserIdentifier $user;
-    private ProgramIdentifier $program;
+    private \TrackerFactory & MockObject $tracker_factory;
     private RetrieveProgramIncrementTracker $tracker_id_retriever;
 
     protected function setUp(): void
     {
         $this->tracker_factory      = $this->createMock(\TrackerFactory::class);
-        $this->user                 = UserIdentifierStub::buildGenericUser();
-        $this->program              = ProgramIdentifierBuilder::build();
         $this->tracker_id_retriever = RetrieveProgramIncrementTrackerStub::withValidTracker(1);
+    }
+
+    /**
+     * @throws ProgramTrackerNotFoundException
+     * @throws ProgramHasNoProgramIncrementTrackerException
+     */
+    private function retrieve(): TrackerReference
+    {
+        $retriever = new VisibleProgramIncrementTrackerRetriever(
+            $this->tracker_id_retriever,
+            $this->tracker_factory,
+            RetrieveUserStub::withUser(UserTestBuilder::buildWithId(995))
+        );
+        return $retriever->retrieveVisibleProgramIncrementTracker(
+            ProgramIdentifierBuilder::build(),
+            UserIdentifierStub::withId(995)
+        );
     }
 
     public function testItThrowsAnExceptionIfProgramIncrementTrackerIsNotFound(): void
@@ -55,7 +66,7 @@ final class VisibleProgramIncrementTrackerRetrieverTest extends \Tuleap\Test\PHP
         $this->tracker_factory->method('getTrackerById')->with(1)->willReturn(null);
 
         $this->expectException(ProgramTrackerNotFoundException::class);
-        $this->getRetriever()->retrieveVisibleProgramIncrementTracker($this->program, $this->user);
+        $this->retrieve();
     }
 
     public function testItThrowsIfGivenProjectIsNotAProgram(): void
@@ -63,7 +74,7 @@ final class VisibleProgramIncrementTrackerRetrieverTest extends \Tuleap\Test\PHP
         $this->tracker_id_retriever = RetrieveProgramIncrementTrackerStub::withNoProgramIncrementTracker();
 
         $this->expectException(ProgramHasNoProgramIncrementTrackerException::class);
-        $this->getRetriever()->retrieveVisibleProgramIncrementTracker($this->program, $this->user);
+        $this->retrieve();
     }
 
     public function testItThrowsAnExceptionIfUserCanNotSeeProgramIncrementTracker(): void
@@ -74,7 +85,7 @@ final class VisibleProgramIncrementTrackerRetrieverTest extends \Tuleap\Test\PHP
         $this->tracker_factory->method('getTrackerById')->with(1)->willReturn($tracker);
 
         $this->expectException(ProgramTrackerNotFoundException::class);
-        $this->getRetriever()->retrieveVisibleProgramIncrementTracker($this->program, $this->user);
+        $this->retrieve();
     }
 
     public function testItBuildProgramIncrementTracker(): void
@@ -87,14 +98,6 @@ final class VisibleProgramIncrementTrackerRetrieverTest extends \Tuleap\Test\PHP
         $tracker->method('getProject')->willReturn(new \Project(['group_id' => 101, 'group_name' => 'A project']));
         $this->tracker_factory->method('getTrackerById')->with(1)->willReturn($tracker);
 
-        self::assertEquals(
-            $tracker->getId(),
-            $this->getRetriever()->retrieveVisibleProgramIncrementTracker($this->program, $this->user)->getId()
-        );
-    }
-
-    private function getRetriever(): VisibleProgramIncrementTrackerRetriever
-    {
-        return new VisibleProgramIncrementTrackerRetriever($this->tracker_id_retriever, $this->tracker_factory, RetrieveUserStub::withGenericUser());
+        self::assertEquals($tracker->getId(), $this->retrieve()->getId());
     }
 }

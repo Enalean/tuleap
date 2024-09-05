@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program;
 
+use PHPUnit\Framework\MockObject\Stub;
 use Tuleap\AgileDashboard\Test\Builders\PlanningBuilder;
 use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ConfigurationErrorsCollector;
 use Tuleap\ProgramManagement\Domain\Program\PlanningConfiguration\TopPlanningNotFoundInProjectException;
@@ -31,6 +32,7 @@ use Tuleap\ProgramManagement\Tests\Stub\RetrieveUserStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsTeamStub;
 use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class PlanningAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -38,18 +40,15 @@ final class PlanningAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
     private const PROJECT_ID           = 101;
     private const MILESTONE_TRACKER_ID = 40;
     private PlanningAdapter $adapter;
-    /**
-     * @var \PHPUnit\Framework\MockObject\Stub&\PlanningFactory
-     */
-    private $planning_factory;
+    private \PlanningFactory & Stub $planning_factory;
     private UserIdentifierStub $user_identifier;
     private ConfigurationErrorsCollector $error_collector;
 
     protected function setUp(): void
     {
         $this->planning_factory = $this->createStub(\PlanningFactory::class);
-        $this->adapter          = new PlanningAdapter($this->planning_factory, RetrieveUserStub::withGenericUser());
-        $this->user_identifier  = UserIdentifierStub::buildGenericUser();
+        $this->adapter          = new PlanningAdapter($this->planning_factory, RetrieveUserStub::withUser(UserTestBuilder::buildWithId(143)));
+        $this->user_identifier  = UserIdentifierStub::withId(143);
         $this->error_collector  = new ConfigurationErrorsCollector(VerifyIsTeamStub::withValidTeam(), false);
     }
 
@@ -105,7 +104,7 @@ final class PlanningAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
             self::MILESTONE_TRACKER_ID,
             $this->adapter->retrieveRootPlanningMilestoneTracker(
                 $wrapper_project,
-                UserIdentifierStub::buildGenericUser(),
+                $this->user_identifier,
                 $this->error_collector
             )?->getId()
         );
@@ -119,7 +118,7 @@ final class PlanningAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->adapter->retrieveRootPlanningMilestoneTracker(
             $wrapper_project,
-            UserIdentifierStub::buildGenericUser(),
+            $this->user_identifier,
             $this->error_collector
         );
 
@@ -133,7 +132,7 @@ final class PlanningAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
         $wrapper_project = ProjectReferenceStub::buildGeneric();
         $this->adapter->retrieveSecondPlanningMilestoneTracker(
             $wrapper_project,
-            UserIdentifierStub::buildGenericUser(),
+            $this->user_identifier,
             $this->error_collector
         );
 
@@ -156,7 +155,7 @@ final class PlanningAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
         $wrapper_project = ProjectReferenceStub::withValues(self::PROJECT_ID, 'Team Blue', 'team_blue', '');
         $this->adapter->retrieveSecondPlanningMilestoneTracker(
             $wrapper_project,
-            UserIdentifierStub::buildGenericUser(),
+            $this->user_identifier,
             $this->error_collector
         );
 
@@ -184,7 +183,7 @@ final class PlanningAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->expectException(PlanningHasNoMilestoneTrackerException::class);
         $this->adapter->retrieveSecondPlanningMilestoneTracker(
             $wrapper_project,
-            UserIdentifierStub::buildGenericUser(),
+            $this->user_identifier,
             $this->error_collector
         );
     }
@@ -209,7 +208,7 @@ final class PlanningAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
             $second_milestone_tracker_id,
             $this->adapter->retrieveSecondPlanningMilestoneTracker(
                 $wrapper_project,
-                UserIdentifierStub::buildGenericUser(),
+                $this->user_identifier,
                 $this->error_collector
             )?->getId()
         );

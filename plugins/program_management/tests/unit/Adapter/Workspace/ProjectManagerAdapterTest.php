@@ -24,6 +24,7 @@ namespace Tuleap\ProgramManagement\Adapter\Workspace;
 
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveUserStub;
 use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
 final class ProjectManagerAdapterTest extends TestCase
@@ -37,7 +38,7 @@ final class ProjectManagerAdapterTest extends TestCase
             ->with(101)
             ->willReturn($project);
 
-        $adapter = new ProjectManagerAdapter($project_manager, RetrieveUserStub::withGenericUser());
+        $adapter = new ProjectManagerAdapter($project_manager, RetrieveUserStub::withUser(UserTestBuilder::buildWithDefaults()));
         self::assertSame((int) $project->getID(), $adapter->getProjectWithId(101)->getId());
     }
 }

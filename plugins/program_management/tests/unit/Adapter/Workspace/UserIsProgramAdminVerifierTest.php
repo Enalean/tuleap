@@ -25,13 +25,21 @@ namespace Tuleap\ProgramManagement\Adapter\Workspace;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIdentifierBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveUserStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
 
 final class UserIsProgramAdminVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItReturnsTrueWhenUserIsProgramAdmin(): void
     {
+        $project = ProjectTestBuilder::aProject()->withId(101)->build();
+
         $privileges_retriever = new UserIsProgramAdminVerifier(
-            RetrieveUserStub::buildMockedAdminUser($this->createMock(\PFUser::class))
+            RetrieveUserStub::withUser(UserTestBuilder::aUser()
+                ->withId(666)
+                ->withoutSiteAdministrator()
+                ->withAdministratorOf($project)
+                ->build())
         );
 
         self::assertTrue(
@@ -44,8 +52,14 @@ final class UserIsProgramAdminVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItReturnsFalseWhenUserIsNotProgramAdmin(): void
     {
+        $project = ProjectTestBuilder::aProject()->withId(101)->build();
+
         $privileges_retriever = new UserIsProgramAdminVerifier(
-            RetrieveUserStub::buildMockedRegularUser($this->createMock(\PFUser::class))
+            RetrieveUserStub::withUser(UserTestBuilder::aUser()
+                ->withId(666)
+                ->withoutSiteAdministrator()
+                ->withMemberOf($project)
+                ->build())
         );
 
         self::assertFalse(

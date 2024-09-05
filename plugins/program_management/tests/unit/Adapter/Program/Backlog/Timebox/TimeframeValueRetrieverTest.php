@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\Timebox;
 
+use PHPUnit\Framework\MockObject\Stub;
 use Psr\Log\NullLogger;
 use Tuleap\Date\DatePeriodWithOpenDays;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TimeboxIdentifier;
@@ -31,6 +32,7 @@ use Tuleap\ProgramManagement\Tests\Stub\RetrieveFullArtifactStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveUserStub;
 use Tuleap\ProgramManagement\Tests\Stub\TimeboxIdentifierStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
+use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframe;
@@ -42,11 +44,9 @@ use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class TimeframeValueRetrieverTest extends TestCase
 {
+    private const USER_ID = 154;
     private Artifact $artifact;
-    /**
-     * @var \PHPUnit\Framework\MockObject\Stub&SemanticTimeframeBuilder
-     */
-    private $semantic_timeframe_builder;
+    private SemanticTimeframeBuilder & Stub $semantic_timeframe_builder;
     private TimeboxIdentifier $artifact_identifier;
     private UserIdentifier $user_identifier;
 
@@ -62,14 +62,14 @@ final class TimeframeValueRetrieverTest extends TestCase
             ->build();
 
         $this->artifact_identifier = TimeboxIdentifierStub::withId(1);
-        $this->user_identifier     = UserIdentifierStub::buildGenericUser();
+        $this->user_identifier     = UserIdentifierStub::withId(self::USER_ID);
     }
 
     private function getRetriever(): TimeframeValueRetriever
     {
         return new TimeframeValueRetriever(
             RetrieveFullArtifactStub::withArtifact($this->artifact),
-            RetrieveUserStub::withGenericUser(),
+            RetrieveUserStub::withUser(UserTestBuilder::buildWithId(self::USER_ID)),
             $this->semantic_timeframe_builder,
             new NullLogger()
         );
