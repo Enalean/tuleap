@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\CrossTracker\Report\Query\Advanced;
 
+use PFUser;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\VisitorParameters;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFromCollection;
 
@@ -31,6 +32,7 @@ final class InvalidFromCollectionParameters implements VisitorParameters
         public InvalidFromCollection $collection,
         public int $report_id,
         public bool $is_condition_alone,
+        public PFUser $user,
     ) {
     }
 }

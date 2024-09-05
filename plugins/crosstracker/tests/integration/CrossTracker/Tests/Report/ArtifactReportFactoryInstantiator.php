@@ -25,6 +25,7 @@ namespace Tuleap\CrossTracker\Tests\Report;
 use BaseLanguageFactory;
 use Codendi_HTMLPurifier;
 use EventManager;
+use ProjectManager;
 use Tracker_ArtifactFactory;
 use Tracker_FormElementFactory;
 use Tracker_Semantic_ContributorDao;
@@ -323,7 +324,14 @@ final class ArtifactReportFactoryInstantiator
             new FromProjectBuilderVisitor($project_id_retriever),
         );
 
-        $expert_query_dao = new CrossTrackerExpertQueryReportDao();
+        $expert_query_dao      = new CrossTrackerExpertQueryReportDao();
+        $project_dashboard_dao = new ProjectDashboardDao(new DashboardWidgetDao(
+            new WidgetFactory(
+                UserManager::instance(),
+                new User_ForgeUserGroupPermissionsManager(new User_ForgeUserGroupPermissionsDao()),
+                EventManager::instance(),
+            )
+        ));
         return new CrossTrackerArtifactReportFactory(
             new CrossTrackerArtifactReportDao(),
             $artifact_factory,
@@ -342,13 +350,10 @@ final class ArtifactReportFactoryInstantiator
                 $trackers_permissions,
                 $expert_query_dao,
                 TrackerFactory::instance(),
-                new WidgetInProjectChecker(new ProjectDashboardDao(new DashboardWidgetDao(
-                    new WidgetFactory(
-                        UserManager::instance(),
-                        new User_ForgeUserGroupPermissionsManager(new User_ForgeUserGroupPermissionsDao()),
-                        EventManager::instance(),
-                    )
-                ))),
+                new WidgetInProjectChecker($project_dashboard_dao),
+                $project_dashboard_dao,
+                ProjectManager::instance(),
+                EventManager::instance(),
             ),
         );
     }
