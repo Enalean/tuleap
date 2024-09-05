@@ -46,16 +46,25 @@ const props = defineProps<{
     writing_cross_tracker_report: WritingCrossTrackerReport;
 }>();
 
+export type SwitchModeEvent = { readonly is_expert_mode: boolean };
+
+const emit = defineEmits<{
+    (e: "switch-to-query-mode", is_expert_mode: SwitchModeEvent): void;
+}>();
+
 const report_id = strictInject(REPORT_ID);
 
 const { $gettext } = useGettext();
 
 const switch_to_expert_id = computed((): string => {
-    return "toggle" + report_id;
+    return "toggle-" + report_id;
 });
 
 function switchMode(): void {
     props.writing_cross_tracker_report.toggleExpertMode();
+    emit("switch-to-query-mode", {
+        is_expert_mode: props.writing_cross_tracker_report.expert_mode,
+    });
 }
 </script>
 

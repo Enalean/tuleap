@@ -19,8 +19,11 @@
 
 <template>
     <div class="writing-mode">
-        <switch-mode-input v-bind:writing_cross_tracker_report="writing_cross_tracker_report" />
-        <div>
+        <switch-mode-input
+            v-bind:writing_cross_tracker_report="writing_cross_tracker_report"
+            v-on:switch-to-query-mode="handleSwitchModeEvent"
+        />
+        <div v-if="!is_in_expert_mode">
             <tracker-selection
                 v-bind:selected_trackers="selected_trackers"
                 v-on:tracker-added="addTrackerToSelection"
@@ -66,6 +69,7 @@ import TrackerListWritingMode from "./TrackerListWritingMode.vue";
 import type WritingCrossTrackerReport from "./writing-cross-tracker-report";
 import type { TrackerToUpdate } from "../type";
 import { CLEAR_FEEDBACKS, NOTIFY_FAULT } from "../injection-symbols";
+import type { SwitchModeEvent } from "../components/SwitchModeInput.vue";
 import SwitchModeInput from "../components/SwitchModeInput.vue";
 
 export type SaveEvent = { readonly saved_state: boolean };
@@ -81,6 +85,8 @@ const emit = defineEmits<{
 }>();
 
 const selected_trackers = ref<ReadonlyArray<TrackerToUpdate>>([]);
+
+const is_in_expert_mode = ref<boolean>(false);
 
 function cancel(): void {
     emit("switch-to-reading-mode", { saved_state: true });
@@ -104,6 +110,7 @@ function updateSelectedTrackers(): void {
 
 onMounted(() => {
     updateSelectedTrackers();
+    is_in_expert_mode.value = props.writing_cross_tracker_report.expert_mode;
 });
 
 function addTrackerToSelection(payload: AddTrackerToSelectionCommand): void {
@@ -116,6 +123,10 @@ function removeTrackerFromSelection(tracker: TrackerToUpdate): void {
     props.writing_cross_tracker_report.removeTracker(tracker.tracker_id);
     updateSelectedTrackers();
     clearFeedbacks();
+}
+
+function handleSwitchModeEvent(event: SwitchModeEvent): void {
+    is_in_expert_mode.value = event.is_expert_mode;
 }
 
 defineExpose({
