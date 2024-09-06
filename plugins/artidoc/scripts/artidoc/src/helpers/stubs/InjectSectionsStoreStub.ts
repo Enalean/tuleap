@@ -23,9 +23,14 @@ import type { ArtidocSection } from "@/helpers/artidoc-section.type";
 import type { Tracker } from "@/stores/configuration-store";
 import { injectInternalId } from "@/helpers/inject-internal-id";
 import { extractArtifactSectionsFromArtidocSections } from "@/helpers/extract-artifact-sections-from-artidoc-sections";
+import type { ResultAsync } from "neverthrow";
+import { okAsync } from "neverthrow";
+import type { Fault } from "@tuleap/fault";
 
 const noop = (): void => {};
 const promised_noop = (): Promise<void> => Promise.resolve();
+
+const resultasync_noop = (): ResultAsync<boolean, Fault> => okAsync(true);
 
 export const InjectedSectionsStoreStub = {
     withLoadedSections: (sections: readonly ArtidocSection[]): SectionsStore => ({
@@ -33,7 +38,7 @@ export const InjectedSectionsStoreStub = {
         getSectionPositionForSave: () => null,
         insertPendingArtifactSectionForEmptyDocument: noop,
         insertSection: noop,
-        removeSection: noop,
+        removeSection: resultasync_noop,
         loadSections: promised_noop,
         updateSection: noop,
         is_sections_loading: ref(false),
@@ -45,7 +50,7 @@ export const InjectedSectionsStoreStub = {
         getSectionPositionForSave: () => null,
         insertPendingArtifactSectionForEmptyDocument: noop,
         insertSection: noop,
-        removeSection: noop,
+        removeSection: resultasync_noop,
         loadSections: promised_noop,
         updateSection: noop,
         is_sections_loading: ref(true),
@@ -57,7 +62,7 @@ export const InjectedSectionsStoreStub = {
         getSectionPositionForSave: () => null,
         insertPendingArtifactSectionForEmptyDocument: noop,
         insertSection: noop,
-        removeSection: noop,
+        removeSection: resultasync_noop,
         loadSections: promised_noop,
         updateSection: noop,
         is_sections_loading: ref(false),
@@ -69,7 +74,7 @@ export const InjectedSectionsStoreStub = {
         getSectionPositionForSave: () => null,
         insertPendingArtifactSectionForEmptyDocument: noop,
         insertSection: noop,
-        removeSection: noop,
+        removeSection: resultasync_noop,
         loadSections,
         updateSection: noop,
         is_sections_loading: ref(false),

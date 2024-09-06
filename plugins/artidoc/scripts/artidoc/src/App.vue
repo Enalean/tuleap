@@ -23,10 +23,11 @@
     <div class="artidoc-container">
         <document-view class="artidoc-app-container" />
     </div>
+    <global-error-message-modal v-if="has_error_message" v-bind:error="error_message" />
 </template>
 
 <script setup lang="ts">
-import { onMounted } from "vue";
+import { computed, onMounted, provide, ref } from "vue";
 import DocumentView from "@/views/DocumentView.vue";
 import DocumentHeader from "@/components/DocumentHeader.vue";
 import useScrollToAnchor from "@/composables/useScrollToAnchor";
@@ -35,6 +36,9 @@ import { strictInject } from "@tuleap/vue-strict-inject";
 import { CAN_USER_EDIT_DOCUMENT } from "@/can-user-edit-document-injection-key";
 import { DOCUMENT_ID } from "@/document-id-injection-key";
 import { SECTIONS_STORE } from "@/stores/sections-store-injection-key";
+import GlobalErrorMessageModal from "@/components/GlobalErrorMessageModal.vue";
+import type { GlobalErrorMessage } from "@/global-error-message-injection-key";
+import { SET_GLOBAL_ERROR_MESSAGE } from "@/global-error-message-injection-key";
 
 const item_id = strictInject(DOCUMENT_ID);
 const store = strictInject(SECTIONS_STORE);
@@ -43,6 +47,14 @@ const configuration = strictInject(CONFIGURATION_STORE);
 const can_user_edit_document = strictInject(CAN_USER_EDIT_DOCUMENT);
 
 const { scrollToAnchor } = useScrollToAnchor();
+
+const error_message = ref<GlobalErrorMessage | null>(null);
+const has_error_message = computed(() => error_message.value !== null);
+
+provide(
+    SET_GLOBAL_ERROR_MESSAGE,
+    (message: GlobalErrorMessage | null) => (error_message.value = message),
+);
 
 onMounted(() => {
     store

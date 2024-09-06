@@ -222,7 +222,7 @@ final class ArtidocTest extends DocmanTestExecutionHelper
         $response = $this->getResponse($this->request_factory->createRequest('OPTIONS', 'artidoc_sections/' . $uuid));
 
         self::assertSame(200, $response->getStatusCode());
-        self::assertSame(['OPTIONS', 'GET'], explode(', ', $response->getHeaderLine('Allow')));
+        self::assertSame(['OPTIONS', 'GET', 'DELETE'], explode(', ', $response->getHeaderLine('Allow')));
     }
 
     /**
@@ -360,6 +360,52 @@ final class ArtidocTest extends DocmanTestExecutionHelper
             $section_4_art_id,
             $section_3_art_id,
         );
+    }
+
+    /**
+     * @depends testGetRootId
+     */
+    public function testDeleteSection(int $root_id): void
+    {
+        $artidoc_id       = $this->createArtidoc($root_id, 'Test Add New Section ' . $this->now)['id'];
+        $section_1_art_id = $this->createRequirementArtifact('Section 1', 'Content of section 1');
+        $section_2_art_id = $this->createRequirementArtifact('Section 2', 'Content of section 2');
+        $section_3_art_id = $this->createRequirementArtifact('Section 3', 'Content of section 3');
+
+        $this->setSectionsForArtidoc($artidoc_id, $section_1_art_id, $section_2_art_id, $section_3_art_id);
+
+        $this->assertSectionsMatchArtifactIdsForDocument(
+            $artidoc_id,
+            $section_1_art_id,
+            $section_2_art_id,
+            $section_3_art_id,
+        );
+
+        $uuid = $this->getSectionUuid($artidoc_id, $section_2_art_id);
+
+        $delete_response = $this->getResponse(
+            $this->request_factory->createRequest('DELETE', 'artidoc_sections/' . $uuid),
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME
+        );
+        self::assertSame(204, $delete_response->getStatusCode());
+
+        $this->assertSectionsMatchArtifactIdsForDocument(
+            $artidoc_id,
+            $section_1_art_id,
+            $section_3_art_id,
+        );
+    }
+
+    private function getSectionUuid(int $artidoc_id, int $section_artifact_id): string
+    {
+        $document_content = $this->getArtidocSections($artidoc_id);
+        foreach ($document_content as $section) {
+            if ($section['artifact']['id'] === $section_artifact_id) {
+                return $section['id'];
+            }
+        }
+
+        throw new \Exception('Unable to find section for art #' . $section_artifact_id . ' in ' . $artidoc_id);
     }
 
     private function assertSectionsMatchArtifactIdsForDocument(int $artidoc_id, int ...$artifact_ids): void

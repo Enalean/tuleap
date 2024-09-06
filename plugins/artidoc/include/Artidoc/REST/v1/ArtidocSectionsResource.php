@@ -53,7 +53,7 @@ final class ArtidocSectionsResource extends AuthenticatedResource
      */
     public function options(string $id): void
     {
-        Header::allowOptionsGet();
+        Header::allowOptionsGetDelete();
     }
 
     /**
@@ -88,6 +88,59 @@ final class ArtidocSectionsResource extends AuthenticatedResource
                     throw new RestException(404);
                 },
             );
+    }
+
+    /**
+     * Delete section
+     *
+     * Delete the section of a document
+     *
+     * @url    DELETE {id}
+     * @access hybrid
+     *
+     * @param string $id Uuid of the section
+     *
+     * @status 204
+     * @throws RestException 404
+     */
+    public function delete(string $id): void
+    {
+        $this->checkAccess();
+
+        try {
+            $section_id = $this->getSectionIdentifierFactory()->buildFromHexadecimalString($id);
+        } catch (InvalidSectionIdentifierStringException) {
+            throw new RestException(404);
+        }
+
+        $this->getDeleteHandler()
+            ->handle($section_id, UserManager::instance()->getCurrentUser())
+            ->match(
+                function () {
+                },
+                function (Fault $fault) {
+                    Fault::writeToLogger($fault, RESTLogger::getLogger());
+                    throw new RestException(404);
+                },
+            );
+    }
+
+    private function getDeleteHandler(): DeleteSectionHandler
+    {
+        $plugin = \PluginManager::instance()->getEnabledPluginByName('artidoc');
+        if (! $plugin) {
+            throw new RestException(404);
+        }
+
+        $dao       = new ArtidocDao($this->getSectionIdentifierFactory());
+        $retriever = new ArtidocRetriever(
+            \ProjectManager::instance(),
+            $dao,
+            new Docman_ItemFactory(),
+            new DocumentServiceFromAllowedProjectRetriever($plugin),
+        );
+
+        return new DeleteSectionHandler($dao, $retriever, $dao);
     }
 
     private function getBuilder(): ArtidocSectionRepresentationBuilder
