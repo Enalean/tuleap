@@ -72,7 +72,6 @@ import { useAttachmentFile } from "@/composables/useAttachmentFile";
 import { ref } from "vue";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import { SECTIONS_STORE } from "@/stores/sections-store-injection-key";
-import type { UseUploadFileType } from "@/composables/useUploadFile";
 import { useUploadFile } from "@/composables/useUploadFile";
 import { SET_GLOBAL_ERROR_MESSAGE } from "@/global-error-message-injection-key";
 import { useGettext } from "vue3-gettext";
@@ -89,7 +88,7 @@ const {
     setWaitingListAttachments,
 } = useAttachmentFile(ref(props.section.attachments ? props.section.attachments.field_id : 0));
 
-const upload_file: UseUploadFileType = useUploadFile(upload_url, addAttachmentToWaitingList);
+const upload_file = useUploadFile(props.section.id, upload_url, addAttachmentToWaitingList);
 
 const { $gettext } = useGettext();
 

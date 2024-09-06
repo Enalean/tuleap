@@ -19,7 +19,6 @@
 
 import { ref } from "vue";
 import type { UseUploadFileType } from "@/composables/useUploadFile";
-import type { OnGoingUploadFile } from "@tuleap/prose-mirror-editor";
 
 const noop = (): void => {};
 
@@ -28,13 +27,12 @@ export const UploadFileStub = {
         file_upload_options: {
             upload_url: "upload_url",
             max_size_upload: 123,
-            upload_files: new Map(),
             onErrorCallback: noop,
+            onStartUploadCallback: () => [],
             onSuccessCallback: noop,
             onProgressCallback: noop,
         },
         error_message: ref(""),
-        progress: ref(0),
         is_in_progress: ref(false),
         resetProgressCallback: noop,
     }),
@@ -43,21 +41,12 @@ export const UploadFileStub = {
         file_upload_options: {
             upload_url: "https://upload_url",
             max_size_upload: 12345678,
-            upload_files: new Map<number, OnGoingUploadFile>([
-                [
-                    1,
-                    {
-                        file_name: "file_1.jpg",
-                        progress: 45,
-                    },
-                ],
-            ]),
+            onStartUploadCallback: () => [],
             onErrorCallback: noop,
             onSuccessCallback: noop,
             onProgressCallback: noop,
         },
         error_message: ref(""),
-        progress: ref(45),
         is_in_progress: ref(true),
         resetProgressCallback: noop,
     }),

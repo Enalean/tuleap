@@ -31,10 +31,10 @@ export type OnGoingUploadFile = {
 export type FileUploadOptions = {
     upload_url: string;
     max_size_upload: number;
-    upload_files: Map<number, OnGoingUploadFile>;
     onErrorCallback: (
         error: UploadError | MaxSizeUploadExceededError | InvalidFileUploadError,
     ) => void;
     onSuccessCallback: (id: number, download_href: string) => void;
-    onProgressCallback: (global_progress: number) => void;
+    onProgressCallback: (file_name: string, global_progress: number) => void;
+    onStartUploadCallback: (file_name: string) => OnGoingUploadFile[];
 };

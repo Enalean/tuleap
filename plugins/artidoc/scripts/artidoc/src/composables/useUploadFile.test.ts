@@ -23,23 +23,40 @@ import { mockStrictInject } from "@/helpers/mock-strict-inject";
 import { UPLOAD_MAX_SIZE } from "@/max-upload-size-injecion-keys";
 import { UploadError } from "@tuleap/prose-mirror-editor";
 import type { GetText } from "@tuleap/gettext";
+import { UPLOAD_FILE_STORE } from "@/stores/upload-file-store-injection-key";
+import { UploadFileStoreStub } from "@/helpers/stubs/UploadFileStoreStub";
+import type { OnGoingUploadFileWithId, UploadFileStoreType } from "@/stores/useUploadFileStore";
 
 const gettext_provider = {
     gettext: (msgid: string) => msgid,
 } as unknown as GetText;
 
+function getCurrentSectionUploads(
+    section_id: string,
+    store_data: OnGoingUploadFileWithId[],
+): OnGoingUploadFileWithId[] {
+    return store_data.filter((upload) => upload.section_id === section_id);
+}
 describe("useUploadFile", () => {
+    let mocked_upload_data: UploadFileStoreType;
+    const section_id: string =
+        UploadFileStoreStub.uploadInProgress().pending_uploads.value[0].section_id;
     beforeEach(() => {
-        mockStrictInject([[UPLOAD_MAX_SIZE, 222]]);
+        mocked_upload_data = UploadFileStoreStub.uploadInProgress();
+        mockStrictInject([
+            [UPLOAD_MAX_SIZE, 222],
+            [UPLOAD_FILE_STORE, mocked_upload_data],
+        ]);
     });
 
     describe("file_upload_options", () => {
         it("should be initialized properly", () => {
-            const { file_upload_options } = useUploadFile("upload_url", vi.fn());
+            const { file_upload_options } = useUploadFile(section_id, "upload_url", vi.fn());
 
             expect(file_upload_options.upload_url).toBe("upload_url");
             expect(file_upload_options.max_size_upload).toBe(222);
             expect(file_upload_options.onErrorCallback).toBeDefined();
+            expect(file_upload_options.onStartUploadCallback).toBeDefined();
             expect(file_upload_options.onSuccessCallback).toBeDefined();
             expect(file_upload_options.onProgressCallback).toBeDefined();
         });
@@ -47,7 +64,11 @@ describe("useUploadFile", () => {
 
     describe("error_message", () => {
         it("should return the upload error message", () => {
-            const { file_upload_options, error_message } = useUploadFile("upload_url", vi.fn());
+            const { file_upload_options, error_message } = useUploadFile(
+                section_id,
+                "upload_url",
+                vi.fn(),
+            );
 
             file_upload_options.onErrorCallback(new UploadError(gettext_provider));
 
@@ -55,28 +76,115 @@ describe("useUploadFile", () => {
         });
     });
 
-    describe("upload_progress", () => {
-        describe("while the upload is in progress", () => {
-            it("update progress", () => {
-                const { file_upload_options, progress } = useUploadFile("upload_url", vi.fn());
+    describe("is_in_progress", () => {
+        describe("when a section upload is in store pending uploads list", () => {
+            it("should be true", () => {
+                const { is_in_progress } = useUploadFile(section_id, "upload_url", vi.fn());
 
-                file_upload_options.onProgressCallback(88);
-
-                expect(progress.value).toBe(88);
+                expect(
+                    getCurrentSectionUploads(section_id, mocked_upload_data.pending_uploads.value)
+                        .length,
+                ).toBeGreaterThan(0);
+                expect(is_in_progress.value).toBe(true);
             });
         });
-        describe("resetProgressCallback", () => {
-            it("should reset progress", () => {
-                const { resetProgressCallback, progress, is_in_progress, file_upload_options } =
-                    useUploadFile("upload_url", vi.fn());
+        describe("when there is no section upload in pending upload store list", () => {
+            it("should be false", () => {
+                mockStrictInject([
+                    [UPLOAD_MAX_SIZE, 222],
+                    [UPLOAD_FILE_STORE, UploadFileStoreStub.uploadNotInProgress()],
+                ]);
+                const { is_in_progress } = useUploadFile(section_id, "upload_url", vi.fn());
 
-                file_upload_options.onProgressCallback(88);
-                expect(progress.value).toBe(88);
-                expect(is_in_progress.value).toBe(true);
-
-                resetProgressCallback();
                 expect(is_in_progress.value).toBe(false);
-                expect(progress.value).toBe(0);
+            });
+        });
+    });
+
+    describe("resetProgressCallback", () => {
+        it("should reset progress", () => {
+            const cancelSectionUploadsMock = vi.fn();
+            mockStrictInject([
+                [UPLOAD_MAX_SIZE, 222],
+                [
+                    UPLOAD_FILE_STORE,
+                    { ...mocked_upload_data, cancelSectionUploads: cancelSectionUploadsMock },
+                ],
+            ]);
+            const { resetProgressCallback } = useUploadFile(section_id, "upload_url", vi.fn());
+
+            resetProgressCallback();
+
+            expect(cancelSectionUploadsMock).toHaveBeenCalledOnce();
+        });
+    });
+
+    describe("onStartUploadCallback", () => {
+        it("should add the current upload to the store pending uploads", () => {
+            const addPendingUploadMock = vi.fn();
+            mockStrictInject([
+                [UPLOAD_MAX_SIZE, 222],
+                [
+                    UPLOAD_FILE_STORE,
+                    { ...mocked_upload_data, addPendingUpload: addPendingUploadMock },
+                ],
+            ]);
+            const { file_upload_options } = useUploadFile(section_id, "upload_url", vi.fn());
+
+            file_upload_options.onStartUploadCallback("file_name");
+
+            expect(addPendingUploadMock).toHaveBeenCalledWith("file_name", section_id);
+        });
+    });
+
+    describe("onSuccessCallback", () => {
+        it("should add the current upload to the store pending uploads", () => {
+            const add_attachment_to_waiting_list_mock = vi.fn();
+            const { file_upload_options } = useUploadFile(
+                section_id,
+                "upload_url",
+                add_attachment_to_waiting_list_mock,
+            );
+
+            file_upload_options.onSuccessCallback(123, "download_href");
+            expect(add_attachment_to_waiting_list_mock).toHaveBeenCalledWith({
+                id: 123,
+                upload_url: "download_href",
+            });
+        });
+    });
+
+    describe("onProgressCallback", () => {
+        it("should actualized progress of upload", () => {
+            const { file_upload_options } = useUploadFile(section_id, "upload_url", vi.fn());
+
+            const current_uploads_section = getCurrentSectionUploads(
+                section_id,
+                mocked_upload_data.pending_uploads.value,
+            );
+
+            const new_progress = current_uploads_section[0].progress + 12;
+            file_upload_options.onProgressCallback(
+                current_uploads_section[0].file_name,
+                new_progress,
+            );
+
+            const new_current_uploads_section = getCurrentSectionUploads(
+                section_id,
+                mocked_upload_data.pending_uploads.value,
+            );
+
+            expect(new_current_uploads_section[0].progress).toBe(new_progress);
+        });
+        describe("if the file is not found in upload list", () => {
+            it("should not actualize upload list state", () => {
+                const { file_upload_options } = useUploadFile(section_id, "upload_url", vi.fn());
+
+                const save_upload_files = [...mocked_upload_data.pending_uploads.value];
+
+                file_upload_options.onProgressCallback("unknown file name", 12);
+
+                expect(mocked_upload_data.pending_uploads.value).toEqual(save_upload_files);
             });
         });
     });

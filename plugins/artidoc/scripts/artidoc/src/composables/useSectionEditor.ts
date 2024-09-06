@@ -34,6 +34,7 @@ import type { AttachmentFile } from "@/composables/useAttachmentFile";
 import { SECTIONS_STORE } from "@/stores/sections-store-injection-key";
 import { EDITORS_COLLECTION } from "@/composables/useSectionEditorsCollection";
 import { EDITOR_CHOICE } from "@/helpers/editor-choice";
+import { UPLOAD_FILE_STORE } from "@/stores/upload-file-store-injection-key";
 import type { Fault } from "@tuleap/fault";
 
 export type SectionEditorActions = {
@@ -157,8 +158,12 @@ export function useSectionEditor(
         editor_errors_handler.resetErrorStates();
     }
 
+    const { cancelSectionUploads } = strictInject(UPLOAD_FILE_STORE);
     function cancelEditor(tracker: Tracker | null): void {
         closeEditor();
+        if (is_prose_mirror) {
+            cancelSectionUploads(current_section.value.id);
+        }
         if (!is_prose_mirror.value && isPendingArtifactSection(current_section.value)) {
             editors_collection.removeEditor(current_section.value);
             removeSection(current_section.value, tracker);

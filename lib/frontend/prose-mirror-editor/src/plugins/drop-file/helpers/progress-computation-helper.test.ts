@@ -19,18 +19,18 @@
 
 import { describe, expect, it } from "vitest";
 import { computedProgress } from "./progress-computation-helper";
-import type { OnGoingUploadFile } from "../types";
 
 describe("computedProgress", () => {
     it("should computed progress of upload for files", () => {
-        const files: Map<number, OnGoingUploadFile> = new Map();
-        files.set(1, { file_name: "aa", progress: 0 });
-        files.set(2, { file_name: "bb", progress: 0 });
+        const files = [
+            { file_name: "aa", progress: 0 },
+            { file_name: "bb", progress: 0 },
+        ];
 
         let progress = 0;
-        progress = computedProgress(files, 1, 10, 100);
+        progress = computedProgress(files, "aa", 10, 100);
         expect(progress).toBe(5);
-        progress = computedProgress(files, 2, 20, 40);
+        progress = computedProgress(files, "bb", 20, 40);
         expect(progress).toBe(30);
     });
 });

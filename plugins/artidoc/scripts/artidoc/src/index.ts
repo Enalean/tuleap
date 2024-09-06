@@ -44,6 +44,8 @@ import {
 import { PDF_TEMPLATES_STORE, initPdfTemplatesStore } from "@/stores/pdf-templates-store";
 import { IS_USER_ANONYMOUS } from "@/is-user-anonymous";
 import { EDITOR_CHOICE, editorChoice } from "@/helpers/editor-choice";
+import { useUploadFileStore } from "@/stores/useUploadFileStore";
+import { UPLOAD_FILE_STORE } from "./stores/upload-file-store-injection-key";
 
 document.addEventListener("DOMContentLoaded", async () => {
     const vue_mount_point = document.getElementById("artidoc-mountpoint");
@@ -65,9 +67,11 @@ document.addEventListener("DOMContentLoaded", async () => {
     const app = createApp(App);
 
     const sections_store = useSectionsStore();
+    const upload_file_store = useUploadFileStore();
     const editors_collection = useSectionEditorsCollection();
     app.provide(EDITORS_COLLECTION, editors_collection);
     app.provide(SECTIONS_STORE, sections_store);
+    app.provide(UPLOAD_FILE_STORE, upload_file_store);
     app.provide(CURRENT_LOCALE, current_locale);
     app.provide(
         CAN_USER_EDIT_DOCUMENT,
