@@ -158,6 +158,29 @@ final class InvalidFromCollectionBuilderTest extends TestCase
         self::assertEquals("You cannot use @project = 'aggregated' in a project without service program enabled", $result[0]);
     }
 
+    public function testItReturnsErrorWhenProjectAggregatedInsideTeamProject(): void
+    {
+        $this->project_from_widget = IRetrieveProjectFromWidgetStub::buildWithProjectId(101);
+        $project                   = ProjectTestBuilder::aProject()->withId(101)->build();
+        $this->project_factory     = ProjectByIDFactoryStub::buildWith($project);
+        $user                      = UserTestBuilder::buildWithDefaults();
+        $new_event                 = new CollectLinkedProjects($project, $user);
+        $collection                = LinkedProjectsCollection::fromSourceProject(
+            SearchLinkedProjectsStub::withValidProjects($project),
+            CheckProjectAccessStub::withValidAccess(),
+            $project,
+            $user,
+        );
+        $new_event->addParentProjects($collection);
+        $this->event_dispatcher = EventDispatcherStub::withCallback(static fn(object $event) => match ($event::class) {
+            CollectLinkedProjects::class => $new_event,
+            default                      => $event,
+        });
+        $result                 = $this->getInvalidFrom(new From(new FromProject('@project', new FromProjectEqual('aggregated')), null));
+        self::assertCount(1, $result);
+        self::assertEquals("You can use @project = 'aggregated' only in a program project", $result[0]);
+    }
+
     public function testItReturnsEmptyWhenProjectAggregatedInsideProgramProject(): void
     {
         $this->project_from_widget = IRetrieveProjectFromWidgetStub::buildWithProjectId(101);

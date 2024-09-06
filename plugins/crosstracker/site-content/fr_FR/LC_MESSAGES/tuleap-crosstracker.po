@@ -196,8 +196,8 @@ msgstr "La valeur pour 'offset' est incorrecte. 'offset' doit être un entier"
 msgid "No tracker found"
 msgstr "Aucun outils de suivi trouvé"
 
-msgid "Only @project = 'self' is supported"
-msgstr "Seulement @project = 'self' est supporté"
+msgid "Only @project = 'self' and @project = 'aggregated' are supported"
+msgstr "Seulement @project = 'self' et @project = 'aggregated' sont supportés"
 
 msgid "Project not found"
 msgstr "Le projet n'a pas été trouvé"
@@ -228,6 +228,10 @@ msgstr ""
 #, php-format
 msgid "The maximum value for 'limit' is %d"
 msgstr "La valeur maximum pour 'limit' est %d"
+
+msgid "You can use @project = 'aggregated' only in a program project"
+msgstr ""
+"Vous ne pouvez utiliser @project = 'aggregated' que dans un projet programme"
 
 msgid "You cannot access all projects of the search"
 msgstr "Vous ne pouvez pas accéder à tous les projets de cette recherche"
