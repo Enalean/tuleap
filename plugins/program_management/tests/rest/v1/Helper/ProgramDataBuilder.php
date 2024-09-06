@@ -68,13 +68,12 @@ final class ProgramDataBuilder extends REST_TestDataBuilder
     {
         echo 'Setup Program Management REST Tests configuration' . PHP_EOL;
 
-        $user_manager                 = UserManager::instance();
-        $user_adapter                 = new UserManagerAdapter($user_manager);
-        $this->artifact_factory       = Tracker_ArtifactFactory::instance();
-        $team_dao                     = new TeamDao();
-        $program_dao                  = new ProgramDaoProject();
-        $this->program_increment_DAO  = new ProgramIncrementsDAO();
-        $project_permissions_verifier = new ProjectPermissionVerifier(RetrieveUserStub::withGenericUser());
+        $user_manager                = UserManager::instance();
+        $user_adapter                = new UserManagerAdapter($user_manager);
+        $this->artifact_factory      = Tracker_ArtifactFactory::instance();
+        $team_dao                    = new TeamDao();
+        $program_dao                 = new ProgramDaoProject();
+        $this->program_increment_DAO = new ProgramIncrementsDAO();
 
         $team_builder = new TeamAdapter(
             new ProjectManagerAdapter($this->project_manager, $user_adapter),
@@ -95,7 +94,7 @@ final class ProgramDataBuilder extends REST_TestDataBuilder
 
         $program = ProgramForAdministrationIdentifier::fromProject(
             $team_dao,
-            $project_permissions_verifier,
+            new ProjectPermissionVerifier(RetrieveUserStub::withUser($this->user)),
             UserProxy::buildFromPFUser($this->user),
             ProjectProxy::buildFromProject($program_project)
         );

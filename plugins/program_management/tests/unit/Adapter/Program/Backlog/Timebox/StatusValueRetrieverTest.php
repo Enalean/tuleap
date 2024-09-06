@@ -31,11 +31,13 @@ use Tuleap\ProgramManagement\Tests\Stub\RetrieveFullArtifactStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveUserStub;
 use Tuleap\ProgramManagement\Tests\Stub\TimeboxIdentifierStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
+use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\Artifact;
 
 final class StatusValueRetrieverTest extends TestCase
 {
+    private const USER_ID = 599;
     /**
      * @var \PHPUnit\Framework\MockObject\Stub&Artifact
      */
@@ -61,12 +63,15 @@ final class StatusValueRetrieverTest extends TestCase
         $this->artifact->method('getTracker')->willReturn($this->tracker);
 
         $this->artifact_identifier = TimeboxIdentifierStub::withId(1);
-        $this->user_identifier     = UserIdentifierStub::buildGenericUser();
+        $this->user_identifier     = UserIdentifierStub::withId(self::USER_ID);
     }
 
     private function getRetriever(): StatusValueRetriever
     {
-        return new StatusValueRetriever(RetrieveFullArtifactStub::withArtifact($this->artifact), RetrieveUserStub::withGenericUser());
+        return new StatusValueRetriever(
+            RetrieveFullArtifactStub::withArtifact($this->artifact),
+            RetrieveUserStub::withUser(UserTestBuilder::buildWithId(self::USER_ID))
+        );
     }
 
     public function testItReturnsNullWhenStatusFieldIsNotFound(): void

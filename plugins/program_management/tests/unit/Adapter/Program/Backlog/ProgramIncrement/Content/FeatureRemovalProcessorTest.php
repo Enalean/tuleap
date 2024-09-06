@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Content;
 
+use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Content\FeatureRemoval;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Content\RemoveFeatureException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker\SearchProgramIncrementLinkedToFeature;
@@ -39,21 +40,39 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkUpdater;
 
 final class FeatureRemovalProcessorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
+    private const USER_ID = 635;
     private SearchProgramIncrementLinkedToFeature $program_increments_dao;
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&\Tracker_ArtifactFactory
-     */
-    private $artifact_factory;
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&ArtifactLinkUpdater
-     */
-    private $artifact_link_updater;
+    private \Tracker_ArtifactFactory & MockObject $artifact_factory;
+    private ArtifactLinkUpdater & MockObject $artifact_link_updater;
 
     protected function setUp(): void
     {
         $this->program_increments_dao = SearchProgramIncrementLinkedToFeatureStub::withoutLink();
         $this->artifact_factory       = $this->createMock(\Tracker_ArtifactFactory::class);
         $this->artifact_link_updater  = $this->createMock(ArtifactLinkUpdater::class);
+    }
+
+    private function buildFeatureRemoval(): FeatureRemoval
+    {
+        $user_identifier = UserIdentifierStub::withId(self::USER_ID);
+        $program         = ProgramIdentifierBuilder::buildWithId(110);
+        $feature         = FeatureIdentifierBuilder::build(76, 110);
+
+        return FeatureRemoval::fromFeature(
+            VerifyHasAtLeastOnePlannedUserStoryStub::withNothingPlanned(),
+            $feature,
+            UserCanPrioritize::fromUser(VerifyPrioritizeFeaturesPermissionStub::canPrioritize(), $user_identifier, $program, null)
+        );
+    }
+
+    protected function getProcessor(): FeatureRemovalProcessor
+    {
+        return new FeatureRemovalProcessor(
+            $this->program_increments_dao,
+            $this->artifact_factory,
+            $this->artifact_link_updater,
+            RetrieveUserStub::withUser(UserTestBuilder::aUser()->withId(self::USER_ID)->build())
+        );
     }
 
     public function testWhenThereAreNoProgramIncrementsLinkingTheFeatureItDoesNothing(): void
@@ -135,28 +154,5 @@ final class FeatureRemovalProcessorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->artifact_link_updater->expects(self::exactly(2))->method('updateArtifactLinks');
 
         $this->getProcessor()->removeFromAllProgramIncrements($feature_removal);
-    }
-
-    private function buildFeatureRemoval(): FeatureRemoval
-    {
-        $user_identifier = UserIdentifierStub::buildGenericUser();
-        $program         = ProgramIdentifierBuilder::buildWithId(110);
-        $feature         = FeatureIdentifierBuilder::build(76, 110);
-
-        return FeatureRemoval::fromFeature(
-            VerifyHasAtLeastOnePlannedUserStoryStub::withNothingPlanned(),
-            $feature,
-            UserCanPrioritize::fromUser(VerifyPrioritizeFeaturesPermissionStub::canPrioritize(), $user_identifier, $program, null)
-        );
-    }
-
-    protected function getProcessor(): FeatureRemovalProcessor
-    {
-        return new FeatureRemovalProcessor(
-            $this->program_increments_dao,
-            $this->artifact_factory,
-            $this->artifact_link_updater,
-            RetrieveUserStub::withUser(UserTestBuilder::aUser()->build())
-        );
     }
 }

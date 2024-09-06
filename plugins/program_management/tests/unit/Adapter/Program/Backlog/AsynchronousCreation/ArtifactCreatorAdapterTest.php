@@ -39,6 +39,7 @@ use Tuleap\ProgramManagement\Tests\Stub\RetrieveUserStub;
 use Tuleap\ProgramManagement\Tests\Stub\SynchronizedFieldsStubPreparation;
 use Tuleap\ProgramManagement\Tests\Stub\TrackerIdentifierStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
+use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\ChangesetValue\InitialChangesetValuesContainer;
 use Tuleap\Tracker\Artifact\Creation\TrackerArtifactCreator;
@@ -66,10 +67,7 @@ final class ArtifactCreatorAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
     private const END_DATE_VALUE              = 1604665266; // 2020-11-06T13:21:06+01:00
     private const ARTIFACT_LINK_ID            = 842;
 
-    /**
-     * @var MockObject&TrackerArtifactCreator
-     */
-    private $creator;
+    private TrackerArtifactCreator & MockObject $creator;
     private MirroredTimeboxFirstChangeset $changeset;
 
     protected function setUp(): void
@@ -112,7 +110,7 @@ final class ArtifactCreatorAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
             RetrieveFullTrackerStub::withTracker(
                 TrackerTestBuilder::aTracker()->build()
             ),
-            RetrieveUserStub::withGenericUser(),
+            RetrieveUserStub::withUser(UserTestBuilder::buildWithId(self::USER_ID)),
             new ChangesetValuesFormatter(
                 new ArtifactLinkValueFormatter(),
                 new DescriptionValueFormatter(),
