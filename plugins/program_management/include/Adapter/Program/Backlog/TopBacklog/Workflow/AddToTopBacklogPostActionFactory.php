@@ -26,17 +26,14 @@ use Tracker_FormElement_Field;
 use Transition;
 use Transition_PostAction;
 use Transition_PostActionSubFactory;
-use Tuleap\ProgramManagement\Adapter\Permissions\WorkflowUserPermissionBypass;
 use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\Workflow\WorkflowProxy;
-use Tuleap\ProgramManagement\Adapter\Workspace\UserProxy;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\CreatePostAction;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\ProgramIdentifierForTopBacklogAction;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\SearchByTransitionId;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\SearchByWorkflow;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\TopBacklogChangeProcessor;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\VerifyProgramServiceIsEnabled;
 use Tuleap\ProgramManagement\Domain\Program\Plan\BuildProgram;
-use Tuleap\ProgramManagement\Domain\Program\Plan\ProgramAccessException;
-use Tuleap\ProgramManagement\Domain\Program\Plan\ProjectIsNotAProgramException;
-use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Workflow;
 
 final class AddToTopBacklogPostActionFactory implements Transition_PostActionSubFactory
@@ -47,11 +44,12 @@ final class AddToTopBacklogPostActionFactory implements Transition_PostActionSub
     private array $cache = [];
 
     public function __construct(
-        private SearchByTransitionId $add_to_top_backlog_post_action_dao,
-        private BuildProgram $build_program,
-        private TopBacklogChangeProcessor $top_backlog_change_processor,
-        private SearchByWorkflow $search_by_workflow,
-        private CreatePostAction $create_post_action,
+        private readonly SearchByTransitionId $add_to_top_backlog_post_action_dao,
+        private readonly BuildProgram $build_program,
+        private readonly VerifyProgramServiceIsEnabled $program_verifier,
+        private readonly TopBacklogChangeProcessor $top_backlog_change_processor,
+        private readonly SearchByWorkflow $search_by_workflow,
+        private readonly CreatePostAction $create_post_action,
     ) {
     }
 
@@ -90,16 +88,15 @@ final class AddToTopBacklogPostActionFactory implements Transition_PostActionSub
             return [];
         }
 
-        $project_id      = (int) $transition->getGroupId();
-        $user_identifier = UserProxy::buildFromPFUser(new AddToBacklogPostActionAllPowerfulUser());
-        try {
-            ProgramIdentifier::fromId($this->build_program, $project_id, $user_identifier, new WorkflowUserPermissionBypass());
-        } catch (ProgramAccessException | ProjectIsNotAProgramException $e) {
-            return [];
-        }
-
-        $row = $this->add_to_top_backlog_post_action_dao->searchByTransitionId((int) $transition->getId());
-        if ($row !== null) {
+        $project_id = (int) $transition->getGroupId();
+        return ProgramIdentifierForTopBacklogAction::fromProjectId(
+            $this->program_verifier,
+            $project_id
+        )->mapOr(function () use ($transition) {
+            $row = $this->add_to_top_backlog_post_action_dao->searchByTransitionId((int) $transition->getId());
+            if ($row === null) {
+                return [];
+            }
             return [
                 new AddToTopBacklogPostAction(
                     $transition,
@@ -108,9 +105,7 @@ final class AddToTopBacklogPostActionFactory implements Transition_PostActionSub
                     $this->top_backlog_change_processor
                 ),
             ];
-        }
-
-        return [];
+        }, []);
     }
 
     public function saveObject(Transition_PostAction $post_action): void

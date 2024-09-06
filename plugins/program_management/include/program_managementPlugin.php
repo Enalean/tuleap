@@ -96,6 +96,7 @@ use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\MassChangeTopBac
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\MassChangeTopBacklogSourceInformation;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\PlannedFeatureDAO;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\ProcessTopBacklogChange;
+use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\ProgramServiceIsEnabledVerifier;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\Workflow\AddToTopBacklogPostAction;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\Workflow\AddToTopBacklogPostActionDAO;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\Workflow\AddToTopBacklogPostActionFactory;
@@ -1248,6 +1249,9 @@ final class program_managementPlugin extends Plugin implements PluginWithService
         return new AddToTopBacklogPostActionFactory(
             $dao,
             $this->getProgramAdapter(),
+            new ProgramServiceIsEnabledVerifier(
+                new ProjectManagerAdapter(ProjectManager::instance(), new UserManagerAdapter(UserManager::instance())),
+            ),
             $this->getTopBacklogChangeProcessor(),
             $dao,
             $dao,
