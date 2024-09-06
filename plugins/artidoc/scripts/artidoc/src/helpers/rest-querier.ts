@@ -24,7 +24,7 @@ import TurndownService from "turndown";
 import type { ArtidocSection } from "@/helpers/artidoc-section.type";
 import { isCommonmark, isTitleAString } from "@/helpers/artidoc-section.type";
 import type { Tracker } from "@/stores/configuration-store";
-import type { PositionForSave } from "@/stores/useSectionsStore";
+import type { CrossReference, PositionForSave } from "@/stores/useSectionsStore";
 import type { AttachmentFile } from "@/composables/useAttachmentFile";
 
 type ArtidocSectionFromRest = Omit<ArtidocSection, "display_title">;
@@ -162,5 +162,15 @@ function injectDisplayTitle(section: ArtidocSectionFromRest): ArtidocSection {
     return {
         ...section,
         display_title: display_title.replace(/([\r\n]+)/g, " "),
+        references: [],
     };
+}
+
+export function getReferences(
+    text_content: string,
+    project_id: number,
+): ResultAsync<CrossReference[], Fault> {
+    return postJSON<CrossReference[]>(uri`/api/projects/${project_id}/extract_references`, {
+        text: text_content,
+    });
 }

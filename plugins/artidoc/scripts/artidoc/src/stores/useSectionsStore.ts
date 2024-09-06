@@ -26,7 +26,7 @@ import type {
     ArtifactSection,
 } from "@/helpers/artidoc-section.type";
 import ArtifactSectionFactory from "@/helpers/artifact-section.factory";
-import { deleteSection, getAllSections } from "@/helpers/rest-querier";
+import { deleteSection, getAllSections, getReferences } from "@/helpers/rest-querier";
 import PendingArtifactSectionFactory from "@/helpers/pending-artifact-section.factory";
 import type { Tracker } from "@/stores/configuration-store";
 import { isTrackerWithSubmittableSection } from "@/stores/configuration-store";
@@ -35,6 +35,7 @@ import { okAsync } from "neverthrow";
 import { injectInternalId } from "@/helpers/inject-internal-id";
 import { extractArtifactSectionsFromArtidocSections } from "@/helpers/extract-artifact-sections-from-artidoc-sections";
 import type { Fault } from "@tuleap/fault";
+import type { Project } from "@/helpers/project.type";
 
 export interface SectionsStore {
     sections: Ref<readonly (ArtidocSection & InternalArtidocSectionId)[] | undefined>;
@@ -44,6 +45,7 @@ export interface SectionsStore {
         item_id: number,
         tracker: Tracker | null,
         can_user_edit_document: boolean,
+        current_project: Project | null,
     ) => Promise<void>;
     updateSection: (section: ArtifactSection) => void;
     insertSection: (section: PendingArtifactSection, position: PositionDuringEdition) => void;
@@ -57,6 +59,7 @@ export interface SectionsStore {
         pending: PendingArtifactSection,
         section: ArtifactSection,
     ) => void;
+    getReferencesForOneSection: (section: ArtidocSection, project_id: number) => void;
 }
 
 type BeforeSection = { index: number };
@@ -67,6 +70,11 @@ export type PositionDuringEdition = AtTheEnd | BeforeSection;
 export type PositionForSave = null | { before: string };
 export interface InternalArtidocSectionId {
     internal_id: string;
+}
+
+export interface CrossReference {
+    text: string;
+    link: string;
 }
 
 export function useSectionsStore(): SectionsStore {
@@ -88,6 +96,7 @@ export function useSectionsStore(): SectionsStore {
         item_id: number,
         tracker: Tracker | null,
         can_user_edit_document: boolean,
+        current_project: Project | null,
     ): Promise<void> {
         return getAllSections(item_id)
             .andThen((artidoc_sections: readonly ArtidocSection[]) => {
@@ -97,10 +106,20 @@ export function useSectionsStore(): SectionsStore {
                     insertPendingArtifactSectionForEmptyDocument(tracker);
                 }
 
-                return okAsync(true);
+                return okAsync(sections);
             })
             .match(
-                () => {
+                async (artidoc_sections) => {
+                    if (!artidoc_sections.value || !current_project) {
+                        return;
+                    }
+
+                    await Promise.all(
+                        artidoc_sections.value.map((section) =>
+                            getReferencesForOneSection(section, current_project.id),
+                        ),
+                    );
+
                     is_sections_loading.value = false;
                 },
                 () => {
@@ -108,6 +127,18 @@ export function useSectionsStore(): SectionsStore {
                     is_sections_loading.value = false;
                 },
             );
+    }
+
+    function getReferencesForOneSection(
+        section: ArtidocSection,
+        project_id: number,
+    ): ResultAsync<null, Fault> {
+        return getReferences(section.description.value, project_id).andThen(function (
+            references: CrossReference[],
+        ) {
+            section.references = references;
+            return okAsync(null);
+        });
     }
 
     function updateSection(section: ArtifactSection): void {
@@ -247,5 +278,6 @@ export function useSectionsStore(): SectionsStore {
         insertPendingArtifactSectionForEmptyDocument,
         getSectionPositionForSave,
         replacePendingByArtifactSection,
+        getReferencesForOneSection,
     };
 }

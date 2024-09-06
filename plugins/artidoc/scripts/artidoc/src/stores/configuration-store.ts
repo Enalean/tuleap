@@ -76,6 +76,7 @@ export interface ConfigurationStore {
     error_message: Ref<string>;
     saveConfiguration: (new_selected_tracker: Tracker, onSuccessfulSave: () => void) => void;
     resetSuccessFlagFromPreviousCalls: () => void;
+    current_project: Ref<Project | null>;
 }
 
 export const CONFIGURATION_STORE: StrictInjectionKey<ConfigurationStore> =
@@ -92,11 +93,15 @@ export function initConfigurationStore(
     const is_error = ref(false);
     const is_success = ref(false);
     const error_message = ref("");
+    const current_project: Ref<Project | null> = ref(
+        selected_tracker ? selected_tracker.project : null,
+    );
 
     function saveConfiguration(new_selected_tracker: Tracker, onSuccessfulSave: () => void): void {
         is_saving.value = true;
         is_error.value = false;
         is_success.value = false;
+        current_project.value = new_selected_tracker.project;
 
         putConfiguration(document_id, new_selected_tracker.id).match(
             () => {
@@ -125,6 +130,7 @@ export function initConfigurationStore(
         is_error,
         is_success,
         error_message,
+        current_project,
         saveConfiguration,
         resetSuccessFlagFromPreviousCalls,
     };

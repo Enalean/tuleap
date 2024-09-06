@@ -55,6 +55,7 @@
                 v-bind:is_image_upload_allowed="is_image_upload_allowed"
                 v-bind:upload_file="upload_file"
                 v-bind:project_id="getProjectId()"
+                v-bind:references="props.section.references"
             />
             <section-footer v-bind:editor="editor" v-bind:section="section" />
         </article>

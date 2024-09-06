@@ -34,6 +34,7 @@ import { initPluginDropFile, useEditor } from "@tuleap/prose-mirror-editor";
 import type { EditorSectionContent } from "@/composables/useEditorSectionContent";
 import type { GetText } from "@tuleap/gettext";
 import type { UseUploadFileType } from "@/composables/useUploadFile";
+import type { CrossReference } from "@/stores/useSectionsStore";
 
 const props = defineProps<{
     is_edit_mode: boolean;
@@ -41,6 +42,7 @@ const props = defineProps<{
     input_current_description: EditorSectionContent["inputCurrentDescription"];
     upload_file: UseUploadFileType;
     project_id: number;
+    references: Array<CrossReference>;
 }>();
 
 let useEditorInstance: UseEditorType | undefined;
@@ -85,6 +87,7 @@ onMounted(async () => {
             onChange,
             content_editor.value,
             props.project_id,
+            props.references,
         );
         editorView.value = useEditorInstance.editor;
     }
