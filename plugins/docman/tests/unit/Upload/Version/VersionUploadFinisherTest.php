@@ -18,58 +18,65 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Docman\Upload\Version;
 
 use Docman_File;
+use Docman_FileStorage;
 use Docman_ItemFactory;
+use Docman_LockFactory;
+use Docman_MIMETypeDetector;
 use Docman_VersionFactory;
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use EventManager;
 use org\bovigo\vfs\vfsStream;
+use PHPUnit\Framework\MockObject\MockObject;
+use ProjectManager;
+use Psr\Log\NullLogger;
 use Tuleap\Docman\ApprovalTable\ApprovalTableRetriever;
 use Tuleap\Docman\ApprovalTable\ApprovalTableUpdateActionChecker;
 use Tuleap\Docman\ApprovalTable\ApprovalTableUpdater;
 use Tuleap\Docman\PostUpdate\PostUpdateFileHandler;
 use Tuleap\Docman\REST\v1\DocmanItemsEventAdder;
 use Tuleap\Http\Server\NullServerRequest;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
+use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Upload\FileAlreadyUploadedInformation;
 use Tuleap\Upload\FileBeingUploadedInformation;
 use Tuleap\Upload\UploadPathAllocator;
+use UserManager;
 
-final class VersionUploadFinisherTest extends \Tuleap\Test\PHPUnit\TestCase
+final class VersionUploadFinisherTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    private $project_manager;
-    private $adder;
-    private $logger;
-    private $item_factory;
-    private $version_factory;
-    private $event_manager;
-    private $on_going_upload_dao;
-    private $file_storage;
-    private $user_manager;
-    private $approval_table_updater;
-    private $approval_table_retriever;
-    private $approval_table_update_checker;
-    private $lock_factory;
+    private ProjectManager&MockObject $project_manager;
+    private DocmanItemsEventAdder&MockObject $adder;
+    private Docman_ItemFactory&MockObject $item_factory;
+    private Docman_VersionFactory&MockObject $version_factory;
+    private EventManager&MockObject $event_manager;
+    private DocumentOnGoingVersionToUploadDAO&MockObject $on_going_upload_dao;
+    private Docman_FileStorage&MockObject $file_storage;
+    private UserManager&MockObject $user_manager;
+    private ApprovalTableUpdater&MockObject $approval_table_updater;
+    private ApprovalTableRetriever&MockObject $approval_table_retriever;
+    private ApprovalTableUpdateActionChecker&MockObject $approval_table_update_checker;
+    private Docman_LockFactory&MockObject $lock_factory;
 
     protected function setUp(): void
     {
-        $this->logger                        = Mockery::mock(\Psr\Log\LoggerInterface::class);
-        $this->item_factory                  = Mockery::mock(Docman_ItemFactory::class);
-        $this->version_factory               = Mockery::mock(Docman_VersionFactory::class);
-        $this->event_manager                 = Mockery::mock(\EventManager::class);
-        $this->on_going_upload_dao           = Mockery::mock(DocumentOnGoingVersionToUploadDAO::class);
-        $this->file_storage                  = Mockery::mock(\Docman_FileStorage::class);
-        $this->user_manager                  = Mockery::mock(\UserManager::class);
-        $this->adder                         = Mockery::mock(DocmanItemsEventAdder::class);
-        $this->project_manager               = Mockery::mock(\ProjectManager::class);
-        $this->approval_table_updater        = Mockery::mock(ApprovalTableUpdater::class);
-        $this->approval_table_retriever      = Mockery::mock(ApprovalTableRetriever::class);
-        $this->approval_table_update_checker = Mockery::mock(ApprovalTableUpdateActionChecker::class);
-        $this->lock_factory                  = Mockery::mock(\Docman_LockFactory::class);
+        $this->item_factory                  = $this->createMock(Docman_ItemFactory::class);
+        $this->version_factory               = $this->createMock(Docman_VersionFactory::class);
+        $this->event_manager                 = $this->createMock(EventManager::class);
+        $this->on_going_upload_dao           = $this->createMock(DocumentOnGoingVersionToUploadDAO::class);
+        $this->file_storage                  = $this->createMock(Docman_FileStorage::class);
+        $this->user_manager                  = $this->createMock(UserManager::class);
+        $this->adder                         = $this->createMock(DocmanItemsEventAdder::class);
+        $this->project_manager               = $this->createMock(ProjectManager::class);
+        $this->approval_table_updater        = $this->createMock(ApprovalTableUpdater::class);
+        $this->approval_table_retriever      = $this->createMock(ApprovalTableRetriever::class);
+        $this->approval_table_update_checker = $this->createMock(ApprovalTableUpdateActionChecker::class);
+        $this->lock_factory                  = $this->createMock(Docman_LockFactory::class);
     }
 
     public function testDocumentIsAddedToTheDocumentManagerWhenTheUploadIsComplete(): void
@@ -79,14 +86,14 @@ final class VersionUploadFinisherTest extends \Tuleap\Test\PHPUnit\TestCase
         $path_allocator = new UploadPathAllocator($root->url() . '/version');
 
         $upload_finisher = new VersionUploadFinisher(
-            $this->logger,
+            new NullLogger(),
             $path_allocator,
             $this->item_factory,
             $this->version_factory,
             $this->on_going_upload_dao,
             new DBTransactionExecutorPassthrough(),
             $this->file_storage,
-            new \Docman_MIMETypeDetector(),
+            new Docman_MIMETypeDetector(),
             $this->user_manager,
             $this->lock_factory,
             $this->approval_table_updater,
@@ -100,80 +107,66 @@ final class VersionUploadFinisherTest extends \Tuleap\Test\PHPUnit\TestCase
         $path_item_being_uploaded = $path_allocator->getPathForItemBeingUploaded($file_information);
         mkdir(dirname($path_item_being_uploaded), 0777, true);
         touch($path_item_being_uploaded);
-        $this->on_going_upload_dao->shouldReceive('wrapAtomicOperations')->with(
-            \Mockery::on(
-                function (callable $operations) {
-                    $operations($this->on_going_upload_dao);
-                    return true;
-                }
-            )
-        );
-        $this->on_going_upload_dao->shouldReceive('searchDocumentVersionOngoingUploadByUploadID')->andReturns(
-            [
-                'id'                    => $item_id_being_created,
-                'parent_id'             => 3,
-                'item_id'               => 20,
-                'user_id'               => 101,
-                'version_title'         => 'Title',
-                'changelog'             => 'Description',
-                'filename'              => 'Filename',
-                'filesize'              => 123,
-                'filetype'              => 'Filetype',
-                'is_file_locked'        => false,
-                'approval_table_action' => 'copy',
-                'title'                 => 'New title',
-                'description'           => '',
-                'obsolescence_date'     => 125861251,
-                'status'                => 101,
-            ]
-        );
-        $item = Mockery::mock(Docman_File::class);
-        $item->shouldReceive('getTitle')->andReturn('title');
-        $item->shouldReceive('getGroupId')->andReturn(101);
-        $item->shouldReceive('getId')->andReturn(20);
-        $item->shouldReceive('getParentId')->andReturn(3);
-        $item->shouldReceive('setCurrentVersion')->once();
-        $item->shouldReceive('accept')->andReturn(true);
+        $this->on_going_upload_dao->method('searchDocumentVersionOngoingUploadByUploadID')->willReturn([
+            'id'                    => $item_id_being_created,
+            'parent_id'             => 3,
+            'item_id'               => 20,
+            'user_id'               => 101,
+            'version_title'         => 'Title',
+            'changelog'             => 'Description',
+            'filename'              => 'Filename',
+            'filesize'              => 123,
+            'filetype'              => 'Filetype',
+            'is_file_locked'        => false,
+            'approval_table_action' => 'copy',
+            'title'                 => 'New title',
+            'description'           => '',
+            'obsolescence_date'     => 125861251,
+            'status'                => 101,
+        ]);
+        $item = $this->createMock(Docman_File::class);
+        $item->method('getTitle')->willReturn('title');
+        $item->method('getGroupId')->willReturn(101);
+        $item->method('getId')->willReturn(20);
+        $item->method('getParentId')->willReturn(3);
+        $item->expects(self::once())->method('setCurrentVersion');
+        $item->method('accept')->willReturn(true);
 
-        $this->item_factory->shouldReceive('getItemFromDb')->andReturn($item);
-        $this->version_factory->shouldReceive('getNextVersionNumber')->andReturn(2);
+        $this->item_factory->method('getItemFromDb')->willReturn($item);
+        $this->version_factory->method('getNextVersionNumber')->willReturn(2);
 
         $created_docman_version = $root->url() . '/created_version';
         touch($created_docman_version);
-        $this->file_storage->shouldReceive('copy')->once()->andReturns($created_docman_version);
+        $this->file_storage->expects(self::once())->method('copy')->willReturn($created_docman_version);
 
-        $this->version_factory->shouldReceive('create')->once()->andReturns(true);
+        $this->version_factory->expects(self::once())->method('create')->willReturn(true);
 
-        $user = \Mockery::mock(\PFUser::class);
-        $this->user_manager->shouldReceive('getUserByID')->andReturns($user);
+        $user = UserTestBuilder::buildWithDefaults();
+        $this->user_manager->method('getUserByID')->willReturn($user);
 
-        $this->event_manager->shouldReceive('processEvent');
-        $this->logger->shouldReceive('debug');
-        $this->version_factory->shouldReceive('getCurrentVersionForItem');
+        $this->event_manager->method('processEvent');
+        $this->version_factory->method('getCurrentVersionForItem');
 
-        $this->project_manager->shouldReceive('getProjectById')->andReturn(Mockery::mock(\Project::class));
+        $this->project_manager->method('getProjectById')->willReturn(ProjectTestBuilder::aProject()->build());
 
-        $this->adder->shouldReceive('addNotificationEvents');
-        $this->adder->shouldReceive('addLogEvents');
+        $this->adder->method('addNotificationEvents');
+        $this->adder->method('addLogEvents');
 
-        $this->on_going_upload_dao->shouldReceive('deleteByVersionID')->once();
-        $this->item_factory->shouldReceive('update')->once()->andReturn(true);
+        $this->on_going_upload_dao->expects(self::once())->method('deleteByVersionID');
+        $this->item_factory->expects(self::once())->method('update')->willReturn(true);
 
-        $this->approval_table_retriever->shouldReceive('hasApprovalTable')->andReturn(true);
+        $this->approval_table_retriever->method('hasApprovalTable')->willReturn(true);
 
         $file_information = new FileAlreadyUploadedInformation($item_id_being_created, 'Filename', 123);
-        $this->lock_factory->shouldReceive('unlock');
+        $this->lock_factory->method('unlock');
 
-        $this->approval_table_update_checker
-            ->shouldReceive('checkAvailableUpdateAction')
-            ->with('copy')
-            ->andReturn(true);
+        $this->approval_table_update_checker->method('checkAvailableUpdateAction')->with('copy')->willReturn(true);
 
-        $this->approval_table_updater->shouldReceive('updateApprovalTable')->withArgs([$item, $user, 'copy'])->once();
+        $this->approval_table_updater->expects(self::once())->method('updateApprovalTable')->with($item, $user, 'copy');
 
         $upload_finisher->finishUpload(new NullServerRequest(), $file_information);
 
-        $this->assertFileDoesNotExist($path_item_being_uploaded);
+        self::assertFileDoesNotExist($path_item_being_uploaded);
     }
 
     public function testDocumentWithoutApprovalTableIsAddedToTheDocumentManagerWhenTheUploadIsComplete(): void
@@ -183,14 +176,14 @@ final class VersionUploadFinisherTest extends \Tuleap\Test\PHPUnit\TestCase
         $path_allocator = new UploadPathAllocator($root->url() . '/version');
 
         $upload_finisher = new VersionUploadFinisher(
-            $this->logger,
+            new NullLogger(),
             $path_allocator,
             $this->item_factory,
             $this->version_factory,
             $this->on_going_upload_dao,
             new DBTransactionExecutorPassthrough(),
             $this->file_storage,
-            new \Docman_MIMETypeDetector(),
+            new Docman_MIMETypeDetector(),
             $this->user_manager,
             $this->lock_factory,
             $this->approval_table_updater,
@@ -204,80 +197,66 @@ final class VersionUploadFinisherTest extends \Tuleap\Test\PHPUnit\TestCase
         $path_item_being_uploaded = $path_allocator->getPathForItemBeingUploaded($file_information);
         mkdir(dirname($path_item_being_uploaded), 0777, true);
         touch($path_item_being_uploaded);
-        $this->on_going_upload_dao->shouldReceive('wrapAtomicOperations')->with(
-            \Mockery::on(
-                function (callable $operations) {
-                    $operations($this->on_going_upload_dao);
-                    return true;
-                }
-            )
-        );
-        $this->on_going_upload_dao->shouldReceive('searchDocumentVersionOngoingUploadByUploadID')->andReturns(
-            [
-                'id'                    => $item_id_being_created,
-                'parent_id'             => 3,
-                'item_id'               => 20,
-                'user_id'               => 101,
-                'version_title'         => 'Title',
-                'changelog'             => 'Description',
-                'filename'              => 'Filename',
-                'filesize'              => 123,
-                'filetype'              => 'Filetype',
-                'is_file_locked'        => false,
-                'approval_table_action' => 'copy',
-                'title'                 => 'New title',
-                'description'           => '',
-                'obsolescence_date'     => 125861251,
-                'status'                => 101,
-            ]
-        );
-        $item = Mockery::mock(Docman_File::class);
-        $item->shouldReceive('getTitle')->andReturn('title');
-        $item->shouldReceive('getGroupId')->andReturn(101);
-        $item->shouldReceive('getId')->andReturn(20);
-        $item->shouldReceive('getParentId')->andReturn(3);
-        $item->shouldReceive('setCurrentVersion')->never();
-        $item->shouldReceive('accept')->andReturn(true);
+        $this->on_going_upload_dao->method('searchDocumentVersionOngoingUploadByUploadID')->willReturn([
+            'id'                    => $item_id_being_created,
+            'parent_id'             => 3,
+            'item_id'               => 20,
+            'user_id'               => 101,
+            'version_title'         => 'Title',
+            'changelog'             => 'Description',
+            'filename'              => 'Filename',
+            'filesize'              => 123,
+            'filetype'              => 'Filetype',
+            'is_file_locked'        => false,
+            'approval_table_action' => 'copy',
+            'title'                 => 'New title',
+            'description'           => '',
+            'obsolescence_date'     => 125861251,
+            'status'                => 101,
+        ]);
+        $item = $this->createMock(Docman_File::class);
+        $item->method('getTitle')->willReturn('title');
+        $item->method('getGroupId')->willReturn(101);
+        $item->method('getId')->willReturn(20);
+        $item->method('getParentId')->willReturn(3);
+        $item->expects(self::never())->method('setCurrentVersion');
+        $item->method('accept')->willReturn(true);
 
-        $this->item_factory->shouldReceive('getItemFromDb')->andReturn($item);
-        $this->version_factory->shouldReceive('getNextVersionNumber')->andReturn(2);
+        $this->item_factory->method('getItemFromDb')->willReturn($item);
+        $this->version_factory->method('getNextVersionNumber')->willReturn(2);
 
         $created_docman_version = $root->url() . '/created_version';
         touch($created_docman_version);
-        $this->file_storage->shouldReceive('copy')->once()->andReturns($created_docman_version);
+        $this->file_storage->expects(self::once())->method('copy')->willReturn($created_docman_version);
 
-        $this->version_factory->shouldReceive('create')->once()->andReturns(true);
+        $this->version_factory->expects(self::once())->method('create')->willReturn(true);
 
-        $user = \Mockery::mock(\PFUser::class);
-        $this->user_manager->shouldReceive('getUserByID')->andReturns($user);
+        $user = UserTestBuilder::buildWithDefaults();
+        $this->user_manager->method('getUserByID')->willReturn($user);
 
-        $this->event_manager->shouldReceive('processEvent');
-        $this->logger->shouldReceive('debug');
-        $this->version_factory->shouldReceive('getCurrentVersionForItem');
+        $this->event_manager->method('processEvent');
+        $this->version_factory->method('getCurrentVersionForItem');
 
-        $this->project_manager->shouldReceive('getProjectById')->andReturn(Mockery::mock(\Project::class));
+        $this->project_manager->method('getProjectById')->willReturn(ProjectTestBuilder::aProject()->build());
 
-        $this->adder->shouldReceive('addNotificationEvents');
-        $this->adder->shouldReceive('addLogEvents');
+        $this->adder->method('addNotificationEvents');
+        $this->adder->method('addLogEvents');
 
-        $this->on_going_upload_dao->shouldReceive('deleteByVersionID')->once();
-        $this->item_factory->shouldReceive('update')->once()->andReturn(true);
+        $this->on_going_upload_dao->expects(self::once())->method('deleteByVersionID');
+        $this->item_factory->expects(self::once())->method('update')->willReturn(true);
 
-        $this->approval_table_retriever->shouldReceive('hasApprovalTable')->andReturn(false);
+        $this->approval_table_retriever->method('hasApprovalTable')->willReturn(false);
 
         $file_information = new FileAlreadyUploadedInformation($item_id_being_created, 'Filename', 123);
 
-        $this->approval_table_update_checker
-            ->shouldReceive('checkAvailableUpdateAction')
-            ->with('copy')
-            ->andReturn(true);
+        $this->approval_table_update_checker->method('checkAvailableUpdateAction')->with('copy')->willReturn(true);
 
-        $this->approval_table_updater->shouldReceive('updateApprovalTable')->never();
-        $this->lock_factory->shouldReceive('unlock');
+        $this->approval_table_updater->expects(self::never())->method('updateApprovalTable');
+        $this->lock_factory->method('unlock');
 
         $upload_finisher->finishUpload(new NullServerRequest(), $file_information);
 
-        $this->assertFileDoesNotExist($path_item_being_uploaded);
+        self::assertFileDoesNotExist($path_item_being_uploaded);
     }
 
     public function testDocumentWithApprovalTableAndBadActionApprovalIsAddedToTheDocumentManagerWhenTheUploadIsComplete(): void
@@ -287,14 +266,14 @@ final class VersionUploadFinisherTest extends \Tuleap\Test\PHPUnit\TestCase
         $path_allocator = new UploadPathAllocator($root->url() . '/version');
 
         $upload_finisher = new VersionUploadFinisher(
-            $this->logger,
+            new NullLogger(),
             $path_allocator,
             $this->item_factory,
             $this->version_factory,
             $this->on_going_upload_dao,
             new DBTransactionExecutorPassthrough(),
             $this->file_storage,
-            new \Docman_MIMETypeDetector(),
+            new Docman_MIMETypeDetector(),
             $this->user_manager,
             $this->lock_factory,
             $this->approval_table_updater,
@@ -308,79 +287,65 @@ final class VersionUploadFinisherTest extends \Tuleap\Test\PHPUnit\TestCase
         $path_item_being_uploaded = $path_allocator->getPathForItemBeingUploaded($file_information);
         mkdir(dirname($path_item_being_uploaded), 0777, true);
         touch($path_item_being_uploaded);
-        $this->on_going_upload_dao->shouldReceive('wrapAtomicOperations')->with(
-            \Mockery::on(
-                function (callable $operations) {
-                    $operations($this->on_going_upload_dao);
-                    return true;
-                }
-            )
-        );
-        $this->on_going_upload_dao->shouldReceive('searchDocumentVersionOngoingUploadByUploadID')->andReturns(
-            [
-                'id'                    => $item_id_being_created,
-                'parent_id'             => 3,
-                'item_id'               => 20,
-                'user_id'               => 101,
-                'version_title'         => 'Title',
-                'changelog'             => 'Description',
-                'filename'              => 'Filename',
-                'filesize'              => 123,
-                'filetype'              => 'Filetype',
-                'is_file_locked'        => false,
-                'approval_table_action' => 'blablabla',
-                'title'                 => 'New title',
-                'description'           => '',
-                'obsolescence_date'     => 125861251,
-                'status'                => 101,
-            ]
-        );
-        $item = Mockery::mock(Docman_File::class);
-        $item->shouldReceive('getTitle')->andReturn('title');
-        $item->shouldReceive('getGroupId')->andReturn(101);
-        $item->shouldReceive('getId')->andReturn(20);
-        $item->shouldReceive('getParentId')->andReturn(3);
-        $item->shouldReceive('setCurrentVersion')->never();
-        $item->shouldReceive('accept')->andReturn(true);
+        $this->on_going_upload_dao->method('searchDocumentVersionOngoingUploadByUploadID')->willReturn([
+            'id'                    => $item_id_being_created,
+            'parent_id'             => 3,
+            'item_id'               => 20,
+            'user_id'               => 101,
+            'version_title'         => 'Title',
+            'changelog'             => 'Description',
+            'filename'              => 'Filename',
+            'filesize'              => 123,
+            'filetype'              => 'Filetype',
+            'is_file_locked'        => false,
+            'approval_table_action' => 'blablabla',
+            'title'                 => 'New title',
+            'description'           => '',
+            'obsolescence_date'     => 125861251,
+            'status'                => 101,
+        ]);
+        $item = $this->createMock(Docman_File::class);
+        $item->method('getTitle')->willReturn('title');
+        $item->method('getGroupId')->willReturn(101);
+        $item->method('getId')->willReturn(20);
+        $item->method('getParentId')->willReturn(3);
+        $item->expects(self::never())->method('setCurrentVersion');
+        $item->method('accept')->willReturn(true);
 
-        $this->item_factory->shouldReceive('getItemFromDb')->andReturn($item);
-        $this->version_factory->shouldReceive('getNextVersionNumber')->andReturn(2);
+        $this->item_factory->method('getItemFromDb')->willReturn($item);
+        $this->version_factory->method('getNextVersionNumber')->willReturn(2);
 
         $created_docman_version = $root->url() . '/created_version';
         touch($created_docman_version);
-        $this->file_storage->shouldReceive('copy')->once()->andReturns($created_docman_version);
+        $this->file_storage->expects(self::once())->method('copy')->willReturn($created_docman_version);
 
-        $this->version_factory->shouldReceive('create')->once()->andReturns(true);
+        $this->version_factory->expects(self::once())->method('create')->willReturn(true);
 
-        $user = \Mockery::mock(\PFUser::class);
-        $this->user_manager->shouldReceive('getUserByID')->andReturns($user);
+        $user = UserTestBuilder::buildWithDefaults();
+        $this->user_manager->method('getUserByID')->willReturn($user);
 
-        $this->event_manager->shouldReceive('processEvent');
-        $this->logger->shouldReceive('debug');
-        $this->version_factory->shouldReceive('getCurrentVersionForItem');
+        $this->event_manager->method('processEvent');
+        $this->version_factory->method('getCurrentVersionForItem');
 
-        $this->project_manager->shouldReceive('getProjectById')->andReturn(Mockery::mock(\Project::class));
+        $this->project_manager->method('getProjectById')->willReturn(ProjectTestBuilder::aProject()->build());
 
-        $this->adder->shouldReceive('addNotificationEvents');
-        $this->adder->shouldReceive('addLogEvents');
+        $this->adder->method('addNotificationEvents');
+        $this->adder->method('addLogEvents');
 
-        $this->on_going_upload_dao->shouldReceive('deleteByVersionID')->once();
-        $this->item_factory->shouldReceive('update')->once()->andReturn(true);
+        $this->on_going_upload_dao->expects(self::once())->method('deleteByVersionID');
+        $this->item_factory->expects(self::once())->method('update')->willReturn(true);
 
-        $this->approval_table_retriever->shouldReceive('hasApprovalTable')->andReturn(true);
+        $this->approval_table_retriever->method('hasApprovalTable')->willReturn(true);
 
         $file_information = new FileAlreadyUploadedInformation($item_id_being_created, 'Filename', 123);
-        $this->lock_factory->shouldReceive('unlock');
+        $this->lock_factory->method('unlock');
 
-        $this->approval_table_update_checker
-            ->shouldReceive('checkAvailableUpdateAction')
-            ->with('blablabla')
-            ->andReturn(false);
+        $this->approval_table_update_checker->method('checkAvailableUpdateAction')->with('blablabla')->willReturn(false);
 
-        $this->approval_table_updater->shouldReceive('updateApprovalTable')->never();
+        $this->approval_table_updater->expects(self::never())->method('updateApprovalTable');
 
         $upload_finisher->finishUpload(new NullServerRequest(), $file_information);
 
-        $this->assertFileDoesNotExist($path_item_being_uploaded);
+        self::assertFileDoesNotExist($path_item_being_uploaded);
     }
 }

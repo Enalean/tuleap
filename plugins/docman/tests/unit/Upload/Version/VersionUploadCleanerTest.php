@@ -18,22 +18,23 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Docman\Upload\Version;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use DateTimeImmutable;
 use org\bovigo\vfs\vfsStream;
+use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Upload\FileBeingUploadedInformation;
 use Tuleap\Upload\UploadPathAllocator;
 
-class VersionUploadCleanerTest extends \Tuleap\Test\PHPUnit\TestCase
+final class VersionUploadCleanerTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    public function testDanglingDocumentBeingUploadedAreCleaned()
+    public function testDanglingDocumentBeingUploadedAreCleaned(): void
     {
         $tmp_dir = vfsStream::setup();
 
-        $dao            = \Mockery::mock(DocumentOnGoingVersionToUploadDAO::class);
+        $dao            = $this->createMock(DocumentOnGoingVersionToUploadDAO::class);
         $path_allocator = new UploadPathAllocator($tmp_dir->url() . '/document');
 
         $existing_version_id                  = 10;
@@ -41,18 +42,18 @@ class VersionUploadCleanerTest extends \Tuleap\Test\PHPUnit\TestCase
         $existing_version_being_uploaded_path = $path_allocator->getPathForItemBeingUploaded($existing_file_information);
         mkdir(dirname($existing_version_being_uploaded_path), 0777, true);
         touch($existing_version_being_uploaded_path);
-        $dao->shouldReceive('searchVersionOngoingUploadItemIDs')->andReturns([$existing_version_id]);
+        $dao->method('searchVersionOngoingUploadItemIDs')->willReturn([$existing_version_id]);
         $non_existing_file_information = new FileBeingUploadedInformation(999999, 'Filename', 10, 0);
         $non_existing_item_path        = $path_allocator->getPathForItemBeingUploaded($non_existing_file_information);
         touch($non_existing_item_path);
 
-        $dao->shouldReceive('deleteUnusableVersions')->once();
+        $dao->expects(self::once())->method('deleteUnusableVersions');
 
         $cleaner = new VersionUploadCleaner($path_allocator, $dao);
 
-        $current_time = new \DateTimeImmutable();
+        $current_time = new DateTimeImmutable();
         $cleaner->deleteDanglingVersionToUpload($current_time);
-        $this->assertFileExists($existing_version_being_uploaded_path);
-        $this->assertFileDoesNotExist($non_existing_item_path);
+        self::assertFileExists($existing_version_being_uploaded_path);
+        self::assertFileDoesNotExist($non_existing_item_path);
     }
 }
