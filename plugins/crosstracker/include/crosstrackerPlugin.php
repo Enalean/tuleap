@@ -407,9 +407,14 @@ class crosstrackerPlugin extends Plugin
                 $event_manager,
             )
         ));
+        $project_manager         = ProjectManager::instance();
         $from_builder_visitor    = new FromBuilderVisitor(
             new FromTrackerBuilderVisitor($project_id_retriever),
-            new FromProjectBuilderVisitor($project_id_retriever),
+            new FromProjectBuilderVisitor(
+                $project_id_retriever,
+                $project_manager,
+                $event_manager,
+            ),
         );
 
         $expert_query_dao               = new CrossTrackerExpertQueryReportDao();
@@ -420,7 +425,6 @@ class crosstrackerPlugin extends Plugin
                 $event_manager,
             )
         ));
-        $project_manager                = ProjectManager::instance();
         $cross_tracker_artifact_factory = new CrossTrackerArtifactReportFactory(
             new CrossTrackerArtifactReportDao(),
             Tracker_ArtifactFactory::instance(),

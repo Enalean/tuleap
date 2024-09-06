@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\CrossTracker\Report\Query\Advanced;
 
+use PFUser;
 use Tuleap\CrossTracker\Report\Query\Advanced\FromBuilder\FromProjectBuilderVisitor;
 use Tuleap\CrossTracker\Report\Query\Advanced\FromBuilder\FromProjectBuilderVisitorParameters;
 use Tuleap\CrossTracker\Report\Query\Advanced\FromBuilder\FromTrackerBuilderVisitor;
@@ -44,13 +45,13 @@ final readonly class FromBuilderVisitor implements FromSomethingVisitor
     ) {
     }
 
-    public function buildFromWhere(From $from, int $report_id): IProvideParametrizedFromAndWhereSQLFragments
+    public function buildFromWhere(From $from, int $report_id, PFUser $user): IProvideParametrizedFromAndWhereSQLFragments
     {
-        $left = $from->getLeft()->acceptFromSomethingVisitor($this, new FromBuilderVisitorParameters($report_id, $from->getRight() === null));
+        $left = $from->getLeft()->acceptFromSomethingVisitor($this, new FromBuilderVisitorParameters($report_id, $from->getRight() === null, $user));
         if ($from->getRight() === null) {
             return $left;
         }
-        $right = $from->getRight()->acceptFromSomethingVisitor($this, new FromBuilderVisitorParameters($report_id, false));
+        $right = $from->getRight()->acceptFromSomethingVisitor($this, new FromBuilderVisitorParameters($report_id, false, $user));
 
         return new ParametrizedAndFromWhere($left, $right);
     }
@@ -67,7 +68,7 @@ final readonly class FromBuilderVisitor implements FromSomethingVisitor
     {
         return $from_project->getCondition()->acceptFromProjectConditionVisitor(
             $this->project_builder,
-            new FromProjectBuilderVisitorParameters($from_project, $parameters->report_id),
+            new FromProjectBuilderVisitorParameters($from_project, $parameters->report_id, $parameters->user),
         );
     }
 }

@@ -31,30 +31,28 @@ use Tuleap\Project\ProjectAccessSuspendedException;
  * I exist to avoid passing around fat \Project instances when we don't need them.
  * @psalm-immutable
  */
-final class LinkedProject
+final readonly class LinkedProject
 {
-    public string $public_name;
-    public string $uri;
-
-    private function __construct(string $public_name, string $uri, public string $project_icon)
-    {
-        $this->public_name = $public_name;
-        $this->uri         = $uri;
+    private function __construct(
+        public string $public_name,
+        public string $uri,
+        public string $project_icon,
+        public int $id,
+    ) {
     }
 
     public static function fromProject(CheckProjectAccess $access_checker, \Project $project, \PFUser $user): ?self
     {
         try {
             $access_checker->checkUserCanAccessProject($user, $project);
-        } catch (ProjectAccessSuspendedException | \Project_AccessDeletedException | \Project_AccessPrivateException | \Project_AccessRestrictedException | \Project_AccessProjectNotFoundException $e) {
+        } catch (ProjectAccessSuspendedException | \Project_AccessDeletedException | \Project_AccessPrivateException | \Project_AccessRestrictedException | \Project_AccessProjectNotFoundException) {
             return null;
         }
         return new self(
             $project->getPublicName(),
             $project->getUrl(),
-            EmojiCodepointConverter::convertStoredEmojiFormatToEmojiFormat(
-                $project->getIconUnicodeCodepoint()
-            )
+            EmojiCodepointConverter::convertStoredEmojiFormatToEmojiFormat($project->getIconUnicodeCodepoint()),
+            (int) $project->getID(),
         );
     }
 }

@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\CrossTracker\Report\Query\Advanced\FromBuilder;
 
+use PFUser;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\FromProject;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\VisitorParameters;
 
@@ -30,6 +31,7 @@ final readonly class FromProjectBuilderVisitorParameters implements VisitorParam
     public function __construct(
         public FromProject $from_project,
         public int $report_id,
+        public PFUser $user,
     ) {
     }
 }

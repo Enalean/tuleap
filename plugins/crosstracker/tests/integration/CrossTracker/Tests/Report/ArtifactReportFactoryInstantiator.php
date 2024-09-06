@@ -312,16 +312,22 @@ final class ArtifactReportFactoryInstantiator
                 new ArtifactResultBuilder($artifact_factory),
             ),
         );
+        $event_manager            = EventManager::instance();
         $project_id_retriever     = new ProjectDashboardDao(new DashboardWidgetDao(
             new WidgetFactory(
                 $user_manager,
                 new User_ForgeUserGroupPermissionsManager(new User_ForgeUserGroupPermissionsDao()),
-                EventManager::instance(),
+                $event_manager,
             )
         ));
+        $project_manager          = ProjectManager::instance();
         $from_builder_visitor     = new FromBuilderVisitor(
             new FromTrackerBuilderVisitor($project_id_retriever),
-            new FromProjectBuilderVisitor($project_id_retriever),
+            new FromProjectBuilderVisitor(
+                $project_id_retriever,
+                $project_manager,
+                $event_manager,
+            ),
         );
 
         $expert_query_dao      = new CrossTrackerExpertQueryReportDao();
@@ -329,7 +335,7 @@ final class ArtifactReportFactoryInstantiator
             new WidgetFactory(
                 UserManager::instance(),
                 new User_ForgeUserGroupPermissionsManager(new User_ForgeUserGroupPermissionsDao()),
-                EventManager::instance(),
+                $event_manager,
             )
         ));
         return new CrossTrackerArtifactReportFactory(
@@ -352,8 +358,8 @@ final class ArtifactReportFactoryInstantiator
                 TrackerFactory::instance(),
                 new WidgetInProjectChecker($project_dashboard_dao),
                 $project_dashboard_dao,
-                ProjectManager::instance(),
-                EventManager::instance(),
+                $project_manager,
+                $event_manager,
             ),
         );
     }
