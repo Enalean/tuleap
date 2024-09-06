@@ -24,7 +24,7 @@ import { DOMParser } from "prosemirror-model";
 import { dropCursor } from "prosemirror-dropcursor";
 import { custom_schema } from "./custom_schema";
 import type { PluginDropFile } from "./plugins";
-import { initPluginInput, setupToolbar } from "./plugins";
+import { initLinkPopoverPlugin, initPluginInput, setupToolbar } from "./plugins";
 import type { GetText } from "@tuleap/gettext";
 
 import {
@@ -59,6 +59,7 @@ export async function useEditor(
         initPluginInput(onChange),
         upload_plugin,
         dropCursor(),
+        initLinkPopoverPlugin(gettext_provider, editor_id),
         ...setupToolbar(gettext_provider, editor_id),
     ];
 

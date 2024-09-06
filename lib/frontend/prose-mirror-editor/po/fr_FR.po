@@ -56,6 +56,9 @@ msgstr "La taille maximale de téléversement dépassée"
 msgid "Normal text"
 msgstr "Texte"
 
+msgid "Open link"
+msgstr "Ouvrir le lien"
+
 msgid "Styles"
 msgstr "Styles"
 
