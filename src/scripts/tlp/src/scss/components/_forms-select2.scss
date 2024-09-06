@@ -17,8 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@use "@tuleap/tlp-styles/components/form-element" as element;
-@use "@tuleap/tlp-badge";
+@use "pkg:@tuleap/tlp-styles/components/form-element" as element;
+@use "pkg:@tuleap/tlp-badge";
 
 %-tlp-form-element {
     @include element.tlp-form-element;

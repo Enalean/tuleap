@@ -8,7 +8,7 @@ A SCSS library to share TLP Business colors. Include color classes in your theme
 <span class="tlp-swatch-inca-silver my-colored-element"></span>
 ```
 ```scss
-@use "@tuleap/tlp-swatch-colors";
+@use "pkg:@tuleap/tlp-swatch-colors";
 
 .my-colored-element {
     color: var(--text-color);
@@ -28,7 +28,7 @@ A SCSS library to share TLP Business colors. Include color classes in your theme
 Only in cases where you need to modify those colors, use the following SCSS snippet:
 
 ```scss
-@use "@tuleap/tlp-swatch-colors";
+@use "pkg:@tuleap/tlp-swatch-colors";
 @use "sass:map";
 @use "sass:color";
 

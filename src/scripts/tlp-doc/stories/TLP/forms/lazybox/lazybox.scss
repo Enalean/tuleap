@@ -17,6 +17,8 @@
  *  along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+@use "pkg:@tuleap/lazybox";
+
 .doc-multiple-lazybox-user-with-avatar {
     display: flex;
     gap: var(--tlp-small-spacing);

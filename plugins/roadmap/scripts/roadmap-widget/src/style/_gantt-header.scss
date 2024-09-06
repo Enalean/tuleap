@@ -19,8 +19,8 @@
 
 @use "sass:map";
 @use "sass:color";
-@use "@tuleap/tlp-swatch-colors";
-@use "roadmap-variables";
+@use "pkg:@tuleap/tlp-swatch-colors";
+@use "./roadmap-variables";
 
 $border-width: 4px;
 $caret-width: 20px;

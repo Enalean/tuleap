@@ -17,8 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@use "media-query-definitions" as media-query;
-@use "@tuleap/tlp/src/scss/components/tooltips-mixins" as tooltip;
+@use "./media-query-definitions" as media-query;
+@use "pkg:@tuleap/tlp/src/scss/components/tooltips-mixins" as tooltip;
 
 .test-plan-list-of-test-definitions {
     display: flex;

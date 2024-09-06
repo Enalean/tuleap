@@ -5,8 +5,8 @@
 A SCSS library to share Project Background. It is used both in FlamingParrot and BurningParrot themes.
 
 ```scss
-@use "@tuleap/project-background";
-@use "../../src/themes/BurningParrot/css/includes/global-variables";
+@use "pkg:@tuleap/project-background";
+@use "pkg:@tuleap/burningparrot-theme/css/includes/global-variables";
 
 .project-with-background {
     .my-header-class-that-must-show-project-background {

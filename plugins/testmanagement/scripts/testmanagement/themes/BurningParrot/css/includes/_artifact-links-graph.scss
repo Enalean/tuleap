@@ -1,6 +1,6 @@
 @use "sass:map";
 @use "sass:color";
-@use "@tuleap/tlp-swatch-colors";
+@use "pkg:@tuleap/tlp-swatch-colors";
 
 .tlp-modal > .artifact-links-graph-modal {
     height: 70vh;

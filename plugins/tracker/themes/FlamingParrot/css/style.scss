@@ -19,13 +19,13 @@
 
 @use "../../default/css/style";
 @use "./tracker-creation";
-@use "@tuleap/mention";
-@use "@tuleap/tlp-badge";
-@use "@tuleap/plugin-tracker-rich-text-editor";
-@use "@tuleap/tlp/src/scss/components/switch";
-@use "@tuleap/tlp/src/scss/components/panes";
-@use "@tuleap/tlp/src/scss/components/cards";
-@use "@tuleap/tlp/src/scss/components/tables";
+@use "pkg:@tuleap/mention";
+@use "pkg:@tuleap/tlp-badge";
+@use "pkg:@tuleap/plugin-tracker-rich-text-editor";
+@use "pkg:@tuleap/tlp/src/scss/components/switch";
+@use "pkg:@tuleap/tlp/src/scss/components/panes";
+@use "pkg:@tuleap/tlp/src/scss/components/cards";
+@use "pkg:@tuleap/tlp/src/scss/components/tables";
 
 /* stylelint-disable-next-line selector-class-pattern,selector-id-pattern */
 .widget_content #tracker_report_table > thead > tr > th {

@@ -130,7 +130,7 @@ function handleAPIFault(fault: Fault): void {
 </script>
 
 <style lang="scss">
-@use "@tuleap/lazybox/style";
+@use "pkg:@tuleap/lazybox";
 
 .pull-request-overview-pane {
     display: flex;

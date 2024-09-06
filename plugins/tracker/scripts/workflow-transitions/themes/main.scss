@@ -20,7 +20,7 @@
 @use "./header";
 @use "./matrix";
 @use "./transition-modal";
-@use "@tuleap/list-picker";
+@use "pkg:@tuleap/list-picker";
 
 .tracker-workflow-loader {
     height: 200px;

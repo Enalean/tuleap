@@ -4,22 +4,26 @@
   "homepage": "https://tuleap.org",
   "license": "GPL-2.0-or-later",
   "private": true,
-  "version": "0.0.0",
   "type": "module",
-  "module": "dist/tlp-popovers.js",
-  "main": "dist/tlp-popovers.umd.cjs",
-  "style": "dist/style.css",
-  "types": "dist/index.d.ts",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "sass": "./dist/style.css",
+      "import": "./dist/tlp-popovers.js",
+      "require": "./dist/tlp-popovers.umd.cjs"
+    }
+  },
   "dependencies": {
     "@floating-ui/dom": "^1.2.7"
+  },
+  "devDependencies": {
+    "@tuleap/build-system-configurator": "workspace:*"
   },
   "scripts": {
     "typecheck": "tsc --noEmit",
     "build": "vite build",
     "watch": "vite build --watch --mode development --minify false",
     "test": "vitest"
-  },
-  "devDependencies": {
-    "@tuleap/build-system-configurator": "workspace:*"
   }
 }

@@ -35,14 +35,14 @@ defineProps<{ properties: GlobalExportProperties }>();
 @use "sass:meta";
 
 .tracker-cross-report-document-modal :deep() {
-    @include meta.load-css("@tuleap/tlp-styles/components/typography");
+    @include meta.load-css("pkg:@tuleap/tlp-styles/components/typography");
     @include meta.load-css(
-        "@tuleap/tlp-styles/components/forms",
+        "pkg:@tuleap/tlp-styles/components/forms",
         (
             "assets-base-path": "@tuleap/tlp-styles/",
         )
     );
-    @include meta.load-css("@tuleap/tlp-modal");
-    @include meta.load-css("@tuleap/tlp-button");
+    @include meta.load-css("pkg:@tuleap/tlp-modal");
+    @include meta.load-css("pkg:@tuleap/tlp-button");
 }
 </style>

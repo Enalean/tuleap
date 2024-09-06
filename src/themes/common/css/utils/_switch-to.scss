@@ -19,7 +19,7 @@
 
 @use "sass:map";
 @use "sass:color";
-@use "@tuleap/tlp-swatch-colors";
+@use "pkg:@tuleap/tlp-swatch-colors";
 
 $projects-container-width: 400px;
 $white-space-above-and-after-a-project-link: var(--tlp-small-spacing);

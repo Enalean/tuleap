@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@use "@tuleap/tlp-badge/badge-with-remove-button";
+@use "pkg:@tuleap/tlp-badge/badge-with-remove-button";
 
 .timetracking-reading-mode {
     display: flex;

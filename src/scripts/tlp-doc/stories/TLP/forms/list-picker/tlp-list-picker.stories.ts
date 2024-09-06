@@ -23,7 +23,7 @@ import { html } from "lit";
 import type { ListPickerOptions } from "@tuleap/list-picker";
 import "@tuleap/list-picker";
 import "./ListPickerWrapper";
-import "@tuleap/list-picker/style";
+import "@tuleap/list-picker/style.css";
 
 // prettier-ignore
 const helper_text: TemplateResult = html`

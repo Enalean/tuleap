@@ -18,7 +18,7 @@
  */
 
 @use "sass:color";
-@use "@tuleap/project-background";
+@use "pkg:@tuleap/project-background";
 
 @each $project-color-name, $project-color-properties in project-background.$definitions {
     $project-color: project-background.get-color($project-color-name);

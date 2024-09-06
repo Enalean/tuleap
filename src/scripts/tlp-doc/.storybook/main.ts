@@ -18,6 +18,8 @@
  */
 
 import type { StorybookConfig } from "@storybook/web-components-vite";
+// eslint-disable-next-line import/no-extraneous-dependencies
+import { NodePackageImporter } from "sass";
 
 const config: StorybookConfig = {
     framework: "@storybook/web-components-vite",
@@ -28,6 +30,21 @@ const config: StorybookConfig = {
         "@storybook/addon-links",
         "@storybook/addon-themes",
     ],
+    async viteFinal(config) {
+        // eslint-disable-next-line import/no-extraneous-dependencies
+        const { mergeConfig } = await import("vite");
+
+        return mergeConfig(config, {
+            css: {
+                preprocessorOptions: {
+                    scss: {
+                        api: "modern",
+                        importers: [new NodePackageImporter()],
+                    },
+                },
+            },
+        });
+    },
 };
 
 export default config;

@@ -17,8 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@use "includes/login";
-@use "@tuleap/burningparrot-sign-in";
+@use "./includes/login";
+@use "pkg:@tuleap/burningparrot-sign-in";
 
 $homepage-small-screen-width: 850px;
 $homepage-huge-screen-width: 3000px;

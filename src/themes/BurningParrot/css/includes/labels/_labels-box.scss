@@ -19,7 +19,7 @@
 
 @use "sass:map";
 @use "../global-variables";
-@use "@tuleap/tlp-swatch-colors";
+@use "pkg:@tuleap/tlp-swatch-colors";
 
 /* stylelint-disable selector-class-pattern */
 .select2-selection.item-labels-box-select2

@@ -17,8 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@use "@tuleap/project-background";
-@use "../../src/themes/BurningParrot/css/includes/global-variables";
+@use "pkg:@tuleap/project-background";
+@use "pkg:@tuleap/burningparrot-theme/css/includes/global-variables";
 
 .project-with-background {
     .baseline-title-header {

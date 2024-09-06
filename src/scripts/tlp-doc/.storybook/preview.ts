@@ -21,7 +21,7 @@ import type { Preview } from "@storybook/web-components";
 import type { HTMLTemplateResult } from "lit";
 import { html } from "lit";
 import "@tuleap/tlp/src/scss/_reset.scss";
-import "@tuleap/tlp-styles/components/typography";
+import "@tuleap/tlp-styles/components/typography.scss";
 import "@tuleap/tlp/src/scss/tlp.scss";
 import blue_theme from "@tuleap/tlp/src/scss/tlp-vars-blue.scss?inline";
 import green_theme from "@tuleap/tlp/src/scss/tlp-vars-green.scss?inline";

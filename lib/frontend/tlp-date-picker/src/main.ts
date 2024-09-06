@@ -17,4 +17,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import "../scss/main.scss";
+
 export * from "./flatpickr";

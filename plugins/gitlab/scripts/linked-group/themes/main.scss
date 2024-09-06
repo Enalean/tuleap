@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@use "@tuleap/plugin-gitlab-administration-theme";
+@use "pkg:@tuleap/plugin-gitlab-administration-theme";
 
 .gitlab-linked-group-feedback {
     margin: var(--tlp-medium-spacing) 0 0 var(--tlp-medium-spacing);

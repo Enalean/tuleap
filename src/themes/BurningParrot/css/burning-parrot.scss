@@ -17,31 +17,31 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@use "includes/structure";
-@use "includes/switch-to";
-@use "includes/empty-states";
-@use "includes/siteadmin";
-@use "includes/resource_restrictor";
-@use "includes/autocomplete";
-@use "includes/profile";
-@use "includes/toggler";
-@use "includes/modals";
-@use "includes/breadcrumb";
-@use "includes/skip-to-main-link";
-@use "includes/project-admin";
-@use "includes/software_map";
-@use "includes/error";
-@use "includes/ckeditor";
-@use "includes/project-banner";
-@use "includes/project-background";
-@use "includes/cross-ref-tooltip";
-@use "@tuleap/cross-ref-badges";
-@use "includes/help-dropdown";
-@use "includes/project-privacy-popover";
-@use "includes/invite-buddies";
-@use "includes/platform-banner";
-@use "includes/browser-unsupported";
-@use "includes/mermaid";
+@use "./includes/structure";
+@use "./includes/switch-to";
+@use "./includes/empty-states";
+@use "./includes/siteadmin";
+@use "./includes/resource_restrictor";
+@use "./includes/autocomplete";
+@use "./includes/profile";
+@use "./includes/toggler";
+@use "./includes/modals";
+@use "./includes/breadcrumb";
+@use "./includes/skip-to-main-link";
+@use "./includes/project-admin";
+@use "./includes/software_map";
+@use "./includes/error";
+@use "./includes/ckeditor";
+@use "./includes/project-banner";
+@use "./includes/project-background";
+@use "./includes/cross-ref-tooltip";
+@use "pkg:@tuleap/cross-ref-badges";
+@use "./includes/help-dropdown";
+@use "./includes/project-privacy-popover";
+@use "./includes/invite-buddies";
+@use "./includes/platform-banner";
+@use "./includes/browser-unsupported";
+@use "./includes/mermaid";
 
 @media print {
     body {

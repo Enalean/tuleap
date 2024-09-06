@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@use "@tuleap/tlp-badge";
+@use "pkg:@tuleap/tlp-badge";
 
 .project-admin-permission-per-group {
     display: flex;

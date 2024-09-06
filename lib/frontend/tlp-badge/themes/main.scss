@@ -19,7 +19,7 @@
 
 @use "sass:color";
 @use "sass:map";
-@use "@tuleap/tlp-swatch-colors";
+@use "pkg:@tuleap/tlp-swatch-colors";
 
 $-tlp-badge-radius: var(--tlp-small-radius);
 $-tlp-badge-color: var(--tlp-white-color);

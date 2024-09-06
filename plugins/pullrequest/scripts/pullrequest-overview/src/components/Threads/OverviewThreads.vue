@@ -234,7 +234,7 @@ function addNewRootComment(comment: PullRequestCommentPresenter): void {
 </script>
 
 <style lang="scss">
-@use "@tuleap/plugin-pullrequest-comments";
+@use "pkg:@tuleap/plugin-pullrequest-comments";
 
 .pull-request-overview-thread > .pull-request-comment-component,
 .pull-request-description > .pull-request-description-comment,

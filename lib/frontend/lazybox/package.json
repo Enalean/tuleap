@@ -5,17 +5,13 @@
   "license": "GPL-2.0-or-later",
   "private": true,
   "type": "module",
-  "module": "dist/lazybox.js",
-  "main": "dist/lazybox.umd.cjs",
-  "style": "dist/style.css",
-  "types": "dist/main.d.ts",
+  "types": "./dist/main.d.ts",
   "exports": {
     ".": {
+      "sass": "./dist/style.css",
       "import": "./dist/lazybox.js",
-      "require": "./dist/lazybox.umd.cjs",
-      "style": "./dist/style.css"
-    },
-    "./style": "./dist/style.css"
+      "require": "./dist/lazybox.umd.cjs"
+    }
   },
   "dependencies": {
     "@floating-ui/dom": "1.2.7",

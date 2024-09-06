@@ -18,8 +18,8 @@
  */
 
 @use "../../../../../../../src/themes/FlamingParrot/css/utils/variables-common";
-@use "@tuleap/project-background";
-@import "../../default/css/style";
+@use "pkg:@tuleap/project-background";
+@use "../../default/css/style";
 
 /* stylelint-disable selector-no-qualifying-type */
 body.viewvc-epel {

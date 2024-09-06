@@ -7,6 +7,7 @@
   "dependencies": {
     "@tuleap/burningparrot-theme": "workspace:^",
     "@tuleap/fetch-result": "workspace:^",
+    "@tuleap/flamingparrot-theme": "workspace:^",
     "@tuleap/mention": "workspace:*",
     "@tuleap/plugin-tracker-artifact-ckeditor-image-upload": "workspace:*",
     "@tuleap/plugin-tracker-constants": "workspace:*",

@@ -18,7 +18,7 @@
  */
 
 @use "sass:map";
-@use "@tuleap/tlp-dropdown";
+@use "pkg:@tuleap/tlp-dropdown";
 
 /* stylelint-disable selector-no-qualifying-type */
 body.reduce-help-button .help-dropdown {

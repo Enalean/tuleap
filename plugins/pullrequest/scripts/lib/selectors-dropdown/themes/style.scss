@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@use "@tuleap/lazybox/style";
+@use "pkg:@tuleap/lazybox";
 
 .selectors-dropdown-content {
     flex-direction: row;

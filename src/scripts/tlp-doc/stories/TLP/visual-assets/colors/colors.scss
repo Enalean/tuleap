@@ -18,8 +18,8 @@
  */
 
 @use "sass:map";
-@use "@tuleap/tlp-swatch-colors";
-@use "@tuleap/tlp/src/scss/variables/colors/common-colors";
+@use "pkg:@tuleap/tlp-swatch-colors";
+@use "pkg:@tuleap/tlp/src/scss/variables/colors/common-colors";
 
 %size {
     font-size: 13px;

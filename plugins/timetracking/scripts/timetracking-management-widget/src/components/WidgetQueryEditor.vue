@@ -196,7 +196,7 @@ const setDatePickersValues = (
 </script>
 
 <style lang="scss">
-@use "@tuleap/lazybox/style";
+@use "pkg:@tuleap/lazybox";
 </style>
 
 <style scoped lang="scss">

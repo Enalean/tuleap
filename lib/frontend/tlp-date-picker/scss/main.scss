@@ -17,5 +17,5 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@use "flatpickr/dist/flatpickr";
+@use "pkg:flatpickr";
 @use "./datepicker";

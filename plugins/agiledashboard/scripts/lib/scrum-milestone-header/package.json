@@ -5,16 +5,11 @@
   "license": "GPL-2.0-or-later",
   "private": true,
   "type": "module",
-  "module": "dist/plugin-agiledashboard-scrum-milestone-header.js",
-  "main": "dist/plugin-agiledashboard-scrum-milestone-header.umd.cjs",
   "exports": {
     ".": {
+      "sass": "./dist/style.css",
       "import": "./dist/plugin-agiledashboard-scrum-milestone-header.js",
-      "require": "./dist/plugin-agiledashboard-scrum-milestone-header.umd.cjs",
-      "style": "./dist/style.css"
-    },
-    "./dist/style.css": {
-      "default": "./dist/style.css"
+      "require": "./dist/plugin-agiledashboard-scrum-milestone-header.umd.cjs"
     }
   },
   "dependencies": {

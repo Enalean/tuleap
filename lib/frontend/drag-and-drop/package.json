@@ -4,12 +4,15 @@
   "homepage": "https://tuleap.org",
   "license": "GPL-2.0-or-later",
   "private": true,
-  "version": "0.0.0",
   "type": "module",
-  "module": "dist/drag-and-drop.js",
-  "main": "dist/drag-and-drop.umd.cjs",
-  "style": "dist/style.css",
-  "types": "dist/index.d.ts",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "sass": "./dist/style.css",
+      "import": "./dist/drag-and-drop.js",
+      "require": "./dist/drag-and-drop.umd.cjs"
+    }
+  },
   "devDependencies": {
     "@tuleap/build-system-configurator": "workspace:*"
   },

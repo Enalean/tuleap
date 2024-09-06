@@ -17,11 +17,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@use "@tuleap/burningparrot-theme/css/includes/global-variables";
-@use "@tuleap/plugin-tracker-artifact-modal";
-@use "ng-scrollbar/dist/ng-scrollbar";
-@use "dragular/dist/dragular";
-@use "@tuleap/plugin-cardwall-card-fields";
+@use "pkg:@tuleap/burningparrot-theme/css/includes/global-variables";
+@use "pkg:@tuleap/plugin-tracker-artifact-modal";
+@use "pkg:ng-scrollbar/dist/ng-scrollbar";
+@use "pkg:dragular/dist/dragular";
+@use "pkg:@tuleap/plugin-cardwall-card-fields";
 @use "./socket";
 @use "./edit-kanban";
 @use "./kanban-item";

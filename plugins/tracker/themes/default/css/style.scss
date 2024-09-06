@@ -18,18 +18,18 @@
  */
 
 @use "sass:map";
-@use "@tuleap/plugin-tracker-tql-codemirror";
-@use "@tuleap/tlp-swatch-colors";
-@use "../../../../../src/themes/FlamingParrot/css/utils/variables-common";
-@use "includes/cards";
-@use "includes/field-bound-colors";
-@use "includes/columns-colors";
-@use "includes/move-artifact";
-@use "includes/artifact-link-field";
-@use "includes/xml-changesets";
-@use "includes/xml-validation";
-@use "includes/project-header-background";
-@use "includes/cross-references-fields";
+@use "pkg:@tuleap/plugin-tracker-tql-codemirror";
+@use "pkg:@tuleap/tlp-swatch-colors";
+@use "pkg:@tuleap/flamingparrot-theme/css/utils/variables-common";
+@use "./includes/cards";
+@use "./includes/field-bound-colors";
+@use "./includes/columns-colors";
+@use "./includes/move-artifact";
+@use "./includes/artifact-link-field";
+@use "./includes/xml-changesets";
+@use "./includes/xml-validation";
+@use "./includes/project-header-background";
+@use "./includes/cross-references-fields";
 
 $tracker-artifact-submit-buttons-height: 80px;
 $tracker-artifact-submit-buttons-concurrent-edition-height: 286px;

@@ -5,17 +5,14 @@
   "license": "GPL-2.0-or-later",
   "private": true,
   "type": "module",
-  "types": "dist/index.d.ts",
-  "module": "dist/list-picker.js",
-  "main": "dist/list-picker.umd.cjs",
-  "style": "dist/style.css",
+  "types": "./dist/index.d.ts",
   "exports": {
     ".": {
+      "sass": "./dist/style.css",
       "import": "./dist/list-picker.js",
-      "require": "./dist/list-picker.umd.cjs",
-      "style": "./dist/style.css"
+      "require": "./dist/list-picker.umd.cjs"
     },
-    "./style": "./dist/style.css"
+    "./style.css": "./dist/style.css"
   },
   "dependencies": {
     "@tuleap/gettext": "workspace:*",

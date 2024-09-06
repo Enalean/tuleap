@@ -28,7 +28,7 @@ webpack configuration:
 ## How to include this in my angular app?
 
 - You need webpack or a module-loader that can understand ES2015 `import`s.
-- You need a sass build that can use `@import`.
+- You need a sass build that can use `@use`.
 - In your main `app.js`, add the following:
     ```javascript
     import angular_artifact_modal from '@tuleap/plugin-tracker-artifact-modal';
@@ -41,7 +41,7 @@ webpack configuration:
     ```
 - In your main `app.scss`, add the following:
     ```scss
-    @use '~@tuleap/plugin-tracker-artifact-modal';
+    @use 'pkg:@tuleap/plugin-tracker-artifact-modal';
     ```
 
 ## Usage

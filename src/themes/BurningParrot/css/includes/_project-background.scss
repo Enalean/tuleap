@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@use "@tuleap/project-background" with (
+@use "pkg:@tuleap/project-background" with (
     $project-background-images-path: "../../common/images/project-background/"
 );
 @use "sass:map";

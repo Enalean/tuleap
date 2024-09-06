@@ -17,25 +17,32 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@use "@tuleap/tlp-popovers";
+@use "pkg:@tuleap/tlp-popovers";
 
 $tuleap-common-theme-basepath: "../../../www/themes/common/";
 
-@import "../../../www/themes/common/css/bootstrap-tuleap-22d39b3.min.css";
-@import "../../../www/themes/common/css/bootstrap-tuleap-responsive-22d39b3.min.css";
-@import "../../../common/css/utils/utils";
+@use "../../../../www/themes/common/css/bootstrap-tuleap-22d39b3.min.css";
+@use "../../../../www/themes/common/css/bootstrap-tuleap-responsive-22d39b3.min.css";
+@use "../../../common/css/utils/utils";
 
 $fa-font-path: "@fortawesome/fontawesome-free/webfonts/";
 
-@import "@fortawesome/fontawesome-free/scss/fontawesome";
-@import "@fortawesome/fontawesome-free/scss/solid";
-@import "@fortawesome/fontawesome-free/scss/regular";
-@import "@fortawesome/fontawesome-free/scss/brands";
-@import "@fortawesome/fontawesome-free/scss/shims";
+@use "pkg:@fortawesome/fontawesome-free/scss/fontawesome";
+@use "pkg:@fortawesome/fontawesome-free/scss/solid" with (
+    $fa-font-path: $fa-font-path
+);
+@use "pkg:@fortawesome/fontawesome-free/scss/regular" with (
+    $fa-font-path: $fa-font-path
+);
+@use "pkg:@fortawesome/fontawesome-free/scss/brands" with (
+    $fa-font-path: $fa-font-path
+);
+@use "pkg:@fortawesome/fontawesome-free/css/v4-shims";
 
-$tlp-font-basepath: "@tuleap/tlp/src";
-
-@import "@tuleap/tlp/src/fonts/tlp-font/tlp-font";
+// tlp-font MUST come after font-awesome, otherwise `fa`, `fa-solid`, etc. will overwrite the font-family and mix up the icons
+@use "pkg:@tuleap/tlp/src/fonts/tlp-font/tlp-font" with (
+    $tlp-font-basepath: "@tuleap/tlp/src"
+);
 
 html,
 body {

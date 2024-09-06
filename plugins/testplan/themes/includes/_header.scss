@@ -18,7 +18,7 @@
  */
 
 @use "media-query-definitions" as media-query;
-@import "@tuleap/plugin-agiledashboard-scrum-milestone-header";
+@use "pkg:@tuleap/plugin-agiledashboard-scrum-milestone-header";
 
 .testplan-root {
     margin: var(--tlp-medium-spacing) 0 0;

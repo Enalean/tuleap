@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@use "@tuleap/plugin-tracker-tql-codemirror";
+@use "pkg:@tuleap/plugin-tracker-tql-codemirror";
 
 $expert-query-area-height: 75px;
 

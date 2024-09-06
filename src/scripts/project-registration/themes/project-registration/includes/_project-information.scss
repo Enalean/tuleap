@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@use "@tuleap/list-picker/style";
+@use "pkg:@tuleap/list-picker";
 
 .register-new-project-list.register-new-project-information {
     width: 500px;

@@ -4,17 +4,15 @@
   "homepage": "https://tuleap.org",
   "license": "GPL-2.0-or-later",
   "private": true,
-  "version": "0.0.0",
   "type": "module",
   "module": "dist/fp-feedback.js",
   "main": "dist/fp-feedback.umd.cjs",
-  "style": "themes/main.scss",
   "types": "dist/index.d.ts",
   "exports": {
     ".": {
+      "sass": "./themes/main.scss",
       "import": "./dist/fp-feedback.js",
-      "require": "./dist/fp-feedback.umd.cjs",
-      "default": "./themes/main.scss"
+      "require": "./dist/fp-feedback.umd.cjs"
     }
   },
   "dependencies": {

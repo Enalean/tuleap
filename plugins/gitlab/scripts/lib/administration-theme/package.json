@@ -4,9 +4,11 @@
   "homepage": "https://tuleap.org",
   "license": "GPL-2.0-or-later",
   "private": true,
-  "main": "themes/main.scss",
-  "style": "themes/main.scss",
+  "exports": {
+    ".": "./themes/main.scss"
+  },
   "dependencies": {
+    "@tuleap/burningparrot-theme": "workspace:^",
     "@tuleap/project-background": "workspace:*"
   }
 }

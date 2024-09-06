@@ -99,18 +99,18 @@ watch(is_sidebar_collapsed, (): void => {
 });
 </script>
 <style lang="scss">
-@use "@tuleap/tlp-styles/components/typography";
-@use "@tuleap/burningparrot-theme/css/includes/global-variables";
+@use "pkg:@tuleap/tlp-styles/components/typography";
+@use "pkg:@tuleap/burningparrot-theme/css/includes/global-variables";
 @use "./Styles/sidebar-generic";
 @use "./Styles/sidebar-collapsed";
 @use "./Styles/sidebar-project";
-@use "@tuleap/burningparrot-theme/css/includes/logo";
-@use "@fortawesome/fontawesome-free/scss/fontawesome";
-@use "@fortawesome/fontawesome-free/scss/brands";
+@use "pkg:@tuleap/burningparrot-theme/css/includes/logo";
+@use "pkg:@fortawesome/fontawesome-free/scss/fontawesome";
+@use "pkg:@fortawesome/fontawesome-free/scss/brands";
 @use "./Styles/fontawesome-classes";
-@use "@tuleap/tlp/src/fonts/tlp-font/icons";
-@use "@tuleap/tlp-popovers";
-@use "@tuleap/burningparrot-theme/css/includes/project-privacy-popover";
+@use "pkg:@tuleap/tlp/src/fonts/tlp-font/icons";
+@use "pkg:@tuleap/tlp-popovers";
+@use "pkg:@tuleap/burningparrot-theme/css/includes/project-privacy-popover";
 
 :host {
     display: block;
@@ -124,7 +124,7 @@ watch(is_sidebar_collapsed, (): void => {
 }
 </style>
 <style lang="scss" scoped>
-@use "@tuleap/burningparrot-theme/css/includes/global-variables";
+@use "pkg:@tuleap/burningparrot-theme/css/includes/global-variables";
 
 .sidebar {
     height: 100%;

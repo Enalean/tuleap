@@ -18,7 +18,7 @@
  */
 
 @use "sass:color";
-@use "@tuleap/plugin-tracker-chart-styles" as chart;
+@use "pkg:@tuleap/plugin-tracker-chart-styles" as chart;
 
 $team-effort-color: #57b258;
 $total-effort-color: #bd2626;

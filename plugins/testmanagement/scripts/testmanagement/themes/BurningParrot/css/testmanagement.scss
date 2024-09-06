@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@use "@tuleap/plugin-tracker-artifact-modal";
+@use "pkg:@tuleap/plugin-tracker-artifact-modal";
 @use "./includes/socket";
 @use "./includes/artifact-links-graph";
 @use "./includes/graph";

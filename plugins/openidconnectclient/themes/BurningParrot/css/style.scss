@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@use "includes/openidconnectclient";
-@use "includes/provider-admin-modal";
-@use "includes/login";
-@use "includes/button-colors";
+@use "./includes/openidconnectclient";
+@use "./includes/provider-admin-modal";
+@use "./includes/login";
+@use "./includes/button-colors";
