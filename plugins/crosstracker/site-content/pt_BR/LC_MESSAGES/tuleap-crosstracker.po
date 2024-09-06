@@ -154,7 +154,7 @@ msgstr ""
 msgid "No tracker found"
 msgstr ""
 
-msgid "Only @project = 'self' is supported"
+msgid "Only @project = 'self' and @project = 'aggregated' are supported"
 msgstr ""
 
 msgid "Project not found"
@@ -181,6 +181,9 @@ msgstr ""
 
 #, php-format
 msgid "The maximum value for 'limit' is %d"
+msgstr ""
+
+msgid "You can use @project = 'aggregated' only in a program project"
 msgstr ""
 
 msgid "You cannot access all projects of the search"

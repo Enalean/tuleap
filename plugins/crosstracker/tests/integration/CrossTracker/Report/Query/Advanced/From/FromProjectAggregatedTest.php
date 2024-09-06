@@ -136,22 +136,4 @@ final class FromProjectAggregatedTest extends CrossTrackerFieldTestCase
         );
         $this->assertItContainsTrackers(['Tracker 1', 'Tracker 2', 'Tracker 3'], $result);
     }
-
-    public function testItGetAllTrackersFromSubProject(): void
-    {
-        $new_event  = new CollectLinkedProjects($this->sub_project_1, $this->user);
-        $collection = LinkedProjectsCollection::fromSourceProject(
-            SearchLinkedProjectsStub::withValidProjects($this->top_project),
-            CheckProjectAccessStub::withValidAccess(),
-            $this->sub_project_1,
-            $this->user,
-        );
-        $new_event->addChildrenProjects($collection);
-        $this->event_manager->method('dispatch')->willReturn($new_event);
-        $result = $this->getQueryResults(
-            new CrossTrackerExpertReport(2, 'SELECT @tracker.name FROM @project = "aggregated" WHERE @id >= 1'),
-            $this->user,
-        );
-        $this->assertItContainsTrackers(['Tracker 1', 'Tracker 2'], $result);
-    }
 }
