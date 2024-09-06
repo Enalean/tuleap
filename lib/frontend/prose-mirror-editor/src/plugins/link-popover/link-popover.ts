@@ -21,17 +21,12 @@ import { Plugin } from "prosemirror-state";
 import type { EditorView } from "prosemirror-view";
 import { removeLinkPopover, insertLinkPopover } from "./helper/link-popover-inserter";
 import { getLinkValue } from "./helper/link-value-extractor";
-import { createPopover } from "@tuleap/tlp-popovers";
-import type { Popover } from "@tuleap/tlp-popovers";
 import type { GetText } from "@tuleap/gettext";
-
-let popover_instance: Popover | null = null;
 
 export const initLinkPopoverPlugin = (gettext_provider: GetText, editor_id: string): Plugin =>
     new Plugin({
         props: {
             handleClick: (view: EditorView, pos: number): boolean => {
-                popover_instance?.destroy();
                 removeLinkPopover(document, editor_id);
 
                 if (!view.state.selection.empty) {
@@ -52,16 +47,7 @@ export const initLinkPopoverPlugin = (gettext_provider: GetText, editor_id: stri
                     return false;
                 }
 
-                const popover = insertLinkPopover(document, gettext_provider, editor_id, link_href);
-                if (!popover) {
-                    return false;
-                }
-
-                popover_instance = createPopover(popover_anchor, popover, {
-                    placement: "top",
-                    trigger: "click",
-                });
-                popover_instance.show();
+                insertLinkPopover(document, gettext_provider, popover_anchor, editor_id, link_href);
 
                 return true;
             },

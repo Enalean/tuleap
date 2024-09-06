@@ -143,7 +143,7 @@ import { ref, onMounted, computed } from "vue";
 import { SIDEBAR_CONFIGURATION } from "../injection-symbols";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import { createPopover } from "@tuleap/tlp-popovers";
-import { sanitizeURL } from "../url-sanitizer";
+import { sanitizeURL } from "@tuleap/url-sanitizer";
 
 const props = defineProps<{ is_sidebar_collapsed: boolean }>();
 

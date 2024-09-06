@@ -57,7 +57,7 @@ import { SIDEBAR_CONFIGURATION } from "../injection-symbols";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import PrivacyBadge from "./PrivacyBadge.vue";
 import { computed } from "vue";
-import { sanitizeURL } from "../url-sanitizer";
+import { sanitizeURL } from "@tuleap/url-sanitizer";
 import ProjectFlags from "./ProjectFlags.vue";
 import ProjectAnnouncement from "./ProjectAnnouncement.vue";
 import LinkedProjects from "./LinkedProjects.vue";

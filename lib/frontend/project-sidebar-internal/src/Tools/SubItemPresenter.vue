@@ -51,7 +51,7 @@
 
 <script setup lang="ts">
 import { computed, ref } from "vue";
-import { sanitizeURL } from "../url-sanitizer";
+import { sanitizeURL } from "@tuleap/url-sanitizer";
 import type { QuickLink } from "../configuration";
 
 // We cannot directly import the Tool interface from the external file so we duplicate the content for now

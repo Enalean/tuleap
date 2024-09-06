@@ -18,10 +18,11 @@
  *
  */
 
-import DOMPurify from "dompurify";
 import type { GetText } from "@tuleap/gettext";
+import { TAG as LINK_POPOVER_TAG } from "../element/LinkPopoverElement";
+import type { LinkPopoverElement } from "../element/LinkPopoverElement";
 
-function buildLinkPopoverId(editor_id: string): string {
+export function buildLinkPopoverId(editor_id: string): string {
     return `link-popover-${editor_id}`;
 }
 
@@ -33,38 +34,25 @@ export function removeLinkPopover(doc: Document, editor_id: string): void {
     existing_menu.remove();
 }
 
+const isLinkPopoverElement = (element: HTMLElement): element is LinkPopoverElement & HTMLElement =>
+    element.localName === LINK_POPOVER_TAG;
+
 export function insertLinkPopover(
     doc: Document,
     gettext_provider: GetText,
+    popover_anchor: HTMLElement,
     editor_id: string,
     link_href: string,
-): HTMLElement | null {
-    const menu_id = buildLinkPopoverId(editor_id);
+): void {
+    const popover = doc.createElement(LINK_POPOVER_TAG);
+    if (!isLinkPopoverElement(popover)) {
+        return;
+    }
 
-    const popover = DOMPurify.sanitize(
-        `
-        <section id="${menu_id}" class="tlp-popover prose-mirror-editor-popover-links">
-            <div class="tlp-popover-arrow"></div>
-            <div class="tlp-popover-body">
-                <div class="tlp-button-bar">
-                    <div class="tlp-button-bar-item">
-                        <a
-                            class="tlp-button-outline tlp-button-secondary tlp-button-small"
-                            title="${gettext_provider.gettext("Open link")}"
-                            href="${link_href}"
-                            target="_blank"
-                            data-test="open-link-button"
-                        >
-                            <i class="fa-solid fa-external-link-alt" role="img"></i>
-                        </a>
-                    </div>
-                </div>
-        </section>
-    `,
-        { RETURN_DOM: true, ADD_ATTR: ["target"] },
-    );
+    popover.id = buildLinkPopoverId(editor_id);
+    popover.gettext_provider = gettext_provider;
+    popover.link_href = link_href;
+    popover.popover_anchor = popover_anchor;
 
     doc.body.appendChild(popover);
-
-    return doc.getElementById(menu_id);
 }

@@ -1,0 +1,27 @@
+{
+  "author": "Enalean Team",
+  "name": "@tuleap/url-sanitizer",
+  "homepage": "https://tuleap.org",
+  "license": "GPL-2.0-or-later",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "module": "dist/url-sanitizer.js",
+  "main": "dist/url-sanitizer.umd.cjs",
+  "types": "src/url-sanitizer.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/url-sanitizer.js",
+      "require": "./dist/url-sanitizer.umd.cjs"
+    }
+  },
+  "devDependencies": {
+    "@tuleap/build-system-configurator": "workspace:*"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "build": "vite build",
+    "watch": "vite build --watch --mode development --minify false",
+    "test": "vitest"
+  }
+}
