@@ -94,7 +94,7 @@ final readonly class ReportTrackersRetriever implements RetrieveReportTrackers
 
         $query = $this->parser->parse($expert_query);
         assert($query->getFrom() !== null); // From part is checked for expert query, so it cannot be null
-        $additional_from = $this->from_builder->buildFromWhere($query->getFrom(), $report->getId());
+        $additional_from = $this->from_builder->buildFromWhere($query->getFrom(), $report->getId(), $current_user);
         return $this->trackers_permissions->retrieveUserPermissionOnTrackers(
             $current_user,
             $this->getTrackers(array_map(

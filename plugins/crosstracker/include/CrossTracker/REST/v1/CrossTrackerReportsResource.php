@@ -625,16 +625,21 @@ final class CrossTrackerReportsResource extends AuthenticatedResource
 
     private function getFromBuilderVisitor(): FromBuilderVisitor
     {
+        $event_manager        = EventManager::instance();
         $project_id_retriever = new ProjectDashboardDao(new DashboardWidgetDao(
             new WidgetFactory(
                 $this->user_manager,
                 new User_ForgeUserGroupPermissionsManager(new User_ForgeUserGroupPermissionsDao()),
-                EventManager::instance(),
+                $event_manager,
             )
         ));
         return new FromBuilderVisitor(
             new FromTrackerBuilderVisitor($project_id_retriever),
-            new FromProjectBuilderVisitor($project_id_retriever),
+            new FromProjectBuilderVisitor(
+                $project_id_retriever,
+                ProjectManager::instance(),
+                $event_manager,
+            ),
         );
     }
 

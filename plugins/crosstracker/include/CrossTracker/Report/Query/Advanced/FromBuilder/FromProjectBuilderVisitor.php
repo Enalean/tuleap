@@ -24,9 +24,13 @@ namespace Tuleap\CrossTracker\Report\Query\Advanced\FromBuilder;
 
 use LogicException;
 use ParagonIE\EasyDB\EasyStatement;
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Tuleap\CrossTracker\Report\Query\Advanced\AllowedFrom;
 use Tuleap\CrossTracker\Widget\ProjectCrossTrackerSearch;
 use Tuleap\Dashboard\Project\IRetrieveProjectFromWidget;
+use Tuleap\Project\ProjectByIDFactory;
+use Tuleap\Project\Sidebar\CollectLinkedProjects;
+use Tuleap\Project\Sidebar\LinkedProject;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\FromProjectConditionVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\FromProjectEqual;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\FromProjectIn;
@@ -40,6 +44,8 @@ final readonly class FromProjectBuilderVisitor implements FromProjectConditionVi
 {
     public function __construct(
         private IRetrieveProjectFromWidget $project_id_retriever,
+        private ProjectByIDFactory $project_factory,
+        private EventDispatcherInterface $event_dispatcher,
     ) {
     }
 
@@ -66,7 +72,25 @@ final readonly class FromProjectBuilderVisitor implements FromProjectConditionVi
         }
 
         if ($project_equal->getValue() === AllowedFrom::PROJECT_AGGREGATED) {
-            throw new LogicException("@project = 'aggregated' is not yet implemented");
+            $project_id = $this->project_id_retriever->searchProjectIdFromWidgetIdAndType($parameters->report_id, ProjectCrossTrackerSearch::NAME);
+            if ($project_id === null) {
+                throw new LogicException('Project id not found');
+            }
+            $project         = $this->project_factory->getValidProjectById($project_id);
+            $linked_projects = $this->event_dispatcher->dispatch(new CollectLinkedProjects($project, $parameters->user));
+            assert($linked_projects instanceof CollectLinkedProjects);
+            $projects_ids   = array_values(array_map(
+                static fn(LinkedProject $project) => $project->id,
+                array_merge($linked_projects->getParentProjects()->getProjects(), $linked_projects->getChildrenProjects()->getProjects()),
+            ));
+            $projects_ids[] = $project_id;
+
+            return new ParametrizedFromWhere(
+                '',
+                EasyStatement::open()->in('project.group_id IN (?*)', $projects_ids),
+                [],
+                $projects_ids,
+            );
         }
 
         throw new LogicException('Should not be here: already catched by the FROM query validation');
