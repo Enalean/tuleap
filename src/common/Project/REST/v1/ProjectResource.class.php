@@ -1292,6 +1292,49 @@ class ProjectResource extends AuthenticatedResource
     }
 
     /**
+     * Extract references
+     *
+     * Return given text with detected Tuleap references converted into clickable links
+     *
+     * @url POST {id}/extract_references
+     * @access hybrid
+     * @oauth2-scope read:project
+     *
+     * @param int $id Id of the project
+     * @param string $text {@from body} the text to add Tuleap references
+     *
+     * @throws RestException 401
+     * @throws RestException 403
+     * @throws RestException 404
+     */
+    public function extractReferences(int $id, string $text): array
+    {
+        $this->checkAccess();
+        $project = $this->getProjectForUser($id);
+
+        $references = (\ReferenceManager::instance())->extractReferences($text, (int) $project->getID());
+
+        $formatted_references = [];
+        foreach ($references as $reference) {
+            $formatted_references[] = [
+                'text' => $reference->getMatch(),
+                'link' => $reference->getFullGotoLink(),
+            ];
+        }
+        return $formatted_references;
+    }
+
+    /**
+     * @url OPTIONS {id}/extract_references
+     *
+     * @param int $id Id of the project
+     */
+    public function optionReferences(int $id): void
+    {
+        Header::allowOptionsPost();
+    }
+
+    /**
      * @url OPTIONS {id}/3rd_party_integration_data
      *
      * @param int $id ID of the project

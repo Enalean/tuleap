@@ -40,6 +40,7 @@ const props = defineProps<{
     editable_description: string;
     input_current_description: EditorSectionContent["inputCurrentDescription"];
     upload_file: UseUploadFileType;
+    project_id: number;
 }>();
 
 let useEditorInstance: UseEditorType | undefined;
@@ -83,6 +84,7 @@ onMounted(async () => {
             setupUploadPlugin,
             onChange,
             content_editor.value,
+            props.project_id,
         );
         editorView.value = useEditorInstance.editor;
     }

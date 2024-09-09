@@ -22,6 +22,7 @@ import { ref } from "vue";
 import { putConfiguration } from "@/helpers/rest-querier";
 import type { SectionsStore } from "@/stores/useSectionsStore";
 import type { StrictInjectionKey } from "@tuleap/vue-strict-inject";
+import type { Project } from "@/helpers/project.type";
 
 interface TitleFieldDefinition {
     readonly field_id: number;
@@ -52,6 +53,7 @@ export interface Tracker {
     readonly title: null | TitleFieldDefinition;
     readonly description: null | DescriptionFieldDefinition;
     readonly file: null | FileFieldDefinition;
+    readonly project: Project;
 }
 
 export interface TrackerWithSubmittableSection extends Tracker {

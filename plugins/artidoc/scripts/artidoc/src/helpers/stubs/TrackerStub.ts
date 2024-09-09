@@ -25,6 +25,12 @@ const base: Tracker = {
     title: null,
     description: null,
     file: null,
+    project: {
+        id: 101,
+        uri: "/my-project",
+        label: "My project",
+        icon: "project-icon",
+    },
 };
 
 export const TrackerStub = {

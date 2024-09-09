@@ -31,6 +31,7 @@
             v-bind:readonly_value="readonly_description"
             v-bind:is_image_upload_allowed="is_image_upload_allowed"
             v-bind:upload_file="upload_file"
+            v-bind:project_id="project_id"
             data-test="editor"
         />
     </template>
@@ -59,6 +60,7 @@ withDefaults(
         input_current_description: EditorSectionContent["inputCurrentDescription"];
         is_print_mode?: boolean;
         upload_file: UseUploadFileType;
+        project_id: number;
     }>(),
     {
         is_print_mode: false,
