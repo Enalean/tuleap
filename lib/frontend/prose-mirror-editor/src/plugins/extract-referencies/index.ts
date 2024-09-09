@@ -30,16 +30,6 @@ export function initPluginTransformInput(project_id: number): Plugin {
             decorations(state): DecorationSource {
                 return this.getState(state);
             },
-            handleClick(view, _, event): boolean | void {
-                if (event.target instanceof HTMLElement && event.target.dataset.dataHref) {
-                    const link = view.dom.ownerDocument.getElementById(
-                        event.target.dataset.dataHref,
-                    );
-
-                    return !link;
-                }
-                return false;
-            },
         },
         state: {
             init: (config, state): DecorationSet => {

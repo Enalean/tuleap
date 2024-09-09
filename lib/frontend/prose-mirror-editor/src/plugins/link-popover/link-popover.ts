@@ -29,15 +29,24 @@ export const initLinkPopoverPlugin = (gettext_provider: GetText, editor_id: stri
             handleClick: (view: EditorView, pos: number): boolean => {
                 removeLinkPopover(document, editor_id);
 
-                if (!view.state.selection.empty) {
-                    return false;
+                let link_href = "";
+                const dom_element = view.domAtPos(pos).node.parentElement;
+                if (dom_element) {
+                    link_href = dom_element.dataset.href ? dom_element.dataset.href : "";
                 }
 
-                const link_href = getLinkValue(
-                    view.state,
-                    view.state.selection.from,
-                    view.state.selection.to,
-                );
+                if (!link_href) {
+                    if (!view.state.selection.empty) {
+                        return false;
+                    }
+
+                    link_href = getLinkValue(
+                        view.state,
+                        view.state.selection.from,
+                        view.state.selection.to,
+                    );
+                }
+
                 if (!link_href) {
                     return false;
                 }
