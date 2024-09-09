@@ -95,8 +95,6 @@ use Tuleap\CrossTracker\Report\SimilarField\SimilarFieldsMatcher;
 use Tuleap\CrossTracker\Report\SimilarField\SupportedFieldsDao;
 use Tuleap\CrossTracker\REST\ResourcesInjector;
 use Tuleap\CrossTracker\Widget\ProjectCrossTrackerSearch;
-use Tuleap\Dashboard\Project\ProjectDashboardDao;
-use Tuleap\Dashboard\Widget\DashboardWidgetDao;
 use Tuleap\DB\DBFactory;
 use Tuleap\Markdown\CommonMarkInterpreter;
 use Tuleap\Plugin\ListeningToEventClass;
@@ -132,7 +130,6 @@ use Tuleap\Tracker\Report\TrackerReportConfigDao;
 use Tuleap\Widget\Event\GetProjectWidgetList;
 use Tuleap\Widget\Event\GetUserWidgetList;
 use Tuleap\Widget\Event\GetWidget;
-use Tuleap\Widget\WidgetFactory;
 
 require_once __DIR__ . '/../../tracker/include/trackerPlugin.php';
 require_once __DIR__ . '/../vendor/autoload.php';
@@ -400,31 +397,18 @@ class crosstrackerPlugin extends Plugin
             ),
         );
         $event_manager           = EventManager::instance();
-        $project_id_retriever    = new ProjectDashboardDao(new DashboardWidgetDao(
-            new WidgetFactory(
-                $user_manager,
-                new User_ForgeUserGroupPermissionsManager(new User_ForgeUserGroupPermissionsDao()),
-                $event_manager,
-            )
-        ));
         $project_manager         = ProjectManager::instance();
+        $report_dao              = new CrossTrackerReportDao();
         $from_builder_visitor    = new FromBuilderVisitor(
-            new FromTrackerBuilderVisitor($project_id_retriever),
+            new FromTrackerBuilderVisitor($report_dao),
             new FromProjectBuilderVisitor(
-                $project_id_retriever,
+                $report_dao,
                 $project_manager,
                 $event_manager,
             ),
         );
 
         $expert_query_dao               = new CrossTrackerExpertQueryReportDao();
-        $project_dashboard_dao          = new ProjectDashboardDao(new DashboardWidgetDao(
-            new WidgetFactory(
-                UserManager::instance(),
-                new User_ForgeUserGroupPermissionsManager(new User_ForgeUserGroupPermissionsDao()),
-                $event_manager,
-            )
-        ));
         $cross_tracker_artifact_factory = new CrossTrackerArtifactReportFactory(
             new CrossTrackerArtifactReportDao(),
             Tracker_ArtifactFactory::instance(),
@@ -443,14 +427,12 @@ class crosstrackerPlugin extends Plugin
                 $trackers_permissions,
                 $expert_query_dao,
                 TrackerFactory::instance(),
-                new WidgetInProjectChecker($project_dashboard_dao),
-                $project_dashboard_dao,
+                new WidgetInProjectChecker($report_dao),
+                $report_dao,
                 $project_manager,
                 $event_manager,
             ),
         );
-
-        $report_dao = new CrossTrackerReportDao();
 
         $formatter_visitor = new CSVFormatterVisitor(new CSVFormatter());
 

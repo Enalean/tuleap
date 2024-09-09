@@ -76,7 +76,8 @@ seed_data() {
         roadmap \
         artidoc \
         pdftemplate \
-        tracker_functions
+        tracker_functions \
+        crosstracker
 }
 
 seed_plugin_data() {

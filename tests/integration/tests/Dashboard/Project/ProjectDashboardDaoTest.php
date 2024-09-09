@@ -23,8 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\Dashboard\Project;
 
 use Tuleap\Dashboard\Widget\DashboardWidgetDao;
-use Tuleap\DB\DBFactory;
-use Tuleap\Test\Builders\CoreDatabaseBuilder;
 use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
 use Tuleap\Test\Stubs\EventDispatcherStub;
 use Tuleap\Widget\WidgetFactory;
@@ -119,25 +117,5 @@ final class ProjectDashboardDaoTest extends TestIntegrationTestCase
     private function getDashboardIds(array $project_dashboard_rows): array
     {
         return array_values(array_map(static fn(array $row) => $row['id'], $project_dashboard_rows));
-    }
-
-    public function testItCannotRetrieveProjectIdFromNonExistingWidget(): void
-    {
-        self::assertNull($this->dao->searchProjectIdFromWidgetIdAndType(-1, 'blabla'));
-    }
-
-    public function testItCanRetrieveProjectIdFromWidget(): void
-    {
-        $db           = DBFactory::getMainTuleapDBConnection()->getDB();
-        $core_builder = new CoreDatabaseBuilder($db);
-        $project      = $core_builder->buildProject('project_name');
-        $dashboard_id = $this->dao->save((int) $project->getID(), 'Main Dashboard');
-        $line_id      = $this->widget_dao->createLine($dashboard_id, 'project', 0);
-        $column_id    = $this->widget_dao->createColumn($line_id, 0);
-        self::assertTrue($this->widget_dao->insertWidgetInColumnWithRank('projectcontacts', 396, $column_id, 0));
-        self::assertEquals(
-            (int) $project->getID(),
-            $this->dao->searchProjectIdFromWidgetIdAndType(396, 'projectcontacts'),
-        );
     }
 }

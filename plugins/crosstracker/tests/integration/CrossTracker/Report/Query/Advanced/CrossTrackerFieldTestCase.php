@@ -24,9 +24,11 @@ namespace Tuleap\CrossTracker\Report\Query\Advanced;
 
 use EventManager;
 use ForgeConfig;
+use Tuleap\CrossTracker\CrossTrackerReportDao;
 use Tuleap\CrossTracker\Widget\ProjectCrossTrackerSearch;
 use Tuleap\Dashboard\Project\ProjectDashboardDao;
 use Tuleap\Dashboard\Widget\DashboardWidgetDao;
+use Tuleap\DB\DBFactory;
 use Tuleap\TemporaryTestDirectory;
 use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
 use Tuleap\Widget\WidgetFactory;
@@ -60,6 +62,8 @@ abstract class CrossTrackerFieldTestCase extends TestIntegrationTestCase
 
     protected function addReportToProject(int $report_id, int $project_id): void
     {
+        $db = DBFactory::getMainTuleapDBConnection()->getDB();
+        $db->insert('plugin_crosstracker_report', ['id' => $report_id, 'expert_query' => '']);
         $widget_dao   = new DashboardWidgetDao(
             new WidgetFactory(
                 UserManager::instance(),
@@ -72,5 +76,6 @@ abstract class CrossTrackerFieldTestCase extends TestIntegrationTestCase
         $line_id      = $widget_dao->createLine($dashboard_id, 'project', 0);
         $column_id    = $widget_dao->createColumn($line_id, 0);
         self::assertTrue($widget_dao->insertWidgetInColumnWithRank(ProjectCrossTrackerSearch::NAME, $report_id, $column_id, 0));
+        self::assertNotNull((new CrossTrackerReportDao())->searchCrossTrackerWidgetByCrossTrackerReportId($report_id));
     }
 }

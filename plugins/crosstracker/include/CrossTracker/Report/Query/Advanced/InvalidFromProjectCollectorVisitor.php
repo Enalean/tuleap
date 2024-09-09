@@ -24,8 +24,7 @@ namespace Tuleap\CrossTracker\Report\Query\Advanced;
 
 use LogicException;
 use Psr\EventDispatcher\EventDispatcherInterface;
-use Tuleap\CrossTracker\Widget\ProjectCrossTrackerSearch;
-use Tuleap\Dashboard\Project\IRetrieveProjectFromWidget;
+use Tuleap\CrossTracker\SearchCrossTrackerWidget;
 use Tuleap\Project\ProjectByIDFactory;
 use Tuleap\Project\Sidebar\CollectLinkedProjects;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\FromProjectConditionVisitor;
@@ -39,7 +38,7 @@ final readonly class InvalidFromProjectCollectorVisitor implements FromProjectCo
 {
     public function __construct(
         private WidgetInProjectChecker $in_project_checker,
-        private IRetrieveProjectFromWidget $project_id_retriever,
+        private SearchCrossTrackerWidget $widget_retriever,
         private ProjectByIDFactory $project_factory,
         private EventDispatcherInterface $event_dispatcher,
     ) {
@@ -77,15 +76,15 @@ final readonly class InvalidFromProjectCollectorVisitor implements FromProjectCo
             return;
         }
 
-        $project_id = $this->project_id_retriever->searchProjectIdFromWidgetIdAndType($parameters->report_id, ProjectCrossTrackerSearch::NAME);
-        if ($project_id === null) {
+        $row = $this->widget_retriever->searchCrossTrackerWidgetByCrossTrackerReportId($parameters->report_id);
+        if ($row === null || $row['dashboard_type'] !== 'project') {
             $parameters->collection->addInvalidFrom(dgettext(
                 'tuleap-crosstracker',
                 "You cannot use @project = 'aggregated' in the context of a personal dashboard",
             ));
             return;
         }
-        $project         = $this->project_factory->getValidProjectById($project_id);
+        $project         = $this->project_factory->getValidProjectById($row['project_id']);
         $linked_projects = $this->event_dispatcher->dispatch(new CollectLinkedProjects($project, $parameters->user));
         assert($linked_projects instanceof CollectLinkedProjects);
         if (! $linked_projects->getParentProjects()->isEmpty()) {

@@ -22,17 +22,18 @@ declare(strict_types=1);
 
 namespace Tuleap\CrossTracker\Report\Query\Advanced;
 
-use Tuleap\CrossTracker\Widget\ProjectCrossTrackerSearch;
-use Tuleap\Dashboard\Project\IRetrieveProjectFromWidget;
+use Tuleap\CrossTracker\SearchCrossTrackerWidget;
 
 final readonly class WidgetInProjectChecker
 {
-    public function __construct(private IRetrieveProjectFromWidget $project_id_retriever)
+    public function __construct(private SearchCrossTrackerWidget $widget_retriever)
     {
     }
 
     public function isWidgetInProjectDashboard(int $report_id): bool
     {
-        return $this->project_id_retriever->searchProjectIdFromWidgetIdAndType($report_id, ProjectCrossTrackerSearch::NAME) !== null;
+        $row = $this->widget_retriever->searchCrossTrackerWidgetByCrossTrackerReportId($report_id);
+
+        return $row !== null && $row['dashboard_type'] === 'project';
     }
 }

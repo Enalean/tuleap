@@ -34,6 +34,7 @@ use Tracker_Semantic_StatusDao;
 use Tracker_Semantic_TitleDao;
 use TrackerFactory;
 use Tuleap\CrossTracker\CrossTrackerArtifactReportDao;
+use Tuleap\CrossTracker\CrossTrackerReportDao;
 use Tuleap\CrossTracker\Report\CrossTrackerArtifactReportFactory;
 use Tuleap\CrossTracker\Report\Query\Advanced\DuckTypedField\FieldTypeRetrieverWrapper;
 use Tuleap\CrossTracker\Report\Query\Advanced\FromBuilder\FromProjectBuilderVisitor;
@@ -94,8 +95,6 @@ use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Metadata\Special\Pro
 use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilderVisitor;
 use Tuleap\CrossTracker\Report\Query\Advanced\WidgetInProjectChecker;
 use Tuleap\CrossTracker\Report\ReportTrackersRetriever;
-use Tuleap\Dashboard\Project\ProjectDashboardDao;
-use Tuleap\Dashboard\Widget\DashboardWidgetDao;
 use Tuleap\DB\DBFactory;
 use Tuleap\Markdown\CommonMarkInterpreter;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
@@ -124,10 +123,7 @@ use Tuleap\Tracker\Report\Query\Advanced\SizeValidatorVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\UgroupLabelConverter;
 use Tuleap\Tracker\Report\TrackerReportConfig;
 use Tuleap\Tracker\Report\TrackerReportConfigDao;
-use Tuleap\Widget\WidgetFactory;
 use UGroupManager;
-use User_ForgeUserGroupPermissionsDao;
-use User_ForgeUserGroupPermissionsManager;
 use UserHelper;
 use UserManager;
 
@@ -313,31 +309,18 @@ final class ArtifactReportFactoryInstantiator
             ),
         );
         $event_manager            = EventManager::instance();
-        $project_id_retriever     = new ProjectDashboardDao(new DashboardWidgetDao(
-            new WidgetFactory(
-                $user_manager,
-                new User_ForgeUserGroupPermissionsManager(new User_ForgeUserGroupPermissionsDao()),
-                $event_manager,
-            )
-        ));
         $project_manager          = ProjectManager::instance();
+        $report_dao               = new CrossTrackerReportDao();
         $from_builder_visitor     = new FromBuilderVisitor(
-            new FromTrackerBuilderVisitor($project_id_retriever),
+            new FromTrackerBuilderVisitor($report_dao),
             new FromProjectBuilderVisitor(
-                $project_id_retriever,
+                $report_dao,
                 $project_manager,
                 $event_manager,
             ),
         );
 
-        $expert_query_dao      = new CrossTrackerExpertQueryReportDao();
-        $project_dashboard_dao = new ProjectDashboardDao(new DashboardWidgetDao(
-            new WidgetFactory(
-                UserManager::instance(),
-                new User_ForgeUserGroupPermissionsManager(new User_ForgeUserGroupPermissionsDao()),
-                $event_manager,
-            )
-        ));
+        $expert_query_dao = new CrossTrackerExpertQueryReportDao();
         return new CrossTrackerArtifactReportFactory(
             new CrossTrackerArtifactReportDao(),
             $artifact_factory,
@@ -356,8 +339,8 @@ final class ArtifactReportFactoryInstantiator
                 $trackers_permissions,
                 $expert_query_dao,
                 TrackerFactory::instance(),
-                new WidgetInProjectChecker($project_dashboard_dao),
-                $project_dashboard_dao,
+                new WidgetInProjectChecker($report_dao),
+                $report_dao,
                 $project_manager,
                 $event_manager,
             ),

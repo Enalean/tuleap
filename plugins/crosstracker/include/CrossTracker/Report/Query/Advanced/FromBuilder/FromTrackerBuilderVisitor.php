@@ -25,8 +25,7 @@ namespace Tuleap\CrossTracker\Report\Query\Advanced\FromBuilder;
 use LogicException;
 use ParagonIE\EasyDB\EasyStatement;
 use Tuleap\CrossTracker\Report\Query\Advanced\AllowedFrom;
-use Tuleap\CrossTracker\Widget\ProjectCrossTrackerSearch;
-use Tuleap\Dashboard\Project\IRetrieveProjectFromWidget;
+use Tuleap\CrossTracker\SearchCrossTrackerWidget;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\FromTrackerConditionVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\FromTrackerEqual;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\FromTrackerIn;
@@ -39,7 +38,7 @@ use Tuleap\Tracker\Report\Query\ParametrizedFromWhere;
 final readonly class FromTrackerBuilderVisitor implements FromTrackerConditionVisitor
 {
     public function __construct(
-        private IRetrieveProjectFromWidget $project_id_retriever,
+        private SearchCrossTrackerWidget $widget_retriever,
     ) {
     }
 
@@ -73,13 +72,12 @@ final readonly class FromTrackerBuilderVisitor implements FromTrackerConditionVi
         $where_parameters = $names;
 
         if ($parameters->is_tracker_condition_alone) {
-            $widget_id  = $parameters->report_id;
-            $project_id = $this->project_id_retriever->searchProjectIdFromWidgetIdAndType($widget_id, ProjectCrossTrackerSearch::NAME);
-            if ($project_id === null) {
+            $row = $this->widget_retriever->searchCrossTrackerWidgetByCrossTrackerReportId($parameters->report_id);
+            if ($row === null || $row['dashboard_type'] !== 'project') {
                 throw new LogicException('Project id not found');
             }
             $where             .= ' AND project.group_id = ?';
-            $where_parameters[] = $project_id;
+            $where_parameters[] = $row['project_id'];
         }
 
         return new ParametrizedFromWhere('', $where, [], $where_parameters);
