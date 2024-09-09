@@ -184,6 +184,11 @@ msgstr ""
 "La section que vous êtes en train d'éditer n'existe pas ou vous n'y avez "
 "plus accès."
 
+msgid "There is %{ remaining_uploads } other upload in progress..."
+msgid_plural "There are %{ remaining_uploads } other uploads in progress..."
+msgstr[0] "Il y a %{ remaining_uploads } autre téléchargement en cours..."
+msgstr[1] "Il y a %{ remaining_uploads } autres téléchargements en cours..."
+
 msgid "There isn't any suitable trackers in this project"
 msgstr "Il n'y a pas de tracker utilisable dans ce projet"
 

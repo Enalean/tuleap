@@ -20,11 +20,11 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { shallowMount } from "@vue/test-utils";
 import type { VueWrapper } from "@vue/test-utils";
-import NotificationBar from "@/components/section/description/NotificationBar.vue";
-import type { NotificationBarProps } from "@/components/section/description/NotificationBar.vue";
+import NotificationProgress from "@/components/section/description/NotificationProgress.vue";
 import { mockStrictInject } from "@/helpers/mock-strict-inject";
 import { UPLOAD_FILE_STORE } from "@/stores/upload-file-store-injection-key";
 import { UploadFileStoreStub } from "@/helpers/stubs/UploadFileStoreStub";
+import type { NotificationProgressProps } from "@/components/section/description/NotificationProgress.vue";
 
 const default_props = {
     file_id: "123",
@@ -34,13 +34,13 @@ const default_props = {
     reset_progress: vi.fn(),
 };
 
-function getWrapper(props: NotificationBarProps): VueWrapper {
-    return shallowMount(NotificationBar, {
+function getWrapper(props: NotificationProgressProps): VueWrapper {
+    return shallowMount(NotificationProgress, {
         props,
     });
 }
 
-describe("NotificationBar", () => {
+describe("NotificationProgress", () => {
     const mocked_upload_data = UploadFileStoreStub.uploadInProgress();
 
     beforeEach(() => {
@@ -54,23 +54,31 @@ describe("NotificationBar", () => {
                 upload_progress: 20,
             });
 
-            const progressElement = wrapper.find('span[class="tlp-alert-info"]');
+            const progressElement = wrapper.find('div[class="notification-message"]');
 
             expect(progressElement.exists()).toBe(true);
-            expect(progressElement.text()).toBe("file_name : 20%");
+            expect(progressElement.text()).toBe("file_name 20%");
         });
     });
-    describe("when an error occurred", () => {
-        it("should display the message", () => {
-            const wrapper = getWrapper({
+    describe("when the upload is finished", () => {
+        it("should delete the progress bar after 3 seconds", () => {
+            vi.useFakeTimers();
+
+            const mocked_delete_upload = vi.fn();
+            mockStrictInject([
+                [UPLOAD_FILE_STORE, { ...mocked_upload_data, deleteUpload: mocked_delete_upload }],
+            ]);
+
+            getWrapper({
                 ...default_props,
-                message: "a message",
+                upload_progress: 100,
             });
 
-            const messageElement = wrapper.find('span[class="tlp-alert-danger"]');
+            vi.advanceTimersByTime(3_000);
 
-            expect(messageElement.exists()).toBe(true);
-            expect(messageElement.text()).toBe("a message");
+            expect(mocked_delete_upload).toHaveBeenCalledOnce();
+
+            vi.useRealTimers();
         });
     });
 });

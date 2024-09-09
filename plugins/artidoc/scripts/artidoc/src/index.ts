@@ -43,6 +43,8 @@ import { IS_USER_ANONYMOUS } from "@/is-user-anonymous";
 import { EDITOR_CHOICE, editorChoice } from "@/helpers/editor-choice";
 import { useUploadFileStore } from "@/stores/useUploadFileStore";
 import { UPLOAD_FILE_STORE } from "./stores/upload-file-store-injection-key";
+import { NOTIFICATION_STORE } from "@/stores/notification-injection-key";
+import { useNotificationsStore } from "@/stores/useNotificationsStore";
 import {
     OPEN_ADD_EXISTING_SECTION_MODAL_BUS,
     useOpenAddExistingSectionModalBus,
@@ -69,10 +71,12 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     const sections_store = useSectionsStore();
     const upload_file_store = useUploadFileStore();
+    const notifications_store = useNotificationsStore();
     const editors_store = useSectionEditorsStore();
     app.provide(EDITORS_COLLECTION, editors_store);
     app.provide(SECTIONS_STORE, sections_store);
     app.provide(UPLOAD_FILE_STORE, upload_file_store);
+    app.provide(NOTIFICATION_STORE, notifications_store);
     app.provide(CURRENT_LOCALE, current_locale);
     app.provide(
         CAN_USER_EDIT_DOCUMENT,

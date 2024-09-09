@@ -18,11 +18,9 @@
   -
   -->
 <template>
-    <div>
-        <span v-if="message" class="tlp-alert-danger">
-            {{ message }}
-        </span>
-        <span v-else class="tlp-alert-info">{{ upload_message }}</span>
+    <div class="notification-message">
+        <span class="upload-message">{{ upload_message }}</span
+        ><span class="upload-percentage">{{ upload_percentage }}</span>
     </div>
 </template>
 <script setup lang="ts">
@@ -31,39 +29,41 @@ import { strictInject } from "@tuleap/vue-strict-inject";
 import type { UploadFileStoreType } from "@/stores/useUploadFileStore";
 import { UPLOAD_FILE_STORE } from "@/stores/upload-file-store-injection-key";
 
-export type NotificationBarProps = {
+export type NotificationProgressProps = {
     upload_progress?: number;
-    message?: string | null;
     file_name: string;
     file_id: string;
 };
 
-const props = withDefaults(defineProps<NotificationBarProps>(), {
+const props = withDefaults(defineProps<NotificationProgressProps>(), {
     upload_progress: 0,
-    message: "",
 });
 
-const { file_name, upload_progress, message } = toRefs(props);
-const { deleteFinishedUpload } = strictInject<UploadFileStoreType>(UPLOAD_FILE_STORE);
+const { file_name, upload_progress, file_id } = toRefs(props);
+const { deleteUpload } = strictInject<UploadFileStoreType>(UPLOAD_FILE_STORE);
+watch(
+    [upload_progress, file_id],
+    () => {
+        if (upload_progress.value === 100) {
+            setTimeout(() => {
+                deleteUpload(file_id.value);
+            }, 3_000);
+        }
+    },
+    { immediate: true },
+);
 
-watch(upload_progress, () => {
-    if (upload_progress.value === 100) {
-        setTimeout(() => {
-            deleteFinishedUpload(props.file_id);
-        }, 3_000);
-    }
-});
-
-const upload_message = computed(() => `${file_name.value} : ${upload_progress.value}%`);
+const upload_message = computed(() => `${file_name.value} `);
+const upload_percentage = computed(() => `${upload_progress.value}%`);
 </script>
 <style lang="scss" scoped>
-@use "pkg:@tuleap/burningparrot-theme/css/includes/global-variables";
+.upload-message {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
 
-$title-height: 65px;
-
-div {
+.notification-message {
     display: flex;
-    position: sticky;
-    justify-content: center;
 }
 </style>

@@ -19,13 +19,12 @@
 
 import { ref } from "vue";
 import type { UploadFileStoreType } from "@/stores/useUploadFileStore";
-
-const noop = (): void => {};
+import { noop } from "@/helpers/noop";
 
 export const UploadFileStoreStub = {
     uploadNotInProgress: (): UploadFileStoreType => ({
         pending_uploads: ref([]),
-        deleteFinishedUpload: noop,
+        deleteUpload: noop,
         cancelSectionUploads: noop,
         addPendingUpload: noop,
     }),
@@ -51,7 +50,7 @@ export const UploadFileStoreStub = {
                 progress: 100,
             },
         ]),
-        deleteFinishedUpload: noop,
+        deleteUpload: noop,
         cancelSectionUploads: noop,
         addPendingUpload: noop,
     }),

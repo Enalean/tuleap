@@ -20,8 +20,7 @@
 import { ref } from "vue";
 import type { ConfigurationStore, Tracker } from "@/stores/configuration-store";
 import { TrackerStub } from "@/helpers/stubs/TrackerStub";
-
-const noop = (): void => {};
+import { noop } from "@/helpers/noop";
 
 const tasks: Tracker = {
     ...TrackerStub.withoutTitleAndDescription(),

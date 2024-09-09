@@ -101,6 +101,7 @@ describe("uploadFile", () => {
                 );
                 expect(options.onErrorCallback).toHaveBeenCalledWith(
                     new MaxSizeUploadExceededError(max_size_upload, gettext_provider),
+                    file.name,
                 );
             });
         });
@@ -119,6 +120,7 @@ describe("uploadFile", () => {
                 );
                 expect(options.onErrorCallback).toHaveBeenCalledWith(
                     new InvalidFileUploadError(gettext_provider),
+                    file_with_invalid_type.name,
                 );
             });
         });
@@ -153,6 +155,7 @@ describe("uploadFile", () => {
                 );
                 expect(options.onErrorCallback).toHaveBeenCalledWith(
                     new UploadError(gettext_provider),
+                    file.name,
                 );
             });
         });
@@ -203,13 +206,14 @@ describe("uploadFile", () => {
                 ).rejects.toThrowError();
                 expect(options.onErrorCallback).toHaveBeenCalledWith(
                     new UploadError(gettext_provider),
+                    file.name,
                 );
             });
         });
 
         it("should call success callback", async () => {
             await uploadAndDisplayFileInEditor(mockFileList([file]), options, gettext_provider, []);
-            expect(options.onSuccessCallback).toHaveBeenCalledWith(1, "download_href");
+            expect(options.onSuccessCallback).toHaveBeenCalledWith(1, "download_href", file.name);
         });
     });
 });

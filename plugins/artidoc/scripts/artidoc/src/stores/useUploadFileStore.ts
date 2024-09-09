@@ -23,7 +23,7 @@ import { v4 as uuidv4 } from "uuid";
 
 export type UploadFileStoreType = {
     pending_uploads: Ref<OnGoingUploadFileWithId[]>;
-    deleteFinishedUpload: (file_id: string) => void;
+    deleteUpload: (file_id: string) => void;
     cancelSectionUploads: (section_id: string) => void;
     addPendingUpload: (file_name: string, section_id: string) => void;
 };
@@ -31,12 +31,13 @@ export type UploadFileStoreType = {
 export type OnGoingUploadFileWithId = OnGoingUploadFile & {
     file_id: string;
     section_id: string;
+    error_message?: string | null | undefined;
 };
 
 export function useUploadFileStore(): UploadFileStoreType {
     const pending_uploads: Ref<OnGoingUploadFileWithId[]> = ref([]);
 
-    const deleteFinishedUpload = (file_id: string): void => {
+    const deleteUpload = (file_id: string): void => {
         const index = pending_uploads.value.findIndex(
             (upload: OnGoingUploadFileWithId) => upload.file_id === file_id,
         );
@@ -48,7 +49,7 @@ export function useUploadFileStore(): UploadFileStoreType {
     const cancelSectionUploads = (section_id: string): void => {
         pending_uploads.value.forEach((upload) => {
             if (upload.section_id === section_id) {
-                deleteFinishedUpload(upload.file_id);
+                deleteUpload(upload.file_id);
             }
         });
     };
@@ -66,6 +67,6 @@ export function useUploadFileStore(): UploadFileStoreType {
         pending_uploads,
         addPendingUpload,
         cancelSectionUploads,
-        deleteFinishedUpload,
+        deleteUpload,
     };
 }

@@ -46,9 +46,13 @@ function handleDrop(
     gettext_provider: GetText,
     uploaders: Array<Upload>,
 ): Promise<Option<ReadonlyArray<OngoingUpload>>> {
-    const success_callback_with_insert_file = (id: number, download_href: string): void => {
+    const success_callback_with_insert_file = (
+        id: number,
+        download_href: string,
+        file_name: string,
+    ): void => {
         insertFile(view, download_href);
-        options.onSuccessCallback(id, download_href);
+        options.onSuccessCallback(id, download_href, file_name);
     };
     return fileUploadHandler(
         { ...options, onSuccessCallback: success_callback_with_insert_file },

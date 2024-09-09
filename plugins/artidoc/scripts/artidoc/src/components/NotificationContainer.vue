@@ -18,35 +18,82 @@
   -->
 
 <template>
-    <div class="notifications">
-        <notification-bar
-            v-for="upload in pending_uploads"
-            v-bind:key="upload.file_name"
-            v-bind:upload_progress="upload.progress"
-            v-bind:file_id="upload.file_id"
-            v-bind:file_name="upload.file_name"
-        />
+    <div class="notification-container">
+        <div class="notifications">
+            <notification-message
+                class="notification"
+                v-for="(message, index) in messages"
+                v-bind:key="`notification-message-${index}`"
+                v-bind:notification="message"
+                v-bind:delete_notification="deleteNotification"
+            />
+            <div v-if="pending_uploads.length > 0" class="notification tlp-alert-info">
+                <notification-progress
+                    class="notification-progress"
+                    v-for="upload in displayed_pending_uploads"
+                    v-bind:key="upload.file_name"
+                    v-bind:upload_progress="upload.progress"
+                    v-bind:file_id="upload.file_id"
+                    v-bind:file_name="upload.file_name"
+                />
+                <notification-remaining-pending-uploads
+                    class="notification"
+                    v-bind:pending_uploads="pending_uploads"
+                    v-bind:nb_pending_upload_to_display="NB_PENDING_UPLOAD_TO_DISPLAY"
+                />
+            </div>
+        </div>
     </div>
 </template>
 
 <script setup lang="ts">
 import { strictInject } from "@tuleap/vue-strict-inject";
 import { UPLOAD_FILE_STORE } from "@/stores/upload-file-store-injection-key";
-import NotificationBar from "@/components/section/description/NotificationBar.vue";
+import NotificationProgress from "@/components/section/description/NotificationProgress.vue";
+import { NOTIFICATION_STORE } from "@/stores/notification-injection-key";
+import NotificationMessage from "@/components/section/description/NotificationMessage.vue";
+import { computed } from "vue";
+import NotificationRemainingPendingUploads from "@/components/NotificationRemainingPendingUploads.vue";
 
 const { pending_uploads } = strictInject(UPLOAD_FILE_STORE);
+const { messages, deleteNotification } = strictInject(NOTIFICATION_STORE);
+
+const NB_PENDING_UPLOAD_TO_DISPLAY = 3;
+const displayed_pending_uploads = computed(() =>
+    pending_uploads.value.slice(0, NB_PENDING_UPLOAD_TO_DISPLAY),
+);
 </script>
 
 <style lang="scss" scoped>
-.notifications {
-    position: fixed;
+.notification-container {
+    display: flex;
+    position: sticky;
     z-index: 100;
-    top: 5rem;
-    left: 50%;
-    transform: translateX(-50%);
+    top: 7rem;
+    justify-content: center;
+    width: inherit;
+}
+
+.notifications {
+    position: absolute;
+    top: 1rem;
 
     > *:not(:last-child) {
         margin-bottom: 1rem;
     }
+}
+
+.notification-progress {
+    display: flex;
+    flex-flow: row nowrap;
+    gap: var(--tlp-small-spacing);
+    justify-content: space-between;
+}
+
+.notification {
+    display: flex;
+    flex-direction: column;
+    gap: var(--tlp-small-spacing);
+    width: 25rem;
 }
 </style>

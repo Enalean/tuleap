@@ -17,5 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export const noop = (): void => {};
-export const promised_noop = (): Promise<void> => Promise.resolve();
+import type { StrictInjectionKey } from "@tuleap/vue-strict-inject";
+import type { UseNotificationsStoreType } from "@/stores/useNotificationsStore";
+
+export const NOTIFICATION_STORE: StrictInjectionKey<UseNotificationsStoreType> =
+    Symbol("notifications");

@@ -25,17 +25,35 @@ import NotificationContainer from "@/components/NotificationContainer.vue";
 import { mockStrictInject } from "@/helpers/mock-strict-inject";
 import { UPLOAD_FILE_STORE } from "@/stores/upload-file-store-injection-key";
 import { UploadFileStoreStub } from "@/helpers/stubs/UploadFileStoreStub";
-import NotificationBar from "@/components/section/description/NotificationBar.vue";
+import NotificationProgress from "@/components/section/description/NotificationProgress.vue";
+import NotificationMessage from "@/components/section/description/NotificationMessage.vue";
+import { NOTIFICATION_STORE } from "@/stores/notification-injection-key";
+import type { UseNotificationsStoreType } from "@/stores/useNotificationsStore";
+import { NotificationsSub } from "@/helpers/stubs/NotificationsStub";
+import NotificationRemainingPendingUploads from "@/components/NotificationRemainingPendingUploads.vue";
 
 describe("NotificationContainer", () => {
     let wrapper: VueWrapper<ComponentPublicInstance>;
+    let mocked_notifications_data: UseNotificationsStoreType;
 
     beforeAll(() => {
-        mockStrictInject([[UPLOAD_FILE_STORE, UploadFileStoreStub.uploadInProgress()]]);
+        mocked_notifications_data = NotificationsSub.withMessages();
+        mockStrictInject([
+            [UPLOAD_FILE_STORE, UploadFileStoreStub.uploadInProgress()],
+            [NOTIFICATION_STORE, mocked_notifications_data],
+        ]);
         wrapper = shallowMount(NotificationContainer, {});
     });
 
-    it("should display a notification bar for each pending uploads", () => {
-        expect(wrapper.findAllComponents(NotificationBar)).toHaveLength(3);
+    it("should display a notification progress for each pending uploads", () => {
+        expect(wrapper.findAllComponents(NotificationProgress)).toHaveLength(3);
+    });
+
+    it("should display a notification for each messages", () => {
+        expect(wrapper.findAllComponents(NotificationMessage)).toHaveLength(2);
+    });
+
+    it("should display info message about remaining pending uploads", () => {
+        expect(wrapper.findAllComponents(NotificationRemainingPendingUploads)).toHaveLength(1);
     });
 });

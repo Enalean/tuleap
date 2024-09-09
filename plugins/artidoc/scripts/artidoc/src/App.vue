@@ -20,7 +20,6 @@
 
 <template>
     <document-header />
-    <notification-container />
     <div class="artidoc-container">
         <document-view class="artidoc-app-container" />
     </div>
@@ -37,7 +36,6 @@ import { strictInject } from "@tuleap/vue-strict-inject";
 import { CAN_USER_EDIT_DOCUMENT } from "@/can-user-edit-document-injection-key";
 import { DOCUMENT_ID } from "@/document-id-injection-key";
 import { SECTIONS_STORE } from "@/stores/sections-store-injection-key";
-import NotificationContainer from "@/components/NotificationContainer.vue";
 import GlobalErrorMessageModal from "@/components/GlobalErrorMessageModal.vue";
 import type { GlobalErrorMessage } from "@/global-error-message-injection-key";
 import { SET_GLOBAL_ERROR_MESSAGE } from "@/global-error-message-injection-key";

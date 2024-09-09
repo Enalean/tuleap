@@ -23,17 +23,17 @@ import type {
     UploadError,
     OnGoingUploadFile,
 } from "@tuleap/prose-mirror-editor";
-import { computed, ref } from "vue";
+import { computed } from "vue";
 import type { Ref } from "vue";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import { UPLOAD_MAX_SIZE } from "@/max-upload-size-injecion-keys";
 import type { AttachmentFile } from "@/composables/useAttachmentFile";
 import { UPLOAD_FILE_STORE } from "@/stores/upload-file-store-injection-key";
 import type { OnGoingUploadFileWithId } from "@/stores/useUploadFileStore";
+import { NOTIFICATION_STORE } from "@/stores/notification-injection-key";
 
 export type UseUploadFileType = {
     file_upload_options: FileUploadOptions;
-    error_message: Ref<string | null>;
     is_in_progress: Ref<boolean>;
     resetProgressCallback: () => void;
 };
@@ -44,10 +44,9 @@ export function useUploadFile(
     add_attachment_to_waiting_list: AttachmentFile["addAttachmentToWaitingList"],
 ): UseUploadFileType {
     const upload_max_size = strictInject(UPLOAD_MAX_SIZE);
-    const { addPendingUpload, pending_uploads, cancelSectionUploads } =
+    const { addPendingUpload, pending_uploads, deleteUpload, cancelSectionUploads } =
         strictInject(UPLOAD_FILE_STORE);
 
-    const error_message: Ref<string | null> = ref(null);
     const is_in_progress = computed(() => {
         return (
             pending_uploads.value.filter(
@@ -56,19 +55,26 @@ export function useUploadFile(
         );
     });
 
-    const onStartUploadCallback = (file_name: string): OnGoingUploadFile[] => {
-        addPendingUpload(file_name, section_id);
+    const onStartUploadCallback = (files: FileList): OnGoingUploadFile[] => {
+        for (const file of files) {
+            addPendingUpload(file.name, section_id);
+        }
         return pending_uploads.value;
     };
-    const onErrorCallback = (error: UploadError | MaxSizeUploadExceededError): void => {
-        error_message.value = error.message;
+    const { addNotification } = strictInject(NOTIFICATION_STORE);
+    const onErrorCallback = (
+        error: UploadError | MaxSizeUploadExceededError,
+        file_name: string,
+    ): void => {
+        addNotification({ message: error.message, type: "danger" });
+        const file_to_delete = pending_uploads.value.find(
+            (upload) => upload.file_name === file_name && upload.section_id === section_id,
+        );
+        if (file_to_delete) {
+            deleteUpload(file_to_delete.file_id);
+        }
     };
-    const onSuccessCallback = (id: number, download_href: string): void => {
-        add_attachment_to_waiting_list({ id, upload_url: download_href });
-        error_message.value = "";
-    };
-
-    const onProgressCallback = (file_name: string, global_progress: number): void => {
+    const updateProgress = (file_name: string, new_progress: number): boolean => {
         const file_index = pending_uploads.value.findIndex(
             (upload: OnGoingUploadFileWithId) => upload.file_name === file_name,
         );
@@ -76,9 +82,18 @@ export function useUploadFile(
             pending_uploads.value[file_index] = {
                 ...pending_uploads.value[file_index],
                 file_name,
-                progress: global_progress,
+                progress: new_progress,
             };
+            return true;
         }
+        return false;
+    };
+    const onSuccessCallback = (id: number, download_href: string, file_name: string): void => {
+        updateProgress(file_name, 100);
+        add_attachment_to_waiting_list({ id, upload_url: download_href });
+    };
+    const onProgressCallback = (file_name: string, global_progress: number): void => {
+        updateProgress(file_name, global_progress);
     };
     const resetProgressCallback = (): void => {
         cancelSectionUploads(section_id);
@@ -94,7 +109,6 @@ export function useUploadFile(
     };
     return {
         file_upload_options,
-        error_message,
         is_in_progress,
         resetProgressCallback,
     };
