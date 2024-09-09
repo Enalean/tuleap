@@ -64,6 +64,7 @@ use Tuleap\Tracker\Report\Query\Advanced\SearchablesDoNotExistException;
 use Tuleap\Tracker\Report\Query\Advanced\SelectablesAreInvalidException;
 use Tuleap\Tracker\Report\Query\Advanced\SelectablesDoNotExistException;
 use Tuleap\Tracker\Report\Query\Advanced\SelectablesMustBeUniqueException;
+use Tuleap\Tracker\Report\Query\Advanced\SelectLimitExceededException;
 use Tuleap\Tracker\Report\Query\Advanced\SizeValidatorVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\UgroupLabelConverter;
 use Tuleap\Tracker\Report\Query\CommentFromWhereBuilder;
@@ -1599,7 +1600,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
                 if ($this->is_in_expert_mode && $this->expert_query) {
                     try {
                         $this->validateExpertQuery();
-                    } catch (SearchablesDoNotExistException | SelectablesDoNotExistException | SelectablesMustBeUniqueException $exception) {
+                    } catch (SearchablesDoNotExistException | SelectablesDoNotExistException | SelectablesMustBeUniqueException | SelectLimitExceededException $exception) {
                         $GLOBALS['Response']->addFeedback(
                             Feedback::ERROR,
                             $exception->getI18NExceptionMessage()

@@ -62,6 +62,10 @@ final readonly class CrossTrackerArtifactReportFactory
     #[ConfigKeyInt(0)]
     public const MAX_TRACKER_FROM = 'crosstracker_maximum_tracker_get_from';
 
+    #[ConfigKey('Configure the maximum quantity of column a cross tracker search expert query can select (default to 0 for no limit)')]
+    #[ConfigKeyInt(0)]
+    public const MAX_SELECT = 'crosstracker_maximum_selected_columns';
+
     public function __construct(
         private CrossTrackerArtifactReportDao $artifact_report_dao,
         private RetrieveArtifact $artifact_factory,

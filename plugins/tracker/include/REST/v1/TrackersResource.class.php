@@ -65,6 +65,7 @@ use Tuleap\Tracker\Report\Query\Advanced\SearchablesDoNotExistException;
 use Tuleap\Tracker\Report\Query\Advanced\SelectablesAreInvalidException;
 use Tuleap\Tracker\Report\Query\Advanced\SelectablesDoNotExistException;
 use Tuleap\Tracker\Report\Query\Advanced\SelectablesMustBeUniqueException;
+use Tuleap\Tracker\Report\Query\Advanced\SelectLimitExceededException;
 use Tuleap\Tracker\REST\Artifact\ArtifactRepresentation;
 use Tuleap\Tracker\REST\Artifact\ArtifactRepresentationBuilder;
 use Tuleap\Tracker\REST\Artifact\Changeset\ChangesetRepresentationBuilder;
@@ -394,7 +395,7 @@ class TrackersResource extends AuthenticatedResource
     {
         try {
             $report->validateExpertQuery();
-        } catch (SearchablesDoNotExistException | SelectablesDoNotExistException | SelectablesMustBeUniqueException $exception) {
+        } catch (SearchablesDoNotExistException | SelectablesDoNotExistException | SelectablesMustBeUniqueException | SelectLimitExceededException $exception) {
             throw new RestException(
                 400,
                 $exception->getI18NExceptionMessage()

@@ -23,6 +23,8 @@ declare(strict_types=1);
 namespace Tuleap\CrossTracker\Report\Query\Advanced;
 
 use BaseLanguageFactory;
+use ForgeConfig;
+use Tuleap\CrossTracker\Report\CrossTrackerArtifactReportFactory;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\DuckTypedField\DuckTypedFieldChecker;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata\ArtifactIdMetadataChecker;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata\AssignedToChecker;
@@ -32,6 +34,7 @@ use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata\StatusChe
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata\SubmissionDateChecker;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata\TextSemanticChecker;
 use Tuleap\CrossTracker\Tests\Stub\MetadataCheckerStub;
+use Tuleap\ForgeConfigSandbox;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\LegacyTabTranslationsSupport;
 use Tuleap\Test\PHPUnit\TestCase;
@@ -51,6 +54,7 @@ use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ListFields\ListFieldCheck
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Text\TextFieldChecker;
 use Tuleap\Tracker\Report\Query\Advanced\ListFieldBindValueNormalizer;
 use Tuleap\Tracker\Report\Query\Advanced\SelectablesMustBeUniqueException;
+use Tuleap\Tracker\Report\Query\Advanced\SelectLimitExceededException;
 use Tuleap\Tracker\Report\Query\Advanced\UgroupLabelConverter;
 use Tuleap\Tracker\Test\Stub\RetrieveFieldTypeStub;
 use Tuleap\Tracker\Test\Stub\RetrieveUsedFieldsStub;
@@ -60,6 +64,7 @@ use UserManager;
 final class InvalidSelectablesCollectionBuilderTest extends TestCase
 {
     use LegacyTabTranslationsSupport;
+    use ForgeConfigSandbox;
 
     private InvalidSelectablesCollectionBuilder $builder;
 
@@ -132,6 +137,15 @@ final class InvalidSelectablesCollectionBuilderTest extends TestCase
         self::expectException(SelectablesMustBeUniqueException::class);
         $this->builder->buildCollectionOfInvalidSelectables([
             new Metadata('meta'), new Metadata('meta'),
+        ]);
+    }
+
+    public function testItThrowIfSelectSizeExceedLimit(): void
+    {
+        ForgeConfig::set(CrossTrackerArtifactReportFactory::MAX_SELECT, 1);
+        self::expectException(SelectLimitExceededException::class);
+        $this->builder->buildCollectionOfInvalidSelectables([
+            new Field('a'), new Field('b'), new Metadata('meta'),
         ]);
     }
 
