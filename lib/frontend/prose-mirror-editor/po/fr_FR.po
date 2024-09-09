@@ -34,6 +34,9 @@ msgstr "Changer le texte en titre"
 msgid "Change to plain text"
 msgstr "Changer en texte"
 
+msgid "Copy link url"
+msgstr "Copier l'url du lien"
+
 msgid "Create"
 msgstr "Créer"
 
@@ -49,6 +52,9 @@ msgstr "Source de l'image"
 
 msgid "Link"
 msgstr "Lien"
+
+msgid "Link url has been copied!"
+msgstr "L'url du lien a été copiée !"
 
 msgid "Max upload size exceeded"
 msgstr "La taille maximale de téléversement dépassée"

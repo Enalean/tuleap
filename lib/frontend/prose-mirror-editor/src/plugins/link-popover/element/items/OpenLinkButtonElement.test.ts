@@ -18,11 +18,11 @@
  */
 
 import { describe, it, expect, beforeEach } from "vitest";
-import { createLocalDocument, gettext_provider } from "../../../helpers/helper-for-test";
-import { renderLinkPopover } from "./LinkPopoverTemplate";
-import type { HostElement, InternalLinkPopoverElement } from "./LinkPopoverElement";
+import { createLocalDocument, gettext_provider } from "../../../../helpers/helper-for-test";
+import type { HostElement, InternalOpenLinkButtonElement } from "./OpenLinkButtonElement";
+import { renderOpenLinkButton } from "./OpenLinkButtonElement";
 
-describe("LinkPopoverTemplate", () => {
+describe("OpenLinkButtonElement", () => {
     let doc: Document, target: ShadowRoot;
 
     beforeEach(() => {
@@ -33,9 +33,9 @@ describe("LinkPopoverTemplate", () => {
     it("should contain a clickable link to open the link", () => {
         const host = Object.assign(doc.createElement("div"), {
             sanitized_link_href: "https://www.example.com/",
-        } as InternalLinkPopoverElement) as HostElement;
+        } as InternalOpenLinkButtonElement) as HostElement;
 
-        const render = renderLinkPopover(host, gettext_provider);
+        const render = renderOpenLinkButton(host, gettext_provider);
         render(host, target);
 
         expect(target.querySelector<HTMLLinkElement>("[data-test=open-link-button]")?.href).toBe(
