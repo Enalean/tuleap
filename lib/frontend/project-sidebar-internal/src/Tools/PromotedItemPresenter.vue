@@ -59,7 +59,7 @@
 
 <script setup lang="ts">
 import { computed, ref } from "vue";
-import { sanitizeURL } from "../url-sanitizer";
+import { sanitizeURL } from "@tuleap/url-sanitizer";
 import type { Item, QuickLink } from "../configuration";
 import SubItemPresenter from "./SubItemPresenter.vue";
 

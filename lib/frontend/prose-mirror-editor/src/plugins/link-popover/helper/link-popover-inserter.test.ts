@@ -19,33 +19,30 @@
  */
 
 import { describe, beforeEach, it, expect } from "vitest";
-import { insertLinkPopover, removeLinkPopover } from "./link-popover-inserter";
+import { buildLinkPopoverId, insertLinkPopover, removeLinkPopover } from "./link-popover-inserter";
 import { createLocalDocument, gettext_provider } from "../../../helpers/helper-for-test";
 
 const editor_id = "aaaa-bbbb-cccc-dddd";
 const link_href = "https://example.com/";
 
 describe("link-popover-inserter", () => {
-    let doc: Document;
+    let doc: Document, popover_anchor: HTMLElement;
 
     beforeEach(() => {
         doc = createLocalDocument();
+        popover_anchor = doc.createElement("span");
     });
 
-    it("insertLinkPopover() should insert a tlp-popover containing a clickable link and return it", () => {
-        const popover_element = insertLinkPopover(doc, gettext_provider, editor_id, link_href);
+    it("insertLinkPopover() should insert a LinkPopoverElement into the document", () => {
+        insertLinkPopover(doc, gettext_provider, popover_anchor, editor_id, link_href);
 
-        expect(popover_element).not.toBeNull();
-        expect(
-            popover_element?.querySelector<HTMLLinkElement>("[data-test=open-link-button]")?.href,
-        ).toBe(link_href);
-        expect(doc.getElementById(`link-popover-${editor_id}`)).toBe(popover_element);
+        expect(doc.getElementById(buildLinkPopoverId(editor_id))).not.toBeNull();
     });
 
     it("removeLinkPopover() should remover the tlp-popover from the DOM", () => {
-        insertLinkPopover(doc, gettext_provider, editor_id, link_href);
+        insertLinkPopover(doc, gettext_provider, popover_anchor, editor_id, link_href);
         removeLinkPopover(doc, editor_id);
 
-        expect(doc.getElementById(`link-popover-${editor_id}`)).toBeNull();
+        expect(doc.getElementById(buildLinkPopoverId(editor_id))).toBeNull();
     });
 });

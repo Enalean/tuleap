@@ -66,7 +66,7 @@
 </template>
 <script setup lang="ts">
 import { computed } from "vue";
-import { sanitizeURL } from "../url-sanitizer";
+import { sanitizeURL } from "@tuleap/url-sanitizer";
 import type { PromotedItem } from "../configuration";
 import PromotedItemPresenter from "./PromotedItemPresenter.vue";
 

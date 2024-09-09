@@ -19,6 +19,7 @@
     "@tuleap/tlp": "workspace:*",
     "@tuleap/tlp-popovers": "workspace:*",
     "@tuleap/tlp-styles": "workspace:^",
+    "@tuleap/url-sanitizer": "workspace:*",
     "@tuleap/vue-strict-inject": "workspace:*",
     "@vueuse/core": "^8.7.3",
     "vue": "^3.3.4",
