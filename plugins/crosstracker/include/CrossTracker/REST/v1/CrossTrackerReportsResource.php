@@ -111,8 +111,6 @@ use Tuleap\CrossTracker\Report\Query\Advanced\WidgetInProjectChecker;
 use Tuleap\CrossTracker\Report\ReportTrackersRetriever;
 use Tuleap\CrossTracker\REST\v1\Representation\CrossTrackerReportContentRepresentation;
 use Tuleap\CrossTracker\REST\v1\Representation\LegacyCrossTrackerReportContentRepresentation;
-use Tuleap\Dashboard\Project\ProjectDashboardDao;
-use Tuleap\Dashboard\Widget\DashboardWidgetDao;
 use Tuleap\DB\DBFactory;
 use Tuleap\Markdown\CommonMarkInterpreter;
 use Tuleap\REST\AuthenticatedResource;
@@ -161,11 +159,8 @@ use Tuleap\Tracker\Report\TrackerReportConfig;
 use Tuleap\Tracker\Report\TrackerReportConfigDao;
 use Tuleap\Tracker\Report\TrackerReportExtractor;
 use Tuleap\Tracker\REST\v1\ArtifactMatchingReportCollection;
-use Tuleap\Widget\WidgetFactory;
 use UGroupManager;
 use URLVerification;
-use User_ForgeUserGroupPermissionsDao;
-use User_ForgeUserGroupPermissionsManager;
 use UserHelper;
 use UserManager;
 
@@ -626,18 +621,12 @@ final class CrossTrackerReportsResource extends AuthenticatedResource
 
     private function getFromBuilderVisitor(): FromBuilderVisitor
     {
-        $event_manager        = EventManager::instance();
-        $project_id_retriever = new ProjectDashboardDao(new DashboardWidgetDao(
-            new WidgetFactory(
-                $this->user_manager,
-                new User_ForgeUserGroupPermissionsManager(new User_ForgeUserGroupPermissionsDao()),
-                $event_manager,
-            )
-        ));
+        $event_manager = EventManager::instance();
+        $report_dao    = new CrossTrackerReportDao();
         return new FromBuilderVisitor(
-            new FromTrackerBuilderVisitor($project_id_retriever),
+            new FromTrackerBuilderVisitor($report_dao),
             new FromProjectBuilderVisitor(
-                $project_id_retriever,
+                $report_dao,
                 ProjectManager::instance(),
                 $event_manager,
             ),
@@ -754,13 +743,7 @@ final class CrossTrackerReportsResource extends AuthenticatedResource
 
     private function getReportTrackersRetriever(): ReportTrackersRetriever
     {
-        $project_dashboard_dao = new ProjectDashboardDao(new DashboardWidgetDao(
-            new WidgetFactory(
-                UserManager::instance(),
-                new User_ForgeUserGroupPermissionsManager(new User_ForgeUserGroupPermissionsDao()),
-                EventManager::instance(),
-            )
-        ));
+        $report_dao = new CrossTrackerReportDao();
         return new ReportTrackersRetriever(
             $this->getExpertQueryValidator(),
             $this->getParser(),
@@ -768,8 +751,8 @@ final class CrossTrackerReportsResource extends AuthenticatedResource
             TrackersPermissionsRetriever::build(),
             new CrossTrackerExpertQueryReportDao(),
             TrackerFactory::instance(),
-            new WidgetInProjectChecker($project_dashboard_dao),
-            $project_dashboard_dao,
+            new WidgetInProjectChecker($report_dao),
+            $report_dao,
             ProjectManager::instance(),
             EventManager::instance(),
         );

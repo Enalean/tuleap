@@ -33,7 +33,7 @@ use Tuleap\CrossTracker\Report\Query\Advanced\InvalidFromProjectCollectorVisitor
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidFromTrackerCollectorVisitor;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\CrossTrackerExpertQueryReportDao;
 use Tuleap\CrossTracker\Report\Query\Advanced\WidgetInProjectChecker;
-use Tuleap\Dashboard\Project\IRetrieveProjectFromWidget;
+use Tuleap\CrossTracker\SearchCrossTrackerWidget;
 use Tuleap\Project\ProjectByIDFactory;
 use Tuleap\Tracker\Artifact\RetrieveTracker;
 use Tuleap\Tracker\Permission\RetrieveUserPermissionOnTrackers;
@@ -53,7 +53,7 @@ final readonly class ReportTrackersRetriever implements RetrieveReportTrackers
         private CrossTrackerExpertQueryReportDao $expert_query_dao,
         private RetrieveTracker $tracker_factory,
         private WidgetInProjectChecker $in_project_checker,
-        private IRetrieveProjectFromWidget $project_id_retriever,
+        private SearchCrossTrackerWidget $widget_retriever,
         private ProjectByIDFactory $project_factory,
         private EventDispatcherInterface $event_dispatcher,
     ) {
@@ -83,7 +83,7 @@ final readonly class ReportTrackersRetriever implements RetrieveReportTrackers
                 new InvalidFromTrackerCollectorVisitor($this->in_project_checker),
                 new InvalidFromProjectCollectorVisitor(
                     $this->in_project_checker,
-                    $this->project_id_retriever,
+                    $this->widget_retriever,
                     $this->project_factory,
                     $this->event_dispatcher,
                 ),

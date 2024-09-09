@@ -26,8 +26,7 @@ use LogicException;
 use ParagonIE\EasyDB\EasyStatement;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Tuleap\CrossTracker\Report\Query\Advanced\AllowedFrom;
-use Tuleap\CrossTracker\Widget\ProjectCrossTrackerSearch;
-use Tuleap\Dashboard\Project\IRetrieveProjectFromWidget;
+use Tuleap\CrossTracker\SearchCrossTrackerWidget;
 use Tuleap\Project\ProjectByIDFactory;
 use Tuleap\Project\Sidebar\CollectLinkedProjects;
 use Tuleap\Project\Sidebar\LinkedProject;
@@ -43,7 +42,7 @@ use Tuleap\Tracker\Report\Query\ParametrizedFromWhere;
 final readonly class FromProjectBuilderVisitor implements FromProjectConditionVisitor
 {
     public function __construct(
-        private IRetrieveProjectFromWidget $project_id_retriever,
+        private SearchCrossTrackerWidget $widget_retriever,
         private ProjectByIDFactory $project_factory,
         private EventDispatcherInterface $event_dispatcher,
     ) {
@@ -64,18 +63,19 @@ final readonly class FromProjectBuilderVisitor implements FromProjectConditionVi
     private function buildFromProjectEqual(FromProjectEqual $project_equal, FromProjectBuilderVisitorParameters $parameters): IProvideParametrizedFromAndWhereSQLFragments
     {
         if ($project_equal->getValue() === AllowedFrom::PROJECT_SELF) {
-            $project_id = $this->project_id_retriever->searchProjectIdFromWidgetIdAndType($parameters->report_id, ProjectCrossTrackerSearch::NAME);
-            if ($project_id === null) {
+            $row = $this->widget_retriever->searchCrossTrackerWidgetByCrossTrackerReportId($parameters->report_id);
+            if ($row === null || $row['dashboard_type'] !== 'project') {
                 throw new LogicException('Project id not found');
             }
-            return new ParametrizedFromWhere('', 'project.group_id = ?', [], [$project_id]);
+            return new ParametrizedFromWhere('', 'project.group_id = ?', [], [$row['project_id']]);
         }
 
         if ($project_equal->getValue() === AllowedFrom::PROJECT_AGGREGATED) {
-            $project_id = $this->project_id_retriever->searchProjectIdFromWidgetIdAndType($parameters->report_id, ProjectCrossTrackerSearch::NAME);
-            if ($project_id === null) {
+            $row = $this->widget_retriever->searchCrossTrackerWidgetByCrossTrackerReportId($parameters->report_id);
+            if ($row === null || $row['dashboard_type'] !== 'project') {
                 throw new LogicException('Project id not found');
             }
+            $project_id      = $row['project_id'];
             $project         = $this->project_factory->getValidProjectById($project_id);
             $linked_projects = $this->event_dispatcher->dispatch(new CollectLinkedProjects($project, $parameters->user));
             assert($linked_projects instanceof CollectLinkedProjects);
