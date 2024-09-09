@@ -22,72 +22,79 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\Workflow;
 
+use PHPUnit\Framework\MockObject\MockObject;
 use Transition;
-use Tuleap\GlobalLanguageMock;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\TopBacklogChangeProcessor;
 use Tuleap\ProgramManagement\Tests\Stub\BuildProgramStub;
 use Tuleap\ProgramManagement\Tests\Stub\CreatePostActionStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchByTransitionIdStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchByWorkflowStub;
+use Tuleap\ProgramManagement\Tests\Stub\Workspace\VerifyProgramServiceIsEnabledStub;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class AddToTopBacklogPostActionFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use GlobalLanguageMock;
-
-    private int $transition_id;
+    private const TRANSITION_ID = 923;
     private Transition $transition;
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&\Workflow
-     */
-    private $workflow;
+    private \Workflow & MockObject $workflow;
+    private SearchByTransitionIdStub $search_transition;
+    private VerifyProgramServiceIsEnabledStub $program_verifier;
+    private SearchByWorkflowStub $search_by_workflow;
 
     protected function setUp(): void
     {
         $workflow_id    = 112;
+        $project_id     = 101;
         $this->workflow = $this->createConfiguredMock(
             \Workflow::class,
             [
                 'getId'      => (string) $workflow_id,
                 'getTracker' =>
                     TrackerTestBuilder::aTracker()
-                        ->withProject(new \Project(['group_id' => 101]))->build(),
+                        ->withProject(ProjectTestBuilder::aProject()->withId($project_id)->build())
+                        ->build(),
             ]
         );
 
-        $this->transition_id = 923;
-        $this->transition    = new Transition((string) $this->transition_id, (string) $workflow_id, null, new \Tracker_FormElement_Field_List_Bind_StaticValue(1, 'field', '', 1, false));
+        $this->transition = new Transition(
+            (string) self::TRANSITION_ID,
+            (string) $workflow_id,
+            null,
+            new \Tracker_FormElement_Field_List_Bind_StaticValue(1, 'field', '', 1, false)
+        );
         $this->transition->setWorkflow($this->workflow);
+        $this->search_transition  = SearchByTransitionIdStub::withTransitions(['id' => 88]);
+        $this->program_verifier   = VerifyProgramServiceIsEnabledStub::withProgramService($project_id);
+        $this->search_by_workflow = SearchByWorkflowStub::withoutTransitions();
+    }
+
+    private function getFactory(): AddToTopBacklogPostActionFactory
+    {
+        return new AddToTopBacklogPostActionFactory(
+            $this->search_transition,
+            BuildProgramStub::stubValidProgram(),
+            $this->program_verifier,
+            $this->createMock(TopBacklogChangeProcessor::class),
+            $this->search_by_workflow,
+            CreatePostActionStub::withCount()
+        );
     }
 
     public function testBuildsThePostAction(): void
     {
-        $factory = new AddToTopBacklogPostActionFactory(
-            SearchByTransitionIdStub::withTransitions(['id' => 88]),
-            BuildProgramStub::stubValidProgram(),
-            $this->createMock(TopBacklogChangeProcessor::class),
-            SearchByWorkflowStub::withoutTransitions(),
-            CreatePostActionStub::withCount()
-        );
-
-        $post_actions = $factory->loadPostActions($this->transition);
+        $post_actions = $this->getFactory()->loadPostActions($this->transition);
         self::assertCount(1, $post_actions);
 
         self::assertInstanceOf(AddToTopBacklogPostAction::class, $post_actions[0]);
-        self::assertEquals(88, $post_actions[0]->getId());
+        self::assertSame(88, $post_actions[0]->getId());
     }
 
     public function testDoesNotBuildThePostActionIfWeAreOutsideOfAProgram(): void
     {
-        $factory = new AddToTopBacklogPostActionFactory(
-            SearchByTransitionIdStub::withoutTransitions(),
-            BuildProgramStub::stubInvalidProgram(),
-            $this->createMock(TopBacklogChangeProcessor::class),
-            SearchByWorkflowStub::withoutTransitions(),
-            CreatePostActionStub::withCount()
-        );
+        $this->program_verifier = VerifyProgramServiceIsEnabledStub::withoutProgramService();
 
-        $post_actions = $factory->loadPostActions($this->transition);
+        $post_actions = $this->getFactory()->loadPostActions($this->transition);
         self::assertEmpty($post_actions);
     }
 
@@ -100,23 +107,19 @@ final class AddToTopBacklogPostActionFactoryTest extends \Tuleap\Test\PHPUnit\Te
             ],
             [
                 'id'            => 88,
-                'transition_id' => $this->transition_id,
+                'transition_id' => self::TRANSITION_ID,
             ],
         ];
 
-        $factory = new AddToTopBacklogPostActionFactory(
-            SearchByTransitionIdStub::withoutTransitions(),
-            BuildProgramStub::stubValidProgram(),
-            $this->createMock(TopBacklogChangeProcessor::class),
-            SearchByWorkflowStub::withTransitions($transitions),
-            CreatePostActionStub::withCount()
-        );
+        $this->search_transition  = SearchByTransitionIdStub::withoutTransitions();
+        $this->search_by_workflow = SearchByWorkflowStub::withTransitions($transitions);
 
+        $factory = $this->getFactory();
         $factory->warmUpCacheForWorkflow($this->workflow);
         $post_actions = $factory->loadPostActions($this->transition);
         self::assertCount(1, $post_actions);
 
         self::assertInstanceOf(AddToTopBacklogPostAction::class, $post_actions[0]);
-        self::assertEquals(88, $post_actions[0]->getId());
+        self::assertSame(88, $post_actions[0]->getId());
     }
 }
