@@ -20,6 +20,7 @@
 
 use Tuleap\Config\GetConfigKeys;
 use Tuleap\CrossTracker\CrossTrackerArtifactReportDao;
+use Tuleap\CrossTracker\CrossTrackerInstrumentation;
 use Tuleap\CrossTracker\CrossTrackerReportDao;
 use Tuleap\CrossTracker\CrossTrackerReportFactory;
 use Tuleap\CrossTracker\Permission\CrossTrackerPermissionGate;
@@ -96,6 +97,7 @@ use Tuleap\CrossTracker\Report\SimilarField\SupportedFieldsDao;
 use Tuleap\CrossTracker\REST\ResourcesInjector;
 use Tuleap\CrossTracker\Widget\ProjectCrossTrackerSearch;
 use Tuleap\DB\DBFactory;
+use Tuleap\Instrument\Prometheus\Prometheus;
 use Tuleap\Markdown\CommonMarkInterpreter;
 use Tuleap\Plugin\ListeningToEventClass;
 use Tuleap\Plugin\ListeningToEventName;
@@ -432,6 +434,7 @@ class crosstrackerPlugin extends Plugin
                 $project_manager,
                 $event_manager,
             ),
+            new CrossTrackerInstrumentation(Prometheus::instance())
         );
 
         $formatter_visitor = new CSVFormatterVisitor(new CSVFormatter());
