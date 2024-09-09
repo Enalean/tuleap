@@ -4047,6 +4047,13 @@ msgstr ""
 msgid "You can retrieve the imported data here:"
 msgstr ""
 
+#, php-format
+msgid "You can select at most %1$d columns, but you have selected %2$d column."
+msgid_plural ""
+"You can select at most %1$d columns, but you have selected %2$d columns."
+msgstr[0] ""
+msgstr[1] ""
+
 msgid ""
 "You can send an email to the following email address in order to create an "
 "artifact:"

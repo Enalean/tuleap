@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 3.4.4\n"
+"X-Generator: Poedit 3.5\n"
 
 msgid "\"Attachment\" type field cannot be modified during artifact copy."
 msgstr ""
@@ -4616,6 +4616,17 @@ msgstr ""
 
 msgid "You can retrieve the imported data here:"
 msgstr "Vous pouvez retrouver les données importées ici :"
+
+#, php-format
+msgid "You can select at most %1$d columns, but you have selected %2$d column."
+msgid_plural ""
+"You can select at most %1$d columns, but you have selected %2$d columns."
+msgstr[0] ""
+"Vous ne pouvez sélectionner que %1$d colonnes au maximum, mais vous avez "
+"sélectionné %2$d colonne."
+msgstr[1] ""
+"Vous ne pouvez sélectionner que %1$d colonnes au maximum, mais vous avez "
+"sélectionné %2$d colonnes."
 
 msgid ""
 "You can send an email to the following email address in order to create an "

@@ -47,6 +47,7 @@ use Tuleap\Tracker\Report\Query\Advanced\SearchablesDoNotExistException;
 use Tuleap\Tracker\Report\Query\Advanced\SelectablesAreInvalidException;
 use Tuleap\Tracker\Report\Query\Advanced\SelectablesDoNotExistException;
 use Tuleap\Tracker\Report\Query\Advanced\SelectablesMustBeUniqueException;
+use Tuleap\Tracker\Report\Query\Advanced\SelectLimitExceededException;
 use Tuleap\Tracker\REST\v1\ArtifactMatchingReportCollection;
 use URLVerification;
 
@@ -168,7 +169,7 @@ class CSVExportController implements DispatchableWithRequest
             );
         } catch (SearchablesAreInvalidException | SelectablesAreInvalidException $e) {
             throw new BadRequestException($e->getMessage());
-        } catch (SearchablesDoNotExistException | SelectablesDoNotExistException | SelectablesMustBeUniqueException $e) {
+        } catch (SearchablesDoNotExistException | SelectablesDoNotExistException | SelectablesMustBeUniqueException | SelectLimitExceededException $e) {
             throw new BadRequestException($e->getI18NExceptionMessage());
         }
     }

@@ -152,6 +152,7 @@ use Tuleap\Tracker\Report\Query\Advanced\SearchablesDoNotExistException;
 use Tuleap\Tracker\Report\Query\Advanced\SelectablesAreInvalidException;
 use Tuleap\Tracker\Report\Query\Advanced\SelectablesDoNotExistException;
 use Tuleap\Tracker\Report\Query\Advanced\SelectablesMustBeUniqueException;
+use Tuleap\Tracker\Report\Query\Advanced\SelectLimitExceededException;
 use Tuleap\Tracker\Report\Query\Advanced\SizeValidatorVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\UgroupLabelConverter;
 use Tuleap\Tracker\Report\TrackerDuplicateException;
@@ -305,7 +306,7 @@ final class CrossTrackerReportsResource extends AuthenticatedResource
                 'tuleap-tracker',
                 'The query is considered too complex to be executed by the server. Please simplify it (e.g remove comparisons) to continue.'
             ));
-        } catch (SearchablesDoNotExistException | SelectablesDoNotExistException | SelectablesMustBeUniqueException $exception) {
+        } catch (SearchablesDoNotExistException | SelectablesDoNotExistException | SelectablesMustBeUniqueException | SelectLimitExceededException $exception) {
             throw new I18NRestException(400, $exception->getI18NExceptionMessage());
         } catch (SearchablesAreInvalidException | SelectablesAreInvalidException $exception) {
             throw new I18NRestException(400, $exception->getMessage());

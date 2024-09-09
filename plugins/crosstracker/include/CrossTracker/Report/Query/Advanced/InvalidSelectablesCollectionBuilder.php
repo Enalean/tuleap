@@ -22,11 +22,14 @@ declare(strict_types=1);
 
 namespace Tuleap\CrossTracker\Report\Query\Advanced;
 
+use ForgeConfig;
 use PFUser;
 use Tracker;
+use Tuleap\CrossTracker\Report\CrossTrackerArtifactReportFactory;
 use Tuleap\Tracker\Report\Query\Advanced\IBuildInvalidSelectablesCollection;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidSelectablesCollection;
 use Tuleap\Tracker\Report\Query\Advanced\SelectablesMustBeUniqueException;
+use Tuleap\Tracker\Report\Query\Advanced\SelectLimitExceededException;
 
 final readonly class InvalidSelectablesCollectionBuilder implements IBuildInvalidSelectablesCollection
 {
@@ -42,12 +45,18 @@ final readonly class InvalidSelectablesCollectionBuilder implements IBuildInvali
 
     /**
      * @throws SelectablesMustBeUniqueException
+     * @throws SelectLimitExceededException
      */
     public function buildCollectionOfInvalidSelectables(array $selectables): InvalidSelectablesCollection
     {
         $unique_selectables = array_unique($selectables, SORT_REGULAR);
         if (count($unique_selectables) !== count($selectables)) {
             throw new SelectablesMustBeUniqueException();
+        }
+
+        $max_select = ForgeConfig::getInt(CrossTrackerArtifactReportFactory::MAX_SELECT);
+        if ($max_select > 0 && count($selectables) > $max_select) {
+            throw new SelectLimitExceededException(count($selectables), $max_select);
         }
 
         $collection = new InvalidSelectablesCollection();
