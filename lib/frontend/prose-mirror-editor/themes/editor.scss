@@ -28,6 +28,8 @@
 
 /* stylelint-disable selector-class-pattern */
 .ProseMirror {
+    // This min-height is a quick fix, the heading dropdown can be hidden bellow footer
+    min-height: 200px;
     padding: var(--tlp-form-element-padding-horizontal);
     border-right: 1px solid var(--tlp-form-element-border-color);
     border-bottom: 1px solid var(--tlp-form-element-border-color);
