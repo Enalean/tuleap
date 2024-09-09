@@ -22,7 +22,7 @@
     <editor-choice />
     <ol ref="sections_container">
         <li
-            v-for="(section, index) in sections"
+            v-for="section in sections"
             v-bind:key="section.internal_id"
             v-bind:id="getId(section)"
             v-bind:class="{ 'artidoc-section-with-add-button': has_add_button }"
@@ -31,7 +31,7 @@
                 class="artidoc-button-add-section-container"
                 v-if="has_add_button"
                 v-bind:insert_section_callback="insertSection"
-                v-bind:position="{ index }"
+                v-bind:position="{ before: section.id }"
             />
             <section-container v-bind:section="section" />
         </li>
@@ -42,6 +42,7 @@
         v-bind:insert_section_callback="insertSection"
         v-bind:position="AT_THE_END"
     />
+    <add-existing-section-modal />
 </template>
 
 <script setup lang="ts">
@@ -55,6 +56,7 @@ import { CAN_USER_EDIT_DOCUMENT } from "@/can-user-edit-document-injection-key";
 import { SECTIONS_STORE } from "@/stores/sections-store-injection-key";
 import EditorChoice from "@/components/EditorChoice.vue";
 import { onScrollStickSectionNumbers } from "@/helpers/on-scroll-stick-section-numbers";
+import AddExistingSectionModal from "@/components/AddExistingSectionModal.vue";
 
 const { sections, insertSection } = strictInject(SECTIONS_STORE);
 

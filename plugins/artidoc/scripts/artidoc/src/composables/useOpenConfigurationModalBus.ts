@@ -18,10 +18,9 @@
  */
 
 import type { StrictInjectionKey } from "@tuleap/vue-strict-inject";
+import { noop } from "@/helpers/noop";
 
 type OpenConfigurationModalHandler = (onSuccessfulSaved: () => void) => void;
-
-const noop = (): void => {};
 
 export interface OpenConfigurationModalBus {
     readonly registerHandler: (new_handler: OpenConfigurationModalHandler) => void;

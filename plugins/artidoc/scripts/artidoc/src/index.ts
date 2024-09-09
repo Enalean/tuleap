@@ -46,6 +46,10 @@ import { IS_USER_ANONYMOUS } from "@/is-user-anonymous";
 import { EDITOR_CHOICE, editorChoice } from "@/helpers/editor-choice";
 import { useUploadFileStore } from "@/stores/useUploadFileStore";
 import { UPLOAD_FILE_STORE } from "./stores/upload-file-store-injection-key";
+import {
+    OPEN_ADD_EXISTING_SECTION_MODAL_BUS,
+    useOpenAddExistingSectionModalBus,
+} from "@/composables/useOpenAddExistingSectionModalBus";
 
 document.addEventListener("DOMContentLoaded", async () => {
     const vue_mount_point = document.getElementById("artidoc-mountpoint");
@@ -82,6 +86,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         editorChoice(Boolean(getDatasetItemOrThrow(vue_mount_point, "isNextGenEditorEnabled"))),
     );
     app.provide(OPEN_CONFIGURATION_MODAL_BUS, useOpenConfigurationModalBus());
+    app.provide(OPEN_ADD_EXISTING_SECTION_MODAL_BUS, useOpenAddExistingSectionModalBus());
     app.provide(DOCUMENT_ID, item_id);
     app.provide(TITLE, getDatasetItemOrThrow(vue_mount_point, "title"));
     app.provide(

@@ -364,7 +364,7 @@ describe("useSectionsStore", () => {
             store.loadSections(101, null, true, { id: 101 } as Project);
             await flushPromises();
 
-            store.insertSection(new_section, { index: 0 });
+            store.insertSection(new_section, { before: section1.id });
 
             expect(store.sections.value).not.toBeUndefined();
             expect(store.sections.value).toHaveLength(3);
@@ -380,7 +380,7 @@ describe("useSectionsStore", () => {
             store.loadSections(101, null, true, { id: 101 } as Project);
             await flushPromises();
 
-            store.insertSection(new_section, { index: 1 });
+            store.insertSection(new_section, { before: section2.id });
 
             expect(store.sections.value).not.toBeUndefined();
             expect(store.sections.value).toHaveLength(3);

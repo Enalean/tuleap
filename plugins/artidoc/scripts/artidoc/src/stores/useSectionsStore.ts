@@ -48,13 +48,13 @@ export interface SectionsStore {
         current_project: Project | null,
     ) => Promise<void>;
     updateSection: (section: ArtifactSection) => void;
-    insertSection: (section: PendingArtifactSection, position: PositionDuringEdition) => void;
+    insertSection: (section: ArtidocSection, position: PositionForSection) => void;
     removeSection: (
         section: ArtidocSection,
         tracker: Tracker | null,
     ) => ResultAsync<boolean, Fault>;
     insertPendingArtifactSectionForEmptyDocument: (tracker: Tracker | null) => void;
-    getSectionPositionForSave: (section: ArtidocSection) => PositionForSave;
+    getSectionPositionForSave: (section: ArtidocSection) => PositionForSection;
     replacePendingByArtifactSection: (
         pending: PendingArtifactSection,
         section: ArtifactSection,
@@ -62,12 +62,11 @@ export interface SectionsStore {
     getReferencesForOneSection: (section: ArtidocSection, project_id: number) => void;
 }
 
-type BeforeSection = { index: number };
-export type AtTheEnd = "at-the-end";
+type BeforeSection = { before: string };
+export type AtTheEnd = null;
 
-export const AT_THE_END: AtTheEnd = "at-the-end";
-export type PositionDuringEdition = AtTheEnd | BeforeSection;
-export type PositionForSave = null | { before: string };
+export const AT_THE_END: AtTheEnd = null;
+export type PositionForSection = AtTheEnd | BeforeSection;
 export interface InternalArtidocSectionId {
     internal_id: string;
 }
@@ -158,15 +157,29 @@ export function useSectionsStore(): SectionsStore {
         }
     }
 
-    function insertSection(section: PendingArtifactSection, position: PositionDuringEdition): void {
+    function insertSection(section: ArtidocSection, position: PositionForSection): void {
         if (sections.value === undefined) {
             return;
         }
 
-        if (position === AT_THE_END) {
+        const NOT_FOUND = -1;
+        const index = getIndexWhereSectionShouldBeInserted(sections.value, position);
+
+        if (index === NOT_FOUND) {
             sections.value.push(injectInternalId(section));
         } else {
-            sections.value.splice(position.index, 0, injectInternalId(section));
+            sections.value.splice(index, 0, injectInternalId(section));
+        }
+
+        function getIndexWhereSectionShouldBeInserted(
+            sections: (ArtidocSection & InternalArtidocSectionId)[],
+            position: PositionForSection,
+        ): number {
+            if (position === AT_THE_END) {
+                return NOT_FOUND;
+            }
+
+            return sections.findIndex((sibling) => sibling.id === position.before);
         }
     }
 
@@ -225,7 +238,7 @@ export function useSectionsStore(): SectionsStore {
         });
     }
 
-    function getSectionPositionForSave(section: ArtidocSection): PositionForSave {
+    function getSectionPositionForSave(section: ArtidocSection): PositionForSection {
         if (sections.value === undefined) {
             return null;
         }

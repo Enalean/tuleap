@@ -28,9 +28,10 @@
             <i class="fa-solid fa-ellipsis" role="img"></i>
         </button>
         <div class="tlp-dropdown-menu" role="menu">
-            <configuration-modal v-if="can_user_edit_document" />
+            <configuration-modal-trigger v-if="can_user_edit_document" />
             <pdf-export-menu-item v-if="should_display_pdf_menu_item" />
         </div>
+        <configuration-modal v-if="can_user_edit_document" />
     </div>
 </template>
 
@@ -44,6 +45,7 @@ import { CAN_USER_EDIT_DOCUMENT } from "@/can-user-edit-document-injection-key";
 import ConfigurationModal from "@/components/configuration/ConfigurationModal.vue";
 import PdfExportMenuItem from "@/components/export/pdf/PdfExportMenuItem.vue";
 import { SECTIONS_STORE } from "@/stores/sections-store-injection-key";
+import ConfigurationModalTrigger from "@/components/configuration/ConfigurationModalTrigger.vue";
 
 const { $gettext } = useGettext();
 

@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { Tracker } from "@/stores/configuration-store";
+import type { Tracker, TrackerWithSubmittableSection } from "@/stores/configuration-store";
 
 const base: Tracker = {
     id: 101,
@@ -62,7 +62,7 @@ export const TrackerStub = {
         },
     }),
 
-    withTitleAndDescription: (): Tracker => ({
+    withTitleAndDescription: (): TrackerWithSubmittableSection => ({
         ...base,
         title: {
             field_id: 1001,

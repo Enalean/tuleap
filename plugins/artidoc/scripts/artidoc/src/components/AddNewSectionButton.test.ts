@@ -33,12 +33,20 @@ import {
 import { createGettext } from "vue3-gettext";
 import { AT_THE_END } from "@/stores/useSectionsStore";
 import { TrackerStub } from "@/helpers/stubs/TrackerStub";
+import type { OpenAddExistingSectionModalBus } from "@/composables/useOpenAddExistingSectionModalBus";
+import {
+    OPEN_ADD_EXISTING_SECTION_MODAL_BUS,
+    useOpenAddExistingSectionModalBus,
+} from "@/composables/useOpenAddExistingSectionModalBus";
+
+vi.mock("@tuleap/tlp-dropdown");
 
 describe("AddNewSectionButton", () => {
     function getWrapper(
         insert_section_callback: Mock,
         configuration_store: ConfigurationStore,
-        bus: OpenConfigurationModalBus,
+        configuration_bus: OpenConfigurationModalBus,
+        add_existing_section_bus: OpenAddExistingSectionModalBus,
     ): VueWrapper {
         return shallowMount(AddNewSectionButton, {
             props: { position: AT_THE_END, insert_section_callback },
@@ -46,7 +54,8 @@ describe("AddNewSectionButton", () => {
                 plugins: [createGettext({ silent: true })],
                 provide: {
                     [CONFIGURATION_STORE.valueOf()]: configuration_store,
-                    [OPEN_CONFIGURATION_MODAL_BUS.valueOf()]: bus,
+                    [OPEN_CONFIGURATION_MODAL_BUS.valueOf()]: configuration_bus,
+                    [OPEN_ADD_EXISTING_SECTION_MODAL_BUS.valueOf()]: add_existing_section_bus,
                 },
             },
         });
@@ -56,8 +65,9 @@ describe("AddNewSectionButton", () => {
         it("should ask to open the configuration modal on click", async () => {
             let has_modal_been_opened = false;
 
-            const bus = useOpenConfigurationModalBus();
-            bus.registerHandler(() => {
+            const add_existing_section_bus = useOpenAddExistingSectionModalBus();
+            const configuration_bus = useOpenConfigurationModalBus();
+            configuration_bus.registerHandler(() => {
                 has_modal_been_opened = true;
             });
 
@@ -66,7 +76,8 @@ describe("AddNewSectionButton", () => {
             const wrapper = getWrapper(
                 insert_section_callback,
                 ConfigurationStoreStub.withSelectedTracker(null),
-                bus,
+                configuration_bus,
+                add_existing_section_bus,
             );
 
             await wrapper.find("button").trigger("click");
@@ -76,11 +87,12 @@ describe("AddNewSectionButton", () => {
         });
 
         it("should insert a pending artifact section after the configuration is saved", async () => {
-            const bus = useOpenConfigurationModalBus();
+            const add_existing_section_bus = useOpenAddExistingSectionModalBus();
+            const configuration_bus = useOpenConfigurationModalBus();
             const store = ConfigurationStoreStub.withSelectedTracker(null);
 
             let has_modal_been_opened = false;
-            bus.registerHandler((onSuccessfulSaved: () => void) => {
+            configuration_bus.registerHandler((onSuccessfulSaved: () => void) => {
                 has_modal_been_opened = true;
                 store.selected_tracker.value = TrackerStub.withTitleAndDescription();
                 onSuccessfulSaved();
@@ -88,7 +100,12 @@ describe("AddNewSectionButton", () => {
 
             const insert_section_callback = vi.fn();
 
-            const wrapper = getWrapper(insert_section_callback, store, bus);
+            const wrapper = getWrapper(
+                insert_section_callback,
+                store,
+                configuration_bus,
+                add_existing_section_bus,
+            );
 
             await wrapper.find("button").trigger("click");
 
@@ -101,8 +118,9 @@ describe("AddNewSectionButton", () => {
         it("should ask to open the configuration modal on click when title is not submittable", async () => {
             let has_modal_been_opened = false;
 
-            const bus = useOpenConfigurationModalBus();
-            bus.registerHandler(() => {
+            const add_existing_section_bus = useOpenAddExistingSectionModalBus();
+            const configuration_bus = useOpenConfigurationModalBus();
+            configuration_bus.registerHandler(() => {
                 has_modal_been_opened = true;
             });
             const store = ConfigurationStoreStub.withSelectedTracker({
@@ -118,7 +136,12 @@ describe("AddNewSectionButton", () => {
 
             const insert_section_callback = vi.fn();
 
-            const wrapper = getWrapper(insert_section_callback, store, bus);
+            const wrapper = getWrapper(
+                insert_section_callback,
+                store,
+                configuration_bus,
+                add_existing_section_bus,
+            );
 
             await wrapper.find("button").trigger("click");
 
@@ -127,7 +150,8 @@ describe("AddNewSectionButton", () => {
         });
 
         it("should insert a pending artifact section after the configuration is saved", async () => {
-            const bus = useOpenConfigurationModalBus();
+            const add_existing_section_bus = useOpenAddExistingSectionModalBus();
+            const configuration_bus = useOpenConfigurationModalBus();
             const store = ConfigurationStoreStub.withSelectedTracker({
                 ...ConfigurationStoreStub.bugs,
                 title: null,
@@ -140,7 +164,7 @@ describe("AddNewSectionButton", () => {
             });
 
             let has_modal_been_opened = false;
-            bus.registerHandler((onSuccessfulSaved: () => void) => {
+            configuration_bus.registerHandler((onSuccessfulSaved: () => void) => {
                 has_modal_been_opened = true;
                 store.selected_tracker.value = TrackerStub.withTitleAndDescription();
                 onSuccessfulSaved();
@@ -148,7 +172,12 @@ describe("AddNewSectionButton", () => {
 
             const insert_section_callback = vi.fn();
 
-            const wrapper = getWrapper(insert_section_callback, store, bus);
+            const wrapper = getWrapper(
+                insert_section_callback,
+                store,
+                configuration_bus,
+                add_existing_section_bus,
+            );
 
             await wrapper.find("button").trigger("click");
 
@@ -161,8 +190,9 @@ describe("AddNewSectionButton", () => {
         it("should ask to open the configuration modal on click when description is not submittable", async () => {
             let has_modal_been_opened = false;
 
-            const bus = useOpenConfigurationModalBus();
-            bus.registerHandler(() => {
+            const add_existing_section_bus = useOpenAddExistingSectionModalBus();
+            const configuration_bus = useOpenConfigurationModalBus();
+            configuration_bus.registerHandler(() => {
                 has_modal_been_opened = true;
             });
             const store = ConfigurationStoreStub.withSelectedTracker({
@@ -178,7 +208,12 @@ describe("AddNewSectionButton", () => {
 
             const insert_section_callback = vi.fn();
 
-            const wrapper = getWrapper(insert_section_callback, store, bus);
+            const wrapper = getWrapper(
+                insert_section_callback,
+                store,
+                configuration_bus,
+                add_existing_section_bus,
+            );
 
             await wrapper.find("button").trigger("click");
 
@@ -187,7 +222,8 @@ describe("AddNewSectionButton", () => {
         });
 
         it("should insert a pending artifact section after the configuration is saved", async () => {
-            const bus = useOpenConfigurationModalBus();
+            const add_existing_section_bus = useOpenAddExistingSectionModalBus();
+            const configuration_bus = useOpenConfigurationModalBus();
             const store = ConfigurationStoreStub.withSelectedTracker({
                 ...ConfigurationStoreStub.bugs,
                 title: {
@@ -200,7 +236,7 @@ describe("AddNewSectionButton", () => {
             });
 
             let has_modal_been_opened = false;
-            bus.registerHandler((onSuccessfulSaved: () => void) => {
+            configuration_bus.registerHandler((onSuccessfulSaved: () => void) => {
                 has_modal_been_opened = true;
                 store.selected_tracker.value = TrackerStub.withTitleAndDescription();
                 onSuccessfulSaved();
@@ -208,7 +244,12 @@ describe("AddNewSectionButton", () => {
 
             const insert_section_callback = vi.fn();
 
-            const wrapper = getWrapper(insert_section_callback, store, bus);
+            const wrapper = getWrapper(
+                insert_section_callback,
+                store,
+                configuration_bus,
+                add_existing_section_bus,
+            );
 
             await wrapper.find("button").trigger("click");
 
@@ -221,8 +262,9 @@ describe("AddNewSectionButton", () => {
         it("should insert a pending artifact section", async () => {
             let has_modal_been_opened = false;
 
-            const bus = useOpenConfigurationModalBus();
-            bus.registerHandler(() => {
+            const add_existing_section_bus = useOpenAddExistingSectionModalBus();
+            const configuration_bus = useOpenConfigurationModalBus();
+            configuration_bus.registerHandler(() => {
                 has_modal_been_opened = true;
             });
             const store = ConfigurationStoreStub.withSelectedTracker({
@@ -243,12 +285,56 @@ describe("AddNewSectionButton", () => {
 
             const insert_section_callback = vi.fn();
 
-            const wrapper = getWrapper(insert_section_callback, store, bus);
+            const wrapper = getWrapper(
+                insert_section_callback,
+                store,
+                configuration_bus,
+                add_existing_section_bus,
+            );
 
-            await wrapper.find("button").trigger("click");
+            await wrapper.find("[data-test=add-new-section]").trigger("click");
 
             expect(has_modal_been_opened).toBe(false);
             expect(insert_section_callback).toHaveBeenCalled();
+        });
+
+        it("should ask to open the add existing section modal", async () => {
+            let has_modal_been_opened = false;
+
+            const configuration_bus = useOpenConfigurationModalBus();
+            const add_existing_section_bus = useOpenAddExistingSectionModalBus();
+            add_existing_section_bus.registerHandler(() => {
+                has_modal_been_opened = true;
+            });
+            const store = ConfigurationStoreStub.withSelectedTracker({
+                ...ConfigurationStoreStub.bugs,
+                title: {
+                    field_id: 1001,
+                    label: "Summary",
+                    type: "string",
+                    default_value: "",
+                },
+                description: {
+                    field_id: 1002,
+                    label: "Description",
+                    type: "text",
+                    default_value: { format: "html", content: "" },
+                },
+            });
+
+            const insert_section_callback = vi.fn();
+
+            const wrapper = getWrapper(
+                insert_section_callback,
+                store,
+                configuration_bus,
+                add_existing_section_bus,
+            );
+
+            await wrapper.find("[data-test=add-existing-section]").trigger("click");
+
+            expect(has_modal_been_opened).toBe(true);
+            expect(insert_section_callback).not.toHaveBeenCalled();
         });
     });
 });
