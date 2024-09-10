@@ -207,6 +207,9 @@ final class MetadataUsageChecker implements CheckMetadataUsage
      */
     private function isThereAtLeastOneReadableField(array $fields, PFUser $user): bool
     {
+        if ($fields === []) {
+            return true;
+        }
         foreach ($fields as $field) {
             if ($field->userCanRead($user)) {
                 return true;
@@ -221,7 +224,7 @@ final class MetadataUsageChecker implements CheckMetadataUsage
         $count = 0;
         foreach ($trackers as $tracker) {
             $fields = $this->form_element_factory->getFormElementsByType($tracker, $type, true);
-            if (empty($fields) || ! $this->isThereAtLeastOneReadableField($fields, $user)) {
+            if (! $this->isThereAtLeastOneReadableField($fields, $user)) {
                 $count++;
             }
         }

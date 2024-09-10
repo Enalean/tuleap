@@ -76,10 +76,6 @@ final class FromProjectAggregatedTest extends CrossTrackerFieldTestCase
         $tracker_builder->setViewPermissionOnTracker($tracker_2->getId(), Tracker::PERMISSION_FULL, ProjectUGroup::PROJECT_MEMBERS);
         $tracker_builder->setViewPermissionOnTracker($tracker_3->getId(), Tracker::PERMISSION_FULL, ProjectUGroup::PROJECT_MEMBERS);
 
-        $tracker_builder->setReadPermission($tracker_builder->buildArtifactIdField($tracker_1->getId()), ProjectUGroup::PROJECT_MEMBERS);
-        $tracker_builder->setReadPermission($tracker_builder->buildArtifactIdField($tracker_2->getId()), ProjectUGroup::PROJECT_MEMBERS);
-        $tracker_builder->setReadPermission($tracker_builder->buildArtifactIdField($tracker_3->getId()), ProjectUGroup::PROJECT_MEMBERS);
-
         $tracker_builder->buildLastChangeset($tracker_builder->buildArtifact($tracker_1->getId()));
         $tracker_builder->buildLastChangeset($tracker_builder->buildArtifact($tracker_2->getId()));
         $tracker_builder->buildLastChangeset($tracker_builder->buildArtifact($tracker_3->getId()));

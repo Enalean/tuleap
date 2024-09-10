@@ -159,19 +159,16 @@ final class MetadataUsageCheckerTest extends TestCase
         $this->checker->checkMetadataIsUsedByAllTrackers($metadata, $this->trackers, $this->user);
     }
 
-    public function testItShouldRaiseAnErrorIfThereIsNoSubmittedOnFieldInTrackers(): void
+    public function testItShouldRaiseNoErrorIfThereIsNoSubmittedOnFieldInTrackers(): void
     {
+        self::expectNotToPerformAssertions();
         $this->submitted_on_101->method('userCanRead')->willReturn(false);
         $fields_map = [
             [$this->tracker_101, 'subon', true, [$this->submitted_on_101]],
             [$this->tracker_102, 'subon', true, []],
         ];
         $this->form_element_factory->method('getFormElementsByType')->willReturnMap($fields_map);
-
         $metadata = new Metadata('submitted_on');
-
-        self::expectException(SubmittedOnIsMissingInAllTrackersException::class);
-
         $this->checker->checkMetadataIsUsedByAllTrackers($metadata, $this->trackers, $this->user);
     }
 
@@ -230,22 +227,6 @@ final class MetadataUsageCheckerTest extends TestCase
         $this->title_dao->method('getNbOfTrackerWithoutSemanticTitleDefined')->willReturn(2);
 
         self::expectException(TitleIsMissingInAllTrackersException::class);
-
-        $metadata = new Metadata('pretty_title');
-        $this->checker->checkMetadataIsUsedByAllTrackers($metadata, $this->trackers, $this->user);
-    }
-
-    public function testItShouldRaiseAnErrorIfFieldArtifactIdIsNotDefinedForPrettyTitle(): void
-    {
-        $this->title_dao->method('getNbOfTrackerWithoutSemanticTitleDefined')->willReturn(0);
-
-        $fields_map = [
-            [$this->tracker_101, 'aid', true, []],
-            [$this->tracker_102, 'aid', true, []],
-        ];
-        $this->form_element_factory->method('getFormElementsByType')->willReturnMap($fields_map);
-
-        self::expectException(ArtifactIdIsMissingInAllTrackersException::class);
 
         $metadata = new Metadata('pretty_title');
         $this->checker->checkMetadataIsUsedByAllTrackers($metadata, $this->trackers, $this->user);

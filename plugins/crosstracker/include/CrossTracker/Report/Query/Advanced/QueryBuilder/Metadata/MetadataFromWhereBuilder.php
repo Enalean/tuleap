@@ -27,8 +27,8 @@ use PFUser;
 use Tracker;
 use Tracker_FormElementFactory;
 use Tuleap\CrossTracker\Report\Query\Advanced\AllowedMetadata;
-use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\AlwaysThereField\Date\DateFromWhereBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\AlwaysThereField\ArtifactId\ArtifactIdFromWhereBuilder;
+use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\AlwaysThereField\Date\DateFromWhereBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\AlwaysThereField\Users\UsersFromWhereBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\Semantic\AssignedTo\AssignedToFromWhereBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\Metadata\Semantic\Description\DescriptionFromWhereBuilder;
@@ -118,7 +118,11 @@ final readonly class MetadataFromWhereBuilder
     {
         $result = [];
         foreach ($trackers as $tracker) {
-            $fields = $this->form_element_factory->getFormElementsByType($tracker, $field_type);
+            $fields = $this->form_element_factory->getUsedFormElementsByType($tracker, $field_type);
+            if ($fields === []) {
+                $result[] = $tracker;
+                continue;
+            }
             foreach ($fields as $field) {
                 if ($field->userCanRead($user)) {
                     $result[] = $tracker;
