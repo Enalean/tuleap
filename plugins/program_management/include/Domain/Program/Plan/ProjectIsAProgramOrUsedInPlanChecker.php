@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Plan;
 
-use Tuleap\ProgramManagement\Domain\Permissions\PermissionBypass;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 
 interface ProjectIsAProgramOrUsedInPlanChecker
@@ -31,5 +30,5 @@ interface ProjectIsAProgramOrUsedInPlanChecker
      * @throws ProjectIsNotAProgramException
      * @throws ProgramAccessException
      */
-    public function ensureProjectIsAProgramOrIsPartOfPlan(int $project_id, UserIdentifier $user, ?PermissionBypass $bypass): void;
+    public function ensureProjectIsAProgramOrIsPartOfPlan(int $project_id, UserIdentifier $user): void;
 }

@@ -22,9 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Plan;
 
-use PHPUnit\Framework\MockObject\MockObject;
-use Tuleap\GlobalLanguageMock;
 use Tuleap\ProgramManagement\Adapter\Permissions\WorkflowUserPermissionBypass;
+use Tuleap\ProgramManagement\Domain\Permissions\PermissionBypass;
+use Tuleap\ProgramManagement\Domain\Program\Plan\ProgramAccessException;
 use Tuleap\ProgramManagement\Domain\Program\Plan\ProjectIsNotAProgramException;
 use Tuleap\ProgramManagement\Domain\Program\VerifyIsProgram;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
@@ -33,25 +33,24 @@ use Tuleap\ProgramManagement\Tests\Stub\RetrieveUserStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserReferenceStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsProgramStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsProjectAProgramOrUsedInPlanStub;
-use Tuleap\Project\ProjectAccessChecker;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\Stubs\CheckProjectAccessStub;
 
 final class ProgramAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use GlobalLanguageMock;
-
     private const PROJECT_ID = 101;
     private const USER_ID    = 135;
-
     private VerifyIsProgram $program_verifier;
     private UserIdentifier $user_identifier;
-    private ProjectAccessChecker & MockObject $project_access_checker;
+    private CheckProjectAccessStub $project_access_checker;
+    private VerifyIsProjectAProgramOrUsedInPlanStub $verify_is_program_in_administration;
 
     protected function setUp(): void
     {
-        $this->project_access_checker = $this->createMock(ProjectAccessChecker::class);
-        $this->program_verifier       = VerifyIsProgramStub::withValidProgram();
+        $this->project_access_checker              = CheckProjectAccessStub::withValidAccess();
+        $this->program_verifier                    = VerifyIsProgramStub::withValidProgram();
+        $this->verify_is_program_in_administration = VerifyIsProjectAProgramOrUsedInPlanStub::withValidProgram();
 
         $this->user_identifier = UserReferenceStub::withIdAndName(self::USER_ID, 'John');
     }
@@ -67,41 +66,29 @@ final class ProgramAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->project_access_checker,
             $this->program_verifier,
             RetrieveUserStub::withUser($user),
-            VerifyIsProjectAProgramOrUsedInPlanStub::withValidProgram()
+            $this->verify_is_program_in_administration
         );
     }
 
-    public function testItThrowsErrorWhenProjectIsNotAProgram(): void
+    public function testItAllowsAccessToProgram(): void
     {
-        $this->project_access_checker->method('checkUserCanAccessProject');
-        $this->program_verifier = VerifyIsProgramStub::withNotValidProgram();
-
-        $this->expectException(ProjectIsNotAProgramException::class);
+        $this->expectNotToPerformAssertions();
         $this->getAdapter()->ensureProgramIsAProject(self::PROJECT_ID, $this->user_identifier, null);
-        $this->getAdapter()->ensureProjectIsAProgramOrIsPartOfPlan(self::PROJECT_ID, $this->user_identifier, null);
     }
 
-    public function testItSucceedWhenProgramIsAProjectAndUsesCache(): void
+    public function testItThrowsErrorWhenUserDoesNotHaveAccess(): void
     {
-        $this->project_access_checker->expects(self::once())->method('checkUserCanAccessProject');
+        $this->project_access_checker = CheckProjectAccessStub::withPrivateProjectWithoutAccess();
 
-        $adapter = $this->getAdapter();
-
-        $adapter->ensureProgramIsAProject(self::PROJECT_ID, $this->user_identifier, null);
-        $adapter->ensureProjectIsAProgramOrIsPartOfPlan(self::PROJECT_ID, $this->user_identifier, null);
+        $this->expectException(ProgramAccessException::class);
+        $this->getAdapter()->ensureProgramIsAProject(self::PROJECT_ID, $this->user_identifier, null);
     }
 
     public function testItSucceedsWithBypassEvenWhenUserCannotAccessProject(): void
     {
-        $this->project_access_checker->method('checkUserCanAccessProject')
-            ->willThrowException(new \Project_AccessPrivateException());
+        $this->project_access_checker = CheckProjectAccessStub::withPrivateProjectWithoutAccess();
 
         $this->getAdapter()->ensureProgramIsAProject(
-            self::PROJECT_ID,
-            $this->user_identifier,
-            new WorkflowUserPermissionBypass()
-        );
-        $this->getAdapter()->ensureProjectIsAProgramOrIsPartOfPlan(
             self::PROJECT_ID,
             $this->user_identifier,
             new WorkflowUserPermissionBypass()
@@ -110,16 +97,42 @@ final class ProgramAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->expectNotToPerformAssertions();
     }
 
-    public function testItThrowsWithBypassWhenProjectIsNotAProgram(): void
+    private function generateBypass(): iterable
     {
-        $this->project_access_checker->method('checkUserCanAccessProject');
+        yield [null];
+        yield [new WorkflowUserPermissionBypass()];
+    }
+
+    /**
+     * @dataProvider generateBypass
+     */
+    public function testItThrowsWhenProjectIsNotAProgram(?PermissionBypass $bypass): void
+    {
         $this->program_verifier = VerifyIsProgramStub::withNotValidProgram();
 
         $this->expectException(ProjectIsNotAProgramException::class);
-        $this->getAdapter()->ensureProgramIsAProject(
-            self::PROJECT_ID,
-            $this->user_identifier,
-            new WorkflowUserPermissionBypass()
-        );
+        $this->getAdapter()->ensureProgramIsAProject(self::PROJECT_ID, $this->user_identifier, $bypass);
+    }
+
+    public function testItAllowsAdminAccessToProgram(): void
+    {
+        $this->expectNotToPerformAssertions();
+        $this->getAdapter()->ensureProjectIsAProgramOrIsPartOfPlan(self::PROJECT_ID, $this->user_identifier);
+    }
+
+    public function testItThrowsErrorWhenAdminCannotAccessProject(): void
+    {
+        $this->project_access_checker = CheckProjectAccessStub::withSuspendedProject();
+
+        $this->expectException(ProgramAccessException::class);
+        $this->getAdapter()->ensureProjectIsAProgramOrIsPartOfPlan(self::PROJECT_ID, $this->user_identifier);
+    }
+
+    public function testItThrowsWhenProjectForAdminIsNotAProgram(): void
+    {
+        $this->verify_is_program_in_administration = VerifyIsProjectAProgramOrUsedInPlanStub::withNotValidProgram();
+
+        $this->expectException(ProjectIsNotAProgramException::class);
+        $this->getAdapter()->ensureProjectIsAProgramOrIsPartOfPlan(self::PROJECT_ID, $this->user_identifier);
     }
 }

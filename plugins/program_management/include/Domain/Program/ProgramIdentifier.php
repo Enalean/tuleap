@@ -73,13 +73,12 @@ final class ProgramIdentifier
      */
     public static function fromIdForAdministration(
         ProjectIsAProgramOrUsedInPlanChecker $build_program,
-        int $id,
+        ProgramForAdministrationIdentifier $program,
         UserIdentifier $user,
-        ?PermissionBypass $bypass,
     ): self {
-        $build_program->ensureProjectIsAProgramOrIsPartOfPlan($id, $user, $bypass);
+        $build_program->ensureProjectIsAProgramOrIsPartOfPlan($program->id, $user);
 
-        return new self($id);
+        return new self($program->id);
     }
 
     /**

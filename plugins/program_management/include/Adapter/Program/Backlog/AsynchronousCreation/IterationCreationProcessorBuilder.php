@@ -32,7 +32,7 @@ use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Cha
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Changeset\Values\DescriptionValueFormatter;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Changeset\Values\FieldValuesGathererRetriever;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Fields\SynchronizedFieldsGatherer;
-use Tuleap\ProgramManagement\Adapter\Program\Plan\ProgramAdapter;
+use Tuleap\ProgramManagement\Adapter\Program\Plan\CachedProgramBuilder;
 use Tuleap\ProgramManagement\Adapter\Program\PlanningAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\ProgramDaoProject;
 use Tuleap\ProgramManagement\Adapter\ProjectReferenceRetriever;
@@ -62,9 +62,9 @@ use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateComme
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupPermissionInserter;
 use Tuleap\Tracker\Artifact\Changeset\FieldsToBeSavedInSpecificOrderRetriever;
 use Tuleap\Tracker\Artifact\Changeset\InitialChangesetCreator;
-use Tuleap\Tracker\Artifact\Changeset\NewChangesetPostProcessor;
 use Tuleap\Tracker\Artifact\Changeset\NewChangesetCreator;
 use Tuleap\Tracker\Artifact\Changeset\NewChangesetFieldValueSaver;
+use Tuleap\Tracker\Artifact\Changeset\NewChangesetPostProcessor;
 use Tuleap\Tracker\Artifact\Changeset\NewChangesetValidator;
 use Tuleap\Tracker\Artifact\Changeset\PostCreation\ActionsQueuer;
 use Tuleap\Tracker\Artifact\ChangesetValue\ChangesetValueSaver;
@@ -251,7 +251,7 @@ final class IterationCreationProcessorBuilder implements BuildIterationCreationP
             new FieldValuesGathererRetriever($artifact_retriever, $form_element_factory),
             new SubmissionDateRetriever($artifact_retriever),
             $program_DAO,
-            ProgramAdapter::instance(),
+            CachedProgramBuilder::instance(),
             new VisibleTeamSearcher(
                 $program_DAO,
                 $user_retriever,

@@ -37,6 +37,7 @@ use Tuleap\ProgramManagement\Adapter\ArtifactLinks\MoveArtifactActionEventProxy;
 use Tuleap\ProgramManagement\Adapter\ArtifactLinks\ProvidedArtifactLinksTypesProxy;
 use Tuleap\ProgramManagement\Adapter\ArtifactVisibleVerifier;
 use Tuleap\ProgramManagement\Adapter\BacklogPlugin\BacklogServiceBlocker;
+use Tuleap\ProgramManagement\Adapter\BacklogPlugin\ProgramServiceBlocker;
 use Tuleap\ProgramManagement\Adapter\Events\ArtifactCreatedProxy;
 use Tuleap\ProgramManagement\Adapter\Events\ArtifactUpdatedProxy;
 use Tuleap\ProgramManagement\Adapter\Events\BuildRedirectFormActionEventProxy;
@@ -109,11 +110,11 @@ use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\ArtifactsLinkedToPare
 use Tuleap\ProgramManagement\Adapter\Program\Feature\UserStoriesInMirroredProgramIncrementsPlanner;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\UserStoryInOneMirrorPlanner;
 use Tuleap\ProgramManagement\Adapter\Program\IterationTracker\VisibleIterationTrackerRetriever;
+use Tuleap\ProgramManagement\Adapter\Program\Plan\CachedProgramBuilder;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\CanPrioritizeFeaturesDAO;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\PlanDao;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\PlannableTrackersRetriever;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\PrioritizeFeaturesPermissionVerifier;
-use Tuleap\ProgramManagement\Adapter\Program\Plan\ProgramAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\TrackerConfigurationChecker;
 use Tuleap\ProgramManagement\Adapter\Program\PlanningAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\ProgramDaoProject;
@@ -135,7 +136,6 @@ use Tuleap\ProgramManagement\Adapter\Workspace\ProgramsSearcher;
 use Tuleap\ProgramManagement\Adapter\Workspace\ProjectManagerAdapter;
 use Tuleap\ProgramManagement\Adapter\Workspace\ProjectPermissionVerifier;
 use Tuleap\ProgramManagement\Adapter\Workspace\ProjectProxy;
-use Tuleap\ProgramManagement\Adapter\BacklogPlugin\ProgramServiceBlocker;
 use Tuleap\ProgramManagement\Adapter\Workspace\TeamsSearcher;
 use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\Artifact\ArtifactFactoryAdapter;
 use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\Artifact\ArtifactIdentifierProxy;
@@ -232,9 +232,9 @@ use Tuleap\Tracker\Artifact\Changeset\Comment\CommentCreator;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupPermissionDao;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupPermissionInserter;
 use Tuleap\Tracker\Artifact\Changeset\FieldsToBeSavedInSpecificOrderRetriever;
-use Tuleap\Tracker\Artifact\Changeset\NewChangesetPostProcessor;
 use Tuleap\Tracker\Artifact\Changeset\NewChangesetCreator;
 use Tuleap\Tracker\Artifact\Changeset\NewChangesetFieldValueSaver;
+use Tuleap\Tracker\Artifact\Changeset\NewChangesetPostProcessor;
 use Tuleap\Tracker\Artifact\Changeset\NewChangesetValidator;
 use Tuleap\Tracker\Artifact\Changeset\PostCreation\ActionsQueuer;
 use Tuleap\Tracker\Artifact\ChangesetValue\ChangesetValueSaver;
@@ -417,7 +417,7 @@ final class program_managementPlugin extends Plugin implements PluginWithService
                 ),
                 new TeamDao()
             ),
-            ProgramAdapter::instance(),
+            CachedProgramBuilder::instance(),
             new PendingSynchronizationDao()
         );
     }
@@ -438,7 +438,7 @@ final class program_managementPlugin extends Plugin implements PluginWithService
         return new DisplayProgramBacklogController(
             $project_manager,
             new \Tuleap\Project\Flags\ProjectFlagsBuilder(new \Tuleap\Project\Flags\ProjectFlagsDao()),
-            $this->getProgramAdapter(),
+            CachedProgramBuilder::instance(),
             TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../templates'),
             $this->getVisibleProgramIncrementTrackerRetriever($retrieve_user),
             $program_increments_dao,
@@ -537,7 +537,7 @@ final class program_managementPlugin extends Plugin implements PluginWithService
         $artifact_retriever       = new ArtifactFactoryAdapter($tracker_artifact_factory);
         $update_verifier          = new UserCanUpdateTimeboxVerifier($artifact_retriever, $user_retriever);
         $program_increments_DAO   = new ProgramIncrementsDAO();
-        $program_adapter          = ProgramAdapter::instance();
+        $program_adapter          = CachedProgramBuilder::instance();
         $project_access_checker   = new ProjectAccessChecker(
             new RestrictedUserCanAccessProjectVerifier(),
             EventManager::instance()
@@ -575,7 +575,7 @@ final class program_managementPlugin extends Plugin implements PluginWithService
             new IterationsDAO(),
             $program_dao,
             new ConfigurationErrorsGatherer(
-                $this->getProgramAdapter(),
+                $program_adapter,
                 new ProgramIncrementCreatorChecker(
                     $checker,
                     $program_increments_dao,
@@ -595,7 +595,7 @@ final class program_managementPlugin extends Plugin implements PluginWithService
             ),
             $project_manager,
             new ProgramIncrementsSearcher(
-                $this->getProgramAdapter(),
+                $program_adapter,
                 $program_increments_dao,
                 $program_increments_dao,
                 $artifact_visible_verifier,
@@ -646,13 +646,12 @@ final class program_managementPlugin extends Plugin implements PluginWithService
         $update_verifier          = new UserCanUpdateTimeboxVerifier($artifact_retriever, $user_retriever);
         $project_manager_adapter  = new ProjectManagerAdapter(ProjectManager::instance(), $user_retriever);
         $program_dao              = new ProgramDaoProject();
+        $program_adapter          = CachedProgramBuilder::instance();
 
         $project_access_checker = new ProjectAccessChecker(
             new RestrictedUserCanAccessProjectVerifier(),
             EventManager::instance()
         );
-
-        $program_adapter = ProgramAdapter::instance();
 
         return new DisplayPlanIterationsController(
             ProjectManager::instance(),
@@ -809,7 +808,7 @@ final class program_managementPlugin extends Plugin implements PluginWithService
         $program_increments_dao    = new ProgramIncrementsDAO();
         $artifact_visible_verifier = new ArtifactVisibleVerifier($tracker_artifact_factory, $user_retriever);
         $program_dao               = new ProgramDaoProject();
-        $program_adapter           = ProgramAdapter::instance();
+        $program_adapter           = CachedProgramBuilder::instance();
         $project_manager_adapter   = new ProjectManagerAdapter(ProjectManager::instance(), $user_retriever);
 
         $visible_team_searcher       = new VisibleTeamSearcher(
@@ -830,7 +829,7 @@ final class program_managementPlugin extends Plugin implements PluginWithService
                 $user_manager,
                 new \Tuleap\ProgramManagement\Domain\Program\Backlog\TeamSynchronization\MissingProgramIncrementCreator(
                     new ProgramIncrementsSearcher(
-                        $this->getProgramAdapter(),
+                        $program_adapter,
                         $program_increments_dao,
                         $program_increments_dao,
                         $artifact_visible_verifier,
@@ -867,7 +866,7 @@ final class program_managementPlugin extends Plugin implements PluginWithService
                     $program_adapter
                 ),
                 $pending_synchronization_dao,
-                $this->getProgramAdapter(),
+                $program_adapter,
                 $visible_team_searcher,
                 $pending_synchronization_dao
             )
@@ -1146,7 +1145,7 @@ final class program_managementPlugin extends Plugin implements PluginWithService
         $user_manager_adapter    = new UserManagerAdapter(UserManager::instance());
         $project_manager_adapter = new ProjectManagerAdapter($project_manager, $user_manager_adapter);
         $action_builder          = new ArtifactTopBacklogActionBuilder(
-            ProgramAdapter::instance(),
+            CachedProgramBuilder::instance(),
             new PrioritizeFeaturesPermissionVerifier(
                 $project_manager_adapter,
                 $project_access_checker,
@@ -1189,7 +1188,7 @@ final class program_managementPlugin extends Plugin implements PluginWithService
         $user_manager_adapter    = new UserManagerAdapter(UserManager::instance());
         $project_manager_adapter = new ProjectManagerAdapter($project_manager, $user_manager_adapter);
         $action_builder          = new MassChangeTopBacklogActionBuilder(
-            ProgramAdapter::instance(),
+            CachedProgramBuilder::instance(),
             new PrioritizeFeaturesPermissionVerifier(
                 $project_manager_adapter,
                 $project_access_checker,
@@ -1216,7 +1215,7 @@ final class program_managementPlugin extends Plugin implements PluginWithService
     public function trackerMasschangeProcessExternalActionsEvent(TrackerMasschangeProcessExternalActionsEvent $event): void
     {
         $processor = new MassChangeTopBacklogActionProcessor(
-            $this->getProgramAdapter(),
+            CachedProgramBuilder::instance(),
             $this->getTopBacklogChangeProcessor()
         );
 
@@ -1248,7 +1247,7 @@ final class program_managementPlugin extends Plugin implements PluginWithService
 
         return new AddToTopBacklogPostActionFactory(
             $dao,
-            $this->getProgramAdapter(),
+            CachedProgramBuilder::instance(),
             new ProgramServiceIsEnabledVerifier(
                 new ProjectManagerAdapter(ProjectManager::instance(), new UserManagerAdapter(UserManager::instance())),
             ),
@@ -1453,11 +1452,6 @@ final class program_managementPlugin extends Plugin implements PluginWithService
         return $component_involved_verifier;
     }
 
-    private function getProgramAdapter(): ProgramAdapter
-    {
-        return ProgramAdapter::instance();
-    }
-
     private function getCanSubmitNewArtifactHandler(): CanSubmitNewArtifactHandler
     {
         $user_manager                  = UserManager::instance();
@@ -1529,7 +1523,7 @@ final class program_managementPlugin extends Plugin implements PluginWithService
 
         return new CanSubmitNewArtifactHandler(
             new ConfigurationErrorsGatherer(
-                $this->getProgramAdapter(),
+                CachedProgramBuilder::instance(),
                 new ProgramIncrementCreatorChecker(
                     $checker,
                     $program_increments_dao,
@@ -1664,7 +1658,7 @@ final class program_managementPlugin extends Plugin implements PluginWithService
         $features_dao         = new FeaturesDao();
         (new PossibleParentHandler(
             new ArtifactVisibleVerifier($artifact_factory, $user_manager_adapter),
-            ProgramAdapter::instance(),
+            CachedProgramBuilder::instance(),
             new TeamDao(),
             $features_dao,
             $features_dao,

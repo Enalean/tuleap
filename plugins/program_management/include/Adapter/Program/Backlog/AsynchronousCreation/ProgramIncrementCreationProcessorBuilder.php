@@ -41,7 +41,7 @@ use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Fie
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\ArtifactsLinkedToParentDao;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\UserStoriesInMirroredProgramIncrementsPlanner;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\UserStoryInOneMirrorPlanner;
-use Tuleap\ProgramManagement\Adapter\Program\Plan\ProgramAdapter;
+use Tuleap\ProgramManagement\Adapter\Program\Plan\CachedProgramBuilder;
 use Tuleap\ProgramManagement\Adapter\Program\PlanningAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\ProgramDaoProject;
 use Tuleap\ProgramManagement\Adapter\ProjectReferenceRetriever;
@@ -70,9 +70,9 @@ use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateComme
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupPermissionInserter;
 use Tuleap\Tracker\Artifact\Changeset\FieldsToBeSavedInSpecificOrderRetriever;
 use Tuleap\Tracker\Artifact\Changeset\InitialChangesetCreator;
-use Tuleap\Tracker\Artifact\Changeset\NewChangesetPostProcessor;
 use Tuleap\Tracker\Artifact\Changeset\NewChangesetCreator;
 use Tuleap\Tracker\Artifact\Changeset\NewChangesetFieldValueSaver;
+use Tuleap\Tracker\Artifact\Changeset\NewChangesetPostProcessor;
 use Tuleap\Tracker\Artifact\Changeset\NewChangesetValidator;
 use Tuleap\Tracker\Artifact\Changeset\PostCreation\ActionsQueuer;
 use Tuleap\Tracker\Artifact\ChangesetValue\ChangesetValueSaver;
@@ -250,7 +250,7 @@ final class ProgramIncrementCreationProcessorBuilder implements BuildProgramIncr
             $event_manager
         );
 
-        $program_adapter = ProgramAdapter::instance();
+        $program_adapter = CachedProgramBuilder::instance();
         $iterations_dao  = new IterationsDAO();
         return new ProgramIncrementCreationProcessor(
             MessageLog::buildFromLogger($logger),
