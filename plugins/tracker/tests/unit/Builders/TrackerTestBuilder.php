@@ -32,6 +32,7 @@ final class TrackerTestBuilder
 {
     private ?TrackerColor $color  = null;
     private string $name          = 'Irrelevant';
+    private string $description   = 'Irrelevant';
     private string $short_name    = 'irrelevant';
     private ?Project $project     = null;
     private int $tracker_id       = 0;
@@ -65,6 +66,12 @@ final class TrackerTestBuilder
         $this->name       = $name;
         $this->short_name = strtolower($name);
 
+        return $this;
+    }
+
+    public function withDescription(string $description): self
+    {
+        $this->description = $description;
         return $this;
     }
 
@@ -141,7 +148,7 @@ final class TrackerTestBuilder
             $this->tracker_id,
             $this->getProjectId(),
             $this->name,
-            'Irrelevant',
+            $this->description,
             $this->short_name,
             false,
             null,
