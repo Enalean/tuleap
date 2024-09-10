@@ -7,6 +7,8 @@ StartLimitBurst=0
 [Service]
 Type=simple
 Environment=DISPLAY_ERRORS=true
+ExecStartPre=/bin/sh -c 'until /usr/bin/tuleap --version 2> /dev/null; do echo "Waiting on services to be ready to start"; /bin/sleep 5; done'
+ExecStartPre=/usr/bin/tuleap sanity-check
 ExecStart=/usr/share/tuleap/src/utils/worker.php -v --id=%i
 User=codendiadm
 Restart=always

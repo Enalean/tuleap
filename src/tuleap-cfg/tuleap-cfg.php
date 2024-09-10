@@ -40,7 +40,6 @@ $application->add(new \TuleapCfg\Command\StartCommunityEditionContainerCommand(
     $variable_provider,
 ));
 $application->add(new \TuleapCfg\Command\SetupMysqlInitCommand(
-    new \TuleapCfg\Command\SetupMysql\ConnectionManager(),
     new \TuleapCfg\Command\SetupMysql\DatabaseConfigurator(
         PasswordHandlerFactory::getPasswordHandler(),
         new \TuleapCfg\Command\SetupMysql\ConnectionManager(),

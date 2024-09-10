@@ -24,6 +24,9 @@ declare(strict_types=1);
 namespace TuleapCfg\Command;
 
 use Symfony\Component\Console\Style\SymfonyStyle;
+use Tuleap\NeverThrow\Err;
+use Tuleap\NeverThrow\Ok;
+use Tuleap\NeverThrow\Result;
 use TuleapCfg\Command\SetupMysql\ConnectionManagerInterface;
 use TuleapCfg\Command\SetupMysql\DBWrapperInterface;
 
@@ -49,7 +52,8 @@ final class TestConnectionManager implements ConnectionManagerInterface
         return $this->db;
     }
 
-    public function checkSQLModes(DBWrapperInterface $db): void
+    public function sanityCheck(DBWrapperInterface $db): Ok|Err
     {
+        return Result::ok(null);
     }
 }

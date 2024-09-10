@@ -23,6 +23,8 @@ declare(strict_types=1);
 
 namespace TuleapCfg\Command\Docker;
 
+use Tuleap\Option\Option;
+
 final class VariableProviderFromEnvironment implements VariableProviderInterface
 {
     public function get(string $key): string
@@ -32,5 +34,14 @@ final class VariableProviderFromEnvironment implements VariableProviderInterface
             return $value;
         }
         throw new \RuntimeException(sprintf('No variable named `%s` found in environment', $key));
+    }
+
+    public function getOr(string $key): Option
+    {
+        $value = getenv($key);
+        if ($value !== false) {
+            return Option::fromValue($value);
+        }
+        return Option::nothing(\Psl\Type\string());
     }
 }

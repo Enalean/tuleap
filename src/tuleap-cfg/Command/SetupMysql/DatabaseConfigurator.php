@@ -29,6 +29,10 @@ use Tuleap\Config\ConfigSerializer;
 use Tuleap\Config\ConfigurationVariables;
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\DB\DBConfig;
+use Tuleap\NeverThrow\Err;
+use Tuleap\NeverThrow\Fault;
+use Tuleap\NeverThrow\Ok;
+use Tuleap\NeverThrow\Result;
 use Tuleap\Option\Option;
 
 final class DatabaseConfigurator
@@ -45,9 +49,9 @@ final class DatabaseConfigurator
     }
 
     /**
-     * @psalm-return Option<ConcealedString>
+     * @return Ok<DBWrapperInterface>|Err<Fault>
      */
-    public function setupDatabase(SymfonyStyle $output, DBSetupParameters $db_params, string $base_directory = '/'): Option
+    public function getDatabaseConnection(SymfonyStyle $output, DBSetupParameters $db_params): Ok|Err
     {
         $db = $this->connection_manager->getDBWithoutDBName(
             $output,
@@ -60,8 +64,28 @@ final class DatabaseConfigurator
             $db_params->admin_password,
         );
 
-        $this->connection_manager->checkSQLModes($db);
+        return $this->sanityCheck($db)->andThen(fn () => Result::ok($db));
+    }
 
+    public function getDatabaseConnectionWithoutSanityCheck(SymfonyStyle $output, DBSetupParameters $db_params): DBWrapperInterface
+    {
+        return $this->connection_manager->getDBWithoutDBName(
+            $output,
+            \ForgeConfig::get(DBConfig::CONF_HOST),
+            \ForgeConfig::getInt(DBConfig::CONF_PORT),
+            \ForgeConfig::getStringAsBool(DBConfig::CONF_ENABLE_SSL),
+            \ForgeConfig::getStringAsBool(DBConfig::CONF_SSL_VERIFY_CERT),
+            \ForgeConfig::get(DBConfig::CONF_SSL_CA),
+            $db_params->admin_user,
+            $db_params->admin_password,
+        );
+    }
+
+    /**
+     * @psalm-return Option<ConcealedString>
+     */
+    public function setupDatabase(SymfonyStyle $output, DBWrapperInterface $db, DBSetupParameters $db_params, string $base_directory = '/'): Option
+    {
         $admin_password = $this->updateDBAdminPasswordIfNeeded($output, $db, $db_params);
 
         $this->initializeDatabaseAndLoadValues(
@@ -263,5 +287,13 @@ final class DatabaseConfigurator
     private function quoteDbUser(string $user_identifier, string $grant_hostname): string
     {
         return sprintf("'%s'@'%s'", $user_identifier, $grant_hostname);
+    }
+
+    /**
+     * @return Ok<null>|Err<Fault>
+     */
+    public function sanityCheck(DBWrapperInterface $db): Ok|Err
+    {
+        return $this->connection_manager->sanityCheck($db);
     }
 }

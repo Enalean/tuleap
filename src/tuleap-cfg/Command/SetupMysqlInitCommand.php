@@ -30,8 +30,8 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\DB\DBConfig;
+use Tuleap\NeverThrow\Result;
 use Tuleap\Option\Option;
-use TuleapCfg\Command\SetupMysql\ConnectionManagerInterface;
 use TuleapCfg\Command\SetupMysql\DatabaseConfigurator;
 use TuleapCfg\Command\SetupMysql\DBSetupParameters;
 use TuleapCfg\Command\SetupMysql\DBWrapperInterface;
@@ -45,19 +45,18 @@ final class SetupMysqlInitCommand extends Command
     private const OPT_APP_USER            = 'app-user';
     private const OPT_APP_PASSWORD        = 'app-password';
     private const OPT_MEDIAWIKI           = 'mediawiki';
-    private const OPT_SKIP_DATABASE       = 'skip-database';
     private const OPT_GRANT_HOSTNAME      = 'grant-hostname';
     private const OPT_LOG_PASSWORD        = 'log-password';
     private const OPT_AZURE_SUFFIX        = 'azure-suffix';
     private const ENV_AZURE_SUFFIX        = 'TULEAP_DB_AZURE_SUFFIX';
     private const OPT_TULEAP_FQDN         = 'tuleap-fqdn';
     private const OPT_SITE_ADMIN_PASSWORD = 'site-admin-password';
+    private const OPT_SKIP_SANITY_CHECK   = 'skip-sanity-check';
 
     private MysqlCommandHelper $command_helper;
     private string $base_directory;
 
     public function __construct(
-        private ConnectionManagerInterface $connection_manager,
         private DatabaseConfigurator $database_configurator,
         ?string $base_directory = null,
     ) {
@@ -108,7 +107,8 @@ final class SetupMysqlInitCommand extends Command
             ->addOption(self::OPT_LOG_PASSWORD, '', InputOption::VALUE_REQUIRED, 'Write user & password into given file')
             ->addOption(self::OPT_AZURE_SUFFIX, '', InputOption::VALUE_REQUIRED, 'Value to add to user\'s name to comply with Microsoft Azure rules')
             ->addOption(self::OPT_TULEAP_FQDN, '', InputOption::VALUE_REQUIRED, 'Fully qualified domain name of the tuleap server (eg. tuleap.example.com)')
-            ->addOption(self::OPT_SITE_ADMIN_PASSWORD, '', InputOption::VALUE_REQUIRED, 'Password for site administrator (`admin`) user ');
+            ->addOption(self::OPT_SITE_ADMIN_PASSWORD, '', InputOption::VALUE_REQUIRED, 'Password for site administrator (`admin`) user ')
+            ->addOption(self::OPT_SKIP_SANITY_CHECK, '', InputOption::VALUE_NONE, 'Skip sanity check (db versions and mode), should be used in dev only');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -172,19 +172,18 @@ final class SetupMysqlInitCommand extends Command
         assert(is_string($grant_hostname));
         $db_params = $db_params->withGrantHostname($grant_hostname);
 
-        $db = $this->connection_manager->getDBWithoutDBName(
-            $io,
-            \ForgeConfig::get(DBConfig::CONF_HOST),
-            \ForgeConfig::getInt(DBConfig::CONF_PORT),
-            \ForgeConfig::getStringAsBool(DBConfig::CONF_ENABLE_SSL),
-            \ForgeConfig::getStringAsBool(DBConfig::CONF_SSL_VERIFY_CERT),
-            \ForgeConfig::get(DBConfig::CONF_SSL_CA),
-            $db_params->admin_user,
-            $db_params->admin_password
-        );
-        $output->writeln('<info>Successfully connected to the server !</info>');
+        if ($input->getOption(self::OPT_SKIP_SANITY_CHECK) !== true) {
+            $result = $this->database_configurator->getDatabaseConnection($io, $db_params);
+            if (Result::isErr($result)) {
+                $io->getErrorStyle()->writeln((string) $result->error);
+                return self::FAILURE;
+            }
+            $db = $result->value;
+        } else {
+            $db = $this->database_configurator->getDatabaseConnectionWithoutSanityCheck($io, $db_params);
+        }
 
-        $this->connection_manager->checkSQLModes($db);
+        $output->writeln('<info>Successfully connected to the server !</info>');
 
         $this->initializeDatabase($input, $io, $db, $db_params);
         $this->initializeMediawiki($input, $io, $db, $tuleap_user, $db_params->grant_hostname);
@@ -228,7 +227,7 @@ final class SetupMysqlInitCommand extends Command
         $generated_admin_db_password = Option::nothing(ConcealedString::class);
 
         if ($db_params->canSetup()) {
-            $generated_admin_db_password = $this->database_configurator->setupDatabase($output, $db_params, $this->base_directory);
+            $generated_admin_db_password = $this->database_configurator->setupDatabase($output, $db, $db_params, $this->base_directory);
         } else {
             $this->database_configurator->initializeDatabase($output, $db, $dbname, $db_params->grant_hostname);
         }

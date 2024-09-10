@@ -335,6 +335,11 @@ $CLI_command_collector->addCommand(
     ),
 );
 
+$CLI_command_collector->addCommand(
+    \Tuleap\CLI\Command\SanityCheckCommand::NAME,
+    static fn () => new \Tuleap\CLI\Command\SanityCheckCommand(),
+);
+
 $event_manager->dispatch($CLI_command_collector);
 
 $application = new Application();

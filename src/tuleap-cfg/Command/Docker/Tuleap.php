@@ -33,12 +33,15 @@ use Tuleap\Cryptography\ConcealedString;
 use Tuleap\DB\DBConfig;
 use Tuleap\DB\DBFactory;
 use Tuleap\ForgeUpgrade\ForgeUpgrade;
+use Tuleap\NeverThrow\Result;
 use Tuleap\Option\Option;
 use Tuleap\System\ServiceControl;
 use TuleapCfg\Command\Configure\ConfigureApache;
 use TuleapCfg\Command\ProcessFactory;
 use TuleapCfg\Command\SetupMysql\DatabaseConfigurator;
 use TuleapCfg\Command\SetupMysql\DBSetupParameters;
+use TuleapCfg\Command\SetupMysql\DBWrapperInterface;
+use TuleapCfg\Command\SetupMysql\EasyDBWrapper;
 use TuleapCfg\Command\SetupTuleap\SetupTuleap;
 
 final class Tuleap
@@ -47,6 +50,7 @@ final class Tuleap
     private const DB_ADMIN_USER       = 'DB_ADMIN_USER';
     private const DB_ADMIN_PASSWORD   = 'DB_ADMIN_PASSWORD';
     private const SITE_ADMIN_PASSWORD = 'SITE_ADMINISTRATOR_PASSWORD';
+    private const SKIP_SANITY_CHECK   = 'SKIP_SANITY_CHECK';
 
     public function __construct(private ProcessFactory $process_factory, private DatabaseConfigurator $database_configurator)
     {
@@ -65,7 +69,26 @@ final class Tuleap
         } else {
             $data_persistence->restore($output);
             \ForgeConfig::loadInSequence();
+            $variable_provider->getOr(self::SKIP_SANITY_CHECK)->match(
+                function (string $value) use ($output): void {
+                    if ($value === '1') {
+                        $output->info('Skip sanity check');
+                        return;
+                    }
+                    $this->sanityCheckOrThrow();
+                },
+                fn () => $this->sanityCheckOrThrow(),
+            );
+
             return $this->update($output);
+        }
+    }
+
+    private function sanityCheckOrThrow(): void
+    {
+        $result = $this->database_configurator->sanityCheck(new EasyDBWrapper(DBFactory::getMainTuleapDBConnection()->getDB()));
+        if (Result::isErr($result)) {
+            throw new \RuntimeException((string) $result->error);
         }
     }
 
@@ -83,16 +106,39 @@ final class Tuleap
             }
 
             $output->writeln('Setup database');
-            $this->database_configurator
-                ->setupDatabase(
-                    $output,
-                    DBSetupParameters::fromAdminCredentials(
-                        $variable_provider->get(self::DB_ADMIN_USER),
-                        $variable_provider->get(self::DB_ADMIN_PASSWORD)
-                    )
-                    ->withSiteAdminPassword(new ConcealedString($variable_provider->get(self::SITE_ADMIN_PASSWORD)))
-                    ->withTuleapFQDN($fqdn)
-                );
+            $db_setup_parameters = DBSetupParameters::fromAdminCredentials(
+                $variable_provider->get(self::DB_ADMIN_USER),
+                $variable_provider->get(self::DB_ADMIN_PASSWORD)
+            )
+                ->withSiteAdminPassword(new ConcealedString($variable_provider->get(self::SITE_ADMIN_PASSWORD)))
+                ->withTuleapFQDN($fqdn);
+
+            $db = $variable_provider->getOr(self::SKIP_SANITY_CHECK)->match(
+                function (string $value) use ($output, $db_setup_parameters): DBWrapperInterface {
+                    if ($value === '1') {
+                        $output->info('Skip sanity check');
+                        return $this->database_configurator->getDatabaseConnectionWithoutSanityCheck($output, $db_setup_parameters);
+                    }
+                    $result = $this->database_configurator->getDatabaseConnection($output, $db_setup_parameters);
+                    if (Result::isErr($result)) {
+                        throw new \RuntimeException((string) $result->error);
+                    }
+                    return $result->value;
+                },
+                function () use ($output, $db_setup_parameters): DBWrapperInterface {
+                    $result = $this->database_configurator->getDatabaseConnection($output, $db_setup_parameters);
+                    if (Result::isErr($result)) {
+                        throw new \RuntimeException((string) $result->error);
+                    }
+                    return $result->value;
+                }
+            );
+
+            $this->database_configurator->setupDatabase(
+                $output,
+                $db,
+                $db_setup_parameters,
+            );
 
             $output->writeln('Configure local.inc');
             (new SetupTuleap())->setup();

@@ -33,10 +33,12 @@ services:
 #      - TULEAP_REDIS_PASSWORD=some_password
 #      - TULEAP_REDIS_USE_TLS=1
       - TULEAP_EMAIL_RELAYHOST=mailhog:1025
+#      - SKIP_SANITY_CHECK=1
 
   db:
     image: mysql:8.0
     command: ["--character-set-server=utf8mb4", "--collation-server=utf8mb4_unicode_ci", "--sql-mode=NO_ENGINE_SUBSTITUTION", "--port=3307"]
+#    command: ["--character-set-server=utf8mb4", "--collation-server=utf8mb4_unicode_ci", "--port=3307"]
     environment:
       - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
     volumes:

@@ -24,6 +24,9 @@ declare(strict_types=1);
 namespace TuleapCfg\Command\SetupMysql;
 
 use Symfony\Component\Console\Style\SymfonyStyle;
+use Tuleap\NeverThrow\Err;
+use Tuleap\NeverThrow\Fault;
+use Tuleap\NeverThrow\Ok;
 
 interface ConnectionManagerInterface
 {
@@ -38,5 +41,8 @@ interface ConnectionManagerInterface
         string $password,
     ): DBWrapperInterface;
 
-    public function checkSQLModes(DBWrapperInterface $db): void;
+    /**
+     * @return Ok<null>|Err<Fault>
+     */
+    public function sanityCheck(DBWrapperInterface $db): Ok|Err;
 }
