@@ -707,8 +707,8 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
             $tracker_manager = new TrackerManager();
             $tracker_manager->duplicate(
                 new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection()),
-                (int) $template->getID(),
-                (int) $project->getID(),
+                $template,
+                $project,
                 $event->getMappingRegistry(),
             );
 

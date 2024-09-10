@@ -602,7 +602,7 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
     public function trackerEventTrackersDuplicated(TrackerEventTrackersDuplicated $event): void
     {
         PlanningFactory::build()->duplicatePlannings(
-            $event->project_id,
+            (int) $event->new_project->getID(),
             $event->tracker_mapping,
             $event->ugroups_mapping,
         );

@@ -33,9 +33,9 @@ final class TrackerEventTrackersDuplicated implements \Tuleap\Event\Dispatchable
         public readonly array $tracker_mapping,
         public readonly array $field_mapping,
         public readonly array $report_mapping,
-        public readonly int $project_id,
+        public readonly \Project $new_project,
         public readonly array $ugroups_mapping,
-        public readonly int $source_project_id,
+        public readonly \Project $source_project,
         public readonly MappingRegistry $mapping_registry,
     ) {
     }
