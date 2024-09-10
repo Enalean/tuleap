@@ -94,3 +94,15 @@ id = "GHSA-g3ch-rx76-35fx" # CVE-2024-6783
 reason = "No direct exploitation path, template are not compiled at runtime. The migration to move away from Vue 2 is underway."
 
 ### TO BE FIXED
+# Go < 1.22.7
+[[IgnoredVulns]]
+id = "GO-2024-3105" # CVE-2024-34155
+reason = "Uncalled code."
+
+[[IgnoredVulns]]
+id = "GO-2024-3106" # CVE-2024-34156
+reason = "Uncalled code."
+
+[[IgnoredVulns]]
+id = "GO-2024-3107" # CVE-2024-34158
+reason = "Uncalled code."
