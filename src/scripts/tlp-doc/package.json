@@ -46,7 +46,8 @@
       "is-typed-array": "npm:@nolyfill/is-typed-array@latest",
       "isarray": "npm:@nolyfill/isarray@latest",
       "side-channel": "npm:@nolyfill/side-channel@latest",
-      "which-typed-array": "npm:@nolyfill/which-typed-array@latest"
+      "which-typed-array": "npm:@nolyfill/which-typed-array@latest",
+      "path-to-regexp": "^0.1.10"
     }
   }
 }
