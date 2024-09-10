@@ -32,6 +32,7 @@
             v-bind:is_image_upload_allowed="is_image_upload_allowed"
             v-bind:upload_file="upload_file"
             v-bind:project_id="project_id"
+            v-bind:references="references"
             data-test="editor"
         />
     </template>
@@ -48,6 +49,7 @@ import { strictInject } from "@tuleap/vue-strict-inject";
 import { SECTIONS_STORE } from "@/stores/sections-store-injection-key";
 import { EDITOR_CHOICE } from "@/helpers/editor-choice";
 import type { UseUploadFileType } from "@/composables/useUploadFile";
+import type { CrossReference } from "@/stores/useSectionsStore";
 
 withDefaults(
     defineProps<{
@@ -61,6 +63,7 @@ withDefaults(
         is_print_mode?: boolean;
         upload_file: UseUploadFileType;
         project_id: number;
+        references: Array<CrossReference>;
     }>(),
     {
         is_print_mode: false,

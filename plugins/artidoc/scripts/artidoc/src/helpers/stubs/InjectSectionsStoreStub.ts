@@ -44,6 +44,7 @@ export const InjectedSectionsStoreStub = {
         is_sections_loading: ref(false),
         sections: ref(sections.map(injectInternalId)),
         saved_sections: computed(() => extractArtifactSectionsFromArtidocSections(sections)),
+        getReferencesForOneSection: noop,
     }),
     withLoadingSections: (sections: readonly ArtidocSection[] = []): SectionsStore => ({
         replacePendingByArtifactSection: noop,
@@ -56,6 +57,7 @@ export const InjectedSectionsStoreStub = {
         is_sections_loading: ref(true),
         sections: ref(sections.map(injectInternalId)),
         saved_sections: computed(() => extractArtifactSectionsFromArtidocSections(sections)),
+        getReferencesForOneSection: noop,
     }),
     withSectionsInError: (): SectionsStore => ({
         replacePendingByArtifactSection: noop,
@@ -68,6 +70,7 @@ export const InjectedSectionsStoreStub = {
         is_sections_loading: ref(false),
         sections: ref(undefined),
         saved_sections: computed(() => undefined),
+        getReferencesForOneSection: noop,
     }),
     withMockedLoadSections: (loadSections: (item_id: number) => Promise<void>): SectionsStore => ({
         replacePendingByArtifactSection: noop,
@@ -80,6 +83,7 @@ export const InjectedSectionsStoreStub = {
         is_sections_loading: ref(false),
         sections: ref([]),
         saved_sections: computed(() => []),
+        getReferencesForOneSection: noop,
     }),
     withMockedInsertPendingArtifactSectionForEmptyDocument: (
         insertPendingArtifactSectionForEmptyDocument: (tracker: Tracker | null) => void,

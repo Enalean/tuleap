@@ -38,6 +38,7 @@ import {
     initGettext,
 } from "@tuleap/gettext";
 import { v4 as uuidv4 } from "uuid";
+import type { CrossReference } from "./plugins/extract-referencies/reference-extractor";
 
 export type UseEditorType = {
     editor: EditorView;
@@ -51,6 +52,7 @@ export async function useEditor(
     onChange: (new_text_content: string) => void,
     initial_content: HTMLElement,
     project_id: number,
+    references: Array<CrossReference>,
 ): Promise<UseEditorType> {
     const gettext_provider = await initGettext(
         getLocaleWithDefault(document),
@@ -67,7 +69,7 @@ export async function useEditor(
         dropCursor(),
         initLinkPopoverPlugin(gettext_provider, editor_id),
         ...setupToolbar(gettext_provider, editor_id),
-        initPluginTransformInput(project_id),
+        initPluginTransformInput(project_id, references),
     ];
 
     const state: EditorState = getState(initial_content);

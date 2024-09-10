@@ -18,13 +18,17 @@
  */
 
 import { Plugin } from "prosemirror-state";
-import type { DecorationSource, EditorView } from "prosemirror-view";
-import { DecorationSet } from "prosemirror-view";
+import type { DecorationSource, EditorView, DecorationSet } from "prosemirror-view";
 import { loadCrossReferences } from "./cross-ref-loader";
+import type { CrossReference } from "./reference-extractor";
+import { decorateLink } from "./link-decorator";
 
 let editor_view: EditorView;
 
-export function initPluginTransformInput(project_id: number): Plugin {
+export function initPluginTransformInput(
+    project_id: number,
+    references: Array<CrossReference>,
+): Plugin {
     return new Plugin({
         props: {
             decorations(state): DecorationSource {
@@ -33,7 +37,7 @@ export function initPluginTransformInput(project_id: number): Plugin {
         },
         state: {
             init: (config, state): DecorationSet => {
-                return DecorationSet.create(state.doc, []);
+                return decorateLink(state.doc, references);
             },
             apply: (tr, decoration_set: DecorationSet): DecorationSet => {
                 if (tr.docChanged) {

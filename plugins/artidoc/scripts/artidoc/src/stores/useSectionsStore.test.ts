@@ -28,6 +28,7 @@ import PendingArtifactSectionFactory from "@/helpers/pending-artifact-section.fa
 import { TrackerStub } from "@/helpers/stubs/TrackerStub";
 import type { Tracker } from "@/stores/configuration-store";
 import { isPendingArtifactSection } from "@/helpers/artidoc-section.type";
+import type { Project } from "@/helpers/project.type";
 
 describe("useSectionsStore", () => {
     describe("loadSections", () => {
@@ -43,7 +44,7 @@ describe("useSectionsStore", () => {
             );
 
             const store = useSectionsStore();
-            store.loadSections(101, null, false);
+            store.loadSections(101, null, false, { id: 101 } as Project);
 
             await flushPromises();
 
@@ -56,7 +57,7 @@ describe("useSectionsStore", () => {
             vi.spyOn(rest, "getAllSections").mockReturnValue(okAsync([section]));
 
             const store = useSectionsStore();
-            store.loadSections(101, null, false);
+            store.loadSections(101, null, false, { id: 101 } as Project);
 
             await flushPromises();
 
@@ -76,7 +77,7 @@ describe("useSectionsStore", () => {
                 vi.spyOn(rest, "getAllSections").mockReturnValue(okAsync([]));
 
                 const store = useSectionsStore();
-                store.loadSections(101, tracker, true);
+                store.loadSections(101, tracker, true, { id: 101 } as Project);
 
                 await flushPromises();
 
@@ -88,7 +89,9 @@ describe("useSectionsStore", () => {
             vi.spyOn(rest, "getAllSections").mockReturnValue(okAsync([]));
 
             const store = useSectionsStore();
-            store.loadSections(101, TrackerStub.withTitleAndDescription(), false);
+            store.loadSections(101, TrackerStub.withTitleAndDescription(), false, {
+                id: 101,
+            } as Project);
 
             await flushPromises();
 
@@ -102,7 +105,9 @@ describe("useSectionsStore", () => {
             vi.spyOn(rest, "getAllSections").mockReturnValue(okAsync([]));
 
             const store = useSectionsStore();
-            store.loadSections(101, TrackerStub.withTitleAndDescription(), true);
+            store.loadSections(101, TrackerStub.withTitleAndDescription(), true, {
+                id: 101,
+            } as Project);
 
             await flushPromises();
 
@@ -115,7 +120,7 @@ describe("useSectionsStore", () => {
             );
 
             const store = useSectionsStore();
-            store.loadSections(101, null, false);
+            store.loadSections(101, null, false, { id: 101 } as Project);
 
             await flushPromises();
 
@@ -136,7 +141,7 @@ describe("useSectionsStore", () => {
             );
 
             const store = useSectionsStore();
-            store.loadSections(101, null, false);
+            await store.loadSections(101, null, false, { id: 101 } as Project);
 
             await flushPromises();
 
@@ -149,7 +154,7 @@ describe("useSectionsStore", () => {
             );
 
             const store = useSectionsStore();
-            store.loadSections(101, null, false);
+            store.loadSections(101, null, false, { id: 101 } as Project);
 
             await flushPromises();
 
@@ -166,7 +171,7 @@ describe("useSectionsStore", () => {
             );
 
             const store = useSectionsStore();
-            store.loadSections(101, null, true);
+            store.loadSections(101, null, true, { id: 101 } as Project);
 
             await flushPromises();
 
@@ -195,7 +200,7 @@ describe("useSectionsStore", () => {
             vi.spyOn(rest, "getAllSections").mockReturnValue(okAsync([section_a, section_b]));
 
             const store = useSectionsStore();
-            store.loadSections(101, null, true);
+            store.loadSections(101, null, true, { id: 101 } as Project);
 
             await flushPromises();
 
@@ -236,7 +241,7 @@ describe("useSectionsStore", () => {
                 vi.spyOn(rest, "deleteSection").mockReturnValue(okAsync(new Response()));
 
                 const store = useSectionsStore();
-                store.loadSections(101, null, true);
+                store.loadSections(101, null, true, { id: 101 } as Project);
                 await flushPromises();
 
                 store.removeSection(section2, tracker);
@@ -264,7 +269,7 @@ describe("useSectionsStore", () => {
                 vi.spyOn(rest, "deleteSection").mockReturnValue(okAsync(new Response()));
 
                 const store = useSectionsStore();
-                store.loadSections(101, null, true);
+                store.loadSections(101, null, true, { id: 101 } as Project);
                 await flushPromises();
 
                 store.removeSection(section, tracker);
@@ -282,7 +287,7 @@ describe("useSectionsStore", () => {
             vi.spyOn(rest, "deleteSection").mockReturnValue(okAsync(new Response()));
 
             const store = useSectionsStore();
-            store.loadSections(101, null, true);
+            store.loadSections(101, null, true, { id: 101 } as Project);
             await flushPromises();
 
             store.removeSection(section, TrackerStub.withTitleAndDescription());
@@ -318,7 +323,7 @@ describe("useSectionsStore", () => {
             );
 
             const store = useSectionsStore();
-            store.loadSections(101, null, true);
+            store.loadSections(101, null, true, { id: 101 } as Project);
             await flushPromises();
 
             store.removeSection(ArtifactSectionFactory.create(), null);
@@ -344,7 +349,7 @@ describe("useSectionsStore", () => {
             );
 
             const store = useSectionsStore();
-            store.loadSections(101, null, true);
+            store.loadSections(101, null, true, { id: 101 } as Project);
             await flushPromises();
 
             store.insertSection(PendingArtifactSectionFactory.create(), AT_THE_END);
@@ -356,7 +361,7 @@ describe("useSectionsStore", () => {
             vi.spyOn(rest, "getAllSections").mockReturnValue(okAsync([section1, section2]));
 
             const store = useSectionsStore();
-            store.loadSections(101, null, true);
+            store.loadSections(101, null, true, { id: 101 } as Project);
             await flushPromises();
 
             store.insertSection(new_section, { index: 0 });
@@ -372,7 +377,7 @@ describe("useSectionsStore", () => {
             vi.spyOn(rest, "getAllSections").mockReturnValue(okAsync([section1, section2]));
 
             const store = useSectionsStore();
-            store.loadSections(101, null, true);
+            store.loadSections(101, null, true, { id: 101 } as Project);
             await flushPromises();
 
             store.insertSection(new_section, { index: 1 });
@@ -388,7 +393,7 @@ describe("useSectionsStore", () => {
             vi.spyOn(rest, "getAllSections").mockReturnValue(okAsync([section1, section2]));
 
             const store = useSectionsStore();
-            store.loadSections(101, null, true);
+            store.loadSections(101, null, true, { id: 101 } as Project);
             await flushPromises();
 
             store.insertSection(new_section, AT_THE_END);
@@ -411,7 +416,7 @@ describe("useSectionsStore", () => {
             vi.spyOn(rest, "getAllSections").mockReturnValue(okAsync([]));
 
             const store = useSectionsStore();
-            store.loadSections(101, null, true);
+            store.loadSections(101, null, true, { id: 101 } as Project);
             await flushPromises();
 
             store.insertPendingArtifactSectionForEmptyDocument(tracker);
@@ -424,7 +429,7 @@ describe("useSectionsStore", () => {
             vi.spyOn(rest, "getAllSections").mockReturnValue(okAsync([]));
 
             const store = useSectionsStore();
-            store.loadSections(101, null, true);
+            store.loadSections(101, null, true, { id: 101 } as Project);
             await flushPromises();
 
             store.insertPendingArtifactSectionForEmptyDocument(
@@ -460,7 +465,7 @@ describe("useSectionsStore", () => {
             vi.spyOn(rest, "getAllSections").mockReturnValue(okAsync([section]));
 
             const store = useSectionsStore();
-            store.loadSections(101, null, true);
+            store.loadSections(101, null, true, { id: 101 } as Project);
             await flushPromises();
 
             store.insertPendingArtifactSectionForEmptyDocument(
@@ -479,7 +484,7 @@ describe("useSectionsStore", () => {
                 vi.spyOn(rest, "getAllSections").mockReturnValue(okAsync([]));
 
                 const store = useSectionsStore();
-                store.loadSections(101, null, true);
+                store.loadSections(101, null, true, { id: 101 } as Project);
                 await flushPromises();
 
                 expect(
@@ -493,7 +498,7 @@ describe("useSectionsStore", () => {
                 );
 
                 const store = useSectionsStore();
-                store.loadSections(101, null, true);
+                store.loadSections(101, null, true, { id: 101 } as Project);
                 await flushPromises();
 
                 expect(
@@ -512,7 +517,7 @@ describe("useSectionsStore", () => {
             );
 
             const store = useSectionsStore();
-            store.loadSections(101, null, true);
+            store.loadSections(101, null, true, { id: 101 } as Project);
             await flushPromises();
 
             expect(store.getSectionPositionForSave(section0)).toStrictEqual({
@@ -537,7 +542,7 @@ describe("useSectionsStore", () => {
             );
 
             const store = useSectionsStore();
-            store.loadSections(101, null, true);
+            store.loadSections(101, null, true, { id: 101 } as Project);
             await flushPromises();
 
             expect(store.getSectionPositionForSave(section0)).toStrictEqual({
@@ -564,7 +569,7 @@ describe("useSectionsStore", () => {
             );
 
             const store = useSectionsStore();
-            store.loadSections(101, null, true);
+            store.loadSections(101, null, true, { id: 101 } as Project);
             await flushPromises();
 
             store.replacePendingByArtifactSection(
@@ -579,7 +584,7 @@ describe("useSectionsStore", () => {
             vi.spyOn(rest, "getAllSections").mockReturnValue(okAsync([]));
 
             const store = useSectionsStore();
-            store.loadSections(101, null, true);
+            store.loadSections(101, null, true, { id: 101 } as Project);
             await flushPromises();
 
             store.replacePendingByArtifactSection(
@@ -596,7 +601,7 @@ describe("useSectionsStore", () => {
             vi.spyOn(rest, "getAllSections").mockReturnValue(okAsync([section]));
 
             const store = useSectionsStore();
-            store.loadSections(101, null, true);
+            store.loadSections(101, null, true, { id: 101 } as Project);
             await flushPromises();
 
             store.replacePendingByArtifactSection(
@@ -619,7 +624,7 @@ describe("useSectionsStore", () => {
             );
 
             const store = useSectionsStore();
-            store.loadSections(101, null, true);
+            store.loadSections(101, null, true, { id: 101 } as Project);
             await flushPromises();
 
             const newone = ArtifactSectionFactory.create();

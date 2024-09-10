@@ -47,6 +47,7 @@ export const ConfigurationStoreStub = {
         error_message: ref(""),
         saveConfiguration: noop,
         resetSuccessFlagFromPreviousCalls: noop,
+        current_project: ref(null),
     }),
 
     withSelectedTracker: (selected_tracker: Tracker | null): ConfigurationStore => ({

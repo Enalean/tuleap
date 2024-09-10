@@ -60,6 +60,12 @@ const ArtifactSectionFactory = {
             type: "file",
             file_descriptions: [],
         },
+        references: [
+            {
+                link: "https://example.com",
+                text: "test",
+            },
+        ],
     }),
 
     override: (overrides: Partial<ArtifactSection>): ArtifactSection => ({
