@@ -17,23 +17,22 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { html } from "hybrids";
-import type { UpdateFunction } from "hybrids";
-import popover_styles from "./link-popover-styles.scss?inline";
-import type { InternalLinkPopoverElement } from "./LinkPopoverElement";
+import type { LinkPopoverButton } from "../LinkPopoverElement";
+import { createOpenLinkButton } from "./OpenLinkButtonElement";
+import { createCopyToClipboardButton } from "./CopyToClipboardButtonElement";
 import type { GetText } from "@tuleap/gettext";
-import { createButton } from "./items/button-creator";
 
-export const renderLinkPopover = (
-    host: InternalLinkPopoverElement,
+export const createButton = (
+    doc: Document,
     gettext_provider: GetText,
-): UpdateFunction<InternalLinkPopoverElement> =>
-    html`
-        <section data-role="popover" class="tlp-popover prose-mirror-editor-popover-links">
-            <div class="tlp-popover-arrow"></div>
-            <div class="tlp-popover-body">
-                <div class="tlp-button-bar">
-                    ${host.buttons.map((button) => createButton(document, gettext_provider, button))}
-                </div>
-        </section>
-    `.style(popover_styles);
+    button: LinkPopoverButton,
+): HTMLElement => {
+    switch (button.type) {
+        case "open-link":
+            return createOpenLinkButton(doc, gettext_provider, button);
+        case "copy-to-clipboard":
+            return createCopyToClipboardButton(doc, button);
+        default:
+            throw new Error(`Unknown button type`);
+    }
+};

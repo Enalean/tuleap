@@ -19,14 +19,20 @@
 
 import { define, html } from "hybrids";
 import type { UpdateFunction } from "hybrids";
-import type { GetText } from "@tuleap/gettext";
 import "@tuleap/copy-to-clipboard";
+import type { TypedLinkPopoverButton } from "../LinkPopoverElement";
 
 export const TAG = "copy-to-clipboard-button";
 
+export type CopyToClipboardButton = TypedLinkPopoverButton &
+    CopyToClipboardButtonElement & {
+        type: "copy-to-clipboard";
+    };
+
 export type CopyToClipboardButtonElement = {
     value_to_copy: string;
-    gettext_provider: GetText;
+    value_copied_title: string;
+    copy_value_title: string;
 };
 
 export type InternalCopyToClipboardButtonElement = Readonly<CopyToClipboardButtonElement> & {
@@ -55,16 +61,34 @@ const getIcon = (
     return html`<i class="${icon_classnames}" role="img" data-test="copy-to-clipboard-icon"></i>`;
 };
 
+export const isCopyToClipboardElement = (
+    element: HTMLElement,
+): element is HTMLElement & CopyToClipboardButtonElement => element.tagName === TAG.toUpperCase();
+
+export const createCopyToClipboardButton = (
+    doc: Document,
+    props: CopyToClipboardButton,
+): HTMLElement => {
+    const button = doc.createElement(TAG);
+    if (!isCopyToClipboardElement(button)) {
+        throw new Error("Unable to create a copy to clipboard button.");
+    }
+    button.value_to_copy = props.value_to_copy;
+    button.copy_value_title = props.copy_value_title;
+    button.value_copied_title = props.value_copied_title;
+
+    return button;
+};
+
 export const renderCopyToClipboardItem = (
     host: InternalCopyToClipboardButtonElement,
-    gettext_provider: GetText,
 ): UpdateFunction<InternalCopyToClipboardButtonElement> => html`
     <div class="tlp-button-bar-item">
         <copy-to-clipboard
             class="tlp-button-outline tlp-button-secondary tlp-button-small"
             title="${host.has_been_copied_to_clipboard
-                ? gettext_provider.gettext("Link url has been copied!")
-                : gettext_provider.gettext("Copy link url")}"
+                ? host.value_copied_title
+                : host.copy_value_title}"
             value="${host.value_to_copy}"
             data-test="copy-link-button"
             oncopied-to-clipboard="${onCopiedToClipboard}"
@@ -76,8 +100,9 @@ export const renderCopyToClipboardItem = (
 
 define<InternalCopyToClipboardButtonElement>({
     tag: TAG,
-    gettext_provider: (host, gettext_provider) => gettext_provider,
     has_been_copied_to_clipboard: false,
     value_to_copy: "",
-    render: (host) => renderCopyToClipboardItem(host, host.gettext_provider),
+    value_copied_title: "",
+    copy_value_title: "",
+    render: renderCopyToClipboardItem,
 });

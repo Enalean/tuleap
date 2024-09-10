@@ -34,6 +34,9 @@ msgstr "Changer le texte en titre"
 msgid "Change to plain text"
 msgstr "Changer en texte"
 
+msgid "Copy Tuleap reference"
+msgstr "Copier la référence Tuleap"
+
 msgid "Copy link url"
 msgstr "Copier l'url du lien"
 
@@ -82,6 +85,9 @@ msgstr "Passer en italique `Ctrl+i`"
 
 msgid "Toggle strong style `Ctrl+b`"
 msgstr "Passer en gras `Ctrl+b`"
+
+msgid "Tuleap reference has been copied!"
+msgstr "La référence Tuleap a été copiée !"
 
 msgid "Update link"
 msgstr "Modifier le lien"
