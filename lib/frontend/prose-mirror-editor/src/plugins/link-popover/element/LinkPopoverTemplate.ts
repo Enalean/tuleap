@@ -22,27 +22,26 @@ import type { UpdateFunction } from "hybrids";
 import popover_styles from "./link-popover-styles.scss?inline";
 import type { InternalLinkPopoverElement } from "./LinkPopoverElement";
 import type { GetText } from "@tuleap/gettext";
+import "./items/OpenLinkButtonElement";
+import "./items/CopyToClipboardButtonElement";
 
 export const renderLinkPopover = (
     host: InternalLinkPopoverElement,
     gettext_provider: GetText,
 ): UpdateFunction<InternalLinkPopoverElement> =>
     html`
-    <section data-role="popover" class="tlp-popover prose-mirror-editor-popover-links">
-        <div class="tlp-popover-arrow"></div>
-        <div class="tlp-popover-body">
-            <div class="tlp-button-bar">
-                <div class="tlp-button-bar-item">
-                    <a
-                        class="tlp-button-outline tlp-button-secondary tlp-button-small"
-                        title="${gettext_provider.gettext("Open link")}"
-                        href="${host.sanitized_link_href}"
-                        target="_blank"
-                        data-test="open-link-button"
-                    >
-                        <i class="fa-solid fa-external-link-alt" role="img"></i>
-                    </a>
+        <section data-role="popover" class="tlp-popover prose-mirror-editor-popover-links">
+            <div class="tlp-popover-arrow"></div>
+            <div class="tlp-popover-body">
+                <div class="tlp-button-bar">
+                    <open-link-button
+                        gettext_provider="${gettext_provider}">
+                        sanitized_link_href="${host.sanitized_link_href}"
+                    </open-link-button>
+                    <copy-to-clipboard-button
+                        gettext_provider="${gettext_provider}"
+                        value_to_copy="${host.sanitized_link_href}"
+                    ></copy-to-clipboard-button>
                 </div>
-            </div>
-    </section>
-`.style(popover_styles);
+        </section>
+    `.style(popover_styles);
