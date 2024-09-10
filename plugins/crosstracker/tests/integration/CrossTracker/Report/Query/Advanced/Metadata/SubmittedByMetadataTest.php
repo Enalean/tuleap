@@ -81,22 +81,8 @@ final class SubmittedByMetadataTest extends CrossTrackerFieldTestCase
         $this->sprint_tracker  = $tracker_builder->buildTracker($project_id, 'Sprint');
         $this->task_tracker    = $tracker_builder->buildTracker($project_id, 'Task');
 
-        $release_subby_field_id = $tracker_builder->buildSubmittedByField($this->release_tracker->getId());
-        $sprint_subby_field_id  = $tracker_builder->buildSubmittedByField($this->sprint_tracker->getId());
-        $task_subby_field_id    = $tracker_builder->buildSubmittedByField($this->task_tracker->getId());
-
-        $tracker_builder->setReadPermission(
-            $release_subby_field_id,
-            ProjectUGroup::PROJECT_MEMBERS
-        );
-        $tracker_builder->setReadPermission(
-            $sprint_subby_field_id,
-            ProjectUGroup::PROJECT_MEMBERS
-        );
-        $tracker_builder->setReadPermission(
-            $task_subby_field_id,
-            ProjectUGroup::PROJECT_ADMIN
-        );
+        $task_subby_field_id = $tracker_builder->buildSubmittedByField($this->task_tracker->getId());
+        $tracker_builder->setReadPermission($task_subby_field_id, ProjectUGroup::PROJECT_ADMIN);
 
         $this->release_artifact_alice_id  = $tracker_builder->buildArtifact($this->release_tracker->getId(), 0, (int) $this->alice->getId());
         $this->release_artifact_bob_id    = $tracker_builder->buildArtifact($this->release_tracker->getId(), 0, (int) $bob->getId());

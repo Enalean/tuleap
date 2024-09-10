@@ -63,13 +63,6 @@ final class FromTrackerTest extends CrossTrackerFieldTestCase
         $tracker_builder->setViewPermissionOnTracker($tracker_2->getId(), Tracker::PERMISSION_FULL, ProjectUGroup::PROJECT_MEMBERS);
         $tracker_builder->setViewPermissionOnTracker($tracker_3->getId(), Tracker::PERMISSION_FULL, ProjectUGroup::PROJECT_MEMBERS);
 
-        $artifact_id_field_1 = $tracker_builder->buildArtifactIdField($tracker_1->getId());
-        $artifact_id_field_2 = $tracker_builder->buildArtifactIdField($tracker_2->getId());
-        $artifact_id_field_3 = $tracker_builder->buildArtifactIdField($tracker_3->getId());
-        $tracker_builder->setReadPermission($artifact_id_field_1, ProjectUGroup::PROJECT_MEMBERS);
-        $tracker_builder->setReadPermission($artifact_id_field_2, ProjectUGroup::PROJECT_MEMBERS);
-        $tracker_builder->setReadPermission($artifact_id_field_3, ProjectUGroup::PROJECT_MEMBERS);
-
         $tracker_builder->buildLastChangeset($tracker_builder->buildArtifact($tracker_1->getId()));
         $tracker_builder->buildLastChangeset($tracker_builder->buildArtifact($tracker_2->getId()));
         $tracker_builder->buildLastChangeset($tracker_builder->buildArtifact($tracker_3->getId()));

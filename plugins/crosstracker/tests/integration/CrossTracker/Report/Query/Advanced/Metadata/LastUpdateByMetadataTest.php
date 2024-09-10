@@ -82,22 +82,8 @@ final class LastUpdateByMetadataTest extends CrossTrackerFieldTestCase
         $this->sprint_tracker  = $tracker_builder->buildTracker($project_id, 'Sprint');
         $this->task_tracker    = $tracker_builder->buildTracker($project_id, 'Task');
 
-        $release_luby_field_id = $tracker_builder->buildLastUpdateByField($this->release_tracker->getId());
-        $sprint_luby_field_id  = $tracker_builder->buildLastUpdateByField($this->sprint_tracker->getId());
-        $task_luby_field_id    = $tracker_builder->buildLastUpdateByField($this->task_tracker->getId());
-
-        $tracker_builder->setReadPermission(
-            $release_luby_field_id,
-            ProjectUGroup::PROJECT_MEMBERS
-        );
-        $tracker_builder->setReadPermission(
-            $sprint_luby_field_id,
-            ProjectUGroup::PROJECT_MEMBERS
-        );
-        $tracker_builder->setReadPermission(
-            $task_luby_field_id,
-            ProjectUGroup::PROJECT_ADMIN
-        );
+        $task_luby_field_id = $tracker_builder->buildLastUpdateByField($this->task_tracker->getId());
+        $tracker_builder->setReadPermission($task_luby_field_id, ProjectUGroup::PROJECT_ADMIN);
 
         $this->release_artifact_alice_id  = $tracker_builder->buildArtifact($this->release_tracker->getId());
         $this->release_artifact_bob_id    = $tracker_builder->buildArtifact($this->release_tracker->getId());
