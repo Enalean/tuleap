@@ -17,5 +17,11 @@
   "scripts": {
     "build": "esbuild src/server.js --platform=node --bundle --minify --outfile=dist/tuleap-realtime.js",
     "test": "vitest"
+  },
+  "pnpm": {
+    "overrides": {
+      "path-to-regexp": "^0.1.10",
+      "ws": "^8.17.1"
+    }
   }
 }
