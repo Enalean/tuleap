@@ -19,89 +19,86 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+declare(strict_types=1);
+
+namespace Tuleap\Tracker;
+
+use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
+use Reference;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\GlobalResponseMock;
+use Tuleap\Layout\BaseLayout;
 use Tuleap\Project\MappingRegistry;
-use Tuleap\Tracker\Admin\GlobalAdmin\ArtifactLinks\ArtifactLinksController;
+use Tuleap\Test\Builders\HTTPRequestBuilder;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
-//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 final class TrackerManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
     use GlobalLanguageMock;
     use GlobalResponseMock;
 
-    private $tracker;
-    private PFUser $user;
-    /**
-     * @var Tracker_URL&\Mockery\MockInterface
-     */
-    private $url;
-    /**
-     * @var \Tuleap\Tracker\Artifact\Artifact&\Mockery\MockInterface
-     */
-    private $artifact;
-    /**
-     * @var Tracker_Report&\Mockery\MockInterface
-     */
-    private $report;
-    /**
-     * @var Tracker_FormElement_Interface&\Mockery\MockInterface
-     */
-    private $formElement;
-    /**
-     * @var \Mockery\MockInterface&TrackerManager
-     */
-    private $tm;
+    private \Tracker & MockObject $tracker;
+    private \PFUser $user;
+    private \Tracker_URL & Stub $url;
+    private Artifact & MockObject $artifact;
+    private \Tracker_Report & MockObject $report;
+    private \Tracker_FormElement_Interface & MockObject $formElement;
+    private \TrackerManager & MockObject $tm;
 
     protected function setUp(): void
     {
-        parent::setUp();
+        $GLOBALS['HTML'] = $this->createMock(BaseLayout::class);
 
-        $GLOBALS['HTML'] = Mockery::spy(\Layout::class);
+        $this->user = UserTestBuilder::aUser()->withId(666)->build();
 
-        $this->user = \Tuleap\Test\Builders\UserTestBuilder::aUser()->withId(666)->build();
+        $this->url = $this->createStub(\Tracker_URL::class);
 
-        $this->url = \Mockery::spy(\Tracker_URL::class);
+        $project = ProjectTestBuilder::aProject()->build();
 
-        $project = \Mockery::spy(\Project::class);
+        $this->artifact = $this->createMock(Artifact::class);
+        $af             = $this->createMock(\Tracker_ArtifactFactory::class);
+        $af->method('getArtifactById')->with('1')->willReturn($this->artifact);
 
-        $this->artifact = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
-        $af             = \Mockery::spy(\Tracker_ArtifactFactory::class);
-        $af->shouldReceive('getArtifactById')->with('1')->andReturns($this->artifact);
+        $this->report = $this->createMock(\Tracker_Report::class);
+        $rf           = $this->createMock(\Tracker_ReportFactory::class);
+        $rf->method('getReportById')->with('2', $this->user->getId(), true)->willReturn($this->report);
 
-        $this->report = \Mockery::spy(\Tracker_Report::class);
-        $rf           = \Mockery::spy(\Tracker_ReportFactory::class);
-        $rf->shouldReceive('getReportById')->with('2', $this->user->getId(), true)->andReturns($this->report);
-
-        $this->tracker = \Mockery::spy(\Tracker::class);
-        $this->tracker->shouldReceive('isActive')->andReturns(true);
-        $this->tracker->shouldReceive('getTracker')->andReturns($this->tracker);
+        $this->tracker = $this->createMock(\Tracker::class);
+        $this->tracker->method('isActive')->willReturn(true);
+        $this->tracker->method('getTracker')->willReturn($this->tracker);
 
         $trackers = [$this->tracker];
 
-        $tf = \Mockery::spy(\TrackerFactory::class);
-        $tf->shouldReceive('getTrackerById')->with(3)->andReturns($this->tracker);
-        $tf->shouldReceive('getTrackersByGroupId')->andReturns($trackers);
+        $tf = $this->createMock(\TrackerFactory::class);
+        $tf->method('getTrackerById')->with(3)->willReturn($this->tracker);
+        $tf->method('getTrackersByGroupId')->willReturn($trackers);
 
-        $this->formElement = \Mockery::spy(\Tracker_FormElement_Interface::class);
-        $ff                = \Mockery::spy(\Tracker_FormElementFactory::class);
-        $ff->shouldReceive('getFormElementById')->with('4')->andReturns($this->formElement);
+        $this->formElement = $this->createMock(\Tracker_FormElement_Interface::class);
+        $ff                = $this->createMock(\Tracker_FormElementFactory::class);
+        $ff->method('getFormElementById')->with('4')->willReturn($this->formElement);
 
-        $this->artifact->shouldReceive('getTracker')->andReturns($this->tracker);
-        $this->report->shouldReceive('getTracker')->andReturns($this->tracker);
-        $this->formElement->shouldReceive('getTracker')->andReturns($this->tracker);
-        $this->tracker->shouldReceive('getGroupId')->andReturns(5);
-        $this->tracker->shouldReceive('getProject')->andReturns($project);
+        $this->artifact->method('getTracker')->willReturn($this->tracker);
+        $this->report->method('getTracker')->willReturn($this->tracker);
+        $this->formElement->method('getTracker')->willReturn($this->tracker);
+        $this->tracker->method('getGroupId')->willReturn(5);
+        $this->tracker->method('getProject')->willReturn($project);
 
-        $this->tm = \Mockery::mock(\TrackerManager::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $this->tm->shouldReceive('getUrl')->andReturns($this->url);
-        $this->tm->shouldReceive('getTrackerFactory')->andReturns($tf);
-        $this->tm->shouldReceive('getTracker_FormElementFactory')->andReturns($ff);
-        $this->tm->shouldReceive('getArtifactFactory')->andReturns($af);
-        $this->tm->shouldReceive('getArtifactReportFactory')->andReturns($rf);
-        $this->tm->shouldReceive('checkServiceEnabled')->andReturns(true);
+        $this->tm = $this->createPartialMock(\TrackerManager::class, [
+            'getUrl',
+            'getTrackerFactory',
+            'getArtifactFactory',
+            'getArtifactReportFactory',
+            'checkServiceEnabled',
+        ]);
+        $this->tm->method('getUrl')->willReturn($this->url);
+        $this->tm->method('getTrackerFactory')->willReturn($tf);
+        $this->tm->method('getArtifactFactory')->willReturn($af);
+        $this->tm->method('getArtifactReportFactory')->willReturn($rf);
+        $this->tm->method('checkServiceEnabled')->willReturn(true);
     }
 
     protected function tearDown(): void
@@ -111,96 +108,94 @@ final class TrackerManagerTest extends \Tuleap\Test\PHPUnit\TestCase
         parent::tearDown();
     }
 
-    public function testProcessArtifact()
+    public function testProcessArtifact(): void
     {
-        $this->artifact->shouldReceive('process')->once();
-        $this->tracker->shouldReceive('process')->never();
-        $this->formElement->shouldReceive('process')->never();
-        $this->report->shouldReceive('process')->never();
+        $this->artifact->expects(self::once())->method('process');
+        $this->tracker->expects(self::never())->method('process');
+        $this->formElement->expects(self::never())->method('process');
+        $this->report->expects(self::never())->method('process');
 
-        $request_artifact = Mockery::spy(HTTPRequest::class);
-        $request_artifact->shouldReceive('get')->with('aid')->andReturn('1');
-        $this->artifact->shouldReceive('userCanView')->andReturns(true);
-        $this->tracker->shouldReceive('userCanView')->andReturns(true);
-        $this->url->shouldReceive('getDispatchableFromRequest')->andReturns($this->artifact);
+        $request_artifact = HTTPRequestBuilder::get()->withParam('aid', '1')->build();
+        $this->artifact->method('userCanView')->willReturn(true);
+        $this->tracker->method('userCanView')->willReturn(true);
+        $this->url->method('getDispatchableFromRequest')->willReturn($this->artifact);
         $this->tm->process($request_artifact, $this->user);
     }
 
-    public function testProcessReport()
+    public function testProcessReport(): void
     {
-        $this->artifact->shouldReceive('process')->never();
-        $this->report->shouldReceive('process')->once();
-        $this->tracker->shouldReceive('process')->never();
-        $this->formElement->shouldReceive('process')->never();
+        $this->artifact->expects(self::never())->method('process');
+        $this->report->expects(self::once())->method('process');
+        $this->tracker->expects(self::never())->method('process');
+        $this->formElement->expects(self::never())->method('process');
 
-        $request_artifact = Mockery::spy(HTTPRequest::class);
-        $this->tracker->shouldReceive('userCanView')->andReturns(true);
-        $this->url->shouldReceive('getDispatchableFromRequest')->andReturns($this->report);
+        $request_artifact = HTTPRequestBuilder::get()->build();
+        $this->tracker->method('userCanView')->willReturn(true);
+        $this->url->method('getDispatchableFromRequest')->willReturn($this->report);
         $this->tm->process($request_artifact, $this->user);
     }
 
-    public function testProcessTracker()
+    public function testProcessTracker(): void
     {
-        $this->artifact->shouldReceive('process')->never();
-        $this->report->shouldReceive('process')->never();
-        $this->tracker->shouldReceive('process')->once();
-        $this->formElement->shouldReceive('process')->never();
-        $this->tracker->shouldReceive('userCanView')->once()->andReturns(true);
+        $this->artifact->expects(self::never())->method('process');
+        $this->report->expects(self::never())->method('process');
+        $this->tracker->expects(self::once())->method('process');
+        $this->formElement->expects(self::never())->method('process');
+        $this->tracker->expects(self::once())->method('userCanView')->willReturn(true);
 
-        $request_artifact = Mockery::spy(HTTPRequest::class);
-
-        $this->url->shouldReceive('getDispatchableFromRequest')->andReturns($this->tracker);
+        $request_artifact = HTTPRequestBuilder::get()->build();
+        $this->url->method('getDispatchableFromRequest')->willReturn($this->tracker);
         $this->tm->process($request_artifact, $this->user);
     }
 
-    public function testProcessTrackerWithNoPermissionsToView()
+    public function testProcessTrackerWithNoPermissionsToView(): void
     {
-        $this->artifact->shouldReceive('process')->never();
-        $this->report->shouldReceive('process')->never();
-        $this->tracker->shouldReceive('process')->never(); //user can't view the tracker. so don't process the request in tracker
-        $this->formElement->shouldReceive('process')->never();
-        $this->tracker->shouldReceive('userCanView')->once()->andReturns(false);
+        $this->artifact->expects(self::never())->method('process');
+        $this->report->expects(self::never())->method('process');
+        $this->tracker->expects(self::never())->method('process'); //user can't view the tracker. so don't process the request in tracker
+        $this->formElement->expects(self::never())->method('process');
+        $this->tracker->expects(self::once())->method('userCanView')->willReturn(false);
         $GLOBALS['Response']->expects(self::atLeastOnce())->method('addFeedback')->with('error', self::anything());
         $GLOBALS['Response']->expects(self::once())->method('redirect');
 
-        $request_artifact = Mockery::spy(HTTPRequest::class);
+        $request_artifact = HTTPRequestBuilder::get()->build();
 
-        $this->url->shouldReceive('getDispatchableFromRequest')->andReturns($this->tracker);
+        $this->url->method('getDispatchableFromRequest')->willReturn($this->tracker);
         $this->tm->process($request_artifact, $this->user);
     }
 
-    public function testProcessField()
+    public function testProcessField(): void
     {
-        $this->artifact->shouldReceive('process')->never();
-        $this->report->shouldReceive('process')->never();
-        $this->tracker->shouldReceive('process')->never();
-        $this->formElement->shouldReceive('process')->once();
+        $this->artifact->expects(self::never())->method('process');
+        $this->report->expects(self::never())->method('process');
+        $this->tracker->expects(self::never())->method('process');
+        $this->formElement->expects(self::once())->method('process');
 
-        $request_artifact = Mockery::spy(HTTPRequest::class);
-        $request_artifact->shouldReceive('get')->with('formElement')->andReturns('4');
-        $request_artifact->shouldReceive('get')->with('group_id')->andReturns('5');
-        $this->tracker->shouldReceive('userCanView')->andReturns(true);
-        $this->url->shouldReceive('getDispatchableFromRequest')->andReturns($this->formElement);
+        $request_artifact = HTTPRequestBuilder::get()->withParam('formElement', '4')->withParam('group_id', '5')->build();
+        $this->tracker->expects(self::once())->method('userCanView')->willReturn(true);
+        $this->url->method('getDispatchableFromRequest')->willReturn($this->formElement);
         $this->tm->process($request_artifact, $this->user);
     }
 
-    public function testProcessItself()
+    public function testProcessItself(): void
     {
-        $request_artifact = Mockery::spy(HTTPRequest::class);
+        $request_artifact = HTTPRequestBuilder::get()->withParam('group_id', '5')->build();
 
-        $tm      = Mockery::mock(TrackerManager::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $project = Mockery::spy(Project::class);
-        $tm->shouldReceive('getProject')->with(5)->andReturn($project)->once();
-        $tm->shouldReceive('checkServiceEnabled')->with($project, $request_artifact)->andReturn(true);
-        $tm->shouldReceive('getGlobalAdminController')->andReturn(Mockery::mock(ArtifactLinksController::class));
-        $tm->shouldReceive('displayAllTrackers')->with($project, $this->user)->once();
+        $tm      = $this->createPartialMock(\TrackerManager::class, [
+            'getProject',
+            'checkServiceEnabled',
+            'displayAllTrackers',
+        ]);
+        $project = ProjectTestBuilder::aProject()->build();
+        $tm->expects(self::once())->method('getProject')->with(5)->willReturn($project);
+        $tm->method('checkServiceEnabled')->with($project, $request_artifact)->willReturn(true);
+        $tm->expects(self::once())->method('displayAllTrackers')->with($project, $this->user);
 
-        $this->artifact->shouldReceive('process')->never();
-        $this->report->shouldReceive('process')->never();
-        $this->tracker->shouldReceive('process')->never();
-        $this->formElement->shouldReceive('process')->never();
+        $this->artifact->expects(self::never())->method('process');
+        $this->report->expects(self::never())->method('process');
+        $this->tracker->expects(self::never())->method('process');
+        $this->formElement->expects(self::never())->method('process');
 
-        $request_artifact->shouldReceive('get')->with('group_id')->andReturn('5');
         $tm->process($request_artifact, $this->user);
     }
 
@@ -220,37 +215,43 @@ final class TrackerManagerTest extends \Tuleap\Test\PHPUnit\TestCase
      * And 'task' reference is not created (it's up to tracker creation to create the reference)
      *
      */
-    public function testDuplicateCopyReferences()
+    public function testDuplicateCopyReferences(): void
     {
-        $source_project_id       = 100;
-        $destinatnion_project_id = 120;
-        $u_group_mapping         = [];
+        $source_project_id      = 100;
+        $destination_project_id = 120;
+        $u_group_mapping        = [];
 
-        $tm = Mockery::mock(TrackerManager::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $tm = $this->createPartialMock(\TrackerManager::class, [
+            'getTrackerFactory',
+            'getReferenceManager',
+        ]);
 
-        $tf = Mockery::mock(TrackerFactory::class);
-        $tf->shouldReceive('duplicate')->once();
-        $tm->shouldReceive('getTrackerFactory')->andReturns($tf);
+        $tf = $this->createMock(\TrackerFactory::class);
+        $tf->expects(self::once())->method('duplicate');
+        $tm->method('getTrackerFactory')->willReturn($tf);
 
         $r1 = new Reference(101, 'bug', 'desc', '/plugins/tracker/?aid=$1&group_id=$group_id', 'P', 'plugin_tracker', 'plugin_tracker_artifact', 1, 100);
         $r2 = new Reference(102, 'issue', 'desc', '/plugins/tracker/?aid=$1&group_id=$group_id', 'P', 'plugin_tracker', 'plugin_tracker_artifact', 1, 100);
         $r3 = new Reference(103, 'task', 'desc', '/plugins/tracker/?aid=$1&group_id=$group_id', 'P', 'plugin_tracker', 'plugin_tracker_artifact', 1, 100);
 
-        $rm = Mockery::mock(ReferenceManager::class);
-        $rm->shouldReceive('getReferencesByGroupId')->with($source_project_id)->andReturns([$r1, $r2, $r3])->once();
-        $tm->shouldReceive('getReferenceManager')->andReturns($rm);
+        $rm = $this->createMock(\ReferenceManager::class);
+        $rm->expects(self::once())->method('getReferencesByGroupId')->with($source_project_id)->willReturn([$r1, $r2, $r3]);
+        $tm->method('getReferenceManager')->willReturn($rm);
 
-        $t1 = Mockery::mock(Tracker::class);
-        $t1->shouldReceive('getItemName')->andReturns('bug');
-        $t1->shouldReceive('mustBeInstantiatedForNewProjects')->andReturns(true);
-        $t2 = Mockery::mock(Tracker::class);
-        $t2->shouldReceive('getItemName')->andReturns('task');
-        $t2->shouldReceive('mustBeInstantiatedForNewProjects')->andReturns(false);
+        $t1 = TrackerTestBuilder::aTracker()->withShortName('bug')->build();
+        $t2 = $this->createMock(\Tracker::class);
+        $t2->method('getItemName')->willReturn('task');
+        $t2->method('mustBeInstantiatedForNewProjects')->willReturn(false);
 
-        $tf->shouldReceive('getTrackersByGroupId')->with($source_project_id)->andReturns([$t1, $t2]);
+        $tf->method('getTrackersByGroupId')->with($source_project_id)->willReturn([$t1, $t2]);
 
-        $rm->shouldReceive('createReference')->with($r2)->once();
+        $rm->expects(self::once())->method('createReference')->with($r2);
 
-        $tm->duplicate(new \Tuleap\Test\DB\DBTransactionExecutorPassthrough(), $source_project_id, $destinatnion_project_id, new MappingRegistry($u_group_mapping));
+        $tm->duplicate(
+            new \Tuleap\Test\DB\DBTransactionExecutorPassthrough(),
+            $source_project_id,
+            $destination_project_id,
+            new MappingRegistry($u_group_mapping)
+        );
     }
 }
