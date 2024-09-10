@@ -79,11 +79,10 @@ final readonly class FromProjectBuilderVisitor implements FromProjectConditionVi
             $project         = $this->project_factory->getValidProjectById($project_id);
             $linked_projects = $this->event_dispatcher->dispatch(new CollectLinkedProjects($project, $parameters->user));
             assert($linked_projects instanceof CollectLinkedProjects);
-            $projects_ids   = array_values(array_map(
+            $projects_ids = array_values(array_map(
                 static fn(LinkedProject $project) => $project->id,
-                array_merge($linked_projects->getParentProjects()->getProjects(), $linked_projects->getChildrenProjects()->getProjects()),
+                $linked_projects->getChildrenProjects()->getProjects(),
             ));
-            $projects_ids[] = $project_id;
 
             return new ParametrizedFromWhere(
                 '',

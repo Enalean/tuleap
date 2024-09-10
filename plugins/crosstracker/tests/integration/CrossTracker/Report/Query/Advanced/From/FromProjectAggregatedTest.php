@@ -134,6 +134,6 @@ final class FromProjectAggregatedTest extends CrossTrackerFieldTestCase
             new CrossTrackerExpertReport(1, 'SELECT @tracker.name FROM @project = "aggregated" WHERE @id >= 1'),
             $this->user,
         );
-        $this->assertItContainsTrackers(['Tracker 1', 'Tracker 2', 'Tracker 3'], $result);
+        $this->assertItContainsTrackers(['Tracker 2', 'Tracker 3'], $result);
     }
 }
