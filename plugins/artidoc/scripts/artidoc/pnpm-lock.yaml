@@ -11,6 +11,9 @@ dependencies:
   '@tuleap/ckeditor-image-upload':
     specifier: workspace:^
     version: link:../../../../lib/frontend/ckeditor-image-upload
+  '@tuleap/core-constants':
+    specifier: workspace:^
+    version: link:../../../../lib/frontend/constants
   '@tuleap/dom':
     specifier: workspace:^
     version: link:../../../../lib/frontend/dom
@@ -23,6 +26,9 @@ dependencies:
   '@tuleap/gettext':
     specifier: workspace:^
     version: link:../../../../lib/frontend/gettext
+  '@tuleap/lazybox':
+    specifier: workspace:^
+    version: link:../../../../lib/frontend/lazybox
   '@tuleap/plugin-tracker-artifact-ckeditor-image-upload':
     specifier: workspace:^
     version: link:../../../tracker/scripts/lib/artifact-ckeditor-image-upload

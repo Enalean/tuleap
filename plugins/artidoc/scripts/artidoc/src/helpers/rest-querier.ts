@@ -24,7 +24,7 @@ import TurndownService from "turndown";
 import type { ArtidocSection } from "@/helpers/artidoc-section.type";
 import { isCommonmark, isTitleAString } from "@/helpers/artidoc-section.type";
 import type { Tracker } from "@/stores/configuration-store";
-import type { CrossReference, PositionForSave } from "@/stores/useSectionsStore";
+import type { CrossReference, PositionForSection } from "@/stores/useSectionsStore";
 import type { AttachmentFile } from "@/composables/useAttachmentFile";
 
 type ArtidocSectionFromRest = Omit<ArtidocSection, "display_title">;
@@ -120,7 +120,7 @@ export function postArtifact(
 export function createSection(
     document_id: number,
     artifact_id: number,
-    position: PositionForSave,
+    position: PositionForSection,
 ): ResultAsync<ArtidocSection, Fault> {
     return postJSON<ArtidocSectionFromRest>(uri`/api/artidoc/${document_id}/sections`, {
         artifact: { id: artifact_id },

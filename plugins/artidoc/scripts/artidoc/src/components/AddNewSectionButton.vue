@@ -19,12 +19,45 @@
   -->
 
 <template>
-    <div>
+    <div class="tlp-dropdown artidoc-add-new-section-container">
+        <template v-if="is_tracker_with_submittable_section">
+            <button
+                type="button"
+                class="tlp-button-primary artidoc-add-new-section-solo-button"
+                v-bind:title="add_new_section_label"
+                ref="trigger_element"
+            >
+                <i class="fa-solid fa-plus" role="img"></i>
+            </button>
+            <div
+                ref="dropdown_element"
+                role="menu"
+                class="tlp-dropdown-menu artidoc-add-new-section-submenu"
+            >
+                <button
+                    type="button"
+                    class="tlp-dropdown-menu-item"
+                    v-on:click="addNewSection"
+                    data-test="add-new-section"
+                >
+                    {{ add_new_section_label }}
+                </button>
+                <button
+                    type="button"
+                    class="tlp-dropdown-menu-item"
+                    v-on:click="addExistingSection"
+                    data-test="add-existing-section"
+                >
+                    {{ add_existing_section_label }}
+                </button>
+            </div>
+        </template>
         <button
+            v-else
             type="button"
-            class="tlp-button-primary"
-            v-bind:title="title"
-            v-on:click="onClick"
+            class="tlp-button-primary artidoc-add-new-section-solo-button"
+            v-bind:title="add_new_section_label"
+            v-on:click="addNewSection"
             data-test="add-new-section"
         >
             <i class="fa-solid fa-plus" role="img"></i>
@@ -36,13 +69,17 @@
 import { useGettext } from "vue3-gettext";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import { OPEN_CONFIGURATION_MODAL_BUS } from "@/composables/useOpenConfigurationModalBus";
+import { OPEN_ADD_EXISTING_SECTION_MODAL_BUS } from "@/composables/useOpenAddExistingSectionModalBus";
 import { isTrackerWithSubmittableSection, CONFIGURATION_STORE } from "@/stores/configuration-store";
-import type { PositionDuringEdition, SectionsStore } from "@/stores/useSectionsStore";
-import type { PendingArtifactSection } from "@/helpers/artidoc-section.type";
+import type { PositionForSection, SectionsStore } from "@/stores/useSectionsStore";
+import type { ArtidocSection, PendingArtifactSection } from "@/helpers/artidoc-section.type";
 import PendingArtifactSectionFactory from "@/helpers/pending-artifact-section.factory";
+import { computed, watch, ref, onMounted } from "vue";
+import type { Dropdown } from "@tuleap/tlp-dropdown";
+import { createDropdown } from "@tuleap/tlp-dropdown";
 
 const props = defineProps<{
-    position: PositionDuringEdition;
+    position: PositionForSection;
     insert_section_callback: SectionsStore["insertSection"];
 }>();
 
@@ -50,17 +87,53 @@ const configuration_store = strictInject(CONFIGURATION_STORE);
 
 const { $gettext } = useGettext();
 
-const title = $gettext("Add new section");
+const add_new_section_label = $gettext("Add new section");
+const add_existing_section_label = $gettext("Add existing section");
 
-const bus = strictInject(OPEN_CONFIGURATION_MODAL_BUS);
+const configuration_bus = strictInject(OPEN_CONFIGURATION_MODAL_BUS);
+const add_existing_section_bus = strictInject(OPEN_ADD_EXISTING_SECTION_MODAL_BUS);
 
-function onClick(): void {
-    if (!configuration_store.selected_tracker.value) {
-        openConfigurationModalBeforeInsertingNewSection();
-        return;
+const trigger_element = ref<HTMLElement>();
+const dropdown_element = ref<HTMLElement>();
+let dropdown: Dropdown | null = null;
+
+const is_tracker_with_submittable_section = computed(
+    () =>
+        configuration_store.selected_tracker.value &&
+        isTrackerWithSubmittableSection(configuration_store.selected_tracker.value),
+);
+
+watch(
+    () => is_tracker_with_submittable_section.value,
+    (): void => {
+        if (is_tracker_with_submittable_section.value) {
+            initDropdown();
+        } else {
+            dropdown?.destroy();
+        }
+    },
+);
+
+onMounted(initDropdown);
+
+function initDropdown(): void {
+    if (trigger_element.value && dropdown_element.value) {
+        dropdown = createDropdown(trigger_element.value, {
+            trigger: "click",
+            dropdown_menu: dropdown_element.value,
+            keyboard: true,
+        });
     }
+}
 
-    if (!isTrackerWithSubmittableSection(configuration_store.selected_tracker.value)) {
+function addExistingSection(): void {
+    add_existing_section_bus.openModal(props.position, (section: ArtidocSection): void => {
+        props.insert_section_callback(section, props.position);
+    });
+}
+
+function addNewSection(): void {
+    if (!is_tracker_with_submittable_section.value) {
         openConfigurationModalBeforeInsertingNewSection();
         return;
     }
@@ -69,7 +142,7 @@ function onClick(): void {
 }
 
 function openConfigurationModalBeforeInsertingNewSection(): void {
-    bus.openModal(insertNewSection);
+    configuration_bus.openModal(insertNewSection);
 }
 
 function insertNewSection(): void {
@@ -97,7 +170,7 @@ $half: calc(#{size.$add-section-button-container-height} * 0.5);
 $half-minus-one-px: calc(#{$half} - 1px);
 $half-plus-one-px: calc(#{$half} + 1px);
 
-div {
+.artidoc-add-new-section-container {
     --add-new-section-button-background-color: var(--tlp-neutral-light-color);
     --add-new-section-button-text-color: var(--tlp-typo-default-text-color);
 
@@ -125,7 +198,7 @@ div {
     }
 }
 
-button {
+.artidoc-add-new-section-solo-button {
     width: size.$add-section-button-size;
     height: size.$add-section-button-size;
     padding: 0;
@@ -141,5 +214,9 @@ button {
         background: var(--add-new-section-button-background-color);
         color: var(--add-new-section-button-text-color);
     }
+}
+
+.artidoc-add-new-section-submenu {
+    transform: translate(-8px, 8px);
 }
 </style>

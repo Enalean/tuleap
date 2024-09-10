@@ -30,6 +30,7 @@ import { InjectedSectionsStoreStub } from "@/helpers/stubs/InjectSectionsStoreSt
 import ArtifactSectionFactory from "@/helpers/artifact-section.factory";
 import PendingArtifactSectionFactory from "@/helpers/pending-artifact-section.factory";
 import type { SectionsStore } from "@/stores/useSectionsStore";
+import ConfigurationModalTrigger from "@/components/configuration/ConfigurationModalTrigger.vue";
 
 vi.mock("@tuleap/tlp-dropdown");
 
@@ -53,12 +54,14 @@ describe("DocumentDropdown", () => {
         it("should display configuration modal when user can edit document", () => {
             const wrapper = getWrapper(true, InjectedSectionsStoreStub.withLoadedSections([]));
 
+            expect(wrapper.findComponent(ConfigurationModalTrigger).exists()).toBe(true);
             expect(wrapper.findComponent(ConfigurationModal).exists()).toBe(true);
         });
 
         it("should not display configuration modal when user cannot edit document", () => {
             const wrapper = getWrapper(false, InjectedSectionsStoreStub.withLoadedSections([]));
 
+            expect(wrapper.findComponent(ConfigurationModalTrigger).exists()).toBe(false);
             expect(wrapper.findComponent(ConfigurationModal).exists()).toBe(false);
         });
     });

@@ -19,17 +19,6 @@
   -->
 
 <template>
-    <button
-        class="tlp-dropdown-menu-item"
-        type="button"
-        role="menuitem"
-        v-bind:title="button_title"
-        v-on:click="openModal()"
-    >
-        <i class="fa-solid fa-cog fa-fw" aria-hidden="true"></i>
-        {{ $gettext("Configure document") }}
-    </button>
-
     <form
         class="tlp-modal"
         aria-labelledby="artidoc-configuration-modal-title"
@@ -109,8 +98,6 @@ const configuration_helper = useConfigurationScreenHelper();
 const { is_submit_button_disabled, submit_button_icon, is_success, is_error, error_message } =
     configuration_helper;
 
-const button_title = $gettext("Configure document");
-
 const modal_element = ref<HTMLElement | undefined>(undefined);
 
 const noop = (): void => {};
@@ -144,12 +131,6 @@ function onSubmit(event: Event): void {
 </script>
 
 <style scoped lang="scss">
-.tlp-button-ellipsis {
-    flex-shrink: 0;
-    margin: 3px 0 0;
-    font-size: 1.125rem;
-}
-
 .tlp-modal-footer {
     flex-direction: column;
 }
