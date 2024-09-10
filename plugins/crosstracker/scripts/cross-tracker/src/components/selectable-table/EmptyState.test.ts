@@ -107,4 +107,17 @@ describe("EmptyState", () => {
             "There is no artifact matching the query",
         );
     });
+
+    it(`display no artifact message if expert mode when no tracker`, () => {
+        const writing_cross_tracker_report = new WritingCrossTrackerReport();
+        writing_cross_tracker_report.expert_query = `SELECT start_date FROM @project='self' WHERE start_date != ''`;
+        writing_cross_tracker_report.expert_mode = true;
+        const wrapper = getWrapper(writing_cross_tracker_report);
+        expect(wrapper.find("[data-test=selectable-empty-state-title]").text()).toContain(
+            "No artifact found",
+        );
+        expect(wrapper.find("[data-test=selectable-empty-state-text]").text()).toContain(
+            "There is no artifact matching the query.",
+        );
+    });
 });
