@@ -40,7 +40,7 @@ const TQL_mode_definition = {
             token: "keyword",
         },
         {
-            regex: /(?:now|between|in|not|myself|open|parent|artifact|tracker|with|without|children|child|is|linked|from|to|type|covering|covered|by)\b/i,
+            regex: /(?:select|where|now|between|in|not|myself|open|parent|artifact|tracker|with|without|children|child|is|linked|from|to|type|covering|covered|by)\b/i,
             token: "variable-2",
         },
         {

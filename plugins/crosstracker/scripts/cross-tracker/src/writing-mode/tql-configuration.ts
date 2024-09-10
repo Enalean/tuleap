@@ -20,6 +20,9 @@
 import { buildModeDefinition } from "@tuleap/plugin-tracker-tql-codemirror";
 
 export const TQL_cross_tracker_autocomplete_keywords = [
+    "SELECT",
+    "FROM",
+    "WHERE",
     "AND",
     "OR",
     "OPEN()",
