@@ -19,20 +19,26 @@
 
 import { define } from "hybrids";
 import type { GetText } from "@tuleap/gettext";
-import { sanitizeURL } from "@tuleap/url-sanitizer";
 import { createPopover } from "@tuleap/tlp-popovers";
 import { renderLinkPopover } from "./LinkPopoverTemplate";
+import type { OpenLinkButton } from "./items/OpenLinkButtonElement";
+import type { CopyToClipboardButton } from "./items/CopyToClipboardButtonElement";
 
 export const TAG = "tuleap-prose-mirror-link-popover-element";
 
 export type LinkPopoverElement = {
     gettext_provider: GetText;
     popover_anchor: HTMLElement;
-    link_href: string;
+    buttons: LinkPopoverButton[];
 };
 
+export type TypedLinkPopoverButton = {
+    type: string;
+};
+
+export type LinkPopoverButton = OpenLinkButton | CopyToClipboardButton;
+
 export type InternalLinkPopoverElement = Readonly<LinkPopoverElement> & {
-    sanitized_link_href: string;
     popover_element: HTMLElement;
     render(): HTMLElement;
 };
@@ -55,8 +61,6 @@ export const connect = (host: HostElement): DisconnectFunction => {
 define<InternalLinkPopoverElement>({
     tag: TAG,
     gettext_provider: (host, gettext_provider) => gettext_provider,
-    sanitized_link_href: (host: InternalLinkPopoverElement): string => sanitizeURL(host.link_href),
-    link_href: (host, link_href) => link_href,
     popover_anchor: (host, popover_anchor) => popover_anchor,
     popover_element: {
         value: (host: InternalLinkPopoverElement): HTMLElement => {
@@ -69,6 +73,7 @@ define<InternalLinkPopoverElement>({
         },
         connect,
     },
+    buttons: (host, buttons) => buttons,
     render: {
         shadow: false,
         value: (host) => renderLinkPopover(host, host.gettext_provider),

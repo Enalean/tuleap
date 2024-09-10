@@ -19,7 +19,11 @@
 
 import { Plugin } from "prosemirror-state";
 import type { EditorView } from "prosemirror-view";
-import { removeLinkPopover, insertLinkPopover } from "./helper/link-popover-inserter";
+import {
+    removePopover,
+    insertLinkPopover,
+    insertCrossReferenceLinkPopover,
+} from "./helper/link-popover-inserter";
 import { getLinkValue } from "./helper/link-value-extractor";
 import type { GetText } from "@tuleap/gettext";
 
@@ -27,26 +31,22 @@ export const initLinkPopoverPlugin = (gettext_provider: GetText, editor_id: stri
     new Plugin({
         props: {
             handleClick: (view: EditorView, pos: number): boolean => {
-                removeLinkPopover(document, editor_id);
+                removePopover(document, editor_id);
 
-                let link_href = "";
+                if (!view.state.selection.empty) {
+                    return false;
+                }
+
                 const dom_element = view.domAtPos(pos).node.parentElement;
-                if (dom_element) {
-                    link_href = dom_element.dataset.href ? dom_element.dataset.href : "";
+                if (dom_element === null) {
+                    return false;
                 }
 
-                if (!link_href) {
-                    if (!view.state.selection.empty) {
-                        return false;
-                    }
+                const is_cross_ref_link = dom_element.dataset.href !== undefined;
 
-                    link_href = getLinkValue(
-                        view.state,
-                        view.state.selection.from,
-                        view.state.selection.to,
-                    );
-                }
-
+                const link_href = is_cross_ref_link
+                    ? dom_element.dataset.href
+                    : getLinkValue(view.state, view.state.selection.from, view.state.selection.to);
                 if (!link_href) {
                     return false;
                 }
@@ -54,6 +54,18 @@ export const initLinkPopoverPlugin = (gettext_provider: GetText, editor_id: stri
                 const popover_anchor = view.domAtPos(pos).node.parentElement;
                 if (!popover_anchor) {
                     return false;
+                }
+
+                if (is_cross_ref_link) {
+                    insertCrossReferenceLinkPopover(
+                        document,
+                        gettext_provider,
+                        popover_anchor,
+                        editor_id,
+                        link_href,
+                        dom_element.textContent ?? "",
+                    );
+                    return true;
                 }
 
                 insertLinkPopover(document, gettext_provider, popover_anchor, editor_id, link_href);

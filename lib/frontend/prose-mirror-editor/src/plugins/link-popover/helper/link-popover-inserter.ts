@@ -21,12 +21,13 @@
 import type { GetText } from "@tuleap/gettext";
 import { TAG as LINK_POPOVER_TAG } from "../element/LinkPopoverElement";
 import type { LinkPopoverElement } from "../element/LinkPopoverElement";
+import { sanitizeURL } from "@tuleap/url-sanitizer";
 
 export function buildLinkPopoverId(editor_id: string): string {
     return `link-popover-${editor_id}`;
 }
 
-export function removeLinkPopover(doc: Document, editor_id: string): void {
+export function removePopover(doc: Document, editor_id: string): void {
     const existing_menu = doc.getElementById(buildLinkPopoverId(editor_id));
     if (!existing_menu) {
         return;
@@ -37,6 +38,26 @@ export function removeLinkPopover(doc: Document, editor_id: string): void {
 const isLinkPopoverElement = (element: HTMLElement): element is LinkPopoverElement & HTMLElement =>
     element.localName === LINK_POPOVER_TAG;
 
+export function createBasePopoverElement(
+    doc: Document,
+    gettext_provider: GetText,
+    popover_anchor: HTMLElement,
+    editor_id: string,
+    link_href: string,
+): LinkPopoverElement & HTMLElement {
+    const popover = doc.createElement(LINK_POPOVER_TAG);
+    if (!isLinkPopoverElement(popover)) {
+        throw new Error("Unable to create the popover element :(");
+    }
+
+    popover.id = buildLinkPopoverId(editor_id);
+    popover.gettext_provider = gettext_provider;
+    popover.popover_anchor = popover_anchor;
+    popover.buttons = [{ type: "open-link", sanitized_link_href: sanitizeURL(link_href) }];
+
+    return popover;
+}
+
 export function insertLinkPopover(
     doc: Document,
     gettext_provider: GetText,
@@ -44,15 +65,46 @@ export function insertLinkPopover(
     editor_id: string,
     link_href: string,
 ): void {
-    const popover = doc.createElement(LINK_POPOVER_TAG);
-    if (!isLinkPopoverElement(popover)) {
-        return;
-    }
+    const popover = createBasePopoverElement(
+        doc,
+        gettext_provider,
+        popover_anchor,
+        editor_id,
+        link_href,
+    );
 
-    popover.id = buildLinkPopoverId(editor_id);
-    popover.gettext_provider = gettext_provider;
-    popover.link_href = link_href;
-    popover.popover_anchor = popover_anchor;
+    popover.buttons.push({
+        type: "copy-to-clipboard",
+        value_to_copy: sanitizeURL(link_href),
+        copy_value_title: gettext_provider.gettext("Copy link url"),
+        value_copied_title: gettext_provider.gettext("Link url has been copied!"),
+    });
+
+    doc.body.appendChild(popover);
+}
+
+export function insertCrossReferenceLinkPopover(
+    doc: Document,
+    gettext_provider: GetText,
+    popover_anchor: HTMLElement,
+    editor_id: string,
+    link_href: string,
+    cross_ref_text: string,
+): void {
+    const popover = createBasePopoverElement(
+        doc,
+        gettext_provider,
+        popover_anchor,
+        editor_id,
+        link_href,
+    );
+
+    popover.buttons.push({
+        type: "copy-to-clipboard",
+        value_to_copy: cross_ref_text,
+        copy_value_title: gettext_provider.gettext("Copy Tuleap reference"),
+        value_copied_title: gettext_provider.gettext("Tuleap reference has been copied!"),
+    });
 
     doc.body.appendChild(popover);
 }

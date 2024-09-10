@@ -18,7 +18,7 @@
  */
 
 import { describe, it, expect, beforeEach } from "vitest";
-import { createLocalDocument, gettext_provider } from "../../../../helpers/helper-for-test";
+import { createLocalDocument } from "../../../../helpers/helper-for-test";
 import type {
     HostElement,
     InternalCopyToClipboardButtonElement,
@@ -43,7 +43,7 @@ describe("CopyToClipboardButtonElement", () => {
                 has_been_copied_to_clipboard,
             } as InternalCopyToClipboardButtonElement) as HostElement;
 
-            const render = renderCopyToClipboardItem(host, gettext_provider);
+            const render = renderCopyToClipboardItem(host);
             render(host, target);
 
             const icon_element = target.querySelector("[data-test=copy-to-clipboard-icon]");

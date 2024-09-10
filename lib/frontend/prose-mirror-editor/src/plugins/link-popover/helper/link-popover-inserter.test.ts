@@ -19,7 +19,12 @@
  */
 
 import { describe, beforeEach, it, expect } from "vitest";
-import { buildLinkPopoverId, insertLinkPopover, removeLinkPopover } from "./link-popover-inserter";
+import {
+    buildLinkPopoverId,
+    insertCrossReferenceLinkPopover,
+    insertLinkPopover,
+    removePopover,
+} from "./link-popover-inserter";
 import { createLocalDocument, gettext_provider } from "../../../helpers/helper-for-test";
 
 const editor_id = "aaaa-bbbb-cccc-dddd";
@@ -39,9 +44,22 @@ describe("link-popover-inserter", () => {
         expect(doc.getElementById(buildLinkPopoverId(editor_id))).not.toBeNull();
     });
 
-    it("removeLinkPopover() should remover the tlp-popover from the DOM", () => {
+    it("insertCrossReferenceLinkPopover() should insert a LinkPopoverElement into the document", () => {
+        insertCrossReferenceLinkPopover(
+            doc,
+            gettext_provider,
+            popover_anchor,
+            editor_id,
+            link_href,
+            "art #123",
+        );
+
+        expect(doc.getElementById(buildLinkPopoverId(editor_id))).not.toBeNull();
+    });
+
+    it("removePopover() should remove the tlp-popover from the DOM", () => {
         insertLinkPopover(doc, gettext_provider, popover_anchor, editor_id, link_href);
-        removeLinkPopover(doc, editor_id);
+        removePopover(doc, editor_id);
 
         expect(doc.getElementById(buildLinkPopoverId(editor_id))).toBeNull();
     });
