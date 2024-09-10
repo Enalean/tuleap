@@ -41,6 +41,7 @@ use TrackerFactory;
 use Tuleap\CrossTracker\CrossTrackerArtifactReportDao;
 use Tuleap\CrossTracker\CrossTrackerDefaultReport;
 use Tuleap\CrossTracker\CrossTrackerExpertReport;
+use Tuleap\CrossTracker\CrossTrackerInstrumentation;
 use Tuleap\CrossTracker\CrossTrackerReport;
 use Tuleap\CrossTracker\CrossTrackerReportDao;
 use Tuleap\CrossTracker\CrossTrackerReportFactory;
@@ -112,6 +113,7 @@ use Tuleap\CrossTracker\Report\ReportTrackersRetriever;
 use Tuleap\CrossTracker\REST\v1\Representation\CrossTrackerReportContentRepresentation;
 use Tuleap\CrossTracker\REST\v1\Representation\LegacyCrossTrackerReportContentRepresentation;
 use Tuleap\DB\DBFactory;
+use Tuleap\Instrument\Prometheus\Prometheus;
 use Tuleap\Markdown\CommonMarkInterpreter;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Exceptions\InvalidJsonException;
@@ -268,11 +270,13 @@ final class CrossTrackerReportsResource extends AuthenticatedResource
 
             $this->getUserIsAllowedToSeeReportChecker()->checkUserIsAllowedToSeeReport($current_user, $expected_report);
 
-            $artifacts = $this->getArtifactFactory()->getArtifactsMatchingReport(
-                $expected_report,
-                $current_user,
-                $limit,
-                $offset,
+            $artifacts = $this->getInstrumentation()->updateQueryDuration(
+                fn() => $this->getArtifactFactory()->getArtifactsMatchingReport(
+                    $expected_report,
+                    $current_user,
+                    $limit,
+                    $offset,
+                )
             );
 
             if ($expected_report->isExpert()) {
@@ -738,6 +742,7 @@ final class CrossTrackerReportsResource extends AuthenticatedResource
             $this->getInvalidComparisonsCollector(),
             new InvalidSelectablesCollectorVisitor($this->getDuckTypedFieldChecker(), $this->getMetadataChecker()),
             $this->getReportTrackersRetriever(),
+            $this->getInstrumentation(),
         );
     }
 
@@ -756,5 +761,10 @@ final class CrossTrackerReportsResource extends AuthenticatedResource
             ProjectManager::instance(),
             EventManager::instance(),
         );
+    }
+
+    private function getInstrumentation(): CrossTrackerInstrumentation
+    {
+        return new CrossTrackerInstrumentation(Prometheus::instance());
     }
 }

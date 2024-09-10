@@ -35,6 +35,7 @@ use Tracker_Semantic_TitleDao;
 use TrackerFactory;
 use Tuleap\CrossTracker\CrossTrackerArtifactReportDao;
 use Tuleap\CrossTracker\CrossTrackerReportDao;
+use Tuleap\CrossTracker\CrossTrackerInstrumentation;
 use Tuleap\CrossTracker\Report\CrossTrackerArtifactReportFactory;
 use Tuleap\CrossTracker\Report\Query\Advanced\DuckTypedField\FieldTypeRetrieverWrapper;
 use Tuleap\CrossTracker\Report\Query\Advanced\FromBuilder\FromProjectBuilderVisitor;
@@ -96,6 +97,7 @@ use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilderVisitor;
 use Tuleap\CrossTracker\Report\Query\Advanced\WidgetInProjectChecker;
 use Tuleap\CrossTracker\Report\ReportTrackersRetriever;
 use Tuleap\DB\DBFactory;
+use Tuleap\Instrument\Prometheus\Prometheus;
 use Tuleap\Markdown\CommonMarkInterpreter;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\Artifact\ChangesetValue\Text\TextValueInterpreter;
@@ -344,6 +346,7 @@ final class ArtifactReportFactoryInstantiator
                 $project_manager,
                 $event_manager,
             ),
+            new CrossTrackerInstrumentation(Prometheus::getInMemory()),
         );
     }
 }

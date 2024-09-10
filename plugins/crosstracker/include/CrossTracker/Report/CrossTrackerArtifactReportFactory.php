@@ -29,6 +29,7 @@ use Tracker;
 use Tuleap\Config\ConfigKey;
 use Tuleap\Config\ConfigKeyInt;
 use Tuleap\CrossTracker\CrossTrackerArtifactReportDao;
+use Tuleap\CrossTracker\CrossTrackerInstrumentation;
 use Tuleap\CrossTracker\CrossTrackerReport;
 use Tuleap\CrossTracker\Report\Query\Advanced\ExpertQueryIsEmptyException;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSearchablesCollectionBuilder;
@@ -78,6 +79,7 @@ final readonly class CrossTrackerArtifactReportFactory
         private InvalidTermCollectorVisitor $term_collector,
         private InvalidSelectablesCollectorVisitor $selectables_collector,
         private RetrieveReportTrackers $report_trackers_retriever,
+        private CrossTrackerInstrumentation $instrumentation,
     ) {
     }
 
@@ -133,6 +135,7 @@ final readonly class CrossTrackerArtifactReportFactory
         if (count($trackers) === 0) {
             return new ArtifactMatchingReportCollection([], 0);
         }
+        $this->instrumentation->updateTrackerCount(count($trackers));
 
         $trackers_id = $this->getTrackersId($trackers);
 
@@ -154,7 +157,8 @@ final readonly class CrossTrackerArtifactReportFactory
         int $limit,
         int $offset,
     ): ArtifactMatchingReportCollection {
-        $trackers              = $this->getOnlyActiveTrackersInActiveProjects($report->getTrackers());
+        $trackers = $this->getOnlyActiveTrackersInActiveProjects($report->getTrackers());
+        $this->instrumentation->updateTrackerCount(count($trackers));
         $query                 = $this->getQueryFromReport($report, $current_user, $trackers);
         $condition             = $query->getCondition();
         $additional_from_where = $this->query_builder->buildFromWhere($condition, $trackers, $current_user);
@@ -186,6 +190,7 @@ final readonly class CrossTrackerArtifactReportFactory
         if ($trackers === []) {
             throw new FromIsInvalidException([dgettext('tuleap-crosstracker', 'No tracker found')]);
         }
+        $this->instrumentation->updateTrackerCount(count($trackers));
 
         $query = $this->getQueryFromReport($report, $current_user, $trackers);
 
@@ -206,6 +211,7 @@ final readonly class CrossTrackerArtifactReportFactory
             $this->getTrackersId($trackers),
         );
 
+        $this->instrumentation->updateSelectCount(count($query->getSelect()));
         $additional_select_from = $this->select_builder->buildSelectFrom($query->getSelect(), $trackers, $current_user);
         $select_results         = $this->expert_query_dao->searchArtifactsColumnsMatchingIds(
             $additional_select_from,
