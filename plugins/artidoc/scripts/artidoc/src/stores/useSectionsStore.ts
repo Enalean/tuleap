@@ -30,8 +30,7 @@ import { deleteSection, getAllSections, getReferences } from "@/helpers/rest-que
 import PendingArtifactSectionFactory from "@/helpers/pending-artifact-section.factory";
 import type { Tracker } from "@/stores/configuration-store";
 import { isTrackerWithSubmittableSection } from "@/stores/configuration-store";
-import type { ResultAsync } from "neverthrow";
-import { okAsync } from "neverthrow";
+import { ResultAsync, okAsync } from "neverthrow";
 import { injectInternalId } from "@/helpers/inject-internal-id";
 import { extractArtifactSectionsFromArtidocSections } from "@/helpers/extract-artifact-sections-from-artidoc-sections";
 import type { Fault } from "@tuleap/fault";
@@ -105,20 +104,21 @@ export function useSectionsStore(): SectionsStore {
                     insertPendingArtifactSectionForEmptyDocument(tracker);
                 }
 
-                return okAsync(sections);
+                return okAsync(true);
+            })
+            .andThen(() => {
+                if (!sections.value || !current_project) {
+                    return okAsync(true);
+                }
+
+                return ResultAsync.combine(
+                    sections.value.map((section) =>
+                        getReferencesForOneSection(section, current_project.id),
+                    ),
+                );
             })
             .match(
-                async (artidoc_sections) => {
-                    if (!artidoc_sections.value || !current_project) {
-                        return;
-                    }
-
-                    await Promise.all(
-                        artidoc_sections.value.map((section) =>
-                            getReferencesForOneSection(section, current_project.id),
-                        ),
-                    );
-
+                () => {
                     is_sections_loading.value = false;
                 },
                 () => {
