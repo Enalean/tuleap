@@ -88,7 +88,7 @@ import SuccessFeedback from "@/components/configuration/SuccessFeedback.vue";
 import ConfigurationModalHeader from "@/components/configuration/ConfigurationModalHeader.vue";
 import TrackerSelection from "@/components/configuration/TrackerSelection.vue";
 import { useConfigurationScreenHelper } from "@/composables/useConfigurationScreenHelper";
-import { OPEN_CONFIGURATION_MODAL_BUS } from "@/composables/useOpenConfigurationModalBus";
+import { OPEN_CONFIGURATION_MODAL_BUS } from "@/stores/useOpenConfigurationModalBusStore";
 import { strictInject } from "@tuleap/vue-strict-inject";
 
 const { $gettext } = useGettext();

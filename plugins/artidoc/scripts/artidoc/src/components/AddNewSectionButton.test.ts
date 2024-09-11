@@ -25,11 +25,11 @@ import AddNewSectionButton from "@/components/AddNewSectionButton.vue";
 import type { ConfigurationStore } from "@/stores/configuration-store";
 import { CONFIGURATION_STORE } from "@/stores/configuration-store";
 import { ConfigurationStoreStub } from "@/helpers/stubs/ConfigurationStoreStub";
-import type { OpenConfigurationModalBus } from "@/composables/useOpenConfigurationModalBus";
+import type { OpenConfigurationModalBusStore } from "@/stores/useOpenConfigurationModalBusStore";
 import {
     OPEN_CONFIGURATION_MODAL_BUS,
-    useOpenConfigurationModalBus,
-} from "@/composables/useOpenConfigurationModalBus";
+    useOpenConfigurationModalBusStore,
+} from "@/stores/useOpenConfigurationModalBusStore";
 import { createGettext } from "vue3-gettext";
 import { AT_THE_END } from "@/stores/useSectionsStore";
 import { TrackerStub } from "@/helpers/stubs/TrackerStub";
@@ -45,7 +45,7 @@ describe("AddNewSectionButton", () => {
     function getWrapper(
         insert_section_callback: Mock,
         configuration_store: ConfigurationStore,
-        configuration_bus: OpenConfigurationModalBus,
+        configuration_bus: OpenConfigurationModalBusStore,
         add_existing_section_bus: OpenAddExistingSectionModalBus,
     ): VueWrapper {
         return shallowMount(AddNewSectionButton, {
@@ -66,7 +66,7 @@ describe("AddNewSectionButton", () => {
             let has_modal_been_opened = false;
 
             const add_existing_section_bus = useOpenAddExistingSectionModalBus();
-            const configuration_bus = useOpenConfigurationModalBus();
+            const configuration_bus = useOpenConfigurationModalBusStore();
             configuration_bus.registerHandler(() => {
                 has_modal_been_opened = true;
             });
@@ -88,7 +88,7 @@ describe("AddNewSectionButton", () => {
 
         it("should insert a pending artifact section after the configuration is saved", async () => {
             const add_existing_section_bus = useOpenAddExistingSectionModalBus();
-            const configuration_bus = useOpenConfigurationModalBus();
+            const configuration_bus = useOpenConfigurationModalBusStore();
             const store = ConfigurationStoreStub.withSelectedTracker(null);
 
             let has_modal_been_opened = false;
@@ -119,7 +119,7 @@ describe("AddNewSectionButton", () => {
             let has_modal_been_opened = false;
 
             const add_existing_section_bus = useOpenAddExistingSectionModalBus();
-            const configuration_bus = useOpenConfigurationModalBus();
+            const configuration_bus = useOpenConfigurationModalBusStore();
             configuration_bus.registerHandler(() => {
                 has_modal_been_opened = true;
             });
@@ -151,7 +151,7 @@ describe("AddNewSectionButton", () => {
 
         it("should insert a pending artifact section after the configuration is saved", async () => {
             const add_existing_section_bus = useOpenAddExistingSectionModalBus();
-            const configuration_bus = useOpenConfigurationModalBus();
+            const configuration_bus = useOpenConfigurationModalBusStore();
             const store = ConfigurationStoreStub.withSelectedTracker({
                 ...ConfigurationStoreStub.bugs,
                 title: null,
@@ -191,7 +191,7 @@ describe("AddNewSectionButton", () => {
             let has_modal_been_opened = false;
 
             const add_existing_section_bus = useOpenAddExistingSectionModalBus();
-            const configuration_bus = useOpenConfigurationModalBus();
+            const configuration_bus = useOpenConfigurationModalBusStore();
             configuration_bus.registerHandler(() => {
                 has_modal_been_opened = true;
             });
@@ -223,7 +223,7 @@ describe("AddNewSectionButton", () => {
 
         it("should insert a pending artifact section after the configuration is saved", async () => {
             const add_existing_section_bus = useOpenAddExistingSectionModalBus();
-            const configuration_bus = useOpenConfigurationModalBus();
+            const configuration_bus = useOpenConfigurationModalBusStore();
             const store = ConfigurationStoreStub.withSelectedTracker({
                 ...ConfigurationStoreStub.bugs,
                 title: {
@@ -263,7 +263,7 @@ describe("AddNewSectionButton", () => {
             let has_modal_been_opened = false;
 
             const add_existing_section_bus = useOpenAddExistingSectionModalBus();
-            const configuration_bus = useOpenConfigurationModalBus();
+            const configuration_bus = useOpenConfigurationModalBusStore();
             configuration_bus.registerHandler(() => {
                 has_modal_been_opened = true;
             });
@@ -301,7 +301,7 @@ describe("AddNewSectionButton", () => {
         it("should ask to open the add existing section modal", async () => {
             let has_modal_been_opened = false;
 
-            const configuration_bus = useOpenConfigurationModalBus();
+            const configuration_bus = useOpenConfigurationModalBusStore();
             const add_existing_section_bus = useOpenAddExistingSectionModalBus();
             add_existing_section_bus.registerHandler(() => {
                 has_modal_been_opened = true;

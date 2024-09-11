@@ -24,11 +24,8 @@ import { createGettext } from "vue3-gettext";
 import { IS_USER_ANONYMOUS } from "@/is-user-anonymous";
 import PrinterVersion from "@/components/print/PrinterVersion.vue";
 import PdfExportMenuTemplatesDropdown from "./PdfExportMenuTemplatesDropdown.vue";
-import type { SectionEditorsCollection } from "@/composables/useSectionEditorsCollection";
-import {
-    EDITORS_COLLECTION,
-    useSectionEditorsCollection,
-} from "@/composables/useSectionEditorsCollection";
+import type { SectionEditorsStore } from "@/stores/useSectionEditorsStore";
+import { EDITORS_COLLECTION, useSectionEditorsStore } from "@/stores/useSectionEditorsStore";
 import { SectionEditorStub } from "@/helpers/stubs/SectionEditorStub";
 import ArtifactSectionFactory from "@/helpers/artifact-section.factory";
 import { initPdfTemplatesStore, PDF_TEMPLATES_STORE } from "@/stores/pdf-templates-store";
@@ -36,10 +33,10 @@ import { PdfTemplateStub } from "@/helpers/stubs/PdfTemplateStub";
 import { TITLE } from "@/title-injection-key";
 
 describe("PdfExportMenuItem", () => {
-    let editors_collection: SectionEditorsCollection;
+    let editors_collection: SectionEditorsStore;
 
     beforeEach(() => {
-        editors_collection = useSectionEditorsCollection();
+        editors_collection = useSectionEditorsStore();
     });
 
     it("should display disabled menuitem if user is anonymous", () => {

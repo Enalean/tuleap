@@ -32,7 +32,7 @@ import type { RefreshSection } from "@/composables/useRefreshSection";
 import { useRefreshSection } from "@/composables/useRefreshSection";
 import type { AttachmentFile } from "@/composables/useAttachmentFile";
 import { SECTIONS_STORE } from "@/stores/sections-store-injection-key";
-import { EDITORS_COLLECTION } from "@/composables/useSectionEditorsCollection";
+import { EDITORS_COLLECTION } from "@/stores/useSectionEditorsStore";
 import { EDITOR_CHOICE } from "@/helpers/editor-choice";
 import { UPLOAD_FILE_STORE } from "@/stores/upload-file-store-injection-key";
 import type { Fault } from "@tuleap/fault";

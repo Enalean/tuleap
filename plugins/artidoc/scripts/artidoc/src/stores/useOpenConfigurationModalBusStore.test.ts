@@ -18,13 +18,13 @@
  */
 
 import { describe, expect, it } from "vitest";
-import { useOpenConfigurationModalBus } from "@/composables/useOpenConfigurationModalBus";
+import { useOpenConfigurationModalBusStore } from "@/stores/useOpenConfigurationModalBusStore";
 
 describe("useOpenConfigurationModalBus", () => {
     it("should call the open modal handler", () => {
         let has_been_called = false;
 
-        const bus = useOpenConfigurationModalBus();
+        const bus = useOpenConfigurationModalBusStore();
         bus.registerHandler(() => {
             has_been_called = true;
         });
@@ -43,7 +43,7 @@ describe("useOpenConfigurationModalBus", () => {
             has_been_called = true;
         };
 
-        const bus = useOpenConfigurationModalBus();
+        const bus = useOpenConfigurationModalBusStore();
         bus.registerHandler((onSuccessfulSaved: () => void) => {
             onSuccessfulSaved();
         });

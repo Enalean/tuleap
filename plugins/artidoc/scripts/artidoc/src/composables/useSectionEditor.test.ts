@@ -32,11 +32,8 @@ import * as refreshSection from "@/composables/useRefreshSection";
 import * as editorError from "@/composables/useEditorErrors";
 import * as editorContent from "@/composables/useEditorSectionContent";
 import { SECTIONS_STORE } from "@/stores/sections-store-injection-key";
-import type { SectionEditorsCollection } from "@/composables/useSectionEditorsCollection";
-import {
-    EDITORS_COLLECTION,
-    useSectionEditorsCollection,
-} from "@/composables/useSectionEditorsCollection";
+import type { SectionEditorsStore } from "@/stores/useSectionEditorsStore";
+import { EDITORS_COLLECTION, useSectionEditorsStore } from "@/stores/useSectionEditorsStore";
 import { EDITOR_CHOICE } from "@/helpers/editor-choice";
 import { ref } from "vue";
 import { UPLOAD_FILE_STORE } from "@/stores/upload-file-store-injection-key";
@@ -50,7 +47,7 @@ const set_waiting_list = vi.fn();
 const remove_section = vi.fn();
 describe("useSectionEditor", () => {
     let store_stub: SectionsStore;
-    let editors_collection: SectionEditorsCollection;
+    let editors_collection: SectionEditorsStore;
     let upload_file_store_stub: UploadFileStoreType;
 
     beforeEach(() => {
@@ -58,7 +55,7 @@ describe("useSectionEditor", () => {
             ...InjectedSectionsStoreStub.withLoadedSections([]),
             removeSection: remove_section,
         };
-        editors_collection = useSectionEditorsCollection();
+        editors_collection = useSectionEditorsStore();
         upload_file_store_stub = {
             ...UploadFileStoreStub.uploadInProgress(),
             cancelSectionUploads: vi.fn(),

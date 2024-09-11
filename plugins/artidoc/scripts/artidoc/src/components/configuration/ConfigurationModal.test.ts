@@ -27,14 +27,17 @@ import SuccessFeedback from "@/components/configuration/SuccessFeedback.vue";
 import ErrorFeedback from "@/components/configuration/ErrorFeedback.vue";
 import type { ConfigurationStore, Tracker } from "@/stores/configuration-store";
 import { CONFIGURATION_STORE } from "@/stores/configuration-store";
-import type { OpenConfigurationModalBus } from "@/composables/useOpenConfigurationModalBus";
+import type { OpenConfigurationModalBusStore } from "@/stores/useOpenConfigurationModalBusStore";
 import {
     OPEN_CONFIGURATION_MODAL_BUS,
-    useOpenConfigurationModalBus,
-} from "@/composables/useOpenConfigurationModalBus";
+    useOpenConfigurationModalBusStore,
+} from "@/stores/useOpenConfigurationModalBusStore";
 
 describe("ConfigurationModal", () => {
-    function getWrapper(store: ConfigurationStore, bus: OpenConfigurationModalBus): VueWrapper {
+    function getWrapper(
+        store: ConfigurationStore,
+        bus: OpenConfigurationModalBusStore,
+    ): VueWrapper {
         return shallowMount(ConfigurationModal, {
             global: {
                 plugins: [createGettext({ silent: true })],
@@ -49,7 +52,7 @@ describe("ConfigurationModal", () => {
     it("should display success feedback", () => {
         const wrapper = getWrapper(
             ConfigurationStoreStub.withSuccessfullSave(),
-            useOpenConfigurationModalBus(),
+            useOpenConfigurationModalBusStore(),
         );
 
         expect(wrapper.findComponent(SuccessFeedback).exists()).toBe(true);
@@ -59,7 +62,7 @@ describe("ConfigurationModal", () => {
     it("should display error feedback", () => {
         const wrapper = getWrapper(
             ConfigurationStoreStub.withError(),
-            useOpenConfigurationModalBus(),
+            useOpenConfigurationModalBusStore(),
         );
 
         expect(wrapper.findComponent(SuccessFeedback).exists()).toBe(false);
@@ -72,7 +75,7 @@ describe("ConfigurationModal", () => {
             has_been_called = true;
         };
 
-        const bus = useOpenConfigurationModalBus();
+        const bus = useOpenConfigurationModalBusStore();
 
         const save: ConfigurationStore["saveConfiguration"] = vi
             .fn()
