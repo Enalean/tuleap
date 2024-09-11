@@ -42,6 +42,7 @@ describe("useSectionsStore", () => {
             vi.spyOn(rest, "getAllSections").mockReturnValue(
                 okAsync([ArtifactSectionFactory.create()]),
             );
+            vi.spyOn(rest, "getReferences").mockReturnValue(okAsync([]));
 
             const store = useSectionsStore();
             store.loadSections(101, null, false, { id: 101 } as Project);
@@ -55,6 +56,7 @@ describe("useSectionsStore", () => {
             const section = ArtifactSectionFactory.create();
 
             vi.spyOn(rest, "getAllSections").mockReturnValue(okAsync([section]));
+            vi.spyOn(rest, "getReferences").mockReturnValue(okAsync([]));
 
             const store = useSectionsStore();
             store.loadSections(101, null, false, { id: 101 } as Project);
@@ -103,6 +105,7 @@ describe("useSectionsStore", () => {
             and there is a configured tracker
             and user can edit document`, async () => {
             vi.spyOn(rest, "getAllSections").mockReturnValue(okAsync([]));
+            vi.spyOn(rest, "getReferences").mockReturnValue(okAsync([]));
 
             const store = useSectionsStore();
             store.loadSections(101, TrackerStub.withTitleAndDescription(), true, {
@@ -139,6 +142,7 @@ describe("useSectionsStore", () => {
             vi.spyOn(rest, "getAllSections").mockReturnValue(
                 okAsync([ArtifactSectionFactory.create()]),
             );
+            vi.spyOn(rest, "getReferences").mockReturnValue(okAsync([]));
 
             const store = useSectionsStore();
             await store.loadSections(101, null, false, { id: 101 } as Project);
@@ -198,6 +202,7 @@ describe("useSectionsStore", () => {
             });
 
             vi.spyOn(rest, "getAllSections").mockReturnValue(okAsync([section_a, section_b]));
+            vi.spyOn(rest, "getReferences").mockReturnValue(okAsync([]));
 
             const store = useSectionsStore();
             store.loadSections(101, null, true, { id: 101 } as Project);
@@ -238,6 +243,7 @@ describe("useSectionsStore", () => {
                 vi.spyOn(rest, "getAllSections").mockReturnValue(
                     okAsync([section1, section2, section3, section4]),
                 );
+                vi.spyOn(rest, "getReferences").mockReturnValue(okAsync([]));
                 vi.spyOn(rest, "deleteSection").mockReturnValue(okAsync(new Response()));
 
                 const store = useSectionsStore();
@@ -266,6 +272,7 @@ describe("useSectionsStore", () => {
                 const section = ArtifactSectionFactory.create();
 
                 vi.spyOn(rest, "getAllSections").mockReturnValue(okAsync([section]));
+                vi.spyOn(rest, "getReferences").mockReturnValue(okAsync([]));
                 vi.spyOn(rest, "deleteSection").mockReturnValue(okAsync(new Response()));
 
                 const store = useSectionsStore();
@@ -284,6 +291,7 @@ describe("useSectionsStore", () => {
             const section = ArtifactSectionFactory.create();
 
             vi.spyOn(rest, "getAllSections").mockReturnValue(okAsync([section]));
+            vi.spyOn(rest, "getReferences").mockReturnValue(okAsync([]));
             vi.spyOn(rest, "deleteSection").mockReturnValue(okAsync(new Response()));
 
             const store = useSectionsStore();
@@ -321,6 +329,7 @@ describe("useSectionsStore", () => {
             vi.spyOn(rest, "getAllSections").mockReturnValue(
                 okAsync([section1, section2, section3, section4]),
             );
+            vi.spyOn(rest, "getReferences").mockReturnValue(okAsync([]));
 
             const store = useSectionsStore();
             store.loadSections(101, null, true, { id: 101 } as Project);
@@ -359,6 +368,7 @@ describe("useSectionsStore", () => {
 
         it("should insert the section at the beginning", async () => {
             vi.spyOn(rest, "getAllSections").mockReturnValue(okAsync([section1, section2]));
+            vi.spyOn(rest, "getReferences").mockReturnValue(okAsync([]));
 
             const store = useSectionsStore();
             store.loadSections(101, null, true, { id: 101 } as Project);
@@ -375,6 +385,7 @@ describe("useSectionsStore", () => {
 
         it("should insert the section before the second one", async () => {
             vi.spyOn(rest, "getAllSections").mockReturnValue(okAsync([section1, section2]));
+            vi.spyOn(rest, "getReferences").mockReturnValue(okAsync([]));
 
             const store = useSectionsStore();
             store.loadSections(101, null, true, { id: 101 } as Project);
@@ -391,6 +402,7 @@ describe("useSectionsStore", () => {
 
         it("should insert the section at the end", async () => {
             vi.spyOn(rest, "getAllSections").mockReturnValue(okAsync([section1, section2]));
+            vi.spyOn(rest, "getReferences").mockReturnValue(okAsync([]));
 
             const store = useSectionsStore();
             store.loadSections(101, null, true, { id: 101 } as Project);
@@ -414,6 +426,7 @@ describe("useSectionsStore", () => {
             [TrackerStub.withDescription()],
         ])("should do nothing if tracker is %s", async (tracker: Tracker | null) => {
             vi.spyOn(rest, "getAllSections").mockReturnValue(okAsync([]));
+            vi.spyOn(rest, "getReferences").mockReturnValue(okAsync([]));
 
             const store = useSectionsStore();
             store.loadSections(101, null, true, { id: 101 } as Project);
@@ -463,6 +476,7 @@ describe("useSectionsStore", () => {
         it("should do nothing when not empty", async () => {
             const section = ArtifactSectionFactory.create();
             vi.spyOn(rest, "getAllSections").mockReturnValue(okAsync([section]));
+            vi.spyOn(rest, "getReferences").mockReturnValue(okAsync([]));
 
             const store = useSectionsStore();
             store.loadSections(101, null, true, { id: 101 } as Project);
@@ -515,6 +529,7 @@ describe("useSectionsStore", () => {
             vi.spyOn(rest, "getAllSections").mockReturnValue(
                 okAsync([section0, section1, section2]),
             );
+            vi.spyOn(rest, "getReferences").mockReturnValue(okAsync([]));
 
             const store = useSectionsStore();
             store.loadSections(101, null, true, { id: 101 } as Project);
@@ -540,6 +555,7 @@ describe("useSectionsStore", () => {
             vi.spyOn(rest, "getAllSections").mockReturnValue(
                 okAsync([section0, section1, section2, section3, section4, section5]),
             );
+            vi.spyOn(rest, "getReferences").mockReturnValue(okAsync([]));
 
             const store = useSectionsStore();
             store.loadSections(101, null, true, { id: 101 } as Project);
@@ -599,6 +615,7 @@ describe("useSectionsStore", () => {
             const section = PendingArtifactSectionFactory.create();
 
             vi.spyOn(rest, "getAllSections").mockReturnValue(okAsync([section]));
+            vi.spyOn(rest, "getReferences").mockReturnValue(okAsync([]));
 
             const store = useSectionsStore();
             store.loadSections(101, null, true, { id: 101 } as Project);
@@ -622,6 +639,7 @@ describe("useSectionsStore", () => {
             vi.spyOn(rest, "getAllSections").mockReturnValue(
                 okAsync([section0, section1, section2, section3]),
             );
+            vi.spyOn(rest, "getReferences").mockReturnValue(okAsync([]));
 
             const store = useSectionsStore();
             store.loadSections(101, null, true, { id: 101 } as Project);
