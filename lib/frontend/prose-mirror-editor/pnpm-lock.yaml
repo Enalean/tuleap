@@ -30,8 +30,8 @@ dependencies:
     specifier: ^3.1.4
     version: 3.1.6
   hybrids:
-    specifier: 9.1.1
-    version: 9.1.1
+    specifier: 9.1.6
+    version: 9.1.6
   neverthrow:
     specifier: 6.0.0
     version: 6.0.0
@@ -132,8 +132,8 @@ packages:
     resolution: {integrity: sha512-RbJ5/jmFcNNCcDV5o9eTnBLJ/HszWV0P73bc+Ff4nS/rJj+YaS6IGyiOL0VoBYX+l1Wrl3k63h/KrH+nhJ0XvQ==}
     dev: false
 
-  /hybrids@9.1.1:
-    resolution: {integrity: sha512-1rWYiLPN9eUAaR88VTsMV2qGxWzhs0AtOwp+6yC+8GxNjNCtURWbu53q3L2qv0g4xFN4Uxisfkz+6HMzzOtifA==}
+  /hybrids@9.1.6:
+    resolution: {integrity: sha512-AES51XhSvgXQLSwAHBE4tmjKW8XxnnGBiGSeHWeiPzO638waOX+cYU6VWvfiUOuTMjM/KzxsYHrLfMLLNqVZ3A==}
     engines: {node: '>=18.0.0'}
     hasBin: true
     dev: false

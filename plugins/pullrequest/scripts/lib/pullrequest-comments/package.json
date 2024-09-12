@@ -27,7 +27,7 @@
     "@tuleap/tlp-relative-date": "workspace:*",
     "@tuleap/tooltip": "workspace:*",
     "dompurify": "^3.1.4",
-    "hybrids": "^9.0.0",
+    "hybrids": "^9.1.6",
     "neverthrow": "6.0.0"
   },
   "devDependencies": {

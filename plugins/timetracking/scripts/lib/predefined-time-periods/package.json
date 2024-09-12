@@ -19,7 +19,7 @@
     "@tuleap/gettext": "workspace:^",
     "@tuleap/option": "workspace:*",
     "@tuleap/plugin-timetracking-time-formatters": "workspace:^",
-    "hybrids": "^9.0.0"
+    "hybrids": "^9.1.6"
   },
   "devDependencies": {
     "@tuleap/build-system-configurator": "workspace:*",

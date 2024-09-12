@@ -166,20 +166,22 @@ export const PullRequestCommentComponent = define<PullRequestCommentComponentTyp
     tag: PULL_REQUEST_COMMENT_ELEMENT_TAG_NAME,
     is_reply_form_shown: false,
     is_edition_form_shown: false,
-    comment: (host, value) => value,
+    comment: {
+        value: (host, value) => value,
+        observe: (host) => {
+            if (host.comment) {
+                host.controller.displayReplies(host);
+            }
+        },
+    },
+
     post_rendering_callback: undefined,
     relative_date_helper: (host: PullRequestCommentComponentType) => {
         return host.controller.getRelativeDateHelper();
     },
     after_render_once: after_render_once_descriptor,
     element_height: element_height_descriptor,
-    controller: (host, controller: ControlPullRequestComment) => {
-        if (host.comment) {
-            controller.displayReplies(host);
-        }
-
-        return controller;
-    },
+    controller: (host, controller: ControlPullRequestComment) => controller,
     replies: setReplies,
     render: renderComment,
 });
