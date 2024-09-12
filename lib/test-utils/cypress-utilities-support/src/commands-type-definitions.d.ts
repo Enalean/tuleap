@@ -146,6 +146,8 @@ declare global {
             addBotMattermost(bot_name: string): void;
 
             deleteBotMattermost(bot_name: string): void;
+
+            enableService(project_name: string, service_short_name: string): void;
         }
     }
 }

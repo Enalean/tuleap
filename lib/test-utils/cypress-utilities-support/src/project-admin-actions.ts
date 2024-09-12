@@ -91,3 +91,21 @@ Cypress.Commands.add(
         cy.get('[data-test="project-admin-submit-add-member"]').click();
     },
 );
+
+Cypress.Commands.add("enableService", (project_name: string, service_short_name: string): void => {
+    cy.visitProjectAdministration(project_name);
+    cy.get("[data-test=project-administration-navigation]").within(() => {
+        cy.get("[data-test=services]").click({ force: true });
+    });
+
+    cy.get(`[data-test=edit-service-plugin_${service_short_name}]`).click();
+
+    cy.get("[data-test=service-edit-modal]").within(() => {
+        cy.get("[data-test=service-is-used]").click();
+        cy.get("[data-test=save-service-modifications]").click();
+    });
+
+    cy.get("[data-test=feedback]").contains("Service updated successfully", {
+        timeout: 40000,
+    });
+});
