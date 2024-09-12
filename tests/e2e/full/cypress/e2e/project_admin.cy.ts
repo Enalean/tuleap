@@ -19,6 +19,12 @@
 
 const project_admin_group_id = 4;
 
+export interface ProjectServiceResponse {
+    root_item: {
+        id: number;
+    };
+}
+
 context("Suspended users", function () {
     let project_name: string, now: number;
 
@@ -119,6 +125,7 @@ describe("Project admin", function () {
     let public_project_name: string,
         private_project_name: string,
         project_visibility: string,
+        project_acces_log: string,
         now: number;
 
     before(() => {
@@ -126,6 +133,9 @@ describe("Project admin", function () {
         public_project_name = "public-admin-" + now;
         private_project_name = "private-admin-" + now;
         project_visibility = `visibility-${now}`;
+        project_acces_log = `access-${now}`;
+        cy.projectAdministratorSession();
+        cy.createNewPublicProject(project_acces_log, "agile_alm").as("access_project_id");
     });
 
     context("project basic administration", function () {
@@ -152,21 +162,7 @@ describe("Project admin", function () {
                 .should("have.class", "fa-lock");
 
             cy.log("Check administrator can enable a service");
-            cy.visitProjectAdministration(public_project_name);
-            cy.get("[data-test=project-administration-navigation]").within(() => {
-                cy.get("[data-test=services]").click({ force: true });
-            });
-
-            cy.get("[data-test=edit-service-plugin_svn]").click();
-
-            cy.get("[data-test=service-edit-modal]").within(() => {
-                cy.get("[data-test=service-is-used]").click();
-                cy.get("[data-test=save-service-modifications]").click();
-            });
-
-            cy.get("[data-test=feedback]").contains("Service updated successfully", {
-                timeout: 40000,
-            });
+            cy.enableService(public_project_name, "svn");
         });
 
         it("should be able to add users to a public project", function () {
@@ -221,6 +217,59 @@ describe("Project admin", function () {
             cy.get("[data-test=project-icon]", { includeShadowDom: true })
                 .eq(0)
                 .should("have.class", "fa-lock-open");
+        });
+
+        it("should be able to export project access log", function () {
+            cy.projectAdministratorSession();
+            cy.log("Add a document");
+            cy.getFromTuleapAPI<ProjectServiceResponse>(
+                `api/projects/${this.access_project_id}/docman_service`,
+            ).then((response) => {
+                const root_folder_id = response.body.root_item.id;
+                const embedded_payload = {
+                    title: "test",
+                    description: "",
+                    type: "embedded",
+                    embedded_properties: {
+                        content: "<p>embedded</p>\n",
+                    },
+                    should_lock_file: false,
+                };
+                return cy.postFromTuleapApi(
+                    `api/docman_folders/${root_folder_id}/embedded_files`,
+                    embedded_payload,
+                );
+            });
+            cy.log("Create a package");
+            cy.createFRSPackage(this.access_project_id, "P1");
+
+            cy.log("access to svn repo");
+            cy.enableService(project_acces_log, "svn");
+            cy.visitProjectService(project_acces_log, "SVN");
+            cy.get("[data-test=create-repository-creation]").click();
+            cy.get("[data-test=create-repository-field-name]").type("My_new_repo");
+            cy.get("[data-test=create-repository]").click();
+            cy.get("[data-test=svn-repository-access-My_new_repo]").click();
+
+            cy.log("access to git repo");
+            cy.visitProjectService(project_acces_log, "Git");
+            cy.get("[data-test=create-repository-button]").click();
+            cy.get("[data-test=create_repository_name]").type("Aquali");
+            cy.get("[data-test=create_repository]").click();
+
+            cy.get("[data-test=git_repo_name]").contains("Aquali", {
+                timeout: 20000,
+            });
+
+            cy.visitProjectAdministration(project_acces_log);
+            cy.get("[data-test=access-log]").click({ force: true });
+
+            const download_folder = Cypress.config("downloadsFolder");
+            cy.get("[data-test=export-access-log]")
+                .click()
+                .then(() => {
+                    cy.readFile(`${download_folder}/access_logs.csv`).should("exist");
+                });
         });
     });
 });

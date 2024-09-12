@@ -155,7 +155,7 @@ echo '<BR><FORM METHOD="POST" NAME="access_logs_export_form">
 	<INPUT TYPE="HIDDEN" NAME="span" VALUE="' . $purifier->purify($span) . '">
 	<INPUT TYPE="HIDDEN" NAME="view" VALUE="' . $purifier->purify($view) . '">
 	<TABLE align="left"><TR><TD>
-	<INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="' . $GLOBALS['Language']->getText('project_stats_source_code_access', 'logs_export') . '">
+	<INPUT TYPE="SUBMIT" NAME="SUBMIT" data-test="export-access-log" VALUE="' . $GLOBALS['Language']->getText('project_stats_source_code_access', 'logs_export') . '">
 	</TD></TR></TABLE></FORM>';
 
 print '<BR><P>';
