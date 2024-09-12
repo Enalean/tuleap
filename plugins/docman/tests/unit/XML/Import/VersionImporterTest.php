@@ -22,72 +22,39 @@ declare(strict_types=1);
 
 namespace Tuleap\Docman\XML\Import;
 
+use DateTimeImmutable;
 use Docman_FileStorage;
 use Docman_Item;
 use Docman_Version;
 use Docman_VersionFactory;
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use org\bovigo\vfs\vfsStream;
-use PFUser;
-use Project;
+use PHPUnit\Framework\MockObject\MockObject;
 use SimpleXMLElement;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Test\Stubs\User\XML\Import\IFindUserFromXMLReferenceStub;
 use Tuleap\xml\InvalidDateException;
-use User\XML\Import\IFindUserFromXMLReference;
 
-class VersionImporterTest extends \Tuleap\Test\PHPUnit\TestCase
+final class VersionImporterTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var Docman_VersionFactory|Mockery\LegacyMockInterface|Mockery\MockInterface
-     */
-    private $version_factory;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Docman_FileStorage
-     */
-    private $docman_file_storage;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Project
-     */
-    private $project;
-    /**
-     * @var string
-     */
-    private $extraction_path;
-    /**
-     * @var VersionImporter
-     */
-    private $importer;
-    /**
-     * @var SimpleXMLElement
-     */
-    private $node;
-    /**
-     * @var Docman_Item|Mockery\LegacyMockInterface|Mockery\MockInterface
-     */
-    private $item;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|PFUser
-     */
-    private $user;
-    /**
-     * @var \DateTimeImmutable
-     */
-    private $current_date;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|IFindUserFromXMLReference
-     */
-    private $user_finder;
+    private Docman_VersionFactory&MockObject $version_factory;
+    private Docman_FileStorage&MockObject $docman_file_storage;
+    private string $extraction_path;
+    private VersionImporter $importer;
+    private SimpleXMLElement $node;
+    private Docman_Item $item;
+    private DateTimeImmutable $current_date;
 
     protected function setUp(): void
     {
-        $this->version_factory     = Mockery::mock(Docman_VersionFactory::class);
-        $this->docman_file_storage = Mockery::mock(Docman_FileStorage::class);
-        $this->project             = Mockery::mock(Project::class)->shouldReceive(['getGroupId' => 114])->getMock();
+        $this->version_factory     = $this->createMock(Docman_VersionFactory::class);
+        $this->docman_file_storage = $this->createMock(Docman_FileStorage::class);
+        $project                   = ProjectTestBuilder::aProject()->withId(114)->build();
         $this->extraction_path     = '/path/to/extracted/archive';
-        $this->current_date        = new \DateTimeImmutable();
-        $this->user_finder         = Mockery::mock(IFindUserFromXMLReference::class);
+        $this->current_date        = new DateTimeImmutable();
+        $user                      = UserTestBuilder::buildWithId(101);
+        $user_finder               = IFindUserFromXMLReferenceStub::buildWithUser($user);
 
         $this->node = new SimpleXMLElement(
             <<<EOS
@@ -100,17 +67,16 @@ class VersionImporterTest extends \Tuleap\Test\PHPUnit\TestCase
             EOS
         );
 
-        $this->item = Mockery::mock(Docman_Item::class)->shouldReceive(['getId' => 13])->getMock();
-        $this->user = Mockery::mock(PFUser::class)->shouldReceive(['getId' => 101])->getMock();
+        $this->item = new Docman_Item(['item_id' => 13]);
 
         $this->importer = new VersionImporter(
-            $this->user_finder,
+            $user_finder,
             $this->version_factory,
             $this->docman_file_storage,
-            $this->project,
+            $project,
             $this->extraction_path,
             $this->current_date,
-            $this->user
+            $user
         );
     }
 
@@ -128,35 +94,21 @@ class VersionImporterTest extends \Tuleap\Test\PHPUnit\TestCase
             EOS
         );
 
-        $this->docman_file_storage
-            ->shouldReceive('copy')
-            ->with(
-                $this->extraction_path . '/documents/content-214.bin',
-                'Pan-Pan-Artwork1.png',
-                114,
-                13,
-                1
-            )->never();
+        $this->docman_file_storage->expects(self::never())->method('copy')
+            ->with($this->extraction_path . '/documents/content-214.bin', 'Pan-Pan-Artwork1.png', 114, 13, 1);
 
-        $this->expectException(InvalidDateException::class);
+        self::expectException(InvalidDateException::class);
 
         $this->importer->import($node, $this->item, 1);
     }
 
     public function testItRaisesExceptionWhenFileCannotBeCopiedOnFilesystem(): void
     {
-        $this->docman_file_storage
-            ->shouldReceive('copy')
-            ->with(
-                $this->extraction_path . '/documents/content-214.bin',
-                'Pan-Pan-Artwork1.png',
-                114,
-                13,
-                1
-            )->once()
-            ->andReturnFalse();
+        $this->docman_file_storage->expects(self::once())->method('copy')
+            ->with($this->extraction_path . '/documents/content-214.bin', 'Pan-Pan-Artwork1.png', 114, 13, 1)
+            ->willReturn(false);
 
-        $this->expectException(UnableToCreateFileOnFilesystemException::class);
+        self::expectException(UnableToCreateFileOnFilesystemException::class);
 
         $this->importer->import($this->node, $this->item, 1);
     }
@@ -166,45 +118,33 @@ class VersionImporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $root         = vfsStream::setup();
         $created_file = vfsStream::newFile('file.png')->at($root);
         $file_path    = $created_file->url();
-        $this->assertFileExists($file_path);
+        self::assertFileExists($file_path);
 
-        $this->docman_file_storage
-            ->shouldReceive('copy')
-            ->with(
-                $this->extraction_path . '/documents/content-214.bin',
-                'Pan-Pan-Artwork1.png',
-                114,
-                13,
-                1
-            )->once()
-            ->andReturn($file_path);
+        $this->docman_file_storage->expects(self::once())->method('copy')
+            ->with($this->extraction_path . '/documents/content-214.bin', 'Pan-Pan-Artwork1.png', 114, 13, 1)
+            ->willReturn($file_path);
 
-        $this->version_factory
-            ->shouldReceive('create')
-            ->with(
-                [
-                    'item_id'   => 13,
-                    'number'    => 1,
-                    'user_id'   => 101,
-                    'filename'  => 'Pan-Pan-Artwork1.png',
-                    'filesize'  => filesize($file_path),
-                    'filetype'  => 'image/png',
-                    'path'      => $file_path,
-                    'date'      => $this->current_date->getTimestamp(),
-                    'label'     => '',
-                    'changelog' => '',
-                ]
-            )->once()
-            ->andReturnFalse();
+        $this->version_factory->expects(self::once())->method('create')->with([
+            'item_id'   => 13,
+            'number'    => 1,
+            'user_id'   => 101,
+            'filename'  => 'Pan-Pan-Artwork1.png',
+            'filesize'  => filesize($file_path),
+            'filetype'  => 'image/png',
+            'path'      => $file_path,
+            'date'      => $this->current_date->getTimestamp(),
+            'label'     => '',
+            'changelog' => '',
+        ])->willReturn(false);
 
         $exception_caught = false;
         try {
             $this->importer->import($this->node, $this->item, 1);
-        } catch (UnableToCreateVersionInDbException $exception) {
+        } catch (UnableToCreateVersionInDbException) {
             $exception_caught = true;
-            $this->assertFileDoesNotExist($file_path);
+            self::assertFileDoesNotExist($file_path);
         }
-        $this->assertTrue($exception_caught);
+        self::assertTrue($exception_caught);
     }
 
     public function testSuccessfulImport(): void
@@ -214,37 +154,25 @@ class VersionImporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $file_path    = $created_file->url();
         $this->assertFileExists($file_path);
 
-        $this->docman_file_storage
-            ->shouldReceive('copy')
-            ->with(
-                $this->extraction_path . '/documents/content-214.bin',
-                'Pan-Pan-Artwork1.png',
-                114,
-                13,
-                1
-            )->once()
-            ->andReturn($file_path);
+        $this->docman_file_storage->expects(self::once())->method('copy')
+            ->with($this->extraction_path . '/documents/content-214.bin', 'Pan-Pan-Artwork1.png', 114, 13, 1)
+            ->willReturn($file_path);
 
-        $this->version_factory
-            ->shouldReceive('create')
-            ->with(
-                [
-                    'item_id'   => 13,
-                    'number'    => 1,
-                    'user_id'   => 101,
-                    'filename'  => 'Pan-Pan-Artwork1.png',
-                    'filesize'  => filesize($file_path),
-                    'filetype'  => 'image/png',
-                    'path'      => $file_path,
-                    'date'      => $this->current_date->getTimestamp(),
-                    'label'     => '',
-                    'changelog' => '',
-                ]
-            )->once()
-            ->andReturn(Mockery::mock(Docman_Version::class));
+        $this->version_factory->expects(self::once())->method('create')->with([
+            'item_id'   => 13,
+            'number'    => 1,
+            'user_id'   => 101,
+            'filename'  => 'Pan-Pan-Artwork1.png',
+            'filesize'  => filesize($file_path),
+            'filetype'  => 'image/png',
+            'path'      => $file_path,
+            'date'      => $this->current_date->getTimestamp(),
+            'label'     => '',
+            'changelog' => '',
+        ])->willReturn(new Docman_Version());
 
         $this->importer->import($this->node, $this->item, 1);
-        $this->assertFileExists($file_path);
+        self::assertFileExists($file_path);
     }
 
     public function testSuccessfulImportWithGivenUser(): void
@@ -252,34 +180,22 @@ class VersionImporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $root         = vfsStream::setup();
         $created_file = vfsStream::newFile('file.png')->at($root);
         $file_path    = $created_file->url();
-        $this->assertFileExists($file_path);
+        self::assertFileExists($file_path);
 
-        $this->docman_file_storage
-            ->shouldReceive('copy')
-            ->andReturn($file_path);
+        $this->docman_file_storage->method('copy')->willReturn($file_path);
 
-        $this->version_factory
-            ->shouldReceive('create')
-            ->with(
-                [
-                    'item_id'   => 13,
-                    'number'    => 1,
-                    'user_id'   => 103,
-                    'filename'  => 'Pan-Pan-Artwork1.png',
-                    'filesize'  => filesize($file_path),
-                    'filetype'  => 'image/png',
-                    'path'      => $file_path,
-                    'date'      => $this->current_date->getTimestamp(),
-                    'label'     => '',
-                    'changelog' => '',
-                ]
-            )->once()
-            ->andReturn(Mockery::mock(Docman_Version::class));
-
-        $this->user_finder
-            ->shouldReceive('getUser')
-            ->once()
-            ->andReturn(Mockery::mock(PFUser::class)->shouldReceive(['getId' => 103])->getMock());
+        $this->version_factory->expects(self::once())->method('create')->with([
+            'item_id'   => 13,
+            'number'    => 1,
+            'user_id'   => 101,
+            'filename'  => 'Pan-Pan-Artwork1.png',
+            'filesize'  => filesize($file_path),
+            'filetype'  => 'image/png',
+            'path'      => $file_path,
+            'date'      => $this->current_date->getTimestamp(),
+            'label'     => '',
+            'changelog' => '',
+        ])->willReturn(new Docman_Version());
 
         $node = new SimpleXMLElement(
             <<<EOS
@@ -301,36 +217,24 @@ class VersionImporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $root         = vfsStream::setup();
         $created_file = vfsStream::newFile('file.png')->at($root);
         $file_path    = $created_file->url();
-        $this->assertFileExists($file_path);
+        self::assertFileExists($file_path);
 
-        $this->docman_file_storage
-            ->shouldReceive('copy')
-            ->with(
-                $this->extraction_path . '/documents/content-214.bin',
-                'Pan-Pan-Artwork1.png',
-                114,
-                13,
-                1
-            )->once()
-            ->andReturn($file_path);
+        $this->docman_file_storage->expects(self::once())->method('copy')
+            ->with($this->extraction_path . '/documents/content-214.bin', 'Pan-Pan-Artwork1.png', 114, 13, 1)
+            ->willReturn($file_path);
 
-        $this->version_factory
-            ->shouldReceive('create')
-            ->with(
-                [
-                    'item_id'   => 13,
-                    'number'    => 1,
-                    'user_id'   => 101,
-                    'filename'  => 'Pan-Pan-Artwork1.png',
-                    'filesize'  => filesize($file_path),
-                    'filetype'  => 'image/png',
-                    'path'      => $file_path,
-                    'date'      => 1234567890,
-                    'label'     => '',
-                    'changelog' => '',
-                ]
-            )->once()
-            ->andReturn(Mockery::mock(Docman_Version::class));
+        $this->version_factory->expects(self::once())->method('create')->with([
+            'item_id'   => 13,
+            'number'    => 1,
+            'user_id'   => 101,
+            'filename'  => 'Pan-Pan-Artwork1.png',
+            'filesize'  => filesize($file_path),
+            'filetype'  => 'image/png',
+            'path'      => $file_path,
+            'date'      => 1234567890,
+            'label'     => '',
+            'changelog' => '',
+        ])->willReturn(new Docman_Version());
 
         $node = new SimpleXMLElement(
             <<<EOS
@@ -345,7 +249,7 @@ class VersionImporterTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $this->importer->import($node, $this->item, 1);
-        $this->assertFileExists($file_path);
+        self::assertFileExists($file_path);
     }
 
     public function testSuccessfulImportWithLabelAndChangelog(): void
@@ -353,36 +257,24 @@ class VersionImporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $root         = vfsStream::setup();
         $created_file = vfsStream::newFile('file.png')->at($root);
         $file_path    = $created_file->url();
-        $this->assertFileExists($file_path);
+        self::assertFileExists($file_path);
 
-        $this->docman_file_storage
-            ->shouldReceive('copy')
-            ->with(
-                $this->extraction_path . '/documents/content-214.bin',
-                'Pan-Pan-Artwork1.png',
-                114,
-                13,
-                1
-            )->once()
-            ->andReturn($file_path);
+        $this->docman_file_storage->expects(self::once())->method('copy')
+            ->with($this->extraction_path . '/documents/content-214.bin', 'Pan-Pan-Artwork1.png', 114, 13, 1)
+            ->willReturn($file_path);
 
-        $this->version_factory
-            ->shouldReceive('create')
-            ->with(
-                [
-                    'item_id'   => 13,
-                    'number'    => 1,
-                    'user_id'   => 101,
-                    'filename'  => 'Pan-Pan-Artwork1.png',
-                    'filesize'  => filesize($file_path),
-                    'filetype'  => 'image/png',
-                    'path'      => $file_path,
-                    'date'      => $this->current_date->getTimestamp(),
-                    'label'     => 'The label',
-                    'changelog' => 'The changelog',
-                ]
-            )->once()
-            ->andReturn(Mockery::mock(Docman_Version::class));
+        $this->version_factory->expects(self::once())->method('create')->with([
+            'item_id'   => 13,
+            'number'    => 1,
+            'user_id'   => 101,
+            'filename'  => 'Pan-Pan-Artwork1.png',
+            'filesize'  => filesize($file_path),
+            'filetype'  => 'image/png',
+            'path'      => $file_path,
+            'date'      => $this->current_date->getTimestamp(),
+            'label'     => 'The label',
+            'changelog' => 'The changelog',
+        ])->willReturn(new Docman_Version());
 
         $node = new SimpleXMLElement(
             <<<EOS
@@ -398,6 +290,6 @@ class VersionImporterTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $this->importer->import($node, $this->item, 1);
-        $this->assertFileExists($file_path);
+        self::assertFileExists($file_path);
     }
 }

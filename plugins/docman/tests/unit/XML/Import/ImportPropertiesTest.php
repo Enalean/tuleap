@@ -22,90 +22,89 @@ declare(strict_types=1);
 
 namespace Tuleap\Docman\XML\Import;
 
-use Mockery;
-use PFUser;
+use DateTimeImmutable;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
 
-class ImportPropertiesTest extends \Tuleap\Test\PHPUnit\TestCase
+final class ImportPropertiesTest extends TestCase
 {
-    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
     public function testLink(): void
     {
-        $create_date = (new \DateTimeImmutable())->setTimestamp(1234567890);
-        $update_date = (new \DateTimeImmutable())->setTimestamp(1324567890);
-        $owner       = Mockery::mock(PFUser::class);
+        $create_date = (new DateTimeImmutable())->setTimestamp(1234567890);
+        $update_date = (new DateTimeImmutable())->setTimestamp(1324567890);
+        $owner       = UserTestBuilder::buildWithDefaults();
 
         $properties = ImportProperties::buildLink('title', 'description', 'link url', $create_date, $update_date, $owner);
-        $this->assertEquals('title', $properties->getTitle());
-        $this->assertEquals('description', $properties->getDescription());
-        $this->assertEquals($create_date, $properties->getCreateDate());
-        $this->assertEquals($update_date, $properties->getUpdateDate());
-        $this->assertEquals($owner, $properties->getOwner());
-        $this->assertEquals('link url', $properties->getLinkUrl());
-        $this->assertEquals(PLUGIN_DOCMAN_ITEM_TYPE_LINK, $properties->getItemTypeId());
+        self::assertEquals('title', $properties->getTitle());
+        self::assertEquals('description', $properties->getDescription());
+        self::assertEquals($create_date, $properties->getCreateDate());
+        self::assertEquals($update_date, $properties->getUpdateDate());
+        self::assertEquals($owner, $properties->getOwner());
+        self::assertEquals('link url', $properties->getLinkUrl());
+        self::assertEquals(PLUGIN_DOCMAN_ITEM_TYPE_LINK, $properties->getItemTypeId());
     }
 
     public function testEmpty(): void
     {
-        $create_date = (new \DateTimeImmutable())->setTimestamp(1234567890);
-        $update_date = (new \DateTimeImmutable())->setTimestamp(1324567890);
-        $owner       = Mockery::mock(PFUser::class);
+        $create_date = (new DateTimeImmutable())->setTimestamp(1234567890);
+        $update_date = (new DateTimeImmutable())->setTimestamp(1324567890);
+        $owner       = UserTestBuilder::buildWithDefaults();
 
         $properties = ImportProperties::buildEmpty('title', 'description', $create_date, $update_date, $owner);
-        $this->assertEquals('title', $properties->getTitle());
-        $this->assertEquals('description', $properties->getDescription());
-        $this->assertEquals($create_date, $properties->getCreateDate());
-        $this->assertEquals($update_date, $properties->getUpdateDate());
-        $this->assertEquals($owner, $properties->getOwner());
-        $this->assertEquals(null, $properties->getLinkUrl());
-        $this->assertEquals(PLUGIN_DOCMAN_ITEM_TYPE_EMPTY, $properties->getItemTypeId());
+        self::assertEquals('title', $properties->getTitle());
+        self::assertEquals('description', $properties->getDescription());
+        self::assertEquals($create_date, $properties->getCreateDate());
+        self::assertEquals($update_date, $properties->getUpdateDate());
+        self::assertEquals($owner, $properties->getOwner());
+        self::assertEquals(null, $properties->getLinkUrl());
+        self::assertEquals(PLUGIN_DOCMAN_ITEM_TYPE_EMPTY, $properties->getItemTypeId());
     }
 
     public function testFolder(): void
     {
-        $create_date = (new \DateTimeImmutable())->setTimestamp(1234567890);
-        $update_date = (new \DateTimeImmutable())->setTimestamp(1324567890);
-        $owner       = Mockery::mock(PFUser::class);
+        $create_date = (new DateTimeImmutable())->setTimestamp(1234567890);
+        $update_date = (new DateTimeImmutable())->setTimestamp(1324567890);
+        $owner       = UserTestBuilder::buildWithDefaults();
 
         $properties = ImportProperties::buildFolder('title', 'description', $create_date, $update_date, $owner);
-        $this->assertEquals('title', $properties->getTitle());
-        $this->assertEquals('description', $properties->getDescription());
-        $this->assertEquals($create_date, $properties->getCreateDate());
-        $this->assertEquals($update_date, $properties->getUpdateDate());
-        $this->assertEquals($owner, $properties->getOwner());
-        $this->assertEquals(null, $properties->getLinkUrl());
-        $this->assertEquals(PLUGIN_DOCMAN_ITEM_TYPE_FOLDER, $properties->getItemTypeId());
+        self::assertEquals('title', $properties->getTitle());
+        self::assertEquals('description', $properties->getDescription());
+        self::assertEquals($create_date, $properties->getCreateDate());
+        self::assertEquals($update_date, $properties->getUpdateDate());
+        self::assertEquals($owner, $properties->getOwner());
+        self::assertEquals(null, $properties->getLinkUrl());
+        self::assertEquals(PLUGIN_DOCMAN_ITEM_TYPE_FOLDER, $properties->getItemTypeId());
     }
 
     public function testFile(): void
     {
-        $create_date = (new \DateTimeImmutable())->setTimestamp(1234567890);
-        $update_date = (new \DateTimeImmutable())->setTimestamp(1324567890);
-        $owner       = Mockery::mock(PFUser::class);
+        $create_date = (new DateTimeImmutable())->setTimestamp(1234567890);
+        $update_date = (new DateTimeImmutable())->setTimestamp(1324567890);
+        $owner       = UserTestBuilder::buildWithDefaults();
 
         $properties = ImportProperties::buildFile('title', 'description', $create_date, $update_date, $owner);
-        $this->assertEquals('title', $properties->getTitle());
-        $this->assertEquals('description', $properties->getDescription());
-        $this->assertEquals($create_date, $properties->getCreateDate());
-        $this->assertEquals($update_date, $properties->getUpdateDate());
-        $this->assertEquals($owner, $properties->getOwner());
-        $this->assertEquals(null, $properties->getLinkUrl());
-        $this->assertEquals(PLUGIN_DOCMAN_ITEM_TYPE_FILE, $properties->getItemTypeId());
+        self::assertEquals('title', $properties->getTitle());
+        self::assertEquals('description', $properties->getDescription());
+        self::assertEquals($create_date, $properties->getCreateDate());
+        self::assertEquals($update_date, $properties->getUpdateDate());
+        self::assertEquals($owner, $properties->getOwner());
+        self::assertEquals(null, $properties->getLinkUrl());
+        self::assertEquals(PLUGIN_DOCMAN_ITEM_TYPE_FILE, $properties->getItemTypeId());
     }
 
     public function testEmbbeded(): void
     {
-        $create_date = (new \DateTimeImmutable())->setTimestamp(1234567890);
-        $update_date = (new \DateTimeImmutable())->setTimestamp(1324567890);
-        $owner       = Mockery::mock(PFUser::class);
+        $create_date = (new DateTimeImmutable())->setTimestamp(1234567890);
+        $update_date = (new DateTimeImmutable())->setTimestamp(1324567890);
+        $owner       = UserTestBuilder::buildWithDefaults();
 
         $properties = ImportProperties::buildEmbedded('title', 'description', $create_date, $update_date, $owner);
-        $this->assertEquals('title', $properties->getTitle());
-        $this->assertEquals('description', $properties->getDescription());
-        $this->assertEquals($create_date, $properties->getCreateDate());
-        $this->assertEquals($update_date, $properties->getUpdateDate());
-        $this->assertEquals($owner, $properties->getOwner());
-        $this->assertEquals(null, $properties->getLinkUrl());
-        $this->assertEquals(PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE, $properties->getItemTypeId());
+        self::assertEquals('title', $properties->getTitle());
+        self::assertEquals('description', $properties->getDescription());
+        self::assertEquals($create_date, $properties->getCreateDate());
+        self::assertEquals($update_date, $properties->getUpdateDate());
+        self::assertEquals($owner, $properties->getOwner());
+        self::assertEquals(null, $properties->getLinkUrl());
+        self::assertEquals(PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE, $properties->getItemTypeId());
     }
 }

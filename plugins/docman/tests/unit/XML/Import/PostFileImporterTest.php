@@ -23,15 +23,12 @@ declare(strict_types=1);
 namespace Tuleap\Docman\XML\Import;
 
 use Docman_Item;
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
 use SimpleXMLElement;
+use Tuleap\Test\PHPUnit\TestCase;
 
-class PostFileImporterTest extends \Tuleap\Test\PHPUnit\TestCase
+final class PostFileImporterTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     public function testPostImport(): void
     {
         $node = new SimpleXMLElement(
@@ -46,40 +43,17 @@ class PostFileImporterTest extends \Tuleap\Test\PHPUnit\TestCase
             EOS
         );
 
-        $node_importer = Mockery::mock(NodeImporter::class);
-        $item          = Mockery::mock(Docman_Item::class);
+        $node_importer = $this->createMock(NodeImporter::class);
+        $item          = new Docman_Item();
 
-        $version_importer = Mockery::mock(VersionImporter::class);
-        $logger           = Mockery::mock(LoggerInterface::class);
+        $version_importer = $this->createMock(VersionImporter::class);
+        $version_importer->expects(self::exactly(2))->method('import')
+            ->withConsecutive(
+                [self::callback(static fn(SimpleXMLElement $node) => (string) $node->filename === 'image.png'), $item, 1],
+                [self::callback(static fn(SimpleXMLElement $node) => (string) $node->filename === 'file.txt'), $item, 2],
+            );
 
-        $logger->shouldReceive('debug')->with('└ Importing version #1')->once();
-        $version_importer
-            ->shouldReceive('import')
-            ->with(
-                Mockery::on(
-                    static function (SimpleXMLElement $node): bool {
-                        return (string) $node->filename === 'image.png';
-                    }
-                ),
-                $item,
-                1
-            )->once()
-            ->ordered();
-        $logger->shouldReceive('debug')->with('└ Importing version #2')->once();
-        $version_importer
-            ->shouldReceive('import')
-            ->with(
-                Mockery::on(
-                    static function (SimpleXMLElement $node): bool {
-                        return (string) $node->filename === 'file.txt';
-                    }
-                ),
-                $item,
-                2
-            )->once()
-            ->ordered();
-
-        $importer = new PostFileImporter($version_importer, $logger);
+        $importer = new PostFileImporter($version_importer, new NullLogger());
         $importer->postImport($node_importer, $node, $item);
     }
 }
