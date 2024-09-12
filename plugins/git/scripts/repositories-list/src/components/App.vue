@@ -66,6 +66,7 @@ import RegenerateGitlabWebhook from "./GitlabModal/RegenerateGitlabWebhookModal/
 import ArtifactClosureModal from "./GitlabModal/ArtifactClosureModal/ArtifactClosureModal.vue";
 import CreateBranchPrefixModal from "./GitlabModal/CreateBranchPrefix/CreateBranchPrefixModal.vue";
 import { useActions, useGetters } from "vuex-composition-helpers";
+import type { JenkinsServer } from "../type";
 
 const { isFolderDisplayMode } = useGetters(["isFolderDisplayMode"]);
 const { changeRepositories } = useActions(["changeRepositories"]);
@@ -81,7 +82,7 @@ function has_jenkins_server(): boolean {
         }) !== undefined
     );
 }
-function jenkins_servers(): Array<unknown> {
+function jenkins_servers(): Array<JenkinsServer> {
     const external_plugin = getExternalPlugins().find((plugin) => {
         return plugin.plugin_name === "hudson_git";
     });

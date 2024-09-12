@@ -31,7 +31,9 @@
         >
             <div class="tlp-popover-arrow"></div>
             <div class="tlp-popover-header">
-                <h1 class="tlp-popover-title">{{ $gettext("Jenkins servers") }}</h1>
+                <h1 class="tlp-popover-title">
+                    {{ $gettext("Jenkins servers") }}
+                </h1>
             </div>
             <div class="tlp-popover-body">
                 <p>
@@ -53,44 +55,41 @@
     </div>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
 import { createPopover } from "@tuleap/tlp-popovers";
-import { Component, Prop } from "vue-property-decorator";
-import Vue from "vue";
+import { computed, onMounted, ref } from "vue";
+import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
+import type { JenkinsServer } from "../../type";
 
-interface ServerJenkins {
-    id: number;
-    url: string;
-}
-@Component
-export default class JenkinsServer extends Vue {
-    @Prop({ required: true })
-    readonly servers!: ServerJenkins[];
+const { interpolate, $ngettext } = useGettext();
 
-    mounted(): void {
-        const badge = this.$refs.jenkins_server_badge;
-        if (!(badge instanceof HTMLElement)) {
-            throw new Error("Badge element is not found in DOM");
-        }
-        const popover = this.$refs.jenkins_server_popover;
-        if (!(popover instanceof HTMLElement)) {
-            throw new Error("Popover element is not found in DOM");
-        }
-        createPopover(badge, popover, {
-            placement: "right",
-            trigger: "click",
-        });
+const props = defineProps<{
+    servers: ReadonlyArray<JenkinsServer>;
+}>();
+
+const jenkins_server_badge = ref();
+const jenkins_server_popover = ref();
+onMounted(() => {
+    if (!(jenkins_server_badge.value instanceof HTMLElement)) {
+        throw new Error("Badge element is not found in DOM");
     }
-
-    get jenkins_servers_setup() {
-        return this.$gettextInterpolate(
-            this.$ngettext(
-                "%{ countJenkinsServers } Jenkins server setup",
-                "%{ countJenkinsServers } Jenkins servers setup",
-                this.servers.length,
-            ),
-            { countJenkinsServers: this.servers.length },
-        );
+    if (!(jenkins_server_popover.value instanceof HTMLElement)) {
+        throw new Error("Popover element is not found in DOM");
     }
-}
+    createPopover(jenkins_server_badge.value, jenkins_server_popover.value, {
+        placement: "right",
+        trigger: "click",
+    });
+});
+
+const jenkins_servers_setup = computed(() => {
+    return interpolate(
+        $ngettext(
+            "%{ countJenkinsServers } Jenkins server setup",
+            "%{ countJenkinsServers } Jenkins servers setup",
+            props.servers.length,
+        ),
+        { countJenkinsServers: props.servers.length },
+    );
+});
 </script>
