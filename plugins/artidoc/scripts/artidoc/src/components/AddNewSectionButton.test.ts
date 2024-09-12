@@ -80,7 +80,7 @@ describe("AddNewSectionButton", () => {
                 add_existing_section_bus,
             );
 
-            await wrapper.find("button").trigger("click");
+            await wrapper.find("[data-test=add-new-section]").trigger("click");
 
             expect(has_modal_been_opened).toBe(true);
             expect(insert_section_callback).not.toHaveBeenCalled();
@@ -107,7 +107,7 @@ describe("AddNewSectionButton", () => {
                 add_existing_section_bus,
             );
 
-            await wrapper.find("button").trigger("click");
+            await wrapper.find("[data-test=add-new-section]").trigger("click");
 
             expect(has_modal_been_opened).toBe(true);
             expect(insert_section_callback).toHaveBeenCalled();
@@ -143,7 +143,7 @@ describe("AddNewSectionButton", () => {
                 add_existing_section_bus,
             );
 
-            await wrapper.find("button").trigger("click");
+            await wrapper.find("[data-test=add-new-section]").trigger("click");
 
             expect(has_modal_been_opened).toBe(true);
             expect(insert_section_callback).not.toHaveBeenCalled();
@@ -179,7 +179,7 @@ describe("AddNewSectionButton", () => {
                 add_existing_section_bus,
             );
 
-            await wrapper.find("button").trigger("click");
+            await wrapper.find("[data-test=add-new-section]").trigger("click");
 
             expect(has_modal_been_opened).toBe(true);
             expect(insert_section_callback).toHaveBeenCalled();
@@ -215,7 +215,7 @@ describe("AddNewSectionButton", () => {
                 add_existing_section_bus,
             );
 
-            await wrapper.find("button").trigger("click");
+            await wrapper.find("[data-test=add-new-section]").trigger("click");
 
             expect(has_modal_been_opened).toBe(true);
             expect(insert_section_callback).not.toHaveBeenCalled();
@@ -251,7 +251,7 @@ describe("AddNewSectionButton", () => {
                 add_existing_section_bus,
             );
 
-            await wrapper.find("button").trigger("click");
+            await wrapper.find("[data-test=add-new-section]").trigger("click");
 
             expect(has_modal_been_opened).toBe(true);
             expect(insert_section_callback).toHaveBeenCalled();

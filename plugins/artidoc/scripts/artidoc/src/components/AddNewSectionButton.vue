@@ -20,49 +20,37 @@
 
 <template>
     <div class="tlp-dropdown artidoc-add-new-section-container">
-        <template v-if="is_tracker_with_submittable_section">
-            <button
-                type="button"
-                class="tlp-button-primary artidoc-add-new-section-solo-button"
-                v-bind:title="add_new_section_label"
-                ref="trigger_element"
-                data-test="artidoc-add-new-section-trigger"
-            >
-                <i class="fa-solid fa-plus" role="img"></i>
-            </button>
-            <div
-                ref="dropdown_element"
-                role="menu"
-                class="tlp-dropdown-menu artidoc-add-new-section-submenu"
-            >
-                <button
-                    type="button"
-                    class="tlp-dropdown-menu-item"
-                    v-on:click="addNewSection"
-                    data-test="add-new-section"
-                >
-                    {{ add_new_section_label }}
-                </button>
-                <button
-                    type="button"
-                    class="tlp-dropdown-menu-item"
-                    v-on:click="addExistingSection"
-                    data-test="add-existing-section"
-                >
-                    {{ add_existing_section_label }}
-                </button>
-            </div>
-        </template>
         <button
-            v-else
             type="button"
             class="tlp-button-primary artidoc-add-new-section-solo-button"
             v-bind:title="add_new_section_label"
-            v-on:click="addNewSection"
-            data-test="add-new-section"
+            ref="trigger_element"
+            data-test="artidoc-add-new-section-trigger"
         >
             <i class="fa-solid fa-plus" role="img"></i>
         </button>
+        <div
+            ref="dropdown_element"
+            role="menu"
+            class="tlp-dropdown-menu artidoc-add-new-section-submenu"
+        >
+            <button
+                type="button"
+                class="tlp-dropdown-menu-item"
+                v-on:click="addNewSection"
+                data-test="add-new-section"
+            >
+                {{ add_new_section_label }}
+            </button>
+            <button
+                type="button"
+                class="tlp-dropdown-menu-item"
+                v-on:click="addExistingSection"
+                data-test="add-existing-section"
+            >
+                {{ add_existing_section_label }}
+            </button>
+        </div>
     </div>
 </template>
 
@@ -75,7 +63,7 @@ import { isTrackerWithSubmittableSection, CONFIGURATION_STORE } from "@/stores/c
 import type { PositionForSection, SectionsStore } from "@/stores/useSectionsStore";
 import type { ArtidocSection, PendingArtifactSection } from "@/helpers/artidoc-section.type";
 import PendingArtifactSectionFactory from "@/helpers/pending-artifact-section.factory";
-import { computed, watch, ref, onMounted } from "vue";
+import { computed, ref, onMounted, onUnmounted } from "vue";
 import type { Dropdown } from "@tuleap/tlp-dropdown";
 import { createDropdown } from "@tuleap/tlp-dropdown";
 
@@ -104,20 +92,7 @@ const is_tracker_with_submittable_section = computed(
         isTrackerWithSubmittableSection(configuration_store.selected_tracker.value),
 );
 
-watch(
-    () => is_tracker_with_submittable_section.value,
-    (): void => {
-        if (is_tracker_with_submittable_section.value) {
-            initDropdown();
-        } else {
-            dropdown?.destroy();
-        }
-    },
-);
-
-onMounted(initDropdown);
-
-function initDropdown(): void {
+onMounted(() => {
     if (trigger_element.value && dropdown_element.value) {
         dropdown = createDropdown(trigger_element.value, {
             trigger: "click",
@@ -125,7 +100,13 @@ function initDropdown(): void {
             keyboard: true,
         });
     }
-}
+});
+
+onUnmounted(() => {
+    if (dropdown) {
+        dropdown.destroy();
+    }
+});
 
 function addExistingSection(): void {
     add_existing_section_bus.openModal(props.position, (section: ArtidocSection): void => {
