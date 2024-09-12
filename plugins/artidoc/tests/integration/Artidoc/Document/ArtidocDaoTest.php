@@ -120,6 +120,22 @@ final class ArtidocDaoTest extends TestIntegrationTestCase
         self::assertSame(10001, $dao->getTracker(103));
     }
 
+    public function testCloneItemForEmptyDocument(): void
+    {
+        $identifier_factory = new SectionIdentifierFactory(new \Tuleap\DB\DatabaseUUIDV7Factory());
+        $dao                = new ArtidocDao($identifier_factory);
+        $dao->save(101, []);
+        $dao->saveTracker(101, 10001);
+
+
+        $dao->cloneItem(101, 103);
+
+        $this->assertSectionsMatchArtifactIdsForDocument($dao, 101, []);
+        $this->assertSectionsMatchArtifactIdsForDocument($dao, 103, []);
+
+        self::assertSame(10001, $dao->getTracker(103));
+    }
+
     public function testSave(): void
     {
         $identifier_factory = new SectionIdentifierFactory(new \Tuleap\DB\DatabaseUUIDV7Factory());

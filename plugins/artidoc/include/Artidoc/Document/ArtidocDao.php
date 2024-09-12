@@ -121,20 +121,22 @@ final class ArtidocDao extends DataAccessObject implements SearchArtidocDocument
                 $source_id
             );
 
-            $db->insertMany(
-                'plugin_artidoc_document',
-                array_map(
-                    function (array $row) use ($target_id) {
-                        return [
-                            'id'          => $this->identifier_factory->buildIdentifier()->getBytes(),
-                            'item_id'     => $target_id,
-                            'artifact_id' => $row['artifact_id'],
-                            'rank'        => $row['rank'],
-                        ];
-                    },
-                    $rows,
-                )
-            );
+            if (count($rows) !== 0) {
+                $db->insertMany(
+                    'plugin_artidoc_document',
+                    array_map(
+                        function (array $row) use ($target_id) {
+                            return [
+                                'id' => $this->identifier_factory->buildIdentifier()->getBytes(),
+                                'item_id' => $target_id,
+                                'artifact_id' => $row['artifact_id'],
+                                'rank' => $row['rank'],
+                            ];
+                        },
+                        $rows,
+                    )
+                );
+            }
 
             $db->run('DELETE FROM plugin_artidoc_document_tracker WHERE item_id = ?', $target_id);
             $db->run(
