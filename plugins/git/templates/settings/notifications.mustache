@@ -29,7 +29,7 @@
                         <input type="checkbox" name="remove_ugroup[]" value="{{ ugroup_id }}" />
                     </td>
                     <td>
-                        <i class="fa fa-users git-notification-mail-list-group-icon"></i>
+                        <i data-test="group-icon" class="fa fa-users git-notification-mail-list-group-icon"></i>
                         {{ label }}
                     </td>
                 </tr>
@@ -82,5 +82,5 @@
         </tbody>
     </table>
 
-    <input type="submit" class="btn btn-primary git-notification-mail-list-submit" value="{{ btn_submit }}" />
+    <input type="submit" data-test="submit-git-notifications" class="btn btn-primary git-notification-mail-list-submit" value="{{ btn_submit }}" />
 </form>

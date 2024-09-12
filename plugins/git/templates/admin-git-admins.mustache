@@ -32,13 +32,13 @@
             <input type="hidden" value="{{ project_id }}" name="group_id"/>
             <input type="hidden" name="git_admins[]" value="4"/>
 
-            <select id="{{ git_admins_selectbox_id }}" size="8" multiple name="{{ git_admins_selectbox_name }}">
+            <select data-test="git-admins-select" id="{{ git_admins_selectbox_id }}" size="8" multiple name="{{ git_admins_selectbox_name }}">
                 {{# git_admins_options }}
                     <option value="{{ value }}" {{# selected }} selected="selected" {{/ selected }}> {{ label }} </option>
                 {{/ git_admins_options }}
             </select>
             <p>
-                <input class="btn btn-primary" type="submit" value="{{ git_admins_submit_button }}" name="submit"/>
+                <input class="btn btn-primary" data-test="update-git-administrators" type="submit" value="{{ git_admins_submit_button }}" name="submit"/>
             </p>
         </form>
     </div>
