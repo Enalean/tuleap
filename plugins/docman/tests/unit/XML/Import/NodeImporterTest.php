@@ -22,68 +22,41 @@ declare(strict_types=1);
 
 namespace Tuleap\Docman\XML\Import;
 
+use DateTimeImmutable;
 use Docman_Item;
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
+use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 use SimpleXMLElement;
 use Tuleap\Docman\CannotInstantiateItemWeHaveJustCreatedInDBException;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\xml\InvalidDateException;
 use User\XML\Import\UserNotFoundException;
 
-class NodeImporterTest extends \Tuleap\Test\PHPUnit\TestCase
+final class NodeImporterTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|LoggerInterface
-     */
-    private $logger;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ItemImporter
-     */
-    private $item_importer;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|PostFileImporter
-     */
-    private $file_importer;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|PostFolderImporter
-     */
-    private $folder_importer;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|PostDoNothingImporter
-     */
-    private $do_nothing_importer;
-    /**
-     * @var NodeImporter
-     */
-    private $importer;
-    /**
-     * @var Docman_Item|Mockery\LegacyMockInterface|Mockery\MockInterface
-     */
-    private $parent_item;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|PFUser
-     */
-    private $user;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ImportPropertiesExtractor
-     */
-    private $properties_extractor;
+    private LoggerInterface&MockObject $logger;
+    private ItemImporter&MockObject $item_importer;
+    private PostFileImporter&MockObject $file_importer;
+    private PostFolderImporter&MockObject $folder_importer;
+    private PostDoNothingImporter $do_nothing_importer;
+    private NodeImporter $importer;
+    private Docman_Item $parent_item;
+    private PFUser $user;
+    private ImportPropertiesExtractor&MockObject $properties_extractor;
 
     protected function setUp(): void
     {
-        $this->logger               = Mockery::mock(LoggerInterface::class);
-        $this->item_importer        = Mockery::mock(ItemImporter::class);
-        $this->file_importer        = Mockery::mock(PostFileImporter::class);
-        $this->folder_importer      = Mockery::mock(PostFolderImporter::class);
-        $this->do_nothing_importer  = Mockery::mock(PostDoNothingImporter::class);
-        $this->properties_extractor = Mockery::mock(ImportPropertiesExtractor::class);
+        $this->logger               = $this->createMock(LoggerInterface::class);
+        $this->item_importer        = $this->createMock(ItemImporter::class);
+        $this->file_importer        = $this->createMock(PostFileImporter::class);
+        $this->folder_importer      = $this->createMock(PostFolderImporter::class);
+        $this->properties_extractor = $this->createMock(ImportPropertiesExtractor::class);
+        $this->do_nothing_importer  = new PostDoNothingImporter();
 
-        $this->parent_item = Mockery::mock(Docman_Item::class);
-        $this->user        = Mockery::mock(PFUser::class);
+        $this->parent_item = new Docman_Item();
+        $this->user        = UserTestBuilder::buildWithDefaults();
 
         $this->importer = new NodeImporter(
             $this->item_importer,
@@ -111,29 +84,17 @@ class NodeImporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $properties = ImportProperties::buildFile(
             'My document',
             '',
-            new \DateTimeImmutable(),
-            new \DateTimeImmutable(),
+            new DateTimeImmutable(),
+            new DateTimeImmutable(),
             $this->user
         );
-        $this->properties_extractor
-            ->shouldReceive('getImportProperties')
-            ->with($node)
-            ->once()
-            ->andReturn($properties);
+        $this->properties_extractor->expects(self::once())->method('getImportProperties')->with($node)->willReturn($properties);
 
-        $this->logger
-            ->shouldReceive('debug')
-            ->with('Importing file: My document')
-            ->once();
-        $this->item_importer
-            ->shouldReceive('import')
+        $this->logger->expects(self::once())->method('debug')->with('Importing file: My document');
+        $this->item_importer->expects(self::once())->method('import')
             ->with($node, $this->importer, $this->file_importer, $this->parent_item, $properties)
-            ->once()
-            ->andThrow(CannotInstantiateItemWeHaveJustCreatedInDBException::class);
-        $this->logger
-            ->shouldReceive('error')
-            ->with('An error occurred while creating in DB the item: ' . $node->properties->title)
-            ->once();
+            ->willThrowException(new CannotInstantiateItemWeHaveJustCreatedInDBException());
+        $this->logger->expects(self::once())->method('error')->with('An error occurred while creating in DB the item: ' . $node->properties->title);
 
         $this->importer->import($node, $this->parent_item);
     }
@@ -154,28 +115,17 @@ class NodeImporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $properties = ImportProperties::buildFile(
             'My document',
             '',
-            new \DateTimeImmutable(),
-            new \DateTimeImmutable(),
+            new DateTimeImmutable(),
+            new DateTimeImmutable(),
             $this->user
         );
-        $this->properties_extractor
-            ->shouldReceive('getImportProperties')
-            ->with($node)
-            ->once()
-            ->andReturn($properties);
+        $this->properties_extractor->expects(self::once())->method('getImportProperties')->with($node)->willReturn($properties);
 
-        $this->logger
-            ->shouldReceive('debug')
-            ->with('Importing file: My document')
-            ->once();
-        $this->item_importer
-            ->shouldReceive('import')
+        $this->logger->expects(self::once())->method('debug')->with('Importing file: My document');
+        $this->item_importer->expects(self::once())->method('import')
             ->with($node, $this->importer, $this->file_importer, $this->parent_item, $properties)
-            ->once()
-            ->andThrow(InvalidDateException::class);
-        $this->logger
-            ->shouldReceive('error')
-            ->once();
+            ->willThrowException(new InvalidDateException());
+        $this->logger->expects(self::once())->method('error');
 
         $this->importer->import($node, $this->parent_item);
     }
@@ -196,28 +146,17 @@ class NodeImporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $properties = ImportProperties::buildFile(
             'My document',
             '',
-            new \DateTimeImmutable(),
-            new \DateTimeImmutable(),
+            new DateTimeImmutable(),
+            new DateTimeImmutable(),
             $this->user
         );
-        $this->properties_extractor
-            ->shouldReceive('getImportProperties')
-            ->with($node)
-            ->once()
-            ->andReturn($properties);
+        $this->properties_extractor->expects(self::once())->method('getImportProperties')->with($node)->willReturn($properties);
 
-        $this->logger
-            ->shouldReceive('debug')
-            ->with('Importing file: My document')
-            ->once();
-        $this->item_importer
-            ->shouldReceive('import')
+        $this->logger->expects(self::once())->method('debug')->with('Importing file: My document');
+        $this->item_importer->expects(self::once())->method('import')
             ->with($node, $this->importer, $this->file_importer, $this->parent_item, $properties)
-            ->once()
-            ->andThrow(UnknownItemTypeException::class);
-        $this->logger
-            ->shouldReceive('error')
-            ->once();
+            ->willThrowException(new UnknownItemTypeException(''));
+        $this->logger->expects(self::once())->method('error');
 
         $this->importer->import($node, $this->parent_item);
     }
@@ -238,28 +177,17 @@ class NodeImporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $properties = ImportProperties::buildFile(
             'My document',
             '',
-            new \DateTimeImmutable(),
-            new \DateTimeImmutable(),
+            new DateTimeImmutable(),
+            new DateTimeImmutable(),
             $this->user
         );
-        $this->properties_extractor
-            ->shouldReceive('getImportProperties')
-            ->with($node)
-            ->once()
-            ->andReturn($properties);
+        $this->properties_extractor->expects(self::once())->method('getImportProperties')->with($node)->willReturn($properties);
 
-        $this->logger
-            ->shouldReceive('debug')
-            ->with('Importing file: My document')
-            ->once();
-        $this->item_importer
-            ->shouldReceive('import')
+        $this->logger->expects(self::once())->method('debug')->with('Importing file: My document');
+        $this->item_importer->expects(self::once())->method('import')
             ->with($node, $this->importer, $this->file_importer, $this->parent_item, $properties)
-            ->once()
-            ->andThrow(UserNotFoundException::class);
-        $this->logger
-            ->shouldReceive('error')
-            ->once();
+            ->willThrowException(new UserNotFoundException());
+        $this->logger->expects(self::once())->method('error');
 
         $this->importer->import($node, $this->parent_item);
     }
@@ -280,25 +208,15 @@ class NodeImporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $properties = ImportProperties::buildEmpty(
             'My document',
             '',
-            new \DateTimeImmutable(),
-            new \DateTimeImmutable(),
+            new DateTimeImmutable(),
+            new DateTimeImmutable(),
             $this->user
         );
-        $this->properties_extractor
-            ->shouldReceive('getImportProperties')
-            ->with($node)
-            ->once()
-            ->andReturn($properties);
+        $this->properties_extractor->expects(self::once())->method('getImportProperties')->with($node)->willReturn($properties);
 
-        $this->logger
-            ->shouldReceive('debug')
-            ->with('Importing empty: My document')
-            ->once();
-        $this->item_importer
-            ->shouldReceive('import')
-            ->with($node, $this->importer, $this->do_nothing_importer, $this->parent_item, $properties)
-            ->once();
-
+        $this->logger->expects(self::once())->method('debug')->with('Importing empty: My document');
+        $this->item_importer->expects(self::once())->method('import')
+            ->with($node, $this->importer, $this->do_nothing_importer, $this->parent_item, $properties);
 
         $this->importer->import($node, $this->parent_item);
     }
@@ -321,25 +239,15 @@ class NodeImporterTest extends \Tuleap\Test\PHPUnit\TestCase
             'My document',
             '',
             'https://example.test',
-            new \DateTimeImmutable(),
-            new \DateTimeImmutable(),
+            new DateTimeImmutable(),
+            new DateTimeImmutable(),
             $this->user
         );
-        $this->properties_extractor
-            ->shouldReceive('getImportProperties')
-            ->with($node)
-            ->once()
-            ->andReturn($properties);
+        $this->properties_extractor->expects(self::once())->method('getImportProperties')->with($node)->willReturn($properties);
 
-        $this->logger
-            ->shouldReceive('debug')
-            ->with('Importing link: My document')
-            ->once();
-        $this->item_importer
-            ->shouldReceive('import')
-            ->with($node, $this->importer, $this->do_nothing_importer, $this->parent_item, $properties)
-            ->once();
-
+        $this->logger->expects(self::once())->method('debug')->with('Importing link: My document');
+        $this->item_importer->expects(self::once())->method('import')
+            ->with($node, $this->importer, $this->do_nothing_importer, $this->parent_item, $properties);
 
         $this->importer->import($node, $this->parent_item);
     }
@@ -360,25 +268,15 @@ class NodeImporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $properties = ImportProperties::buildFolder(
             'My document',
             '',
-            new \DateTimeImmutable(),
-            new \DateTimeImmutable(),
+            new DateTimeImmutable(),
+            new DateTimeImmutable(),
             $this->user
         );
-        $this->properties_extractor
-            ->shouldReceive('getImportProperties')
-            ->with($node)
-            ->once()
-            ->andReturn($properties);
+        $this->properties_extractor->expects(self::once())->method('getImportProperties')->with($node)->willReturn($properties);
 
-        $this->logger
-            ->shouldReceive('debug')
-            ->with('Importing folder: My folder')
-            ->once();
-        $this->item_importer
-            ->shouldReceive('import')
-            ->with($node, $this->importer, $this->folder_importer, $this->parent_item, $properties)
-            ->once();
-
+        $this->logger->expects(self::once())->method('debug')->with('Importing folder: My folder');
+        $this->item_importer->expects(self::once())->method('import')
+            ->with($node, $this->importer, $this->folder_importer, $this->parent_item, $properties);
 
         $this->importer->import($node, $this->parent_item);
     }
@@ -399,25 +297,15 @@ class NodeImporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $properties = ImportProperties::buildFile(
             'My document',
             '',
-            new \DateTimeImmutable(),
-            new \DateTimeImmutable(),
+            new DateTimeImmutable(),
+            new DateTimeImmutable(),
             $this->user
         );
-        $this->properties_extractor
-            ->shouldReceive('getImportProperties')
-            ->with($node)
-            ->once()
-            ->andReturn($properties);
+        $this->properties_extractor->expects(self::once())->method('getImportProperties')->with($node)->willReturn($properties);
 
-        $this->logger
-            ->shouldReceive('debug')
-            ->with('Importing file: My document')
-            ->once();
-        $this->item_importer
-            ->shouldReceive('import')
-            ->with($node, $this->importer, $this->file_importer, $this->parent_item, $properties)
-            ->once();
-
+        $this->logger->expects(self::once())->method('debug')->with('Importing file: My document');
+        $this->item_importer->expects(self::once())->method('import')
+            ->with($node, $this->importer, $this->file_importer, $this->parent_item, $properties);
 
         $this->importer->import($node, $this->parent_item);
     }
@@ -438,25 +326,15 @@ class NodeImporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $properties = ImportProperties::buildEmbedded(
             'My document',
             '',
-            new \DateTimeImmutable(),
-            new \DateTimeImmutable(),
+            new DateTimeImmutable(),
+            new DateTimeImmutable(),
             $this->user
         );
-        $this->properties_extractor
-            ->shouldReceive('getImportProperties')
-            ->with($node)
-            ->once()
-            ->andReturn($properties);
+        $this->properties_extractor->expects(self::once())->method('getImportProperties')->with($node)->willReturn($properties);
 
-        $this->logger
-            ->shouldReceive('debug')
-            ->with('Importing embeddedfile: My document')
-            ->once();
-        $this->item_importer
-            ->shouldReceive('import')
-            ->with($node, $this->importer, $this->file_importer, $this->parent_item, $properties)
-            ->once();
-
+        $this->logger->expects(self::once())->method('debug')->with('Importing embeddedfile: My document');
+        $this->item_importer->expects(self::once())->method('import')
+            ->with($node, $this->importer, $this->file_importer, $this->parent_item, $properties);
 
         $this->importer->import($node, $this->parent_item);
     }
