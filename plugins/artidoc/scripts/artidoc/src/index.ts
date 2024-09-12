@@ -32,15 +32,12 @@ import { getDatasetItemOrThrow } from "@tuleap/dom";
 import { CONFIGURATION_STORE, initConfigurationStore } from "@/stores/configuration-store";
 import {
     OPEN_CONFIGURATION_MODAL_BUS,
-    useOpenConfigurationModalBus,
-} from "@/composables/useOpenConfigurationModalBus";
+    useOpenConfigurationModalBusStore,
+} from "@/stores/useOpenConfigurationModalBusStore";
 import { DOCUMENT_ID } from "@/document-id-injection-key";
 import { UPLOAD_MAX_SIZE } from "@/max-upload-size-injecion-keys";
 import { preventPageLeave } from "@/helpers/on-before-unload";
-import {
-    EDITORS_COLLECTION,
-    useSectionEditorsCollection,
-} from "@/composables/useSectionEditorsCollection";
+import { EDITORS_COLLECTION, useSectionEditorsStore } from "@/stores/useSectionEditorsStore";
 import { PDF_TEMPLATES_STORE, initPdfTemplatesStore } from "@/stores/pdf-templates-store";
 import { IS_USER_ANONYMOUS } from "@/is-user-anonymous";
 import { EDITOR_CHOICE, editorChoice } from "@/helpers/editor-choice";
@@ -72,8 +69,8 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     const sections_store = useSectionsStore();
     const upload_file_store = useUploadFileStore();
-    const editors_collection = useSectionEditorsCollection();
-    app.provide(EDITORS_COLLECTION, editors_collection);
+    const editors_store = useSectionEditorsStore();
+    app.provide(EDITORS_COLLECTION, editors_store);
     app.provide(SECTIONS_STORE, sections_store);
     app.provide(UPLOAD_FILE_STORE, upload_file_store);
     app.provide(CURRENT_LOCALE, current_locale);
@@ -85,7 +82,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         EDITOR_CHOICE,
         editorChoice(Boolean(getDatasetItemOrThrow(vue_mount_point, "isNextGenEditorEnabled"))),
     );
-    app.provide(OPEN_CONFIGURATION_MODAL_BUS, useOpenConfigurationModalBus());
+    app.provide(OPEN_CONFIGURATION_MODAL_BUS, useOpenConfigurationModalBusStore());
     app.provide(OPEN_ADD_EXISTING_SECTION_MODAL_BUS, useOpenAddExistingSectionModalBus());
     app.provide(DOCUMENT_ID, item_id);
     app.provide(TITLE, getDatasetItemOrThrow(vue_mount_point, "title"));
@@ -112,5 +109,5 @@ document.addEventListener("DOMContentLoaded", async () => {
     app.use(VueDOMPurifyHTML);
     app.mount(vue_mount_point);
 
-    preventPageLeave(editors_collection);
+    preventPageLeave(editors_store);
 });

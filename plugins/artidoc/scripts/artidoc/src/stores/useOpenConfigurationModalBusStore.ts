@@ -22,16 +22,15 @@ import { noop } from "@/helpers/noop";
 
 type OpenConfigurationModalHandler = (onSuccessfulSaved: () => void) => void;
 
-export interface OpenConfigurationModalBus {
+export interface OpenConfigurationModalBusStore {
     readonly registerHandler: (new_handler: OpenConfigurationModalHandler) => void;
     readonly openModal: (onSuccessfulSaved?: () => void) => void;
 }
 
-export const OPEN_CONFIGURATION_MODAL_BUS: StrictInjectionKey<OpenConfigurationModalBus> = Symbol(
-    "open_configuration_modal_bus",
-);
+export const OPEN_CONFIGURATION_MODAL_BUS: StrictInjectionKey<OpenConfigurationModalBusStore> =
+    Symbol("open_configuration_modal_bus");
 
-export function useOpenConfigurationModalBus(): OpenConfigurationModalBus {
+export function useOpenConfigurationModalBusStore(): OpenConfigurationModalBusStore {
     let handler: OpenConfigurationModalHandler = noop;
 
     return {

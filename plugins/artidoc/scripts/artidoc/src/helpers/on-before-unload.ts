@@ -17,9 +17,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { SectionEditorsCollection } from "@/composables/useSectionEditorsCollection";
+import type { SectionEditorsStore } from "@/stores/useSectionEditorsStore";
 
-export function preventPageLeave(editors_collection: SectionEditorsCollection): void {
+export function preventPageLeave(editors_collection: SectionEditorsStore): void {
     window.addEventListener("beforeunload", (event) => {
         if (editors_collection.hasAtLeastOneEditorOpened()) {
             event.preventDefault();

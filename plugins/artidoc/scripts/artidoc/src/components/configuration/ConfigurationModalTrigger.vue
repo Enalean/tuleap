@@ -33,7 +33,7 @@
 
 <script setup lang="ts">
 import { useGettext } from "vue3-gettext";
-import { OPEN_CONFIGURATION_MODAL_BUS } from "@/composables/useOpenConfigurationModalBus";
+import { OPEN_CONFIGURATION_MODAL_BUS } from "@/stores/useOpenConfigurationModalBusStore";
 import { strictInject } from "@tuleap/vue-strict-inject";
 
 const { $gettext } = useGettext();

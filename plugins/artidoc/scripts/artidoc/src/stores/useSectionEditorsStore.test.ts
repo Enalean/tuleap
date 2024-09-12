@@ -1,32 +1,32 @@
 /*
- * Copyright (c) Enalean, 2024 - Present. All Rights Reserved.
+ *  Copyright (c) Enalean, 2024 - Present. All Rights Reserved.
  *
- * This file is a part of Tuleap.
+ *  This file is a part of Tuleap.
  *
- * Tuleap is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
+ *  Tuleap is free software; you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation; either version 2 of the License, or
+ *  (at your option) any later version.
  *
- * Tuleap is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ *  Tuleap is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *  You should have received a copy of the GNU General Public License
+ *  along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
 import { beforeEach, describe, expect, it } from "vitest";
-import type { SectionEditorsCollection } from "@/composables/useSectionEditorsCollection";
-import { useSectionEditorsCollection } from "@/composables/useSectionEditorsCollection";
+import type { SectionEditorsStore } from "@/stores/useSectionEditorsStore";
+import { useSectionEditorsStore } from "@/stores/useSectionEditorsStore";
 import { SectionEditorStub } from "@/helpers/stubs/SectionEditorStub";
 import ArtifactSectionFactory from "@/helpers/artifact-section.factory";
 import type { ArtidocSection } from "@/helpers/artidoc-section.type";
 import PendingArtifactSectionFactory from "@/helpers/pending-artifact-section.factory";
 import type { SectionEditor } from "@/composables/useSectionEditor";
 
-describe("useSectionEditorsCollection", () => {
+describe("useSectionEditorsStore", () => {
     describe("has_at_least_one_editor_opened", () => {
         let section_1: ArtidocSection;
         let section_2: ArtidocSection;
@@ -36,7 +36,7 @@ describe("useSectionEditorsCollection", () => {
         let editor_for_section_2: SectionEditor;
         let editor_for_section_3: SectionEditor;
 
-        let collection: SectionEditorsCollection;
+        let collection: SectionEditorsStore;
 
         beforeEach(() => {
             section_1 = ArtifactSectionFactory.create();
@@ -47,7 +47,7 @@ describe("useSectionEditorsCollection", () => {
             editor_for_section_2 = SectionEditorStub.withEditableSection();
             editor_for_section_3 = SectionEditorStub.withEditableSection();
 
-            collection = useSectionEditorsCollection();
+            collection = useSectionEditorsStore();
 
             collection.addEditor(section_1, editor_for_section_1);
             collection.addEditor(section_2, editor_for_section_2);

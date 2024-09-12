@@ -21,16 +21,15 @@ import type { SectionEditor } from "@/composables/useSectionEditor";
 import type { ArtidocSection } from "@/helpers/artidoc-section.type";
 import type { StrictInjectionKey } from "@tuleap/vue-strict-inject";
 
-export const EDITORS_COLLECTION: StrictInjectionKey<SectionEditorsCollection> =
-    Symbol("editors-collection");
+export const EDITORS_COLLECTION: StrictInjectionKey<SectionEditorsStore> = Symbol("editors-store");
 
-export interface SectionEditorsCollection {
+export interface SectionEditorsStore {
     readonly addEditor: (section: ArtidocSection, editor: SectionEditor) => void;
     readonly removeEditor: (section: ArtidocSection) => void;
     readonly hasAtLeastOneEditorOpened: () => boolean;
 }
 
-export function useSectionEditorsCollection(): SectionEditorsCollection {
+export function useSectionEditorsStore(): SectionEditorsStore {
     const editors: Map<string, SectionEditor> = new Map<string, SectionEditor>();
 
     function addEditor(section: ArtidocSection, editor: SectionEditor): void {
