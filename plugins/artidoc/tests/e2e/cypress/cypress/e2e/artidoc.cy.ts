@@ -82,10 +82,12 @@ describe("Artidoc", () => {
                 createSection(requirements[0]);
 
                 cy.log("User should be able to add a section at the beginning");
+                cy.get("[data-test=artidoc-add-new-section-trigger]").first().click();
                 cy.get("[data-test=add-new-section]").first().click();
                 createSection(requirements[1]);
 
                 cy.log("User should be able to add a section at the end");
+                cy.get("[data-test=artidoc-add-new-section-trigger]").last().click();
                 cy.get("[data-test=add-new-section]").last().click();
                 createSection(requirements[2]);
 

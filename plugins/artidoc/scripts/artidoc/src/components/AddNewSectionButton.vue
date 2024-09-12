@@ -26,6 +26,7 @@
                 class="tlp-button-primary artidoc-add-new-section-solo-button"
                 v-bind:title="add_new_section_label"
                 ref="trigger_element"
+                data-test="artidoc-add-new-section-trigger"
             >
                 <i class="fa-solid fa-plus" role="img"></i>
             </button>
