@@ -44,10 +44,8 @@
         </div>
     </div>
 </template>
-<script lang="ts">
-import Vue from "vue";
-import { Component } from "vue-property-decorator";
-import { Getter } from "vuex-class";
+<script setup lang="ts">
+import { onMounted } from "vue";
 import GitRepositoryCreate from "./GitRepositoryCreate.vue";
 import FilterEmptyState from "./FilterEmptyState.vue";
 import GitBreadcrumbs from "./GitBreadcrumbs.vue";
@@ -67,52 +65,30 @@ import SuccessMessage from "./SuccessMessage.vue";
 import RegenerateGitlabWebhook from "./GitlabModal/RegenerateGitlabWebhookModal/RegenerateGitlabWebhook.vue";
 import ArtifactClosureModal from "./GitlabModal/ArtifactClosureModal/ArtifactClosureModal.vue";
 import CreateBranchPrefixModal from "./GitlabModal/CreateBranchPrefix/CreateBranchPrefixModal.vue";
+import { useActions, useGetters } from "vuex-composition-helpers";
 
-@Component({
-    components: {
-        ArtifactClosureModal,
-        CreateBranchPrefixModal,
-        RegenerateGitlabWebhook,
-        SuccessMessage,
-        GitlabRepositoryModal,
-        UnlinkRepositoryGitlabModal,
-        EditAccessTokenGitlabModal,
-        ErrorMessage,
-        RepositoryList,
-        ActionBar,
-        NoRepositoryEmptyState,
-        FilterEmptyState,
-        GitRepositoryCreate,
-        GitBreadcrumbs,
-        RepositoryListSpinner,
-        FolderRepositoryList,
-        JenkinsServers,
-    },
-})
-export default class App extends Vue {
-    @Getter
-    readonly isFolderDisplayMode!: boolean;
+const { isFolderDisplayMode } = useGetters(["isFolderDisplayMode"]);
+const { changeRepositories } = useActions(["changeRepositories"]);
 
-    async mounted(): Promise<void> {
-        await this.$store.dispatch("changeRepositories", PROJECT_KEY);
+onMounted(async (): Promise<void> => {
+    await changeRepositories(PROJECT_KEY);
+});
+
+function has_jenkins_server(): boolean {
+    return (
+        getExternalPlugins().find((plugin) => {
+            return plugin.plugin_name === "hudson_git" && plugin.data.length > 0;
+        }) !== undefined
+    );
+}
+function jenkins_servers(): Array<unknown> {
+    const external_plugin = getExternalPlugins().find((plugin) => {
+        return plugin.plugin_name === "hudson_git";
+    });
+    if (!external_plugin) {
+        return [];
     }
 
-    has_jenkins_server(): boolean {
-        return (
-            getExternalPlugins().find((plugin) => {
-                return plugin.plugin_name === "hudson_git" && plugin.data.length > 0;
-            }) !== undefined
-        );
-    }
-    jenkins_servers(): Array<unknown> {
-        const external_plugin = getExternalPlugins().find((plugin) => {
-            return plugin.plugin_name === "hudson_git";
-        });
-        if (!external_plugin) {
-            return [];
-        }
-
-        return external_plugin.data;
-    }
+    return external_plugin.data;
 }
 </script>
