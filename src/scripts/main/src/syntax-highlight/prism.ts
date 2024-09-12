@@ -19,6 +19,8 @@
 
 import Prism from "prismjs";
 
+import "@tuleap/prism-language-tql";
+
 import "prismjs/components/prism-markup-templating";
 import "prismjs/components/prism-javadoclike";
 import "prismjs/components/prism-markup";

@@ -50,6 +50,9 @@ dependencies:
   '@tuleap/potentially-dangerous-bidirectional-characters':
     specifier: workspace:*
     version: link:../../../lib/frontend/potentially-dangerous-bidirectional-characters
+  '@tuleap/prism-language-tql':
+    specifier: workspace:^
+    version: link:../../../lib/frontend/prism-language-tql
   '@tuleap/project-background':
     specifier: workspace:*
     version: link:../../../lib/frontend/project-background
@@ -326,7 +329,7 @@ packages:
   /jsonfile@4.0.0:
     resolution: {integrity: sha1-h3Gq4HmbZAdrdmQPygWPnBDjPss=}
     optionalDependencies:
-      graceful-fs: 4.2.6
+      graceful-fs: 4.2.11
     dev: false
 
   /jsonfile@5.0.0:

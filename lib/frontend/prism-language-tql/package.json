@@ -1,0 +1,35 @@
+{
+  "author": "Enalean Team",
+  "name": "@tuleap/prism-language-tql",
+  "homepage": "https://tuleap.net/plugins/git/tuleap/tuleap/stable?a=tree&hb=refs%2Fheads%2Fmaster&f=lib%2Ffrontend%2Fprism-language-tql",
+  "license": "MIT",
+  "version": "1.0.0",
+  "type": "module",
+  "types": "dist/index.d.ts",
+  "module": "dist/prism-language-tql.js",
+  "main": "dist/prism-language-tql.umd.cjs",
+  "repository": {
+    "type": "git",
+    "url": "https://tuleap.net/plugins/git/tuleap/tuleap/stable",
+    "directory": "lib/frontend/prism-language-tql"
+  },
+  "bugs": {
+    "url": "https://tuleap.net/plugins/tracker/?tracker=140"
+  },
+  "keywords": [
+    "tuleap"
+  ],
+  "files": [
+    "dist/",
+    "src/**/*.ts"
+  ],
+  "devDependencies": {
+    "@tuleap/build-system-configurator": "workspace:^",
+    "@tuleap/tql-syntax": "workspace:^"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "build": "vite build",
+    "watch": "vite build --watch --mode development --minify false"
+  }
+}

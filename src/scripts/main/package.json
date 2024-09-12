@@ -20,6 +20,7 @@
     "@tuleap/mention": "workspace:*",
     "@tuleap/pinned-header": "workspace:^",
     "@tuleap/potentially-dangerous-bidirectional-characters": "workspace:*",
+    "@tuleap/prism-language-tql": "workspace:^",
     "@tuleap/project-background": "workspace:*",
     "@tuleap/project-sidebar-internal": "workspace:*",
     "@tuleap/tlp": "workspace:*",
