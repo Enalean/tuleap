@@ -51,6 +51,7 @@ use Tuleap\ProgramManagement\Adapter\Events\RedirectUserAfterArtifactCreationOrU
 use Tuleap\ProgramManagement\Adapter\Events\RootPlanningEditionEventProxy;
 use Tuleap\ProgramManagement\Adapter\Events\ServiceDisabledCollectorProxy;
 use Tuleap\ProgramManagement\Adapter\Events\TeamSynchronizationEventProxy;
+use Tuleap\ProgramManagement\Adapter\Events\TrackersDuplicatedHandler;
 use Tuleap\ProgramManagement\Adapter\Program\Admin\CanPrioritizeItems\UGroupRepresentationBuilder;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\ChangesetDAO;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation\IterationCreationProcessorBuilder;
@@ -185,6 +186,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\TopBacklogActionA
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\TopBacklogActionMassChangeSourceInformation;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\TopBacklogChangeProcessor;
 use Tuleap\ProgramManagement\Domain\Program\Plan\PlanCreator;
+use Tuleap\ProgramManagement\Domain\Program\Plan\PlanInheritanceHandler;
 use Tuleap\ProgramManagement\Domain\Redirections\BuildRedirectFormActionHandler;
 use Tuleap\ProgramManagement\Domain\Redirections\RedirectToIterationsProcessor;
 use Tuleap\ProgramManagement\Domain\Redirections\RedirectToProgramManagementProcessor;
@@ -1647,6 +1649,17 @@ final class program_managementPlugin extends Plugin implements PluginWithService
             $event->getCreatedTrackersMapping(),
             $user_identifier
         );
+    }
+
+    #[\Tuleap\Plugin\ListeningToEventClass]
+    public function handleTrackersInheritance(\Tuleap\Tracker\TrackerEventTrackersDuplicated $event): void
+    {
+        $handler = new TrackersDuplicatedHandler(
+            new ProgramServiceIsEnabledCertifier(),
+            new PlanInheritanceHandler(new PlanDao()),
+            $this->getLogger()
+        );
+        $handler->handle($event);
     }
 
     #[\Tuleap\Plugin\ListeningToEventClass]

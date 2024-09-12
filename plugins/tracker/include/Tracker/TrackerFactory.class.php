@@ -553,7 +553,7 @@ class TrackerFactory implements RetrieveTracker, RetrieveTrackersByProjectIdUser
 
         [$trackers_from_template, $tracker_mapping, $field_mapping, $report_mapping] = $transaction_executor->execute(
             /**
-             * @return array{0: Tracker[], 1: array, 2: list<array{from: int, to: int, values: array, workflow: bool}>, 3: array}
+             * @return array{0: Tracker[], 1: array<int, int>, 2: list<array{from: int, to: int, values: array, workflow: bool}>, 3: array}
              */
             function () use ($from_project_id, $tracker_ids_list, $mapping_registry, $to_project_id) {
                 $tracker_mapping = [];
@@ -644,9 +644,10 @@ class TrackerFactory implements RetrieveTracker, RetrieveTrackersByProjectIdUser
     }
 
     /**
+     * @param array<int, int> $tracker_mapping
      * @param list<array{from: int, to: int, values: array, workflow: bool}> $field_mapping
      *
-     * @return array{0: array, 1: list<array{from: int, to: int, values: array, workflow: bool}>, 2: array}
+     * @return array{0: array<int, int>, 1: list<array{from: int, to: int, values: array, workflow: bool}>, 2: array}
      */
     private function duplicateTracker(
         array $tracker_mapping,

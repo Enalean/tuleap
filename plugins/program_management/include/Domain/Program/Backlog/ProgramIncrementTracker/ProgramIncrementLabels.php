@@ -27,15 +27,12 @@ use Tuleap\ProgramManagement\Domain\TrackerReference;
 /**
  * @psalm-immutable
  */
-final class ProgramIncrementLabels
+final readonly class ProgramIncrementLabels
 {
-    public ?string $label;
-    public ?string $sub_label;
-
-    private function __construct(?string $label, ?string $sub_label)
-    {
-        $this->label     = $label;
-        $this->sub_label = $sub_label;
+    private function __construct(
+        public ?string $label,
+        public ?string $sub_label,
+    ) {
     }
 
     public static function fromProgramIncrementTracker(
@@ -50,5 +47,10 @@ final class ProgramIncrementLabels
             return new self(null, null);
         }
         return new self($labels['program_increment_label'], $labels['program_increment_sub_label']);
+    }
+
+    public static function fromPlanConfiguration(?string $label, ?string $sub_label): self
+    {
+        return new self($label, $sub_label);
     }
 }

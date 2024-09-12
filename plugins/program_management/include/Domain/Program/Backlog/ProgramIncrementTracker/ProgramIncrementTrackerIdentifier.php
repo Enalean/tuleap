@@ -52,6 +52,12 @@ final class ProgramIncrementTrackerIdentifier implements TrackerIdentifier
         return new self($tracker_retriever->getProgramIncrementTrackerIdFromProgramIncrement($program_increment));
     }
 
+    public static function fromPlanConfiguration(
+        int $program_increment_tracker_id,
+    ): self {
+        return new self($program_increment_tracker_id);
+    }
+
     public function getId(): int
     {
         return $this->id;
