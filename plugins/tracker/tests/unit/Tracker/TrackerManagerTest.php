@@ -249,8 +249,8 @@ final class TrackerManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $tm->duplicate(
             new \Tuleap\Test\DB\DBTransactionExecutorPassthrough(),
-            $source_project_id,
-            $destination_project_id,
+            ProjectTestBuilder::aProject()->withId($source_project_id)->build(),
+            ProjectTestBuilder::aProject()->withId($destination_project_id)->build(),
             new MappingRegistry($u_group_mapping)
         );
     }

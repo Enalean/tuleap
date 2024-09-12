@@ -354,8 +354,8 @@ class testmanagementPlugin extends Plugin implements PluginWithService, \Tuleap\
     public function trackerEventTrackersDuplicated(TrackerEventTrackersDuplicated $event): void
     {
         $config       = $this->getConfig();
-        $from_project = ProjectManager::instance()->getProject($event->source_project_id);
-        $to_project   = ProjectManager::instance()->getProject($event->project_id);
+        $from_project = $event->source_project;
+        $to_project   = $event->new_project;
 
         $plugin_testmanagement_is_used = $to_project->usesService($this->getServiceShortname());
         if (! $plugin_testmanagement_is_used) {

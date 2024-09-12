@@ -17,6 +17,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutor;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
@@ -336,6 +337,11 @@ class TrackerFactory implements RetrieveTracker, RetrieveTrackersByProjectIdUser
         return ProjectManager::instance();
     }
 
+    protected function getEventDispatcher(): EventDispatcherInterface
+    {
+        return EventManager::instance();
+    }
+
     /**
      * Mark the tracker as deleted
      */
@@ -536,8 +542,10 @@ class TrackerFactory implements RetrieveTracker, RetrieveTrackersByProjectIdUser
      * - the shared fields
      * - etc.
      */
-    public function duplicate(DBTransactionExecutor $transaction_executor, int $from_project_id, int $to_project_id, MappingRegistry $mapping_registry): void
+    public function duplicate(DBTransactionExecutor $transaction_executor, \Project $from_project, \Project $to_project, MappingRegistry $mapping_registry): void
     {
+        $from_project_id  = (int) $from_project->getID();
+        $to_project_id    = (int) $to_project->getID();
         $tracker_ids_list = [];
         $params           = ['project_id' => $from_project_id, 'tracker_ids_list' => &$tracker_ids_list];
         EventManager::instance()->processEvent(self::TRACKER_EVENT_PROJECT_CREATION_TRACKERS_REQUIRED, $params);
@@ -598,13 +606,13 @@ class TrackerFactory implements RetrieveTracker, RetrieveTrackersByProjectIdUser
         $shared_factory = $this->getFormElementFactory();
         $shared_factory->fixOriginalFieldIdsAfterDuplication($to_project_id, $from_project_id, $field_mapping);
 
-        EventManager::instance()->processEvent(new TrackerEventTrackersDuplicated(
+        $this->getEventDispatcher()->dispatch(new TrackerEventTrackersDuplicated(
             $tracker_mapping,
             $field_mapping,
             $report_mapping,
-            $to_project_id,
+            $to_project,
             $mapping_registry->getUgroupMapping(),
-            $from_project_id,
+            $from_project,
             $mapping_registry,
         ));
     }

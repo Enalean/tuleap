@@ -25,6 +25,7 @@ namespace Tuleap\Tracker;
 
 use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\Project\MappingRegistry;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDuplicator;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
@@ -85,7 +86,12 @@ final class TrackerFactoryDuplicationTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->semantic_timeframe_duplicator->expects(self::once())->method('duplicateSemanticTimeframeForAllTrackers');
 
-        $this->tracker_factory->duplicate(new DBTransactionExecutorPassthrough(), 100, 999, $mapping_registry);
+        $this->tracker_factory->duplicate(
+            new DBTransactionExecutorPassthrough(),
+            ProjectTestBuilder::aProject()->withId(100)->build(),
+            ProjectTestBuilder::aProject()->withId(999)->build(),
+            $mapping_registry
+        );
     }
 
     public function testDuplicateDuplicatesSharedFields(): void
@@ -130,7 +136,12 @@ final class TrackerFactoryDuplicationTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->formelement_factory->expects(self::once())->method('fixOriginalFieldIdsAfterDuplication')->with($to_project_id, $from_project_id, $full_field_mapping);
         $this->semantic_timeframe_duplicator->expects(self::once())->method('duplicateSemanticTimeframeForAllTrackers');
 
-        $this->tracker_factory->duplicate(new DBTransactionExecutorPassthrough(), $from_project_id, $to_project_id, $mapping_registry);
+        $this->tracker_factory->duplicate(
+            new DBTransactionExecutorPassthrough(),
+            ProjectTestBuilder::aProject()->withId($from_project_id)->build(),
+            ProjectTestBuilder::aProject()->withId($to_project_id)->build(),
+            $mapping_registry
+        );
     }
 
     public function testDuplicateIgnoresNonDuplicatableTrackers(): void
@@ -143,7 +154,12 @@ final class TrackerFactoryDuplicationTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->tracker_factory->expects(self::never())->method('create');
 
-        $this->tracker_factory->duplicate(new DBTransactionExecutorPassthrough(), 100, 999, new MappingRegistry([]));
+        $this->tracker_factory->duplicate(
+            new DBTransactionExecutorPassthrough(),
+            ProjectTestBuilder::aProject()->withId(100)->build(),
+            ProjectTestBuilder::aProject()->withId(999)->build(),
+            new MappingRegistry([])
+        );
     }
 
     public function testDuplicateDuplicatesAllTriggerRules(): void
@@ -170,7 +186,12 @@ final class TrackerFactoryDuplicationTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->semantic_timeframe_duplicator->expects(self::once())->method('duplicateSemanticTimeframeForAllTrackers');
 
-        $this->tracker_factory->duplicate(new DBTransactionExecutorPassthrough(), 100, 999, $mapping_registry);
+        $this->tracker_factory->duplicate(
+            new DBTransactionExecutorPassthrough(),
+            ProjectTestBuilder::aProject()->withId(100)->build(),
+            ProjectTestBuilder::aProject()->withId(999)->build(),
+            $mapping_registry
+        );
     }
 
     public function testDuplicateDuplicatesAllTrackersWithSemanticTimeframe(): void
@@ -198,6 +219,11 @@ final class TrackerFactoryDuplicationTest extends \Tuleap\Test\PHPUnit\TestCase
             ->method('duplicateSemanticTimeframeForAllTrackers')
             ->with([], [1234 => 555]);
 
-        $this->tracker_factory->duplicate(new DBTransactionExecutorPassthrough(), 100, 999, $mapping_registry);
+        $this->tracker_factory->duplicate(
+            new DBTransactionExecutorPassthrough(),
+            ProjectTestBuilder::aProject()->withId(100)->build(),
+            ProjectTestBuilder::aProject()->withId(999)->build(),
+            $mapping_registry
+        );
     }
 }
