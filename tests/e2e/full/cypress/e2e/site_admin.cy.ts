@@ -142,5 +142,28 @@ describe("Site admin", function () {
                     cy.readFile(download_folder + "/Tuleap_progress_data.csv").should("exist");
                 });
         });
+
+        it("Can delete a project", function () {
+            const now = Date.now();
+            cy.projectAdministratorSession();
+            const project_name = "delete-project-" + now;
+            cy.createNewPublicProject(project_name, "scrum");
+
+            cy.siteAdministratorSession();
+            cy.visit("/");
+            cy.get("[data-test=platform-administration-link]").click();
+            cy.get("[data-test=group-name-search]").type(`${project_name}{Enter}`);
+            cy.get("[data-test=project-status]").select("Deleted");
+            cy.get("[data-test=update-project-information]").click();
+
+            cy.projectAdministratorSession();
+
+            //failOnStatusCode ignore the 401 thrown in HTTP Headers by server
+            cy.visit(`/projects/${project_name}/`, {
+                failOnStatusCode: false,
+            });
+
+            cy.get("[data-test=feedback]").contains("This project is deleted");
+        });
     });
 });

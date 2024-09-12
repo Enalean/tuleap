@@ -76,6 +76,7 @@
                                         <select class="tlp-select"
                                                 id="status"
                                                 name="form_status"
+                                                data-test="project-status"
                                                 {{# can_change_status }}disabled{{/ can_change_status }}
                                         >
                                             {{# is_status_invalid }}
@@ -131,7 +132,7 @@
                     {{/ has_custom_fields }}
 
                     <section class="tlp-pane-section tlp-pane-section-submit">
-                        <button type="submit" class="tlp-button-primary" name="update">
+                        <button type="submit" class="tlp-button-primary" name="update" data-test="update-project-information">
                             <i class="fa fa-save tlp-button-icon"></i> {{ save_label }}
                         </button>
                     </section>
