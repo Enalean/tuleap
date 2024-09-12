@@ -25,9 +25,10 @@ namespace Tuleap\ProgramManagement\Domain\Program\Plan;
 use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramUserGroupCollection;
 
 /**
+ * I hold the data for a new Plan of a Program that is going to be saved.
  * @psalm-immutable
  */
-final class Plan
+final class NewPlan
 {
     /**
      * @var NewPlannableTracker[]

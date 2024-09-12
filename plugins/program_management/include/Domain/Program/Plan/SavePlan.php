@@ -24,5 +24,5 @@ namespace Tuleap\ProgramManagement\Domain\Program\Plan;
 
 interface SavePlan
 {
-    public function save(Plan $plan): void;
+    public function save(NewPlan $plan): void;
 }

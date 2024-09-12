@@ -75,7 +75,7 @@ final class PlanCreator implements CreatePlan
             $plan_change->can_possibly_prioritize_ugroups
         );
 
-        $plan = new Plan(
+        $plan = new NewPlan(
             $program_tracker,
             $program->id,
             $plannable_tracker_collection->trackers,

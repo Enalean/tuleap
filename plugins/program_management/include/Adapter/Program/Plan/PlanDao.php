@@ -26,7 +26,7 @@ use Tuleap\DB\DataAccessObject;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\VerifyIsFeature;
 use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramForAdministrationIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Content\VerifyCanBePlannedInProgramIncrement;
-use Tuleap\ProgramManagement\Domain\Program\Plan\Plan;
+use Tuleap\ProgramManagement\Domain\Program\Plan\NewPlan;
 use Tuleap\ProgramManagement\Domain\Program\Plan\RetrievePlannableTrackersIds;
 use Tuleap\ProgramManagement\Domain\Program\Plan\SavePlan;
 use Tuleap\ProgramManagement\Domain\Program\Plan\VerifyIsPlannable;
@@ -38,7 +38,7 @@ final class PlanDao extends DataAccessObject implements SavePlan, VerifyCanBePla
     /**
      * @throws \Throwable
      */
-    public function save(Plan $plan): void
+    public function save(NewPlan $plan): void
     {
         $this->getDB()->tryFlatTransaction(function () use ($plan): void {
             $this->setUpPlan($plan);
@@ -49,7 +49,7 @@ final class PlanDao extends DataAccessObject implements SavePlan, VerifyCanBePla
         });
     }
 
-    private function setUpPlan(Plan $plan): void
+    private function setUpPlan(NewPlan $plan): void
     {
         $sql = 'DELETE FROM plugin_program_management_plan WHERE project_id = ?';
 
@@ -66,7 +66,7 @@ final class PlanDao extends DataAccessObject implements SavePlan, VerifyCanBePla
         $this->getDB()->insertMany('plugin_program_management_plan', $insert);
     }
 
-    private function setUpPlanPermissions(Plan $plan): void
+    private function setUpPlanPermissions(NewPlan $plan): void
     {
         $sql = 'DELETE FROM plugin_program_management_can_prioritize_features WHERE project_id = ?';
 
@@ -82,7 +82,7 @@ final class PlanDao extends DataAccessObject implements SavePlan, VerifyCanBePla
         $this->getDB()->insertMany('plugin_program_management_can_prioritize_features', $insert);
     }
 
-    private function setUpProgramPlan(Plan $plan): void
+    private function setUpProgramPlan(NewPlan $plan): void
     {
         $project_id = $plan->getProjectId();
 
