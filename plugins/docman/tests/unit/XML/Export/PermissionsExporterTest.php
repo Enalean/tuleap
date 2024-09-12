@@ -22,19 +22,18 @@ declare(strict_types=1);
 
 namespace Tuleap\Docman\XML\Export;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use Docman_Item;
+use SimpleXMLElement;
+use Tuleap\Test\PHPUnit\TestCase;
 
-class PermissionsExporterTest extends \Tuleap\Test\PHPUnit\TestCase
+final class PermissionsExporterTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     public function testItDoesNotExportIfNoPermissions(): void
     {
-        $dao = Mockery::mock(PermissionsExporterDao::class);
-        $dao->shouldReceive('searchPermissions')->with(42)->andReturn([]);
+        $dao = $this->createMock(PermissionsExporterDao::class);
+        $dao->method('searchPermissions')->with(42)->willReturn([]);
 
-        $xml = new \SimpleXMLElement(
+        $xml = new SimpleXMLElement(
             <<<EOS
             <?xml version="1.0" encoding="UTF-8"?>
             <item type="file">
@@ -45,29 +44,25 @@ class PermissionsExporterTest extends \Tuleap\Test\PHPUnit\TestCase
             EOS
         );
 
-        $item = Mockery::mock(\Docman_Item::class)->shouldReceive(['getId' => 42])->getMock();
+        $item = new Docman_Item(['item_id' => 42]);
 
         $exporter = new PermissionsExporter($dao, []);
         $exporter->exportPermissions($xml, $item);
 
-        $this->assertEmpty($xml->permissions);
+        self::assertEmpty($xml->permissions);
     }
 
     public function testItExportPermissions(): void
     {
-        $dao = Mockery::mock(PermissionsExporterDao::class);
-        $dao->shouldReceive('searchPermissions')
-            ->with(42)
-            ->andReturn(
-                [
-                    [
-                        'ugroup_id'       => 2,
-                        'permission_type' => 'PLUGIN_DOCMAN_READ',
-                    ],
-                ]
-            );
+        $dao = $this->createMock(PermissionsExporterDao::class);
+        $dao->method('searchPermissions')->with(42)->willReturn([
+            [
+                'ugroup_id'       => 2,
+                'permission_type' => 'PLUGIN_DOCMAN_READ',
+            ],
+        ]);
 
-        $xml = new \SimpleXMLElement(
+        $xml = new SimpleXMLElement(
             <<<EOS
             <?xml version="1.0" encoding="UTF-8"?>
             <item type="file">
@@ -78,30 +73,26 @@ class PermissionsExporterTest extends \Tuleap\Test\PHPUnit\TestCase
             EOS
         );
 
-        $item = Mockery::mock(\Docman_Item::class)->shouldReceive(['getId' => 42])->getMock();
+        $item = new Docman_Item(['item_id' => 42]);
 
         $exporter = new PermissionsExporter($dao, ['UGROUP_REGISTERED' => 2]);
         $exporter->exportPermissions($xml, $item);
 
-        $this->assertEquals('PLUGIN_DOCMAN_READ', (string) $xml->permissions->permission[0]['type']);
-        $this->assertEquals('UGROUP_REGISTERED', (string) $xml->permissions->permission[0]['ugroup']);
+        self::assertEquals('PLUGIN_DOCMAN_READ', (string) $xml->permissions->permission[0]['type']);
+        self::assertEquals('UGROUP_REGISTERED', (string) $xml->permissions->permission[0]['ugroup']);
     }
 
     public function testItIgnoresUnknownUgroup(): void
     {
-        $dao = Mockery::mock(PermissionsExporterDao::class);
-        $dao->shouldReceive('searchPermissions')
-            ->with(42)
-            ->andReturn(
-                [
-                    [
-                        'ugroup_id'       => 102,
-                        'permission_type' => 'PLUGIN_DOCMAN_READ',
-                    ],
-                ]
-            );
+        $dao = $this->createMock(PermissionsExporterDao::class);
+        $dao->method('searchPermissions')->with(42)->willReturn([
+            [
+                'ugroup_id'       => 102,
+                'permission_type' => 'PLUGIN_DOCMAN_READ',
+            ],
+        ]);
 
-        $xml = new \SimpleXMLElement(
+        $xml = new SimpleXMLElement(
             <<<EOS
             <?xml version="1.0" encoding="UTF-8"?>
             <item type="file">
@@ -112,11 +103,11 @@ class PermissionsExporterTest extends \Tuleap\Test\PHPUnit\TestCase
             EOS
         );
 
-        $item = Mockery::mock(\Docman_Item::class)->shouldReceive(['getId' => 42])->getMock();
+        $item = new Docman_Item(['item_id' => 42]);
 
         $exporter = new PermissionsExporter($dao, ['UGROUP_REGISTERED' => 2]);
         $exporter->exportPermissions($xml, $item);
 
-        $this->assertEmpty($xml->permissions->permission);
+        self::assertEmpty($xml->permissions->permission);
     }
 }

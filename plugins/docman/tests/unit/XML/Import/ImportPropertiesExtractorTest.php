@@ -22,38 +22,26 @@ declare(strict_types=1);
 
 namespace Tuleap\Docman\XML\Import;
 
-use Mockery;
+use DateTimeImmutable;
+use PFUser;
 use SimpleXMLElement;
-use User\XML\Import\IFindUserFromXMLReference;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Test\Stubs\User\XML\Import\IFindUserFromXMLReferenceStub;
 
-class ImportPropertiesExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
+final class ImportPropertiesExtractorTest extends TestCase
 {
-    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
-    /**
-     * @var \DateTimeImmutable
-     */
-    private $current_date;
-    /**
-     * @var ImportPropertiesExtractor
-     */
-    private $properties_extractor;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|IFindUserFromXMLReference
-     */
-    private $user_finder;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|\PFUser
-     */
-    private $current_user;
+    private DateTimeImmutable $current_date;
+    private ImportPropertiesExtractor $properties_extractor;
+    private PFUser $current_user;
 
     protected function setUp(): void
     {
-        $this->current_date = new \DateTimeImmutable();
-        $this->user_finder  = Mockery::mock(IFindUserFromXMLReference::class);
-        $this->current_user = Mockery::mock(\PFUser::class);
+        $this->current_date = new DateTimeImmutable();
+        $this->current_user = UserTestBuilder::buildWithDefaults();
+        $user_finder        = IFindUserFromXMLReferenceStub::buildWithUser($this->current_user);
 
-        $this->properties_extractor = new ImportPropertiesExtractor($this->current_date, $this->current_user, $this->user_finder);
+        $this->properties_extractor = new ImportPropertiesExtractor($this->current_date, $this->current_user, $user_finder);
     }
 
     public function testImportEmpty(): void
@@ -71,13 +59,13 @@ class ImportPropertiesExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $properties = $this->properties_extractor->getImportProperties($node);
 
-        $this->assertEquals(PLUGIN_DOCMAN_ITEM_TYPE_EMPTY, $properties->getItemTypeId());
-        $this->assertEquals('My document', $properties->getTitle());
-        $this->assertEquals('', $properties->getDescription());
-        $this->assertEquals($this->current_date, $properties->getCreateDate());
-        $this->assertEquals($this->current_date, $properties->getUpdateDate());
-        $this->assertEquals($this->current_user, $properties->getOwner());
-        $this->assertNull($properties->getLinkUrl());
+        self::assertEquals(PLUGIN_DOCMAN_ITEM_TYPE_EMPTY, $properties->getItemTypeId());
+        self::assertEquals('My document', $properties->getTitle());
+        self::assertEquals('', $properties->getDescription());
+        self::assertEquals($this->current_date, $properties->getCreateDate());
+        self::assertEquals($this->current_date, $properties->getUpdateDate());
+        self::assertEquals($this->current_user, $properties->getOwner());
+        self::assertNull($properties->getLinkUrl());
     }
 
     public function testImportWithDescription(): void
@@ -96,7 +84,7 @@ class ImportPropertiesExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $properties = $this->properties_extractor->getImportProperties($node);
 
-        $this->assertEquals('Lorem ipsum', $properties->getDescription());
+        self::assertEquals('Lorem ipsum', $properties->getDescription());
     }
 
     public function testImportWithUpdateDate(): void
@@ -115,8 +103,8 @@ class ImportPropertiesExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $properties = $this->properties_extractor->getImportProperties($node);
 
-        $this->assertEquals(
-            (new \DateTimeImmutable())->setTimestamp(1234567890),
+        self::assertEquals(
+            (new DateTimeImmutable())->setTimestamp(1234567890),
             $properties->getUpdateDate()
         );
     }
@@ -137,9 +125,9 @@ class ImportPropertiesExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $properties = $this->properties_extractor->getImportProperties($node);
 
-        $expected_update_date = (new \DateTimeImmutable())->setTimestamp(1234567890);
-        $this->assertEquals($expected_update_date, $properties->getUpdateDate());
-        $this->assertEquals($expected_update_date, $properties->getCreateDate());
+        $expected_update_date = (new DateTimeImmutable())->setTimestamp(1234567890);
+        self::assertEquals($expected_update_date, $properties->getUpdateDate());
+        self::assertEquals($expected_update_date, $properties->getCreateDate());
     }
 
     public function testImportWithCreateDate(): void
@@ -158,8 +146,8 @@ class ImportPropertiesExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $properties = $this->properties_extractor->getImportProperties($node);
 
-        $this->assertEquals(
-            (new \DateTimeImmutable())->setTimestamp(1234567890),
+        self::assertEquals(
+            (new DateTimeImmutable())->setTimestamp(1234567890),
             $properties->getCreateDate()
         );
     }
@@ -181,12 +169,12 @@ class ImportPropertiesExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $properties = $this->properties_extractor->getImportProperties($node);
 
-        $this->assertEquals(
-            (new \DateTimeImmutable())->setTimestamp(1234567890),
+        self::assertEquals(
+            (new DateTimeImmutable())->setTimestamp(1234567890),
             $properties->getCreateDate()
         );
-        $this->assertEquals(
-            (new \DateTimeImmutable())->setTimestamp(1324567890),
+        self::assertEquals(
+            (new DateTimeImmutable())->setTimestamp(1324567890),
             $properties->getUpdateDate()
         );
     }
@@ -205,15 +193,9 @@ class ImportPropertiesExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
             EOS
         );
 
-        $user = Mockery::mock(\PFUser::class);
-        $this->user_finder
-            ->shouldReceive('getUser')
-            ->once()
-            ->andReturn($user);
-
         $properties = $this->properties_extractor->getImportProperties($node);
 
-        $this->assertEquals($user, $properties->getOwner());
+        self::assertEquals($this->current_user, $properties->getOwner());
     }
 
     public function testImportWiki(): void
@@ -226,7 +208,7 @@ class ImportPropertiesExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
             EOS
         );
 
-        $this->expectException(UnknownItemTypeException::class);
+        self::expectException(UnknownItemTypeException::class);
 
         $this->properties_extractor->getImportProperties($node);
     }
@@ -247,8 +229,8 @@ class ImportPropertiesExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $properties = $this->properties_extractor->getImportProperties($node);
 
-        $this->assertEquals(PLUGIN_DOCMAN_ITEM_TYPE_LINK, $properties->getItemTypeId());
-        $this->assertEquals('https://example.test', $properties->getLinkUrl());
+        self::assertEquals(PLUGIN_DOCMAN_ITEM_TYPE_LINK, $properties->getItemTypeId());
+        self::assertEquals('https://example.test', $properties->getLinkUrl());
     }
 
     public function testImportFolder(): void
@@ -266,7 +248,7 @@ class ImportPropertiesExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $properties = $this->properties_extractor->getImportProperties($node);
 
-        $this->assertEquals(PLUGIN_DOCMAN_ITEM_TYPE_FOLDER, $properties->getItemTypeId());
+        self::assertEquals(PLUGIN_DOCMAN_ITEM_TYPE_FOLDER, $properties->getItemTypeId());
     }
 
     public function testImportFile(): void
@@ -284,7 +266,7 @@ class ImportPropertiesExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $properties = $this->properties_extractor->getImportProperties($node);
 
-        $this->assertEquals(PLUGIN_DOCMAN_ITEM_TYPE_FILE, $properties->getItemTypeId());
+        self::assertEquals(PLUGIN_DOCMAN_ITEM_TYPE_FILE, $properties->getItemTypeId());
     }
 
     public function testImportEmbedded(): void
@@ -302,6 +284,6 @@ class ImportPropertiesExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $properties = $this->properties_extractor->getImportProperties($node);
 
-        $this->assertEquals(PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE, $properties->getItemTypeId());
+        self::assertEquals(PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE, $properties->getItemTypeId());
     }
 }

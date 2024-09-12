@@ -23,14 +23,11 @@ declare(strict_types=1);
 namespace Tuleap\Docman\XML\Import;
 
 use Docman_Item;
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use SimpleXMLElement;
+use Tuleap\Test\PHPUnit\TestCase;
 
-class PostFolderImporterTest extends \Tuleap\Test\PHPUnit\TestCase
+final class PostFolderImporterTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     public function testPostImport(): void
     {
         $node = new SimpleXMLElement(
@@ -43,27 +40,14 @@ class PostFolderImporterTest extends \Tuleap\Test\PHPUnit\TestCase
             EOS
         );
 
-        $node_importer = Mockery::mock(NodeImporter::class);
-        $item          = Mockery::mock(Docman_Item::class);
+        $node_importer = $this->createMock(NodeImporter::class);
+        $item          = new Docman_Item();
 
-        $node_importer
-            ->shouldReceive('import')
-            ->with(
-                Mockery::on(static function (SimpleXMLElement $node): bool {
-                    return (string) $node['type'] === 'empty';
-                }),
-                $item,
-            )->once()
-            ->ordered();
-        $node_importer
-            ->shouldReceive('import')
-            ->with(
-                Mockery::on(static function (SimpleXMLElement $node): bool {
-                    return (string) $node['type'] === 'wiki';
-                }),
-                $item,
-            )->once()
-            ->ordered();
+        $node_importer->expects(self::exactly(2))->method('import')
+            ->withConsecutive(
+                [self::callback(static fn(SimpleXMLElement $node) => (string) $node['type'] === 'empty'), $item],
+                [self::callback(static fn(SimpleXMLElement $node) => (string) $node['type'] === 'wiki'), $item],
+            );
 
         $importer = new PostFolderImporter();
         $importer->postImport($node_importer, $node, $item);
