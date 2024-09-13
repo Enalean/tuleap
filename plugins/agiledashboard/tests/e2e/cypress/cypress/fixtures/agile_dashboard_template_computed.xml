@@ -1,0 +1,454 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project>
+  <agiledashboard>
+    <admin>
+      <scrum>
+        <explicit_backlog is_used="1"/>
+      </scrum>
+    </admin>
+    <plannings>
+      <planning name="Release Planning" plan_title="Release Plan" planning_tracker_id="T1827" backlog_title="Product Backlog">
+        <backlogs>
+          <backlog>T1830</backlog>
+        </backlogs>
+      </planning>
+      <planning name="Sprint Planning" plan_title="Sprint Plan" planning_tracker_id="T1828" backlog_title="Epic Backlog">
+        <backlogs>
+          <backlog>T1830</backlog>
+        </backlogs>
+      </planning>
+    </plannings>
+  </agiledashboard>
+  <trackers use-natures="true">
+    <tracker id="T1827" parent_id="0" instantiate_for_new_projects="1" notifications_level="1">
+      <name><![CDATA[Releases]]></name>
+      <item_name><![CDATA[rel]]></item_name>
+      <description><![CDATA[releases]]></description>
+      <color><![CDATA[clockwork-orange]]></color>
+      <cannedResponses/>
+      <formElements>
+        <formElement type="computed" ID="F21224" rank="7" id="21224" tracker_id="1010" parent_id="0" required="1">
+          <name><![CDATA[computed]]></name>
+          <label><![CDATA[Computed]]></label>
+        </formElement>
+        <formElement type="string" ID="F21226" rank="8" id="21226" tracker_id="1010" parent_id="0" required="1">
+          <name><![CDATA[release_number]]></name>
+          <label><![CDATA[Release Number]]></label>
+          <description><![CDATA[E.g. 1.4.12 or v0.2]]></description>
+          <properties size="30"/>
+        </formElement>
+        <formElement type="sb" ID="F21232" rank="9" id="21232" tracker_id="1010" parent_id="0" required="1">
+          <name><![CDATA[progress]]></name>
+          <label><![CDATA[Progress]]></label>
+          <bind type="static" is_rank_alpha="0">
+            <items>
+              <item ID="V5404" label="Planned" is_hidden="0"/>
+              <item ID="V5405" label="In development" is_hidden="0"/>
+              <item ID="V5406" label="Delivered to customer" is_hidden="0"/>
+              <item ID="V5407" label="End of life" is_hidden="0"/>
+            </items>
+            <default_values>
+              <value REF="V5404"/>
+            </default_values>
+          </bind>
+        </formElement>
+        <formElement type="art_link" ID="F21238" rank="10" id="21238" tracker_id="1010" parent_id="0">
+          <name><![CDATA[links]]></name>
+          <label><![CDATA[Links]]></label>
+        </formElement>
+      </formElements>
+      <semantics>
+        <semantic type="title">
+          <shortname><![CDATA[title]]></shortname>
+          <label><![CDATA[Title]]></label>
+          <description><![CDATA[Define the title of an artifact]]></description>
+          <field REF="F21226"/>
+        </semantic>
+        <semantic type="status">
+          <shortname><![CDATA[status]]></shortname>
+          <label><![CDATA[Status]]></label>
+          <description><![CDATA[Define the status of an artifact]]></description>
+          <field REF="F21232"/>
+          <open_values>
+            <open_value REF="V5404"/>
+            <open_value REF="V5405"/>
+          </open_values>
+        </semantic>
+        <semantic type="done">
+          <shortname><![CDATA[done]]></shortname>
+          <label><![CDATA[Done]]></label>
+          <description><![CDATA[Define the closed status that are considered Done]]></description>
+          <closed_values/>
+        </semantic>
+        <semantic type="tooltip"/>
+        <semantic type="plugin_cardwall_card_fields"/>
+      </semantics>
+      <reports>
+        <report id="REPORT_1837" is_default="0">
+          <name><![CDATA[Default]]></name>
+          <description><![CDATA[The system default artifact report]]></description>
+          <criterias/>
+          <renderers>
+            <renderer ID="R3674" type="table" rank="0" chunksz="15">
+              <name><![CDATA[Results]]></name>
+              <columns>
+                <field REF="F21226"/>
+                <field REF="F21232"/>
+                <field REF="F21238"/>
+              </columns>
+              <sort>
+                <field REF="F21226"/>
+              </sort>
+            </renderer>
+          </renderers>
+        </report>
+      </reports>
+      <permissions>
+        <permission scope="tracker" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_ACCESS_FULL"/>
+        <permission scope="field" REF="F21224" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F21224" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F21224" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F21226" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F21226" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F21226" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F21232" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F21232" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F21232" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F21238" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F21238" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F21238" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+      </permissions>
+    </tracker>
+    <tracker id="T1828" parent_id="T1827" instantiate_for_new_projects="1" notifications_level="1">
+      <name><![CDATA[Sprints]]></name>
+      <item_name><![CDATA[sprint]]></item_name>
+      <description><![CDATA[sprints]]></description>
+      <color><![CDATA[acid-green]]></color>
+      <cannedResponses/>
+      <formElements>
+        <formElement type="fieldset" ID="F21240" rank="68" id="21240" tracker_id="1011" parent_id="0">
+          <name><![CDATA[sprint_info]]></name>
+          <label><![CDATA[Sprint info]]></label>
+          <formElements>
+            <formElement type="column" ID="F21241" rank="0" id="21241" tracker_id="1011" parent_id="21240">
+              <name><![CDATA[general_1]]></name>
+              <label><![CDATA[general 1]]></label>
+              <formElements>
+                <formElement type="string" ID="F21242" rank="0" id="21242" tracker_id="1011" parent_id="21241" required="1">
+                  <name><![CDATA[sprint_name]]></name>
+                  <label><![CDATA[Sprint Name]]></label>
+                  <properties size="30"/>
+                </formElement>
+              </formElements>
+            </formElement>
+            <formElement type="column" ID="F21243" rank="2" id="21243" tracker_id="1011" parent_id="21240">
+              <name><![CDATA[general_2]]></name>
+              <label><![CDATA[general 2]]></label>
+              <formElements>
+                <formElement type="sb" ID="F21244" rank="0" id="21244" tracker_id="1011" parent_id="21243">
+                  <name><![CDATA[status]]></name>
+                  <label><![CDATA[Status]]></label>
+                  <bind type="static" is_rank_alpha="0">
+                    <items>
+                      <item ID="V5408" label="planned" is_hidden="0"/>
+                      <item ID="V5409" label="current" is_hidden="0"/>
+                      <item ID="V5410" label="close" is_hidden="0"/>
+                    </items>
+                    <decorators>
+                      <decorator REF="V5408" r="255" g="102" b="0"/>
+                      <decorator REF="V5409" r="0" g="204" b="0"/>
+                      <decorator REF="V5410" r="153" g="51" b="0"/>
+                    </decorators>
+                    <default_values>
+                      <value REF="V5408"/>
+                    </default_values>
+                  </bind>
+                </formElement>
+              </formElements>
+            </formElement>
+          </formElements>
+        </formElement>
+        <formElement type="fieldset" ID="F21245" rank="843" id="21245" tracker_id="1011" parent_id="0">
+          <name><![CDATA[sprint_details]]></name>
+          <label><![CDATA[Sprint details]]></label>
+          <formElements>
+            <formElement type="column" ID="F21248" rank="1" id="21248" tracker_id="1011" parent_id="21245">
+              <name><![CDATA[details2]]></name>
+              <label><![CDATA[details 2]]></label>
+              <formElements>
+                <formElement type="int" ID="F21249" rank="0" id="21249" tracker_id="1011" parent_id="21248">
+                  <name><![CDATA[capacity]]></name>
+                  <label><![CDATA[Capacity -in story points-]]></label>
+                  <properties size="5"/>
+                </formElement>
+                <formElement type="computed" ID="F21250" rank="2" id="21250" tracker_id="1011" parent_id="21248">
+                  <name><![CDATA[remaining_effort]]></name>
+                  <label><![CDATA[Total Remaining Effort]]></label>
+                  <description><![CDATA[Sum of the remaining efforts of sprint's artifacts]]></description>
+                </formElement>
+              </formElements>
+            </formElement>
+          </formElements>
+        </formElement>
+      </formElements>
+      <semantics>
+        <semantic type="title">
+          <shortname><![CDATA[title]]></shortname>
+          <label><![CDATA[Title]]></label>
+          <description><![CDATA[Define the title of an artifact]]></description>
+          <field REF="F21242"/>
+        </semantic>
+        <semantic type="status">
+          <shortname><![CDATA[status]]></shortname>
+          <label><![CDATA[Status]]></label>
+          <description><![CDATA[Define the status of an artifact]]></description>
+          <field REF="F21244"/>
+          <open_values>
+            <open_value REF="V5408"/>
+            <open_value REF="V5409"/>
+          </open_values>
+        </semantic>
+        <semantic type="done">
+          <shortname><![CDATA[done]]></shortname>
+          <label><![CDATA[Done]]></label>
+          <description><![CDATA[Define the closed status that are considered Done]]></description>
+          <closed_values/>
+        </semantic>
+        <semantic type="tooltip"/>
+        <semantic type="plugin_cardwall_card_fields">
+          <field REF="F21250"/>
+        </semantic>
+        <semantic type="initial_effort">
+          <shortname><![CDATA[initial_effort]]></shortname>
+          <label><![CDATA[Initial Effort]]></label>
+          <description><![CDATA[Define the initial effort of an artifact.]]></description>
+          <field REF="F21249"/>
+        </semantic>
+      </semantics>
+      <reports>
+        <report id="REPORT_1838" is_default="0">
+          <name><![CDATA[Default]]></name>
+          <description><![CDATA[The system default artifact report]]></description>
+          <criterias>
+            <criteria rank="0">
+              <field REF="F21242"/>
+            </criteria>
+          </criterias>
+          <renderers>
+            <renderer ID="R3675" type="table" rank="0" chunksz="15">
+              <name><![CDATA[Sprints]]></name>
+              <columns>
+                <field REF="F21244"/>
+                <field REF="F21242"/>
+                <field REF="F21249"/>
+              </columns>
+              <sort>
+                <field REF="F21242"/>
+              </sort>
+            </renderer>
+          </renderers>
+        </report>
+      </reports>
+      <permissions>
+        <permission scope="tracker" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_ACCESS_FULL"/>
+        <permission scope="tracker" ugroup="UGROUP_PROJECT_ADMIN" type="PLUGIN_TRACKER_ADMIN"/>
+        <permission scope="field" REF="F21242" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F21242" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F21242" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F21244" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F21244" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F21244" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F21249" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F21249" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F21249" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F21250" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+      </permissions>
+    </tracker>
+    <tracker id="T1830" instantiate_for_new_projects="1" notifications_level="1">
+      <name><![CDATA[User Stories]]></name>
+      <item_name><![CDATA[story]]></item_name>
+      <description><![CDATA[User Stories]]></description>
+      <color><![CDATA[lake-placid-blue]]></color>
+      <cannedResponses/>
+      <formElements>
+        <formElement type="computed" ID="F21274" rank="15" id="21274" tracker_id="1013" parent_id="0" required="1">
+          <name><![CDATA[computed]]></name>
+          <label><![CDATA[Computed]]></label>
+        </formElement>
+        <formElement type="fieldset" ID="F21282" rank="773" id="21282" tracker_id="1013" parent_id="0" required="1">
+          <name><![CDATA[fieldset_1]]></name>
+          <label><![CDATA[Summary]]></label>
+          <formElements>
+            <formElement type="column" ID="F21283" rank="0" id="21283" tracker_id="1013" parent_id="21282">
+              <name><![CDATA[summary_left_column]]></name>
+              <label><![CDATA[summary left column]]></label>
+              <formElements>
+                <formElement type="string" ID="F21285" rank="3" id="21285" tracker_id="1013" parent_id="21283" required="1">
+                  <name><![CDATA[i_want_to]]></name>
+                  <label><![CDATA[I want to]]></label>
+                  <description><![CDATA[One line description of the artifact]]></description>
+                  <properties size="50"/>
+                </formElement>
+              </formElements>
+            </formElement>
+            <formElement type="column" ID="F21287" rank="2" id="21287" tracker_id="1013" parent_id="21282">
+              <name><![CDATA[summary_right_column]]></name>
+              <label><![CDATA[summary right column]]></label>
+              <formElements>
+                <formElement type="int" ID="F21288" rank="0" id="21288" tracker_id="1013" parent_id="21287">
+                  <name><![CDATA[initial_effort]]></name>
+                  <label><![CDATA[Initial effort - in Story Points-]]></label>
+                  <properties size="5"/>
+                </formElement>
+                <formElement type="float" ID="F21289" rank="1" id="21289" tracker_id="1013" parent_id="21287">
+                  <name><![CDATA[remaining_effort]]></name>
+                  <label><![CDATA[Remaining effort -in Story Points-]]></label>
+                  <properties size="5"/>
+                </formElement>
+              </formElements>
+            </formElement>
+          </formElements>
+        </formElement>
+        <formElement type="fieldset" ID="F21292" rank="774" id="21292" tracker_id="1013" parent_id="0" required="1">
+          <name><![CDATA[fieldset_2]]></name>
+          <label><![CDATA[Progress]]></label>
+          <formElements>
+            <formElement type="column" ID="F21293" rank="0" id="21293" tracker_id="1013" parent_id="21292">
+              <name><![CDATA[column3]]></name>
+              <label><![CDATA[Column Details 1]]></label>
+              <formElements>
+                <formElement type="sb" ID="F21294" rank="0" id="21294" tracker_id="1013" parent_id="21293" required="1">
+                  <name><![CDATA[status_1]]></name>
+                  <label><![CDATA[Status]]></label>
+                  <bind type="static" is_rank_alpha="0">
+                    <items>
+                      <item ID="V5418" label="Todo" is_hidden="0"/>
+                      <item ID="V5419" label="On Going" is_hidden="0"/>
+                      <item ID="V5420" label="Review" is_hidden="0"/>
+                      <item ID="V5421" label="Done" is_hidden="0"/>
+                    </items>
+                    <decorators>
+                      <decorator REF="V5418" r="204" g="0" b="204"/>
+                      <decorator REF="V5419" r="51" g="153" b="153"/>
+                      <decorator REF="V5420" r="0" g="204" b="255"/>
+                      <decorator REF="V5421" r="0" g="51" b="255"/>
+                    </decorators>
+                    <default_values>
+                      <value REF="V5418"/>
+                    </default_values>
+                  </bind>
+                </formElement>
+              </formElements>
+            </formElement>
+          </formElements>
+        </formElement>
+      </formElements>
+      <semantics>
+        <semantic type="title">
+          <shortname><![CDATA[title]]></shortname>
+          <label><![CDATA[Title]]></label>
+          <description><![CDATA[Define the title of an artifact]]></description>
+          <field REF="F21285"/>
+        </semantic>
+        <semantic type="status">
+          <shortname><![CDATA[status]]></shortname>
+          <label><![CDATA[Status]]></label>
+          <description><![CDATA[Define the status of an artifact]]></description>
+          <field REF="F21294"/>
+          <open_values>
+            <open_value REF="V5418"/>
+            <open_value REF="V5419"/>
+            <open_value REF="V5420"/>
+          </open_values>
+        </semantic>
+        <semantic type="done">
+          <shortname><![CDATA[done]]></shortname>
+          <label><![CDATA[Done]]></label>
+          <description><![CDATA[Define the closed status that are considered Done]]></description>
+          <closed_values/>
+        </semantic>
+        <semantic type="tooltip">
+          <field REF="F21285"/>
+        </semantic>
+        <semantic type="plugin_cardwall_card_fields">
+          <field REF="F21289"/>
+          <field REF="F21294"/>
+        </semantic>
+        <semantic type="initial_effort">
+          <shortname><![CDATA[initial_effort]]></shortname>
+          <label><![CDATA[Initial Effort]]></label>
+          <description><![CDATA[Define the initial effort of an artifact.]]></description>
+          <field REF="F21288"/>
+        </semantic>
+      </semantics>
+      <reports>
+        <report id="REPORT_1841" is_default="0">
+          <name><![CDATA[Default]]></name>
+          <description><![CDATA[The system default artifact report]]></description>
+          <criterias>
+            <criteria rank="0">
+              <field REF="F21285"/>
+            </criteria>
+          </criterias>
+          <renderers>
+            <renderer ID="R3683" type="table" rank="0" chunksz="15">
+              <name><![CDATA[User Stories]]></name>
+              <columns>
+                <field REF="F21285"/>
+                <field REF="F21294"/>
+                <field REF="F21288"/>
+                <field REF="F21289"/>
+              </columns>
+            </renderer>
+            <renderer ID="R3684" type="plugin_cardwall" rank="1">
+              <name><![CDATA[Cardwall]]></name>
+            </renderer>
+          </renderers>
+        </report>
+      </reports>
+      <permissions>
+        <permission scope="tracker" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_ACCESS_FULL"/>
+        <permission scope="field" REF="F21274" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F21274" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F21274" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F21285" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F21285" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F21285" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F21288" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F21288" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F21288" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F21289" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F21289" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F21289" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F21294" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F21294" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F21294" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+      </permissions>
+    </tracker>
+  </trackers>
+  <cardwall>
+    <trackers>
+      <tracker id="T1827">
+        <columns>
+          <column label="TODO" id="C947" bg_red="248" bg_green="248" bg_blue="248"/>
+        </columns>
+        <mappings>
+          <mapping tracker_id="T1830" field_id="F39979">
+            <values>
+              <value value_id="V12989" column_id="C947"/>
+            </values>
+          </mapping>
+        </mappings>
+      </tracker>
+      <tracker id="T1828">
+        <columns>
+          <column label="Todo" id="C948" bg_red="153" bg_green="204" bg_blue="255"/>
+          <column label="On Going" id="C949" bg_red="51" bg_green="153" bg_blue="255"/>
+          <column label="Review" id="C950" bg_red="0" bg_green="51" bg_blue="102"/>
+          <column label="Done" id="C951" bg_red="248" bg_green="248" bg_blue="248"/>
+        </columns>
+      </tracker>
+      <tracker id="T1830"/>
+    </trackers>
+  </cardwall>
+</project>

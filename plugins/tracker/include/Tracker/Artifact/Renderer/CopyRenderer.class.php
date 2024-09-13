@@ -102,6 +102,7 @@ class Tracker_Artifact_CopyRenderer extends Tracker_Artifact_ReadOnlyRenderer
                         <input type="hidden" name="copy_children" id="copy_children" value="0" />
                         <a
                             href="#"
+                            data-test="copy-children-button"
                             title="' . $purifier->purify($copy_children_title) . '"
                             id="copy_children_button">
                             ' . $copy_children_label . '
