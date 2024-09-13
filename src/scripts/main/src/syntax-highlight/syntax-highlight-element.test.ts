@@ -25,6 +25,8 @@ jest.mock("./prism", () => {
     };
 });
 
+jest.useFakeTimers();
+
 describe("SyntaxHighlightElement", () => {
     const windowIntersectionObserver = window.IntersectionObserver;
 
@@ -91,5 +93,34 @@ describe("SyntaxHighlightElement", () => {
 
         expect(syntaxHighlightElement).toHaveBeenCalled();
         expect(unobserve).toHaveBeenCalled();
+    });
+
+    it("Run again the syntax highlight when the code block change", async (): Promise<void> => {
+        const observe = (): void => {
+            // mocking observe
+        };
+        const unobserve = jest.fn();
+        const mockIntersectionObserver = jest.fn();
+        mockIntersectionObserver.mockReturnValue({
+            observe,
+            unobserve,
+        });
+        window.IntersectionObserver = mockIntersectionObserver;
+
+        const mermaid_diagram = createSyntaxHighlightElement();
+
+        const observerCallback = mockIntersectionObserver.mock.calls[0][0];
+        await observerCallback([{ isIntersecting: true, target: mermaid_diagram }]);
+
+        expect(syntaxHighlightElement).toHaveBeenCalledTimes(1);
+
+        const code = mermaid_diagram.querySelector("code");
+        if (!code) {
+            throw new Error("Unable to find code");
+        }
+        code.textContent = "class Bar {}";
+
+        await jest.runOnlyPendingTimersAsync();
+        expect(syntaxHighlightElement).toHaveBeenCalledTimes(2);
     });
 });
