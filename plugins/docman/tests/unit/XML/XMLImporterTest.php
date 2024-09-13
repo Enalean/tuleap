@@ -22,27 +22,26 @@ declare(strict_types=1);
 
 namespace Tuleap\Docman\XML;
 
+use ColinODell\PsrTestLogger\TestLogger;
 use Docman_Item;
 use Docman_ItemFactory;
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use Project;
-use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
 use SimpleXMLElement;
 use Tuleap\Docman\XML\Import\NodeImporter;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\XML\ParseExceptionWithErrors;
+use XML_ParseException;
 use XML_RNGValidator;
 
-class XMLImporterTest extends \Tuleap\Test\PHPUnit\TestCase
+final class XMLImporterTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     public function testImport(): void
     {
-        $item_factory  = Mockery::mock(Docman_ItemFactory::class);
-        $project       = Mockery::mock(Project::class)->shouldReceive(['getGroupId' => 113])->getMock();
-        $logger        = Mockery::mock(LoggerInterface::class);
-        $node_importer = Mockery::mock(NodeImporter::class);
-        $rng_validator = Mockery::mock(XML_RNGValidator::class);
+        $item_factory  = $this->createMock(Docman_ItemFactory::class);
+        $project       = ProjectTestBuilder::aProject()->withId(113)->build();
+        $node_importer = $this->createMock(NodeImporter::class);
+        $rng_validator = $this->createMock(XML_RNGValidator::class);
 
         $node = new SimpleXMLElement(
             <<<EOS
@@ -56,45 +55,28 @@ class XMLImporterTest extends \Tuleap\Test\PHPUnit\TestCase
             EOS
         );
 
-        $rng_validator
-            ->shouldReceive('validate')
-            ->once();
+        $rng_validator->expects(self::once())->method('validate');
 
-        $parent_item = Mockery::mock(Docman_Item::class);
-        $item_factory->shouldReceive('getRoot')->with(113)->once()->andReturn($parent_item);
+        $parent_item = new Docman_Item();
+        $item_factory->expects(self::once())->method('getRoot')->with(113)->willReturn($parent_item);
 
-        $node_importer
-            ->shouldReceive('import')
+        $node_importer->expects(self::exactly(2))->method('import')
             ->with(
-                Mockery::on(
-                    static function (SimpleXMLElement $node): bool {
-                        return (string) $node['type'] === 'wiki';
-                    }
-                ),
+                self::callback(static fn(SimpleXMLElement $node) => (string) $node['type'] === 'wiki' || (string) $node['type'] === 'file'),
                 $parent_item
-            )->once();
-        $node_importer
-            ->shouldReceive('import')
-            ->with(
-                Mockery::on(
-                    static function (SimpleXMLElement $node): bool {
-                        return (string) $node['type'] === 'file';
-                    }
-                ),
-                $parent_item
-            )->once();
+            );
 
-        $importer = new XMLImporter($item_factory, $project, $logger, $node_importer, $rng_validator);
+        $importer = new XMLImporter($item_factory, $project, new NullLogger(), $node_importer, $rng_validator);
         $importer->import($node);
     }
 
     public function testItDoesNotImportWhenThereIsNoRoot(): void
     {
-        $item_factory  = Mockery::mock(Docman_ItemFactory::class);
-        $project       = Mockery::mock(Project::class)->shouldReceive(['getGroupId' => 113])->getMock();
-        $logger        = Mockery::mock(LoggerInterface::class);
-        $node_importer = Mockery::mock(NodeImporter::class);
-        $rng_validator = Mockery::mock(XML_RNGValidator::class);
+        $item_factory  = $this->createMock(Docman_ItemFactory::class);
+        $project       = ProjectTestBuilder::aProject()->withId(113)->build();
+        $logger        = new TestLogger();
+        $node_importer = $this->createMock(NodeImporter::class);
+        $rng_validator = $this->createMock(XML_RNGValidator::class);
 
         $node = new SimpleXMLElement(
             <<<EOS
@@ -108,25 +90,22 @@ class XMLImporterTest extends \Tuleap\Test\PHPUnit\TestCase
             EOS
         );
 
-        $rng_validator
-            ->shouldReceive('validate')
-            ->once();
+        $rng_validator->expects(self::once())->method('validate');
 
-        $item_factory->shouldReceive('getRoot')->with(113)->once()->andReturnNull();
-        $node_importer->shouldReceive('import')->never();
-        $logger->shouldReceive('error')->with('Unable to find a root element in project #113')->once();
+        $item_factory->expects(self::once())->method('getRoot')->with(113)->willReturn(null);
+        $node_importer->expects(self::never())->method('import');
 
         $importer = new XMLImporter($item_factory, $project, $logger, $node_importer, $rng_validator);
         $importer->import($node);
+        self::assertTrue($logger->hasError('Unable to find a root element in project #113'));
     }
 
     public function testItRaisesParseExceptionWhenXMLIsInvalid(): void
     {
-        $item_factory  = Mockery::mock(Docman_ItemFactory::class);
-        $project       = Mockery::mock(Project::class)->shouldReceive(['getGroupId' => 113])->getMock();
-        $logger        = Mockery::mock(LoggerInterface::class);
-        $node_importer = Mockery::mock(NodeImporter::class);
-        $rng_validator = Mockery::mock(XML_RNGValidator::class);
+        $item_factory  = $this->createMock(Docman_ItemFactory::class);
+        $project       = ProjectTestBuilder::aProject()->withId(113)->build();
+        $node_importer = $this->createMock(NodeImporter::class);
+        $rng_validator = $this->createMock(XML_RNGValidator::class);
 
         $node = new SimpleXMLElement(
             <<<EOS
@@ -137,13 +116,11 @@ class XMLImporterTest extends \Tuleap\Test\PHPUnit\TestCase
             EOS
         );
 
-        $rng_validator
-            ->shouldReceive('validate')
-            ->once()
-            ->andThrow(Mockery::mock(\XML_ParseException::class));
+        $rng_validator->expects(self::once())->method('validate')
+            ->willThrowException(new ParseExceptionWithErrors('', [], []));
 
-        $this->expectException(\XML_ParseException::class);
-        $importer = new XMLImporter($item_factory, $project, $logger, $node_importer, $rng_validator);
+        self::expectException(XML_ParseException::class);
+        $importer = new XMLImporter($item_factory, $project, new NullLogger(), $node_importer, $rng_validator);
         $importer->import($node);
     }
 }
