@@ -23,26 +23,25 @@ declare(strict_types=1);
 namespace Tuleap\HudsonGit\Git\Administration;
 
 use Tuleap\DB\DataAccessObject;
+use Tuleap\DB\UUID;
 
 class JenkinsServerDao extends DataAccessObject
 {
     public function addJenkinsServer(int $project_id, string $jenkins_server_url, ?string $encrypted_token): void
     {
-        $this->getDB()->insertOnDuplicateKeyUpdate(
+        $this->getDB()->insert(
             'plugin_hudson_git_project_server',
             [
+                'id' => $this->uuid_factory->buildUUIDBytes(),
                 'project_id' => $project_id,
                 'jenkins_server_url' => $jenkins_server_url,
                 'encrypted_token' => $encrypted_token,
             ],
-            [
-                'jenkins_server_url',
-            ]
         );
     }
 
     /**
-     * @return array{id: int, jenkins_server_url: string, encrypted_token: string|null}[]
+     * @return array{id: UUID, jenkins_server_url: string, encrypted_token: string|null}[]
      */
     public function getJenkinsServerOfProject(int $project_id): array
     {
@@ -50,18 +49,26 @@ class JenkinsServerDao extends DataAccessObject
                 FROM plugin_hudson_git_project_server
                 WHERE project_id = ?';
 
-        return $this->getDB()->run($sql, $project_id);
+        $result = $this->getDB()->run($sql, $project_id);
+        $rows   = [];
+
+        foreach ($result as $row) {
+            $row['id'] = $this->uuid_factory->buildUUIDFromBytesData($row['id']);
+            $rows[]    = $row;
+        }
+
+        return $rows;
     }
 
     /**
-     * @return array{id: int, jenkins_server_url: string}[]
+     * @return array{api_id: int, jenkins_server_url: string}[]
      */
     public function getPaginatedJenkinsServerOfProject(
         int $project_id,
         int $limit,
         int $offset,
     ): array {
-        $sql = 'SELECT SQL_CALC_FOUND_ROWS id, jenkins_server_url
+        $sql = 'SELECT SQL_CALC_FOUND_ROWS api_id, jenkins_server_url
                 FROM plugin_hudson_git_project_server
                 WHERE project_id = ?
                 LIMIT ? OFFSET ?
@@ -87,24 +94,29 @@ class JenkinsServerDao extends DataAccessObject
     }
 
     /**
-     * @return array{id: int, jenkins_server_url: string, project_id: int, encrypted_token: string|null}|null
+     * @return array{project_id: int}|null
      */
-    public function getJenkinsServerById(int $jenkins_server_id): ?array
+    public function getProjectIDByJenkinsServerID(string $jenkins_server_uuid_hex): ?array
     {
-        $sql = 'SELECT id, jenkins_server_url, project_id, encrypted_token
+        $sql = 'SELECT project_id
                 FROM plugin_hudson_git_project_server
                 WHERE id = ?';
 
-        return $this->getDB()->row($sql, $jenkins_server_id);
+        return $this->uuid_factory->buildUUIDFromHexadecimalString($jenkins_server_uuid_hex)->mapOr(
+            fn(UUID $uuid): array => $this->getDB()->row($sql, $uuid->getBytes()),
+            null
+        );
     }
 
-    public function deleteJenkinsServer(int $jenkins_server_id): void
+    public function deleteJenkinsServer(string $jenkins_server_uuid_hex): void
     {
-        $this->getDB()->delete(
-            'plugin_hudson_git_project_server',
-            [
-                'id' => $jenkins_server_id,
-            ]
+        $this->uuid_factory->buildUUIDFromHexadecimalString($jenkins_server_uuid_hex)->apply(
+            fn(UUID $uuid) => $this->getDB()->delete(
+                'plugin_hudson_git_project_server',
+                [
+                    'id' => $uuid->getBytes(),
+                ]
+            ),
         );
     }
 }

@@ -96,7 +96,7 @@ class LogCreator
 
         $this->transaction_executor->execute(function () use ($jenkins_server, $log) {
             $log_id = $this->project_job_dao->create(
-                $jenkins_server->getId(),
+                $jenkins_server->id,
                 $log->getRepository()->getId(),
                 $log->getPushDate()
             );

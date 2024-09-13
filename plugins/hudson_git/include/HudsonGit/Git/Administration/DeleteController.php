@@ -73,14 +73,13 @@ class DeleteController implements DispatchableWithRequest
             throw new RuntimeException(dgettext('tuleap-hudson_git', 'Expected Jenkins server ID not found'));
         }
 
-        $jenkins_server_id = (int) $request->get('jenkins_server_id');
-        $jenkins_server    = $this->jenkins_server_factory->getJenkinsServerById($jenkins_server_id);
+        $jenkins_server_id = (string) $request->get('jenkins_server_id');
+        $project           = $this->jenkins_server_factory->getProjectByJenkinsServerID($jenkins_server_id);
 
-        if ($jenkins_server === null) {
+        if ($project === null) {
             throw new NotFoundException(dgettext('tuleap-git', 'Jenkins server not found.'));
         }
 
-        $project = $jenkins_server->getProject();
         $this->csrf_token->check(
             URLBuilder::buildUrl($project)
         );
@@ -94,7 +93,7 @@ class DeleteController implements DispatchableWithRequest
             throw new ForbiddenException(dgettext('tuleap-hudson_git', 'User is not Git administrator.'));
         }
 
-        $this->jenkins_server_deleter->deleteServer($jenkins_server);
+        $this->jenkins_server_deleter->deleteServer($jenkins_server_id);
 
         $layout->addFeedback(
             Feedback::INFO,

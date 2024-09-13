@@ -23,15 +23,17 @@ declare(strict_types=1);
 namespace Tuleap\HudsonGit\Job;
 
 use Tuleap\DB\DataAccessObject;
+use Tuleap\DB\UUID;
+use Tuleap\HudsonGit\Git\Administration\JenkinsServer;
 
 class ProjectJobDao extends DataAccessObject
 {
-    public function create(int $jenkins_server_id, int $repository_id, int $push_date): int
+    public function create(UUID $jenkins_server_id, int $repository_id, int $push_date): int
     {
         return (int) $this->getDB()->insertReturnId(
             'plugin_hudson_git_project_server_job',
             [
-                'project_server_id' => $jenkins_server_id,
+                'project_server_id' => $jenkins_server_id->getBytes(),
                 'repository_id'     => $repository_id,
                 'push_date'         => $push_date,
             ]
@@ -60,19 +62,23 @@ class ProjectJobDao extends DataAccessObject
         );
     }
 
-    public function deleteLogsOfServer(int $jenkins_server_id): void
+    public function deleteLogsOfServer(string $jenkins_server_uuid_hex): void
     {
-        $sql = 'DELETE plugin_hudson_git_project_server_job.*, plugin_hudson_git_project_server_job_polling_url.*
-                FROM plugin_hudson_git_project_server_job
-                    INNER JOIN plugin_hudson_git_project_server_job_polling_url
-                    ON plugin_hudson_git_project_server_job.id = plugin_hudson_git_project_server_job_polling_url.job_id
-                WHERE plugin_hudson_git_project_server_job.project_server_id=?
-                ';
-
-        $this->getDB()->run($sql, $jenkins_server_id);
+        $this->uuid_factory->buildUUIDFromHexadecimalString($jenkins_server_uuid_hex)
+            ->apply(
+                function (UUID $uuid): void {
+                    $sql = 'DELETE plugin_hudson_git_project_server_job.*, plugin_hudson_git_project_server_job_polling_url.*
+                            FROM plugin_hudson_git_project_server_job
+                                INNER JOIN plugin_hudson_git_project_server_job_polling_url
+                                ON plugin_hudson_git_project_server_job.id = plugin_hudson_git_project_server_job_polling_url.job_id
+                            WHERE plugin_hudson_git_project_server_job.project_server_id=?
+                            ';
+                    $this->getDB()->run($sql, $uuid->getBytes());
+                }
+            );
     }
 
-    public function searchJobsByJenkinsServer(int $jenkins_server_id): array
+    public function searchJobsByJenkinsServer(JenkinsServer $jenkins_server): array
     {
         $sql = 'SELECT plugin_hudson_git_project_server_job.*,
                        plugin_hudson_git_project_server_job_polling_url.job_url,
@@ -87,6 +93,6 @@ class ProjectJobDao extends DataAccessObject
                     DESC
                 LIMIT 30';
 
-        return $this->getDB()->run($sql, $jenkins_server_id);
+        return $this->getDB()->run($sql, $jenkins_server->id->getBytes());
     }
 }

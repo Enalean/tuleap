@@ -1,10 +1,6 @@
 <?php
 /**
- * Copyright Enalean (c) 2020 - Present. All rights reserved.
- *
- * Tuleap and Enalean names and logos are registered trademarks owned by
- * Enalean SAS. All other trademarks or names are properties of their respective
- * owners.
+ * Copyright (c) Enalean, 2024-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,15 +18,33 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\HudsonGit\REST\v1;
+declare(strict_types=1);
 
+namespace Tuleap\Test\DB;
+
+use Ramsey\Uuid\Rfc4122\UuidV7;
+use Ramsey\Uuid\UuidInterface;
+use Tuleap\DB\UUID;
 
 /**
  * @psalm-immutable
  */
-final readonly class JenkinsServerRepresentation
+final class UUIDTestContext implements UUID
 {
-    public function __construct(public int $id, public string $url)
+    private UuidInterface $uuid;
+
+    public function __construct()
     {
+        $this->uuid = UuidV7::uuid7();
+    }
+
+    public function getBytes(): string
+    {
+        return $this->uuid->getBytes();
+    }
+
+    public function toString(): string
+    {
+        return $this->uuid->toString();
     }
 }

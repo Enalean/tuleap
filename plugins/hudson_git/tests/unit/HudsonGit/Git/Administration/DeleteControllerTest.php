@@ -52,8 +52,6 @@ final class DeleteControllerTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $request;
 
-    private JenkinsServer $jenkins_server;
-
     /**
      * @var \PHPUnit\Framework\MockObject\MockObject&Project
      */
@@ -93,13 +91,6 @@ final class DeleteControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->request = $this->createMock(HTTPRequest::class);
         $this->project = $this->createMock(Project::class);
 
-        $this->jenkins_server = new JenkinsServer(
-            1,
-            'url',
-            null,
-            $this->project
-        );
-
         $this->project->method('isError')->willReturn(false);
         $this->project->method('getUnixName')->willReturn('test');
 
@@ -122,11 +113,10 @@ final class DeleteControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItThrowsNotFoundIfJenkinsServerDoesNotExists(): void
     {
         $this->request->method('exist')->with('jenkins_server_id')->willReturn(true);
-        $this->request->method('get')->with('jenkins_server_id')->willReturn(1);
+        $this->request->method('get')->with('jenkins_server_id')->willReturn('uuid');
 
         $this->git_jenkins_administration_server_factory->expects(self::once())
-            ->method('getJenkinsServerById')
-            ->with(1)
+            ->method('getProjectByJenkinsServerID')
             ->willReturn(null);
 
         $this->expectException(NotFoundException::class);
@@ -141,12 +131,11 @@ final class DeleteControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testProcessThrowsNotFoundExceptionWhenProjectDoesNotUseGitService(): void
     {
         $this->request->method('exist')->with('jenkins_server_id')->willReturn(true);
-        $this->request->method('get')->with('jenkins_server_id')->willReturn(1);
+        $this->request->method('get')->with('jenkins_server_id')->willReturn('uuid');
 
         $this->git_jenkins_administration_server_factory->expects(self::once())
-            ->method('getJenkinsServerById')
-            ->with(1)
-            ->willReturn($this->jenkins_server);
+            ->method('getProjectByJenkinsServerID')
+            ->willReturn($this->project);
 
         $this->project->expects(self::once())
             ->method('usesService')
@@ -165,12 +154,11 @@ final class DeleteControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testProcessThrowsForbiddenWhenUserIsNotGitAdmin(): void
     {
         $this->request->method('exist')->with('jenkins_server_id')->willReturn(true);
-        $this->request->method('get')->with('jenkins_server_id')->willReturn(1);
+        $this->request->method('get')->with('jenkins_server_id')->willReturn('uuid');
 
         $this->git_jenkins_administration_server_factory->expects(self::once())
-            ->method('getJenkinsServerById')
-            ->with(1)
-            ->willReturn($this->jenkins_server);
+            ->method('getProjectByJenkinsServerID')
+            ->willReturn($this->project);
 
         $this->project->expects(self::once())
             ->method('usesService')
@@ -200,12 +188,11 @@ final class DeleteControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testProcessDeletesTheJenkinsServer(): void
     {
         $this->request->method('exist')->with('jenkins_server_id')->willReturn(true);
-        $this->request->method('get')->with('jenkins_server_id')->willReturn(1);
+        $this->request->method('get')->with('jenkins_server_id')->willReturn('uuid');
 
         $this->git_jenkins_administration_server_factory->expects(self::once())
-            ->method('getJenkinsServerById')
-            ->with(1)
-            ->willReturn($this->jenkins_server);
+            ->method('getProjectByJenkinsServerID')
+            ->willReturn($this->project);
 
         $this->project->expects(self::once())
             ->method('usesService')
@@ -225,7 +212,7 @@ final class DeleteControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->git_jenkins_administration_server_deleter->expects(self::once())
             ->method('deleteServer')
-            ->with($this->jenkins_server);
+            ->with('uuid');
 
         $this->layout->method('redirect');
         $this->layout->method('addFeedback');

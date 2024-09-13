@@ -31,10 +31,7 @@ class JenkinsServerPresenter
      */
     public $jenkins_server_url;
 
-    /**
-     * @var int
-     */
-    public $jenkins_server_id;
+    public readonly string $jenkins_server_id;
 
     /**
      * @var CSRFSynchronizerToken
@@ -48,7 +45,7 @@ class JenkinsServerPresenter
 
     public function __construct(JenkinsServer $jenkins_server, array $logs_presenters)
     {
-        $this->jenkins_server_id  = $jenkins_server->getId();
+        $this->jenkins_server_id  = $jenkins_server->id->toString();
         $this->jenkins_server_url = $jenkins_server->getServerURL();
         $this->csrf_delete        = new CSRFSynchronizerToken(
             URLBuilder::buildDeleteUrl()

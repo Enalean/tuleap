@@ -52,11 +52,11 @@ class JenkinsServerDeleter
         $this->transaction_executor = $transaction_executor;
     }
 
-    public function deleteServer(JenkinsServer $jenkins_server): void
+    public function deleteServer(string $jenkins_server_id): void
     {
-        $this->transaction_executor->execute(function () use ($jenkins_server) {
-            $this->project_job_dao->deleteLogsOfServer($jenkins_server->getId());
-            $this->jenkins_server_dao->deleteJenkinsServer($jenkins_server->getId());
+        $this->transaction_executor->execute(function () use ($jenkins_server_id) {
+            $this->project_job_dao->deleteLogsOfServer($jenkins_server_id);
+            $this->jenkins_server_dao->deleteJenkinsServer($jenkins_server_id);
         });
     }
 }
