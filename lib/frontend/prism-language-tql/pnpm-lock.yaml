@@ -6,8 +6,8 @@ settings:
 
 devDependencies:
   '@tuleap/build-system-configurator':
-    specifier: workspace:^
+    specifier: link:../build-system-configurator
     version: link:../build-system-configurator
   '@tuleap/tql-syntax':
-    specifier: workspace:^
+    specifier: link:../tql-syntax
     version: link:../tql-syntax
