@@ -1,0 +1,112 @@
+/**
+ * Copyright (c) Enalean, 2024-Present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+@use "pkg:@tuleap/tlp-swatch-colors";
+
+code[class*="language-"],
+pre[class*="language-"] {
+    color: var(--tlp-typo-default-text-color);
+}
+
+:not(pre) > code[class*="language-"],
+pre[class*="language-"] {
+    background: var(--tlp-background-color);
+}
+
+.token {
+    &.important,
+    &.bold {
+        font-weight: bold;
+    }
+
+    &.italic {
+        font-style: italic;
+    }
+
+    &.important,
+    &.prolog,
+    &.doctype,
+    &.atrule,
+    &.keyword {
+        color: #{tlp-swatch-colors.$deep-blue-text};
+    }
+
+    &.deleted,
+    &.entity,
+    &.builtin {
+        color: #{tlp-swatch-colors.$fiesta-red-text};
+    }
+
+    &.class-name,
+    &.attr-name,
+    &.namespace,
+    &.symbol {
+        color: #{tlp-swatch-colors.$clockwork-orange-text};
+    }
+
+    &.function,
+    &.property,
+    &.tag,
+    &.selector {
+        color: #{tlp-swatch-colors.$plum-crazy-text};
+    }
+
+    &.boolean,
+    &.number,
+    &.constant {
+        color: #{tlp-swatch-colors.$coral-pink-text};
+    }
+
+    &.string,
+    &.char,
+    &.url,
+    &.attr-value,
+    &.inserted {
+        color: #{tlp-swatch-colors.$neon-green-text};
+    }
+
+    &.regex {
+        color: #{tlp-swatch-colors.$flamingo-pink-text};
+    }
+
+    &.regex-delimiter {
+        color: #{tlp-swatch-colors.$panther-pink-text};
+    }
+
+    &.regex-flags {
+        color: #{tlp-swatch-colors.$peggy-pink-text};
+    }
+
+    &.operator {
+        color: #{tlp-swatch-colors.$daphne-blue-text};
+    }
+
+    &.variable {
+        color: #{tlp-swatch-colors.$inca-silver-text};
+    }
+
+    &.punctuation,
+    &.comment {
+        color: var(--tlp-dimmed-color);
+    }
+
+    &.cdata {
+        color: #{tlp-swatch-colors.$surf-green-text};
+    }
+}
