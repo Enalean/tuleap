@@ -107,15 +107,3 @@ id = "GHSA-g974-hxvm-x689" # CVE-2024-21528
 reason = "No exploitation path in the Tuleap context for this prototype pollution issue."
 
 ### TO BE FIXED
-# Go < 1.22.7
-[[IgnoredVulns]]
-id = "GO-2024-3105" # CVE-2024-34155
-reason = "Uncalled code."
-
-[[IgnoredVulns]]
-id = "GO-2024-3106" # CVE-2024-34156
-reason = "Uncalled code."
-
-[[IgnoredVulns]]
-id = "GO-2024-3107" # CVE-2024-34158
-reason = "Uncalled code."
