@@ -20,7 +20,7 @@
 use Tuleap\GlobalLanguageMock;
 
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
-class HTML_Element_SelectboxTest extends \Tuleap\Test\PHPUnit\TestCase
+final class HTML_Element_SelectboxTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use GlobalLanguageMock;
 
@@ -29,7 +29,7 @@ class HTML_Element_SelectboxTest extends \Tuleap\Test\PHPUnit\TestCase
         $selectbox = new HTML_Element_Selectbox('label', 'name', 'value', true);
         $selectbox->setId('id-none-test');
         $this->assertEquals(
-            '<select id="id-none-test" name="name" ><option value="" >-- None --</option></select>',
+            '<select id="id-none-test" data-test="selectbox" name="name" ><option value="" >-- None --</option></select>',
             $selectbox->renderValue()
         );
     }
@@ -38,7 +38,7 @@ class HTML_Element_SelectboxTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $selectbox = new HTML_Element_Selectbox('label', 'name', 'value', false);
         $selectbox->setId('id');
-        $this->assertEquals('<select id="id" name="name" ></select>', $selectbox->renderValue());
+        $this->assertEquals('<select id="id" data-test="selectbox" name="name" ></select>', $selectbox->renderValue());
     }
 
     public function testAddMultipleOptions(): void
@@ -47,7 +47,7 @@ class HTML_Element_SelectboxTest extends \Tuleap\Test\PHPUnit\TestCase
         $selectbox->setId('id-add-options-test');
         $selectbox->addMultipleOptions(['one' => '1', 'two' => '2'], 'two');
         $this->assertEquals(
-            '<select id="id-add-options-test" name="name" ><option value="one" >1</option><option value="two" selected="selected">2</option></select>',
+            '<select id="id-add-options-test" data-test="selectbox" name="name" ><option value="one" >1</option><option value="two" selected="selected">2</option></select>',
             $selectbox->renderValue()
         );
     }

@@ -1,7 +1,7 @@
 <h2> {{ title }} </h2>
 <form method="POST" action="?group_id={{ group_id }}" id="project_history_form" name="project_history_form">
     <div>
-        <span title="{{ toggle_search }}" id="history_search_title" class="{{ toggler_class_name }}">
+        <span title="{{ toggle_search }}" id="history_search_title" class="{{ toggler_class_name }}" data-test="search-in-history">
             {{ history_search_title }}
         </span>
 
@@ -39,7 +39,7 @@
                 </span>
             </div>
 
-            <input type="submit" class="btn btn-primary" name="filter">
+            <input type="submit" class="btn btn-primary" name="filter" data-test="filter-history-submit">
         </div>
 
     </div>
@@ -87,7 +87,7 @@
         <table align="left">
             <tr>
                 <td>
-                    <input type="submit" name="export" value="{{ export_history }}">
+                    <input type="submit" name="export" value="{{ export_history }}" data-test="export-history-button">
                 </td>
             </tr>
         </table>
