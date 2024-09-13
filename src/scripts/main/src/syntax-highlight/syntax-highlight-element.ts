@@ -24,7 +24,30 @@ export class SyntaxHighlightElement extends HTMLElement {
             return;
         }
 
-        const observer = new IntersectionObserver(async (entries) => {
+        const observeChangeOfContents = (
+            syntaxHighlightElement: (element: Element) => void,
+        ): void => {
+            const mutation_observer = new MutationObserver((mutations: Array<MutationRecord>) => {
+                if (mutations.length === 0) {
+                    return;
+                }
+
+                if (mutations[0].addedNodes.length !== 1) {
+                    return;
+                }
+
+                if (mutations[0].addedNodes[0] instanceof CharacterData) {
+                    syntaxHighlightElement(code_block);
+                }
+            });
+
+            mutation_observer.observe(code_block, {
+                childList: true,
+                subtree: true,
+            });
+        };
+
+        const intersection_observer = new IntersectionObserver(async (entries) => {
             for (const entry of entries) {
                 if (entry.isIntersecting) {
                     // This is needed to force Prism to not highlight everything when its module is loaded
@@ -33,11 +56,13 @@ export class SyntaxHighlightElement extends HTMLElement {
                         /* webpackChunkName: "prism-syntax-hl" */ "./prism"
                     );
                     syntaxHighlightElement(code_block);
-                    observer.unobserve(this);
+                    intersection_observer.unobserve(this);
+
+                    observeChangeOfContents(syntaxHighlightElement);
                 }
             }
         });
 
-        observer.observe(this);
+        intersection_observer.observe(this);
     }
 }
