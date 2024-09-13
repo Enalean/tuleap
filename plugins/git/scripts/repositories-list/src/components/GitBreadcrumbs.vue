@@ -45,6 +45,7 @@
                                 class="breadcrumb-dropdown-link"
                                 v-bind:href="repository_admin_url()"
                                 v-bind:title="$gettext('Administration')"
+                                data-test="git-administration"
                             >
                                 <i class="fa fa-cog fa-fw"></i>
                                 {{ $gettext("Administration") }}

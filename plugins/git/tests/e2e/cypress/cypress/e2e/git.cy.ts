@@ -24,6 +24,7 @@ describe("Git", function () {
         now = Date.now();
         cy.createNewPublicProject(`git-project-${now}`, "agile_alm");
         cy.getProjectId(`git-project-${now}`).as("project_id");
+        cy.createNewPublicProject(`gnotif-${now}`, "agile_alm");
     });
 
     context("Project administrators", function () {
@@ -129,8 +130,73 @@ describe("Git", function () {
                         );
                     });
             });
+            it("should be able to manage notifications", function () {
+                cy.projectAdministratorSession();
+                cy.visitProjectAdministration(`gnotif-${now}`);
+                cy.addProjectMember(`gnotif-${now}`, "ProjectMember");
+                cy.projectAdministratorSession();
+
+                cy.visitProjectAdministration(`gnotif-${now}`);
+                cy.get("[data-test=admin-nav-groups]").click();
+
+                cy.addUserGroupWithUsers("developer", ["projectMember"]);
+
+                cy.visitProjectService(`gnotif-${now}`, "Git");
+                cy.get("[data-test=create-repository-button]").click();
+                cy.get("[data-test=create_repository_name]").type("my-repo");
+                cy.get("[data-test=create_repository]").click();
+
+                cy.visitProjectService(`gnotif-${now}`, "Git");
+                cy.get("[data-test=git-administration]").click({ force: true });
+                cy.get("[data-test=git-administrators]").click();
+                cy.get("[data-test=git-admins-select]").select("Project Members");
+                cy.get("[data-test=update-git-administrators]").click();
+
+                cy.projectMemberSession();
+                cy.visitProjectService(`gnotif-${now}`, "Git");
+                cy.get("[data-test=git-repository-card-admin-link]").click();
+                cy.get("[data-test=mail]").click();
+
+                disableSpecificErrorThrownDueToConflictBetweenCypressAndPrototype();
+
+                addToNotifiedPeople("private");
+                cy.get("[data-test=submit-git-notifications]").click();
+
+                cy.get("[data-test=feedback]").contains("The entered value 'private' is invalid");
+
+                addToNotifiedPeople("devel");
+                cy.get("[data-test=submit-git-notifications]").click();
+
+                cy.get("[data-test=feedback]").contains("developer");
+                cy.get("[data-test=group-icon]").should(
+                    "have.class",
+                    "git-notification-mail-list-group-icon",
+                );
+
+                addToNotifiedPeople("members");
+                cy.get("[data-test=submit-git-notifications]").click();
+
+                cy.get("[data-test=feedback]").contains("successfully added to notifications");
+            });
         });
     });
+
+    function addToNotifiedPeople(user: string): void {
+        // eslint-disable-next-line cypress/require-data-selectors
+        cy.get(".select2-container").click();
+        // eslint-disable-next-line cypress/require-data-selectors
+        cy.get(".select2-input").type(`${user}{enter}`);
+        // eslint-disable-next-line cypress/require-data-selectors
+        cy.get(".select2-result-label").last().click();
+    }
+
+    function disableSpecificErrorThrownDueToConflictBetweenCypressAndPrototype(): void {
+        cy.on("uncaught:exception", (err) => {
+            // the message below is only thrown by Prototypejs, if any other js exception is thrown
+            // the test will fail
+            return !err.message.includes("Assignment to constant variable");
+        });
+    }
 
     context("Project members", function () {
         it("should raise an error when user try to access to plugin Git admin page", function () {
