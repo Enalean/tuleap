@@ -22,60 +22,36 @@ declare(strict_types=1);
 
 namespace Tuleap\Docman\XML\Import;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use Docman_Item;
 use PermissionsManager;
+use PHPUnit\Framework\MockObject\MockObject;
 use Project;
-use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
+use SimpleXMLElement;
 use Tuleap\Project\UGroupRetrieverWithLegacy;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
 
-class PermissionsImporterTest extends \Tuleap\Test\PHPUnit\TestCase
+final class PermissionsImporterTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|LoggerInterface
-     */
-    private $logger;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|PermissionsManager
-     */
-    private $permission_manager;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|UGroupRetrieverWithLegacy
-     */
-    private $ugroup_retriever_with_legacy;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Project
-     */
-    private $project;
-    /**
-     * @var PermissionsImporter
-     */
-    private $importer;
-    /**
-     * @var \Docman_Item|Mockery\LegacyMockInterface|Mockery\MockInterface
-     */
-    private $parent_item;
-    /**
-     * @var \Docman_Item|Mockery\LegacyMockInterface|Mockery\MockInterface
-     */
-    private $item;
+    private PermissionsManager&MockObject $permission_manager;
+    private UGroupRetrieverWithLegacy&MockObject $ugroup_retriever_with_legacy;
+    private Project $project;
+    private PermissionsImporter $importer;
+    private Docman_Item $parent_item;
+    private Docman_Item $item;
 
     protected function setUp(): void
     {
-        $this->logger                       = Mockery::mock(LoggerInterface::class);
-        $this->permission_manager           = Mockery::mock(PermissionsManager::class);
-        $this->ugroup_retriever_with_legacy = Mockery::mock(UGroupRetrieverWithLegacy::class);
-        $this->project                      = Mockery::mock(Project::class);
+        $this->permission_manager           = $this->createMock(PermissionsManager::class);
+        $this->ugroup_retriever_with_legacy = $this->createMock(UGroupRetrieverWithLegacy::class);
+        $this->project                      = ProjectTestBuilder::aProject()->withPublicName('ACME Project')->build();
 
-        $this->project->shouldReceive(['getPublicName' => 'ACME Project']);
-
-        $this->parent_item = Mockery::mock(\Docman_Item::class)->shouldReceive(['getId' => 13])->getMock();
-        $this->item        = Mockery::mock(\Docman_Item::class)->shouldReceive(['getId' => 14])->getMock();
+        $this->parent_item = new Docman_Item(['item_id' => 13]);
+        $this->item        = new Docman_Item(['item_id' => 14]);
 
         $this->importer = new PermissionsImporter(
-            $this->logger,
+            new NullLogger(),
             $this->permission_manager,
             $this->ugroup_retriever_with_legacy,
             $this->project
@@ -84,7 +60,7 @@ class PermissionsImporterTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItClonesPermissionsWhenNoPermissionsNode(): void
     {
-        $xml = new \SimpleXMLElement(
+        $xml = new SimpleXMLElement(
             <<<EOS
             <?xml version="1.0" encoding="UTF-8"?>
             <item type="file">
@@ -95,17 +71,15 @@ class PermissionsImporterTest extends \Tuleap\Test\PHPUnit\TestCase
             EOS
         );
 
-        $this->permission_manager
-            ->shouldReceive('clonePermissions')
-            ->with(13, 14, ['PLUGIN_DOCMAN_READ', 'PLUGIN_DOCMAN_WRITE', 'PLUGIN_DOCMAN_MANAGE'])
-            ->once();
+        $this->permission_manager->expects(self::once())->method('clonePermissions')
+            ->with(13, 14, ['PLUGIN_DOCMAN_READ', 'PLUGIN_DOCMAN_WRITE', 'PLUGIN_DOCMAN_MANAGE']);
 
         $this->importer->importPermissions($this->parent_item, $this->item, $xml);
     }
 
     public function testItSavesGivenPermissions(): void
     {
-        $xml = new \SimpleXMLElement(
+        $xml = new SimpleXMLElement(
             <<<EOS
             <?xml version="1.0" encoding="UTF-8"?>
             <item type="file">
@@ -120,32 +94,24 @@ class PermissionsImporterTest extends \Tuleap\Test\PHPUnit\TestCase
             EOS
         );
 
-        $this->ugroup_retriever_with_legacy
-            ->shouldReceive('getUGroupId')
-            ->with($this->project, 'UGROUP_REGISTERED')
-            ->once()
-            ->andReturn(2);
-        $this->ugroup_retriever_with_legacy
-            ->shouldReceive('getUGroupId')
-            ->with($this->project, 'Developers')
-            ->once()
-            ->andReturn(101);
+        $this->ugroup_retriever_with_legacy->expects(self::exactly(2))->method('getUGroupId')
+            ->willReturnCallback(static fn(Project $project, string $name) => match ($name) {
+                'UGROUP_REGISTERED' => 2,
+                'Developers'        => 101,
+            });
 
-        $this->permission_manager
-            ->shouldReceive('addPermission')
-            ->with('PLUGIN_DOCMAN_READ', 14, 2)
-            ->once();
-        $this->permission_manager
-            ->shouldReceive('addPermission')
-            ->with('PLUGIN_DOCMAN_WRITE', 14, 101)
-            ->once();
+        $this->permission_manager->expects(self::exactly(2))->method('addPermission')
+            ->withConsecutive(
+                ['PLUGIN_DOCMAN_READ', 14, 2],
+                ['PLUGIN_DOCMAN_WRITE', 14, 101],
+            );
 
         $this->importer->importPermissions($this->parent_item, $this->item, $xml);
     }
 
     public function testItIgnoresUnknownUgroup(): void
     {
-        $xml = new \SimpleXMLElement(
+        $xml = new SimpleXMLElement(
             <<<EOS
             <?xml version="1.0" encoding="UTF-8"?>
             <item type="file">
@@ -159,17 +125,10 @@ class PermissionsImporterTest extends \Tuleap\Test\PHPUnit\TestCase
             EOS
         );
 
-        $this->ugroup_retriever_with_legacy
-            ->shouldReceive('getUGroupId')
-            ->with($this->project, 'unknown')
-            ->once()
-            ->andReturnNull();
+        $this->ugroup_retriever_with_legacy->expects(self::once())->method('getUGroupId')
+            ->with($this->project, 'unknown')->willReturn(null);
 
-        $this->permission_manager
-            ->shouldReceive('addPermission')
-            ->never();
-
-        $this->logger->shouldReceive('error')->once();
+        $this->permission_manager->expects(self::never())->method('addPermission');
 
         $this->importer->importPermissions($this->parent_item, $this->item, $xml);
     }
