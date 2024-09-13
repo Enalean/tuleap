@@ -5,6 +5,9 @@ settings:
   excludeLinksFromLockfile: false
 
 dependencies:
+  '@tuleap/tlp-swatch-colors':
+    specifier: workspace:^
+    version: link:../../../../../lib/frontend/tlp-swatch-colors
   '@tuleap/tql-syntax':
     specifier: workspace:^
     version: link:../../../../../lib/frontend/tql-syntax

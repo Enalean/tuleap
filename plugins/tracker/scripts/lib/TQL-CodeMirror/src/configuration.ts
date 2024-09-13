@@ -20,47 +20,56 @@ import syntax from "@tuleap/tql-syntax";
 
 export const variable_definition = {
     regex: syntax.variable.pattern,
-    token: "variable",
+    token: "tql-variable",
 };
 
 const TQL_mode_definition = {
     start: [
         {
             regex: syntax.double_quote_string.pattern,
-            token: "string",
+            token: "tql-string",
         },
         {
             regex: syntax.simple_quote_string.pattern,
-            token: "string",
+            token: "tql-string",
         },
         {
             regex: syntax.time_period.pattern,
-            token: "variable-3",
+            token: "tql-time-period",
         },
         {
             regex: syntax.number.pattern,
-            token: "number",
+            token: "tql-number",
         },
         {
             regex: syntax.structure.pattern,
-            token: "keyword",
+            token: "tql-structure",
+        },
+        {
+            regex: syntax.linked_from.pattern,
+            token: "tql-keyword",
         },
         {
             regex: syntax.function.pattern,
-            token: "variable-2",
+            token: "tql-keyword",
         },
         {
             regex: syntax.operator.pattern,
-            token: "operator",
+            token: "tql-operator",
         },
         {
-            regex: syntax.parenthesis.pattern,
-            token: "operator",
+            regex: /[(]/,
+            token: "tql-operator",
             indent: true,
         },
         {
+            regex: /[)]/,
+            token: "tql-operator",
+            dedent: true,
+        },
+        {
             regex: syntax.atvariable.pattern,
-            token: "keyword",
+            token: "tql-atvariable",
         },
         { ...variable_definition },
     ],

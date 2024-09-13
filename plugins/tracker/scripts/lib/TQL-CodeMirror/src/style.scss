@@ -19,3 +19,33 @@
 
 @use "codemirror/lib/codemirror";
 @use "codemirror/addon/hint/show-hint";
+@use "pkg:@tuleap/tlp-swatch-colors";
+
+.cm-tql-atvariable {
+    color: tlp-swatch-colors.$clockwork-orange-text;
+}
+
+.cm-tql-structure {
+    color: tlp-swatch-colors.$deep-blue-text;
+}
+
+.cm-tql-keyword {
+    color: tlp-swatch-colors.$plum-crazy-text;
+}
+
+.cm-tql-string {
+    color: tlp-swatch-colors.$neon-green-text;
+}
+
+.cm-tql-time-period,
+.cm-tql-number {
+    color: tlp-swatch-colors.$coral-pink-text;
+}
+
+.cm-tql-operator {
+    color: tlp-swatch-colors.$daphne-blue-text;
+}
+
+.cm-tql-variable {
+    color: tlp-swatch-colors.$inca-silver-text;
+}
