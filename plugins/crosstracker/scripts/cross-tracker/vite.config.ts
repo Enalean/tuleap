@@ -28,7 +28,16 @@ export default vite.defineAppConfig(
         sub_app_name: path.basename(__dirname),
     },
     {
-        plugins: [POGettextPlugin.vite(), vue()],
+        plugins: [
+            POGettextPlugin.vite(),
+            vue({
+                template: {
+                    compilerOptions: {
+                        isCustomElement: (tag) => tag === "tlp-syntax-highlighting",
+                    },
+                },
+            }),
+        ],
         build: {
             rollupOptions: {
                 input: {

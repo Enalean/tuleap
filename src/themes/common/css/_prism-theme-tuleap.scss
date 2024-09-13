@@ -42,7 +42,6 @@ pre[class*="language-"] {
     &.important,
     &.prolog,
     &.doctype,
-    &.atrule,
     &.keyword {
         color: #{tlp-swatch-colors.$deep-blue-text};
     }
@@ -55,6 +54,7 @@ pre[class*="language-"] {
 
     &.class-name,
     &.attr-name,
+    &.atrule,
     &.namespace,
     &.symbol {
         color: #{tlp-swatch-colors.$clockwork-orange-text};

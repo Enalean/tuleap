@@ -29,9 +29,14 @@
             data-test="tracker-list-reading-mode"
             v-if="!props.reading_cross_tracker_report.expert_mode"
         />
-        <div v-if="is_expert_query_not_empty" data-test="tql-reading-mode-query">
-            {{ props.reading_cross_tracker_report.expert_query }}
-        </div>
+        <tlp-syntax-highlighting
+            v-if="is_expert_query_not_empty"
+            data-test="tql-reading-mode-query"
+        >
+            <code class="language-tql cross-tracker-reading-mode-query">{{
+                props.reading_cross_tracker_report.expert_query
+            }}</code>
+        </tlp-syntax-highlighting>
     </div>
     <div class="actions" v-if="report_state === 'result-preview'">
         <button
@@ -170,5 +175,10 @@ function cancelReport(): void {
     margin: var(--tlp-medium-spacing) 0 0 0;
     padding-bottom: var(--tlp-medium-spacing);
     border-bottom: 1px solid var(--tlp-neutral-light-color);
+}
+
+.cross-tracker-reading-mode-query {
+    padding: 3px 0;
+    background: transparent;
 }
 </style>
