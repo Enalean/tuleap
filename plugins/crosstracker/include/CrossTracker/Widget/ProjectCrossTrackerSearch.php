@@ -25,7 +25,11 @@ use HTTPRequest;
 use Project;
 use TemplateRendererFactory;
 use Tuleap\CrossTracker\CrossTrackerReportDao;
+use Tuleap\Layout\CssAssetCollection;
+use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
+use Tuleap\Layout\IncludeCoreAssets;
 use Tuleap\Layout\IncludeViteAssets;
+use Tuleap\Layout\JavascriptAsset;
 use Tuleap\Layout\JavascriptViteAsset;
 use Tuleap\Project\MappingRegistry;
 use Widget;
@@ -161,7 +165,15 @@ class ProjectCrossTrackerSearch extends Widget
     {
         return [
             new JavascriptViteAsset($this->getAssets(), 'src/index.ts'),
+            new JavascriptAsset(new IncludeCoreAssets(), 'syntax-highlight.js'),
         ];
+    }
+
+    public function getStylesheetDependencies()
+    {
+        return new CssAssetCollection([
+            new CssAssetWithoutVariantDeclinaisons(new IncludeCoreAssets(), 'syntax-highlight'),
+        ]);
     }
 
     private function getAssets(): IncludeViteAssets
