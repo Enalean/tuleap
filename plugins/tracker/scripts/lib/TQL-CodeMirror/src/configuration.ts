@@ -16,53 +16,54 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
+import syntax from "@tuleap/tql-syntax";
+
+export const variable_definition = {
+    regex: syntax.variable.pattern,
+    token: "variable",
+};
 
 const TQL_mode_definition = {
     start: [
         {
-            regex: /"(?:[^\\]|\\.)*?(?:"|$)/, // double quotes
+            regex: syntax.double_quote_string.pattern,
             token: "string",
         },
         {
-            regex: /'(?:[^\\]|\\.)*?(?:'|$)/, // single quotes
+            regex: syntax.simple_quote_string.pattern,
             token: "string",
         },
         {
-            regex: /\d+[dwmy]/i, // Time period
+            regex: syntax.time_period.pattern,
             token: "variable-3",
         },
         {
-            regex: /\d+(?:\.\d+)?/i, // Float & integers
+            regex: syntax.number.pattern,
             token: "number",
         },
         {
-            regex: /(?:and|or)\b/i,
+            regex: syntax.structure.pattern,
             token: "keyword",
         },
         {
-            regex: /(?:select|where|now|between|in|not|myself|open|parent|artifact|tracker|with|without|children|child|is|linked|from|to|type|covering|covered|by)\b/i,
+            regex: syntax.function.pattern,
             token: "variable-2",
         },
         {
-            regex: /[=<>!+-]+/,
+            regex: syntax.operator.pattern,
             token: "operator",
         },
         {
-            regex: /[(]/,
+            regex: syntax.parenthesis.pattern,
             token: "operator",
             indent: true,
         },
         {
-            regex: /[)]/,
-            token: "operator",
-            dedent: true,
+            regex: syntax.atvariable.pattern,
+            token: "keyword",
         },
+        { ...variable_definition },
     ],
-};
-
-export const variable_definition = {
-    regex: /@?[a-zA-Z0-9_-]+/,
-    token: "variable",
 };
 
 export type TQLDefinition = typeof TQL_mode_definition;
@@ -80,7 +81,6 @@ export function buildModeDefinition({
         };
         TQL_mode_definition.start.push(additional_keywords_definition);
     }
-    TQL_mode_definition.start.push(variable_definition);
     return TQL_mode_definition;
 }
 
