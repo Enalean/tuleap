@@ -20,21 +20,20 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog;
+namespace Tuleap\ProgramManagement\Adapter\Workspace;
 
-use Tuleap\ProgramManagement\Adapter\Workspace\RetrieveFullProject;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\VerifyProgramServiceIsEnabled;
+use Tuleap\Option\Option;
+use Tuleap\ProgramManagement\Domain\Program\ProgramServiceIsEnabledCertificate;
 use Tuleap\ProgramManagement\ProgramService;
 
-final readonly class ProgramServiceIsEnabledVerifier implements VerifyProgramServiceIsEnabled
+final readonly class ProgramServiceIsEnabledCertifier
 {
-    public function __construct(private RetrieveFullProject $project_retriever)
+    /** @return Option<ProgramServiceIsEnabledCertificate> */
+    public function certifyProgramServiceEnabled(\Project $project): Option
     {
-    }
-
-    public function isProgramServiceEnabled(int $project_id): bool
-    {
-        return $this->project_retriever->getProject($project_id)
-            ->usesService(ProgramService::SERVICE_SHORTNAME);
+        if ($project->usesService(ProgramService::SERVICE_SHORTNAME)) {
+            return Option::fromValue(new ProgramServiceIsEnabledCertificate((int) $project->getID()));
+        }
+        return Option::nothing(ProgramServiceIsEnabledCertificate::class);
     }
 }

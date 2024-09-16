@@ -20,27 +20,15 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Tests\Stub\Workspace;
+namespace Tuleap\ProgramManagement\Domain\Program;
 
-final readonly class VerifyProgramServiceIsEnabledStub implements \Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\VerifyProgramServiceIsEnabled
+/**
+ * I certify that the Program with this project_id has a Program service that is enabled.
+ * @psalm-immutable
+ */
+final readonly class ProgramServiceIsEnabledCertificate
 {
-    /** @param list<int> $valid_programs */
-    private function __construct(private array $valid_programs)
+    public function __construct(public int $program_id)
     {
-    }
-
-    public static function withProgramService(int $project_id): self
-    {
-        return new self([$project_id]);
-    }
-
-    public static function withoutProgramService(): self
-    {
-        return new self([]);
-    }
-
-    public function isProgramServiceEnabled(int $project_id): bool
-    {
-        return in_array($project_id, $this->valid_programs, true);
     }
 }
