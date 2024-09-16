@@ -46,7 +46,7 @@ class HTML_Element_Selectbox extends HTML_Element
     public function renderValue()
     {
         $hp   = Codendi_HTMLPurifier::instance();
-        $html = '<select id="' . $this->id . '" name="' .  $hp->purify($this->name, CODENDI_PURIFIER_CONVERT_HTML) . '" ';
+        $html = '<select id="' . $this->id . '" data-test="selectbox" name="' .  $hp->purify($this->name, CODENDI_PURIFIER_CONVERT_HTML) . '" ';
         if ($this->onchange) {
             $html .= 'onchange="' . $this->onchange . '" ';
         }

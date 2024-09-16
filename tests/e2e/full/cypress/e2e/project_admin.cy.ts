@@ -219,7 +219,7 @@ describe("Project admin", function () {
                 .should("have.class", "fa-lock-open");
         });
 
-        it("should be able to export project access log", function () {
+        it("should be able to export project access log and history", function () {
             cy.projectAdministratorSession();
             cy.log("Add a document");
             cy.getFromTuleapAPI<ProjectServiceResponse>(
@@ -261,6 +261,7 @@ describe("Project admin", function () {
                 timeout: 20000,
             });
 
+            cy.log("Download access file");
             cy.visitProjectAdministration(project_acces_log);
             cy.get("[data-test=access-log]").click({ force: true });
 
@@ -269,6 +270,20 @@ describe("Project admin", function () {
                 .click()
                 .then(() => {
                     cy.readFile(`${download_folder}/access_logs.csv`).should("exist");
+                });
+
+            cy.log("Download project history");
+            cy.visitProjectAdministration(project_acces_log);
+            cy.get("[data-test=project-history]").click({ force: true });
+            cy.get("[data-test=search-in-history]").click();
+            // select can be outside of viewport
+            cy.get("[data-test=selectbox]").select("Permissions", { force: true });
+            cy.get("[data-test=filter-history-submit]").click();
+            // button is outside of viewport
+            cy.get("[data-test=export-history-button]")
+                .click({ force: true })
+                .then(() => {
+                    cy.readFile(`${download_folder}/project_history.csv`).should("exist");
                 });
         });
     });
