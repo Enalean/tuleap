@@ -27,25 +27,21 @@
         size="30"
     />
 </template>
-<script lang="ts">
-import { Component, Watch } from "vue-property-decorator";
-import Vue from "vue";
-import { State } from "vuex-class";
+<script setup lang="ts">
+import type { Ref } from "vue";
+import { onMounted, ref, watch } from "vue";
+import { useMutations, useState } from "vuex-composition-helpers";
 
-@Component
-export default class ListFilter extends Vue {
-    @State
-    readonly filter!: string;
+const { filter } = useState(["filter"]);
+const { setFilter } = useMutations(["setFilter"]);
 
-    filter_value: string | null = null;
+let filter_value: Ref<string | null> = ref(null);
 
-    mounted(): void {
-        this.filter_value = this.filter;
-    }
+onMounted(() => {
+    filter_value.value = filter.value;
+});
 
-    @Watch("filter_value")
-    public updateFilter(value: string) {
-        this.$store.commit("setFilter", value);
-    }
-}
+watch(filter_value, (value: string | null) => {
+    setFilter(value);
+});
 </script>
