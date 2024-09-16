@@ -19,43 +19,58 @@
  *
  */
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+declare(strict_types=1);
 
-//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
-class Docman_FilterFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
+namespace Tuleap\Docman;
+
+use Docman_FilterFactory;
+use Docman_FilterItemType;
+use Docman_ListMetadata;
+use Docman_Metadata;
+use Docman_MetadataFactory;
+use Docman_Report;
+use Tuleap\Test\PHPUnit\TestCase;
+
+final class FilterFactoryTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     public function testCloneFilter(): void
     {
-        $mdFactory =  \Mockery::spy(Docman_MetadataFactory::class);
-        $mdFactory->allows(['isRealMetadata' => false]);
+        $mdFactory = $this->createMock(Docman_MetadataFactory::class);
+        $mdFactory->method('isRealMetadata')->willReturn(false);
 
         $md = new Docman_ListMetadata();
         $md->setLabel('item_type');
 
-        $srcFilter     = \Mockery::mock(Docman_FilterItemType::class);
+        $srcFilter     = $this->createMock(Docman_FilterItemType::class);
         $srcFilter->md = $md;
         $dstReport     = new Docman_Report();
         $dstReport->setGroupId(123);
 
-        $filterFactory = \Mockery::mock(Docman_FilterFactory::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $filterFactory = $this->createPartialMock(Docman_FilterFactory::class, [
+            'getGlobalSearchMetadata',
+            'getItemTypeSearchMetadata',
+            'getFilterFactory',
+            'cloneFilterValues',
+        ]);
         $gsMd          = new Docman_Metadata();
-        $filterFactory->allows(['getGlobalSearchMetadata' => $gsMd]);
+        $filterFactory->method('getGlobalSearchMetadata')->willReturn($gsMd);
         $gsMd->setLabel('global_txt');
         $itMd = new Docman_ListMetadata();
-        $filterFactory->allows(['getItemTypeSearchMetadata' => $itMd]);
+        $filterFactory->method('getItemTypeSearchMetadata')->willReturn($itMd);
         $itMd->setLabel('item_type');
 
         $itMd->setUseIt(PLUGIN_DOCMAN_METADATA_USED);
         $metadataMapping  = ['md' => [], 'love' => []];
-        $dstFilterFactory = \Mockery::mock(Docman_FilterFactory::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $dstFilterFactory = $this->createPartialMock(Docman_FilterFactory::class, [
+            'createFromMetadata',
+            'createFilter',
+        ]);
 
-        $filterFactory->shouldReceive('getFilterFactory')->andReturns($dstFilterFactory);
-        $filterFactory->shouldReceive('cloneFilterValues')->once();
+        $filterFactory->method('getFilterFactory')->willReturn($dstFilterFactory);
+        $filterFactory->expects(self::once())->method('cloneFilterValues');
 
-        $dstFilterFactory->shouldReceive('createFromMetadata')->once();
-        $dstFilterFactory->shouldReceive('createFilter')->once();
+        $dstFilterFactory->expects(self::once())->method('createFromMetadata');
+        $dstFilterFactory->expects(self::once())->method('createFilter');
 
         $filterFactory->cloneFilter($srcFilter, $dstReport, $metadataMapping);
     }
