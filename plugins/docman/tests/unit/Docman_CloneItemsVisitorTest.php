@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Docman;
 
-use ArrayIterator;
 use Docman_CloneItemsVisitor;
 use Docman_ItemFactory;
 use Docman_Link;
@@ -31,60 +30,51 @@ use Docman_LinkVersionFactory;
 use Docman_MetadataFactory;
 use Docman_PermissionsManager;
 use Docman_SettingsBo;
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use Project;
 use ProjectManager;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\EventDispatcherStub;
 
-final class Docman_CloneItemsVisitorTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
+final class Docman_CloneItemsVisitorTest extends TestCase // phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 {
-    use MockeryPHPUnitIntegration;
-
     public function testLinkVersionIsCreatedWhenALinkIsCopied(): void
     {
-        $project_manager      = Mockery::mock(ProjectManager::instance());
-        $link_version_factory = Mockery::mock(Docman_LinkVersionFactory::class);
+        $project_manager      = $this->createMock(ProjectManager::class);
+        $link_version_factory = $this->createMock(Docman_LinkVersionFactory::class);
 
-        $visitor     = Mockery::mock(
-            Docman_CloneItemsVisitor::class,
-            [102, $project_manager, $link_version_factory, EventDispatcherStub::withIdentityCallback()]
-        )->makePartial();
-        $settings_bo = Mockery::mock(Docman_SettingsBo::class);
-        $settings_bo->shouldReceive('getMetadataUsage')->andReturn(false);
-        $visitor->shouldReceive('_getSettingsBo')->andReturn($settings_bo);
-        $item_factory = Mockery::mock(Docman_ItemFactory::class);
-        $item_factory->shouldReceive('rawCreate')->andReturn(743);
-        $visitor->shouldReceive('_getItemFactory')->andReturn($item_factory);
-        $permissions_manager = Mockery::mock(Docman_PermissionsManager::class);
-        $permissions_manager->shouldReceive('cloneItemPermissions');
-        $visitor->shouldReceive('_getPermissionsManager')->andReturn($permissions_manager);
-        $metadata_factory = Mockery::mock(Docman_MetadataFactory::class);
-        $metadata_factory->shouldReceive('appendItemMetadataList');
-        $visitor->shouldReceive('_getMetadataFactory')->andReturn($metadata_factory);
+        $visitor     = $this->getMockBuilder(Docman_CloneItemsVisitor::class)
+            ->setConstructorArgs([102, $project_manager, $link_version_factory, EventDispatcherStub::withIdentityCallback()])
+            ->onlyMethods([
+                '_getSettingsBo',
+                '_getItemFactory',
+                '_getPermissionsManager',
+                '_getMetadataFactory',
+            ])
+            ->getMock();
+        $settings_bo = $this->createMock(Docman_SettingsBo::class);
+        $settings_bo->method('getMetadataUsage')->willReturn(false);
+        $visitor->method('_getSettingsBo')->willReturn($settings_bo);
+        $item_factory = $this->createMock(Docman_ItemFactory::class);
+        $item_factory->method('rawCreate')->willReturn(743);
+        $visitor->method('_getItemFactory')->willReturn($item_factory);
+        $permissions_manager = $this->createMock(Docman_PermissionsManager::class);
+        $permissions_manager->method('cloneItemPermissions');
+        $visitor->method('_getPermissionsManager')->willReturn($permissions_manager);
+        $metadata_factory = $this->createMock(Docman_MetadataFactory::class);
+        $metadata_factory->method('appendItemMetadataList');
+        $visitor->method('_getMetadataFactory')->willReturn($metadata_factory);
 
-        $link_to_copy = Mockery::mock(Docman_Link::class);
-        $link_to_copy->shouldReceive('setGroupId');
-        $link_to_copy->shouldReceive('setParentId');
-        $link_to_copy->shouldReceive('getId')->andReturn(742);
-        $link_to_copy->shouldReceive('getGroupId')->andReturn(102);
-        $link_to_copy->shouldReceive('setStatus');
-        $link_to_copy->shouldReceive('setObsolescenceDate');
-        $link_to_copy->shouldReceive('toRow')->andReturn([]);
-        $link_to_copy->shouldReceive('getMetadataIterator')->andReturn(new ArrayIterator());
-        $copied_link = Mockery::mock(Docman_Link::class);
-        $copied_link->shouldReceive('getTitle')->andReturn('Copied link title');
-        $copied_link->shouldReceive('getGroupId')->andReturn(102);
-        $copied_link_version = Mockery::mock(Docman_LinkVersion::class);
-        $copied_link_version->shouldReceive('getNumber')->andReturn(12);
-        $copied_link->shouldReceive('getCurrentVersion')->andReturn($copied_link_version);
+        $link_to_copy        = new Docman_Link(['item_id' => 742, 'group_id' => 102, 'link_url' => '']);
+        $copied_link         = new Docman_Link(['group_id' => 102, 'title' => 'Copied link title', 'link_url' => '']);
+        $copied_link_version = $this->createMock(Docman_LinkVersion::class);
+        $copied_link_version->method('getNumber')->willReturn(12);
+        $copied_link->setCurrentVersion($copied_link_version);
 
-        $item_factory->shouldReceive('getItemFromDb')->andReturn($copied_link);
-        $project = Mockery::mock(Project::class);
-        $project->shouldReceive('getPublicName')->andReturn('project name');
-        $project_manager->shouldReceive('getProject')->andReturn($project);
+        $item_factory->method('getItemFromDb')->willReturn($copied_link);
+        $project = ProjectTestBuilder::aProject()->withPublicName('project name')->build();
+        $project_manager->method('getProject')->willReturn($project);
 
-        $link_version_factory->shouldReceive('create')->atLeast()->once();
+        $link_version_factory->expects(self::atLeastOnce())->method('create');
 
         $visitor->visitLink(
             $link_to_copy,

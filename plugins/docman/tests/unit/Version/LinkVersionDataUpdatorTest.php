@@ -23,36 +23,26 @@ declare(strict_types=1);
 
 namespace Tuleap\Docman\Version;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use Docman_Empty;
+use Docman_ItemFactory;
+use Docman_Link;
+use PHPUnit\Framework\MockObject\MockObject;
+use Tuleap\Test\PHPUnit\TestCase;
 
-class LinkVersionDataUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
+final class LinkVersionDataUpdatorTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var \Docman_ItemFactory|\Mockery\LegacyMockInterface|\Mockery\MockInterface
-     */
-    private $item_factory;
-    /**
-     * @var LinkVersionDataUpdator
-     */
-    private $link_data_updator;
+    private Docman_ItemFactory&MockObject $item_factory;
+    private LinkVersionDataUpdator $link_data_updator;
 
     protected function setUp(): void
     {
-        parent::setUp();
-
-        $this->item_factory      = \Mockery::mock(\Docman_ItemFactory::class);
+        $this->item_factory      = $this->createMock(Docman_ItemFactory::class);
         $this->link_data_updator = new LinkVersionDataUpdator($this->item_factory);
     }
 
     public function testItShouldUpdateAndReturnALink(): void
     {
-        $empty = \Mockery::mock(\Docman_Empty::class);
-        $empty->shouldReceive('getId')->andReturn(1);
-        $empty->shouldReceive('getGroupId')->andReturn(100);
-        $empty->shouldReceive('getTitle')->andReturn('Tradition');
-        $empty->shouldReceive('getOwnerId')->andReturn(2);
+        $empty = new Docman_Empty(['item_id' => 1, 'group_id' => 100, 'title' => 'Tradition', 'user_id' => 2]);
 
         $version_data = ['link_url' => 'https://example.test'];
 
@@ -64,15 +54,15 @@ class LinkVersionDataUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
             'item_type' => PLUGIN_DOCMAN_ITEM_TYPE_LINK,
             'link_url'  => $version_data['link_url'],
         ];
-        $this->item_factory->shouldReceive('update')->with($row)->once();
+        $this->item_factory->expects(self::once())->method('update')->with($row);
 
-        $link = \Mockery::mock(\Docman_Link::class);
-        $this->item_factory->shouldReceive('getItemFromDb')->with($empty->getId())->andReturn($link);
+        $link = new Docman_Link(['link_url' => '']);
+        $this->item_factory->method('getItemFromDb')->with($empty->getId())->willReturn($link);
 
-        $this->item_factory->shouldReceive('createNewLinkVersion')->withArgs([$link, $version_data]);
+        $this->item_factory->method('createNewLinkVersion')->with($link, $version_data);
 
         $updated_link = $this->link_data_updator->updateLinkFromEmptyVersionData($empty, $version_data);
 
-        $this->assertEquals($updated_link, $link);
+        self::assertEquals($updated_link, $link);
     }
 }
