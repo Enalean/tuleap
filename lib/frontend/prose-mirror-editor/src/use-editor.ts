@@ -39,6 +39,7 @@ import {
 } from "@tuleap/gettext";
 import { v4 as uuidv4 } from "uuid";
 import type { CrossReference } from "./plugins/extract-referencies/reference-extractor";
+import { initPluginCloseMarksAfterSpace } from "./plugins/close-marks-after-space";
 
 export type UseEditorType = {
     editor: EditorView;
@@ -70,6 +71,7 @@ export async function useEditor(
         initLinkPopoverPlugin(document, gettext_provider, editor_id),
         ...setupToolbar(gettext_provider, editor_id),
         initPluginTransformInput(project_id, references),
+        initPluginCloseMarksAfterSpace(),
     ];
 
     const state: EditorState = getState(initial_content);
