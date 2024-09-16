@@ -22,36 +22,21 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Report\Query\Advanced\Grammar;
 
-final readonly class Query
+final readonly class OrderBy
 {
-    /**
-     * @param list<Selectable> $select
-     */
     public function __construct(
-        private array $select,
-        private ?From $from,
-        private Logical $condition,
-        private ?OrderBy $order_by,
+        private Selectable $filter,
+        private OrderByDirection $direction,
     ) {
     }
 
-    public function getSelect(): array
+    public function getFilter(): Selectable
     {
-        return $this->select;
+        return $this->filter;
     }
 
-    public function getFrom(): ?From
+    public function getDirection(): OrderByDirection
     {
-        return $this->from;
-    }
-
-    public function getCondition(): Logical
-    {
-        return $this->condition;
-    }
-
-    public function getOrderBy(): ?OrderBy
-    {
-        return $this->order_by;
+        return $this->direction;
     }
 }

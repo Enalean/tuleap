@@ -42,7 +42,7 @@ final class ParserTest extends TestCase
                 null
             ),
             null
-        ));
+        ), null);
 
         self::assertEquals($expected, $result);
     }
@@ -74,7 +74,8 @@ final class ParserTest extends TestCase
                     null
                 ),
                 null
-            )
+            ),
+            null,
         );
         self::assertEquals($expected, $result);
     }
@@ -92,7 +93,8 @@ final class ParserTest extends TestCase
                     null
                 ),
                 null
-            )
+            ),
+            null,
         );
         self::assertEquals($expected, $result);
     }
@@ -111,6 +113,7 @@ final class ParserTest extends TestCase
                 ),
                 null,
             ),
+            null,
         );
         self::assertEquals($expected, $result);
     }
@@ -129,6 +132,7 @@ final class ParserTest extends TestCase
                 ),
                 null,
             ),
+            null,
         );
         self::assertEquals($expected, $result);
     }
@@ -147,6 +151,7 @@ final class ParserTest extends TestCase
                 ),
                 null,
             ),
+            null,
         );
         self::assertEquals($expected, $result);
     }
@@ -165,6 +170,7 @@ final class ParserTest extends TestCase
                 ),
                 null,
             ),
+            null,
         );
         self::assertEquals($expected, $result);
     }
@@ -183,6 +189,7 @@ final class ParserTest extends TestCase
                 ),
                 null,
             ),
+            null,
         );
         self::assertEquals($expected, $result);
     }
@@ -201,6 +208,7 @@ final class ParserTest extends TestCase
                 ),
                 null,
             ),
+            null,
         );
         self::assertEquals($expected, $result);
     }
@@ -219,6 +227,7 @@ final class ParserTest extends TestCase
                 ),
                 null,
             ),
+            null,
         );
         self::assertEquals($expected, $result);
     }
@@ -237,6 +246,7 @@ final class ParserTest extends TestCase
                 ),
                 null,
             ),
+            null,
         );
         self::assertEquals($expected, $result);
     }
@@ -258,6 +268,7 @@ final class ParserTest extends TestCase
                 ),
                 null,
             ),
+            null,
         );
         self::assertEquals($expected, $result);
     }
@@ -279,6 +290,7 @@ final class ParserTest extends TestCase
                 ),
                 null,
             ),
+            null,
         );
         self::assertEquals($expected, $result);
     }
@@ -288,5 +300,53 @@ final class ParserTest extends TestCase
         $parser = new Parser();
         self::expectException(SyntaxError::class);
         $parser->parse('SELECT field, WHERE field = "value"');
+    }
+
+    public function testOrderByFieldAsc(): void
+    {
+        $parser   = new Parser();
+        $result1  = $parser->parse('SELECT @id FROM @project = "self" WHERE @id >= 1 ORDER BY field ASC');
+        $result2  = $parser->parse('SELECT @id FROM @project = "self" WHERE @id >= 1 ORDER BY field ASCENDING');
+        $expected = new Query(
+            [new Metadata('id')],
+            new From(
+                new FromProject('@project', new FromProjectEqual('self')),
+                null,
+            ),
+            new OrExpression(
+                new AndExpression(
+                    new GreaterThanOrEqualComparison(new Metadata('id'), new SimpleValueWrapper(1)),
+                    null,
+                ),
+                null,
+            ),
+            new OrderBy(new Field('field'), OrderByDirection::ASCENDING),
+        );
+        self::assertEquals($expected, $result1);
+        self::assertEquals($expected, $result2);
+    }
+
+    public function testOrderByMetadataDesc(): void
+    {
+        $parser   = new Parser();
+        $result1  = $parser->parse('SELECT @id FROM @project = "self" WHERE @id >= 1 ORDER BY @last_update_date DESC');
+        $result2  = $parser->parse('SELECT @id FROM @project = "self" WHERE @id >= 1 ORDER BY @last_update_date DESCENDING');
+        $expected = new Query(
+            [new Metadata('id')],
+            new From(
+                new FromProject('@project', new FromProjectEqual('self')),
+                null,
+            ),
+            new OrExpression(
+                new AndExpression(
+                    new GreaterThanOrEqualComparison(new Metadata('id'), new SimpleValueWrapper(1)),
+                    null,
+                ),
+                null,
+            ),
+            new OrderBy(new Metadata('last_update_date'), OrderByDirection::DESCENDING),
+        );
+        self::assertEquals($expected, $result1);
+        self::assertEquals($expected, $result2);
     }
 }

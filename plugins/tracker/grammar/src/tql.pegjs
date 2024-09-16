@@ -41,12 +41,12 @@ query
 
 default_query
     = condition:or_expression {
-        return new Query([], null, $condition);
+        return new Query([], null, $condition, null);
     }
 
 expert_query
-    = select:select _ from:from _ "where"i _ condition:or_expression {
-        return new Query($select, $from, $condition);
+    = select:select _ from:from _ "where"i _ condition:or_expression _ order:order_by? {
+        return new Query($select, $from, $condition, $order);
     }
 
 select
@@ -111,6 +111,15 @@ from_tracker_in
         array_unshift($list, $first->getValue());
         return new FromTrackerIn($list);
     }
+
+order_by
+    = "order"i _ "by"i _ select:Selectable _ direction:order_direction {
+        return new OrderBy($select, $direction);
+    }
+
+order_direction
+    = ("ASCENDING"i / "ASC"i) { return OrderByDirection::ASCENDING; }
+    / ("DESCENDING"i / "DESC"i) { return OrderByDirection::DESCENDING; }
 
 StringList
     = _ "," _ value:String { return $value->getValue(); }

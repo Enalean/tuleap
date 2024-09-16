@@ -25,6 +25,7 @@ namespace Tuleap\Tracker\Report\Query\Advanced;
 use PFUser;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\From;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Logical;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\OrderBy;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Selectable;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\SyntaxError;
 
@@ -55,6 +56,7 @@ final readonly class ExpertQueryValidator
 
         $this->checkSearchables($condition, $invalid_searchables_collection_builder);
         $this->checkSelectables($query->getSelect(), $expert_mode, $invalid_selectables_collection_builder);
+        $this->checkOrderBy($query->getOrderBy());
     }
 
     /**
@@ -143,6 +145,17 @@ final readonly class ExpertQueryValidator
         }
 
         if ($from !== null) { // From is invalid in default mode
+            throw new SyntaxError('', '', '', 0, 0, 0);
+        }
+    }
+
+    /**
+     * @throws SyntaxError
+     */
+    private function checkOrderBy(
+        ?OrderBy $order_by,
+    ): void {
+        if ($order_by !== null) {
             throw new SyntaxError('', '', '', 0, 0, 0);
         }
     }
