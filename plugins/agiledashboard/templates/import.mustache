@@ -49,11 +49,11 @@
                     {{/ dgettext }}
                 </p>
                 <p>
-                    <input type="file" required name="template_file" id="template_file" />
+                    <input type="file" required name="template_file" id="template_file" data-test="input-backlog-import-file" />
                 </p>
 
                 <div class="tlp-pane-section-submit">
-                    <button type="submit" class="tlp-button-primary">
+                    <button type="submit" class="tlp-button-primary" data-test="import-backlog-xml-submit">
                         <i class="fa-solid fa-upload tlp-button-icon" aria-hidden="true"></i>
                         {{# dgettext }} tuleap-agiledashboard | Import {{/ dgettext }}
                     </button>
