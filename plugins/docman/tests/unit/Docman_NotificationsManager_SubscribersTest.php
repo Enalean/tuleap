@@ -21,101 +21,76 @@
 
 declare(strict_types=1);
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use Tuleap\Docman\ExternalLinks\ILinkUrlProvider;
+namespace Tuleap\Docman;
 
-//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
-class Docman_NotificationsManager_SubscribersTest extends \Tuleap\Test\PHPUnit\TestCase
+use Docman_File;
+use Docman_Folder;
+use Docman_NotificationsManager_Subscribers;
+use Docman_Path;
+use PHPUnit\Framework\MockObject\MockObject;
+use Tuleap\Document\LinkProvider\DocumentLinkProvider;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
+
+final class Docman_NotificationsManager_SubscribersTest extends TestCase //phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|ILinkUrlProvider
-     */
-    private $link_provider;
-
-    /**
-     * @var Docman_NotificationsManager_Add
-     */
-    private $notification_manager;
+    private Docman_NotificationsManager_Subscribers&MockObject $notification_manager;
 
     protected function setUp(): void
     {
-        parent::setUp();
+        $this->notification_manager = $this->createPartialMock(Docman_NotificationsManager_Subscribers::class, [
+            'getUrlProvider',
+            '_getMonitoredItemForUser',
+        ]);
 
-        $this->notification_manager = Mockery::mock(Docman_NotificationsManager_Subscribers::class)
-            ->makePartial()
-            ->shouldAllowMockingProtectedMethods();
-
-        $this->link_provider = Mockery::mock(ILinkUrlProvider::class);
-        $this->notification_manager->shouldReceive('getUrlProvider')->andReturn($this->link_provider);
+        $link_provider = new DocumentLinkProvider('https://www.example.com', ProjectTestBuilder::aProject()->build());
+        $this->notification_manager->method('getUrlProvider')->willReturn($link_provider);
     }
 
     public function testItBuildMessageForUserAddedInMonotringList(): void
     {
-        $folder = Mockery::mock(Docman_Folder::class);
-        $folder->shouldReceive('getId')->andReturn(1);
+        $folder           = new Docman_Folder(['item_id' => 1, 'title' => '/my/folder/parent']);
         $params['parent'] = $folder;
+        $params['path']   = new Docman_Path();
+        $item             = new Docman_File(['item_id' => 100, 'title' => 'my file name']);
+        $params['item']   = $item;
 
-        $params['path'] = Mockery::mock(Docman_Path::class);
-        $params['path']->shouldReceive('get')->andReturn('/my/folder/parent');
+        $this->notification_manager->method('_getMonitoredItemForUser')->willReturn($folder);
 
-        $item = Mockery::mock(Docman_File::class);
-        $item->shouldReceive('getTitle')->andReturn('my file name');
-        $item->shouldReceive('getId')->andReturn(100);
-        $params['item'] = $item;
-
-        $this->notification_manager->shouldReceive('_getMonitoredItemForUser')->andReturn($folder);
-
-        $user = Mockery::mock(PFUser::class);
-        $user->shouldReceive('getRealName')->andReturn('UserName');
-
-        $details_url = 'http://www.example.com/plugins/docman/project_name/preview/1/';
-        $this->link_provider->shouldReceive('getShowLinkUrl')->andReturn($details_url);
-        $notifications_url = 'http://www.example.com/plugins/docman/&action=details&section=notifications&id=1';
-        $this->link_provider->shouldReceive('getNotificationLinkUrl')->andReturn($notifications_url);
+        $details_url       = 'https://www.example.com/plugins/document/testproject/preview/100';
+        $notifications_url = 'https://www.example.com/plugins/docman/?group_id=101&action=details&section=notifications&id=100';
 
         $message = $this->notification_manager->_getMessageForUser(
-            $user,
+            UserTestBuilder::aUser()->withRealName('UserName')->build(),
             $this->notification_manager::MESSAGE_ADDED,
             $params
         );
 
-            $expected_message = "You are receiving this message because you were added to the monitoring list of this item:\n";
-        $expected_message    .= $details_url . "\n\n";
-        $expected_message    .= "--------------------------------------------------------------------\n";
-        $expected_message    .= "To stop monitoring, please visit:\n";
-        $expected_message    .= $notifications_url;
+        $expected_message  = "You are receiving this message because you were added to the monitoring list of this item:\n";
+        $expected_message .= $details_url . "\n\n";
+        $expected_message .= "--------------------------------------------------------------------\n";
+        $expected_message .= "To stop monitoring, please visit:\n";
+        $expected_message .= $notifications_url;
 
-        $this->assertEquals($expected_message, $message);
+        self::assertEquals($expected_message, $message);
     }
 
     public function testItBuildMessageForUserRemovedInMonotringList(): void
     {
-        $folder = Mockery::mock(Docman_Folder::class);
-        $folder->shouldReceive('getId')->andReturn(1);
+        $folder           = new Docman_Folder(['item_id' => 1, 'title' => '/my/folder/parent']);
         $params['parent'] = $folder;
+        $params['path']   = new Docman_Path();
+        $item             = new Docman_File(['item_id' => 100, 'title' => 'my file name']);
+        $params['item']   = $item;
 
-        $params['path'] = Mockery::mock(Docman_Path::class);
-        $params['path']->shouldReceive('get')->andReturn('/my/folder/parent');
+        $this->notification_manager->method('_getMonitoredItemForUser')->willReturn($folder);
 
-        $item = Mockery::mock(Docman_File::class);
-        $item->shouldReceive('getTitle')->andReturn('my file name');
-        $item->shouldReceive('getId')->andReturn(100);
-        $params['item'] = $item;
-
-        $this->notification_manager->shouldReceive('_getMonitoredItemForUser')->andReturn($folder);
-
-        $user = Mockery::mock(PFUser::class);
-        $user->shouldReceive('getRealName')->andReturn('UserName');
-
-        $details_url = 'http://www.example.com/plugins/docman/project_name/preview/1/';
-        $this->link_provider->shouldReceive('getShowLinkUrl')->andReturn($details_url);
-        $notifications_url = 'http://www.example.com/plugins/docman/&action=details&section=notifications&id=1';
-        $this->link_provider->shouldReceive('getNotificationLinkUrl')->andReturn($notifications_url);
+        $details_url       = 'https://www.example.com/plugins/document/testproject/preview/100';
+        $notifications_url = 'https://www.example.com/plugins/docman/?group_id=101&action=details&section=notifications&id=100';
 
         $message = $this->notification_manager->_getMessageForUser(
-            $user,
+            UserTestBuilder::aUser()->withRealName('UserName')->build(),
             $this->notification_manager::MESSAGE_REMOVED,
             $params
         );
@@ -126,6 +101,6 @@ class Docman_NotificationsManager_SubscribersTest extends \Tuleap\Test\PHPUnit\T
         $expected_message .= "To restore monitoring, please visit:\n";
         $expected_message .= $notifications_url;
 
-        $this->assertEquals($expected_message, $message);
+        self::assertEquals($expected_message, $message);
     }
 }
