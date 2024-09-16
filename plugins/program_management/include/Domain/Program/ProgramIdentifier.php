@@ -26,10 +26,9 @@ use Tuleap\ProgramManagement\Domain\Permissions\PermissionBypass;
 use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramForAdministrationIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration\IterationIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementIdentifier;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\ProgramIdentifierForTopBacklogAction;
 use Tuleap\ProgramManagement\Domain\Program\Plan\BuildProgram;
-use Tuleap\ProgramManagement\Domain\Program\Plan\ProjectIsAProgramOrUsedInPlanChecker;
 use Tuleap\ProgramManagement\Domain\Program\Plan\ProgramAccessException;
+use Tuleap\ProgramManagement\Domain\Program\Plan\ProjectIsAProgramOrUsedInPlanChecker;
 use Tuleap\ProgramManagement\Domain\Program\Plan\ProjectIsNotAProgramException;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 
@@ -38,7 +37,6 @@ use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
  * This represents its project ID number.
  * I have at least one Team.
  * @see ProgramForAdministrationIdentifier for a Program being configured by an administrator
- * @see ProgramIdentifierForTopBacklogAction for a program accessed by the automatic action to add to Top backlog
  * @psalm-immutable
  */
 final class ProgramIdentifier

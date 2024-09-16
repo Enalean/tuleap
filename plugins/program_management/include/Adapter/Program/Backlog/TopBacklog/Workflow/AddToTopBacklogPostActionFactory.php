@@ -26,13 +26,13 @@ use Tracker_FormElement_Field;
 use Transition;
 use Transition_PostAction;
 use Transition_PostActionSubFactory;
+use Tuleap\ProgramManagement\Adapter\Workspace\ProgramServiceIsEnabledCertifier;
+use Tuleap\ProgramManagement\Adapter\Workspace\RetrieveFullProject;
 use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\Workflow\WorkflowProxy;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\CreatePostAction;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\ProgramIdentifierForTopBacklogAction;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\SearchByTransitionId;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\SearchByWorkflow;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\TopBacklogChangeProcessor;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\VerifyProgramServiceIsEnabled;
 use Tuleap\ProgramManagement\Domain\Program\Plan\BuildProgram;
 use Workflow;
 
@@ -46,7 +46,8 @@ final class AddToTopBacklogPostActionFactory implements Transition_PostActionSub
     public function __construct(
         private readonly SearchByTransitionId $add_to_top_backlog_post_action_dao,
         private readonly BuildProgram $build_program,
-        private readonly VerifyProgramServiceIsEnabled $program_verifier,
+        private readonly RetrieveFullProject $project_retriever,
+        private readonly ProgramServiceIsEnabledCertifier $program_certifier,
         private readonly TopBacklogChangeProcessor $top_backlog_change_processor,
         private readonly SearchByWorkflow $search_by_workflow,
         private readonly CreatePostAction $create_post_action,
@@ -89,23 +90,22 @@ final class AddToTopBacklogPostActionFactory implements Transition_PostActionSub
         }
 
         $project_id = (int) $transition->getGroupId();
-        return ProgramIdentifierForTopBacklogAction::fromProjectId(
-            $this->program_verifier,
-            $project_id
-        )->mapOr(function () use ($transition) {
-            $row = $this->add_to_top_backlog_post_action_dao->searchByTransitionId((int) $transition->getId());
-            if ($row === null) {
-                return [];
-            }
-            return [
-                new AddToTopBacklogPostAction(
-                    $transition,
-                    $row['id'],
-                    $this->build_program,
-                    $this->top_backlog_change_processor
-                ),
-            ];
-        }, []);
+        $project    = $this->project_retriever->getProject($project_id);
+        return $this->program_certifier->certifyProgramServiceEnabled($project)
+            ->mapOr(function () use ($transition) {
+                $row = $this->add_to_top_backlog_post_action_dao->searchByTransitionId((int) $transition->getId());
+                if ($row === null) {
+                    return [];
+                }
+                return [
+                    new AddToTopBacklogPostAction(
+                        $transition,
+                        $row['id'],
+                        $this->build_program,
+                        $this->top_backlog_change_processor
+                    ),
+                ];
+            }, []);
     }
 
     public function saveObject(Transition_PostAction $post_action): void

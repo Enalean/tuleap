@@ -97,7 +97,6 @@ use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\MassChangeTopBac
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\MassChangeTopBacklogSourceInformation;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\PlannedFeatureDAO;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\ProcessTopBacklogChange;
-use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\ProgramServiceIsEnabledVerifier;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\Workflow\AddToTopBacklogPostAction;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\Workflow\AddToTopBacklogPostActionDAO;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\Workflow\AddToTopBacklogPostActionFactory;
@@ -132,6 +131,7 @@ use Tuleap\ProgramManagement\Adapter\Workspace\MessageLog;
 use Tuleap\ProgramManagement\Adapter\Workspace\ProgramBaseInfoBuilder;
 use Tuleap\ProgramManagement\Adapter\Workspace\ProgramFlagsBuilder;
 use Tuleap\ProgramManagement\Adapter\Workspace\ProgramPrivacyBuilder;
+use Tuleap\ProgramManagement\Adapter\Workspace\ProgramServiceIsEnabledCertifier;
 use Tuleap\ProgramManagement\Adapter\Workspace\ProgramsSearcher;
 use Tuleap\ProgramManagement\Adapter\Workspace\ProjectManagerAdapter;
 use Tuleap\ProgramManagement\Adapter\Workspace\ProjectPermissionVerifier;
@@ -1248,9 +1248,8 @@ final class program_managementPlugin extends Plugin implements PluginWithService
         return new AddToTopBacklogPostActionFactory(
             $dao,
             CachedProgramBuilder::instance(),
-            new ProgramServiceIsEnabledVerifier(
-                new ProjectManagerAdapter(ProjectManager::instance(), new UserManagerAdapter(UserManager::instance())),
-            ),
+            new ProjectManagerAdapter(ProjectManager::instance(), new UserManagerAdapter(UserManager::instance())),
+            new ProgramServiceIsEnabledCertifier(),
             $this->getTopBacklogChangeProcessor(),
             $dao,
             $dao,
