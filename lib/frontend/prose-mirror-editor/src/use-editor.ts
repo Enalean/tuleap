@@ -67,7 +67,7 @@ export async function useEditor(
         initPluginInput(onChange),
         upload_plugin,
         dropCursor(),
-        initLinkPopoverPlugin(gettext_provider, editor_id),
+        initLinkPopoverPlugin(document, gettext_provider, editor_id),
         ...setupToolbar(gettext_provider, editor_id),
         initPluginTransformInput(project_id, references),
     ];

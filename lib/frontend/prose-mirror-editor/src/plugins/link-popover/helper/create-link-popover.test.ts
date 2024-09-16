@@ -19,18 +19,18 @@
  */
 
 import { describe, beforeEach, it, expect } from "vitest";
+import { createLocalDocument, gettext_provider } from "../../../helpers/helper-for-test";
 import {
     buildLinkPopoverId,
     insertCrossReferenceLinkPopover,
     insertLinkPopover,
     removePopover,
-} from "./link-popover-inserter";
-import { createLocalDocument, gettext_provider } from "../../../helpers/helper-for-test";
+} from "./create-link-popover";
 
 const editor_id = "aaaa-bbbb-cccc-dddd";
 const link_href = "https://example.com/";
 
-describe("link-popover-inserter", () => {
+describe("create-link-popover", () => {
     let doc: Document, popover_anchor: HTMLElement;
 
     beforeEach(() => {

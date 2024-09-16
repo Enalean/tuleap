@@ -19,58 +19,36 @@
 
 import { Plugin } from "prosemirror-state";
 import type { EditorView } from "prosemirror-view";
-import {
-    removePopover,
-    insertLinkPopover,
-    insertCrossReferenceLinkPopover,
-} from "./helper/link-popover-inserter";
-import { getLinkValue } from "./helper/link-value-extractor";
 import type { GetText } from "@tuleap/gettext";
+import { LinkPopoverInserter } from "./helper/LinkPopoverInserter";
+import { DOMNodeAtPositionFinder } from "./helper/DOMNodeAtPositionFinder";
+import { CrossReferenceHTMLElementDetector } from "./helper/CrossReferenceNodeDetector";
+import { CrossReferenceUrlExtractor } from "./helper/CrossReferenceUrlExtractor";
+import { LinkUrlExtractor } from "./helper/LinkUrlExtractor";
+import { LinkNodeDetector } from "./helper/LinkNodeDetector";
+import { EditorNodeAtPositionFinder } from "./helper/EditorNodeAtPositionFinder";
+import { EmptySelectionChecker } from "./helper/EmptySelectionChecker";
 
-export const initLinkPopoverPlugin = (gettext_provider: GetText, editor_id: string): Plugin =>
+export const initLinkPopoverPlugin = (
+    doc: Document,
+    gettext_provider: GetText,
+    editor_id: string,
+): Plugin =>
     new Plugin({
         props: {
-            handleClick: (view: EditorView, pos: number): boolean => {
-                removePopover(document, editor_id);
-
-                if (!view.state.selection.empty) {
-                    return false;
-                }
-
-                const dom_element = view.domAtPos(pos).node.parentElement;
-                if (dom_element === null) {
-                    return false;
-                }
-
-                const is_cross_ref_link = dom_element.dataset.href !== undefined;
-
-                const link_href = is_cross_ref_link
-                    ? dom_element.dataset.href
-                    : getLinkValue(view.state, view.state.selection.from, view.state.selection.to);
-                if (!link_href) {
-                    return false;
-                }
-
-                const popover_anchor = view.domAtPos(pos).node.parentElement;
-                if (!popover_anchor) {
-                    return false;
-                }
-
-                if (is_cross_ref_link) {
-                    insertCrossReferenceLinkPopover(
-                        document,
-                        gettext_provider,
-                        popover_anchor,
-                        editor_id,
-                        link_href,
-                        dom_element.textContent ?? "",
-                    );
-                    return true;
-                }
-
-                insertLinkPopover(document, gettext_provider, popover_anchor, editor_id, link_href);
-
-                return true;
-            },
+            handleClick: (view: EditorView, position: number): boolean =>
+                LinkPopoverInserter(
+                    doc,
+                    gettext_provider,
+                    editor_id,
+                    EmptySelectionChecker(view.state.selection),
+                    DOMNodeAtPositionFinder(view),
+                    CrossReferenceHTMLElementDetector(),
+                    CrossReferenceUrlExtractor(),
+                    LinkUrlExtractor(
+                        EditorNodeAtPositionFinder(view.state),
+                        LinkNodeDetector(view.state),
+                    ),
+                ).insertPopover(position),
         },
     });

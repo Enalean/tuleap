@@ -38,7 +38,7 @@ export function removePopover(doc: Document, editor_id: string): void {
 const isLinkPopoverElement = (element: HTMLElement): element is LinkPopoverElement & HTMLElement =>
     element.localName === LINK_POPOVER_TAG;
 
-export function createBasePopoverElement(
+function createBasePopoverElement(
     doc: Document,
     gettext_provider: GetText,
     popover_anchor: HTMLElement,
