@@ -32,6 +32,7 @@ use Tuleap\CrossTracker\CrossTrackerArtifactReportDao;
 use Tuleap\CrossTracker\CrossTrackerInstrumentation;
 use Tuleap\CrossTracker\CrossTrackerReport;
 use Tuleap\CrossTracker\Report\Query\Advanced\ExpertQueryIsEmptyException;
+use Tuleap\CrossTracker\Report\Query\Advanced\InvalidOrderByBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSearchablesCollectionBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSelectablesCollectionBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSelectablesCollectorVisitor;
@@ -50,6 +51,7 @@ use Tuleap\Tracker\Report\Query\Advanced\FromIsInvalidException;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Query;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\SyntaxError;
+use Tuleap\Tracker\Report\Query\Advanced\OrderByIsInvalidException;
 use Tuleap\Tracker\Report\Query\Advanced\ParserCacheProxy;
 use Tuleap\Tracker\Report\Query\Advanced\SearchablesAreInvalidException;
 use Tuleap\Tracker\Report\Query\Advanced\SearchablesDoNotExistException;
@@ -91,6 +93,7 @@ final readonly class CrossTrackerArtifactReportFactory
      * @throws SyntaxError
      * @throws ExpertQueryIsEmptyException
      * @throws FromIsInvalidException
+     * @throws OrderByIsInvalidException
      */
     public function getArtifactsMatchingReport(
         CrossTrackerReport $report,
@@ -150,6 +153,7 @@ final readonly class CrossTrackerArtifactReportFactory
      * @throws SyntaxError
      * @throws SelectablesDoNotExistException
      * @throws SelectablesAreInvalidException
+     * @throws OrderByIsInvalidException
      */
     private function getArtifactsMatchingDefaultQuery(
         CrossTrackerReport $report,
@@ -179,6 +183,7 @@ final readonly class CrossTrackerArtifactReportFactory
      * @throws SyntaxError
      * @throws SelectablesDoNotExistException
      * @throws FromIsInvalidException
+     * @throws OrderByIsInvalidException
      */
     private function getArtifactsMatchingExpertQuery(
         CrossTrackerReport $report,
@@ -229,6 +234,7 @@ final readonly class CrossTrackerArtifactReportFactory
      * @throws SelectablesAreInvalidException
      * @throws SyntaxError
      * @throws SelectablesDoNotExistException
+     * @throws OrderByIsInvalidException
      */
     private function getQueryFromReport(
         CrossTrackerReport $report,
@@ -241,6 +247,7 @@ final readonly class CrossTrackerArtifactReportFactory
             $report->isExpert(),
             new InvalidSearchablesCollectionBuilder($this->term_collector, $trackers, $current_user),
             new InvalidSelectablesCollectionBuilder($this->selectables_collector, $trackers, $current_user),
+            new InvalidOrderByBuilder(),
         );
         return $this->parser->parse($expert_query);
     }

@@ -53,6 +53,7 @@ use Tuleap\CrossTracker\Report\Query\Advanced\ExpertQueryIsEmptyException;
 use Tuleap\CrossTracker\Report\Query\Advanced\FromBuilder\FromProjectBuilderVisitor;
 use Tuleap\CrossTracker\Report\Query\Advanced\FromBuilder\FromTrackerBuilderVisitor;
 use Tuleap\CrossTracker\Report\Query\Advanced\FromBuilderVisitor;
+use Tuleap\CrossTracker\Report\Query\Advanced\InvalidOrderByBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSearchableCollectorVisitor;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSearchablesCollectionBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSelectablesCollectionBuilder;
@@ -145,6 +146,7 @@ use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ListFields\ListFieldCheck
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Text\TextFieldChecker;
 use Tuleap\Tracker\Report\Query\Advanced\LimitSizeIsExceededException;
 use Tuleap\Tracker\Report\Query\Advanced\ListFieldBindValueNormalizer;
+use Tuleap\Tracker\Report\Query\Advanced\OrderByIsInvalidException;
 use Tuleap\Tracker\Report\Query\Advanced\ParserCacheProxy;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\DateTimeValueRounder;
 use Tuleap\Tracker\Report\Query\Advanced\SearchablesAreInvalidException;
@@ -311,6 +313,8 @@ final class CrossTrackerReportsResource extends AuthenticatedResource
             throw new I18NRestException(400, $exception->getMessage());
         } catch (FromIsInvalidException $exception) {
             throw new I18NRestException(400, $exception->getI18NExceptionMessage());
+        } catch (OrderByIsInvalidException $exception) {
+            throw new I18NRestException(400, $exception->getI18NExceptionMessage());
         } catch (ExpertQueryIsEmptyException) {
             throw new I18NRestException(400, dgettext('tuleap-crosstracker', 'Expert query is required and cannot be empty'));
         }
@@ -406,12 +410,15 @@ final class CrossTrackerReportsResource extends AuthenticatedResource
                     $trackers,
                     $user
                 ),
+                new InvalidOrderByBuilder(),
             );
         } catch (SearchablesDoNotExistException | SearchablesAreInvalidException $exception) {
             throw new RestException(400, $exception->getMessage());
         } catch (SyntaxError) {
             throw new I18NRestException(400, dgettext('tuleap-crosstracker', 'Error while parsing the query'));
         } catch (FromIsInvalidException $exception) {
+            throw new I18NRestException(400, $exception->getI18NExceptionMessage());
+        } catch (OrderByIsInvalidException $exception) {
             throw new I18NRestException(400, $exception->getI18NExceptionMessage());
         } catch (LimitSizeIsExceededException $exception) {
             throw new RestException(400, $exception->getMessage());

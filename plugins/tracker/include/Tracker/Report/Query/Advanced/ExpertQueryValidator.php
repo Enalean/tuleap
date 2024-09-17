@@ -43,12 +43,14 @@ final readonly class ExpertQueryValidator
      * @throws SyntaxError
      * @throws SelectablesDoNotExistException
      * @throws SelectablesAreInvalidException
+     * @throws OrderByIsInvalidException
      */
     public function validateExpertQuery(
         string $expert_query,
         bool $expert_mode,
         IBuildInvalidSearchablesCollection $invalid_searchables_collection_builder,
         IBuildInvalidSelectablesCollection $invalid_selectables_collection_builder,
+        IBuildInvalidOrderBy $invalid_order_by_builder,
     ): void {
         $query     = $this->parser->parse($expert_query);
         $condition = $query->getCondition();
@@ -56,7 +58,7 @@ final readonly class ExpertQueryValidator
 
         $this->checkSearchables($condition, $invalid_searchables_collection_builder);
         $this->checkSelectables($query->getSelect(), $expert_mode, $invalid_selectables_collection_builder);
-        $this->checkOrderBy($query->getOrderBy());
+        $this->checkOrderBy($query->getOrderBy(), $invalid_order_by_builder);
     }
 
     /**
@@ -150,13 +152,21 @@ final readonly class ExpertQueryValidator
     }
 
     /**
-     * @throws SyntaxError
+     * @throws OrderByIsInvalidException
      */
     private function checkOrderBy(
         ?OrderBy $order_by,
+        IBuildInvalidOrderBy $invalid_order_by_builder,
     ): void {
-        if ($order_by !== null) {
-            throw new SyntaxError('', '', '', 0, 0, 0);
+        if ($order_by === null) {
+            return;
+        }
+        // No need to check for not expert mode.
+        // Here if we have ORDER BY, it means we have valid SELECT, so $expert_mode === true
+
+        $invalid_order_by = $invalid_order_by_builder->buildInvalidOrderBy($order_by);
+        if ($invalid_order_by !== null) {
+            throw new OrderByIsInvalidException($invalid_order_by->message, $invalid_order_by->i18n_message);
         }
     }
 }
