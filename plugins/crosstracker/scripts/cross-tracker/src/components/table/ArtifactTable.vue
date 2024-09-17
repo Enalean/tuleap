@@ -18,10 +18,14 @@
   -->
 
 <template>
+    <empty-state
+        v-if="is_table_empty"
+        v-bind:writing_cross_tracker_report="writing_cross_tracker_report"
+    />
     <div class="tlp-table-actions" v-if="should_show_export_button">
         <export-button />
     </div>
-    <table class="tlp-table">
+    <table class="tlp-table" v-if="is_loading || artifacts.length > 0">
         <thead>
             <tr>
                 <th>{{ $gettext("Artifact") }}</th>
@@ -32,21 +36,14 @@
                 <th>{{ $gettext("Assigned to") }}</th>
             </tr>
         </thead>
-        <tbody v-if="is_loading" key="loading">
+        <tbody v-if="is_loading">
             <tr>
                 <td colspan="6">
                     <div class="cross-tracker-loader"></div>
                 </td>
             </tr>
         </tbody>
-        <tbody v-if="is_table_empty" key="empty" data-test="cross-tracker-no-results">
-            <tr>
-                <td colspan="6" class="tlp-table-cell-empty">
-                    {{ $gettext("No matching artifacts found") }}
-                </td>
-            </tr>
-        </tbody>
-        <tbody v-else key="loaded" data-test="cross-tracker-results">
+        <tbody v-if="!is_table_empty" data-test="cross-tracker-results">
             <artifact-table-row
                 v-for="artifact of artifacts"
                 v-bind:artifact="artifact"
@@ -74,7 +71,6 @@
 </template>
 
 <script setup lang="ts">
-import type { Ref } from "vue";
 import { computed, onMounted, ref, watch } from "vue";
 import { useGettext } from "vue3-gettext";
 import { strictInject } from "@tuleap/vue-strict-inject";
@@ -93,6 +89,7 @@ import {
     REPORT_STATE,
 } from "../../injection-symbols";
 import { ArtifactsRetrievalFault } from "../../domain/ArtifactsRetrievalFault";
+import EmptyState from "../EmptyState.vue";
 
 const props = defineProps<{ writing_cross_tracker_report: WritingCrossTrackerReport }>();
 
@@ -105,7 +102,7 @@ const report_id = strictInject(REPORT_ID);
 const { $gettext } = useGettext();
 
 const is_loading = ref(true);
-let artifacts: Ref<Artifact[]> = ref([]);
+const artifacts = ref<ReadonlyArray<Artifact>>([]);
 const is_load_more_displayed = ref(false);
 const is_loading_more = ref(false);
 let current_offset = 0;

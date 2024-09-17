@@ -101,9 +101,6 @@ msgstr "Suivant"
 msgid "No artifact found"
 msgstr "Aucun artéfact trouvé"
 
-msgid "No matching artifacts found"
-msgstr "Aucun artéfact correspondant trouvé"
-
 msgid "No trackers selected"
 msgstr "Aucun élément sélectionné"
 

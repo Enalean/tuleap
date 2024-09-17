@@ -93,9 +93,6 @@ msgstr ""
 msgid "No artifact found"
 msgstr ""
 
-msgid "No matching artifacts found"
-msgstr ""
-
 msgid "No trackers selected"
 msgstr ""
 

@@ -69,7 +69,7 @@ import type { Fault } from "@tuleap/fault";
 import { useGettext } from "vue3-gettext";
 import type { ArtifactsTableWithTotal } from "../../domain/RetrieveArtifactsTable";
 import SelectablePagination from "./SelectablePagination.vue";
-import EmptyState from "./EmptyState.vue";
+import EmptyState from "../EmptyState.vue";
 import { ArtifactsRetrievalFault } from "../../domain/ArtifactsRetrievalFault";
 import SelectableCell from "./SelectableCell.vue";
 import type { ColumnName } from "../../domain/ColumnName";
