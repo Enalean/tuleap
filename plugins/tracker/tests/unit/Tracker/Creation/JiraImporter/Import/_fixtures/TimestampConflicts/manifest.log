@@ -1,0 +1,9 @@
+https://jira.example.com/rest/api/2/issuetype/10102 issuetype.json 200
+https://jira.example.com/rest/api/2/mypermissions?projectKey=SBX mypermissions.json 200
+https://jira.example.com/rest/api/2/project/SBX/statuses statuses.json 200
+https://jira.example.com/rest/api/2/priority priorities.json 200
+https://jira.example.com/rest/api/2/issue/createmeta?projectKeys=SBX&issuetypeIds=10102&expand=projects.issuetypes.fields createmeta.json 200
+https://jira.example.com/rest/api/2/search?jql=project%3D%22SBX%22+AND+issuetype%3D10102&expand=editmeta&startAt=0&maxResults=1 expand_editmeta_search.json 200
+https://jira.example.com/rest/api/2/search?jql=project%3D%22SBX%22+AND+issuetype%3D10102&fields=%2Aall&expand=renderedFields&startAt=0 all_issues.json 200
+https://jira.example.com/rest/api/2/issue/SBX-6?expand=changelog sbx6.json 200
+https://jira.example.com/rest/api/2/issue/SBX-6?expand=renderedFields sbx6.json 200

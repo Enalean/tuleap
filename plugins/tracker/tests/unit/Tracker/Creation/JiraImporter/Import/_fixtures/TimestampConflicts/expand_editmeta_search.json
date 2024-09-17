@@ -1,0 +1,906 @@
+{
+    "expand": "names,schema",
+    "startAt": 0,
+    "maxResults": 1,
+    "total": 3,
+    "issues": [
+        {
+            "expand": "operations,versionedRepresentations,editmeta,changelog,renderedFields",
+            "id": "10777",
+            "self": "https://jira.example.com/rest/api/2/issue/10777",
+            "key": "SBX-6",
+            "fields": {
+                "issuetype": {
+                    "self": "https://jira.example.com/rest/api/2/issuetype/10102",
+                    "id": "10102",
+                    "description": "",
+                    "iconUrl": "https://jira.example.com/secure/viewavatar?size=xsmall&avatarId=10303&avatarType=issuetype",
+                    "name": "Bogue",
+                    "subtask": false,
+                    "avatarId": 10303
+                },
+                "timespent": null,
+                "project": {
+                    "self": "https://jira.example.com/rest/api/2/project/10103",
+                    "id": "10103",
+                    "key": "SBX",
+                    "name": "SANDBOX",
+                    "projectTypeKey": "software",
+                    "avatarUrls": {
+                        "48x48": "https://jira.example.com/secure/projectavatar?pid=10103&avatarId=10712",
+                        "24x24": "https://jira.example.com/secure/projectavatar?size=small&pid=10103&avatarId=10712",
+                        "16x16": "https://jira.example.com/secure/projectavatar?size=xsmall&pid=10103&avatarId=10712",
+                        "32x32": "https://jira.example.com/secure/projectavatar?size=medium&pid=10103&avatarId=10712"
+                    },
+                    "projectCategory": {
+                        "self": "https://jira.example.com/rest/api/2/projectCategory/10104",
+                        "id": "10104",
+                        "description": "Projet interne à ACME",
+                        "name": "ACME"
+                    }
+                },
+                "fixVersions": [],
+                "customfield_10231": "-vcvd",
+                "customfield_10232": "-",
+                "aggregatetimespent": null,
+                "customfield_10233": "-",
+                "customfield_10234": "-",
+                "customfield_10235": "-",
+                "customfield_10104": null,
+                "customfield_10105": "0|i004bb:",
+                "customfield_10501": null,
+                "customfield_10502": null,
+                "customfield_10229": "-",
+                "resolutiondate": null,
+                "workratio": -1,
+                "lastViewed": "2021-11-19T16:27:05.862+0100",
+                "watches": {
+                    "self": "https://jira.example.com/rest/api/2/issue/SBX-6/watchers",
+                    "watchCount": 0,
+                    "isWatching": false
+                },
+                "created": "2021-03-24T10:56:18.499+0100",
+                "customfield_10100": null,
+                "priority": {
+                    "self": "https://jira.example.com/rest/api/2/priority/4",
+                    "iconUrl": "https://jira.example.com/images/icons/priorities/trivial.svg",
+                    "name": "Normal",
+                    "id": "4"
+                },
+                "customfield_10214": null,
+                "customfield_10215": {
+                    "self": "https://jira.example.com/rest/api/2/customFieldOption/10361",
+                    "value": "Composant_1",
+                    "id": "10361"
+                },
+                "timeestimate": null,
+                "aggregatetimeoriginalestimate": null,
+                "versions": [
+                    {
+                        "self": "https://jira.example.com/rest/api/2/version/10109",
+                        "id": "10109",
+                        "description": "",
+                        "name": "1.0",
+                        "archived": false,
+                        "released": false
+                    }
+                ],
+                "issuelinks": [],
+                "assignee": {
+                    "self": "https://jira.example.com/rest/api/2/user?username=jdoe",
+                    "name": "jdoe",
+                    "key": "JIRAUSER10131",
+                    "emailAddress": "john.doe@example.com",
+                    "avatarUrls": {
+                        "48x48": "https://jira.example.com/secure/useravatar?avatarId=10337",
+                        "24x24": "https://jira.example.com/secure/useravatar?size=small&avatarId=10337",
+                        "16x16": "https://jira.example.com/secure/useravatar?size=xsmall&avatarId=10337",
+                        "32x32": "https://jira.example.com/secure/useravatar?size=medium&avatarId=10337"
+                    },
+                    "displayName": "DOE John",
+                    "active": true,
+                    "timeZone": "Europe/Paris"
+                },
+                "updated": "2021-03-24T11:08:56.931+0100",
+                "status": {
+                    "self": "https://jira.example.com/rest/api/2/status/10007",
+                    "description": "(limegreen)",
+                    "iconUrl": "https://jira.example.com/images/icons/statuses/generic.png",
+                    "name": "VALIDATION",
+                    "id": "10007",
+                    "statusCategory": {
+                        "self": "https://jira.example.com/rest/api/2/statuscategory/4",
+                        "id": 4,
+                        "key": "indeterminate",
+                        "colorName": "yellow",
+                        "name": "En cours"
+                    }
+                },
+                "components": [],
+                "customfield_10290": null,
+                "timeoriginalestimate": null,
+                "description": "gdg",
+                "timetracking": {},
+                "customfield_10401": null,
+                "customfield_10204": "dgdg",
+                "customfield_10249": {
+                    "self": "https://jira.example.com/rest/api/2/customFieldOption/10242",
+                    "value": "STD_ITG",
+                    "id": "10242"
+                },
+                "customfield_10403": "2021-03-24",
+                "customfield_10404": null,
+                "attachment": [],
+                "customfield_10405": null,
+                "aggregatetimeestimate": null,
+                "customfield_10406": null,
+                "customfield_10407": null,
+                "customfield_10408": null,
+                "summary": "bug1",
+                "creator": {
+                    "self": "https://jira.example.com/rest/api/2/user?username=jdoe",
+                    "name": "jdoe",
+                    "key": "JIRAUSER10131",
+                    "emailAddress": "john.doe@example.com",
+                    "avatarUrls": {
+                        "48x48": "https://jira.example.com/secure/useravatar?avatarId=10337",
+                        "24x24": "https://jira.example.com/secure/useravatar?size=small&avatarId=10337",
+                        "16x16": "https://jira.example.com/secure/useravatar?size=xsmall&avatarId=10337",
+                        "32x32": "https://jira.example.com/secure/useravatar?size=medium&avatarId=10337"
+                    },
+                    "displayName": "DOE John",
+                    "active": true,
+                    "timeZone": "Europe/Paris"
+                },
+                "subtasks": [],
+                "reporter": {
+                    "self": "https://jira.example.com/rest/api/2/user?username=jdoe",
+                    "name": "jdoe",
+                    "key": "JIRAUSER10131",
+                    "emailAddress": "john.doe@example.com",
+                    "avatarUrls": {
+                        "48x48": "https://jira.example.com/secure/useravatar?avatarId=10337",
+                        "24x24": "https://jira.example.com/secure/useravatar?size=small&avatarId=10337",
+                        "16x16": "https://jira.example.com/secure/useravatar?size=xsmall&avatarId=10337",
+                        "32x32": "https://jira.example.com/secure/useravatar?size=medium&avatarId=10337"
+                    },
+                    "displayName": "DOE John",
+                    "active": true,
+                    "timeZone": "Europe/Paris"
+                },
+                "customfield_10000": "{summaryBean=com.atlassian.jira.plugin.devstatus.rest.SummaryBean@69f35df5[summary={pullrequest=com.atlassian.jira.plugin.devstatus.rest.SummaryItemBean@36eb3cb2[overall=PullRequestOverallBean{stateCount=0, state='OPEN', details=PullRequestOverallDetails{openCount=0, mergedCount=0, declinedCount=0}},byInstanceType={}], build=com.atlassian.jira.plugin.devstatus.rest.SummaryItemBean@67d20fe7[overall=com.atlassian.jira.plugin.devstatus.summary.beans.BuildOverallBean@833a103[failedBuildCount=0,successfulBuildCount=0,unknownBuildCount=0,count=0,lastUpdated=<null>,lastUpdatedTimestamp=<null>],byInstanceType={}], review=com.atlassian.jira.plugin.devstatus.rest.SummaryItemBean@2b8bf462[overall=com.atlassian.jira.plugin.devstatus.summary.beans.ReviewsOverallBean@50ee1b07[stateCount=0,state=<null>,dueDate=<null>,overDue=false,count=0,lastUpdated=<null>,lastUpdatedTimestamp=<null>],byInstanceType={}], deployment-environment=com.atlassian.jira.plugin.devstatus.rest.SummaryItemBean@27b48bca[overall=com.atlassian.jira.plugin.devstatus.summary.beans.DeploymentOverallBean@329a1d86[topEnvironments=[],showProjects=false,successfulCount=0,count=0,lastUpdated=<null>,lastUpdatedTimestamp=<null>],byInstanceType={}], repository=com.atlassian.jira.plugin.devstatus.rest.SummaryItemBean@4646c753[overall=com.atlassian.jira.plugin.devstatus.summary.beans.CommitOverallBean@6650dabf[count=0,lastUpdated=<null>,lastUpdatedTimestamp=<null>],byInstanceType={}], branch=com.atlassian.jira.plugin.devstatus.rest.SummaryItemBean@65b9e764[overall=com.atlassian.jira.plugin.devstatus.summary.beans.BranchOverallBean@7adb078[count=0,lastUpdated=<null>,lastUpdatedTimestamp=<null>],byInstanceType={}]},errors=[],configErrors=[]], devSummaryJson={\"cachedValue\":{\"errors\":[],\"configErrors\":[],\"summary\":{\"pullrequest\":{\"overall\":{\"count\":0,\"lastUpdated\":null,\"stateCount\":0,\"state\":\"OPEN\",\"details\":{\"openCount\":0,\"mergedCount\":0,\"declinedCount\":0,\"total\":0},\"open\":true},\"byInstanceType\":{}},\"build\":{\"overall\":{\"count\":0,\"lastUpdated\":null,\"failedBuildCount\":0,\"successfulBuildCount\":0,\"unknownBuildCount\":0},\"byInstanceType\":{}},\"review\":{\"overall\":{\"count\":0,\"lastUpdated\":null,\"stateCount\":0,\"state\":null,\"dueDate\":null,\"overDue\":false,\"completed\":false},\"byInstanceType\":{}},\"deployment-environment\":{\"overall\":{\"count\":0,\"lastUpdated\":null,\"topEnvironments\":[],\"showProjects\":false,\"successfulCount\":0},\"byInstanceType\":{}},\"repository\":{\"overall\":{\"count\":0,\"lastUpdated\":null},\"byInstanceType\":{}},\"branch\":{\"overall\":{\"count\":0,\"lastUpdated\":null},\"byInstanceType\":{}}}},\"isStale\":false}}",
+                "aggregateprogress": {
+                    "progress": 0,
+                    "total": 0
+                },
+                "customfield_10287": null,
+                "customfield_10202": {
+                    "self": "https://jira.example.com/rest/api/2/customFieldOption/10100",
+                    "value": "Logiciel",
+                    "id": "10100"
+                },
+                "customfield_10236": "-",
+                "customfield_10237": {
+                    "self": "https://jira.example.com/rest/api/2/customFieldOption/10192",
+                    "value": "-",
+                    "id": "10192"
+                },
+                "environment": null,
+                "duedate": "2021-03-24",
+                "progress": {
+                    "progress": 0,
+                    "total": 0
+                },
+                "comment": {
+                    "comments": [
+                        {
+                            "self": "https://jira.example.com/rest/api/2/issue/10777/comment/12119",
+                            "id": "12119",
+                            "author": {
+                                "self": "https://jira.example.com/rest/api/2/user?username=jdoe",
+                                "name": "jdoe",
+                                "key": "JIRAUSER10131",
+                                "emailAddress": "john.doe@example.com",
+                                "avatarUrls": {
+                                    "48x48": "https://jira.example.com/secure/useravatar?avatarId=10337",
+                                    "24x24": "https://jira.example.com/secure/useravatar?size=small&avatarId=10337",
+                                    "16x16": "https://jira.example.com/secure/useravatar?size=xsmall&avatarId=10337",
+                                    "32x32": "https://jira.example.com/secure/useravatar?size=medium&avatarId=10337"
+                                },
+                                "displayName": "DOE John",
+                                "active": true,
+                                "timeZone": "Europe/Paris"
+                            },
+                            "body": "sdgdsg",
+                            "updateAuthor": {
+                                "self": "https://jira.example.com/rest/api/2/user?username=jdoe",
+                                "name": "jdoe",
+                                "key": "JIRAUSER10131",
+                                "emailAddress": "john.doe@example.com",
+                                "avatarUrls": {
+                                    "48x48": "https://jira.example.com/secure/useravatar?avatarId=10337",
+                                    "24x24": "https://jira.example.com/secure/useravatar?size=small&avatarId=10337",
+                                    "16x16": "https://jira.example.com/secure/useravatar?size=xsmall&avatarId=10337",
+                                    "32x32": "https://jira.example.com/secure/useravatar?size=medium&avatarId=10337"
+                                },
+                                "displayName": "DOE John",
+                                "active": true,
+                                "timeZone": "Europe/Paris"
+                            },
+                            "created": "2021-03-24T11:08:12.562+0100",
+                            "updated": "2021-03-24T11:08:12.562+0100"
+                        },
+                        {
+                            "self": "https://jira.example.com/rest/api/2/issue/10777/comment/12120",
+                            "id": "12120",
+                            "author": {
+                                "self": "https://jira.example.com/rest/api/2/user?username=jdoe",
+                                "name": "jdoe",
+                                "key": "JIRAUSER10131",
+                                "emailAddress": "john.doe@example.com",
+                                "avatarUrls": {
+                                    "48x48": "https://jira.example.com/secure/useravatar?avatarId=10337",
+                                    "24x24": "https://jira.example.com/secure/useravatar?size=small&avatarId=10337",
+                                    "16x16": "https://jira.example.com/secure/useravatar?size=xsmall&avatarId=10337",
+                                    "32x32": "https://jira.example.com/secure/useravatar?size=medium&avatarId=10337"
+                                },
+                                "displayName": "DOE John",
+                                "active": true,
+                                "timeZone": "Europe/Paris"
+                            },
+                            "body": "vdv",
+                            "updateAuthor": {
+                                "self": "https://jira.example.com/rest/api/2/user?username=jdoe",
+                                "name": "jdoe",
+                                "key": "JIRAUSER10131",
+                                "emailAddress": "john.doe@example.com",
+                                "avatarUrls": {
+                                    "48x48": "https://jira.example.com/secure/useravatar?avatarId=10337",
+                                    "24x24": "https://jira.example.com/secure/useravatar?size=small&avatarId=10337",
+                                    "16x16": "https://jira.example.com/secure/useravatar?size=xsmall&avatarId=10337",
+                                    "32x32": "https://jira.example.com/secure/useravatar?size=medium&avatarId=10337"
+                                },
+                                "displayName": "DOE John",
+                                "active": true,
+                                "timeZone": "Europe/Paris"
+                            },
+                            "created": "2021-03-24T11:08:22.476+0100",
+                            "updated": "2021-03-24T11:08:22.476+0100"
+                        },
+                        {
+                            "self": "https://jira.example.com/rest/api/2/issue/10777/comment/12121",
+                            "id": "12121",
+                            "author": {
+                                "self": "https://jira.example.com/rest/api/2/user?username=jdoe",
+                                "name": "jdoe",
+                                "key": "JIRAUSER10131",
+                                "emailAddress": "john.doe@example.com",
+                                "avatarUrls": {
+                                    "48x48": "https://jira.example.com/secure/useravatar?avatarId=10337",
+                                    "24x24": "https://jira.example.com/secure/useravatar?size=small&avatarId=10337",
+                                    "16x16": "https://jira.example.com/secure/useravatar?size=xsmall&avatarId=10337",
+                                    "32x32": "https://jira.example.com/secure/useravatar?size=medium&avatarId=10337"
+                                },
+                                "displayName": "DOE John",
+                                "active": true,
+                                "timeZone": "Europe/Paris"
+                            },
+                            "body": "vdvd",
+                            "updateAuthor": {
+                                "self": "https://jira.example.com/rest/api/2/user?username=jdoe",
+                                "name": "jdoe",
+                                "key": "JIRAUSER10131",
+                                "emailAddress": "john.doe@example.com",
+                                "avatarUrls": {
+                                    "48x48": "https://jira.example.com/secure/useravatar?avatarId=10337",
+                                    "24x24": "https://jira.example.com/secure/useravatar?size=small&avatarId=10337",
+                                    "16x16": "https://jira.example.com/secure/useravatar?size=xsmall&avatarId=10337",
+                                    "32x32": "https://jira.example.com/secure/useravatar?size=medium&avatarId=10337"
+                                },
+                                "displayName": "DOE John",
+                                "active": true,
+                                "timeZone": "Europe/Paris"
+                            },
+                            "created": "2021-03-24T11:08:32.562+0100",
+                            "updated": "2021-03-24T11:08:32.562+0100"
+                        },
+                        {
+                            "self": "https://jira.example.com/rest/api/2/issue/10777/comment/12122",
+                            "id": "12122",
+                            "author": {
+                                "self": "https://jira.example.com/rest/api/2/user?username=jdoe",
+                                "name": "jdoe",
+                                "key": "JIRAUSER10131",
+                                "emailAddress": "john.doe@example.com",
+                                "avatarUrls": {
+                                    "48x48": "https://jira.example.com/secure/useravatar?avatarId=10337",
+                                    "24x24": "https://jira.example.com/secure/useravatar?size=small&avatarId=10337",
+                                    "16x16": "https://jira.example.com/secure/useravatar?size=xsmall&avatarId=10337",
+                                    "32x32": "https://jira.example.com/secure/useravatar?size=medium&avatarId=10337"
+                                },
+                                "displayName": "DOE John",
+                                "active": true,
+                                "timeZone": "Europe/Paris"
+                            },
+                            "body": "ffdfdgf",
+                            "updateAuthor": {
+                                "self": "https://jira.example.com/rest/api/2/user?username=jdoe",
+                                "name": "jdoe",
+                                "key": "JIRAUSER10131",
+                                "emailAddress": "john.doe@example.com",
+                                "avatarUrls": {
+                                    "48x48": "https://jira.example.com/secure/useravatar?avatarId=10337",
+                                    "24x24": "https://jira.example.com/secure/useravatar?size=small&avatarId=10337",
+                                    "16x16": "https://jira.example.com/secure/useravatar?size=xsmall&avatarId=10337",
+                                    "32x32": "https://jira.example.com/secure/useravatar?size=medium&avatarId=10337"
+                                },
+                                "displayName": "DOE John",
+                                "active": true,
+                                "timeZone": "Europe/Paris"
+                            },
+                            "created": "2021-03-24T11:08:56.930+0100",
+                            "updated": "2021-03-24T11:08:56.930+0100"
+                        }
+                    ],
+                    "maxResults": 4,
+                    "total": 4,
+                    "startAt": 0
+                },
+                "worklog": {
+                    "startAt": 0,
+                    "maxResults": 20,
+                    "total": 0,
+                    "worklogs": []
+                }
+            },
+            "editmeta": {
+                "fields": {
+                    "issuetype": {
+                        "required": true,
+                        "schema": {
+                            "type": "issuetype",
+                            "system": "issuetype"
+                        },
+                        "name": "Type de ticket",
+                        "fieldId": "issuetype",
+                        "operations": [],
+                        "allowedValues": [
+                            {
+                                "self": "https://jira.example.com/rest/api/2/issuetype/10102",
+                                "id": "10102",
+                                "description": "",
+                                "iconUrl": "https://jira.example.com/secure/viewavatar?size=xsmall&avatarId=10303&avatarType=issuetype",
+                                "name": "Bogue",
+                                "subtask": false,
+                                "avatarId": 10303
+                            }
+                        ]
+                    },
+                    "customfield_10202": {
+                        "required": true,
+                        "schema": {
+                            "type": "option",
+                            "custom": "com.atlassian.jira.plugin.system.customfieldtypes:select",
+                            "customId": 10202
+                        },
+                        "name": "Categories",
+                        "fieldId": "customfield_10202",
+                        "operations": [
+                            "set"
+                        ],
+                        "allowedValues": [
+                            {
+                                "self": "https://jira.example.com/rest/api/2/customFieldOption/10100",
+                                "value": "Logiciel",
+                                "id": "10100"
+                            },
+                            {
+                                "self": "https://jira.example.com/rest/api/2/customFieldOption/10101",
+                                "value": "Electrique",
+                                "id": "10101"
+                            },
+                            {
+                                "self": "https://jira.example.com/rest/api/2/customFieldOption/10102",
+                                "value": "Mécanique",
+                                "id": "10102"
+                            }
+                        ]
+                    },
+                    "summary": {
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "system": "summary"
+                        },
+                        "name": "Résumé",
+                        "fieldId": "summary",
+                        "operations": [
+                            "set"
+                        ]
+                    },
+                    "description": {
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "system": "description"
+                        },
+                        "name": "Descriptif",
+                        "fieldId": "description",
+                        "operations": [
+                            "set"
+                        ]
+                    },
+                    "customfield_10204": {
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "custom": "com.atlassian.jira.plugin.system.customfieldtypes:textarea",
+                            "customId": 10204
+                        },
+                        "name": "Comment reproduire",
+                        "fieldId": "customfield_10204",
+                        "operations": [
+                            "set"
+                        ]
+                    },
+                    "versions": {
+                        "required": true,
+                        "schema": {
+                            "type": "array",
+                            "items": "version",
+                            "system": "versions"
+                        },
+                        "name": "Affecte la/les version(s)",
+                        "fieldId": "versions",
+                        "operations": [
+                            "set",
+                            "add",
+                            "remove"
+                        ],
+                        "allowedValues": [
+                            {
+                                "self": "https://jira.example.com/rest/api/2/version/10109",
+                                "id": "10109",
+                                "name": "1.0",
+                                "archived": false,
+                                "released": false,
+                                "projectId": 10103
+                            }
+                        ]
+                    },
+                    "customfield_10214": {
+                        "required": false,
+                        "schema": {
+                            "type": "option",
+                            "custom": "com.atlassian.jira.plugin.system.customfieldtypes:select",
+                            "customId": 10214
+                        },
+                        "name": "Version ciblée",
+                        "fieldId": "customfield_10214",
+                        "operations": [
+                            "set"
+                        ],
+                        "allowedValues": [
+                            {
+                                "self": "https://jira.example.com/rest/api/2/customFieldOption/10117",
+                                "value": "Agv4_11",
+                                "id": "10117"
+                            },
+                            {
+                                "self": "https://jira.example.com/rest/api/2/customFieldOption/10118",
+                                "value": "Agv4_12",
+                                "id": "10118"
+                            },
+                            {
+                                "self": "https://jira.example.com/rest/api/2/customFieldOption/10119",
+                                "value": "Agv4_13",
+                                "id": "10119"
+                            },
+                            {
+                                "self": "https://jira.example.com/rest/api/2/customFieldOption/10120",
+                                "value": "Agv4_14",
+                                "id": "10120"
+                            },
+                            {
+                                "self": "https://jira.example.com/rest/api/2/customFieldOption/10121",
+                                "value": "Agv4_15",
+                                "id": "10121"
+                            },
+                            {
+                                "self": "https://jira.example.com/rest/api/2/customFieldOption/10122",
+                                "value": "Agv4_16",
+                                "id": "10122"
+                            },
+                            {
+                                "self": "https://jira.example.com/rest/api/2/customFieldOption/10200",
+                                "value": "Agv4_17",
+                                "id": "10200"
+                            },
+                            {
+                                "self": "https://jira.example.com/rest/api/2/customFieldOption/10201",
+                                "value": "Agv4_18",
+                                "id": "10201"
+                            },
+                            {
+                                "self": "https://jira.example.com/rest/api/2/customFieldOption/10202",
+                                "value": "Agv4_19",
+                                "id": "10202"
+                            },
+                            {
+                                "self": "https://jira.example.com/rest/api/2/customFieldOption/10234",
+                                "value": "Agv4_20",
+                                "id": "10234"
+                            },
+                            {
+                                "self": "https://jira.example.com/rest/api/2/customFieldOption/10235",
+                                "value": "Agv4_21",
+                                "id": "10235"
+                            },
+                            {
+                                "self": "https://jira.example.com/rest/api/2/customFieldOption/10236",
+                                "value": "Agv4_22",
+                                "id": "10236"
+                            },
+                            {
+                                "self": "https://jira.example.com/rest/api/2/customFieldOption/10243",
+                                "value": "Agv4_23",
+                                "id": "10243"
+                            },
+                            {
+                                "self": "https://jira.example.com/rest/api/2/customFieldOption/10245",
+                                "value": "Agv4_24",
+                                "id": "10245"
+                            },
+                            {
+                                "self": "https://jira.example.com/rest/api/2/customFieldOption/10246",
+                                "value": "Agv4_25",
+                                "id": "10246"
+                            },
+                            {
+                                "self": "https://jira.example.com/rest/api/2/customFieldOption/10253",
+                                "value": "Agv4_26",
+                                "id": "10253"
+                            },
+                            {
+                                "self": "https://jira.example.com/rest/api/2/customFieldOption/10261",
+                                "value": "Agv4_26_1",
+                                "id": "10261"
+                            },
+                            {
+                                "self": "https://jira.example.com/rest/api/2/customFieldOption/10263",
+                                "value": "Agv4_26_2",
+                                "id": "10263"
+                            },
+                            {
+                                "self": "https://jira.example.com/rest/api/2/customFieldOption/10265",
+                                "value": "Agv4_27",
+                                "id": "10265"
+                            },
+                            {
+                                "self": "https://jira.example.com/rest/api/2/customFieldOption/10451",
+                                "value": "Agv4_27_1",
+                                "id": "10451"
+                            },
+                            {
+                                "self": "https://jira.example.com/rest/api/2/customFieldOption/10453",
+                                "value": "Agv4_27_2",
+                                "id": "10453"
+                            },
+                            {
+                                "self": "https://jira.example.com/rest/api/2/customFieldOption/10268",
+                                "value": "Agv4_28",
+                                "id": "10268"
+                            }
+                        ]
+                    },
+                    "fixVersions": {
+                        "required": false,
+                        "schema": {
+                            "type": "array",
+                            "items": "version",
+                            "system": "fixVersions"
+                        },
+                        "name": "Version(s) corrigée(s)",
+                        "fieldId": "fixVersions",
+                        "operations": [
+                            "set",
+                            "add",
+                            "remove"
+                        ],
+                        "allowedValues": [
+                            {
+                                "self": "https://jira.example.com/rest/api/2/version/10109",
+                                "id": "10109",
+                                "name": "1.0",
+                                "archived": false,
+                                "released": false,
+                                "projectId": 10103
+                            }
+                        ]
+                    },
+                    "customfield_10401": {
+                        "required": false,
+                        "schema": {
+                            "type": "number",
+                            "custom": "com.atlassian.jira.plugin.system.customfieldtypes:float",
+                            "customId": 10401
+                        },
+                        "name": "Chiffrage (en heures)",
+                        "fieldId": "customfield_10401",
+                        "operations": [
+                            "set"
+                        ]
+                    },
+                    "customfield_10290": {
+                        "required": false,
+                        "schema": {
+                            "type": "option",
+                            "custom": "com.atlassian.jira.plugin.system.customfieldtypes:select",
+                            "customId": 10290
+                        },
+                        "name": "Sévérité",
+                        "fieldId": "customfield_10290",
+                        "operations": [
+                            "set"
+                        ],
+                        "allowedValues": [
+                            {
+                                "self": "https://jira.example.com/rest/api/2/customFieldOption/10198",
+                                "value": "Bloquant",
+                                "id": "10198"
+                            },
+                            {
+                                "self": "https://jira.example.com/rest/api/2/customFieldOption/10199",
+                                "value": "Mineur",
+                                "id": "10199"
+                            }
+                        ]
+                    },
+                    "customfield_10231": {
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "custom": "com.atlassian.jira.plugin.system.customfieldtypes:textarea",
+                            "customId": 10231
+                        },
+                        "name": "Fil d'analyse",
+                        "fieldId": "customfield_10231",
+                        "operations": [
+                            "set"
+                        ]
+                    },
+                    "customfield_10232": {
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "custom": "com.atlassian.jira.plugin.system.customfieldtypes:textarea",
+                            "customId": 10232
+                        },
+                        "name": "Revue de code",
+                        "fieldId": "customfield_10232",
+                        "operations": [
+                            "set"
+                        ]
+                    },
+                    "customfield_10235": {
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "custom": "com.atlassian.jira.plugin.system.customfieldtypes:textarea",
+                            "customId": 10235
+                        },
+                        "name": "Tags doxygen",
+                        "fieldId": "customfield_10235",
+                        "operations": [
+                            "set"
+                        ]
+                    },
+                    "customfield_10236": {
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "custom": "com.atlassian.jira.plugin.system.customfieldtypes:textarea",
+                            "customId": 10236
+                        },
+                        "name": "Revue de docs",
+                        "fieldId": "customfield_10236",
+                        "operations": [
+                            "set"
+                        ]
+                    },
+                    "customfield_10229": {
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "custom": "com.atlassian.jira.plugin.system.customfieldtypes:textarea",
+                            "customId": 10229
+                        },
+                        "name": "Revue FTU",
+                        "fieldId": "customfield_10229",
+                        "operations": [
+                            "set"
+                        ]
+                    },
+                    "customfield_10233": {
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "custom": "com.atlassian.jira.plugin.system.customfieldtypes:textarea",
+                            "customId": 10233
+                        },
+                        "name": "Comment tester",
+                        "fieldId": "customfield_10233",
+                        "operations": [
+                            "set"
+                        ]
+                    },
+                    "customfield_10234": {
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "custom": "com.atlassian.jira.plugin.system.customfieldtypes:textarea",
+                            "customId": 10234
+                        },
+                        "name": "Analyse d'impact",
+                        "fieldId": "customfield_10234",
+                        "operations": [
+                            "set"
+                        ]
+                    },
+                    "customfield_10249": {
+                        "required": false,
+                        "schema": {
+                            "type": "option",
+                            "custom": "com.atlassian.jira.plugin.system.customfieldtypes:select",
+                            "customId": 10249
+                        },
+                        "name": "Branche intégration",
+                        "fieldId": "customfield_10249",
+                        "operations": [
+                            "set"
+                        ],
+                        "allowedValues": [
+                            {
+                                "self": "https://jira.example.com/rest/api/2/customFieldOption/10142",
+                                "value": "BACKBONE_ITG",
+                                "id": "10142"
+                            },
+                            {
+                                "self": "https://jira.example.com/rest/api/2/customFieldOption/10430",
+                                "value": "ETHERCAT_ITG",
+                                "id": "10430"
+                            },
+                            {
+                                "self": "https://jira.example.com/rest/api/2/customFieldOption/10143",
+                                "value": "STD_ITG_01.01",
+                                "id": "10143"
+                            },
+                            {
+                                "self": "https://jira.example.com/rest/api/2/customFieldOption/10144",
+                                "value": "STD_ITG_02.01",
+                                "id": "10144"
+                            },
+                            {
+                                "self": "https://jira.example.com/rest/api/2/customFieldOption/10145",
+                                "value": "STD_ITG_16.03",
+                                "id": "10145"
+                            },
+                            {
+                                "self": "https://jira.example.com/rest/api/2/customFieldOption/10242",
+                                "value": "STD_ITG",
+                                "id": "10242"
+                            },
+                            {
+                                "self": "https://jira.example.com/rest/api/2/customFieldOption/10577",
+                                "value": "LASER_ITG",
+                                "id": "10577"
+                            },
+                            {
+                                "self": "https://jira.example.com/rest/api/2/customFieldOption/10197",
+                                "value": "-",
+                                "id": "10197"
+                            }
+                        ]
+                    },
+                    "customfield_10287": {
+                        "required": false,
+                        "schema": {
+                            "type": "option",
+                            "custom": "com.atlassian.jira.plugin.system.customfieldtypes:select",
+                            "customId": 10287
+                        },
+                        "name": "Motif",
+                        "fieldId": "customfield_10287",
+                        "operations": [
+                            "set"
+                        ],
+                        "allowedValues": [
+                            {
+                                "self": "https://jira.example.com/rest/api/2/customFieldOption/10189",
+                                "value": "Impossible à reproduire",
+                                "id": "10189"
+                            },
+                            {
+                                "self": "https://jira.example.com/rest/api/2/customFieldOption/10190",
+                                "value": "doublon",
+                                "id": "10190"
+                            },
+                            {
+                                "self": "https://jira.example.com/rest/api/2/customFieldOption/10244",
+                                "value": "No fix",
+                                "id": "10244"
+                            }
+                        ]
+                    },
+                    "customfield_10215": {
+                        "required": true,
+                        "schema": {
+                            "type": "option",
+                            "custom": "com.atlassian.jira.plugin.system.customfieldtypes:select",
+                            "customId": 10215
+                        },
+                        "name": "Composants",
+                        "fieldId": "customfield_10215",
+                        "operations": [
+                            "set"
+                        ],
+                        "allowedValues": [
+                            {
+                                "self": "https://jira.example.com/rest/api/2/customFieldOption/10361",
+                                "value": "Composant_1",
+                                "id": "10361"
+                            },
+                            {
+                                "self": "https://jira.example.com/rest/api/2/customFieldOption/10362",
+                                "value": "Composant_2",
+                                "id": "10362"
+                            },
+                            {
+                                "self": "https://jira.example.com/rest/api/2/customFieldOption/10363",
+                                "value": "Composant_3",
+                                "id": "10363"
+                            }
+                        ]
+                    },
+                    "customfield_10405": {
+                        "required": false,
+                        "schema": {
+                            "type": "option",
+                            "custom": "com.atlassian.jira.plugin.system.customfieldtypes:select",
+                            "customId": 10405
+                        },
+                        "name": "Ticket Jalon Client",
+                        "fieldId": "customfield_10405",
+                        "operations": [
+                            "set"
+                        ],
+                        "allowedValues": [
+                            {
+                                "self": "https://jira.example.com/rest/api/2/customFieldOption/10392",
+                                "value": "oui",
+                                "id": "10392"
+                            },
+                            {
+                                "self": "https://jira.example.com/rest/api/2/customFieldOption/10393",
+                                "value": "non",
+                                "id": "10393"
+                            }
+                        ]
+                    },
+                    "duedate": {
+                        "required": false,
+                        "schema": {
+                            "type": "date",
+                            "system": "duedate"
+                        },
+                        "name": "Date d'échéance",
+                        "fieldId": "duedate",
+                        "operations": [
+                            "set"
+                        ]
+                    }
+                }
+            }
+        }
+    ]
+}
