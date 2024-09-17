@@ -26,15 +26,13 @@ namespace Tuleap\Tracker\Notifications\RemoveRecipient;
 use PFUser;
 use Psr\Log\LoggerInterface;
 use Tracker_Artifact_Changeset;
-use Tracker_FormElementFactory;
 use Tuleap\Tracker\Notifications\Recipient;
 use Tuleap\Tracker\Notifications\RecipientRemovalStrategy;
 
 final class RemoveRecipientThatCannotReadAnything implements RecipientRemovalStrategy
 {
-    public function __construct(
-        private Tracker_FormElementFactory $form_element_factory,
-    ) {
+    public function __construct()
+    {
     }
 
     /**
@@ -48,19 +46,23 @@ final class RemoveRecipientThatCannotReadAnything implements RecipientRemovalStr
         array $recipients,
         bool $is_update,
     ): array {
-        $comment = $changeset->getComment();
-        if ($comment !== null && ! $comment->hasEmptyBody()) {
-            $logger->debug(self::class . ' there is a comment, skipped');
-            return $recipients;
-        }
-
         foreach ($recipients as $key => $recipient) {
             if (! $recipient->check_permissions) {
                 continue;
             }
 
-            if (! $changeset->getArtifact()->userCanView($recipient->user) || ! $this->userCanReadAtLeastOneChangedField($changeset, $recipient->user)) {
-                $logger->debug(self::class . ' ' . $key . ' removed');
+            if (! $changeset->getArtifact()->userCanView($recipient->user)) {
+                $logger->debug(self::class . ' ' . $key . ' removed, artifact cannot be seen by the user');
+                unset($recipients[$key]);
+                continue;
+            }
+
+            if ($this->isThereANonEmptyChangesetComment($changeset)) {
+                continue;
+            }
+
+            if (! $this->userCanReadAtLeastOneChangedField($changeset, $recipient->user)) {
+                $logger->debug(self::class . ' ' . $key . ' removed, no visible changes for the user');
                 unset($recipients[$key]);
             }
         }
@@ -70,14 +72,24 @@ final class RemoveRecipientThatCannotReadAnything implements RecipientRemovalStr
 
     private function userCanReadAtLeastOneChangedField(Tracker_Artifact_Changeset $changeset, PFUser $user): bool
     {
-        foreach ($changeset->getValues() as $field_id => $current_changeset_value) {
-            $field             = $this->form_element_factory->getFieldById($field_id);
-            $field_is_readable = $field && $field->userCanRead($user);
+        foreach ($changeset->getValues() as $current_changeset_value) {
             $field_has_changed = $current_changeset_value && $current_changeset_value->hasChanged();
-            if ($field_is_readable && $field_has_changed) {
+            if (! $field_has_changed) {
+                continue;
+            }
+            $field             = $current_changeset_value->getField();
+            $field_is_readable = $field && $field->userCanRead($user);
+            if ($field_is_readable) {
                 return true;
             }
         }
         return false;
+    }
+
+    private function isThereANonEmptyChangesetComment(Tracker_Artifact_Changeset $changeset): bool
+    {
+        $comment = $changeset->getComment();
+
+        return $comment !== null && ! $comment->hasEmptyBody();
     }
 }

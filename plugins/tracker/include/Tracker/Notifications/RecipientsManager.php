@@ -56,7 +56,7 @@ class RecipientsManager
         $this->recipient_removal_strategies = [
             new RemoveRecipientThatAreTechnicalUsers(),
             new RemoveRecipientThatDoesntWantMailForTheirOwnActions(),
-            new RemoveRecipientThatCannotReadAnything($this->form_element_factory),
+            new RemoveRecipientThatCannotReadAnything(),
             new RemoveRecipientThatHaveUnsubscribedFromNotification($this->unsubscribers_notification_dao),
             new RemoveRecipientWhenTheyAreInStatusUpdateOnlyMode($this->user_status_change_only_dao, $this->status_change_detector),
             new RemoveRecipientWhenTheyAreInCreationOnlyMode($this->notification_settings_retriever),
