@@ -26345,7 +26345,7 @@
       <code><![CDATA[! $start_purge_timestamp]]></code>
     </RiskyTruthyFalsyComparison>
   </file>
-  <file src="plugins/program_management/include/Domain/Program/Plan/Plan.php">
+  <file src="plugins/program_management/include/Domain/Program/Plan/NewPlan.php">
     <LessSpecificReturnStatement>
       <code><![CDATA[$this->can_prioritize->getUserGroups()]]></code>
     </LessSpecificReturnStatement>
@@ -26494,27 +26494,6 @@
       <code><![CDATA[count]]></code>
       <code><![CDATA[getName]]></code>
     </PossiblyNullReference>
-  </file>
-  <file src="plugins/program_management/tests/unit/Stub/GatherSynchronizedFieldsStub.php">
-    <InvalidArgument>
-      <code><![CDATA[$artifact_links]]></code>
-    </InvalidArgument>
-  </file>
-  <file src="plugins/program_management/tests/unit/Stub/SearchByWorkflowStub.php">
-    <LessSpecificReturnStatement>
-      <code><![CDATA[$this->transitions]]></code>
-    </LessSpecificReturnStatement>
-    <MoreSpecificReturnType>
-      <code><![CDATA[array]]></code>
-    </MoreSpecificReturnType>
-  </file>
-  <file src="plugins/program_management/tests/unit/Stub/SearchOpenFeaturesStub.php">
-    <LessSpecificReturnStatement>
-      <code><![CDATA[$this->open_features]]></code>
-    </LessSpecificReturnStatement>
-    <MoreSpecificReturnType>
-      <code><![CDATA[array]]></code>
-    </MoreSpecificReturnType>
   </file>
   <file src="plugins/project_ownership/include/Notification/Sender.php">
     <MissingParamType>
@@ -31853,11 +31832,6 @@
       <code><![CDATA[empty($user->getPreference($hide_preference_name))]]></code>
     </RiskyTruthyFalsyComparison>
   </file>
-  <file src="plugins/taskboard/include/Column/ColumnPresenter.php">
-    <RedundantCastGivenDocblockType>
-      <code><![CDATA[(int) $column->getId()]]></code>
-    </RedundantCastGivenDocblockType>
-  </file>
   <file src="plugins/taskboard/include/Column/ColumnPresenterCollectionRetriever.php">
     <RiskyTruthyFalsyComparison>
       <code><![CDATA[empty($user->getPreference($preference_name))]]></code>
@@ -31915,9 +31889,6 @@
     </RiskyTruthyFalsyComparison>
   </file>
   <file src="plugins/taskboard/include/REST/v1/Cell/CardMappedFieldUpdater.php">
-    <MissingReturnType>
-      <code><![CDATA[updateCardMappedField]]></code>
-    </MissingReturnType>
     <RedundantCastGivenDocblockType>
       <code><![CDATA[(int) $mapped_field->getId()]]></code>
     </RedundantCastGivenDocblockType>

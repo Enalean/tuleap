@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Tests\Stub;
 
-use Tuleap\ProgramManagement\Domain\Program\Plan\Plan;
+use Tuleap\ProgramManagement\Domain\Program\Plan\NewPlan;
 use Tuleap\ProgramManagement\Domain\Program\Plan\SavePlan;
 
 final class SavePlanStub implements SavePlan
@@ -36,7 +36,7 @@ final class SavePlanStub implements SavePlan
         return new self();
     }
 
-    public function save(Plan $plan): void
+    public function save(NewPlan $plan): void
     {
         $this->call_count++;
     }
