@@ -20,13 +20,11 @@
 import type Vue from "vue";
 import { createLocalVue } from "@vue/test-utils";
 import Vuex from "vuex";
-import VueDOMPurifyHTML from "vue-dompurify-html";
 import { initVueGettext } from "@tuleap/vue2-gettext-init";
 
 export const createLocalVueForTests = async (): Promise<typeof Vue> => {
     const local_vue = createLocalVue();
     local_vue.use(Vuex);
-    local_vue.use(VueDOMPurifyHTML);
     await initVueGettext(local_vue, () => {
         throw new Error("Fallback to default");
     });
