@@ -35,6 +35,7 @@ use Tuleap\CrossTracker\Report\Query\Advanced\DuckTypedField\FieldTypeRetrieverW
 use Tuleap\CrossTracker\Report\Query\Advanced\FromBuilder\FromProjectBuilderVisitor;
 use Tuleap\CrossTracker\Report\Query\Advanced\FromBuilder\FromTrackerBuilderVisitor;
 use Tuleap\CrossTracker\Report\Query\Advanced\FromBuilderVisitor;
+use Tuleap\CrossTracker\Report\Query\Advanced\InvalidOrderByListChecker;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSearchableCollectorVisitor;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSelectablesCollectorVisitor;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidTermCollectorVisitor;
@@ -129,6 +130,8 @@ use Tuleap\Tracker\Report\Query\Advanced\SizeValidatorVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\UgroupLabelConverter;
 use Tuleap\Tracker\Report\TrackerReportConfig;
 use Tuleap\Tracker\Report\TrackerReportConfigDao;
+use Tuleap\Tracker\Semantic\Contributor\ContributorFieldRetriever;
+use Tuleap\Tracker\Semantic\Status\StatusFieldRetriever;
 use Tuleap\Widget\Event\GetProjectWidgetList;
 use Tuleap\Widget\Event\GetUserWidgetList;
 use Tuleap\Widget\Event\GetWidget;
@@ -292,7 +295,11 @@ class crosstrackerPlugin extends Plugin
                 ),
                 new SubmissionDateChecker(),
                 new ArtifactIdMetadataChecker(),
-            )
+            ),
+            new InvalidOrderByListChecker(
+                new StatusFieldRetriever(Tracker_Semantic_StatusFactory::instance()),
+                new ContributorFieldRetriever(Tracker_Semantic_ContributorFactory::instance()),
+            ),
         );
         $invalid_comparisons_collector = new InvalidTermCollectorVisitor(
             new InvalidSearchableCollectorVisitor($metadata_checker, $duck_typed_field_checker),
@@ -422,6 +429,7 @@ class crosstrackerPlugin extends Plugin
             $expert_query_dao,
             $invalid_comparisons_collector,
             $invalid_selectables_collector,
+            $metadata_checker,
             new ReportTrackersRetriever(
                 $validator,
                 $parser,

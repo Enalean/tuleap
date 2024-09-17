@@ -65,6 +65,15 @@ msgstr ""
 "est plus grande que la valeur maximum."
 
 #, php-format
+msgid ""
+"%s is a list with multiple values, sorting artifacts by it is not allowed. "
+"Please refine your query or check the configuration of the trackers."
+msgstr ""
+"%s est une liste avec plusieurs valeurs, ordonner les artéfacts avec n'est "
+"pas autorisé. Merci de modifier votre requête ou de vérifier la "
+"configuration des outils de suivi."
+
+#, php-format
 msgid "%s is not supported for the operator %s."
 msgstr "%s ne supporte pas l'opérateur %s."
 
@@ -217,6 +226,14 @@ msgstr "Permet la recherche d'artéfacts à travers plusieurs outils de suivi"
 
 msgid "Search into multiple trackers and multiple projects."
 msgstr "Rechercher dans plusieurs outils de suivi et plusieurs projets."
+
+#, php-format
+msgid ""
+"Sorting artifacts by %s is not allowed. Please refine your query or check "
+"the configuration of the trackers."
+msgstr ""
+"Ordonner les artéfacts avec %s n'est pas autorisé. Merci de modifier votre "
+"requête ou de vérifier la configuration des outils de suivi."
 
 msgid ""
 "The both conditions of 'FROM' must be on \"tracker\" and \"project\". If you "

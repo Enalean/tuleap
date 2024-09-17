@@ -61,4 +61,16 @@ final class AllowedMetadata
         self::TRACKER_NAME,
         self::PRETTY_TITLE,
     ];
+
+    public const SORTABLE_NAMES = [
+        self::TITLE,
+        self::DESCRIPTION,
+        self::STATUS,
+        self::SUBMITTED_ON,
+        self::LAST_UPDATE_DATE,
+        self::SUBMITTED_BY,
+        self::LAST_UPDATE_BY,
+        self::ASSIGNED_TO,
+        self::ID,
+    ];
 }

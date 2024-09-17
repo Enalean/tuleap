@@ -34,8 +34,10 @@ use Tracker;
 use Tracker_ArtifactFactory;
 use Tracker_FormElementFactory;
 use Tracker_Semantic_ContributorDao;
+use Tracker_Semantic_ContributorFactory;
 use Tracker_Semantic_DescriptionDao;
 use Tracker_Semantic_StatusDao;
+use Tracker_Semantic_StatusFactory;
 use Tracker_Semantic_TitleDao;
 use TrackerFactory;
 use Tuleap\CrossTracker\CrossTrackerArtifactReportDao;
@@ -54,6 +56,7 @@ use Tuleap\CrossTracker\Report\Query\Advanced\FromBuilder\FromProjectBuilderVisi
 use Tuleap\CrossTracker\Report\Query\Advanced\FromBuilder\FromTrackerBuilderVisitor;
 use Tuleap\CrossTracker\Report\Query\Advanced\FromBuilderVisitor;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidOrderByBuilder;
+use Tuleap\CrossTracker\Report\Query\Advanced\InvalidOrderByListChecker;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSearchableCollectorVisitor;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSearchablesCollectionBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSelectablesCollectionBuilder;
@@ -163,6 +166,8 @@ use Tuleap\Tracker\Report\TrackerReportConfig;
 use Tuleap\Tracker\Report\TrackerReportConfigDao;
 use Tuleap\Tracker\Report\TrackerReportExtractor;
 use Tuleap\Tracker\REST\v1\ArtifactMatchingReportCollection;
+use Tuleap\Tracker\Semantic\Contributor\ContributorFieldRetriever;
+use Tuleap\Tracker\Semantic\Status\StatusFieldRetriever;
 use UGroupManager;
 use URLVerification;
 use UserHelper;
@@ -410,7 +415,7 @@ final class CrossTrackerReportsResource extends AuthenticatedResource
                     $trackers,
                     $user
                 ),
-                new InvalidOrderByBuilder(),
+                new InvalidOrderByBuilder($this->getMetadataChecker(), $trackers, $user),
             );
         } catch (SearchablesDoNotExistException | SearchablesAreInvalidException $exception) {
             throw new RestException(400, $exception->getMessage());
@@ -596,7 +601,11 @@ final class CrossTrackerReportsResource extends AuthenticatedResource
                 ),
                 new SubmissionDateChecker(),
                 new ArtifactIdMetadataChecker(),
-            )
+            ),
+            new InvalidOrderByListChecker(
+                new StatusFieldRetriever(Tracker_Semantic_StatusFactory::instance()),
+                new ContributorFieldRetriever(Tracker_Semantic_ContributorFactory::instance()),
+            ),
         );
     }
 
@@ -737,6 +746,7 @@ final class CrossTrackerReportsResource extends AuthenticatedResource
                 new ArtifactResultBuilder($tracker_artifact_factory),
             ),
         );
+        $metadata_checker         = $this->getMetadataChecker();
         return new CrossTrackerArtifactReportFactory(
             new CrossTrackerArtifactReportDao(),
             $tracker_artifact_factory,
@@ -747,7 +757,8 @@ final class CrossTrackerReportsResource extends AuthenticatedResource
             $this->getParser(),
             new CrossTrackerExpertQueryReportDao(),
             $this->getInvalidComparisonsCollector(),
-            new InvalidSelectablesCollectorVisitor($this->getDuckTypedFieldChecker(), $this->getMetadataChecker()),
+            new InvalidSelectablesCollectorVisitor($this->getDuckTypedFieldChecker(), $metadata_checker),
+            $metadata_checker,
             $this->getReportTrackersRetriever(),
             $this->getInstrumentation(),
         );
