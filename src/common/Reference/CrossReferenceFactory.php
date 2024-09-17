@@ -194,12 +194,13 @@ class CrossReferenceFactory
         ));
     }
 
-    public function getHTMLCrossRefsForMail()
+    public function getHTMLCrossRefsForMail(): string
     {
         $html                        = '';
         $cross_refs                  = $this->getCrossReferences();
         $reference_manager           = ReferenceManager::instance();
         $available_nature_collection = $reference_manager->getAvailableNatures();
+        $html_purifier               = Codendi_HTMLPurifier::instance();
 
         foreach ($cross_refs as $nature => $references_by_destination) {
             $html .= '<div>';
@@ -218,7 +219,7 @@ class CrossReferenceFactory
                         continue;
                     }
                     $title  = $available_nature->label;
-                    $refs[] = '<a title="' . $title . '" href="' . $url . '">' . $ref . '</a>';
+                    $refs[] = '<a title="' . $html_purifier->purify($title) . '" href="' . $html_purifier->purify($url) . '">' . $html_purifier->purify($ref) . '</a>';
                 }
             }
             $html .= implode(', ', $refs);
