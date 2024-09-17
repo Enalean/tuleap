@@ -22,7 +22,6 @@ import Vue from "vue";
 import TimeAgo from "javascript-time-ago";
 import time_ago_english from "javascript-time-ago/locale/en";
 import time_ago_french from "javascript-time-ago/locale/fr";
-import VueDOMPurifyHTML from "vue-dompurify-html";
 import { getDatasetItemOrThrow } from "@tuleap/dom";
 import App from "./components/App.vue";
 import "../themes/main.scss";
@@ -47,7 +46,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     );
 
     Vue.config.language = locale;
-    Vue.use(VueDOMPurifyHTML);
 
     TimeAgo.locale(time_ago_english);
     TimeAgo.locale(time_ago_french);

@@ -47,10 +47,9 @@
                 {{ message_error_rest }}
             </div>
             <div v-else-if="repository !== null" class="git-repository-create-modal-body">
-                <p
-                    v-dompurify-html="confirmation_message"
-                    data-test="confirm-unlink-gitlab-message"
-                ></p>
+                <p data-test="confirm-unlink-gitlab-message">
+                    {{ confirmation_message }}
+                </p>
             </div>
         </div>
         <div class="tlp-modal-footer">
