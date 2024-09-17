@@ -49,6 +49,7 @@ use Tuleap\Tracker\Report\Query\Advanced\InvalidFields;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ListFields\ArtifactSubmitterChecker;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ListFields\CollectionOfNormalizedBindLabelsExtractor;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidMetadata;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidOrderByBuilder;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidSearchableCollectorVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidSearchablesCollection;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidSearchablesCollectionBuilder;
@@ -56,6 +57,7 @@ use Tuleap\Tracker\Report\Query\Advanced\InvalidSelectablesCollectionBuilder;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidTermCollectorVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\LimitSizeIsExceededException;
 use Tuleap\Tracker\Report\Query\Advanced\ListFieldBindValueNormalizer;
+use Tuleap\Tracker\Report\Query\Advanced\OrderByIsInvalidException;
 use Tuleap\Tracker\Report\Query\Advanced\ParserCacheProxy;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilderVisitor;
@@ -1908,6 +1910,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
      * @throws SyntaxError
      * @throws SelectablesAreInvalidException
      * @throws SelectablesDoNotExistException
+     * @throws OrderByIsInvalidException
      */
     public function validateExpertQuery(): void
     {
@@ -1920,6 +1923,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
             false,
             new InvalidSearchablesCollectionBuilder($this->getCollector()),
             new InvalidSelectablesCollectionBuilder(),
+            new InvalidOrderByBuilder(),
         );
     }
 

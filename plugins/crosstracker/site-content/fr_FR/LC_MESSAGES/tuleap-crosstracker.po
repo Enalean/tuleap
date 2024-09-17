@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 3.4.4\n"
+"X-Generator: Poedit 3.5\n"
 
 #, php-format
 msgid "%s cannot be compared to '%s'."
@@ -195,6 +195,9 @@ msgstr "La valeur pour 'offset' est incorrecte. 'offset' doit être un entier"
 
 msgid "No tracker found"
 msgstr "Aucun outils de suivi trouvé"
+
+msgid "Not implemented yet"
+msgstr "Pas encore implémenté"
 
 msgid "Only @project = 'self' and @project = 'aggregated' are supported"
 msgstr "Seulement @project = 'self' et @project = 'aggregated' sont supportés"
