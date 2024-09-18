@@ -63,26 +63,12 @@ final readonly class FromProjectBuilderVisitor implements FromProjectConditionVi
     private function buildFromProjectEqual(FromProjectEqual $project_equal, FromProjectBuilderVisitorParameters $parameters): IProvideParametrizedFromAndWhereSQLFragments
     {
         if ($project_equal->getValue() === AllowedFrom::PROJECT_SELF) {
-            $row = $this->widget_retriever->searchCrossTrackerWidgetByCrossTrackerReportId($parameters->report_id);
-            if ($row === null || $row['dashboard_type'] !== 'project') {
-                throw new LogicException('Project id not found');
-            }
-            return new ParametrizedFromWhere('', 'project.group_id = ?', [], [$row['project_id']]);
+            $project_id = $this->getCurrentProjectId($parameters);
+            return new ParametrizedFromWhere('', 'project.group_id = ?', [], [$project_id]);
         }
 
         if ($project_equal->getValue() === AllowedFrom::PROJECT_AGGREGATED) {
-            $row = $this->widget_retriever->searchCrossTrackerWidgetByCrossTrackerReportId($parameters->report_id);
-            if ($row === null || $row['dashboard_type'] !== 'project') {
-                throw new LogicException('Project id not found');
-            }
-            $project_id      = $row['project_id'];
-            $project         = $this->project_factory->getValidProjectById($project_id);
-            $linked_projects = $this->event_dispatcher->dispatch(new CollectLinkedProjects($project, $parameters->user));
-            assert($linked_projects instanceof CollectLinkedProjects);
-            $projects_ids = array_values(array_map(
-                static fn(LinkedProject $project) => $project->id,
-                $linked_projects->getChildrenProjects()->getProjects(),
-            ));
+            $projects_ids = $this->getAggregatedProjectsIds($parameters);
 
             return new ParametrizedFromWhere(
                 '',
@@ -93,6 +79,34 @@ final readonly class FromProjectBuilderVisitor implements FromProjectConditionVi
         }
 
         throw new LogicException('Should not be here: already catched by the FROM query validation');
+    }
+
+    private function getCurrentProjectId(FromProjectBuilderVisitorParameters $parameters): int
+    {
+        $row = $this->widget_retriever->searchCrossTrackerWidgetByCrossTrackerReportId($parameters->report_id);
+        if ($row === null || $row['dashboard_type'] !== 'project') {
+            throw new LogicException('Project id not found');
+        }
+        return $row['project_id'];
+    }
+
+    /**
+     * @return list<int>
+     */
+    private function getAggregatedProjectsIds(FromProjectBuilderVisitorParameters $parameters): array
+    {
+        $row = $this->widget_retriever->searchCrossTrackerWidgetByCrossTrackerReportId($parameters->report_id);
+        if ($row === null || $row['dashboard_type'] !== 'project') {
+            throw new LogicException('Project id not found');
+        }
+        $project_id      = $row['project_id'];
+        $project         = $this->project_factory->getValidProjectById($project_id);
+        $linked_projects = $this->event_dispatcher->dispatch(new CollectLinkedProjects($project, $parameters->user));
+        assert($linked_projects instanceof CollectLinkedProjects);
+        return array_values(array_map(
+            static fn(LinkedProject $project) => $project->id,
+            $linked_projects->getChildrenProjects()->getProjects(),
+        ));
     }
 
     private function buildFromProjectCategoryEqual(string $category): IProvideParametrizedFromAndWhereSQLFragments
@@ -125,11 +139,33 @@ final readonly class FromProjectBuilderVisitor implements FromProjectConditionVi
         $from_project = $parameters->from_project;
 
         return match ($from_project->getTarget()) {
+            AllowedFrom::PROJECT          => $this->buildFromProjectIn($project_in->getValues(), $parameters),
             AllowedFrom::PROJECT_NAME     => $this->buildFromProjectName($project_in->getValues()),
-            AllowedFrom::PROJECT          => throw new LogicException('Should not be called: already catched by the FROM query validation'),
             AllowedFrom::PROJECT_CATEGORY => $this->buildFromProjectCategoryIn($project_in->getValues()),
             default                       => throw new LogicException("Unknown FROM project: {$from_project->getTarget()}"),
         };
+    }
+
+    /**
+     * @param list<string> $values
+     */
+    private function buildFromProjectIn(array $values, FromProjectBuilderVisitorParameters $parameters): IProvideParametrizedFromAndWhereSQLFragments
+    {
+        $projects_ids = array_reduce(
+            $values,
+            fn(array $accumulator, string $value) => match ($value) {
+                AllowedFrom::PROJECT_SELF       => [...$accumulator, $this->getCurrentProjectId($parameters)],
+                AllowedFrom::PROJECT_AGGREGATED => [...$accumulator, ...$this->getAggregatedProjectsIds($parameters)],
+            },
+            [],
+        );
+
+        return new ParametrizedFromWhere(
+            '',
+            EasyStatement::open()->in('project.group_id IN (?*)', $projects_ids),
+            [],
+            $projects_ids,
+        );
     }
 
     /**

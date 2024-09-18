@@ -111,7 +111,7 @@ final class InvalidFromCollectionBuilderTest extends TestCase
         self::assertStringContainsStringIgnoringCase('The both conditions of \'FROM\' must be on "tracker" and "project"', $result[0]);
     }
 
-    public function testItReturnsEmptyForProjectAndTrackerAsNothingHasBeenImplemented(): void
+    public function testItReturnsEmptyForValidFrom(): void
     {
         $this->widget_retriever = SearchCrossTrackerWidgetStub::withExistingWidget(['dashboard_type' => 'project']);
         $result                 = $this->getInvalidFrom(new From(
@@ -121,18 +121,63 @@ final class InvalidFromCollectionBuilderTest extends TestCase
         self::assertEmpty($result);
     }
 
-    public function testItReturnsErrorWhenUsingProjectIn(): void
+    public function testItReturnsErrorWhenUsingProjectInSelfOutsideProject(): void
     {
-        $result = $this->getInvalidFrom(new From(new FromProject('@project', new FromProjectIn([])), null));
+        $result = $this->getInvalidFrom(new From(new FromProject('@project', new FromProjectIn(['self'])), null));
         self::assertCount(1, $result);
-        self::assertEquals("You cannot use '@project IN(...)'", $result[0]);
+        self::assertEquals("You cannot use @project with 'self' in the context of a personal dashboard", $result[0]);
+    }
+
+    public function testItReturnsErrorWhenUsingProjectInAggregatedOutsideProject(): void
+    {
+        $result = $this->getInvalidFrom(new From(new FromProject('@project', new FromProjectIn(['aggregated'])), null));
+        self::assertCount(1, $result);
+        self::assertEquals("You cannot use @project with 'aggregated' in the context of a personal dashboard", $result[0]);
+    }
+
+    public function testItReturnsErrorWhenProjectInAggregatedInsideNormalProject(): void
+    {
+        $this->widget_retriever = SearchCrossTrackerWidgetStub::withExistingWidget(['dashboard_type' => 'project', 'project_id' => 101]);
+        $this->project_factory  = ProjectByIDFactoryStub::buildWith(ProjectTestBuilder::aProject()->withId(101)->build());
+        $result                 = $this->getInvalidFrom(new From(new FromProject('@project', new FromProjectIn(['self', 'aggregated'])), null));
+        self::assertCount(1, $result);
+        self::assertEquals("You cannot use @project with 'aggregated' in a project without service Program enabled", $result[0]);
+    }
+
+    public function testItReturnsEmptyWhenProjectInAggregatedInProgram(): void
+    {
+        $this->widget_retriever = SearchCrossTrackerWidgetStub::withExistingWidget(['dashboard_type' => 'project', 'project_id' => 101]);
+        $project                = ProjectTestBuilder::aProject()->withId(101)->build();
+        $this->project_factory  = ProjectByIDFactoryStub::buildWith($project);
+        $user                   = UserTestBuilder::buildWithDefaults();
+        $new_event              = new CollectLinkedProjects($project, $user);
+        $collection             = LinkedProjectsCollection::fromSourceProject(
+            SearchLinkedProjectsStub::withValidProjects($project),
+            CheckProjectAccessStub::withValidAccess(),
+            $project,
+            $user,
+        );
+        $new_event->addChildrenProjects($collection);
+        $this->event_dispatcher = EventDispatcherStub::withCallback(static fn(object $event) => match ($event::class) {
+            CollectLinkedProjects::class => $new_event,
+            default                      => $event,
+        });
+        $result                 = $this->getInvalidFrom(new From(new FromProject('@project', new FromProjectIn(['self', 'aggregated'])), null));
+        self::assertEmpty($result);
+    }
+
+    public function testItReturnsEmptyWhenProjectInSelfInsideProject(): void
+    {
+        $this->widget_retriever = SearchCrossTrackerWidgetStub::withExistingWidget(['dashboard_type' => 'project']);
+        $result                 = $this->getInvalidFrom(new From(new FromProject('@project', new FromProjectIn(['self'])), null));
+        self::assertEmpty($result);
     }
 
     public function testItReturnsErrorWhenProjectSelfOutsideProject(): void
     {
         $result = $this->getInvalidFrom(new From(new FromProject('@project', new FromProjectEqual('self')), null));
         self::assertCount(1, $result);
-        self::assertEquals("You cannot use @project = 'self' in the context of a personal dashboard", $result[0]);
+        self::assertEquals("You cannot use @project with 'self' in the context of a personal dashboard", $result[0]);
     }
 
     public function testItReturnsEmptyWhenProjectSelfInsideProject(): void
@@ -146,7 +191,7 @@ final class InvalidFromCollectionBuilderTest extends TestCase
     {
         $result = $this->getInvalidFrom(new From(new FromProject('@project', new FromProjectEqual('aggregated')), null));
         self::assertCount(1, $result);
-        self::assertEquals("You cannot use @project = 'aggregated' in the context of a personal dashboard", $result[0]);
+        self::assertEquals("You cannot use @project with 'aggregated' in the context of a personal dashboard", $result[0]);
     }
 
     public function testItReturnsErrorWhenProjectAggregatedInsideNormalProject(): void
@@ -155,7 +200,7 @@ final class InvalidFromCollectionBuilderTest extends TestCase
         $this->project_factory  = ProjectByIDFactoryStub::buildWith(ProjectTestBuilder::aProject()->withId(101)->build());
         $result                 = $this->getInvalidFrom(new From(new FromProject('@project', new FromProjectEqual('aggregated')), null));
         self::assertCount(1, $result);
-        self::assertEquals("You cannot use @project = 'aggregated' in a project without service program enabled", $result[0]);
+        self::assertEquals("You cannot use @project with 'aggregated' in a project without service Program enabled", $result[0]);
     }
 
     public function testItReturnsErrorWhenProjectAggregatedInsideTeamProject(): void
@@ -178,7 +223,7 @@ final class InvalidFromCollectionBuilderTest extends TestCase
         });
         $result                 = $this->getInvalidFrom(new From(new FromProject('@project', new FromProjectEqual('aggregated')), null));
         self::assertCount(1, $result);
-        self::assertEquals("You can use @project = 'aggregated' only in a program project", $result[0]);
+        self::assertEquals("You can use @project with 'aggregated' only in a Program project", $result[0]);
     }
 
     public function testItReturnsEmptyWhenProjectAggregatedInsideProgramProject(): void
