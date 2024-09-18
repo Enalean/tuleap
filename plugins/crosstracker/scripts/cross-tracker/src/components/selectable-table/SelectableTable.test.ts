@@ -48,7 +48,7 @@ import type {
 } from "../../domain/RetrieveArtifactsTable";
 import { Fault } from "@tuleap/fault";
 import { buildVueDompurifyHTMLDirective } from "vue-dompurify-html";
-import EmptyState from "./EmptyState.vue";
+import EmptyState from "../EmptyState.vue";
 import type { ReportState } from "../../domain/ReportState";
 import SelectableCell from "./SelectableCell.vue";
 

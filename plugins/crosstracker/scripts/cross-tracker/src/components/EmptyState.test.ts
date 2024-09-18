@@ -19,10 +19,10 @@
 
 import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
-import WritingCrossTrackerReport from "../../writing-mode/writing-cross-tracker-report";
-import { ProjectInfoStub } from "../../../tests/stubs/ProjectInfoStub";
-import { TrackerInfoStub } from "../../../tests/stubs/TrackerInfoStub";
-import { getGlobalTestOptions } from "../../helpers/global-options-for-tests";
+import WritingCrossTrackerReport from "../writing-mode/writing-cross-tracker-report";
+import { ProjectInfoStub } from "../../tests/stubs/ProjectInfoStub";
+import { TrackerInfoStub } from "../../tests/stubs/TrackerInfoStub";
+import { getGlobalTestOptions } from "../helpers/global-options-for-tests";
 import { expect, describe, it } from "vitest";
 import EmptyState from "./EmptyState.vue";
 
