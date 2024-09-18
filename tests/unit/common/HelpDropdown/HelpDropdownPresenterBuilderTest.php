@@ -22,7 +22,6 @@ declare(strict_types=1);
 namespace Tuleap\HelpDropdown;
 
 use ForgeConfig;
-use PFUser;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Tuleap\ForgeConfigSandbox;
@@ -37,8 +36,6 @@ final class HelpDropdownPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCa
     use ForgeConfigSandbox;
 
     private HelpDropdownPresenterBuilder $help_dropdown_builder;
-
-    private PFUser $user;
     private ReleaseNoteManager&MockObject $release_note_manager;
     private URISanitizer $uri_sanitizer;
 
