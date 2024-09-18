@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Test\Builders;
 
+use Tracker_Artifact_Changeset_Comment;
 use Tuleap\Tracker\Artifact\Artifact;
 
 final class ChangesetTestBuilder
@@ -30,6 +31,7 @@ final class ChangesetTestBuilder
     private int $submitted_by_id        = 101;
     private int $submission_timestamp   = 1234567890;
     private ?string $submitted_by_email = 'anonymous_user@example.com';
+    private ?string $text_comment       = null;
 
     private function __construct(private string $id)
     {
@@ -63,17 +65,41 @@ final class ChangesetTestBuilder
         return $this;
     }
 
+    public function withTextComment(string $comment): self
+    {
+        $this->text_comment = $comment;
+        return $this;
+    }
+
     /**
      * @psalm-pure
      */
     public function build(): \Tracker_Artifact_Changeset
     {
-        return new \Tracker_Artifact_Changeset(
+        $changeset = new \Tracker_Artifact_Changeset(
             $this->id,
             $this->artifact,
             $this->submitted_by_id,
             $this->submission_timestamp,
             $this->submitted_by_email
         );
+
+        if ($this->text_comment !== null) {
+            $comment = new Tracker_Artifact_Changeset_Comment(
+                1,
+                $changeset,
+                0,
+                0,
+                (int) $changeset->getSubmittedBy(),
+                (int) $changeset->getSubmittedOn(),
+                $this->text_comment,
+                Tracker_Artifact_Changeset_Comment::TEXT_COMMENT,
+                -1,
+                null
+            );
+            $changeset->setLatestComment($comment);
+        }
+
+        return $changeset;
     }
 }

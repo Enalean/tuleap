@@ -129,6 +129,9 @@ final class RecipientsManagerTest extends \Tuleap\Test\PHPUnit\TestCase
             Mockery::spy(Tracker_Artifact_Changeset::class)
         );
 
+        $artifact = $changeset->getArtifact();
+        $artifact->shouldReceive('userCanView')->andReturn(true);
+
         $this->user_notification_settings->shouldReceive('isInNotifyOnArtifactCreationMode')->andReturnFalse();
 
         $this->assertEquals(
@@ -152,6 +155,9 @@ final class RecipientsManagerTest extends \Tuleap\Test\PHPUnit\TestCase
             false,
             Mockery::spy(Tracker_Artifact_Changeset::class)
         );
+
+        $artifact = $changeset->getArtifact();
+        $artifact->shouldReceive('userCanView')->andReturn(true);
 
         $this->user_notification_settings->shouldReceive('isInNotifyOnArtifactCreationMode')->andReturnFalse();
 
@@ -182,6 +188,9 @@ final class RecipientsManagerTest extends \Tuleap\Test\PHPUnit\TestCase
             false,
             Mockery::spy(Tracker_Artifact_Changeset::class)
         );
+
+        $artifact = $changeset->getArtifact();
+        $artifact->shouldReceive('userCanView')->andReturn(true);
 
         $this->user_notification_settings->shouldReceive('isInNotifyOnArtifactCreationMode')->andReturnFalse();
 
@@ -274,6 +283,9 @@ final class RecipientsManagerTest extends \Tuleap\Test\PHPUnit\TestCase
             Mockery::spy(Tracker_Artifact_Changeset::class)
         );
 
+        $artifact = $changeset->getArtifact();
+        $artifact->shouldReceive('userCanView')->andReturn(true);
+
         $this->user_notification_settings->shouldReceive('isInNotifyOnArtifactCreationMode')->andReturnFalse();
 
         $this->assertEquals(
@@ -303,6 +315,8 @@ final class RecipientsManagerTest extends \Tuleap\Test\PHPUnit\TestCase
             false,
             Mockery::spy(Tracker_Artifact_Changeset::class)
         );
+        $artifact  = $changeset->getArtifact();
+        $artifact->shouldReceive('userCanView')->andReturn(true);
 
         $this->user_notification_settings->shouldReceive('isInNotifyOnArtifactCreationMode')->andReturnFalse();
 
@@ -334,6 +348,9 @@ final class RecipientsManagerTest extends \Tuleap\Test\PHPUnit\TestCase
             Mockery::spy(Tracker_Artifact_Changeset::class)
         );
 
+        $artifact = $changeset->getArtifact();
+        $artifact->shouldReceive('userCanView')->andReturn(true);
+
         $this->user_notification_settings->shouldReceive('isInNotifyOnArtifactCreationMode')->andReturnFalse();
 
         $this->assertEquals(
@@ -363,6 +380,9 @@ final class RecipientsManagerTest extends \Tuleap\Test\PHPUnit\TestCase
             false,
             null
         );
+
+        $artifact = $changeset->getArtifact();
+        $artifact->shouldReceive('userCanView')->andReturn(true);
 
         $this->user_notification_settings->shouldReceive('isInNotifyOnEveryChangeMode')->andReturnFalse();
 
@@ -394,6 +414,9 @@ final class RecipientsManagerTest extends \Tuleap\Test\PHPUnit\TestCase
             Mockery::spy(Tracker_Artifact_Changeset::class)
         );
 
+        $artifact = $changeset->getArtifact();
+        $artifact->shouldReceive('userCanView')->andReturn(true);
+
         $this->user_notification_settings->shouldReceive('isInNotifyOnEveryChangeMode')->andReturnTrue();
         $this->user_notification_settings->shouldReceive('isInNotifyOnArtifactCreationMode')->andReturnFalse();
 
@@ -424,6 +447,9 @@ final class RecipientsManagerTest extends \Tuleap\Test\PHPUnit\TestCase
             false,
             Mockery::spy(Tracker_Artifact_Changeset::class)
         );
+
+        $artifact = $changeset->getArtifact();
+        $artifact->shouldReceive('userCanView')->andReturn(true);
 
         $this->user_notification_settings->shouldReceive('isInNoGlobalNotificationMode')->andReturnTrue();
         $this->user_notification_settings->shouldReceive('isInNotifyOnArtifactCreationMode')->andReturnFalse();
@@ -496,6 +522,9 @@ final class RecipientsManagerTest extends \Tuleap\Test\PHPUnit\TestCase
             Mockery::spy(Tracker_Artifact_Changeset::class)
         );
 
+        $artifact = $changeset->getArtifact();
+        $artifact->shouldReceive('userCanView')->andReturn(true);
+
         $this->user_notification_settings->shouldReceive('isInNotifyOnEveryChangeMode')->andReturnTrue();
         $this->user_notification_settings->shouldReceive('isInNotifyOnArtifactCreationMode')->andReturnFalse();
 
@@ -526,6 +555,9 @@ final class RecipientsManagerTest extends \Tuleap\Test\PHPUnit\TestCase
             false,
             Mockery::spy(Tracker_Artifact_Changeset::class)
         );
+
+        $artifact = $changeset->getArtifact();
+        $artifact->shouldReceive('userCanView')->andReturn(true);
 
         $this->user_status_change_only_dao->shouldReceive('doesUserIdHaveSubscribeOnlyForStatusChangeNotification')->with(102, 36)->andReturns(true);
         $this->user_status_change_only_dao->shouldReceive('doesUserIdHaveSubscribeOnlyForStatusChangeNotification')->with(103, 36)->andReturns(false);
@@ -560,6 +592,9 @@ final class RecipientsManagerTest extends \Tuleap\Test\PHPUnit\TestCase
             Mockery::spy(Tracker_Artifact_Changeset::class)
         );
 
+        $artifact = $changeset->getArtifact();
+        $artifact->shouldReceive('userCanView')->andReturn(true);
+
         $this->user_status_change_only_dao->shouldReceive('doesUserIdHaveSubscribeOnlyForStatusChangeNotification')->with(102, 36)->andReturns(true);
         $this->user_status_change_only_dao->shouldReceive('doesUserIdHaveSubscribeOnlyForStatusChangeNotification')->with(103, 36)->andReturns(false);
 
@@ -592,6 +627,9 @@ final class RecipientsManagerTest extends \Tuleap\Test\PHPUnit\TestCase
             false,
             Mockery::spy(Tracker_Artifact_Changeset::class)
         );
+
+        $artifact = $changeset->getArtifact();
+        $artifact->shouldReceive('userCanView')->andReturn(true);
 
         $this->user_status_change_only_dao->shouldReceive('doesUserIdHaveSubscribeOnlyForStatusChangeNotification')->with(102, 36)->andReturns(false);
         $this->user_status_change_only_dao->shouldReceive('doesUserIdHaveSubscribeOnlyForStatusChangeNotification')->with(103, 36)->andReturns(false);
