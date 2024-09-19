@@ -25,7 +25,8 @@ namespace Tuleap\ProgramManagement\Domain\Program\Plan;
 use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramUserGroupCollection;
 
 /**
- * I hold the data for a new Plan of a Program that is going to be saved.
+ * I hold the new Plan configuration of a Program that is going to be saved.
+ * @see PlanChange to modify a Plan configuration and save it.
  * @psalm-immutable
  */
 final class NewPlan

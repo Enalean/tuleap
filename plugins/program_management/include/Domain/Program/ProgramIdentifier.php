@@ -110,4 +110,9 @@ final class ProgramIdentifier
 
         return new self($program_id);
     }
+
+    public static function fromServiceEnabled(ProgramServiceIsEnabledCertificate $certificate): self
+    {
+        return new self($certificate->program_id);
+    }
 }

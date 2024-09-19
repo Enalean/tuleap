@@ -25,6 +25,8 @@ namespace Tuleap\ProgramManagement\Domain\Program\Plan;
 use Tuleap\ProgramManagement\Domain\Workspace\UserReference;
 
 /**
+ * I hold the modified Plan configuration of a Program, that has changed and is going to be saved.
+ * @see NewPlan to create a new Plan configuration and save it.
  * @psalm-immutable
  */
 final class PlanChange

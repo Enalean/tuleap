@@ -29,13 +29,10 @@ use Tuleap\ProgramManagement\Domain\Program\ProgramUserGroupDoesNotExistExceptio
 final class RetrieveProgramUserGroupStub implements RetrieveProgramUserGroup
 {
     /**
-     * @var int[]
+     * @param list<int> $user_group_ids
      */
-    private array $user_group_ids;
-
-    private function __construct(array $user_group_ids)
+    private function __construct(private array $user_group_ids)
     {
-        $this->user_group_ids = $user_group_ids;
     }
 
     public function getProjectUserGroupId(string $raw_user_group_id, ProgramForAdministrationIdentifier $program): int
@@ -46,9 +43,12 @@ final class RetrieveProgramUserGroupStub implements RetrieveProgramUserGroup
         throw new ProgramUserGroupDoesNotExistException($raw_user_group_id);
     }
 
-    public static function withValidUserGroups(int ...$user_group_ids): self
+    /**
+     * @no-named-arguments
+     */
+    public static function withValidUserGroups(int $user_group_id, int ...$other_user_group_ids): self
     {
-        return new self($user_group_ids);
+        return new self([$user_group_id, ...$other_user_group_ids]);
     }
 
     public static function withNotValidUserGroup(): self

@@ -100,6 +100,11 @@ final class IterationTrackerIdentifier implements TrackerIdentifier
         );
     }
 
+    public static function fromPlanConfiguration(int $iteration_tracker_id): self
+    {
+        return new self($iteration_tracker_id);
+    }
+
     public function getId(): int
     {
         return $this->id;

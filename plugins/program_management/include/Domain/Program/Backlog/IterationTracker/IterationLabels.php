@@ -46,4 +46,9 @@ final class IterationLabels
         }
         return new self($labels['iteration_label'], $labels['iteration_sub_label']);
     }
+
+    public static function fromPlanConfiguration(?string $label, ?string $sub_label): self
+    {
+        return new self($label, $sub_label);
+    }
 }

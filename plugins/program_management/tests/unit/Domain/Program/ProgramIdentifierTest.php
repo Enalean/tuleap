@@ -112,4 +112,10 @@ final class ProgramIdentifierTest extends TestCase
             $this->user
         );
     }
+
+    public function testItBuildsWhenProgramServiceIsEnabled(): void
+    {
+        $identifier = ProgramIdentifier::fromServiceEnabled(new ProgramServiceIsEnabledCertificate(173));
+        self::assertSame(173, $identifier->getId());
+    }
 }

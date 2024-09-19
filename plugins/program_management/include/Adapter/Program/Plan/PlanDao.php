@@ -23,17 +23,21 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Adapter\Program\Plan;
 
 use Tuleap\DB\DataAccessObject;
+use Tuleap\Option\Option;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\VerifyIsFeature;
 use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramForAdministrationIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Content\VerifyCanBePlannedInProgramIncrement;
 use Tuleap\ProgramManagement\Domain\Program\Plan\NewPlan;
+use Tuleap\ProgramManagement\Domain\Program\Plan\PlanConfiguration;
+use Tuleap\ProgramManagement\Domain\Program\Plan\RetrievePlan;
 use Tuleap\ProgramManagement\Domain\Program\Plan\RetrievePlannableTrackersIds;
 use Tuleap\ProgramManagement\Domain\Program\Plan\SavePlan;
 use Tuleap\ProgramManagement\Domain\Program\Plan\VerifyIsPlannable;
 use Tuleap\ProgramManagement\Domain\Program\Plan\VerifyIsProjectUsedInPlan;
+use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\TrackerReference;
 
-final class PlanDao extends DataAccessObject implements SavePlan, VerifyCanBePlannedInProgramIncrement, VerifyIsPlannable, VerifyIsFeature, RetrievePlannableTrackersIds, VerifyIsProjectUsedInPlan
+final class PlanDao extends DataAccessObject implements SavePlan, VerifyCanBePlannedInProgramIncrement, VerifyIsPlannable, VerifyIsFeature, RetrievePlannableTrackersIds, VerifyIsProjectUsedInPlan, RetrievePlan
 {
     /**
      * @throws \Throwable
@@ -207,5 +211,51 @@ final class PlanDao extends DataAccessObject implements SavePlan, VerifyCanBePla
         $rows = $this->getDB()->run($sql, $program_increment_id, $feature_id);
 
         return count($rows) > 0;
+    }
+
+    public function retrievePlan(ProgramIdentifier $program_identifier): PlanConfiguration
+    {
+        $sql_config = <<<EOSQL
+        SELECT program_increment_tracker_id,
+               program_increment_label,
+               program_increment_sub_label,
+               iteration_tracker_id,
+               iteration_label,
+               iteration_sub_label
+        FROM plugin_program_management_program
+        WHERE program_project_id = ?
+        EOSQL;
+
+        $config = $this->getDB()->row($sql_config, $program_identifier->getId());
+
+        $tracker_ids_can_be_planned = [];
+        $tracker_rows               = $this->getDB()->run(
+            'SELECT plannable_tracker_id FROM plugin_program_management_plan WHERE project_id = ?',
+            $program_identifier->getId()
+        );
+        foreach ($tracker_rows as $row) {
+            $tracker_ids_can_be_planned[] = $row['plannable_tracker_id'];
+        }
+
+        $user_group_ids_that_can_prioritize = [];
+        $user_groups_rows                   = $this->getDB()->run(
+            'SELECT user_group_id FROM plugin_program_management_can_prioritize_features WHERE project_id = ?',
+            $program_identifier->getId()
+        );
+        foreach ($user_groups_rows as $row) {
+            $user_group_ids_that_can_prioritize[] = $row['user_group_id'];
+        }
+
+        return PlanConfiguration::fromRaw(
+            $program_identifier,
+            $config['program_increment_tracker_id'],
+            $config['program_increment_label'],
+            $config['program_increment_sub_label'],
+            Option::fromNullable($config['iteration_tracker_id']),
+            $config['iteration_label'],
+            $config['iteration_sub_label'],
+            $tracker_ids_can_be_planned,
+            $user_group_ids_that_can_prioritize
+        );
     }
 }
