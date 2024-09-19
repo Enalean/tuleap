@@ -2543,6 +2543,19 @@
       <code><![CDATA[$non_planning_rows]]></code>
     </DeprecatedMethod>
   </file>
+  <file src="plugins/agiledashboard/tests/unit/Builders/BurnupTestBuilder.php">
+    <NullArgument>
+      <code><![CDATA[null]]></code>
+      <code><![CDATA[null]]></code>
+      <code><![CDATA[null]]></code>
+    </NullArgument>
+  </file>
+  <file src="plugins/agiledashboard/tests/unit/Stub/Milestone/Sidebar/PromotedMilestoneBuilderStub.php">
+    <InaccessibleProperty>
+      <code><![CDATA[$this->milestones]]></code>
+      <code><![CDATA[$this->nb_called]]></code>
+    </InaccessibleProperty>
+  </file>
   <file src="plugins/api_explorer/include/Specification/Swagger/SwaggerJsonPathsAndDefinitions.php">
     <PossiblyInvalidArgument>
       <code><![CDATA[$method]]></code>
@@ -13079,6 +13092,36 @@
     <MissingTemplateParam>
       <code><![CDATA[ItemVisitor]]></code>
     </MissingTemplateParam>
+  </file>
+  <file src="plugins/docman/tests/unit/Log/LogEntryTestBuilder.php">
+    <ArgumentTypeCoercion>
+      <code><![CDATA[$this->type]]></code>
+    </ArgumentTypeCoercion>
+  </file>
+  <file src="plugins/docman/tests/unit/Stubs/ResponseFeedbackWrapperStub.php">
+    <MissingParamType>
+      <code><![CDATA[$level]]></code>
+      <code><![CDATA[$msg]]></code>
+      <code><![CDATA[$purify]]></code>
+    </MissingParamType>
+  </file>
+  <file src="plugins/docman/tests/unit/Stubs/StoredLogStub.php">
+    <InvalidArrayOffset>
+      <code><![CDATA[[
+            $item->getId() => array_map(
+                static fn(LogEntry $entry): array => [
+                    'time'      => $entry->when->getTimestamp(),
+                    'group_id'  => $entry->project_id,
+                    'user_id'   => $entry->who->getId(),
+                    'type'      => $entry->type,
+                    'old_value' => $entry->old_value,
+                    'new_value' => $entry->new_value,
+                    'field'     => $entry->field,
+                ],
+                $entries
+            ),
+        ]]]></code>
+    </InvalidArrayOffset>
   </file>
   <file src="plugins/document/include/Config/Admin/FilesDownloadLimitsAdminSaveController.php">
     <InvalidReturnType>
@@ -32451,6 +32494,20 @@
       <code><![CDATA[$dom_document]]></code>
     </TypeDoesNotContainType>
   </file>
+  <file src="plugins/testmanagement/tests/unit/Builders/StepDefinitionFieldBuilder.php">
+    <NullArgument>
+      <code><![CDATA[null]]></code>
+      <code><![CDATA[null]]></code>
+      <code><![CDATA[null]]></code>
+    </NullArgument>
+  </file>
+  <file src="plugins/testmanagement/tests/unit/Builders/StepExecutionFieldBuilder.php">
+    <NullArgument>
+      <code><![CDATA[null]]></code>
+      <code><![CDATA[null]]></code>
+      <code><![CDATA[null]]></code>
+    </NullArgument>
+  </file>
   <file src="plugins/testplan/include/REST/v1/BacklogItemRepresentation.php">
     <DeprecatedMethod>
       <code><![CDATA[getAnArtifactLinkField]]></code>
@@ -50704,6 +50761,353 @@
       <code><![CDATA[testItStartsWithEmptyTable]]></code>
     </MissingReturnType>
   </file>
+  <file src="plugins/tracker/tests/unit/Builders/ArtifactImportedMappingBuilder.php">
+    <InvalidDocblock>
+      <code><![CDATA[public static function fromSourcesAndDestinations(array $sources_and_destinations): Tracker_XML_Importer_ArtifactImportedMapping]]></code>
+    </InvalidDocblock>
+  </file>
+  <file src="plugins/tracker/tests/unit/Builders/ArtifactTestBuilder.php">
+    <InvalidPropertyAssignmentValue>
+      <code><![CDATA[$this->user_can_view]]></code>
+      <code><![CDATA[$this->user_can_view]]></code>
+    </InvalidPropertyAssignmentValue>
+  </file>
+  <file src="plugins/tracker/tests/unit/Builders/ArtifactValuesRepresentationBuilder.php">
+    <InvalidPropertyAssignmentValue>
+      <code><![CDATA[[$first_bind_value_id, ...$other_bind_value_ids]]]></code>
+    </InvalidPropertyAssignmentValue>
+    <RiskyTruthyFalsyComparison>
+      <code><![CDATA[$this->all_links]]></code>
+      <code><![CDATA[$this->bind_value_ids]]></code>
+      <code><![CDATA[$this->links]]></code>
+    </RiskyTruthyFalsyComparison>
+  </file>
+  <file src="plugins/tracker/tests/unit/Builders/ChangesetTestBuilder.php">
+    <ArgumentTypeCoercion>
+      <code><![CDATA[$this->id]]></code>
+    </ArgumentTypeCoercion>
+    <ImpureMethodCall>
+      <code><![CDATA[getSubmittedBy]]></code>
+      <code><![CDATA[getSubmittedOn]]></code>
+      <code><![CDATA[new Tracker_Artifact_Changeset_Comment(
+                1,
+                $changeset,
+                0,
+                0,
+                (int) $changeset->getSubmittedBy(),
+                (int) $changeset->getSubmittedOn(),
+                $this->text_comment,
+                Tracker_Artifact_Changeset_Comment::TEXT_COMMENT,
+                -1,
+                null
+            )]]></code>
+      <code><![CDATA[new \Tracker_Artifact_Changeset(
+            $this->id,
+            $this->artifact,
+            $this->submitted_by_id,
+            $this->submission_timestamp,
+            $this->submitted_by_email
+        )]]></code>
+      <code><![CDATA[setLatestComment]]></code>
+    </ImpureMethodCall>
+    <ImpurePropertyFetch>
+      <code><![CDATA[$this->artifact]]></code>
+      <code><![CDATA[$this->id]]></code>
+      <code><![CDATA[$this->submission_timestamp]]></code>
+      <code><![CDATA[$this->submitted_by_email]]></code>
+      <code><![CDATA[$this->submitted_by_id]]></code>
+      <code><![CDATA[$this->text_comment]]></code>
+      <code><![CDATA[$this->text_comment]]></code>
+    </ImpurePropertyFetch>
+    <ImpureVariable>
+      <code><![CDATA[$this]]></code>
+      <code><![CDATA[$this]]></code>
+      <code><![CDATA[$this]]></code>
+      <code><![CDATA[$this]]></code>
+      <code><![CDATA[$this]]></code>
+      <code><![CDATA[$this]]></code>
+      <code><![CDATA[$this]]></code>
+    </ImpureVariable>
+  </file>
+  <file src="plugins/tracker/tests/unit/Builders/Fields/CheckboxFieldBuilder.php">
+    <InvalidPropertyAssignmentValue>
+      <code><![CDATA[$this->read_permissions]]></code>
+    </InvalidPropertyAssignmentValue>
+    <PossiblyInvalidArrayOffset>
+      <code><![CDATA[$this->read_permissions[$user->getId()]]]></code>
+    </PossiblyInvalidArrayOffset>
+  </file>
+  <file src="plugins/tracker/tests/unit/Builders/Fields/DateFieldBuilder.php">
+    <DeprecatedMethod>
+      <code><![CDATA[setCacheSpecificProperties]]></code>
+    </DeprecatedMethod>
+    <InvalidPropertyAssignmentValue>
+      <code><![CDATA[$this->read_permissions]]></code>
+    </InvalidPropertyAssignmentValue>
+    <PossiblyInvalidArrayOffset>
+      <code><![CDATA[$this->read_permissions[$user->getId()]]]></code>
+    </PossiblyInvalidArrayOffset>
+  </file>
+  <file src="plugins/tracker/tests/unit/Builders/Fields/ExternalFieldBuilder.php">
+    <InvalidReturnType>
+      <code><![CDATA[fetchAdminFormElement]]></code>
+      <code><![CDATA[fetchArtifactValue]]></code>
+      <code><![CDATA[fetchArtifactValueReadOnly]]></code>
+      <code><![CDATA[fetchCriteriaValue]]></code>
+      <code><![CDATA[fetchRawValue]]></code>
+      <code><![CDATA[fetchRawValueFromChangeset]]></code>
+      <code><![CDATA[fetchSubmitValue]]></code>
+      <code><![CDATA[fetchSubmitValueMasschange]]></code>
+      <code><![CDATA[fetchTooltipValue]]></code>
+      <code><![CDATA[getFactoryDescription]]></code>
+      <code><![CDATA[getFactoryIconCreate]]></code>
+      <code><![CDATA[getFactoryIconUseIt]]></code>
+      <code><![CDATA[getFactoryLabel]]></code>
+      <code><![CDATA[saveValue]]></code>
+      <code><![CDATA[validate]]></code>
+    </InvalidReturnType>
+    <MissingParamType>
+      <code><![CDATA[$criteria]]></code>
+    </MissingParamType>
+    <MissingReturnType>
+      <code><![CDATA[accept]]></code>
+      <code><![CDATA[getFormAdminVisitor]]></code>
+      <code><![CDATA[getRESTAvailableValues]]></code>
+      <code><![CDATA[getValueDao]]></code>
+    </MissingReturnType>
+  </file>
+  <file src="plugins/tracker/tests/unit/Builders/Fields/FileFieldBuilder.php">
+    <InvalidPropertyAssignmentValue>
+      <code><![CDATA[$this->read_permissions]]></code>
+    </InvalidPropertyAssignmentValue>
+    <PossiblyInvalidArrayOffset>
+      <code><![CDATA[$this->read_permissions[$user->getId()]]]></code>
+    </PossiblyInvalidArrayOffset>
+  </file>
+  <file src="plugins/tracker/tests/unit/Builders/Fields/ListFieldBuilder.php">
+    <InvalidPropertyAssignmentValue>
+      <code><![CDATA[$this->read_permissions]]></code>
+    </InvalidPropertyAssignmentValue>
+    <PossiblyInvalidArrayOffset>
+      <code><![CDATA[$this->read_permissions[$user->getId()]]]></code>
+    </PossiblyInvalidArrayOffset>
+  </file>
+  <file src="plugins/tracker/tests/unit/Builders/Fields/OpenListFieldBuilder.php">
+    <InvalidPropertyAssignmentValue>
+      <code><![CDATA[$this->read_permissions]]></code>
+    </InvalidPropertyAssignmentValue>
+    <PossiblyInvalidArrayOffset>
+      <code><![CDATA[$this->read_permissions[$user->getId()]]]></code>
+    </PossiblyInvalidArrayOffset>
+  </file>
+  <file src="plugins/tracker/tests/unit/Builders/Fields/RadioButtonFieldBuilder.php">
+    <InvalidPropertyAssignmentValue>
+      <code><![CDATA[$this->read_permissions]]></code>
+    </InvalidPropertyAssignmentValue>
+    <PossiblyInvalidArrayOffset>
+      <code><![CDATA[$this->read_permissions[$user->getId()]]]></code>
+    </PossiblyInvalidArrayOffset>
+  </file>
+  <file src="plugins/tracker/tests/unit/Builders/Fields/StringFieldBuilder.php">
+    <InvalidPropertyAssignmentValue>
+      <code><![CDATA[$this->read_permissions]]></code>
+    </InvalidPropertyAssignmentValue>
+    <PossiblyInvalidArrayOffset>
+      <code><![CDATA[$this->read_permissions[$user->getId()]]]></code>
+    </PossiblyInvalidArrayOffset>
+  </file>
+  <file src="plugins/tracker/tests/unit/Builders/Fields/TextFieldBuilder.php">
+    <InvalidPropertyAssignmentValue>
+      <code><![CDATA[$this->read_permissions]]></code>
+    </InvalidPropertyAssignmentValue>
+    <PossiblyInvalidArrayOffset>
+      <code><![CDATA[$this->read_permissions[$user->getId()]]]></code>
+    </PossiblyInvalidArrayOffset>
+  </file>
+  <file src="plugins/tracker/tests/unit/Builders/LinkWithDirectionRepresentationBuilder.php">
+    <InaccessibleProperty>
+      <code><![CDATA[$representation->direction]]></code>
+      <code><![CDATA[$representation->id]]></code>
+      <code><![CDATA[$representation->type]]></code>
+    </InaccessibleProperty>
+    <PropertyTypeCoercion>
+      <code><![CDATA[$this->direction]]></code>
+      <code><![CDATA[$this->id]]></code>
+    </PropertyTypeCoercion>
+  </file>
+  <file src="plugins/tracker/tests/unit/Builders/TrackerTestBuilder.php">
+    <MissingParamType>
+      <code><![CDATA[$allow_copy]]></code>
+      <code><![CDATA[$browse_instructions]]></code>
+      <code><![CDATA[$deletion_date]]></code>
+      <code><![CDATA[$description]]></code>
+      <code><![CDATA[$enable_emailgateway]]></code>
+      <code><![CDATA[$group_id]]></code>
+      <code><![CDATA[$id]]></code>
+      <code><![CDATA[$instantiate_for_new_projects]]></code>
+      <code><![CDATA[$item_name]]></code>
+      <code><![CDATA[$log_priority_changes]]></code>
+      <code><![CDATA[$name]]></code>
+      <code><![CDATA[$notifications_level]]></code>
+      <code><![CDATA[$status]]></code>
+      <code><![CDATA[$submit_instructions]]></code>
+    </MissingParamType>
+  </file>
+  <file src="plugins/tracker/tests/unit/REST/Artifact/ChangesetValue/ArtifactLink/NewArtifactLinkChangesetValueBuilderTest.php">
+    <MissingReturnType>
+      <code><![CDATA[build]]></code>
+    </MissingReturnType>
+  </file>
+  <file src="plugins/tracker/tests/unit/Stub/BindValueIdCollectionStub.php">
+    <MissingParamType>
+      <code><![CDATA[$value]]></code>
+    </MissingParamType>
+  </file>
+  <file src="plugins/tracker/tests/unit/Stub/CheckBeforeMoveStub.php">
+    <InaccessibleProperty>
+      <code><![CDATA[$this->call_count]]></code>
+    </InaccessibleProperty>
+  </file>
+  <file src="plugins/tracker/tests/unit/Stub/CreateNewChangesetStub.php">
+    <ArgumentTypeCoercion>
+      <code><![CDATA[$callback]]></code>
+    </ArgumentTypeCoercion>
+  </file>
+  <file src="plugins/tracker/tests/unit/Stub/FeedbackFieldCollectorInterfaceStub.php">
+    <UndefinedClass>
+      <code><![CDATA[FeedbackFieldCollectorInterface]]></code>
+    </UndefinedClass>
+  </file>
+  <file src="plugins/tracker/tests/unit/Stub/MoveDryRunStub.php">
+    <ImpureMethodCall>
+      <code><![CDATA[withoutDryRun]]></code>
+    </ImpureMethodCall>
+    <InaccessibleProperty>
+      <code><![CDATA[$this->call_count]]></code>
+    </InaccessibleProperty>
+  </file>
+  <file src="plugins/tracker/tests/unit/Stub/MoveRestArtifactStub.php">
+    <InaccessibleProperty>
+      <code><![CDATA[$this->call_count]]></code>
+    </InaccessibleProperty>
+  </file>
+  <file src="plugins/tracker/tests/unit/Stub/RetrieveAllUsableTypesInProjectStub.php">
+    <LessSpecificImplementedReturnType>
+      <code><![CDATA[TypePresenter[]]]></code>
+    </LessSpecificImplementedReturnType>
+  </file>
+  <file src="plugins/tracker/tests/unit/Stub/Tracker/Artifact/Changeset/PostCreation/CalendarEvent/RetrieveEventDatesStub.php">
+    <LessSpecificReturnStatement>
+      <code><![CDATA[Result::err($this->error)]]></code>
+    </LessSpecificReturnStatement>
+    <MoreSpecificReturnType>
+      <code><![CDATA[Ok<CalendarEventData>|Err<non-falsy-string>]]></code>
+    </MoreSpecificReturnType>
+  </file>
+  <file src="plugins/tracker/tests/unit/Stub/Tracker/Artifact/Changeset/PostCreation/CalendarEvent/RetrieveEventOrganizerStub.php">
+    <PossiblyNullArgument>
+      <code><![CDATA[$this->organizer_name]]></code>
+    </PossiblyNullArgument>
+  </file>
+  <file src="plugins/tracker/tests/unit/Stub/Tracker/Artifact/Changeset/PostCreation/CalendarEvent/RetrieveEventSummaryStub.php">
+    <ArgumentTypeCoercion>
+      <code><![CDATA[$summary]]></code>
+    </ArgumentTypeCoercion>
+  </file>
+  <file src="plugins/tracker/tests/unit/Stub/Tracker/Artifact/Changeset/PostCreation/PostCreationActionsQueuerStub.php">
+    <MissingParamType>
+      <code><![CDATA[$count]]></code>
+    </MissingParamType>
+  </file>
+  <file src="plugins/tracker/tests/unit/Stub/Tracker/Artifact/Changeset/ProcessChangesetPostCreationStub.php">
+    <InaccessibleProperty>
+      <code><![CDATA[$this->count]]></code>
+    </InaccessibleProperty>
+  </file>
+  <file src="plugins/tracker/tests/unit/Stub/Tracker/FormElement/Field/ListFields/Bind/BindVisitorStub.php">
+    <MissingReturnType>
+      <code><![CDATA[visitListBindNull]]></code>
+      <code><![CDATA[visitListBindStatic]]></code>
+      <code><![CDATA[visitListBindUgroups]]></code>
+      <code><![CDATA[visitListBindUsers]]></code>
+    </MissingReturnType>
+  </file>
+  <file src="plugins/tracker/tests/unit/Stub/Tracker/Permission/RetrieveUserPermissionOnTrackersStub.php">
+    <PropertyTypeCoercion>
+      <code><![CDATA[$this->has_permission_on]]></code>
+    </PropertyTypeCoercion>
+  </file>
+  <file src="plugins/tracker/tests/unit/Stub/UpdateArtifactLinkXMLStub.php">
+    <InaccessibleProperty>
+      <code><![CDATA[$this->nb_calls]]></code>
+    </InaccessibleProperty>
+  </file>
+  <file src="plugins/tracker/tests/unit/Stub/UpdateBindValueForSemanticStub.php">
+    <UndefinedClass>
+      <code><![CDATA[UpdateBindValueForSemantic]]></code>
+    </UndefinedClass>
+  </file>
+  <file src="plugins/tracker/tests/unit/Tracker/Artifact/ChangesetValue/ArtifactLink/ArtifactLinksByChangesetCacheTest.php">
+    <InvalidScalarArgument>
+      <code><![CDATA[101]]></code>
+      <code><![CDATA[102]]></code>
+    </InvalidScalarArgument>
+  </file>
+  <file src="plugins/tracker/tests/unit/Tracker/Artifact/ChangesetValue/ArtifactLink/ChangeForwardLinksCommandFormatterTest.php">
+    <InvalidPropertyAssignmentValue>
+      <code><![CDATA[Option::fromValue(NewParentLinkStub::withId(55))]]></code>
+    </InvalidPropertyAssignmentValue>
+  </file>
+  <file src="plugins/tracker/tests/unit/Tracker/Artifact/ChangesetValue/ArtifactLink/NewArtifactLinkChangesetValueTest.php">
+    <InvalidArgument>
+      <code><![CDATA[$new_parent_link]]></code>
+    </InvalidArgument>
+  </file>
+  <file src="plugins/tracker/tests/unit/Tracker/Artifact/ChangesetValue/ArtifactLink/NewArtifactLinkInitialChangesetValueFormatterTest.php">
+    <InvalidPropertyAssignmentValue>
+      <code><![CDATA[Option::fromValue(NewParentLinkStub::withId(71))]]></code>
+    </InvalidPropertyAssignmentValue>
+  </file>
+  <file src="plugins/tracker/tests/unit/Tracker/Artifact/ChangesetValue/ArtifactLink/NewArtifactLinkInitialChangesetValueTest.php">
+    <InvalidArgument>
+      <code><![CDATA[$parent]]></code>
+    </InvalidArgument>
+  </file>
+  <file src="plugins/tracker/tests/unit/Tracker/Artifact/ChangesetValue/ArtifactLink/ReverseLinksRetrieverTest.php">
+    <InvalidArgument>
+      <code><![CDATA[[StoredReverseLink::fromRow($expected_retrieve_artifact, $user, $linked_artifact_1)]]]></code>
+    </InvalidArgument>
+  </file>
+  <file src="plugins/tracker/tests/unit/Tracker/Artifact/ChangesetValue/ArtifactLink/ReverseLinksToNewChangesetsConverterTest.php">
+    <PossiblyUndefinedArrayOffset>
+      <code><![CDATA[$first_added_changeset]]></code>
+      <code><![CDATA[$new_changeset_add_link]]></code>
+    </PossiblyUndefinedArrayOffset>
+  </file>
+  <file src="plugins/tracker/tests/unit/Tracker/Artifact/ChangesetValue/ArtifactLink/StoredReverseLinkTest.php">
+    <PossiblyNullReference>
+      <code><![CDATA[getSourceArtifactId]]></code>
+      <code><![CDATA[getType]]></code>
+    </PossiblyNullReference>
+  </file>
+  <file src="plugins/tracker/tests/unit/Tracker/Artifact/ChangesetValue/ChangesetValuesContainerTest.php">
+    <InvalidArgument>
+      <code><![CDATA[Option::fromValue(NewParentLinkStub::withId(63))]]></code>
+    </InvalidArgument>
+  </file>
+  <file src="plugins/tracker/tests/unit/Tracker/Artifact/ChangesetValue/Text/TextValueInterpreterTest.php">
+    <PossiblyNullArgument>
+      <code><![CDATA[$this->purifier]]></code>
+    </PossiblyNullArgument>
+    <PossiblyNullReference>
+      <code><![CDATA[purifyHTMLWithReferences]]></code>
+    </PossiblyNullReference>
+  </file>
+  <file src="plugins/tracker/tests/unit/Tracker/Artifact/Creation/ReverseLinksAdderTest.php">
+    <InvalidArgument>
+      <code><![CDATA[$parent]]></code>
+    </InvalidArgument>
+  </file>
   <file src="plugins/tracker_date_reminder/include/ArtifactDateReminder.class.php">
     <DeprecatedFunction>
       <code><![CDATA[db_fetch_array($res)]]></code>
@@ -55096,6 +55500,7 @@
     <MissingPropertyType>
       <code><![CDATA[$icons]]></code>
       <code><![CDATA[$javascript]]></code>
+      <code><![CDATA[$this->javascript]]></code>
     </MissingPropertyType>
     <MissingReturnType>
       <code><![CDATA[addStylesheet]]></code>
@@ -60181,7 +60586,6 @@
       <code><![CDATA[DisplayCrossRefs]]></code>
       <code><![CDATA[fetchDatas]]></code>
       <code><![CDATA[getHTMLCrossRefsForCSVExport]]></code>
-      <code><![CDATA[getHTMLCrossRefsForMail]]></code>
       <code><![CDATA[getNbReferences]]></code>
       <code><![CDATA[getRefSource]]></code>
       <code><![CDATA[getRefTarget]]></code>
@@ -78941,6 +79345,65 @@
       <code><![CDATA[getListValueById]]></code>
     </PossiblyNullReference>
   </file>
+  <file src="tests/lib/Builders/LayoutInspector.php">
+    <MissingPropertyType>
+      <code><![CDATA[$feedbacks]]></code>
+    </MissingPropertyType>
+  </file>
+  <file src="tests/lib/Builders/ProjectTestBuilder.php">
+    <MissingPropertyType>
+      <code><![CDATA[$data]]></code>
+    </MissingPropertyType>
+  </file>
+  <file src="tests/lib/Builders/ProjectUGroupTestBuilder.php">
+    <InvalidClass>
+      <code><![CDATA[\ProjectUgroup]]></code>
+      <code><![CDATA[\ProjectUgroup]]></code>
+      <code><![CDATA[\ProjectUgroup]]></code>
+      <code><![CDATA[\ProjectUgroup]]></code>
+      <code><![CDATA[\ProjectUgroup]]></code>
+      <code><![CDATA[\ProjectUgroup]]></code>
+    </InvalidClass>
+    <MissingReturnType>
+      <code><![CDATA[withoutUsers]]></code>
+    </MissingReturnType>
+    <PropertyTypeCoercion>
+      <code><![CDATA[[$user, ...$other_users]]]></code>
+    </PropertyTypeCoercion>
+  </file>
+  <file src="tests/lib/Builders/SearchResultEntryBuilder.php">
+    <ArgumentTypeCoercion>
+      <code><![CDATA[$this->badges]]></code>
+    </ArgumentTypeCoercion>
+  </file>
+  <file src="tests/lib/Builders/TemplateRendererFactoryBuilder.php">
+    <MissingPropertyType>
+      <code><![CDATA[$path]]></code>
+    </MissingPropertyType>
+  </file>
+  <file src="tests/lib/Builders/TestLayout.php">
+    <MissingParamType>
+      <code><![CDATA[$level]]></code>
+      <code><![CDATA[$message]]></code>
+      <code><![CDATA[$purify]]></code>
+      <code><![CDATA[$redirect_url]]></code>
+    </MissingParamType>
+    <MissingReturnType>
+      <code><![CDATA[addFeedback]]></code>
+      <code><![CDATA[displayStaticWidget]]></code>
+      <code><![CDATA[getUser]]></code>
+      <code><![CDATA[includeCalendarScripts]]></code>
+      <code><![CDATA[includeFooterJavascriptFile]]></code>
+    </MissingReturnType>
+  </file>
+  <file src="tests/lib/Builders/UserTestBuilder.php">
+    <InvalidDocblock>
+      <code><![CDATA[public function withStatus(string $status): self]]></code>
+    </InvalidDocblock>
+    <RedundantCast>
+      <code><![CDATA[(string) $email]]></code>
+    </RedundantCast>
+  </file>
   <file src="tests/lib/Stubs/ExtractReferencesStub.php">
     <LessSpecificReturnStatement>
       <code><![CDATA[$this->return_values[0]]]></code>
@@ -78954,5 +79417,283 @@
     <MissingParamType>
       <code><![CDATA[$user_id]]></code>
     </MissingParamType>
+  </file>
+  <file src="tests/unit/common/Authentication/Scope/AggregateAuthenticationScopeBuilderTest.php">
+    <InvalidReturnType>
+      <code><![CDATA[dispatch]]></code>
+    </InvalidReturnType>
+  </file>
+  <file src="tests/unit/common/Authentication/Scope/AuthenticationScopeBuilderFromClassNamesTest.php">
+    <MissingImmutableAnnotation>
+      <code><![CDATA[class implements AuthenticationScope]]></code>
+      <code><![CDATA[class implements AuthenticationScope]]></code>
+    </MissingImmutableAnnotation>
+    <MissingTemplateParam>
+      <code><![CDATA[AuthenticationScope]]></code>
+      <code><![CDATA[AuthenticationScope]]></code>
+      <code><![CDATA[AuthenticationScope]]></code>
+      <code><![CDATA[AuthenticationScope]]></code>
+      <code><![CDATA[AuthenticationScope]]></code>
+      <code><![CDATA[AuthenticationScopeThrowOnActualMethodCall]]></code>
+      <code><![CDATA[AuthenticationScopeThrowOnActualMethodCall]]></code>
+      <code><![CDATA[AuthenticationScopeThrowOnActualMethodCall]]></code>
+      <code><![CDATA[AuthenticationScopeThrowOnActualMethodCall]]></code>
+      <code><![CDATA[AuthenticationScopeThrowOnActualMethodCall]]></code>
+    </MissingTemplateParam>
+  </file>
+  <file src="tests/unit/common/Authentication/Scope/AuthenticationScopeTestCase.php">
+    <PossiblyNullReference>
+      <code><![CDATA[getIdentifier]]></code>
+    </PossiblyNullReference>
+  </file>
+  <file src="tests/unit/common/Authentication/Scope/AuthenticationTestCoveringScope.php">
+    <ImpureMethodCall>
+      <code><![CDATA[throwUnexpectedCall]]></code>
+    </ImpureMethodCall>
+    <MissingImmutableAnnotation>
+      <code><![CDATA[AuthenticationTestCoveringScope]]></code>
+    </MissingImmutableAnnotation>
+  </file>
+  <file src="tests/unit/common/Authentication/Scope/AuthenticationTestScopeIdentifier.php">
+    <MissingImmutableAnnotation>
+      <code><![CDATA[AuthenticationTestScopeIdentifier]]></code>
+      <code><![CDATA[AuthenticationTestScopeIdentifier]]></code>
+    </MissingImmutableAnnotation>
+  </file>
+  <file src="tests/unit/common/Authentication/SplitToken/SplitTokenVerificationStringTest.php">
+    <MissingReturnType>
+      <code><![CDATA[testGeneratedKeyIsValid]]></code>
+      <code><![CDATA[testIncorrectlySizedVerificationStringAreRejected]]></code>
+    </MissingReturnType>
+  </file>
+  <file src="tests/unit/common/BrowserDetection/BrowserDeprecationMessageTest.php">
+    <UndefinedInterfaceMethod>
+      <code><![CDATA[with]]></code>
+    </UndefinedInterfaceMethod>
+  </file>
+  <file src="tests/unit/common/BrowserDetection/DetectedBrowserTest.php">
+    <UndefinedInterfaceMethod>
+      <code><![CDATA[with]]></code>
+      <code><![CDATA[with]]></code>
+    </UndefinedInterfaceMethod>
+  </file>
+  <file src="tests/unit/common/CLI/DelayExecution/ExecutionDelayedLauncherTest.php">
+    <MissingPropertyType>
+      <code><![CDATA[$nb_delay]]></code>
+    </MissingPropertyType>
+  </file>
+  <file src="tests/unit/common/Error/FrontendErrorCollectorControllerTest.php">
+    <MissingParamType>
+      <code><![CDATA[$user_id]]></code>
+    </MissingParamType>
+  </file>
+  <file src="tests/unit/common/InviteBuddy/InvitationLimitCheckerTest.php">
+    <InternalMethod>
+      <code><![CDATA[addToAssertionCount]]></code>
+    </InternalMethod>
+  </file>
+  <file src="tests/unit/common/InviteBuddy/InvitationSenderTest.php">
+    <InvalidArgument>
+      <code><![CDATA[['', null, 'doe@example.com']]]></code>
+    </InvalidArgument>
+  </file>
+  <file src="tests/unit/common/InviteBuddy/InvitationToOneRecipientSenderStub.php">
+    <InvalidDocblock>
+      <code><![CDATA[private function __construct(private \Closure $callback)]]></code>
+    </InvalidDocblock>
+    <LessSpecificReturnStatement>
+      <code><![CDATA[$this->calls]]></code>
+    </LessSpecificReturnStatement>
+    <MoreSpecificReturnType>
+      <code><![CDATA[list<array{from_user: PFUser, recipient: InvitationRecipient, project: ?\Project, custom_message: ?string, resent_from_user: ?PFUser}>]]></code>
+    </MoreSpecificReturnType>
+  </file>
+  <file src="tests/unit/common/InviteBuddy/ProjectMemberAccordingToInvitationAdderTest.php">
+    <InvalidReturnStatement>
+      <code><![CDATA[[
+            [\PFUser::STATUS_SUSPENDED],
+            [\PFUser::STATUS_DELETED],
+            [\PFUser::STATUS_VALIDATED],
+            [\PFUser::STATUS_VALIDATED_RESTRICTED],
+            [\PFUser::STATUS_PENDING],
+        ]]]></code>
+    </InvalidReturnStatement>
+    <InvalidReturnType>
+      <code><![CDATA[string[]]]></code>
+      <code><![CDATA[string[]]]></code>
+    </InvalidReturnType>
+  </file>
+  <file src="tests/unit/common/Layout/ColorHelperTest.php">
+    <MissingPropertyType>
+      <code><![CDATA[$colorSet]]></code>
+    </MissingPropertyType>
+  </file>
+  <file src="tests/unit/common/Layout/LayoutTest.php">
+    <TooManyArguments>
+      <code><![CDATA[displayStylesheetElements]]></code>
+    </TooManyArguments>
+  </file>
+  <file src="tests/unit/common/Layout/Logo/CustomizedLogoDetectorTest.php">
+    <MissingPropertyType>
+      <code><![CDATA[$data_dir_path]]></code>
+    </MissingPropertyType>
+  </file>
+  <file src="tests/unit/common/Layout/ProjectSidebar/InstanceInformation/ProjectSidebarLegacyPNGHrefTest.php">
+    <PossiblyNullArgument>
+      <code><![CDATA[$representation->normal]]></code>
+      <code><![CDATA[$representation->small]]></code>
+    </PossiblyNullArgument>
+    <PossiblyNullPropertyFetch>
+      <code><![CDATA[$representation->normal]]></code>
+      <code><![CDATA[$representation->small]]></code>
+    </PossiblyNullPropertyFetch>
+  </file>
+  <file src="tests/unit/common/Layout/ProjectSidebar/InstanceInformation/ProjectSidebarSVGLogoTest.php">
+    <PossiblyNullPropertyFetch>
+      <code><![CDATA[$representation->normal]]></code>
+    </PossiblyNullPropertyFetch>
+  </file>
+  <file src="tests/unit/common/Layout/ThemeVariationTest.php">
+    <InvalidArgument>
+      <code><![CDATA[false]]></code>
+    </InvalidArgument>
+  </file>
+  <file src="tests/unit/common/OAuth2ServerCore/AccessToken/OAuth2AccessTokenVerifierTest.php">
+    <MissingTemplateParam>
+      <code><![CDATA[AuthenticationScope]]></code>
+      <code><![CDATA[AuthenticationScope]]></code>
+      <code><![CDATA[AuthenticationScopeThrowOnActualMethodCall]]></code>
+    </MissingTemplateParam>
+  </file>
+  <file src="tests/unit/common/OAuth2ServerCore/App/AppFactoryTest.php">
+    <UndefinedInterfaceMethod>
+      <code><![CDATA[expects]]></code>
+      <code><![CDATA[expects]]></code>
+      <code><![CDATA[expects]]></code>
+      <code><![CDATA[expects]]></code>
+    </UndefinedInterfaceMethod>
+  </file>
+  <file src="tests/unit/common/OAuth2ServerCore/App/AppMatchingClientIDFilterAppTypeRetrieverTest.php">
+    <PossiblyNullArrayAccess>
+      <code><![CDATA[$data['id']]]></code>
+    </PossiblyNullArrayAccess>
+  </file>
+  <file src="tests/unit/common/OAuth2ServerCore/OpenIDConnect/IDToken/OpenIDConnectIDTokenCreatorTest.php">
+    <ArgumentTypeCoercion>
+      <code><![CDATA[$payload]]></code>
+    </ArgumentTypeCoercion>
+  </file>
+  <file src="tests/unit/common/OAuth2ServerCore/OpenIDConnect/OpenIDConnectTokenBuilderTest.php">
+    <ArgumentTypeCoercion>
+      <code><![CDATA[$claims]]></code>
+      <code><![CDATA[$token_str]]></code>
+    </ArgumentTypeCoercion>
+  </file>
+  <file src="tests/unit/common/Password/PasswordCompromiseValidatorTest.php">
+    <MissingReturnType>
+      <code><![CDATA[testPasswordAcceptation]]></code>
+      <code><![CDATA[testPasswordRejection]]></code>
+    </MissingReturnType>
+  </file>
+  <file src="tests/unit/common/Platform/Banner/BannerDisplayTest.php">
+    <InvalidArgument>
+      <code><![CDATA[$expected_importance]]></code>
+      <code><![CDATA[$expected_importance]]></code>
+    </InvalidArgument>
+  </file>
+  <file src="tests/unit/common/Platform/Banner/BannerRetrieverTest.php">
+    <PossiblyNullReference>
+      <code><![CDATA[getMessage]]></code>
+      <code><![CDATA[getMessage]]></code>
+      <code><![CDATA[getMessage]]></code>
+      <code><![CDATA[getTimestamp]]></code>
+    </PossiblyNullReference>
+  </file>
+  <file src="tests/unit/common/Project/Banner/BannerPermissionsCheckerTest.php">
+    <MissingReturnType>
+      <code><![CDATA[testGetUpdateBannerPermissionShouldReturnNullIfUserIsNotProjectAdmin]]></code>
+      <code><![CDATA[testGetUpdateBannerPermissionShouldReturnThePermissionIfUserIsProjectAdmin]]></code>
+    </MissingReturnType>
+  </file>
+  <file src="tests/unit/common/Project/Banner/BannerRetrieverTest.php">
+    <PossiblyNullReference>
+      <code><![CDATA[getMessage]]></code>
+      <code><![CDATA[getMessage]]></code>
+      <code><![CDATA[getMessage]]></code>
+    </PossiblyNullReference>
+  </file>
+  <file src="tests/unit/common/Project/MappingRegistryTest.php">
+    <InvalidArrayAssignment>
+      <code><![CDATA[$registry->getCustomMapping('whatever')]]></code>
+    </InvalidArrayAssignment>
+    <PossiblyInvalidMethodCall>
+      <code><![CDATA[getArrayCopy]]></code>
+    </PossiblyInvalidMethodCall>
+  </file>
+  <file src="tests/unit/common/Project/ProjectBackground/ProjectBackgroundConfigurationTest.php">
+    <PossiblyNullReference>
+      <code><![CDATA[getIdentifier]]></code>
+    </PossiblyNullReference>
+  </file>
+  <file src="tests/unit/common/Project/Routing/ProjectByNameRetrieverMiddlewareTest.php">
+    <PossiblyNullReference>
+      <code><![CDATA[getAttribute]]></code>
+    </PossiblyNullReference>
+  </file>
+  <file src="tests/unit/common/Queue/PersistentQueueNoTransactionWrapperTest.php">
+    <InvalidArgument>
+      <code><![CDATA[$callback]]></code>
+    </InvalidArgument>
+    <MissingClosureReturnType>
+      <code><![CDATA[static function (string $value) {]]></code>
+    </MissingClosureReturnType>
+  </file>
+  <file src="tests/unit/common/Search/IndexedItemFoundToSearchResultTest.php">
+    <InvalidArgument>
+      <code><![CDATA[[1, new IndexedItemFound('type', ['a' => 'a'], null)]]]></code>
+      <code><![CDATA[[1, new IndexedItemFound('type', ['a' => 'a'], null)]]]></code>
+      <code><![CDATA[[1, new IndexedItemFound('type', ['a' => 'a'], null)]]]></code>
+    </InvalidArgument>
+  </file>
+  <file src="tests/unit/common/Tus/TusCORSMiddlewareTest.php">
+    <MissingReturnType>
+      <code><![CDATA[testAllowedAndExposedHeadersAreNotOverwritten]]></code>
+    </MissingReturnType>
+  </file>
+  <file src="tests/unit/common/Upload/FileBeingUploadedWriterTest.php">
+    <InvalidArgument>
+      <code><![CDATA[$not_a_resource]]></code>
+    </InvalidArgument>
+  </file>
+  <file src="tests/unit/common/Upload/UploadPathAllocatorTest.php">
+    <MissingReturnType>
+      <code><![CDATA[testTheSamePathIsAlwaysAllocatedForAGivenItemID]]></code>
+    </MissingReturnType>
+  </file>
+  <file src="tests/unit/common/WebAssembly/WASMCallerStub.php">
+    <ImplementedReturnTypeMismatch>
+      <code><![CDATA[Option<Result<string, Fault>>]]></code>
+    </ImplementedReturnTypeMismatch>
+    <InvalidArgument>
+      <code><![CDATA[Option::fromValue(Result::err(Fault::fromMessage($message)))]]></code>
+      <code><![CDATA[Option::fromValue(Result::ok($response))]]></code>
+    </InvalidArgument>
+    <TooManyTemplateParams>
+      <code><![CDATA[Option<Result<string, Fault>>]]></code>
+      <code><![CDATA[Option<Result<string, Fault>>]]></code>
+    </TooManyTemplateParams>
+  </file>
+  <file src="tests/unit/common/Webhook/EmitterTest.php">
+    <MissingParamType>
+      <code><![CDATA[$status]]></code>
+    </MissingParamType>
+  </file>
+  <file src="tests/unit/tests/DB/DBTransactionExecutorPassthroughTest.php">
+    <InvalidMethodCall>
+      <code><![CDATA[getNumberOfCalls]]></code>
+    </InvalidMethodCall>
+    <MissingPropertyType>
+      <code><![CDATA[$number_of_calls]]></code>
+    </MissingPropertyType>
   </file>
 </files>

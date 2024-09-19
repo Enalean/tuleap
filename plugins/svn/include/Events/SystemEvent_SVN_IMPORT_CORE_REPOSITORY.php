@@ -149,11 +149,7 @@ final class SystemEvent_SVN_IMPORT_CORE_REPOSITORY extends \SystemEvent // phpcs
 
     public function verbalizeParameters($with_link): string
     {
-        /**
-         * @psalm-trace $result
-         */
-        $result = $this->getProjectFromParameters();
-        return $result->match(
+        return $this->getProjectFromParameters()->match(
             fn (\Project $project): string => $this->verbalizeProjectId($project->getID(), $with_link),
             fn (Fault $fault): string => $fault->__toString(),
         );
