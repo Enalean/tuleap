@@ -18,7 +18,7 @@
   -->
 
 <template>
-    <div class="empty-state-zone">
+    <div class="empty-state-zone" data-test="cross-tracker-no-results">
         <empty-state-tumbleweed />
         <p class="empty-state-title" data-test="selectable-empty-state-title">
             {{
