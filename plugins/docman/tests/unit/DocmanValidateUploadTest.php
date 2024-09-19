@@ -26,13 +26,11 @@ use Codendi_Request;
 use Docman_ValidateUpload;
 use DocmanPlugin;
 use ForgeConfig;
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Tuleap\ForgeConfigSandbox;
+use Tuleap\Test\PHPUnit\TestCase;
 
-final class DocmanValidateUploadTest extends \Tuleap\Test\PHPUnit\TestCase
+final class DocmanValidateUploadTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
     use ForgeConfigSandbox;
 
     protected function tearDown(): void
@@ -42,8 +40,7 @@ final class DocmanValidateUploadTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testValidFileIsAccepted(): void
     {
-        $request = Mockery::mock(Codendi_Request::class);
-        $request->shouldReceive('exist')->with('upload_content')->andReturn(false);
+        $request = new Codendi_Request([]);
 
         ForgeConfig::set(DocmanPlugin::PLUGIN_DOCMAN_MAX_FILE_SIZE_SETTING, '10000');
 
@@ -51,13 +48,12 @@ final class DocmanValidateUploadTest extends \Tuleap\Test\PHPUnit\TestCase
         $_FILES['file'] = ['name' => 'my_file', 'size' => 100, 'error' => UPLOAD_ERR_OK];
 
         $validator = new Docman_ValidateUpload($request);
-        $this->assertTrue($validator->isValid());
+        self::assertTrue($validator->isValid());
     }
 
     public function testTooLargeFileIsRejected(): void
     {
-        $request = Mockery::mock(Codendi_Request::class);
-        $request->shouldReceive('exist')->with('upload_content')->andReturn(false);
+        $request = new Codendi_Request([]);
 
         ForgeConfig::set(DocmanPlugin::PLUGIN_DOCMAN_MAX_FILE_SIZE_SETTING, '10');
 
@@ -65,6 +61,6 @@ final class DocmanValidateUploadTest extends \Tuleap\Test\PHPUnit\TestCase
         $_FILES['file'] = ['name' => 'my_file', 'size' => 100, 'error' => UPLOAD_ERR_OK];
 
         $validator = new Docman_ValidateUpload($request);
-        $this->assertFalse($validator->isValid());
+        self::assertFalse($validator->isValid());
     }
 }

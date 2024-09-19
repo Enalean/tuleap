@@ -27,22 +27,18 @@ use Docman_Folder;
 use Docman_ItemFactory;
 use Docman_LinkVersionFactory;
 use LogicException;
-use Mockery;
-use Project;
 use ProjectManager;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\EventDispatcherStub;
 
-final class DestinationCloneItemTest extends \Tuleap\Test\PHPUnit\TestCase
+final class DestinationCloneItemTest extends TestCase
 {
-    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
     public function testDestinationForACloneCanBeBuiltFromAFolder(): void
     {
-        $folder = Mockery::mock(Docman_Folder::class);
-        $folder->shouldReceive('getGroupId')->andReturn('102');
-        $folder->shouldReceive('getId')->andReturn('12');
-        $project_manager      = Mockery::mock(ProjectManager::class);
-        $link_version_factory = Mockery::mock(Docman_LinkVersionFactory::class);
+        $folder               = new Docman_Folder(['item_id' => 12, 'group_id' => 102]);
+        $project_manager      = $this->createMock(ProjectManager::class);
+        $link_version_factory = $this->createMock(Docman_LinkVersionFactory::class);
 
         $dispatcher = EventDispatcherStub::withIdentityCallback();
 
@@ -52,8 +48,8 @@ final class DestinationCloneItemTest extends \Tuleap\Test\PHPUnit\TestCase
             $link_version_factory,
             $dispatcher,
         );
-        $this->assertEquals(12, $destination_clone_item->getNewParentID());
-        $this->assertEquals(
+        self::assertEquals(12, $destination_clone_item->getNewParentID());
+        self::assertEquals(
             new Docman_CloneItemsVisitor(102, $project_manager, $link_version_factory, $dispatcher),
             $destination_clone_item->getCloneItemsVisitor()
         );
@@ -61,12 +57,11 @@ final class DestinationCloneItemTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testDestinationForACloneCanBeUsedToCreateRootFolder(): void
     {
-        $project = Mockery::mock(Project::class);
-        $project->shouldReceive('getID')->andReturn('102');
-        $item_factory = Mockery::mock(Docman_ItemFactory::class);
-        $item_factory->shouldReceive('getRoot')->andReturn(null);
-        $project_manager      = Mockery::mock(ProjectManager::class);
-        $link_version_factory = Mockery::mock(Docman_LinkVersionFactory::class);
+        $project      = ProjectTestBuilder::aProject()->withId(102)->build();
+        $item_factory = $this->createMock(Docman_ItemFactory::class);
+        $item_factory->method('getRoot')->willReturn(null);
+        $project_manager      = $this->createMock(ProjectManager::class);
+        $link_version_factory = $this->createMock(Docman_LinkVersionFactory::class);
 
         $dispatcher = EventDispatcherStub::withIdentityCallback();
 
@@ -77,8 +72,8 @@ final class DestinationCloneItemTest extends \Tuleap\Test\PHPUnit\TestCase
             $link_version_factory,
             $dispatcher,
         );
-        $this->assertEquals(0, $destination_clone_item->getNewParentID());
-        $this->assertEquals(
+        self::assertEquals(0, $destination_clone_item->getNewParentID());
+        self::assertEquals(
             new Docman_CloneItemsVisitor(102, $project_manager, $link_version_factory, $dispatcher),
             $destination_clone_item->getCloneItemsVisitor()
         );
@@ -86,17 +81,16 @@ final class DestinationCloneItemTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testDestinationForACloneToBuildTheRootFolderCanConstructedWhenARootFolderAlreadyExist(): void
     {
-        $project = Mockery::mock(Project::class);
-        $project->shouldReceive('getID')->andReturn('102');
-        $item_factory = Mockery::mock(Docman_ItemFactory::class);
-        $item_factory->shouldReceive('getRoot')->andReturn(Mockery::mock(Docman_Folder::class));
+        $project      = ProjectTestBuilder::aProject()->withId(102)->build();
+        $item_factory = $this->createMock(Docman_ItemFactory::class);
+        $item_factory->method('getRoot')->willReturn(new Docman_Folder());
 
-        $this->expectException(LogicException::class);
+        self::expectException(LogicException::class);
         DestinationCloneItem::fromDestinationProject(
             $item_factory,
             $project,
-            Mockery::mock(ProjectManager::class),
-            Mockery::mock(Docman_LinkVersionFactory::class),
+            $this->createMock(ProjectManager::class),
+            $this->createMock(Docman_LinkVersionFactory::class),
             EventDispatcherStub::withIdentityCallback(),
         );
     }
