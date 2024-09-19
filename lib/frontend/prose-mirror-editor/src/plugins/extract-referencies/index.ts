@@ -21,11 +21,16 @@ import { Plugin } from "prosemirror-state";
 import type { DecorationSource, EditorView, DecorationSet } from "prosemirror-view";
 import { loadCrossReferences } from "./cross-ref-loader";
 import type { CrossReference } from "./reference-extractor";
-import { decorateLink } from "./link-decorator";
+import { CrossReferencesDecorator } from "./cross-references-decorator";
 import { UpdateCrossReferenceHandler } from "./update/UpdateCrossReferenceHandler";
 import { UpdatedCrossReferenceInTransactionFinder } from "./update/UpdatedCrossReferenceInTransactionFinder";
 import { CrossReferenceDecorationFinder } from "./update/CrossReferenceDecorationFinder";
 import { CrossReferenceDecorationReplacer } from "./update/CrossReferenceDecorationReplacer";
+import { ReferencePositionComputer } from "./helpers/ReferencePositionComputer";
+import { PositionsInDescendentsFinder } from "./helpers/DescendentsContainingReferenceFinder";
+import { ParentNodeRetriever } from "./helpers/ParentNodeRetriever";
+import { ContextLengthComputer } from "./helpers/ContextLengthPositionComputer";
+import { ReferenceWithContextGetter } from "./helpers/ReferenceWithContextGetter";
 
 let editor_view: EditorView;
 
@@ -34,6 +39,14 @@ export function initPluginTransformInput(
     references: Array<CrossReference>,
 ): Plugin {
     let decorations: DecorationSet;
+    const link_decorator = CrossReferencesDecorator(
+        ReferencePositionComputer(
+            ParentNodeRetriever(),
+            ContextLengthComputer(),
+            ReferenceWithContextGetter(),
+        ),
+        PositionsInDescendentsFinder(),
+    );
 
     return new Plugin({
         props: {
@@ -43,13 +56,13 @@ export function initPluginTransformInput(
         },
         state: {
             init: (config, state): DecorationSet => {
-                return decorateLink(state.doc, references);
+                return link_decorator.decorateCrossReference(state.doc, references);
             },
             apply: (tr, decoration_set: DecorationSet): DecorationSet => {
                 decorations = decoration_set;
 
                 if (tr.docChanged) {
-                    loadCrossReferences(tr.doc, project_id, editor_view);
+                    loadCrossReferences(tr.doc, project_id, editor_view, link_decorator);
                 }
 
                 const decorations_promises = tr.getMeta("asyncDecorations");

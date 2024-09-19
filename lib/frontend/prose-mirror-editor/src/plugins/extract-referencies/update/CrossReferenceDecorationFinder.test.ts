@@ -48,10 +48,12 @@ describe("CrossReferenceDecorationFinder", () => {
         art_123_decoration = createCrossReferenceDecoration(art_123_position, {
             text: "art #123",
             link: "https://example.com",
+            context: "test",
         });
         art_456_decoration = createCrossReferenceDecoration(art_456_position, {
             text: "art #456",
             link: "https://example.com",
+            context: "test",
         });
 
         finder = CrossReferenceDecorationFinder(

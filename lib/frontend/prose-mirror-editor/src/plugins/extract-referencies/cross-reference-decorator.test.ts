@@ -19,13 +19,15 @@
  */
 
 import { DOMParser } from "prosemirror-model";
-import { decorateLink } from "./link-decorator";
 import { expect, describe, it } from "vitest";
 import { EditorState } from "prosemirror-state";
 import { createLocalDocument } from "../../helpers";
 import { custom_schema } from "../../custom_schema";
 import type { Decoration, DecorationSet } from "prosemirror-view";
 import { CROSS_REFERENCE_DECORATION_TYPE } from "../../helpers/create-cross-reference-decoration";
+import { ReferencePositionComputerStub } from "./helpers/stubs/ReferencePositionComputerStub";
+import { NodePositionContainingReferenceFinderStub } from "./helpers/stubs/NodePositionContainingReferenceFinderStub";
+import { CrossReferencesDecorator } from "./cross-references-decorator";
 
 describe("node decorator", () => {
     let state: EditorState;
@@ -39,24 +41,23 @@ describe("node decorator", () => {
         });
     }
 
-    it("decorate links of node", () => {
-        initEditorWithText("<p>a text with <ul><li>art #1</li><li>and art #2</li></p>");
+    it("decorate link of node", () => {
+        initEditorWithText("<p>a text with art #1</p>");
         const node = state.doc;
 
         const references = [
             {
                 text: "art #1",
                 link: "https://example.com?goto=1",
-            },
-            {
-                text: "art #2",
-                link: "https://example.com?goto=2",
+                context: "",
             },
         ];
 
+        const position = { from: 16, to: 23 };
+
         const first_ref = {
-            from: 16,
-            to: 23,
+            from: position.from,
+            to: position.to,
             type: {
                 attrs: {
                     class: "cross-reference-link",
@@ -66,23 +67,12 @@ describe("node decorator", () => {
                     type: CROSS_REFERENCE_DECORATION_TYPE,
                 },
             },
-        } as unknown as DecorationSet;
+        } as unknown as Decoration;
 
-        const second_ref = {
-            from: 30,
-            to: 37,
-            type: {
-                attrs: {
-                    class: "cross-reference-link",
-                    "data-href": "https://example.com?goto=2",
-                },
-                spec: {
-                    type: CROSS_REFERENCE_DECORATION_TYPE,
-                },
-            } as unknown as Decoration,
-        } as unknown as DecorationSet;
-
-        const result: DecorationSet = decorateLink(node, references);
-        expect(result.find()).toEqual([first_ref, second_ref]);
+        const result: DecorationSet = CrossReferencesDecorator(
+            ReferencePositionComputerStub.withPosition(position),
+            NodePositionContainingReferenceFinderStub.withPositions([1]),
+        ).decorateCrossReference(node, references);
+        expect(result.find()).toEqual([first_ref]);
     });
 });

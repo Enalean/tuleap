@@ -64,6 +64,7 @@ const ArtifactSectionFactory = {
             {
                 link: "https://example.com",
                 text: "test",
+                context: "",
             },
         ],
     }),

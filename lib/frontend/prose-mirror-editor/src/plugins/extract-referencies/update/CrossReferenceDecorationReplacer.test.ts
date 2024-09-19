@@ -39,7 +39,7 @@ describe("CrossReferenceDecorationReplacer", () => {
         const view = new EditorView(editor_content, { state });
         const decoration = createCrossReferenceDecoration(
             { from: 11, to: 20 },
-            { text: "art #123", link: "https://example.com" },
+            { text: "art #123", link: "https://example.com", context: "" },
         );
 
         const new_reference_text = "story #321";

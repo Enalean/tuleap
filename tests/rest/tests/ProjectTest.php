@@ -1935,6 +1935,7 @@ class ProjectTest extends ProjectBase
         $response_json = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         self::assertEquals('art #1', $response_json[0]['text']);
         self::assertStringContainsString('https://localhost/goto?key=art&val=1&group_id=', $response_json[0]['link']);
+        self::assertEquals('with', $response_json[0]['context']);
     }
 
     public function testOPTIONSCrossReference(): void

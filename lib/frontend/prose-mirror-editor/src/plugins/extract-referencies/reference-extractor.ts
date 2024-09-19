@@ -26,6 +26,7 @@ import { postJSON, uri } from "@tuleap/fetch-result";
 export interface CrossReference {
     text: string;
     link: string;
+    context: string;
 }
 
 export function getNodeText(

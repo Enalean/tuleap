@@ -73,6 +73,7 @@ export interface InternalArtidocSectionId {
 export interface CrossReference {
     text: string;
     link: string;
+    context: string;
 }
 
 export function useSectionsStore(): SectionsStore {
