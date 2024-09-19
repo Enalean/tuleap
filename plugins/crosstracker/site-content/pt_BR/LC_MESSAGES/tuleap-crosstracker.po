@@ -70,6 +70,9 @@ msgid ""
 "'limit' and 'offset' are required parameters. Please add them in the query."
 msgstr ""
 
+msgid "@project IN(...) cannot contain multiple times the same value"
+msgstr ""
+
 msgid "@project.category cannot be empty"
 msgstr ""
 
@@ -163,6 +166,9 @@ msgstr ""
 msgid "Not implemented yet"
 msgstr ""
 
+msgid "Only 'self' and 'aggregated' are supported for @project IN(...)"
+msgstr ""
+
 msgid "Only @project = 'self' and @project = 'aggregated' are supported"
 msgstr ""
 
@@ -198,7 +204,7 @@ msgstr ""
 msgid "The maximum value for 'limit' is %d"
 msgstr ""
 
-msgid "You can use @project = 'aggregated' only in a program project"
+msgid "You can use @project with 'aggregated' only in a Program project"
 msgstr ""
 
 msgid "You cannot access all projects of the search"
@@ -219,19 +225,18 @@ msgid ""
 "'FROM' syntax part."
 msgstr ""
 
-msgid "You cannot use '@project IN(...)'"
+msgid ""
+"You cannot use @project with 'aggregated' in a project without service "
+"Program enabled"
 msgstr ""
 
 msgid ""
-"You cannot use @project = 'aggregated' in a project without service program "
-"enabled"
+"You cannot use @project with 'aggregated' in the context of a personal "
+"dashboard"
 msgstr ""
 
 msgid ""
-"You cannot use @project = 'aggregated' in the context of a personal dashboard"
-msgstr ""
-
-msgid "You cannot use @project = 'self' in the context of a personal dashboard"
+"You cannot use @project with 'self' in the context of a personal dashboard"
 msgstr ""
 
 msgid "You don't have permission to access this project"

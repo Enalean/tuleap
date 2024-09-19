@@ -58,48 +58,14 @@ final readonly class InvalidFromProjectCollectorVisitor implements FromProjectCo
 
     private function checkProjectEqual(FromProjectEqual $project_equal, InvalidFromProjectCollectorParameters $parameters): void
     {
-        if ($project_equal->getValue() !== AllowedFrom::PROJECT_SELF && $project_equal->getValue() !== AllowedFrom::PROJECT_AGGREGATED) {
-            $parameters->collection->addInvalidFrom(dgettext(
+        match ($project_equal->getValue()) {
+            AllowedFrom::PROJECT_SELF       => $this->checkProjectSelf($parameters),
+            AllowedFrom::PROJECT_AGGREGATED => $this->checkProjectAggregated($parameters),
+            default                         => $parameters->collection->addInvalidFrom(dgettext(
                 'tuleap-crosstracker',
                 "Only @project = 'self' and @project = 'aggregated' are supported",
-            ));
-            return;
-        }
-
-        if ($project_equal->getValue() === AllowedFrom::PROJECT_SELF) {
-            if (! $this->in_project_checker->isWidgetInProjectDashboard($parameters->report_id)) {
-                $parameters->collection->addInvalidFrom(dgettext(
-                    'tuleap-crosstracker',
-                    "You cannot use @project = 'self' in the context of a personal dashboard",
-                ));
-            }
-            return;
-        }
-
-        $row = $this->widget_retriever->searchCrossTrackerWidgetByCrossTrackerReportId($parameters->report_id);
-        if ($row === null || $row['dashboard_type'] !== 'project') {
-            $parameters->collection->addInvalidFrom(dgettext(
-                'tuleap-crosstracker',
-                "You cannot use @project = 'aggregated' in the context of a personal dashboard",
-            ));
-            return;
-        }
-        $project         = $this->project_factory->getValidProjectById($row['project_id']);
-        $linked_projects = $this->event_dispatcher->dispatch(new CollectLinkedProjects($project, $parameters->user));
-        assert($linked_projects instanceof CollectLinkedProjects);
-        if (! $linked_projects->getParentProjects()->isEmpty()) {
-            $parameters->collection->addInvalidFrom(dgettext(
-                'tuleap-crosstracker',
-                "You can use @project = 'aggregated' only in a program project",
-            ));
-            return;
-        }
-        if ($linked_projects->getChildrenProjects()->isEmpty()) {
-            $parameters->collection->addInvalidFrom(dgettext(
-                'tuleap-crosstracker',
-                "You cannot use @project = 'aggregated' in a project without service program enabled",
-            ));
-        }
+            )),
+        };
     }
 
     /**
@@ -132,10 +98,69 @@ final readonly class InvalidFromProjectCollectorVisitor implements FromProjectCo
         $from_project = $parameters->from_project;
 
         match ($from_project->getTarget()) {
-            AllowedFrom::PROJECT          => $parameters->collection->addInvalidFrom(dgettext('tuleap-crosstracker', "You cannot use '@project IN(...)'")),
+            AllowedFrom::PROJECT          => $this->checkProjectIn($project_in->getValues(), $parameters),
             AllowedFrom::PROJECT_NAME     => $this->checkProjectNames($project_in->getValues(), $parameters),
             AllowedFrom::PROJECT_CATEGORY => $this->checkProjectCategories($project_in->getValues(), $parameters),
             default                       => throw new LogicException("Unknown FROM project: {$from_project->getTarget()}"),
         };
+    }
+
+    /**
+     * @param list<string> $values
+     */
+    private function checkProjectIn(array $values, InvalidFromProjectCollectorParameters $parameters): void
+    {
+        if (count(array_unique($values)) !== count($values)) {
+            $parameters->collection->addInvalidFrom(dgettext('tuleap-crosstracker', '@project IN(...) cannot contain multiple times the same value'));
+            return;
+        }
+
+        foreach ($values as $value) {
+            match ($value) {
+                AllowedFrom::PROJECT_SELF       => $this->checkProjectSelf($parameters),
+                AllowedFrom::PROJECT_AGGREGATED => $this->checkProjectAggregated($parameters),
+                default                         => $parameters->collection->addInvalidFrom(
+                    dgettext('tuleap-crosstracker', "Only 'self' and 'aggregated' are supported for @project IN(...)"),
+                ),
+            };
+        }
+    }
+
+    private function checkProjectSelf(InvalidFromProjectCollectorParameters $parameters): void
+    {
+        if (! $this->in_project_checker->isWidgetInProjectDashboard($parameters->report_id)) {
+            $parameters->collection->addInvalidFrom(dgettext(
+                'tuleap-crosstracker',
+                "You cannot use @project with 'self' in the context of a personal dashboard",
+            ));
+        }
+    }
+
+    private function checkProjectAggregated(InvalidFromProjectCollectorParameters $parameters): void
+    {
+        $row = $this->widget_retriever->searchCrossTrackerWidgetByCrossTrackerReportId($parameters->report_id);
+        if ($row === null || $row['dashboard_type'] !== 'project') {
+            $parameters->collection->addInvalidFrom(dgettext(
+                'tuleap-crosstracker',
+                "You cannot use @project with 'aggregated' in the context of a personal dashboard",
+            ));
+            return;
+        }
+        $project         = $this->project_factory->getValidProjectById($row['project_id']);
+        $linked_projects = $this->event_dispatcher->dispatch(new CollectLinkedProjects($project, $parameters->user));
+        assert($linked_projects instanceof CollectLinkedProjects);
+        if (! $linked_projects->getParentProjects()->isEmpty()) {
+            $parameters->collection->addInvalidFrom(dgettext(
+                'tuleap-crosstracker',
+                "You can use @project with 'aggregated' only in a Program project",
+            ));
+            return;
+        }
+        if ($linked_projects->getChildrenProjects()->isEmpty()) {
+            $parameters->collection->addInvalidFrom(dgettext(
+                'tuleap-crosstracker',
+                "You cannot use @project with 'aggregated' in a project without service Program enabled",
+            ));
+        }
     }
 }
