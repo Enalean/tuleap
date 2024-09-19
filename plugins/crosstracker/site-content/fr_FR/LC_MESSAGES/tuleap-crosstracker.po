@@ -208,9 +208,6 @@ msgstr "La valeur pour 'offset' est incorrecte. 'offset' doit être un entier"
 msgid "No tracker found"
 msgstr "Aucun outils de suivi trouvé"
 
-msgid "Not implemented yet"
-msgstr "Pas encore implémenté"
-
 msgid "Only 'self' and 'aggregated' are supported for @project IN(...)"
 msgstr "Seulement 'self' et 'aggregated' sont supportés pour @project IN(...)"
 
@@ -284,6 +281,13 @@ msgid ""
 msgstr ""
 "Vous ne pouvez pas chercher sur '%s', référez vous à la documentation sur la "
 "syntaxe du 'FROM'."
+
+#, php-format
+msgid ""
+"You cannot sort artifacts by %s, the field is a list with multiple values"
+msgstr ""
+"Vous ne pouvez pas ordonner avec %s, le champs est une liste avec plusieurs "
+"valeurs"
 
 msgid ""
 "You cannot use @project with 'aggregated' in a project without service "

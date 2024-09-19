@@ -163,9 +163,6 @@ msgstr ""
 msgid "No tracker found"
 msgstr ""
 
-msgid "Not implemented yet"
-msgstr ""
-
 msgid "Only 'self' and 'aggregated' are supported for @project IN(...)"
 msgstr ""
 
@@ -223,6 +220,11 @@ msgstr ""
 msgid ""
 "You cannot search on '%s', please refer to the documentation about the "
 "'FROM' syntax part."
+msgstr ""
+
+#, php-format
+msgid ""
+"You cannot sort artifacts by %s, the field is a list with multiple values"
 msgstr ""
 
 msgid ""
