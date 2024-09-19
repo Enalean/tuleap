@@ -49,7 +49,7 @@ export function fileUploadHandler(
         event.preventDefault();
         const files = event.dataTransfer?.files;
         if (!files) {
-            options.onErrorCallback(new UploadError(gettext_provider));
+            options.onErrorCallback(new UploadError(gettext_provider), "");
             return Promise.resolve(Option.nothing<ReadonlyArray<OngoingUpload>>());
         }
         return uploadAndDisplayFileInEditor(files, options, gettext_provider, uploaders);
@@ -75,19 +75,22 @@ export async function uploadAndDisplayFileInEditor(
         onProgressCallback,
     } = options;
 
+    const upload_files: OnGoingUploadFile[] = onStartUploadCallback(files);
     const ongoing_uploads: Array<OngoingUpload> = [];
     for (const file of files) {
         if (file.size > max_size_upload) {
-            onErrorCallback(new MaxSizeUploadExceededError(max_size_upload, gettext_provider));
+            onErrorCallback(
+                new MaxSizeUploadExceededError(max_size_upload, gettext_provider),
+                file.name,
+            );
             return Promise.resolve(Option.fromValue(ongoing_uploads));
         }
 
         if (!isFileTypeValid(file)) {
-            onErrorCallback(new InvalidFileUploadError(gettext_provider));
+            onErrorCallback(new InvalidFileUploadError(gettext_provider), file.name);
             return Promise.resolve(Option.fromValue(ongoing_uploads));
         }
 
-        const upload_files: OnGoingUploadFile[] = onStartUploadCallback(file.name);
         const optional_ongoing_upload: Option<OngoingUpload> = await postJSON<PostFileResponse>(
             uri`${rawUri(upload_url)}`,
             {
@@ -98,7 +101,7 @@ export async function uploadAndDisplayFileInEditor(
         ).match(
             async (response): Promise<Option<OngoingUpload>> => {
                 if (!response.upload_href) {
-                    onErrorCallback(new UploadError(gettext_provider));
+                    onErrorCallback(new UploadError(gettext_provider), file.name);
                     return Promise.resolve(Option.nothing<OngoingUpload>());
                 }
 
@@ -110,16 +113,16 @@ export async function uploadAndDisplayFileInEditor(
                         onProgressCallback,
                         uploaders,
                     );
-                    onSuccessCallback(response.id, response.download_href);
+                    onSuccessCallback(response.id, response.download_href, file.name);
 
                     return ongoing_upload;
                 } catch (error) {
-                    onErrorCallback(new UploadError(gettext_provider));
+                    onErrorCallback(new UploadError(gettext_provider), file.name);
                     throw error;
                 }
             },
             (): Promise<Option<OngoingUpload>> => {
-                onErrorCallback(new UploadError(gettext_provider));
+                onErrorCallback(new UploadError(gettext_provider), file.name);
                 return Promise.resolve(Option.nothing<OngoingUpload>());
             },
         );

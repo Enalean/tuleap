@@ -19,8 +19,7 @@
 
 import { ref } from "vue";
 import type { UseUploadFileType } from "@/composables/useUploadFile";
-
-const noop = (): void => {};
+import { noop } from "@/helpers/noop";
 
 export const UploadFileStub = {
     uploadNotInProgress: (): UseUploadFileType => ({
@@ -32,7 +31,6 @@ export const UploadFileStub = {
             onSuccessCallback: noop,
             onProgressCallback: noop,
         },
-        error_message: ref(""),
         is_in_progress: ref(false),
         resetProgressCallback: noop,
     }),
@@ -46,7 +44,6 @@ export const UploadFileStub = {
             onSuccessCallback: noop,
             onProgressCallback: noop,
         },
-        error_message: ref(""),
         is_in_progress: ref(true),
         resetProgressCallback: noop,
     }),

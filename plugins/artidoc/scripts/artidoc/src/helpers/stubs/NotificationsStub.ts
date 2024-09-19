@@ -17,25 +17,28 @@
  *  along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type {
-    InvalidFileUploadError,
-    MaxSizeUploadExceededError,
-    UploadError,
-} from "./upload-file.error";
+import { ref } from "vue";
+import type { UseNotificationsStoreType } from "@/stores/useNotificationsStore";
+import { noop } from "@/helpers/noop";
 
-export type OnGoingUploadFile = {
-    file_name: string;
-    progress: number;
-};
-
-export type FileUploadOptions = {
-    upload_url: string;
-    max_size_upload: number;
-    onErrorCallback: (
-        error: UploadError | MaxSizeUploadExceededError | InvalidFileUploadError,
-        file_name: string,
-    ) => void;
-    onSuccessCallback: (id: number, download_href: string, file_name: string) => void;
-    onProgressCallback: (file_name: string, global_progress: number) => void;
-    onStartUploadCallback: (files: FileList) => OnGoingUploadFile[];
+export const NotificationsSub = {
+    withMessages: (): UseNotificationsStoreType => ({
+        messages: ref([
+            {
+                message: "a success message",
+                type: "success",
+            },
+            {
+                message: "an error message",
+                type: "danger",
+            },
+        ]),
+        addNotification: noop,
+        deleteNotification: noop,
+    }),
+    withoutMessages: (): UseNotificationsStoreType => ({
+        messages: ref([]),
+        addNotification: noop,
+        deleteNotification: noop,
+    }),
 };

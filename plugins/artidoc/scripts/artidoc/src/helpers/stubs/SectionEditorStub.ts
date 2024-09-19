@@ -18,8 +18,7 @@
  */
 import type { SectionEditor } from "@/composables/useSectionEditor";
 import { computed, ref } from "vue";
-
-const noop = (): void => {};
+import { noop } from "@/helpers/noop";
 
 export const SectionEditorStub = {
     withoutEditableSection: (): SectionEditor => ({

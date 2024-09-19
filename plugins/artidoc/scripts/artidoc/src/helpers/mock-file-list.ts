@@ -17,25 +17,15 @@
  *  along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type {
-    InvalidFileUploadError,
-    MaxSizeUploadExceededError,
-    UploadError,
-} from "./upload-file.error";
-
-export type OnGoingUploadFile = {
-    file_name: string;
-    progress: number;
-};
-
-export type FileUploadOptions = {
-    upload_url: string;
-    max_size_upload: number;
-    onErrorCallback: (
-        error: UploadError | MaxSizeUploadExceededError | InvalidFileUploadError,
-        file_name: string,
-    ) => void;
-    onSuccessCallback: (id: number, download_href: string, file_name: string) => void;
-    onProgressCallback: (file_name: string, global_progress: number) => void;
-    onStartUploadCallback: (files: FileList) => OnGoingUploadFile[];
-};
+export function mockFileList(files: File[]): FileList {
+    const input = document.createElement("input");
+    input.setAttribute("type", "file");
+    input.setAttribute("name", "file-upload");
+    input.multiple = true;
+    const fileList: FileList = Object.create(input.files);
+    for (let i = 0; i < files.length; i++) {
+        fileList[i] = files[i];
+    }
+    Object.defineProperty(fileList, "length", { value: files.length });
+    return fileList;
+}

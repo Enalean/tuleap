@@ -26,9 +26,7 @@ import { extractArtifactSectionsFromArtidocSections } from "@/helpers/extract-ar
 import type { ResultAsync } from "neverthrow";
 import { okAsync } from "neverthrow";
 import type { Fault } from "@tuleap/fault";
-
-const noop = (): void => {};
-const promised_noop = (): Promise<void> => Promise.resolve();
+import { noop, promised_noop } from "@/helpers/noop";
 
 const resultasync_noop = (): ResultAsync<boolean, Fault> => okAsync(true);
 
