@@ -22,6 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\CrossTracker\Report\Query\Advanced;
 
+use Tracker_Semantic_ContributorFactory;
+use Tracker_Semantic_StatusFactory;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\DuckTypedField\DuckTypedFieldChecker;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata\ArtifactIdMetadataChecker;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata\AssignedToChecker;
@@ -80,6 +82,8 @@ use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Text\TextFieldChecker;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidSearchablesCollection;
 use Tuleap\Tracker\Report\Query\Advanced\ListFieldBindValueNormalizer;
 use Tuleap\Tracker\Report\Query\Advanced\UgroupLabelConverter;
+use Tuleap\Tracker\Semantic\Contributor\ContributorFieldRetriever;
+use Tuleap\Tracker\Semantic\Status\StatusFieldRetriever;
 use Tuleap\Tracker\Test\Builders\Fields\CheckboxFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\DateFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\ExternalFieldBuilder;
@@ -172,7 +176,11 @@ final class InvalidTermCollectorVisitorTest extends TestCase
                         ),
                         new SubmissionDateChecker(),
                         new ArtifactIdMetadataChecker(),
-                    )
+                    ),
+                    new InvalidOrderByListChecker(
+                        new StatusFieldRetriever(Tracker_Semantic_StatusFactory::instance()),
+                        new ContributorFieldRetriever(Tracker_Semantic_ContributorFactory::instance()),
+                    ),
                 ),
                 new DuckTypedFieldChecker(
                     $this->fields_retriever,

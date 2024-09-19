@@ -24,6 +24,8 @@ namespace Tuleap\CrossTracker\Report\Query\Advanced;
 
 use BaseLanguageFactory;
 use ForgeConfig;
+use Tracker_Semantic_ContributorFactory;
+use Tracker_Semantic_StatusFactory;
 use Tuleap\CrossTracker\Report\CrossTrackerArtifactReportFactory;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\DuckTypedField\DuckTypedFieldChecker;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata\ArtifactIdMetadataChecker;
@@ -56,6 +58,8 @@ use Tuleap\Tracker\Report\Query\Advanced\ListFieldBindValueNormalizer;
 use Tuleap\Tracker\Report\Query\Advanced\SelectablesMustBeUniqueException;
 use Tuleap\Tracker\Report\Query\Advanced\SelectLimitExceededException;
 use Tuleap\Tracker\Report\Query\Advanced\UgroupLabelConverter;
+use Tuleap\Tracker\Semantic\Contributor\ContributorFieldRetriever;
+use Tuleap\Tracker\Semantic\Status\StatusFieldRetriever;
 use Tuleap\Tracker\Test\Stub\RetrieveFieldTypeStub;
 use Tuleap\Tracker\Test\Stub\RetrieveUsedFieldsStub;
 use Tuleap\Tracker\Test\Stub\Tracker\Permission\RetrieveUserPermissionOnFieldsStub;
@@ -117,6 +121,10 @@ final class InvalidSelectablesCollectionBuilderTest extends TestCase
                     new QueryValidation\Metadata\ArtifactSubmitterChecker(ProvideAndRetrieveUserStub::build(UserTestBuilder::buildWithDefaults())),
                     new SubmissionDateChecker(),
                     new ArtifactIdMetadataChecker(),
+                ),
+                new InvalidOrderByListChecker(
+                    new StatusFieldRetriever(Tracker_Semantic_StatusFactory::instance()),
+                    new ContributorFieldRetriever(Tracker_Semantic_ContributorFactory::instance()),
                 ),
             )),
             [],

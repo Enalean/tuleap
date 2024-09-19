@@ -22,14 +22,49 @@ declare(strict_types=1);
 
 namespace Tuleap\CrossTracker\Report\Query\Advanced;
 
+use PFUser;
+use Tracker;
+use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\InvalidQueryException;
+use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata\MetadataChecker;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\Field;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\OrderBy;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\SelectableVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\IBuildInvalidOrderBy;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidOrderBy;
 
-final class InvalidOrderByBuilder implements IBuildInvalidOrderBy
+/**
+ * @template-implements SelectableVisitor<InvalidOrderByBuilderParameters, ?InvalidOrderBy>
+ */
+final readonly class InvalidOrderByBuilder implements IBuildInvalidOrderBy, SelectableVisitor
 {
+    /**
+     * @param Tracker[] $trackers
+     */
+    public function __construct(
+        private MetadataChecker $metadata_checker,
+        private array $trackers,
+        private PFUser $user,
+    ) {
+    }
+
     public function buildInvalidOrderBy(OrderBy $order_by): ?InvalidOrderBy
     {
+        return $order_by->getFilter()->acceptSelectableVisitor($this, new InvalidOrderByBuilderParameters($this->trackers, $this->user));
+    }
+
+    public function visitField(Field $field, $parameters): ?InvalidOrderBy
+    {
         return new InvalidOrderBy('Not implemented yet', dgettext('tuleap-crosstracker', 'Not implemented yet'));
+    }
+
+    public function visitMetaData(Metadata $metadata, $parameters): ?InvalidOrderBy
+    {
+        try {
+            $this->metadata_checker->checkMetadataIsValidForOrderBy($metadata, $parameters);
+            return $parameters->getInvalidOrderBy();
+        } catch (InvalidQueryException $exception) {
+            return new InvalidOrderBy($exception->getMessage(), $exception->getMessage());
+        }
     }
 }

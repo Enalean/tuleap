@@ -57,6 +57,12 @@ msgid ""
 msgstr ""
 
 #, php-format
+msgid ""
+"%s is a list with multiple values, sorting artifacts by it is not allowed. "
+"Please refine your query or check the configuration of the trackers."
+msgstr ""
+
+#, php-format
 msgid "%s is not supported for the operator %s."
 msgstr ""
 
@@ -174,6 +180,12 @@ msgid "Search artifacts that are in different trackers"
 msgstr ""
 
 msgid "Search into multiple trackers and multiple projects."
+msgstr ""
+
+#, php-format
+msgid ""
+"Sorting artifacts by %s is not allowed. Please refine your query or check "
+"the configuration of the trackers."
 msgstr ""
 
 msgid ""

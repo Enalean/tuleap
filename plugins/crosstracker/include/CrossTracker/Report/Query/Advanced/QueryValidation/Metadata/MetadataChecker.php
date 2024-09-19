@@ -22,16 +22,20 @@ namespace Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata;
 
 use Tuleap\CrossTracker\Report\Query\Advanced\AllowedMetadata;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidComparisonCollectorParameters;
+use Tuleap\CrossTracker\Report\Query\Advanced\InvalidOrderByBuilderParameters;
+use Tuleap\CrossTracker\Report\Query\Advanced\InvalidOrderByListChecker;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSelectableCollectorParameters;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\InvalidQueryException;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidOrderBy;
 
 final readonly class MetadataChecker
 {
     public function __construct(
         private CheckMetadataUsage $semantic_usage_checker,
         private InvalidMetadataChecker $comparison_checker,
+        private InvalidOrderByListChecker $order_by_list_checker,
     ) {
     }
 
@@ -65,5 +69,39 @@ final readonly class MetadataChecker
         }
 
         $this->semantic_usage_checker->checkMetadataIsUsedByAllTrackers($metadata, $collector_parameters->trackers, $collector_parameters->user);
+    }
+
+    /**
+     * @throws InvalidQueryException
+     */
+    public function checkMetadataIsValidForOrderBy(
+        Metadata $metadata,
+        InvalidOrderByBuilderParameters $parameters,
+    ): void {
+        if (! in_array($metadata->getName(), AllowedMetadata::SORTABLE_NAMES, true)) {
+            $parameters->setInvalidOrderBy(new InvalidOrderBy(
+                sprintf('Sorting artifacts by %s is not allowed. Please refine your query or check the configuration of the trackers.', $metadata->getName()),
+                sprintf(
+                    dgettext('tuleap-crosstracker', 'Sorting artifacts by %s is not allowed. Please refine your query or check the configuration of the trackers.'),
+                    $metadata->getName(),
+                ),
+            ));
+            return;
+        }
+
+        $this->semantic_usage_checker->checkMetadataIsUsedByAllTrackers($metadata, $parameters->trackers, $parameters->user);
+
+        if (
+            ($metadata->getName() === AllowedMetadata::STATUS || $metadata->getName() === AllowedMetadata::ASSIGNED_TO)
+            && ! $this->order_by_list_checker->metadataListIsSortable($metadata, $parameters->trackers)
+        ) {
+            $parameters->setInvalidOrderBy(new InvalidOrderBy(
+                sprintf('%s is a list with multiple values, sorting artifacts by it is not allowed. Please refine your query or check the configuration of the trackers.', $metadata->getName()),
+                sprintf(
+                    dgettext('tuleap-crosstracker', '%s is a list with multiple values, sorting artifacts by it is not allowed. Please refine your query or check the configuration of the trackers.'),
+                    $metadata->getName(),
+                ),
+            ));
+        }
     }
 }

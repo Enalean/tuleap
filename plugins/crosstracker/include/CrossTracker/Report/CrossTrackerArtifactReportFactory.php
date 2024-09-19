@@ -39,6 +39,7 @@ use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSelectablesCollectorVisitor
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidTermCollectorVisitor;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\CrossTrackerExpertQueryReportDao;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilderVisitor;
+use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata\MetadataChecker;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\SelectedValueRepresentation;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\SelectedValuesCollection;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilderVisitor;
@@ -80,6 +81,7 @@ final readonly class CrossTrackerArtifactReportFactory
         private CrossTrackerExpertQueryReportDao $expert_query_dao,
         private InvalidTermCollectorVisitor $term_collector,
         private InvalidSelectablesCollectorVisitor $selectables_collector,
+        private MetadataChecker $metadata_checker,
         private RetrieveReportTrackers $report_trackers_retriever,
         private CrossTrackerInstrumentation $instrumentation,
     ) {
@@ -247,7 +249,7 @@ final readonly class CrossTrackerArtifactReportFactory
             $report->isExpert(),
             new InvalidSearchablesCollectionBuilder($this->term_collector, $trackers, $current_user),
             new InvalidSelectablesCollectionBuilder($this->selectables_collector, $trackers, $current_user),
-            new InvalidOrderByBuilder(),
+            new InvalidOrderByBuilder($this->metadata_checker, $trackers, $current_user),
         );
         return $this->parser->parse($expert_query);
     }
