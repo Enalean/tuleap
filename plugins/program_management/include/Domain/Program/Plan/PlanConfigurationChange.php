@@ -26,10 +26,10 @@ use Tuleap\ProgramManagement\Domain\Workspace\UserReference;
 
 /**
  * I hold the modified Plan configuration of a Program, that has changed and is going to be saved.
- * @see NewPlan to create a new Plan configuration and save it.
+ * @see NewPlanConfiguration to create a new Plan configuration and save it.
  * @psalm-immutable
  */
-final class PlanChange
+final class PlanConfigurationChange
 {
     /**
     * @param int[]                  $tracker_ids_that_can_be_planned

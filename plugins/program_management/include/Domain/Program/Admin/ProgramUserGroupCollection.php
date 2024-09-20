@@ -33,13 +33,10 @@ use Tuleap\ProgramManagement\Domain\Program\Plan\RetrieveProgramUserGroup;
 final class ProgramUserGroupCollection
 {
     /**
-     * @var ProgramUserGroup[]
+     * @param non-empty-list<ProgramUserGroup> $user_group_identifiers
      */
-    private array $user_group_identifiers;
-
-    private function __construct(array $user_group_identifiers)
+    private function __construct(private array $user_group_identifiers)
     {
-        $this->user_group_identifiers = $user_group_identifiers;
     }
 
     /**
@@ -64,6 +61,9 @@ final class ProgramUserGroupCollection
         return new self($program_user_groups);
     }
 
+    /**
+     * @return non-empty-list<ProgramUserGroup>
+     */
     public function getUserGroups(): array
     {
         return $this->user_group_identifiers;

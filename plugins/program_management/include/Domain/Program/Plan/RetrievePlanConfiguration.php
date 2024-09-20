@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2024-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,7 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Plan;
 
-interface SavePlan
+use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
+
+interface RetrievePlanConfiguration
 {
-    public function save(NewPlan $plan): void;
+    public function retrievePlan(ProgramIdentifier $program_identifier): PlanConfiguration;
 }

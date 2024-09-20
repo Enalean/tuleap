@@ -46,7 +46,7 @@ use Tuleap\ProgramManagement\Adapter\Program\Feature\FeaturesDao;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\ArtifactsLinkedToParentDao;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\CachedProgramBuilder;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\CanPrioritizeFeaturesDAO;
-use Tuleap\ProgramManagement\Adapter\Program\Plan\PlanDao;
+use Tuleap\ProgramManagement\Adapter\Program\Plan\PlanConfigurationDAO;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\PrioritizeFeaturesPermissionVerifier;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\TrackerConfigurationChecker;
 use Tuleap\ProgramManagement\Adapter\Program\PlanningAdapter;
@@ -76,8 +76,8 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\CannotManipulateT
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\TopBacklogChange;
 use Tuleap\ProgramManagement\Domain\Program\Plan\CannotPlanIntoItselfException;
 use Tuleap\ProgramManagement\Domain\Program\Plan\InvalidProgramUserGroup;
-use Tuleap\ProgramManagement\Domain\Program\Plan\PlanChange;
-use Tuleap\ProgramManagement\Domain\Program\Plan\PlanCreator;
+use Tuleap\ProgramManagement\Domain\Program\Plan\PlanConfigurationChange;
+use Tuleap\ProgramManagement\Domain\Program\Plan\PlanConfigurationCreator;
 use Tuleap\ProgramManagement\Domain\Program\Plan\PlanIterationChange;
 use Tuleap\ProgramManagement\Domain\Program\Plan\PlanProgramIncrementChange;
 use Tuleap\ProgramManagement\Domain\Program\Plan\PlanTrackerException;
@@ -269,12 +269,12 @@ final class ProjectResource extends AuthenticatedResource
         $tracker_retriever = new TrackerFactoryAdapter(\TrackerFactory::instance());
         $tracker_checker   = new TrackerConfigurationChecker($tracker_retriever);
 
-        $plan_creator = new PlanCreator(
+        $plan_creator = new PlanConfigurationCreator(
             $tracker_checker,
             $tracker_checker,
             $tracker_checker,
             new ProgramUserGroupRetriever(new UserGroupRetriever(new \UGroupManager())),
-            new PlanDao(),
+            new PlanConfigurationDAO(),
             new ProjectManagerAdapter(\ProjectManager::instance(), $this->user_manager_adapter),
             new TeamDao(),
             new ProjectPermissionVerifier($this->user_manager_adapter)
@@ -294,7 +294,7 @@ final class ProjectResource extends AuthenticatedResource
             );
         }
         try {
-            $plan_change = PlanChange::fromProgramIncrementAndRaw(
+            $plan_change = PlanConfigurationChange::fromProgramIncrementAndRaw(
                 $plan_program_increment_change,
                 $user_identifier,
                 $id,

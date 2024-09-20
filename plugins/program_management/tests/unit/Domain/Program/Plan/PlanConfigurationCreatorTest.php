@@ -28,20 +28,20 @@ use Tuleap\ProgramManagement\Tests\Stub\CheckNewProgramIncrementTrackerStub;
 use Tuleap\ProgramManagement\Tests\Stub\ProjectIdentifierStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveProgramUserGroupStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveProjectStub;
-use Tuleap\ProgramManagement\Tests\Stub\SavePlanStub;
+use Tuleap\ProgramManagement\Tests\Stub\SaveNewPlanConfigurationStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserReferenceStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsTeamStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyProjectPermissionStub;
 
-final class PlanCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
+final class PlanConfigurationCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const PROGRAM_ID                   = 102;
     private const ADMINISTRATORS_USER_GROUP_ID = 4;
-    private SavePlanStub $plan_saver;
+    private SaveNewPlanConfigurationStub $plan_saver;
 
     protected function setUp(): void
     {
-        $this->plan_saver = SavePlanStub::withCount();
+        $this->plan_saver = SaveNewPlanConfigurationStub::withCount();
     }
 
     private function createPlan(): void
@@ -58,7 +58,7 @@ final class PlanCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             'iteration'
         );
 
-        $plan_change = PlanChange::fromProgramIncrementAndRaw(
+        $plan_change = PlanConfigurationChange::fromProgramIncrementAndRaw(
             $program_increment_change,
             UserReferenceStub::withDefaults(),
             self::PROGRAM_ID,
@@ -66,7 +66,7 @@ final class PlanCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             [self::PROGRAM_ID . '_' . self::ADMINISTRATORS_USER_GROUP_ID],
             $iteration_change
         );
-        $creator     = new PlanCreator(
+        $creator     = new PlanConfigurationCreator(
             CheckNewProgramIncrementTrackerStub::withValidTracker(),
             CheckNewPlannableTrackerStub::withValidTracker(),
             CheckNewIterationTrackerStub::withValidTracker(),

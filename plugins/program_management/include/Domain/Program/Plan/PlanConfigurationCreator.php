@@ -28,21 +28,21 @@ use Tuleap\ProgramManagement\Domain\Team\VerifyIsTeam;
 use Tuleap\ProgramManagement\Domain\Workspace\RetrieveProject;
 use Tuleap\ProgramManagement\Domain\Workspace\VerifyProjectPermission;
 
-final class PlanCreator implements CreatePlan
+final class PlanConfigurationCreator implements CreatePlanConfiguration
 {
     public function __construct(
         private CheckNewProgramIncrementTracker $program_increment_checker,
         private CheckNewPlannableTracker $plannable_checker,
         private CheckNewIterationTracker $iteration_checker,
         private RetrieveProgramUserGroup $ugroup_retriever,
-        private SavePlan $plan_store,
+        private SaveNewPlanConfiguration $plan_store,
         private RetrieveProject $project_retriever,
         private VerifyIsTeam $team_verifier,
         private VerifyProjectPermission $permission_verifier,
     ) {
     }
 
-    public function create(PlanChange $plan_change): void
+    public function create(PlanConfigurationChange $plan_change): void
     {
         $project           = $this->project_retriever->getProjectWithId($plan_change->project_id);
         $program           = ProgramForAdministrationIdentifier::fromProject(
@@ -75,7 +75,7 @@ final class PlanCreator implements CreatePlan
             $plan_change->can_possibly_prioritize_ugroups
         );
 
-        $plan = new NewPlan(
+        $plan = new NewPlanConfiguration(
             $program_tracker,
             $program->id,
             $plannable_tracker_collection->trackers,

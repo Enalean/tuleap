@@ -35,7 +35,7 @@ use Tuleap\ProgramManagement\Adapter\Program\Feature\BackgroundColorRetriever;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Content\FeatureHasPlannedUserStoriesVerifier;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\FeatureChecker;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\ArtifactsLinkedToParentDao;
-use Tuleap\ProgramManagement\Adapter\Program\Plan\PlanDao;
+use Tuleap\ProgramManagement\Adapter\Program\Plan\PlanConfigurationDAO;
 use Tuleap\ProgramManagement\Adapter\Program\PlanningAdapter;
 use Tuleap\ProgramManagement\Adapter\Team\MirroredTimeboxes\MirroredTimeboxesDao;
 use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\Artifact\ArtifactFactoryAdapter;
@@ -121,7 +121,7 @@ final class IterationResource
                     new PlanningAdapter(\PlanningFactory::build(), $this->user_adapter),
                     $artifacts_linked_to_parent_dao
                 ),
-                new FeatureChecker(new PlanDao(), $visibility_verifier),
+                new FeatureChecker(new PlanConfigurationDAO(), $visibility_verifier),
                 $retrieve_background_color,
                 $retrieve_tracker_id,
                 $artifacts_linked_to_parent_dao,

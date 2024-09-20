@@ -31,7 +31,7 @@ use Tuleap\ProgramManagement\Adapter\Program\Backlog\Timebox\URIRetriever;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\BackgroundColorRetriever;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\FeatureChecker;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\ArtifactsLinkedToParentDao;
-use Tuleap\ProgramManagement\Adapter\Program\Plan\PlanDao;
+use Tuleap\ProgramManagement\Adapter\Program\Plan\PlanConfigurationDAO;
 use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\Artifact\ArtifactFactoryAdapter;
 use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\Semantics\IsOpenRetriever;
 use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\TrackerFactoryAdapter;
@@ -83,7 +83,7 @@ final class ProgramBacklogItemsResource extends AuthenticatedResource
 
         $user_story_representation_builder = new UserStoryRetriever(
             new ArtifactsLinkedToParentDao(),
-            new FeatureChecker(new PlanDao(), $visibility_verifier),
+            new FeatureChecker(new PlanConfigurationDAO(), $visibility_verifier),
             new BackgroundColorRetriever(
                 new BackgroundColorBuilder(new BindDecoratorRetriever()),
                 $artifact_retriever,

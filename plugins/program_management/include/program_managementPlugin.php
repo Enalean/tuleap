@@ -112,7 +112,7 @@ use Tuleap\ProgramManagement\Adapter\Program\Feature\UserStoryInOneMirrorPlanner
 use Tuleap\ProgramManagement\Adapter\Program\IterationTracker\VisibleIterationTrackerRetriever;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\CachedProgramBuilder;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\CanPrioritizeFeaturesDAO;
-use Tuleap\ProgramManagement\Adapter\Program\Plan\PlanDao;
+use Tuleap\ProgramManagement\Adapter\Program\Plan\PlanConfigurationDAO;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\PlannableTrackersRetriever;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\PrioritizeFeaturesPermissionVerifier;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\TrackerConfigurationChecker;
@@ -185,7 +185,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\TimeboxArtifactLinkType;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\TopBacklogActionArtifactSourceInformation;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\TopBacklogActionMassChangeSourceInformation;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\TopBacklogChangeProcessor;
-use Tuleap\ProgramManagement\Domain\Program\Plan\PlanCreator;
+use Tuleap\ProgramManagement\Domain\Program\Plan\PlanConfigurationCreator;
 use Tuleap\ProgramManagement\Domain\Program\Plan\PlanInheritanceHandler;
 use Tuleap\ProgramManagement\Domain\Redirections\BuildRedirectFormActionHandler;
 use Tuleap\ProgramManagement\Domain\Redirections\RedirectToIterationsProcessor;
@@ -554,7 +554,7 @@ final class program_managementPlugin extends Plugin implements PluginWithService
 
         $artifact_visible_verifier   = new ArtifactVisibleVerifier($tracker_artifact_factory, $user_retriever);
         $pending_synchronization_dao = new PendingSynchronizationDao();
-        $plan_dao                    = new PlanDao();
+        $plan_dao                    = new PlanConfigurationDAO();
         return new DisplayAdminProgramManagementController(
             new ProjectManagerAdapter($project_manager, $user_manager_adapter),
             TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../templates/admin'),
@@ -1046,7 +1046,7 @@ final class program_managementPlugin extends Plugin implements PluginWithService
     #[\Tuleap\Plugin\ListeningToEventName(Tracker::TRACKER_USAGE)]
     public function trackerUsage(array $params): void
     {
-        if ((new PlanDao())->isPartOfAPlan(TrackerReferenceProxy::fromTracker($params['tracker']))) {
+        if ((new PlanConfigurationDAO())->isPartOfAPlan(TrackerReferenceProxy::fromTracker($params['tracker']))) {
             $params['result'] = [
                 'can_be_deleted' => false,
                 'message'        => $this->getPluginInfo()->getPluginDescriptor()->getFullName(),
@@ -1155,7 +1155,7 @@ final class program_managementPlugin extends Plugin implements PluginWithService
                 $user_manager_adapter,
                 new UserIsProgramAdminVerifier($user_manager_adapter)
             ),
-            new PlanDao(),
+            new PlanConfigurationDAO(),
             new ArtifactsExplicitTopBacklogDAO(),
             new PlannedFeatureDAO(),
             new \Tuleap\Layout\JavascriptViteAsset($assets, 'src/index.ts'),
@@ -1198,7 +1198,7 @@ final class program_managementPlugin extends Plugin implements PluginWithService
                 $user_manager_adapter,
                 new UserIsProgramAdminVerifier($user_manager_adapter)
             ),
-            new PlanDao(),
+            new PlanConfigurationDAO(),
             TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../templates')
         );
 
@@ -1230,7 +1230,7 @@ final class program_managementPlugin extends Plugin implements PluginWithService
     public function getExternalPostActionPluginsEvent(GetExternalPostActionPluginsEvent $event): void
     {
         $tracker_id = $event->getTracker()->getId();
-        if ((new PlanDao())->isPlannable($tracker_id)) {
+        if ((new PlanConfigurationDAO())->isPlannable($tracker_id)) {
             $event->addServiceNameUsed($this->getServiceShortname());
         }
     }
@@ -1311,7 +1311,7 @@ final class program_managementPlugin extends Plugin implements PluginWithService
     public function getExternalPostActionJsonParserEvent(GetExternalPostActionJsonParserEvent $event): void
     {
         $event->addParser(
-            new AddToTopBacklogPostActionJSONParser(new PlanDao())
+            new AddToTopBacklogPostActionJSONParser(new PlanConfigurationDAO())
         );
     }
 
@@ -1361,7 +1361,7 @@ final class program_managementPlugin extends Plugin implements PluginWithService
     #[\Tuleap\Plugin\ListeningToEventClass]
     public function checkPostActionsForTracker(CheckPostActionsForTracker $event): void
     {
-        $verify_is_plannable   = new PlanDao();
+        $verify_is_plannable   = new PlanConfigurationDAO();
         $tracker               = $event->getTracker();
         $external_post_actions = $event->getPostActions()->getExternalPostActionsValue();
         foreach ($external_post_actions as $post_action) {
@@ -1620,12 +1620,12 @@ final class program_managementPlugin extends Plugin implements PluginWithService
         $tracker_checker             = new TrackerConfigurationChecker($tracker_retriever);
 
         $importer = new ProgramManagementConfigXMLImporter(
-            new PlanCreator(
+            new PlanConfigurationCreator(
                 $tracker_checker,
                 $tracker_checker,
                 $tracker_checker,
                 new ProgramUserGroupRetriever(new UserGroupRetriever($ugroup_manager)),
-                new PlanDao(),
+                new PlanConfigurationDAO(),
                 $project_manager_adapter,
                 $team_dao,
                 $project_permission_verifier,
@@ -1656,7 +1656,7 @@ final class program_managementPlugin extends Plugin implements PluginWithService
     {
         $handler = new TrackersDuplicatedHandler(
             new ProgramServiceIsEnabledCertifier(),
-            new PlanInheritanceHandler(new PlanDao()),
+            new PlanInheritanceHandler(new PlanConfigurationDAO()),
             $this->getLogger()
         );
         $handler->handle($event);

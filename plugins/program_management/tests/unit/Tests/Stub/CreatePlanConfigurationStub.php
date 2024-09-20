@@ -22,15 +22,15 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Tests\Stub;
 
-use Tuleap\ProgramManagement\Domain\Program\Plan\CreatePlan;
-use Tuleap\ProgramManagement\Domain\Program\Plan\PlanChange;
+use Tuleap\ProgramManagement\Domain\Program\Plan\CreatePlanConfiguration;
+use Tuleap\ProgramManagement\Domain\Program\Plan\PlanConfigurationChange;
 
-final class CreatePlanStub implements CreatePlan
+final class CreatePlanConfigurationStub implements CreatePlanConfiguration
 {
     private bool $will_throw_exception_on_plan_change_creation = false;
 
     /**
-     * @var PlanChange[]
+     * @var PlanConfigurationChange[]
      */
     private array $method_create_calls_history = [];
 
@@ -47,7 +47,7 @@ final class CreatePlanStub implements CreatePlan
     /**
      * @throws \Exception
      */
-    public function create(PlanChange $plan_change): void
+    public function create(PlanConfigurationChange $plan_change): void
     {
         if ($this->will_throw_exception_on_plan_change_creation) {
             throw new \Exception('PlanChange creation has failed for some reasons ¯\_(ツ)_/¯');
@@ -59,7 +59,7 @@ final class CreatePlanStub implements CreatePlan
     /**
      * @throws \Exception
      */
-    public function getCreateMethodCallsArgs(int $call_number): PlanChange
+    public function getCreateMethodCallsArgs(int $call_number): PlanConfigurationChange
     {
         if (! isset($this->method_create_calls_history[$call_number])) {
             throw new \Exception(sprintf('Method CreatePlanStub::create has not been called %d time', $call_number + 1));
