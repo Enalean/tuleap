@@ -20,174 +20,122 @@
  *
  */
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use Tuleap\Docman\ExternalLinks\ILinkUrlProvider;
+declare(strict_types=1);
+
+namespace Tuleap\Docman;
+
+use Docman_Item;
+use Docman_NotificationsManager;
+use Docman_Path;
+use Feedback;
+use MailBuilder;
+use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\Docman\Notifications\NotifiedPeopleRetriever;
 use Tuleap\Docman\Notifications\UGroupsRetriever;
 use Tuleap\Docman\Notifications\UgroupsUpdater;
 use Tuleap\Docman\Notifications\UsersRetriever;
 use Tuleap\Docman\Notifications\UsersToNotifyDao;
 use Tuleap\Docman\Notifications\UsersUpdater;
+use Tuleap\Document\LinkProvider\DocumentLinkProvider;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
 
-//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
-class Docman_NotificationsManagerTest extends \Tuleap\Test\PHPUnit\TestCase
+final class NotificationsManagerTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|ILinkUrlProvider
-     */
-    private $link_url_provider;
-
-    /**
-     * @var Docman_NotificationsManager
-     */
-    private $notification_manager;
-
-    /**
-     * @var Tuleap\Docman\Notifications\UsersRetriever
-     */
-    private $users_retriever;
-
-    /**
-     * @var Tuleap\Docman\Notifications\UGroupsRetriever
-     */
-    private $ugroups_retriever;
+    private Docman_NotificationsManager $notification_manager;
+    private UsersRetriever&MockObject $users_retriever;
+    private UGroupsRetriever&MockObject $ugroups_retriever;
 
     protected function setUp(): void
     {
-        parent::setUp();
-
-        $this->users_retriever   = Mockery::mock(UsersRetriever::class);
-        $this->ugroups_retriever = Mockery::mock(UGroupsRetriever::class);
-        $project                 = Mockery::mock(Project::class);
-        $project->shouldReceive('isError')->andReturn(false);
-        $project->shouldReceive('getPublicName')->andReturn('My project');
-        $project->shouldReceive('getTruncatedEmailsUsage')->andReturn(false);
-        $this->link_url_provider    = Mockery::mock(ILinkUrlProvider::class);
+        $this->users_retriever      = $this->createMock(UsersRetriever::class);
+        $this->ugroups_retriever    = $this->createMock(UGroupsRetriever::class);
+        $project                    = ProjectTestBuilder::aProject()->withPublicName('My project')->withTruncatedEmails(false)->build();
         $this->notification_manager = new Docman_NotificationsManager(
             $project,
-            $this->link_url_provider,
-            Mockery::mock(Feedback::class),
-            Mockery::mock(MailBuilder::class),
-            Mockery::mock(UsersToNotifyDao::class),
+            new DocumentLinkProvider('https://www.example.com', $project),
+            new Feedback(),
+            $this->createMock(MailBuilder::class),
+            $this->createMock(UsersToNotifyDao::class),
             $this->users_retriever,
             $this->ugroups_retriever,
-            Mockery::mock(NotifiedPeopleRetriever::class),
-            Mockery::mock(UsersUpdater::class),
-            Mockery::mock(UgroupsUpdater::class)
+            $this->createMock(NotifiedPeopleRetriever::class),
+            $this->createMock(UsersUpdater::class),
+            $this->createMock(UgroupsUpdater::class)
         );
     }
 
     public function testGetMessageForUserSameListenedItem(): void
     {
-        $user = Mockery::mock(PFUser::class);
-        $user->shouldReceive('getRealName')->andReturn('John Doe');
-        $user->shouldReceive('getId')->andReturn(2);
-        $params['path'] = Mockery::mock(Docman_Path::class);
-        $params['path']->shouldReceive('get')->andReturn('Folder1/Folder2/File');
-        $params['item'] = Mockery::mock(Docman_Item::class);
-        $params['item']->shouldReceive('getId')->andReturn(1);
-        $this->users_retriever->shouldReceive('getListeningUsers')->andReturn(
-            [$user->getId() => $params['item']]
-        );
+        $user           = UserTestBuilder::aUser()->withId(2)->withRealName('John Doe')->build();
+        $params['path'] = new Docman_Path();
+        $params['item'] = new Docman_Item(['item_id' => 1, 'title' => 'Folder1/Folder2/File']);
+        $this->users_retriever->method('getListeningUsers')->willReturn([$user->getId() => $params['item']]);
         $params['wiki_page'] = 'wiki';
-        $params['url']       = 'http://www.example.com/plugins/docman/';
+        $params['url']       = 'https://www.example.com/plugins/docman/';
 
-        $details_link_url = 'http://www.example.com/plugins/docman/&action=details&section=notifications&id=1';
-        $this->link_url_provider->shouldReceive('getDetailsLinkUrl')->andReturn($details_link_url);
-
-        $notifications_link_url = 'http://www.example.com/plugins/docman/&action=details&section=notifications&id=1';
-        $this->link_url_provider->shouldReceive('getNotificationLinkUrl')->andReturn($notifications_link_url);
-
-        $plugin_link_url = 'http://www.example.com/plugins/docman/';
-        $this->link_url_provider->shouldReceive('getPluginLinkUrl')->andReturn($plugin_link_url);
+        $details_link_url       = 'https://www.example.com/plugins/document/testproject/preview/1';
+        $notifications_link_url = 'https://www.example.com/plugins/docman/?group_id=101&action=details&section=notifications&id=1';
+        $plugin_link_url        = 'https://www.example.com/plugins/docman/';
 
         $message1 = "Folder1/Folder2/File has been modified by John Doe.\n$details_link_url\n\n\n--------------------------------------------------------------------\nYou are receiving this message because you are monitoring this item.\nTo stop monitoring, please visit:\n$notifications_link_url";
         $message2 = "Folder1/Folder2/File has been modified by John Doe.\n$details_link_url\n\n\n--------------------------------------------------------------------\nYou are receiving this message because you are monitoring this item.\nTo stop monitoring, please visit:\n$notifications_link_url";
         $message3 = "New version of wiki wiki page was created by John Doe.\n$plugin_link_url\n\n\n--------------------------------------------------------------------\nYou are receiving this message because you are monitoring this item.\nTo stop monitoring, please visit:\n$notifications_link_url";
         $message4 = "Something happen!\n\n--------------------------------------------------------------------\nYou are receiving this message because you are monitoring this item.\nTo stop monitoring, please visit:\n$notifications_link_url";
 
-        $this->assertEquals($message1, $this->notification_manager->_getMessageForUser($user, 'modified', $params));
-        $this->assertEquals($message2, $this->notification_manager->_getMessageForUser($user, 'new_version', $params));
-        $this->assertEquals(
-            $message3,
-            $this->notification_manager->_getMessageForUser($user, 'new_wiki_version', $params)
-        );
-        $this->assertEquals(
-            $message4,
-            $this->notification_manager->_getMessageForUser($user, 'something happen', $params)
-        );
+        self::assertEquals($message1, $this->notification_manager->_getMessageForUser($user, 'modified', $params));
+        self::assertEquals($message2, $this->notification_manager->_getMessageForUser($user, 'new_version', $params));
+        self::assertEquals($message3, $this->notification_manager->_getMessageForUser($user, 'new_wiki_version', $params));
+        self::assertEquals($message4, $this->notification_manager->_getMessageForUser($user, 'something happen', $params));
     }
 
     public function testGetMessageForUserParentListened(): void
     {
-        $user = Mockery::mock(PFUser::class);
-        $user->shouldReceive('getRealName')->andReturn('John Doe');
-        $user->shouldReceive('getId')->andReturn(2);
-        $params['path'] = Mockery::mock(Docman_Path::class);
-        $params['path']->shouldReceive('get')->andReturn('Folder1/Folder2/File');
-        $params['item'] = Mockery::mock(Docman_Item::class);
-        $params['item']->shouldReceive('getId')->andReturn(10);
-        $parent_item = Mockery::mock(Docman_Item::class);
-        $parent_item->shouldReceive('getId')->andReturn(1);
-        $this->users_retriever->shouldReceive('getListeningUsers')->andReturn([$user->getId() => $parent_item]);
+        $user           = UserTestBuilder::aUser()->withId(2)->withRealName('John Doe')->build();
+        $params['path'] = new Docman_Path();
+        $params['item'] = new Docman_Item(['item_id' => 10, 'title' => 'Folder1/Folder2/File']);
+        $parent_item    = new Docman_Item(['item_id' => 1]);
+        $this->users_retriever->method('getListeningUsers')->willReturn([$user->getId() => $parent_item]);
         $params['wiki_page'] = 'wiki';
-        $params['url']       = 'http://www.example.com/plugins/docman/';
+        $params['url']       = 'https://www.example.com/plugins/docman/';
 
-        $details_link_url = 'http://www.example.com/plugins/docman/&action=details&section=notifications&id=1';
-        $this->link_url_provider->shouldReceive('getDetailsLinkUrl')->andReturn($details_link_url);
-
-        $notifications_link_url = 'http://www.example.com/plugins/docman/&action=details&section=notifications&id=1';
-        $this->link_url_provider->shouldReceive('getNotificationLinkUrl')->andReturn($notifications_link_url);
+        $details_link_url       = 'https://www.example.com/plugins/document/testproject/preview/10';
+        $notifications_link_url = 'https://www.example.com/plugins/docman/?group_id=101&action=details&section=notifications&id=1';
 
         $message1 = "Folder1/Folder2/File has been modified by John Doe.\n$details_link_url\n\n\n--------------------------------------------------------------------\nYou are receiving this message because you are monitoring this item.\nTo stop monitoring, please visit:\n$notifications_link_url";
         $message2 = "Folder1/Folder2/File has been modified by John Doe.\n$details_link_url\n\n\n--------------------------------------------------------------------\nYou are receiving this message because you are monitoring this item.\nTo stop monitoring, please visit:\n$notifications_link_url";
-        $message3 = "New version of wiki wiki page was created by John Doe.\nhttp://www.example.com/plugins/docman/\n\n\n--------------------------------------------------------------------\nYou are receiving this message because you are monitoring this item.\nTo stop monitoring, please visit:\n$notifications_link_url";
+        $message3 = "New version of wiki wiki page was created by John Doe.\nhttps://www.example.com/plugins/docman/\n\n\n--------------------------------------------------------------------\nYou are receiving this message because you are monitoring this item.\nTo stop monitoring, please visit:\n$notifications_link_url";
         $message4 = "Something happen!\n\n--------------------------------------------------------------------\nYou are receiving this message because you are monitoring this item.\nTo stop monitoring, please visit:\n$notifications_link_url";
 
-        $this->assertEquals($message1, $this->notification_manager->_getMessageForUser($user, 'modified', $params));
-        $this->assertEquals($message2, $this->notification_manager->_getMessageForUser($user, 'new_version', $params));
-        $this->assertEquals(
-            $message3,
-            $this->notification_manager->_getMessageForUser($user, 'new_wiki_version', $params)
-        );
-        $this->assertEquals(
-            $message4,
-            $this->notification_manager->_getMessageForUser($user, 'something happen', $params)
-        );
+        self::assertEquals($message1, $this->notification_manager->_getMessageForUser($user, 'modified', $params));
+        self::assertEquals($message2, $this->notification_manager->_getMessageForUser($user, 'new_version', $params));
+        self::assertEquals($message3, $this->notification_manager->_getMessageForUser($user, 'new_wiki_version', $params));
+        self::assertEquals($message4, $this->notification_manager->_getMessageForUser($user, 'something happen', $params));
     }
 
     public function testItReturnsTrueWhenAtLeastOneUserIsNotified(): void
     {
-        $this->users_retriever->shouldReceive('doesNotificationExistByUserAndItemId')->andReturn(true)->once();
-        $this->ugroups_retriever->shouldReceive('doesNotificationExistByUGroupAndItemId')->never();
+        $this->users_retriever->expects(self::once())->method('doesNotificationExistByUserAndItemId')->willReturn(true);
+        $this->ugroups_retriever->expects(self::never())->method('doesNotificationExistByUGroupAndItemId');
 
-        $this->assertTrue(
-            $this->notification_manager->userExists('101', '201', PLUGIN_DOCMAN_NOTIFICATION)
-        );
+        self::assertTrue($this->notification_manager->userExists('101', '201', PLUGIN_DOCMAN_NOTIFICATION));
     }
 
     public function testItReturnsTrueWhenAtLeastAGroupIsNotified(): void
     {
-        $this->users_retriever->shouldReceive('doesNotificationExistByUserAndItemId')->never();
-        $this->ugroups_retriever->shouldReceive('doesNotificationExistByUGroupAndItemId')->andReturn(true)->once();
+        $this->users_retriever->expects(self::never())->method('doesNotificationExistByUserAndItemId');
+        $this->ugroups_retriever->expects(self::once())->method('doesNotificationExistByUGroupAndItemId')->willReturn(true);
 
-        $this->assertTrue(
-            $this->notification_manager->ugroupExists('101', '201', PLUGIN_DOCMAN_NOTIFICATION)
-        );
+        self::assertTrue($this->notification_manager->ugroupExists('101', '201', PLUGIN_DOCMAN_NOTIFICATION));
     }
 
     public function testItReturnsFalseWhenNoGroupAndNoUserReceiveNotifications(): void
     {
-        $this->users_retriever->shouldReceive('doesNotificationExistByUserAndItemId')->andReturn(false)->once();
-        $this->ugroups_retriever->shouldReceive('doesNotificationExistByUGroupAndItemId')->andReturn(false)->once();
+        $this->users_retriever->expects(self::once())->method('doesNotificationExistByUserAndItemId')->willReturn(false);
+        $this->ugroups_retriever->expects(self::once())->method('doesNotificationExistByUGroupAndItemId')->willReturn(false);
 
-        $this->assertFalse(
-            $this->notification_manager->userExists('101', '201', PLUGIN_DOCMAN_NOTIFICATION)
-        );
-        $this->assertFalse(
-            $this->notification_manager->ugroupExists('101', '201', PLUGIN_DOCMAN_NOTIFICATION)
-        );
+        self::assertFalse($this->notification_manager->userExists('101', '201', PLUGIN_DOCMAN_NOTIFICATION));
+        self::assertFalse($this->notification_manager->ugroupExists('101', '201', PLUGIN_DOCMAN_NOTIFICATION));
     }
 }

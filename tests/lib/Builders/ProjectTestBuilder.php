@@ -179,4 +179,10 @@ final class ProjectTestBuilder
         $this->data['short_description'] = $description;
         return $this;
     }
+
+    public function withTruncatedEmails(bool $truncated): self
+    {
+        $this->data['truncated_emails'] = $truncated;
+        return $this;
+    }
 }
