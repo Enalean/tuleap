@@ -21,74 +21,51 @@
 
 declare(strict_types=1);
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use Tuleap\Docman\ExternalLinks\ILinkUrlProvider;
+namespace Tuleap\Docman;
 
-//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
-class Docman_NotificationsManager_MoveTest extends \Tuleap\Test\PHPUnit\TestCase
+use Docman_Folder;
+use Docman_NotificationsManager_Move;
+use Docman_Path;
+use Docman_PermissionsManager;
+use PFUser;
+use PHPUnit\Framework\MockObject\MockObject;
+use Tuleap\Document\LinkProvider\DocumentLinkProvider;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
+
+final class Docman_NotificationsManager_MoveTest extends TestCase //phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 {
-    use MockeryPHPUnitIntegration;
+    private const DETAILS_URL       = 'https://www.example.com/plugins/document/monocarbonic/preview/10';
+    private const NOTIFICATIONS_URL = 'https://www.example.com/plugins/docman/?group_id=101&action=details&section=notifications&id=1';
 
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|ILinkUrlProvider
-     */
-    private $link_provider;
-    /**
-     * @var Docman_Path|\Mockery\LegacyMockInterface|\Mockery\MockInterface
-     */
-    private $path;
-    /**
-     * @var Docman_Folder|\Mockery\LegacyMockInterface|\Mockery\MockInterface
-     */
-    private $old_parent;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|PFUser
-     */
-    private $user;
-    /**
-     * @var Docman_PermissionsManager|\Mockery\LegacyMockInterface|\Mockery\MockInterface
-     */
-    private $permission_manager;
-    /**
-     * @var Docman_Folder|\Mockery\LegacyMockInterface|\Mockery\MockInterface
-     */
-    private $parent_folder;
-    /**
-     * @var Docman_Folder|\Mockery\LegacyMockInterface|\Mockery\MockInterface
-     */
-    private $folder;
-
-    /**
-     * @var Docman_NotificationsManager_Move
-     */
-    private $notification_manager;
+    private Docman_Path $path;
+    private Docman_Folder $old_parent;
+    private PFUser $user;
+    private Docman_PermissionsManager&MockObject $permission_manager;
+    private Docman_Folder $parent_folder;
+    private Docman_Folder $folder;
+    private Docman_NotificationsManager_Move&MockObject $notification_manager;
 
     protected function setUp(): void
     {
-        parent::setUp();
+        $this->notification_manager = $this->createPartialMock(Docman_NotificationsManager_Move::class, [
+            'getUrlProvider',
+            '_getMonitoredItemForUser',
+            '_getPermissionsManager',
+        ]);
 
-        $this->notification_manager = Mockery::mock(Docman_NotificationsManager_Move::class)
-            ->makePartial()
-            ->shouldAllowMockingProtectedMethods();
-
-        $this->folder = Mockery::mock(Docman_Folder::class);
-
-        $this->old_parent = Mockery::mock(Docman_Folder::class);
-
-        $this->parent_folder = Mockery::mock(Docman_Folder::class);
-        $this->parent_folder->shouldReceive('getId')->once()->andReturn(10);
-
-        $this->permission_manager = Mockery::mock(Docman_PermissionsManager::class);
-
-        $this->user = Mockery::mock(PFUser::class);
-        $this->user->shouldReceive('getRealName')->once()->andReturn('UserRealName');
-
-        $this->path = Mockery::mock(Docman_Path::class);
-        $this->path->shouldReceive('get')->withArgs([$this->old_parent])->andReturn('/my/old/path');
-        $this->path->shouldReceive('get')->withArgs([$this->parent_folder])->andReturn('/my/new/path');
-
-        $this->link_provider = Mockery::mock(ILinkUrlProvider::class);
-        $this->notification_manager->shouldReceive('getUrlProvider')->andReturn($this->link_provider);
+        $this->folder             = new Docman_Folder(['item_id' => 1, 'title' => 'My title']);
+        $this->old_parent         = new Docman_Folder(['item_id' => 100, 'title' => '/my/old/path']);
+        $this->parent_folder      = new Docman_Folder(['item_id' => 10, 'title' => '/my/new/path']);
+        $this->permission_manager = $this->createMock(Docman_PermissionsManager::class);
+        $this->user               = UserTestBuilder::aUser()->withRealName('UserRealName')->build();
+        $this->path               = new Docman_Path();
+        $link_provider            = new DocumentLinkProvider(
+            'https://www.example.com',
+            ProjectTestBuilder::aProject()->withUnixName('monocarbonic')->build(),
+        );
+        $this->notification_manager->method('getUrlProvider')->willReturn($link_provider);
     }
 
     public function testItBuildMovedMessageForUser(): void
@@ -98,18 +75,10 @@ class Docman_NotificationsManager_MoveTest extends \Tuleap\Test\PHPUnit\TestCase
         $params['user_monitor'] = $this->user;
         $params['old_parent']   = $this->old_parent;
         $params['path']         = $this->path;
-        $this->old_parent->shouldReceive('getId')->andReturn(100);
 
-        $this->notification_manager->shouldReceive('_getMonitoredItemForUser')->andReturn($this->folder);
-        $this->notification_manager->shouldReceive('_getPermissionsManager')->andReturn($this->permission_manager);
-        $this->permission_manager->shouldReceive('userCanAccess')->andReturn(true);
-
-        $details_url = 'http://www.example.com/plugins/docman/project_name/preview/100/';
-        $this->link_provider->shouldReceive('getShowLinkUrl')->andReturn($details_url);
-        $notifications_url = 'http://www.example.com/plugins/docman/&action=details&section=notifications&id=1';
-        $this->link_provider->shouldReceive('getNotificationLinkUrl')->andReturn($notifications_url);
-
-        $this->folder->shouldReceive('getTitle')->once()->andReturn('My title');
+        $this->notification_manager->method('_getMonitoredItemForUser')->willReturn($this->folder);
+        $this->notification_manager->method('_getPermissionsManager')->willReturn($this->permission_manager);
+        $this->permission_manager->method('userCanAccess')->willReturn(true);
 
         $message = $this->notification_manager->_getMessageForUser(
             $this->user,
@@ -118,14 +87,14 @@ class Docman_NotificationsManager_MoveTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $expected_message  = "My title has been modified by UserRealName.\n";
-        $expected_message .= $details_url . "\n\n";
+        $expected_message .= self::DETAILS_URL . "\n\n";
         $expected_message .= "Moved from:\n /my/old/path\n        to:\n /my/new/path\n\n";
         $expected_message .= "--------------------------------------------------------------------\n";
         $expected_message .= "You are receiving this message because you are monitoring this item.\n";
         $expected_message .= "To stop monitoring, please visit:\n";
-        $expected_message .= $notifications_url;
+        $expected_message .= self::NOTIFICATIONS_URL;
 
-        $this->assertEquals($expected_message, $message);
+        self::assertEquals($expected_message, $message);
     }
 
     public function testItBuildMovedFromMessageForUser(): void
@@ -135,16 +104,10 @@ class Docman_NotificationsManager_MoveTest extends \Tuleap\Test\PHPUnit\TestCase
         $params['user_monitor'] = $this->user;
         $params['path']         = $this->path;
         $params['old_parent']   = $this->old_parent;
-        $this->old_parent->shouldReceive('getId')->andReturn(100);
 
-        $this->notification_manager->shouldReceive('_getMonitoredItemForUser')->andReturn($this->folder);
-        $this->notification_manager->shouldReceive('_getPermissionsManager')->andReturn($this->permission_manager);
-        $this->permission_manager->shouldReceive('userCanAccess')->andReturn(true);
-
-        $details_url = 'http://www.example.com/plugins/docman/project_name/preview/100/';
-        $this->link_provider->shouldReceive('getShowLinkUrl')->andReturn($details_url);
-        $notifications_url = 'http://www.example.com/plugins/docman/&action=details&section=notifications&id=1';
-        $this->link_provider->shouldReceive('getNotificationLinkUrl')->andReturn($notifications_url);
+        $this->notification_manager->method('_getMonitoredItemForUser')->willReturn($this->folder);
+        $this->notification_manager->method('_getPermissionsManager')->willReturn($this->permission_manager);
+        $this->permission_manager->method('userCanAccess')->willReturn(true);
 
         $message = $this->notification_manager->_getMessageForUser(
             $this->user,
@@ -153,14 +116,14 @@ class Docman_NotificationsManager_MoveTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $expected_message  = "/my/new/path has been modified by UserRealName.\n";
-        $expected_message .= $details_url . "\n\n";
+        $expected_message .= self::DETAILS_URL . "\n\n";
         $expected_message .= "Moved from:\n /my/old/path to:\n /my/new/path\n\n";
         $expected_message .= "--------------------------------------------------------------------\n";
         $expected_message .= "You are receiving this message because you are monitoring this item.\n";
         $expected_message .= "To stop monitoring, please visit:\n";
-        $expected_message .= $notifications_url;
+        $expected_message .= self::NOTIFICATIONS_URL;
 
-        $this->assertEquals($expected_message, $message);
+        self::assertEquals($expected_message, $message);
     }
 
     public function testItBuildMovedToMessageForUser(): void
@@ -170,16 +133,10 @@ class Docman_NotificationsManager_MoveTest extends \Tuleap\Test\PHPUnit\TestCase
         $params['user_monitor'] = $this->user;
         $params['path']         = $this->path;
         $params['old_parent']   = $this->old_parent;
-        $this->old_parent->shouldReceive('getId')->andReturn(100);
 
-        $this->notification_manager->shouldReceive('_getMonitoredItemForUser')->andReturn($this->folder);
-        $this->notification_manager->shouldReceive('_getPermissionsManager')->andReturn($this->permission_manager);
-        $this->permission_manager->shouldReceive('userCanAccess')->andReturn(true);
-
-        $details_url = 'http://www.example.com/plugins/docman/project_name/preview/100/';
-        $this->link_provider->shouldReceive('getShowLinkUrl')->andReturn($details_url);
-        $notifications_url = 'http://www.example.com/plugins/docman/&action=details&section=notifications&id=1';
-        $this->link_provider->shouldReceive('getNotificationLinkUrl')->andReturn($notifications_url);
+        $this->notification_manager->method('_getMonitoredItemForUser')->willReturn($this->folder);
+        $this->notification_manager->method('_getPermissionsManager')->willReturn($this->permission_manager);
+        $this->permission_manager->method('userCanAccess')->willReturn(true);
 
         $message = $this->notification_manager->_getMessageForUser(
             $this->user,
@@ -188,14 +145,14 @@ class Docman_NotificationsManager_MoveTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $expected_message  = "/my/old/path has been modified by UserRealName.\n";
-        $expected_message .= $details_url . "\n\n";
+        $expected_message .= self::DETAILS_URL . "\n\n";
         $expected_message .= "Moved from:\n /my/old/path to:\n /my/new/path\n\n";
         $expected_message .= "--------------------------------------------------------------------\n";
         $expected_message .= "You are receiving this message because you are monitoring this item.\n";
         $expected_message .= "To stop monitoring, please visit:\n";
-        $expected_message .= $notifications_url;
+        $expected_message .= self::NOTIFICATIONS_URL;
 
-        $this->assertEquals($expected_message, $message);
+        self::assertEquals($expected_message, $message);
     }
 
     public function testItBuildMovedWithoutSeparationIfUserCanNotAccess(): void
@@ -205,18 +162,10 @@ class Docman_NotificationsManager_MoveTest extends \Tuleap\Test\PHPUnit\TestCase
         $params['user_monitor'] = $this->user;
         $params['old_parent']   = $this->old_parent;
         $params['path']         = $this->path;
-        $this->old_parent->shouldReceive('getId')->andReturn(100);
 
-        $this->notification_manager->shouldReceive('_getMonitoredItemForUser')->andReturn($this->folder);
-        $this->notification_manager->shouldReceive('_getPermissionsManager')->andReturn($this->permission_manager);
-        $this->permission_manager->shouldReceive('userCanAccess')->andReturn(false);
-
-        $details_url = 'http://www.example.com/plugins/docman/project_name/preview/100/';
-        $this->link_provider->shouldReceive('getShowLinkUrl')->andReturn($details_url);
-        $notifications_url = 'http://www.example.com/plugins/docman/&action=details&section=notifications&id=1';
-        $this->link_provider->shouldReceive('getNotificationLinkUrl')->andReturn($notifications_url);
-
-        $this->folder->shouldReceive('getTitle')->once()->andReturn('My title');
+        $this->notification_manager->method('_getMonitoredItemForUser')->willReturn($this->folder);
+        $this->notification_manager->method('_getPermissionsManager')->willReturn($this->permission_manager);
+        $this->permission_manager->method('userCanAccess')->willReturn(false);
 
         $message = $this->notification_manager->_getMessageForUser(
             $this->user,
@@ -225,13 +174,13 @@ class Docman_NotificationsManager_MoveTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $expected_message  = "My title has been modified by UserRealName.\n";
-        $expected_message .= $details_url . "\n\n";
+        $expected_message .= self::DETAILS_URL . "\n\n";
         $expected_message .= "Moved \n\n";
         $expected_message .= "--------------------------------------------------------------------\n";
         $expected_message .= "You are receiving this message because you are monitoring this item.\n";
         $expected_message .= "To stop monitoring, please visit:\n";
-        $expected_message .= $notifications_url;
+        $expected_message .= self::NOTIFICATIONS_URL;
 
-        $this->assertEquals($expected_message, $message);
+        self::assertEquals($expected_message, $message);
     }
 }

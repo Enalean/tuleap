@@ -25,56 +25,45 @@ namespace Tuleap\Docman;
 use BackendSystem;
 use Docman_SystemCheck;
 use Docman_SystemCheckProjectRetriever;
+use DocmanPluginInfo;
 use ForgeConfig;
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use org\bovigo\vfs\vfsStream;
+use PHPUnit\Framework\MockObject\MockObject;
 use Plugin;
 use PluginConfigChecker;
-use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
+use Tuleap\ForgeConfigSandbox;
+use Tuleap\Test\PHPUnit\TestCase;
 
-//phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
-class Docman_SystemCheckTest extends \Tuleap\Test\PHPUnit\TestCase
+final class SystemCheckTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
+    use ForgeConfigSandbox;
 
-    /** @var Docman_SystemCheck */
-    private $system_check;
-
-    /** @var Plugin */
-    private $plugin;
-
-    /** @var Docman_SystemCheckProjectRetriever */
-    private $retriever;
-    /**
-     * @var BackendSystem|\Mockery\LegacyMockInterface|\Mockery\MockInterface
-     */
-    private $backend;
+    private Docman_SystemCheck $system_check;
+    private Docman_SystemCheckProjectRetriever&MockObject $retriever;
+    private BackendSystem&MockObject $backend;
     private string $root_dir_path;
 
     public function setUp(): void
     {
-        parent::setUp();
-
-        ForgeConfig::store();
         ForgeConfig::set('sys_http_user', 'codendiadm');
 
-        $this->plugin = Mockery::mock(Plugin::class);
-        $this->plugin->shouldReceive('getServiceShortname')->andReturn('docman');
-        $this->retriever = \Mockery::spy(\Docman_SystemCheckProjectRetriever::class);
-        $logger          = \Mockery::spy(LoggerInterface::class);
+        $plugin = $this->createMock(Plugin::class);
+        $plugin->method('getServiceShortname')->willReturn('docman');
+        $this->retriever = $this->createMock(Docman_SystemCheckProjectRetriever::class);
+        $logger          = new NullLogger();
         $config_checker  = new PluginConfigChecker($logger);
-        $this->backend   = Mockery::mock(BackendSystem::class);
+        $this->backend   = $this->createMock(BackendSystem::class);
 
         $this->root_dir_path = vfsStream::setup()->url();
 
-        $plugin_info = \Mockery::mock(\DocmanPluginInfo::class);
-        $plugin_info->shouldReceive('getPropertyValueForName')->with('docman_root')->andReturns($this->root_dir_path);
-        $this->plugin->shouldReceive('getPluginInfo')->andReturns($plugin_info);
-        $this->plugin->shouldReceive('getPluginEtcRoot')->andReturns(ForgeConfig::get('codendi_cache_dir'));
+        $plugin_info = $this->createMock(DocmanPluginInfo::class);
+        $plugin_info->method('getPropertyValueForName')->with('docman_root')->willReturn($this->root_dir_path);
+        $plugin->method('getPluginInfo')->willReturn($plugin_info);
+        $plugin->method('getPluginEtcRoot')->willReturn(ForgeConfig::get('codendi_cache_dir'));
 
         $this->system_check = new Docman_SystemCheck(
-            $this->plugin,
+            $plugin,
             $this->retriever,
             $this->backend,
             $config_checker,
@@ -82,22 +71,13 @@ class Docman_SystemCheckTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-    public function tearDown(): void
-    {
-        ForgeConfig::restore();
-
-        parent::tearDown();
-    }
-
     public function testItCreatesFolderForActiveProject(): void
     {
-        $this->retriever->shouldReceive('getActiveProjectUnixNamesThatUseDocman')->andReturns(
-            ['project_01']
-        );
+        $this->retriever->method('getActiveProjectUnixNamesThatUseDocman')->willReturn(['project_01']);
 
-        $this->backend->shouldReceive('changeOwnerGroupMode')->once();
+        $this->backend->expects(self::once())->method('changeOwnerGroupMode');
         $this->system_check->process();
 
-        $this->assertTrue(is_dir($this->root_dir_path . '/project_01'));
+        self::assertTrue(is_dir($this->root_dir_path . '/project_01'));
     }
 }
