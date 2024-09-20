@@ -19,7 +19,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-class Tracker_FormElement_DateTimeFormatter extends Tracker_FormElement_DateFormatter
+class Tracker_FormElement_DateTimeFormatter extends Tracker_FormElement_DateFormatter // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
     public const DATE_TIME_FORMAT = 'Y-m-d H:i';
 
@@ -77,6 +77,11 @@ class Tracker_FormElement_DateTimeFormatter extends Tracker_FormElement_DateForm
     }
 
     public function formatDateForDisplay($timestamp)
+    {
+        return self::format($timestamp);
+    }
+
+    public static function format(?int $timestamp): string
     {
         return format_date($GLOBALS['Language']->getText('system', 'datefmt_time'), (float) $timestamp, '');
     }
