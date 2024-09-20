@@ -17,7 +17,7 @@
  *  along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { wrapItem, icons, MenuItem } from "prosemirror-menu";
+import { icons, MenuItem } from "prosemirror-menu";
 import type { MenuElement, MenuItemSpec } from "prosemirror-menu";
 import type { EditorState, Command } from "prosemirror-state";
 import type { Schema, MarkType } from "prosemirror-model";
@@ -27,6 +27,7 @@ import { linkItem, unlinkItem } from "./links/link-menu-item-builder";
 import { wrapListItem } from "./list/list-menu-item-builder";
 import { getTextStyleDropdownMenu } from "./text-style";
 import { imageItem } from "./image/image-menu-item-builder";
+import { getQuoteMenuItem } from "./quote";
 import { getSubscriptMenuItem } from "./text-transformations";
 
 export function cmdItem(cmd: Command, options: MenuItemSpec): MenuItem {
@@ -91,11 +92,8 @@ export function buildMenuItems(
                     title: gettext_provider.gettext("Toggle embedded style `Ctrl+i`"),
                     icon: icons.em,
                 }),
+                getQuoteMenuItem(gettext_provider),
                 getSubscriptMenuItem(schema, gettext_provider),
-                wrapItem(schema.nodes.blockquote, {
-                    title: gettext_provider.gettext("Wrap in block quote `Ctrl->`"),
-                    icon: icons.blockquote,
-                }),
                 wrapListItem(
                     schema.nodes.bullet_list,
                     {
