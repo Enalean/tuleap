@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder;
 
 use ParagonIE\EasyDB\EasyStatement;
+use Tuleap\CrossTracker\Report\Query\Advanced\OrderByBuilder\ParametrizedFromOrder;
 use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\IProvideParametrizedSelectAndFromSQLFragments;
 use Tuleap\DB\DataAccessObject;
 use Tuleap\Tracker\Report\Query\IProvideParametrizedFromAndWhereSQLFragments;
@@ -127,14 +128,20 @@ final class CrossTrackerExpertQueryReportDao extends DataAccessObject
      */
     public function searchArtifactsColumnsMatchingIds(
         IProvideParametrizedSelectAndFromSQLFragments $select_from,
+        ParametrizedFromOrder $from_order,
         array $artifact_ids,
     ): array {
         $select    = $select_from->getSelect();
-        $from      = $select_from->getFrom();
+        $from      = $select_from->getFrom() . $from_order->getFrom();
+        $order     = $from_order->getOrderBy();
         $condition = EasyStatement::open()->in('artifact.id IN (?*)', $artifact_ids);
 
         if ($select !== '') {
             $select = ', ' . $select;
+        }
+
+        if ($order === '') {
+            $order = 'artifact.id DESC';
         }
 
         $sql = <<<SQL
@@ -145,11 +152,12 @@ final class CrossTrackerExpertQueryReportDao extends DataAccessObject
         INNER JOIN tracker_changeset AS changeset ON (changeset.id = artifact.last_changeset_id)
         $from
         WHERE $condition
-        ORDER BY artifact.id DESC
+        ORDER BY $order
         SQL;
 
         $parameters = [
             ...$select_from->getFromParameters(),
+            ...$from_order->getFromParameters(),
             ...$artifact_ids,
         ];
 
