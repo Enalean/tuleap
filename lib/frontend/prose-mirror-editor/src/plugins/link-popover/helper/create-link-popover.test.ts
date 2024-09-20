@@ -29,6 +29,9 @@ import {
 
 const editor_id = "aaaa-bbbb-cccc-dddd";
 const link_href = "https://example.com/";
+const noop = (): void => {
+    // Do nothing
+};
 
 describe("create-link-popover", () => {
     let doc: Document, popover_anchor: HTMLElement;
@@ -39,7 +42,7 @@ describe("create-link-popover", () => {
     });
 
     it("insertLinkPopover() should insert a LinkPopoverElement into the document", () => {
-        insertLinkPopover(doc, gettext_provider, popover_anchor, editor_id, link_href);
+        insertLinkPopover(doc, gettext_provider, popover_anchor, editor_id, link_href, noop);
 
         expect(doc.getElementById(buildLinkPopoverId(editor_id))).not.toBeNull();
     });
@@ -58,7 +61,7 @@ describe("create-link-popover", () => {
     });
 
     it("removePopover() should remove the tlp-popover from the DOM", () => {
-        insertLinkPopover(doc, gettext_provider, popover_anchor, editor_id, link_href);
+        insertLinkPopover(doc, gettext_provider, popover_anchor, editor_id, link_href, noop);
         removePopover(doc, editor_id);
 
         expect(doc.getElementById(buildLinkPopoverId(editor_id))).toBeNull();

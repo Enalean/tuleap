@@ -20,6 +20,7 @@
 import type { LinkPopoverButton } from "../LinkPopoverElement";
 import { createOpenLinkButton } from "./OpenLinkButtonElement";
 import { createCopyToClipboardButton } from "./CopyToClipboardButtonElement";
+import { createRemoveLinkButton } from "./RemoveLinkButton";
 import type { GetText } from "@tuleap/gettext";
 
 export const createButton = (
@@ -32,6 +33,8 @@ export const createButton = (
             return createOpenLinkButton(doc, gettext_provider, button);
         case "copy-to-clipboard":
             return createCopyToClipboardButton(doc, button);
+        case "remove-link":
+            return createRemoveLinkButton(doc, gettext_provider, button);
         default:
             throw new Error(`Unknown button type`);
     }

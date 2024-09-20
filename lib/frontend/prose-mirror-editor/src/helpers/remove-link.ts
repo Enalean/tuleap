@@ -18,8 +18,8 @@
  *
  */
 
-import { markActive } from "../menu";
-import { getWrappingNodeInfo } from "../helper/node-info-retriever";
+import { markActive } from "../plugins/toolbar/menu";
+import { getWrappingNodeInfo } from "../plugins/toolbar/helper/node-info-retriever";
 import type { EditorState, Transaction } from "prosemirror-state";
 import { NodeSelection, TextSelection } from "prosemirror-state";
 import type { MarkType, ResolvedPos } from "prosemirror-model";

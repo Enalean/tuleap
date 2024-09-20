@@ -29,9 +29,13 @@ import * as popover_creator from "./create-link-popover";
 import type { ExtractLinkUrl } from "./LinkUrlExtractor";
 import type { CheckEmptySelection } from "./EmptySelectionChecker";
 import { EmptySelectionCheckerStub } from "./stubs/EmptySelectionCheckerStub";
+import { BuildRemoveLinkCallbackStub } from "./stubs/BuildRemoveLinkCallbackStub";
 
 const editor_id = "aaaa-bbbb-cccc-dddd";
 const position = 1;
+const remove_link_callback = (): void => {
+    // Do nothing
+};
 
 describe("LinkPopoverInserter", () => {
     let doc: Document, check_empty_selection: CheckEmptySelection;
@@ -53,6 +57,7 @@ describe("LinkPopoverInserter", () => {
             CrossReferenceHTMLElementDetector(),
             CrossReferenceUrlExtractor(),
             editor_link_url_extractor,
+            BuildRemoveLinkCallbackStub.withCallback(remove_link_callback),
         ).insertPopover(position);
     };
 
@@ -131,6 +136,7 @@ describe("LinkPopoverInserter", () => {
             link,
             editor_id,
             link_url,
+            remove_link_callback,
         );
     });
 });

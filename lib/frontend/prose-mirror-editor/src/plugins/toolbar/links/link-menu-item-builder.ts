@@ -27,7 +27,7 @@ import { updateInputValues } from "./input-value-updater";
 import { markActive } from "../menu";
 import { getWrappingNodeInfo } from "../helper/node-info-retriever";
 import { schema } from "prosemirror-schema-basic";
-import { removeLink } from "./remove-link";
+import { removeLink } from "../../../helpers/remove-link";
 
 export function linkItem(
     markType: MarkType,

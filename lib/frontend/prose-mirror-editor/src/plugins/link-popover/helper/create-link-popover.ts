@@ -22,6 +22,7 @@ import type { GetText } from "@tuleap/gettext";
 import { TAG as LINK_POPOVER_TAG } from "../element/LinkPopoverElement";
 import type { LinkPopoverElement } from "../element/LinkPopoverElement";
 import { sanitizeURL } from "@tuleap/url-sanitizer";
+import type { RemoveLinkCallback } from "../element/items/RemoveLinkButton";
 
 export function buildLinkPopoverId(editor_id: string): string {
     return `link-popover-${editor_id}`;
@@ -64,6 +65,7 @@ export function insertLinkPopover(
     popover_anchor: HTMLElement,
     editor_id: string,
     link_href: string,
+    remove_link_callback: RemoveLinkCallback,
 ): void {
     const popover = createBasePopoverElement(
         doc,
@@ -73,12 +75,19 @@ export function insertLinkPopover(
         link_href,
     );
 
-    popover.buttons.push({
-        type: "copy-to-clipboard",
-        value_to_copy: sanitizeURL(link_href),
-        copy_value_title: gettext_provider.gettext("Copy link url"),
-        value_copied_title: gettext_provider.gettext("Link url has been copied!"),
-    });
+    popover.buttons.push(
+        {
+            type: "copy-to-clipboard",
+            value_to_copy: sanitizeURL(link_href),
+            copy_value_title: gettext_provider.gettext("Copy link url"),
+            value_copied_title: gettext_provider.gettext("Link url has been copied!"),
+        },
+        {
+            type: "remove-link",
+            gettext_provider,
+            remove_link_callback,
+        },
+    );
 
     doc.body.appendChild(popover);
 }

@@ -68,6 +68,9 @@ msgstr "Texte"
 msgid "Open link"
 msgstr "Ouvrir le lien"
 
+msgid "Remove link"
+msgstr "Supprimer le lien"
+
 msgid "Styles"
 msgstr "Styles"
 
