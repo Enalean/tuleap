@@ -20,7 +20,7 @@
 import { chainCommands, exitCode, lift, toggleMark, wrapIn } from "prosemirror-commands";
 import type { Command } from "prosemirror-state";
 import { TextSelection } from "prosemirror-state";
-import type { MarkType, NodeType, Schema } from "prosemirror-model";
+import type { Schema } from "prosemirror-model";
 import { liftListItem, sinkListItem, splitListItem, wrapInList } from "prosemirror-schema-list";
 import { isSelectionAList } from "./list/is-list-checker";
 import { getHeadingCommand } from "./text-style/transform-text";
@@ -32,8 +32,6 @@ export function buildKeymap(
     map_keys?: { [key: string]: false | string },
 ): ProseMirrorKeyMap {
     const keys: ProseMirrorKeyMap = {};
-    let mark_type: MarkType;
-    let node_type: NodeType;
 
     function bind(key: string, cmd: Command): void {
         if (map_keys) {
@@ -49,16 +47,13 @@ export function buildKeymap(
         }
     }
 
-    mark_type = schema.marks.strong;
-    bind("Mod-b", toggleMark(mark_type));
-    bind("Mod-B", toggleMark(mark_type));
+    bind("Mod-b", toggleMark(schema.marks.strong));
+    bind("Mod-B", toggleMark(schema.marks.strong));
 
-    mark_type = schema.marks.em;
-    bind("Mod-i", toggleMark(mark_type));
-    bind("Mod-I", toggleMark(mark_type));
+    bind("Mod-i", toggleMark(schema.marks.em));
+    bind("Mod-I", toggleMark(schema.marks.em));
 
-    mark_type = schema.marks.code;
-    bind("Mod-`", toggleMark(mark_type));
+    bind("Mod-`", toggleMark(schema.marks.code));
 
     const listCommand = chainCommands(exitCode, (state, dispatch) => {
         const node_type = schema.nodes.bullet_list;
@@ -80,14 +75,11 @@ export function buildKeymap(
         return wrapFunction(state, dispatch);
     });
 
-    node_type = schema.nodes.bullet_list;
     bind("Shift-Ctrl-8", listCommand);
 
-    node_type = schema.nodes.ordered_list;
     bind("Shift-Ctrl-9", olistCommand);
 
-    node_type = schema.nodes.paragraph;
-    const br = node_type,
+    const br = schema.nodes.custom_hard_break,
         cmd = chainCommands(exitCode, (state, dispatch) => {
             if (dispatch) {
                 const transaction = state.tr.replaceSelectionWith(br.create());
@@ -105,12 +97,10 @@ export function buildKeymap(
         bind(`Ctrl-Shift-${index + 1}`, getHeadingCommand(index + 1));
     });
 
-    node_type = schema.nodes.list_item;
-    bind("Enter", splitListItem(node_type));
-    bind("Shift-Tab", liftListItem(node_type));
-    bind("Tab", sinkListItem(node_type));
+    bind("Enter", splitListItem(schema.nodes.list_item));
+    bind("Shift-Tab", liftListItem(schema.nodes.list_item));
+    bind("Tab", sinkListItem(schema.nodes.list_item));
 
-    node_type = schema.nodes.blockquote;
-    bind("Mod->", wrapIn(node_type));
+    bind("Mod->", wrapIn(schema.nodes.blockquote));
     return keys;
 }
