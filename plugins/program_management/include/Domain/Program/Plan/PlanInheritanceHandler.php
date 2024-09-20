@@ -27,7 +27,7 @@ use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 final readonly class PlanInheritanceHandler
 {
     public function __construct(
-        private RetrievePlan $retrieve_plan,
+        private RetrievePlanConfiguration $retrieve_plan,
     ) {
     }
 

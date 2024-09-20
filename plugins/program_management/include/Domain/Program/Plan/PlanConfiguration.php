@@ -31,8 +31,8 @@ use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 
 /**
  * I hold the Plan configuration of a Program.
- * @see NewPlan to create a new Plan configuration and save it.
- * @see PlanChange to modify a Plan configuration and save it.
+ * @see NewPlanConfiguration to create a new Plan configuration and save it.
+ * @see PlanConfigurationChange to modify a Plan configuration and save it.
  * @psalm-immutable
  */
 final readonly class PlanConfiguration

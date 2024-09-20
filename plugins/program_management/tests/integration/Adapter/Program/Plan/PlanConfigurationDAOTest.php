@@ -25,7 +25,7 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Plan;
 use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramForAdministrationIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramUserGroupCollection;
 use Tuleap\ProgramManagement\Domain\Program\Plan\NewIterationTrackerConfiguration;
-use Tuleap\ProgramManagement\Domain\Program\Plan\NewPlan;
+use Tuleap\ProgramManagement\Domain\Program\Plan\NewPlanConfiguration;
 use Tuleap\ProgramManagement\Domain\Program\Plan\NewPlannableTracker;
 use Tuleap\ProgramManagement\Domain\Program\Plan\NewProgramIncrementTracker;
 use Tuleap\ProgramManagement\Domain\Program\Plan\PlanIterationChange;
@@ -41,7 +41,7 @@ use Tuleap\ProgramManagement\Tests\Stub\VerifyIsTeamStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyProjectPermissionStub;
 use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
 
-final class PlanDaoTest extends TestIntegrationTestCase
+final class PlanConfigurationDAOTest extends TestIntegrationTestCase
 {
     public function testItSavesAndRetrievesThePlanConfiguration(): void
     {
@@ -62,7 +62,7 @@ final class PlanDaoTest extends TestIntegrationTestCase
         $project_administrators_user_group_id  = 4;
         $user_group_id_granted_plan_permission = 668;
 
-        $new_plan = new NewPlan(
+        $new_plan = new NewPlanConfiguration(
             NewProgramIncrementTracker::fromId(
                 CheckNewProgramIncrementTrackerStub::withValidTracker(),
                 $program_increment_tracker_id,
@@ -90,7 +90,7 @@ final class PlanDaoTest extends TestIntegrationTestCase
             )
         );
 
-        $dao = new PlanDao();
+        $dao = new PlanConfigurationDAO();
         $dao->save($new_plan);
 
         $program_identifier = ProgramIdentifier::fromServiceEnabled(new ProgramServiceIsEnabledCertificate($program_id));

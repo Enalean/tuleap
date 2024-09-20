@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,19 +20,29 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Domain\Program\Plan;
+namespace Tuleap\ProgramManagement\Tests\Stub;
 
-use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramCannotBeATeamException;
-use Tuleap\ProgramManagement\Domain\Program\ProgramTrackerException;
+use Tuleap\ProgramManagement\Domain\Program\Plan\NewPlanConfiguration;
+use Tuleap\ProgramManagement\Domain\Program\Plan\SaveNewPlanConfiguration;
 
-interface CreatePlan
+final class SaveNewPlanConfigurationStub implements SaveNewPlanConfiguration
 {
-    /**
-     * @throws PlanTrackerException
-     * @throws ProgramAccessException
-     * @throws ProgramTrackerException
-     * @throws InvalidProgramUserGroup
-     * @throws ProgramCannotBeATeamException
-     */
-    public function create(PlanChange $plan_change): void;
+    private function __construct(private int $call_count = 0)
+    {
+    }
+
+    public static function withCount(): self
+    {
+        return new self();
+    }
+
+    public function save(NewPlanConfiguration $plan): void
+    {
+        $this->call_count++;
+    }
+
+    public function getCallCount(): int
+    {
+        return $this->call_count;
+    }
 }

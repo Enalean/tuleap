@@ -26,7 +26,7 @@ use Tuleap\ProgramManagement\Domain\Workspace\UserReference;
 use Tuleap\ProgramManagement\Tests\Stub\UserReferenceStub;
 use Tuleap\Test\PHPUnit\TestCase;
 
-final class PlanChangeTest extends TestCase
+final class PlanConfigurationChangeTest extends TestCase
 {
     private const PROGRAM_INCREMENT_TRACKER_ID = 16;
 
@@ -43,7 +43,7 @@ final class PlanChangeTest extends TestCase
         $plan_program_increment_change   = new PlanProgramIncrementChange(self::PROGRAM_INCREMENT_TRACKER_ID, null, null);
 
         $this->expectException(ProgramIncrementCannotPlanIntoItselfException::class);
-        PlanChange::fromProgramIncrementAndRaw(
+        PlanConfigurationChange::fromProgramIncrementAndRaw(
             $plan_program_increment_change,
             $this->user_identifier,
             101,
@@ -60,7 +60,7 @@ final class PlanChangeTest extends TestCase
         $iteration_representation        = new PlanIterationChange(99, null, null);
 
         $this->expectException(IterationCannotBePlannedException::class);
-        PlanChange::fromProgramIncrementAndRaw(
+        PlanConfigurationChange::fromProgramIncrementAndRaw(
             $plan_program_increment_change,
             $this->user_identifier,
             101,
@@ -80,7 +80,7 @@ final class PlanChangeTest extends TestCase
         $plan_iteration_change           = new PlanIterationChange(16, 'Iterations', 'iteration');
 
         $this->expectException(ProgramIncrementAndIterationCanNotBeTheSameTrackerException::class);
-        PlanChange::fromProgramIncrementAndRaw(
+        PlanConfigurationChange::fromProgramIncrementAndRaw(
             $plan_program_increment_change,
             $user,
             $project_id,
@@ -90,7 +90,7 @@ final class PlanChangeTest extends TestCase
         );
     }
 
-    public function testItBuildsAValidPlanChange(): void
+    public function testItBuildsAValidPlanConfigurationChange(): void
     {
         $plan_program_increment_change   = new PlanProgramIncrementChange(16, 'Releases', 'release');
         $user                            = $this->user_identifier;
@@ -98,7 +98,7 @@ final class PlanChangeTest extends TestCase
         $tracker_ids_that_can_be_planned = [99, 67];
         $can_possibly_prioritize_ugroups = ['198', '101_3'];
 
-        $plan_change = PlanChange::fromProgramIncrementAndRaw(
+        $plan_change = PlanConfigurationChange::fromProgramIncrementAndRaw(
             $plan_program_increment_change,
             $user,
             $project_id,
@@ -115,7 +115,7 @@ final class PlanChangeTest extends TestCase
         self::assertNull($plan_change->iteration);
     }
 
-    public function testItBuildsAValidPlanChangeWithIterationChange(): void
+    public function testItBuildsAValidPlanConfigurationChangeWithIterationChange(): void
     {
         $plan_program_increment_change   = new PlanProgramIncrementChange(16, 'Releases', 'release');
         $user                            = $this->user_identifier;
@@ -124,7 +124,7 @@ final class PlanChangeTest extends TestCase
         $can_possibly_prioritize_ugroups = ['198', '101_3'];
         $plan_iteration_change           = new PlanIterationChange(130, 'Iterations', 'iteration');
 
-        $plan_change = PlanChange::fromProgramIncrementAndRaw(
+        $plan_change = PlanConfigurationChange::fromProgramIncrementAndRaw(
             $plan_program_increment_change,
             $user,
             $project_id,

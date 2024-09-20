@@ -29,7 +29,7 @@ use Tuleap\ProgramManagement\Domain\Program\Plan\PlanConfiguration;
 use Tuleap\ProgramManagement\Domain\Program\Plan\PlanInheritanceHandler;
 use Tuleap\ProgramManagement\ProgramService;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIdentifierBuilder;
-use Tuleap\ProgramManagement\Tests\Stub\Program\Plan\RetrievePlanStub;
+use Tuleap\ProgramManagement\Tests\Stub\Program\Plan\RetrievePlanConfigurationStub;
 use Tuleap\Project\MappingRegistry;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
@@ -38,14 +38,14 @@ use Tuleap\Tracker\TrackerEventTrackersDuplicated;
 final class TrackersDuplicatedHandlerTest extends TestCase
 {
     private const SOURCE_PROJECT_ID = 114;
-    private RetrievePlanStub $retrieve_plan;
+    private RetrievePlanConfigurationStub $retrieve_plan;
     private TestLogger $logger;
     private \Project $source_project;
 
     protected function setUp(): void
     {
         $this->logger         = new TestLogger();
-        $this->retrieve_plan  = RetrievePlanStub::withPlanConfigurations(
+        $this->retrieve_plan  = RetrievePlanConfigurationStub::withPlanConfigurations(
             PlanConfiguration::fromRaw(
                 ProgramIdentifierBuilder::buildWithId(self::SOURCE_PROJECT_ID),
                 12,

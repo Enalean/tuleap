@@ -25,8 +25,8 @@ namespace Tuleap\ProgramManagement\Adapter\XML;
 use Psr\Log\LoggerInterface;
 use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramForAdministrationIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Plan\CannotPlanIntoItselfException;
-use Tuleap\ProgramManagement\Domain\Program\Plan\CreatePlan;
-use Tuleap\ProgramManagement\Domain\Program\Plan\PlanChange;
+use Tuleap\ProgramManagement\Domain\Program\Plan\CreatePlanConfiguration;
+use Tuleap\ProgramManagement\Domain\Program\Plan\PlanConfigurationChange;
 use Tuleap\ProgramManagement\Domain\Program\Plan\PlanIterationChange;
 use Tuleap\ProgramManagement\Domain\Program\Plan\PlanProgramIncrementChange;
 use Tuleap\ProgramManagement\Domain\Workspace\UserReference;
@@ -35,11 +35,11 @@ final class ProgramManagementConfigXMLImporter
 {
     private LoggerInterface $logger;
     private ExtractXMLConfig $xml_config_extractor;
-    private CreatePlan $plan_creator;
+    private CreatePlanConfiguration $plan_creator;
     private ParseXMLConfig $xml_config_parser;
 
     public function __construct(
-        CreatePlan $plan_creator,
+        CreatePlanConfiguration $plan_creator,
         ParseXMLConfig $xml_config_parser,
         ExtractXMLConfig $xml_config_extractor,
         LoggerInterface $logger,
@@ -116,7 +116,7 @@ final class ProgramManagementConfigXMLImporter
             );
         }
 
-        $plan_change = PlanChange::fromProgramIncrementAndRaw(
+        $plan_change = PlanConfigurationChange::fromProgramIncrementAndRaw(
             $plan_program_increment_change,
             $user,
             $project->id,

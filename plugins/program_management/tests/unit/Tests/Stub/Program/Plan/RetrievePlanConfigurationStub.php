@@ -25,7 +25,7 @@ namespace Tuleap\ProgramManagement\Tests\Stub\Program\Plan;
 use Tuleap\ProgramManagement\Domain\Program\Plan\PlanConfiguration;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 
-final readonly class RetrievePlanStub implements \Tuleap\ProgramManagement\Domain\Program\Plan\RetrievePlan
+final readonly class RetrievePlanConfigurationStub implements \Tuleap\ProgramManagement\Domain\Program\Plan\RetrievePlanConfiguration
 {
     /** @param list<PlanConfiguration> $configurations */
     private function __construct(

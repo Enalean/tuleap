@@ -25,7 +25,7 @@ namespace Tuleap\ProgramManagement\Adapter\XML;
 use ColinODell\PsrTestLogger\TestLogger;
 use Tuleap\ProgramManagement\Domain\Workspace\UserReference;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramForAdministrationIdentifierBuilder;
-use Tuleap\ProgramManagement\Tests\Stub\CreatePlanStub;
+use Tuleap\ProgramManagement\Tests\Stub\CreatePlanConfigurationStub;
 use Tuleap\ProgramManagement\Tests\Stub\ExtractXMLConfigStub;
 use Tuleap\ProgramManagement\Tests\Stub\ParseXMLConfigStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserReferenceStub;
@@ -33,13 +33,13 @@ use Tuleap\Test\PHPUnit\TestCase;
 
 final class ProgramManagementConfigXMLImporterTest extends TestCase
 {
-    private CreatePlanStub $plan_creator;
+    private CreatePlanConfigurationStub $plan_creator;
     private TestLogger $logger;
     private UserReference $current_user;
 
     protected function setUp(): void
     {
-        $this->plan_creator = CreatePlanStub::build();
+        $this->plan_creator = CreatePlanConfigurationStub::build();
         $this->current_user = UserReferenceStub::withDefaults();
         $this->logger       = new TestLogger();
     }

@@ -49,7 +49,7 @@ use Tuleap\ProgramManagement\Adapter\Program\Feature\FeatureDAO;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\Links\ArtifactsLinkedToParentDao;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\CachedProgramBuilder;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\CanPrioritizeFeaturesDAO;
-use Tuleap\ProgramManagement\Adapter\Program\Plan\PlanDao;
+use Tuleap\ProgramManagement\Adapter\Program\Plan\PlanConfigurationDAO;
 use Tuleap\ProgramManagement\Adapter\Program\Plan\PrioritizeFeaturesPermissionVerifier;
 use Tuleap\ProgramManagement\Adapter\Program\PlanningAdapter;
 use Tuleap\ProgramManagement\Adapter\Program\ProgramDaoProject;
@@ -204,7 +204,7 @@ final class ProgramIncrementResource extends AuthenticatedResource
         $user_retriever          = new UserManagerAdapter($user_manager);
         $artifact_factory        = \Tracker_ArtifactFactory::instance();
         $program_increments_dao  = new ProgramIncrementsDAO();
-        $plan_dao                = new PlanDao();
+        $plan_dao                = new PlanConfigurationDAO();
         $program_dao             = new ProgramDaoProject();
         $artifact_retriever      = new ArtifactFactoryAdapter($artifact_factory);
         $tracker_factory         = \TrackerFactory::instance();
@@ -444,7 +444,7 @@ final class ProgramIncrementResource extends AuthenticatedResource
                     new PlanningAdapter(\PlanningFactory::build(), $user_retriever),
                     $artifacts_linked_to_parent_dao
                 ),
-                new FeatureChecker(new PlanDao(), $visibility_verifier),
+                new FeatureChecker(new PlanConfigurationDAO(), $visibility_verifier),
                 $background_color_retriever,
                 $story_tracker_retriever,
                 $artifacts_linked_to_parent_dao,

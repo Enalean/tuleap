@@ -27,22 +27,22 @@ use Tuleap\Option\Option;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\VerifyIsFeature;
 use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramForAdministrationIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Content\VerifyCanBePlannedInProgramIncrement;
-use Tuleap\ProgramManagement\Domain\Program\Plan\NewPlan;
+use Tuleap\ProgramManagement\Domain\Program\Plan\NewPlanConfiguration;
 use Tuleap\ProgramManagement\Domain\Program\Plan\PlanConfiguration;
-use Tuleap\ProgramManagement\Domain\Program\Plan\RetrievePlan;
+use Tuleap\ProgramManagement\Domain\Program\Plan\RetrievePlanConfiguration;
 use Tuleap\ProgramManagement\Domain\Program\Plan\RetrievePlannableTrackersIds;
-use Tuleap\ProgramManagement\Domain\Program\Plan\SavePlan;
+use Tuleap\ProgramManagement\Domain\Program\Plan\SaveNewPlanConfiguration;
 use Tuleap\ProgramManagement\Domain\Program\Plan\VerifyIsPlannable;
 use Tuleap\ProgramManagement\Domain\Program\Plan\VerifyIsProjectUsedInPlan;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\TrackerReference;
 
-final class PlanDao extends DataAccessObject implements SavePlan, VerifyCanBePlannedInProgramIncrement, VerifyIsPlannable, VerifyIsFeature, RetrievePlannableTrackersIds, VerifyIsProjectUsedInPlan, RetrievePlan
+final class PlanConfigurationDAO extends DataAccessObject implements SaveNewPlanConfiguration, VerifyCanBePlannedInProgramIncrement, VerifyIsPlannable, VerifyIsFeature, RetrievePlannableTrackersIds, VerifyIsProjectUsedInPlan, RetrievePlanConfiguration
 {
     /**
      * @throws \Throwable
      */
-    public function save(NewPlan $plan): void
+    public function save(NewPlanConfiguration $plan): void
     {
         $this->getDB()->tryFlatTransaction(function () use ($plan): void {
             $this->setUpPlan($plan);
@@ -53,7 +53,7 @@ final class PlanDao extends DataAccessObject implements SavePlan, VerifyCanBePla
         });
     }
 
-    private function setUpPlan(NewPlan $plan): void
+    private function setUpPlan(NewPlanConfiguration $plan): void
     {
         $sql = 'DELETE FROM plugin_program_management_plan WHERE project_id = ?';
 
@@ -70,7 +70,7 @@ final class PlanDao extends DataAccessObject implements SavePlan, VerifyCanBePla
         $this->getDB()->insertMany('plugin_program_management_plan', $insert);
     }
 
-    private function setUpPlanPermissions(NewPlan $plan): void
+    private function setUpPlanPermissions(NewPlanConfiguration $plan): void
     {
         $sql = 'DELETE FROM plugin_program_management_can_prioritize_features WHERE project_id = ?';
 
@@ -86,7 +86,7 @@ final class PlanDao extends DataAccessObject implements SavePlan, VerifyCanBePla
         $this->getDB()->insertMany('plugin_program_management_can_prioritize_features', $insert);
     }
 
-    private function setUpProgramPlan(NewPlan $plan): void
+    private function setUpProgramPlan(NewPlanConfiguration $plan): void
     {
         $project_id = $plan->getProjectId();
 
