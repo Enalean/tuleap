@@ -19,43 +19,66 @@
  *
  */
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use Tuleap\Docman\ExternalLinks\ILinkUrlProvider;
+declare(strict_types=1);
+
+namespace Tuleap\Docman;
+
+use Docman_Item;
+use Docman_ItemFactory;
+use Docman_NotificationsManager_Move;
+use Docman_Path;
+use Docman_PermissionsManager;
+use Feedback;
+use ForgeConfig;
+use Generator;
+use MailBuilder;
+use PFUser;
+use PHPUnit\Framework\MockObject\MockObject;
+use TemplateRendererFactory;
+use TestHelper;
 use Tuleap\Docman\Notifications\NotifiedPeopleRetriever;
+use Tuleap\Docman\Notifications\UGroupsRetriever;
+use Tuleap\Docman\Notifications\UgroupsToNotifyDao;
 use Tuleap\Docman\Notifications\UgroupsUpdater;
 use Tuleap\Docman\Notifications\UsersRetriever;
+use Tuleap\Docman\Notifications\UsersToNotifyDao;
 use Tuleap\Docman\Notifications\UsersUpdater;
-use Tuleap\Templating\TemplateCache;
+use Tuleap\Document\LinkProvider\DocumentLinkProvider;
+use Tuleap\ForgeConfigSandbox;
+use Tuleap\Mail\MailFilter;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Test\Stubs\TemplateRendererStub;
+use UGroupManager;
+use UserManager;
 
-//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
-class NotificationsManager_MoveTest extends \Tuleap\Test\PHPUnit\TestCase
+final class NotificationsManager_MoveTest extends TestCase //phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 {
-    use MockeryPHPUnitIntegration;
-    use \Tuleap\ForgeConfigSandbox;
+    use ForgeConfigSandbox;
 
-    /**
-     * @var Tuleap\Mail\MailFilter
-     */
-    private $mail_filter;
+    private MailFilter&MockObject $mail_filter;
 
     protected function setUp(): void
     {
         ForgeConfig::set('sys_noreply', 'norelpy@example.com');
         ForgeConfig::set('codendi_dir', '/tuleap');
-        $this->mail_filter = \Mockery::spy(\Tuleap\Mail\MailFilter::class);
+        $this->mail_filter = $this->createMock(MailFilter::class);
     }
 
-    public function testNotifications(): void
+    public static function provideTestVariations(): Generator
     {
+        $bool_values     = [true, false];
+        $key_from_params = static fn(bool $dr, bool $br, bool $cr, bool $lb, bool $lc, bool $ld, string $res) => "[$dr, $br, $cr, $lb, $lc, $ld, $res]";
         // {{{ Listener cannot read moved item
         // We expect no notification
-        $dr = 0;
-        for ($br = 0; $br <= 1; ++$br) {
-            for ($cr = 0; $cr <= 1; ++$cr) {
-                for ($lb = 0; $lb <= 1; ++$lb) {
-                    for ($lc = 0; $lc <= 1; ++$lc) {
-                        for ($ld = 0; $ld <= 1; ++$ld) {
-                            $this->_runTest($dr, $br, $cr, $lb, $lc, $ld, 'none');
+        $dr = false;
+        foreach ($bool_values as $br) {
+            foreach ($bool_values as $cr) {
+                foreach ($bool_values as $lb) {
+                    foreach ($bool_values as $lc) {
+                        foreach ($bool_values as $ld) {
+                            yield $key_from_params($dr, $br, $cr, $lb, $lc, $ld, 'none') => [$dr, $br, $cr, $lb, $lc, $ld, 'none'];
                         }
                     }
                 }
@@ -63,240 +86,205 @@ class NotificationsManager_MoveTest extends \Tuleap\Test\PHPUnit\TestCase
         }
         //}}}
         // {{{ Listener can read moved item
-        $dr = 1;
-            // {{{ Listener cannot read old parent
-            $br = 0;
-                // {{{ Listener cannot read new parent
-                // We expect no notification
-                $cr = 0;
-        for ($lb = 0; $lb <= 1; ++$lb) {
-            for ($lc = 0; $lc <= 1; ++$lc) {
-                for ($ld = 0; $ld <= 1; ++$ld) {
-                    $this->_runTest($dr, $br, $cr, $lb, $lc, $ld, 'none');
+        $dr = true;
+        // {{{ Listener cannot read old parent
+        $br = false;
+        // {{{ Listener cannot read new parent
+        // We expect no notification
+        $cr = false;
+        foreach ($bool_values as $lb) {
+            foreach ($bool_values as $lc) {
+                foreach ($bool_values as $ld) {
+                    yield $key_from_params($dr, $br, $cr, $lb, $lc, $ld, 'none') => [$dr, $br, $cr, $lb, $lc, $ld, 'none'];
                 }
             }
         }
-                //}}}
-                // {{{ Listener can read new parent
-                // => A readable item is moved from an unreadable parent to a readable one
-                $cr = 1;
-                    //{{{ Do not listen item but maybe its parent ?
-                    $ld = 0;
-                    // No listeners, no notification
-                    $this->_runTest($dr, $br, $cr, 0, 0, $ld, 'none');
-                    // Only old parent is listened (but still unreadable), no notification
-                    $this->_runTest($dr, $br, $cr, 1, 0, $ld, 'none');
-                        // {{{ new parent is listened, we receive a notification without b because it is still unreadable
-        for ($lb = 0; $lb <= 1; ++$lb) {
-            $this->_runTest($dr, $br, $cr, $lb, 1, $ld, 'to_wo_b');
+        //}}}
+        // {{{ Listener can read new parent
+        // => A readable item is moved from an unreadable parent to a readable one
+        $cr = true;
+        // {{{ Do not listen item but maybe its parent ?
+        $ld = false;
+        // No listeners, no notification
+        yield $key_from_params($dr, $br, $cr, false, false, $ld, 'none') => [$dr, $br, $cr, false, false, $ld, 'none'];
+        // Only old parent is listened (but still unreadable), no notification
+        yield $key_from_params($dr, $br, $cr, true, false, $ld, 'none') => [$dr, $br, $cr, true, false, $ld, 'none'];
+        // {{{ new parent is listened, we receive a notification without b because it is still unreadable
+        foreach ($bool_values as $lb) {
+            yield $key_from_params($dr, $br, $cr, $lb, true, $ld, 'to_wo_b') => [$dr, $br, $cr, $lb, true, $ld, 'to_wo_b'];
         }
-                        //}}}
-                    //}}}
+        //}}}
+        //}}}
 
-                    //{{{ If we listen item, we receive a notification about item ("has been moved to c")
-                    $ld = 1;
-        for ($lb = 0; $lb <= 1; ++$lb) {
-            for ($lc = 0; $lc <= 1; ++$lc) {
-                $this->_runTest($dr, $br, $cr, $lb, $lc, $ld, 'item');
+        //{{{ If we listen item, we receive a notification about item ("has been moved to c")
+        $ld = true;
+        foreach ($bool_values as $lb) {
+            foreach ($bool_values as $lc) {
+                yield $key_from_params($dr, $br, $cr, $lb, $lc, $ld, 'item') => [$dr, $br, $cr, $lb, $lc, $ld, 'item'];
             }
         }
-                    //}}}
-                //}}}
-            //}}}
-            // {{{ Listener can read old parent
-            $br = 1;
-                // {{{ Listener cannot read new parent
-                // We have to send notifications only when old parent or item is listened
-                $cr = 0;
-        for ($lb = 0; $lb <= 1; ++$lb) {
-            for ($lc = 0; $lc <= 1; ++$lc) {
-                for ($ld = 0; $ld <= 1; ++$ld) {
-                    $this->_runTest($dr, $br, $cr, $lb, $lc, $ld, $lb || $ld ? 'from_wo_c' : 'none');
+        //}}}
+        //}}}
+        //}}}
+        // {{{ Listener can read old parent
+        $br = true;
+        // {{{ Listener cannot read new parent
+        // We have to send notifications only when old parent or item is listened
+        $cr = false;
+        foreach ($bool_values as $lb) {
+            foreach ($bool_values as $lc) {
+                foreach ($bool_values as $ld) {
+                    yield $key_from_params($dr, $br, $cr, $lb, $lc, $ld, $lb || $ld ? 'from_wo_c' : 'none') => [$dr, $br, $cr, $lb, $lc, $ld, $lb || $ld ? 'from_wo_c' : 'none'];
                 }
             }
         }
-                //}}}
-                // {{{ Listener can read new parent
-                $cr = 1;
-                    // {{{ Moved item is listened, notification on item
-                    $ld = 1;
-        for ($lb = 0; $lb <= 1; ++$lb) {
-            for ($lc = 0; $lc <= 1; ++$lc) {
-                $this->_runTest($dr, $br, $cr, $lb, $lc, $ld, 'item');
+        //}}}
+        // {{{ Listener can read new parent
+        $cr = true;
+        // {{{ Moved item is listened, notification on item
+        $ld = true;
+        foreach ($bool_values as $lb) {
+            foreach ($bool_values as $lc) {
+                yield $key_from_params($dr, $br, $cr, $lb, $lc, $ld, 'item') => [$dr, $br, $cr, $lb, $lc, $ld, 'item'];
             }
         }
-                    //}}}
-                    //{{{ Moved item is not listened
-                    $ld = 0;
-                        // {{{ new parent is listened, notification 'to'
-                        $lc = 1;
-        for ($lb = 0; $lb <= 1; ++$lb) {
-            $this->_runTest($dr, $br, $cr, $lb, $lc, $ld, 'to');
+        //}}}
+        //{{{ Moved item is not listened
+        $ld = false;
+        // {{{ new parent is listened, notification 'to'
+        $lc = true;
+        foreach ($bool_values as $lb) {
+            yield $key_from_params($dr, $br, $cr, $lb, $lc, $ld, 'to') => [$dr, $br, $cr, $lb, $lc, $ld, 'to'];
         }
-                        //}}}
-                        // {{{ new parent is not listened
-                        $lc = 0;
-                        //Old parent is listened, 'from' notification
-                        $this->_runTest($dr, $br, $cr, 1, $lc, $ld, 'from');
-                        //No listener, no notification
-                        $this->_runTest($dr, $br, $cr, 0, $lc, $ld, 'none');
-                        //}}}
-                    //}}}
-                //}}}
-            //}}}
+        //}}}
+        // {{{ new parent is not listened
+        $lc = false;
+        //Old parent is listened, 'from' notification
+        yield $key_from_params($dr, $br, $cr, true, $lc, $ld, 'from') => [$dr, $br, $cr, true, $lc, $ld, 'from'];
+        //No listener, no notification
+        yield $key_from_params($dr, $br, $cr, false, $lc, $ld, 'none') => [$dr, $br, $cr, false, $lc, $ld, 'none'];
+        //}}}
+        //}}}
+        //}}}
+        //}}}
         //}}}
     }
-    /**
-    *        A
-    *        |-- B
-    *        | +-+-----+
-    *        | | `-- D |
-    *        | +-------+ \
-    *        `-- C        |
-    *             <-------²
-    *
-    *        D is moved from B to C
-    *
-    * @param dr   d is readable 0|1
-    * @param br   b is readable 0|1
-    * @param cr   c is readable 0|1
-    * @param lb   b is listened 0|1
-    * @param lc   c is listened 0|1
-    * @param ld   d is listened 0|1
-    * @param res  expected result: item | from | from_wo_c | to | to_wo_b | none
-    * @param msg  message to display if the test fail
-    */
-    //phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
-    protected function _runTest($dr, $br, $cr, $lb, $lc, $ld, $res, $msg = '%s'): void
-    {
-        $msg = "[$dr, $br, $cr, $lb, $lc, $ld, $res] " . $msg;
 
-        $a = \Mockery::spy(\Docman_Item::class);
-        $a->shouldReceive('getId')->andReturns(102);
-        $a->shouldReceive('getParentId')->andReturns(0);
-        $b = \Mockery::spy(\Docman_Item::class);
-        $b->shouldReceive('getId')->andReturns(103);
-        $b->shouldReceive('getParentId')->andReturns(102);
-        $c = \Mockery::spy(\Docman_Item::class);
-        $c->shouldReceive('getId')->andReturns(104);
-        $c->shouldReceive('getParentId')->andReturns(102);
-        $d = \Mockery::spy(\Docman_Item::class);
-        $d->shouldReceive('getId')->andReturns(105);
-        $d->shouldReceive('getParentId')->andReturns(103);
+    /**
+     *        A
+     *        |-- B
+     *        | +-+-----+
+     *        | | `-- D |
+     *        | +-------+ \
+     *        `-- C        |
+     *             <-------²
+     *
+     *        D is moved from B to C
+     *
+     * @param $dr bool d is readable
+     * @param $br bool b is readable
+     * @param $cr bool c is readable
+     * @param $lb bool b is listened
+     * @param $lc bool c is listened
+     * @param $ld bool d is listened
+     * @param $res 'item'|'from'|'from_wo_c'|'to'|'to_wo_b'|'none' expected result
+     * @dataProvider provideTestVariations
+     */
+    public function testNotification(bool $dr, bool $br, bool $cr, bool $lb, bool $lc, bool $ld, string $res): void
+    {
+        $a = new Docman_Item(['item_id' => 102, 'parent_id' => 0]);
+        $b = new Docman_Item(['item_id' => 103, 'parent_id' => 102]);
+        $c = new Docman_Item(['item_id' => 104, 'parent_id' => 102]);
+        $d = new Docman_Item(['item_id' => 105, 'parent_id' => 103]);
 
         $group_id = 101;
-        $project  = \Mockery::spy(\Project::class, ['getID' => $group_id, 'getUserName' => false, 'isPublic' => false]);
+        $project  = ProjectTestBuilder::aProject()->withId($group_id)->withAccessPrivate()->build();
 
-        $user = \Mockery::spy(\PFUser::class);
-        $user->shouldReceive('getId')->andReturns('user');
-        $listener = \Mockery::spy(\PFUser::class);
-        $listener->shouldReceive('getId')->andReturns('listener');
+        $user     = UserTestBuilder::buildWithId(101);
+        $listener = UserTestBuilder::buildWithId(102);
 
         $feedback = new Feedback();
 
-        $item_factory = \Mockery::spy(\Docman_ItemFactory::class);
-        $item_factory->shouldReceive('getItemFromDb')->with($a->getId())->andReturns($a);
-        $item_factory->shouldReceive('getItemFromDb')->with($b->getId())->andReturns($b);
-        $item_factory->shouldReceive('getItemFromDb')->with($c->getId())->andReturns($c);
-        $item_factory->shouldReceive('getItemFromDb')->with($d->getId())->andReturns($d);
+        $item_factory = $this->createMock(Docman_ItemFactory::class);
+        $item_factory->method('getItemFromDb')->willReturnMap([
+            $a->getId() => $a,
+            $b->getId() => $b,
+            $c->getId() => $c,
+            $d->getId() => $d,
+        ]);
 
-        $user_manager = \Mockery::spy(\UserManager::class);
-        $user_manager->shouldReceive('getUserById')->with($user->getId())->andReturns($user);
-        $user_manager->shouldReceive('getUserById')->with($listener->getId())->andReturns($listener);
+        $user_manager = $this->createMock(UserManager::class);
+        $user_manager->method('getUserById')->willReturnMap([
+            $user->getId()     => $user,
+            $listener->getId() => $listener,
+        ]);
 
-        $permissions_manager = \Mockery::spy(\Docman_PermissionsManager::class);
-        $permissions_manager->shouldReceive('userCanRead')->with($listener, $a->getId())->andReturns(true);
-        $permissions_manager->shouldReceive('userCanAccess')->with($listener, $a->getId())->andReturns(true);
-        $permissions_manager->shouldReceive('userCanRead')->with($listener, $c->getId())->andReturns($cr);
-        $permissions_manager->shouldReceive('userCanAccess')->with($listener, $c->getId())->andReturns($cr);
-        $permissions_manager->shouldReceive('userCanRead')->with($listener, $b->getId())->andReturns($br);
-        $permissions_manager->shouldReceive('userCanAccess')->with($listener, $b->getId())->andReturns($br);
-        $permissions_manager->shouldReceive('userCanRead')->with($listener, $d->getId())->andReturns($dr);
-        $permissions_manager->shouldReceive('userCanAccess')->with($listener, $d->getId())->andReturns($dr && $br);
+        $permissions_manager = $this->createMock(Docman_PermissionsManager::class);
+        $permissions_manager->method('userCanRead')->with($listener, self::anything())
+            ->willReturnCallback(static fn(PFUser $user, $item_id) => match ($item_id) {
+                $a->getId() => true,
+                $c->getId() => $cr,
+                $b->getId() => $br,
+                $d->getId() => $dr,
+            });
+        $permissions_manager->method('userCanAccess')->with($listener, self::anything())
+            ->willReturnCallback(static fn(PFUser $user, $item_id) => match ($item_id) {
+                $a->getId() => true,
+                $c->getId() => $cr,
+                $b->getId() => $br,
+                $d->getId() => $dr && $br,
+            });
 
-        $dao = \Mockery::spy(\Tuleap\Docman\Notifications\UsersToNotifyDao::class);
+        $dao = $this->createMock(UsersToNotifyDao::class);
+        $dao->method('searchUserIdByObjectIdAndType')
+            ->willReturnCallback(static fn($item_id) => match ($item_id) {
+                $d->getId() => $ld ? TestHelper::arrayToDar(['user_id' => $listener->getId(), 'item_id' => $d->getId()]) : TestHelper::emptyDar(),
+                $c->getId() => $ld ? TestHelper::arrayToDar(['user_id' => $listener->getId(), 'item_id' => $c->getId()]) : TestHelper::emptyDar(),
+                $b->getId() => $lb ? TestHelper::arrayToDar(['user_id' => $listener->getId(), 'item_id' => $b->getId()]) : TestHelper::emptyDar(),
+            });
 
-        if ($ld) {
-            $dao->shouldReceive('searchUserIdByObjectIdAndType')->with($d->getId(), 'plugin_docman')->andReturns(
-                \TestHelper::arrayToDar(['user_id' => $listener->getId(), 'item_id' => $d->getId()])
-            );
+        $docman_path = new Docman_Path();
+
+        $dnmm = $this->createPartialMock(Docman_NotificationsManager_Move::class, [
+            '_getItemFactory',
+            '_getUserManager',
+            '_getPermissionsManager',
+            '_getDocmanPath',
+            '_buildMessage',
+        ]);
+        $dnmm->method('_getItemFactory')->willReturn($item_factory);
+        $dnmm->method('_getUserManager')->willReturn($user_manager);
+        $dnmm->method('_getPermissionsManager')->willReturn($permissions_manager);
+        $dnmm->method('_getDocmanPath')->willReturn($docman_path);
+
+        if ($res === 'none') {
+            $dnmm->expects(self::never())->method('_buildMessage');
         } else {
-            $dao->shouldReceive('searchUserIdByObjectIdAndType')->with($d->getId(), 'plugin_docman')->andReturns(
-                \TestHelper::emptyDar()
-            );
+            self::expectNotToPerformAssertions();
         }
 
-        if ($lc) {
-            $dao->shouldReceive('searchUserIdByObjectIdAndType')->with($c->getId(), 'plugin_docman')->andReturns(
-                \TestHelper::arrayToDar(['user_id' => $listener->getId(), 'item_id' => $c->getId()])
-            );
-        } else {
-            $dao->shouldReceive('searchUserIdByObjectIdAndType')->with($c->getId(), 'plugin_docman')->andReturns(
-                \TestHelper::emptyDar()
-            );
-        }
-
-        if ($lb) {
-            $dao->shouldReceive('searchUserIdByObjectIdAndType')->with($b->getId(), 'plugin_docman')->andReturns(
-                \TestHelper::arrayToDar(['user_id' => $listener->getId(), 'item_id' => $b->getId()])
-            );
-        } else {
-            $dao->shouldReceive('searchUserIdByObjectIdAndType')->with($b->getId(), 'plugin_docman')->andReturns(
-                \TestHelper::emptyDar()
-            );
-        }
-
-        $docman_path = \Mockery::spy(\Docman_Path::class);
-
-        $dnmm = \Mockery::mock(\Docman_NotificationsManager_Move::class)->makePartial(
-        )->shouldAllowMockingProtectedMethods();
-        $dnmm->shouldReceive('_groupGetObject')->andReturns($project);
-        $dnmm->shouldReceive('_getItemFactory')->andReturns($item_factory);
-        $dnmm->shouldReceive('_getUserManager')->andReturns($user_manager);
-        $dnmm->shouldReceive('_getPermissionsManager')->andReturns($permissions_manager);
-        $dnmm->shouldReceive('_getDocmanPath')->andReturns($docman_path);
-
-        if ($res != 'none') {
-        } else {
-            $dnmm->shouldReceive('_buildMessage')->never();
-        }
-
-        $ugroups_to_notify_dao = \Mockery::spy(\Tuleap\Docman\Notifications\UgroupsToNotifyDao::class);
-        $ugroups_to_notify_dao->shouldReceive('searchUgroupsByItemIdAndType')->andReturns(false);
-        $docman_itemfactory      = \Mockery::spy(\Docman_ItemFactory::class);
-        $ugroup_manager          = \Mockery::spy(\UGroupManager::class);
-        $template_render_factory = Mockery::mock(TemplateRendererFactory::class);
-        $template_cache          = Mockery::mock(TemplateCache::class);
-        $template_render_factory->shouldReceive('build')->andReturn($template_cache);
-        $template_rendder = Mockery::mock(TemplateRenderer::class);
-        $template_render_factory->shouldReceive('getRenderer')->andReturn($template_rendder);
-
-        $link_provider = Mockery::mock(ILinkUrlProvider::class);
-        $link_provider->shouldReceive('getShowLinkUrl')->with($c)->andReturn();
-        $link_provider->shouldReceive('getNotificationLinkUrl')->with($d)->andReturn();
+        $ugroups_to_notify_dao = $this->createMock(UgroupsToNotifyDao::class);
+        $ugroups_to_notify_dao->method('searchUgroupsByItemIdAndType')->willReturn(false);
+        $ugroup_manager          = $this->createMock(UGroupManager::class);
+        $template_render_factory = $this->createMock(TemplateRendererFactory::class);
+        $template_rendder        = new TemplateRendererStub();
+        $template_render_factory->method('getRenderer')->willReturn($template_rendder);
+        $link_provider = new DocumentLinkProvider('', $project);
 
         $mail_builder    = new MailBuilder($template_render_factory, $this->mail_filter);
-        $users_retriever = new UsersRetriever(
-            $dao,
-            $docman_itemfactory
-        );
+        $users_retriever = new UsersRetriever($dao, $item_factory);
 
         $notified_people_retriever = new NotifiedPeopleRetriever(
             $dao,
             $ugroups_to_notify_dao,
-            $docman_itemfactory,
+            $item_factory,
             $ugroup_manager
         );
 
         $users_updater   = new UsersUpdater($dao);
         $ugroups_updater = new UgroupsUpdater($ugroups_to_notify_dao);
 
-        $docman_item = \Mockery::spy(\Docman_EmbeddedFile::class);
-        $docman_itemfactory->shouldReceive('getItemFromDb')->with('b')->andReturns($docman_item);
-        $docman_itemfactory->shouldReceive('getItemFromDb')->with('c')->andReturns($docman_item);
-        $docman_itemfactory->shouldReceive('getItemFromDb')->with('d')->andReturns($docman_item);
-
-        //C'est parti
+        // Let's go
         $dnmm->__construct(
             $project,
             $link_provider,
@@ -304,16 +292,16 @@ class NotificationsManager_MoveTest extends \Tuleap\Test\PHPUnit\TestCase
             $mail_builder,
             $dao,
             $users_retriever,
-            \Mockery::spy(\Tuleap\Docman\Notifications\UGroupsRetriever::class),
+            $this->createMock(UGroupsRetriever::class),
             $notified_people_retriever,
             $users_updater,
             $ugroups_updater
         );
         $dnmm->somethingHappen('plugin_docman_event_move', [
             'group_id' => $group_id,
-            'item'    => &$d,
-            'parent'  => &$c,
-            'user'    => &$user,
+            'item'     => &$d,
+            'parent'   => &$c,
+            'user'     => &$user,
         ]);
     }
 }
