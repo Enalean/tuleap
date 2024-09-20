@@ -22,14 +22,15 @@ declare(strict_types=1);
 
 namespace Tuleap\Docman;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use Docman_VersionDao;
+use Docman_VersionFactory;
 use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\vfsStreamWrapper;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
 
-class RenameProjectTest extends \Tuleap\Test\PHPUnit\TestCase
+final class RenameProjectTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     public function testRenameProjectTest(): void
     {
         vfsStreamWrapper::register();
@@ -41,17 +42,18 @@ class RenameProjectTest extends \Tuleap\Test\PHPUnit\TestCase
         $old_directory     = vfsStream::newDirectory('toto', 0755)->at($docman_root_directory);
         $old_directory_url = $old_directory->url();
 
-        $project = \Mockery::spy(Project::class);
-        $project->allows()->getUnixName(true)->andReturns($old_name);
+        $project = ProjectTestBuilder::aProject()->withUnixName($old_name)->build();
 
-        $fact = \Mockery::mock(Docman_VersionFactory::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $this->assertEquals(rename($old_directory->url(), $docman_root_directory->url() . '/' . $new_name), true);
+        $fact = $this->createPartialMock(Docman_VersionFactory::class, [
+            '_getVersionDao',
+        ]);
+        self::assertTrue(rename($old_directory->url(), $docman_root_directory->url() . '/' . $new_name));
 
-        $dao = \Mockery::spy(Docman_VersionDao::class);
-        $fact->allows(['_getVersionDao' => $dao]);
-        $dao->allows()->renameProject($docman_root_directory->url(), $project, $new_name)->andReturns(true);
+        $dao = $this->createMock(Docman_VersionDao::class);
+        $fact->method('_getVersionDao')->willReturn($dao);
+        $dao->method('renameProject')->with($docman_root_directory->url(), $project, $new_name)->willReturn(true);
 
-        $this->assertFalse(is_dir($old_directory_url), 'Docman old rep should be renamed');
-        $this->assertTrue(is_dir($docman_root_directory->url() . '/' . $new_name), 'Docman new Rep should be created');
+        self::assertFalse(is_dir($old_directory_url), 'Docman old rep should be renamed');
+        self::assertTrue(is_dir($docman_root_directory->url() . '/' . $new_name), 'Docman new Rep should be created');
     }
 }
