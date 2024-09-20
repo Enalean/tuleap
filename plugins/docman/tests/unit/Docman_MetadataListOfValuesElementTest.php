@@ -23,23 +23,16 @@ declare(strict_types=1);
 
 namespace Tuleap\Docman;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\TestCase;
+use Docman_MetadataListOfValuesElement;
+use Tuleap\Test\PHPUnit\TestCase;
 
-class Docman_MetadataListOfValuesElementTest extends TestCase // @codingStandardsIgnoreLine
+final class Docman_MetadataListOfValuesElementTest extends TestCase // phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var \Docman_MetadataListOfValuesElement
-     */
-    private $metadata_list_values;
+    private Docman_MetadataListOfValuesElement $metadata_list_values;
 
     protected function setUp(): void
     {
-        parent::setUp();
-
-        $this->metadata_list_values = new \Docman_MetadataListOfValuesElement();
+        $this->metadata_list_values = new Docman_MetadataListOfValuesElement();
     }
 
     public function testItInitsTheClassAttributeIfTheRowValueIsSet(): void
@@ -52,11 +45,11 @@ class Docman_MetadataListOfValuesElementTest extends TestCase // @codingStandard
 
         $this->metadata_list_values->initFromRow($row);
 
-        $this->assertEquals(120, $this->metadata_list_values->getId());
-        $this->assertEquals('Bang', $this->metadata_list_values->getName());
-        $this->assertNull($this->metadata_list_values->getDescription());
-        $this->assertNull($this->metadata_list_values->getRank());
-        $this->assertEquals('status Value', $this->metadata_list_values->getStatus());
+        self::assertEquals(120, $this->metadata_list_values->getId());
+        self::assertEquals('Bang', $this->metadata_list_values->getName());
+        self::assertNull($this->metadata_list_values->getDescription());
+        self::assertNull($this->metadata_list_values->getRank());
+        self::assertEquals('status Value', $this->metadata_list_values->getStatus());
     }
 
     public function testItReturnsTheNoneValueWhenTheIdIs100(): void
@@ -66,7 +59,7 @@ class Docman_MetadataListOfValuesElementTest extends TestCase // @codingStandard
 
         $metadata_list_value = $this->metadata_list_values->getMetadataValue();
 
-        $this->assertEquals('None', $metadata_list_value);
+        self::assertEquals('None', $metadata_list_value);
     }
 
     public function testItReturnsTheMetadataNameWhenTheIdIsNot100(): void
@@ -76,6 +69,6 @@ class Docman_MetadataListOfValuesElementTest extends TestCase // @codingStandard
 
         $metadata_list_value = $this->metadata_list_values->getMetadataValue();
 
-        $this->assertEquals('Blanka', $metadata_list_value);
+        self::assertEquals('Blanka', $metadata_list_value);
     }
 }
