@@ -343,6 +343,7 @@ final class ArtifactReportFactoryInstantiator
             $expert_query_dao,
             $invalid_comparisons_collector,
             $invalid_selectables_collector,
+            $duck_typed_field_checker,
             $metadata_checker,
             new ReportTrackersRetriever(
                 $validator,

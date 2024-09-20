@@ -22,10 +22,13 @@ declare(strict_types=1);
 
 namespace Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\DuckTypedField;
 
+use Tracker;
 use Tracker_FormElement_Field;
 use Tuleap\CrossTracker\Report\Query\Advanced\DuckTypedField\FieldTypeRetrieverWrapper;
+use Tuleap\CrossTracker\Report\Query\Advanced\DuckTypedField\OrderBy\DuckTypedFieldOrderBy;
 use Tuleap\CrossTracker\Report\Query\Advanced\DuckTypedField\Select\DuckTypedFieldSelect;
 use Tuleap\CrossTracker\Report\Query\Advanced\DuckTypedField\Where\DuckTypedFieldWhere;
+use Tuleap\CrossTracker\Report\Query\Advanced\InvalidOrderByBuilderParameters;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSearchableCollectorParameters;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSelectableCollectorParameters;
 use Tuleap\NeverThrow\Err;
@@ -108,6 +111,35 @@ final readonly class DuckTypedFieldChecker
             ->allowed;
 
         return DuckTypedFieldSelect::build(
+            new FieldTypeRetrieverWrapper($this->retrieve_field_type),
+            $field->getName(),
+            $fields_user_can_read,
+            $tracker_ids,
+        )->map(static fn() => null);
+    }
+
+    /**
+     * @return Ok<null>|Err<Fault>
+     */
+    public function checkFieldIsValidForOrderBy(
+        Field $field,
+        InvalidOrderByBuilderParameters $parameters,
+    ): Ok|Err {
+        $tracker_ids = array_map(static fn(Tracker $tracker) => $tracker->getId(), $parameters->trackers);
+
+        $fields = array_filter(
+            array_map(
+                fn(int $tracker_id) => $this->retrieve_used_fields->getUsedFieldByName($tracker_id, $field->getName()),
+                $tracker_ids,
+            ),
+            static fn(?Tracker_FormElement_Field $field) => $field !== null,
+        );
+
+        $fields_user_can_read = $this->user_permission_on_fields
+            ->retrieveUserPermissionOnFields($parameters->user, $fields, FieldPermissionType::PERMISSION_READ)
+            ->allowed;
+
+        return DuckTypedFieldOrderBy::build(
             new FieldTypeRetrieverWrapper($this->retrieve_field_type),
             $field->getName(),
             $fields_user_can_read,

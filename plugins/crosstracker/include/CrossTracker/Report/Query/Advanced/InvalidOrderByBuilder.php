@@ -24,8 +24,10 @@ namespace Tuleap\CrossTracker\Report\Query\Advanced;
 
 use PFUser;
 use Tracker;
+use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\DuckTypedField\DuckTypedFieldChecker;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\InvalidQueryException;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata\MetadataChecker;
+use Tuleap\NeverThrow\Fault;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Field;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\OrderBy;
@@ -42,6 +44,7 @@ final readonly class InvalidOrderByBuilder implements IBuildInvalidOrderBy, Sele
      * @param Tracker[] $trackers
      */
     public function __construct(
+        private DuckTypedFieldChecker $field_checker,
         private MetadataChecker $metadata_checker,
         private array $trackers,
         private PFUser $user,
@@ -55,7 +58,11 @@ final readonly class InvalidOrderByBuilder implements IBuildInvalidOrderBy, Sele
 
     public function visitField(Field $field, $parameters): ?InvalidOrderBy
     {
-        return new InvalidOrderBy('Not implemented yet', dgettext('tuleap-crosstracker', 'Not implemented yet'));
+        return $this->field_checker->checkFieldIsValidForOrderBy($field, $parameters)
+            ->match(
+                static fn() => null,
+                static fn(Fault $fault) => new InvalidOrderBy((string) $fault, (string) $fault),
+            );
     }
 
     public function visitMetaData(Metadata $metadata, $parameters): ?InvalidOrderBy

@@ -406,16 +406,18 @@ final class CrossTrackerReportsResource extends AuthenticatedResource
                 $report = new CrossTrackerDefaultReport($report_id, $expert_query, $trackers);
             }
             $this->getUserIsAllowedToSeeReportChecker()->checkUserIsAllowedToSeeReport($user, $report);
+            $field_checker    = $this->getDuckTypedFieldChecker();
+            $metadata_checker = $this->getMetadataChecker();
             $this->getExpertQueryValidator()->validateExpertQuery(
                 $expert_query,
                 $expert_mode,
                 new InvalidSearchablesCollectionBuilder($this->getInvalidComparisonsCollector(), $trackers, $user),
                 new InvalidSelectablesCollectionBuilder(
-                    new InvalidSelectablesCollectorVisitor($this->getDuckTypedFieldChecker(), $this->getMetadataChecker()),
+                    new InvalidSelectablesCollectorVisitor($field_checker, $metadata_checker),
                     $trackers,
                     $user
                 ),
-                new InvalidOrderByBuilder($this->getMetadataChecker(), $trackers, $user),
+                new InvalidOrderByBuilder($field_checker, $metadata_checker, $trackers, $user),
             );
         } catch (SearchablesDoNotExistException | SearchablesAreInvalidException $exception) {
             throw new RestException(400, $exception->getMessage());
@@ -746,6 +748,7 @@ final class CrossTrackerReportsResource extends AuthenticatedResource
                 new ArtifactResultBuilder($tracker_artifact_factory),
             ),
         );
+        $field_checker            = $this->getDuckTypedFieldChecker();
         $metadata_checker         = $this->getMetadataChecker();
         return new CrossTrackerArtifactReportFactory(
             new CrossTrackerArtifactReportDao(),
@@ -757,7 +760,8 @@ final class CrossTrackerReportsResource extends AuthenticatedResource
             $this->getParser(),
             new CrossTrackerExpertQueryReportDao(),
             $this->getInvalidComparisonsCollector(),
-            new InvalidSelectablesCollectorVisitor($this->getDuckTypedFieldChecker(), $metadata_checker),
+            new InvalidSelectablesCollectorVisitor($field_checker, $metadata_checker),
+            $field_checker,
             $metadata_checker,
             $this->getReportTrackersRetriever(),
             $this->getInstrumentation(),
