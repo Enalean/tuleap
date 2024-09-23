@@ -18,8 +18,8 @@ dependencies:
     specifier: workspace:^
     version: link:../time-formatters
   hybrids:
-    specifier: ^9.0.0
-    version: 9.0.0
+    specifier: ^9.1.6
+    version: 9.1.6
 
 devDependencies:
   '@tuleap/build-system-configurator':
@@ -31,8 +31,8 @@ devDependencies:
 
 packages:
 
-  /hybrids@9.0.0:
-    resolution: {integrity: sha512-BEwhBvhJlUB3cKJJbnrKrsdr871T1VC/tDL5Umeuoy4DWz9ssJNldgYot4QP8zHPPxUlUpGv+41QYq9m4kzQ5g==}
+  /hybrids@9.1.6:
+    resolution: {integrity: sha512-AES51XhSvgXQLSwAHBE4tmjKW8XxnnGBiGSeHWeiPzO638waOX+cYU6VWvfiUOuTMjM/KzxsYHrLfMLLNqVZ3A==}
     engines: {node: '>=18.0.0'}
     hasBin: true
     dev: false

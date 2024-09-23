@@ -25,7 +25,7 @@
     "angular-gettext": "^2.4.2",
     "angular-sanitize": "^1.8.2",
     "codemirror": "^5.62.0",
-    "hybrids": "^9.0.0",
+    "hybrids": "^9.1.6",
     "neverthrow": "6.0.0",
     "sprintf-js": "^1.1.2"
   },
