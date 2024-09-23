@@ -18,7 +18,7 @@
  */
 
 import type { BuildRemoveLinkCallback } from "../RemoveLinkCallbackBuilder";
-import type { RemoveLinkCallback } from "../../element/items/RemoveLinkButton";
+import type { RemoveLinkCallback } from "../../element/items/RemoveLinkButtonElement";
 
 export const BuildRemoveLinkCallbackStub = {
     withCallback: (callback: RemoveLinkCallback): BuildRemoveLinkCallback => ({

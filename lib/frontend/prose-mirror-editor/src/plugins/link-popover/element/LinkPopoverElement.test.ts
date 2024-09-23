@@ -18,7 +18,7 @@
  */
 
 import { describe, it, expect, beforeEach, vi } from "vitest";
-import { createLocalDocument } from "../../../helpers/helper-for-test";
+import { createLocalDocument } from "../../../helpers";
 import * as tlp_popovers from "@tuleap/tlp-popovers";
 import type { HostElement } from "./LinkPopoverElement";
 import { connect } from "./LinkPopoverElement";

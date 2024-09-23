@@ -21,19 +21,16 @@ import { html } from "hybrids";
 import type { UpdateFunction } from "hybrids";
 import popover_styles from "./link-popover-styles.scss?inline";
 import type { InternalLinkPopoverElement } from "./LinkPopoverElement";
-import type { GetText } from "@tuleap/gettext";
-import { createButton } from "./items/button-creator";
 
 export const renderLinkPopover = (
     host: InternalLinkPopoverElement,
-    gettext_provider: GetText,
 ): UpdateFunction<InternalLinkPopoverElement> =>
     html`
         <section data-role="popover" class="tlp-popover prose-mirror-editor-popover-links">
             <div class="tlp-popover-arrow"></div>
             <div class="tlp-popover-body">
                 <div class="tlp-button-bar">
-                    ${host.buttons.map((button) => createButton(document, gettext_provider, button))}
+                    ${host.buttons_renderer.render()}
                 </div>
         </section>
     `.style(popover_styles);

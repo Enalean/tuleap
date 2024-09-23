@@ -20,14 +20,8 @@
 import { define, html } from "hybrids";
 import type { UpdateFunction } from "hybrids";
 import "@tuleap/copy-to-clipboard";
-import type { TypedLinkPopoverButton } from "../LinkPopoverElement";
 
 export const TAG = "copy-to-clipboard-button";
-
-export type CopyToClipboardButton = TypedLinkPopoverButton &
-    CopyToClipboardButtonElement & {
-        type: "copy-to-clipboard";
-    };
 
 export type CopyToClipboardButtonElement = {
     value_to_copy: string;
@@ -59,25 +53,6 @@ const getIcon = (
     };
 
     return html`<i class="${icon_classnames}" role="img" data-test="copy-to-clipboard-icon"></i>`;
-};
-
-export const isCopyToClipboardElement = (
-    element: HTMLElement,
-): element is HTMLElement & CopyToClipboardButtonElement => element.tagName === TAG.toUpperCase();
-
-export const createCopyToClipboardButton = (
-    doc: Document,
-    props: CopyToClipboardButton,
-): HTMLElement => {
-    const button = doc.createElement(TAG);
-    if (!isCopyToClipboardElement(button)) {
-        throw new Error("Unable to create a copy to clipboard button.");
-    }
-    button.value_to_copy = props.value_to_copy;
-    button.copy_value_title = props.copy_value_title;
-    button.value_copied_title = props.value_copied_title;
-
-    return button;
 };
 
 export const renderCopyToClipboardItem = (

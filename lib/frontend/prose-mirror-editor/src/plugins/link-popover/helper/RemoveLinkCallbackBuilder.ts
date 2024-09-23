@@ -18,7 +18,7 @@
  */
 
 import type { EditorState, Transaction } from "prosemirror-state";
-import type { RemoveLinkCallback } from "../element/items/RemoveLinkButton";
+import type { RemoveLinkCallback } from "../element/items/RemoveLinkButtonElement";
 import { removeLink } from "../../../helpers/remove-link";
 import { removePopover } from "./create-link-popover";
 
