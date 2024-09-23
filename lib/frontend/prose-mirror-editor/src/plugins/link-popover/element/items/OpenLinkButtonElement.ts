@@ -20,16 +20,11 @@
 import { define, html } from "hybrids";
 import type { UpdateFunction } from "hybrids";
 import type { GetText } from "@tuleap/gettext";
-import type { TypedLinkPopoverButton } from "../LinkPopoverElement";
 
 export const TAG = "open-link-button";
 
-export type OpenLinkButton = TypedLinkPopoverButton & {
-    type: "open-link";
+export type OpenLinkButtonElement = {
     sanitized_link_href: string;
-};
-
-export type OpenLinkButtonElement = Omit<OpenLinkButton, "type"> & {
     gettext_provider: GetText;
 };
 
@@ -55,25 +50,6 @@ export const renderOpenLinkButton = (
         </a>
     </div>
 `;
-
-export const isOpenLinkButtonElement = (
-    element: HTMLElement,
-): element is HTMLElement & OpenLinkButtonElement => element.tagName === TAG.toUpperCase();
-
-export const createOpenLinkButton = (
-    doc: Document,
-    gettext_provider: GetText,
-    props: OpenLinkButton,
-): HTMLElement => {
-    const button = doc.createElement(TAG);
-    if (!isOpenLinkButtonElement(button)) {
-        throw new Error("Unable to create an open link button");
-    }
-    button.sanitized_link_href = props.sanitized_link_href;
-    button.gettext_provider = gettext_provider;
-
-    return button;
-};
 
 define<InternalOpenLinkButtonElement>({
     tag: TAG,

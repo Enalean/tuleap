@@ -19,10 +19,10 @@
 
 import { describe, it, expect, beforeEach, vi } from "vitest";
 import { createLocalDocument, gettext_provider } from "../../../../helpers";
-import type { HostElement, InternalRemoveLnkButton } from "./RemoveLinkButton";
-import { renderRemoveLinkButton } from "./RemoveLinkButton";
+import type { HostElement, InternalRemoveLnkButton } from "./RemoveLinkButtonElement";
+import { renderRemoveLinkButton } from "./RemoveLinkButtonElement";
 
-describe("RemoveLinkButton", () => {
+describe("RemoveLinkButtonElement", () => {
     let doc: Document, target: ShadowRoot;
 
     beforeEach(() => {

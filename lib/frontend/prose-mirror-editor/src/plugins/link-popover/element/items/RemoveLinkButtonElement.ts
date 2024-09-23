@@ -20,19 +20,16 @@
 import { define, html } from "hybrids";
 import type { UpdateFunction } from "hybrids";
 import type { GetText } from "@tuleap/gettext";
-import type { TypedLinkPopoverButton } from "../LinkPopoverElement";
 
 export const TAG = "remove-link-button";
 
 export type RemoveLinkCallback = () => void;
 
-export type RemoveLinkButton = TypedLinkPopoverButton & {
-    type: "remove-link";
+export type RemoveLinkButtonElement = {
     gettext_provider: GetText;
     remove_link_callback: RemoveLinkCallback;
 };
 
-export type RemoveLinkButtonElement = Omit<RemoveLinkButton, "type">;
 export type InternalRemoveLnkButton = Readonly<RemoveLinkButtonElement>;
 
 export type HostElement = InternalRemoveLnkButton & HTMLElement;
@@ -52,26 +49,6 @@ export const renderRemoveLinkButton = (
         </button>
     </div>
 `;
-
-export const isRemoveLinkButtonElement = (
-    element: HTMLElement,
-): element is HTMLElement & RemoveLinkButtonElement => element.tagName === TAG.toUpperCase();
-
-export const createRemoveLinkButton = (
-    doc: Document,
-    gettext_provider: GetText,
-    props: RemoveLinkButton,
-): HTMLElement => {
-    const button = doc.createElement(TAG);
-    if (!isRemoveLinkButtonElement(button)) {
-        throw new Error("Unable to create a remove link button");
-    }
-
-    button.gettext_provider = gettext_provider;
-    button.remove_link_callback = props.remove_link_callback;
-
-    return button;
-};
 
 define<InternalRemoveLnkButton>({
     tag: TAG,
