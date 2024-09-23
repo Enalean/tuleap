@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Domain\Program\Admin;
 
 use Tuleap\ProgramManagement\Domain\Program\Plan\ProgramAccessException;
+use Tuleap\ProgramManagement\Domain\Program\ProgramServiceIsEnabledCertificate;
 use Tuleap\ProgramManagement\Domain\Workspace\UserReference;
 use Tuleap\ProgramManagement\Tests\Stub\ProjectIdentifierStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserReferenceStub;
@@ -79,5 +80,11 @@ final class ProgramForAdministrationIdentifierTest extends \Tuleap\Test\PHPUnit\
             $this->user,
             $this->project
         );
+    }
+
+    public function testItBuildsWhenProgramServiceIsEnabled(): void
+    {
+        $identifier = ProgramForAdministrationIdentifier::fromServiceEnabled(new ProgramServiceIsEnabledCertificate(169));
+        self::assertSame(169, $identifier->id);
     }
 }

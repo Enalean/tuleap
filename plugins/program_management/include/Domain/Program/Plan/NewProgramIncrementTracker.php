@@ -26,29 +26,37 @@ use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramForAdministrationIdenti
 use Tuleap\ProgramManagement\Domain\Program\ProgramTrackerException;
 
 /**
- * I hold the identifier of a Tracker that is going to be saved as Program Increment Tracker
+ * I hold the identifier of a Tracker that is going to be saved as Program Increment Tracker.
+ * I also hold its customized label and sub-label (if any).
  * @psalm-immutable
  */
-final class NewProgramIncrementTracker
+final readonly class NewProgramIncrementTracker
 {
-    private function __construct(private int $id)
+    private function __construct(public int $id, public ?string $label, public ?string $sub_label)
     {
-    }
-
-    public function getId(): int
-    {
-        return $this->id;
     }
 
     /**
      * @throws ProgramTrackerException
      */
-    public static function fromId(
+    public static function fromProgramIncrementChange(
         CheckNewProgramIncrementTracker $tracker_checker,
-        int $tracker_id,
+        PlanProgramIncrementChange $program_increment_change,
         ProgramForAdministrationIdentifier $program,
     ): self {
-        $tracker_checker->checkProgramIncrementTrackerIsValid($tracker_id, $program);
-        return new self($tracker_id);
+        $tracker_checker->checkProgramIncrementTrackerIsValid($program_increment_change->tracker_id, $program);
+        return new self(
+            $program_increment_change->tracker_id,
+            $program_increment_change->label,
+            $program_increment_change->sub_label
+        );
+    }
+
+    public static function fromCheck(
+        NewConfigurationTrackerIsValidCertificate $certificate,
+        ?string $label,
+        ?string $sub_label,
+    ): self {
+        return new self($certificate->tracker_id, $label, $sub_label);
     }
 }

@@ -23,8 +23,14 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Adapter\Events;
 
 use Psr\Log\LoggerInterface;
+use Psr\Log\LogLevel;
+use Tuleap\NeverThrow\Fault;
+use Tuleap\Option\Option;
 use Tuleap\ProgramManagement\Adapter\Workspace\ProgramServiceIsEnabledCertifier;
-use Tuleap\ProgramManagement\Domain\Program\Plan\PlanInheritanceHandler;
+use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramForAdministrationIdentifier;
+use Tuleap\ProgramManagement\Domain\Program\Plan\Inheritance\PlanInheritanceHandler;
+use Tuleap\ProgramManagement\Domain\Program\Plan\Inheritance\ProgramInheritanceMapping;
+use Tuleap\ProgramManagement\Domain\Program\Plan\NewProgramIncrementTracker;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\Tracker\TrackerEventTrackersDuplicated;
 
@@ -41,37 +47,47 @@ final readonly class TrackersDuplicatedHandler
     {
         $this->program_certifier->certifyProgramServiceEnabled($event->source_project)
             ->map(ProgramIdentifier::fromServiceEnabled(...))
-            ->apply(function (ProgramIdentifier $program_identifier) {
-                $plan_configuration      = $this->inheritance_handler->handle($program_identifier);
-                $program_id              = sprintf('program id #%s', $plan_configuration->program_identifier->getId());
-                $pi_tracker_id           = sprintf('program increment tracker id #%s', $plan_configuration->program_increment_tracker->getId());
-                $iteration_tracker_id    = sprintf(
-                    'iteration tracker id #%s',
-                    (string) $plan_configuration->iteration_tracker->unwrapOr(null)?->getId()
-                );
-                $pi_labels               = sprintf(
-                    "program increment label '%s' and sub-label '%s'",
-                    $plan_configuration->program_increment_labels->label ?? '',
-                    $plan_configuration->program_increment_labels->sub_label ?? ''
-                );
-                $iteration_labels        = sprintf(
-                    "iteration label '%s' and sub-label '%s'",
-                    $plan_configuration->iteration_labels->label ?? '',
-                    $plan_configuration->iteration_labels->sub_label ?? '',
-                );
-                $trackers_can_be_planned = sprintf('tracker ids that can be planned: %s', \Psl\Json\encode($plan_configuration->tracker_ids_that_can_be_planned));
-                $user_groups_can_prio    = sprintf('user group ids that can plan: %s', \Psl\Json\encode($plan_configuration->user_group_ids_that_can_prioritize));
-                $this->logger->debug(
-                    sprintf(
-                        'Plan configuration retrieved from template : %s %s %s %s %s %s %s',
-                        $program_id,
-                        $pi_tracker_id,
-                        $iteration_tracker_id,
-                        $pi_labels,
-                        $iteration_labels,
-                        $trackers_can_be_planned,
-                        $user_groups_can_prio
-                    )
+            ->andThen(function (ProgramIdentifier $source_program) use ($event) {
+                if (! $event->mapping_registry->hasCustomMapping(\TrackerFactory::TRACKER_MAPPING_KEY)) {
+                    return Option::nothing(ProgramInheritanceMapping::class);
+                }
+                return $this->program_certifier->certifyProgramServiceEnabled($event->new_project)
+                    ->map(ProgramForAdministrationIdentifier::fromServiceEnabled(...))
+                    ->map(static fn(ProgramForAdministrationIdentifier $new_program) => new ProgramInheritanceMapping(
+                        $source_program,
+                        $new_program,
+                        $event->mapping_registry->getCustomMapping(\TrackerFactory::TRACKER_MAPPING_KEY),
+                    ));
+            })
+            ->apply(function (ProgramInheritanceMapping $mapping) {
+                $this->inheritance_handler->handle($mapping)->match(
+                    function (NewProgramIncrementTracker $new_program_increment_tracker) use ($mapping) {
+                        $new_program_id = sprintf(
+                            'new program id #%s',
+                            $mapping->new_program->id
+                        );
+                        $pi_tracker_id  = sprintf(
+                            'new program increment tracker id #%s',
+                            $new_program_increment_tracker->id
+                        );
+                        $pi_labels      = sprintf(
+                            "new program increment label '%s' and sub-label '%s'",
+                            $new_program_increment_tracker->label ?? '',
+                            $new_program_increment_tracker->sub_label ?? ''
+                        );
+
+                        $this->logger->debug(
+                            sprintf(
+                                'Plan configuration inheritance : %s %s %s',
+                                $new_program_id,
+                                $pi_tracker_id,
+                                $pi_labels,
+                            )
+                        );
+                    },
+                    function (Fault $fault) {
+                        Fault::writeToLogger($fault, $this->logger, LogLevel::DEBUG);
+                    }
                 );
             });
     }

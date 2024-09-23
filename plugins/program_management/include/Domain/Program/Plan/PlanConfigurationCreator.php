@@ -51,9 +51,9 @@ final class PlanConfigurationCreator implements CreatePlanConfiguration
             $plan_change->user,
             $project
         );
-        $program_tracker   = NewProgramIncrementTracker::fromId(
+        $program_tracker   = NewProgramIncrementTracker::fromProgramIncrementChange(
             $this->program_increment_checker,
-            $plan_change->program_increment_change->tracker_id,
+            $plan_change->program_increment_change,
             $program
         );
         $iteration_tracker = null;
@@ -77,11 +77,9 @@ final class PlanConfigurationCreator implements CreatePlanConfiguration
 
         $plan = new NewPlanConfiguration(
             $program_tracker,
-            $program->id,
+            $program,
             $plannable_tracker_collection->trackers,
             $can_prioritize_user_groups,
-            $plan_change->program_increment_change->label,
-            $plan_change->program_increment_change->sub_label,
             $iteration_tracker
         );
         $this->plan_store->save($plan);

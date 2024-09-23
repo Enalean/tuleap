@@ -22,55 +22,26 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Plan;
 
+use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramForAdministrationIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramUserGroupCollection;
 
 /**
  * I hold the new Plan configuration of a Program that is going to be saved.
- * @see PlanConfigurationChange to modify a Plan configuration and save it.
+ * @see PlanConfigurationChange for data coming from the Adapters and not yet validated.
  * @psalm-immutable
  */
-final class NewPlanConfiguration
+final readonly class NewPlanConfiguration
 {
-    /**
-     * @var NewPlannableTracker[]
-     */
-    private $plannable_trackers;
-    private ProgramUserGroupCollection $can_prioritize;
-    /**
-     * @var string|null
-     */
-    private $custom_label;
-    /**
-     * @var string|null
-     */
-    private $custom_sub_label;
-    /**
-     * @var int
-     */
-    private $project_id;
-
     /**
      * @param NewPlannableTracker[] $plannable_trackers
      */
     public function __construct(
-        private NewProgramIncrementTracker $program_increment_tracker,
-        int $project_id,
-        array $plannable_trackers,
-        ProgramUserGroupCollection $can_prioritize,
-        ?string $custom_label,
-        ?string $custom_sub_label,
+        public NewProgramIncrementTracker $program_increment_tracker,
+        public ProgramForAdministrationIdentifier $program,
+        private array $plannable_trackers,
+        private ProgramUserGroupCollection $can_prioritize,
         private ?NewIterationTrackerConfiguration $iteration_tracker,
     ) {
-        $this->project_id         = $project_id;
-        $this->plannable_trackers = $plannable_trackers;
-        $this->can_prioritize     = $can_prioritize;
-        $this->custom_label       = $custom_label;
-        $this->custom_sub_label   = $custom_sub_label;
-    }
-
-    public function getProgramIncrementTracker(): NewProgramIncrementTracker
-    {
-        return $this->program_increment_tracker;
     }
 
     /**
@@ -79,9 +50,7 @@ final class NewPlanConfiguration
     public function getPlannableTrackerIds(): array
     {
         return array_map(
-            static function (NewPlannableTracker $tracker) {
-                return $tracker->getId();
-            },
+            static fn(NewPlannableTracker $tracker) => $tracker->getId(),
             $this->plannable_trackers
         );
     }
@@ -94,23 +63,8 @@ final class NewPlanConfiguration
         return $this->can_prioritize->getUserGroups();
     }
 
-    public function getCustomLabel(): ?string
-    {
-        return $this->custom_label;
-    }
-
-    public function getCustomSubLabel(): ?string
-    {
-        return $this->custom_sub_label;
-    }
-
     public function getIterationTracker(): ?NewIterationTrackerConfiguration
     {
         return $this->iteration_tracker;
-    }
-
-    public function getProjectId(): int
-    {
-        return $this->project_id;
     }
 }

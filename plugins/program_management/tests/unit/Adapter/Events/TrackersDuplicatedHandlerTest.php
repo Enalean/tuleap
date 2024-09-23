@@ -25,8 +25,8 @@ namespace Tuleap\ProgramManagement\Adapter\Events;
 use ColinODell\PsrTestLogger\TestLogger;
 use Tuleap\Option\Option;
 use Tuleap\ProgramManagement\Adapter\Workspace\ProgramServiceIsEnabledCertifier;
+use Tuleap\ProgramManagement\Domain\Program\Plan\Inheritance\PlanInheritanceHandler;
 use Tuleap\ProgramManagement\Domain\Program\Plan\PlanConfiguration;
-use Tuleap\ProgramManagement\Domain\Program\Plan\PlanInheritanceHandler;
 use Tuleap\ProgramManagement\ProgramService;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIdentifierBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\Program\Plan\RetrievePlanConfigurationStub;
@@ -37,18 +37,23 @@ use Tuleap\Tracker\TrackerEventTrackersDuplicated;
 
 final class TrackersDuplicatedHandlerTest extends TestCase
 {
-    private const SOURCE_PROJECT_ID = 114;
+    private const SOURCE_PROJECT_ID                   = 114;
+    private const NEW_PROJECT_ID                      = 127;
+    private const SOURCE_PROGRAM_INCREMENT_TRACKER_ID = 12;
+    private const NEW_PROGRAM_INCREMENT_TRACKER_ID    = 164;
     private RetrievePlanConfigurationStub $retrieve_plan;
     private TestLogger $logger;
     private \Project $source_project;
+    private \Project $new_project;
+    private MappingRegistry $mapping_registry;
 
     protected function setUp(): void
     {
-        $this->logger         = new TestLogger();
-        $this->retrieve_plan  = RetrievePlanConfigurationStub::withPlanConfigurations(
+        $this->logger           = new TestLogger();
+        $this->retrieve_plan    = RetrievePlanConfigurationStub::withPlanConfigurations(
             PlanConfiguration::fromRaw(
                 ProgramIdentifierBuilder::buildWithId(self::SOURCE_PROJECT_ID),
-                12,
+                self::SOURCE_PROGRAM_INCREMENT_TRACKER_ID,
                 'Releases',
                 'release',
                 Option::fromValue(46),
@@ -58,7 +63,16 @@ final class TrackersDuplicatedHandlerTest extends TestCase
                 [4, 143]
             )
         );
-        $this->source_project = ProjectTestBuilder::aProject()->withId(self::SOURCE_PROJECT_ID)->build();
+        $this->source_project   = ProjectTestBuilder::aProject()->withId(self::SOURCE_PROJECT_ID)
+            ->withUsedService(ProgramService::SERVICE_SHORTNAME)
+            ->build();
+        $this->new_project      = ProjectTestBuilder::aProject()->withId(self::NEW_PROJECT_ID)
+            ->withUsedService(ProgramService::SERVICE_SHORTNAME)
+            ->build();
+        $this->mapping_registry = new MappingRegistry([]);
+        $this->mapping_registry->setCustomMapping(\TrackerFactory::TRACKER_MAPPING_KEY, [
+            self::SOURCE_PROGRAM_INCREMENT_TRACKER_ID => self::NEW_PROGRAM_INCREMENT_TRACKER_ID,
+        ]);
     }
 
     private function handle(): void
@@ -73,10 +87,10 @@ final class TrackersDuplicatedHandlerTest extends TestCase
                 [],
                 [],
                 [],
-                ProjectTestBuilder::aProject()->withId(127)->build(),
+                $this->new_project,
                 [],
                 $this->source_project,
-                new MappingRegistry([]),
+                $this->mapping_registry,
             )
         );
     }
@@ -90,13 +104,46 @@ final class TrackersDuplicatedHandlerTest extends TestCase
         self::assertFalse($this->logger->hasDebugRecords());
     }
 
-    public function testItLogsToDebugWhenTheSourceProjectIsAProgram(): void
+    public function testItDoesNothingWhenTheEventHasNoTrackerMapping(): void
     {
-        $this->source_project = ProjectTestBuilder::aProject()->withId(self::SOURCE_PROJECT_ID)
-            ->withUsedService(ProgramService::SERVICE_SHORTNAME)
+        $this->mapping_registry = new MappingRegistry([]);
+        $this->handle();
+        self::assertFalse($this->logger->hasDebugRecords());
+    }
+
+    public function testItDoesNothingWhenTheNewProjectDoesNotInheritProgramServiceEnabled(): void
+    {
+        $this->new_project = ProjectTestBuilder::aProject()->withId(self::NEW_PROJECT_ID)
+            ->withoutServices()
             ->build();
         $this->handle();
+        self::assertFalse($this->logger->hasDebugRecords());
+    }
 
-        self::assertTrue($this->logger->hasDebugThatContains('program id #' . self::SOURCE_PROJECT_ID));
+    public function testItLogsToDebugWhenTheTrackersMappingHasNoEntryForTheConfiguredProgramIncrementTracker(): void
+    {
+        $this->mapping_registry->setCustomMapping(\TrackerFactory::TRACKER_MAPPING_KEY, []);
+        $this->handle();
+        self::assertTrue(
+            $this->logger->hasDebugThatContains(
+                sprintf(
+                    'Could not find mapping for source Program Increment tracker #%d while inheriting from Program #%d to new Program #%d',
+                    self::SOURCE_PROGRAM_INCREMENT_TRACKER_ID,
+                    self::SOURCE_PROJECT_ID,
+                    self::NEW_PROJECT_ID
+                )
+            )
+        );
+    }
+
+    public function testItLogsToDebugWhenTheEventIsHandled(): void
+    {
+        $this->handle();
+        self::assertTrue($this->logger->hasDebugThatContains('new program id #' . self::NEW_PROJECT_ID));
+        self::assertTrue(
+            $this->logger->hasDebugThatContains(
+                'new program increment tracker id #' . self::NEW_PROGRAM_INCREMENT_TRACKER_ID
+            )
+        );
     }
 }
