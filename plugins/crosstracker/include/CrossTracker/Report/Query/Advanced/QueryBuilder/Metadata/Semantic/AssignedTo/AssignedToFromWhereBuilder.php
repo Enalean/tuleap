@@ -89,13 +89,13 @@ final readonly class AssignedToFromWhereBuilder implements ValueWrapperVisitor
             $field_ids_statement = EasyStatement::open()->in('empty_assigned_to_field.field_id IN (?*)', $field_ids);
             $from                = <<<EOSQL
             INNER JOIN tracker_semantic_contributor AS empty_assigned_to_field
-                ON (empty_assigned_to_field.tracker_id = tracker_artifact.tracker_id AND $field_ids_statement)
+                ON (empty_assigned_to_field.tracker_id = artifact.tracker_id AND $field_ids_statement)
             LEFT JOIN (
                 tracker_changeset_value AS changeset_value_assigned_to
                 INNER JOIN tracker_changeset_value_list AS tracker_changeset_value_assigned_to
                     ON (tracker_changeset_value_assigned_to.changeset_value_id = changeset_value_assigned_to.id)
             ) ON (
-                changeset_value_assigned_to.changeset_id = tracker_artifact.last_changeset_id
+                changeset_value_assigned_to.changeset_id = artifact.last_changeset_id
                 AND changeset_value_assigned_to.field_id = empty_assigned_to_field.field_id
             )
             EOSQL;
@@ -111,11 +111,11 @@ final readonly class AssignedToFromWhereBuilder implements ValueWrapperVisitor
         $field_ids_statement = EasyStatement::open()->in('equal_assigned_to_field.field_id IN (?*)', $field_ids);
         $from                = <<<EOSQL
         INNER JOIN tracker_semantic_contributor AS equal_assigned_to_field
-            ON (equal_assigned_to_field.tracker_id = tracker_artifact.tracker_id AND $field_ids_statement)
+            ON (equal_assigned_to_field.tracker_id = artifact.tracker_id AND $field_ids_statement)
         EOSQL;
 
         $where = <<<EOSQL
-        tracker_artifact.last_changeset_id IN (
+        artifact.last_changeset_id IN (
             SELECT changeset_value_assigned_to.changeset_id
             FROM tracker_changeset_value AS changeset_value_assigned_to
             INNER JOIN tracker_changeset_value_list AS tracker_changeset_value_assigned_to
@@ -157,13 +157,13 @@ final readonly class AssignedToFromWhereBuilder implements ValueWrapperVisitor
         $field_ids_statement = EasyStatement::open()->in('assigned_to_field_not_equal.field_id IN (?*)', $field_ids);
         $from                = <<<EOSQL
         INNER JOIN tracker_semantic_contributor AS assigned_to_field_not_equal
-            ON (assigned_to_field_not_equal.tracker_id = tracker_artifact.tracker_id AND $field_ids_statement)
+            ON (assigned_to_field_not_equal.tracker_id = artifact.tracker_id AND $field_ids_statement)
         LEFT JOIN (
             tracker_changeset_value AS changeset_value_assigned_to_not_equal
             INNER JOIN tracker_changeset_value_list AS changeset_value_list_assigned_to_not_equal
                 ON (changeset_value_list_assigned_to_not_equal.changeset_value_id = changeset_value_assigned_to_not_equal.id)
         ) ON (
-            changeset_value_assigned_to_not_equal.changeset_id = tracker_artifact.last_changeset_id
+            changeset_value_assigned_to_not_equal.changeset_id = artifact.last_changeset_id
             AND changeset_value_assigned_to_not_equal.field_id = assigned_to_field_not_equal.field_id
         )
         EOSQL;
@@ -187,7 +187,7 @@ final readonly class AssignedToFromWhereBuilder implements ValueWrapperVisitor
 
         $where = <<<EOSQL
         changeset_value_assigned_to_not_equal.changeset_id IS NOT NULL
-        AND tracker_artifact.id NOT IN (
+        AND artifact.id NOT IN (
             SELECT artifact.id
             FROM tracker_artifact AS artifact
             INNER JOIN tracker_changeset AS c ON (artifact.last_changeset_id = c.id)
@@ -291,12 +291,12 @@ final readonly class AssignedToFromWhereBuilder implements ValueWrapperVisitor
         $from = <<<EOSQL
         INNER JOIN tracker_semantic_contributor AS equal_assigned_to_field
         ON (
-            equal_assigned_to_field.tracker_id = tracker_artifact.tracker_id AND $field_ids_statement
+            equal_assigned_to_field.tracker_id = artifact.tracker_id AND $field_ids_statement
         )
         EOSQL;
 
         $where = <<<EOSQL
-        tracker_artifact.last_changeset_id IN (
+        artifact.last_changeset_id IN (
             SELECT changeset_value_assigned_to.changeset_id
             FROM tracker_changeset_value AS changeset_value_assigned_to
             INNER JOIN tracker_changeset_value_list AS tracker_changeset_value_assigned_to
@@ -349,20 +349,20 @@ final readonly class AssignedToFromWhereBuilder implements ValueWrapperVisitor
 
         $from = <<<EOSQL
         INNER JOIN tracker_semantic_contributor AS assigned_to_field_not_equal
-            ON (assigned_to_field_not_equal.tracker_id = tracker_artifact.tracker_id AND $field_ids_statement)
+            ON (assigned_to_field_not_equal.tracker_id = artifact.tracker_id AND $field_ids_statement)
         LEFT JOIN (
             tracker_changeset_value AS changeset_value_assigned_to_not_equal
             INNER JOIN tracker_changeset_value_list AS changeset_value_list_assigned_to_not_equal
                 ON (changeset_value_list_assigned_to_not_equal.changeset_value_id = changeset_value_assigned_to_not_equal.id)
         ) ON (
-            changeset_value_assigned_to_not_equal.changeset_id = tracker_artifact.last_changeset_id
+            changeset_value_assigned_to_not_equal.changeset_id = artifact.last_changeset_id
             AND changeset_value_assigned_to_not_equal.field_id = assigned_to_field_not_equal.field_id
         )
         EOSQL;
 
         $where = <<<EOSQL
         changeset_value_assigned_to_not_equal.changeset_id IS NOT NULL
-        AND tracker_artifact.id NOT IN (
+        AND artifact.id NOT IN (
             SELECT artifact.id
             FROM tracker_artifact AS artifact
             INNER JOIN tracker_changeset AS c ON (artifact.last_changeset_id = c.id)

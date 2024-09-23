@@ -62,7 +62,7 @@ final readonly class ListFromWhereBuilder
                 tcv.changeset_id = artifact.last_changeset_id AND $filter_field_ids_statement
                 AND ({$bind_from_where->filter_where})
             )
-        ) AS $filter_alias ON (tracker_artifact.id = $filter_alias.artifact_id)
+        ) AS $filter_alias ON (artifact.id = $filter_alias.artifact_id)
         EOSQL;
 
         return new ParametrizedFromWhere(

@@ -55,7 +55,7 @@ final class StatusFromWhereBuilder implements ValueWrapperVisitor
                 ON (tss.field_id = tcv.field_id)
             INNER JOIN tracker_changeset_value_list AS tcvl
                 ON (tcvl.changeset_value_id = tcv.id AND (tcvl.bindvalue_id = tss.open_value_id OR tcvl.bindvalue_id = ?))
-        ) AS artifact_filter ON (tracker_artifact.id = artifact_filter.artifact_id)
+        ) AS artifact_filter ON (artifact.id = artifact_filter.artifact_id)
         EOSQL;
 
         $where = $parameters->comparison->getValueWrapper()->accept($this, $parameters);

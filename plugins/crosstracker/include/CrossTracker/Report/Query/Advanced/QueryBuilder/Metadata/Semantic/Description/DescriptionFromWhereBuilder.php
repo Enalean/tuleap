@@ -60,9 +60,9 @@ final readonly class DescriptionFromWhereBuilder implements ValueWrapperVisitor
 
         $from = <<<EOSQL
         INNER JOIN tracker_semantic_description
-            ON (tracker_semantic_description.tracker_id = tracker_artifact.tracker_id AND $field_ids_statement)
+            ON (tracker_semantic_description.tracker_id = artifact.tracker_id AND $field_ids_statement)
         LEFT JOIN tracker_changeset_value AS changeset_value_description ON (
-            changeset_value_description.changeset_id = tracker_artifact.last_changeset_id
+            changeset_value_description.changeset_id = artifact.last_changeset_id
             AND changeset_value_description.field_id = tracker_semantic_description.field_id
         )
         LEFT JOIN tracker_changeset_value_text AS tracker_changeset_value_description

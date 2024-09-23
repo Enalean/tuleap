@@ -93,7 +93,7 @@ final class ReverseLinkFromWhereBuilder implements LinkConditionVisitor
                         ON (TCVAL_$suffix.changeset_value_id = TCV_$suffix.id)
                     INNER JOIN tracker_artifact AS TCA_$suffix
                         ON (TCA_$suffix.last_changeset_id = TCV_$suffix.changeset_id)
-                WHERE TCVAL_$suffix.artifact_id = tracker_artifact.id
+                WHERE TCVAL_$suffix.artifact_id = artifact.id
                     $type_condition
                 LIMIT 1",
             $parameters,
@@ -124,7 +124,7 @@ final class ReverseLinkFromWhereBuilder implements LinkConditionVisitor
                         TCA_$suffix.last_changeset_id = TCV_$suffix.changeset_id AND
                         TCA_$suffix.id = ?
                     )
-            WHERE TCVAL_$suffix.artifact_id = tracker_artifact.id
+            WHERE TCVAL_$suffix.artifact_id = artifact.id
                 $type_condition
             LIMIT 1",
             [
@@ -157,7 +157,7 @@ final class ReverseLinkFromWhereBuilder implements LinkConditionVisitor
                     ON (T_$suffix.id = TCA_$suffix.tracker_id AND
                         T_$suffix.item_name = ?
                     )
-            WHERE TCVAL_$suffix.artifact_id = tracker_artifact.id
+            WHERE TCVAL_$suffix.artifact_id = artifact.id
                 $type_condition
             LIMIT 1",
             [
@@ -190,7 +190,7 @@ final class ReverseLinkFromWhereBuilder implements LinkConditionVisitor
                     ON (T_$suffix.id = TCA_$suffix.tracker_id AND
                         T_$suffix.item_name != ?
                     )
-            WHERE TCVAL_$suffix.artifact_id = tracker_artifact.id
+            WHERE TCVAL_$suffix.artifact_id = artifact.id
                 $type_condition
             LIMIT 1",
             [

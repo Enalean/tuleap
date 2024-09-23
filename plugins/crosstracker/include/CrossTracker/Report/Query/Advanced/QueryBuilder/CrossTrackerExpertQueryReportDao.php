@@ -39,18 +39,18 @@ final class CrossTrackerExpertQueryReportDao extends DataAccessObject
         $from  = $from_where->getFrom();
         $where = $from_where->getWhere();
 
-        $tracker_ids_statement = EasyStatement::open()->in('tracker_artifact.tracker_id IN (?*)', $tracker_ids);
+        $tracker_ids_statement = EasyStatement::open()->in('artifact.tracker_id IN (?*)', $tracker_ids);
 
         $sql = <<<EOSQL
         SELECT
             SQL_CALC_FOUND_ROWS
             DISTINCT
-            tracker_artifact.tracker_id,
-            tracker_artifact.id,
+            artifact.tracker_id,
+            artifact.id,
             tracker_changeset_value_title.value AS title
-        FROM tracker_artifact
-        INNER JOIN tracker ON (tracker_artifact.tracker_id = tracker.id)
-        INNER JOIN tracker_changeset AS last_changeset ON (tracker_artifact.last_changeset_id = last_changeset.id)
+        FROM tracker_artifact as artifact
+        INNER JOIN tracker ON (artifact.tracker_id = tracker.id)
+        INNER JOIN tracker_changeset AS changeset ON (artifact.last_changeset_id = changeset.id)
         LEFT JOIN (
             tracker_changeset_value AS changeset_value_title
             INNER JOIN tracker_semantic_title
@@ -58,12 +58,12 @@ final class CrossTrackerExpertQueryReportDao extends DataAccessObject
             INNER JOIN tracker_changeset_value_text AS tracker_changeset_value_title
                 ON (tracker_changeset_value_title.changeset_value_id = changeset_value_title.id)
         ) ON (
-            tracker_semantic_title.tracker_id = tracker_artifact.tracker_id
-            AND changeset_value_title.changeset_id = tracker_artifact.last_changeset_id
+            tracker_semantic_title.tracker_id = artifact.tracker_id
+            AND changeset_value_title.changeset_id = artifact.last_changeset_id
         )
         $from
         WHERE $tracker_ids_statement AND $where
-        ORDER BY tracker_artifact.id DESC
+        ORDER BY artifact.id DESC
         LIMIT ?, ?
         EOSQL;
 
@@ -83,20 +83,26 @@ final class CrossTrackerExpertQueryReportDao extends DataAccessObject
      */
     public function searchArtifactsIdsMatchingQuery(
         IProvideParametrizedFromAndWhereSQLFragments $from_where,
+        ParametrizedFromOrder $from_order,
         array $tracker_ids,
         int $limit,
         int $offset,
     ): array {
-        $from  = $from_where->getFrom();
+        $from  = $from_where->getFrom() . ' ' . $from_order->getFrom();
         $where = $from_where->getWhere();
+        $order = $from_order->getOrderBy();
 
-        $tracker_ids_statement = EasyStatement::open()->in('tracker_artifact.tracker_id IN (?*)', $tracker_ids);
+        if ($order === '') {
+            $order = 'artifact.id DESC';
+        }
+
+        $tracker_ids_statement = EasyStatement::open()->in('artifact.tracker_id IN (?*)', $tracker_ids);
 
         $sql = <<<EOSQL
-        SELECT DISTINCT tracker_artifact.id AS id
-        FROM tracker_artifact
-        INNER JOIN tracker ON (tracker_artifact.tracker_id = tracker.id)
-        INNER JOIN tracker_changeset AS last_changeset ON (tracker_artifact.last_changeset_id = last_changeset.id)
+        SELECT DISTINCT artifact.id AS id
+        FROM tracker_artifact as artifact
+        INNER JOIN tracker ON (artifact.tracker_id = tracker.id)
+        INNER JOIN tracker_changeset AS changeset ON (artifact.last_changeset_id = changeset.id)
         LEFT JOIN (
             tracker_changeset_value AS changeset_value_title
             INNER JOIN tracker_semantic_title
@@ -104,16 +110,18 @@ final class CrossTrackerExpertQueryReportDao extends DataAccessObject
             INNER JOIN tracker_changeset_value_text AS tracker_changeset_value_title
                 ON (tracker_changeset_value_title.changeset_value_id = changeset_value_title.id)
         ) ON (
-            tracker_semantic_title.tracker_id = tracker_artifact.tracker_id
-            AND changeset_value_title.changeset_id = tracker_artifact.last_changeset_id
+            tracker_semantic_title.tracker_id = artifact.tracker_id
+            AND changeset_value_title.changeset_id = artifact.last_changeset_id
         )
         $from
         WHERE $tracker_ids_statement AND $where
+        ORDER BY $order
         LIMIT ?, ?
         EOSQL;
 
         $parameters = [
             ...$from_where->getFromParameters(),
+            ...$from_order->getFromParameters(),
             ...$tracker_ids_statement->values(),
             ...$from_where->getWhereParameters(),
             $offset,
@@ -132,7 +140,7 @@ final class CrossTrackerExpertQueryReportDao extends DataAccessObject
         array $artifact_ids,
     ): array {
         $select    = $select_from->getSelect();
-        $from      = $select_from->getFrom() . $from_order->getFrom();
+        $from      = $select_from->getFrom() . ' ' . $from_order->getFrom();
         $order     = $from_order->getOrderBy();
         $condition = EasyStatement::open()->in('artifact.id IN (?*)', $artifact_ids);
 
@@ -171,13 +179,13 @@ final class CrossTrackerExpertQueryReportDao extends DataAccessObject
         $from  = $from_where->getFrom();
         $where = $from_where->getWhere();
 
-        $tracker_ids_statement = EasyStatement::open()->in('tracker_artifact.tracker_id IN (?*)', $tracker_ids);
+        $tracker_ids_statement = EasyStatement::open()->in('artifact.tracker_id IN (?*)', $tracker_ids);
 
         $sql = <<<EOSQL
-            SELECT count(DISTINCT tracker_artifact.id) AS nb_of_artifact
-            FROM tracker_artifact
-            INNER JOIN tracker ON (tracker_artifact.tracker_id = tracker.id)
-            INNER JOIN tracker_changeset AS last_changeset ON (tracker_artifact.last_changeset_id = last_changeset.id)
+            SELECT count(DISTINCT artifact.id) AS nb_of_artifact
+            FROM tracker_artifact as artifact
+            INNER JOIN tracker ON (artifact.tracker_id = tracker.id)
+            INNER JOIN tracker_changeset AS changeset ON (artifact.last_changeset_id = changeset.id)
             LEFT JOIN (
                 tracker_changeset_value AS changeset_value_title
                 INNER JOIN tracker_semantic_title
@@ -185,8 +193,8 @@ final class CrossTrackerExpertQueryReportDao extends DataAccessObject
                 INNER JOIN tracker_changeset_value_text AS tracker_changeset_value_title
                     ON (tracker_changeset_value_title.changeset_value_id = changeset_value_title.id)
             ) ON (
-                tracker_semantic_title.tracker_id = tracker_artifact.tracker_id
-                AND changeset_value_title.changeset_id = tracker_artifact.last_changeset_id
+                tracker_semantic_title.tracker_id = artifact.tracker_id
+                AND changeset_value_title.changeset_id = artifact.last_changeset_id
             )
             $from
             WHERE $tracker_ids_statement AND $where
