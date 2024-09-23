@@ -20,91 +20,68 @@
 
 declare(strict_types=1);
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+namespace Tuleap\Docman;
 
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
-final class Docman_LockFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
+use Docman_Item;
+use Docman_LockDao;
+use Docman_LockFactory;
+use Docman_Log;
+use PFUser;
+use PHPUnit\Framework\MockObject\MockObject;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
+
+final class Docman_LockFactoryTest extends TestCase // phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var Docman_Log|\Mockery\MockInterface
-     */
-    private $docman_log;
-    /**
-     * @var \Mockery\MockInterface|PFUser
-     */
-    private $dao;
-    /**
-     * @var \Mockery\MockInterface|PFUser
-     */
-    private $user;
-    /**
-     * @var Docman_Item|\Mockery\MockInterface
-     */
-    private $item;
-    /**
-     * @var Docman_LockFactory
-     */
-    private $lock_factory;
+    private Docman_Log&MockObject $docman_log;
+    private Docman_LockDao&MockObject $dao;
+    private PFUser $user;
+    private Docman_Item $item;
+    private Docman_LockFactory $lock_factory;
 
     public function setUp(): void
     {
-        parent::setUp();
-
-        $this->dao          = Mockery::mock(Docman_LockDao::class);
-        $this->docman_log   = Mockery::mock(Docman_Log::class);
+        $this->dao          = $this->createMock(Docman_LockDao::class);
+        $this->docman_log   = $this->createMock(Docman_Log::class);
         $this->lock_factory = new Docman_LockFactory($this->dao, $this->docman_log);
-        $this->user         = Mockery::mock(PFUser::class);
-        $this->item         = Mockery::mock(Docman_Item::class);
+        $this->user         = UserTestBuilder::buildWithId(105);
+        $this->item         = new Docman_Item(['item_id' => 1, 'group_id' => 100]);
     }
 
     public function testUserShouldBeAbleToLockADocument(): void
     {
-        $this->item->shouldReceive('getId')->andReturn(1);
-        $this->item->shouldReceive('getGroupId')->andReturn(100);
-        $this->user->shouldReceive('getId')->andReturn(105);
-        $this->dao->shouldReceive('searchLocksForProjectByItemId')->andReturn([]);
-        $this->dao->shouldReceive('addLock')->once();
-        $this->docman_log->shouldReceive('log')->once();
+        $this->dao->method('searchLocksForProjectByItemId')->willReturn([]);
+        $this->dao->expects(self::once())->method('addLock');
+        $this->docman_log->expects(self::once())->method('log');
 
         $this->lock_factory->lock($this->item, $this->user);
     }
 
     public function testItemIsNotLockedAgainIfUserAlreadyHasTheLock(): void
     {
-        $this->item->shouldReceive('getId')->andReturn(1);
-        $this->item->shouldReceive('getGroupId')->andReturn(100);
-        $this->user->shouldReceive('getId')->andReturn(105);
-        $this->dao->shouldReceive('searchLocksForProjectByItemId')->andReturn([['item_id' => 1]]);
+        $this->dao->method('searchLocksForProjectByItemId')->willReturn([['item_id' => 1]]);
         $this->lock_factory->_cacheLocksForProject($this->item->getId());
 
-        $this->dao->shouldReceive('addLock')->never();
-        $this->docman_log->shouldReceive('log')->never();
+        $this->dao->expects(self::never())->method('addLock');
+        $this->docman_log->expects(self::never())->method('log');
 
         $this->lock_factory->lock($this->item, $this->user);
     }
 
     public function testUserShouldBeAbleToUnLockADocument(): void
     {
-        $this->item->shouldReceive('getId')->andReturn(1);
-        $this->item->shouldReceive('getGroupId')->andReturn(100);
-        $this->user->shouldReceive('getId')->andReturn(105);
-        $this->dao->shouldReceive('searchLocksForProjectByItemId')->andReturn([['item_id' => 1]]);
-        $this->dao->shouldReceive('delLock')->once();
-        $this->docman_log->shouldReceive('log')->once();
+        $this->dao->method('searchLocksForProjectByItemId')->willReturn([['item_id' => 1]]);
+        $this->dao->expects(self::once())->method('delLock');
+        $this->docman_log->expects(self::once())->method('log');
 
         $this->lock_factory->unlock($this->item, $this->user);
     }
 
     public function testItemIsNotUnlockedAgainIfTheDocumentIsAlreadyUnlocked(): void
     {
-        $this->item->shouldReceive('getId')->andReturn(1);
-        $this->item->shouldReceive('getGroupId')->andReturn(100);
-        $this->user->shouldReceive('getId')->andReturn(105);
-        $this->dao->shouldReceive('searchLocksForProjectByItemId')->andReturn([]);
-        $this->dao->shouldReceive('delLock')->never();
-        $this->docman_log->shouldReceive('log')->never();
+        $this->dao->method('searchLocksForProjectByItemId')->willReturn([]);
+        $this->dao->expects(self::never())->method('delLock');
+        $this->docman_log->expects(self::never())->method('log');
 
         $this->lock_factory->unlock($this->item, $this->user);
     }
