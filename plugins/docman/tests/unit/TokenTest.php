@@ -23,136 +23,91 @@ declare(strict_types=1);
 
 namespace Tuleap\Docman;
 
+use Codendi_Request;
 use Docman_Token;
 use Docman_TokenDao;
-use HTTPRequest;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\MockObject\MockObject;
+use Tuleap\Test\PHPUnit\TestCase;
 
-class TokenTest extends \Tuleap\Test\PHPUnit\TestCase
+final class TokenTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    public function testGenerateRandomToken()
+    public function testGenerateRandomToken(): void
     {
-        $dao  = \Mockery::spy(Docman_TokenDao::class);
-        $http = \Mockery::spy(HTTPRequest::class);
-        $http->allows()->get('bc')->andReturns(false);
+        $dao = $this->createMock(Docman_TokenDao::class);
+        $dao->method('create');
+        $http = new Codendi_Request(['bc' => false]);
 
-        $t1 = \Mockery::mock(Docman_Token::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $t1->allows(['_getDao' => $dao]);
-        $t1->allows(['_getReferer' => 'http://codendi.com/?id=1&action=show']);
-        $t1->allows(['_getCurrentUserId' => '123']);
-        $t1->allows(['_getHTTPRequest' => $http]);
-        $t1->__construct();
+        $t1 = $this->mockToken($dao, 'https://example.com/?id=1&action=show', '123', $http);
+        $t2 = $this->mockToken($dao, 'https://example.com/?id=1&action=show', '123', $http);
+        $t3 = $this->mockToken($dao, 'https://example.com/?id=2&action=show', '123', $http);
+        $t4 = $this->mockToken($dao, 'https://example.com/?id=1&action=show', '987', $http);
 
-        $t2 = \Mockery::mock(Docman_Token::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $t2->allows(['_getDao' => $dao]);
-        $t2->allows(['_getReferer' => 'http://codendi.com/?id=1&action=show']);
-        $t2->allows(['_getCurrentUserId' => '123']);
-        $t2->allows(['_getHTTPRequest' => $http]);
-        $t2->__construct();
-
-        $t3 = \Mockery::mock(Docman_Token::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $t3->allows(['_getDao' => $dao]);
-        $t3->allows(['_getReferer' => 'http://codendi.com/?id=2&action=show']);
-        $t3->allows(['_getCurrentUserId' => '123']);
-        $t3->allows(['_getHTTPRequest' => $http]);
-        $t3->__construct();
-
-        $t4 = \Mockery::mock(Docman_Token::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $t4->allows(['_getDao' => $dao]);
-        $t4->allows(['_getReferer' => 'http://codendi.com/?id=1&action=show']);
-        $t4->allows(['_getCurrentUserId' => '987']);
-        $t4->allows(['_getHTTPRequest' => $http]);
-        $t4->__construct();
-
-        $this->assertNotEquals($t1->getToken(), $t2->getToken(), 'Same users, same referers, different tokens');
-        $this->assertNotEquals($t1->getToken(), $t3->getToken(), 'Different referers, different tokens');
-        $this->assertNotEquals($t1->getToken(), $t4->getToken(), 'Different users, different tokens');
+        self::assertNotEquals($t1->getToken(), $t2->getToken(), 'Same users, same referers, different tokens');
+        self::assertNotEquals($t1->getToken(), $t3->getToken(), 'Different referers, different tokens');
+        self::assertNotEquals($t1->getToken(), $t4->getToken(), 'Different users, different tokens');
     }
 
-    public function testNullToken()
+    public function testNullToken(): void
     {
-        $dao  = \Mockery::spy(Docman_TokenDao::class);
-        $http = \Mockery::spy(HTTPRequest::class);
-        $http->allows()->get('bc')->andReturns(false);
+        $dao = $this->createMock(Docman_TokenDao::class);
+        $dao->method('create');
+        $http = new Codendi_Request(['bc' => false]);
 
-        $t1 = \Mockery::mock(Docman_Token::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $t1->allows(['_getDao' => $dao]);
-        $t1->allows(['_getReferer' => 'http://codendi.com/?']);
-        $t1->allows(['_getCurrentUserId' => '123']);
-        $t1->allows(['_getHTTPRequest' => $http]);
-        $t1->__construct();
+        $t1 = $this->mockToken($dao, 'https://example.com/?', '123', $http);
+        self::assertNull($t1->getToken(), 'Without referer, we should have a null token');
 
-        $this->assertNull($t1->getToken(), 'Without referer, we should have a null token');
+        $t2 = $this->mockToken($dao, 'https://example.com/?id=1&action=show', '123', $http);
+        self::assertNotNull($t2->getToken());
 
-        $t2 = \Mockery::mock(Docman_Token::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $t2->allows(['_getDao' => $dao]);
-        $t2->allows(['_getReferer' => 'http://codendi.com/?id=1&action=show']);
-        $t2->allows(['_getCurrentUserId' => '123']);
-        $t2->allows(['_getHTTPRequest' => $http]);
-        $t2->__construct();
-
-        $this->assertNotNull($t2->getToken());
-
-        $t3 = \Mockery::mock(Docman_Token::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $t3->allows(['_getDao' => $dao]);
-        $t3->allows(['_getReferer' => 'http://codendi.com/?id=1&action=show']);
-        $t3->allows(['_getCurrentUserId' => null]);
-        $t3->allows(['_getHTTPRequest' => $http]);
-        $t3->__construct();
-
-        $this->assertNull($t3->getToken(), 'With anonymous user, we should have a null token');
+        $t3 = $this->mockToken($dao, 'https://example.com/?id=1&action=show', null, $http);
+        self::assertNull($t3->getToken(), 'With anonymous user, we should have a null token');
     }
 
-    public function testStorage()
+    public function testStorage(): void
     {
-        $user_id = 123;
-        $referer = 'http://codendi.com/?id=1&action=show';
+        $user_id = '123';
+        $referer = 'https://example.com/?id=1&action=show';
 
-        $dao = \Mockery::spy(Docman_TokenDao::class);
-        $dao->expects()->create($user_id, \Mockery::any(), $referer);
-        $http = \Mockery::spy(HTTPRequest::class);
-        $http->allows()->get('bc')->andReturns(false);
+        $dao = $this->createMock(Docman_TokenDao::class);
+        $dao->expects(self::once())->method('create')->with($user_id, self::anything(), $referer);
+        $http = new Codendi_Request(['bc' => false]);
 
-        $t1 = \Mockery::mock(Docman_Token::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $t1->allows(['_getDao' => $dao]);
-        $t1->allows(['_getReferer' => $referer]);
-        $t1->allows(['_getCurrentUserId' => $user_id]);
-        $t1->allows(['_getHTTPRequest' => $http]);
-        $t1->__construct();
+        $this->mockToken($dao, $referer, $user_id, $http);
     }
 
-    public function testInvalidReferer()
+    public function testInvalidReferer(): void
     {
-        $dao  = \Mockery::spy(Docman_TokenDao::class);
-        $http = \Mockery::spy(HTTPRequest::class);
-        $http->allows()->get('bc')->andReturns(false);
+        $dao = $this->createMock(Docman_TokenDao::class);
+        $dao->method('create');
+        $http = new Codendi_Request(['bc' => false]);
         foreach (['aaaa', '?action=foo', '?action=details&section=notification'] as $referer) {
-            $t = \Mockery::mock(Docman_Token::class)->makePartial()->shouldAllowMockingProtectedMethods();
-            $t->allows(['_getDao' => $dao]);
-            $t->allows(['_getReferer' => 'http://codendi.com/' . $referer]);
-            $t->allows(['_getCurrentUserId' => '123']);
-            $t->allows(['_getHTTPRequest' => $http]);
-            $t->__construct();
-
-            $this->assertNull($t->getToken(), 'Without valid referer, we should have a null token');
+            $t = $this->mockToken($dao, "https://exmaple.com/$referer", '123', $http);
+            self::assertNull($t->getToken(), 'Without valid referer, we should have a null token');
         }
-        foreach (
-            [
-                '?action=show',
-                '?id=1&action=show',
-                '?action=details',
-            ] as $referer
-        ) {
-            $t = \Mockery::mock(Docman_Token::class)->makePartial()->shouldAllowMockingProtectedMethods();
-            $t->allows(['_getDao' => $dao]);
-            $t->allows(['_getReferer' => 'http://codendi.com/' . $referer]);
-            $t->allows(['_getCurrentUserId' => '123']);
-            $t->allows(['_getHTTPRequest' => $http]);
-            $t->__construct();
-
-            $this->assertNotNull($t->getToken(), "With valid referer, we should'nt have a null token");
+        foreach (['?action=show', '?id=1&action=show', '?action=details'] as $referer) {
+            $t = $this->mockToken($dao, "https://exmaple.com/$referer", '123', $http);
+            self::assertNotNull($t->getToken(), "With valid referer, we should'nt have a null token");
         }
+    }
+
+    private function mockToken(
+        Docman_TokenDao $dao,
+        string $referer,
+        ?string $user_id,
+        Codendi_Request $request,
+    ): Docman_Token&MockObject {
+        $token = $this->createPartialMock(Docman_Token::class, [
+            '_getDao',
+            '_getReferer',
+            '_getCurrentUserId',
+            '_getHTTPRequest',
+        ]);
+        $token->method('_getDao')->willReturn($dao);
+        $token->method('_getReferer')->willReturn($referer);
+        $token->method('_getCurrentUserId')->willReturn($user_id);
+        $token->method('_getHTTPRequest')->willReturn($request);
+        $token->__construct();
+
+        return $token;
     }
 }
