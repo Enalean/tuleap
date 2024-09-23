@@ -17,7 +17,7 @@
  *  along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Schema } from "prosemirror-model";
+import { type DOMOutputSpec, type MarkSpec, Schema } from "prosemirror-model";
 import { addListNodes } from "prosemirror-schema-list";
 import { schema } from "prosemirror-schema-basic";
 
@@ -35,7 +35,16 @@ const nodes = schema.spec.nodes.append({
     },
 });
 
+const subscript_mark_spec: MarkSpec = {
+    parseDOM: [{ tag: "sub" }],
+    toDOM(): DOMOutputSpec {
+        return ["sub", 0];
+    },
+};
 export const custom_schema: Schema = new Schema({
     nodes: addListNodes(nodes, "paragraph block*", "block"),
-    marks: schema.spec.marks,
+    marks: {
+        ...schema.spec.marks.toObject(),
+        subscript: subscript_mark_spec,
+    },
 });

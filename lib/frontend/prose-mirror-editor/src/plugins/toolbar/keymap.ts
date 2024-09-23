@@ -55,6 +55,8 @@ export function buildKeymap(
 
     bind("Mod-`", toggleMark(schema.marks.code));
 
+    bind("Mod-,", toggleMark(schema.marks.subscript));
+
     const listCommand = chainCommands(exitCode, (state, dispatch) => {
         const node_type = schema.nodes.bullet_list;
         if (isSelectionAList(state, node_type)) {

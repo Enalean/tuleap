@@ -25,6 +25,9 @@ msgstr "Ajouter ou modifier un lien"
 msgid "An error occurred during upload"
 msgstr "Une erreur est survenue durant le téléversement"
 
+msgid "Apply subscript style on the selected text `Ctrl+,`"
+msgstr "Transformer le texte sélectionné en indice `Ctrl+,`"
+
 msgid "Cancel"
 msgstr "Annuler"
 
@@ -73,6 +76,9 @@ msgstr "Supprimer le lien"
 
 msgid "Styles"
 msgstr "Styles"
+
+msgid "Subscript"
+msgstr "Indice"
 
 msgid "Text"
 msgstr "Texte"

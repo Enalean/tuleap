@@ -27,6 +27,7 @@ import { linkItem, unlinkItem } from "./links/link-menu-item-builder";
 import { wrapListItem } from "./list/list-menu-item-builder";
 import { getTextStyleDropdownMenu } from "./text-style";
 import { imageItem } from "./image/image-menu-item-builder";
+import { getSubscriptMenuItem } from "./text-transformations";
 
 export function cmdItem(cmd: Command, options: MenuItemSpec): MenuItem {
     const passed_options: MenuItemSpec = options;
@@ -90,7 +91,7 @@ export function buildMenuItems(
                     title: gettext_provider.gettext("Toggle embedded style `Ctrl+i`"),
                     icon: icons.em,
                 }),
-
+                getSubscriptMenuItem(schema, gettext_provider),
                 wrapItem(schema.nodes.blockquote, {
                     title: gettext_provider.gettext("Wrap in block quote `Ctrl->`"),
                     icon: icons.blockquote,
