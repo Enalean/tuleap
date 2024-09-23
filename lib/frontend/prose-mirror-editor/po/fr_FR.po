@@ -104,9 +104,6 @@ msgstr "Passer en bloc code Ctrl+`"
 msgid "Toggle embedded style `Ctrl+i`"
 msgstr "Passer en italique `Ctrl+i`"
 
-msgid "Toggle strong style `Ctrl+b`"
-msgstr "Passer en gras `Ctrl+b`"
-
 msgid "Tuleap reference has been copied!"
 msgstr "La référence Tuleap a été copiée !"
 

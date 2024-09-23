@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) Enalean, 2024 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -15,18 +15,10 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
-$header: 1;
+import type { StrictInjectionKey } from "@tuleap/vue-strict-inject";
+import type { ToolbarBus } from "@tuleap/prose-mirror-editor";
 
-// editor should be above the title when we scroll (toolbar always visible)
-$editor: 2;
-
-// footer must be above editor when we scroll (submit button always visible)
-$footer: 3;
-
-// dropdown should be displayed above everything else
-$dropdown: 4;
-
-// toolbar should be displayed above everything else
-$toolbar: 5;
+export const TOOLBAR_BUS: StrictInjectionKey<ToolbarBus> = Symbol("toolbar_bus");

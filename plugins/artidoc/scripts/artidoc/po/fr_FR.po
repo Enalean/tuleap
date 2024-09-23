@@ -201,6 +201,9 @@ msgstr "Cette section a été mise à jour par quelqu'un d'autre."
 msgid "Title..."
 msgstr "Titre..."
 
+msgid "Toggle bold style `Ctrl+b`"
+msgstr "Passer en gras `Ctrl+b`"
+
 msgid "Tracker"
 msgstr "Tracker"
 

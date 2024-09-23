@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) Enalean, 2024 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -15,18 +15,33 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
+export interface ToolbarHandler {
+    toggleBold: () => void;
+}
 
-$header: 1;
+export interface ToolbarView {
+    activateBold: (is_activated: boolean) => void;
+}
 
-// editor should be above the title when we scroll (toolbar always visible)
-$editor: 2;
-
-// footer must be above editor when we scroll (submit button always visible)
-$footer: 3;
-
-// dropdown should be displayed above everything else
-$dropdown: 4;
-
-// toolbar should be displayed above everything else
-$toolbar: 5;
+export interface ToolbarBus {
+    handler: ToolbarHandler | null;
+    view: ToolbarView | null;
+    bold: () => void;
+    setCurrentHandler: (handler: ToolbarHandler) => void;
+    setView: (view: ToolbarView) => void;
+}
+export const buildToolbarBus = (): ToolbarBus => ({
+    handler: null,
+    view: null,
+    bold(): void {
+        this.handler?.toggleBold();
+    },
+    setCurrentHandler(handler: ToolbarHandler): void {
+        this.handler = handler;
+    },
+    setView(view: ToolbarView): void {
+        this.view = view;
+    },
+});

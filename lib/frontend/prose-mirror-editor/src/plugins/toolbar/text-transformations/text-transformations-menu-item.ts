@@ -22,23 +22,31 @@ import type { Schema } from "prosemirror-model";
 import type { GetText } from "@tuleap/gettext";
 import { toggleMark } from "prosemirror-commands";
 import { createIcon } from "../helper/create-icon";
-import { markActive } from "../menu";
+import type { CheckIsMArkActive } from "../helper/IsMarkActiveChecker";
 
-export function getSubscriptMenuItem(schema: Schema, gettext_provider: GetText): MenuItem {
+export function getSubscriptMenuItem(
+    schema: Schema,
+    gettext_provider: GetText,
+    check_is_mark_active: CheckIsMArkActive,
+): MenuItem {
     return new MenuItem({
         title: gettext_provider.gettext("Apply subscript style on the selected text `Ctrl+,`"),
         label: gettext_provider.gettext(`Subscript`),
-        active: (state) => markActive(state, schema.marks.subscript),
+        active: (state) => check_is_mark_active.isMarkActive(state, schema.marks.subscript),
         run: toggleMark(schema.marks.subscript),
         icon: createIcon("fa-solid fa-subscript"),
     });
 }
 
-export function getSuperscriptMenuItem(schema: Schema, gettext_provider: GetText): MenuItem {
+export function getSuperscriptMenuItem(
+    schema: Schema,
+    gettext_provider: GetText,
+    check_is_mark_active: CheckIsMArkActive,
+): MenuItem {
     return new MenuItem({
         title: gettext_provider.gettext("Apply superscript style on the selected text `Ctrl+.`"),
         label: gettext_provider.gettext(`Superscript`),
-        active: (state) => markActive(state, schema.marks.superscript),
+        active: (state) => check_is_mark_active.isMarkActive(state, schema.marks.superscript),
         run: toggleMark(schema.marks.superscript),
         icon: createIcon("fa-solid fa-superscript"),
     });

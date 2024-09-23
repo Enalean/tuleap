@@ -19,6 +19,7 @@
   -->
 
 <template>
+    <editor-toolbar />
     <notification-container />
     <editor-choice />
     <ol ref="sections_container">
@@ -59,6 +60,7 @@ import EditorChoice from "@/components/EditorChoice.vue";
 import { onScrollStickSectionNumbers } from "@/helpers/on-scroll-stick-section-numbers";
 import AddExistingSectionModal from "@/components/AddExistingSectionModal.vue";
 import NotificationContainer from "@/components/NotificationContainer.vue";
+import EditorToolbar from "@/components/toolbar/EditorToolbar.vue";
 
 const { sections, insertSection } = strictInject(SECTIONS_STORE);
 

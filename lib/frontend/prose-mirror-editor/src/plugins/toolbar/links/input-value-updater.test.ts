@@ -26,8 +26,7 @@ import { DOMParser, type Node } from "prosemirror-model";
 import { createLocalDocument, gettext_provider } from "../../../helpers/helper-for-test";
 import { EditorState } from "prosemirror-state";
 import { custom_schema } from "../../../custom_schema";
-import { setupToolbar } from "../index";
-import * as info_retriever from "../helper/node-info-retriever";
+import * as info_retriever from "../helper/NodeInfoRetriever";
 
 describe("update input values", () => {
     let form: HTMLFormElement;
@@ -78,7 +77,6 @@ describe("update input values", () => {
         state = EditorState.create({
             doc: DOMParser.fromSchema(custom_schema).parse(editor_content),
             schema: custom_schema,
-            ...setupToolbar(gettext_provider, "1"),
         });
         vi.spyOn(info_retriever, "getWrappingNodeInfo").mockReturnValue({
             from: 0,
@@ -122,7 +120,6 @@ describe("update input values", () => {
         state = EditorState.create({
             doc: DOMParser.fromSchema(custom_schema).parse(editor_content),
             schema: custom_schema,
-            ...setupToolbar(gettext_provider, "1"),
         });
         vi.spyOn(info_retriever, "getWrappingNodeInfo").mockReturnValue({
             from: 20,

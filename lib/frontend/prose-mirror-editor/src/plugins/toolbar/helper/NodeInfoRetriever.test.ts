@@ -20,11 +20,10 @@
 
 import { beforeEach, describe, expect, it } from "vitest";
 import { EditorState } from "prosemirror-state";
-import { createLocalDocument, gettext_provider } from "../../../helpers/helper-for-test";
+import { createLocalDocument } from "../../../helpers/helper-for-test";
 import { DOMParser } from "prosemirror-model";
 import { custom_schema } from "../../../custom_schema";
-import { setupToolbar } from "../index";
-import { getWrappingNodeInfo } from "./node-info-retriever";
+import { getWrappingNodeInfo } from "./NodeInfoRetriever";
 
 describe("getWrappingNodeInfo", () => {
     let state: EditorState;
@@ -35,7 +34,6 @@ describe("getWrappingNodeInfo", () => {
         state = EditorState.create({
             doc: DOMParser.fromSchema(custom_schema).parse(editor_content),
             schema: custom_schema,
-            ...setupToolbar(gettext_provider, "1"),
         });
     });
 

@@ -49,6 +49,8 @@ import {
     OPEN_ADD_EXISTING_SECTION_MODAL_BUS,
     useOpenAddExistingSectionModalBus,
 } from "@/composables/useOpenAddExistingSectionModalBus";
+import { TOOLBAR_BUS } from "@/toolbar-bus-injection-key";
+import { buildToolbarBus } from "@tuleap/prose-mirror-editor";
 
 document.addEventListener("DOMContentLoaded", async () => {
     const vue_mount_point = document.getElementById("artidoc-mountpoint");
@@ -68,6 +70,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     const item_id = Number.parseInt(getDatasetItemOrThrow(vue_mount_point, "itemId"), 10);
 
     const app = createApp(App);
+
+    app.provide(TOOLBAR_BUS, buildToolbarBus());
 
     const sections_store = useSectionsStore();
     const upload_file_store = useUploadFileStore();
