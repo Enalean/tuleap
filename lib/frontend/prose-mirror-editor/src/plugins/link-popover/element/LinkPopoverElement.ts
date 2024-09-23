@@ -23,6 +23,7 @@ import { createPopover } from "@tuleap/tlp-popovers";
 import { renderLinkPopover } from "./LinkPopoverTemplate";
 import type { OpenLinkButton } from "./items/OpenLinkButtonElement";
 import type { CopyToClipboardButton } from "./items/CopyToClipboardButtonElement";
+import type { RemoveLinkButton } from "./items/RemoveLinkButton";
 
 export const TAG = "tuleap-prose-mirror-link-popover-element";
 
@@ -36,7 +37,7 @@ export type TypedLinkPopoverButton = {
     type: string;
 };
 
-export type LinkPopoverButton = OpenLinkButton | CopyToClipboardButton;
+export type LinkPopoverButton = OpenLinkButton | CopyToClipboardButton | RemoveLinkButton;
 
 export type InternalLinkPopoverElement = Readonly<LinkPopoverElement> & {
     popover_element: HTMLElement;

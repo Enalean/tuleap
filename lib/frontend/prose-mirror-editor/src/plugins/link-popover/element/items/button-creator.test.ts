@@ -22,6 +22,7 @@ import { createButton } from "./button-creator";
 import { createLocalDocument, gettext_provider } from "../../../../helpers/helper-for-test";
 import { isOpenLinkButtonElement } from "./OpenLinkButtonElement";
 import { isCopyToClipboardElement } from "./CopyToClipboardButtonElement";
+import { isRemoveLinkButtonElement } from "./RemoveLinkButton";
 
 describe("button-creator", () => {
     let doc: Document;
@@ -59,5 +60,23 @@ describe("button-creator", () => {
         expect(button.value_to_copy).toBe("art #123");
         expect(button.value_copied_title).toBe("Value copied!");
         expect(button.copy_value_title).toBe("Copy value");
+    });
+
+    it("Given a RemoveLinkButton, then it should return a RemoveLinkButtonElement", () => {
+        const remove_link_callback = (): void => {
+            // Do nothing
+        };
+        const button = createButton(doc, gettext_provider, {
+            type: "remove-link",
+            gettext_provider,
+            remove_link_callback,
+        });
+
+        if (!isRemoveLinkButtonElement(button)) {
+            throw new Error("Expected an RemoveLinkButtonElement");
+        }
+
+        expect(button.remove_link_callback).toBe(remove_link_callback);
+        expect(button.gettext_provider).toBe(gettext_provider);
     });
 });

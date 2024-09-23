@@ -28,6 +28,7 @@ import { LinkUrlExtractor } from "./helper/LinkUrlExtractor";
 import { LinkNodeDetector } from "./helper/LinkNodeDetector";
 import { EditorNodeAtPositionFinder } from "./helper/EditorNodeAtPositionFinder";
 import { EmptySelectionChecker } from "./helper/EmptySelectionChecker";
+import { RemoveLinkCallbackBuilder } from "./helper/RemoveLinkCallbackBuilder";
 
 export const initLinkPopoverPlugin = (
     doc: Document,
@@ -49,6 +50,7 @@ export const initLinkPopoverPlugin = (
                         EditorNodeAtPositionFinder(view.state),
                         LinkNodeDetector(view.state),
                     ),
+                    RemoveLinkCallbackBuilder(view.state, view.dispatch),
                 ).insertPopover(position),
         },
     });

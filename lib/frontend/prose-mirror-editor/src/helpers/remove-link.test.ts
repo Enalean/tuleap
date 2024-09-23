@@ -21,9 +21,9 @@
 import { describe, expect, it, vi } from "vitest";
 import { EditorState, NodeSelection, TextSelection } from "prosemirror-state";
 import { DOMParser } from "prosemirror-model";
-import { custom_schema } from "../../../custom_schema";
-import { setupToolbar } from "../index";
-import { createLocalDocument, gettext_provider } from "../../../helpers/helper-for-test";
+import { custom_schema } from "../custom_schema";
+import { setupToolbar } from "../plugins/toolbar";
+import { createLocalDocument, gettext_provider } from "./helper-for-test";
 import { removeLink } from "./remove-link";
 import { schema } from "prosemirror-schema-basic";
 
