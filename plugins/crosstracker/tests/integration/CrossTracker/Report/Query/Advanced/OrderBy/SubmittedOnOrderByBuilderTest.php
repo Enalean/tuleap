@@ -34,7 +34,7 @@ use Tuleap\DB\DBFactory;
 use Tuleap\Test\Builders\CoreDatabaseBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerDatabaseBuilder;
 
-final class ArtifactIdOrderByBuilderTest extends CrossTrackerFieldTestCase
+final class SubmittedOnOrderByBuilderTest extends CrossTrackerFieldTestCase
 {
     private PFUser $user;
     /** @var list<int> */
@@ -57,12 +57,12 @@ final class ArtifactIdOrderByBuilderTest extends CrossTrackerFieldTestCase
         $release_tracker = $tracker_builder->buildTracker($project_id, 'Release');
         $tracker_builder->setViewPermissionOnTracker($release_tracker->getId(), Tracker::PERMISSION_FULL, ProjectUGroup::PROJECT_MEMBERS);
 
-        $artifact_1 = $tracker_builder->buildArtifact($release_tracker->getId());
-        $artifact_2 = $tracker_builder->buildArtifact($release_tracker->getId());
-        $artifact_3 = $tracker_builder->buildArtifact($release_tracker->getId());
+        $artifact_1 = $tracker_builder->buildArtifact($release_tracker->getId(), 2);
+        $artifact_2 = $tracker_builder->buildArtifact($release_tracker->getId(), 1);
+        $artifact_3 = $tracker_builder->buildArtifact($release_tracker->getId(), 3);
 
-        $this->result_descending = [$artifact_3, $artifact_2, $artifact_1];
-        $this->result_ascending  = [$artifact_1, $artifact_2, $artifact_3];
+        $this->result_descending = [$artifact_3, $artifact_1, $artifact_2];
+        $this->result_ascending  = [$artifact_2, $artifact_1, $artifact_3];
 
         $tracker_builder->buildLastChangeset($artifact_1);
         $tracker_builder->buildLastChangeset($artifact_2);
@@ -78,10 +78,10 @@ final class ArtifactIdOrderByBuilderTest extends CrossTrackerFieldTestCase
         return $result;
     }
 
-    public function testNoOrderBy(): void
+    public function testSubmittedOnDescending(): void
     {
         $result = $this->getQueryResults(
-            new CrossTrackerExpertReport(1, 'SELECT @id FROM @project = "self" WHERE @id >= 1'),
+            new CrossTrackerExpertReport(1, 'SELECT @id FROM @project = "self" WHERE @id >= 1 ORDER BY @submitted_on DESC'),
             $this->user,
         );
 
@@ -96,28 +96,10 @@ final class ArtifactIdOrderByBuilderTest extends CrossTrackerFieldTestCase
         self::assertSame($this->result_descending, $values);
     }
 
-    public function testArtifactIdDescending(): void
+    public function testSubmittedOnAscending(): void
     {
         $result = $this->getQueryResults(
-            new CrossTrackerExpertReport(1, 'SELECT @id FROM @project = "self" WHERE @id >= 1 ORDER BY @id DESC'),
-            $this->user,
-        );
-
-        $values = [];
-        foreach ($result->artifacts as $artifact) {
-            self::assertCount(2, $artifact);
-            self::assertArrayHasKey('@id', $artifact);
-            $value = $artifact['@id'];
-            self::assertInstanceOf(NumericResultRepresentation::class, $value);
-            $values[] = $value->value;
-        }
-        self::assertSame($this->result_descending, $values);
-    }
-
-    public function testArtifactIdAscending(): void
-    {
-        $result = $this->getQueryResults(
-            new CrossTrackerExpertReport(1, 'SELECT @id FROM @project = "self" WHERE @id >= 1 ORDER BY @id ASC'),
+            new CrossTrackerExpertReport(1, 'SELECT @id FROM @project = "self" WHERE @id >= 1 ORDER BY @submitted_on ASC'),
             $this->user,
         );
 
