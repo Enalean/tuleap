@@ -29,7 +29,7 @@ use UserManager;
 
 class Controller_Commitdiff extends Controller_DiffBase // @codingStandardsIgnoreLine
 {
-    public function __construct()
+    public function __construct(private readonly BlobDataReader $data_reader)
     {
         parent::__construct();
         if (! $this->project) {
@@ -142,6 +142,7 @@ class Controller_Commitdiff extends Controller_DiffBase // @codingStandardsIgnor
         }
 
         $treediff                  = new TreeDiff(
+            $this->data_reader,
             $this->project,
             $this->params['hash'],
             (isset($this->params['hashparent']) ? $this->params['hashparent'] : '')
@@ -158,5 +159,6 @@ class Controller_Commitdiff extends Controller_DiffBase // @codingStandardsIgnor
         $commit_presenter          = new CommitPresenter($commit, $commit_metadata[0], $treediff, (int) $tuleap_repository->getProjectId());
         $this->tpl->assign('commit_presenter', $commit_presenter);
         $this->tpl->assign('treediff', $treediff);
+        $this->tpl->assign('blob_data_reader', $this->data_reader);
     }
 }

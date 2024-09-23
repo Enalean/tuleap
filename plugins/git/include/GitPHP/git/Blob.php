@@ -93,8 +93,11 @@ class Blob extends FilesystemObject
      * @return mixed blob object
      * @throws \Exception exception on invalid hash
      */
-    public function __construct($project, $hash)
-    {
+    public function __construct(
+        private readonly BlobDataReader $data_reader,
+        $project,
+        $hash,
+    ) {
         parent::__construct($project, $hash);
     }
 
@@ -358,7 +361,7 @@ class Blob extends FilesystemObject
                 $commit = $this->GetProject()->GetCommit($regs[1]);
             } elseif (isset($commit)) {
                 try {
-                    $history = new FileDiff($this->GetProject(), $line);
+                    $history = new FileDiff($this->data_reader, $this->GetProject(), $line);
                     $history->SetCommit($commit);
                     $this->history[] = $history;
                 } catch (\Exception $e) {

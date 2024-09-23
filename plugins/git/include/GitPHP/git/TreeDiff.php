@@ -92,8 +92,13 @@ class TreeDiff implements \Iterator, \Countable
      * @return mixed TreeDiff object
      * @throws \Exception exception on invalid parameters
      */
-    public function __construct($project, $toHash, $fromHash = '', $renames = false)
-    {
+    public function __construct(
+        private readonly BlobDataReader $data_reader,
+        $project,
+        $toHash,
+        $fromHash = '',
+        $renames = false,
+    ) {
         $this->project = $project;
 
         $toCommit     = $this->project->GetCommit($toHash);
@@ -151,7 +156,7 @@ class TreeDiff implements \Iterator, \Countable
             $trimmed = trim($line);
             if ((strlen($trimmed) > 0) && (substr_compare($trimmed, ':', 0, 1) === 0)) {
                 try {
-                    $this->fileDiffs[] = new FileDiff($this->project, $trimmed, '', $stats_indexed_by_filename);
+                    $this->fileDiffs[] = new FileDiff($this->data_reader, $this->project, $trimmed, '', $stats_indexed_by_filename);
                 } catch (\Exception $e) {
                 }
             }

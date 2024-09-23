@@ -53,7 +53,7 @@ class Controller
                 break;
             case 'commitdiff':
             case 'commitdiff_plain':
-                $controller = new Controller_Commitdiff();
+                $controller = new Controller_Commitdiff(new BlobDataReader());
                 if ($action === 'commitdiff_plain') {
                     $controller->SetParam('plain', true);
                 }
@@ -78,11 +78,11 @@ class Controller
                 $controller = new Controller_Tag();
                 break;
             case 'blame':
-                $controller = new Controller_Blame();
+                $controller = new Controller_Blame(new BlobDataReader());
                 break;
             case 'blob':
             case 'blob_plain':
-                $controller = new Controller_Blob();
+                $controller = new Controller_Blob(new BlobDataReader());
                 if ($action === 'blob_plain') {
                     $controller->SetParam('plain', true);
                 }
@@ -92,7 +92,7 @@ class Controller
                 break;
             case 'tree':
             default:
-                $controller = new Controller_Tree();
+                $controller = new Controller_Tree(new BlobDataReader());
         }
 
         return $controller;

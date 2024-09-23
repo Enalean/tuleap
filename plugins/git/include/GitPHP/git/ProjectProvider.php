@@ -39,7 +39,7 @@ class ProjectProvider
         $repository_path = $project_root . $project_path;
         $git_exec        = new Git_Exec($repository_path, $repository_path);
 
-        $this->project    = new Project($project_root, $project_path, $git_exec);
+        $this->project    = new Project(new BlobDataReader(), $project_root, $project_path, $git_exec);
         $this->repository = $repository;
     }
 

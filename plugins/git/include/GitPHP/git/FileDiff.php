@@ -204,8 +204,13 @@ class FileDiff
      *
      * @throws \Exception on invalid parameters
      */
-    public function __construct($project, $fromHash, $toHash = '', array $stats_indexed_by_filename = [])
-    {
+    public function __construct(
+        private readonly BlobDataReader $data_reader,
+        $project,
+        $fromHash,
+        $toHash = '',
+        array $stats_indexed_by_filename = [],
+    ) {
         $this->project = $project;
 
         if ($this->ParseDiffTreeLine($fromHash)) {
@@ -643,7 +648,7 @@ class FileDiff
             if ((empty($this->status)) || ($this->status == 'D') || ($this->status == 'M')) {
                 $fromBlob    = $this->GetFromBlob();
                 $fromTmpFile = 'gitphp_' . $pid . '_from';
-                $tmpdir->AddFile($fromTmpFile, $fromBlob->GetData());
+                $tmpdir->AddFile($fromTmpFile, $fromBlob ? $this->data_reader->getDataStringInUTF8($fromBlob) : '');
 
                 $fromName = 'a/';
                 if (! empty($file)) {
@@ -658,7 +663,7 @@ class FileDiff
             if ((empty($this->status)) || ($this->status == 'A') || ($this->status == 'M')) {
                 $toBlob    = $this->GetToBlob();
                 $toTmpFile = 'gitphp_' . $pid . '_to';
-                $tmpdir->AddFile($toTmpFile, $toBlob->GetData());
+                $tmpdir->AddFile($toTmpFile, $toBlob ? $this->data_reader->getDataStringInUTF8($toBlob) : '');
 
                 $toName = 'b/';
                 if (! empty($file)) {
@@ -710,7 +715,7 @@ class FileDiff
         $exe = new GitExe($this->project);
 
         $fromBlob = $this->GetFromBlob();
-        $blob     = $fromBlob->GetData(true);
+        $blob     = $this->data_reader->getDataLinesInUTF8($fromBlob);
 
         $diffLines = '';
         if (function_exists('xdiff_string_diff')) {
@@ -750,19 +755,19 @@ class FileDiff
                     break;
                 case '+':
                     if ($currentDiff) {
-                        $currentDiff['right'][] = substr($d, 1);
+                        $currentDiff['right'][] = $this->data_reader->convertToUTF8(substr($d, 1));
                     }
                     break;
                 case '-':
                     if ($currentDiff) {
-                        $currentDiff['left'][] = substr($d, 1);
+                        $currentDiff['left'][] = $this->data_reader->convertToUTF8(substr($d, 1));
                     }
                     break;
                 case ' ':
                     echo 'should not happen!';
                     if ($currentDiff) {
-                        $currentDiff['left'][]  = substr($d, 1);
-                        $currentDiff['right'][] = substr($d, 1);
+                        $currentDiff['left'][]  = $this->data_reader->convertToUTF8(substr($d, 1));
+                        $currentDiff['right'][] = $this->data_reader->convertToUTF8(substr($d, 1));
                     }
                     break;
             }

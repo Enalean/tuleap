@@ -31,7 +31,7 @@ class Controller_Tree extends ControllerBase // @codingStandardsIgnoreLine
 {
     public const README_FILE_PATTERN = '/^readme\.(markdown|mdown|mkdn|md|mkd|mdwn|mdtxt|mdtext|text)$/i';
 
-    public function __construct()
+    public function __construct(private readonly BlobDataReader $data_reader)
     {
         parent::__construct();
         if (! $this->project) {
@@ -140,7 +140,7 @@ class Controller_Tree extends ControllerBase // @codingStandardsIgnoreLine
             $this->tpl->assign(
                 'readme_content_interpreted',
                 $content_interpretor->getInterpretedContent(
-                    $readme_tree_item->GetData()
+                    $this->data_reader->getDataStringInUTF8($readme_tree_item)
                 )
             );
             $core_assets = new \Tuleap\Layout\IncludeCoreAssets();

@@ -66,7 +66,7 @@ EOF;
         $project = $this->createMock(Project::class);
         $project->method('GetObject')->with('6ab479decb315611faa0cc6252816109884636b6', 0)->willReturn($tag_content);
         $project->method('GetCommit')->with('27f1d88dc86a73284d6c85448ec46de2cdb5bb95')->willReturn(
-            new Commit($project, '27f1d88dc86a73284d6c85448ec46de2cdb5bb95')
+            new Commit(new BlobDataReader(), $project, '27f1d88dc86a73284d6c85448ec46de2cdb5bb95')
         );
 
         $tag = new Tag($project, 'v5', '6ab479decb315611faa0cc6252816109884636b6');
@@ -79,7 +79,7 @@ EOF;
 
     public function testItReturnsCommitSHA1ofNestedTags(): void
     {
-        $project = new Project($this->fixture_dir, '.git', $this->git_exec);
+        $project = new Project(new BlobDataReader(), $this->fixture_dir, '.git', $this->git_exec);
         $gitexe  = new GitExe($project);
 
         //add initial commit
