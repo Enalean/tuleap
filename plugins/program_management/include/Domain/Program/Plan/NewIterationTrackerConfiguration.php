@@ -54,4 +54,16 @@ final class NewIterationTrackerConfiguration
             $sub_label
         );
     }
+
+    public static function fromValidTrackerAndLabels(
+        NewConfigurationTrackerIsValidCertificate $certificate,
+        ?string $label,
+        ?string $sub_label,
+    ): self {
+        return new self(
+            $certificate->tracker_id,
+            ($label !== '') ? $label : null,
+            ($sub_label !== '') ? $sub_label : null
+        );
+    }
 }

@@ -52,7 +52,7 @@ final readonly class NewProgramIncrementTracker
         );
     }
 
-    public static function fromCheck(
+    public static function fromValidTrackerAndLabels(
         NewConfigurationTrackerIsValidCertificate $certificate,
         ?string $label,
         ?string $sub_label,

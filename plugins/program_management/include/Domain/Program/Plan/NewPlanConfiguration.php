@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Plan;
 
+use Tuleap\Option\Option;
 use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramForAdministrationIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramUserGroupCollection;
 
@@ -33,14 +34,15 @@ use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramUserGroupCollection;
 final readonly class NewPlanConfiguration
 {
     /**
-     * @param NewPlannableTracker[] $plannable_trackers
+     * @param NewPlannableTracker[]                    $plannable_trackers
+     * @param Option<NewIterationTrackerConfiguration> $iteration_tracker
      */
     public function __construct(
         public NewProgramIncrementTracker $program_increment_tracker,
         public ProgramForAdministrationIdentifier $program,
         private array $plannable_trackers,
         private ProgramUserGroupCollection $can_prioritize,
-        private ?NewIterationTrackerConfiguration $iteration_tracker,
+        public Option $iteration_tracker,
     ) {
     }
 
@@ -61,10 +63,5 @@ final readonly class NewPlanConfiguration
     public function getCanPrioritize(): array
     {
         return $this->can_prioritize->getUserGroups();
-    }
-
-    public function getIterationTracker(): ?NewIterationTrackerConfiguration
-    {
-        return $this->iteration_tracker;
     }
 }

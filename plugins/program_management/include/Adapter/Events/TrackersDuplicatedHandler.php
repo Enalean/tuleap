@@ -30,7 +30,7 @@ use Tuleap\ProgramManagement\Adapter\Workspace\ProgramServiceIsEnabledCertifier;
 use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramForAdministrationIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Plan\Inheritance\PlanInheritanceHandler;
 use Tuleap\ProgramManagement\Domain\Program\Plan\Inheritance\ProgramInheritanceMapping;
-use Tuleap\ProgramManagement\Domain\Program\Plan\NewProgramIncrementTracker;
+use Tuleap\ProgramManagement\Domain\Program\Plan\NewPlanConfiguration;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\Tracker\TrackerEventTrackersDuplicated;
 
@@ -61,27 +61,38 @@ final readonly class TrackersDuplicatedHandler
             })
             ->apply(function (ProgramInheritanceMapping $mapping) {
                 $this->inheritance_handler->handle($mapping)->match(
-                    function (NewProgramIncrementTracker $new_program_increment_tracker) use ($mapping) {
-                        $new_program_id = sprintf(
+                    function (NewPlanConfiguration $new_plan_configuration) use ($mapping) {
+                        $new_program_id   = sprintf(
                             'new program id #%s',
                             $mapping->new_program->id
                         );
-                        $pi_tracker_id  = sprintf(
+                        $pi_tracker_id    = sprintf(
                             'new program increment tracker id #%s',
-                            $new_program_increment_tracker->id
+                            $new_plan_configuration->program_increment_tracker->id
                         );
-                        $pi_labels      = sprintf(
+                        $pi_labels        = sprintf(
                             "new program increment label '%s' and sub-label '%s'",
-                            $new_program_increment_tracker->label ?? '',
-                            $new_program_increment_tracker->sub_label ?? ''
+                            $new_plan_configuration->program_increment_tracker->label ?? '',
+                            $new_plan_configuration->program_increment_tracker->sub_label ?? ''
+                        );
+                        $iteration_id     = sprintf(
+                            'new iteration tracker id #%s',
+                            (string) $new_plan_configuration->iteration_tracker->unwrapOr(null)?->id
+                        );
+                        $iteration_labels = sprintf(
+                            "new iteration label '%s' and sub-label '%s'",
+                            $new_plan_configuration->iteration_tracker->unwrapOr(null)?->label ?? '',
+                            $new_plan_configuration->iteration_tracker->unwrapOr(null)?->sub_label ?? ''
                         );
 
                         $this->logger->debug(
                             sprintf(
-                                'Plan configuration inheritance : %s %s %s',
+                                'Plan configuration inheritance : %s %s %s %s %s',
                                 $new_program_id,
                                 $pi_tracker_id,
                                 $pi_labels,
+                                $iteration_id,
+                                $iteration_labels
                             )
                         );
                     },

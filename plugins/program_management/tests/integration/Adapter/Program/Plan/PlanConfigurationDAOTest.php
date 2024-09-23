@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Plan;
 
+use Tuleap\Option\Option;
 use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramForAdministrationIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramUserGroupCollection;
 use Tuleap\ProgramManagement\Domain\Program\Plan\NewConfigurationTrackerIsValidCertificate;
@@ -29,10 +30,8 @@ use Tuleap\ProgramManagement\Domain\Program\Plan\NewIterationTrackerConfiguratio
 use Tuleap\ProgramManagement\Domain\Program\Plan\NewPlanConfiguration;
 use Tuleap\ProgramManagement\Domain\Program\Plan\NewPlannableTracker;
 use Tuleap\ProgramManagement\Domain\Program\Plan\NewProgramIncrementTracker;
-use Tuleap\ProgramManagement\Domain\Program\Plan\PlanIterationChange;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\ProgramServiceIsEnabledCertificate;
-use Tuleap\ProgramManagement\Tests\Stub\CheckNewIterationTrackerStub;
 use Tuleap\ProgramManagement\Tests\Stub\CheckNewPlannableTrackerStub;
 use Tuleap\ProgramManagement\Tests\Stub\ProjectIdentifierStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveProgramUserGroupStub;
@@ -63,7 +62,7 @@ final class PlanConfigurationDAOTest extends TestIntegrationTestCase
         $user_group_id_granted_plan_permission = 668;
 
         $new_plan = new NewPlanConfiguration(
-            NewProgramIncrementTracker::fromCheck(
+            NewProgramIncrementTracker::fromValidTrackerAndLabels(
                 new NewConfigurationTrackerIsValidCertificate($program_increment_tracker_id, $program_identifier),
                 'Releases',
                 'release'
@@ -81,17 +80,21 @@ final class PlanConfigurationDAOTest extends TestIntegrationTestCase
                 $program_identifier,
                 [$program_id . '_' . $project_administrators_user_group_id, (string) $user_group_id_granted_plan_permission]
             ),
-            NewIterationTrackerConfiguration::fromPlanIterationChange(
-                CheckNewIterationTrackerStub::withValidTracker(),
-                new PlanIterationChange($iteration_tracker_id, 'Sprints', 'sprint'),
-                $program_identifier
+            Option::fromValue(
+                NewIterationTrackerConfiguration::fromValidTrackerAndLabels(
+                    new NewConfigurationTrackerIsValidCertificate($iteration_tracker_id, $program_identifier),
+                    'Sprints',
+                    'sprint'
+                )
             )
         );
 
         $dao = new PlanConfigurationDAO();
         $dao->save($new_plan);
 
-        $program_identifier = ProgramIdentifier::fromServiceEnabled(new ProgramServiceIsEnabledCertificate($program_id));
+        $program_identifier = ProgramIdentifier::fromServiceEnabled(
+            new ProgramServiceIsEnabledCertificate($program_id)
+        );
 
         $retrieved_plan = $dao->retrievePlan($program_identifier);
         self::assertSame($program_id, $retrieved_plan->program_identifier->getId());

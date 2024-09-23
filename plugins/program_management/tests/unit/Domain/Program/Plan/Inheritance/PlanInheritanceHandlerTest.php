@@ -27,7 +27,7 @@ use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
 use Tuleap\Option\Option;
-use Tuleap\ProgramManagement\Domain\Program\Plan\NewProgramIncrementTracker;
+use Tuleap\ProgramManagement\Domain\Program\Plan\NewPlanConfiguration;
 use Tuleap\ProgramManagement\Domain\Program\Plan\PlanConfiguration;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramForAdministrationIdentifierBuilder;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIdentifierBuilder;
@@ -37,15 +37,23 @@ use Tuleap\Test\PHPUnit\TestCase;
 final class PlanInheritanceHandlerTest extends TestCase
 {
     private const SOURCE_PROGRAM_INCREMENT_TRACKER_ID = 37;
+    private const SOURCE_ITERATION_TRACKER_ID         = 35;
+    private const NEW_PROGRAM_ID                      = 227;
     /** @var array<int, int> */
     private array $tracker_mapping;
+    /** @var Option<int> */
+    private Option $source_iteration_tracker_id;
 
     protected function setUp(): void
     {
-        $this->tracker_mapping = [];
+        $this->tracker_mapping             = [
+            self::SOURCE_PROGRAM_INCREMENT_TRACKER_ID => 97,
+            self::SOURCE_ITERATION_TRACKER_ID         => 89,
+        ];
+        $this->source_iteration_tracker_id = Option::fromValue(self::SOURCE_ITERATION_TRACKER_ID);
     }
 
-    /** @return Ok<NewProgramIncrementTracker> | Err<Fault> */
+    /** @return Ok<NewPlanConfiguration> | Err<Fault> */
     private function handle(): Ok|Err
     {
         $source_program = ProgramIdentifierBuilder::buildWithId(135);
@@ -56,9 +64,9 @@ final class PlanInheritanceHandlerTest extends TestCase
                     self::SOURCE_PROGRAM_INCREMENT_TRACKER_ID,
                     'Releases',
                     'release',
-                    Option::nothing(\Psl\Type\int()),
-                    null,
-                    null,
+                    $this->source_iteration_tracker_id,
+                    'Cycles',
+                    'cycle',
                     [],
                     []
                 )
@@ -67,7 +75,7 @@ final class PlanInheritanceHandlerTest extends TestCase
         return $handler->handle(
             new ProgramInheritanceMapping(
                 $source_program,
-                ProgramForAdministrationIdentifierBuilder::buildWithId(227),
+                ProgramForAdministrationIdentifierBuilder::buildWithId(self::NEW_PROGRAM_ID),
                 $this->tracker_mapping
             )
         );
@@ -83,15 +91,41 @@ final class PlanInheritanceHandlerTest extends TestCase
         self::assertInstanceOf(ProgramIncrementTrackerNotFoundInMappingFault::class, $result->error);
     }
 
-    public function testItMapsProgramIncrementTrackerAndReturnsIt(): void
+    public function testItDoesNotMapEmptyConfigurationForIterations(): void
     {
-        $this->tracker_mapping[self::SOURCE_PROGRAM_INCREMENT_TRACKER_ID] = 88;
+        $this->source_iteration_tracker_id = Option::nothing(\Psl\Type\int());
 
         $result = $this->handle();
 
         self::assertTrue(Result::isOk($result));
-        self::assertSame(88, $result->value->id);
-        self::assertSame('Releases', $result->value->label);
-        self::assertSame('release', $result->value->sub_label);
+        self::assertTrue($result->value->iteration_tracker->isNothing());
+    }
+
+    public function testItDoesNotMapIterationConfigurationWhenTrackerIsNotFoundInMapping(): void
+    {
+        $this->source_iteration_tracker_id = Option::fromValue(70);
+
+        $result = $this->handle();
+
+        self::assertTrue(Result::isOk($result));
+        self::assertTrue($result->value->iteration_tracker->isNothing());
+    }
+
+    public function testItMapsConfigurationAndReturnsIt(): void
+    {
+        $this->tracker_mapping[self::SOURCE_PROGRAM_INCREMENT_TRACKER_ID] = 88;
+        $this->tracker_mapping[self::SOURCE_ITERATION_TRACKER_ID]         = 123;
+
+        $result = $this->handle();
+
+        self::assertTrue(Result::isOk($result));
+        self::assertSame(self::NEW_PROGRAM_ID, $result->value->program->id);
+        self::assertSame(88, $result->value->program_increment_tracker->id);
+        self::assertSame('Releases', $result->value->program_increment_tracker->label);
+        self::assertSame('release', $result->value->program_increment_tracker->sub_label);
+        $iteration = $result->value->iteration_tracker->unwrapOr(null);
+        self::assertSame(123, $iteration?->id);
+        self::assertSame('Cycles', $iteration?->label);
+        self::assertSame('cycle', $iteration?->sub_label);
     }
 }

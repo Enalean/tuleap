@@ -44,7 +44,7 @@ final class NewIterationTrackerConfigurationTest extends \Tuleap\Test\PHPUnit\Te
     /**
      * @throws \Tuleap\ProgramManagement\Domain\Program\ProgramTrackerException
      */
-    private function getNewIterationTrackerConfiguration(): NewIterationTrackerConfiguration
+    private function buildFromChange(): NewIterationTrackerConfiguration
     {
         return NewIterationTrackerConfiguration::fromPlanIterationChange(
             $this->iteration_checker,
@@ -55,7 +55,7 @@ final class NewIterationTrackerConfigurationTest extends \Tuleap\Test\PHPUnit\Te
 
     public function testItBuildsFromIterationChange(): void
     {
-        $new_configuration = $this->getNewIterationTrackerConfiguration();
+        $new_configuration = $this->buildFromChange();
         self::assertSame(self::ITERATION_TRACKER_ID, $new_configuration->id);
         self::assertSame(self::LABEL, $new_configuration->label);
         self::assertSame(self::SUB_LABEL, $new_configuration->sub_label);
@@ -65,20 +65,20 @@ final class NewIterationTrackerConfigurationTest extends \Tuleap\Test\PHPUnit\Te
     {
         $this->iteration_checker = CheckNewIterationTrackerStub::withTrackerNotFound();
         $this->expectException(PlanTrackerNotFoundException::class);
-        $this->getNewIterationTrackerConfiguration();
+        $this->buildFromChange();
     }
 
     public function testItThrowsWhenTrackerDoesNotBelongToProgram(): void
     {
         $this->iteration_checker = CheckNewIterationTrackerStub::withTrackerNotPartOfProgram();
         $this->expectException(PlanTrackerDoesNotBelongToProjectException::class);
-        $this->getNewIterationTrackerConfiguration();
+        $this->buildFromChange();
     }
 
     public function testItBuildsWithNullLabels(): void
     {
         $this->iteration_change = new PlanIterationChange(self::ITERATION_TRACKER_ID, null, null);
-        $new_configuration      = $this->getNewIterationTrackerConfiguration();
+        $new_configuration      = $this->buildFromChange();
         self::assertSame(self::ITERATION_TRACKER_ID, $new_configuration->id);
         self::assertNull($new_configuration->label);
         self::assertNull($new_configuration->sub_label);
@@ -87,9 +87,33 @@ final class NewIterationTrackerConfigurationTest extends \Tuleap\Test\PHPUnit\Te
     public function testItEnforcesNullLabelsWhenGivenEmptyStrings(): void
     {
         $this->iteration_change = new PlanIterationChange(self::ITERATION_TRACKER_ID, '', '');
-        $new_configuration      = $this->getNewIterationTrackerConfiguration();
+        $new_configuration      = $this->buildFromChange();
         self::assertSame(self::ITERATION_TRACKER_ID, $new_configuration->id);
         self::assertNull($new_configuration->label);
         self::assertNull($new_configuration->sub_label);
+    }
+
+    public function testItBuildsFromValidTrackerAndLabels(): void
+    {
+        $iteration = NewIterationTrackerConfiguration::fromValidTrackerAndLabels(
+            new NewConfigurationTrackerIsValidCertificate(99, ProgramForAdministrationIdentifierBuilder::build()),
+            self::LABEL,
+            self::SUB_LABEL
+        );
+        self::assertSame(99, $iteration->id);
+        self::assertSame(self::LABEL, $iteration->label);
+        self::assertSame(self::SUB_LABEL, $iteration->sub_label);
+    }
+
+    public function testItEnforcesNullLabelsWhenGivenEmptyStringsAndValidTracker(): void
+    {
+        $iteration = NewIterationTrackerConfiguration::fromValidTrackerAndLabels(
+            new NewConfigurationTrackerIsValidCertificate(self::ITERATION_TRACKER_ID, ProgramForAdministrationIdentifierBuilder::build()),
+            '',
+            ''
+        );
+        self::assertSame(self::ITERATION_TRACKER_ID, $iteration->id);
+        self::assertNull($iteration->label);
+        self::assertNull($iteration->sub_label);
     }
 }
