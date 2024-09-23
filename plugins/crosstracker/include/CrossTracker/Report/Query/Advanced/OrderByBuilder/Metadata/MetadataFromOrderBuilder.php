@@ -22,14 +22,34 @@ declare(strict_types=1);
 
 namespace Tuleap\CrossTracker\Report\Query\Advanced\OrderByBuilder\Metadata;
 
+use LogicException;
+use Tuleap\CrossTracker\Report\Query\Advanced\AllowedMetadata;
 use Tuleap\CrossTracker\Report\Query\Advanced\OrderByBuilder\OrderByBuilderParameters;
 use Tuleap\CrossTracker\Report\Query\Advanced\OrderByBuilder\ParametrizedFromOrder;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\OrderByDirection;
 
 final class MetadataFromOrderBuilder
 {
     public function getFromOrder(Metadata $metadata, OrderByBuilderParameters $parameters): ParametrizedFromOrder
     {
-        return new ParametrizedFromOrder('', [], '');
+        $order = match ($parameters->direction) {
+            OrderByDirection::ASCENDING  => ' ASC',
+            OrderByDirection::DESCENDING => ' DESC',
+        };
+
+        return match ($metadata->getName()) {
+            AllowedMetadata::TITLE,
+            AllowedMetadata::DESCRIPTION,
+            AllowedMetadata::STATUS,
+            AllowedMetadata::ASSIGNED_TO,
+
+            AllowedMetadata::SUBMITTED_BY,
+            AllowedMetadata::LAST_UPDATE_BY   => new ParametrizedFromOrder('', [], ''),
+            AllowedMetadata::SUBMITTED_ON     => new ParametrizedFromOrder('', [], 'artifact.submitted_on' . $order),
+            AllowedMetadata::LAST_UPDATE_DATE => new ParametrizedFromOrder('', [], 'changeset.submitted_on' . $order),
+            AllowedMetadata::ID               => new ParametrizedFromOrder('', [], 'artifact.id' . $order),
+            default                           => throw new LogicException("Unknown metadata type: {$metadata->getName()}"),
+        };
     }
 }
