@@ -37,6 +37,7 @@ use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSearchablesCollectionBuilde
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSelectablesCollectionBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSelectablesCollectorVisitor;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidTermCollectorVisitor;
+use Tuleap\CrossTracker\Report\Query\Advanced\OrderByBuilderVisitor;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\CrossTrackerExpertQueryReportDao;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilderVisitor;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\DuckTypedField\DuckTypedFieldChecker;
@@ -77,6 +78,7 @@ final readonly class CrossTrackerArtifactReportFactory
         private ExpertQueryValidator $expert_query_validator,
         private QueryBuilderVisitor $query_builder,
         private SelectBuilderVisitor $select_builder,
+        private OrderByBuilderVisitor $order_builder,
         private ResultBuilderVisitor $result_builder,
         private ParserCacheProxy $parser,
         private CrossTrackerExpertQueryReportDao $expert_query_dao,
@@ -222,8 +224,10 @@ final readonly class CrossTrackerArtifactReportFactory
 
         $this->instrumentation->updateSelectCount(count($query->getSelect()));
         $additional_select_from = $this->select_builder->buildSelectFrom($query->getSelect(), $trackers, $current_user);
+        $additional_from_order  = $this->order_builder->buildFromOrder($query->getOrderBy(), $current_user);
         $select_results         = $this->expert_query_dao->searchArtifactsColumnsMatchingIds(
             $additional_select_from,
+            $additional_from_order,
             array_map(static fn(array $row) => $row['id'], $artifact_ids),
         );
 

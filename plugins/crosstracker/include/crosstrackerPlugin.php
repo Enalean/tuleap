@@ -39,6 +39,9 @@ use Tuleap\CrossTracker\Report\Query\Advanced\InvalidOrderByListChecker;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSearchableCollectorVisitor;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSelectablesCollectorVisitor;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidTermCollectorVisitor;
+use Tuleap\CrossTracker\Report\Query\Advanced\OrderByBuilder\Field\FieldFromOrderBuilder;
+use Tuleap\CrossTracker\Report\Query\Advanced\OrderByBuilder\Metadata\MetadataFromOrderBuilder;
+use Tuleap\CrossTracker\Report\Query\Advanced\OrderByBuilderVisitor;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\ArtifactLink\ForwardLinkFromWhereBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\ArtifactLink\ReverseLinkFromWhereBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\CrossTrackerExpertQueryReportDao;
@@ -424,6 +427,7 @@ class crosstrackerPlugin extends Plugin
             $validator,
             $query_builder_visitor,
             $select_builder_visitor,
+            new OrderByBuilderVisitor(new FieldFromOrderBuilder(), new MetadataFromOrderBuilder()),
             $result_builder_visitor,
             $parser,
             $expert_query_dao,

@@ -62,6 +62,9 @@ use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSearchablesCollectionBuilde
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSelectablesCollectionBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSelectablesCollectorVisitor;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidTermCollectorVisitor;
+use Tuleap\CrossTracker\Report\Query\Advanced\OrderByBuilder\Field\FieldFromOrderBuilder;
+use Tuleap\CrossTracker\Report\Query\Advanced\OrderByBuilder\Metadata\MetadataFromOrderBuilder;
+use Tuleap\CrossTracker\Report\Query\Advanced\OrderByBuilderVisitor;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\ArtifactLink\ForwardLinkFromWhereBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\ArtifactLink\ReverseLinkFromWhereBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\CrossTrackerExpertQueryReportDao;
@@ -756,6 +759,7 @@ final class CrossTrackerReportsResource extends AuthenticatedResource
             $this->getExpertQueryValidator(),
             $this->getQueryBuilderVisitor(),
             $select_builder_visitor,
+            new OrderByBuilderVisitor(new FieldFromOrderBuilder(), new MetadataFromOrderBuilder()),
             $result_builder_visitor,
             $this->getParser(),
             new CrossTrackerExpertQueryReportDao(),
