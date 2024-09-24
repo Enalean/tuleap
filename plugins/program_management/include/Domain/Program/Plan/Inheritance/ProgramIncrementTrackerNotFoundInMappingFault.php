@@ -20,19 +20,27 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Domain\Program\Plan;
+namespace Tuleap\ProgramManagement\Domain\Program\Plan\Inheritance;
 
-use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
+use Tuleap\NeverThrow\Fault;
 
-final readonly class PlanInheritanceHandler
+/**
+ * @psalm-immutable
+ */
+final readonly class ProgramIncrementTrackerNotFoundInMappingFault extends Fault
 {
-    public function __construct(
-        private RetrievePlanConfiguration $retrieve_plan,
-    ) {
-    }
-
-    public function handle(ProgramIdentifier $program_identifier): PlanConfiguration
-    {
-        return $this->retrieve_plan->retrievePlan($program_identifier);
+    public static function build(
+        int $source_program_id,
+        int $new_program_id,
+        int $source_program_increment_tracker_id,
+    ): Fault {
+        return new self(
+            sprintf(
+                'Could not find mapping for source Program Increment tracker #%1$d while inheriting from Program #%2$d to new Program #%3$d',
+                $source_program_increment_tracker_id,
+                $source_program_id,
+                $new_program_id
+            )
+        );
     }
 }

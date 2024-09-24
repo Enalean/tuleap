@@ -24,6 +24,7 @@ namespace Tuleap\ProgramManagement\Domain\Program\Admin;
 
 use Tuleap\ProgramManagement\Domain\Program\Plan\ProgramAccessException;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
+use Tuleap\ProgramManagement\Domain\Program\ProgramServiceIsEnabledCertificate;
 use Tuleap\ProgramManagement\Domain\Team\VerifyIsTeam;
 use Tuleap\ProgramManagement\Domain\Workspace\ProjectIdentifier;
 use Tuleap\ProgramManagement\Domain\Workspace\UserReference;
@@ -60,5 +61,10 @@ final class ProgramForAdministrationIdentifier
             throw new ProgramAccessException($project_id, $user);
         }
         return new self($project_id);
+    }
+
+    public static function fromServiceEnabled(ProgramServiceIsEnabledCertificate $certificate): self
+    {
+        return new self($certificate->program_id);
     }
 }

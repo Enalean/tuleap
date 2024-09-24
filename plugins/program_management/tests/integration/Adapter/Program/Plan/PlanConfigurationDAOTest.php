@@ -24,6 +24,7 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Plan;
 
 use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramForAdministrationIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramUserGroupCollection;
+use Tuleap\ProgramManagement\Domain\Program\Plan\NewConfigurationTrackerIsValidCertificate;
 use Tuleap\ProgramManagement\Domain\Program\Plan\NewIterationTrackerConfiguration;
 use Tuleap\ProgramManagement\Domain\Program\Plan\NewPlanConfiguration;
 use Tuleap\ProgramManagement\Domain\Program\Plan\NewPlannableTracker;
@@ -33,7 +34,6 @@ use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\ProgramServiceIsEnabledCertificate;
 use Tuleap\ProgramManagement\Tests\Stub\CheckNewIterationTrackerStub;
 use Tuleap\ProgramManagement\Tests\Stub\CheckNewPlannableTrackerStub;
-use Tuleap\ProgramManagement\Tests\Stub\CheckNewProgramIncrementTrackerStub;
 use Tuleap\ProgramManagement\Tests\Stub\ProjectIdentifierStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveProgramUserGroupStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserReferenceStub;
@@ -63,12 +63,12 @@ final class PlanConfigurationDAOTest extends TestIntegrationTestCase
         $user_group_id_granted_plan_permission = 668;
 
         $new_plan = new NewPlanConfiguration(
-            NewProgramIncrementTracker::fromId(
-                CheckNewProgramIncrementTrackerStub::withValidTracker(),
-                $program_increment_tracker_id,
-                $program_identifier
+            NewProgramIncrementTracker::fromCheck(
+                new NewConfigurationTrackerIsValidCertificate($program_increment_tracker_id, $program_identifier),
+                'Releases',
+                'release'
             ),
-            $program_id,
+            $program_identifier,
             [
                 NewPlannableTracker::fromId($tracker_checker, $epics_tracker_id, $program_identifier),
                 NewPlannableTracker::fromId($tracker_checker, $enablers_tracker_id, $program_identifier),
@@ -81,8 +81,6 @@ final class PlanConfigurationDAOTest extends TestIntegrationTestCase
                 $program_identifier,
                 [$program_id . '_' . $project_administrators_user_group_id, (string) $user_group_id_granted_plan_permission]
             ),
-            'Releases',
-            'release',
             NewIterationTrackerConfiguration::fromPlanIterationChange(
                 CheckNewIterationTrackerStub::withValidTracker(),
                 new PlanIterationChange($iteration_tracker_id, 'Sprints', 'sprint'),

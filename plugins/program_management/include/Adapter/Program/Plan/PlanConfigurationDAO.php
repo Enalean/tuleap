@@ -57,13 +57,12 @@ final class PlanConfigurationDAO extends DataAccessObject implements SaveNewPlan
     {
         $sql = 'DELETE FROM plugin_program_management_plan WHERE project_id = ?';
 
-        $project_id = $plan->getProjectId();
-        $this->getDB()->run($sql, $project_id);
+        $this->getDB()->run($sql, $plan->program->id);
 
         $insert = [];
         foreach ($plan->getPlannableTrackerIds() as $plannable_tracker_id) {
             $insert[] = [
-                'project_id'           => $project_id,
+                'project_id'           => $plan->program->id,
                 'plannable_tracker_id' => $plannable_tracker_id,
             ];
         }
@@ -74,12 +73,12 @@ final class PlanConfigurationDAO extends DataAccessObject implements SaveNewPlan
     {
         $sql = 'DELETE FROM plugin_program_management_can_prioritize_features WHERE project_id = ?';
 
-        $this->getDB()->run($sql, $plan->getProjectId());
+        $this->getDB()->run($sql, $plan->program->id);
 
         $insert = [];
         foreach ($plan->getCanPrioritize() as $can_prioritize_ugroup) {
             $insert[] = [
-                'project_id'    => $plan->getProjectId(),
+                'project_id'    => $plan->program->id,
                 'user_group_id' => $can_prioritize_ugroup->getId(),
             ];
         }
@@ -88,14 +87,12 @@ final class PlanConfigurationDAO extends DataAccessObject implements SaveNewPlan
 
     private function setUpProgramPlan(NewPlanConfiguration $plan): void
     {
-        $project_id = $plan->getProjectId();
-
         $sql = 'DELETE FROM plugin_program_management_program WHERE program_project_id = ?';
-        $this->getDB()->run($sql, $project_id);
+        $this->getDB()->run($sql, $plan->program->id);
 
         $insert = [
-            'program_project_id'   => $project_id,
-            'program_increment_tracker_id' => $plan->getProgramIncrementTracker()->getId(),
+            'program_project_id'           => $plan->program->id,
+            'program_increment_tracker_id' => $plan->program_increment_tracker->id,
         ];
 
         if ($plan->getIterationTracker()) {
@@ -110,12 +107,12 @@ final class PlanConfigurationDAO extends DataAccessObject implements SaveNewPlan
             }
         }
 
-        if ($plan->getCustomLabel() !== null) {
-            $insert['program_increment_label'] = $plan->getCustomLabel();
+        if ($plan->program_increment_tracker->label !== null) {
+            $insert['program_increment_label'] = $plan->program_increment_tracker->label;
         }
 
-        if ($plan->getCustomSubLabel() !== null) {
-            $insert['program_increment_sub_label'] = $plan->getCustomSubLabel();
+        if ($plan->program_increment_tracker->sub_label !== null) {
+            $insert['program_increment_sub_label'] = $plan->program_increment_tracker->sub_label;
         }
 
         $this->getDB()->insert('plugin_program_management_program', $insert);

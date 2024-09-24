@@ -30,6 +30,8 @@ use Tuleap\ProgramManagement\Tests\Stub\CheckNewProgramIncrementTrackerStub;
 final class NewProgramIncrementTrackerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const TRACKER_ID = 28;
+    private const LABEL      = 'Releases';
+    private const SUB_LABEL  = 'release';
     private CheckNewProgramIncrementTracker $program_increment_checker;
 
     protected function setUp(): void
@@ -40,32 +42,49 @@ final class NewProgramIncrementTrackerTest extends \Tuleap\Test\PHPUnit\TestCase
     /**
      * @throws \Tuleap\ProgramManagement\Domain\Program\ProgramTrackerException
      */
-    private function getNewProgramIncrementTracker(): NewProgramIncrementTracker
+    private function buildFromChange(): NewProgramIncrementTracker
     {
-        return NewProgramIncrementTracker::fromId(
+        return NewProgramIncrementTracker::fromProgramIncrementChange(
             $this->program_increment_checker,
-            self::TRACKER_ID,
+            new PlanProgramIncrementChange(self::TRACKER_ID, self::LABEL, self::SUB_LABEL),
             ProgramForAdministrationIdentifierBuilder::build()
         );
     }
 
-    public function testItBuildsFromId(): void
+    public function testItBuildsFromPlanChange(): void
     {
-        $new_tracker = $this->getNewProgramIncrementTracker();
-        self::assertSame(self::TRACKER_ID, $new_tracker->getId());
+        $new_tracker = $this->buildFromChange();
+        self::assertSame(self::TRACKER_ID, $new_tracker->id);
+        self::assertSame(self::LABEL, $new_tracker->label);
+        self::assertSame(self::SUB_LABEL, $new_tracker->sub_label);
     }
 
     public function testItThrowsAnExceptionWhenTrackerIsNotFound(): void
     {
         $this->program_increment_checker = CheckNewProgramIncrementTrackerStub::withTrackerNotFound();
         $this->expectException(PlanTrackerNotFoundException::class);
-        $this->getNewProgramIncrementTracker();
+        $this->buildFromChange();
     }
 
     public function testItThrowsWhenTrackerDoesNotBelongToProgram(): void
     {
         $this->program_increment_checker = CheckNewProgramIncrementTrackerStub::withTrackerNotPartOfProgram();
         $this->expectException(PlanTrackerDoesNotBelongToProjectException::class);
-        $this->getNewProgramIncrementTracker();
+        $this->buildFromChange();
+    }
+
+    public function testItBuildsFromCertificate(): void
+    {
+        $new_tracker = NewProgramIncrementTracker::fromCheck(
+            new NewConfigurationTrackerIsValidCertificate(
+                79,
+                ProgramForAdministrationIdentifierBuilder::build()
+            ),
+            self::LABEL,
+            self::SUB_LABEL
+        );
+        self::assertSame(79, $new_tracker->id);
+        self::assertSame(self::LABEL, $new_tracker->label);
+        self::assertSame(self::SUB_LABEL, $new_tracker->sub_label);
     }
 }
