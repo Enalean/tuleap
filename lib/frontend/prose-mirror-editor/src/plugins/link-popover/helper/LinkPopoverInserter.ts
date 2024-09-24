@@ -29,6 +29,7 @@ import {
 } from "./create-link-popover";
 import type { CheckEmptySelection } from "./EmptySelectionChecker";
 import type { BuildRemoveLinkCallback } from "./RemoveLinkCallbackBuilder";
+import type { BuildEditLinkCallback } from "./EditLinkCallbackBuilder";
 
 type InsertLinkPopover = {
     insertPopover(position: number): boolean;
@@ -44,6 +45,7 @@ export const LinkPopoverInserter = (
     extract_cross_reference_url: ExtractCrossReferenceUrl,
     extract_regular_link_url: ExtractLinkUrl,
     build_remove_link_callback: BuildRemoveLinkCallback,
+    build_edit_link_callback: BuildEditLinkCallback,
 ): InsertLinkPopover => ({
     insertPopover(position: number): boolean {
         removePopover(doc, editor_id);
@@ -67,15 +69,13 @@ export const LinkPopoverInserter = (
             return false;
         }
 
+        const link = {
+            href: url,
+            title: popover_anchor.textContent ?? "",
+        };
+
         if (is_cross_ref_link) {
-            insertCrossReferenceLinkPopover(
-                doc,
-                gettext_provider,
-                popover_anchor,
-                editor_id,
-                url,
-                popover_anchor.textContent ?? "",
-            );
+            insertCrossReferenceLinkPopover(doc, gettext_provider, popover_anchor, editor_id, link);
 
             return true;
         }
@@ -85,8 +85,9 @@ export const LinkPopoverInserter = (
             gettext_provider,
             popover_anchor,
             editor_id,
-            url,
+            link,
             build_remove_link_callback.build(doc, editor_id),
+            build_edit_link_callback.build(doc, editor_id),
         );
 
         return true;

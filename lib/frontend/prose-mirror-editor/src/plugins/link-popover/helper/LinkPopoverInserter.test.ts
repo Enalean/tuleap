@@ -30,10 +30,15 @@ import type { ExtractLinkUrl } from "./LinkUrlExtractor";
 import type { CheckEmptySelection } from "./EmptySelectionChecker";
 import { EmptySelectionCheckerStub } from "./stubs/EmptySelectionCheckerStub";
 import { BuildRemoveLinkCallbackStub } from "./stubs/BuildRemoveLinkCallbackStub";
+import { BuildEditLinkCallbackStub } from "./stubs/BuildEditLinkCallbackStub";
 
 const editor_id = "aaaa-bbbb-cccc-dddd";
 const position = 1;
 const remove_link_callback = (): void => {
+    // Do nothing
+};
+
+const edit_link_callback = (): void => {
     // Do nothing
 };
 
@@ -58,6 +63,7 @@ describe("LinkPopoverInserter", () => {
             CrossReferenceUrlExtractor(),
             editor_link_url_extractor,
             BuildRemoveLinkCallbackStub.withCallback(remove_link_callback),
+            BuildEditLinkCallbackStub.withCallback(edit_link_callback),
         ).insertPopover(position);
     };
 
@@ -89,7 +95,7 @@ describe("LinkPopoverInserter", () => {
 
     it("When the parent element of the DOM node found at the given position is a cross reference node, then it should insert a popover for cross references and return true", () => {
         const cross_reference_text = doc.createTextNode("art #123");
-        const cross_reference_url = "https://example.com";
+        const cross_reference_url = "https://example.com/";
         const cross_reference = doc.createElement("span");
 
         cross_reference.setAttribute("data-href", cross_reference_url);
@@ -110,14 +116,16 @@ describe("LinkPopoverInserter", () => {
             gettext_provider,
             cross_reference,
             editor_id,
-            cross_reference_url,
-            cross_reference_text.textContent,
+            {
+                href: cross_reference_url,
+                title: cross_reference_text.textContent,
+            },
         );
     });
 
     it("When the DOM node found at the given position is a regular link node, then it should insert a popover for regular links and return true", () => {
         const link_text = doc.createTextNode("See example");
-        const link_url = "https://example.com";
+        const link_url = "https://example.com/";
         const link = doc.createElement("a");
 
         link.setAttribute("href", link_url);
@@ -135,8 +143,12 @@ describe("LinkPopoverInserter", () => {
             gettext_provider,
             link,
             editor_id,
-            link_url,
+            {
+                href: link.href,
+                title: link_text.textContent,
+            },
             remove_link_callback,
+            edit_link_callback,
         );
     });
 });

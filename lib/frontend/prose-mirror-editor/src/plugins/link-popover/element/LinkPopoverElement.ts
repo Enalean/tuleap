@@ -18,35 +18,56 @@
  */
 
 import { define } from "hybrids";
+import type { Popover } from "@tuleap/tlp-popovers";
 import { createPopover } from "@tuleap/tlp-popovers";
 import { renderLinkPopover } from "./LinkPopoverTemplate";
 import type { RenderButtons } from "./LinkPopoverButtonsRenderers";
+import type { RenderEditionForm } from "./LinkPopoverEditionFormRenderers";
 
 export const TAG = "tuleap-prose-mirror-link-popover-element";
 
 export type LinkPopoverElement = {
     popover_anchor: HTMLElement;
     buttons_renderer: RenderButtons;
+    edition_form_renderer: RenderEditionForm;
 };
 
 export type InternalLinkPopoverElement = Readonly<LinkPopoverElement> & {
     popover_element: HTMLElement;
+    popover_instance: Popover | null;
+    is_in_edition_mode: boolean;
     render(): HTMLElement;
 };
 
 export type HostElement = InternalLinkPopoverElement & HTMLElement;
 
-type DisconnectFunction = () => void;
-export const connect = (host: HostElement): DisconnectFunction => {
-    const popover_instance = createPopover(host.popover_anchor, host.popover_element, {
+const createPopoverInstance = (host: InternalLinkPopoverElement): void => {
+    host.popover_instance = createPopover(host.popover_anchor, host.popover_element, {
         placement: "top",
         trigger: "click",
     });
-    popover_instance.show();
+    host.popover_instance.show();
+};
+
+type DisconnectFunction = () => void;
+export const connect = (host: HostElement): DisconnectFunction => {
+    createPopoverInstance(host);
 
     return () => {
-        popover_instance.destroy();
+        host.popover_instance?.destroy();
     };
+};
+
+export const observeEditionMode = (
+    host: InternalLinkPopoverElement,
+    is_in_edition_mode: boolean,
+): void => {
+    if (is_in_edition_mode) {
+        host.popover_instance?.destroy();
+        return;
+    }
+
+    createPopoverInstance(host);
 };
 
 define<InternalLinkPopoverElement>({
@@ -63,7 +84,13 @@ define<InternalLinkPopoverElement>({
         },
         connect,
     },
+    popover_instance: (host, popover_instance) => popover_instance,
     buttons_renderer: (host, buttons_renderer) => buttons_renderer,
+    edition_form_renderer: (host, edition_form_renderer) => edition_form_renderer,
+    is_in_edition_mode: {
+        value: false,
+        observe: observeEditionMode,
+    },
     render: {
         shadow: false,
         value: renderLinkPopover,

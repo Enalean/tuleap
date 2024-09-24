@@ -23,7 +23,7 @@ import { buildPopover } from "./popover-link";
 import * as tlp_popovers from "@tuleap/tlp-popovers";
 import type { Popover } from "@tuleap/tlp-popovers";
 import type { EditorView } from "prosemirror-view";
-import { createLocalDocument, gettext_provider } from "../../../helpers/helper-for-test";
+import { createLocalDocument, gettext_provider } from "../../../helpers";
 
 describe("popover-links", () => {
     it("it builds input for adding link popover", () => {

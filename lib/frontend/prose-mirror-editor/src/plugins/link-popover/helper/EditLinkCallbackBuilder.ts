@@ -17,14 +17,21 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/**
- * Reexport the prose-mirror Node type as EditorNode to avoid
- * the confusion with the DOM Node type.
- */
-import type { Node } from "prosemirror-model";
-export type EditorNode = Node;
+import type { EditorView } from "prosemirror-view";
+import { replaceLinkNode } from "../../../helpers/replace-link-node";
+import type { LinkProperties } from "../../../types/internal-types";
+import type { EditLinkCallback } from "../element/LinkPopoverEditionFormRenderers";
+import { removePopover } from "./create-link-popover";
 
-export type LinkProperties = {
-    href: string;
-    title: string;
+export type BuildEditLinkCallback = {
+    build(doc: Document, editor_id: string): EditLinkCallback;
 };
+
+export const EditLinkCallbackBuilder = (view: EditorView): BuildEditLinkCallback => ({
+    build:
+        (doc: Document, editor_id: string): EditLinkCallback =>
+        (link: LinkProperties): void => {
+            removePopover(doc, editor_id);
+            replaceLinkNode(view, link);
+        },
+});

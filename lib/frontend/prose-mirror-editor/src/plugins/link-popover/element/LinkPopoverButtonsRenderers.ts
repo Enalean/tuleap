@@ -26,28 +26,38 @@ import type { RemoveLinkCallback } from "./items/RemoveLinkButtonElement";
 import "./items/OpenLinkButtonElement";
 import "./items/CopyToClipboardButtonElement";
 import "./items/RemoveLinkButtonElement";
+import "./items/EditLinkButtonElement";
+import type { InternalLinkPopoverElement } from "./LinkPopoverElement";
+import type { LinkProperties } from "../../../types/internal-types";
 
 export type RenderButtons = {
-    render(): UpdateFunction<HTMLElement>;
+    render(host: InternalLinkPopoverElement): UpdateFunction<HTMLElement>;
 };
 
 export const RegularLinkPopoverButtonsRenderer = (
     gettext_provider: GetText,
-    link_href: string,
+    link: LinkProperties,
     remove_link_callback: RemoveLinkCallback,
 ): RenderButtons => ({
-    render: () => html`
+    render: (host: InternalLinkPopoverElement) => html`
         <open-link-button
             data-test="open-link-button"
             gettext_provider="${gettext_provider}"
-            sanitized_link_href="${sanitizeURL(link_href)}"
+            sanitized_link_href="${sanitizeURL(link.href)}"
         ></open-link-button>
         <copy-to-clipboard-button
             data-test="copy-to-clipboard-button"
-            value_to_copy="${sanitizeURL(link_href)}"
+            value_to_copy="${sanitizeURL(link.href)}"
             copy_value_title="${gettext_provider.gettext("Copy link url")}"
             value_copied_title="${gettext_provider.gettext("Link url has been copied!")}"
         ></copy-to-clipboard-button>
+        <edit-link-button
+            data-test="edit-link-button"
+            button_title="${gettext_provider.gettext("Edit link")}"
+            ontoggle-edition-mode="${(): void => {
+                host.is_in_edition_mode = true;
+            }}"
+        ></edit-link-button>
         <remove-link-button
             data-test="remove-link-button"
             gettext_provider="${gettext_provider}"
@@ -58,18 +68,17 @@ export const RegularLinkPopoverButtonsRenderer = (
 
 export const CrossReferenceLinkPopoverButtonsRenderer = (
     gettext_provider: GetText,
-    link_href: string,
-    cross_reference_text: string,
+    link: LinkProperties,
 ): RenderButtons => ({
     render: () => html`
         <open-link-button
             data-test="open-link-button"
             gettext_provider="${gettext_provider}"
-            sanitized_link_href="${sanitizeURL(link_href)}"
+            sanitized_link_href="${sanitizeURL(link.href)}"
         ></open-link-button>
         <copy-to-clipboard-button
             data-test="copy-to-clipboard-button"
-            value_to_copy="${cross_reference_text}"
+            value_to_copy="${link.title}"
             copy_value_title="${gettext_provider.gettext("Copy Tuleap reference")}"
             value_copied_title="${gettext_provider.gettext("Tuleap reference has been copied!")}"
         ></copy-to-clipboard-button>
