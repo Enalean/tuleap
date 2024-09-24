@@ -43,6 +43,23 @@ describe("closeAllCurrentMarks", () => {
             expect(closeMarkMock).toHaveBeenCalledOnce();
             expect(closeMarkMock.mock.calls[0]).toEqual([subscript_mark.type, view, toggleMark]);
         });
+        it("should close the superscript mark", () => {
+            const closeMarkMock = vi.spyOn(closeMarkModule, "closeMark").mockReturnValue(false);
+            const superscript_mark = custom_schema.marks.superscript.create();
+            const view = {
+                state: {
+                    selection: {
+                        $from: {
+                            marks: vi.fn().mockReturnValue([superscript_mark]),
+                        },
+                    },
+                },
+            } as unknown as EditorView;
+
+            closeAllCurrentMarks(view);
+            expect(closeMarkMock).toHaveBeenCalledOnce();
+            expect(closeMarkMock.mock.calls[0]).toEqual([superscript_mark.type, view, toggleMark]);
+        });
     });
     describe("When the current mark is not in the list of marks to close", () => {
         it("should not close the mark", () => {

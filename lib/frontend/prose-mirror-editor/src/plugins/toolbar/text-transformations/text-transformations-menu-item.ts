@@ -33,3 +33,13 @@ export function getSubscriptMenuItem(schema: Schema, gettext_provider: GetText):
         icon: createIcon("fa-solid fa-subscript"),
     });
 }
+
+export function getSuperscriptMenuItem(schema: Schema, gettext_provider: GetText): MenuItem {
+    return new MenuItem({
+        title: gettext_provider.gettext("Apply superscript style on the selected text `Ctrl+.`"),
+        label: gettext_provider.gettext(`Superscript`),
+        active: (state) => markActive(state, schema.marks.superscript),
+        run: toggleMark(schema.marks.superscript),
+        icon: createIcon("fa-solid fa-superscript"),
+    });
+}
