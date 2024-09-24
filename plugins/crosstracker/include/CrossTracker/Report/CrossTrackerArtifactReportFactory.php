@@ -206,7 +206,7 @@ final readonly class CrossTrackerArtifactReportFactory
         $query = $this->getQueryFromReport($report, $current_user, $trackers);
 
         $additional_from_where = $this->query_builder->buildFromWhere($query->getCondition(), $trackers, $current_user);
-        $additional_from_order = $this->order_builder->buildFromOrder($query->getOrderBy(), $current_user);
+        $additional_from_order = $this->order_builder->buildFromOrder($query->getOrderBy(), $trackers, $current_user);
         $artifact_ids          = $this->expert_query_dao->searchArtifactsIdsMatchingQuery(
             $additional_from_where,
             $additional_from_order,

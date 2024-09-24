@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\CrossTracker\Report\Query\Advanced;
 
 use PFUser;
+use Tracker;
 use Tuleap\CrossTracker\Report\Query\Advanced\OrderByBuilder\Field\FieldFromOrderBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\OrderByBuilder\Metadata\MetadataFromOrderBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\OrderByBuilder\OrderByBuilderParameters;
@@ -43,15 +44,19 @@ final readonly class OrderByBuilderVisitor implements SelectableVisitor
     ) {
     }
 
+    /**
+     * @param Tracker[] $trackers
+     */
     public function buildFromOrder(
         ?OrderBy $order_by,
+        array $trackers,
         PFUser $user,
     ): ParametrizedFromOrder {
         if ($order_by === null) {
             return new ParametrizedFromOrder('', [], '');
         }
 
-        return $order_by->getFilter()->acceptSelectableVisitor($this, new OrderByBuilderParameters($order_by->getDirection(), $user));
+        return $order_by->getFilter()->acceptSelectableVisitor($this, new OrderByBuilderParameters($order_by->getDirection(), $user, $trackers));
     }
 
     public function visitField(Field $field, $parameters): ParametrizedFromOrder

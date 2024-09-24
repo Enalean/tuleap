@@ -23,14 +23,19 @@ declare(strict_types=1);
 namespace Tuleap\CrossTracker\Report\Query\Advanced\OrderByBuilder;
 
 use PFUser;
+use Tracker;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\OrderByDirection;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\VisitorParameters;
 
 final readonly class OrderByBuilderParameters implements VisitorParameters
 {
+    /**
+     * @param Tracker[] $trackers
+     */
     public function __construct(
         public OrderByDirection $direction,
         public PFUser $user,
+        public array $trackers,
     ) {
     }
 }
