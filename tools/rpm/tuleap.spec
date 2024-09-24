@@ -485,13 +485,6 @@ Provides: tuleap-plugin-textualreport
 %description plugin-document_generation
 %{summary}.
 
-%package plugin-mytuleap-contact-support
-Summary: myTuleap Contact support
-Group: Development/Tools
-Requires: %{name} = %{tuleap_version}-%{tuleap_release}%{?dist}
-%description plugin-mytuleap-contact-support
-%{summary}.
-
 %package plugin-enalean-licensemanager
 Summary: Manage usage of license for Tuleap
 Group: Development/Tools
@@ -608,7 +601,6 @@ done
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/document_generation
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/jira_import
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/program_management
-%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/mytuleap_contact_support
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/enalean_licensemanager
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/webauthn
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/tracker_functions
@@ -1422,10 +1414,6 @@ fi
 %files plugin-document_generation
 %defattr(-,root,root,-)
 %{APP_DIR}/plugins/document_generation
-
-%files plugin-mytuleap-contact-support
-%defattr(-,root,root,-)
-%{APP_DIR}/plugins/mytuleap_contact_support
 
 %files plugin-enalean-licensemanager
 %defattr(-,root,root,-)
