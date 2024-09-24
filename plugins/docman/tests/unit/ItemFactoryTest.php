@@ -22,14 +22,28 @@
  *
  */
 
-use Mockery as M;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+declare(strict_types=1);
 
-//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
-class Docman_ItemFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
+namespace Tuleap\Docman;
+
+use Docman_File;
+use Docman_Folder;
+use Docman_Item;
+use Docman_ItemDao;
+use Docman_ItemFactory;
+use Docman_LockFactory;
+use Docman_Version;
+use Docman_VersionFactory;
+use EventManager;
+use TestHelper;
+use Tuleap\Docman\Notifications\UgroupsToNotifyDao;
+use Tuleap\Docman\Notifications\UsersToNotifyDao;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
+use UserManager;
+
+final class ItemFactoryTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     /**
      * 140
      * `-- 150
@@ -49,10 +63,10 @@ class Docman_ItemFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
         $orphans     = [113 => 113];
         $wantedItems = [];
         $rootId      = $itemFactory->connectOrphansToParents($itemList, $orphans, $wantedItems);
-        $this->assertEquals([112], $wantedItems);
-        $this->assertEquals([113 => 113], $orphans);
-        $this->assertEquals([113 => $fld113], $itemList);
-        $this->assertFalse($rootId);
+        self::assertEquals([112], $wantedItems);
+        self::assertEquals([113 => 113], $orphans);
+        self::assertEquals([113 => $fld113], $itemList);
+        self::assertFalse($rootId);
     }
 
     public function testconnectOrphansToParentsStep2(): void
@@ -73,10 +87,10 @@ class Docman_ItemFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
         $orphans     = [112 => 112, 113 => 113];
         $wantedItems = [];
         $rootId      = $itemFactory->connectOrphansToParents($itemList, $orphans, $wantedItems);
-        $this->assertEquals([150], $wantedItems);
-        $this->assertEquals([112 => 112], $orphans);
-        $this->assertEquals([112 => $c_fld112, 113 => $c_fld113], $itemList);
-        $this->assertFalse($rootId);
+        self::assertEquals([150], $wantedItems);
+        self::assertEquals([112 => 112], $orphans);
+        self::assertEquals([112 => $c_fld112, 113 => $c_fld113], $itemList);
+        self::assertFalse($rootId);
     }
 
     public function testconnectOrphansToParentsStep3(): void
@@ -100,10 +114,10 @@ class Docman_ItemFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
         $orphans     = [150 => 150, 112 => 112];
         $wantedItems = [];
         $rootId      = $itemFactory->connectOrphansToParents($itemList, $orphans, $wantedItems);
-        $this->assertEquals([140], $wantedItems);
-        $this->assertEquals([150 => 150], $orphans);
-        $this->assertEquals([150 => $c_fld150, 112 => $c_fld112, 113 => $c_fld113], $itemList);
-        $this->assertFalse($rootId);
+        self::assertEquals([140], $wantedItems);
+        self::assertEquals([150 => 150], $orphans);
+        self::assertEquals([150 => $c_fld150, 112 => $c_fld112, 113 => $c_fld113], $itemList);
+        self::assertFalse($rootId);
     }
 
     public function testconnectOrphansToParentsStep4(): void
@@ -131,10 +145,10 @@ class Docman_ItemFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
         $orphans     = [140 => 140, 150 => 150];
         $wantedItems = [];
         $rootId      = $itemFactory->connectOrphansToParents($itemList, $orphans, $wantedItems);
-        $this->assertEquals([], $wantedItems);
-        $this->assertEquals([], $orphans);
-        $this->assertEquals([140 => $c_fld140, 150 => $c_fld150, 112 => $c_fld112, 113 => $c_fld113], $itemList);
-        $this->assertEquals(140, $rootId);
+        self::assertEquals([], $wantedItems);
+        self::assertEquals([], $orphans);
+        self::assertEquals([140 => $c_fld140, 150 => $c_fld150, 112 => $c_fld112, 113 => $c_fld113], $itemList);
+        self::assertEquals(140, $rootId);
     }
 
     /**
@@ -166,10 +180,10 @@ class Docman_ItemFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
         $orphans     = [150 => 150, 112 => 112];
         $wantedItems = [];
         $rootId      = $itemFactory->connectOrphansToParents($itemList, $orphans, $wantedItems);
-        $this->assertEquals([], $wantedItems);
-        $this->assertEquals([150 => 150, 112 => 112], $orphans);
-        $this->assertEquals([150 => false, 112 => $c_fld112, 113 => $c_fld113], $itemList);
-        $this->assertFalse($rootId);
+        self::assertEquals([], $wantedItems);
+        self::assertEquals([150 => 150, 112 => 112], $orphans);
+        self::assertEquals([150 => false, 112 => $c_fld112, 113 => $c_fld113], $itemList);
+        self::assertFalse($rootId);
     }
 
     /**
@@ -181,57 +195,48 @@ class Docman_ItemFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     public function testIsInSubTreeSuccess(): void
     {
-        $itemFactory = \Mockery::mock(\Docman_ItemFactory::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $itemFactory = $this->createPartialMock(Docman_ItemFactory::class, [
+            'getItemFromDb',
+            'isRoot',
+        ]);
 
-        $fld110 = \Mockery::spy(\Docman_Folder::class);
+        $fld112 = new Docman_Folder(['parent_id' => 111]);
+        $fld113 = new Docman_Folder(['parent_id' => 112]);
 
-        $fld111 = \Mockery::spy(\Docman_Folder::class);
+        $itemFactory->method('getItemFromDb')->willReturnCallback(static fn($id) => match ($id) {
+            112 => $fld112,
+            113 => $fld113,
+        });
+        $itemFactory->method('isRoot')->willReturnCallback(static fn(Docman_Item $item) => match ($item) {
+            $fld112, $fld113 => false,
+        });
 
-        $fld112 = \Mockery::spy(\Docman_Folder::class);
-
-        $fld113 = \Mockery::spy(\Docman_Folder::class);
-
-        $itemFactory->shouldReceive('getItemFromDb')->with(113)->andReturns($fld113);
-        $itemFactory->shouldReceive('getItemFromDb')->with(112)->andReturns($fld112);
-
-        $itemFactory->shouldReceive('isRoot')->with($fld113)->andReturns(false);
-        $itemFactory->shouldReceive('isRoot')->with($fld112)->andReturns(false);
-
-        $fld110->shouldReceive('getParentId')->never()->andReturns(100);
-        $fld111->shouldReceive('getParentId')->never()->andReturns(110);
-        $fld112->shouldReceive('getParentId')->once()->andReturns(111);
-        $fld113->shouldReceive('getParentId')->once()->andReturns(112);
-
-        $this->assertTrue($itemFactory->isInSubTree(113, 111));
+        self::assertTrue($itemFactory->isInSubTree(113, 111));
     }
 
     public function testIsInSubTreeFalse(): void
     {
-        $itemFactory = \Mockery::mock(\Docman_ItemFactory::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $itemFactory = $this->createPartialMock(Docman_ItemFactory::class, [
+            'getItemFromDb',
+            'isRoot',
+        ]);
 
-        $fld110 = \Mockery::spy(\Docman_Folder::class);
+        $fld110 = new Docman_Folder(['parent_id' => 100]);
+        $fld111 = new Docman_Folder(['parent_id' => 110]);
+        $fld112 = new Docman_Folder(['parent_id' => 111]);
+        $fld113 = new Docman_Folder(['parent_id' => 112]);
 
-        $fld111 = \Mockery::spy(\Docman_Folder::class);
+        $itemFactory->method('getItemFromDb')->willReturnMap([
+            110 => $fld110,
+            111 => $fld111,
+            112 => $fld112,
+        ]);
+        $itemFactory->method('isRoot')->willReturnCallback(static fn(Docman_Item $item) => match ($item) {
+            $fld110                   => true,
+            $fld111, $fld112, $fld113 => false,
+        });
 
-        $fld112 = \Mockery::spy(\Docman_Folder::class);
-
-        $fld113 = \Mockery::spy(\Docman_Folder::class);
-
-        $itemFactory->shouldReceive('getItemFromDb')->with(112)->andReturns($fld112);
-        $itemFactory->shouldReceive('getItemFromDb')->with(111)->andReturns($fld111);
-
-        $itemFactory->shouldReceive('isRoot')->with($fld113)->andReturns(false);
-        $itemFactory->shouldReceive('isRoot')->with($fld112)->andReturns(false);
-        $itemFactory->shouldReceive('isRoot')->with($fld111)->andReturns(false);
-
-        $itemFactory->shouldReceive('getItemFromDb')->with(110)->andReturns($fld110)->once();
-        $itemFactory->shouldReceive('isRoot')->with($fld110)->andReturns(true)->once();
-        $fld110->shouldReceive('getParentId')->never()->andReturns(100);
-        $fld111->shouldReceive('getParentId')->once()->andReturns(110);
-        $fld112->shouldReceive('getParentId')->once()->andReturns(111);
-        $fld113->shouldReceive('getParentId')->never()->andReturns(112);
-
-        $this->assertFalse($itemFactory->isInSubTree(112, 113));
+        self::assertFalse($itemFactory->isInSubTree(112, 113));
     }
 
     /**
@@ -243,15 +248,17 @@ class Docman_ItemFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     public function testIsInSubTreeFailWithRootItem(): void
     {
-        $itemFactory = \Mockery::mock(\Docman_ItemFactory::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $itemFactory = $this->createPartialMock(Docman_ItemFactory::class, [
+            'getItemFromDb',
+            'isRoot',
+        ]);
 
-        $fld110 = \Mockery::spy(\Docman_Folder::class);
+        $fld110 = new Docman_Folder(['parent_id' => 0]);
 
-        $itemFactory->shouldReceive('getItemFromDb')->with(110)->once()->andReturns($fld110);
-        $itemFactory->shouldReceive('isRoot')->with($fld110)->once()->andReturns(true);
-        $fld110->shouldReceive('getParentId')->never()->andReturns(0);
+        $itemFactory->expects(self::once())->method('getItemFromDb')->with(110)->willReturn($fld110);
+        $itemFactory->expects(self::once())->method('isRoot')->with($fld110)->willReturn(true);
 
-        $this->assertFalse($itemFactory->isInSubTree(110, 113));
+        self::assertFalse($itemFactory->isInSubTree(110, 113));
     }
 
     /**
@@ -263,45 +270,43 @@ class Docman_ItemFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     public function testGetParents(): void
     {
-        $itemFactory = \Mockery::mock(\Docman_ItemFactory::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $itemFactory = $this->createPartialMock(Docman_ItemFactory::class, [
+            'getItemFromDb',
+            'isRoot',
+        ]);
 
-        $fld110 = \Mockery::spy(\Docman_Folder::class);
+        $fld110 = new Docman_Folder(['item_id' => 110, 'parent_id' => 0]);
+        $fld111 = new Docman_Folder(['item_id' => 111, 'parent_id' => 110]);
+        $fld112 = new Docman_Folder(['item_id' => 112, 'parent_id' => 111]);
+        $fld113 = new Docman_Folder(['item_id' => 113, 'parent_id' => 112]);
 
-        $fld111 = \Mockery::spy(\Docman_Folder::class);
+        $itemFactory->method('getItemFromDb')->willReturnCallback(static fn($id) => match ($id) {
+            113 => $fld113,
+            112 => $fld112,
+            111 => $fld111,
+            110 => $fld110,
+        });
+        $itemFactory->method('isRoot')->willReturnCallback(static fn(Docman_Item $item) => match ($item) {
+            $fld113, $fld112, $fld111 => false,
+            $fld110                   => true,
+        });
 
-        $fld112 = \Mockery::spy(\Docman_Folder::class);
-
-        $fld113 = \Mockery::spy(\Docman_Folder::class);
-
-        $itemFactory->shouldReceive('getItemFromDb')->with(113)->andReturns($fld113);
-        $itemFactory->shouldReceive('getItemFromDb')->with(112)->andReturns($fld112);
-        $itemFactory->shouldReceive('getItemFromDb')->with(111)->andReturns($fld111);
-
-        $itemFactory->shouldReceive('isRoot')->with($fld113)->andReturns(false);
-        $itemFactory->shouldReceive('isRoot')->with($fld112)->andReturns(false);
-        $itemFactory->shouldReceive('isRoot')->with($fld111)->andReturns(false);
-
-        $itemFactory->shouldReceive('getItemFromDb')->with(110)->andReturns($fld110)->once();
-        $itemFactory->shouldReceive('isRoot')->with($fld110)->andReturns(true)->once();
-        $fld110->shouldReceive('getParentId')->never()->andReturns(0);
-        $fld111->shouldReceive('getParentId')->once()->andReturns(110);
-        $fld112->shouldReceive('getParentId')->once()->andReturns(111);
-        $fld113->shouldReceive('getParentId')->never()->andReturns(112);
-
-        $this->assertEquals([111 => true, 110 => true], $itemFactory->getParents(112));
+        self::assertEquals([111 => true, 110 => true], $itemFactory->getParents(112));
     }
 
-    public function testGetParentsForRoot()
+    public function testGetParentsForRoot(): void
     {
-        $itemFactory = \Mockery::mock(\Docman_ItemFactory::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $itemFactory = $this->createPartialMock(Docman_ItemFactory::class, [
+            'getItemFromDb',
+            'isRoot',
+        ]);
 
-        $fld110 = \Mockery::spy(\Docman_Folder::class);
+        $fld110 = new Docman_Folder(['parent_id' => 0]);
 
-        $itemFactory->shouldReceive('getItemFromDb')->with(110)->once()->andReturns($fld110);
-        $itemFactory->shouldReceive('isRoot')->with($fld110)->once()->andReturns(true);
-        $fld110->shouldReceive('getParentId')->never()->andReturns(0);
+        $itemFactory->expects(self::once())->method('getItemFromDb')->with(110)->willReturn($fld110);
+        $itemFactory->expects(self::once())->method('isRoot')->with($fld110)->willReturn(true);
 
-        $this->assertEquals([], $itemFactory->getParents(110));
+        self::assertEquals([], $itemFactory->getParents(110));
     }
 
     /**
@@ -317,7 +322,7 @@ class Docman_ItemFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
      *
      * Find path to root for 113, 115 & 135
      */
-    public function testBuildTreeFromLeavesMultipleStep1()
+    public function testBuildTreeFromLeavesMultipleStep1(): void
     {
         $fld113 = new Docman_Folder(['item_id' => 113, 'parent_id' => 112, 'title' => 'Folder 113']);
         $fld115 = new Docman_Folder(['item_id' => 115, 'parent_id' => 150, 'title' => 'Folder 115']);
@@ -325,23 +330,25 @@ class Docman_ItemFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $itemFactory = new Docman_ItemFactory(0);
 
-        $itemList    = [113 => $fld113,
+        $itemList    = [
+            113 => $fld113,
             115 => $fld115,
             135 => $fld135,
         ];
-        $orphans     = [113 => 113,
+        $orphans     = [
+            113 => 113,
             115 => 115,
             135 => 135,
         ];
         $wantedItems = [];
         $rootId      = $itemFactory->connectOrphansToParents($itemList, $orphans, $wantedItems);
-        $this->assertEquals([112, 150, 140], $wantedItems);
-        $this->assertEquals([113 => 113, 115 => 115, 135 => 135], $orphans);
-        $this->assertEquals([113 => $fld113, 115 => $fld115, 135 => $fld135], $itemList);
-        $this->assertFalse($rootId);
+        self::assertEquals([112, 150, 140], $wantedItems);
+        self::assertEquals([113 => 113, 115 => 115, 135 => 135], $orphans);
+        self::assertEquals([113 => $fld113, 115 => $fld115, 135 => $fld135], $itemList);
+        self::assertFalse($rootId);
     }
 
-    public function testBuildTreeFromLeavesMultipleStep2()
+    public function testBuildTreeFromLeavesMultipleStep2(): void
     {
         $fld140 = new Docman_Folder(['item_id' => 140, 'parent_id' => 0, 'title' => 'Project documentation', 'rank' => 0]);
         $fld150 = new Docman_Folder(['item_id' => 150, 'parent_id' => 140, 'title' => 'Folder 150', 'rank' => -2]);
@@ -366,7 +373,8 @@ class Docman_ItemFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $itemFactory = new Docman_ItemFactory(0);
 
-        $itemList = [113 => $fld113,
+        $itemList = [
+            113 => $fld113,
             115 => $fld115,
             150 => $fld150,
             140 => $fld140,
@@ -380,7 +388,8 @@ class Docman_ItemFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
         // the priorities. While the final result will always be the same
         // (items ordered by priority) the internal status of the mapping may
         // differ. And this internal difference will break tests :/
-        $orphans     = [140 => 140,
+        $orphans     = [
+            140 => 140,
             150 => 150,
             112 => 112,
             113 => 113,
@@ -389,42 +398,44 @@ class Docman_ItemFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
         ];
         $wantedItems = [];
         $rootId      = $itemFactory->connectOrphansToParents($itemList, $orphans, $wantedItems);
-        $this->assertEquals([], $wantedItems);
-        $this->assertEquals([], $orphans);
-        $this->assertEquals(
-            [
-                113 => $c_fld113,
-                115 => $c_fld115,
-                135 => $c_fld135,
-                112 => $c_fld112,
-                140 => $c_fld140,
-                150 => $c_fld150,
-            ],
-            $itemList
-        );
-        $this->assertEquals(140, $rootId);
+        self::assertEquals([], $wantedItems);
+        self::assertEquals([], $orphans);
+        self::assertEquals([
+            113 => $c_fld113,
+            115 => $c_fld115,
+            135 => $c_fld135,
+            112 => $c_fld112,
+            140 => $c_fld140,
+            150 => $c_fld150,
+        ], $itemList);
+        self::assertEquals(140, $rootId);
     }
 
     public function testPurgeDeletedItemsWithNoItems(): void
     {
-        $itemFactory = \Mockery::mock(\Docman_ItemFactory::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $itemFactory = $this->createPartialMock(Docman_ItemFactory::class, [
+            '_getItemDao',
+            'purgeDeletedItem',
+        ]);
 
-        $dao = \Mockery::spy(\Docman_ItemDao::class);
-        $dao->shouldReceive('listItemsToPurge')->andReturns(\TestHelper::emptyDar());
+        $dao = $this->createMock(Docman_ItemDao::class);
+        $dao->method('listItemsToPurge')->willReturn(TestHelper::emptyDar());
 
-        $itemFactory->shouldReceive('_getItemDao')->andReturns($dao);
+        $itemFactory->method('_getItemDao')->willReturn($dao);
+        $itemFactory->expects(self::never())->method('purgeDeletedItem');
 
-        $itemFactory->shouldReceive('purgeDeletedItem')->never();
-
-        $this->assertTrue($itemFactory->PurgeDeletedItems(1234567890));
+        self::assertTrue($itemFactory->PurgeDeletedItems(1234567890));
     }
 
     public function testPurgeDeletedItems(): void
     {
-        $itemFactory = \Mockery::mock(\Docman_ItemFactory::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $itemFactory = $this->createPartialMock(Docman_ItemFactory::class, [
+            '_getItemDao',
+            'purgeDeletedItem',
+        ]);
 
-        $dao = \Mockery::spy(\Docman_ItemDao::class);
-        $dao->shouldReceive('listItemsToPurge')->andReturns(\TestHelper::arrayToDar([
+        $dao = $this->createMock(Docman_ItemDao::class);
+        $dao->method('listItemsToPurge')->willReturn(TestHelper::arrayToDar([
             'id'               => null,
             'title'            => null,
             'description'      => null,
@@ -438,177 +449,203 @@ class Docman_ItemFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
             'status'           => null,
             'obsolescenceDate' => null,
         ]));
-        $itemFactory->shouldReceive('_getItemDao')->andReturns($dao);
+        $itemFactory->method('_getItemDao')->willReturn($dao);
 
-        $itemFactory->shouldReceive('purgeDeletedItem')->once();
+        $itemFactory->expects(self::once())->method('purgeDeletedItem');
 
-        $this->assertTrue($itemFactory->PurgeDeletedItems(1234567890));
+        self::assertTrue($itemFactory->PurgeDeletedItems(1234567890));
     }
 
     public function testRestoreDeletedItemNonFile(): void
     {
-        $itemFactory = \Mockery::mock(\Docman_ItemFactory::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $itemFactory = $this->createPartialMock(Docman_ItemFactory::class, [
+            '_getItemDao',
+            '_getUserManager',
+            '_getEventManager',
+        ]);
 
-        $item = \Mockery::spy(\Docman_Folder::class);
-        $item->shouldReceive('getId')->andReturns(112);
-        $item->shouldReceive('getGroupId')->andReturns(114);
+        $item = new Docman_Folder(['item_id' => 112, 'group_id' => 114]);
 
-        $dao = \Mockery::spy(\Docman_ItemDao::class);
-        $dao->shouldReceive('restore')->with(112)->once()->andReturns(true);
-        $itemFactory->shouldReceive('_getItemDao')->andReturns($dao);
+        $dao = $this->createMock(Docman_ItemDao::class);
+        $dao->expects(self::once())->method('restore')->with(112)->willReturn(true);
+        $itemFactory->method('_getItemDao')->willReturn($dao);
 
         // Event
-        $user = \Mockery::spy(\PFUser::class);
-        $um   = \Mockery::spy(\UserManager::class);
-        $um->shouldReceive('getCurrentUser')->andReturns($user);
-        $itemFactory->shouldReceive('_getUserManager')->andReturns($um);
-        $em = \Mockery::mock(EventManager::class);
-        $em->shouldReceive('processEvent')->with('plugin_docman_event_restore', ['group_id' => 114, 'item' => $item, 'user' => $user]);
-        $itemFactory->shouldReceive('_getEventManager')->andReturns($em);
+        $user = UserTestBuilder::buildWithDefaults();
+        $um   = $this->createMock(UserManager::class);
+        $um->method('getCurrentUser')->willReturn($user);
+        $itemFactory->method('_getUserManager')->willReturn($um);
+        $em = $this->createMock(EventManager::class);
+        $em->method('processEvent')->with('plugin_docman_event_restore', ['group_id' => 114, 'item' => $item, 'user' => $user]);
+        $itemFactory->method('_getEventManager')->willReturn($em);
 
-        $this->assertTrue($itemFactory->restore($item));
+        self::assertTrue($itemFactory->restore($item));
     }
 
     public function testRestoreDeletedItemFile(): void
     {
-        $itemFactory = \Mockery::mock(\Docman_ItemFactory::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $itemFactory = $this->createPartialMock(Docman_ItemFactory::class, [
+            '_getItemDao',
+            '_getUserManager',
+            '_getEventManager',
+            '_getVersionFactory',
+            'getItemTypeForItem',
+        ]);
 
-        $item = \Mockery::spy(\Docman_File::class);
-        $item->shouldReceive('getId')->andReturns(112);
-        $item->shouldReceive('getGroupId')->andReturns(114);
-        $itemFactory->shouldReceive('getItemTypeForItem')->andReturns(PLUGIN_DOCMAN_ITEM_TYPE_FILE);
+        $item = new Docman_File(['item_id' => 112, 'group_id' => 114]);
+        $itemFactory->method('getItemTypeForItem')->willReturn(PLUGIN_DOCMAN_ITEM_TYPE_FILE);
 
-        $dao = \Mockery::spy(\Docman_ItemDao::class);
-        $dao->shouldReceive('restore')->with(112)->once()->andReturns(true);
-        $itemFactory->shouldReceive('_getItemDao')->andReturns($dao);
+        $dao = $this->createMock(Docman_ItemDao::class);
+        $dao->expects(self::once())->method('restore')->with(112)->willReturn(true);
+        $itemFactory->method('_getItemDao')->willReturn($dao);
 
-        $v1 = \Mockery::spy(\Docman_Version::class);
-        $v2 = \Mockery::spy(\Docman_Version::class);
+        $v1 = new Docman_Version();
+        $v2 = new Docman_Version();
 
-        $versionFactory = M::mock(Docman_VersionFactory::class);
-        $versionFactory->shouldReceive('listVersionsToPurgeForItem')->with($item)->andReturn([$v1, $v2]);
-        $versionFactory->shouldReceive('restore')->with($v1)->andReturn(true)->ordered();
-        $versionFactory->shouldReceive('restore')->with($v2)->andReturn(true)->ordered();
-        $itemFactory->shouldReceive('_getVersionFactory')->andReturns($versionFactory);
+        $versionFactory = $this->createMock(Docman_VersionFactory::class);
+        $versionFactory->method('listVersionsToPurgeForItem')->with($item)->willReturn([$v1, $v2]);
+        $versionFactory->method('restore')->withConsecutive([$v1], [$v2])->willReturn(true);
+        $itemFactory->method('_getVersionFactory')->willReturn($versionFactory);
 
         // Event
-        $user = \Mockery::spy(\PFUser::class);
-        $um   = \Mockery::spy(\UserManager::class);
-        $um->shouldReceive('getCurrentUser')->andReturns($user);
-        $itemFactory->shouldReceive('_getUserManager')->andReturns($um);
-        $em = \Mockery::mock(EventManager::class);
-        $em->shouldReceive('processEvent')->with('plugin_docman_event_restore', ['group_id' => 114, 'item' => $item, 'user' => $user]);
-        $itemFactory->shouldReceive('_getEventManager')->andReturns($em);
+        $user = UserTestBuilder::buildWithDefaults();
+        $um   = $this->createMock(UserManager::class);
+        $um->method('getCurrentUser')->willReturn($user);
+        $itemFactory->method('_getUserManager')->willReturn($um);
+        $em = $this->createMock(EventManager::class);
+        $em->method('processEvent')->with('plugin_docman_event_restore', ['group_id' => 114, 'item' => $item, 'user' => $user]);
+        $itemFactory->method('_getEventManager')->willReturn($em);
 
-        $this->assertTrue($itemFactory->restore($item));
+        self::assertTrue($itemFactory->restore($item));
     }
 
     public function testRestoreDeletedItemFileWithoutRestorableVersions(): void
     {
-        $itemFactory = \Mockery::mock(\Docman_ItemFactory::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $itemFactory = $this->createPartialMock(Docman_ItemFactory::class, [
+            'getItemTypeForItem',
+            '_getItemDao',
+            '_getVersionFactory',
+            '_getEventManager',
+        ]);
 
-        $item = \Mockery::spy(\Docman_File::class);
-        $item->shouldReceive('getId')->andReturns(112);
-        $item->shouldReceive('getGroupId')->andReturns(114);
-        $itemFactory->shouldReceive('getItemTypeForItem')->andReturns(PLUGIN_DOCMAN_ITEM_TYPE_FILE);
+        $item = new Docman_File(['item_id' => 112, 'group_id' => 114]);
+        $itemFactory->method('getItemTypeForItem')->willReturn(PLUGIN_DOCMAN_ITEM_TYPE_FILE);
 
-        $dao = \Mockery::spy(\Docman_ItemDao::class);
-        $dao->shouldReceive('restore')->never();
-        $itemFactory->shouldReceive('_getItemDao')->andReturns($dao);
+        $dao = $this->createMock(Docman_ItemDao::class);
+        $dao->expects(self::never())->method('restore');
+        $itemFactory->method('_getItemDao')->willReturn($dao);
 
-        $versionFactory = M::mock(Docman_VersionFactory::class);
-        $versionFactory->shouldReceive('listVersionsToPurgeForItem')->with($item)->andReturn(false);
-        $versionFactory->shouldNotReceive('restore');
-        $itemFactory->shouldReceive('_getVersionFactory')->andReturns($versionFactory);
+        $versionFactory = $this->createMock(Docman_VersionFactory::class);
+        $versionFactory->method('listVersionsToPurgeForItem')->with($item)->willReturn(false);
+        $versionFactory->expects(self::never())->method('restore');
+        $itemFactory->method('_getVersionFactory')->willReturn($versionFactory);
 
         // Event
-        $itemFactory->shouldReceive('_getEventManager')->never();
+        $itemFactory->expects(self::never())->method('_getEventManager');
 
-        $this->assertFalse($itemFactory->restore($item));
+        self::assertFalse($itemFactory->restore($item));
     }
 
     public function testRestoreDeletedItemFileWithSomeVersionRestoreFailure(): void
     {
-        $itemFactory = \Mockery::mock(\Docman_ItemFactory::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $itemFactory = $this->createPartialMock(Docman_ItemFactory::class, [
+            'getItemTypeForItem',
+            '_getItemDao',
+            '_getVersionFactory',
+            '_getEventManager',
+            '_getUserManager',
+        ]);
 
-        $item = \Mockery::spy(\Docman_File::class);
-        $item->shouldReceive('getId')->andReturns(112);
-        $item->shouldReceive('getGroupId')->andReturns(114);
-        $itemFactory->shouldReceive('getItemTypeForItem')->andReturns(PLUGIN_DOCMAN_ITEM_TYPE_FILE);
+        $item = new Docman_File(['item_id' => 112, 'group_id' => 114]);
+        $itemFactory->method('getItemTypeForItem')->willReturn(PLUGIN_DOCMAN_ITEM_TYPE_FILE);
 
-        $dao = \Mockery::spy(\Docman_ItemDao::class);
-        $dao->shouldReceive('restore')->with(112)->once()->andReturns(true);
-        $itemFactory->shouldReceive('_getItemDao')->andReturns($dao);
+        $dao = $this->createMock(Docman_ItemDao::class);
+        $dao->expects(self::once())->method('restore')->with(112)->willReturn(true);
+        $itemFactory->method('_getItemDao')->willReturn($dao);
 
-        $v1 = \Mockery::spy(\Docman_Version::class);
-        $v2 = \Mockery::spy(\Docman_Version::class);
+        $v1 = new Docman_Version();
+        $v2 = new Docman_Version();
 
-        $versionFactory = M::mock(Docman_VersionFactory::class);
-        $versionFactory->shouldReceive('listVersionsToPurgeForItem')->with($item)->andReturn([$v1, $v2]);
-        $versionFactory->shouldReceive('restore')->with($v1)->andReturn(true)->ordered();
-        $versionFactory->shouldReceive('restore')->with($v2)->andReturn(false)->ordered();
-        $itemFactory->shouldReceive('_getVersionFactory')->andReturns($versionFactory);
+        $versionFactory = $this->createMock(Docman_VersionFactory::class);
+        $versionFactory->method('listVersionsToPurgeForItem')->with($item)->willReturn([$v1, $v2]);
+        $versionFactory->method('restore')->withConsecutive([$v1], [$v2])->willReturnOnConsecutiveCalls(true, false);
+        $itemFactory->method('_getVersionFactory')->willReturn($versionFactory);
 
         // Event
-        $user = \Mockery::spy(\PFUser::class);
-        $um   = \Mockery::spy(\UserManager::class);
-        $um->shouldReceive('getCurrentUser')->andReturns($user);
-        $itemFactory->shouldReceive('_getUserManager')->andReturns($um);
-        $em = \Mockery::mock(EventManager::class);
-        $em->shouldReceive('processEvent')->with('plugin_docman_event_restore', ['group_id' => 114, 'item' => $item, 'user' => $user]);
-        $itemFactory->shouldReceive('_getEventManager')->andReturns($em);
+        $user = UserTestBuilder::buildWithDefaults();
+        $um   = $this->createMock(UserManager::class);
+        $um->method('getCurrentUser')->willReturn($user);
+        $itemFactory->method('_getUserManager')->willReturn($um);
+        $em = $this->createMock(EventManager::class);
+        $em->method('processEvent')->with('plugin_docman_event_restore', ['group_id' => 114, 'item' => $item, 'user' => $user]);
+        $itemFactory->method('_getEventManager')->willReturn($em);
 
-        $this->assertTrue($itemFactory->restore($item));
+        self::assertTrue($itemFactory->restore($item));
     }
 
     public function testRestoreDeletedItemFileWithAllVersionRestoreFailure(): void
     {
-        $itemFactory = \Mockery::mock(\Docman_ItemFactory::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $itemFactory = $this->createPartialMock(Docman_ItemFactory::class, [
+            'getItemTypeForItem',
+            '_getItemDao',
+            '_getVersionFactory',
+            '_getEventManager',
+        ]);
 
-        $item = \Mockery::spy(\Docman_File::class);
-        $item->shouldReceive('getId')->andReturns(112);
-        $item->shouldReceive('getGroupId')->andReturns(114);
-        $itemFactory->shouldReceive('getItemTypeForItem')->andReturns(PLUGIN_DOCMAN_ITEM_TYPE_FILE);
+        $item = new Docman_File(['item_id' => 112, 'group_id' => 114]);
+        $itemFactory->method('getItemTypeForItem')->willReturn(PLUGIN_DOCMAN_ITEM_TYPE_FILE);
 
-        $dao = \Mockery::spy(\Docman_ItemDao::class);
-        $dao->shouldReceive('restore')->never();
-        $itemFactory->shouldReceive('_getItemDao')->andReturns($dao);
+        $dao = $this->createMock(Docman_ItemDao::class);
+        $dao->expects(self::never())->method('restore');
+        $itemFactory->method('_getItemDao')->willReturn($dao);
 
-        $v1 = \Mockery::spy(\Docman_Version::class);
-        $v2 = \Mockery::spy(\Docman_Version::class);
+        $v1 = new Docman_Version();
+        $v2 = new Docman_Version();
 
-        $versionFactory = M::mock(Docman_VersionFactory::class);
-        $versionFactory->shouldReceive('listVersionsToPurgeForItem')->with($item)->andReturn([$v1, $v2]);
-        $versionFactory->shouldReceive('restore')->with($v1)->andReturn(false)->ordered();
-        $versionFactory->shouldReceive('restore')->with($v2)->andReturn(false)->ordered();
-        $itemFactory->shouldReceive('_getVersionFactory')->andReturns($versionFactory);
+        $versionFactory = $this->createMock(Docman_VersionFactory::class);
+        $versionFactory->method('listVersionsToPurgeForItem')->with($item)->willReturn([$v1, $v2]);
+        $versionFactory->method('restore')->withConsecutive([$v1], [$v2])->willReturn(false);
+        $itemFactory->method('_getVersionFactory')->willReturn($versionFactory);
 
         // Event
-        $itemFactory->shouldReceive('_getEventManager')->never();
+        $itemFactory->expects(self::never())->method('_getEventManager');
 
-        $this->assertFalse($itemFactory->restore($item));
+        self::assertFalse($itemFactory->restore($item));
     }
 
-    public function itDeletesNotificationsWhenDeletingItem(): void
+    public function testItDeletesNotificationsWhenDeletingItem(): void
     {
-        $lock_factory          = \Mockery::spy(\Docman_LockFactory::class);
-        $item_dao              = \Mockery::spy(\Docman_ItemDao::class);
-        $ugroups_to_notify_dao = \Mockery::spy(\Tuleap\Docman\Notifications\UgroupsToNotifyDao::class);
-        $users_to_notify_dao   = \Mockery::spy(\Tuleap\Docman\Notifications\UsersToNotifyDao::class);
+        $lock_factory          = $this->createMock(Docman_LockFactory::class);
+        $item_dao              = $this->createMock(Docman_ItemDao::class);
+        $ugroups_to_notify_dao = $this->createMock(UgroupsToNotifyDao::class);
+        $users_to_notify_dao   = $this->createMock(UsersToNotifyDao::class);
+        $user_manager          = $this->createMock(UserManager::class);
 
         $item_id = 183;
-        $item    = \Mockery::spy(\Docman_File::class);
-        $item->shouldReceive('getId')->andReturns($item_id);
+        $item    = new Docman_File(['item_id' => $item_id]);
 
-        $item_factory = \Mockery::mock(\Docman_ItemFactory::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $item_factory->shouldReceive('getUgroupsToNotifyDao')->andReturns($ugroups_to_notify_dao);
-        $ugroups_to_notify_dao->shouldReceive('deleteByItemId')->with($item_id)->once();
-        $item_factory->shouldReceive('getUsersToNotifyDao')->andReturns($users_to_notify_dao);
-        $users_to_notify_dao->shouldReceive('deleteByItemId')->with($item_id)->once();
-        $item_factory->shouldReceive('getItemFromDb')->andReturns(null);
-        $item_factory->shouldReceive('_getUserManager')->andReturns(\Mockery::spy(\UserManager::class));
-        $item_factory->shouldReceive('getLockFactory')->andReturns($lock_factory);
-        $item_factory->shouldReceive('_getItemDao')->andReturns($item_dao);
+        $item_factory = $this->createPartialMock(Docman_ItemFactory::class, [
+            'getUgroupsToNotifyDao',
+            'getUsersToNotifyDao',
+            'getItemFromDb',
+            '_getUserManager',
+            'getLockFactory',
+            '_getItemDao',
+        ]);
+        $item_factory->method('getUgroupsToNotifyDao')->willReturn($ugroups_to_notify_dao);
+        $ugroups_to_notify_dao->expects(self::once())->method('deleteByItemId')->with($item_id);
+        $item_factory->method('getUsersToNotifyDao')->willReturn($users_to_notify_dao);
+        $users_to_notify_dao->expects(self::once())->method('deleteByItemId')->with($item_id);
+        $item_factory->method('getItemFromDb')->willReturn(null);
+        $user_manager->method('getCurrentUser')->willReturn(UserTestBuilder::buildWithDefaults());
+        $item_factory->method('_getUserManager')->willReturn($user_manager);
+        $item_factory->method('getLockFactory')->willReturn($lock_factory);
+        $item_factory->method('_getItemDao')->willReturn($item_dao);
+        $lock_factory->method('itemIsLocked');
+        $item_dao->method('deleteCutPreferenceForAllUsers');
+        $item_dao->method('deleteCopyPreferenceForAllUsers');
+        $item_dao->method('updateFromRow');
+        $item_dao->method('storeDeletedItem');
 
         $item_factory->delete($item);
     }
