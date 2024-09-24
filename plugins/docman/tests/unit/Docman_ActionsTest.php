@@ -20,42 +20,56 @@
  *
  */
 
-use Mockery as M;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use Tuleap\Docman\ResponseFeedbackWrapper;
+declare(strict_types=1);
+
+namespace Tuleap\Docman;
+
+use Codendi_Request;
+use Docman_Actions;
+use Docman_Controller;
+use Docman_File;
+use Docman_Folder;
+use Docman_Item;
+use Docman_ItemFactory;
+use Docman_NotificationsManager;
+use Docman_PermissionsManager;
+use Docman_Version;
+use Docman_VersionFactory;
+use EventManager;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
+use UserManager;
 
 // Make easier the navigation in IDE between the main class and this class
-//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
-final class Docman_ActionsTest extends \Tuleap\Test\PHPUnit\TestCase
+final class Docman_ActionsTest extends TestCase //phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 {
-    use MockeryPHPUnitIntegration;
-
     public function testCannotDeleteVersionOnNonFile(): void
     {
         // Definition acceptance criteria:
         // test is complete if there is an error and the error message is the right one
-        $ctrl           = \Mockery::spy(\Docman_Controller::class);
-        $ctrl->feedback = \Mockery::spy(ResponseFeedbackWrapper::class);
+        $ctrl           = $this->createMock(Docman_Controller::class);
+        $ctrl->feedback = $this->createMock(ResponseFeedbackWrapper::class);
         // Test log message
-        $ctrl->feedback->shouldReceive('log')->with('error', 'Cannot delete a version on something that is not a file.')->once();
+        $ctrl->feedback->expects(self::once())->method('log')->with('error', 'Cannot delete a version on something that is not a file.');
 
         // Setup of the test
-        $actions = \Mockery::mock(\Docman_Actions::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $actions = $this->createPartialMock(Docman_Actions::class, [
+            '_getItemFactory',
+            '_getEventManager',
+        ]);
 
-        $ctrl->request = \Mockery::spy(\HTTPRequest::class);
-        $ctrl->request->shouldReceive('get')->with('group_id')->andReturns('102');
-        $ctrl->request->shouldReceive('get')->with('id')->andReturns('344');
-        $ctrl->request->shouldReceive('get')->with('version')->andReturns('1');
-        $ctrl->request->shouldReceive('valid')->andReturns(true);
+        $ctrl->request       = new Codendi_Request(['group_id' => '102', 'id' => '344', 'version' => '1']);
         $actions->_controler = $ctrl;
 
-        $item = \Mockery::spy(\Docman_Folder::class);
-        $if   = \Mockery::spy(\Docman_ItemFactory::class);
-        $if->shouldReceive('getItemFromDb')->with(344)->once()->andReturns($item);
-        $if->shouldReceive('getItemTypeForItem')->andReturns(PLUGIN_DOCMAN_ITEM_TYPE_FOLDER);
-        $actions->shouldReceive('_getItemFactory')->with(102)->once()->andReturns($if);
+        $item = new Docman_Folder();
+        $if   = $this->createMock(Docman_ItemFactory::class);
+        $if->expects(self::once())->method('getItemFromDb')->with(344)->willReturn($item);
+        $if->method('getItemTypeForItem')->willReturn(PLUGIN_DOCMAN_ITEM_TYPE_FOLDER);
+        $actions->expects(self::once())->method('_getItemFactory')->with(102)->willReturn($if);
 
-        $actions->shouldReceive('_getEventManager')->andReturns(\Mockery::spy(EventManager::class));
+        $event_manager = $this->createMock(EventManager::class);
+        $event_manager->method('processEvent');
+        $actions->method('_getEventManager')->willReturn($event_manager);
 
         // Run test
         $actions->deleteVersion();
@@ -65,39 +79,39 @@ final class Docman_ActionsTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         // Definition acceptance criteria:
         // test is complete if there is an info flash message that tells version is deleted
-        $ctrl           = \Mockery::spy(\Docman_Controller::class);
-        $ctrl->feedback = \Mockery::spy(ResponseFeedbackWrapper::class);
+        $ctrl           = $this->createMock(Docman_Controller::class);
+        $ctrl->feedback = $this->createMock(ResponseFeedbackWrapper::class);
         // Test log message
-        $ctrl->feedback->shouldReceive('log')->with('info', 'Version 1 (label 5) successfully deleted')->once();
+        $ctrl->feedback->expects(self::once())->method('log')->with('info', 'Version 1 (label 5) successfully deleted');
 
         // Setup of the test
-        $actions = \Mockery::mock(\Docman_Actions::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $actions = $this->createPartialMock(Docman_Actions::class, [
+            '_getVersionFactory',
+            '_getEventManager',
+            '_getItemFactory',
+        ]);
 
-        $ctrl->request = \Mockery::spy(\HTTPRequest::class);
-        $ctrl->request->shouldReceive('get')->with('group_id')->andReturns('102');
-        $ctrl->request->shouldReceive('get')->with('id')->andReturns('344');
-        $ctrl->request->shouldReceive('get')->with('version')->andReturns('1');
-        $ctrl->request->shouldReceive('valid')->andReturns(true);
+        $ctrl->request       = new Codendi_Request(['group_id' => '102', 'id' => '344', 'version' => '1']);
         $actions->_controler = $ctrl;
+        $ctrl->method('getUser');
 
-        $item = \Mockery::spy(\Docman_File::class);
-        $item->shouldReceive('accept')->andReturns(true);
+        $item = $this->createMock(Docman_File::class);
+        $item->method('accept')->willReturn(true);
 
-        $if = \Mockery::spy(\Docman_ItemFactory::class);
-        $if->shouldReceive('getItemFromDb')->with(344)->andReturns($item);
-        $if->shouldReceive('getItemTypeForItem')->andReturns(PLUGIN_DOCMAN_ITEM_TYPE_FILE);
-        $actions->shouldReceive('_getItemFactory')->with(102)->once()->andReturns($if);
+        $if = $this->createMock(Docman_ItemFactory::class);
+        $if->method('getItemFromDb')->with(344)->willReturn($item);
+        $if->method('getItemTypeForItem')->willReturn(PLUGIN_DOCMAN_ITEM_TYPE_FILE);
+        $actions->expects(self::once())->method('_getItemFactory')->with(102)->willReturn($if);
 
-        $v1 = \Mockery::spy(\Docman_Version::class);
-        $v1->shouldReceive('getNumber')->andReturns(0);
-        $v1->shouldReceive('getLabel')->andReturns('label 4');
-        $v2 = \Mockery::spy(\Docman_Version::class);
-        $v2->shouldReceive('getNumber')->andReturns(1);
-        $v2->shouldReceive('getLabel')->andReturns('label 5');
-        $vf = M::mock(Docman_VersionFactory::class, ['getAllVersionForItem' => [$v1, $v2]]);
-        $actions->shouldReceive('_getVersionFactory')->andReturns($vf);
+        $v1 = new Docman_Version(['number' => 0, 'label' => 'label 4']);
+        $v2 = new Docman_Version(['number' => 1, 'label' => 'label 5']);
+        $vf = $this->createMock(Docman_VersionFactory::class);
+        $vf->method('getAllVersionForItem')->willReturn([$v1, $v2]);
+        $actions->method('_getVersionFactory')->willReturn($vf);
 
-        $actions->shouldReceive('_getEventManager')->andReturns(\Mockery::spy(EventManager::class));
+        $event_manager = $this->createMock(EventManager::class);
+        $event_manager->method('processEvent');
+        $actions->method('_getEventManager')->willReturn($event_manager);
 
         // Run test
         $actions->deleteVersion();
@@ -107,33 +121,36 @@ final class Docman_ActionsTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         // Definition acceptance criteria:
         // test is complete if there is an error and the error message is the right one
-        $ctrl           = \Mockery::spy(\Docman_Controller::class);
-        $ctrl->feedback = \Mockery::spy(ResponseFeedbackWrapper::class);
+        $ctrl           = $this->createMock(Docman_Controller::class);
+        $ctrl->feedback = $this->createMock(ResponseFeedbackWrapper::class);
         // Test log message
-        $ctrl->feedback->shouldReceive('log')->with('error', 'Cannot delete last version of a file. If you want to continue, please delete the document itself.')->once();
+        $ctrl->feedback->expects(self::once())->method('log')->with('error', 'Cannot delete last version of a file. If you want to continue, please delete the document itself.');
 
         // Setup of the test
-        $actions = \Mockery::mock(\Docman_Actions::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $actions = $this->createPartialMock(Docman_Actions::class, [
+            '_getItemFactory',
+            '_getVersionFactory',
+            '_getEventManager',
+        ]);
 
-        $ctrl->request = \Mockery::spy(\HTTPRequest::class);
-        $ctrl->request->shouldReceive('get')->with('group_id')->andReturns('102');
-        $ctrl->request->shouldReceive('get')->with('id')->andReturns('344');
-        $ctrl->request->shouldReceive('get')->with('version')->andReturns('1');
-        $ctrl->request->shouldReceive('valid')->andReturns(true);
+        $ctrl->request       = new Codendi_Request(['group_id' => '102', 'id' => '344', 'version' => '1']);
         $actions->_controler = $ctrl;
 
-        $item = \Mockery::spy(\Docman_File::class);
-        $item->shouldReceive('accept')->andReturns(true);
+        $item = $this->createMock(Docman_File::class);
+        $item->method('accept')->willReturn(true);
 
-        $if = \Mockery::spy(\Docman_ItemFactory::class);
-        $if->shouldReceive('getItemFromDb')->with(344)->andReturns($item);
-        $if->shouldReceive('getItemTypeForItem')->andReturns(PLUGIN_DOCMAN_ITEM_TYPE_FILE);
-        $actions->shouldReceive('_getItemFactory')->with(102)->once()->andReturns($if);
+        $if = $this->createMock(Docman_ItemFactory::class);
+        $if->method('getItemFromDb')->with(344)->willReturn($item);
+        $if->method('getItemTypeForItem')->willReturn(PLUGIN_DOCMAN_ITEM_TYPE_FILE);
+        $actions->expects(self::once())->method('_getItemFactory')->with(102)->willReturn($if);
 
-        $vf = M::mock(Docman_VersionFactory::class, ['getAllVersionForItem' => [M::mock(Docman_Version::class)]]);
-        $actions->shouldReceive('_getVersionFactory')->andReturns($vf);
+        $vf = $this->createMock(Docman_VersionFactory::class);
+        $vf->method('getAllVersionForItem')->willReturn([new Docman_Version()]);
+        $actions->method('_getVersionFactory')->willReturn($vf);
 
-        $actions->shouldReceive('_getEventManager')->andReturns(\Mockery::spy(EventManager::class));
+        $event_manager = $this->createMock(EventManager::class);
+        $event_manager->method('processEvent');
+        $actions->method('_getEventManager')->willReturn($event_manager);
 
         // Run test
         $actions->deleteVersion();
@@ -143,39 +160,37 @@ final class Docman_ActionsTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         // Definition acceptance criteria:
         // test is complete if there is an info flash message that tells version is deleted
-        $ctrl           = \Mockery::spy(\Docman_Controller::class);
-        $ctrl->feedback = \Mockery::spy(ResponseFeedbackWrapper::class);
+        $ctrl           = $this->createMock(Docman_Controller::class);
+        $ctrl->feedback = $this->createMock(ResponseFeedbackWrapper::class);
         // Test log message
-        $ctrl->feedback->shouldReceive('log')->with('error', 'Cannot delete a version that doesn\'t exist.')->once();
+        $ctrl->feedback->expects(self::once())->method('log')->with('error', 'Cannot delete a version that doesn\'t exist.');
 
         // Setup of the test
-        $actions = \Mockery::mock(\Docman_Actions::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $actions = $this->createPartialMock(Docman_Actions::class, [
+            '_getItemFactory',
+            '_getVersionFactory',
+            '_getEventManager',
+        ]);
 
-        $ctrl->request = \Mockery::spy(\HTTPRequest::class);
-        $ctrl->request->shouldReceive('get')->with('group_id')->andReturns('102');
-        $ctrl->request->shouldReceive('get')->with('id')->andReturns('344');
-        $ctrl->request->shouldReceive('get')->with('version')->andReturns('1');
-        $ctrl->request->shouldReceive('valid')->andReturns(true);
+        $ctrl->request       = new Codendi_Request(['group_id' => '102', 'id' => '344', 'version' => '1']);
         $actions->_controler = $ctrl;
 
-        $item = \Mockery::spy(\Docman_File::class);
-        $item->shouldReceive('accept')->never();
+        $item = new Docman_File();
 
-        $if = \Mockery::spy(\Docman_ItemFactory::class);
-        $if->shouldReceive('getItemFromDb')->with(344)->andReturns($item);
-        $if->shouldReceive('getItemTypeForItem')->andReturns(PLUGIN_DOCMAN_ITEM_TYPE_FILE);
-        $actions->shouldReceive('_getItemFactory')->with(102)->once()->andReturns($if);
+        $if = $this->createMock(Docman_ItemFactory::class);
+        $if->method('getItemFromDb')->with(344)->willReturn($item);
+        $if->method('getItemTypeForItem')->willReturn(PLUGIN_DOCMAN_ITEM_TYPE_FILE);
+        $actions->expects(self::once())->method('_getItemFactory')->with(102)->willReturn($if);
 
-        $v1 = \Mockery::spy(\Docman_Version::class);
-        $v1->shouldReceive('getNumber')->andReturns(0);
-        $v1->shouldReceive('getLabel')->andReturns('label 4');
-        $v2 = \Mockery::spy(\Docman_Version::class);
-        $v2->shouldReceive('getNumber')->andReturns(2);
-        $v2->shouldReceive('getLabel')->andReturns('label 5');
-        $vf = M::mock(Docman_VersionFactory::class, ['getAllVersionForItem' => [$v1, $v2]]);
-        $actions->shouldReceive('_getVersionFactory')->andReturns($vf);
+        $v1 = new Docman_Version(['number' => 0, 'label' => 'label 4']);
+        $v2 = new Docman_Version(['number' => 2, 'label' => 'label 5']);
+        $vf = $this->createMock(Docman_VersionFactory::class);
+        $vf->method('getAllVersionForItem')->willReturn([$v1, $v2]);
+        $actions->method('_getVersionFactory')->willReturn($vf);
 
-        $actions->shouldReceive('_getEventManager')->andReturns(\Mockery::spy(EventManager::class));
+        $event_manager = $this->createMock(EventManager::class);
+        $event_manager->method('processEvent');
+        $actions->method('_getEventManager')->willReturn($event_manager);
 
         // Run test
         $actions->deleteVersion();
@@ -183,224 +198,196 @@ final class Docman_ActionsTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testRemoveMonitoringNothingToDelete(): void
     {
-        $notificationsManager                  = \Mockery::spy(\Docman_NotificationsManager::class);
-        $controller                            = \Mockery::spy(\Docman_Controller::class);
-        $controller->feedback                  = \Mockery::spy(ResponseFeedbackWrapper::class);
-        $actions                               = \Mockery::mock(\Docman_Actions::class)->makePartial(
-        )->shouldAllowMockingProtectedMethods();
+        $notificationsManager                  = $this->createMock(Docman_NotificationsManager::class);
+        $controller                            = $this->createMock(Docman_Controller::class);
+        $controller->feedback                  = $this->createMock(ResponseFeedbackWrapper::class);
+        $actions                               = $this->createPartialMock(Docman_Actions::class, []);
         $actions->_controler                   = $controller;
         $params['listeners_users_to_delete']   = true;
         $params['listeners_ugroups_to_delete'] = true;
         $params['item']                        = new Docman_Item();
+        $notificationsManager->expects(self::never())->method('removeUser');
         $actions->update_monitoring($params);
-        $notificationsManager->shouldReceive('removeUser')->never();
     }
 
     public function testRemoveMonitoringNotifDoesNotExist(): void
     {
-        $controller           = \Mockery::spy(\Docman_Controller::class);
-        $controller->feedback = \Mockery::spy(ResponseFeedbackWrapper::class);
-        $user1                = \Mockery::spy(\PFUser::class);
-        $user1->shouldReceive('getId')->andReturns(123);
-        $user1->shouldReceive('getUserName')->andReturns('Carol');
-        $user2 = \Mockery::spy(\PFUser::class);
-        $user2->shouldReceive('getId')->andReturns(132);
-        $user2->shouldReceive('getUserName')->andReturns('Carlos');
-        $user3 = \Mockery::spy(\PFUser::class);
-        $user3->shouldReceive('getId')->andReturns(133);
-        $user3->shouldReceive('getUserName')->andReturns('Charlie');
-        $controller->feedback->shouldReceive('log')->with('warning', 'Monitoring was not active for user "Carol"')->ordered();
-        $controller->feedback->shouldReceive('log')->with('warning', 'Monitoring was not active for user "Carlos"')->ordered();
-        $controller->feedback->shouldReceive('log')->with('warning', 'Monitoring was not active for user "Charlie"')->ordered();
-        $notificationsManager                  = \Mockery::spy(\Docman_NotificationsManager::class);
+        $controller           = $this->createMock(Docman_Controller::class);
+        $controller->feedback = $this->createMock(ResponseFeedbackWrapper::class);
+        $user1                = UserTestBuilder::aUser()->withId(123)->withUserName('Carol')->build();
+        $user2                = UserTestBuilder::aUser()->withId(132)->withUserName('Carlos')->build();
+        $user3                = UserTestBuilder::aUser()->withId(133)->withUserName('Charlie')->build();
+        $controller->feedback->method('log')->withConsecutive(
+            ['warning', 'Monitoring was not active for user "Carol"'],
+            ['warning', 'Monitoring was not active for user "Carlos"'],
+            ['warning', 'Monitoring was not active for user "Charlie"'],
+        );
+        $notificationsManager                  = $this->createMock(Docman_NotificationsManager::class);
         $controller->notificationsManager      = $notificationsManager;
-        $actions                               = \Mockery::mock(\Docman_Actions::class)->makePartial(
-        )->shouldAllowMockingProtectedMethods();
+        $actions                               = $this->createPartialMock(Docman_Actions::class, []);
         $actions->_controler                   = $controller;
         $params['listeners_users_to_delete']   = [$user1, $user2, $user3];
         $params['listeners_ugroups_to_delete'] = [];
         $params['item']                        = new Docman_Item();
+        $notificationsManager->method('userExists')->withConsecutive([123], [132], [133])->willReturn(false);
+        $notificationsManager->expects(self::never())->method('removeUser');
         $actions->update_monitoring($params);
-        $notificationsManager->shouldReceive('userExists')->with(123)->andReturns(false);
-        $notificationsManager->shouldReceive('removeUser')->never();
     }
 
     public function testRemoveMonitoringError(): void
     {
-        $controller           = \Mockery::spy(\Docman_Controller::class);
-        $controller->feedback = \Mockery::spy(ResponseFeedbackWrapper::class);
-        $userManager          = \Mockery::spy(\UserManager::class);
-        $user1                = \Mockery::spy(\PFUser::class);
-        $user1->shouldReceive('getId')->andReturns(123);
-        $user1->shouldReceive('getUserName')->andReturns('Carol');
-        $user2 = \Mockery::spy(\PFUser::class);
-        $user2->shouldReceive('getId')->andReturns(132);
-        $user2->shouldReceive('getUserName')->andReturns('Carlos');
-        $user3 = \Mockery::spy(\PFUser::class);
-        $user3->shouldReceive('getId')->andReturns(133);
-        $user3->shouldReceive('getUserName')->andReturns('Charlie');
-        $controller->feedback->shouldReceive('log')->with('error', 'Unable to remove monitoring for user "Carol"')->ordered();
-        $controller->feedback->shouldReceive('log')->with('error', 'Unable to remove monitoring for user "Carlos"')->ordered();
-        $controller->feedback->shouldReceive('log')->with('error', 'Unable to remove monitoring for user "Charlie"')->ordered();
-        $notificationsManager                  = \Mockery::spy(\Docman_NotificationsManager::class);
+        $controller           = $this->createMock(Docman_Controller::class);
+        $controller->feedback = $this->createMock(ResponseFeedbackWrapper::class);
+        $user1                = UserTestBuilder::aUser()->withId(123)->withUserName('Carol')->build();
+        $user2                = UserTestBuilder::aUser()->withId(132)->withUserName('Carlos')->build();
+        $user3                = UserTestBuilder::aUser()->withId(133)->withUserName('Charlie')->build();
+        $controller->feedback->method('log')->withConsecutive(
+            ['error', 'Unable to remove monitoring for user "Carol"'],
+            ['error', 'Unable to remove monitoring for user "Carlos"'],
+            ['error', 'Unable to remove monitoring for user "Charlie"'],
+        );
+        $notificationsManager                  = $this->createMock(Docman_NotificationsManager::class);
         $controller->notificationsManager      = $notificationsManager;
-        $actions                               = \Mockery::mock(\Docman_Actions::class)->makePartial(
-        )->shouldAllowMockingProtectedMethods();
+        $actions                               = $this->createPartialMock(Docman_Actions::class, []);
         $actions->_controler                   = $controller;
         $params['listeners_users_to_delete']   = [$user1, $user2, $user3];
         $params['listeners_ugroups_to_delete'] = [];
         $item                                  = new Docman_Item();
         $item->setId(10);
         $params['item'] = new Docman_Item();
-        $notificationsManager->shouldReceive('userExists')->times(3)->andReturns(true);
-        $notificationsManager->shouldReceive('removeUser')->times(3)->andReturns(false);
+        $notificationsManager->expects(self::exactly(3))->method('userExists')->willReturn(true);
+        $notificationsManager->expects(self::exactly(3))->method('removeUser')->willReturn(false);
         $actions->update_monitoring($params);
     }
 
     public function testRemoveMonitoringSuccess(): void
     {
-        $controller           = \Mockery::spy(\Docman_Controller::class);
-        $controller->feedback = \Mockery::spy(ResponseFeedbackWrapper::class);
-        $userManager          = \Mockery::spy(\UserManager::class);
-        $user1                = \Mockery::spy(\PFUser::class);
-        $user1->shouldReceive('getId')->andReturns(123);
-        $user1->shouldReceive('getUserName')->andReturns('Carol');
-        $user2 = \Mockery::spy(\PFUser::class);
-        $user2->shouldReceive('getId')->andReturns(132);
-        $user2->shouldReceive('getUserName')->andReturns('Carlos');
-        $user3 = \Mockery::spy(\PFUser::class);
-        $user3->shouldReceive('getId')->andReturns(133);
-        $user3->shouldReceive('getUserName')->andReturns('Charlie');
-        $controller->feedback->shouldReceive('log')->with('info', 'Removed monitoring for user(s) "Carol"')->once();
-        $notificationsManager             = \Mockery::spy(\Docman_NotificationsManager::class);
+        $controller           = $this->createMock(Docman_Controller::class);
+        $controller->feedback = $this->createMock(ResponseFeedbackWrapper::class);
+        $userManager          = $this->createMock(UserManager::class);
+        $user1                = UserTestBuilder::aUser()->withId(123)->withUserName('Carol')->build();
+        $user2                = UserTestBuilder::aUser()->withId(132)->withUserName('Carlos')->build();
+        $user3                = UserTestBuilder::aUser()->withId(133)->withUserName('Charlie')->build();
+        $controller->feedback->expects(self::once())->method('log')->with('info', 'Removed monitoring for user(s) "Carol"');
+        $notificationsManager             = $this->createMock(Docman_NotificationsManager::class);
         $controller->notificationsManager = $notificationsManager;
-        $actions                          = \Mockery::mock(\Docman_Actions::class)->makePartial(
-        )->shouldAllowMockingProtectedMethods();
+        $actions                          = $this->createPartialMock(Docman_Actions::class, ['_getUserManagerInstance']);
         $actions->_controler              = $controller;
-        $actions->event_manager           = \Mockery::spy(EventManager::class);
-        $actions->shouldReceive('_getUserManagerInstance')->andReturns($userManager);
+        $actions->event_manager           = $this->createMock(EventManager::class);
+        $actions->event_manager->method('processEvent');
+        $actions->method('_getUserManagerInstance')->willReturn($userManager);
         $params['listeners_users_to_delete']   = [$user1, $user2, $user3];
         $params['listeners_ugroups_to_delete'] = [];
         $params['item']                        = new Docman_Item();
-        $notificationsManager->shouldReceive('userExists')->times(3)->andReturns(true);
-        $notificationsManager->shouldReceive('removeUser')->times(6)->andReturns(true);
+        $notificationsManager->expects(self::exactly(3))->method('userExists')->willReturn(true);
+        $notificationsManager->expects(self::exactly(6))->method('removeUser')->willReturn(true);
         $actions->update_monitoring($params);
     }
 
     public function testAddMonitoringNoOneToAdd(): void
     {
-        $controller                 = \Mockery::spy(\Docman_Controller::class);
-        $notificationsManager       = \Mockery::spy(\Docman_NotificationsManager::class);
-        $actions                    = \Mockery::mock(\Docman_Actions::class)->makePartial(
-        )->shouldAllowMockingProtectedMethods();
+        $controller                 = $this->createMock(Docman_Controller::class);
+        $notificationsManager       = $this->createMock(Docman_NotificationsManager::class);
+        $actions                    = $this->createPartialMock(Docman_Actions::class, []);
         $actions->_controler        = $controller;
         $params['listeners_to_add'] = true;
         $params['item']             = new Docman_Item();
+        $notificationsManager->expects(self::never())->method('addUser');
         $actions->update_monitoring($params);
-        $notificationsManager->shouldReceive('addUser')->never();
     }
 
     public function testAddMonitoringNotifAlreadyExist(): void
     {
-        $controller                       = \Mockery::spy(\Docman_Controller::class);
-        $controller->feedback             = \Mockery::spy(ResponseFeedbackWrapper::class);
-        $notificationsManager             = \Mockery::spy(\Docman_NotificationsManager::class);
+        $controller                       = $this->createMock(Docman_Controller::class);
+        $controller->feedback             = $this->createMock(ResponseFeedbackWrapper::class);
+        $notificationsManager             = $this->createMock(Docman_NotificationsManager::class);
         $controller->notificationsManager = $notificationsManager;
-        $actions                          = \Mockery::mock(\Docman_Actions::class)->makePartial(
-        )->shouldAllowMockingProtectedMethods();
-        $docmanPermissionsManager         = \Mockery::spy(\Docman_PermissionsManager::class);
-        $actions->shouldReceive('_getDocmanPermissionsManagerInstance')->andReturns($docmanPermissionsManager);
+        $actions                          = $this->createPartialMock(Docman_Actions::class, ['_getDocmanPermissionsManagerInstance']);
+        $docmanPermissionsManager         = $this->createMock(Docman_PermissionsManager::class);
+        $actions->method('_getDocmanPermissionsManagerInstance')->willReturn($docmanPermissionsManager);
         $actions->_controler = $controller;
-        $user1               = \Mockery::spy(\PFUser::class);
-        $user1->shouldReceive('getUserName')->andReturns('Carol');
-        $user1->shouldReceive('getId')->andReturns(1);
-        $user2 = \Mockery::spy(\PFUser::class);
-        $user2->shouldReceive('getUserName')->andReturns('Carlos');
-        $user2->shouldReceive('getId')->andReturns(2);
-        $controller->feedback->shouldReceive('log')->with('warning', 'Monitoring for user(s) "Carol" already exists')->ordered();
-        $controller->feedback->shouldReceive('log')->with('warning', 'Monitoring for user(s) "Carlos" already exists')->ordered();
+        $user1               = UserTestBuilder::aUser()->withId(1)->withUserName('Carol')->build();
+        $user2               = UserTestBuilder::aUser()->withId(2)->withUserName('Carlos')->build();
+        $controller->feedback->method('log')->withConsecutive(
+            ['warning', 'Monitoring for user(s) "Carol" already exists'],
+            ['warning', 'Monitoring for user(s) "Carlos" already exists'],
+        );
         $params['listeners_users_to_add'] = [$user1, $user2];
         $params['item']                   = new Docman_Item();
-        $notificationsManager->shouldReceive('userExists')->times(2)->andReturns(true);
-        $notificationsManager->shouldReceive('addUser')->never();
+        $notificationsManager->expects(self::exactly(2))->method('userExists')->willReturn(true);
+        $notificationsManager->expects(self::never())->method('addUser');
         $actions->update_monitoring($params);
     }
 
     public function testAddMonitoringError(): void
     {
-        $controller                       = \Mockery::spy(\Docman_Controller::class);
-        $controller->feedback             = \Mockery::spy(ResponseFeedbackWrapper::class);
-        $notificationsManager             = \Mockery::spy(\Docman_NotificationsManager::class);
+        $controller                       = $this->createMock(Docman_Controller::class);
+        $controller->feedback             = $this->createMock(ResponseFeedbackWrapper::class);
+        $notificationsManager             = $this->createMock(Docman_NotificationsManager::class);
         $controller->notificationsManager = $notificationsManager;
-        $actions                          = \Mockery::mock(\Docman_Actions::class)->makePartial(
-        )->shouldAllowMockingProtectedMethods();
+        $actions                          = $this->createPartialMock(Docman_Actions::class, ['_getDocmanPermissionsManagerInstance']);
         $actions->_controler              = $controller;
-        $docmanPermissionsManager         = \Mockery::spy(\Docman_PermissionsManager::class);
-        $docmanPermissionsManager->shouldReceive('userCanRead')->andReturns(true);
-        $actions->shouldReceive('_getDocmanPermissionsManagerInstance')->andReturns($docmanPermissionsManager);
-        $user1 = \Mockery::spy(\PFUser::class);
-        $user1->shouldReceive('getId')->andReturns(123);
-        $user1->shouldReceive('getUserName')->andReturns('Carol');
-        $user2 = \Mockery::spy(\PFUser::class);
-        $user2->shouldReceive('getId')->andReturns(132);
-        $user2->shouldReceive('getUserName')->andReturns('Carlos');
-        $controller->feedback->shouldReceive('log')->with('error', 'Monitoring for user(s) "Carol" has not been added')->ordered();
-        $controller->feedback->shouldReceive('log')->with('error', 'Monitoring for user(s) "Carlos" has not been added')->ordered();
+        $docmanPermissionsManager         = $this->createMock(Docman_PermissionsManager::class);
+        $docmanPermissionsManager->method('userCanRead')->willReturn(true);
+        $actions->method('_getDocmanPermissionsManagerInstance')->willReturn($docmanPermissionsManager);
+        $user1 = UserTestBuilder::aUser()->withId(123)->withUserName('Carol')->build();
+        $user2 = UserTestBuilder::aUser()->withId(132)->withUserName('Carlos')->build();
+        $controller->feedback->method('log')->withConsecutive(
+            ['error', 'Monitoring for user(s) "Carol" has not been added'],
+            ['error', 'Monitoring for user(s) "Carlos" has not been added'],
+        );
         $params['listeners_users_to_add'] = [$user1, $user2];
         $params['item']                   = new Docman_Item();
-        $notificationsManager->shouldReceive('userExists')->times(2)->andReturns(false);
-        $notificationsManager->shouldReceive('addUser')->times(2)->andReturns(false);
+        $notificationsManager->expects(self::exactly(2))->method('userExists')->willReturn(false);
+        $notificationsManager->expects(self::exactly(2))->method('addUser')->willReturn(false);
         $actions->update_monitoring($params);
     }
 
     public function testAddMonitoringNoUserPermissions(): void
     {
-        $controller                       = \Mockery::spy(\Docman_Controller::class);
-        $controller->feedback             = \Mockery::spy(ResponseFeedbackWrapper::class);
-        $notificationsManager             = \Mockery::spy(\Docman_NotificationsManager::class);
+        $controller                       = $this->createMock(Docman_Controller::class);
+        $controller->feedback             = $this->createMock(ResponseFeedbackWrapper::class);
+        $notificationsManager             = $this->createMock(Docman_NotificationsManager::class);
         $controller->notificationsManager = $notificationsManager;
-        $actions                          = \Mockery::mock(\Docman_Actions::class)->makePartial(
-        )->shouldAllowMockingProtectedMethods();
+        $actions                          = $this->createPartialMock(Docman_Actions::class, ['_getDocmanPermissionsManagerInstance']);
         $actions->_controler              = $controller;
-        $docmanPermissionsManager         = \Mockery::spy(\Docman_PermissionsManager::class);
-        $docmanPermissionsManager->shouldReceive('userCanRead')->once()->andReturns(true);
-        $docmanPermissionsManager->shouldReceive('userCanRead')->once()->andReturns(false);
-        $actions->shouldReceive('_getDocmanPermissionsManagerInstance')->andReturns($docmanPermissionsManager);
-        $actions->event_manager = \Mockery::spy(EventManager::class);
-        $user1                  = \Mockery::spy(\PFUser::class);
-        $user1->shouldReceive('getId')->andReturns(123);
-        $user1->shouldReceive('getUserName')->andReturns('Carol');
-        $user2 = \Mockery::spy(\PFUser::class);
-        $user2->shouldReceive('getId')->andReturns(132);
-        $user2->shouldReceive('getUserName')->andReturns('Carlos');
-        $controller->feedback->shouldReceive('log')->with('warning', 'Insufficient permissions for user(s) "Carlos"')->ordered();
-        $controller->feedback->shouldReceive('log')->with('info', 'Le monitoring a été ajouté pour le(s) utilisateur(s) "Carol"')->ordered();
+        $docmanPermissionsManager         = $this->createMock(Docman_PermissionsManager::class);
+        $docmanPermissionsManager->expects(self::exactly(2))->method('userCanRead')->willReturnOnConsecutiveCalls(true, false);
+        $actions->method('_getDocmanPermissionsManagerInstance')->willReturn($docmanPermissionsManager);
+        $actions->event_manager = $this->createMock(EventManager::class);
+        $actions->event_manager->method('processEvent');
+        $user1 = UserTestBuilder::aUser()->withId(123)->withUserName('Carol')->build();
+        $user2 = UserTestBuilder::aUser()->withId(132)->withUserName('Carlos')->build();
+        $controller->feedback->method('log')->withConsecutive(
+            ['warning', 'Insufficient permissions for user(s) "Carlos"'],
+            ['info', 'Monitoring for user(s) "Carol" has been added'],
+        );
         $params['listeners_users_to_add'] = [$user1, $user2];
         $params['item']                   = new Docman_Item();
-        $notificationsManager->shouldReceive('userExists')->times(2)->andReturns(false);
-        $notificationsManager->shouldReceive('addUser')->once()->andReturns(true);
+        $notificationsManager->expects(self::exactly(2))->method('userExists')->willReturn(false);
+        $notificationsManager->expects(self::once())->method('addUser')->willReturn(true);
         $actions->update_monitoring($params);
     }
 
     public function testAddMonitoringSuccess(): void
     {
-        $controller           = \Mockery::spy(\Docman_Controller::class);
-        $controller->feedback = \Mockery::spy(ResponseFeedbackWrapper::class);
-        $user                 = \Tuleap\Test\Builders\UserTestBuilder::anActiveUser()->withId(123)->withUserName('Carol')->build();
-        $controller->feedback->shouldReceive('log')->with('info', 'Monitoring for user(s) "Carol" has been added')->once();
-        $notificationsManager             = \Mockery::spy(\Docman_NotificationsManager::class);
+        $controller           = $this->createMock(Docman_Controller::class);
+        $controller->feedback = $this->createMock(ResponseFeedbackWrapper::class);
+        $user                 = UserTestBuilder::anActiveUser()->withId(123)->withUserName('Carol')->build();
+        $controller->feedback->expects(self::once())->method('log')->with('info', 'Monitoring for user(s) "Carol" has been added');
+        $notificationsManager             = $this->createMock(Docman_NotificationsManager::class);
         $controller->notificationsManager = $notificationsManager;
-        $actions                          = \Mockery::mock(\Docman_Actions::class)->makePartial(
-        )->shouldAllowMockingProtectedMethods();
+        $actions                          = $this->createPartialMock(Docman_Actions::class, ['_getDocmanPermissionsManagerInstance']);
         $actions->_controler              = $controller;
-        $actions->event_manager           = \Mockery::spy(EventManager::class);
-        $docmanPermissionsManager         = \Mockery::spy(\Docman_PermissionsManager::class);
-        $docmanPermissionsManager->shouldReceive('userCanRead')->andReturns(true);
-        $actions->shouldReceive('_getDocmanPermissionsManagerInstance')->andReturns($docmanPermissionsManager);
+        $actions->event_manager           = $this->createMock(EventManager::class);
+        $actions->event_manager->method('processEvent');
+        $docmanPermissionsManager = $this->createMock(Docman_PermissionsManager::class);
+        $docmanPermissionsManager->method('userCanRead')->willReturn(true);
+        $actions->method('_getDocmanPermissionsManagerInstance')->willReturn($docmanPermissionsManager);
         $params['listeners_users_to_add'] = [$user];
         $params['item']                   = new Docman_Item();
-        $notificationsManager->shouldReceive('userExists')->once()->andReturns(false);
-        $notificationsManager->shouldReceive('addUser')->once()->andReturns(true);
+        $notificationsManager->expects(self::once())->method('userExists')->willReturn(false);
+        $notificationsManager->expects(self::once())->method('addUser')->willReturn(true);
         $actions->update_monitoring($params);
     }
 }
