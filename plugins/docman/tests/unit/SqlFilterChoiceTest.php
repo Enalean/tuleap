@@ -25,39 +25,40 @@ namespace Tuleap\Docman;
 
 use CodendiDataAccess;
 use Docman_SqlFilter;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use Tuleap\DB\Compat\Legacy2018\LegacyDataAccessInterface;
+use Tuleap\Test\PHPUnit\TestCase;
 
-class SqlFilterChoiceTest extends \Tuleap\Test\PHPUnit\TestCase
+final class SqlFilterChoiceTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     public function setUp(): void
     {
-        parent::setUp();
-        $data_access = \Mockery::mock(\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessInterface::class);
-        $data_access->shouldReceive('quoteLikeValueSurround')->with('codex')->andReturns('"%codex%"');
-        $data_access->shouldReceive('quoteLikeValueSurround')->with('c*od*ex')->andReturns('"%c*od*ex%"');
-        $data_access->shouldReceive('quoteLikeValuePrefix')->with('codex')->andReturns('"%codex"');
-        $data_access->shouldReceive('quoteLikeValuePrefix')->with('*codex')->andReturns('"%*codex"');
+        $data_access = $this->createMock(LegacyDataAccessInterface::class);
+        $data_access->method('quoteLikeValueSurround')->willReturnCallback(static fn(string $value) => match ($value) {
+            'codex'   => '"%codex%"',
+            'c*od*ex' => '"%c*od*ex%"',
+        });
+        $data_access->method('quoteLikeValuePrefix')->willReturnCallback(static fn(string $value) => match ($value) {
+            'codex'  => '"%codex"',
+            '*codex' => '"%*codex"',
+        });
         CodendiDataAccess::setInstance($data_access);
     }
 
     public function tearDown(): void
     {
-        parent::tearDown();
         CodendiDataAccess::clearInstance();
     }
 
     public function testItTestSqlFilterChoicePerPattern(): void
     {
-        $docmanSf = \Mockery::mock(Docman_SqlFilter::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $docmanSf = $this->createPartialMock(Docman_SqlFilter::class, []);
 
-        $this->assertEquals($docmanSf->getSearchType('*codex*'), ['like' => true, 'pattern' => '"%codex%"']);
-        $this->assertEquals($docmanSf->getSearchType('*c*od*ex*'), ['like' => true, 'pattern' => '"%c*od*ex%"']);
-        $this->assertEquals($docmanSf->getSearchType('*codex'), ['like' => true, 'pattern' => '"%codex"']);
-        $this->assertEquals($docmanSf->getSearchType('**codex'), ['like' => true, 'pattern' => '"%*codex"']);
-        $this->assertEquals($docmanSf->getSearchType('codex*'), ['like' => false]);
-        $this->assertEquals($docmanSf->getSearchType('cod*ex*'), ['like' => false]);
-        $this->assertEquals($docmanSf->getSearchType('codex'), ['like' => false]);
+        self::assertEquals(['like' => true, 'pattern' => '"%codex%"'], $docmanSf->getSearchType('*codex*'));
+        self::assertEquals(['like' => true, 'pattern' => '"%c*od*ex%"'], $docmanSf->getSearchType('*c*od*ex*'));
+        self::assertEquals(['like' => true, 'pattern' => '"%codex"'], $docmanSf->getSearchType('*codex'));
+        self::assertEquals(['like' => true, 'pattern' => '"%*codex"'], $docmanSf->getSearchType('**codex'));
+        self::assertEquals(['like' => false], $docmanSf->getSearchType('codex*'));
+        self::assertEquals(['like' => false], $docmanSf->getSearchType('cod*ex*'));
+        self::assertEquals(['like' => false], $docmanSf->getSearchType('codex'));
     }
 }
