@@ -25,6 +25,7 @@ namespace Tuleap\Git\REST\v1;
 
 use GitRepositoryException;
 use Tuleap\Git\GitPHP\Blob;
+use Tuleap\Git\GitPHP\BlobDataReader;
 use Tuleap\Git\GitPHP\Commit;
 use Tuleap\Git\GitPHP\Pack;
 use Tuleap\Git\GitPHP\Project;
@@ -176,11 +177,11 @@ final class GitTreeRepresentationFactoryTest extends TestCase
         };
 
 
-        $file1 = new Blob($git_repository, $file_hash);
+        $file1 = new Blob(new BlobDataReader(), $git_repository, $file_hash);
         $file1->SetPath('file1');
         $file1->SetMode('100644');
 
-        $file2 = new Blob($git_repository, $file_hash);
+        $file2 = new Blob(new BlobDataReader(), $git_repository, $file_hash);
         $file2->SetPath('file2');
         $file2->SetMode('120000');
 

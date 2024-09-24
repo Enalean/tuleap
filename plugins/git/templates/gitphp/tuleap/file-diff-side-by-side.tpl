@@ -7,7 +7,7 @@
 <div class="git-repository-diff-side-by-side">
     {if $filediff->GetStatus() == 'D'}
         {assign var=delblob value=$filediff->GetFromBlob()}
-        {foreach from=$delblob->GetData(true) item=blobline}
+        {foreach from=$blob_data_reader->getDataLinesInUTF8($delblob) item=blobline}
             <div class="git-repository-diff-side-by-side-line">
                 <div class="git-repository-diff-line-left git-repository-diff-line-deleted">{$blobline|escape}</div>
                 <div class="git-repository-diff-line-right"></div>
@@ -15,7 +15,7 @@
         {/foreach}
     {elseif $filediff->GetStatus() == 'A'}
         {assign var=newblob value=$filediff->GetToBlob()}
-        {foreach from=$newblob->GetData(true) item=blobline}
+        {foreach from=$blob_data_reader->getDataLinesInUTF8($newblob) item=blobline}
             <div class="git-repository-diff-side-by-side-line">
                 <div class="git-repository-diff-line-left"></div>
                 <div class="git-repository-diff-line-right git-repository-diff-line-added">{$blobline|escape}</div>

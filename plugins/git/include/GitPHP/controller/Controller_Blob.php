@@ -40,7 +40,7 @@ use Tuleap\Markdown\EnhancedCodeBlockExtension;
  */
 class Controller_Blob extends ControllerBase // @codingStandardsIgnoreLine
 {
-    public function __construct()
+    public function __construct(private readonly BlobDataReader $data_reader)
     {
         parent::__construct();
         if (! $this->project) {
@@ -273,7 +273,7 @@ class Controller_Blob extends ControllerBase // @codingStandardsIgnoreLine
                 'potentially_dangerous_bidirectional_text_warning',
                 DangerousUnicodeText::getCodePotentiallyDangerousBidirectionalUnicodeTextWarning($blob->GetData())
             );
-            $this->tpl->assign('bloblines', $blob->GetData(true));
+            $this->tpl->assign('bloblines', $this->data_reader->getDataLinesInUTF8($blob));
         }
         $GLOBALS['HTML']->addJavascriptAsset(new JavascriptAsset($core_assets, 'syntax-highlight.js'));
         $git_assets = new IncludeViteAssets(

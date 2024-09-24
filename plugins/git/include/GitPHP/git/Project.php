@@ -279,8 +279,12 @@ class Project
      * @param string $project project
      * @throws \Exception if project is invalid or outside of projectroot
      */
-    public function __construct($projectRoot, $project, Git_Exec $git_exec)
-    {
+    public function __construct(
+        private readonly BlobDataReader $data_reader,
+        $projectRoot,
+        $project,
+        Git_Exec $git_exec,
+    ) {
         $this->projectRoot = Util::AddSlash($projectRoot);
         $this->SetProject($project);
         $this->git_exec = $git_exec;
@@ -760,7 +764,7 @@ class Project
         }
         if (preg_match('/^[0-9a-f]{40}$/i', $hash)) {
             if (! isset($this->commitCache[$hash])) {
-                $this->commitCache[$hash] = new Commit($this, $hash);
+                $this->commitCache[$hash] = new Commit($this->data_reader, $this, $hash);
             }
 
             return $this->commitCache[$hash];
@@ -1223,7 +1227,7 @@ class Project
             return null;
         }
 
-        return new Blob($this, $hash);
+        return new Blob($this->data_reader, $this, $hash);
     }
 
 /*}}}2*/

@@ -218,8 +218,11 @@ class Commit extends GitObject
      * @return mixed git object
      * @throws \Exception exception on invalid hash
      */
-    public function __construct($project, $hash)
-    {
+    public function __construct(
+        private readonly BlobDataReader $data_reader,
+        $project,
+        $hash,
+    ) {
         parent::__construct($project, $hash);
     }
 
@@ -801,7 +804,7 @@ class Commit extends GitObject
      */
     public function DiffToParent() // @codingStandardsIgnoreLine
     {
-        return new TreeDiff($this->GetProject(), $this->hash);
+        return new TreeDiff($this->data_reader, $this->GetProject(), $this->hash);
     }
 
     /**

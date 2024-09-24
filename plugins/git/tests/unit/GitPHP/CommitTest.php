@@ -147,7 +147,7 @@ EOF;
     ): void {
         $project = $this->createMock(Project::class);
         $project->method('GetObject')->with('3f4a9ea9a9bcc19fa6f0806058469c5e4c35df82')->willReturn($commit_content);
-        $commit = new Commit($project, '3f4a9ea9a9bcc19fa6f0806058469c5e4c35df82');
+        $commit = new Commit(new BlobDataReader(), $project, '3f4a9ea9a9bcc19fa6f0806058469c5e4c35df82');
 
         $this->assertSame($author_name, $commit->GetAuthorName());
         $this->assertSame($author_email, $commit->getAuthorEmail());
