@@ -33,58 +33,17 @@ use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMappingCollection
 use Tuleap\Tracker\Creation\JiraImporter\Import\User\JiraUserRetriever;
 use Tuleap\Tracker\Creation\JiraImporter\JiraConnectionException;
 
-class IssueSnapshotCollectionBuilder
+readonly class IssueSnapshotCollectionBuilder
 {
-    /**
-     * @var InitialSnapshotBuilder
-     */
-    private $initial_snapshot_builder;
-
-    /**
-     * @var ChangelogEntriesBuilder
-     */
-    private $changelog_entries_builder;
-
-    /**
-     * @var ChangelogSnapshotBuilder
-     */
-    private $changelog_snapshot_builder;
-
-    /**
-     * @var CurrentSnapshotBuilder
-     */
-    private $current_snapshot_builder;
-
-    /**
-     * @var CommentValuesBuilder
-     */
-    private $comment_values_builder;
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
-
-    /**
-     * @var JiraUserRetriever
-     */
-    private $jira_user_retriever;
-
     public function __construct(
-        ChangelogEntriesBuilder $changelog_entries_builder,
-        CurrentSnapshotBuilder $current_snapshot_builder,
-        InitialSnapshotBuilder $initial_snapshot_builder,
-        ChangelogSnapshotBuilder $changelog_snapshot_builder,
-        CommentValuesBuilder $comment_values_builder,
-        LoggerInterface $logger,
-        JiraUserRetriever $jira_user_retriever,
+        private ChangelogEntriesBuilder $changelog_entries_builder,
+        private CurrentSnapshotBuilder $current_snapshot_builder,
+        private InitialSnapshotBuilder $initial_snapshot_builder,
+        private ChangelogSnapshotBuilder $changelog_snapshot_builder,
+        private CommentValuesBuilder $comment_values_builder,
+        private LoggerInterface $logger,
+        private JiraUserRetriever $jira_user_retriever,
     ) {
-        $this->initial_snapshot_builder   = $initial_snapshot_builder;
-        $this->changelog_entries_builder  = $changelog_entries_builder;
-        $this->changelog_snapshot_builder = $changelog_snapshot_builder;
-        $this->current_snapshot_builder   = $current_snapshot_builder;
-        $this->comment_values_builder     = $comment_values_builder;
-        $this->logger                     = $logger;
-        $this->jira_user_retriever        = $jira_user_retriever;
     }
 
     /**
@@ -105,7 +64,7 @@ class IssueSnapshotCollectionBuilder
             $issue_api_representation->getFieldByKey('creator')
         );
 
-        $snapshots_collection = [];
+        $snapshots_collection = new SnapshotCollection($this->logger);
         $changelog_entries    = $this->changelog_entries_builder->buildEntriesCollectionForIssue($jira_issue_key);
 
         $current_snapshot = $this->current_snapshot_builder->buildCurrentSnapshot(
@@ -125,7 +84,7 @@ class IssueSnapshotCollectionBuilder
             $jira_base_url
         );
 
-        $snapshots_collection[$initial_snapshot->getDate()->getTimestamp()] = $initial_snapshot;
+        $snapshots_collection->setInitialSnapshot($initial_snapshot);
 
         foreach ($changelog_entries as $changelog_entry) {
             $changelog_snapshot = $this->changelog_snapshot_builder->buildSnapshotFromChangelogEntry(
@@ -136,41 +95,20 @@ class IssueSnapshotCollectionBuilder
             );
 
             if (count($changelog_snapshot->getAllFieldsSnapshot()) > 0) {
-                $snapshots_collection[$changelog_snapshot->getDate()->getTimestamp()] = $changelog_snapshot;
+                $snapshots_collection->appendChangelogSnapshot($changelog_snapshot);
             }
         }
 
         $comments_collection = $this->comment_values_builder->buildCommentCollectionForIssue($jira_issue_key);
         foreach ($comments_collection as $comment) {
-            if (isset($snapshots_collection[$comment->getDate()->getTimestamp()])) {
-                $snapshots_collection[$comment->getDate()->getTimestamp()] = new Snapshot(
-                    $snapshots_collection[$comment->getDate()->getTimestamp()]->getUser(),
-                    $snapshots_collection[$comment->getDate()->getTimestamp()]->getDate(),
-                    $snapshots_collection[$comment->getDate()->getTimestamp()]->getAllFieldsSnapshot(),
-                    $comment
-                );
-
-                continue;
-            }
-
-            $commenter = $comment->getUpdateAuthor();
-
-            $comment_snapshot = new Snapshot(
-                $this->jira_user_retriever->retrieveJiraAuthor($commenter),
-                $comment->getDate(),
-                [],
+            $snapshots_collection->addComment(
+                $this->jira_user_retriever->retrieveJiraAuthor($comment->getUpdateAuthor()),
                 $comment
             );
-
-            if ($comment_snapshot->getCommentSnapshot() !== null) {
-                $snapshots_collection[$comment_snapshot->getDate()->getTimestamp()] = $comment_snapshot;
-            }
         }
-
-        ksort($snapshots_collection);
 
         $this->logger->debug('End build collection of snapshot');
 
-        return $snapshots_collection;
+        return $snapshots_collection->toArray();
     }
 }

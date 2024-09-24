@@ -150,6 +150,15 @@ final class JiraIssuesFromIssueTypeInDedicatedTrackerInXmlExporterTest extends T
                 'manuel.vacelet@example.com' => UserTestBuilder::anActiveUser()->withId(102)->withUserName('manuel_vacelet')->build(),
             ],
         ];
+
+        yield 'Changelog date and issue creation date within the same second' => [
+            'fixtures_path' => __DIR__ . '/_fixtures/TimestampConflicts',
+            'is_jira_cloud' => false,
+            'jira_major_version' => 8,
+            'users' => [
+                'john.doe@example.com' => UserTestBuilder::anActiveUser()->withId(101)->withUserName('john_doe')->build(),
+            ],
+        ];
     }
 
     /**

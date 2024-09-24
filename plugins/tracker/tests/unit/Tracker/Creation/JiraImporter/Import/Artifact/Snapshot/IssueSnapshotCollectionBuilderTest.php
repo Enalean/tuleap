@@ -197,7 +197,7 @@ class IssueSnapshotCollectionBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                 1585141870,
                 1585141930,
             ],
-            array_keys($collection)
+            array_map(static fn (Snapshot $snapshot) => $snapshot->getDate()->getTimestamp(), $collection),
         );
     }
 
@@ -248,7 +248,7 @@ class IssueSnapshotCollectionBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                 1585141750,
                 1585141810,
             ],
-            array_keys($collection)
+            array_map(static fn (Snapshot $snapshot) => $snapshot->getDate()->getTimestamp(), $collection),
         );
     }
 
@@ -285,9 +285,11 @@ class IssueSnapshotCollectionBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->comment_values_builder->shouldReceive('buildCommentCollectionForIssue')->andReturn(
             [
-                $this->buildCommentSnapshotWithSameTimestampOfInitialChangelog(),
+                $this->buildCommentSnapshotWithSameTimestampOfFirstChangelog(),
             ]
         );
+
+        $this->jira_user_retriever->shouldReceive('retrieveJiraAuthor')->andReturn($this->user);
 
         $collection = $this->builder->buildCollectionOfSnapshotsForIssue(
             $this->jira_issue_api,
@@ -304,10 +306,14 @@ class IssueSnapshotCollectionBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                 1585141810,
                 1585141870,
             ],
-            array_keys($collection)
+            array_map(static fn (Snapshot $snapshot) => $snapshot->getDate()->getTimestamp(), $collection),
         );
-        $this->assertEquals($this->buildCommentSnapshotWithSameTimestampOfInitialChangelog(), $collection[1585141750]->getCommentSnapshot());
-        $this->assertEquals($this->buildInitialSnapshot($this->user)->getAllFieldsSnapshot(), $collection[1585141750]->getAllFieldsSnapshot());
+
+        $snapshot_1585141810 = array_values(array_filter($collection, fn (Snapshot $snapshot) => $snapshot->getDate()->getTimestamp() === 1585141810));
+        self::assertCount(1, $snapshot_1585141810);
+
+        $this->assertEquals($this->buildCommentSnapshotWithSameTimestampOfFirstChangelog(), $snapshot_1585141810[0]->getCommentSnapshot());
+        $this->assertEquals($this->buildFirstChangelogSnapshot($this->user)->getAllFieldsSnapshot(), $snapshot_1585141810[0]->getAllFieldsSnapshot());
     }
 
     private function buildInitialSnapshot($user): Snapshot
@@ -471,14 +477,14 @@ class IssueSnapshotCollectionBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-    private function buildCommentSnapshotWithSameTimestampOfInitialChangelog(): Comment
+    private function buildCommentSnapshotWithSameTimestampOfFirstChangelog(): Comment
     {
         return new JiraCloudComment(
             new ActiveJiraCloudUser([
                 'displayName' => 'userO1',
                 'accountId' => 'e12ds5123sw',
             ]),
-            new DateTimeImmutable('2020-03-25T14:09:10.823+0100'),
+            new DateTimeImmutable('2020-03-25T14:10:10.823+0100'),
             'Comment 01'
         );
     }
