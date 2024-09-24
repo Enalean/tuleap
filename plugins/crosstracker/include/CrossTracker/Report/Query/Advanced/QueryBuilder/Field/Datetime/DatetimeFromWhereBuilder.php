@@ -68,7 +68,7 @@ final readonly class DatetimeFromWhereBuilder implements ValueWrapperVisitor
         INNER JOIN tracker_field AS $tracker_field_alias
             ON (tracker.id = $tracker_field_alias.tracker_id AND $fields_id_statement)
         LEFT JOIN tracker_changeset_value AS $changeset_value_alias
-            ON ($tracker_field_alias.id = $changeset_value_alias.field_id AND last_changeset.id = $changeset_value_alias.changeset_id)
+            ON ($tracker_field_alias.id = $changeset_value_alias.field_id AND changeset.id = $changeset_value_alias.changeset_id)
         LEFT JOIN tracker_changeset_value_date AS $changeset_value_datetime_alias
             ON $changeset_value_datetime_alias.changeset_value_id = $changeset_value_alias.id
         EOSQL;

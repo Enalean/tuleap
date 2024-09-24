@@ -40,11 +40,11 @@ use Tuleap\Tracker\Report\Query\IProvideParametrizedFromAndWhereSQLFragments;
 
 final readonly class MetadataFromWhereBuilder
 {
-    private const SUBMITTED_ON_ALIAS     = 'tracker_artifact.submitted_on';
-    private const LAST_UPDATE_DATE_ALIAS = 'last_changeset.submitted_on';
-    private const SUBMITTED_BY_ALIAS     = 'tracker_artifact.submitted_by';
-    private const LAST_UPDATE_BY_ALIAS   = 'last_changeset.submitted_by';
-    private const ARTIFACT_ID_ALIAS      = 'tracker_artifact.id';
+    private const SUBMITTED_ON_ALIAS     = 'artifact.submitted_on';
+    private const LAST_UPDATE_DATE_ALIAS = 'changeset.submitted_on';
+    private const SUBMITTED_BY_ALIAS     = 'artifact.submitted_by';
+    private const LAST_UPDATE_BY_ALIAS   = 'changeset.submitted_by';
+    private const ARTIFACT_ID_ALIAS      = 'artifact.id';
 
     public function __construct(
         private TitleFromWhereBuilder $title_builder,

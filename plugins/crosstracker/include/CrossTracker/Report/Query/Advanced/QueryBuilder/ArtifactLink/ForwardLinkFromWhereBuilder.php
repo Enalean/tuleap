@@ -94,7 +94,7 @@ final class ForwardLinkFromWhereBuilder implements LinkConditionVisitor
                         ON (TCVAL_$suffix.changeset_value_id = TCV_$suffix.id
                             $type_condition
                         )
-                WHERE tracker_artifact.last_changeset_id = TCV_$suffix.changeset_id
+                WHERE artifact.last_changeset_id = TCV_$suffix.changeset_id
                 LIMIT 1",
             $parameters,
         ];
@@ -122,7 +122,7 @@ final class ForwardLinkFromWhereBuilder implements LinkConditionVisitor
                         AND TCVAL_$suffix.artifact_id = ?
                         $type_condition
                     )
-                WHERE tracker_artifact.last_changeset_id = TCV_$suffix.changeset_id
+                WHERE artifact.last_changeset_id = TCV_$suffix.changeset_id
             LIMIT 1",
             [
                 ($artifact ? $artifact->getId() : self::INVALID_ARTIFACT_ID),
@@ -156,7 +156,7 @@ final class ForwardLinkFromWhereBuilder implements LinkConditionVisitor
                     ON (T_$suffix.id = TCA_$suffix.tracker_id
                         AND T_$suffix.item_name = ?
                     )
-            WHERE tracker_artifact.last_changeset_id = TCV_$suffix.changeset_id
+            WHERE artifact.last_changeset_id = TCV_$suffix.changeset_id
             LIMIT 1",
             [
                 ...$params,
@@ -190,7 +190,7 @@ final class ForwardLinkFromWhereBuilder implements LinkConditionVisitor
                     ON (T_$suffix.id = TCA_$suffix.tracker_id
                         AND T_$suffix.item_name != ?
                     )
-            WHERE tracker_artifact.last_changeset_id = TCV_$suffix.changeset_id
+            WHERE artifact.last_changeset_id = TCV_$suffix.changeset_id
             LIMIT 1",
             [
                 ...$params,
