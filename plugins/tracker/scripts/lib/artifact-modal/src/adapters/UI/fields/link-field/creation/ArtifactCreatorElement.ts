@@ -334,8 +334,13 @@ export const ArtifactCreatorElement = define<InternalArtifactCreator>({
             controller.registerFaultListener((fault) => {
                 host.error_message = Option.fromValue(displayer.formatForDisplay(fault));
             });
+
+            return controller;
+        },
+        observe: (host, controller) => {
             host.selected_project = controller.getSelectedProject();
             host.is_loading = true;
+
             const event = WillDisableSubmit(getSubmitDisabledForProjectsAndTrackersReason());
             Promise.all([
                 controller.getProjects(event),
@@ -347,8 +352,6 @@ export const ArtifactCreatorElement = define<InternalArtifactCreator>({
                 host.selected_tracker = controller.getSelectedTracker();
                 host.is_loading = false;
             });
-
-            return controller;
         },
         connect: initListPickers,
     },
