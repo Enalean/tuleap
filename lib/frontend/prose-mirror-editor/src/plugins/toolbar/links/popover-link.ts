@@ -23,9 +23,9 @@ import { createPopover } from "@tuleap/tlp-popovers";
 import type { EditorView } from "prosemirror-view";
 import { createAndInsertField } from "../popover/fields-adder";
 import type { GetText } from "@tuleap/gettext";
-import { TextSelection } from "prosemirror-state";
-import { getWrappingNodeInfo } from "../helper/node-info-retriever";
 import { buildTrigger, getFooter, getHeader } from "../popover/common-builder";
+import type { LinkProperties } from "../../../types/internal-types";
+import { replaceLinkNode } from "../../../helpers/replace-link-node";
 
 export type TextField = {
     id: string;
@@ -126,34 +126,16 @@ export function addListeners(
 ): void {
     const submit = (event: Event): boolean => {
         event.preventDefault();
-        const attrs = getValues(link_title_id, link_href_id);
+        const attrs = getLinkProperties(link_title_id, link_href_id);
         if (attrs) {
             popover.hide();
-            const schema = view.state.schema;
-            const wrapping_node_info = getWrappingNodeInfo(
-                view.state.selection.$from,
-                schema.marks.link,
-                view.state,
-            );
-
-            if (!wrapping_node_info.is_creating_node) {
-                const from = view.state.doc.resolve(wrapping_node_info.from);
-                const to = view.state.doc.resolve(wrapping_node_info.to);
-                view.dispatch(view.state.tr.setSelection(new TextSelection(from, to)));
-            }
-
-            const node = schema.text(attrs.title, [schema.marks.link.create(attrs)]);
-            view.dispatch(view.state.tr.replaceSelectionWith(node, false));
-            view.focus();
+            replaceLinkNode(view, attrs);
         }
 
         return true;
     };
 
-    function getValues(
-        link_title_id: string,
-        link_href_id: string,
-    ): { href: string; title: string } {
+    function getLinkProperties(link_title_id: string, link_href_id: string): LinkProperties {
         const result = { href: "", title: "" };
 
         const href = document.getElementById(link_href_id);

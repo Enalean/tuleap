@@ -19,6 +19,7 @@
  */
 
 import type { GetText } from "@tuleap/gettext";
+import type { LinkProperties } from "../../../types/internal-types";
 import { TAG as LINK_POPOVER_TAG } from "../element/LinkPopoverElement";
 import type { LinkPopoverElement } from "../element/LinkPopoverElement";
 import type { RemoveLinkCallback } from "../element/items/RemoveLinkButtonElement";
@@ -26,6 +27,11 @@ import {
     CrossReferenceLinkPopoverButtonsRenderer,
     RegularLinkPopoverButtonsRenderer,
 } from "../element/LinkPopoverButtonsRenderers";
+import type { EditLinkCallback } from "../element/LinkPopoverEditionFormRenderers";
+import {
+    CrossReferenceLinkEditionPopoverRenderer,
+    RegularLinkEditionPopoverRenderer,
+} from "../element/LinkPopoverEditionFormRenderers";
 
 export function buildLinkPopoverId(editor_id: string): string {
     return `link-popover-${editor_id}`;
@@ -63,15 +69,21 @@ export function insertLinkPopover(
     gettext_provider: GetText,
     popover_anchor: HTMLElement,
     editor_id: string,
-    link_href: string,
+    link: LinkProperties,
     remove_link_callback: RemoveLinkCallback,
+    edit_link_callback: EditLinkCallback,
 ): void {
     const popover = createBasePopoverElement(doc, popover_anchor, editor_id);
 
     popover.buttons_renderer = RegularLinkPopoverButtonsRenderer(
         gettext_provider,
-        link_href,
+        link,
         remove_link_callback,
+    );
+    popover.edition_form_renderer = RegularLinkEditionPopoverRenderer(
+        gettext_provider,
+        link,
+        edit_link_callback,
     );
 
     doc.body.appendChild(popover);
@@ -82,16 +94,13 @@ export function insertCrossReferenceLinkPopover(
     gettext_provider: GetText,
     popover_anchor: HTMLElement,
     editor_id: string,
-    link_href: string,
-    cross_ref_text: string,
+    link: LinkProperties,
 ): void {
     const popover = createBasePopoverElement(doc, popover_anchor, editor_id);
 
-    popover.buttons_renderer = CrossReferenceLinkPopoverButtonsRenderer(
-        gettext_provider,
-        link_href,
-        cross_ref_text,
-    );
+    popover.buttons_renderer = CrossReferenceLinkPopoverButtonsRenderer(gettext_provider, link);
+
+    popover.edition_form_renderer = CrossReferenceLinkEditionPopoverRenderer();
 
     doc.body.appendChild(popover);
 }

@@ -23,6 +23,7 @@ import {
     CrossReferenceLinkPopoverButtonsRenderer,
     RegularLinkPopoverButtonsRenderer,
 } from "./LinkPopoverButtonsRenderers";
+import type { HostElement } from "./LinkPopoverElement";
 
 describe("LinkPopoverButtonsRenderers", () => {
     let target: ShadowRoot, host: HTMLElement;
@@ -34,30 +35,34 @@ describe("LinkPopoverButtonsRenderers", () => {
     });
 
     it("RegularLinkPopoverButtonsRenderer should return a render function for regular link popover buttons", () => {
+        const noop = (): void => {
+            // Do nothing
+        };
         const renderer = RegularLinkPopoverButtonsRenderer(
             gettext_provider,
-            "https://example.com",
-            (): void => {
-                // Do nothing
+            {
+                href: "https://example.com",
+                title: "Example website",
             },
+            noop,
         );
 
-        renderer.render()(host, target);
+        renderer.render({} as HostElement)(host, target);
 
-        expect(target.children.length).toBe(3);
+        expect(target.children.length).toBe(4);
         expect(target.querySelector("[data-test=open-link-button]")).not.toBeNull();
         expect(target.querySelector("[data-test=copy-to-clipboard-button]")).not.toBeNull();
+        expect(target.querySelector("[data-test=edit-link-button]")).not.toBeNull();
         expect(target.querySelector("[data-test=remove-link-button]")).not.toBeNull();
     });
 
     it("CrossReferenceLinkPopoverButtonsRenderer should return a render function for cross reference link popover buttons", () => {
-        const renderer = CrossReferenceLinkPopoverButtonsRenderer(
-            gettext_provider,
-            "https://example.com",
-            "art #123",
-        );
+        const renderer = CrossReferenceLinkPopoverButtonsRenderer(gettext_provider, {
+            href: "https://example.com",
+            title: "art #123",
+        });
 
-        renderer.render()(host, target);
+        renderer.render({} as HostElement)(host, target);
 
         expect(target.children.length).toBe(2);
         expect(target.querySelector("[data-test=open-link-button]")).not.toBeNull();

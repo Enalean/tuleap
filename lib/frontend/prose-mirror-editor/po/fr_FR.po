@@ -52,6 +52,9 @@ msgstr "Créer"
 msgid "Create a link"
 msgstr "Créer un lien"
 
+msgid "Edit link"
+msgstr "Éditer le lien"
+
 msgid "File type is invalid, you can only upload images"
 msgstr ""
 "Le type de fichier est invalide, vous pouvez téléverser uniquement des images"
@@ -76,6 +79,9 @@ msgstr "Ouvrir le lien"
 
 msgid "Remove link"
 msgstr "Supprimer le lien"
+
+msgid "Save"
+msgstr "Sauvegarder"
 
 msgid "Styles"
 msgstr "Styles"

@@ -19,18 +19,25 @@
 
 import { html } from "hybrids";
 import type { UpdateFunction } from "hybrids";
-import popover_styles from "./link-popover-styles.scss?inline";
 import type { InternalLinkPopoverElement } from "./LinkPopoverElement";
+
+const renderButtons = (
+    host: InternalLinkPopoverElement,
+): UpdateFunction<InternalLinkPopoverElement> => html`
+    <section data-role="popover" class="tlp-popover prose-mirror-editor-popover-links">
+        <div class="tlp-popover-arrow"></div>
+        <div class="tlp-popover-body">
+            <div class="tlp-button-bar">${host.buttons_renderer.render(host)}</div>
+        </div>
+    </section>
+`;
 
 export const renderLinkPopover = (
     host: InternalLinkPopoverElement,
-): UpdateFunction<InternalLinkPopoverElement> =>
-    html`
-        <section data-role="popover" class="tlp-popover prose-mirror-editor-popover-links">
-            <div class="tlp-popover-arrow"></div>
-            <div class="tlp-popover-body">
-                <div class="tlp-button-bar">
-                    ${host.buttons_renderer.render()}
-                </div>
-        </section>
-    `.style(popover_styles);
+): UpdateFunction<InternalLinkPopoverElement> => {
+    if (host.is_in_edition_mode) {
+        return html`${host.edition_form_renderer.render(host)}`;
+    }
+
+    return renderButtons(host);
+};

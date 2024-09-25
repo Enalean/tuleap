@@ -17,7 +17,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare module "*.scss?inline" {
-    const scss: string;
-    export default scss;
-}
+import type { EditLinkCallback } from "../../element/LinkPopoverEditionFormRenderers";
+import type { BuildEditLinkCallback } from "../EditLinkCallbackBuilder";
+
+export const BuildEditLinkCallbackStub = {
+    withCallback: (callback: EditLinkCallback): BuildEditLinkCallback => ({
+        build: () => callback,
+    }),
+};

@@ -28,7 +28,11 @@ import {
 } from "./create-link-popover";
 
 const editor_id = "aaaa-bbbb-cccc-dddd";
-const link_href = "https://example.com/";
+const popover_link = {
+    href: "https://example.com/",
+    title: "Example website",
+};
+
 const noop = (): void => {
     // Do nothing
 };
@@ -42,7 +46,15 @@ describe("create-link-popover", () => {
     });
 
     it("insertLinkPopover() should insert a LinkPopoverElement into the document", () => {
-        insertLinkPopover(doc, gettext_provider, popover_anchor, editor_id, link_href, noop);
+        insertLinkPopover(
+            doc,
+            gettext_provider,
+            popover_anchor,
+            editor_id,
+            popover_link,
+            noop,
+            noop,
+        );
 
         expect(doc.getElementById(buildLinkPopoverId(editor_id))).not.toBeNull();
     });
@@ -53,15 +65,22 @@ describe("create-link-popover", () => {
             gettext_provider,
             popover_anchor,
             editor_id,
-            link_href,
-            "art #123",
+            popover_link,
         );
 
         expect(doc.getElementById(buildLinkPopoverId(editor_id))).not.toBeNull();
     });
 
     it("removePopover() should remove the tlp-popover from the DOM", () => {
-        insertLinkPopover(doc, gettext_provider, popover_anchor, editor_id, link_href, noop);
+        insertLinkPopover(
+            doc,
+            gettext_provider,
+            popover_anchor,
+            editor_id,
+            popover_link,
+            noop,
+            noop,
+        );
         removePopover(doc, editor_id);
 
         expect(doc.getElementById(buildLinkPopoverId(editor_id))).toBeNull();
