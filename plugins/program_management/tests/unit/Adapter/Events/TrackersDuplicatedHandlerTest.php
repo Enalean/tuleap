@@ -37,11 +37,13 @@ use Tuleap\Tracker\TrackerEventTrackersDuplicated;
 
 final class TrackersDuplicatedHandlerTest extends TestCase
 {
-    private const SOURCE_PROJECT_ID                   = 114;
-    private const NEW_PROJECT_ID                      = 127;
-    private const SOURCE_PROGRAM_INCREMENT_TRACKER_ID = 12;
-    private const NEW_PROGRAM_INCREMENT_TRACKER_ID    = 164;
-    private const NEW_ITERATION_TRACKER_ID            = 183;
+    private const SOURCE_PROJECT_ID                         = 114;
+    private const NEW_PROJECT_ID                            = 127;
+    private const SOURCE_PROGRAM_INCREMENT_TRACKER_ID       = 12;
+    private const NEW_PROGRAM_INCREMENT_TRACKER_ID          = 164;
+    private const NEW_ITERATION_TRACKER_ID                  = 183;
+    private const FIRST_NEW_TRACKER_ID_THAT_CAN_BE_PLANNED  = 741;
+    private const SECOND_NEW_TRACKER_ID_THAT_CAN_BE_PLANNED = 742;
     private RetrievePlanConfigurationStub $retrieve_plan;
     private TestLogger $logger;
     private \Project $source_project;
@@ -50,7 +52,9 @@ final class TrackersDuplicatedHandlerTest extends TestCase
 
     protected function setUp(): void
     {
-        $source_iteration_tracker_id = 46;
+        $source_iteration_tracker_id                  = 46;
+        $first_source_tracker_id_that_can_be_planned  = 65;
+        $second_source_tracker_id_that_can_be_planned = 53;
 
         $this->logger           = new TestLogger();
         $this->retrieve_plan    = RetrievePlanConfigurationStub::withPlanConfigurations(
@@ -62,7 +66,7 @@ final class TrackersDuplicatedHandlerTest extends TestCase
                 Option::fromValue($source_iteration_tracker_id),
                 'Sprints',
                 'sprint',
-                [65, 53],
+                [$first_source_tracker_id_that_can_be_planned, $second_source_tracker_id_that_can_be_planned],
                 [4, 143]
             )
         );
@@ -74,8 +78,10 @@ final class TrackersDuplicatedHandlerTest extends TestCase
             ->build();
         $this->mapping_registry = new MappingRegistry([]);
         $this->mapping_registry->setCustomMapping(\TrackerFactory::TRACKER_MAPPING_KEY, [
-            self::SOURCE_PROGRAM_INCREMENT_TRACKER_ID => self::NEW_PROGRAM_INCREMENT_TRACKER_ID,
-            $source_iteration_tracker_id              => self::NEW_ITERATION_TRACKER_ID,
+            self::SOURCE_PROGRAM_INCREMENT_TRACKER_ID     => self::NEW_PROGRAM_INCREMENT_TRACKER_ID,
+            $source_iteration_tracker_id                  => self::NEW_ITERATION_TRACKER_ID,
+            $first_source_tracker_id_that_can_be_planned  => self::FIRST_NEW_TRACKER_ID_THAT_CAN_BE_PLANNED,
+            $second_source_tracker_id_that_can_be_planned => self::SECOND_NEW_TRACKER_ID_THAT_CAN_BE_PLANNED,
         ]);
     }
 
@@ -151,6 +157,13 @@ final class TrackersDuplicatedHandlerTest extends TestCase
         );
         self::assertTrue(
             $this->logger->hasDebugThatContains('new iteration tracker id #' . self::NEW_ITERATION_TRACKER_ID)
+        );
+        self::assertTrue(
+            $this->logger->hasDebugThatContains(
+                'tracker ids that can be planned ' . \Psl\Json\encode(
+                    [self::FIRST_NEW_TRACKER_ID_THAT_CAN_BE_PLANNED, self::SECOND_NEW_TRACKER_ID_THAT_CAN_BE_PLANNED]
+                )
+            )
         );
     }
 }

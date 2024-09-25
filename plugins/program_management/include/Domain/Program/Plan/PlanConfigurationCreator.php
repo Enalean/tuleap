@@ -65,7 +65,7 @@ final class PlanConfigurationCreator implements CreatePlanConfiguration
             )
         );
 
-        $plannable_tracker_collection = NewPlannableTrackerCollection::fromIds(
+        $trackers_that_can_be_planned = NewTrackerThatCanBePlannedCollection::fromIds(
             $this->plannable_checker,
             $plan_change->tracker_ids_that_can_be_planned,
             $program
@@ -79,7 +79,7 @@ final class PlanConfigurationCreator implements CreatePlanConfiguration
         $plan = new NewPlanConfiguration(
             $program_tracker,
             $program,
-            $plannable_tracker_collection->trackers,
+            $trackers_that_can_be_planned,
             $can_prioritize_user_groups,
             $iteration_tracker
         );

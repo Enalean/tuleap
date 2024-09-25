@@ -62,37 +62,42 @@ final readonly class TrackersDuplicatedHandler
             ->apply(function (ProgramInheritanceMapping $mapping) {
                 $this->inheritance_handler->handle($mapping)->match(
                     function (NewPlanConfiguration $new_plan_configuration) use ($mapping) {
-                        $new_program_id   = sprintf(
+                        $new_program_id               = sprintf(
                             'new program id #%s',
                             $mapping->new_program->id
                         );
-                        $pi_tracker_id    = sprintf(
+                        $pi_tracker_id                = sprintf(
                             'new program increment tracker id #%s',
                             $new_plan_configuration->program_increment_tracker->id
                         );
-                        $pi_labels        = sprintf(
+                        $pi_labels                    = sprintf(
                             "new program increment label '%s' and sub-label '%s'",
                             $new_plan_configuration->program_increment_tracker->label ?? '',
                             $new_plan_configuration->program_increment_tracker->sub_label ?? ''
                         );
-                        $iteration_id     = sprintf(
+                        $iteration_id                 = sprintf(
                             'new iteration tracker id #%s',
                             (string) $new_plan_configuration->iteration_tracker->unwrapOr(null)?->id
                         );
-                        $iteration_labels = sprintf(
+                        $iteration_labels             = sprintf(
                             "new iteration label '%s' and sub-label '%s'",
                             $new_plan_configuration->iteration_tracker->unwrapOr(null)?->label ?? '',
                             $new_plan_configuration->iteration_tracker->unwrapOr(null)?->sub_label ?? ''
                         );
+                        $trackers_that_can_be_planned = sprintf(
+                            'tracker ids that can be planned %s',
+                            \Psl\Json\encode($new_plan_configuration->trackers_that_can_be_planned->getTrackerIds())
+                        );
 
                         $this->logger->debug(
                             sprintf(
-                                'Plan configuration inheritance : %s %s %s %s %s',
+                                'Plan configuration inheritance : %s %s %s %s %s %s',
                                 $new_program_id,
                                 $pi_tracker_id,
                                 $pi_labels,
                                 $iteration_id,
-                                $iteration_labels
+                                $iteration_labels,
+                                $trackers_that_can_be_planned
                             )
                         );
                     },

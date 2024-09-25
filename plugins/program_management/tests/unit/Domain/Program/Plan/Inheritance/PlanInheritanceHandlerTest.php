@@ -36,9 +36,11 @@ use Tuleap\Test\PHPUnit\TestCase;
 
 final class PlanInheritanceHandlerTest extends TestCase
 {
-    private const SOURCE_PROGRAM_INCREMENT_TRACKER_ID = 37;
-    private const SOURCE_ITERATION_TRACKER_ID         = 35;
-    private const NEW_PROGRAM_ID                      = 227;
+    private const SOURCE_PROGRAM_INCREMENT_TRACKER_ID          = 37;
+    private const SOURCE_ITERATION_TRACKER_ID                  = 35;
+    private const FIRST_SOURCE_TRACKER_ID_THAT_CAN_BE_PLANNED  = 64;
+    private const SECOND_SOURCE_TRACKER_ID_THAT_CAN_BE_PLANNED = 65;
+    private const NEW_PROGRAM_ID                               = 227;
     /** @var array<int, int> */
     private array $tracker_mapping;
     /** @var Option<int> */
@@ -67,7 +69,7 @@ final class PlanInheritanceHandlerTest extends TestCase
                     $this->source_iteration_tracker_id,
                     'Cycles',
                     'cycle',
-                    [],
+                    [self::FIRST_SOURCE_TRACKER_ID_THAT_CAN_BE_PLANNED, self::SECOND_SOURCE_TRACKER_ID_THAT_CAN_BE_PLANNED],
                     []
                 )
             )
@@ -113,8 +115,10 @@ final class PlanInheritanceHandlerTest extends TestCase
 
     public function testItMapsConfigurationAndReturnsIt(): void
     {
-        $this->tracker_mapping[self::SOURCE_PROGRAM_INCREMENT_TRACKER_ID] = 88;
-        $this->tracker_mapping[self::SOURCE_ITERATION_TRACKER_ID]         = 123;
+        $this->tracker_mapping[self::SOURCE_PROGRAM_INCREMENT_TRACKER_ID]          = 88;
+        $this->tracker_mapping[self::SOURCE_ITERATION_TRACKER_ID]                  = 123;
+        $this->tracker_mapping[self::FIRST_SOURCE_TRACKER_ID_THAT_CAN_BE_PLANNED]  = 172;
+        $this->tracker_mapping[self::SECOND_SOURCE_TRACKER_ID_THAT_CAN_BE_PLANNED] = 173;
 
         $result = $this->handle();
 
@@ -127,5 +131,6 @@ final class PlanInheritanceHandlerTest extends TestCase
         self::assertSame(123, $iteration?->id);
         self::assertSame('Cycles', $iteration?->label);
         self::assertSame('cycle', $iteration?->sub_label);
+        self::assertEqualsCanonicalizing([172, 173], $result->value->trackers_that_can_be_planned->getTrackerIds());
     }
 }

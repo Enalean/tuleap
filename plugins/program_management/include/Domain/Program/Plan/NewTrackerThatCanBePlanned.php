@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2021 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -26,37 +26,29 @@ use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramForAdministrationIdenti
 use Tuleap\ProgramManagement\Domain\Program\ProgramTrackerException;
 
 /**
- * I hold a collection of NewPlannableTracker
- * @see NewPlannableTracker
+ * I hold the identifier of a Tracker that can be planned in a Program Increment.
  * @psalm-immutable
  */
-final class NewPlannableTrackerCollection
+final readonly class NewTrackerThatCanBePlanned
 {
-    /**
-     * @param NewPlannableTracker[] $trackers
-     */
-    private function __construct(public array $trackers)
+    private function __construct(public int $id)
     {
     }
 
     /**
-     * @param int[] $plannable_trackers_ids
-     * @throws PlannableTrackerCannotBeEmptyException
      * @throws ProgramTrackerException
      */
-    public static function fromIds(
+    public static function fromId(
         CheckNewPlannableTracker $tracker_checker,
-        array $plannable_trackers_ids,
+        int $tracker_id,
         ProgramForAdministrationIdentifier $program,
     ): self {
-        if (empty($plannable_trackers_ids)) {
-            throw new PlannableTrackerCannotBeEmptyException();
-        }
-        return new self(
-            array_map(
-                static fn($tracker_id) => NewPlannableTracker::fromId($tracker_checker, $tracker_id, $program),
-                $plannable_trackers_ids
-            )
-        );
+        $tracker_checker->checkPlannableTrackerIsValid($tracker_id, $program);
+        return new self($tracker_id);
+    }
+
+    public static function fromValidTracker(NewConfigurationTrackerIsValidCertificate $certificate): self
+    {
+        return new self($certificate->tracker_id);
     }
 }

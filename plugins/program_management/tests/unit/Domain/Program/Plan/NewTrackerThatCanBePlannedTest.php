@@ -27,7 +27,7 @@ use Tuleap\ProgramManagement\Domain\Program\PlanTrackerNotFoundException;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramForAdministrationIdentifierBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\CheckNewPlannableTrackerStub;
 
-final class NewPlannableTrackerTest extends \Tuleap\Test\PHPUnit\TestCase
+final class NewTrackerThatCanBePlannedTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const TRACKER_ID = 17;
     private CheckNewPlannableTrackerStub $tracker_checker;
@@ -37,9 +37,9 @@ final class NewPlannableTrackerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->tracker_checker = CheckNewPlannableTrackerStub::withValidTracker();
     }
 
-    private function getNewPlannableTracker(): NewPlannableTracker
+    private function buildFromId(): NewTrackerThatCanBePlanned
     {
-        return NewPlannableTracker::fromId(
+        return NewTrackerThatCanBePlanned::fromId(
             $this->tracker_checker,
             self::TRACKER_ID,
             ProgramForAdministrationIdentifierBuilder::build()
@@ -48,21 +48,29 @@ final class NewPlannableTrackerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItBuildsFromId(): void
     {
-        $new_tracker = $this->getNewPlannableTracker();
-        self::assertSame(self::TRACKER_ID, $new_tracker->getId());
+        $new_tracker = $this->buildFromId();
+        self::assertSame(self::TRACKER_ID, $new_tracker->id);
     }
 
     public function testItThrowsAnExceptionWhenTrackerIsNotFound(): void
     {
         $this->tracker_checker = CheckNewPlannableTrackerStub::withTrackerNotFound();
         $this->expectException(PlanTrackerNotFoundException::class);
-        $this->getNewPlannableTracker();
+        $this->buildFromId();
     }
 
     public function testItThrowsWhenTrackerDoesNotBelongToProgram(): void
     {
         $this->tracker_checker = CheckNewPlannableTrackerStub::withTrackerNotPartOfProgram();
         $this->expectException(PlanTrackerDoesNotBelongToProjectException::class);
-        $this->getNewPlannableTracker();
+        $this->buildFromId();
+    }
+
+    public function testItBuildsFromValidTracker(): void
+    {
+        $new_tracker = NewTrackerThatCanBePlanned::fromValidTracker(
+            new NewConfigurationTrackerIsValidCertificate(18, ProgramForAdministrationIdentifierBuilder::build())
+        );
+        self::assertSame(18, $new_tracker->id);
     }
 }

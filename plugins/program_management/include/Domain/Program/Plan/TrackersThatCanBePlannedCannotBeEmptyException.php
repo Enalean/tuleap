@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Plan;
 
-final class PlannableTrackerCannotBeEmptyException extends \Exception implements PlanTrackerException
+final class TrackersThatCanBePlannedCannotBeEmptyException extends \Exception implements PlanTrackerException
 {
     private string $i18n_message;
 
