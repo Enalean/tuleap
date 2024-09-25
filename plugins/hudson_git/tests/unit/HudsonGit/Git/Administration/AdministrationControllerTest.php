@@ -39,6 +39,7 @@ use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Request\NotFoundException;
+use Tuleap\Test\DB\UUIDTestContext;
 
 final class AdministrationControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -230,7 +231,7 @@ final class AdministrationControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             )
             ->willReturn(true);
 
-        $jenkins_server = new JenkinsServer(1, 'url', 'encrypted_token', $this->project);
+        $jenkins_server = new JenkinsServer(new UUIDTestContext(), 'url', 'encrypted_token', $this->project);
         $this->jenkins_server_factory->expects(self::once())
             ->method('getJenkinsServerOfProject')
             ->with($this->project)

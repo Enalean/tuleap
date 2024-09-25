@@ -63,26 +63,18 @@ class JenkinsServerFactory
         return $servers;
     }
 
-    public function getJenkinsServerById(int $jenkins_server_id): ?JenkinsServer
+    public function getProjectByJenkinsServerID(string $jenkins_server_uuid_hex): ?Project
     {
-        $row = $this->jenkins_server_dao->getJenkinsServerById($jenkins_server_id);
+        $row = $this->jenkins_server_dao->getProjectIDByJenkinsServerID($jenkins_server_uuid_hex);
         if (empty($row)) {
             return null;
         }
-
-        $jenkins_server_id  = $row['id'];
-        $jenkins_server_url = $row['jenkins_server_url'];
 
         $project = $this->project_manager->getProject($row['project_id']);
         if (! $project || $project->isError()) {
             return null;
         }
 
-        return new JenkinsServer(
-            $jenkins_server_id,
-            $jenkins_server_url,
-            $row['encrypted_token'],
-            $project
-        );
+        return $project;
     }
 }

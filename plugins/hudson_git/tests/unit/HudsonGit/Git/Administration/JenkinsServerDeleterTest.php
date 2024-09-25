@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\HudsonGit\Git\Administration;
 
 use Tuleap\HudsonGit\Job\ProjectJobDao;
-use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 
 final class JenkinsServerDeleterTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -34,8 +33,6 @@ final class JenkinsServerDeleterTest extends \Tuleap\Test\PHPUnit\TestCase
      * @var \PHPUnit\Framework\MockObject\MockObject&JenkinsServerDao
      */
     private $jenkins_server_dao;
-
-    private JenkinsServer $jenkins_server;
 
     /**
      * @var \PHPUnit\Framework\MockObject\MockObject&ProjectJobDao
@@ -54,20 +51,13 @@ final class JenkinsServerDeleterTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->project_job_dao,
             new DBTransactionExecutorPassthrough()
         );
-
-        $this->jenkins_server = new JenkinsServer(
-            1,
-            'url',
-            null,
-            ProjectTestBuilder::aProject()->build(),
-        );
     }
 
     public function testItDeletesAJenkinsServer(): void
     {
-        $this->project_job_dao->expects(self::once())->method('deleteLogsOfServer')->with(1);
-        $this->jenkins_server_dao->expects(self::once())->method('deleteJenkinsServer')->with(1);
+        $this->project_job_dao->expects(self::once())->method('deleteLogsOfServer');
+        $this->jenkins_server_dao->expects(self::once())->method('deleteJenkinsServer');
 
-        $this->deleter->deleteServer($this->jenkins_server);
+        $this->deleter->deleteServer('uuid');
     }
 }

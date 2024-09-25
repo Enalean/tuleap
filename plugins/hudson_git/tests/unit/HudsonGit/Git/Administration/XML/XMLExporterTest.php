@@ -31,6 +31,7 @@ use Tuleap\Cryptography\Symmetric\SymmetricCrypto;
 use Tuleap\HudsonGit\Git\Administration\JenkinsServer;
 use Tuleap\HudsonGit\Git\Administration\JenkinsServerFactory;
 use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\DB\UUIDTestContext;
 
 final class XMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -71,8 +72,8 @@ final class XMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->jenkins_server_factory->expects(self::once())
             ->method('getJenkinsServerOfProject')
             ->willReturn([
-                new JenkinsServer(1, ('https://url'), null, $this->project),
-                new JenkinsServer(2, ('https://url2'), SymmetricCrypto::encrypt(new ConcealedString('my_token'), $this->encryption_key), $this->project),
+                new JenkinsServer(new UUIDTestContext(), ('https://url'), null, $this->project),
+                new JenkinsServer(new UUIDTestContext(), ('https://url2'), SymmetricCrypto::encrypt(new ConcealedString('my_token'), $this->encryption_key), $this->project),
             ]);
 
         $xml_git = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?>

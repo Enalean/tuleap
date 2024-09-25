@@ -29,6 +29,7 @@ use Tuleap\HudsonGit\Job\JobDao;
 use Tuleap\HudsonGit\Job\ProjectJobDao;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
+use Tuleap\Test\DB\UUIDTestContext;
 
 final class LogCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -128,7 +129,7 @@ final class LogCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $project        = ProjectTestBuilder::aProject()->withId(101)->build();
         $jenkins_server = new JenkinsServer(
-            1,
+            new UUIDTestContext(),
             'https://jenkins_url',
             null,
             $project
@@ -156,7 +157,7 @@ final class LogCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $project        = ProjectTestBuilder::aProject()->withId(101)->build();
         $jenkins_server = new JenkinsServer(
-            1,
+            new UUIDTestContext(),
             'https://jenkins_url',
             null,
             $project
@@ -184,7 +185,7 @@ final class LogCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $project        = ProjectTestBuilder::aProject()->withId(101)->build();
         $jenkins_server = new JenkinsServer(
-            1,
+            new UUIDTestContext(),
             'https://jenkins_url',
             null,
             $project
@@ -212,7 +213,7 @@ final class LogCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $project        = ProjectTestBuilder::aProject()->withId(101)->build();
         $jenkins_server = new JenkinsServer(
-            1,
+            new UUIDTestContext(),
             'https://jenkins_url',
             null,
             $project
@@ -242,7 +243,7 @@ final class LogCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $project        = ProjectTestBuilder::aProject()->withId(101)->build();
         $jenkins_server = new JenkinsServer(
-            1,
+            new UUIDTestContext(),
             'https://jenkins_url',
             null,
             $project

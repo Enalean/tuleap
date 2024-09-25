@@ -66,7 +66,7 @@ class LogFactory
     public function getLastJobLogsByProjectServer(JenkinsServer $jenkins_server): array
     {
         $jobs = [];
-        foreach ($this->project_job_dao->searchJobsByJenkinsServer($jenkins_server->getId()) as $row) {
+        foreach ($this->project_job_dao->searchJobsByJenkinsServer($jenkins_server) as $row) {
             $repository = $this->git_repository_factory->getRepositoryById((int) $row['repository_id']);
             if ($repository === null) {
                 continue;

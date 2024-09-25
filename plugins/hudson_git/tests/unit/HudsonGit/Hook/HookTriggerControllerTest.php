@@ -32,6 +32,7 @@ use Tuleap\HudsonGit\Hook\JenkinsTuleapBranchSourcePluginHook\JenkinsTuleapPlugi
 use Tuleap\HudsonGit\Log\LogCreator;
 use Tuleap\HudsonGit\PollingResponse;
 use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\DB\UUIDTestContext;
 
 final class HookTriggerControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -231,7 +232,7 @@ final class HookTriggerControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->dao->expects(self::once())->method('searchById')->with(1)->willReturn(null);
 
-        $jenkins_server = new JenkinsServer(0, 'https://example.com/jenkins', null, $this->project);
+        $jenkins_server = new JenkinsServer(new UUIDTestContext(), 'https://example.com/jenkins', null, $this->project);
         $this->jenkins_server_factory->expects(self::once())->method('getJenkinsServerOfProject')->willReturn([
             $jenkins_server,
         ]);
@@ -268,7 +269,7 @@ final class HookTriggerControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->dao->expects(self::once())->method('searchById')->with(1)->willReturn(null);
 
-        $jenkins_server = new JenkinsServer(0, 'https://example.com/jenkins', null, $this->project);
+        $jenkins_server = new JenkinsServer(new UUIDTestContext(), 'https://example.com/jenkins', null, $this->project);
         $this->jenkins_server_factory->expects(self::once())->method('getJenkinsServerOfProject')->willReturn([
             $jenkins_server,
         ]);
@@ -320,7 +321,7 @@ final class HookTriggerControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             ['jenkins_server_url' => 'https://example.com/jenkins', 'encrypted_token' => null, 'is_commit_reference_needed' => false],
         );
 
-        $jenkins_server = new JenkinsServer(0, 'https://example.com/jenkins', null, $this->project);
+        $jenkins_server = new JenkinsServer(new UUIDTestContext(), 'https://example.com/jenkins', null, $this->project);
         $this->jenkins_server_factory->expects(self::once())->method('getJenkinsServerOfProject')->willReturn([
             $jenkins_server,
         ]);

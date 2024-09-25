@@ -23,15 +23,10 @@ declare(strict_types=1);
 namespace Tuleap\HudsonGit\Git\Administration;
 
 use Project;
+use Tuleap\DB\UUID;
 
 class JenkinsServer implements \JsonSerializable
 {
-    /**
-     * @var int
-     * @psalm-readonly
-     */
-    private $id;
-
     /**
      * @var string
      * @psalm-readonly
@@ -45,23 +40,14 @@ class JenkinsServer implements \JsonSerializable
     private $project;
 
     public function __construct(
-        int $id,
+        public readonly UUID $id,
         string $jenkins_server_url,
         /** @psalm-readonly */
         private ?string $encrypted_token,
         Project $project,
     ) {
-        $this->id                 = $id;
         $this->jenkins_server_url = $jenkins_server_url;
         $this->project            = $project;
-    }
-
-    /**
-     * @psalm-mutation-free
-     */
-    public function getId(): int
-    {
-        return $this->id;
     }
 
     /**
@@ -91,7 +77,7 @@ class JenkinsServer implements \JsonSerializable
     public function jsonSerialize(): array
     {
         return [
-            'id'  => $this->getId(),
+            'id'  => $this->id->toString(),
             'url' => $this->getServerURL(),
         ];
     }

@@ -48,14 +48,11 @@ class JenkinsServerRepresentationCollection
         $this->total                               = $total;
     }
 
+    /**
+     * @param JenkinsServerRepresentation[] $servers
+     */
     public static function build(array $servers, int $total): self
     {
-        $jenkins_server_representations = [];
-
-        foreach ($servers as $server) {
-            $jenkins_server_representations[] = JenkinsServerRepresentation::build($server);
-        }
-
-        return new self($jenkins_server_representations, $total);
+        return new self($servers, $total);
     }
 }

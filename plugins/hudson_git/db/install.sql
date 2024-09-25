@@ -24,7 +24,8 @@ CREATE TABLE plugin_hudson_git_job_branch_source (
 ) ENGINE=InnoDB;
 
 CREATE TABLE IF NOT EXISTS plugin_hudson_git_project_server(
-   id int(11) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+   id BINARY(16) NOT NULL PRIMARY KEY,
+   api_id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT UNIQUE,
    project_id int(11) NOT NULL,
    jenkins_server_url varchar(255) default '',
    encrypted_token BLOB DEFAULT NULL
@@ -32,9 +33,10 @@ CREATE TABLE IF NOT EXISTS plugin_hudson_git_project_server(
 
 CREATE TABLE plugin_hudson_git_project_server_job (
    id int(11) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-   project_server_id int(11) UNSIGNED NOT NULL,
+   project_server_id BINARY(16) NOT NULL,
    repository_id int(10) UNSIGNED NOT NULL,
-   push_date int(11) UNSIGNED NOT NULL
+   push_date int(11) UNSIGNED NOT NULL,
+   INDEX idx_project_server_id(project_server_id)
 ) ENGINE=InnoDB;
 
 CREATE TABLE plugin_hudson_git_project_server_job_polling_url (

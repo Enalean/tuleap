@@ -30,7 +30,6 @@ use ProjectManager;
 use SystemEventManager;
 use Tuleap\Git\Permissions\FineGrainedDao;
 use Tuleap\Git\Permissions\FineGrainedRetriever;
-use Tuleap\HudsonGit\Git\Administration\JenkinsServer;
 use Tuleap\HudsonGit\Git\Administration\JenkinsServerDao;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
@@ -132,11 +131,9 @@ final class GitJenkinsServersResource extends AuthenticatedResource
         $total   = $this->jenkins_server_dao->foundRows();
 
         foreach ($results as $server) {
-            $servers[] = new JenkinsServer(
-                $server['id'],
+            $servers[] = new JenkinsServerRepresentation(
+                $server['api_id'],
                 $server['jenkins_server_url'],
-                null,
-                $project
             );
         }
 
