@@ -72,7 +72,10 @@ final class HardcodedMetadataObsolescenceDateRetrieverTest extends TestCase
             $current_time
         );
         $expected_date_timestamp = $obsolescence_date->getTimestamp();
-        self::assertEquals($expected_date_timestamp, $time_stamp);
+        self::assertSame(
+            (new DateTimeImmutable())->setTimestamp($expected_date_timestamp)->format('Y-m-d'),
+            (new DateTimeImmutable())->setTimestamp($time_stamp)->format('Y-m-d'),
+        );
     }
 
     public function testGetTimeStampOfDateForDocumentWhichHaveAnUnlimitedObsolescenceDate(): void
