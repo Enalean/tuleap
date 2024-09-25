@@ -26,6 +26,7 @@ use BaseLanguageFactory;
 use ForgeConfig;
 use Tracker_Semantic_ContributorFactory;
 use Tracker_Semantic_StatusFactory;
+use Tuleap\CrossTracker\Field\ReadableFieldRetriever;
 use Tuleap\CrossTracker\Report\CrossTrackerArtifactReportFactory;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\DuckTypedField\DuckTypedFieldChecker;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata\ArtifactIdMetadataChecker;
@@ -84,9 +85,10 @@ final class InvalidSelectablesCollectionBuilderTest extends TestCase
             $ugroup_label_converter
         );
 
+        $used_fields   = RetrieveUsedFieldsStub::withNoFields();
         $this->builder = new InvalidSelectablesCollectionBuilder(
             new InvalidSelectablesCollectorVisitor(new DuckTypedFieldChecker(
-                RetrieveUsedFieldsStub::withNoFields(),
+                $used_fields,
                 RetrieveFieldTypeStub::withDetectionOfType(),
                 new InvalidFieldChecker(
                     new FloatFieldChecker(),
@@ -111,7 +113,10 @@ final class InvalidSelectablesCollectionBuilderTest extends TestCase
                     new ArtifactSubmitterChecker(UserManager::instance()),
                     true,
                 ),
-                RetrieveUserPermissionOnFieldsStub::build(),
+                new ReadableFieldRetriever(
+                    $used_fields,
+                    RetrieveUserPermissionOnFieldsStub::build(),
+                )
             ), new MetadataChecker(
                 MetadataCheckerStub::withValidMetadata(),
                 new InvalidMetadataChecker(

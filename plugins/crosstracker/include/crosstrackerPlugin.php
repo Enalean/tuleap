@@ -23,6 +23,7 @@ use Tuleap\CrossTracker\CrossTrackerArtifactReportDao;
 use Tuleap\CrossTracker\CrossTrackerInstrumentation;
 use Tuleap\CrossTracker\CrossTrackerReportDao;
 use Tuleap\CrossTracker\CrossTrackerReportFactory;
+use Tuleap\CrossTracker\Field\ReadableFieldRetriever;
 use Tuleap\CrossTracker\Permission\CrossTrackerPermissionGate;
 use Tuleap\CrossTracker\Report\CrossTrackerArtifactReportFactory;
 use Tuleap\CrossTracker\Report\CSV\CSVExportController;
@@ -253,7 +254,10 @@ class crosstrackerPlugin extends Plugin
             $ugroup_label_converter
         );
 
-        $trackers_permissions          = TrackersPermissionsRetriever::build();
+        $trackers_permissions = TrackersPermissionsRetriever::build();
+
+        $field_retriever = new ReadableFieldRetriever($form_element_factory, $trackers_permissions);
+
         $duck_typed_field_checker      = new DuckTypedFieldChecker(
             $form_element_factory,
             $form_element_factory,
@@ -280,7 +284,7 @@ class crosstrackerPlugin extends Plugin
                 new ArtifactSubmitterChecker($user_manager),
                 true,
             ),
-            $trackers_permissions,
+            $field_retriever,
         );
         $metadata_checker              = new MetadataChecker(
             new MetadataUsageChecker(
@@ -377,9 +381,7 @@ class crosstrackerPlugin extends Plugin
         );
         $result_builder_visitor  = new ResultBuilderVisitor(
             new FieldResultBuilder(
-                $form_element_factory,
                 $retrieve_field_type,
-                $trackers_permissions,
                 new DateResultBuilder(
                     $artifact_factory,
                     $form_element_factory,
@@ -392,6 +394,7 @@ class crosstrackerPlugin extends Plugin
                 new StaticListResultBuilder(),
                 new UGroupListResultBuilder($artifact_factory, new UGroupManager()),
                 new UserListResultBuilder($user_manager, $user_manager, $user_manager, UserHelper::instance()),
+                $field_retriever
             ),
             new MetadataResultBuilder(
                 new MetadataTextResultBuilder(
@@ -420,11 +423,11 @@ class crosstrackerPlugin extends Plugin
                 $event_manager,
             ),
         );
-        $order_builder_visitor   = new OrderByBuilderVisitor(
+
+        $order_builder_visitor = new OrderByBuilderVisitor(
             new FieldFromOrderBuilder(
-                $form_element_factory,
+                $field_retriever,
                 $retrieve_field_type,
-                $trackers_permissions,
                 new DateFromOrderBuilder(),
             ),
             new MetadataFromOrderBuilder(),

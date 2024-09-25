@@ -23,7 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\DuckTypedField;
 
 use Tracker;
-use Tracker_FormElement_Field;
+use Tuleap\CrossTracker\Field\ReadableFieldRetriever;
 use Tuleap\CrossTracker\Report\Query\Advanced\DuckTypedField\FieldTypeRetrieverWrapper;
 use Tuleap\CrossTracker\Report\Query\Advanced\DuckTypedField\OrderBy\DuckTypedFieldOrderBy;
 use Tuleap\CrossTracker\Report\Query\Advanced\DuckTypedField\Select\DuckTypedFieldSelect;
@@ -37,8 +37,6 @@ use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
 use Tuleap\Tracker\FormElement\Field\RetrieveUsedFields;
 use Tuleap\Tracker\FormElement\RetrieveFieldType;
-use Tuleap\Tracker\Permission\FieldPermissionType;
-use Tuleap\Tracker\Permission\RetrieveUserPermissionOnFields;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Field;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\InvalidFieldChecker;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\InvalidFieldException;
@@ -49,7 +47,7 @@ final readonly class DuckTypedFieldChecker
         private RetrieveUsedFields $retrieve_used_fields,
         private RetrieveFieldType $retrieve_field_type,
         private InvalidFieldChecker $field_checker,
-        private RetrieveUserPermissionOnFields $user_permission_on_fields,
+        private ReadableFieldRetriever $readable_field_retriever,
     ) {
     }
 
@@ -98,17 +96,7 @@ final readonly class DuckTypedFieldChecker
         $tracker_ids = $collector_parameters->getTrackersIds();
         $user        = $collector_parameters->user;
 
-        $fields = array_filter(
-            array_map(
-                fn(int $tracker_id) => $this->retrieve_used_fields->getUsedFieldByName($tracker_id, $field->getName()),
-                $tracker_ids,
-            ),
-            static fn(?Tracker_FormElement_Field $field) => $field !== null,
-        );
-
-        $fields_user_can_read = $this->user_permission_on_fields
-            ->retrieveUserPermissionOnFields($user, $fields, FieldPermissionType::PERMISSION_READ)
-            ->allowed;
+        $fields_user_can_read = $this->readable_field_retriever->retrieveFieldsUserCanRead($field, $user, $tracker_ids);
 
         return DuckTypedFieldSelect::build(
             new FieldTypeRetrieverWrapper($this->retrieve_field_type),
@@ -127,17 +115,7 @@ final readonly class DuckTypedFieldChecker
     ): Ok|Err {
         $tracker_ids = array_map(static fn(Tracker $tracker) => $tracker->getId(), $parameters->trackers);
 
-        $fields = array_filter(
-            array_map(
-                fn(int $tracker_id) => $this->retrieve_used_fields->getUsedFieldByName($tracker_id, $field->getName()),
-                $tracker_ids,
-            ),
-            static fn(?Tracker_FormElement_Field $field) => $field !== null,
-        );
-
-        $fields_user_can_read = $this->user_permission_on_fields
-            ->retrieveUserPermissionOnFields($parameters->user, $fields, FieldPermissionType::PERMISSION_READ)
-            ->allowed;
+        $fields_user_can_read = $this->readable_field_retriever->retrieveFieldsUserCanRead($field, $parameters->user, $tracker_ids);
 
         return DuckTypedFieldOrderBy::build(
             new FieldTypeRetrieverWrapper($this->retrieve_field_type),

@@ -24,6 +24,7 @@ namespace Tuleap\CrossTracker\Report\Query\Advanced;
 
 use Tracker_Semantic_ContributorFactory;
 use Tracker_Semantic_StatusFactory;
+use Tuleap\CrossTracker\Field\ReadableFieldRetriever;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\DuckTypedField\DuckTypedFieldChecker;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata\ArtifactIdMetadataChecker;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata\AssignedToChecker;
@@ -208,7 +209,10 @@ final class InvalidTermCollectorVisitorTest extends TestCase
                         new ArtifactSubmitterChecker($user_manager),
                         true,
                     ),
-                    RetrieveUserPermissionOnFieldsStub::build(),
+                    new ReadableFieldRetriever(
+                        $this->fields_retriever,
+                        RetrieveUserPermissionOnFieldsStub::build(),
+                    )
                 )
             ),
             new ArtifactLinkTypeChecker(

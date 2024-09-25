@@ -38,6 +38,7 @@ use TrackerFactory;
 use Tuleap\CrossTracker\CrossTrackerArtifactReportDao;
 use Tuleap\CrossTracker\CrossTrackerInstrumentation;
 use Tuleap\CrossTracker\CrossTrackerReportDao;
+use Tuleap\CrossTracker\Field\ReadableFieldRetriever;
 use Tuleap\CrossTracker\Report\CrossTrackerArtifactReportFactory;
 use Tuleap\CrossTracker\Report\Query\Advanced\DuckTypedField\FieldTypeRetrieverWrapper;
 use Tuleap\CrossTracker\Report\Query\Advanced\FromBuilder\FromProjectBuilderVisitor;
@@ -166,8 +167,10 @@ final class ArtifactReportFactoryInstantiator
             $ugroup_label_converter
         );
 
-        $form_element_factory          = Tracker_FormElementFactory::instance();
-        $trackers_permissions          = TrackersPermissionsRetriever::build();
+        $form_element_factory = Tracker_FormElementFactory::instance();
+        $trackers_permissions = TrackersPermissionsRetriever::build();
+        $field_retriever      = new ReadableFieldRetriever($form_element_factory, $trackers_permissions);
+
         $duck_typed_field_checker      = new DuckTypedFieldChecker(
             $form_element_factory,
             $form_element_factory,
@@ -194,7 +197,7 @@ final class ArtifactReportFactoryInstantiator
                 new ArtifactSubmitterChecker($user_manager),
                 true,
             ),
-            $trackers_permissions,
+            $field_retriever,
         );
         $metadata_checker              = new MetadataChecker(
             new MetadataUsageChecker(
@@ -289,11 +292,10 @@ final class ArtifactReportFactoryInstantiator
             $purifier,
             CommonMarkInterpreter::build($purifier),
         );
+        $field_retriever          = new ReadableFieldRetriever($form_element_factory, $trackers_permissions);
         $result_builder_visitor   = new ResultBuilderVisitor(
             new FieldResultBuilder(
-                $form_element_factory,
                 $retrieve_field_type,
-                $trackers_permissions,
                 new DateResultBuilder(
                     $artifact_factory,
                     $form_element_factory,
@@ -306,6 +308,7 @@ final class ArtifactReportFactoryInstantiator
                 new StaticListResultBuilder(),
                 new UGroupListResultBuilder($artifact_factory, new UGroupManager()),
                 new UserListResultBuilder($user_manager, $user_manager, $user_manager, UserHelper::instance()),
+                $field_retriever
             ),
             new MetadataResultBuilder(
                 new MetadataTextResultBuilder(
@@ -334,11 +337,11 @@ final class ArtifactReportFactoryInstantiator
                 $event_manager,
             ),
         );
-        $order_builder_visitor    = new OrderByBuilderVisitor(
+
+        $order_builder_visitor = new OrderByBuilderVisitor(
             new FieldFromOrderBuilder(
-                $form_element_factory,
+                $field_retriever,
                 $retrieve_field_type,
-                $trackers_permissions,
                 new DateFromOrderBuilder(),
             ),
             new MetadataFromOrderBuilder(),

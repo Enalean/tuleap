@@ -25,6 +25,7 @@ namespace Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\DuckTypedFie
 use BaseLanguageFactory;
 use PFUser;
 use Tracker;
+use Tuleap\CrossTracker\Field\ReadableFieldRetriever;
 use Tuleap\CrossTracker\Report\Query\Advanced\DuckTypedField\FieldNotFoundInAnyTrackerFault;
 use Tuleap\CrossTracker\Report\Query\Advanced\DuckTypedField\FieldTypesAreIncompatibleFault;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSelectableCollectorParameters;
@@ -137,7 +138,10 @@ final class DuckTypedFieldCheckerTest extends TestCase
                 new ArtifactSubmitterChecker(UserManager::instance()),
                 true,
             ),
-            $this->user_permission_on_fields,
+            new ReadableFieldRetriever(
+                $this->fields_retriever,
+                $this->user_permission_on_fields,
+            ),
         );
     }
 

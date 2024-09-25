@@ -28,6 +28,7 @@ use Tracker;
 use Tracker_Semantic_ContributorFactory;
 use Tracker_Semantic_Status;
 use Tracker_Semantic_StatusFactory;
+use Tuleap\CrossTracker\Field\ReadableFieldRetriever;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\DuckTypedField\DuckTypedFieldChecker;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata\ArtifactIdMetadataChecker;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata\ArtifactSubmitterChecker;
@@ -134,7 +135,10 @@ final class InvalidOrderByBuilderTest extends TestCase
                     new \Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ListFields\ArtifactSubmitterChecker($user_manager),
                     true,
                 ),
-                RetrieveUserPermissionOnFieldsStub::build()->withPermissionOn([102], FieldPermissionType::PERMISSION_READ),
+                new ReadableFieldRetriever(
+                    $this->used_field_retriever,
+                    RetrieveUserPermissionOnFieldsStub::build()->withPermissionOn([102], FieldPermissionType::PERMISSION_READ),
+                )
             ),
             new MetadataChecker(
                 $this->metadata_checker,
