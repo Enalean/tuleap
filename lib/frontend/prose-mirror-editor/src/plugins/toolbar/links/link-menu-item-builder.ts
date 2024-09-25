@@ -28,6 +28,8 @@ import { markActive } from "../menu";
 import { getWrappingNodeInfo } from "../helper/node-info-retriever";
 import { schema } from "prosemirror-schema-basic";
 import { removeLink } from "../../../helpers/remove-link";
+import { isMarkTypeRepeatedInSelection } from "../../../helpers/is-mark-type-repeated-in-selection";
+import type { EditorState } from "prosemirror-state";
 
 export function linkItem(
     markType: MarkType,
@@ -44,6 +46,8 @@ export function linkItem(
         active(state): boolean {
             return markActive(state, markType);
         },
+        enable: (state: EditorState): boolean =>
+            !isMarkTypeRepeatedInSelection(state, state.schema.marks.link),
         render: function (view: EditorView): HTMLElement {
             return buildPopover(
                 popover_element_id,
