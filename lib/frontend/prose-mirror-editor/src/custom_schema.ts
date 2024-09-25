@@ -41,10 +41,17 @@ const subscript_mark_spec: MarkSpec = {
         return ["sub", 0];
     },
 };
+const supercript_mark_spec: MarkSpec = {
+    parseDOM: [{ tag: "sup" }],
+    toDOM(): DOMOutputSpec {
+        return ["sup", 0];
+    },
+};
 export const custom_schema: Schema = new Schema({
     nodes: addListNodes(nodes, "paragraph block*", "block"),
     marks: {
         ...schema.spec.marks.toObject(),
         subscript: subscript_mark_spec,
+        superscript: supercript_mark_spec,
     },
 });

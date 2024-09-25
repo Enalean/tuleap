@@ -20,4 +20,7 @@
 import { custom_schema } from "../../custom_schema";
 import type { MarkType } from "prosemirror-model";
 
-export const MARKS_TO_CLOSE: MarkType[] = [custom_schema.marks.subscript];
+export const MARKS_TO_CLOSE: MarkType[] = [
+    custom_schema.marks.subscript,
+    custom_schema.marks.superscript,
+];
