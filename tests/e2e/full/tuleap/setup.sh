@@ -44,7 +44,6 @@ enable_plugins() {
         botmattermost_git \
         statistics \
         enalean_licensemanager \
-        mytuleap_contact_support \
         tracker_functions \
         artidoc \
         webauthn
