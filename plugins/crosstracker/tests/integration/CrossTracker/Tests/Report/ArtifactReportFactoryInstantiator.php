@@ -36,8 +36,8 @@ use Tracker_Semantic_StatusFactory;
 use Tracker_Semantic_TitleDao;
 use TrackerFactory;
 use Tuleap\CrossTracker\CrossTrackerArtifactReportDao;
-use Tuleap\CrossTracker\CrossTrackerReportDao;
 use Tuleap\CrossTracker\CrossTrackerInstrumentation;
+use Tuleap\CrossTracker\CrossTrackerReportDao;
 use Tuleap\CrossTracker\Report\CrossTrackerArtifactReportFactory;
 use Tuleap\CrossTracker\Report\Query\Advanced\DuckTypedField\FieldTypeRetrieverWrapper;
 use Tuleap\CrossTracker\Report\Query\Advanced\FromBuilder\FromProjectBuilderVisitor;
@@ -47,6 +47,7 @@ use Tuleap\CrossTracker\Report\Query\Advanced\InvalidOrderByListChecker;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSearchableCollectorVisitor;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSelectablesCollectorVisitor;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidTermCollectorVisitor;
+use Tuleap\CrossTracker\Report\Query\Advanced\OrderByBuilder\Field\Date\DateFromOrderBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\OrderByBuilder\Field\FieldFromOrderBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\OrderByBuilder\Metadata\MetadataFromOrderBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\OrderByBuilderVisitor;
@@ -333,6 +334,15 @@ final class ArtifactReportFactoryInstantiator
                 $event_manager,
             ),
         );
+        $order_builder_visitor    = new OrderByBuilderVisitor(
+            new FieldFromOrderBuilder(
+                $form_element_factory,
+                $retrieve_field_type,
+                $trackers_permissions,
+                new DateFromOrderBuilder(),
+            ),
+            new MetadataFromOrderBuilder(),
+        );
 
         $expert_query_dao = new CrossTrackerExpertQueryReportDao();
         return new CrossTrackerArtifactReportFactory(
@@ -341,7 +351,7 @@ final class ArtifactReportFactoryInstantiator
             $validator,
             $query_builder_visitor,
             $select_builder_visitor,
-            new OrderByBuilderVisitor(new FieldFromOrderBuilder(), new MetadataFromOrderBuilder()),
+            $order_builder_visitor,
             $result_builder_visitor,
             $parser,
             $expert_query_dao,

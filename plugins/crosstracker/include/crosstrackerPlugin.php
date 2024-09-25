@@ -39,6 +39,7 @@ use Tuleap\CrossTracker\Report\Query\Advanced\InvalidOrderByListChecker;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSearchableCollectorVisitor;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSelectablesCollectorVisitor;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidTermCollectorVisitor;
+use Tuleap\CrossTracker\Report\Query\Advanced\OrderByBuilder\Field\Date\DateFromOrderBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\OrderByBuilder\Field\FieldFromOrderBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\OrderByBuilder\Metadata\MetadataFromOrderBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\OrderByBuilderVisitor;
@@ -419,6 +420,15 @@ class crosstrackerPlugin extends Plugin
                 $event_manager,
             ),
         );
+        $order_builder_visitor   = new OrderByBuilderVisitor(
+            new FieldFromOrderBuilder(
+                $form_element_factory,
+                $retrieve_field_type,
+                $trackers_permissions,
+                new DateFromOrderBuilder(),
+            ),
+            new MetadataFromOrderBuilder(),
+        );
 
         $expert_query_dao               = new CrossTrackerExpertQueryReportDao();
         $cross_tracker_artifact_factory = new CrossTrackerArtifactReportFactory(
@@ -427,7 +437,7 @@ class crosstrackerPlugin extends Plugin
             $validator,
             $query_builder_visitor,
             $select_builder_visitor,
-            new OrderByBuilderVisitor(new FieldFromOrderBuilder(), new MetadataFromOrderBuilder()),
+            $order_builder_visitor,
             $result_builder_visitor,
             $parser,
             $expert_query_dao,

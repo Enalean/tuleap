@@ -62,6 +62,7 @@ use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSearchablesCollectionBuilde
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSelectablesCollectionBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSelectablesCollectorVisitor;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidTermCollectorVisitor;
+use Tuleap\CrossTracker\Report\Query\Advanced\OrderByBuilder\Field\Date\DateFromOrderBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\OrderByBuilder\Field\FieldFromOrderBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\OrderByBuilder\Metadata\MetadataFromOrderBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\OrderByBuilderVisitor;
@@ -751,6 +752,15 @@ final class CrossTrackerReportsResource extends AuthenticatedResource
                 new ArtifactResultBuilder($tracker_artifact_factory),
             ),
         );
+        $order_builder_visitor    = new OrderByBuilderVisitor(
+            new FieldFromOrderBuilder(
+                $form_element_factory,
+                $retrieve_field_type,
+                $trackers_permissions,
+                new DateFromOrderBuilder(),
+            ),
+            new MetadataFromOrderBuilder(),
+        );
         $field_checker            = $this->getDuckTypedFieldChecker();
         $metadata_checker         = $this->getMetadataChecker();
         return new CrossTrackerArtifactReportFactory(
@@ -759,7 +769,7 @@ final class CrossTrackerReportsResource extends AuthenticatedResource
             $this->getExpertQueryValidator(),
             $this->getQueryBuilderVisitor(),
             $select_builder_visitor,
-            new OrderByBuilderVisitor(new FieldFromOrderBuilder(), new MetadataFromOrderBuilder()),
+            $order_builder_visitor,
             $result_builder_visitor,
             $this->getParser(),
             new CrossTrackerExpertQueryReportDao(),
