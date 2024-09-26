@@ -18,34 +18,38 @@
   -->
 
 <template>
-    <span class="pull-request-creation-info"
-        >{{ $gettext("Created:")
-        }}<tlp-relative-date
-            data-test="pull-request-creation-date"
-            v-bind:date="pull_request.creation_date"
-            v-bind:absolute-date="formatted_full_date"
-            v-bind:placement="relative_date_placement"
-            v-bind:preference="relative_date_preference"
-            v-bind:locale="user_locale"
-            >{{ formatted_full_date }}</tlp-relative-date
-        >
-        {{ $gettext("Created by:") }}
-        <div class="pull-request-creation-info">
-            <div class="tlp-avatar-mini">
+    <div class="creation-info-panel">
+        <span class="creation-info">
+            {{ $gettext("Created:") }}
+            <tlp-relative-date
+                data-test="pull-request-creation-date"
+                v-bind:date="pull_request.creation_date"
+                v-bind:absolute-date="formatted_full_date"
+                v-bind:placement="relative_date_placement"
+                v-bind:preference="relative_date_preference"
+                v-bind:locale="user_locale"
+            >
+                {{ formatted_full_date }}
+            </tlp-relative-date>
+        </span>
+
+        <span class="creation-info">
+            {{ $gettext("Created by:") }}
+            <span class="tlp-avatar-mini">
                 <img
                     v-bind:src="pull_request.creator.avatar_url"
                     aria-hidden="true"
                     data-test="pull-request-creator-avatar-img"
                 />
-            </div>
+            </span>
             <a
-                class="pull-request-creator-name"
+                class="creator-name"
                 data-test="pull-request-creator-link"
                 v-bind:href="pull_request.creator.user_url"
                 >{{ pull_request.creator.display_name }}</a
             >
-        </div>
-    </span>
+        </span>
+    </div>
 </template>
 
 <script setup lang="ts">
@@ -89,15 +93,21 @@ const relative_date_placement = computed((): string => {
 </script>
 
 <style scoped lang="scss">
-.pull-request-creation-info {
+.creation-info-panel {
     display: flex;
     align-items: center;
     color: var(--tlp-dimmed-color);
     font-size: 0.75rem;
-    gap: 0 4px;
+    gap: var(--tlp-medium-spacing);
 }
 
-.pull-request-creator-name {
+.creation-info {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.creator-name {
     color: var(--tlp-dimmed-color);
 }
 </style>
