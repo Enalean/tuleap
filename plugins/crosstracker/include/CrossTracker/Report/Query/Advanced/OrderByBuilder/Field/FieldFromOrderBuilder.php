@@ -27,6 +27,7 @@ use Tracker_FormElement_Field;
 use Tuleap\CrossTracker\Report\Query\Advanced\DuckTypedField\OrderBy\DuckTypedFieldOrderBy;
 use Tuleap\CrossTracker\Report\Query\Advanced\DuckTypedField\OrderBy\DuckTypedFieldTypeOrderBy;
 use Tuleap\CrossTracker\Report\Query\Advanced\OrderByBuilder\Field\Date\DateFromOrderBuilder;
+use Tuleap\CrossTracker\Report\Query\Advanced\OrderByBuilder\Field\Numeric\NumericFromOrderBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\OrderByBuilder\OrderByBuilderParameters;
 use Tuleap\CrossTracker\Report\Query\Advanced\OrderByBuilder\ParametrizedFromOrder;
 use Tuleap\Tracker\FormElement\Field\RetrieveUsedFields;
@@ -43,6 +44,7 @@ final readonly class FieldFromOrderBuilder
         private RetrieveFieldType $retrieve_field_type,
         private RetrieveUserPermissionOnFields $permission_on_fields,
         private DateFromOrderBuilder $date_builder,
+        private NumericFromOrderBuilder $numeric_builder,
     ) {
     }
 
@@ -81,7 +83,7 @@ final readonly class FieldFromOrderBuilder
         return match ($field->type) {
             DuckTypedFieldTypeOrderBy::DATE,
             DuckTypedFieldTypeOrderBy::DATETIME  => $this->date_builder->getFromOrder($field, $order),
-            DuckTypedFieldTypeOrderBy::NUMERIC,
+            DuckTypedFieldTypeOrderBy::NUMERIC   => $this->numeric_builder->getFromOrder($field, $order),
             DuckTypedFieldTypeOrderBy::TEXT,
             DuckTypedFieldTypeOrderBy::STATIC_LIST,
             DuckTypedFieldTypeOrderBy::UGROUP_LIST,
