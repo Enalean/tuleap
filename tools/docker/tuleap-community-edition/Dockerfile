@@ -3,6 +3,8 @@ FROM rockylinux/rockylinux:9.4@sha256:4b9c7b0285aa68f45ef42308fb7a364ffb63b46164
 COPY rpm/tuleap.repo /etc/yum.repos.d/
 COPY rpm/RPM-GPG-KEY-Tuleap /etc/pki/rpm-gpg/RPM-GPG-KEY-Tuleap
 
+RUN /usr/bin/ln -s /var/lib/tuleap /var/lib/codendi
+
 RUN /usr/sbin/groupadd -g 900 -r codendiadm && \
     /usr/sbin/groupadd -g 902 -r gitolite && \
     /usr/sbin/groupadd -g 903 -r dummy && \

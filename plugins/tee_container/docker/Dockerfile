@@ -12,6 +12,8 @@ ARG RELEASE_CYCLE=dev
 COPY $YUM_REPO_PATH /etc/yum.repos.d/
 COPY $PACKAGES_PATH /rpms
 
+RUN /usr/bin/ln -s /var/lib/tuleap /var/lib/codendi
+
 RUN /usr/sbin/groupadd -g 900 -r codendiadm && \
     /usr/sbin/groupadd -g 902 -r gitolite && \
     /usr/sbin/groupadd -g 903 -r dummy && \
