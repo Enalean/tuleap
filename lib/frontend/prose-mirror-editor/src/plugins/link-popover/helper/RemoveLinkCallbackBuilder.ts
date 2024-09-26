@@ -19,8 +19,8 @@
 
 import type { EditorState, Transaction } from "prosemirror-state";
 import type { RemoveLinkCallback } from "../element/items/RemoveLinkButtonElement";
-import { removeLink } from "../../../helpers/remove-link";
 import { removePopover } from "./create-link-popover";
+import { removeSelectedLinks } from "./remove-selected-links";
 
 export type BuildRemoveLinkCallback = {
     build(doc: Document, editor_id: string): RemoveLinkCallback;
@@ -33,7 +33,7 @@ export const RemoveLinkCallbackBuilder = (
     build:
         (doc: Document, editor_id: string): RemoveLinkCallback =>
         (): void => {
-            removeLink(state, state.schema.marks.link, dispatch);
+            removeSelectedLinks(state, dispatch);
             removePopover(doc, editor_id);
         },
 });
