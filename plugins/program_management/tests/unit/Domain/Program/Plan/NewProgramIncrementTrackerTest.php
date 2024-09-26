@@ -73,9 +73,9 @@ final class NewProgramIncrementTrackerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->buildFromChange();
     }
 
-    public function testItBuildsFromCertificate(): void
+    public function testItBuildsFromValidTrackerAndLabels(): void
     {
-        $new_tracker = NewProgramIncrementTracker::fromCheck(
+        $new_tracker = NewProgramIncrementTracker::fromValidTrackerAndLabels(
             new NewConfigurationTrackerIsValidCertificate(
                 79,
                 ProgramForAdministrationIdentifierBuilder::build()

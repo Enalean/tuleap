@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Plan;
 
+use Tuleap\Option\Option;
 use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramForAdministrationIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramUserGroupCollection;
 use Tuleap\ProgramManagement\Domain\Team\VerifyIsTeam;
@@ -56,14 +57,14 @@ final class PlanConfigurationCreator implements CreatePlanConfiguration
             $plan_change->program_increment_change,
             $program
         );
-        $iteration_tracker = null;
-        if ($plan_change->iteration) {
-            $iteration_tracker = NewIterationTrackerConfiguration::fromPlanIterationChange(
+        $iteration_tracker = Option::fromNullable($plan_change->iteration)->map(
+            fn(PlanIterationChange $iteration_change) => NewIterationTrackerConfiguration::fromPlanIterationChange(
                 $this->iteration_checker,
-                $plan_change->iteration,
+                $iteration_change,
                 $program
-            );
-        }
+            )
+        );
+
         $plannable_tracker_collection = NewPlannableTrackerCollection::fromIds(
             $this->plannable_checker,
             $plan_change->tracker_ids_that_can_be_planned,

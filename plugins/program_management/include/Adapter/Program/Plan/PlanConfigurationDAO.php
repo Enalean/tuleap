@@ -27,6 +27,7 @@ use Tuleap\Option\Option;
 use Tuleap\ProgramManagement\Adapter\Program\Feature\VerifyIsFeature;
 use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramForAdministrationIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Content\VerifyCanBePlannedInProgramIncrement;
+use Tuleap\ProgramManagement\Domain\Program\Plan\NewIterationTrackerConfiguration;
 use Tuleap\ProgramManagement\Domain\Program\Plan\NewPlanConfiguration;
 use Tuleap\ProgramManagement\Domain\Program\Plan\PlanConfiguration;
 use Tuleap\ProgramManagement\Domain\Program\Plan\RetrievePlanConfiguration;
@@ -95,17 +96,17 @@ final class PlanConfigurationDAO extends DataAccessObject implements SaveNewPlan
             'program_increment_tracker_id' => $plan->program_increment_tracker->id,
         ];
 
-        if ($plan->getIterationTracker()) {
-            $insert['iteration_tracker_id'] = $plan->getIterationTracker()->id;
+        $plan->iteration_tracker->apply(function (NewIterationTrackerConfiguration $iteration) use (&$insert) {
+            $insert['iteration_tracker_id'] = $iteration->id;
 
-            if ($plan->getIterationTracker()->label !== null) {
-                $insert['iteration_label'] = $plan->getIterationTracker()->label;
+            if ($iteration->label !== null) {
+                $insert['iteration_label'] = $iteration->label;
             }
 
-            if ($plan->getIterationTracker()->sub_label !== null) {
-                $insert['iteration_sub_label'] = $plan->getIterationTracker()->sub_label;
+            if ($iteration->sub_label !== null) {
+                $insert['iteration_sub_label'] = $iteration->sub_label;
             }
-        }
+        });
 
         if ($plan->program_increment_tracker->label !== null) {
             $insert['program_increment_label'] = $plan->program_increment_tracker->label;

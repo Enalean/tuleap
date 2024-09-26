@@ -41,6 +41,7 @@ final class TrackersDuplicatedHandlerTest extends TestCase
     private const NEW_PROJECT_ID                      = 127;
     private const SOURCE_PROGRAM_INCREMENT_TRACKER_ID = 12;
     private const NEW_PROGRAM_INCREMENT_TRACKER_ID    = 164;
+    private const NEW_ITERATION_TRACKER_ID            = 183;
     private RetrievePlanConfigurationStub $retrieve_plan;
     private TestLogger $logger;
     private \Project $source_project;
@@ -49,6 +50,8 @@ final class TrackersDuplicatedHandlerTest extends TestCase
 
     protected function setUp(): void
     {
+        $source_iteration_tracker_id = 46;
+
         $this->logger           = new TestLogger();
         $this->retrieve_plan    = RetrievePlanConfigurationStub::withPlanConfigurations(
             PlanConfiguration::fromRaw(
@@ -56,7 +59,7 @@ final class TrackersDuplicatedHandlerTest extends TestCase
                 self::SOURCE_PROGRAM_INCREMENT_TRACKER_ID,
                 'Releases',
                 'release',
-                Option::fromValue(46),
+                Option::fromValue($source_iteration_tracker_id),
                 'Sprints',
                 'sprint',
                 [65, 53],
@@ -72,6 +75,7 @@ final class TrackersDuplicatedHandlerTest extends TestCase
         $this->mapping_registry = new MappingRegistry([]);
         $this->mapping_registry->setCustomMapping(\TrackerFactory::TRACKER_MAPPING_KEY, [
             self::SOURCE_PROGRAM_INCREMENT_TRACKER_ID => self::NEW_PROGRAM_INCREMENT_TRACKER_ID,
+            $source_iteration_tracker_id              => self::NEW_ITERATION_TRACKER_ID,
         ]);
     }
 
@@ -144,6 +148,9 @@ final class TrackersDuplicatedHandlerTest extends TestCase
             $this->logger->hasDebugThatContains(
                 'new program increment tracker id #' . self::NEW_PROGRAM_INCREMENT_TRACKER_ID
             )
+        );
+        self::assertTrue(
+            $this->logger->hasDebugThatContains('new iteration tracker id #' . self::NEW_ITERATION_TRACKER_ID)
         );
     }
 }

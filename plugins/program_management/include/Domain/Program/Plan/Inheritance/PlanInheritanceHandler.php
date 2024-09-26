@@ -26,7 +26,13 @@ use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
+use Tuleap\Option\Option;
+use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramUserGroupCollection;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\IterationTracker\IterationLabels;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\IterationTracker\IterationTrackerIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Plan\NewConfigurationTrackerIsValidCertificate;
+use Tuleap\ProgramManagement\Domain\Program\Plan\NewIterationTrackerConfiguration;
+use Tuleap\ProgramManagement\Domain\Program\Plan\NewPlanConfiguration;
 use Tuleap\ProgramManagement\Domain\Program\Plan\NewProgramIncrementTracker;
 use Tuleap\ProgramManagement\Domain\Program\Plan\RetrievePlanConfiguration;
 
@@ -37,7 +43,7 @@ final readonly class PlanInheritanceHandler
     ) {
     }
 
-    /** @return Ok<NewProgramIncrementTracker> | Err<Fault> */
+    /** @return Ok<NewPlanConfiguration> | Err<Fault> */
     public function handle(ProgramInheritanceMapping $mapping): Ok|Err
     {
         $configuration                       = $this->retrieve_plan->retrievePlan($mapping->source_program);
@@ -54,12 +60,54 @@ final readonly class PlanInheritanceHandler
         }
         $new_program_increment_tracker_id = $mapping->tracker_mapping[$source_program_increment_tracker_id];
 
-        return Result::ok(
-            NewProgramIncrementTracker::fromCheck(
-                new NewConfigurationTrackerIsValidCertificate($new_program_increment_tracker_id, $mapping->new_program),
-                $configuration->program_increment_labels->label,
-                $configuration->program_increment_labels->sub_label
-            )
+        $new_program_increment = NewProgramIncrementTracker::fromValidTrackerAndLabels(
+            new NewConfigurationTrackerIsValidCertificate($new_program_increment_tracker_id, $mapping->new_program),
+            $configuration->program_increment_labels->label,
+            $configuration->program_increment_labels->sub_label
         );
+
+        $new_iteration = $this->mapIterationConfiguration(
+            $mapping,
+            $configuration->iteration_tracker,
+            $configuration->iteration_labels
+        );
+
+        $incomplete_new_plan_configuration = new NewPlanConfiguration(
+            $new_program_increment,
+            $mapping->new_program,
+            [],
+            ProgramUserGroupCollection::buildFakeCollection(),
+            $new_iteration
+        );
+
+        return Result::ok($incomplete_new_plan_configuration);
+    }
+
+    /**
+     * @param Option<IterationTrackerIdentifier> $iteration_tracker
+     * @return Option<NewIterationTrackerConfiguration>
+     */
+    private function mapIterationConfiguration(
+        ProgramInheritanceMapping $mapping,
+        Option $iteration_tracker,
+        IterationLabels $iteration_labels,
+    ): Option {
+        return $iteration_tracker->andThen(static function (IterationTrackerIdentifier $iteration) use (
+            $iteration_labels,
+            $mapping
+        ) {
+            if (! isset($mapping->tracker_mapping[$iteration->getId()])) {
+                return Option::nothing(NewIterationTrackerConfiguration::class);
+            }
+            $new_iteration_tracker_id = $mapping->tracker_mapping[$iteration->getId()];
+
+            return Option::fromValue(
+                NewIterationTrackerConfiguration::fromValidTrackerAndLabels(
+                    new NewConfigurationTrackerIsValidCertificate($new_iteration_tracker_id, $mapping->new_program),
+                    $iteration_labels->label,
+                    $iteration_labels->sub_label
+                )
+            );
+        });
     }
 }

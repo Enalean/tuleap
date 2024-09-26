@@ -48,6 +48,11 @@ final class ProgramUserGroup
         return new self($user_group_id);
     }
 
+    public static function buildFake(): self
+    {
+        return new self(-1);
+    }
+
     public function getId(): int
     {
         return $this->id;

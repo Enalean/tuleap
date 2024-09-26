@@ -32,7 +32,7 @@ use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 /**
  * I hold the Plan configuration of a Program.
  * @see NewPlanConfiguration to create a new Plan configuration and save it.
- * @see PlanConfigurationChange to modify a Plan configuration and save it.
+ * @see PlanConfigurationChange for data coming from the Adapters and not yet validated.
  * @psalm-immutable
  */
 final readonly class PlanConfiguration

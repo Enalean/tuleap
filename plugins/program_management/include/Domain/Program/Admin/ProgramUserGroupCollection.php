@@ -61,6 +61,11 @@ final class ProgramUserGroupCollection
         return new self($program_user_groups);
     }
 
+    public static function buildFakeCollection(): self
+    {
+        return new self([ProgramUserGroup::buildFake()]);
+    }
+
     /**
      * @return non-empty-list<ProgramUserGroup>
      */
