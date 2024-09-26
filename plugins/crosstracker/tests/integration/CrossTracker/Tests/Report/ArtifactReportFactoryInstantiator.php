@@ -50,6 +50,7 @@ use Tuleap\CrossTracker\Report\Query\Advanced\InvalidTermCollectorVisitor;
 use Tuleap\CrossTracker\Report\Query\Advanced\OrderByBuilder\Field\Date\DateFromOrderBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\OrderByBuilder\Field\FieldFromOrderBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\OrderByBuilder\Field\Numeric\NumericFromOrderBuilder;
+use Tuleap\CrossTracker\Report\Query\Advanced\OrderByBuilder\Field\Text\TextFromOrderBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\OrderByBuilder\Metadata\MetadataFromOrderBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\OrderByBuilderVisitor;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\ArtifactLink\ForwardLinkFromWhereBuilder;
@@ -342,6 +343,7 @@ final class ArtifactReportFactoryInstantiator
                 $trackers_permissions,
                 new DateFromOrderBuilder(),
                 new NumericFromOrderBuilder(),
+                new TextFromOrderBuilder(),
             ),
             new MetadataFromOrderBuilder(),
         );
