@@ -1,13 +1,12 @@
 import { escape, clone } from "lodash-es";
 import escapeStringRegexp from "escape-string-regexp";
+import { getDateToDisplay } from "@tuleap/plugin-cardwall-card-fields";
 
 export default InPropertiesFilter;
 
 InPropertiesFilter.$inject = ["$filter"];
 
 function InPropertiesFilter($filter) {
-    var amCalendarFilter = $filter("amCalendar");
-
     const HTML_FORMAT = "html";
 
     return function (list, terms) {
@@ -75,7 +74,7 @@ function InPropertiesFilter($filter) {
                         case "date":
                         case "lud":
                         case "subon":
-                            return match(amCalendarFilter(card_field.value));
+                            return match(getDateToDisplay(card_field));
                         case "computed":
                             if (card_field.manual_value !== null) {
                                 return match(card_field.manual_value);

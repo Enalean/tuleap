@@ -1,5 +1,6 @@
 import { html } from "hybrids";
 import { highlightFilterElements } from "./highlight-filter-template";
+import { getDateToDisplay } from "./card-date-field/get-date-to-display";
 
 export default CardFieldsService;
 
@@ -22,6 +23,7 @@ function CardFieldsService($sce) {
         getCardFieldPermissionsValue,
         getCardFieldUserValue,
         isListBoundToAValueDifferentFromNone,
+        getDateToDisplay,
     };
 
     function cardFieldIsSimpleValue(type) {

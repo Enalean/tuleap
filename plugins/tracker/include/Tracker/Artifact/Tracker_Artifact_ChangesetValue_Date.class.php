@@ -19,6 +19,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\REST\Artifact\ArtifactFieldValueDateFullRepresentation;
+
 /**
  * Manage values in changeset for date fields
  */
@@ -88,7 +90,16 @@ class Tracker_Artifact_ChangesetValue_Date extends Tracker_Artifact_ChangesetVal
         if ($this->getTimestamp()) {
             $date = date('c', $this->getTimestamp() ?? 0);
         }
-        return $this->getFullRESTRepresentation($date);
+
+        assert($this->field instanceof Tracker_FormElement_Field_Date);
+
+        return ArtifactFieldValueDateFullRepresentation::fromDatetimeInfo(
+            $this->field->getId(),
+            Tracker_FormElementFactory::instance()->getType($this->field),
+            $this->field->getLabel(),
+            $date,
+            $this->field->isTimeDisplayed(),
+        );
     }
 
     /**

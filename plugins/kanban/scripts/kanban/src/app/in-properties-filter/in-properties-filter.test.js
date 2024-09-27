@@ -1,3 +1,4 @@
+import * as card_fields from "@tuleap/plugin-cardwall-card-fields";
 import kanban_module from "../app.js";
 import angular from "angular";
 import "angular-mocks";
@@ -36,14 +37,12 @@ describe("InPropertiesItemFilter", () => {
     beforeEach(() => {
         angular.mock.module(kanban_module);
 
-        var $filter, moment;
-        angular.mock.inject(function (_$filter_, _moment_) {
+        var $filter;
+        angular.mock.inject(function (_$filter_) {
             $filter = _$filter_;
-            moment = _moment_;
         });
 
         in_properties_filter = $filter("InPropertiesFilter");
-        (moment.locale || moment.lang)("en");
     });
 
     it("has a InPropertiesFilter filter", function () {
@@ -459,8 +458,10 @@ describe("InPropertiesItemFilter", () => {
                 "toto",
             ),
         ).toHaveLength(1);
+
+        jest.spyOn(card_fields, "getDateToDisplay").mockReturnValue("2024-09-27");
         ["date", "lud", "subon"].forEach(function (date_type) {
-            var today = new Date();
+            var today = new Date("2024-09-27");
 
             expect(
                 in_properties_filter(
@@ -476,10 +477,11 @@ describe("InPropertiesItemFilter", () => {
                             ],
                         },
                     ],
-                    "today",
+                    "2024",
                 ),
             ).toHaveLength(1);
         });
+
         expect(
             in_properties_filter(
                 [
