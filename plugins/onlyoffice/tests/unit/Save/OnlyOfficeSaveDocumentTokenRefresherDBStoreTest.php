@@ -28,6 +28,7 @@ use Tuleap\Authentication\SplitToken\SplitTokenIdentifierTranslator;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationString;
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\NeverThrow\Result;
+use Tuleap\Test\DB\UUIDTestContext;
 use Tuleap\Test\PHPUnit\TestCase;
 
 final class OnlyOfficeSaveDocumentTokenRefresherDBStoreTest extends TestCase
@@ -36,9 +37,10 @@ final class OnlyOfficeSaveDocumentTokenRefresherDBStoreTest extends TestCase
     {
         $token_verifier = $this->createStub(OnlyOfficeSaveDocumentTokenVerifier::class);
         $dao            = $this->createMock(OnlyOfficeSaveDocumentTokenDAO::class);
+        $server_id      = new UUIDTestContext();
 
-        $token_verifier->method('getDocumentSaveTokenData')->willReturn(new SaveDocumentTokenData(1, 102, 1, 1));
-        $dao->expects(self::atLeastOnce())->method('updateTokensExpirationDate')->with(1, 1, 10, 20);
+        $token_verifier->method('getDocumentSaveTokenData')->willReturn(new SaveDocumentTokenData(1, 102, 1, $server_id));
+        $dao->expects(self::atLeastOnce())->method('updateTokensExpirationDate')->with(1, $server_id, 10, 20);
 
         $token_refresher = self::buildTokenRefresher($token_verifier, $dao, new SplitToken(1, SplitTokenVerificationString::generateNewSplitTokenVerificationString()));
 

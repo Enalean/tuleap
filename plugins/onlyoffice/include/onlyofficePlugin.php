@@ -175,9 +175,9 @@ final class onlyofficePlugin extends Plugin
         $route_collector->post(OnlyOfficeSaveCallbackURLGenerator::CALLBACK_SAVE_URL, $this->getRouteHandler('routePostDocumentSave'));
         $route_collector->get(OnlyOfficeAdminSettingsController::ADMIN_SETTINGS_URL . '[/{vue-routing:.*}]', $this->getRouteHandler('routeGetAdminSettings'));
         $route_collector->post(OnlyOfficeCreateAdminSettingsController::URL, $this->getRouteHandler('routeCreateAdminSettings'));
-        $route_collector->post(OnlyOfficeUpdateAdminSettingsController::URL . '/{id:\d+}', $this->getRouteHandler('routeUpdateAdminSettings'));
-        $route_collector->post(OnlyOfficeDeleteAdminSettingsController::URL . '/{id:\d+}', $this->getRouteHandler('routeDeleteAdminSettings'));
-        $route_collector->post(OnlyOfficeRestrictAdminSettingsController::URL . '/{id:\d+}', $this->getRouteHandler('routeRestrictAdminSettings'));
+        $route_collector->post(OnlyOfficeUpdateAdminSettingsController::URL . '/{id:[0-9a-f\-]+}', $this->getRouteHandler('routeUpdateAdminSettings'));
+        $route_collector->post(OnlyOfficeDeleteAdminSettingsController::URL . '/{id:[0-9a-f\-]+}', $this->getRouteHandler('routeDeleteAdminSettings'));
+        $route_collector->post(OnlyOfficeRestrictAdminSettingsController::URL . '/{id:[0-9a-f\-]+}', $this->getRouteHandler('routeRestrictAdminSettings'));
     }
 
     public function routePostDocumentSave(): OnlyOfficeSaveController

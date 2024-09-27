@@ -90,10 +90,6 @@ final class OnlyOfficeCallbackResponseJWTParser implements OnlyOfficeCallbackRes
                     'Document server does not have a JWT secret key'
                 )
             );
-        } catch (NoDocumentServerException $e) {
-            return Result::err(
-                Fault::fromMessage('No document server is configured')
-            );
         }
     }
 

@@ -22,12 +22,14 @@ declare(strict_types=1);
 
 namespace Tuleap\OnlyOffice\Save;
 
+use Tuleap\DB\UUID;
+
 /**
  * @psalm-immutable
  */
 final class SaveDocumentTokenData
 {
-    public function __construct(public int $token_id, public int $user_id, public int $document_id, public int $server_id)
+    public function __construct(public int $token_id, public int $user_id, public int $document_id, public UUID $server_id)
     {
     }
 }

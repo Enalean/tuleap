@@ -30,6 +30,7 @@ use Tuleap\OnlyOffice\DocumentServer\DocumentServer;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Test\Builders\LayoutBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\DB\UUIDTestContext;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\ProvideCurrentUserStub;
 
@@ -60,7 +61,7 @@ final class OnlyOfficeAdminSettingsControllerTest extends TestCase
             $admin_page_renderer,
             ProvideCurrentUserStub::buildWithUser($current_user),
             new OnlyOfficeAdminSettingsPresenter(
-                [OnlyOfficeServerPresenter::fromServer(DocumentServer::withoutProjectRestrictions(1, 'https://onlyoffice.example.com/', new ConcealedString('123456')))],
+                [OnlyOfficeServerPresenter::fromServer(DocumentServer::withoutProjectRestrictions(new UUIDTestContext(), 'https://onlyoffice.example.com/', new ConcealedString('123456')))],
                 CSRFSynchronizerTokenPresenter::fromToken(new \CSRFSynchronizerToken('/admin', '', $csrf_store)),
             ),
             new IncludeViteAssets(__DIR__ . '/../frontend-assets/', '/assets/onlyoffice'),

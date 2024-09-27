@@ -37,7 +37,7 @@ final class IDeleteDocumentServerStub implements IDeleteDocumentServer
         return new self();
     }
 
-    public function delete(int $id): void
+    public function delete(string $uuid_hex): void
     {
         $this->has_been_deleted = true;
     }

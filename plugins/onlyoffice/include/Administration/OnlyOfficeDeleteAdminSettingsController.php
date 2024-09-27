@@ -50,7 +50,7 @@ final class OnlyOfficeDeleteAdminSettingsController extends DispatchablePSR15Com
     {
         $this->csrf_token->check();
 
-        $this->deletor->delete((int) $request->getAttribute('id'));
+        $this->deletor->delete((string) $request->getAttribute('id'));
 
         $user = $request->getAttribute(\PFUser::class);
         assert($user instanceof \PFUser);

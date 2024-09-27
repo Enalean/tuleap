@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\OnlyOffice\Stubs;
 
+use Tuleap\DB\UUID;
 use Tuleap\OnlyOffice\DocumentServer\IRestrictDocumentServer;
 use Tuleap\OnlyOffice\DocumentServer\TooManyServersException;
 
@@ -50,12 +51,12 @@ final class IRestrictDocumentServerStub implements IRestrictDocumentServer
     /**
      * @param int[] $project_ids
      */
-    public function restrict(int $id, array $project_ids): void
+    public function restrict(UUID $id, array $project_ids): void
     {
         $this->has_been_restricted_with = $project_ids;
     }
 
-    public function unrestrict(int $id): void
+    public function unrestrict(UUID $id): void
     {
         if ($this->too_many_servers_for_unrestriction) {
             throw new TooManyServersException();

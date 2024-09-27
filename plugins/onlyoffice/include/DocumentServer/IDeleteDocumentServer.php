@@ -24,5 +24,5 @@ namespace Tuleap\OnlyOffice\DocumentServer;
 
 interface IDeleteDocumentServer
 {
-    public function delete(int $id): void;
+    public function delete(string $uuid_hex): void;
 }

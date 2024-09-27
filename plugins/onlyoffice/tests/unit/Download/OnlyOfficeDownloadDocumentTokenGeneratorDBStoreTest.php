@@ -30,6 +30,7 @@ use Tuleap\OnlyOffice\DocumentServer\DocumentServer;
 use Tuleap\OnlyOffice\Open\OnlyOfficeDocument;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\DB\UUIDTestContext;
 use Tuleap\Test\PHPUnit\TestCase;
 
 final class OnlyOfficeDownloadDocumentTokenGeneratorDBStoreTest extends TestCase
@@ -57,7 +58,7 @@ final class OnlyOfficeDownloadDocumentTokenGeneratorDBStoreTest extends TestCase
                 123,
                 'document.docx',
                 true,
-                DocumentServer::withoutProjectRestrictions(1, 'https://example.com', new ConcealedString('very_secret')),
+                DocumentServer::withoutProjectRestrictions(new UUIDTestContext(), 'https://example.com', new ConcealedString('very_secret')),
             ),
             new \DateTimeImmutable('@10'),
         );

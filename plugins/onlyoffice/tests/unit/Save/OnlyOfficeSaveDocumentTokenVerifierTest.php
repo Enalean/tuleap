@@ -26,6 +26,7 @@ use Psr\Log\NullLogger;
 use Tuleap\Authentication\SplitToken\SplitToken;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationString;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
+use Tuleap\Test\DB\UUIDTestContext;
 use Tuleap\Test\PHPUnit\TestCase;
 
 final class OnlyOfficeSaveDocumentTokenVerifierTest extends TestCase
@@ -51,19 +52,20 @@ final class OnlyOfficeSaveDocumentTokenVerifierTest extends TestCase
     public function testFindsDataAssociatedWithAValidToken(): void
     {
         $save_token = new SplitToken(1, SplitTokenVerificationString::generateNewSplitTokenVerificationString());
+        $server_id  = new UUIDTestContext();
 
         $this->dao->method('searchTokenVerificationAndAssociatedData')->willReturn(
             [
                 'verifier'    => $this->hasher->computeHash($save_token->getVerificationString()),
                 'user_id'     => 102,
                 'document_id' => 11,
-                'server_id'   => 1,
+                'server_id'   => $server_id,
             ]
         );
 
         $token_data = $this->token_verifier->getDocumentSaveTokenData($save_token, new \DateTimeImmutable('@20'));
 
-        self::assertEquals(new SaveDocumentTokenData(1, 102, 11, 1), $token_data);
+        self::assertEquals(new SaveDocumentTokenData(1, 102, 11, $server_id), $token_data);
     }
 
     public function testDoesNotRetrieveDataWhenTokenIsNotFound(): void

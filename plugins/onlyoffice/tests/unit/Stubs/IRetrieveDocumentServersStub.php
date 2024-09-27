@@ -53,10 +53,10 @@ final class IRetrieveDocumentServersStub implements IRetrieveDocumentServers
         return $this->servers;
     }
 
-    public function retrieveById(int $id): DocumentServer
+    public function retrieveById(string $uuid_hex): DocumentServer
     {
         foreach ($this->servers as $server) {
-            if ($server->id === $id) {
+            if ($server->id->toString() === $uuid_hex) {
                 return $server;
             }
         }

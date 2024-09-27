@@ -26,5 +26,5 @@ use Tuleap\Cryptography\ConcealedString;
 
 interface IUpdateDocumentServer
 {
-    public function update(int $id, string $url, ConcealedString $secret_key): void;
+    public function update(string $uuid_hex, string $url, ConcealedString $secret_key): void;
 }

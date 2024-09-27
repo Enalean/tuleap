@@ -24,6 +24,7 @@ namespace Tuleap\OnlyOffice\Save;
 
 use ParagonIE\EasyDB\EasyDB;
 use Tuleap\DB\DataAccessObject;
+use Tuleap\DB\UUID;
 
 class OnlyOfficeSaveDocumentTokenDAO extends DataAccessObject
 {
@@ -32,7 +33,7 @@ class OnlyOfficeSaveDocumentTokenDAO extends DataAccessObject
         int $document_id,
         string $hashed_verification_string,
         int $expiration_date_timestamp,
-        int $server_id,
+        UUID $server_id,
     ): int {
         return (int) $this->getDB()->insertReturnId(
             'plugin_onlyoffice_save_document_token',
@@ -41,20 +42,24 @@ class OnlyOfficeSaveDocumentTokenDAO extends DataAccessObject
                 'document_id'     => $document_id,
                 'verifier'        => $hashed_verification_string,
                 'expiration_date' => $expiration_date_timestamp,
-                'server_id'       => $server_id,
+                'server_id'       => $server_id->getBytes(),
             ]
         );
     }
 
     /**
-     * @return array{verifier: string, user_id: int, document_id: int, server_id: int}|null
+     * @return array{verifier: string, user_id: int, document_id: int, server_id: UUID}|null
      */
     public function searchTokenVerificationAndAssociatedData(int $key_id, int $current_timestamp): ?array
     {
         return $this->getDB()->tryFlatTransaction(
             function (EasyDB $db) use ($current_timestamp, $key_id): ?array {
                 $this->deleteExpiredTokens($current_timestamp);
-                return $db->row('SELECT verifier, user_id, document_id, server_id FROM plugin_onlyoffice_save_document_token WHERE id = ?', $key_id);
+                $row = $db->row('SELECT verifier, user_id, document_id, server_id FROM plugin_onlyoffice_save_document_token WHERE id = ?', $key_id);
+                if (isset($row['server_id'])) {
+                    $row['server_id'] = $this->uuid_factory->buildUUIDFromBytesData($row['server_id']);
+                }
+                return $row;
             }
         );
     }
@@ -64,7 +69,7 @@ class OnlyOfficeSaveDocumentTokenDAO extends DataAccessObject
         $this->getDB()->run('DELETE FROM plugin_onlyoffice_save_document_token WHERE expiration_date <= ?', $current_timestamp);
     }
 
-    public function updateTokensExpirationDate(int $document_id, int $server_id, int $current_timestamp, int $expiration_date_timestamp): void
+    public function updateTokensExpirationDate(int $document_id, UUID $server_id, int $current_timestamp, int $expiration_date_timestamp): void
     {
         $this->getDB()->tryFlatTransaction(
             function () use ($document_id, $server_id, $current_timestamp, $expiration_date_timestamp): void {
@@ -72,7 +77,7 @@ class OnlyOfficeSaveDocumentTokenDAO extends DataAccessObject
                     'UPDATE plugin_onlyoffice_save_document_token SET expiration_date = ? WHERE document_id = ? AND server_id = ?',
                     $expiration_date_timestamp,
                     $document_id,
-                    $server_id,
+                    $server_id->getBytes(),
                 );
                 $this->deleteExpiredTokens($current_timestamp);
             }

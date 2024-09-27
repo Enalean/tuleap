@@ -38,12 +38,14 @@ use org\bovigo\vfs\vfsStream;
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\Cryptography\KeyFactory;
 use Tuleap\Cryptography\Symmetric\SymmetricCrypto;
+use Tuleap\DB\UUID;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\NeverThrow\Result;
 use Tuleap\OnlyOffice\DocumentServer\DocumentServer;
 use Tuleap\OnlyOffice\DocumentServer\DocumentServerKeyEncryption;
 use Tuleap\OnlyOffice\Stubs\IRetrieveDocumentServersStub;
 use Tuleap\Option\Option;
+use Tuleap\Test\DB\UUIDTestContext;
 use Tuleap\Test\PHPUnit\TestCase;
 
 final class OnlyOfficeCallbackResponseJWTParserTest extends TestCase
@@ -84,7 +86,7 @@ final class OnlyOfficeCallbackResponseJWTParserTest extends TestCase
                 ['token' => $jwt],
                 JSON_THROW_ON_ERROR
             ),
-            new SaveDocumentTokenData(123, 101, 102, 1),
+            new SaveDocumentTokenData(123, 101, 102, $this->getServer1UUID()),
         );
 
         self::assertEquals(
@@ -137,7 +139,7 @@ final class OnlyOfficeCallbackResponseJWTParserTest extends TestCase
     {
         $res = $this->buildParser(true)->parseCallbackResponseContent(
             json_encode(['token' => self::buildJWT(['status' => 1])], JSON_THROW_ON_ERROR),
-            new SaveDocumentTokenData(123, 101, 102, 1),
+            new SaveDocumentTokenData(123, 101, 102, $this->getServer1UUID()),
         );
 
         self::assertEquals(
@@ -152,7 +154,7 @@ final class OnlyOfficeCallbackResponseJWTParserTest extends TestCase
             Result::isErr(
                 $this->buildParser(true)->parseCallbackResponseContent(
                     'Not JSON',
-                    new SaveDocumentTokenData(123, 101, 102, 1),
+                    new SaveDocumentTokenData(123, 101, 102, $this->getServer1UUID()),
                 )
             )
         );
@@ -164,7 +166,7 @@ final class OnlyOfficeCallbackResponseJWTParserTest extends TestCase
             Result::isErr(
                 $this->buildParser(true)->parseCallbackResponseContent(
                     json_encode('Not an array', JSON_THROW_ON_ERROR),
-                    new SaveDocumentTokenData(123, 101, 102, 1),
+                    new SaveDocumentTokenData(123, 101, 102, $this->getServer1UUID()),
                 )
             )
         );
@@ -176,7 +178,7 @@ final class OnlyOfficeCallbackResponseJWTParserTest extends TestCase
             Result::isErr(
                 $this->buildParser(true)->parseCallbackResponseContent(
                     json_encode(['invalid_callback_json' => true], JSON_THROW_ON_ERROR),
-                    new SaveDocumentTokenData(123, 101, 102, 1),
+                    new SaveDocumentTokenData(123, 101, 102, $this->getServer1UUID()),
                 )
             )
         );
@@ -188,7 +190,7 @@ final class OnlyOfficeCallbackResponseJWTParserTest extends TestCase
             Result::isErr(
                 $this->buildParser(true)->parseCallbackResponseContent(
                     json_encode(['token' => 'not_a_jwt'], JSON_THROW_ON_ERROR),
-                    new SaveDocumentTokenData(123, 101, 102, 1),
+                    new SaveDocumentTokenData(123, 101, 102, $this->getServer1UUID()),
                 )
             )
         );
@@ -200,7 +202,7 @@ final class OnlyOfficeCallbackResponseJWTParserTest extends TestCase
             Result::isErr(
                 $this->buildParser(false)->parseCallbackResponseContent(
                     json_encode(['token' => self::buildJWT([])], JSON_THROW_ON_ERROR),
-                    new SaveDocumentTokenData(123, 101, 102, 1),
+                    new SaveDocumentTokenData(123, 101, 102, $this->getServer1UUID()),
                 )
             )
         );
@@ -215,7 +217,7 @@ final class OnlyOfficeCallbackResponseJWTParserTest extends TestCase
             Result::isErr(
                 $this->buildParser(true)->parseCallbackResponseContent(
                     json_encode(['token' => $jwt], JSON_THROW_ON_ERROR),
-                    new SaveDocumentTokenData(123, 101, 102, 1),
+                    new SaveDocumentTokenData(123, 101, 102, $this->getServer1UUID()),
                 )
             )
         );
@@ -277,12 +279,12 @@ final class OnlyOfficeCallbackResponseJWTParserTest extends TestCase
             new DocumentServerForSaveDocumentTokenRetriever(
                 IRetrieveDocumentServersStub::buildWith(
                     DocumentServer::withoutProjectRestrictions(
-                        1,
+                        $this->getServer1UUID(),
                         'https://example.com/1',
                         new ConcealedString($this->encrypted_secret_server_1)
                     ),
                     DocumentServer::withoutProjectRestrictions(
-                        2,
+                        new UUIDTestContext(),
                         'https://example.com/2',
                         new ConcealedString($this->encrypted_secret_server_2)
                     ),
@@ -308,5 +310,14 @@ final class OnlyOfficeCallbackResponseJWTParserTest extends TestCase
                 return $builder;
             }
         )->toString();
+    }
+
+    private function getServer1UUID(): UUID
+    {
+        static $uuid = null;
+        if ($uuid === null) {
+            $uuid = new UUIDTestContext();
+        }
+        return $uuid;
     }
 }

@@ -44,6 +44,7 @@ use Tuleap\OnlyOffice\Save\OnlyOfficeSaveCallbackURLGenerator;
 use Tuleap\OnlyOffice\Save\OnlyOfficeSaveDocumentTokenGenerator;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\DB\UUIDTestContext;
 use Tuleap\Test\PHPUnit\TestCase;
 
 final class OnlyOfficeGlobalEditorJWTokenProviderTest extends TestCase
@@ -65,7 +66,7 @@ final class OnlyOfficeGlobalEditorJWTokenProviderTest extends TestCase
             'Doc.docx',
             true,
             DocumentServer::withoutProjectRestrictions(
-                1,
+                new UUIDTestContext(),
                 'https://example.com',
                 new ConcealedString(
                     base64_encode(SymmetricCrypto::encrypt(new ConcealedString($secret), (new KeyFactory())->getEncryptionKey()))

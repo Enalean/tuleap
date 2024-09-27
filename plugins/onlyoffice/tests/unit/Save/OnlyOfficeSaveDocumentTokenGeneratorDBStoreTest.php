@@ -30,6 +30,7 @@ use Tuleap\OnlyOffice\DocumentServer\DocumentServer;
 use Tuleap\OnlyOffice\Open\OnlyOfficeDocument;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\DB\UUIDTestContext;
 use Tuleap\Test\PHPUnit\TestCase;
 
 final class OnlyOfficeSaveDocumentTokenGeneratorDBStoreTest extends TestCase
@@ -55,18 +56,19 @@ final class OnlyOfficeSaveDocumentTokenGeneratorDBStoreTest extends TestCase
     {
         $user                 = UserTestBuilder::buildWithDefaults();
         $item                 = new \Docman_Item(['item_id' => 258]);
+        $server_id            = new UUIDTestContext();
         $only_office_document = new OnlyOfficeDocument(
             ProjectTestBuilder::aProject()->build(),
             $item,
             123,
             'document.docx',
             true,
-            DocumentServer::withoutProjectRestrictions(1, 'https://example.com', new ConcealedString('very_secret')),
+            DocumentServer::withoutProjectRestrictions($server_id, 'https://example.com', new ConcealedString('very_secret')),
         );
 
         $this->dao->expects(self::once())
             ->method('create')
-            ->with($user->getId(), $item->getId(), self::anything(), 70, 1)
+            ->with($user->getId(), $item->getId(), self::anything(), 70, $server_id)
             ->willReturn(147);
 
         $token = $this->token_generator->generateSaveToken(
@@ -89,7 +91,7 @@ final class OnlyOfficeSaveDocumentTokenGeneratorDBStoreTest extends TestCase
             123,
             'document.docx',
             false,
-            DocumentServer::withoutProjectRestrictions(1, 'https://example.com', new ConcealedString('very_secret')),
+            DocumentServer::withoutProjectRestrictions(new UUIDTestContext(), 'https://example.com', new ConcealedString('very_secret')),
         );
 
         $token = $this->token_generator->generateSaveToken(

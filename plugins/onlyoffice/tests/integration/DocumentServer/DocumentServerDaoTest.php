@@ -63,7 +63,7 @@ final class DocumentServerDaoTest extends TestIntegrationTestCase
 
         $servers = $this->dao->retrieveAll();
         self::assertCount(1, $servers);
-        $server = $this->dao->retrieveById($servers[0]->id);
+        $server = $this->dao->retrieveById($servers[0]->id->toString());
         self::assertEquals([0], $this->getServerProjectRestrictions());
 
         $this->dao->create('https://example.com/1', new ConcealedString('much_secret'));
@@ -81,13 +81,13 @@ final class DocumentServerDaoTest extends TestIntegrationTestCase
         self::assertEquals([1, 1], $this->getServerProjectRestrictions());
 
         // Update
-        $this->dao->update($servers[0]->id, $servers[0]->url, new ConcealedString('new_secret'));
+        $this->dao->update($servers[0]->id->toString(), $servers[0]->url, new ConcealedString('new_secret'));
         $servers = $this->dao->retrieveAll();
         self::assertTrue($this->decrypt($servers[0]->encrypted_secret_key)->isIdenticalTo(new ConcealedString('new_secret')));
         self::assertTrue($this->decrypt($servers[1]->encrypted_secret_key)->isIdenticalTo(new ConcealedString('much_secret')));
 
         // Delete
-        $this->dao->delete($servers[0]->id);
+        $this->dao->delete($servers[0]->id->toString());
         $servers = $this->dao->retrieveAll();
         self::assertCount(1, $servers);
         self::assertEquals('https://example.com/1', $servers[0]->url);
@@ -100,18 +100,18 @@ final class DocumentServerDaoTest extends TestIntegrationTestCase
 
          $servers = $this->dao->retrieveAll();
          self::assertCount(1, $servers);
-         $server = $this->dao->retrieveById($servers[0]->id);
+         $server = $this->dao->retrieveById($servers[0]->id->toString());
          self::assertFalse($server->is_project_restricted);
 
          $this->dao->restrict($server->id, [$this->project_a_id, $this->project_b_id]);
-         $server = $this->dao->retrieveById($server->id);
+         $server = $this->dao->retrieveById($server->id->toString());
          self::assertTrue($server->is_project_restricted);
          $server_names = array_map(static fn (RestrictedProject $project): string => $project->name, $server->project_restrictions);
          self::assertContains('project_a', $server_names);
          self::assertContains('project_b', $server_names);
 
         $this->dao->restrict($server->id, []);
-        $server = $this->dao->retrieveById($server->id);
+        $server = $this->dao->retrieveById($server->id->toString());
         self::assertTrue($server->is_project_restricted);
         self::assertEmpty($server->project_restrictions);
 
@@ -119,18 +119,18 @@ final class DocumentServerDaoTest extends TestIntegrationTestCase
         $servers = $this->dao->retrieveAll();
         $this->dao->restrict($servers[0]->id, [$this->project_a_id]);
         $this->dao->restrict($servers[1]->id, [$this->project_a_id]);
-        $server_a = $this->dao->retrieveById($servers[0]->id);
-        $server_b = $this->dao->retrieveById($servers[1]->id);
+        $server_a = $this->dao->retrieveById($servers[0]->id->toString());
+        $server_b = $this->dao->retrieveById($servers[1]->id->toString());
         self::assertTrue($server_a->is_project_restricted);
         self::assertTrue($server_b->is_project_restricted);
         self::assertEmpty($server_a->project_restrictions);
         self::assertCount(1, $server_b->project_restrictions);
 
-        $this->dao->delete($server_b->id);
+        $this->dao->delete($server_b->id->toString());
         $are_projects_restrictions_deleted_after_server_deletion =
             $this->db->single(
                 'SELECT COUNT(*) FROM plugin_onlyoffice_document_server_project_restriction WHERE server_id = ?',
-                [$server_b->id]
+                [$server_b->id->getBytes()]
             ) === 0;
 
         self::assertTrue($are_projects_restrictions_deleted_after_server_deletion);
@@ -143,8 +143,8 @@ final class DocumentServerDaoTest extends TestIntegrationTestCase
 
         $servers = $this->dao->retrieveAll();
         $this->dao->restrict($servers[0]->id, [$this->project_a_id, $this->project_b_id]);
-        $server_a = $this->dao->retrieveById($servers[0]->id);
-        $server_b = $this->dao->retrieveById($servers[1]->id);
+        $server_a = $this->dao->retrieveById($servers[0]->id->toString());
+        $server_b = $this->dao->retrieveById($servers[1]->id->toString());
 
         self::assertTrue($server_a->is_project_restricted);
         self::assertTrue($server_b->is_project_restricted);
@@ -155,10 +155,10 @@ final class DocumentServerDaoTest extends TestIntegrationTestCase
         } catch (TooManyServersException) {
         }
 
-        $this->dao->delete($server_b->id);
+        $this->dao->delete($server_b->id->toString());
         $this->dao->unrestrict($server_a->id);
 
-        $server_a = $this->dao->retrieveById($server_a->id);
+        $server_a = $this->dao->retrieveById($server_a->id->toString());
         self::assertFalse($server_a->is_project_restricted);
         self::assertEmpty($server_a->project_restrictions);
     }

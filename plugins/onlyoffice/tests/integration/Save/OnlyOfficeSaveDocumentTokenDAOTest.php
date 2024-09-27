@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\OnlyOffice\Save;
 
 use Tuleap\DB\DBFactory;
+use Tuleap\Test\DB\UUIDTestContext;
 use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
 
 final class OnlyOfficeSaveDocumentTokenDAOTest extends TestIntegrationTestCase
@@ -39,13 +40,18 @@ final class OnlyOfficeSaveDocumentTokenDAOTest extends TestIntegrationTestCase
         $current_time    = 10;
         $expiration_time = 20;
 
-        $key_id = $this->dao->create(102, 11, 'verification_string', $expiration_time, 1);
+        $server_id = new UUIDTestContext();
+        $key_id    = $this->dao->create(102, 11, 'verification_string', $expiration_time, $server_id);
 
         $row = $this->dao->searchTokenVerificationAndAssociatedData($key_id, $current_time);
+        self::assertNotNull($row);
+        $row_server_id = $row['server_id'];
+        unset($row['server_id']);
         self::assertEqualsCanonicalizing(
-            ['verifier' => 'verification_string', 'user_id' => 102, 'document_id' => 11, 'server_id' => 1],
+            ['verifier' => 'verification_string', 'user_id' => 102, 'document_id' => 11],
             $row
         );
+        self::assertEquals($server_id->toString(), $row_server_id->toString());
     }
 
     public function testDoesNotFoundAnExpiredToken(): void
@@ -53,23 +59,25 @@ final class OnlyOfficeSaveDocumentTokenDAOTest extends TestIntegrationTestCase
         $current_time    = 20;
         $expiration_time = 10;
 
-        $key_id = $this->dao->create(102, 11, 'verification_string', $expiration_time, 1);
+        $key_id = $this->dao->create(102, 11, 'verification_string', $expiration_time, new UUIDTestContext());
 
         self::assertNull($this->dao->searchTokenVerificationAndAssociatedData($key_id, $current_time));
     }
 
     public function testCanUpdateExpirationTimeOfTokens(): void
     {
-        $key_id_1 = $this->dao->create(102, 11, 'verification_string', 10, 1);
-        $key_id_2 = $this->dao->create(103, 11, 'verification_string', 10, 1);
+        $server_id = new UUIDTestContext();
+
+        $key_id_1 = $this->dao->create(102, 11, 'verification_string', 10, $server_id);
+        $key_id_2 = $this->dao->create(103, 11, 'verification_string', 10, $server_id);
         self::assertEquals(10, $this->getExpirationDateOfAToken($key_id_1));
         self::assertEquals(10, $this->getExpirationDateOfAToken($key_id_2));
 
-        $this->dao->updateTokensExpirationDate(11, 1, 1, 20);
+        $this->dao->updateTokensExpirationDate(11, $server_id, 1, 20);
         self::assertEquals(20, $this->getExpirationDateOfAToken($key_id_1));
         self::assertEquals(20, $this->getExpirationDateOfAToken($key_id_2));
 
-        $this->dao->updateTokensExpirationDate(11, 1, 15, 10);
+        $this->dao->updateTokensExpirationDate(11, $server_id, 15, 10);
         self::assertFalse($this->getExpirationDateOfAToken($key_id_1));
         self::assertFalse($this->getExpirationDateOfAToken($key_id_2));
     }

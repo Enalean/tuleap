@@ -23,11 +23,12 @@ declare(strict_types=1);
 namespace Tuleap\OnlyOffice\DocumentServer;
 
 use Tuleap\Cryptography\ConcealedString;
+use Tuleap\DB\UUID;
 
 /**
  * @psalm-immutable
  */
-final class DocumentServer
+final readonly class DocumentServer
 {
     public bool $has_existing_secret;
 
@@ -36,7 +37,7 @@ final class DocumentServer
      * @param array<int, RestrictedProject> $project_restrictions
      */
     private function __construct(
-        public int $id,
+        public UUID $id,
         public string $url,
         public ConcealedString $encrypted_secret_key,
         public bool $is_project_restricted,
@@ -49,7 +50,7 @@ final class DocumentServer
      * @param array<int, RestrictedProject> $project_restrictions
      */
     public static function withProjectRestrictions(
-        int $id,
+        UUID $id,
         string $url,
         ConcealedString $encrypted_secret_key,
         array $project_restrictions,
@@ -58,7 +59,7 @@ final class DocumentServer
     }
 
     public static function withoutProjectRestrictions(
-        int $id,
+        UUID $id,
         string $url,
         ConcealedString $encrypted_secret_key,
     ): self {

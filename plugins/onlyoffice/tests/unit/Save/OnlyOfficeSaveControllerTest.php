@@ -33,6 +33,7 @@ use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
 use Tuleap\Option\Option;
+use Tuleap\Test\DB\UUIDTestContext;
 use Tuleap\Test\PHPUnit\TestCase;
 
 final class OnlyOfficeSaveControllerTest extends TestCase
@@ -149,7 +150,7 @@ final class OnlyOfficeSaveControllerTest extends TestCase
     {
         return (new NullServerRequest())->withAttribute(
             SaveDocumentTokenData::class,
-            new SaveDocumentTokenData(1, 1, 1, 1)
+            new SaveDocumentTokenData(1, 1, 1, new UUIDTestContext())
         );
     }
 }

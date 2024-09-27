@@ -66,7 +66,7 @@ final class OnlyOfficeUpdateAdminSettingsController extends DispatchablePSR15Com
             throw new ForbiddenException();
         }
 
-        $this->updater->update((int) $request->getAttribute('id'), $server_url, $server_key);
+        $this->updater->update((string) $request->getAttribute('id'), $server_url, $server_key);
 
         $user = $request->getAttribute(\PFUser::class);
         assert($user instanceof \PFUser);

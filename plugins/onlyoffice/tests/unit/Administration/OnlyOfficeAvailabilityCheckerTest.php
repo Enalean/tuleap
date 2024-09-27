@@ -29,6 +29,7 @@ use Tuleap\OnlyOffice\DocumentServer\DocumentServer;
 use Tuleap\OnlyOffice\DocumentServer\RestrictedProject;
 use Tuleap\OnlyOffice\Stubs\IRetrieveDocumentServersStub;
 use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\DB\UUIDTestContext;
 use Tuleap\Test\PHPUnit\TestCase;
 
 final class OnlyOfficeAvailabilityCheckerTest extends TestCase
@@ -59,7 +60,7 @@ final class OnlyOfficeAvailabilityCheckerTest extends TestCase
 
         $checker = new OnlyOfficeAvailabilityChecker(
             $logger,
-            IRetrieveDocumentServersStub::buildWith(DocumentServer::withoutProjectRestrictions(1, 'https://example.com', new ConcealedString(''))),
+            IRetrieveDocumentServersStub::buildWith(DocumentServer::withoutProjectRestrictions(new UUIDTestContext(), 'https://example.com', new ConcealedString(''))),
         );
 
         $project = ProjectTestBuilder::aProject()->withId(self::PROJECT_ID)->build();
@@ -75,7 +76,7 @@ final class OnlyOfficeAvailabilityCheckerTest extends TestCase
     {
         $checker = new OnlyOfficeAvailabilityChecker(
             new NullLogger(),
-            IRetrieveDocumentServersStub::buildWith(DocumentServer::withoutProjectRestrictions(1, 'https://example.com', new ConcealedString('very_secret'))),
+            IRetrieveDocumentServersStub::buildWith(DocumentServer::withoutProjectRestrictions(new UUIDTestContext(), 'https://example.com', new ConcealedString('very_secret'))),
         );
 
         $project = ProjectTestBuilder::aProject()
@@ -88,7 +89,7 @@ final class OnlyOfficeAvailabilityCheckerTest extends TestCase
 
     public function testHappyPathWithoutProjectRestrictions(): void
     {
-        $document_server = DocumentServer::withoutProjectRestrictions(1, 'https://example.com', new ConcealedString('very_secret'));
+        $document_server = DocumentServer::withoutProjectRestrictions(new UUIDTestContext(), 'https://example.com', new ConcealedString('very_secret'));
         $checker         = new OnlyOfficeAvailabilityChecker(
             new NullLogger(),
             IRetrieveDocumentServersStub::buildWith($document_server),
@@ -106,7 +107,7 @@ final class OnlyOfficeAvailabilityCheckerTest extends TestCase
     public function testHappyPathWithProjectRestrictions(): void
     {
         $document_server = DocumentServer::withProjectRestrictions(
-            1,
+            new UUIDTestContext(),
             'https://example.com',
             new ConcealedString('very_secret'),
             [
