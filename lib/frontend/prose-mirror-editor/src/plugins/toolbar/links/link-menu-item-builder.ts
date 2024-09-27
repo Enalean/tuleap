@@ -27,9 +27,9 @@ import { updateInputValues } from "./input-value-updater";
 import { markActive } from "../menu";
 import { getWrappingNodeInfo } from "../helper/node-info-retriever";
 import { schema } from "prosemirror-schema-basic";
-import { removeLink } from "../../../helpers/remove-link";
 import { isMarkTypeRepeatedInSelection } from "../../../helpers/is-mark-type-repeated-in-selection";
 import type { EditorState } from "prosemirror-state";
+import { removeSelectedLinks } from "../../link-popover/helper/remove-selected-links";
 
 export function linkItem(
     markType: MarkType,
@@ -105,7 +105,7 @@ export function unlinkItem(markType: MarkType, popover_element_id: string): Menu
         },
         run(state, dispatch, view, event): void {
             event.preventDefault();
-            removeLink(state, markType, dispatch);
+            removeSelectedLinks(state, dispatch);
         },
     });
 }

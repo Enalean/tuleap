@@ -22,15 +22,15 @@ import { EditorState } from "prosemirror-state";
 import { custom_schema } from "../../../custom_schema";
 import { RemoveLinkCallbackBuilder } from "./RemoveLinkCallbackBuilder";
 import { createLocalDocument } from "../../../helpers";
-import * as link_remover from "../../../helpers/remove-link";
 import * as popover_remover from "./create-link-popover";
+import * as link_remover from "./remove-selected-links";
 
 const editor_id = "aaaa-bbbb-cccc-dddd";
 
 describe("RemoveLinkCallbackBuilder", () => {
     it("should return a callback which removes the link mark and removes the link popover", () => {
         const doc = createLocalDocument();
-        const removeLink = vi.spyOn(link_remover, "removeLink");
+        const removeSelectedLinks = vi.spyOn(link_remover, "removeSelectedLinks");
         const removePopover = vi.spyOn(popover_remover, "removePopover");
 
         const state = EditorState.create({
@@ -44,8 +44,8 @@ describe("RemoveLinkCallbackBuilder", () => {
 
         callback();
 
-        expect(removeLink).toHaveBeenCalledOnce();
-        expect(removeLink).toHaveBeenCalledWith(state, state.schema.marks.link, dispatch);
+        expect(removeSelectedLinks).toHaveBeenCalledOnce();
+        expect(removeSelectedLinks).toHaveBeenCalledWith(state, dispatch);
 
         expect(removePopover).toHaveBeenCalledOnce();
         expect(removePopover).toHaveBeenCalledWith(doc, editor_id);
