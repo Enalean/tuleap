@@ -23,22 +23,21 @@ declare(strict_types=1);
 namespace Tuleap\CrossTracker\Report\Query\Advanced\OrderByBuilder\Field\Text;
 
 use ParagonIE\EasyDB\EasyStatement;
-use Tuleap\CrossTracker\Report\Query\Advanced\DuckTypedField\OrderBy\DuckTypedFieldOrderBy;
 use Tuleap\CrossTracker\Report\Query\Advanced\OrderByBuilder\ParametrizedFromOrder;
 
 final class TextFromOrderBuilder
 {
-    public function getFromOrder(DuckTypedFieldOrderBy $field, string $order): ParametrizedFromOrder
+    /**
+     * @param list<int> $field_ids
+     */
+    public function getFromOrder(array $field_ids, string $order): ParametrizedFromOrder
     {
-        $suffix                     = spl_object_hash($field);
+        $suffix                     = md5($order);
         $tracker_field_alias        = "TF_$suffix";
         $changeset_value_alias      = "CV_$suffix";
         $changeset_value_text_alias = "CVText_$suffix";
 
-        $fields_id_statement = EasyStatement::open()->in(
-            "$tracker_field_alias.id IN (?*)",
-            $field->field_ids
-        );
+        $fields_id_statement = EasyStatement::open()->in("$tracker_field_alias.id IN (?*)", $field_ids);
         $from                = <<<EOSQL
         LEFT JOIN tracker_field AS $tracker_field_alias
             ON (tracker.id = $tracker_field_alias.tracker_id AND $fields_id_statement)
@@ -48,6 +47,6 @@ final class TextFromOrderBuilder
             ON $changeset_value_text_alias.changeset_value_id = $changeset_value_alias.id
         EOSQL;
 
-        return new ParametrizedFromOrder($from, $fields_id_statement->values(), "$changeset_value_text_alias.value $order");
+        return new ParametrizedFromOrder($from, $field_ids, "$changeset_value_text_alias.value $order");
     }
 }

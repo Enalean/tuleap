@@ -19,10 +19,11 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+use Tuleap\Tracker\Semantic\Description\GetDescriptionSemantic;
 use Tuleap\Tracker\Semantic\IDuplicateSemantic;
 use Tuleap\Tracker\Semantic\IBuildSemanticFromXML;
 
-class Tracker_Semantic_DescriptionFactory implements IBuildSemanticFromXML, IDuplicateSemantic
+class Tracker_Semantic_DescriptionFactory implements IBuildSemanticFromXML, IDuplicateSemantic, GetDescriptionSemantic
 {
     /**
      * Hold an instance of the class
@@ -43,7 +44,7 @@ class Tracker_Semantic_DescriptionFactory implements IBuildSemanticFromXML, IDup
         return self::$instance;
     }
 
-    public function getByTracker(Tracker $tracker)
+    public function getByTracker(Tracker $tracker): Tracker_Semantic_Description
     {
         return Tracker_Semantic_Description::load($tracker);
     }

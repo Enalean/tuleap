@@ -73,7 +73,7 @@ final readonly class FieldFromOrderBuilder
             DuckTypedFieldTypeOrderBy::DATE,
             DuckTypedFieldTypeOrderBy::DATETIME  => $this->date_builder->getFromOrder($field, $order),
             DuckTypedFieldTypeOrderBy::NUMERIC   => $this->numeric_builder->getFromOrder($field, $order),
-            DuckTypedFieldTypeOrderBy::TEXT      => $this->text_builder->getFromOrder($field, $order),
+            DuckTypedFieldTypeOrderBy::TEXT      => $this->text_builder->getFromOrder($field->field_ids, $order),
             DuckTypedFieldTypeOrderBy::STATIC_LIST,
             DuckTypedFieldTypeOrderBy::UGROUP_LIST,
             DuckTypedFieldTypeOrderBy::USER_LIST => new ParametrizedFromOrder('', [], ''),

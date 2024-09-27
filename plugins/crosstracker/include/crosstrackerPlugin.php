@@ -426,15 +426,20 @@ class crosstrackerPlugin extends Plugin
             ),
         );
 
+        $text_order_builder    = new TextFromOrderBuilder();
         $order_builder_visitor = new OrderByBuilderVisitor(
             new FieldFromOrderBuilder(
                 $field_retriever,
                 $retrieve_field_type,
                 new DateFromOrderBuilder(),
                 new NumericFromOrderBuilder(),
-                new TextFromOrderBuilder(),
+                $text_order_builder,
             ),
-            new MetadataFromOrderBuilder(),
+            new MetadataFromOrderBuilder(
+                Tracker_Semantic_TitleFactory::instance(),
+                Tracker_Semantic_DescriptionFactory::instance(),
+                $text_order_builder,
+            ),
         );
 
         $expert_query_dao               = new CrossTrackerExpertQueryReportDao();
