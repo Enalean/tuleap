@@ -66,6 +66,7 @@ describe("create-link-popover", () => {
             popover_anchor,
             editor_id,
             popover_link,
+            noop,
         );
 
         expect(doc.getElementById(buildLinkPopoverId(editor_id))).not.toBeNull();

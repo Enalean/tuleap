@@ -64,8 +64,9 @@ describe("LinkPopoverButtonsRenderers", () => {
 
         renderer.render({} as HostElement)(host, target);
 
-        expect(target.children.length).toBe(2);
+        expect(target.children.length).toBe(3);
         expect(target.querySelector("[data-test=open-link-button]")).not.toBeNull();
         expect(target.querySelector("[data-test=copy-to-clipboard-button]")).not.toBeNull();
+        expect(target.querySelector("[data-test=edit-reference-button]")).not.toBeNull();
     });
 });

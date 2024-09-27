@@ -70,7 +70,7 @@ export const CrossReferenceLinkPopoverButtonsRenderer = (
     gettext_provider: GetText,
     link: LinkProperties,
 ): RenderButtons => ({
-    render: () => html`
+    render: (host: InternalLinkPopoverElement) => html`
         <open-link-button
             data-test="open-link-button"
             gettext_provider="${gettext_provider}"
@@ -82,5 +82,12 @@ export const CrossReferenceLinkPopoverButtonsRenderer = (
             copy_value_title="${gettext_provider.gettext("Copy Tuleap reference")}"
             value_copied_title="${gettext_provider.gettext("Tuleap reference has been copied!")}"
         ></copy-to-clipboard-button>
+        <edit-link-button
+            data-test="edit-reference-button"
+            button_title="${gettext_provider.gettext("Edit reference")}"
+            ontoggle-edition-mode="${(): void => {
+                host.is_in_edition_mode = true;
+            }}"
+        ></edit-link-button>
     `,
 });
