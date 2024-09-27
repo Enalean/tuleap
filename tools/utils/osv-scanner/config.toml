@@ -65,21 +65,6 @@ reason = "ckeditor4 samples are not shipped."
 id = "GHSA-7r32-vfj5-c2jv" # CVE-2024-43407
 reason = "ckeditor4 code snippet GeSHi."
 
-# src/additional-packages/wasmtime-wrapper-lib/Cargo.lock
-## atty
-[[IgnoredVulns]]
-id = "RUSTSEC-2021-0145"
-reason = "Windows only."
-
-[[IgnoredVulns]]
-id = "GHSA-g98v-hv3f-hcfr" # Same as RUSTSEC-2021-0145
-reason = "Windows only."
-
-## mach
-[[IgnoredVulns]]
-id = "RUSTSEC-2020-0168"
-reason = "Only used when targetting macOS."
-
 # word-wrap
 [[IgnoredVulns]]
 id = "GHSA-j8xg-fqg3-53r7" # CVE-2023-26115

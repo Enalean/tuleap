@@ -9,7 +9,7 @@ path = "src/lib.rs"
 crate-type = ["cdylib"]
 
 [build-dependencies]
-cbindgen = "0.24.3"
+cbindgen = "0.27.0"
 
 [dependencies]
 serde = { version = "1.0.147", features = ["derive"] }
