@@ -20,11 +20,13 @@
 
 import type { Node } from "prosemirror-model";
 import type { CrossReference } from "./reference-extractor";
-import { Decoration, DecorationSet } from "prosemirror-view";
+import type { Decoration } from "prosemirror-view";
+import { DecorationSet } from "prosemirror-view";
 import {
     computesReferencePositionRelativeToNode,
     findNodesContainingReference,
 } from "./reference-position-finder";
+import { createCrossReferenceDecoration } from "../../helpers/create-cross-reference-decoration";
 
 export function decorateLink(tree: Node, references: Array<CrossReference>): DecorationSet {
     const decorated_links: Array<Decoration> = [];
@@ -37,10 +39,7 @@ export function decorateLink(tree: Node, references: Array<CrossReference>): Dec
                 node_position,
                 reference,
             );
-            return Decoration.inline(reference_position.from, reference_position.to, {
-                class: "cross-reference-link",
-                "data-href": reference.link,
-            });
+            return createCrossReferenceDecoration(reference_position, reference);
         });
         decorated_links.push(...decorations);
     });

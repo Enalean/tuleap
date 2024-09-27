@@ -30,13 +30,16 @@ import { EditorNodeAtPositionFinder } from "./helper/EditorNodeAtPositionFinder"
 import { EmptySelectionChecker } from "./helper/EmptySelectionChecker";
 import { RemoveLinkCallbackBuilder } from "./helper/RemoveLinkCallbackBuilder";
 import { EditLinkCallbackBuilder } from "./helper/EditLinkCallbackBuilder";
+import { EditCrossReferenceCallbackBuilder } from "./helper/EditCrossReferenceCallbackBuilder";
+import { UpdatedCrossReferenceTransactionDispatcher } from "../../helpers/UpdatedCrossReferenceTransactionDispatcher";
+import { EditorTextNodeCreator } from "../../helpers/EditorTextNodeCreator";
 
 export const initLinkPopoverPlugin = (
     doc: Document,
     gettext_provider: GetText,
     editor_id: string,
-): Plugin => {
-    return new Plugin({
+): Plugin =>
+    new Plugin({
         props: {
             handleClick: (view: EditorView, position: number): boolean =>
                 LinkPopoverInserter(
@@ -53,7 +56,10 @@ export const initLinkPopoverPlugin = (
                     ),
                     RemoveLinkCallbackBuilder(view.state, view.dispatch),
                     EditLinkCallbackBuilder(view),
+                    EditCrossReferenceCallbackBuilder(
+                        UpdatedCrossReferenceTransactionDispatcher(view, view.state),
+                        EditorTextNodeCreator(view.state),
+                    ),
                 ).insertPopover(position),
         },
     });
-};
