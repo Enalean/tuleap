@@ -24,7 +24,7 @@ namespace Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Field;
 
 use PFUser;
 use Tracker;
-use Tracker_FormElement_Field;
+use Tuleap\CrossTracker\Field\ReadableFieldRetriever;
 use Tuleap\CrossTracker\Report\Query\Advanced\DuckTypedField\Select\DuckTypedFieldSelect;
 use Tuleap\CrossTracker\Report\Query\Advanced\DuckTypedField\Select\DuckTypedFieldTypeSelect;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Field\Date\DateResultBuilder;
@@ -34,24 +34,20 @@ use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Field\Text\TextResul
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Field\UGroupList\UGroupListResultBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Field\UserList\UserListResultBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\SelectedValuesCollection;
-use Tuleap\Tracker\FormElement\Field\RetrieveUsedFields;
 use Tuleap\Tracker\FormElement\RetrieveFieldType;
-use Tuleap\Tracker\Permission\FieldPermissionType;
-use Tuleap\Tracker\Permission\RetrieveUserPermissionOnFields;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Field;
 
 final readonly class FieldResultBuilder
 {
     public function __construct(
-        private RetrieveUsedFields $retrieve_used_fields,
         private RetrieveFieldType $retrieve_field_type,
-        private RetrieveUserPermissionOnFields $permission_on_fields,
         private DateResultBuilder $date_builder,
         private TextResultBuilder $text_builder,
         private NumericResultBuilder $numeric_builder,
         private StaticListResultBuilder $static_list_builder,
         private UGroupListResultBuilder $user_group_list_builder,
         private UserListResultBuilder $user_list_builder,
+        private ReadableFieldRetriever $fields_retriever,
     ) {
     }
 
@@ -65,17 +61,9 @@ final readonly class FieldResultBuilder
         array $select_results,
     ): SelectedValuesCollection {
         $tracker_ids = array_map(static fn(Tracker $tracker) => $tracker->getId(), $trackers);
-        $fields      = array_filter(
-            array_map(
-                fn(int $tracker_id) => $this->retrieve_used_fields->getUsedFieldByName($tracker_id, $field->getName()),
-                $tracker_ids,
-            ),
-            static fn(?Tracker_FormElement_Field $field) => $field !== null,
-        );
 
-        $fields_user_can_read = $this->permission_on_fields
-            ->retrieveUserPermissionOnFields($user, $fields, FieldPermissionType::PERMISSION_READ)
-            ->allowed;
+        $fields_user_can_read = $this->fields_retriever->retrieveFieldsUserCanRead($field, $user, $tracker_ids);
+
         return DuckTypedFieldSelect::build(
             $this->retrieve_field_type,
             $field->getName(),

@@ -29,6 +29,7 @@ use PFUser;
 use ProjectUGroup;
 use Tracker;
 use Tuleap\Config\ConfigurationVariables;
+use Tuleap\CrossTracker\Field\ReadableFieldRetriever;
 use Tuleap\CrossTracker\Report\Query\Advanced\DuckTypedField\FieldTypeRetrieverWrapper;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Field\Date\DateResultBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\ResultBuilder\Field\Numeric\NumericResultBuilder;
@@ -112,15 +113,17 @@ final class FieldResultBuilderTest extends TestCase
         RetrieveArtifactStub $artifact_retriever,
         array $selected_result,
     ): SelectedValuesCollection {
-        $purifier    = Codendi_HTMLPurifier::instance();
-        $user_helper = $this->createMock(UserHelper::class);
-        $builder     = new FieldResultBuilder(
+        $purifier        = Codendi_HTMLPurifier::instance();
+        $user_helper     = $this->createMock(UserHelper::class);
+        $field_retriever = new ReadableFieldRetriever(
             $fields_retriever,
-            new FieldTypeRetrieverWrapper(RetrieveFieldTypeStub::withDetectionOfType()),
             RetrieveUserPermissionOnFieldsStub::build()->withPermissionOn(
                 [self::FIRST_FIELD_ID, self::SECOND_FIELD_ID],
                 FieldPermissionType::PERMISSION_READ,
-            ),
+            )
+        );
+        $builder         = new FieldResultBuilder(
+            new FieldTypeRetrieverWrapper(RetrieveFieldTypeStub::withDetectionOfType()),
             new DateResultBuilder($artifact_retriever, $fields_retriever),
             new TextResultBuilder(
                 $artifact_retriever,
@@ -145,6 +148,7 @@ final class FieldResultBuilderTest extends TestCase
                 ProvideAndRetrieveUserStub::build(UserTestBuilder::buildWithDefaults()),
                 $user_helper,
             ),
+            $field_retriever
         );
 
         $user_helper->method('getDisplayNameFromUser')->willReturnCallback(static fn(PFUser $user) => $user->isAnonymous() ? $user->getEmail() : $user->getRealName());
