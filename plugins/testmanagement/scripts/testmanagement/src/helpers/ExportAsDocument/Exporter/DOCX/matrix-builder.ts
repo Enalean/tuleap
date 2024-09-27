@@ -31,6 +31,7 @@ import {
     Paragraph,
     WidthType,
     TableRow,
+    TableLayoutType,
 } from "docx";
 import {
     HEADER_LEVEL_SECTION_TITLE,
@@ -45,6 +46,7 @@ import {
 import { buildCellContentResult, TABLE_BORDERS, TABLE_LABEL_SHADING } from "./Table/table-builder";
 import { computeRequirementStatus } from "./matrix-compute-requirement-status";
 import type { GettextProvider } from "@tuleap/gettext";
+import { A4_LANDSCAPE_APPROXIMATE_WIDTH_IN_DXA } from "./hardcoded-page-width";
 
 export function getTraceabilityMatrixTitle(gettext_provider: GettextProvider): {
     id: string;
@@ -121,24 +123,28 @@ function buildTraceabilityMatrixTable(
     elements: ReadonlyArray<TraceabilityMatrixElement>,
     gettext_provider: GettextProvider,
 ): Table {
+    const headers = [
+        buildHeaderCell(gettext_provider.gettext("Requirements")),
+        buildHeaderCell(gettext_provider.gettext("Status")),
+        buildHeaderCell(gettext_provider.gettext("Tests")),
+        buildHeaderCell(gettext_provider.gettext("Campaigns")),
+        buildHeaderCell(gettext_provider.gettext("Results")),
+        buildHeaderCell(gettext_provider.gettext("Executed By")),
+        buildHeaderCell(gettext_provider.gettext("Executed On")),
+    ];
+
     return new Table({
         width: {
             size: 100,
             type: WidthType.PERCENTAGE,
         },
         borders: TABLE_BORDERS,
+        columnWidths: headers.map(() => A4_LANDSCAPE_APPROXIMATE_WIDTH_IN_DXA / headers.length),
+        layout: TableLayoutType.FIXED,
         rows: [
             new TableRow({
                 tableHeader: true,
-                children: [
-                    buildHeaderCell(gettext_provider.gettext("Requirements")),
-                    buildHeaderCell(gettext_provider.gettext("Status")),
-                    buildHeaderCell(gettext_provider.gettext("Tests")),
-                    buildHeaderCell(gettext_provider.gettext("Campaigns")),
-                    buildHeaderCell(gettext_provider.gettext("Results")),
-                    buildHeaderCell(gettext_provider.gettext("Executed By")),
-                    buildHeaderCell(gettext_provider.gettext("Executed On")),
-                ],
+                children: headers,
             }),
             ...elements.reduce((acc: TableRow[], element) => {
                 let is_first = true;

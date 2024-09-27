@@ -54,6 +54,7 @@ import { getInternationalizedTestStatus } from "./internationalize-test-status";
 import type { ArtifactFieldValueStepDefinitionEnhancedWithResults } from "../../../../type";
 import { buildCellContentResult } from "./Table/table-builder";
 import type { GettextProvider } from "@tuleap/gettext";
+import { A4_PORTRAIT_APPROXIMATE_WIDTH_IN_DXA } from "./hardcoded-page-width";
 
 const TABLE_LABEL_SHADING = {
     val: ShadingType.CLEAR,
@@ -285,7 +286,7 @@ async function buildFieldValuesDisplayZone(
                     );
                     step_number++;
                 }
-                display_zone_long_fields.push(buildTable(step_exec_table_rows));
+                display_zone_long_fields.push(buildLabelValueTable(step_exec_table_rows));
                 for (const step of field.steps) {
                     display_zone_long_fields.push(
                         new Paragraph({
@@ -501,23 +502,49 @@ function buildShortFieldValuesDisplayZone(
         }
     }
 
-    return buildTable(fields_rows);
+    return buildLabelValueTable(fields_rows);
+}
+
+function buildLabelValueTable(fields_rows: TableRow[]): Table {
+    // Some readers such as Google Docs does not deal properly with automatic table column widths.
+    // To avoid that we use the same strategy than LibreOffice and set the column widths explicitly.
+    // The table is expected to take the whole width, the page width with the margins is ~9638 DXA so
+    // we set the size of the labels column 3000 and the size of the values column to 6638 so
+    // (3000 + 6638) = 9638 DXA
+
+    const first_column_width_in_dxa = 3000;
+    const second_column_width_in_dxa =
+        A4_PORTRAIT_APPROXIMATE_WIDTH_IN_DXA - first_column_width_in_dxa;
+
+    return buildTableWithGivenColumnWidths(fields_rows, [
+        first_column_width_in_dxa,
+        second_column_width_in_dxa,
+    ]);
 }
 
 function buildTable(fields_rows: TableRow[]): Table {
+    // Some readers such as Google Docs does not deal properly with automatic table column widths.
+    // To avoid that we use the same strategy than LibreOffice and set the column widths explicitly.
+    // The table is expected to take the whole width, the page width with the margins is ~9638 DXA so
+    // we set the same size for every columns
+
+    const nb_columns = fields_rows.length > 0 ? fields_rows[0].cells.length : 0;
+
+    return buildTableWithGivenColumnWidths(
+        fields_rows,
+        Array(nb_columns).fill(A4_PORTRAIT_APPROXIMATE_WIDTH_IN_DXA / nb_columns),
+    );
+}
+
+function buildTableWithGivenColumnWidths(rows: TableRow[], widths: number[]): Table {
     return new Table({
-        rows: fields_rows,
-        // Some readers such as Google Docs does not deal properly with automatic table column widths.
-        // To avoid that we use the same strategy than LibreOffice and set the column widths explicitly.
-        // The table is expected to take the whole width, the page width with the margins is ~9638 DXA so
-        // we set the size of the labels column 3000 and the size of the values column to 6638 so
-        // (3000 + 6638) = 9638 DXA
+        rows,
         width: {
             size: 100,
             type: WidthType.PERCENTAGE,
         },
         borders: TABLE_BORDERS,
-        columnWidths: [3000, 6638],
+        columnWidths: widths,
         layout: TableLayoutType.FIXED,
     });
 }
@@ -607,7 +634,7 @@ async function buildStepDefinitionParagraphs(
 
     if (must_display_enhanced_data) {
         paragraphs.push(
-            buildTable([
+            buildLabelValueTable([
                 new TableRow({
                     children: [
                         buildTableCellLabel(gettext_provider.gettext("Status")),
@@ -652,7 +679,7 @@ async function buildStepDefinitionTestResultParagraphs(
     );
     if (field.last_execution_user !== "" && field.last_execution_date !== "") {
         paragraphs.push(
-            buildTable([
+            buildLabelValueTable([
                 new TableRow({
                     children: [
                         buildTableCellLabel(gettext_provider.gettext("Executed By")),
@@ -675,7 +702,7 @@ async function buildStepDefinitionTestResultParagraphs(
             heading: HeadingLevel.HEADING_6,
             children: [new TextRun(gettext_provider.gettext("Status"))],
         }),
-        buildTable([
+        buildLabelValueTable([
             new TableRow({
                 children: [buildCellContentResult(field.status, gettext_provider, 1)],
             }),
@@ -683,7 +710,7 @@ async function buildStepDefinitionTestResultParagraphs(
         ...(field.steps.length > 0
             ? [
                   new Paragraph({ children: [new TextRun("")] }),
-                  buildTable([
+                  buildLabelValueTable([
                       new TableRow({
                           children: [
                               buildTableCellHeaderLabel(gettext_provider.gettext("Step")),
