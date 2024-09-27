@@ -26,7 +26,7 @@ use Tuleap\ProgramManagement\Tests\Builder\ProgramForAdministrationIdentifierBui
 use Tuleap\ProgramManagement\Tests\Stub\CheckNewPlannableTrackerStub;
 use Tuleap\Test\PHPUnit\TestCase;
 
-final class NewPlannableTrackerCollectionTest extends TestCase
+final class NewTrackerThatCanBePlannedCollectionTest extends TestCase
 {
     private const FIRST_TRACKER_ID  = 1;
     private const SECOND_TRACKER_ID = 63;
@@ -41,34 +41,31 @@ final class NewPlannableTrackerCollectionTest extends TestCase
     }
 
     /**
-     * @throws PlannableTrackerCannotBeEmptyException
+     * @throws TrackersThatCanBePlannedCannotBeEmptyException
      * @throws \Tuleap\ProgramManagement\Domain\Program\ProgramTrackerException
      */
-    private function getCollection(): NewPlannableTrackerCollection
+    private function getCollection(): NewTrackerThatCanBePlannedCollection
     {
-        return NewPlannableTrackerCollection::fromIds(
+        return NewTrackerThatCanBePlannedCollection::fromIds(
             CheckNewPlannableTrackerStub::withValidTracker(),
             $this->trackers_ids,
             ProgramForAdministrationIdentifierBuilder::build()
         );
     }
 
-    public function testItBuildsPlannableTrackers(): void
+    public function testItBuildsTrackersThatCanBePlanned(): void
     {
         $collection = $this->getCollection();
 
-        self::assertCount(2, $collection->trackers);
-        $tracker_ids = array_map(
-            static fn(NewPlannableTracker $tracker) => $tracker->getId(),
-            $collection->trackers
-        );
-        self::assertContains(self::FIRST_TRACKER_ID, $tracker_ids);
-        self::assertContains(self::SECOND_TRACKER_ID, $tracker_ids);
+        $retrieved_ids = $collection->getTrackerIds();
+        self::assertCount(2, $retrieved_ids);
+        self::assertContains(self::FIRST_TRACKER_ID, $retrieved_ids);
+        self::assertContains(self::SECOND_TRACKER_ID, $retrieved_ids);
     }
 
     public function testItThrowsAnExceptionWhenTrackerListIsEmpty(): void
     {
-        $this->expectException(PlannableTrackerCannotBeEmptyException::class);
+        $this->expectException(TrackersThatCanBePlannedCannotBeEmptyException::class);
         $this->trackers_ids = [];
         $this->getCollection();
     }

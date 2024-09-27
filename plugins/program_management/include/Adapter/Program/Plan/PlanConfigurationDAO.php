@@ -57,14 +57,18 @@ final class PlanConfigurationDAO extends DataAccessObject implements SaveNewPlan
     private function setUpPlan(NewPlanConfiguration $plan): void
     {
         $sql = 'DELETE FROM plugin_program_management_plan WHERE project_id = ?';
-
         $this->getDB()->run($sql, $plan->program->id);
 
+        $tracker_ids = $plan->trackers_that_can_be_planned->getTrackerIds();
+        if ($tracker_ids === []) {
+            return;
+        }
+
         $insert = [];
-        foreach ($plan->getPlannableTrackerIds() as $plannable_tracker_id) {
+        foreach ($tracker_ids as $tracker_id_that_can_be_planned) {
             $insert[] = [
                 'project_id'           => $plan->program->id,
-                'plannable_tracker_id' => $plannable_tracker_id,
+                'plannable_tracker_id' => $tracker_id_that_can_be_planned,
             ];
         }
         $this->getDB()->insertMany('plugin_program_management_plan', $insert);

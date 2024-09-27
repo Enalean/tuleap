@@ -34,27 +34,15 @@ use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramUserGroupCollection;
 final readonly class NewPlanConfiguration
 {
     /**
-     * @param NewPlannableTracker[]                    $plannable_trackers
      * @param Option<NewIterationTrackerConfiguration> $iteration_tracker
      */
     public function __construct(
         public NewProgramIncrementTracker $program_increment_tracker,
         public ProgramForAdministrationIdentifier $program,
-        private array $plannable_trackers,
+        public NewTrackerThatCanBePlannedCollection $trackers_that_can_be_planned,
         private ProgramUserGroupCollection $can_prioritize,
         public Option $iteration_tracker,
     ) {
-    }
-
-    /**
-     * @return int[]
-     */
-    public function getPlannableTrackerIds(): array
-    {
-        return array_map(
-            static fn(NewPlannableTracker $tracker) => $tracker->getId(),
-            $this->plannable_trackers
-        );
     }
 
     /**

@@ -34,6 +34,8 @@ use Tuleap\ProgramManagement\Domain\Program\Plan\NewConfigurationTrackerIsValidC
 use Tuleap\ProgramManagement\Domain\Program\Plan\NewIterationTrackerConfiguration;
 use Tuleap\ProgramManagement\Domain\Program\Plan\NewPlanConfiguration;
 use Tuleap\ProgramManagement\Domain\Program\Plan\NewProgramIncrementTracker;
+use Tuleap\ProgramManagement\Domain\Program\Plan\NewTrackerThatCanBePlanned;
+use Tuleap\ProgramManagement\Domain\Program\Plan\NewTrackerThatCanBePlannedCollection;
 use Tuleap\ProgramManagement\Domain\Program\Plan\RetrievePlanConfiguration;
 
 final readonly class PlanInheritanceHandler
@@ -72,10 +74,15 @@ final readonly class PlanInheritanceHandler
             $configuration->iteration_labels
         );
 
+        $new_trackers_that_can_be_planned = $this->mapTrackersThatCanBePlanned(
+            $mapping,
+            $configuration->tracker_ids_that_can_be_planned
+        );
+
         $incomplete_new_plan_configuration = new NewPlanConfiguration(
             $new_program_increment,
             $mapping->new_program,
-            [],
+            $new_trackers_that_can_be_planned,
             ProgramUserGroupCollection::buildFakeCollection(),
             $new_iteration
         );
@@ -109,5 +116,24 @@ final readonly class PlanInheritanceHandler
                 )
             );
         });
+    }
+
+    /**
+     * @param list<int> $trackers_from_template
+     */
+    private function mapTrackersThatCanBePlanned(
+        ProgramInheritanceMapping $mapping,
+        array $trackers_from_template,
+    ): NewTrackerThatCanBePlannedCollection {
+        $new_trackers = [];
+        foreach ($trackers_from_template as $tracker_id_from_template) {
+            if (isset($mapping->tracker_mapping[$tracker_id_from_template])) {
+                $new_tracker_id = $mapping->tracker_mapping[$tracker_id_from_template];
+                $new_trackers[] = NewTrackerThatCanBePlanned::fromValidTracker(
+                    new NewConfigurationTrackerIsValidCertificate($new_tracker_id, $mapping->new_program)
+                );
+            }
+        }
+        return NewTrackerThatCanBePlannedCollection::fromTrackers($new_trackers);
     }
 }
