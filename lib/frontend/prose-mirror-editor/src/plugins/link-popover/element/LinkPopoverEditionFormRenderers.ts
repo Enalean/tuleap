@@ -23,10 +23,13 @@ import type { GetText } from "@tuleap/gettext";
 import type { InternalLinkPopoverElement } from "./LinkPopoverElement";
 
 import "./forms/EditLinkFormElement";
+import "./forms/EditCrossReferenceFormElement";
+
 import { sanitizeURL } from "@tuleap/url-sanitizer";
 import type { LinkProperties } from "../../../types/internal-types";
+import type { EditCrossReferenceCallback } from "./forms/EditCrossReferenceFormElement";
 
-export type EditLinkCallback = (link: LinkProperties) => void;
+export type EditLinkCallback = (link: LinkProperties) => void; // TODO: move in the component
 
 export type RenderEditionForm = {
     render(host: InternalLinkPopoverElement): UpdateFunction<InternalLinkPopoverElement>;
@@ -55,8 +58,20 @@ export const RegularLinkEditionPopoverRenderer = (
     `,
 });
 
-export const CrossReferenceLinkEditionPopoverRenderer = (): RenderEditionForm => ({
-    render: (): UpdateFunction<InternalLinkPopoverElement> => {
-        throw new Error("Cross reference link edition is not supported yet.");
-    },
+export const CrossReferenceLinkEditionPopoverRenderer = (
+    gettext_provider: GetText,
+    link: LinkProperties,
+    edit_cross_reference_callback: EditCrossReferenceCallback,
+): RenderEditionForm => ({
+    render: (host: InternalLinkPopoverElement): UpdateFunction<InternalLinkPopoverElement> => html`
+        <edit-cross-reference-form
+            gettext_provider="${gettext_provider}"
+            edit_cross_reference_callback="${edit_cross_reference_callback}"
+            cancel_callback="${(): void => {
+                onClickCancel(host);
+            }}"
+            reference_text="${link.title}"
+            popover_anchor="${host.popover_anchor}"
+        ></edit-cross-reference-form>
+    `,
 });

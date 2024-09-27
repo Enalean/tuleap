@@ -18,7 +18,7 @@
  */
 
 import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
-import { createLocalDocument, gettext_provider } from "../../../helpers/helper-for-test";
+import { createLocalDocument, gettext_provider } from "../../../helpers";
 import { LinkPopoverInserter } from "./LinkPopoverInserter";
 import { FindDOMNodeAtPositionStub } from "./stubs/FindDOMNodeAtPositionStub";
 import { CrossReferenceHTMLElementDetector } from "./CrossReferenceNodeDetector";
@@ -120,6 +120,7 @@ describe("LinkPopoverInserter", () => {
                 href: cross_reference_url,
                 title: cross_reference_text.textContent,
             },
+            expect.any(Function),
         );
     });
 

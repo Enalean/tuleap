@@ -32,6 +32,7 @@ import {
     CrossReferenceLinkEditionPopoverRenderer,
     RegularLinkEditionPopoverRenderer,
 } from "../element/LinkPopoverEditionFormRenderers";
+import type { EditCrossReferenceCallback } from "../element/forms/EditCrossReferenceFormElement";
 
 export function buildLinkPopoverId(editor_id: string): string {
     return `link-popover-${editor_id}`;
@@ -95,12 +96,16 @@ export function insertCrossReferenceLinkPopover(
     popover_anchor: HTMLElement,
     editor_id: string,
     link: LinkProperties,
+    edit_cross_reference_callback: EditCrossReferenceCallback,
 ): void {
     const popover = createBasePopoverElement(doc, popover_anchor, editor_id);
 
     popover.buttons_renderer = CrossReferenceLinkPopoverButtonsRenderer(gettext_provider, link);
-
-    popover.edition_form_renderer = CrossReferenceLinkEditionPopoverRenderer();
+    popover.edition_form_renderer = CrossReferenceLinkEditionPopoverRenderer(
+        gettext_provider,
+        link,
+        edit_cross_reference_callback,
+    );
 
     doc.body.appendChild(popover);
 }

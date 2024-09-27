@@ -52,8 +52,14 @@ msgstr "Créer"
 msgid "Create a link"
 msgstr "Créer un lien"
 
+msgid "Edit cross reference"
+msgstr "Éditer la référence croisée"
+
 msgid "Edit link"
 msgstr "Éditer le lien"
+
+msgid "Edit reference"
+msgstr "Éditer la référence"
 
 msgid "File type is invalid, you can only upload images"
 msgstr ""
@@ -76,6 +82,9 @@ msgstr "Texte"
 
 msgid "Open link"
 msgstr "Ouvrir le lien"
+
+msgid "Reference"
+msgstr "Référence"
 
 msgid "Remove link"
 msgstr "Supprimer le lien"

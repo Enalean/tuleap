@@ -71,11 +71,20 @@ export const LinkPopoverInserter = (
 
         const link = {
             href: url,
-            title: popover_anchor.textContent ?? "",
+            title: popover_anchor.textContent?.trim() ?? "",
         };
 
         if (is_cross_ref_link) {
-            insertCrossReferenceLinkPopover(doc, gettext_provider, popover_anchor, editor_id, link);
+            insertCrossReferenceLinkPopover(
+                doc,
+                gettext_provider,
+                popover_anchor,
+                editor_id,
+                link,
+                () => {
+                    removePopover(doc, editor_id);
+                },
+            );
 
             return true;
         }
