@@ -2600,6 +2600,21 @@
       <code><![CDATA[getWellFormattedArchivePath]]></code>
     </MissingReturnType>
   </file>
+  <file src="plugins/artidoc/include/Artidoc/Document/ArtidocDao.php">
+    <ArgumentTypeCoercion>
+      <code><![CDATA[array_map(
+                        function (array $row) use ($target_id) {
+                            return [
+                                'id' => $this->identifier_factory->buildIdentifier()->getBytes(),
+                                'item_id' => $target_id,
+                                'artifact_id' => $row['artifact_id'],
+                                'rank' => $row['rank'],
+                            ];
+                        },
+                        $rows,
+                    )]]></code>
+    </ArgumentTypeCoercion>
+  </file>
   <file src="plugins/baseline/include/Adapter/Administration/AdminPermissionsPresenterBuilder.php">
     <ArgumentTypeCoercion>
       <code><![CDATA[$this->getUserGroupsPresenter($administrators_ugroup_id, $project)]]></code>
@@ -2986,6 +3001,9 @@
     </MissingReturnType>
   </file>
   <file src="plugins/botmattermost_agiledashboard/include/BotMattermostAgileDashboard/BotMattermostStandUpSummary/Dao.php">
+    <ArgumentTypeCoercion>
+      <code><![CDATA[$data_to_insert]]></code>
+    </ArgumentTypeCoercion>
     <NullableReturnStatement>
       <code><![CDATA[$res['id']]]></code>
     </NullableReturnStatement>
@@ -3196,6 +3214,9 @@
     </MissingReturnType>
   </file>
   <file src="plugins/botmattermost_git/include/BotMattermostGit/BotMattermostGitNotification/Dao.php">
+    <ArgumentTypeCoercion>
+      <code><![CDATA[$data_to_insert]]></code>
+    </ArgumentTypeCoercion>
     <MissingParamType>
       <code><![CDATA[$repository_id]]></code>
     </MissingParamType>
@@ -13133,6 +13154,16 @@
       <code><![CDATA[process]]></code>
     </InvalidReturnType>
   </file>
+  <file src="plugins/document/include/Config/Project/SearchColumnsDao.php">
+    <ArgumentTypeCoercion>
+      <code><![CDATA[array_map(static fn($name) => ['name' => $name, 'project_id' => $project_id], $columns)]]></code>
+    </ArgumentTypeCoercion>
+  </file>
+  <file src="plugins/document/include/Config/Project/SearchCriteriaDao.php">
+    <ArgumentTypeCoercion>
+      <code><![CDATA[array_map(static fn($name) => ['name' => $name, 'project_id' => $project_id], $criteria)]]></code>
+    </ArgumentTypeCoercion>
+  </file>
   <file src="plugins/document/include/Config/Project/UpdateSearchView.php">
     <InvalidReturnType>
       <code><![CDATA[process]]></code>
@@ -17466,7 +17497,6 @@
       <code><![CDATA[$comma]]></code>
     </PossiblyFalseOperand>
     <PossiblyNullReference>
-      <code><![CDATA[GetData]]></code>
       <code><![CDATA[GetData]]></code>
     </PossiblyNullReference>
     <RiskyTruthyFalsyComparison>
@@ -25397,6 +25427,11 @@
       <code><![CDATA[$this->getSupportedScopeIdentifiers()]]></code>
     </ArgumentTypeCoercion>
   </file>
+  <file src="plugins/oauth2_server/include/User/AuthorizationScopeDao.php">
+    <ArgumentTypeCoercion>
+      <code><![CDATA[$inserts]]></code>
+    </ArgumentTypeCoercion>
+  </file>
   <file src="plugins/oauth2_server/tests/unit/User/AuthorizationComparatorTest.php">
     <ArgumentTypeCoercion>
       <code><![CDATA[$requested_scopes]]></code>
@@ -26263,6 +26298,11 @@
       <code><![CDATA[! $iteration_tracker_id]]></code>
     </RiskyTruthyFalsyComparison>
   </file>
+  <file src="plugins/program_management/include/Adapter/Program/Plan/PlanConfigurationDAO.php">
+    <ArgumentTypeCoercion>
+      <code><![CDATA[$insert]]></code>
+    </ArgumentTypeCoercion>
+  </file>
   <file src="plugins/program_management/include/Adapter/Program/ProgramIncrementTracker/VisibleProgramIncrementTrackerRetriever.php">
     <RiskyTruthyFalsyComparison>
       <code><![CDATA[! $program_increment_tracker_id]]></code>
@@ -26321,14 +26361,6 @@
     <RiskyTruthyFalsyComparison>
       <code><![CDATA[! $start_purge_timestamp]]></code>
     </RiskyTruthyFalsyComparison>
-  </file>
-  <file src="plugins/program_management/include/Domain/Program/Plan/NewPlan.php">
-    <LessSpecificReturnStatement>
-      <code><![CDATA[$this->can_prioritize->getUserGroups()]]></code>
-    </LessSpecificReturnStatement>
-    <MoreSpecificReturnType>
-      <code><![CDATA[non-empty-list<ProgramUserGroup>]]></code>
-    </MoreSpecificReturnType>
   </file>
   <file src="plugins/program_management/include/Domain/Team/MirroredTimebox/MirroredProgramIncrementIdentifier.php">
     <RiskyTruthyFalsyComparison>
@@ -28236,6 +28268,11 @@
       <code><![CDATA[$raw_change_information]]></code>
     </InvalidArgument>
   </file>
+  <file src="plugins/pullrequest/include/PullRequest/Reviewer/ReviewerDAO.php">
+    <ArgumentTypeCoercion>
+      <code><![CDATA[$change_user_rows]]></code>
+    </ArgumentTypeCoercion>
+  </file>
   <file src="plugins/pullrequest/include/PullRequest/Reviewer/UserCannotBeAddedAsReviewerException.php">
     <ImpureMethodCall>
       <code><![CDATA[getId]]></code>
@@ -28411,6 +28448,18 @@
       <code><![CDATA[$this->title]]></code>
       <code><![CDATA[$this->tracker_ids]]></code>
     </RiskyTruthyFalsyComparison>
+  </file>
+  <file src="plugins/roadmap/include/Roadmap/RoadmapWidgetDao.php">
+    <ArgumentTypeCoercion>
+      <code><![CDATA[array_map(
+                        fn ($tracker_id) => ['plugin_roadmap_widget_id' => $id, 'tracker_id' => $tracker_id],
+                        $tracker_ids,
+                    )]]></code>
+      <code><![CDATA[array_map(
+                        fn ($tracker_id) => ['plugin_roadmap_widget_id' => $new_id, 'tracker_id' => $tracker_id],
+                        $tracker_ids,
+                    )]]></code>
+    </ArgumentTypeCoercion>
   </file>
   <file src="plugins/roadmap/include/Roadmap/Widget/PreferencePresenter.php">
     <RiskyTruthyFalsyComparison>
@@ -32593,6 +32642,10 @@
     </UndefinedThisPropertyFetch>
   </file>
   <file src="plugins/timetracking/include/Timetracking/Admin/TimetrackingUgroupDao.php">
+    <ArgumentTypeCoercion>
+      <code><![CDATA[$data_to_insert]]></code>
+      <code><![CDATA[$data_to_insert]]></code>
+    </ArgumentTypeCoercion>
     <MissingParamType>
       <code><![CDATA[$tracker_id]]></code>
       <code><![CDATA[$tracker_id]]></code>
@@ -32680,6 +32733,11 @@
     <RiskyTruthyFalsyComparison>
       <code><![CDATA[empty($query)]]></code>
     </RiskyTruthyFalsyComparison>
+  </file>
+  <file src="plugins/timetracking/include/Timetracking/REST/v1/TimetrackingManagement/Dao.php">
+    <ArgumentTypeCoercion>
+      <code><![CDATA[$users_to_insert]]></code>
+    </ArgumentTypeCoercion>
   </file>
   <file src="plugins/timetracking/include/Timetracking/REST/v1/TimetrackingOverviewRepresentationsBuilder.php">
     <MissingParamType>
@@ -37225,6 +37283,11 @@
     <MissingPropertyType>
       <code><![CDATA[$project->group_id]]></code>
     </MissingPropertyType>
+  </file>
+  <file src="plugins/tracker/include/Tracker/DateReminder/DateReminderDao.php">
+    <ArgumentTypeCoercion>
+      <code><![CDATA[$data_to_insert]]></code>
+    </ArgumentTypeCoercion>
   </file>
   <file src="plugins/tracker/include/Tracker/DateReminder/Tracker_DateReminder.class.php">
     <InvalidArgument>
@@ -45476,6 +45539,14 @@
     </PossiblyNullReference>
   </file>
   <file src="plugins/tracker/include/Tracker/Report/dao/ReportCriteriaDao.php">
+    <ArgumentTypeCoercion>
+      <code><![CDATA[$data_to_insert_without_duplicates]]></code>
+      <code><![CDATA[$data_to_insert_without_duplicates]]></code>
+      <code><![CDATA[$data_to_insert_without_duplicates]]></code>
+      <code><![CDATA[$data_to_insert_without_duplicates]]></code>
+      <code><![CDATA[$data_to_insert_without_duplicates]]></code>
+      <code><![CDATA[$data_to_insert_without_duplicates]]></code>
+    </ArgumentTypeCoercion>
     <RiskyTruthyFalsyComparison>
       <code><![CDATA[! $value]]></code>
     </RiskyTruthyFalsyComparison>
@@ -46528,6 +46599,11 @@
       <code><![CDATA[addAttribute]]></code>
       <code><![CDATA[addChild]]></code>
     </PossiblyNullReference>
+  </file>
+  <file src="plugins/tracker/include/Tracker/Semantic/Status/Done/SemanticDoneDao.php">
+    <ArgumentTypeCoercion>
+      <code><![CDATA[$values]]></code>
+    </ArgumentTypeCoercion>
   </file>
   <file src="plugins/tracker/include/Tracker/Semantic/Status/Done/SemanticDoneFactory.php">
     <RiskyTruthyFalsyComparison>
@@ -56411,6 +56487,11 @@
       <code><![CDATA[$user_id]]></code>
     </MissingPropertyType>
   </file>
+  <file src="src/common/OAuth2ServerCore/AccessToken/Scope/OAuth2AccessTokenScopeDAO.php">
+    <ArgumentTypeCoercion>
+      <code><![CDATA[$data_to_insert]]></code>
+    </ArgumentTypeCoercion>
+  </file>
   <file src="src/common/OAuth2ServerCore/App/AppDao.php">
     <ImplementedReturnTypeMismatch>
       <code><![CDATA[array{id:int, project_id:int|null, name:string, redirect_endpoint: string, use_pkce:0|1, app_type: string}]]></code>
@@ -56433,10 +56514,20 @@
                 )]]></code>
     </PossiblyInvalidArgument>
   </file>
+  <file src="src/common/OAuth2ServerCore/Grant/AuthorizationCode/Scope/OAuth2AuthorizationCodeScopeDAO.php">
+    <ArgumentTypeCoercion>
+      <code><![CDATA[$data_to_insert]]></code>
+    </ArgumentTypeCoercion>
+  </file>
   <file src="src/common/OAuth2ServerCore/OpenIDConnect/JWK/JSONWebKeySet.php">
     <PropertyTypeCoercion>
       <code><![CDATA[$keys]]></code>
     </PropertyTypeCoercion>
+  </file>
+  <file src="src/common/OAuth2ServerCore/RefreshToken/Scope/OAuth2RefreshTokenScopeDAO.php">
+    <ArgumentTypeCoercion>
+      <code><![CDATA[$data_to_insert]]></code>
+    </ArgumentTypeCoercion>
   </file>
   <file src="src/common/OpenGraph/OpenGraphPresenter.php">
     <MissingParamType>
@@ -61605,6 +61696,11 @@
     <PossiblyNullArgument>
       <code><![CDATA[$last_access_key_identifier_store->getLastGeneratedAccessKeyIdentifier()]]></code>
     </PossiblyNullArgument>
+  </file>
+  <file src="src/common/User/AccessKey/Scope/AccessKeyScopeDAO.php">
+    <ArgumentTypeCoercion>
+      <code><![CDATA[$data_to_insert]]></code>
+    </ArgumentTypeCoercion>
   </file>
   <file src="src/common/User/Account/AccessKeyPresenterBuilder.php">
     <PossiblyNullArgument>
