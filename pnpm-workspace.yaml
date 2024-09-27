@@ -11,4 +11,5 @@ packages:  # all packages in subdirs of packages/ and components/  - 'packages/*
   - "plugins/*/tests/e2e/**/"
   - "plugins/tracker/grammar/"
   - "tests/e2e/**/"
+  - "doc/slides/*/"
 shared-workspace-lockfile: false

@@ -28,3 +28,4 @@ Tuleap internals
 * [Config](./back-end/config.md)
 * [Flowcharts](./back-end/flowcharts.md)
 
+* ["Life of a request in Tuleap" slides with some architecture diagrams](../slides/life-tuleap-request/)
