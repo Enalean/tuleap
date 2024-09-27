@@ -23,14 +23,15 @@ import type { MenuItem, MenuItemSpec } from "prosemirror-menu";
 import { isSelectionAList, isSelectionAListWithType } from "./is-list-checker";
 import { lift } from "prosemirror-commands";
 import { wrapInList } from "prosemirror-schema-list";
-import { cmdItem } from "../menu";
 import { v4 as uuidv4 } from "uuid";
+import type { BuildMenuItemWithCommand } from "../helper/BuildMenuItemWithCommand";
 
 export function wrapListItem(
     node_type: NodeType,
     options: Partial<MenuItemSpec>,
     can_not_be_converted_to: NodeType,
     fa_icon: string,
+    menu_item_with_command_builder: BuildMenuItemWithCommand,
 ): MenuItem {
     const icon_id = `${uuidv4()}-icon-list`;
     const passed_options: MenuItemSpec = {
@@ -68,5 +69,8 @@ export function wrapListItem(
             return wrapFunction(state, dispatch);
         },
     };
-    return cmdItem(wrapInList(node_type, {}), passed_options);
+    return menu_item_with_command_builder.buildMenuItemWihCommand(
+        wrapInList(node_type, {}),
+        passed_options,
+    );
 }

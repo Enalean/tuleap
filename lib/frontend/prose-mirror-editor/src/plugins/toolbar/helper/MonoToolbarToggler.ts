@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) Enalean, 2024 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -15,18 +15,18 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
-$header: 1;
+import { toggleMark } from "prosemirror-commands";
+import type { EditorView } from "prosemirror-view";
+import type { MarkType } from "prosemirror-model";
 
-// editor should be above the title when we scroll (toolbar always visible)
-$editor: 2;
-
-// footer must be above editor when we scroll (submit button always visible)
-$footer: 3;
-
-// dropdown should be displayed above everything else
-$dropdown: 4;
-
-// toolbar should be displayed above everything else
-$toolbar: 5;
+export type ToggleMark = {
+    toggleMark(view: EditorView, mark_type: MarkType): void;
+};
+export const MarkToggle = (): ToggleMark => ({
+    toggleMark(view: EditorView, mark_type: MarkType): void {
+        toggleMark(mark_type)(view.state, view.dispatch, view);
+    },
+});

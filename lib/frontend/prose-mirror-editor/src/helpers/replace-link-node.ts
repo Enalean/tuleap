@@ -20,7 +20,7 @@
 import type { LinkProperties } from "../types/internal-types";
 import type { EditorView } from "prosemirror-view";
 import { TextSelection } from "prosemirror-state";
-import { getWrappingNodeInfo } from "../plugins/toolbar/helper/node-info-retriever";
+import { getWrappingNodeInfo } from "../plugins/toolbar/helper/NodeInfoRetriever";
 
 export function replaceLinkNode(view: EditorView, attrs: LinkProperties): void {
     const schema = view.state.schema;

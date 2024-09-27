@@ -17,11 +17,9 @@
  *  along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { icons, MenuItem } from "prosemirror-menu";
-import type { MenuElement, MenuItemSpec } from "prosemirror-menu";
-import type { EditorState, Command } from "prosemirror-state";
-import type { Schema, MarkType } from "prosemirror-model";
-import { toggleMark } from "prosemirror-commands";
+import { icons } from "prosemirror-menu";
+import type { MenuElement, MenuItem } from "prosemirror-menu";
+import type { Schema } from "prosemirror-model";
 import type { GetText } from "@tuleap/gettext";
 import { linkItem, unlinkItem } from "./links/link-menu-item-builder";
 import { wrapListItem } from "./list/list-menu-item-builder";
@@ -29,42 +27,9 @@ import { getTextStyleDropdownMenu } from "./text-style";
 import { imageItem } from "./image/image-menu-item-builder";
 import { getSubscriptMenuItem, getSuperscriptMenuItem } from "./text-transformations";
 import { getQuoteMenuItem } from "./quote";
-
-export function cmdItem(cmd: Command, options: MenuItemSpec): MenuItem {
-    const passed_options: MenuItemSpec = options;
-    passed_options.label = options.label ? options.label : "";
-    if (options.run) {
-        passed_options.run = options.run;
-    } else {
-        passed_options.run = cmd;
-    }
-
-    if (!options.enable && !options.select) {
-        passed_options[options.enable ? "enable" : "select"] = (state): boolean => cmd(state);
-    }
-
-    return new MenuItem(passed_options);
-}
-
-export function markActive(state: EditorState, type: MarkType): boolean {
-    const { from, $from, to, empty } = state.selection;
-    if (empty) {
-        return Boolean(type.isInSet(state.storedMarks || $from.marks()));
-    }
-    return state.doc.rangeHasMark(from, to, type);
-}
-
-function markItem(markType: MarkType, options: Partial<MenuItemSpec>): MenuItem {
-    const passed_options: MenuItemSpec = {
-        ...options,
-        active(state) {
-            return markActive(state, markType);
-        },
-        run: toggleMark(markType),
-    };
-
-    return cmdItem(toggleMark(markType), passed_options);
-}
+import type { BuildMenuItem } from "./helper/BuildMenuItem";
+import type { CheckIsMArkActive } from "./helper/IsMarkActiveChecker";
+import { type BuildMenuItemWithCommand } from "./helper/BuildMenuItemWithCommand";
 
 type MenuItemResult = {
     toggleStrong?: MenuItem;
@@ -80,21 +45,26 @@ export function buildMenuItems(
     schema: Schema,
     gettext_provider: GetText,
     editor_id: string,
+    MenuItemBuilder: BuildMenuItem,
+    check_is_mark_active: CheckIsMArkActive,
+    MenuItemWithCommandBuilder: BuildMenuItemWithCommand,
 ): MenuItemResult {
     return {
         fullMenu: [
             [
-                markItem(schema.marks.strong, {
-                    title: gettext_provider.gettext("Toggle strong style `Ctrl+b`"),
-                    icon: icons.strong,
-                }),
-                markItem(schema.marks.em, {
-                    title: gettext_provider.gettext("Toggle embedded style `Ctrl+i`"),
-                    icon: icons.em,
-                }),
+                MenuItemBuilder.buildMenuItem(
+                    schema.marks.em,
+                    {
+                        title: gettext_provider.gettext("Toggle embedded style `Ctrl+i`"),
+                        icon: icons.em,
+                    },
+                    check_is_mark_active,
+                    MenuItemWithCommandBuilder,
+                ),
                 getQuoteMenuItem(gettext_provider),
-                getSubscriptMenuItem(schema, gettext_provider),
-                getSuperscriptMenuItem(schema, gettext_provider),
+                getSubscriptMenuItem(schema, gettext_provider, check_is_mark_active),
+                getSuperscriptMenuItem(schema, gettext_provider, check_is_mark_active),
+
                 wrapListItem(
                     schema.nodes.bullet_list,
                     {
@@ -103,6 +73,7 @@ export function buildMenuItems(
                     },
                     schema.nodes.ordered_list,
                     "fa-list",
+                    MenuItemWithCommandBuilder,
                 ),
                 wrapListItem(
                     schema.nodes.ordered_list,
@@ -112,14 +83,20 @@ export function buildMenuItems(
                     },
                     schema.nodes.bullet_list,
                     "fa-list-ol",
+                    MenuItemWithCommandBuilder,
                 ),
-                markItem(schema.marks.code, {
-                    title: gettext_provider.gettext("Toggle code Ctrl+`"),
-                    icon: icons.code,
-                }),
+                MenuItemBuilder.buildMenuItem(
+                    schema.marks.code,
+                    {
+                        title: gettext_provider.gettext("Toggle code Ctrl+`"),
+                        icon: icons.code,
+                    },
+                    check_is_mark_active,
+                    MenuItemWithCommandBuilder,
+                ),
                 getTextStyleDropdownMenu(schema, editor_id, gettext_provider),
-                linkItem(schema.marks.link, editor_id, gettext_provider),
-                unlinkItem(schema.marks.link, editor_id),
+                linkItem(schema.marks.link, editor_id, gettext_provider, check_is_mark_active),
+                unlinkItem(schema.marks.link, editor_id, check_is_mark_active),
 
                 imageItem(schema.nodes.image, editor_id, gettext_provider),
             ],

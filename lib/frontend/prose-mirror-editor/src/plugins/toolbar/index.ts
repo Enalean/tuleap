@@ -27,12 +27,21 @@ import { custom_schema } from "../../custom_schema";
 import { buildInputRules } from "./input-rules";
 import type { GetText } from "@tuleap/gettext";
 import { initPluginTextStyle } from "./text-style";
+import { setupMonoToolbar } from "./mono-toolbar";
+import type { ToolbarBus } from "./helper/toolbar-bus";
+import { MenuItemBuilder } from "./helper/BuildMenuItem";
+import { IsMarkActiveChecker } from "./helper/IsMarkActiveChecker";
+import { MenuItemWithCommandBuilder } from "./helper/BuildMenuItemWithCommand";
 
 export { buildMenuItems, buildKeymap };
 
 export const NB_HEADING = 6;
 
-export function setupToolbar(gettext_provider: GetText, editor_id: string): Plugin[] {
+export function setupToolbar(
+    gettext_provider: GetText,
+    editor_id: string,
+    toolbar_bus: ToolbarBus,
+): Plugin[] {
     const plugins = [
         keymap(buildKeymap(custom_schema, NB_HEADING)),
         keymap(baseKeymap),
@@ -42,8 +51,16 @@ export function setupToolbar(gettext_provider: GetText, editor_id: string): Plug
 
     plugins.push(
         menuBar({
-            content: buildMenuItems(custom_schema, gettext_provider, editor_id).fullMenu,
+            content: buildMenuItems(
+                custom_schema,
+                gettext_provider,
+                editor_id,
+                MenuItemBuilder(),
+                IsMarkActiveChecker(),
+                MenuItemWithCommandBuilder(),
+            ).fullMenu,
         }),
+        setupMonoToolbar(toolbar_bus),
     );
 
     return plugins;

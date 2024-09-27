@@ -35,6 +35,8 @@ import type { EditorSectionContent } from "@/composables/useEditorSectionContent
 import type { GetText } from "@tuleap/gettext";
 import type { UseUploadFileType } from "@/composables/useUploadFile";
 import type { CrossReference } from "@/stores/useSectionsStore";
+import { strictInject } from "@tuleap/vue-strict-inject";
+import { TOOLBAR_BUS } from "@/toolbar-bus-injection-key";
 
 const props = defineProps<{
     is_edit_mode: boolean;
@@ -88,6 +90,7 @@ onMounted(async () => {
             content_editor.value,
             props.project_id,
             props.references,
+            strictInject(TOOLBAR_BUS),
         );
         editorView.value = useEditorInstance.editor;
     }

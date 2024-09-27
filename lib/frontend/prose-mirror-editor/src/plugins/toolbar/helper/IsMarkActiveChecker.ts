@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) Enalean, 2024 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -15,18 +15,20 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
-$header: 1;
-
-// editor should be above the title when we scroll (toolbar always visible)
-$editor: 2;
-
-// footer must be above editor when we scroll (submit button always visible)
-$footer: 3;
-
-// dropdown should be displayed above everything else
-$dropdown: 4;
-
-// toolbar should be displayed above everything else
-$toolbar: 5;
+import type { MarkType } from "prosemirror-model";
+import type { EditorState } from "prosemirror-state";
+export type CheckIsMArkActive = {
+    isMarkActive(state: EditorState, type: MarkType): boolean;
+};
+export const IsMarkActiveChecker = (): CheckIsMArkActive => ({
+    isMarkActive(state: EditorState, type: MarkType): boolean {
+        const { from, $from, to, empty } = state.selection;
+        if (empty) {
+            return Boolean(type.isInSet(state.storedMarks || $from.marks()));
+        }
+        return state.doc.rangeHasMark(from, to, type);
+    },
+});

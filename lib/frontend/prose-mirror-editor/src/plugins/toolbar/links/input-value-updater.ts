@@ -20,8 +20,8 @@
 
 import type { GetText } from "@tuleap/gettext";
 import type { EditorState } from "prosemirror-state";
-import type { NodeInformation } from "../helper/node-info-retriever";
-import { getWrappingNodeInfo } from "../helper/node-info-retriever";
+import type { NodeInformation } from "../helper/NodeInfoRetriever";
+import { getWrappingNodeInfo } from "../helper/NodeInfoRetriever";
 
 function updateHrefAndReturnWhenALinkHaveBeenUpdated(
     state: EditorState,

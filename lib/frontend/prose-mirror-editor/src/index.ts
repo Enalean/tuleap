@@ -21,3 +21,4 @@ import "../themes/editor.scss";
 export * from "./use-editor";
 export * from "./plugins";
 export * from "./types";
+export * from "./plugins/toolbar/helper/toolbar-bus";

@@ -35,8 +35,8 @@ export const initLinkPopoverPlugin = (
     doc: Document,
     gettext_provider: GetText,
     editor_id: string,
-): Plugin =>
-    new Plugin({
+): Plugin => {
+    return new Plugin({
         props: {
             handleClick: (view: EditorView, position: number): boolean =>
                 LinkPopoverInserter(
@@ -56,3 +56,4 @@ export const initLinkPopoverPlugin = (
                 ).insertPopover(position),
         },
     });
+};

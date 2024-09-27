@@ -40,6 +40,7 @@ import {
 import { v4 as uuidv4 } from "uuid";
 import type { CrossReference } from "./plugins/extract-referencies/reference-extractor";
 import { initPluginCloseMarksAfterSpace } from "./plugins/close-marks-after-space";
+import { type ToolbarBus } from "./plugins/toolbar/helper/toolbar-bus";
 
 export type UseEditorType = {
     editor: EditorView;
@@ -54,6 +55,7 @@ export async function useEditor(
     initial_content: HTMLElement,
     project_id: number,
     references: Array<CrossReference>,
+    toolbar_bus: ToolbarBus,
 ): Promise<UseEditorType> {
     const gettext_provider = await initGettext(
         getLocaleWithDefault(document),
@@ -69,7 +71,7 @@ export async function useEditor(
         upload_plugin,
         dropCursor(),
         initLinkPopoverPlugin(document, gettext_provider, editor_id),
-        ...setupToolbar(gettext_provider, editor_id),
+        ...setupToolbar(gettext_provider, editor_id, toolbar_bus),
         initPluginTransformInput(project_id, references),
         initPluginCloseMarksAfterSpace(),
     ];
