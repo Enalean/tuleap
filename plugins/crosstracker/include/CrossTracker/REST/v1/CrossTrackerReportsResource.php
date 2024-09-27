@@ -37,9 +37,11 @@ use Tracker_FormElementFactory;
 use Tracker_Semantic_ContributorDao;
 use Tracker_Semantic_ContributorFactory;
 use Tracker_Semantic_DescriptionDao;
+use Tracker_Semantic_DescriptionFactory;
 use Tracker_Semantic_StatusDao;
 use Tracker_Semantic_StatusFactory;
 use Tracker_Semantic_TitleDao;
+use Tracker_Semantic_TitleFactory;
 use TrackerFactory;
 use Tuleap\CrossTracker\CrossTrackerArtifactReportDao;
 use Tuleap\CrossTracker\CrossTrackerDefaultReport;
@@ -757,15 +759,20 @@ final class CrossTrackerReportsResource extends AuthenticatedResource
                 new ArtifactResultBuilder($tracker_artifact_factory),
             ),
         );
+        $text_order_builder       = new TextFromOrderBuilder();
         $order_builder_visitor    = new OrderByBuilderVisitor(
             new FieldFromOrderBuilder(
                 $field_retriever,
                 $retrieve_field_type,
                 new DateFromOrderBuilder(),
                 new NumericFromOrderBuilder(),
-                new TextFromOrderBuilder(),
+                $text_order_builder,
             ),
-            new MetadataFromOrderBuilder(),
+            new MetadataFromOrderBuilder(
+                Tracker_Semantic_TitleFactory::instance(),
+                Tracker_Semantic_DescriptionFactory::instance(),
+                $text_order_builder,
+            ),
         );
         $field_checker            = $this->getDuckTypedFieldChecker();
         $metadata_checker         = $this->getMetadataChecker();
