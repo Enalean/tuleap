@@ -41,6 +41,7 @@ import { v4 as uuidv4 } from "uuid";
 import type { CrossReference } from "./plugins/extract-referencies/reference-extractor";
 import { initPluginCloseMarksAfterSpace } from "./plugins/close-marks-after-space";
 import { type ToolbarBus } from "./plugins/toolbar/helper/toolbar-bus";
+import { initPluginAutomagicLinks } from "./plugins/automagic-links";
 
 export type UseEditorType = {
     editor: EditorView;
@@ -74,6 +75,7 @@ export async function useEditor(
         ...setupToolbar(gettext_provider, editor_id, toolbar_bus),
         initPluginTransformInput(project_id, references),
         initPluginCloseMarksAfterSpace(),
+        initPluginAutomagicLinks(),
     ];
 
     const state: EditorState = getState(initial_content);
