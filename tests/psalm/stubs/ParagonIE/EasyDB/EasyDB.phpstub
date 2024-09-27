@@ -114,7 +114,8 @@ class EasyDB
     }
 
     /**
-     * @psalm-taint-source input $table
+     * @psalm-taint-source input    $table
+     * @psalm-param non-empty-array $maps
      */
     public function insertMany(string $table, array $maps): int
     {
