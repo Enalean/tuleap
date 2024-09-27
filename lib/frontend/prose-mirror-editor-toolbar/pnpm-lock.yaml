@@ -1,0 +1,52 @@
+lockfileVersion: '6.0'
+
+settings:
+  autoInstallPeers: false
+  excludeLinksFromLockfile: false
+
+dependencies:
+  '@tuleap/gettext':
+    specifier: workspace:^
+    version: link:../gettext
+  '@tuleap/prose-mirror-editor':
+    specifier: workspace:^
+    version: link:../prose-mirror-editor
+  dompurify:
+    specifier: ^3.1.4
+    version: 3.1.7
+  hybrids:
+    specifier: 9.1.6
+    version: 9.1.6
+
+devDependencies:
+  '@tuleap/build-system-configurator':
+    specifier: workspace:*
+    version: link:../build-system-configurator
+  '@tuleap/po-gettext-plugin':
+    specifier: workspace:^
+    version: link:../po-gettext-plugin
+  '@types/dompurify':
+    specifier: ^3.0.5
+    version: 3.0.5
+
+packages:
+
+  /@types/dompurify@3.0.5:
+    resolution: {integrity: sha512-1Wg0g3BtQF7sSb27fJQAKck1HECM6zV1EB66j8JH9i3LCjYabJa0FSdiSgsD5K/RbrsR0SiraKacLB+T8ZVYAg==}
+    dependencies:
+      '@types/trusted-types': 2.0.7
+    dev: true
+
+  /@types/trusted-types@2.0.7:
+    resolution: {integrity: sha512-ScaPdn1dQczgbl0QFTeTOmVHFULt394XJgOQNoyVhZ6r2vLnMLJfBPd53SB52T/3G36VI1/g2MZaX0cwDuXsfw==}
+    dev: true
+
+  /dompurify@3.1.7:
+    resolution: {integrity: sha512-VaTstWtsneJY8xzy7DekmYWEOZcmzIe3Qb3zPd4STve1OBTa+e+WmS1ITQec1fZYXI3HCsOZZiSMpG6oxoWMWQ==}
+    dev: false
+
+  /hybrids@9.1.6:
+    resolution: {integrity: sha512-AES51XhSvgXQLSwAHBE4tmjKW8XxnnGBiGSeHWeiPzO638waOX+cYU6VWvfiUOuTMjM/KzxsYHrLfMLLNqVZ3A==}
+    engines: {node: '>=18.0.0'}
+    hasBin: true
+    dev: false

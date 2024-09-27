@@ -18,6 +18,7 @@
     "@tuleap/print-as-pdf": "workspace:^",
     "@tuleap/project-background": "workspace:^",
     "@tuleap/prose-mirror-editor": "workspace:^",
+    "@tuleap/prose-mirror-editor-toolbar": "workspace:^",
     "@tuleap/tlp-dropdown": "workspace:*",
     "@tuleap/tlp-modal": "workspace:^",
     "@tuleap/tooltip": "workspace:*",
