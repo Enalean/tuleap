@@ -19,7 +19,7 @@
   -->
 
 <template>
-    <editor-toolbar />
+    <editor-toolbar v-if="is_prose_mirror" />
     <notification-container />
     <editor-choice />
     <ol ref="sections_container">
@@ -61,10 +61,12 @@ import { onScrollStickSectionNumbers } from "@/helpers/on-scroll-stick-section-n
 import AddExistingSectionModal from "@/components/AddExistingSectionModal.vue";
 import NotificationContainer from "@/components/NotificationContainer.vue";
 import EditorToolbar from "@/components/toolbar/EditorToolbar.vue";
+import { EDITOR_CHOICE } from "@/helpers/editor-choice";
 
 const { sections, insertSection } = strictInject(SECTIONS_STORE);
 
 const can_user_edit_document = strictInject(CAN_USER_EDIT_DOCUMENT);
+const { is_prose_mirror } = strictInject(EDITOR_CHOICE);
 
 const sections_container = ref<HTMLOListElement>();
 
