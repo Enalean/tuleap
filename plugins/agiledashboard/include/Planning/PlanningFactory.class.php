@@ -173,7 +173,10 @@ class PlanningFactory implements RetrievePlannings, RetrieveRootPlanning
         }
 
         foreach ($backlog_tracker_ids as $backlog_tracker_id) {
-            $backlog_trackers[] = $this->tracker_factory->getTrackerById($backlog_tracker_id);
+            $tracker = $this->tracker_factory->getTrackerById($backlog_tracker_id);
+            if ($tracker && $tracker->userCanView($user)) {
+                $backlog_trackers[] = $tracker;
+            }
         }
 
         $planning = new Planning(

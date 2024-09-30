@@ -37,17 +37,24 @@ use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class PlanningFactoryTestGetVirtualTopPlanningTest extends TestCase
 {
+    private const PROJECT_ID   = 101;
+    private const SPRINT_ID    = 1000;
+    private const STORIES_ID   = 1001;
+    private const TOPSECRET_ID = 1002;
+
     private PlanningFactory&MockObject $partial_factory;
     private TrackerFactory&MockObject $tracker_factory;
+    private PlanningDao&MockObject $planning_dao;
+    private PlanningPermissionsManager&MockObject $planning_permissions_manager;
 
     protected function setUp(): void
     {
-        $planning_dao                 = $this->createMock(PlanningDao::class);
-        $this->tracker_factory        = $this->createMock(TrackerFactory::class);
-        $planning_permissions_manager = $this->createMock(PlanningPermissionsManager::class);
+        $this->planning_dao                 = $this->createMock(PlanningDao::class);
+        $this->tracker_factory              = $this->createMock(TrackerFactory::class);
+        $this->planning_permissions_manager = $this->createMock(PlanningPermissionsManager::class);
 
         $this->partial_factory = $this->getMockBuilder(PlanningFactory::class)
-            ->setConstructorArgs([$planning_dao, $this->tracker_factory, $planning_permissions_manager])
+            ->setConstructorArgs([$this->planning_dao, $this->tracker_factory, $this->planning_permissions_manager])
             ->onlyMethods(['getRootPlanning'])
             ->getMock();
     }
@@ -62,8 +69,8 @@ final class PlanningFactoryTestGetVirtualTopPlanningTest extends TestCase
 
     public function testItCreatesNewPlanningWithValidBacklogAndPlanningTrackers(): void
     {
-        $backlog_tracker  = TrackerTestBuilder::aTracker()->withId(78)->build();
-        $planning_tracker = TrackerTestBuilder::aTracker()->withId(45)->build();
+        $backlog_tracker  = TrackerTestBuilder::aTracker()->withId(78)->withUserCanView(true)->build();
+        $planning_tracker = TrackerTestBuilder::aTracker()->withId(45)->withUserCanView(true)->build();
 
         $my_planning = PlanningBuilder::aPlanning(56)
             ->withBacklogTrackers($backlog_tracker)
@@ -81,5 +88,48 @@ final class PlanningFactoryTestGetVirtualTopPlanningTest extends TestCase
         self::assertInstanceOf(Tracker::class, $planning->getPlanningTracker());
         $backlog_trackers = $planning->getBacklogTrackers();
         self::assertInstanceOf(Tracker::class, $backlog_trackers[0]);
+    }
+
+    public function testGetVirtualTopPlanningExcludesBacklogTrackersUserCannotSeeSoItDoesNotProposeToAddThemInPV2(): void
+    {
+        $factory = new PlanningFactory(
+            $this->planning_dao,
+            $this->tracker_factory,
+            $this->planning_permissions_manager,
+        );
+
+        $user = UserTestBuilder::buildWithDefaults();
+
+        $sprint    = TrackerTestBuilder::aTracker()->withId(self::SPRINT_ID)->withUserCanView(true)->build();
+        $stories   = TrackerTestBuilder::aTracker()->withId(self::STORIES_ID)->withUserCanView(true)->build();
+        $topsecret = TrackerTestBuilder::aTracker()->withId(self::TOPSECRET_ID)->withUserCanView(false)->build();
+
+        $this->tracker_factory->method('getTrackerById')->willReturnCallback(static fn($id) => match ($id) {
+            self::SPRINT_ID    => $sprint,
+            self::STORIES_ID   => $stories,
+            self::TOPSECRET_ID => $topsecret,
+        });
+        $this->tracker_factory->method('getHierarchy')->willReturn(new \Tracker_Hierarchy());
+
+        $this->planning_dao->method('searchByProjectId')->willReturn([[
+            'id'                  => 1,
+            'name'                => 'Sprint planning',
+            'group_id'            => self::PROJECT_ID,
+            'planning_tracker_id' => $sprint->id,
+            'backlog_title'       => 'backlog',
+            'plan_title'          => 'milestone',
+        ],
+        ]);
+        $this->planning_dao->method('searchBacklogTrackersByPlanningId')->willReturn([
+            ['planning_id' => 1, 'tracker_id' => self::STORIES_ID],
+            ['planning_id' => 1, 'tracker_id' => self::TOPSECRET_ID],
+        ]);
+
+        $planning = $factory->getVirtualTopPlanning($user, self::PROJECT_ID);
+
+        self::assertSame(
+            [$stories],
+            $planning->getBacklogTrackers(),
+        );
     }
 }
