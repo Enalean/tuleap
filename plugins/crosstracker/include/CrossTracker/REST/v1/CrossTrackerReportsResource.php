@@ -71,6 +71,7 @@ use Tuleap\CrossTracker\Report\Query\Advanced\OrderByBuilder\Field\FieldFromOrde
 use Tuleap\CrossTracker\Report\Query\Advanced\OrderByBuilder\Field\Numeric\NumericFromOrderBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\OrderByBuilder\Field\StaticList\StaticListFromOrderBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\OrderByBuilder\Field\Text\TextFromOrderBuilder;
+use Tuleap\CrossTracker\Report\Query\Advanced\OrderByBuilder\Field\UGroupList\UGroupListFromOrderBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\OrderByBuilder\Metadata\MetadataFromOrderBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\OrderByBuilderVisitor;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\ArtifactLink\ForwardLinkFromWhereBuilder;
@@ -736,6 +737,7 @@ final class CrossTrackerReportsResource extends AuthenticatedResource
         $purifier                  = Codendi_HTMLPurifier::instance();
         $text_value_interpreter    = new TextValueInterpreter($purifier, CommonMarkInterpreter::build($purifier));
         $field_retriever           = new ReadableFieldRetriever($form_element_factory, $trackers_permissions);
+        $user_group_manager        = new UGroupManager();
         $result_builder_visitor    = new ResultBuilderVisitor(
             new FieldResultBuilder(
                 $retrieve_field_type,
@@ -743,7 +745,7 @@ final class CrossTrackerReportsResource extends AuthenticatedResource
                 new TextResultBuilder($tracker_artifact_factory, $text_value_interpreter),
                 new NumericResultBuilder(),
                 new StaticListResultBuilder(),
-                new UGroupListResultBuilder($tracker_artifact_factory, new UGroupManager()),
+                new UGroupListResultBuilder($tracker_artifact_factory, $user_group_manager),
                 new UserListResultBuilder($this->user_manager, $this->user_manager, $this->user_manager, UserHelper::instance()),
                 $field_retriever
             ),
@@ -770,6 +772,7 @@ final class CrossTrackerReportsResource extends AuthenticatedResource
                 new NumericFromOrderBuilder(),
                 $text_order_builder,
                 $static_list_order_builder,
+                new UGroupListFromOrderBuilder($user_group_manager),
             ),
             new MetadataFromOrderBuilder(
                 Tracker_Semantic_TitleFactory::instance(),
