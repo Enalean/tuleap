@@ -137,7 +137,7 @@ final readonly class TrackersPermissionsRetriever implements RetrieveUserPermiss
     private function buildTrackerViewPermissions(PFUser $user, array $trackers): UserPermissionsOnItems
     {
         $results = $this->trackers_dao->searchUserGroupsViewPermissionOnTrackers(
-            $this->getUserUGroupsFromTrackers($user, $trackers),
+            $this->getUserUGroupsWithProjectFromTrackers($user, $trackers),
             array_map(static fn(Tracker $tracker) => $tracker->getId(), $trackers)
         );
 
@@ -239,17 +239,38 @@ final readonly class TrackersPermissionsRetriever implements RetrieveUserPermiss
 
     /**
      * @param Tracker_FormElement[] $fields
-     * @return int[]
+     * @return list<UserGroupInProject>
      */
     private function getUserUGroupsFromFields(PFUser $user, array $fields): array
     {
-        $ugroups_id = [];
+        $result = [];
         foreach ($fields as $field) {
             $project_id = (int) $field->getTracker()->getProject()->getID();
-            $ugroups_id = array_merge($ugroups_id, $user->getUgroups($project_id, ['project_id' => $project_id]));
+            $ugroups    = $user->getUgroups($project_id, ['project_id' => $project_id]);
+            foreach ($ugroups as $ugroup) {
+                $result[] = new UserGroupInProject($project_id, (int) $ugroup);
+            }
         }
 
-        return array_map(static fn(int|string $id) => (int) $id, $ugroups_id);
+        return array_values(array_unique($result, SORT_REGULAR));
+    }
+
+    /**
+     * @param Tracker[] $trackers
+     * @return list<UserGroupInProject>
+     */
+    private function getUserUGroupsWithProjectFromTrackers(PFUser $user, array $trackers): array
+    {
+        $result = [];
+        foreach ($trackers as $tracker) {
+            $project_id = (int) $tracker->getProject()->getID();
+            $ugroups    = $user->getUgroups($project_id, ['project_id' => $project_id]);
+            foreach ($ugroups as $ugroup) {
+                $result[] = new UserGroupInProject($project_id, (int) $ugroup);
+            }
+        }
+
+        return array_values(array_unique($result, SORT_REGULAR));
     }
 
     /**

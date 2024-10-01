@@ -31,6 +31,7 @@ use Tuleap\Tracker\Test\Builders\TrackerDatabaseBuilder;
 
 final class TrackersPermissionsDaoOnTrackersTest extends TestIntegrationTestCase
 {
+    private int $project_id;
     /**
      * @var list<int>
      */
@@ -45,11 +46,12 @@ final class TrackersPermissionsDaoOnTrackersTest extends TestIntegrationTestCase
         $core_builder    = new CoreDatabaseBuilder($db);
         $tracker_builder = new TrackerDatabaseBuilder($db);
 
-        $project = $core_builder->buildProject('project_name');
+        $project          = $core_builder->buildProject('project_name');
+        $this->project_id = (int) $project->getID();
 
-        $this->tracker1_id = $tracker_builder->buildTracker((int) $project->getID(), 'Tracker 1')->getId();
-        $this->tracker2_id = $tracker_builder->buildTracker((int) $project->getID(), 'Tracker 2')->getId();
-        $this->tracker3_id = $tracker_builder->buildTracker((int) $project->getID(), 'Tracker 3')->getId();
+        $this->tracker1_id = $tracker_builder->buildTracker($this->project_id, 'Tracker 1')->getId();
+        $this->tracker2_id = $tracker_builder->buildTracker($this->project_id, 'Tracker 2')->getId();
+        $this->tracker3_id = $tracker_builder->buildTracker($this->project_id, 'Tracker 3')->getId();
         $this->trackers    = [$this->tracker1_id, $this->tracker2_id, $this->tracker3_id];
         $tracker_builder->setViewPermissionOnTracker(
             $this->tracker1_id,
@@ -71,12 +73,19 @@ final class TrackersPermissionsDaoOnTrackersTest extends TestIntegrationTestCase
         $field3_id = $tracker_builder->buildIntField($this->tracker3_id, 'int_field3');
         $tracker_builder->setSubmitPermission($field1_id, ProjectUGroup::PROJECT_ADMIN);
         $tracker_builder->setSubmitPermission($field3_id, ProjectUGroup::PROJECT_MEMBERS);
+
+        $_SERVER['REQUEST_URI'] = '';
+    }
+
+    protected function tearDown(): void
+    {
+        unset($_SERVER['REQUEST_URI']);
     }
 
     public function testItRetrieveTrackersViewPermissions(): void
     {
         $dao     = new TrackersPermissionsDao();
-        $results = $dao->searchUserGroupsViewPermissionOnTrackers([ProjectUGroup::PROJECT_MEMBERS], $this->trackers);
+        $results = $dao->searchUserGroupsViewPermissionOnTrackers([new UserGroupInProject($this->project_id, ProjectUGroup::PROJECT_MEMBERS)], $this->trackers);
 
         self::assertCount(2, $results);
         self::assertEqualsCanonicalizing([$this->tracker1_id, $this->tracker3_id], $results);
@@ -85,7 +94,10 @@ final class TrackersPermissionsDaoOnTrackersTest extends TestIntegrationTestCase
     public function testItRetrieveTrackersViewPermissionsWithAdmin(): void
     {
         $dao     = new TrackersPermissionsDao();
-        $results = $dao->searchUserGroupsViewPermissionOnTrackers([ProjectUGroup::PROJECT_MEMBERS, ProjectUGroup::PROJECT_ADMIN], $this->trackers);
+        $results = $dao->searchUserGroupsViewPermissionOnTrackers([
+            new UserGroupInProject($this->project_id, ProjectUGroup::PROJECT_MEMBERS),
+            new UserGroupInProject($this->project_id, ProjectUGroup::PROJECT_ADMIN),
+        ], $this->trackers);
 
         self::assertCount(3, $results);
         self::assertEqualsCanonicalizing([$this->tracker1_id, $this->tracker2_id, $this->tracker3_id], $results);
@@ -107,5 +119,57 @@ final class TrackersPermissionsDaoOnTrackersTest extends TestIntegrationTestCase
 
         self::assertCount(2, $results);
         self::assertEqualsCanonicalizing([$this->tracker1_id, $this->tracker3_id], $results);
+    }
+
+    public function testItDoesNotRetrieveTrackerViewFromProjectWhenAdminOfAnotherProject(): void
+    {
+        $db              = DBFactory::getMainTuleapDBConnection()->getDB();
+        $core_builder    = new CoreDatabaseBuilder($db);
+        $tracker_builder = new TrackerDatabaseBuilder($db);
+        $retriever       = TrackersPermissionsRetriever::build();
+
+        $project       = $core_builder->buildProject('project');
+        $project_admin = $core_builder->buildProject('project_admin');
+        $user          = $core_builder->buildUser('admin', 'Admin', 'admin@example.com');
+        $core_builder->addUserToProjectMembers((int) $user->getId(), (int) $project->getID());
+        $core_builder->addUserToProjectMembers((int) $user->getId(), (int) $project_admin->getID());
+        $core_builder->addUserToProjectAdmins((int) $user->getId(), (int) $project_admin->getID());
+
+        $tracker_1 = $tracker_builder->buildTracker((int) $project->getID(), 'Tracker 1');
+        $tracker_2 = $tracker_builder->buildTracker((int) $project_admin->getID(), 'Tracker 2');
+        $tracker_builder->setViewPermissionOnTracker($tracker_1->getId(), Tracker::PERMISSION_FULL, ProjectUGroup::PROJECT_ADMIN);
+        $tracker_builder->setViewPermissionOnTracker($tracker_2->getId(), Tracker::PERMISSION_FULL, ProjectUGroup::PROJECT_MEMBERS);
+
+        $result = $retriever->retrieveUserPermissionOnTrackers($user, [$tracker_1, $tracker_2], TrackerPermissionType::PERMISSION_VIEW);
+        self::assertCount(1, $result->allowed);
+        self::assertSame($tracker_2->getId(), $result->allowed[0]->getId());
+        self::assertCount(1, $result->not_allowed);
+        self::assertSame($tracker_1->getId(), $result->not_allowed[0]->getId());
+    }
+
+    public function testItDoesNotRetrieveTrackerSubmitFromProjectWhenAdminOfAnotherProject(): void
+    {
+        $db              = DBFactory::getMainTuleapDBConnection()->getDB();
+        $core_builder    = new CoreDatabaseBuilder($db);
+        $tracker_builder = new TrackerDatabaseBuilder($db);
+        $retriever       = TrackersPermissionsRetriever::build();
+
+        $project       = $core_builder->buildProject('project');
+        $project_admin = $core_builder->buildProject('project_admin');
+        $user          = $core_builder->buildUser('admin', 'Admin', 'admin@example.com');
+        $core_builder->addUserToProjectMembers((int) $user->getId(), (int) $project->getID());
+        $core_builder->addUserToProjectMembers((int) $user->getId(), (int) $project_admin->getID());
+        $core_builder->addUserToProjectAdmins((int) $user->getId(), (int) $project_admin->getID());
+
+        $tracker_1 = $tracker_builder->buildTracker((int) $project->getID(), 'Tracker 1');
+        $tracker_2 = $tracker_builder->buildTracker((int) $project_admin->getID(), 'Tracker 2');
+        $tracker_builder->setViewPermissionOnTracker($tracker_1->getId(), Tracker::PERMISSION_FULL, ProjectUGroup::PROJECT_ADMIN);
+        $tracker_builder->setViewPermissionOnTracker($tracker_2->getId(), Tracker::PERMISSION_FULL, ProjectUGroup::PROJECT_MEMBERS);
+
+        $result = $retriever->retrieveUserPermissionOnTrackers($user, [$tracker_1, $tracker_2], TrackerPermissionType::PERMISSION_SUBMIT);
+        self::assertCount(1, $result->allowed);
+        self::assertSame($tracker_2->getId(), $result->allowed[0]->getId());
+        self::assertCount(1, $result->not_allowed);
+        self::assertSame($tracker_1->getId(), $result->not_allowed[0]->getId());
     }
 }

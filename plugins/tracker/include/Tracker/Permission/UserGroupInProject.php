@@ -20,34 +20,16 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\Test\Stub\Tracker\Permission;
+namespace Tuleap\Tracker\Permission;
 
-use Tuleap\Tracker\Permission\SearchUserGroupsPermissionOnFields;
-
-final readonly class SearchUserGroupsPermissionOnFieldsStub implements SearchUserGroupsPermissionOnFields
+/**
+ * @psalm-immutable
+ */
+final readonly class UserGroupInProject
 {
-    /**
-     * @param list<int> $result
-     */
-    private function __construct(private array $result)
-    {
-    }
-
-    public static function buildEmpty(): self
-    {
-        return new self([]);
-    }
-
-    /**
-     * @param list<int> $results
-     */
-    public static function buildWithResults(array $results): self
-    {
-        return new self($results);
-    }
-
-    public function searchUserGroupsPermissionOnFields(array $user_groups, array $fields_id, string $permission): array
-    {
-        return $this->result;
+    public function __construct(
+        public int $project_id,
+        public int $user_group_id,
+    ) {
     }
 }
