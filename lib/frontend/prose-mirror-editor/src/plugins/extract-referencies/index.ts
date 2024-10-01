@@ -22,6 +22,10 @@ import type { DecorationSource, EditorView, DecorationSet } from "prosemirror-vi
 import { loadCrossReferences } from "./cross-ref-loader";
 import type { CrossReference } from "./reference-extractor";
 import { decorateLink } from "./link-decorator";
+import { UpdateCrossReferenceHandler } from "./update/UpdateCrossReferenceHandler";
+import { UpdatedCrossReferenceInTransactionFinder } from "./update/UpdatedCrossReferenceInTransactionFinder";
+import { CrossReferenceDecorationFinder } from "./update/CrossReferenceDecorationFinder";
+import { CrossReferenceDecorationReplacer } from "./update/CrossReferenceDecorationReplacer";
 
 let editor_view: EditorView;
 
@@ -29,6 +33,8 @@ export function initPluginTransformInput(
     project_id: number,
     references: Array<CrossReference>,
 ): Plugin {
+    let decorations: DecorationSet;
+
     return new Plugin({
         props: {
             decorations(state): DecorationSource {
@@ -40,6 +46,8 @@ export function initPluginTransformInput(
                 return decorateLink(state.doc, references);
             },
             apply: (tr, decoration_set: DecorationSet): DecorationSet => {
+                decorations = decoration_set;
+
                 if (tr.docChanged) {
                     loadCrossReferences(tr.doc, project_id, editor_view);
                 }
@@ -52,6 +60,11 @@ export function initPluginTransformInput(
                 return decorations_promises;
             },
         },
+        appendTransaction: (transactions, old_state) =>
+            UpdateCrossReferenceHandler(
+                CrossReferenceDecorationFinder(decorations),
+                CrossReferenceDecorationReplacer(old_state),
+            ).handle(UpdatedCrossReferenceInTransactionFinder().find(transactions)),
         view: function (): { update(view: EditorView): void } {
             return {
                 update(view: EditorView): void {

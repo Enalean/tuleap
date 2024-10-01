@@ -30,6 +30,7 @@ import {
 import type { CheckEmptySelection } from "./EmptySelectionChecker";
 import type { BuildRemoveLinkCallback } from "./RemoveLinkCallbackBuilder";
 import type { BuildEditLinkCallback } from "./EditLinkCallbackBuilder";
+import type { BuildEditCrossReferenceCallback } from "./EditCrossReferenceCallbackBuilder";
 
 type InsertLinkPopover = {
     insertPopover(position: number): boolean;
@@ -46,6 +47,7 @@ export const LinkPopoverInserter = (
     extract_regular_link_url: ExtractLinkUrl,
     build_remove_link_callback: BuildRemoveLinkCallback,
     build_edit_link_callback: BuildEditLinkCallback,
+    build_edit_cross_reference_callback: BuildEditCrossReferenceCallback,
 ): InsertLinkPopover => ({
     insertPopover(position: number): boolean {
         removePopover(doc, editor_id);
@@ -81,9 +83,7 @@ export const LinkPopoverInserter = (
                 popover_anchor,
                 editor_id,
                 link,
-                () => {
-                    removePopover(doc, editor_id);
-                },
+                build_edit_cross_reference_callback.build(doc, editor_id, position),
             );
 
             return true;

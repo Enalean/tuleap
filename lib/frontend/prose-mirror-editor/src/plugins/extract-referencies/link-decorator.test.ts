@@ -22,9 +22,10 @@ import { DOMParser } from "prosemirror-model";
 import { decorateLink } from "./link-decorator";
 import { expect, describe, it } from "vitest";
 import { EditorState } from "prosemirror-state";
-import { createLocalDocument } from "../../helpers/helper-for-test";
+import { createLocalDocument } from "../../helpers";
 import { custom_schema } from "../../custom_schema";
 import type { Decoration, DecorationSet } from "prosemirror-view";
+import { CROSS_REFERENCE_DECORATION_TYPE } from "../../helpers/create-cross-reference-decoration";
 
 describe("node decorator", () => {
     let state: EditorState;
@@ -61,7 +62,9 @@ describe("node decorator", () => {
                     class: "cross-reference-link",
                     "data-href": "https://example.com?goto=1",
                 },
-                spec: {},
+                spec: {
+                    type: CROSS_REFERENCE_DECORATION_TYPE,
+                },
             },
         } as unknown as DecorationSet;
 
@@ -73,7 +76,9 @@ describe("node decorator", () => {
                     class: "cross-reference-link",
                     "data-href": "https://example.com?goto=2",
                 },
-                spec: {},
+                spec: {
+                    type: CROSS_REFERENCE_DECORATION_TYPE,
+                },
             } as unknown as Decoration,
         } as unknown as DecorationSet;
 

@@ -31,6 +31,7 @@ import type { CheckEmptySelection } from "./EmptySelectionChecker";
 import { EmptySelectionCheckerStub } from "./stubs/EmptySelectionCheckerStub";
 import { BuildRemoveLinkCallbackStub } from "./stubs/BuildRemoveLinkCallbackStub";
 import { BuildEditLinkCallbackStub } from "./stubs/BuildEditLinkCallbackStub";
+import { BuildEditCrossReferenceCallbackStub } from "./stubs/BuildEditCrossReferenceCallbackStub";
 
 const editor_id = "aaaa-bbbb-cccc-dddd";
 const position = 1;
@@ -39,6 +40,10 @@ const remove_link_callback = (): void => {
 };
 
 const edit_link_callback = (): void => {
+    // Do nothing
+};
+
+const edit_cross_reference_callback = (): void => {
     // Do nothing
 };
 
@@ -64,6 +69,7 @@ describe("LinkPopoverInserter", () => {
             editor_link_url_extractor,
             BuildRemoveLinkCallbackStub.withCallback(remove_link_callback),
             BuildEditLinkCallbackStub.withCallback(edit_link_callback),
+            BuildEditCrossReferenceCallbackStub.withCallback(edit_cross_reference_callback),
         ).insertPopover(position);
     };
 
@@ -120,7 +126,7 @@ describe("LinkPopoverInserter", () => {
                 href: cross_reference_url,
                 title: cross_reference_text.textContent,
             },
-            expect.any(Function),
+            edit_cross_reference_callback,
         );
     });
 
