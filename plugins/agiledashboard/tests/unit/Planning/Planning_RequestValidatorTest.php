@@ -21,6 +21,7 @@
 use Tuleap\AgileDashboard\AgileDashboard\Planning\VerifyTrackerAccessDuringImportStrategy;
 use Tuleap\AgileDashboard\AgileDashboard\Planning\EnsureThatTrackerIsReadableByUser;
 use Tuleap\AgileDashboard\Test\Builders\PlanningBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
@@ -60,27 +61,25 @@ final class Planning_RequestValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
     private $tracker_factory;
     private PlanningFactory|\PHPUnit\Framework\MockObject\MockObject $planning_factory;
     private EnsureThatTrackerIsReadableByUser $tracker_access_during_import_strategy;
+    private PFUser $user;
 
     protected function setUp(): void
     {
+        $this->user = UserTestBuilder::buildWithDefaults();
+
         $this->planning_factory = $this->createMock(\PlanningFactory::class);
         $this->tracker_factory  = $this->createMock(TrackerFactory::class);
         $this->validator        = new Planning_RequestValidator(
             $this->planning_factory,
             $this->tracker_factory,
-            new class implements \Tuleap\User\ProvideCurrentUser
-            {
-                public function getCurrentUser(): \PFUser
-                {
-                    return \Tuleap\Test\Builders\UserTestBuilder::aUser()->build();
-                }
-            }
+            \Tuleap\Test\Stubs\ProvideCurrentUserStub::buildWithUser($this->user),
         );
 
         $this->release_planning_id = 34;
         $this->releases_tracker_id = 56;
         $this->sprints_tracker_id  = 78;
         $this->holidays_tracker_id = 90;
+
 
         $this->tracker_access_during_import_strategy = new EnsureThatTrackerIsReadableByUser();
     }
@@ -189,7 +188,7 @@ final class Planning_RequestValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
             ->withMilestoneTracker($release_tracker)
             ->build();
 
-        $this->planning_factory->method('getPlanning')->with($this->release_planning_id)->willReturn(
+        $this->planning_factory->method('getPlanning')->with($this->user, $this->release_planning_id)->willReturn(
             $this->release_planning
         );
         $this->planning_factory->method('getPlanningTrackerIdsByGroupId')->with($group_id)->willReturn(
@@ -246,7 +245,7 @@ final class Planning_RequestValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
             ->withMilestoneTracker($release_tracker)
             ->build();
 
-        $this->planning_factory->method('getPlanning')->with($this->release_planning_id)->willReturn(
+        $this->planning_factory->method('getPlanning')->with($this->user, $this->release_planning_id)->willReturn(
             $this->release_planning
         );
         $this->planning_factory->method('getPlanningTrackerIdsByGroupId')->with($group_id)->willReturn(

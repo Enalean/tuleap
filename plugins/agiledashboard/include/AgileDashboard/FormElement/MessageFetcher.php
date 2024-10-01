@@ -56,11 +56,11 @@ class MessageFetcher
     /**
      * @return array
      */
-    public function getWarningsRelatedToPlanningConfiguration(Tracker $tracker)
+    public function getWarningsRelatedToPlanningConfiguration(\PFUser $user, Tracker $tracker)
     {
         $purifier = Codendi_HTMLPurifier::instance();
         $warnings = [];
-        $planning = $this->planning_factory->getPlanningByPlanningTracker($tracker);
+        $planning = $this->planning_factory->getPlanningByPlanningTracker($user, $tracker);
 
         if (! $planning) {
             $warnings[] = '<li>' . dgettext('tuleap-agiledashboard', 'This tracker is not a planning tracker') . '</li>';

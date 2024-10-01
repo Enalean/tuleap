@@ -82,16 +82,13 @@ class PlanningResource extends AuthenticatedResource
     }
 
     /**
-     * @param int $id
-     *
-     * @return Planning
      * @throws RestException 403
      * @throws RestException 404
      */
-    private function getPlanning($id)
+    private function getPlanning(int $id): Planning
     {
-        $planning = PlanningFactory::build()->getPlanning($id);
         $user     = $this->getCurrentUser();
+        $planning = PlanningFactory::build()->getPlanning($user, $id);
 
         if (! $planning) {
             throw new RestException(404, 'Planning not found');

@@ -226,10 +226,8 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum
     /**
      * Return true if this field is the semantic title field of the tracker,
      * false otherwise if not or if there is no title field defined.
-     *
-     * @return bool true if the field is the 'title' of the tracker
      */
-    protected function isSemanticTitle()
+    protected function isSemanticTitle(): bool
     {
         $semantic_manager = new Tracker_SemanticManager($this->getTracker());
         $semantics        = $semantic_manager->getSemantics();

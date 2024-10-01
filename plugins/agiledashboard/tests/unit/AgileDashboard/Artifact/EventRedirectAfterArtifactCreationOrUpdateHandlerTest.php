@@ -134,7 +134,7 @@ final class EventRedirectAfterArtifactCreationOrUpdateHandlerTest extends \Tulea
         $this->planning_factory
             ->expects(self::once())
             ->method('getPlanning')
-            ->with(self::PLANNING_ID)
+            ->with($this->user, self::PLANNING_ID)
             ->willReturn($this->planning);
 
         $milestone = $this->createMock(\Planning_Milestone::class);
@@ -216,7 +216,7 @@ final class EventRedirectAfterArtifactCreationOrUpdateHandlerTest extends \Tulea
         $this->planning_factory
             ->expects(self::once())
             ->method('getPlanning')
-            ->with(self::PLANNING_ID)
+            ->with($this->user, self::PLANNING_ID)
             ->willReturn($this->planning);
 
         $milestone = $this->createMock(\Planning_Milestone::class);
@@ -283,7 +283,7 @@ final class EventRedirectAfterArtifactCreationOrUpdateHandlerTest extends \Tulea
         $this->planning_factory
             ->expects(self::once())
             ->method('getPlanning')
-            ->with(self::PLANNING_ID)
+            ->with($this->user, self::PLANNING_ID)
             ->willReturn($this->planning);
 
         $milestone = $this->createMock(\Planning_Milestone::class);
@@ -337,7 +337,7 @@ final class EventRedirectAfterArtifactCreationOrUpdateHandlerTest extends \Tulea
         $this->planning_factory
             ->expects(self::once())
             ->method('getPlanning')
-            ->with(self::PLANNING_ID)
+            ->with($this->user, self::PLANNING_ID)
             ->willReturn($this->planning);
 
         $this->milestone_factory
@@ -387,7 +387,7 @@ final class EventRedirectAfterArtifactCreationOrUpdateHandlerTest extends \Tulea
         $this->planning_factory
             ->expects(self::once())
             ->method('getPlanning')
-            ->with(self::PLANNING_ID)
+            ->with($this->user, self::PLANNING_ID)
             ->willReturn(null);
 
         $redirect       = new Tracker_Artifact_Redirect();
@@ -430,7 +430,7 @@ final class EventRedirectAfterArtifactCreationOrUpdateHandlerTest extends \Tulea
         $this->planning_factory
             ->expects(self::once())
             ->method('getPlanning')
-            ->with(self::PLANNING_ID)
+            ->with($this->user, self::PLANNING_ID)
             ->willReturn($this->planning);
 
         $redirect       = new Tracker_Artifact_Redirect();
@@ -474,7 +474,7 @@ final class EventRedirectAfterArtifactCreationOrUpdateHandlerTest extends \Tulea
         $this->planning_factory
             ->expects(self::once())
             ->method('getPlanning')
-            ->with(self::PLANNING_ID)
+            ->with($this->user, self::PLANNING_ID)
             ->willReturn($this->planning);
 
         $redirect       = new Tracker_Artifact_Redirect();

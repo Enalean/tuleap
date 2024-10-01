@@ -248,6 +248,7 @@ final class TrackerManagerTest extends \Tuleap\Test\PHPUnit\TestCase
         $rm->expects(self::once())->method('createReference')->with($r2);
 
         $tm->duplicate(
+            UserTestBuilder::buildWithDefaults(),
             new \Tuleap\Test\DB\DBTransactionExecutorPassthrough(),
             ProjectTestBuilder::aProject()->withId($source_project_id)->build(),
             ProjectTestBuilder::aProject()->withId($destination_project_id)->build(),

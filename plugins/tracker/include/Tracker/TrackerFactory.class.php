@@ -542,8 +542,13 @@ class TrackerFactory implements RetrieveTracker, RetrieveTrackersByProjectIdUser
      * - the shared fields
      * - etc.
      */
-    public function duplicate(DBTransactionExecutor $transaction_executor, \Project $from_project, \Project $to_project, MappingRegistry $mapping_registry): void
-    {
+    public function duplicate(
+        PFUser $user,
+        DBTransactionExecutor $transaction_executor,
+        \Project $from_project,
+        \Project $to_project,
+        MappingRegistry $mapping_registry,
+    ): void {
         $from_project_id  = (int) $from_project->getID();
         $to_project_id    = (int) $to_project->getID();
         $tracker_ids_list = [];
@@ -607,6 +612,7 @@ class TrackerFactory implements RetrieveTracker, RetrieveTrackersByProjectIdUser
         $shared_factory->fixOriginalFieldIdsAfterDuplication($to_project_id, $from_project_id, $field_mapping);
 
         $this->getEventDispatcher()->dispatch(new TrackerEventTrackersDuplicated(
+            $user,
             $tracker_mapping,
             $field_mapping,
             $report_mapping,

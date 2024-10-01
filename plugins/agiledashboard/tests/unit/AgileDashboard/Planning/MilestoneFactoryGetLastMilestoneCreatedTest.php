@@ -88,7 +88,7 @@ final class MilestoneFactoryGetLastMilestoneCreatedTest extends TestCase
             ->withMilestoneTracker($planning_tracker)
             ->build();
 
-        $planning_factory->method('getPlanning')->with($this->planning_id)->willReturn($planning);
+        $planning_factory->method('getPlanning')->with($this->current_user, $this->planning_id)->willReturn($planning);
     }
 
     public function testItReturnsEmptyMilestoneWhenNothingMatches(): void
@@ -105,7 +105,7 @@ final class MilestoneFactoryGetLastMilestoneCreatedTest extends TestCase
             ->willReturn(['115' => $this->sprint_1_artifact, '104' => ArtifactTestBuilder::anArtifact(104)->build()]);
 
         $this->milestone_factory->method('getMilestoneFromArtifact')
-            ->with($this->sprint_1_artifact)
+            ->with($this->current_user, $this->sprint_1_artifact)
             ->willReturn($this->sprint_1_milestone);
 
         $milestone = $this->milestone_factory->getLastMilestoneCreated($this->current_user, $this->planning_id);

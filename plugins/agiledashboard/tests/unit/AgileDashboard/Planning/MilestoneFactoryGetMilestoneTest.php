@@ -168,7 +168,7 @@ final class MilestoneFactoryGetMilestoneTest extends TestCase
 
 
         $this->planning_factory->method('getPlanningByPlanningTracker')
-            ->withConsecutive([$sprints_tracker], [$sprints_tracker], [$hackfests_tracker])
+            ->withConsecutive([$this->user, $sprints_tracker], [$this->user, $sprints_tracker], [$this->user, $hackfests_tracker])
             ->willReturnOnConsecutiveCalls($sprint_planning, $sprint_planning, $hackfest_planning);
 
         $milestone = new Planning_ArtifactMilestone(

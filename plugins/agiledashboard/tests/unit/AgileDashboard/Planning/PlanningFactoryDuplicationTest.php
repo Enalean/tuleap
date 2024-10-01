@@ -28,6 +28,7 @@ use PlanningFactory;
 use PlanningPermissionsManager;
 use TrackerFactory;
 use Tuleap\AgileDashboard\Test\Builders\PlanningBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
 final class PlanningFactoryDuplicationTest extends TestCase
@@ -36,6 +37,7 @@ final class PlanningFactoryDuplicationTest extends TestCase
     private PlanningFactory $planning_factory;
     private PlanningPermissionsManager&MockObject $planning_permissions_manager;
     private PlanningDao&MockObject $planning_dao;
+    private \PFUser $user;
 
     protected function setUp(): void
     {
@@ -48,6 +50,8 @@ final class PlanningFactoryDuplicationTest extends TestCase
             $tracker_factory,
             $this->planning_permissions_manager
         );
+
+        $this->user = UserTestBuilder::buildWithDefaults();
 
         $this->partial_factory = $this->getMockBuilder(PlanningFactory::class)
             ->setConstructorArgs([$this->planning_dao, $tracker_factory, $this->planning_permissions_manager])
@@ -68,7 +72,10 @@ final class PlanningFactoryDuplicationTest extends TestCase
         $bug_tracker_copy_id    = 7;
         $faq_tracker_copy_id    = 8;
 
-        $this->partial_factory->method('getPlanning')->with(1)->willReturn(PlanningBuilder::aPlanning(123)->build());
+        $this->partial_factory
+            ->method('getPlanning')
+            ->with($this->user, 1)
+            ->willReturn(PlanningBuilder::aPlanning(123)->build());
 
         $tracker_mapping = [
             $sprint_tracker_id => $sprint_tracker_copy_id,
@@ -110,7 +117,7 @@ final class PlanningFactoryDuplicationTest extends TestCase
 
         $this->planning_permissions_manager->method('getGroupIdsWhoHasPermissionOnPlanning');
 
-        $this->partial_factory->duplicatePlannings($group_id, $tracker_mapping, []);
+        $this->partial_factory->duplicatePlannings($this->user, $group_id, $tracker_mapping, []);
     }
 
     public function testItDoesNothingIfThereAreNoTrackerMappings(): void
@@ -120,7 +127,7 @@ final class PlanningFactoryDuplicationTest extends TestCase
 
         $this->planning_dao->expects(self::never())->method('createPlanning');
 
-        $this->planning_factory->duplicatePlannings($group_id, $empty_tracker_mapping, []);
+        $this->planning_factory->duplicatePlannings($this->user, $group_id, $empty_tracker_mapping, []);
     }
 
     public function testItTranslatesUgroupsIdsFromUgroupsMapping(): void
@@ -136,7 +143,10 @@ final class PlanningFactoryDuplicationTest extends TestCase
         $bug_tracker_copy_id    = 7;
         $faq_tracker_copy_id    = 8;
 
-        $this->partial_factory->method('getPlanning')->with(1)->willReturn(PlanningBuilder::aPlanning(123)->build());
+        $this->partial_factory
+            ->method('getPlanning')
+            ->with($this->user, 1)
+            ->willReturn(PlanningBuilder::aPlanning(123)->build());
 
         $tracker_mapping = [
             $sprint_tracker_id => $sprint_tracker_copy_id,
@@ -189,6 +199,6 @@ final class PlanningFactoryDuplicationTest extends TestCase
         $this->planning_permissions_manager->method('getGroupIdsWhoHasPermissionOnPlanning')->willReturn($ugroups_mapping);
         $this->planning_dao->method('createPlanning');
 
-        $this->partial_factory->duplicatePlannings($group_id, $tracker_mapping, $ugroups_mapping);
+        $this->partial_factory->duplicatePlannings($this->user, $group_id, $tracker_mapping, $ugroups_mapping);
     }
 }

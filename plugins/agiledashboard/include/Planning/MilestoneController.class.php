@@ -160,11 +160,11 @@ class Planning_MilestoneController extends BaseController
     public function solveInconsistencies()
     {
         $milestone_artifact = Tracker_ArtifactFactory::instance()->getArtifactById($this->request->get('aid'));
-        $milestone          = $this->milestone_factory->getMilestoneFromArtifact($milestone_artifact);
+        $milestone          = $this->milestone_factory->getMilestoneFromArtifact($this->request->getCurrentUser(), $milestone_artifact);
         $artifact_ids       = $this->request->get('inconsistent-artifacts-ids');
         $extractor          = new AgileDashboard_PaneRedirectionExtractor();
 
-        if (! ($this->inconsistentArtifactsIdsAreValid($artifact_ids) && $milestone->solveInconsistencies($this->getCurrentUser(), $artifact_ids))) {
+        if (! $milestone || ! ($this->inconsistentArtifactsIdsAreValid($artifact_ids) && $milestone->solveInconsistencies($this->getCurrentUser(), $artifact_ids))) {
             $this->addFeedback(Feedback::ERROR, dgettext('tuleap-agiledashboard', 'An error occurred while trying to solve inconsistencies.'));
         }
 

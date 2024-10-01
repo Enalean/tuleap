@@ -95,7 +95,10 @@ final class MilestoneFactoryGetBareMilestoneByArtifactIdTest extends TestCase
             ->withProject(ProjectTestBuilder::aProject()->build())
             ->build();
 
-        $this->planning_factory->method('getPlanningByPlanningTracker')->with($planning_tracker)->willReturn(PlanningBuilder::aPlanning(101)->build());
+        $this->planning_factory
+            ->method('getPlanningByPlanningTracker')
+            ->with($this->user, $planning_tracker)
+            ->willReturn(PlanningBuilder::aPlanning(101)->build());
 
         $changeset = ChangesetTestBuilder::aChangeset('1')->build();
 
@@ -118,7 +121,7 @@ final class MilestoneFactoryGetBareMilestoneByArtifactIdTest extends TestCase
     public function testItReturnsNullWhenArtifactIsNotAMilestone(): void
     {
         $planning_tracker = TrackerTestBuilder::aTracker()->build();
-        $this->planning_factory->method('getPlanningByPlanningTracker')->with()->willReturn(null);
+        $this->planning_factory->method('getPlanningByPlanningTracker')->willReturn(null);
 
         $artifact = ArtifactTestBuilder::anArtifact(1)
             ->inTracker($planning_tracker)

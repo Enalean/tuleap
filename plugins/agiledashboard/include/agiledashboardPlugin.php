@@ -426,14 +426,6 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
         $visit_cleaner->deleteVisitByUserId((int) $user->getId());
     }
 
-    public function cardwall_event_get_swimline_tracker($params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-    {
-        $planning_factory = $this->getPlanningFactory();
-        if ($planning = $planning_factory->getPlanningByPlanningTracker($params['tracker'])) {
-            $params['backlog_trackers'] = $planning->getBacklogTrackers();
-        }
-    }
-
     /**
      * @see Tracker_Report::TRACKER_EVENT_REPORT_DISPLAY_ADDITIONAL_CRITERIA
      */
@@ -602,6 +594,7 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
     public function trackerEventTrackersDuplicated(TrackerEventTrackersDuplicated $event): void
     {
         PlanningFactory::build()->duplicatePlannings(
+            $event->user,
             (int) $event->new_project->getID(),
             $event->tracker_mapping,
             $event->ugroups_mapping,
@@ -887,23 +880,6 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
         $injector->declareProjectPlanningResource($params['resources'], $params['project']);
     }
 
-    private function getPlanningIdFromParameters($params)
-    {
-        if ($params['milestone_id'] == 0) {
-            $planning = $this->getPlanningFactory()->getRootPlanning(
-                $params['user'],
-                $params['group_id']
-            );
-
-            return $planning->getId();
-        }
-
-        $artifact  = $this->getArtifactFactory()->getArtifactById($params['milestone_id']);
-        $milestone = $this->getMilestoneFactory()->getMilestoneFromArtifact($artifact);
-
-        return $milestone->getPlanningId();
-    }
-
     /** @see Event::GET_PROJECTID_FROM_URL */
     public function get_projectid_from_url($params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
@@ -1170,7 +1146,7 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
         $field = $event->getField();
 
         if ($field::class === Tuleap\AgileDashboard\FormElement\Burnup::class) {
-            $event->setWarnings($message_fetcher->getWarningsRelatedToPlanningConfiguration($field->getTracker()));
+            $event->setWarnings($message_fetcher->getWarningsRelatedToPlanningConfiguration($event->user, $field->getTracker()));
         }
     }
 
@@ -1286,7 +1262,7 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
 
     public function getSwitchToQuickLinkCollection(SwitchToLinksCollection $collection): void
     {
-        $milestone = $this->getMilestoneFactory()->getMilestoneFromArtifact($collection->getArtifact());
+        $milestone = $this->getMilestoneFactory()->getMilestoneFromArtifact($collection->getCurrentUser(), $collection->getArtifact());
         if ($milestone === null) {
             return;
         }

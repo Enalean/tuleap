@@ -107,7 +107,7 @@ class MilestoneResourceValidator
             $backlog = $this->backlog_factory->getSelfBacklog($milestone);
 
             if ($milestone->getParent()) {
-                $open_unplanned = $this->backlog_item_collection_factory->getUnplannedOpenCollection($user, $milestone->getParent(), $this->backlog_factory->getBacklog($milestone->getParent()), false);
+                $open_unplanned = $this->backlog_item_collection_factory->getUnplannedOpenCollection($user, $milestone->getParent(), $this->backlog_factory->getBacklog($user, $milestone->getParent()), false);
             } else {
                 $top_milestone      = $this->milestone_factory->getVirtualTopMilestone($user, $milestone->getProject());
                 $backlog_unassigned = $this->backlog_factory->getSelfBacklog($top_milestone);
@@ -205,7 +205,7 @@ class MilestoneResourceValidator
     {
         $this->validateIdsAreUnique($ids);
 
-        $unplanned = $this->backlog_item_collection_factory->getUnplannedCollection($user, $milestone, $this->backlog_factory->getBacklog($milestone), false);
+        $unplanned = $this->backlog_item_collection_factory->getUnplannedCollection($user, $milestone, $this->backlog_factory->getBacklog($user, $milestone), false);
 
         foreach ($ids as $id) {
             if (! $unplanned->containsId($id)) {
@@ -238,7 +238,7 @@ class MilestoneResourceValidator
 
         $ids_to_add = $this->filterArtifactIdsAlreadyInBacklog($to_add, $milestone, $user);
 
-        $indexed_children_backlog_trackers = $this->getIndexedChildrenBacklogTrackers($milestone);
+        $indexed_children_backlog_trackers = $this->getIndexedChildrenBacklogTrackers($user, $milestone);
 
         foreach ($ids_to_add as $id) {
             $artifact = $this->tracker_artifact_factory->getArtifactById($id);
@@ -262,10 +262,10 @@ class MilestoneResourceValidator
         return $to_add;
     }
 
-    private function getIndexedChildrenBacklogTrackers(Planning_Milestone $milestone)
+    private function getIndexedChildrenBacklogTrackers(PFUser $user, Planning_Milestone $milestone): array
     {
         $children_backlog_trackers = [];
-        $children_planning         = $this->planning_factory->getChildrenPlanning($milestone->getPlanning());
+        $children_planning         = $this->planning_factory->getChildrenPlanning($user, $milestone->getPlanning());
         if ($children_planning) {
             foreach ($children_planning->getBacklogTrackersIds() as $id) {
                 $children_backlog_trackers[$id] = true;
@@ -289,7 +289,7 @@ class MilestoneResourceValidator
         return $this->backlog_item_collection_factory->getUnplannedOpenCollection(
             $user,
             $milestone,
-            $this->backlog_factory->getBacklog($milestone),
+            $this->backlog_factory->getBacklog($user, $milestone),
             false
         );
     }

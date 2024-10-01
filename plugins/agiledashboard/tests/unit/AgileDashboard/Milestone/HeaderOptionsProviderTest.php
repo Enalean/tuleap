@@ -79,7 +79,7 @@ final class HeaderOptionsProviderTest extends TestCase
 
         $this->backlog = $this->createMock(AgileDashboard_Milestone_Backlog_Backlog::class);
         $backlog_factory->method('getBacklog')
-            ->with($this->milestone)
+            ->with($this->user, $this->milestone)
             ->willReturn($this->backlog);
 
         $this->epic            = TrackerTestBuilder::aTracker()

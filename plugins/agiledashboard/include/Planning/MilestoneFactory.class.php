@@ -167,7 +167,7 @@ class Planning_MilestoneFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
     public function getBareMilestoneByArtifact(PFUser $user, Artifact $artifact)
     {
         $tracker  = $artifact->getTracker();
-        $planning = $this->planning_factory->getPlanningByPlanningTracker($tracker);
+        $planning = $this->planning_factory->getPlanningByPlanningTracker($user, $tracker);
         if ($planning) {
             return $this->getBareMilestoneByArtifactAndPlanning($user, $artifact, $planning);
         }
@@ -205,7 +205,7 @@ class Planning_MilestoneFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
      */
     public function getBareMilestone(PFUser $user, Project $project, $planning_id, $artifact_id)
     {
-        $planning = $this->planning_factory->getPlanning($planning_id);
+        $planning = $this->planning_factory->getPlanning($user, $planning_id);
         if ($planning === null) {
             throw new NotFoundException($planning_id);
         }
@@ -520,7 +520,7 @@ class Planning_MilestoneFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
                 continue;
             }
 
-            $planning = $this->planning_factory->getPlanningByPlanningTracker($artifact->getTracker());
+            $planning = $this->planning_factory->getPlanningByPlanningTracker($user, $artifact->getTracker());
             if (! $planning) {
                 continue;
             }
@@ -689,28 +689,10 @@ class Planning_MilestoneFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
         return $milestones;
     }
 
-    /**
-     * Create a Milestone corresponding to given artifact and loads the artifacts planned for this milestone
-     *
-     *
-     * @return Planning_ArtifactMilestone
-     */
-    public function getMilestoneFromArtifactWithPlannedArtifacts(Artifact $artifact, PFUser $user)
-    {
-        $planned_artifacts = $this->getPlannedArtifacts($user, $artifact);
-        return $this->getMilestoneFromArtifact($artifact, $planned_artifacts);
-    }
-
-    /**
-     * Create a Milestone corresponding to given artifact
-     *
-     *
-     * @return Planning_ArtifactMilestone
-     */
-    public function getMilestoneFromArtifact(Artifact $artifact, ?TreeNode $planned_artifacts = null)
+    public function getMilestoneFromArtifact(PFUser $user, Artifact $artifact, ?TreeNode $planned_artifacts = null): ?Planning_ArtifactMilestone
     {
         $tracker  = $artifact->getTracker();
-        $planning = $this->planning_factory->getPlanningByPlanningTracker($tracker);
+        $planning = $this->planning_factory->getPlanningByPlanningTracker($user, $tracker);
         if (! $planning) {
             return null;
         }
@@ -739,7 +721,7 @@ class Planning_MilestoneFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
         if ($milestone_artifact) {
             $parent_artifacts = $milestone_artifact->getAllAncestors($user);
             foreach ($parent_artifacts as $artifact) {
-                $parent_milestone[] = $this->getMilestoneFromArtifact($artifact);
+                $parent_milestone[] = $this->getMilestoneFromArtifact($user, $artifact);
             }
         }
         $parent_milestone = array_filter($parent_milestone);
@@ -761,18 +743,16 @@ class Planning_MilestoneFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
      * Get the top most recent milestone (last created artifact in planning tracker)
      *
      * @param int $planning_id
-     *
-     * @return Planning_Milestone
      */
-    public function getLastMilestoneCreated(PFUser $user, $planning_id)
+    public function getLastMilestoneCreated(PFUser $user, $planning_id): ?Planning_Milestone
     {
-        $planning = $this->planning_factory->getPlanning($planning_id);
+        $planning = $this->planning_factory->getPlanning($user, $planning_id);
         if ($planning === null) {
             throw new NotFoundException($planning_id);
         }
         $artifacts = $this->artifact_factory->getOpenArtifactsByTrackerIdUserCanView($user, $planning->getPlanningTrackerId());
         if (count($artifacts) > 0) {
-            return $this->getMilestoneFromArtifact(array_shift($artifacts));
+            return $this->getMilestoneFromArtifact($user, array_shift($artifacts));
         }
         return new Planning_NoMilestone($planning->getPlanningTracker()->getProject(), $planning);
     }
@@ -794,7 +774,7 @@ class Planning_MilestoneFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
     /**
      * @return Planning_Milestone[]
      */
-    public function getAllCurrentMilestones(PFUser $user, Planning $planning)
+    public function getAllCurrentMilestones(PFUser $user, Planning $planning): array
     {
         $milestones = [];
         $artifacts  = $this->artifact_factory->getArtifactsByTrackerIdUserCanView($user, $planning->getPlanningTrackerId());
@@ -804,7 +784,10 @@ class Planning_MilestoneFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
                 continue;
             }
 
-            $milestones[] = $this->getMilestoneFromArtifact($artifact);
+            $milestone = $this->getMilestoneFromArtifact($user, $artifact);
+            if ($milestone) {
+                $milestones[] = $milestone;
+            }
         }
 
         return $milestones;
@@ -823,7 +806,10 @@ class Planning_MilestoneFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
                 continue;
             }
 
-            $milestones[] = $this->getMilestoneFromArtifact($artifact);
+            $milestone = $this->getMilestoneFromArtifact($user, $artifact);
+            if ($milestone) {
+                $milestones[] = $milestone;
+            }
         }
 
         return $milestones;

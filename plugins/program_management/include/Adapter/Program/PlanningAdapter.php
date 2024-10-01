@@ -95,7 +95,7 @@ final class PlanningAdapter implements BuildPlanning, RetrieveMirroredProgramInc
             return null;
         }
 
-        $children_planning = $this->planning_factory->getChildrenPlanning($root_planning);
+        $children_planning = $this->planning_factory->getChildrenPlanning($pfuser, $root_planning);
         if (! $children_planning) {
             $errors_collector?->addTeamSprintPlanningNotFoundOrNotAccessible($project);
             return null;

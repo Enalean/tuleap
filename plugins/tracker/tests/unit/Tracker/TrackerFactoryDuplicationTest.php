@@ -26,6 +26,7 @@ namespace Tuleap\Tracker;
 use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\Project\MappingRegistry;
 use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDuplicator;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
@@ -87,6 +88,7 @@ final class TrackerFactoryDuplicationTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->semantic_timeframe_duplicator->expects(self::once())->method('duplicateSemanticTimeframeForAllTrackers');
 
         $this->tracker_factory->duplicate(
+            UserTestBuilder::buildWithDefaults(),
             new DBTransactionExecutorPassthrough(),
             ProjectTestBuilder::aProject()->withId(100)->build(),
             ProjectTestBuilder::aProject()->withId(999)->build(),
@@ -137,6 +139,7 @@ final class TrackerFactoryDuplicationTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->semantic_timeframe_duplicator->expects(self::once())->method('duplicateSemanticTimeframeForAllTrackers');
 
         $this->tracker_factory->duplicate(
+            UserTestBuilder::buildWithDefaults(),
             new DBTransactionExecutorPassthrough(),
             ProjectTestBuilder::aProject()->withId($from_project_id)->build(),
             ProjectTestBuilder::aProject()->withId($to_project_id)->build(),
@@ -155,6 +158,7 @@ final class TrackerFactoryDuplicationTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->tracker_factory->expects(self::never())->method('create');
 
         $this->tracker_factory->duplicate(
+            UserTestBuilder::buildWithDefaults(),
             new DBTransactionExecutorPassthrough(),
             ProjectTestBuilder::aProject()->withId(100)->build(),
             ProjectTestBuilder::aProject()->withId(999)->build(),
@@ -187,6 +191,7 @@ final class TrackerFactoryDuplicationTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->semantic_timeframe_duplicator->expects(self::once())->method('duplicateSemanticTimeframeForAllTrackers');
 
         $this->tracker_factory->duplicate(
+            UserTestBuilder::buildWithDefaults(),
             new DBTransactionExecutorPassthrough(),
             ProjectTestBuilder::aProject()->withId(100)->build(),
             ProjectTestBuilder::aProject()->withId(999)->build(),
@@ -220,6 +225,7 @@ final class TrackerFactoryDuplicationTest extends \Tuleap\Test\PHPUnit\TestCase
             ->with([], [1234 => 555]);
 
         $this->tracker_factory->duplicate(
+            UserTestBuilder::buildWithDefaults(),
             new DBTransactionExecutorPassthrough(),
             ProjectTestBuilder::aProject()->withId(100)->build(),
             ProjectTestBuilder::aProject()->withId(999)->build(),

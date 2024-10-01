@@ -110,7 +110,7 @@ class EventRedirectAfterArtifactCreationOrUpdateHandler
             return;
         }
 
-        $planning = $this->planning_factory->getPlanning($requested_planning['planning_id']);
+        $planning = $this->planning_factory->getPlanning($request->getCurrentUser(), $requested_planning['planning_id']);
 
         if ($redirect->stayInTracker()) {
             $this->saveToRequestForFutureRedirection($planning, $last_milestone_artifact, $redirect, $request);

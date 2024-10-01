@@ -38,6 +38,7 @@ use Tuleap\Tracker\Semantic\Status\Done\SemanticDone;
 use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneDao;
 use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneFactory;
 use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneValueChecker;
+use UserManager;
 
 class SemanticVelocity extends Tracker_Semantic
 {
@@ -101,7 +102,7 @@ class SemanticVelocity extends Tracker_Semantic
             $this->getBacklogRetriever(),
             new VelocitySemanticChecker()
         );
-        $velocity_presenter = $builder->build($this->getTracker(), $this->semantic_done, $this->velocity_field);
+        $velocity_presenter = $builder->build(UserManager::instance()->getCurrentUser(), $this->getTracker(), $this->semantic_done, $this->velocity_field);
 
         return $renderer->renderToString('velocity-intro', $velocity_presenter);
     }
@@ -122,6 +123,7 @@ class SemanticVelocity extends Tracker_Semantic
 
         $renderer  = TemplateRendererFactory::build()->getRenderer(VELOCITY_BASE_DIR . '/templates');
         $presenter = $builder->build(
+            $current_user,
             $this->getTracker(),
             $this->getCSRFSynchronizerToken(),
             $this->semantic_done,

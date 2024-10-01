@@ -75,7 +75,10 @@ class AgileDashboard_Milestone_Backlog_Backlog
         );
     }
 
-    public function getDescendantTrackers()
+    /**
+     * @return Tracker[]
+     */
+    public function getDescendantTrackers(): array
     {
         return $this->descendant_trackers;
     }

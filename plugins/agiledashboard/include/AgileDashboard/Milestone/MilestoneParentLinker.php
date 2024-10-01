@@ -52,7 +52,7 @@ class MilestoneParentLinker
 
         $parent_milestone_artifact = $parent_milestone->getArtifact();
 
-        if (! $this->parentMilestoneHasItemTrackerInItsBacklogTracker($parent_milestone, $artifact_added)) {
+        if (! $this->parentMilestoneHasItemTrackerInItsBacklogTracker($user, $parent_milestone, $artifact_added)) {
             return;
         }
 
@@ -68,19 +68,20 @@ class MilestoneParentLinker
         }
     }
 
-    private function getBacklogTrackers(Planning_Milestone $milestone)
+    /**
+     * @return Tracker[]
+     */
+    private function getBacklogTrackers(PFUser $user, Planning_Milestone $milestone): array
     {
-        return $this->backlog_factory->getBacklog($milestone)->getDescendantTrackers();
+        return $this->backlog_factory->getBacklog($user, $milestone)->getDescendantTrackers();
     }
 
-    /**
-     * @return bool
-     */
     private function parentMilestoneHasItemTrackerInItsBacklogTracker(
+        PFUser $user,
         Planning_Milestone $parent_milestone,
         Artifact $artifact_added,
-    ) {
-        $backlog_trackers = $this->getBacklogTrackers($parent_milestone);
+    ): bool {
+        $backlog_trackers = $this->getBacklogTrackers($user, $parent_milestone);
 
         foreach ($backlog_trackers as $backlog_tracker) {
             if ($backlog_tracker->getId() === $artifact_added->getTrackerId()) {

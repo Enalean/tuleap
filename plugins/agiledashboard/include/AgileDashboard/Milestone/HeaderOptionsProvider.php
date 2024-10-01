@@ -85,7 +85,7 @@ class HeaderOptionsProvider
 
         return $this->createCurrentContextSectionFromTrackers(
             $milestone,
-            $this->backlog_factory->getBacklog($milestone)->getDescendantTrackers(),
+            $this->backlog_factory->getBacklog($user, $milestone)->getDescendantTrackers(),
             $user,
             (string) $milestone->getArtifactTitle(),
             $current_context_section,

@@ -65,14 +65,14 @@ class AgileDashboard_Milestone_MilestoneReportCriterionOptionsProvider
      *
      * @return string[]
      */
-    public function getSelectboxOptions(Tracker $backlog_tracker, $selected_milestone_id, PFUser $user)
+    public function getSelectboxOptions(Tracker $backlog_tracker, $selected_milestone_id, PFUser $user): array
     {
         $nearest_planning_tracker = $this->nearest_planning_tracker_provider->getNearestPlanningTracker($backlog_tracker, $this->hierarchy_factory);
         if (! $nearest_planning_tracker) {
             return [];
         }
 
-        $planning_trackers_ids = $this->getPlanningTrackersIds($nearest_planning_tracker);
+        $planning_trackers_ids = $this->getPlanningTrackersIds($user, $nearest_planning_tracker);
 
         return $this->formatAllMilestonesAsSelectboxOptions($planning_trackers_ids, $selected_milestone_id, $backlog_tracker, $user);
     }
@@ -153,9 +153,9 @@ class AgileDashboard_Milestone_MilestoneReportCriterionOptionsProvider
     }
 
     /** @return int[] */
-    private function getPlanningTrackersIds(Tracker $nearest_planning_tracker)
+    private function getPlanningTrackersIds(PFUser $user, Tracker $nearest_planning_tracker): array
     {
-        $parents = $this->getParentsWithPlanningAndOrderedFromTopToBottom($nearest_planning_tracker);
+        $parents = $this->getParentsWithPlanningAndOrderedFromTopToBottom($user, $nearest_planning_tracker);
 
         return array_map(
             static function (Tracker $tracker) {
@@ -166,11 +166,11 @@ class AgileDashboard_Milestone_MilestoneReportCriterionOptionsProvider
     }
 
     /** @return Tracker[] */
-    private function keepsTrackersUntilThereIsNoPlanning(array $list_of_trackers)
+    private function keepsTrackersUntilThereIsNoPlanning(PFUser $user, array $list_of_trackers): array
     {
         $trackers = [];
         foreach ($list_of_trackers as $tracker) {
-            if (! $this->planning_factory->getPlanningByPlanningTracker($tracker)) {
+            if (! $this->planning_factory->getPlanningByPlanningTracker($user, $tracker)) {
                 break;
             }
             $trackers[] = $tracker;
@@ -179,10 +179,10 @@ class AgileDashboard_Milestone_MilestoneReportCriterionOptionsProvider
     }
 
     /** @return Tracker[] */
-    private function getParentsWithPlanningAndOrderedFromTopToBottom(Tracker $nearest_planning_tracker)
+    private function getParentsWithPlanningAndOrderedFromTopToBottom(PFUser $user, Tracker $nearest_planning_tracker): array
     {
         $parents   = $this->hierarchy_factory->getAllParents($nearest_planning_tracker);
-        $parents   = $this->keepsTrackersUntilThereIsNoPlanning($parents);
+        $parents   = $this->keepsTrackersUntilThereIsNoPlanning($user, $parents);
         $parents   = array_reverse($parents);
         $parents[] = $nearest_planning_tracker;
 

@@ -194,8 +194,9 @@ class ProjectMilestonesPresenterBuilder
             throw ProjectMilestonesException::buildProjectDontExist();
         }
 
+        $user = $this->request->getCurrentUser();
         try {
-            $this->project_access_checker->checkUserCanAccessProject($this->request->getCurrentUser(), $project);
+            $this->project_access_checker->checkUserCanAccessProject($user, $project);
         } catch (Project_AccessPrivateException $e) {
             throw ProjectMilestonesException::buildUserNotAccessToPrivateProject();
         } catch (Project_AccessDeletedException | Project_AccessProjectNotFoundException | Project_AccessRestrictedException | ProjectAccessSuspendedException $e) {
@@ -217,7 +218,7 @@ class ProjectMilestonesPresenterBuilder
             $project,
             $this->getNumberUpcomingReleases(),
             $this->getNumberBacklogItems(),
-            $this->getTrackersIdAgileDashboard(),
+            $this->getTrackersIdAgileDashboard($user),
             $this->getLabelTrackerPlanning(),
             $this->isTimeframeDurationField(),
             $this->getLabelStartDateField(),
@@ -253,15 +254,15 @@ class ProjectMilestonesPresenterBuilder
         return $backlog->count();
     }
 
-    private function getTrackersIdAgileDashboard(): array
+    private function getTrackersIdAgileDashboard(\PFUser $user): array
     {
         $trackers_agile_dashboard = [];
-        $backlog_milestones       = $this->agile_dashboard_milestone_backlog_backlog_factory->getBacklog($this->getVirturalTopMilestone());
+        $backlog_milestones       = $this->agile_dashboard_milestone_backlog_backlog_factory->getBacklog($user, $this->getVirturalTopMilestone());
         $trackers_backlogs        = $backlog_milestones->getDescendantTrackers();
 
         foreach ($trackers_backlogs as $tracker_backlog) {
             $tracker_agile_dashboard = [
-                'id' => (int) $tracker_backlog->getId(),
+                'id' => $tracker_backlog->getId(),
                 'color_name' => $tracker_backlog->getColor()->getName(),
                 'label' => $tracker_backlog->getName(),
             ];

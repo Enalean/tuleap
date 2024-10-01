@@ -32,6 +32,7 @@ use Tuleap\ProgramManagement\Tests\Builder\ProgramIdentifierBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\Program\Plan\RetrievePlanConfigurationStub;
 use Tuleap\Project\MappingRegistry;
 use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\TrackerEventTrackersDuplicated;
 
@@ -94,6 +95,7 @@ final class TrackersDuplicatedHandlerTest extends TestCase
         );
         $handler->handle(
             new TrackerEventTrackersDuplicated(
+                UserTestBuilder::buildWithDefaults(),
                 [],
                 [],
                 [],

@@ -57,7 +57,7 @@ class AgileDashboard_BacklogItem_PaginatedBacklogItemsRepresentationsBuilder
      */
     public function getPaginatedBacklogItemsRepresentationsForMilestone(PFUser $user, Planning_Milestone $milestone, ISearchOnStatus $criterion, $limit, $offset)
     {
-        $backlog = $this->backlog_factory->getBacklog($milestone, $limit, $offset);
+        $backlog = $this->backlog_factory->getBacklog($user, $milestone, $limit, $offset);
 
         return $this->getBacklogItemsRepresentations($user, $milestone, $backlog, $criterion, $limit, $offset);
     }

@@ -37,6 +37,7 @@ use Tracker_ArtifactFactory;
 use Tracker_FormElementFactory;
 use Tuleap\AgileDashboard\Test\Builders\PlanningBuilder;
 use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
@@ -51,6 +52,7 @@ final class MilestoneFactoryGetMilestoneFromArtifactTest extends TestCase
     private Artifact $release_artifact;
     private Planning $release_planning;
     private Project $project;
+    private \PFUser $user;
 
     protected function setUp(): void
     {
@@ -64,6 +66,8 @@ final class MilestoneFactoryGetMilestoneFromArtifactTest extends TestCase
         $this->task_artifact = ArtifactTestBuilder::anArtifact(2)->inTracker($task_tracker)->build();
 
         $this->planning_factory = $this->createMock(PlanningFactory::class);
+
+        $this->user = UserTestBuilder::buildWithDefaults();
 
         $this->milestone_factory = new Planning_MilestoneFactory(
             $this->planning_factory,
@@ -80,7 +84,7 @@ final class MilestoneFactoryGetMilestoneFromArtifactTest extends TestCase
     public function testItCreateMilestoneFromArtifact(): void
     {
         $this->planning_factory->expects(self::once())->method('getPlanningByPlanningTracker')->willReturn($this->release_planning);
-        $this->assertEqualToReleaseMilestone($this->milestone_factory->getMilestoneFromArtifact($this->release_artifact));
+        $this->assertEqualToReleaseMilestone($this->milestone_factory->getMilestoneFromArtifact($this->user, $this->release_artifact));
     }
 
     private function assertEqualToReleaseMilestone($actual_release_milestone): void
@@ -96,6 +100,6 @@ final class MilestoneFactoryGetMilestoneFromArtifactTest extends TestCase
     public function testItReturnsNullWhenThereIsNoPlanningForTheTracker(): void
     {
         $this->planning_factory->expects(self::once())->method('getPlanningByPlanningTracker')->willReturn(null);
-        self::assertNull($this->milestone_factory->getMilestoneFromArtifact($this->task_artifact));
+        self::assertNull($this->milestone_factory->getMilestoneFromArtifact($this->user, $this->task_artifact));
     }
 }

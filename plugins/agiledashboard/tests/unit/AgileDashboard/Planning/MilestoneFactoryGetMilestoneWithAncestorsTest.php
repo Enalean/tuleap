@@ -76,7 +76,7 @@ final class MilestoneFactoryGetMilestoneWithAncestorsTest extends TestCase
         $this->sprint_artifact->method('getAllAncestors')->with($this->current_user)->willReturn([$release_artifact]);
 
         $release_milestone = $this->createMock(Planning_ArtifactMilestone::class);
-        $this->milestone_factory->method('getMilestoneFromArtifact')->with($release_artifact)->willReturn($release_milestone);
+        $this->milestone_factory->method('getMilestoneFromArtifact')->with($this->current_user, $release_artifact)->willReturn($release_milestone);
 
         $milestones = $this->milestone_factory->getMilestoneAncestors($this->current_user, $this->sprint_milestone);
         self::assertEquals([$release_milestone], $milestones);
@@ -93,7 +93,7 @@ final class MilestoneFactoryGetMilestoneWithAncestorsTest extends TestCase
         $release_milestone = $this->createMock(Planning_ArtifactMilestone::class);
         $release_milestone->method('getArtifact')->willReturn($release_artifact);
         $this->milestone_factory->method('getMilestoneFromArtifact')
-            ->withConsecutive([$release_artifact], [$product_artifact])
+            ->withConsecutive([$this->current_user, $release_artifact], [$this->current_user, $product_artifact])
             ->willReturnOnConsecutiveCalls($release_milestone, $product_milestone);
 
         $milestones = $this->milestone_factory->getMilestoneAncestors($this->current_user, $this->sprint_milestone);
@@ -105,7 +105,7 @@ final class MilestoneFactoryGetMilestoneWithAncestorsTest extends TestCase
         $release_artifact = ArtifactTestBuilder::anArtifact(1)->build();
         $this->sprint_artifact->method('getAllAncestors')->with($this->current_user)->willReturn([$release_artifact]);
 
-        $this->milestone_factory->method('getMilestoneFromArtifact')->with($release_artifact)->willReturn(null);
+        $this->milestone_factory->method('getMilestoneFromArtifact')->with($this->current_user, $release_artifact)->willReturn(null);
 
         $milestones = $this->milestone_factory->getMilestoneAncestors($this->current_user, $this->sprint_milestone);
         self::assertEquals([], $milestones);

@@ -781,9 +781,9 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher
     /**
      * On project creation, copy template trackers to destination project
      */
-    public function duplicate(DBTransactionExecutor $transaction_executor, \Project $from_project, \Project $to_project, MappingRegistry $mapping_registry): void
+    public function duplicate(PFUser $user, DBTransactionExecutor $transaction_executor, \Project $from_project, \Project $to_project, MappingRegistry $mapping_registry): void
     {
-        $this->getTrackerFactory()->duplicate($transaction_executor, $from_project, $to_project, $mapping_registry);
+        $this->getTrackerFactory()->duplicate($user, $transaction_executor, $from_project, $to_project, $mapping_registry);
         $this->duplicateReferences((int) $from_project->getID());
     }
 
