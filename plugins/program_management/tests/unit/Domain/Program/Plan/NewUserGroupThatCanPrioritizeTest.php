@@ -24,10 +24,11 @@ namespace Tuleap\ProgramManagement\Domain\Program\Plan;
 
 use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramForAdministrationIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\ProgramUserGroupDoesNotExistException;
+use Tuleap\ProgramManagement\Domain\Workspace\NewUserGroupThatCanPrioritizeIsValidCertificate;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramForAdministrationIdentifierBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveProgramUserGroupStub;
 
-final class ProgramUserGroupTest extends \Tuleap\Test\PHPUnit\TestCase
+final class NewUserGroupThatCanPrioritizeTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private ProgramForAdministrationIdentifier $program;
 
@@ -39,20 +40,28 @@ final class ProgramUserGroupTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testRejectIfUgroupDoesNotExist(): void
     {
         $this->expectException(ProgramUserGroupDoesNotExistException::class);
-        ProgramUserGroup::buildProgramUserGroup(
+        NewUserGroupThatCanPrioritize::fromId(
             RetrieveProgramUserGroupStub::withNotValidUserGroup(),
             '123',
             $this->program
         );
     }
 
-    public function testItBuildAProgramUserGroup(): void
+    public function testItBuildsFromId(): void
     {
-        $group = ProgramUserGroup::buildProgramUserGroup(
+        $group = NewUserGroupThatCanPrioritize::fromId(
             RetrieveProgramUserGroupStub::withValidUserGroups(123),
             '123',
             $this->program
         );
-        self::assertEquals(123, $group->getId());
+        self::assertEquals(123, $group->id);
+    }
+
+    public function testItBuildsFromValidUserGroup(): void
+    {
+        $new_group = NewUserGroupThatCanPrioritize::fromValidUserGroup(
+            new NewUserGroupThatCanPrioritizeIsValidCertificate(\ProjectUGroup::PROJECT_ADMIN, $this->program)
+        );
+        self::assertSame(\ProjectUGroup::PROJECT_ADMIN, $new_group->id);
     }
 }

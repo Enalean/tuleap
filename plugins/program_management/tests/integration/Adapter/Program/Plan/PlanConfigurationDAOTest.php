@@ -23,22 +23,22 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Adapter\Program\Plan;
 
 use Tuleap\Option\Option;
-use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramUserGroupCollection;
+use Tuleap\ProgramManagement\Domain\Program\Admin\CollectionOfNewUserGroupsThatCanPrioritize;
 use Tuleap\ProgramManagement\Domain\Program\Plan\NewConfigurationTrackerIsValidCertificate;
 use Tuleap\ProgramManagement\Domain\Program\Plan\NewIterationTrackerConfiguration;
 use Tuleap\ProgramManagement\Domain\Program\Plan\NewPlanConfiguration;
 use Tuleap\ProgramManagement\Domain\Program\Plan\NewProgramIncrementTracker;
 use Tuleap\ProgramManagement\Domain\Program\Plan\NewTrackerThatCanBePlanned;
 use Tuleap\ProgramManagement\Domain\Program\Plan\NewTrackerThatCanBePlannedCollection;
+use Tuleap\ProgramManagement\Domain\Program\Plan\NewUserGroupThatCanPrioritize;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\ProgramServiceIsEnabledCertificate;
+use Tuleap\ProgramManagement\Domain\Workspace\NewUserGroupThatCanPrioritizeIsValidCertificate;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramForAdministrationIdentifierBuilder;
-use Tuleap\ProgramManagement\Tests\Stub\RetrieveProgramUserGroupStub;
 use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
 
 final class PlanConfigurationDAOTest extends TestIntegrationTestCase
 {
-    private const PROJECT_ADMINISTRATORS_USER_GROUP_ID = 4;
     private PlanConfigurationDAO $dao;
 
     protected function setUp(): void
@@ -67,17 +67,29 @@ final class PlanConfigurationDAOTest extends TestIntegrationTestCase
             $program_identifier,
             NewTrackerThatCanBePlannedCollection::fromTrackers(
                 [
-                    NewTrackerThatCanBePlanned::fromValidTracker(new NewConfigurationTrackerIsValidCertificate($epics_tracker_id, $program_identifier)),
-                    NewTrackerThatCanBePlanned::fromValidTracker(new NewConfigurationTrackerIsValidCertificate($enablers_tracker_id, $program_identifier)),
+                    NewTrackerThatCanBePlanned::fromValidTracker(
+                        new NewConfigurationTrackerIsValidCertificate($epics_tracker_id, $program_identifier)
+                    ),
+                    NewTrackerThatCanBePlanned::fromValidTracker(
+                        new NewConfigurationTrackerIsValidCertificate($enablers_tracker_id, $program_identifier)
+                    ),
                 ]
             ),
-            ProgramUserGroupCollection::fromRawIdentifiers(
-                RetrieveProgramUserGroupStub::withValidUserGroups(
-                    self::PROJECT_ADMINISTRATORS_USER_GROUP_ID,
-                    $user_group_id_granted_plan_permission
-                ),
-                $program_identifier,
-                [$program_id . '_' . self::PROJECT_ADMINISTRATORS_USER_GROUP_ID, (string) $user_group_id_granted_plan_permission]
+            CollectionOfNewUserGroupsThatCanPrioritize::fromUserGroups(
+                [
+                    NewUserGroupThatCanPrioritize::fromValidUserGroup(
+                        new NewUserGroupThatCanPrioritizeIsValidCertificate(
+                            \ProjectUGroup::PROJECT_ADMIN,
+                            $program_identifier
+                        )
+                    ),
+                    NewUserGroupThatCanPrioritize::fromValidUserGroup(
+                        new NewUserGroupThatCanPrioritizeIsValidCertificate(
+                            $user_group_id_granted_plan_permission,
+                            $program_identifier
+                        )
+                    ),
+                ]
             ),
             Option::fromValue(
                 NewIterationTrackerConfiguration::fromValidTrackerAndLabels(
@@ -107,7 +119,7 @@ final class PlanConfigurationDAOTest extends TestIntegrationTestCase
             $retrieved_plan->tracker_ids_that_can_be_planned
         );
         self::assertEqualsCanonicalizing(
-            [self::PROJECT_ADMINISTRATORS_USER_GROUP_ID, $user_group_id_granted_plan_permission],
+            [\ProjectUGroup::PROJECT_ADMIN, $user_group_id_granted_plan_permission],
             $retrieved_plan->user_group_ids_that_can_prioritize
         );
     }
@@ -127,10 +139,15 @@ final class PlanConfigurationDAOTest extends TestIntegrationTestCase
             ),
             $program_identifier,
             NewTrackerThatCanBePlannedCollection::fromTrackers([]),
-            ProgramUserGroupCollection::fromRawIdentifiers(
-                RetrieveProgramUserGroupStub::withValidUserGroups(self::PROJECT_ADMINISTRATORS_USER_GROUP_ID),
-                $program_identifier,
-                [$program_id . '_' . self::PROJECT_ADMINISTRATORS_USER_GROUP_ID]
+            CollectionOfNewUserGroupsThatCanPrioritize::fromUserGroups(
+                [
+                    NewUserGroupThatCanPrioritize::fromValidUserGroup(
+                        new NewUserGroupThatCanPrioritizeIsValidCertificate(
+                            \ProjectUGroup::PROJECT_ADMIN,
+                            $program_identifier
+                        )
+                    ),
+                ]
             ),
             Option::nothing(NewIterationTrackerConfiguration::class)
         );
@@ -143,5 +160,36 @@ final class PlanConfigurationDAOTest extends TestIntegrationTestCase
 
         $retrieved_plan = $this->dao->retrievePlan($program_identifier);
         self::assertEmpty($retrieved_plan->tracker_ids_that_can_be_planned);
+    }
+
+    public function testItIgnoresEmptyListOfUserGroupsThatCanPrioritize(): void
+    {
+        $program_id                   = 132;
+        $program_increment_tracker_id = 58;
+
+        $program_identifier = ProgramForAdministrationIdentifierBuilder::buildWithId($program_id);
+
+        $new_plan = new NewPlanConfiguration(
+            NewProgramIncrementTracker::fromValidTrackerAndLabels(
+                new NewConfigurationTrackerIsValidCertificate($program_increment_tracker_id, $program_identifier),
+                null,
+                null
+            ),
+            $program_identifier,
+            NewTrackerThatCanBePlannedCollection::fromTrackers([
+                NewTrackerThatCanBePlanned::fromValidTracker(new NewConfigurationTrackerIsValidCertificate(95, $program_identifier)),
+            ]),
+            CollectionOfNewUserGroupsThatCanPrioritize::fromUserGroups([]),
+            Option::nothing(NewIterationTrackerConfiguration::class)
+        );
+
+        $this->dao->save($new_plan);
+
+        $program_identifier = ProgramIdentifier::fromServiceEnabled(
+            new ProgramServiceIsEnabledCertificate($program_id)
+        );
+
+        $retrieved_plan = $this->dao->retrievePlan($program_identifier);
+        self::assertEmpty($retrieved_plan->user_group_ids_that_can_prioritize);
     }
 }

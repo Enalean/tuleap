@@ -24,7 +24,7 @@ namespace Tuleap\ProgramManagement\Domain\Program\Plan;
 
 use Tuleap\Option\Option;
 use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramForAdministrationIdentifier;
-use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramUserGroupCollection;
+use Tuleap\ProgramManagement\Domain\Program\Admin\CollectionOfNewUserGroupsThatCanPrioritize;
 use Tuleap\ProgramManagement\Domain\Team\VerifyIsTeam;
 use Tuleap\ProgramManagement\Domain\Workspace\RetrieveProject;
 use Tuleap\ProgramManagement\Domain\Workspace\VerifyProjectPermission;
@@ -70,7 +70,7 @@ final class PlanConfigurationCreator implements CreatePlanConfiguration
             $plan_change->tracker_ids_that_can_be_planned,
             $program
         );
-        $can_prioritize_user_groups   = ProgramUserGroupCollection::fromRawIdentifiers(
+        $can_prioritize_user_groups   = CollectionOfNewUserGroupsThatCanPrioritize::fromRawIdentifiers(
             $this->ugroup_retriever,
             $program,
             $plan_change->can_possibly_prioritize_ugroups

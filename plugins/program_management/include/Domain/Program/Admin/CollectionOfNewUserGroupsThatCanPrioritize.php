@@ -23,17 +23,16 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Domain\Program\Admin;
 
 use Tuleap\ProgramManagement\Domain\Program\Plan\InvalidProgramUserGroup;
-use Tuleap\ProgramManagement\Domain\Program\Plan\ProgramUserGroup;
+use Tuleap\ProgramManagement\Domain\Program\Plan\NewUserGroupThatCanPrioritize;
 use Tuleap\ProgramManagement\Domain\Program\Plan\RetrieveProgramUserGroup;
 
 /**
- * I am a collection of user group identifiers.
  * @psalm-immutable
  */
-final class ProgramUserGroupCollection
+final readonly class CollectionOfNewUserGroupsThatCanPrioritize
 {
     /**
-     * @param non-empty-list<ProgramUserGroup> $user_group_identifiers
+     * @param list<NewUserGroupThatCanPrioritize> $user_group_identifiers
      */
     private function __construct(private array $user_group_identifiers)
     {
@@ -51,7 +50,7 @@ final class ProgramUserGroupCollection
         $program_user_groups = [];
 
         foreach ($raw_user_group_ids as $raw_user_group_id) {
-            $program_user_groups[] = ProgramUserGroup::buildProgramUserGroup(
+            $program_user_groups[] = NewUserGroupThatCanPrioritize::fromId(
                 $user_group_builder,
                 $raw_user_group_id,
                 $program
@@ -61,16 +60,22 @@ final class ProgramUserGroupCollection
         return new self($program_user_groups);
     }
 
-    public static function buildFakeCollection(): self
+    /**
+     * @param list<NewUserGroupThatCanPrioritize> $user_groups_that_can_prioritize
+     */
+    public static function fromUserGroups(array $user_groups_that_can_prioritize): self
     {
-        return new self([ProgramUserGroup::buildFake()]);
+        return new self($user_groups_that_can_prioritize);
     }
 
     /**
-     * @return non-empty-list<ProgramUserGroup>
+     * @return list<int>
      */
-    public function getUserGroups(): array
+    public function getUserGroupIds(): array
     {
-        return $this->user_group_identifiers;
+        return array_map(
+            static fn(NewUserGroupThatCanPrioritize $user_group) => $user_group->id,
+            $this->user_group_identifiers
+        );
     }
 }

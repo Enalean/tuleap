@@ -185,6 +185,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\TimeboxArtifactLinkType;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\TopBacklogActionArtifactSourceInformation;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\TopBacklogActionMassChangeSourceInformation;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\TopBacklogChangeProcessor;
+use Tuleap\ProgramManagement\Domain\Program\Plan\Inheritance\PlanConfigurationMapper;
 use Tuleap\ProgramManagement\Domain\Program\Plan\Inheritance\PlanInheritanceHandler;
 use Tuleap\ProgramManagement\Domain\Program\Plan\PlanConfigurationCreator;
 use Tuleap\ProgramManagement\Domain\Redirections\BuildRedirectFormActionHandler;
@@ -1654,9 +1655,14 @@ final class program_managementPlugin extends Plugin implements PluginWithService
     #[\Tuleap\Plugin\ListeningToEventClass]
     public function handleTrackersInheritance(\Tuleap\Tracker\TrackerEventTrackersDuplicated $event): void
     {
-        $handler = new TrackersDuplicatedHandler(
+        $plan_configuration_dao = new PlanConfigurationDAO();
+        $handler                = new TrackersDuplicatedHandler(
             new ProgramServiceIsEnabledCertifier(),
-            new PlanInheritanceHandler(new PlanConfigurationDAO()),
+            new PlanInheritanceHandler(
+                $plan_configuration_dao,
+                new PlanConfigurationMapper(),
+                $plan_configuration_dao
+            ),
             $this->getLogger()
         );
         $handler->handle($event);

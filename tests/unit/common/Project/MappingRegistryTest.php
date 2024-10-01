@@ -23,7 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Project;
 
 
-class MappingRegistryTest extends \Tuleap\Test\PHPUnit\TestCase
+final class MappingRegistryTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testGetUgroupMapping(): void
     {

@@ -25,7 +25,7 @@ namespace Tuleap\ProgramManagement\Domain\Program\Plan;
 use Tuleap\ProgramManagement\Domain\Workspace\UserReference;
 
 /**
- * I hold the modified Plan configuration of a Program, that has changed and is going to be saved.
+ * I hold data not yet validated coming from the Adapters, with the goal to create a new Plan configuration for a Program.
  * @see NewPlanConfiguration to create a new Plan configuration and save it.
  * @psalm-immutable
  */

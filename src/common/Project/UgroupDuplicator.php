@@ -71,7 +71,10 @@ class UgroupDuplicator
         $this->event_manager = $event_manager;
     }
 
-    public function duplicateOnProjectCreation(Project $template, $new_project_id, array &$ugroup_mapping, \PFUser $project_admin)
+    /**
+     * @param array<int, int> $ugroup_mapping
+     */
+    public function duplicateOnProjectCreation(Project $template, int $new_project_id, array &$ugroup_mapping, \PFUser $project_admin): void
     {
         foreach ($this->manager->getStaticUGroups($template) as $ugroup) {
             if (! $ugroup->isStatic()) {
@@ -82,13 +85,16 @@ class UgroupDuplicator
         }
     }
 
-    private function duplicate(ProjectUGroup $source_ugroup, $new_project_id, array &$ugroup_mapping, \PFUser $project_admin)
+    /**
+     * @param array<int, int> $ugroup_mapping
+     */
+    private function duplicate(ProjectUGroup $source_ugroup, int $new_project_id, array &$ugroup_mapping, \PFUser $project_admin): void
     {
         $ugroup_id     = $source_ugroup->getId();
         $new_ugroup_id = $this->dao->createUgroupFromSourceUgroup($ugroup_id, $new_project_id);
 
-        if (! $new_ugroup_id) {
-            return false;
+        if ($new_ugroup_id === false) {
+            return;
         }
 
         $new_ugroup = $this->manager->getById($new_ugroup_id);

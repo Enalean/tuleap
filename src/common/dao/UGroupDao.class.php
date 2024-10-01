@@ -37,8 +37,8 @@ class UGroupDao extends DataAccessObject
     public function searchByGroupId($group_id)
     {
         $group_id = $this->da->escapeInt($group_id);
-        $sql      = "SELECT * 
-                FROM ugroup 
+        $sql      = "SELECT *
+                FROM ugroup
                 WHERE group_id = $group_id ORDER BY name";
         return $this->retrieve($sql);
     }
@@ -53,8 +53,8 @@ class UGroupDao extends DataAccessObject
     public function searchByUGroupId($ugroup_id)
     {
         $ugroup_id = $this->da->escapeInt($ugroup_id);
-        $sql       = "SELECT * 
-                FROM ugroup 
+        $sql       = "SELECT *
+                FROM ugroup
                 WHERE ugroup_id = $ugroup_id ORDER BY name";
         return $this->retrieve($sql);
     }
@@ -73,8 +73,8 @@ class UGroupDao extends DataAccessObject
     public function searchDynamicAndStaticByGroupId($group_id)
     {
         $group_id = $this->da->escapeInt($group_id);
-        $sql      = "SELECT * 
-                FROM ugroup 
+        $sql      = "SELECT *
+                FROM ugroup
                 WHERE group_id = $group_id OR (group_id = 100 and ugroup_id <= 100)
                 ORDER BY ugroup_id";
         return $this->retrieve($sql);
@@ -94,8 +94,8 @@ class UGroupDao extends DataAccessObject
     {
         $group_id  = $this->da->escapeInt($group_id);
         $ugroup_id = $this->da->escapeInt($ugroup_id);
-        $sql       = "SELECT * 
-                FROM ugroup 
+        $sql       = "SELECT *
+                FROM ugroup
                 WHERE group_id = $group_id AND ugroup_id = $ugroup_id";
         return $this->retrieve($sql);
     }
@@ -219,7 +219,7 @@ class UGroupDao extends DataAccessObject
         $ugroupId = $this->da->escapeInt($ugroupId);
 
         $sql = 'SELECT NULL
-                FROM ugroup 
+                FROM ugroup
                 WHERE group_id = ' . $groupId . ' AND ugroup_id = ' . $ugroupId;
         $res = $this->retrieve($sql);
         if ($res && ! $res->isError() && $res->rowCount() == 1) {
@@ -290,13 +290,13 @@ class UGroupDao extends DataAccessObject
     {
         $ugroupId = $this->da->escapeInt($ugroupId);
         $sql      = 'SELECT source.*
-                     FROM ugroup u 
+                     FROM ugroup u
                        JOIN ugroup source ON (source.ugroup_id = u.source_id)
                      WHERE u.ugroup_id = ' . $ugroupId;
         return $this->retrieve($sql);
     }
 
-    public function createUgroupFromSourceUgroup($ugroup_id, $new_project_id)
+    public function createUgroupFromSourceUgroup(int $ugroup_id, int $new_project_id): false|int
     {
         $ugroup_id      = $this->da->escapeInt($ugroup_id);
         $new_project_id = $this->da->escapeInt($new_project_id);

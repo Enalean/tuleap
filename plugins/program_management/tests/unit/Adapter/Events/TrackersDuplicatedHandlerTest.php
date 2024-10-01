@@ -25,11 +25,13 @@ namespace Tuleap\ProgramManagement\Adapter\Events;
 use ColinODell\PsrTestLogger\TestLogger;
 use Tuleap\Option\Option;
 use Tuleap\ProgramManagement\Adapter\Workspace\ProgramServiceIsEnabledCertifier;
+use Tuleap\ProgramManagement\Domain\Program\Plan\Inheritance\PlanConfigurationMapper;
 use Tuleap\ProgramManagement\Domain\Program\Plan\Inheritance\PlanInheritanceHandler;
 use Tuleap\ProgramManagement\Domain\Program\Plan\PlanConfiguration;
 use Tuleap\ProgramManagement\ProgramService;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIdentifierBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\Program\Plan\RetrievePlanConfigurationStub;
+use Tuleap\ProgramManagement\Tests\Stub\SaveNewPlanConfigurationStub;
 use Tuleap\Project\MappingRegistry;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
@@ -38,14 +40,11 @@ use Tuleap\Tracker\TrackerEventTrackersDuplicated;
 
 final class TrackersDuplicatedHandlerTest extends TestCase
 {
-    private const SOURCE_PROJECT_ID                         = 114;
-    private const NEW_PROJECT_ID                            = 127;
-    private const SOURCE_PROGRAM_INCREMENT_TRACKER_ID       = 12;
-    private const NEW_PROGRAM_INCREMENT_TRACKER_ID          = 164;
-    private const NEW_ITERATION_TRACKER_ID                  = 183;
-    private const FIRST_NEW_TRACKER_ID_THAT_CAN_BE_PLANNED  = 741;
-    private const SECOND_NEW_TRACKER_ID_THAT_CAN_BE_PLANNED = 742;
+    private const SOURCE_PROJECT_ID                   = 114;
+    private const NEW_PROJECT_ID                      = 127;
+    private const SOURCE_PROGRAM_INCREMENT_TRACKER_ID = 12;
     private RetrievePlanConfigurationStub $retrieve_plan;
+    private SaveNewPlanConfigurationStub $save_new_plan;
     private TestLogger $logger;
     private \Project $source_project;
     private \Project $new_project;
@@ -56,6 +55,7 @@ final class TrackersDuplicatedHandlerTest extends TestCase
         $source_iteration_tracker_id                  = 46;
         $first_source_tracker_id_that_can_be_planned  = 65;
         $second_source_tracker_id_that_can_be_planned = 53;
+        $source_user_group_id_granted_plan_permission = 143;
 
         $this->logger           = new TestLogger();
         $this->retrieve_plan    = RetrievePlanConfigurationStub::withPlanConfigurations(
@@ -68,21 +68,22 @@ final class TrackersDuplicatedHandlerTest extends TestCase
                 'Sprints',
                 'sprint',
                 [$first_source_tracker_id_that_can_be_planned, $second_source_tracker_id_that_can_be_planned],
-                [4, 143]
+                [\ProjectUGroup::PROJECT_ADMIN, $source_user_group_id_granted_plan_permission]
             )
         );
+        $this->save_new_plan    = SaveNewPlanConfigurationStub::withCount();
         $this->source_project   = ProjectTestBuilder::aProject()->withId(self::SOURCE_PROJECT_ID)
             ->withUsedService(ProgramService::SERVICE_SHORTNAME)
             ->build();
         $this->new_project      = ProjectTestBuilder::aProject()->withId(self::NEW_PROJECT_ID)
             ->withUsedService(ProgramService::SERVICE_SHORTNAME)
             ->build();
-        $this->mapping_registry = new MappingRegistry([]);
+        $this->mapping_registry = new MappingRegistry([$source_user_group_id_granted_plan_permission => 191]);
         $this->mapping_registry->setCustomMapping(\TrackerFactory::TRACKER_MAPPING_KEY, [
-            self::SOURCE_PROGRAM_INCREMENT_TRACKER_ID     => self::NEW_PROGRAM_INCREMENT_TRACKER_ID,
-            $source_iteration_tracker_id                  => self::NEW_ITERATION_TRACKER_ID,
-            $first_source_tracker_id_that_can_be_planned  => self::FIRST_NEW_TRACKER_ID_THAT_CAN_BE_PLANNED,
-            $second_source_tracker_id_that_can_be_planned => self::SECOND_NEW_TRACKER_ID_THAT_CAN_BE_PLANNED,
+            self::SOURCE_PROGRAM_INCREMENT_TRACKER_ID     => 164,
+            $source_iteration_tracker_id                  => 183,
+            $first_source_tracker_id_that_can_be_planned  => 741,
+            $second_source_tracker_id_that_can_be_planned => 742,
         ]);
     }
 
@@ -90,7 +91,11 @@ final class TrackersDuplicatedHandlerTest extends TestCase
     {
         $handler = new TrackersDuplicatedHandler(
             new ProgramServiceIsEnabledCertifier(),
-            new PlanInheritanceHandler($this->retrieve_plan),
+            new PlanInheritanceHandler(
+                $this->retrieve_plan,
+                new PlanConfigurationMapper(),
+                $this->save_new_plan
+            ),
             $this->logger
         );
         $handler->handle(
@@ -113,14 +118,14 @@ final class TrackersDuplicatedHandlerTest extends TestCase
             ->withoutServices()
             ->build();
         $this->handle();
-        self::assertFalse($this->logger->hasDebugRecords());
+        self::assertSame(0, $this->save_new_plan->getCallCount());
     }
 
     public function testItDoesNothingWhenTheEventHasNoTrackerMapping(): void
     {
         $this->mapping_registry = new MappingRegistry([]);
         $this->handle();
-        self::assertFalse($this->logger->hasDebugRecords());
+        self::assertSame(0, $this->save_new_plan->getCallCount());
     }
 
     public function testItDoesNothingWhenTheNewProjectDoesNotInheritProgramServiceEnabled(): void
@@ -129,7 +134,7 @@ final class TrackersDuplicatedHandlerTest extends TestCase
             ->withoutServices()
             ->build();
         $this->handle();
-        self::assertFalse($this->logger->hasDebugRecords());
+        self::assertSame(0, $this->save_new_plan->getCallCount());
     }
 
     public function testItLogsToDebugWhenTheTrackersMappingHasNoEntryForTheConfiguredProgramIncrementTracker(): void
@@ -148,24 +153,9 @@ final class TrackersDuplicatedHandlerTest extends TestCase
         );
     }
 
-    public function testItLogsToDebugWhenTheEventIsHandled(): void
+    public function testItHandlesTheEvent(): void
     {
         $this->handle();
-        self::assertTrue($this->logger->hasDebugThatContains('new program id #' . self::NEW_PROJECT_ID));
-        self::assertTrue(
-            $this->logger->hasDebugThatContains(
-                'new program increment tracker id #' . self::NEW_PROGRAM_INCREMENT_TRACKER_ID
-            )
-        );
-        self::assertTrue(
-            $this->logger->hasDebugThatContains('new iteration tracker id #' . self::NEW_ITERATION_TRACKER_ID)
-        );
-        self::assertTrue(
-            $this->logger->hasDebugThatContains(
-                'tracker ids that can be planned ' . \Psl\Json\encode(
-                    [self::FIRST_NEW_TRACKER_ID_THAT_CAN_BE_PLANNED, self::SECOND_NEW_TRACKER_ID_THAT_CAN_BE_PLANNED]
-                )
-            )
-        );
+        self::assertSame(1, $this->save_new_plan->getCallCount());
     }
 }
