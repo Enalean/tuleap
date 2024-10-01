@@ -43,6 +43,7 @@ use Tuleap\CrossTracker\Report\Query\Advanced\InvalidTermCollectorVisitor;
 use Tuleap\CrossTracker\Report\Query\Advanced\OrderByBuilder\Field\Date\DateFromOrderBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\OrderByBuilder\Field\FieldFromOrderBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\OrderByBuilder\Field\Numeric\NumericFromOrderBuilder;
+use Tuleap\CrossTracker\Report\Query\Advanced\OrderByBuilder\Field\StaticList\StaticListFromOrderBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\OrderByBuilder\Field\Text\TextFromOrderBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\OrderByBuilder\Metadata\MetadataFromOrderBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\OrderByBuilderVisitor;
@@ -426,19 +427,23 @@ class crosstrackerPlugin extends Plugin
             ),
         );
 
-        $text_order_builder    = new TextFromOrderBuilder();
-        $order_builder_visitor = new OrderByBuilderVisitor(
+        $text_order_builder        = new TextFromOrderBuilder();
+        $static_list_order_builder = new StaticListFromOrderBuilder();
+        $order_builder_visitor     = new OrderByBuilderVisitor(
             new FieldFromOrderBuilder(
                 $field_retriever,
                 $retrieve_field_type,
                 new DateFromOrderBuilder(),
                 new NumericFromOrderBuilder(),
                 $text_order_builder,
+                $static_list_order_builder,
             ),
             new MetadataFromOrderBuilder(
                 Tracker_Semantic_TitleFactory::instance(),
                 Tracker_Semantic_DescriptionFactory::instance(),
+                new StatusFieldRetriever(Tracker_Semantic_StatusFactory::instance()),
                 $text_order_builder,
+                $static_list_order_builder,
             ),
         );
 

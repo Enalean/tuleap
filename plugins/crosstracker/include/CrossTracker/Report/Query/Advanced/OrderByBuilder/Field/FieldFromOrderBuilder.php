@@ -28,6 +28,7 @@ use Tuleap\CrossTracker\Report\Query\Advanced\DuckTypedField\OrderBy\DuckTypedFi
 use Tuleap\CrossTracker\Report\Query\Advanced\DuckTypedField\OrderBy\DuckTypedFieldTypeOrderBy;
 use Tuleap\CrossTracker\Report\Query\Advanced\OrderByBuilder\Field\Date\DateFromOrderBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\OrderByBuilder\Field\Numeric\NumericFromOrderBuilder;
+use Tuleap\CrossTracker\Report\Query\Advanced\OrderByBuilder\Field\StaticList\StaticListFromOrderBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\OrderByBuilder\Field\Text\TextFromOrderBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\OrderByBuilder\OrderByBuilderParameters;
 use Tuleap\CrossTracker\Report\Query\Advanced\OrderByBuilder\ParametrizedFromOrder;
@@ -43,6 +44,7 @@ final readonly class FieldFromOrderBuilder
         private DateFromOrderBuilder $date_builder,
         private NumericFromOrderBuilder $numeric_builder,
         private TextFromOrderBuilder $text_builder,
+        private StaticListFromOrderBuilder $static_list_builder,
     ) {
     }
 
@@ -71,12 +73,12 @@ final readonly class FieldFromOrderBuilder
 
         return match ($field->type) {
             DuckTypedFieldTypeOrderBy::DATE,
-            DuckTypedFieldTypeOrderBy::DATETIME  => $this->date_builder->getFromOrder($field, $order),
-            DuckTypedFieldTypeOrderBy::NUMERIC   => $this->numeric_builder->getFromOrder($field, $order),
-            DuckTypedFieldTypeOrderBy::TEXT      => $this->text_builder->getFromOrder($field->field_ids, $order),
-            DuckTypedFieldTypeOrderBy::STATIC_LIST,
+            DuckTypedFieldTypeOrderBy::DATETIME    => $this->date_builder->getFromOrder($field, $order),
+            DuckTypedFieldTypeOrderBy::NUMERIC     => $this->numeric_builder->getFromOrder($field, $order),
+            DuckTypedFieldTypeOrderBy::TEXT        => $this->text_builder->getFromOrder($field->field_ids, $order),
+            DuckTypedFieldTypeOrderBy::STATIC_LIST => $this->static_list_builder->getFromOrder($field->field_ids, $order),
             DuckTypedFieldTypeOrderBy::UGROUP_LIST,
-            DuckTypedFieldTypeOrderBy::USER_LIST => new ParametrizedFromOrder('', [], ''),
+            DuckTypedFieldTypeOrderBy::USER_LIST   => new ParametrizedFromOrder('', [], ''),
         };
     }
 }

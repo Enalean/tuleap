@@ -25,12 +25,14 @@ namespace Tuleap\CrossTracker\Report\Query\Advanced\OrderByBuilder\Metadata;
 use LogicException;
 use Tracker;
 use Tuleap\CrossTracker\Report\Query\Advanced\AllowedMetadata;
+use Tuleap\CrossTracker\Report\Query\Advanced\OrderByBuilder\Field\StaticList\StaticListFromOrderBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\OrderByBuilder\Field\Text\TextFromOrderBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\OrderByBuilder\OrderByBuilderParameters;
 use Tuleap\CrossTracker\Report\Query\Advanced\OrderByBuilder\ParametrizedFromOrder;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\OrderByDirection;
 use Tuleap\Tracker\Semantic\Description\GetDescriptionSemantic;
+use Tuleap\Tracker\Semantic\Status\RetrieveStatusField;
 use Tuleap\Tracker\Semantic\Title\GetTitleSemantic;
 
 final readonly class MetadataFromOrderBuilder
@@ -38,7 +40,9 @@ final readonly class MetadataFromOrderBuilder
     public function __construct(
         private GetTitleSemantic $title_semantic_retriever,
         private GetDescriptionSemantic $description_semantic_retriever,
+        private RetrieveStatusField $status_field_retriever,
         private TextFromOrderBuilder $text_builder,
+        private StaticListFromOrderBuilder $static_list_builder,
     ) {
     }
 
@@ -52,7 +56,7 @@ final readonly class MetadataFromOrderBuilder
         return match ($metadata->getName()) {
             AllowedMetadata::TITLE            => $this->text_builder->getFromOrder($this->getTitleFieldIds($parameters->trackers), $order),
             AllowedMetadata::DESCRIPTION      => $this->text_builder->getFromOrder($this->getDescriptionFieldIds($parameters->trackers), $order),
-            AllowedMetadata::STATUS,
+            AllowedMetadata::STATUS           => $this->static_list_builder->getFromOrder($this->getStatusFieldIds($parameters->trackers), $order),
             AllowedMetadata::ASSIGNED_TO,
 
             AllowedMetadata::SUBMITTED_BY,
@@ -92,6 +96,22 @@ final readonly class MetadataFromOrderBuilder
             $semantic_description = $this->description_semantic_retriever->getByTracker($tracker);
             if ($semantic_description->getField() !== null) {
                 $field_ids[] = $semantic_description->getFieldId();
+            }
+        }
+        return $field_ids;
+    }
+
+    /**
+     * @param Tracker[] $trackers
+     * @return list<int>
+     */
+    private function getStatusFieldIds(array $trackers): array
+    {
+        $field_ids = [];
+        foreach ($trackers as $tracker) {
+            $field = $this->status_field_retriever->getStatusField($tracker);
+            if ($field !== null) {
+                $field_ids[] = $field->getId();
             }
         }
         return $field_ids;

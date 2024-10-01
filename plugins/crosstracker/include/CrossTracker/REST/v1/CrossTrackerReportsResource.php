@@ -69,6 +69,7 @@ use Tuleap\CrossTracker\Report\Query\Advanced\InvalidTermCollectorVisitor;
 use Tuleap\CrossTracker\Report\Query\Advanced\OrderByBuilder\Field\Date\DateFromOrderBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\OrderByBuilder\Field\FieldFromOrderBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\OrderByBuilder\Field\Numeric\NumericFromOrderBuilder;
+use Tuleap\CrossTracker\Report\Query\Advanced\OrderByBuilder\Field\StaticList\StaticListFromOrderBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\OrderByBuilder\Field\Text\TextFromOrderBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\OrderByBuilder\Metadata\MetadataFromOrderBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\OrderByBuilderVisitor;
@@ -707,11 +708,11 @@ final class CrossTrackerReportsResource extends AuthenticatedResource
 
     private function getArtifactFactory(): CrossTrackerArtifactReportFactory
     {
-        $form_element_factory     = Tracker_FormElementFactory::instance();
-        $tracker_artifact_factory = Tracker_ArtifactFactory::instance();
-        $retrieve_field_type      = new FieldTypeRetrieverWrapper($form_element_factory);
-        $trackers_permissions     = TrackersPermissionsRetriever::build();
-        $select_builder_visitor   = new SelectBuilderVisitor(
+        $form_element_factory      = Tracker_FormElementFactory::instance();
+        $tracker_artifact_factory  = Tracker_ArtifactFactory::instance();
+        $retrieve_field_type       = new FieldTypeRetrieverWrapper($form_element_factory);
+        $trackers_permissions      = TrackersPermissionsRetriever::build();
+        $select_builder_visitor    = new SelectBuilderVisitor(
             new FieldSelectFromBuilder(
                 $form_element_factory,
                 $retrieve_field_type,
@@ -732,10 +733,10 @@ final class CrossTrackerReportsResource extends AuthenticatedResource
                 new PrettyTitleSelectFromBuilder(),
             ),
         );
-        $purifier                 = Codendi_HTMLPurifier::instance();
-        $text_value_interpreter   = new TextValueInterpreter($purifier, CommonMarkInterpreter::build($purifier));
-        $field_retriever          = new ReadableFieldRetriever($form_element_factory, $trackers_permissions);
-        $result_builder_visitor   = new ResultBuilderVisitor(
+        $purifier                  = Codendi_HTMLPurifier::instance();
+        $text_value_interpreter    = new TextValueInterpreter($purifier, CommonMarkInterpreter::build($purifier));
+        $field_retriever           = new ReadableFieldRetriever($form_element_factory, $trackers_permissions);
+        $result_builder_visitor    = new ResultBuilderVisitor(
             new FieldResultBuilder(
                 $retrieve_field_type,
                 new DateResultBuilder($tracker_artifact_factory, $form_element_factory),
@@ -759,23 +760,27 @@ final class CrossTrackerReportsResource extends AuthenticatedResource
                 new ArtifactResultBuilder($tracker_artifact_factory),
             ),
         );
-        $text_order_builder       = new TextFromOrderBuilder();
-        $order_builder_visitor    = new OrderByBuilderVisitor(
+        $text_order_builder        = new TextFromOrderBuilder();
+        $static_list_order_builder = new StaticListFromOrderBuilder();
+        $order_builder_visitor     = new OrderByBuilderVisitor(
             new FieldFromOrderBuilder(
                 $field_retriever,
                 $retrieve_field_type,
                 new DateFromOrderBuilder(),
                 new NumericFromOrderBuilder(),
                 $text_order_builder,
+                $static_list_order_builder,
             ),
             new MetadataFromOrderBuilder(
                 Tracker_Semantic_TitleFactory::instance(),
                 Tracker_Semantic_DescriptionFactory::instance(),
+                new StatusFieldRetriever(Tracker_Semantic_StatusFactory::instance()),
                 $text_order_builder,
+                $static_list_order_builder,
             ),
         );
-        $field_checker            = $this->getDuckTypedFieldChecker();
-        $metadata_checker         = $this->getMetadataChecker();
+        $field_checker             = $this->getDuckTypedFieldChecker();
+        $metadata_checker          = $this->getMetadataChecker();
         return new CrossTrackerArtifactReportFactory(
             new CrossTrackerArtifactReportDao(),
             $tracker_artifact_factory,
