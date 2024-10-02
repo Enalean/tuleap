@@ -27,21 +27,32 @@ export interface ToolbarView {
 
 export interface ToolbarBus {
     handler: ToolbarHandler | null;
-    view: ToolbarView | null;
+    view: ToolbarView;
     bold: () => void;
     setCurrentHandler: (handler: ToolbarHandler) => void;
-    setView: (view: ToolbarView) => void;
+    setView: (view: Partial<ToolbarView>) => void;
 }
+
+const noop = (): void => {
+    // Do nothing
+};
+const default_view: ToolbarView = {
+    activateBold: noop,
+};
+
 export const buildToolbarBus = (): ToolbarBus => ({
     handler: null,
-    view: null,
+    view: default_view,
     bold(): void {
         this.handler?.toggleBold();
     },
     setCurrentHandler(handler: ToolbarHandler): void {
         this.handler = handler;
     },
-    setView(view: ToolbarView): void {
-        this.view = view;
+    setView(view: Partial<ToolbarView>): void {
+        this.view = {
+            ...this.view,
+            ...view,
+        };
     },
 });

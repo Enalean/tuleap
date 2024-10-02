@@ -27,39 +27,22 @@ export type ProseMirrorToolbarElement = {
     controller: ControlToolbar;
 };
 
-export type InternalProseMirrorToolbarElement = Readonly<ProseMirrorToolbarElement> & {
-    is_bold_activated: boolean;
-};
+export type InternalProseMirrorToolbarElement = Readonly<ProseMirrorToolbarElement>;
 
 const TOOLBAR_TAG_NAME = "tuleap-prose-mirror-toolbar";
-
-export const connect = (host: InternalProseMirrorToolbarElement): void => {
-    host.controller.getToolbarBus().setView({
-        activateBold: (is_activated: boolean): void => {
-            host.is_bold_activated = is_activated;
-        },
-    });
-};
 
 export const renderToolbar = (
     host: InternalProseMirrorToolbarElement,
 ): UpdateFunction<InternalProseMirrorToolbarElement> =>
     html`
         <div class="prose-mirror-toolbar-container" data-test="toolbar-container">
-            <bold-item
-                is_activated="${host.is_bold_activated}"
-                toolbar_bus="${host.controller.getToolbarBus()}"
-            ></bold-item>
+            <bold-item toolbar_bus="${host.controller.getToolbarBus()}"></bold-item>
         </div>
     `.style(scss_styles);
 
 define<InternalProseMirrorToolbarElement>({
     tag: TOOLBAR_TAG_NAME,
-    is_bold_activated: false,
-    controller: {
-        value: (host, controller) => controller,
-        connect,
-    },
+    controller: (host, controller) => controller,
     render: {
         value: renderToolbar,
         shadow: false,
