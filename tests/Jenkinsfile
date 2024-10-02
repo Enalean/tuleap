@@ -132,7 +132,7 @@ pipeline {
                         }
                     }
                     steps { script { execTestWithLimitedConcurrency({ actions.runDeptrac() }) } }
-                    post { failure { junit 'results/deptrac/*.xml' } }
+                    post { always { junit 'results/deptrac/*.xml' } }
                 }
                 stage('ESLint static analysis') {
                     steps { script { execTestWithLimitedConcurrency({ actions.runESLint() }) } }
