@@ -26,15 +26,17 @@
     gap: var(--tlp-medium-spacing);
 }
 
-.prose-mirror-toolbar-button-icon {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: var(--tlp-small-spacing);
-    vertical-align: middle;
-    cursor: pointer;
-}
+.prose-mirror-button {
+    width: var(--tlp-form-element-small-height);
+    height: var(--tlp-form-element-small-height);
+    border: 0;
+    box-shadow: none;
 
-.prose-mirror-button-activated {
-    background: var(--tlp-main-color-lighter-90);
+    &.button-active {
+        background: var(--tlp-main-color-lighter-90);
+    }
+
+    &:hover {
+        color: var(--tlp-typo-default-text-color);
+    }
 }
