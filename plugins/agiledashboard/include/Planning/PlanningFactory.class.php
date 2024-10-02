@@ -19,8 +19,14 @@
  */
 
 use Tuleap\AgileDashboard\Planning\PlanningDao;
+use Tuleap\AgileDashboard\Planning\PlanningTrackerNotFoundFault;
+use Tuleap\AgileDashboard\Planning\PlanningTrackerNotReadableFault;
 use Tuleap\AgileDashboard\Planning\RetrievePlannings;
 use Tuleap\AgileDashboard\Planning\RetrieveRootPlanning;
+use Tuleap\NeverThrow\Err;
+use Tuleap\NeverThrow\Fault;
+use Tuleap\NeverThrow\Ok;
+use Tuleap\NeverThrow\Result;
 
 class PlanningFactory implements RetrievePlannings, RetrieveRootPlanning
 {
@@ -140,7 +146,12 @@ class PlanningFactory implements RetrievePlannings, RetrieveRootPlanning
         foreach ($this->dao->searchByProjectId($group_id) as $row) {
             $tracker = $this->tracker_factory->getTrackerById($row['planning_tracker_id']);
             if ($tracker && $tracker->userCanView($user)) {
-                $plannings[] = $this->getPlanningFromRow($user, $row);
+                $this->getPlanningFromRow($user, $row)
+                    ->andThen(function (Planning $planning) use (&$plannings) {
+                        $plannings[] = $planning;
+
+                        return Result::ok(null);
+                    });
             }
         }
         if ($plannings) {
@@ -168,7 +179,7 @@ class PlanningFactory implements RetrievePlannings, RetrieveRootPlanning
         $backlog_tracker_ids = $first_planning->getBacklogTrackersIds();
 
         $planning_tracker = $this->tracker_factory->getTrackerById($planning_tracker_id);
-        if ($planning_tracker === null) {
+        if ($planning_tracker === null || ! $planning_tracker->userCanView($user)) {
             throw new RuntimeException('Tracker does not exist');
         }
 
@@ -341,10 +352,13 @@ class PlanningFactory implements RetrievePlannings, RetrieveRootPlanning
             return null;
         }
 
-        return $this->getPlanningFromRow($user, $planning);
+        return $this->getPlanningFromRow($user, $planning)->unwrapOr(null);
     }
 
-    private function getPlanningFromRow(PFUser $user, array $row): Planning
+    /**
+     * @return Ok<Planning>|Err<Fault>
+     */
+    private function getPlanningFromRow(PFUser $user, array $row): Ok|Err
     {
         $planning = new Planning(
             $row['id'],
@@ -356,9 +370,9 @@ class PlanningFactory implements RetrievePlannings, RetrieveRootPlanning
             $row['planning_tracker_id']
         );
         $planning->setBacklogTrackers($this->getBacklogTrackers($user, $planning));
-        $planning->setPlanningTracker($this->getPlanningTracker($planning));
 
-        return $planning;
+        return $this->getPlanningTracker($user, $planning)
+            ->andThen(fn (Tracker $tracker) => Result::ok($planning->setPlanningTracker($tracker)));
     }
 
     /**
@@ -388,9 +402,15 @@ class PlanningFactory implements RetrievePlannings, RetrieveRootPlanning
             [],
             $planning['planning_tracker_id']
         );
-        $returned->setPlanningTracker($this->getPlanningTracker($returned));
         $returned->setBacklogTrackers($this->getBacklogTrackers($user, $returned));
-        $this->instances[$planning_tracker->getId()] = $returned;
+        $returned = $this->getPlanningTracker($user, $returned)
+            ->andThen(fn (Tracker $tracker) => Result::ok($returned->setPlanningTracker($tracker)))
+            ->unwrapOr(null);
+
+        if ($returned !== null) {
+            $this->instances[$planning_tracker->getId()] = $returned;
+        }
+
         return $returned;
     }
 
@@ -412,7 +432,7 @@ class PlanningFactory implements RetrievePlannings, RetrieveRootPlanning
      *
      * @return Planning[]
      */
-    public function getPlanningsByBacklogTracker(Tracker $backlog_tracker): array
+    public function getPlanningsByBacklogTracker(PFUser $user, Tracker $backlog_tracker): array
     {
         $plannings = [];
         foreach ($this->dao->searchByBacklogTrackerId($backlog_tracker->getId()) as $planning) {
@@ -426,8 +446,13 @@ class PlanningFactory implements RetrievePlannings, RetrieveRootPlanning
                 $planning['planning_tracker_id']
             );
             $p->setBacklogTrackers([$backlog_tracker]);
-            $p->setPlanningTracker($this->getPlanningTracker($p));
-            $plannings[] = $p;
+            $this->getPlanningTracker($user, $p)
+                ->andThen(function (Tracker $tracker) use ($p, &$plannings) {
+                    $p->setPlanningTracker($tracker);
+                    $plannings[] = $p;
+
+                    return Result::ok(null);
+                });
         }
         return $plannings;
     }
@@ -473,15 +498,20 @@ class PlanningFactory implements RetrievePlannings, RetrieveRootPlanning
     }
 
     /**
-     * @return Tracker
+     * @return Ok<Tracker>|Err<Fault>
      */
-    private function getPlanningTracker(Planning $planning)
+    private function getPlanningTracker(PFUser $user, Planning $planning): Ok|Err
     {
         $tracker = $this->tracker_factory->getTrackerById($planning->getPlanningTrackerId());
         if ($tracker === null) {
-            throw new RuntimeException('Tracker does not exist ' . $planning->getPlanningTrackerId() . ' for planning ' . $planning->getId());
+            return Result::err(PlanningTrackerNotFoundFault::build($planning));
         }
-        return $tracker;
+
+        if (! $tracker->userCanView($user)) {
+            return Result::err(PlanningTrackerNotReadableFault::build($planning));
+        }
+
+        return Result::ok($tracker);
     }
 
     /**
