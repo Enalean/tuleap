@@ -18,6 +18,6 @@
  *
  */
 
-import "./toolbar-element";
+import "./elements/toolbar-element";
 
-export { ToolbarController } from "./ToolbarController";
+export { ToolbarController } from "./elements/ToolbarController";

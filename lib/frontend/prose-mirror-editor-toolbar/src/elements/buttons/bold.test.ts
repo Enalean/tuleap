@@ -22,7 +22,7 @@ import { describe, expect, it, vi } from "vitest";
 import type { BoldElement } from "./bold";
 import { renderBoldItem } from "./bold";
 import type { ToolbarBus } from "@tuleap/prose-mirror-editor";
-import { createLocalDocument } from "./helpers/helper-for-test";
+import { createLocalDocument } from "../../helpers/helper-for-test";
 
 describe("BoldElement", () => {
     it("When clicked, Then it should call toolbar_bus bold method", () => {

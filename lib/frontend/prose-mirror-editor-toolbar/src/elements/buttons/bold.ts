@@ -20,7 +20,7 @@
 
 import { define, html, type UpdateFunction } from "hybrids";
 import type { ToolbarBus } from "@tuleap/prose-mirror-editor";
-import { gettext_provider } from "./gettext-provider";
+import { gettext_provider } from "../../gettext-provider";
 
 export const BOLD_TAG_NAME = "bold-item";
 
