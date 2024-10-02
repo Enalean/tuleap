@@ -44,6 +44,10 @@
         "prose-mirror": {
             "src": "lib/frontend/prose-mirror-editor/src",
             "po": "lib/frontend/prose-mirror-editor/po"
+        },
+        "prose-mirror-toolbar": {
+            "src": "lib/frontend/prose-mirror-editor-toolbar/src",
+            "po": "lib/frontend/prose-mirror-editor-toolbar/po"
         }
     },
     "gettext-vue3": {

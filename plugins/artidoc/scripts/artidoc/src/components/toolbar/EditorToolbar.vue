@@ -19,62 +19,25 @@
   -->
 
 <template>
-    <div>
-        <i
-            class="icon fa-solid fa-bold"
-            v-bind:class="{ activated: is_bold_activated }"
-            v-bind:title="$gettext('Toggle bold style `Ctrl+b`')"
-            v-on:click="applyBold"
-            data-test="icon-bold"
-        ></i>
-    </div>
+    <tuleap-prose-mirror-toolbar class="artidoc-toolbar" v-bind:controller="controller" />
 </template>
 
 <script setup lang="ts">
 import { TOOLBAR_BUS } from "@/toolbar-bus-injection-key";
 import { strictInject } from "@tuleap/vue-strict-inject";
-import { ref } from "vue";
+import { ToolbarController } from "@tuleap/prose-mirror-editor-toolbar";
 
 const toolbar_bus = strictInject(TOOLBAR_BUS);
-
-const is_bold_activated = ref(false);
-
-toolbar_bus.setView({
-    activateBold(is_activated: boolean) {
-        is_bold_activated.value = is_activated;
-    },
-});
-
-function applyBold(): void {
-    toolbar_bus.bold();
-}
+const controller = ToolbarController(toolbar_bus);
 </script>
 
 <style scoped lang="scss">
 @use "@/themes/includes/zindex";
 @use "@tuleap/burningparrot-theme/css/includes/global-variables";
 
-div {
-    display: flex;
+.artidoc-toolbar {
     position: sticky;
     z-index: zindex.$toolbar;
     top: global-variables.$navbar-height;
-    padding: var(--tlp-medium-spacing);
-    background: var(--tlp-white-color);
-    box-shadow: var(--tlp-sticky-header-shadow);
-    gap: var(--tlp-medium-spacing);
-}
-
-.icon {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: var(--tlp-small-spacing);
-    vertical-align: middle;
-    cursor: pointer;
-}
-
-.activated {
-    background: var(--tlp-main-color-lighter-90);
 }
 </style>

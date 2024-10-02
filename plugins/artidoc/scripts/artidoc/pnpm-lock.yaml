@@ -41,6 +41,9 @@ dependencies:
   '@tuleap/prose-mirror-editor':
     specifier: workspace:^
     version: link:../../../../lib/frontend/prose-mirror-editor
+  '@tuleap/prose-mirror-editor-toolbar':
+    specifier: workspace:^
+    version: link:../../../../lib/frontend/prose-mirror-editor-toolbar
   '@tuleap/tlp-dropdown':
     specifier: workspace:*
     version: link:../../../../lib/frontend/tlp-dropdown
