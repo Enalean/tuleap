@@ -26,8 +26,10 @@ use BaseLanguageFactory;
 use PFUser;
 use Tracker;
 use Tuleap\CrossTracker\Field\ReadableFieldRetriever;
+use Tuleap\CrossTracker\Report\Query\Advanced\DuckTypedField\FieldLinkedToMetadataFault;
 use Tuleap\CrossTracker\Report\Query\Advanced\DuckTypedField\FieldNotFoundInAnyTrackerFault;
 use Tuleap\CrossTracker\Report\Query\Advanced\DuckTypedField\FieldTypesAreIncompatibleFault;
+use Tuleap\CrossTracker\Report\Query\Advanced\InvalidOrderByBuilderParameters;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSelectableCollectorParameters;
 use Tuleap\CrossTracker\Tests\Builders\InvalidSearchableCollectorParametersBuilder;
 use Tuleap\NeverThrow\Err;
@@ -63,6 +65,8 @@ use Tuleap\Tracker\Test\Builders\Fields\IntFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticBindBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\StringFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\SubmittedByFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\SubmittedOnFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\RetrieveFieldTypeStub;
 use Tuleap\Tracker\Test\Stub\RetrieveUsedFieldsStub;
@@ -176,6 +180,20 @@ final class DuckTypedFieldCheckerTest extends TestCase
         );
     }
 
+    /**
+     * @return Ok<null>|Err<Fault>
+     */
+    private function checkForOrderBy(): Ok|Err
+    {
+        return $this->buildChecker()->checkFieldIsValidForOrderBy(
+            new Field(self::FIELD_NAME),
+            new InvalidOrderByBuilderParameters(
+                [$this->first_tracker, $this->second_tracker],
+                $this->user,
+            ),
+        );
+    }
+
     public function testSearchCheckWhenAllFieldsAreIntOrFloat(): void
     {
         self::assertTrue(Result::isOk($this->checkForSearch(new EqualComparison(
@@ -253,6 +271,26 @@ final class DuckTypedFieldCheckerTest extends TestCase
         self::assertInstanceOf(FieldNotFoundInAnyTrackerFault::class, $result->error);
     }
 
+    public function testSearchCheckFailsWhenTheFieldIsAlreadyRelatedToAnAlwaysThereField(): void
+    {
+        $this->fields_retriever = RetrieveUsedFieldsStub::withFields(
+            SubmittedByFieldBuilder::aSubmittedByField(156) // @submitted_on
+                    ->withName(self::FIELD_NAME)
+                        ->inTracker($this->first_tracker)
+                            ->withReadPermission($this->user, true)
+                                ->build(),
+        );
+        $this->user_permission_on_fields->withPermissionOn([156], FieldPermissionType::PERMISSION_READ);
+
+        $result = $this->checkForSearch(new EqualComparison(
+            new Field(self::FIELD_NAME),
+            new SimpleValueWrapper(12)
+        ));
+
+        self::assertTrue(Result::isErr($result));
+        self::assertInstanceOf(FieldLinkedToMetadataFault::class, $result->error);
+    }
+
     public function testSearchCheckGoodWhenLabelMissingOnlyInOneField(): void
     {
         $this->fields_retriever = RetrieveUsedFieldsStub::withFields(
@@ -319,6 +357,21 @@ final class DuckTypedFieldCheckerTest extends TestCase
         self::assertEquals("The value 'e' doesn't exist for the list field '" . self::FIELD_NAME . "'.", (string) $result->error);
     }
 
+    public function testSelectCheckFailsWhenTheFieldIsAlreadyRelatedToAnAlwaysThereField(): void
+    {
+        $this->fields_retriever = RetrieveUsedFieldsStub::withFields(
+            SubmittedOnFieldBuilder::aSubmittedOnField(156) // @submitted_on
+                    ->withName(self::FIELD_NAME)
+                        ->inTracker($this->first_tracker)
+                            ->build(),
+        );
+        $this->user_permission_on_fields->withPermissionOn([156], FieldPermissionType::PERMISSION_READ);
+
+        $result = $this->checkForSelect();
+        self::assertTrue(Result::isErr($result));
+        self::assertInstanceOf(FieldLinkedToMetadataFault::class, $result->error);
+    }
+
     public function testSelectCheckAcceptDateAndDateTime(): void
     {
         $this->fields_retriever = RetrieveUsedFieldsStub::withFields(
@@ -336,5 +389,20 @@ final class DuckTypedFieldCheckerTest extends TestCase
         $this->user_permission_on_fields->withPermissionOn([189], FieldPermissionType::PERMISSION_UPDATE);
 
         self::assertTrue(Result::isOk($this->checkForSelect()));
+    }
+
+    public function testOrderByCheckFailsWhenTheFieldIsAlreadyRelatedToAnAlwaysThereField(): void
+    {
+        $this->fields_retriever = RetrieveUsedFieldsStub::withFields(
+            SubmittedByFieldBuilder::aSubmittedByField(156) // @submitted_on
+                    ->withName(self::FIELD_NAME)
+                        ->inTracker($this->first_tracker)
+                            ->build(),
+        );
+        $this->user_permission_on_fields->withPermissionOn([156], FieldPermissionType::PERMISSION_READ);
+
+        $result = $this->checkForOrderBy();
+        self::assertTrue(Result::isErr($result));
+        self::assertInstanceOf(FieldLinkedToMetadataFault::class, $result->error);
     }
 }

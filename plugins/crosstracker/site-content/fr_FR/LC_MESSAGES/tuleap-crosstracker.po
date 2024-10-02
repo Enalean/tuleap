@@ -77,6 +77,14 @@ msgstr ""
 msgid "%s is not supported for the operator %s."
 msgstr "%s ne supporte pas l'opérateur %s."
 
+#, php-format
+msgid ""
+"'%s' field is linked to an already existing metadata, please use '%s' "
+"instead if you want to get the field."
+msgstr ""
+"Le champ '%s' est déjà lié a une metadata dejà existante, veuillez utiliser "
+"'%s' si vous voulez récuperer ce champ."
+
 msgid ""
 "'limit' and 'offset' are required parameters. Please add them in the query."
 msgstr ""

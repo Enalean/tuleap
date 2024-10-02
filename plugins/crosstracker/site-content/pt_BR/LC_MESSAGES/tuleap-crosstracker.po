@@ -66,6 +66,12 @@ msgstr ""
 msgid "%s is not supported for the operator %s."
 msgstr ""
 
+#, php-format
+msgid ""
+"'%s' field is linked to an already existing metadata, please use '%s' "
+"instead if you want to get the field."
+msgstr ""
+
 msgid ""
 "'limit' and 'offset' are required parameters. Please add them in the query."
 msgstr ""

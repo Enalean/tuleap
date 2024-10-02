@@ -20,6 +20,8 @@
 
 namespace Tuleap\CrossTracker\Report\Query\Advanced;
 
+use Tracker_FormElementFactory;
+
 final class AllowedMetadata
 {
     public const TITLE            = '@title';
@@ -72,5 +74,13 @@ final class AllowedMetadata
         self::LAST_UPDATE_BY,
         self::ASSIGNED_TO,
         self::ID,
+    ];
+
+    public const FIELD_WITH_NO_CHANGESET = [
+        Tracker_FormElementFactory::FIELD_SUBMITTED_ON_TYPE     => self::SUBMITTED_ON,
+        Tracker_FormElementFactory::FIELD_LAST_UPDATE_DATE_TYPE => self::LAST_UPDATE_DATE,
+        Tracker_FormElementFactory::FIELD_SUBMITTED_BY_TYPE     => self::SUBMITTED_BY,
+        Tracker_FormElementFactory::FIELD_LAST_MODIFIED_BY      => self::LAST_UPDATE_BY,
+        Tracker_FormElementFactory::FIELD_ARTIFACT_ID_TYPE      => self::ID,
     ];
 }
