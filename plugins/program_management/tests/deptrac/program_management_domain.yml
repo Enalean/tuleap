@@ -10,6 +10,8 @@ deptrac:
       collectors:
         - type: className
           regex: Tuleap\\Option\\Option
+        - type: className
+          regex: Tuleap\\NeverThrow\\(?:Err|Fault|Ok|Result)
   ruleset:
     Domain:
       - Domain
