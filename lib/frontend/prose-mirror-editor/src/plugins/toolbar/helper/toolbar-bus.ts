@@ -19,16 +19,25 @@
  */
 export interface ToolbarHandler {
     toggleBold: () => void;
+    toggleEmbedded: () => void;
+    toggleCode: () => void;
+    toggleQuote: () => void;
 }
 
 export interface ToolbarView {
     activateBold: (is_activated: boolean) => void;
+    activateEmbedded: (is_activated: boolean) => void;
+    activateCode: (is_activated: boolean) => void;
+    activateQuote: (is_activated: boolean) => void;
 }
 
 export interface ToolbarBus {
     handler: ToolbarHandler | null;
     view: ToolbarView;
     bold: () => void;
+    embedded: () => void;
+    code: () => void;
+    quote: () => void;
     setCurrentHandler: (handler: ToolbarHandler) => void;
     setView: (view: Partial<ToolbarView>) => void;
 }
@@ -38,6 +47,9 @@ const noop = (): void => {
 };
 const default_view: ToolbarView = {
     activateBold: noop,
+    activateCode: noop,
+    activateQuote: noop,
+    activateEmbedded: noop,
 };
 
 export const buildToolbarBus = (): ToolbarBus => ({
@@ -45,6 +57,15 @@ export const buildToolbarBus = (): ToolbarBus => ({
     view: default_view,
     bold(): void {
         this.handler?.toggleBold();
+    },
+    embedded(): void {
+        this.handler?.toggleEmbedded();
+    },
+    code(): void {
+        this.handler?.toggleCode();
+    },
+    quote(): void {
+        this.handler?.toggleQuote();
     },
     setCurrentHandler(handler: ToolbarHandler): void {
         this.handler = handler;

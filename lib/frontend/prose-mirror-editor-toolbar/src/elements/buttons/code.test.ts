@@ -22,10 +22,10 @@ import { describe, beforeEach, expect, it, vi } from "vitest";
 import type { ToolbarBus } from "@tuleap/prose-mirror-editor";
 import { buildToolbarBus } from "@tuleap/prose-mirror-editor";
 import { createLocalDocument } from "../../helpers/helper-for-test";
-import type { HostElement } from "./bold";
-import { connect, renderBoldItem } from "./bold";
+import type { HostElement } from "./code";
+import { connect, renderCodeItem } from "./code";
 
-describe("BoldElement", () => {
+describe("CodeElement", () => {
     let target: ShadowRoot, toolbar_bus: ToolbarBus;
 
     beforeEach(() => {
@@ -43,27 +43,27 @@ describe("BoldElement", () => {
 
         connect(host);
 
-        toolbar_bus.view.activateBold(true);
+        toolbar_bus.view.activateCode(true);
         expect(host.is_activated).toBe(true);
 
-        toolbar_bus.view.activateBold(false);
+        toolbar_bus.view.activateCode(false);
         expect(host.is_activated).toBe(false);
     });
 
-    it("When the button is clicked, Then it should call toolbar_bus bold() method", () => {
-        const applyBold = vi.spyOn(toolbar_bus, "bold");
+    it("When the button is clicked, Then it should call toolbar_bus code() method", () => {
+        const applyCode = vi.spyOn(toolbar_bus, "code");
         const host = { toolbar_bus } as HostElement;
 
-        renderBoldItem(host)(host, target);
+        renderCodeItem(host)(host, target);
 
-        const button = target.querySelector<HTMLButtonElement>("[data-test=button-bold]");
+        const button = target.querySelector<HTMLButtonElement>("[data-test=button-code]");
         if (!button) {
             throw new Error("Expected a button");
         }
 
         button.click();
 
-        expect(applyBold).toHaveBeenCalledOnce();
+        expect(applyCode).toHaveBeenCalledOnce();
     });
 
     it.each([
@@ -75,9 +75,9 @@ describe("BoldElement", () => {
             toolbar_bus,
         } as HostElement;
 
-        renderBoldItem(host)(host, target);
+        renderCodeItem(host)(host, target);
 
-        const button = target.querySelector<HTMLButtonElement>("[data-test=button-bold]");
+        const button = target.querySelector<HTMLButtonElement>("[data-test=button-code]");
         if (!button) {
             throw new Error("Expected a button");
         }

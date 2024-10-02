@@ -26,6 +26,7 @@ import { ToolbarActivator } from "./helper/MonoToolbarActionActivator";
 import { IsMarkActiveChecker } from "./helper/IsMarkActiveChecker";
 import { MarkToggle } from "./helper/MonoToolbarToggler";
 import { custom_schema } from "../../custom_schema";
+import { getQuoteCommand } from "./quote";
 
 export function setupMonoToolbar(toolbar_bus: ToolbarBus): Plugin {
     return new Plugin({
@@ -43,6 +44,15 @@ export function setupMonoToolbar(toolbar_bus: ToolbarBus): Plugin {
                     toolbar_bus.setCurrentHandler({
                         toggleBold(): void {
                             MarkToggle().toggleMark(view, custom_schema.marks.strong);
+                        },
+                        toggleEmbedded(): void {
+                            MarkToggle().toggleMark(view, custom_schema.marks.em);
+                        },
+                        toggleCode(): void {
+                            MarkToggle().toggleMark(view, custom_schema.marks.code);
+                        },
+                        toggleQuote(): void {
+                            getQuoteCommand()(view.state, view.dispatch);
                         },
                     });
                 },

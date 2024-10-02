@@ -23,48 +23,49 @@ import type { ToolbarBus } from "@tuleap/prose-mirror-editor";
 import { gettext_provider } from "../../gettext-provider";
 import { getClass } from "../../helpers/class-getter";
 
-export const BOLD_TAG_NAME = "bold-item";
+export const EMBEDDED_TAG_NAME = "embedded-item";
 
-export type BoldElement = {
+export type EmbeddedElement = {
     toolbar_bus: ToolbarBus;
 };
 
-type InternalBoldElement = Readonly<BoldElement> & {
+type InternalEmbeddedElement = Readonly<EmbeddedElement> & {
     is_activated: boolean;
 };
 
-export type HostElement = InternalBoldElement & HTMLElement;
-
-const onClickApplyBold = (host: BoldElement): void => {
-    host.toolbar_bus.bold();
+export type HostElement = InternalEmbeddedElement & HTMLElement;
+const onClickApplyEmbedded = (host: EmbeddedElement): void => {
+    host.toolbar_bus.embedded();
 };
-export const renderBoldItem = (host: InternalBoldElement): UpdateFunction<InternalBoldElement> => {
+export const renderEmbeddedItem = (
+    host: InternalEmbeddedElement,
+): UpdateFunction<InternalEmbeddedElement> => {
     const classes = getClass(host.is_activated);
 
     return html`<button
         class="${classes}"
-        onclick="${onClickApplyBold}"
-        data-test="button-bold"
-        title="${gettext_provider.gettext("Toggle bold style `Ctrl+b`")}"
+        onclick="${onClickApplyEmbedded}"
+        data-test="button-embedded"
+        title="${gettext_provider.gettext("Toggle embedded style `Ctrl+i`")}"
     >
-        <i class="fa-solid fa-bold" role="img"></i>
+        <i class="fa-solid fa-italic" role="img"></i>
     </button>`;
 };
 
-export const connect = (host: InternalBoldElement): void => {
+export const connect = (host: InternalEmbeddedElement): void => {
     host.toolbar_bus.setView({
-        activateBold: (is_activated: boolean): void => {
+        activateEmbedded: (is_activated: boolean): void => {
             host.is_activated = is_activated;
         },
     });
 };
 
-define<InternalBoldElement>({
-    tag: BOLD_TAG_NAME,
+export default define<InternalEmbeddedElement>({
+    tag: EMBEDDED_TAG_NAME,
     is_activated: false,
     toolbar_bus: {
-        value: (host: BoldElement, toolbar_bus: ToolbarBus) => toolbar_bus,
+        value: (host: EmbeddedElement, toolbar_bus: ToolbarBus) => toolbar_bus,
         connect,
     },
-    render: renderBoldItem,
+    render: renderEmbeddedItem,
 });

@@ -107,20 +107,11 @@ msgstr "Texte"
 msgid "Title"
 msgstr "Titre"
 
-msgid "Toggle code Ctrl+`"
-msgstr "Passer en bloc code Ctrl+`"
-
-msgid "Toggle embedded style `Ctrl+i`"
-msgstr "Passer en italique `Ctrl+i`"
-
 msgid "Tuleap reference has been copied!"
 msgstr "La référence Tuleap a été copiée !"
 
 msgid "Update link"
 msgstr "Modifier le lien"
-
-msgid "Wrap in block quote `Ctrl->`"
-msgstr "Passer en mode citation Ctrl->`"
 
 msgid "Wrap in bullet list `Shift+Ctrl+8`"
 msgstr "Transformer en liste à puces `Shift+Ctrl+8`"

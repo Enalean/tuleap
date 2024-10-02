@@ -26,8 +26,6 @@ import { wrapListItem } from "./list/list-menu-item-builder";
 import { getTextStyleDropdownMenu } from "./text-style";
 import { imageItem } from "./image/image-menu-item-builder";
 import { getSubscriptMenuItem, getSuperscriptMenuItem } from "./text-transformations";
-import { getQuoteMenuItem } from "./quote";
-import type { BuildMenuItem } from "./helper/BuildMenuItem";
 import type { CheckIsMArkActive } from "./helper/IsMarkActiveChecker";
 import { type BuildMenuItemWithCommand } from "./helper/BuildMenuItemWithCommand";
 
@@ -45,23 +43,12 @@ export function buildMenuItems(
     schema: Schema,
     gettext_provider: GetText,
     editor_id: string,
-    MenuItemBuilder: BuildMenuItem,
     check_is_mark_active: CheckIsMArkActive,
     MenuItemWithCommandBuilder: BuildMenuItemWithCommand,
 ): MenuItemResult {
     return {
         fullMenu: [
             [
-                MenuItemBuilder.buildMenuItem(
-                    schema.marks.em,
-                    {
-                        title: gettext_provider.gettext("Toggle embedded style `Ctrl+i`"),
-                        icon: icons.em,
-                    },
-                    check_is_mark_active,
-                    MenuItemWithCommandBuilder,
-                ),
-                getQuoteMenuItem(gettext_provider),
                 getSubscriptMenuItem(schema, gettext_provider, check_is_mark_active),
                 getSuperscriptMenuItem(schema, gettext_provider, check_is_mark_active),
 
@@ -83,15 +70,6 @@ export function buildMenuItems(
                     },
                     schema.nodes.bullet_list,
                     "fa-list-ol",
-                    MenuItemWithCommandBuilder,
-                ),
-                MenuItemBuilder.buildMenuItem(
-                    schema.marks.code,
-                    {
-                        title: gettext_provider.gettext("Toggle code Ctrl+`"),
-                        icon: icons.code,
-                    },
-                    check_is_mark_active,
                     MenuItemWithCommandBuilder,
                 ),
                 getTextStyleDropdownMenu(schema, editor_id, gettext_provider),
