@@ -50,13 +50,14 @@ class SemanticVelocityAdminPresenterBuilder
     }
 
     public function build(
+        \PFUser $user,
         Tracker $tracker,
         CSRFSynchronizerToken $csrf,
         SemanticDone $semantic_done,
         array $possible_fields,
         $semantic_velocity_field_id,
     ) {
-        $backlog_trackers                     = $this->backlog_retriever->getBacklogTrackers($tracker);
+        $backlog_trackers                     = $this->backlog_retriever->getBacklogTrackers($user, $tracker);
         $backlog_required_trackers_collection = $this->missing_requirement_retriever->buildCollectionFromBacklogTrackers(
             $backlog_trackers
         );

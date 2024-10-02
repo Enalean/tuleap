@@ -73,7 +73,7 @@ final class ArtifactLinkerTest extends TestCase
         $release_planning = PlanningBuilder::aPlanning(101)->withBacklogTrackers($epic_tracker)->build();
 
         $planning_factory = $this->createMock(PlanningFactory::class);
-        $planning_factory->method('getPlanningByPlanningTracker')->willReturnCallback(static fn(Tracker $tracker) => match ($tracker) {
+        $planning_factory->method('getPlanningByPlanningTracker')->willReturnCallback(static fn(PFUser $user, Tracker $tracker) => match ($tracker) {
             $corp_tracker    => $corp_planning,
             $product_tracker => $product_planning,
             $release_tracker => $release_planning,

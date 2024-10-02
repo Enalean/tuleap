@@ -311,7 +311,7 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
         $this->checkUserIsAdmin();
 
         $planning_id = $this->request->get('planning_id');
-        $planning    = $this->planning_factory->getPlanning($planning_id);
+        $planning    = $this->planning_factory->getPlanning($this->request->getCurrentUser(), $planning_id);
         if ($planning === null) {
             throw new \Tuleap\AgileDashboard\Planning\NotFoundException($planning_id);
         }
@@ -394,7 +394,7 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
         $this->checkUserIsAdmin();
 
         $updated_planning_id = (int) $this->request->get('planning_id');
-        $original_planning   = $this->planning_factory->getPlanning($updated_planning_id);
+        $original_planning   = $this->planning_factory->getPlanning($this->request->getCurrentUser(), $updated_planning_id);
         if ($original_planning === null) {
             $this->addFeedback(
                 Feedback::ERROR,
@@ -523,7 +523,7 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
     private function getPlanning()
     {
         $planning_id = $this->request->get('planning_id');
-        return $this->planning_factory->getPlanning($planning_id);
+        return $this->planning_factory->getPlanning($this->request->getCurrentUser(), $planning_id);
     }
 
     private function addBurnupWarning(array &$warning_list, Tracker $planning_tracker)

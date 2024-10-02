@@ -94,7 +94,7 @@ class MilestoneRepresentationBuilder
             $status_count = $this->milestone_factory->getMilestoneStatusCount($user, $milestone);
         }
 
-        $backlog_trackers = $this->getBacklogTrackers($milestone);
+        $backlog_trackers = $this->getBacklogTrackers($user, $milestone);
 
 
         $pane_info_collector = new \Tuleap\AgileDashboard\Milestone\Pane\PaneInfoCollector(
@@ -106,7 +106,7 @@ class MilestoneRepresentationBuilder
         );
         $this->event_manager->processEvent($pane_info_collector);
 
-        $submilestone_tracker = $this->sub_milestone_finder->findFirstSubmilestoneTracker($milestone);
+        $submilestone_tracker = $this->sub_milestone_finder->findFirstSubmilestoneTracker($user, $milestone);
 
         $original_project_collector = new OriginalProjectCollector($milestone->getArtifact(), $user);
         $this->event_manager->processEvent($original_project_collector);
@@ -118,7 +118,7 @@ class MilestoneRepresentationBuilder
             $this->parent_tracker_retriever->getCreatableParentTrackers($milestone, $user, $backlog_trackers),
             $this->milestone_factory->userCanChangePrioritiesInMilestone($milestone, $user),
             $representation_type,
-            $this->getSubPlanning($milestone),
+            $this->getSubPlanning($user, $milestone),
             $pane_info_collector,
             $submilestone_tracker,
             $original_project_collector,
@@ -163,15 +163,15 @@ class MilestoneRepresentationBuilder
     /**
      * @return \Tracker[]
      */
-    private function getBacklogTrackers(\Planning_Milestone $milestone): array
+    private function getBacklogTrackers(\PFUser $user, \Planning_Milestone $milestone): array
     {
-        return $this->backlog_factory->getBacklog($milestone)->getDescendantTrackers();
+        return $this->backlog_factory->getBacklog($user, $milestone)->getDescendantTrackers();
     }
 
-    private function getSubPlanning(\Planning_Milestone $milestone): ?\Planning
+    private function getSubPlanning(\PFUser $user, \Planning_Milestone $milestone): ?\Planning
     {
         $planning = $milestone->getPlanning();
 
-        return $this->planning_factory->getChildrenPlanning($planning);
+        return $this->planning_factory->getChildrenPlanning($user, $planning);
     }
 }

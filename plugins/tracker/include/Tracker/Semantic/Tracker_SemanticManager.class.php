@@ -41,6 +41,7 @@ class Tracker_SemanticManager
      * Parameters:
      * 'semantics' => @var Tracker_SemanticCollection A collection of semantics that needs adding to.
      * 'tracker'   => @var Tracker                    The Tracker the semantics are defined upon
+     * 'user'      => @var PFUser                     The current user
      *
      * Expected results
      * The semantics parameter is populated with additional semantic fields
@@ -187,10 +188,7 @@ class Tracker_SemanticManager
         return new CollectionOfSemanticsUsingAParticularTrackerField($field, $semantics_using_field);
     }
 
-    /**
-     * @return Tracker_SemanticCollection
-     */
-    public function getSemantics()
+    public function getSemantics(): Tracker_SemanticCollection
     {
         $semantics = new Tracker_SemanticCollection();
 
@@ -221,7 +219,7 @@ class Tracker_SemanticManager
         $semantics->add($semantic_progress);
         $semantics->add($this->tracker->getTooltip());
 
-        $this->addOtherSemantics($semantics);
+        $this->addOtherSemantics(UserManager::instance()->getCurrentUser(), $semantics);
 
         return $semantics;
     }
@@ -230,13 +228,14 @@ class Tracker_SemanticManager
      * Use an event to get semantics from other plugins.
      *
      */
-    private function addOtherSemantics(Tracker_SemanticCollection $semantics)
+    private function addOtherSemantics(PFUser $user, Tracker_SemanticCollection $semantics): void
     {
          EventManager::instance()->processEvent(
              self::TRACKER_EVENT_MANAGE_SEMANTICS,
              [
                  'semantics'   => $semantics,
                  'tracker'     => $this->tracker,
+                 'user'        => $user,
              ]
          );
     }

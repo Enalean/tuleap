@@ -30,6 +30,7 @@ use PlanningFactory;
 use Tracker;
 use Tracker_FormElement_Field;
 use Tuleap\AgileDashboard\Test\Builders\PlanningBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Semantic\Status\Done\SemanticDone;
 use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneFactory;
@@ -45,6 +46,7 @@ final class MessageFetcherTest extends TestCase
     private MessageFetcher $message_fetcher;
     private AgileDashboard_Semantic_InitialEffortFactory&MockObject $initial_effort_factory;
     private SemanticDoneFactory&MockObject $semantic_done_factory;
+    private \PFUser $user;
 
     protected function setUp(): void
     {
@@ -61,6 +63,7 @@ final class MessageFetcherTest extends TestCase
         $this->tracker         = TrackerTestBuilder::aTracker()->build();
         $this->backlog_tracker = TrackerTestBuilder::aTracker()->build();
         $this->field           = IntFieldBuilder::anIntField(145)->build();
+        $this->user            = UserTestBuilder::buildWithDefaults();
     }
 
     public function testItDoesNotAddWarningsIfAllIsWellConfigured(): void
@@ -69,20 +72,20 @@ final class MessageFetcherTest extends TestCase
         $semantic_done  = $this->getMockedSemanticDone(true);
         $initial_effort = $this->getInitialEffortFieldSemantic();
 
-        $this->planning_factory->method('getPlanningByPlanningTracker')->with($this->tracker)->willReturn($planning);
+        $this->planning_factory->method('getPlanningByPlanningTracker')->with($this->user, $this->tracker)->willReturn($planning);
         $this->semantic_done_factory->method('getInstanceByTracker')->with($this->backlog_tracker)->willReturn($semantic_done);
         $this->initial_effort_factory->method('getByTracker')->with($this->backlog_tracker)->willReturn($initial_effort);
 
-        $warnings = $this->message_fetcher->getWarningsRelatedToPlanningConfiguration($this->tracker);
+        $warnings = $this->message_fetcher->getWarningsRelatedToPlanningConfiguration($this->user, $this->tracker);
 
         self::assertEmpty($warnings);
     }
 
     public function testItReturnsAWarningIfTrackerIsNotAPlanningTracker(): void
     {
-        $this->planning_factory->method('getPlanningByPlanningTracker')->with($this->tracker)->willReturn(null);
+        $this->planning_factory->method('getPlanningByPlanningTracker')->with($this->user, $this->tracker)->willReturn(null);
 
-        $warnings = $this->message_fetcher->getWarningsRelatedToPlanningConfiguration($this->tracker);
+        $warnings = $this->message_fetcher->getWarningsRelatedToPlanningConfiguration($this->user, $this->tracker);
 
         self::assertNotEmpty($warnings);
     }
@@ -93,12 +96,12 @@ final class MessageFetcherTest extends TestCase
         $semantic_done  = $this->getMockedSemanticDone(false);
         $initial_effort = $this->getInitialEffortFieldSemantic();
 
-        $this->planning_factory->method('getPlanningByPlanningTracker')->with($this->tracker)->willReturn($planning);
+        $this->planning_factory->method('getPlanningByPlanningTracker')->with($this->user, $this->tracker)->willReturn($planning);
         $this->semantic_done_factory->method('getInstanceByTracker')->with($this->backlog_tracker)->willReturn($semantic_done);
         $this->initial_effort_factory->method('getByTracker')->with($this->backlog_tracker)->willReturn($initial_effort);
         $semantic_done->method('getUrl');
 
-        $warnings = $this->message_fetcher->getWarningsRelatedToPlanningConfiguration($this->tracker);
+        $warnings = $this->message_fetcher->getWarningsRelatedToPlanningConfiguration($this->user, $this->tracker);
 
         self::assertNotEmpty($warnings);
     }
@@ -109,11 +112,11 @@ final class MessageFetcherTest extends TestCase
         $semantic_done  = $this->getMockedSemanticDone(true);
         $initial_effort = new AgileDashBoard_Semantic_InitialEffort($this->tracker, null);
 
-        $this->planning_factory->method('getPlanningByPlanningTracker')->with($this->tracker)->willReturn($planning);
+        $this->planning_factory->method('getPlanningByPlanningTracker')->with($this->user, $this->tracker)->willReturn($planning);
         $this->semantic_done_factory->method('getInstanceByTracker')->with($this->backlog_tracker)->willReturn($semantic_done);
         $this->initial_effort_factory->method('getByTracker')->with($this->backlog_tracker)->willReturn($initial_effort);
 
-        $warnings = $this->message_fetcher->getWarningsRelatedToPlanningConfiguration($this->tracker);
+        $warnings = $this->message_fetcher->getWarningsRelatedToPlanningConfiguration($this->user, $this->tracker);
 
         self::assertNotEmpty($warnings);
     }

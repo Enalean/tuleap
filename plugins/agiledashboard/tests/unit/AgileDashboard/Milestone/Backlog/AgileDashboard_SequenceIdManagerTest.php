@@ -114,7 +114,7 @@ final class AgileDashboard_SequenceIdManagerTest extends TestCase //phpcs:ignore
         $this->backlog_1->expects(self::once())->method('getArtifacts')->with($this->user)
             ->willReturn(new AgileDashboard_Milestone_Backlog_DescendantItemsCollection());
 
-        $this->backlog_factory->expects(self::once())->method('getBacklog')->with($this->milestone_1)
+        $this->backlog_factory->expects(self::once())->method('getBacklog')->with($this->user, $this->milestone_1)
             ->willReturn($this->backlog_1);
 
         self::assertNull($this->sequence_id_manager->getSequenceId($this->user, $this->milestone_1, 2));
@@ -127,7 +127,7 @@ final class AgileDashboard_SequenceIdManagerTest extends TestCase //phpcs:ignore
         $backlog_items->push($this->artifact_2);
         $backlog_items->push($this->artifact_3);
 
-        $this->backlog_factory->expects(self::once())->method('getBacklog')->with($this->milestone_1)
+        $this->backlog_factory->expects(self::once())->method('getBacklog')->with($this->user, $this->milestone_1)
             ->willReturn($this->backlog_1);
         $this->backlog_1->expects(self::once())->method('getArtifacts')->with($this->user)
             ->willReturn($backlog_items);
@@ -142,7 +142,7 @@ final class AgileDashboard_SequenceIdManagerTest extends TestCase //phpcs:ignore
         $backlog_items->push($this->artifact_2);
         $backlog_items->push($this->artifact_3);
 
-        $this->backlog_factory->expects(self::once())->method('getBacklog')->with($this->milestone_1)
+        $this->backlog_factory->expects(self::once())->method('getBacklog')->with($this->user, $this->milestone_1)
             ->willReturn($this->backlog_1);
         $this->backlog_1->expects(self::once())->method('getArtifacts')->with($this->user)
             ->willReturn($backlog_items);
@@ -160,7 +160,7 @@ final class AgileDashboard_SequenceIdManagerTest extends TestCase //phpcs:ignore
         $backlog_items->push($this->artifact_1);
         $backlog_items->push($this->artifact_3);
 
-        $this->backlog_factory->expects(self::once())->method('getBacklog')->with($this->milestone_1)
+        $this->backlog_factory->expects(self::once())->method('getBacklog')->with($this->user, $this->milestone_1)
             ->willReturn($this->backlog_1);
         $this->backlog_1->expects(self::once())->method('getArtifacts')->with($this->user)
             ->willReturn($backlog_items);
@@ -178,7 +178,7 @@ final class AgileDashboard_SequenceIdManagerTest extends TestCase //phpcs:ignore
         $backlog_items->push($this->artifact_1);
         $backlog_items->push($this->artifact_3);
 
-        $this->backlog_factory->expects(self::once())->method('getBacklog')->with($this->milestone_1)
+        $this->backlog_factory->expects(self::once())->method('getBacklog')->with($this->user, $this->milestone_1)
             ->willReturn($this->backlog_1);
         $this->backlog_1->expects(self::once())->method('getArtifacts')->with($this->user)
             ->willReturn($backlog_items);
@@ -196,7 +196,7 @@ final class AgileDashboard_SequenceIdManagerTest extends TestCase //phpcs:ignore
     public function testItCanDealWithMultipleCallWithDifferentMilestones(): void
     {
         $this->backlog_factory->expects(self::exactly(2))->method('getBacklog')
-            ->withConsecutive([$this->milestone_1], [$this->milestone_2])
+            ->withConsecutive([$this->user, $this->milestone_1], [$this->user, $this->milestone_2])
             ->willReturnOnConsecutiveCalls($this->backlog_1, $this->backlog_2);
 
         $backlog_items = new AgileDashboard_Milestone_Backlog_DescendantItemsCollection();

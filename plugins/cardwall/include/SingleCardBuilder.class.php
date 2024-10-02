@@ -72,7 +72,7 @@ class Cardwall_SingleCardBuilder
     public function getSingleCard(PFUser $user, $artifact_id, $planning_id)
     {
         $card_artifact       = $this->getArtifact($artifact_id);
-        $config              = $this->getConfig($planning_id);
+        $config              = $this->getConfig($user, $planning_id);
         $field_provider      = $this->getFieldRetriever($config);
         $columns             = $config->getDashboardColumns();
         $display_preferences = new Cardwall_UserPreferences_UserPreferencesDisplayUser(
@@ -177,18 +177,18 @@ class Cardwall_SingleCardBuilder
         throw new CardControllerBuilderRequestIdException();
     }
 
-    private function getConfig($planning_id)
+    private function getConfig(PFUser $user, $planning_id)
     {
-        $config = $this->config_factory->getOnTopConfigByPlanning($this->getPlanning($planning_id));
+        $config = $this->config_factory->getOnTopConfigByPlanning($this->getPlanning($user, $planning_id));
         if ($config && $config->isEnabled()) {
             return $config;
         }
         throw new CardControllerBuilderRequestDataException();
     }
 
-    private function getPlanning($planning_id)
+    private function getPlanning(PFUser $user, $planning_id)
     {
-        $planning = $this->planning_factory->getPlanning($planning_id);
+        $planning = $this->planning_factory->getPlanning($user, $planning_id);
         if ($planning) {
             return $planning;
         }

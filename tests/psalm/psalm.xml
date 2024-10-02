@@ -192,7 +192,6 @@
             <file name="plugins/agiledashboard/tests/unit/AgileDashboard/Planning/MilestoneFactoryGetBareMilestoneByArtifactIdTest.php"/>
             <file name="plugins/agiledashboard/tests/unit/AgileDashboard/Planning/MilestoneFactoryGetLastMilestoneCreatedTest.php"/>
             <file name="plugins/agiledashboard/tests/unit/AgileDashboard/Planning/MilestoneFactoryGetMilestoneFromArtifactTest.php"/>
-            <file name="plugins/agiledashboard/tests/unit/AgileDashboard/Planning/MilestoneFactoryGetMilestoneFromArtifactWithPlannedArtifactsTest.php"/>
             <file name="plugins/agiledashboard/tests/unit/AgileDashboard/Planning/MilestoneFactoryGetMilestoneTest.php"/>
             <file name="plugins/agiledashboard/tests/unit/AgileDashboard/Planning/MilestoneFactoryGetMilestoneWithAncestorsTest.php"/>
             <file name="plugins/agiledashboard/tests/unit/AgileDashboard/Planning/MilestoneFactoryGetPaginatedMilestonesTest.php"/>

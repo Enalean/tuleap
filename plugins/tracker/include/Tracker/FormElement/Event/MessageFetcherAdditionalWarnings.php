@@ -37,7 +37,7 @@ class MessageFetcherAdditionalWarnings implements Dispatchable
      */
     private $warnings = [];
 
-    public function __construct(Tracker_FormElement_Field $field)
+    public function __construct(public readonly \PFUser $user, Tracker_FormElement_Field $field)
     {
         $this->field = $field;
     }

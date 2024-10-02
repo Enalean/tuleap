@@ -83,7 +83,12 @@ class Planning_RequestValidator
                 $current_user,
                 $tracker_access_during_import_strategy,
             )
-            && $this->planningTrackerIsNotThePlanningTrackerOfAnotherPlanningInTheSameProject($group_id, $planning_id, $planning_parameters);
+            && $this->planningTrackerIsNotThePlanningTrackerOfAnotherPlanningInTheSameProject(
+                $current_user,
+                $group_id,
+                $planning_id,
+                $planning_parameters,
+            );
     }
 
     /**
@@ -160,12 +165,14 @@ class Planning_RequestValidator
      * @param int                $group_id            The group id to check the existing planning trackers against.
      * @param int                $planning_id         The id of the planning to be updated.
      * @param PlanningParameters $planning_parameters The validated parameters.
-     *
-     * @return bool
      */
-    private function planningTrackerIsNotThePlanningTrackerOfAnotherPlanningInTheSameProject($group_id, $planning_id, PlanningParameters $planning_parameters)
-    {
-        return ($this->planningTrackerIsTheCurrentOne($planning_id, $planning_parameters) ||
+    private function planningTrackerIsNotThePlanningTrackerOfAnotherPlanningInTheSameProject(
+        PFUser $user,
+        $group_id,
+        $planning_id,
+        PlanningParameters $planning_parameters,
+    ): bool {
+        return ($this->planningTrackerIsTheCurrentOne($user, $planning_id, $planning_parameters) ||
                 $this->trackerIsNotAlreadyUsedAsAPlanningTrackerInProject($group_id, $planning_parameters));
     }
 
@@ -175,12 +182,10 @@ class Planning_RequestValidator
      *
      * @param int                $planning_id         The planning with the current planning tracker id
      * @param PlanningParameters $planning_parameters The parameters being validated
-     *
-     * @return bool
      */
-    private function planningTrackerIsTheCurrentOne($planning_id, PlanningParameters $planning_parameters)
+    private function planningTrackerIsTheCurrentOne(PFUser $user, $planning_id, PlanningParameters $planning_parameters): bool
     {
-        $planning = $this->factory->getPlanning($planning_id);
+        $planning = $this->factory->getPlanning($user, $planning_id);
 
         if (! $planning) {
             return false;

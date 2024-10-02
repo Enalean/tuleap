@@ -75,21 +75,22 @@ class velocityPlugin extends Plugin // @codingStandardsIgnoreLine
     #[\Tuleap\Plugin\ListeningToEventName(Tracker_SemanticManager::TRACKER_EVENT_MANAGE_SEMANTICS)]
     public function trackerEventManageSemantics($parameters): void // @codingStandardsIgnoreLine
     {
+        $user      = $parameters['user'];
         $tracker   = $parameters['tracker'];
         $semantics = $parameters['semantics'];
         \assert($semantics instanceof Tracker_SemanticCollection);
 
-        if (! $this->isAPlanningTrackers($tracker)) {
+        if (! $this->isAPlanningTrackers($user, $tracker)) {
             return;
         }
 
         $semantics->insertAfter(SemanticDone::NAME, SemanticVelocity::load($tracker));
     }
 
-    private function isAPlanningTrackers(Tracker $semantic_tracker)
+    private function isAPlanningTrackers(PFUser $user, Tracker $semantic_tracker): bool
     {
         $planning_factory = PlanningFactory::build();
-        $planning         = $planning_factory->getPlanningByPlanningTracker($semantic_tracker);
+        $planning         = $planning_factory->getPlanningByPlanningTracker($user, $semantic_tracker);
 
         if ($planning) {
             return $semantic_tracker->getId() === $planning->getPlanningTrackerId();

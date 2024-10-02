@@ -72,11 +72,11 @@ final class PlanningFactoryTestGetPlanningTest extends TestCase
 
         $this->user = UserTestBuilder::buildWithDefaults();
 
-        $this->planning_tracker = TrackerTestBuilder::aTracker()->withId(103)->build();
-        $this->backlog_tracker  = TrackerTestBuilder::aTracker()->withId(104)->build();
+        $this->planning_tracker = TrackerTestBuilder::aTracker()->withId(103)->withUserCanView(true)->build();
+        $this->backlog_tracker  = TrackerTestBuilder::aTracker()->withId(104)->withUserCanView(true)->build();
 
-        $epic_tracker          = TrackerTestBuilder::aTracker()->withId(101)->build();
-        $story_tracker         = TrackerTestBuilder::aTracker()->withId(100)->build();
+        $epic_tracker          = TrackerTestBuilder::aTracker()->withId(101)->withUserCanView(true)->build();
+        $story_tracker         = TrackerTestBuilder::aTracker()->withId(100)->withUserCanView(true)->build();
         $this->release_tracker = $this->mockTrackerWithId(107);
         $this->sprint_tracker  = $this->mockTrackerWithId(108);
 
@@ -162,7 +162,7 @@ final class PlanningFactoryTestGetPlanningTest extends TestCase
             ->with($planning_id)
             ->willReturn([['tracker_id' => 104]]);
 
-        $planning = $this->planning_factory->getPlanning($planning_id);
+        $planning = $this->planning_factory->getPlanning($this->user, $planning_id);
 
         self::assertInstanceOf(Planning::class, $planning);
         self::assertEquals($this->planning_tracker, $planning->getPlanningTracker());

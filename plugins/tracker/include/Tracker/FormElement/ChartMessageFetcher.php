@@ -111,7 +111,7 @@ class ChartMessageFetcher
             }
         }
 
-        $event = new MessageFetcherAdditionalWarnings($field);
+        $event = new MessageFetcherAdditionalWarnings($user, $field);
         $this->event_manager->processEvent($event);
 
         $warnings = array_merge($warnings, $event->getWarnings());

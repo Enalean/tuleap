@@ -62,7 +62,7 @@ class PlanningFactory implements RetrievePlannings, RetrieveRootPlanning
      * @param array  $tracker_mapping  An array mapping source tracker ids to destination tracker ids.
      * @param array  $ugroups_mapping  An array mapping source ugroups and destinations ones.
      */
-    public function duplicatePlannings($group_id, $tracker_mapping, array $ugroups_mapping)
+    public function duplicatePlannings(PFUser $user, $group_id, $tracker_mapping, array $ugroups_mapping): void
     {
         if (! $tracker_mapping) {
             return;
@@ -80,14 +80,14 @@ class PlanningFactory implements RetrievePlannings, RetrieveRootPlanning
 
                 $inserted_planning_id = $this->dao->createPlanning($group_id, PlanningParameters::fromArray($row));
 
-                $this->duplicatePriorityChangePermission($group_id, $row['id'], $inserted_planning_id, $ugroups_mapping);
+                $this->duplicatePriorityChangePermission($user, $group_id, $row['id'], $inserted_planning_id, $ugroups_mapping);
             }
         }
     }
 
-    protected function duplicatePriorityChangePermission($group_id, $source_planning_id, $new_planning_id, array $ugroups_mapping)
+    private function duplicatePriorityChangePermission(PFUser $user, $group_id, $source_planning_id, $new_planning_id, array $ugroups_mapping): void
     {
-        $source_planning = $this->getPlanning($source_planning_id);
+        $source_planning = $this->getPlanning($user, $source_planning_id);
         if ($source_planning === null) {
             throw new \Tuleap\AgileDashboard\Planning\NotFoundException($source_planning_id);
         }
@@ -140,7 +140,7 @@ class PlanningFactory implements RetrievePlannings, RetrieveRootPlanning
         foreach ($this->dao->searchByProjectId($group_id) as $row) {
             $tracker = $this->tracker_factory->getTrackerById($row['planning_tracker_id']);
             if ($tracker && $tracker->userCanView($user)) {
-                $plannings[] = $this->getPlanningFromRow($row);
+                $plannings[] = $this->getPlanningFromRow($user, $row);
             }
         }
         if ($plannings) {
@@ -305,7 +305,7 @@ class PlanningFactory implements RetrievePlannings, RetrieveRootPlanning
         $plannings = $this->getPlannings($user, $group_id);
 
         foreach ($plannings as $planning) {
-            $planning->setBacklogTrackers($this->getBacklogTrackers($planning));
+            $planning->setBacklogTrackers($this->getBacklogTrackers($user, $planning));
         }
 
         $this->sortPlanningsAccordinglyToHierarchy($plannings);
@@ -334,21 +334,17 @@ class PlanningFactory implements RetrievePlannings, RetrieveRootPlanning
         });
     }
 
-    public function getPlanning($planning_id): ?Planning
+    public function getPlanning(PFUser $user, $planning_id): ?Planning
     {
         $planning = $this->dao->searchById((int) $planning_id);
         if ($planning === null) {
             return null;
         }
 
-        return $this->getPlanningFromRow($planning);
+        return $this->getPlanningFromRow($user, $planning);
     }
 
-    /**
-     *
-     * @return Planning
-     */
-    private function getPlanningFromRow(array $row)
+    private function getPlanningFromRow(PFUser $user, array $row): Planning
     {
         $planning = new Planning(
             $row['id'],
@@ -359,7 +355,7 @@ class PlanningFactory implements RetrievePlannings, RetrieveRootPlanning
             [],
             $row['planning_tracker_id']
         );
-        $planning->setBacklogTrackers($this->getBacklogTrackers($planning));
+        $planning->setBacklogTrackers($this->getBacklogTrackers($user, $planning));
         $planning->setPlanningTracker($this->getPlanningTracker($planning));
 
         return $planning;
@@ -372,7 +368,7 @@ class PlanningFactory implements RetrievePlannings, RetrieveRootPlanning
      * - Given I pass Release tracker as parameter
      * - Then I should get the Release planning (for instance Epic -> Release)
      */
-    public function getPlanningByPlanningTracker(Tracker $planning_tracker): ?Planning
+    public function getPlanningByPlanningTracker(PFUser $user, Tracker $planning_tracker): ?Planning
     {
         if (array_key_exists($planning_tracker->getId(), $this->instances)) {
             return $this->instances[$planning_tracker->getId()];
@@ -393,7 +389,7 @@ class PlanningFactory implements RetrievePlannings, RetrieveRootPlanning
             $planning['planning_tracker_id']
         );
         $returned->setPlanningTracker($this->getPlanningTracker($returned));
-        $returned->setBacklogTrackers($this->getBacklogTrackers($returned));
+        $returned->setBacklogTrackers($this->getBacklogTrackers($user, $returned));
         $this->instances[$planning_tracker->getId()] = $returned;
         return $returned;
     }
@@ -489,12 +485,9 @@ class PlanningFactory implements RetrievePlannings, RetrieveRootPlanning
     }
 
     /**
-     * Get a list of trackers defined as backlog for a planning
-     *
-     *
-     * @return array of Tracker
+     * @return Tracker[]
      */
-    private function getBacklogTrackers(Planning $planning)
+    private function getBacklogTrackers(PFUser $user, Planning $planning): array
     {
         $backlog_trackers = [];
         $planning_id      = $planning->getId();
@@ -502,7 +495,7 @@ class PlanningFactory implements RetrievePlannings, RetrieveRootPlanning
 
         foreach ($rows as $row) {
             $tracker = $this->tracker_factory->getTrackerById($row['tracker_id']);
-            if ($tracker !== null) {
+            if ($tracker !== null && $tracker->userCanView($user)) {
                 $backlog_trackers[] = $tracker;
             }
         }
@@ -650,7 +643,7 @@ class PlanningFactory implements RetrievePlannings, RetrieveRootPlanning
                 if (! in_array($tracker_id, $potential_planning_trackers)) {
                     $tracker = $this->tracker_factory->getTrackerById($tracker_id);
                     if ($tracker !== null) {
-                        $plannings[] = $this->getPlanningByPlanningTracker($tracker);
+                        $plannings[] = $this->getPlanningByPlanningTracker($user, $tracker);
                     }
                 }
             }
@@ -666,14 +659,14 @@ class PlanningFactory implements RetrievePlannings, RetrieveRootPlanning
         return $this->tracker_factory;
     }
 
-    public function getChildrenPlanning(Planning $planning)
+    public function getChildrenPlanning(PFUser $user, Planning $planning): ?Planning
     {
         $children = $this->tracker_factory->getHierarchyFactory()->getChildren($planning->getPlanningTrackerId());
         if (count($children) == 0) {
             return null;
         } else {
             $planning_tracker = array_shift($children);
-            return $this->getPlanningByPlanningTracker($planning_tracker);
+            return $this->getPlanningByPlanningTracker($user, $planning_tracker);
         }
     }
 

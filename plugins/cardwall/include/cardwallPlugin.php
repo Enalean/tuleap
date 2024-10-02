@@ -480,7 +480,7 @@ class cardwallPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration
                 $redirect_params = current($cardwall);
                 switch ($redirect_to) {
                     case 'agile':
-                        $this->redirectToAgileDashboard($redirect, $redirect_params);
+                        $this->redirectToAgileDashboard($event->getRequest()->getCurrentUser(), $redirect, $redirect_params);
                         break;
                     case 'renderer':
                         $this->redirectToRenderer($redirect, $redirect_params);
@@ -492,11 +492,11 @@ class cardwallPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration
         }
     }
 
-    private function redirectToAgileDashboard(Tracker_Artifact_Redirect $redirect, array $redirect_params)
+    private function redirectToAgileDashboard(PFUser $user, Tracker_Artifact_Redirect $redirect, array $redirect_params)
     {
         $planning_id = key($redirect_params);
         $artifact_id = current($redirect_params);
-        $planning    = PlanningFactory::build()->getPlanning($planning_id);
+        $planning    = PlanningFactory::build()->getPlanning($user, $planning_id);
         if ($planning) {
             $redirect->base_url         = AGILEDASHBOARD_BASE_URL;
             $redirect->query_parameters = [

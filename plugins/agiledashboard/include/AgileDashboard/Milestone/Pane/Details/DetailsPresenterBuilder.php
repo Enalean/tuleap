@@ -64,7 +64,7 @@ class DetailsPresenterBuilder
     public function getMilestoneDetailsPresenter(PFUser $user, Planning_Milestone $milestone)
     {
         $redirect_parameter = new Planning_MilestoneRedirectParameter();
-        $backlog            = $this->backlog_factory->getBacklog($milestone);
+        $backlog            = $this->backlog_factory->getBacklog($user, $milestone);
         $redirect_to_self   = $redirect_parameter->getPlanningRedirectToSelf($milestone, DetailsPaneInfo::IDENTIFIER);
 
         $descendant_trackers = $backlog->getDescendantTrackers();

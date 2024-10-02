@@ -80,7 +80,7 @@ class HeaderOptionsForPlanningProvider
         PFUser $user,
         Option $current_context_section,
     ): Option {
-        $tracker = $this->submilestone_finder->findFirstSubmilestoneTracker($milestone);
+        $tracker = $this->submilestone_finder->findFirstSubmilestoneTracker($user, $milestone);
         if (! $tracker || ! $tracker->userCanSubmitArtifact($user)) {
             return $current_context_section;
         }

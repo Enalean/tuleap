@@ -176,7 +176,7 @@ class Planning
     /**
      * @return Tracker[]
      */
-    public function getBacklogTrackers()
+    public function getBacklogTrackers(): array
     {
         return $this->backlog_trackers;
     }

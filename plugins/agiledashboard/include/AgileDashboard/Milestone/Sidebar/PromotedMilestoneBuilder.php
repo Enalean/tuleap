@@ -75,7 +75,7 @@ final class PromotedMilestoneBuilder implements BuildPromotedMilestone
             return Option::nothing(Planning_ArtifactMilestone::class);
         }
 
-        $planning = $this->planning_factory->getPlanningByPlanningTracker($milestone_artifact->getTracker());
+        $planning = $this->planning_factory->getPlanningByPlanningTracker($user, $milestone_artifact->getTracker());
         if (! $planning) {
             return Option::nothing(Planning_ArtifactMilestone::class);
         }

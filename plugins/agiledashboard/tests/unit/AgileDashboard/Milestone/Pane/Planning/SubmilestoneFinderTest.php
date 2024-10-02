@@ -36,6 +36,7 @@ use Tracker;
 use Tracker_HierarchyFactory;
 use Tuleap\AgileDashboard\Test\Builders\PlanningBuilder;
 use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
@@ -63,6 +64,7 @@ final class SubmilestoneFinderTest extends TestCase
     private int $theme_tracker_id       = 5;
     private int $team_tracker_id        = 6;
     private int $requirement_tracker_id = 7;
+    private \PFUser $user;
 
     protected function setUp(): void
     {
@@ -95,6 +97,8 @@ final class SubmilestoneFinderTest extends TestCase
         $this->tracker_hierarchy_factory = $this->createMock(Tracker_HierarchyFactory::class);
         $this->planning_factory          = $this->createMock(PlanningFactory::class);
 
+        $this->user = UserTestBuilder::buildWithDefaults();
+
         $this->finder = new AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinder(
             $this->tracker_hierarchy_factory,
             $this->planning_factory,
@@ -108,7 +112,7 @@ final class SubmilestoneFinderTest extends TestCase
     {
         $this->tracker_hierarchy_factory->method('getChildren')->with($this->sprint_tracker_id)->willReturn([]);
 
-        self::assertNull($this->finder->findFirstSubmilestoneTracker($this->sprint_milestone));
+        self::assertNull($this->finder->findFirstSubmilestoneTracker($this->user, $this->sprint_milestone));
     }
 
     /**
@@ -119,9 +123,9 @@ final class SubmilestoneFinderTest extends TestCase
     {
         $this->release_planning->method('getBacklogTrackers')->willReturn([$this->user_story_tracker]);
         $this->tracker_hierarchy_factory->method('getChildren')->with($this->release_tracker_id)->willReturn([$this->sprint_tracker]);
-        $this->planning_factory->method('getPlanningByPlanningTracker')->with($this->sprint_tracker)->willReturn($this->sprint_planning);
+        $this->planning_factory->method('getPlanningByPlanningTracker')->with($this->user, $this->sprint_tracker)->willReturn($this->sprint_planning);
 
-        self::assertEquals($this->sprint_tracker, $this->finder->findFirstSubmilestoneTracker($this->release_milestone));
+        self::assertEquals($this->sprint_tracker, $this->finder->findFirstSubmilestoneTracker($this->user, $this->release_milestone));
     }
 
     /**
@@ -132,9 +136,9 @@ final class SubmilestoneFinderTest extends TestCase
     {
         $this->release_planning->method('getBacklogTrackers')->willReturn([$this->user_story_tracker]);
         $this->tracker_hierarchy_factory->method('getChildren')->with($this->release_tracker_id)->willReturn([$this->sprint_tracker]);
-        $this->planning_factory->method('getPlanningByPlanningTracker')->with($this->sprint_tracker)->willReturn(null);
+        $this->planning_factory->method('getPlanningByPlanningTracker')->with($this->user, $this->sprint_tracker)->willReturn(null);
 
-        self::assertNull($this->finder->findFirstSubmilestoneTracker($this->release_milestone));
+        self::assertNull($this->finder->findFirstSubmilestoneTracker($this->user, $this->release_milestone));
     }
 
     /**
@@ -146,9 +150,9 @@ final class SubmilestoneFinderTest extends TestCase
         $this->release_planning->method('getBacklogTrackers')->willReturn([$this->epic_tracker]);
         $this->tracker_hierarchy_factory->method('getChildren')->with($this->release_tracker_id)->willReturn([$this->sprint_tracker]);
         $this->tracker_hierarchy_factory->method('getAllParents')->with($this->user_story_tracker)->willReturn([$this->epic_tracker]);
-        $this->planning_factory->method('getPlanningByPlanningTracker')->with($this->sprint_tracker)->willReturn($this->sprint_planning);
+        $this->planning_factory->method('getPlanningByPlanningTracker')->with($this->user, $this->sprint_tracker)->willReturn($this->sprint_planning);
 
-        self::assertEquals($this->sprint_tracker, $this->finder->findFirstSubmilestoneTracker($this->release_milestone));
+        self::assertEquals($this->sprint_tracker, $this->finder->findFirstSubmilestoneTracker($this->user, $this->release_milestone));
     }
 
     /**
@@ -162,9 +166,9 @@ final class SubmilestoneFinderTest extends TestCase
         $this->release_planning->method('getBacklogTrackers')->willReturn([$this->epic_tracker]);
         $this->tracker_hierarchy_factory->method('getChildren')->with($this->release_tracker_id)->willReturn([$this->requirement_tracker]);
         $this->tracker_hierarchy_factory->method('getAllParents')->with($this->team_tracker)->willReturn([]);
-        $this->planning_factory->method('getPlanningByPlanningTracker')->with($this->requirement_tracker)->willReturn($this->requirement_planning);
+        $this->planning_factory->method('getPlanningByPlanningTracker')->with($this->user, $this->requirement_tracker)->willReturn($this->requirement_planning);
 
-        self::assertNull($this->finder->findFirstSubmilestoneTracker($this->release_milestone));
+        self::assertNull($this->finder->findFirstSubmilestoneTracker($this->user, $this->release_milestone));
     }
 
     /**
@@ -177,9 +181,9 @@ final class SubmilestoneFinderTest extends TestCase
         $this->release_planning->method('getBacklogTrackers')->willReturn([$this->theme_tracker]);
         $this->tracker_hierarchy_factory->method('getChildren')->with($this->release_tracker_id)->willReturn([$this->sprint_tracker]);
         $this->tracker_hierarchy_factory->method('getAllParents')->with($this->user_story_tracker)->willReturn([$this->epic_tracker, $this->theme_tracker]);
-        $this->planning_factory->method('getPlanningByPlanningTracker')->with($this->sprint_tracker)->willReturn($this->sprint_planning);
+        $this->planning_factory->method('getPlanningByPlanningTracker')->with($this->user, $this->sprint_tracker)->willReturn($this->sprint_planning);
 
-        self::assertEquals($this->sprint_tracker, $this->finder->findFirstSubmilestoneTracker($this->release_milestone));
+        self::assertEquals($this->sprint_tracker, $this->finder->findFirstSubmilestoneTracker($this->user, $this->release_milestone));
     }
 
     /**
@@ -197,9 +201,9 @@ final class SubmilestoneFinderTest extends TestCase
         $this->tracker_hierarchy_factory->method('getAllParents')
             ->withConsecutive([$this->team_tracker], [$this->user_story_tracker])->willReturn([]);
         $this->planning_factory->method('getPlanningByPlanningTracker')
-            ->withConsecutive([$this->requirement_tracker], [$this->sprint_tracker])
+            ->withConsecutive([$this->user, $this->requirement_tracker], [$this->user, $this->sprint_tracker])
             ->willReturnOnConsecutiveCalls($this->requirement_planning, $this->sprint_planning);
 
-        self::assertEquals($this->sprint_tracker, $this->finder->findFirstSubmilestoneTracker($this->release_milestone));
+        self::assertEquals($this->sprint_tracker, $this->finder->findFirstSubmilestoneTracker($this->user, $this->release_milestone));
     }
 }

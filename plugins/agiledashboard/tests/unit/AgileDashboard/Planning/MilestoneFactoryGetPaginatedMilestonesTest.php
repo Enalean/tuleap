@@ -230,7 +230,7 @@ final class MilestoneFactoryGetPaginatedMilestonesTest extends TestCase
 
         $this->artifact_factory->method('getInstanceFromRow')->willReturnOnConsecutiveCalls($first_artifact, $second_artifact);
         $this->planning_factory->method('getPlanningByPlanningTracker')
-            ->with($this->sub_milestone_tracker)
+            ->with($this->user, $this->sub_milestone_tracker)
             ->willReturn($this->sub_planning);
 
         $sub_milestones = $this->getSubMilestones();
@@ -291,7 +291,7 @@ final class MilestoneFactoryGetPaginatedMilestonesTest extends TestCase
 
         $this->artifact_factory->method('getInstanceFromRow')->willReturn($first_artifact, $second_artifact);
         $this->planning_factory->method('getPlanningByPlanningTracker')
-            ->with($top_milestone_tracker)
+            ->with($this->user, $top_milestone_tracker)
             ->willReturn($this->top_planning);
 
         $sibling_milestones = $this->getSiblingMilestones();
@@ -343,7 +343,7 @@ final class MilestoneFactoryGetPaginatedMilestonesTest extends TestCase
 
         $this->artifact_factory->method('getInstanceFromRow')->willReturnOnConsecutiveCalls($first_artifact, $second_artifact);
         $this->planning_factory->method('getPlanningByPlanningTracker')
-            ->with($this->sub_milestone_tracker)
+            ->with($this->user, $this->sub_milestone_tracker)
             ->willReturn($this->sub_planning);
 
         $sibling_milestones = $this->getSiblingMilestones();

@@ -28,6 +28,7 @@ use PlanningFactory;
 use PlanningPermissionsManager;
 use TrackerFactory;
 use Tuleap\AgileDashboard\Test\Builders\PlanningBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
@@ -55,23 +56,28 @@ class PlanningFactoryTestGetPlanningByPlanningTrackerTest extends TestCase
         $tracker = TrackerTestBuilder::aTracker()->withId(99)->build();
         $this->planning_dao->method('searchByMilestoneTrackerId')->willReturn(null);
 
-        self::assertNull($this->planning_factory->getPlanningByPlanningTracker($tracker));
+        self::assertNull($this->planning_factory->getPlanningByPlanningTracker(UserTestBuilder::buildWithDefaults(), $tracker));
     }
 
-    public function testItReturnsAPlanning(): void
+    public function testItReturnsAPlanningWithoutUnreadableTrackers(): void
     {
-        $tracker          = TrackerTestBuilder::aTracker()->withId(99)->build();
-        $planning_tracker = TrackerTestBuilder::aTracker()->withId(1)->build();
-        $backlog_tracker  = TrackerTestBuilder::aTracker()->withId(2)->build();
+        $tracker           = TrackerTestBuilder::aTracker()->withId(99)->build();
+        $planning_tracker  = TrackerTestBuilder::aTracker()->withId(1)->withUserCanView(true)->build();
+        $backlog_tracker   = TrackerTestBuilder::aTracker()->withId(2)->withUserCanView(true)->build();
+        $topsecret_tracker = TrackerTestBuilder::aTracker()->withId(3)->withUserCanView(false)->build();
 
         $planning = PlanningBuilder::aPlanning(102)
             ->withMilestoneTracker($planning_tracker)
             ->withBacklogTrackers($backlog_tracker)
             ->build();
 
-        $this->tracker_factory->expects(self::exactly(2))->method('getTrackerById')
-            ->withConsecutive([1], [2])
-            ->willReturnOnConsecutiveCalls($planning_tracker, $backlog_tracker);
+        $this->tracker_factory
+            ->method('getTrackerById')
+            ->willReturnCallback(fn ($id) => match ($id) {
+                1 => $planning_tracker,
+                2 => $backlog_tracker,
+                3 => $topsecret_tracker,
+            });
 
         $rows = [
             'id'                  => 12,
@@ -85,7 +91,7 @@ class PlanningFactoryTestGetPlanningByPlanningTrackerTest extends TestCase
         $this->planning_dao->method('searchBacklogTrackersByPlanningId')->willReturn([['tracker_id' => 2]]);
         $this->planning_dao->method('searchByMilestoneTrackerId')->willReturn($rows);
 
-        $retrieved_planning = $this->planning_factory->getPlanningByPlanningTracker($tracker);
+        $retrieved_planning = $this->planning_factory->getPlanningByPlanningTracker(UserTestBuilder::buildWithDefaults(), $tracker);
         self::assertEquals($planning->getPlanningTracker(), $retrieved_planning->getPlanningTracker());
         self::assertEquals($planning->getBacklogTrackers(), $retrieved_planning->getBacklogTrackers());
     }

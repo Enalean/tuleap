@@ -38,9 +38,9 @@ class BacklogRetriever
     /**
      * @return Tracker[]
      */
-    public function getBacklogTrackers(Tracker $tracker)
+    public function getBacklogTrackers(\PFUser $user, Tracker $tracker)
     {
-        $planning_trackers = $this->planning_factory->getPlanningByPlanningTracker($tracker);
+        $planning_trackers = $this->planning_factory->getPlanningByPlanningTracker($user, $tracker);
         if (! $planning_trackers) {
             return [];
         }
