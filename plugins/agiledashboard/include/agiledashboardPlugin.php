@@ -470,6 +470,7 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
         $backlog_tracker = $event->getTracker();
 
         $nearest_planning_tracker = (new AgileDashboard_Planning_NearestPlanningTrackerProvider($this->getPlanningFactory()))->getNearestPlanningTracker(
+            $event->getUser(),
             $backlog_tracker,
             Tracker_HierarchyFactory::instance(),
         );

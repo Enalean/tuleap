@@ -114,7 +114,7 @@ final class MilestoneReportCriterionOptionsProviderTest extends TestCase
     public function testItReturnsEmptyArrayWhenNoNearestPlanningTracker(): void
     {
         $this->nearest_planning_tracker_provider->method('getNearestPlanningTracker')
-            ->with($this->task_tracker, $this->hierarchy_factory)
+            ->with($this->user, $this->task_tracker, $this->hierarchy_factory)
             ->willReturn(null);
 
         $this->dao->expects(self::never())->method('getAllMilestoneByTrackers');
@@ -125,7 +125,7 @@ final class MilestoneReportCriterionOptionsProviderTest extends TestCase
     public function testItDoesNotSearchOnProductTrackerSinceThereIsNoPlanning(): void
     {
         $this->nearest_planning_tracker_provider->method('getNearestPlanningTracker')
-            ->with($this->task_tracker, $this->hierarchy_factory)->willReturn($this->sprint_tracker);
+            ->with($this->user, $this->task_tracker, $this->hierarchy_factory)->willReturn($this->sprint_tracker);
 
         $this->release_tracker->method('userCanView')->with($this->user)->willReturn(true);
         $this->sprint_tracker->method('userCanView')->with($this->user)->willReturn(true);
@@ -140,7 +140,7 @@ final class MilestoneReportCriterionOptionsProviderTest extends TestCase
     public function testItDoesNotSearchOnMilestonesUserCantView(): void
     {
         $this->nearest_planning_tracker_provider->method('getNearestPlanningTracker')
-            ->with($this->task_tracker, $this->hierarchy_factory)
+            ->with($this->user, $this->task_tracker, $this->hierarchy_factory)
             ->willReturn($this->sprint_tracker);
 
         $this->release_tracker->method('userCanView')->with($this->user)->willReturn(false);
