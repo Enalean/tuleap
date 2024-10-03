@@ -67,7 +67,7 @@ class AgileDashboard_Milestone_MilestoneReportCriterionOptionsProvider
      */
     public function getSelectboxOptions(Tracker $backlog_tracker, $selected_milestone_id, PFUser $user): array
     {
-        $nearest_planning_tracker = $this->nearest_planning_tracker_provider->getNearestPlanningTracker($backlog_tracker, $this->hierarchy_factory);
+        $nearest_planning_tracker = $this->nearest_planning_tracker_provider->getNearestPlanningTracker($user, $backlog_tracker, $this->hierarchy_factory);
         if (! $nearest_planning_tracker) {
             return [];
         }

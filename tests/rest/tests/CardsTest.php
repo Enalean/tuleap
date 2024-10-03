@@ -118,7 +118,7 @@ class CardsTest extends CardsBase //phpcs:ignore PSR1.Classes.ClassDeclaration.M
             ),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
-        $this->assertEquals(403, $response_put->getStatusCode());
+        $this->assertEquals(404, $response_put->getStatusCode());
     }
 
     private function findCardInCardwall($cardwall, $id)

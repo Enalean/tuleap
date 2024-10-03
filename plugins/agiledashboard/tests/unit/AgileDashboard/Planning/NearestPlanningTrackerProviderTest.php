@@ -30,6 +30,7 @@ use Tracker;
 use Tracker_Hierarchy;
 use Tracker_HierarchyFactory;
 use Tuleap\AgileDashboard\Test\Builders\PlanningBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
@@ -59,7 +60,7 @@ final class NearestPlanningTrackerProviderTest extends TestCase
 
         $planning_factory = $this->createMock(PlanningFactory::class);
         $planning_factory->method('getPlanningsByBacklogTracker')
-            ->will(self::returnCallback(fn(Tracker $tracker) => match ($tracker) {
+            ->will(self::returnCallback(fn(\PFUser $user, Tracker $tracker) => match ($tracker) {
                 $this->task_tracker,
                 $this->epic_tracker => [],
                 $story_tracker      => [$sprint_planning],
@@ -71,11 +72,11 @@ final class NearestPlanningTrackerProviderTest extends TestCase
 
     public function testItRetrievesTheNearestPlanningTracker(): void
     {
-        self::assertEquals($this->sprint_tracker, $this->provider->getNearestPlanningTracker($this->task_tracker, $this->hierarchy_factory));
+        self::assertEquals($this->sprint_tracker, $this->provider->getNearestPlanningTracker(UserTestBuilder::buildWithDefaults(), $this->task_tracker, $this->hierarchy_factory));
     }
 
     public function testItReturnsNullWhenNoPlanningMatches(): void
     {
-        self::assertNull($this->provider->getNearestPlanningTracker($this->epic_tracker, $this->hierarchy_factory));
+        self::assertNull($this->provider->getNearestPlanningTracker(UserTestBuilder::buildWithDefaults(), $this->epic_tracker, $this->hierarchy_factory));
     }
 }
