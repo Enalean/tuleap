@@ -27,11 +27,14 @@ use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
 use Tuleap\Option\Option;
-use Tuleap\ProgramManagement\Domain\Program\Plan\NewPlanConfiguration;
+use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramForAdministrationIdentifier;
+use Tuleap\ProgramManagement\Domain\Program\Plan\NewConfigurationTrackerIsValidCertificate;
 use Tuleap\ProgramManagement\Domain\Program\Plan\PlanConfiguration;
+use Tuleap\ProgramManagement\Domain\Workspace\NewUserGroupThatCanPrioritizeIsValidCertificate;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramForAdministrationIdentifierBuilder;
 use Tuleap\ProgramManagement\Tests\Builder\ProgramIdentifierBuilder;
 use Tuleap\ProgramManagement\Tests\Stub\Program\Plan\RetrievePlanConfigurationStub;
+use Tuleap\ProgramManagement\Tests\Stub\SaveNewPlanConfigurationStub;
 use Tuleap\Test\PHPUnit\TestCase;
 
 final class PlanInheritanceHandlerTest extends TestCase
@@ -40,24 +43,52 @@ final class PlanInheritanceHandlerTest extends TestCase
     private const SOURCE_ITERATION_TRACKER_ID                  = 35;
     private const FIRST_SOURCE_TRACKER_ID_THAT_CAN_BE_PLANNED  = 64;
     private const SECOND_SOURCE_TRACKER_ID_THAT_CAN_BE_PLANNED = 65;
-    private const NEW_PROGRAM_ID                               = 227;
-    /** @var array<int, int> */
+    /** @var array<int, NewConfigurationTrackerIsValidCertificate> */
     private array $tracker_mapping;
-    /** @var Option<int> */
-    private Option $source_iteration_tracker_id;
+    private SaveNewPlanConfigurationStub $save_new_plan;
+    private ProgramForAdministrationIdentifier $new_program;
 
     protected function setUp(): void
     {
-        $this->tracker_mapping             = [
-            self::SOURCE_PROGRAM_INCREMENT_TRACKER_ID => 97,
-            self::SOURCE_ITERATION_TRACKER_ID         => 89,
+        $this->new_program     = ProgramForAdministrationIdentifierBuilder::buildWithId(227);
+        $this->tracker_mapping = [
+            self::SOURCE_PROGRAM_INCREMENT_TRACKER_ID          => new NewConfigurationTrackerIsValidCertificate(
+                97,
+                $this->new_program
+            ),
+            self::SOURCE_ITERATION_TRACKER_ID                  => new NewConfigurationTrackerIsValidCertificate(
+                89,
+                $this->new_program
+            ),
+            self::FIRST_SOURCE_TRACKER_ID_THAT_CAN_BE_PLANNED  => new NewConfigurationTrackerIsValidCertificate(
+                251,
+                $this->new_program
+            ),
+            self::SECOND_SOURCE_TRACKER_ID_THAT_CAN_BE_PLANNED => new NewConfigurationTrackerIsValidCertificate(
+                252,
+                $this->new_program
+            ),
         ];
-        $this->source_iteration_tracker_id = Option::fromValue(self::SOURCE_ITERATION_TRACKER_ID);
+        $this->save_new_plan   = SaveNewPlanConfigurationStub::withCount();
     }
 
-    /** @return Ok<NewPlanConfiguration> | Err<Fault> */
+    /** @return Ok<void> | Err<Fault> */
     private function handle(): Ok|Err
     {
+        $project_members_user_group_id         = \ProjectUGroup::PROJECT_MEMBERS;
+        $user_group_id_granted_plan_permission = 822;
+
+        $user_group_mapping = [
+            $project_members_user_group_id         => new NewUserGroupThatCanPrioritizeIsValidCertificate(
+                \ProjectUGroup::PROJECT_MEMBERS,
+                $this->new_program,
+            ),
+            $user_group_id_granted_plan_permission => new NewUserGroupThatCanPrioritizeIsValidCertificate(
+                1411,
+                $this->new_program
+            ),
+        ];
+
         $source_program = ProgramIdentifierBuilder::buildWithId(135);
         $handler        = new PlanInheritanceHandler(
             RetrievePlanConfigurationStub::withPlanConfigurations(
@@ -66,71 +97,42 @@ final class PlanInheritanceHandlerTest extends TestCase
                     self::SOURCE_PROGRAM_INCREMENT_TRACKER_ID,
                     'Releases',
                     'release',
-                    $this->source_iteration_tracker_id,
+                    Option::fromValue(self::SOURCE_ITERATION_TRACKER_ID),
                     'Cycles',
                     'cycle',
                     [self::FIRST_SOURCE_TRACKER_ID_THAT_CAN_BE_PLANNED, self::SECOND_SOURCE_TRACKER_ID_THAT_CAN_BE_PLANNED],
-                    []
+                    [$project_members_user_group_id, $user_group_id_granted_plan_permission]
                 )
-            )
+            ),
+            new PlanConfigurationMapper(),
+            $this->save_new_plan
         );
         return $handler->handle(
             new ProgramInheritanceMapping(
                 $source_program,
-                ProgramForAdministrationIdentifierBuilder::buildWithId(self::NEW_PROGRAM_ID),
-                $this->tracker_mapping
+                $this->new_program,
+                $this->tracker_mapping,
+                $user_group_mapping,
             )
         );
     }
 
-    public function testItReturnsErrWhenProgramIncrementTrackerIsNotFoundInMapping(): void
+    public function testItReturnsErrAndDoesNotSaveWhenProgramIncrementTrackerIsNotFoundInMapping(): void
     {
         $this->tracker_mapping = [];
 
         $result = $this->handle();
 
         self::assertTrue(Result::isErr($result));
-        self::assertInstanceOf(ProgramIncrementTrackerNotFoundInMappingFault::class, $result->error);
+        self::assertSame(0, $this->save_new_plan->getCallCount());
     }
 
-    public function testItDoesNotMapEmptyConfigurationForIterations(): void
+    public function testItSavesMappedPlanConfigurationAndReturnsEmptyOk(): void
     {
-        $this->source_iteration_tracker_id = Option::nothing(\Psl\Type\int());
-
         $result = $this->handle();
 
         self::assertTrue(Result::isOk($result));
-        self::assertTrue($result->value->iteration_tracker->isNothing());
-    }
-
-    public function testItDoesNotMapIterationConfigurationWhenTrackerIsNotFoundInMapping(): void
-    {
-        $this->source_iteration_tracker_id = Option::fromValue(70);
-
-        $result = $this->handle();
-
-        self::assertTrue(Result::isOk($result));
-        self::assertTrue($result->value->iteration_tracker->isNothing());
-    }
-
-    public function testItMapsConfigurationAndReturnsIt(): void
-    {
-        $this->tracker_mapping[self::SOURCE_PROGRAM_INCREMENT_TRACKER_ID]          = 88;
-        $this->tracker_mapping[self::SOURCE_ITERATION_TRACKER_ID]                  = 123;
-        $this->tracker_mapping[self::FIRST_SOURCE_TRACKER_ID_THAT_CAN_BE_PLANNED]  = 172;
-        $this->tracker_mapping[self::SECOND_SOURCE_TRACKER_ID_THAT_CAN_BE_PLANNED] = 173;
-
-        $result = $this->handle();
-
-        self::assertTrue(Result::isOk($result));
-        self::assertSame(self::NEW_PROGRAM_ID, $result->value->program->id);
-        self::assertSame(88, $result->value->program_increment_tracker->id);
-        self::assertSame('Releases', $result->value->program_increment_tracker->label);
-        self::assertSame('release', $result->value->program_increment_tracker->sub_label);
-        $iteration = $result->value->iteration_tracker->unwrapOr(null);
-        self::assertSame(123, $iteration?->id);
-        self::assertSame('Cycles', $iteration?->label);
-        self::assertSame('cycle', $iteration?->sub_label);
-        self::assertEqualsCanonicalizing([172, 173], $result->value->trackers_that_can_be_planned->getTrackerIds());
+        self::assertNull($result->value);
+        self::assertSame(1, $this->save_new_plan->getCallCount());
     }
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,26 +22,32 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Plan;
 
-use Tuleap\Option\Option;
 use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramForAdministrationIdentifier;
-use Tuleap\ProgramManagement\Domain\Program\Admin\CollectionOfNewUserGroupsThatCanPrioritize;
+use Tuleap\ProgramManagement\Domain\Workspace\NewUserGroupThatCanPrioritizeIsValidCertificate;
 
 /**
- * I hold the new Plan configuration of a Program that is going to be saved.
- * @see PlanConfigurationChange for data coming from the Adapters and not yet validated.
  * @psalm-immutable
  */
-final readonly class NewPlanConfiguration
+final readonly class NewUserGroupThatCanPrioritize
 {
+    private function __construct(public int $id)
+    {
+    }
+
     /**
-     * @param Option<NewIterationTrackerConfiguration> $iteration_tracker
+     * @throws InvalidProgramUserGroup
      */
-    public function __construct(
-        public NewProgramIncrementTracker $program_increment_tracker,
-        public ProgramForAdministrationIdentifier $program,
-        public NewTrackerThatCanBePlannedCollection $trackers_that_can_be_planned,
-        public CollectionOfNewUserGroupsThatCanPrioritize $user_groups_that_can_prioritize,
-        public Option $iteration_tracker,
-    ) {
+    public static function fromId(
+        RetrieveProgramUserGroup $ugroup_retriever,
+        string $raw_user_group_id,
+        ProgramForAdministrationIdentifier $program,
+    ): self {
+        $user_group_id = $ugroup_retriever->getProjectUserGroupId($raw_user_group_id, $program);
+        return new self($user_group_id);
+    }
+
+    public static function fromValidUserGroup(NewUserGroupThatCanPrioritizeIsValidCertificate $certificate): self
+    {
+        return new self($certificate->user_group_id);
     }
 }

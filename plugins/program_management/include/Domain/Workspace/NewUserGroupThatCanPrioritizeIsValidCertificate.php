@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2024-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,41 +20,19 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\ProgramManagement\Domain\Program\Plan;
+namespace Tuleap\ProgramManagement\Domain\Workspace;
 
 use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramForAdministrationIdentifier;
 
 /**
+ * I certify that the User Group that can prioritize features exists and belongs to the given Program.
  * @psalm-immutable
  */
-final class ProgramUserGroup
+final readonly class NewUserGroupThatCanPrioritizeIsValidCertificate
 {
-    private int $id;
-
-    private function __construct(int $id)
-    {
-        $this->id = $id;
-    }
-
-    /**
-     * @throws InvalidProgramUserGroup
-     */
-    public static function buildProgramUserGroup(
-        RetrieveProgramUserGroup $ugroup_retriever,
-        string $raw_user_group_id,
-        ProgramForAdministrationIdentifier $program,
-    ): self {
-        $user_group_id = $ugroup_retriever->getProjectUserGroupId($raw_user_group_id, $program);
-        return new self($user_group_id);
-    }
-
-    public static function buildFake(): self
-    {
-        return new self(-1);
-    }
-
-    public function getId(): int
-    {
-        return $this->id;
+    public function __construct(
+        public int $user_group_id,
+        public ProgramForAdministrationIdentifier $program,
+    ) {
     }
 }

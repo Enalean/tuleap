@@ -44,6 +44,7 @@ final readonly class Option
      * @template T
      * @psalm-param T $value
      * @psalm-return self<T>
+     * @psalm-mutation-free
      */
     public static function fromValue(mixed $value): self
     {
@@ -54,6 +55,7 @@ final readonly class Option
      * @template T
      * @psalm-param class-string<T>|\Psl\Type\TypeInterface<T> $type
      * @psalm-return self<T>
+     * @psalm-mutation-free
      */
     public static function nothing(string|\Psl\Type\TypeInterface $type): self
     {

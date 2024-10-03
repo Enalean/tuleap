@@ -30,8 +30,10 @@ use Tuleap\ProgramManagement\Adapter\Workspace\ProgramServiceIsEnabledCertifier;
 use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramForAdministrationIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Plan\Inheritance\PlanInheritanceHandler;
 use Tuleap\ProgramManagement\Domain\Program\Plan\Inheritance\ProgramInheritanceMapping;
-use Tuleap\ProgramManagement\Domain\Program\Plan\NewPlanConfiguration;
+use Tuleap\ProgramManagement\Domain\Program\Plan\NewConfigurationTrackerIsValidCertificate;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
+use Tuleap\ProgramManagement\Domain\Workspace\NewUserGroupThatCanPrioritizeIsValidCertificate;
+use Tuleap\Project\MappingRegistry;
 use Tuleap\Tracker\TrackerEventTrackersDuplicated;
 
 final readonly class TrackersDuplicatedHandler
@@ -53,58 +55,54 @@ final readonly class TrackersDuplicatedHandler
                 }
                 return $this->program_certifier->certifyProgramServiceEnabled($event->new_project)
                     ->map(ProgramForAdministrationIdentifier::fromServiceEnabled(...))
-                    ->map(static fn(ProgramForAdministrationIdentifier $new_program) => new ProgramInheritanceMapping(
+                    ->map(fn(ProgramForAdministrationIdentifier $new_program) => new ProgramInheritanceMapping(
                         $source_program,
                         $new_program,
-                        $event->mapping_registry->getCustomMapping(\TrackerFactory::TRACKER_MAPPING_KEY),
+                        $this->buildTrackersMapping($event->mapping_registry, $new_program),
+                        $this->buildUserGroupsMapping($event->mapping_registry, $new_program)
                     ));
             })
             ->apply(function (ProgramInheritanceMapping $mapping) {
-                $this->inheritance_handler->handle($mapping)->match(
-                    function (NewPlanConfiguration $new_plan_configuration) use ($mapping) {
-                        $new_program_id               = sprintf(
-                            'new program id #%s',
-                            $mapping->new_program->id
-                        );
-                        $pi_tracker_id                = sprintf(
-                            'new program increment tracker id #%s',
-                            $new_plan_configuration->program_increment_tracker->id
-                        );
-                        $pi_labels                    = sprintf(
-                            "new program increment label '%s' and sub-label '%s'",
-                            $new_plan_configuration->program_increment_tracker->label ?? '',
-                            $new_plan_configuration->program_increment_tracker->sub_label ?? ''
-                        );
-                        $iteration_id                 = sprintf(
-                            'new iteration tracker id #%s',
-                            (string) $new_plan_configuration->iteration_tracker->unwrapOr(null)?->id
-                        );
-                        $iteration_labels             = sprintf(
-                            "new iteration label '%s' and sub-label '%s'",
-                            $new_plan_configuration->iteration_tracker->unwrapOr(null)?->label ?? '',
-                            $new_plan_configuration->iteration_tracker->unwrapOr(null)?->sub_label ?? ''
-                        );
-                        $trackers_that_can_be_planned = sprintf(
-                            'tracker ids that can be planned %s',
-                            \Psl\Json\encode($new_plan_configuration->trackers_that_can_be_planned->getTrackerIds())
-                        );
-
-                        $this->logger->debug(
-                            sprintf(
-                                'Plan configuration inheritance : %s %s %s %s %s %s',
-                                $new_program_id,
-                                $pi_tracker_id,
-                                $pi_labels,
-                                $iteration_id,
-                                $iteration_labels,
-                                $trackers_that_can_be_planned
-                            )
-                        );
-                    },
+                $this->inheritance_handler->handle($mapping)->mapErr(
                     function (Fault $fault) {
                         Fault::writeToLogger($fault, $this->logger, LogLevel::DEBUG);
                     }
                 );
             });
+    }
+
+    /**
+     * @return array<int, NewConfigurationTrackerIsValidCertificate>
+     */
+    private function buildTrackersMapping(
+        MappingRegistry $mapping_registry,
+        ProgramForAdministrationIdentifier $new_program,
+    ): array {
+        $tracker_mapping = $mapping_registry->getCustomMapping(\TrackerFactory::TRACKER_MAPPING_KEY);
+        $mapping         = [];
+        foreach ($tracker_mapping as $source_tracker_id => $new_tracker_id) {
+            $mapping[$source_tracker_id] = new NewConfigurationTrackerIsValidCertificate($new_tracker_id, $new_program);
+        }
+        return $mapping;
+    }
+
+    /**
+     * @return array<int, NewUserGroupThatCanPrioritizeIsValidCertificate>
+     */
+    private function buildUserGroupsMapping(
+        MappingRegistry $mapping_registry,
+        ProgramForAdministrationIdentifier $new_program,
+    ): array {
+        $dynamic_ugroups = \Psl\Range\between(\ProjectUGroup::ANONYMOUS, \ProjectUGroup::DYNAMIC_UPPER_BOUNDARY);
+        $mapping         = [];
+        foreach ($dynamic_ugroups as $dynamic_ugroup_id) {
+            // Dynamic user groups such as Project Members are not part of the mapping but are still created implicitly
+            $mapping[$dynamic_ugroup_id] = new NewUserGroupThatCanPrioritizeIsValidCertificate($dynamic_ugroup_id, $new_program);
+        }
+        $user_group_mapping = $mapping_registry->getUgroupMapping();
+        foreach ($user_group_mapping as $source_user_group_id => $new_user_group_id) {
+            $mapping[$source_user_group_id] = new NewUserGroupThatCanPrioritizeIsValidCertificate($new_user_group_id, $new_program);
+        }
+        return $mapping;
     }
 }

@@ -25,20 +25,20 @@ namespace Tuleap\Project;
 final class MappingRegistry
 {
     /**
-     * @var array
-     */
-    private $ugroup_mapping;
-
-    /**
      * @var array<string, array|\ArrayObject>
      */
-    private $custom_mappings;
+    private array $custom_mappings;
 
-    public function __construct(array $ugroup_mapping)
+    /**
+     * @param array<int, int> $ugroup_mapping
+     */
+    public function __construct(private array $ugroup_mapping)
     {
-        $this->ugroup_mapping = $ugroup_mapping;
     }
 
+    /**
+     * @return array<int, int>
+     */
     public function getUgroupMapping(): array
     {
         return $this->ugroup_mapping;

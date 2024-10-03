@@ -22,8 +22,11 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Plan\Inheritance;
 
+use Tuleap\Option\Option;
 use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramForAdministrationIdentifier;
+use Tuleap\ProgramManagement\Domain\Program\Plan\NewConfigurationTrackerIsValidCertificate;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
+use Tuleap\ProgramManagement\Domain\Workspace\NewUserGroupThatCanPrioritizeIsValidCertificate;
 
 /**
  * @psalm-immutable
@@ -31,12 +34,36 @@ use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 final readonly class ProgramInheritanceMapping
 {
     /**
-     * @param array<int, int> $tracker_mapping
+     * @param array<int, NewConfigurationTrackerIsValidCertificate>       $tracker_mapping
+     * @param array<int, NewUserGroupThatCanPrioritizeIsValidCertificate> $user_group_mapping
      */
     public function __construct(
         public ProgramIdentifier $source_program,
         public ProgramForAdministrationIdentifier $new_program,
-        public array $tracker_mapping,
+        private array $tracker_mapping,
+        private array $user_group_mapping,
     ) {
+    }
+
+    /**
+     * @return Option<NewConfigurationTrackerIsValidCertificate>
+     */
+    public function getMappedTrackerId(int $source_tracker_id): Option
+    {
+        if (isset($this->tracker_mapping[$source_tracker_id])) {
+            return Option::fromValue($this->tracker_mapping[$source_tracker_id]);
+        }
+        return Option::nothing(NewConfigurationTrackerIsValidCertificate::class);
+    }
+
+    /**
+     * @return Option<NewUserGroupThatCanPrioritizeIsValidCertificate>
+     */
+    public function getMappedUserGroupId(int $source_user_group_id): Option
+    {
+        if (isset($this->user_group_mapping[$source_user_group_id])) {
+            return Option::fromValue($this->user_group_mapping[$source_user_group_id]);
+        }
+        return Option::nothing(NewUserGroupThatCanPrioritizeIsValidCertificate::class);
     }
 }

@@ -425,6 +425,7 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
 
             $this->synchronized_project_membership_duplicator->duplicate((int) $template_group->getID(), $group);
             //Copy ugroups
+            /** @var array<int, int> $ugroup_mapping */
             $ugroup_mapping = [];
             $this->ugroup_duplicator->duplicateOnProjectCreation($template_group, $group_id, $ugroup_mapping, $admin_user);
 

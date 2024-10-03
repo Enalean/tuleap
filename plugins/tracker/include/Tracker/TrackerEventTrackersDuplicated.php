@@ -28,6 +28,7 @@ final class TrackerEventTrackersDuplicated implements \Tuleap\Event\Dispatchable
 {
     /**
      * @param list<array{from: int, to: int, values: array, workflow: bool}> $field_mapping
+     * @param array<int, int> $ugroups_mapping
      */
     public function __construct(
         public readonly \PFUser $user,

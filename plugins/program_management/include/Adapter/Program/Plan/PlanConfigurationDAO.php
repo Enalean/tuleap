@@ -77,14 +77,18 @@ final class PlanConfigurationDAO extends DataAccessObject implements SaveNewPlan
     private function setUpPlanPermissions(NewPlanConfiguration $plan): void
     {
         $sql = 'DELETE FROM plugin_program_management_can_prioritize_features WHERE project_id = ?';
-
         $this->getDB()->run($sql, $plan->program->id);
 
+        $user_group_ids = $plan->user_groups_that_can_prioritize->getUserGroupIds();
+        if ($user_group_ids === []) {
+            return;
+        }
+
         $insert = [];
-        foreach ($plan->getCanPrioritize() as $can_prioritize_ugroup) {
+        foreach ($user_group_ids as $user_group_id_that_can_prioritize) {
             $insert[] = [
                 'project_id'    => $plan->program->id,
-                'user_group_id' => $can_prioritize_ugroup->getId(),
+                'user_group_id' => $user_group_id_that_can_prioritize,
             ];
         }
         $this->getDB()->insertMany('plugin_program_management_can_prioritize_features', $insert);

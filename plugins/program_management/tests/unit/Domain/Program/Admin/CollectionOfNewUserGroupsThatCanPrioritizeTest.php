@@ -26,19 +26,25 @@ use Tuleap\ProgramManagement\Tests\Builder\ProgramForAdministrationIdentifierBui
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveProgramUserGroupStub;
 use Tuleap\Test\PHPUnit\TestCase;
 
-final class ProgramUserGroupCollectionTest extends TestCase
+final class CollectionOfNewUserGroupsThatCanPrioritizeTest extends TestCase
 {
     public function testItBuildsFromRawIdentifiers(): void
     {
-        $program = ProgramForAdministrationIdentifierBuilder::build();
+        $program_id = 102;
+        $program    = ProgramForAdministrationIdentifierBuilder::buildWithId($program_id);
 
-        $collection = ProgramUserGroupCollection::fromRawIdentifiers(
-            RetrieveProgramUserGroupStub::withValidUserGroups(3, 4),
+        $collection = CollectionOfNewUserGroupsThatCanPrioritize::fromRawIdentifiers(
+            RetrieveProgramUserGroupStub::withValidUserGroups(
+                \ProjectUGroup::PROJECT_MEMBERS,
+                \ProjectUGroup::PROJECT_ADMIN
+            ),
             $program,
-            ['102_3', '102_4']
+            [$program_id . '_' . \ProjectUGroup::PROJECT_MEMBERS, $program_id . '_' . \ProjectUGroup::PROJECT_ADMIN]
         );
-        $ids        = $collection->getUserGroups();
-        self::assertSame(3, $ids[0]->getId());
-        self::assertSame(4, $ids[1]->getId());
+
+        self::assertEqualsCanonicalizing(
+            [\ProjectUGroup::PROJECT_MEMBERS, \ProjectUGroup::PROJECT_ADMIN],
+            $collection->getUserGroupIds()
+        );
     }
 }
