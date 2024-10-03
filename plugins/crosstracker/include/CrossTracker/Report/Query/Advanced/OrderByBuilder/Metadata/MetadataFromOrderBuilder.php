@@ -27,10 +27,13 @@ use Tracker;
 use Tuleap\CrossTracker\Report\Query\Advanced\AllowedMetadata;
 use Tuleap\CrossTracker\Report\Query\Advanced\OrderByBuilder\Field\StaticList\StaticListFromOrderBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\OrderByBuilder\Field\Text\TextFromOrderBuilder;
+use Tuleap\CrossTracker\Report\Query\Advanced\OrderByBuilder\Field\UserList\UserListFromOrderBuilder;
+use Tuleap\CrossTracker\Report\Query\Advanced\OrderByBuilder\Field\UserList\UserOrderByBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\OrderByBuilder\OrderByBuilderParameters;
 use Tuleap\CrossTracker\Report\Query\Advanced\OrderByBuilder\ParametrizedFromOrder;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\OrderByDirection;
+use Tuleap\Tracker\Semantic\Contributor\RetrieveContributorField;
 use Tuleap\Tracker\Semantic\Description\GetDescriptionSemantic;
 use Tuleap\Tracker\Semantic\Status\RetrieveStatusField;
 use Tuleap\Tracker\Semantic\Title\GetTitleSemantic;
@@ -41,8 +44,11 @@ final readonly class MetadataFromOrderBuilder
         private GetTitleSemantic $title_semantic_retriever,
         private GetDescriptionSemantic $description_semantic_retriever,
         private RetrieveStatusField $status_field_retriever,
+        private RetrieveContributorField $contributor_field_retriever,
         private TextFromOrderBuilder $text_builder,
         private StaticListFromOrderBuilder $static_list_builder,
+        private UserListFromOrderBuilder $user_list_builder,
+        private UserOrderByBuilder $user_order_by_builder,
     ) {
     }
 
@@ -52,15 +58,16 @@ final readonly class MetadataFromOrderBuilder
             OrderByDirection::ASCENDING  => ' ASC',
             OrderByDirection::DESCENDING => ' DESC',
         };
+        $user_alias = 'user_' . md5($order);
 
         return match ($metadata->getName()) {
             AllowedMetadata::TITLE            => $this->text_builder->getFromOrder($this->getTitleFieldIds($parameters->trackers), $order),
             AllowedMetadata::DESCRIPTION      => $this->text_builder->getFromOrder($this->getDescriptionFieldIds($parameters->trackers), $order),
             AllowedMetadata::STATUS           => $this->static_list_builder->getFromOrder($this->getStatusFieldIds($parameters->trackers), $order),
-            AllowedMetadata::ASSIGNED_TO,
+            AllowedMetadata::ASSIGNED_TO      => $this->user_list_builder->getFromOrder($this->getAssignedToFieldIds($parameters->trackers), $order),
 
-            AllowedMetadata::SUBMITTED_BY,
-            AllowedMetadata::LAST_UPDATE_BY   => new ParametrizedFromOrder('', [], ''),
+            AllowedMetadata::SUBMITTED_BY     => new ParametrizedFromOrder("LEFT JOIN user AS $user_alias ON $user_alias.user_id = artifact.submitted_by", [], $this->user_order_by_builder->getOrderByForUsers($user_alias, $order)),
+            AllowedMetadata::LAST_UPDATE_BY   => new ParametrizedFromOrder("LEFT JOIN user AS $user_alias ON $user_alias.user_id = changeset.submitted_by", [], $this->user_order_by_builder->getOrderByForUsers($user_alias, $order)),
             AllowedMetadata::SUBMITTED_ON     => new ParametrizedFromOrder('', [], 'artifact.submitted_on' . $order),
             AllowedMetadata::LAST_UPDATE_DATE => new ParametrizedFromOrder('', [], 'changeset.submitted_on' . $order),
             AllowedMetadata::ID               => new ParametrizedFromOrder('', [], 'artifact.id' . $order),
@@ -110,6 +117,22 @@ final readonly class MetadataFromOrderBuilder
         $field_ids = [];
         foreach ($trackers as $tracker) {
             $field = $this->status_field_retriever->getStatusField($tracker);
+            if ($field !== null) {
+                $field_ids[] = $field->getId();
+            }
+        }
+        return $field_ids;
+    }
+
+    /**
+     * @param Tracker[] $trackers
+     * @return list<int>
+     */
+    private function getAssignedToFieldIds(array $trackers): array
+    {
+        $field_ids = [];
+        foreach ($trackers as $tracker) {
+            $field = $this->contributor_field_retriever->getContributorField($tracker);
             if ($field !== null) {
                 $field_ids[] = $field->getId();
             }

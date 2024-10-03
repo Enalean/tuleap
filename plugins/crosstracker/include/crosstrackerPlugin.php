@@ -46,6 +46,8 @@ use Tuleap\CrossTracker\Report\Query\Advanced\OrderByBuilder\Field\Numeric\Numer
 use Tuleap\CrossTracker\Report\Query\Advanced\OrderByBuilder\Field\StaticList\StaticListFromOrderBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\OrderByBuilder\Field\Text\TextFromOrderBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\OrderByBuilder\Field\UGroupList\UGroupListFromOrderBuilder;
+use Tuleap\CrossTracker\Report\Query\Advanced\OrderByBuilder\Field\UserList\UserListFromOrderBuilder;
+use Tuleap\CrossTracker\Report\Query\Advanced\OrderByBuilder\Field\UserList\UserOrderByBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\OrderByBuilder\Metadata\MetadataFromOrderBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\OrderByBuilderVisitor;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\ArtifactLink\ForwardLinkFromWhereBuilder;
@@ -431,6 +433,8 @@ class crosstrackerPlugin extends Plugin
 
         $text_order_builder        = new TextFromOrderBuilder();
         $static_list_order_builder = new StaticListFromOrderBuilder();
+        $user_order_by_builder     = new UserOrderByBuilder($user_manager);
+        $user_list_builder         = new UserListFromOrderBuilder($user_order_by_builder);
         $order_builder_visitor     = new OrderByBuilderVisitor(
             new FieldFromOrderBuilder(
                 $field_retriever,
@@ -440,13 +444,17 @@ class crosstrackerPlugin extends Plugin
                 $text_order_builder,
                 $static_list_order_builder,
                 new UGroupListFromOrderBuilder($user_group_manager),
+                $user_list_builder,
             ),
             new MetadataFromOrderBuilder(
                 Tracker_Semantic_TitleFactory::instance(),
                 Tracker_Semantic_DescriptionFactory::instance(),
                 new StatusFieldRetriever(Tracker_Semantic_StatusFactory::instance()),
+                new ContributorFieldRetriever(Tracker_Semantic_ContributorFactory::instance()),
                 $text_order_builder,
                 $static_list_order_builder,
+                $user_list_builder,
+                $user_order_by_builder,
             ),
         );
 
