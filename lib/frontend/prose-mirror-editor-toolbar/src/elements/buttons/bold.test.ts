@@ -18,24 +18,41 @@
  *
  */
 
-import { describe, expect, it, vi } from "vitest";
-import type { BoldElement } from "./bold";
-import { renderBoldItem } from "./bold";
+import { describe, beforeEach, expect, it, vi } from "vitest";
 import type { ToolbarBus } from "@tuleap/prose-mirror-editor";
+import { buildToolbarBus } from "@tuleap/prose-mirror-editor";
 import { createLocalDocument } from "../../helpers/helper-for-test";
+import type { HostElement } from "./bold";
+import { connect, renderBoldItem } from "./bold";
 
 describe("BoldElement", () => {
-    it("When clicked, Then it should call toolbar_bus bold method", () => {
+    let target: ShadowRoot, toolbar_bus: ToolbarBus;
+
+    beforeEach(() => {
         const doc = createLocalDocument();
-        const mock_bold = vi.fn();
-        const toolbar_bus = {
-            bold: mock_bold,
-        } as unknown as ToolbarBus;
-        const host = Object.assign(doc.createElement("span"), {
+
+        target = doc.createElement("div") as unknown as ShadowRoot;
+        toolbar_bus = buildToolbarBus();
+    });
+
+    it("When the component is connected, then it should set its part of the toolbar view so it will be able to update itself when the view changes.", () => {
+        const host = {
             is_activated: false,
             toolbar_bus,
-        } as BoldElement);
-        const target = doc.createElement("div") as unknown as ShadowRoot;
+        } as HostElement;
+
+        connect(host);
+
+        toolbar_bus.view.activateBold(true);
+        expect(host.is_activated).toBe(true);
+
+        toolbar_bus.view.activateBold(false);
+        expect(host.is_activated).toBe(false);
+    });
+
+    it("When the button is clicked, Then it should call toolbar_bus bold() method", () => {
+        const applyBold = vi.spyOn(toolbar_bus, "bold");
+        const host = { toolbar_bus } as HostElement;
 
         renderBoldItem(host)(host, target);
 
@@ -46,20 +63,17 @@ describe("BoldElement", () => {
 
         button.click();
 
-        expect(mock_bold).toHaveBeenCalledOnce();
+        expect(applyBold).toHaveBeenCalledOnce();
     });
 
-    it("Should have the activate class", () => {
-        const doc = createLocalDocument();
-        const mock_bold = vi.fn();
-        const toolbar_bus = {
-            bold: mock_bold,
-        } as unknown as ToolbarBus;
-        const host = Object.assign(doc.createElement("span"), {
-            is_activated: true,
+    it.each([
+        [false, "it should NOT have the prose-mirror-button-activated class"],
+        [true, "it should have the prose-mirror-button-activated class"],
+    ])("When is_activated is %s, then %s", (is_activated) => {
+        const host = {
+            is_activated,
             toolbar_bus,
-        } as BoldElement);
-        const target = doc.createElement("div") as unknown as ShadowRoot;
+        } as HostElement;
 
         renderBoldItem(host)(host, target);
 
@@ -68,6 +82,6 @@ describe("BoldElement", () => {
             throw new Error("Expected a button");
         }
 
-        expect(button.classList.contains("prose-mirror-button-activated")).toBe(true);
+        expect(button.classList.contains("prose-mirror-button-activated")).toBe(is_activated);
     });
 });

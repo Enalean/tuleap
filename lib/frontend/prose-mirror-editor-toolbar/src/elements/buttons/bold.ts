@@ -25,11 +25,14 @@ import { gettext_provider } from "../../gettext-provider";
 export const BOLD_TAG_NAME = "bold-item";
 
 export type BoldElement = {
-    is_activated: boolean;
     toolbar_bus: ToolbarBus;
 };
 
-type InternalBoldElement = Readonly<BoldElement>;
+type InternalBoldElement = Readonly<BoldElement> & {
+    is_activated: boolean;
+};
+
+export type HostElement = InternalBoldElement & HTMLElement;
 
 const onClickApplyBold = (host: BoldElement): void => {
     host.toolbar_bus.bold();
@@ -50,9 +53,20 @@ export const renderBoldItem = (host: InternalBoldElement): UpdateFunction<Intern
     ></i>`;
 };
 
-export default define<InternalBoldElement>({
+export const connect = (host: InternalBoldElement): void => {
+    host.toolbar_bus.setView({
+        activateBold: (is_activated: boolean): void => {
+            host.is_activated = is_activated;
+        },
+    });
+};
+
+define<InternalBoldElement>({
     tag: BOLD_TAG_NAME,
     is_activated: false,
-    toolbar_bus: (host: BoldElement, toolbar_bus: ToolbarBus) => toolbar_bus,
+    toolbar_bus: {
+        value: (host: BoldElement, toolbar_bus: ToolbarBus) => toolbar_bus,
+        connect,
+    },
     render: renderBoldItem,
 });
