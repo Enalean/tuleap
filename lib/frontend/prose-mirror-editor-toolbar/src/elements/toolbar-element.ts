@@ -21,7 +21,7 @@ import type { UpdateFunction } from "hybrids";
 import { define, html } from "hybrids";
 import type { ControlToolbar } from "./ToolbarController";
 import scss_styles from "./styles.scss?inline";
-import "./bold";
+import "./buttons/bold";
 
 export type ProseMirrorToolbarElement = {
     controller: ControlToolbar;

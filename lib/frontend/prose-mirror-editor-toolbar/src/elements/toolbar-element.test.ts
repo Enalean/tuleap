@@ -19,7 +19,7 @@
  */
 
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { createLocalDocument } from "./helpers/helper-for-test";
+import { createLocalDocument } from "../helpers/helper-for-test";
 import type { InternalProseMirrorToolbarElement } from "./toolbar-element";
 import { connect, renderToolbar } from "./toolbar-element";
 import type { ControlToolbar } from "./ToolbarController";
