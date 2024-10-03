@@ -13,13 +13,13 @@ deptrac:
     - name: Production code
       collectors:
         - type: directory
-          regex: src/.*
+          value: src/.*
         - type: directory
-          regex: plugins/\w+/include/.*
+          value: plugins/\w+/include/.*
     - name: Test code
       collectors:
         - type: directory
-          regex: .*/tests/.*
+          value: .*/tests/.*
   ruleset:
     Test code:
       - Production code

@@ -5,13 +5,13 @@ deptrac:
     - name: Domain
       collectors:
         - type: directory
-          regex: plugins/program_management/include/Domain/.*
+          value: plugins/program_management/include/Domain/.*
     - name: CoreLibraries
       collectors:
-        - type: className
-          regex: Tuleap\\Option\\Option
-        - type: className
-          regex: Tuleap\\NeverThrow\\(?:Err|Fault|Ok|Result)
+        - type: classLike
+          value: Tuleap\\Option\\Option
+        - type: classLike
+          value: Tuleap\\NeverThrow\\(?:Err|Fault|Ok|Result)
   ruleset:
     Domain:
       - Domain

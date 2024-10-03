@@ -10,11 +10,11 @@ deptrac:
     - name: Core
       collectors:
         - type: directory
-          regex: src/common/.*
+          value: src/common/.*
     - name: Plugins
       collectors:
         - type: directory
-          regex: plugins/\w+/include/.*
+          value: plugins/\w+/include/.*
   ruleset:
     Plugins:
       - Core
