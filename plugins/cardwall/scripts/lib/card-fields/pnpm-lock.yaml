@@ -5,6 +5,9 @@ settings:
   excludeLinksFromLockfile: false
 
 dependencies:
+  '@tuleap/date-helper':
+    specifier: workspace:^
+    version: link:../../../../../lib/frontend/date-helper
   '@tuleap/tlp-swatch-colors':
     specifier: workspace:*
     version: link:../../../../../lib/frontend/tlp-swatch-colors

@@ -7,13 +7,13 @@
 import angular from "angular";
 import "angular-mocks";
 
-import card_fields_module from "./index.js";
+import { card_fields } from "./index.js";
 
 describe("tuleapHighlight", () => {
     let highlightFilter, test_phrase;
 
     beforeEach(() => {
-        angular.mock.module(card_fields_module);
+        angular.mock.module(card_fields);
 
         angular.mock.inject(function ($filter) {
             highlightFilter = $filter("tuleapHighlight");
