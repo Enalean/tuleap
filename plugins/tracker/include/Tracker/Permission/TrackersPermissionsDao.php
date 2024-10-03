@@ -29,25 +29,32 @@ use Tuleap\Tracker\Artifact\Artifact;
 
 final class TrackersPermissionsDao extends DataAccessObject implements SearchUserGroupsPermissionOnFields, SearchUserGroupsPermissionOnTrackers, SearchUserGroupsPermissionOnArtifacts
 {
-    public function searchUserGroupsPermissionOnFields(array $user_groups_id, array $fields_id, string $permission): array
+    public function searchUserGroupsPermissionOnFields(array $user_groups, array $fields_id, string $permission): array
     {
-        $ugroups_statement = EasyStatement::open()->in('permissions.ugroup_id IN (?*)', $user_groups_id);
-        $fields_statement  = EasyStatement::open()->in('permissions.object_id IN (?*)', $fields_id);
+        $fields_statement = EasyStatement::open()->in('field.id IN (?*)', $fields_id);
+        $groups_statement = implode(', ', array_map(static fn(UserGroupInProject $user_group) => '(?, ?)', $user_groups));
+        $groups_values    = [];
+        foreach ($user_groups as $user_group) {
+            $groups_values[] = $user_group->project_id;
+            $groups_values[] = $user_group->user_group_id;
+        }
 
         $sql = <<<SQL
-        SELECT DISTINCT object_id AS field_id
+        SELECT DISTINCT permissions.object_id AS field_id
         FROM permissions
-        WHERE $ugroups_statement AND $fields_statement AND permissions.permission_type = ?
+        INNER JOIN tracker_field AS field ON permissions.object_id = CAST(field.id AS CHAR CHARACTER SET utf8)
+        INNER JOIN tracker ON tracker.id = field.tracker_id
+        INNER JOIN `groups` AS project ON project.group_id = tracker.group_id
+        WHERE permissions.permission_type = ? AND $fields_statement AND (project.group_id, permissions.ugroup_id) IN ($groups_statement)
         SQL;
 
-        $results = $this->getDB()->safeQuery($sql, [...$user_groups_id, ...$this->castIdsToString($fields_id), $permission]);
+        $results = $this->getDB()->safeQuery($sql, [$permission, ...$fields_id, ...$groups_values]);
         assert(is_array($results));
         return array_map(static fn(array $row) => (int) $row['field_id'], $results);
     }
 
-    public function searchUserGroupsViewPermissionOnTrackers(array $user_groups_id, array $trackers_id): array
+    public function searchUserGroupsViewPermissionOnTrackers(array $user_groups, array $trackers_id): array
     {
-        $ugroups_statement   = EasyStatement::open()->in('permissions.ugroup_id IN (?*)', $user_groups_id);
         $trackers_statement  = EasyStatement::open()->in('tracker.id IN (?*)', $trackers_id);
         $perm_type_statement = EasyStatement::open()->in('permissions.permission_type IN (?*)', [
             Tracker::PERMISSION_ADMIN,
@@ -57,21 +64,27 @@ final class TrackersPermissionsDao extends DataAccessObject implements SearchUse
             Tracker::PERMISSION_SUBMITTER_ONLY,
         ]);
 
+        $groups_statement = implode(', ', array_map(static fn(UserGroupInProject $user_group) => '(?, ?)', $user_groups));
+        $groups_values    = [];
+        foreach ($user_groups as $user_group) {
+            $groups_values[] = $user_group->project_id;
+            $groups_values[] = $user_group->user_group_id;
+        }
+
         $sql = <<<SQL
         SELECT DISTINCT tracker.id AS tracker_id
-        FROM tracker
-        INNER JOIN permissions ON (
-            permissions.object_id = CAST(tracker.id AS CHAR CHARACTER SET utf8)
-            AND $ugroups_statement
-            AND $perm_type_statement
-        )
-        WHERE tracker.deletion_date IS NULL AND $trackers_statement
+        FROM permissions
+        INNER JOIN tracker ON permissions.object_id = CAST(tracker.id AS CHAR CHARACTER SET utf8)
+        INNER JOIN `groups` AS project ON project.group_id = tracker.group_id
+        WHERE tracker.deletion_date IS NULL
+            AND $trackers_statement AND $perm_type_statement
+            AND (project.group_id, permissions.ugroup_id) IN ($groups_statement)
         SQL;
 
         $results = $this->getDB()->safeQuery($sql, [
-            ...$user_groups_id,
-            ...array_values($perm_type_statement->values()),
             ...$trackers_id,
+            ...array_values($perm_type_statement->values()),
+            ...$groups_values,
         ]);
         assert(is_array($results));
         return array_map(static fn(array $row) => (int) $row['tracker_id'], $results);
@@ -134,14 +147,5 @@ final class TrackersPermissionsDao extends DataAccessObject implements SearchUse
             ...$artifacts_id,
         );
         return array_map(static fn(array $row) => (int) $row['artifact_id'], $results);
-    }
-
-    /**
-     * @param int[] $ids
-     * @return string[]
-     */
-    private function castIdsToString(array $ids): array
-    {
-        return array_map(static fn(int $id) => (string) $id, $ids);
     }
 }

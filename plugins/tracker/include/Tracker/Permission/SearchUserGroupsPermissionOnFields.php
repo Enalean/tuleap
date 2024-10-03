@@ -25,9 +25,9 @@ namespace Tuleap\Tracker\Permission;
 interface SearchUserGroupsPermissionOnFields
 {
     /**
-     * @param int[] $user_groups_id
+     * @param list<UserGroupInProject> $user_groups
      * @param int[] $fields_id
      * @return int[]
      */
-    public function searchUserGroupsPermissionOnFields(array $user_groups_id, array $fields_id, string $permission): array;
+    public function searchUserGroupsPermissionOnFields(array $user_groups, array $fields_id, string $permission): array;
 }

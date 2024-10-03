@@ -64,7 +64,7 @@ final class SearchUserGroupsPermissionOnTrackersStub implements SearchUserGroups
         return $this;
     }
 
-    public function searchUserGroupsViewPermissionOnTrackers(array $user_groups_id, array $trackers_id): array
+    public function searchUserGroupsViewPermissionOnTrackers(array $user_groups, array $trackers_id): array
     {
         return $this->view_results;
     }

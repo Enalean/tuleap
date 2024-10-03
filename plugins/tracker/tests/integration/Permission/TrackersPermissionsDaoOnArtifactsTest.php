@@ -24,6 +24,7 @@ namespace Tuleap\Tracker\Permission;
 
 use ProjectUGroup;
 use Tracker;
+use Tracker_ArtifactFactory;
 use Tuleap\DB\DBFactory;
 use Tuleap\Test\Builders\CoreDatabaseBuilder;
 use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
@@ -108,5 +109,38 @@ final class TrackersPermissionsDaoOnArtifactsTest extends TestIntegrationTestCas
             $this->artifact_open_2,
             $this->artifact_closed_2,
         ], $result);
+    }
+
+    public function testItDoesNotRetrieveArtifactFromProjectWhenAdminOfAnotherProject(): void
+    {
+        $db              = DBFactory::getMainTuleapDBConnection()->getDB();
+        $core_builder    = new CoreDatabaseBuilder($db);
+        $tracker_builder = new TrackerDatabaseBuilder($db);
+        $retriever       = TrackersPermissionsRetriever::build();
+
+        $project       = $core_builder->buildProject('project');
+        $project_admin = $core_builder->buildProject('project_admin');
+        $user          = $core_builder->buildUser('admin', 'Admin', 'admin@example.com');
+        $core_builder->addUserToProjectMembers((int) $user->getId(), (int) $project->getID());
+        $core_builder->addUserToProjectMembers((int) $user->getId(), (int) $project_admin->getID());
+        $core_builder->addUserToProjectAdmins((int) $user->getId(), (int) $project_admin->getID());
+
+        $tracker_1     = $tracker_builder->buildTracker((int) $project->getID(), 'Tracker 1');
+        $artifact_1_id = $tracker_builder->buildArtifact($tracker_1->getId());
+        $tracker_2     = $tracker_builder->buildTracker((int) $project_admin->getID(), 'Tracker 2');
+        $artifact_2_id = $tracker_builder->buildArtifact($tracker_2->getId());
+        $tracker_builder->setViewPermissionOnArtifact($artifact_1_id, ProjectUGroup::PROJECT_ADMIN);
+        $tracker_builder->setViewPermissionOnArtifact($artifact_2_id, ProjectUGroup::PROJECT_MEMBERS);
+        $factory    = Tracker_ArtifactFactory::instance();
+        $artifact_1 = $factory->getArtifactById($artifact_1_id);
+        $artifact_2 = $factory->getArtifactById($artifact_2_id);
+        self::assertNotNull($artifact_1);
+        self::assertNotNull($artifact_2);
+
+        $result = $retriever->retrieveUserPermissionOnArtifacts($user, [$artifact_1, $artifact_2], ArtifactPermissionType::PERMISSION_VIEW);
+        self::assertCount(1, $result->allowed);
+        self::assertSame($artifact_2_id, $result->allowed[0]->getId());
+        self::assertCount(1, $result->not_allowed);
+        self::assertSame($artifact_1_id, $result->not_allowed[0]->getId());
     }
 }
