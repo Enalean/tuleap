@@ -1249,7 +1249,6 @@ final class program_managementPlugin extends Plugin implements PluginWithService
 
         return new AddToTopBacklogPostActionFactory(
             $dao,
-            CachedProgramBuilder::instance(),
             new ProjectManagerAdapter(ProjectManager::instance(), new UserManagerAdapter(UserManager::instance())),
             new ProgramServiceIsEnabledCertifier(),
             $this->getTopBacklogChangeProcessor(),

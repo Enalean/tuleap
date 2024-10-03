@@ -104,8 +104,7 @@ final class DisplayPlanIterationsController implements DispatchableWithRequest, 
             $program_identifier   = ProgramIdentifier::fromId(
                 $this->program_adapter,
                 (int) $project->getID(),
-                $user_identifier,
-                null
+                $user_identifier
             );
             $increment_identifier = ProgramIncrementIdentifier::fromId(
                 $this->verify_is_program_increment,

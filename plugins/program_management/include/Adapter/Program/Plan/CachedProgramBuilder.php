@@ -25,7 +25,6 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Plan;
 use Tuleap\ProgramManagement\Adapter\Program\ProgramDaoProject;
 use Tuleap\ProgramManagement\Adapter\Workspace\ProjectManagerAdapter;
 use Tuleap\ProgramManagement\Adapter\Workspace\UserManagerAdapter;
-use Tuleap\ProgramManagement\Domain\Permissions\PermissionBypass;
 use Tuleap\ProgramManagement\Domain\Program\Plan\BuildProgram;
 use Tuleap\ProgramManagement\Domain\Program\Plan\ProjectIsAProgramOrUsedInPlanChecker;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
@@ -71,12 +70,12 @@ final class CachedProgramBuilder implements BuildProgram, ProjectIsAProgramOrUse
     ) {
     }
 
-    public function ensureProgramIsAProject(int $project_id, UserIdentifier $user, ?PermissionBypass $bypass): void
+    public function ensureProgramIsAProject(int $project_id, UserIdentifier $user): void
     {
         if (isset($this->permission_cache[$project_id])) {
             return;
         }
-        $this->program_builder->ensureProgramIsAProject($project_id, $user, $bypass);
+        $this->program_builder->ensureProgramIsAProject($project_id, $user);
         $this->permission_cache[$project_id] = true;
     }
 

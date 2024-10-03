@@ -65,8 +65,7 @@ final class ConfigurationErrorsGatherer
             $program = ProgramIdentifier::fromId(
                 $this->build_program,
                 $tracker->getProjectId(),
-                $user_identifier,
-                null
+                $user_identifier
             );
         } catch (ProgramAccessException | ProjectIsNotAProgramException $e) {
             // Do not disable artifact submission. Keep it enabled

@@ -60,7 +60,11 @@ final class ArtifactTopBacklogActionBuilder
     ): ?AdditionalButtonAction {
         try {
             $user_identifier = UserProxy::buildFromPFUser($user);
-            $program         = ProgramIdentifier::fromId($this->build_program, $source_information->project_id, $user_identifier, null);
+            $program         = ProgramIdentifier::fromId(
+                $this->build_program,
+                $source_information->project_id,
+                $user_identifier
+            );
             UserCanPrioritize::fromUser(
                 $this->prioritize_features_permission_verifier,
                 $user_identifier,

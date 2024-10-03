@@ -64,8 +64,8 @@ final class CachedProgramBuilderTest extends TestCase
         $access_checker = CheckProjectAccessStub::withValidAccess();
         $checker        = $this->getChecker($access_checker);
 
-        $checker->ensureProgramIsAProject(self::PROJECT_ID, $this->user_identifier, null);
-        $checker->ensureProgramIsAProject(self::PROJECT_ID, $this->user_identifier, null);
+        $checker->ensureProgramIsAProject(self::PROJECT_ID, $this->user_identifier);
+        $checker->ensureProgramIsAProject(self::PROJECT_ID, $this->user_identifier);
         $checker->ensureProjectIsAProgramOrIsPartOfPlan(self::PROJECT_ID, $this->user_identifier);
 
         self::assertSame(1, $access_checker->getCallCount());
@@ -78,7 +78,7 @@ final class CachedProgramBuilderTest extends TestCase
 
         $checker->ensureProjectIsAProgramOrIsPartOfPlan(self::PROJECT_ID, $this->user_identifier);
         $checker->ensureProjectIsAProgramOrIsPartOfPlan(self::PROJECT_ID, $this->user_identifier);
-        $checker->ensureProgramIsAProject(self::PROJECT_ID, $this->user_identifier, null);
+        $checker->ensureProgramIsAProject(self::PROJECT_ID, $this->user_identifier);
 
         self::assertSame(1, $access_checker->getCallCount());
     }

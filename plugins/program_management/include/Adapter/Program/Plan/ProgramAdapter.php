@@ -26,7 +26,6 @@ use Project_AccessException;
 use Tuleap\ProgramManagement\Adapter\Workspace\RetrieveFullProject;
 use Tuleap\ProgramManagement\Adapter\Workspace\RetrieveUser;
 use Tuleap\ProgramManagement\Adapter\Workspace\UserProxy;
-use Tuleap\ProgramManagement\Domain\Permissions\PermissionBypass;
 use Tuleap\ProgramManagement\Domain\Program\Plan\BuildProgram;
 use Tuleap\ProgramManagement\Domain\Program\Plan\ProgramAccessException;
 use Tuleap\ProgramManagement\Domain\Program\Plan\ProjectIsAProgramOrUsedInPlanChecker;
@@ -50,9 +49,9 @@ final readonly class ProgramAdapter implements BuildProgram, ProjectIsAProgramOr
     ) {
     }
 
-    public function ensureProgramIsAProject(int $project_id, UserIdentifier $user, ?PermissionBypass $bypass): void
+    public function ensureProgramIsAProject(int $project_id, UserIdentifier $user): void
     {
-        $this->ensureUserCanAccessToProject($project_id, $user, $bypass);
+        $this->ensureUserCanAccessToProject($project_id, $user);
         if (! $this->program_verifier->isAProgram($project_id)) {
             throw new ProjectIsNotAProgramException($project_id);
         }
@@ -60,7 +59,7 @@ final readonly class ProgramAdapter implements BuildProgram, ProjectIsAProgramOr
 
     public function ensureProjectIsAProgramOrIsPartOfPlan(int $project_id, UserIdentifier $user): void
     {
-        $this->ensureUserCanAccessToProject($project_id, $user, null);
+        $this->ensureUserCanAccessToProject($project_id, $user);
         if (! $this->verify_is_program_in_administration->isProjectAProgramOrIsPartOfPlan($project_id)) {
             throw new ProjectIsNotAProgramException($project_id);
         }
@@ -69,12 +68,8 @@ final readonly class ProgramAdapter implements BuildProgram, ProjectIsAProgramOr
     /**
      * @throws ProgramAccessException
      */
-    private function ensureUserCanAccessToProject(int $id, UserIdentifier $user, ?PermissionBypass $bypass): void
+    private function ensureUserCanAccessToProject(int $id, UserIdentifier $user): void
     {
-        if ($bypass) {
-            return;
-        }
-
         $project = $this->retrieve_full_project->getProject($id);
         $pfuser  = $this->user_manager_adapter->getUserWithId($user);
         try {

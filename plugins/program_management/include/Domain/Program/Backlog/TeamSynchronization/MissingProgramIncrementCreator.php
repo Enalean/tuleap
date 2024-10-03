@@ -87,8 +87,7 @@ final class MissingProgramIncrementCreator
         $program = ProgramIdentifier::fromId(
             $this->build_program,
             $event->getProgramId(),
-            $user,
-            null
+            $user
         );
 
         foreach ($missing_milestones->missing_program_increments_ids as $missing_milestone_id) {

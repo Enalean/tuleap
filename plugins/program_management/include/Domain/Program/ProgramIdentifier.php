@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program;
 
-use Tuleap\ProgramManagement\Domain\Permissions\PermissionBypass;
 use Tuleap\ProgramManagement\Domain\Program\Admin\ProgramForAdministrationIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration\IterationIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementIdentifier;
@@ -58,9 +57,8 @@ final class ProgramIdentifier
         BuildProgram $build_program,
         int $id,
         UserIdentifier $user,
-        ?PermissionBypass $bypass,
     ): self {
-        $build_program->ensureProgramIsAProject($id, $user, $bypass);
+        $build_program->ensureProgramIsAProject($id, $user);
 
         return new self($id);
     }
@@ -90,7 +88,7 @@ final class ProgramIdentifier
         UserIdentifier $user,
     ): self {
         $program_id = $program_retriever->getProgramOfProgramIncrement($program_increment);
-        $program_builder->ensureProgramIsAProject($program_id, $user, null);
+        $program_builder->ensureProgramIsAProject($program_id, $user);
 
         return new self($program_id);
     }
@@ -106,7 +104,7 @@ final class ProgramIdentifier
         UserIdentifier $user,
     ): self {
         $program_id = $program_retriever->getProgramOfIteration($iteration);
-        $program_builder->ensureProgramIsAProject($program_id, $user, null);
+        $program_builder->ensureProgramIsAProject($program_id, $user);
 
         return new self($program_id);
     }

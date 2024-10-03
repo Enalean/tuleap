@@ -49,7 +49,7 @@ final class ProgramIncrementsSearcher implements SearchOpenProgramIncrements
      */
     public function searchOpenProgramIncrements(int $potential_program_id, UserIdentifier $user): array
     {
-        $program = ProgramIdentifier::fromId($this->build_program, $potential_program_id, $user, null);
+        $program = ProgramIdentifier::fromId($this->build_program, $potential_program_id, $user);
 
         $program_increment_ids = $this->program_increments_searcher->searchOpenProgramIncrements($program);
 

@@ -22,8 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\Workflow;
 
-use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\TopBacklogChangeProcessor;
-use Tuleap\ProgramManagement\Domain\Program\Plan\BuildProgram;
+use Tuleap\ProgramManagement\Adapter\Workspace\ProgramServiceIsEnabledCertifier;
+use Tuleap\ProgramManagement\Tests\Stub\Program\Backlog\TopBacklog\TopBacklogChangeProcessorStub;
 
 final class AddToTopBacklogPostActionRepresentationTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -32,12 +32,12 @@ final class AddToTopBacklogPostActionRepresentationTest extends \Tuleap\Test\PHP
         $post_action = new AddToTopBacklogPostAction(
             $this->createMock(\Transition::class),
             147,
-            $this->createMock(BuildProgram::class),
-            $this->createMock(TopBacklogChangeProcessor::class)
+            new ProgramServiceIsEnabledCertifier(),
+            TopBacklogChangeProcessorStub::withCallCount()
         );
 
         $representation = AddToTopBacklogPostActionRepresentation::buildFromPostAction($post_action);
-        self::assertEquals(147, $representation->id);
-        self::assertEquals('program_management_add_to_top_backlog', $representation->type);
+        self::assertSame(147, $representation->id);
+        self::assertSame('program_management_add_to_top_backlog', $representation->type);
     }
 }

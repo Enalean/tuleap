@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program;
 
-use Tuleap\ProgramManagement\Adapter\Permissions\WorkflowUserPermissionBypass;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration\IterationHasNoProgramException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Iteration\IterationIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\ProgramIncrementHasNoProgramException;
@@ -54,18 +53,7 @@ final class ProgramIdentifierTest extends TestCase
 
     public function testItBuildsFromAProjectId(): void
     {
-        $program = ProgramIdentifier::fromId($this->program_builder, self::PROGRAM_ID, $this->user, null);
-        self::assertSame(self::PROGRAM_ID, $program->getId());
-    }
-
-    public function testItBuildsWithBypass(): void
-    {
-        $program = ProgramIdentifier::fromId(
-            $this->program_builder,
-            self::PROGRAM_ID,
-            $this->user,
-            new WorkflowUserPermissionBypass()
-        );
+        $program = ProgramIdentifier::fromId($this->program_builder, self::PROGRAM_ID, $this->user);
         self::assertSame(self::PROGRAM_ID, $program->getId());
     }
 

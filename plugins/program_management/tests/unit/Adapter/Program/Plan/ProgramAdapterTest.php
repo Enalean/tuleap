@@ -22,8 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Plan;
 
-use Tuleap\ProgramManagement\Adapter\Permissions\WorkflowUserPermissionBypass;
-use Tuleap\ProgramManagement\Domain\Permissions\PermissionBypass;
 use Tuleap\ProgramManagement\Domain\Program\Plan\ProgramAccessException;
 use Tuleap\ProgramManagement\Domain\Program\Plan\ProjectIsNotAProgramException;
 use Tuleap\ProgramManagement\Domain\Program\VerifyIsProgram;
@@ -73,7 +71,7 @@ final class ProgramAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItAllowsAccessToProgram(): void
     {
         $this->expectNotToPerformAssertions();
-        $this->getAdapter()->ensureProgramIsAProject(self::PROJECT_ID, $this->user_identifier, null);
+        $this->getAdapter()->ensureProgramIsAProject(self::PROJECT_ID, $this->user_identifier);
     }
 
     public function testItThrowsErrorWhenUserDoesNotHaveAccess(): void
@@ -81,37 +79,15 @@ final class ProgramAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->project_access_checker = CheckProjectAccessStub::withPrivateProjectWithoutAccess();
 
         $this->expectException(ProgramAccessException::class);
-        $this->getAdapter()->ensureProgramIsAProject(self::PROJECT_ID, $this->user_identifier, null);
+        $this->getAdapter()->ensureProgramIsAProject(self::PROJECT_ID, $this->user_identifier);
     }
 
-    public function testItSucceedsWithBypassEvenWhenUserCannotAccessProject(): void
-    {
-        $this->project_access_checker = CheckProjectAccessStub::withPrivateProjectWithoutAccess();
-
-        $this->getAdapter()->ensureProgramIsAProject(
-            self::PROJECT_ID,
-            $this->user_identifier,
-            new WorkflowUserPermissionBypass()
-        );
-
-        $this->expectNotToPerformAssertions();
-    }
-
-    private function generateBypass(): iterable
-    {
-        yield [null];
-        yield [new WorkflowUserPermissionBypass()];
-    }
-
-    /**
-     * @dataProvider generateBypass
-     */
-    public function testItThrowsWhenProjectIsNotAProgram(?PermissionBypass $bypass): void
+    public function testItThrowsWhenProjectIsNotAProgram(): void
     {
         $this->program_verifier = VerifyIsProgramStub::withNotValidProgram();
 
         $this->expectException(ProjectIsNotAProgramException::class);
-        $this->getAdapter()->ensureProgramIsAProject(self::PROJECT_ID, $this->user_identifier, $bypass);
+        $this->getAdapter()->ensureProgramIsAProject(self::PROJECT_ID, $this->user_identifier);
     }
 
     public function testItAllowsAdminAccessToProgram(): void

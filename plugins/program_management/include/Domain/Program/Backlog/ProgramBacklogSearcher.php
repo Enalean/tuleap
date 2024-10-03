@@ -65,7 +65,7 @@ final class ProgramBacklogSearcher
      */
     public function retrieveFeaturesToBePlanned(int $program_id, UserIdentifier $user): array
     {
-        $program = ProgramIdentifier::fromId($this->build_program, $program_id, $user, null);
+        $program = ProgramIdentifier::fromId($this->build_program, $program_id, $user);
 
         $feature_identifiers = FeatureIdentifier::buildCollectionFromProgram(
             $this->search_plannable_features,
