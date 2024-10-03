@@ -47,7 +47,7 @@ final class IssuesLinkedToEpicsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCa
         };
 
         $epic_issues_retriever = new class implements JiraEpicIssuesRetriever {
-            public function getIssueIds(JiraEpic $epic): array
+            public function getIssueIds(JiraEpic $epic, string $jira_project): array
             {
                 return ['10005', '10013'];
             }
@@ -58,7 +58,7 @@ final class IssuesLinkedToEpicsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCa
             $epic_from_issue_type_retriever,
             $epic_issues_retriever,
         );
-        $linked_issues           = $linked_issues_retriever->getLinkedIssuesFromBoard(JiraBoard::buildFakeBoard());
+        $linked_issues           = $linked_issues_retriever->getLinkedIssuesFromBoard(JiraBoard::buildFakeBoard(), 'project');
 
         self::assertEquals(['10005', '10013'], $linked_issues->getChildren('SP-36'));
     }
@@ -83,7 +83,7 @@ final class IssuesLinkedToEpicsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCa
         };
 
         $epic_issues_retriever = new class implements JiraEpicIssuesRetriever {
-            public function getIssueIds(JiraEpic $epic): array
+            public function getIssueIds(JiraEpic $epic, string $jira_project): array
             {
                 if ($epic->key === 'SP-36') {
                     return ['10005', '10013'];
@@ -100,7 +100,7 @@ final class IssuesLinkedToEpicsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCa
             $epic_from_issue_type_retriever,
             $epic_issues_retriever,
         );
-        $linked_issues           = $linked_issues_retriever->getLinkedIssuesFromBoard(JiraBoard::buildFakeBoard());
+        $linked_issues           = $linked_issues_retriever->getLinkedIssuesFromBoard(JiraBoard::buildFakeBoard(), 'project');
 
         self::assertEquals(['10005', '10013'], $linked_issues->getChildren('SP-36'));
         self::assertEquals(['10006'], $linked_issues->getChildren('SP-39'));
@@ -125,7 +125,7 @@ final class IssuesLinkedToEpicsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCa
         };
 
         $epic_issues_retriever = new class implements JiraEpicIssuesRetriever {
-            public function getIssueIds(JiraEpic $epic): array
+            public function getIssueIds(JiraEpic $epic, string $jira_project): array
             {
                 return ['10005', '10013'];
             }
@@ -164,7 +164,7 @@ final class IssuesLinkedToEpicsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCa
         };
 
         $epic_issues_retriever = new class implements JiraEpicIssuesRetriever {
-            public function getIssueIds(JiraEpic $epic): array
+            public function getIssueIds(JiraEpic $epic, string $jira_project): array
             {
                 if ($epic->key === 'SP-36') {
                     return ['10005', '10013'];

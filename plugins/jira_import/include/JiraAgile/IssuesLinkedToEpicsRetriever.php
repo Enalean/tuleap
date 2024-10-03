@@ -35,11 +35,11 @@ final class IssuesLinkedToEpicsRetriever
     ) {
     }
 
-    public function getLinkedIssuesFromBoard(JiraBoard $board): LinkedIssuesCollection
+    public function getLinkedIssuesFromBoard(JiraBoard $board, string $jira_project): LinkedIssuesCollection
     {
         $linked_issues_collection = new LinkedIssuesCollection();
         foreach ($this->epic_from_board_retriever->getEpics($board) as $epic) {
-            foreach ($this->epic_issues_retriever->getIssueIds($epic) as $issue_id) {
+            foreach ($this->epic_issues_retriever->getIssueIds($epic, $jira_project) as $issue_id) {
                 $linked_issues_collection = $linked_issues_collection->withChild($epic->key, $issue_id);
             }
         }
@@ -50,7 +50,7 @@ final class IssuesLinkedToEpicsRetriever
     {
         $linked_issues_collection = new LinkedIssuesCollection();
         foreach ($this->epic_from_issue_type_retriever->getEpics($issue_type, $jira_project) as $epic) {
-            foreach ($this->epic_issues_retriever->getIssueIds($epic) as $issue_id) {
+            foreach ($this->epic_issues_retriever->getIssueIds($epic, $jira_project) as $issue_id) {
                 $linked_issues_collection = $linked_issues_collection->withChild($epic->key, $issue_id);
             }
         }
