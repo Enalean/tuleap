@@ -39,18 +39,21 @@ const onClickApplyBold = (host: BoldElement): void => {
 };
 export const renderBoldItem = (host: InternalBoldElement): UpdateFunction<InternalBoldElement> => {
     const classes = {
-        "prose-mirror-button-activated": host.is_activated,
-        "fa-solid": true,
-        "fa-bold": true,
-        "prose-mirror-toolbar-button-icon": true,
+        "tlp-button-primary button-active": host.is_activated,
+        "tlp-button-secondary": !host.is_activated,
+        "prose-mirror-button": true,
+        "tlp-button-primary": true,
+        "tlp-button-outline": true,
     };
 
-    return html` <i
+    return html`<button
         class="${classes}"
         onclick="${onClickApplyBold}"
         data-test="button-bold"
         title="${gettext_provider.gettext("Toggle bold style `Ctrl+b`")}"
-    ></i>`;
+    >
+        <i class="fa-solid fa-bold" role="img"></i>
+    </button>`;
 };
 
 export const connect = (host: InternalBoldElement): void => {

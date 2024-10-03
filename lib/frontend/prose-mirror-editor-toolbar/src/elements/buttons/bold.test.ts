@@ -82,6 +82,6 @@ describe("BoldElement", () => {
             throw new Error("Expected a button");
         }
 
-        expect(button.classList.contains("prose-mirror-button-activated")).toBe(is_activated);
+        expect(button.classList.contains("button-active")).toBe(is_activated);
     });
 });
