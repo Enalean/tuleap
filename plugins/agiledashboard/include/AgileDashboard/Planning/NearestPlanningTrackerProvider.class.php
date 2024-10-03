@@ -40,12 +40,13 @@ class AgileDashboard_Planning_NearestPlanningTrackerProvider
         $this->planning_factory = $planning_factory;
     }
 
-    public function getNearestPlanningTracker(PFUser $user, Tracker $backlog_tracker, Tracker_HierarchyFactory $hierarchy_factory): ?Tracker
+    /** @return Tracker|null */
+    public function getNearestPlanningTracker(Tracker $backlog_tracker, Tracker_HierarchyFactory $hierarchy_factory)
     {
         $current_backlog_tracker  = $backlog_tracker;
         $nearest_planning_tracker = null;
         while ($current_backlog_tracker && ! $nearest_planning_tracker) {
-            $plannings = $this->getPlanningTrackersInRightOrder($user, $current_backlog_tracker, $hierarchy_factory);
+            $plannings = $this->getPlanningTrackersInRightOrder($current_backlog_tracker, $hierarchy_factory);
             if (! $plannings) {
                 $current_backlog_tracker = $current_backlog_tracker->getParent();
                 continue;
@@ -56,9 +57,9 @@ class AgileDashboard_Planning_NearestPlanningTrackerProvider
         return $nearest_planning_tracker;
     }
 
-    private function getPlanningTrackersInRightOrder(PFUser $user, Tracker $backlog_tracker, Tracker_HierarchyFactory $hierarchy_factory)
+    private function getPlanningTrackersInRightOrder(Tracker $backlog_tracker, Tracker_HierarchyFactory $hierarchy_factory)
     {
-        $planning_trackers = $this->planning_factory->getPlanningsByBacklogTracker($user, $backlog_tracker);
+        $planning_trackers = $this->planning_factory->getPlanningsByBacklogTracker($backlog_tracker);
 
         $trackers_ids = $this->getAllPlanningTrackersIds($planning_trackers);
         $trackers_ids = $this->sortPlanningTrackersIdsUsingHierarchy($trackers_ids, $hierarchy_factory);
