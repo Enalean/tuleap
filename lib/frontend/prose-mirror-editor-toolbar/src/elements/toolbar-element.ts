@@ -25,7 +25,7 @@ import scss_styles from "./styles.scss?inline";
 import "./buttons/bold";
 import "./buttons/code";
 import "./buttons/quote";
-import "./buttons/embedded";
+import "./buttons/italic";
 import "./buttons/subscript";
 import "./buttons/superscript";
 import "./buttons/link/link";
@@ -36,7 +36,7 @@ export type ProseMirrorToolbarElement = {
 
 export type TextElements = {
     bold: boolean;
-    embedded: boolean;
+    italic: boolean;
     code: boolean;
     quote: boolean;
 };
@@ -65,8 +65,8 @@ export const renderToolbar = (
         ? html`<bold-item toolbar_bus="${host.controller.getToolbarBus()}"></bold-item>`
         : html``;
 
-    const embedded_item = host.text_elements?.embedded
-        ? html`<embedded-item toolbar_bus="${host.controller.getToolbarBus()}"></embedded-item>`
+    const italic_item = host.text_elements?.italic
+        ? html`<italic-item toolbar_bus="${host.controller.getToolbarBus()}"></italic-item>`
         : html``;
 
     const code = host.text_elements?.code;
@@ -97,7 +97,7 @@ export const renderToolbar = (
 
     return html`
         <div class="prose-mirror-toolbar-container" data-test="toolbar-container">
-            ${bold_item} ${embedded_item} ${code_item} ${quote_item}
+            ${bold_item} ${italic_item} ${quote_item} ${code_item}
             <hr class="prose-mirror-hr" />
             ${link_item}
             <hr class="prose-mirror-hr" />

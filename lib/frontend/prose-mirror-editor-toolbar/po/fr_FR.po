@@ -45,7 +45,7 @@ msgstr "Passer en gras `Ctrl+b`"
 msgid "Toggle code Ctrl+`"
 msgstr "Passer en bloc code Ctrl+`"
 
-msgid "Toggle embedded style `Ctrl+i`"
+msgid "Toggle italic style `Ctrl+i`"
 msgstr "Passer en italique `Ctrl+i`"
 
 msgid "Wrap in block quote `Ctrl->`"

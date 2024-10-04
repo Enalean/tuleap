@@ -23,7 +23,7 @@ import type { LinkProperties } from "../../../types/internal-types";
 
 export interface ToolbarHandler {
     toggleBold: () => void;
-    toggleEmbedded: () => void;
+    toggleItalic: () => void;
     toggleCode: () => void;
     toggleQuote: () => void;
     toggleSubscript: () => void;
@@ -33,7 +33,7 @@ export interface ToolbarHandler {
 
 export interface ToolbarView {
     activateBold: (is_activated: boolean) => void;
-    activateEmbedded: (is_activated: boolean) => void;
+    activateItalic: (is_activated: boolean) => void;
     activateCode: (is_activated: boolean) => void;
     activateQuote: (is_activated: boolean) => void;
     activateSubscript: (is_activated: boolean) => void;
@@ -45,7 +45,7 @@ export interface ToolbarBus {
     handler: ToolbarHandler | null;
     view: ToolbarView;
     bold: () => void;
-    embedded: () => void;
+    italic: () => void;
     code: () => void;
     quote: () => void;
     subscript: () => void;
@@ -62,7 +62,7 @@ const default_view: ToolbarView = {
     activateBold: noop,
     activateCode: noop,
     activateQuote: noop,
-    activateEmbedded: noop,
+    activateItalic: noop,
     activateSubscript: noop,
     activateSuperscript: noop,
     activateLink: noop,
@@ -74,8 +74,8 @@ export const buildToolbarBus = (): ToolbarBus => ({
     bold(): void {
         this.handler?.toggleBold();
     },
-    embedded(): void {
-        this.handler?.toggleEmbedded();
+    italic(): void {
+        this.handler?.toggleItalic();
     },
     code(): void {
         this.handler?.toggleCode();
