@@ -31,6 +31,8 @@ import "./buttons/superscript";
 import "./buttons/unlink";
 import "./buttons/link/link";
 import "./buttons/image/image";
+import "./buttons/ordered-list";
+import "./buttons/bullet-list";
 
 export type ProseMirrorToolbarElement = {
     controller: ControlToolbar;
@@ -41,6 +43,11 @@ export type TextElements = {
     italic: boolean;
     code: boolean;
     quote: boolean;
+};
+
+export type ListElements = {
+    ordered_list: boolean;
+    bullet_list: boolean;
 };
 
 export type ScriptElements = {
@@ -56,6 +63,7 @@ export type LinkElements = {
 
 export type InternalProseMirrorToolbarElement = Readonly<ProseMirrorToolbarElement> & {
     text_elements: TextElements | null;
+    list_elements: ListElements | null;
     script_elements: ScriptElements | null;
     link_elements: LinkElements | null;
 };
@@ -81,6 +89,20 @@ export const renderToolbar = (
     const quote = host.text_elements?.quote;
     const quote_item = quote
         ? html`<quote-item toolbar_bus="${host.controller.getToolbarBus()}"></quote-item>`
+        : html``;
+
+    const ordered = host.list_elements?.ordered_list;
+    const ordered_item = ordered
+        ? html`<ordered-list-item
+              toolbar_bus="${host.controller.getToolbarBus()}"
+          ></ordered-list-item>`
+        : html``;
+
+    const bullet = host.list_elements?.bullet_list;
+    const bullet_item = bullet
+        ? html`<bullet-list-item
+              toolbar_bus="${host.controller.getToolbarBus()}"
+          ></bullet-list-item>`
         : html``;
 
     const subscript = host.script_elements?.subscript;
@@ -113,7 +135,10 @@ export const renderToolbar = (
             <hr class="prose-mirror-hr" />
             ${link_item} ${unlink_item} ${image_item}
             <hr class="prose-mirror-hr" />
+            ${bullet_item} ${ordered_item}
+            <hr class="prose-mirror-hr" />
             ${subscript_item} ${superscript_item}
+            <hr class="prose-mirror-hr" />
         </div>
     `.style(scss_styles);
 };
@@ -124,6 +149,7 @@ define<InternalProseMirrorToolbarElement>({
     text_elements: null,
     script_elements: null,
     link_elements: null,
+    list_elements: null,
     render: {
         value: renderToolbar,
         shadow: false,

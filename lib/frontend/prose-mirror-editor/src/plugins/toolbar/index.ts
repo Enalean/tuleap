@@ -29,11 +29,12 @@ import type { GetText } from "@tuleap/gettext";
 import { initPluginTextStyle } from "./text-style";
 import { setupMonoToolbar } from "./mono-toolbar";
 import type { ToolbarBus } from "./helper/toolbar-bus";
-import { MenuItemWithCommandBuilder } from "./helper/BuildMenuItemWithCommand";
+import { IsSelectionAListChecker } from "./list/IsListChecker";
 
 export { buildMenuItems, buildKeymap };
 export type { LinkState } from "./links/LinkState";
 export type { ImageState } from "./image/ImageState";
+export type { ListState } from "./list/ListState";
 
 export const NB_HEADING = 6;
 
@@ -43,7 +44,7 @@ export function setupToolbar(
     toolbar_bus: ToolbarBus,
 ): Plugin[] {
     const plugins = [
-        keymap(buildKeymap(custom_schema, NB_HEADING)),
+        keymap(buildKeymap(custom_schema, IsSelectionAListChecker(), NB_HEADING)),
         keymap(baseKeymap),
         buildInputRules(custom_schema),
         initPluginTextStyle(editor_id, gettext_provider),
@@ -51,12 +52,7 @@ export function setupToolbar(
 
     plugins.push(
         menuBar({
-            content: buildMenuItems(
-                custom_schema,
-                gettext_provider,
-                editor_id,
-                MenuItemWithCommandBuilder(),
-            ).fullMenu,
+            content: buildMenuItems(custom_schema, gettext_provider, editor_id).fullMenu,
         }),
         setupMonoToolbar(toolbar_bus),
     );
