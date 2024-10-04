@@ -28,6 +28,10 @@
             code: true,
             quote: true,
         }"
+        v-bind:script_elements="{
+            subscript: true,
+            superscript: true,
+        }"
     />
 </template>
 
