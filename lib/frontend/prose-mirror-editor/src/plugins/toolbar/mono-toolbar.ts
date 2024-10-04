@@ -54,6 +54,12 @@ export function setupMonoToolbar(toolbar_bus: ToolbarBus): Plugin {
                         toggleQuote(): void {
                             getQuoteCommand()(view.state, view.dispatch);
                         },
+                        toggleSubscript(): void {
+                            MarkToggle().toggleMark(view, custom_schema.marks.subscript);
+                        },
+                        toggleSuperScript(): void {
+                            MarkToggle().toggleMark(view, custom_schema.marks.superscript);
+                        },
                     });
                 },
             };

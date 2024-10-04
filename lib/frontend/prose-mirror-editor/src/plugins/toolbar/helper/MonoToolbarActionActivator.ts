@@ -46,5 +46,11 @@ export const ToolbarActivator = (): ActivateToolbar => ({
             check_is_mark_active.isMarkActive(state, custom_schema.marks.code),
         );
         toolbar_view.activateQuote(isSelectionABlockQuote(state));
+        toolbar_view.activateSubscript(
+            check_is_mark_active.isMarkActive(state, custom_schema.marks.subscript),
+        );
+        toolbar_view.activateSuperscript(
+            check_is_mark_active.isMarkActive(state, custom_schema.marks.superscript),
+        );
     },
 });

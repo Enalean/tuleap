@@ -22,6 +22,8 @@ export interface ToolbarHandler {
     toggleEmbedded: () => void;
     toggleCode: () => void;
     toggleQuote: () => void;
+    toggleSubscript: () => void;
+    toggleSuperScript: () => void;
 }
 
 export interface ToolbarView {
@@ -29,6 +31,8 @@ export interface ToolbarView {
     activateEmbedded: (is_activated: boolean) => void;
     activateCode: (is_activated: boolean) => void;
     activateQuote: (is_activated: boolean) => void;
+    activateSubscript: (is_activated: boolean) => void;
+    activateSuperscript: (is_activated: boolean) => void;
 }
 
 export interface ToolbarBus {
@@ -38,6 +42,8 @@ export interface ToolbarBus {
     embedded: () => void;
     code: () => void;
     quote: () => void;
+    subscript: () => void;
+    superscript: () => void;
     setCurrentHandler: (handler: ToolbarHandler) => void;
     setView: (view: Partial<ToolbarView>) => void;
 }
@@ -50,6 +56,8 @@ const default_view: ToolbarView = {
     activateCode: noop,
     activateQuote: noop,
     activateEmbedded: noop,
+    activateSubscript: noop,
+    activateSuperscript: noop,
 };
 
 export const buildToolbarBus = (): ToolbarBus => ({
@@ -66,6 +74,12 @@ export const buildToolbarBus = (): ToolbarBus => ({
     },
     quote(): void {
         this.handler?.toggleQuote();
+    },
+    subscript(): void {
+        this.handler?.toggleSubscript();
+    },
+    superscript(): void {
+        this.handler?.toggleSuperScript();
     },
     setCurrentHandler(handler: ToolbarHandler): void {
         this.handler = handler;

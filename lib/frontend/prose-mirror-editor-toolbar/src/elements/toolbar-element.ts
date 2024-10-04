@@ -25,6 +25,8 @@ import "./buttons/bold";
 import "./buttons/code";
 import "./buttons/quote";
 import "./buttons/embedded";
+import "./buttons/subscript";
+import "./buttons/superscript";
 
 export type ProseMirrorToolbarElement = {
     controller: ControlToolbar;
@@ -37,8 +39,14 @@ export type TextElements = {
     quote: boolean;
 };
 
+export type ScriptElements = {
+    subscript: boolean;
+    superscript: boolean;
+};
+
 export type InternalProseMirrorToolbarElement = Readonly<ProseMirrorToolbarElement> & {
     text_elements: TextElements | null;
+    script_elements: ScriptElements | null;
 };
 
 const TOOLBAR_TAG_NAME = "tuleap-prose-mirror-toolbar";
@@ -64,9 +72,23 @@ export const renderToolbar = (
         ? html`<quote-item toolbar_bus="${host.controller.getToolbarBus()}"></quote-item>`
         : html``;
 
+    const subscript = host.script_elements?.subscript;
+    const subscript_item = subscript
+        ? html`<subscript-item toolbar_bus="${host.controller.getToolbarBus()}"></subscript-item>`
+        : html``;
+
+    const superscript = host.script_elements?.superscript;
+    const superscript_item = superscript
+        ? html`<superscript-item
+              toolbar_bus="${host.controller.getToolbarBus()}"
+          ></superscript-item>`
+        : html``;
+
     return html`
         <div class="prose-mirror-toolbar-container" data-test="toolbar-container">
             ${bold_item} ${embedded_item} ${code_item} ${quote_item}
+            <hr class="prose-mirror-hr" />
+            ${subscript_item} ${superscript_item}
             <hr class="prose-mirror-hr" />
         </div>
     `.style(scss_styles);
@@ -76,6 +98,7 @@ define<InternalProseMirrorToolbarElement>({
     tag: TOOLBAR_TAG_NAME,
     controller: (host, controller) => controller,
     text_elements: null,
+    script_elements: null,
     render: {
         value: renderToolbar,
         shadow: false,
