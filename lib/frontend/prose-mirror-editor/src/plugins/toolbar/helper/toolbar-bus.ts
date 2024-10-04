@@ -29,6 +29,7 @@ export interface ToolbarHandler {
     toggleSubscript: () => void;
     toggleSuperScript: () => void;
     applyLink: (link: LinkProperties) => void;
+    applyUnlink: () => void;
 }
 
 export interface ToolbarView {
@@ -39,6 +40,7 @@ export interface ToolbarView {
     activateSubscript: (is_activated: boolean) => void;
     activateSuperscript: (is_activated: boolean) => void;
     activateLink: (link_state: LinkState) => void;
+    activateUnlink: (is_activated: boolean) => void;
 }
 
 export interface ToolbarBus {
@@ -51,6 +53,7 @@ export interface ToolbarBus {
     subscript: () => void;
     superscript: () => void;
     link: (link: LinkProperties) => void;
+    unlink: () => void;
     setCurrentHandler: (handler: ToolbarHandler) => void;
     setView: (view: Partial<ToolbarView>) => void;
 }
@@ -66,6 +69,7 @@ const default_view: ToolbarView = {
     activateSubscript: noop,
     activateSuperscript: noop,
     activateLink: noop,
+    activateUnlink: noop,
 };
 
 export const buildToolbarBus = (): ToolbarBus => ({
@@ -91,6 +95,9 @@ export const buildToolbarBus = (): ToolbarBus => ({
     },
     link(link: LinkProperties): void {
         this.handler?.applyLink(link);
+    },
+    unlink(): void {
+        this.handler?.applyUnlink();
     },
     setCurrentHandler(handler: ToolbarHandler): void {
         this.handler = handler;

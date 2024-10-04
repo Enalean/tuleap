@@ -21,11 +21,9 @@ import { icons } from "prosemirror-menu";
 import type { MenuElement, MenuItem } from "prosemirror-menu";
 import type { Schema } from "prosemirror-model";
 import type { GetText } from "@tuleap/gettext";
-import { unlinkItem } from "./links/link-menu-item-builder";
 import { wrapListItem } from "./list/list-menu-item-builder";
 import { getTextStyleDropdownMenu } from "./text-style";
 import { imageItem } from "./image/image-menu-item-builder";
-import type { CheckIsMArkActive } from "./helper/IsMarkActiveChecker";
 import { type BuildMenuItemWithCommand } from "./helper/BuildMenuItemWithCommand";
 
 type MenuItemResult = {
@@ -42,7 +40,6 @@ export function buildMenuItems(
     schema: Schema,
     gettext_provider: GetText,
     editor_id: string,
-    check_is_mark_active: CheckIsMArkActive,
     MenuItemWithCommandBuilder: BuildMenuItemWithCommand,
 ): MenuItemResult {
     return {
@@ -69,7 +66,6 @@ export function buildMenuItems(
                     MenuItemWithCommandBuilder,
                 ),
                 getTextStyleDropdownMenu(schema, editor_id, gettext_provider),
-                unlinkItem(schema.marks.link, editor_id, check_is_mark_active),
 
                 imageItem(schema.nodes.image, editor_id, gettext_provider),
             ],
