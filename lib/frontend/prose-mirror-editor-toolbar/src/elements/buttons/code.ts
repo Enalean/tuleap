@@ -23,48 +23,47 @@ import type { ToolbarBus } from "@tuleap/prose-mirror-editor";
 import { gettext_provider } from "../../gettext-provider";
 import { getClass } from "../../helpers/class-getter";
 
-export const BOLD_TAG_NAME = "bold-item";
+export const CODE_TAG_NAME = "code-item";
 
-export type BoldElement = {
+export type CodeElement = {
     toolbar_bus: ToolbarBus;
 };
 
-type InternalBoldElement = Readonly<BoldElement> & {
+type InternalCodeElement = Readonly<CodeElement> & {
     is_activated: boolean;
 };
 
-export type HostElement = InternalBoldElement & HTMLElement;
-
-const onClickApplyBold = (host: BoldElement): void => {
-    host.toolbar_bus.bold();
-};
-export const renderBoldItem = (host: InternalBoldElement): UpdateFunction<InternalBoldElement> => {
-    const classes = getClass(host.is_activated);
-
-    return html`<button
-        class="${classes}"
-        onclick="${onClickApplyBold}"
-        data-test="button-bold"
-        title="${gettext_provider.gettext("Toggle bold style `Ctrl+b`")}"
-    >
-        <i class="fa-solid fa-bold" role="img"></i>
-    </button>`;
+export type HostElement = InternalCodeElement & HTMLElement;
+const onClickApplyCode = (host: CodeElement): void => {
+    host.toolbar_bus.code();
 };
 
-export const connect = (host: InternalBoldElement): void => {
+export const connect = (host: InternalCodeElement): void => {
     host.toolbar_bus.setView({
-        activateBold: (is_activated: boolean): void => {
+        activateCode: (is_activated: boolean): void => {
             host.is_activated = is_activated;
         },
     });
 };
+export const renderCodeItem = (host: InternalCodeElement): UpdateFunction<InternalCodeElement> => {
+    const classes = getClass(host.is_activated);
 
-define<InternalBoldElement>({
-    tag: BOLD_TAG_NAME,
+    return html`<button
+        class="${classes}"
+        onclick="${onClickApplyCode}"
+        data-test="button-code"
+        title="${gettext_provider.gettext("Toggle code Ctrl+`")}"
+    >
+        <i class="fa-solid fa-code" role="img"></i>
+    </button>`;
+};
+
+export default define<InternalCodeElement>({
+    tag: CODE_TAG_NAME,
     is_activated: false,
     toolbar_bus: {
-        value: (host: BoldElement, toolbar_bus: ToolbarBus) => toolbar_bus,
+        value: (host: CodeElement, toolbar_bus: ToolbarBus) => toolbar_bus,
         connect,
     },
-    render: renderBoldItem,
+    render: renderCodeItem,
 });

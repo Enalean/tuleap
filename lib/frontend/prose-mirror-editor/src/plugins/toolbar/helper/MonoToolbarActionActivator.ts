@@ -22,6 +22,7 @@ import type { EditorState } from "prosemirror-state";
 import type { ToolbarView } from "./toolbar-bus";
 import { custom_schema } from "../../../custom_schema";
 import type { CheckIsMArkActive } from "./IsMarkActiveChecker";
+import { isSelectionABlockQuote } from "../quote/is-selection-a-block-quote";
 export type ActivateToolbar = {
     activateToolbarItem(
         toolbar_view: ToolbarView,
@@ -38,5 +39,12 @@ export const ToolbarActivator = (): ActivateToolbar => ({
         toolbar_view.activateBold(
             check_is_mark_active.isMarkActive(state, custom_schema.marks.strong),
         );
+        toolbar_view.activateEmbedded(
+            check_is_mark_active.isMarkActive(state, custom_schema.marks.em),
+        );
+        toolbar_view.activateCode(
+            check_is_mark_active.isMarkActive(state, custom_schema.marks.code),
+        );
+        toolbar_view.activateQuote(isSelectionABlockQuote(state));
     },
 });

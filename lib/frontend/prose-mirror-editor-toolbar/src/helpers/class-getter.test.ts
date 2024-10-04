@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) Enalean, 2024 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -18,33 +18,19 @@
  *
  */
 
-.prose-mirror-toolbar-container {
-    display: flex;
-    padding: var(--tlp-medium-spacing);
-    background: var(--tlp-white-color);
-    box-shadow: var(--tlp-sticky-header-shadow);
-    gap: var(--tlp-medium-spacing);
-}
+import { describe, expect, it } from "vitest";
+import type { ButtonClasses } from "./class-getter";
+import { getClass } from "./class-getter";
 
-.prose-mirror-button {
-    width: var(--tlp-form-element-small-height);
-    height: var(--tlp-form-element-small-height);
-    border: 0;
-    box-shadow: none;
-
-    &.button-active {
-        background: var(--tlp-main-color-lighter-90);
-    }
-
-    &:hover {
-        color: var(--tlp-typo-default-text-color);
-    }
-}
-
-.prose-mirror-hr {
-    width: 0;
-    height: calc(var(--tlp-form-element-small-height) - 7px);
-    margin: 0;
-    border: 0;
-    border-left: 1px solid var(--tlp-neutral-dark-color);
-}
+describe("QuoteElement", () => {
+    it.each([true, false])(`should returns classes when active is %s`, (is_activated) => {
+        const expected: ButtonClasses = {
+            "tlp-button-primary button-active": is_activated,
+            "tlp-button-secondary": !is_activated,
+            "prose-mirror-button": true,
+            "tlp-button-primary": true,
+            "tlp-button-outline": true,
+        };
+        expect(getClass(is_activated)).toEqual(expected);
+    });
+});

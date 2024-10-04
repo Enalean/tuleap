@@ -23,48 +23,49 @@ import type { ToolbarBus } from "@tuleap/prose-mirror-editor";
 import { gettext_provider } from "../../gettext-provider";
 import { getClass } from "../../helpers/class-getter";
 
-export const BOLD_TAG_NAME = "bold-item";
+export const QUOTE_TAG_NAME = "quote-item";
 
-export type BoldElement = {
+export type QuoteElement = {
     toolbar_bus: ToolbarBus;
 };
 
-type InternalBoldElement = Readonly<BoldElement> & {
+type InternalQuoteElement = Readonly<QuoteElement> & {
     is_activated: boolean;
 };
 
-export type HostElement = InternalBoldElement & HTMLElement;
-
-const onClickApplyBold = (host: BoldElement): void => {
-    host.toolbar_bus.bold();
+export type HostElement = InternalQuoteElement & HTMLElement;
+const onClickApplyQuote = (host: QuoteElement): void => {
+    host.toolbar_bus.quote();
 };
-export const renderBoldItem = (host: InternalBoldElement): UpdateFunction<InternalBoldElement> => {
+export const renderQuoteItem = (
+    host: InternalQuoteElement,
+): UpdateFunction<InternalQuoteElement> => {
     const classes = getClass(host.is_activated);
 
     return html`<button
         class="${classes}"
-        onclick="${onClickApplyBold}"
-        data-test="button-bold"
-        title="${gettext_provider.gettext("Toggle bold style `Ctrl+b`")}"
+        onclick="${onClickApplyQuote}"
+        data-test="button-quote"
+        title="${gettext_provider.gettext("Wrap in block quote `Ctrl->`")}"
     >
-        <i class="fa-solid fa-bold" role="img"></i>
+        <i class="fa-solid fa-quote-left" role="img"></i>
     </button>`;
 };
 
-export const connect = (host: InternalBoldElement): void => {
+export const connect = (host: InternalQuoteElement): void => {
     host.toolbar_bus.setView({
-        activateBold: (is_activated: boolean): void => {
+        activateQuote: (is_activated: boolean): void => {
             host.is_activated = is_activated;
         },
     });
 };
 
-define<InternalBoldElement>({
-    tag: BOLD_TAG_NAME,
+export default define<InternalQuoteElement>({
+    tag: QUOTE_TAG_NAME,
     is_activated: false,
     toolbar_bus: {
-        value: (host: BoldElement, toolbar_bus: ToolbarBus) => toolbar_bus,
+        value: (host: QuoteElement, toolbar_bus: ToolbarBus) => toolbar_bus,
         connect,
     },
-    render: renderBoldItem,
+    render: renderQuoteItem,
 });
