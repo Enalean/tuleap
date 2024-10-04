@@ -33,15 +33,12 @@ const SYNTAX = {
     number: {
         pattern: /\d+(?:\.\d+)?/,
     },
-    linked_from: {
-        pattern: /linked\s*from\b/i,
-    },
     structure: {
-        pattern: /(?:and|from|or|select|where)\b/i,
+        pattern: /(?:and|from|or|select|where|order\s*by)\b/i,
     },
     function: {
         pattern:
-            /(?:artifact|between|by|child|children|covered|covering|from|in|is|linked|myself|not|now|open|parent|to|tracker|type|with|without)\b/i,
+            /(?:artifact|between|by|child|children|covered|covering|from|in|is|linked|myself|not|now|open|parent|to|tracker|type|with|without|linked\s*from|asc|ascending|desc|descending)\b/i,
     },
     operator: {
         pattern: /[=<>!+-]+/,

@@ -42,10 +42,6 @@ Prism.languages.tql = {
     number: {
         pattern: syntax.number.pattern,
     },
-    "linked-from": {
-        pattern: syntax.linked_from.pattern,
-        alias: "function",
-    },
     structure: {
         pattern: syntax.structure.pattern,
         alias: "keyword",
