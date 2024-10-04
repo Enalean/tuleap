@@ -24,6 +24,8 @@ namespace Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\DuckTypedFie
 
 use Tracker;
 use Tuleap\CrossTracker\Field\ReadableFieldRetriever;
+use Tuleap\CrossTracker\Report\Query\Advanced\AllowedMetadata;
+use Tuleap\CrossTracker\Report\Query\Advanced\DuckTypedField\FieldLinkedToMetadataFault;
 use Tuleap\CrossTracker\Report\Query\Advanced\DuckTypedField\FieldTypeRetrieverWrapper;
 use Tuleap\CrossTracker\Report\Query\Advanced\DuckTypedField\OrderBy\DuckTypedFieldOrderBy;
 use Tuleap\CrossTracker\Report\Query\Advanced\DuckTypedField\Select\DuckTypedFieldSelect;
@@ -65,6 +67,10 @@ final readonly class DuckTypedFieldChecker
         foreach ($tracker_ids as $tracker_id) {
             $used_field = $this->retrieve_used_fields->getUsedFieldByName($tracker_id, $field->getName());
             if ($used_field && $used_field->userCanRead($user)) {
+                $type = $this->retrieve_field_type->getType($used_field);
+                if (array_key_exists($type, AllowedMetadata::FIELD_WITH_NO_CHANGESET)) {
+                    return Result::err(FieldLinkedToMetadataFault::build($used_field->getName(), $type));
+                }
                 try {
                     $this->field_checker->checkFieldIsValidForComparison($collector_parameters->comparison, $used_field);
                 } catch (InvalidFieldException $e) {
@@ -98,6 +104,13 @@ final readonly class DuckTypedFieldChecker
 
         $fields_user_can_read = $this->readable_field_retriever->retrieveFieldsUserCanRead($field, $user, $tracker_ids);
 
+        foreach ($fields_user_can_read as $field_user_can_read) {
+            $type = $this->retrieve_field_type->getType($field_user_can_read);
+            if (array_key_exists($type, AllowedMetadata::FIELD_WITH_NO_CHANGESET)) {
+                return Result::err(FieldLinkedToMetadataFault::build($field_user_can_read->getName(), $type));
+            }
+        }
+
         return DuckTypedFieldSelect::build(
             new FieldTypeRetrieverWrapper($this->retrieve_field_type),
             $field->getName(),
@@ -116,6 +129,13 @@ final readonly class DuckTypedFieldChecker
         $tracker_ids = array_map(static fn(Tracker $tracker) => $tracker->getId(), $parameters->trackers);
 
         $fields_user_can_read = $this->readable_field_retriever->retrieveFieldsUserCanRead($field, $parameters->user, $tracker_ids);
+
+        foreach ($fields_user_can_read as $field_user_can_read) {
+            $type = $this->retrieve_field_type->getType($field_user_can_read);
+            if (array_key_exists($type, AllowedMetadata::FIELD_WITH_NO_CHANGESET)) {
+                return Result::err(FieldLinkedToMetadataFault::build($field_user_can_read->getName(), $type));
+            }
+        }
 
         return DuckTypedFieldOrderBy::build(
             new FieldTypeRetrieverWrapper($this->retrieve_field_type),

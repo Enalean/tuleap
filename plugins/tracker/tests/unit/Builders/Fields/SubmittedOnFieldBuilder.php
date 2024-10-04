@@ -22,16 +22,17 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Test\Builders\Fields;
 
+use Tracker;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class SubmittedOnFieldBuilder
 {
     private string $name = 'submission_date';
-    private \Tracker $tracker;
+    private Tracker $tracker;
 
     private function __construct(private readonly int $id)
     {
-        $this->tracker = TrackerTestBuilder::aTracker()->withId(18)->build();
+        $this->tracker = TrackerTestBuilder::aTracker()->withId($id)->build();
     }
 
     public static function aSubmittedOnField(int $id): self
@@ -42,6 +43,12 @@ final class SubmittedOnFieldBuilder
     public function withName(string $name): self
     {
         $this->name = $name;
+        return $this;
+    }
+
+    public function inTracker(Tracker $tracker): self
+    {
+        $this->tracker = $tracker;
         return $this;
     }
 

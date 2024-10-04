@@ -22,16 +22,19 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Test\Builders\Fields;
 
+use Tracker;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class SubmittedByFieldBuilder
 {
-    private string $name = 'submitted_by';
-    private \Tracker $tracker;
+    private string $name                        = 'submitted_by';
+    private ?\PFUser $user_with_read_permission = null;
+    private bool $read_permission               = false;
+    private Tracker $tracker;
 
     private function __construct(private readonly int $id)
     {
-        $this->tracker = TrackerTestBuilder::aTracker()->withId(18)->build();
+        $this->tracker = TrackerTestBuilder::aTracker()->withId($id)->build();
     }
 
     public static function aSubmittedByField(int $id): self
@@ -42,6 +45,19 @@ final class SubmittedByFieldBuilder
     public function withName(string $name): self
     {
         $this->name = $name;
+        return $this;
+    }
+
+    public function inTracker(Tracker $tracker): self
+    {
+        $this->tracker = $tracker;
+        return $this;
+    }
+
+    public function withReadPermission(\PFUser $user, bool $user_can_read): self
+    {
+        $this->user_with_read_permission = $user;
+        $this->read_permission           = $user_can_read;
         return $this;
     }
 
@@ -61,7 +77,9 @@ final class SubmittedByFieldBuilder
             10,
             null
         );
-
+        if ($this->user_with_read_permission !== null) {
+            $field->setUserCanRead($this->user_with_read_permission, $this->read_permission);
+        }
         return $field;
     }
 }
