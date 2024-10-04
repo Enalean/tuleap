@@ -151,7 +151,7 @@ export interface RepositoryOwner {
 
 export interface ExternalPlugins {
     plugin_name: string;
-    data: Array<unknown>;
+    data: Array<JenkinsServer>;
 }
 
 export interface GitlabProject {
@@ -161,4 +161,9 @@ export interface GitlabProject {
     name_with_namespace: string;
     avatar_url: string;
     web_url: string;
+}
+
+export interface JenkinsServer {
+    readonly id: number;
+    readonly url: string;
 }
