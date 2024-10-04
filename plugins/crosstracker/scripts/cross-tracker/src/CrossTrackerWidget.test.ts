@@ -108,29 +108,30 @@ describe("CrossTrackerWidget", () => {
         });
     });
 
-    describe("switchToReadingMode()", () => {
+    describe(`handleCancelQueryEdition()`, () => {
         it(`Given I started to modify the report
             when I cancel,
             then the report will be back to its "report-saved" state
-            and the writing report will be reset`, async () => {
-            const duplicate = vi.spyOn(writing_cross_tracker_report, "duplicateFromReport");
+            and the reading report will be reset
+            and it will clear the feedback messages`, async () => {
+            const duplicate = vi.spyOn(reading_cross_tracker_report, "duplicateFromReport");
             const wrapper = getWrapper();
             await vi.runOnlyPendingTimersAsync();
 
             wrapper.findComponent(ReadingMode).vm.$emit("switch-to-writing-mode");
             await nextTick();
-            wrapper
-                .findComponent(WritingMode)
-                .vm.$emit("switch-to-reading-mode", { saved_state: true });
+            wrapper.findComponent(WritingMode).vm.$emit("cancel-query-edition");
 
             expect(wrapper.vm.report_state).toBe("report-saved");
-            expect(duplicate).toHaveBeenCalledWith(reading_cross_tracker_report);
+            expect(duplicate).toHaveBeenCalledWith(backend_cross_tracker_report);
             expect(wrapper.vm.current_fault.isNothing()).toBe(true);
             expect(wrapper.vm.current_success.isNothing()).toBe(true);
         });
+    });
 
+    describe("handlePreviewResult()", () => {
         it(`Given I started to modify the report
-            when I switch back to reading mode
+            when I preview the results
             then the report will be in "result-preview" state
             and the reading report will be updated
             and it will clear the feedback messages`, async () => {
@@ -140,9 +141,7 @@ describe("CrossTrackerWidget", () => {
 
             wrapper.findComponent(ReadingMode).vm.$emit("switch-to-writing-mode");
             await nextTick();
-            wrapper
-                .findComponent(WritingMode)
-                .vm.$emit("switch-to-reading-mode", { saved_state: false });
+            wrapper.findComponent(WritingMode).vm.$emit("preview-result");
 
             expect(wrapper.vm.report_state).toBe("result-preview");
             expect(duplicate).toHaveBeenCalledWith(writing_cross_tracker_report);
@@ -162,9 +161,7 @@ describe("CrossTrackerWidget", () => {
 
             wrapper.findComponent(ReadingMode).vm.$emit("switch-to-writing-mode");
             await nextTick();
-            wrapper
-                .findComponent(WritingMode)
-                .vm.$emit("switch-to-reading-mode", { saved_state: false });
+            wrapper.findComponent(WritingMode).vm.$emit("preview-result");
             await nextTick();
             wrapper.findComponent(ReadingMode).vm.$emit("saved");
 
@@ -186,9 +183,7 @@ describe("CrossTrackerWidget", () => {
 
             wrapper.findComponent(ReadingMode).vm.$emit("switch-to-writing-mode");
             await nextTick();
-            wrapper
-                .findComponent(WritingMode)
-                .vm.$emit("switch-to-reading-mode", { saved_state: false });
+            wrapper.findComponent(WritingMode).vm.$emit("preview-result");
             await nextTick();
             wrapper.findComponent(ReadingMode).vm.$emit("discard-unsaved-report");
 

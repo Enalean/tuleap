@@ -86,32 +86,24 @@ describe("WritingMode", () => {
     });
 
     describe("cancel()", () => {
-        it("when I hit cancel, then an event will be emitted to switch the widget to reading mode in saved state", () => {
+        it("when I hit cancel, then an event will be emitted to cancel the query edition and switch the widget back to reading mode", () => {
             const writing_cross_tracker_report = new WritingCrossTrackerReport();
             const wrapper = getWrapper(writing_cross_tracker_report);
 
             wrapper.find("[data-test=writing-mode-cancel-button]").trigger("click");
-            const emitted = wrapper.emitted("switch-to-reading-mode");
-            if (!emitted) {
-                throw new Error("Event has not been emitted");
-            }
-
-            expect(emitted[0][0]).toStrictEqual({ saved_state: true });
+            const emitted = wrapper.emitted("cancel-query-edition");
+            expect(emitted).toBeDefined();
         });
     });
 
     describe("search()", () => {
-        it("when I hit search, then an event will be emitted to switch the widget to reading mode in unsaved state", () => {
+        it("when I hit search, then an event will be emitted to preview the results and switch the widget to reading mode", () => {
             const writing_cross_tracker_report = new WritingCrossTrackerReport();
             const wrapper = getWrapper(writing_cross_tracker_report);
 
             wrapper.find("[data-test=search-report-button]").trigger("click");
-            const emitted = wrapper.emitted("switch-to-reading-mode");
-            if (!emitted) {
-                throw new Error("Event has not been emitted");
-            }
-
-            expect(emitted[0][0]).toStrictEqual({ saved_state: false });
+            const emitted = wrapper.emitted("preview-result");
+            expect(emitted).toBeDefined();
         });
     });
 

@@ -40,11 +40,12 @@ import {
 import { DATE_FORMATTER, DATE_TIME_FORMATTER } from "../../injection-symbols";
 
 describe(`SelectableCell`, () => {
-    let artifact_uri: string, is_even: boolean;
+    let artifact_uri: string, is_even: boolean, is_last_of_row: boolean;
 
     beforeEach(() => {
         artifact_uri = "/plugins/tracker/?aid=286";
         is_even = false;
+        is_last_of_row = false;
     });
 
     const getWrapper = (cell: Cell): VueWrapper<InstanceType<typeof SelectableCell>> => {
@@ -64,6 +65,7 @@ describe(`SelectableCell`, () => {
                 cell,
                 artifact_uri,
                 even: is_even,
+                last_of_row: is_last_of_row,
             },
         });
     };
@@ -137,6 +139,15 @@ describe(`SelectableCell`, () => {
                 is_even = false;
                 const wrapper = getWrapper(cell);
                 expect(wrapper.get("[data-test=cell]").classes()).toContain("odd-row");
+            },
+        );
+
+        it.each([...generateCells()])(
+            `sets the last-of-row class when the cell is the last of its row for a %s cell`,
+            (_cell_type, cell) => {
+                is_last_of_row = true;
+                const wrapper = getWrapper(cell);
+                expect(wrapper.get("[data-test=cell]").classes()).toContain("last-of-row");
             },
         );
     });
