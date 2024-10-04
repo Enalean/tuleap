@@ -43,9 +43,7 @@
                     v-bind:cell="row.cells.get(column_name)"
                     v-bind:artifact_uri="row.uri"
                     v-bind:even="isEven(index)"
-                    v-bind:class="{
-                        'is-last-cell-of-row': isLastCellOfRow(column_index, columns.size),
-                    }"
+                    v-bind:last_of_row="isLastCellOfRow(column_index, columns.size)"
                 />
             </template>
         </div>
@@ -243,9 +241,5 @@ function isLastCellOfRow(index: number, size: number): boolean {
     border-bottom: 2px solid var(--tlp-main-color);
     color: var(--tlp-main-color);
     white-space: nowrap;
-}
-
-.is-last-cell-of-row {
-    padding-right: var(--tlp-medium-spacing);
 }
 </style>

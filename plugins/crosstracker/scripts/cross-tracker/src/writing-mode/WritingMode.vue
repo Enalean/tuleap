@@ -72,8 +72,6 @@ import { CLEAR_FEEDBACKS, NOTIFY_FAULT } from "../injection-symbols";
 import type { SwitchModeEvent } from "../components/SwitchModeInput.vue";
 import SwitchModeInput from "../components/SwitchModeInput.vue";
 
-export type SaveEvent = { readonly saved_state: boolean };
-
 const { $gettext } = useGettext();
 
 const notifyFault = strictInject(NOTIFY_FAULT);
@@ -81,7 +79,8 @@ const clearFeedbacks = strictInject(CLEAR_FEEDBACKS);
 
 const props = defineProps<{ writing_cross_tracker_report: WritingCrossTrackerReport }>();
 const emit = defineEmits<{
-    (e: "switch-to-reading-mode", payload: SaveEvent): void;
+    (e: "preview-result"): void;
+    (e: "cancel-query-edition"): void;
 }>();
 
 const selected_trackers = ref<ReadonlyArray<TrackerToUpdate>>([]);
@@ -89,11 +88,11 @@ const selected_trackers = ref<ReadonlyArray<TrackerToUpdate>>([]);
 const is_in_expert_mode = ref<boolean>(false);
 
 function cancel(): void {
-    emit("switch-to-reading-mode", { saved_state: true });
+    emit("cancel-query-edition");
 }
 
 function search(): void {
-    emit("switch-to-reading-mode", { saved_state: false });
+    emit("preview-result");
 }
 
 function updateSelectedTrackers(): void {

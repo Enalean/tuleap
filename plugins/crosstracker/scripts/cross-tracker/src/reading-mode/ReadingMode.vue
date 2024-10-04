@@ -29,10 +29,7 @@
             data-test="tracker-list-reading-mode"
             v-if="!props.reading_cross_tracker_report.expert_mode"
         />
-        <tlp-syntax-highlighting
-            v-if="is_expert_query_not_empty"
-            data-test="tql-reading-mode-query"
-        >
+        <tlp-syntax-highlighting v-if="!isExpertQueryEmpty()" data-test="tql-reading-mode-query">
             <code class="language-tql cross-tracker-reading-mode-query">{{
                 props.reading_cross_tracker_report.expert_query
             }}</code>
@@ -100,9 +97,9 @@ const is_loading = ref(false);
 
 const is_save_disabled = computed(() => is_loading.value === true || props.has_error);
 
-const is_expert_query_not_empty = computed(
-    () => props.reading_cross_tracker_report.expert_query !== "",
-);
+function isExpertQueryEmpty(): boolean {
+    return props.reading_cross_tracker_report.expert_query === "";
+}
 
 function switchToWritingMode(): void {
     if (!is_user_admin) {
@@ -162,9 +159,12 @@ function cancelReport(): void {
     font-size: 0.9375rem;
     gap: var(--tlp-medium-spacing);
 
+    &:not(.disabled) {
+        cursor: pointer;
+    }
+
     &:hover:not(.disabled) {
         background-color: var(--tlp-main-color-transparent-80);
-        cursor: pointer;
     }
 }
 

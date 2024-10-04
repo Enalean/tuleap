@@ -44,7 +44,8 @@
         <writing-mode
             v-if="report_state === 'edit-query'"
             v-bind:writing_cross_tracker_report="writing_cross_tracker_report"
-            v-on:switch-to-reading-mode="handleSwitchReading"
+            v-on:preview-result="handlePreviewResult"
+            v-on:cancel-query-edition="handleCancelQueryEdition"
         />
     </section>
     <section class="tlp-pane-section" v-if="!is_loading">
@@ -64,7 +65,6 @@ import { useGettext } from "vue3-gettext";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import ArtifactTable from "./components/table/ArtifactTable.vue";
 import ReadingMode from "./reading-mode/ReadingMode.vue";
-import type { SaveEvent } from "./writing-mode/WritingMode.vue";
 import WritingMode from "./writing-mode/WritingMode.vue";
 import ErrorMessage from "./components/ErrorMessage.vue";
 import ErrorInactiveProjectMessage from "./components/ErrorInactiveProjectMessage.vue";
@@ -174,16 +174,17 @@ function handleSwitchWriting(): void {
     clearFeedbacks();
 }
 
-function handleSwitchReading(event: SaveEvent): void {
-    if (event.saved_state) {
-        props.writing_cross_tracker_report.duplicateFromReport(props.reading_cross_tracker_report);
-        report_state.value = "report-saved";
-    } else {
-        props.reading_cross_tracker_report.duplicateFromWritingReport(
-            props.writing_cross_tracker_report,
-        );
-        report_state.value = "result-preview";
-    }
+function handlePreviewResult(): void {
+    props.reading_cross_tracker_report.duplicateFromWritingReport(
+        props.writing_cross_tracker_report,
+    );
+    report_state.value = "result-preview";
+    clearFeedbacks();
+}
+
+function handleCancelQueryEdition(): void {
+    props.reading_cross_tracker_report.duplicateFromReport(props.backend_cross_tracker_report);
+    report_state.value = "report-saved";
     clearFeedbacks();
 }
 

@@ -22,21 +22,21 @@
         <text-cell
             v-if="props.cell.type === TEXT_CELL"
             class="cell"
-            v-bind:class="getEvenOddClass()"
+            v-bind:class="getCommonClasses()"
             v-bind:text="props.cell.value"
             data-test="cell"
         />
         <span
             v-if="props.cell.type === USER_CELL"
             class="cell"
-            v-bind:class="getEvenOddClass()"
+            v-bind:class="getCommonClasses()"
             data-test="cell"
             ><user-value v-bind:user="props.cell" />
         </span>
         <span
             v-if="props.cell.type === STATIC_LIST_CELL"
             class="cell list-cell"
-            v-bind:class="getEvenOddClass()"
+            v-bind:class="getCommonClasses()"
             data-test="cell"
         >
             <span
@@ -49,7 +49,7 @@
         <span
             v-if="props.cell.type === USER_LIST_CELL"
             class="cell list-cell"
-            v-bind:class="getEvenOddClass()"
+            v-bind:class="getCommonClasses()"
             data-test="cell"
         >
             <user-value
@@ -61,7 +61,7 @@
         <span
             v-if="props.cell.type === USER_GROUP_LIST_CELL"
             class="cell list-cell"
-            v-bind:class="getEvenOddClass()"
+            v-bind:class="getCommonClasses()"
             data-test="cell"
             ><span
                 v-for="list_value of props.cell.value"
@@ -73,14 +73,14 @@
         <span
             v-if="props.cell.type === TRACKER_CELL"
             class="cell"
-            v-bind:class="getEvenOddClass()"
+            v-bind:class="getCommonClasses()"
             data-test="cell"
             ><span v-bind:class="getBadgeClass(props.cell.color)">{{ props.cell.name }}</span></span
         >
         <span
             v-if="props.cell.type === PRETTY_TITLE_CELL"
             class="cell"
-            v-bind:class="getEvenOddClass()"
+            v-bind:class="getCommonClasses()"
             data-test="cell"
             ><a v-bind:href="props.artifact_uri" class="link"
                 ><span v-bind:class="getCrossRefBadgeClass(props.cell)"
@@ -95,7 +95,7 @@
                 props.cell.type === PROJECT_CELL
             "
             class="cell"
-            v-bind:class="getEvenOddClass()"
+            v-bind:class="getCommonClasses()"
             data-test="cell"
             >{{ renderCell(props.cell) }}</span
         >
@@ -130,6 +130,7 @@ const props = defineProps<{
     cell: Cell | undefined;
     artifact_uri: string;
     even: boolean;
+    last_of_row: boolean;
 }>();
 
 function renderCell(cell: Cell): string {
@@ -146,7 +147,13 @@ function renderCell(cell: Cell): string {
     return "";
 }
 
-const getEvenOddClass = (): string => (props.even ? `even-row` : `odd-row`);
+const getCommonClasses = (): ReadonlyArray<string> => {
+    const classes = [props.even ? "even-row" : "odd-row"];
+    if (props.last_of_row) {
+        classes.push("last-of-row");
+    }
+    return classes;
+};
 
 const getBadgeClass = (color: ColorName): string => `tlp-badge-${color} tlp-badge-outline`;
 
@@ -183,5 +190,9 @@ const getCrossRefBadgeClass = (cell: PrettyTitleCell): string =>
 
 .user-group:not(:last-child)::after {
     content: ", ";
+}
+
+.last-of-row {
+    padding-right: var(--tlp-medium-spacing);
 }
 </style>
