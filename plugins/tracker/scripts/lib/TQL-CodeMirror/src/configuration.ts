@@ -46,10 +46,6 @@ const TQL_mode_definition = {
             token: "tql-structure",
         },
         {
-            regex: syntax.linked_from.pattern,
-            token: "tql-keyword",
-        },
-        {
             regex: syntax.function.pattern,
             token: "tql-keyword",
         },
