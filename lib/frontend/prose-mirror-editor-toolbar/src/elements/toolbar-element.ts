@@ -21,12 +21,14 @@ import type { UpdateFunction } from "hybrids";
 import { define, html } from "hybrids";
 import type { ControlToolbar } from "./ToolbarController";
 import scss_styles from "./styles.scss?inline";
+
 import "./buttons/bold";
 import "./buttons/code";
 import "./buttons/quote";
 import "./buttons/embedded";
 import "./buttons/subscript";
 import "./buttons/superscript";
+import "./buttons/link/link";
 
 export type ProseMirrorToolbarElement = {
     controller: ControlToolbar;
@@ -44,9 +46,14 @@ export type ScriptElements = {
     superscript: boolean;
 };
 
+export type LinkElements = {
+    link: boolean;
+};
+
 export type InternalProseMirrorToolbarElement = Readonly<ProseMirrorToolbarElement> & {
     text_elements: TextElements | null;
     script_elements: ScriptElements | null;
+    link_elements: LinkElements | null;
 };
 
 const TOOLBAR_TAG_NAME = "tuleap-prose-mirror-toolbar";
@@ -84,12 +91,17 @@ export const renderToolbar = (
           ></superscript-item>`
         : html``;
 
+    const link_item = host.link_elements?.link
+        ? html`<link-item toolbar_bus="${host.controller.getToolbarBus()}"></link-item>`
+        : html``;
+
     return html`
         <div class="prose-mirror-toolbar-container" data-test="toolbar-container">
             ${bold_item} ${embedded_item} ${code_item} ${quote_item}
             <hr class="prose-mirror-hr" />
-            ${subscript_item} ${superscript_item}
+            ${link_item}
             <hr class="prose-mirror-hr" />
+            ${subscript_item} ${superscript_item}
         </div>
     `.style(scss_styles);
 };
@@ -99,6 +111,7 @@ define<InternalProseMirrorToolbarElement>({
     controller: (host, controller) => controller,
     text_elements: null,
     script_elements: null,
+    link_elements: null,
     render: {
         value: renderToolbar,
         shadow: false,

@@ -23,19 +23,17 @@ import type { ToolbarView } from "./toolbar-bus";
 import { custom_schema } from "../../../custom_schema";
 import type { CheckIsMArkActive } from "./IsMarkActiveChecker";
 import { isSelectionABlockQuote } from "../quote/is-selection-a-block-quote";
+import type { BuildLinkState } from "../links/LinkStateBuilder";
+
 export type ActivateToolbar = {
-    activateToolbarItem(
-        toolbar_view: ToolbarView,
-        state: EditorState,
-        check_is_mark_active: CheckIsMArkActive,
-    ): void;
+    activateToolbarItem(toolbar_view: ToolbarView, state: EditorState): void;
 };
-export const ToolbarActivator = (): ActivateToolbar => ({
-    activateToolbarItem(
-        toolbar_view: ToolbarView,
-        state: EditorState,
-        check_is_mark_active: CheckIsMArkActive,
-    ): void {
+
+export const ToolbarActivator = (
+    check_is_mark_active: CheckIsMArkActive,
+    build_link_state: BuildLinkState,
+): ActivateToolbar => ({
+    activateToolbarItem(toolbar_view: ToolbarView, state: EditorState): void {
         toolbar_view.activateBold(
             check_is_mark_active.isMarkActive(state, custom_schema.marks.strong),
         );
@@ -52,5 +50,6 @@ export const ToolbarActivator = (): ActivateToolbar => ({
         toolbar_view.activateSuperscript(
             check_is_mark_active.isMarkActive(state, custom_schema.marks.superscript),
         );
+        toolbar_view.activateLink(build_link_state.build(state));
     },
 });

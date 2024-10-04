@@ -23,10 +23,10 @@ import { LinkPopoverInserter } from "./LinkPopoverInserter";
 import { FindDOMNodeAtPositionStub } from "./stubs/FindDOMNodeAtPositionStub";
 import { CrossReferenceHTMLElementDetector } from "./CrossReferenceNodeDetector";
 import { CrossReferenceUrlExtractor } from "./CrossReferenceUrlExtractor";
-import { EditorLinkNodeUrlExtractorStub } from "./stubs/EditorLinkNodeUrlExtractorStub";
+import { ExtractLinkPropertiesStub } from "../../../helpers/stubs/ExtractLinkPropertiesStub";
 
 import * as popover_creator from "./create-link-popover";
-import type { ExtractLinkUrl } from "./LinkUrlExtractor";
+import type { ExtractLinkProperties } from "../../../helpers/LinkPropertiesExtractor";
 import type { CheckEmptySelection } from "./EmptySelectionChecker";
 import { EmptySelectionCheckerStub } from "./stubs/EmptySelectionCheckerStub";
 import { BuildRemoveLinkCallbackStub } from "./stubs/BuildRemoveLinkCallbackStub";
@@ -57,7 +57,10 @@ describe("LinkPopoverInserter", () => {
         vi.spyOn(popover_creator, "removePopover");
     });
 
-    const insertPopover = (node: Node, editor_link_url_extractor: ExtractLinkUrl): boolean => {
+    const insertPopover = (
+        node: Node,
+        editor_link_url_extractor: ExtractLinkProperties,
+    ): boolean => {
         return LinkPopoverInserter(
             doc,
             gettext_provider,
@@ -82,13 +85,13 @@ describe("LinkPopoverInserter", () => {
         const node = doc.createTextNode("I'm a text node");
         check_empty_selection = EmptySelectionCheckerStub.withoutEmptySelection();
 
-        expect(insertPopover(node, EditorLinkNodeUrlExtractorStub.withoutUrl())).toBe(false);
+        expect(insertPopover(node, ExtractLinkPropertiesStub.withoutLinkProperties())).toBe(false);
     });
 
     it("When the Node found at the given position has no parentElement, then it should return false", () => {
         const node = doc.createTextNode("I'm a text node");
 
-        expect(insertPopover(node, EditorLinkNodeUrlExtractorStub.withoutUrl())).toBe(false);
+        expect(insertPopover(node, ExtractLinkPropertiesStub.withoutLinkProperties())).toBe(false);
     });
 
     it("When no url can be found, then it should return false", () => {
@@ -96,7 +99,9 @@ describe("LinkPopoverInserter", () => {
         const node = doc.createElement("span");
         node.appendChild(node_text);
 
-        expect(insertPopover(node_text, EditorLinkNodeUrlExtractorStub.withoutUrl())).toBe(false);
+        expect(insertPopover(node_text, ExtractLinkPropertiesStub.withoutLinkProperties())).toBe(
+            false,
+        );
     });
 
     it("When the parent element of the DOM node found at the given position is a cross reference node, then it should insert a popover for cross references and return true", () => {
@@ -113,7 +118,7 @@ describe("LinkPopoverInserter", () => {
         );
 
         expect(
-            insertPopover(cross_reference_text, EditorLinkNodeUrlExtractorStub.withoutUrl()),
+            insertPopover(cross_reference_text, ExtractLinkPropertiesStub.withoutLinkProperties()),
         ).toBe(true);
 
         expect(insertCrossReferenceLinkPopover).toHaveBeenCalledOnce();
@@ -131,29 +136,30 @@ describe("LinkPopoverInserter", () => {
     });
 
     it("When the DOM node found at the given position is a regular link node, then it should insert a popover for regular links and return true", () => {
-        const link_text = doc.createTextNode("See example");
-        const link_url = "https://example.com/";
+        const link_properties = {
+            href: "https://example.com/",
+            title: "See example",
+        };
+        const link_text = doc.createTextNode(link_properties.title);
         const link = doc.createElement("a");
 
-        link.setAttribute("href", link_url);
+        link.setAttribute("href", link_properties.href);
         link.appendChild(link_text);
 
         const insertLinkPopover = vi.spyOn(popover_creator, "insertLinkPopover");
 
-        expect(insertPopover(link_text, EditorLinkNodeUrlExtractorStub.withUrl(link_url))).toBe(
-            true,
-        );
+        expect(
+            insertPopover(link_text, ExtractLinkPropertiesStub.withLinkProperties(link_properties)),
+        ).toBe(true);
 
         expect(insertLinkPopover).toHaveBeenCalledOnce();
+
         expect(insertLinkPopover).toHaveBeenCalledWith(
             doc,
             gettext_provider,
             link,
             editor_id,
-            {
-                href: link.href,
-                title: link_text.textContent,
-            },
+            link_properties,
             remove_link_callback,
             edit_link_callback,
         );

@@ -20,16 +20,22 @@
 import type { EditorState } from "prosemirror-state";
 import type { MarkType } from "prosemirror-model";
 
-export function isMarkTypeRepeatedInSelection(state: EditorState, mark_type: MarkType): boolean {
-    const { from, to } = state.selection;
-    let mark_type_count = 0;
+export type CheckIsMarkTypeRepeatedInSelection = {
+    isMarkTypeRepeatedInSelection(state: EditorState, mark_type: MarkType): boolean;
+};
 
-    state.doc.nodesBetween(from, to, (node): void => {
-        if (mark_type_count > 1) {
-            return;
-        }
-        mark_type_count += node.marks.filter((mark): boolean => mark.type === mark_type).length;
-    });
+export const IsMarkTypeRepeatedInSelectionChecker = (): CheckIsMarkTypeRepeatedInSelection => ({
+    isMarkTypeRepeatedInSelection: (state: EditorState, mark_type: MarkType): boolean => {
+        const { from, to } = state.selection;
+        let mark_type_count = 0;
 
-    return mark_type_count > 1;
-}
+        state.doc.nodesBetween(from, to, (node): void => {
+            if (mark_type_count > 1) {
+                return;
+            }
+            mark_type_count += node.marks.filter((mark): boolean => mark.type === mark_type).length;
+        });
+
+        return mark_type_count > 1;
+    },
+});

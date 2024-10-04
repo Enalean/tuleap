@@ -41,6 +41,10 @@
     &:hover {
         color: var(--tlp-typo-default-text-color);
     }
+
+    &.tlp-button-secondary:disabled {
+        color: var(--tlp-dimmed-color);
+    }
 }
 
 .prose-mirror-hr {

@@ -24,7 +24,7 @@ import { LinkPopoverInserter } from "./helper/LinkPopoverInserter";
 import { DOMNodeAtPositionFinder } from "./helper/DOMNodeAtPositionFinder";
 import { CrossReferenceHTMLElementDetector } from "./helper/CrossReferenceNodeDetector";
 import { CrossReferenceUrlExtractor } from "./helper/CrossReferenceUrlExtractor";
-import { LinkUrlExtractor } from "./helper/LinkUrlExtractor";
+import { LinkPropertiesExtractor } from "../../helpers/LinkPropertiesExtractor";
 import { LinkNodeDetector } from "./helper/LinkNodeDetector";
 import { EditorNodeAtPositionFinder } from "./helper/EditorNodeAtPositionFinder";
 import { EmptySelectionChecker } from "./helper/EmptySelectionChecker";
@@ -50,7 +50,7 @@ export const initLinkPopoverPlugin = (
                     DOMNodeAtPositionFinder(view),
                     CrossReferenceHTMLElementDetector(),
                     CrossReferenceUrlExtractor(),
-                    LinkUrlExtractor(
+                    LinkPropertiesExtractor(
                         EditorNodeAtPositionFinder(view.state),
                         LinkNodeDetector(view.state),
                     ),

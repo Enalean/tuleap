@@ -21,7 +21,7 @@ import type { GetText } from "@tuleap/gettext";
 import type { FindDOMNodeAtPosition } from "./DOMNodeAtPositionFinder";
 import type { DetectCrossReferenceHTMLElement } from "./CrossReferenceNodeDetector";
 import type { ExtractCrossReferenceUrl } from "./CrossReferenceUrlExtractor";
-import type { ExtractLinkUrl } from "./LinkUrlExtractor";
+import type { ExtractLinkProperties } from "../../../helpers/LinkPropertiesExtractor";
 import {
     insertCrossReferenceLinkPopover,
     insertLinkPopover,
@@ -44,49 +44,42 @@ export const LinkPopoverInserter = (
     find_node: FindDOMNodeAtPosition,
     detect_cross_reference: DetectCrossReferenceHTMLElement,
     extract_cross_reference_url: ExtractCrossReferenceUrl,
-    extract_regular_link_url: ExtractLinkUrl,
+    extract_regular_link_url: ExtractLinkProperties,
     build_remove_link_callback: BuildRemoveLinkCallback,
     build_edit_link_callback: BuildEditLinkCallback,
     build_edit_cross_reference_callback: BuildEditCrossReferenceCallback,
-): InsertLinkPopover => ({
-    insertPopover(position: number): boolean {
-        removePopover(doc, editor_id);
-
-        if (!check_empty_selection.isSelectionEmpty()) {
+): InsertLinkPopover => {
+    const insertPopoverForCrossReference = (
+        popover_anchor: HTMLElement,
+        position: number,
+    ): boolean => {
+        const url = extract_cross_reference_url.extractUrl(popover_anchor);
+        if (!url) {
             return false;
         }
 
-        const popover_anchor = find_node.findNodeAtGivenPosition(position).parentElement;
-        if (!popover_anchor) {
+        insertCrossReferenceLinkPopover(
+            doc,
+            gettext_provider,
+            popover_anchor,
+            editor_id,
+            {
+                href: extract_cross_reference_url.extractUrl(popover_anchor),
+                title: popover_anchor.textContent?.trim() ?? "",
+            },
+            build_edit_cross_reference_callback.build(doc, editor_id, position),
+        );
+
+        return true;
+    };
+
+    const insertPopoverForRegularLink = (
+        popover_anchor: HTMLElement,
+        position: number,
+    ): boolean => {
+        const link = extract_regular_link_url.extractLinkProperties(position);
+        if (!link) {
             return false;
-        }
-
-        const is_cross_ref_link =
-            detect_cross_reference.isCrossReferenceHTMLElement(popover_anchor);
-        const url = is_cross_ref_link
-            ? extract_cross_reference_url.extractUrl(popover_anchor)
-            : extract_regular_link_url.extractLinkUrl(position);
-
-        if (url.length === 0) {
-            return false;
-        }
-
-        const link = {
-            href: url,
-            title: popover_anchor.textContent?.trim() ?? "",
-        };
-
-        if (is_cross_ref_link) {
-            insertCrossReferenceLinkPopover(
-                doc,
-                gettext_provider,
-                popover_anchor,
-                editor_id,
-                link,
-                build_edit_cross_reference_callback.build(doc, editor_id, position),
-            );
-
-            return true;
         }
 
         insertLinkPopover(
@@ -100,5 +93,26 @@ export const LinkPopoverInserter = (
         );
 
         return true;
-    },
-});
+    };
+
+    return {
+        insertPopover(position: number): boolean {
+            removePopover(doc, editor_id);
+
+            if (!check_empty_selection.isSelectionEmpty()) {
+                return false;
+            }
+
+            const popover_anchor = find_node.findNodeAtGivenPosition(position).parentElement;
+            if (!popover_anchor) {
+                return false;
+            }
+
+            if (detect_cross_reference.isCrossReferenceHTMLElement(popover_anchor)) {
+                return insertPopoverForCrossReference(popover_anchor, position);
+            }
+
+            return insertPopoverForRegularLink(popover_anchor, position);
+        },
+    };
+};

@@ -18,48 +18,49 @@
  */
 
 import { describe, it, expect, beforeEach } from "vitest";
-import { LinkUrlExtractor } from "./LinkUrlExtractor";
-import { FindEditorNodeAtPositionStub } from "./stubs/FindEditorNodeAtPositionStub";
-import { DetectLinkNodeStub } from "./stubs/DetectLinkNodeStub";
-import { createLocalDocument } from "../../../helpers/helper-for-test";
-import type { EditorNode } from "../../../types/internal-types";
-import { custom_schema } from "../../../custom_schema";
+import { LinkPropertiesExtractor } from "./LinkPropertiesExtractor";
+import { FindEditorNodeAtPositionStub } from "../plugins/link-popover/helper/stubs/FindEditorNodeAtPositionStub";
+import { DetectLinkNodeStub } from "../plugins/link-popover/helper/stubs/DetectLinkNodeStub";
+import { createLocalDocument } from "./index";
+import type { EditorNode } from "../types/internal-types";
+import { custom_schema } from "../custom_schema";
 import { DOMParser } from "prosemirror-model";
 
-describe("LinkUrlExtractor", () => {
+describe("LinkPropertiesExtractor", () => {
     let doc: Document;
 
     beforeEach(() => {
         doc = createLocalDocument();
     });
 
-    it("When no EditorNode is found at the given position, then it should return an empty string", () => {
-        const url = LinkUrlExtractor(
+    it("When no EditorNode is found at the given position, then it should return null", () => {
+        const url = LinkPropertiesExtractor(
             FindEditorNodeAtPositionStub.withNoEditorNode(),
             DetectLinkNodeStub.withoutLinkNode(),
-        ).extractLinkUrl(1);
+        ).extractLinkProperties(1);
 
-        expect(url).toBe("");
+        expect(url).toBeNull();
     });
 
-    it("When the EditorNode at the given position is not a link node, then it should return an empty string", () => {
-        const url = LinkUrlExtractor(
+    it("When the EditorNode at the given position is not a link node, then it should return null", () => {
+        const url = LinkPropertiesExtractor(
             FindEditorNodeAtPositionStub.withNode(
                 doc.createElement("div") as unknown as EditorNode,
             ),
             DetectLinkNodeStub.withoutLinkNode(),
-        ).extractLinkUrl(1);
+        ).extractLinkProperties(1);
 
-        expect(url).toBe("");
+        expect(url).toBeNull();
     });
 
-    it("When the Editor node at the given position is a link node, then it should return its href attribute", () => {
+    it("When the Editor node at the given position is a link node, then it should return a LinkProperties object", () => {
         const href = "https://example.com";
         const editor_node = {
+            text: "See example",
             marks: [
                 {
                     attrs: {
-                        title: "See example",
+                        title: null,
                         href,
                     },
                     type: DOMParser.fromSchema(custom_schema).schema.marks.link,
@@ -67,11 +68,14 @@ describe("LinkUrlExtractor", () => {
             ],
         } as unknown as EditorNode;
 
-        const url = LinkUrlExtractor(
+        const url = LinkPropertiesExtractor(
             FindEditorNodeAtPositionStub.withNode(editor_node),
             DetectLinkNodeStub.withLinkNode(),
-        ).extractLinkUrl(1);
+        ).extractLinkProperties(1);
 
-        expect(url).toBe(href);
+        expect(url).toStrictEqual({
+            href,
+            title: editor_node.text,
+        });
     });
 });
