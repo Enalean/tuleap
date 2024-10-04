@@ -74,8 +74,7 @@ final class SynchronizeTeamController implements DispatchableWithRequest, Dispat
             $program = ProgramIdentifier::fromId(
                 $this->build_program,
                 (int) $project->getID(),
-                $user,
-                null
+                $user
             );
 
             $team = TeamIdentifier::buildTeamOfProgramById(

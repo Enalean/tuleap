@@ -114,8 +114,7 @@ final class ProgramAdminTeam
             $program_identifier      = ProgramIdentifier::fromId(
                 $build_program,
                 $admin_program->id,
-                $user_identifier,
-                null
+                $user_identifier
             );
             $teams_presenter[]       = new self(
                 $team,

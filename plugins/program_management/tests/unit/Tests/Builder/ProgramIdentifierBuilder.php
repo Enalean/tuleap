@@ -31,11 +31,11 @@ final class ProgramIdentifierBuilder
 {
     public static function build(): ProgramIdentifier
     {
-        return ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 101, UserReferenceStub::withDefaults(), null);
+        return ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), 101, UserReferenceStub::withDefaults());
     }
 
     public static function buildWithId(int $id): ProgramIdentifier
     {
-        return ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), $id, UserReferenceStub::withDefaults(), null);
+        return ProgramIdentifier::fromId(BuildProgramStub::stubValidProgram(), $id, UserReferenceStub::withDefaults());
     }
 }

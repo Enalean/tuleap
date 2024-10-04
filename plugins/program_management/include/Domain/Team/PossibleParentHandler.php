@@ -67,8 +67,7 @@ final class PossibleParentHandler
                 $programs[$program_id] = ProgramIdentifier::fromId(
                     $this->program_builder,
                     $program_id,
-                    $possible_parent_selector->getUser(),
-                    null
+                    $possible_parent_selector->getUser()
                 );
             } catch (ProgramAccessException) {
                 continue;

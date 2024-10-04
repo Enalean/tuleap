@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Tests\Stub;
 
-use Tuleap\ProgramManagement\Domain\Permissions\PermissionBypass;
 use Tuleap\ProgramManagement\Domain\Program\Plan\BuildProgram;
 use Tuleap\ProgramManagement\Domain\Program\Plan\ProgramAccessException;
 use Tuleap\ProgramManagement\Domain\Program\Plan\ProjectIsNotAProgramException;
@@ -56,7 +55,7 @@ final class BuildProgramStub implements BuildProgram
         return new self(true, false);
     }
 
-    public function ensureProgramIsAProject(int $project_id, UserIdentifier $user, ?PermissionBypass $bypass): void
+    public function ensureProgramIsAProject(int $project_id, UserIdentifier $user): void
     {
         if (! $this->is_a_program) {
             throw new ProjectIsNotAProgramException($project_id);

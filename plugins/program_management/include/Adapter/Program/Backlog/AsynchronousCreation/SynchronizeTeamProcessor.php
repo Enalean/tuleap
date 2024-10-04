@@ -96,8 +96,7 @@ final class SynchronizeTeamProcessor implements ProcessTeamSynchronization
         $program_identifier = ProgramIdentifier::fromId(
             $this->build_program,
             $event->getProgramId(),
-            $user_identifier,
-            null
+            $user_identifier
         );
 
         $team_identifier = TeamIdentifier::buildTeamOfProgramById(

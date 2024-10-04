@@ -33,7 +33,6 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\CreatePostAction;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\SearchByTransitionId;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\SearchByWorkflow;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\TopBacklogChangeProcessor;
-use Tuleap\ProgramManagement\Domain\Program\Plan\BuildProgram;
 use Workflow;
 
 final class AddToTopBacklogPostActionFactory implements Transition_PostActionSubFactory
@@ -45,7 +44,6 @@ final class AddToTopBacklogPostActionFactory implements Transition_PostActionSub
 
     public function __construct(
         private readonly SearchByTransitionId $add_to_top_backlog_post_action_dao,
-        private readonly BuildProgram $build_program,
         private readonly RetrieveFullProject $project_retriever,
         private readonly ProgramServiceIsEnabledCertifier $program_certifier,
         private readonly TopBacklogChangeProcessor $top_backlog_change_processor,
@@ -81,7 +79,7 @@ final class AddToTopBacklogPostActionFactory implements Transition_PostActionSub
                     new AddToTopBacklogPostAction(
                         $transition,
                         $this->cache[$workflow_id][$transition_id],
-                        $this->build_program,
+                        $this->program_certifier,
                         $this->top_backlog_change_processor
                     ),
                 ];
@@ -101,7 +99,7 @@ final class AddToTopBacklogPostActionFactory implements Transition_PostActionSub
                     new AddToTopBacklogPostAction(
                         $transition,
                         $row['id'],
-                        $this->build_program,
+                        $this->program_certifier,
                         $this->top_backlog_change_processor
                     ),
                 ];
@@ -137,7 +135,7 @@ final class AddToTopBacklogPostActionFactory implements Transition_PostActionSub
         return new AddToTopBacklogPostAction(
             $transition,
             0,
-            $this->build_program,
+            $this->program_certifier,
             $this->top_backlog_change_processor
         );
     }

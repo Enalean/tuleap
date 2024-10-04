@@ -22,14 +22,14 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\Workflow;
 
-use Tracker_Artifact_Changeset;
 use Tracker_FormElement_Field;
 use Tuleap\GlobalLanguageMock;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\TopBacklogChangeProcessor;
-use Tuleap\ProgramManagement\Domain\Program\Plan\BuildProgram;
-use Tuleap\ProgramManagement\Tests\Stub\BuildProgramStub;
-use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\ProgramManagement\Adapter\Workspace\ProgramServiceIsEnabledCertifier;
+use Tuleap\ProgramManagement\ProgramService;
+use Tuleap\ProgramManagement\Tests\Stub\Program\Backlog\TopBacklog\TopBacklogChangeProcessorStub;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
+use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Workflow\PostAction\Visitor;
 
@@ -37,19 +37,21 @@ final class AddToTopBacklogPostActionTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use GlobalLanguageMock;
 
-    /**
-     * @var BuildProgram
-     */
-    private $build_program;
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&TopBacklogChangeProcessor
-     */
-    private $top_backlog_change_processor;
+    private TopBacklogChangeProcessorStub $top_backlog_change_processor;
 
     protected function setUp(): void
     {
-        $this->build_program                = BuildProgramStub::stubValidProgram();
-        $this->top_backlog_change_processor = $this->createMock(TopBacklogChangeProcessor::class);
+        $this->top_backlog_change_processor = TopBacklogChangeProcessorStub::withCallCount();
+    }
+
+    private function getPostAction(): AddToTopBacklogPostAction
+    {
+        return new AddToTopBacklogPostAction(
+            $this->createMock(\Transition::class),
+            1,
+            new ProgramServiceIsEnabledCertifier(),
+            $this->top_backlog_change_processor
+        );
     }
 
     public function testHasAShortName(): void
@@ -72,29 +74,40 @@ final class AddToTopBacklogPostActionTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testAddArtifactToTheTopBacklogOnceTheTransitionIsExecuted(): void
     {
-        $changeset = $this->createMock(Tracker_Artifact_Changeset::class);
-        $artifact  = $this->createMock(Artifact::class);
-        $artifact->method('getId')->willReturn(999);
-        $changeset->method('getArtifact')->willReturn($artifact);
-        $tracker = TrackerTestBuilder::aTracker()->withId(10)->withProject(new \Project(['group_id' => 102]))->build();
-        $artifact->method('getTracker')->willReturn($tracker);
-
-        $this->top_backlog_change_processor->expects(self::once())->method('processTopBacklogChangeForAProgram');
+        $changeset = ChangesetTestBuilder::aChangeset('432')
+            ->ofArtifact(
+                ArtifactTestBuilder::anArtifact(999)
+                    ->inTracker(
+                        TrackerTestBuilder::aTracker()->withId(10)
+                            ->withProject(
+                                ProjectTestBuilder::aProject()->withId(102)
+                                    ->withUsedService(ProgramService::SERVICE_SHORTNAME)
+                                    ->build()
+                            )->build()
+                    )->build()
+            )->build();
 
         $this->getPostAction()->after($changeset);
+
+        self::assertSame(1, $this->top_backlog_change_processor->getCallCount());
     }
 
-    public function testDoesNothingIfSomeReasonWeTryToProcessAnArtifactThatIsNotPartOfAProgram(): void
+    public function testItDoesNothingIfForSomeReasonWeTryToProcessAnArtifactThatIsNotPartOfAProgram(): void
     {
-        $changeset = $this->createMock(Tracker_Artifact_Changeset::class);
-        $tracker   = TrackerTestBuilder::aTracker()->withId(10)->withProject(new \Project(['group_id' => 103]))->build();
-        $artifact  = ArtifactTestBuilder::anArtifact(1)->inTracker($tracker)->build();
-        $changeset->method('getArtifact')->willReturn($artifact);
-        $this->build_program = BuildProgramStub::stubInvalidProgram();
-
-        $this->top_backlog_change_processor->expects(self::never())->method('processTopBacklogChangeForAProgram');
+        $changeset = ChangesetTestBuilder::aChangeset('465')
+            ->ofArtifact(
+                ArtifactTestBuilder::anArtifact(1)
+                    ->inTracker(
+                        TrackerTestBuilder::aTracker()->withId(10)
+                            ->withProject(
+                                ProjectTestBuilder::aProject()->withId(103)->withoutServices()->build()
+                            )->build()
+                    )->build()
+            )->build();
 
         $this->getPostAction()->after($changeset);
+
+        self::assertSame(0, $this->top_backlog_change_processor->getCallCount());
     }
 
     public function testItExportsToXMl(): void
@@ -102,17 +115,7 @@ final class AddToTopBacklogPostActionTest extends \Tuleap\Test\PHPUnit\TestCase
         $root = new \SimpleXMLElement('<postactions></postactions>');
         $this->getPostAction()->exportToXml($root, []);
 
-        self::assertEquals(1, $root->children()->count());
-        self::assertEquals('postaction_add_to_program_top_backlog', $root->children()->getName());
-    }
-
-    private function getPostAction(): AddToTopBacklogPostAction
-    {
-        return new AddToTopBacklogPostAction(
-            $this->createMock(\Transition::class),
-            1,
-            $this->build_program,
-            $this->top_backlog_change_processor
-        );
+        self::assertSame(1, $root->children()->count());
+        self::assertSame('postaction_add_to_program_top_backlog', $root->children()->getName());
     }
 }

@@ -27,7 +27,6 @@ use Transition;
 use Tuleap\ProgramManagement\Adapter\Workspace\ProgramServiceIsEnabledCertifier;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\TopBacklogChangeProcessor;
 use Tuleap\ProgramManagement\ProgramService;
-use Tuleap\ProgramManagement\Tests\Stub\BuildProgramStub;
 use Tuleap\ProgramManagement\Tests\Stub\CreatePostActionStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveFullProjectStub;
 use Tuleap\ProgramManagement\Tests\Stub\SearchByTransitionIdStub;
@@ -79,7 +78,6 @@ final class AddToTopBacklogPostActionFactoryTest extends \Tuleap\Test\PHPUnit\Te
     {
         return new AddToTopBacklogPostActionFactory(
             $this->search_transition,
-            BuildProgramStub::stubValidProgram(),
             RetrieveFullProjectStub::withProject($this->project),
             new ProgramServiceIsEnabledCertifier(),
             $this->createMock(TopBacklogChangeProcessor::class),

@@ -158,7 +158,7 @@ final class DisplayProgramBacklogController implements DispatchableWithRequest, 
         Project $project,
         UserIdentifier $user,
     ): ProgramBacklogConfiguration {
-        $program = ProgramIdentifier::fromId($this->build_program, (int) $project->getID(), $user, null);
+        $program = ProgramIdentifier::fromId($this->build_program, (int) $project->getID(), $user);
 
         $program_increment_configuration = ProgramIncrementTrackerConfiguration::fromProgram(
             $this->program_increment_tracker_retriever,

@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Plan;
 
-use Tuleap\ProgramManagement\Domain\Permissions\PermissionBypass;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 
 interface BuildProgram
@@ -31,5 +30,5 @@ interface BuildProgram
      * @throws ProjectIsNotAProgramException
      * @throws ProgramAccessException
      */
-    public function ensureProgramIsAProject(int $project_id, UserIdentifier $user, ?PermissionBypass $bypass): void;
+    public function ensureProgramIsAProject(int $project_id, UserIdentifier $user): void;
 }
