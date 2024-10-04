@@ -20,10 +20,12 @@
 
 .prose-mirror-toolbar-container {
     display: flex;
-    padding: var(--tlp-medium-spacing);
+    flex-wrap: wrap;
+    align-items: center;
+    padding: var(--tlp-small-spacing) var(--tlp-medium-spacing);
     background: var(--tlp-white-color);
     box-shadow: var(--tlp-sticky-header-shadow);
-    gap: var(--tlp-medium-spacing);
+    gap: var(--tlp-small-spacing);
 }
 
 .prose-mirror-button {
