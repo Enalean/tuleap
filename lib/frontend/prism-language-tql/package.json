@@ -3,11 +3,18 @@
   "name": "@tuleap/prism-language-tql",
   "homepage": "https://tuleap.net/plugins/git/tuleap/tuleap/stable?a=tree&hb=refs%2Fheads%2Fmaster&f=lib%2Ffrontend%2Fprism-language-tql",
   "license": "MIT",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "type": "module",
-  "types": "dist/index.d.ts",
-  "module": "dist/prism-language-tql.js",
-  "main": "dist/prism-language-tql.umd.cjs",
+  "types": "./dist/index.d.ts",
+  "module": "./dist/prism-language-tql.js",
+  "main": "./dist/prism-language-tql.umd.cjs",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/prism-language-tql.js",
+      "require": "./dist/prism-language-tql.umd.cjs"
+    }
+  },
   "repository": {
     "type": "git",
     "url": "https://tuleap.net/plugins/git/tuleap/tuleap/stable",
