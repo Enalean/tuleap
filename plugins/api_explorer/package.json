@@ -19,6 +19,7 @@
   },
   "pnpm": {
     "overrides": {
+      "cookie": "^0.7.2",
       "dompurify": "^3.1.4",
       "json-stable-stringify": "npm:@nolyfill/json-stable-stringify@latest",
       "side-channel": "npm:@nolyfill/side-channel@latest"
