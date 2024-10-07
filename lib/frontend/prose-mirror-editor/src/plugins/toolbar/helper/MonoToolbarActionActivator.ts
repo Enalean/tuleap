@@ -51,5 +51,8 @@ export const ToolbarActivator = (
             check_is_mark_active.isMarkActive(state, custom_schema.marks.superscript),
         );
         toolbar_view.activateLink(build_link_state.build(state));
+        toolbar_view.activateUnlink(
+            check_is_mark_active.isMarkActive(state, custom_schema.marks.link),
+        );
     },
 });

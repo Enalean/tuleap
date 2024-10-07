@@ -29,7 +29,6 @@ import type { GetText } from "@tuleap/gettext";
 import { initPluginTextStyle } from "./text-style";
 import { setupMonoToolbar } from "./mono-toolbar";
 import type { ToolbarBus } from "./helper/toolbar-bus";
-import { IsMarkActiveChecker } from "./helper/IsMarkActiveChecker";
 import { MenuItemWithCommandBuilder } from "./helper/BuildMenuItemWithCommand";
 
 export { buildMenuItems, buildKeymap };
@@ -55,7 +54,6 @@ export function setupToolbar(
                 custom_schema,
                 gettext_provider,
                 editor_id,
-                IsMarkActiveChecker(),
                 MenuItemWithCommandBuilder(),
             ).fullMenu,
         }),

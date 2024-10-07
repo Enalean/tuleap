@@ -33,6 +33,9 @@ msgstr "Éditer un lien"
 msgid "Link"
 msgstr "Lien"
 
+msgid "Remove link"
+msgstr "Supprimer le lien"
+
 msgid "Save"
 msgstr "Sauvegarder"
 
