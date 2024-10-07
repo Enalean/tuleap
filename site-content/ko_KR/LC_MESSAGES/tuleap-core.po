@@ -2034,6 +2034,10 @@ msgstr "내 대시보드"
 msgid "Name"
 msgstr "이름"
 
+#, php-format
+msgid "Name is too long. It must be less than %s characters."
+msgstr ""
+
 msgid "Name of passkey can contain up to 250 characters maximum"
 msgstr "암호 키 이름은 최대 250자까지 작성할 수 있습니다."
 

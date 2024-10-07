@@ -162,10 +162,13 @@ class Rule_UserName extends \Rule // phpcs:ignore PSR1.Classes.ClassDeclaration.
      *
      * @return bool
      */
-    public function greaterThanMax($val, $max = 30)
+    public function greaterThanMax(string $val, int $max = 30)
     {
-        if (\strlen($val) > $max) {
-            $this->error = $GLOBALS['Language']->getText('include_account', 'name_too_long', $max);
+        if (\mb_strlen($val) > $max) {
+            $this->error = sprintf(
+                gettext('Name is too long. It must be less than %s characters.'),
+                $max
+            );
             return \true;
         }
         return \false;
@@ -201,7 +204,7 @@ class Rule_UserName extends \Rule // phpcs:ignore PSR1.Classes.ClassDeclaration.
 
     public function isUnixValid(string $val): bool
     {
-        return $this->noSpaces($val) && ! $this->lessThanMin($val) && ! $this->greaterThanMax($val) && ! $this->containsIllegalChars($val);
+        return $this->noSpaces($val) && ! $this->containsIllegalChars($val) && ! $this->lessThanMin($val) && ! $this->greaterThanMax($val);
     }
 
     /**

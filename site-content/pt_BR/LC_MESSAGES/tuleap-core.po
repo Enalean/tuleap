@@ -2081,6 +2081,10 @@ msgstr "Meu painel"
 msgid "Name"
 msgstr "Nome"
 
+#, php-format
+msgid "Name is too long. It must be less than %s characters."
+msgstr ""
+
 msgid "Name of passkey can contain up to 250 characters maximum"
 msgstr ""
 
