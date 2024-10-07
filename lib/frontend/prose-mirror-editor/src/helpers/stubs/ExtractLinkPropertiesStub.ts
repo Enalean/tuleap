@@ -17,13 +17,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { ExtractLinkUrl } from "../LinkUrlExtractor";
+import type { ExtractLinkProperties } from "../LinkPropertiesExtractor";
+import type { LinkProperties } from "../../types/internal-types";
 
-export const EditorLinkNodeUrlExtractorStub = {
-    withoutUrl: (): ExtractLinkUrl => ({
-        extractLinkUrl: () => "",
+export const ExtractLinkPropertiesStub = {
+    withoutLinkProperties: (): ExtractLinkProperties => ({
+        extractLinkProperties: () => null,
     }),
-    withUrl: (url: string): ExtractLinkUrl => ({
-        extractLinkUrl: () => url,
+    withLinkProperties: (link: LinkProperties): ExtractLinkProperties => ({
+        extractLinkProperties: () => link,
     }),
 };

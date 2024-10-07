@@ -11,6 +11,9 @@ dependencies:
   '@tuleap/prose-mirror-editor':
     specifier: workspace:^
     version: link:../prose-mirror-editor
+  '@tuleap/tlp-popovers':
+    specifier: workspace:^
+    version: link:../tlp-popovers
   dompurify:
     specifier: ^3.1.4
     version: 3.1.7

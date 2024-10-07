@@ -27,6 +27,12 @@ import { IsMarkActiveChecker } from "./helper/IsMarkActiveChecker";
 import { MarkToggle } from "./helper/MonoToolbarToggler";
 import { custom_schema } from "../../custom_schema";
 import { getQuoteCommand } from "./quote";
+import { LinkStateBuilder } from "./links/LinkStateBuilder";
+import { LinkPropertiesExtractor } from "../../helpers/LinkPropertiesExtractor";
+import { EditorNodeAtPositionFinder } from "../link-popover/helper/EditorNodeAtPositionFinder";
+import { LinkNodeDetector } from "../link-popover/helper/LinkNodeDetector";
+import { replaceLinkNode } from "../../helpers/replace-link-node";
+import { IsMarkTypeRepeatedInSelectionChecker } from "../../helpers/IsMarkTypeRepeatedInSelectionChecker";
 
 export function setupMonoToolbar(toolbar_bus: ToolbarBus): Plugin {
     return new Plugin({
@@ -34,11 +40,18 @@ export function setupMonoToolbar(toolbar_bus: ToolbarBus): Plugin {
             return {
                 update: (view: EditorView): void => {
                     if (toolbar_bus.view) {
-                        ToolbarActivator().activateToolbarItem(
-                            toolbar_bus.view,
-                            view.state,
+                        const toolbar_activator = ToolbarActivator(
                             IsMarkActiveChecker(),
+                            LinkStateBuilder(
+                                IsMarkTypeRepeatedInSelectionChecker(),
+                                LinkPropertiesExtractor(
+                                    EditorNodeAtPositionFinder(view.state),
+                                    LinkNodeDetector(view.state),
+                                ),
+                            ),
                         );
+
+                        toolbar_activator.activateToolbarItem(toolbar_bus.view, view.state);
                     }
 
                     toolbar_bus.setCurrentHandler({
@@ -59,6 +72,9 @@ export function setupMonoToolbar(toolbar_bus: ToolbarBus): Plugin {
                         },
                         toggleSuperScript(): void {
                             MarkToggle().toggleMark(view, custom_schema.marks.superscript);
+                        },
+                        applyLink(link): void {
+                            replaceLinkNode(view, link);
                         },
                     });
                 },

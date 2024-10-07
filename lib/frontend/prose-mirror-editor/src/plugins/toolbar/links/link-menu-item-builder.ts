@@ -19,61 +19,11 @@
  */
 
 import type { MarkType } from "prosemirror-model";
-import type { GetText } from "@tuleap/gettext";
 import { MenuItem } from "prosemirror-menu";
-import type { EditorView } from "prosemirror-view";
-import { buildPopover } from "./popover-link";
-import { updateInputValues } from "./input-value-updater";
 import { getWrappingNodeInfo } from "../helper/NodeInfoRetriever";
 import { schema } from "prosemirror-schema-basic";
-import { isMarkTypeRepeatedInSelection } from "../../../helpers/is-mark-type-repeated-in-selection";
-import type { EditorState } from "prosemirror-state";
 import { removeSelectedLinks } from "../../link-popover/helper/remove-selected-links";
 import type { CheckIsMArkActive } from "../helper/IsMarkActiveChecker";
-
-export function linkItem(
-    markType: MarkType,
-    popover_element_id: string,
-    gettext_provider: GetText,
-    check_is_mark_active: CheckIsMArkActive,
-): MenuItem {
-    const link_title_id = `link-title-${popover_element_id}`;
-    const link_href_id = `link-href-${popover_element_id}`;
-    const popover_title_id = `popover-title-${popover_element_id}`;
-    const popover_submit_id = `submit-popover-${popover_element_id}`;
-
-    return new MenuItem({
-        title: gettext_provider.gettext("Add or update link"),
-        active(state): boolean {
-            return check_is_mark_active.isMarkActive(state, markType);
-        },
-        enable: (state: EditorState): boolean =>
-            !isMarkTypeRepeatedInSelection(state, state.schema.marks.link),
-        render: function (view: EditorView): HTMLElement {
-            return buildPopover(
-                popover_element_id,
-                view,
-                document,
-                link_title_id,
-                link_href_id,
-                popover_title_id,
-                popover_submit_id,
-                gettext_provider,
-            );
-        },
-        run(state): void {
-            updateInputValues(
-                document,
-                link_title_id,
-                link_href_id,
-                popover_title_id,
-                popover_submit_id,
-                gettext_provider,
-                state,
-            );
-        },
-    });
-}
 
 export function unlinkItem(
     markType: MarkType,

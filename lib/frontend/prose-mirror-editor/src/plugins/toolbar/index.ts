@@ -33,6 +33,7 @@ import { IsMarkActiveChecker } from "./helper/IsMarkActiveChecker";
 import { MenuItemWithCommandBuilder } from "./helper/BuildMenuItemWithCommand";
 
 export { buildMenuItems, buildKeymap };
+export type { LinkState } from "./links/LinkState";
 
 export const NB_HEADING = 6;
 

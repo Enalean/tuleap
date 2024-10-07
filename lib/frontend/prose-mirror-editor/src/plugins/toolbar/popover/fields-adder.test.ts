@@ -19,9 +19,9 @@
  */
 
 import { describe, expect, it } from "vitest";
-import type { TextField } from "../links/popover-link";
+import type { TextField } from "../image/popover-image";
 import { createAndInsertField } from "./fields-adder";
-import { createLocalDocument } from "../../../helpers/helper-for-test";
+import { createLocalDocument } from "../../../helpers";
 
 const doc = createLocalDocument();
 describe("fields adder", () => {

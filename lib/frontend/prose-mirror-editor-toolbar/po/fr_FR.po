@@ -18,6 +18,27 @@ msgstr "Transformer le texte sélectionné en indice `Ctrl+,`"
 msgid "Apply superscript style on the selected text `Ctrl+.`"
 msgstr "Transformer le texte sélectionné en exposant `Ctrl+.`"
 
+msgid "Cancel"
+msgstr "Annuler"
+
+msgid "Create link"
+msgstr "Créer un lien"
+
+msgid "Create or edit link"
+msgstr "Créer ou éditer un lien"
+
+msgid "Edit link"
+msgstr "Éditer un lien"
+
+msgid "Link"
+msgstr "Lien"
+
+msgid "Save"
+msgstr "Sauvegarder"
+
+msgid "Text"
+msgstr "Texte"
+
 msgid "Toggle bold style `Ctrl+b`"
 msgstr "Passer en gras `Ctrl+b`"
 

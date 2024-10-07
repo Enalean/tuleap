@@ -32,6 +32,7 @@
             subscript: true,
             superscript: true,
         }"
+        v-bind:link_elements="{ link: true }"
     />
 </template>
 

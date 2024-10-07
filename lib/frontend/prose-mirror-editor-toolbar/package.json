@@ -17,6 +17,7 @@
   "dependencies": {
     "@tuleap/gettext": "workspace:^",
     "@tuleap/prose-mirror-editor": "workspace:^",
+    "@tuleap/tlp-popovers": "workspace:^",
     "dompurify": "^3.1.4",
     "hybrids": "9.1.6"
   },
