@@ -58,7 +58,7 @@ export function setupMonoToolbar(toolbar_bus: ToolbarBus): Plugin {
                         toggleBold(): void {
                             MarkToggle().toggleMark(view, custom_schema.marks.strong);
                         },
-                        toggleEmbedded(): void {
+                        toggleItalic(): void {
                             MarkToggle().toggleMark(view, custom_schema.marks.em);
                         },
                         toggleCode(): void {

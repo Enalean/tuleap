@@ -24,7 +24,7 @@
         v-bind:controller="controller"
         v-bind:text_elements="{
             bold: true,
-            embedded: true,
+            italic: true,
             code: true,
             quote: true,
         }"

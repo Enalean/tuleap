@@ -37,7 +37,7 @@ export const ToolbarActivator = (
         toolbar_view.activateBold(
             check_is_mark_active.isMarkActive(state, custom_schema.marks.strong),
         );
-        toolbar_view.activateEmbedded(
+        toolbar_view.activateItalic(
             check_is_mark_active.isMarkActive(state, custom_schema.marks.em),
         );
         toolbar_view.activateCode(

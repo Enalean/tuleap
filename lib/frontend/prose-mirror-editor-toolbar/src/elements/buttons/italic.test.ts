@@ -22,10 +22,10 @@ import { describe, beforeEach, expect, it, vi } from "vitest";
 import type { ToolbarBus } from "@tuleap/prose-mirror-editor";
 import { buildToolbarBus } from "@tuleap/prose-mirror-editor";
 import { createLocalDocument } from "../../helpers/helper-for-test";
-import type { HostElement } from "./embedded";
-import { connect, renderEmbeddedItem } from "./embedded";
+import type { HostElement } from "./italic";
+import { connect, renderItalicItem } from "./italic";
 
-describe("EmbeddedElement", () => {
+describe("ItalicElement", () => {
     let target: ShadowRoot, toolbar_bus: ToolbarBus;
 
     beforeEach(() => {
@@ -43,27 +43,27 @@ describe("EmbeddedElement", () => {
 
         connect(host);
 
-        toolbar_bus.view.activateEmbedded(true);
+        toolbar_bus.view.activateItalic(true);
         expect(host.is_activated).toBe(true);
 
-        toolbar_bus.view.activateEmbedded(false);
+        toolbar_bus.view.activateItalic(false);
         expect(host.is_activated).toBe(false);
     });
 
-    it("When the button is clicked, Then it should call toolbar_bus embedded() method", () => {
-        const applyCode = vi.spyOn(toolbar_bus, "embedded");
+    it("When the button is clicked, Then it should call toolbar_bus italic() method", () => {
+        const applyItalic = vi.spyOn(toolbar_bus, "italic");
         const host = { toolbar_bus } as HostElement;
 
-        renderEmbeddedItem(host)(host, target);
+        renderItalicItem(host)(host, target);
 
-        const button = target.querySelector<HTMLButtonElement>("[data-test=button-embedded]");
+        const button = target.querySelector<HTMLButtonElement>("[data-test=button-italic]");
         if (!button) {
             throw new Error("Expected a button");
         }
 
         button.click();
 
-        expect(applyCode).toHaveBeenCalledOnce();
+        expect(applyItalic).toHaveBeenCalledOnce();
     });
 
     it.each([
@@ -75,9 +75,9 @@ describe("EmbeddedElement", () => {
             toolbar_bus,
         } as HostElement;
 
-        renderEmbeddedItem(host)(host, target);
+        renderItalicItem(host)(host, target);
 
-        const button = target.querySelector<HTMLButtonElement>("[data-test=button-embedded]");
+        const button = target.querySelector<HTMLButtonElement>("[data-test=button-italic]");
         if (!button) {
             throw new Error("Expected a button");
         }
