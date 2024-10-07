@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 3.4.4\n"
+"X-Generator: Poedit 3.0.1\n"
 
 msgid " New user"
 msgstr " Nouvel utilisateur"
@@ -2114,6 +2114,10 @@ msgstr "Mon tableau de bord"
 
 msgid "Name"
 msgstr "Nom"
+
+#, php-format
+msgid "Name is too long. It must be less than %s characters."
+msgstr "Le nom est trop long. Il doit comporter au plus %s caractères."
 
 msgid "Name of passkey can contain up to 250 characters maximum"
 msgstr ""

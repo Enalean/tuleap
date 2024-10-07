@@ -34,10 +34,6 @@ class Rule_ProjectFullNameTest extends \Tuleap\Test\PHPUnit\TestCase
                     return 'name_too_short';
                 }
 
-                if ($page_name === 'include_account' && $category === 'name_too_long' && $args === 40) {
-                    return 'name_too_long';
-                }
-
                 throw new LogicException(sprintf('Unexpected call to getText(%s, %s, %d)', $page_name, $category, $args));
             }
         );
@@ -61,7 +57,9 @@ class Rule_ProjectFullNameTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertFalse($rule->isValid('pr'));
         $this->assertEquals('name_too_short', $rule->getErrorMessage());
 
+        $this->assertTrue($rule->isValid('It accepts long string with accents éééé'));
+
         $this->assertFalse($rule->isValid('This a very very long project name longer than 40 characters :)'));
-        $this->assertEquals('name_too_long', $rule->getErrorMessage());
+        $this->assertEquals('Name is too long. It must be less than 40 characters.', $rule->getErrorMessage());
     }
 }

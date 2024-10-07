@@ -16,7 +16,6 @@ include_account	project_spaces	Les espaces sont interdits dans le nom court.
 include_account	char_err	Le nom doit commencer par une lettre.
 include_account	illegal_char	Caractère non autorisé dans le nom.
 include_account	name_too_short	Le nom est trop court. Il doit comporter au moins 3 caractères.
-include_account	name_too_long	Le nom est trop long. Il doit comporter au plus $1 caractères.
 include_account	reserved	Le nom est réservé.
 include_account	reserved_dns	Le nom est réservé pour le DNS.
 include_account	dns_error	Les noms de projet ne peuvent comporter de caractères soulignés ou de points.
