@@ -4356,6 +4356,13 @@ msgstr "Modification de %1$s"
 msgid "Updated comment:"
 msgstr "Commentaire modifié :"
 
+msgid ""
+"Usage of 'SELECT', 'FROM', 'ORDER BY' and 'WHERE' is not allowed in the "
+"Tracker report context"
+msgstr ""
+"L'utilisation de 'SELECT', 'FROM', 'ORDER BY' et 'WHERE' n'est pas autorisée "
+"dans le contexte du rapport de l'outil de suivi"
+
 msgid "Use"
 msgstr "Utiliser"
 

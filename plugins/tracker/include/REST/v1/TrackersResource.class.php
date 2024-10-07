@@ -62,10 +62,7 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\SyntaxError;
 use Tuleap\Tracker\Report\Query\Advanced\LimitSizeIsExceededException;
 use Tuleap\Tracker\Report\Query\Advanced\SearchablesAreInvalidException;
 use Tuleap\Tracker\Report\Query\Advanced\SearchablesDoNotExistException;
-use Tuleap\Tracker\Report\Query\Advanced\SelectablesAreInvalidException;
-use Tuleap\Tracker\Report\Query\Advanced\SelectablesDoNotExistException;
-use Tuleap\Tracker\Report\Query\Advanced\SelectablesMustBeUniqueException;
-use Tuleap\Tracker\Report\Query\Advanced\SelectLimitExceededException;
+use Tuleap\Tracker\Report\Query\Advanced\SyntaxNotSupportedException;
 use Tuleap\Tracker\REST\Artifact\ArtifactRepresentation;
 use Tuleap\Tracker\REST\Artifact\ArtifactRepresentationBuilder;
 use Tuleap\Tracker\REST\Artifact\Changeset\ChangesetRepresentationBuilder;
@@ -395,12 +392,12 @@ class TrackersResource extends AuthenticatedResource
     {
         try {
             $report->validateExpertQuery();
-        } catch (SearchablesDoNotExistException | SelectablesDoNotExistException | SelectablesMustBeUniqueException | SelectLimitExceededException $exception) {
+        } catch (SearchablesDoNotExistException $exception) {
             throw new RestException(
                 400,
                 $exception->getI18NExceptionMessage()
             );
-        } catch (SearchablesAreInvalidException | SelectablesAreInvalidException $exception) {
+        } catch (SearchablesAreInvalidException | SyntaxNotSupportedException $exception) {
             throw new RestException(
                 400,
                 $exception->getMessage()

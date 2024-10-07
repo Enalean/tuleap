@@ -3838,6 +3838,11 @@ msgstr ""
 msgid "Updated comment:"
 msgstr ""
 
+msgid ""
+"Usage of 'SELECT', 'FROM', 'ORDER BY' and 'WHERE' is not allowed in the "
+"Tracker report context"
+msgstr ""
+
 msgid "Use"
 msgstr ""
 

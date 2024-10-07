@@ -62,6 +62,28 @@ final readonly class ExpertQueryValidator
     }
 
     /**
+     * @throws SearchablesDoNotExistException
+     * @throws SearchablesAreInvalidException
+     * @throws Grammar\SyntaxError
+     * @throws SyntaxNotSupportedException
+     */
+    public function validateQueryFromSingleTracker(
+        string $expert_query,
+        IBuildInvalidSearchablesCollection $invalid_searchables_collection_builder,
+    ): void {
+        $query = $this->parser->parse($expert_query);
+
+        if ($query->getSelect() !== [] || $query->getOrderBy() !== null || $query->getFrom() !== null) {
+            throw new SyntaxNotSupportedException();
+        }
+
+        $condition = $query->getCondition();
+        $this->size_validator->checkSizeOfTree($condition);
+
+        $this->checkSearchables($condition, $invalid_searchables_collection_builder);
+    }
+
+    /**
      * @throws FromIsInvalidException
      * @throws SyntaxError
      */
