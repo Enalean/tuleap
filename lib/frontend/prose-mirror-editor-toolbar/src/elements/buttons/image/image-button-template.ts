@@ -17,19 +17,22 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/**
- * Reexport the prose-mirror Node type as EditorNode to avoid
- * the confusion with the DOM Node type.
- */
-import type { Node } from "prosemirror-model";
-export type EditorNode = Node;
+import { html } from "hybrids";
+import type { UpdateFunction } from "hybrids";
+import type { InternalImageButton } from "./image";
+import { gettext_provider } from "../../../gettext-provider";
+import { getClass } from "../../../helpers/class-getter";
 
-export type LinkProperties = {
-    readonly href: string;
-    readonly title: string;
-};
-
-export type ImageProperties = {
-    readonly src: string;
-    readonly title: string;
-};
+export const renderImageButton = (
+    host: InternalImageButton,
+): UpdateFunction<InternalImageButton> => html`
+    <button
+        class="${getClass(host.is_activated)}"
+        data-role="popover-trigger"
+        disabled="${host.is_disabled}"
+        title="${gettext_provider.gettext("Insert or edit image")}"
+        data-test="button-image"
+    >
+        <i class="prose-mirror-toolbar-button-icon fa-solid fa-image"></i>
+    </button>
+`;

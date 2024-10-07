@@ -19,7 +19,8 @@
  */
 
 import type { LinkState } from "../links/LinkState";
-import type { LinkProperties } from "../../../types/internal-types";
+import type { ImageState } from "../image/ImageState";
+import type { ImageProperties, LinkProperties } from "../../../types/internal-types";
 
 export interface ToolbarHandler {
     toggleBold: () => void;
@@ -30,6 +31,7 @@ export interface ToolbarHandler {
     toggleSuperScript: () => void;
     applyLink: (link: LinkProperties) => void;
     applyUnlink: () => void;
+    applyImage: (image: ImageProperties) => void;
 }
 
 export interface ToolbarView {
@@ -41,6 +43,7 @@ export interface ToolbarView {
     activateSuperscript: (is_activated: boolean) => void;
     activateLink: (link_state: LinkState) => void;
     activateUnlink: (is_activated: boolean) => void;
+    activateImage: (image_state: ImageState) => void;
 }
 
 export interface ToolbarBus {
@@ -54,6 +57,7 @@ export interface ToolbarBus {
     superscript: () => void;
     link: (link: LinkProperties) => void;
     unlink: () => void;
+    image: (image: ImageProperties) => void;
     setCurrentHandler: (handler: ToolbarHandler) => void;
     setView: (view: Partial<ToolbarView>) => void;
 }
@@ -70,6 +74,7 @@ const default_view: ToolbarView = {
     activateSuperscript: noop,
     activateLink: noop,
     activateUnlink: noop,
+    activateImage: noop,
 };
 
 export const buildToolbarBus = (): ToolbarBus => ({
@@ -98,6 +103,9 @@ export const buildToolbarBus = (): ToolbarBus => ({
     },
     unlink(): void {
         this.handler?.applyUnlink();
+    },
+    image(image: ImageProperties): void {
+        this.handler?.applyImage(image);
     },
     setCurrentHandler(handler: ToolbarHandler): void {
         this.handler = handler;

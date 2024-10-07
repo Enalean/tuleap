@@ -17,13 +17,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { EditorState } from "prosemirror-state";
-import type { EditorNode } from "../../../types/internal-types";
+import type { EditorNode } from "../../types/internal-types";
+import type { FindEditorNodeAtPosition } from "../EditorNodeAtPositionFinder";
 
-export type FindEditorNodeAtPosition = {
-    findNodeAtPosition(position: number): EditorNode | null;
+export const FindEditorNodeAtPositionStub = {
+    withNoEditorNode: (): FindEditorNodeAtPosition => ({
+        findNodeAtPosition: () => null,
+    }),
+    withNode: (editor_node: EditorNode): FindEditorNodeAtPosition => ({
+        findNodeAtPosition: () => editor_node,
+    }),
 };
-
-export const EditorNodeAtPositionFinder = (state: EditorState): FindEditorNodeAtPosition => ({
-    findNodeAtPosition: (position): EditorNode | null => state.doc.nodeAt(position),
-});

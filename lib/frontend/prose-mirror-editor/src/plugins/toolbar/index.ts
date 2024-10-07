@@ -33,6 +33,7 @@ import { MenuItemWithCommandBuilder } from "./helper/BuildMenuItemWithCommand";
 
 export { buildMenuItems, buildKeymap };
 export type { LinkState } from "./links/LinkState";
+export type { ImageState } from "./image/ImageState";
 
 export const NB_HEADING = 6;
 

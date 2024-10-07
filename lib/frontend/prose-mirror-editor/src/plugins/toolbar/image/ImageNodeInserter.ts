@@ -17,19 +17,25 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/**
- * Reexport the prose-mirror Node type as EditorNode to avoid
- * the confusion with the DOM Node type.
- */
-import type { Node } from "prosemirror-model";
-export type EditorNode = Node;
+import type { EditorState, Transaction } from "prosemirror-state";
+import type { ImageProperties } from "../../../types/internal-types";
+import { custom_schema } from "../../../custom_schema";
 
-export type LinkProperties = {
-    readonly href: string;
-    readonly title: string;
+export type InsertImageNode = {
+    insertImage(image: ImageProperties): void;
 };
 
-export type ImageProperties = {
-    readonly src: string;
-    readonly title: string;
-};
+export const ImageNodeInserter = (
+    state: EditorState,
+    dispatch: (tr: Transaction) => void,
+): InsertImageNode => ({
+    insertImage: (image: ImageProperties): void => {
+        const node = custom_schema.nodes.image.create({
+            src: image.src,
+            title: image.title,
+            alt: image.title,
+        });
+        const transaction = state.tr.replaceSelectionWith(node);
+        dispatch(transaction);
+    },
+});

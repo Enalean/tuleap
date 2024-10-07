@@ -17,14 +17,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { EditorNode } from "../../../../types/internal-types";
-import type { FindEditorNodeAtPosition } from "../EditorNodeAtPositionFinder";
+import type { CheckCanInsertImage } from "../CanInsertImageChecker";
 
-export const FindEditorNodeAtPositionStub = {
-    withNoEditorNode: (): FindEditorNodeAtPosition => ({
-        findNodeAtPosition: () => null,
+export const CheckCanInsertImageStub = {
+    withInsertionAllowed: (): CheckCanInsertImage => ({
+        canInsertImage: () => true,
     }),
-    withNode: (editor_node: EditorNode): FindEditorNodeAtPosition => ({
-        findNodeAtPosition: () => editor_node,
+    withInsertionForbidden: (): CheckCanInsertImage => ({
+        canInsertImage: () => false,
     }),
 };

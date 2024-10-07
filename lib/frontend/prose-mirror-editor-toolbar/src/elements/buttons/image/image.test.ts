@@ -19,10 +19,10 @@
 
 import { describe, it, expect } from "vitest";
 import { buildToolbarBus } from "@tuleap/prose-mirror-editor";
-import { connect } from "./link";
-import type { HostElement } from "./link";
+import type { HostElement } from "./image";
+import { connect } from "./image";
 
-describe("link", () => {
+describe("image", () => {
     describe("connect", () => {
         it("When the component is connected, then it should set its part of the toolbar view so it will be able to update itself when the view changes", () => {
             const toolbar_bus = buildToolbarBus();
@@ -30,19 +30,19 @@ describe("link", () => {
 
             connect(host);
 
-            const link_state = {
+            const image_state = {
                 is_activated: true,
                 is_disabled: false,
-                link_href: "https://example.com",
-                link_title: "See example",
+                image_src: "https://example.com",
+                image_title: "See example",
             };
 
-            toolbar_bus.view.activateLink(link_state);
+            toolbar_bus.view.activateImage(image_state);
 
-            expect(host.is_activated).toBe(link_state.is_activated);
-            expect(host.is_disabled).toBe(link_state.is_disabled);
-            expect(host.link_href).toBe(link_state.link_href);
-            expect(host.link_title).toBe(link_state.link_title);
+            expect(host.is_activated).toBe(image_state.is_activated);
+            expect(host.is_disabled).toBe(image_state.is_disabled);
+            expect(host.image_src).toBe(image_state.image_src);
+            expect(host.image_title).toBe(image_state.image_title);
         });
     });
 });

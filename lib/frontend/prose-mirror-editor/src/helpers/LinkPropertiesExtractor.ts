@@ -18,7 +18,7 @@
  */
 
 import type { DetectLinkNode } from "../plugins/link-popover/helper/LinkNodeDetector";
-import type { FindEditorNodeAtPosition } from "../plugins/link-popover/helper/EditorNodeAtPositionFinder";
+import type { FindEditorNodeAtPosition } from "./EditorNodeAtPositionFinder";
 import type { LinkProperties } from "../types/internal-types";
 
 export type ExtractLinkProperties = {

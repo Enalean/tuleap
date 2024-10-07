@@ -24,6 +24,7 @@ import { custom_schema } from "../../../custom_schema";
 import type { CheckIsMArkActive } from "./IsMarkActiveChecker";
 import { isSelectionABlockQuote } from "../quote/is-selection-a-block-quote";
 import type { BuildLinkState } from "../links/LinkStateBuilder";
+import type { BuildImageState } from "../image/ImageStateBuilder";
 
 export type ActivateToolbar = {
     activateToolbarItem(toolbar_view: ToolbarView, state: EditorState): void;
@@ -32,6 +33,7 @@ export type ActivateToolbar = {
 export const ToolbarActivator = (
     check_is_mark_active: CheckIsMArkActive,
     build_link_state: BuildLinkState,
+    build_image_state: BuildImageState,
 ): ActivateToolbar => ({
     activateToolbarItem(toolbar_view: ToolbarView, state: EditorState): void {
         toolbar_view.activateBold(
@@ -54,5 +56,6 @@ export const ToolbarActivator = (
         toolbar_view.activateUnlink(
             check_is_mark_active.isMarkActive(state, custom_schema.marks.link),
         );
+        toolbar_view.activateImage(build_image_state.build(state.selection));
     },
 });

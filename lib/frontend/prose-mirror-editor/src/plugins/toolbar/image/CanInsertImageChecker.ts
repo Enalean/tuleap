@@ -17,19 +17,21 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/**
- * Reexport the prose-mirror Node type as EditorNode to avoid
- * the confusion with the DOM Node type.
- */
-import type { Node } from "prosemirror-model";
-export type EditorNode = Node;
+import type { ResolvedPos } from "prosemirror-model";
+import { custom_schema } from "../../../custom_schema";
 
-export type LinkProperties = {
-    readonly href: string;
-    readonly title: string;
+export type CheckCanInsertImage = {
+    canInsertImage(position: ResolvedPos): boolean;
 };
 
-export type ImageProperties = {
-    readonly src: string;
-    readonly title: string;
-};
+export const CanInsertImageChecker = (): CheckCanInsertImage => ({
+    canInsertImage(position: ResolvedPos): boolean {
+        for (let d = position.depth; d >= 0; d--) {
+            const index = position.index(d);
+            if (position.node(d).canReplaceWith(index, index, custom_schema.nodes.image)) {
+                return true;
+            }
+        }
+        return false;
+    },
+});

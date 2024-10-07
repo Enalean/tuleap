@@ -29,11 +29,15 @@ import { custom_schema } from "../../custom_schema";
 import { getQuoteCommand } from "./quote";
 import { LinkStateBuilder } from "./links/LinkStateBuilder";
 import { LinkPropertiesExtractor } from "../../helpers/LinkPropertiesExtractor";
-import { EditorNodeAtPositionFinder } from "../link-popover/helper/EditorNodeAtPositionFinder";
+import { EditorNodeAtPositionFinder } from "../../helpers/EditorNodeAtPositionFinder";
 import { LinkNodeDetector } from "../link-popover/helper/LinkNodeDetector";
 import { replaceLinkNode } from "../../helpers/replace-link-node";
 import { IsMarkTypeRepeatedInSelectionChecker } from "../../helpers/IsMarkTypeRepeatedInSelectionChecker";
 import { removeSelectedLinks } from "../link-popover/helper/remove-selected-links";
+import { ImageStateBuilder } from "./image/ImageStateBuilder";
+import { CanInsertImageChecker } from "./image/CanInsertImageChecker";
+import { ImageNodeInserter } from "./image/ImageNodeInserter";
+import { ImageFromSelectionExtractor } from "./image/ImageFromSelectionExtractor";
 
 export function setupMonoToolbar(toolbar_bus: ToolbarBus): Plugin {
     return new Plugin({
@@ -49,6 +53,10 @@ export function setupMonoToolbar(toolbar_bus: ToolbarBus): Plugin {
                                     EditorNodeAtPositionFinder(view.state),
                                     LinkNodeDetector(view.state),
                                 ),
+                            ),
+                            ImageStateBuilder(
+                                CanInsertImageChecker(),
+                                ImageFromSelectionExtractor(EditorNodeAtPositionFinder(view.state)),
                             ),
                         );
 
@@ -79,6 +87,9 @@ export function setupMonoToolbar(toolbar_bus: ToolbarBus): Plugin {
                         },
                         applyUnlink(): void {
                             removeSelectedLinks(view.state, view.dispatch);
+                        },
+                        applyImage(image): void {
+                            ImageNodeInserter(view.state, view.dispatch).insertImage(image);
                         },
                     });
                 },
