@@ -22,7 +22,10 @@
         class="tlp-pane-section"
         v-bind:class="{ 'reading-mode-shown': is_reading_mode_shown }"
     >
-        <error-message v-bind:fault="current_fault" />
+        <error-message
+            v-bind:fault="current_fault"
+            v-bind:writing_cross_tracker_report="writing_cross_tracker_report"
+        />
         <error-inactive-project-message v-bind:invalid_trackers="invalid_trackers" />
         <div
             class="tlp-alert-success cross-tracker-report-success"

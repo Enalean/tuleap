@@ -319,8 +319,8 @@ final class CrossTrackerReportsResource extends AuthenticatedResource
             throw new I18NRestException(404, dgettext('tuleap-crosstracker', 'Report not found'));
         } catch (TrackerNotFoundException | TrackerDuplicateException $exception) {
             throw new I18NRestException(400, $exception->getMessage());
-        } catch (SyntaxError) {
-            throw new I18NRestException(400, dgettext('tuleap-crosstracker', 'Error while parsing the query'));
+        } catch (SyntaxError $error) {
+            throw new RestException(400, '', SyntaxErrorTranslator::fromSyntaxError($error));
         } catch (LimitSizeIsExceededException) {
             throw new I18NRestException(400, dgettext(
                 'tuleap-tracker',
@@ -392,8 +392,8 @@ final class CrossTrackerReportsResource extends AuthenticatedResource
             throw new RestException(400, $exception->getMessage());
         } catch (FromIsInvalidException $exception) {
             throw new I18NRestException(400, $exception->getI18NExceptionMessage());
-        } catch (SyntaxError) {
-            throw new I18NRestException(400, dgettext('tuleap-crosstracker', 'Error while parsing the query'));
+        } catch (SyntaxError $error) {
+            throw new RestException(400, '', SyntaxErrorTranslator::fromSyntaxError($error));
         }
 
         return $this->getReportRepresentation($expected_report, $current_user);
@@ -435,8 +435,8 @@ final class CrossTrackerReportsResource extends AuthenticatedResource
             );
         } catch (SearchablesDoNotExistException | SearchablesAreInvalidException $exception) {
             throw new RestException(400, $exception->getMessage());
-        } catch (SyntaxError) {
-            throw new I18NRestException(400, dgettext('tuleap-crosstracker', 'Error while parsing the query'));
+        } catch (SyntaxError $error) {
+            throw new RestException(400, '', SyntaxErrorTranslator::fromSyntaxError($error));
         } catch (FromIsInvalidException $exception) {
             throw new I18NRestException(400, $exception->getI18NExceptionMessage());
         } catch (OrderByIsInvalidException $exception) {
