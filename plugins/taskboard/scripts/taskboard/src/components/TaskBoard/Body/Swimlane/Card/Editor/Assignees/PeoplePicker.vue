@@ -104,7 +104,7 @@ export default class PeoplePicker extends Vue {
         return mustache.render(
             `<div class="select2-result-user">
                 <div class="tlp-avatar-mini select2-result-user__avatar">
-                    <img src="{{ avatar_url }}">
+                    <img src="{{ avatar_url }}" loading="lazy">
                 </div>
                 {{ display_name }}
             </div>`,
@@ -125,7 +125,7 @@ export default class PeoplePicker extends Vue {
 
         return mustache.render(
             `<div class="tlp-avatar-mini">
-                <img src="{{ avatar_url }}">
+                <img src="{{ avatar_url }}" loading="lazy">
             </div>
             {{ display_name }}`,
             user,

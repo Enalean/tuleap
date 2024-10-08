@@ -39,7 +39,7 @@ function getClass(size: string): string {
 
 function avatarWithSelectedImage(size: string): TemplateResult {
     return html`<div class="${getClass(size)}">
-        <img src="${avatar_image}" alt="User avatar" />
+        <img src="${avatar_image}" alt="User avatar" loading="lazy" />
     </div>`;
 }
 
