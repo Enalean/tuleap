@@ -41,7 +41,7 @@
                     <p>
                         <span class="gitlab-group-avatar-container">
                             {{# avatar_url }}
-                                <img src="{{ avatar_url }}" alt="{{ group_path }}" class="gitlab-group-avatar"/>
+                                <img src="{{ avatar_url }}" alt="{{ group_path }}" class="gitlab-group-avatar" loading="lazy" />
                             {{/ avatar_url }}
                             {{^ avatar_url }}
                                 <span class="default-gitlab-group-avatar gitlab-group-avatar">{{ first_letter_of_group_name }}</span>
@@ -177,7 +177,7 @@
                 <p>
                     <span class="gitlab-group-avatar-container">
                         {{# avatar_url }}
-                            <img src="{{ avatar_url }}" alt="{{ group_path }}" class="gitlab-group-avatar"/>
+                            <img src="{{ avatar_url }}" alt="{{ group_path }}" class="gitlab-group-avatar" loading="lazy" />
                         {{/ avatar_url }}
                         {{^ avatar_url }}
                             <span class="default-gitlab-group-avatar gitlab-group-avatar">{{ first_letter_of_group_name }}</span>

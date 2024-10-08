@@ -25,7 +25,7 @@
                                         <i class="tlp-button-icon fas fa-pencil-alt account-information-avatar-button-icon"></i>
                                     </button>
                                     {{# has_avatar }}
-                                        <img src="{{ avatar_url }}" alt="{{# gettext }}Your avatar{{/ gettext }}">
+                                        <img src="{{ avatar_url }}" alt="{{# gettext }}Your avatar{{/ gettext }}" loading="lazy">
                                     {{/ has_avatar }}
                                 </div>
                             </div>
@@ -173,7 +173,7 @@
             <div class="account-information-avatar-modal-body">
                 <div class="tlp-avatar-jumbo" id="account-information-avatar-modal-preview">
                     {{# has_avatar }}
-                        <img src="{{ avatar_url }}" alt="{{# gettext }}Your avatar{{/ gettext }}">
+                        <img src="{{ avatar_url }}" alt="{{# gettext }}Your avatar{{/ gettext }}" loading="lazy">
                     {{/ has_avatar }}
                 </div>
                 <div class="account-information-avatar-modal-buttons">
