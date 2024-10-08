@@ -28,7 +28,11 @@
                 v-on:click="switchMode"
                 data-test="switch-to-expert-input"
             />
-            <label v-bind:for="switch_to_expert_id" class="tlp-switch-button"></label>
+            <label
+                v-bind:for="switch_to_expert_id"
+                class="tlp-switch-button"
+                data-test="switch-mode"
+            ></label>
         </div>
         <label class="tlp-label switch-label" v-bind:for="switch_to_expert_id"
             >{{ $gettext("Expert mode") }}
