@@ -51,6 +51,7 @@ const PendingArtifactSectionFactory = {
             {
                 link: "https://example.com",
                 text: "test",
+                context: "",
             },
         ],
     }),

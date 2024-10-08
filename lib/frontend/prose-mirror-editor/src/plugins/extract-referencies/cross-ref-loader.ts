@@ -21,9 +21,14 @@
 import type { Node } from "prosemirror-model";
 import type { EditorView } from "prosemirror-view";
 import { type CrossReference, getNodeText } from "./reference-extractor";
-import { decorateLink } from "./link-decorator";
+import type { DecorateCrossReference } from "./cross-references-decorator";
 
-export function loadCrossReferences(tree: Node, project_id: number, editor_view: EditorView): void {
+export function loadCrossReferences(
+    tree: Node,
+    project_id: number,
+    editor_view: EditorView,
+    link_decorator: DecorateCrossReference,
+): void {
     getNodeText(tree.toString(), project_id).match(
         (references: Array<CrossReference>) => {
             if (references.length === 0) {
@@ -31,7 +36,10 @@ export function loadCrossReferences(tree: Node, project_id: number, editor_view:
             }
 
             editor_view.dispatch(
-                editor_view.state.tr.setMeta("asyncDecorations", decorateLink(tree, references)),
+                editor_view.state.tr.setMeta(
+                    "asyncDecorations",
+                    link_decorator.decorateCrossReference(tree, references),
+                ),
             );
         },
         () => {

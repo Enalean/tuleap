@@ -1319,6 +1319,7 @@ class ProjectResource extends AuthenticatedResource
             $formatted_references[] = [
                 'text' => $reference->getMatch(),
                 'link' => $reference->getFullGotoLink(),
+                'context' => $reference->getContextWord(),
             ];
         }
         return $formatted_references;

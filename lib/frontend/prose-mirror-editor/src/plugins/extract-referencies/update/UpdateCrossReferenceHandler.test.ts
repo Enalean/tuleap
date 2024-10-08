@@ -64,7 +64,7 @@ describe("UpdateCrossReferenceHandler", () => {
         };
         const replaced_decoration = createCrossReferenceDecoration(
             { from: 10, to: 18 },
-            { text: "art #123", link: "https://example.com" },
+            { text: "art #123", link: "https://example.com", context: "" },
         );
         const new_transaction = UpdateCrossReferenceHandler(
             FindCrossReferenceDecorationStub.withDecoration(replaced_decoration),

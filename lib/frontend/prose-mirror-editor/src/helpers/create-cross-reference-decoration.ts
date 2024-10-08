@@ -18,8 +18,8 @@
  */
 
 import { Decoration } from "prosemirror-view";
-import type { ReferencePosition } from "../plugins/extract-referencies/reference-position-finder";
 import type { CrossReference } from "../plugins/extract-referencies/reference-extractor";
+import type { ReferencePosition } from "../plugins/extract-referencies/helpers/ReferencePositionComputer";
 
 export type CrossReferenceDecoration = "cross-ref-link";
 export const CROSS_REFERENCE_DECORATION_TYPE: CrossReferenceDecoration = "cross-ref-link";

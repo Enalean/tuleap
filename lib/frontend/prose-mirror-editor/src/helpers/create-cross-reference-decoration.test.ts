@@ -30,6 +30,7 @@ describe("create-cross-reference-decoration", () => {
         const decoration = createCrossReferenceDecoration(reference_position, {
             text: "art #123",
             link: "https://example.com",
+            context: "text",
         });
 
         expect(decoration.from).toBe(reference_position.from);
