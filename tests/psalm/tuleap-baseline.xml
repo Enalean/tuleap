@@ -32734,11 +32734,6 @@
       <code><![CDATA[empty($query)]]></code>
     </RiskyTruthyFalsyComparison>
   </file>
-  <file src="plugins/timetracking/include/Timetracking/REST/v1/TimetrackingManagement/Dao.php">
-    <ArgumentTypeCoercion>
-      <code><![CDATA[$users_to_insert]]></code>
-    </ArgumentTypeCoercion>
-  </file>
   <file src="plugins/timetracking/include/Timetracking/REST/v1/TimetrackingOverviewRepresentationsBuilder.php">
     <MissingParamType>
       <code><![CDATA[$permissions_retriever]]></code>
