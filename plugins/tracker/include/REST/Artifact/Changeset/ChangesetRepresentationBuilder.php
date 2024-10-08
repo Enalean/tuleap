@@ -26,6 +26,7 @@ use PFUser;
 use Tracker_UserWithReadAllPermission;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\PermissionChecker;
 use Tuleap\Tracker\REST\Artifact\Changeset\Comment\CommentRepresentationBuilder;
+use Tuleap\User\Avatar\ProvideUserAvatarUrl;
 use Tuleap\User\REST\MinimalUserRepresentation;
 
 class ChangesetRepresentationBuilder
@@ -52,6 +53,7 @@ class ChangesetRepresentationBuilder
         \Tracker_FormElementFactory $form_element_factory,
         CommentRepresentationBuilder $comment_builder,
         PermissionChecker $comment_permission_checker,
+        private readonly ProvideUserAvatarUrl $provide_user_avatar_url,
     ) {
         $this->user_manager               = $user_manager;
         $this->form_element_factory       = $form_element_factory;
@@ -176,13 +178,13 @@ class ChangesetRepresentationBuilder
         $submitted_by_id      = (int) $changeset->getSubmittedBy();
         $submitted_by_user    = $this->user_manager->getUserById($submitted_by_id);
         $submitted_by_details = ($submitted_by_user !== null)
-            ? MinimalUserRepresentation::build($submitted_by_user)
+            ? MinimalUserRepresentation::build($submitted_by_user, $this->provide_user_avatar_url)
             : null;
 
         $comment_submitted_by_id   = (int) $last_comment->getSubmittedBy();
         $comment_submitted_by_user = $this->user_manager->getUserById($comment_submitted_by_id);
         $last_modified_by          = ($comment_submitted_by_user !== null)
-            ? MinimalUserRepresentation::build($comment_submitted_by_user)
+            ? MinimalUserRepresentation::build($comment_submitted_by_user, $this->provide_user_avatar_url)
             : null;
         return new ChangesetRepresentation(
             (int) $changeset->getId(),

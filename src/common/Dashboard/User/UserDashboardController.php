@@ -38,6 +38,7 @@ use Tuleap\Dashboard\Widget\WidgetMinimizor;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\FooterConfiguration;
 use Tuleap\Layout\HeaderConfigurationBuilder;
+use Tuleap\User\Avatar\ProvideUserAvatarUrl;
 
 class UserDashboardController
 {
@@ -97,6 +98,7 @@ class UserDashboardController
         WidgetMinimizor $widget_minimizor,
         AssetsIncluder $assets_includer,
         private FirstTimerPresenterBuilder $first_timer_presenter_builder,
+        private readonly ProvideUserAvatarUrl $provide_user_avatar_url,
     ) {
         $this->csrf                     = $csrf;
         $this->retriever                = $retriever;
@@ -156,7 +158,7 @@ class UserDashboardController
             new MyPresenter(
                 $this->csrf,
                 '/my/',
-                new UserPresenter($current_user),
+                new UserPresenter($current_user, $this->provide_user_avatar_url),
                 $user_dashboards_presenter,
                 $first_timer_presenter,
             )

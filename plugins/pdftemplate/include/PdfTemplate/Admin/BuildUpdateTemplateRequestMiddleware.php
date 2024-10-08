@@ -33,6 +33,7 @@ use Tuleap\Http\Response\RedirectWithFeedbackFactory;
 use Tuleap\Layout\Feedback\NewFeedback;
 use Tuleap\PdfTemplate\RetrieveTemplate;
 use Tuleap\Request\NotFoundException;
+use Tuleap\User\Avatar\ProvideUserAvatarUrl;
 
 final readonly class BuildUpdateTemplateRequestMiddleware implements MiddlewareInterface
 {
@@ -40,6 +41,7 @@ final readonly class BuildUpdateTemplateRequestMiddleware implements MiddlewareI
         private RedirectWithFeedbackFactory $redirect_with_feedback_factory,
         private PdfTemplateIdentifierFactory $identifier_factory,
         private RetrieveTemplate $retriever,
+        private ProvideUserAvatarUrl $provide_user_avatar_url,
     ) {
     }
 
@@ -72,7 +74,7 @@ final readonly class BuildUpdateTemplateRequestMiddleware implements MiddlewareI
         if (! $label) {
             return $this->redirect_with_feedback_factory->createResponseForUser(
                 $user,
-                PdfTemplatePresenter::fromPdfTemplate($original_template, $user)->update_url,
+                PdfTemplatePresenter::fromPdfTemplate($original_template, $user, $this->provide_user_avatar_url)->update_url,
                 NewFeedback::error(dgettext('tuleap-pdftemplate', 'The template label is mandatory')),
             );
         }

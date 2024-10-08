@@ -31,6 +31,7 @@ use Tuleap\PullRequest\Tests\Builders\PullRequestTestBuilder;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Test\Stubs\User\Avatar\ProvideUserAvatarUrlStub;
 use Tuleap\User\REST\MinimalUserRepresentation;
 
 final class PullRequestMinimalRepresentationTest extends TestCase
@@ -55,7 +56,8 @@ final class PullRequestMinimalRepresentationTest extends TestCase
     {
         $this->url_generator        = $this->createStub(GitoliteAccessURLGenerator::class);
         $this->pull_request_creator = MinimalUserRepresentation::build(
-            UserTestBuilder::aUser()->withId(self::CREATOR_USER_ID)->withRealName(self::CREATOR_NAME)->build()
+            UserTestBuilder::aUser()->withId(self::CREATOR_USER_ID)->withRealName(self::CREATOR_NAME)->build(),
+            ProvideUserAvatarUrlStub::build(),
         );
 
         $this->pull_request = PullRequestTestBuilder::aPullRequestInReview()
@@ -83,10 +85,12 @@ final class PullRequestMinimalRepresentationTest extends TestCase
         $git_reference          = new GitPullRequestReference(20, GitPullRequestReference::STATUS_OK);
 
         $first_reviewer  = MinimalUserRepresentation::build(
-            UserTestBuilder::buildWithId(self::FIRST_REVIEWER_USER_ID)
+            UserTestBuilder::buildWithId(self::FIRST_REVIEWER_USER_ID),
+            ProvideUserAvatarUrlStub::build(),
         );
         $second_reviewer = MinimalUserRepresentation::build(
-            UserTestBuilder::buildWithId(self::SECOND_REVIEWER_USER_ID)
+            UserTestBuilder::buildWithId(self::SECOND_REVIEWER_USER_ID),
+            ProvideUserAvatarUrlStub::build(),
         );
 
         $representation = new PullRequestMinimalRepresentation($this->url_generator);

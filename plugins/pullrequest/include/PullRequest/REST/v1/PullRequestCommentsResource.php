@@ -50,6 +50,9 @@ use Tuleap\PullRequest\REST\v1\Comment\CommentRepresentationBuilder;
 use Tuleap\PullRequest\REST\v1\Comment\PATCHCommentHandler;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
+use Tuleap\User\Avatar\AvatarHashDao;
+use Tuleap\User\Avatar\ComputeAvatarHash;
+use Tuleap\User\Avatar\UserAvatarUrlProvider;
 use UserManager;
 
 final class PullRequestCommentsResource extends AuthenticatedResource
@@ -128,7 +131,8 @@ final class PullRequestCommentsResource extends AuthenticatedResource
             new CommentRepresentationBuilder($purifier, $content_interpreter),
             $git_repository_factory,
             ReferenceManager::instance(),
-            $event_dispatcher
+            $event_dispatcher,
+            new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash()),
         );
 
         $current_user = UserManager::instance()->getCurrentUser();

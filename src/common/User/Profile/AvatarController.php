@@ -23,8 +23,11 @@ namespace Tuleap\User\Profile;
 use ForgeConfig;
 use HTTPRequest;
 use Tuleap\Layout\BaseLayout;
+use Tuleap\Option\Option;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\DispatchableWithRequestNoAuthz;
+use Tuleap\User\Avatar\AvatarHashStorage;
+use Tuleap\User\Avatar\ComputeAvatarHash;
 use UserManager;
 
 class AvatarController implements DispatchableWithRequest, DispatchableWithRequestNoAuthz
@@ -39,8 +42,12 @@ class AvatarController implements DispatchableWithRequest, DispatchableWithReque
      */
     private $avatar_generator;
 
-    public function __construct(AvatarGenerator $avatar_generator, array $options = [])
-    {
+    public function __construct(
+        AvatarGenerator $avatar_generator,
+        private AvatarHashStorage $avatar_hash_storage,
+        private ComputeAvatarHash $compute_avatar_hash,
+        array $options = [],
+    ) {
         if (isset($options['expires']) && $options['expires'] === 'never') {
             $this->never_expires = true;
         }
@@ -70,7 +77,7 @@ class AvatarController implements DispatchableWithRequest, DispatchableWithReque
 
             if (is_file($user_avatar_path)) {
                 if (isset($variables['hash'])) {
-                    $this->redirectIfStalled($layout, $user_avatar_path, $variables['hash'], $variables['name']);
+                    $this->redirectIfStalled($layout, $user, $variables['hash'], $variables['name']);
                 }
                 $this->displayAvatar($user_avatar_path);
                 return;
@@ -80,12 +87,21 @@ class AvatarController implements DispatchableWithRequest, DispatchableWithReque
         $this->displayAvatar(self::DEFAULT_AVATAR);
     }
 
-    private function redirectIfStalled(BaseLayout $layout, $user_avatar_path, $hash, $user_name)
+    private function redirectIfStalled(BaseLayout $layout, \PFUser $user, $hash, $user_name)
     {
-        $current_hash = hash_file('sha256', $user_avatar_path);
-        if ($current_hash !== $hash) {
-            $layout->permanentRedirect('/users/' . $user_name . '/avatar-' . $current_hash . '.png');
-        }
+        $this->avatar_hash_storage
+            ->retrieve($user)
+            ->orElse(function () use ($user) {
+                return Option::fromValue(
+                    $this->compute_avatar_hash->computeAvatarHash($user->getAvatarFilePath())
+                );
+            })->andThen(function (string $current_hash) use ($layout, $hash, $user_name) {
+                if ($current_hash !== $hash) {
+                    $layout->permanentRedirect('/users/' . $user_name . '/avatar-' . $current_hash . '.png');
+                }
+
+                return Option::fromValue(null);
+            });
     }
 
     private function displayAvatar($path)

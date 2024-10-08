@@ -30,6 +30,7 @@ use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\RetrieveUserByIdStub;
+use Tuleap\Test\Stubs\User\Avatar\ProvideUserAvatarUrlStub;
 
 class FirstTimerPresenterBuilderTest extends TestCase
 {
@@ -59,6 +60,7 @@ class FirstTimerPresenterBuilderTest extends TestCase
                     ->build(),
             ),
             RetrieveUserByIdStub::withUser($project_admin),
+            ProvideUserAvatarUrlStub::build(),
         );
 
         $project = ProjectTestBuilder::aProject()
@@ -86,6 +88,7 @@ class FirstTimerPresenterBuilderTest extends TestCase
         $builder = new FirstTimerPresenterBuilder(
             UsedInvitationRetrieverStub::withoutInvitation(),
             RetrieveUserByIdStub::withNoUser(),
+            ProvideUserAvatarUrlStub::build(),
         );
 
         $project = ProjectTestBuilder::aProject()
@@ -124,6 +127,7 @@ class FirstTimerPresenterBuilderTest extends TestCase
                     ->build(),
             ),
             RetrieveUserByIdStub::withUser($project_admin),
+            ProvideUserAvatarUrlStub::build(),
         );
 
         $project = ProjectTestBuilder::aProject()
@@ -143,6 +147,7 @@ class FirstTimerPresenterBuilderTest extends TestCase
         $builder = new FirstTimerPresenterBuilder(
             UsedInvitationRetrieverStub::withoutInvitation(),
             RetrieveUserByIdStub::withNoUser(),
+            ProvideUserAvatarUrlStub::build(),
         );
 
         $project = ProjectTestBuilder::aProject()

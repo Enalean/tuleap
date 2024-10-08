@@ -40,6 +40,9 @@ use Tuleap\REST\MissingMandatoryParameterException;
 use Tuleap\REST\ProjectAuthorization;
 use Tuleap\REST\ProjectStatusVerificator;
 use Tuleap\REST\QueryParameterParser;
+use Tuleap\User\Avatar\AvatarHashDao;
+use Tuleap\User\Avatar\ComputeAvatarHash;
+use Tuleap\User\Avatar\UserAvatarUrlProvider;
 use Tuleap\User\REST\UserRepresentation;
 use UGroupManager;
 use URLVerification;
@@ -425,7 +428,7 @@ class UserGroupResource extends AuthenticatedResource
      */
     private function getUserRepresentation(PFUser $member)
     {
-        return UserRepresentation::build($member);
+        return UserRepresentation::build($member, new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash()));
     }
 
     /**

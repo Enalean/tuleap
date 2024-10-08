@@ -28,6 +28,7 @@ use Tuleap\Cardwall\BackgroundColor\BackgroundColorBuilder;
 use Tuleap\Option\Option;
 use Tuleap\Taskboard\Column\FieldValuesToColumnMapping\ArtifactMappedFieldValueRetriever;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\User\Avatar\ProvideUserAvatarUrl;
 use Tuleap\User\REST\MinimalUserRepresentation;
 
 final readonly class CardRepresentationBuilder
@@ -36,6 +37,7 @@ final readonly class CardRepresentationBuilder
         private BackgroundColorBuilder $background_color_builder,
         private ArtifactMappedFieldValueRetriever $mapped_field_value_retriever,
         private RemainingEffortRepresentationBuilder $remaining_effort_representation_builder,
+        private ProvideUserAvatarUrl $provide_user_avatar_url,
     ) {
     }
 
@@ -84,11 +86,13 @@ final readonly class CardRepresentationBuilder
     {
         $assignees = $artifact->getAssignedTo($user);
 
-        return array_map(
-            function (PFUser $user): MinimalUserRepresentation {
-                return MinimalUserRepresentation::build($user);
-            },
-            $assignees
+        return array_values(
+            array_map(
+                function (PFUser $user): MinimalUserRepresentation {
+                    return MinimalUserRepresentation::build($user, $this->provide_user_avatar_url);
+                },
+                $assignees
+            ),
         );
     }
 

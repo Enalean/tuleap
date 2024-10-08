@@ -28,6 +28,7 @@ use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
 use Tuleap\PullRequest\PullRequest\REST\v1\UserNotFoundFault;
 use Tuleap\PullRequest\SearchPaginatedPullRequestsAuthors;
+use Tuleap\User\Avatar\ProvideUserAvatarUrl;
 use Tuleap\User\REST\MinimalUserRepresentation;
 use Tuleap\User\RetrieveUserById;
 
@@ -36,6 +37,7 @@ final class GETHandler
     public function __construct(
         private readonly RetrieveUserById $retrieve_user_by_id,
         private readonly SearchPaginatedPullRequestsAuthors $search_paginated_pull_requests_authors,
+        private readonly ProvideUserAvatarUrl $provide_user_avatar_url,
     ) {
     }
 
@@ -54,7 +56,7 @@ final class GETHandler
                 return Result::err(UserNotFoundFault::fromUserId($author_id));
             }
 
-            $authors_representations[] = MinimalUserRepresentation::build($author);
+            $authors_representations[] = MinimalUserRepresentation::build($author, $this->provide_user_avatar_url);
         }
 
         return Result::ok(new RepositoryPullRequestsAuthorsRepresentation($authors_representations, $result->total_size));

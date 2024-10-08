@@ -30,6 +30,7 @@ use Tuleap\PullRequest\Reviewer\Change\ReviewerChange;
 use Tuleap\PullRequest\Timeline\Factory;
 use Tuleap\PullRequest\Timeline\TimelineEvent;
 use Tuleap\PullRequest\Timeline\TimelineGlobalEvent;
+use Tuleap\User\Avatar\ProvideUserAvatarUrl;
 use Tuleap\User\REST\MinimalUserRepresentation;
 use UserManager;
 
@@ -40,6 +41,7 @@ class PaginatedTimelineRepresentationBuilder
         private readonly UserManager $user_manager,
         private readonly CommentRepresentationBuilder $comment_representation_builder,
         private readonly SingleRepresentationBuilder $timeline_inline_comment_representation_builder,
+        private readonly ProvideUserAvatarUrl $provide_user_avatar_url,
     ) {
     }
 
@@ -85,7 +87,7 @@ class PaginatedTimelineRepresentationBuilder
                 );
             case ReviewerChange::class:
                 assert($event instanceof ReviewerChange);
-                return ReviewerChangeTimelineEventRepresentation::fromReviewerChange($event);
+                return ReviewerChangeTimelineEventRepresentation::fromReviewerChange($event, $this->provide_user_avatar_url);
         }
 
         throw new \LogicException('Do not know how to build a timeline event representation from ' . $event::class);
@@ -95,8 +97,8 @@ class PaginatedTimelineRepresentationBuilder
     {
         $user = $this->user_manager->getUserById($user_id);
         if ($user === null) {
-            return MinimalUserRepresentation::build($this->user_manager->getUserAnonymous());
+            return MinimalUserRepresentation::build($this->user_manager->getUserAnonymous(), $this->provide_user_avatar_url);
         }
-        return MinimalUserRepresentation::build($user);
+        return MinimalUserRepresentation::build($user, $this->provide_user_avatar_url);
     }
 }

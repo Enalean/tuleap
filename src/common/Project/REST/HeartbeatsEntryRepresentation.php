@@ -22,6 +22,7 @@ namespace Tuleap\Project\REST;
 
 use Tuleap\Project\HeartbeatsEntry;
 use Tuleap\REST\JsonCast;
+use Tuleap\User\Avatar\ProvideUserAvatarUrl;
 use Tuleap\User\REST\MinimalUserRepresentation;
 
 /**
@@ -56,7 +57,7 @@ final class HeartbeatsEntryRepresentation
      */
     public $user;
 
-    private function __construct(string $updated_at, string $html_message, string $svg, ?\PFUser $user = null)
+    private function __construct(string $updated_at, string $html_message, string $svg, ?\PFUser $user, ProvideUserAvatarUrl $provide_user_avatar_url)
     {
         $this->updated_at   = $updated_at;
         $this->html_message = $html_message;
@@ -65,17 +66,18 @@ final class HeartbeatsEntryRepresentation
         $this->icon_name    = $svg;
 
         if ($user) {
-            $this->user = MinimalUserRepresentation::build($user);
+            $this->user = MinimalUserRepresentation::build($user, $provide_user_avatar_url);
         }
     }
 
-    public static function build(HeartbeatsEntry $entry): self
+    public static function build(HeartbeatsEntry $entry, ProvideUserAvatarUrl $provide_user_avatar_url): self
     {
         return new self(
             JsonCast::toDate($entry->getUpdatedAt()),
             $entry->getHTMLMessage(),
             $entry->getIconName(),
-            $entry->getUser()
+            $entry->getUser(),
+            $provide_user_avatar_url,
         );
     }
 }

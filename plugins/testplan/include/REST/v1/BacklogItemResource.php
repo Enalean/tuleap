@@ -32,6 +32,9 @@ use Tuleap\TestPlan\TestDefinition\TestPlanLinkedTestDefinitionsRetriever;
 use Tuleap\TestPlan\TestDefinition\TestPlanTestDefinitionsTestStatusDAO;
 use Tuleap\TestPlan\TestDefinition\TestPlanTestDefinitionWithTestStatusRetriever;
 use Tuleap\TestPlan\TestDefinition\TestStatusPerTestDefinitionsInformationForUserRetriever;
+use Tuleap\User\Avatar\AvatarHashDao;
+use Tuleap\User\Avatar\ComputeAvatarHash;
+use Tuleap\User\Avatar\UserAvatarUrlProvider;
 
 final class BacklogItemResource extends AuthenticatedResource
 {
@@ -118,7 +121,8 @@ final class BacklogItemResource extends AuthenticatedResource
             $representations[] = DefinitionLinkedToABacklogItemRepresentation::fromTestDefinitionWithTestStatus(
                 $linked_test_definition,
                 $user,
-                $formelement_factory
+                $formelement_factory,
+                new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash()),
             );
         }
 

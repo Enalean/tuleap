@@ -64,6 +64,9 @@ use Tuleap\Plugin\ListeningToEventClass;
 use Tuleap\Plugin\ListeningToEventName;
 use Tuleap\Request\CollectRoutesEvent;
 use Tuleap\Request\DispatchableWithRequest;
+use Tuleap\User\Avatar\AvatarHashDao;
+use Tuleap\User\Avatar\ComputeAvatarHash;
+use Tuleap\User\Avatar\UserAvatarUrlProvider;
 use Tuleap\User\User_ForgeUserGroupPermissionsFactory;
 
 require_once __DIR__ . '/../vendor/autoload.php';
@@ -223,7 +226,8 @@ class PdfTemplatePlugin extends Plugin
             new UsageDetector(
                 $this->getPdfTemplateDao(),
                 new PdfTemplateImageHrefBuilder(),
-            )
+            ),
+            new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash()),
         );
     }
 
@@ -234,6 +238,7 @@ class PdfTemplatePlugin extends Plugin
             $this->getUserCanManageTemplatesChecker(),
             $this->getPdfTemplateDao(),
             new AdministrationCSRFTokenProvider(),
+            new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash()),
         );
     }
 
@@ -244,6 +249,7 @@ class PdfTemplatePlugin extends Plugin
             $this->getUserCanManageTemplatesChecker(),
             new AdministrationCSRFTokenProvider(),
             $this->getImageDao(),
+            new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash()),
         );
     }
 
@@ -257,6 +263,7 @@ class PdfTemplatePlugin extends Plugin
             new AdministrationCSRFTokenProvider(),
             $this->getImageDao(),
             new VariableMisusageInTemplateDetector(new VariableMisusageCollector()),
+            new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash()),
         );
     }
 
@@ -269,6 +276,7 @@ class PdfTemplatePlugin extends Plugin
             $this->getPdfTemplateDao(),
             new AdministrationCSRFTokenProvider(),
             $this->getImageDao(),
+            new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash()),
         );
     }
 
@@ -312,6 +320,7 @@ class PdfTemplatePlugin extends Plugin
                 $redirect_with_feedback_factory,
                 $this->getPdfTemplateIdentifierFactory(),
                 $this->getPdfTemplateDao(),
+                new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash()),
             ),
             new CheckCSRFMiddleware(new AdministrationCSRFTokenProvider()),
         );

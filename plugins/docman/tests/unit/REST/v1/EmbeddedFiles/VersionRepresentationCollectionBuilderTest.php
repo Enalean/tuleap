@@ -28,6 +28,7 @@ use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\ProjectByIDFactoryStub;
 use Tuleap\Test\Stubs\RetrieveUserByIdStub;
+use Tuleap\Test\Stubs\User\Avatar\ProvideUserAvatarUrlStub;
 
 final class VersionRepresentationCollectionBuilderTest extends TestCase
 {
@@ -47,7 +48,8 @@ final class VersionRepresentationCollectionBuilderTest extends TestCase
             $this->docman_version_dao,
             RetrieveUserByIdStub::withUser(UserTestBuilder::buildWithDefaults()),
             TableFactoryForFileBuilderStub::buildWithFactory($this->factory),
-            ProjectByIDFactoryStub::buildWith(ProjectTestBuilder::aProject()->withId(self::PROJECT_ID)->build())
+            ProjectByIDFactoryStub::buildWith(ProjectTestBuilder::aProject()->withId(self::PROJECT_ID)->build()),
+            ProvideUserAvatarUrlStub::build(),
         );
         $user_helper   = $this->createStub(\UserHelper::class);
         $user_helper->method('getUserUrl')->willReturn('/path/to/user');

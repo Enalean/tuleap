@@ -25,6 +25,7 @@ namespace Tuleap\PullRequest\REST\v1\Reviewer;
 use PFUser;
 use Tuleap\PullRequest\Reviewer\Change\ReviewerChange;
 use Tuleap\REST\JsonCast;
+use Tuleap\User\Avatar\ProvideUserAvatarUrl;
 use Tuleap\User\REST\MinimalUserRepresentation;
 
 final class ReviewerChangeTimelineEventRepresentation
@@ -51,39 +52,40 @@ final class ReviewerChangeTimelineEventRepresentation
      * @param PFUser[] $added_reviewers
      * @param PFUser[] $removed_reviewers
      */
-    private function __construct(PFUser $user, \DateTimeImmutable $post_date, array $added_reviewers, array $removed_reviewers)
+    private function __construct(PFUser $user, \DateTimeImmutable $post_date, array $added_reviewers, array $removed_reviewers, ProvideUserAvatarUrl $provide_user_avatar_url)
     {
-        $this->user              = self::buildMinimalUserRepresentation($user);
+        $this->user              = self::buildMinimalUserRepresentation($user, $provide_user_avatar_url);
         $this->post_date         = JsonCast::fromNotNullDateTimeToDate($post_date);
-        $this->added_reviewers   = self::transformToMinimalUserRepresentations(...$added_reviewers);
-        $this->removed_reviewers = self::transformToMinimalUserRepresentations(...$removed_reviewers);
+        $this->added_reviewers   = self::transformToMinimalUserRepresentations($provide_user_avatar_url, ...$added_reviewers);
+        $this->removed_reviewers = self::transformToMinimalUserRepresentations($provide_user_avatar_url, ...$removed_reviewers);
     }
 
-    private static function buildMinimalUserRepresentation(PFUser $user): MinimalUserRepresentation
+    private static function buildMinimalUserRepresentation(PFUser $user, ProvideUserAvatarUrl $provide_user_avatar_url): MinimalUserRepresentation
     {
-        return MinimalUserRepresentation::build($user);
+        return MinimalUserRepresentation::build($user, $provide_user_avatar_url);
     }
 
     /**
      * @return list<MinimalUserRepresentation>
      */
-    private static function transformToMinimalUserRepresentations(PFUser ...$users): array
+    private static function transformToMinimalUserRepresentations(ProvideUserAvatarUrl $provide_user_avatar_url, PFUser ...$users): array
     {
         $minimal_user_representations = [];
         foreach ($users as $user) {
-            $minimal_user_representations[] = self::buildMinimalUserRepresentation($user);
+            $minimal_user_representations[] = self::buildMinimalUserRepresentation($user, $provide_user_avatar_url);
         }
 
         return $minimal_user_representations;
     }
 
-    public static function fromReviewerChange(ReviewerChange $reviewer_change): self
+    public static function fromReviewerChange(ReviewerChange $reviewer_change, ProvideUserAvatarUrl $provide_user_avatar_url): self
     {
         return new self(
             $reviewer_change->changedBy(),
             $reviewer_change->getPostDate(),
             $reviewer_change->getAddedReviewers(),
             $reviewer_change->getRemovedReviewers(),
+            $provide_user_avatar_url,
         );
     }
 }

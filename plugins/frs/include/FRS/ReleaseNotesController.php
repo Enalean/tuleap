@@ -46,6 +46,10 @@ use Tuleap\Markdown\ContentInterpretor;
 use Tuleap\Request\DispatchableWithBurningParrot;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\NotFoundException;
+use Tuleap\User\Avatar\AvatarHashDao;
+use Tuleap\User\Avatar\ComputeAvatarHash;
+use Tuleap\User\Avatar\ProvideUserAvatarUrl;
+use Tuleap\User\Avatar\UserAvatarUrlProvider;
 use UGroupManager;
 use UserManager;
 
@@ -78,6 +82,7 @@ class ReleaseNotesController implements DispatchableWithRequest, DispatchableWit
         private ContentInterpretor $interpreter,
         TemplateRenderer $renderer,
         IncludeAssets $assets,
+        private readonly ProvideUserAvatarUrl $provide_user_avatar_url,
     ) {
         $this->release_factory                = $release_factory;
         $this->license_agreement_factory      = $license_agreement_factory;
@@ -109,7 +114,8 @@ class ReleaseNotesController implements DispatchableWithRequest, DispatchableWit
             new IncludeAssets(
                 __DIR__ . '/../../frontend-assets',
                 '/assets/frs'
-            )
+            ),
+            new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash()),
         );
     }
 
@@ -129,7 +135,8 @@ class ReleaseNotesController implements DispatchableWithRequest, DispatchableWit
             $this->link_retriever,
             $user,
             $this->uploaded_links_retriever,
-            $this->permissions_for_groups_builder
+            $this->permissions_for_groups_builder,
+            $this->provide_user_avatar_url,
         );
 
         $license_agreement = $this->license_agreement_factory->getLicenseAgreementForPackage($release->getPackage());

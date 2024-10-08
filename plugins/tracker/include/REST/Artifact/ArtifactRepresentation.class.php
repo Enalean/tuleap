@@ -26,6 +26,7 @@ use Tuleap\REST\JsonCast;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\REST\Artifact\Changeset\ChangesetRepresentation;
 use Tuleap\Tracker\REST\TrackerRepresentation;
+use Tuleap\User\Avatar\ProvideUserAvatarUrl;
 use Tuleap\User\REST\MinimalUserRepresentation;
 
 /**
@@ -172,12 +173,13 @@ class ArtifactRepresentation
         ?array $values_by_field,
         TrackerRepresentation $tracker_representation,
         StatusValueRepresentation $status_value_representation,
+        ProvideUserAvatarUrl $provide_user_avatar_url,
     ): self {
         $artifact_id = $artifact->getId();
 
         $assignees = [];
         foreach ($artifact->getAssignedTo($current_user) as $assignee) {
-            $user_representation = MinimalUserRepresentation::build($assignee);
+            $user_representation = MinimalUserRepresentation::build($assignee, $provide_user_avatar_url);
             $assignees[]         = $user_representation;
         }
 
@@ -195,7 +197,7 @@ class ArtifactRepresentation
             $tracker_representation,
             new ProjectReference($artifact->getTracker()->getProject()),
             JsonCast::toInt($submitted_by_user->getId()),
-            MinimalUserRepresentation::build($submitted_by_user),
+            MinimalUserRepresentation::build($submitted_by_user, $provide_user_avatar_url),
             JsonCast::toDate($artifact->getSubmittedOn()),
             $artifact->getUri(),
             self::ROUTE . '/' . $artifact_id . '/' . ChangesetRepresentation::ROUTE,

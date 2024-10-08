@@ -22,19 +22,19 @@ namespace Tuleap\User\Account;
 
 use Gumlet\ImageResize;
 use Gumlet\ImageResizeException;
+use Tuleap\User\Avatar\AvatarHashStorage;
+use Tuleap\User\Avatar\ComputeAvatarHash;
 
-class UserAvatarSaver
+final readonly class UserAvatarSaver
 {
     public const AVATAR_MAX_SIZE = 100;
 
-    /**
-     * @var \UserManager
-     */
-    private $user_manager;
 
-    public function __construct(\UserManager $user_manager)
-    {
-        $this->user_manager = $user_manager;
+    public function __construct(
+        private \UserManager $user_manager,
+        private AvatarHashStorage $avatar_hash_storage,
+        private ComputeAvatarHash $compute_avatar_hash,
+    ) {
     }
 
     /**
@@ -64,8 +64,9 @@ class UserAvatarSaver
         if (! is_dir($avatar_folder) && ! mkdir($avatar_folder, 0777, true) && ! is_dir($avatar_folder)) {
             throw new \RuntimeException(sprintf('Directory "%s" was not created', $avatar_folder));
         }
-        $image->save($user->getAvatarFilePath(), IMAGETYPE_PNG, 9, 0640);
+        $image->save($avatar_path, IMAGETYPE_PNG, 9, 0640);
         $user->setHasCustomAvatar(true);
+        $this->avatar_hash_storage->store($user, $this->compute_avatar_hash->computeAvatarHash($avatar_path));
         $this->user_manager->updateDb($user);
     }
 }

@@ -29,6 +29,7 @@ use Tuleap\PdfTemplate\Image\DisplayImagePresenter;
 use Tuleap\PdfTemplate\Variable\Variable;
 use Tuleap\PdfTemplate\Variable\VariablePresenter;
 use Tuleap\Request\CSRFSynchronizerTokenInterface;
+use Tuleap\User\Avatar\ProvideUserAvatarUrl;
 
 /**
  * @psalm-immutable
@@ -70,9 +71,10 @@ final readonly class DisplayPdfTemplateCreationOrUpdateFormPresenter
         CSRFSynchronizerTokenInterface $token,
         \PFUser $user,
         array $images,
+        ProvideUserAvatarUrl $provide_user_avatar_url,
     ): self {
         return self::createFromTemplate(
-            PdfTemplatePresenter::forCreation($user),
+            PdfTemplatePresenter::forCreation($user, $provide_user_avatar_url),
             $token,
             $images,
         );
@@ -86,9 +88,10 @@ final readonly class DisplayPdfTemplateCreationOrUpdateFormPresenter
         CSRFSynchronizerTokenInterface $token,
         \PFUser $user,
         array $images,
+        ProvideUserAvatarUrl $provide_user_avatar_url,
     ): self {
         return self::createFromTemplate(
-            PdfTemplatePresenter::forDuplication($template, $user),
+            PdfTemplatePresenter::forDuplication($template, $user, $provide_user_avatar_url),
             $token,
             $images,
         );
@@ -123,8 +126,9 @@ final readonly class DisplayPdfTemplateCreationOrUpdateFormPresenter
         CSRFSynchronizerTokenInterface $token,
         \PFUser $user,
         array $images,
+        ProvideUserAvatarUrl $provide_user_avatar_url,
     ): self {
-        $presenter = PdfTemplatePresenter::fromPdfTemplate($template, $user);
+        $presenter = PdfTemplatePresenter::fromPdfTemplate($template, $user, $provide_user_avatar_url);
 
         return new self(
             Navigation::inTemplates(),

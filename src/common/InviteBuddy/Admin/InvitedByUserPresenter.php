@@ -24,6 +24,7 @@ namespace Tuleap\InviteBuddy\Admin;
 
 use PFUser;
 use Tuleap\Project\ProjectPresenter;
+use Tuleap\User\Avatar\ProvideUserAvatarUrl;
 
 final class InvitedByUserPresenter
 {
@@ -44,13 +45,13 @@ final class InvitedByUserPresenter
         $this->invited_in_more_than_one_project = count($this->projects) > 1;
     }
 
-    public static function fromUser(PFUser $user): self
+    public static function fromUser(PFUser $user, ProvideUserAvatarUrl $provide_user_avatar_url): self
     {
         return new self(
             (string) \UserHelper::instance()->getDisplayNameFromUser($user),
             '/admin/usergroup.php?' . http_build_query(['user_id' => $user->getId()]),
             $user->hasAvatar(),
-            $user->getAvatarUrl(),
+            $provide_user_avatar_url->getAvatarUrl($user),
             [],
         );
     }

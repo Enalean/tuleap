@@ -28,6 +28,7 @@ use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\BuildDisplayNameStub;
 use Tuleap\Test\Stubs\ProvideUserFromRowStub;
+use Tuleap\Test\Stubs\User\Avatar\ProvideUserAvatarUrlStub;
 
 final class AllOwnerRetrieverTest extends TestCase
 {
@@ -41,7 +42,8 @@ final class AllOwnerRetrieverTest extends TestCase
                 }
             },
             ProvideUserFromRowStub::build(),
-            BuildDisplayNameStub::build()
+            BuildDisplayNameStub::build(),
+            ProvideUserAvatarUrlStub::build(),
         );
 
         self::assertEquals([], $owner_retriever->retrieveProjectDocumentOwnersForAutocomplete(ProjectTestBuilder::aProject()->build(), 'igo'));
@@ -70,7 +72,8 @@ final class AllOwnerRetrieverTest extends TestCase
                 }
             },
             ProvideUserFromRowStub::build(),
-            BuildDisplayNameStub::build()
+            BuildDisplayNameStub::build(),
+            ProvideUserAvatarUrlStub::build(),
         );
 
         $owner_1 = UserTestBuilder::aUser()
@@ -88,8 +91,8 @@ final class AllOwnerRetrieverTest extends TestCase
             ->build();
 
         $expected_owners = [
-            OwnerRepresentationForAutocomplete::buildForSelect2AutocompleteFromOwner($owner_1, BuildDisplayNameStub::build()),
-            OwnerRepresentationForAutocomplete::buildForSelect2AutocompleteFromOwner($owner_2, BuildDisplayNameStub::build()),
+            OwnerRepresentationForAutocomplete::buildForSelect2AutocompleteFromOwner($owner_1, BuildDisplayNameStub::build(), ProvideUserAvatarUrlStub::build()),
+            OwnerRepresentationForAutocomplete::buildForSelect2AutocompleteFromOwner($owner_2, BuildDisplayNameStub::build(), ProvideUserAvatarUrlStub::build()),
         ];
 
         $owners = $owner_retriever->retrieveProjectDocumentOwnersForAutocomplete(ProjectTestBuilder::aProject()->build(), '');

@@ -30,6 +30,7 @@ use Tuleap\Git\CommitMetadata\CommitMetadataRetriever;
 use Tuleap\Git\CommitStatus\CommitStatusUnknown;
 use Tuleap\Git\CommitStatus\CommitStatusWithKnownStatus;
 use Tuleap\Git\GitPHP\Commit;
+use Tuleap\Test\Stubs\User\Avatar\ProvideUserAvatarUrlStub;
 use Tuleap\User\REST\MinimalUserRepresentation;
 use UserHelper;
 
@@ -57,7 +58,7 @@ final class GitCommitRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\Test
         $this->git_commit_representation_builder = $this
             ->getMockBuilder(GitCommitRepresentationBuilder::class)
             ->onlyMethods(['getCommitReferences'])
-            ->setConstructorArgs([$this->metadata_retriever, $this->url_manager])
+            ->setConstructorArgs([$this->metadata_retriever, $this->url_manager, ProvideUserAvatarUrlStub::build()])
             ->getMock();
         $this->git_commit_representation_builder->method('getCommitReferences')->willReturn([]);
 

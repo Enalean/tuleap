@@ -57,6 +57,9 @@ use Tuleap\Tracker\Rule\FirstValidValueAccordingToDependenciesRetriever;
 use Tuleap\Tracker\Semantic\Status\StatusValueRetriever;
 use Tuleap\Tracker\Workflow\FirstPossibleValueInListRetriever;
 use Tuleap\Tracker\Workflow\ValidValuesAccordingToTransitionsRetriever;
+use Tuleap\User\Avatar\AvatarHashDao;
+use Tuleap\User\Avatar\ComputeAvatarHash;
+use Tuleap\User\Avatar\UserAvatarUrlProvider;
 use UserManager;
 use Workflow_Transition_ConditionFactory;
 
@@ -125,10 +128,13 @@ class ProjectResource
                     new CommentRepresentationBuilder(
                         CommonMarkInterpreter::build(\Codendi_HTMLPurifier::instance())
                     ),
-                    new PermissionChecker(new CachingTrackerPrivateCommentInformationRetriever(new TrackerPrivateCommentInformationRetriever(new TrackerPrivateCommentUGroupEnabledDao())))
-                )
+                    new PermissionChecker(new CachingTrackerPrivateCommentInformationRetriever(new TrackerPrivateCommentInformationRetriever(new TrackerPrivateCommentUGroupEnabledDao()))),
+                    new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash()),
+                ),
+                new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash()),
             ),
             \Tracker_Artifact_PriorityManager::build(),
+            new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash()),
         );
 
         $campaign_retriever = new CampaignRetriever($artifact_factory, new CampaignDao(), new KeyFactory());

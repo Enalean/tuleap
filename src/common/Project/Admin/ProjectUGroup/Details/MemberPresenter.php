@@ -25,6 +25,7 @@ namespace Tuleap\Project\Admin\ProjectUGroup\Details;
 
 use ProjectUGroup;
 use Tuleap\Project\Admin\ProjectUGroup\ProjectUGroupMemberUpdatable;
+use Tuleap\User\Avatar\ProvideUserAvatarUrl;
 use Tuleap\User\StatusPresenter;
 
 class MemberPresenter
@@ -47,7 +48,7 @@ class MemberPresenter
      */
     public $avatar_url;
 
-    public function __construct(\UserHelper $user_helper, \PFUser $member, ProjectUGroup $ugroup, ProjectUGroupMemberUpdatable $ugroup_members_updatable)
+    public function __construct(\UserHelper $user_helper, \PFUser $member, ProjectUGroup $ugroup, ProjectUGroupMemberUpdatable $ugroup_members_updatable, ProvideUserAvatarUrl $provide_user_avatar_url)
     {
         $this->profile_page_url = '/users/' . urlencode($member->getUserName()) . '/';
 
@@ -65,7 +66,7 @@ class MemberPresenter
         }
 
         $this->has_avatar                = $member->hasAvatar();
-        $this->avatar_url                = $member->getAvatarUrl();
+        $this->avatar_url                = $provide_user_avatar_url->getAvatarUrl($member);
         $this->user_name                 = $member->getUserName();
         $this->user_id                   = $member->getId();
         $updatable_error_messages        = $ugroup_members_updatable->getUserUpdatableErrorMessages($member);

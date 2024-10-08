@@ -27,6 +27,7 @@ use Tracker_UserWithReadAllPermission;
 use Tuleap\Markdown\ContentInterpretor;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\Stubs\User\Avatar\ProvideUserAvatarUrlStub;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\PermissionChecker;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\UserIsNotAllowedToSeeUGroups;
@@ -67,7 +68,8 @@ final class ChangesetRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\Test
             new CommentRepresentationBuilder(
                 \Mockery::spy(ContentInterpretor::class)
             ),
-            $this->comment_permission_checker
+            $this->comment_permission_checker,
+            ProvideUserAvatarUrlStub::build(),
         );
 
         $this->comment_permission_checker

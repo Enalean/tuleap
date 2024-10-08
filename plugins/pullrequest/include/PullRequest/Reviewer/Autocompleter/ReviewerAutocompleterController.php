@@ -35,6 +35,7 @@ use Tuleap\PullRequest\PullRequestRetriever;
 use Tuleap\Request\DispatchablePSR15Compatible;
 use Tuleap\Request\DispatchableWithRequestNoAuthz;
 use Tuleap\Request\NotFoundException;
+use Tuleap\User\Avatar\ProvideUserAvatarUrl;
 use Tuleap\User\REST\MinimalUserRepresentation;
 use UserManager;
 
@@ -52,6 +53,7 @@ final class ReviewerAutocompleterController extends DispatchablePSR15Compatible 
         private readonly PullRequestPermissionChecker $pull_request_permission_checker,
         private readonly PotentialReviewerRetriever $potential_reviewer_retriever,
         private readonly JSONResponseBuilder $json_response_builder,
+        private readonly ProvideUserAvatarUrl $provide_user_avatar_url,
         EmitterInterface $emitter,
         MiddlewareInterface ...$middleware_stack,
     ) {
@@ -91,7 +93,7 @@ final class ReviewerAutocompleterController extends DispatchablePSR15Compatible 
                 $potential_reviewer_representations = [];
 
                 foreach ($potential_reviewers as $potential_reviewer) {
-                    $representation                       = MinimalUserRepresentation::build($potential_reviewer);
+                    $representation                       = MinimalUserRepresentation::build($potential_reviewer, $this->provide_user_avatar_url);
                     $potential_reviewer_representations[] = $representation;
                 }
 

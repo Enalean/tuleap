@@ -26,6 +26,7 @@ use Tuleap\Config\ConfigurationVariables;
 use Tuleap\InviteBuddy\UsedInvitationRetriever;
 use Tuleap\Layout\IncludeViteAssets;
 use Tuleap\Layout\JavascriptViteAsset;
+use Tuleap\User\Avatar\ProvideUserAvatarUrl;
 use Tuleap\User\RetrieveUserById;
 
 final class FirstTimerPresenterBuilder
@@ -33,6 +34,7 @@ final class FirstTimerPresenterBuilder
     public function __construct(
         private UsedInvitationRetriever $invitation_dao,
         private RetrieveUserById $user_manager,
+        private readonly ProvideUserAvatarUrl $provide_user_avatar_url,
     ) {
     }
 
@@ -56,6 +58,7 @@ final class FirstTimerPresenterBuilder
                 ),
                 'src/first-timer.ts',
             ),
+            $this->provide_user_avatar_url,
         );
     }
 }

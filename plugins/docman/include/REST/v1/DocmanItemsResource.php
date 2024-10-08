@@ -47,6 +47,9 @@ use Tuleap\Docman\REST\v1\Permissions\DocmanItemPermissionsForGroupsBuilder;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\REST\I18NRestException;
+use Tuleap\User\Avatar\AvatarHashDao;
+use Tuleap\User\Avatar\ComputeAvatarHash;
+use Tuleap\User\Avatar\UserAvatarUrlProvider;
 use UGroupManager;
 use UserHelper;
 use UserManager;
@@ -285,7 +288,7 @@ final class DocmanItemsResource extends AuthenticatedResource
         Header::sendPaginationHeaders($limit, $offset, $page->total, self::MAX_LIMIT);
 
         return array_map(
-            static fn (LogEntry $entry): LogEntryRepresentation => LogEntryRepresentation::fromEntry($entry),
+            static fn (LogEntry $entry): LogEntryRepresentation => LogEntryRepresentation::fromEntry($entry, new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash())),
             $page->entries,
         );
     }
@@ -373,7 +376,8 @@ final class DocmanItemsResource extends AuthenticatedResource
                 PermissionsManager::instance(),
                 new UGroupManager()
             ),
-            $html_purifier
+            $html_purifier,
+            new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash()),
         );
     }
 }

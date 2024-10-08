@@ -23,12 +23,14 @@ namespace Tuleap\JWT\generators;
 
 use Lcobucci\JWT\Configuration;
 use Tuleap\Cryptography\ConcealedString;
+use Tuleap\User\Avatar\ProvideUserAvatarUrl;
 use Tuleap\User\REST\UserRepresentation;
 
 final class MercureJWTGeneratorImpl implements MercureJWTGenerator
 {
     public function __construct(
         private Configuration $jwt_configuration,
+        private readonly ProvideUserAvatarUrl $provide_user_avatar_url,
     ) {
     }
 
@@ -54,7 +56,7 @@ final class MercureJWTGeneratorImpl implements MercureJWTGenerator
         }
         $mercure = [
             'subscribe' => $app_list,
-            'payload' => UserRepresentation::build($user),
+            'payload' => UserRepresentation::build($user, $this->provide_user_avatar_url),
         ];
         $token   = $this->jwt_configuration->builder()
             ->withClaim('mercure', $mercure)

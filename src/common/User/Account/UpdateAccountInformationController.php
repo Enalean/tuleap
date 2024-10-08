@@ -31,6 +31,8 @@ use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\DispatchableWithBurningParrot;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\ForbiddenException;
+use Tuleap\User\Avatar\AvatarHashDao;
+use Tuleap\User\Avatar\ComputeAvatarHash;
 use Tuleap\User\Profile\AvatarGenerator;
 use UserManager;
 
@@ -79,7 +81,7 @@ final class UpdateAccountInformationController implements DispatchableWithReques
             DisplayAccountInformationController::getCSRFToken(),
             UserManager::instance(),
             new EmailUpdater(),
-            new AvatarGenerator()
+            new AvatarGenerator(new AvatarHashDao(), new ComputeAvatarHash())
         );
     }
 

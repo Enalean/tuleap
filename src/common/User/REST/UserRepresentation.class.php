@@ -20,6 +20,7 @@
 namespace Tuleap\User\REST;
 
 use PFUser;
+use Tuleap\User\Avatar\ProvideUserAvatarUrl;
 
 /**
  * @psalm-immutable
@@ -42,8 +43,8 @@ class UserRepresentation extends MinimalUserRepresentation
     /**
      * @return UserRepresentation
      */
-    public static function build(PFUser $user)
+    public static function build(PFUser $user, ProvideUserAvatarUrl $provide_user_avatar_url)
     {
-        return new self(parent::build($user), $user->getEmail(), $user->getStatus());
+        return new self(parent::build($user, $provide_user_avatar_url), $user->getEmail(), $user->getStatus());
     }
 }

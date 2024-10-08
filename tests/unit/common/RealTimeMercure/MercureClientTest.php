@@ -32,6 +32,7 @@ use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\JWT\generators\MercureJWTGeneratorImpl;
 use Tuleap\JWT\generators\NullMercureJWTGenerator;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Test\Stubs\User\Avatar\ProvideUserAvatarUrlStub;
 use UserManager;
 
 final class MercureClientTest extends TestCase
@@ -61,7 +62,7 @@ final class MercureClientTest extends TestCase
 
 
         $this->jwt_configuration     = Configuration::forSymmetricSigner(new Sha256(), Key\InMemory::plainText(str_repeat('a', 32)));
-        $this->mercure_jwt_generator = new MercureJWTGeneratorImpl($this->jwt_configuration);
+        $this->mercure_jwt_generator = new MercureJWTGeneratorImpl($this->jwt_configuration, ProvideUserAvatarUrlStub::build());
     }
 
     public function testMessageIsTransmittedToRealTimeMercureServer(): void

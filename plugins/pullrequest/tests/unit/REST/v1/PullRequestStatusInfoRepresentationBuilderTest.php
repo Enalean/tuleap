@@ -29,6 +29,7 @@ use Tuleap\PullRequest\Timeline\TimelineGlobalEvent;
 use Tuleap\REST\JsonCast;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\Stubs\RetrieveUserByIdStub;
+use Tuleap\Test\Stubs\User\Avatar\ProvideUserAvatarUrlStub;
 use Tuleap\User\REST\MinimalUserRepresentation;
 
 final class PullRequestStatusInfoRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -49,6 +50,7 @@ final class PullRequestStatusInfoRepresentationBuilderTest extends \Tuleap\Test\
                 self::USER_ID
             ),
             RetrieveUserByIdStub::withUser($user),
+            ProvideUserAvatarUrlStub::build(),
         );
 
         $representation = $builder->buildPullRequestStatusInfoRepresentation(
@@ -59,7 +61,7 @@ final class PullRequestStatusInfoRepresentationBuilderTest extends \Tuleap\Test\
             new PullRequestStatusInfoRepresentation(
                 PullRequestStatusTypeConverter::fromIntStatusToStringStatus(TimelineGlobalEvent::MERGE),
                 JsonCast::toDate($merge_date_timestamp),
-                MinimalUserRepresentation::build($user)
+                MinimalUserRepresentation::build($user, ProvideUserAvatarUrlStub::build())
             ),
             $representation
         );
@@ -74,6 +76,7 @@ final class PullRequestStatusInfoRepresentationBuilderTest extends \Tuleap\Test\
             ),
             SearchAbandonEventStub::withNoAbandonEvent(),
             RetrieveUserByIdStub::withNoUser(),
+            ProvideUserAvatarUrlStub::build(),
         );
 
         self::assertNull(
@@ -89,6 +92,7 @@ final class PullRequestStatusInfoRepresentationBuilderTest extends \Tuleap\Test\
             SearchMergeEventStub::withNoMergeEvent(),
             SearchAbandonEventStub::withNoAbandonEvent(),
             RetrieveUserByIdStub::withUser($this->buildUser()),
+            ProvideUserAvatarUrlStub::build(),
         );
 
         self::assertNull(
@@ -104,6 +108,7 @@ final class PullRequestStatusInfoRepresentationBuilderTest extends \Tuleap\Test\
             SearchMergeEventStub::withNoMergeEvent(),
             SearchAbandonEventStub::withNoAbandonEvent(),
             RetrieveUserByIdStub::withNoUser(),
+            ProvideUserAvatarUrlStub::build(),
         );
 
         self::assertNull(
@@ -124,6 +129,7 @@ final class PullRequestStatusInfoRepresentationBuilderTest extends \Tuleap\Test\
                 self::USER_ID
             ),
             RetrieveUserByIdStub::withUser($user),
+            ProvideUserAvatarUrlStub::build(),
         );
 
         $representation = $builder->buildPullRequestStatusInfoRepresentation(
@@ -134,7 +140,7 @@ final class PullRequestStatusInfoRepresentationBuilderTest extends \Tuleap\Test\
             new PullRequestStatusInfoRepresentation(
                 PullRequestStatusTypeConverter::fromIntStatusToStringStatus(TimelineGlobalEvent::ABANDON),
                 JsonCast::toDate($merge_date_timestamp),
-                MinimalUserRepresentation::build($user)
+                MinimalUserRepresentation::build($user, ProvideUserAvatarUrlStub::build())
             ),
             $representation
         );
@@ -149,6 +155,7 @@ final class PullRequestStatusInfoRepresentationBuilderTest extends \Tuleap\Test\
                 666
             ),
             RetrieveUserByIdStub::withNoUser(),
+            ProvideUserAvatarUrlStub::build(),
         );
 
         self::assertNull(
@@ -164,6 +171,7 @@ final class PullRequestStatusInfoRepresentationBuilderTest extends \Tuleap\Test\
             SearchMergeEventStub::withNoMergeEvent(),
             SearchAbandonEventStub::withNoAbandonEvent(),
             RetrieveUserByIdStub::withUser($this->buildUser()),
+            ProvideUserAvatarUrlStub::build(),
         );
 
         self::assertNull(

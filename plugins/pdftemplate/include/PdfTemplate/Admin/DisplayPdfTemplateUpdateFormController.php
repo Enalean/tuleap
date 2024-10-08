@@ -37,6 +37,7 @@ use Tuleap\PdfTemplate\Variable\VariableMisusageInTemplateDetector;
 use Tuleap\Request\DispatchableWithBurningParrot;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\NotFoundException;
+use Tuleap\User\Avatar\ProvideUserAvatarUrl;
 
 final readonly class DisplayPdfTemplateUpdateFormController implements DispatchableWithBurningParrot, DispatchableWithRequest
 {
@@ -49,7 +50,8 @@ final readonly class DisplayPdfTemplateUpdateFormController implements Dispatcha
         private RetrieveTemplate $retriever,
         private CSRFTokenProvider $token_provider,
         private RetrieveAllImages $images_retriever,
-        private readonly VariableMisusageInTemplateDetector $variable_misusage_detector,
+        private VariableMisusageInTemplateDetector $variable_misusage_detector,
+        private ProvideUserAvatarUrl $provide_user_avatar_url,
     ) {
     }
 
@@ -98,6 +100,7 @@ final readonly class DisplayPdfTemplateUpdateFormController implements Dispatcha
                     static fn (PdfTemplateImage $image) => DisplayImagePresenter::fromImage($image),
                     $this->images_retriever->retrieveAll(),
                 ),
+                $this->provide_user_avatar_url,
             ),
         );
     }

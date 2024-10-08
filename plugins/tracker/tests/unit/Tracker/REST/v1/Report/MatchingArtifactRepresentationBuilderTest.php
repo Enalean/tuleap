@@ -32,6 +32,7 @@ use Tracker_Report_Renderer_Table;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Test\Stubs\User\Avatar\ProvideUserAvatarUrlStub;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Report\Renderer\Table\TableRendererForReportRetriever;
 use Tuleap\Tracker\Report\Renderer\Table\UsedFieldsRetriever;
@@ -73,7 +74,8 @@ final class MatchingArtifactRepresentationBuilderTest extends TestCase
             $this->report_artifact_factory,
             $this->table_renderer_retriever,
             $this->used_fields_retriever,
-            $color_provider
+            $color_provider,
+            ProvideUserAvatarUrlStub::build(),
         );
     }
 

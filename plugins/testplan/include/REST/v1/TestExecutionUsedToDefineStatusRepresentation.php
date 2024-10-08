@@ -25,6 +25,7 @@ namespace Tuleap\TestPlan\REST\v1;
 use Tuleap\REST\JsonCast;
 use Tuleap\TestPlan\TestDefinition\TestPlanTestDefinitionWithTestStatus;
 use Tuleap\Tracker\REST\Artifact\ArtifactReferenceRepresentation;
+use Tuleap\User\Avatar\ProvideUserAvatarUrl;
 use Tuleap\User\REST\MinimalUserRepresentation;
 
 /**
@@ -48,7 +49,7 @@ final class TestExecutionUsedToDefineStatusRepresentation extends ArtifactRefere
         $this->submitted_by = $submitted_by;
     }
 
-    public static function fromTestPlanTestDefinitionWithStatus(TestPlanTestDefinitionWithTestStatus $test_definition_with_test_status): ?self
+    public static function fromTestPlanTestDefinitionWithStatus(TestPlanTestDefinitionWithTestStatus $test_definition_with_test_status, ProvideUserAvatarUrl $provide_user_avatar_url): ?self
     {
         $artifact_id  = $test_definition_with_test_status->getTestExecutionIdUsedToDefineStatus();
         $submitted_on = $test_definition_with_test_status->getTestExecutionDate();
@@ -58,6 +59,6 @@ final class TestExecutionUsedToDefineStatusRepresentation extends ArtifactRefere
             return null;
         }
 
-        return new self($artifact_id, $submitted_on, MinimalUserRepresentation::build($submitted_by));
+        return new self($artifact_id, $submitted_on, MinimalUserRepresentation::build($submitted_by, $provide_user_avatar_url));
     }
 }

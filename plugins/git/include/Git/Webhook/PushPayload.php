@@ -22,6 +22,7 @@ namespace Tuleap\Git\Webhook;
 
 use GitRepository;
 use PFUser;
+use Tuleap\User\Avatar\ProvideUserAvatarUrl;
 use Tuleap\User\REST\MinimalUserRepresentation;
 use Tuleap\Webhook\Payload;
 
@@ -32,7 +33,7 @@ class PushPayload implements Payload
      */
     private $payload;
 
-    public function __construct(GitRepository $repository, PFUser $user, $oldrev, $newrev, $refname)
+    public function __construct(GitRepository $repository, PFUser $user, $oldrev, $newrev, $refname, private readonly ProvideUserAvatarUrl $provide_user_avatar_url)
     {
         $this->payload = $this->buildPayload($repository, $user, $oldrev, $newrev, $refname);
     }
@@ -53,7 +54,7 @@ class PushPayload implements Payload
             'email' => $user->getEmail(),
         ];
 
-        $sender_representation = MinimalUserRepresentation::build($user);
+        $sender_representation = MinimalUserRepresentation::build($user, $this->provide_user_avatar_url);
 
         return [
             'ref'        => $refname,

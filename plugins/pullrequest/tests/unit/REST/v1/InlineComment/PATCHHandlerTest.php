@@ -48,6 +48,7 @@ use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\ContentInterpretorStub;
 use Tuleap\Test\Stubs\EventDispatcherStub;
 use Tuleap\Test\Stubs\ExtractAndSaveCrossReferencesStub;
+use Tuleap\Test\Stubs\User\Avatar\ProvideUserAvatarUrlStub;
 
 final class PATCHHandlerTest extends TestCase
 {
@@ -98,7 +99,8 @@ final class PATCHHandlerTest extends TestCase
                 \Codendi_HTMLPurifier::instance(),
                 ContentInterpretorStub::withInterpretedText('')
             ),
-            EventDispatcherStub::withIdentityCallback()
+            EventDispatcherStub::withIdentityCallback(),
+            ProvideUserAvatarUrlStub::build(),
         );
         return $handler->handle(
             $this->comment_author,

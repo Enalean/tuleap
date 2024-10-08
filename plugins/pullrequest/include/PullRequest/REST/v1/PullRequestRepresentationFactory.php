@@ -31,6 +31,7 @@ use Tuleap\PullRequest\PullRequest;
 use Tuleap\PullRequest\PullRequestWithGitReference;
 use Tuleap\PullRequest\REST\v1\Reviewer\ReviewersRepresentation;
 use Tuleap\PullRequest\Reviewer\ReviewerRetriever;
+use Tuleap\User\Avatar\ProvideUserAvatarUrl;
 use Tuleap\User\REST\MinimalUserRepresentation;
 use Tuleap\User\RetrieveUserById;
 
@@ -50,6 +51,7 @@ class PullRequestRepresentationFactory
         private readonly ContentInterpretor $common_mark_interpreter,
         private readonly ReviewerRetriever $reviewer_retriever,
         private readonly RetrieveUserById $user_retriever,
+        private readonly ProvideUserAvatarUrl $provide_user_avatar_url,
     ) {
     }
 
@@ -115,8 +117,8 @@ class PullRequestRepresentationFactory
             $last_build_status_name,
             $last_build_date,
             $user,
-            MinimalUserRepresentation::build($pull_request_creator),
-            ReviewersRepresentation::fromUsers(...$reviewers)->users,
+            MinimalUserRepresentation::build($pull_request_creator, $this->provide_user_avatar_url),
+            ReviewersRepresentation::fromUsers($this->provide_user_avatar_url, ...$reviewers)->users,
             $short_stat_repres,
             $this->status_info_representation_builder->buildPullRequestStatusInfoRepresentation($pull_request)
         );

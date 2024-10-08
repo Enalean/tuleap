@@ -21,6 +21,7 @@
 namespace Tuleap\Project\REST;
 
 use Tuleap\Project\HeartbeatsEntryCollection;
+use Tuleap\User\Avatar\ProvideUserAvatarUrl;
 
 /**
  * @psalm-immutable
@@ -46,11 +47,11 @@ class HeartbeatsRepresentation
         $this->are_there_activities_user_cannot_see = $are_there_activities_user_cannot_see;
     }
 
-    public static function build(HeartbeatsEntryCollection $heartbeats): self
+    public static function build(HeartbeatsEntryCollection $heartbeats, ProvideUserAvatarUrl $provide_user_avatar_url): self
     {
         $entries = [];
         foreach ($heartbeats->getLatestEntries() as $entry) {
-            $entries[] = HeartbeatsEntryRepresentation::build($entry);
+            $entries[] = HeartbeatsEntryRepresentation::build($entry, $provide_user_avatar_url);
         }
 
         return new self($entries, $heartbeats->areThereActivitiesUserCannotSee());

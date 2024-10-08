@@ -31,6 +31,7 @@ use Tuleap\Tracker\RealTime\ArtifactRightsPresenter;
 use Tuleap\Tracker\RealTime\RealTimeArtifactMessageSender;
 use Tuleap\Tracker\RealtimeMercure\RealTimeMercureArtifactMessageSender;
 use Tuleap\Tracker\REST\MinimalTrackerRepresentation;
+use Tuleap\User\Avatar\ProvideUserAvatarUrl;
 use Tuleap\User\REST\UserRepresentation;
 
 class RealTimeMessageSender
@@ -50,6 +51,7 @@ class RealTimeMessageSender
         private readonly Tracker_Permission_PermissionsSerializer $permissions_serializer,
         private readonly RealTimeArtifactMessageSender $artifact_message_sender,
         private readonly RealTimeMercureArtifactMessageSender $mercure_artifact_message_sender,
+        private readonly ProvideUserAvatarUrl $provide_user_avatar_url,
     ) {
     }
 
@@ -62,7 +64,7 @@ class RealTimeMessageSender
         if ($this->doesNotHaveHTTPClientUUID($client_uuid)) {
             return;
         }
-        $user_representation = UserRepresentation::build($user);
+        $user_representation = UserRepresentation::build($user, $this->provide_user_avatar_url);
         if (\ForgeConfig::getFeatureFlag(MercureClient::FEATURE_FLAG_TESTMANAGEMENT_KEY)) {
             $data = [
                 'cmd'         => self::EVENT_NAME_EXECUTION_CREATED,
@@ -88,7 +90,7 @@ class RealTimeMessageSender
         if ($this->doesNotHaveHTTPClientUUID($client_uuid)) {
             return;
         }
-        $user_representation = UserRepresentation::build($user);
+        $user_representation = UserRepresentation::build($user, $this->provide_user_avatar_url);
         if (\ForgeConfig::getFeatureFlag(MercureClient::FEATURE_FLAG_TESTMANAGEMENT_KEY)) {
             $data = [
                 'cmd'         => self::EVENT_NAME_EXECUTION_DELETED,
@@ -113,7 +115,7 @@ class RealTimeMessageSender
         ?string $previous_status,
         ?UserRepresentation $previous_user,
     ): void {
-        $user_representation = UserRepresentation::build($user);
+        $user_representation = UserRepresentation::build($user, $this->provide_user_avatar_url);
         if (\ForgeConfig::getFeatureFlag(MercureClient::FEATURE_FLAG_TESTMANAGEMENT_KEY)) {
             $data = [
                 'cmd'           => self::EVENT_NAME_EXECUTION_UPDATED,
@@ -186,7 +188,7 @@ class RealTimeMessageSender
             ];
             $this->mercure_artifact_message_sender->sendMessage(json_encode($data), self::topicHelper($artifact));
         } else {
-            $user_representation = UserRepresentation::build($user);
+            $user_representation = UserRepresentation::build($user, $this->provide_user_avatar_url);
             $data                = [
                 'artifact_id' => $artifact->getId(),
                 'user'        => $user_representation,
@@ -213,7 +215,7 @@ class RealTimeMessageSender
             return;
         }
 
-        $user_representation = UserRepresentation::build($user);
+        $user_representation = UserRepresentation::build($user, $this->provide_user_avatar_url);
         if (\ForgeConfig::getFeatureFlag(MercureClient::FEATURE_FLAG_TESTMANAGEMENT_KEY)) {
             $user_representation = new RealtimeUserRepresentation($user_representation, $uuid);
             $data                = [

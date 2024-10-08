@@ -44,6 +44,7 @@ use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\ContentInterpretorStub;
 use Tuleap\Test\Stubs\EventDispatcherStub;
 use Tuleap\Test\Stubs\ExtractAndSaveCrossReferencesStub;
+use Tuleap\Test\Stubs\User\Avatar\ProvideUserAvatarUrlStub;
 
 final class POSTCommentHandlerTest extends TestCase
 {
@@ -91,7 +92,8 @@ final class POSTCommentHandlerTest extends TestCase
             new CommentRepresentationBuilder(
                 \Codendi_HTMLPurifier::instance(),
                 ContentInterpretorStub::withInterpretedText('')
-            )
+            ),
+            ProvideUserAvatarUrlStub::build(),
         );
         return $handler->handle($comment_data, $user, $post_date, $pull_request);
     }

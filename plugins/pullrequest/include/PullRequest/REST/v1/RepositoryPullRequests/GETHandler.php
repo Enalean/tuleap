@@ -43,6 +43,7 @@ use Tuleap\PullRequest\REST\v1\RepositoryPullRequests\QueryToSearchCriteriaConve
 use Tuleap\PullRequest\REST\v1\Reviewer\ReviewersRepresentation;
 use Tuleap\PullRequest\Reviewer\RetrieveReviewers;
 use Tuleap\PullRequest\SearchPaginatedPullRequests;
+use Tuleap\User\Avatar\ProvideUserAvatarUrl;
 use Tuleap\User\REST\MinimalUserRepresentation;
 use Tuleap\User\RetrieveUserById;
 
@@ -58,6 +59,7 @@ final class GETHandler
         private readonly RetrieveReviewers $retrieve_reviewers,
         private readonly GenerateGitoliteAccessURL $generate_gitolite_access_URL,
         private readonly LoggerInterface $logger,
+        private readonly ProvideUserAvatarUrl $provide_user_avatar_url,
     ) {
     }
 
@@ -99,7 +101,7 @@ final class GETHandler
             }
 
             $reviewers                = $this->retrieve_reviewers->getReviewers($pull_request);
-            $reviewers_representation = ReviewersRepresentation::fromUsers(...$reviewers);
+            $reviewers_representation = ReviewersRepresentation::fromUsers($this->provide_user_avatar_url, ...$reviewers);
 
             if ($repository_src && $repository_dest) {
                 $pull_request_representation = new PullRequestMinimalRepresentation($this->generate_gitolite_access_URL);
@@ -108,7 +110,7 @@ final class GETHandler
                     $repository_src,
                     $repository_dest,
                     $git_reference,
-                    MinimalUserRepresentation::build($pull_request_creator),
+                    MinimalUserRepresentation::build($pull_request_creator, $this->provide_user_avatar_url),
                     $reviewers_representation->users
                 );
                 $collection[] = $pull_request_representation;

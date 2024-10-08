@@ -21,6 +21,7 @@ namespace Tuleap\User\REST;
 
 use PFUser;
 use Tuleap\REST\JsonCast;
+use Tuleap\User\Avatar\ProvideUserAvatarUrl;
 use UserHelper;
 
 /**
@@ -97,7 +98,7 @@ class MinimalUserRepresentation
     /**
      * @return MinimalUserRepresentation
      */
-    public static function build(PFUser $user)
+    public static function build(PFUser $user, ProvideUserAvatarUrl $provide_user_avatar_url)
     {
         $user_helper = UserHelper::instance();
         $user_id     = $user->getId();
@@ -110,7 +111,7 @@ class MinimalUserRepresentation
             ($user->isAnonymous()) ? null : $user->getRealName(),
             ($user->isAnonymous()) ? null : $user->getUserName(),
             ($user->isAnonymous()) ? null : $user->getLdapId(),
-            $user->getAvatarUrl(),
+            $provide_user_avatar_url->getAvatarUrl($user),
             (bool) $user->isAnonymous(),
             (bool) $user->hasAvatar(),
         );

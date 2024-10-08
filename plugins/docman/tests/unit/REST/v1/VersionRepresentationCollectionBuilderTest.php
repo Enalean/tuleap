@@ -27,6 +27,7 @@ use Tuleap\Docman\Version\VersionDao;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\RetrieveUserByIdStub;
+use Tuleap\Test\Stubs\User\Avatar\ProvideUserAvatarUrlStub;
 
 final class VersionRepresentationCollectionBuilderTest extends TestCase
 {
@@ -52,7 +53,8 @@ final class VersionRepresentationCollectionBuilderTest extends TestCase
             $this->docman_version_dao,
             $this->co_author_dao,
             RetrieveUserByIdStub::withUsers($user, $co_author_1, $co_author_2),
-            TableFactoryForFileBuilderStub::buildWithFactory($this->factory)
+            TableFactoryForFileBuilderStub::buildWithFactory($this->factory),
+            ProvideUserAvatarUrlStub::build(),
         );
         $user_helper   = $this->createStub(\UserHelper::class);
         $user_helper->method('getUserUrl')->willReturn('/path/to/user');

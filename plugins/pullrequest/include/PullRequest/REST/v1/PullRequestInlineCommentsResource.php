@@ -50,6 +50,9 @@ use Tuleap\PullRequest\REST\v1\InlineComment\PATCHHandler;
 use Tuleap\PullRequest\REST\v1\InlineComment\SingleRepresentationBuilder;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
+use Tuleap\User\Avatar\AvatarHashDao;
+use Tuleap\User\Avatar\ComputeAvatarHash;
+use Tuleap\User\Avatar\UserAvatarUrlProvider;
 
 final class PullRequestInlineCommentsResource extends AuthenticatedResource
 {
@@ -111,7 +114,8 @@ final class PullRequestInlineCommentsResource extends AuthenticatedResource
             $git_repository_factory,
             new \ReferenceManager(),
             new SingleRepresentationBuilder($purifier, $markdown_interpreter),
-            PullRequestNotificationSupport::buildDispatcher(new BackendLogger())
+            PullRequestNotificationSupport::buildDispatcher(new BackendLogger()),
+            new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash()),
         );
         return $handler->handle($current_user, $id, $comment_data, new \DateTimeImmutable())
             ->match(
@@ -196,7 +200,8 @@ final class PullRequestInlineCommentsResource extends AuthenticatedResource
                 ),
                 $git_repository_factory,
                 new SingleRepresentationBuilder($purifier, $markdown_interpreter),
-                $comment_creator
+                $comment_creator,
+                new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash()),
             )
         )->handle(
             $id,

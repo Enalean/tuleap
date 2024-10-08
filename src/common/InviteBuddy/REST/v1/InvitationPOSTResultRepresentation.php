@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\InviteBuddy\REST\v1;
 
 use Tuleap\InviteBuddy\SentInvitationResult;
+use Tuleap\User\Avatar\ProvideUserAvatarUrl;
 use Tuleap\User\REST\UserRepresentation;
 
 /**
@@ -46,24 +47,24 @@ final class InvitationPOSTResultRepresentation
     ) {
     }
 
-    public static function fromResult(SentInvitationResult $result): self
+    public static function fromResult(SentInvitationResult $result, ProvideUserAvatarUrl $provide_user_avatar_url): self
     {
         return new self(
             $result->failures,
             array_map(
-                static fn(\PFUser $user): UserRepresentation => UserRepresentation::build($user),
+                static fn(\PFUser $user): UserRepresentation => UserRepresentation::build($user, $provide_user_avatar_url),
                 $result->already_project_members,
             ),
             array_map(
-                static fn(\PFUser $user): UserRepresentation => UserRepresentation::build($user),
+                static fn(\PFUser $user): UserRepresentation => UserRepresentation::build($user, $provide_user_avatar_url),
                 $result->known_users_added_to_project_members,
             ),
             array_map(
-                static fn(\PFUser $user): UserRepresentation => UserRepresentation::build($user),
+                static fn(\PFUser $user): UserRepresentation => UserRepresentation::build($user, $provide_user_avatar_url),
                 $result->known_users_not_alive,
             ),
             array_map(
-                static fn(\PFUser $user): UserRepresentation => UserRepresentation::build($user),
+                static fn(\PFUser $user): UserRepresentation => UserRepresentation::build($user, $provide_user_avatar_url),
                 $result->known_users_are_restricted,
             ),
         );

@@ -42,6 +42,7 @@ use Tuleap\PullRequest\PullRequest\REST\v1\AccessiblePullRequestRESTRetriever;
 use Tuleap\PullRequest\PullRequest\Timeline\TimelineComment;
 use Tuleap\PullRequest\REST\v1\CommentPATCHRepresentation;
 use Tuleap\Reference\ExtractAndSaveCrossReferences;
+use Tuleap\User\Avatar\ProvideUserAvatarUrl;
 use Tuleap\User\REST\MinimalUserRepresentation;
 
 final class PATCHCommentHandler
@@ -54,6 +55,7 @@ final class PATCHCommentHandler
         private readonly RetrieveGitRepository $git_repository_factory,
         private readonly ExtractAndSaveCrossReferences $cross_references_saver,
         private readonly EventDispatcherInterface $event_manager,
+        private readonly ProvideUserAvatarUrl $provide_user_avatar_url,
     ) {
     }
 
@@ -101,7 +103,7 @@ final class PATCHCommentHandler
                         return Result::ok(
                             $this->comment_representation_builder->buildRepresentation(
                                 $source_project_id,
-                                MinimalUserRepresentation::build($user),
+                                MinimalUserRepresentation::build($user, $this->provide_user_avatar_url),
                                 $new_comment
                             )
                         );

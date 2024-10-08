@@ -33,6 +33,9 @@ use Tuleap\Project\Admin\ProjectUGroup\ProjectUGroupPresenterBuilder;
 use Tuleap\Project\Admin\ProjectUGroup\UGroupRouter;
 use Tuleap\Project\UGroups\SynchronizedProjectMembershipDao;
 use Tuleap\Project\UGroups\SynchronizedProjectMembershipDetector;
+use Tuleap\User\Avatar\AvatarHashDao;
+use Tuleap\User\Avatar\ComputeAvatarHash;
+use Tuleap\User\Avatar\UserAvatarUrlProvider;
 
 require_once __DIR__ . '/../../include/pre.php';
 
@@ -69,7 +72,12 @@ $index_controller = new IndexController(
             $user_manager,
             $event_manager
         ),
-        new MembersPresenterBuilder($event_manager, new UserHelper(), $synchronized_project_membership_detector),
+        new MembersPresenterBuilder(
+            $event_manager,
+            new UserHelper(),
+            $synchronized_project_membership_detector,
+            new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash()),
+        ),
         new PermissionsDelegationPresenterBuilder($membership_delegation_dao)
     ),
     new \Tuleap\Layout\IncludeCoreAssets(),

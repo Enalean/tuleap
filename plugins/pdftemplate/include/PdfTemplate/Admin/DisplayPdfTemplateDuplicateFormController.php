@@ -36,6 +36,7 @@ use Tuleap\PdfTemplate\RetrieveTemplate;
 use Tuleap\Request\DispatchableWithBurningParrot;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\NotFoundException;
+use Tuleap\User\Avatar\ProvideUserAvatarUrl;
 
 final readonly class DisplayPdfTemplateDuplicateFormController implements DispatchableWithBurningParrot, DispatchableWithRequest
 {
@@ -48,6 +49,7 @@ final readonly class DisplayPdfTemplateDuplicateFormController implements Dispat
         private RetrieveTemplate $retriever,
         private CSRFTokenProvider $token_provider,
         private RetrieveAllImages $images_retriever,
+        private ProvideUserAvatarUrl $provide_user_avatar_url,
     ) {
     }
 
@@ -92,6 +94,7 @@ final readonly class DisplayPdfTemplateDuplicateFormController implements Dispat
                     static fn (PdfTemplateImage $image) => DisplayImagePresenter::fromImage($image),
                     $this->images_retriever->retrieveAll(),
                 ),
+                $this->provide_user_avatar_url,
             ),
         );
     }

@@ -91,6 +91,9 @@ use Tuleap\Plugin\ListeningToEventClass;
 use Tuleap\Project\Registration\Template\Upload\ArchiveWithoutDataCheckerErrorCollection;
 use Tuleap\Project\Service\CollectServicesAllowedForRestrictedEvent;
 use Tuleap\Project\Service\ServiceClassnamesCollector;
+use Tuleap\User\Avatar\AvatarHashDao;
+use Tuleap\User\Avatar\ComputeAvatarHash;
+use Tuleap\User\Avatar\UserAvatarUrlProvider;
 use Tuleap\WebAssembly\FFIWASMCaller;
 use Tuleap\Git\HTTP\HTTPAccessControl;
 use Tuleap\Git\LatestHeartbeatsCollector;
@@ -2530,6 +2533,7 @@ class GitPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
                 UserManager::instance(),
                 EventManager::instance(),
                 new ProjectFlagsBuilder(new ProjectFlagsDao()),
+                new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash()),
             ),
             new \Tuleap\Layout\JavascriptViteAsset(
                 new \Tuleap\Layout\IncludeViteAssets(

@@ -30,6 +30,7 @@ use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\ContentInterpretorStub;
 use Tuleap\Test\Stubs\RetrieveUserByIdStub;
+use Tuleap\Test\Stubs\User\Avatar\ProvideUserAvatarUrlStub;
 
 final class InlineCommentRepresentationsBuilderTest extends TestCase
 {
@@ -75,6 +76,7 @@ final class InlineCommentRepresentationsBuilderTest extends TestCase
                 \Codendi_HTMLPurifier::instance(),
                 ContentInterpretorStub::withInterpretedText('')
             ),
+            ProvideUserAvatarUrlStub::build(),
         );
         return $builder->getForFile($this->pull_request, self::FILE_PATH, $project_id);
     }

@@ -30,6 +30,7 @@ use Tuleap\Project\REST\MinimalUserGroupRepresentation;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Test\Stubs\User\Avatar\ProvideUserAvatarUrlStub;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\REST\TrackerRepresentation;
 use Tuleap\Tracker\Test\Stub\RetrieveUsedFieldsStub;
@@ -147,8 +148,8 @@ final class FlatArtifactRepresentationTransformerTest extends TestCase
             return $field_value;
         };
         yield 'list field (static values)' => [$build_list_field([['label' => 'value1'], ['label' => 'value2']]), ['f1' => ['value1', 'value2']]];
-        yield 'list field (user bind)' => [$build_list_field([UserRepresentation::build(UserTestBuilder::anActiveUser()->withId(103)->withLocale('en_US')->build())]), ['f1' => ['User #103 ()']]];
-        yield 'list field (user bind empty)' => [$build_list_field([UserRepresentation::build(\UserManager::instance()->getUserAnonymous())]), ['f1' => []]];
+        yield 'list field (user bind)' => [$build_list_field([UserRepresentation::build(UserTestBuilder::anActiveUser()->withId(103)->withLocale('en_US')->build(), ProvideUserAvatarUrlStub::build())]), ['f1' => ['User #103 ()']]];
+        yield 'list field (user bind empty)' => [$build_list_field([UserRepresentation::build(\UserManager::instance()->getUserAnonymous(), ProvideUserAvatarUrlStub::build())]), ['f1' => []]];
         yield 'list field (user group bind)' => [$build_list_field([new MinimalUserGroupRepresentation(102, new \ProjectUGroup(['ugroup_id' => 999, 'name' => 'ugroup_name']))]), ['f1' => ['ugroup_name']]];
         $openlist_representation = new ArtifactFieldValueOpenListFullRepresentation();
         $openlist_representation->build(1, 'tbl', 'label1', 'static', [['label' => 'value1']], []);
@@ -231,6 +232,7 @@ final class FlatArtifactRepresentationTransformerTest extends TestCase
             null,
             $this->createStub(TrackerRepresentation::class),
             StatusValueRepresentation::buildFromValues('value', null),
+            ProvideUserAvatarUrlStub::build(),
         );
     }
 }

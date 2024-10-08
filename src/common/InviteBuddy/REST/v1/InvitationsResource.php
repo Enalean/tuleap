@@ -45,6 +45,9 @@ use Tuleap\Project\UGroups\Membership\DynamicUGroups\ProjectMemberAdderWithStatu
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\REST\I18NRestException;
+use Tuleap\User\Avatar\AvatarHashDao;
+use Tuleap\User\Avatar\ComputeAvatarHash;
+use Tuleap\User\Avatar\UserAvatarUrlProvider;
 
 class InvitationsResource extends AuthenticatedResource
 {
@@ -126,7 +129,10 @@ class InvitationsResource extends AuthenticatedResource
                 null,
             );
 
-            return InvitationPOSTResultRepresentation::fromResult($result);
+            return InvitationPOSTResultRepresentation::fromResult(
+                $result,
+                new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash()),
+            );
         } catch (\Project_NotFoundException | UserIsNotAllowedToManageProjectMembersException) {
             throw new RestException(404);
         } catch (InvitationSenderGateKeeperException $e) {

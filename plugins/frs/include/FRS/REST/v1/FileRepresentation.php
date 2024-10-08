@@ -22,6 +22,7 @@ namespace Tuleap\FRS\REST\v1;
 
 use Tuleap\REST\JsonCast;
 use FRSFile;
+use Tuleap\User\Avatar\ProvideUserAvatarUrl;
 use UserManager;
 use FRSProcessorDao;
 use FRSFileTypeDao;
@@ -95,7 +96,7 @@ class FileRepresentation
      */
     public $owner;
 
-    public function __construct(FRSFile $file)
+    public function __construct(FRSFile $file, ProvideUserAvatarUrl $provide_user_avatar_url)
     {
         $this->id            = JsonCast::toInt($file->getFileID());
         $this->uri           = self::ROUTE . '/' . $this->id;
@@ -108,7 +109,7 @@ class FileRepresentation
         $this->date          = JsonCast::toDate($file->getPostDate());
         $this->reference_md5 = $file->getReferenceMd5();
         $this->computed_md5  = $file->getComputedMd5();
-        $this->owner         = self::getUser($file);
+        $this->owner         = self::getUser($file, $provide_user_avatar_url);
     }
 
     private static function retrieveOnlyFileName(FRSFile $file): string
@@ -120,7 +121,7 @@ class FileRepresentation
         return '';
     }
 
-    private static function getUser(FRSFile $file): ?UserRepresentation
+    private static function getUser(FRSFile $file, ProvideUserAvatarUrl $provide_user_avatar_url): ?UserRepresentation
     {
         $owner = UserManager::instance()->getUserById($file->getUserId());
 
@@ -128,7 +129,7 @@ class FileRepresentation
             return null;
         }
 
-        return UserRepresentation::build($owner);
+        return UserRepresentation::build($owner, $provide_user_avatar_url);
     }
 
     private static function getDownloads(FRSFile $file): int

@@ -39,6 +39,7 @@ use Tuleap\Docman\REST\v1\Permissions\DocmanItemPermissionsForGroupsRepresentati
 use Tuleap\GlobalLanguageMock;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Test\Stubs\User\Avatar\ProvideUserAvatarUrlStub;
 use UserManager;
 
 final class ItemRepresentationBuilderTest extends TestCase
@@ -76,7 +77,8 @@ final class ItemRepresentationBuilderTest extends TestCase
             $this->metadata_representation_builder,
             $this->approval_table_retriever,
             $this->item_permissions_for_groups_builder,
-            $this->html_purifier
+            $this->html_purifier,
+            ProvideUserAvatarUrlStub::build(),
         );
 
         UserManager::setInstance($this->user_manager);

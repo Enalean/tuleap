@@ -29,6 +29,7 @@ use Tuleap\Project\ProjectPrivacyPresenter;
 use Tuleap\RealTimeMercure\MercureClient;
 use Tuleap\TestManagement\REST\v1\MilestoneRepresentation;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenter;
+use Tuleap\User\Avatar\ProvideUserAvatarUrl;
 use Tuleap\User\REST\UserRepresentation;
 
 #[ConfigKeyCategory('Test Management')]
@@ -167,6 +168,7 @@ class IndexPresenter
         string $base_url,
         string $platform_logo_url,
         array $artifact_links_types,
+        ProvideUserAvatarUrl $provide_user_avatar_url,
     ) {
         $this->lang = $this->getLanguageAbbreviation($current_user);
 
@@ -179,7 +181,7 @@ class IndexPresenter
         $this->base_url          = $base_url;
         $this->platform_logo_url = $platform_logo_url;
 
-        $user_representation = UserRepresentation::build($current_user);
+        $user_representation = UserRepresentation::build($current_user, $provide_user_avatar_url);
         $this->current_user  = json_encode($user_representation);
         if ($current_user->isAdmin($project->getID())) {
             $this->ttm_admin_url = TESTMANAGEMENT_BASE_URL . '/?' . http_build_query([

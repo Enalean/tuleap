@@ -29,6 +29,7 @@ use Tuleap\Project\Admin\ProjectUGroup\ProjectUGroupMemberUpdatable;
 use Tuleap\Project\UGroups\SynchronizedProjectMembershipDetector;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\Stubs\User\Avatar\ProvideUserAvatarUrlStub;
 
 final class MembersPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -44,7 +45,12 @@ final class MembersPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->event_manager = $this->createMock(\EventManager::class);
         $this->user_helper   = $this->createMock(\UserHelper::class);
         $this->detector      = $this->createMock(SynchronizedProjectMembershipDetector::class);
-        $this->builder       = new MembersPresenterBuilder($this->event_manager, $this->user_helper, $this->detector);
+        $this->builder       = new MembersPresenterBuilder(
+            $this->event_manager,
+            $this->user_helper,
+            $this->detector,
+            ProvideUserAvatarUrlStub::build(),
+        );
 
         $this->event_manager->method('processEvent');
     }

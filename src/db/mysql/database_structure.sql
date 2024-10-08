@@ -655,6 +655,11 @@ CREATE TABLE user (
   KEY idx_user_user (status)
 );
 
+CREATE TABLE user_avatar_hash (
+    user_id int(11) NOT NULL PRIMARY KEY,
+    hash VARCHAR(255)
+);
+
 
 #
 # Table structure for table 'user_access'

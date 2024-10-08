@@ -47,6 +47,9 @@ use Tuleap\User\AccessKey\Scope\AccessKeyScopeDAO;
 use Tuleap\User\AccessKey\Scope\AccessKeyScopeRetriever;
 use Tuleap\User\AccessKey\Scope\CoreAccessKeyScopeBuilderFactory;
 use Tuleap\User\Admin\UserStatusChecker;
+use Tuleap\User\Avatar\AvatarHashDao;
+use Tuleap\User\Avatar\ComputeAvatarHash;
+use Tuleap\User\Avatar\UserAvatarUrlProvider;
 use Tuleap\User\History\HistoryCleaner;
 use Tuleap\User\History\HistoryEntry;
 use Tuleap\User\History\HistoryRetriever;
@@ -89,6 +92,7 @@ class UserResource extends AuthenticatedResource
      * @var UserGroupRetriever
      */
     private $user_group_retriever;
+    private UserAvatarUrlProvider $user_avatar_url_provider;
 
     public function __construct()
     {
@@ -96,6 +100,8 @@ class UserResource extends AuthenticatedResource
         $this->json_decoder         = new JsonDecoder();
         $this->ugroup_literalizer   = new UGroupLiteralizer();
         $this->user_group_retriever = new UserGroupRetriever(new \UGroupManager());
+
+        $this->user_avatar_url_provider = new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash());
 
         $this->forge_ugroup_permissions_manager = new User_ForgeUserGroupPermissionsManager(
             new User_ForgeUserGroupPermissionsDao()
@@ -134,7 +140,7 @@ class UserResource extends AuthenticatedResource
         $user_id = $this->getUserIDFromIDOrSelf($id);
 
         $user = $this->getUserById($user_id);
-        return ($this->is_authenticated) ? UserRepresentation::build($user) : MinimalUserRepresentation::build($user);
+        return ($this->is_authenticated) ? UserRepresentation::build($user, $this->user_avatar_url_provider) : MinimalUserRepresentation::build($user, $this->user_avatar_url_provider);
     }
 
     /**
@@ -280,7 +286,7 @@ class UserResource extends AuthenticatedResource
 
         $list_of_user_representation = [];
         foreach ($user_collection->getUsers() as $user) {
-            $user_representation           = ($this->is_authenticated) ? UserRepresentation::build($user) : MinimalUserRepresentation::build($user);
+            $user_representation           = ($this->is_authenticated) ? UserRepresentation::build($user, $this->user_avatar_url_provider) : MinimalUserRepresentation::build($user, $this->user_avatar_url_provider);
             $list_of_user_representation[] = $user_representation;
         }
 

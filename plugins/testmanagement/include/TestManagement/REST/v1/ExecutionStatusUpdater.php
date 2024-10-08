@@ -30,6 +30,7 @@ use Tuleap\TestManagement\ArtifactFactory;
 use Tuleap\TestManagement\RealTime\RealTimeMessageSender;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\REST\Artifact\ArtifactUpdater;
+use Tuleap\User\Avatar\ProvideUserAvatarUrl;
 use Tuleap\User\REST\UserRepresentation;
 use UserManager;
 
@@ -54,6 +55,7 @@ class ExecutionStatusUpdater
         ArtifactFactory $testmanagement_artifact_factory,
         RealTimeMessageSender $realtime_message_sender,
         UserManager $user_manager,
+        private readonly ProvideUserAvatarUrl $provide_user_avatar_url,
     ) {
         $this->artifact_updater                = $artifact_updater;
         $this->testmanagement_artifact_factory = $testmanagement_artifact_factory;
@@ -126,6 +128,6 @@ class ExecutionStatusUpdater
         if (! $submitted_by) {
             return null;
         }
-        return UserRepresentation::build($submitted_by);
+        return UserRepresentation::build($submitted_by, $this->provide_user_avatar_url);
     }
 }

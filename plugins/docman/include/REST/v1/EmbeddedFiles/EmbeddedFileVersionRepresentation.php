@@ -22,6 +22,7 @@
 namespace Tuleap\Docman\REST\v1\EmbeddedFiles;
 
 use Tuleap\REST\JsonCast;
+use Tuleap\User\Avatar\ProvideUserAvatarUrl;
 use Tuleap\User\REST\UserRepresentation;
 
 /**
@@ -95,6 +96,7 @@ final class EmbeddedFileVersionRepresentation
         \PFUser $author,
         \DateTimeInterface $date,
         string $changelog,
+        ProvideUserAvatarUrl $provide_user_avatar_url,
     ): self {
         return new self(
             $version_id,
@@ -104,7 +106,7 @@ final class EmbeddedFileVersionRepresentation
             $item_id,
             $approval_href,
             $open_href,
-            UserRepresentation::build($author),
+            UserRepresentation::build($author, $provide_user_avatar_url),
             JsonCast::fromNotNullDateTimeToDate($date),
             $changelog,
         );

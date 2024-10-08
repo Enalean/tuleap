@@ -36,6 +36,7 @@ use Tuleap\Tracker\REST\Artifact\StatusValueRepresentation;
 use Tuleap\Tracker\REST\MinimalTrackerRepresentation;
 use Tuleap\Tracker\REST\v1\ReportArtifactFactory;
 use Tuleap\Tracker\Semantic\Status\StatusColorForChangesetProvider;
+use Tuleap\User\Avatar\ProvideUserAvatarUrl;
 
 class MatchingArtifactRepresentationBuilder
 {
@@ -44,6 +45,7 @@ class MatchingArtifactRepresentationBuilder
         private TableRendererForReportRetriever $table_renderer_retriever,
         private UsedFieldsRetriever $used_fields_retriever,
         private StatusColorForChangesetProvider $status_value_for_changeset_provider,
+        private readonly ProvideUserAvatarUrl $provide_user_avatar_url,
     ) {
     }
 
@@ -95,7 +97,8 @@ class MatchingArtifactRepresentationBuilder
                 StatusValueRepresentation::buildFromValues(
                     $matching_artifact->getStatus(),
                     $this->status_value_for_changeset_provider->provideColor($last_changeset, $matching_artifact->getTracker(), $current_user)
-                )
+                ),
+                $this->provide_user_avatar_url,
             );
         }
 

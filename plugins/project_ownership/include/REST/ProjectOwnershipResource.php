@@ -30,6 +30,9 @@ use Tuleap\ProjectOwnership\ProjectOwner\ProjectOwnerRetriever;
 use Tuleap\ProjectOwnership\ProjectOwner\ProjectOwnerUpdater;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
+use Tuleap\User\Avatar\AvatarHashDao;
+use Tuleap\User\Avatar\ComputeAvatarHash;
+use Tuleap\User\Avatar\UserAvatarUrlProvider;
 use Tuleap\User\ForgeUserGroupPermission\RestProjectManagementPermission;
 use User_ForgeUserGroupPermissionsDao;
 use User_ForgeUserGroupPermissionsManager;
@@ -75,7 +78,7 @@ class ProjectOwnershipResource extends AuthenticatedResource
         $representation = new ProjectOwnershipRepresentation();
         $project_owner  = $project_owner_retriever->getProjectOwner($project);
 
-        $representation->build($project_owner);
+        $representation->build(new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash()), $project_owner);
 
         return $representation;
     }

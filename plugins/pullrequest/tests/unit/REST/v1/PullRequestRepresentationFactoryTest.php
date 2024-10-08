@@ -44,6 +44,7 @@ use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\ProvideUserFromRowStub;
 use Tuleap\Test\Stubs\RetrieveUserByIdStub;
+use Tuleap\Test\Stubs\User\Avatar\ProvideUserAvatarUrlStub;
 
 final class PullRequestRepresentationFactoryTest extends TestCase
 {
@@ -94,6 +95,7 @@ final class PullRequestRepresentationFactoryTest extends TestCase
             $this->createStub(SearchMergeEvent::class),
             $this->createStub(SearchAbandonEvent::class),
             RetrieveUserByIdStub::withNoUser(),
+            ProvideUserAvatarUrlStub::build(),
         );
 
         $git_exec = $this->createStub(GitExec::class);
@@ -111,7 +113,8 @@ final class PullRequestRepresentationFactoryTest extends TestCase
                 SearchReviewersStub::fromReviewers($first_reviewer, $second_reviewer),
                 CheckUserCanAccessPullRequestStub::withAllowed()
             ),
-            $this->user_retriever
+            $this->user_retriever,
+            ProvideUserAvatarUrlStub::build(),
         );
 
         return $representation_factory->getPullRequestRepresentation(

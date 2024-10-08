@@ -24,6 +24,7 @@ use Tuleap\ForgeConfigSandbox;
 use Tuleap\RealTimeMercure\MercureClient;
 use Tuleap\Test\PHPUnit\TestCase;
 use org\bovigo\vfs\vfsStream;
+use Tuleap\Test\Stubs\User\Avatar\ProvideUserAvatarUrlStub;
 
 final class GeneratorBuilderTest extends TestCase
 {
@@ -40,7 +41,7 @@ final class GeneratorBuilderTest extends TestCase
         ];
         $root      = vfsStream::setup('root1', null, $structure);
         $this->assertTrue($root->hasChild('env/mercure.env'));
-        $mercure_client = MercureJWTGeneratorBuilder::build($root->url() . '/env/mercure.env');
+        $mercure_client = MercureJWTGeneratorBuilder::build($root->url() . '/env/mercure.env', ProvideUserAvatarUrlStub::build());
         $this->assertnotNull($mercure_client->getTokenBackend());
     }
 
@@ -48,7 +49,7 @@ final class GeneratorBuilderTest extends TestCase
     {
         \ForgeConfig::setFeatureFlag(MercureClient::FEATURE_FLAG_KANBAN_KEY, true);
         $root           = vfsStream::setup('root2');
-        $mercure_client = MercureJWTGeneratorBuilder::build($root->url() . '/mercure.env');
+        $mercure_client = MercureJWTGeneratorBuilder::build($root->url() . '/mercure.env', ProvideUserAvatarUrlStub::build());
         $this->assertNull($mercure_client->getTokenBackend());
     }
 
@@ -61,7 +62,7 @@ final class GeneratorBuilderTest extends TestCase
             ],
         ];
         $root           = vfsStream::setup('root3', null, $structure);
-        $mercure_client = MercureJWTGeneratorBuilder::build($root->url() . '/env/mercure.env');
+        $mercure_client = MercureJWTGeneratorBuilder::build($root->url() . '/env/mercure.env', ProvideUserAvatarUrlStub::build());
         $this->assertnull($mercure_client->getTokenBackend());
     }
 
@@ -74,7 +75,7 @@ final class GeneratorBuilderTest extends TestCase
             ],
         ];
         $root           = vfsStream::setup('root4', null, $structure);
-        $mercure_client = MercureJWTGeneratorBuilder::build($root->url() . '/env/mercure.env');
+        $mercure_client = MercureJWTGeneratorBuilder::build($root->url() . '/env/mercure.env', ProvideUserAvatarUrlStub::build());
         $this->assertNull($mercure_client->getTokenBackend());
     }
 
@@ -88,7 +89,7 @@ final class GeneratorBuilderTest extends TestCase
         ];
         $root      = vfsStream::setup('root5', null, $structure);
         $this->assertTrue($root->hasChild('env/mercure.env'));
-        $mercure_client = MercureJWTGeneratorBuilder::build($root->url() . '/env/mercure.env');
+        $mercure_client = MercureJWTGeneratorBuilder::build($root->url() . '/env/mercure.env', ProvideUserAvatarUrlStub::build());
         $this->assertNull($mercure_client->getTokenBackend());
     }
 }

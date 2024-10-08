@@ -112,6 +112,9 @@ use Tuleap\REST\JsonDecoder;
 use Tuleap\REST\ProjectAuthorization;
 use Tuleap\REST\v1\PhpWikiPageRepresentation;
 use Tuleap\Sanitizer\URISanitizer;
+use Tuleap\User\Avatar\AvatarHashDao;
+use Tuleap\User\Avatar\ComputeAvatarHash;
+use Tuleap\User\Avatar\UserAvatarUrlProvider;
 use Tuleap\User\ForgeUserGroupPermission\RestProjectManagementPermission;
 use Tuleap\Widget\Event\GetProjectsWithCriteria;
 use TuleapRegisterMail;
@@ -726,7 +729,7 @@ class ProjectResource extends AuthenticatedResource
         $event   = new HeartbeatsEntryCollection($project, $user);
         $this->event_manager->processEvent($event);
 
-        $heartbeats = HeartbeatsRepresentation::build($event);
+        $heartbeats = HeartbeatsRepresentation::build($event, new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash()));
 
         $this->sendAllowHeadersForHeartBeat();
 

@@ -122,6 +122,9 @@ use Tuleap\Tracker\Workflow\SimpleMode\State\StateFactory;
 use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionExtractor;
 use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionRetriever;
 use Tuleap\Tracker\Workflow\WorkflowUpdateChecker;
+use Tuleap\User\Avatar\AvatarHashDao;
+use Tuleap\User\Avatar\ComputeAvatarHash;
+use Tuleap\User\Avatar\UserAvatarUrlProvider;
 use UserManager;
 use WrapperLogger;
 
@@ -182,9 +185,12 @@ class ExecutionsResource
             $artifact_dao
         );
 
+        $provide_user_avatar_url = new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash());
+
         $assigned_to_representation_builder = new AssignedToRepresentationBuilder(
             $this->formelement_factory,
-            $this->user_manager
+            $this->user_manager,
+            $provide_user_avatar_url,
         );
 
         $requirement_retriever = new RequirementRetriever($this->artifact_factory, $artifact_dao, $this->config);
@@ -224,11 +230,15 @@ class ExecutionsResource
                         new CommentRepresentationBuilder(
                             CommonMarkInterpreter::build(\Codendi_HTMLPurifier::instance())
                         ),
-                        new PermissionChecker(new CachingTrackerPrivateCommentInformationRetriever(new TrackerPrivateCommentInformationRetriever(new TrackerPrivateCommentUGroupEnabledDao())))
-                    )
+                        new PermissionChecker(new CachingTrackerPrivateCommentInformationRetriever(new TrackerPrivateCommentInformationRetriever(new TrackerPrivateCommentUGroupEnabledDao()))),
+                        $provide_user_avatar_url,
+                    ),
+                    $provide_user_avatar_url,
                 ),
                 \Tracker_Artifact_PriorityManager::build(),
+                $provide_user_avatar_url,
             ),
+            $provide_user_avatar_url,
         );
 
         $node_js_client                  = new NodeJSClient(
@@ -244,16 +254,17 @@ class ExecutionsResource
             $node_js_client,
             $permissions_serializer
         );
-        $mercure_client                  = ClientBuilder::build(ClientBuilder::DEFAULTPATH);
+        $mercure_client                  = ClientBuilder::build(ClientBuilder::DEFAULTPATH, $provide_user_avatar_url);
         $mercure_artifact_message_sender = new RealTimeMercureArtifactMessageSender(
             $mercure_client
         );
-        $mercure_client                  = ClientBuilder::build(ClientBuilder::DEFAULTPATH);
+        $mercure_client                  = ClientBuilder::build(ClientBuilder::DEFAULTPATH, $provide_user_avatar_url);
         $this->realtime_message_sender   = new RealTimeMessageSender(
             $node_js_client,
             $permissions_serializer,
             $artifact_message_sender,
-            $mercure_artifact_message_sender
+            $mercure_artifact_message_sender,
+            $provide_user_avatar_url,
         );
 
         $usage_dao        = new ArtifactLinksUsageDao();
@@ -326,7 +337,8 @@ class ExecutionsResource
             $this->artifact_updater,
             $this->testmanagement_artifact_factory,
             $this->realtime_message_sender,
-            $this->user_manager
+            $this->user_manager,
+            $provide_user_avatar_url,
         );
     }
 

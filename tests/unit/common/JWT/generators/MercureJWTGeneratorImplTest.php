@@ -30,6 +30,7 @@ use Lcobucci\JWT\Signer\Key;
 use Lcobucci\JWT\Validation\Constraint\SignedWith;
 use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\GlobalLanguageMock;
+use Tuleap\Test\Stubs\User\Avatar\ProvideUserAvatarUrlStub;
 use UserManager;
 
 final class MercureJWTGeneratorImplTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -57,7 +58,7 @@ final class MercureJWTGeneratorImplTest extends \Tuleap\Test\PHPUnit\TestCase
 
 
         $this->jwt_configuration     = Configuration::forSymmetricSigner(new Sha256(), Key\InMemory::plainText(str_repeat('a', 32)));
-        $this->mercure_jwt_generator = new MercureJWTGeneratorImpl($this->jwt_configuration);
+        $this->mercure_jwt_generator = new MercureJWTGeneratorImpl($this->jwt_configuration, ProvideUserAvatarUrlStub::build());
     }
 
     public function testJWTDecodedWithAlgorithmHS256(): void

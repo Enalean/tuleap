@@ -35,6 +35,7 @@ use Tuleap\PdfTemplate\Image\PdfTemplateImage;
 use Tuleap\PdfTemplate\Image\RetrieveAllImages;
 use Tuleap\Request\DispatchableWithBurningParrot;
 use Tuleap\Request\DispatchableWithRequest;
+use Tuleap\User\Avatar\ProvideUserAvatarUrl;
 
 final class IndexImagesController implements DispatchableWithBurningParrot, DispatchableWithRequest
 {
@@ -46,6 +47,7 @@ final class IndexImagesController implements DispatchableWithBurningParrot, Disp
         private CSRFTokenProvider $token_provider,
         private RetrieveAllImages $retriever,
         private UsageDetector $usage_detector,
+        private ProvideUserAvatarUrl $provide_user_avatar_url,
     ) {
     }
 
@@ -75,7 +77,7 @@ final class IndexImagesController implements DispatchableWithBurningParrot, Disp
                 Navigation::inImages(),
                 $this->token_provider->getToken(),
                 array_map(
-                    fn (PdfTemplateImage $image) => PdfTemplateImagePresenter::fromImage($image, $current_user, $this->usage_detector),
+                    fn (PdfTemplateImage $image) => PdfTemplateImagePresenter::fromImage($image, $current_user, $this->usage_detector, $this->provide_user_avatar_url),
                     $this->retriever->retrieveAll(),
                 ),
             ),

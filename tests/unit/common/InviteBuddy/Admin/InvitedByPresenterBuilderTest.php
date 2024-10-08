@@ -29,6 +29,7 @@ use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\ProjectByIDFactoryStub;
 use Tuleap\Test\Stubs\RetrieveUserByIdStub;
+use Tuleap\Test\Stubs\User\Avatar\ProvideUserAvatarUrlStub;
 
 final class InvitedByPresenterBuilderTest extends TestCase
 {
@@ -109,6 +110,7 @@ final class InvitedByPresenterBuilderTest extends TestCase
             $dao,
             RetrieveUserByIdStub::withUsers($alice, $bob, $invitee),
             ProjectByIDFactoryStub::buildWith($a_project, $another_project),
+            ProvideUserAvatarUrlStub::build(),
         );
 
         $presenter = $builder->getInvitedByPresenter($invitee, $current_user);

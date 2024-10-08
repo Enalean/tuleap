@@ -55,6 +55,7 @@ use Tuleap\Queue\TaskWorker\TaskWorkerProcessCommand;
 use Tuleap\Queue\WorkerLogger;
 use Tuleap\User\AccessKey\AccessKeyDAO;
 use Tuleap\User\AccessKey\AccessKeyRevoker;
+use Tuleap\User\Avatar\AvatarHashDao;
 use Tuleap\User\Profile\ForceRegenerationDefaultAvatarCommand;
 use Tuleap\User\UserSuspensionManager;
 use TuleapCfg\Command\ProcessFactory;
@@ -304,7 +305,8 @@ $CLI_command_collector->addCommand(
     static function (): ForceRegenerationDefaultAvatarCommand {
         return new ForceRegenerationDefaultAvatarCommand(
             UserManager::instance(),
-            new UserDao()
+            new UserDao(),
+            new AvatarHashDao(),
         );
     }
 );

@@ -22,6 +22,7 @@
 namespace Tuleap\Docman\REST\v1\Files;
 
 use Tuleap\REST\JsonCast;
+use Tuleap\User\Avatar\ProvideUserAvatarUrl;
 use Tuleap\User\REST\UserRepresentation;
 
 /**
@@ -129,6 +130,7 @@ final class FileVersionRepresentation
         \DateTimeInterface $date,
         string $changelog,
         string $authoring_tool,
+        ProvideUserAvatarUrl $provide_user_avatar_url,
     ): self {
         return new self(
             $version_id,
@@ -138,9 +140,9 @@ final class FileVersionRepresentation
             $group_id,
             $item_id,
             $approval_href,
-            UserRepresentation::build($author),
+            UserRepresentation::build($author, $provide_user_avatar_url),
             array_map(
-                static fn (\PFUser $coauthor): UserRepresentation => UserRepresentation::build($coauthor),
+                static fn (\PFUser $coauthor): UserRepresentation => UserRepresentation::build($coauthor, $provide_user_avatar_url),
                 $coauthors
             ),
             JsonCast::fromNotNullDateTimeToDate($date),

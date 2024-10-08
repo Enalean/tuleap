@@ -56,6 +56,9 @@ use Tuleap\Tracker\REST\v1\Report\MatchingArtifactRepresentationBuilder;
 use Tuleap\Tracker\REST\v1\Report\MatchingIdsOrderer;
 use Tuleap\Tracker\Semantic\Status\StatusColorForChangesetProvider;
 use Tuleap\Tracker\Semantic\Status\StatusValueForChangesetProvider;
+use Tuleap\User\Avatar\AvatarHashDao;
+use Tuleap\User\Avatar\ComputeAvatarHash;
+use Tuleap\User\Avatar\UserAvatarUrlProvider;
 use UserManager;
 
 /**
@@ -206,7 +209,8 @@ class ReportsResource extends AuthenticatedResource
                 $this->report_artifact_factory,
                 new TableRendererForReportRetriever(),
                 new UsedFieldsRetriever(),
-                new StatusColorForChangesetProvider(new StatusValueForChangesetProvider())
+                new StatusColorForChangesetProvider(new StatusValueForChangesetProvider()),
+                new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash()),
             );
 
             $artifact_collection = $builder->buildMatchingArtifactRepresentationCollection(
@@ -275,8 +279,10 @@ class ReportsResource extends AuthenticatedResource
                 new CommentRepresentationBuilder(
                     CommonMarkInterpreter::build(\Codendi_HTMLPurifier::instance())
                 ),
-                new PermissionChecker(new CachingTrackerPrivateCommentInformationRetriever(new TrackerPrivateCommentInformationRetriever(new TrackerPrivateCommentUGroupEnabledDao())))
-            )
+                new PermissionChecker(new CachingTrackerPrivateCommentInformationRetriever(new TrackerPrivateCommentInformationRetriever(new TrackerPrivateCommentUGroupEnabledDao()))),
+                new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash()),
+            ),
+            new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash()),
         );
 
         $build_artifact_representation = function (?Artifact $artifact) use (

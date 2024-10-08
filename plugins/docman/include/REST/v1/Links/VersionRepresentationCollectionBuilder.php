@@ -23,6 +23,7 @@
 namespace Tuleap\Docman\REST\v1\Links;
 
 use Tuleap\Docman\Version\LinkVersionDao;
+use Tuleap\User\Avatar\ProvideUserAvatarUrl;
 use Tuleap\User\RetrieveUserById;
 
 final class VersionRepresentationCollectionBuilder
@@ -30,6 +31,7 @@ final class VersionRepresentationCollectionBuilder
     public function __construct(
         private LinkVersionDao $dao,
         private RetrieveUserById $user_retriever,
+        private ProvideUserAvatarUrl $provide_user_avatar_url,
     ) {
     }
 
@@ -57,6 +59,7 @@ final class VersionRepresentationCollectionBuilder
                 $author,
                 (new \DateTimeImmutable())->setTimestamp((int) $version->getDate()),
                 (string) $version->getChangelog(),
+                $this->provide_user_avatar_url,
             );
         }
 

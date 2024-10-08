@@ -26,6 +26,7 @@ use Tuleap\Docman\Version\LinkVersionDao;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\RetrieveUserByIdStub;
+use Tuleap\Test\Stubs\User\Avatar\ProvideUserAvatarUrlStub;
 
 class VersionRepresentationCollectionBuilderTest extends TestCase
 {
@@ -39,6 +40,7 @@ class VersionRepresentationCollectionBuilderTest extends TestCase
         $this->builder = new VersionRepresentationCollectionBuilder(
             $this->dao,
             RetrieveUserByIdStub::withUser(UserTestBuilder::buildWithDefaults()),
+            ProvideUserAvatarUrlStub::build(),
         );
         $user_helper   = $this->createStub(\UserHelper::class);
         $user_helper->method('getUserUrl')->willReturn('/path/to/user');

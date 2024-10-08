@@ -24,6 +24,7 @@ use Tuleap\Project\REST\MinimalUserGroupRepresentation;
 use Tuleap\SVN\Admin\MailNotification;
 use Tuleap\SVN\Notifications\UgroupsToNotifyDao;
 use Tuleap\SVN\Notifications\UsersToNotifyDao;
+use Tuleap\User\Avatar\ProvideUserAvatarUrl;
 use Tuleap\User\REST\MinimalUserRepresentation;
 use UGroupManager;
 use UserManager;
@@ -52,6 +53,7 @@ class NotificationsBuilder
         UserManager $user_manager,
         UgroupsToNotifyDao $ugroup_dao,
         UGroupManager $ugroup_manager,
+        private readonly ProvideUserAvatarUrl $provide_user_avatar_url,
     ) {
         $this->user_dao       = $user_dao;
         $this->user_manager   = $user_manager;
@@ -105,7 +107,7 @@ class NotificationsBuilder
         foreach ($this->user_dao->searchUsersByNotificationId($notification->getId()) as $row) {
             $user = $this->user_manager->getUserById($row['user_id']);
 
-            $user_representation = MinimalUserRepresentation::build($user);
+            $user_representation = MinimalUserRepresentation::build($user, $this->provide_user_avatar_url);
 
             $users[] = $user_representation;
         }

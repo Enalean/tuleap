@@ -36,6 +36,7 @@ use Tuleap\Tracker\REST\Artifact\Changeset\ChangesetRepresentationBuilder;
 use Tuleap\Tracker\REST\Artifact\Changeset\ChangesetRepresentationCollection;
 use Tuleap\Tracker\REST\MinimalTrackerRepresentation;
 use Tuleap\Tracker\REST\TrackerRepresentation;
+use Tuleap\User\Avatar\ProvideUserAvatarUrl;
 
 class ArtifactRepresentationBuilder
 {
@@ -44,6 +45,7 @@ class ArtifactRepresentationBuilder
         private Tracker_ArtifactFactory $artifact_factory,
         private TypeDao $nature_dao,
         private ChangesetRepresentationBuilder $changeset_representation_builder,
+        private ProvideUserAvatarUrl $provide_user_avatar_url,
     ) {
     }
 
@@ -55,7 +57,8 @@ class ArtifactRepresentationBuilder
             $this->getFieldsValues($user, $artifact),
             null,
             $tracker_representation,
-            $status_value_representation
+            $status_value_representation,
+            $this->provide_user_avatar_url,
         );
     }
 
@@ -67,7 +70,8 @@ class ArtifactRepresentationBuilder
             null,
             $this->getFieldValuesIndexedByName($user, $artifact),
             $tracker_representation,
-            $status_value_representation
+            $status_value_representation,
+            $this->provide_user_avatar_url,
         );
     }
 
@@ -79,7 +83,8 @@ class ArtifactRepresentationBuilder
             $this->getFieldsValues($user, $artifact),
             $this->getFieldValuesIndexedByName($user, $artifact),
             $tracker_representation,
-            $status_value_representation
+            $status_value_representation,
+            $this->provide_user_avatar_url,
         );
     }
 
@@ -93,7 +98,8 @@ class ArtifactRepresentationBuilder
             null,
             null,
             $tracker_representation,
-            $status_value_representation
+            $status_value_representation,
+            $this->provide_user_avatar_url,
         );
     }
 

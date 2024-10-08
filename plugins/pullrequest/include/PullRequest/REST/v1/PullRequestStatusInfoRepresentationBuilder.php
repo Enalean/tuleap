@@ -26,6 +26,7 @@ use Tuleap\PullRequest\PullRequest;
 use Tuleap\PullRequest\Timeline\SearchAbandonEvent;
 use Tuleap\PullRequest\Timeline\SearchMergeEvent;
 use Tuleap\REST\JsonCast;
+use Tuleap\User\Avatar\ProvideUserAvatarUrl;
 use Tuleap\User\REST\MinimalUserRepresentation;
 use Tuleap\User\RetrieveUserById;
 
@@ -35,6 +36,7 @@ final class PullRequestStatusInfoRepresentationBuilder
         private SearchMergeEvent $search_merge_event,
         private SearchAbandonEvent $search_abandon_event,
         private RetrieveUserById $retrieve_user_by_id,
+        private readonly ProvideUserAvatarUrl $provide_user_avatar_url,
     ) {
     }
 
@@ -69,7 +71,7 @@ final class PullRequestStatusInfoRepresentationBuilder
         return new PullRequestStatusInfoRepresentation(
             PullRequestStatusTypeConverter::fromIntStatusToStringStatus($close_pr_event['type']),
             JsonCast::toDate($close_pr_event['post_date']),
-            MinimalUserRepresentation::build($status_updater),
+            MinimalUserRepresentation::build($status_updater, $this->provide_user_avatar_url),
         );
     }
 }

@@ -43,6 +43,7 @@ use Tuleap\PullRequest\PullRequest;
 use Tuleap\PullRequest\PullRequest\Timeline\TimelineComment;
 use Tuleap\PullRequest\PullRequestRetriever;
 use Tuleap\Reference\ExtractAndSaveCrossReferences;
+use Tuleap\User\Avatar\ProvideUserAvatarUrl;
 use Tuleap\User\REST\MinimalUserRepresentation;
 
 final class PATCHHandler
@@ -56,6 +57,7 @@ final class PATCHHandler
         private readonly ExtractAndSaveCrossReferences $cross_references_saver,
         private readonly SingleRepresentationBuilder $representation_builder,
         private readonly EventDispatcherInterface $event_dispatcher,
+        private readonly ProvideUserAvatarUrl $provide_user_avatar_url,
     ) {
     }
 
@@ -109,7 +111,7 @@ final class PATCHHandler
                         );
                         $representation = $this->representation_builder->build(
                             $source_project_id,
-                            MinimalUserRepresentation::build($user),
+                            MinimalUserRepresentation::build($user, $this->provide_user_avatar_url),
                             $updated_comment
                         );
                         return Result::ok($representation);
