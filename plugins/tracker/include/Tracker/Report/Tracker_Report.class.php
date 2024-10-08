@@ -49,25 +49,19 @@ use Tuleap\Tracker\Report\Query\Advanced\InvalidFields;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ListFields\ArtifactSubmitterChecker;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ListFields\CollectionOfNormalizedBindLabelsExtractor;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidMetadata;
-use Tuleap\Tracker\Report\Query\Advanced\InvalidOrderByBuilder;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidSearchableCollectorVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidSearchablesCollection;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidSearchablesCollectionBuilder;
-use Tuleap\Tracker\Report\Query\Advanced\InvalidSelectablesCollectionBuilder;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidTermCollectorVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\LimitSizeIsExceededException;
 use Tuleap\Tracker\Report\Query\Advanced\ListFieldBindValueNormalizer;
-use Tuleap\Tracker\Report\Query\Advanced\OrderByIsInvalidException;
 use Tuleap\Tracker\Report\Query\Advanced\ParserCacheProxy;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilderVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\SearchablesAreInvalidException;
 use Tuleap\Tracker\Report\Query\Advanced\SearchablesDoNotExistException;
-use Tuleap\Tracker\Report\Query\Advanced\SelectablesAreInvalidException;
-use Tuleap\Tracker\Report\Query\Advanced\SelectablesDoNotExistException;
-use Tuleap\Tracker\Report\Query\Advanced\SelectablesMustBeUniqueException;
-use Tuleap\Tracker\Report\Query\Advanced\SelectLimitExceededException;
 use Tuleap\Tracker\Report\Query\Advanced\SizeValidatorVisitor;
+use Tuleap\Tracker\Report\Query\Advanced\SyntaxNotSupportedException;
 use Tuleap\Tracker\Report\Query\Advanced\UgroupLabelConverter;
 use Tuleap\Tracker\Report\Query\CommentFromWhereBuilder;
 use Tuleap\Tracker\Report\Query\CommentFromWhereBuilderFactory;
@@ -1602,12 +1596,12 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
                 if ($this->is_in_expert_mode && $this->expert_query) {
                     try {
                         $this->validateExpertQuery();
-                    } catch (SearchablesDoNotExistException | SelectablesDoNotExistException | SelectablesMustBeUniqueException | SelectLimitExceededException $exception) {
+                    } catch (SearchablesDoNotExistException $exception) {
                         $GLOBALS['Response']->addFeedback(
                             Feedback::ERROR,
                             $exception->getI18NExceptionMessage()
                         );
-                    } catch (SearchablesAreInvalidException | SelectablesAreInvalidException $exception) {
+                    } catch (SearchablesAreInvalidException $exception) {
                         foreach ($exception->getErrorMessages() as $message) {
                             $GLOBALS['Response']->addFeedback(
                                 Feedback::ERROR,
@@ -1624,6 +1618,11 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
                             Feedback::ERROR,
                             dgettext('tuleap-tracker', 'The query is considered too complex to be executed by the server.
                                 Please simplify it (e.g remove comparisons) to continue.')
+                        );
+                    } catch (SyntaxNotSupportedException $e) {
+                        $GLOBALS['Response']->addFeedback(
+                            Feedback::ERROR,
+                            $e->getMessage()
                         );
                     }
                 }
@@ -1908,9 +1907,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
      * @throws SearchablesAreInvalidException
      * @throws SearchablesDoNotExistException
      * @throws SyntaxError
-     * @throws SelectablesAreInvalidException
-     * @throws SelectablesDoNotExistException
-     * @throws OrderByIsInvalidException
+     * @throws SyntaxNotSupportedException
      */
     public function validateExpertQuery(): void
     {
@@ -1918,12 +1915,9 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
             $this->parser,
             $this->getSizeValidator()
         );
-        $validator->validateExpertQuery(
+        $validator->validateQueryFromSingleTracker(
             $this->expert_query,
-            false,
             new InvalidSearchablesCollectionBuilder($this->getCollector()),
-            new InvalidSelectablesCollectionBuilder(),
-            new InvalidOrderByBuilder(),
         );
     }
 
