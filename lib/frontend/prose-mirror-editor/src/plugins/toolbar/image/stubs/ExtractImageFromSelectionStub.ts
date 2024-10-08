@@ -17,19 +17,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/**
- * Reexport the prose-mirror Node type as EditorNode to avoid
- * the confusion with the DOM Node type.
- */
-import type { Node } from "prosemirror-model";
-export type EditorNode = Node;
+import type { ExtractImageFromSelection } from "../ImageFromSelectionExtractor";
+import type { ImageProperties } from "../../../../types/internal-types";
 
-export type LinkProperties = {
-    readonly href: string;
-    readonly title: string;
-};
-
-export type ImageProperties = {
-    readonly src: string;
-    readonly title: string;
+export const ExtractImageFromSelectionStub = {
+    withImageProperties: (image: ImageProperties): ExtractImageFromSelection => ({
+        extractImageProperties: () => image,
+    }),
+    withNothing: (): ExtractImageFromSelection => ({
+        extractImageProperties: () => null,
+    }),
 };

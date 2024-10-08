@@ -30,6 +30,7 @@ import "./buttons/subscript";
 import "./buttons/superscript";
 import "./buttons/unlink";
 import "./buttons/link/link";
+import "./buttons/image/image";
 
 export type ProseMirrorToolbarElement = {
     controller: ControlToolbar;
@@ -50,6 +51,7 @@ export type ScriptElements = {
 export type LinkElements = {
     link: boolean;
     unlink: boolean;
+    image: true;
 };
 
 export type InternalProseMirrorToolbarElement = Readonly<ProseMirrorToolbarElement> & {
@@ -101,11 +103,15 @@ export const renderToolbar = (
         ? html`<unlink-item toolbar_bus="${host.controller.getToolbarBus()}"></unlink-item>`
         : html``;
 
+    const image_item = host.link_elements?.image
+        ? html`<image-item toolbar_bus="${host.controller.getToolbarBus()}"></image-item>`
+        : html``;
+
     return html`
         <div class="prose-mirror-toolbar-container" data-test="toolbar-container">
             ${bold_item} ${italic_item} ${quote_item} ${code_item}
             <hr class="prose-mirror-hr" />
-            ${link_item} ${unlink_item}
+            ${link_item} ${unlink_item} ${image_item}
             <hr class="prose-mirror-hr" />
             ${subscript_item} ${superscript_item}
         </div>

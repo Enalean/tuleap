@@ -17,19 +17,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/**
- * Reexport the prose-mirror Node type as EditorNode to avoid
- * the confusion with the DOM Node type.
- */
-import type { Node } from "prosemirror-model";
-export type EditorNode = Node;
+import type { EditorState } from "prosemirror-state";
+import type { EditorNode } from "../types/internal-types";
 
-export type LinkProperties = {
-    readonly href: string;
-    readonly title: string;
+export type FindEditorNodeAtPosition = {
+    findNodeAtPosition(position: number): EditorNode | null;
 };
 
-export type ImageProperties = {
-    readonly src: string;
-    readonly title: string;
-};
+export const EditorNodeAtPositionFinder = (state: EditorState): FindEditorNodeAtPosition => ({
+    findNodeAtPosition: (position): EditorNode | null => state.doc.nodeAt(position),
+});

@@ -19,7 +19,7 @@
 
 import { describe, it, expect, beforeEach } from "vitest";
 import { LinkPropertiesExtractor } from "./LinkPropertiesExtractor";
-import { FindEditorNodeAtPositionStub } from "../plugins/link-popover/helper/stubs/FindEditorNodeAtPositionStub";
+import { FindEditorNodeAtPositionStub } from "./stubs/FindEditorNodeAtPositionStub";
 import { DetectLinkNodeStub } from "../plugins/link-popover/helper/stubs/DetectLinkNodeStub";
 import { createLocalDocument } from "./index";
 import type { EditorNode } from "../types/internal-types";

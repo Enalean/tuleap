@@ -26,7 +26,7 @@ import { CrossReferenceHTMLElementDetector } from "./helper/CrossReferenceNodeDe
 import { CrossReferenceUrlExtractor } from "./helper/CrossReferenceUrlExtractor";
 import { LinkPropertiesExtractor } from "../../helpers/LinkPropertiesExtractor";
 import { LinkNodeDetector } from "./helper/LinkNodeDetector";
-import { EditorNodeAtPositionFinder } from "./helper/EditorNodeAtPositionFinder";
+import { EditorNodeAtPositionFinder } from "../../helpers/EditorNodeAtPositionFinder";
 import { EmptySelectionChecker } from "./helper/EmptySelectionChecker";
 import { RemoveLinkCallbackBuilder } from "./helper/RemoveLinkCallbackBuilder";
 import { EditLinkCallbackBuilder } from "./helper/EditLinkCallbackBuilder";

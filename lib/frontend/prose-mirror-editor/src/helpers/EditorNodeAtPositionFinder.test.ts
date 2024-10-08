@@ -19,8 +19,8 @@
 
 import { describe, it, expect, vi } from "vitest";
 import type { EditorState } from "prosemirror-state";
-import type { EditorNode } from "../../../types/internal-types";
-import { createLocalDocument } from "../../../helpers/helper-for-test";
+import type { EditorNode } from "../types/internal-types";
+import { createLocalDocument } from "./helper-for-test";
 import { EditorNodeAtPositionFinder } from "./EditorNodeAtPositionFinder";
 
 describe("EditorNodeAtPositionFinder", () => {

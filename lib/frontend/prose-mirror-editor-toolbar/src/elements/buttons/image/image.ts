@@ -18,46 +18,47 @@
  */
 
 import { define, html } from "hybrids";
-import type { ToolbarBus, LinkState } from "@tuleap/prose-mirror-editor";
-import type { PopoverHost } from "../common/connect-popover";
+import type { UpdateFunction } from "hybrids";
+import type { ToolbarBus, ImageState } from "@tuleap/prose-mirror-editor";
 import { connectPopover } from "../common/connect-popover";
-import { renderLinkButtonElement } from "./link-button-template";
-import { renderLinkPopover } from "./link-popover-template";
+import type { PopoverHost } from "../common/connect-popover";
+import { renderImageButton } from "./image-button-template";
+import { renderImagePopover } from "./image-popover-template";
 
-export const TAG = "link-item";
+export const TAG = "image-item";
 
-export type Link = {
+export type ImageButton = {
     toolbar_bus: ToolbarBus;
 };
 
-export type InternalLinkButtonElement = Readonly<Link> &
+export type InternalImageButton = Readonly<ImageButton> &
     PopoverHost & {
         is_activated: boolean;
         is_disabled: boolean;
-        link_href: string;
-        link_title: string;
+        image_src: string;
+        image_title: string;
     };
 
-export type HostElement = InternalLinkButtonElement & HTMLElement;
+export type HostElement = InternalImageButton & HTMLElement;
 
-export const connect = (host: InternalLinkButtonElement): void => {
+export const connect = (host: InternalImageButton): void => {
     host.toolbar_bus.setView({
-        activateLink: (link_state: LinkState) => {
-            host.is_activated = link_state.is_activated;
-            host.link_href = link_state.link_href;
-            host.link_title = link_state.link_title;
-            host.is_disabled = link_state.is_disabled;
+        activateImage: (image_state: ImageState) => {
+            host.is_activated = image_state.is_activated;
+            host.is_disabled = image_state.is_disabled;
+            host.image_src = image_state.image_src;
+            host.image_title = image_state.image_title;
         },
     });
 };
 
-define<InternalLinkButtonElement>({
+define<InternalImageButton>({
     tag: TAG,
     is_activated: false,
     is_disabled: true,
-    link_href: "",
-    link_title: "",
-    button_element: (host: InternalLinkButtonElement) => {
+    image_src: "",
+    image_title: "",
+    button_element: (host: InternalImageButton) => {
         const button_element = host.render().querySelector("[data-role=popover-trigger]");
         if (!(button_element instanceof HTMLButtonElement)) {
             throw new Error("Unable to find button_element.");
@@ -65,7 +66,7 @@ define<InternalLinkButtonElement>({
         return button_element;
     },
     popover_element: {
-        value: (host: InternalLinkButtonElement) => {
+        value: (host: InternalImageButton) => {
             const popover_element = host.render().querySelector("[data-role=popover]");
             if (!(popover_element instanceof HTMLElement)) {
                 throw new Error("Unable to find popover_element.");
@@ -73,11 +74,12 @@ define<InternalLinkButtonElement>({
 
             return popover_element;
         },
-        connect: (host: InternalLinkButtonElement) => connectPopover(host, document),
+        connect: (host) => connectPopover(host, document),
     },
     toolbar_bus: {
-        value: (host: InternalLinkButtonElement, toolbar_bus: ToolbarBus) => toolbar_bus,
+        value: (host: InternalImageButton, toolbar_bus: ToolbarBus) => toolbar_bus,
         connect,
     },
-    render: (host) => html`${renderLinkButtonElement(host)}${renderLinkPopover(host)}`,
+    render: (host): UpdateFunction<InternalImageButton> =>
+        html`${renderImageButton(host)}${renderImagePopover(host)}`,
 });

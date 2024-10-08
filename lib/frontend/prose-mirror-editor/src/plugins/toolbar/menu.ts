@@ -23,16 +23,11 @@ import type { Schema } from "prosemirror-model";
 import type { GetText } from "@tuleap/gettext";
 import { wrapListItem } from "./list/list-menu-item-builder";
 import { getTextStyleDropdownMenu } from "./text-style";
-import { imageItem } from "./image/image-menu-item-builder";
 import { type BuildMenuItemWithCommand } from "./helper/BuildMenuItemWithCommand";
 
 type MenuItemResult = {
-    toggleStrong?: MenuItem;
-    toggleEm?: MenuItem;
     wrapBulletList?: MenuItem;
     wrapOrderedList?: MenuItem;
-    toggleCode?: MenuItem;
-    toggleLink?: MenuItem;
     fullMenu: MenuElement[][];
 };
 
@@ -66,8 +61,6 @@ export function buildMenuItems(
                     MenuItemWithCommandBuilder,
                 ),
                 getTextStyleDropdownMenu(schema, editor_id, gettext_provider),
-
-                imageItem(schema.nodes.image, editor_id, gettext_provider),
             ],
         ],
     };

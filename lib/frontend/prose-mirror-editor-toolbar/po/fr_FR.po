@@ -30,6 +30,15 @@ msgstr "Créer ou éditer un lien"
 msgid "Edit link"
 msgstr "Éditer un lien"
 
+msgid "Image source"
+msgstr "Source de l'image"
+
+msgid "Insert new image"
+msgstr "Insérer une nouvelle image"
+
+msgid "Insert or edit image"
+msgstr "Insérer ou éditer une image"
+
 msgid "Link"
 msgstr "Lien"
 
@@ -42,6 +51,9 @@ msgstr "Sauvegarder"
 msgid "Text"
 msgstr "Texte"
 
+msgid "Title"
+msgstr "Titre"
+
 msgid "Toggle bold style `Ctrl+b`"
 msgstr "Passer en gras `Ctrl+b`"
 
@@ -50,6 +62,9 @@ msgstr "Passer en bloc code Ctrl+`"
 
 msgid "Toggle italic style `Ctrl+i`"
 msgstr "Passer en italique `Ctrl+i`"
+
+msgid "Update image properties"
+msgstr "Mettre à jour les propriétés de l'image"
 
 msgid "Wrap in block quote `Ctrl->`"
 msgstr "Passer en mode citation Ctrl->`"
