@@ -143,7 +143,9 @@ msgstr ""
 msgid "Cross trackers search"
 msgstr ""
 
-msgid "Error while parsing the query"
+#, php-format
+msgid ""
+"Error while parsing the query. Expected to find one of the following: %s"
 msgstr ""
 
 msgid "Expert query is required and cannot be empty"
@@ -248,4 +250,7 @@ msgid ""
 msgstr ""
 
 msgid "You don't have permission to access this project"
+msgstr ""
+
+msgid "end of input"
 msgstr ""

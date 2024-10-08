@@ -185,8 +185,12 @@ msgstr "L'export CSV d'un rapport expert n'est pas supporté"
 msgid "Cross trackers search"
 msgstr "Recherche multi trackers"
 
-msgid "Error while parsing the query"
-msgstr "Erreur pendant l'analyse de la requête"
+#, php-format
+msgid ""
+"Error while parsing the query. Expected to find one of the following: %s"
+msgstr ""
+"Erreur pendant l'analyse de la requête. L'un des éléments suivants était "
+"attendu : %s"
 
 msgid "Expert query is required and cannot be empty"
 msgstr "La requête expert est obligatoire et ne peut pas être vide"
@@ -319,3 +323,6 @@ msgstr ""
 
 msgid "You don't have permission to access this project"
 msgstr "Vous n'avez pas la permission d'accéder à ce projet"
+
+msgid "end of input"
+msgstr "fin du texte"

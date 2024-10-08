@@ -18,25 +18,37 @@
  */
 
 import type { ResultAsync } from "neverthrow";
-import { okAsync, errAsync } from "neverthrow";
+import { errAsync, okAsync } from "neverthrow";
 import type { Fault } from "@tuleap/fault";
-import { decodeJSON } from "../json-decoder";
 import { TuleapAPIFault } from "./TuleapAPIFault";
 import type { ErrorResponseHandler } from "./ErrorResponseHandler";
+import { decodeJSON } from "../json-decoder";
+import { TuleapAPIWithDetailsFault } from "./TuleapAPIWithDetailsFault";
+import type { RestlerErrorDetails } from "./RestlerErrorDetails";
 
-type RestlerErrorMessage = {
+type RestlerErrorMessageWithDetails = {
     readonly message?: string;
     readonly i18n_error_message?: string;
+    readonly details?: RestlerErrorDetails;
 };
 
-type RestlerError = {
-    readonly error?: RestlerErrorMessage;
+type RestlerErrorWithAdditionalProperties = {
+    readonly error?: RestlerErrorMessageWithDetails;
 };
 
 const convertRestlerErrorResponseToFault = (response: Response): ResultAsync<never, Fault> =>
-    decodeJSON<RestlerError>(response).andThen((error_json) => {
+    decodeJSON<RestlerErrorWithAdditionalProperties>(response).andThen((error_json) => {
         if (error_json.error !== undefined) {
             if (error_json.error.i18n_error_message !== undefined) {
+                if (error_json.error.details !== undefined) {
+                    return errAsync(
+                        TuleapAPIWithDetailsFault.fromCodeMessageAndDetails(
+                            response.status,
+                            error_json.error.i18n_error_message,
+                            error_json.error.details,
+                        ),
+                    );
+                }
                 return errAsync(
                     TuleapAPIFault.fromCodeAndMessage(
                         response.status,

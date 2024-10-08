@@ -30,7 +30,7 @@ export interface Fault {
     getStackTraceAsString(): string;
     toString(): string;
     valueOf(): string;
-    readonly [key: string]: () => boolean | string; // Allow defining arbitrary functions that return boolean or string
+    readonly [key: string]: () => boolean | string | Record<string, unknown>; // Allow defining arbitrary functions
 }
 
 const newFault = (message: string, error: Error | null = null): Fault => {

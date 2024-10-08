@@ -27,6 +27,9 @@ const isJSONParseFault = (fault: Fault): boolean =>
 const isTuleapAPIFault = (fault: Fault): boolean =>
     "isTuleapAPIFault" in fault && fault.isTuleapAPIFault() === true;
 
+const isTuleapAPIWithDetailsFault = (fault: Fault): boolean =>
+    "getDetails" in fault && typeof fault.getDetails === "function";
+
 describe(`RestlerErrorHandler`, () => {
     const handle = (response: Response): ResultAsync<Response, Fault> => {
         const handler = RestlerErrorHandler();
@@ -64,6 +67,26 @@ describe(`RestlerErrorHandler`, () => {
             expect(isTuleapAPIFault(result.error)).toBe(true);
         },
     );
+
+    it(`when there is an API error with details, it will return an Err with a TuleapAPIWithDetailsFault`, async () => {
+        const response = {
+            ok: false,
+            json: () =>
+                Promise.resolve({
+                    error: {
+                        i18n_error_message: "Une erreur s'est produite",
+                        details: { line: 57, column: 79 },
+                    },
+                }),
+        } as Response;
+
+        const result = await handle(response);
+        if (!result.isErr()) {
+            throw Error("Expected an Err");
+        }
+        expect(isTuleapAPIFault(result.error)).toBe(true);
+        expect(isTuleapAPIWithDetailsFault(result.error)).toBe(true);
+    });
 
     it(`when there is an API error but its JSON cannot be parsed,
         it will return an Err with a JSONParseFault`, async () => {
