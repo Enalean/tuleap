@@ -22,12 +22,13 @@ import type { Command } from "prosemirror-state";
 import { TextSelection } from "prosemirror-state";
 import type { Schema } from "prosemirror-model";
 import { liftListItem, sinkListItem, splitListItem, wrapInList } from "prosemirror-schema-list";
-import { isSelectionAList } from "./list/is-list-checker";
+import type { CheckIsSelectionAList } from "./list/IsListChecker";
 import { getHeadingCommand } from "./text-style/transform-text";
 
 export type ProseMirrorKeyMap = { [key: string]: Command };
 export function buildKeymap(
     schema: Schema,
+    check_is_selection_a_list: CheckIsSelectionAList,
     nb_heading: number,
     map_keys?: { [key: string]: false | string },
 ): ProseMirrorKeyMap {
@@ -60,7 +61,7 @@ export function buildKeymap(
 
     const listCommand = chainCommands(exitCode, (state, dispatch) => {
         const node_type = schema.nodes.bullet_list;
-        if (isSelectionAList(state, node_type)) {
+        if (check_is_selection_a_list.isSelectionAList(state, node_type)) {
             return lift(state, dispatch);
         }
 
@@ -70,7 +71,7 @@ export function buildKeymap(
 
     const olistCommand = chainCommands(exitCode, (state, dispatch) => {
         const node_type = schema.nodes.ordered_list;
-        if (isSelectionAList(state, node_type)) {
+        if (check_is_selection_a_list.isSelectionAList(state, node_type)) {
             return lift(state, dispatch);
         }
 

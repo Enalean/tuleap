@@ -38,6 +38,12 @@ import { ImageStateBuilder } from "./image/ImageStateBuilder";
 import { CanInsertImageChecker } from "./image/CanInsertImageChecker";
 import { ImageNodeInserter } from "./image/ImageNodeInserter";
 import { ImageFromSelectionExtractor } from "./image/ImageFromSelectionExtractor";
+import { ListStateBuilder } from "./list/ListStateBuilder";
+import { IsSelectionAListWithTypeChecker } from "./list/IsSelectionAListWithTypeChecker";
+import { ListNodeInserter } from "./list/ListInserter";
+import { IsSelectionAListChecker } from "./list/IsListChecker";
+import { lift } from "prosemirror-commands";
+import { wrapInList } from "prosemirror-schema-list";
 
 export function setupMonoToolbar(toolbar_bus: ToolbarBus): Plugin {
     return new Plugin({
@@ -58,6 +64,7 @@ export function setupMonoToolbar(toolbar_bus: ToolbarBus): Plugin {
                                 CanInsertImageChecker(),
                                 ImageFromSelectionExtractor(EditorNodeAtPositionFinder(view.state)),
                             ),
+                            ListStateBuilder(view.state, IsSelectionAListWithTypeChecker()),
                         );
 
                         toolbar_activator.activateToolbarItem(toolbar_bus.view, view.state);
@@ -90,6 +97,26 @@ export function setupMonoToolbar(toolbar_bus: ToolbarBus): Plugin {
                         },
                         applyImage(image): void {
                             ImageNodeInserter(view.state, view.dispatch).insertImage(image);
+                        },
+                        toggleOrderedList(): void {
+                            ListNodeInserter(
+                                view.state,
+                                view.dispatch,
+                                IsSelectionAListChecker(),
+                                custom_schema.nodes.ordered_list,
+                                lift,
+                                wrapInList(custom_schema.nodes.ordered_list),
+                            ).insertList();
+                        },
+                        toggleBulletList(): void {
+                            ListNodeInserter(
+                                view.state,
+                                view.dispatch,
+                                IsSelectionAListChecker(),
+                                custom_schema.nodes.bullet_list,
+                                lift,
+                                wrapInList(custom_schema.nodes.bullet_list),
+                            ).insertList();
                         },
                     });
                 },

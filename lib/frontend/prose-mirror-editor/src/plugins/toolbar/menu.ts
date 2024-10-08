@@ -17,17 +17,12 @@
  *  along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { icons } from "prosemirror-menu";
-import type { MenuElement, MenuItem } from "prosemirror-menu";
+import type { MenuElement } from "prosemirror-menu";
 import type { Schema } from "prosemirror-model";
 import type { GetText } from "@tuleap/gettext";
-import { wrapListItem } from "./list/list-menu-item-builder";
 import { getTextStyleDropdownMenu } from "./text-style";
-import { type BuildMenuItemWithCommand } from "./helper/BuildMenuItemWithCommand";
 
 type MenuItemResult = {
-    wrapBulletList?: MenuItem;
-    wrapOrderedList?: MenuItem;
     fullMenu: MenuElement[][];
 };
 
@@ -35,33 +30,8 @@ export function buildMenuItems(
     schema: Schema,
     gettext_provider: GetText,
     editor_id: string,
-    MenuItemWithCommandBuilder: BuildMenuItemWithCommand,
 ): MenuItemResult {
     return {
-        fullMenu: [
-            [
-                wrapListItem(
-                    schema.nodes.bullet_list,
-                    {
-                        title: gettext_provider.gettext("Wrap in bullet list `Shift+Ctrl+8`"),
-                        icon: icons.bulletList,
-                    },
-                    schema.nodes.ordered_list,
-                    "fa-list",
-                    MenuItemWithCommandBuilder,
-                ),
-                wrapListItem(
-                    schema.nodes.ordered_list,
-                    {
-                        title: gettext_provider.gettext("Wrap in ordered list `Shift+Ctrl+9`"),
-                        icon: icons.orderedList,
-                    },
-                    schema.nodes.bullet_list,
-                    "fa-list-ol",
-                    MenuItemWithCommandBuilder,
-                ),
-                getTextStyleDropdownMenu(schema, editor_id, gettext_provider),
-            ],
-        ],
+        fullMenu: [[getTextStyleDropdownMenu(schema, editor_id, gettext_provider)]],
     };
 }

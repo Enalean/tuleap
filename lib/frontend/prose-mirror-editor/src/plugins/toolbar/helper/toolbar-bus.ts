@@ -21,6 +21,7 @@
 import type { LinkState } from "../links/LinkState";
 import type { ImageState } from "../image/ImageState";
 import type { ImageProperties, LinkProperties } from "../../../types/internal-types";
+import type { ListState } from "../list/ListState";
 
 export interface ToolbarHandler {
     toggleBold: () => void;
@@ -32,6 +33,8 @@ export interface ToolbarHandler {
     applyLink: (link: LinkProperties) => void;
     applyUnlink: () => void;
     applyImage: (image: ImageProperties) => void;
+    toggleOrderedList: () => void;
+    toggleBulletList: () => void;
 }
 
 export interface ToolbarView {
@@ -44,6 +47,8 @@ export interface ToolbarView {
     activateLink: (link_state: LinkState) => void;
     activateUnlink: (is_activated: boolean) => void;
     activateImage: (image_state: ImageState) => void;
+    activateOrderedList: (list_state: ListState) => void;
+    activateBulletList: (list_state: ListState) => void;
 }
 
 export interface ToolbarBus {
@@ -58,6 +63,8 @@ export interface ToolbarBus {
     link: (link: LinkProperties) => void;
     unlink: () => void;
     image: (image: ImageProperties) => void;
+    orderedList: () => void;
+    bulletList: () => void;
     setCurrentHandler: (handler: ToolbarHandler) => void;
     setView: (view: Partial<ToolbarView>) => void;
 }
@@ -75,6 +82,8 @@ const default_view: ToolbarView = {
     activateLink: noop,
     activateUnlink: noop,
     activateImage: noop,
+    activateOrderedList: noop,
+    activateBulletList: noop,
 };
 
 export const buildToolbarBus = (): ToolbarBus => ({
@@ -106,6 +115,12 @@ export const buildToolbarBus = (): ToolbarBus => ({
     },
     image(image: ImageProperties): void {
         this.handler?.applyImage(image);
+    },
+    orderedList(): void {
+        this.handler?.toggleOrderedList();
+    },
+    bulletList(): void {
+        this.handler?.toggleBulletList();
     },
     setCurrentHandler(handler: ToolbarHandler): void {
         this.handler = handler;

@@ -17,8 +17,21 @@
  *  along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export function createIcon(class_name: string): { dom: Node } {
-    const span = document.createElement("span");
-    span.className = class_name;
-    return { dom: span };
-}
+import type { EditorState } from "prosemirror-state";
+import type { NodeType } from "prosemirror-model";
+
+export type CheckIsSelectionAList = {
+    isSelectionAList(state: EditorState, node_type: NodeType): boolean;
+};
+
+export const IsSelectionAListChecker = (): CheckIsSelectionAList => ({
+    isSelectionAList(state: EditorState, node_type: NodeType): boolean {
+        const { $from, $to } = state.selection;
+        const range = $from.blockRange($to);
+        if (!range) {
+            return false;
+        }
+
+        return range.depth >= 2 && $from.node(range.depth - 1).type.name === node_type.name;
+    },
+});
