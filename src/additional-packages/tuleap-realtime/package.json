@@ -20,6 +20,7 @@
   },
   "pnpm": {
     "overrides": {
+      "cookie": "^0.7.2",
       "path-to-regexp": "^0.1.10",
       "ws": "^8.17.1"
     }

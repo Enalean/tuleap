@@ -38,6 +38,7 @@
   },
   "pnpm": {
     "overrides": {
+      "cookie": "^0.7.2",
       "assert": "npm:@nolyfill/assert@latest",
       "deep-equal": "npm:@nolyfill/deep-equal@latest",
       "hasown": "npm:@nolyfill/hasown@latest",
