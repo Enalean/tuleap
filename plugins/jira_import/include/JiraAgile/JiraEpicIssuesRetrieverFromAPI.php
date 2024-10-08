@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace Tuleap\JiraImport\JiraAgile;
 
 use Psr\Log\LoggerInterface;
+use Tuleap\Tracker\Creation\JiraImporter\ClientWrapper;
 use Tuleap\Tracker\Creation\JiraImporter\JiraClient;
 use Tuleap\Tracker\Creation\JiraImporter\JiraCollectionBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\UnexpectedFormatException;
@@ -45,26 +46,32 @@ final class JiraEpicIssuesRetrieverFromAPI implements JiraEpicIssuesRetriever
         $this->logger      = $logger;
     }
 
-    public function getIssueIds(JiraEpic $epic): array
+    public function getIssueIds(JiraEpic $epic, string $jira_project): array
     {
         $iterator  = JiraCollectionBuilder::iterateUntilTotal(
             $this->jira_client,
             $this->logger,
-            $this->getUrlWithoutHost($epic),
+            $this->getUrlWithoutHost($epic, $jira_project),
             'issues'
         );
         $issue_ids = [];
         foreach ($iterator as $value) {
             if (! isset($value['id'])) {
-                throw new UnexpectedFormatException($this->getUrlWithoutHost($epic) . ' `issues` key is suppose to be an array with `id` key ');
+                throw new UnexpectedFormatException($this->getUrlWithoutHost($epic, $jira_project) . ' `issues` key is suppose to be an array with `id` key ');
             }
             $issue_ids[] = $value['id'];
         }
         return $issue_ids;
     }
 
-    private function getUrlWithoutHost(JiraEpic $epic): string
+    private function getUrlWithoutHost(JiraEpic $epic, string $jira_project): string
     {
-        return parse_url($epic->url, PHP_URL_PATH) . '/issue?' . http_build_query(['fields' => 'id']);
+        $params = [
+            'jql'    => 'project="' . $jira_project . '" AND parent=' . $epic->id,
+            'fields' => '*all',
+            'expand' => 'renderedFields',
+        ];
+
+        return parse_url(ClientWrapper::JIRA_CORE_BASE_URL, PHP_URL_PATH) . '/search?' . http_build_query($params);
     }
 }

@@ -28,14 +28,14 @@ use function PHPUnit\Framework\assertEquals;
 
 final class JiraEpicIssuesRetrieverFromAPITest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    public function testItCallsTheEpicsIssueURL(): void
+    public function testItSearchForIssuesWithGivenEpicAsParentBecauseCallingTheEpicsIssueURLDontWorkWithJiraNextGenIssues(): void
     {
         $client = new class extends \Tuleap\Tracker\Test\Tracker\Creation\JiraImporter\Stub\JiraCloudClientStub {
             public bool $called = false;
             public function getUrl(string $url): ?array
             {
                 $this->called = true;
-                assertEquals('/rest/agile/latest/board/1/epic/10143/issue?fields=id&startAt=0', $url);
+                assertEquals('/rest/api/2/search?jql=project%3D%22project%22+AND+parent%3D10143&fields=%2Aall&expand=renderedFields&startAt=0', $url);
                 return [
                     'total' => 0,
                     'issues' => [],
@@ -44,7 +44,7 @@ final class JiraEpicIssuesRetrieverFromAPITest extends \Tuleap\Test\PHPUnit\Test
         };
 
         $epic_retriever = new JiraEpicIssuesRetrieverFromAPI($client, new NullLogger());
-        $epic_retriever->getIssueIds(new JiraEpic(10143, '', 'https://example.com/rest/agile/latest/board/1/epic/10143'));
+        $epic_retriever->getIssueIds(new JiraEpic(10143, '', 'https://example.com/rest/agile/latest/board/1/epic/10143'), 'project');
 
         self::assertTrue($client->called);
     }
@@ -75,7 +75,7 @@ final class JiraEpicIssuesRetrieverFromAPITest extends \Tuleap\Test\PHPUnit\Test
         };
 
         $epic_retriever = new JiraEpicIssuesRetrieverFromAPI($client, new NullLogger());
-        $ids            = $epic_retriever->getIssueIds(new JiraEpic(10143, '', 'https://example.com/rest/agile/latest/board/1/epic/10143'));
+        $ids            = $epic_retriever->getIssueIds(new JiraEpic(10143, '', 'https://example.com/rest/agile/latest/board/1/epic/10143'), 'project');
 
         self::assertEquals(['10005', '10013'], $ids);
     }

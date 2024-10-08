@@ -25,5 +25,5 @@ namespace Tuleap\JiraImport\JiraAgile;
 
 interface JiraEpicIssuesRetriever
 {
-    public function getIssueIds(JiraEpic $epic): array;
+    public function getIssueIds(JiraEpic $epic, string $jira_project): array;
 }

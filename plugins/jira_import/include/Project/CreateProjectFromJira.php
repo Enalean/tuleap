@@ -267,7 +267,7 @@ final class CreateProjectFromJira
                     $platform_configuration_collection->setStoryPointsField($board_configuration->estimation_field);
                 }
 
-                $linked_issues_collection = $issues_linked_to_epics_retriever->getLinkedIssuesFromBoard($board);
+                $linked_issues_collection = $issues_linked_to_epics_retriever->getLinkedIssuesFromBoard($board, $jira_project);
             } else {
                 $logger->info('No scrum board found. We will try to get linked Epic issues with provided Epic issueType name');
                 $logger->debug('Provided Epic issueType name: ' . $jira_epic_issue_type);
