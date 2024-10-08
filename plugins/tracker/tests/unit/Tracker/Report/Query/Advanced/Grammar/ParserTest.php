@@ -349,4 +349,17 @@ final class ParserTest extends TestCase
         self::assertEquals($expected, $result1);
         self::assertEquals($expected, $result2);
     }
+
+    public function testItAcceptNonBreakingSpace(): void
+    {
+        $parser   = new Parser();
+        $result   = $parser->parse("text_field = ''");
+        $expected = new Query(
+            [],
+            null,
+            new OrExpression(new AndExpression(new EqualComparison(new Field('text_field'), new SimpleValueWrapper('')), null), null),
+            null,
+        );
+        self::assertEquals($expected, $result);
+    }
 }

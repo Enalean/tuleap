@@ -418,4 +418,4 @@ Designator
     }
 
 _ "whitespace"
-    = [ \t\n\r]*
+    = [ \t\n\r\u00a0]*
