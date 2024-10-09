@@ -19,8 +19,6 @@
 
 import { defineJestConfiguration } from "@tuleap/build-system-configurator";
 
-process.env.DISABLE_TS_TYPECHECK = "true";
-
 export default {
     ...defineJestConfiguration(),
     displayName: "@tuleap/plugin-tracker-rich-text-editor",

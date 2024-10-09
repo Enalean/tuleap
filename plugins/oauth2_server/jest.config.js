@@ -19,8 +19,6 @@
 
 const { defineJestConfiguration } = require("@tuleap/build-system-configurator");
 
-process.env.DISABLE_TS_TYPECHECK = "true";
-
 module.exports = {
     ...defineJestConfiguration(),
     displayName: "oauth2_server",
