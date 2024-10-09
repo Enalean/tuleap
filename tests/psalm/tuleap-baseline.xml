@@ -525,7 +525,6 @@
     </MissingPropertyType>
     <MissingReturnType>
       <code><![CDATA[getDescendantTrackerIds]]></code>
-      <code><![CDATA[getDescendantTrackers]]></code>
       <code><![CDATA[getMilestoneBacklogArtifactsTracker]]></code>
       <code><![CDATA[getTotalBacklogSize]]></code>
       <code><![CDATA[getTotalContentSize]]></code>
@@ -540,9 +539,6 @@
       <code><![CDATA[$offset]]></code>
       <code><![CDATA[$offset]]></code>
     </MissingParamType>
-    <MissingReturnType>
-      <code><![CDATA[getFirstChildBacklogTracker]]></code>
-    </MissingReturnType>
   </file>
   <file src="plugins/agiledashboard/include/AgileDashboard/Milestone/Backlog/BacklogItem.class.php">
     <MissingParamType>
@@ -894,7 +890,6 @@
       <code><![CDATA[linkArtifact]]></code>
     </DeprecatedMethod>
     <MissingReturnType>
-      <code><![CDATA[getBacklogTrackers]]></code>
       <code><![CDATA[isParentLinkedToParentMilestone]]></code>
       <code><![CDATA[linkToMilestoneParent]]></code>
     </MissingReturnType>
@@ -1499,7 +1494,6 @@
       <code><![CDATA[filterArtifactIdsAlreadyInBacklog]]></code>
       <code><![CDATA[getArtifactsFromBodyContent]]></code>
       <code><![CDATA[getIndexedBacklogItems]]></code>
-      <code><![CDATA[getIndexedChildrenBacklogTrackers]]></code>
       <code><![CDATA[getIndexedLinkedArtifactIds]]></code>
       <code><![CDATA[getMilestoneBacklogItems]]></code>
       <code><![CDATA[getMilestoneDoneBacklogItems]]></code>
@@ -2046,9 +2040,6 @@
       <code><![CDATA[foundRows]]></code>
       <code><![CDATA[foundRows]]></code>
     </DeprecatedMethod>
-    <InvalidNullableReturnType>
-      <code><![CDATA[Planning_ArtifactMilestone]]></code>
-    </InvalidNullableReturnType>
     <InvalidScalarArgument>
       <code><![CDATA[$top_milestone->getProject()->getID()]]></code>
     </InvalidScalarArgument>
@@ -2072,9 +2063,6 @@
       <code><![CDATA[milestoneHasStartDate]]></code>
       <code><![CDATA[userCanChangePrioritiesInMilestone]]></code>
     </MissingReturnType>
-    <NullableReturnStatement>
-      <code><![CDATA[null]]></code>
-    </NullableReturnStatement>
     <PossiblyFalseArgument>
       <code><![CDATA[$root_planning]]></code>
     </PossiblyFalseArgument>
@@ -2235,10 +2223,7 @@
     </MissingParamType>
     <MissingReturnType>
       <code><![CDATA[createPlanning]]></code>
-      <code><![CDATA[duplicatePlannings]]></code>
-      <code><![CDATA[duplicatePriorityChangePermission]]></code>
       <code><![CDATA[getBacklogTrackerIdsByGroupId]]></code>
-      <code><![CDATA[getChildrenPlanning]]></code>
       <code><![CDATA[getPlanningTrackerIdsByGroupId]]></code>
       <code><![CDATA[getPlanningsOutOfRootPlanningHierarchy]]></code>
       <code><![CDATA[getUGroupIdToSaveRegardingMappings]]></code>
@@ -2471,11 +2456,8 @@
       <code><![CDATA[$params]]></code>
       <code><![CDATA[$params]]></code>
       <code><![CDATA[$params]]></code>
-      <code><![CDATA[$params]]></code>
-      <code><![CDATA[$params]]></code>
     </MissingParamType>
     <MissingReturnType>
-      <code><![CDATA[cardwall_event_get_swimline_tracker]]></code>
       <code><![CDATA[collectRoutesEvent]]></code>
       <code><![CDATA[cssfile]]></code>
       <code><![CDATA[getArtifactFactory]]></code>
@@ -2485,7 +2467,6 @@
       <code><![CDATA[getHierarchyFactory]]></code>
       <code><![CDATA[getHooksAndCallbacks]]></code>
       <code><![CDATA[getMessageFetcherAdditionalWarnings]]></code>
-      <code><![CDATA[getPlanningIdFromParameters]]></code>
       <code><![CDATA[getPlanningPermissionsManager]]></code>
       <code><![CDATA[getSemanticInitialEffortFactory]]></code>
       <code><![CDATA[getSequenceIdManager]]></code>
@@ -2520,9 +2501,6 @@
       <code><![CDATA[tracker_usage]]></code>
       <code><![CDATA[transitionDeletionEvent]]></code>
     </MissingReturnType>
-    <PossiblyFalseReference>
-      <code><![CDATA[getId]]></code>
-    </PossiblyFalseReference>
     <PossiblyNullArgument>
       <code><![CDATA[$_SERVER['REQUEST_URI']]]></code>
     </PossiblyNullArgument>
@@ -19601,161 +19579,23 @@
   </file>
   <file src="plugins/git/tests/integration/GitXmlImporterTest.php">
     <ForbiddenCode>
-      <code><![CDATA[shell_exec("cd $sys_data_dir_arg/gitolite/repositories/test_project/stable.git && " . \Git_Exec::getGitCommand() . ' log --oneline| wc -l')]]></code>
-      <code><![CDATA[shell_exec("cd $sys_data_dir_arg/gitolite/repositories/test_project/stable.git && " . \Git_Exec::getGitCommand() . ' log --oneline| wc -l')]]></code>
-      <code><![CDATA[shell_exec("cd $sys_data_dir_arg/gitolite/repositories/test_project/stable2.git && " . \Git_Exec::getGitCommand() . ' log --oneline| wc -l')]]></code>
-      <code><![CDATA[shell_exec(\Git_Exec::getGitCommand() . " config --global --add safe.directory $sys_data_dir_arg/gitolite/repositories/test_project/stable.git")]]></code>
-      <code><![CDATA[shell_exec(\Git_Exec::getGitCommand() . " config --global --add safe.directory $sys_data_dir_arg/gitolite/repositories/test_project/stable.git")]]></code>
-      <code><![CDATA[shell_exec(\Git_Exec::getGitCommand() . " config --global --add safe.directory $sys_data_dir_arg/gitolite/repositories/test_project/stable2.git")]]></code>
+      <code><![CDATA[shell_exec("cd $sys_data_dir_arg/gitolite/repositories/test_project/stable.git && " . Git_Exec::getGitCommand() . ' log --oneline| wc -l')]]></code>
+      <code><![CDATA[shell_exec("cd $sys_data_dir_arg/gitolite/repositories/test_project/stable.git && " . Git_Exec::getGitCommand() . ' log --oneline| wc -l')]]></code>
+      <code><![CDATA[shell_exec("cd $sys_data_dir_arg/gitolite/repositories/test_project/stable2.git && " . Git_Exec::getGitCommand() . ' log --oneline| wc -l')]]></code>
+      <code><![CDATA[shell_exec(Git_Exec::getGitCommand() . " config --global --add safe.directory $sys_data_dir_arg/gitolite/repositories/test_project/stable.git")]]></code>
+      <code><![CDATA[shell_exec(Git_Exec::getGitCommand() . " config --global --add safe.directory $sys_data_dir_arg/gitolite/repositories/test_project/stable.git")]]></code>
+      <code><![CDATA[shell_exec(Git_Exec::getGitCommand() . " config --global --add safe.directory $sys_data_dir_arg/gitolite/repositories/test_project/stable2.git")]]></code>
     </ForbiddenCode>
-    <InvalidArgument>
-      <code><![CDATA[$plugin_dao]]></code>
-      <code><![CDATA[$restricted_plugin_dao]]></code>
-      <code><![CDATA[$this->event_manager]]></code>
-      <code><![CDATA[$this->event_manager]]></code>
-      <code><![CDATA[$this->fine_grained_factory]]></code>
-      <code><![CDATA[$this->fine_grained_saver]]></code>
-      <code><![CDATA[$this->fine_grained_updater]]></code>
-      <code><![CDATA[$this->git_dao]]></code>
-      <code><![CDATA[$this->git_dao]]></code>
-      <code><![CDATA[$this->git_dao]]></code>
-      <code><![CDATA[$this->git_dao]]></code>
-      <code><![CDATA[$this->git_systemeventmanager]]></code>
-      <code><![CDATA[$this->git_systemeventmanager]]></code>
-      <code><![CDATA[$this->logger]]></code>
-      <code><![CDATA[$this->logger]]></code>
-      <code><![CDATA[$this->logger]]></code>
-      <code><![CDATA[$this->logger]]></code>
-      <code><![CDATA[$this->logger]]></code>
-      <code><![CDATA[$this->regexp_fine_grained_enabler]]></code>
-      <code><![CDATA[$this->regexp_fine_grained_retriever]]></code>
-      <code><![CDATA[$this->ugroup_dao]]></code>
-      <code><![CDATA[$this->user_finder]]></code>
-      <code><![CDATA[\Mockery::spy(GitoliteAccessURLGenerator::class)]]></code>
-      <code><![CDATA[\Mockery::spy(\EventManager::class)]]></code>
-      <code><![CDATA[\Mockery::spy(\Git_GitRepositoryUrlManager::class)]]></code>
-      <code><![CDATA[\Mockery::spy(\Git_Gitolite_ConfigPermissionsSerializer::class)]]></code>
-      <code><![CDATA[\Mockery::spy(\PFUser::class)]]></code>
-      <code><![CDATA[\Mockery::spy(\PFUser::class)]]></code>
-      <code><![CDATA[\Mockery::spy(\PFUser::class)]]></code>
-      <code><![CDATA[\Mockery::spy(\PFUser::class)]]></code>
-      <code><![CDATA[\Mockery::spy(\PFUser::class)]]></code>
-      <code><![CDATA[\Mockery::spy(\PFUser::class)]]></code>
-      <code><![CDATA[\Mockery::spy(\ProjectHistoryDao::class)]]></code>
-      <code><![CDATA[\Mockery::spy(\Tuleap\Git\BigObjectAuthorization\BigObjectAuthorizationManager::class)]]></code>
-      <code><![CDATA[\Mockery::spy(\Tuleap\Git\Permissions\FineGrainedPermissionReplicator::class)]]></code>
-      <code><![CDATA[\Mockery::spy(\Tuleap\Git\Permissions\HistoryValueFormatter::class)]]></code>
-    </InvalidArgument>
-    <InvalidPropertyAssignmentValue>
-      <code><![CDATA[\Mockery::spy(GitDao::class)]]></code>
-      <code><![CDATA[\Mockery::spy(XMLImportHelper::class)]]></code>
-      <code><![CDATA[\Mockery::spy(\EventManager::class)]]></code>
-      <code><![CDATA[\Mockery::spy(\Git_SystemEventManager::class)]]></code>
-      <code><![CDATA[\Mockery::spy(\PermissionsDao::class)]]></code>
-      <code><![CDATA[\Mockery::spy(\UGroupDao::class)]]></code>
-    </InvalidPropertyAssignmentValue>
-    <MissingParamType>
-      <code><![CDATA[$xml]]></code>
-    </MissingParamType>
-    <MissingPropertyType>
-      <code><![CDATA[$old_cwd]]></code>
-    </MissingPropertyType>
-    <MissingReturnType>
-      <code><![CDATA[import]]></code>
-    </MissingReturnType>
     <PossiblyNullReference>
       <code><![CDATA[getDescription]]></code>
       <code><![CDATA[getDescription]]></code>
       <code><![CDATA[getDescription]]></code>
       <code><![CDATA[getName]]></code>
     </PossiblyNullReference>
-    <PossiblyUndefinedMethod>
-      <code><![CDATA[expects]]></code>
-      <code><![CDATA[expects]]></code>
-      <code><![CDATA[expects]]></code>
-      <code><![CDATA[expects]]></code>
-      <code><![CDATA[expects]]></code>
-      <code><![CDATA[expects]]></code>
-      <code><![CDATA[shouldReceive]]></code>
-      <code><![CDATA[shouldReceive]]></code>
-      <code><![CDATA[shouldReceive]]></code>
-    </PossiblyUndefinedMethod>
-    <TooManyArguments>
-      <code><![CDATA[andReturns]]></code>
-      <code><![CDATA[andReturns]]></code>
-      <code><![CDATA[andReturns]]></code>
-      <code><![CDATA[andReturns]]></code>
-      <code><![CDATA[andReturns]]></code>
-      <code><![CDATA[andReturns]]></code>
-      <code><![CDATA[andReturns]]></code>
-    </TooManyArguments>
-    <UndefinedDocblockClass>
-      <code><![CDATA[$this->event_manager]]></code>
-      <code><![CDATA[$this->git_systemeventmanager]]></code>
-      <code><![CDATA[$this->permission_dao]]></code>
-      <code><![CDATA[$this->permission_dao]]></code>
-      <code><![CDATA[$this->permission_dao]]></code>
-      <code><![CDATA[$this->permission_dao]]></code>
-      <code><![CDATA[$this->permission_dao]]></code>
-      <code><![CDATA[$this->permission_dao]]></code>
-      <code><![CDATA[$this->permission_dao]]></code>
-      <code><![CDATA[$this->permission_dao]]></code>
-      <code><![CDATA[$this->permission_dao]]></code>
-      <code><![CDATA[$this->ugroup_dao]]></code>
-      <code><![CDATA[$this->ugroup_dao]]></code>
-      <code><![CDATA[$this->ugroup_dao]]></code>
-      <code><![CDATA[$this->ugroup_dao]]></code>
-      <code><![CDATA[$this->ugroup_dao]]></code>
-      <code><![CDATA[$this->ugroup_dao]]></code>
-      <code><![CDATA[$this->ugroup_dao]]></code>
-      <code><![CDATA[$this->ugroup_dao]]></code>
-      <code><![CDATA[$this->ugroup_dao]]></code>
-      <code><![CDATA[$this->ugroup_dao]]></code>
-      <code><![CDATA[$this->ugroup_dao]]></code>
-      <code><![CDATA[$this->ugroup_dao]]></code>
-      <code><![CDATA[EventManager]]></code>
-      <code><![CDATA[Git_SystemEventManager]]></code>
-      <code><![CDATA[PermissionsDAO]]></code>
-      <code><![CDATA[UGroupDao]]></code>
-    </UndefinedDocblockClass>
-    <UndefinedInterfaceMethod>
-      <code><![CDATA[with]]></code>
-    </UndefinedInterfaceMethod>
-    <UndefinedMagicMethod>
-      <code><![CDATA[andReturns]]></code>
-      <code><![CDATA[andReturns]]></code>
-      <code><![CDATA[andReturns]]></code>
-      <code><![CDATA[andReturns]]></code>
-      <code><![CDATA[andReturns]]></code>
-      <code><![CDATA[andReturns]]></code>
-      <code><![CDATA[andReturns]]></code>
-      <code><![CDATA[with]]></code>
-    </UndefinedMagicMethod>
-    <UndefinedMethod>
-      <code><![CDATA[shouldReceive]]></code>
-      <code><![CDATA[shouldReceive]]></code>
-    </UndefinedMethod>
     <UndefinedThisPropertyAssignment>
-      <code><![CDATA[$this->fine_grained_factory]]></code>
-      <code><![CDATA[$this->fine_grained_saver]]></code>
-      <code><![CDATA[$this->fine_grained_updater]]></code>
       <code><![CDATA[$this->project]]></code>
-      <code><![CDATA[$this->regexp_fine_grained_enabler]]></code>
-      <code><![CDATA[$this->regexp_fine_grained_retriever]]></code>
-      <code><![CDATA[$this->xml_ugroup_retriever]]></code>
     </UndefinedThisPropertyAssignment>
     <UndefinedThisPropertyFetch>
-      <code><![CDATA[$this->fine_grained_factory]]></code>
-      <code><![CDATA[$this->fine_grained_factory]]></code>
-      <code><![CDATA[$this->fine_grained_factory]]></code>
-      <code><![CDATA[$this->fine_grained_saver]]></code>
-      <code><![CDATA[$this->fine_grained_saver]]></code>
-      <code><![CDATA[$this->fine_grained_saver]]></code>
-      <code><![CDATA[$this->fine_grained_updater]]></code>
-      <code><![CDATA[$this->fine_grained_updater]]></code>
-      <code><![CDATA[$this->fine_grained_updater]]></code>
-      <code><![CDATA[$this->fine_grained_updater]]></code>
-      <code><![CDATA[$this->fine_grained_updater]]></code>
       <code><![CDATA[$this->project]]></code>
       <code><![CDATA[$this->project]]></code>
       <code><![CDATA[$this->project]]></code>
@@ -19764,17 +19604,6 @@
       <code><![CDATA[$this->project]]></code>
       <code><![CDATA[$this->project]]></code>
       <code><![CDATA[$this->project]]></code>
-      <code><![CDATA[$this->regexp_fine_grained_enabler]]></code>
-      <code><![CDATA[$this->regexp_fine_grained_enabler]]></code>
-      <code><![CDATA[$this->regexp_fine_grained_enabler]]></code>
-      <code><![CDATA[$this->regexp_fine_grained_enabler]]></code>
-      <code><![CDATA[$this->regexp_fine_grained_enabler]]></code>
-      <code><![CDATA[$this->regexp_fine_grained_retriever]]></code>
-      <code><![CDATA[$this->regexp_fine_grained_retriever]]></code>
-      <code><![CDATA[$this->regexp_fine_grained_retriever]]></code>
-      <code><![CDATA[$this->regexp_fine_grained_retriever]]></code>
-      <code><![CDATA[$this->regexp_fine_grained_retriever]]></code>
-      <code><![CDATA[$this->regexp_fine_grained_retriever]]></code>
     </UndefinedThisPropertyFetch>
   </file>
   <file src="plugins/git/tests/integration/Gitolite/GitoliteDriverTest.php">
@@ -26297,11 +26126,6 @@
     <RiskyTruthyFalsyComparison>
       <code><![CDATA[! $iteration_tracker_id]]></code>
     </RiskyTruthyFalsyComparison>
-  </file>
-  <file src="plugins/program_management/include/Adapter/Program/Plan/PlanConfigurationDAO.php">
-    <ArgumentTypeCoercion>
-      <code><![CDATA[$insert]]></code>
-    </ArgumentTypeCoercion>
   </file>
   <file src="plugins/program_management/include/Adapter/Program/ProgramIncrementTracker/VisibleProgramIncrementTrackerRetriever.php">
     <RiskyTruthyFalsyComparison>
@@ -46808,7 +46632,6 @@
       <code><![CDATA[$request]]></code>
     </MissingParamType>
     <MissingReturnType>
-      <code><![CDATA[addOtherSemantics]]></code>
       <code><![CDATA[displayAdminSemantic]]></code>
       <code><![CDATA[displaySemanticFooter]]></code>
       <code><![CDATA[displaySemanticHeader]]></code>
@@ -46886,9 +46709,6 @@
     </RiskyTruthyFalsyComparison>
   </file>
   <file src="plugins/tracker/include/Tracker/Semantic/Tracker_Semantic_DescriptionFactory.class.php">
-    <MissingReturnType>
-      <code><![CDATA[getByTracker]]></code>
-    </MissingReturnType>
     <PossiblyNullArrayAccess>
       <code><![CDATA[$xml_field_attributes['REF']]]></code>
       <code><![CDATA[$xml_field_attributes['REF']]]></code>
@@ -52033,7 +51853,6 @@
     <MissingReturnType>
       <code><![CDATA[getPluginInfo]]></code>
       <code><![CDATA[isAPlanningOverviewRequest]]></code>
-      <code><![CDATA[isAPlanningTrackers]]></code>
     </MissingReturnType>
     <PossiblyNullArgument>
       <code><![CDATA[$_SERVER['REQUEST_URI']]]></code>
@@ -59829,12 +59648,8 @@
   <file src="src/common/Project/UgroupDuplicator.php">
     <MissingParamType>
       <code><![CDATA[$new_project_id]]></code>
-      <code><![CDATA[$new_project_id]]></code>
-      <code><![CDATA[$new_project_id]]></code>
     </MissingParamType>
     <MissingReturnType>
-      <code><![CDATA[duplicate]]></code>
-      <code><![CDATA[duplicateOnProjectCreation]]></code>
       <code><![CDATA[duplicateUgroupUsersAndBinding]]></code>
       <code><![CDATA[pluginDuplicatesUgroup]]></code>
     </MissingReturnType>
@@ -67290,13 +67105,11 @@
       <code><![CDATA[$group_id]]></code>
       <code><![CDATA[$name]]></code>
       <code><![CDATA[$new_project_id]]></code>
-      <code><![CDATA[$new_project_id]]></code>
       <code><![CDATA[$new_ugroup_id]]></code>
       <code><![CDATA[$project_id]]></code>
       <code><![CDATA[$project_id]]></code>
       <code><![CDATA[$project_id]]></code>
       <code><![CDATA[$project_id]]></code>
-      <code><![CDATA[$ugroup_id]]></code>
       <code><![CDATA[$ugroup_id]]></code>
       <code><![CDATA[$ugroup_id]]></code>
       <code><![CDATA[$ugroup_id]]></code>
@@ -67306,7 +67119,6 @@
     </MissingParamType>
     <MissingReturnType>
       <code><![CDATA[createBinding]]></code>
-      <code><![CDATA[createUgroupFromSourceUgroup]]></code>
       <code><![CDATA[searchByGroupIdAndName]]></code>
       <code><![CDATA[searchByGroupIdAndUGroupId]]></code>
       <code><![CDATA[searchByListOfUGroupsId]]></code>
