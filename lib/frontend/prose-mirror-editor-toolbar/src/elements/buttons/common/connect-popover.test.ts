@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { describe, it, expect, beforeEach, vi } from "vitest";
+import { describe, it, expect, vi } from "vitest";
 import * as tlp_popovers from "@tuleap/tlp-popovers";
 import type { Popover } from "@tuleap/tlp-popovers";
 import { createLocalDocument } from "../../../helpers/helper-for-test";
@@ -27,28 +27,20 @@ import { connectPopover } from "./connect-popover";
 vi.mock("@tuleap/tlp-popovers");
 
 describe("connect-popover", () => {
-    let doc: Document;
-
-    beforeEach(() => {
-        doc = createLocalDocument();
-    });
-
     const getHost = (): PopoverHost => {
-        const host_element = doc.createElement("div");
-        return Object.assign(host_element, {
+        const doc = createLocalDocument();
+
+        return {
             button_element: doc.createElement("button"),
             popover_element: doc.createElement("div"),
-            render(): HTMLElement {
-                return host_element;
-            },
-        }) as unknown as PopoverHost;
+        } as unknown as PopoverHost;
     };
 
     it("When the component is connected, then it should create a popover instance", () => {
         const host = getHost();
         const createPopover = vi.spyOn(tlp_popovers, "createPopover");
 
-        connectPopover(host, doc);
+        connectPopover(host);
 
         expect(createPopover).toHaveBeenCalledOnce();
         expect(createPopover).toHaveBeenCalledWith(host.button_element, host.popover_element, {
@@ -56,13 +48,8 @@ describe("connect-popover", () => {
             trigger: "click",
         });
     });
-    it("When the component is connected, then it should move its popover element to document.body", () => {
-        const host = getHost();
-        connectPopover(host, doc);
 
-        expect(host.popover_element.parentElement).toBe(doc.body);
-    });
-    it("When the component is disconnected, then it should destroy the popover instance, and put back its popover element inside itself", () => {
+    it("When the component is disconnected, then it should destroy the popover instance", () => {
         const host = getHost();
         const popover_instance = {
             destroy: vi.fn(),
@@ -70,11 +57,10 @@ describe("connect-popover", () => {
 
         vi.spyOn(tlp_popovers, "createPopover").mockReturnValue(popover_instance);
 
-        const disconnect = connectPopover(host, doc);
+        const disconnect = connectPopover(host);
 
         disconnect();
 
         expect(popover_instance.destroy).toHaveBeenCalledOnce();
-        expect(host.popover_element.parentElement).toBe(host);
     });
 });

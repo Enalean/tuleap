@@ -36,6 +36,7 @@ export type InternalLinkButtonElement = Readonly<Link> &
         is_disabled: boolean;
         link_href: string;
         link_title: string;
+        render(): HTMLElement;
     };
 
 export type HostElement = InternalLinkButtonElement & HTMLElement;
@@ -73,7 +74,7 @@ define<InternalLinkButtonElement>({
 
             return popover_element;
         },
-        connect: (host: InternalLinkButtonElement) => connectPopover(host, document),
+        connect: connectPopover,
     },
     toolbar_bus: {
         value: (host: InternalLinkButtonElement, toolbar_bus: ToolbarBus) => toolbar_bus,
