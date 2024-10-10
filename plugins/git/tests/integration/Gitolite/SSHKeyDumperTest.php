@@ -24,11 +24,12 @@ declare(strict_types=1);
 namespace Tuleap\Git\Gitolite;
 
 use PFUser;
+use Tuleap\Git\Gitolite\SSHKey\InvalidKeysCollector;
 
 final class SSHKeyDumperTest extends GitoliteTestCase
 {
-    protected $key1;
-    protected $key2;
+    protected string $key1;
+    protected string $key2;
 
     protected function setUp(): void
     {
@@ -45,13 +46,13 @@ final class SSHKeyDumperTest extends GitoliteTestCase
             'user_name'       => 'john_do',
             'authorized_keys' => $this->key1,
         ]);
-        $invalid_keys_collector = \Mockery::spy(\Tuleap\Git\Gitolite\SSHKey\InvalidKeysCollector::class);
+        $invalid_keys_collector = new InvalidKeysCollector();
 
-        $this->git_exec->shouldReceive('push')->andReturn(true)->once();
+        $this->git_exec->expects(self::once())->method('push')->willReturn(true);
         $this->dumper->dumpSSHKeys($user, $invalid_keys_collector);
 
-        $this->assertTrue(is_file($this->gitolite_admin_dir . '/keydir/john_do@0.pub'));
-        $this->assertStringEqualsFile($this->gitolite_admin_dir . '/keydir/john_do@0.pub', $this->key1);
+        self::assertTrue(is_file($this->gitolite_admin_dir . '/keydir/john_do@0.pub'));
+        self::assertStringEqualsFile($this->gitolite_admin_dir . '/keydir/john_do@0.pub', $this->key1);
 
         $this->assertEmptyGitStatus();
     }
@@ -64,23 +65,23 @@ final class SSHKeyDumperTest extends GitoliteTestCase
             'user_name'       => 'john_do',
             'authorized_keys' => $this->key1 . PFUser::SSH_KEY_SEPARATOR . $this->key2,
         ]);
-        $invalid_keys_collector = \Mockery::spy(\Tuleap\Git\Gitolite\SSHKey\InvalidKeysCollector::class);
+        $invalid_keys_collector = new InvalidKeysCollector();
 
-        $this->git_exec->shouldReceive('push')->andReturn(true)->once();
+        $this->git_exec->expects(self::once())->method('push')->willReturn(true);
         $this->dumper->dumpSSHKeys($user, $invalid_keys_collector);
 
-        $this->assertTrue(is_file($this->gitolite_admin_dir . '/keydir/john_do@0.pub'));
-        $this->assertStringEqualsFile($this->gitolite_admin_dir . '/keydir/john_do@0.pub', $this->key1);
-        $this->assertTrue(is_file($this->gitolite_admin_dir . '/keydir/john_do@1.pub'));
-        $this->assertStringEqualsFile($this->gitolite_admin_dir . '/keydir/john_do@1.pub', $this->key2);
+        self::assertTrue(is_file($this->gitolite_admin_dir . '/keydir/john_do@0.pub'));
+        self::assertStringEqualsFile($this->gitolite_admin_dir . '/keydir/john_do@0.pub', $this->key1);
+        self::assertTrue(is_file($this->gitolite_admin_dir . '/keydir/john_do@1.pub'));
+        self::assertStringEqualsFile($this->gitolite_admin_dir . '/keydir/john_do@1.pub', $this->key2);
 
         $this->assertEmptyGitStatus();
     }
 
     public function testRemoveUserKey(): void
     {
-        $invalid_keys_collector = \Mockery::spy(\Tuleap\Git\Gitolite\SSHKey\InvalidKeysCollector::class);
-        $this->git_exec->shouldReceive('push')->andReturn(true)->times(2);
+        $invalid_keys_collector = new InvalidKeysCollector();
+        $this->git_exec->expects(self::exactly(2))->method('push')->willReturn(true);
 
         // User has 2 keys
         $user = new PFUser([
@@ -101,15 +102,15 @@ final class SSHKeyDumperTest extends GitoliteTestCase
         $this->dumper->dumpSSHKeys($user, $invalid_keys_collector);
 
         // Ensure second key was deleted
-        $this->assertFalse(is_file($this->gitolite_admin_dir . '/keydir/john_do@1.pub'), 'Second key should be deleted');
+        self::assertFalse(is_file($this->gitolite_admin_dir . '/keydir/john_do@1.pub'), 'Second key should be deleted');
 
         $this->assertEmptyGitStatus();
     }
 
     public function testItDeletesAllTheKeys(): void
     {
-        $invalid_keys_collector = \Mockery::spy(\Tuleap\Git\Gitolite\SSHKey\InvalidKeysCollector::class);
-        $this->git_exec->shouldReceive('push')->andReturn(true);
+        $invalid_keys_collector = new InvalidKeysCollector();
+        $this->git_exec->method('push')->willReturn(true);
         $user = new PFUser([
             'id'              => 12,
             'language_id'     => 'en',
@@ -125,15 +126,15 @@ final class SSHKeyDumperTest extends GitoliteTestCase
             'authorized_keys' => '',
         ]);
         $this->dumper->dumpSSHKeys($user, $invalid_keys_collector);
-        $this->assertCount(0, glob($this->gitolite_admin_dir . '/keydir/*.pub'));
+        self::assertCount(0, glob($this->gitolite_admin_dir . '/keydir/*.pub'));
 
         $this->assertEmptyGitStatus();
     }
 
     public function testItFlipsTheKeys(): void
     {
-        $invalid_keys_collector = \Mockery::spy(\Tuleap\Git\Gitolite\SSHKey\InvalidKeysCollector::class);
-        $this->git_exec->shouldReceive('push')->andReturn(true);
+        $invalid_keys_collector = new InvalidKeysCollector();
+        $this->git_exec->method('push')->willReturn(true);
         $user = new PFUser([
             'id'              => 12,
             'language_id'     => 'en',
@@ -149,24 +150,23 @@ final class SSHKeyDumperTest extends GitoliteTestCase
             'authorized_keys' => $this->key2 . PFUser::SSH_KEY_SEPARATOR . $this->key1,
         ]);
         $this->dumper->dumpSSHKeys($user, $invalid_keys_collector);
-        $this->assertStringEqualsFile($this->gitolite_admin_dir . '/keydir/john_do@0.pub', $this->key2);
-        $this->assertStringEqualsFile($this->gitolite_admin_dir . '/keydir/john_do@1.pub', $this->key1);
+        self::assertStringEqualsFile($this->gitolite_admin_dir . '/keydir/john_do@0.pub', $this->key2);
+        self::assertStringEqualsFile($this->gitolite_admin_dir . '/keydir/john_do@1.pub', $this->key1);
 
         $this->assertEmptyGitStatus();
     }
 
     public function testItDoesntGenerateAnyErrorsWhenThereAreNoChangesOnKeys(): void
     {
-        $invalid_keys_collector = \Mockery::spy(\Tuleap\Git\Gitolite\SSHKey\InvalidKeysCollector::class);
-        $this->git_exec->shouldReceive('push')->andReturn(true);
+        $invalid_keys_collector = new InvalidKeysCollector();
+        $this->git_exec->method('push')->willReturn(true);
         $user = new PFUser([
-            'id' => 12,
-            'language_id' => 'en',
-            'user_name' => 'john_do',
+            'id'              => 12,
+            'language_id'     => 'en',
+            'user_name'       => 'john_do',
             'authorized_keys' => $this->key1 . PFUser::SSH_KEY_SEPARATOR . $this->key2,
         ]);
         self::assertTrue($this->dumper->dumpSSHKeys($user, $invalid_keys_collector));
-
         self::assertTrue($this->dumper->dumpSSHKeys($user, $invalid_keys_collector));
     }
 }
