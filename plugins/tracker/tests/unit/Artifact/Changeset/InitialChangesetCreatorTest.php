@@ -23,70 +23,73 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Artifact\Changeset;
 
-use Mockery;
+use PHPUnit\Framework\MockObject\MockObject;
+use Psr\Log\NullLogger;
 use Tracker_Artifact_Changeset_ChangesetDataInitializator;
+use Tracker_Artifact_Changeset_InitialChangesetFieldsValidator;
 use Tracker_Artifact_Changeset_Null;
+use Tracker_Artifact_ChangesetFactory;
+use Tracker_Artifact_Exception_CannotCreateNewChangeset;
+use Tracker_FormElement_Field_List_Bind_StaticValue;
 use Tracker_FormElement_Field_Selectbox;
 use Tracker_FormElementFactory;
 use Tracker_Workflow_Transition_InvalidConditionForTransitionException;
 use Transition;
+use Tuleap\GlobalResponseMock;
 use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\ChangesetValue\InitialChangesetValueSaver;
 use Tuleap\Tracker\Artifact\XMLImport\TrackerNoXMLImportLoggedConfig;
 use Tuleap\Tracker\Changeset\Validation\NullChangesetValidationContext;
+use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\RetrieveWorkflowStub;
 use Tuleap\Tracker\Test\Stub\SaveArtifactStub;
 use Workflow;
 
-final class InitialChangesetCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
+final class InitialChangesetCreatorTest extends TestCase
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-    use \Tuleap\GlobalResponseMock;
+    use GlobalResponseMock;
 
-    private \Mockery\LegacyMockInterface|\Mockery\MockInterface|ArtifactChangesetSaver $changeset_saver;
-    private \Mockery\LegacyMockInterface|\Mockery\MockInterface|Tracker_FormElement_Field_Selectbox $field;
+    private MockObject&ArtifactChangesetSaver $changeset_saver;
+    private MockObject&Tracker_FormElement_Field_Selectbox $field;
     private array $fields_data = [];
-    private \Mockery\LegacyMockInterface|\Mockery\MockInterface|Tracker_FormElementFactory $factory;
+    private MockObject&Tracker_FormElementFactory $factory;
     private InitialChangesetValueSaver $creator;
-    private \Mockery\LegacyMockInterface|\Mockery\MockInterface|Workflow $workflow;
+    private MockObject&Workflow $workflow;
     private SaveArtifactStub $artifact_saver;
 
     protected function setUp(): void
     {
-        $this->factory = \Mockery::spy(\Tracker_FormElementFactory::class);
+        $this->factory = $this->createMock(Tracker_FormElementFactory::class);
 
-        $this->artifact_saver  = SaveArtifactStub::withSuccess();
-        $this->workflow        = \Mockery::spy(\Workflow::class);
-        $this->changeset_saver = Mockery::mock(ArtifactChangesetSaver::class);
+        $this->artifact_saver = SaveArtifactStub::withSuccess();
+        $this->workflow       = $this->createMock(Workflow::class);
+        $this->workflow->method('getId')->willReturn(10);
+        $this->changeset_saver = $this->createMock(ArtifactChangesetSaver::class);
 
-        $this->field = \Mockery::spy(\Tracker_FormElement_Field_Selectbox::class);
-        $this->field->shouldReceive('getId')->andReturns(123);
-        $this->field->shouldReceive('isSubmitable')->andReturns(true);
+        $this->field = $this->createMock(Tracker_FormElement_Field_Selectbox::class);
+        $this->field->method('getId')->willReturn(123);
+        $this->field->method('isSubmitable')->willReturn(true);
     }
 
     private function create(): ?int
     {
-        $changeset_factory = \Mockery::spy(\Tracker_Artifact_ChangesetFactory::class);
-        $changeset_factory->shouldReceive('getChangeset')->andReturns(new Tracker_Artifact_Changeset_Null());
+        $changeset_factory = $this->createMock(Tracker_Artifact_ChangesetFactory::class);
+        $changeset_factory->method('getChangeset')->willReturn(new Tracker_Artifact_Changeset_Null());
 
-        $tracker = \Mockery::spy(\Tracker::class)
-            ->shouldReceive('getWorkflow')
-            ->andReturns($this->workflow)
-            ->getMock();
-        $tracker->shouldReceive('getId')->andReturns(888);
+        $tracker = TrackerTestBuilder::aTracker()->withId(888)->withWorkflow($this->workflow)->build();
 
-        $artifact = \Mockery::mock(Artifact::class)
-            ->makePartial()
-            ->shouldAllowMockingProtectedMethods();
+        $artifact = $this->createPartialMock(Artifact::class, ['getChangesetFactory']);
         $artifact->setId(42);
         $artifact->setTracker($tracker);
-        $artifact->shouldReceive('getChangesetFactory')->andReturns($changeset_factory);
+        $artifact->method('getChangesetFactory')->willReturn($changeset_factory);
 
         $submitter = UserTestBuilder::aUser()->withId(102)->build();
 
-        $fields_validator = \Mockery::spy(\Tracker_Artifact_Changeset_InitialChangesetFieldsValidator::class);
-        $fields_validator->shouldReceive('validate')->andReturns(true);
+        $fields_validator = $this->createMock(Tracker_Artifact_Changeset_InitialChangesetFieldsValidator::class);
+        $fields_validator->method('validate')->willReturn(true);
         $fields_retriever = new FieldsToBeSavedInSpecificOrderRetriever($this->factory);
 
         $workflow_retriever = RetrieveWorkflowStub::withWorkflow($this->workflow);
@@ -94,7 +97,7 @@ final class InitialChangesetCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             $fields_validator,
             $fields_retriever,
             new Tracker_Artifact_Changeset_ChangesetDataInitializator($this->factory),
-            new \Psr\Log\NullLogger(),
+            new NullLogger(),
             $this->changeset_saver,
             new AfterNewChangesetHandler(
                 $this->artifact_saver,
@@ -109,7 +112,7 @@ final class InitialChangesetCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->fields_data,
             $submitter,
             1234567890,
-            Mockery::mock(\Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping::class),
+            $this->createMock(CreatedFileURLMapping::class),
             new TrackerNoXMLImportLoggedConfig(),
             new NullChangesetValidationContext()
         );
@@ -118,10 +121,15 @@ final class InitialChangesetCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItCallsTheAfterMethodOnWorkflowWhenCreateInitialChangeset(): void
     {
         $this->setFields([]);
-        $this->workflow->shouldReceive('validate')->andReturns(true);
-        $this->changeset_saver->shouldReceive('saveChangeset')->once()->andReturns(5667);
+        $this->workflow->expects(self::once())->method('before');
+        $this->workflow->expects(self::once())->method('checkGlobalRules');
 
-        $this->workflow->shouldReceive('after')->with($this->fields_data, Mockery::any(), null)->once();
+        $this->workflow->expects(self::once())->method('isDisabled')->willReturn(false);
+        $this->workflow->expects(self::once())->method('validate');
+
+        $this->changeset_saver->expects(self::once())->method('saveChangeset')->willReturn(5667);
+
+        $this->workflow->expects(self::once())->method('after')->with($this->fields_data, self::anything(), null);
 
         $this->create();
     }
@@ -129,12 +137,16 @@ final class InitialChangesetCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItDoesNotCallTheAfterMethodOnWorkflowWhenSaveOfInitialChangesetFails(): void
     {
         $this->setFields([]);
-        $this->workflow->shouldReceive('validate')->andReturns(true);
-        $this->changeset_saver->shouldReceive('saveChangeset')
-            ->once()
-            ->andThrows(new \Tracker_Artifact_Exception_CannotCreateNewChangeset());
+        $this->workflow->expects(self::once())->method('validate');
+        $this->workflow->expects(self::once())->method('isDisabled')->willReturn(false);
+        $this->workflow->expects(self::once())->method('before');
+        $this->workflow->expects(self::once())->method('checkGlobalRules');
 
-        $this->workflow->shouldReceive('after')->never();
+        $this->changeset_saver->expects(self::once())->method('saveChangeset')->willThrowException(
+            new Tracker_Artifact_Exception_CannotCreateNewChangeset()
+        );
+
+        $this->workflow->expects(self::never())->method('after');
 
         $this->create();
     }
@@ -143,10 +155,14 @@ final class InitialChangesetCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->setFields([]);
         $this->artifact_saver = SaveArtifactStub::withFailure();
-        $this->workflow->shouldReceive('validate')->andReturns(true);
-        $this->changeset_saver->shouldReceive('saveChangeset')->once()->andReturns(123);
+        $this->workflow->expects(self::once())->method('validate');
+        $this->workflow->expects(self::once())->method('isDisabled')->willReturn(false);
+        $this->workflow->expects(self::once())->method('before');
+        $this->workflow->expects(self::once())->method('checkGlobalRules');
 
-        $this->workflow->shouldReceive('after')->never();
+        $this->changeset_saver->expects(self::once())->method('saveChangeset')->willReturn(123);
+
+        $this->workflow->expects(self::never())->method('after');
 
         $this->create();
     }
@@ -158,122 +174,151 @@ final class InitialChangesetCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             1,
             $this->workflow->getId(),
             null,
-            new \Tracker_FormElement_Field_List_Bind_StaticValue(1, 'field', '', 1, false)
+            new Tracker_FormElement_Field_List_Bind_StaticValue(1, 'field', '', 1, false)
         );
 
-        $this->workflow->shouldReceive('validate')->andThrows(
+        $this->workflow->method('validate')->willThrowException(
             new Tracker_Workflow_Transition_InvalidConditionForTransitionException($transition)
         );
 
-        $this->workflow->shouldReceive('after')->never();
-        $this->changeset_saver->shouldReceive('saveChangeset')->never();
-
+        $this->workflow->expects(self::once())->method('isDisabled')->willReturn(false);
+        $this->workflow->expects(self::never())->method('after');
+        $this->changeset_saver->expects(self::never())->method('saveChangeset');
         $creation = $this->create();
 
-        $this->assertEquals(null, $creation);
+        self::assertNull($creation);
     }
 
     public function testItSavesTheDefaultValueWhenFieldIsSubmittedButCannotSubmit(): void
     {
+        $this->workflow->expects(self::once())->method('isDisabled')->willReturn(false);
+        $this->workflow->expects(self::once())->method('validate');
+        $this->workflow->expects(self::once())->method('before');
+        $this->workflow->expects(self::once())->method('checkGlobalRules');
+        $this->workflow->expects(self::once())->method('bypassPermissions')->willReturn(true);
+        $this->workflow->expects(self::once())->method('after');
+
+
         $this->setFields([$this->field]);
 
-        $this->field->shouldReceive('userCanSubmit')->andReturns(false);
-        $this->field->shouldReceive('getDefaultValue')->andReturns('default value');
-        $this->changeset_saver->shouldReceive('saveChangeset')->once()->andReturns(123);
+        $this->field->method('userCanSubmit')->willReturn(false);
+        $this->field->method('getDefaultValue')->willReturn('default value');
+        $this->field->expects(self::once())->method('postSaveNewChangeset');
+        $this->changeset_saver->expects(self::once())->method('saveChangeset')->willReturn(123);
 
         $this->fields_data[123] = 'value';
 
-        $this->field->shouldReceive('saveNewChangeset')->with(
-            \Mockery::any(),
-            \Mockery::any(),
-            \Mockery::any(),
+        $this->field->expects(self::once())->method('saveNewChangeset')->willReturn(
+            self::anything(),
+            self::anything(),
+            self::anything(),
             'default value',
-            \Mockery::any(),
-            \Mockery::any(),
-            \Mockery::any(),
-            \Mockery::any()
-        )->once();
+            self::anything(),
+            self::anything(),
+            self::anything(),
+            self::anything()
+        );
 
         $this->create();
     }
 
     public function testItIgnoresTheDefaultValueWhenFieldIsSubmittedAndCanSubmit(): void
     {
+        $this->workflow->expects(self::once())->method('isDisabled')->willReturn(false);
+        $this->workflow->expects(self::once())->method('validate');
+        $this->workflow->expects(self::once())->method('before');
+        $this->workflow->expects(self::once())->method('checkGlobalRules');
+        $this->workflow->expects(self::once())->method('after');
+
         $this->setFields([$this->field]);
 
-        $this->field->shouldReceive('userCanSubmit')->andReturns(true);
-        $this->field->shouldReceive('getDefaultValue')->andReturns('default value');
-        $this->changeset_saver->shouldReceive('saveChangeset')->once()->andReturns(123);
+        $this->field->method('userCanSubmit')->willReturn(true);
+        $this->field->method('getDefaultValue')->willReturn('default value');
+        $this->field->expects(self::once())->method('postSaveNewChangeset');
+        $this->changeset_saver->expects(self::once())->method('saveChangeset')->willReturn(123);
 
         $this->fields_data[123] = 'value';
 
-        $this->field->shouldReceive('saveNewChangeset')->with(
-            \Mockery::any(),
-            \Mockery::any(),
-            \Mockery::any(),
+        $this->field->expects(self::once())->method('saveNewChangeset')->with(
+            self::anything(),
+            self::anything(),
+            self::anything(),
             'value',
-            \Mockery::any(),
-            \Mockery::any(),
-            \Mockery::any(),
-            \Mockery::any()
-        )->once();
+            self::anything(),
+            self::anything(),
+            self::anything(),
+            self::anything()
+        );
 
         $this->create();
     }
 
     public function testItBypassPermsWhenWorkflowBypassPerms(): void
     {
+        $this->workflow->expects(self::once())->method('isDisabled')->willReturn(false);
+        $this->workflow->expects(self::once())->method('validate');
+        $this->workflow->expects(self::once())->method('before');
+        $this->workflow->expects(self::once())->method('checkGlobalRules');
+        $this->workflow->expects(self::once())->method('after');
+
         $this->setFields([$this->field]);
 
-        $this->field->shouldReceive('userCanSubmit')->andReturns(false);
-        $this->field->shouldReceive('getDefaultValue')->andReturns('default value');
-        $this->workflow->shouldReceive('bypassPermissions')->with($this->field)->andReturns(true);
-        $this->changeset_saver->shouldReceive('saveChangeset')->once()->andReturns(123);
+        $this->field->method('userCanSubmit')->willReturn(false);
+        $this->field->method('getDefaultValue')->willReturn('default value');
+        $this->workflow->method('bypassPermissions')->with($this->field)->willReturn(true);
+        $this->field->expects(self::once())->method('postSaveNewChangeset');
+        $this->changeset_saver->expects(self::once())->method('saveChangeset')->willReturn(123);
 
         $this->fields_data[123] = 'value';
 
-        $this->field->shouldReceive('saveNewChangeset')->with(
-            \Mockery::any(),
-            \Mockery::any(),
-            \Mockery::any(),
+        $this->field->expects(self::once())->method('saveNewChangeset')->with(
+            self::anything(),
+            self::anything(),
+            self::anything(),
             'value',
-            \Mockery::any(),
-            \Mockery::any(),
-            \Mockery::any(),
-            \Mockery::any()
-        )->once();
+            self::anything(),
+            self::anything(),
+            self::anything(),
+            self::anything()
+        );
 
         $this->create();
     }
 
     public function testItBypassPermissionsWhenWorkflowIsDisabled(): void
     {
-        $this->workflow->shouldReceive('isDisabled')->andReturnTrue();
+        $this->workflow->method('isDisabled')->willReturn(true);
+        $this->workflow->expects(self::once())->method('after');
+        $this->workflow->expects(self::never())->method('validate');
+        $this->workflow->expects(self::never())->method('before');
+        $this->workflow->expects(self::never())->method('checkGlobalRules');
+
         $this->setFields([$this->field]);
 
-        $this->field->shouldReceive('userCanSubmit')->andReturns(true);
-        $this->field->shouldReceive('getDefaultValue')->andReturns('default value');
-        $this->changeset_saver->shouldReceive('saveChangeset')->once()->andReturns(123);
+        $this->field->method('userCanSubmit')->willReturn(true);
+        $this->field->method('getDefaultValue')->willReturn('default value');
+        $this->changeset_saver->expects(self::once())->method('saveChangeset')->willReturn(123);
 
         $this->fields_data[123] = 'value';
 
-        $this->field->shouldReceive('saveNewChangeset')->with(
-            \Mockery::any(),
-            \Mockery::any(),
-            \Mockery::any(),
+        $this->field->expects(self::once())->method('postSaveNewChangeset');
+        $this->field->expects(self::once())->method('saveNewChangeset')->with(
+            self::anything(),
+            self::anything(),
+            self::anything(),
             'value',
-            \Mockery::any(),
-            \Mockery::any(),
-            \Mockery::any(),
-            \Mockery::any()
-        )->once();
+            self::anything(),
+            self::anything(),
+            self::anything(),
+            self::anything()
+        );
 
         $this->create();
     }
 
     private function setFields(array $fields): void
     {
-        $this->factory->shouldReceive('getAllFormElementsForTracker')->andReturns($fields);
-        $this->factory->shouldReceive('getUsedFields')->andReturns($fields);
+        $this->factory->method('getAllFormElementsForTracker')->willReturn($fields);
+        $this->factory->method('getUsedFields')->willReturn($fields);
     }
 }

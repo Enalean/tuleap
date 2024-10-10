@@ -19,53 +19,41 @@
  *
  */
 
+use PHPUnit\Framework\MockObject\MockObject;
+use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
-final class Tracker_Artifact_Changeset_ChangesetDataInitializatorTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+final class Tracker_Artifact_Changeset_ChangesetDataInitializatorTest extends TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+    private Tracker $tracker;
+    private MockObject&Tracker_FormElementFactory $formelement_factory;
 
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Tracker
-     */
-    private $tracker;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Tracker_FormElementFactory
-     */
-    private $formelement_factory;
-
-    /**
-     * @var Tracker_Artifact_Changeset_ChangesetDataInitializator
-     */
-    private $initializator;
-
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Artifact
-     */
-    private $artifact;
+    private Tracker_Artifact_Changeset_ChangesetDataInitializator $initializator;
+    private MockObject&Artifact $artifact;
 
     protected function setUp(): void
     {
-        $this->tracker  = Mockery::mock(Tracker::class);
-        $this->artifact = Mockery::mock(Artifact::class);
-        $this->artifact->shouldReceive('getTracker')->andReturn($this->tracker);
+        $this->tracker  = TrackerTestBuilder::aTracker()->build();
+        $this->artifact = $this->createMock(Artifact::class);
+        $this->artifact->method('getTracker')->willReturn($this->tracker);
 
-        $this->formelement_factory = \Mockery::mock(Tracker_FormElementFactory::class);
+        $this->formelement_factory = $this->createMock(Tracker_FormElementFactory::class);
         $this->initializator       = new Tracker_Artifact_Changeset_ChangesetDataInitializator($this->formelement_factory);
     }
 
     public function testItPreloadsDateFieldsFromPreviousChangeset(): void
     {
-        $this->formelement_factory->shouldReceive('getAllFormElementsForTracker')
+        $this->formelement_factory->method('getAllFormElementsForTracker')
             ->with($this->tracker)
-            ->andReturns([]);
+            ->willReturn([]);
 
-        $changeset = Mockery::mock(Tracker_Artifact_Changeset::class);
-        $value     = Mockery::mock(Tracker_Artifact_ChangesetValue_Date::class);
-        $value->shouldReceive('getTimestamp')->andReturn('1655381802');
-        $changeset->shouldReceive('getValues')->andReturn([14 => $value]);
+        $changeset = $this->createMock(Tracker_Artifact_Changeset::class);
+        $value     = $this->createMock(Tracker_Artifact_ChangesetValue_Date::class);
+        $value->method('getTimestamp')->willReturn(1655381802);
+        $changeset->method('getValues')->willReturn([14 => $value]);
 
-        $this->artifact->shouldReceive('getLastChangeset')->andReturn($changeset);
+        $this->artifact->method('getLastChangeset')->willReturn($changeset);
 
         $fields_data = [];
 
@@ -77,16 +65,16 @@ final class Tracker_Artifact_Changeset_ChangesetDataInitializatorTest extends \T
 
     public function testItPreloadsListFieldsFromPreviousChangeset(): void
     {
-        $this->formelement_factory->shouldReceive('getAllFormElementsForTracker')
+        $this->formelement_factory->method('getAllFormElementsForTracker')
             ->with($this->tracker)
-            ->andReturns([]);
+            ->willReturn([]);
 
-        $changeset = Mockery::mock(Tracker_Artifact_Changeset::class);
-        $value     = Mockery::mock(Tracker_Artifact_ChangesetValue_List::class);
-        $value->shouldReceive('getValue')->andReturn('101');
-        $changeset->shouldReceive('getValues')->andReturn([22 => $value]);
+        $changeset = $this->createMock(Tracker_Artifact_Changeset::class);
+        $value     = $this->createMock(Tracker_Artifact_ChangesetValue_List::class);
+        $value->method('getValue')->willReturn('101');
+        $changeset->method('getValues')->willReturn([22 => $value]);
 
-        $this->artifact->shouldReceive('getLastChangeset')->andReturn($changeset);
+        $this->artifact->method('getLastChangeset')->willReturn($changeset);
 
         $fields_data = [];
 
@@ -98,16 +86,16 @@ final class Tracker_Artifact_Changeset_ChangesetDataInitializatorTest extends \T
 
     public function testAnEmptyValueForListFieldAtUpdateShouldUseNoneValueToWorkWellWithFieldDependenciesCheckingAfterward(): void
     {
-        $this->formelement_factory->shouldReceive('getAllFormElementsForTracker')
+        $this->formelement_factory->method('getAllFormElementsForTracker')
             ->with($this->tracker)
-            ->andReturns([]);
+            ->willReturn([]);
 
-        $changeset = Mockery::mock(Tracker_Artifact_Changeset::class);
-        $value     = Mockery::mock(Tracker_Artifact_ChangesetValue_List::class);
-        $value->shouldReceive('getValue')->andReturn([]);
-        $changeset->shouldReceive('getValues')->andReturn([22 => $value]);
+        $changeset = $this->createMock(Tracker_Artifact_Changeset::class);
+        $value     = $this->createMock(Tracker_Artifact_ChangesetValue_List::class);
+        $value->method('getValue')->willReturn([]);
+        $changeset->method('getValues')->willReturn([22 => $value]);
 
-        $this->artifact->shouldReceive('getLastChangeset')->andReturn($changeset);
+        $this->artifact->method('getLastChangeset')->willReturn($changeset);
 
         $fields_data = [];
 
@@ -123,11 +111,11 @@ final class Tracker_Artifact_Changeset_ChangesetDataInitializatorTest extends \T
         $list_field->method('getId')->willReturn(22);
         $list_field->method('getDefaultValue')->willReturn([598]);
 
-        $this->formelement_factory->shouldReceive('getAllFormElementsForTracker')
+        $this->formelement_factory->method('getAllFormElementsForTracker')
             ->with($this->tracker)
-            ->andReturns([$list_field]);
+            ->willReturn([$list_field]);
 
-        $this->artifact->shouldReceive('getLastChangeset')->andReturn(null);
+        $this->artifact->method('getLastChangeset')->willReturn(null);
 
         $fields_data = [];
 
@@ -143,11 +131,11 @@ final class Tracker_Artifact_Changeset_ChangesetDataInitializatorTest extends \T
         $list_field->method('getId')->willReturn(22);
         $list_field->method('getDefaultValue')->willReturn([100]);
 
-        $this->formelement_factory->shouldReceive('getAllFormElementsForTracker')
+        $this->formelement_factory->method('getAllFormElementsForTracker')
             ->with($this->tracker)
-            ->andReturns([$list_field]);
+            ->willReturn([$list_field]);
 
-        $this->artifact->shouldReceive('getLastChangeset')->andReturn(null);
+        $this->artifact->method('getLastChangeset')->willReturn(null);
 
         $fields_data = [];
 
@@ -162,11 +150,11 @@ final class Tracker_Artifact_Changeset_ChangesetDataInitializatorTest extends \T
         $list_field = $this->createMock(Tracker_FormElement_Field_List::class);
         $list_field->method('getId')->willReturn(22);
 
-        $this->formelement_factory->shouldReceive('getAllFormElementsForTracker')
+        $this->formelement_factory->method('getAllFormElementsForTracker')
             ->with($this->tracker)
-            ->andReturns([$list_field]);
+            ->willReturn([$list_field]);
 
-        $this->artifact->shouldReceive('getLastChangeset')->andReturn(null);
+        $this->artifact->method('getLastChangeset')->willReturn(null);
 
         $fields_data = [22 => [234]];
 
@@ -178,16 +166,16 @@ final class Tracker_Artifact_Changeset_ChangesetDataInitializatorTest extends \T
 
     public function testSubmittedDateFieldsOverridesPreviousChangeset(): void
     {
-        $this->formelement_factory->shouldReceive('getAllFormElementsForTracker')
+        $this->formelement_factory->method('getAllFormElementsForTracker')
             ->with($this->tracker)
-            ->andReturns([]);
+            ->willReturn([]);
 
-        $changeset = Mockery::mock(Tracker_Artifact_Changeset::class);
-        $value     = Mockery::mock(Tracker_Artifact_ChangesetValue_Date::class);
-        $value->shouldReceive('getTimestamp')->andReturn('1655381802');
-        $changeset->shouldReceive('getValues')->andReturn([14 => $value]);
+        $changeset = $this->createMock(Tracker_Artifact_Changeset::class);
+        $value     = $this->createMock(Tracker_Artifact_ChangesetValue_Date::class);
+        $value->method('getTimestamp')->willReturn(1655381802);
+        $changeset->method('getValues')->willReturn([14 => $value]);
 
-        $this->artifact->shouldReceive('getLastChangeset')->andReturn($changeset);
+        $this->artifact->method('getLastChangeset')->willReturn($changeset);
 
         $fields_data = [14 => '2014-07-07'];
 
@@ -199,16 +187,16 @@ final class Tracker_Artifact_Changeset_ChangesetDataInitializatorTest extends \T
 
     public function testSubmittedListFieldsOverridesPreviousChangeset(): void
     {
-        $this->formelement_factory->shouldReceive('getAllFormElementsForTracker')
+        $this->formelement_factory->method('getAllFormElementsForTracker')
             ->with($this->tracker)
-            ->andReturns([]);
+            ->willReturn([]);
 
-        $changeset = Mockery::mock(Tracker_Artifact_Changeset::class);
-        $value     = Mockery::mock(Tracker_Artifact_ChangesetValue_List::class);
-        $value->shouldReceive('getValue')->andReturn('101');
-        $changeset->shouldReceive('getValues')->andReturn([22 => $value]);
+        $changeset = $this->createMock(Tracker_Artifact_Changeset::class);
+        $value     = $this->createMock(Tracker_Artifact_ChangesetValue_List::class);
+        $value->method('getValue')->willReturn('101');
+        $changeset->method('getValues')->willReturn([22 => $value]);
 
-        $this->artifact->shouldReceive('getLastChangeset')->andReturn($changeset);
+        $this->artifact->method('getLastChangeset')->willReturn($changeset);
 
         $fields_data = [22 => '108'];
 
@@ -220,14 +208,14 @@ final class Tracker_Artifact_Changeset_ChangesetDataInitializatorTest extends \T
 
     public function testItAppendsSubmittedBy(): void
     {
-        $field = Mockery::mock(Tracker_FormElement_Field_SubmittedOn::class);
-        $field->shouldReceive('getId')->andReturn(12);
-        $this->formelement_factory->shouldReceive('getAllFormElementsForTracker')
+        $field = $this->createMock(Tracker_FormElement_Field_SubmittedOn::class);
+        $field->method('getId')->willReturn(12);
+        $this->formelement_factory->method('getAllFormElementsForTracker')
             ->with($this->tracker)
-            ->andReturns([$field]);
+            ->willReturn([$field]);
 
-        $this->artifact->shouldReceive('getLastChangeset')->andReturn(Mockery::mock(Tracker_Artifact_Changeset_Null::class));
-        $this->artifact->shouldReceive('getSubmittedOn')->andReturn(12346789);
+        $this->artifact->method('getLastChangeset')->willReturn($this->createMock(Tracker_Artifact_Changeset_Null::class));
+        $this->artifact->method('getSubmittedOn')->willReturn(12346789);
 
         $this->assertEquals(
             [12 => 12346789],
@@ -237,14 +225,14 @@ final class Tracker_Artifact_Changeset_ChangesetDataInitializatorTest extends \T
 
     public function testItNoReturnLastFieldChangesIfNoChangesets(): void
     {
-        $field = Mockery::mock(Tracker_FormElement_Field_SubmittedOn::class);
-        $field->shouldReceive('getId')->andReturn(12);
-        $this->formelement_factory->shouldReceive('getAllFormElementsForTracker')
+        $field = $this->createMock(Tracker_FormElement_Field_SubmittedOn::class);
+        $field->method('getId')->willReturn(12);
+        $this->formelement_factory->method('getAllFormElementsForTracker')
             ->with($this->tracker)
-            ->andReturns([$field]);
+            ->willReturn([$field]);
 
-        $this->artifact->shouldReceive('getLastChangeset')->andReturn(null);
-        $this->artifact->shouldReceive('getSubmittedOn')->andReturn(12346789);
+        $this->artifact->method('getLastChangeset')->willReturn(null);
+        $this->artifact->method('getSubmittedOn')->willReturn(12346789);
 
         $this->assertEquals(
             [12 => 12346789],
@@ -254,15 +242,15 @@ final class Tracker_Artifact_Changeset_ChangesetDataInitializatorTest extends \T
 
     public function testItAppendsLastUpdateDateAtCurrentTime(): void
     {
-        $field = Mockery::mock(Tracker_FormElement_Field_LastUpdateDate::class);
-        $field->shouldReceive('getId')->andReturn(55);
-        $this->formelement_factory->shouldReceive('getAllFormElementsForTracker')
+        $field = $this->createMock(Tracker_FormElement_Field_LastUpdateDate::class);
+        $field->method('getId')->willReturn(55);
+        $this->formelement_factory->method('getAllFormElementsForTracker')
             ->with($this->tracker)
-            ->andReturns([$field]);
+            ->willReturn([$field]);
 
         $date = $_SERVER['REQUEST_TIME'];
-        $this->artifact->shouldReceive('getLastChangeset')->andReturn(Mockery::mock(Tracker_Artifact_Changeset_Null::class));
-        $this->artifact->shouldReceive('getSubmittedOn')->andReturn($date);
+        $this->artifact->method('getLastChangeset')->willReturn(new Tracker_Artifact_Changeset_Null());
+        $this->artifact->method('getSubmittedOn')->willReturn($date);
 
         $this->assertEquals(
             [55 => date('Y-m-d', $date)],
