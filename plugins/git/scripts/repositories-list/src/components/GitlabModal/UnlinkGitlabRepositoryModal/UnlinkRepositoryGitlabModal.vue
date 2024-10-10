@@ -23,6 +23,7 @@
         aria-labelledby="unlink-gitlab-repository-modal-title"
         id="unlink-gitlab-repository-modal"
         class="tlp-modal tlp-modal-danger"
+        ref="modal_element"
         data-test="unlink-gitlab-repository-modal-form"
     >
         <div class="tlp-modal-header">
@@ -82,125 +83,121 @@
     </div>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
 import { FetchWrapperError } from "@tuleap/tlp-fetch";
 import type { Modal } from "@tuleap/tlp-modal";
 import { createModal } from "@tuleap/tlp-modal";
 import { deleteIntegrationGitlab } from "../../../gitlab/gitlab-api-querier";
-import { Component } from "vue-property-decorator";
-import Vue from "vue";
 import type { Repository } from "../../../type";
-import { namespace } from "vuex-class";
+import { useMutations, useNamespacedMutations, useNamespacedState } from "vuex-composition-helpers";
+import { computed, onMounted, ref } from "vue";
+import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
 
-const gitlab = namespace("gitlab");
+const gettext_provider = useGettext();
 
-@Component
-export default class UnlinkRepositoryGitlabModal extends Vue {
-    @gitlab.State
-    readonly unlink_gitlab_repository!: Repository;
+const { unlink_gitlab_repository } = useNamespacedState("gitlab", ["unlink_gitlab_repository"]);
+const { removeRepository, setSuccessMessage } = useMutations([
+    "removeRepository",
+    "setSuccessMessage",
+]);
+const { setUnlinkGitlabRepositoryModal } = useNamespacedMutations("gitlab", [
+    "setUnlinkGitlabRepositoryModal",
+]);
 
-    private modal: Modal | null = null;
-    repository: Repository | null = null;
-    message_error_rest = "";
-    is_loading = false;
+const modal = ref<Modal | null>(null);
+const repository = ref<Repository | null>(null);
+const message_error_rest = ref("");
+const is_loading = ref(false);
 
-    get close_label(): string {
-        return this.$gettext("Close");
+const modal_element = ref();
+
+const close_label = gettext_provider.$gettext("Close");
+
+const confirmation_message = computed((): string => {
+    if (!repository.value || !repository.value.normalized_path) {
+        return "";
     }
 
-    get confirmation_message(): string {
-        if (!this.repository || !this.repository.normalized_path) {
-            return "";
+    return gettext_provider.interpolate(
+        gettext_provider.$gettext(
+            "Wow, wait a minute. You are about to unlink the GitLab repository %{ label }. Please confirm your action.",
+        ),
+        {
+            label: repository.value.normalized_path,
+        },
+    );
+});
+
+const have_any_rest_error = computed((): boolean => message_error_rest.value.length > 0);
+
+const disabled_button = computed((): boolean => is_loading.value || have_any_rest_error.value);
+
+const success_message = computed((): string => {
+    if (!repository.value || !repository.value.normalized_path) {
+        return "";
+    }
+
+    return gettext_provider.interpolate(
+        gettext_provider.$gettext("GitLab repository %{ label } has been successfully unlinked!"),
+        {
+            label: repository.value.normalized_path,
+        },
+    );
+});
+
+const onShownModal = (): void => {
+    repository.value = unlink_gitlab_repository.value;
+};
+
+const reset = (): void => {
+    is_loading.value = false;
+    message_error_rest.value = "";
+};
+
+onMounted((): void => {
+    modal.value = createModal(modal_element.value);
+    modal.value.addEventListener("tlp-modal-shown", onShownModal);
+    modal.value.addEventListener("tlp-modal-hidden", reset);
+    setUnlinkGitlabRepositoryModal(modal.value);
+});
+const handleError = async (rest_error: unknown): Promise<void> => {
+    try {
+        if (!(rest_error instanceof FetchWrapperError)) {
+            throw rest_error;
         }
+        const { error } = await rest_error.response.json();
+        message_error_rest.value = error.code + " " + error.message;
+    } catch (error) {
+        message_error_rest.value = gettext_provider.$gettext("Oops, an error occurred!");
+    } finally {
+        is_loading.value = false;
+    }
+};
 
-        return this.$gettextInterpolate(
-            this.$gettext(
-                "Wow, wait a minute. You are about to unlink the GitLab repository %{ label }. Please confirm your action.",
-            ),
-            {
-                label: this.repository.normalized_path,
-            },
-        );
+const confirmUnlink = async (event: Event): Promise<void> => {
+    event.preventDefault();
+
+    if (have_any_rest_error.value) {
+        return;
     }
 
-    get have_any_rest_error(): boolean {
-        return this.message_error_rest.length > 0;
+    if (!repository.value) {
+        return;
     }
 
-    get disabled_button(): boolean {
-        return this.is_loading || this.have_any_rest_error;
+    is_loading.value = true;
+    try {
+        await deleteIntegrationGitlab({
+            integration_id: Number(repository.value.integration_id),
+        });
+
+        removeRepository(repository.value);
+        setSuccessMessage(success_message.value);
+        modal.value?.hide();
+    } catch (rest_error) {
+        await handleError(rest_error);
+    } finally {
+        is_loading.value = false;
     }
-
-    get success_message(): string {
-        if (!this.repository || !this.repository.normalized_path) {
-            return "";
-        }
-
-        return this.$gettextInterpolate(
-            this.$gettext("GitLab repository %{ label } has been successfully unlinked!"),
-            {
-                label: this.repository.normalized_path,
-            },
-        );
-    }
-
-    mounted(): void {
-        this.modal = createModal(this.$el);
-        this.modal.addEventListener("tlp-modal-shown", this.onShownModal);
-        this.modal.addEventListener("tlp-modal-hidden", this.reset);
-        this.$store.commit("gitlab/setUnlinkGitlabRepositoryModal", this.modal);
-    }
-
-    onShownModal(): void {
-        this.repository = this.unlink_gitlab_repository;
-    }
-
-    reset(): void {
-        this.is_loading = false;
-        this.message_error_rest = "";
-    }
-
-    async confirmUnlink(event: Event): Promise<void> {
-        event.preventDefault();
-
-        if (this.have_any_rest_error) {
-            return;
-        }
-
-        if (!this.repository) {
-            return;
-        }
-
-        this.is_loading = true;
-        try {
-            await deleteIntegrationGitlab({
-                integration_id: Number(this.repository.integration_id),
-            });
-
-            this.$store.commit("removeRepository", this.repository);
-            this.$store.commit("setSuccessMessage", this.success_message);
-            if (this.modal) {
-                this.modal.hide();
-            }
-        } catch (rest_error) {
-            await this.handleError(rest_error);
-        } finally {
-            this.is_loading = false;
-        }
-    }
-
-    async handleError(rest_error: unknown): Promise<void> {
-        try {
-            if (!(rest_error instanceof FetchWrapperError)) {
-                throw rest_error;
-            }
-            const { error } = await rest_error.response.json();
-            this.message_error_rest = error.code + " " + error.message;
-        } catch (error) {
-            this.message_error_rest = this.$gettext("Oops, an error occurred!");
-        } finally {
-            this.is_loading = false;
-        }
-    }
-}
+};
 </script>
