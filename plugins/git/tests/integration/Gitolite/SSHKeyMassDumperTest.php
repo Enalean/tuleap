@@ -25,15 +25,16 @@ namespace Tuleap\Git\Gitolite;
 
 use Git_Gitolite_SSHKeyMassDumper;
 use PFUser;
+use Tuleap\Git\Gitolite\SSHKey\InvalidKeysCollector;
 use Tuleap\GlobalLanguageMock;
 
-final class SSHKeyMassDumperTest extends \Tuleap\Git\Gitolite\GitoliteTestCase
+final class SSHKeyMassDumperTest extends GitoliteTestCase
 {
     use GlobalLanguageMock;
 
-    private $mass_dumper;
-    private $key1;
-    private $key2;
+    private Git_Gitolite_SSHKeyMassDumper $mass_dumper;
+    private string $key1;
+    private string $key2;
 
     protected function setUp(): void
     {
@@ -46,71 +47,75 @@ final class SSHKeyMassDumperTest extends \Tuleap\Git\Gitolite\GitoliteTestCase
 
     public function testItDumpsSshKeysForOneUser(): void
     {
-        $invalid_keys_collector = \Mockery::spy(\Tuleap\Git\Gitolite\SSHKey\InvalidKeysCollector::class);
-        $this->user_manager->shouldReceive('getUsersWithSshKey')->andReturns([new PFUser(['authorized_keys' => $this->key1, 'user_name' => 'john_do'])]);
+        $invalid_keys_collector = new InvalidKeysCollector();
+        $this->user_manager->method('getUsersWithSshKey')->willReturn([new PFUser(['authorized_keys' => $this->key1, 'user_name' => 'john_do'])]);
 
-        $this->git_exec->shouldReceive('push')->once();
+        $this->git_exec->expects(self::once())->method('push');
         $this->mass_dumper->dumpSSHKeys($invalid_keys_collector);
 
-        $this->assertTrue(is_file($this->gitolite_admin_dir . '/keydir/john_do@0.pub'));
-        $this->assertEquals(file_get_contents($this->gitolite_admin_dir . '/keydir/john_do@0.pub'), $this->key1);
+        self::assertTrue(is_file($this->gitolite_admin_dir . '/keydir/john_do@0.pub'));
+        self::assertEquals(file_get_contents($this->gitolite_admin_dir . '/keydir/john_do@0.pub'), $this->key1);
 
         $this->assertEmptyGitStatus();
     }
 
     public function testItRemovesSshKeyFileWhenUserDeletedAllHisKeys(): void
     {
-        $invalid_keys_collector = \Mockery::spy(\Tuleap\Git\Gitolite\SSHKey\InvalidKeysCollector::class);
-        $this->git_exec->shouldReceive('push')->times(2);
+        $invalid_keys_collector = new InvalidKeysCollector();
+        $this->git_exec->expects(self::exactly(2))->method('push');
 
-        $this->user_manager->shouldReceive('getUsersWithSshKey')->once()->andReturns([new PFUser(['authorized_keys' => $this->key1, 'user_name' => 'john_do'])]);
+        $this->user_manager->expects(self::exactly(2))->method('getUsersWithSshKey')
+            ->willReturnOnConsecutiveCalls([new PFUser(['authorized_keys' => $this->key1, 'user_name' => 'john_do'])], []);
+        $this->mass_dumper->dumpSSHKeys($invalid_keys_collector);
         $this->mass_dumper->dumpSSHKeys($invalid_keys_collector);
 
-        $this->user_manager->shouldReceive('getUsersWithSshKey')->once()->andReturns([]);
-        $this->mass_dumper->dumpSSHKeys($invalid_keys_collector);
-
-        $this->assertFalse(is_file($this->gitolite_admin_dir . '/keydir/john_do@0.pub'));
+        self::assertFalse(is_file($this->gitolite_admin_dir . '/keydir/john_do@0.pub'));
     }
 
     public function testItRemovesOnlySshFilesForUsersWithoutKeys(): void
     {
-        $invalid_keys_collector = \Mockery::spy(\Tuleap\Git\Gitolite\SSHKey\InvalidKeysCollector::class);
-        $this->git_exec->shouldReceive('push')->andReturn(true);
-        $this->user_manager->shouldReceive('getUsersWithSshKey')->once()->andReturns([new PFUser(['authorized_keys' => $this->key1, 'user_name' => 'john_do']), new PFUser(['authorized_keys' => $this->key2, 'user_name' => 'do_john'])]);
+        $invalid_keys_collector = new InvalidKeysCollector();
+        $this->git_exec->method('push')->willReturn(true);
+        $this->user_manager->expects(self::exactly(2))->method('getUsersWithSshKey')
+            ->willReturnOnConsecutiveCalls(
+                [new PFUser(['authorized_keys' => $this->key1, 'user_name' => 'john_do']), new PFUser(['authorized_keys' => $this->key2, 'user_name' => 'do_john'])],
+                [new PFUser(['authorized_keys' => $this->key2, 'user_name' => 'do_john'])],
+            );
+        $this->mass_dumper->dumpSSHKeys($invalid_keys_collector);
         $this->mass_dumper->dumpSSHKeys($invalid_keys_collector);
 
-        $this->user_manager->shouldReceive('getUsersWithSshKey')->once()->andReturns([new PFUser(['authorized_keys' => $this->key2, 'user_name' => 'do_john'])]);
-        $this->mass_dumper->dumpSSHKeys($invalid_keys_collector);
-
-        $this->assertFalse(is_file($this->gitolite_admin_dir . '/keydir/john_do@0.pub'));
-        $this->assertTrue(is_file($this->gitolite_admin_dir . '/keydir/do_john@0.pub'));
+        self::assertFalse(is_file($this->gitolite_admin_dir . '/keydir/john_do@0.pub'));
+        self::assertTrue(is_file($this->gitolite_admin_dir . '/keydir/do_john@0.pub'));
 
         $this->assertEmptyGitStatus();
     }
 
     public function testItRemovesSshFilesWhenKeysAreDeleted(): void
     {
-        $invalid_keys_collector = \Mockery::spy(\Tuleap\Git\Gitolite\SSHKey\InvalidKeysCollector::class);
-        $this->git_exec->shouldReceive('push')->andReturn(true);
-        $this->user_manager->shouldReceive('getUsersWithSshKey')->once()->andReturns([new PFUser(['authorized_keys' => $this->key1, 'user_name' => 'john_do']), new PFUser(['authorized_keys' => $this->key2 . PFUser::SSH_KEY_SEPARATOR . $this->key1, 'user_name' => 'do_john'])]);
+        $invalid_keys_collector = new InvalidKeysCollector();
+        $this->git_exec->method('push')->willReturn(true);
+        $this->user_manager->expects(self::exactly(2))->method('getUsersWithSshKey')
+            ->willReturnOnConsecutiveCalls(
+                [new PFUser(['authorized_keys' => $this->key1, 'user_name' => 'john_do']), new PFUser(['authorized_keys' => $this->key2 . PFUser::SSH_KEY_SEPARATOR . $this->key1, 'user_name' => 'do_john'])],
+                [new PFUser(['authorized_keys' => $this->key1, 'user_name' => 'do_john'])],
+            );
+        $this->mass_dumper->dumpSSHKeys($invalid_keys_collector);
         $this->mass_dumper->dumpSSHKeys($invalid_keys_collector);
 
-        $this->user_manager->shouldReceive('getUsersWithSshKey')->once()->andReturns([new PFUser(['authorized_keys' => $this->key1, 'user_name' => 'do_john'])]);
-        $this->mass_dumper->dumpSSHKeys($invalid_keys_collector);
-
-        $this->assertFalse(is_file($this->gitolite_admin_dir . '/keydir/john_do@0.pub'));
-        $this->assertFalse(is_file($this->gitolite_admin_dir . '/keydir/do_john@1.pub'));
-        $this->assertTrue(is_file($this->gitolite_admin_dir . '/keydir/do_john@0.pub'));
-        $this->assertEquals(file_get_contents($this->gitolite_admin_dir . '/keydir/do_john@0.pub'), $this->key1);
+        self::assertFalse(is_file($this->gitolite_admin_dir . '/keydir/john_do@0.pub'));
+        self::assertFalse(is_file($this->gitolite_admin_dir . '/keydir/do_john@1.pub'));
+        self::assertTrue(is_file($this->gitolite_admin_dir . '/keydir/do_john@0.pub'));
+        self::assertEquals(file_get_contents($this->gitolite_admin_dir . '/keydir/do_john@0.pub'), $this->key1);
 
         $this->assertEmptyGitStatus();
     }
 
     public function testItDoesntRemoveTheGitoliteAdminSSHKey(): void
     {
-        $invalid_keys_collector = \Mockery::spy(\Tuleap\Git\Gitolite\SSHKey\InvalidKeysCollector::class);
-        $this->git_exec->shouldReceive('push')->andReturn(true);
-        $this->user_manager->shouldReceive('getUsersWithSshKey')->once()->andReturns([new PFUser(['authorized_keys' => $this->key1, 'user_name' => 'john_do'])]);
+        $invalid_keys_collector = new InvalidKeysCollector();
+        $this->git_exec->method('push')->willReturn(true);
+        $this->user_manager->expects(self::exactly(2))->method('getUsersWithSshKey')
+            ->willReturnOnConsecutiveCalls([new PFUser(['authorized_keys' => $this->key1, 'user_name' => 'john_do'])], []);
         $this->mass_dumper->dumpSSHKeys($invalid_keys_collector);
 
         touch($this->gitolite_admin_dir . '/keydir/id_rsa_gl-adm.pub');
@@ -118,18 +123,18 @@ final class SSHKeyMassDumperTest extends \Tuleap\Git\Gitolite\GitoliteTestCase
         $this->git_exec->commit('Admin key');
         $this->assertEmptyGitStatus();
 
-        $this->user_manager->shouldReceive('getUsersWithSshKey')->once()->andReturns([]);
         $this->mass_dumper->dumpSSHKeys($invalid_keys_collector);
 
-        $this->assertFalse(is_file($this->gitolite_admin_dir . '/keydir/john_do@0.pub'));
-        $this->assertTrue(is_file($this->gitolite_admin_dir . '/keydir/id_rsa_gl-adm.pub'));
+        self::assertFalse(is_file($this->gitolite_admin_dir . '/keydir/john_do@0.pub'));
+        self::assertTrue(is_file($this->gitolite_admin_dir . '/keydir/id_rsa_gl-adm.pub'));
     }
 
     public function testItDoesntRemoveTheGerritReservedKeys(): void
     {
-        $invalid_keys_collector = \Mockery::spy(\Tuleap\Git\Gitolite\SSHKey\InvalidKeysCollector::class);
-        $this->git_exec->shouldReceive('push')->andReturn(true);
-        $this->user_manager->shouldReceive('getUsersWithSshKey')->once()->andReturns([new PFUser(['authorized_keys' => $this->key1, 'user_name' => 'john_do'])]);
+        $invalid_keys_collector = new InvalidKeysCollector();
+        $this->git_exec->method('push')->willReturn(true);
+        $this->user_manager->expects(self::exactly(2))->method('getUsersWithSshKey')
+            ->willReturnOnConsecutiveCalls([new PFUser(['authorized_keys' => $this->key1, 'user_name' => 'john_do'])], []);
         $this->mass_dumper->dumpSSHKeys($invalid_keys_collector);
 
         $keyfile = 'forge__gerrit_1@0.pub';
@@ -138,10 +143,9 @@ final class SSHKeyMassDumperTest extends \Tuleap\Git\Gitolite\GitoliteTestCase
         $this->git_exec->commit('Gerrit key');
         $this->assertEmptyGitStatus();
 
-        $this->user_manager->shouldReceive('getUsersWithSshKey')->once()->andReturns([]);
         $this->mass_dumper->dumpSSHKeys($invalid_keys_collector);
 
-        $this->assertFalse(is_file($this->gitolite_admin_dir . '/keydir/john_do@0.pub'));
-        $this->assertTrue(is_file($this->gitolite_admin_dir . '/keydir/' . $keyfile));
+        self::assertFalse(is_file($this->gitolite_admin_dir . '/keydir/john_do@0.pub'));
+        self::assertTrue(is_file($this->gitolite_admin_dir . '/keydir/' . $keyfile));
     }
 }

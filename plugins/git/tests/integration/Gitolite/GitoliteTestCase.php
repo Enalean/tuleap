@@ -23,7 +23,10 @@ declare(strict_types=1);
 
 namespace Tuleap\Git\Gitolite;
 
+use ColinODell\PsrTestLogger\TestLogger;
 use EventManager;
+use ForgeConfig;
+use Git_Driver_Gerrit_ProjectCreatorStatus;
 use Git_Exec;
 use Git_Gitolite_ConfigPermissionsSerializer;
 use Git_Gitolite_SSHKeyDumper;
@@ -33,114 +36,86 @@ use Git_SystemEventManager;
 use GitDao;
 use GitPlugin;
 use GitRepositoryFactory;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use Mockery\MockInterface;
+use PHPUnit\Framework\MockObject\MockObject;
+use Tuleap\Git\BigObjectAuthorization\BigObjectAuthorizationManager;
+use Tuleap\Git\Permissions\FineGrainedPermissionFactory;
+use Tuleap\Git\Permissions\FineGrainedRetriever;
+use Tuleap\Git\Permissions\RegexpFineGrainedRetriever;
 use Tuleap\TemporaryTestDirectory;
 use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
 use UserManager;
 
 abstract class GitoliteTestCase extends TestIntegrationTestCase
 {
-    use MockeryPHPUnitIntegration;
     use TemporaryTestDirectory;
 
-    /** @var Git_GitoliteDriver */
-    protected $driver;
-    /** @var UserManager&MockInterface */
-    protected $user_manager;
-    /** @var Git_Exec&MockInterface */
-    protected $git_exec;
-    /** @var Git_Gitolite_SSHKeyDumper */
-    protected $dumper;
-    /** @var GitRepositoryFactory */
-    protected $repository_factory;
-    /** @var Git_Gitolite_ConfigPermissionsSerializer */
-    protected $gitolite_permissions_serializer;
-
-    /** @var Git_GitRepositoryUrlManager */
-    protected $url_manager;
-
-    /** @var Git_SystemEventManager */
-    protected $git_system_event_manager;
-
-    /** @var \Psr\Log\LoggerInterface&MockInterface */
-    protected $logger;
-    /**
-     * @var false|string
-     */
-    private $cwd;
-    /**
-     * @var string
-     */
-    protected $fixtures_dir;
-    /**
-     * @var string
-     */
-    private $gitolite_admin_ref;
-    /**
-     * @var string
-     */
-    protected $sys_data_dir;
-    /**
-     * @var string
-     */
-    protected $gitolite_admin_dir;
-    /**
-     * @var string
-     */
-    private $repo_dir;
+    protected Git_GitoliteDriver $driver;
+    protected UserManager&MockObject $user_manager;
+    protected Git_Exec&MockObject $git_exec;
+    protected Git_Gitolite_SSHKeyDumper $dumper;
+    protected GitRepositoryFactory&MockObject $repository_factory;
+    protected Git_Gitolite_ConfigPermissionsSerializer $gitolite_permissions_serializer;
+    protected Git_GitRepositoryUrlManager $url_manager;
+    protected Git_SystemEventManager&MockObject $git_system_event_manager;
+    protected TestLogger $logger;
+    private string $cwd;
+    protected string $fixtures_dir;
+    protected string $sys_data_dir;
+    protected string $gitolite_admin_dir;
 
     protected function setUp(): void
     {
         $this->cwd                = getcwd();
         $this->fixtures_dir       = __DIR__ . '/_fixtures';
         $tmpDir                   = $this->getTmpDir();
-        $this->gitolite_admin_ref = $tmpDir . '/gitolite-admin-ref';
+        $gitolite_admin_ref       = $tmpDir . '/gitolite-admin-ref';
         $this->sys_data_dir       = $tmpDir;
         $this->gitolite_admin_dir = $tmpDir . '/gitolite/admin';
-        $this->repo_dir           = $tmpDir . '/repositories';
+        $repo_dir                 = $tmpDir . '/repositories';
 
         // Copy the reference to save time & create symlink because
         // git is very sensitive to path you are using. Just symlinking
         // spots bugs
         mkdir($tmpDir . '/gitolite');
         system('tar -xf ' . $this->fixtures_dir . '/gitolite-admin-ref' . '.tar --directory ' . $tmpDir);
-        symlink($this->gitolite_admin_ref, $this->gitolite_admin_dir);
+        symlink($gitolite_admin_ref, $this->gitolite_admin_dir);
 
-        mkdir($this->repo_dir);
+        mkdir($repo_dir);
 
-        \ForgeConfig::set('sys_data_dir', $this->sys_data_dir);
-        $this->git_exec = \Mockery::mock(\Git_Exec::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $this->git_exec->__construct($this->gitolite_admin_dir);
+        ForgeConfig::set('sys_data_dir', $this->sys_data_dir);
+        $this->git_exec = $this->getMockBuilder(Git_Exec::class)
+            ->setConstructorArgs([$this->gitolite_admin_dir])
+            ->onlyMethods(['push'])
+            ->getMock();
         $this->git_exec->setLocalCommiter('TestName', 'test@example.com');
 
-        $this->user_manager = \Mockery::spy(\UserManager::class);
+        $this->user_manager = $this->createMock(UserManager::class);
         $this->dumper       = new Git_Gitolite_SSHKeyDumper($this->gitolite_admin_dir, $this->git_exec);
 
-        $this->repository_factory = \Mockery::spy(\GitRepositoryFactory::class);
+        $this->repository_factory = $this->createMock(GitRepositoryFactory::class);
 
-        $git_plugin = \Mockery::mock(GitPlugin::class);
-        $git_plugin->shouldReceive('areFriendlyUrlsActivated')->andReturns(false);
+        $git_plugin = $this->createMock(GitPlugin::class);
+        $git_plugin->method('areFriendlyUrlsActivated')->willReturn(false);
         $this->url_manager = new Git_GitRepositoryUrlManager($git_plugin);
 
         $this->gitolite_permissions_serializer = new Git_Gitolite_ConfigPermissionsSerializer(
-            \Mockery::spy(\Git_Driver_Gerrit_ProjectCreatorStatus::class),
+            $this->createMock(Git_Driver_Gerrit_ProjectCreatorStatus::class),
             'whatever',
-            \Mockery::spy(\Tuleap\Git\Permissions\FineGrainedRetriever::class),
-            \Mockery::spy(\Tuleap\Git\Permissions\FineGrainedPermissionFactory::class),
-            \Mockery::spy(\Tuleap\Git\Permissions\RegexpFineGrainedRetriever::class),
-            \Mockery::spy(EventManager::class)
+            $this->createMock(FineGrainedRetriever::class),
+            $this->createMock(FineGrainedPermissionFactory::class),
+            $this->createMock(RegexpFineGrainedRetriever::class),
+            $this->createMock(EventManager::class)
         );
 
-        $this->git_system_event_manager = \Mockery::spy(\Git_SystemEventManager::class);
-        $this->logger                   = \Mockery::spy(\Psr\Log\LoggerInterface::class);
+        $this->git_system_event_manager = $this->createMock(Git_SystemEventManager::class);
+        $this->logger                   = new TestLogger();
 
         $this->driver = new Git_GitoliteDriver(
             $this->logger,
             $this->url_manager,
-            \Mockery::spy(GitDao::class),
-            \Mockery::mock(GitPlugin::class),
-            \Mockery::spy(\Tuleap\Git\BigObjectAuthorization\BigObjectAuthorizationManager::class),
+            $this->createMock(GitDao::class),
+            $git_plugin,
+            $this->createMock(BigObjectAuthorizationManager::class),
             $this->git_exec,
             $this->repository_factory,
             $this->gitolite_permissions_serializer,
@@ -158,9 +133,9 @@ abstract class GitoliteTestCase extends TestIntegrationTestCase
     {
         $cwd = getcwd();
         chdir($this->gitolite_admin_dir);
-        exec(\Git_Exec::getGitCommand() . ' status --porcelain', $output, $ret_val);
+        exec(Git_Exec::getGitCommand() . ' status --porcelain', $output, $ret_val);
         chdir($cwd);
-        $this->assertEmpty($output);
-        $this->assertEquals(0, $ret_val);
+        self::assertEmpty($output);
+        self::assertEquals(0, $ret_val);
     }
 }
