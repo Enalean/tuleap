@@ -86,7 +86,7 @@ final class Dao extends DataAccessObject implements SaveQueryWithDates, SaveQuer
             $users_to_insert[] = ['widget_id' => $widget_id, 'user_id' => $user_id];
         }
 
-        if (! empty($user_ids_to_insert)) {
+        if ($users_to_insert !== []) {
             $this->getDB()->insertMany('plugin_timetracking_management_query_users', $users_to_insert);
         }
     }
