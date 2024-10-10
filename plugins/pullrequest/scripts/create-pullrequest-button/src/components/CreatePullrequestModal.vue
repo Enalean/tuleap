@@ -47,6 +47,7 @@
                     ><select
                         class="tlp-select"
                         id="git-repository-actions-pullrequest-modal-body-source"
+                        data-test="pull-request-source-branch"
                         required
                         v-model="source_branch"
                     >
@@ -68,6 +69,7 @@
                     ><select
                         class="tlp-select"
                         id="git-repository-actions-pullrequest-modal-body-destination"
+                        data-test="pull-request-destination-branch"
                         required
                         v-model="destination_branch"
                     >
@@ -96,6 +98,7 @@
                 class="tlp-button-primary tlp-modal-action"
                 v-on:click="create()"
                 v-bind:disabled="is_button_disabled"
+                data-test="pull-request-create-button"
             >
                 <i v-bind:class="is_creating_pullrequest_icon_class"></i>{{ create_button }}
             </button>

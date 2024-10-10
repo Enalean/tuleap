@@ -18,6 +18,7 @@
                                    class="tlp-search"
                                    id="project-labels-table-filter"
                                    data-target-table-id="project-labels-table"
+                                   data-test="search_label"
                                    autocomplete="off"
                                    placeholder="{{ filter_placeholder }}">
                         </div>
@@ -46,7 +47,7 @@
                                 </td>
                             </tr>
                             {{# labels }}
-                                <tr>
+                                <tr data-test="label-row">
                                     <td class="tlp-table-cell-filterable">
                                         <i class="fa
                                             {{# is_outline }}fa-circle-o{{/is_outline}}
@@ -59,6 +60,7 @@
                                         {{# is_used }}
                                             <span class="tlp-tooltip tlp-tooltip-bottom project-labels-table-is-used-help"
                                                   data-tlp-tooltip="{{ this_label_is_used }}"
+                                                  data-test="label_is_used"
                                             >
                                                 <i class="fa fa-check"></i>
                                             </span>
@@ -74,6 +76,7 @@
                                         <button
                                             class="tlp-table-cell-actions-button tlp-button-small tlp-button-danger tlp-button-outline project-labels-table-delete-button"
                                             data-modal-id="project-label-delete-{{ id }}"
+                                            data-test="delete-project-label"
                                         >
                                             <i class="far fa-trash-alt tlp-button-icon"></i> {{ delete_button }}
                                         </button>
