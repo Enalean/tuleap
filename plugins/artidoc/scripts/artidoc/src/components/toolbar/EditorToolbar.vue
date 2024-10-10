@@ -20,7 +20,9 @@
 
 <template>
     <tuleap-prose-mirror-toolbar
+        ref="toolbar"
         class="artidoc-toolbar"
+        v-bind:class="{ 'is-stuck': is_stuck }"
         v-bind:controller="controller"
         v-bind:text_elements="{
             bold: true,
@@ -37,8 +39,7 @@
             ordered_list: true,
             bullet_list: true,
         }"
-        v-bind:class="{ 'is-stuck': is_stuck }"
-        ref="toolbar"
+        v-bind:style_elements="{ headings: true }"
     />
 </template>
 

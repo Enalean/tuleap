@@ -16,7 +16,6 @@
  *  You should have received a copy of the GNU General Public License
  *  along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-@use "./toolbar";
 @use "./links-popover";
 
 #editor,
@@ -29,14 +28,9 @@
 
 /* stylelint-disable selector-class-pattern */
 .ProseMirror {
-    // This min-height is a quick fix, the heading dropdown can be hidden bellow footer
-    min-height: 200px;
     padding: var(--tlp-form-element-padding-horizontal);
-    border-right: 1px solid var(--tlp-form-element-border-color);
-    border-bottom: 1px solid var(--tlp-form-element-border-color);
-    border-left: 1px solid var(--tlp-form-element-border-color);
-    border-bottom-right-radius: var(--tlp-form-element-border-radius);
-    border-bottom-left-radius: var(--tlp-form-element-border-radius);
+    border: 1px solid var(--tlp-form-element-border-color);
+    border-radius: var(--tlp-form-element-border-radius);
     word-wrap: break-word;
     white-space: pre-wrap;
 }

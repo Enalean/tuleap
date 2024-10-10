@@ -50,9 +50,13 @@ export const renderRemoveLinkButton = (
     </div>
 `;
 
-define<InternalRemoveLnkButton>({
+const remove_link_button = define.compile<InternalRemoveLnkButton>({
     tag: TAG,
     gettext_provider: (host, gettext_provider) => gettext_provider,
     remove_link_callback: (host, remove_link_callback) => remove_link_callback,
     render: (host) => renderRemoveLinkButton(host, host.gettext_provider),
 });
+
+if (!window.customElements.get(TAG)) {
+    window.customElements.define(TAG, remove_link_button);
+}

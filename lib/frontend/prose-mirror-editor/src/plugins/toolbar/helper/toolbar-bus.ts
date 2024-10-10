@@ -22,6 +22,7 @@ import type { LinkState } from "../links/LinkState";
 import type { ImageState } from "../image/ImageState";
 import type { ImageProperties, LinkProperties } from "../../../types/internal-types";
 import type { ListState } from "../list/ListState";
+import type { Heading } from "../text-style/Heading";
 
 export interface ToolbarHandler {
     toggleBold: () => void;
@@ -30,6 +31,8 @@ export interface ToolbarHandler {
     toggleQuote: () => void;
     toggleSubscript: () => void;
     toggleSuperScript: () => void;
+    toggleHeading: (heading: Heading) => void;
+    togglePlainText: () => void;
     applyLink: (link: LinkProperties) => void;
     applyUnlink: () => void;
     applyImage: (image: ImageProperties) => void;
@@ -49,6 +52,8 @@ export interface ToolbarView {
     activateImage: (image_state: ImageState) => void;
     activateOrderedList: (list_state: ListState) => void;
     activateBulletList: (list_state: ListState) => void;
+    activateHeading: (current_heading: Heading | null) => void;
+    activatePlainText: (is_activated: boolean) => void;
 }
 
 export interface ToolbarBus {
@@ -65,6 +70,8 @@ export interface ToolbarBus {
     image: (image: ImageProperties) => void;
     orderedList: () => void;
     bulletList: () => void;
+    heading: (heading: Heading) => void;
+    plainText: () => void;
     setCurrentHandler: (handler: ToolbarHandler) => void;
     setView: (view: Partial<ToolbarView>) => void;
 }
@@ -84,6 +91,8 @@ const default_view: ToolbarView = {
     activateImage: noop,
     activateOrderedList: noop,
     activateBulletList: noop,
+    activateHeading: noop,
+    activatePlainText: noop,
 };
 
 export const buildToolbarBus = (): ToolbarBus => ({
@@ -121,6 +130,12 @@ export const buildToolbarBus = (): ToolbarBus => ({
     },
     bulletList(): void {
         this.handler?.toggleBulletList();
+    },
+    heading(heading: Heading): void {
+        this.handler?.toggleHeading(heading);
+    },
+    plainText(): void {
+        this.handler?.togglePlainText();
     },
     setCurrentHandler(handler: ToolbarHandler): void {
         this.handler = handler;

@@ -51,9 +51,13 @@ export const renderOpenLinkButton = (
     </div>
 `;
 
-define<InternalOpenLinkButtonElement>({
+const open_link_button = define.compile<InternalOpenLinkButtonElement>({
     tag: TAG,
     gettext_provider: (host, gettext_provider) => gettext_provider,
     sanitized_link_href: "",
     render: (host) => renderOpenLinkButton(host, host.gettext_provider),
 });
+
+if (!window.customElements.get(TAG)) {
+    window.customElements.define(TAG, open_link_button);
+}

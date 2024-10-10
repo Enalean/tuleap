@@ -21,6 +21,14 @@ msgstr "Transformer le texte sélectionné en exposant `Ctrl+.`"
 msgid "Cancel"
 msgstr "Annuler"
 
+msgid "Change to heading %(heading_level)s `Ctrl+Shift+%(heading_level)s`"
+msgstr ""
+"Changer le texte en titre de niveau %(heading_level)s `Ctrl+Shift+"
+"%(heading_level)s`"
+
+msgid "Change to plain text"
+msgstr "Changer en texte"
+
 msgid "Create link"
 msgstr "Créer un lien"
 
@@ -29,6 +37,9 @@ msgstr "Créer ou éditer un lien"
 
 msgid "Edit link"
 msgstr "Éditer un lien"
+
+msgid "Heading %(heading_level)s"
+msgstr "Titre %(heading_level)s"
 
 msgid "Image source"
 msgstr "Source de l'image"
@@ -47,6 +58,9 @@ msgstr "Supprimer le lien"
 
 msgid "Save"
 msgstr "Sauvegarder"
+
+msgid "Styles"
+msgstr "Styles"
 
 msgid "Text"
 msgstr "Texte"

@@ -72,7 +72,7 @@ export async function useEditor(
         upload_plugin,
         dropCursor(),
         initLinkPopoverPlugin(document, gettext_provider, editor_id),
-        ...setupToolbar(gettext_provider, editor_id, toolbar_bus),
+        ...setupToolbar(toolbar_bus),
         initPluginTransformInput(project_id, references),
         initPluginCloseMarksAfterSpace(),
         initPluginAutomagicLinks(),

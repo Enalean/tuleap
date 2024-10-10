@@ -73,7 +73,7 @@ export const renderCopyToClipboardItem = (
     </div>
 `;
 
-define<InternalCopyToClipboardButtonElement>({
+const copy_link_button = define.compile<InternalCopyToClipboardButtonElement>({
     tag: TAG,
     has_been_copied_to_clipboard: false,
     value_to_copy: "",
@@ -81,3 +81,7 @@ define<InternalCopyToClipboardButtonElement>({
     copy_value_title: "",
     render: renderCopyToClipboardItem,
 });
+
+if (!window.customElements.get(TAG)) {
+    window.customElements.define(TAG, copy_link_button);
+}
