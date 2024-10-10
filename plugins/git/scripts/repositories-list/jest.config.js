@@ -19,13 +19,10 @@
 
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { env } from "node:process";
 import { defineJestConfiguration } from "@tuleap/build-system-configurator";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-
-env.DISABLE_TS_TYPECHECK = "true";
 
 const jest_base_config = defineJestConfiguration();
 export default {

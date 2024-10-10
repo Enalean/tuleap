@@ -17,9 +17,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import path from "path";
-import fs from "fs";
-import { env } from "process";
+import path from "node:path";
+import fs from "node:fs";
+import { env } from "node:process";
 
 const esModules = [
     "d3-selection",
@@ -61,8 +61,6 @@ export const defineJestConfiguration = (): JestConfiguration => {
         };
     }
 
-    const is_typechecking_enabled = env.DISABLE_TS_TYPECHECK !== "true";
-
     return {
         testEnvironment: "jsdom",
         testEnvironmentOptions: {
@@ -73,8 +71,8 @@ export const defineJestConfiguration = (): JestConfiguration => {
             "^.+\\.ts$": [
                 "ts-jest",
                 {
-                    diagnostics: is_typechecking_enabled,
-                    isolatedModules: !is_typechecking_enabled,
+                    diagnostics: false,
+                    isolatedModules: true,
                 },
             ],
             "^.+\\.js$": path.resolve(__dirname, "./babel-jest-process.js"),
