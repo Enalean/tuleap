@@ -20,11 +20,11 @@
  */
 
 use Tuleap\Admin\AdminPageRenderer;
-use Tuleap\Date\RelativeDatesAssetsRetriever;
 use Tuleap\DB\DBTransactionExecutor;
 use Tuleap\Event\Events\ProjectProviderEvent;
 use Tuleap\Layout\HeaderConfiguration;
-use Tuleap\Layout\IncludeAssets;
+use Tuleap\Layout\IncludeViteAssets;
+use Tuleap\Layout\JavascriptViteAsset;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupUGroupRepresentationBuilder;
 use Tuleap\Project\MappingRegistry;
 use Tuleap\Tracker\Admin\GlobalAdmin\GlobalAdminPermissionsChecker;
@@ -38,6 +38,8 @@ use Tuleap\Tracker\Migration\LegacyTrackerMigrationDao;
 use Tuleap\Tracker\PermissionsPerGroup\TrackerPermissionPerGroupJSONRetriever;
 use Tuleap\Tracker\PermissionsPerGroup\TrackerPermissionPerGroupPermissionRepresentationBuilder;
 use Tuleap\Tracker\PermissionsPerGroup\TrackerPermissionPerGroupRepresentationBuilder;
+use Tuleap\Tracker\ServiceHomepage\HomepagePresenterBuilder;
+use Tuleap\Tracker\ServiceHomepage\HomepageRenderer;
 
 class TrackerManager implements Tracker_IFetchTrackerSwitcher
 {
@@ -542,31 +544,40 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher
     }
 
     /**
-     * Display all trackers of project $project that $user is able to see
-     *
-     * @param Project $project The project
-     * @param PFUser    $user    The user
-     *
-     * @return void
+     * Display all trackers of $project that $user is able to see
      */
-    public function displayAllTrackers($project, $user)
+    public function displayAllTrackers(\Project $project, \PFUser $user): void
     {
-        $hp          = Codendi_HTMLPurifier::instance();
-        $breadcrumbs = [];
-        $html        = '';
-        $trackers    = $this->getTrackerFactory()->getTrackersByGroupId($project->getID());
+        $migration_manager = $this->getTV3MigrationManager();
+        $renderer          = new HomepageRenderer(
+            new HomepagePresenterBuilder(
+                $this->getTrackerFactory(),
+                $migration_manager,
+            ),
+            new \Tuleap\Tracker\Admin\GlobalAdmin\GlobalAdminPermissionsChecker(
+                new User_ForgeUserGroupPermissionsManager(
+                    new User_ForgeUserGroupPermissionsDao()
+                )
+            ),
+            new \Tuleap\Tracker\Creation\OngoingCreationFeedbackNotifier(
+                $migration_manager,
+                new PendingJiraImportDao()
+            ),
+            TemplateRendererFactory::build()
+        );
 
-        $permissions_checker = new \Tuleap\Tracker\Admin\GlobalAdmin\GlobalAdminPermissionsChecker(
-            new User_ForgeUserGroupPermissionsManager(
-                new User_ForgeUserGroupPermissionsDao()
+
+        $GLOBALS['HTML']->addJavascriptAsset(
+            new JavascriptViteAsset(
+                new IncludeViteAssets(
+                    __DIR__ . '/../../scripts/service-homepage/frontend-assets',
+                    '/assets/trackers/service-homepage'
+                ),
+                'src/main.ts'
             )
         );
-        $is_tracker_admin    = $permissions_checker->doesUserHaveTrackerGlobalAdminRightsOnProject($project, $user);
-        if ($is_tracker_admin) {
-            $this->informUserOfOngoingMigrations($project);
-        }
-
-        $title = dgettext('tuleap-tracker', 'Trackers');
+        $title       = dgettext('tuleap-tracker', 'Trackers');
+        $breadcrumbs = [];
         $this->displayHeader(
             $project,
             $title,
@@ -575,72 +586,7 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher
                 ->inProject($project, trackerPlugin::SERVICE_SHORTNAME)
                 ->build()
         );
-        $html .= '<h1 class="trackers-homepage-title">' . dgettext('tuleap-tracker', 'Trackers');
-
-        if ($is_tracker_admin) {
-            $html .= '<a id="tracker_createnewlink" class="tlp-button-primary" data-test="new-tracker-creation" href="' . TRACKER_BASE_URL . '/' .
-                urlencode($project->getUnixNameLowerCase()) . '/new">';
-            $html .= '<i class="fa fa-plus tlp-button-icon"></i>';
-            $html .= dgettext('tuleap-tracker', 'New tracker');
-            $html .= '</a></h1>';
-        } else {
-            $html .= '</h1>';
-        }
-
-        $html .= '<div class="trackers-homepage">';
-
-        if (! count($trackers)) {
-            $html .= '<p>' . dgettext('tuleap-tracker', 'No trackers have been set up, or you are not allowed to view them.') . '</p>';
-        }
-
-        $GLOBALS['HTML']->includeFooterJavascriptFile(RelativeDatesAssetsRetriever::retrieveAssetsUrl());
-
-        $include_assets = new IncludeAssets(
-            __DIR__ . '/../../frontend-assets',
-            '/assets/trackers'
-        );
-
-        $GLOBALS['HTML']->includeFooterJavascriptFile($include_assets->getFileURL('tracker-homepage.js'));
-
-        foreach ($trackers as $tracker) {
-            if ($this->trackerCanBeDisplayed($tracker, $user)) {
-                $html .= '<a href="' . TRACKER_BASE_URL . '/?tracker=' . $hp->purify(urlencode($tracker->id)) . '" data-test="tracker-link-' . $hp->purify($tracker->getItemName()) . '" ';
-                $html .= 'data-test-tracker-id="' . $hp->purify($tracker->getId()) . '" data-tracker-id="' . $hp->purify($tracker->id) . '" ';
-                $html .= 'class="tlp-card tlp-card-selectable trackers-homepage-tracker ' . $hp->purify($tracker->getColor()->getName()) . '">';
-
-                $html .= '<span class="trackers-homepage-tracker-title-container">';
-                $html .= '<span class="trackers-homepage-tracker-title">' . $hp->purify($tracker->name, CODENDI_PURIFIER_CONVERT_HTML) . '</span>';
-
-                $stats = null;
-                if ($tracker->userHasFullAccess()) {
-                    $stats = $tracker->getStats();
-                }
-
-                if ($stats !== null) {
-                    $html .= '<span class="trackers-homepage-tracker-spacer"></span>';
-                    $html .= '<span class="trackers-homepage-tracker-badge tlp-badge-' . $hp->purify($tracker->getColor()->getName()) . ' tlp-badge-outline">';
-                    if ($tracker->hasSemanticsStatus() && $stats->getNbOpenArtifacts() > 0) {
-                        $html .= $stats->getNbOpenArtifacts() . ' ' . dgettext('tuleap-tracker', 'open') . ' / ';
-                    }
-                    $html .= $stats->getNbTotalArtifacts() . ' ' . dgettext('tuleap-tracker', 'total');
-                    $html .= '</span>';
-                }
-
-                $html .= '</span>';
-
-                $html .= '<span class="trackers-homepage-tracker-description">' . $hp->purify($tracker->description, CODENDI_PURIFIER_CONVERT_HTML) . '</span>';
-                $html .= '</a>';
-
-                $html .= $tracker->fetchStatsTooltip($user);
-            }
-        }
-
-        $html .= '</div>';
-
-        if ($html) {
-            echo $html;
-        }
-
+        echo $renderer->renderToString($project, $user);
         $this->displayFooter($project);
     }
 
@@ -690,25 +636,6 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher
             self::DELETED_TRACKERS_TEMPLATE_NAME,
             $presenter
         );
-    }
-
-    private function trackerCanBeDisplayed(Tracker $tracker, PFUser $user)
-    {
-        return $tracker->userCanView($user) && ! $this->getTV3MigrationManager()->isTrackerUnderMigration($tracker);
-    }
-
-    private function informUserOfOngoingMigrations(Project $project)
-    {
-        $feedback_notifier = new \Tuleap\Tracker\Creation\OngoingCreationFeedbackNotifier(
-            $this->getTV3MigrationManager(),
-            $this->getPendingJiraCreationDao()
-        );
-        $feedback_notifier->informUserOfOngoingMigrations($project, $GLOBALS['Response']);
-    }
-
-    private function getPendingJiraCreationDao(): PendingJiraImportDao
-    {
-        return new PendingJiraImportDao();
     }
 
     public function fetchTrackerSwitcher(PFUser $user, $separator, ?Project $include_project = null, ?Tracker $current_tracker = null)

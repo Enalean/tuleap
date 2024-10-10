@@ -17,17 +17,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@use "sass:map";
 @use "pkg:@tuleap/tlp-swatch-colors";
 
 .trackers-homepage-title {
     display: flex;
     align-items: center;
     margin: var(--tlp-medium-spacing) var(--tlp-medium-spacing) var(--tlp-title-spacing);
-
-    > .tlp-button-primary {
-        margin: 0 0 0 var(--tlp-medium-spacing);
-    }
+    gap: var(--tlp-medium-spacing);
 }
 
 .trackers-homepage {
@@ -37,16 +33,8 @@
 .trackers-homepage-tracker {
     width: 50%;
 
-    @each $color-name, $colors in tlp-swatch-colors.$color-map {
-        &.#{$color-name} {
-            &:hover {
-                border-color: map.get($colors, "border");
-            }
-
-            > .trackers-homepage-tracker-title-container > .trackers-homepage-tracker-title {
-                color: map.get($colors, "text");
-            }
-        }
+    &:hover {
+        border-color: var(--border-color);
     }
 }
 
@@ -57,8 +45,8 @@
 }
 
 .trackers-homepage-tracker-title {
-    flex: 0 0 auto;
     margin: 0 var(--tlp-small-spacing) 0 0;
+    color: var(--text-color);
     font-size: 1.125rem;
     font-weight: 500;
 }

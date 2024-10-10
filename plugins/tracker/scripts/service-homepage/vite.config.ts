@@ -1,5 +1,5 @@
-/**
- * Copyright (c) Enalean, 2016 - Present. All Rights Reserved.
+/*
+ * Copyright (c) Enalean, 2024-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,22 +17,21 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@use "../../default/css/includes/cards";
-@use "../../default/css/includes/field-bound-colors";
-@use "../../default/css/includes/xml-validation";
-@use "includes/widgets";
-@use "includes/administration";
-@use "includes/project-tracker-background";
-@use "includes/email-copy-paste";
+import { vite } from "@tuleap/build-system-configurator";
+import * as path from "node:path";
 
-.header-column-deleted-tracker {
-    width: 50%;
-}
-
-.header-column-deleted-tracker-date {
-    white-space: nowrap;
-}
-
-.tracker-aggregate-single-line {
-    display: block;
-}
+export default vite.defineAppConfig(
+    {
+        plugin_name: path.basename(path.resolve(__dirname, "../..")),
+        sub_app_name: path.basename(__dirname),
+    },
+    {
+        build: {
+            rollupOptions: {
+                input: {
+                    homepage: path.resolve(__dirname, "src/main.ts"),
+                },
+            },
+        },
+    },
+);

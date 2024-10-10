@@ -17,14 +17,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { createPopover } from "tlp";
+import { createPopover } from "@tuleap/tlp-popovers";
+import "@tuleap/tlp-relative-date";
+import "../themes/main.scss";
 
 document.addEventListener("DOMContentLoaded", (): void => {
     handleTrackerStatisticsPopovers();
 });
 
 function handleTrackerStatisticsPopovers(): void {
-    for (const trigger of document.querySelectorAll(".trackers-homepage-tracker")) {
+    for (const trigger of document.querySelectorAll("[data-tracker-card]")) {
         if (!(trigger instanceof HTMLElement)) {
             continue;
         }
@@ -33,9 +35,8 @@ function handleTrackerStatisticsPopovers(): void {
             "tracker-statistics-popover-" + trigger.dataset.trackerId,
         );
         if (popover_content === null) {
-            throw new Error(
-                `Statistics popover not found for tracker #${trigger.dataset.trackerId}`,
-            );
+            // Users without full access to tracker do not have a popover
+            continue;
         }
 
         createPopover(trigger, popover_content, {

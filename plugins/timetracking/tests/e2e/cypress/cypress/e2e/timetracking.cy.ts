@@ -29,7 +29,7 @@ describe("Time tracking", function () {
         cy.projectAdministratorSession();
 
         cy.visitProjectService("timetracking", "Trackers");
-        cy.get("[data-test=tracker-link-issue]").click();
+        cy.getContains("[data-test=tracker-link]", "Issues").click();
         cy.get("[data-test=link-to-current-tracker-administration]").click({ force: true });
         cy.get("[data-test=tracker-admin-more-options]").click();
         cy.get("[data-test=timetracking]").click();
@@ -52,7 +52,7 @@ describe("Time tracking", function () {
 
         // create an artifact
         cy.visitProjectService("timetracking", "Trackers");
-        cy.get("[data-test=tracker-link-issue]").click();
+        cy.getContains("[data-test=tracker-link]", "Issues").click();
 
         cy.get("[data-test=new-artifact]").click();
         cy.get("[data-test=details]").type("My artifact");

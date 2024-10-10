@@ -35,6 +35,12 @@ msgid "\"start date\" field is empty or invalid"
 msgstr "Le champ \"start date\" est vide ou invalide"
 
 #, php-format
+msgid "%1$d open / %2$d total"
+msgid_plural "%1$d open / %2$d total"
+msgstr[0] "%1$d ouvert / %2$d total"
+msgstr[1] "%1$d ouverts / %2$d total"
+
+#, php-format
 msgid "%1$s : artifact #%2$s does not exist."
 msgstr "%1$s : %2$s n'est pas un artéfact existant."
 
@@ -106,6 +112,10 @@ msgstr "%1$s : %2$s n'est pas un id d'artéfact."
 #, php-format
 msgid "%1s - open %2s"
 msgstr "%1s - %2s ouvert·e·s"
+
+#, php-format
+msgid "%d total"
+msgstr "%d total"
 
 msgid "%s administration"
 msgstr "Administration de %s"
@@ -5027,9 +5037,6 @@ msgstr "sur"
 msgid "of type"
 msgstr "de type"
 
-msgid "open"
-msgstr "ouvert(s)"
-
 msgid "or"
 msgstr "ou"
 
@@ -5078,9 +5085,6 @@ msgstr "le backlog du projet"
 
 msgid "to"
 msgstr "à"
-
-msgid "total"
-msgstr "total"
 
 msgid "trigger already exists for field value"
 msgstr "un déclencheur existe déjà pour cette valeur de champ"

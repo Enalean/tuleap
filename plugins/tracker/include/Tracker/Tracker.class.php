@@ -111,7 +111,6 @@ use Tuleap\Tracker\Permission\SubmissionPermissionVerifier;
 use Tuleap\Tracker\Permission\VerifySubmissionPermissions;
 use Tuleap\Tracker\PromotedTrackerDao;
 use Tuleap\Tracker\Semantic\Tooltip\SemanticTooltip;
-use Tuleap\Tracker\Tooltip\TooltipStatsPresenter;
 use Tuleap\Tracker\Tooltip\TrackerStats;
 use Tuleap\Tracker\TrackerColor;
 use Tuleap\Tracker\TrackerCrumbInContext;
@@ -2901,29 +2900,6 @@ class Tracker implements Tracker_Dispatchable_Interface
         }
 
         return $this->tracker_stats;
-    }
-
-    /**
-     * Fetch some statistics about this tracker to display on trackers home page
-     */
-    public function fetchStatsTooltip(PFUser $current_user): string
-    {
-        $tracker_stats = $this->getStats();
-        if ($tracker_stats === null) {
-            return '';
-        }
-
-        $tooltip_renderer = TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../../templates/tooltip');
-
-        return $tooltip_renderer->renderToString(
-            'stats-tooltip',
-            new TooltipStatsPresenter(
-                $this->getId(),
-                $this->hasSemanticsStatus(),
-                $tracker_stats,
-                $current_user
-            )
-        );
     }
 
     /**

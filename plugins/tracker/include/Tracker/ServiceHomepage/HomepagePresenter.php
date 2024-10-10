@@ -1,5 +1,6 @@
+<?php
 /**
- * Copyright (c) Enalean, 2016 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2024-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,22 +18,27 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@use "../../default/css/includes/cards";
-@use "../../default/css/includes/field-bound-colors";
-@use "../../default/css/includes/xml-validation";
-@use "includes/widgets";
-@use "includes/administration";
-@use "includes/project-tracker-background";
-@use "includes/email-copy-paste";
+declare(strict_types=1);
 
-.header-column-deleted-tracker {
-    width: 50%;
-}
+namespace Tuleap\Tracker\ServiceHomepage;
 
-.header-column-deleted-tracker-date {
-    white-space: nowrap;
-}
+/**
+ * @psalm-immutable
+ */
+final readonly class HomepagePresenter
+{
+    public string $new_tracker_uri;
+    public bool $is_empty;
 
-.tracker-aggregate-single-line {
-    display: block;
+    /**
+     * @param list<HomepageTrackerPresenter> $trackers
+     */
+    public function __construct(
+        \Project $project,
+        public bool $is_tracker_admin,
+        public array $trackers,
+    ) {
+        $this->is_empty        = $this->trackers === [];
+        $this->new_tracker_uri = TRACKER_BASE_URL . '/' . urlencode($project->getUnixNameLowerCase()) . '/new';
+    }
 }

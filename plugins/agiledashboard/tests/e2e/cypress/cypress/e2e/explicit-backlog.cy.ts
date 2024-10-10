@@ -128,7 +128,7 @@ describe(`Planning view Explicit Backlog`, function () {
 
             cy.log("Artifacts are not linked");
             cy.visitProjectService(project_name, "Trackers");
-            cy.get("[data-test=tracker-link-story]").click();
+            cy.getContains("[data-test=tracker-link]", "User Stories").click();
             cy.get("[data-test=new-artifact]").click();
             cy.get("[data-test=i_want_to]").type("Unrealistic Hobby");
             cy.get("[data-test=artifact-submit-button]").click();

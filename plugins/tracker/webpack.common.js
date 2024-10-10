@@ -52,24 +52,6 @@ const config_for_flaming_parrot = {
     plugins: [manifest_plugin, webpack_configurator.getTypescriptCheckerPlugin(false)],
 };
 
-const config_for_burning_parrot = {
-    entry: {
-        "tracker-homepage": "./scripts/tracker-homepage/src/index.ts",
-    },
-    context,
-    output,
-    externals: {
-        tlp: "tlp",
-    },
-    resolve: {
-        extensions: [".js", ".ts"],
-    },
-    module: {
-        rules: [...webpack_configurator.configureTypescriptRules()],
-    },
-    plugins: [manifest_plugin, webpack_configurator.getTypescriptCheckerPlugin(false)],
-};
-
 let entry_points = {
     "style-fp": "./themes/FlamingParrot/css/style.scss",
     print: "./themes/default/css/print.scss",
@@ -87,4 +69,4 @@ const config_for_themes = {
     plugins: [manifest_plugin, ...webpack_configurator.getCSSExtractionPlugins()],
 };
 
-module.exports = [config_for_flaming_parrot, config_for_burning_parrot, config_for_themes];
+module.exports = [config_for_flaming_parrot, config_for_themes];

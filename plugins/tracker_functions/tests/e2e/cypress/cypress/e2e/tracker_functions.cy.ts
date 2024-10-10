@@ -32,7 +32,7 @@ describe("Tuleap Functions for Trackers", () => {
         cy.log("Upload Function");
         cy.projectAdministratorSession();
         cy.visitProjectService(project_name, "Trackers");
-        cy.get("[data-test=tracker-link-functions]").click();
+        cy.getContains("[data-test=tracker-link]", "Functions").click();
         cy.get("[data-test=link-to-current-tracker-administration]").click({ force: true });
         cy.get("[data-test=tracker-functions]").click({ force: true });
         cy.get("[data-test=tracker-functions-admin-upload-modal-trigger]").click();

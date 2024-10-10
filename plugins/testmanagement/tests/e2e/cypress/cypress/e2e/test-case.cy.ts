@@ -32,7 +32,7 @@ describe(`TestManagement test case`, function () {
             cy.createNewPublicProject(project_name, "agile_alm");
 
             cy.visitProjectService(project_name, "Trackers");
-            cy.get("[data-test=tracker-link-test_case]").click();
+            cy.getContains("[data-test=tracker-link]", "Test Cases").click();
             cy.get("[data-test=new-artifact]").click();
             cy.get("[data-test=summary]").type("Modal should open");
             cy.get("[data-test=step-definition-field]").get("[data-test=add-step]").click();
