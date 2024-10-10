@@ -26,7 +26,7 @@ namespace Tuleap\Tracker\Artifact\Closure;
  * I hold a keyword to close an Artifact. Multiple variants of each keyword are supported.
  * @psalm-immutable
  */
-final class ClosingKeyword
+final readonly class ClosingKeyword
 {
     private const RESOLVE_KEYWORDS = [
         'resolve',
@@ -40,6 +40,7 @@ final class ClosingKeyword
         'closes',
         'closed',
         'closing',
+        'chore:',
     ];
 
     private const FIX_KEYWORDS = [
@@ -47,6 +48,7 @@ final class ClosingKeyword
         'fixes',
         'fixed',
         'fixing',
+        'fix:',
     ];
 
     private const IMPLEMENT_KEYWORDS = [
@@ -54,6 +56,7 @@ final class ClosingKeyword
         'implements',
         'implemented',
         'implementing',
+        'feat:',
     ];
 
     private const RESOLVES_KEYWORD   = 'resolves';
