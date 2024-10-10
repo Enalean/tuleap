@@ -690,6 +690,9 @@ msgstr "O Avatar mudou!"
 msgid "Back"
 msgstr "Voltar"
 
+msgid "Back to references"
+msgstr ""
+
 msgid "Back to the administration"
 msgstr "Voltar para a administração"
 
@@ -766,6 +769,9 @@ msgstr ""
 "Ao realizar o download deste software você implicitamente reconhece que <a "
 "href=\"%s\"><b> leu a Política</b></a> e concorda com seus termos e "
 "condições."
+
+msgid "Bypass filters"
+msgstr ""
 
 msgid "Bypass filters <em>(Site administrators only)</em>:"
 msgstr "Filtros de contorno <em>(Apenas administradores do site)</em>:"
@@ -3090,6 +3096,9 @@ msgstr "Pesquisar"
 
 msgid "Security"
 msgstr "Segurança"
+
+msgid "See %sreference pattern configuration%s for usage"
+msgstr ""
 
 msgid "See permissions"
 msgstr "Ver permissões"

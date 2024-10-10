@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2024 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -15,22 +15,12 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
-@import "project-admin/labels";
-@import "project-admin/details";
-@import "project-admin/ugroups";
-@import "project-admin/members";
-@import "project-admin/permissions";
-@import "project-admin/categories";
-@import "project-admin/services";
-@import "project-admin/references";
-
-.project-administration-title {
-    padding: var(--tlp-medium-spacing) var(--tlp-medium-spacing) 0;
-    word-break: break-all;
-}
-
-.project-administration-content {
-    padding: var(--tlp-medium-spacing) 0 0;
+.back-to-references {
+    color: var(--tlp-dimmed-color);
+    font-size: 0.875rem;
+    font-weight: 400;
+    line-height: 1.375rem;
 }

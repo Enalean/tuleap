@@ -83,8 +83,8 @@ class ReferenceAdministrationActions extends Actions
             // Add reference to ALL active projects!
             $result = $reference_manager->createSystemReference($ref, $force);
             if (! $result) {
-                exit_error(
-                    _('Error'),
+                $GLOBALS['HTML']->addFeedback(
+                    \Feedback::ERROR,
                     _('Reference pattern creation failed: the selected keyword is invalid (reserved, or already exists)')
                 );
             } else {
@@ -92,12 +92,13 @@ class ReferenceAdministrationActions extends Actions
                     \Feedback::INFO,
                     _('Successfully created system reference pattern - reference pattern added to all projects')
                 );
+                $GLOBALS['Response']->redirect('/project/' . urlencode($request->get('group_id')) . '/admin/references');
             }
         } else {
             $result = $reference_manager->createReference($ref, $force);
             if (! $result) {
-                exit_error(
-                    _('Error'),
+                $GLOBALS['HTML']->addFeedback(
+                    \Feedback::ERROR,
                     _('Reference pattern creation failed: the selected keyword is invalid (reserved, or already exists)')
                 );
             } else {
@@ -105,6 +106,7 @@ class ReferenceAdministrationActions extends Actions
                     \Feedback::INFO,
                     _('Successfully created reference pattern')
                 );
+                $GLOBALS['Response']->redirect('/project/' . urlencode($request->get('group_id')) . '/admin/references');
             }
         }
     }

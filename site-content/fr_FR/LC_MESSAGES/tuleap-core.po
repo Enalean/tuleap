@@ -703,6 +703,9 @@ msgstr "Avatar changé !"
 msgid "Back"
 msgstr "Retour"
 
+msgid "Back to references"
+msgstr "Revenir aux références"
+
 msgid "Back to the administration"
 msgstr "Retour vers l'administration"
 
@@ -780,6 +783,9 @@ msgstr ""
 "En téléchargeant ce logiciel vous reconnaissez implicitement <a "
 "href=\"%s\"><b>avoir lu cette politique d'échange de code</b></a> et être en "
 "accord avec son contenu."
+
+msgid "Bypass filters"
+msgstr "Contourner les filtres"
 
 msgid "Bypass filters <em>(Site administrators only)</em>:"
 msgstr "Ignore les filtres <em>(Administrateurs Site seulement)</em>&nbsp;:"
@@ -3145,6 +3151,9 @@ msgstr "Rechercher"
 
 msgid "Security"
 msgstr "Sécurité"
+
+msgid "See %sreference pattern configuration%s for usage"
+msgstr "Voir %sla configuration des références%s pour l'utilisation"
 
 msgid "See permissions"
 msgstr "Voir les permissions"
