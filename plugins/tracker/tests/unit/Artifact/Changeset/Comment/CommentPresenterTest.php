@@ -22,32 +22,33 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Artifact\Changeset\Comment;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\MockObject\MockObject;
+use Tracker_Artifact_Changeset;
+use Tracker_Artifact_Changeset_Comment;
 use Tuleap\GlobalLanguageMock;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
+use UserHelper;
 
-final class CommentPresenterTest extends \Tuleap\Test\PHPUnit\TestCase
+final class CommentPresenterTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
     use GlobalLanguageMock;
 
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|\UserHelper
-     */
-    private $user_helper;
+    private MockObject&UserHelper $user_helper;
 
     protected function setUp(): void
     {
-        $this->user_helper = \Mockery::mock(\UserHelper::class);
+        $this->user_helper = $this->createMock(UserHelper::class);
         $GLOBALS['Language']
             ->method('getText')
             ->with('system', 'datefmt')
             ->willReturn('d/m/Y H:i');
-        $this->user_helper->shouldReceive('getLinkOnUserFromUserId')
+        $this->user_helper->expects(self::once())->method('getLinkOnUserFromUserId')
             ->with(101)
-            ->once()
-            ->andReturn('<a href="https://example.com">A user</a>');
+            ->willReturn('<a href="https://example.com">A user</a>');
     }
 
     public function testItBuildsACommentPresenter(): void
@@ -92,12 +93,12 @@ final class CommentPresenterTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertTrue($presenter->was_cleared);
     }
 
-    private function buildComment(string $body, string $format, int $parent_id): \Tracker_Artifact_Changeset_Comment
+    private function buildComment(string $body, string $format, int $parent_id): Tracker_Artifact_Changeset_Comment
     {
-        $tracker = \Mockery::mock(\Tracker::class);
-        $tracker->shouldReceive('getGroupId')->andReturn(110);
         $tracker_id = 15;
-        $tracker->shouldReceive('getId')->andReturn($tracker_id);
+        $tracker    = TrackerTestBuilder::aTracker()->withId($tracker_id)->withProject(
+            ProjectTestBuilder::aProject()->withId(110)->build()
+        )->build();
 
         $submitter_user_id = 101;
         $artifact          = new Artifact(48, $tracker_id, $submitter_user_id, 1234567890, false);
@@ -105,14 +106,14 @@ final class CommentPresenterTest extends \Tuleap\Test\PHPUnit\TestCase
         $changeset_id = '102';
 
         $changeset_submission_timestamp = 1234567891;
-        $changeset                      = new \Tracker_Artifact_Changeset(
+        $changeset                      = new Tracker_Artifact_Changeset(
             $changeset_id,
             $artifact,
             $submitter_user_id,
             $changeset_submission_timestamp,
             null
         );
-        return new \Tracker_Artifact_Changeset_Comment(
+        return new Tracker_Artifact_Changeset_Comment(
             $changeset_id,
             $changeset,
             null,
