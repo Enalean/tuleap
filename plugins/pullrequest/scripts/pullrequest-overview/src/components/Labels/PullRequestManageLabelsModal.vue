@@ -24,6 +24,7 @@
         role="dialog"
         aria-labelledby="manage-labels-modal-title"
         ref="modal_element"
+        data-test="manage-labels-modal"
     >
         <div class="tlp-modal-header">
             <h1 id="manage-labels-modal-title" class="tlp-modal-title">

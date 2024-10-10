@@ -23,6 +23,7 @@
         v-bind:disabled="is_button_disabled"
         v-bind:title="button_title"
         v-on:click="showModal"
+        data-test="create-pull-request"
     >
         <i class="fas fa-code-branch fa-rotate-270 tlp-button-icon"></i>
         <translate>Create pull request</translate>

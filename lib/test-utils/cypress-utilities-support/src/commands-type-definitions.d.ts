@@ -122,6 +122,8 @@ declare global {
                 dropdown_item_label: string,
             ): Chainable<JQuery<HTMLElement>>;
 
+            addItemInLazyboxDropdown(query: string): void;
+
             searchItemInListPickerDropdown(
                 dropdown_item_label: string,
             ): Chainable<JQuery<HTMLElement>>;

@@ -257,6 +257,21 @@ Cypress.Commands.add("searchItemInLazyboxDropdown", (query, dropdown_item_label)
     });
 });
 
+Cypress.Commands.add("addItemInLazyboxDropdown", (query: string) => {
+    cy.get("[data-test=lazybox]").click();
+    // Use Cypress.$ to escape from cy.within(), see https://github.com/cypress-io/cypress/issues/6666
+    cy.wrap(Cypress.$("body")).then((body) => {
+        cy.wrap(body)
+            .find("[data-test=lazybox-search-field]", { includeShadowDom: true })
+            .type(query);
+        // Lazybox waits a delay before loading items
+
+        cy.wait(LINK_SELECTOR_TRIGGER_CALLBACK_DELAY_IN_MS);
+        cy.wrap(body).find("[data-test=lazybox-loading-group-spinner]").should("not.exist");
+        cy.wrap(body).find("[data-test=new-item-button]").click();
+    });
+});
+
 Cypress.Commands.add("searchItemInListPickerDropdown", (dropdown_item_label) => {
     cy.get("[data-test=list-picker-selection]").click();
     // Use Cypress.$ to escape from cy.within(), see https://github.com/cypress-io/cypress/issues/6666
