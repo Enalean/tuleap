@@ -67,26 +67,27 @@ describe("Artifact link usage", () => {
                 .as("project_id")
                 .then((project_id) => {
                     cy.getTrackerIdFromREST(project_id, "artifact_link").then((tracker_id) => {
+                        cy.wrap(tracker_id).as("tracker_id");
                         cy.createArtifact({
-                            tracker_id: tracker_id,
+                            tracker_id,
                             artifact_title: "Fixed By",
                             title_field_name: TITLE_FIELD_NAME,
                         }).as("fixed_by_artifact");
 
                         cy.createArtifact({
-                            tracker_id: tracker_id,
+                            tracker_id,
                             artifact_title: "Fixed In",
                             title_field_name: TITLE_FIELD_NAME,
                         }).as("fixed_in_artifact");
 
                         cy.createArtifact({
-                            tracker_id: tracker_id,
+                            tracker_id,
                             artifact_title: "Parent of",
                             title_field_name: TITLE_FIELD_NAME,
                         }).as("parent_of_artifact");
 
                         cy.createArtifact({
-                            tracker_id: tracker_id,
+                            tracker_id,
                             artifact_title: "Child of",
                             title_field_name: TITLE_FIELD_NAME,
                         }).as("child_of_artifact");
@@ -99,8 +100,7 @@ describe("Artifact link usage", () => {
             disableArtifactLinkUsage(this.project_id);
 
             cy.log("Fixed in nature is not available when nature is disabled");
-            cy.visitProjectService("tracker-artifact", "Trackers");
-            cy.get("[data-test=tracker-link-artifact_link]").click();
+            cy.visit(`/plugins/tracker/?tracker=${this.tracker_id}`);
             cy.get("[data-test=direct-link-to-artifact]").first().click();
             cy.get("[data-test=edit-field-links]").click();
 
@@ -108,7 +108,6 @@ describe("Artifact link usage", () => {
 
             enableArtifactLinkUsage(this.project_id);
             cy.log("Fixed in nature can be used");
-            cy.visitProjectService("tracker-artifact", "Trackers");
             cy.visit("/plugins/tracker/?&aid=" + this.fixed_in_artifact);
             cy.get("[data-test=edit-field-links]").click();
             cy.get("[data-test=artifact-link-submit]").type(this.fixed_by_artifact);
@@ -126,7 +125,6 @@ describe("Artifact link usage", () => {
 
         it("can use _is_child nature", function () {
             cy.projectAdministratorSession();
-            cy.visitProjectService("tracker-artifact", "Trackers");
             cy.visit("/plugins/tracker/?&aid=" + this.child_of_artifact);
             cy.get("[data-test=edit-field-links]").click();
             cy.get("[data-test=artifact-link-submit]").type(this.parent_of_artifact);
@@ -150,19 +148,19 @@ describe("Artifact link usage", () => {
                 .then((project_id) => {
                     cy.getTrackerIdFromREST(project_id, "issue").then((tracker_id) => {
                         cy.createArtifact({
-                            tracker_id: tracker_id,
+                            tracker_id,
                             artifact_title: "Parent",
                             title_field_name: TITLE_FIELD_NAME,
                         }).as("parent_artifact");
 
                         cy.createArtifact({
-                            tracker_id: tracker_id,
+                            tracker_id,
                             artifact_title: "Update",
                             title_field_name: TITLE_FIELD_NAME,
                         }).as("update_parent");
 
                         cy.createArtifact({
-                            tracker_id: tracker_id,
+                            tracker_id,
                             artifact_title: "Create parent",
                             title_field_name: TITLE_FIELD_NAME,
                         }).as("create_parent");

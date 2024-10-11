@@ -1,0 +1,38 @@
+<h1 class="trackers-homepage-title">
+    {{# dgettext }}tuleap-tracker | Trackers{{/ dgettext }}
+{{# is_tracker_admin }}
+    <a class="tlp-button-primary" data-test="new-tracker-creation" href="{{ new_tracker_uri }}">
+        <i class="fa-solid fa-plus tlp-button-icon" aria-hidden="true"></i>
+        {{# dgettext }}tuleap-tracker | New tracker{{/ dgettext }}
+    </a>
+{{/ is_tracker_admin }}
+</h1>
+<div class="trackers-homepage">
+{{# is_empty }}
+    <p>{{# dgettext }}tuleap-tracker | No trackers have been set up, or you are not allowed to view them.{{/ dgettext }}</p>
+{{/ is_empty }}
+{{# trackers }}
+    <a
+        class="tlp-card tlp-card-selectable trackers-homepage-tracker tlp-swatch-{{ color }}"
+        href="{{ uri }}"
+        data-test="tracker-link"
+        data-test-tracker-id="{{ tracker_id }}"
+        data-tracker-id="{{ tracker_id }}"
+        data-tracker-card
+    >
+        <span class="trackers-homepage-tracker-title-container">
+            <span class="trackers-homepage-tracker-title">{{ label }}</span>
+        {{# has_statistics }}
+            <span class="trackers-homepage-tracker-spacer"></span>
+            <span class="trackers-homepage-tracker-badge tlp-badge-{{ color }} tlp-badge-outline">
+                {{ nb_artifacts }}
+            </span>
+        {{/ has_statistics }}
+        </span>
+        <span class="trackers-homepage-tracker-description">{{ description }}</span>
+    </a>
+    {{# tooltip }}
+        {{> stats-tooltip }}
+    {{/ tooltip }}
+{{/ trackers }}
+</div>

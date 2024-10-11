@@ -25,6 +25,12 @@ msgid "\"start date\" field is empty or invalid"
 msgstr ""
 
 #, php-format
+msgid "%1$d open / %2$d total"
+msgid_plural "%1$d open / %2$d total"
+msgstr[0] ""
+msgstr[1] ""
+
+#, php-format
 msgid "%1$s : artifact #%2$s does not exist."
 msgstr ""
 
@@ -90,6 +96,10 @@ msgstr ""
 
 #, php-format
 msgid "%1s - open %2s"
+msgstr ""
+
+#, php-format
+msgid "%d total"
 msgstr ""
 
 msgid "%s administration"
@@ -4382,9 +4392,6 @@ msgstr ""
 msgid "of type"
 msgstr ""
 
-msgid "open"
-msgstr ""
-
 msgid "or"
 msgstr "ou"
 
@@ -4433,9 +4440,6 @@ msgstr ""
 
 msgid "to"
 msgstr "para"
-
-msgid "total"
-msgstr ""
 
 msgid "trigger already exists for field value"
 msgstr ""

@@ -19,7 +19,9 @@
 
 function getTrackerIdFromTrackerListPage(): Cypress.Chainable<JQuery<HTMLElement>> {
     cy.visitProjectService("tql", "Trackers");
-    return cy.get("[data-test=tracker-link-tql]").should("have.attr", "data-test-tracker-id");
+    return cy
+        .getContains("[data-test=tracker-link]", "TQL")
+        .should("have.attr", "data-test-tracker-id");
 }
 
 interface TrackerField {
@@ -97,8 +99,7 @@ describe("Report expert queries", () => {
     it("TQL queries", function () {
         cy.log("bug1 for summary='bug1'");
         cy.projectMemberSession();
-        cy.visitProjectService("tql", "Trackers");
-        cy.get("[data-test=tracker-link-tql]").click();
+        cy.visit(`/plugins/tracker/?tracker=${this.tql_tracker_id}`);
         findArtifactsWithExpertQuery("summary='bug1'");
         checkOnlyExpectedArtifactsAreListed(this.summary_field_id, ["bug1"]);
 
@@ -159,10 +160,9 @@ describe("Report expert queries", () => {
         checkOnlyExpectedArtifactsAreListed(this.summary_field_id, ["bug1"]);
     });
 
-    it("Shows error", () => {
+    it("Shows error", function () {
         cy.projectMemberSession();
-        cy.visitProjectService("tql", "Trackers");
-        cy.get("[data-test=tracker-link-tql]").click();
+        cy.visit(`/plugins/tracker/?tracker=${this.tql_tracker_id}`);
         findArtifactsWithExpertQuery('summary="bug1');
 
         cy.get("[data-test=feedback]").contains("Error during parsing expert query");

@@ -4,7 +4,6 @@
         "types": ["jquery", "bootstrap"],
     },
     "include": [
-        "scripts/tracker-homepage/**/*",
-        "scripts/header/**/*",
+        "scripts/header/**/*"
     ]
 }

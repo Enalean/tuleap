@@ -55,7 +55,7 @@ describe(`Computed fields`, function () {
         cy.get("[data-test=artifact-modal-save-button]").click();
 
         cy.visitProjectService(`computed-${now}`, "Tracker");
-        cy.get("[data-test=tracker-link-rel]").click();
+        cy.getContains("[data-test=tracker-link]", "Releases").click();
 
         cy.log("copy artifact with children with 0 as manual value");
         cy.get("[data-test=direct-link-to-artifact]").click();
@@ -78,7 +78,7 @@ describe(`Computed fields`, function () {
     it(`User can submit new artifacts`, function () {
         cy.projectMemberSession();
         cy.visitProjectService(`computed-${now}`, "Trackers");
-        cy.get("[data-test=tracker-link-rel]").click();
+        cy.getContains("[data-test=tracker-link]", "Releases").click();
         cy.get("[data-test=new-artifact]").click();
         cy.get("[data-test=release_number]").type("R0");
         cy.get("[data-test=submit-and-continue]").click();

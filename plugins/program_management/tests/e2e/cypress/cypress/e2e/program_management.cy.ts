@@ -105,7 +105,7 @@ function createAndLinkUserStory(
 ): void {
     cy.log("Create a user story");
     cy.visitProjectService(team_project_name, "Trackers");
-    cy.get("[data-test=tracker-link-story]").click();
+    cy.getContains("[data-test=tracker-link]", "User Stories").click();
     cy.get("[data-test=create-new]").click();
     cy.get("[data-test=create-new-item]").first().click();
     cy.get("[data-test=i_want_to]").type("My US");
@@ -159,7 +159,7 @@ function createAndPlanFeature(program_project_name: string, team_project_name: s
 
     cy.log("Create a feature");
     cy.visitProjectService(program_project_name, "Trackers");
-    cy.get("[data-test=tracker-link-feature]").click();
+    cy.getContains("[data-test=tracker-link]", "Features").click();
     cy.get("[data-test=create-new]").click();
     cy.get("[data-test=create-new-item]").first().click();
     cy.get("[data-test=title]").type("My awesome feature");

@@ -21,9 +21,14 @@
 import { PROJECT_ADMINISTRATORS_ID } from "@tuleap/core-constants";
 import { POST_ACTION_TYPE } from "../../../../../scripts/workflow-transitions/src/constants/workflow-constants";
 
-function getTrackerIdFromTrackerListPage(): Cypress.Chainable<JQuery<HTMLElement>> {
-    cy.visitProjectService("tracker-project", "Trackers");
-    return cy.get("[data-test=tracker-link-workflow]").should("have.attr", "data-test-tracker-id");
+function getTrackerIdFromTrackerListPage(
+    project_name: string,
+    tracker_label: string,
+): Cypress.Chainable<string> {
+    cy.visitProjectService(project_name, "Trackers");
+    return cy
+        .getContains("[data-test=tracker-link]", tracker_label)
+        .invoke("data", "testTrackerId");
 }
 
 function saveTransition(
@@ -53,10 +58,10 @@ describe(`Tracker Workflow`, () => {
 
     it(`has an empty state`, function () {
         cy.projectAdministratorSession();
-        getTrackerIdFromTrackerListPage()
+        getTrackerIdFromTrackerListPage("tracker-project", "Workflow")
             .as("workflow_tracker_id")
-            .then((workflow_tracker_id: Cypress.ObjectLike) => {
-                cy.visit(`/plugins/tracker/workflow/${workflow_tracker_id}/transitions`);
+            .then((tracker_id) => {
+                cy.visit(`/plugins/tracker/workflow/${tracker_id}/transitions`);
             });
     });
 
@@ -68,11 +73,9 @@ describe(`Tracker Workflow`, () => {
     context("Simple mode", () => {
         it(`can create and configure a workflow`, function () {
             cy.projectAdministratorSession();
-            getTrackerIdFromTrackerListPage()
-                .as("workflow_tracker_id")
-                .then((workflow_tracker_id: Cypress.ObjectLike) => {
-                    cy.visit(`/plugins/tracker/workflow/${workflow_tracker_id}/transitions`);
-                });
+            getTrackerIdFromTrackerListPage("tracker-project", "Workflow").then((tracker_id) => {
+                cy.visit(`/plugins/tracker/workflow/${tracker_id}/transitions`);
+            });
             /* Create the workflow */
             cy.get("[data-test=tracker-workflow-first-configuration]").within(() => {
                 cy.get("[data-test=list-fields]").select(STATUS_FIELD_LABEL);
@@ -152,7 +155,7 @@ describe(`Tracker Workflow`, () => {
             it(`User can switch mode to use simple mode`, function () {
                 cy.projectAdministratorSession();
                 cy.visitProjectService("workflow", "Trackers");
-                cy.get("[data-test=tracker-link-workflow_simple_mode]").click();
+                cy.getContains("[data-test=tracker-link]", "Workflow Simple Mode").click();
                 cy.get("[data-test=link-to-current-tracker-administration]").click({ force: true });
                 cy.get("[data-test=workflow]").click();
                 cy.get("[data-test=transitions]").click();
@@ -224,7 +227,7 @@ describe(`Tracker Workflow`, () => {
             cy.projectMemberSession();
             cy.log("Everything is visible at artifact creation");
             cy.visitProjectService("workflow", "Trackers");
-            cy.get('[data-test="tracker-link-bugs_hidden"]').click();
+            cy.getContains("[data-test=tracker-link]", "Bug Hidden").click();
             cy.get("[data-test=new-artifact]").click();
             cy.get("[data-test=summary]").type("My artifact");
 
@@ -248,7 +251,7 @@ describe(`Tracker Workflow`, () => {
             cy.projectMemberSession();
             cy.log("Every field can be updated at artifact creation");
             cy.visitProjectService("workflow", "Trackers");
-            cy.get("[data-test=tracker-link-frozen_fields]").click();
+            cy.getContains("[data-test=tracker-link]", "Frozen fields").click();
             cy.get("[data-test=new-artifact]").click();
             cy.get("[data-test=title]").type("My artifact");
             cy.get("[data-test=points]").type("10");
@@ -265,7 +268,7 @@ describe(`Tracker Workflow`, () => {
             cy.projectMemberSession();
             cy.log("Comment is not required at creation");
             cy.visitProjectService("workflow", "Trackers");
-            cy.get("[data-test=tracker-link-required]").click();
+            cy.getContains("[data-test=tracker-link]", "required comments").click();
             cy.get("[data-test=new-artifact]").click();
             cy.get("[data-test=title]").type("My artifact");
 
@@ -288,7 +291,7 @@ describe(`Tracker Workflow`, () => {
             cy.projectMemberSession();
             cy.log("Fields are not required a submission");
             cy.visitProjectService("workflow", "Trackers");
-            cy.get("[data-test=tracker-link-required_fields]").click();
+            cy.getContains("[data-test=tracker-link]", "required fields").click();
             cy.get("[data-test=new-artifact]").click();
             cy.get("[data-test=title]").type("My artifact");
 
@@ -311,14 +314,12 @@ describe(`Tracker Workflow`, () => {
             cy.projectAdministratorSession();
             const now = Date.now();
             const project_name = "transitions-" + now;
-            cy.createNewPublicProject(project_name, "issues").then(() => {
-                cy.addProjectMember(project_name, "projectMember");
-            });
+            cy.createNewPublicProject(project_name, "issues");
+            cy.addProjectMember(project_name, "projectMember");
 
             cy.projectAdministratorSession();
             cy.log("Import the tracker from XML");
-            cy.visitProjectService(project_name, "Trackers");
-            cy.get("[data-test=new-tracker-creation]").click();
+            cy.visit(`/plugins/tracker/${project_name}/new`);
             cy.get("[data-test=template-xml-description]").click();
             cy.get("[data-test=tracker-creation-xml-file-selector]").selectFile(
                 "./_fixtures/TrackerValidPostAction.xml",
@@ -353,10 +354,11 @@ describe(`Tracker Workflow`, () => {
             cy.get("[data-test=workflow-transitions-enabled]").click({ force: true });
 
             cy.log("Create a new Artifact should set Start Date");
-            cy.visitProjectService(project_name, "Trackers");
-            cy.get("[data-test=tracker-link-SR8]").click();
-            cy.get("[data-test=create-new]").click();
-            cy.get("[data-test=create-new-item]").first().click();
+            getTrackerIdFromTrackerListPage(project_name, "SR8")
+                .as("tracker_id")
+                .then((tracker_id) => {
+                    cy.visit(`/plugins/tracker/?tracker=${tracker_id}&func=new-artifact`);
+                });
             cy.get("[data-test=summary]").type("My artifact");
             cy.get("[data-test=artifact-submit-and-stay]").click();
             const today = new Date().toISOString().slice(0, 10);
@@ -391,9 +393,9 @@ describe(`Tracker Workflow`, () => {
             cy.get("[data-test=submit-permissions]").click();
 
             cy.projectMemberSession();
-
-            cy.visitProjectService(project_name, "Trackers");
-            cy.get("[data-test=tracker-link-SR8]").click();
+            cy.wrap("").then(() => {
+                cy.visit(`/plugins/tracker?tracker=${this.tracker_id}`);
+            });
             cy.get("[data-test=direct-link-to-artifact]").click();
             selectLabelInListPickerDropdown("Open");
             cy.get("[data-test=artifact-submit-and-stay]").click();
@@ -403,10 +405,10 @@ describe(`Tracker Workflow`, () => {
             );
 
             cy.projectAdministratorSession();
-            cy.visitProjectService(project_name, "Trackers");
-            cy.get("[data-test=tracker-link-SR8]").click();
+            cy.wrap("").then(() => {
+                cy.visit(`/plugins/tracker?tracker=${this.tracker_id}&func=admin`);
+            });
             cy.log("User can change artifact status even when he can not see date field");
-            cy.get("[data-test=link-to-current-tracker-administration]").click({ force: true });
             cy.get("[data-test=admin-permissions]").click();
             cy.get("[data-test=field-permissions]").click();
             cy.get("[data-test=select-field-permissions]").select("Close date");
@@ -417,17 +419,18 @@ describe(`Tracker Workflow`, () => {
             cy.get("[data-test=submit-permissions]").click();
 
             cy.projectMemberSession();
-
-            cy.visitProjectService(project_name, "Trackers");
-            cy.get("[data-test=tracker-link-SR8]").click();
+            cy.wrap("").then(() => {
+                cy.visit(`/plugins/tracker?tracker=${this.tracker_id}`);
+            });
             cy.get("[data-test=direct-link-to-artifact]").click();
             selectLabelInListPickerDropdown("Close");
             cy.get("[data-test=artifact-submit-and-stay]").click();
             cy.get("[data-test=tracker-artifact-value-close_date]").should("not.exist");
 
             cy.projectAdministratorSession();
-            cy.visitProjectService(project_name, "Trackers");
-            cy.get("[data-test=tracker-link-SR8]").click();
+            cy.wrap("").then(() => {
+                cy.visit(`/plugins/tracker?tracker=${this.tracker_id}`);
+            });
             cy.get("[data-test=direct-link-to-artifact]").click();
             cy.get("[data-test=tracker-artifact-value-close_date]").contains(today);
         });

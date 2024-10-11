@@ -134,23 +134,24 @@ describe("Kanban service", () => {
             const project_name = `filtered-${now}`;
             cy.createNewPublicProject(project_name, "kanban").then((project_id) => {
                 const TITLE_FIELD_NAME = "title";
-                cy.getTrackerIdFromREST(project_id, "activity").then((tracker_id) => {
-                    cy.createArtifact({
-                        tracker_id: tracker_id,
-                        artifact_title: "an artifact with title",
-                        artifact_status: "To be done",
-                        title_field_name: TITLE_FIELD_NAME,
-                    });
+                cy.getTrackerIdFromREST(project_id, "activity")
+                    .as("tracker_id")
+                    .then((tracker_id) => {
+                        cy.createArtifact({
+                            tracker_id,
+                            artifact_title: "an artifact with title",
+                            artifact_status: "To be done",
+                            title_field_name: TITLE_FIELD_NAME,
+                        });
 
-                    cy.createArtifact({
-                        tracker_id: tracker_id,
-                        artifact_title: "bla bla",
-                        artifact_status: "To be done",
-                        title_field_name: TITLE_FIELD_NAME,
+                        cy.createArtifact({
+                            tracker_id,
+                            artifact_title: "bla bla",
+                            artifact_status: "To be done",
+                            title_field_name: TITLE_FIELD_NAME,
+                        });
                     });
-                });
             });
-            cy.projectAdministratorSession();
 
             cy.visit(`/projects/${project_name}`);
             cy.log("create some empty dashboard in order to add multiple widgets");
@@ -170,8 +171,9 @@ describe("Kanban service", () => {
             cy.get("[data-test=feedback]").contains("The widget has been added successfully");
 
             cy.log("create some filter to have filtered kanban");
-            cy.visitProjectService(project_name, "Tracker");
-            cy.get("[data-test=tracker-link-activity]").click();
+            cy.wrap("").then(() => {
+                cy.visit(`/plugins/tracker?tracker=${this.tracker_id}`);
+            });
             cy.get("[data-test=expert-mode]").click();
 
             // eslint-disable-next-line cypress/require-data-selectors
@@ -243,8 +245,9 @@ describe("Kanban service", () => {
             cy.get("[data-test=dashboard-title]").contains("Activities - My custom report");
 
             cy.log("When report is deleted kanban is no longer filtered");
-            cy.visitProjectService(project_name, "Tracker");
-            cy.get("[data-test=tracker-link-activity]").click();
+            cy.wrap("").then(() => {
+                cy.visit(`/plugins/tracker?tracker=${this.tracker_id}`);
+            });
 
             cy.get("[data-test=tracker_report_options]").first().click();
             cy.get("[data-test=tracker_report_updater_delete]").click();

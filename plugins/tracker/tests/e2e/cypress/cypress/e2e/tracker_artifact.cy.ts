@@ -24,7 +24,7 @@ function submitAndStay(): void {
 
 function createNewBug(bug_title: string): void {
     cy.visitProjectService("tracker-artifact", "Trackers");
-    cy.get("[data-test=tracker-link-bug]").click();
+    cy.getContains("[data-test=tracker-link]", "Bugs").click();
     cy.get("[data-test=create-new]").click();
     cy.get("[data-test=create-new-item]").first().click();
     cy.get("[data-test=summary]").type(bug_title);
@@ -101,7 +101,7 @@ describe("Tracker artifacts", function () {
         it("can add a report on the project home page", function () {
             cy.projectAdministratorSession();
             cy.visitProjectService("tracker-artifact", "Trackers");
-            cy.get("[data-test=tracker-link-artifact_link]").click();
+            cy.getContains("[data-test=tracker-link]", "artifact-link").click();
             cy.get("[data-test=add-to-project-dashboard]").click();
 
             cy.get("[data-test=artifact-report-table]").contains("test A");
@@ -222,8 +222,7 @@ describe("Tracker artifacts", function () {
         it("can add a report on his dashboard", function () {
             cy.projectMemberSession();
             cy.visitProjectService("tracker-artifact", "Trackers");
-            cy.visitProjectService("tracker-artifact", "Trackers");
-            cy.get("[data-test=tracker-link-artifact_link]").click();
+            cy.getContains("[data-test=tracker-link]", "artifact-link").click();
             cy.get("[data-test=add-to-my-dashboard]").first().click({ force: true });
 
             cy.get("[data-test=artifact-report-table]").contains("test A");
@@ -251,8 +250,7 @@ describe("Tracker artifacts", function () {
         it("tracker admin must be able to delegate tracker administration privilege", function () {
             cy.projectAdministratorSession();
             cy.visitProjectService("tracker-artifact", "Trackers");
-
-            cy.get("[data-test=tracker-link-bug]").click();
+            cy.getContains("[data-test=tracker-link]", "Bugs").click();
 
             cy.get("[data-test=link-to-current-tracker-administration]").click({ force: true });
 
@@ -266,8 +264,7 @@ describe("Tracker artifacts", function () {
             cy.get("[data-test=feedback]").contains("Permissions Updated");
 
             cy.visitProjectService("tracker-artifact", "Trackers");
-
-            cy.get("[data-test=tracker-link-story]").click();
+            cy.getContains("[data-test=tracker-link]", "User Stories").click();
             cy.get("[data-test=link-to-current-tracker-administration]").click({ force: true });
 
             cy.get("[data-test=admin-permissions]").click();
@@ -309,8 +306,7 @@ describe("Tracker artifacts", function () {
         it("user with tracker admin permissions are tracker admin", function () {
             cy.projectMemberSession();
             cy.visitProjectService("tracker-artifact", "Trackers");
-
-            cy.get("[data-test=tracker-link-bug]").click();
+            cy.getContains("[data-test=tracker-link]", "Bugs").click();
             cy.get("[data-test=link-to-current-tracker-administration]").click({ force: true });
         });
     });

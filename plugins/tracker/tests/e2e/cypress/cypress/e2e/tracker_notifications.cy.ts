@@ -18,7 +18,6 @@
  */
 
 const PROJECT_NAME = "conditional-notifications";
-const TRACKER_SHORTNAME = "cond_notif";
 
 function addToNotifications(label: string): void {
     // ignore rule for select2
@@ -76,7 +75,7 @@ describe("Tracker notifications", () => {
 
             cy.log("Add project and configure calendar option");
             cy.visitProjectService(project_name, "Trackers");
-            cy.get("[data-test=tracker-link-rel]").click();
+            cy.getContains("[data-test=tracker-link]", "Releases").click();
             goToNotificationAdministration();
             cy.get("[data-test=enable-calendar-events]").click();
             cy.get("[data-test=submit-changes]").click();
@@ -115,7 +114,8 @@ describe("Tracker notifications", () => {
         cy.projectAdministratorSession();
 
         cy.visitProjectService(PROJECT_NAME, "Trackers");
-        cy.get(`[data-test=tracker-link-${TRACKER_SHORTNAME}]`).click();
+        const TRACKER_LABEL = "Conditional Notifications";
+        cy.getContains("[data-test=tracker-link]", TRACKER_LABEL).click();
         cy.get("[data-test=link-to-current-tracker-administration]").click({ force: true });
         cy.get("[data-test=workflow]").click();
         cy.get("[data-test=field-dependencies]").click();
@@ -150,7 +150,7 @@ describe("Tracker notifications", () => {
         );
         cy.projectAdministratorSession();
         cy.visitProjectService(PROJECT_NAME, "Trackers");
-        cy.get(`[data-test=tracker-link-${TRACKER_SHORTNAME}]`).click();
+        cy.getContains("[data-test=tracker-link]", TRACKER_LABEL).click();
         cy.get("[data-test=create-new]").click();
         cy.get("[data-test=create-new-item]").first().click();
         cy.get("[data-test=summary_1]").type("My conditional notification");
@@ -245,7 +245,7 @@ describe("Tracker notifications", () => {
         cy.addUserGroupWithUsers("my_custom_group", ["ARegularUser"]);
 
         cy.visitProjectService(project_name, "Trackers");
-        cy.get("[data-test=tracker-link-issue]").click();
+        cy.getContains("[data-test=tracker-link]", "Issues").click();
 
         cy.log("Configure tracker notifications");
         goToNotificationAdministration();
@@ -330,7 +330,7 @@ describe("Tracker notifications", () => {
         cy.addUserGroupWithUsers("empty", []);
 
         cy.visitProjectService(project_name, "Trackers");
-        cy.get("[data-test=tracker-link-issue]").click();
+        cy.getContains("[data-test=tracker-link]", "Issues").click();
 
         cy.log("Project member must be tracker administrator");
         cy.get("[data-test=link-to-current-tracker-administration]").click({ force: true });
@@ -342,7 +342,7 @@ describe("Tracker notifications", () => {
 
         cy.projectMemberSession();
         cy.visitProjectService(project_name, "Trackers");
-        cy.get("[data-test=tracker-link-issue]").click();
+        cy.getContains("[data-test=tracker-link]", "Issues").click();
 
         cy.log("Configure tracker notifications");
         goToNotificationAdministration();

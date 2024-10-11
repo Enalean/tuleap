@@ -21,7 +21,7 @@ describe("Empty Followup", () => {
         cy.projectAdministratorSession();
         cy.visitProjectService("empty-followup", "Trackers");
 
-        cy.get("[data-test=tracker-link-bugs]").click();
+        cy.getContains("[data-test=tracker-link]", "Bugs").click();
         cy.get("[data-test=direct-link-to-artifact]").first().click();
 
         cy.get("[data-test=artifact-follow-up]").should("have.length", 4);
@@ -74,7 +74,7 @@ describe("Empty Followup", () => {
     it("When user is Project Member, Then he can not see private comment and hidden field and there are not empty follow-up", () => {
         cy.projectMemberSession();
         cy.visitProjectService("empty-followup", "Trackers");
-        cy.get("[data-test=tracker-link-bugs]").click();
+        cy.getContains("[data-test=tracker-link]", "Bugs").click();
         cy.get("[data-test=direct-link-to-artifact]").first().click();
         cy.get("[data-test=artifact-follow-up]").should("have.length", 2);
 

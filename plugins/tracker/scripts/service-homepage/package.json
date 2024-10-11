@@ -1,0 +1,21 @@
+{
+  "author": "Enalean Team",
+  "name": "@tuleap/plugin-tracker-service-homepage",
+  "homepage": "https://tuleap.org",
+  "license": "GPL-2.0-or-later",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "@tuleap/tlp-popovers": "workspace:^",
+    "@tuleap/tlp-relative-date": "workspace:^",
+    "@tuleap/tlp-swatch-colors": "workspace:^"
+  },
+  "devDependencies": {
+    "@tuleap/build-system-configurator": "workspace:^"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "build": "vite build",
+    "watch": "vite build --watch --mode development --minify false"
+  }
+}
