@@ -2,6 +2,12 @@
 
 set -ex
 
+set_community_version() {
+    if [ ! -f ENTERPRISE_BUILD ]; then
+        tools/utils/version_numbers/update-community-version.sh
+    fi
+}
+
 build_generated_files() {
     CYPRESS_INSTALL_BINARY=0 pnpm install --frozen-lockfile && pnpm run build
     make composer preload MODE=Prod
@@ -19,5 +25,6 @@ configure_composer_github_auth(){
     fi
 }
 
+set_community_version
 configure_composer_github_auth
 build_generated_files $@
