@@ -29,6 +29,12 @@ import { createLocalVueForTests } from "../../../helpers/local-vue-for-tests";
 
 jest.useFakeTimers();
 
+type RegenerateGitlabWebhookExposed = {
+    message_error_rest: string;
+    repository: Repository;
+    is_updating_webhook: boolean;
+};
+
 describe("RegenerateGitlabWebhook", () => {
     let store_options = {},
         store: Store;
@@ -40,13 +46,13 @@ describe("RegenerateGitlabWebhook", () => {
         };
     });
 
-    async function instantiateComponent(): Promise<Wrapper<RegenerateGitlabWebhook>> {
+    async function instantiateComponent(): Promise<Wrapper<Vue & RegenerateGitlabWebhookExposed>> {
         store = createStoreMock(store_options);
 
         return shallowMount(RegenerateGitlabWebhook, {
             mocks: { $store: store },
             localVue: await createLocalVueForTests(),
-        });
+        }) as Wrapper<Vue & RegenerateGitlabWebhookExposed>;
     }
 
     it("When the user confirms new token, Then api is called", async () => {
@@ -124,7 +130,7 @@ describe("RegenerateGitlabWebhook", () => {
         wrapper.find("[data-test=regenerate-gitlab-webhook-submit]").trigger("click");
         await jest.runOnlyPendingTimersAsync();
 
-        expect(wrapper.vm.$data.message_error_rest).toBe("404 Error on server");
+        expect(wrapper.vm.message_error_rest).toBe("404 Error on server");
         expect(
             wrapper.find("[data-test=regenerate-gitlab-webhook-submit]").attributes().disabled,
         ).toBeTruthy();
@@ -148,8 +154,8 @@ describe("RegenerateGitlabWebhook", () => {
 
         await wrapper.find("[data-test=regenerate-gitlab-webhook-cancel]").trigger("click");
 
-        expect(wrapper.vm.$data.message_error_rest).toBe("");
-        expect(wrapper.vm.$data.repository).toBeNull();
-        expect(wrapper.vm.$data.is_updating_webhook).toBeFalsy();
+        expect(wrapper.vm.message_error_rest).toBe("");
+        expect(wrapper.vm.repository).toBeNull();
+        expect(wrapper.vm.is_updating_webhook).toBeFalsy();
     });
 });

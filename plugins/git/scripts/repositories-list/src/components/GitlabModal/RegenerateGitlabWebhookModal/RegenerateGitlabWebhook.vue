@@ -18,7 +18,12 @@
   -->
 
 <template>
-    <div role="dialog" aria-labelledby="regenerate-gitlab-webhook" class="tlp-modal">
+    <div
+        role="dialog"
+        aria-labelledby="regenerate-gitlab-webhook"
+        class="tlp-modal"
+        ref="modal_element"
+    >
         <div class="tlp-modal-header">
             <h1 class="tlp-modal-title" id="regenerate-gitlab-webhook">
                 {{ $gettext("Regenerate the GitLab webhook") }}
@@ -79,128 +84,128 @@
     </div>
 </template>
 
-<script lang="ts">
-import { Component } from "vue-property-decorator";
-import Vue from "vue";
+<script setup lang="ts">
+import { computed, onMounted, ref } from "vue";
 import type { Modal } from "@tuleap/tlp-modal";
 import { createModal } from "@tuleap/tlp-modal";
 import type { Repository } from "../../../type";
-import { namespace } from "vuex-class";
 import { handleError } from "../../../gitlab/gitlab-error-handler";
+import {
+    useMutations,
+    useNamespacedActions,
+    useNamespacedMutations,
+    useNamespacedState,
+} from "vuex-composition-helpers";
+import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
 
-const gitlab = namespace("gitlab");
+const gettext_provider = useGettext();
 
-@Component
-export default class RegenerateGitlabWebhook extends Vue {
-    @gitlab.Action
-    readonly regenerateGitlabWebhook!: (integration_id: number | string) => Promise<void>;
+const { regenerateGitlabWebhook } = useNamespacedActions("gitlab", ["regenerateGitlabWebhook"]);
+const { regenerate_gitlab_webhook_repository } = useNamespacedState("gitlab", [
+    "regenerate_gitlab_webhook_repository",
+]);
+const { setRegenerateGitlabWebhookModal } = useNamespacedMutations("gitlab", [
+    "setRegenerateGitlabWebhookModal",
+]);
+const { setSuccessMessage } = useMutations(["setSuccessMessage"]);
 
-    @gitlab.State
-    readonly regenerate_gitlab_webhook_repository!: Repository;
+const modal = ref<Modal | null>(null);
+const repository = ref<Repository | null>(null);
+const is_updating_webhook = ref(false);
+const message_error_rest = ref("");
 
-    private modal: Modal | null = null;
-    repository: Repository | null = null;
-    is_updating_webhook = false;
-    message_error_rest = "";
+const modal_element = ref();
 
-    get close_label(): string {
-        return this.$gettext("Close");
-    }
+const close_label = gettext_provider.$gettext("Close");
 
-    mounted(): void {
-        this.modal = createModal(this.$el);
-        this.modal.addEventListener("tlp-modal-shown", this.onShownModal);
-        this.modal.addEventListener("tlp-modal-hidden", this.reset);
-        this.$store.commit("gitlab/setRegenerateGitlabWebhookModal", this.modal);
-    }
+onMounted((): void => {
+    modal.value = createModal(modal_element.value);
+    modal.value.addEventListener("tlp-modal-shown", onShownModal);
+    modal.value.addEventListener("tlp-modal-hidden", reset);
+    setRegenerateGitlabWebhookModal(modal.value);
+});
 
-    onShownModal(): void {
-        this.repository = this.regenerate_gitlab_webhook_repository;
-    }
-
-    reset(): void {
-        this.is_updating_webhook = false;
-        this.repository = null;
-        this.message_error_rest = "";
-    }
-
-    onSuccessRegenerateGitlabWebhook(): void {
-        this.$store.commit("setSuccessMessage", this.success_message);
-    }
-
-    get success_message(): string {
-        if (!this.repository || !this.repository.normalized_path) {
-            return "";
-        }
-
-        return this.$gettextInterpolate(
-            this.$gettext(
-                "New webhook of GitLab repository %{ label } has been successfully regenerated.",
-            ),
-            {
-                label: this.repository.normalized_path,
-            },
-        );
-    }
-
-    get disabled_button() {
-        return this.is_updating_webhook || this.have_any_rest_error;
-    }
-
-    get instance_url(): string {
-        if (!this.repository || !this.repository.gitlab_data || !this.repository.normalized_path) {
-            return "";
-        }
-        return this.repository.gitlab_data.gitlab_repository_url.replace(
-            this.repository.normalized_path,
-            "",
-        );
-    }
-
-    get have_any_rest_error(): boolean {
-        return this.message_error_rest.length > 0;
-    }
-
-    async confirmRegenerateWebhookGitlab(event: Event): Promise<void> {
-        event.preventDefault();
-
-        if (this.have_any_rest_error) {
-            return;
-        }
-
-        if (!this.repository) {
-            return;
-        }
-
-        if (!this.repository.gitlab_data) {
-            return;
-        }
-
-        this.is_updating_webhook = true;
-
-        try {
-            await this.regenerateGitlabWebhook(this.repository.integration_id);
-            this.repository.gitlab_data.is_webhook_configured = true;
-            this.onSuccessRegenerateGitlabWebhook();
-            if (this.modal) {
-                this.modal.hide();
-            }
-        } catch (rest_error) {
-            this.message_error_rest = await handleError(rest_error, this);
-            throw rest_error;
-        } finally {
-            this.is_updating_webhook = false;
-        }
-    }
-
-    get you_are_about_to_regenerate_the_webhook_for_repository_located_at_message() {
-        let translated = this.$gettext(
-            `You are about to regenerate the webhook for %{ label } repository located at %{ instance_url }.`,
-        );
-        return this.$gettextInterpolate(translated, {
-            label: this.repository?.normalized_path,
-            instance_url: this.instance_url,
-        });
-    }
+function onShownModal(): void {
+    repository.value = regenerate_gitlab_webhook_repository.value;
 }
+
+function reset(): void {
+    is_updating_webhook.value = false;
+    repository.value = null;
+    message_error_rest.value = "";
+}
+
+const success_message = computed((): string => {
+    if (!repository.value || !repository.value.normalized_path) {
+        return "";
+    }
+
+    return gettext_provider.interpolate(
+        gettext_provider.$gettext(
+            "New webhook of GitLab repository %{ label } has been successfully regenerated.",
+        ),
+        {
+            label: repository.value.normalized_path,
+        },
+    );
+});
+
+const have_any_rest_error = computed((): boolean => message_error_rest.value.length > 0);
+
+const onSuccessRegenerateGitlabWebhook = (): void => setSuccessMessage(success_message.value);
+
+const disabled_button = computed(() => is_updating_webhook.value || have_any_rest_error.value);
+
+const instance_url = computed((): string => {
+    if (!repository.value || !repository.value.gitlab_data || !repository.value.normalized_path) {
+        return "";
+    }
+    return repository.value.gitlab_data.gitlab_repository_url.replace(
+        repository.value.normalized_path,
+        "",
+    );
+});
+
+const confirmRegenerateWebhookGitlab = async (event: Event): Promise<void> => {
+    event.preventDefault();
+
+    if (have_any_rest_error.value) {
+        return;
+    }
+
+    if (!repository.value) {
+        return;
+    }
+
+    if (!repository.value.gitlab_data) {
+        return;
+    }
+
+    is_updating_webhook.value = true;
+
+    try {
+        await regenerateGitlabWebhook(repository.value.integration_id);
+        repository.value.gitlab_data.is_webhook_configured = true;
+        onSuccessRegenerateGitlabWebhook();
+
+        modal.value?.hide();
+    } catch (rest_error) {
+        message_error_rest.value = await handleError(rest_error, gettext_provider);
+        throw rest_error;
+    } finally {
+        is_updating_webhook.value = false;
+    }
+};
+
+const you_are_about_to_regenerate_the_webhook_for_repository_located_at_message = computed(() => {
+    let translated = gettext_provider.$gettext(
+        `You are about to regenerate the webhook for %{ label } repository located at %{ instance_url }.`,
+    );
+    return gettext_provider.interpolate(translated, {
+        label: repository.value?.normalized_path,
+        instance_url: instance_url.value,
+    });
+});
+
+defineExpose({ message_error_rest, repository, is_updating_webhook });
 </script>
