@@ -249,7 +249,10 @@ export const getDropdownElement = (host: HostElement): DropdownElement & HTMLEle
 
 const IntermediaryClass = define.compile<InternalLazyboxElement>({
     tag: TAG,
-    tabindex: 0,
+    tabindex: {
+        value: 0,
+        reflect: true,
+    },
     options: (host, value) => value,
     replaceDropdownContent: { value: buildReplaceDropdown, connect },
     clearSelection: buildClearSelection,
