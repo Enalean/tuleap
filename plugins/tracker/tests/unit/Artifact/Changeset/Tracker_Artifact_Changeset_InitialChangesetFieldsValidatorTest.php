@@ -19,67 +19,62 @@
  *
  */
 
+use PHPUnit\Framework\MockObject\MockObject;
+use Tuleap\GlobalResponseMock;
 use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Changeset\Validation\ChangesetWithFieldsValidationContext;
+use Tuleap\Tracker\Changeset\Validation\NullChangesetValidationContext;
+use Tuleap\Tracker\FormElement\ArtifactLinkValidator;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Validation\ManualActionContext;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
+use Tuleap\Tracker\Workflow\WorkflowUpdateChecker;
 
-final class Tracker_Artifact_Changeset_InitialChangesetFieldsValidatorTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+final class Tracker_Artifact_Changeset_InitialChangesetFieldsValidatorTest extends TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-    use \Tuleap\GlobalResponseMock;
+    use GlobalResponseMock;
 
-    /** @var Tracker_Artifact_Changeset_InitialChangesetFieldsValidator */
-    private $initial_changeset_fields_validator;
+    private Tracker_Artifact_Changeset_InitialChangesetFieldsValidator $initial_changeset_fields_validator;
 
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Tracker_FormElementFactory
-     */
-    private $factory;
+    private MockObject&Tracker_FormElementFactory $factory;
 
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|\Tuleap\Tracker\FormElement\ArtifactLinkValidator
-     */
-    private $artifact_link_validator;
+    private MockObject&ArtifactLinkValidator $artifact_link_validator;
 
-    /** @var Workflow */
-    private $workflow;
+    private MockObject&Workflow $workflow;
 
-    /** @var Artifact */
-    private $artifact;
+    private MockObject&Artifact $artifact;
 
     protected function setUp(): void
     {
-        $this->factory                 = \Mockery::spy(\Tracker_FormElementFactory::class);
-        $this->artifact_link_validator = \Mockery::mock(\Tuleap\Tracker\FormElement\ArtifactLinkValidator::class);
-        $workflow_checker              = \Mockery::mock(\Tuleap\Tracker\Workflow\WorkflowUpdateChecker::class);
-        $workflow_checker->shouldReceive('canFieldBeUpdated')->andReturnTrue();
+        $this->factory                 = $this->createMock(Tracker_FormElementFactory::class);
+        $this->artifact_link_validator = $this->createMock(ArtifactLinkValidator::class);
+        $workflow_checker              = $this->createMock(WorkflowUpdateChecker::class);
+        $workflow_checker->method('canFieldBeUpdated')->willReturn(true);
         $this->initial_changeset_fields_validator = new Tracker_Artifact_Changeset_InitialChangesetFieldsValidator(
             $this->factory,
             $this->artifact_link_validator,
         );
 
-        $this->factory->shouldReceive('getAllFormElementsForTracker')->andReturns([]);
+        $this->factory->method('getAllFormElementsForTracker')->willReturn([]);
 
-        $this->workflow = \Mockery::spy(\Workflow::class);
+        $this->workflow = $this->createMock(Workflow::class);
+        $this->workflow->method('validate');
 
-        $this->artifact = Mockery::mock(Artifact::class);
-        $this->artifact->shouldReceive('getTracker')->andReturn(\Mockery::spy(\Tracker::class));
-        $this->artifact->shouldReceive('getWorkflow')->andReturns($this->workflow);
-        $this->artifact->shouldReceive('getLastChangeset')->andReturns(new Tracker_Artifact_Changeset_Null());
+        $this->artifact = $this->createMock(Artifact::class);
+        $this->artifact->method('getTracker')->willReturn(TrackerTestBuilder::aTracker()->build());
+        $this->artifact->method('getWorkflow')->willReturn($this->workflow);
+        $this->artifact->method('getLastChangeset')->willReturn(new Tracker_Artifact_Changeset_Null());
     }
 
-    /**
-     * @return \Mockery\Mock|Tracker_FormElement_Field
-     */
-    private function getFieldWithId(int $id, bool $can_submit, bool $can_update, bool $is_valid)
+    private function getFieldWithId(int $id, bool $can_submit, bool $can_update, bool $is_valid): MockObject&Tracker_FormElement_Field
     {
-        $field = \Mockery::spy(\Tracker_FormElement_Field::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $field->shouldReceive('getId')->andReturn($id);
-        $field->shouldReceive('userCanUpdate')->andReturn($can_update);
-        $field->shouldReceive('userCanSubmit')->andReturn($can_submit);
-        $field->shouldReceive('isValid')->andReturns($is_valid);
-
+        $field = $this->createMock(Tracker_FormElement_Field::class);
+        $field->method('getId')->willReturn($id);
+        $field->method('userCanUpdate')->willReturn($can_update);
+        $field->method('userCanSubmit')->willReturn($can_submit);
+        $field->method('isValid')->willReturn($is_valid);
+        $field->method('isRequired')->willReturn(true);
         return $field;
     }
 
@@ -89,22 +84,22 @@ final class Tracker_Artifact_Changeset_InitialChangesetFieldsValidatorTest exten
         $field2 = $this->getFieldWithId(102, false, false, true);
         $field3 = $this->getFieldWithId(103, false, false, true);
 
-        $this->factory->shouldReceive('getUsedFields')->andReturns([$field1, $field2, $field3]);
+        $this->factory->method('getUsedFields')->willReturn([$field1, $field2, $field3]);
 
-        $user        = \Mockery::spy(\PFUser::class);
+        $user        = UserTestBuilder::aUser()->build();
         $fields_data = [];
-        $this->assertTrue(
+        self::assertTrue(
             $this->initial_changeset_fields_validator->validate(
                 $this->artifact,
                 $user,
                 $fields_data,
-                new \Tuleap\Tracker\Changeset\Validation\NullChangesetValidationContext()
+                new NullChangesetValidationContext()
             )
         );
-        $this->assertNotNull($fields_data);
-        $this->assertFalse(isset($fields_data[101]));
-        $this->assertFalse(isset($fields_data[102]));
-        $this->assertFalse(isset($fields_data[103]));
+        self::assertNotNull($fields_data);
+        self::assertFalse(isset($fields_data[101]));
+        self::assertFalse(isset($fields_data[102]));
+        self::assertFalse(isset($fields_data[103]));
     }
 
     public function testValidateSubmitFieldNotRequired(): void
@@ -113,47 +108,46 @@ final class Tracker_Artifact_Changeset_InitialChangesetFieldsValidatorTest exten
         $field2 = $this->getFieldWithId(102, false, false, true);
         $field3 = $this->getFieldWithId(103, false, false, true);
 
-        $this->factory->shouldReceive('getUsedFields')->andReturns([$field1, $field2, $field3]);
+        $field1->method('validateFieldWithPermissionsAndRequiredStatus')->willReturn(true);
 
-        $this->workflow->shouldReceive('validate')->andReturns(true);
+        $this->factory->method('getUsedFields')->willReturn([$field1, $field2, $field3]);
 
-        $user        = \Mockery::spy(\PFUser::class);
+        $user        = UserTestBuilder::aUser()->build();
         $fields_data = ['101' => 444];
-        $this->assertTrue(
+        self::assertTrue(
             $this->initial_changeset_fields_validator->validate(
                 $this->artifact,
                 $user,
                 $fields_data,
-                new \Tuleap\Tracker\Changeset\Validation\NullChangesetValidationContext()
+                new NullChangesetValidationContext()
             )
         );
-        $this->assertNotNull($fields_data[101]);
-        $this->assertEquals(444, $fields_data[101]);
+        self::assertNotNull($fields_data[101]);
+        self::assertEquals(444, $fields_data[101]);
     }
 
     public function testValidateSubmitFieldNotRequiredNotSubmittedDefaultValue(): void
     {
         $field1 = $this->getFieldWithId(101, true, false, true);
-        $field1->shouldReceive('hasDefaultValue')->andReturns(true);
-        $field1->shouldReceive('getDefaultValue')->andReturns('DefaultValue');
+        $field1->method('hasDefaultValue')->willReturn(true);
+        $field1->method('getDefaultValue')->willReturn('DefaultValue');
+        $field1->method('validateFieldWithPermissionsAndRequiredStatus')->willReturn(true);
 
         $field2 = $this->getFieldWithId(102, false, false, true);
         $field3 = $this->getFieldWithId(103, false, false, true);
 
-        $this->factory->shouldReceive('getUsedFields')->andReturns([$field1, $field2, $field3]);
-        $this->workflow->shouldReceive('validate')->andReturns(true);
-
-        $user        = \Mockery::spy(\PFUser::class);
+        $this->factory->method('getUsedFields')->willReturn([$field1, $field2, $field3]);
+        $user        = UserTestBuilder::aUser()->build();
         $fields_data = [];
-        $this->assertTrue(
+        self::assertTrue(
             $this->initial_changeset_fields_validator->validate(
                 $this->artifact,
                 $user,
                 $fields_data,
-                new \Tuleap\Tracker\Changeset\Validation\NullChangesetValidationContext()
+                new NullChangesetValidationContext()
             )
         );
-        $this->assertFalse(isset($fields_data[101]));
+        self::assertFalse(isset($fields_data[101]));
     }
 
     public function testValidateSubmitFieldNotRequiredNotSubmittedNoDefaultValue(): void
@@ -162,97 +156,97 @@ final class Tracker_Artifact_Changeset_InitialChangesetFieldsValidatorTest exten
         $field2 = $this->getFieldWithId(102, false, false, true);
         $field3 = $this->getFieldWithId(103, false, false, true);
 
-        $this->factory->shouldReceive('getUsedFields')->andReturns([$field1, $field2, $field3]);
+        $field1->method('validateFieldWithPermissionsAndRequiredStatus')->willReturn(true);
 
-        $this->workflow->shouldReceive('validate')->andReturns(true);
+        $this->factory->method('getUsedFields')->willReturn([$field1, $field2, $field3]);
 
-        $user        = \Mockery::spy(\PFUser::class);
+        $user        = UserTestBuilder::aUser()->build();
         $fields_data = [];
-        $this->assertTrue(
+        self::assertTrue(
             $this->initial_changeset_fields_validator->validate(
                 $this->artifact,
                 $user,
                 $fields_data,
-                new \Tuleap\Tracker\Changeset\Validation\NullChangesetValidationContext()
+                new NullChangesetValidationContext()
             )
         );
-        $this->assertFalse(isset($fields_data[101]));
+        self::assertFalse(isset($fields_data[101]));
     }
 
     public function testValidateSubmitFieldRequired(): void
     {
         $field1 = $this->getFieldWithId(101, true, false, true);
-        $field1->shouldReceive('isRequired')->andReturns(true);
+        $field1->method('isRequired')->willReturn(true);
         $field2 = $this->getFieldWithId(102, false, false, true);
         $field3 = $this->getFieldWithId(103, false, false, true);
 
-        $this->factory->shouldReceive('getUsedFields')->andReturns([$field1, $field2, $field3]);
+        $field1->method('validateFieldWithPermissionsAndRequiredStatus')->willReturn(true);
 
-        $this->workflow->shouldReceive('validate')->andReturns(true);
+        $this->factory->method('getUsedFields')->willReturn([$field1, $field2, $field3]);
 
-        $user        = \Mockery::spy(\PFUser::class);
+        $user        = UserTestBuilder::aUser()->build();
         $fields_data = ['101' => 666];
-        $this->assertTrue(
+        self::assertTrue(
             $this->initial_changeset_fields_validator->validate(
                 $this->artifact,
                 $user,
                 $fields_data,
-                new \Tuleap\Tracker\Changeset\Validation\NullChangesetValidationContext()
+                new NullChangesetValidationContext()
             )
         );
-        $this->assertNotNull($fields_data[101]);
-        $this->assertEquals(666, $fields_data[101]);
+        self::assertNotNull($fields_data[101]);
+        self::assertEquals(666, $fields_data[101]);
     }
 
     public function testValidateSubmitFieldRequiredNotSubmittedDefaultValue(): void
     {
         $field1 = $this->getFieldWithId(101, true, false, true);
-        $field1->shouldReceive('isRequired')->andReturns(true);
-        $field1->shouldReceive('hasDefaultValue')->andReturns(true);
-        $field1->shouldReceive('getDefaultValue')->andReturns('DefaultValue');
+        $field1->method('isRequired')->willReturn(true);
+        $field1->method('hasDefaultValue')->willReturn(true);
+        $field1->method('getDefaultValue')->willReturn('DefaultValue');
+        $field1->method('validateFieldWithPermissionsAndRequiredStatus')->willReturn(false);
+
         $field2 = $this->getFieldWithId(102, false, false, true);
         $field3 = $this->getFieldWithId(103, false, false, true);
 
-        $this->factory->shouldReceive('getUsedFields')->andReturns([$field1, $field2, $field3]);
-        $this->workflow->shouldReceive('validate')->andReturns(true);
-
+        $this->factory->method('getUsedFields')->willReturn([$field1, $field2, $field3]);
         $GLOBALS['Response']->method('addFeedback')->with(Feedback::ERROR);
 
-        $user        = \Mockery::spy(\PFUser::class);
+        $user        = UserTestBuilder::aUser()->build();
         $fields_data = [];
-        $this->assertFalse(
+        self::assertFalse(
             $this->initial_changeset_fields_validator->validate(
                 $this->artifact,
                 $user,
                 $fields_data,
-                new \Tuleap\Tracker\Changeset\Validation\NullChangesetValidationContext()
+                new NullChangesetValidationContext()
             )
         );
-        $this->assertFalse(isset($fields_data[101]));
+        self::assertFalse(isset($fields_data[101]));
     }
 
     public function testValidateSubmitFieldRequiredNotSubmittedNoDefaultValue(): void
     {
         $field1 = $this->getFieldWithId(101, true, false, false);
-        $field1->shouldReceive('hasDefaultValue')->andReturns(false);
-        $field1->shouldReceive('isRequired')->andReturns(true);
+        $field1->method('hasDefaultValue')->willReturn(false);
+        $field1->method('isRequired')->willReturn(true);
+        $field1->method('validateFieldWithPermissionsAndRequiredStatus')->willReturn(false);
+
         $field2 = $this->getFieldWithId(102, false, false, true);
         $field3 = $this->getFieldWithId(103, false, false, true);
 
-        $this->factory->shouldReceive('getUsedFields')->andReturns([$field1, $field2, $field3]);
-
-        $this->workflow->shouldReceive('validate')->andReturns(true);
+        $this->factory->method('getUsedFields')->willReturn([$field1, $field2, $field3]);
 
         $GLOBALS['Response']->method('addFeedback')->with(Feedback::ERROR);
 
-        $user        = \Mockery::spy(\PFUser::class);
+        $user        = UserTestBuilder::aUser()->build();
         $fields_data = [];
-        $this->assertFalse(
+        self::assertFalse(
             $this->initial_changeset_fields_validator->validate(
                 $this->artifact,
                 $user,
                 $fields_data,
-                new \Tuleap\Tracker\Changeset\Validation\NullChangesetValidationContext()
+                new NullChangesetValidationContext()
             )
         );
     }
@@ -263,27 +257,29 @@ final class Tracker_Artifact_Changeset_InitialChangesetFieldsValidatorTest exten
         $field2 = $this->getFieldWithId(102, true, false, true);
         $field3 = $this->getFieldWithId(103, true, false, true);
 
-        $this->factory->shouldReceive('getUsedFields')->andReturns([$field1, $field2, $field3]);
+        $field1->method('validateFieldWithPermissionsAndRequiredStatus')->willReturn(true);
+        $field2->method('validateFieldWithPermissionsAndRequiredStatus')->willReturn(true);
+        $field3->method('validateFieldWithPermissionsAndRequiredStatus')->willReturn(true);
 
-        $this->workflow->shouldReceive('validate')->andReturns(true);
+        $this->factory->method('getUsedFields')->willReturn([$field1, $field2, $field3]);
 
-        $user = \Mockery::spy(\PFUser::class);
+        $user = UserTestBuilder::aUser()->build();
         // field 101 and 102 are missing
         // 101 has a default value
         // 102 has no default value
         $fields_data = ['103' => 444];
-        $this->assertTrue(
+        self::assertTrue(
             $this->initial_changeset_fields_validator->validate(
                 $this->artifact,
                 $user,
                 $fields_data,
-                new \Tuleap\Tracker\Changeset\Validation\NullChangesetValidationContext()
+                new NullChangesetValidationContext()
             )
         );
-        $this->assertFalse(isset($fields_data[101]));
-        $this->assertFalse(isset($fields_data[102]));
-        $this->assertNotNull($fields_data[103]);
-        $this->assertEquals(444, $fields_data[103]);
+        self::assertFalse(isset($fields_data[101]));
+        self::assertFalse(isset($fields_data[102]));
+        self::assertNotNull($fields_data[103]);
+        self::assertEquals(444, $fields_data[103]);
     }
 
     public function testValidateFieldsBasicNotValid(): void
@@ -292,43 +288,45 @@ final class Tracker_Artifact_Changeset_InitialChangesetFieldsValidatorTest exten
         $field2 = $this->getFieldWithId(102, true, false, true);
         $field3 = $this->getFieldWithId(103, true, false, true);
 
-        $field1->shouldReceive('validateFieldWithPermissionsAndRequiredStatus')->andReturn(false);
+        $field1->method('validateFieldWithPermissionsAndRequiredStatus')->willReturn(false);
+        $field2->method('validateFieldWithPermissionsAndRequiredStatus')->willReturn(false);
+        $field3->method('validateFieldWithPermissionsAndRequiredStatus')->willReturn(false);
 
-        $this->factory->shouldReceive('getUsedFields')->andReturns([$field1, $field2, $field3]);
+        $this->factory->method('getUsedFields')->willReturn([$field1, $field2, $field3]);
 
-        $user = \Mockery::spy(\PFUser::class);
+        $user = UserTestBuilder::aUser()->build();
         // field 102 is missing
         $fields_data = [];
-        $this->assertFalse(
+        self::assertFalse(
             $this->initial_changeset_fields_validator->validate(
                 $this->artifact,
                 $user,
                 $fields_data,
-                new \Tuleap\Tracker\Changeset\Validation\NullChangesetValidationContext()
+                new NullChangesetValidationContext()
             )
         );
-        $this->assertFalse(isset($fields_data[101]));
-        $this->assertFalse(isset($fields_data[102]));
-        $this->assertFalse(isset($fields_data[103]));
+        self::assertFalse(isset($fields_data[101]));
+        self::assertFalse(isset($fields_data[102]));
+        self::assertFalse(isset($fields_data[103]));
     }
 
     public function testItValidatesArtifactLinkField(): void
     {
-        $this->artifact_link_validator->shouldReceive('isValid')->once()->andReturn(true);
+        $this->artifact_link_validator->expects(self::once())->method('isValid')->willReturn(true);
 
-        $artifact_link_field = Mockery::mock(Tracker_FormElement_Field_ArtifactLink::class);
-        $artifact_link_field->shouldReceive('getId')->andReturn(101);
-        $artifact_link_field->shouldReceive('userCanUpdate')->andReturnTrue();
-        $artifact_link_field->shouldReceive('isRequired')->andReturnFalse();
-        $artifact_link_field->shouldReceive('validateFieldWithPermissionsAndRequiredStatus')->andReturnTrue();
-        $this->factory->shouldReceive('getUsedFields')->andReturns([$artifact_link_field]);
+        $artifact_link_field = $this->createMock(Tracker_FormElement_Field_ArtifactLink::class);
+        $artifact_link_field->method('getId')->willReturn(101);
+        $artifact_link_field->method('userCanUpdate')->willReturn(true);
+        $artifact_link_field->method('isRequired')->willReturn(false);
+        $artifact_link_field->method('validateFieldWithPermissionsAndRequiredStatus')->willReturn(true);
+        $this->factory->method('getUsedFields')->willReturn([$artifact_link_field]);
 
         $user        = UserTestBuilder::aUser()->build();
         $fields_data = [
             '101' => ['new_values' => '184'],
         ];
         $context     = new ChangesetWithFieldsValidationContext(new ManualActionContext());
-        $this->assertTrue(
+        self::assertTrue(
             $this->initial_changeset_fields_validator->validate(
                 $this->artifact,
                 $user,
