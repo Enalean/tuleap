@@ -146,7 +146,7 @@ class UserTestBuilder
     }
 
     /**
-     * @psalm-param \PFUser::STATUS_*
+     * @psalm-param $status \PFUser::STATUS_*
      */
     public function withStatus(string $status): self
     {
