@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) Enalean, 2015-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -14,10 +14,10 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Tuleap; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+// eslint-disable-next-line import/no-extraneous-dependencies -- jquery is defined globally
 import jQuery from "jquery";
 import { setupEmailCopyModalInteractions } from "@tuleap/plugin-tracker-email-copy-paste";
 

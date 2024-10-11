@@ -34,8 +34,6 @@ import MiniCssExtractPlugin from "mini-css-extract-plugin";
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { VueLoaderPlugin } from "vue-loader";
 // eslint-disable-next-line import/no-extraneous-dependencies
-import ForkTsCheckerWebpackPlugin from "fork-ts-checker-webpack-plugin";
-// eslint-disable-next-line import/no-extraneous-dependencies
 import MergeIntoSingleFilePlugin from "webpack-merge-and-include-globally";
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { ESBuildMinifyPlugin } from "esbuild-loader";
@@ -82,19 +80,6 @@ export function getCleanWebpackPlugin(): CleanWebpackPlugin {
 
 export function getVueLoaderPlugin(): VueLoaderPlugin {
     return new VueLoaderPlugin();
-}
-
-export function getTypescriptCheckerPlugin(use_vue: boolean): ForkTsCheckerWebpackPlugin {
-    return new ForkTsCheckerWebpackPlugin({
-        typescript: {
-            configOverwrite: {
-                exclude: ["**/*.test.ts"],
-            },
-            extensions: {
-                vue: use_vue,
-            },
-        },
-    });
 }
 
 export function getCopyPlugin(patterns = [], options = {}): CopyWebpackPlugin {
