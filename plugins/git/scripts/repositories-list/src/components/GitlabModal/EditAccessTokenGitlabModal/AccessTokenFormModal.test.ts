@@ -26,6 +26,8 @@ import { createLocalVueForTests } from "../../../helpers/local-vue-for-tests";
 
 jest.useFakeTimers();
 
+type AccessTokenFormModalExposed = { gitlab_new_token: string; error_message: string };
+
 describe("AccessTokenFormModal", () => {
     let store_options = {},
         propsData = {},
@@ -38,14 +40,14 @@ describe("AccessTokenFormModal", () => {
         };
     });
 
-    async function instantiateComponent(): Promise<Wrapper<AccessTokenFormModal>> {
+    async function instantiateComponent(): Promise<Wrapper<Vue & AccessTokenFormModalExposed>> {
         store = createStoreMock(store_options, { gitlab: {} });
 
         return shallowMount(AccessTokenFormModal, {
             propsData,
             mocks: { $store: store },
             localVue: await createLocalVueForTests(),
-        });
+        }) as Wrapper<Vue & AccessTokenFormModalExposed>;
     }
 
     it("When the user check token, Then the submit button is disabled and icon spin is displayed and api is called", async () => {
@@ -90,7 +92,7 @@ describe("AccessTokenFormModal", () => {
             throw new Error("Should have emitted on-get-new-token");
         }
 
-        expect(on_get_new_token[0]).toEqual([{ token: "AFREZF546" }]);
+        expect(on_get_new_token[0]).toStrictEqual([{ token: "AFREZF546" }]);
     });
 
     it("When there is an error message, Then it's displayed", async () => {
@@ -195,7 +197,7 @@ describe("AccessTokenFormModal", () => {
             // Ignore, error handler re-throws REST errors
         }
 
-        expect(wrapper.vm.$data.error_message).toBe(
+        expect(wrapper.vm.error_message).toBe(
             "Submitted token is invalid to access to this repository on this GitLab server.",
         );
     });
@@ -217,15 +219,15 @@ describe("AccessTokenFormModal", () => {
             error_message: "Error",
         });
 
-        expect(wrapper.vm.$data.gitlab_new_token).toBe("AZERTY123");
-        expect(wrapper.vm.$data.error_message).toBe("Error");
+        expect(wrapper.vm.gitlab_new_token).toBe("AZERTY123");
+        expect(wrapper.vm.error_message).toBe("Error");
 
         await wrapper
             .find("[data-test=button-cancel-new-token-gitlab-repository]")
             .trigger("click");
 
-        expect(wrapper.vm.$data.gitlab_new_token).toBe("");
-        expect(wrapper.vm.$data.error_message).toBe("");
+        expect(wrapper.vm.gitlab_new_token).toBe("");
+        expect(wrapper.vm.error_message).toBe("");
 
         const on_close_modal = wrapper.emitted()["on-close-modal"];
         if (!on_close_modal) {
