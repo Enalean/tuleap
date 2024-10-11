@@ -96,6 +96,7 @@ final class VirtualTopMilestoneController extends BaseController
             $this->getBreadcrumbs(),
             HeaderConfigurationBuilder::get($title)
                 ->inProject($this->project, \AgileDashboardPlugin::PLUGIN_SHORTNAME)
+                ->withBodyClass(['has-sidebar-with-pinned-header'])
                 ->build()
         );
         echo $this->renderToString('show-top', $presenter);
