@@ -24,6 +24,7 @@
             'git-repository-card-two-columns': !isFolderDisplayMode,
             'git-repository-in-folder': isFolderDisplayMode && is_in_folder(),
         }"
+        data-test="git-repository"
     >
         <div class="tlp-pane-container">
             <a
