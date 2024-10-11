@@ -42,6 +42,7 @@ use Tuleap\Tracker\Admin\ArtifactLinksUsageUpdater;
 use Tuleap\Tracker\Artifact\RecentlyVisited\VisitRecorder;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
+use Tuleap\User\Avatar\ProvideUserAvatarUrl;
 use UserManager;
 use Valid_UInt;
 use XMLImportHelper;
@@ -113,6 +114,7 @@ class Router
         Valid_UInt $int_validator,
         ProjectFlagsBuilder $project_flags_builder,
         AdminTrackersRetriever $tracker_retriever,
+        private readonly ProvideUserAvatarUrl $provide_user_avatar_url,
     ) {
         $this->config                       = $config;
         $this->tracker_factory              = $tracker_factory;
@@ -204,7 +206,8 @@ class Router
             $this->tracker_factory,
             $this->visit_recorder,
             $this->project_flags_builder,
-            (new TypePresenterFactory(new TypeDao(), new ArtifactLinksUsageDao()))
+            (new TypePresenterFactory(new TypeDao(), new ArtifactLinksUsageDao())),
+            $this->provide_user_avatar_url,
         );
         $this->renderAction($controller, 'index', $request, true, [], ['reduce-help-button']);
     }

@@ -26,6 +26,7 @@ use PFUser;
 use Project;
 use Tuleap\Git\Events\GetExternalGitHomepagePluginsEvent;
 use Tuleap\Project\Flags\ProjectFlagsBuilder;
+use Tuleap\User\Avatar\ProvideUserAvatarUrl;
 use Tuleap\User\REST\MinimalUserRepresentation;
 use UserManager;
 use Tuleap\Git\Events\GetExternalUsedServiceEvent;
@@ -60,6 +61,7 @@ class ListPresenterBuilder
         UserManager $user_manager,
         EventDispatcherInterface $event_manager,
         ProjectFlagsBuilder $project_flags_builder,
+        private readonly ProvideUserAvatarUrl $provide_user_avatar_url,
     ) {
         $this->git_permissions_manager = $git_permissions_manager;
         $this->dao                     = $dao;
@@ -101,7 +103,7 @@ class ListPresenterBuilder
                         return;
                     }
 
-                    return MinimalUserRepresentation::build($user);
+                    return MinimalUserRepresentation::build($user, $this->provide_user_avatar_url);
                 },
                 $this->dao->getProjectRepositoriesOwners(
                     $project->getID()

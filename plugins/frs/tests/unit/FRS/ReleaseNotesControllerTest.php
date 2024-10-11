@@ -42,6 +42,7 @@ use Tuleap\Markdown\ContentInterpretor;
 use Tuleap\Request\NotFoundException;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\Stubs\User\Avatar\ProvideUserAvatarUrlStub;
 
 final class ReleaseNotesControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -117,7 +118,8 @@ final class ReleaseNotesControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->permission_manager,
             $content_interpreter,
             $this->renderer,
-            $this->script_assets
+            $this->script_assets,
+            ProvideUserAvatarUrlStub::build(),
         );
         $GLOBALS['Language']->method('getText')->willReturn('');
     }

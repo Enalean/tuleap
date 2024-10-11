@@ -34,6 +34,9 @@ use Tuleap\Docman\REST\v1\Metadata\MetadataRepresentationBuilder;
 use Tuleap\Docman\REST\v1\Permissions\DocmanItemPermissionsForGroupsBuilder;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
+use Tuleap\User\Avatar\AvatarHashDao;
+use Tuleap\User\Avatar\ComputeAvatarHash;
+use Tuleap\User\Avatar\UserAvatarUrlProvider;
 use UGroupManager;
 use UserHelper;
 
@@ -89,7 +92,8 @@ final class DocmanServiceResource extends AuthenticatedResource
                     PermissionsManager::instance(),
                     $ugroup_manager
                 ),
-                $html_purifier
+                $html_purifier,
+                new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash()),
             ),
             $permissions_manager,
             new DocmanServicePermissionsForGroupsBuilder(

@@ -26,11 +26,12 @@ use Lcobucci\JWT\Signer\Key;
 use Lcobucci\JWT\Signer\Hmac\Sha256;
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\RealTimeMercure\MercureClient;
+use Tuleap\User\Avatar\ProvideUserAvatarUrl;
 
 class MercureJWTGeneratorBuilder
 {
     public const  DEFAULTPATH = '/etc/tuleap/conf/mercure.env';
-    public static function build(string $path): MercureJWTGenerator
+    public static function build(string $path, ProvideUserAvatarUrl $provide_user_avatar_url): MercureJWTGenerator
     {
         if (
             ! \ForgeConfig::getFeatureFlag(MercureClient::FEATURE_FLAG_KANBAN_KEY) &&
@@ -48,6 +49,7 @@ class MercureJWTGeneratorBuilder
         }
         return new MercureJWTGeneratorImpl(
             Configuration::forSymmetricSigner(new Sha256(), Key\InMemory::plainText($mercure_key->getString())),
+            $provide_user_avatar_url,
         );
     }
 }

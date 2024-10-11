@@ -62,6 +62,9 @@ use Tuleap\Layout\JavascriptViteAsset;
 use Tuleap\Request\DispatchableWithProject;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\NotFoundException;
+use Tuleap\User\Avatar\AvatarHashDao;
+use Tuleap\User\Avatar\ComputeAvatarHash;
+use Tuleap\User\Avatar\UserAvatarUrlProvider;
 use Tuleap\Widget\WidgetFactory;
 use User_ForgeUserGroupPermissionsDao;
 use User_ForgeUserGroupPermissionsManager;
@@ -146,6 +149,7 @@ class Home implements DispatchableWithRequest, DispatchableWithProject
                             new \Tuleap\InviteBuddy\InvitationInstrumentation(\Tuleap\Instrument\Prometheus\Prometheus::instance())
                         ),
                         UserManager::instance(),
+                        new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash()),
                     ),
                     new RecentlyVisitedProjectDashboardDao(),
                     new ProjectHistoryDao(),

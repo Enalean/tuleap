@@ -23,9 +23,15 @@ declare(strict_types=1);
 namespace Tuleap\User\Profile;
 
 use Tuleap\Color\AllowedColorsCollection;
+use Tuleap\User\Avatar\AvatarHashStorage;
+use Tuleap\User\Avatar\ComputeAvatarHash;
 
 class AvatarGenerator
 {
+    public function __construct(private readonly AvatarHashStorage $storage, private readonly ComputeAvatarHash $compute_avatar_hash)
+    {
+    }
+
     public function generate(\PFUser $user, string $path): void
     {
         $dir = dirname($path);
@@ -34,6 +40,7 @@ class AvatarGenerator
         }
 
         $this->getImage($user)->save($path, null, 'png');
+        $this->storage->store($user, $this->compute_avatar_hash->computeAvatarHash($path));
     }
 
     public function generateAsDataUrl(\PFUser $user): string

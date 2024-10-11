@@ -235,6 +235,8 @@ use Tuleap\User\Account\UpdatePasswordController;
 use Tuleap\User\Account\UpdateSessionPreferencesController;
 use Tuleap\User\Account\UserAvatarSaver;
 use Tuleap\User\Account\UserWellKnownChangePasswordController;
+use Tuleap\User\Avatar\AvatarHashDao;
+use Tuleap\User\Avatar\ComputeAvatarHash;
 use Tuleap\User\Password\Change\PasswordChanger;
 use Tuleap\User\Password\Reset\LostPasswordDAO;
 use Tuleap\User\Password\Reset\ResetTokenSerializer;
@@ -647,10 +649,13 @@ class RouteCollector
     {
         $user_manager = \UserManager::instance();
 
+        $avatar_hash_storage = new AvatarHashDao();
+
         return new ChangeAvatarController(
             DisplayAccountInformationController::getCSRFToken(),
-            new UserAvatarSaver($user_manager),
-            $user_manager
+            new UserAvatarSaver($user_manager, $avatar_hash_storage, new ComputeAvatarHash()),
+            $user_manager,
+            $avatar_hash_storage,
         );
     }
 
@@ -703,12 +708,27 @@ class RouteCollector
 
     public static function getUsersNameAvatar()
     {
-        return new AvatarController(new AvatarGenerator());
+        $storage             = new AvatarHashDao();
+        $compute_avatar_hash = new ComputeAvatarHash();
+
+        return new AvatarController(
+            new AvatarGenerator($storage, $compute_avatar_hash),
+            $storage,
+            $compute_avatar_hash,
+        );
     }
 
     public static function getUsersNameAvatarHash()
     {
-        return new AvatarController(new AvatarGenerator(), ['expires' => 'never']);
+        $storage             = new AvatarHashDao();
+        $compute_avatar_hash = new ComputeAvatarHash();
+
+        return new AvatarController(
+            new AvatarGenerator($storage, $compute_avatar_hash),
+            $storage,
+            $compute_avatar_hash,
+            ['expires' => 'never'],
+        );
     }
 
     public static function postJoinPrivateProjectMail()

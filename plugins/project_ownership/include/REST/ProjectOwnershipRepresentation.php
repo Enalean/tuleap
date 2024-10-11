@@ -20,6 +20,7 @@
 
 namespace Tuleap\ProjectOwnership\REST;
 
+use Tuleap\User\Avatar\ProvideUserAvatarUrl;
 use Tuleap\User\REST\MinimalUserRepresentation;
 
 class ProjectOwnershipRepresentation
@@ -29,10 +30,10 @@ class ProjectOwnershipRepresentation
      */
     public $project_owner;
 
-    public function build(?\PFUser $project_owner = null)
+    public function build(ProvideUserAvatarUrl $provide_user_avatar_url, ?\PFUser $project_owner = null)
     {
         if ($project_owner !== null) {
-            $user_representation = MinimalUserRepresentation::build($project_owner);
+            $user_representation = MinimalUserRepresentation::build($project_owner, $provide_user_avatar_url);
             $this->project_owner = $user_representation;
         }
     }

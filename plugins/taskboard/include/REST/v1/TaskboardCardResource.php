@@ -49,6 +49,9 @@ use Tuleap\Taskboard\REST\v1\Card\CardPatcher;
 use Tuleap\Taskboard\REST\v1\Card\CardPatchRepresentation;
 use Tuleap\Tracker\Artifact\SlicedArtifactsBuilder;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDecoratorRetriever;
+use Tuleap\User\Avatar\AvatarHashDao;
+use Tuleap\User\Avatar\ComputeAvatarHash;
+use Tuleap\User\Avatar\UserAvatarUrlProvider;
 use UserManager;
 
 class TaskboardCardResource extends AuthenticatedResource
@@ -156,7 +159,8 @@ class TaskboardCardResource extends AuthenticatedResource
             new RemainingEffortRepresentationBuilder(
                 new RemainingEffortValueRetriever($form_element_factory),
                 $form_element_factory
-            )
+            ),
+            new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash()),
         );
 
         $collection      = [];
@@ -228,7 +232,8 @@ class TaskboardCardResource extends AuthenticatedResource
             new RemainingEffortRepresentationBuilder(
                 new RemainingEffortValueRetriever($form_element_factory),
                 $form_element_factory
-            )
+            ),
+            new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash()),
         );
         $priority_manager            = Tracker_Artifact_PriorityManager::build();
 

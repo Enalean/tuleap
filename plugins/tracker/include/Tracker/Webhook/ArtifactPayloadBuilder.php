@@ -24,6 +24,7 @@ namespace Tuleap\Tracker\Webhook;
 
 use Tuleap\Tracker\REST\Artifact\Changeset\ChangesetRepresentationBuilder;
 use Tuleap\Tracker\REST\v1\BuildCompleteTrackerRESTRepresentation;
+use Tuleap\User\Avatar\ProvideUserAvatarUrl;
 use Tuleap\User\TuleapFunctionsUser;
 use Tuleap\User\REST\MinimalUserRepresentation;
 
@@ -32,6 +33,7 @@ class ArtifactPayloadBuilder
     public function __construct(
         private readonly ChangesetRepresentationBuilder $changeset_representation_builder,
         private readonly BuildCompleteTrackerRESTRepresentation $tracker_representation_builder,
+        private readonly ProvideUserAvatarUrl $provide_user_avatar_url,
     ) {
     }
 
@@ -54,7 +56,7 @@ class ArtifactPayloadBuilder
             );
         }
 
-        $user_representation = MinimalUserRepresentation::build($user);
+        $user_representation = MinimalUserRepresentation::build($user, $this->provide_user_avatar_url);
 
         return new ArtifactPayload(
             [

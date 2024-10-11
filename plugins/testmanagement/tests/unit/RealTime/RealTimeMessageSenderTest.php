@@ -28,6 +28,7 @@ use Tuleap\RealTime\NodeJSClient;
 use Tuleap\RealTimeMercure\MercureClient;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Test\Stubs\User\Avatar\ProvideUserAvatarUrlStub;
 use Tuleap\TestManagement\RealTime\RealTimeMessageSender;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\RealTime\RealTimeArtifactMessageSender;
@@ -65,7 +66,8 @@ final class RealTimeMessageSenderTest extends TestCase
             $this->node_client,
             $this->permissions_serializer,
             $this->artifact_message_sender,
-            $this->mercure_artifact_message_sender
+            $this->mercure_artifact_message_sender,
+            ProvideUserAvatarUrlStub::build(),
         );
     }
 

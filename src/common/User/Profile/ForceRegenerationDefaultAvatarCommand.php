@@ -26,6 +26,7 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Tuleap\User\Avatar\AvatarHashStorageDeletor;
 use UserDao;
 use UserManager;
 
@@ -33,21 +34,12 @@ final class ForceRegenerationDefaultAvatarCommand extends Command
 {
     public const NAME = 'user:force-regeneration-default-avatar';
 
-    /**
-     * @var UserManager
-     */
-    private $user_manager;
-    /**
-     * @var UserDao
-     */
-    private $user_dao;
-
-    public function __construct(UserManager $user_manager, UserDao $user_dao)
-    {
+    public function __construct(
+        private readonly UserManager $user_manager,
+        private readonly UserDao $user_dao,
+        private readonly AvatarHashStorageDeletor $avatar_hash_storage,
+    ) {
         parent::__construct(self::NAME);
-
-        $this->user_manager = $user_manager;
-        $this->user_dao     = $user_dao;
     }
 
     protected function configure(): void
@@ -68,6 +60,7 @@ final class ForceRegenerationDefaultAvatarCommand extends Command
             if (is_file($user_avatar_path)) {
                 unlink($user_avatar_path);
             }
+            $this->avatar_hash_storage->delete($user);
         }
 
         $output->writeln('');

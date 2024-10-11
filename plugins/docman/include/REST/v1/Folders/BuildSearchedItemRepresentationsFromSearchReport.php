@@ -30,6 +30,7 @@ use Tuleap\Docman\REST\v1\Search\FilePropertiesVisitor;
 use Tuleap\Docman\REST\v1\Search\ListOfCustomPropertyRepresentationBuilder;
 use Tuleap\Docman\REST\v1\Search\SearchColumnCollection;
 use Tuleap\Docman\REST\v1\Search\SearchRepresentationTypeVisitor;
+use Tuleap\User\Avatar\ProvideUserAvatarUrl;
 
 final class BuildSearchedItemRepresentationsFromSearchReport
 {
@@ -41,6 +42,7 @@ final class BuildSearchedItemRepresentationsFromSearchReport
         private SearchRepresentationTypeVisitor $type_visitor,
         private FilePropertiesVisitor $file_properties_visitor,
         private ListOfCustomPropertyRepresentationBuilder $custom_property_builder,
+        private ProvideUserAvatarUrl $provide_user_avatar_url,
     ) {
     }
 
@@ -80,6 +82,7 @@ final class BuildSearchedItemRepresentationsFromSearchReport
                 $item->accept($this->type_visitor),
                 $item->accept($this->file_properties_visitor),
                 $this->custom_property_builder->getCustomProperties($item, $wanted_custom_properties),
+                $this->provide_user_avatar_url,
             );
         }
 

@@ -35,6 +35,7 @@ use Tuleap\TestManagement\REST\v1\Execution\StepsResultsRepresentationBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\FileUploadDataProvider;
 use Tuleap\Tracker\REST\MinimalTrackerRepresentation;
+use Tuleap\User\Avatar\ProvideUserAvatarUrl;
 use Tuleap\User\REST\UserRepresentation;
 use UserManager;
 
@@ -102,6 +103,7 @@ class ExecutionRepresentationBuilder
         StepsResultsRepresentationBuilder $steps_results_representation_builder,
         FileUploadDataProvider $file_upload_data_provider,
         DefinitionRepresentationBuilder $definition_representation_builder,
+        private readonly ProvideUserAvatarUrl $provide_user_avatar_url,
     ) {
         $this->user_manager                         = $user_manager;
         $this->tracker_form_element_factory         = $tracker_form_element_factory;
@@ -401,9 +403,9 @@ class ExecutionRepresentationBuilder
 
         $submitted_by = $this->user_manager->getUserById($last_changeset->getSubmittedBy());
         if ($submitted_by) {
-            $user_representation = UserRepresentation::build($submitted_by);
+            $user_representation = UserRepresentation::build($submitted_by, $this->provide_user_avatar_url);
         } else {
-            $user_representation = UserRepresentation::build($this->user_manager->getUserAnonymous());
+            $user_representation = UserRepresentation::build($this->user_manager->getUserAnonymous(), $this->provide_user_avatar_url);
         }
 
         $has_been_run_at_least_once = ! $execution->isFirstChangeset($last_changeset);

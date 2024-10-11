@@ -26,6 +26,7 @@ use EventManager;
 use ProjectUGroup;
 use Tuleap\Project\Admin\ProjectUGroup\ProjectUGroupMemberUpdatable;
 use Tuleap\Project\UGroups\SynchronizedProjectMembershipDetector;
+use Tuleap\User\Avatar\ProvideUserAvatarUrl;
 use UserHelper;
 
 class MembersPresenterBuilder
@@ -47,6 +48,7 @@ class MembersPresenterBuilder
         EventManager $event_manager,
         UserHelper $user_helper,
         SynchronizedProjectMembershipDetector $detector,
+        private readonly ProvideUserAvatarUrl $provide_user_avatar_url,
     ) {
         $this->event_manager = $event_manager;
         $this->user_helper   = $user_helper;
@@ -83,7 +85,7 @@ class MembersPresenterBuilder
         $members = $ugroup->getMembersIncludingSuspendedAndDeleted();
 
         foreach ($members as $member) {
-            $ugroup_members[] = new MemberPresenter($this->user_helper, $member, $ugroup, $ugroup_members_updatable);
+            $ugroup_members[] = new MemberPresenter($this->user_helper, $member, $ugroup, $ugroup_members_updatable, $this->provide_user_avatar_url);
         }
 
         return $ugroup_members;

@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\PullRequest\REST\v1\Reviewer;
 
 use PFUser;
+use Tuleap\User\Avatar\ProvideUserAvatarUrl;
 use Tuleap\User\REST\MinimalUserRepresentation;
 
 /**
@@ -42,12 +43,12 @@ final class ReviewersRepresentation
         $this->users = $user_representations;
     }
 
-    public static function fromUsers(PFUser ...$users): self
+    public static function fromUsers(ProvideUserAvatarUrl $provide_user_avatar_url, PFUser ...$users): self
     {
         $representations = [];
 
         foreach ($users as $user) {
-            $representation    = MinimalUserRepresentation::build($user);
+            $representation    = MinimalUserRepresentation::build($user, $provide_user_avatar_url);
             $representations[] = $representation;
         }
 

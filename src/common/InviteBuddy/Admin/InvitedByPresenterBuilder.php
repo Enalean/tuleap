@@ -25,14 +25,16 @@ namespace Tuleap\InviteBuddy\Admin;
 use Tuleap\InviteBuddy\Invitation;
 use Tuleap\InviteBuddy\InvitationDao;
 use Tuleap\Project\ProjectByIDFactory;
+use Tuleap\User\Avatar\ProvideUserAvatarUrl;
 use Tuleap\User\RetrieveUserById;
 
-final class InvitedByPresenterBuilder
+final readonly class InvitedByPresenterBuilder
 {
     public function __construct(
         private InvitationDao $dao,
         private RetrieveUserById $user_manager,
         private ProjectByIDFactory $project_manager,
+        private ProvideUserAvatarUrl $provide_user_avatar_url,
     ) {
     }
 
@@ -68,6 +70,6 @@ final class InvitedByPresenterBuilder
             return $presenters[$from_user->getId()];
         }
 
-        return InvitedByUserPresenter::fromUser($from_user);
+        return InvitedByUserPresenter::fromUser($from_user, $this->provide_user_avatar_url);
     }
 }

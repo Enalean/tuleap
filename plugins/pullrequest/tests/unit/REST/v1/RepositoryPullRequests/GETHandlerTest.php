@@ -47,6 +47,7 @@ use Tuleap\PullRequest\Tests\Stub\SearchPaginatedPullRequestsStub;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\RetrieveUserByIdStub;
+use Tuleap\Test\Stubs\User\Avatar\ProvideUserAvatarUrlStub;
 
 final class GETHandlerTest extends TestCase
 {
@@ -135,6 +136,7 @@ final class GETHandlerTest extends TestCase
             ),
             new GenerateGitoliteAccessURLStub(),
             new TestLogger(),
+            ProvideUserAvatarUrlStub::build(),
         );
 
         return $handler->handle(

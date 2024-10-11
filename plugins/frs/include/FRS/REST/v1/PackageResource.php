@@ -33,6 +33,9 @@ use Tuleap\FRS\UploadedLinksRetriever;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\REST\ProjectStatusVerificator;
+use Tuleap\User\Avatar\AvatarHashDao;
+use Tuleap\User\Avatar\ComputeAvatarHash;
+use Tuleap\User\Avatar\UserAvatarUrlProvider;
 use UGroupManager;
 use UserManager;
 
@@ -211,7 +214,7 @@ class PackageResource extends AuthenticatedResource
 
         $releases = [];
         foreach ($paginated_releases->getReleases() as $release) {
-            $representation = new ReleaseRepresentation($release, $this->retriever, $current_user, $this->uploaded_link_retriever, $this->release_permissions_for_groups_builder);
+            $representation = new ReleaseRepresentation($release, $this->retriever, $current_user, $this->uploaded_link_retriever, $this->release_permissions_for_groups_builder, new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash()));
 
             $releases[] = $representation;
         }

@@ -37,6 +37,7 @@ use Tuleap\Test\Builders\TestLayout;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\CSRFSynchronizerTokenStub;
+use Tuleap\Test\Stubs\User\Avatar\ProvideUserAvatarUrlStub;
 use Tuleap\Test\Stubs\User\ForgePermissionsRetrieverStub;
 
 final class DisplayPdfTemplateDuplicateFormControllerTest extends TestCase
@@ -66,6 +67,7 @@ final class DisplayPdfTemplateDuplicateFormControllerTest extends TestCase
             RetrieveTemplateStub::withMatchingTemplate($template),
             CSRFTokenProviderStub::withToken(CSRFSynchronizerTokenStub::buildSelf()),
             RetrieveAllImagesStub::withoutImages(),
+            ProvideUserAvatarUrlStub::build(),
         );
 
         $user = UserTestBuilder::anActiveUser()->build();
@@ -98,6 +100,7 @@ final class DisplayPdfTemplateDuplicateFormControllerTest extends TestCase
             RetrieveTemplateStub::withMatchingTemplate($template),
             CSRFTokenProviderStub::withToken(CSRFSynchronizerTokenStub::buildSelf()),
             RetrieveAllImagesStub::withoutImages(),
+            ProvideUserAvatarUrlStub::build(),
         );
 
         $user = UserTestBuilder::buildSiteAdministrator();
@@ -128,6 +131,7 @@ final class DisplayPdfTemplateDuplicateFormControllerTest extends TestCase
             RetrieveTemplateStub::withMatchingTemplate($template),
             CSRFTokenProviderStub::withToken(CSRFSynchronizerTokenStub::buildSelf()),
             RetrieveAllImagesStub::withoutImages(),
+            ProvideUserAvatarUrlStub::build(),
         );
 
         $user = UserTestBuilder::anActiveUser()->build();
@@ -158,6 +162,7 @@ final class DisplayPdfTemplateDuplicateFormControllerTest extends TestCase
             RetrieveTemplateStub::withMatchingTemplate($template),
             CSRFTokenProviderStub::withToken(CSRFSynchronizerTokenStub::buildSelf()),
             RetrieveAllImagesStub::withoutImages(),
+            ProvideUserAvatarUrlStub::build(),
         );
 
         $user = UserTestBuilder::buildSiteAdministrator();
@@ -190,6 +195,7 @@ final class DisplayPdfTemplateDuplicateFormControllerTest extends TestCase
             RetrieveTemplateStub::withoutMatchingTemplate(),
             CSRFTokenProviderStub::withToken(CSRFSynchronizerTokenStub::buildSelf()),
             RetrieveAllImagesStub::withoutImages(),
+            ProvideUserAvatarUrlStub::build(),
         );
 
         $user = UserTestBuilder::buildSiteAdministrator();

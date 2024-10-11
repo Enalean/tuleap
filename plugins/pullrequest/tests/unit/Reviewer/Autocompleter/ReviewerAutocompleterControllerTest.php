@@ -36,6 +36,7 @@ use Tuleap\PullRequest\Tests\Builders\PullRequestTestBuilder;
 use Tuleap\PullRequest\Tests\Stub\SearchPullRequestStub;
 use Tuleap\Request\NotFoundException;
 use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\Stubs\User\Avatar\ProvideUserAvatarUrlStub;
 use UserManager;
 
 final class ReviewerAutocompleterControllerTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -66,6 +67,7 @@ final class ReviewerAutocompleterControllerTest extends \Tuleap\Test\PHPUnit\Tes
                 HTTPFactoryBuilder::responseFactory(),
                 HTTPFactoryBuilder::streamFactory()
             ),
+            ProvideUserAvatarUrlStub::build(),
             $this->createMock(EmitterInterface::class)
         );
 

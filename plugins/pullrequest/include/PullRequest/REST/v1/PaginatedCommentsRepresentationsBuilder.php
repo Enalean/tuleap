@@ -22,6 +22,7 @@ namespace Tuleap\PullRequest\REST\v1;
 
 use Tuleap\PullRequest\Comment\Factory;
 use Tuleap\PullRequest\REST\v1\Comment\CommentRepresentationBuilder;
+use Tuleap\User\Avatar\ProvideUserAvatarUrl;
 use Tuleap\User\REST\MinimalUserRepresentation;
 use UserManager;
 
@@ -31,6 +32,7 @@ class PaginatedCommentsRepresentationsBuilder
         private readonly Factory $comment_factory,
         private readonly UserManager $user_manager,
         private readonly CommentRepresentationBuilder $comment_representation_builder,
+        private readonly ProvideUserAvatarUrl $provide_user_avatar_url,
     ) {
     }
 
@@ -44,7 +46,7 @@ class PaginatedCommentsRepresentationsBuilder
             if ($user === null) {
                 continue;
             }
-            $user_representation        = MinimalUserRepresentation::build($user);
+            $user_representation        = MinimalUserRepresentation::build($user, $this->provide_user_avatar_url);
             $comment_representation     = $this->comment_representation_builder
                     ->buildRepresentation(
                         $project_id,

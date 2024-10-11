@@ -29,6 +29,7 @@ use Tuleap\PullRequest\Tests\Stub\SearchPaginatedPullRequestsAuthorsStub;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\RetrieveUserByIdStub;
+use Tuleap\Test\Stubs\User\Avatar\ProvideUserAvatarUrlStub;
 use Tuleap\User\REST\MinimalUserRepresentation;
 
 final class GETHandlerTest extends TestCase
@@ -42,7 +43,8 @@ final class GETHandlerTest extends TestCase
 
         $handler = new GETHandler(
             RetrieveUserByIdStub::withUsers($alice, $bob),
-            SearchPaginatedPullRequestsAuthorsStub::withAuthors($alice, $bob)
+            SearchPaginatedPullRequestsAuthorsStub::withAuthors($alice, $bob),
+            ProvideUserAvatarUrlStub::build(),
         );
 
         $paginated_result_1 = $handler->handle(
@@ -60,12 +62,12 @@ final class GETHandlerTest extends TestCase
         self::assertTrue(Result::isOk($paginated_result_1));
         self::assertEquals(2, $paginated_result_1->value->total_size);
         self::assertCount(self::LIMIT, $paginated_result_1->value->collection);
-        self::assertEquals(MinimalUserRepresentation::build($alice), $paginated_result_1->value->collection[0]);
+        self::assertEquals(MinimalUserRepresentation::build($alice, ProvideUserAvatarUrlStub::build()), $paginated_result_1->value->collection[0]);
 
         self::assertTrue(Result::isOk($paginated_result_2));
         self::assertEquals(2, $paginated_result_2->value->total_size);
         self::assertCount(self::LIMIT, $paginated_result_2->value->collection);
-        self::assertEquals(MinimalUserRepresentation::build($bob), $paginated_result_2->value->collection[0]);
+        self::assertEquals(MinimalUserRepresentation::build($bob, ProvideUserAvatarUrlStub::build()), $paginated_result_2->value->collection[0]);
     }
 
     public function testItReturnsErrWhenAUserIsNotFound(): void
@@ -75,7 +77,8 @@ final class GETHandlerTest extends TestCase
 
         $handler = new GETHandler(
             RetrieveUserByIdStub::withUsers($alice),
-            SearchPaginatedPullRequestsAuthorsStub::withAuthors($hobo_joe)
+            SearchPaginatedPullRequestsAuthorsStub::withAuthors($hobo_joe),
+            ProvideUserAvatarUrlStub::build(),
         );
 
         $result = $handler->handle(

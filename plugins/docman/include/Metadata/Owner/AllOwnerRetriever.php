@@ -23,13 +23,18 @@ declare(strict_types=1);
 namespace Tuleap\Docman\Metadata\Owner;
 
 use Project;
+use Tuleap\User\Avatar\ProvideUserAvatarUrl;
 use Tuleap\User\BuildDisplayName;
 use Tuleap\User\ProvideUserFromRow;
 
 final class AllOwnerRetriever implements RetrieveAllOwner
 {
-    public function __construct(private OwnerData $owner_dao, private ProvideUserFromRow $user_manager, private BuildDisplayName $user_helper)
-    {
+    public function __construct(
+        private OwnerData $owner_dao,
+        private ProvideUserFromRow $user_manager,
+        private BuildDisplayName $user_helper,
+        private readonly ProvideUserAvatarUrl $provide_user_avatar_url,
+    ) {
     }
 
     /**
@@ -46,7 +51,7 @@ final class AllOwnerRetriever implements RetrieveAllOwner
         $project_document_owner = [];
         foreach ($owners_rows as $row) {
             $user                     = $this->user_manager->getUserInstanceFromRow($row);
-            $owner                    = OwnerRepresentationForAutocomplete::buildForSelect2AutocompleteFromOwner($user, $this->user_helper);
+            $owner                    = OwnerRepresentationForAutocomplete::buildForSelect2AutocompleteFromOwner($user, $this->user_helper, $this->provide_user_avatar_url);
             $project_document_owner[] = $owner;
         }
 

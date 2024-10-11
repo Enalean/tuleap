@@ -168,6 +168,9 @@ use Tuleap\ServerHostname;
 use Tuleap\Upload\FileBeingUploadedLocker;
 use Tuleap\Upload\FileBeingUploadedWriter;
 use Tuleap\Upload\FileUploadController;
+use Tuleap\User\Avatar\AvatarHashDao;
+use Tuleap\User\Avatar\ComputeAvatarHash;
+use Tuleap\User\Avatar\UserAvatarUrlProvider;
 use Tuleap\Widget\Event\GetProjectWidgetList;
 use Tuleap\Widget\Event\GetPublicAreas;
 use Tuleap\Widget\Event\GetUserWidgetList;
@@ -1560,7 +1563,8 @@ class DocmanPlugin extends Plugin implements PluginWithConfigKeys
             new AllOwnerRetriever(
                 new OwnerDao(),
                 $this->getUserManager(),
-                UserHelper::instance()
+                UserHelper::instance(),
+                new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash()),
             ),
             new ProjectAccessChecker(
                 new RestrictedUserCanAccessProjectVerifier(),

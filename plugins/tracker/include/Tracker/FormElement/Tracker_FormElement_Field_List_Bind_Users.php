@@ -27,6 +27,9 @@ use Tuleap\Tracker\FormElement\Field\ListFields\Bind\PlatformUsersGetterSingleto
 use Tuleap\Tracker\Import\Spotter;
 use Tuleap\Tracker\REST\FieldListBindUserValueRepresentation;
 use Tuleap\Tracker\REST\FormElement\UserListValueRepresentation;
+use Tuleap\User\Avatar\AvatarHashDao;
+use Tuleap\User\Avatar\ComputeAvatarHash;
+use Tuleap\User\Avatar\UserAvatarUrlProvider;
 use Tuleap\User\REST\UserRepresentation;
 
 class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Field_List_Bind //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
@@ -923,7 +926,7 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
 
         $rest_array = [];
         foreach ($bind_values as $value) {
-            $representation = \Tuleap\User\REST\UserRepresentation::build($value->getUser());
+            $representation = \Tuleap\User\REST\UserRepresentation::build($value->getUser(), new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash()),);
             $rest_array[]   = $representation;
         }
         return $rest_array;
@@ -974,7 +977,7 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
             $user->setEmail($value->getLabel());
         }
 
-        return UserRepresentation::build($user);
+        return UserRepresentation::build($user, new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash()),);
     }
 
     public function accept(BindVisitor $visitor, BindParameters $parameters)

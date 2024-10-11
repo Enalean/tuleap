@@ -29,6 +29,7 @@ use Tuleap\Git\CommitMetadata\CommitMetadata;
 use Tuleap\Git\CommitMetadata\CommitMetadataRetriever;
 use Tuleap\Git\CommitStatus\CommitStatusUnknown;
 use Tuleap\Git\GitPHP\Commit;
+use Tuleap\User\Avatar\ProvideUserAvatarUrl;
 use Tuleap\User\REST\MinimalUserRepresentation;
 
 class GitCommitRepresentationBuilder
@@ -42,7 +43,7 @@ class GitCommitRepresentationBuilder
      */
     private $url_manager;
 
-    public function __construct(CommitMetadataRetriever $metadata_retriever, Git_GitRepositoryUrlManager $url_manager)
+    public function __construct(CommitMetadataRetriever $metadata_retriever, Git_GitRepositoryUrlManager $url_manager, private readonly ProvideUserAvatarUrl $provide_user_avatar_url)
     {
         $this->metadata_retriever = $metadata_retriever;
         $this->url_manager        = $url_manager;
@@ -140,7 +141,7 @@ class GitCommitRepresentationBuilder
         $author = $metadata->getAuthor();
 
         if ($author !== null) {
-            $author_representation = MinimalUserRepresentation::build($author);
+            $author_representation = MinimalUserRepresentation::build($author, $this->provide_user_avatar_url);
             $author                = $author_representation;
         }
         return $author;

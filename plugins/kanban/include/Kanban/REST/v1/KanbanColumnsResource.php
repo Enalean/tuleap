@@ -46,6 +46,9 @@ use Tuleap\Kanban\KanbanStatisticsAggregator;
 use TrackerFactory;
 use Tuleap\REST\ProjectStatusVerificator;
 use Tuleap\Tracker\Permission\SubmissionPermissionVerifier;
+use Tuleap\User\Avatar\AvatarHashDao;
+use Tuleap\User\Avatar\ComputeAvatarHash;
+use Tuleap\User\Avatar\UserAvatarUrlProvider;
 use UserManager;
 use PFUser;
 use Tuleap\Kanban\KanbanUserPreferences;
@@ -126,7 +129,7 @@ class KanbanColumnsResource
             new Tracker_Permission_PermissionRetrieveAssignee(UserManager::instance())
         );
 
-        $this->mercure_client             = ClientBuilder::build(ClientBuilder::DEFAULTPATH);
+        $this->mercure_client             = ClientBuilder::build(ClientBuilder::DEFAULTPATH, new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash()));
         $this->kanban_structural_realtime = new KanbanStructureRealTimeMercure($this->mercure_client);
     }
 

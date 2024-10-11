@@ -25,6 +25,7 @@ namespace Tuleap\PdfTemplate\Admin;
 use Tuleap\CSRFSynchronizerTokenPresenter;
 use Tuleap\Export\Pdf\Template\PdfTemplate;
 use Tuleap\Request\CSRFSynchronizerTokenInterface;
+use Tuleap\User\Avatar\ProvideUserAvatarUrl;
 
 /**
  * @psalm-immutable
@@ -48,12 +49,13 @@ final readonly class IndexPdfTemplatePresenter
         array $templates,
         CSRFSynchronizerTokenInterface $token,
         \PFUser $user,
+        ProvideUserAvatarUrl $provide_user_avatar_url,
     ) {
         $this->has_templates = count($templates) > 0;
         $this->csrf          = CSRFSynchronizerTokenPresenter::fromToken($token);
         $presenters          = [];
         foreach ($templates as $template) {
-            $presenters[] = PdfTemplatePresenter::fromPdfTemplate($template, $user);
+            $presenters[] = PdfTemplatePresenter::fromPdfTemplate($template, $user, $provide_user_avatar_url);
         }
         $this->templates = $presenters;
     }

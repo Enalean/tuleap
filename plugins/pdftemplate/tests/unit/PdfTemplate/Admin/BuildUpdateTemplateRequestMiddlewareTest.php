@@ -36,6 +36,7 @@ use Tuleap\Test\Builders\Export\Pdf\Template\PdfTemplateTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\FeedbackSerializerStub;
+use Tuleap\Test\Stubs\User\Avatar\ProvideUserAvatarUrlStub;
 
 final class BuildUpdateTemplateRequestMiddlewareTest extends TestCase
 {
@@ -64,6 +65,7 @@ final class BuildUpdateTemplateRequestMiddlewareTest extends TestCase
             new RedirectWithFeedbackFactory(HTTPFactoryBuilder::responseFactory(), FeedbackSerializerStub::buildSelf()),
             new PdfTemplateIdentifierFactory(new DatabaseUUIDV7Factory()),
             RetrieveTemplateStub::withMatchingTemplate($template),
+            ProvideUserAvatarUrlStub::build(),
         );
 
         $response = $this->createMock(ResponseInterface::class);
@@ -95,6 +97,7 @@ final class BuildUpdateTemplateRequestMiddlewareTest extends TestCase
             new RedirectWithFeedbackFactory(HTTPFactoryBuilder::responseFactory(), FeedbackSerializerStub::buildSelf()),
             new PdfTemplateIdentifierFactory(new DatabaseUUIDV7Factory()),
             RetrieveTemplateStub::withMatchingTemplate($template),
+            ProvideUserAvatarUrlStub::build(),
         );
 
         $response = $this->createMock(ResponseInterface::class);
@@ -121,6 +124,7 @@ final class BuildUpdateTemplateRequestMiddlewareTest extends TestCase
             new RedirectWithFeedbackFactory(HTTPFactoryBuilder::responseFactory(), FeedbackSerializerStub::buildSelf()),
             new PdfTemplateIdentifierFactory(new DatabaseUUIDV7Factory()),
             RetrieveTemplateStub::withMatchingTemplate($template),
+            ProvideUserAvatarUrlStub::build(),
         );
 
         $response = $this->createMock(ResponseInterface::class);
@@ -148,6 +152,7 @@ final class BuildUpdateTemplateRequestMiddlewareTest extends TestCase
             new RedirectWithFeedbackFactory(HTTPFactoryBuilder::responseFactory(), FeedbackSerializerStub::buildSelf()),
             new PdfTemplateIdentifierFactory(new DatabaseUUIDV7Factory()),
             RetrieveTemplateStub::withoutMatchingTemplate(),
+            ProvideUserAvatarUrlStub::build(),
         );
 
         $response = $this->createMock(ResponseInterface::class);
@@ -175,6 +180,7 @@ final class BuildUpdateTemplateRequestMiddlewareTest extends TestCase
             new RedirectWithFeedbackFactory(HTTPFactoryBuilder::responseFactory(), FeedbackSerializerStub::buildSelf()),
             new PdfTemplateIdentifierFactory(new DatabaseUUIDV7Factory()),
             RetrieveTemplateStub::withMatchingTemplate($template),
+            ProvideUserAvatarUrlStub::build(),
         );
 
         $response = $this->createMock(ResponseInterface::class);
@@ -203,6 +209,7 @@ final class BuildUpdateTemplateRequestMiddlewareTest extends TestCase
             new RedirectWithFeedbackFactory(HTTPFactoryBuilder::responseFactory(), $feedback_serializer),
             new PdfTemplateIdentifierFactory(new DatabaseUUIDV7Factory()),
             RetrieveTemplateStub::withMatchingTemplate($template),
+            ProvideUserAvatarUrlStub::build(),
         );
 
         $response = $this->createMock(ResponseInterface::class);

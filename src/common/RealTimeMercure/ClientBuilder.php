@@ -24,13 +24,14 @@ use BackendLogger;
 use Tuleap\Http\HttpClientFactory;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\JWT\generators\MercureJWTGeneratorBuilder;
+use Tuleap\User\Avatar\ProvideUserAvatarUrl;
 
 class ClientBuilder
 {
     public const  DEFAULTPATH = '/etc/tuleap/conf/mercure.env';
-    public static function build(string $path): Client
+    public static function build(string $path, ProvideUserAvatarUrl $provide_user_avatar_url): Client
     {
-        $mercure_jwt_generator = MercureJWTGeneratorBuilder::build($path);
+        $mercure_jwt_generator = MercureJWTGeneratorBuilder::build($path, $provide_user_avatar_url);
         if (! \ForgeConfig::getFeatureFlag(MercureClient::FEATURE_FLAG_KANBAN_KEY)) {
             return new NullClient();
         }

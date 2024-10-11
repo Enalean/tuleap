@@ -28,6 +28,7 @@ use Tuleap\PullRequest\Tests\Builders\InlineCommentTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\ContentInterpretorStub;
+use Tuleap\Test\Stubs\User\Avatar\ProvideUserAvatarUrlStub;
 use Tuleap\User\REST\MinimalUserRepresentation;
 
 final class SingleRepresentationBuilderTest extends TestCase
@@ -41,7 +42,7 @@ final class SingleRepresentationBuilderTest extends TestCase
 
     private function build(InlineComment $comment): InlineCommentRepresentation
     {
-        $user     = MinimalUserRepresentation::build(UserTestBuilder::buildWithDefaults());
+        $user     = MinimalUserRepresentation::build(UserTestBuilder::buildWithDefaults(), ProvideUserAvatarUrlStub::build());
         $purifier = \Codendi_HTMLPurifier::instance();
         $builder  = new SingleRepresentationBuilder($purifier, $this->interpreter);
         return $builder->build(141, $user, $comment);

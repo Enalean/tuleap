@@ -26,6 +26,7 @@ use Tuleap\Docman\ApprovalTable\TableFactoryForFileBuilder;
 use Tuleap\Docman\Version\VersionDao;
 use Tuleap\Docman\View\DocmanViewURLBuilder;
 use Tuleap\Project\ProjectByIDFactory;
+use Tuleap\User\Avatar\ProvideUserAvatarUrl;
 use Tuleap\User\RetrieveUserById;
 
 final class VersionRepresentationCollectionBuilder
@@ -35,6 +36,7 @@ final class VersionRepresentationCollectionBuilder
         private RetrieveUserById $user_retriever,
         private TableFactoryForFileBuilder $table_factory_builder,
         private ProjectByIDFactory $project_factory,
+        private readonly ProvideUserAvatarUrl $provide_user_avatar_url,
     ) {
     }
 
@@ -89,6 +91,7 @@ final class VersionRepresentationCollectionBuilder
                 $author,
                 (new \DateTimeImmutable())->setTimestamp((int) $version->getDate()),
                 (string) $version->getChangelog(),
+                $this->provide_user_avatar_url,
             );
         }
 

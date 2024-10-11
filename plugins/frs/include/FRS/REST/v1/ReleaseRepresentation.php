@@ -40,6 +40,10 @@ use Tuleap\Tracker\REST\Artifact\ArtifactRepresentationBuilder;
 use Tuleap\Tracker\REST\Artifact\Changeset\ChangesetRepresentationBuilder;
 use Tuleap\Tracker\REST\Artifact\Changeset\Comment\CommentRepresentationBuilder;
 use Tuleap\Tracker\REST\Artifact\StatusValueRepresentation;
+use Tuleap\User\Avatar\AvatarHashDao;
+use Tuleap\User\Avatar\ComputeAvatarHash;
+use Tuleap\User\Avatar\ProvideUserAvatarUrl;
+use Tuleap\User\Avatar\UserAvatarUrlProvider;
 
 /**
  * @psalm-immutable
@@ -128,8 +132,14 @@ final class ReleaseRepresentation
      */
     public $permissions_for_groups;
 
-    public function __construct(FRSRelease $release, Retriever $link_retriever, PFUser $user, UploadedLinksRetriever $uploaded_links_retriever, ReleasePermissionsForGroupsBuilder $permissions_for_groups_builder)
-    {
+    public function __construct(
+        FRSRelease $release,
+        Retriever $link_retriever,
+        PFUser $user,
+        UploadedLinksRetriever $uploaded_links_retriever,
+        ReleasePermissionsForGroupsBuilder $permissions_for_groups_builder,
+        ProvideUserAvatarUrl $provide_user_avatar_url,
+    ) {
         $this->id           = JsonCast::toInt($release->getReleaseID());
         $this->uri          = self::ROUTE . '/' . urlencode((string) $release->getReleaseID());
         $this->changelog    = $release->getChanges();
@@ -146,9 +156,9 @@ final class ReleaseRepresentation
         ];
         $this->project   = self::getProjectReference($release);
 
-        $this->files = self::getFiles($release);
+        $this->files = self::getFiles($release, $provide_user_avatar_url);
 
-        $this->links = self::getLinks($uploaded_links_retriever, $release);
+        $this->links = self::getLinks($uploaded_links_retriever, $release, $provide_user_avatar_url);
 
         $this->license_approval = self::getLicenseApprovalState($release);
 
@@ -185,8 +195,10 @@ final class ReleaseRepresentation
                 new CommentRepresentationBuilder(
                     CommonMarkInterpreter::build(\Codendi_HTMLPurifier::instance())
                 ),
-                new PermissionChecker(new CachingTrackerPrivateCommentInformationRetriever(new TrackerPrivateCommentInformationRetriever(new TrackerPrivateCommentUGroupEnabledDao())))
-            )
+                new PermissionChecker(new CachingTrackerPrivateCommentInformationRetriever(new TrackerPrivateCommentInformationRetriever(new TrackerPrivateCommentUGroupEnabledDao()))),
+                new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash()),
+            ),
+            new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash()),
         );
 
         $tracker_factory = Tracker_ArtifactFactory::instance();
@@ -212,11 +224,11 @@ final class ReleaseRepresentation
     /**
      * @return FileRepresentation[]
      */
-    private static function getFiles(FRSRelease $release): array
+    private static function getFiles(FRSRelease $release, ProvideUserAvatarUrl $provide_user_avatar_url): array
     {
         $files = [];
         foreach ($release->getFiles() as $file) {
-            $file_representation = new FileRepresentation($file);
+            $file_representation = new FileRepresentation($file, $provide_user_avatar_url);
             $files[]             = $file_representation;
         }
 
@@ -226,11 +238,11 @@ final class ReleaseRepresentation
     /**
      * @return UploadedLinkRepresentation[]
      */
-    private static function getLinks(UploadedLinksRetriever $uploaded_links_retriever, FRSRelease $release): array
+    private static function getLinks(UploadedLinksRetriever $uploaded_links_retriever, FRSRelease $release, ProvideUserAvatarUrl $provide_user_avatar_url): array
     {
         $links = [];
         foreach ($uploaded_links_retriever->getLinksForRelease($release) as $link) {
-            $link_representation = new UploadedLinkRepresentation($link);
+            $link_representation = new UploadedLinkRepresentation($link, $provide_user_avatar_url);
             $links[]             = $link_representation;
         }
 

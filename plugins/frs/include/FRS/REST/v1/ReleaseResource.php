@@ -34,6 +34,9 @@ use Tuleap\FRS\UploadedLinksRetriever;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\REST\ProjectStatusVerificator;
+use Tuleap\User\Avatar\AvatarHashDao;
+use Tuleap\User\Avatar\ComputeAvatarHash;
+use Tuleap\User\Avatar\UserAvatarUrlProvider;
 use UGroupManager;
 use UserManager;
 
@@ -108,7 +111,7 @@ class ReleaseResource extends AuthenticatedResource
 
         $this->checkUserCanReadRelease($release, $user);
 
-        return new ReleaseRepresentation($release, $this->retriever, $user, $this->uploaded_link_retriever, $this->permissions_for_groups_builder);
+        return new ReleaseRepresentation($release, $this->retriever, $user, $this->uploaded_link_retriever, $this->permissions_for_groups_builder, new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash()));
     }
 
     /**
@@ -142,7 +145,7 @@ class ReleaseResource extends AuthenticatedResource
         $files_in_release = $release->getFiles();
         $representations  = [];
         foreach (array_slice($files_in_release, $offset, $limit) as $file) {
-            $file_representation = new FileRepresentation($file);
+            $file_representation = new FileRepresentation($file, new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash()));
             $representations[]   = $file_representation;
         }
 
@@ -227,7 +230,7 @@ class ReleaseResource extends AuthenticatedResource
         if (! $release) {
             throw new RestException(500, 'Unable to retrieve the release from the DB. Please contact site administrators');
         }
-        return new ReleaseRepresentation($release, $this->retriever, $user, $this->uploaded_link_retriever, $this->permissions_for_groups_builder);
+        return new ReleaseRepresentation($release, $this->retriever, $user, $this->uploaded_link_retriever, $this->permissions_for_groups_builder, new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash()));
     }
 
     /**

@@ -20,6 +20,9 @@
  */
 
 use Tuleap\Cryptography\ConcealedString;
+use Tuleap\User\Avatar\AvatarHashDao;
+use Tuleap\User\Avatar\ComputeAvatarHash;
+use Tuleap\User\Avatar\UserAvatarUrlProvider;
 use Tuleap\User\ForgeUserGroupPermission\SiteAdministratorPermission;
 
 /**
@@ -1283,25 +1286,14 @@ class PFUser implements PFO_User, IHaveAnSSHKey
      /**
       * Return the user avatar url
       * @return string url
+      * @deprecated Use UserAvatarUrlProvider::getAvatarUrl() instead
       */
     public function getAvatarUrl()
     {
-        if ($this->avatar_url) {
-            return $this->avatar_url;
+        if (! $this->avatar_url) {
+            $user_avatar_url_provider = new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash());
+            $this->avatar_url         = $user_avatar_url_provider->getAvatarUrl($this);
         }
-
-        $avatar_url = self::DEFAULT_AVATAR_URL;
-
-        if (! $this->isAnonymous() && $this->hasAvatar()) {
-            $avatar_file_path = $this->getAvatarFilePath();
-            if (is_file($avatar_file_path)) {
-                $avatar_url = '/users/' . urlencode($this->getUserName()) . '/avatar-' . hash_file('sha256', $avatar_file_path) . '.png';
-            } else {
-                $avatar_url = '/users/' . urlencode($this->getUserName()) . '/avatar.png';
-            }
-        }
-
-        $this->avatar_url = \Tuleap\ServerHostname::HTTPSUrl() . $avatar_url;
 
         return $this->avatar_url;
     }

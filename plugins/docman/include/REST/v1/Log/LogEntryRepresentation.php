@@ -24,6 +24,7 @@ namespace Tuleap\Docman\REST\v1\Log;
 
 use Tuleap\Docman\Log\LogEntry;
 use Tuleap\REST\JsonCast;
+use Tuleap\User\Avatar\ProvideUserAvatarUrl;
 use Tuleap\User\REST\UserRepresentation;
 
 /**
@@ -41,11 +42,11 @@ final class LogEntryRepresentation
     ) {
     }
 
-    public static function fromEntry(LogEntry $entry): self
+    public static function fromEntry(LogEntry $entry, ProvideUserAvatarUrl $provide_user_avatar_url): self
     {
         return new self(
             JsonCast::fromNotNullDateTimeToDate($entry->when),
-            UserRepresentation::build($entry->who),
+            UserRepresentation::build($entry->who, $provide_user_avatar_url),
             $entry->what,
             $entry->old_value,
             $entry->new_value,

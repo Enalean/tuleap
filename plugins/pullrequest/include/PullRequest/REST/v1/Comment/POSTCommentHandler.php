@@ -34,6 +34,7 @@ use Tuleap\PullRequest\Comment\NewComment;
 use Tuleap\PullRequest\PullRequest;
 use Tuleap\PullRequest\PullRequest\Timeline\TimelineComment;
 use Tuleap\PullRequest\REST\v1\CommentPOSTRepresentation;
+use Tuleap\User\Avatar\ProvideUserAvatarUrl;
 use Tuleap\User\REST\MinimalUserRepresentation;
 
 final class POSTCommentHandler
@@ -42,6 +43,7 @@ final class POSTCommentHandler
         private readonly RetrieveGitRepository $repository_retriever,
         private readonly CommentCreator $comment_creator,
         private readonly CommentRepresentationBuilder $builder,
+        private readonly ProvideUserAvatarUrl $provide_user_avatar_url,
     ) {
     }
 
@@ -79,7 +81,7 @@ final class POSTCommentHandler
 
         $representation = $this->builder->buildRepresentation(
             $source_project_id,
-            MinimalUserRepresentation::build($user),
+            MinimalUserRepresentation::build($user, $this->provide_user_avatar_url),
             $inserted_comment
         );
         return Result::ok($representation);

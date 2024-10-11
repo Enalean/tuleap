@@ -23,6 +23,7 @@ namespace Tuleap\RealTimeMercure;
 use org\bovigo\vfs\vfsStream;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Test\Stubs\User\Avatar\ProvideUserAvatarUrlStub;
 
 class ClientBuilderTest extends TestCase
 {
@@ -38,7 +39,7 @@ class ClientBuilderTest extends TestCase
         ];
         $root      = vfsStream::setup('root1', null, $structure);
         $this->assertTrue($root->hasChild('env/mercure.env'));
-        $mercure_client = ClientBuilder::build($root->url() . '/env/mercure.env');
+        $mercure_client = ClientBuilder::build($root->url() . '/env/mercure.env', ProvideUserAvatarUrlStub::build());
         $this->assertInstanceOf(MercureClient::class, $mercure_client);
     }
 
@@ -46,7 +47,7 @@ class ClientBuilderTest extends TestCase
     {
         \ForgeConfig::setFeatureFlag(MercureClient::FEATURE_FLAG_KANBAN_KEY, false);
         $root           = vfsStream::setup('root2');
-        $mercure_client = ClientBuilder::build($root->url() . '/mercure.env');
+        $mercure_client = ClientBuilder::build($root->url() . '/mercure.env', ProvideUserAvatarUrlStub::build());
         $this->assertInstanceOf(NullClient::class, $mercure_client);
     }
 }

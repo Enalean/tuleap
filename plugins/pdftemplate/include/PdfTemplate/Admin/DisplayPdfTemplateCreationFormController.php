@@ -31,6 +31,7 @@ use Tuleap\PdfTemplate\Image\PdfTemplateImage;
 use Tuleap\PdfTemplate\Image\RetrieveAllImages;
 use Tuleap\Request\DispatchableWithBurningParrot;
 use Tuleap\Request\DispatchableWithRequest;
+use Tuleap\User\Avatar\ProvideUserAvatarUrl;
 
 final readonly class DisplayPdfTemplateCreationFormController implements DispatchableWithBurningParrot, DispatchableWithRequest
 {
@@ -41,6 +42,7 @@ final readonly class DisplayPdfTemplateCreationFormController implements Dispatc
         private UserCanManageTemplatesChecker $can_manage_templates_checker,
         private CSRFTokenProvider $token_provider,
         private RetrieveAllImages $images_retriever,
+        private ProvideUserAvatarUrl $provide_user_avatar_url,
     ) {
     }
 
@@ -72,6 +74,7 @@ final readonly class DisplayPdfTemplateCreationFormController implements Dispatc
                     static fn (PdfTemplateImage $image) => DisplayImagePresenter::fromImage($image),
                     $this->images_retriever->retrieveAll(),
                 ),
+                $this->provide_user_avatar_url,
             ),
         );
     }

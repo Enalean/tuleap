@@ -41,6 +41,7 @@ use Tuleap\PullRequest\PullRequest;
 use Tuleap\PullRequest\PullRequestRetriever;
 use Tuleap\PullRequest\REST\v1\InlineComment\InlineCommentRepresentation;
 use Tuleap\PullRequest\REST\v1\InlineComment\SingleRepresentationBuilder;
+use Tuleap\User\Avatar\ProvideUserAvatarUrl;
 use Tuleap\User\REST\MinimalUserRepresentation;
 
 final class POSTHandler
@@ -52,6 +53,7 @@ final class POSTHandler
         private readonly RetrieveGitRepository $repository_retriever,
         private readonly SingleRepresentationBuilder $representation_builder,
         private readonly InlineCommentCreator $inline_comment_creator,
+        private readonly ProvideUserAvatarUrl $provide_user_avatar_url,
     ) {
     }
 
@@ -103,7 +105,7 @@ final class POSTHandler
 
                         $representation = $this->representation_builder->build(
                             $source_project_id,
-                            MinimalUserRepresentation::build($user),
+                            MinimalUserRepresentation::build($user, $this->provide_user_avatar_url),
                             $inserted_reply
                         );
                         return Result::ok($representation);

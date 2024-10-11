@@ -54,6 +54,9 @@ use Tuleap\Docman\Search\SearchSortPropertyMapper;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\REST\I18NRestException;
+use Tuleap\User\Avatar\AvatarHashDao;
+use Tuleap\User\Avatar\ComputeAvatarHash;
+use Tuleap\User\Avatar\UserAvatarUrlProvider;
 use UGroupManager;
 use UserHelper;
 
@@ -264,6 +267,8 @@ final class SearchResource extends AuthenticatedResource
 
         $html_purifier = Codendi_HTMLPurifier::instance();
 
+        $provide_user_avatar_url = new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash());
+
         $representation_builder =  new ItemRepresentationBuilder(
             $item_dao,
             $user_manager,
@@ -286,7 +291,8 @@ final class SearchResource extends AuthenticatedResource
                 PermissionsManager::instance(),
                 new UGroupManager()
             ),
-            $html_purifier
+            $html_purifier,
+            $provide_user_avatar_url,
         );
 
 
@@ -312,6 +318,7 @@ final class SearchResource extends AuthenticatedResource
             new SearchRepresentationTypeVisitor(\EventManager::instance()),
             new FilePropertiesVisitor($version_factory, $event_manager),
             new ListOfCustomPropertyRepresentationBuilder(),
+            $provide_user_avatar_url,
         );
 
         $wanted_custom_properties = (new SearchColumnCollectionBuilder())

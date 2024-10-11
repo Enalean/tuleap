@@ -182,6 +182,9 @@ use Tuleap\Tracker\Report\TrackerReportExtractor;
 use Tuleap\Tracker\REST\v1\ArtifactMatchingReportCollection;
 use Tuleap\Tracker\Semantic\Contributor\ContributorFieldRetriever;
 use Tuleap\Tracker\Semantic\Status\StatusFieldRetriever;
+use Tuleap\User\Avatar\AvatarHashDao;
+use Tuleap\User\Avatar\ComputeAvatarHash;
+use Tuleap\User\Avatar\UserAvatarUrlProvider;
 use UGroupManager;
 use URLVerification;
 use UserHelper;
@@ -308,7 +311,8 @@ final class CrossTrackerReportsResource extends AuthenticatedResource
                 assert($artifacts instanceof ArtifactMatchingReportCollection);
                 $representations = (new ArtifactRepresentationFactory())->buildRepresentationsForReport(
                     $artifacts,
-                    $current_user
+                    $current_user,
+                    new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash()),
                 );
 
                 $this->sendPaginationHeaders($limit, $offset, $representations->getTotalSize());

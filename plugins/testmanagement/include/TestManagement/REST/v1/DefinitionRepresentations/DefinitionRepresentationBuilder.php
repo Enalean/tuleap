@@ -34,6 +34,7 @@ use Tuleap\Tracker\REST\Artifact\ArtifactRepresentation;
 use Tuleap\Tracker\REST\Artifact\ArtifactRepresentationBuilder;
 use Tuleap\Tracker\REST\Artifact\StatusValueRepresentation;
 use Tuleap\Tracker\REST\MinimalTrackerRepresentation;
+use Tuleap\User\Avatar\ProvideUserAvatarUrl;
 
 class DefinitionRepresentationBuilder
 {
@@ -68,6 +69,7 @@ class DefinitionRepresentationBuilder
         ContentInterpretor $interpreter,
         private readonly ArtifactRepresentationBuilder $artifact_representation_builder,
         private readonly \Tracker_Artifact_PriorityManager $artifact_priority_manager,
+        private readonly ProvideUserAvatarUrl $provide_user_avatar_url,
     ) {
         $this->tracker_form_element_factory = $tracker_form_element_factory;
         $this->conformance_validator        = $conformance_validator;
@@ -128,13 +130,14 @@ class DefinitionRepresentationBuilder
         ArtifactRepresentation $definition_artifact_representation,
     ): DefinitionRepresentation {
         $all_requirements = array_map(
-            static fn(Artifact $requirement): ArtifactRepresentation => ArtifactRepresentation::build(
+            fn(Artifact $requirement): ArtifactRepresentation => ArtifactRepresentation::build(
                 $user,
                 $requirement,
                 [],
                 [],
                 MinimalTrackerRepresentation::build($requirement->getTracker()),
-                StatusValueRepresentation::buildFromArtifact($definition_artifact, $user)
+                StatusValueRepresentation::buildFromArtifact($definition_artifact, $user),
+                $this->provide_user_avatar_url,
             ),
             $this->requirement_retriever->getAllRequirementsForDefinition($definition_artifact, $user)
         );

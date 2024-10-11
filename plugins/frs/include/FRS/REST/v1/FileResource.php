@@ -41,6 +41,9 @@ use Tuleap\FRS\Upload\UploadPathAllocator;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\REST\I18NRestException;
+use Tuleap\User\Avatar\AvatarHashDao;
+use Tuleap\User\Avatar\ComputeAvatarHash;
+use Tuleap\User\Avatar\UserAvatarUrlProvider;
 use UserManager;
 
 class FileResource extends AuthenticatedResource
@@ -86,7 +89,7 @@ class FileResource extends AuthenticatedResource
         $user = $this->user_manager->getCurrentUser();
         $file = $this->getFile($id, $user);
 
-        return new FileRepresentation($file);
+        return new FileRepresentation($file, new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash()));
     }
 
     /**

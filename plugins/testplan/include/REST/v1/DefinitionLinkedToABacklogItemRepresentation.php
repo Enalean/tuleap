@@ -28,6 +28,7 @@ use Tuleap\TestManagement\REST\v1\DefinitionRepresentations\MinimalDefinitionRep
 use Tuleap\TestPlan\TestDefinition\TestPlanTestDefinitionWithTestStatus;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\REST\Artifact\ArtifactReferenceRepresentation;
+use Tuleap\User\Avatar\ProvideUserAvatarUrl;
 
 /**
  * @psalm-immutable
@@ -77,6 +78,7 @@ final class DefinitionLinkedToABacklogItemRepresentation extends MinimalDefiniti
         TestPlanTestDefinitionWithTestStatus $test_definition_with_test_status,
         PFUser $user,
         Tracker_FormElementFactory $form_element_factory,
+        ProvideUserAvatarUrl $provide_user_avatar_url,
     ): self {
         $test_definition = $test_definition_with_test_status->getTestDefinition();
 
@@ -86,7 +88,7 @@ final class DefinitionLinkedToABacklogItemRepresentation extends MinimalDefiniti
             $user,
             $test_definition->getTracker()->getItemName(),
             $test_definition_with_test_status->getStatus(),
-            TestExecutionUsedToDefineStatusRepresentation::fromTestPlanTestDefinitionWithStatus($test_definition_with_test_status),
+            TestExecutionUsedToDefineStatusRepresentation::fromTestPlanTestDefinitionWithStatus($test_definition_with_test_status, $provide_user_avatar_url),
             self::buildArtifactReference($test_definition_with_test_status->getTestCampaignIdDefiningTheStatus())
         );
     }

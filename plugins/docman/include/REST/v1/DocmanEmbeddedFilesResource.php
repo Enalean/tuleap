@@ -59,6 +59,9 @@ use Tuleap\Project\REST\UserGroupRetriever;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\REST\I18NRestException;
+use Tuleap\User\Avatar\AvatarHashDao;
+use Tuleap\User\Avatar\ComputeAvatarHash;
+use Tuleap\User\Avatar\UserAvatarUrlProvider;
 use UGroupManager;
 use UserManager;
 
@@ -327,6 +330,7 @@ class DocmanEmbeddedFilesResource extends AuthenticatedResource
             UserManager::instance(),
             new \Docman_ApprovalTableFactoriesFactory(),
             ProjectManager::instance(),
+            new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash()),
         );
 
         $collection = $version_representations_builder->buildVersionsCollection($item, $limit, $offset);

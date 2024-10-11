@@ -24,6 +24,7 @@ namespace Tuleap\Dashboard\User;
 
 use Tuleap\Layout\JavascriptViteAsset;
 use Tuleap\Project\Icons\EmojiCodepointConverter;
+use Tuleap\User\Avatar\ProvideUserAvatarUrl;
 
 final class FirstTimerPresenter
 {
@@ -37,6 +38,7 @@ final class FirstTimerPresenter
         ?\PFUser $invited_by_user,
         ?\Project $project,
         public JavascriptViteAsset $javascript_assets,
+        ProvideUserAvatarUrl $provide_user_avatar_url,
     ) {
         if ($project) {
             $this->project_name = $project->getPublicName();
@@ -45,6 +47,6 @@ final class FirstTimerPresenter
             );
         }
 
-        $this->invited_by_user = $invited_by_user ? new UserPresenter($invited_by_user) : null;
+        $this->invited_by_user = $invited_by_user ? new UserPresenter($invited_by_user, $provide_user_avatar_url) : null;
     }
 }

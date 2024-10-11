@@ -29,6 +29,7 @@ use Psr\Log\NullLogger;
 use Tracker;
 use Tuleap\Http\Server\NullServerRequest;
 use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\Stubs\User\Avatar\ProvideUserAvatarUrlStub;
 use Tuleap\TestManagement\Campaign\ArtifactNotFoundException;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\Http\HTTPFactoryBuilder;
@@ -67,7 +68,7 @@ final class MercureJWTControllerTest extends TestCase
         $this->response_factory      = HTTPFactoryBuilder::responseFactory();
         $this->stream_factory        = HTTPFactoryBuilder::streamFactory();
         $jwt_configuration           = Configuration::forSymmetricSigner(new Sha256(), Key\InMemory::plainText(str_repeat('a', 32)));
-        $mercure_jwt_generator       = new MercureJWTGeneratorImpl($jwt_configuration);
+        $mercure_jwt_generator       = new MercureJWTGeneratorImpl($jwt_configuration, ProvideUserAvatarUrlStub::build());
         $this->emitter               = new NoopSapiEmitter();
         $this->campaign_retriever    = $this->createStub(CampaignRetriever::class);
         $this->conformance_validator = $this->createStub(ConfigConformanceValidator::class);

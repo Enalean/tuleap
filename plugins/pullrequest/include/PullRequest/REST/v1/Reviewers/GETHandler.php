@@ -28,6 +28,7 @@ use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
 use Tuleap\PullRequest\PullRequest\REST\v1\UserNotFoundFault;
 use Tuleap\PullRequest\PullRequest\Reviewer\SearchRepositoryReviewers;
+use Tuleap\User\Avatar\ProvideUserAvatarUrl;
 use Tuleap\User\REST\MinimalUserRepresentation;
 use Tuleap\User\RetrieveUserById;
 
@@ -36,6 +37,7 @@ final class GETHandler
     public function __construct(
         private readonly RetrieveUserById $retrieve_user_by_id,
         private readonly SearchRepositoryReviewers $search_repository_reviewers,
+        private readonly ProvideUserAvatarUrl $provide_user_avatar_url,
     ) {
     }
 
@@ -53,7 +55,7 @@ final class GETHandler
                 return Result::err(UserNotFoundFault::fromUserId($reviewer_id));
             }
 
-            $representations[] = MinimalUserRepresentation::build($reviewer);
+            $representations[] = MinimalUserRepresentation::build($reviewer, $this->provide_user_avatar_url);
         }
 
         return Result::ok(new RepositoryPullRequestsReviewersRepresentation($representations, $result->total_size));

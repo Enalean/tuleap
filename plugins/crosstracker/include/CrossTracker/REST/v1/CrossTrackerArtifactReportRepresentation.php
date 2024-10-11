@@ -28,6 +28,7 @@ use Tuleap\Project\REST\ProjectReference;
 use Tuleap\REST\JsonCast;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\REST\TrackerReference;
+use Tuleap\User\Avatar\ProvideUserAvatarUrl;
 use Tuleap\User\REST\MinimalUserRepresentation;
 
 /**
@@ -51,11 +52,11 @@ final readonly class CrossTrackerArtifactReportRepresentation
     ) {
     }
 
-    public static function build(Artifact $artifact, PFUser $user): self
+    public static function build(Artifact $artifact, PFUser $user, ProvideUserAvatarUrl $provide_user_avatar_url): self
     {
         $assigned_to = [];
         foreach ($artifact->getAssignedTo($user) as $user_assigned_to) {
-            $assigned_to[] = MinimalUserRepresentation::build($user_assigned_to);
+            $assigned_to[] = MinimalUserRepresentation::build($user_assigned_to, $provide_user_avatar_url);
         }
 
         $tracker = $artifact->getTracker();
@@ -65,7 +66,7 @@ final readonly class CrossTrackerArtifactReportRepresentation
             $artifact->getTitle() ?? '',
             $artifact->getStatus(),
             JsonCast::toDate($artifact->getLastUpdateDate()),
-            MinimalUserRepresentation::build($artifact->getSubmittedByUser()),
+            MinimalUserRepresentation::build($artifact->getSubmittedByUser(), $provide_user_avatar_url),
             $assigned_to,
             TrackerReference::build($tracker),
             new CrossTrackerArtifactBadgeRepresentation(

@@ -26,6 +26,7 @@ use Tuleap\Date\TlpRelativeDatePresenter;
 use Tuleap\Date\TlpRelativeDatePresenterBuilder;
 use Tuleap\Export\Pdf\Template\PdfTemplate;
 use Tuleap\User\Admin\UserPresenter;
+use Tuleap\User\Avatar\ProvideUserAvatarUrl;
 
 /**
  * @psalm-immutable
@@ -54,7 +55,7 @@ final readonly class PdfTemplatePresenter
         $this->is_update     = $id !== self::DUMMY_ID_FOR_CREATION;
     }
 
-    public static function fromPdfTemplate(PdfTemplate $template, \PFUser $user): self
+    public static function fromPdfTemplate(PdfTemplate $template, \PFUser $user, ProvideUserAvatarUrl $provide_user_avatar_url): self
     {
         $builder = new TlpRelativeDatePresenterBuilder();
 
@@ -66,13 +67,13 @@ final readonly class PdfTemplatePresenter
             $template->title_page_content,
             $template->header_content,
             $template->footer_content,
-            UserPresenter::fromUser($template->last_updated_by),
+            UserPresenter::fromUser($template->last_updated_by, $provide_user_avatar_url),
             $builder->getTlpRelativeDatePresenterInInlineContext($template->last_updated_date, $user),
             $builder->getTlpRelativeDatePresenterInBlockContext($template->last_updated_date, $user),
         );
     }
 
-    public static function forCreation(\PFUser $user): self
+    public static function forCreation(\PFUser $user, ProvideUserAvatarUrl $provide_user_avatar_url): self
     {
         $builder = new TlpRelativeDatePresenterBuilder();
 
@@ -84,13 +85,13 @@ final readonly class PdfTemplatePresenter
             file_get_contents(__DIR__ . '/../Default/pdf-template-default-title-page.html'),
             file_get_contents(__DIR__ . '/../Default/pdf-template-default-header.html'),
             file_get_contents(__DIR__ . '/../Default/pdf-template-default-footer.html'),
-            UserPresenter::fromUser($user),
+            UserPresenter::fromUser($user, $provide_user_avatar_url),
             $builder->getTlpRelativeDatePresenterInInlineContext(new \DateTimeImmutable(), $user),
             $builder->getTlpRelativeDatePresenterInBlockContext(new \DateTimeImmutable(), $user),
         );
     }
 
-    public static function forDuplication(PdfTemplate $source, \PFUser $user): self
+    public static function forDuplication(PdfTemplate $source, \PFUser $user, ProvideUserAvatarUrl $provide_user_avatar_url): self
     {
         $builder = new TlpRelativeDatePresenterBuilder();
 
@@ -102,7 +103,7 @@ final readonly class PdfTemplatePresenter
             $source->title_page_content,
             $source->header_content,
             $source->footer_content,
-            UserPresenter::fromUser($user),
+            UserPresenter::fromUser($user, $provide_user_avatar_url),
             $builder->getTlpRelativeDatePresenterInInlineContext(new \DateTimeImmutable(), $user),
             $builder->getTlpRelativeDatePresenterInBlockContext(new \DateTimeImmutable(), $user),
         );

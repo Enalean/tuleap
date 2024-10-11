@@ -25,6 +25,7 @@ namespace Tuleap\Tracker\REST\Artifact;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\Stubs\User\Avatar\ProvideUserAvatarUrlStub;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\REST\Artifact\Changeset\ChangesetRepresentation;
 use Tuleap\Tracker\REST\MinimalTrackerRepresentation;
@@ -93,7 +94,7 @@ final class ArtifactRepresentationTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $tracker_representation      = MinimalTrackerRepresentation::build($tracker);
         $value_status_representation = StatusValueRepresentation::buildFromValues(self::STATUS, self::EXPECTED_COLOR);
-        return ArtifactRepresentation::build($user, $artifact, null, null, $tracker_representation, $value_status_representation);
+        return ArtifactRepresentation::build($user, $artifact, null, null, $tracker_representation, $value_status_representation, ProvideUserAvatarUrlStub::build());
     }
 
     public function testItBuildsFromArtifact(): void

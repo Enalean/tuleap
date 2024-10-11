@@ -23,6 +23,7 @@ namespace Tuleap\Git\Webhook;
 use GitRepository;
 use PFUser;
 use Psr\Log\LoggerInterface;
+use Tuleap\User\Avatar\ProvideUserAvatarUrl;
 use Tuleap\Webhook\Emitter;
 
 class WebhookRequestSender
@@ -44,6 +45,7 @@ class WebhookRequestSender
         Emitter $webhook_emitter,
         WebhookFactory $webhook_factory,
         LoggerInterface $logger,
+        private readonly ProvideUserAvatarUrl $provide_user_avatar_url,
     ) {
         $this->webhook_emitter = $webhook_emitter;
         $this->webhook_factory = $webhook_factory;
@@ -53,7 +55,7 @@ class WebhookRequestSender
     public function sendRequests(GitRepository $repository, PFUser $user, $oldrev, $newrev, $refname)
     {
         $web_hooks = $this->webhook_factory->getWebhooksForRepository($repository);
-        $payload   = new PushPayload($repository, $user, $oldrev, $newrev, $refname);
+        $payload   = new PushPayload($repository, $user, $oldrev, $newrev, $refname, $this->provide_user_avatar_url);
         $this->logger->info('Processing webhooks for repository #' . $repository->getId());
         $this->webhook_emitter->emit($payload, ...$web_hooks);
     }

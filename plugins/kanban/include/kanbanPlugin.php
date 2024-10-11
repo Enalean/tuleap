@@ -99,6 +99,9 @@ use Tuleap\Tracker\TrackerEventTrackersDuplicated;
 use Tuleap\Tracker\XML\Exporter\TrackerEventExportFullXML;
 use Tuleap\Tracker\XML\Exporter\TrackerEventExportStructureXML;
 use Tuleap\Tracker\XML\Importer\ImportXMLProjectTrackerDone;
+use Tuleap\User\Avatar\AvatarHashDao;
+use Tuleap\User\Avatar\ComputeAvatarHash;
+use Tuleap\User\Avatar\UserAvatarUrlProvider;
 use Tuleap\User\History\HistoryEntryCollection;
 use Tuleap\User\History\HistoryRetriever;
 
@@ -378,7 +381,7 @@ final class KanbanPlugin extends Plugin implements PluginWithService
             HTTPFactoryBuilder::responseFactory(),
             HTTPFactoryBuilder::streamFactory(),
             UserManager::instance(),
-            MercureJWTGeneratorBuilder::build(MercureJWTGeneratorBuilder::DEFAULTPATH),
+            MercureJWTGeneratorBuilder::build(MercureJWTGeneratorBuilder::DEFAULTPATH, new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash())),
             new SapiEmitter()
         );
     }
@@ -669,7 +672,7 @@ final class KanbanPlugin extends Plugin implements PluginWithService
     private function getKanbanArtifactMessageSenderMercure(): KanbanArtifactMessageSenderMercure
     {
         $kanba_item_dao                           = new KanbanItemDao();
-        $mercure_client                           = ClientBuilder::build(ClientBuilder::DEFAULTPATH);
+        $mercure_client                           = ClientBuilder::build(ClientBuilder::DEFAULTPATH, new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash()));
         $realtime_artifact_message_builder_kanban = new KanbanArtifactMessageBuilderMercure(
             $kanba_item_dao,
             Tracker_Artifact_ChangesetFactoryBuilder::build()

@@ -136,6 +136,9 @@ use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\REST\ProjectAuthorization;
 use Tuleap\REST\ProjectStatusVerificator;
+use Tuleap\User\Avatar\AvatarHashDao;
+use Tuleap\User\Avatar\ComputeAvatarHash;
+use Tuleap\User\Avatar\UserAvatarUrlProvider;
 use URLVerification;
 use UserManager;
 
@@ -230,7 +233,8 @@ class PullRequestsResource extends AuthenticatedResource
         $metadata_retriever                  = new CommitMetadataRetriever($this->status_retriever, $this->user_manager);
         $this->commit_representation_builder = new GitCommitRepresentationBuilder(
             $metadata_retriever,
-            $url_manager
+            $url_manager,
+            new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash()),
         );
     }
 
@@ -283,15 +287,18 @@ class PullRequestsResource extends AuthenticatedResource
             new EnhancedCodeBlockExtension(new CodeBlockFeatures())
         );
 
+        $provide_user_avatar_url = new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash());
+
         $pr_representation_factory = new PullRequestRepresentationFactory(
             $this->access_control_verifier,
             $this->status_retriever,
             $this->getGitoliteAccessURLGenerator(),
-            new PullRequestStatusInfoRepresentationBuilder(new TimelineDao(), new TimelineDao(), $this->user_manager),
+            new PullRequestStatusInfoRepresentationBuilder(new TimelineDao(), new TimelineDao(), $this->user_manager, $provide_user_avatar_url),
             $purifier,
             $content_interpretor,
             $this->getPullReviewerRetrievers(),
-            $this->user_manager
+            $this->user_manager,
+            $provide_user_avatar_url,
         );
 
         return $pr_representation_factory->getPullRequestRepresentation(
@@ -633,7 +640,8 @@ class PullRequestsResource extends AuthenticatedResource
             $inline_comment_builder = new InlineCommentRepresentationsBuilder(
                 new \Tuleap\PullRequest\InlineComment\Dao(),
                 $this->user_manager,
-                new SingleRepresentationBuilder($purifier, $content_interpretor)
+                new SingleRepresentationBuilder($purifier, $content_interpretor),
+                new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash()),
             );
             $git_repository_source  = $this->getRepository($pull_request->getRepositoryId());
             $inline_comments        = $inline_comment_builder->getForFile($pull_request, $path, $git_repository_source->getProjectId());
@@ -724,7 +732,8 @@ class PullRequestsResource extends AuthenticatedResource
         $handler = new POSTHandler(
             $this->git_repository_factory,
             $comment_creator,
-            new SingleRepresentationBuilder($purifier, $content_interpreter)
+            new SingleRepresentationBuilder($purifier, $content_interpreter),
+            new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash()),
         );
         return $handler->handle($comment_data, $user, $post_date, $pull_request)
             ->match(
@@ -905,20 +914,24 @@ class PullRequestsResource extends AuthenticatedResource
         }
         return (new PullRequestRetriever($this->pull_request_dao))->getPullRequestById($id)->match(
             function (PullRequest $updated_pull_request) use ($repository_src, $repository_dest, $pull_request_with_git_reference, $user): PullRequestRepresentation {
-                $purifier                  = \Codendi_HTMLPurifier::instance();
-                $content_interpretor       = CommonMarkInterpreter::build(
+                $purifier            = \Codendi_HTMLPurifier::instance();
+                $content_interpretor = CommonMarkInterpreter::build(
                     $purifier,
                     new EnhancedCodeBlockExtension(new CodeBlockFeatures())
                 );
+
+                $provide_user_avatar_url = new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash());
+
                 $pr_representation_factory = new PullRequestRepresentationFactory(
                     $this->access_control_verifier,
                     new CommitStatusRetriever(new CommitStatusDAO()),
                     $this->getGitoliteAccessURLGenerator(),
-                    new PullRequestStatusInfoRepresentationBuilder(new TimelineDao(), new TimelineDao(), $this->user_manager),
+                    new PullRequestStatusInfoRepresentationBuilder(new TimelineDao(), new TimelineDao(), $this->user_manager, $provide_user_avatar_url),
                     $purifier,
                     $content_interpretor,
                     $this->getPullReviewerRetrievers(),
-                    $this->user_manager
+                    $this->user_manager,
+                    $provide_user_avatar_url,
                 );
 
                 return $pr_representation_factory->getPullRequestRepresentation(
@@ -1040,7 +1053,8 @@ class PullRequestsResource extends AuthenticatedResource
             $timeline_factory,
             UserManager::instance(),
             new CommentRepresentationBuilder($purifier, $content_interpreter),
-            new SingleRepresentationBuilder($purifier, $content_interpreter)
+            new SingleRepresentationBuilder($purifier, $content_interpreter),
+            new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash()),
         );
 
         $paginated_timeline_representation = $paginated_timeline_representation_builder->getPaginatedTimelineRepresentation(
@@ -1107,7 +1121,8 @@ class PullRequestsResource extends AuthenticatedResource
         $paginated_comments_representations_builder = new PaginatedCommentsRepresentationsBuilder(
             $this->comment_factory,
             $this->user_manager,
-            new CommentRepresentationBuilder($purifier, $content_interpreter)
+            new CommentRepresentationBuilder($purifier, $content_interpreter),
+            new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash()),
         );
 
         $paginated_comments_representations = $paginated_comments_representations_builder->getPaginatedCommentsRepresentations(
@@ -1171,7 +1186,8 @@ class PullRequestsResource extends AuthenticatedResource
         $handler             = new POSTCommentHandler(
             $this->git_repository_factory,
             $creator,
-            new CommentRepresentationBuilder($purifier, $content_interpretor)
+            new CommentRepresentationBuilder($purifier, $content_interpretor),
+            new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash()),
         );
 
         $parent_id_validator->checkParentValidity((int) $comment_data->parent_id, $pull_request_id);
@@ -1219,7 +1235,7 @@ class PullRequestsResource extends AuthenticatedResource
 
         $reviewer_retrievers = new ReviewerRetriever($this->user_manager, new ReviewerDAO(), $this->permission_checker);
 
-        return ReviewersRepresentation::fromUsers(...$reviewer_retrievers->getReviewers($pull_request));
+        return ReviewersRepresentation::fromUsers(new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash()), ...$reviewer_retrievers->getReviewers($pull_request));
     }
 
     /**

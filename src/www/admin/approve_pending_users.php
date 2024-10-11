@@ -30,6 +30,9 @@ use Tuleap\InviteBuddy\InviteBuddyConfiguration;
 use Tuleap\InviteBuddy\ProjectMemberAccordingToInvitationAdder;
 use Tuleap\Language\LocaleSwitcher;
 use Tuleap\Project\UGroups\Membership\DynamicUGroups\ProjectMemberAdderWithStatusCheckAndNotifications;
+use Tuleap\User\Avatar\AvatarHashDao;
+use Tuleap\User\Avatar\ComputeAvatarHash;
+use Tuleap\User\Avatar\UserAvatarUrlProvider;
 
 require_once __DIR__ . '/../include/pre.php';
 require_once __DIR__ . '/../include/account.php';
@@ -345,6 +348,7 @@ $invited_by_builder         = new InvitedByPresenterBuilder(
     ),
     $user_manager,
     $project_manager,
+    new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash()),
 );
 
 

@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Docman\Metadata\Owner;
 
 use PFUser;
+use Tuleap\User\Avatar\ProvideUserAvatarUrl;
 use Tuleap\User\BuildDisplayName;
 
 /**
@@ -45,9 +46,9 @@ final class OwnerRepresentationForAutocomplete
         $this->text = $display_name;
     }
 
-    public static function buildForSelect2AutocompleteFromOwner(PFUser $user, BuildDisplayName $user_helper): self
+    public static function buildForSelect2AutocompleteFromOwner(PFUser $user, BuildDisplayName $user_helper, ProvideUserAvatarUrl $provide_user_avatar_url): self
     {
         $owner_display_name = $user_helper->getDisplayName($user->getUserName(), $user->getRealName());
-        return new OwnerRepresentationForAutocomplete((int) $user->getId(), $user->getUserName(), $owner_display_name, $user->getAvatarUrl(), $user->hasAvatar());
+        return new OwnerRepresentationForAutocomplete((int) $user->getId(), $user->getUserName(), $owner_display_name, $provide_user_avatar_url->getAvatarUrl($user), $user->hasAvatar());
     }
 }

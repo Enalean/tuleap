@@ -28,6 +28,7 @@ use Tuleap\Docman\REST\v1\Files\FileVersionRepresentation;
 use Tuleap\Docman\Version\CoAuthorDao;
 use Tuleap\Docman\Version\VersionDao;
 use Tuleap\Docman\View\DocmanViewURLBuilder;
+use Tuleap\User\Avatar\ProvideUserAvatarUrl;
 use Tuleap\User\RetrieveUserById;
 
 final class VersionRepresentationCollectionBuilder
@@ -37,6 +38,7 @@ final class VersionRepresentationCollectionBuilder
         private CoAuthorDao $co_author_dao,
         private RetrieveUserById $user_retriever,
         private TableFactoryForFileBuilder $table_factory_builder,
+        private ProvideUserAvatarUrl $provide_user_avatar_url,
     ) {
     }
 
@@ -96,6 +98,7 @@ final class VersionRepresentationCollectionBuilder
                 (new \DateTimeImmutable())->setTimestamp((int) $version->getDate()),
                 (string) $version->getChangelog(),
                 $version->getAuthoringTool(),
+                $this->provide_user_avatar_url,
             );
         }
 

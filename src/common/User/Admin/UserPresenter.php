@@ -21,6 +21,7 @@
 namespace Tuleap\User\Admin;
 
 use PFUser;
+use Tuleap\User\Avatar\ProvideUserAvatarUrl;
 
 /**
  * @psalm-immutable
@@ -31,11 +32,11 @@ final class UserPresenter
     {
     }
 
-    public static function fromUser(PFUser $user): self
+    public static function fromUser(PFUser $user, ProvideUserAvatarUrl $provide_user_avatar_url): self
     {
         return new self(
             \UserHelper::instance()->getDisplayNameFromUser($user),
-            $user->getAvatarUrl(),
+            $provide_user_avatar_url->getAvatarUrl($user),
             $user->hasAvatar(),
         );
     }

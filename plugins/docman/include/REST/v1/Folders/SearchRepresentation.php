@@ -27,6 +27,7 @@ use Tuleap\Docman\Item\PaginatedParentRowCollection;
 use Tuleap\Docman\REST\v1\Files\FilePropertiesRepresentation;
 use Tuleap\Docman\REST\v1\Search\CustomPropertyRepresentation;
 use Tuleap\REST\JsonCast;
+use Tuleap\User\Avatar\ProvideUserAvatarUrl;
 use Tuleap\User\REST\MinimalUserRepresentation;
 
 /**
@@ -132,6 +133,7 @@ final class SearchRepresentation
         ?string $type,
         ?FilePropertiesRepresentation $file_properties,
         array $custom_properties,
+        ProvideUserAvatarUrl $provide_user_avatar_url,
     ): self {
         $obsolescence_date = $item->getObsolescenceDate();
 
@@ -140,7 +142,7 @@ final class SearchRepresentation
             (string) $item->getTitle(),
             $purifier->purifyTextWithReferences($item->getDescription(), $item->getGroupId()),
             $status,
-            MinimalUserRepresentation::build($user),
+            MinimalUserRepresentation::build($user, $provide_user_avatar_url),
             (string) $item->getUpdateDate(),
             (string) $item->getCreateDate(),
             $obsolescence_date > 0 ? $obsolescence_date : null,

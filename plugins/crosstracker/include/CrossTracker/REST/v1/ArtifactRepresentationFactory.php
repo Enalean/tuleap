@@ -24,17 +24,18 @@ namespace Tuleap\CrossTracker\REST\v1;
 
 use PFUser;
 use Tuleap\Tracker\REST\v1\ArtifactMatchingReportCollection;
+use Tuleap\User\Avatar\ProvideUserAvatarUrl;
 
 final class ArtifactRepresentationFactory
 {
-    public function buildRepresentationsForReport(ArtifactMatchingReportCollection $collection, PFUser $current_user): PaginatedCollectionOfCrossTrackerArtifacts
+    public function buildRepresentationsForReport(ArtifactMatchingReportCollection $collection, PFUser $current_user, ProvideUserAvatarUrl $provide_user_avatar_url): PaginatedCollectionOfCrossTrackerArtifacts
     {
         $representations = [];
         foreach ($collection->getArtifacts() as $artifact) {
             if (! $artifact->userCanView($current_user)) {
                 continue;
             }
-            $artifact_representation = CrossTrackerArtifactReportRepresentation::build($artifact, $current_user);
+            $artifact_representation = CrossTrackerArtifactReportRepresentation::build($artifact, $current_user, $provide_user_avatar_url);
             $representations[]       = $artifact_representation;
         }
 

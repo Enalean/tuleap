@@ -23,6 +23,7 @@ namespace Tuleap\TestManagement\REST\v1;
 use PFUser;
 use Tracker_FormElementFactory;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\User\Avatar\ProvideUserAvatarUrl;
 use Tuleap\User\REST\UserRepresentation;
 use UserManager;
 
@@ -39,6 +40,7 @@ class AssignedToRepresentationBuilder
     public function __construct(
         Tracker_FormElementFactory $tracker_form_element_factory,
         UserManager $user_manager,
+        private readonly ProvideUserAvatarUrl $provide_user_avatar_url,
     ) {
         $this->tracker_form_element_factory = $tracker_form_element_factory;
         $this->user_manager                 = $user_manager;
@@ -60,7 +62,7 @@ class AssignedToRepresentationBuilder
             return null;
         }
 
-        return UserRepresentation::build($user);
+        return UserRepresentation::build($user, $this->provide_user_avatar_url);
     }
 
     /**

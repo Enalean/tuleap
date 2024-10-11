@@ -5355,6 +5355,17 @@
       <code><![CDATA[$offset]]></code>
       <code><![CDATA[$size]]></code>
     </MissingParamType>
+    <UndefinedClass>
+      <code><![CDATA[Parser]]></code>
+      <code><![CDATA[SyntaxError]]></code>
+      <code><![CDATA[SyntaxError]]></code>
+      <code><![CDATA[SyntaxError]]></code>
+    </UndefinedClass>
+  </file>
+  <file src="plugins/crosstracker/include/CrossTracker/REST/v1/SyntaxErrorTranslator.php">
+    <UndefinedClass>
+      <code><![CDATA[SyntaxError]]></code>
+    </UndefinedClass>
   </file>
   <file src="plugins/crosstracker/include/CrossTracker/Report/CSV/CSVRepresentation.php">
     <MissingReturnType>
@@ -5449,6 +5460,14 @@
       <code><![CDATA[getFieldValue]]></code>
     </MissingReturnType>
   </file>
+  <file src="plugins/crosstracker/include/CrossTracker/Report/CrossTrackerArtifactReportFactory.php">
+    <UndefinedDocblockClass>
+      <code><![CDATA[SyntaxError]]></code>
+      <code><![CDATA[SyntaxError]]></code>
+      <code><![CDATA[SyntaxError]]></code>
+      <code><![CDATA[SyntaxError]]></code>
+    </UndefinedDocblockClass>
+  </file>
   <file src="plugins/crosstracker/include/CrossTracker/Report/Query/Advanced/QueryBuilder/CrossTrackerExpertQueryReportDao.php">
     <MissingParamType>
       <code><![CDATA[$limit]]></code>
@@ -5487,6 +5506,17 @@
     <MissingParamType>
       <code><![CDATA[$value]]></code>
     </MissingParamType>
+  </file>
+  <file src="plugins/crosstracker/include/CrossTracker/Report/Query/Advanced/ResultBuilder/Representations/UserRepresentation.php">
+    <DeprecatedMethod>
+      <code><![CDATA[getAvatarUrl]]></code>
+    </DeprecatedMethod>
+  </file>
+  <file src="plugins/crosstracker/include/CrossTracker/Report/ReportTrackersRetriever.php">
+    <UndefinedDocblockClass>
+      <code><![CDATA[SyntaxError]]></code>
+      <code><![CDATA[SyntaxError]]></code>
+    </UndefinedDocblockClass>
   </file>
   <file src="plugins/crosstracker/include/CrossTracker/Report/SimilarField/BindNameVisitor.php">
     <MissingReturnType>
@@ -5623,6 +5653,14 @@
     <MissingReturnType>
       <code><![CDATA[uninstall]]></code>
     </MissingReturnType>
+    <UndefinedClass>
+      <code><![CDATA[Parser]]></code>
+    </UndefinedClass>
+  </file>
+  <file src="plugins/crosstracker/tests/integration/CrossTracker/Tests/Report/ArtifactReportFactoryInstantiator.php">
+    <UndefinedClass>
+      <code><![CDATA[Parser]]></code>
+    </UndefinedClass>
   </file>
   <file src="plugins/docman/bin/DocmanExport/Docman_ExportException.class.php">
     <MissingParamType>
@@ -10691,6 +10729,9 @@
     </MissingReturnType>
   </file>
   <file src="plugins/docman/include/Notifications/NotificationListPresenter.php">
+    <DeprecatedMethod>
+      <code><![CDATA[getAvatarUrl]]></code>
+    </DeprecatedMethod>
     <MissingPropertyType>
       <code><![CDATA[$cannot_delete_title]]></code>
       <code><![CDATA[$empty_state]]></code>
@@ -15203,6 +15244,9 @@
     </MissingReturnType>
   </file>
   <file src="plugins/git/include/Git/Notifications/CollectionOfUserToBeNotifiedPresenterBuilder.php">
+    <DeprecatedMethod>
+      <code><![CDATA[getAvatarUrl]]></code>
+    </DeprecatedMethod>
     <MissingParamType>
       <code><![CDATA[$presenters]]></code>
     </MissingParamType>
@@ -15959,6 +16003,11 @@
     <UndefinedDocblockClass>
       <code><![CDATA[RepositoryPermissionRepresentation]]></code>
     </UndefinedDocblockClass>
+  </file>
+  <file src="plugins/git/include/Git/Reference/CrossReferenceGitEnhancer.php">
+    <DeprecatedMethod>
+      <code><![CDATA[getAvatarUrl]]></code>
+    </DeprecatedMethod>
   </file>
   <file src="plugins/git/include/Git/ReferenceManager.class.php">
     <PossiblyFalseArgument>
@@ -17064,6 +17113,9 @@
     </MissingReturnType>
   </file>
   <file src="plugins/git/include/GitPHP/Commit/CommitUserPresenter.php">
+    <DeprecatedMethod>
+      <code><![CDATA[getAvatarUrl]]></code>
+    </DeprecatedMethod>
     <PossiblyNullReference>
       <code><![CDATA[hasAvatar]]></code>
     </PossiblyNullReference>
@@ -19887,7 +19939,15 @@
       <code><![CDATA[public string $gitlab_server_url;]]></code>
     </MissingDocblockType>
   </file>
+  <file src="plugins/gitlab/include/Reference/Commit/GitlabCommitCrossReferenceEnhancer.php">
+    <DeprecatedMethod>
+      <code><![CDATA[getAvatarUrl]]></code>
+    </DeprecatedMethod>
+  </file>
   <file src="plugins/gitlab/include/Reference/GitlabCrossReferenceOrganizer.php">
+    <DeprecatedMethod>
+      <code><![CDATA[getAvatarUrl]]></code>
+    </DeprecatedMethod>
     <RiskyTruthyFalsyComparison>
       <code><![CDATA[! $item_id]]></code>
       <code><![CDATA[! $repository_name]]></code>
@@ -23304,7 +23364,17 @@
       <code><![CDATA[$argname]]></code>
     </PossiblyUndefinedVariable>
   </file>
+  <file src="plugins/ldap/include/BindMembersConfirmController.php">
+    <DeprecatedMethod>
+      <code><![CDATA[getAvatarUrl]]></code>
+      <code><![CDATA[getAvatarUrl]]></code>
+    </DeprecatedMethod>
+  </file>
   <file src="plugins/ldap/include/BindUgroupConfirmController.php">
+    <DeprecatedMethod>
+      <code><![CDATA[getAvatarUrl]]></code>
+      <code><![CDATA[getAvatarUrl]]></code>
+    </DeprecatedMethod>
     <RiskyTruthyFalsyComparison>
       <code><![CDATA[! $this->ldap_user_group_manager->getGroupDn()]]></code>
     </RiskyTruthyFalsyComparison>
@@ -23697,6 +23767,9 @@
     </PossiblyNullReference>
   </file>
   <file src="plugins/ldap/include/LDAP_SearchPeople.class.php">
+    <DeprecatedMethod>
+      <code><![CDATA[getAvatarUrl]]></code>
+    </DeprecatedMethod>
     <MissingParamType>
       <code><![CDATA[$limit]]></code>
       <code><![CDATA[$value]]></code>
@@ -23971,6 +24044,9 @@
       <code><![CDATA[db_es($ldapId)]]></code>
       <code><![CDATA[db_query("UPDATE user SET ldap_id='" . db_es($ldapId) . "' WHERE user_id=" . db_ei($params['user_id']))]]></code>
     </DeprecatedFunction>
+    <DeprecatedMethod>
+      <code><![CDATA[getAvatarUrl]]></code>
+    </DeprecatedMethod>
     <InvalidArgument>
       <code><![CDATA[[
                 dirname(__FILE__) . '/../templates',
@@ -26339,6 +26415,9 @@
     </MissingReturnType>
   </file>
   <file src="plugins/project_ownership/include/ProjectAdmin/ProjectOwnerPresenter.php">
+    <DeprecatedMethod>
+      <code><![CDATA[getAvatarUrl]]></code>
+    </DeprecatedMethod>
     <MissingPropertyType>
       <code><![CDATA[$avatar_url]]></code>
       <code><![CDATA[$project_owner_description]]></code>
@@ -27753,6 +27832,9 @@
     </MissingReturnType>
   </file>
   <file src="plugins/pullrequest/include/PullRequest/PullRequestPresenter.php">
+    <DeprecatedMethod>
+      <code><![CDATA[getAvatarUrl]]></code>
+    </DeprecatedMethod>
     <MissingReturnType>
       <code><![CDATA[nb_pull_request_badge]]></code>
     </MissingReturnType>
@@ -28041,6 +28123,11 @@
       <code><![CDATA[getRepository]]></code>
       <code><![CDATA[patchStatus]]></code>
     </MissingReturnType>
+  </file>
+  <file src="plugins/pullrequest/include/PullRequest/Reference/CrossReferencePullRequestOrganizer.php">
+    <DeprecatedMethod>
+      <code><![CDATA[getAvatarUrl]]></code>
+    </DeprecatedMethod>
   </file>
   <file src="plugins/pullrequest/include/PullRequest/Reference/HTMLURLBuilder.php">
     <InvalidScalarArgument>
@@ -30943,6 +31030,9 @@
     </MissingReturnType>
   </file>
   <file src="plugins/svn/include/SVN/Notifications/CollectionOfUserToBeNotifiedPresenterBuilder.php">
+    <DeprecatedMethod>
+      <code><![CDATA[getAvatarUrl]]></code>
+    </DeprecatedMethod>
     <MissingParamType>
       <code><![CDATA[$presenters]]></code>
     </MissingParamType>
@@ -31719,21 +31809,10 @@
     </RedundantCastGivenDocblockType>
   </file>
   <file src="plugins/taskboard/include/REST/v1/CardRepresentationBuilder.php">
-    <LessSpecificReturnStatement>
-      <code><![CDATA[array_map(
-            function (PFUser $user): MinimalUserRepresentation {
-                return MinimalUserRepresentation::build($user);
-            },
-            $assignees
-        )]]></code>
-    </LessSpecificReturnStatement>
     <MissingReturnType>
       <code><![CDATA[getInitialEffort]]></code>
       <code><![CDATA[getListFieldFirstValue]]></code>
     </MissingReturnType>
-    <MoreSpecificReturnType>
-      <code><![CDATA[list<MinimalUserRepresentation>]]></code>
-    </MoreSpecificReturnType>
     <RiskyTruthyFalsyComparison>
       <code><![CDATA[empty($user->getPreference($preference_name))]]></code>
     </RiskyTruthyFalsyComparison>
@@ -32763,6 +32842,9 @@
     </MissingReturnType>
   </file>
   <file src="plugins/timetracking/include/Timetracking/Time/TimePresenterBuilder.php">
+    <DeprecatedMethod>
+      <code><![CDATA[getAvatarUrl]]></code>
+    </DeprecatedMethod>
     <MissingReturnType>
       <code><![CDATA[getUserPresenter]]></code>
     </MissingReturnType>
@@ -33322,6 +33404,11 @@
       <code><![CDATA[public $can_update = [];]]></code>
     </InvalidDocblock>
   </file>
+  <file src="plugins/tracker/include/REST/FormElement/UserListValueRepresentation.php">
+    <DeprecatedMethod>
+      <code><![CDATA[getAvatarUrl]]></code>
+    </DeprecatedMethod>
+  </file>
   <file src="plugins/tracker/include/REST/FormElementRepresentation.class.php">
     <ImpureMethodCall>
       <code><![CDATA[isRequired]]></code>
@@ -33803,6 +33890,9 @@
     <RedundantCast>
       <code><![CDATA[(bool) (strtolower($order) === self::ORDER_DESC)]]></code>
     </RedundantCast>
+    <UndefinedClass>
+      <code><![CDATA[SyntaxError]]></code>
+    </UndefinedClass>
   </file>
   <file src="plugins/tracker/include/REST/v1/Workflow/ModeUpdater.php">
     <MissingReturnType>
@@ -35372,6 +35462,7 @@
   <file src="plugins/tracker/include/Tracker/Artifact/Tracker_Artifact_Changeset.class.php">
     <DeprecatedMethod>
       <code><![CDATA[executePostCreationActions]]></code>
+      <code><![CDATA[getAvatarUrl]]></code>
     </DeprecatedMethod>
     <FalseOperand>
       <code><![CDATA[$result]]></code>
@@ -41149,6 +41240,10 @@
     </UndefinedMethod>
   </file>
   <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Field_List_Bind_UsersValue.php">
+    <DeprecatedMethod>
+      <code><![CDATA[getAvatarUrl]]></code>
+      <code><![CDATA[getAvatarUrl]]></code>
+    </DeprecatedMethod>
     <MissingParamType>
       <code><![CDATA[$display_name]]></code>
       <code><![CDATA[$id]]></code>
@@ -42801,6 +42896,9 @@
     </MissingReturnType>
   </file>
   <file src="plugins/tracker/include/Tracker/Notifications/CollectionOfUserInvolvedInNotificationPresenterBuilder.php">
+    <DeprecatedMethod>
+      <code><![CDATA[getAvatarUrl]]></code>
+    </DeprecatedMethod>
     <MissingParamType>
       <code><![CDATA[$presenters]]></code>
     </MissingParamType>
@@ -43605,6 +43703,20 @@
       <code><![CDATA[! $value]]></code>
     </RiskyTruthyFalsyComparison>
   </file>
+  <file src="plugins/tracker/include/Tracker/Report/Query/Advanced/ExpertQueryValidator.php">
+    <UndefinedClass>
+      <code><![CDATA[SyntaxError]]></code>
+      <code><![CDATA[SyntaxError]]></code>
+      <code><![CDATA[SyntaxError]]></code>
+    </UndefinedClass>
+    <UndefinedDocblockClass>
+      <code><![CDATA[Grammar\SyntaxError]]></code>
+      <code><![CDATA[SyntaxError]]></code>
+      <code><![CDATA[SyntaxError]]></code>
+      <code><![CDATA[SyntaxError]]></code>
+      <code><![CDATA[SyntaxError]]></code>
+    </UndefinedDocblockClass>
+  </file>
   <file src="plugins/tracker/include/Tracker/Report/Query/Advanced/Grammar/CurrentDateTimeValueWrapper.php">
     <RiskyTruthyFalsyComparison>
       <code><![CDATA[$period]]></code>
@@ -43712,6 +43824,14 @@
       <code><![CDATA[checkMetaDataIsValid]]></code>
     </MissingReturnType>
   </file>
+  <file src="plugins/tracker/include/Tracker/Report/Query/Advanced/InvalidSelectablesCollectionBuilder.php">
+    <UndefinedClass>
+      <code><![CDATA[SyntaxError]]></code>
+    </UndefinedClass>
+    <UndefinedDocblockClass>
+      <code><![CDATA[SyntaxError]]></code>
+    </UndefinedDocblockClass>
+  </file>
   <file src="plugins/tracker/include/Tracker/Report/Query/Advanced/ListFieldBindValueNormalizer.php">
     <MissingParamType>
       <code><![CDATA[$value]]></code>
@@ -43719,6 +43839,15 @@
     <MissingReturnType>
       <code><![CDATA[normalize]]></code>
     </MissingReturnType>
+  </file>
+  <file src="plugins/tracker/include/Tracker/Report/Query/Advanced/ParserCacheProxy.php">
+    <UndefinedClass>
+      <code><![CDATA[$this->parser]]></code>
+      <code><![CDATA[private]]></code>
+    </UndefinedClass>
+    <UndefinedDocblockClass>
+      <code><![CDATA[SyntaxError]]></code>
+    </UndefinedDocblockClass>
   </file>
   <file src="plugins/tracker/include/Tracker/Report/Query/Advanced/QueryBuilder/BetweenComparison/ForDateTime.php">
     <MissingParamType>
@@ -44727,9 +44856,15 @@
       <code><![CDATA[$session_additional_criteria]]></code>
       <code><![CDATA[$session_criteria]]></code>
     </RiskyTruthyFalsyComparison>
+    <UndefinedClass>
+      <code><![CDATA[Parser]]></code>
+      <code><![CDATA[SyntaxError]]></code>
+      <code><![CDATA[SyntaxError]]></code>
+    </UndefinedClass>
     <UndefinedDocblockClass>
       <code><![CDATA[ReportRenderer]]></code>
       <code><![CDATA[Request]]></code>
+      <code><![CDATA[SyntaxError]]></code>
     </UndefinedDocblockClass>
     <UnsupportedReferenceUsage>
       <code><![CDATA[$session_criteria = &$this->report_session->getCriteria()]]></code>
@@ -50210,6 +50345,10 @@
     </MissingReturnType>
   </file>
   <file src="plugins/tracker/include/manual_autoload.php">
+    <MissingFile>
+      <code><![CDATA[require_once __DIR__ . '/../grammar/backend-assets/Tracker/Report/Query/Advanced/Grammar/Parser.php']]></code>
+      <code><![CDATA[require_once __DIR__ . '/../grammar/backend-assets/Tracker/Report/Query/Advanced/Grammar/Parser.php']]></code>
+    </MissingFile>
     <MissingParamType>
       <code><![CDATA[$classname]]></code>
     </MissingParamType>
@@ -55215,6 +55354,9 @@
     </MissingReturnType>
   </file>
   <file src="src/common/Layout/HomePage/HomePageNews.php">
+    <DeprecatedMethod>
+      <code><![CDATA[getAvatarUrl]]></code>
+    </DeprecatedMethod>
     <MissingReturnType>
       <code><![CDATA[details]]></code>
     </MissingReturnType>
@@ -55949,6 +56091,9 @@
     </RiskyTruthyFalsyComparison>
   </file>
   <file src="src/common/News/Admin/AdminNewsBuilder.php">
+    <DeprecatedMethod>
+      <code><![CDATA[getAvatarUrl]]></code>
+    </DeprecatedMethod>
     <MissingParamType>
       <code><![CDATA[$current_tab]]></code>
       <code><![CDATA[$current_tab]]></code>
@@ -56342,6 +56487,11 @@
     <ArgumentTypeCoercion>
       <code><![CDATA[$data_to_insert]]></code>
     </ArgumentTypeCoercion>
+  </file>
+  <file src="src/common/OAuth2ServerCore/User/UserInfoResponseRepresentation.php">
+    <DeprecatedMethod>
+      <code><![CDATA[getAvatarUrl]]></code>
+    </DeprecatedMethod>
   </file>
   <file src="src/common/OpenGraph/OpenGraphPresenter.php">
     <MissingParamType>
@@ -57593,6 +57743,9 @@
     </MissingReturnType>
   </file>
   <file src="src/common/Project/Admin/ProjectMembers/ProjectMembersController.php">
+    <DeprecatedMethod>
+      <code><![CDATA[getAvatarUrl]]></code>
+    </DeprecatedMethod>
     <InvalidScalarArgument>
       <code><![CDATA[$project->getID()]]></code>
     </InvalidScalarArgument>
@@ -60940,6 +61093,9 @@
     </InvalidPropertyAssignmentValue>
   </file>
   <file src="src/common/Search/Presenters/SearchPeopleResultPresenter.php">
+    <DeprecatedMethod>
+      <code><![CDATA[getAvatarUrl]]></code>
+    </DeprecatedMethod>
     <MissingReturnType>
       <code><![CDATA[avatar]]></code>
       <code><![CDATA[real_name]]></code>
@@ -61518,6 +61674,9 @@
     </PossiblyNullArgument>
   </file>
   <file src="src/common/User/Account/AccountInformationCollectionPresenter.php">
+    <DeprecatedMethod>
+      <code><![CDATA[getAvatarUrl]]></code>
+    </DeprecatedMethod>
     <RedundantCastGivenDocblockType>
       <code><![CDATA[(bool) $user->hasAvatar()]]></code>
     </RedundantCastGivenDocblockType>
@@ -61650,6 +61809,9 @@
     </MissingReturnType>
   </file>
   <file src="src/common/User/Admin/PendingProjectBuilder.php">
+    <DeprecatedMethod>
+      <code><![CDATA[getAvatarUrl]]></code>
+    </DeprecatedMethod>
     <InvalidArgument>
       <code><![CDATA[$members_id]]></code>
     </InvalidArgument>
@@ -61769,6 +61931,9 @@
     </MissingReturnType>
   </file>
   <file src="src/common/User/Admin/UserDetailsPresenter.php">
+    <DeprecatedMethod>
+      <code><![CDATA[getAvatarUrl]]></code>
+    </DeprecatedMethod>
     <MissingParamType>
       <code><![CDATA[$current_status_id]]></code>
     </MissingParamType>
@@ -62356,7 +62521,6 @@
     <MissingParamType>
       <code><![CDATA[$hash]]></code>
       <code><![CDATA[$path]]></code>
-      <code><![CDATA[$user_avatar_path]]></code>
       <code><![CDATA[$user_name]]></code>
     </MissingParamType>
     <MissingPropertyType>
@@ -62381,6 +62545,9 @@
     </MissingReturnType>
   </file>
   <file src="src/common/User/Profile/ProfilePresenter.php">
+    <DeprecatedMethod>
+      <code><![CDATA[getAvatarUrl]]></code>
+    </DeprecatedMethod>
     <InvalidArgument>
       <code><![CDATA[$project->getMembersId()]]></code>
     </InvalidArgument>
@@ -62407,6 +62574,11 @@
     <MissingReturnType>
       <code><![CDATA[getPresenter]]></code>
     </MissingReturnType>
+  </file>
+  <file src="src/common/User/Profile/UserTooltipTitlePresenter.php">
+    <DeprecatedMethod>
+      <code><![CDATA[getAvatarUrl]]></code>
+    </DeprecatedMethod>
   </file>
   <file src="src/common/User/REST/MinimalUserRepresentation.class.php">
     <InvalidDocblock>
@@ -62600,6 +62772,7 @@
     <DeprecatedMethod>
       <code><![CDATA[$dar]]></code>
       <code><![CDATA[$dar]]></code>
+      <code><![CDATA[getAvatarUrl]]></code>
     </DeprecatedMethod>
     <MissingParamType>
       <code><![CDATA[$addDate]]></code>
@@ -62804,6 +62977,9 @@
     </MissingReturnType>
   </file>
   <file src="src/common/User/UserImportCollection.php">
+    <DeprecatedMethod>
+      <code><![CDATA[getAvatarUrl]]></code>
+    </DeprecatedMethod>
     <MissingParamType>
       <code><![CDATA[$warning]]></code>
       <code><![CDATA[$warning_invalid_user]]></code>
@@ -63360,6 +63536,9 @@
     </MissingPropertyType>
   </file>
   <file src="src/common/Widget/ProjectMembers/AdministratorPresenter.php">
+    <DeprecatedMethod>
+      <code><![CDATA[getAvatarUrl]]></code>
+    </DeprecatedMethod>
     <MissingPropertyType>
       <code><![CDATA[$user_name]]></code>
       <code><![CDATA[$username_display]]></code>
@@ -79132,6 +79311,9 @@
     </PossiblyInvalidArgument>
   </file>
   <file src="src/www/user/autocomplete.php">
+    <DeprecatedMethod>
+      <code><![CDATA[getAvatarUrl]]></code>
+    </DeprecatedMethod>
     <RedundantCast>
       <code><![CDATA[(int) ($limit - count($userList))]]></code>
     </RedundantCast>

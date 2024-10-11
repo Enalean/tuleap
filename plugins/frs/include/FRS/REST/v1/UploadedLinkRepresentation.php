@@ -23,6 +23,7 @@ namespace Tuleap\FRS\REST\v1;
 
 use Tuleap\FRS\UploadedLink;
 use Tuleap\REST\JsonCast;
+use Tuleap\User\Avatar\ProvideUserAvatarUrl;
 use Tuleap\User\REST\UserRepresentation;
 
 /**
@@ -55,14 +56,14 @@ class UploadedLinkRepresentation
      */
     public $release_time;
 
-    public function __construct(UploadedLink $link)
+    public function __construct(UploadedLink $link, ProvideUserAvatarUrl $provide_user_avatar_url)
     {
         $this->id           = JsonCast::toInt($link->getId());
         $this->link         = $link->getLink();
         $this->name         = $link->getName();
         $this->release_time = JsonCast::toDate($link->getReleaseTime());
 
-        $owner_representation = UserRepresentation::build($link->getOwner());
+        $owner_representation = UserRepresentation::build($link->getOwner(), $provide_user_avatar_url);
         $this->owner          = $owner_representation;
     }
 }

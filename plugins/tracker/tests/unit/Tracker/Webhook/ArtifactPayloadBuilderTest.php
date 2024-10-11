@@ -25,6 +25,7 @@ namespace Tuleap\Tracker\Webhook;
 use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\Stubs\User\Avatar\ProvideUserAvatarUrlStub;
 use Tuleap\Tracker\REST\Artifact\Changeset\ChangesetRepresentation;
 use Tuleap\Tracker\REST\Artifact\Changeset\ChangesetRepresentationBuilder;
 use Tuleap\Tracker\REST\Artifact\Changeset\Comment\HTMLOrTextCommentRepresentation;
@@ -49,6 +50,7 @@ final class ArtifactPayloadBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->builder                          = new ArtifactPayloadBuilder(
             $this->changeset_representation_builder,
             BuildCompleteTrackerRESTRepresentationStub::build(),
+            ProvideUserAvatarUrlStub::build(),
         );
     }
 
@@ -119,12 +121,12 @@ final class ArtifactPayloadBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         return new ChangesetRepresentation(
             98,
             101,
-            MinimalUserRepresentation::build($user),
+            MinimalUserRepresentation::build($user, ProvideUserAvatarUrlStub::build()),
             1234567890,
             null,
             $comment_representation,
             [],
-            MinimalUserRepresentation::build($user),
+            MinimalUserRepresentation::build($user, ProvideUserAvatarUrlStub::build()),
             1234567890
         );
     }

@@ -160,6 +160,9 @@ use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionExtractor;
 use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionRetriever;
 use Tuleap\Tracker\Workflow\ValidValuesAccordingToTransitionsRetriever;
 use Tuleap\Tracker\Workflow\WorkflowUpdateChecker;
+use Tuleap\User\Avatar\AvatarHashDao;
+use Tuleap\User\Avatar\ComputeAvatarHash;
+use Tuleap\User\Avatar\UserAvatarUrlProvider;
 use UserManager;
 use Workflow_Transition_ConditionFactory;
 use WrapperLogger;
@@ -230,6 +233,7 @@ class CampaignsResource
      * @var ArtifactDao
      */
     private $artifact_dao;
+    private UserAvatarUrlProvider $provide_user_avatar_url;
 
     public function __construct()
     {
@@ -258,9 +262,12 @@ class CampaignsResource
             $event_manager
         );
 
+        $this->provide_user_avatar_url = new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash());
+
         $assigned_to_representation_builder = new AssignedToRepresentationBuilder(
             $this->formelement_factory,
-            $this->user_manager
+            $this->user_manager,
+            $this->provide_user_avatar_url,
         );
 
         $requirement_retriever = new RequirementRetriever($this->artifact_factory, $this->artifact_dao, $this->config);
@@ -302,11 +309,15 @@ class CampaignsResource
                         new CommentRepresentationBuilder(
                             CommonMarkInterpreter::build(\Codendi_HTMLPurifier::instance())
                         ),
-                        new PermissionChecker(new CachingTrackerPrivateCommentInformationRetriever(new TrackerPrivateCommentInformationRetriever(new TrackerPrivateCommentUGroupEnabledDao())))
-                    )
+                        new PermissionChecker(new CachingTrackerPrivateCommentInformationRetriever(new TrackerPrivateCommentInformationRetriever(new TrackerPrivateCommentUGroupEnabledDao()))),
+                        $this->provide_user_avatar_url,
+                    ),
+                    new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash()),
                 ),
                 \Tracker_Artifact_PriorityManager::build(),
+                new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash()),
             ),
+            $this->provide_user_avatar_url,
         );
 
         $campaign_dao = new CampaignDao();
@@ -476,7 +487,7 @@ class CampaignsResource
             $node_js_client,
             $permissions_serializer
         );
-        $mercure_client                  = ClientBuilder::build(ClientBuilder::DEFAULTPATH);
+        $mercure_client                  = ClientBuilder::build(ClientBuilder::DEFAULTPATH, $this->provide_user_avatar_url);
         $mercure_artifact_message_sender = new RealTimeMercureArtifactMessageSender(
             $mercure_client
         );
@@ -485,6 +496,7 @@ class CampaignsResource
             $permissions_serializer,
             $artifact_message_sender,
             $mercure_artifact_message_sender,
+            $this->provide_user_avatar_url,
         );
 
         $http_client          = HttpClientFactory::createClient(new CookiePlugin(new CookieJar()));
@@ -1111,7 +1123,8 @@ class CampaignsResource
             $this->artifact_updater,
             $this->testmanagement_artifact_factory,
             $this->realtime_message_sender,
-            $this->user_manager
+            $this->user_manager,
+            $this->provide_user_avatar_url,
         );
     }
 

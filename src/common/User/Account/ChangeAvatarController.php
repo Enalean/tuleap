@@ -27,6 +27,7 @@ use Gumlet\ImageResizeException;
 use HTTPRequest;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\DispatchableWithRequest;
+use Tuleap\User\Avatar\AvatarHashStorageDeletor;
 
 class ChangeAvatarController implements DispatchableWithRequest
 {
@@ -47,6 +48,7 @@ class ChangeAvatarController implements DispatchableWithRequest
         CSRFSynchronizerToken $csrf,
         UserAvatarSaver $user_avatar_saver,
         \UserManager $user_manager,
+        private readonly AvatarHashStorageDeletor $user_avatar_hash_storage,
     ) {
         $this->csrf              = $csrf;
         $this->user_avatar_saver = $user_avatar_saver;
@@ -67,6 +69,7 @@ class ChangeAvatarController implements DispatchableWithRequest
             if (is_file($avatar_path)) {
                 unlink($avatar_path);
             }
+            $this->user_avatar_hash_storage->delete($user);
             $user->setHasCustomAvatar(false);
             $this->user_manager->updateDb($user);
             $layout->addFeedback(Feedback::INFO, _('Avatar changed!'));

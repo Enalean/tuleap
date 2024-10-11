@@ -30,6 +30,7 @@ use Tuleap\Layout\JavascriptViteAsset;
 use Tuleap\PdfTemplate\RetrieveAllTemplates;
 use Tuleap\Request\DispatchableWithBurningParrot;
 use Tuleap\Request\DispatchableWithRequest;
+use Tuleap\User\Avatar\ProvideUserAvatarUrl;
 
 final readonly class IndexPdfTemplateController implements DispatchableWithBurningParrot, DispatchableWithRequest
 {
@@ -40,6 +41,7 @@ final readonly class IndexPdfTemplateController implements DispatchableWithBurni
         private UserCanManageTemplatesChecker $can_manage_templates_checker,
         private RetrieveAllTemplates $templates_retriever,
         private CSRFTokenProvider $token_provider,
+        private ProvideUserAvatarUrl $provide_user_avatar_url,
     ) {
     }
 
@@ -72,6 +74,7 @@ final readonly class IndexPdfTemplateController implements DispatchableWithBurni
                 $this->templates_retriever->retrieveAll(),
                 $this->token_provider->getToken(),
                 $current_user,
+                $this->provide_user_avatar_url,
             ),
         );
     }

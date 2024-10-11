@@ -31,6 +31,7 @@ use Tracker_Artifact_ChangesetValue_Text;
 use Tuleap\Markdown\ContentInterpretor;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\Stubs\User\Avatar\ProvideUserAvatarUrlStub;
 use Tuleap\TestManagement\ConfigConformanceValidator;
 use Tuleap\TestManagement\REST\v1\RequirementRetriever;
 use Tuleap\Tracker\Artifact\Artifact;
@@ -90,6 +91,7 @@ final class DefinitionRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\Tes
             $this->interpreter,
             $this->artifact_representation_builder,
             $priority_manager,
+            ProvideUserAvatarUrlStub::build(),
         );
     }
 

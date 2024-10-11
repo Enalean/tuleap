@@ -25,6 +25,7 @@ namespace Tuleap\PullRequest\REST\v1\InlineComment;
 use Tuleap\PullRequest\InlineComment\InlineComment;
 use Tuleap\PullRequest\InlineComment\SearchInlineCommentsOnFile;
 use Tuleap\PullRequest\PullRequest;
+use Tuleap\User\Avatar\ProvideUserAvatarUrl;
 use Tuleap\User\REST\MinimalUserRepresentation;
 use Tuleap\User\RetrieveUserById;
 
@@ -34,6 +35,7 @@ final class InlineCommentRepresentationsBuilder
         private readonly SearchInlineCommentsOnFile $comments_searcher,
         private readonly RetrieveUserById $user_retriever,
         private readonly SingleRepresentationBuilder $single_builder,
+        private readonly ProvideUserAvatarUrl $provide_user_avatar_url,
     ) {
     }
 
@@ -59,7 +61,7 @@ final class InlineCommentRepresentationsBuilder
         }
         return $this->single_builder->build(
             $project_id,
-            MinimalUserRepresentation::build($comment_author),
+            MinimalUserRepresentation::build($comment_author, $this->provide_user_avatar_url),
             $inline_comment
         );
     }

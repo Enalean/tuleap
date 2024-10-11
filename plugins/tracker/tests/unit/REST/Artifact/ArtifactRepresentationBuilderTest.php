@@ -28,6 +28,7 @@ use Tracker_Artifact_Changeset;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\Stubs\User\Avatar\ProvideUserAvatarUrlStub;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
 use Tuleap\Tracker\REST\Artifact\Changeset\ChangesetRepresentation;
@@ -60,7 +61,8 @@ final class ArtifactRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestC
             $this->form_element_factory,
             Mockery::mock(\Tracker_ArtifactFactory::class),
             Mockery::mock(TypeDao::class),
-            $this->changeset_representation_builder
+            $this->changeset_representation_builder,
+            ProvideUserAvatarUrlStub::build(),
         );
     }
 

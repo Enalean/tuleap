@@ -36,6 +36,7 @@ use Tuleap\Docman\REST\v1\Others\OtherTypePropertiesRepresentation;
 use Tuleap\Docman\REST\v1\Permissions\DocmanItemPermissionsForGroupsBuilder;
 use Tuleap\Docman\REST\v1\Wiki\WikiPropertiesRepresentation;
 use Tuleap\Docman\REST\v1\Links\LinkPropertiesRepresentation;
+use Tuleap\User\Avatar\ProvideUserAvatarUrl;
 use Tuleap\User\REST\MinimalUserRepresentation;
 
 class ItemRepresentationBuilder
@@ -92,6 +93,7 @@ class ItemRepresentationBuilder
         ApprovalTableRetriever $approval_table_retriever,
         DocmanItemPermissionsForGroupsBuilder $item_permissions_for_groups_builder,
         Codendi_HTMLPurifier $purifier,
+        private readonly ProvideUserAvatarUrl $provide_user_avatar_url,
     ) {
         $this->dao                                 = $dao;
         $this->user_manager                        = $user_manager;
@@ -144,7 +146,7 @@ class ItemRepresentationBuilder
         ?OtherTypePropertiesRepresentation $other_type_properties = null,
     ) {
         $owner                = $this->user_manager->getUserById($item->getOwnerId());
-        $owner_representation = MinimalUserRepresentation::build($owner);
+        $owner_representation = MinimalUserRepresentation::build($owner, $this->provide_user_avatar_url);
 
         $is_expanded = false;
         if ($type === ItemRepresentation::TYPE_FOLDER) {
@@ -223,7 +225,8 @@ class ItemRepresentationBuilder
     private function getMinimalUserRepresentation(int $user_id): MinimalUserRepresentation
     {
         return MinimalUserRepresentation::build(
-            $this->user_manager->getUserById($user_id)
+            $this->user_manager->getUserById($user_id),
+            $this->provide_user_avatar_url,
         );
     }
 }

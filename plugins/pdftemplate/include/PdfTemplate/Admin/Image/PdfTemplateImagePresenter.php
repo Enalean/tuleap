@@ -30,6 +30,7 @@ use Tuleap\PdfTemplate\Admin\PdfTemplatePresenter;
 use Tuleap\PdfTemplate\Image\PdfTemplateImage;
 use Tuleap\PdfTemplate\Image\PdfTemplateImageHrefBuilder;
 use Tuleap\User\Admin\UserPresenter;
+use Tuleap\User\Avatar\ProvideUserAvatarUrl;
 
 final readonly class PdfTemplateImagePresenter
 {
@@ -58,6 +59,7 @@ final readonly class PdfTemplateImagePresenter
         PdfTemplateImage $image,
         \PFUser $user,
         UsageDetector $usage_detector,
+        ProvideUserAvatarUrl $provide_user_avatar_url,
     ): self {
         $href_builder = new PdfTemplateImageHrefBuilder();
         $date_builder = new TlpRelativeDatePresenterBuilder();
@@ -67,10 +69,10 @@ final readonly class PdfTemplateImagePresenter
             $image->filename,
             HumanReadableFilesize::convert($image->filesize),
             $href_builder->getImageHref($image),
-            UserPresenter::fromUser($image->last_updated_by),
+            UserPresenter::fromUser($image->last_updated_by, $provide_user_avatar_url),
             $date_builder->getTlpRelativeDatePresenterInBlockContext($image->last_updated_date, $user),
             array_map(
-                fn (PdfTemplate $template) => PdfTemplatePresenter::fromPdfTemplate($template, $user),
+                fn (PdfTemplate $template) => PdfTemplatePresenter::fromPdfTemplate($template, $user, $provide_user_avatar_url),
                 $usage_detector->getUsages($image),
             ),
         );

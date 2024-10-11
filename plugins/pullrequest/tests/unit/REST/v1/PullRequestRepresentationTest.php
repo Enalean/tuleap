@@ -35,6 +35,7 @@ use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\ContentInterpretorStub;
+use Tuleap\Test\Stubs\User\Avatar\ProvideUserAvatarUrlStub;
 use Tuleap\User\REST\MinimalUserRepresentation;
 
 final class PullRequestRepresentationTest extends TestCase
@@ -64,7 +65,8 @@ final class PullRequestRepresentationTest extends TestCase
     {
         $this->url_generator        = $this->createStub(GitoliteAccessURLGenerator::class);
         $this->pull_request_creator = MinimalUserRepresentation::build(
-            UserTestBuilder::aUser()->withId(self::CREATOR_USER_ID)->withRealName(self::CREATOR_NAME)->build()
+            UserTestBuilder::aUser()->withId(self::CREATOR_USER_ID)->withRealName(self::CREATOR_NAME)->build(),
+            ProvideUserAvatarUrlStub::build(),
         );
         $this->pull_request         = PullRequestTestBuilder::aMergedPullRequest()
             ->withId(self::PULL_REQUEST_ID)
@@ -97,10 +99,12 @@ final class PullRequestRepresentationTest extends TestCase
         $current_user = UserTestBuilder::buildWithId(150);
 
         $first_reviewer  = MinimalUserRepresentation::build(
-            UserTestBuilder::buildWithId(self::FIRST_REVIERWER_USER_ID)
+            UserTestBuilder::buildWithId(self::FIRST_REVIERWER_USER_ID),
+            ProvideUserAvatarUrlStub::build(),
         );
         $second_reviewer = MinimalUserRepresentation::build(
-            UserTestBuilder::buildWithId(self::SECOND_REVIEWER_USER_ID)
+            UserTestBuilder::buildWithId(self::SECOND_REVIEWER_USER_ID),
+            ProvideUserAvatarUrlStub::build(),
         );
 
         $pull_request_merger = $first_reviewer;

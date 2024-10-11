@@ -24,6 +24,7 @@ namespace Tuleap\PullRequest\REST\v1\Reviewer;
 
 use Tuleap\PullRequest\Reviewer\Change\ReviewerChange;
 use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\Stubs\User\Avatar\ProvideUserAvatarUrlStub;
 
 final class ReviewerChangeTimelineEventRepresentationTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -36,7 +37,7 @@ final class ReviewerChangeTimelineEventRepresentationTest extends \Tuleap\Test\P
             [UserTestBuilder::buildWithId(104)]
         );
 
-        $representation = ReviewerChangeTimelineEventRepresentation::fromReviewerChange($reviewer_change);
+        $representation = ReviewerChangeTimelineEventRepresentation::fromReviewerChange($reviewer_change, ProvideUserAvatarUrlStub::build());
 
         $this->assertEquals('reviewer-change', $representation->type);
         $this->assertSame('1970-01-01T00:00:10+00:00', $representation->post_date);

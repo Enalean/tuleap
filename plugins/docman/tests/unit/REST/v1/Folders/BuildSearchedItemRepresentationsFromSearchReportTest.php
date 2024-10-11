@@ -37,6 +37,7 @@ use Tuleap\Test\Stubs\EventDispatcherStub;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Test\Stubs\User\Avatar\ProvideUserAvatarUrlStub;
 
 final class BuildSearchedItemRepresentationsFromSearchReportTest extends TestCase
 {
@@ -79,6 +80,7 @@ final class BuildSearchedItemRepresentationsFromSearchReportTest extends TestCas
             new SearchRepresentationTypeVisitor(EventDispatcherStub::withIdentityCallback()),
             new FilePropertiesVisitor($this->version_factory, EventDispatcherStub::withIdentityCallback()),
             new ListOfCustomPropertyRepresentationBuilder(),
+            ProvideUserAvatarUrlStub::build(),
         );
 
         \UserManager::setInstance($this->user_manager);

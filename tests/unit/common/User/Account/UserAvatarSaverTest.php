@@ -21,6 +21,8 @@
 namespace Tuleap\User\Account;
 
 use org\bovigo\vfs\vfsStream;
+use Tuleap\Test\Stubs\User\Avatar\AvatarHashStorageStub;
+use Tuleap\User\Avatar\ComputeAvatarHash;
 
 final class UserAvatarSaverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -31,7 +33,10 @@ final class UserAvatarSaverTest extends \Tuleap\Test\PHPUnit\TestCase
         $filesystem   = vfsStream::setup();
         $user_manager = $this->createMock(\UserManager::class);
 
-        $user_avatar_saver = new UserAvatarSaver($user_manager);
+        $avatar_hash_storage = AvatarHashStorageStub::withoutStoredHash();
+        $compute_avatar_hash = new ComputeAvatarHash();
+
+        $user_avatar_saver = new UserAvatarSaver($user_manager, $avatar_hash_storage, $compute_avatar_hash);
 
         $user             = $this->createMock(\PFUser::class);
         $avatar_file_path = $filesystem->url() . '/folder/user/avatar';
@@ -46,5 +51,9 @@ final class UserAvatarSaverTest extends \Tuleap\Test\PHPUnit\TestCase
         $user_avatar_saver->saveAvatar($user, $avatar_temporary_path);
 
         self::assertFileExists($avatar_file_path);
+        self::assertSame(
+            $compute_avatar_hash->computeAvatarHash($avatar_file_path),
+            $avatar_hash_storage->getNewStoredHash(),
+        );
     }
 }

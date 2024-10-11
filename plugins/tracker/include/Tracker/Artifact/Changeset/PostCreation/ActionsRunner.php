@@ -84,6 +84,9 @@ use Tuleap\Tracker\Workflow\SimpleMode\SimpleWorkflowDao;
 use Tuleap\Tracker\Workflow\SimpleMode\State\StateFactory;
 use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionExtractor;
 use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionRetriever;
+use Tuleap\User\Avatar\AvatarHashDao;
+use Tuleap\User\Avatar\ComputeAvatarHash;
+use Tuleap\User\Avatar\UserAvatarUrlProvider;
 use Tuleap\Webhook\Emitter as WebhookEmitter;
 use UGroupManager;
 use UserHelper;
@@ -184,7 +187,8 @@ class ActionsRunner
                         new CommentRepresentationBuilder(
                             CommonMarkInterpreter::build(Codendi_HTMLPurifier::instance())
                         ),
-                        new PermissionChecker(new CachingTrackerPrivateCommentInformationRetriever(new TrackerPrivateCommentInformationRetriever(new TrackerPrivateCommentUGroupEnabledDao())))
+                        new PermissionChecker(new CachingTrackerPrivateCommentInformationRetriever(new TrackerPrivateCommentInformationRetriever(new TrackerPrivateCommentUGroupEnabledDao()))),
+                        new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash()),
                     ),
                     new Tracker_REST_TrackerRestBuilder(
                         $form_element_factory,
@@ -218,6 +222,7 @@ class ActionsRunner
                         ),
                         new WorkflowRestBuilder(),
                     ),
+                    new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash()),
                 ),
             ),
         );

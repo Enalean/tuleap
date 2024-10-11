@@ -21,6 +21,7 @@
 namespace Tuleap\Dashboard\User;
 
 use PFUser;
+use Tuleap\User\Avatar\ProvideUserAvatarUrl;
 
 class UserPresenter
 {
@@ -30,12 +31,12 @@ class UserPresenter
     public $has_avatar;
     public string $avatar_alt;
 
-    public function __construct(PFUser $user)
+    public function __construct(PFUser $user, ProvideUserAvatarUrl $provide_user_avatar_url)
     {
         $this->real_name  = $user->getRealName();
         $this->login      = $user->getUserName();
         $this->has_avatar = $user->hasAvatar();
-        $this->avatar_url = $user->getAvatarUrl();
+        $this->avatar_url = $provide_user_avatar_url->getAvatarUrl($user);
         $this->avatar_alt = _('User avatar');
     }
 }

@@ -46,6 +46,7 @@ use Tuleap\Docman\REST\v1\Metadata\ItemMetadataRepresentation;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Test\Stubs\User\Avatar\ProvideUserAvatarUrlStub;
 use Tuleap\User\REST\MinimalUserRepresentation;
 
 final class ItemRepresentationCollectionBuilderTest extends TestCase
@@ -138,7 +139,7 @@ final class ItemRepresentationCollectionBuilderTest extends TestCase
             2       => false,
         });
 
-        $user_representation = MinimalUserRepresentation::build($user);
+        $user_representation = MinimalUserRepresentation::build($user, ProvideUserAvatarUrlStub::build());
         $representation1     = ItemRepresentation::build(
             $docman_item1,
             $html_purifier,
@@ -280,7 +281,7 @@ final class ItemRepresentationCollectionBuilderTest extends TestCase
         $item           = new Docman_File($dar_item);
 
         $user                = UserTestBuilder::buildWithDefaults();
-        $user_representation = MinimalUserRepresentation::build($user);
+        $user_representation = MinimalUserRepresentation::build($user, ProvideUserAvatarUrlStub::build());
 
         $this->permission_manager->method('userCanRead')->willReturn(true);
         $this->permission_manager->method('userCanManage')->willReturn(false);

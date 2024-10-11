@@ -26,6 +26,7 @@ use org\bovigo\vfs\vfsStream;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\RealTimeMercure\MercureClient;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Test\Stubs\User\Avatar\ProvideUserAvatarUrlStub;
 
 final class MercureJWTGeneratorBuilderTest extends TestCase
 {
@@ -52,7 +53,7 @@ final class MercureJWTGeneratorBuilderTest extends TestCase
     {
         \ForgeConfig::set(MercureClient::FEATURE_FLAG_KANBAN_KEY, 1);
 
-        $generator = MercureJWTGeneratorBuilder::build($this->mercure_key_path);
+        $generator = MercureJWTGeneratorBuilder::build($this->mercure_key_path, ProvideUserAvatarUrlStub::build());
 
         self::assertInstanceOf(
             MercureJWTGenerator::class,
@@ -64,7 +65,7 @@ final class MercureJWTGeneratorBuilderTest extends TestCase
     {
         \ForgeConfig::set(MercureClient::FEATURE_FLAG_TESTMANAGEMENT_KEY, 1);
 
-        $generator = MercureJWTGeneratorBuilder::build($this->mercure_key_path);
+        $generator = MercureJWTGeneratorBuilder::build($this->mercure_key_path, ProvideUserAvatarUrlStub::build());
 
         self::assertInstanceOf(
             MercureJWTGenerator::class,
@@ -74,7 +75,7 @@ final class MercureJWTGeneratorBuilderTest extends TestCase
 
     public function testItGeneratesNullMercureGeneratorWhenNoFeatureFlagIsSet(): void
     {
-        $generator = MercureJWTGeneratorBuilder::build($this->mercure_key_path);
+        $generator = MercureJWTGeneratorBuilder::build($this->mercure_key_path, ProvideUserAvatarUrlStub::build());
 
         self::assertInstanceOf(
             NullMercureJWTGenerator::class,
@@ -87,7 +88,7 @@ final class MercureJWTGeneratorBuilderTest extends TestCase
         \ForgeConfig::set(MercureClient::FEATURE_FLAG_KANBAN_KEY, 1);
         \ForgeConfig::set(MercureClient::FEATURE_FLAG_TESTMANAGEMENT_KEY, 1);
 
-        $generator = MercureJWTGeneratorBuilder::build($this->base_path . '/non_existing');
+        $generator = MercureJWTGeneratorBuilder::build($this->base_path . '/non_existing', ProvideUserAvatarUrlStub::build());
 
         self::assertInstanceOf(
             NullMercureJWTGenerator::class,
@@ -106,7 +107,7 @@ final class MercureJWTGeneratorBuilderTest extends TestCase
             str_repeat('aA', 100),
         );
 
-        $generator = MercureJWTGeneratorBuilder::build($this->base_path . '/wrong_content_start');
+        $generator = MercureJWTGeneratorBuilder::build($this->base_path . '/wrong_content_start', ProvideUserAvatarUrlStub::build());
 
         self::assertInstanceOf(
             NullMercureJWTGenerator::class,
@@ -125,7 +126,7 @@ final class MercureJWTGeneratorBuilderTest extends TestCase
             'MERCURE_KEY=' . str_repeat('aA', 1),
         );
 
-        $generator = MercureJWTGeneratorBuilder::build($this->base_path . '/wrong_content_length');
+        $generator = MercureJWTGeneratorBuilder::build($this->base_path . '/wrong_content_length', ProvideUserAvatarUrlStub::build());
 
         self::assertInstanceOf(
             NullMercureJWTGenerator::class,
