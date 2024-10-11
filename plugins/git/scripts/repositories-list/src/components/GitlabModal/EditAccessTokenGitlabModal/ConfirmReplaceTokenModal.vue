@@ -63,95 +63,95 @@
     </div>
 </template>
 
-<script lang="ts">
-import { Component, Prop } from "vue-property-decorator";
-import type { GitLabDataWithTokenPayload, Repository } from "../../../type";
-import Vue from "vue";
-import { namespace } from "vuex-class";
+<script setup lang="ts">
+import type { Repository } from "../../../type";
+import { computed, ref } from "vue";
 import { handleError } from "../../../gitlab/gitlab-error-handler";
+import { useNamespacedActions } from "vuex-composition-helpers";
+import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
 
-const gitlab = namespace("gitlab");
+const gettext_provider = useGettext();
 
-@Component
-export default class ConfirmReplaceTokenModal extends Vue {
-    @Prop({ required: true })
-    readonly repository!: Repository;
+const { updateBotApiTokenGitlab } = useNamespacedActions("gitlab", ["updateBotApiTokenGitlab"]);
 
-    @Prop({ required: true })
-    readonly gitlab_new_token!: string;
+const props = defineProps<{
+    repository: Repository;
+    gitlab_new_token: string;
+}>();
 
-    @gitlab.Action
-    readonly updateBotApiTokenGitlab!: (gitlab_data: GitLabDataWithTokenPayload) => Promise<void>;
+const emit = defineEmits<{
+    (e: "on-back-button"): void;
+    (e: "on-success-edit-token"): void;
+}>();
 
-    message_error_rest = "";
-    is_patching_new_token = false;
+const message_error_rest = ref("");
+const is_patching_new_token = ref(false);
 
-    get confirmation_message(): string {
-        return this.$gettextInterpolate(
-            this.$gettext(
-                "You are about to update the token used to integrate %{ label } repository of %{ instance_url }.",
-            ),
-            {
-                label: this.repository.normalized_path,
-                instance_url: this.instance_url,
-            },
-        );
+const instance_url = computed((): string => {
+    if (!props.repository.gitlab_data || !props.repository.normalized_path) {
+        return "";
+    }
+    return props.repository.gitlab_data.gitlab_repository_url.replace(
+        props.repository.normalized_path,
+        "",
+    );
+});
+
+const confirmation_message = computed((): string => {
+    return gettext_provider.interpolate(
+        gettext_provider.$gettext(
+            "You are about to update the token used to integrate %{ label } repository of %{ instance_url }.",
+        ),
+        {
+            label: props.repository.normalized_path,
+            instance_url: instance_url.value,
+        },
+    );
+});
+
+const have_any_rest_error = computed((): boolean => message_error_rest.value.length > 0);
+
+const disabled_button = computed(
+    (): boolean => is_patching_new_token.value || have_any_rest_error.value,
+);
+
+const reset = (): void => {
+    is_patching_new_token.value = false;
+    message_error_rest.value = "";
+};
+
+const onBackToEdit = (): void => {
+    reset();
+    emit("on-back-button");
+};
+
+const confirmEditToken = async (event: Event): Promise<void> => {
+    event.preventDefault();
+
+    if (have_any_rest_error.value) {
+        return;
     }
 
-    get instance_url(): string {
-        if (!this.repository.gitlab_data || !this.repository.normalized_path) {
-            return "";
-        }
-        return this.repository.gitlab_data.gitlab_repository_url.replace(
-            this.repository.normalized_path,
-            "",
-        );
+    if (!props.repository.gitlab_data) {
+        return;
     }
 
-    get have_any_rest_error(): boolean {
-        return this.message_error_rest.length > 0;
+    is_patching_new_token.value = true;
+
+    try {
+        await updateBotApiTokenGitlab({
+            gitlab_integration_id: props.repository.integration_id,
+            gitlab_api_token: props.gitlab_new_token,
+        });
+
+        emit("on-success-edit-token");
+    } catch (rest_error) {
+        message_error_rest.value = await handleError(rest_error, gettext_provider);
+        throw rest_error;
+    } finally {
+        is_patching_new_token.value = false;
     }
+};
 
-    get disabled_button(): boolean {
-        return this.is_patching_new_token || this.have_any_rest_error;
-    }
-
-    onBackToEdit(): void {
-        this.reset();
-        this.$emit("on-back-button");
-    }
-
-    reset(): void {
-        this.is_patching_new_token = false;
-        this.message_error_rest = "";
-    }
-
-    async confirmEditToken(event: Event): Promise<void> {
-        event.preventDefault();
-
-        if (this.have_any_rest_error) {
-            return;
-        }
-
-        if (!this.repository.gitlab_data) {
-            return;
-        }
-
-        this.is_patching_new_token = true;
-
-        try {
-            await this.updateBotApiTokenGitlab({
-                gitlab_integration_id: this.repository.integration_id,
-                gitlab_api_token: this.gitlab_new_token,
-            });
-
-            this.$emit("on-success-edit-token");
-        } catch (rest_error) {
-            this.message_error_rest = await handleError(rest_error, this);
-            throw rest_error;
-        } finally {
-            this.is_patching_new_token = false;
-        }
-    }
-}
+defineExpose({ message_error_rest });
 </script>

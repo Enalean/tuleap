@@ -28,6 +28,8 @@ import { createLocalVueForTests } from "../../../helpers/local-vue-for-tests";
 
 jest.useFakeTimers();
 
+type ConfirmReplaceTokenModalExposed = { message_error_rest: string };
+
 describe("ConfirmReplaceTokenModal", () => {
     let store_options = {},
         propsData = {},
@@ -40,14 +42,14 @@ describe("ConfirmReplaceTokenModal", () => {
         };
     });
 
-    async function instantiateComponent(): Promise<Wrapper<ConfirmReplaceTokenModal>> {
+    async function instantiateComponent(): Promise<Wrapper<Vue & ConfirmReplaceTokenModalExposed>> {
         store = createStoreMock(store_options);
 
         return shallowMount(ConfirmReplaceTokenModal, {
             propsData,
             mocks: { $store: store },
             localVue: await createLocalVueForTests(),
-        });
+        }) as Wrapper<Vue & ConfirmReplaceTokenModalExposed>;
     }
 
     it("When the user confirms new token, Then api is called and event is emitted", async () => {
@@ -83,7 +85,7 @@ describe("ConfirmReplaceTokenModal", () => {
             throw new Error("Should have emitted on-success-edit-token");
         }
 
-        expect(on_success_edit_token[0]).toEqual([]);
+        expect(on_success_edit_token[0]).toStrictEqual([]);
     });
 
     it("When there is an error message, Then it's displayed", async () => {
@@ -164,7 +166,7 @@ describe("ConfirmReplaceTokenModal", () => {
         wrapper.find("[data-test=button-confirm-edit-token-gitlab]").trigger("click");
         await jest.runOnlyPendingTimersAsync();
 
-        expect(wrapper.vm.$data.message_error_rest).toBe("404 Error on server");
+        expect(wrapper.vm.message_error_rest).toBe("404 Error on server");
         expect(gitlab_error_handler.handleError).toHaveBeenCalled();
     });
 
