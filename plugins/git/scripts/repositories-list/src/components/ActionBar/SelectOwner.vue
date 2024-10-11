@@ -18,7 +18,7 @@
   -->
 
 <template>
-    <div v-if="are_there_personal_repositories()" class="git-repository-actions-select-owners">
+    <div v-if="are_there_personal_repositories" class="git-repository-actions-select-owners">
         <label class="tlp-label" for="git-repository-select-owner">
             {{ $gettext("Forks:") }}
         </label>
@@ -28,10 +28,12 @@
             v-model="owner_id"
             v-bind:disabled="isLoading"
         >
-            <option v-bind:value="project_key()">{{ $gettext("Project repositories") }}</option>
+            <option v-bind:value="PROJECT_KEY">
+                {{ $gettext("Project repositories") }}
+            </option>
             <optgroup v-bind:label="$gettext('Users forks')">
                 <option
-                    v-for="owner in sorted_repositories_owners()"
+                    v-for="owner in sorted_repositories_owners"
                     v-bind:key="owner.id"
                     v-bind:value="owner.id"
                 >
@@ -41,43 +43,34 @@
         </select>
     </div>
 </template>
-<script lang="ts">
-import Vue from "vue";
+<script setup lang="ts">
+import { computed, onMounted, ref, watch } from "vue";
 import type { RepositoryOwner } from "../../type";
-import { Getter, State } from "vuex-class";
-import { Component, Watch } from "vue-property-decorator";
 import { getRepositoriesOwners } from "../../repository-list-presenter";
 import { PROJECT_KEY } from "../../constants";
+import { useActions, useGetters, useState } from "vuex-composition-helpers";
 
-@Component
-export default class SelectOwner extends Vue {
-    @Getter
-    readonly isLoading!: boolean;
+const { isLoading } = useGetters(["isLoading"]);
+const { selected_owner_id } = useState(["selected_owner_id"]);
+const { changeRepositories } = useActions(["changeRepositories"]);
 
-    @State
-    readonly selected_owner_id!: string | number;
+const owner_id = ref<string | number | null>(null);
 
-    owner_id: string | number | null = null;
+const are_there_personal_repositories = computed((): boolean => {
+    return getRepositoriesOwners().length > 0;
+});
 
-    are_there_personal_repositories(): boolean {
-        return getRepositoriesOwners().length > 0;
-    }
-    sorted_repositories_owners(): Array<RepositoryOwner> {
-        return getRepositoriesOwners().sort(function (user_a, user_b) {
-            return user_a.display_name.localeCompare(user_b.display_name);
-        });
-    }
-    project_key(): string {
-        return PROJECT_KEY;
-    }
+const sorted_repositories_owners = computed((): ReadonlyArray<RepositoryOwner> => {
+    return getRepositoriesOwners().sort(function (user_a, user_b) {
+        return user_a.display_name.localeCompare(user_b.display_name);
+    });
+});
 
-    mounted(): void {
-        this.owner_id = this.selected_owner_id;
-    }
+onMounted(() => {
+    owner_id.value = selected_owner_id.value;
+});
 
-    @Watch("owner_id")
-    public updateSelectedOwnerId(value: string) {
-        this.$store.dispatch("changeRepositories", value);
-    }
-}
+watch(owner_id, (new_value: string | number | null) => {
+    changeRepositories(new_value);
+});
 </script>
