@@ -119,7 +119,7 @@ final class ArtifactClosingReferencesHandlerTest extends \Tuleap\Test\PHPUnit\Te
                         UserName::fromUser($user)
                     ),
                     new TextWithPotentialReferences(
-                        sprintf('implements art #%d', self::SECOND_ARTIFACT_ID),
+                        sprintf('feat: art #%d', self::SECOND_ARTIFACT_ID),
                         ReferenceStringStub::fromString('git #linkable/e43c62bb'),
                         UserName::fromUser($user)
                     ),

@@ -195,6 +195,12 @@ final class ReferenceManagerTest extends TestCase
         self::assertCount(1, $matches);
         self::assertEquals('ref', $matches[0]['key']);
         self::assertEquals('a.b-c_d/12784', $matches[0]['value']);
+
+        $matches = $this->rm->_extractAllMatches('fix: request #23456');
+        self::assertCount(1, $matches);
+        self::assertEquals('fix:', $matches[0]['context_word']);
+        self::assertEquals('request', $matches[0]['key']);
+        self::assertEquals('23456', $matches[0]['value']);
     }
 
     public function testUpdateProjectReferenceShortName(): void
