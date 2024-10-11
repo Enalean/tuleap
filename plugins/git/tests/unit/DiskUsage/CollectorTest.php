@@ -24,78 +24,66 @@ namespace Tuleap\Git\DiskUsage;
 
 use ForgeConfig;
 use Git_LogDao;
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\MockObject\MockObject;
 use Project;
 use Statistics_DiskUsageManager;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
 
-class CollectorTest extends \Tuleap\Test\PHPUnit\TestCase
+final class CollectorTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Statistics_DiskUsageManager
-     */
-    private $disk_usage_manager;
-    /**
-     * @var Git_LogDao|Mockery\LegacyMockInterface|Mockery\MockInterface
-     */
-    private $git_log_dao;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Retriever
-     */
-    private $retriever;
-    /**
-     * @var Collector
-     */
-    private $collector;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Project
-     */
-    private $project;
+    private Statistics_DiskUsageManager&MockObject $disk_usage_manager;
+    private Git_LogDao&MockObject $git_log_dao;
+    private Retriever&MockObject $retriever;
+    private Collector $collector;
+    private Project $project;
 
     protected function setUp(): void
     {
-        $this->disk_usage_manager = Mockery::mock(Statistics_DiskUsageManager::class);
-        $this->git_log_dao        = Mockery::mock(Git_LogDao::class);
-        $this->retriever          = Mockery::mock(Retriever::class);
+        $this->disk_usage_manager = $this->createMock(Statistics_DiskUsageManager::class);
+        $this->git_log_dao        = $this->createMock(Git_LogDao::class);
+        $this->retriever          = $this->createMock(Retriever::class);
 
         $this->collector = new Collector($this->disk_usage_manager, $this->git_log_dao, $this->retriever);
 
-        $this->project = Mockery::mock(Project::class);
-        $this->project->shouldReceive('getId')->andReturn(111);
-        $this->project->shouldReceive('getUnixNameLowerCase')->andReturn('leprojet');
+        $this->project = ProjectTestBuilder::aProject()->withId(111)->withUnixName('leprojet')->build();
     }
 
     public function testCollectSizeForGitoliteRepositories(): void
     {
-        $this->git_log_dao->shouldReceive('hasRepositoriesUpdatedAfterGivenDate')->andReturn(true);
-        $this->git_log_dao->shouldReceive('hasRepositories')->andReturn(true);
+        $this->git_log_dao->method('hasRepositoriesUpdatedAfterGivenDate')->willReturn(true);
+        $this->git_log_dao->method('hasRepositories')->willReturn(true);
 
-        $this->disk_usage_manager->shouldReceive('getDirSize')->with(ForgeConfig::get('sys_data_dir') . '/gitolite/repositories/leprojet')->andReturn(11);
-        $this->disk_usage_manager->shouldReceive('getDirSize')->with(ForgeConfig::get('sys_data_dir') . '/gitroot/leprojet')->andReturn(0);
+        $this->disk_usage_manager->method('getDirSize')
+            ->willReturnCallback(static fn(string $dir) => match ($dir) {
+                ForgeConfig::get('sys_data_dir') . '/gitolite/repositories/leprojet' => 11,
+                ForgeConfig::get('sys_data_dir') . '/gitroot/leprojet'               => 0,
+            });
 
-        $this->assertEquals(11, $this->collector->collectForGitoliteRepositories($this->project));
+        self::assertEquals(11, $this->collector->collectForGitoliteRepositories($this->project));
     }
 
     public function testCollectSizeWhenNoRepositories(): void
     {
-        $this->git_log_dao->shouldReceive('hasRepositoriesUpdatedAfterGivenDate')->andReturn(false);
-        $this->git_log_dao->shouldReceive('hasRepositories')->andReturn(false);
+        $this->git_log_dao->method('hasRepositoriesUpdatedAfterGivenDate')->willReturn(false);
+        $this->git_log_dao->method('hasRepositories')->willReturn(false);
 
-        $this->disk_usage_manager->shouldReceive('getDirSize')->with(ForgeConfig::get('sys_data_dir') . '/gitolite/repositories/leprojet')->andReturn(11);
-        $this->disk_usage_manager->shouldReceive('getDirSize')->with(ForgeConfig::get('sys_data_dir') . '/gitroot/leprojet')->andReturn(0);
+        $this->disk_usage_manager->method('getDirSize')
+            ->willReturnCallback(static fn(string $dir) => match ($dir) {
+                ForgeConfig::get('sys_data_dir') . '/gitolite/repositories/leprojet' => 11,
+                ForgeConfig::get('sys_data_dir') . '/gitroot/leprojet'               => 0,
+            });
 
-        $this->assertEquals(11, $this->collector->collectForGitoliteRepositories($this->project));
+        self::assertEquals(11, $this->collector->collectForGitoliteRepositories($this->project));
     }
 
     public function testCollectLastSizeWhenNoNewCommit(): void
     {
-        $this->git_log_dao->shouldReceive('hasRepositoriesUpdatedAfterGivenDate')->andReturn(false);
-        $this->git_log_dao->shouldReceive('hasRepositories')->andReturn(true);
+        $this->git_log_dao->method('hasRepositoriesUpdatedAfterGivenDate')->willReturn(false);
+        $this->git_log_dao->method('hasRepositories')->willReturn(true);
 
-        $this->retriever->shouldReceive('getLastSizeForProject')->with($this->project)->andReturn(90);
+        $this->retriever->method('getLastSizeForProject')->with($this->project)->willReturn(90);
 
-        $this->assertEquals(90, $this->collector->collectForGitoliteRepositories($this->project));
+        self::assertEquals(90, $this->collector->collectForGitoliteRepositories($this->project));
     }
 }
