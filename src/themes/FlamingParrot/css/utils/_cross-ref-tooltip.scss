@@ -177,6 +177,41 @@ $dimmed-white-over-dark-background: color.adjust(#ffffff, $alpha: - 0.2);
     }
 }
 
+.crossref-tooltip-body-table-value {
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+        margin: var(--tlp-small-spacing) 0;
+    }
+
+    h1 {
+        font-size: 1.8em;
+    }
+
+    h2 {
+        font-size: 1.64em;
+    }
+
+    h3 {
+        font-size: 1.48em;
+    }
+
+    h4 {
+        font-size: 1.32em;
+    }
+
+    h5 {
+        font-size: 1.16em;
+    }
+
+    h6 {
+        font-size: 1em;
+    }
+}
+
 .crossref-tooltip-header-user-name {
     color: $dimmed-white-over-dark-background;
     font-size: 12px;

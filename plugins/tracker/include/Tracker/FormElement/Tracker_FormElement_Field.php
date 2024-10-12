@@ -645,7 +645,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
         if ($this->userCanRead()) {
             $html .= '<tr><td>';
             $html .= '<label>' .  $hp->purify($this->getLabel(), CODENDI_PURIFIER_CONVERT_HTML) . '</label>';
-            $html .= '</td><td>';
+            $html .= '</td><td class="crossref-tooltip-body-table-value">';
             $value = $artifact->getLastChangeset()->getValue($this);
             $html .= $this->fetchTooltipValue($artifact, $value);
             $html .= '</td></tr>';
