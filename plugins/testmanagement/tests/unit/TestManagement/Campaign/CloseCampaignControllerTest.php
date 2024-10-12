@@ -22,39 +22,34 @@ declare(strict_types=1);
 
 namespace Tuleap\TestManagement\Campaign;
 
-use HTTPRequest;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PFUser;
-use Tracker;
+use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\NotFoundException;
-use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Test\Builders\HTTPRequestBuilder;
+use Tuleap\Test\Builders\LayoutInspector;
+use Tuleap\Test\Builders\LayoutInspectorRedirection;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\Builders\TestLayout;
+use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Workflow\NoPossibleValueException;
 
-class CloseCampaignControllerTest extends \Tuleap\Test\PHPUnit\TestCase
+final class CloseCampaignControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 
-    /**
-     * @var CloseCampaignController
-     */
-    private $controller;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|CampaignRetriever
-     */
-    private $campaign_retriever;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|StatusUpdater
-     */
-    private $status_updater;
+    private CloseCampaignController $controller;
+    private CampaignRetriever&MockObject $campaign_retriever;
+    private StatusUpdater&MockObject $status_updater;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->campaign_retriever = Mockery::mock(CampaignRetriever::class);
-        $this->status_updater     = Mockery::mock(StatusUpdater::class);
+        $this->campaign_retriever = $this->createMock(CampaignRetriever::class);
+        $this->status_updater     = $this->createMock(StatusUpdater::class);
 
         $this->controller = new CloseCampaignController(
             $this->campaign_retriever,
@@ -71,34 +66,32 @@ class CloseCampaignControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItAsksToCloseTheCampaign(): void
     {
-        $user    = Mockery::mock(PFUser::class);
-        $request = new HTTPRequest();
-        $request->setCurrentUser($user);
+        $request = HTTPRequestBuilder::get()->build();
 
         $layout    = Mockery::mock(BaseLayout::class);
         $variables = [
             'campaign_id' => '3',
         ];
 
-        $project          = new \Project(['group_id' => 101]);
-        $tracker_campaign = Mockery::mock(Tracker::class);
-        $tracker_campaign->shouldReceive('getProject')->andReturn($project);
+        $project          = ProjectTestBuilder::aProject()->build();
+        $tracker_campaign = TrackerTestBuilder::aTracker()->withProject($project)->build();
 
-        $artifact_campaign = Mockery::mock(Artifact::class);
-        $artifact_campaign->shouldReceive('getTracker')->andReturn($tracker_campaign);
+        $artifact_campaign = ArtifactTestBuilder::anArtifact(101)->inTracker($tracker_campaign)->build();
 
         $campaign = new Campaign(
             $artifact_campaign,
             'Campaign 01',
             new NoJobConfiguration()
         );
-        $this->campaign_retriever->shouldReceive('getById')
-            ->once()
+        $this->campaign_retriever
+            ->expects(self::once())
+            ->method('getById')
             ->with(3)
-            ->andReturn($campaign);
+            ->willReturn($campaign);
 
-        $this->status_updater->shouldReceive('closeCampaign')
-            ->once();
+        $this->status_updater
+            ->expects(self::once())
+            ->method('closeCampaign');
 
         $layout->shouldReceive('addFeedback')->once();
         $layout->shouldReceive('redirect')->once();
@@ -112,25 +105,23 @@ class CloseCampaignControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItThrowsAnExceptionIfCampaignNotFound(): void
     {
-        $user    = Mockery::mock(PFUser::class);
-        $request = new HTTPRequest();
-        $request->setCurrentUser($user);
+        $request = HTTPRequestBuilder::get()->build();
 
-        $layout    = Mockery::mock(BaseLayout::class);
+        $inspector = new LayoutInspector();
+        $layout    = new TestLayout($inspector);
         $variables = [
             'campaign_id' => '3',
         ];
 
-        $this->campaign_retriever->shouldReceive('getById')
-            ->once()
+        $this->campaign_retriever
+            ->expects(self::once())
+            ->method('getById')
             ->with(3)
-            ->andThrow(
+            ->willThrowException(
                 new ArtifactNotFoundException()
             );
 
-        $this->status_updater->shouldNotReceive('closeCampaign');
-        $layout->shouldNotReceive('addFeedback');
-        $layout->shouldNotReceive('redirect');
+        $this->status_updater->method('closeCampaign');
 
         $this->expectException(NotFoundException::class);
 
@@ -139,46 +130,60 @@ class CloseCampaignControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             $layout,
             $variables
         );
+
+        self::assertSame([], $inspector->getFeedback());
     }
 
     public function testCloseCampaignShowsAnErrorFeedbackIfNotValidValueFound(): void
     {
-        $user    = Mockery::mock(PFUser::class);
-        $request = new HTTPRequest();
-        $request->setCurrentUser($user);
+        $request = HTTPRequestBuilder::get()->build();
 
-        $layout    = Mockery::mock(BaseLayout::class);
+        $inspector = new LayoutInspector();
+        $layout    = new TestLayout($inspector);
         $variables = [
             'campaign_id' => '3',
         ];
 
-        $project          = new \Project(['group_id' => 101]);
-        $tracker_campaign = Mockery::mock(Tracker::class);
-        $tracker_campaign->shouldReceive('getProject')->andReturn($project);
+        $project          = ProjectTestBuilder::aProject()->build();
+        $tracker_campaign = TrackerTestBuilder::aTracker()->withProject($project)->build();
 
-        $artifact_campaign = Mockery::mock(Artifact::class);
-        $artifact_campaign->shouldReceive('getTracker')->andReturn($tracker_campaign);
+        $artifact_campaign = ArtifactTestBuilder::anArtifact(101)->inTracker($tracker_campaign)->build();
 
         $campaign = new Campaign(
             $artifact_campaign,
             'Campaign 01',
             new NoJobConfiguration()
         );
-        $this->campaign_retriever->shouldReceive('getById')
-            ->once()
+        $this->campaign_retriever
+            ->expects(self::once())
+            ->method('getById')
             ->with(3)
-            ->andReturn($campaign);
+            ->willReturn($campaign);
 
-        $this->status_updater->shouldReceive('closeCampaign')
-            ->andThrow(NoPossibleValueException::class);
+        $this->status_updater->method('closeCampaign')
+            ->willThrowException(new NoPossibleValueException());
 
-        $layout->shouldReceive('addFeedback')->withArgs(['error', 'The campaign cannot be closed : No possible value found regarding your configuration. Please check your transition and field dependencies.'])->once();
-        $layout->shouldReceive('redirect')->once();
+        $redirected = false;
 
-        $this->controller->process(
-            $request,
-            $layout,
-            $variables
+        try {
+            $this->controller->process(
+                $request,
+                $layout,
+                $variables
+            );
+        } catch (LayoutInspectorRedirection $e) {
+            $redirected = true;
+            self::assertSame('/plugins/testmanagement/?group_id=101#!/campaigns/3', $e->redirect_url);
+        }
+
+        self::assertTrue($redirected);
+        self::assertSame(
+            [[
+                'level' => 'error',
+                'message' => 'The campaign cannot be closed : No possible value found regarding your configuration. Please check your transition and field dependencies.',
+            ],
+            ],
+            $inspector->getFeedback()
         );
     }
 }

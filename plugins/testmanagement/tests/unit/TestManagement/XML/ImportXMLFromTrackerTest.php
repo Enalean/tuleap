@@ -20,17 +20,13 @@
 
 namespace Tuleap\TestManagement\XML;
 
-use Mockery;
 use SimpleXMLElement;
 use Tuleap\TestManagement\Step\Definition\Field\StepDefinition;
 use Tuleap\TestManagement\Step\Execution\Field\StepExecution;
-use Tuleap\Tracker\XML\TrackerXmlImportFeedbackCollector;
 use XML_RNGValidator;
 
 final class ImportXMLFromTrackerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
     /**
      * @var ImportXMLFromTracker
      */
@@ -133,9 +129,6 @@ final class ImportXMLFromTrackerTest extends \Tuleap\Test\PHPUnit\TestCase
              </externalField>'
         );
 
-        $feedback_collector = Mockery::mock(TrackerXmlImportFeedbackCollector::class);
-        $feedback_collector->shouldReceive('addWarnings');
-
         $step_def = new StepDefinition(
             0,
             0,
@@ -167,9 +160,6 @@ final class ImportXMLFromTrackerTest extends \Tuleap\Test\PHPUnit\TestCase
              </externalField>'
         );
 
-        $feedback_collector = Mockery::mock(TrackerXmlImportFeedbackCollector::class);
-        $feedback_collector->shouldReceive('addWarnings');
-
         $step_def = new StepExecution(
             0,
             0,
@@ -200,9 +190,6 @@ final class ImportXMLFromTrackerTest extends \Tuleap\Test\PHPUnit\TestCase
                   <description>Execution of the test\'s steps</description>
              </externalField>'
         );
-
-        $feedback_collector = Mockery::mock(TrackerXmlImportFeedbackCollector::class);
-        $feedback_collector->shouldReceive('addWarnings');
 
         $this->assertNull($this->xml_validator->getInstanceFromXML($xml_input));
     }

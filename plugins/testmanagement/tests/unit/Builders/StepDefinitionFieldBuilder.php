@@ -31,15 +31,15 @@ final class StepDefinitionFieldBuilder
         return new StepDefinition(
             1,
             102,
-            null,
+            0,
             'steps_def',
             'Steps definition',
             "Definition of the test's steps",
             true,
+            'P',
             null,
             null,
-            null,
-            null,
+            10,
             null
         );
     }

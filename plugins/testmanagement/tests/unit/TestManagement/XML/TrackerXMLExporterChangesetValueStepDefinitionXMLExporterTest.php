@@ -22,19 +22,15 @@ declare(strict_types=1);
 
 namespace Tuleap\TestManagement\XML;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use SimpleXMLElement;
 use Tracker_Artifact_ChangesetValue;
 use Tuleap\TestManagement\Step\Definition\Field\StepDefinition;
 use Tuleap\TestManagement\Step\Step;
-use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use XML_SimpleXMLCDATAFactory;
 
 final class TrackerXMLExporterChangesetValueStepDefinitionXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     public function testItExportsTheExternalChangeset(): void
     {
         $exporter     = new TrackerXMLExporterChangesetValueStepDefinitionXMLExporter(
@@ -68,14 +64,14 @@ final class TrackerXMLExporterChangesetValueStepDefinitionXMLExporterTest extend
 
         $values = [$step1, $step2];
 
-        $field = Mockery::mock(StepDefinition::class);
-        $field->shouldReceive('getName')->andReturn('steps')->once();
+        $field = $this->createMock(StepDefinition::class);
+        $field->expects(self::once())->method('getName')->willReturn('steps');
 
-        $changeset_value = Mockery::mock(Tracker_Artifact_ChangesetValue::class);
-        $changeset_value->shouldReceive('getValue')->andReturn($values)->once();
-        $changeset_value->shouldReceive('getField')->andReturn($field)->once();
+        $changeset_value = $this->createMock(Tracker_Artifact_ChangesetValue::class);
+        $changeset_value->expects(self::once())->method('getValue')->willReturn($values);
+        $changeset_value->expects(self::once())->method('getField')->willReturn($field);
 
-        $artifact = Mockery::mock(Artifact::class);
+        $artifact = ArtifactTestBuilder::anArtifact(42)->build();
         $exporter->export($artifact_xml, $changeset_xml, $artifact, $changeset_value);
         $this->assertXmlStringEqualsXmlString($this->getXmlResult()->asXML(), $changeset_xml->asXML());
     }
@@ -97,14 +93,14 @@ final class TrackerXMLExporterChangesetValueStepDefinitionXMLExporterTest extend
 
         $values = [];
 
-        $field = Mockery::mock(StepDefinition::class);
-        $field->shouldReceive('getName')->andReturn('steps')->never();
+        $field = $this->createMock(StepDefinition::class);
+        $field->expects(self::never())->method('getName');
 
-        $changeset_value = Mockery::mock(Tracker_Artifact_ChangesetValue::class);
-        $changeset_value->shouldReceive('getValue')->andReturn($values)->once();
-        $changeset_value->shouldReceive('getField')->andReturn($field)->once();
+        $changeset_value = $this->createMock(Tracker_Artifact_ChangesetValue::class);
+        $changeset_value->expects(self::once())->method('getValue')->willReturn($values);
+        $changeset_value->expects(self::once())->method('getField')->willReturn($field);
 
-        $artifact = Mockery::mock(Artifact::class);
+        $artifact = ArtifactTestBuilder::anArtifact(42)->build();
         $exporter->export($artifact_xml, $changeset_xml, $artifact, $changeset_value);
         $this->assertXmlStringEqualsXmlString($expected_xml->asXML(), $changeset_xml->asXML());
     }

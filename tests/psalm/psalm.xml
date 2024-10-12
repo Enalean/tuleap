@@ -623,7 +623,6 @@
             <file name="plugins/testmanagement/tests/unit/TestManagement/REST/FormattedChangesetValueForTextFieldRetrieverTest.php"/>
             <file name="plugins/testmanagement/tests/unit/TestManagement/REST/ListOfExecutionsWithAutomatedTestDataRetrieverTest.php"/>
             <file name="plugins/testmanagement/tests/unit/TestManagement/REST/TestsDataFromJunitExtractorTest.php"/>
-            <file name="plugins/testmanagement/tests/unit/TestManagement/REST/v1/AssignedToRepresentationBuilder.php"/>
             <file name="plugins/testmanagement/tests/unit/TestManagement/REST/v1/CampaignArtifactUpdateFieldValuesBuilderTest.php"/>
             <file name="plugins/testmanagement/tests/unit/TestManagement/REST/v1/DefinitionRepresentations/DefinitionRepresentationBuilderTest.php"/>
             <file name="plugins/testmanagement/tests/unit/TestManagement/REST/v1/DefinitionRepresentations/DefinitionRepresentationTest.php"/>

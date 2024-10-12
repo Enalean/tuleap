@@ -22,46 +22,32 @@ declare(strict_types=1);
 
 namespace Tuleap\TestManagement;
 
-use Mockery;
+use ColinODell\PsrTestLogger\TestLogger;
+use PHPUnit\Framework\MockObject\MockObject;
 use Project;
-use Psr\Log\LoggerInterface;
 use Tracker;
 use TrackerXmlImport;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 class TestmanagementTrackersCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+    private TrackerXmlImport|MockObject $xml_import;
+    private TestmanagementTrackersCreator $tracker_creator;
+    private Project $project;
+    private Tracker $created_tracker;
+    private TestLogger $logger;
 
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|TrackerXmlImport
-     */
-    private $xml_import;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|LoggerInterface
-     */
-    private $logger;
-    /**
-     * @var TestmanagementTrackersCreator
-     */
-    private $tracker_creator;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Project
-     */
-    private $project;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Tracker
-     */
-    private $created_tracker;
 
     protected function setup(): void
     {
         parent::setUp();
 
-        $this->project         = Mockery::mock(Project::class);
-        $this->created_tracker = Mockery::mock(Tracker::class);
+        $this->project         = ProjectTestBuilder::aProject()->withId(111)->build();
+        $this->created_tracker = TrackerTestBuilder::aTracker()->build();
 
-        $this->xml_import      = Mockery::mock(TrackerXmlImport::class);
-        $this->logger          = Mockery::mock(LoggerInterface::class);
+        $this->xml_import      = $this->createMock(TrackerXmlImport::class);
+        $this->logger          = new TestLogger();
         $this->tracker_creator = new TestmanagementTrackersCreator($this->xml_import, $this->logger);
     }
 
@@ -69,9 +55,9 @@ class TestmanagementTrackersCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $expected_path = (string) realpath(__DIR__ . '/../../../resources/templates/Tracker_campaign.xml');
 
-        $this->xml_import->shouldReceive('createFromXMLFile')
-            ->withArgs([$this->project, $expected_path])
-            ->andReturn($this->created_tracker);
+        $this->xml_import->method('createFromXMLFile')
+            ->with($this->project, $expected_path)
+            ->willReturn($this->created_tracker);
 
         $result = $this->tracker_creator->createTrackerFromXML($this->project, 'campaign');
         $this->assertEquals($this->created_tracker, $result);
@@ -81,40 +67,41 @@ class TestmanagementTrackersCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $expected_path = (string) realpath(__DIR__ . '/../../../../tracker/resources/templates/Tracker_Bugs.xml');
 
-        $this->xml_import->shouldReceive('createFromXMLFile')
-            ->withArgs([$this->project, $expected_path])
-            ->andReturn($this->created_tracker);
+        $this->xml_import->method('createFromXMLFile')
+            ->with($this->project, $expected_path)
+            ->willReturn($this->created_tracker);
 
         $result = $this->tracker_creator->createTrackerFromXML($this->project, 'bug');
 
         $this->assertEquals($this->created_tracker, $result);
+
+        self::assertFalse($this->logger->hasErrorRecords());
     }
 
     public function testCreateTrackerFromXmlFail(): void
     {
         $expected_path = (string) realpath(__DIR__ . '/../broken_path.xml');
-        $this->project->shouldReceive('getId')->andReturn(111);
 
-        $this->xml_import->shouldReceive('createFromXMLFile')
-            ->withArgs([$this->project, $expected_path]);
+        $this->xml_import->method('createFromXMLFile')
+            ->with($this->project, $expected_path);
 
-        $this->logger->shouldReceive('error')->once();
         $this->expectException(TrackerNotCreatedException::class);
 
         $this->tracker_creator->createTrackerFromXML($this->project, 'campaign');
+
+        self::assertTrue($this->logger->hasErrorRecords());
     }
 
     // Bug tracker shouldn't raise exception because it's not mandatory for Testmanagement administration
     public function testCreateTrackerFromXmlDoesntStopIfBugTrackerCreationFail(): void
     {
         $expected_path = (string) realpath(__DIR__ . '/../broken_path.xml');
-        $this->project->shouldReceive('getId')->andReturn(111);
 
-        $this->xml_import->shouldReceive('createFromXMLFile')
-            ->withArgs([$this->project, $expected_path]);
-
-        $this->logger->shouldReceive('error')->once();
+        $this->xml_import->method('createFromXMLFile')
+            ->with($this->project, $expected_path);
 
         $this->assertNull($this->tracker_creator->createTrackerFromXML($this->project, 'bug'));
+
+        self::assertTrue($this->logger->hasErrorRecords());
     }
 }

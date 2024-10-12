@@ -20,55 +20,43 @@
 
 namespace Tuleap\TestManagement\XML;
 
-require_once __DIR__ . '/../../bootstrap.php';
-
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\MockObject\MockObject;
 use Project;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\TestManagement\Campaign\Execution\ExecutionDao;
 use Tuleap\TestManagement\Config;
 use XML_RNGValidator;
 
 class ExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var Exporter
-     */
-    private $exporter;
-    private $execution_dao;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Config
-     */
-    private $config;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Project
-     */
-    private $project;
+    private Exporter $exporter;
+    private ExecutionDao&MockObject $execution_dao;
+    private Config&MockObject $config;
+    private Project $project;
 
     public function setUp(): void
     {
         parent::setUp();
 
-        $this->config        = Mockery::mock(Config::class);
-        $this->execution_dao = Mockery::mock(ExecutionDao::class);
+        $this->config        = $this->createMock(Config::class);
+        $this->execution_dao = $this->createMock(ExecutionDao::class);
         $this->exporter      = new Exporter($this->config, new XML_RNGValidator(), $this->execution_dao);
 
-        $this->project = Mockery::spy(Project::class);
+        $this->project = ProjectTestBuilder::aProject()->build();
     }
 
     public function testItExportsTTMConfigurationInXML()
     {
-        $this->config->shouldReceive([
-            'getIssueTrackerId'          => 1,
-            'getCampaignTrackerId'       => 2,
-            'getTestDefinitionTrackerId' => 3,
-            'getTestExecutionTrackerId'  => 4,
-            'isConfigNeeded'             => false,
-        ]);
+        $this->config->method('getIssueTrackerId')->willReturn(1);
+        $this->config->method('getCampaignTrackerId')->willReturn(2);
+        $this->config->method('getTestDefinitionTrackerId')->willReturn(3);
+        $this->config->method('getTestExecutionTrackerId')->willReturn(4);
+        $this->config->method('isConfigNeeded')->willReturn(false);
 
-        $this->execution_dao->shouldReceive('searchByExecutionTrackerId')->once()->andReturn([]);
+        $this->execution_dao
+            ->expects(self::once())
+            ->method('searchByExecutionTrackerId')
+            ->willReturn([]);
 
         $xml_content = $this->exporter->exportToXML($this->project);
 
@@ -80,15 +68,16 @@ class ExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItExportsTTMConfigurationInXMLWithoutIssueTracker(): void
     {
-        $this->config->shouldReceive([
-            'getIssueTrackerId'          => null,
-            'getCampaignTrackerId'       => 2,
-            'getTestDefinitionTrackerId' => 3,
-            'getTestExecutionTrackerId'  => 4,
-            'isConfigNeeded'             => false,
-        ]);
+        $this->config->method('getIssueTrackerId')->willReturn(null);
+        $this->config->method('getCampaignTrackerId')->willReturn(2);
+        $this->config->method('getTestDefinitionTrackerId')->willReturn(3);
+        $this->config->method('getTestExecutionTrackerId')->willReturn(4);
+        $this->config->method('isConfigNeeded')->willReturn(false);
 
-        $this->execution_dao->shouldReceive('searchByExecutionTrackerId')->once()->andReturn([]);
+        $this->execution_dao
+            ->expects(self::once())
+            ->method('searchByExecutionTrackerId')
+            ->willReturn([]);
 
         $xml_content = $this->exporter->exportToXML($this->project);
 
@@ -100,15 +89,15 @@ class ExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItDoesNotExportTTMConfigurationInXMLIfATrackerIsNotSet()
     {
-        $this->config->shouldReceive([
-            'getIssueTrackerId'          => 1,
-            'getCampaignTrackerId'       => 2,
-            'getTestDefinitionTrackerId' => 3,
-            'getTestExecutionTrackerId'  => false,
-            'isConfigNeeded'             => true,
-        ]);
+        $this->config->method('getIssueTrackerId')->willReturn(1);
+        $this->config->method('getCampaignTrackerId')->willReturn(2);
+        $this->config->method('getTestDefinitionTrackerId')->willReturn(3);
+        $this->config->method('getTestExecutionTrackerId')->willReturn(false);
+        $this->config->method('isConfigNeeded')->willReturn(true);
 
-        $this->execution_dao->shouldReceive('searchByExecutionTrackerId')->never();
+        $this->execution_dao
+            ->expects(self::never())
+            ->method('searchByExecutionTrackerId');
 
         $xml_content = $this->exporter->exportToXML($this->project);
 
@@ -117,18 +106,16 @@ class ExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItExportExistingExecutionsMapping()
     {
-        $this->config->shouldReceive([
-            'getIssueTrackerId'          => 1,
-            'getCampaignTrackerId'       => 2,
-            'getTestDefinitionTrackerId' => 3,
-            'getTestExecutionTrackerId'  => 4,
-            'isConfigNeeded'             => false,
-        ]);
+        $this->config->method('getIssueTrackerId')->willReturn(1);
+        $this->config->method('getCampaignTrackerId')->willReturn(2);
+        $this->config->method('getTestDefinitionTrackerId')->willReturn(3);
+        $this->config->method('getTestExecutionTrackerId')->willReturn(4);
+        $this->config->method('isConfigNeeded')->willReturn(false);
 
         $this->execution_dao
-            ->shouldReceive('searchByExecutionTrackerId')
-            ->once()
-            ->andReturn([
+            ->expects(self::once())
+            ->method('searchByExecutionTrackerId')
+            ->willReturn([
                 ['execution_artifact_id' => 123, 'definition_changeset_id' => 10001],
                 ['execution_artifact_id' => 124, 'definition_changeset_id' => 10002],
             ]);

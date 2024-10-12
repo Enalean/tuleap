@@ -25,25 +25,15 @@ use Tracker_FormElementFactory;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\User\Avatar\ProvideUserAvatarUrl;
 use Tuleap\User\REST\UserRepresentation;
-use UserManager;
+use Tuleap\User\RetrieveUserById;
 
 class AssignedToRepresentationBuilder
 {
-    /**
-     * @var UserManager
-     */
-    private $user_manager;
-
-    /** @var Tracker_FormElementFactory */
-    private $tracker_form_element_factory;
-
     public function __construct(
-        Tracker_FormElementFactory $tracker_form_element_factory,
-        UserManager $user_manager,
+        private readonly Tracker_FormElementFactory $tracker_form_element_factory,
+        private readonly RetrieveUserById $user_manager,
         private readonly ProvideUserAvatarUrl $provide_user_avatar_url,
     ) {
-        $this->tracker_form_element_factory = $tracker_form_element_factory;
-        $this->user_manager                 = $user_manager;
     }
 
     /**

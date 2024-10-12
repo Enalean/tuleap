@@ -21,26 +21,17 @@
 namespace Tuleap\TestManagement;
 
 use Project;
-use TrackerFactory;
+use Tuleap\Tracker\Artifact\RetrieveTracker;
 
 class Config implements IRetrieveTestExecutionTrackerIdFromConfig
 {
-    /** @var Dao */
-    private $dao;
-
     /**
      * @var array
      */
     private $properties = [];
-    /**
-     * @var TrackerFactory
-     */
-    private $tracker_factory;
 
-    public function __construct(Dao $dao, TrackerFactory $tracker_factory)
+    public function __construct(private readonly Dao $dao, private readonly RetrieveTracker $tracker_factory)
     {
-        $this->dao             = $dao;
-        $this->tracker_factory = $tracker_factory;
     }
 
     public function setProjectConfiguration(

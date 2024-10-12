@@ -23,41 +23,21 @@ declare(strict_types=1);
 
 namespace Tuleap\TestManagement;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use TrackerFactory;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
+use Tuleap\Tracker\Test\Stub\RetrieveTrackerStub;
 
 final class ConfigTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var Config
-     */
-    private $config;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|TrackerFactory
-     */
-    private $tracker_factory;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Dao
-     */
-    private $dao;
-
-    protected function setUp(): void
-    {
-        $this->dao             = \Mockery::mock(Dao::class);
-        $this->tracker_factory = \Mockery::mock(TrackerFactory::class);
-        $this->config          = new Config($this->dao, $this->tracker_factory);
-    }
-
     public function testItReturnsFalseIfTrackerIdIsNotFoundInProperty(): void
     {
         $project = ProjectTestBuilder::aProject()->withId(101)->build();
 
-        $this->dao->shouldReceive('searchByProjectId')->withArgs([101])->andReturn(\TestHelper::arrayToDar([]));
-        $this->assertFalse($this->config->getCampaignTrackerId($project));
+        $dao = $this->createMock(Dao::class);
+        $dao->method('searchByProjectId')->with(101)->willReturn(\TestHelper::arrayToDar([]));
+
+        $config = new Config($dao, RetrieveTrackerStub::withoutTracker());
+        $this->assertFalse($config->getCampaignTrackerId($project));
     }
 
     public function testItReturnsFalseIfTrackerIsDeleted(): void
@@ -72,13 +52,13 @@ final class ConfigTest extends \Tuleap\Test\PHPUnit\TestCase
             'issue_tracker_id' => 13,
         ];
         $dar        = \TestHelper::arrayToDar($properties);
-        $this->dao->shouldReceive('searchByProjectId')->withArgs([101])->andReturn($dar);
+        $dao        = $this->createMock(Dao::class);
+        $dao->method('searchByProjectId')->with(101)->willReturn($dar);
 
-        $tracker = \Mockery::mock(\Tracker::class);
-        $tracker->shouldReceive('isActive')->once()->andReturnFalse();
-        $this->tracker_factory->shouldReceive('getTrackerById')->withArgs([10])->andReturn($tracker);
+        $tracker = TrackerTestBuilder::aTracker()->withDeletionDate(1234567890)->build();
 
-        $this->assertFalse($this->config->getCampaignTrackerId($project));
+        $config = new Config($dao, RetrieveTrackerStub::withTracker($tracker));
+        $this->assertFalse($config->getCampaignTrackerId($project));
     }
 
     public function testItReturnsTheTrackerId(): void
@@ -93,12 +73,13 @@ final class ConfigTest extends \Tuleap\Test\PHPUnit\TestCase
             'issue_tracker_id' => 13,
         ];
         $dar        = \TestHelper::arrayToDar($properties);
-        $this->dao->shouldReceive('searchByProjectId')->withArgs([101])->andReturn($dar);
+        $dao        = $this->createMock(Dao::class);
+        $dao->method('searchByProjectId')->with(101)->willReturn($dar);
 
         $tracker = TrackerTestBuilder::aTracker()->withId(10)->build();
-        $this->tracker_factory->shouldReceive('getTrackerById')->withArgs([10])->andReturn($tracker);
 
-        $this->assertEquals(10, $this->config->getCampaignTrackerId($project));
+        $config = new Config($dao, RetrieveTrackerStub::withTracker($tracker));
+        $this->assertEquals(10, $config->getCampaignTrackerId($project));
     }
 
     public function testItDoesNotReturnTheTrackerIdIfTrackerIsDeleted(): void
@@ -113,11 +94,12 @@ final class ConfigTest extends \Tuleap\Test\PHPUnit\TestCase
             'issue_tracker_id' => 13,
         ];
         $dar        = \TestHelper::arrayToDar($properties);
-        $this->dao->shouldReceive('searchByProjectId')->withArgs([101])->andReturn($dar);
+        $dao        = $this->createMock(Dao::class);
+        $dao->method('searchByProjectId')->with(101)->willReturn($dar);
 
         $tracker = TrackerTestBuilder::aTracker()->withId(10)->withDeletionDate(1234567890)->build();
-        $this->tracker_factory->shouldReceive('getTrackerById')->withArgs([10])->andReturn($tracker);
 
-        $this->assertFalse($this->config->getCampaignTrackerId($project));
+        $config = new Config($dao, RetrieveTrackerStub::withTracker($tracker));
+        $this->assertFalse($config->getCampaignTrackerId($project));
     }
 }

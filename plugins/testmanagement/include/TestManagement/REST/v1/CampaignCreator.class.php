@@ -22,14 +22,14 @@ namespace Tuleap\TestManagement\REST\v1;
 
 use Luracast\Restler\RestException;
 use PFUser;
-use ProjectManager;
 use Tracker_Artifact_Attachment_AlreadyLinkedToAnotherArtifactException;
 use Tracker_Artifact_Attachment_FileNotFoundException;
 use Tracker_FormElement_InvalidFieldException;
 use Tracker_FormElement_InvalidFieldValueException;
 use Tracker_FormElementFactory;
-use TrackerFactory;
+use Tuleap\Project\ProjectByIDFactory;
 use Tuleap\TestManagement\Config;
+use Tuleap\Tracker\Artifact\RetrieveTracker;
 use Tuleap\Tracker\REST\Artifact\ArtifactCreator;
 use Tuleap\Tracker\REST\Artifact\ArtifactReference;
 use Tuleap\Tracker\REST\TrackerReference;
@@ -39,9 +39,9 @@ class CampaignCreator
 {
     public function __construct(
         private Config $config,
-        private ProjectManager $project_manager,
+        private ProjectByIDFactory $project_manager,
         private Tracker_FormElementFactory $formelement_factory,
-        private TrackerFactory $tracker_factory,
+        private RetrieveTracker $tracker_factory,
         private DefinitionSelector $definition_selector,
         private ArtifactCreator $artifact_creator,
         private ExecutionCreator $execution_creator,
@@ -94,7 +94,7 @@ class CampaignCreator
         int $report_id,
     ): array {
         $execution_ids = [];
-        $project       = $this->project_manager->getProject($project_id);
+        $project       = $this->project_manager->getProjectById($project_id);
         $definitions   = $this->definition_selector->selectDefinitions(
             $user,
             $project,
@@ -117,7 +117,7 @@ class CampaignCreator
 
     private function getCampaignTrackerReferenceForProject(int $project_id): TrackerReference
     {
-        $project = $this->project_manager->getProject($project_id);
+        $project = $this->project_manager->getProjectById($project_id);
         if ($project->isError()) {
             throw new RestException(404, 'Project not found');
         }

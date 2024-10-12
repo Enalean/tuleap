@@ -20,84 +20,54 @@
 
 namespace Tuleap\TestManagement;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\MockObject\MockObject;
 use Project;
 use Tracker;
 use TrackerFactory;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\TestManagement\Administration\TrackerChecker;
 use Tuleap\TestManagement\Administration\TrackerHasAtLeastOneFrozenFieldsPostActionException;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
-class FirstConfigCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
+final class FirstConfigCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
+    private Config&MockObject $config;
 
-    /** @var Config */
-    private $config;
+    private Project $template;
 
-    /** @var Project */
-    private $template;
+    private Project $project;
 
-    /** @var Project */
-    private $project;
+    private TrackerFactory&MockObject $tracker_factory;
 
-    /** @var TrackerFactory */
-    private $tracker_factory;
+    private TrackerChecker&MockObject $tracker_checker;
 
-    /** @var TrackerChecker */
-    private $tracker_checker;
+    private TestmanagementTrackersCreator&MockObject $testmanagement_trackers_creator;
+    private TestmanagementTrackersConfigurator&MockObject $testmanagement_trackers_configurator;
+    private Tracker $new_campaign_tracker;
+    private Tracker $new_definition_tracker;
+    private Tracker $new_execution_tracker;
+    private Tracker $new_issue_tracker;
+    private FirstConfigCreator $config_creator;
 
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|TestmanagementTrackersCreator
-     */
-    private $testmanagement_trackers_creator;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|TestmanagementTrackersConfigurator
-     */
-    private $testmanagement_trackers_configurator;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Tracker
-     */
-    private $new_campaign_tracker;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Tracker
-     */
-    private $new_definition_tracker;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Tracker
-     */
-    private $new_execution_tracker;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Tracker
-     */
-    private $new_issue_tracker;
-    /**
-     * @var FirstConfigCreator
-     */
-    private $config_creator;
+    private int $template_id           = 101;
+    private int $campaign_tracker_id   = 333;
+    private int $definition_tracker_id = 444;
+    private int $execution_tracker_id  = 555;
+    private int $issue_tracker_id      = 666;
 
-    private $template_id           = 101;
-    private $campaign_tracker_id   = 333;
-    private $definition_tracker_id = 444;
-    private $execution_tracker_id  = 555;
-    private $issue_tracker_id      = 666;
-
-    private $project_id                = 102;
-    private $new_campaign_tracker_id   = 334;
-    private $new_definition_tracker_id = 445;
-    private $new_execution_tracker_id  = 556;
-    private $new_issue_tracker_id      = 667;
-    private $tracker_mapping;
+    private int $project_id                = 102;
+    private int $new_campaign_tracker_id   = 334;
+    private int $new_definition_tracker_id = 445;
+    private int $new_execution_tracker_id  = 556;
+    private int $new_issue_tracker_id      = 667;
+    private array $tracker_mapping;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->template = Mockery::spy(\Project::class);
-        $this->template->shouldReceive('getID')->andReturn($this->template_id);
-
-        $this->project = Mockery::spy(\Project::class);
-        $this->project->shouldReceive('getID')->andReturn($this->project_id);
+        $this->template = ProjectTestBuilder::aProject()->withId($this->template_id)->build();
+        $this->project  = ProjectTestBuilder::aProject()->withId($this->project_id)->build();
 
         $this->tracker_mapping = [
             $this->campaign_tracker_id   => $this->new_campaign_tracker_id,
@@ -106,24 +76,17 @@ class FirstConfigCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->issue_tracker_id      => $this->new_issue_tracker_id,
         ];
 
-        $this->config          = Mockery::spy(Config::class);
-        $this->tracker_factory = Mockery::spy(TrackerFactory::class);
+        $this->config          = $this->createMock(Config::class);
+        $this->tracker_factory = $this->createMock(TrackerFactory::class);
 
-        $this->new_campaign_tracker = Mockery::spy(Tracker::class);
-        $this->new_campaign_tracker->shouldReceive('getId')->andReturn($this->new_campaign_tracker_id);
+        $this->new_campaign_tracker   = TrackerTestBuilder::aTracker()->withId($this->new_campaign_tracker_id)->build();
+        $this->new_definition_tracker = TrackerTestBuilder::aTracker()->withId($this->new_definition_tracker_id)->build();
+        $this->new_execution_tracker  = TrackerTestBuilder::aTracker()->withId($this->new_execution_tracker_id)->build();
+        $this->new_issue_tracker      = TrackerTestBuilder::aTracker()->withId($this->new_issue_tracker_id)->build();
 
-        $this->new_definition_tracker = Mockery::spy(Tracker::class);
-        $this->new_definition_tracker->shouldReceive('getId')->andReturn($this->new_definition_tracker_id);
-
-        $this->new_execution_tracker = Mockery::spy(Tracker::class);
-        $this->new_execution_tracker->shouldReceive('getId')->andReturn($this->new_execution_tracker_id);
-
-        $this->new_issue_tracker = Mockery::spy(Tracker::class);
-        $this->new_issue_tracker->shouldReceive('getId')->andReturn($this->new_issue_tracker_id);
-
-        $this->tracker_checker                      = Mockery::mock(TrackerChecker::class);
-        $this->testmanagement_trackers_creator      = Mockery::mock(TestmanagementTrackersCreator::class);
-        $this->testmanagement_trackers_configurator = Mockery::mock(TestmanagementTrackersConfigurator::class);
+        $this->tracker_checker                      = $this->createMock(TrackerChecker::class);
+        $this->testmanagement_trackers_creator      = $this->createMock(TestmanagementTrackersCreator::class);
+        $this->testmanagement_trackers_configurator = $this->createMock(TestmanagementTrackersConfigurator::class);
 
         $this->config_creator = new FirstConfigCreator(
             $this->config,
@@ -136,31 +99,33 @@ class FirstConfigCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItSetsTheProjectTTMTrackerIdsInConfig()
     {
-        $this->config->shouldReceive('isConfigNeeded')
+        $this->config->method('isConfigNeeded')
             ->with($this->project)
-            ->andReturn(true);
+            ->willReturn(true);
 
         $trackers_from_template = $this->getTrackers();
 
-        $this->config->shouldReceive('getTrackersFromTemplate')->andReturn(
+        $this->config->method('getTrackersFromTemplate')->willReturn(
             $trackers_from_template
         );
-        $this->testmanagement_trackers_configurator->shouldReceive('configureTestmanagementTracker')->times(4);
+        $this->testmanagement_trackers_configurator->expects(self::exactly(4))->method('configureTestmanagementTracker');
 
-        $this->testmanagement_trackers_configurator->shouldReceive('getTrackersConfiguration')->once()->andReturn(
+        $this->testmanagement_trackers_configurator->expects(self::once())->method('getTrackersConfiguration')->willReturn(
             $this->getNewTrackersConfiguration()
         );
 
-        $this->tracker_checker->shouldReceive('checkTrackers')->once();
+        $this->tracker_checker->expects(self::once())->method('checkTrackers');
 
-        $this->config->shouldReceive('setProjectConfiguration')
+        $this->config
+            ->expects(self::once())
+            ->method('setProjectConfiguration')
             ->with(
                 $this->project,
                 $this->new_campaign_tracker_id,
                 $this->new_definition_tracker_id,
                 $this->new_execution_tracker_id,
                 $this->new_issue_tracker_id
-            )->once();
+            );
 
         $this->config_creator->createConfigForProjectFromTemplate(
             $this->project,
@@ -171,18 +136,13 @@ class FirstConfigCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItDoesNotOverwriteAnExistingConfig()
     {
-        $this->config->shouldReceive('isConfigNeeded')
+        $this->config->method('isConfigNeeded')
             ->with($this->project)
-            ->andReturn(false);
+            ->willReturn(false);
 
-        $this->config->shouldReceive('setProjectConfiguration')
-            ->with(
-                $this->project,
-                $this->new_campaign_tracker_id,
-                $this->new_definition_tracker_id,
-                $this->new_execution_tracker_id,
-                $this->new_issue_tracker_id
-            )->never();
+        $this->config
+            ->expects(self::never())
+            ->method('setProjectConfiguration');
 
         $this->config_creator->createConfigForProjectFromTemplate(
             $this->project,
@@ -193,37 +153,44 @@ class FirstConfigCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItFallsBackToXMLImportIfTrackerMappingIsMissing()
     {
-        $this->config->shouldReceive('isConfigNeeded')
+        $this->tracker_factory->method('isShortNameExists')
+            ->with('campaign', $this->project->getID())
+            ->willReturn(false);
+
+        $this->config->method('isConfigNeeded')
             ->with($this->project)
-            ->andReturn(true);
+            ->willReturn(true);
 
         $trackers_from_template = $this->getTrackersWithoutCampaignTracker();
-        $this->config->shouldReceive('getTrackersFromTemplate')->andReturn(
+        $this->config->method('getTrackersFromTemplate')->willReturn(
             $trackers_from_template
         );
 
-        $this->testmanagement_trackers_creator->shouldReceive('createTrackerFromXML')
-            ->once()
-            ->andReturn($this->new_campaign_tracker);
+        $this->testmanagement_trackers_creator
+            ->expects(self::once())
+            ->method('createTrackerFromXML')
+            ->willReturn($this->new_campaign_tracker);
 
-        $this->testmanagement_trackers_configurator->shouldReceive('configureTestmanagementTracker')->withArgs(
-            ['campaign', 334]
-        )->once();
-        $this->testmanagement_trackers_configurator->shouldReceive('configureTestmanagementTracker')->withArgs(
-            ['test_def', 445]
-        )->once();
-        $this->testmanagement_trackers_configurator->shouldReceive('configureTestmanagementTracker')->withArgs(
-            ['test_exec', 556]
-        )->once();
-        $this->testmanagement_trackers_configurator->shouldReceive('configureTestmanagementTracker')->withArgs(
-            ['bug', 667]
-        )->once();
+        $this->testmanagement_trackers_configurator
+            ->expects(self::exactly(4))
+            ->method('configureTestmanagementTracker')
+            ->withConsecutive(
+                ['campaign', 334],
+                ['test_def', 445],
+                ['test_exec', 556],
+                ['bug', 667]
+            );
 
-        $this->tracker_checker->shouldReceive('checkTrackers')->once();
+        $this->tracker_checker->expects(self::once())->method('checkTrackers');
 
-        $this->testmanagement_trackers_configurator->shouldReceive('getTrackersConfiguration')->once()->andReturn(
-            $this->getNewTrackersConfiguration()
-        );
+        $this->testmanagement_trackers_configurator
+            ->expects(self::once())
+            ->method('getTrackersConfiguration')
+            ->willReturn(
+                $this->getNewTrackersConfiguration()
+            );
+
+        $this->config->method('setProjectConfiguration');
 
         $this->config_creator->createConfigForProjectFromTemplate(
             $this->project,
@@ -234,111 +201,104 @@ class FirstConfigCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItCreatesTTMTrackersFromXMLTemplates()
     {
-        $this->config->shouldReceive('isConfigNeeded')
+        $this->tracker_factory->method('isShortNameExists')
+            ->willReturn(false);
+
+        $this->config->method('isConfigNeeded')
             ->with($this->project)
-            ->andReturn(true);
+            ->willReturn(true);
 
-        $this->testmanagement_trackers_creator->shouldReceive('createTrackerFromXML')
-            ->with($this->project, 'campaign')
-            ->once()
-            ->andReturn($this->new_campaign_tracker);
+        $this->testmanagement_trackers_creator
+            ->method('createTrackerFromXML')
+            ->willReturnCallback(fn (Project $project, string $tracker_itemname) => match ($tracker_itemname) {
+                'campaign'  => $this->new_campaign_tracker,
+                'test_def'  => $this->new_definition_tracker,
+                'test_exec' => $this->new_execution_tracker,
+                'bug'       => $this->new_issue_tracker,
+            });
 
-        $this->testmanagement_trackers_creator->shouldReceive('createTrackerFromXML')
-            ->with($this->project, 'test_def')
-            ->once()
-            ->andReturn($this->new_definition_tracker);
+        $this->testmanagement_trackers_configurator
+            ->expects(self::exactly(4))
+            ->method('configureTestmanagementTracker');
 
-        $this->testmanagement_trackers_creator->shouldReceive('createTrackerFromXML')
-            ->with($this->project, 'test_exec')
-            ->once()
-            ->andReturn($this->new_execution_tracker);
+        $this->testmanagement_trackers_configurator
+            ->expects(self::once())
+            ->method('getTrackersConfiguration')
+            ->willReturn(
+                $this->getNewTrackersConfiguration()
+            );
 
-        $this->testmanagement_trackers_creator->shouldReceive('createTrackerFromXML')
-            ->with($this->project, 'bug')
-            ->once()
-            ->andReturn($this->new_issue_tracker);
+        $this->tracker_checker->expects(self::once())->method('checkTrackers');
 
-        $this->testmanagement_trackers_configurator->shouldReceive('configureTestmanagementTracker')->times(4);
-
-        $this->testmanagement_trackers_configurator->shouldReceive('getTrackersConfiguration')->once()->andReturn(
-            $this->getNewTrackersConfiguration()
-        );
-
-        $this->tracker_checker->shouldReceive('checkTrackers')->once();
-
-        $this->config->shouldReceive('setProjectConfiguration')
+        $this->config
+            ->expects(self::once())
+            ->method('setProjectConfiguration')
             ->with(
                 $this->project,
                 $this->new_campaign_tracker_id,
                 $this->new_definition_tracker_id,
                 $this->new_execution_tracker_id,
                 $this->new_issue_tracker_id
-            )->once();
+            );
 
         $this->config_creator->createConfigForProjectFromXML($this->project);
     }
 
     public function testItDoesNotCreateExistingTrackers()
     {
-        $this->tracker_factory->shouldReceive('isShortNameExists')
-            ->with('campaign', $this->project->getID())
-            ->andReturn(true);
+        $this->tracker_factory->method('isShortNameExists')
+            ->willReturnCallback(fn(string $shortname, $group_id) => $shortname === 'campaign');
 
-        $this->tracker_factory->shouldReceive('getTrackerByShortnameAndProjectId')
+        $this->tracker_factory->method('getTrackerByShortnameAndProjectId')
             ->with('campaign', $this->project->getID())
-            ->andReturn($this->new_campaign_tracker);
+            ->willReturn($this->new_campaign_tracker);
 
-        $this->config->shouldReceive('isConfigNeeded')
+        $this->config->method('isConfigNeeded')
             ->with($this->project)
-            ->andReturn(true);
+            ->willReturn(true);
 
-        $this->testmanagement_trackers_creator->shouldReceive('createTrackerFromXML')
-            ->with($this->project, 'campaign')
-            ->never();
+        $this->testmanagement_trackers_creator
+            ->method('createTrackerFromXML')
+            ->willReturnCallback(fn (Project $project, string $tracker_itemname) => match ($tracker_itemname) {
+                'test_def'  => $this->new_definition_tracker,
+                'test_exec' => $this->new_execution_tracker,
+                'bug'       => $this->new_issue_tracker,
+            });
 
-        $this->testmanagement_trackers_creator->shouldReceive('createTrackerFromXML')
-            ->with($this->project, 'test_def')
-            ->once()
-            ->andReturn($this->new_definition_tracker);
+        $this->testmanagement_trackers_configurator
+            ->expects(self::exactly(4))
+            ->method('configureTestmanagementTracker');
 
-        $this->testmanagement_trackers_creator->shouldReceive('createTrackerFromXML')
-            ->with($this->project, 'test_exec')
-            ->once()
-            ->andReturn($this->new_execution_tracker);
+        $this->testmanagement_trackers_configurator
+            ->expects(self::once())
+            ->method('getTrackersConfiguration')
+            ->willReturn(
+                $this->getNewTrackersConfiguration()
+            );
 
-        $this->testmanagement_trackers_creator->shouldReceive('createTrackerFromXML')
-            ->with($this->project, 'bug')
-            ->once()
-            ->andReturn($this->new_issue_tracker);
+        $this->tracker_checker->expects(self::once())->method('checkTrackers');
 
-        $this->testmanagement_trackers_configurator->shouldReceive('configureTestmanagementTracker')->times(4);
-
-        $this->testmanagement_trackers_configurator->shouldReceive('getTrackersConfiguration')->once()->andReturn(
-            $this->getNewTrackersConfiguration()
-        );
-
-        $this->tracker_checker->shouldReceive('checkTrackers')->once();
+        $this->config->method('setProjectConfiguration');
 
         $this->config_creator->createConfigForProjectFromXML($this->project);
     }
 
     public function testItThrowsAnExceptionIfTrackerExistsInLegacyEngineInTemplateContext()
     {
-        $this->config->shouldReceive('getTrackersFromTemplate')->andReturn(
+        $this->config->method('getTrackersFromTemplate')->willReturn(
             $this->getTrackersWithoutCampaignTracker()
         );
 
-        $this->tracker_factory->shouldReceive('isShortNameExists')
-            ->with('campaign', $this->project->getID())
-            ->andReturn(true);
+        $this->tracker_factory->method('isShortNameExists')
+            ->willReturnCallback(fn(string $shortname, $group_id) => $shortname === 'campaign');
 
-        $this->tracker_factory->shouldReceive('getTrackerByShortnameAndProjectId')
+        $this->tracker_factory->method('getTrackerByShortnameAndProjectId')
             ->with('campaign', $this->project->getID())
-            ->andReturn(null);
+            ->willReturn(null);
 
-        $this->config->shouldReceive('isConfigNeeded')
+        $this->config->method('isConfigNeeded')
             ->with($this->project)
-            ->andReturn(true);
+            ->willReturn(true);
 
         $this->expectException(TrackerComesFromLegacyEngineException::class);
 
@@ -351,19 +311,18 @@ class FirstConfigCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItThrowsAnExceptionIfTrackerExistsInLegacyEngineInXMLContext()
     {
-        $this->tracker_factory->shouldReceive('isShortNameExists')
-            ->with('campaign', $this->project->getID())
-            ->andReturn(true);
+        $this->tracker_factory->method('isShortNameExists')
+            ->willReturnCallback(fn(string $shortname, $group_id) => $shortname === 'campaign');
 
-        $this->tracker_factory->shouldReceive('getTrackerByShortnameAndProjectId')
+        $this->tracker_factory->method('getTrackerByShortnameAndProjectId')
             ->with('campaign', $this->project->getID())
-            ->andReturn(null);
+            ->willReturn(null);
 
-        $this->config->shouldReceive('isConfigNeeded')
+        $this->config->method('isConfigNeeded')
             ->with($this->project)
-            ->andReturn(true);
+            ->willReturn(true);
 
-        $this->testmanagement_trackers_creator->shouldReceive('createTrackerFromXML')->never();
+        $this->testmanagement_trackers_creator->expects(self::never())->method('createTrackerFromXML');
 
         $this->expectException(TrackerComesFromLegacyEngineException::class);
 
@@ -372,14 +331,17 @@ class FirstConfigCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItThrowsAnExceptionIfTrackerIsNotCreatedInXMLContext()
     {
-        $this->config->shouldReceive('isConfigNeeded')
-            ->with($this->project)
-            ->andReturn(true);
+        $this->tracker_factory->method('isShortNameExists')
+            ->willReturn(false);
 
-        $this->testmanagement_trackers_creator->shouldReceive('createTrackerFromXML')
+        $this->config->method('isConfigNeeded')
+            ->with($this->project)
+            ->willReturn(true);
+
+        $this->testmanagement_trackers_creator
+            ->method('createTrackerFromXML')
             ->with($this->project, 'campaign')
-            ->once()
-            ->andThrow(TrackerNotCreatedException::class);
+            ->willThrowException(new TrackerNotCreatedException());
 
         $this->expectException(TrackerNotCreatedException::class);
 
@@ -388,27 +350,34 @@ class FirstConfigCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItDoesNotSaveTheConfigurationIfATrackerIsNotUsableInTemplateContext()
     {
-        $this->config->shouldReceive('getTrackersFromTemplate')->andReturn(
+        $this->config->method('getTrackersFromTemplate')->willReturn(
             $this->getTrackers()
         );
 
-        $this->config->shouldReceive('isConfigNeeded')
+        $this->config->method('isConfigNeeded')
             ->with($this->project)
-            ->andReturn(true);
+            ->willReturn(true);
 
-        $this->testmanagement_trackers_configurator->shouldReceive('configureTestmanagementTracker')->times(4);
+        $this->testmanagement_trackers_configurator
+            ->expects(self::exactly(4))
+            ->method('configureTestmanagementTracker');
 
-        $this->testmanagement_trackers_configurator->shouldReceive('getTrackersConfiguration')->once()->andReturn(
-            $this->getNewTrackersConfiguration()
-        );
+        $this->testmanagement_trackers_configurator
+            ->expects(self::once())
+            ->method('getTrackersConfiguration')
+            ->willReturn(
+                $this->getNewTrackersConfiguration()
+            );
 
-        $this->tracker_checker->shouldReceive('checkTrackers')->once()->andThrow(
-            TrackerHasAtLeastOneFrozenFieldsPostActionException::class
+        $this->tracker_checker->method('checkTrackers')->willThrowException(
+            new TrackerHasAtLeastOneFrozenFieldsPostActionException()
         );
 
         $this->expectException(TrackerHasAtLeastOneFrozenFieldsPostActionException::class);
 
-        $this->config->shouldReceive('setProjectConfiguration')->never();
+        $this->config
+            ->expects(self::never())
+            ->method('setProjectConfiguration');
 
         $this->config_creator->createConfigForProjectFromTemplate(
             $this->project,
