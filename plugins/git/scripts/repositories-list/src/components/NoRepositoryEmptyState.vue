@@ -20,7 +20,7 @@
 <template>
     <section class="empty-state-page" v-if="show_empty_state()">
         <div class="empty-state-text">
-            <h1 class="empty-state-title">
+            <h1 class="empty-state-title" data-test="no-repositories">
                 {{ $gettext("There are no repositories in this project") }}
             </h1>
             <div v-if="is_admin()" class="empty-state-action">

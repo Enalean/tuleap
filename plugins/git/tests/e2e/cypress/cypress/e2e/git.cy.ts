@@ -54,6 +54,27 @@ describe("Git", function () {
                     timeout: 20000,
                 });
             });
+
+            it("can delete repository", function () {
+                cy.projectAdministratorSession();
+                cy.intercept("git?query=*").as("loadRepositories");
+                cy.visit(`/plugins/git/delete-git/`);
+                cy.wait("@loadRepositories");
+
+                cy.get("[data-test=git-repository-spinner]").should("not.exist");
+
+                cy.get("[data-test=git-repository-list]").then(($repository_list) => {
+                    if ($repository_list.find("[data-test=git-repository]").length > 0) {
+                        cy.log("Do not rerun test when repository is already deleted");
+                        cy.get("[data-test=git-repository-card-admin-link]").click();
+                        cy.get("[data-test=delete]").click();
+                        cy.get("[data-test=confirm-repository-deletion-button]").click();
+                        cy.get("[data-test=deletion-confirmation-button]").click();
+                    }
+                });
+
+                cy.get("[data-test=no-repositories]").should("be.visible");
+            });
         });
         context("Manage repository", function () {
             it(`create and see repository in tree view`, function () {

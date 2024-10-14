@@ -17,7 +17,11 @@
   - along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
   -->
 <template>
-    <div class="git-repository-list-loading" v-if="show_spinner()"></div>
+    <div
+        class="git-repository-list-loading"
+        data-test="git-repository-spinner"
+        v-if="show_spinner()"
+    ></div>
 </template>
 <script setup lang="ts">
 import { useGetters } from "vuex-composition-helpers";

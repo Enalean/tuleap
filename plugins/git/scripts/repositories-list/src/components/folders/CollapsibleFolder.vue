@@ -23,6 +23,7 @@
             'git-repository-list-folder': !props.is_root_folder,
             'git-repository-list-base-folder': props.is_base_folder,
         }"
+        data-test="git-repository-list"
     >
         <div
             data-test="git-repository-list-folder-collapse"
