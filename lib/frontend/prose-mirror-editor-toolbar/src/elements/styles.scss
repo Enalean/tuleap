@@ -27,6 +27,37 @@
     gap: var(--tlp-small-spacing);
 }
 
+$magic-value-taken-from-mockups-to-have-a-separator-smaller-than-form-element-height: 7px;
+$margin-of-separator: calc(
+    $magic-value-taken-from-mockups-to-have-a-separator-smaller-than-form-element-height / 2
+);
+$height-of-separator: calc(
+    var(--tlp-form-element-small-height) -
+        $magic-value-taken-from-mockups-to-have-a-separator-smaller-than-form-element-height
+);
+
+.prose-mirror-button-group {
+    display: flex;
+    gap: var(--tlp-small-spacing);
+    position: relative;
+    padding: 0 var(--tlp-small-spacing) 0 0;
+
+    &::after {
+        content: "";
+        display: block;
+        position: absolute;
+        top: $margin-of-separator;
+        right: 0;
+        width: 1px;
+        height: $height-of-separator;
+        background: var(--tlp-neutral-dark-color);
+    }
+
+    &:last-child::after {
+        display: none;
+    }
+}
+
 .prose-mirror-button {
     width: var(--tlp-form-element-small-height);
     height: var(--tlp-form-element-small-height);
@@ -44,12 +75,4 @@
     &.tlp-button-secondary:disabled {
         color: var(--tlp-dimmed-color);
     }
-}
-
-.prose-mirror-hr {
-    width: 0;
-    height: calc(var(--tlp-form-element-small-height) - 7px);
-    margin: 0;
-    border: 0;
-    border-left: 1px solid var(--tlp-neutral-dark-color);
 }

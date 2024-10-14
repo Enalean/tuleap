@@ -98,6 +98,17 @@ export const renderToolbar = (
         ? html`<quote-item toolbar_bus="${host.controller.getToolbarBus()}"></quote-item>`
         : html``;
 
+    const has_at_least_one_basic_text_element =
+        host.text_elements?.bold ||
+        host.text_elements?.italic ||
+        host.text_elements?.code ||
+        host.text_elements?.quote;
+    const basic_text_items = has_at_least_one_basic_text_element
+        ? html`<span class="prose-mirror-button-group">
+              ${bold_item} ${italic_item} ${quote_item} ${code_item}
+          </span>`
+        : html``;
+
     const ordered = host.list_elements?.ordered_list;
     const ordered_item = ordered
         ? html`<ordered-list-item
@@ -112,6 +123,11 @@ export const renderToolbar = (
           ></bullet-list-item>`
         : html``;
 
+    const list_items =
+        host.list_elements?.ordered_list || host.list_elements?.bullet_list
+            ? html`<span class="prose-mirror-button-group">${bullet_item} ${ordered_item}</span>`
+            : html``;
+
     const subscript = host.script_elements?.subscript;
     const subscript_item = subscript
         ? html`<subscript-item toolbar_bus="${host.controller.getToolbarBus()}"></subscript-item>`
@@ -122,6 +138,14 @@ export const renderToolbar = (
         ? html`<superscript-item
               toolbar_bus="${host.controller.getToolbarBus()}"
           ></superscript-item>`
+        : html``;
+
+    const has_supersubscript_elements =
+        host.script_elements?.subscript || host.script_elements?.superscript;
+    const supersubscript_items = has_supersubscript_elements
+        ? html`<span class="prose-mirror-button-group">
+              ${subscript_item} ${superscript_item}
+          </span>`
         : html``;
 
     const link_item = host.link_elements?.link
@@ -136,21 +160,24 @@ export const renderToolbar = (
         ? html`<image-item toolbar_bus="${host.controller.getToolbarBus()}"></image-item>`
         : html``;
 
+    const has_at_least_one_link_element =
+        host.link_elements?.link || host.link_elements?.unlink || host.link_elements?.image;
+    const link_items = has_at_least_one_link_element
+        ? html`<span class="prose-mirror-button-group">
+              ${link_item} ${unlink_item} ${image_item}
+          </span>`
+        : html``;
+
     const text_style_item = host.style_elements?.headings
-        ? html`<text-style-item toolbar_bus="${host.controller.getToolbarBus()}"></text-style-item>`
+        ? html`<span class="prose-mirror-button-group">
+              <text-style-item toolbar_bus="${host.controller.getToolbarBus()}"></text-style-item>
+          </span>`
         : html``;
 
     return html`
         <div class="prose-mirror-toolbar-container" data-test="toolbar-container">
-            ${bold_item} ${italic_item} ${quote_item} ${code_item}
-            <hr class="prose-mirror-hr" />
-            ${text_style_item}
-            <hr class="prose-mirror-hr" />
-            ${bullet_item} ${ordered_item}
-            <hr class="prose-mirror-hr" />
-            ${link_item} ${unlink_item} ${image_item}
-            <hr class="prose-mirror-hr" />
-            ${subscript_item} ${superscript_item}
+            ${basic_text_items} ${text_style_item} ${list_items} ${link_items}
+            ${supersubscript_items}
         </div>
     `.style(scss_styles);
 };
