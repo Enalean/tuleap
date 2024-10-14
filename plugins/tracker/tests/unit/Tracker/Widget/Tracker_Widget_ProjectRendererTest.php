@@ -22,12 +22,18 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Widget;
 
-use Tracker_Report_Renderer;
+use Tuleap\Test\Builders\HTTPRequestBuilder;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\Test\Builders\ReportTestBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 // phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 final class Tracker_Widget_ProjectRendererTest extends TestCase
 {
+    private const CURRENT_PROJECT_ID = 1001;
+    private const ANOTHER_PROJECT_ID = 1002;
+
     private \Tracker_Widget_ProjectRenderer $widget;
     /**
      * @var \PHPUnit\Framework\MockObject\Stub&\Tracker_Report_RendererFactory
@@ -36,13 +42,26 @@ final class Tracker_Widget_ProjectRendererTest extends TestCase
 
     protected function setUp(): void
     {
+        \HTTPRequest::setInstance(
+            HTTPRequestBuilder::get()->withParam('group_id', self::CURRENT_PROJECT_ID)->build()
+        );
+
         $this->renderer_factory = $this->createStub(\Tracker_Report_RendererFactory::class);
         $this->widget           = new \Tracker_Widget_ProjectRenderer($this->renderer_factory);
     }
 
+    protected function tearDown(): void
+    {
+        \HTTPRequest::clearInstance();
+    }
+
     public function testExportsWidgetWhenRendererExist(): void
     {
-        $this->renderer_factory->method('getReportRendererById')->willReturn($this->createStub(Tracker_Report_Renderer::class));
+        $project  = ProjectTestBuilder::aProject()->withId(self::CURRENT_PROJECT_ID)->build();
+        $tracker  = TrackerTestBuilder::aTracker()->withProject($project)->build();
+        $report   = ReportTestBuilder::aPublicReport()->inTracker($tracker)->build();
+        $renderer = new \Tracker_Report_Renderer_Table(123, $report, 'Table', '', 0, 15, false);
+        $this->renderer_factory->method('getReportRendererById')->willReturn($renderer);
         $this->widget->renderer_id = 200;
         $xml                       = $this->widget->exportAsXML();
 
@@ -58,10 +77,46 @@ final class Tracker_Widget_ProjectRendererTest extends TestCase
         );
     }
 
-    public function testDoesNotExportWidgetWhenRendererDoesNotExist(): void
+    /**
+     * @dataProvider getRenderer
+     */
+    public function testDoesNotExportWidgetWhenRendererDoesNotExist(?\Tracker_Report_Renderer $renderer): void
     {
-        $this->renderer_factory->method('getReportRendererById')->willReturn(null);
+        $this->renderer_factory->method('getReportRendererById')->willReturn($renderer);
 
         self::assertNull($this->widget->exportAsXML());
+    }
+
+    public function getRenderer(): iterable
+    {
+        yield 'renderer does not exist' => [null];
+
+        $project        = ProjectTestBuilder::aProject()->withId(self::CURRENT_PROJECT_ID)->build();
+        $tracker        = TrackerTestBuilder::aTracker()->withProject($project)->build();
+        $private_report = ReportTestBuilder::aPrivateReport()->inTracker($tracker)->build();
+        yield 'report is not public' => [$this->getTable($private_report)];
+
+        $project         = ProjectTestBuilder::aProject()->withId(self::CURRENT_PROJECT_ID)->build();
+        $deleted_tracker = TrackerTestBuilder::aTracker()->withDeletionDate(1234567890)->withProject($project)->build();
+        $report          = ReportTestBuilder::aPublicReport()->inTracker($deleted_tracker)->build();
+        yield 'tracker is deleted' => [$this->getTable($report)];
+
+        $another_project = ProjectTestBuilder::aProject()->withId(self::ANOTHER_PROJECT_ID)->build();
+        $tracker         = TrackerTestBuilder::aTracker()->withProject($another_project)->build();
+        $report          = ReportTestBuilder::aPublicReport()->inTracker($tracker)->build();
+        yield 'widget targets a renderer in another project' => [$this->getTable($report)];
+    }
+
+    private function getTable(\Tracker_Report $report): \Tracker_Report_Renderer
+    {
+        return new \Tracker_Report_Renderer_Table(
+            123,
+            $report,
+            'Table',
+            '',
+            0,
+            15,
+            false,
+        );
     }
 }

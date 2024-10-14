@@ -113,6 +113,22 @@ class Tracker_Widget_ProjectRenderer extends Tracker_Widget_Renderer
             return null;
         }
 
+        $report = $renderer->getReport();
+        if (! $report->isPublic()) {
+            return null;
+        }
+
+        $tracker = $report->getTracker();
+        if ($tracker->isDeleted()) {
+            return null;
+        }
+
+        $current_project_id = (int) $this->owner_id;
+        if ($current_project_id !== (int) $tracker->getProject()->getId()) {
+            return null;
+        }
+
+
         $widget = new \SimpleXMLElement('<widget />');
         $widget->addAttribute('name', $this->id);
 
