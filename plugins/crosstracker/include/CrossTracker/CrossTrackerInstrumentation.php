@@ -36,6 +36,9 @@ final readonly class CrossTrackerInstrumentation
     private const SELECT_COUNT_NAME = 'crosstracker_tql_select_count';
     private const SELECT_COUNT_HELP = 'Number of columns selected by CrossTracker TQL query';
 
+    private const ORDER_BY_COUNT_NAME = 'crosstracker_tql_order_by_used_total';
+    private const ORDER_BY_COUNT_HELP = 'Is order by used in CrossTracker TQL query';
+
     public function __construct(private Prometheus $prometheus)
     {
     }
@@ -74,6 +77,14 @@ final readonly class CrossTrackerInstrumentation
             self::SELECT_COUNT_NAME,
             self::SELECT_COUNT_HELP,
             $count,
+        );
+    }
+
+    public function updateOrderByUsage(): void
+    {
+        $this->prometheus->increment(
+            self::ORDER_BY_COUNT_NAME,
+            self::ORDER_BY_COUNT_HELP,
         );
     }
 }

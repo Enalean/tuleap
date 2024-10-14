@@ -204,6 +204,9 @@ final readonly class CrossTrackerArtifactReportFactory
         $this->instrumentation->updateTrackerCount(count($trackers));
 
         $query = $this->getQueryFromReport($report, $current_user, $trackers);
+        if ($query->getOrderBy() !== null) {
+            $this->instrumentation->updateOrderByUsage();
+        }
 
         $additional_from_where = $this->query_builder->buildFromWhere($query->getCondition(), $trackers, $current_user);
         $additional_from_order = $this->order_builder->buildFromOrder($query->getOrderBy(), $trackers, $current_user);
