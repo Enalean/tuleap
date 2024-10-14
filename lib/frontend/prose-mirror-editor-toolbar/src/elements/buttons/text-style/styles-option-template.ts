@@ -19,11 +19,12 @@
 
 import { html } from "hybrids";
 import type { UpdateFunction } from "hybrids";
-import { gettext_provider } from "../../../gettext-provider";
 import type { InternalHeadingsItem } from "./text-style";
+import type { GetText } from "@tuleap/gettext";
 
 export const renderStylesOption = (
     host: InternalHeadingsItem,
+    gettext_provider: GetText,
 ): UpdateFunction<InternalHeadingsItem> => {
     const is_selected =
         !host.is_plain_text_activated &&

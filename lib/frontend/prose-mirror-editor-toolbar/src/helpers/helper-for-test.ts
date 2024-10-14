@@ -18,6 +18,13 @@
  *
  */
 
+import type { GetText } from "@tuleap/gettext";
+
+// eslint-disable-next-line @typescript-eslint/consistent-type-assertions
+export const gettext_provider: GetText = {
+    gettext: (msgid: string) => msgid,
+} as GetText;
+
 export function createLocalDocument(): Document {
     return document.implementation.createHTMLDocument();
 }

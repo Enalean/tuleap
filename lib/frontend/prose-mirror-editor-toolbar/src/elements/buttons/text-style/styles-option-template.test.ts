@@ -18,7 +18,7 @@
  */
 
 import { describe, it, expect, beforeEach } from "vitest";
-import { createLocalDocument } from "../../../helpers/helper-for-test";
+import { createLocalDocument, gettext_provider } from "../../../helpers/helper-for-test";
 import type { HostElement } from "./text-style";
 import { renderStylesOption } from "./styles-option-template";
 
@@ -32,7 +32,7 @@ describe("styles-option-template", () => {
     });
 
     const getOption = (host: HostElement): HTMLOptionElement => {
-        renderStylesOption(host)(host, target);
+        renderStylesOption(host, gettext_provider)(host, target);
 
         const option = target.querySelector("option");
         if (!option) {
@@ -61,7 +61,7 @@ describe("styles-option-template", () => {
             current_heading: null,
         } as unknown as HostElement;
 
-        renderStylesOption(host)(host, target);
+        renderStylesOption(host, gettext_provider)(host, target);
 
         const option = getOption(host);
 
@@ -76,7 +76,7 @@ describe("styles-option-template", () => {
             current_heading: null,
         } as unknown as HostElement;
 
-        renderStylesOption(host)(host, target);
+        renderStylesOption(host, gettext_provider)(host, target);
 
         const option = getOption(host);
 

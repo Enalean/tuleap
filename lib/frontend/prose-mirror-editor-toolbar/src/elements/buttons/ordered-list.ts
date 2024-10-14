@@ -20,13 +20,14 @@
 
 import { define, html, type UpdateFunction } from "hybrids";
 import type { ToolbarBus, ListState } from "@tuleap/prose-mirror-editor";
-import { gettext_provider } from "../../gettext-provider";
 import { getClass } from "../../helpers/class-getter";
+import type { GetText } from "@tuleap/gettext";
 
 export const ORDERED_LIST_TAG_NAME = "ordered-list-item";
 
 export type OrderedListElement = {
     toolbar_bus: ToolbarBus;
+    gettext_provider: GetText;
 };
 
 type InternalOrderedListElement = Readonly<OrderedListElement> & {
@@ -41,6 +42,7 @@ const onClickApplyOrderedList = (host: OrderedListElement): void => {
 };
 export const renderOrderedListItem = (
     host: InternalOrderedListElement,
+    gettext_provider: GetText,
 ): UpdateFunction<InternalOrderedListElement> => {
     const classes = getClass(host.is_activated);
 
@@ -72,5 +74,6 @@ define<InternalOrderedListElement>({
         value: (host: OrderedListElement, toolbar_bus: ToolbarBus) => toolbar_bus,
         connect,
     },
-    render: renderOrderedListItem,
+    gettext_provider: (host, gettext_provider) => gettext_provider,
+    render: (host) => renderOrderedListItem(host, host.gettext_provider),
 });

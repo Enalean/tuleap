@@ -34,6 +34,12 @@ import "./buttons/image/image";
 import "./buttons/ordered-list";
 import "./buttons/bullet-list";
 import "./buttons/text-style/text-style";
+import type { GetText } from "@tuleap/gettext";
+import {
+    getLocaleWithDefault,
+    getPOFileFromLocaleWithoutExtension,
+    initGettext,
+} from "@tuleap/gettext";
 
 export type ProseMirrorToolbarElement = {
     controller: ControlToolbar;
@@ -81,23 +87,36 @@ const TOOLBAR_TAG_NAME = "tuleap-prose-mirror-toolbar";
 
 export const renderToolbar = (
     host: InternalProseMirrorToolbarElement,
+    gettext_provider: GetText,
 ): UpdateFunction<InternalProseMirrorToolbarElement> => {
     const bold_item = host.text_elements?.bold
-        ? html`<bold-item toolbar_bus="${host.controller.getToolbarBus()}"></bold-item>`
+        ? html`<bold-item
+              toolbar_bus="${host.controller.getToolbarBus()}"
+              gettext_provider="${gettext_provider}"
+          ></bold-item>`
         : html``;
 
     const italic_item = host.text_elements?.italic
-        ? html`<italic-item toolbar_bus="${host.controller.getToolbarBus()}"></italic-item>`
+        ? html`<italic-item
+              toolbar_bus="${host.controller.getToolbarBus()}"
+              gettext_provider="${gettext_provider}"
+          ></italic-item>`
         : html``;
 
     const code = host.text_elements?.code;
     const code_item = code
-        ? html`<code-item toolbar_bus="${host.controller.getToolbarBus()}"></code-item>`
+        ? html`<code-item
+              toolbar_bus="${host.controller.getToolbarBus()}"
+              gettext_provider="${gettext_provider}"
+          ></code-item>`
         : html``;
 
     const quote = host.text_elements?.quote;
     const quote_item = quote
-        ? html`<quote-item toolbar_bus="${host.controller.getToolbarBus()}"></quote-item>`
+        ? html`<quote-item
+              toolbar_bus="${host.controller.getToolbarBus()}"
+              gettext_provider="${gettext_provider}"
+          ></quote-item>`
         : html``;
 
     const has_at_least_one_basic_text_element =
@@ -115,6 +134,7 @@ export const renderToolbar = (
     const ordered_item = ordered
         ? html`<ordered-list-item
               toolbar_bus="${host.controller.getToolbarBus()}"
+              gettext_provider="${gettext_provider}"
           ></ordered-list-item>`
         : html``;
 
@@ -122,6 +142,7 @@ export const renderToolbar = (
     const bullet_item = bullet
         ? html`<bullet-list-item
               toolbar_bus="${host.controller.getToolbarBus()}"
+              gettext_provider="${gettext_provider}"
           ></bullet-list-item>`
         : html``;
 
@@ -132,13 +153,17 @@ export const renderToolbar = (
 
     const subscript = host.script_elements?.subscript;
     const subscript_item = subscript
-        ? html`<subscript-item toolbar_bus="${host.controller.getToolbarBus()}"></subscript-item>`
+        ? html`<subscript-item
+              toolbar_bus="${host.controller.getToolbarBus()}"
+              gettext_provider="${gettext_provider}"
+          ></subscript-item>`
         : html``;
 
     const superscript = host.script_elements?.superscript;
     const superscript_item = superscript
         ? html`<superscript-item
               toolbar_bus="${host.controller.getToolbarBus()}"
+              gettext_provider="${gettext_provider}"
           ></superscript-item>`
         : html``;
 
@@ -151,15 +176,24 @@ export const renderToolbar = (
         : html``;
 
     const link_item = host.link_elements?.link
-        ? html`<link-item toolbar_bus="${host.controller.getToolbarBus()}"></link-item>`
+        ? html`<link-item
+              toolbar_bus="${host.controller.getToolbarBus()}"
+              gettext_provider="${gettext_provider}"
+          ></link-item>`
         : html``;
 
     const unlink_item = host.link_elements?.unlink
-        ? html`<unlink-item toolbar_bus="${host.controller.getToolbarBus()}"></unlink-item>`
+        ? html`<unlink-item
+              toolbar_bus="${host.controller.getToolbarBus()}"
+              gettext_provider="${gettext_provider}"
+          ></unlink-item>`
         : html``;
 
     const image_item = host.link_elements?.image
-        ? html`<image-item toolbar_bus="${host.controller.getToolbarBus()}"></image-item>`
+        ? html`<image-item
+              toolbar_bus="${host.controller.getToolbarBus()}"
+              gettext_provider="${gettext_provider}"
+          ></image-item>`
         : html``;
 
     const has_at_least_one_link_element =
@@ -180,6 +214,7 @@ export const renderToolbar = (
               <text-style-item
                   toolbar_bus="${host.controller.getToolbarBus()}"
                   style_elements="${host.style_elements}"
+                  gettext_provider="${gettext_provider}"
               ></text-style-item>
           </span>`
         : html``;
@@ -192,16 +227,23 @@ export const renderToolbar = (
     `.style(scss_styles);
 };
 
-define<InternalProseMirrorToolbarElement>({
-    tag: TOOLBAR_TAG_NAME,
-    controller: (host, controller) => controller,
-    text_elements: null,
-    script_elements: null,
-    link_elements: null,
-    list_elements: null,
-    style_elements: null,
-    render: {
-        value: renderToolbar,
-        shadow: false,
-    },
+initGettext(
+    getLocaleWithDefault(document),
+    "tlp-prose-mirror-toolbar",
+    (locale) => import(`../../po/${getPOFileFromLocaleWithoutExtension(locale)}.po`),
+).then((gettext_provider) => {
+    define<InternalProseMirrorToolbarElement>({
+        tag: TOOLBAR_TAG_NAME,
+        controller: (host, controller) => controller,
+        text_elements: null,
+        script_elements: null,
+        link_elements: null,
+        list_elements: null,
+        style_elements: null,
+        render: {
+            value: (host: InternalProseMirrorToolbarElement) =>
+                renderToolbar(host, gettext_provider),
+            shadow: false,
+        },
+    });
 });

@@ -19,7 +19,7 @@
 
 import { describe, it, expect, beforeEach } from "vitest";
 import { renderImageButton } from "./image-button-template";
-import { createLocalDocument } from "../../../helpers/helper-for-test";
+import { createLocalDocument, gettext_provider } from "../../../helpers/helper-for-test";
 import type { HostElement } from "./image";
 
 describe("image-button-template", () => {
@@ -36,7 +36,7 @@ describe("image-button-template", () => {
     ])("When is_activated is %s, then %s", (is_activated) => {
         const host = { is_activated } as HostElement;
 
-        renderImageButton(host)(host, target);
+        renderImageButton(host, gettext_provider)(host, target);
 
         const button = target.querySelector<HTMLButtonElement>("[data-test=button-image]");
         if (!button) {
@@ -52,7 +52,7 @@ describe("image-button-template", () => {
     ])("When is_disabled is %s, then %s", (is_disabled) => {
         const host = { is_disabled } as HostElement;
 
-        renderImageButton(host)(host, target);
+        renderImageButton(host, gettext_provider)(host, target);
 
         const button = target.querySelector<HTMLButtonElement>("[data-test=button-image]");
         if (!button) {

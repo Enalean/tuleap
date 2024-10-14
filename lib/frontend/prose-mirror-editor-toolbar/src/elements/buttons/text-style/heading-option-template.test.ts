@@ -20,7 +20,7 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
 import type { ToolbarBus } from "@tuleap/prose-mirror-editor";
 import { buildToolbarBus, NB_HEADING } from "@tuleap/prose-mirror-editor";
-import { createLocalDocument } from "../../../helpers/helper-for-test";
+import { createLocalDocument, gettext_provider } from "../../../helpers/helper-for-test";
 import type { HostElement } from "./text-style";
 import { renderHeadingOption, renderHeadingsOptions } from "./heading-option-template";
 
@@ -35,7 +35,7 @@ describe("heading-option-template", () => {
     });
 
     const getOptionElement = (host: HostElement, level: number): HTMLOptionElement => {
-        renderHeadingOption(host, level)(host, target);
+        renderHeadingOption(host, level, gettext_provider)(host, target);
         const option = target.querySelector("option");
         if (!option) {
             throw new Error("Expected an option");
@@ -103,7 +103,7 @@ describe("heading-option-template", () => {
                 style_elements: { headings: false },
             } as HostElement;
 
-            renderHeadingsOptions(host)(host, target);
+            renderHeadingsOptions(host, gettext_provider)(host, target);
             const options = target.querySelectorAll("option");
 
             expect(options.length).toBe(0);
@@ -115,7 +115,7 @@ describe("heading-option-template", () => {
                 current_heading: null,
             } as HostElement;
 
-            renderHeadingsOptions(host)(host, target);
+            renderHeadingsOptions(host, gettext_provider)(host, target);
             const options = target.querySelectorAll("option");
 
             expect(options.length).toBe(NB_HEADING);

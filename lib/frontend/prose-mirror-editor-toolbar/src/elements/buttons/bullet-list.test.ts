@@ -21,7 +21,7 @@
 import { describe, beforeEach, expect, it, vi } from "vitest";
 import { buildToolbarBus } from "@tuleap/prose-mirror-editor";
 import type { ToolbarBus } from "@tuleap/prose-mirror-editor";
-import { createLocalDocument } from "../../helpers/helper-for-test";
+import { createLocalDocument, gettext_provider } from "../../helpers/helper-for-test";
 import type { HostElement } from "./bullet-list";
 import { connect, renderBulletListItem } from "./bullet-list";
 
@@ -57,7 +57,7 @@ describe("BulletElement", () => {
         const applyBulletList = vi.spyOn(toolbar_bus, "bulletList");
         const host = { toolbar_bus } as HostElement;
 
-        renderBulletListItem(host)(host, target);
+        renderBulletListItem(host, gettext_provider)(host, target);
 
         const button = target.querySelector<HTMLButtonElement>("[data-test=button-bullet]");
         if (!button) {
@@ -78,7 +78,7 @@ describe("BulletElement", () => {
             toolbar_bus,
         } as HostElement;
 
-        renderBulletListItem(host)(host, target);
+        renderBulletListItem(host, gettext_provider)(host, target);
 
         const button = target.querySelector<HTMLButtonElement>("[data-test=button-bullet]");
         if (!button) {

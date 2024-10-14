@@ -21,7 +21,7 @@
 import { describe, beforeEach, expect, it, vi } from "vitest";
 import type { ToolbarBus } from "@tuleap/prose-mirror-editor";
 import { buildToolbarBus } from "@tuleap/prose-mirror-editor";
-import { createLocalDocument } from "../../helpers/helper-for-test";
+import { createLocalDocument, gettext_provider } from "../../helpers/helper-for-test";
 import type { HostElement } from "./italic";
 import { connect, renderItalicItem } from "./italic";
 
@@ -54,7 +54,7 @@ describe("ItalicElement", () => {
         const applyItalic = vi.spyOn(toolbar_bus, "italic");
         const host = { toolbar_bus } as HostElement;
 
-        renderItalicItem(host)(host, target);
+        renderItalicItem(host, gettext_provider)(host, target);
 
         const button = target.querySelector<HTMLButtonElement>("[data-test=button-italic]");
         if (!button) {
@@ -75,7 +75,7 @@ describe("ItalicElement", () => {
             toolbar_bus,
         } as HostElement;
 
-        renderItalicItem(host)(host, target);
+        renderItalicItem(host, gettext_provider)(host, target);
 
         const button = target.querySelector<HTMLButtonElement>("[data-test=button-italic]");
         if (!button) {

@@ -18,7 +18,7 @@
  */
 
 import { describe, it, expect, beforeEach } from "vitest";
-import { createLocalDocument } from "../../../helpers/helper-for-test";
+import { createLocalDocument, gettext_provider } from "../../../helpers/helper-for-test";
 import { renderLinkButtonElement } from "./link-button-template";
 import type { HostElement } from "./link";
 
@@ -36,7 +36,7 @@ describe("link-button-template", () => {
     ])("When is_activated is %s, then %s", (is_activated) => {
         const host = { is_activated } as HostElement;
 
-        renderLinkButtonElement(host)(host, target);
+        renderLinkButtonElement(host, gettext_provider)(host, target);
 
         const button = target.querySelector<HTMLButtonElement>("[data-test=button-link]");
         if (!button) {
@@ -52,7 +52,7 @@ describe("link-button-template", () => {
     ])("When is_disabled is %s, then %s", (is_disabled) => {
         const host = { is_disabled } as HostElement;
 
-        renderLinkButtonElement(host)(host, target);
+        renderLinkButtonElement(host, gettext_provider)(host, target);
 
         const button = target.querySelector<HTMLButtonElement>("[data-test=button-link]");
         if (!button) {

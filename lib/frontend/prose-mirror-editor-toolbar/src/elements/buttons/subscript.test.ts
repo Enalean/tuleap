@@ -21,7 +21,7 @@
 import { describe, beforeEach, expect, it, vi } from "vitest";
 import type { ToolbarBus } from "@tuleap/prose-mirror-editor";
 import { buildToolbarBus } from "@tuleap/prose-mirror-editor";
-import { createLocalDocument } from "../../helpers/helper-for-test";
+import { createLocalDocument, gettext_provider } from "../../helpers/helper-for-test";
 import type { HostElement } from "./subscript";
 import { connect, renderSubscriptItem } from "./subscript";
 
@@ -54,7 +54,7 @@ describe("SubscriptElement", () => {
         const applyCode = vi.spyOn(toolbar_bus, "subscript");
         const host = { toolbar_bus } as HostElement;
 
-        renderSubscriptItem(host)(host, target);
+        renderSubscriptItem(host, gettext_provider)(host, target);
 
         const button = target.querySelector<HTMLButtonElement>("[data-test=button-subscript]");
         if (!button) {
@@ -75,7 +75,7 @@ describe("SubscriptElement", () => {
             toolbar_bus,
         } as HostElement;
 
-        renderSubscriptItem(host)(host, target);
+        renderSubscriptItem(host, gettext_provider)(host, target);
 
         const button = target.querySelector<HTMLButtonElement>("[data-test=button-subscript]");
         if (!button) {

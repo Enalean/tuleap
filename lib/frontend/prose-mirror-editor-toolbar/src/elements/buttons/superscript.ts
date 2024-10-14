@@ -20,13 +20,14 @@
 
 import { define, html, type UpdateFunction } from "hybrids";
 import type { ToolbarBus } from "@tuleap/prose-mirror-editor";
-import { gettext_provider } from "../../gettext-provider";
 import { getClass } from "../../helpers/class-getter";
+import type { GetText } from "@tuleap/gettext";
 
 export const SUPERSCRIPT_TAG_NAME = "superscript-item";
 
 export type SuperscriptElement = {
     toolbar_bus: ToolbarBus;
+    gettext_provider: GetText;
 };
 
 type InternalSuperscriptElement = Readonly<SuperscriptElement> & {
@@ -40,6 +41,7 @@ const onClickApplySuperscript = (host: SuperscriptElement): void => {
 };
 export const renderSuperscriptItem = (
     host: InternalSuperscriptElement,
+    gettext_provider: GetText,
 ): UpdateFunction<InternalSuperscriptElement> => {
     const classes = getClass(host.is_activated);
 
@@ -68,5 +70,6 @@ define<InternalSuperscriptElement>({
         value: (host: SuperscriptElement, toolbar_bus: ToolbarBus) => toolbar_bus,
         connect,
     },
-    render: renderSuperscriptItem,
+    gettext_provider: (host, gettext_provider) => gettext_provider,
+    render: (host) => renderSuperscriptItem(host, host.gettext_provider),
 });

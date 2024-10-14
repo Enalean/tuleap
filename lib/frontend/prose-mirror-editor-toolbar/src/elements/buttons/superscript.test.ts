@@ -21,7 +21,7 @@
 import { describe, beforeEach, expect, it, vi } from "vitest";
 import type { ToolbarBus } from "@tuleap/prose-mirror-editor";
 import { buildToolbarBus } from "@tuleap/prose-mirror-editor";
-import { createLocalDocument } from "../../helpers/helper-for-test";
+import { createLocalDocument, gettext_provider } from "../../helpers/helper-for-test";
 import type { HostElement } from "./superscript";
 import { connect, renderSuperscriptItem } from "./superscript";
 
@@ -54,7 +54,7 @@ describe("SuperscriptElement", () => {
         const applyCode = vi.spyOn(toolbar_bus, "superscript");
         const host = { toolbar_bus } as HostElement;
 
-        renderSuperscriptItem(host)(host, target);
+        renderSuperscriptItem(host, gettext_provider)(host, target);
 
         const button = target.querySelector<HTMLButtonElement>("[data-test=button-superscript]");
         if (!button) {
@@ -75,7 +75,7 @@ describe("SuperscriptElement", () => {
             toolbar_bus,
         } as HostElement;
 
-        renderSuperscriptItem(host)(host, target);
+        renderSuperscriptItem(host, gettext_provider)(host, target);
 
         const button = target.querySelector<HTMLButtonElement>("[data-test=button-superscript]");
         if (!button) {

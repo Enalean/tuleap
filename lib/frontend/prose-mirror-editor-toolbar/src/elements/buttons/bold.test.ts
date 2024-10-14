@@ -21,7 +21,7 @@
 import { describe, beforeEach, expect, it, vi } from "vitest";
 import type { ToolbarBus } from "@tuleap/prose-mirror-editor";
 import { buildToolbarBus } from "@tuleap/prose-mirror-editor";
-import { createLocalDocument } from "../../helpers/helper-for-test";
+import { createLocalDocument, gettext_provider } from "../../helpers/helper-for-test";
 import type { HostElement } from "./bold";
 import { connect, renderBoldItem } from "./bold";
 
@@ -54,7 +54,7 @@ describe("BoldElement", () => {
         const applyBold = vi.spyOn(toolbar_bus, "bold");
         const host = { toolbar_bus } as HostElement;
 
-        renderBoldItem(host)(host, target);
+        renderBoldItem(host, gettext_provider)(host, target);
 
         const button = target.querySelector<HTMLButtonElement>("[data-test=button-bold]");
         if (!button) {
@@ -75,7 +75,7 @@ describe("BoldElement", () => {
             toolbar_bus,
         } as HostElement;
 
-        renderBoldItem(host)(host, target);
+        renderBoldItem(host, gettext_provider)(host, target);
 
         const button = target.querySelector<HTMLButtonElement>("[data-test=button-bold]");
         if (!button) {

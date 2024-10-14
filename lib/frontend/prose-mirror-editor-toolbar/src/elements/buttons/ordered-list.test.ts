@@ -21,7 +21,7 @@
 import { describe, beforeEach, expect, it, vi } from "vitest";
 import { buildToolbarBus } from "@tuleap/prose-mirror-editor";
 import type { ToolbarBus } from "@tuleap/prose-mirror-editor";
-import { createLocalDocument } from "../../helpers/helper-for-test";
+import { createLocalDocument, gettext_provider } from "../../helpers/helper-for-test";
 import type { HostElement } from "./ordered-list";
 import { connect, renderOrderedListItem } from "./ordered-list";
 
@@ -58,7 +58,7 @@ describe("OrderedElement", () => {
         const applyOrderedList = vi.spyOn(toolbar_bus, "orderedList");
         const host = { toolbar_bus } as HostElement;
 
-        renderOrderedListItem(host)(host, target);
+        renderOrderedListItem(host, gettext_provider)(host, target);
 
         const button = target.querySelector<HTMLButtonElement>("[data-test=button-ordered]");
         if (!button) {
@@ -79,7 +79,7 @@ describe("OrderedElement", () => {
             toolbar_bus,
         } as HostElement;
 
-        renderOrderedListItem(host)(host, target);
+        renderOrderedListItem(host, gettext_provider)(host, target);
 
         const button = target.querySelector<HTMLButtonElement>("[data-test=button-ordered]");
         if (!button) {

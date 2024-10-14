@@ -20,13 +20,14 @@
 
 import { define, html, type UpdateFunction } from "hybrids";
 import type { ToolbarBus } from "@tuleap/prose-mirror-editor";
-import { gettext_provider } from "../../gettext-provider";
 import { getClass } from "../../helpers/class-getter";
+import type { GetText } from "@tuleap/gettext";
 
 export const ITALIC_TAG_NAME = "italic-item";
 
 export type ItalicElement = {
     toolbar_bus: ToolbarBus;
+    gettext_provider: GetText;
 };
 
 type InternalItalicElement = Readonly<ItalicElement> & {
@@ -39,6 +40,7 @@ const onClickApplyItalic = (host: ItalicElement): void => {
 };
 export const renderItalicItem = (
     host: InternalItalicElement,
+    gettext_provider: GetText,
 ): UpdateFunction<InternalItalicElement> => {
     const classes = getClass(host.is_activated);
 
@@ -67,5 +69,6 @@ export default define<InternalItalicElement>({
         value: (host: ItalicElement, toolbar_bus: ToolbarBus) => toolbar_bus,
         connect,
     },
-    render: renderItalicItem,
+    gettext_provider: (host, gettext_provider) => gettext_provider,
+    render: (host) => renderItalicItem(host, host.gettext_provider),
 });

@@ -20,13 +20,14 @@
 
 import { define, html, type UpdateFunction } from "hybrids";
 import type { ToolbarBus } from "@tuleap/prose-mirror-editor";
-import { gettext_provider } from "../../gettext-provider";
 import { getClass } from "../../helpers/class-getter";
+import type { GetText } from "@tuleap/gettext";
 
 export const QUOTE_TAG_NAME = "quote-item";
 
 export type QuoteElement = {
     toolbar_bus: ToolbarBus;
+    gettext_provider: GetText;
 };
 
 type InternalQuoteElement = Readonly<QuoteElement> & {
@@ -39,6 +40,7 @@ const onClickApplyQuote = (host: QuoteElement): void => {
 };
 export const renderQuoteItem = (
     host: InternalQuoteElement,
+    gettext_provider: GetText,
 ): UpdateFunction<InternalQuoteElement> => {
     const classes = getClass(host.is_activated);
 
@@ -67,5 +69,6 @@ export default define<InternalQuoteElement>({
         value: (host: QuoteElement, toolbar_bus: ToolbarBus) => toolbar_bus,
         connect,
     },
-    render: renderQuoteItem,
+    gettext_provider: (host, gettext_provider) => gettext_provider,
+    render: (host) => renderQuoteItem(host, host.gettext_provider),
 });
