@@ -51,6 +51,7 @@ export function setupMonoToolbar(toolbar_bus: ToolbarBus): Plugin {
             return {
                 update: (view: EditorView): void => {
                     if (toolbar_bus.view) {
+                        view.focus();
                         const toolbar_activator = ToolbarActivator(
                             IsMarkActiveChecker(),
                             LinkStateBuilder(
