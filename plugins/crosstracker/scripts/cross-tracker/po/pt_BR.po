@@ -33,6 +33,9 @@ msgstr ""
 msgid "Cancel"
 msgstr "Cancelar"
 
+msgid "Click to see the documentation for advanced mode"
+msgstr ""
+
 msgid "Description"
 msgstr "Descrição"
 

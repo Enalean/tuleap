@@ -64,7 +64,8 @@ class ProjectCrossTrackerSearch extends Widget
             'project-cross-tracker-search',
             new ProjectCrossTrackerSearchPresenter(
                 $this->content_id,
-                $is_admin
+                $is_admin,
+                $user
             )
         );
     }

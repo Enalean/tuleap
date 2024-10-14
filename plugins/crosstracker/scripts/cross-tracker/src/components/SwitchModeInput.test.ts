@@ -21,52 +21,59 @@ import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import { getGlobalTestOptions } from "../helpers/global-options-for-tests";
 import SwitchModeInput from "./SwitchModeInput.vue";
-import WritingCrossTrackerReport from "../writing-mode/writing-cross-tracker-report";
 import { describe, expect, it } from "vitest";
-import { REPORT_ID } from "../injection-symbols";
+import { DOCUMENTATION_BASE_URL, REPORT_ID } from "../injection-symbols";
 
 describe("SwitchModeInput", () => {
     function getWrapper(
-        writing_cross_tracker_report: WritingCrossTrackerReport,
+        is_in_expert_mode: boolean,
     ): VueWrapper<InstanceType<typeof SwitchModeInput>> {
         return shallowMount(SwitchModeInput, {
             global: {
                 ...getGlobalTestOptions(),
                 provide: {
                     [REPORT_ID.valueOf()]: 15,
+                    [DOCUMENTATION_BASE_URL.valueOf()]: "/doc/en/",
                 },
             },
             props: {
-                writing_cross_tracker_report,
+                is_in_expert_mode,
             },
         });
     }
 
     describe("Check at component creation", () => {
-        it("already in checked state when the current report is expert mode", () => {
-            const report = new WritingCrossTrackerReport();
-            report.toggleExpertMode();
-            const wrapper = getWrapper(report);
+        it("already in checked state and the helper is displayed when the current report is expert mode", () => {
+            const wrapper = getWrapper(true);
 
             const input: HTMLInputElement = wrapper.find("[data-test=switch-to-expert-input]")
                 .element as HTMLInputElement;
+
+            const is_helper_exist: boolean = wrapper
+                .find("[data-test=documentation-helper]")
+                .exists();
+
             expect(input.checked).toBe(true);
+            expect(is_helper_exist).toBe(true);
         });
 
-        it("not checked when the current report is default mode", () => {
-            const report = new WritingCrossTrackerReport();
-            const wrapper = getWrapper(report);
+        it("not checked and the helper is not displayed when the current report is default mode", () => {
+            const wrapper = getWrapper(false);
+
+            const is_helper_exist: boolean = wrapper
+                .find("[data-test=documentation-helper]")
+                .exists();
 
             const input: HTMLInputElement = wrapper.find("[data-test=switch-to-expert-input]")
                 .element as HTMLInputElement;
             expect(input.checked).toBe(false);
+            expect(is_helper_exist).toBe(false);
         });
     });
 
     describe("Emit switch mode event", () => {
         it("will send the switch mode event when the switch is clicked", () => {
-            const report = new WritingCrossTrackerReport();
-            const wrapper = getWrapper(report);
+            const wrapper = getWrapper(false);
 
             wrapper.find("[data-test=switch-to-expert-input]").trigger("click");
 

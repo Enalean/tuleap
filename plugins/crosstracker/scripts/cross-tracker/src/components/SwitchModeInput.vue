@@ -24,26 +24,36 @@
                 type="checkbox"
                 v-bind:id="switch_to_expert_id"
                 class="tlp-switch-checkbox"
-                v-bind:checked="writing_cross_tracker_report.expert_mode"
+                v-bind:checked="is_in_expert_mode"
                 v-on:click="switchMode"
                 data-test="switch-to-expert-input"
             />
             <label v-bind:for="switch_to_expert_id" class="tlp-switch-button"></label>
         </div>
-        <label class="tlp-label switch-label" v-bind:for="switch_to_expert_id">{{
-            $gettext("Expert mode")
-        }}</label>
+        <label class="tlp-label switch-label" v-bind:for="switch_to_expert_id"
+            >{{ $gettext("Expert mode") }}
+            <a
+                v-bind:href="`${doc_base_url}/user-guide/tql/cross-tracker-search.html#expert-mode`"
+                v-bind:data-tlp-tooltip="
+                    $gettext('Click to see the documentation for advanced mode')
+                "
+                class="tlp-tooltip tlp-tooltip-right"
+                v-if="is_in_expert_mode"
+                data-test="documentation-helper"
+            >
+                <i class="fa-solid fa-circle-info xts-link-helper" aria-hidden="true"></i
+            ></a>
+        </label>
     </div>
 </template>
 
 <script setup lang="ts">
 import { strictInject } from "@tuleap/vue-strict-inject";
-import { REPORT_ID } from "../injection-symbols";
+import { DOCUMENTATION_BASE_URL, REPORT_ID } from "../injection-symbols";
 import { computed } from "vue";
 import { useGettext } from "vue3-gettext";
-import type WritingCrossTrackerReport from "../writing-mode/writing-cross-tracker-report";
 const props = defineProps<{
-    writing_cross_tracker_report: WritingCrossTrackerReport;
+    is_in_expert_mode: boolean;
 }>();
 
 export type SwitchModeEvent = { readonly is_expert_mode: boolean };
@@ -53,6 +63,7 @@ const emit = defineEmits<{
 }>();
 
 const report_id = strictInject(REPORT_ID);
+const doc_base_url = strictInject(DOCUMENTATION_BASE_URL);
 
 const { $gettext } = useGettext();
 
@@ -61,9 +72,8 @@ const switch_to_expert_id = computed((): string => {
 });
 
 function switchMode(): void {
-    props.writing_cross_tracker_report.toggleExpertMode();
     emit("switch-to-query-mode", {
-        is_expert_mode: props.writing_cross_tracker_report.expert_mode,
+        is_expert_mode: !props.is_in_expert_mode,
     });
 }
 </script>
@@ -75,5 +85,9 @@ function switchMode(): void {
 
 .switch-label {
     margin: 0 0 0 var(--tlp-small-spacing);
+}
+
+.xts-link-helper {
+    color: var(--tlp-dimmed-color);
 }
 </style>

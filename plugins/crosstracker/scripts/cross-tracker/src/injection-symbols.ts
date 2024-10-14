@@ -35,3 +35,4 @@ export const CLEAR_FEEDBACKS: StrictInjectionKey<ClearFeedbacksCallback> = Symbo
 export const IS_CSV_EXPORT_ALLOWED: StrictInjectionKey<Ref<boolean>> = Symbol();
 export const REPORT_ID: StrictInjectionKey<number> = Symbol();
 export const IS_USER_ADMIN: StrictInjectionKey<boolean> = Symbol();
+export const DOCUMENTATION_BASE_URL: StrictInjectionKey<string> = Symbol();
