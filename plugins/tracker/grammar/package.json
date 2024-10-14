@@ -1,16 +1,16 @@
 {
-  "name": "TQL-grammar",
-  "version": "0.1.0",
+  "name": "@tuleap/tql-grammar",
   "description": "Tuleap Query Language grammar",
   "main": "generate_parser.js",
-  "author": "Enalean",
-  "license": "GPL-2.0",
+  "author": "Enalean Team",
+  "homepage": "https://tuleap.org",
+  "license": "GPL-2.0-or-later",
   "private": true,
   "dependencies": {
-    "pegjs": "^0.10.0",
-    "phpegjs": "^1.0.0-beta7"
+    "peggy": "^3.0.2",
+    "phpeggy": "^2.0.1"
   },
   "scripts": {
-    "build": "rm -rf backend-assets/ && node ./src/generate_parser.js"
+    "build": "rm -rf ./backend-assets && mkdir -p ./backend-assets/Tracker/Report/Query/Advanced/Grammar && peggy -c config.js -o ./backend-assets/Tracker/Report/Query/Advanced/Grammar/Parser.php ./src/tql.pegjs"
   }
 }

@@ -132,7 +132,7 @@ final readonly class ExpertQueryValidator
     ): void {
         if (! $expert_mode && $selectables !== []) {
             // This way user think its query is not valid tql
-            throw new SyntaxError('', '', '', 0, 0, 0);
+            throw new EmptySyntaxError();
         }
 
         $invalid_selectables_collection = $invalid_selectables_collection_builder->buildCollectionOfInvalidSelectables($selectables);
@@ -157,7 +157,7 @@ final readonly class ExpertQueryValidator
     ): void {
         if ($expert_mode) {
             if ($from === null) { // From is mandatory in expert mode
-                throw new SyntaxError('', '', '', 0, 0, 0);
+                throw new EmptySyntaxError();
             }
 
             $invalid_from_collection = $invalid_from_collection_builder->buildCollectionOfInvalidFrom($from, $user);
@@ -169,7 +169,7 @@ final readonly class ExpertQueryValidator
         }
 
         if ($from !== null) { // From is invalid in default mode
-            throw new SyntaxError('', '', '', 0, 0, 0);
+            throw new EmptySyntaxError();
         }
     }
 

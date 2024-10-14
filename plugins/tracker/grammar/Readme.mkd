@@ -2,14 +2,14 @@ Install
 =======
 
 ```bash
-$ npm install
+$ pnpm install
 ```
 
 Generate the parser
 ===================
 
 ```bash
-$ node genereate_parser.js
+$ pnpm build
 ```
 
 Test the parser
@@ -18,4 +18,3 @@ Test the parser
 ```bash
 $ php test_parser.php
 ```
-
