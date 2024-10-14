@@ -1323,12 +1323,39 @@ div.tracker-admin-field-controls {
     padding: 1px 5px 1px 19px;
 }
 
+.card-details,
+.tracker_artifact_field,
+.tracker_report_table {
+    h1 {
+        font-size: 1.8em;
+    }
+
+    h2 {
+        font-size: 1.64em;
+    }
+
+    h3 {
+        font-size: 1.48em;
+    }
+
+    h4 {
+        font-size: 1.32em;
+    }
+
+    h5 {
+        font-size: 1.16em;
+    }
+
+    h6 {
+        font-size: 1em;
+    }
+}
+
 .tracker_artifact_field {
     margin-bottom: 20px;
     padding-right: 22px;
     padding-left: 22px;
     color: #626262;
-    font-size: 0.9em;
 
     .textarea-value,
     .artifact-link-value,
@@ -2432,7 +2459,6 @@ body.sidebar-expanded .artifact-copy-button {
 
             .tracker_artifact_field {
                 margin-bottom: 10px;
-                font-size: 0.9em;
 
                 label {
                     display: block;
