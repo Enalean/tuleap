@@ -54,6 +54,8 @@ const controller = ToolbarController(toolbar_bus);
 @use "@tuleap/burningparrot-theme/css/includes/global-variables";
 
 .artidoc-toolbar {
+    // Display block is mandatory to avoid flickering with the toolbar
+    display: block;
     position: sticky;
     z-index: zindex.$toolbar;
     top: global-variables.$navbar-height;
