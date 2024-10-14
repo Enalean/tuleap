@@ -40,6 +40,7 @@ export type Lazybox = {
     replaceSelection(selection: ReadonlyArray<LazyboxItem>): void;
 };
 type InternalLazyboxElement = Readonly<Lazybox> & {
+    dataTest: "lazybox";
     tabindex: 0 | -1;
     internals: ElementInternals;
     readonly search_input_element: SearchInput & HTMLElement;
@@ -182,7 +183,6 @@ export const getSelectionElement = (host: HostElement): SelectionElement & HTMLE
     element.onSelection = host.options.selection_callback;
     element.templating_callback = host.options.templating_callback;
     element.selection_badge_callback = getSelectionBadgeCallback(host.options);
-    element.setAttribute("data-test", "lazybox");
     if (host.options.is_multiple) {
         element.role = "combobox";
         element.ariaHasPopup = "true";
@@ -249,10 +249,8 @@ export const getDropdownElement = (host: HostElement): DropdownElement & HTMLEle
 
 const IntermediaryClass = define.compile<InternalLazyboxElement>({
     tag: TAG,
-    tabindex: {
-        value: 0,
-        reflect: true,
-    },
+    dataTest: { value: "lazybox", reflect: true },
+    tabindex: { value: 0, reflect: true },
     options: (host, value) => value,
     replaceDropdownContent: { value: buildReplaceDropdown, connect },
     clearSelection: buildClearSelection,

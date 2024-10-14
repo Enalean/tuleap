@@ -61,7 +61,10 @@ describe("Pull request", function () {
             cy.log("Remove label Emergency from pull request");
             cy.get("[data-test=pull-request-card]").click();
             cy.get("[data-test=manage-labels-button]").click();
-            cy.get("[data-test=remove-selection]", { includeShadowDom: true }).first().click();
+            cy.get("[data-test=lazybox]")
+                .find("[data-test=remove-selection]", { includeShadowDom: true })
+                .first()
+                .click();
             cy.get("[data-test=save-labels-button]").click({ force: true });
 
             cy.get("[data-test=tabs-pullrequest]").click();
