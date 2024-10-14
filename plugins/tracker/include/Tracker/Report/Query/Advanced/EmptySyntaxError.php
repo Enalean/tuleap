@@ -22,20 +22,18 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Report\Query\Advanced;
 
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\pegLocation;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\pegPosition;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\SyntaxError;
 
-final class InvalidSelectablesCollectionBuilder implements IBuildInvalidSelectablesCollection
+final class EmptySyntaxError extends SyntaxError
 {
-    /**
-     * @throws SyntaxError
-     */
-    public function buildCollectionOfInvalidSelectables(array $selectables): InvalidSelectablesCollection
+    public function __construct()
     {
-        if ($selectables !== []) {
-            // This way user think its query is not valid tql
-            throw new EmptySyntaxError();
-        }
-
-        return new InvalidSelectablesCollection();
+        parent::__construct('', [], '', 0, 0, 0, new pegLocation(
+            '',
+            new pegPosition(0, 0, 0),
+            new pegPosition(0, 0, 0),
+        ));
     }
 }

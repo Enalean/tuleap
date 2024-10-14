@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\CrossTracker\REST\v1;
 
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\pegExpectation;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\SyntaxError;
 
 final class SyntaxErrorTranslator
@@ -32,12 +33,16 @@ final class SyntaxErrorTranslator
 
     public static function fromSyntaxError(SyntaxError $error): array
     {
-        $expected = implode(', ', array_map(
-            static fn(array $expection) => $expection['description'] === 'end of input'
-                ? dgettext('tuleap-crosstracker', 'end of input')
-                : $expection['description'],
-            $error->expected,
-        ));
+        if ($error->expected !== null) {
+            $expected = implode(', ', array_map(
+                static fn(pegExpectation $expection) => $expection->description === 'end of input'
+                    ? dgettext('tuleap-crosstracker', 'end of input')
+                    : $expection->description,
+                $error->expected,
+            ));
+        } else {
+            $expected = '';
+        }
 
         return [
             'error_message'      => sprintf('Error while parsing the query. Expected to find one of the following: %s', $expected),

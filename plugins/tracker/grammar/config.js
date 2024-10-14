@@ -1,4 +1,3 @@
-<?php
 /**
  * Copyright (c) Enalean, 2024-Present. All Rights Reserved.
  *
@@ -17,25 +16,12 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-
-declare(strict_types=1);
-
-namespace Tuleap\Tracker\Report\Query\Advanced;
-
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\SyntaxError;
-
-final class InvalidSelectablesCollectionBuilder implements IBuildInvalidSelectablesCollection
-{
-    /**
-     * @throws SyntaxError
-     */
-    public function buildCollectionOfInvalidSelectables(array $selectables): InvalidSelectablesCollection
-    {
-        if ($selectables !== []) {
-            // This way user think its query is not valid tql
-            throw new EmptySyntaxError();
-        }
-
-        return new InvalidSelectablesCollection();
-    }
-}
+/* eslint-env node */
+module.exports = {
+    cache: true,
+    plugins: [require("phpeggy")],
+    phpeggy: {
+        parserNamespace: "Tuleap\\Tracker\\Report\\Query\\Advanced\\Grammar",
+        parserClassName: "Parser",
+    },
+};

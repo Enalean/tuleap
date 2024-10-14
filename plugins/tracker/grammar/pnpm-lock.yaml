@@ -1,25 +1,42 @@
 lockfileVersion: '6.0'
 
+settings:
+  autoInstallPeers: false
+  excludeLinksFromLockfile: false
+
 dependencies:
-  pegjs:
-    specifier: ^0.10.0
-    version: 0.10.0
-  phpegjs:
-    specifier: ^1.0.0-beta7
-    version: 1.0.0-beta7(pegjs@0.10.0)
+  peggy:
+    specifier: ^3.0.2
+    version: 3.0.2
+  phpeggy:
+    specifier: ^2.0.1
+    version: 2.0.1(peggy@3.0.2)
 
 packages:
 
-  /pegjs@0.10.0:
-    resolution: {integrity: sha1-z4uvrm7d/0tafvsYUmnqr0YQ3b0=}
-    engines: {node: '>=0.10'}
-    hasBin: true
+  /commander@10.0.1:
+    resolution: {integrity: sha512-y4Mg2tXshplEbSGzx7amzPwKKOCGuoSRP/CjEdwwk0FOGlUbq6lKuoyDZTNZkmxHdJtp54hdfY/JUrdL7Xfdug==}
+    engines: {node: '>=14'}
     dev: false
 
-  /phpegjs@1.0.0-beta7(pegjs@0.10.0):
-    resolution: {integrity: sha1-uLbthQGYB//Q7+ID4AKj5e2LTZQ=}
-    peerDependencies:
-      pegjs: ^0.10.0
+  /peggy@3.0.2:
+    resolution: {integrity: sha512-n7chtCbEoGYRwZZ0i/O3t1cPr6o+d9Xx4Zwy2LYfzv0vjchMBU0tO+qYYyvZloBPcgRgzYvALzGWHe609JjEpg==}
+    engines: {node: '>=14'}
+    hasBin: true
     dependencies:
-      pegjs: 0.10.0
+      commander: 10.0.1
+      source-map-generator: 0.8.0
+    dev: false
+
+  /phpeggy@2.0.1(peggy@3.0.2):
+    resolution: {integrity: sha512-y7dALxM6XiWq49FNYfTMN66XvUTGBVWp/hoU2RDoJ04fd+W3KLw1iIVAEVp8fKfxL7Bn9Ym+FEWDe+IeQLQ/uw==}
+    peerDependencies:
+      peggy: ^3.0.0
+    dependencies:
+      peggy: 3.0.2
+    dev: false
+
+  /source-map-generator@0.8.0:
+    resolution: {integrity: sha512-psgxdGMwl5MZM9S3FWee4EgsEaIjahYV5AzGnwUvPhWeITz/j6rKpysQHlQ4USdxvINlb8lKfWGIXwfkrgtqkA==}
+    engines: {node: '>= 10'}
     dev: false
