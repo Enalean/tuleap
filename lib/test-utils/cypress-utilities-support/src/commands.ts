@@ -235,41 +235,28 @@ Cypress.Commands.add(
     },
 );
 
-const LINK_SELECTOR_TRIGGER_CALLBACK_DELAY_IN_MS = 250;
+const LAZYBOX_TRIGGER_CALLBACK_DELAY_IN_MS = 250;
 
 Cypress.Commands.add("searchItemInLazyboxDropdown", (query, dropdown_item_label) => {
     cy.get("[data-test=lazybox]").click();
-    // Use Cypress.$ to escape from cy.within(), see https://github.com/cypress-io/cypress/issues/6666
-    return cy.wrap(Cypress.$("body")).then((body) => {
-        cy.wrap(body)
-            .find("[data-test=lazybox-search-field]", { includeShadowDom: true })
-            .type(query);
-        // Lazybox waits a delay before loading items
-
-        cy.wait(LINK_SELECTOR_TRIGGER_CALLBACK_DELAY_IN_MS);
-        cy.wrap(body).find("[data-test=lazybox-loading-group-spinner]").should("not.exist");
-        return cy
-            .wrap(body)
-            .find("[data-test=lazybox-item]")
-            .contains(dropdown_item_label)
-            .first()
-            .parents("[data-test=lazybox-item]");
-    });
+    cy.get("[data-test=lazybox-search-field]", { includeShadowDom: true }).focus().type(query);
+    // Lazybox waits a delay before loading items
+    cy.wait(LAZYBOX_TRIGGER_CALLBACK_DELAY_IN_MS);
+    cy.get("[data-test=lazybox]")
+        .find("[data-test=lazybox-loading-group-spinner]")
+        .should("not.exist");
+    return cy.getContains("[data-test=lazybox-item]", dropdown_item_label);
 });
 
 Cypress.Commands.add("addItemInLazyboxDropdown", (query: string) => {
     cy.get("[data-test=lazybox]").click();
-    // Use Cypress.$ to escape from cy.within(), see https://github.com/cypress-io/cypress/issues/6666
-    cy.wrap(Cypress.$("body")).then((body) => {
-        cy.wrap(body)
-            .find("[data-test=lazybox-search-field]", { includeShadowDom: true })
-            .type(query);
-        // Lazybox waits a delay before loading items
-
-        cy.wait(LINK_SELECTOR_TRIGGER_CALLBACK_DELAY_IN_MS);
-        cy.wrap(body).find("[data-test=lazybox-loading-group-spinner]").should("not.exist");
-        cy.wrap(body).find("[data-test=new-item-button]").click();
-    });
+    cy.get("[data-test=lazybox-search-field]", { includeShadowDom: true }).focus().type(query);
+    // Lazybox waits a delay before loading items
+    cy.wait(LAZYBOX_TRIGGER_CALLBACK_DELAY_IN_MS);
+    cy.get("[data-test=lazybox]")
+        .find("[data-test=lazybox-loading-group-spinner]")
+        .should("not.exist");
+    cy.get("[data-test=lazybox] [data-test=new-item-button]").click();
 });
 
 Cypress.Commands.add("searchItemInListPickerDropdown", (dropdown_item_label) => {
