@@ -40,7 +40,6 @@
     "eslint-plugin-storybook": "^0.8.0",
     "eslint-plugin-vue": "^9.17.0",
     "eslint-plugin-you-dont-need-lodash-underscore": "^6.13.0",
-    "fork-ts-checker-webpack-plugin": "^7.2.13",
     "gettext-extractor": "^3.8.0",
     "identity-obj-proxy": "^3.0.0",
     "jest": "^29.7.0",

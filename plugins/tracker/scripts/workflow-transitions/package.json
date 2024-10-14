@@ -25,7 +25,6 @@
     "@vue/test-utils": "^1.3"
   },
   "scripts": {
-    "typecheck": "vue-tsc --noEmit",
     "build": "webpack --config webpack.prod.js",
     "watch": "webpack --config webpack.dev.js --watch",
     "test": "jest"

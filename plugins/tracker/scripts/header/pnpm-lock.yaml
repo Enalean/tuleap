@@ -1,0 +1,15 @@
+lockfileVersion: '6.0'
+
+settings:
+  autoInstallPeers: false
+  excludeLinksFromLockfile: false
+
+dependencies:
+  '@tuleap/plugin-tracker-email-copy-paste':
+    specifier: workspace:^
+    version: link:../lib/email-copy-paste
+
+devDependencies:
+  '@tuleap/build-system-configurator':
+    specifier: workspace:^
+    version: link:../../../../lib/frontend/build-system-configurator

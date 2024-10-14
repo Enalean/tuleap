@@ -1226,14 +1226,22 @@ class Tracker implements Tracker_Dispatchable_Interface
         array $params = [],
     ): void {
         if ($project = ProjectManager::instance()->getProject($this->group_id)) {
-            $hp = Codendi_HTMLPurifier::instance();
+            $is_email_creation_allowed = $this->getArtifactByMailStatus()->canCreateArtifact($this);
+            if ($is_email_creation_allowed) {
+                $base_layout = $GLOBALS['HTML'];
+                assert($base_layout instanceof \Tuleap\Layout\BaseLayout);
+                $base_layout->addJavascriptAsset(
+                    new \Tuleap\Layout\JavascriptViteAsset(
+                        new \Tuleap\Layout\IncludeViteAssets(
+                            __DIR__ . '/../../scripts/header/frontend-assets',
+                            '/assets/trackers/header'
+                        ),
+                        'src/main.ts'
+                    )
+                );
+            }
 
-            $breadcrumbs = array_merge(
-                [
-                    $this->getCrumb(),
-                ],
-                $breadcrumbs
-            );
+            $breadcrumbs = array_merge([$this->getCrumb()], $breadcrumbs);
 
             if ($this->userCanSubmitArtifact($this->getUserManager()->getCurrentUser())) {
                 $link_presenter_builder                         = new TrackerNewDropdownLinkPresenterBuilder();
@@ -1247,15 +1255,11 @@ class Tracker implements Tracker_Dispatchable_Interface
 
             $params['active-promoted-item-id'] = $this->getPromotedTrackerId();
 
+            $hp    = Codendi_HTMLPurifier::instance();
             $title = ($title ? $title . ' - ' : '') . $hp->purify($this->name, CODENDI_PURIFIER_CONVERT_HTML);
             $layout->displayHeader($project, $title, $breadcrumbs, $params);
 
-            if ($this->getArtifactByMailStatus()->canCreateArtifact($this)) {
-                $assets      = new \Tuleap\Layout\IncludeAssets(__DIR__ . '/../../frontend-assets', '/assets/trackers');
-                $base_layout = $GLOBALS['HTML'];
-                assert($base_layout instanceof \Tuleap\Layout\BaseLayout);
-                $base_layout->addJavascriptAsset(new \Tuleap\Layout\JavascriptAsset($assets, 'tracker-header.js'));
-
+            if ($is_email_creation_allowed) {
                 $renderer = TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../../templates/artifact');
                 $renderer->renderToPage(
                     'create-by-mail-modal-info',
