@@ -22,39 +22,29 @@ declare(strict_types=1);
 
 namespace Tuleap\TestManagement;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use Tuleap\AgileDashboard\Test\Builders\PlanningBuilder;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 
-class GetURIForMilestoneFromTTMTest extends \Tuleap\Test\PHPUnit\TestCase
+final class GetURIForMilestoneFromTTMTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
+    private const PROJECT_ID   = 1;
+    private const PLANNING_ID  = 2;
+    private const MILESTONE_ID = 3;
 
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|\Planning_Milestone
-     */
-    private $milestone;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|\PFUser
-     */
-    private $user;
-
-    protected function setUp(): void
+    private function getMilestone(): \Planning_Milestone
     {
-        $this->milestone = Mockery::mock(\Planning_Milestone::class);
-        $this->milestone->shouldReceive(
-            [
-                'getGroupId'    => 1,
-                'getPlanningId' => 2,
-                'getArtifactId' => 3,
-            ]
+        return new \Planning_ArtifactMilestone(
+            ProjectTestBuilder::aProject()->withId(self::PROJECT_ID)->build(),
+            PlanningBuilder::aPlanning(self::PROJECT_ID)->withId(self::PLANNING_ID)->build(),
+            ArtifactTestBuilder::anArtifact(self::MILESTONE_ID)->build(),
         );
-
-        $this->user = Mockery::mock(\PFUser::class);
     }
 
     public function testItReturnsTheDefaultURI(): void
     {
-        $event = new GetURIForMilestoneFromTTM($this->milestone, $this->user);
+        $event = new GetURIForMilestoneFromTTM($this->getMilestone(), UserTestBuilder::buildWithDefaults());
         $this->assertEquals(
             '/plugins/agiledashboard/?pane=details&action=show&group_id=1&planning_id=2&aid=3',
             $event->getURI(),
@@ -63,7 +53,7 @@ class GetURIForMilestoneFromTTMTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItReturnsTheCustomURI(): void
     {
-        $event = new GetURIForMilestoneFromTTM($this->milestone, $this->user);
+        $event = new GetURIForMilestoneFromTTM($this->getMilestone(), UserTestBuilder::buildWithDefaults());
         $event->setURI('/my/custom/uri');
         $this->assertEquals('/my/custom/uri', $event->getURI());
     }

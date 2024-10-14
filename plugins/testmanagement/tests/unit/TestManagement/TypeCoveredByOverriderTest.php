@@ -20,66 +20,57 @@
 
 namespace Tuleap\TestManagement\Type;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\MockObject\MockObject;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\TestManagement\Config;
+use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
+use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
-class TypeCoveredByOverriderTest extends \Tuleap\Test\PHPUnit\TestCase
+final class TypeCoveredByOverriderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /** @var TrackerArtifact */
-    private $artifact;
-
-    /** @var Config */
-    private $config;
-
-    /** @var Project */
-    private $project;
-
-    /** @var TypeCoveredByOverrider */
-    private $overrider;
-
-    private $artifact_id = 123;
-
-    private $test_definition_tracker_id = 444;
-    /**
-     * @var \Tuleap\Tracker\Admin\ArtifactLinksUsageDao&Mockery\MockInterface
-     */
-    private $dao;
+    private Config|MockObject $config;
+    private \Project $project;
+    private TypeCoveredByOverrider $overrider;
+    private int $artifact_id                = 123;
+    private int $test_definition_tracker_id = 444;
+    private int $another_tracker_id         = 445;
+    private ArtifactLinksUsageDao&MockObject $dao;
+    private \Tracker $test_definition_tracker;
+    private \Tracker $another_tracker;
 
     public function setUp(): void
     {
-        parent::setUp();
+        $this->test_definition_tracker = TrackerTestBuilder::aTracker()->withId($this->test_definition_tracker_id)->build();
+        $this->another_tracker         = TrackerTestBuilder::aTracker()->withId($this->another_tracker_id)->build();
 
-        $this->artifact = Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
-        $this->artifact->shouldReceive('getId')->andReturn($this->artifact_id);
+        $this->project = ProjectTestBuilder::aProject()->build();
 
-        $this->project = Mockery::spy(\Project::class);
-        $this->project->shouldReceive('getID')->andReturn(101);
-
-        $this->config = \Mockery::spy(\Tuleap\TestManagement\Config::class);
-        $this->dao    = \Mockery::spy(\Tuleap\Tracker\Admin\ArtifactLinksUsageDao::class);
+        $this->config = $this->createMock(\Tuleap\TestManagement\Config::class);
+        $this->dao    = $this->createMock(\Tuleap\Tracker\Admin\ArtifactLinksUsageDao::class);
 
         $this->overrider = new TypeCoveredByOverrider($this->config, $this->dao);
 
-        $this->config->shouldReceive('getTestDefinitionTrackerId')
+        $this->config->method('getTestDefinitionTrackerId')
             ->with($this->project)
-            ->andReturn($this->test_definition_tracker_id);
+            ->willReturn($this->test_definition_tracker_id);
     }
 
-    public function testItGivesTheCoveredByTypeToNewLinkToTestDefinition()
+    public function testItGivesTheCoveredByTypeToNewLinkToTestDefinition(): void
     {
         $new_linked_artifact_ids = [$this->artifact_id];
 
-        $this->artifact->shouldReceive('getTrackerId')->andReturn($this->test_definition_tracker_id);
+        $artifact = ArtifactTestBuilder::anArtifact($this->artifact_id)
+            ->inTracker($this->test_definition_tracker)
+            ->build();
 
-        $this->dao->shouldReceive('isTypeDisabledInProject')
+        $this->dao->method('isTypeDisabledInProject')
             ->with(101, '_covered_by')
-            ->andReturn(false);
+            ->willReturn(false);
 
         $overriding_type = $this->overrider->getOverridingType(
             $this->project,
-            $this->artifact,
+            $artifact,
             $new_linked_artifact_ids
         );
 
@@ -89,53 +80,63 @@ class TypeCoveredByOverriderTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-    public function testItReturnsNothingWhenNotLinkingToTestDefinition()
+    public function testItReturnsNothingWhenNotLinkingToTestDefinition(): void
     {
         $new_linked_artifact_ids = [$this->artifact_id];
 
-        $this->dao->shouldReceive('isTypeDisabledInProject')
+        $artifact = ArtifactTestBuilder::anArtifact($this->artifact_id)
+            ->inTracker($this->another_tracker)
+            ->build();
+
+        $this->dao->method('isTypeDisabledInProject')
             ->with(101, '_covered_by')
-            ->andReturn(false);
+            ->willReturn(false);
 
         $overriding_type = $this->overrider->getOverridingType(
             $this->project,
-            $this->artifact,
+            $artifact,
             $new_linked_artifact_ids
         );
 
         $this->assertNull($overriding_type);
     }
 
-    public function testItReturnsNothingWhenUpdatingLinkToTestDefinition()
+    public function testItReturnsNothingWhenUpdatingLinkToTestDefinition(): void
     {
         $new_linked_artifact_ids = [];
 
-        $this->artifact->shouldReceive('getTrackerId')->andReturn($this->test_definition_tracker_id);
+        $artifact = ArtifactTestBuilder::anArtifact($this->artifact_id)
+            ->inTracker($this->test_definition_tracker)
+            ->build();
 
-        $this->dao->shouldReceive('isTypeDisabledInProject')
+        $this->dao->method('isTypeDisabledInProject')
             ->with(101, '_covered_by')
-            ->andReturn(false);
+            ->willReturn(false);
 
         $overriding_type = $this->overrider->getOverridingType(
             $this->project,
-            $this->artifact,
+            $artifact,
             $new_linked_artifact_ids
         );
 
         $this->assertNull($overriding_type);
     }
 
-    public function testItReturnsNothingIfCoveredByTypeIsDisabled()
+    public function testItReturnsNothingIfCoveredByTypeIsDisabled(): void
     {
         $new_linked_artifact_ids = [$this->artifact_id];
 
-        $this->dao->shouldReceive('isTypeDisabledInProject')
+        $artifact = ArtifactTestBuilder::anArtifact($this->artifact_id)
+            ->inTracker($this->test_definition_tracker)
+            ->build();
+
+        $this->dao->method('isTypeDisabledInProject')
             ->with(101, '_covered_by')
-            ->andReturn(true);
+            ->willReturn(true);
 
         $overriding_type = $this->overrider->getOverridingType(
             $this->project,
-            $this->artifact,
+            $artifact,
             $new_linked_artifact_ids
         );
 

@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\TestManagement\REST;
 
-use Mockery;
+use PHPUnit\Framework\MockObject\MockObject;
 use TemplateRenderer;
 use Tuleap\TestManagement\REST\v1\AutomatedTestsNotXmlException;
 use Tuleap\TestManagement\REST\v1\AutomatedTestsResultPATCHRepresentation;
@@ -31,21 +31,13 @@ use Tuleap\TestManagement\REST\v1\TestsDataFromJunitExtractor;
 
 class TestsDataFromJunitExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+    private TestsDataFromJunitExtractor $tests_data_from_junit_extractor;
 
-    /**
-     * @var TestsDataFromJunitExtractor
-     */
-    private $tests_data_from_junit_extractor;
-
-    /**
-     * @var TemplateRenderer
-     */
-    private $template_renderer;
+    private TemplateRenderer&MockObject $template_renderer;
 
     protected function setUp(): void
     {
-        $this->template_renderer               = Mockery::mock(TemplateRenderer::class);
+        $this->template_renderer               = $this->createMock(TemplateRenderer::class);
         $this->tests_data_from_junit_extractor = new TestsDataFromJunitExtractor($this->template_renderer);
     }
 
@@ -99,13 +91,36 @@ class TestsDataFromJunitExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
              </testsuites>',
         ];
 
-        $this->template_renderer->shouldReceive('renderToString')->with('test-case-execution', Mockery::andAnyOtherArgs())->andReturn('test case executed')->times(3);
-        $this->template_renderer->shouldReceive('renderToString')->with('test-suite-execution', Mockery::andAnyOtherArgs())->andReturn('test suite executed')->times(3);
-        $this->template_renderer->shouldReceive('renderToString')->with('failure-feedback', Mockery::andAnyOtherArgs())->andReturn('failure feedback')->times(2);
+        $calls = [
+            'test-case-execution' => 0,
+            'test-suite-execution' => 0,
+            'failure-feedback' => 0,
+        ];
+
+        $this->template_renderer
+            ->method('renderToString')
+            ->willReturnCallback(function (string $template, mixed $presenter) use (&$calls): string {
+                if ($template === 'test-case-execution') {
+                    $calls[$template]++;
+                    return 'test case executed';
+                }
+
+                if ($template === 'test-suite-execution') {
+                    $calls[$template]++;
+                    return 'test suite executed';
+                }
+
+                if ($template === 'failure-feedback') {
+                    $calls[$template]++;
+                    return 'failure feedback';
+                }
+
+                throw new \Exception('Unexpected template: ' . $template);
+            });
 
         $result = $this->tests_data_from_junit_extractor->getTestsResultsFromJunit($automated_tests_results_representation);
 
-        $this->assertEquals(
+        self::assertEquals(
             [
                 'firsttest' => $extracted_test_1,
                 'failtest'  => $extracted_test_2,
@@ -116,6 +131,11 @@ class TestsDataFromJunitExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
             ],
             $result
         );
+        self::assertSame([
+            'test-case-execution' => 3,
+            'test-suite-execution' => 3,
+            'failure-feedback' => 2,
+        ], $calls);
     }
 
     public function testGetTestsCaseFromJunitWithMulitpleFailureForATest(): void
@@ -150,13 +170,45 @@ class TestsDataFromJunitExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
              </testsuites>',
         ];
 
-        $this->template_renderer->shouldReceive('renderToString')->with('test-case-execution', Mockery::andAnyOtherArgs())->andReturn('test case executed')->times(3);
-        $this->template_renderer->shouldReceive('renderToString')->with('test-suite-execution', Mockery::andAnyOtherArgs())->andReturn('test suite executed')->once();
-        $this->template_renderer->shouldReceive('renderToString')->with('failure-feedback', Mockery::andAnyOtherArgs())->andReturn('failure feedback')->times(4);
+        $calls = [
+            'test-case-execution' => 0,
+            'test-suite-execution' => 0,
+            'failure-feedback' => 0,
+        ];
+
+        $this->template_renderer
+            ->method('renderToString')
+            ->willReturnCallback(function (string $template, mixed $presenter) use (&$calls): string {
+                if ($template === 'test-case-execution') {
+                    $calls[$template]++;
+                    return 'test case executed';
+                }
+
+                if ($template === 'test-suite-execution') {
+                    $calls[$template]++;
+                    return 'test suite executed';
+                }
+
+                if ($template === 'failure-feedback') {
+                    $calls[$template]++;
+                    return 'failure feedback';
+                }
+
+                throw new \Exception('Unexpected template: ' . $template);
+            });
 
         $result = $this->tests_data_from_junit_extractor->getTestsResultsFromJunit($automated_tests_results_representation);
 
-        $this->assertEquals(['firsttest' => $extracted_test_1, 'failtest' => $extracted_test_2, 'testSuite' => $extracted_test_suite], $result);
+        self::assertEquals([
+            'firsttest' => $extracted_test_1,
+            'failtest' => $extracted_test_2,
+            'testSuite' => $extracted_test_suite,
+        ], $result);
+        self::assertSame([
+            'test-case-execution' => 3,
+            'test-suite-execution' => 1,
+            'failure-feedback' => 4,
+        ], $calls);
     }
 
     public function testGetTestsCaseFromJunitTrowExceptionIfNoXmlInAutomatedTestResult(): void
@@ -199,13 +251,41 @@ class TestsDataFromJunitExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
              </testsuites>',
         ];
 
-        $this->template_renderer->shouldReceive('renderToString')->with('test-case-execution', Mockery::andAnyOtherArgs())->andReturn('test case executed')->times(2);
-        $this->template_renderer->shouldReceive('renderToString')->with('test-suite-execution', Mockery::andAnyOtherArgs())->andReturn('test suite executed')->times(2);
-        $this->template_renderer->shouldReceive('renderToString')->with('failure-feedback', Mockery::andAnyOtherArgs())->andReturn('failure feedback')->times(2);
+        $calls = [
+            'test-case-execution' => 0,
+            'test-suite-execution' => 0,
+            'failure-feedback' => 0,
+        ];
+
+        $this->template_renderer
+            ->method('renderToString')
+            ->willReturnCallback(function (string $template, mixed $presenter) use (&$calls): string {
+                if ($template === 'test-case-execution') {
+                    $calls[$template]++;
+                    return 'test case executed';
+                }
+
+                if ($template === 'test-suite-execution') {
+                    $calls[$template]++;
+                    return 'test suite executed';
+                }
+
+                if ($template === 'failure-feedback') {
+                    $calls[$template]++;
+                    return 'failure feedback';
+                }
+
+                throw new \Exception('Unexpected template: ' . $template);
+            });
 
         $result = $this->tests_data_from_junit_extractor->getTestsResultsFromJunit($automated_tests_results_representation);
 
-        $this->assertEquals($extracted_suite_1, $result['firstTestSuite']);
-        $this->assertEquals($extracted_suite_2, $result['secondTestSuite']);
+        self::assertEquals($extracted_suite_1, $result['firstTestSuite']);
+        self::assertEquals($extracted_suite_2, $result['secondTestSuite']);
+        self::assertSame([
+            'test-case-execution' => 2,
+            'test-suite-execution' => 2,
+            'failure-feedback' => 2,
+        ], $calls);
     }
 }

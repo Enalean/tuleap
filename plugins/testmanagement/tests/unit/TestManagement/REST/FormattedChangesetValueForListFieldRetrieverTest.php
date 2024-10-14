@@ -23,43 +23,21 @@ declare(strict_types=1);
 namespace Tuleap\TestManagement\REST;
 
 use Luracast\Restler\RestException;
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PFUser;
-use Tracker_FormElement_Field_List;
-use Tracker_FormElement_Field_List_Bind;
-use Tracker_FormElement_Field_List_BindValue;
+use PHPUnit\Framework\MockObject\MockObject;
 use Tracker_FormElementFactory;
-use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticBindBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
 
 class FormattedChangesetValueForListFieldRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var FormattedChangesetValueForListFieldRetriever
-     */
-    private $formatted_changeset_value_for_list_field_retriever;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Artifact
-     */
-    private $artifact;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|PFUser
-     */
-    private $user;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Tracker_FormElementFactory
-     */
-    private $tracker_formelement_factory;
+    private FormattedChangesetValueForListFieldRetriever $formatted_changeset_value_for_list_field_retriever;
+    private Tracker_FormElementFactory&MockObject $tracker_formelement_factory;
 
     protected function setUp(): void
     {
-        $this->artifact = Mockery::mock(Artifact::class);
-        $this->artifact->shouldReceive('getTrackerId')->andReturn(42);
-
-        $this->user                                               = Mockery::mock(PFUser::class);
-        $this->tracker_formelement_factory                        = Mockery::mock(Tracker_FormElementFactory::class);
+        $this->tracker_formelement_factory                        = $this->createMock(Tracker_FormElementFactory::class);
         $this->formatted_changeset_value_for_list_field_retriever = new FormattedChangesetValueForListFieldRetriever(
             $this->tracker_formelement_factory
         );
@@ -67,49 +45,58 @@ class FormattedChangesetValueForListFieldRetrieverTest extends \Tuleap\Test\PHPU
 
     public function testGetFormattedChangesetValueForFieldList(): void
     {
-        $bind_value = Mockery::mock(Tracker_FormElement_Field_List_BindValue::class);
-        $bind_value->shouldReceive('getId')->andReturn(111);
+        $field = ListStaticBindBuilder::aStaticBind(ListFieldBuilder::aListField(112)->build())
+            ->withStaticValues([110 => 'notrun', 111 => 'pass'])
+            ->build()
+            ->getField();
 
-        $bind = Mockery::mock(Tracker_FormElement_Field_List_Bind::class);
-        $bind->shouldReceive('getValuesByKeyword')->andReturn([$bind_value]);
-
-        $field = Mockery::mock(Tracker_FormElement_Field_List::class);
-        $field->shouldReceive('getId')->andReturn(112);
-        $field->shouldReceive('getBind')->andReturn($bind);
-
-        $this->tracker_formelement_factory->shouldReceive('getUsedFieldByNameForUser')->andReturn($field);
+        $this->tracker_formelement_factory->method('getUsedFieldByNameForUser')->willReturn($field);
 
 
         $result = $this->formatted_changeset_value_for_list_field_retriever
-            ->getFormattedChangesetValueForFieldList('status', 'pass', $this->artifact, $this->user);
+            ->getFormattedChangesetValueForFieldList(
+                'status',
+                'pass',
+                ArtifactTestBuilder::anArtifact(42)->build(),
+                UserTestBuilder::buildWithDefaults(),
+            );
 
         $this->assertEquals([111], $result->bind_value_ids);
         $this->assertEquals(112, $result->field_id);
     }
 
-    public function testGetFormattedChangesetValueForffFieldList(): void
+    public function testExceptionWhenPassedValueIsNotPartOfFieldValue(): void
     {
-        $bind = Mockery::mock(Tracker_FormElement_Field_List_Bind::class);
-        $bind->shouldReceive('getValuesByKeyword')->andReturn([]);
+        $field = ListStaticBindBuilder::aStaticBind(ListFieldBuilder::aListField(112)->build())
+            ->withStaticValues([110 => 'notrun', 111 => 'pass'])
+            ->build()
+            ->getField();
 
-        $field = Mockery::mock(Tracker_FormElement_Field_List::class);
-        $field->shouldReceive('getBind')->andReturn($bind);
-
-        $this->tracker_formelement_factory->shouldReceive('getUsedFieldByNameForUser')->andReturn($field);
+        $this->tracker_formelement_factory->method('getUsedFieldByNameForUser')->willReturn($field);
 
         $this->expectException(RestException::class);
         $this->expectExceptionCode(400);
 
         $this->formatted_changeset_value_for_list_field_retriever
-            ->getFormattedChangesetValueForFieldList('status', 'pass', $this->artifact, $this->user);
+            ->getFormattedChangesetValueForFieldList(
+                'status',
+                'unknown',
+                ArtifactTestBuilder::anArtifact(42)->build(),
+                UserTestBuilder::buildWithDefaults(),
+            );
     }
 
     public function testGetFormattedChangesetValueForFieldListReturnsNullIfFieldDoesntExist(): void
     {
-        $this->tracker_formelement_factory->shouldReceive('getUsedFieldByNameForUser')->andReturn(null);
+        $this->tracker_formelement_factory->method('getUsedFieldByNameForUser')->willReturn(null);
 
         $result = $this->formatted_changeset_value_for_list_field_retriever
-            ->getFormattedChangesetValueForFieldList('status', 'pass', $this->artifact, $this->user);
+            ->getFormattedChangesetValueForFieldList(
+                'status',
+                'pass',
+                ArtifactTestBuilder::anArtifact(42)->build(),
+                UserTestBuilder::buildWithDefaults(),
+            );
 
         $this->assertNull($result);
     }

@@ -22,12 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\TestManagement;
 
-use Mockery;
-
 class TestmanagementTrackersConfiguratorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
     /**
      * @var TestmanagementTrackersConfigurator
      */

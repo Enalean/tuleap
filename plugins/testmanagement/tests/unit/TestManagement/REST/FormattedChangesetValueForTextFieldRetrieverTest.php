@@ -22,55 +22,31 @@ declare(strict_types=1);
 
 namespace Tuleap\TestManagement\REST;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PFUser;
-use Tracker_FormElement_Field_Text;
 use Tracker_FormElementFactory;
-use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\StringFieldBuilder;
 
-class FormattedChangesetValueForTextFieldRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
+final class FormattedChangesetValueForTextFieldRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var FormattedChangesetValueForTextFieldRetriever
-     */
-    private $formatted_changeset_value_for_text_field_retriever;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Artifact
-     */
-    private $artifact;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|PFUser
-     */
-    private $user;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Tracker_FormElementFactory
-     */
-    private $tracker_formelement_factory;
-
-    protected function setUp(): void
-    {
-        $this->artifact = Mockery::mock(Artifact::class);
-        $this->artifact->shouldReceive('getTrackerId')->andReturn(42);
-
-        $this->user                                               = Mockery::mock(PFUser::class);
-        $this->tracker_formelement_factory                        = Mockery::mock(Tracker_FormElementFactory::class);
-        $this->formatted_changeset_value_for_text_field_retriever = new FormattedChangesetValueForTextFieldRetriever(
-            $this->tracker_formelement_factory
-        );
-    }
-
     public function testGetFormattedChangesetValueForFieldText(): void
     {
-        $field = Mockery::mock(Tracker_FormElement_Field_Text::class);
-        $field->shouldReceive('getId')->andReturn(112);
+        $tracker_formelement_factory = $this->createMock(Tracker_FormElementFactory::class);
+        $tracker_formelement_factory
+            ->method('getUsedFieldByNameForUser')
+            ->willReturn(StringFieldBuilder::aStringField(112)->build());
 
-        $this->tracker_formelement_factory->shouldReceive('getUsedFieldByNameForUser')->andReturn($field);
+        $formatted_changeset_value_for_text_field_retriever = new FormattedChangesetValueForTextFieldRetriever(
+            $tracker_formelement_factory
+        );
+        $result                                             = $formatted_changeset_value_for_text_field_retriever
+            ->getFormattedChangesetValueForFieldText(
+                'result',
+                'Result',
+                ArtifactTestBuilder::anArtifact(123)->build(),
+                UserTestBuilder::buildWithDefaults(),
+            );
 
-        $result          = $this->formatted_changeset_value_for_text_field_retriever
-            ->getFormattedChangesetValueForFieldText('result', 'Result', $this->artifact, $this->user);
         $expected_result = ['content' => 'Result', 'format' => 'html'];
 
         $this->assertEquals($expected_result, $result->value);
@@ -79,10 +55,21 @@ class FormattedChangesetValueForTextFieldRetrieverTest extends \Tuleap\Test\PHPU
 
     public function testGetFormattedChangesetValueForFieldTextReturnsNullIfFieldDoesntExist(): void
     {
-        $this->tracker_formelement_factory->shouldReceive('getUsedFieldByNameForUser')->andReturn(null);
+        $tracker_formelement_factory = $this->createMock(Tracker_FormElementFactory::class);
+        $tracker_formelement_factory
+            ->method('getUsedFieldByNameForUser')
+            ->willReturn(null);
 
-        $result = $this->formatted_changeset_value_for_text_field_retriever
-            ->getFormattedChangesetValueForFieldText('result', 'Result', $this->artifact, $this->user);
+        $formatted_changeset_value_for_text_field_retriever = new FormattedChangesetValueForTextFieldRetriever(
+            $tracker_formelement_factory
+        );
+        $result                                             = $formatted_changeset_value_for_text_field_retriever
+            ->getFormattedChangesetValueForFieldText(
+                'result',
+                'Result',
+                ArtifactTestBuilder::anArtifact(123)->build(),
+                UserTestBuilder::buildWithDefaults(),
+            );
 
         $this->assertNull($result);
     }

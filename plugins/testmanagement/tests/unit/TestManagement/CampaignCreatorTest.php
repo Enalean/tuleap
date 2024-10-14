@@ -20,119 +20,101 @@
 
 namespace Tuleap\TestManagement\REST\v1;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
-use ProjectManager;
+use PHPUnit\Framework\MockObject\MockObject;
 use Tracker;
 use Tracker_FormElementFactory;
-use TrackerFactory;
+use Tuleap\Project\ProjectByIDFactory;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\Stubs\ProjectByIDFactoryStub;
 use Tuleap\TestManagement\Config;
+use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\REST\Artifact\ArtifactCreator;
+use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\ArtifactLinkFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticBindBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\StringFieldBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
+use Tuleap\Tracker\Test\Stub\RetrieveTrackerStub;
 
 final class CampaignCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     private CampaignCreator $campaign_creator;
-    private ProjectManager $project_manager;
-    private TrackerFactory $tracker_factory;
-    private DefinitionSelector $definition_selector;
+    private ProjectByIDFactory $project_manager;
+    private DefinitionSelector&MockObject $definition_selector;
     private Tracker_FormElementFactory $formelement_factory;
-    private Config $config;
-    private ArtifactCreator $artifact_creator;
-    private ExecutionCreator $execution_creator;
+    private Config&MockObject $config;
+    private ArtifactCreator&MockObject $artifact_creator;
+    private Artifact&MockObject $campaign_artifact;
+    private ExecutionCreator&MockObject $execution_creator;
     private Tracker $campaign_tracker;
     private PFUser $user;
 
-    private $project_id          = 101;
-    private $campaign_tracker_id = 444;
-    private $project;
-
-    /**
-     * Setup and general stubs
-     *
-     */
+    private int $project_id          = 101;
+    private int $campaign_tracker_id = 444;
 
     public function setUp(): void
     {
         parent::setUp();
 
-        $this->project          = Mockery::spy(\Project::class);
-        $this->campaign_tracker = Mockery::spy(\Tracker::class);
-        $this->campaign_tracker->shouldReceive('getName')->andReturn('Campaigns');
-        $this->campaign_tracker->shouldReceive('getProject')->andReturn($this->project);
-        $this->user = Mockery::spy(\PFUser::class);
+        $project         = ProjectTestBuilder::aProject()->withId($this->project_id)->build();
+        $project_manager = ProjectByIDFactoryStub::buildWith($project);
 
-        $this->project_manager     = Mockery::spy(\ProjectManager::class);
-        $this->tracker_factory     = Mockery::spy(\TrackerFactory::class);
-        $this->definition_selector = Mockery::spy(\Tuleap\TestManagement\REST\v1\DefinitionSelector::class);
-        $this->formelement_factory = Mockery::spy(\Tracker_FormElementFactory::class);
-        $this->artifact_creator    = Mockery::spy(ArtifactCreator::class);
-        $this->config              = Mockery::spy(\Tuleap\TestManagement\Config::class);
-        $this->execution_creator   = Mockery::spy(\Tuleap\TestManagement\REST\v1\ExecutionCreator::class);
+        $this->campaign_tracker = TrackerTestBuilder::aTracker()
+            ->withId($this->campaign_tracker_id)
+            ->withProject($project)
+            ->withName('Campaigns')
+            ->build();
+
+        $tracker_factory = RetrieveTrackerStub::withTracker($this->campaign_tracker);
+
+        $this->user = UserTestBuilder::buildWithDefaults();
+
+        $this->definition_selector = $this->createMock(\Tuleap\TestManagement\REST\v1\DefinitionSelector::class);
+        $this->execution_creator   = $this->createMock(\Tuleap\TestManagement\REST\v1\ExecutionCreator::class);
+
+        $this->formelement_factory = $this->createMock(\Tracker_FormElementFactory::class);
+        $this->formelement_factory
+            ->method('getUsedFieldByNameForUser')
+            ->willReturnCallback(fn (int $tracker_id, string $field_name, PFUser $user): \Tracker_FormElement_Field => match ($field_name) {
+                CampaignRepresentation::FIELD_NAME => StringFieldBuilder::aStringField(1001)->build(),
+                CampaignRepresentation::FIELD_STATUS => ListStaticBindBuilder::aStaticBind(ListFieldBuilder::aListField(1002)->build())->build()->getField(),
+                CampaignRepresentation::FIELD_ARTIFACT_LINKS => ArtifactLinkFieldBuilder::anArtifactLinkField(1003)->build(),
+            });
+
+        $this->campaign_artifact = $this->createMock(\Tuleap\Tracker\Artifact\Artifact::class);
+        $artifact_ref            = $this->createMock(\Tuleap\Tracker\REST\Artifact\ArtifactReference::class);
+        $artifact_ref->method('getArtifact')->willReturn($this->campaign_artifact);
+
+        $this->artifact_creator = $this->createMock(ArtifactCreator::class);
+        $this->artifact_creator->method('create')->willReturn($artifact_ref);
+
+        $this->config = $this->createMock(\Tuleap\TestManagement\Config::class);
+        $this->config->method('getCampaignTrackerId')->willReturn($this->campaign_tracker_id);
 
         $this->campaign_creator = new CampaignCreator(
             $this->config,
-            $this->project_manager,
+            $project_manager,
             $this->formelement_factory,
-            $this->tracker_factory,
+            $tracker_factory,
             $this->definition_selector,
             $this->artifact_creator,
             $this->execution_creator
         );
     }
 
-    private function stubCampaignTracker(): void
-    {
-        $this->config->shouldReceive('getCampaignTrackerId')->andReturn($this->campaign_tracker_id);
-        $this->project_manager->shouldReceive('getProject')->andReturn($this->project);
-        $this->tracker_factory->shouldReceive('getTrackerById')->andReturn($this->campaign_tracker);
-    }
-
-    private function stubCampaignArtifact(): \Tuleap\Tracker\Artifact\Artifact
-    {
-        $campaign_artifact = Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
-        $artifact_ref      = Mockery::spy(\Tuleap\Tracker\REST\Artifact\ArtifactReference::class);
-
-        $artifact_ref->shouldReceive('getArtifact')->andReturn($campaign_artifact);
-        $this->artifact_creator->shouldReceive('create')->andReturn($artifact_ref);
-
-        return $campaign_artifact;
-    }
-
-    /**
-     * Tests for createCampaign
-     *
-     */
-
     public function testItCreatesACampaignWithTheGivenName(): void
     {
-        $this->stubCampaignTracker();
-        $this->definition_selector->shouldReceive('selectDefinitions')->andReturn([]);
+        $this->definition_selector->method('selectDefinitions')->willReturn([]);
 
-        $this->stubCampaignArtifact();
         $expected_label  = 'Campaign Name';
         $test_selector   = 'all';
         $no_milestone_id = 0;
         $no_report_id    = 0;
 
-        $label_field_id = 123;
-        $label_field    = Mockery::spy(\Tracker_FormElement_Field::class);
-        $label_field->shouldReceive('getId')->andReturn($label_field_id);
-        $this->formelement_factory->shouldReceive('getUsedFieldByNameForUser')->andReturn($label_field);
-
-        $status_field_id = 456;
-        $status_field    = Mockery::spy(\Tracker_FormElement_Field::class);
-        $status_field->shouldReceive('getId')->andReturn($status_field_id);
-        $this->formelement_factory->shouldReceive('getUsedFieldByNameForUser')->andReturn($status_field);
-
-        $link_field_id = 789;
-        $link_field    = Mockery::spy(\Tracker_FormElement_Field::class);
-        $link_field->shouldReceive('getId')->andReturn($link_field_id);
-        $this->formelement_factory->shouldReceive('getUsedFieldByNameForUser')->andReturn($link_field);
-
-        $this->artifact_creator->shouldReceive('linkArtifact')->never();
+        $this->campaign_artifact->expects(self::never())->method('linkArtifact');
 
         $this->campaign_creator->createCampaign(
             $this->user,
@@ -146,20 +128,17 @@ final class CampaignCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItCreatesAnArtifactLinkToMilestoneWhenGivenAMilestoneId(): void
     {
-        $this->stubCampaignTracker();
-        $campaign_artifact = $this->stubCampaignArtifact();
-        $this->definition_selector->shouldReceive('selectDefinitions')->andReturn([]);
-        $this->formelement_factory->shouldReceive('getUsedFieldByNameForUser')->andReturn(
-            Mockery::spy(\Tracker_FormElement_Field::class)
-        );
+        $this->definition_selector->method('selectDefinitions')->willReturn([]);
 
-        $this->stubCampaignArtifact();
         $expected_label = 'Campaign Name';
         $test_selector  = 'all';
         $milestone_id   = 10;
         $no_report_id   = 0;
 
-        $campaign_artifact->shouldReceive('linkArtifact')->with($milestone_id, Mockery::any())->once();
+        $this->campaign_artifact
+            ->expects(self::once())
+            ->method('linkArtifact')
+            ->with($milestone_id, $this->user);
 
         $this->campaign_creator->createCampaign(
             $this->user,
@@ -173,31 +152,27 @@ final class CampaignCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItCreatesTestExecutionsForSelectedDefinitions(): void
     {
-        $definition_1 = Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
-        $definition_1->allows()->getId()->andReturn('1');
-        $definition_2 = Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
-        $definition_2->allows()->getId()->andReturn('2');
-        $definition_3 = Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
-        $definition_3->allows()->getId()->andReturn('3');
+        $definition_1     = ArtifactTestBuilder::anArtifact(1)->build();
+        $definition_2     = ArtifactTestBuilder::anArtifact(2)->build();
+        $definition_3     = ArtifactTestBuilder::anArtifact(3)->build();
         $test_definitions = [$definition_1, $definition_2, $definition_3];
 
-        $this->stubCampaignTracker();
-        $this->stubCampaignArtifact();
-
-        $this->definition_selector->shouldReceive('selectDefinitions')->andReturn($test_definitions);
-        $this->formelement_factory->shouldReceive('getUsedFieldByNameForUser')->andReturn(
-            Mockery::spy(\Tracker_FormElement_Field::class)
-        );
+        $this->definition_selector->method('selectDefinitions')->willReturn($test_definitions);
 
         $expected_label = 'Campaign Name';
         $test_selector  = 'report';
         $milestone_id   = 10;
         $report_id      = 5;
 
-        $this->execution_creator->shouldReceive('createTestExecution')
-            ->times(count($test_definitions))
-            ->andReturn(Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class));
+        $this->execution_creator
+            ->expects(self::exactly(count($test_definitions)))
+            ->method('createTestExecution')
+            ->willReturn(ArtifactTestBuilder::anArtifact(124)->build());
 
+        $this->campaign_artifact
+            ->expects(self::once())
+            ->method('linkArtifact')
+            ->with($milestone_id, $this->user);
 
         $this->campaign_creator->createCampaign(
             $this->user,

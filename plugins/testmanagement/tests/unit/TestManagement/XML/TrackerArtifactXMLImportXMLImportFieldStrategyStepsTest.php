@@ -20,18 +20,14 @@
 
 namespace Tuleap\TestManagement\XML;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PFUser;
 use SimpleXMLElement;
-use Tracker_FormElement_Field;
-use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\TestManagement\Test\Builders\StepDefinitionFieldBuilder;
 use Tuleap\Tracker\Artifact\Changeset\PostCreation\PostCreationContext;
+use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 
 final class TrackerArtifactXMLImportXMLImportFieldStrategyStepsTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
     public function testGetFieldData(): void
     {
         $xml_data = '
@@ -48,10 +44,10 @@ final class TrackerArtifactXMLImportXMLImportFieldStrategyStepsTest extends \Tul
 
         $xml = new SimpleXMLElement($xml_data);
 
-        $import_strategie = new TrackerArtifactXMLImportXMLImportFieldStrategySteps();
-        $field            = Mockery::mock(Tracker_FormElement_Field::class);
-        $user             = Mockery::mock(PFUser::class);
-        $artifact         = Mockery::mock(Artifact::class);
+        $import_strategy = new TrackerArtifactXMLImportXMLImportFieldStrategySteps();
+        $field           = StepDefinitionFieldBuilder::aStepDefinitionField();
+        $user            = UserTestBuilder::buildWithDefaults();
+        $artifact        = ArtifactTestBuilder::anArtifact(101)->build();
 
         $data = [
             'description_format'      => ['text', 'html'],
@@ -60,6 +56,6 @@ final class TrackerArtifactXMLImportXMLImportFieldStrategyStepsTest extends \Tul
             'expected_results'        => ['Non', 'Non'],
         ];
 
-        $this->assertEquals($data, $import_strategie->getFieldData($field, $xml, $user, $artifact, PostCreationContext::withNoConfig(false)));
+        $this->assertEquals($data, $import_strategy->getFieldData($field, $xml, $user, $artifact, PostCreationContext::withNoConfig(false)));
     }
 }

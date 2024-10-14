@@ -31,15 +31,15 @@ final class StepExecutionFieldBuilder
         return new StepExecution(
             1,
             102,
-            null,
+            0,
             'steps_exec',
             'Steps execution',
             "Execution of the test's steps",
             true,
+            'P',
             null,
             null,
-            null,
-            null,
+            10,
             null
         );
     }

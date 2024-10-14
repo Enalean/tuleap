@@ -22,41 +22,20 @@ declare(strict_types=1);
 
 namespace Tuleap\TestManagement\REST;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PFUser;
-use Tracker_FormElement_Field_Integer;
+use PHPUnit\Framework\MockObject\MockObject;
 use Tracker_FormElementFactory;
-use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\IntFieldBuilder;
 
-class FormattedChangesetValueForIntFieldRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
+final class FormattedChangesetValueForIntFieldRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var FormattedChangesetValueForIntFieldRetriever
-     */
-    private $formatted_changeset_value_for_int_field_retriever;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Artifact
-     */
-    private $artifact;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|PFUser
-     */
-    private $user;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Tracker_FormElementFactory
-     */
-    private $tracker_formelement_factory;
+    private FormattedChangesetValueForIntFieldRetriever $formatted_changeset_value_for_int_field_retriever;
+    private Tracker_FormElementFactory&MockObject $tracker_formelement_factory;
 
     protected function setUp(): void
     {
-        $this->artifact = Mockery::mock(Artifact::class);
-        $this->artifact->shouldReceive('getTrackerId')->andReturn(42);
-
-        $this->user                                              = Mockery::mock(PFUser::class);
-        $this->tracker_formelement_factory                       = Mockery::mock(Tracker_FormElementFactory::class);
+        $this->tracker_formelement_factory                       = $this->createMock(Tracker_FormElementFactory::class);
         $this->formatted_changeset_value_for_int_field_retriever = new FormattedChangesetValueForIntFieldRetriever(
             $this->tracker_formelement_factory
         );
@@ -64,13 +43,17 @@ class FormattedChangesetValueForIntFieldRetrieverTest extends \Tuleap\Test\PHPUn
 
     public function testGetFormattedChangesetValueForIntFile(): void
     {
-        $field = Mockery::mock(Tracker_FormElement_Field_Integer::class);
-        $field->shouldReceive('getId')->andReturn(112);
+        $field = IntFieldBuilder::anIntField(112)->build();
 
-        $this->tracker_formelement_factory->shouldReceive('getUsedFieldByNameForUser')->andReturn($field);
+        $this->tracker_formelement_factory->method('getUsedFieldByNameForUser')->willReturn($field);
 
         $result = $this->formatted_changeset_value_for_int_field_retriever
-            ->getFormattedChangesetValueForFieldInt('time', 1234, $this->artifact, $this->user);
+            ->getFormattedChangesetValueForFieldInt(
+                'time',
+                1234,
+                ArtifactTestBuilder::anArtifact(42)->build(),
+                UserTestBuilder::buildWithDefaults(),
+            );
 
         $this->assertEquals(1234, $result->value);
         $this->assertEquals(112, $result->field_id);
@@ -78,10 +61,15 @@ class FormattedChangesetValueForIntFieldRetrieverTest extends \Tuleap\Test\PHPUn
 
     public function testGetFormattedChangesetValueForFieldIntReturnsNullIfFieldDoesntExist(): void
     {
-        $this->tracker_formelement_factory->shouldReceive('getUsedFieldByNameForUser')->andReturn(null);
+        $this->tracker_formelement_factory->method('getUsedFieldByNameForUser')->willReturn(null);
 
         $result = $this->formatted_changeset_value_for_int_field_retriever
-            ->getFormattedChangesetValueForFieldInt('time', 1234, $this->artifact, $this->user);
+            ->getFormattedChangesetValueForFieldInt(
+                'time',
+                1234,
+                ArtifactTestBuilder::anArtifact(42)->build(),
+                UserTestBuilder::buildWithDefaults(),
+            );
 
         $this->assertNull($result);
     }
