@@ -254,3 +254,9 @@ msgstr ""
 
 msgid "end of input"
 msgstr ""
+
+msgid "integer"
+msgstr ""
+
+msgid "whitespace"
+msgstr ""

@@ -326,3 +326,9 @@ msgstr "Vous n'avez pas la permission d'accéder à ce projet"
 
 msgid "end of input"
 msgstr "fin du texte"
+
+msgid "integer"
+msgstr "nombre entier"
+
+msgid "whitespace"
+msgstr "espace"

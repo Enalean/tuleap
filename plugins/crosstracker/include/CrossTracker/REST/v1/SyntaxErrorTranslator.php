@@ -35,9 +35,7 @@ final class SyntaxErrorTranslator
     {
         if ($error->expected !== null) {
             $expected = implode(', ', array_map(
-                static fn(pegExpectation $expection) => $expection->description === 'end of input'
-                    ? dgettext('tuleap-crosstracker', 'end of input')
-                    : $expection->description,
+                static fn(pegExpectation $expection) => self::translateExpectation($expection->description),
                 $error->expected,
             ));
         } else {
@@ -55,5 +53,16 @@ final class SyntaxErrorTranslator
                 'column' => $error->grammarColumn,
             ],
         ];
+    }
+
+    private static function translateExpectation(?string $expectation): string
+    {
+        return match ($expectation) {
+            'end of input' => dgettext('tuleap-crosstracker', 'end of input'),
+            'integer'      => dgettext('tuleap-crosstracker', 'integer'),
+            'whitespace'   => dgettext('tuleap-crosstracker', 'whitespace'),
+            null           => '',
+            default        => $expectation,
+        };
     }
 }
