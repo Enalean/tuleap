@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) Enalean, 2024 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -17,19 +17,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-$header: 1;
-
-// editor should be above the title when we scroll (ckeditor toolbar always visible)
-$editor: 2;
-
-// footer must be above editor when we scroll (submit button always visible)
-$footer: 3;
-
-// prosemirror toolbar should be displayed above section content
-$toolbar: 4;
-
-// TOC should be displayed above the toolbar (to mask the box-shadow)
-$toc: 5;
-
-// dropdown should be displayed above the toc
-$dropdown: 6;
+export function moveDropdownMenuInDocumentBody(document: Document, element: HTMLElement): void {
+    document.body.appendChild(element);
+}

@@ -37,6 +37,8 @@ import DocumentContent from "./DocumentContent.vue";
 </script>
 
 <style lang="scss" scoped>
+@use "@/themes/includes/zindex";
+
 .document-layout {
     display: grid;
     grid-template-columns: 80% 20%;
@@ -50,6 +52,7 @@ import DocumentContent from "./DocumentContent.vue";
 }
 
 aside {
+    z-index: zindex.$toc;
     order: 1;
     height: 100%;
     background: var(--tlp-fade-background-color);

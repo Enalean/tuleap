@@ -146,7 +146,6 @@ section {
 
 .artidoc-dropdown-container {
     display: flex;
-    z-index: zindex.$dropdown;
     justify-content: center;
     order: 1;
 

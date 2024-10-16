@@ -30,6 +30,7 @@ import type { ArtifactSection } from "@/helpers/artidoc-section.type";
 import { CONFIGURATION_STORE } from "@/stores/configuration-store";
 
 vi.mock("@tuleap/tlp-dropdown");
+vi.mock("@/helpers/move-dropdownmenu-in-document-body");
 
 describe("SectionDropdown", () => {
     function getWrapper(editor: SectionEditor): VueWrapper<ComponentPublicInstance> {
