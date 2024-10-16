@@ -198,6 +198,8 @@ module.exports = {
             ],
             extends: ["plugin:vue/recommended"],
             rules: {
+                "vue/html-indent": "off",
+                "vue/max-attributes-per-line": "off",
                 "@typescript-eslint/explicit-function-return-type": "off",
                 "@typescript-eslint/explicit-module-boundary-types": "off",
                 "no-var": "off",

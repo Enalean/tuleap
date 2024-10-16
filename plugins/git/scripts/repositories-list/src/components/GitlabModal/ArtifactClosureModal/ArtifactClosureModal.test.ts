@@ -29,10 +29,12 @@ import { createLocalVueForTests } from "../../../helpers/local-vue-for-tests";
 
 jest.useFakeTimers();
 
+type ArtifactClosureModalExposed = { message_error_rest: string };
+
 describe("ArtifactClosureModal", () => {
     let store: Store;
 
-    async function instantiateComponent(): Promise<Wrapper<ArtifactClosureModal>> {
+    async function instantiateComponent(): Promise<Wrapper<Vue & ArtifactClosureModalExposed>> {
         store = createStoreMock(
             {},
             {
@@ -46,7 +48,7 @@ describe("ArtifactClosureModal", () => {
             propsData: {},
             mocks: { $store: store },
             localVue: await createLocalVueForTests(),
-        });
+        }) as Wrapper<Vue & ArtifactClosureModalExposed>;
     }
 
     describe("The feedback display", () => {
@@ -172,7 +174,7 @@ describe("ArtifactClosureModal", () => {
             wrapper.find("[data-test=update-artifact-closure-modal-save-button]").trigger("click");
             await jest.runOnlyPendingTimersAsync();
 
-            expect(wrapper.vm.$data.message_error_rest).toBe("404 Error on server");
+            expect(wrapper.vm.message_error_rest).toBe("404 Error on server");
         });
     });
 });

@@ -19,7 +19,7 @@
   -->
 
 <template>
-    <div class="tlp-modal" role="dialog" aria-labelledby="my-modal-label">
+    <div class="tlp-modal" role="dialog" aria-labelledby="my-modal-label" ref="modal_element">
         <div class="tlp-modal-header">
             <h1 class="tlp-modal-title" id="my-modal-label">
                 <i
@@ -67,7 +67,7 @@
                 class="tlp-button-primary tlp-button-outline tlp-modal-action"
                 data-dismiss="modal"
             >
-                Cancel
+                {{ $gettext("Cancel") }}
             </button>
             <button
                 type="submit"
@@ -87,103 +87,98 @@
     </div>
 </template>
 
-<script lang="ts">
-import { Component } from "vue-property-decorator";
-import Vue from "vue";
-import { namespace } from "vuex-class";
+<script setup lang="ts">
+import { computed, onMounted, ref } from "vue";
 import type { Modal } from "@tuleap/tlp-modal";
 import { createModal } from "@tuleap/tlp-modal";
-import type { Repository, GitLabRepository } from "../../../type";
 import { handleError } from "../../../gitlab/gitlab-error-handler";
+import {
+    useMutations,
+    useNamespacedActions,
+    useNamespacedMutations,
+    useNamespacedState,
+} from "vuex-composition-helpers";
+import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
 
-const gitlab = namespace("gitlab");
+const gettext_provider = useGettext();
+const { updateGitlabRepositoryArtifactClosure } = useNamespacedActions("gitlab", [
+    "updateGitlabRepositoryArtifactClosure",
+]);
+const { artifact_closure_repository } = useNamespacedState("gitlab", [
+    "artifact_closure_repository",
+]);
+const { setArtifactClosureModal } = useNamespacedMutations("gitlab", ["setArtifactClosureModal"]);
+const { setSuccessMessage } = useMutations(["setSuccessMessage"]);
 
-@Component
-export default class ArtifactClosureModal extends Vue {
-    private modal: Modal | null = null;
-    is_updating_gitlab_repository = false;
-    allow_artifact_closure = false;
-    message_error_rest = "";
+const modal = ref<Modal | null>(null);
+const is_updating_gitlab_repository = ref(false);
+const allow_artifact_closure = ref(false);
+const message_error_rest = ref("");
 
-    @gitlab.Action
-    readonly updateGitlabRepositoryArtifactClosure!: ({
-        integration_id,
-        allow_artifact_closure,
-    }: {
-        integration_id: number;
-        allow_artifact_closure: boolean;
-    }) => Promise<GitLabRepository>;
+const modal_element = ref();
 
-    @gitlab.State
-    readonly artifact_closure_repository!: Repository;
+const onShownModal = (): void => {
+    allow_artifact_closure.value = artifact_closure_repository.value.allow_artifact_closure;
+};
 
-    mounted(): void {
-        this.modal = createModal(this.$el);
-        this.modal.addEventListener("tlp-modal-shown", this.onShownModal);
-        this.modal.addEventListener("tlp-modal-hidden", this.reset);
-        this.$store.commit("gitlab/setArtifactClosureModal", this.modal);
-    }
+const reset = (): void => {
+    is_updating_gitlab_repository.value = false;
+    allow_artifact_closure.value = false;
+    message_error_rest.value = "";
+};
 
-    onShownModal(): void {
-        this.allow_artifact_closure = this.artifact_closure_repository.allow_artifact_closure;
-    }
+onMounted((): void => {
+    modal.value = createModal(modal_element.value);
+    modal.value.addEventListener("tlp-modal-shown", onShownModal);
+    modal.value.addEventListener("tlp-modal-hidden", reset);
+    setArtifactClosureModal(modal.value);
+});
 
-    reset(): void {
-        this.is_updating_gitlab_repository = false;
-        this.allow_artifact_closure = false;
-        this.message_error_rest = "";
-    }
+const have_any_rest_error = computed((): boolean => message_error_rest.value.length > 0);
 
-    get disabled_button() {
-        return this.is_updating_gitlab_repository || this.have_any_rest_error;
-    }
+const disabled_button = computed(
+    () => is_updating_gitlab_repository.value || have_any_rest_error.value,
+);
 
-    get close_label(): string {
-        return this.$gettext("Close");
-    }
+const close_label = gettext_provider.$gettext("Close");
 
-    get have_any_rest_error(): boolean {
-        return this.message_error_rest.length > 0;
-    }
-
-    getSuccessMessage(allow_closure_artifact: boolean): string {
-        if (allow_closure_artifact) {
-            return this.$gettextInterpolate(
-                this.$gettext("Artifact closure is now allowed for '%{repository}'!"),
-                { repository: this.artifact_closure_repository.label },
-            );
-        }
-        return this.$gettextInterpolate(
-            this.$gettext("Artifact closure is now disabled for '%{repository}'!"),
-            { repository: this.artifact_closure_repository.label },
+const getSuccessMessage = (allow_closure_artifact: boolean): string => {
+    if (allow_closure_artifact) {
+        return gettext_provider.interpolate(
+            gettext_provider.$gettext("Artifact closure is now allowed for '%{repository}'!"),
+            { repository: artifact_closure_repository.value.label },
         );
     }
+    return gettext_provider.interpolate(
+        gettext_provider.$gettext("Artifact closure is now disabled for '%{repository}'!"),
+        { repository: artifact_closure_repository.value.label },
+    );
+};
 
-    async updateArtifactClosureValue(event: Event): Promise<void> {
-        event.preventDefault();
+const updateArtifactClosureValue = async (event: Event): Promise<void> => {
+    event.preventDefault();
 
-        try {
-            this.is_updating_gitlab_repository = true;
+    try {
+        is_updating_gitlab_repository.value = true;
 
-            const updated_integration = await this.updateGitlabRepositoryArtifactClosure({
-                integration_id: Number(this.artifact_closure_repository.integration_id),
-                allow_artifact_closure: this.allow_artifact_closure,
-            });
+        const updated_integration = await updateGitlabRepositoryArtifactClosure({
+            integration_id: Number(artifact_closure_repository.value.integration_id),
+            allow_artifact_closure: allow_artifact_closure.value,
+        });
 
-            if (updated_integration && this.modal) {
-                this.modal.hide();
-            }
-
-            const success_message = this.getSuccessMessage(
-                updated_integration.allow_artifact_closure,
-            );
-            this.$store.commit("setSuccessMessage", success_message);
-        } catch (rest_error) {
-            this.message_error_rest = await handleError(rest_error, this);
-            throw rest_error;
-        } finally {
-            this.is_updating_gitlab_repository = false;
+        if (updated_integration) {
+            modal.value?.hide();
         }
+
+        const success_message = getSuccessMessage(updated_integration.allow_artifact_closure);
+        setSuccessMessage(success_message);
+    } catch (rest_error) {
+        message_error_rest.value = await handleError(rest_error, gettext_provider);
+        throw rest_error;
+    } finally {
+        is_updating_gitlab_repository.value = false;
     }
-}
+};
+
+defineExpose({ message_error_rest });
 </script>
