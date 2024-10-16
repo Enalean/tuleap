@@ -17,20 +17,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { html } from "hybrids";
-import type { UpdateFunction } from "hybrids";
-import { gettext_provider } from "../../../gettext-provider";
-import type { InternalHeadingsItem } from "./text-style";
+import type { DetectPreformattedTextInSelection } from "../PreformattedTextInSelectionDetector";
 
-export const renderStylesOption = (
-    host: InternalHeadingsItem,
-): UpdateFunction<InternalHeadingsItem> => {
-    const is_selected =
-        !host.is_plain_text_activated &&
-        !host.is_preformatted_text_activated &&
-        host.current_heading === null;
-
-    return html`<option selected="${is_selected}" disabled>
-        ${gettext_provider.gettext("Styles")}
-    </option>`;
+export const DetectPreformattedTextInSelectionStub = {
+    withOnlyPreformattedText: (): DetectPreformattedTextInSelection => ({
+        doesSelectionContainOnlyPreformattedText: () => true,
+    }),
+    withoutOnlyPreformattedText: (): DetectPreformattedTextInSelection => ({
+        doesSelectionContainOnlyPreformattedText: () => false,
+    }),
 };

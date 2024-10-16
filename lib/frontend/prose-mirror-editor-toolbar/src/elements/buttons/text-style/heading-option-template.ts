@@ -63,6 +63,10 @@ export const renderHeadingOption = (
 export const renderHeadingsOptions = (
     host: InternalHeadingsItem,
 ): UpdateFunction<InternalHeadingsItem> => {
+    if (!host.style_elements.headings) {
+        return html``;
+    }
+
     const heading_options = [];
     for (let level = 1; level < NB_HEADING + 1; level++) {
         heading_options.push(renderHeadingOption(host, level));

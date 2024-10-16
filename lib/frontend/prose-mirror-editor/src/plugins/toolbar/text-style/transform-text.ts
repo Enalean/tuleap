@@ -19,9 +19,10 @@
 
 import type { Command, EditorState, Transaction } from "prosemirror-state";
 import { custom_schema } from "../../../custom_schema";
+import type { NodeType } from "prosemirror-model";
 
-export const getPlainTextCommand =
-    (): Command =>
+const buildSetBlockTypeCommand =
+    (block_type: NodeType): Command =>
     (state: EditorState, dispatch): boolean => {
         if (!dispatch) {
             return true;
@@ -31,9 +32,14 @@ export const getPlainTextCommand =
             selection: { $from, $to },
         } = state;
 
-        dispatch(tr.setBlockType($from.pos, $to.pos, custom_schema.nodes.paragraph));
+        dispatch(tr.setBlockType($from.pos, $to.pos, block_type));
         return true;
     };
+
+export const getPlainTextCommand = (): Command =>
+    buildSetBlockTypeCommand(custom_schema.nodes.paragraph);
+export const getFormattedTextCommand = (): Command =>
+    buildSetBlockTypeCommand(custom_schema.nodes.code_block);
 
 export const getHeadingCommand =
     (level: number): Command =>

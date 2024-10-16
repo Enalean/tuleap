@@ -34,6 +34,12 @@ describe("text-style", () => {
         const host = {
             current_heading: null,
             is_plain_text_activated: false,
+            is_preformatted_text_activated: false,
+            style_elements: {
+                headings: true,
+                text: true,
+                preformatted: true,
+            },
             toolbar_bus,
         } as HostElement;
 
@@ -49,5 +55,11 @@ describe("text-style", () => {
 
         toolbar_bus.view.activatePlainText(false);
         expect(host.is_plain_text_activated).toBe(false);
+
+        toolbar_bus.view.activatePreformattedText(true);
+        expect(host.is_preformatted_text_activated).toBe(true);
+
+        toolbar_bus.view.activatePreformattedText(false);
+        expect(host.is_preformatted_text_activated).toBe(false);
     });
 });

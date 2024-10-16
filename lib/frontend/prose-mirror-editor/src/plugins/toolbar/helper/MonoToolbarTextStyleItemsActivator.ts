@@ -20,7 +20,8 @@
 import type { EditorState } from "prosemirror-state";
 import type { RetrieveHeading } from "../text-style/HeadingInSelectionRetriever";
 import type { ToolbarView } from "./toolbar-bus";
-import type { DetectHeadingsInSelection } from "../text-style/HeadingsInSelectionDetector";
+import type { DetectPreformattedTextInSelection } from "../text-style/PreformattedTextInSelectionDetector";
+import type { DetectParagraphsInSelection } from "../text-style/ParagraphsInSelectionDetector";
 
 export type ActivateMonoToolbarTextStyleItems = {
     activateTextStyleItems(toolbar_view: ToolbarView, state: EditorState): void;
@@ -28,14 +29,23 @@ export type ActivateMonoToolbarTextStyleItems = {
 
 export const MonoToolbarTextStyleItemsActivator = (
     retrieve_heading: RetrieveHeading,
-    detect_headings: DetectHeadingsInSelection,
+    detect_formatted_text: DetectPreformattedTextInSelection,
+    detect_paragraphs: DetectParagraphsInSelection,
 ): ActivateMonoToolbarTextStyleItems => ({
     activateTextStyleItems: (toolbar_view, state): void => {
         toolbar_view.activateHeading(
             retrieve_heading.retrieveHeadingInSelection(state.doc, state.selection),
         );
+
         toolbar_view.activatePlainText(
-            !detect_headings.doesSelectionContainHeadings(state.doc, state.selection),
+            detect_paragraphs.doesSelectionContainOnlyParagraphs(state.doc, state.selection),
+        );
+
+        toolbar_view.activatePreformattedText(
+            detect_formatted_text.doesSelectionContainOnlyPreformattedText(
+                state.doc,
+                state.selection,
+            ),
         );
     },
 });

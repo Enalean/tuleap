@@ -17,13 +17,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { DetectHeadingsInSelection } from "../HeadingsInSelectionDetector";
+import type { Selection } from "prosemirror-state";
 
-export const DetectHeadingsInSelectionStub = {
-    withAtLeastOneHeading: (): DetectHeadingsInSelection => ({
-        doesSelectionContainHeadings: () => true,
-    }),
-    withoutHeadings: (): DetectHeadingsInSelection => ({
-        doesSelectionContainHeadings: () => false,
-    }),
+export type CheckSelectedNodesHaveSameParent = {
+    haveSelectedNodesTheSameParent(selection: Selection): boolean;
 };
+
+export const SelectedNodesHaveSameParentChecker = (): CheckSelectedNodesHaveSameParent => ({
+    haveSelectedNodesTheSameParent: (selection): boolean =>
+        selection.$from.sameParent(selection.$to),
+});

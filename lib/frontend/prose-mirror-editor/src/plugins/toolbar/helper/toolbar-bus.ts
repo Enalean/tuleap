@@ -33,6 +33,7 @@ export interface ToolbarHandler {
     toggleSuperScript: () => void;
     toggleHeading: (heading: Heading) => void;
     togglePlainText: () => void;
+    togglePreformattedText: () => void;
     applyLink: (link: LinkProperties) => void;
     applyUnlink: () => void;
     applyImage: (image: ImageProperties) => void;
@@ -54,6 +55,7 @@ export interface ToolbarView {
     activateBulletList: (list_state: ListState) => void;
     activateHeading: (current_heading: Heading | null) => void;
     activatePlainText: (is_activated: boolean) => void;
+    activatePreformattedText: (is_activated: boolean) => void;
 }
 
 export interface ToolbarBus {
@@ -72,6 +74,7 @@ export interface ToolbarBus {
     bulletList: () => void;
     heading: (heading: Heading) => void;
     plainText: () => void;
+    preformattedText: () => void;
     setCurrentHandler: (handler: ToolbarHandler) => void;
     setView: (view: Partial<ToolbarView>) => void;
 }
@@ -93,6 +96,7 @@ const default_view: ToolbarView = {
     activateBulletList: noop,
     activateHeading: noop,
     activatePlainText: noop,
+    activatePreformattedText: noop,
 };
 
 export const buildToolbarBus = (): ToolbarBus => ({
@@ -136,6 +140,9 @@ export const buildToolbarBus = (): ToolbarBus => ({
     },
     plainText(): void {
         this.handler?.togglePlainText();
+    },
+    preformattedText(): void {
+        this.handler?.togglePreformattedText();
     },
     setCurrentHandler(handler: ToolbarHandler): void {
         this.handler = handler;

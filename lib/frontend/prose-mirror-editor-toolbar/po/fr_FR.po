@@ -29,6 +29,9 @@ msgstr ""
 msgid "Change to plain text"
 msgstr "Changer en texte"
 
+msgid "Change to preformatted text"
+msgstr "Changer en texte préformaté"
+
 msgid "Create link"
 msgstr "Créer un lien"
 
@@ -52,6 +55,9 @@ msgstr "Insérer ou éditer une image"
 
 msgid "Link"
 msgstr "Lien"
+
+msgid "Preformatted"
+msgstr "Préformaté"
 
 msgid "Remove link"
 msgstr "Supprimer le lien"

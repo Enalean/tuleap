@@ -22,7 +22,7 @@ import type { EditorState, Transaction } from "prosemirror-state";
 import type { Attrs, NodeType } from "prosemirror-model";
 import type { EditorNode } from "../../../types/internal-types";
 import { custom_schema } from "../../../custom_schema";
-import { getHeadingCommand, getPlainTextCommand } from "./transform-text";
+import { getFormattedTextCommand, getHeadingCommand, getPlainTextCommand } from "./transform-text";
 
 describe("transform-text", () => {
     let transaction_containing_new_block_type: Transaction,
@@ -138,6 +138,30 @@ describe("transform-text", () => {
                 state.selection.$from.pos,
                 state.selection.$to.pos,
                 custom_schema.nodes.paragraph,
+            );
+            expect(dispatch).toHaveBeenCalledWith(transaction_containing_new_block_type);
+            expect(command_result).toBe(true);
+        });
+    });
+
+    describe("getFormattedTextCommand()", () => {
+        it("Given that no dispatch function was provided to the Command, then it should return true", () => {
+            const state = {} as EditorState;
+            const command = getFormattedTextCommand();
+
+            expect(command(state)).toBe(true);
+        });
+
+        it("should dispatch a transaction setting the block type to code_block and return true", () => {
+            const current_block = buildCurrentBlock(custom_schema.nodes.heading, { level: 1 });
+            const state = buildState(current_block);
+
+            const command_result = getFormattedTextCommand()(state, dispatch);
+
+            expect(setBlockType).toHaveBeenCalledWith(
+                state.selection.$from.pos,
+                state.selection.$to.pos,
+                custom_schema.nodes.code_block,
             );
             expect(dispatch).toHaveBeenCalledWith(transaction_containing_new_block_type);
             expect(command_result).toBe(true);

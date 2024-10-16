@@ -19,10 +19,10 @@
 
 import { describe, it, expect, beforeEach, vi } from "vitest";
 import type { ToolbarBus } from "@tuleap/prose-mirror-editor";
-import { buildToolbarBus } from "@tuleap/prose-mirror-editor";
+import { buildToolbarBus, NB_HEADING } from "@tuleap/prose-mirror-editor";
 import { createLocalDocument } from "../../../helpers/helper-for-test";
 import type { HostElement } from "./text-style";
-import { renderHeadingOption } from "./heading-option-template";
+import { renderHeadingOption, renderHeadingsOptions } from "./heading-option-template";
 
 describe("heading-option-template", () => {
     let toolbar_bus: ToolbarBus, target: ShadowRoot;
@@ -95,5 +95,30 @@ describe("heading-option-template", () => {
         getOptionElement(host, heading_level).click();
 
         expect(applyHeading).not.toHaveBeenCalled();
+    });
+
+    describe("renderHeadingsOptions()", () => {
+        it("should render nothing when headings are disabled", () => {
+            const host = {
+                style_elements: { headings: false },
+            } as HostElement;
+
+            renderHeadingsOptions(host)(host, target);
+            const options = target.querySelectorAll("option");
+
+            expect(options.length).toBe(0);
+        });
+
+        it("should render heading options when headings are enabled", () => {
+            const host = {
+                style_elements: { headings: true },
+                current_heading: null,
+            } as HostElement;
+
+            renderHeadingsOptions(host)(host, target);
+            const options = target.querySelectorAll("option");
+
+            expect(options.length).toBe(NB_HEADING);
+        });
     });
 });

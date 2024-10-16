@@ -21,20 +21,15 @@ import type { Selection } from "prosemirror-state";
 import { custom_schema } from "../../../custom_schema";
 import type { EditorNode } from "../../../types/internal-types";
 import type { Heading } from "./Heading";
+import type { CheckSelectedNodesHaveSameParent } from "./SelectedNodesHaveSameParentChecker";
 
 export type RetrieveHeading = {
     retrieveHeadingInSelection(tree: EditorNode, selection: Selection): Heading | null;
 };
 
-export const HeadingInSelectionRetriever = (): RetrieveHeading => {
-    /**
-     * When user selects a whole heading, or a smaller portion of a heading
-     * Then 2 nodes are found in the selection:
-     * - 1 heading node
-     * - 1 text node containing the text of the heading
-     */
-    const max_nb_of_children = 2;
-
+export const HeadingInSelectionRetriever = (
+    check_same_parent: CheckSelectedNodesHaveSameParent,
+): RetrieveHeading => {
     const retrieveHeadingAtCursorPosition = (selection: Selection): Heading | null => {
         const node_at_cursor_position = selection.$head.node();
 
@@ -45,17 +40,14 @@ export const HeadingInSelectionRetriever = (): RetrieveHeading => {
 
     const retrieveHeadingInSelection = (tree: EditorNode, selection: Selection): Heading | null => {
         let found_heading: EditorNode | undefined;
-        let nb_children = 0;
 
         tree.nodesBetween(selection.from, selection.to, (node) => {
             if (node.type === custom_schema.nodes.heading) {
                 found_heading = node;
             }
-
-            nb_children++;
         });
 
-        if (nb_children > max_nb_of_children || !found_heading) {
+        if (!found_heading) {
             return null;
         }
 
@@ -63,9 +55,14 @@ export const HeadingInSelectionRetriever = (): RetrieveHeading => {
     };
 
     return {
-        retrieveHeadingInSelection: (tree: EditorNode, selection: Selection): Heading | null =>
-            selection.empty
+        retrieveHeadingInSelection: (tree: EditorNode, selection: Selection): Heading | null => {
+            if (!check_same_parent.haveSelectedNodesTheSameParent(selection)) {
+                return null;
+            }
+
+            return selection.empty
                 ? retrieveHeadingAtCursorPosition(selection)
-                : retrieveHeadingInSelection(tree, selection),
+                : retrieveHeadingInSelection(tree, selection);
+        },
     };
 };

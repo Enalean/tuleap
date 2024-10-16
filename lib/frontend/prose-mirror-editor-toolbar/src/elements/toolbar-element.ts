@@ -65,6 +65,8 @@ export type LinkElements = {
 
 export type StyleElements = {
     headings: boolean;
+    text: boolean;
+    preformatted: boolean;
 };
 
 export type InternalProseMirrorToolbarElement = Readonly<ProseMirrorToolbarElement> & {
@@ -168,9 +170,17 @@ export const renderToolbar = (
           </span>`
         : html``;
 
-    const text_style_item = host.style_elements?.headings
-        ? html`<span class="prose-mirror-button-group">
-              <text-style-item toolbar_bus="${host.controller.getToolbarBus()}"></text-style-item>
+    const has_at_least_one_style_element_activated =
+        host.style_elements !== null &&
+        (host.style_elements.headings ||
+            host.style_elements.text ||
+            host.style_elements.preformatted);
+    const text_style_item = has_at_least_one_style_element_activated
+        ? html` <span class="prose-mirror-button-group">
+              <text-style-item
+                  toolbar_bus="${host.controller.getToolbarBus()}"
+                  style_elements="${host.style_elements}"
+              ></text-style-item>
           </span>`
         : html``;
 

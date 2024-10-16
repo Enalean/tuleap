@@ -22,28 +22,28 @@ import type { UpdateFunction } from "hybrids";
 import type { InternalHeadingsItem } from "./text-style";
 import { gettext_provider } from "../../../gettext-provider";
 
-export const renderPlainTextOption = (
+export const renderPreformattedTextOption = (
     host: InternalHeadingsItem,
 ): UpdateFunction<InternalHeadingsItem> => {
-    if (!host.style_elements.text) {
+    if (!host.style_elements.preformatted) {
         return html``;
     }
 
-    const onClickApplyPlainText = (): void => {
-        if (host.is_plain_text_activated) {
+    const onClickApplyPreformattedText = (): void => {
+        if (host.is_preformatted_text_activated) {
             return;
         }
 
-        host.toolbar_bus.plainText();
+        host.toolbar_bus.preformattedText();
     };
 
     return html`
         <option
-            selected="${host.is_plain_text_activated}"
-            title="${gettext_provider.gettext("Change to plain text")}"
-            onclick="${onClickApplyPlainText}"
+            selected="${host.is_preformatted_text_activated}"
+            title="${gettext_provider.gettext("Change to preformatted text")}"
+            onclick="${onClickApplyPreformattedText}"
         >
-            ${gettext_provider.gettext("Text")}
+            ${gettext_provider.gettext("Preformatted")}
         </option>
     `;
 };
