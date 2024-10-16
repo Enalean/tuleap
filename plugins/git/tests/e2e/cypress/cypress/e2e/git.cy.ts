@@ -38,7 +38,7 @@ describe("Git", function () {
         });
 
         context("Git repository list", function () {
-            it("can create a new repository", function () {
+            it("can create a new repository and delete it", function () {
                 cy.projectAdministratorSession();
                 visitGitService();
                 cy.get("[data-test=create-repository-button]").click();
@@ -50,28 +50,38 @@ describe("Git", function () {
                 });
                 cy.log("shows the new repository in the list");
                 visitGitService();
-                cy.get("[data-test=repository_name]").contains("Aquali", {
-                    timeout: 20000,
-                });
-            });
+                cy.get("[data-test=git-repositories-page]")
+                    .find("[data-test=git-repository-spinner]")
+                    .should("not.exist");
+                cy.get("[data-test=git-repositories-page]")
+                    .find("[data-test=git-repository]")
+                    .should("contain.text", "Aquali");
 
-            it("can delete repository", function () {
-                cy.projectAdministratorSession();
-                cy.intercept("git?query=*").as("loadRepositories");
-                cy.visit(`/plugins/git/delete-git/`);
-                cy.wait("@loadRepositories");
-
-                cy.get("[data-test=git-repository-spinner]").should("not.exist");
-
-                cy.get("[data-test=git-repository-list]").then(($repository_list) => {
-                    if ($repository_list.find("[data-test=git-repository]").length > 0) {
-                        cy.log("Do not rerun test when repository is already deleted");
-                        cy.get("[data-test=git-repository-card-admin-link]").click();
-                        cy.get("[data-test=delete]").click();
-                        cy.get("[data-test=confirm-repository-deletion-button]").click();
-                        cy.get("[data-test=deletion-confirmation-button]").click();
-                    }
-                });
+                cy.log("delete the repository");
+                cy.getContains("[data-test=git-repository]", "Aquali")
+                    .get("[data-test=git-repository-card-admin-link]")
+                    .click();
+                cy.get("[data-test=delete]").click();
+                cy.reloadUntilCondition(
+                    () => {
+                        cy.log("Wait 10 seconds for the Git system event to be finished");
+                        // eslint-disable-next-line cypress/no-unnecessary-waiting -- the system event to create the git repo can be long
+                        cy.wait(10000);
+                        cy.reload();
+                    },
+                    (number_of_attempts, max_attempts) => {
+                        cy.log(
+                            `Check that the git repository can be deleted (attempt ${number_of_attempts}/${max_attempts})`,
+                        );
+                        return cy
+                            .get("[data-test=confirm-repository-deletion-button]")
+                            .invoke("attr", "disabled")
+                            .then((disabled) => disabled === undefined);
+                    },
+                    "Timed out while checking if the git repository can be deleted",
+                );
+                cy.get("[data-test=confirm-repository-deletion-button]").click();
+                cy.get("[data-test=deletion-confirmation-button]").click();
 
                 cy.get("[data-test=no-repositories]").should("be.visible");
             });

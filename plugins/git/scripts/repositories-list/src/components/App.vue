@@ -19,7 +19,7 @@
   -->
 
 <template>
-    <div>
+    <div data-test="git-repositories-page">
         <git-breadcrumbs />
         <div class="git-repository-list-header">
             <h1>{{ $gettext("Git repositories") }}</h1>
