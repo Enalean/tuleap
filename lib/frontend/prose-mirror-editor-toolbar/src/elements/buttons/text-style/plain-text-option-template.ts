@@ -26,13 +26,16 @@ export const renderPlainTextOption = (
     host: InternalHeadingsItem,
 ): UpdateFunction<InternalHeadingsItem> => {
     const onClickApplyPlainText = (): void => {
+        if (host.is_plain_text_activated) {
+            return;
+        }
+
         host.toolbar_bus.plainText();
     };
 
     return html`
         <option
             selected="${host.is_plain_text_activated}"
-            disabled="${host.is_plain_text_activated}"
             title="${gettext_provider.gettext("Change to plain text")}"
             onclick="${onClickApplyPlainText}"
         >

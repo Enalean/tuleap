@@ -49,7 +49,7 @@ describe("plain-text-option-template", () => {
         const host = { is_plain_text_activated } as HostElement;
         const option = getPlainTextOption(host);
 
-        expect(option.disabled).toBe(is_plain_text_activated);
+        expect(option.disabled).toBe(false);
         expect(option.selected).toBe(is_plain_text_activated);
     });
 
@@ -61,5 +61,15 @@ describe("plain-text-option-template", () => {
         getPlainTextOption(host).click();
 
         expect(applyPlainText).toHaveBeenCalledOnce();
+    });
+
+    it("When the option is clicked, then it should NOT call toolbar_bus.plainText() if the option was already selected", () => {
+        const toolbar_bus = buildToolbarBus();
+        const host = { is_plain_text_activated: true, toolbar_bus } as HostElement;
+        const applyPlainText = vi.spyOn(toolbar_bus, "plainText");
+
+        getPlainTextOption(host).click();
+
+        expect(applyPlainText).not.toHaveBeenCalled();
     });
 });
