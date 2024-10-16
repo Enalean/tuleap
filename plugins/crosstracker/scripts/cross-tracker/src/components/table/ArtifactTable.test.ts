@@ -45,11 +45,14 @@ import ExportCSVButton from "../ExportCSVButton.vue";
 vi.useFakeTimers();
 
 describe("ArtifactTable", () => {
-    let errorSpy: Mock, is_csv_export_allowed: boolean;
+    let errorSpy: Mock,
+        is_csv_export_allowed: boolean,
+        writing_cross_tracker_report: WritingCrossTrackerReport;
 
     beforeEach(() => {
         errorSpy = vi.fn();
         is_csv_export_allowed = true;
+        writing_cross_tracker_report = new WritingCrossTrackerReport();
     });
 
     function getWrapper(report_state: ReportState): VueWrapper<InstanceType<typeof ArtifactTable>> {
@@ -66,7 +69,7 @@ describe("ArtifactTable", () => {
                 },
             },
             props: {
-                writing_cross_tracker_report: new WritingCrossTrackerReport(),
+                writing_cross_tracker_report: writing_cross_tracker_report,
             },
         });
     }
@@ -98,7 +101,7 @@ describe("ArtifactTable", () => {
         });
     });
 
-    describe("loadArtifacts()", () => {
+    describe(`onMounted()`, () => {
         it("Given report is saved, it loads artifacts of report", () => {
             const getReportContent = vi
                 .spyOn(rest_querier, "getReportContent")
@@ -126,6 +129,20 @@ describe("ArtifactTable", () => {
             expect(errorSpy.mock.calls[0][0].isArtifactsRetrieval()).toBe(true);
         });
 
+        it(`does nothing when the report mode is not default`, async () => {
+            vi.spyOn(rest_querier, "getReportContent").mockReturnValue(
+                errAsync(Fault.fromMessage("Invalid query")),
+            );
+            writing_cross_tracker_report.toggleExpertMode();
+
+            getWrapper("report-saved");
+            await vi.runOnlyPendingTimersAsync();
+
+            expect(errorSpy).not.toHaveBeenCalled();
+        });
+    });
+
+    describe("loadArtifacts()", () => {
         it(`Given the user does not have the permission to see all the matching artifacts on a call,
             then a load more button is displayed to retrieve the next ones`, async () => {
             const total = 32;

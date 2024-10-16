@@ -176,9 +176,11 @@ describe("CrossTrackerWidget", () => {
     describe(`unsavedReportDiscarded()`, () => {
         it(`Given a report that has been modified,
             when its changes are discarded,
-            then it will restore the reading report and clear the feedback messages`, async () => {
+            then it will restore the reading and writing reports
+            and will clear the feedback messages`, async () => {
             const wrapper = getWrapper();
             const duplicateReading = vi.spyOn(reading_cross_tracker_report, "duplicateFromReport");
+            const duplicateWriting = vi.spyOn(writing_cross_tracker_report, "duplicateFromReport");
             await vi.runOnlyPendingTimersAsync();
 
             wrapper.findComponent(ReadingMode).vm.$emit("switch-to-writing-mode");
@@ -189,6 +191,7 @@ describe("CrossTrackerWidget", () => {
 
             expect(wrapper.vm.report_state).toBe("report-saved");
             expect(duplicateReading).toHaveBeenCalledWith(backend_cross_tracker_report);
+            expect(duplicateWriting).toHaveBeenCalledWith(reading_cross_tracker_report);
             expect(wrapper.vm.current_fault.isNothing()).toBe(true);
             expect(wrapper.vm.current_success.isNothing()).toBe(true);
         });

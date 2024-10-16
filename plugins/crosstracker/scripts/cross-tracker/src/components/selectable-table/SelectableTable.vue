@@ -119,6 +119,10 @@ function handleNewPage(new_offset: number): void {
 }
 
 function refreshArtifactList(): void {
+    if (!props.writing_cross_tracker_report.expert_mode) {
+        return;
+    }
+
     rows.value = [];
     columns.value = new Set<string>();
     is_loading.value = true;
@@ -126,8 +130,7 @@ function refreshArtifactList(): void {
 }
 
 onMounted(() => {
-    is_loading.value = true;
-    loadArtifacts();
+    refreshArtifactList();
 });
 
 function loadArtifacts(): void {

@@ -59,24 +59,28 @@ const NUMERIC_COLUMN_NAME = "remaining_effort";
 const TEXT_COLUMN_NAME = "details";
 
 describe(`SelectableTable`, () => {
-    let errorSpy: Mock, report_state: ReportState, is_csv_export_allowed: boolean;
+    let errorSpy: Mock,
+        report_state: ReportState,
+        is_csv_export_allowed: boolean,
+        writing_cross_tracker_report: WritingCrossTrackerReport;
 
     beforeEach(() => {
         errorSpy = vi.fn();
         report_state = "report-saved";
         is_csv_export_allowed = true;
-    });
 
-    const getWrapper = (
-        table_retriever: RetrieveArtifactsTable,
-    ): VueWrapper<InstanceType<typeof SelectableTable>> => {
-        const writing_cross_tracker_report = new WritingCrossTrackerReport();
+        writing_cross_tracker_report = new WritingCrossTrackerReport();
         writing_cross_tracker_report.expert_query = `SELECT start_date WHERE start_date != ''`;
         writing_cross_tracker_report.addTracker(
             ProjectInfoStub.withId(116),
             TrackerInfoStub.withId(186),
         );
+        writing_cross_tracker_report.toggleExpertMode();
+    });
 
+    const getWrapper = (
+        table_retriever: RetrieveArtifactsTable,
+    ): VueWrapper<InstanceType<typeof SelectableTable>> => {
         return shallowMount(SelectableTable, {
             global: {
                 ...getGlobalTestOptions(),
@@ -180,6 +184,19 @@ describe(`SelectableTable`, () => {
 
             expect(errorSpy).toHaveBeenCalled();
             expect(errorSpy.mock.calls[0][0].isArtifactsRetrieval()).toBe(true);
+        });
+
+        it(`does nothing when the report mode is not expert`, async () => {
+            const table_retriever = RetrieveArtifactsTableStub.withFault(
+                Fault.fromMessage("Invalid query"),
+            );
+            writing_cross_tracker_report.toggleExpertMode();
+
+            getWrapper(table_retriever);
+
+            await vi.runOnlyPendingTimersAsync();
+
+            expect(errorSpy).not.toHaveBeenCalled();
         });
     });
     describe("loadArtifact()", () => {
