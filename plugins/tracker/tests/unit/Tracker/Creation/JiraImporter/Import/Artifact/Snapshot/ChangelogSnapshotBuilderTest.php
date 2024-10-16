@@ -91,7 +91,7 @@ class ChangelogSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->assertSame($user, $snapshot->getUser());
         $this->assertSame(1585141810, $snapshot->getDate()->getTimestamp());
-        $this->assertCount(8, $snapshot->getAllFieldsSnapshot());
+        $this->assertCount(9, $snapshot->getAllFieldsSnapshot());
 
         $this->assertNull($snapshot->getFieldInSnapshot('environment'));
         $this->assertSame('9', $snapshot->getFieldInSnapshot('customfield_10036')->getValue());
@@ -116,6 +116,11 @@ class ChangelogSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertSame(
             '*def*',
             $snapshot->getFieldInSnapshot('textfield')->getValue()
+        );
+
+        $this->assertSame(
+            'lorem ipsum',
+            $snapshot->getFieldInSnapshot('customfield_10081')->getValue()
         );
 
         $this->assertNull($snapshot->getFieldInSnapshot('textfield')->getRenderedValue());
@@ -287,49 +292,49 @@ class ChangelogSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                 'id' => '100',
                 'created' => '2020-03-25T14:10:10.823+0100',
                 'items' => [
-                    0 => [
+                    [
                         'fieldId'    => 'customfield_10036',
                         'from'       => null,
                         'fromString' => null,
                         'to'         => null,
                         'toString'   => '9',
                     ],
-                    1 => [
+                    [
                         'fieldId'    => 'customfield_10040',
                         'from'       => '[10009]',
                         'fromString' => 'mulit1',
                         'to'         => '[10009, 10010]',
                         'toString'   => 'mulit1,multi2',
                     ],
-                    2 => [
+                    [
                         'fieldId'    => 'environment',
                         'from'       => null,
                         'fromString' => "\r\n----\r\n",
                         'to'         => null,
                         'toString'   => "----\r\n",
                     ],
-                    3 => [
+                    [
                         'fieldId'    => 'description',
                         'from'       => null,
                         'fromString' => 'aaaaaaaaaaa',
                         'to'         => '{"id":"ari:cloud:jira:d63a8014-ba58-4b58-b22d-eb1d85d56f3d:issuefieldvalue/10006/description","version":"1"}',
                         'toString'   => '*aaaaaaaaa*',
                     ],
-                    4 => [
+                    [
                         'fieldId'    => 'textfield',
                         'from'       => null,
                         'fromString' => 'abc',
                         'to'         => null,
                         'toString'   => '*def*',
                     ],
-                    5 => [
+                    [
                         'fieldId'    => 'attachment',
                         'from'       => null,
                         'fromString' => null,
                         'to'         => '10008',
                         'toString'   => 'file02.gif',
                     ],
-                    6 => [
+                    [
 
                         'fieldId'    => 'datepicker',
                         'from'       => null,
@@ -337,35 +342,35 @@ class ChangelogSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                         'to'         => '2020-03-25',
                         'toString'   => '25/Mar/20',
                     ],
-                    7 => [
+                    [
                         'fieldId'    => 'assignee',
                         'from'       => null,
                         'fromString' => null,
                         'to'         => 'e8a7dbae5',
                         'toString'   => 'John Doe',
                     ],
-                    8 => [
+                    [
                         'fieldId'    => 'homies',
                         'from'       => null,
                         'fromString' => null,
                         'to'         => '[e8a7dbae5, a7e8b9c5]',
                         'toString'   => '[John Doe, Mysterio]',
                     ],
-                    9 => [
+                    [
                         'fieldId'    => 'versions',
                         'from'       => null,
                         'fromString' => null,
                         'to'         => '10003',
                         'toString'   => 'Release 1.0',
                     ],
-                    10 => [
+                    [
                         'fieldId'    => 'fixVersions',
                         'from'       => null,
                         'fromString' => null,
                         'to'         => '10013',
                         'toString'   => 'Release 2.0',
                     ],
-                    11 => [
+                    [
                         [
                             'fieldId'    => 'components',
                             'from'       => null,
@@ -374,7 +379,7 @@ class ChangelogSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                             'toString'   => 'Comp 01',
                         ],
                     ],
-                    12 => [
+                    [
                         [
                             'fieldId'    => 'customfield_10100',
                             'from'       => null,
@@ -383,7 +388,7 @@ class ChangelogSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                             'toString'   => '[v1]',
                         ],
                     ],
-                    13 => [
+                    [
                         [
                             'fieldId'    => 'customfield_10101',
                             'from'       => null,
@@ -392,7 +397,7 @@ class ChangelogSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                             'toString'   => '[v1]',
                         ],
                     ],
-                    13 => [
+                    [
                         [
                             'fieldId'    => 'customfield_10102',
                             'from'       => null,
@@ -400,6 +405,13 @@ class ChangelogSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                             'to'         => '10030',
                             'toString'   => '[test1]',
                         ],
+                    ],
+                    [
+                        'fieldId'    => 'customfield_10081',
+                        'from'       => null,
+                        'fromString' => null,
+                        'to'         => '',
+                        'toString'   => 'lorem ipsum',
                     ],
                 ],
                 'author' => [
@@ -511,6 +523,16 @@ class ChangelogSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                 'patepicker',
                 'date',
             ),
+        );
+        $collection->addMapping(
+            new ScalarFieldMapping(
+                'customfield_10081',
+                'customfield_10081',
+                null,
+                'Fcustomfield_10081',
+                'customfield_10081',
+                'text',
+            )
         );
 
         $collection->addMapping($this->getVersionMapping());

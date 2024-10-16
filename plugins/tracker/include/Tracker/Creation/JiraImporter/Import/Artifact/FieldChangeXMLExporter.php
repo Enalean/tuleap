@@ -103,7 +103,7 @@ class FieldChangeXMLExporter
                 $this->field_change_text_builder->build(
                     $changeset_node,
                     $mapping->getFieldName(),
-                    (string) $value,
+                    is_array($value) ? '' : (string) $value,
                     Tracker_Artifact_ChangesetValue_Text::TEXT_CONTENT
                 );
             }

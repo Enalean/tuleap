@@ -150,6 +150,80 @@ final class FieldChangeXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
+    public function testItExportsTheValueOfTextFieldsAsTextFormatWhenNoRenderedValue(): void
+    {
+        $mapping = new ScalarFieldMapping(
+            'description',
+            'Description',
+            null,
+            'Fdescription',
+            'description',
+            'text',
+        );
+
+        $changeset_node = new SimpleXMLElement('<changeset/>');
+        $snapshot       = new Snapshot(
+            Mockery::mock(PFUser::class),
+            new \DateTimeImmutable(),
+            [
+                new FieldSnapshot(
+                    $mapping,
+                    "h1. Coin\r\n\r\nLorem *ipsum* _doloret_ plop.",
+                    null
+                ),
+            ],
+            null
+        );
+        $this->getExporter()->exportFieldChanges(
+            $snapshot,
+            $changeset_node,
+        );
+
+        $this->assertEquals(
+            <<<EOX
+            <field_change type="text" field_name="description"><value format="text"><![CDATA[h1. Coin\r\n\r\nLorem *ipsum* _doloret_ plop.]]></value></field_change>
+            EOX,
+            $changeset_node->field_change->asXML()
+        );
+    }
+
+    public function testItDefaultsToEmptyStringWhenValueOfTextFieldIsAnArrayInsteadOfAStringAndThereIsNoRenderedValue(): void
+    {
+        $mapping = new ScalarFieldMapping(
+            'description',
+            'Description',
+            null,
+            'Fdescription',
+            'description',
+            'text',
+        );
+
+        $changeset_node = new SimpleXMLElement('<changeset/>');
+        $snapshot       = new Snapshot(
+            Mockery::mock(PFUser::class),
+            new \DateTimeImmutable(),
+            [
+                new FieldSnapshot(
+                    $mapping,
+                    ['id' => ''],
+                    null
+                ),
+            ],
+            null
+        );
+        $this->getExporter()->exportFieldChanges(
+            $snapshot,
+            $changeset_node,
+        );
+
+        $this->assertEquals(
+            <<<EOX
+            <field_change type="text" field_name="description"><value format="text"><![CDATA[]]></value></field_change>
+            EOX,
+            $changeset_node->field_change->asXML()
+        );
+    }
+
     public function testItExportsTheSelectedValueInASelectBoxField(): void
     {
         $jira_value_id       = 3;
