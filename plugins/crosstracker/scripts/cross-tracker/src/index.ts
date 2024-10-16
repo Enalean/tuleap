@@ -32,6 +32,7 @@ import { ProjectsCache } from "./writing-mode/ProjectsCache";
 import {
     DATE_FORMATTER,
     DATE_TIME_FORMATTER,
+    DOCUMENTATION_BASE_URL,
     IS_USER_ADMIN,
     REPORT_ID,
     RETRIEVE_ARTIFACTS_TABLE,
@@ -68,6 +69,9 @@ document.addEventListener("DOMContentLoaded", async () => {
         if (!report_id_string) {
             throw new Error("Can not find report id");
         }
+
+        const documentation_url = widget_element.dataset.documentationBaseUrl;
+
         const report_id = Number.parseInt(report_id_string, 10);
         const is_widget_admin = widget_element.dataset.isWidgetAdmin === "true";
 
@@ -96,6 +100,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             )
             .provide(REPORT_ID, report_id)
             .provide(IS_USER_ADMIN, is_widget_admin)
+            .provide(DOCUMENTATION_BASE_URL, documentation_url)
             .mount(vue_mount_point);
     }
 });

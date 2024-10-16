@@ -34,6 +34,9 @@ msgstr "Assigné à"
 msgid "Cancel"
 msgstr "Annuler"
 
+msgid "Click to see the documentation for advanced mode"
+msgstr "Cliquer pour consulter la documentation du mode expert"
+
 msgid "Description"
 msgstr "Description"
 

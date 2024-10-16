@@ -20,7 +20,7 @@
 <template>
     <div class="writing-mode">
         <switch-mode-input
-            v-bind:writing_cross_tracker_report="writing_cross_tracker_report"
+            v-bind:is_in_expert_mode="is_in_expert_mode"
             v-on:switch-to-query-mode="handleSwitchModeEvent"
         />
         <div v-if="!is_in_expert_mode">
@@ -125,6 +125,7 @@ function removeTrackerFromSelection(tracker: TrackerToUpdate): void {
 }
 
 function handleSwitchModeEvent(event: SwitchModeEvent): void {
+    props.writing_cross_tracker_report.toggleExpertMode();
     is_in_expert_mode.value = event.is_expert_mode;
 }
 
