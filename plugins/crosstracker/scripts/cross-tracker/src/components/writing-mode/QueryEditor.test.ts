@@ -62,7 +62,13 @@ describe("QueryEditor", () => {
         writing_cross_tracker_report.expert_query = "@title = 'foo'";
         const wrapper = instantiateComponent(writing_cross_tracker_report);
 
-        wrapper.vm.code_mirror_instance?.setValue("@title = 'bar'");
+        wrapper.vm.code_mirror_instance?.dispatch({
+            changes: {
+                from: 0,
+                to: wrapper.vm.code_mirror_instance?.state.doc.length,
+                insert: "@title = 'bar'",
+            },
+        });
         expect(writing_cross_tracker_report.expert_query).toBe("@title = 'bar'");
     });
 });

@@ -17,38 +17,62 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-import CodeMirror from "codemirror";
-import "codemirror/addon/mode/simple";
-import "codemirror/addon/hint/show-hint";
-import "codemirror/addon/display/placeholder";
-import { getHint } from "./autocompleter";
-import type { TQLDefinition } from "./configuration";
+import type { KeyBinding, ViewUpdate } from "@codemirror/view";
+import { EditorView, keymap, placeholder } from "@codemirror/view";
+import { defaultKeymap, history, historyKeymap } from "@codemirror/commands";
+import type { TQLDefinition } from "./language";
+import { tql } from "./language";
+import { autocompletion, completeFromList } from "@codemirror/autocomplete";
 
-export function initializeTQLMode(tql_mode_definition: TQLDefinition): void {
-    CodeMirror.defineSimpleMode("tql", tql_mode_definition);
-}
-
-export type TQLCodeMirrorEditor = CodeMirror.Editor;
+export type TQLCodeMirrorEditor = EditorView;
 
 export function codeMirrorify(
     textarea_element: HTMLTextAreaElement,
-    autocomplete_keywords: ReadonlyArray<string>,
     submitFormCallback: () => void,
+    tql_definition: TQLDefinition,
+    placeholder_text: string,
+    update_callback: (() => void) | null = null,
 ): TQLCodeMirrorEditor {
-    CodeMirror.commands.autocomplete = autocomplete;
+    const submit_keybinding: KeyBinding = {
+        key: "Ctrl-Enter",
+        run: function () {
+            submitFormCallback();
+            return true;
+        },
+    };
 
-    return CodeMirror.fromTextArea(textarea_element, {
-        extraKeys: { "Ctrl-Space": "autocomplete", "Ctrl-Enter": submitFormCallback },
-        lineNumbers: false,
-        lineWrapping: true,
-        mode: "tql",
-        readOnly: textarea_element.readOnly ? "nocursor" : false,
+    const full_update_callback = (update: ViewUpdate): void => {
+        if (update_callback !== null && update.docChanged) {
+            update_callback();
+        }
+    };
+
+    const editor = new EditorView({
+        doc: textarea_element.value,
+        extensions: [
+            history(),
+            keymap.of([submit_keybinding, ...defaultKeymap, ...historyKeymap]),
+            tql(tql_definition),
+            autocompletion({
+                override: [completeFromList(tql_definition.autocomplete)],
+                icons: false,
+            }),
+            EditorView.updateListener.of(full_update_callback),
+            EditorView.lineWrapping,
+            placeholder(placeholder_text),
+        ],
     });
 
-    function autocomplete(editor: TQLCodeMirrorEditor): void {
-        editor.showHint({
-            words: autocomplete_keywords,
-            hint: getHint,
+    if (textarea_element.parentNode) {
+        textarea_element.parentNode.insertBefore(editor.dom, textarea_element);
+    }
+    textarea_element.style.display = "none";
+    if (textarea_element.form !== null) {
+        textarea_element.form.addEventListener("submit", () => {
+            textarea_element.value = editor.state.doc.toString();
+            submitFormCallback();
         });
     }
+
+    return editor;
 }

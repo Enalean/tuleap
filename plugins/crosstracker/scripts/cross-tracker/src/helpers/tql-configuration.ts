@@ -17,8 +17,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-import { buildModeDefinition } from "@tuleap/plugin-tracker-tql-codemirror";
-
 export const TQL_cross_tracker_autocomplete_keywords = [
     "SELECT",
     "FROM",
@@ -79,22 +77,17 @@ export const TQL_cross_tracker_autocomplete_keywords = [
     "@pretty_title",
 ];
 
-const cross_tracker_allowed_keywords = {
-    additional_keywords: [
-        "@title",
-        "@description",
-        "@status",
-        "@last_update_date",
-        "@last_update_by",
-        "@submitted_on",
-        "@submitted_by",
-        "@assigned_to",
-        "@id",
-        "@project.name",
-        "@tracker.name",
-        "@pretty_title",
-    ],
-};
-export const TQL_cross_tracker_mode_definition = buildModeDefinition(
-    cross_tracker_allowed_keywords,
-);
+export const cross_tracker_allowed_keywords = [
+    "@title",
+    "@description",
+    "@status",
+    "@last_update_date",
+    "@last_update_by",
+    "@submitted_on",
+    "@submitted_by",
+    "@assigned_to",
+    "@id",
+    "@project.name",
+    "@tracker.name",
+    "@pretty_title",
+];

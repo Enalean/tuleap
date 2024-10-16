@@ -70,16 +70,17 @@
 </template>
 
 <script setup lang="ts">
+import type { Ref } from "vue";
 import { onMounted, ref } from "vue";
 import { useGettext } from "vue3-gettext";
 import {
     TQL_cross_tracker_autocomplete_keywords,
-    TQL_cross_tracker_mode_definition,
+    cross_tracker_allowed_keywords,
 } from "../../helpers/tql-configuration";
 import type { TQLCodeMirrorEditor } from "@tuleap/plugin-tracker-tql-codemirror";
 import {
+    buildParserDefinition,
     codeMirrorify,
-    initializeTQLMode,
     insertAllowedFieldInCodeMirror,
 } from "@tuleap/plugin-tracker-tql-codemirror";
 import type { WritingCrossTrackerReport } from "../../domain/WritingCrossTrackerReport";
@@ -89,17 +90,30 @@ const { $gettext } = useGettext();
 const props = defineProps<{ writing_cross_tracker_report: WritingCrossTrackerReport }>();
 const emit = defineEmits<{ (e: "trigger-search"): void }>();
 
-const code_mirror_instance = ref<TQLCodeMirrorEditor | null>(null);
+const code_mirror_instance: Ref<TQLCodeMirrorEditor | null> = ref(null);
 
 const value = ref<string>(props.writing_cross_tracker_report.expert_query);
 
 const query_textarea = ref<InstanceType<typeof HTMLTextAreaElement>>();
 
-initializeTQLMode(TQL_cross_tracker_mode_definition);
-
 onMounted(() => {
     const submitFormCallback = (): void => {
+        if (!code_mirror_instance.value) {
+            throw new Error("Code mirror is not accessible");
+        }
+        props.writing_cross_tracker_report.setExpertQuery(
+            code_mirror_instance.value.state.doc.toString(),
+        );
         emit("trigger-search");
+    };
+
+    const update_callback = (): void => {
+        if (!code_mirror_instance.value) {
+            throw new Error("Code mirror is not accessible");
+        }
+        props.writing_cross_tracker_report.setExpertQuery(
+            code_mirror_instance.value.state.doc.toString(),
+        );
     };
 
     if (!(query_textarea.value instanceof HTMLTextAreaElement)) {
@@ -108,19 +122,19 @@ onMounted(() => {
 
     code_mirror_instance.value = codeMirrorify(
         query_textarea.value,
-        TQL_cross_tracker_autocomplete_keywords,
         submitFormCallback,
+        {
+            autocomplete: TQL_cross_tracker_autocomplete_keywords,
+            parser_definition: buildParserDefinition(cross_tracker_allowed_keywords),
+        },
+        query_textarea.value.placeholder,
+        update_callback,
     );
 
     if (!code_mirror_instance.value) {
         throw new Error("Code mirror is not accessible");
     }
-    code_mirror_instance.value.on("change", () => {
-        if (!code_mirror_instance.value) {
-            throw new Error("Code mirror is not accessible");
-        }
-        props.writing_cross_tracker_report.setExpertQuery(code_mirror_instance.value.getValue());
-    });
+    code_mirror_instance.value.focus();
 });
 
 function insertSelectedField(event: Event): void {

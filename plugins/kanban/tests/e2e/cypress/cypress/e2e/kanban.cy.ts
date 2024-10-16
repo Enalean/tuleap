@@ -177,7 +177,7 @@ describe("Kanban service", () => {
             cy.get("[data-test=expert-mode]").click();
 
             // eslint-disable-next-line cypress/require-data-selectors
-            cy.get(".CodeMirror-code").type("title='title'");
+            cy.get(".cm-editor").type("title='title'");
             cy.get("[data-test=expert-query-submit-button]").click();
             cy.get("[data-test=tracker_report_save_dropdown]").click();
             cy.get("[data-test=tracker_report_options]").first().click();

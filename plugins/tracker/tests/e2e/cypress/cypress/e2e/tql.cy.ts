@@ -50,10 +50,7 @@ function getSummaryFieldId(tracker_id: string): Cypress.Chainable<string> {
 function clearCodeMirror(): void {
     // ignore for code mirror
     // eslint-disable-next-line cypress/require-data-selectors
-    cy.get(".CodeMirror").then((el) => {
-        const unwrap = Cypress.dom.unwrap(el)[0];
-        unwrap.CodeMirror.setValue("");
-    });
+    cy.get(".cm-editor").type("{ctrl}a{del}");
 }
 
 function findArtifactsWithExpertQuery(query: string): void {
@@ -61,7 +58,7 @@ function findArtifactsWithExpertQuery(query: string): void {
 
     // ignore for code mirror
     // eslint-disable-next-line cypress/require-data-selectors
-    cy.get(".CodeMirror-code").type(query);
+    cy.get(".cm-editor").type(query);
     cy.get("[data-test=expert-query-submit-button]").click();
 }
 

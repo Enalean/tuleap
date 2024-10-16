@@ -21,4 +21,4 @@ import "./style.scss";
 
 export * from "./allowed-field-inserter";
 export * from "./builder";
-export * from "./configuration";
+export * from "./language";
