@@ -22,14 +22,16 @@ declare(strict_types=1);
 
 namespace Tuleap\OnlyOffice\Administration;
 
+use Tuleap\DB\UUID;
 use Tuleap\OnlyOffice\DocumentServer\DocumentServer;
 use Tuleap\OnlyOffice\DocumentServer\RestrictedProject;
 
 /**
  * @psalm-immutable
  */
-final class OnlyOfficeServerPresenter
+final readonly class OnlyOfficeServerPresenter
 {
+    public string $id;
     public string $delete_url;
     public string $update_url;
     public string $restrict_url;
@@ -39,14 +41,15 @@ final class OnlyOfficeServerPresenter
      * @param list<RestrictedProjectPresenter> $project_restrictions
      */
     private function __construct(
-        public int $id,
+        UUID $id,
         public string $server_url,
         public bool $has_existing_secret,
         public bool $is_project_restricted,
         public array $project_restrictions,
     ) {
-        $this->delete_url   = OnlyOfficeDeleteAdminSettingsController::URL . '/' . $id;
-        $this->update_url   = OnlyOfficeUpdateAdminSettingsController::URL . '/' . $id;
+        $this->id           = $id->toString();
+        $this->delete_url   = OnlyOfficeDeleteAdminSettingsController::URL . '/' . $this->id;
+        $this->update_url   = OnlyOfficeUpdateAdminSettingsController::URL . '/' . $this->id;
         $this->restrict_url = OnlyOfficeRestrictAdminSettingsController::getServerRestrictUrl($id);
 
         $this->nb_project_restrictions = count($this->project_restrictions);

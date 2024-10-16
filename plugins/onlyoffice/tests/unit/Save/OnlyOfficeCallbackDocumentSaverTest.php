@@ -36,6 +36,7 @@ use Tuleap\NeverThrow\Result;
 use Tuleap\Option\Option;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
+use Tuleap\Test\DB\UUIDTestContext;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\RetrieveUserByIdStub;
 use Tuleap\User\RetrieveUserById;
@@ -89,7 +90,7 @@ final class OnlyOfficeCallbackDocumentSaverTest extends TestCase
             RetrieveUserByIdStub::withUser(UserTestBuilder::aUser()->withId(101)->build()),
         );
         $result = $saver->saveDocument(
-            new SaveDocumentTokenData(1, 101, 1, 1),
+            new SaveDocumentTokenData(1, 101, 1, new UUIDTestContext()),
             Option::nothing(OnlyOfficeCallbackSaveResponseData::class),
         );
 
@@ -118,7 +119,7 @@ final class OnlyOfficeCallbackDocumentSaverTest extends TestCase
         );
 
         $result = $saver->saveDocument(
-            new SaveDocumentTokenData(1, 101, 1, 1),
+            new SaveDocumentTokenData(1, 101, 1, new UUIDTestContext()),
             Option::fromValue(new OnlyOfficeCallbackSaveResponseData('https://example.com/download', '7.2.0', [105, 106])),
         );
 
@@ -145,7 +146,7 @@ final class OnlyOfficeCallbackDocumentSaverTest extends TestCase
         );
 
         $result = $saver->saveDocument(
-            new SaveDocumentTokenData(1, 101, 1, 1),
+            new SaveDocumentTokenData(1, 101, 1, new UUIDTestContext()),
             Option::fromValue(new OnlyOfficeCallbackSaveResponseData('https://example.com/download', '7.2.0', [102])),
         );
 
@@ -170,7 +171,7 @@ final class OnlyOfficeCallbackDocumentSaverTest extends TestCase
         );
 
         $result = $saver->saveDocument(
-            new SaveDocumentTokenData(1, 101, 1, 1),
+            new SaveDocumentTokenData(1, 101, 1, new UUIDTestContext()),
             Option::fromValue(new OnlyOfficeCallbackSaveResponseData('https://example.com/download', '7.2.0', [102])),
         );
 
@@ -192,7 +193,7 @@ final class OnlyOfficeCallbackDocumentSaverTest extends TestCase
         );
 
         $result = $saver->saveDocument(
-            new SaveDocumentTokenData(1, 101, 1, 1),
+            new SaveDocumentTokenData(1, 101, 1, new UUIDTestContext()),
             Option::fromValue(new OnlyOfficeCallbackSaveResponseData('https://example.com/download', '7.2.0', [102])),
         );
 
@@ -215,7 +216,7 @@ final class OnlyOfficeCallbackDocumentSaverTest extends TestCase
         );
 
         $result = $saver->saveDocument(
-            new SaveDocumentTokenData(1, 101, 1, 1),
+            new SaveDocumentTokenData(1, 101, 1, new UUIDTestContext()),
             Option::fromValue(new OnlyOfficeCallbackSaveResponseData('https://example.com/download', '7.2.0', [102])),
         );
 
@@ -236,7 +237,7 @@ final class OnlyOfficeCallbackDocumentSaverTest extends TestCase
         );
 
         $result = $saver->saveDocument(
-            new SaveDocumentTokenData(1, 101, 1, 1),
+            new SaveDocumentTokenData(1, 101, 1, new UUIDTestContext()),
             Option::fromValue(new OnlyOfficeCallbackSaveResponseData('https://example.com/download', '7.2.0', [102])),
         );
 
@@ -258,7 +259,7 @@ final class OnlyOfficeCallbackDocumentSaverTest extends TestCase
         );
 
         $result = $saver->saveDocument(
-            new SaveDocumentTokenData(1, 101, 1, 1),
+            new SaveDocumentTokenData(1, 101, 1, new UUIDTestContext()),
             Option::fromValue(new OnlyOfficeCallbackSaveResponseData('https://example.com/download', '7.2.0', [102])),
         );
 
@@ -277,7 +278,7 @@ final class OnlyOfficeCallbackDocumentSaverTest extends TestCase
         );
 
         $result = $saver->saveDocument(
-            new SaveDocumentTokenData(1, 101, 1, 1),
+            new SaveDocumentTokenData(1, 101, 1, new UUIDTestContext()),
             Option::fromValue(new OnlyOfficeCallbackSaveResponseData('https://example.com/download', '7.2.0', [102])),
         );
 
@@ -293,7 +294,7 @@ final class OnlyOfficeCallbackDocumentSaverTest extends TestCase
         );
 
         $result = $saver->saveDocument(
-            new SaveDocumentTokenData(1, 101, 1, 1),
+            new SaveDocumentTokenData(1, 101, 1, new UUIDTestContext()),
             Option::fromValue(new OnlyOfficeCallbackSaveResponseData('https://example.com/download', '7.2.0', [102])),
         );
 
@@ -307,7 +308,7 @@ final class OnlyOfficeCallbackDocumentSaverTest extends TestCase
         );
 
         $result = $saver->saveDocument(
-            new SaveDocumentTokenData(1, 1, 1, 1),
+            new SaveDocumentTokenData(1, 1, 1, new UUIDTestContext()),
             Option::fromValue(new OnlyOfficeCallbackSaveResponseData('https://example.com/download', '7.2.0', [102])),
         );
 

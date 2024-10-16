@@ -31,12 +31,12 @@ CREATE TABLE plugin_onlyoffice_save_document_token(
     expiration_date INT(11) UNSIGNED DEFAULT NULL,
     user_id INT(11) NOT NULL,
     document_id INT(11) UNSIGNED NOT NULL,
-    server_id INT(11) NOT NULL DEFAULT 0,
+    server_id BINARY(16) NOT NULL,
     INDEX idx_document_server_id(document_id, server_id)
 ) ENGINE=InnoDB;
 
 CREATE TABLE plugin_onlyoffice_document_server(
-    id INT(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    id BINARY(16) PRIMARY KEY,
     url VARCHAR(255) NOT NULL,
     secret_key TEXT NOT NULL,
     is_project_restricted BOOLEAN NOT NULL DEFAULT FALSE
@@ -45,7 +45,7 @@ CREATE TABLE plugin_onlyoffice_document_server(
 
 CREATE TABLE plugin_onlyoffice_document_server_project_restriction(
     project_id INT(11) NOT NULL,
-    server_id INT(11) NOT NULL,
+    server_id BINARY(16) NOT NULL,
     PRIMARY KEY (project_id, server_id),
     UNIQUE idx_project_id(project_id)
 ) ENGINE=InnoDB;

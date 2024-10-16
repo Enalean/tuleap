@@ -28,6 +28,7 @@ use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
 use Tuleap\OnlyOffice\DocumentServer\DocumentServer;
+use Tuleap\Test\DB\UUIDTestContext;
 
 class TransformDocmanFileLastVersionToOnlyOfficeDocumentStub implements TransformDocmanFileLastVersionToOnlyOfficeDocument
 {
@@ -57,7 +58,7 @@ class TransformDocmanFileLastVersionToOnlyOfficeDocumentStub implements Transfor
                     $version_id,
                     $filename,
                     true,
-                    DocumentServer::withoutProjectRestrictions(1, 'https://example.com', new ConcealedString('very_secret')),
+                    DocumentServer::withoutProjectRestrictions(new UUIDTestContext(), 'https://example.com', new ConcealedString('very_secret')),
                 )
             )
         );

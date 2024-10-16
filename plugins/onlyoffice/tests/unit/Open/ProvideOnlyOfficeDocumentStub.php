@@ -28,6 +28,7 @@ use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
 use Tuleap\OnlyOffice\DocumentServer\DocumentServer;
+use Tuleap\Test\DB\UUIDTestContext;
 
 /**
  * @psalm-immutable
@@ -56,7 +57,7 @@ final class ProvideOnlyOfficeDocumentStub implements ProvideOnlyOfficeDocument
                     123,
                     'document.docx',
                     true,
-                    DocumentServer::withoutProjectRestrictions(1, 'https://example.com', new ConcealedString('very_secret')),
+                    DocumentServer::withoutProjectRestrictions(new UUIDTestContext(), 'https://example.com', new ConcealedString('very_secret')),
                 )
             )
         );

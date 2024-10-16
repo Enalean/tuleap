@@ -28,6 +28,7 @@ use Tuleap\OnlyOffice\Administration\CheckOnlyOfficeIsAvailable;
 use Tuleap\OnlyOffice\DocumentServer\DocumentServer;
 use Tuleap\OnlyOffice\Stubs\IRetrieveDocumentServersStub;
 use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\DB\UUIDTestContext;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\ProjectByIDFactoryStub;
 
@@ -125,7 +126,7 @@ class DocmanFileLastVersionToOnlyOfficeDocumentTransformerTest extends TestCase
                 }
             },
             ProjectByIDFactoryStub::buildWith($this->project),
-            IRetrieveDocumentServersStub::buildWith(DocumentServer::withoutProjectRestrictions(1, 'https://example.com', new ConcealedString('very_secret'))),
+            IRetrieveDocumentServersStub::buildWith(DocumentServer::withoutProjectRestrictions(new UUIDTestContext(), 'https://example.com', new ConcealedString('very_secret'))),
         );
     }
 }

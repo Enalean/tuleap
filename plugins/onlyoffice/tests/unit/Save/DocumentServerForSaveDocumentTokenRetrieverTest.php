@@ -23,30 +23,30 @@ declare(strict_types=1);
 namespace Tuleap\OnlyOffice\Save;
 
 use Tuleap\Cryptography\ConcealedString;
+use Tuleap\DB\UUID;
 use Tuleap\OnlyOffice\DocumentServer\DocumentServer;
 use Tuleap\OnlyOffice\DocumentServer\DocumentServerNotFoundException;
 use Tuleap\OnlyOffice\Stubs\IRetrieveDocumentServersStub;
+use Tuleap\Test\DB\UUIDTestContext;
 use Tuleap\Test\PHPUnit\TestCase;
 
 final class DocumentServerForSaveDocumentTokenRetrieverTest extends TestCase
 {
-    private const SERVER_1_ID          = 1;
-    private const SERVER_2_ID          = 2;
-    private const UNEXISTING_SERVER_ID = 3;
-
     public function testExceptionIfServerIsNotFound(): void
     {
         $retriever = new DocumentServerForSaveDocumentTokenRetriever(
             IRetrieveDocumentServersStub::buildWith(
-                DocumentServer::withoutProjectRestrictions(self::SERVER_1_ID, 'https://example.com/1', new ConcealedString('very_secret')),
-                DocumentServer::withoutProjectRestrictions(self::SERVER_2_ID, 'https://example.com/2', new ConcealedString('much_secret')),
+                DocumentServer::withoutProjectRestrictions($this->getServer1ID(), 'https://example.com/1', new ConcealedString('very_secret')),
+                DocumentServer::withoutProjectRestrictions($this->getServer2ID(), 'https://example.com/2', new ConcealedString('much_secret')),
             )
         );
 
         $this->expectException(DocumentServerNotFoundException::class);
 
+        $not_existing_server_id = new UUIDTestContext();
+
         $retriever->getServerFromSaveToken(
-            new SaveDocumentTokenData(123, 102, 103, self::UNEXISTING_SERVER_ID)
+            new SaveDocumentTokenData(123, 102, 103, $not_existing_server_id)
         );
     }
 
@@ -54,22 +54,22 @@ final class DocumentServerForSaveDocumentTokenRetrieverTest extends TestCase
     {
         $retriever = new DocumentServerForSaveDocumentTokenRetriever(
             IRetrieveDocumentServersStub::buildWith(
-                DocumentServer::withoutProjectRestrictions(self::SERVER_1_ID, 'https://example.com/1', new ConcealedString('very_secret')),
-                DocumentServer::withoutProjectRestrictions(self::SERVER_2_ID, 'https://example.com/2', new ConcealedString(''))
+                DocumentServer::withoutProjectRestrictions($this->getServer1ID(), 'https://example.com/1', new ConcealedString('very_secret')),
+                DocumentServer::withoutProjectRestrictions($this->getServer2ID(), 'https://example.com/2', new ConcealedString(''))
             ),
         );
 
         $this->expectException(DocumentServerHasNoExistingSecretException::class);
 
         $retriever->getServerFromSaveToken(
-            new SaveDocumentTokenData(123, 102, 103, self::SERVER_2_ID)
+            new SaveDocumentTokenData(123, 102, 103, $this->getServer2ID())
         );
     }
 
     public function testItReturnsTheServer(): void
     {
-        $server_1  = DocumentServer::withoutProjectRestrictions(self::SERVER_1_ID, 'https://example.com/1', new ConcealedString('very_secret'));
-        $server_2  = DocumentServer::withoutProjectRestrictions(self::SERVER_2_ID, 'https://example.com/2', new ConcealedString('much_secret'));
+        $server_1  = DocumentServer::withoutProjectRestrictions($this->getServer1ID(), 'https://example.com/1', new ConcealedString('very_secret'));
+        $server_2  = DocumentServer::withoutProjectRestrictions($this->getServer2ID(), 'https://example.com/2', new ConcealedString('much_secret'));
         $retriever = new DocumentServerForSaveDocumentTokenRetriever(
             IRetrieveDocumentServersStub::buildWith($server_1, $server_2),
         );
@@ -77,52 +77,26 @@ final class DocumentServerForSaveDocumentTokenRetrieverTest extends TestCase
         self::assertEquals(
             $server_2,
             $retriever->getServerFromSaveToken(
-                new SaveDocumentTokenData(123, 102, 103, self::SERVER_2_ID)
+                new SaveDocumentTokenData(123, 102, 103, $this->getServer2ID())
             )
         );
     }
 
-    public function testItReturnsTheFirstServerIfSaveTokenHasBeenCreatedWhenForgeconfigWereStoringJwtKey(): void
+    private function getServer1ID(): UUID
     {
-        $server_1  = DocumentServer::withoutProjectRestrictions(self::SERVER_1_ID, 'https://example.com/1', new ConcealedString('very_secret'));
-        $server_2  = DocumentServer::withoutProjectRestrictions(self::SERVER_2_ID, 'https://example.com/2', new ConcealedString('much_secret'));
-        $retriever = new DocumentServerForSaveDocumentTokenRetriever(
-            IRetrieveDocumentServersStub::buildWith($server_1, $server_2),
-        );
-
-        self::assertEquals(
-            $server_1,
-            $retriever->getServerFromSaveToken(
-                new SaveDocumentTokenData(123, 102, 103, 0)
-            )
-        );
+        static $id = null;
+        if ($id === null) {
+            $id = new UUIDTestContext();
+        }
+        return $id;
     }
 
-    public function testThrowsExceptionIfTheFirstServerHasNoKeyAndSaveTokenHasBeenCreatedWhenForgeconfigWereStoringJwtKey(): void
+    private function getServer2ID(): UUID
     {
-        $server_1  = DocumentServer::withoutProjectRestrictions(self::SERVER_1_ID, 'https://example.com/1', new ConcealedString(''));
-        $server_2  = DocumentServer::withoutProjectRestrictions(self::SERVER_2_ID, 'https://example.com/2', new ConcealedString('much_secret'));
-        $retriever = new DocumentServerForSaveDocumentTokenRetriever(
-            IRetrieveDocumentServersStub::buildWith($server_1, $server_2),
-        );
-
-        $this->expectException(DocumentServerHasNoExistingSecretException::class);
-
-        $retriever->getServerFromSaveToken(
-            new SaveDocumentTokenData(123, 102, 103, 0)
-        );
-    }
-
-    public function testThrowsExceptionIfThereIsntAnyServerAndSaveTokenHasBeenCreatedWhenForgeconfigWereStoringJwtKey(): void
-    {
-        $retriever = new DocumentServerForSaveDocumentTokenRetriever(
-            IRetrieveDocumentServersStub::buildWithoutServer(),
-        );
-
-        $this->expectException(NoDocumentServerException::class);
-
-        $retriever->getServerFromSaveToken(
-            new SaveDocumentTokenData(123, 102, 103, 0)
-        );
+        static $id = null;
+        if ($id === null) {
+            $id = new UUIDTestContext();
+        }
+        return $id;
     }
 }

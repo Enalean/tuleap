@@ -36,35 +36,15 @@ final class DocumentServerForSaveDocumentTokenRetriever
     /**
      * @throws DocumentServerNotFoundException
      * @throws DocumentServerHasNoExistingSecretException
-     * @throws NoDocumentServerException
      */
     public function getServerFromSaveToken(SaveDocumentTokenData $save_token_information): DocumentServer
     {
-        if ($this->shouldWeTakeTheFirstServer($save_token_information)) {
-            $servers = $this->servers_retriever->retrieveAll();
-            if (empty($servers)) {
-                throw new NoDocumentServerException();
-            }
-
-            $server = $servers[0];
-        } else {
-            $server = $this->servers_retriever->retrieveById($save_token_information->server_id);
-        }
+        $server = $this->servers_retriever->retrieveById($save_token_information->server_id->toString());
 
         if (! $server->has_existing_secret) {
             throw new DocumentServerHasNoExistingSecretException();
         }
 
         return $server;
-    }
-
-    private function shouldWeTakeTheFirstServer(SaveDocumentTokenData $save_token_information): bool
-    {
-        /*
-         * If a document is open before the move from forgeconfig to plugin_onlyoffice_document_server (during 14.4),
-         * Then its save token is not tied to a specific server
-         * Then we should take the first server instead of rejecting it
-         */
-        return $save_token_information->server_id === 0;
     }
 }

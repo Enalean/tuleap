@@ -32,5 +32,5 @@ interface IRetrieveDocumentServers
     /**
      * @throws DocumentServerNotFoundException
      */
-    public function retrieveById(int $id): DocumentServer;
+    public function retrieveById(string $uuid_hex): DocumentServer;
 }

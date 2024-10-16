@@ -22,15 +22,17 @@ declare(strict_types=1);
 
 namespace Tuleap\OnlyOffice\DocumentServer;
 
+use Tuleap\DB\UUID;
+
 interface IRestrictDocumentServer
 {
     /**
      * @param int[] $project_ids
      */
-    public function restrict(int $id, array $project_ids): void;
+    public function restrict(UUID $id, array $project_ids): void;
 
     /**
      * @throws TooManyServersException
      */
-    public function unrestrict(int $id): void;
+    public function unrestrict(UUID $id): void;
 }

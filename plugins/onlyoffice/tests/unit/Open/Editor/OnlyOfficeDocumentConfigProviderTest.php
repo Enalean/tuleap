@@ -34,6 +34,7 @@ use Tuleap\OnlyOffice\Open\OnlyOfficeDocument;
 use Tuleap\OnlyOffice\Open\ProvideOnlyOfficeDocument;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\DB\UUIDTestContext;
 use Tuleap\Test\PHPUnit\TestCase;
 
 final class OnlyOfficeDocumentConfigProviderTest extends TestCase
@@ -54,7 +55,7 @@ final class OnlyOfficeDocumentConfigProviderTest extends TestCase
             963,
             'something.docx',
             $can_be_edited,
-            DocumentServer::withoutProjectRestrictions(1, 'https://example.com', new ConcealedString('very_secret')),
+            DocumentServer::withoutProjectRestrictions(new UUIDTestContext(), 'https://example.com', new ConcealedString('very_secret')),
         );
         $provider = self::buildProvider(Result::ok($document));
 

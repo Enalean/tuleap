@@ -27,6 +27,7 @@ use Laminas\HttpHandlerRunner\Emitter\EmitterInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
+use Tuleap\DB\UUID;
 use Tuleap\Http\Response\RedirectWithFeedbackFactory;
 use Tuleap\Layout\Feedback\NewFeedback;
 use Tuleap\OnlyOffice\DocumentServer\DocumentServer;
@@ -61,7 +62,7 @@ final class OnlyOfficeRestrictAdminSettingsController extends DispatchablePSR15C
         $user = $request->getAttribute(\PFUser::class);
         assert($user instanceof \PFUser);
 
-        $server_id = (int) $request->getAttribute('id');
+        $server_id = (string) $request->getAttribute('id');
         try {
             $server = $this->retriever->retrieveById($server_id);
         } catch (DocumentServerNotFoundException) {
@@ -137,8 +138,8 @@ final class OnlyOfficeRestrictAdminSettingsController extends DispatchablePSR15C
         );
     }
 
-    public static function getServerRestrictUrl(int $server_id): string
+    public static function getServerRestrictUrl(UUID $server_id): string
     {
-        return self::URL . '/' . $server_id;
+        return self::URL . '/' . urlencode($server_id->toString());
     }
 }

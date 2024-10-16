@@ -25,6 +25,7 @@ namespace Tuleap\OnlyOffice\Administration;
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\OnlyOffice\DocumentServer\DocumentServer;
 use Tuleap\OnlyOffice\Stubs\IRetrieveDocumentServersStub;
+use Tuleap\Test\DB\UUIDTestContext;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\CSRFSynchronizerTokenStub;
 
@@ -33,8 +34,8 @@ class OnlyOfficeAdminSettingsPresenterBuilderTest extends TestCase
     public function testGetPresenter(): void
     {
         $retriever = IRetrieveDocumentServersStub::buildWith(
-            DocumentServer::withoutProjectRestrictions(1, 'https://example.com/1', new ConcealedString('')),
-            DocumentServer::withoutProjectRestrictions(2, 'https://example.com/2', new ConcealedString('123456')),
+            DocumentServer::withoutProjectRestrictions(new UUIDTestContext(), 'https://example.com/1', new ConcealedString('')),
+            DocumentServer::withoutProjectRestrictions(new UUIDTestContext(), 'https://example.com/2', new ConcealedString('123456')),
         );
 
         $presenter = (new OnlyOfficeAdminSettingsPresenterBuilder($retriever))
