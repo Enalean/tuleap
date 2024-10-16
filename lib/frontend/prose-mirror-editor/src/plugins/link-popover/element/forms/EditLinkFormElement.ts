@@ -54,7 +54,7 @@ export const connect = (host: InternalEditLinkFormElement): DisconnectFunction =
     };
 };
 
-define<InternalEditLinkFormElement>({
+const edit_link_form = define.compile<InternalEditLinkFormElement>({
     tag: TAG,
     link_href: "",
     link_title: "",
@@ -78,3 +78,7 @@ define<InternalEditLinkFormElement>({
         shadow: false,
     },
 });
+
+if (!window.customElements.get(TAG)) {
+    window.customElements.define(TAG, edit_link_form);
+}

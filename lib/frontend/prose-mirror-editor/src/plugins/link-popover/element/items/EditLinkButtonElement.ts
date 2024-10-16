@@ -51,8 +51,12 @@ export const renderEditLinkButton = (
     `;
 };
 
-define<InternalEditLinkButtonElement>({
+const edit_link_button = define.compile<InternalEditLinkButtonElement>({
     tag: TAG,
     button_title: "",
     render: renderEditLinkButton,
 });
+
+if (!window.customElements.get(TAG)) {
+    window.customElements.define(TAG, edit_link_button);
+}

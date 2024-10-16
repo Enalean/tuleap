@@ -33,6 +33,7 @@ import "./buttons/link/link";
 import "./buttons/image/image";
 import "./buttons/ordered-list";
 import "./buttons/bullet-list";
+import "./buttons/text-style/text-style";
 
 export type ProseMirrorToolbarElement = {
     controller: ControlToolbar;
@@ -43,6 +44,7 @@ export type TextElements = {
     italic: boolean;
     code: boolean;
     quote: boolean;
+    headings: boolean;
 };
 
 export type ListElements = {
@@ -61,11 +63,16 @@ export type LinkElements = {
     image: true;
 };
 
+export type StyleElements = {
+    headings: boolean;
+};
+
 export type InternalProseMirrorToolbarElement = Readonly<ProseMirrorToolbarElement> & {
     text_elements: TextElements | null;
     list_elements: ListElements | null;
     script_elements: ScriptElements | null;
     link_elements: LinkElements | null;
+    style_elements: StyleElements | null;
 };
 
 const TOOLBAR_TAG_NAME = "tuleap-prose-mirror-toolbar";
@@ -129,16 +136,21 @@ export const renderToolbar = (
         ? html`<image-item toolbar_bus="${host.controller.getToolbarBus()}"></image-item>`
         : html``;
 
+    const text_style_item = host.style_elements?.headings
+        ? html`<text-style-item toolbar_bus="${host.controller.getToolbarBus()}"></text-style-item>`
+        : html``;
+
     return html`
         <div class="prose-mirror-toolbar-container" data-test="toolbar-container">
             ${bold_item} ${italic_item} ${quote_item} ${code_item}
             <hr class="prose-mirror-hr" />
-            ${link_item} ${unlink_item} ${image_item}
+            ${text_style_item}
             <hr class="prose-mirror-hr" />
             ${bullet_item} ${ordered_item}
             <hr class="prose-mirror-hr" />
-            ${subscript_item} ${superscript_item}
+            ${link_item} ${unlink_item} ${image_item}
             <hr class="prose-mirror-hr" />
+            ${subscript_item} ${superscript_item}
         </div>
     `.style(scss_styles);
 };
@@ -150,6 +162,7 @@ define<InternalProseMirrorToolbarElement>({
     script_elements: null,
     link_elements: null,
     list_elements: null,
+    style_elements: null,
     render: {
         value: renderToolbar,
         shadow: false,

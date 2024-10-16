@@ -70,7 +70,7 @@ export const observeEditionMode = (
     createPopoverInstance(host);
 };
 
-define<InternalLinkPopoverElement>({
+const link_popover = define.compile<InternalLinkPopoverElement>({
     tag: TAG,
     popover_anchor: (host, popover_anchor) => popover_anchor,
     popover_element: {
@@ -96,3 +96,7 @@ define<InternalLinkPopoverElement>({
         value: renderLinkPopover,
     },
 });
+
+if (!window.customElements.get(TAG)) {
+    window.customElements.define(TAG, link_popover);
+}

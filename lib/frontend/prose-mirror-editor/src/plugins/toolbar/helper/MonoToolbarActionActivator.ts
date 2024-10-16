@@ -26,6 +26,7 @@ import { isSelectionABlockQuote } from "../quote/is-selection-a-block-quote";
 import type { BuildLinkState } from "../links/LinkStateBuilder";
 import type { BuildImageState } from "../image/ImageStateBuilder";
 import type { BuildListState } from "../list/ListStateBuilder";
+import type { ActivateMonoToolbarTextStyleItems } from "./MonoToolbarTextStyleItemsActivator";
 
 export type ActivateToolbar = {
     activateToolbarItem(toolbar_view: ToolbarView, state: EditorState): void;
@@ -36,6 +37,7 @@ export const ToolbarActivator = (
     build_link_state: BuildLinkState,
     build_image_state: BuildImageState,
     build_list_state: BuildListState,
+    activate_text_style_items: ActivateMonoToolbarTextStyleItems,
 ): ActivateToolbar => ({
     activateToolbarItem(toolbar_view: ToolbarView, state: EditorState): void {
         toolbar_view.activateBold(
@@ -73,5 +75,6 @@ export const ToolbarActivator = (
                 custom_schema.nodes.ordered_list,
             ),
         );
+        activate_text_style_items.activateTextStyleItems(toolbar_view, state);
     },
 });

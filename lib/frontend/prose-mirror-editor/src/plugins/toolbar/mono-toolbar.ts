@@ -18,11 +18,12 @@
  *
  */
 
-import type { PluginView } from "prosemirror-state";
+import type { EditorState, PluginView } from "prosemirror-state";
 import { Plugin } from "prosemirror-state";
 import type { EditorView } from "prosemirror-view";
 import type { ToolbarBus } from "./helper/toolbar-bus";
 import { ToolbarActivator } from "./helper/MonoToolbarActionActivator";
+import type { ActivateToolbar } from "./helper/MonoToolbarActionActivator";
 import { IsMarkActiveChecker } from "./helper/IsMarkActiveChecker";
 import { MarkToggle } from "./helper/MonoToolbarToggler";
 import { custom_schema } from "../../custom_schema";
@@ -44,32 +45,39 @@ import { ListNodeInserter } from "./list/ListInserter";
 import { IsSelectionAListChecker } from "./list/IsListChecker";
 import { lift } from "prosemirror-commands";
 import { wrapInList } from "prosemirror-schema-list";
+import { getHeadingCommand, getPlainTextCommand } from "./text-style/transform-text";
+import { HeadingInSelectionRetriever } from "./text-style/HeadingInSelectionRetriever";
+import { MonoToolbarTextStyleItemsActivator } from "./helper/MonoToolbarTextStyleItemsActivator";
+import { HeadingsInSelectionDetector } from "./text-style/HeadingsInSelectionDetector";
+
+const getToolbarActivator = (state: EditorState): ActivateToolbar =>
+    ToolbarActivator(
+        IsMarkActiveChecker(),
+        LinkStateBuilder(
+            IsMarkTypeRepeatedInSelectionChecker(),
+            LinkPropertiesExtractor(EditorNodeAtPositionFinder(state), LinkNodeDetector(state)),
+        ),
+        ImageStateBuilder(
+            CanInsertImageChecker(),
+            ImageFromSelectionExtractor(EditorNodeAtPositionFinder(state)),
+        ),
+        ListStateBuilder(state, IsSelectionAListWithTypeChecker()),
+        MonoToolbarTextStyleItemsActivator(
+            HeadingInSelectionRetriever(),
+            HeadingsInSelectionDetector(),
+        ),
+    );
 
 export function setupMonoToolbar(toolbar_bus: ToolbarBus): Plugin {
     return new Plugin({
         view(): PluginView {
             return {
                 update: (view: EditorView): void => {
-                    if (toolbar_bus.view) {
-                        view.focus();
-                        const toolbar_activator = ToolbarActivator(
-                            IsMarkActiveChecker(),
-                            LinkStateBuilder(
-                                IsMarkTypeRepeatedInSelectionChecker(),
-                                LinkPropertiesExtractor(
-                                    EditorNodeAtPositionFinder(view.state),
-                                    LinkNodeDetector(view.state),
-                                ),
-                            ),
-                            ImageStateBuilder(
-                                CanInsertImageChecker(),
-                                ImageFromSelectionExtractor(EditorNodeAtPositionFinder(view.state)),
-                            ),
-                            ListStateBuilder(view.state, IsSelectionAListWithTypeChecker()),
-                        );
+                    view.focus();
 
-                        toolbar_activator.activateToolbarItem(toolbar_bus.view, view.state);
-                    }
+                    const toolbar_activator = getToolbarActivator(view.state);
+
+                    toolbar_activator.activateToolbarItem(toolbar_bus.view, view.state);
 
                     toolbar_bus.setCurrentHandler({
                         toggleBold(): void {
@@ -118,6 +126,12 @@ export function setupMonoToolbar(toolbar_bus: ToolbarBus): Plugin {
                                 lift,
                                 wrapInList(custom_schema.nodes.bullet_list),
                             ).insertList();
+                        },
+                        toggleHeading(heading): void {
+                            getHeadingCommand(heading.level)(view.state, view.dispatch);
+                        },
+                        togglePlainText(): void {
+                            getPlainTextCommand()(view.state, view.dispatch);
                         },
                     });
                 },

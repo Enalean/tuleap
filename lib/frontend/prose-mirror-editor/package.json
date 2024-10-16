@@ -29,7 +29,6 @@
     "prosemirror-dropcursor": "^1.8.1",
     "prosemirror-inputrules": "^1.4.0",
     "prosemirror-keymap": "^1.2.2",
-    "prosemirror-menu": "^1.2.4",
     "prosemirror-model": "^1.21.3",
     "prosemirror-schema-basic": "^1.2.3",
     "prosemirror-schema-list": "^1.4.0",

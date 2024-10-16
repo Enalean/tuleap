@@ -96,17 +96,3 @@ onMounted(async () => {
     }
 });
 </script>
-
-<style lang="scss">
-@use "pkg:@tuleap/burningparrot-theme/css/includes/global-variables";
-
-/* stylelint-disable selector-class-pattern */
-.ProseMirror-menubar {
-    position: sticky;
-
-    // Do not display the toolbar under the images in the content
-    z-index: 3;
-    top: global-variables.$navbar-height;
-}
-/* stylelint-enable selector-class-pattern */
-</style>

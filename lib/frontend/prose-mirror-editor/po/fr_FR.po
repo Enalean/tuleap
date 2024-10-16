@@ -19,12 +19,6 @@ msgstr "Une erreur est survenue durant le téléversement"
 msgid "Cancel"
 msgstr "Annuler"
 
-msgid "Change to heading"
-msgstr "Changer le texte en titre"
-
-msgid "Change to plain text"
-msgstr "Changer en texte"
-
 msgid "Copy Tuleap reference"
 msgstr "Copier la référence Tuleap"
 
@@ -53,9 +47,6 @@ msgstr "L'url du lien a été copiée !"
 msgid "Max upload size exceeded"
 msgstr "La taille maximale de téléversement dépassée"
 
-msgid "Normal text"
-msgstr "Texte"
-
 msgid "Open link"
 msgstr "Ouvrir le lien"
 
@@ -68,20 +59,8 @@ msgstr "Supprimer le lien"
 msgid "Save"
 msgstr "Sauvegarder"
 
-msgid "Styles"
-msgstr "Styles"
-
 msgid "Text"
 msgstr "Texte"
 
-msgid "Title"
-msgstr "Titre"
-
 msgid "Tuleap reference has been copied!"
 msgstr "La référence Tuleap a été copiée !"
-
-msgid "paragraph"
-msgstr "paragraphe"
-
-msgid "title"
-msgstr "titre"

@@ -20,42 +20,26 @@
 import { keymap } from "prosemirror-keymap";
 import { baseKeymap } from "prosemirror-commands";
 import type { Plugin } from "prosemirror-state";
-import { menuBar } from "prosemirror-menu";
-import { buildMenuItems } from "./menu";
 import { buildKeymap } from "./keymap";
 import { custom_schema } from "../../custom_schema";
 import { buildInputRules } from "./input-rules";
-import type { GetText } from "@tuleap/gettext";
-import { initPluginTextStyle } from "./text-style";
 import { setupMonoToolbar } from "./mono-toolbar";
 import type { ToolbarBus } from "./helper/toolbar-bus";
 import { IsSelectionAListChecker } from "./list/IsListChecker";
 
-export { buildMenuItems, buildKeymap };
+export { buildKeymap };
 export type { LinkState } from "./links/LinkState";
 export type { ImageState } from "./image/ImageState";
 export type { ListState } from "./list/ListState";
+export type { Heading } from "./text-style/Heading";
 
-export const NB_HEADING = 6;
+export const NB_HEADING = 3;
 
-export function setupToolbar(
-    gettext_provider: GetText,
-    editor_id: string,
-    toolbar_bus: ToolbarBus,
-): Plugin[] {
-    const plugins = [
+export function setupToolbar(toolbar_bus: ToolbarBus): Plugin[] {
+    return [
         keymap(buildKeymap(custom_schema, IsSelectionAListChecker(), NB_HEADING)),
         keymap(baseKeymap),
         buildInputRules(custom_schema),
-        initPluginTextStyle(editor_id, gettext_provider),
-    ];
-
-    plugins.push(
-        menuBar({
-            content: buildMenuItems(custom_schema, gettext_provider, editor_id).fullMenu,
-        }),
         setupMonoToolbar(toolbar_bus),
-    );
-
-    return plugins;
+    ];
 }

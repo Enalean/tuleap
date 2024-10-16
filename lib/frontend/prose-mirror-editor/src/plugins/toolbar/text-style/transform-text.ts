@@ -17,39 +17,45 @@
  *  along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { Command, EditorState } from "prosemirror-state";
+import type { Command, EditorState, Transaction } from "prosemirror-state";
+import { custom_schema } from "../../../custom_schema";
 
-export function getPlainTextCommand(): Command {
-    return function (state: EditorState, dispatch): boolean {
+export const getPlainTextCommand =
+    (): Command =>
+    (state: EditorState, dispatch): boolean => {
+        if (!dispatch) {
+            return true;
+        }
         const {
             tr,
             selection: { $from, $to },
-            schema,
         } = state;
-        if (dispatch) {
-            dispatch(tr.setBlockType($from.pos, $to.pos, schema.nodes.paragraph));
-        }
+
+        dispatch(tr.setBlockType($from.pos, $to.pos, custom_schema.nodes.paragraph));
         return true;
     };
-}
 
-export function getHeadingCommand(level: number): Command {
-    return function (state: EditorState, dispatch): boolean {
+export const getHeadingCommand =
+    (level: number): Command =>
+    (state: EditorState, dispatch?: (tr: Transaction) => void): boolean => {
+        if (!dispatch) {
+            return true;
+        }
+
         const {
             tr,
             selection: { $from, $to },
-            schema,
         } = state;
         const currentBlock = $from.parent;
-        if (currentBlock.type !== schema.nodes.heading || currentBlock.attrs.level !== level) {
-            if (dispatch) {
-                dispatch(tr.setBlockType($from.pos, $to.pos, schema.nodes.heading, { level }));
-            }
+
+        if (
+            currentBlock.type === custom_schema.nodes.heading &&
+            currentBlock.attrs.level === level
+        ) {
+            dispatch(tr.setBlockType($from.pos, $to.pos, custom_schema.nodes.paragraph));
         } else {
-            if (dispatch) {
-                dispatch(tr.setBlockType($from.pos, $to.pos, schema.nodes.paragraph));
-            }
+            dispatch(tr.setBlockType($from.pos, $to.pos, custom_schema.nodes.heading, { level }));
         }
+
         return true;
     };
-}

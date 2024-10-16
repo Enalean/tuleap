@@ -54,7 +54,7 @@ export const connect = (host: InternalEditCrossReferenceFormElement): Disconnect
     };
 };
 
-define<InternalEditCrossReferenceFormElement>({
+const edit_cross_reference_form = define.compile<InternalEditCrossReferenceFormElement>({
     tag: TAG,
     reference_text: "",
     gettext_provider: (host, gettext_provider) => gettext_provider,
@@ -78,3 +78,7 @@ define<InternalEditCrossReferenceFormElement>({
         shadow: false,
     },
 });
+
+if (!window.customElements.get(TAG)) {
+    window.customElements.define(TAG, edit_cross_reference_form);
+}
