@@ -95,107 +95,105 @@
     </form>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
 import { credentialsAreEmpty } from "../../../gitlab/gitlab-credentials-helper";
-import { Component, Prop } from "vue-property-decorator";
-import Vue from "vue";
-import type { GitLabCredentials, GitLabRepository, Repository } from "../../../type";
-import { namespace } from "vuex-class";
+import { computed, ref } from "vue";
+import type { Repository } from "../../../type";
+import { useNamespacedActions } from "vuex-composition-helpers";
+import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
 
-const gitlab = namespace("gitlab");
+const gettext_provider = useGettext();
 
-@Component
-export default class AccessTokenFormModal extends Vue {
-    @Prop({ required: true })
-    readonly repository!: Repository;
+const { getGitlabRepositoryFromId } = useNamespacedActions("gitlab", ["getGitlabRepositoryFromId"]);
 
-    @Prop({ required: true })
-    readonly gitlab_token!: string;
+const props = defineProps<{
+    repository: Repository;
+    gitlab_token: string;
+}>();
 
-    @gitlab.Action
-    readonly getGitlabRepositoryFromId!: ({
-        credentials,
-        id,
-    }: {
-        credentials: GitLabCredentials;
-        id: number;
-    }) => Promise<GitLabRepository>;
+const emit = defineEmits<{
+    (e: "on-close-modal"): void;
+    (e: "on-get-new-token-gitlab", { token }: { token: string }): void;
+}>();
 
-    gitlab_new_token = this.gitlab_token;
-    error_message = "";
-    is_checking_validity_of_new_token = false;
+const gitlab_new_token = ref(props.gitlab_token);
+const error_message = ref("");
+const is_checking_validity_of_new_token = ref(false);
 
-    get instance_url(): string {
-        if (!this.repository.gitlab_data || !this.repository.normalized_path) {
-            return "";
-        }
-        return this.repository.gitlab_data.gitlab_repository_url.replace(
-            this.repository.normalized_path,
-            "",
+const instance_url = computed((): string => {
+    if (!props.repository.gitlab_data || !props.repository.normalized_path) {
+        return "";
+    }
+    return props.repository.gitlab_data.gitlab_repository_url.replace(
+        props.repository.normalized_path,
+        "",
+    );
+});
+
+const disabled_button = computed(
+    (): boolean => gitlab_new_token.value === "" || is_checking_validity_of_new_token.value,
+);
+
+const tokenAPIInformationMessage = (): string => {
+    return gettext_provider.$gettext(
+        "The access token will be used to configure project hooks and automatically write comments on GitLab commits and merge requests. It's also needed to be able to extract Tuleap references from GitLab tag message.",
+    );
+};
+
+const resetErrorMessage = (): void => {
+    error_message.value = "";
+};
+
+const reset = (): void => {
+    gitlab_new_token.value = "";
+    is_checking_validity_of_new_token.value = false;
+    resetErrorMessage();
+};
+
+const cancelButton = (): void => {
+    reset();
+    emit("on-close-modal");
+};
+
+const addGitlabToken = async (event: Event): Promise<void> => {
+    event.preventDefault();
+    resetErrorMessage();
+
+    const credentials = {
+        server_url: instance_url.value,
+        token: gitlab_new_token.value,
+    };
+
+    if (credentialsAreEmpty(credentials)) {
+        error_message.value = gettext_provider.$gettext(
+            "You must provide a valid GitLab API token",
         );
+        return;
     }
 
-    get disabled_button(): boolean {
-        return this.gitlab_new_token === "" || this.is_checking_validity_of_new_token;
-    }
+    try {
+        is_checking_validity_of_new_token.value = true;
 
-    tokenAPIInformationMessage(): string {
-        return this.$gettext(
-            "The access token will be used to configure project hooks and automatically write comments on GitLab commits and merge requests. It's also needed to be able to extract Tuleap references from GitLab tag message.",
-        );
-    }
-
-    resetErrorMessage(): void {
-        this.error_message = "";
-    }
-
-    reset(): void {
-        this.gitlab_new_token = "";
-        this.is_checking_validity_of_new_token = false;
-        this.resetErrorMessage();
-    }
-
-    cancelButton(): void {
-        this.reset();
-        this.$emit("on-close-modal");
-    }
-
-    async addGitlabToken(event: Event): Promise<void> {
-        event.preventDefault();
-        this.resetErrorMessage();
-
-        const credentials = {
-            server_url: this.instance_url,
-            token: this.gitlab_new_token,
-        };
-
-        if (credentialsAreEmpty(credentials)) {
-            this.error_message = this.$gettext("You must provide a valid GitLab API token");
+        if (!props.repository.gitlab_data) {
             return;
         }
 
-        try {
-            this.is_checking_validity_of_new_token = true;
+        await getGitlabRepositoryFromId({
+            credentials,
+            id: props.repository.gitlab_data.gitlab_repository_id,
+        });
 
-            if (!this.repository.gitlab_data) {
-                return;
-            }
-
-            await this.getGitlabRepositoryFromId({
-                credentials,
-                id: this.repository.gitlab_data.gitlab_repository_id,
-            });
-
-            this.$emit("on-get-new-token-gitlab", {
-                token: this.gitlab_new_token,
-            });
-        } catch (e) {
-            this.error_message = this.$gettext(
-                "Submitted token is invalid to access to this repository on this GitLab server.",
-            );
-        } finally {
-            this.is_checking_validity_of_new_token = false;
-        }
+        emit("on-get-new-token-gitlab", {
+            token: gitlab_new_token.value,
+        });
+    } catch (e) {
+        error_message.value = gettext_provider.$gettext(
+            "Submitted token is invalid to access to this repository on this GitLab server.",
+        );
+    } finally {
+        is_checking_validity_of_new_token.value = false;
     }
-}
+};
+
+defineExpose({ gitlab_new_token, error_message });
 </script>
