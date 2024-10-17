@@ -60,6 +60,7 @@ class AvatarController implements DispatchableWithRequest, DispatchableWithReque
         if (! ForgeConfig::areAnonymousAllowed() && $request->getCurrentUser()->isAnonymous()) {
             $this->displayDefaultAvatarAsError();
         }
+        \session_write_close();
 
         $user_manager = UserManager::instance();
         $user         = $user_manager->getUserByUserName($variables['name']);
