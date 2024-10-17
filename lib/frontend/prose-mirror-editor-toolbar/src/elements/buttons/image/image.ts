@@ -37,7 +37,6 @@ export type InternalImageButton = Readonly<ImageButton> &
         is_disabled: boolean;
         image_src: string;
         image_title: string;
-        render(): HTMLElement;
     };
 
 export type HostElement = InternalImageButton & HTMLElement;
@@ -75,7 +74,7 @@ define<InternalImageButton>({
 
             return popover_element;
         },
-        connect: connectPopover,
+        connect: (host) => connectPopover(host, document),
     },
     toolbar_bus: {
         value: (host: InternalImageButton, toolbar_bus: ToolbarBus) => toolbar_bus,

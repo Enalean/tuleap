@@ -28,7 +28,7 @@
         >
             <i class="fa-solid fa-ellipsis-vertical fa-fw" role="img"></i>
         </button>
-        <div class="tlp-dropdown-menu tlp-dropdown-menu-on-icon" role="menu">
+        <div ref="menu" class="tlp-dropdown-menu tlp-dropdown-menu-on-icon" role="menu">
             <a v-bind:href="artifact_url" class="tlp-dropdown-menu-item" role="menuitem">
                 <i
                     class="tlp-dropdown-menu-item-icon fa-solid fa-fw fa-arrow-right"
@@ -79,9 +79,10 @@ import type { ArtidocSection } from "@/helpers/artidoc-section.type";
 import { isPendingArtifactSection, isArtifactSection } from "@/helpers/artidoc-section.type";
 import type { Dropdown } from "@tuleap/tlp-dropdown";
 import { createDropdown } from "@tuleap/tlp-dropdown";
-import { computed, ref, watch } from "vue";
+import { computed, onMounted, ref, watch } from "vue";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import { CONFIGURATION_STORE } from "@/stores/configuration-store";
+import { moveDropdownMenuInDocumentBody } from "@/helpers/move-dropdownmenu-in-document-body";
 
 const configuration = strictInject(CONFIGURATION_STORE);
 
@@ -98,6 +99,7 @@ const artifact_url = computed(() =>
     isArtifactSection(props.section) ? `/plugins/tracker/?aid=${props.section.artifact.id}` : "",
 );
 const trigger = ref<HTMLElement | null>(null);
+const menu = ref<HTMLElement | null>(null);
 
 const edit_title = computed(() =>
     is_edit_mode.value ? $gettext("Section is currently being edited") : "",
@@ -107,9 +109,17 @@ const trigger_title = $gettext("Open contextual menu");
 
 let dropdown: Dropdown | null = null;
 
+onMounted(() => {
+    if (menu.value) {
+        moveDropdownMenuInDocumentBody(document, menu.value);
+    }
+});
+
 watch(trigger, () => {
-    if (dropdown === null && trigger.value) {
-        dropdown = createDropdown(trigger.value);
+    if (dropdown === null && trigger.value && menu.value) {
+        dropdown = createDropdown(trigger.value, {
+            dropdown_menu: menu.value,
+        });
     }
 });
 
