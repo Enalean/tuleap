@@ -47,7 +47,7 @@ describe("UnlinkRepositoryGitlabModal", () => {
         };
     });
 
-    async function instantiateComponent(): Promise<Wrapper<UnlinkRepositoryGitlabModal>> {
+    async function instantiateComponent(): Promise<Wrapper<Vue>> {
         store = createStoreMock(store_options);
         return shallowMount(UnlinkRepositoryGitlabModal, {
             mocks: { $store: store },
