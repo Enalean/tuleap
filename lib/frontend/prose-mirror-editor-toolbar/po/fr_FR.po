@@ -81,7 +81,7 @@ msgid "Update image properties"
 msgstr "Mettre à jour les propriétés de l'image"
 
 msgid "Wrap in block quote `Ctrl->`"
-msgstr "Passer en mode citation Ctrl->`"
+msgstr "Passer en mode citation `Ctrl->`"
 
 msgid "Wrap in bullet list `Shift+Ctrl+8`"
 msgstr "Transformer en liste à puces `Shift+Ctrl+8`"
