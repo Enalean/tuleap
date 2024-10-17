@@ -52,6 +52,9 @@ describe("image-popover-template", () => {
         ({
             image_src: "https://example.com",
             image_title: "See example",
+            popover_instance: {
+                hide: vi.fn(),
+            },
             toolbar_bus,
         }) as unknown as HostElement;
 
@@ -76,7 +79,7 @@ describe("image-popover-template", () => {
         form.dispatchEvent(new Event("submit"));
     };
 
-    it("When the form is submitted, then it should call the toolbar_bus.image() method with the title and src", () => {
+    it("When the form is submitted, then it should call the toolbar_bus.image() method with the title and src, and finally hide the popover", () => {
         const host = getHost();
         const image_source = "https://www.example.com";
         const title = "See example HERE";
@@ -89,5 +92,6 @@ describe("image-popover-template", () => {
             src: image_source,
             title,
         });
+        expect(host.popover_instance.hide).toHaveBeenCalledOnce();
     });
 });

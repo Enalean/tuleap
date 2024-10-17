@@ -25,6 +25,7 @@ import type { InternalLinkButtonElement } from "./link";
 const onSubmit = (host: InternalLinkButtonElement, event: Event): void => {
     event.preventDefault();
 
+    host.popover_instance.hide();
     host.toolbar_bus.link({
         href: host.link_href,
         title: host.link_title ? host.link_title : host.link_href,
@@ -96,7 +97,6 @@ export const renderLinkPopover = (
             <button
                 type="submit"
                 class="tlp-button-primary tlp-button-small"
-                data-dismiss="popover"
                 disabled="${host.is_disabled}"
                 data-test="submit-button"
             >

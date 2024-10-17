@@ -52,6 +52,9 @@ describe("link-popover-template", () => {
         ({
             link_href: "https://example.com",
             link_title: "See example",
+            popover_instance: {
+                hide: vi.fn(),
+            },
             toolbar_bus,
         }) as unknown as HostElement;
 
@@ -74,7 +77,7 @@ describe("link-popover-template", () => {
         form.dispatchEvent(new Event("submit"));
     };
 
-    it("When the form is submitted, then it should call the toolbar_bus.link() method with the title and href", () => {
+    it("When the form is submitted, then it should call the toolbar_bus.link() method with the title and href, and finally hide the popover", () => {
         const host = getHost();
         const href = "https://www.example.com";
         const title = "See example HERE";
@@ -87,6 +90,7 @@ describe("link-popover-template", () => {
             href,
             title,
         });
+        expect(host.popover_instance.hide).toHaveBeenCalledOnce();
     });
 
     it("When the title is empty, then the new title will be the current url", () => {
@@ -102,5 +106,6 @@ describe("link-popover-template", () => {
             href,
             title: href,
         });
+        expect(host.popover_instance.hide).toHaveBeenCalledOnce();
     });
 });
