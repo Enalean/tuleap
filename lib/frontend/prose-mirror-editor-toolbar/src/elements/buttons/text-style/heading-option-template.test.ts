@@ -44,7 +44,7 @@ describe("heading-option-template", () => {
         return option;
     };
 
-    it("When the heading level is the one being applied, then the option should be selected and disabled", () => {
+    it("When the heading level is the one being applied, then the option should be selected and NOT disabled", () => {
         const current_level = 2;
         const host = {
             toolbar_bus,
@@ -53,7 +53,7 @@ describe("heading-option-template", () => {
 
         const option = getOptionElement(host, current_level);
 
-        expect(option.disabled).toBe(true);
+        expect(option.disabled).toBe(false);
         expect(option.selected).toBe(true);
     });
 
@@ -82,5 +82,18 @@ describe("heading-option-template", () => {
 
         expect(applyHeading).toHaveBeenCalledOnce();
         expect(applyHeading).toHaveBeenCalledWith({ level: heading_level });
+    });
+
+    it("When clicked, toolbar_bus.heading() should NOT be called with the option value if the heading level didn't change", () => {
+        const heading_level = 3;
+        const host = {
+            toolbar_bus,
+            current_heading: { level: 3 },
+        } as HostElement;
+
+        const applyHeading = vi.spyOn(toolbar_bus, "heading");
+        getOptionElement(host, heading_level).click();
+
+        expect(applyHeading).not.toHaveBeenCalled();
     });
 });

@@ -29,6 +29,10 @@ const isCurrentHeading = (host: InternalHeadingsItem, level: number): boolean =>
 };
 
 const onClickApplyHeading = (host: InternalHeadingsItem, level: number): void => {
+    if (isCurrentHeading(host, level)) {
+        return;
+    }
+
     host.toolbar_bus.heading({ level });
 };
 
@@ -50,7 +54,6 @@ export const renderHeadingOption = (
     <option
         onclick="${(): void => onClickApplyHeading(host, level)}"
         title="${getHeadingOptionTitle(level)}"
-        disabled=${isCurrentHeading(host, level)}
         selected="${isCurrentHeading(host, level)}"
     >
         ${getHeadingOptionTextContent(level)}
