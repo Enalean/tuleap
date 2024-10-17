@@ -121,8 +121,7 @@ watch(report_state, () => {
 });
 
 onMounted(() => {
-    is_loading.value = true;
-    loadArtifacts();
+    refreshArtifactList();
 });
 
 function loadMoreArtifacts(): void {
@@ -131,6 +130,10 @@ function loadMoreArtifacts(): void {
 }
 
 function refreshArtifactList(): void {
+    if (props.writing_cross_tracker_report.expert_mode) {
+        return;
+    }
+
     artifacts.value = [];
     current_offset = 0;
     is_loading.value = true;

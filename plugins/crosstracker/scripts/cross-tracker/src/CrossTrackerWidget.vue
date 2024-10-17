@@ -200,7 +200,7 @@ function reportSaved(): void {
 }
 
 function unsavedReportDiscarded(): void {
-    props.reading_cross_tracker_report.duplicateFromReport(props.backend_cross_tracker_report);
+    initReports();
     report_state.value = "report-saved";
     clearFeedbacks();
 }
