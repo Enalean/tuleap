@@ -29,10 +29,12 @@ import { createLocalVueForTests } from "../../../helpers/local-vue-for-tests";
 
 jest.useFakeTimers();
 
+type CreateBranchPrefixModalExposed = { message_error_rest: string };
+
 describe("CreateBranchPrefixModal", () => {
     let store: Store;
 
-    async function instantiateComponent(): Promise<Wrapper<CreateBranchPrefixModal>> {
+    async function instantiateComponent(): Promise<Wrapper<Vue & CreateBranchPrefixModalExposed>> {
         store = createStoreMock(
             {},
             {
@@ -51,7 +53,7 @@ describe("CreateBranchPrefixModal", () => {
             propsData: {},
             mocks: { $store: store },
             localVue: await createLocalVueForTests(),
-        });
+        }) as Wrapper<Vue & CreateBranchPrefixModalExposed>;
     }
 
     describe("The feedback display", () => {
@@ -145,7 +147,7 @@ describe("CreateBranchPrefixModal", () => {
             wrapper.find("[data-test=create-branch-prefix-modal-save-button]").trigger("click");
             await jest.runOnlyPendingTimersAsync();
 
-            expect(wrapper.vm.$data.message_error_rest).toBe("400 Error on server");
+            expect(wrapper.vm.message_error_rest).toBe("400 Error on server");
         });
     });
 });

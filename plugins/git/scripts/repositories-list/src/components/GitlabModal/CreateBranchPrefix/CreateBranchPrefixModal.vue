@@ -19,7 +19,7 @@
   -->
 
 <template>
-    <div class="tlp-modal" role="dialog" aria-labelledby="my-modal-label">
+    <div class="tlp-modal" role="dialog" aria-labelledby="my-modal-label" ref="modal_element">
         <div class="tlp-modal-header">
             <h1 class="tlp-modal-title" id="my-modal-label">
                 <i
@@ -92,110 +92,108 @@
     </div>
 </template>
 
-<script lang="ts">
-import { Component } from "vue-property-decorator";
-import Vue from "vue";
-import { namespace } from "vuex-class";
+<script setup lang="ts">
+import { computed, onMounted, ref } from "vue";
 import type { Modal } from "@tuleap/tlp-modal";
 import { createModal } from "@tuleap/tlp-modal";
-import type { Repository, GitLabRepository } from "../../../type";
 import { handleError } from "../../../gitlab/gitlab-error-handler";
+import {
+    useMutations,
+    useNamespacedActions,
+    useNamespacedMutations,
+    useNamespacedState,
+} from "vuex-composition-helpers";
+import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
 
-const gitlab = namespace("gitlab");
+const gettext_provider = useGettext();
 
-@Component
-export default class CreateBranchPrefixModal extends Vue {
-    private modal: Modal | null = null;
-    is_updating_gitlab_repository = false;
-    create_branch_prefix = "";
-    message_error_rest = "";
+const { updateGitlabRepositoryCreateBranchPrefix } = useNamespacedActions("gitlab", [
+    "updateGitlabRepositoryCreateBranchPrefix",
+]);
+const { create_branch_prefix_repository } = useNamespacedState("gitlab", [
+    "create_branch_prefix_repository",
+]);
+const { setCreateBranchPrefixModal } = useNamespacedMutations("gitlab", [
+    "setCreateBranchPrefixModal",
+]);
+const { setSuccessMessage } = useMutations(["setSuccessMessage"]);
 
-    @gitlab.Action
-    readonly updateGitlabRepositoryCreateBranchPrefix!: ({
-        integration_id,
-        create_branch_prefix,
-    }: {
-        integration_id: number;
-        create_branch_prefix: string;
-    }) => Promise<GitLabRepository>;
+const modal = ref<Modal | null>(null);
+const is_updating_gitlab_repository = ref(false);
+const create_branch_prefix = ref("");
+const message_error_rest = ref("");
 
-    @gitlab.State
-    readonly create_branch_prefix_repository!: Repository;
+const modal_element = ref();
 
-    mounted(): void {
-        this.modal = createModal(this.$el);
-        this.modal.addEventListener("tlp-modal-shown", this.onShownModal);
-        this.modal.addEventListener("tlp-modal-hidden", this.reset);
-        this.$store.commit("gitlab/setCreateBranchPrefixModal", this.modal);
-    }
+onMounted((): void => {
+    modal.value = createModal(modal_element.value);
+    modal.value.addEventListener("tlp-modal-shown", onShownModal);
+    modal.value.addEventListener("tlp-modal-hidden", reset);
+    setCreateBranchPrefixModal(modal.value);
+});
 
-    onShownModal(): void {
-        this.create_branch_prefix = this.create_branch_prefix_repository.create_branch_prefix;
-    }
+function onShownModal(): void {
+    create_branch_prefix.value = create_branch_prefix_repository.value.create_branch_prefix;
+}
 
-    reset(): void {
-        this.is_updating_gitlab_repository = false;
-        this.create_branch_prefix = "";
-        this.message_error_rest = "";
-    }
+function reset(): void {
+    is_updating_gitlab_repository.value = false;
+    create_branch_prefix.value = "";
+    message_error_rest.value = "";
+}
 
-    get disabled_button() {
-        return this.is_updating_gitlab_repository || this.have_any_rest_error;
-    }
+const have_any_rest_error = computed((): boolean => message_error_rest.value.length > 0);
 
-    get close_label(): string {
-        return this.$gettext("Close");
-    }
+const disabled_button = computed(
+    (): boolean => is_updating_gitlab_repository.value || have_any_rest_error.value,
+);
 
-    get have_any_rest_error(): boolean {
-        return this.message_error_rest.length > 0;
-    }
+const close_label = gettext_provider.$gettext("Close");
 
-    getSuccessMessage(create_branch_prefix: string): string {
-        if (create_branch_prefix.length === 0) {
-            return this.$gettextInterpolate(
-                this.$gettext(
-                    "Create branch prefix for integration %{repository} has been successfully cleared.",
-                ),
-                { repository: this.create_branch_prefix_repository.label },
-            );
-        }
-        return this.$gettextInterpolate(
-            this.$gettext(
-                "Create branch prefix for integration %{repository} has been successfully updated to '%{branch_prefix}'!",
+const getSuccessMessage = (create_branch_prefix: string): string => {
+    if (create_branch_prefix.length === 0) {
+        return gettext_provider.interpolate(
+            gettext_provider.$gettext(
+                "Create branch prefix for integration %{repository} has been successfully cleared.",
             ),
-            {
-                branch_prefix: create_branch_prefix,
-                repository: this.create_branch_prefix_repository.label,
-            },
+            { repository: create_branch_prefix_repository.value.label },
         );
     }
+    return gettext_provider.interpolate(
+        gettext_provider.$gettext(
+            "Create branch prefix for integration %{repository} has been successfully updated to '%{branch_prefix}'!",
+        ),
+        {
+            branch_prefix: create_branch_prefix,
+            repository: create_branch_prefix_repository.value.label,
+        },
+    );
+};
 
-    async updateCreateBranchPrefix(event: Event): Promise<void> {
-        event.preventDefault();
+const updateCreateBranchPrefix = async (event: Event): Promise<void> => {
+    event.preventDefault();
 
-        try {
-            this.is_updating_gitlab_repository = true;
+    try {
+        is_updating_gitlab_repository.value = true;
 
-            const updated_integration = await this.updateGitlabRepositoryCreateBranchPrefix({
-                integration_id: Number(this.create_branch_prefix_repository.integration_id),
-                create_branch_prefix: this.create_branch_prefix,
-            });
+        const updated_integration = await updateGitlabRepositoryCreateBranchPrefix({
+            integration_id: Number(create_branch_prefix_repository.value.integration_id),
+            create_branch_prefix: create_branch_prefix.value,
+        });
 
-            if (updated_integration && this.modal) {
-                this.modal.hide();
-            }
-
-            const success_message = this.getSuccessMessage(
-                updated_integration.create_branch_prefix,
-            );
-            this.$store.commit("setSuccessMessage", success_message);
-        } catch (rest_error) {
-            this.message_error_rest = await handleError(rest_error, this);
-            throw rest_error;
-        } finally {
-            this.is_updating_gitlab_repository = false;
+        if (updated_integration) {
+            modal.value?.hide();
         }
+
+        const success_message = getSuccessMessage(updated_integration.create_branch_prefix);
+        setSuccessMessage(success_message);
+    } catch (rest_error) {
+        message_error_rest.value = await handleError(rest_error, gettext_provider);
+        throw rest_error;
+    } finally {
+        is_updating_gitlab_repository.value = false;
     }
-}
+};
+
+defineExpose({ message_error_rest });
 </script>
