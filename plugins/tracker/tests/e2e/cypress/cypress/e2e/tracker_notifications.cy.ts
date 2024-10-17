@@ -63,6 +63,29 @@ function addUserToUnsusbscribeNotifications(user: string): void {
     cy.get("[data-test=unsuscribe-notifification-button]").click();
 }
 
+function configureTrackerForStatusChangeNotifications(project_name: string): void {
+    cy.projectAdministratorSession();
+    cy.createNewPublicProject(project_name, "issues");
+    cy.visitProjectAdministration(project_name);
+    cy.addProjectMember(project_name, "ProjectMember");
+    cy.addProjectMember(project_name, "ARegularUser");
+
+    cy.projectAdministratorSession();
+    cy.visitProjectAdministration(project_name);
+
+    cy.log("Add user group");
+    cy.get("[data-test=admin-nav-groups]").click();
+    cy.addUserGroupWithUsers("my_custom_group", ["ARegularUser"]);
+
+    cy.visitProjectService(project_name, "Trackers");
+    cy.getContains("[data-test=tracker-link]", "Issues").click();
+
+    cy.log("Configure tracker notifications");
+    goToNotificationAdministration();
+    cy.get("[data-test=status-change-level]").check();
+    cy.get("[data-test=submit-notifications-level]").click();
+}
+
 describe("Tracker notifications", () => {
     let now: number;
     it("Sends calendar events", function () {
@@ -229,28 +252,9 @@ describe("Tracker notifications", () => {
     });
 
     it("Status change notifications", function () {
-        cy.projectAdministratorSession();
         now = Date.now();
         const project_name = `status-${now}`;
-        cy.createNewPublicProject(project_name, "issues");
-        cy.visitProjectAdministration(project_name);
-        cy.addProjectMember(project_name, "ProjectMember");
-        cy.addProjectMember(project_name, "ARegularUser");
-
-        cy.projectAdministratorSession();
-        cy.visitProjectAdministration(project_name);
-
-        cy.log("Add user group");
-        cy.get("[data-test=admin-nav-groups]").click();
-        cy.addUserGroupWithUsers("my_custom_group", ["ARegularUser"]);
-
-        cy.visitProjectService(project_name, "Trackers");
-        cy.getContains("[data-test=tracker-link]", "Issues").click();
-
-        cy.log("Configure tracker notifications");
-        goToNotificationAdministration();
-        cy.get("[data-test=status-change-level]").check();
-        cy.get("[data-test=submit-notifications-level]").click();
+        configureTrackerForStatusChangeNotifications(project_name);
 
         cy.log("Add user group and a random user to all_updates notifications");
         cy.get("[data-test=add-notification]").click();
@@ -276,23 +280,6 @@ describe("Tracker notifications", () => {
         cy.assertNotEmailWithContentReceived("ProjectMember@example.com", "Other artifact");
         cy.assertEmailWithContentReceived("RegularUser@example.com", "Other artifact");
 
-        goToNotificationAdministration();
-        cy.log("Uncheck all_updates");
-        cy.get("[data-test=edit-notification]").click();
-        cy.get("[data-test=global-notification-all-update-checkbox]").uncheck();
-        cy.get("[data-test=edit-notification-button]").click();
-
-        createAndUpdateArtifact("Artifact B", "AnOther artifact");
-        cy.log("When artifact is updated, nobody receive an email");
-        cy.assertNotEmailWithContentReceived("ProjectMember@example.com", "AnOther artifact");
-        cy.assertNotEmailWithContentReceived("RegularUser@example.com", "AnOther artifact");
-
-        cy.log("Add again all_updates otherwise users won't receive any notifications");
-        goToNotificationAdministration();
-        cy.get("[data-test=edit-notification]").click();
-        cy.get("[data-test=global-notification-all-update-checkbox]").check();
-        cy.get("[data-test=edit-notification-button]").click();
-
         cy.get("[data-test=project-sidebar]")
             .shadow()
             .find("[data-test=artifact-quick-link-add]")
@@ -312,6 +299,41 @@ describe("Tracker notifications", () => {
 
         cy.assertNotEmailWithContentReceived("ProjectMember@example.com", "Last artifact");
         cy.assertEmailWithContentReceived("RegularUser@example.com", "Last artifact");
+    });
+
+    it("Notification on Status change does not send an email when user did not ask to receive all updates", function () {
+        now = Date.now();
+        const project_name = `status2-${now}`;
+        configureTrackerForStatusChangeNotifications(project_name);
+
+        cy.log("Add user group and a random user to all_updates notifications");
+        cy.get("[data-test=add-notification]").click();
+        addToNotifications("my_custom_group");
+        addToNotifications("ProjectMember");
+        cy.get("[data-test=save-notification-button]").click();
+
+        cy.get("[data-test=project-sidebar]")
+            .shadow()
+            .find("[data-test=artifact-quick-link-add]")
+            .click();
+
+        cy.get('[data-test="title"]').type("Artifact B");
+        cy.intercept(`*func=submit-artifact*`).as("createArtifact");
+
+        cy.get("[data-test=artifact-submit-and-stay]").click();
+        cy.wait("@createArtifact", { timeout: 60000 });
+
+        cy.log("Wait that creation mail have been sent before continuing test");
+        cy.assertEmailWithContentReceived("ProjectMember@example.com", "Artifact B");
+        cy.assertEmailWithContentReceived("RegularUser@example.com", "Artifact B");
+
+        cy.get("[data-test=edit-field-title]").click();
+        cy.get("[data-test=title]").clear().type("AnOther artifact");
+        cy.get("[data-test=artifact-submit]").click();
+
+        cy.log("When artifact is updated, nobody receive an email");
+        cy.assertNotEmailWithContentReceived("ProjectMember@example.com", "AnOther artifact");
+        cy.assertNotEmailWithContentReceived("RegularUser@example.com", "AnOther artifact");
     });
 
     it("Tracker notifications - can not add invalid users", function () {
