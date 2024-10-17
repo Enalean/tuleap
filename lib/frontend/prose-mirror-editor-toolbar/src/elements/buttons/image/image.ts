@@ -58,6 +58,7 @@ define<InternalImageButton>({
     is_disabled: true,
     image_src: "",
     image_title: "",
+    popover_instance: (host, popover_instance) => popover_instance,
     button_element: (host: InternalImageButton) => {
         const button_element = host.render().querySelector("[data-role=popover-trigger]");
         if (!(button_element instanceof HTMLButtonElement)) {

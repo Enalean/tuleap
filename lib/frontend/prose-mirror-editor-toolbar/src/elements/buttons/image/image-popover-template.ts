@@ -25,6 +25,7 @@ import { gettext_provider } from "../../../gettext-provider";
 const onSubmit = (host: InternalImageButton, event: Event): void => {
     event.preventDefault();
 
+    host.popover_instance.hide();
     host.toolbar_bus.image({
         src: host.image_src,
         title: host.image_title,
@@ -94,7 +95,6 @@ export const renderImagePopover = (
             <button
                 type="submit"
                 class="tlp-button-primary tlp-button-small"
-                data-dismiss="popover"
                 disabled="${host.is_disabled}"
                 data-test="submit-button"
             >

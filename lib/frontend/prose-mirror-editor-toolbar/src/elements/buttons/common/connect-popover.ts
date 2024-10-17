@@ -18,10 +18,12 @@
  */
 
 import { createPopover } from "@tuleap/tlp-popovers";
+import type { Popover } from "@tuleap/tlp-popovers";
 
 export type PopoverHost = {
     button_element: HTMLButtonElement;
     popover_element: HTMLElement;
+    popover_instance: Popover;
     render(): HTMLElement;
 };
 
@@ -38,14 +40,14 @@ const movePopoverBackToHostElement = (host: PopoverHost): void => {
 };
 
 export const connectPopover = (host: PopoverHost, doc: Document): DisconnectFunction => {
-    const popover = createPopover(host.button_element, host.popover_element, {
+    host.popover_instance = createPopover(host.button_element, host.popover_element, {
         trigger: "click",
         placement: "bottom-start",
     });
     movePopoverToDocumentBody(host, doc);
 
     return () => {
-        popover.destroy();
+        host.popover_instance.destroy();
         movePopoverBackToHostElement(host);
     };
 };

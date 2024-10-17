@@ -44,9 +44,12 @@ describe("connect-popover", () => {
         }) as unknown as PopoverHost;
     };
 
-    it("When the component is connected, then it should create a popover instance", () => {
+    it("When the component is connected, then it should assign host a new popover instance", () => {
         const host = getHost();
-        const createPopover = vi.spyOn(tlp_popovers, "createPopover");
+        const popover_instance = {} as Popover;
+        const createPopover = vi
+            .spyOn(tlp_popovers, "createPopover")
+            .mockReturnValue(popover_instance);
 
         connectPopover(host, doc);
 
@@ -55,6 +58,7 @@ describe("connect-popover", () => {
             placement: "bottom-start",
             trigger: "click",
         });
+        expect(host.popover_instance).toBe(popover_instance);
     });
     it("When the component is connected, then it should move its popover element to document.body", () => {
         const host = getHost();
@@ -64,17 +68,16 @@ describe("connect-popover", () => {
     });
     it("When the component is disconnected, then it should destroy the popover instance, and put back its popover element inside itself", () => {
         const host = getHost();
-        const popover_instance = {
-            destroy: vi.fn(),
-        } as unknown as Popover;
 
-        vi.spyOn(tlp_popovers, "createPopover").mockReturnValue(popover_instance);
+        vi.spyOn(tlp_popovers, "createPopover").mockReturnValue({
+            destroy: vi.fn(),
+        } as unknown as Popover);
 
         const disconnect = connectPopover(host, doc);
 
         disconnect();
 
-        expect(popover_instance.destroy).toHaveBeenCalledOnce();
+        expect(host.popover_instance.destroy).toHaveBeenCalledOnce();
         expect(host.popover_element.parentElement).toBe(host);
     });
 });
