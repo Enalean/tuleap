@@ -77,8 +77,8 @@ msgstr "Titre"
 msgid "Toggle bold style `Ctrl+b`"
 msgstr "Passer en gras `Ctrl+b`"
 
-msgid "Toggle code Ctrl+`"
-msgstr "Passer en bloc code Ctrl+`"
+msgid "Toggle inline code `Ctrl+`"
+msgstr "Passer en code inline `Ctrl+`"
 
 msgid "Toggle italic style `Ctrl+i`"
 msgstr "Passer en italique `Ctrl+i`"

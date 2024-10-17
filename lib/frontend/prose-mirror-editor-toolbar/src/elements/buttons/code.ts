@@ -52,7 +52,7 @@ export const renderCodeItem = (host: InternalCodeElement): UpdateFunction<Intern
         class="${classes}"
         onclick="${onClickApplyCode}"
         data-test="button-code"
-        title="${gettext_provider.gettext("Toggle code Ctrl+`")}"
+        title="${gettext_provider.gettext("Toggle inline code `Ctrl+`")}"
     >
         <i class="fa-solid fa-code" role="img"></i>
     </button>`;
