@@ -17,24 +17,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { Selection } from "prosemirror-state";
-import type { EditorNode } from "../../../types/internal-types";
-import { custom_schema } from "../../../custom_schema";
+import type { DetectParagraphsInSelection } from "../ParagraphsInSelectionDetector";
 
-export type DetectHeadingsInSelection = {
-    doesSelectionContainHeadings(tree: EditorNode, selection: Selection): boolean;
+export const DetectParagraphsInSelectionStub = {
+    withOnlyParagraphs: (): DetectParagraphsInSelection => ({
+        doesSelectionContainOnlyParagraphs: () => true,
+    }),
+    withoutOnlyParagraphs: (): DetectParagraphsInSelection => ({
+        doesSelectionContainOnlyParagraphs: () => false,
+    }),
 };
-
-export const HeadingsInSelectionDetector = (): DetectHeadingsInSelection => ({
-    doesSelectionContainHeadings: (tree, selection): boolean => {
-        let has_found_a_heading = false;
-
-        tree.nodesBetween(selection.from, selection.to, (node) => {
-            if (node.type === custom_schema.nodes.heading) {
-                has_found_a_heading = true;
-            }
-        });
-
-        return has_found_a_heading;
-    },
-});

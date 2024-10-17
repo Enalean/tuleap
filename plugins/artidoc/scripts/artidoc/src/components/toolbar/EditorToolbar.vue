@@ -39,7 +39,7 @@
             ordered_list: true,
             bullet_list: true,
         }"
-        v-bind:style_elements="{ headings: true }"
+        v-bind:style_elements="{ headings: true, text: true, preformatted: true }"
     />
 </template>
 

@@ -20,9 +20,10 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
 import { MonoToolbarTextStyleItemsActivator } from "./MonoToolbarTextStyleItemsActivator";
 import { RetrieveHeadingStub } from "../text-style/stub/RetrieveHeadingStub";
-import { DetectHeadingsInSelectionStub } from "../text-style/stub/DetectHeadingsInSelectionStub";
+import { DetectPreformattedTextInSelectionStub } from "../text-style/stub/DetectPreformattedTextInSelectionStub";
 import type { ToolbarView } from "./toolbar-bus";
 import type { EditorState } from "prosemirror-state";
+import { DetectParagraphsInSelectionStub } from "../text-style/stub/DetectParagraphsInSelectionStub";
 
 describe("MonoToolbarTextStyleItemsActivator", () => {
     let toolbar_view: ToolbarView, state: EditorState;
@@ -31,6 +32,7 @@ describe("MonoToolbarTextStyleItemsActivator", () => {
         toolbar_view = {
             activateHeading: vi.fn(),
             activatePlainText: vi.fn(),
+            activatePreformattedText: vi.fn(),
         } as unknown as ToolbarView;
 
         state = {} as EditorState;
@@ -40,36 +42,56 @@ describe("MonoToolbarTextStyleItemsActivator", () => {
         const current_heading = { level: 1 };
         const activator = MonoToolbarTextStyleItemsActivator(
             RetrieveHeadingStub.withOnlyOneHeading(current_heading),
-            DetectHeadingsInSelectionStub.withAtLeastOneHeading(),
+            DetectPreformattedTextInSelectionStub.withoutOnlyPreformattedText(),
+            DetectParagraphsInSelectionStub.withoutOnlyParagraphs(),
         );
 
         activator.activateTextStyleItems(toolbar_view, state);
 
         expect(toolbar_view.activateHeading).toHaveBeenCalledWith(current_heading);
         expect(toolbar_view.activatePlainText).toHaveBeenCalledWith(false);
+        expect(toolbar_view.activatePreformattedText).toHaveBeenCalledWith(false);
     });
 
-    it("When no heading is in the current selection, then plainText should be activated", () => {
+    it("When there is only paragraphs in the current selection, then plainText should be activated", () => {
         const activator = MonoToolbarTextStyleItemsActivator(
             RetrieveHeadingStub.withoutHeading(),
-            DetectHeadingsInSelectionStub.withoutHeadings(),
+            DetectPreformattedTextInSelectionStub.withoutOnlyPreformattedText(),
+            DetectParagraphsInSelectionStub.withOnlyParagraphs(),
         );
 
         activator.activateTextStyleItems(toolbar_view, state);
 
         expect(toolbar_view.activateHeading).toHaveBeenCalledWith(null);
         expect(toolbar_view.activatePlainText).toHaveBeenCalledWith(true);
+        expect(toolbar_view.activatePreformattedText).toHaveBeenCalledWith(false);
     });
 
-    it("When several headings are detected in the current selection, then no plainText nor headings should be activated", () => {
+    it("When there is only preformatted text in the current selection, then preformattedText should be activated", () => {
         const activator = MonoToolbarTextStyleItemsActivator(
             RetrieveHeadingStub.withoutHeading(),
-            DetectHeadingsInSelectionStub.withAtLeastOneHeading(),
+            DetectPreformattedTextInSelectionStub.withOnlyPreformattedText(),
+            DetectParagraphsInSelectionStub.withoutOnlyParagraphs(),
         );
 
         activator.activateTextStyleItems(toolbar_view, state);
 
         expect(toolbar_view.activateHeading).toHaveBeenCalledWith(null);
         expect(toolbar_view.activatePlainText).toHaveBeenCalledWith(false);
+        expect(toolbar_view.activatePreformattedText).toHaveBeenCalledWith(true);
+    });
+
+    it("When several headings/preformatted text/paragraphs are detected in the current selection, all styles should be deactivated", () => {
+        const activator = MonoToolbarTextStyleItemsActivator(
+            RetrieveHeadingStub.withoutHeading(),
+            DetectPreformattedTextInSelectionStub.withoutOnlyPreformattedText(),
+            DetectParagraphsInSelectionStub.withoutOnlyParagraphs(),
+        );
+
+        activator.activateTextStyleItems(toolbar_view, state);
+
+        expect(toolbar_view.activateHeading).toHaveBeenCalledWith(null);
+        expect(toolbar_view.activatePlainText).toHaveBeenCalledWith(false);
+        expect(toolbar_view.activatePreformattedText).toHaveBeenCalledWith(false);
     });
 });

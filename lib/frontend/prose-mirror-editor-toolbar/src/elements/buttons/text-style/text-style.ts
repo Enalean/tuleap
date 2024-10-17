@@ -20,38 +20,59 @@
 import { define, html } from "hybrids";
 import type { UpdateFunction } from "hybrids";
 import type { ToolbarBus, Heading } from "@tuleap/prose-mirror-editor";
+import type { StyleElements } from "../../toolbar-element";
 import { renderHeadingsOptions } from "./heading-option-template";
 import { renderPlainTextOption } from "./plain-text-option-template";
 import { renderStylesOption } from "./styles-option-template";
+import { renderPreformattedTextOption } from "./preformatted-text-option-template";
 
 export const TAG = "text-style-item";
 
 export type HeadingsItem = {
     toolbar_bus: ToolbarBus;
+    style_elements: StyleElements;
 };
 
 export type InternalHeadingsItem = Readonly<HeadingsItem> & {
     current_heading: Heading | null;
     is_plain_text_activated: boolean;
+    is_preformatted_text_activated: boolean;
 };
 
 export type HostElement = InternalHeadingsItem & HTMLElement;
 
 export const connect = (host: InternalHeadingsItem): void => {
-    host.toolbar_bus.setView({
-        activateHeading: (heading: Heading | null) => {
-            host.current_heading = heading;
-        },
-        activatePlainText: (is_activated: boolean) => {
-            host.is_plain_text_activated = is_activated;
-        },
-    });
+    if (host.style_elements.headings) {
+        host.toolbar_bus.setView({
+            activateHeading: (heading: Heading | null) => {
+                host.current_heading = heading;
+            },
+        });
+    }
+
+    if (host.style_elements.text) {
+        host.toolbar_bus.setView({
+            activatePlainText: (is_activated: boolean) => {
+                host.is_plain_text_activated = is_activated;
+            },
+        });
+    }
+
+    if (host.style_elements.preformatted) {
+        host.toolbar_bus.setView({
+            activatePreformattedText: (is_activated: boolean) => {
+                host.is_preformatted_text_activated = is_activated;
+            },
+        });
+    }
 };
 
 define<InternalHeadingsItem>({
     tag: TAG,
     current_heading: null,
     is_plain_text_activated: false,
+    is_preformatted_text_activated: false,
+    style_elements: (host, style_elements) => style_elements,
     toolbar_bus: {
         value: (host: InternalHeadingsItem, toolbar_bus: ToolbarBus) => toolbar_bus,
         connect,
@@ -59,7 +80,7 @@ define<InternalHeadingsItem>({
     render: (host: InternalHeadingsItem): UpdateFunction<InternalHeadingsItem> => html`
         <select class="tlp-select tlp-select-small tlp-select-adjusted">
             ${renderStylesOption(host)} ${renderPlainTextOption(host)}
-            ${renderHeadingsOptions(host)}
+            ${renderHeadingsOptions(host)} ${renderPreformattedTextOption(host)}
         </select>
     `,
 });

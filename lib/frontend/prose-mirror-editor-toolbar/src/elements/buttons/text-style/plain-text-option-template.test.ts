@@ -42,11 +42,22 @@ describe("plain-text-option-template", () => {
         return option;
     };
 
+    it("When plain text is disabled, then it should render nothing", () => {
+        const host = { style_elements: { text: false } } as HostElement;
+        renderPlainTextOption(host)(host, target);
+
+        const option = target.querySelector("option");
+        expect(option).toBeNull();
+    });
+
     it.each([
         [false, "should not be selected nor disabled"],
         [true, "should be selected and disabled"],
     ])("When host.is_plain_text_activated === %s then the option %s", (is_plain_text_activated) => {
-        const host = { is_plain_text_activated } as HostElement;
+        const host = {
+            is_plain_text_activated,
+            style_elements: { text: true },
+        } as HostElement;
         const option = getPlainTextOption(host);
 
         expect(option.disabled).toBe(false);
@@ -55,7 +66,11 @@ describe("plain-text-option-template", () => {
 
     it("When the option is clicked, then it should call toolbar_bus.plainText()", () => {
         const toolbar_bus = buildToolbarBus();
-        const host = { is_plain_text_activated: false, toolbar_bus } as HostElement;
+        const host = {
+            is_plain_text_activated: false,
+            style_elements: { text: true },
+            toolbar_bus,
+        } as HostElement;
         const applyPlainText = vi.spyOn(toolbar_bus, "plainText");
 
         getPlainTextOption(host).click();
@@ -65,7 +80,11 @@ describe("plain-text-option-template", () => {
 
     it("When the option is clicked, then it should NOT call toolbar_bus.plainText() if the option was already selected", () => {
         const toolbar_bus = buildToolbarBus();
-        const host = { is_plain_text_activated: true, toolbar_bus } as HostElement;
+        const host = {
+            is_plain_text_activated: true,
+            style_elements: { text: true },
+            toolbar_bus,
+        } as HostElement;
         const applyPlainText = vi.spyOn(toolbar_bus, "plainText");
 
         getPlainTextOption(host).click();

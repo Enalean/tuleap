@@ -44,6 +44,7 @@ describe("styles-option-template", () => {
     it("When nothing is activated, then it should render a selected and disabled option", () => {
         const host = {
             is_plain_text_activated: false,
+            is_preformatted_text_activated: false,
             current_heading: null,
         } as unknown as HostElement;
 
@@ -56,8 +57,26 @@ describe("styles-option-template", () => {
     it("When plain text is activated, then the option should be disabled and not be selected", () => {
         const host = {
             is_plain_text_activated: true,
+            is_preformatted_text_activated: false,
             current_heading: null,
         } as unknown as HostElement;
+
+        renderStylesOption(host)(host, target);
+
+        const option = getOption(host);
+
+        expect(option.selected).toBe(false);
+        expect(option.disabled).toBe(true);
+    });
+
+    it("When preformatted text is activated, then the option should be disabled and not be selected", () => {
+        const host = {
+            is_plain_text_activated: false,
+            is_preformatted_text_activated: true,
+            current_heading: null,
+        } as unknown as HostElement;
+
+        renderStylesOption(host)(host, target);
 
         const option = getOption(host);
 
@@ -68,6 +87,7 @@ describe("styles-option-template", () => {
     it("When a heading is activated, then the option should be disabled and not be selected", () => {
         const host = {
             is_plain_text_activated: false,
+            is_preformatted_text_activated: false,
             current_heading: { level: 2 },
         } as unknown as HostElement;
 

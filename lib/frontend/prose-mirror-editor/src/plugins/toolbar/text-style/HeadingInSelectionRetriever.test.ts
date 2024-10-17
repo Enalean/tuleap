@@ -24,6 +24,7 @@ import type { EditorNode } from "../../../types/internal-types";
 import { custom_schema } from "../../../custom_schema";
 import type { RetrieveHeading } from "./HeadingInSelectionRetriever";
 import { HeadingInSelectionRetriever } from "./HeadingInSelectionRetriever";
+import { CheckSelectedNodesHaveSameParentStub } from "./stub/CheckSelectedNodesHaveSameParentStub";
 
 const buildEditorNode = (type: NodeType, attrs: Attrs = {}): EditorNode =>
     ({ type, attrs }) as EditorNode;
@@ -40,7 +41,18 @@ describe("HeadingInSelectionRetriever", () => {
     let retriever: RetrieveHeading;
 
     beforeEach(() => {
-        retriever = HeadingInSelectionRetriever();
+        retriever = HeadingInSelectionRetriever(
+            CheckSelectedNodesHaveSameParentStub.withSameParent(),
+        );
+    });
+
+    it("When the nodes in the selection do not have the same parent element, then it should return null", () => {
+        const retriever = HeadingInSelectionRetriever(
+            CheckSelectedNodesHaveSameParentStub.withoutSameParent(),
+        );
+        const heading = retriever.retrieveHeadingInSelection({} as EditorNode, {} as Selection);
+
+        expect(heading).toBeNull();
     });
 
     describe("Given an empty selection", () => {
@@ -78,18 +90,7 @@ describe("HeadingInSelectionRetriever", () => {
     describe("Given a not empty selection", () => {
         const selection = { empty: false, from: 10, to: 50 } as Selection;
 
-        it("When there are more than 2 nodes found in it, then it should return null", () => {
-            const tree = buildTreeWithNodes([
-                buildEditorNode(custom_schema.nodes.heading, { level: 1 }),
-                buildEditorNode(custom_schema.nodes.heading, { level: 2 }),
-                buildEditorNode(custom_schema.nodes.paragraph),
-            ]);
-            const heading = retriever.retrieveHeadingInSelection(tree, selection);
-
-            expect(heading).toBeNull();
-        });
-
-        it("When there are exactly 2 nodes found in it, but none of them are a heading node, then it should return null", () => {
+        it("When it does not contain any heading node, then it should return null", () => {
             const tree = buildTreeWithNodes([
                 buildEditorNode(custom_schema.nodes.custom_hard_break),
                 buildEditorNode(custom_schema.nodes.paragraph),
@@ -99,7 +100,7 @@ describe("HeadingInSelectionRetriever", () => {
             expect(heading).toBeNull();
         });
 
-        it("When there are exactly 2 nodes found in it and one of them is a heading node, then it should return a Heading with the level found in the node attrs", () => {
+        it("When it contains a heading node, then it should return a Heading with the level found in the node attrs", () => {
             const level = 3;
             const tree = buildTreeWithNodes([
                 buildEditorNode(custom_schema.nodes.heading, { level }),

@@ -45,13 +45,21 @@ import { ListNodeInserter } from "./list/ListInserter";
 import { IsSelectionAListChecker } from "./list/IsListChecker";
 import { lift } from "prosemirror-commands";
 import { wrapInList } from "prosemirror-schema-list";
-import { getHeadingCommand, getPlainTextCommand } from "./text-style/transform-text";
+import {
+    getFormattedTextCommand,
+    getHeadingCommand,
+    getPlainTextCommand,
+} from "./text-style/transform-text";
 import { HeadingInSelectionRetriever } from "./text-style/HeadingInSelectionRetriever";
 import { MonoToolbarTextStyleItemsActivator } from "./helper/MonoToolbarTextStyleItemsActivator";
-import { HeadingsInSelectionDetector } from "./text-style/HeadingsInSelectionDetector";
+import { PreformattedTextInSelectionDetector } from "./text-style/PreformattedTextInSelectionDetector";
+import { ParagraphsInSelectionDetector } from "./text-style/ParagraphsInSelectionDetector";
+import { SelectedNodesHaveSameParentChecker } from "./text-style/SelectedNodesHaveSameParentChecker";
 
-const getToolbarActivator = (state: EditorState): ActivateToolbar =>
-    ToolbarActivator(
+const getToolbarActivator = (state: EditorState): ActivateToolbar => {
+    const check_same_parent = SelectedNodesHaveSameParentChecker();
+
+    return ToolbarActivator(
         IsMarkActiveChecker(),
         LinkStateBuilder(
             IsMarkTypeRepeatedInSelectionChecker(),
@@ -63,10 +71,12 @@ const getToolbarActivator = (state: EditorState): ActivateToolbar =>
         ),
         ListStateBuilder(state, IsSelectionAListWithTypeChecker()),
         MonoToolbarTextStyleItemsActivator(
-            HeadingInSelectionRetriever(),
-            HeadingsInSelectionDetector(),
+            HeadingInSelectionRetriever(check_same_parent),
+            PreformattedTextInSelectionDetector(check_same_parent),
+            ParagraphsInSelectionDetector(),
         ),
     );
+};
 
 export function setupMonoToolbar(toolbar_bus: ToolbarBus): Plugin {
     return new Plugin({
@@ -132,6 +142,9 @@ export function setupMonoToolbar(toolbar_bus: ToolbarBus): Plugin {
                         },
                         togglePlainText(): void {
                             getPlainTextCommand()(view.state, view.dispatch);
+                        },
+                        togglePreformattedText(): void {
+                            getFormattedTextCommand()(view.state, view.dispatch);
                         },
                     });
                 },
