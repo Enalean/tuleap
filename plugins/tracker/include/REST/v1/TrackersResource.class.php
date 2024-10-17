@@ -58,6 +58,7 @@ use Tuleap\Tracker\FormElement\Container\FieldsExtractor;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
 use Tuleap\Tracker\PermissionsFunctionsWrapper;
+use Tuleap\Tracker\Report\Query\Advanced\Errors\QueryErrorsTranslator;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\SyntaxError;
 use Tuleap\Tracker\Report\Query\Advanced\LimitSizeIsExceededException;
 use Tuleap\Tracker\Report\Query\Advanced\SearchablesAreInvalidException;
@@ -391,30 +392,21 @@ class TrackersResource extends AuthenticatedResource
         return $artifact_collection->getArtifacts();
     }
 
+    /**
+     * @throws RestException
+     */
     private function validateExpertQuery(Tracker_Report_REST $report): void
     {
         try {
             $report->validateExpertQuery();
         } catch (SearchablesDoNotExistException $exception) {
-            throw new RestException(
-                400,
-                $exception->getI18NExceptionMessage()
-            );
+            throw new RestException(400, $exception->getI18NExceptionMessage());
         } catch (SearchablesAreInvalidException | SyntaxNotSupportedException $exception) {
-            throw new RestException(
-                400,
-                $exception->getMessage()
-            );
-        } catch (SyntaxError $exception) {
-            throw new RestException(
-                400,
-                'Error during parsing expert query'
-            );
+            throw new RestException(400, $exception->getMessage());
+        } catch (SyntaxError) {
+            throw new RestException(400, 'Error during parsing expert query');
         } catch (LimitSizeIsExceededException $exception) {
-            throw new RestException(
-                400,
-                'The query is considered too complex to be executed by the server. Please simplify it (e.g remove comparisons) to continue.'
-            );
+            throw new RestException(400, QueryErrorsTranslator::translateException($exception));
         }
     }
 

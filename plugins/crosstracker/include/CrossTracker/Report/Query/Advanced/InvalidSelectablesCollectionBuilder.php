@@ -43,10 +43,6 @@ final readonly class InvalidSelectablesCollectionBuilder implements IBuildInvali
     ) {
     }
 
-    /**
-     * @throws SelectablesMustBeUniqueException
-     * @throws SelectLimitExceededException
-     */
     public function buildCollectionOfInvalidSelectables(array $selectables): InvalidSelectablesCollection
     {
         $unique_selectables = array_unique($selectables, SORT_REGULAR);

@@ -22,25 +22,12 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Report\Query\Advanced;
 
-use Exception;
-
-final class SelectLimitExceededException extends Exception
+final class SelectLimitExceededException extends \Exception
 {
-    private string $i18n_message;
-
-    public function __construct(int $size, int $limit)
-    {
-        parent::__construct("You can select at most $limit columns, but you have selected $size columns.");
-        $this->i18n_message = sprintf(dngettext(
-            'tuleap-tracker',
-            'You can select at most %1$d columns, but you have selected %2$d column.',
-            'You can select at most %1$d columns, but you have selected %2$d columns.',
-            $size,
-        ), $limit, $size);
-    }
-
-    public function getI18NExceptionMessage(): string
-    {
-        return $this->i18n_message;
+    public function __construct(
+        public readonly int $number_of_columns_selected,
+        public readonly int $limit,
+    ) {
+        parent::__construct();
     }
 }

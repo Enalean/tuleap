@@ -1102,7 +1102,6 @@
             <file name="plugins/tracker/tests/unit/Tracker/Report/Query/Advanced/InvalidFields/ListFields/ListFieldCheckerWithBindUsersTest.php"/>
             <file name="plugins/tracker/tests/unit/Tracker/Report/Query/Advanced/InvalidFromCollectionBuilderTest.php"/>
             <file name="plugins/tracker/tests/unit/Tracker/Report/Query/Advanced/InvalidOrderByBuilderTest.php"/>
-            <file name="plugins/tracker/tests/unit/Tracker/Report/Query/Advanced/InvalidSelectablesCollectionBuilderTest.php"/>
             <file name="plugins/tracker/tests/unit/Tracker/Report/Query/Advanced/InvalidTermCollectorVisitorTest.php"/>
             <file name="plugins/tracker/tests/unit/Tracker/Report/Query/Advanced/QueryBuilder/DateTimeValueRounderTest.php"/>
             <file name="plugins/tracker/tests/unit/Tracker/Report/Query/Advanced/QueryBuilder/EqualExpectation/ForTextTest.php"/>
