@@ -22,6 +22,7 @@
         role="dialog"
         aria-labelledby="edit-access-token-gitlab-modal-title"
         class="tlp-modal"
+        ref="modal_element"
         data-test="edit-access-token-gitlab-modal-form"
     >
         <div class="tlp-modal-header">
@@ -38,14 +39,14 @@
             </button>
         </div>
         <access-token-form-modal
-            v-if="display_form_to_edit"
+            v-if="display_form_to_edit && repository"
             v-bind:repository="repository"
             v-bind:gitlab_token="gitlab_new_token"
             v-on:on-close-modal="onCloseModal"
             v-on:on-get-new-token-gitlab="onGetNewToken"
         />
         <confirm-replace-token-modal
-            v-if="display_confirmation_message"
+            v-if="display_confirmation_message && repository"
             v-bind:repository="repository"
             v-bind:gitlab_new_token="gitlab_new_token"
             v-on:on-back-button="onBackToEditToken"
@@ -54,89 +55,95 @@
     </div>
 </template>
 
-<script lang="ts">
-import { Component } from "vue-property-decorator";
-import Vue from "vue";
+<script setup lang="ts">
+import { computed, onMounted, ref } from "vue";
 import type { Modal } from "@tuleap/tlp-modal";
 import { createModal } from "@tuleap/tlp-modal";
 import AccessTokenFormModal from "./AccessTokenFormModal.vue";
 import ConfirmReplaceTokenModal from "./ConfirmReplaceTokenModal.vue";
 import type { Repository } from "../../../type";
-import { namespace } from "vuex-class";
+import { useMutations, useNamespacedMutations, useNamespacedState } from "vuex-composition-helpers";
+import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
 
-const gitlab = namespace("gitlab");
+const gettext_provider = useGettext();
 
-@Component({ components: { ConfirmReplaceTokenModal, AccessTokenFormModal } })
-export default class EditAccessTokenGitlabModal extends Vue {
-    @gitlab.State
-    readonly edit_access_token_gitlab_repository!: Repository;
+const { edit_access_token_gitlab_repository } = useNamespacedState("gitlab", [
+    "edit_access_token_gitlab_repository",
+]);
+const { setEditAccessTokenGitlabRepositoryModal } = useNamespacedMutations("gitlab", [
+    "setEditAccessTokenGitlabRepositoryModal",
+]);
+const { setSuccessMessage } = useMutations(["setSuccessMessage"]);
 
-    private modal: Modal | null = null;
-    repository: Repository | null = null;
-    gitlab_new_token = "";
-    private on_back_to_edit = false;
+const modal = ref<Modal | null>(null);
+const repository = ref<Repository | null>(null);
+const gitlab_new_token = ref("");
+const on_back_to_edit = ref(false);
 
-    get close_label(): string {
-        return this.$gettext("Close");
+const modal_element = ref();
+
+const close_label = gettext_provider.$gettext("Close");
+
+const reset = (): void => {
+    repository.value = null;
+    gitlab_new_token.value = "";
+    on_back_to_edit.value = false;
+};
+
+const onShownModal = (): void => {
+    repository.value = edit_access_token_gitlab_repository.value;
+};
+
+onMounted((): void => {
+    modal.value = createModal(modal_element.value);
+    modal.value.addEventListener("tlp-modal-shown", onShownModal);
+    modal.value.addEventListener("tlp-modal-hidden", reset);
+    setEditAccessTokenGitlabRepositoryModal(modal.value);
+});
+
+const onCloseModal = (): void => {
+    reset();
+    modal.value?.hide();
+};
+
+const onBackToEditToken = (): void => {
+    on_back_to_edit.value = true;
+};
+
+const onGetNewToken = ({ token }: { token: string }): void => {
+    gitlab_new_token.value = token;
+    on_back_to_edit.value = false;
+};
+
+const success_message = computed((): string => {
+    if (!repository.value || !repository.value.normalized_path) {
+        return "";
     }
 
-    mounted(): void {
-        this.modal = createModal(this.$el);
-        this.modal.addEventListener("tlp-modal-shown", this.onShownModal);
-        this.modal.addEventListener("tlp-modal-hidden", this.reset);
-        this.$store.commit("gitlab/setEditAccessTokenGitlabRepositoryModal", this.modal);
-    }
+    return gettext_provider.interpolate(
+        gettext_provider.$gettext(
+            "Token of GitLab repository %{ label } has been successfully updated.",
+        ),
+        {
+            label: repository.value.normalized_path,
+        },
+    );
+});
 
-    onShownModal(): void {
-        this.repository = this.edit_access_token_gitlab_repository;
-    }
+const onSuccessEditToken = (): void => {
+    setSuccessMessage(success_message.value);
+    onCloseModal();
+};
 
-    onCloseModal(): void {
-        this.reset();
-        if (this.modal) {
-            this.modal.hide();
-        }
-    }
+const display_form_to_edit = computed(
+    (): boolean =>
+        repository.value !== null && (gitlab_new_token.value === "" || on_back_to_edit.value),
+);
 
-    onBackToEditToken(): void {
-        this.on_back_to_edit = true;
-    }
+const display_confirmation_message = computed(
+    (): boolean =>
+        repository.value !== null && gitlab_new_token.value !== "" && !on_back_to_edit.value,
+);
 
-    onGetNewToken({ token }: { token: string }): void {
-        this.gitlab_new_token = token;
-        this.on_back_to_edit = false;
-    }
-
-    onSuccessEditToken(): void {
-        this.$store.commit("setSuccessMessage", this.success_message);
-        this.onCloseModal();
-    }
-
-    reset(): void {
-        this.repository = null;
-        this.gitlab_new_token = "";
-        this.on_back_to_edit = false;
-    }
-
-    get success_message(): string {
-        if (!this.repository || !this.repository.normalized_path) {
-            return "";
-        }
-
-        return this.$gettextInterpolate(
-            this.$gettext("Token of GitLab repository %{ label } has been successfully updated."),
-            {
-                label: this.repository.normalized_path,
-            },
-        );
-    }
-
-    get display_form_to_edit(): boolean {
-        return this.repository !== null && (this.gitlab_new_token === "" || this.on_back_to_edit);
-    }
-
-    get display_confirmation_message(): boolean {
-        return this.repository !== null && this.gitlab_new_token !== "" && !this.on_back_to_edit;
-    }
-}
+defineExpose({ repository, gitlab_new_token });
 </script>

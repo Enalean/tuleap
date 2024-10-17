@@ -25,16 +25,21 @@ import EditAccessTokenGitlabModal from "./EditAccessTokenGitlabModal.vue";
 import AccessTokenFormModal from "./AccessTokenFormModal.vue";
 import ConfirmReplaceTokenModal from "./ConfirmReplaceTokenModal.vue";
 import { createLocalVueForTests } from "../../../helpers/local-vue-for-tests";
+import type { Repository } from "../../../type";
+
+type EditAccessTokenGitlabModalExposed = { repository: Repository; gitlab_new_token: string };
 
 describe("EditAccessTokenGitlabModal", () => {
     let store: Store;
 
-    async function instantiateComponent(): Promise<Wrapper<EditAccessTokenGitlabModal>> {
+    async function instantiateComponent(): Promise<
+        Wrapper<Vue & EditAccessTokenGitlabModalExposed>
+    > {
         store = createStoreMock({}, { gitlab: {} });
         return shallowMount(EditAccessTokenGitlabModal, {
             mocks: { $store: store },
             localVue: await createLocalVueForTests(),
-        });
+        }) as Wrapper<Vue & EditAccessTokenGitlabModalExposed>;
     }
 
     it("When a user displays the modal ,then the AccessTokenFormModal is displayed", async () => {
@@ -58,12 +63,12 @@ describe("EditAccessTokenGitlabModal", () => {
             },
         });
 
-        expect(wrapper.vm.$data.repository).toEqual({ id: 10 });
+        expect(wrapper.vm.repository).toStrictEqual({ id: 10 });
 
         wrapper.findComponent(AccessTokenFormModal).vm.$emit("on-close-modal");
         await wrapper.vm.$nextTick();
 
-        expect(wrapper.vm.$data.repository).toBeNull();
+        expect(wrapper.vm.repository).toBeNull();
     });
 
     it("When CredentialsFormModal emits on-get-new-token-gitlab, Then ConfirmReplaceTokenModal is rendered", async () => {
@@ -108,8 +113,8 @@ describe("EditAccessTokenGitlabModal", () => {
         wrapper.findComponent(ConfirmReplaceTokenModal).vm.$emit("on-success-edit-token");
         await wrapper.vm.$nextTick();
 
-        expect(wrapper.vm.$data.repository).toBeNull();
-        expect(wrapper.vm.$data.gitlab_new_token).toBe("");
+        expect(wrapper.vm.repository).toBeNull();
+        expect(wrapper.vm.gitlab_new_token).toBe("");
 
         expect(store.commit).toHaveBeenCalledWith(
             "setSuccessMessage",
@@ -146,7 +151,7 @@ describe("EditAccessTokenGitlabModal", () => {
 
         expect(wrapper.findComponent(ConfirmReplaceTokenModal).exists()).toBeFalsy();
 
-        expect(wrapper.vm.$data.repository).toEqual(repository);
-        expect(wrapper.vm.$data.gitlab_new_token).toBe("azert123");
+        expect(wrapper.vm.repository).toStrictEqual(repository);
+        expect(wrapper.vm.gitlab_new_token).toBe("azert123");
     });
 });
