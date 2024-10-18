@@ -148,7 +148,7 @@ export function graphOnTrackerPie(id, graph) {
                 if (i % 2 === 0) {
                     return -radius + 40;
                 }
-                return -radius + 25;
+                return -radius + 30;
             })
             .attr("stroke", "#DDD")
             .attr("transform", ({ startAngle, endAngle }) => {
@@ -164,7 +164,7 @@ export function graphOnTrackerPie(id, graph) {
                 if (i % 2 === 0) {
                     dist = radius - 34;
                 } else {
-                    dist = radius - 19;
+                    dist = radius - 24;
                 }
 
                 // Middle of wedge
