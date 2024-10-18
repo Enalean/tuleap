@@ -134,7 +134,7 @@
                         $gettext(
                             "If selected, artifacts of this project can be closed with GitLab commit messages from the selected repository.",
                         )
-                    }}"
+                    }}
                 </p>
             </div>
         </div>
