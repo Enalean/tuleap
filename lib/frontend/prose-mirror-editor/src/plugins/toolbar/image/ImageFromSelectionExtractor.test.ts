@@ -64,7 +64,7 @@ describe("ImageFromSelectionExtractor", () => {
 
         const extractor = ImageFromSelectionExtractor(
             FindEditorNodeAtPositionStub.withNode({
-                type: custom_schema.nodes.custom_hard_break,
+                type: custom_schema.nodes.hard_break,
             } as EditorNode),
         );
 

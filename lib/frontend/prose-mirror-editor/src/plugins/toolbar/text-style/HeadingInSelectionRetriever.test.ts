@@ -92,7 +92,7 @@ describe("HeadingInSelectionRetriever", () => {
 
         it("When it does not contain any heading node, then it should return null", () => {
             const tree = buildTreeWithNodes([
-                buildEditorNode(custom_schema.nodes.custom_hard_break),
+                buildEditorNode(custom_schema.nodes.hard_break),
                 buildEditorNode(custom_schema.nodes.paragraph),
             ]);
             const heading = retriever.retrieveHeadingInSelection(tree, selection);
