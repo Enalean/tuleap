@@ -48,7 +48,7 @@ const supercript_mark_spec: MarkSpec = {
     },
 };
 export const custom_schema: Schema = new Schema({
-    nodes: addListNodes(nodes, "paragraph block*", "block"),
+    nodes: addListNodes(nodes, "(paragraph | code_block | heading) block*", "block"),
     marks: {
         ...schema.spec.marks.toObject(),
         subscript: subscript_mark_spec,
