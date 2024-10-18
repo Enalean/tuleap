@@ -56,15 +56,6 @@ final readonly class ArtidocController implements DispatchableWithRequest, Dispa
     #[ConfigKeyString('1')]
     public const EDIT_FEATURE_FLAG = 'enable_artidoc_edition';
 
-    #[FeatureFlagConfigKey(<<<'EOF'
-    Feature flag to allow edition of artidoc documents with next gen editor.
-    0 to deactivate (default)
-    1 to activate
-    EOF
-    )]
-    #[ConfigKeyString('0')]
-    public const NEXT_GEN_EDITOR_FEATURE_FLAG = 'enable_next_gen_editor_in_artidoc';
-
     public function __construct(
         private RetrieveArtidoc $retrieve_artidoc,
         private ConfiguredTrackerRetriever $configured_tracker_retriever,
@@ -79,9 +70,6 @@ final readonly class ArtidocController implements DispatchableWithRequest, Dispa
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         ServiceInstrumentation::increment('artidoc');
-
-        $core_assets = new \Tuleap\Layout\IncludeCoreAssets();
-        $layout->includeFooterJavascriptFile($core_assets->getFileURL('ckeditor.js'));
 
         $this->retrieve_artidoc->retrieveArtidoc((int) $variables['id'], $request->getCurrentUser())
             ->match(
@@ -129,7 +117,6 @@ final readonly class ArtidocController implements DispatchableWithRequest, Dispa
                 new ArtidocPresenter(
                     (int) $document_information->document->getId(),
                     $user_can_write && \ForgeConfig::getFeatureFlag(self::EDIT_FEATURE_FLAG) === '1',
-                    \ForgeConfig::getFeatureFlag(self::NEXT_GEN_EDITOR_FEATURE_FLAG) === '1',
                     $title,
                     $this->getTrackerRepresentation($this->configured_tracker_retriever->getTracker($document_information->document), $user),
                     array_map(

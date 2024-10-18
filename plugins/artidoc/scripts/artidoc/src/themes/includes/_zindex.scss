@@ -19,17 +19,14 @@
 
 $header: 1;
 
-// editor should be above the title when we scroll (ckeditor toolbar always visible)
-$editor: 2;
-
 // footer must be above editor when we scroll (submit button always visible)
-$footer: 3;
+$footer: 2;
 
 // prosemirror toolbar should be displayed above section content
-$toolbar: 4;
+$toolbar: 3;
 
 // TOC should be displayed above the toolbar (to mask the box-shadow)
-$toc: 5;
+$toc: 4;
 
 // dropdown should be displayed above the toc
-$dropdown: 6;
+$dropdown: 5;

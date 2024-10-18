@@ -5,12 +5,6 @@ settings:
   excludeLinksFromLockfile: false
 
 dependencies:
-  '@tuleap/ckeditor-config':
-    specifier: workspace:*
-    version: link:../../../../lib/frontend/ckeditor-config
-  '@tuleap/ckeditor-image-upload':
-    specifier: workspace:^
-    version: link:../../../../lib/frontend/ckeditor-image-upload
   '@tuleap/core-constants':
     specifier: workspace:^
     version: link:../../../../lib/frontend/constants
@@ -29,9 +23,6 @@ dependencies:
   '@tuleap/lazybox':
     specifier: workspace:^
     version: link:../../../../lib/frontend/lazybox
-  '@tuleap/plugin-tracker-artifact-ckeditor-image-upload':
-    specifier: workspace:^
-    version: link:../../../tracker/scripts/lib/artifact-ckeditor-image-upload
   '@tuleap/print-as-pdf':
     specifier: workspace:^
     version: link:../../../../lib/frontend/print-as-pdf
@@ -94,9 +85,6 @@ devDependencies:
   '@tuleap/po-gettext-plugin':
     specifier: workspace:*
     version: link:../../../../lib/frontend/po-gettext-plugin
-  '@types/ckeditor4':
-    specifier: ^4.20.7
-    version: 4.20.7
   '@types/marked':
     specifier: ^3.0.2
     version: 3.0.4
@@ -185,10 +173,6 @@ packages:
     requiresBuild: true
     dev: true
     optional: true
-
-  /@types/ckeditor4@4.20.7:
-    resolution: {integrity: sha512-Xn4wMey4cSpEtpv0aF9AQaoDT6aYAoqmnKj0g+sWg8Xp3S6hRuec2et45kp9gP69qTuCufEUQnZhBn3o+4UbWQ==}
-    dev: true
 
   /@types/glob@7.2.0:
     resolution: {integrity: sha512-ZUxbzKl0IfJILTS6t7ip5fQQM/J3TJYubDm3nMbgubNNYS62eXeUpoLUC8/7fJNiFYHTrGPQn7hspDUzIHX3UA==}
