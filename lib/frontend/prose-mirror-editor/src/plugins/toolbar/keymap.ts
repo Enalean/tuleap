@@ -83,7 +83,7 @@ export function buildKeymap(
 
     bind("Shift-Ctrl-9", olistCommand);
 
-    const br = schema.nodes.custom_hard_break,
+    const br = schema.nodes.hard_break,
         cmd = chainCommands(exitCode, (state, dispatch) => {
             if (dispatch) {
                 const transaction = state.tr.replaceSelectionWith(br.create());
