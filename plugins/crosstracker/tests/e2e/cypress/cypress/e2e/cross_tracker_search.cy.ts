@@ -26,9 +26,10 @@ describe("Cross tracker search", function () {
     });
 
     it("User should be able to set trackers from widgets", function () {
+        const project_name = `x-tracker-${now}`;
         cy.projectMemberSession();
 
-        cy.createNewPublicProject(`x-tracker-${now}`, "agile_alm").then((project_id) => {
+        cy.createNewPublicProject(project_name, "agile_alm").then((project_id) => {
             cy.getTrackerIdFromREST(project_id, "bug").then((tracker_id) => {
                 const TITLE_FIELD_NAME = "summary";
                 cy.createArtifact({
@@ -84,38 +85,61 @@ describe("Cross tracker search", function () {
         cy.get("[data-test=crosstrackersearch]").click();
         cy.get("[data-test=dashboard-add-widget-button-submit]").click();
 
-        cy.log("select some trackers");
-        cy.get("[data-test=cross-tracker-reading-mode]").click();
+        cy.intercept("/api/v1/cross_tracker_reports/*/content*").as("getReportContent");
 
-        cy.log("select project");
-        cy.get("[data-test=cross-tracker-selector-project]").select(`x-tracker-${now}`);
+        cy.log("Regular user should be able to run queries");
+        cy.log("Switch to Expert mode");
+        editWidget();
+        toggleWidgetMode();
+        updateSearchQuery(
+            `SELECT @title FROM @project.name = "${project_name}" AND @tracker.name IN ("bug", "task") WHERE @last_update_date > "2018-01-01"`,
+        );
+        cy.wait("@getReportContent", { timeout: 5000 });
+        cy.get("[data-test=cross-tracker-search-widget] [data-test=cell]").then((cell) => {
+            cy.wrap(cell).should("contain", "bug");
+            cy.wrap(cell).should("contain", "bug 1");
+            cy.wrap(cell).should("contain", "bug 2");
+            cy.wrap(cell).should("contain", "nananana");
+            cy.wrap(cell).should("contain", "kanban 1");
+            cy.wrap(cell).should("contain", "kanban 2");
+        });
+
+        cy.log("Switch to Default mode and select some trackers");
+        editWidget();
+        toggleWidgetMode();
+
+        cy.log("Select project");
+        cy.get("[data-test=cross-tracker-selector-project]").select(project_name);
 
         cy.get("[data-test=cross-tracker-selector-tracker]").select("Bugs");
         cy.get("[data-test=cross-tracker-selector-tracker-button]").click();
         cy.get("[data-test=cross-tracker-selector-tracker]").select("Tasks");
         cy.get("[data-test=cross-tracker-selector-tracker-button]").click();
-        cy.intercept("/api/v1/cross_tracker_reports/*/content*").as("getReportContent");
-        cy.get("[data-test=search-report-button]").click();
 
-        cy.log("Bugs has some artifacts");
+        cy.log("The default query should return open artifacts");
+        clearCodeMirror();
+        cy.get("[data-test=search-report-button]").click();
         cy.wait("@getReportContent", { timeout: 5000 });
         cy.get("[data-test=cross-tracker-results]").find("tr").should("have.length", 5);
         assertOpenArtifacts();
 
-        cy.log("Regular user should be able to execute queries");
+        editWidget();
         updateSearchQuery("@title != 'foo'");
         cy.wait("@getReportContent", { timeout: 5000 });
         cy.get("[data-test=cross-tracker-results]").find("tr").should("have.length", 6);
         assertAllArtifacts();
 
+        editWidget();
         updateSearchQuery("@status = OPEN()");
         cy.wait("@getReportContent", { timeout: 5000 });
         cy.get("[data-test=cross-tracker-results]").find("tr").should("have.length", 5);
         assertOpenArtifacts();
 
+        editWidget();
         updateSearchQuery("@submitted_on BETWEEN(NOW() - 2m, NOW() - 1m)");
         cy.get("[data-test=cross-tracker-no-results]");
 
+        editWidget();
         updateSearchQuery('@last_update_date > "2018-01-01"');
         cy.wait("@getReportContent", { timeout: 5000 });
         cy.get("[data-test=cross-tracker-results]").find("tr").should("have.length", 6);
@@ -133,15 +157,20 @@ describe("Cross tracker search", function () {
     });
 });
 
-function updateSearchQuery(search_query: string): void {
+function editWidget(): void {
     cy.get("[data-test=cross-tracker-reading-mode]").click();
+}
 
+function updateSearchQuery(search_query: string): void {
     clearCodeMirror();
-    // ignore for code mirror
-    // eslint-disable-next-line cypress/require-data-selectors
+    // eslint-disable-next-line cypress/require-data-selectors -- ignore for CodeMirror
     cy.get(".CodeMirror-code").type(search_query);
     cy.get("[data-test=search-report-button]").click();
     cy.get("[data-test=tql-reading-mode-query]").contains(search_query);
+}
+
+function toggleWidgetMode(): void {
+    cy.get("[data-test=cross-tracker-search-widget] [data-test=switch-mode]").click();
 }
 
 function assertOpenArtifacts(): void {
@@ -166,8 +195,7 @@ function assertAllArtifacts(): void {
 }
 
 function clearCodeMirror(): void {
-    // ignore for code mirror
-    // eslint-disable-next-line cypress/require-data-selectors
+    // eslint-disable-next-line cypress/require-data-selectors -- ignore for CodeMirror
     cy.get(".CodeMirror").then((el) => {
         const unwrap = Cypress.dom.unwrap(el)[0];
         unwrap.CodeMirror.setValue("");
