@@ -19,27 +19,37 @@
 
 import { describe, it, expect } from "vitest";
 import type { EditorState } from "prosemirror-state";
-import { ListStateBuilder } from "./ListStateBuilder";
+import { DetectListsInSelectionStub } from "./stubs/DetectListsInSelectionStub";
+import { DetectSingleListInSelectionStub } from "./stubs/DetectSingleListInSelectionStub";
+import type { DetectSingleListInSelection } from "./SingleListInSelectionDetector";
+import type { DetectListsInSelection } from "./ListsInSelectionDetector";
 import { ListState } from "./ListState";
-import { CheckIsSelectionAListWithTypeStub } from "./stubs/IsSelectionAListWithTypeChecker";
-import { custom_schema } from "../../../custom_schema";
+import { ListStateBuilder } from "./ListStateBuilder";
 
 describe("ListStateBuilder", () => {
-    it("When list type is authorised, then it should return the activate state", () => {
-        const state = ListStateBuilder(
-            {} as EditorState,
-            CheckIsSelectionAListWithTypeStub.withSelectionWithListType(),
-        ).build(custom_schema.nodes.ordered_list, custom_schema.nodes.bullet_list);
+    let target_list_detector: DetectSingleListInSelection, lists_detector: DetectListsInSelection;
 
-        expect(state).toStrictEqual(ListState.activated());
+    const getListState = (): ListState =>
+        ListStateBuilder({} as EditorState, target_list_detector, lists_detector).build();
+
+    it("When the selection contains only a list of the target type, then it should return an activated state", () => {
+        target_list_detector = DetectSingleListInSelectionStub.withOnlyOneListOfTargetType();
+        lists_detector = DetectListsInSelectionStub.withAtLeastOneList();
+
+        expect(getListState()).toStrictEqual(ListState.activated());
     });
 
-    it("When node is not a list, then it should return the enable state", () => {
-        const state = ListStateBuilder(
-            {} as EditorState,
-            CheckIsSelectionAListWithTypeStub.withForbiddenListType(),
-        ).build(custom_schema.nodes.paragraph, custom_schema.nodes.bullet_list);
+    it("When the selection contains multiple lists, then it should return a disabled state", () => {
+        target_list_detector = DetectSingleListInSelectionStub.withNoList();
+        lists_detector = DetectListsInSelectionStub.withAtLeastOneList();
 
-        expect(state).toStrictEqual(ListState.enabled());
+        expect(getListState()).toStrictEqual(ListState.disabled());
+    });
+
+    it("Else, it should return an enabled state", () => {
+        target_list_detector = DetectSingleListInSelectionStub.withNoList();
+        lists_detector = DetectListsInSelectionStub.withoutAnyList();
+
+        expect(getListState()).toStrictEqual(ListState.enabled());
     });
 });

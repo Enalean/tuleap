@@ -18,9 +18,7 @@
  */
 
 import type { Command, EditorState, Transaction } from "prosemirror-state";
-import type { CheckIsSelectionAList } from "./IsListChecker";
-import type { NodeType } from "prosemirror-model";
-
+import type { DetectSingleListInSelection } from "./SingleListInSelectionDetector";
 export type InsertListNode = {
     insertList(): void;
 };
@@ -28,14 +26,14 @@ export type InsertListNode = {
 export const ListNodeInserter = (
     state: EditorState,
     dispatch: (tr: Transaction) => void,
-    check_is_selection_a_list: CheckIsSelectionAList,
-    list_type: NodeType,
+    detect_list: DetectSingleListInSelection,
     lift: Command,
     wrapFunction: Command,
 ): InsertListNode => ({
     insertList: (): void => {
-        if (check_is_selection_a_list.isSelectionAList(state, list_type)) {
+        if (detect_list.doesSelectionContainOnlyASingleList(state.doc, state.selection)) {
             lift(state, dispatch);
+            return;
         }
 
         wrapFunction(state, dispatch);

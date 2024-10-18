@@ -25,7 +25,7 @@ import { custom_schema } from "../../custom_schema";
 import { buildInputRules } from "./input-rules";
 import { setupMonoToolbar } from "./mono-toolbar";
 import type { ToolbarBus } from "./helper/toolbar-bus";
-import { IsSelectionAListChecker } from "./list/IsListChecker";
+import { SingleListInSelectionDetector } from "./list/SingleListInSelectionDetector";
 
 export { buildKeymap };
 export type { LinkState } from "./links/LinkState";
@@ -37,7 +37,13 @@ export const NB_HEADING = 3;
 
 export function setupToolbar(toolbar_bus: ToolbarBus): Plugin[] {
     return [
-        keymap(buildKeymap(custom_schema, IsSelectionAListChecker(), NB_HEADING)),
+        keymap(
+            buildKeymap(
+                SingleListInSelectionDetector(custom_schema.nodes.ordered_list),
+                SingleListInSelectionDetector(custom_schema.nodes.bullet_list),
+                NB_HEADING,
+            ),
+        ),
         keymap(baseKeymap),
         buildInputRules(custom_schema),
         setupMonoToolbar(toolbar_bus),

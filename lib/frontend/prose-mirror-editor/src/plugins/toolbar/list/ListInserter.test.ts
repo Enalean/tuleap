@@ -19,44 +19,43 @@
 
 import { describe, it, expect, vi } from "vitest";
 import type { EditorState } from "prosemirror-state";
+import { DetectSingleListInSelectionStub } from "./stubs/DetectSingleListInSelectionStub";
 import { ListNodeInserter } from "./ListInserter";
-import { CheckIsSelectionAListStub } from "./stubs/IsSelectionAListChecker";
-import { custom_schema } from "../../../custom_schema";
 
 describe("ListNodeInserter", () => {
-    it("WhenSelection is a list then it should lift the list", () => {
+    it("When the selection already contains a list of the target type, then it should lift its items", () => {
         const state = {} as unknown as EditorState;
         const lift_mock = vi.fn();
         const wrap_mock = vi.fn();
         const dispatch = vi.fn();
+
         ListNodeInserter(
             state,
             dispatch,
-            CheckIsSelectionAListStub.withSelectionWithListType(),
-            custom_schema.nodes.bullet_list,
+            DetectSingleListInSelectionStub.withOnlyOneListOfTargetType(),
             lift_mock,
             wrap_mock,
         ).insertList();
 
         expect(lift_mock).toHaveBeenCalledOnce();
-        expect(wrap_mock).toHaveBeenCalledOnce();
+        expect(wrap_mock).not.toHaveBeenCalled();
     });
 
-    it("WhenSelection is a list then it should wrap in List", () => {
+    it("When the selection does not contain a list yet, then it should wrap its content in a list", () => {
         const state = {} as unknown as EditorState;
         const lift_mock = vi.fn();
         const wrap_mock = vi.fn();
         const dispatch = vi.fn();
+
         ListNodeInserter(
             state,
             dispatch,
-            CheckIsSelectionAListStub.withForbiddenListType(),
-            custom_schema.nodes.bullet_list,
+            DetectSingleListInSelectionStub.withNoList(),
             lift_mock,
             wrap_mock,
         ).insertList();
 
-        expect(lift_mock).not.toHaveBeenCalledOnce();
+        expect(lift_mock).not.toHaveBeenCalled();
         expect(wrap_mock).toHaveBeenCalledOnce();
     });
 });

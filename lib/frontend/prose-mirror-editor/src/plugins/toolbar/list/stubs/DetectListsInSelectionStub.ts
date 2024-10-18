@@ -17,13 +17,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { CheckIsSelectionAList } from "../IsListChecker";
+import type { DetectListsInSelection } from "../ListsInSelectionDetector";
 
-export const CheckIsSelectionAListStub = {
-    withSelectionWithListType: (): CheckIsSelectionAList => ({
-        isSelectionAList: () => true,
+export const DetectListsInSelectionStub = {
+    withAtLeastOneList: (): DetectListsInSelection => ({
+        doesSelectionContainLists: () => true,
     }),
-    withForbiddenListType: (): CheckIsSelectionAList => ({
-        isSelectionAList: () => false,
+    withoutAnyList: (): DetectListsInSelection => ({
+        doesSelectionContainLists: () => false,
     }),
 };
