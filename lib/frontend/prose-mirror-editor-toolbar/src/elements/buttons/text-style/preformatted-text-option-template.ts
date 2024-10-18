@@ -20,10 +20,11 @@
 import { html } from "hybrids";
 import type { UpdateFunction } from "hybrids";
 import type { InternalHeadingsItem } from "./text-style";
-import { gettext_provider } from "../../../gettext-provider";
+import type { GetText } from "@tuleap/gettext";
 
 export const renderPreformattedTextOption = (
     host: InternalHeadingsItem,
+    gettext_provider: GetText,
 ): UpdateFunction<InternalHeadingsItem> => {
     if (!host.style_elements.preformatted) {
         return html``;

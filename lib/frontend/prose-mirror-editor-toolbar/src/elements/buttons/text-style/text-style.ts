@@ -25,12 +25,14 @@ import { renderHeadingsOptions } from "./heading-option-template";
 import { renderPlainTextOption } from "./plain-text-option-template";
 import { renderStylesOption } from "./styles-option-template";
 import { renderPreformattedTextOption } from "./preformatted-text-option-template";
+import type { GetText } from "@tuleap/gettext";
 
 export const TAG = "text-style-item";
 
 export type HeadingsItem = {
     toolbar_bus: ToolbarBus;
     style_elements: StyleElements;
+    gettext_provider: GetText;
 };
 
 export type InternalHeadingsItem = Readonly<HeadingsItem> & {
@@ -77,10 +79,13 @@ define<InternalHeadingsItem>({
         value: (host: InternalHeadingsItem, toolbar_bus: ToolbarBus) => toolbar_bus,
         connect,
     },
+    gettext_provider: (host, gettext_provider) => gettext_provider,
     render: (host: InternalHeadingsItem): UpdateFunction<InternalHeadingsItem> => html`
         <select class="tlp-select tlp-select-small tlp-select-adjusted">
-            ${renderStylesOption(host)} ${renderPlainTextOption(host)}
-            ${renderHeadingsOptions(host)} ${renderPreformattedTextOption(host)}
+            ${renderStylesOption(host, host.gettext_provider)}
+            ${renderPlainTextOption(host, host.gettext_provider)}
+            ${renderHeadingsOptions(host, host.gettext_provider)}
+            ${renderPreformattedTextOption(host, host.gettext_provider)}
         </select>
     `,
 });

@@ -21,12 +21,13 @@ import { define, html } from "hybrids";
 import type { UpdateFunction } from "hybrids";
 import type { ToolbarBus } from "@tuleap/prose-mirror-editor";
 import { getClass } from "../../helpers/class-getter";
-import { gettext_provider } from "../../gettext-provider";
+import type { GetText } from "@tuleap/gettext";
 
 export const TAG = "unlink-item";
 
 export type UnlinkElement = {
     toolbar_bus: ToolbarBus;
+    gettext_provider: GetText;
 };
 
 export type InternalUnlinkElement = Readonly<UnlinkElement> & {
@@ -41,6 +42,7 @@ const onClickRemoveLink = (host: InternalUnlinkElement): void => {
 
 export const renderUnlinkElement = (
     host: InternalUnlinkElement,
+    gettext_provider: GetText,
 ): UpdateFunction<InternalUnlinkElement> => {
     const classes = getClass(host.is_activated);
 
@@ -72,5 +74,6 @@ define<InternalUnlinkElement>({
         value: (host: InternalUnlinkElement, toolbar_bus: ToolbarBus) => toolbar_bus,
         connect,
     },
-    render: renderUnlinkElement,
+    gettext_provider: (host, gettext_provider) => gettext_provider,
+    render: (host) => renderUnlinkElement(host, host.gettext_provider),
 });

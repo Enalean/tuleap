@@ -20,13 +20,14 @@
 
 import { define, html, type UpdateFunction } from "hybrids";
 import type { ToolbarBus } from "@tuleap/prose-mirror-editor";
-import { gettext_provider } from "../../gettext-provider";
 import { getClass } from "../../helpers/class-getter";
+import type { GetText } from "@tuleap/gettext";
 
 export const BOLD_TAG_NAME = "bold-item";
 
 export type BoldElement = {
     toolbar_bus: ToolbarBus;
+    gettext_provider: GetText;
 };
 
 type InternalBoldElement = Readonly<BoldElement> & {
@@ -38,7 +39,10 @@ export type HostElement = InternalBoldElement & HTMLElement;
 const onClickApplyBold = (host: BoldElement): void => {
     host.toolbar_bus.bold();
 };
-export const renderBoldItem = (host: InternalBoldElement): UpdateFunction<InternalBoldElement> => {
+export const renderBoldItem = (
+    host: InternalBoldElement,
+    gettext_provider: GetText,
+): UpdateFunction<InternalBoldElement> => {
     const classes = getClass(host.is_activated);
 
     return html`<button
@@ -66,5 +70,6 @@ define<InternalBoldElement>({
         value: (host: BoldElement, toolbar_bus: ToolbarBus) => toolbar_bus,
         connect,
     },
-    render: renderBoldItem,
+    gettext_provider: (host, gettext_provider) => gettext_provider,
+    render: (host) => renderBoldItem(host, host.gettext_provider),
 });

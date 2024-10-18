@@ -20,13 +20,14 @@
 
 import { define, html, type UpdateFunction } from "hybrids";
 import type { ToolbarBus } from "@tuleap/prose-mirror-editor";
-import { gettext_provider } from "../../gettext-provider";
 import { getClass } from "../../helpers/class-getter";
+import type { GetText } from "@tuleap/gettext";
 
 export const SUBSCRIPT_TAG_NAME = "subscript-item";
 
 export type SubscriptElement = {
     toolbar_bus: ToolbarBus;
+    gettext_provider: GetText;
 };
 
 type InternalSubscriptElement = Readonly<SubscriptElement> & {
@@ -40,6 +41,7 @@ const onClickApplySubscript = (host: SubscriptElement): void => {
 };
 export const renderSubscriptItem = (
     host: InternalSubscriptElement,
+    gettext_provider: GetText,
 ): UpdateFunction<InternalSubscriptElement> => {
     const classes = getClass(host.is_activated);
 
@@ -68,5 +70,6 @@ define<InternalSubscriptElement>({
         value: (host: SubscriptElement, toolbar_bus: ToolbarBus) => toolbar_bus,
         connect,
     },
-    render: renderSubscriptItem,
+    gettext_provider: (host, gettext_provider) => gettext_provider,
+    render: (host) => renderSubscriptItem(host, host.gettext_provider),
 });

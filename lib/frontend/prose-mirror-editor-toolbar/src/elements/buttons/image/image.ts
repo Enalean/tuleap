@@ -24,11 +24,13 @@ import { connectPopover } from "../common/connect-popover";
 import type { PopoverHost } from "../common/connect-popover";
 import { renderImageButton } from "./image-button-template";
 import { renderImagePopover } from "./image-popover-template";
+import type { GetText } from "@tuleap/gettext";
 
 export const TAG = "image-item";
 
 export type ImageButton = {
     toolbar_bus: ToolbarBus;
+    gettext_provider: GetText;
 };
 
 export type InternalImageButton = Readonly<ImageButton> &
@@ -81,6 +83,10 @@ define<InternalImageButton>({
         value: (host: InternalImageButton, toolbar_bus: ToolbarBus) => toolbar_bus,
         connect,
     },
+    gettext_provider: (host, gettext_provider) => gettext_provider,
     render: (host): UpdateFunction<InternalImageButton> =>
-        html`${renderImageButton(host)}${renderImagePopover(host)}`,
+        html`${renderImageButton(host, host.gettext_provider)}${renderImagePopover(
+            host,
+            host.gettext_provider,
+        )}`,
 });

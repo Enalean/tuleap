@@ -19,7 +19,7 @@
 
 import { describe, it, expect, beforeEach, vi } from "vitest";
 import { buildToolbarBus } from "@tuleap/prose-mirror-editor";
-import { createLocalDocument } from "../../../helpers/helper-for-test";
+import { createLocalDocument, gettext_provider } from "../../../helpers/helper-for-test";
 import { renderPlainTextOption } from "./plain-text-option-template";
 import type { HostElement } from "./text-style";
 
@@ -33,7 +33,7 @@ describe("plain-text-option-template", () => {
     });
 
     const getPlainTextOption = (host: HostElement): HTMLOptionElement => {
-        renderPlainTextOption(host)(host, target);
+        renderPlainTextOption(host, gettext_provider)(host, target);
 
         const option = target.querySelector("option");
         if (!option) {
@@ -44,7 +44,7 @@ describe("plain-text-option-template", () => {
 
     it("When plain text is disabled, then it should render nothing", () => {
         const host = { style_elements: { text: false } } as HostElement;
-        renderPlainTextOption(host)(host, target);
+        renderPlainTextOption(host, gettext_provider)(host, target);
 
         const option = target.querySelector("option");
         expect(option).toBeNull();

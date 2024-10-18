@@ -21,8 +21,8 @@ import { html } from "hybrids";
 import type { UpdateFunction } from "hybrids";
 import { sprintf } from "sprintf-js";
 import { NB_HEADING } from "@tuleap/prose-mirror-editor";
-import { gettext_provider } from "../../../gettext-provider";
 import type { InternalHeadingsItem } from "./text-style";
+import type { GetText } from "@tuleap/gettext";
 
 const isCurrentHeading = (host: InternalHeadingsItem, level: number): boolean => {
     return host.current_heading !== null && host.current_heading.level === level;
@@ -36,7 +36,7 @@ const onClickApplyHeading = (host: InternalHeadingsItem, level: number): void =>
     host.toolbar_bus.heading({ level });
 };
 
-const getHeadingOptionTitle = (level: number): string =>
+const getHeadingOptionTitle = (level: number, gettext_provider: GetText): string =>
     sprintf(
         gettext_provider.gettext(
             "Change to heading %(heading_level)s `Ctrl+Shift+%(heading_level)s`",
@@ -44,24 +44,26 @@ const getHeadingOptionTitle = (level: number): string =>
         { heading_level: level },
     );
 
-const getHeadingOptionTextContent = (level: number): string =>
+const getHeadingOptionTextContent = (level: number, gettext_provider: GetText): string =>
     sprintf(gettext_provider.gettext("Heading %(heading_level)s"), { heading_level: level });
 
 export const renderHeadingOption = (
     host: InternalHeadingsItem,
     level: number,
+    gettext_provider: GetText,
 ): UpdateFunction<InternalHeadingsItem> => html`
     <option
         onclick="${(): void => onClickApplyHeading(host, level)}"
-        title="${getHeadingOptionTitle(level)}"
+        title="${getHeadingOptionTitle(level, gettext_provider)}"
         selected="${isCurrentHeading(host, level)}"
     >
-        ${getHeadingOptionTextContent(level)}
+        ${getHeadingOptionTextContent(level, gettext_provider)}
     </option>
 `;
 
 export const renderHeadingsOptions = (
     host: InternalHeadingsItem,
+    gettext_provider: GetText,
 ): UpdateFunction<InternalHeadingsItem> => {
     if (!host.style_elements.headings) {
         return html``;
@@ -69,7 +71,7 @@ export const renderHeadingsOptions = (
 
     const heading_options = [];
     for (let level = 1; level < NB_HEADING + 1; level++) {
-        heading_options.push(renderHeadingOption(host, level));
+        heading_options.push(renderHeadingOption(host, level, gettext_provider));
     }
     return html`${heading_options}`;
 };

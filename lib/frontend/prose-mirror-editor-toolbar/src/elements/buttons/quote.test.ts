@@ -21,7 +21,7 @@
 import { describe, beforeEach, expect, it, vi } from "vitest";
 import type { ToolbarBus } from "@tuleap/prose-mirror-editor";
 import { buildToolbarBus } from "@tuleap/prose-mirror-editor";
-import { createLocalDocument } from "../../helpers/helper-for-test";
+import { createLocalDocument, gettext_provider } from "../../helpers/helper-for-test";
 import type { HostElement } from "./quote";
 import { connect, renderQuoteItem } from "./quote";
 
@@ -54,7 +54,7 @@ describe("QuoteElement", () => {
         const applyCode = vi.spyOn(toolbar_bus, "quote");
         const host = { toolbar_bus } as HostElement;
 
-        renderQuoteItem(host)(host, target);
+        renderQuoteItem(host, gettext_provider)(host, target);
 
         const button = target.querySelector<HTMLButtonElement>("[data-test=button-quote]");
         if (!button) {
@@ -75,7 +75,7 @@ describe("QuoteElement", () => {
             toolbar_bus,
         } as HostElement;
 
-        renderQuoteItem(host)(host, target);
+        renderQuoteItem(host, gettext_provider)(host, target);
 
         const button = target.querySelector<HTMLButtonElement>("[data-test=button-quote]");
         if (!button) {

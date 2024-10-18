@@ -20,7 +20,7 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
 import type { ToolbarBus } from "@tuleap/prose-mirror-editor";
 import { buildToolbarBus } from "@tuleap/prose-mirror-editor";
-import { createLocalDocument } from "../../helpers/helper-for-test";
+import { createLocalDocument, gettext_provider } from "../../helpers/helper-for-test";
 import type { HostElement } from "./unlink";
 import { connect, renderUnlinkElement } from "./unlink";
 
@@ -53,7 +53,7 @@ describe("unlink", () => {
         const applyUnlink = vi.spyOn(toolbar_bus, "unlink");
         const host = { toolbar_bus, is_activated: true } as HostElement;
 
-        renderUnlinkElement(host)(host, target);
+        renderUnlinkElement(host, gettext_provider)(host, target);
 
         const button = target.querySelector<HTMLButtonElement>("[data-test=button-unlink]");
         if (!button) {
@@ -74,7 +74,7 @@ describe("unlink", () => {
             toolbar_bus,
         } as HostElement;
 
-        renderUnlinkElement(host)(host, target);
+        renderUnlinkElement(host, gettext_provider)(host, target);
 
         const button = target.querySelector<HTMLButtonElement>("[data-test=button-unlink]");
         if (!button) {

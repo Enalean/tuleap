@@ -23,11 +23,13 @@ import type { PopoverHost } from "../common/connect-popover";
 import { connectPopover } from "../common/connect-popover";
 import { renderLinkButtonElement } from "./link-button-template";
 import { renderLinkPopover } from "./link-popover-template";
+import type { GetText } from "@tuleap/gettext";
 
 export const TAG = "link-item";
 
 export type Link = {
     toolbar_bus: ToolbarBus;
+    gettext_provider: GetText;
 };
 
 export type InternalLinkButtonElement = Readonly<Link> &
@@ -80,5 +82,10 @@ define<InternalLinkButtonElement>({
         value: (host: InternalLinkButtonElement, toolbar_bus: ToolbarBus) => toolbar_bus,
         connect,
     },
-    render: (host) => html`${renderLinkButtonElement(host)}${renderLinkPopover(host)}`,
+    gettext_provider: (host, gettext_provider) => gettext_provider,
+    render: (host) =>
+        html`${renderLinkButtonElement(host, host.gettext_provider)}${renderLinkPopover(
+            host,
+            host.gettext_provider,
+        )}`,
 });

@@ -20,13 +20,14 @@
 
 import { define, html, type UpdateFunction } from "hybrids";
 import type { ToolbarBus, ListState } from "@tuleap/prose-mirror-editor";
-import { gettext_provider } from "../../gettext-provider";
 import { getClass } from "../../helpers/class-getter";
+import type { GetText } from "@tuleap/gettext";
 
 export const BULLET_LIST_TAG_NAME = "bullet-list-item";
 
 export type BulletListElement = {
     toolbar_bus: ToolbarBus;
+    gettext_provider: GetText;
 };
 
 type InternalBulletListElement = Readonly<BulletListElement> & {
@@ -41,6 +42,7 @@ const onClickApplyBulletList = (host: BulletListElement): void => {
 };
 export const renderBulletListItem = (
     host: InternalBulletListElement,
+    gettext_provider: GetText,
 ): UpdateFunction<InternalBulletListElement> => {
     const classes = getClass(host.is_activated);
 
@@ -72,5 +74,6 @@ define<InternalBulletListElement>({
         value: (host: BulletListElement, toolbar_bus: ToolbarBus) => toolbar_bus,
         connect,
     },
-    render: renderBulletListItem,
+    gettext_provider: (host, gettext_provider) => gettext_provider,
+    render: (host) => renderBulletListItem(host, host.gettext_provider),
 });

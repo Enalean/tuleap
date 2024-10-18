@@ -20,7 +20,7 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
 import { buildToolbarBus } from "@tuleap/prose-mirror-editor";
 import type { ToolbarBus } from "@tuleap/prose-mirror-editor";
-import { createLocalDocument } from "../../../helpers/helper-for-test";
+import { createLocalDocument, gettext_provider } from "../../../helpers/helper-for-test";
 import { renderImagePopover } from "./image-popover-template";
 import type { HostElement } from "./image";
 
@@ -39,7 +39,7 @@ describe("image-popover-template", () => {
     ])("When host.is_disabled is %s then the submit button %s", (is_disabled) => {
         const host = { is_disabled } as unknown as HostElement;
 
-        renderImagePopover(host)(host, target);
+        renderImagePopover(host, gettext_provider)(host, target);
         const submit_button = target.querySelector("[data-test=submit-button]");
         if (!submit_button) {
             throw new Error("Expected a submit button");
@@ -59,7 +59,7 @@ describe("image-popover-template", () => {
         }) as unknown as HostElement;
 
     const submitForm = (host: HostElement, image_source: string, title: string): void => {
-        renderImagePopover(host)(host, target);
+        renderImagePopover(host, gettext_provider)(host, target);
 
         const form = target.querySelector<HTMLFormElement>(
             "[data-test=toolbar-image-popover-form]",

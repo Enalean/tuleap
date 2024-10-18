@@ -20,11 +20,12 @@
 import { html } from "hybrids";
 import type { UpdateFunction } from "hybrids";
 import type { InternalImageButton } from "./image";
-import { gettext_provider } from "../../../gettext-provider";
 import { getClass } from "../../../helpers/class-getter";
+import type { GetText } from "@tuleap/gettext";
 
 export const renderImageButton = (
     host: InternalImageButton,
+    gettext_provider: GetText,
 ): UpdateFunction<InternalImageButton> => html`
     <button
         class="${getClass(host.is_activated)}"

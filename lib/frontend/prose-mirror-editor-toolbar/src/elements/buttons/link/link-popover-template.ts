@@ -19,8 +19,8 @@
 
 import type { UpdateFunction } from "hybrids";
 import { html } from "hybrids";
-import { gettext_provider } from "../../../gettext-provider";
 import type { InternalLinkButtonElement } from "./link";
+import type { GetText } from "@tuleap/gettext";
 
 const onSubmit = (host: InternalLinkButtonElement, event: Event): void => {
     event.preventDefault();
@@ -34,6 +34,7 @@ const onSubmit = (host: InternalLinkButtonElement, event: Event): void => {
 
 const getPopoverHeader = (
     host: InternalLinkButtonElement,
+    gettext_provider: GetText,
 ): UpdateFunction<InternalLinkButtonElement> => {
     const popover_title = host.is_activated
         ? gettext_provider.gettext("Create link")
@@ -44,6 +45,7 @@ const getPopoverHeader = (
 
 export const renderLinkPopover = (
     host: InternalLinkButtonElement,
+    gettext_provider: GetText,
 ): UpdateFunction<InternalLinkButtonElement> => html`
     <form
         data-role="popover"
@@ -52,7 +54,7 @@ export const renderLinkPopover = (
         data-test="toolbar-link-popover-form"
     >
         <div class="tlp-popover-arrow"></div>
-        <div class="tlp-popover-header">${getPopoverHeader(host)}</div>
+        <div class="tlp-popover-header">${getPopoverHeader(host, gettext_provider)}</div>
         <div class="tlp-popover-body">
             <div class="tlp-form-element">
                 <label for="toolbar-link-popover-href" class="tlp-label">

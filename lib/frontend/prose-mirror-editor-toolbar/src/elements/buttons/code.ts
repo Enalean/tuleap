@@ -20,13 +20,14 @@
 
 import { define, html, type UpdateFunction } from "hybrids";
 import type { ToolbarBus } from "@tuleap/prose-mirror-editor";
-import { gettext_provider } from "../../gettext-provider";
 import { getClass } from "../../helpers/class-getter";
+import type { GetText } from "@tuleap/gettext";
 
 export const CODE_TAG_NAME = "code-item";
 
 export type CodeElement = {
     toolbar_bus: ToolbarBus;
+    gettext_provider: GetText;
 };
 
 type InternalCodeElement = Readonly<CodeElement> & {
@@ -45,7 +46,10 @@ export const connect = (host: InternalCodeElement): void => {
         },
     });
 };
-export const renderCodeItem = (host: InternalCodeElement): UpdateFunction<InternalCodeElement> => {
+export const renderCodeItem = (
+    host: InternalCodeElement,
+    gettext_provider: GetText,
+): UpdateFunction<InternalCodeElement> => {
     const classes = getClass(host.is_activated);
 
     return html`<button
@@ -65,5 +69,6 @@ export default define<InternalCodeElement>({
         value: (host: CodeElement, toolbar_bus: ToolbarBus) => toolbar_bus,
         connect,
     },
-    render: renderCodeItem,
+    gettext_provider: (host, gettext_provider) => gettext_provider,
+    render: (host) => renderCodeItem(host, host.gettext_provider),
 });

@@ -19,7 +19,7 @@
 
 import { describe, it, expect, beforeEach, vi } from "vitest";
 import { buildToolbarBus } from "@tuleap/prose-mirror-editor";
-import { createLocalDocument } from "../../../helpers/helper-for-test";
+import { createLocalDocument, gettext_provider } from "../../../helpers/helper-for-test";
 import { renderPreformattedTextOption } from "./preformatted-text-option-template";
 import type { HostElement } from "./text-style";
 
@@ -33,7 +33,7 @@ describe("preformatted-text-option-template", () => {
     });
 
     const getPreformattedTextOption = (host: HostElement): HTMLOptionElement => {
-        renderPreformattedTextOption(host)(host, target);
+        renderPreformattedTextOption(host, gettext_provider)(host, target);
 
         const option = target.querySelector("option");
         if (!option) {
@@ -44,7 +44,7 @@ describe("preformatted-text-option-template", () => {
 
     it("When preformatted text is disabled, then it should render nothing", () => {
         const host = { style_elements: { preformatted: false } } as HostElement;
-        renderPreformattedTextOption(host)(host, target);
+        renderPreformattedTextOption(host, gettext_provider)(host, target);
 
         const option = target.querySelector("option");
         expect(option).toBeNull();

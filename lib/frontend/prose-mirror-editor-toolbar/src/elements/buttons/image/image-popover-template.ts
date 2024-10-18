@@ -20,7 +20,7 @@
 import { html } from "hybrids";
 import type { UpdateFunction } from "hybrids";
 import type { InternalImageButton } from "./image";
-import { gettext_provider } from "../../../gettext-provider";
+import type { GetText } from "@tuleap/gettext";
 
 const onSubmit = (host: InternalImageButton, event: Event): void => {
     event.preventDefault();
@@ -32,7 +32,10 @@ const onSubmit = (host: InternalImageButton, event: Event): void => {
     });
 };
 
-const getPopoverHeader = (host: InternalImageButton): UpdateFunction<InternalImageButton> => {
+const getPopoverHeader = (
+    host: InternalImageButton,
+    gettext_provider: GetText,
+): UpdateFunction<InternalImageButton> => {
     const popover_title = host.is_activated
         ? gettext_provider.gettext("Update image properties")
         : gettext_provider.gettext("Insert new image");
@@ -42,6 +45,7 @@ const getPopoverHeader = (host: InternalImageButton): UpdateFunction<InternalIma
 
 export const renderImagePopover = (
     host: InternalImageButton,
+    gettext_provider: GetText,
 ): UpdateFunction<InternalImageButton> =>
     html`<form
         data-role="popover"
@@ -50,7 +54,7 @@ export const renderImagePopover = (
         data-test="toolbar-image-popover-form"
     >
         <div class="tlp-popover-arrow"></div>
-        <div class="tlp-popover-header">${getPopoverHeader(host)}</div>
+        <div class="tlp-popover-header">${getPopoverHeader(host, gettext_provider)}</div>
         <div class="tlp-popover-body">
             <div class="tlp-form-element">
                 <label for="toolbar-image-popover-src" class="tlp-label">
