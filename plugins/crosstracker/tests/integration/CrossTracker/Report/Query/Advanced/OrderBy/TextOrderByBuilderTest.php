@@ -68,31 +68,40 @@ final class TextOrderByBuilderTest extends CrossTrackerFieldTestCase
         $release_artifact_1_id = $tracker_builder->buildArtifact($release_tracker->getId());
         $release_artifact_2_id = $tracker_builder->buildArtifact($release_tracker->getId());
         $sprint_artifact_3_id  = $tracker_builder->buildArtifact($sprint_tracker->getId());
+        $sprint_artifact_4_id  = $tracker_builder->buildArtifact($sprint_tracker->getId());
 
         $release_artifact_1_changeset = $tracker_builder->buildLastChangeset($release_artifact_1_id);
         $release_artifact_2_changeset = $tracker_builder->buildLastChangeset($release_artifact_2_id);
         $sprint_artifact_3_changeset  = $tracker_builder->buildLastChangeset($sprint_artifact_3_id);
+        $sprint_artifact_4_changeset  = $tracker_builder->buildLastChangeset($sprint_artifact_4_id);
 
         $tracker_builder->buildTextValue(
             $release_artifact_1_changeset,
             $release_text_field_id,
-            '**Hello World**',
+            '1 **Hello World**',
             'commonmark'
         );
         $tracker_builder->buildTextValue(
             $release_artifact_2_changeset,
             $release_text_field_id,
-            '<h1>Hello World</h1>',
+            '10 <h1>Hello World</h1>',
             'text'
         );
         $tracker_builder->buildTextValue(
             $sprint_artifact_3_changeset,
             $sprint_text_field_id,
-            'Test',
+            '2 Test',
             'commonmark'
         );
-        $this->result_descending = [$sprint_artifact_3_id, $release_artifact_2_id, $release_artifact_1_id];
-        $this->result_ascending  = [$release_artifact_1_id, $release_artifact_2_id, $sprint_artifact_3_id];
+
+        $tracker_builder->buildTextValue(
+            $sprint_artifact_4_changeset,
+            $sprint_text_field_id,
+            'Gigouli',
+            'commonmark'
+        );
+        $this->result_descending = [$release_artifact_2_id, $sprint_artifact_3_id, $release_artifact_1_id, $sprint_artifact_4_id];
+        $this->result_ascending  = [$sprint_artifact_4_id, $release_artifact_1_id, $sprint_artifact_3_id, $release_artifact_2_id];
     }
 
     private function getQueryResults(CrossTrackerExpertReport $report, PFUser $user): CrossTrackerReportContentRepresentation

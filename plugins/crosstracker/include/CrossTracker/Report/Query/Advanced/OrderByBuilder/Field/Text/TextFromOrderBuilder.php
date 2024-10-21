@@ -47,6 +47,6 @@ final class TextFromOrderBuilder
             ON $changeset_value_text_alias.changeset_value_id = $changeset_value_alias.id
         EOSQL;
 
-        return new ParametrizedFromOrder($from, $field_ids, "$changeset_value_text_alias.value $order");
+        return new ParametrizedFromOrder($from, $field_ids, "CAST($changeset_value_text_alias.value AS SIGNED) $order, $changeset_value_text_alias.value $order");
     }
 }
