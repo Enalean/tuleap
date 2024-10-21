@@ -22,20 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Report\Query\Advanced;
 
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\SyntaxError;
-
-final class InvalidSelectablesCollectionBuilder implements IBuildInvalidSelectablesCollection
+final class MissingFromException extends \Exception
 {
-    /**
-     * @throws SyntaxError
-     */
-    public function buildCollectionOfInvalidSelectables(array $selectables): InvalidSelectablesCollection
-    {
-        if ($selectables !== []) {
-            // This way user think its query is not valid tql
-            throw new EmptySyntaxError();
-        }
-
-        return new InvalidSelectablesCollection();
-    }
 }

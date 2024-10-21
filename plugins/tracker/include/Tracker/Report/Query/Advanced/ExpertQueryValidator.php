@@ -23,9 +23,9 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Report\Query\Advanced;
 
 use PFUser;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\From;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Logical;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\OrderBy;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\Query;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Selectable;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\SyntaxError;
 
@@ -38,12 +38,16 @@ final readonly class ExpertQueryValidator
     }
 
     /**
+     * @throws InvalidSelectException
+     * @throws LimitSizeIsExceededException
+     * @throws OrderByIsInvalidException
      * @throws SearchablesAreInvalidException
      * @throws SearchablesDoNotExistException
-     * @throws SyntaxError
-     * @throws SelectablesDoNotExistException
+     * @throws SelectLimitExceededException
      * @throws SelectablesAreInvalidException
-     * @throws OrderByIsInvalidException
+     * @throws SelectablesDoNotExistException
+     * @throws SelectablesMustBeUniqueException
+     * @throws SyntaxError
      */
     public function validateExpertQuery(
         string $expert_query,
@@ -66,6 +70,7 @@ final readonly class ExpertQueryValidator
      * @throws SearchablesAreInvalidException
      * @throws Grammar\SyntaxError
      * @throws SyntaxNotSupportedException
+     * @throws LimitSizeIsExceededException
      */
     public function validateQueryFromSingleTracker(
         string $expert_query,
@@ -85,16 +90,24 @@ final readonly class ExpertQueryValidator
 
     /**
      * @throws FromIsInvalidException
-     * @throws SyntaxError
+     * @throws MissingFromException
      */
     public function validateFromQuery(
-        string $expert_query,
-        bool $expert_mode,
+        Query $query,
         IBuildInvalidFromCollection $invalid_from_collection_builder,
         PFUser $user,
     ): void {
-        $query = $this->parser->parse($expert_query);
-        $this->checkFrom($query->getFrom(), $expert_mode, $invalid_from_collection_builder, $user);
+        if ($query->getFrom() === null) {
+            throw new MissingFromException();
+        }
+
+        $invalid_from_collection = $invalid_from_collection_builder->buildCollectionOfInvalidFrom(
+            $query->getFrom(),
+            $user
+        );
+        if ($invalid_from_collection->getInvalidFrom() !== []) {
+            throw new FromIsInvalidException($invalid_from_collection->getInvalidFrom());
+        }
     }
 
     /**
@@ -121,9 +134,11 @@ final readonly class ExpertQueryValidator
 
     /**
      * @param Selectable[] $selectables
-     * @throws SelectablesDoNotExistException
+     * @throws InvalidSelectException
+     * @throws SelectLimitExceededException
      * @throws SelectablesAreInvalidException
-     * @throws SyntaxError
+     * @throws SelectablesDoNotExistException
+     * @throws SelectablesMustBeUniqueException
      */
     private function checkSelectables(
         array $selectables,
@@ -131,8 +146,7 @@ final readonly class ExpertQueryValidator
         IBuildInvalidSelectablesCollection $invalid_selectables_collection_builder,
     ): void {
         if (! $expert_mode && $selectables !== []) {
-            // This way user think its query is not valid tql
-            throw new EmptySyntaxError();
+            throw new InvalidSelectException();
         }
 
         $invalid_selectables_collection = $invalid_selectables_collection_builder->buildCollectionOfInvalidSelectables($selectables);
@@ -142,34 +156,6 @@ final readonly class ExpertQueryValidator
 
         if ($invalid_selectables_collection->getInvalidSelectablesErrors() !== []) {
             throw new SelectablesAreInvalidException($invalid_selectables_collection->getInvalidSelectablesErrors());
-        }
-    }
-
-    /**
-     * @throws SyntaxError
-     * @throws FromIsInvalidException
-     */
-    private function checkFrom(
-        ?From $from,
-        bool $expert_mode,
-        IBuildInvalidFromCollection $invalid_from_collection_builder,
-        PFUser $user,
-    ): void {
-        if ($expert_mode) {
-            if ($from === null) { // From is mandatory in expert mode
-                throw new EmptySyntaxError();
-            }
-
-            $invalid_from_collection = $invalid_from_collection_builder->buildCollectionOfInvalidFrom($from, $user);
-            if ($invalid_from_collection->getInvalidFrom() !== []) {
-                throw new FromIsInvalidException($invalid_from_collection->getInvalidFrom());
-            }
-
-            return;
-        }
-
-        if ($from !== null) { // From is invalid in default mode
-            throw new EmptySyntaxError();
         }
     }
 

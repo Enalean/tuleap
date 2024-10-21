@@ -54,12 +54,17 @@ use Tuleap\Tracker\Report\Query\Advanced\FromIsInvalidException;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Query;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\SyntaxError;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidSelectException;
+use Tuleap\Tracker\Report\Query\Advanced\LimitSizeIsExceededException;
+use Tuleap\Tracker\Report\Query\Advanced\MissingFromException;
 use Tuleap\Tracker\Report\Query\Advanced\OrderByIsInvalidException;
 use Tuleap\Tracker\Report\Query\Advanced\ParserCacheProxy;
 use Tuleap\Tracker\Report\Query\Advanced\SearchablesAreInvalidException;
 use Tuleap\Tracker\Report\Query\Advanced\SearchablesDoNotExistException;
 use Tuleap\Tracker\Report\Query\Advanced\SelectablesAreInvalidException;
 use Tuleap\Tracker\Report\Query\Advanced\SelectablesDoNotExistException;
+use Tuleap\Tracker\Report\Query\Advanced\SelectablesMustBeUniqueException;
+use Tuleap\Tracker\Report\Query\Advanced\SelectLimitExceededException;
 use Tuleap\Tracker\REST\v1\ArtifactMatchingReportCollection;
 
 final readonly class CrossTrackerArtifactReportFactory
@@ -92,14 +97,19 @@ final readonly class CrossTrackerArtifactReportFactory
     }
 
     /**
-     * @throws SearchablesAreInvalidException
-     * @throws SearchablesDoNotExistException
-     * @throws SelectablesAreInvalidException
-     * @throws SelectablesDoNotExistException
-     * @throws SyntaxError
      * @throws ExpertQueryIsEmptyException
      * @throws FromIsInvalidException
+     * @throws InvalidSelectException
+     * @throws LimitSizeIsExceededException
+     * @throws MissingFromException
      * @throws OrderByIsInvalidException
+     * @throws SearchablesAreInvalidException
+     * @throws SearchablesDoNotExistException
+     * @throws SelectLimitExceededException
+     * @throws SelectablesAreInvalidException
+     * @throws SelectablesDoNotExistException
+     * @throws SelectablesMustBeUniqueException
+     * @throws SyntaxError
      */
     public function getArtifactsMatchingReport(
         CrossTrackerReport $report,
@@ -117,23 +127,22 @@ final readonly class CrossTrackerArtifactReportFactory
                 $limit,
                 $offset
             );
-        } else {
-            if ($report->isExpert()) {
-                return $this->getArtifactsMatchingExpertQuery(
-                    $report,
-                    $current_user,
-                    $limit,
-                    $offset,
-                );
-            }
+        }
 
-            return $this->getArtifactsMatchingDefaultQuery(
+        if ($report->isExpert()) {
+            return $this->getArtifactsMatchingExpertQuery(
                 $report,
                 $current_user,
                 $limit,
-                $offset
+                $offset,
             );
         }
+        return $this->getArtifactsMatchingDefaultQuery(
+            $report,
+            $current_user,
+            $limit,
+            $offset
+        );
     }
 
     /**
@@ -183,13 +192,18 @@ final readonly class CrossTrackerArtifactReportFactory
     }
 
     /**
+     * @throws FromIsInvalidException
+     * @throws InvalidSelectException
+     * @throws LimitSizeIsExceededException
+     * @throws MissingFromException
+     * @throws OrderByIsInvalidException
      * @throws SearchablesAreInvalidException
      * @throws SearchablesDoNotExistException
+     * @throws SelectLimitExceededException
      * @throws SelectablesAreInvalidException
-     * @throws SyntaxError
      * @throws SelectablesDoNotExistException
-     * @throws FromIsInvalidException
-     * @throws OrderByIsInvalidException
+     * @throws SelectablesMustBeUniqueException
+     * @throws SyntaxError
      */
     private function getArtifactsMatchingExpertQuery(
         CrossTrackerReport $report,
@@ -241,12 +255,16 @@ final readonly class CrossTrackerArtifactReportFactory
 
     /**
      * @param Tracker[] $trackers
-     * @throws SearchablesDoNotExistException
-     * @throws SearchablesAreInvalidException
-     * @throws SelectablesAreInvalidException
-     * @throws SyntaxError
-     * @throws SelectablesDoNotExistException
+     * @throws InvalidSelectException
+     * @throws LimitSizeIsExceededException
      * @throws OrderByIsInvalidException
+     * @throws SearchablesAreInvalidException
+     * @throws SearchablesDoNotExistException
+     * @throws SelectLimitExceededException
+     * @throws SelectablesAreInvalidException
+     * @throws SelectablesDoNotExistException
+     * @throws SelectablesMustBeUniqueException
+     * @throws SyntaxError
      */
     private function getQueryFromReport(
         CrossTrackerReport $report,

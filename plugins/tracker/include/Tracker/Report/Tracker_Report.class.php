@@ -42,6 +42,7 @@ use Tuleap\Tracker\Report\Event\TrackerReportDeleted;
 use Tuleap\Tracker\Report\Event\TrackerReportProcessAdditionalQuery;
 use Tuleap\Tracker\Report\Event\TrackerReportSetToPrivate;
 use Tuleap\Tracker\Report\ExpertModePresenter;
+use Tuleap\Tracker\Report\Query\Advanced\Errors\QueryErrorsTranslator;
 use Tuleap\Tracker\Report\Query\Advanced\ExpertQueryValidator;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Parser;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\SyntaxError;
@@ -1613,17 +1614,8 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
                             Feedback::ERROR,
                             dgettext('tuleap-tracker', 'Error during parsing expert query')
                         );
-                    } catch (LimitSizeIsExceededException $exception) {
-                        $GLOBALS['Response']->addFeedback(
-                            Feedback::ERROR,
-                            dgettext('tuleap-tracker', 'The query is considered too complex to be executed by the server.
-                                Please simplify it (e.g remove comparisons) to continue.')
-                        );
-                    } catch (SyntaxNotSupportedException $e) {
-                        $GLOBALS['Response']->addFeedback(
-                            Feedback::ERROR,
-                            $e->getMessage()
-                        );
+                    } catch (LimitSizeIsExceededException | SyntaxNotSupportedException $exception) {
+                        $GLOBALS['Response']->addFeedback(Feedback::ERROR, QueryErrorsTranslator::translateException($exception));
                     }
                 }
                 $this->display($layout, $request, $current_user);
@@ -1908,6 +1900,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
      * @throws SearchablesDoNotExistException
      * @throws SyntaxError
      * @throws SyntaxNotSupportedException
+     * @throws LimitSizeIsExceededException
      */
     public function validateExpertQuery(): void
     {

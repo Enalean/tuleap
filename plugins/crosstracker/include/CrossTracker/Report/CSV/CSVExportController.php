@@ -42,6 +42,10 @@ use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Request\NotFoundException;
 use Tuleap\REST\Header;
+use Tuleap\Tracker\Report\Query\Advanced\Errors\QueryErrorsTranslator;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidSelectException;
+use Tuleap\Tracker\Report\Query\Advanced\LimitSizeIsExceededException;
+use Tuleap\Tracker\Report\Query\Advanced\MissingFromException;
 use Tuleap\Tracker\Report\Query\Advanced\SearchablesAreInvalidException;
 use Tuleap\Tracker\Report\Query\Advanced\SearchablesDoNotExistException;
 use Tuleap\Tracker\Report\Query\Advanced\SelectablesAreInvalidException;
@@ -111,8 +115,8 @@ class CSVExportController implements DispatchableWithRequest
 
         $report_id = $variables['report_id'];
         try {
-            list($limit, $offset) = $this->getPaginationParameters($request);
-            $representations      = $this->buildRepresentations($current_user, $report_id, $limit, $offset);
+            [$limit, $offset] = $this->getPaginationParameters($request);
+            $representations  = $this->buildRepresentations($current_user, $report_id, $limit, $offset);
             Header::sendPaginationHeaders($limit, $offset, $representations->getTotalSize(), self::MAX_LIMIT);
             header('Content-Type: text/csv; charset=utf-8');
             echo $representations;
@@ -169,8 +173,12 @@ class CSVExportController implements DispatchableWithRequest
             );
         } catch (SearchablesAreInvalidException | SelectablesAreInvalidException $e) {
             throw new BadRequestException($e->getMessage());
-        } catch (SearchablesDoNotExistException | SelectablesDoNotExistException | SelectablesMustBeUniqueException | SelectLimitExceededException $e) {
+        } catch (SearchablesDoNotExistException | SelectablesDoNotExistException $e) {
             throw new BadRequestException($e->getI18NExceptionMessage());
+        } catch (LimitSizeIsExceededException | InvalidSelectException | SelectLimitExceededException | SelectablesMustBeUniqueException | MissingFromException $exception) {
+            throw new BadRequestException(QueryErrorsTranslator::translateException($exception));
+        } catch (\Exception $e) {
+            throw new BadRequestException($e->getMessage());
         }
     }
 

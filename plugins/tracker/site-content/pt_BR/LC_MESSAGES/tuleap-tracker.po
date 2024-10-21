@@ -9,7 +9,14 @@ msgstr ""
 msgid "\"Attachment\" type field cannot be modified during artifact copy."
 msgstr ""
 
+msgid ""
+"\"FROM\" keyword is missing from your query, it is mandatory in expert mode"
+msgstr ""
+
 msgid "\"None\" value cannot be hidden"
+msgstr ""
+
+msgid "\"SELECT\" keyword is not allowed in default mode"
 msgstr ""
 
 msgid "\"duration\" field is empty or invalid"
@@ -3166,9 +3173,8 @@ msgid "The provided file is not a valid file"
 msgstr ""
 
 msgid ""
-"The query is considered too complex to be executed by the server.\n"
-"                                Please simplify it (e.g remove comparisons) "
-"to continue."
+"The query is considered too complex to be executed by the server. Please "
+"simplify it (for example remove comparisons) to continue."
 msgstr ""
 
 msgid ""

@@ -22,20 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Report\Query\Advanced;
 
-use Exception;
-
-final class SelectablesMustBeUniqueException extends Exception
+final class SelectablesMustBeUniqueException extends \Exception
 {
-    private string $i18n_message;
-
-    public function __construct()
-    {
-        parent::__construct('Selection on same field multiple times is not allowed');
-        $this->i18n_message = dgettext('tuleap-tracker', 'Selection on same field multiple times is not allowed');
-    }
-
-    public function getI18NExceptionMessage(): string
-    {
-        return $this->i18n_message;
-    }
 }

@@ -146,6 +146,7 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
 use Tuleap\Tracker\FormElement\Field\ListFields\OpenListValueDao;
 use Tuleap\Tracker\Permission\TrackersPermissionsRetriever;
+use Tuleap\Tracker\Report\Query\Advanced\Errors\QueryErrorsTranslator;
 use Tuleap\Tracker\Report\Query\Advanced\ExpertQueryValidator;
 use Tuleap\Tracker\Report\Query\Advanced\FromIsInvalidException;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Parser;
@@ -163,6 +164,8 @@ use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ListFields\ListFieldCheck
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Text\TextFieldChecker;
 use Tuleap\Tracker\Report\Query\Advanced\LimitSizeIsExceededException;
 use Tuleap\Tracker\Report\Query\Advanced\ListFieldBindValueNormalizer;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidSelectException;
+use Tuleap\Tracker\Report\Query\Advanced\MissingFromException;
 use Tuleap\Tracker\Report\Query\Advanced\OrderByIsInvalidException;
 use Tuleap\Tracker\Report\Query\Advanced\ParserCacheProxy;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\DateTimeValueRounder;
@@ -307,30 +310,27 @@ final class CrossTrackerReportsResource extends AuthenticatedResource
                 assert($artifacts instanceof CrossTrackerReportContentRepresentation);
                 $this->sendPaginationHeaders($limit, $offset, $artifacts->getTotalSize());
                 return $artifacts;
-            } else {
-                assert($artifacts instanceof ArtifactMatchingReportCollection);
-                $representations = (new ArtifactRepresentationFactory())->buildRepresentationsForReport(
-                    $artifacts,
-                    $current_user,
-                    new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash()),
-                );
-
-                $this->sendPaginationHeaders($limit, $offset, $representations->getTotalSize());
-
-                return new LegacyCrossTrackerReportContentRepresentation($representations->getArtifacts());
             }
+
+            assert($artifacts instanceof ArtifactMatchingReportCollection);
+            $representations = (new ArtifactRepresentationFactory())->buildRepresentationsForReport(
+                $artifacts,
+                $current_user,
+                new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash()),
+            );
+
+            $this->sendPaginationHeaders($limit, $offset, $representations->getTotalSize());
+
+            return new LegacyCrossTrackerReportContentRepresentation($representations->getArtifacts());
         } catch (CrossTrackerReportNotFoundException) {
             throw new I18NRestException(404, dgettext('tuleap-crosstracker', 'Report not found'));
         } catch (TrackerNotFoundException | TrackerDuplicateException $exception) {
             throw new I18NRestException(400, $exception->getMessage());
         } catch (SyntaxError $error) {
             throw new RestException(400, '', SyntaxErrorTranslator::fromSyntaxError($error));
-        } catch (LimitSizeIsExceededException) {
-            throw new I18NRestException(400, dgettext(
-                'tuleap-tracker',
-                'The query is considered too complex to be executed by the server. Please simplify it (e.g remove comparisons) to continue.'
-            ));
-        } catch (SearchablesDoNotExistException | SelectablesDoNotExistException | SelectablesMustBeUniqueException | SelectLimitExceededException $exception) {
+        } catch (LimitSizeIsExceededException | InvalidSelectException | SelectablesMustBeUniqueException | SelectLimitExceededException | MissingFromException $exception) {
+            throw new I18NRestException(400, QueryErrorsTranslator::translateException($exception));
+        } catch (SearchablesDoNotExistException | SelectablesDoNotExistException $exception) {
             throw new I18NRestException(400, $exception->getI18NExceptionMessage());
         } catch (SearchablesAreInvalidException | SelectablesAreInvalidException $exception) {
             throw new I18NRestException(400, $exception->getMessage());
@@ -441,12 +441,10 @@ final class CrossTrackerReportsResource extends AuthenticatedResource
             throw new RestException(400, $exception->getMessage());
         } catch (SyntaxError $error) {
             throw new RestException(400, '', SyntaxErrorTranslator::fromSyntaxError($error));
-        } catch (FromIsInvalidException $exception) {
-            throw new I18NRestException(400, $exception->getI18NExceptionMessage());
         } catch (OrderByIsInvalidException $exception) {
             throw new I18NRestException(400, $exception->getI18NExceptionMessage());
-        } catch (LimitSizeIsExceededException $exception) {
-            throw new RestException(400, $exception->getMessage());
+        } catch (LimitSizeIsExceededException | SelectLimitExceededException | InvalidSelectException | SelectablesMustBeUniqueException $exception) {
+            throw new I18NRestException(400, QueryErrorsTranslator::translateException($exception));
         } catch (Exception $exception) {
             throw new RestException(400, $exception->getMessage());
         }

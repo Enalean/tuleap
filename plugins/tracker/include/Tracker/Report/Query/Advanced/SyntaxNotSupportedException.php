@@ -22,17 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Report\Query\Advanced;
 
-use Exception;
-
-final class SyntaxNotSupportedException extends Exception
+final class SyntaxNotSupportedException extends \Exception
 {
-    public function __construct()
-    {
-        parent::__construct(
-            dgettext(
-                'tuleap-tracker',
-                "Usage of 'SELECT', 'FROM', 'ORDER BY' and 'WHERE' is not allowed in the Tracker report context"
-            )
-        );
-    }
 }

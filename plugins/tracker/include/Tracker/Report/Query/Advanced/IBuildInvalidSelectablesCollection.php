@@ -28,6 +28,8 @@ interface IBuildInvalidSelectablesCollection
 {
     /**
      * @param Selectable[] $selectables
+     * @throws SelectLimitExceededException
+     * @throws SelectablesMustBeUniqueException
      */
     public function buildCollectionOfInvalidSelectables(array $selectables): InvalidSelectablesCollection;
 }

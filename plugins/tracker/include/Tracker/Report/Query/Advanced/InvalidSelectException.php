@@ -22,18 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Report\Query\Advanced;
 
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\pegLocation;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\pegPosition;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\SyntaxError;
-
-final class EmptySyntaxError extends SyntaxError
+final class InvalidSelectException extends \Exception
 {
-    public function __construct()
-    {
-        parent::__construct('', [], '', 0, 0, 0, new pegLocation(
-            '',
-            new pegPosition(0, 0, 0),
-            new pegPosition(0, 0, 0),
-        ));
-    }
 }

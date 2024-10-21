@@ -2,7 +2,7 @@
   "name": "tuleap/plugin-tracker",
   "autoload": {
     "psr-4": {
-      "Tuleap\\Tracker\\": ["include/", "include/Tracker/", "grammar/backend-assets/"]
+      "Tuleap\\Tracker\\": ["include/", "include/Tracker/", "grammar/backend-assets/Tracker/"]
     },
     "classmap": ["include/"],
     "files": [

@@ -54,6 +54,9 @@ final class SizeValidatorVisitor implements LogicalVisitor, TermVisitor
         $this->limit = $limit;
     }
 
+    /**
+     * @throws LimitSizeIsExceededException
+     */
     public function checkSizeOfTree(Logical $parsed_query): void
     {
         $parsed_query->acceptLogicalVisitor($this, new SizeValidatorParameters(0));

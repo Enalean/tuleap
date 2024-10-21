@@ -18,10 +18,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Tracker\Report\Query\Advanced;
 
-use Exception;
-
-final class LimitSizeIsExceededException extends Exception
+final class LimitSizeIsExceededException extends \Exception
 {
 }

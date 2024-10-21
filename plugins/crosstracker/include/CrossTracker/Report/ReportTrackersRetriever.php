@@ -41,6 +41,7 @@ use Tuleap\Tracker\Permission\TrackerPermissionType;
 use Tuleap\Tracker\Report\Query\Advanced\ExpertQueryValidator;
 use Tuleap\Tracker\Report\Query\Advanced\FromIsInvalidException;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\SyntaxError;
+use Tuleap\Tracker\Report\Query\Advanced\MissingFromException;
 use Tuleap\Tracker\Report\Query\Advanced\ParserCacheProxy;
 
 final readonly class ReportTrackersRetriever implements RetrieveReportTrackers
@@ -59,10 +60,6 @@ final readonly class ReportTrackersRetriever implements RetrieveReportTrackers
     ) {
     }
 
-    /**
-     * @throws FromIsInvalidException
-     * @throws SyntaxError
-     */
     public function getReportTrackers(CrossTrackerReport $report, PFUser $current_user, int $limit): array
     {
         return $report->isExpert() ? $this->retrieveForExpertReport($report, $current_user, $limit) : $report->getTrackers();
@@ -72,13 +69,14 @@ final readonly class ReportTrackersRetriever implements RetrieveReportTrackers
      * @return Tracker[]
      * @throws SyntaxError
      * @throws FromIsInvalidException
+     * @throws MissingFromException
      */
     private function retrieveForExpertReport(CrossTrackerReport $report, PFUser $current_user, int $limit): array
     {
-        $expert_query = $report->getExpertQuery();
+        $query = $this->parser->parse($report->getExpertQuery());
+
         $this->expert_query_validator->validateFromQuery(
-            $expert_query,
-            $report->isExpert(),
+            $query,
             new InvalidFromCollectionBuilder(
                 new InvalidFromTrackerCollectorVisitor($this->in_project_checker),
                 new InvalidFromProjectCollectorVisitor(
@@ -92,7 +90,6 @@ final readonly class ReportTrackersRetriever implements RetrieveReportTrackers
             $current_user,
         );
 
-        $query = $this->parser->parse($expert_query);
         assert($query->getFrom() !== null); // From part is checked for expert query, so it cannot be null
         $additional_from = $this->from_builder->buildFromWhere($query->getFrom(), $report->getId(), $current_user);
         return $this->trackers_permissions->retrieveUserPermissionOnTrackers(
@@ -115,7 +112,7 @@ final readonly class ReportTrackersRetriever implements RetrieveReportTrackers
         foreach ($trackers_ids as $id) {
             $tracker = $this->tracker_factory->getTrackerById($id);
             if ($tracker === null) {
-                throw new LogicException("Tracker #$id found in db but unable to found it again");
+                throw new LogicException("Tracker #$id found in db but unable to find it again");
             }
             $trackers[] = $tracker;
         }

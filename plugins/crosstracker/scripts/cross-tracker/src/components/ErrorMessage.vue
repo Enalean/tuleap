@@ -100,31 +100,35 @@ const isSyntaxErrorDetails = (
 ): record is SyntaxErrorDetails =>
     typeof record === "object" && "line" in record && "column" in record;
 
-const code_to_show = computed<Option<string>>(() =>
-    props.fault.andThen((fault) => {
-        if (
-            ("isArtifactsRetrieval" in fault &&
-                fault.isArtifactsRetrieval() &&
-                "getDetails" in fault) === false
-        ) {
-            return Option.nothing<string>();
-        }
-        const details = fault.getDetails();
-        if (!isSyntaxErrorDetails(details)) {
-            return Option.nothing<string>();
-        }
-        const query = props.writing_cross_tracker_report.expert_query;
-        const lines = query.split("\n");
-        if (lines.length < details.line) {
-            return Option.nothing<string>();
-        }
-        const line = lines[details.line - 1];
-        if (line.length < details.column) {
-            return Option.nothing<string>();
-        }
-        const spaces = " ".repeat(details.column - 1);
-        return Option.fromValue(`${line}\n${spaces}^`);
-    }),
+const code_to_show = computed(
+    (): Option<string> =>
+        props.fault.andThen((fault) => {
+            if (
+                ("isArtifactsRetrieval" in fault &&
+                    fault.isArtifactsRetrieval() &&
+                    "getDetails" in fault) === false
+            ) {
+                return Option.nothing();
+            }
+            const details = fault.getDetails();
+            if (!isSyntaxErrorDetails(details)) {
+                return Option.nothing();
+            }
+            if (details.line <= 0) {
+                return Option.nothing();
+            }
+            const query = props.writing_cross_tracker_report.expert_query;
+            const lines = query.split("\n");
+            if (lines.length < details.line) {
+                return Option.nothing();
+            }
+            const line = lines[details.line - 1];
+            if (line.length < details.column) {
+                return Option.nothing();
+            }
+            const spaces = " ".repeat(details.column - 1);
+            return Option.fromValue(`${line}\n${spaces}^`);
+        }),
 );
 </script>
 
