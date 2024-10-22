@@ -21,15 +21,17 @@ import type { Meta, StoryObj } from "@storybook/web-components";
 import type { TemplateResult } from "lit";
 import { html } from "lit";
 import "@tuleap/tlp-button";
+import "./switch.scss";
 
 type SwitchProps = {
-    in_form: boolean;
+    label_placement: "none" | "top" | "right";
     form_label: string;
     size: "default" | "large" | "mini";
     disabled: boolean;
     state: "checked" | "unchecked" | "loading";
 };
 
+const LABEL_PLACEMENTS = ["none", "top", "right"];
 const SWITCH_SIZES = ["default", "large", "mini"];
 const SWITCH_STATES = ["checked", "unchecked", "loading"];
 
@@ -52,7 +54,7 @@ function getButtonClasses(args: SwitchProps): string {
 const isChecked = (args: SwitchProps): boolean => args.state === "checked";
 
 function getTemplate(args: SwitchProps): TemplateResult {
-    if (args.in_form) {
+    if (args.label_placement === "top") {
         //prettier-ignore
         return html`
 <div class="tlp-form-element">
@@ -62,6 +64,18 @@ function getTemplate(args: SwitchProps): TemplateResult {
         <label for="toggle" class=${getButtonClasses(args)}></label>
     </div>
 </div>`;
+    }
+    if (args.label_placement === "right") {
+        //prettier-ignore
+        return html`
+<div class="switch-wrapper">
+    <div class=${getSizeClasses(args)}>
+        <input type="checkbox" id="toggle" class="tlp-switch-checkbox" ?disabled=${args.disabled} ?checked=${isChecked(args)}>
+        <label for="toggle" class=${getButtonClasses(args)}></label>
+    </div>
+    <label class="tlp-label switch-label" for="toggle">${args.form_label}</label>
+</div>
+        `;
     }
     //prettier-ignore
     return html`
@@ -77,23 +91,23 @@ const meta: Meta<SwitchProps> = {
         return getTemplate(args);
     },
     args: {
-        in_form: false,
+        label_placement: "none",
         form_label: "Activate advanced mode",
         size: "default",
         disabled: false,
         state: "checked",
     },
     argTypes: {
-        in_form: {
-            name: "In form",
-            description: "Put the switch in a form.",
-            table: {
-                type: { summary: undefined },
-            },
+        label_placement: {
+            name: "Label Placement",
+            description: `Where the label of the switch should be. "none" removes it`,
+            control: "select",
+            options: LABEL_PLACEMENTS,
+            table: { type: { summary: undefined } },
         },
         form_label: {
             name: "Form label",
-            if: { arg: "in_form" },
+            if: { arg: "label_placement", neq: "none" },
         },
         size: {
             name: "Size",
