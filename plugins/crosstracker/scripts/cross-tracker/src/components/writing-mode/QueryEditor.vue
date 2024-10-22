@@ -75,14 +75,14 @@ import { useGettext } from "vue3-gettext";
 import {
     TQL_cross_tracker_autocomplete_keywords,
     TQL_cross_tracker_mode_definition,
-} from "./tql-configuration";
+} from "../../helpers/tql-configuration";
 import type { TQLCodeMirrorEditor } from "@tuleap/plugin-tracker-tql-codemirror";
 import {
     codeMirrorify,
     initializeTQLMode,
     insertAllowedFieldInCodeMirror,
 } from "@tuleap/plugin-tracker-tql-codemirror";
-import type WritingCrossTrackerReport from "./writing-cross-tracker-report";
+import type { WritingCrossTrackerReport } from "../../domain/WritingCrossTrackerReport";
 
 const { $gettext } = useGettext();
 

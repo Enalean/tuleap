@@ -22,13 +22,13 @@ import { createApp } from "vue";
 import { getPOFileFromLocaleWithoutExtension, initVueGettext } from "@tuleap/vue3-gettext-init";
 import { createGettext } from "vue3-gettext";
 import { getLocaleOrThrow, getTimezoneOrThrow, IntlFormatter } from "@tuleap/date-helper";
-import ReadingCrossTrackerReport from "./reading-mode/reading-cross-tracker-report";
-import WritingCrossTrackerReport from "./writing-mode/writing-cross-tracker-report";
-import BackendCrossTrackerReport from "./backend-cross-tracker-report";
+import { ReadingCrossTrackerReport } from "./domain/ReadingCrossTrackerReport";
+import { WritingCrossTrackerReport } from "./domain/WritingCrossTrackerReport";
+import { BackendCrossTrackerReport } from "./domain/BackendCrossTrackerReport";
 import CrossTrackerWidget from "./CrossTrackerWidget.vue";
 import type { RetrieveProjects } from "./domain/RetrieveProjects";
 import { getSortedProjectsIAmMemberOf } from "./api/rest-querier";
-import { ProjectsCache } from "./writing-mode/ProjectsCache";
+import { ProjectsCache } from "./api/ProjectsCache";
 import {
     DATE_FORMATTER,
     DATE_TIME_FORMATTER,

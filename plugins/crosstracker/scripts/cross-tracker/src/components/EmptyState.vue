@@ -35,7 +35,7 @@
 
 <script setup lang="ts">
 import { useGettext } from "vue3-gettext";
-import type WritingCrossTrackerReport from "../writing-mode/writing-cross-tracker-report";
+import type { WritingCrossTrackerReport } from "../domain/WritingCrossTrackerReport";
 import EmptyStateTumbleweed from "./EmptyStateTumbleweed.vue";
 
 const props = defineProps<{

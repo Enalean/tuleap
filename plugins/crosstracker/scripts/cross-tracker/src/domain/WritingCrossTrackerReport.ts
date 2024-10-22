@@ -17,13 +17,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { TrackerAndProject } from "./type";
-import type ReadingCrossTrackerReport from "./reading-mode/reading-cross-tracker-report";
+import type { Result } from "neverthrow";
+import { err, ok } from "neverthrow";
+import type { Fault } from "@tuleap/fault";
+import type { ProjectInfo, TrackerAndProject, TrackerInfo } from "../type";
+import type { ReadingCrossTrackerReport } from "./ReadingCrossTrackerReport";
+import { TooManyTrackersSelectedFault } from "./TooManyTrackersSelectedFault";
 
-export default class BackendCrossTrackerReport {
+export class WritingCrossTrackerReport {
+    trackers: Map<number, TrackerAndProject>;
     expert_query: string;
     expert_mode: boolean;
-    trackers: Map<number, TrackerAndProject>;
 
     constructor() {
         this.trackers = new Map();
@@ -31,17 +35,18 @@ export default class BackendCrossTrackerReport {
         this.expert_mode = false;
     }
 
-    init(
-        trackers: ReadonlyArray<TrackerAndProject>,
-        expert_query: string,
-        expert_mode: boolean,
-    ): void {
-        this.trackers.clear();
-        for (const tracker_with_project of trackers) {
-            this.trackers.set(tracker_with_project.tracker.id, tracker_with_project);
+    addTracker(project: ProjectInfo, tracker: TrackerInfo): Result<null, Fault> {
+        if (this.trackers.size === 25) {
+            return err(TooManyTrackersSelectedFault());
         }
-        this.expert_query = expert_query;
-        this.expert_mode = expert_mode;
+
+        const tracker_and_project: TrackerAndProject = { project, tracker };
+        this.trackers.set(tracker.id, tracker_and_project);
+        return ok(null);
+    }
+
+    removeTracker(tracker_id: number): void {
+        this.trackers.delete(tracker_id);
     }
 
     duplicateFromReport(report: ReadingCrossTrackerReport): void {
@@ -54,7 +59,15 @@ export default class BackendCrossTrackerReport {
         return Array.from(this.trackers.keys());
     }
 
-    getExpertQuery(): string {
-        return this.expert_query;
+    getTrackers(): ReadonlyArray<TrackerAndProject> {
+        return Array.from(this.trackers.values());
+    }
+
+    setExpertQuery(expert_query: string): void {
+        this.expert_query = expert_query;
+    }
+
+    toggleExpertMode(): void {
+        this.expert_mode = !this.expert_mode;
     }
 }

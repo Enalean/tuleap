@@ -24,14 +24,14 @@ import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import { errAsync, okAsync } from "neverthrow";
 import { Fault } from "@tuleap/fault";
-import { getGlobalTestOptions } from "../helpers/global-options-for-tests";
+import { getGlobalTestOptions } from "../../helpers/global-options-for-tests";
 import TrackerSelection from "./TrackerSelection.vue";
-import * as rest_querier from "../api/rest-querier";
-import type { ProjectInfo, SelectedTracker, TrackerInfo } from "../type";
-import type { RetrieveProjects } from "../domain/RetrieveProjects";
-import { RetrieveProjectsStub } from "../../tests/stubs/RetrieveProjectsStub";
-import { ProjectInfoStub } from "../../tests/stubs/ProjectInfoStub";
-import { NOTIFY_FAULT, RETRIEVE_PROJECTS } from "../injection-symbols";
+import * as rest_querier from "../../api/rest-querier";
+import type { ProjectInfo, SelectedTracker, TrackerInfo } from "../../type";
+import type { RetrieveProjects } from "../../domain/RetrieveProjects";
+import { RetrieveProjectsStub } from "../../../tests/stubs/RetrieveProjectsStub";
+import { ProjectInfoStub } from "../../../tests/stubs/ProjectInfoStub";
+import { NOTIFY_FAULT, RETRIEVE_PROJECTS } from "../../injection-symbols";
 
 vi.useFakeTimers();
 

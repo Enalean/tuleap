@@ -96,12 +96,12 @@
 import { computed, onMounted, ref, watch } from "vue";
 import { useGettext } from "vue3-gettext";
 import { strictInject } from "@tuleap/vue-strict-inject";
-import { getTrackersOfProject } from "../api/rest-querier";
-import type { ProjectInfo, SelectedTracker, TrackerInfo } from "../type";
-import { NOTIFY_FAULT, RETRIEVE_PROJECTS } from "../injection-symbols";
-import { ProjectIdentifier } from "../domain/ProjectIdentifier";
-import { ProjectsRetrievalFault } from "../domain/ProjectsRetrievalFault";
-import { TrackersRetrievalFault } from "../domain/TrackersRetrievalFault";
+import { getTrackersOfProject } from "../../api/rest-querier";
+import type { ProjectInfo, SelectedTracker, TrackerInfo } from "../../type";
+import { NOTIFY_FAULT, RETRIEVE_PROJECTS } from "../../injection-symbols";
+import { ProjectIdentifier } from "../../domain/ProjectIdentifier";
+import { ProjectsRetrievalFault } from "../../domain/ProjectsRetrievalFault";
+import { TrackersRetrievalFault } from "../../domain/TrackersRetrievalFault";
 
 type TrackerSelectOption = TrackerInfo & {
     readonly disabled: boolean;

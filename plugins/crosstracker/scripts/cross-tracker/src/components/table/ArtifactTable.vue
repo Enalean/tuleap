@@ -79,7 +79,7 @@ import type { ResultAsync } from "neverthrow";
 import ArtifactTableRow from "./ArtifactTableRow.vue";
 import ExportButton from "../ExportCSVButton.vue";
 import { getQueryResult, getReportContent } from "../../api/rest-querier";
-import type WritingCrossTrackerReport from "../../writing-mode/writing-cross-tracker-report";
+import type { WritingCrossTrackerReport } from "../../domain/WritingCrossTrackerReport";
 import type { Artifact, ArtifactsCollection } from "../../type";
 import {
     DATE_FORMATTER,

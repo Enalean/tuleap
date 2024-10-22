@@ -60,7 +60,7 @@
 import { computed, onMounted, ref, watch } from "vue";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import { NOTIFY_FAULT, REPORT_STATE, RETRIEVE_ARTIFACTS_TABLE } from "../../injection-symbols";
-import type WritingCrossTrackerReport from "../../writing-mode/writing-cross-tracker-report";
+import type { WritingCrossTrackerReport } from "../../domain/WritingCrossTrackerReport";
 import type { ArtifactsTable } from "../../domain/ArtifactsTable";
 import type { ResultAsync } from "neverthrow";
 import type { Fault } from "@tuleap/fault";

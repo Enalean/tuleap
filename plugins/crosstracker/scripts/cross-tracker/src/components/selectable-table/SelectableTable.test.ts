@@ -27,7 +27,7 @@ import { en_US_LOCALE } from "@tuleap/core-constants";
 import { nextTick, ref } from "vue";
 import SelectableTable from "./SelectableTable.vue";
 import { getGlobalTestOptions } from "../../helpers/global-options-for-tests";
-import WritingCrossTrackerReport from "../../writing-mode/writing-cross-tracker-report";
+import { WritingCrossTrackerReport } from "../../domain/WritingCrossTrackerReport";
 import { ProjectInfoStub } from "../../../tests/stubs/ProjectInfoStub";
 import { TrackerInfoStub } from "../../../tests/stubs/TrackerInfoStub";
 import {

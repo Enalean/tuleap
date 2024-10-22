@@ -46,7 +46,7 @@
 </template>
 <script setup lang="ts">
 import { computed } from "vue";
-import type ReadingCrossTrackerReport from "./reading-cross-tracker-report";
+import type { ReadingCrossTrackerReport } from "../../domain/ReadingCrossTrackerReport";
 
 interface TrackerWithProject {
     readonly id: number;
