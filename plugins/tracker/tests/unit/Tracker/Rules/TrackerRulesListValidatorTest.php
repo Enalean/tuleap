@@ -115,7 +115,7 @@ final class TrackerRulesListValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->source_field->shouldReceive('setHasErrors')->withArgs([true]);
         $this->target_field->shouldReceive('setHasErrors')->withArgs([true]);
 
-        $this->tracker_rules_list_validator = new TrackerRulesListValidator($this->formelement_factory);
+        $this->tracker_rules_list_validator = new TrackerRulesListValidator($this->formelement_factory, new \Psr\Log\NullLogger());
 
         // Fields:
         // 101(A1, A2)

@@ -24,20 +24,15 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Rule;
 
 use Feedback;
+use Psr\Log\LoggerInterface;
 use Tracker_FormElement_Field;
 use Tracker_FormElementFactory;
 use Tracker_Rule_Date;
 
 class TrackerRulesDateValidator
 {
-    /**
-     * Tracker_FormElementFactory
-     */
-    private $form_element_factory;
-
-    public function __construct(Tracker_FormElementFactory $form_element_factory)
+    public function __construct(private readonly Tracker_FormElementFactory $form_element_factory, private readonly LoggerInterface $logger)
     {
-        $this->form_element_factory = $form_element_factory;
     }
 
     public function validateDateRules(array $value_field_list, array $rules): bool
@@ -50,9 +45,9 @@ class TrackerRulesDateValidator
             if (! $this->validateDateRuleOnSubmittedFields($rule, $value_field_list)) {
                 $source_field = $this->getFieldById($rule->getSourceFieldId());
                 $target_field = $this->getFieldById($rule->getTargetFieldId());
-                $feedback     = sprintf(dgettext('tuleap-tracker', 'Error on the date value : %1$s must be %2$s to %3$s.'), $source_field->getLabel(), $rule->getComparator(), $target_field->getLabel());
 
-                $GLOBALS['Response']->addFeedback('error', $feedback);
+                $this->logger->debug('Error on the date value : ' . $source_field->getLabel() . ' must be ' . $rule->getComparator() . ' to ' . $target_field->getLabel());
+                $GLOBALS['Response']->addFeedback(Feedback::ERROR, sprintf(dgettext('tuleap-tracker', 'Error on the date value : %1$s must be %2$s to %3$s.'), $source_field->getLabel(), $rule->getComparator(), $target_field->getLabel()));
 
                 $source_field->setHasErrors(true);
                 $target_field->setHasErrors(true);

@@ -450,9 +450,10 @@ class WorkflowFactory implements RetrieveWorkflow // phpcs:ignore PSR1.Classes.C
             $tracker,
             $this->formelement_factory,
             $this->read_only_dao,
-            new TrackerRulesListValidator($this->formelement_factory),
-            new TrackerRulesDateValidator($this->formelement_factory),
-            $this->tracker_factory
+            new TrackerRulesListValidator($this->formelement_factory, $this->logger),
+            new TrackerRulesDateValidator($this->formelement_factory, $this->logger),
+            $this->tracker_factory,
+            $this->logger
         );
     }
 

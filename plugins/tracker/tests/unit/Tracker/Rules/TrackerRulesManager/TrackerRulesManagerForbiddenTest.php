@@ -88,6 +88,7 @@ class TrackerRulesManagerForbiddenTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->tracker_rules_list_validator,
             $this->tracker_rules_date_validator,
             $this->tracker_factory,
+            new \Psr\Log\NullLogger(),
         ])->makePartial();
 
         $this->frozen_fields_dao->shouldReceive('isFieldUsedInPostAction')->withArgs([1])->andReturn(false);

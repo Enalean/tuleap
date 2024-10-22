@@ -570,13 +570,15 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
         }
 
         $tracker_formelement_factory = Tracker_FormElementFactory::instance();
+        $logger                      = new \Tuleap\Tracker\Workflow\WorkflowBackendLogger(BackendLogger::getDefaultLogger(), ForgeConfig::get('sys_logger_level'));
         $tracker_rules_manager       = new Tracker_RulesManager(
             $tracker,
             $tracker_formelement_factory,
             new FrozenFieldsDao(),
-            new TrackerRulesListValidator($tracker_formelement_factory),
-            new TrackerRulesDateValidator($tracker_formelement_factory),
-            TrackerFactory::instance()
+            new TrackerRulesListValidator($tracker_formelement_factory, $logger),
+            new TrackerRulesDateValidator($tracker_formelement_factory, $logger),
+            TrackerFactory::instance(),
+            $logger
         );
         return $tracker_rules_manager->getFieldTargets($this);
     }
@@ -980,13 +982,15 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
         }
 
         $tracker_formelement_factory = Tracker_FormElementFactory::instance();
+        $logger                      = new \Tuleap\Tracker\Workflow\WorkflowBackendLogger(BackendLogger::getDefaultLogger(), ForgeConfig::get('sys_logger_level'));
         $tracker_rules_manager       = new Tracker_RulesManager(
             $tracker,
             $tracker_formelement_factory,
             new FrozenFieldsDao(),
-            new TrackerRulesListValidator($tracker_formelement_factory),
-            new TrackerRulesDateValidator($tracker_formelement_factory),
-            TrackerFactory::instance()
+            new TrackerRulesListValidator($tracker_formelement_factory, $logger),
+            new TrackerRulesDateValidator($tracker_formelement_factory, $logger),
+            TrackerFactory::instance(),
+            $logger
         );
         return $tracker_rules_manager->isUsedInFieldDependency($this);
     }
