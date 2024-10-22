@@ -80,6 +80,7 @@ class Tracker_RulesManager
         TrackerRulesListValidator $tracker_rules_list_validator,
         TrackerRulesDateValidator $tracker_rules_date_validator,
         TrackerFactory $tracker_factory,
+        private readonly \Psr\Log\LoggerInterface $logger,
     ) {
         $this->tracker                      = $tracker;
         $this->form_element_factory         = $form_element_factory;
@@ -214,6 +215,8 @@ class Tracker_RulesManager
             ->validateDateRules($value_field_list, $this->getAllDateRulesByTrackerId($tracker_id));
 
         if (! $valid_list_rules || ! $valid_date_rules) {
+            $this->logger->debug("List rules for tracker #$tracker_id are " . var_export($valid_list_rules, true));
+            $this->logger->debug("Date rules for tracker #$tracker_id are " . var_export($valid_date_rules, true));
             return false;
         }
 

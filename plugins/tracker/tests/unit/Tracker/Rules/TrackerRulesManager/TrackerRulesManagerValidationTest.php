@@ -89,6 +89,7 @@ class TrackerRulesManagerValidationTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->tracker_rules_list_validator,
             $this->tracker_rules_date_validator,
             $this->tracker_factory,
+            new \Psr\Log\NullLogger(),
         ])->makePartial();
 
         $tracker_rule_date  = \Mockery::mock(\Tracker_Rule_Date::class);

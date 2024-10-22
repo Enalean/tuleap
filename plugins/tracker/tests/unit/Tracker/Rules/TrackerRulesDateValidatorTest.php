@@ -46,7 +46,7 @@ class TrackerRulesDateValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $GLOBALS['Response'] = Mockery::mock(BaseLayout::class);
 
         $this->formelement_factory          = \Mockery::mock(\Tracker_FormElementFactory::class);
-        $this->tracker_rules_date_validator = new TrackerRulesDateValidator($this->formelement_factory);
+        $this->tracker_rules_date_validator = new TrackerRulesDateValidator($this->formelement_factory, new \Psr\Log\NullLogger());
     }
 
     public function tearDown(): void

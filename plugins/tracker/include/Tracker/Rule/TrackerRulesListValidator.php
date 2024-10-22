@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Rule;
 
 use Feedback;
+use Psr\Log\LoggerInterface;
 use Tracker;
 use Tracker_FormElement_Field_List;
 use Tracker_FormElementFactory;
@@ -30,14 +31,8 @@ use Tracker_Rule_List;
 
 class TrackerRulesListValidator
 {
-    /**
-     * Tracker_FormElementFactory
-     */
-    private $form_element_factory;
-
-    public function __construct(Tracker_FormElementFactory $form_element_factory)
+    public function __construct(private readonly Tracker_FormElementFactory $form_element_factory, private readonly LoggerInterface $logger)
     {
-        $this->form_element_factory = $form_element_factory;
     }
 
     public function validateListRules(Tracker $tracker, array $value_field_list, array $list_rules): bool
@@ -207,13 +202,9 @@ class TrackerRulesListValidator
 
     private function sendFeedbackError(string $target_label, string $source_label, array $pb_source_values, array $pb_target_values): void
     {
-        $GLOBALS['Response']->addFeedback(
-            Feedback::ERROR,
-            $source_label .
-            '(' . implode(', ', $pb_source_values) . ') -> '
-            . $target_label
-            . '(' . implode(', ', $pb_target_values) . ')'
-        );
+        $message = $source_label .  '(' . implode(', ', $pb_source_values) . ') -> ' . $target_label . '(' . implode(', ', $pb_target_values) . ')';
+        $this->logger->debug($message);
+        $GLOBALS['Response']->addFeedback(Feedback::ERROR, $message);
     }
 
     private function getSelectedValuesForField(Tracker_FormElement_Field_List $field, array $value_field_list): array

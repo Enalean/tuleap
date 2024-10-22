@@ -53,7 +53,8 @@ XML;
             $frozen_dao,
             $tracker_rules_list_validator,
             $tracker_rules_date_validator,
-            $tracker_factory
+            $tracker_factory,
+            new \Psr\Log\NullLogger()
         );
 
         $tracker->shouldReceive('getId')->andReturn(45);
