@@ -47,7 +47,6 @@ describe("Artidoc", () => {
             },
         );
 
-        cy.projectMemberSession();
         cy.log("Create document");
         cy.projectMemberSession();
         cy.visitProjectService(project_name, "Documents");
@@ -78,48 +77,55 @@ describe("Artidoc", () => {
 
                 cy.projectMemberSession();
                 cy.visit(url);
-                cy.log("User with write rights should see a form to enter a new section");
-                createSection(requirements[0]);
+            });
 
-                cy.log("User should be able to add a section at the beginning");
-                cy.get("[data-test=artidoc-add-new-section-trigger]").first().click();
-                cy.get("[data-test=add-new-section]").first().click();
-                createSection(requirements[1]);
+        cy.log("User with write rights should see a form to enter a new section");
+        createSection(requirements[0]);
 
-                cy.log("User should be able to add a section at the end");
-                cy.get("[data-test=artidoc-add-new-section-trigger]").last().click();
-                cy.get("[data-test=add-new-section]").last().click();
-                createSection(requirements[2]);
+        cy.log("User should be able to add a section at the beginning");
+        cy.get("[data-test=artidoc-add-new-section-trigger]").first().click();
+        cy.get("[data-test=add-new-section]").first().click();
+        createSection(requirements[1]);
 
-                cy.log("Check that the document has now section in given order");
-                cy.reload();
-                cy.contains("This document is empty").should("not.exist");
-                cy.get("[data-test=document-content]").within(() => {
-                    cy.contains("li:first-child", "Performance Requirement");
-                    cy.contains("li", "Functional Requirement");
-                    cy.contains("li:last-child", "Security Requirement").within(() => {
-                        cy.intercept("*/artifacts/*").as("updateArtifact");
-                        cy.intercept("*/artidoc_sections/*").as("refreshSection");
-                        cy.get("[data-test=artidoc-dropdown-trigger]").click();
-                        cy.get("[data-test=edit]").click();
-                    });
-                    cy.get("[data-test=title-input]").type(
-                        "{selectAll}Security Requirement (edited)",
-                    );
+        cy.log("User should be able to add a section at the end");
+        cy.get("[data-test=artidoc-add-new-section-trigger]").last().click();
+        cy.get("[data-test=add-new-section]").last().click();
+        createSection(requirements[2]);
 
-                    pasteImageInCkeditorArea();
+        cy.log("Check that the document has now section in given order");
+        cy.reload();
+        cy.contains("This document is empty").should("not.exist");
+        cy.get("[data-test=document-content]").within(() => {
+            cy.contains("li:first-child", "Performance Requirement");
+            cy.contains("li", "Functional Requirement");
+            cy.contains("li:last-child", "Security Requirement").within(() => {
+                cy.intercept("*/artifacts/*").as("updateArtifact");
+                cy.intercept("*/artidoc_sections/*").as("refreshSection");
+                cy.get("[data-test=artidoc-dropdown-trigger]").click();
 
-                    cy.contains("button", "Save").click();
-                    cy.wait(["@updateArtifact", "@refreshSection"]);
-                    cy.contains("h1", "Security Requirement (edited)");
-
-                    // ignore rule for image stored in ckeditor
-                    // eslint-disable-next-line cypress/require-data-selectors
-                    cy.get("img")
-                        .should("have.attr", "src")
-                        .should("include", "/plugins/tracker/attachments/");
+                // dropdown menu is now attached to the document.body
+                // see git #tuleap/stable/002cb45ebe1d2abb3520efa3d31a3c397bfaacdc
+                // therefore we must find it outside the .within context(s)
+                cy.document().then((doc) => {
+                    cy.get("[data-test=edit]", { withinSubject: doc.body })
+                        .filter(":visible")
+                        .click();
                 });
             });
+            cy.get("[data-test=title-input]").type("{selectAll}Security Requirement (edited)");
+
+            pasteImageInCkeditorArea();
+
+            cy.contains("button", "Save").click();
+            cy.wait(["@updateArtifact", "@refreshSection"]);
+            cy.contains("h1", "Security Requirement (edited)");
+
+            // ignore rule for image stored in ckeditor
+            // eslint-disable-next-line cypress/require-data-selectors
+            cy.get("img")
+                .should("have.attr", "src")
+                .should("include", "/plugins/tracker/attachments/");
+        });
     });
 });
 
