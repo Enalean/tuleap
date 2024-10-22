@@ -20,6 +20,7 @@
 
 import { define, html, type UpdateFunction } from "hybrids";
 import type { ToolbarBus, ListState } from "@tuleap/prose-mirror-editor";
+import type { ToolbarButtonWithState } from "../../helpers/class-getter";
 import { getClass } from "../../helpers/class-getter";
 import type { GetText } from "@tuleap/gettext";
 
@@ -30,10 +31,7 @@ export type OrderedListElement = {
     gettext_provider: GetText;
 };
 
-type InternalOrderedListElement = Readonly<OrderedListElement> & {
-    is_activated: boolean;
-    is_disabled: boolean;
-};
+type InternalOrderedListElement = Readonly<OrderedListElement> & ToolbarButtonWithState;
 
 export type HostElement = InternalOrderedListElement & HTMLElement;
 
@@ -44,7 +42,7 @@ export const renderOrderedListItem = (
     host: InternalOrderedListElement,
     gettext_provider: GetText,
 ): UpdateFunction<InternalOrderedListElement> => {
-    const classes = getClass(host.is_activated);
+    const classes = getClass(host);
 
     return html`<button
         class="${classes}"

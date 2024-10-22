@@ -27,7 +27,7 @@ export const renderLinkButtonElement = (
     host: InternalLinkButtonElement,
     gettext_provider: GetText,
 ): UpdateFunction<InternalLinkButtonElement> => {
-    const button_class = getClass(host.is_activated);
+    const button_class = getClass(host);
 
     return html`
         <button

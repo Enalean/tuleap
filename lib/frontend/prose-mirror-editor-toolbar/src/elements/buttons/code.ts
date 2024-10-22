@@ -20,6 +20,7 @@
 
 import { define, html, type UpdateFunction } from "hybrids";
 import type { ToolbarBus } from "@tuleap/prose-mirror-editor";
+import type { ToolbarButtonWithState } from "../../helpers/class-getter";
 import { getClass } from "../../helpers/class-getter";
 import type { GetText } from "@tuleap/gettext";
 
@@ -30,9 +31,7 @@ export type CodeElement = {
     gettext_provider: GetText;
 };
 
-type InternalCodeElement = Readonly<CodeElement> & {
-    is_activated: boolean;
-};
+type InternalCodeElement = Readonly<CodeElement> & ToolbarButtonWithState;
 
 export type HostElement = InternalCodeElement & HTMLElement;
 const onClickApplyCode = (host: CodeElement): void => {
@@ -50,11 +49,12 @@ export const renderCodeItem = (
     host: InternalCodeElement,
     gettext_provider: GetText,
 ): UpdateFunction<InternalCodeElement> => {
-    const classes = getClass(host.is_activated);
+    const classes = getClass(host);
 
     return html`<button
         class="${classes}"
         onclick="${onClickApplyCode}"
+        disabled="${host.is_disabled}"
         data-test="button-code"
         title="${gettext_provider.gettext("Toggle inline code `Ctrl+`")}"
     >
@@ -65,6 +65,7 @@ export const renderCodeItem = (
 export default define<InternalCodeElement>({
     tag: CODE_TAG_NAME,
     is_activated: false,
+    is_disabled: false,
     toolbar_bus: {
         value: (host: CodeElement, toolbar_bus: ToolbarBus) => toolbar_bus,
         connect,

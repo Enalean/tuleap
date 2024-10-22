@@ -49,7 +49,7 @@ export const renderImagePopover = (
 ): UpdateFunction<InternalImageButton> =>
     html`<form
         data-role="popover"
-        class="tlp-popover"
+        class="tlp-popover prose-mirror-toolbar-popover"
         onsubmit="${onSubmit}"
         data-test="toolbar-image-popover-form"
     >

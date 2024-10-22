@@ -39,6 +39,7 @@ export type InternalHeadingsItem = Readonly<HeadingsItem> & {
     current_heading: Heading | null;
     is_plain_text_activated: boolean;
     is_preformatted_text_activated: boolean;
+    is_disabled: boolean;
 };
 
 export type HostElement = InternalHeadingsItem & HTMLElement;
@@ -74,6 +75,7 @@ define<InternalHeadingsItem>({
     current_heading: null,
     is_plain_text_activated: false,
     is_preformatted_text_activated: false,
+    is_disabled: false,
     style_elements: (host, style_elements) => style_elements,
     toolbar_bus: {
         value: (host: InternalHeadingsItem, toolbar_bus: ToolbarBus) => toolbar_bus,
@@ -81,7 +83,10 @@ define<InternalHeadingsItem>({
     },
     gettext_provider: (host, gettext_provider) => gettext_provider,
     render: (host: InternalHeadingsItem): UpdateFunction<InternalHeadingsItem> => html`
-        <select class="tlp-select tlp-select-small tlp-select-adjusted">
+        <select
+            class="tlp-select tlp-select-small tlp-select-adjusted"
+            disabled="${host.is_disabled}"
+        >
             ${renderStylesOption(host, host.gettext_provider)}
             ${renderPlainTextOption(host, host.gettext_provider)}
             ${renderHeadingsOptions(host, host.gettext_provider)}

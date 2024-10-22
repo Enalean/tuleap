@@ -67,21 +67,25 @@ describe("BoldElement", () => {
     });
 
     it.each([
-        [false, "it should NOT have the button-active class"],
-        [true, "it should have the button-active class"],
-    ])("When is_activated is %s, then %s", (is_activated) => {
-        const host = {
-            is_activated,
-            toolbar_bus,
-        } as HostElement;
+        [false, true, "it should NOT have the button-active class"],
+        [true, false, "it should have the button-active class"],
+    ])(
+        "When is_activated is %s and is_disabled is %s, then %s",
+        (is_activated: boolean, is_disabled: boolean) => {
+            const host = {
+                is_activated,
+                is_disabled,
+                toolbar_bus,
+            } as HostElement;
 
-        renderBoldItem(host, gettext_provider)(host, target);
+            renderBoldItem(host, gettext_provider)(host, target);
 
-        const button = target.querySelector<HTMLButtonElement>("[data-test=button-bold]");
-        if (!button) {
-            throw new Error("Expected a button");
-        }
+            const button = target.querySelector<HTMLButtonElement>("[data-test=button-bold]");
+            if (!button) {
+                throw new Error("Expected a button");
+            }
 
-        expect(button.classList.contains("button-active")).toBe(is_activated);
-    });
+            expect(button.classList.contains("button-active")).toBe(is_activated);
+        },
+    );
 });

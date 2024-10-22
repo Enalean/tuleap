@@ -20,6 +20,7 @@
 
 import { define, html, type UpdateFunction } from "hybrids";
 import type { ToolbarBus } from "@tuleap/prose-mirror-editor";
+import type { ToolbarButtonWithState } from "../../helpers/class-getter";
 import { getClass } from "../../helpers/class-getter";
 import type { GetText } from "@tuleap/gettext";
 
@@ -30,9 +31,7 @@ export type BoldElement = {
     gettext_provider: GetText;
 };
 
-type InternalBoldElement = Readonly<BoldElement> & {
-    is_activated: boolean;
-};
+type InternalBoldElement = Readonly<BoldElement> & ToolbarButtonWithState;
 
 export type HostElement = InternalBoldElement & HTMLElement;
 
@@ -43,11 +42,12 @@ export const renderBoldItem = (
     host: InternalBoldElement,
     gettext_provider: GetText,
 ): UpdateFunction<InternalBoldElement> => {
-    const classes = getClass(host.is_activated);
+    const classes = getClass(host);
 
     return html`<button
         class="${classes}"
         onclick="${onClickApplyBold}"
+        disabled="${host.is_disabled}"
         data-test="button-bold"
         title="${gettext_provider.gettext("Toggle bold style `Ctrl+b`")}"
     >
@@ -66,6 +66,7 @@ export const connect = (host: InternalBoldElement): void => {
 define<InternalBoldElement>({
     tag: BOLD_TAG_NAME,
     is_activated: false,
+    is_disabled: false,
     toolbar_bus: {
         value: (host: BoldElement, toolbar_bus: ToolbarBus) => toolbar_bus,
         connect,

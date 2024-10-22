@@ -27,9 +27,10 @@ export const renderStylesOption = (
     gettext_provider: GetText,
 ): UpdateFunction<InternalHeadingsItem> => {
     const is_selected =
-        !host.is_plain_text_activated &&
-        !host.is_preformatted_text_activated &&
-        host.current_heading === null;
+        (!host.is_plain_text_activated &&
+            !host.is_preformatted_text_activated &&
+            host.current_heading === null) ||
+        host.is_disabled;
 
     return html`<option selected="${is_selected}" disabled>
         ${gettext_provider.gettext("Styles")}

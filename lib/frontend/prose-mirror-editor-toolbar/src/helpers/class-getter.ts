@@ -22,10 +22,15 @@ export interface ButtonClasses {
     [key: string]: boolean;
 }
 
-export function getClass(is_activated: boolean): ButtonClasses {
+export type ToolbarButtonWithState = {
+    is_activated: boolean;
+    is_disabled: boolean;
+};
+
+export function getClass(button: ToolbarButtonWithState): ButtonClasses {
     return {
-        "tlp-button-primary button-active": is_activated,
-        "tlp-button-secondary": !is_activated,
+        "tlp-button-primary button-active": button.is_activated && !button.is_disabled,
+        "tlp-button-secondary": !button.is_activated || button.is_disabled,
         "prose-mirror-button": true,
         "tlp-button-primary": true,
         "tlp-button-outline": true,

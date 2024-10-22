@@ -67,11 +67,12 @@ describe("ItalicElement", () => {
     });
 
     it.each([
-        [false, "it should NOT have the button-active class"],
-        [true, "it should have the button-active class"],
-    ])("When is_activated is %s, then %s", (is_activated) => {
+        [false, true, "it should NOT have the button-active class"],
+        [true, false, "it should have the button-active class"],
+    ])("When is_activated is %s and is_disabled is %s, then %s", (is_activated, is_disabled) => {
         const host = {
             is_activated,
+            is_disabled,
             toolbar_bus,
         } as HostElement;
 

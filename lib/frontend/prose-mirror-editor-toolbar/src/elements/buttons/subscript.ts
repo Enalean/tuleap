@@ -20,6 +20,7 @@
 
 import { define, html, type UpdateFunction } from "hybrids";
 import type { ToolbarBus } from "@tuleap/prose-mirror-editor";
+import type { ToolbarButtonWithState } from "../../helpers/class-getter";
 import { getClass } from "../../helpers/class-getter";
 import type { GetText } from "@tuleap/gettext";
 
@@ -30,9 +31,7 @@ export type SubscriptElement = {
     gettext_provider: GetText;
 };
 
-type InternalSubscriptElement = Readonly<SubscriptElement> & {
-    is_activated: boolean;
-};
+type InternalSubscriptElement = Readonly<SubscriptElement> & ToolbarButtonWithState;
 
 export type HostElement = InternalSubscriptElement & HTMLElement;
 
@@ -43,11 +42,12 @@ export const renderSubscriptItem = (
     host: InternalSubscriptElement,
     gettext_provider: GetText,
 ): UpdateFunction<InternalSubscriptElement> => {
-    const classes = getClass(host.is_activated);
+    const classes = getClass(host);
 
     return html`<button
         class="${classes}"
         onclick="${onClickApplySubscript}"
+        disabled="${host.is_disabled}"
         data-test="button-subscript"
         title="${gettext_provider.gettext("Apply subscript style on the selected text `Ctrl+,`")}"
     >
@@ -66,6 +66,7 @@ export const connect = (host: InternalSubscriptElement): void => {
 define<InternalSubscriptElement>({
     tag: SUBSCRIPT_TAG_NAME,
     is_activated: false,
+    is_disabled: false,
     toolbar_bus: {
         value: (host: SubscriptElement, toolbar_bus: ToolbarBus) => toolbar_bus,
         connect,

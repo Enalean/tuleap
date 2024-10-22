@@ -20,6 +20,7 @@
 import { define, html } from "hybrids";
 import type { UpdateFunction } from "hybrids";
 import type { ToolbarBus } from "@tuleap/prose-mirror-editor";
+import type { ToolbarButtonWithState } from "../../helpers/class-getter";
 import { getClass } from "../../helpers/class-getter";
 import type { GetText } from "@tuleap/gettext";
 
@@ -30,9 +31,7 @@ export type UnlinkElement = {
     gettext_provider: GetText;
 };
 
-export type InternalUnlinkElement = Readonly<UnlinkElement> & {
-    is_activated: boolean;
-};
+export type InternalUnlinkElement = Readonly<UnlinkElement> & ToolbarButtonWithState;
 
 export type HostElement = InternalUnlinkElement & HTMLElement;
 
@@ -44,7 +43,7 @@ export const renderUnlinkElement = (
     host: InternalUnlinkElement,
     gettext_provider: GetText,
 ): UpdateFunction<InternalUnlinkElement> => {
-    const classes = getClass(host.is_activated);
+    const classes = getClass(host);
 
     return html`
         <button
@@ -52,7 +51,7 @@ export const renderUnlinkElement = (
             onclick="${onClickRemoveLink}"
             data-test="button-unlink"
             title="${gettext_provider.gettext("Remove link")}"
-            disabled="${!host.is_activated}"
+            disabled="${!host.is_activated || host.is_disabled}"
         >
             <i class="fa-solid fa-link-slash" role="img"></i>
         </button>
@@ -70,6 +69,7 @@ export const connect = (host: InternalUnlinkElement): void => {
 define<InternalUnlinkElement>({
     tag: TAG,
     is_activated: false,
+    is_disabled: false,
     toolbar_bus: {
         value: (host: InternalUnlinkElement, toolbar_bus: ToolbarBus) => toolbar_bus,
         connect,
