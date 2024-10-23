@@ -56,7 +56,7 @@ $border-element-separator: 1px solid var(--project-color-border, var(--tlp-white
 }
 
 .milestone-header-label {
-    flex: 0 0 auto;
+    flex: 0 1 auto;
     color: var(--project-color, var(--tlp-dimmed-color));
 }
 
@@ -78,6 +78,7 @@ $border-element-separator: 1px solid var(--project-color-border, var(--tlp-white
 }
 
 .milestone-header-dates {
+    flex: 0 0 auto;
     color: var(--project-color, var(--tlp-dimmed-color));
     font-size: 12px;
 }

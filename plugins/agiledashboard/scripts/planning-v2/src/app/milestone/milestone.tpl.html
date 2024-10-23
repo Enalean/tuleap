@@ -20,14 +20,15 @@
             {{ milestoneController.milestone.label }}
         </span>
 
-        <a ng-if="! milestoneController.milestone.collapsed"
-            href="/plugins/tracker/?aid={{ milestoneController.milestone.id }}"
-            ng-click="planning.showEditSubmilestoneModal($event, milestoneController.milestone)"
-            class="tlp-button-primary tlp-button-outline tlp-button-mini milestone-action-button"
-            title="{{::'Edit' | translate }}"
-        >
-            <i class="fas fa-pencil-alt tlp-button-icon"></i><span translate>Edit</span>
-        </a>
+        <div class="milestone-action-button" ng-if="! milestoneController.milestone.collapsed">
+            <a href="/plugins/tracker/?aid={{ milestoneController.milestone.id }}"
+                ng-click="planning.showEditSubmilestoneModal($event, milestoneController.milestone)"
+                class="tlp-button-primary tlp-button-outline tlp-button-mini"
+                title="{{::'Edit' | translate }}"
+            >
+                <i class="fas fa-pencil-alt tlp-button-icon"></i><span translate>Edit</span>
+            </a>
+        </div>
 
         <div class="tlp-dropdown milestone-action-button"
             ng-if="! milestoneController.milestone.collapsed && milestoneController.canUserMoveCards()"
