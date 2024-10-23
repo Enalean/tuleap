@@ -71,8 +71,8 @@ final class StaticListOrderByBuilderTest extends CrossTrackerFieldTestCase
             Tracker_FormElementFactory::FIELD_RADIO_BUTTON_TYPE,
         );
 
-        $release_bind_ids = $tracker_builder->buildValuesForStaticListField($release_list_field_id, ['A110', 'A610']);
-        $sprint_bind_ids  = $tracker_builder->buildValuesForStaticListField($sprint_list_field_id, ['Elan', 'Elise']);
+        $release_bind_ids = $tracker_builder->buildValuesForStaticListField($release_list_field_id, ['A110', 'A610', 'B35S']);
+        $sprint_bind_ids  = $tracker_builder->buildValuesForStaticListField($sprint_list_field_id, ['3-Eleven', '22-A', '2-Eleven']);
 
         $tracker_builder->setReadPermission($release_list_field_id, ProjectUGroup::PROJECT_MEMBERS);
         $tracker_builder->setReadPermission($sprint_list_field_id, ProjectUGroup::PROJECT_MEMBERS);
@@ -80,17 +80,23 @@ final class StaticListOrderByBuilderTest extends CrossTrackerFieldTestCase
         $release_artifact_1_id = $tracker_builder->buildArtifact($release_tracker->getId());
         $release_artifact_2_id = $tracker_builder->buildArtifact($release_tracker->getId());
         $sprint_artifact_3_id  = $tracker_builder->buildArtifact($sprint_tracker->getId());
+        $sprint_artifact_4_id  = $tracker_builder->buildArtifact($sprint_tracker->getId());
+        $sprint_artifact_5_id  = $tracker_builder->buildArtifact($sprint_tracker->getId());
 
         $release_artifact_1_changeset = $tracker_builder->buildLastChangeset($release_artifact_1_id);
         $release_artifact_2_changeset = $tracker_builder->buildLastChangeset($release_artifact_2_id);
         $sprint_artifact_3_changeset  = $tracker_builder->buildLastChangeset($sprint_artifact_3_id);
+        $sprint_artifact_4_changeset  = $tracker_builder->buildLastChangeset($sprint_artifact_4_id);
+        $sprint_artifact_5_changeset  = $tracker_builder->buildLastChangeset($sprint_artifact_5_id);
 
-        $tracker_builder->buildListValue($release_artifact_1_changeset, $release_list_field_id, $release_bind_ids['A610']);
+        $tracker_builder->buildListValue($release_artifact_1_changeset, $release_list_field_id, $release_bind_ids['B35S']);
         $tracker_builder->buildListValue($release_artifact_2_changeset, $release_list_field_id, $release_bind_ids['A110']);
-        $tracker_builder->buildListValue($sprint_artifact_3_changeset, $sprint_list_field_id, $sprint_bind_ids['Elan']);
+        $tracker_builder->buildListValue($sprint_artifact_3_changeset, $sprint_list_field_id, $sprint_bind_ids['3-Eleven']);
+        $tracker_builder->buildListValue($sprint_artifact_4_changeset, $sprint_list_field_id, $sprint_bind_ids['2-Eleven']);
+        $tracker_builder->buildListValue($sprint_artifact_5_changeset, $sprint_list_field_id, $sprint_bind_ids['22-A']);
 
-        $this->result_descending = [$sprint_artifact_3_id, $release_artifact_1_id, $release_artifact_2_id];
-        $this->result_ascending  = [$release_artifact_2_id, $release_artifact_1_id, $sprint_artifact_3_id];
+        $this->result_descending = [$sprint_artifact_5_id, $sprint_artifact_3_id, $sprint_artifact_4_id, $release_artifact_1_id, $release_artifact_2_id];
+        $this->result_ascending  = [$release_artifact_2_id, $release_artifact_1_id, $sprint_artifact_4_id, $sprint_artifact_3_id, $sprint_artifact_5_id];
     }
 
     private function getQueryResults(CrossTrackerExpertReport $report, PFUser $user): CrossTrackerReportContentRepresentation
