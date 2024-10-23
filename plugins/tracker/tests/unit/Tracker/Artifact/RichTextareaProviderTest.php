@@ -84,6 +84,51 @@ final class RichTextareaProviderTest extends \Tuleap\Test\PHPUnit\TestCase
             80,
             'input-value',
             true,
+            false
+        );
+        self::assertEquals(
+            <<<EOL
+<textarea
+        id="input-id"
+        class="user-mention"
+        wrap="soft"
+        rows="8"
+        cols="80"
+        name="input-name"
+        maxlength="65535"
+        required
+            data-project-id="7"
+        data-test="input-name"
+>input-value</textarea>
+<div class="muted tracker-richtexteditor-help" id="input-id-help"></div>
+
+EOL
+            ,
+            $textarea
+        );
+    }
+
+    public function testItDoesNotAllowDragAndDropDuringArtifactCopy(): void
+    {
+        $tracker = $this->buildTracker(7);
+        $field1  = Mockery::mock(FileUploadData::class);
+        $field1->shouldReceive('getUploadUrl')->andReturn('/api/v1/tracker_fields/1002/files');
+        $field1->shouldReceive('getUploadFileName')->andReturn('artifact[1002][][tus-uploaded-id]');
+        $field1->shouldReceive('getUploadMaxSize')->andReturn(1024);
+
+        $this->first_usable_field_data_getter->shouldReceive('getFileUploadData')->andReturn($field1);
+
+        $textarea = $this->provider->getTextarea(
+            $tracker,
+            null,
+            UserTestBuilder::aUser()->build(),
+            'input-id',
+            'input-name',
+            8,
+            80,
+            'input-value',
+            true,
+            true
         );
         self::assertEquals(
             <<<EOL
@@ -110,10 +155,10 @@ EOL
     public function testItIncludesUploadOptionsIfAFileFieldIsUpdatable(): void
     {
         $tracker = $this->buildTracker(7);
-        $field1  = Mockery::mock(FileUploadData::class);
-        $field1->shouldReceive('getUploadUrl')->andReturn('/api/v1/tracker_fields/1002/files');
-        $field1->shouldReceive('getUploadFileName')->andReturn('artifact[1002][][tus-uploaded-id]');
-        $field1->shouldReceive('getUploadMaxSize')->andReturn(1024);
+        $field1  = $this->createMock(FileUploadData::class);
+        $field1->method('getUploadUrl')->willReturn('/api/v1/tracker_fields/1002/files');
+        $field1->method('getUploadFileName')->willReturn('artifact[1002][][tus-uploaded-id]');
+        $field1->method('getUploadMaxSize')->willReturn(1024);
 
         $this->first_usable_field_data_getter->shouldReceive('getFileUploadData')->andReturn($field1);
 
@@ -127,6 +172,7 @@ EOL
             80,
             'input-value',
             false,
+            false
         );
         self::assertEquals(
             <<<EOL
