@@ -544,9 +544,9 @@ CREATE TABLE tracker_field_list_bind_decorator(
     green TINYINT UNSIGNED NULL,
     blue TINYINT UNSIGNED NULL,
     tlp_color_name VARCHAR (30) NULL,
-    PRIMARY KEY idx(field_id, value_id)
+    PRIMARY KEY idx(field_id, value_id),
+    INDEX idx_value_id(value_id)
 ) ENGINE=InnoDB;
-
 
 DROP TABLE IF EXISTS  tracker_artifact;
 CREATE TABLE tracker_artifact(
