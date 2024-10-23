@@ -17,8 +17,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { describe, expect, it, vi } from "vitest";
+import { describe, beforeEach, expect, it, vi } from "vitest";
 import { shallowMount } from "@vue/test-utils";
+import type { VueWrapper } from "@vue/test-utils";
 import SectionDescription from "./SectionDescription.vue";
 import SectionDescriptionSkeleton from "./SectionDescriptionSkeleton.vue";
 import { InjectedSectionsStoreStub } from "@/helpers/stubs/InjectSectionsStoreStub";
@@ -27,99 +28,135 @@ import { SECTIONS_STORE } from "@/stores/sections-store-injection-key";
 import { EDITOR_CHOICE } from "@/helpers/editor-choice";
 import { ref } from "vue";
 import { UploadFileStub } from "@/helpers/stubs/UploadFileStub";
+import { CAN_USER_EDIT_DOCUMENT } from "@/can-user-edit-document-injection-key";
 
-const default_props = {
-    editable_description: "Lorem ipsum",
-    readonly_description: "Lorem ipsum",
-    section_id: "1abc",
-    is_edit_mode: false,
-    upload_url: "/file/upload",
-    add_attachment_to_waiting_list: vi.fn(),
-    input_current_description: vi.fn(),
-    is_image_upload_allowed: true,
-    upload_file: UploadFileStub.uploadNotInProgress(),
-    project_id: 101,
-    references: [],
-};
 describe("SectionDescription", () => {
-    describe("while the sections are loading", () => {
-        it("should display the skeleton", () => {
-            const wrapper = shallowMount(SectionDescription, {
-                global: {
-                    provide: {
-                        [SECTIONS_STORE.valueOf()]: InjectedSectionsStoreStub.withLoadingSections(
-                            [],
-                        ),
-                        [EDITOR_CHOICE.valueOf()]: { is_prose_mirror: ref(false) },
+    let are_sections_loading: boolean, is_prose_mirror: boolean, can_user_edit_document: boolean;
+
+    beforeEach(() => {
+        are_sections_loading = false;
+        is_prose_mirror = true;
+        can_user_edit_document = true;
+    });
+
+    const getWrapper = (overriden_props = {}): VueWrapper => {
+        const sections_store = are_sections_loading
+            ? InjectedSectionsStoreStub.withLoadingSections([])
+            : InjectedSectionsStoreStub.withLoadedSections([]);
+
+        return shallowMount(SectionDescription, {
+            global: {
+                provide: {
+                    [SECTIONS_STORE.valueOf()]: sections_store,
+                    [EDITOR_CHOICE.valueOf()]: { is_prose_mirror: ref(is_prose_mirror) },
+                    [CAN_USER_EDIT_DOCUMENT.valueOf()]: can_user_edit_document,
+                },
+                stubs: {
+                    async_editor: {
+                        template: "<span/>",
                     },
                 },
-                props: { ...default_props },
-            });
+            },
+            props: {
+                editable_description: "Lorem ipsum",
+                readonly_description: "Lorem ipsum",
+                is_edit_mode: false,
+                upload_url: "/file/upload",
+                add_attachment_to_waiting_list: vi.fn(),
+                input_current_description: vi.fn(),
+                is_image_upload_allowed: true,
+                upload_file: UploadFileStub.uploadNotInProgress(),
+                project_id: 101,
+                references: [],
+                ...overriden_props,
+            },
+        });
+    };
+
+    it("When sections are loading, Then it should display the skeleton", () => {
+        are_sections_loading = true;
+
+        const wrapper = getWrapper();
+
+        expect(wrapper.findComponent(SectionDescriptionReadOnly).exists()).toBe(false);
+        expect(wrapper.findComponent(SectionDescriptionSkeleton).exists()).toBe(true);
+        expect(wrapper.find("[data-test=editor]").exists()).toBe(false);
+    });
+
+    describe("In legacy mode (ckeditor)", () => {
+        beforeEach(() => {
+            is_prose_mirror = false;
+        });
+
+        it("When the section is not in edit mode, then it should display a readonly description", () => {
+            const wrapper = getWrapper({ is_edit_mode: false });
+
+            expect(wrapper.findComponent(SectionDescriptionReadOnly).exists()).toBe(true);
+            expect(wrapper.findComponent(SectionDescriptionSkeleton).exists()).toBe(false);
+            expect(wrapper.find("[data-test=editor]").exists()).toBe(false);
+        });
+
+        it("When the section is in print mode, then it should display a readonly description", () => {
+            const wrapper = getWrapper({ is_print_mode: false });
+
+            expect(wrapper.findComponent(SectionDescriptionReadOnly).exists()).toBe(true);
+            expect(wrapper.findComponent(SectionDescriptionSkeleton).exists()).toBe(false);
+            expect(wrapper.find("[data-test=editor]").exists()).toBe(false);
+        });
+
+        it("When the current user cannot edit the document, then it should display a readonly description", () => {
+            can_user_edit_document = false;
+
+            const wrapper = getWrapper();
+
+            expect(wrapper.findComponent(SectionDescriptionReadOnly).exists()).toBe(true);
+            expect(wrapper.findComponent(SectionDescriptionSkeleton).exists()).toBe(false);
+            expect(wrapper.find("[data-test=editor]").exists()).toBe(false);
+        });
+
+        it("When the section is in edit mode, then it should display the editor", () => {
+            const wrapper = getWrapper({ is_edit_mode: true });
 
             expect(wrapper.findComponent(SectionDescriptionReadOnly).exists()).toBe(false);
-            expect(wrapper.findComponent(SectionDescriptionSkeleton).exists()).toBe(true);
-            expect(wrapper.find("[data-test=editor]").exists()).toBe(false);
+            expect(wrapper.findComponent(SectionDescriptionSkeleton).exists()).toBe(false);
+            expect(wrapper.find("[data-test=editor]").exists()).toBe(true);
         });
     });
 
-    describe("when the sections are loaded", () => {
-        describe("when the editor mode is disabled", () => {
-            it("should display the description", () => {
-                const wrapper = shallowMount(SectionDescription, {
-                    global: {
-                        provide: {
-                            [SECTIONS_STORE.valueOf()]:
-                                InjectedSectionsStoreStub.withLoadedSections([]),
-                            [EDITOR_CHOICE.valueOf()]: { is_prose_mirror: ref(false) },
-                        },
-                    },
-                    props: default_props,
-                });
-                expect(wrapper.findComponent(SectionDescriptionReadOnly).exists()).toBe(true);
-                expect(wrapper.findComponent(SectionDescriptionSkeleton).exists()).toBe(false);
-                expect(wrapper.find("[data-test=editor]").exists()).toBe(false);
-            });
-            describe("when prose mirror is enabled", () => {
-                it("should display the editor", () => {
-                    const wrapper = shallowMount(SectionDescription, {
-                        global: {
-                            provide: {
-                                [SECTIONS_STORE.valueOf()]:
-                                    InjectedSectionsStoreStub.withLoadedSections([]),
-                                [EDITOR_CHOICE.valueOf()]: { is_prose_mirror: ref(true) },
-                            },
-                            stubs: {
-                                async_editor: {
-                                    template: "<span/>",
-                                },
-                            },
-                        },
-                        props: { ...default_props, is_edit_mode: false },
-                    });
-
-                    expect(wrapper.findComponent(SectionDescriptionReadOnly).exists()).toBe(false);
-                    expect(wrapper.findComponent(SectionDescriptionSkeleton).exists()).toBe(false);
-                    expect(wrapper.find("[data-test=editor]").exists()).toBe(true);
-                });
-            });
+    describe("In nextgen mode (prosemirror)", () => {
+        beforeEach(() => {
+            is_prose_mirror = true;
         });
-        describe("when the editor mode is enabled", () => {
-            it("should display the editor", () => {
-                const wrapper = shallowMount(SectionDescription, {
-                    global: {
-                        provide: {
-                            [SECTIONS_STORE.valueOf()]:
-                                InjectedSectionsStoreStub.withLoadedSections([]),
-                            [EDITOR_CHOICE.valueOf()]: { is_prose_mirror: ref(false) },
-                        },
-                    },
-                    props: { ...default_props, is_edit_mode: true },
-                });
+
+        it.each([[false], [true]])(
+            "When the is_edit_mode === %s, Then the editor should be displayed",
+            (is_edit_mode) => {
+                const wrapper = getWrapper({ is_edit_mode });
 
                 expect(wrapper.findComponent(SectionDescriptionReadOnly).exists()).toBe(false);
                 expect(wrapper.findComponent(SectionDescriptionSkeleton).exists()).toBe(false);
                 expect(wrapper.find("[data-test=editor]").exists()).toBe(true);
-            });
+            },
+        );
+
+        it("When the current user cannot edit the document, then it should display a readonly description", () => {
+            can_user_edit_document = false;
+
+            const wrapper = getWrapper();
+
+            expect(wrapper.findComponent(SectionDescriptionReadOnly).exists()).toBe(true);
+            expect(wrapper.findComponent(SectionDescriptionSkeleton).exists()).toBe(false);
+            expect(wrapper.find("[data-test=editor]").exists()).toBe(false);
+        });
+
+        it("When the section is in print mode, then it should display a readonly description", () => {
+            can_user_edit_document = true;
+
+            const wrapper = getWrapper({ is_print_mode: true });
+
+            expect(wrapper.findComponent(SectionDescriptionReadOnly).exists()).toBe(true);
+            expect(wrapper.findComponent(SectionDescriptionSkeleton).exists()).toBe(false);
+            expect(wrapper.find("[data-test=editor]").exists()).toBe(false);
         });
     });
 });

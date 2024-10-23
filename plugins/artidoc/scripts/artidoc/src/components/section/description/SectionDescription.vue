@@ -20,7 +20,7 @@
 
 <template>
     <section-description-skeleton v-if="is_sections_loading" />
-    <template v-else-if="(is_edit_mode || is_prose_mirror) && !is_print_mode">
+    <template v-if="!is_sections_loading && can_section_be_edited">
         <component
             v-bind:is="async_editor"
             v-bind:upload_url="upload_url"
@@ -36,10 +36,13 @@
             data-test="editor"
         />
     </template>
-    <section-description-read-only v-else v-bind:readonly_value="readonly_description" />
+    <section-description-read-only
+        v-if="!is_sections_loading && !can_section_be_edited"
+        v-bind:readonly_value="readonly_description"
+    />
 </template>
 <script setup lang="ts">
-import { defineAsyncComponent, onMounted } from "vue";
+import { defineAsyncComponent, onMounted, computed } from "vue";
 import { loadTooltips } from "@tuleap/tooltip";
 import SectionDescriptionSkeleton from "./SectionDescriptionSkeleton.vue";
 import SectionDescriptionReadOnly from "./SectionDescriptionReadOnly.vue";
@@ -50,8 +53,9 @@ import { SECTIONS_STORE } from "@/stores/sections-store-injection-key";
 import { EDITOR_CHOICE } from "@/helpers/editor-choice";
 import type { UseUploadFileType } from "@/composables/useUploadFile";
 import type { CrossReference } from "@/stores/useSectionsStore";
+import { CAN_USER_EDIT_DOCUMENT } from "@/can-user-edit-document-injection-key";
 
-withDefaults(
+const props = withDefaults(
     defineProps<{
         add_attachment_to_waiting_list: AttachmentFile["addAttachmentToWaitingList"];
         upload_url: string;
@@ -72,6 +76,15 @@ withDefaults(
 
 const { is_sections_loading } = strictInject(SECTIONS_STORE);
 const { is_prose_mirror } = strictInject(EDITOR_CHOICE);
+const can_user_edit_document = strictInject(CAN_USER_EDIT_DOCUMENT);
+
+const can_section_be_edited = computed(() => {
+    if (props.is_print_mode === true || !can_user_edit_document) {
+        return false;
+    }
+
+    return props.is_edit_mode || is_prose_mirror.value;
+});
 
 const async_editor = is_prose_mirror.value
     ? defineAsyncComponent({

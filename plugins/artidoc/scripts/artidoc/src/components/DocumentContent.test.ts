@@ -117,13 +117,14 @@ describe("DocumentContent", () => {
         ).toHaveLength(4);
     });
 
-    it("should display the mono-toolbar only when the current editor type used is prose-mirror", async () => {
+    it("should display the mono-toolbar only when the current editor type used is prose-mirror and the user can edit the document", async () => {
         const is_prose_mirror = ref(false);
+        const can_user_edit_document = true;
         const wrapper = shallowMount(DocumentContent, {
             global: {
                 provide: {
                     [SECTIONS_STORE.valueOf()]: sections_store,
-                    [CAN_USER_EDIT_DOCUMENT.valueOf()]: true,
+                    [CAN_USER_EDIT_DOCUMENT.valueOf()]: can_user_edit_document,
                     [EDITOR_CHOICE.valueOf()]: { is_prose_mirror },
                 },
             },
