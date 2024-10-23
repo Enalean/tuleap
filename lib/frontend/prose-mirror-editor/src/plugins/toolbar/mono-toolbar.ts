@@ -39,12 +39,8 @@ import { ImageStateBuilder } from "./image/ImageStateBuilder";
 import { CanInsertImageChecker } from "./image/CanInsertImageChecker";
 import { ImageNodeInserter } from "./image/ImageNodeInserter";
 import { ImageFromSelectionExtractor } from "./image/ImageFromSelectionExtractor";
-import { ListStateBuilder } from "./list/ListStateBuilder";
-import { IsSelectionAListWithTypeChecker } from "./list/IsSelectionAListWithTypeChecker";
 import { ListNodeInserter } from "./list/ListInserter";
-import { IsSelectionAListChecker } from "./list/IsListChecker";
-import { lift } from "prosemirror-commands";
-import { wrapInList } from "prosemirror-schema-list";
+import { wrapInList, liftListItem } from "prosemirror-schema-list";
 import {
     getFormattedTextCommand,
     getHeadingCommand,
@@ -55,10 +51,14 @@ import { MonoToolbarTextStyleItemsActivator } from "./helper/MonoToolbarTextStyl
 import { PreformattedTextInSelectionDetector } from "./text-style/PreformattedTextInSelectionDetector";
 import { ParagraphsInSelectionDetector } from "./text-style/ParagraphsInSelectionDetector";
 import { SelectedNodesHaveSameParentChecker } from "./text-style/SelectedNodesHaveSameParentChecker";
+import { SingleListInSelectionDetector } from "./list/SingleListInSelectionDetector";
+import { ListsInSelectionDetector } from "./list/ListsInSelectionDetector";
+import { ListStateBuilder } from "./list/ListStateBuilder";
 
 const getToolbarActivator = (state: EditorState): ActivateToolbar => {
     const check_same_parent = SelectedNodesHaveSameParentChecker();
 
+    const multiple_lists_detector = ListsInSelectionDetector();
     return ToolbarActivator(
         IsMarkActiveChecker(),
         LinkStateBuilder(
@@ -69,7 +69,16 @@ const getToolbarActivator = (state: EditorState): ActivateToolbar => {
             CanInsertImageChecker(),
             ImageFromSelectionExtractor(EditorNodeAtPositionFinder(state)),
         ),
-        ListStateBuilder(state, IsSelectionAListWithTypeChecker()),
+        ListStateBuilder(
+            state,
+            SingleListInSelectionDetector(custom_schema.nodes.ordered_list),
+            multiple_lists_detector,
+        ),
+        ListStateBuilder(
+            state,
+            SingleListInSelectionDetector(custom_schema.nodes.bullet_list),
+            multiple_lists_detector,
+        ),
         MonoToolbarTextStyleItemsActivator(
             HeadingInSelectionRetriever(check_same_parent),
             PreformattedTextInSelectionDetector(check_same_parent),
@@ -121,9 +130,8 @@ export function setupMonoToolbar(toolbar_bus: ToolbarBus): Plugin {
                             ListNodeInserter(
                                 view.state,
                                 view.dispatch,
-                                IsSelectionAListChecker(),
-                                custom_schema.nodes.ordered_list,
-                                lift,
+                                SingleListInSelectionDetector(custom_schema.nodes.ordered_list),
+                                liftListItem(custom_schema.nodes.list_item),
                                 wrapInList(custom_schema.nodes.ordered_list),
                             ).insertList();
                         },
@@ -131,9 +139,8 @@ export function setupMonoToolbar(toolbar_bus: ToolbarBus): Plugin {
                             ListNodeInserter(
                                 view.state,
                                 view.dispatch,
-                                IsSelectionAListChecker(),
-                                custom_schema.nodes.bullet_list,
-                                lift,
+                                SingleListInSelectionDetector(custom_schema.nodes.bullet_list),
+                                liftListItem(custom_schema.nodes.list_item),
                                 wrapInList(custom_schema.nodes.bullet_list),
                             ).insertList();
                         },

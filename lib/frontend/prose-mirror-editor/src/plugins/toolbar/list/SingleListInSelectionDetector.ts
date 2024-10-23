@@ -16,22 +16,31 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-
+import type { Selection } from "prosemirror-state";
 import type { NodeType } from "prosemirror-model";
-import type { EditorState } from "prosemirror-state";
+import type { EditorNode } from "../../../types/internal-types";
 
-export type CheckIsSelectionAListWithType = {
-    isSelectionAListWithType(state: EditorState, node_type: NodeType): boolean;
+export type DetectSingleListInSelection = {
+    doesSelectionContainOnlyASingleList(tree: EditorNode, selection: Selection): boolean;
 };
 
-export const IsSelectionAListWithTypeChecker = (): CheckIsSelectionAListWithType => ({
-    isSelectionAListWithType(state: EditorState, node_type: NodeType): boolean {
-        const { $from, $to } = state.selection;
-        const range = $from.blockRange($to);
-        if (!range) {
-            return false;
-        }
+export const SingleListInSelectionDetector = (
+    list_type: NodeType,
+): DetectSingleListInSelection => ({
+    doesSelectionContainOnlyASingleList: (tree, selection): boolean => {
+        let nb_lists_found = 0;
+        let has_other_nodes_than_list = false;
 
-        return range.depth >= 2 && $from.node(range.depth - 1).type.name === node_type.name;
+        tree.nodesBetween(selection.from, selection.to, (node) => {
+            if (node.type === list_type) {
+                nb_lists_found++;
+            } else {
+                has_other_nodes_than_list = true;
+            }
+
+            return false;
+        });
+
+        return nb_lists_found === 1 && !has_other_nodes_than_list;
     },
 });

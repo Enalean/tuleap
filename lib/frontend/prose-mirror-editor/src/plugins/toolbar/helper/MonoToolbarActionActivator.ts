@@ -36,7 +36,8 @@ export const ToolbarActivator = (
     check_is_mark_active: CheckIsMArkActive,
     build_link_state: BuildLinkState,
     build_image_state: BuildImageState,
-    build_list_state: BuildListState,
+    build_ordered_list_state: BuildListState,
+    build_bullet_list_state: BuildListState,
     activate_text_style_items: ActivateMonoToolbarTextStyleItems,
 ): ActivateToolbar => ({
     activateToolbarItem(toolbar_view: ToolbarView, state: EditorState): void {
@@ -62,19 +63,9 @@ export const ToolbarActivator = (
         );
         toolbar_view.activateImage(build_image_state.build(state.selection));
 
-        toolbar_view.activateOrderedList(
-            build_list_state.build(
-                custom_schema.nodes.ordered_list,
-                custom_schema.nodes.bullet_list,
-            ),
-        );
+        toolbar_view.activateOrderedList(build_ordered_list_state.build());
 
-        toolbar_view.activateBulletList(
-            build_list_state.build(
-                custom_schema.nodes.bullet_list,
-                custom_schema.nodes.ordered_list,
-            ),
-        );
+        toolbar_view.activateBulletList(build_bullet_list_state.build());
         activate_text_style_items.activateTextStyleItems(toolbar_view, state);
     },
 });

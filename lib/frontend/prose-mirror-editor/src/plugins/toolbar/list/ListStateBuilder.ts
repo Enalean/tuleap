@@ -18,23 +18,25 @@
  */
 
 import type { EditorState } from "prosemirror-state";
+import type { DetectSingleListInSelection } from "./SingleListInSelectionDetector";
+import type { DetectListsInSelection } from "./ListsInSelectionDetector";
 import { ListState } from "./ListState";
-import type { NodeType } from "prosemirror-model";
-import type { CheckIsSelectionAListWithType } from "./IsSelectionAListWithTypeChecker";
 
 export type BuildListState = {
-    build(activated_node_type: NodeType, forbidden_node_type: NodeType): ListState;
+    build(): ListState;
 };
 
 export const ListStateBuilder = (
     state: EditorState,
-    list_type_checker: CheckIsSelectionAListWithType,
+    detect_target_list: DetectSingleListInSelection,
+    detect_multiple_lists: DetectListsInSelection,
 ): BuildListState => ({
-    build: (activated_node_type: NodeType, forbidden_node_type: NodeType): ListState => {
-        if (list_type_checker.isSelectionAListWithType(state, activated_node_type)) {
+    build: (): ListState => {
+        if (detect_target_list.doesSelectionContainOnlyASingleList(state.doc, state.selection)) {
             return ListState.activated();
         }
-        if (list_type_checker.isSelectionAListWithType(state, forbidden_node_type)) {
+
+        if (detect_multiple_lists.doesSelectionContainLists(state.doc, state.selection)) {
             return ListState.disabled();
         }
 
