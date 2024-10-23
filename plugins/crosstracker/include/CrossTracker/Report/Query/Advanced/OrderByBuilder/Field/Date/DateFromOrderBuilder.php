@@ -25,10 +25,11 @@ namespace Tuleap\CrossTracker\Report\Query\Advanced\OrderByBuilder\Field\Date;
 use ParagonIE\EasyDB\EasyStatement;
 use Tuleap\CrossTracker\Report\Query\Advanced\DuckTypedField\OrderBy\DuckTypedFieldOrderBy;
 use Tuleap\CrossTracker\Report\Query\Advanced\OrderByBuilder\ParametrizedFromOrder;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\OrderByDirection;
 
 final class DateFromOrderBuilder
 {
-    public function getFromOrder(DuckTypedFieldOrderBy $field, string $order): ParametrizedFromOrder
+    public function getFromOrder(DuckTypedFieldOrderBy $field, OrderByDirection $direction): ParametrizedFromOrder
     {
         $suffix                     = spl_object_hash($field);
         $tracker_field_alias        = "TF_$suffix";
@@ -48,6 +49,6 @@ final class DateFromOrderBuilder
             ON $changeset_value_date_alias.changeset_value_id = $changeset_value_alias.id
         EOSQL;
 
-        return new ParametrizedFromOrder($from, $fields_id_statement->values(), "$changeset_value_date_alias.value $order");
+        return new ParametrizedFromOrder($from, $fields_id_statement->values(), "$changeset_value_date_alias.value $direction->value");
     }
 }

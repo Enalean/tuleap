@@ -24,15 +24,16 @@ namespace Tuleap\CrossTracker\Report\Query\Advanced\OrderByBuilder\Field\Text;
 
 use ParagonIE\EasyDB\EasyStatement;
 use Tuleap\CrossTracker\Report\Query\Advanced\OrderByBuilder\ParametrizedFromOrder;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\OrderByDirection;
 
 final class TextFromOrderBuilder
 {
     /**
      * @param list<int> $field_ids
      */
-    public function getFromOrder(array $field_ids, string $order): ParametrizedFromOrder
+    public function getFromOrder(array $field_ids, OrderByDirection $direction): ParametrizedFromOrder
     {
-        $suffix                     = md5($order);
+        $suffix                     = md5($direction->value);
         $tracker_field_alias        = "TF_$suffix";
         $changeset_value_alias      = "CV_$suffix";
         $changeset_value_text_alias = "CVText_$suffix";
@@ -47,6 +48,10 @@ final class TextFromOrderBuilder
             ON $changeset_value_text_alias.changeset_value_id = $changeset_value_alias.id
         EOSQL;
 
-        return new ParametrizedFromOrder($from, $field_ids, "CAST($changeset_value_text_alias.value AS SIGNED) $order, $changeset_value_text_alias.value $order");
+        return new ParametrizedFromOrder(
+            $from,
+            $field_ids,
+            "CAST($changeset_value_text_alias.value AS SIGNED) $direction->value, $changeset_value_text_alias.value $direction->value"
+        );
     }
 }

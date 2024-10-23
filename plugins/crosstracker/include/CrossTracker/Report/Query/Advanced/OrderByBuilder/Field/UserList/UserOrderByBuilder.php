@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\CrossTracker\Report\Query\Advanced\OrderByBuilder\Field\UserList;
 
 use PFUser;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\OrderByDirection;
 use Tuleap\User\ProvideCurrentUser;
 use UserHelper;
 
@@ -33,7 +34,7 @@ final readonly class UserOrderByBuilder
     ) {
     }
 
-    public function getOrderByForUsers(string $user_alias, string $order): string
+    public function getOrderByForUsers(string $user_alias, OrderByDirection $direction): string
     {
         $preference = (int) $this->current_user_provider->getCurrentUser()->getPreference(PFUser::PREFERENCE_NAME_DISPLAY_USERS) ?: 0;
 
@@ -44,6 +45,6 @@ final readonly class UserOrderByBuilder
             UserHelper::PREFERENCES_NAME_AND_LOGIN => "$user_alias.realname, ' (', $user_alias.user_name, ')'",
         };
 
-        return "CONCAT($concat_value) $order";
+        return "CONCAT($concat_value) $direction->value";
     }
 }

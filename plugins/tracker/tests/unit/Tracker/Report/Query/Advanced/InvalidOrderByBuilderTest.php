@@ -33,7 +33,7 @@ final class InvalidOrderByBuilderTest extends TestCase
     public function testItThrowsWhenCalled(): void
     {
         $builder = new InvalidOrderByBuilder();
-        self::expectException(LogicException::class);
+        $this->expectException(LogicException::class);
         $builder->buildInvalidOrderBy(new OrderBy(new Field('my_field'), OrderByDirection::ASCENDING));
     }
 }

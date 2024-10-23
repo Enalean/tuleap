@@ -70,19 +70,14 @@ final readonly class FieldFromOrderBuilder
 
     private function matchTypeToBuilder(DuckTypedFieldOrderBy $field, OrderByDirection $direction): ParametrizedFromOrder
     {
-        $order = match ($direction) {
-            OrderByDirection::ASCENDING  => 'ASC',
-            OrderByDirection::DESCENDING => 'DESC',
-        };
-
         return match ($field->type) {
             DuckTypedFieldTypeOrderBy::DATE,
-            DuckTypedFieldTypeOrderBy::DATETIME    => $this->date_builder->getFromOrder($field, $order),
-            DuckTypedFieldTypeOrderBy::NUMERIC     => $this->numeric_builder->getFromOrder($field, $order),
-            DuckTypedFieldTypeOrderBy::TEXT        => $this->text_builder->getFromOrder($field->field_ids, $order),
-            DuckTypedFieldTypeOrderBy::STATIC_LIST => $this->static_list_builder->getFromOrder($field->field_ids, $order),
-            DuckTypedFieldTypeOrderBy::UGROUP_LIST => $this->ugroup_list_builder->getFromOrder($field->field_ids, $order),
-            DuckTypedFieldTypeOrderBy::USER_LIST   => $this->user_list_builder->getFromOrder($field->field_ids, $order),
+            DuckTypedFieldTypeOrderBy::DATETIME    => $this->date_builder->getFromOrder($field, $direction),
+            DuckTypedFieldTypeOrderBy::NUMERIC     => $this->numeric_builder->getFromOrder($field, $direction),
+            DuckTypedFieldTypeOrderBy::TEXT        => $this->text_builder->getFromOrder($field->field_ids, $direction),
+            DuckTypedFieldTypeOrderBy::STATIC_LIST => $this->static_list_builder->getFromOrder($field->field_ids, $direction),
+            DuckTypedFieldTypeOrderBy::UGROUP_LIST => $this->ugroup_list_builder->getFromOrder($field->field_ids, $direction),
+            DuckTypedFieldTypeOrderBy::USER_LIST   => $this->user_list_builder->getFromOrder($field->field_ids, $direction),
         };
     }
 }

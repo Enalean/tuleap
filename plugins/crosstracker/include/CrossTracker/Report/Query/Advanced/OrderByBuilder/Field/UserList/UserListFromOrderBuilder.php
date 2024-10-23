@@ -24,6 +24,7 @@ namespace Tuleap\CrossTracker\Report\Query\Advanced\OrderByBuilder\Field\UserLis
 
 use ParagonIE\EasyDB\EasyStatement;
 use Tuleap\CrossTracker\Report\Query\Advanced\OrderByBuilder\ParametrizedFromOrder;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\OrderByDirection;
 
 final readonly class UserListFromOrderBuilder
 {
@@ -35,9 +36,9 @@ final readonly class UserListFromOrderBuilder
     /**
      * @param list<int> $field_ids
      */
-    public function getFromOrder(array $field_ids, string $order): ParametrizedFromOrder
+    public function getFromOrder(array $field_ids, OrderByDirection $direction): ParametrizedFromOrder
     {
-        $suffix                             = md5($order);
+        $suffix                             = md5($direction->value);
         $tracker_field_alias                = "TF_$suffix";
         $changeset_value_alias              = "CV_$suffix";
         $tracker_changeset_value_list_alias = "TCVL_$suffix";
@@ -56,6 +57,6 @@ final readonly class UserListFromOrderBuilder
             ON $user_alias.user_id = $tracker_changeset_value_list_alias.bindvalue_id
         EOSQL;
 
-        return new ParametrizedFromOrder($from, $field_ids, $this->user_order_by_builder->getOrderByForUsers($user_alias, $order));
+        return new ParametrizedFromOrder($from, $field_ids, $this->user_order_by_builder->getOrderByForUsers($user_alias, $direction));
     }
 }

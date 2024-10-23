@@ -25,6 +25,7 @@ namespace Tuleap\CrossTracker\Report\Query\Advanced\OrderByBuilder\Field\UGroupL
 use ParagonIE\EasyDB\EasyStatement;
 use ProjectUGroup;
 use Tuleap\CrossTracker\Report\Query\Advanced\OrderByBuilder\ParametrizedFromOrder;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\OrderByDirection;
 use UGroupManager;
 
 final readonly class UGroupListFromOrderBuilder
@@ -37,9 +38,9 @@ final readonly class UGroupListFromOrderBuilder
     /**
      * @param list<int> $field_ids
      */
-    public function getFromOrder(array $field_ids, string $order): ParametrizedFromOrder
+    public function getFromOrder(array $field_ids, OrderByDirection $direction): ParametrizedFromOrder
     {
-        $suffix                                      = md5($order);
+        $suffix                                      = md5($direction->value);
         $tracker_field_alias                         = "TF_$suffix";
         $changeset_value_alias                       = "CV_$suffix";
         $tracker_changeset_value_list_alias          = "TCVL_$suffix";
@@ -67,7 +68,7 @@ final readonly class UGroupListFromOrderBuilder
         ) AS $ugroup_alias ON $tracker_field_list_bind_ugroups_value_alias.ugroup_id = $ugroup_alias.ugroup_id
         EOSQL;
 
-        return new ParametrizedFromOrder($from, [...$field_ids, ...$user_group_cases['parameters']], "$ugroup_alias.order_name $order");
+        return new ParametrizedFromOrder($from, [...$field_ids, ...$user_group_cases['parameters']], "$ugroup_alias.order_name $direction->value");
     }
 
     /**
