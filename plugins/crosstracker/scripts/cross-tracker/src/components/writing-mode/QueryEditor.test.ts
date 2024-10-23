@@ -20,9 +20,9 @@
 import { describe, expect, it, vi } from "vitest";
 import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
-import { getGlobalTestOptions } from "../helpers/global-options-for-tests";
+import { getGlobalTestOptions } from "../../helpers/global-options-for-tests";
 import QueryEditor from "./QueryEditor.vue";
-import WritingCrossTrackerReport from "./writing-cross-tracker-report";
+import { WritingCrossTrackerReport } from "../../domain/WritingCrossTrackerReport";
 
 const noop = (): void => {
     //Do nothing

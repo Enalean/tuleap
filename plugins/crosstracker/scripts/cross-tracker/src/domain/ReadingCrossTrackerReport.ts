@@ -17,10 +17,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 import type { TrackerAndProject } from "../type";
-import type BackendCrossTrackerReport from "../backend-cross-tracker-report";
-import type WritingCrossTrackerReport from "../writing-mode/writing-cross-tracker-report";
+import type { BackendCrossTrackerReport } from "./BackendCrossTrackerReport";
+import type { WritingCrossTrackerReport } from "./WritingCrossTrackerReport";
 
-export default class ReadingCrossTrackerReport {
+export class ReadingCrossTrackerReport {
     trackers: Map<number, TrackerAndProject>;
     expert_query: string;
     expert_mode: boolean;

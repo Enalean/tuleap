@@ -30,7 +30,7 @@ import { computed } from "vue";
 import { Option } from "@tuleap/option";
 import type { Fault } from "@tuleap/fault";
 import { useGettext } from "vue3-gettext";
-import type WritingCrossTrackerReport from "../writing-mode/writing-cross-tracker-report";
+import type { WritingCrossTrackerReport } from "../domain/WritingCrossTrackerReport";
 
 const { $gettext } = useGettext();
 

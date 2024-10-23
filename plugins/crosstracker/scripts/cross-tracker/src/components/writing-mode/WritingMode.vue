@@ -66,11 +66,11 @@ import QueryEditor from "./QueryEditor.vue";
 import type { AddTrackerToSelectionCommand } from "./TrackerSelection.vue";
 import TrackerSelection from "./TrackerSelection.vue";
 import TrackerListWritingMode from "./TrackerListWritingMode.vue";
-import type WritingCrossTrackerReport from "./writing-cross-tracker-report";
-import type { TrackerToUpdate } from "../type";
-import { CLEAR_FEEDBACKS, NOTIFY_FAULT } from "../injection-symbols";
-import type { SwitchModeEvent } from "../components/SwitchModeInput.vue";
-import SwitchModeInput from "../components/SwitchModeInput.vue";
+import type { WritingCrossTrackerReport } from "../../domain/WritingCrossTrackerReport";
+import type { TrackerToUpdate } from "../../type";
+import { CLEAR_FEEDBACKS, NOTIFY_FAULT } from "../../injection-symbols";
+import type { SwitchModeEvent } from "../SwitchModeInput.vue";
+import SwitchModeInput from "../SwitchModeInput.vue";
 
 const { $gettext } = useGettext();
 

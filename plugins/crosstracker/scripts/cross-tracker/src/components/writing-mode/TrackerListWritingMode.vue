@@ -39,7 +39,7 @@
     </div>
 </template>
 <script setup lang="ts">
-import type { TrackerToUpdate } from "../type";
+import type { TrackerToUpdate } from "../../type";
 
 const props = defineProps<{ trackers: ReadonlyArray<TrackerToUpdate> }>();
 const emit = defineEmits<{ (e: "tracker-removed", tracker: TrackerToUpdate): void }>();

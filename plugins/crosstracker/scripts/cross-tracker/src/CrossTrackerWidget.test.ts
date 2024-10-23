@@ -26,12 +26,12 @@ import { Fault } from "@tuleap/fault";
 import { Option } from "@tuleap/option";
 import { getGlobalTestOptions } from "./helpers/global-options-for-tests";
 import CrossTrackerWidget from "./CrossTrackerWidget.vue";
-import BackendCrossTrackerReport from "./backend-cross-tracker-report";
-import ReadingCrossTrackerReport from "./reading-mode/reading-cross-tracker-report";
-import WritingCrossTrackerReport from "./writing-mode/writing-cross-tracker-report";
+import { BackendCrossTrackerReport } from "./domain/BackendCrossTrackerReport";
+import { ReadingCrossTrackerReport } from "./domain/ReadingCrossTrackerReport";
+import { WritingCrossTrackerReport } from "./domain/WritingCrossTrackerReport";
 import * as rest_querier from "./api/rest-querier";
-import ReadingMode from "./reading-mode/ReadingMode.vue";
-import WritingMode from "./writing-mode/WritingMode.vue";
+import ReadingMode from "./components/reading-mode/ReadingMode.vue";
+import WritingMode from "./components/writing-mode/WritingMode.vue";
 import type { InvalidTracker, TrackerAndProject } from "./type";
 import { IS_USER_ADMIN, REPORT_ID } from "./injection-symbols";
 

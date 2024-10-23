@@ -25,12 +25,12 @@ import { errAsync, okAsync } from "neverthrow";
 import { ref } from "vue";
 import { Fault } from "@tuleap/fault";
 import ReadingMode from "./ReadingMode.vue";
-import BackendCrossTrackerReport from "../backend-cross-tracker-report";
-import ReadingCrossTrackerReport from "./reading-cross-tracker-report";
-import * as rest_querier from "../api/rest-querier";
-import type { Report, TrackerAndProject } from "../type";
-import { getGlobalTestOptions } from "../helpers/global-options-for-tests";
-import { IS_USER_ADMIN, NOTIFY_FAULT, REPORT_ID, REPORT_STATE } from "../injection-symbols";
+import { BackendCrossTrackerReport } from "../../domain/BackendCrossTrackerReport";
+import { ReadingCrossTrackerReport } from "../../domain/ReadingCrossTrackerReport";
+import * as rest_querier from "../../api/rest-querier";
+import type { Report, TrackerAndProject } from "../../type";
+import { getGlobalTestOptions } from "../../helpers/global-options-for-tests";
+import { IS_USER_ADMIN, NOTIFY_FAULT, REPORT_ID, REPORT_STATE } from "../../injection-symbols";
 import TrackerListReadingMode from "./TrackerListReadingMode.vue";
 
 describe("ReadingMode", () => {

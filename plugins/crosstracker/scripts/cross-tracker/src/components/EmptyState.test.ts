@@ -19,7 +19,7 @@
 
 import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
-import WritingCrossTrackerReport from "../writing-mode/writing-cross-tracker-report";
+import { WritingCrossTrackerReport } from "../domain/WritingCrossTrackerReport";
 import { ProjectInfoStub } from "../../tests/stubs/ProjectInfoStub";
 import { TrackerInfoStub } from "../../tests/stubs/TrackerInfoStub";
 import { getGlobalTestOptions } from "../helpers/global-options-for-tests";

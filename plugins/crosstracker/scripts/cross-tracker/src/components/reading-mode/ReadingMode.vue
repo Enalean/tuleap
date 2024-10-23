@@ -68,12 +68,12 @@ import { computed, ref } from "vue";
 import { useGettext } from "vue3-gettext";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import TrackerListReadingMode from "./TrackerListReadingMode.vue";
-import { updateReport } from "../api/rest-querier";
-import type ReadingCrossTrackerReport from "./reading-cross-tracker-report";
-import type { Report } from "../type";
-import type BackendCrossTrackerReport from "../backend-cross-tracker-report";
-import { IS_USER_ADMIN, NOTIFY_FAULT, REPORT_ID, REPORT_STATE } from "../injection-symbols";
-import { SaveReportFault } from "../domain/SaveReportFault";
+import { updateReport } from "../../api/rest-querier";
+import type { ReadingCrossTrackerReport } from "../../domain/ReadingCrossTrackerReport";
+import type { Report } from "../../type";
+import type { BackendCrossTrackerReport } from "../../domain/BackendCrossTrackerReport";
+import { IS_USER_ADMIN, NOTIFY_FAULT, REPORT_ID, REPORT_STATE } from "../../injection-symbols";
+import { SaveReportFault } from "../../domain/SaveReportFault";
 
 const { $gettext } = useGettext();
 const report_state = strictInject(REPORT_STATE);
