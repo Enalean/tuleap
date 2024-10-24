@@ -25,6 +25,7 @@ namespace Tuleap\CrossTracker\Report\Query\Advanced\OrderByBuilder\Field\UserLis
 use PFUser;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\ProvideCurrentUserStub;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\OrderByDirection;
 use UserHelper;
 
 final class UserOrderByBuilderTest extends TestCase
@@ -36,7 +37,7 @@ final class UserOrderByBuilderTest extends TestCase
         $builder = new UserOrderByBuilder(ProvideCurrentUserStub::buildWithUser($user));
         self::assertSame(
             "CONCAT(alias.realname, ' (', alias.user_name, ')') ASC",
-            $builder->getOrderByForUsers('alias', 'ASC'),
+            $builder->getOrderByForUsers('alias', OrderByDirection::ASCENDING),
         );
     }
 
@@ -47,7 +48,7 @@ final class UserOrderByBuilderTest extends TestCase
         $builder = new UserOrderByBuilder(ProvideCurrentUserStub::buildWithUser($user));
         self::assertSame(
             'CONCAT(alias.user_name) ASC',
-            $builder->getOrderByForUsers('alias', 'ASC'),
+            $builder->getOrderByForUsers('alias', OrderByDirection::ASCENDING),
         );
     }
 
@@ -58,7 +59,7 @@ final class UserOrderByBuilderTest extends TestCase
         $builder = new UserOrderByBuilder(ProvideCurrentUserStub::buildWithUser($user));
         self::assertSame(
             'CONCAT(alias.realname) ASC',
-            $builder->getOrderByForUsers('alias', 'ASC'),
+            $builder->getOrderByForUsers('alias', OrderByDirection::ASCENDING),
         );
     }
 
@@ -69,7 +70,7 @@ final class UserOrderByBuilderTest extends TestCase
         $builder = new UserOrderByBuilder(ProvideCurrentUserStub::buildWithUser($user));
         self::assertSame(
             "CONCAT(alias.user_name, ' (', alias.realname, ')') ASC",
-            $builder->getOrderByForUsers('alias', 'ASC'),
+            $builder->getOrderByForUsers('alias', OrderByDirection::ASCENDING),
         );
     }
 
@@ -80,7 +81,7 @@ final class UserOrderByBuilderTest extends TestCase
         $builder = new UserOrderByBuilder(ProvideCurrentUserStub::buildWithUser($user));
         self::assertSame(
             "CONCAT(alias.realname, ' (', alias.user_name, ')') ASC",
-            $builder->getOrderByForUsers('alias', 'ASC'),
+            $builder->getOrderByForUsers('alias', OrderByDirection::ASCENDING),
         );
     }
 }

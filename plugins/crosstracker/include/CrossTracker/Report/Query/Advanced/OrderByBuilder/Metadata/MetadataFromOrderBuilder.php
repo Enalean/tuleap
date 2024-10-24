@@ -32,7 +32,6 @@ use Tuleap\CrossTracker\Report\Query\Advanced\OrderByBuilder\Field\UserList\User
 use Tuleap\CrossTracker\Report\Query\Advanced\OrderByBuilder\OrderByBuilderParameters;
 use Tuleap\CrossTracker\Report\Query\Advanced\OrderByBuilder\ParametrizedFromOrder;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\OrderByDirection;
 use Tuleap\Tracker\Semantic\Contributor\RetrieveContributorField;
 use Tuleap\Tracker\Semantic\Description\GetDescriptionSemantic;
 use Tuleap\Tracker\Semantic\Status\RetrieveStatusField;
@@ -54,23 +53,20 @@ final readonly class MetadataFromOrderBuilder
 
     public function getFromOrder(Metadata $metadata, OrderByBuilderParameters $parameters): ParametrizedFromOrder
     {
-        $order = match ($parameters->direction) {
-            OrderByDirection::ASCENDING  => ' ASC',
-            OrderByDirection::DESCENDING => ' DESC',
-        };
+        $order      = $parameters->direction->value;
         $user_alias = 'user_' . md5($order);
 
         return match ($metadata->getName()) {
-            AllowedMetadata::TITLE            => $this->text_builder->getFromOrder($this->getTitleFieldIds($parameters->trackers), $order),
-            AllowedMetadata::DESCRIPTION      => $this->text_builder->getFromOrder($this->getDescriptionFieldIds($parameters->trackers), $order),
-            AllowedMetadata::STATUS           => $this->static_list_builder->getFromOrder($this->getStatusFieldIds($parameters->trackers), $order),
-            AllowedMetadata::ASSIGNED_TO      => $this->user_list_builder->getFromOrder($this->getAssignedToFieldIds($parameters->trackers), $order),
+            AllowedMetadata::TITLE            => $this->text_builder->getFromOrder($this->getTitleFieldIds($parameters->trackers), $parameters->direction),
+            AllowedMetadata::DESCRIPTION      => $this->text_builder->getFromOrder($this->getDescriptionFieldIds($parameters->trackers), $parameters->direction),
+            AllowedMetadata::STATUS           => $this->static_list_builder->getFromOrder($this->getStatusFieldIds($parameters->trackers), $parameters->direction),
+            AllowedMetadata::ASSIGNED_TO      => $this->user_list_builder->getFromOrder($this->getAssignedToFieldIds($parameters->trackers), $parameters->direction),
 
-            AllowedMetadata::SUBMITTED_BY     => new ParametrizedFromOrder("LEFT JOIN user AS $user_alias ON $user_alias.user_id = artifact.submitted_by", [], $this->user_order_by_builder->getOrderByForUsers($user_alias, $order)),
-            AllowedMetadata::LAST_UPDATE_BY   => new ParametrizedFromOrder("LEFT JOIN user AS $user_alias ON $user_alias.user_id = changeset.submitted_by", [], $this->user_order_by_builder->getOrderByForUsers($user_alias, $order)),
-            AllowedMetadata::SUBMITTED_ON     => new ParametrizedFromOrder('', [], 'artifact.submitted_on' . $order),
-            AllowedMetadata::LAST_UPDATE_DATE => new ParametrizedFromOrder('', [], 'changeset.submitted_on' . $order),
-            AllowedMetadata::ID               => new ParametrizedFromOrder('', [], 'artifact.id' . $order),
+            AllowedMetadata::SUBMITTED_BY     => new ParametrizedFromOrder("LEFT JOIN user AS $user_alias ON $user_alias.user_id = artifact.submitted_by", [], $this->user_order_by_builder->getOrderByForUsers($user_alias, $parameters->direction)),
+            AllowedMetadata::LAST_UPDATE_BY   => new ParametrizedFromOrder("LEFT JOIN user AS $user_alias ON $user_alias.user_id = changeset.submitted_by", [], $this->user_order_by_builder->getOrderByForUsers($user_alias, $parameters->direction)),
+            AllowedMetadata::SUBMITTED_ON     => new ParametrizedFromOrder('', [], 'artifact.submitted_on ' . $order),
+            AllowedMetadata::LAST_UPDATE_DATE => new ParametrizedFromOrder('', [], 'changeset.submitted_on ' . $order),
+            AllowedMetadata::ID               => new ParametrizedFromOrder('', [], 'artifact.id ' . $order),
             default                           => throw new LogicException("Unknown metadata type: {$metadata->getName()}"),
         };
     }

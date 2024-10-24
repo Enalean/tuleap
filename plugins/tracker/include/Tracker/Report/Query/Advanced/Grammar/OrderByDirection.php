@@ -22,8 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Report\Query\Advanced\Grammar;
 
-enum OrderByDirection
+enum OrderByDirection: string
 {
-    case ASCENDING;
-    case DESCENDING;
+    case ASCENDING  = 'ASC';
+    case DESCENDING = 'DESC';
 }
