@@ -27,7 +27,7 @@
                     'disable-border': is_prose_mirror,
                     'add-hover-effect': is_prose_mirror,
                 }"
-                v-if="(is_edit_mode || is_prose_mirror) && !is_print_mode"
+                v-if="can_header_be_edited"
                 v-model="title_to_edit"
                 v-on:input="onTitleChange"
                 v-bind:placeholder="placeholder"
@@ -35,7 +35,7 @@
                 data-test="title-input"
                 rows="1"
             ></textarea>
-            <template v-else>
+            <template v-if="!can_header_be_edited">
                 {{ title }}
             </template>
         </h1>
@@ -43,12 +43,13 @@
 </template>
 
 <script setup lang="ts">
-import { ref, toRefs, watch } from "vue";
+import { ref, toRefs, watch, computed } from "vue";
 import useScrollToAnchor from "@/composables/useScrollToAnchor";
 import { useGettext } from "vue3-gettext";
 import type { EditorSectionContent } from "@/composables/useEditorSectionContent";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import { EDITOR_CHOICE } from "@/helpers/editor-choice";
+import { CAN_USER_EDIT_DOCUMENT } from "@/can-user-edit-document-injection-key";
 
 const props = withDefaults(
     defineProps<{
@@ -73,6 +74,15 @@ const { title } = toRefs(props);
 const title_to_edit = ref(title.value);
 
 const { is_prose_mirror } = strictInject(EDITOR_CHOICE);
+const can_user_edit_document = strictInject(CAN_USER_EDIT_DOCUMENT);
+
+const can_header_be_edited = computed(() => {
+    if (props.is_print_mode === true || !can_user_edit_document) {
+        return false;
+    }
+
+    return props.is_edit_mode || is_prose_mirror.value;
+});
 
 watch(
     () => title.value,

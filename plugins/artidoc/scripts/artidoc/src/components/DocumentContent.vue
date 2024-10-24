@@ -19,7 +19,7 @@
   -->
 
 <template>
-    <editor-toolbar v-if="is_prose_mirror" />
+    <editor-toolbar v-if="can_user_edit_document && is_prose_mirror" />
     <notification-container />
     <editor-choice />
     <ol ref="sections_container">
