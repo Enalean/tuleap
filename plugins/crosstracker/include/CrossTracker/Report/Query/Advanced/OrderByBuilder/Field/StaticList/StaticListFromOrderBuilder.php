@@ -50,6 +50,6 @@ final class StaticListFromOrderBuilder
             ON $tracker_changeset_value_list_alias.bindvalue_id = $tracker_field_list_bind_static_alias.id
         EOSQL;
 
-        return new ParametrizedFromOrder($from, $field_ids, "$tracker_field_list_bind_static_alias.label $order");
+        return new ParametrizedFromOrder($from, $field_ids, "CAST($tracker_field_list_bind_static_alias.label AS SIGNED) $order, $tracker_field_list_bind_static_alias.label $order");
     }
 }
