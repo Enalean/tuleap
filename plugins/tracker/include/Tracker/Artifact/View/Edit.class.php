@@ -263,6 +263,7 @@ class Tracker_Artifact_View_Edit extends Tracker_Artifact_View_View
                 80,
                 $submitted_comment,
                 false,
+                false
             );
             $html .= $this->fetchReplyByMailHelp();
         }

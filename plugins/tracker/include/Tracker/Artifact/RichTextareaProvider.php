@@ -27,23 +27,12 @@ use TemplateRendererFactory;
 use Tracker;
 use Tuleap\Tracker\FormElement\Field\Text\TextValueValidator;
 
-class RichTextareaProvider
+final class RichTextareaProvider
 {
-    /**
-     * @var TemplateRendererFactory
-     */
-    private $template_renderer_factory;
-    /**
-     * @var UploadDataAttributesForRichTextEditorBuilder
-     */
-    private $upload_data_attributes_for_rich_text_editor_builder;
-
     public function __construct(
-        TemplateRendererFactory $template_renderer_factory,
-        UploadDataAttributesForRichTextEditorBuilder $upload_data_attributes_for_rich_text_editor_builder,
+        private readonly TemplateRendererFactory $template_renderer_factory,
+        private readonly UploadDataAttributesForRichTextEditorBuilder $upload_data_attributes_for_rich_text_editor_builder,
     ) {
-        $this->template_renderer_factory                           = $template_renderer_factory;
-        $this->upload_data_attributes_for_rich_text_editor_builder = $upload_data_attributes_for_rich_text_editor_builder;
     }
 
     public function getTextarea(
@@ -56,18 +45,23 @@ class RichTextareaProvider
         int $cols,
         string $value,
         bool $is_required,
+        bool $is_artifact_copy,
     ): string {
         $renderer = $this->template_renderer_factory->getRenderer(__DIR__ . '/../../../templates/artifact');
 
         $help_id = $id . '-help';
 
-        $data_attributes_for_dragndrop = $this->upload_data_attributes_for_rich_text_editor_builder
-            ->getDataAttributes($tracker, $user, $artifact);
-
-        $data_attributes      = [
+        $data_attributes               = [
             ['name' => 'project-id', 'value' => $tracker->getGroupId()],
         ];
-        $is_dragndrop_allowed = ! empty($data_attributes_for_dragndrop);
+        $data_attributes_for_dragndrop = [];
+
+        if (! $is_artifact_copy) {
+            $data_attributes_for_dragndrop = $this->upload_data_attributes_for_rich_text_editor_builder
+                ->getDataAttributes($tracker, $user, $artifact);
+        }
+
+        $is_dragndrop_allowed =  ! empty($data_attributes_for_dragndrop) && ! $is_artifact_copy;
         if ($is_dragndrop_allowed) {
             $data_attributes[] = [
                 'name'  => 'help-id',

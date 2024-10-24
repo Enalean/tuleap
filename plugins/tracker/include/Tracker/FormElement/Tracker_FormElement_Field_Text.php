@@ -60,6 +60,8 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum
         ],
     ];
 
+    private bool $is_artifact_copy = false;
+
     /**
      * The field is permanently deleted from the db
      * This hooks is here to delete specific properties,
@@ -328,6 +330,15 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum
     }
 
     /**
+     * @see Tracker_FormElement::fetchArtifactCopyMode
+     */
+    public function fetchArtifactCopyMode(Artifact $artifact, array $submitted_values)
+    {
+        $this->is_artifact_copy = true;
+        return $this->fetchArtifactReadOnly($artifact, $submitted_values);
+    }
+
+    /**
      * @return string
      */
     private function getRichTextarea(?Artifact $artifact, string $format, string $content)
@@ -361,6 +372,7 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum
             $this->getProperty('cols'),
             $content,
             $this->isRequired(),
+            $this->is_artifact_copy
         );
 
         return $html;
