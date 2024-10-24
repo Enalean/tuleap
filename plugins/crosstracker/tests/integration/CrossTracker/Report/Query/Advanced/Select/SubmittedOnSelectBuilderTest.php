@@ -64,11 +64,11 @@ final class SubmittedOnSelectBuilderTest extends CrossTrackerFieldTestCase
         $release_submitted_on_field_id = $tracker_builder->buildSubmittedOnField($release_tracker->getId());
         $sprint_submitted_on_field_id  = $tracker_builder->buildSubmittedOnField($sprint_tracker->getId());
 
-        $tracker_builder->setReadPermission(
+        $tracker_builder->grantReadPermissionOnField(
             $release_submitted_on_field_id,
             ProjectUGroup::PROJECT_MEMBERS
         );
-        $tracker_builder->setReadPermission(
+        $tracker_builder->grantReadPermissionOnField(
             $sprint_submitted_on_field_id,
             ProjectUGroup::PROJECT_MEMBERS
         );

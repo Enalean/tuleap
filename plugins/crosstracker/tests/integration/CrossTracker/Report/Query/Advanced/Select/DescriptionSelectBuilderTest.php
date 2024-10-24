@@ -72,11 +72,11 @@ final class DescriptionSelectBuilderTest extends CrossTrackerFieldTestCase
         );
         $tracker_builder->buildDescriptionSemantic($sprint_tracker->getId(), $sprint_text_field_id);
 
-        $tracker_builder->setReadPermission(
+        $tracker_builder->grantReadPermissionOnField(
             $release_text_field_id,
             ProjectUGroup::PROJECT_MEMBERS
         );
-        $tracker_builder->setReadPermission(
+        $tracker_builder->grantReadPermissionOnField(
             $sprint_text_field_id,
             ProjectUGroup::PROJECT_MEMBERS
         );

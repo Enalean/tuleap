@@ -70,7 +70,7 @@ final class LastUpdateDateMetadataTest extends CrossTrackerFieldTestCase
         $this->task_tracker    = $tracker_builder->buildTracker($project_id, 'Task');
 
         $task_lud_field_id = $tracker_builder->buildLastUpdateDateField($this->task_tracker->getId());
-        $tracker_builder->setReadPermission($task_lud_field_id, ProjectUGroup::PROJECT_ADMIN);
+        $tracker_builder->grantReadPermissionOnField($task_lud_field_id, ProjectUGroup::PROJECT_ADMIN);
 
         $this->release_artifact_past_1_id = $tracker_builder->buildArtifact($this->release_tracker->getId());
         $this->release_artifact_today_id  = $tracker_builder->buildArtifact($this->release_tracker->getId());

@@ -85,11 +85,11 @@ final class StaticListSelectBuilderTest extends CrossTrackerFieldTestCase
             ['Europa'],
         );
 
-        $tracker_builder->setReadPermission(
+        $tracker_builder->grantReadPermissionOnField(
             $release_static_list_field_id,
             ProjectUGroup::PROJECT_MEMBERS
         );
-        $tracker_builder->setReadPermission(
+        $tracker_builder->grantReadPermissionOnField(
             $sprint_list_field_id,
             ProjectUGroup::PROJECT_MEMBERS
         );

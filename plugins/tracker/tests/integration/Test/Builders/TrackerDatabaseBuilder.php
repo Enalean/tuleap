@@ -289,7 +289,7 @@ final class TrackerDatabaseBuilder
         );
     }
 
-    public function setReadPermission(int $field_id, int $user_group_id): void
+    public function grantReadPermissionOnField(int $field_id, int $user_group_id): void
     {
         $this->db->insert(
             'permissions',
@@ -301,7 +301,7 @@ final class TrackerDatabaseBuilder
         );
     }
 
-    public function setSubmitPermission(int $field_id, int $user_group_id): void
+    public function grantSubmitPermissionOnField(int $field_id, int $user_group_id): void
     {
         $this->db->insert(
             'permissions',
@@ -328,7 +328,7 @@ final class TrackerDatabaseBuilder
         );
     }
 
-    public function setViewPermissionOnArtifact(int $artifact_id, int $user_group_id): void
+    public function grantViewPermissionOnArtifact(int $artifact_id, int $user_group_id): void
     {
         $this->db->update(
             'tracker_artifact',
@@ -536,7 +536,7 @@ final class TrackerDatabaseBuilder
     }
 
     /**
-     * @param string[] $values
+     * @param list<string> $values
      * @return array<string, int>
      */
     public function buildValuesForStaticListField(int $tracker_field_id, array $values): array
@@ -556,7 +556,7 @@ final class TrackerDatabaseBuilder
     }
 
     /**
-     * @param string[] $values
+     * @param list<string> $values
      * @return array<string, int>
      */
     public function buildValuesForStaticOpenListField(int $tracker_field_id, array $values): array
@@ -576,7 +576,7 @@ final class TrackerDatabaseBuilder
     }
 
     /**
-     * @param int[] $ugroup_ids
+     * @param list<int> $ugroup_ids
      * @return array<int, int>
      */
     public function buildValuesForUserGroupListField(int $tracker_field_id, array $ugroup_ids): array
@@ -596,9 +596,11 @@ final class TrackerDatabaseBuilder
     }
 
     /**
+     * @param list<string> $open_values
+     * @param list<string> $closed_values
      * @return array{
-     *     open: array<int>,
-     *     closed: array<int>,
+     *     open: list<int>,
+     *     closed: list<int>,
      * }
      */
     public function buildOpenAndClosedValuesForField(int $tracker_field_id, int $tracker_id, array $open_values, array $closed_values): array
@@ -652,19 +654,6 @@ final class TrackerDatabaseBuilder
                 'artifact_id'        => $target_artifact_id,
                 'keyword'            => 'release',
                 'group_id'           => $project_id,
-            ]
-        );
-    }
-
-    public function addStatusValueForArtifact(int $field_id, int $changeset_id, int $bind_open_value_id): void
-    {
-        $changeset_value_id = $this->buildChangesetValue($changeset_id, $field_id);
-
-        $this->db->insert(
-            'tracker_changeset_value_list',
-            [
-                'changeset_value_id' => $changeset_value_id,
-                'bindvalue_id'       => $bind_open_value_id,
             ]
         );
     }

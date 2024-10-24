@@ -62,8 +62,8 @@ final class NumericOrderByBuilderTest extends CrossTrackerFieldTestCase
         $release_int_field_id  = $tracker_builder->buildIntField($release_tracker->getId(), 'numeric_field');
         $sprint_float_field_id = $tracker_builder->buildFloatField($sprint_tracker->getId(), 'numeric_field');
 
-        $tracker_builder->setReadPermission($release_int_field_id, ProjectUGroup::PROJECT_MEMBERS);
-        $tracker_builder->setReadPermission($sprint_float_field_id, ProjectUGroup::PROJECT_MEMBERS);
+        $tracker_builder->grantReadPermissionOnField($release_int_field_id, ProjectUGroup::PROJECT_MEMBERS);
+        $tracker_builder->grantReadPermissionOnField($sprint_float_field_id, ProjectUGroup::PROJECT_MEMBERS);
 
         $release_artifact_1 = $tracker_builder->buildArtifact($release_tracker->getId());
         $release_artifact_2 = $tracker_builder->buildArtifact($release_tracker->getId());

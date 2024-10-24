@@ -65,11 +65,11 @@ final class StatusSelectBuilderTest extends CrossTrackerFieldTestCase
         $sprint_status_field_id  = $tracker_builder->buildStaticListField($sprint_tracker->getId(), 'field_status', 'sb');
         $sprint_status_values    = $tracker_builder->buildOpenAndClosedValuesForField($sprint_status_field_id, $sprint_tracker->getId(), ['Open'], ['Closed', 'Also closed']);
 
-        $tracker_builder->setReadPermission(
+        $tracker_builder->grantReadPermissionOnField(
             $release_status_field_id,
             ProjectUGroup::PROJECT_MEMBERS
         );
-        $tracker_builder->setReadPermission(
+        $tracker_builder->grantReadPermissionOnField(
             $sprint_status_field_id,
             ProjectUGroup::PROJECT_MEMBERS
         );

@@ -71,8 +71,8 @@ final class TrackersPermissionsDaoOnTrackersTest extends TestIntegrationTestCase
 
         $field1_id = $tracker_builder->buildIntField($this->tracker1_id, 'int_field1');
         $field3_id = $tracker_builder->buildIntField($this->tracker3_id, 'int_field3');
-        $tracker_builder->setSubmitPermission($field1_id, ProjectUGroup::PROJECT_ADMIN);
-        $tracker_builder->setSubmitPermission($field3_id, ProjectUGroup::PROJECT_MEMBERS);
+        $tracker_builder->grantSubmitPermissionOnField($field1_id, ProjectUGroup::PROJECT_ADMIN);
+        $tracker_builder->grantSubmitPermissionOnField($field3_id, ProjectUGroup::PROJECT_MEMBERS);
 
         $_SERVER['REQUEST_URI'] = '';
     }

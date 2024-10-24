@@ -64,8 +64,8 @@ final class TitleOrderByBuilderTest extends CrossTrackerFieldTestCase
         $tracker_builder->buildTitleSemantic($release_tracker->getId(), $release_text_field_id);
         $tracker_builder->buildTitleSemantic($sprint_tracker->getId(), $sprint_text_field_id);
 
-        $tracker_builder->setReadPermission($release_text_field_id, ProjectUGroup::PROJECT_MEMBERS);
-        $tracker_builder->setReadPermission($sprint_text_field_id, ProjectUGroup::PROJECT_MEMBERS);
+        $tracker_builder->grantReadPermissionOnField($release_text_field_id, ProjectUGroup::PROJECT_MEMBERS);
+        $tracker_builder->grantReadPermissionOnField($sprint_text_field_id, ProjectUGroup::PROJECT_MEMBERS);
 
         $release_artifact_1_id = $tracker_builder->buildArtifact($release_tracker->getId());
         $release_artifact_2_id = $tracker_builder->buildArtifact($release_tracker->getId());

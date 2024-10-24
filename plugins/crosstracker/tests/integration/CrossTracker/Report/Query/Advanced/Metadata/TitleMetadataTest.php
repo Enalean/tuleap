@@ -85,15 +85,15 @@ final class TitleMetadataTest extends CrossTrackerFieldTestCase
         $tracker_builder->buildTitleSemantic($this->sprint_tracker->getId(), $sprint_title_field_id);
         $tracker_builder->buildTitleSemantic($this->task_tracker->getId(), $task_title_field_id);
 
-        $tracker_builder->setReadPermission(
+        $tracker_builder->grantReadPermissionOnField(
             $release_title_field_id,
             ProjectUGroup::PROJECT_MEMBERS
         );
-        $tracker_builder->setReadPermission(
+        $tracker_builder->grantReadPermissionOnField(
             $sprint_title_field_id,
             ProjectUGroup::PROJECT_MEMBERS
         );
-        $tracker_builder->setReadPermission(
+        $tracker_builder->grantReadPermissionOnField(
             $task_title_field_id,
             ProjectUGroup::PROJECT_ADMIN
         );

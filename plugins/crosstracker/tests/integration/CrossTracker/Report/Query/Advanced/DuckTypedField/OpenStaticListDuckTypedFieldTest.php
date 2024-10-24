@@ -68,11 +68,11 @@ final class OpenStaticListDuckTypedFieldTest extends CrossTrackerFieldTestCase
         $sprint_bind_ids       = $tracker_builder->buildValuesForStaticListField($sprint_list_field_id, ['lead', 'management']);
         $sprint_open_bind_ids  = $tracker_builder->buildValuesForStaticOpenListField($sprint_list_field_id, ['cheese']);
 
-        $tracker_builder->setReadPermission(
+        $tracker_builder->grantReadPermissionOnField(
             $release_list_field_id,
             ProjectUGroup::PROJECT_MEMBERS
         );
-        $tracker_builder->setReadPermission(
+        $tracker_builder->grantReadPermissionOnField(
             $sprint_list_field_id,
             ProjectUGroup::PROJECT_MEMBERS
         );

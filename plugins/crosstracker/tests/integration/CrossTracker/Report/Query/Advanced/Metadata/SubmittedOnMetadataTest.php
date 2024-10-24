@@ -70,7 +70,7 @@ final class SubmittedOnMetadataTest extends CrossTrackerFieldTestCase
         $this->task_tracker    = $tracker_builder->buildTracker($project_id, 'Task');
 
         $task_subon_field_id = $tracker_builder->buildSubmittedOnField($this->task_tracker->getId());
-        $tracker_builder->setReadPermission($task_subon_field_id, ProjectUGroup::PROJECT_ADMIN);
+        $tracker_builder->grantReadPermissionOnField($task_subon_field_id, ProjectUGroup::PROJECT_ADMIN);
 
         $today_timestamp  = (new DateTime('now'))->getTimestamp();
         $past_1_timestamp = (new DateTime('2023-03-08 10:25'))->getTimestamp();

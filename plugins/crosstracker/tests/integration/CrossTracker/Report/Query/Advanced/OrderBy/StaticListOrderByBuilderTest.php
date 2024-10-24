@@ -74,8 +74,8 @@ final class StaticListOrderByBuilderTest extends CrossTrackerFieldTestCase
         $release_bind_ids = $tracker_builder->buildValuesForStaticListField($release_list_field_id, ['A110', 'A610', 'B35S']);
         $sprint_bind_ids  = $tracker_builder->buildValuesForStaticListField($sprint_list_field_id, ['3-Eleven', '22-A', '2-Eleven']);
 
-        $tracker_builder->setReadPermission($release_list_field_id, ProjectUGroup::PROJECT_MEMBERS);
-        $tracker_builder->setReadPermission($sprint_list_field_id, ProjectUGroup::PROJECT_MEMBERS);
+        $tracker_builder->grantReadPermissionOnField($release_list_field_id, ProjectUGroup::PROJECT_MEMBERS);
+        $tracker_builder->grantReadPermissionOnField($sprint_list_field_id, ProjectUGroup::PROJECT_MEMBERS);
 
         $release_artifact_1_id = $tracker_builder->buildArtifact($release_tracker->getId());
         $release_artifact_2_id = $tracker_builder->buildArtifact($release_tracker->getId());

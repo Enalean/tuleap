@@ -82,15 +82,15 @@ final class UserListDuckTypedFieldTest extends CrossTrackerFieldTestCase
         $sprint_user_field_id  = $tracker_builder->buildUserListField($this->sprint_tracker->getId(), 'user_field', 'msb');
         $task_user_field_id    = $tracker_builder->buildUserListField($this->task_tracker->getId(), 'user_field', 'sb');
 
-        $tracker_builder->setReadPermission(
+        $tracker_builder->grantReadPermissionOnField(
             $release_user_field_id,
             ProjectUGroup::PROJECT_MEMBERS
         );
-        $tracker_builder->setReadPermission(
+        $tracker_builder->grantReadPermissionOnField(
             $sprint_user_field_id,
             ProjectUGroup::PROJECT_MEMBERS
         );
-        $tracker_builder->setReadPermission(
+        $tracker_builder->grantReadPermissionOnField(
             $task_user_field_id,
             ProjectUGroup::PROJECT_ADMIN
         );

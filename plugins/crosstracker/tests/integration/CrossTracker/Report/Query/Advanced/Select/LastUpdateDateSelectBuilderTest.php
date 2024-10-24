@@ -64,11 +64,11 @@ final class LastUpdateDateSelectBuilderTest extends CrossTrackerFieldTestCase
         $release_last_update_date_field_id = $tracker_builder->buildLastUpdateDateField($release_tracker->getId());
         $sprint_last_update_date_field_id  = $tracker_builder->buildLastUpdateDateField($sprint_tracker->getId());
 
-        $tracker_builder->setReadPermission(
+        $tracker_builder->grantReadPermissionOnField(
             $release_last_update_date_field_id,
             ProjectUGroup::PROJECT_MEMBERS
         );
-        $tracker_builder->setReadPermission(
+        $tracker_builder->grantReadPermissionOnField(
             $sprint_last_update_date_field_id,
             ProjectUGroup::PROJECT_MEMBERS
         );

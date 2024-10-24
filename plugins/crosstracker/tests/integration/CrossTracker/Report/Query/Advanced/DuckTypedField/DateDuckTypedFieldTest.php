@@ -86,15 +86,15 @@ final class DateDuckTypedFieldTest extends CrossTrackerFieldTestCase
             false
         );
 
-        $tracker_builder->setReadPermission(
+        $tracker_builder->grantReadPermissionOnField(
             $release_date_field_id,
             ProjectUGroup::PROJECT_MEMBERS
         );
-        $tracker_builder->setReadPermission(
+        $tracker_builder->grantReadPermissionOnField(
             $sprint_date_field_id,
             ProjectUGroup::PROJECT_MEMBERS
         );
-        $tracker_builder->setReadPermission(
+        $tracker_builder->grantReadPermissionOnField(
             $task_date_field_id,
             ProjectUGroup::PROJECT_ADMIN
         );

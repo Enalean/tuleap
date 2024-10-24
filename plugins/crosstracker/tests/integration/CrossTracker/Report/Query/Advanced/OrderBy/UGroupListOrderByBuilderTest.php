@@ -85,8 +85,8 @@ final class UGroupListOrderByBuilderTest extends CrossTrackerFieldTestCase
             [$static_ugroup_id, ProjectUGroup::PROJECT_MEMBERS],
         );
 
-        $tracker_builder->setReadPermission($release_ugroup_list_field_id, ProjectUGroup::PROJECT_MEMBERS);
-        $tracker_builder->setReadPermission($sprint_ugroup_list_field_id, ProjectUGroup::PROJECT_MEMBERS);
+        $tracker_builder->grantReadPermissionOnField($release_ugroup_list_field_id, ProjectUGroup::PROJECT_MEMBERS);
+        $tracker_builder->grantReadPermissionOnField($sprint_ugroup_list_field_id, ProjectUGroup::PROJECT_MEMBERS);
 
         $release_artifact_1_id = $tracker_builder->buildArtifact($release_tracker->getId());
         $release_artifact_2_id = $tracker_builder->buildArtifact($release_tracker->getId());

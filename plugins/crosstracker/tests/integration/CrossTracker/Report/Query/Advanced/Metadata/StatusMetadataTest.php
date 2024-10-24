@@ -75,15 +75,15 @@ final class StatusMetadataTest extends CrossTrackerFieldTestCase
         $task_status_field_id    = $tracker_builder->buildStaticListField($this->task_tracker->getId(), 'task_status', 'sb');
         $task_status_values      = $tracker_builder->buildOpenAndClosedValuesForField($task_status_field_id, $this->task_tracker->getId(), ['Open'], ['Closed']);
 
-        $tracker_builder->setReadPermission(
+        $tracker_builder->grantReadPermissionOnField(
             $release_status_field_id,
             ProjectUGroup::PROJECT_MEMBERS
         );
-        $tracker_builder->setReadPermission(
+        $tracker_builder->grantReadPermissionOnField(
             $sprint_status_field_id,
             ProjectUGroup::PROJECT_MEMBERS
         );
-        $tracker_builder->setReadPermission(
+        $tracker_builder->grantReadPermissionOnField(
             $task_status_field_id,
             ProjectUGroup::PROJECT_ADMIN
         );

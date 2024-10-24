@@ -62,8 +62,8 @@ final class TextOrderByBuilderTest extends CrossTrackerFieldTestCase
         $release_text_field_id = $tracker_builder->buildTextField($release_tracker->getId(), 'text_field');
         $sprint_text_field_id  = $tracker_builder->buildTextField($sprint_tracker->getId(), 'text_field');
 
-        $tracker_builder->setReadPermission($release_text_field_id, ProjectUGroup::PROJECT_MEMBERS);
-        $tracker_builder->setReadPermission($sprint_text_field_id, ProjectUGroup::PROJECT_MEMBERS);
+        $tracker_builder->grantReadPermissionOnField($release_text_field_id, ProjectUGroup::PROJECT_MEMBERS);
+        $tracker_builder->grantReadPermissionOnField($sprint_text_field_id, ProjectUGroup::PROJECT_MEMBERS);
 
         $release_artifact_1_id = $tracker_builder->buildArtifact($release_tracker->getId());
         $release_artifact_2_id = $tracker_builder->buildArtifact($release_tracker->getId());

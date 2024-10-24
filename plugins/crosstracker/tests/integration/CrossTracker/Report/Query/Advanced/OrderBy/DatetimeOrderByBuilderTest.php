@@ -57,7 +57,7 @@ final class DatetimeOrderByBuilderTest extends CrossTrackerFieldTestCase
         $release_tracker = $tracker_builder->buildTracker($project_id, 'Release');
         $tracker_builder->setViewPermissionOnTracker($release_tracker->getId(), Tracker::PERMISSION_FULL, ProjectUGroup::PROJECT_MEMBERS);
         $date_field_id = $tracker_builder->buildDateField($release_tracker->getId(), 'date_field', true);
-        $tracker_builder->setReadPermission($date_field_id, ProjectUGroup::PROJECT_MEMBERS);
+        $tracker_builder->grantReadPermissionOnField($date_field_id, ProjectUGroup::PROJECT_MEMBERS);
 
         $artifact_1 = $tracker_builder->buildArtifact($release_tracker->getId());
         $artifact_2 = $tracker_builder->buildArtifact($release_tracker->getId());

@@ -81,8 +81,8 @@ final class AssignedToOrderByBuilderTest extends CrossTrackerFieldTestCase
         $tracker_builder->buildContributorAssigneeSemantic($release_tracker->getId(), $release_list_field_id);
         $tracker_builder->buildContributorAssigneeSemantic($sprint_tracker->getId(), $sprint_list_field_id);
 
-        $tracker_builder->setReadPermission($release_list_field_id, ProjectUGroup::PROJECT_MEMBERS);
-        $tracker_builder->setReadPermission($sprint_list_field_id, ProjectUGroup::PROJECT_MEMBERS);
+        $tracker_builder->grantReadPermissionOnField($release_list_field_id, ProjectUGroup::PROJECT_MEMBERS);
+        $tracker_builder->grantReadPermissionOnField($sprint_list_field_id, ProjectUGroup::PROJECT_MEMBERS);
 
         $release_artifact_1_id = $tracker_builder->buildArtifact($release_tracker->getId());
         $release_artifact_2_id = $tracker_builder->buildArtifact($release_tracker->getId());

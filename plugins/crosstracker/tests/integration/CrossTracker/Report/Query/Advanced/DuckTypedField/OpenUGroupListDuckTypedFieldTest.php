@@ -74,11 +74,11 @@ final class OpenUGroupListDuckTypedFieldTest extends CrossTrackerFieldTestCase
             ProjectUGroup::PROJECT_MEMBERS, ProjectUGroup::PROJECT_ADMIN, $static_ugroup_id,
         ]);
 
-        $tracker_builder->setReadPermission(
+        $tracker_builder->grantReadPermissionOnField(
             $release_ugroup_field_id,
             ProjectUGroup::PROJECT_MEMBERS
         );
-        $tracker_builder->setReadPermission(
+        $tracker_builder->grantReadPermissionOnField(
             $sprint_ugroup_field_id,
             ProjectUGroup::PROJECT_MEMBERS
         );
