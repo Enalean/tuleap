@@ -225,6 +225,7 @@ describe("transform-field-value-into-formatted-cell", () => {
                     label: "On Going",
                     color: null,
                     tlp_color: "lake-placid-blue",
+                    is_hidden: false,
                 },
             ],
         };
@@ -286,6 +287,7 @@ describe("transform-field-value-into-formatted-cell", () => {
                     label: "On Going",
                     color: null,
                     tlp_color: "lake-placid-blue",
+                    is_hidden: false,
                 },
             ],
         };
@@ -347,12 +349,14 @@ describe("transform-field-value-into-formatted-cell", () => {
                     label: "value01",
                     color: null,
                     tlp_color: "lake-placid-blue",
+                    is_hidden: false,
                 },
                 {
                     id: "2",
                     label: "value02",
                     color: null,
                     tlp_color: "lake-placid-blue",
+                    is_hidden: false,
                 },
             ],
         };
@@ -422,12 +426,14 @@ describe("transform-field-value-into-formatted-cell", () => {
                     label: "value01",
                     color: null,
                     tlp_color: "lake-placid-blue",
+                    is_hidden: false,
                 },
                 {
                     id: "2",
                     label: "value02",
                     color: null,
                     tlp_color: "lake-placid-blue",
+                    is_hidden: false,
                 },
             ],
         };
@@ -495,12 +501,14 @@ describe("transform-field-value-into-formatted-cell", () => {
                 {
                     id: "1",
                     label: "value01",
+                    is_hidden: false,
                 },
                 {
                     id: "1452",
                     label: "value02",
                     color: null,
                     tlp_color: "lake-placid-blue",
+                    is_hidden: false,
                 },
             ],
         };

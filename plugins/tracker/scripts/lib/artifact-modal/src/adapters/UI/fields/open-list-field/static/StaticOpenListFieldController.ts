@@ -54,7 +54,8 @@ export const StaticOpenListFieldController = (
 
     const getFieldValues = (): Array<StaticValueModelItem> => {
         if (merged_values.length === 0) {
-            const union_values = [...field.values, ...bind_value_objects];
+            const visible_values = field.values.filter((value) => !value.is_hidden);
+            const union_values = [...visible_values, ...bind_value_objects];
             merged_values = [
                 ...new Map(
                     union_values.map((union_value) => {
@@ -78,6 +79,7 @@ export const StaticOpenListFieldController = (
         bind_value_objects.push({
             id: new_selection.id,
             label: new_selection.text.replace("\n", "").trim(),
+            is_hidden: false,
         });
 
         host.presenter = StaticOpenListFieldPresenterBuilder.withSelectableValues(

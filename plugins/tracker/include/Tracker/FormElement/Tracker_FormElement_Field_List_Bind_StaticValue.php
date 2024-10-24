@@ -171,6 +171,7 @@ class Tracker_FormElement_Field_List_Bind_StaticValue extends Tracker_FormElemen
             'label'     => $this->getLabel(),
             'color'     => $color,
             'tlp_color' => $tlp_color_name,
+            'is_hidden' => (bool) $this->isHidden(),
         ];
     }
 }

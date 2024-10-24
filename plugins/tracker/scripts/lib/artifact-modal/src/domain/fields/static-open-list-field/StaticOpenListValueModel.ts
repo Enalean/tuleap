@@ -20,6 +20,7 @@
 export type StaticValueModelItem = {
     readonly id: string;
     readonly label: string;
+    readonly is_hidden: boolean;
 };
 
 export type StaticOpenListValueModel = {

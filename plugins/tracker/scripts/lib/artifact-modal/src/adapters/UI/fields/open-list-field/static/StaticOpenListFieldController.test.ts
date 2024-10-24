@@ -46,9 +46,9 @@ describe("StaticOpenListFieldController", () => {
     beforeEach(() => {
         doc = document.implementation.createHTMLDocument();
         bind_value_objects = [
-            { id: "1", label: "Foo" },
-            { id: "2", label: "Bar" },
-            { id: "3", label: "Baz" },
+            { id: "1", label: "Foo", is_hidden: false },
+            { id: "2", label: "Bar", is_hidden: false },
+            { id: "3", label: "Baz", is_hidden: false },
         ];
     });
 
@@ -107,6 +107,7 @@ describe("StaticOpenListFieldController", () => {
             const expected_bind_value = {
                 id: selected_value.id,
                 label: selected_value.text,
+                is_hidden: false,
             };
 
             bind_value_objects = [];
@@ -137,6 +138,7 @@ describe("StaticOpenListFieldController", () => {
             const expected_bind_value = {
                 id: selected_value.id,
                 label: selected_value.text,
+                is_hidden: false,
             };
 
             bind_value_objects = [];
@@ -158,6 +160,7 @@ describe("StaticOpenListFieldController", () => {
             const model_value = {
                 id: value_to_unselect.id,
                 label: value_to_unselect.text,
+                is_hidden: false,
             };
             bind_value_objects = [model_value];
 
@@ -193,6 +196,7 @@ describe("StaticOpenListFieldController", () => {
             const model_value = {
                 id: value_to_unselect.id,
                 label: value_to_unselect.text,
+                is_hidden: false,
             };
             bind_value_objects = [model_value];
 
@@ -265,10 +269,12 @@ describe("StaticOpenListFieldController", () => {
                     {
                         id: "682",
                         label: "magnetotherapy",
+                        is_hidden: false,
                     },
                     {
                         id: "815",
                         label: "extensometer",
+                        is_hidden: false,
                     },
                 ],
             };

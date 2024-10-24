@@ -30,6 +30,7 @@ import type { BaseFieldStructure } from "./trackers";
 export type StaticOpenListItem = {
     readonly id: number;
     readonly label: string;
+    readonly is_hidden: boolean;
 };
 
 type UserGroupOpenListItem = {

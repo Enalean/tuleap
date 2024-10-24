@@ -1301,8 +1301,8 @@ describe("TuleapArtifactFieldValues", () => {
                             { id: 544, label: "squamosomaxillary", is_hidden: false },
                         ],
                         default_value: [
-                            { id: 378, label: "Linda" },
-                            { id: 544, label: "squamosomaxillary" },
+                            { id: 378, label: "Linda", is_hidden: false },
+                            { id: 544, label: "squamosomaxillary", is_hidden: false },
                         ],
                     },
                 ],
@@ -1316,8 +1316,8 @@ describe("TuleapArtifactFieldValues", () => {
                     bindings: { type: "static" },
                     value: {
                         bind_value_objects: [
-                            { id: "378", label: "Linda" },
-                            { id: "544", label: "squamosomaxillary" },
+                            { id: "378", label: "Linda", is_hidden: false },
+                            { id: "544", label: "squamosomaxillary", is_hidden: false },
                         ],
                     },
                 },

@@ -62,11 +62,13 @@ describe("StaticOpenListFieldTemplate", () => {
                     id: "1",
                     label: "Value 1",
                     selected: false,
+                    is_hidden: false,
                 },
                 {
                     id: "2",
                     label: "Value 2",
                     selected: true,
+                    is_hidden: false,
                 },
             ],
         };
