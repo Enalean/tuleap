@@ -105,6 +105,7 @@ class PFUser implements PFO_User, IHaveAnSSHKey
     public const PREFERENCE_EDITION_TEXT       = 'text';
     public const PREFERENCE_EDITION_HTML       = 'html';
     public const PREFERENCE_EDITION_COMMONMARK = 'commonmark';
+    public const NONE_USER                     = 100;
 
     /**
      * the id of the user

@@ -37,7 +37,7 @@ use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\ListFieldMapping;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\ScalarFieldMapping;
 use Tuleap\Tracker\Creation\JiraImporter\Import\User\JiraUserRetriever;
 
-class ChangelogSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
+final class ChangelogSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
@@ -91,7 +91,7 @@ class ChangelogSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->assertSame($user, $snapshot->getUser());
         $this->assertSame(1585141810, $snapshot->getDate()->getTimestamp());
-        $this->assertCount(9, $snapshot->getAllFieldsSnapshot());
+        $this->assertCount(11, $snapshot->getAllFieldsSnapshot());
 
         $this->assertNull($snapshot->getFieldInSnapshot('environment'));
         $this->assertSame('9', $snapshot->getFieldInSnapshot('customfield_10036')->getValue());
@@ -146,6 +146,18 @@ class ChangelogSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                 ['id' => '106'],
             ],
             $snapshot->getFieldInSnapshot('homies')->getValue()
+        );
+
+        $expected_snapshot_value_when_no_user_value = '100';
+        $this->assertSame(
+            ['id' => $expected_snapshot_value_when_no_user_value],
+            $snapshot->getFieldInSnapshot('customfield_10057')->getValue(),
+        );
+
+        $expected_snapshot_value_when_no_static_value = '';
+        $this->assertSame(
+            ['id' => $expected_snapshot_value_when_no_static_value],
+            $snapshot->getFieldInSnapshot('customfield_10058')->getValue(),
         );
 
         $this->assertNull($snapshot->getFieldInSnapshot('versions'));
@@ -413,6 +425,20 @@ class ChangelogSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                         'to'         => '',
                         'toString'   => 'lorem ipsum',
                     ],
+                    [
+                        'fieldId'    => 'customfield_10057',
+                        'from'       => '10045',
+                        'fromString' => 'f52a7e97',
+                        'to'         => null,
+                        'toString'   => '',
+                    ],
+                    [
+                        'fieldId'    => 'customfield_10058',
+                        'from'       => '10023',
+                        'fromString' => '06. PKI',
+                        'to'         => null,
+                        'toString'   => '',
+                    ],
                 ],
                 'author' => [
                     'accountId' => 'e8a7dbae5',
@@ -532,6 +558,31 @@ class ChangelogSnapshotBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                 'Fcustomfield_10081',
                 'customfield_10081',
                 'text',
+            )
+        );
+        $collection->addMapping(
+            new ListFieldMapping(
+                'customfield_10057',
+                'customfield_10057',
+                null,
+                'Fcustomfield_10057',
+                'customfield_10057',
+                \Tracker_FormElementFactory::FIELD_SELECT_BOX_TYPE,
+                \Tracker_FormElement_Field_List_Bind_Users::TYPE,
+                [],
+            )
+        );
+
+        $collection->addMapping(
+            new ListFieldMapping(
+                'customfield_10058',
+                'customfield_10058',
+                null,
+                'Fcustomfield_10058',
+                'customfield_10058',
+                \Tracker_FormElementFactory::FIELD_SELECT_BOX_TYPE,
+                \Tracker_FormElement_Field_List_Bind_Static::TYPE,
+                [],
             )
         );
 
