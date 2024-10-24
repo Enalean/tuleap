@@ -20,6 +20,7 @@
 
 import { define, html, type UpdateFunction } from "hybrids";
 import type { ToolbarBus } from "@tuleap/prose-mirror-editor";
+import type { ToolbarButtonWithState } from "../../helpers/class-getter";
 import { getClass } from "../../helpers/class-getter";
 import type { GetText } from "@tuleap/gettext";
 
@@ -30,9 +31,7 @@ export type QuoteElement = {
     gettext_provider: GetText;
 };
 
-type InternalQuoteElement = Readonly<QuoteElement> & {
-    is_activated: boolean;
-};
+type InternalQuoteElement = Readonly<QuoteElement> & ToolbarButtonWithState;
 
 export type HostElement = InternalQuoteElement & HTMLElement;
 const onClickApplyQuote = (host: QuoteElement): void => {
@@ -42,12 +41,13 @@ export const renderQuoteItem = (
     host: InternalQuoteElement,
     gettext_provider: GetText,
 ): UpdateFunction<InternalQuoteElement> => {
-    const classes = getClass(host.is_activated);
+    const classes = getClass(host);
 
     return html`<button
         class="${classes}"
         onclick="${onClickApplyQuote}"
         data-test="button-quote"
+        disabled="${host.is_disabled}"
         title="${gettext_provider.gettext("Wrap in block quote `Ctrl->`")}"
     >
         <i class="fa-solid fa-quote-left" role="img"></i>
@@ -65,6 +65,7 @@ export const connect = (host: InternalQuoteElement): void => {
 export default define<InternalQuoteElement>({
     tag: QUOTE_TAG_NAME,
     is_activated: false,
+    is_disabled: false,
     toolbar_bus: {
         value: (host: QuoteElement, toolbar_bus: ToolbarBus) => toolbar_bus,
         connect,

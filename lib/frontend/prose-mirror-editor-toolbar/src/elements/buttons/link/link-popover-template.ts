@@ -49,7 +49,7 @@ export const renderLinkPopover = (
 ): UpdateFunction<InternalLinkButtonElement> => html`
     <form
         data-role="popover"
-        class="tlp-popover"
+        class="tlp-popover prose-mirror-toolbar-popover"
         onsubmit="${onSubmit}"
         data-test="toolbar-link-popover-form"
     >

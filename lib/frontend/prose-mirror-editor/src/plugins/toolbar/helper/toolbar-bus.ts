@@ -56,6 +56,7 @@ export interface ToolbarView {
     activateHeading: (current_heading: Heading | null) => void;
     activatePlainText: (is_activated: boolean) => void;
     activatePreformattedText: (is_activated: boolean) => void;
+    toggleToolbarState: (is_enabled: boolean) => void;
 }
 
 export interface ToolbarBus {
@@ -77,6 +78,8 @@ export interface ToolbarBus {
     preformattedText: () => void;
     setCurrentHandler: (handler: ToolbarHandler) => void;
     setView: (view: Partial<ToolbarView>) => void;
+    disableToolbar: () => void;
+    enableToolbar: () => void;
 }
 
 const noop = (): void => {
@@ -97,6 +100,7 @@ const default_view: ToolbarView = {
     activateHeading: noop,
     activatePlainText: noop,
     activatePreformattedText: noop,
+    toggleToolbarState: noop,
 };
 
 export const buildToolbarBus = (): ToolbarBus => ({
@@ -152,5 +156,12 @@ export const buildToolbarBus = (): ToolbarBus => ({
             ...this.view,
             ...view,
         };
+    },
+    disableToolbar(): void {
+        this.view.toggleToolbarState(false);
+        this.handler = null;
+    },
+    enableToolbar(): void {
+        this.view.toggleToolbarState(true);
     },
 });

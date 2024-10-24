@@ -20,6 +20,7 @@
 
 import { define, html, type UpdateFunction } from "hybrids";
 import type { ToolbarBus } from "@tuleap/prose-mirror-editor";
+import type { ToolbarButtonWithState } from "../../helpers/class-getter";
 import { getClass } from "../../helpers/class-getter";
 import type { GetText } from "@tuleap/gettext";
 
@@ -30,9 +31,7 @@ export type SuperscriptElement = {
     gettext_provider: GetText;
 };
 
-type InternalSuperscriptElement = Readonly<SuperscriptElement> & {
-    is_activated: boolean;
-};
+type InternalSuperscriptElement = Readonly<SuperscriptElement> & ToolbarButtonWithState;
 
 export type HostElement = InternalSuperscriptElement & HTMLElement;
 
@@ -43,11 +42,12 @@ export const renderSuperscriptItem = (
     host: InternalSuperscriptElement,
     gettext_provider: GetText,
 ): UpdateFunction<InternalSuperscriptElement> => {
-    const classes = getClass(host.is_activated);
+    const classes = getClass(host);
 
     return html`<button
         class="${classes}"
         onclick="${onClickApplySuperscript}"
+        disabled="${host.is_disabled}"
         data-test="button-superscript"
         title="${gettext_provider.gettext("Apply superscript style on the selected text `Ctrl+.`")}"
     >
@@ -66,6 +66,7 @@ export const connect = (host: InternalSuperscriptElement): void => {
 define<InternalSuperscriptElement>({
     tag: SUPERSCRIPT_TAG_NAME,
     is_activated: false,
+    is_disabled: false,
     toolbar_bus: {
         value: (host: SuperscriptElement, toolbar_bus: ToolbarBus) => toolbar_bus,
         connect,

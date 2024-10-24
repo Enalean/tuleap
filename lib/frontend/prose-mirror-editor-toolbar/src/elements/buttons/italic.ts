@@ -20,6 +20,7 @@
 
 import { define, html, type UpdateFunction } from "hybrids";
 import type { ToolbarBus } from "@tuleap/prose-mirror-editor";
+import type { ToolbarButtonWithState } from "../../helpers/class-getter";
 import { getClass } from "../../helpers/class-getter";
 import type { GetText } from "@tuleap/gettext";
 
@@ -30,9 +31,7 @@ export type ItalicElement = {
     gettext_provider: GetText;
 };
 
-type InternalItalicElement = Readonly<ItalicElement> & {
-    is_activated: boolean;
-};
+type InternalItalicElement = Readonly<ItalicElement> & ToolbarButtonWithState;
 
 export type HostElement = InternalItalicElement & HTMLElement;
 const onClickApplyItalic = (host: ItalicElement): void => {
@@ -42,12 +41,13 @@ export const renderItalicItem = (
     host: InternalItalicElement,
     gettext_provider: GetText,
 ): UpdateFunction<InternalItalicElement> => {
-    const classes = getClass(host.is_activated);
+    const classes = getClass(host);
 
     return html`<button
         class="${classes}"
         onclick="${onClickApplyItalic}"
         data-test="button-italic"
+        disabled="${host.is_disabled}"
         title="${gettext_provider.gettext("Toggle italic style `Ctrl+i`")}"
     >
         <i class="fa-solid fa-italic" role="img"></i>
@@ -65,6 +65,7 @@ export const connect = (host: InternalItalicElement): void => {
 export default define<InternalItalicElement>({
     tag: ITALIC_TAG_NAME,
     is_activated: false,
+    is_disabled: false,
     toolbar_bus: {
         value: (host: ItalicElement, toolbar_bus: ToolbarBus) => toolbar_bus,
         connect,

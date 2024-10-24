@@ -81,6 +81,7 @@ export type InternalProseMirrorToolbarElement = Readonly<ProseMirrorToolbarEleme
     script_elements: ScriptElements | null;
     link_elements: LinkElements | null;
     style_elements: StyleElements | null;
+    is_disabled: boolean;
 };
 
 const TOOLBAR_TAG_NAME = "tuleap-prose-mirror-toolbar";
@@ -93,6 +94,7 @@ export const renderToolbar = (
         ? html`<bold-item
               toolbar_bus="${host.controller.getToolbarBus()}"
               gettext_provider="${gettext_provider}"
+              is_disabled="${host.is_disabled}"
           ></bold-item>`
         : html``;
 
@@ -100,6 +102,7 @@ export const renderToolbar = (
         ? html`<italic-item
               toolbar_bus="${host.controller.getToolbarBus()}"
               gettext_provider="${gettext_provider}"
+              is_disabled="${host.is_disabled}"
           ></italic-item>`
         : html``;
 
@@ -108,6 +111,7 @@ export const renderToolbar = (
         ? html`<code-item
               toolbar_bus="${host.controller.getToolbarBus()}"
               gettext_provider="${gettext_provider}"
+              is_disabled="${host.is_disabled}"
           ></code-item>`
         : html``;
 
@@ -116,6 +120,7 @@ export const renderToolbar = (
         ? html`<quote-item
               toolbar_bus="${host.controller.getToolbarBus()}"
               gettext_provider="${gettext_provider}"
+              is_disabled="${host.is_disabled}"
           ></quote-item>`
         : html``;
 
@@ -135,6 +140,7 @@ export const renderToolbar = (
         ? html`<ordered-list-item
               toolbar_bus="${host.controller.getToolbarBus()}"
               gettext_provider="${gettext_provider}"
+              is_disabled="${host.is_disabled}"
           ></ordered-list-item>`
         : html``;
 
@@ -143,6 +149,7 @@ export const renderToolbar = (
         ? html`<bullet-list-item
               toolbar_bus="${host.controller.getToolbarBus()}"
               gettext_provider="${gettext_provider}"
+              is_disabled="${host.is_disabled}"
           ></bullet-list-item>`
         : html``;
 
@@ -156,6 +163,7 @@ export const renderToolbar = (
         ? html`<subscript-item
               toolbar_bus="${host.controller.getToolbarBus()}"
               gettext_provider="${gettext_provider}"
+              is_disabled="${host.is_disabled}"
           ></subscript-item>`
         : html``;
 
@@ -164,6 +172,7 @@ export const renderToolbar = (
         ? html`<superscript-item
               toolbar_bus="${host.controller.getToolbarBus()}"
               gettext_provider="${gettext_provider}"
+              is_disabled="${host.is_disabled}"
           ></superscript-item>`
         : html``;
 
@@ -179,6 +188,7 @@ export const renderToolbar = (
         ? html`<link-item
               toolbar_bus="${host.controller.getToolbarBus()}"
               gettext_provider="${gettext_provider}"
+              is_disabled="${host.is_disabled}"
           ></link-item>`
         : html``;
 
@@ -186,6 +196,7 @@ export const renderToolbar = (
         ? html`<unlink-item
               toolbar_bus="${host.controller.getToolbarBus()}"
               gettext_provider="${gettext_provider}"
+              is_disabled="${host.is_disabled}"
           ></unlink-item>`
         : html``;
 
@@ -193,6 +204,7 @@ export const renderToolbar = (
         ? html`<image-item
               toolbar_bus="${host.controller.getToolbarBus()}"
               gettext_provider="${gettext_provider}"
+              is_disabled="${host.is_disabled}"
           ></image-item>`
         : html``;
 
@@ -215,6 +227,7 @@ export const renderToolbar = (
                   toolbar_bus="${host.controller.getToolbarBus()}"
                   style_elements="${host.style_elements}"
                   gettext_provider="${gettext_provider}"
+                  is_disabled="${host.is_disabled}"
               ></text-style-item>
           </span>`
         : html``;
@@ -240,6 +253,16 @@ initGettext(
         link_elements: null,
         list_elements: null,
         style_elements: null,
+        is_disabled: {
+            value: true,
+            connect: (host) => {
+                host.controller.getToolbarBus().setView({
+                    toggleToolbarState: (is_enabled: boolean): void => {
+                        host.is_disabled = !is_enabled;
+                    },
+                });
+            },
+        },
         render: {
             value: (host: InternalProseMirrorToolbarElement) =>
                 renderToolbar(host, gettext_provider),

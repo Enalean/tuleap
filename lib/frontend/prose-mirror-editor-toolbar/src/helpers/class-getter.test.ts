@@ -23,14 +23,20 @@ import type { ButtonClasses } from "./class-getter";
 import { getClass } from "./class-getter";
 
 describe("QuoteElement", () => {
-    it.each([true, false])(`should returns classes when active is %s`, (is_activated) => {
-        const expected: ButtonClasses = {
-            "tlp-button-primary button-active": is_activated,
-            "tlp-button-secondary": !is_activated,
-            "prose-mirror-button": true,
-            "tlp-button-primary": true,
-            "tlp-button-outline": true,
-        };
-        expect(getClass(is_activated)).toEqual(expected);
-    });
+    it.each([
+        [true, false],
+        [false, true],
+    ])(
+        `should returns classes when active is %s and disabled is %s`,
+        (is_activated: boolean, is_disabled: boolean) => {
+            const expected: ButtonClasses = {
+                "tlp-button-primary button-active": is_activated && !is_disabled,
+                "tlp-button-secondary": !is_activated || is_disabled,
+                "prose-mirror-button": true,
+                "tlp-button-primary": true,
+                "tlp-button-outline": true,
+            };
+            expect(getClass({ is_activated, is_disabled })).toEqual(expected);
+        },
+    );
 });

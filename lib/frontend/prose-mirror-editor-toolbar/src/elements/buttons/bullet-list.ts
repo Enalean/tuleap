@@ -20,6 +20,7 @@
 
 import { define, html, type UpdateFunction } from "hybrids";
 import type { ToolbarBus, ListState } from "@tuleap/prose-mirror-editor";
+import type { ToolbarButtonWithState } from "../../helpers/class-getter";
 import { getClass } from "../../helpers/class-getter";
 import type { GetText } from "@tuleap/gettext";
 
@@ -30,10 +31,7 @@ export type BulletListElement = {
     gettext_provider: GetText;
 };
 
-type InternalBulletListElement = Readonly<BulletListElement> & {
-    is_activated: boolean;
-    is_disabled: boolean;
-};
+type InternalBulletListElement = Readonly<BulletListElement> & ToolbarButtonWithState;
 
 export type HostElement = InternalBulletListElement & HTMLElement;
 
@@ -44,7 +42,7 @@ export const renderBulletListItem = (
     host: InternalBulletListElement,
     gettext_provider: GetText,
 ): UpdateFunction<InternalBulletListElement> => {
-    const classes = getClass(host.is_activated);
+    const classes = getClass(host);
 
     return html`<button
         class="${classes}"

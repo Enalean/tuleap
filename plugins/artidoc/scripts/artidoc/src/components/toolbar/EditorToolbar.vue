@@ -49,6 +49,7 @@ import { strictInject } from "@tuleap/vue-strict-inject";
 import { ToolbarController } from "@tuleap/prose-mirror-editor-toolbar";
 import { onMounted, ref } from "vue";
 import { observeStickyToolbar } from "@/helpers/observe-sticky-toolbar";
+import { onClickActivateOrDeactivateToolbar } from "@/helpers/toolbar-activator";
 const toolbar_bus = strictInject(TOOLBAR_BUS);
 const controller = ToolbarController(toolbar_bus);
 
@@ -57,6 +58,7 @@ const is_stuck = ref(false);
 
 onMounted(() => {
     if (toolbar.value) {
+        onClickActivateOrDeactivateToolbar(document, toolbar.value, toolbar_bus);
         observeStickyToolbar(
             toolbar.value,
             () => {

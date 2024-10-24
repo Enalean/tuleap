@@ -28,7 +28,7 @@ export const renderImageButton = (
     gettext_provider: GetText,
 ): UpdateFunction<InternalImageButton> => html`
     <button
-        class="${getClass(host.is_activated)}"
+        class="${getClass(host)}"
         data-role="popover-trigger"
         disabled="${host.is_disabled}"
         title="${gettext_provider.gettext("Insert or edit image")}"

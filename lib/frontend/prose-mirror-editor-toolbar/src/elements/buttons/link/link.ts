@@ -24,6 +24,7 @@ import { connectPopover } from "../common/connect-popover";
 import { renderLinkButtonElement } from "./link-button-template";
 import { renderLinkPopover } from "./link-popover-template";
 import type { GetText } from "@tuleap/gettext";
+import type { ToolbarButtonWithState } from "../../../helpers/class-getter";
 
 export const TAG = "link-item";
 
@@ -33,9 +34,8 @@ export type Link = {
 };
 
 export type InternalLinkButtonElement = Readonly<Link> &
-    PopoverHost & {
-        is_activated: boolean;
-        is_disabled: boolean;
+    PopoverHost &
+    ToolbarButtonWithState & {
         link_href: string;
         link_title: string;
     };

@@ -25,6 +25,7 @@ import type { PopoverHost } from "../common/connect-popover";
 import { renderImageButton } from "./image-button-template";
 import { renderImagePopover } from "./image-popover-template";
 import type { GetText } from "@tuleap/gettext";
+import type { ToolbarButtonWithState } from "../../../helpers/class-getter";
 
 export const TAG = "image-item";
 
@@ -34,9 +35,8 @@ export type ImageButton = {
 };
 
 export type InternalImageButton = Readonly<ImageButton> &
-    PopoverHost & {
-        is_activated: boolean;
-        is_disabled: boolean;
+    PopoverHost &
+    ToolbarButtonWithState & {
         image_src: string;
         image_title: string;
     };
