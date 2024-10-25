@@ -66,6 +66,7 @@ import type { ErrorState } from "../../../../store/error/module";
 import { onBeforeUnmount, onMounted, ref } from "vue";
 import { transformStatusPropertyForItemCreation } from "../../../../helpers/properties-helpers/creation-data-transformatter-helper";
 import type { ConfigurationState } from "../../../../store/configuration";
+import { buildFakeItem } from "../../../../helpers/item-builder";
 
 const props = defineProps<{ parent: Folder; droppedFile: File }>();
 
@@ -136,7 +137,7 @@ function close(): void {
 async function createNewFile(): Promise<void> {
     is_loading.value = true;
     resetModalError({});
-    await createNewItem([item.value, props.parent, current_folder.value]);
+    await createNewItem([item.value, props.parent, current_folder.value, buildFakeItem()]);
     is_loading.value = false;
 
     if (!has_modal_error.value) {
