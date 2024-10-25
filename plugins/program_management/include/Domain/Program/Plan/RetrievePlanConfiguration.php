@@ -22,9 +22,13 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Domain\Program\Plan;
 
+use Tuleap\Option\Option;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 
 interface RetrievePlanConfiguration
 {
-    public function retrievePlan(ProgramIdentifier $program_identifier): PlanConfiguration;
+    /**
+     * @return Option<PlanConfiguration>
+     */
+    public function retrievePlan(ProgramIdentifier $program_identifier): Option;
 }

@@ -106,7 +106,10 @@ final class PlanConfigurationDAOTest extends TestIntegrationTestCase
             new ProgramServiceIsEnabledCertificate($program_id)
         );
 
-        $retrieved_plan = $this->dao->retrievePlan($program_identifier);
+        $retrieved_plan = $this->dao->retrievePlan($program_identifier)->unwrapOr(null);
+        if ($retrieved_plan === null) {
+            throw new \Exception('Expected to retrieve a plan configuration');
+        }
         self::assertSame($program_id, $retrieved_plan->program_identifier->getId());
         self::assertSame($program_increment_tracker_id, $retrieved_plan->program_increment_tracker->getId());
         self::assertSame('Releases', $retrieved_plan->program_increment_labels->label);
@@ -158,7 +161,10 @@ final class PlanConfigurationDAOTest extends TestIntegrationTestCase
             new ProgramServiceIsEnabledCertificate($program_id)
         );
 
-        $retrieved_plan = $this->dao->retrievePlan($program_identifier);
+        $retrieved_plan = $this->dao->retrievePlan($program_identifier)->unwrapOr(null);
+        if ($retrieved_plan === null) {
+            throw new \Exception('Expected to retrieve a plan configuration');
+        }
         self::assertEmpty($retrieved_plan->tracker_ids_that_can_be_planned);
     }
 
@@ -189,7 +195,10 @@ final class PlanConfigurationDAOTest extends TestIntegrationTestCase
             new ProgramServiceIsEnabledCertificate($program_id)
         );
 
-        $retrieved_plan = $this->dao->retrievePlan($program_identifier);
+        $retrieved_plan = $this->dao->retrievePlan($program_identifier)->unwrapOr(null);
+        if ($retrieved_plan === null) {
+            throw new \Exception('Expected to retrieve a plan configuration');
+        }
         self::assertEmpty($retrieved_plan->user_group_ids_that_can_prioritize);
     }
 }
