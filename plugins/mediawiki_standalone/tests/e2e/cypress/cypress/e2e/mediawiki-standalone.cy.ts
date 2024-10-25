@@ -152,25 +152,29 @@ describe("MediaWiki Standalone", () => {
         cy.contains("Access denied");
 
         function visitMediaWikiMainPage(): void {
+            // eslint-disable-next-line cypress/no-unnecessary-waiting -- wait a little more to expect that events are processed and mediawiki created
+            cy.wait(1000);
+            cy.visitProjectService(project_name, "MediaWiki", false);
             // After change of permissions, there is a slight delay before MW apply them and clear current session
             // We need to refresh the page until we see "Main page" instead of "Login error"
             cy.reloadUntilCondition(
                 () => {
-                    cy.log("Refreshing again...");
+                    cy.log("Wait 1 second for events to be processed");
+                    // eslint-disable-next-line cypress/no-unnecessary-waiting -- wait a little more to expect that events are processed and mediawiki created
+                    cy.wait(1000);
+                    cy.visitProjectService(project_name, "MediaWiki", false);
                 },
                 (number_of_attempts, max_attempts) => {
                     cy.log(`Refresh Main page (attempt ${number_of_attempts}/${max_attempts})`);
-
-                    // wait a little more to expect that events are processed and mediawiki created
-                    // eslint-disable-next-line cypress/no-unnecessary-waiting
-                    cy.wait(1000);
-                    cy.visitProjectService(project_name, "MediaWiki", false);
-
                     return cy
                         .title()
-                        .then((title) => Promise.resolve(!title.startsWith("Login error")));
+                        .then(
+                            (title) =>
+                                !title.startsWith("Login error") &&
+                                !title.startsWith("Database error"),
+                        );
                 },
-                `Cannot load Main page`,
+                `Timed out while loading Main page`,
             );
         }
     });

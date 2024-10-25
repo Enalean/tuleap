@@ -87,7 +87,9 @@ Cypress.Commands.add(
                 service_label,
             )
         ) {
-            cy.visit(cache_service_urls[project_unixname][service_label]);
+            cy.visit(cache_service_urls[project_unixname][service_label], {
+                failOnStatusCode: fail_on_status_code,
+            });
             return;
         }
 
