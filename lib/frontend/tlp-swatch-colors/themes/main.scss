@@ -17,6 +17,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@forward "swatch-colors";
-@forward "button-colors";
+@forward "./color-map" show $color-map;
+@forward "./button-colors" show colored-button-colors;
 @use "./color-classes";

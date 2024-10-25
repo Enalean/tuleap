@@ -18,9 +18,9 @@
  */
 
 @use "sass:map";
-@use "./swatch-colors";
+@use "./color-map";
 
-@each $color-name, $colors in swatch-colors.$color-map {
+@each $color-name, $colors in color-map.$color-map {
     .tlp-swatch-#{$color-name} {
         --primary-color: #{map.get($colors, "primary")};
         --secondary-color: #{map.get($colors, "secondary")};

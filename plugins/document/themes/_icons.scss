@@ -18,76 +18,77 @@
  */
 
 @use "pkg:@tuleap/tlp-swatch-colors";
+@use "pkg:@tuleap/tlp-swatch-colors/tlp-swatch-colors" as colors;
 
 .document-folder-icon {
-    color: tlp-swatch-colors.$inca-silver-primary;
+    color: colors.$inca-silver-primary;
 }
 
 .document-file-icon {
-    color: tlp-swatch-colors.$chrome-silver-primary;
+    color: colors.$chrome-silver-primary;
 }
 
 .document-empty-icon {
-    color: tlp-swatch-colors.$firemist-silver-primary;
+    color: colors.$firemist-silver-primary;
 }
 
 .document-link-icon {
-    color: tlp-swatch-colors.$flamingo-pink-primary;
+    color: colors.$flamingo-pink-primary;
 }
 
 .document-audio-icon {
-    color: tlp-swatch-colors.$lake-placid-blue-primary;
+    color: colors.$lake-placid-blue-primary;
 }
 
 .document-video-icon {
-    color: tlp-swatch-colors.$ocean-turquoise-primary;
+    color: colors.$ocean-turquoise-primary;
 }
 
 .document-image-icon {
-    color: tlp-swatch-colors.$graffiti-yellow-primary;
+    color: colors.$graffiti-yellow-primary;
 }
 
 .document-text-icon {
-    color: tlp-swatch-colors.$inca-silver-primary;
+    color: colors.$inca-silver-primary;
 }
 
 .document-code-icon {
-    color: tlp-swatch-colors.$daphne-blue-primary;
+    color: colors.$daphne-blue-primary;
 }
 
 .document-archive-icon {
-    color: tlp-swatch-colors.$plum-crazy-primary;
+    color: colors.$plum-crazy-primary;
 }
 
 .document-pdf-icon {
-    color: tlp-swatch-colors.$fiesta-red-primary;
+    color: colors.$fiesta-red-primary;
 }
 
 .document-document-icon {
-    color: tlp-swatch-colors.$deep-blue-primary;
+    color: colors.$deep-blue-primary;
 }
 
 .document-document-badge.tlp-badge-outline {
-    background: tlp-swatch-colors.$deep-blue-secondary;
-    color: tlp-swatch-colors.$deep-blue-text;
+    background: colors.$deep-blue-secondary;
+    color: colors.$deep-blue-text;
 }
 
 .document-presentation-icon {
-    color: tlp-swatch-colors.$clockwork-orange-primary;
+    color: colors.$clockwork-orange-primary;
 }
 
 .document-presentation-badge.tlp-badge-outline {
-    background: tlp-swatch-colors.$clockwork-orange-secondary;
-    color: tlp-swatch-colors.$clockwork-orange-text;
+    background: colors.$clockwork-orange-secondary;
+    color: colors.$clockwork-orange-text;
 }
 
 .document-spreadsheet-icon {
-    color: tlp-swatch-colors.$sherwood-green-primary;
+    color: colors.$sherwood-green-primary;
 }
 
 .document-spreadsheet-badge.tlp-badge-outline {
-    background: tlp-swatch-colors.$sherwood-green-secondary;
-    color: tlp-swatch-colors.$sherwood-green-text;
+    background: colors.$sherwood-green-secondary;
+    color: colors.$sherwood-green-text;
 }
 
 .document-other-type-badge {

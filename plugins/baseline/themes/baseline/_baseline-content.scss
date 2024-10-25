@@ -18,7 +18,7 @@
  *
  */
 @use "./statistics";
-@use "pkg:@tuleap/tlp-swatch-colors";
+@use "pkg:@tuleap/tlp-swatch-colors/tlp-swatch-colors";
 
 $artifact-body-padding: var(--tlp-medium-spacing);
 

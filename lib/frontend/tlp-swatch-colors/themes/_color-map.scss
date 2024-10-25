@@ -1,0 +1,249 @@
+/**
+ * Copyright (c) Enalean, 2024-Present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+@use "sass:color";
+@use "sass:map";
+@use "./tlp-swatch-colors" as colors;
+
+$color-map: (
+    "inca-silver": (
+        primary: colors.$inca-silver-primary,
+        secondary: colors.$inca-silver-secondary,
+        border: colors.$inca-silver-border,
+        text: colors.$inca-silver-text,
+        text-on-dark: colors.$inca-silver-text-on-dark-background,
+        pattern: colors.$inca-silver-pattern,
+    ),
+    "chrome-silver": (
+        primary: colors.$chrome-silver-primary,
+        secondary: colors.$chrome-silver-secondary,
+        border: colors.$chrome-silver-border,
+        text: colors.$chrome-silver-text,
+        text-on-dark: colors.$chrome-silver-text-on-dark-background,
+        pattern: colors.$chrome-silver-pattern,
+    ),
+    "firemist-silver": (
+        primary: colors.$firemist-silver-primary,
+        secondary: colors.$firemist-silver-secondary,
+        border: colors.$firemist-silver-border,
+        text: colors.$firemist-silver-text,
+        text-on-dark: colors.$firemist-silver-text-on-dark-background,
+        pattern: colors.$firemist-silver-pattern,
+    ),
+    "red-wine": (
+        primary: colors.$red-wine-primary,
+        secondary: colors.$red-wine-secondary,
+        border: colors.$red-wine-border,
+        text: colors.$red-wine-text,
+        text-on-dark: colors.$red-wine-text-on-dark-background,
+        pattern: colors.$red-wine-pattern,
+    ),
+    "fiesta-red": (
+        primary: colors.$fiesta-red-primary,
+        secondary: colors.$fiesta-red-secondary,
+        border: colors.$fiesta-red-border,
+        text: colors.$fiesta-red-text,
+        text-on-dark: colors.$fiesta-red-text-on-dark-background,
+        pattern: colors.$fiesta-red-pattern,
+    ),
+    "coral-pink": (
+        primary: colors.$coral-pink-primary,
+        secondary: colors.$coral-pink-secondary,
+        border: colors.$coral-pink-border,
+        text: colors.$coral-pink-text,
+        text-on-dark: colors.$coral-pink-text-on-dark-background,
+        pattern: colors.$coral-pink-pattern,
+    ),
+    "teddy-brown": (
+        primary: colors.$teddy-brown-primary,
+        secondary: colors.$teddy-brown-secondary,
+        border: colors.$teddy-brown-border,
+        text: colors.$teddy-brown-text,
+        text-on-dark: colors.$teddy-brown-text-on-dark-background,
+        pattern: colors.$teddy-brown-pattern,
+    ),
+    "clockwork-orange": (
+        primary: colors.$clockwork-orange-primary,
+        secondary: colors.$clockwork-orange-secondary,
+        border: colors.$clockwork-orange-border,
+        text: colors.$clockwork-orange-text,
+        text-on-dark: colors.$clockwork-orange-text-on-dark-background,
+        pattern: colors.$clockwork-orange-pattern,
+    ),
+    "graffiti-yellow": (
+        primary: colors.$graffiti-yellow-primary,
+        secondary: colors.$graffiti-yellow-secondary,
+        border: colors.$graffiti-yellow-border,
+        text: colors.$graffiti-yellow-text,
+        text-on-dark: colors.$graffiti-yellow-text-on-dark-background,
+        pattern: colors.$graffiti-yellow-pattern,
+    ),
+    "army-green": (
+        primary: colors.$army-green-primary,
+        secondary: colors.$army-green-secondary,
+        border: colors.$army-green-border,
+        text: colors.$army-green-text,
+        text-on-dark: colors.$army-green-text-on-dark-background,
+        pattern: colors.$army-green-pattern,
+    ),
+    "neon-green": (
+        primary: colors.$neon-green-primary,
+        secondary: colors.$neon-green-secondary,
+        border: colors.$neon-green-border,
+        text: colors.$neon-green-text,
+        text-on-dark: colors.$neon-green-text-on-dark-background,
+        pattern: colors.$neon-green-pattern,
+    ),
+    "acid-green": (
+        primary: colors.$acid-green-primary,
+        secondary: colors.$acid-green-secondary,
+        border: colors.$acid-green-border,
+        text: colors.$acid-green-text,
+        text-on-dark: colors.$army-green-text-on-dark-background,
+        pattern: colors.$acid-green-pattern,
+    ),
+    "sherwood-green": (
+        primary: colors.$sherwood-green-primary,
+        secondary: colors.$sherwood-green-secondary,
+        border: colors.$sherwood-green-border,
+        text: colors.$sherwood-green-text,
+        text-on-dark: colors.$sherwood-green-text-on-dark-background,
+        pattern: colors.$sherwood-green-pattern,
+    ),
+    "ocean-turquoise": (
+        primary: colors.$ocean-turquoise-primary,
+        secondary: colors.$ocean-turquoise-secondary,
+        border: colors.$ocean-turquoise-border,
+        text: colors.$ocean-turquoise-text,
+        text-on-dark: colors.$ocean-turquoise-text-on-dark-background,
+        pattern: colors.$ocean-turquoise-pattern,
+    ),
+    "surf-green": (
+        primary: colors.$surf-green-primary,
+        secondary: colors.$surf-green-secondary,
+        border: colors.$surf-green-border,
+        text: colors.$surf-green-text,
+        text-on-dark: colors.$surf-green-text-on-dark-background,
+        pattern: colors.$surf-green-pattern,
+    ),
+    "deep-blue": (
+        primary: colors.$deep-blue-primary,
+        secondary: colors.$deep-blue-secondary,
+        border: colors.$deep-blue-border,
+        text: colors.$deep-blue-text,
+        text-on-dark: colors.$deep-blue-text-on-dark-background,
+        pattern: colors.$deep-blue-pattern,
+    ),
+    "lake-placid-blue": (
+        primary: colors.$lake-placid-blue-primary,
+        secondary: colors.$lake-placid-blue-secondary,
+        border: colors.$lake-placid-blue-border,
+        text: colors.$lake-placid-blue-text,
+        text-on-dark: colors.$lake-placid-blue-text-on-dark-background,
+        pattern: colors.$lake-placid-blue-pattern,
+    ),
+    "daphne-blue": (
+        primary: colors.$daphne-blue-primary,
+        secondary: colors.$daphne-blue-secondary,
+        border: colors.$daphne-blue-border,
+        text: colors.$daphne-blue-text,
+        text-on-dark: colors.$daphne-blue-text-on-dark-background,
+        pattern: colors.$daphne-blue-pattern,
+    ),
+    "plum-crazy": (
+        primary: colors.$plum-crazy-primary,
+        secondary: colors.$plum-crazy-secondary,
+        border: colors.$plum-crazy-border,
+        text: colors.$plum-crazy-text,
+        text-on-dark: colors.$plum-crazy-text-on-dark-background,
+        pattern: colors.$plum-crazy-pattern,
+    ),
+    "ultra-violet": (
+        primary: colors.$ultra-violet-primary,
+        secondary: colors.$ultra-violet-secondary,
+        border: colors.$ultra-violet-border,
+        text: colors.$ultra-violet-text,
+        text-on-dark: colors.$ultra-violet-text-on-dark-background,
+        pattern: colors.$ultra-violet-pattern,
+    ),
+    "lilac-purple": (
+        primary: colors.$lilac-purple-primary,
+        secondary: colors.$lilac-purple-secondary,
+        border: colors.$lilac-purple-border,
+        text: colors.$lilac-purple-text,
+        text-on-dark: colors.$lilac-purple-text-on-dark-background,
+        pattern: colors.$lilac-purple-pattern,
+    ),
+    "panther-pink": (
+        primary: colors.$panther-pink-primary,
+        secondary: colors.$panther-pink-secondary,
+        border: colors.$panther-pink-border,
+        text: colors.$panther-pink-text,
+        text-on-dark: colors.$panther-pink-text-on-dark-background,
+        pattern: colors.$panther-pink-pattern,
+    ),
+    "peggy-pink": (
+        primary: colors.$peggy-pink-primary,
+        secondary: colors.$peggy-pink-secondary,
+        border: colors.$peggy-pink-border,
+        text: colors.$peggy-pink-text,
+        text-on-dark: colors.$peggy-pink-text-on-dark-background,
+        pattern: colors.$peggy-pink-pattern,
+    ),
+    "flamingo-pink": (
+        primary: colors.$flamingo-pink-primary,
+        secondary: colors.$flamingo-pink-secondary,
+        border: colors.$flamingo-pink-border,
+        text: colors.$flamingo-pink-text,
+        text-on-dark: colors.$flamingo-pink-text-on-dark-background,
+        pattern: colors.$flamingo-pink-pattern,
+    ),
+);
+
+@each $color-name, $colors in $color-map {
+    $badge-color-on-dark: color.mix(map.get($colors, "border"), #ffffff, 90%);
+
+    // Adjustments to have a decent contrast ratio
+    @if $color-name ==
+        "teddy-brown" or
+        $color-name ==
+        "plum-crazy" or
+        $color-name ==
+        "red-wine" or
+        $color-name ==
+        "army-green"
+    {
+        $badge-color-on-dark: color.mix(map.get($colors, "border"), #ffffff, 70%);
+    }
+
+    $color-map: map.merge(
+        $color-map,
+        (
+            $color-name:
+                map.merge(
+                    $colors,
+                    (
+                        badge-background-on-dark:
+                            color.adjust(map.get($colors, "primary"), $alpha: -0.85),
+                        badge-color-on-dark: $badge-color-on-dark,
+                    )
+                ),
+        )
+    );
+}

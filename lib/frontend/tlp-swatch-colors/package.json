@@ -5,6 +5,7 @@
   "license": "GPL-2.0-or-later",
   "private": true,
   "exports": {
-    ".": "./themes/main.scss"
+    ".": "./themes/main.scss",
+    "./tlp-swatch-colors.scss": "./themes/tlp-swatch-colors.scss"
   }
 }
