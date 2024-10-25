@@ -167,9 +167,6 @@ msgstr ""
 "Recherche d'artéfact existant à utiliser comme section dans le tracker "
 "%{ tracker }"
 
-msgid "Section without title"
-msgstr "Section sans titre"
-
 msgid "Table of contents"
 msgstr "Table des matières"
 

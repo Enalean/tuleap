@@ -23,8 +23,7 @@ import { convertDescriptionToHtml } from "@/helpers/convert-description-to-html"
 import type { ArtidocSection } from "@/helpers/artidoc-section.type";
 
 export type EditorSectionContent = {
-    inputCurrentTitle: (new_value: string) => void;
-    inputCurrentDescription: (new_value: string) => void;
+    inputSectionContent(new_title: string, new_description: string): void;
     editable_title: Ref<string>;
     editable_description: Ref<string>;
     getReadonlyDescription: () => string;
@@ -43,24 +42,16 @@ export function useEditorSectionContent(
     const editable_description = ref(original_description.value);
     const readonly_description = computed(() => section.value.description.post_processed_value);
 
-    const inputCurrentDescription = (new_value: string): void => {
-        const is_there_any_change = new_value !== original_description.value;
+    const inputSectionContent = (new_title: string, new_description: string): void => {
+        const is_there_any_change =
+            new_title !== original_title.value || new_description !== original_description.value;
         if (is_there_any_change) {
             callbacks.showActionsButtons();
         } else {
             callbacks.hideActionsButtons();
         }
-        editable_description.value = new_value;
-    };
-
-    const inputCurrentTitle = (new_value: string): void => {
-        const is_there_any_change = new_value !== original_title.value;
-        if (is_there_any_change) {
-            callbacks.showActionsButtons();
-        } else {
-            callbacks.hideActionsButtons();
-        }
-        editable_title.value = new_value;
+        editable_title.value = new_title;
+        editable_description.value = new_description;
     };
 
     const resetContent = (): void => {
@@ -72,8 +63,7 @@ export function useEditorSectionContent(
         editable_title,
         editable_description,
         getReadonlyDescription: () => readonly_description.value,
-        inputCurrentTitle,
-        inputCurrentDescription,
+        inputSectionContent,
         resetContent,
     };
 }

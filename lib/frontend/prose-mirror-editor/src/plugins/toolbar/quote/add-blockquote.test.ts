@@ -17,25 +17,63 @@
  *  along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { describe, expect, it, vi } from "vitest";
-import type { EditorState, Transaction } from "prosemirror-state";
+import { describe, expect, it } from "vitest";
+import { EditorState, NodeSelection } from "prosemirror-state";
+import { EditorView } from "prosemirror-view";
+import { DOMParser } from "prosemirror-model";
+import type { DOMOutputSpec } from "../../../types";
+import { prosemirror_nodes } from "../../../types";
 import { buildCustomSchema } from "../../../custom_schema";
+import { createLocalDocument } from "../../../helpers";
 import { addBlockQuote } from "./add-blockquote";
+import { STRUCTURE_BLOCK_GROUP } from "../../../helpers/isNodeAStructureBlock";
 
 describe("addBlockquote", () => {
-    it("should return true", () => {
-        const wrapMock = vi.fn().mockReturnValue({} as Transaction);
-        const state = {
-            schema: buildCustomSchema(),
-            selection: {
-                $from: {},
-                $to: {},
+    it("Should wrap only wrappable nodes in a <blockquote/> element", () => {
+        const extended_schema = buildCustomSchema({
+            external_node_to_ignore: {
+                content: "block+",
+                toDOM(): DOMOutputSpec {
+                    return ["external-node", 0];
+                },
+                parseDOM: [{ tag: "external-node" }],
+                group: STRUCTURE_BLOCK_GROUP,
             },
-            tr: {
-                wrap: wrapMock,
+            ...prosemirror_nodes,
+            doc: {
+                content: "external_node_to_ignore",
             },
-        } as unknown as EditorState;
-        addBlockQuote(state, vi.fn());
-        expect(wrapMock).toHaveBeenCalledOnce();
+        });
+
+        const html_doc = createLocalDocument();
+        const content = html_doc.createElement("div");
+
+        content.insertAdjacentHTML(
+            "afterbegin",
+            `
+            <external-node>
+                <p>Wrap me please :S</p>
+            </external-node>
+        `,
+        );
+
+        const doc = DOMParser.fromSchema(extended_schema).parse(content);
+        const state = EditorState.create({
+            doc,
+            schema: extended_schema,
+            selection: NodeSelection.create(doc, 1), // Position 1 points on the <external-node> open tag
+        });
+
+        const view = new EditorView(html_doc.createElement("div"), { state });
+
+        addBlockQuote(state, view.dispatch);
+
+        expect(view.dom.innerHTML).toMatchInlineSnapshot(`
+            <external-node>
+              <blockquote>
+                <p class="ProseMirror-selectednode" draggable="true">Wrap me please :S</p>
+              </blockquote>
+            </external-node>
+        `);
     });
 });

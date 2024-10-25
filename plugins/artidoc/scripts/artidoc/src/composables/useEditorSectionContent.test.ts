@@ -18,113 +18,98 @@
  */
 
 import type { Mock } from "vitest";
-import { describe, expect, it, vi } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
+import type { EditorSectionContent } from "@/composables/useEditorSectionContent";
 import { useEditorSectionContent } from "@/composables/useEditorSectionContent";
 import ArtifactSectionFactory from "@/helpers/artifact-section.factory";
 import { ref } from "vue";
 
-const getCallbacks = (): { showActionsButtons: Mock; hideActionsButtons: Mock } => {
+type ShowButtonsCallbacks = { showActionsButtons: Mock; hideActionsButtons: Mock };
+const getCallbacks = (): ShowButtonsCallbacks => {
     return {
         showActionsButtons: vi.fn(),
         hideActionsButtons: vi.fn(),
     };
 };
 const section = ref(ArtifactSectionFactory.create());
+
 describe("useEditorSectionContent", () => {
+    let section_content: EditorSectionContent, callbacks: ShowButtonsCallbacks;
+
+    beforeEach(() => {
+        callbacks = getCallbacks();
+        section_content = useEditorSectionContent(section, callbacks);
+    });
+
+    describe("On EditorSectionContent initialization", () => {
+        it("should init the editable_title and the editable_description with the current section title and description", () => {
+            expect(section_content.editable_title.value).toBe(section.value.title.value);
+            expect(section_content.editable_description.value).toBe(
+                section.value.description.value,
+            );
+        });
+    });
+
     describe("get_readonly_description", () => {
         it("should return the read only description", () => {
-            const { getReadonlyDescription } = useEditorSectionContent(section, getCallbacks());
-            expect(getReadonlyDescription()).toBe(section.value.description.value);
+            expect(section_content.getReadonlyDescription()).toBe(section.value.description.value);
         });
     });
-    describe("input_current_title", () => {
-        it("should update editable title", () => {
-            const { editable_title, inputCurrentTitle } = useEditorSectionContent(
-                section,
-                getCallbacks(),
-            );
-            expect(editable_title.value).toBe(section.value.display_title);
-            inputCurrentTitle("new title");
-            expect(editable_title.value).toBe("new title");
+
+    describe("inputSectionContent", () => {
+        it("should update the editable title and the editable description", () => {
+            section_content.inputSectionContent("new title", "new description");
+
+            expect(section_content.editable_title.value).toBe("new title");
+            expect(section_content.editable_description.value).toBe("new description");
         });
-        describe("when the user types something in the title area", () => {
+        describe("when the user types something in the artidoc-section-title", () => {
             it("should display actions buttons", () => {
-                const callbacks = getCallbacks();
-                const { editable_title, inputCurrentTitle } = useEditorSectionContent(
-                    section,
-                    callbacks,
+                section_content.inputSectionContent("new title", section.value.description.value);
+
+                expect(section_content.editable_title.value).toBe("new title");
+                expect(section_content.editable_description.value).toBe(
+                    section.value.description.value,
                 );
-                expect(editable_title.value).toBe(section.value.display_title);
-                inputCurrentTitle("new title");
                 expect(callbacks.showActionsButtons).toHaveBeenCalledOnce();
-                expect(editable_title.value).toBe("new title");
             });
         });
-        describe("when the user focuses on the area but no change has occurred", () => {
+
+        describe("when the user types something in the artidoc-section-description", () => {
+            it("should display actions buttons", () => {
+                section_content.inputSectionContent(section.value.title.value, "new description");
+
+                expect(section_content.editable_description.value).toBe("new description");
+                expect(section_content.editable_title.value).toBe(section.value.title.value);
+                expect(callbacks.showActionsButtons).toHaveBeenCalledOnce();
+            });
+        });
+
+        describe("when the user focuses the editor but no change has occurred", () => {
             it("should hide actions buttons", () => {
-                const callbacks = getCallbacks();
-                const { editable_title, inputCurrentTitle } = useEditorSectionContent(
-                    section,
-                    callbacks,
+                section_content.inputSectionContent(
+                    section.value.title.value,
+                    section.value.description.value,
                 );
-                expect(editable_title.value).toBe(section.value.display_title);
-                inputCurrentTitle(section.value.display_title);
+
                 expect(callbacks.hideActionsButtons).toHaveBeenCalledOnce();
             });
         });
     });
-    describe("input_current_description", () => {
-        it("should update editable description", () => {
-            const { editable_description, inputCurrentDescription } = useEditorSectionContent(
-                section,
-                getCallbacks(),
-            );
-            expect(editable_description.value).toBe(section.value.description.value);
-            inputCurrentDescription("new description");
-            expect(editable_description.value).toBe("new description");
-        });
-        describe("when the user types something in the title area", () => {
-            it("should display actions buttons", () => {
-                const callbacks = getCallbacks();
-                const { editable_description, inputCurrentDescription } = useEditorSectionContent(
-                    section,
-                    callbacks,
-                );
-                expect(editable_description.value).toBe(section.value.description.value);
-                inputCurrentDescription("new description");
-                expect(editable_description.value).toBe("new description");
-                expect(callbacks.showActionsButtons).toHaveBeenCalledOnce();
-            });
-        });
-        describe("when the user focuses on the area but no change has occurred", () => {
-            it("should hide actions buttons", () => {
-                const callbacks = getCallbacks();
-                const { editable_description, inputCurrentDescription } = useEditorSectionContent(
-                    section,
-                    callbacks,
-                );
-                expect(editable_description.value).toBe(section.value.description.value);
-                inputCurrentDescription(section.value.description.value);
-                expect(callbacks.hideActionsButtons).toHaveBeenCalledOnce();
-            });
-        });
-    });
+
     describe("reset_content", () => {
         it("should reset description and title to the original state", () => {
-            const { resetContent, editable_title, editable_description } = useEditorSectionContent(
-                section,
-                getCallbacks(),
+            section_content.editable_title.value = "new title";
+            section_content.editable_description.value = "new description";
+            expect(section_content.editable_title.value).toEqual("new title");
+            expect(section_content.editable_description.value).toEqual("new description");
+
+            section_content.resetContent();
+
+            expect(section_content.editable_title.value).toEqual(section.value.display_title);
+            expect(section_content.editable_description.value).toEqual(
+                section.value.description.value,
             );
-
-            editable_title.value = "new title";
-            editable_description.value = "new description";
-            expect(editable_title.value).toEqual("new title");
-            expect(editable_description.value).toEqual("new description");
-
-            resetContent();
-
-            expect(editable_title.value).toEqual(section.value.display_title);
-            expect(editable_description.value).toEqual(section.value.description.value);
         });
     });
 });

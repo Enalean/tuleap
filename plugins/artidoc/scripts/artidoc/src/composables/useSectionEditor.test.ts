@@ -179,7 +179,10 @@ describe("useSectionEditor", () => {
                     () => {},
                 );
                 editor_state.is_section_in_edit_mode.value = true;
-                editor_section_content.inputCurrentDescription("the description changed");
+                editor_section_content.inputSectionContent(
+                    "the title changed",
+                    "the description changed",
+                );
 
                 editor_actions.cancelEditor(null);
 

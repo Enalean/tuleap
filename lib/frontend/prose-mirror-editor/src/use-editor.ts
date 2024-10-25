@@ -23,13 +23,9 @@ import { EditorView } from "prosemirror-view";
 import { DOMParser } from "prosemirror-model";
 import { dropCursor } from "prosemirror-dropcursor";
 import { buildCustomSchema } from "./custom_schema";
-import type { PluginDropFile } from "./plugins";
-import {
-    initLinkPopoverPlugin,
-    initPluginTransformInput,
-    initPluginInput,
-    setupToolbar,
-} from "./plugins";
+import type { EditorNodes } from "./custom_schema";
+import type { PluginDropFile, PluginInput } from "./plugins";
+import { initLinkPopoverPlugin, initPluginTransformInput, setupToolbar } from "./plugins";
 import type { GetText } from "@tuleap/gettext";
 
 import {
@@ -52,11 +48,12 @@ export type UseEditorType = {
 export async function useEditor(
     editor_element: HTMLElement,
     setupUploadPlugin: (gettext_provider: GetText) => PluginDropFile,
-    onChange: (new_text_content: string) => void,
+    setupInputPlugin: () => PluginInput,
     initial_content: HTMLElement,
     project_id: number,
     references: Array<CrossReference>,
     toolbar_bus: ToolbarBus,
+    custom_editor_nodes?: EditorNodes,
 ): Promise<UseEditorType> {
     const gettext_provider = await initGettext(
         getLocaleWithDefault(document),
@@ -66,10 +63,10 @@ export async function useEditor(
 
     const upload_plugin = setupUploadPlugin(gettext_provider);
 
-    const schema = buildCustomSchema();
+    const schema = buildCustomSchema(custom_editor_nodes);
     const editor_id = uuidv4();
     const plugins: Plugin[] = [
-        initPluginInput(onChange),
+        setupInputPlugin(),
         upload_plugin,
         dropCursor(),
         initLinkPopoverPlugin(document, gettext_provider, editor_id),

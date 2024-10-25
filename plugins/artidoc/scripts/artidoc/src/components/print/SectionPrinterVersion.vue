@@ -23,14 +23,13 @@
         <section-header
             class="section-header"
             v-bind:title="editable_title"
-            v-bind:input_current_title="noop"
-            v-bind:is_edit_mode="false"
             v-bind:is_print_mode="true"
         />
         <section-description
+            v-bind:title="editable_title"
             v-bind:editable_description="editable_description"
             v-bind:readonly_description="readonly_description"
-            v-bind:input_current_description="noop"
+            v-bind:input_section_content="noop"
             v-bind:is_edit_mode="false"
             v-bind:add_attachment_to_waiting_list="noop"
             v-bind:upload_url="upload_url"

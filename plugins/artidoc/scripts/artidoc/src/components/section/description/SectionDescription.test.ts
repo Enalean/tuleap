@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { describe, beforeEach, expect, it, vi } from "vitest";
+import { describe, beforeEach, expect, it } from "vitest";
 import { shallowMount } from "@vue/test-utils";
 import type { VueWrapper } from "@vue/test-utils";
 import SectionDescription from "./SectionDescription.vue";
@@ -27,6 +27,7 @@ import SectionDescriptionReadOnly from "./SectionDescriptionReadOnly.vue";
 import { SECTIONS_STORE } from "@/stores/sections-store-injection-key";
 import { UploadFileStub } from "@/helpers/stubs/UploadFileStub";
 import { CAN_USER_EDIT_DOCUMENT } from "@/can-user-edit-document-injection-key";
+import { noop } from "@/helpers/noop";
 
 describe("SectionDescription", () => {
     let are_sections_loading: boolean, can_user_edit_document: boolean, is_print_mode: boolean;
@@ -55,13 +56,14 @@ describe("SectionDescription", () => {
                 },
             },
             props: {
+                title: "Title",
                 editable_description: "Lorem ipsum",
                 readonly_description: "Lorem ipsum",
                 is_edit_mode: false,
                 is_print_mode,
                 upload_url: "/file/upload",
-                add_attachment_to_waiting_list: vi.fn(),
-                input_current_description: vi.fn(),
+                add_attachment_to_waiting_list: noop,
+                input_section_content: noop,
                 is_image_upload_allowed: true,
                 upload_file: UploadFileStub.uploadNotInProgress(),
                 project_id: 101,
