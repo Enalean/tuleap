@@ -81,15 +81,15 @@ final class NumericDuckTypedFieldTest extends CrossTrackerFieldTestCase
             'initial_effort'
         );
 
-        $tracker_builder->setReadPermission(
+        $tracker_builder->grantReadPermissionOnField(
             $release_initial_effort_field_id,
             \ProjectUGroup::PROJECT_MEMBERS
         );
-        $tracker_builder->setReadPermission(
+        $tracker_builder->grantReadPermissionOnField(
             $sprint_initial_effort_field_id,
             \ProjectUGroup::PROJECT_MEMBERS
         );
-        $tracker_builder->setReadPermission(
+        $tracker_builder->grantReadPermissionOnField(
             $task_initial_effort_field_id,
             \ProjectUGroup::PROJECT_ADMIN
         );

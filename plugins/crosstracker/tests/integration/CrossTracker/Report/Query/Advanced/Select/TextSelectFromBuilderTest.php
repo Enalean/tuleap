@@ -69,11 +69,11 @@ final class TextSelectFromBuilderTest extends CrossTrackerFieldTestCase
             'text_field',
         );
 
-        $tracker_builder->setReadPermission(
+        $tracker_builder->grantReadPermissionOnField(
             $release_text_field_id,
             ProjectUGroup::PROJECT_MEMBERS
         );
-        $tracker_builder->setReadPermission(
+        $tracker_builder->grantReadPermissionOnField(
             $sprint_text_field_id,
             ProjectUGroup::PROJECT_MEMBERS
         );

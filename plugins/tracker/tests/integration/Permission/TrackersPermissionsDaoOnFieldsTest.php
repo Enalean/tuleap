@@ -54,9 +54,9 @@ final class TrackersPermissionsDaoOnFieldsTest extends TestIntegrationTestCase
         $this->field3_id = $tracker_builder->buildDateField($tracker->getId(), 'field3', false);
         $this->fields_id = [$this->field1_id, $field2_id, $this->field3_id];
 
-        $tracker_builder->setReadPermission($this->field1_id, ProjectUGroup::PROJECT_MEMBERS);
-        $tracker_builder->setReadPermission($field2_id, ProjectUGroup::PROJECT_ADMIN);
-        $tracker_builder->setReadPermission($this->field3_id, ProjectUGroup::PROJECT_MEMBERS);
+        $tracker_builder->grantReadPermissionOnField($this->field1_id, ProjectUGroup::PROJECT_MEMBERS);
+        $tracker_builder->grantReadPermissionOnField($field2_id, ProjectUGroup::PROJECT_ADMIN);
+        $tracker_builder->grantReadPermissionOnField($this->field3_id, ProjectUGroup::PROJECT_MEMBERS);
     }
 
     public function testItRetrieveFieldsReadPermissions(): void
@@ -98,8 +98,8 @@ final class TrackersPermissionsDaoOnFieldsTest extends TestIntegrationTestCase
         $field_1_id = $tracker_builder->buildIntField($tracker_1->getId(), 'int_field');
         $tracker_2  = $tracker_builder->buildTracker((int) $project_admin->getID(), 'Tracker 2');
         $field_2_id = $tracker_builder->buildIntField($tracker_2->getId(), 'int_field');
-        $tracker_builder->setReadPermission($field_1_id, ProjectUGroup::PROJECT_ADMIN);
-        $tracker_builder->setReadPermission($field_2_id, ProjectUGroup::PROJECT_MEMBERS);
+        $tracker_builder->grantReadPermissionOnField($field_1_id, ProjectUGroup::PROJECT_ADMIN);
+        $tracker_builder->grantReadPermissionOnField($field_2_id, ProjectUGroup::PROJECT_MEMBERS);
         $factory = Tracker_FormElementFactory::instance();
         $field_1 = $factory->getFieldById($field_1_id);
         $field_2 = $factory->getFieldById($field_2_id);

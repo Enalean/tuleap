@@ -79,15 +79,15 @@ final class StaticListDuckTypedFieldTest extends CrossTrackerFieldTestCase
         $task_list_field_id    = $tracker_builder->buildStaticListField($this->task_tracker->getId(), 'list_field', 'sb');
         $task_bind_ids         = $tracker_builder->buildValuesForStaticListField($task_list_field_id, ['lead', 'management', 'cheese']);
 
-        $tracker_builder->setReadPermission(
+        $tracker_builder->grantReadPermissionOnField(
             $release_list_field_id,
             ProjectUGroup::PROJECT_MEMBERS
         );
-        $tracker_builder->setReadPermission(
+        $tracker_builder->grantReadPermissionOnField(
             $sprint_list_field_id,
             ProjectUGroup::PROJECT_MEMBERS
         );
-        $tracker_builder->setReadPermission(
+        $tracker_builder->grantReadPermissionOnField(
             $task_list_field_id,
             ProjectUGroup::PROJECT_ADMIN
         );

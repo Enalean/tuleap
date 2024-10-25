@@ -85,15 +85,15 @@ final class DescriptionMetadataTest extends CrossTrackerFieldTestCase
         $tracker_builder->buildDescriptionSemantic($this->sprint_tracker->getId(), $sprint_description_field_id);
         $tracker_builder->buildDescriptionSemantic($this->task_tracker->getId(), $task_description_field_id);
 
-        $tracker_builder->setReadPermission(
+        $tracker_builder->grantReadPermissionOnField(
             $release_description_field_id,
             ProjectUGroup::PROJECT_MEMBERS
         );
-        $tracker_builder->setReadPermission(
+        $tracker_builder->grantReadPermissionOnField(
             $sprint_description_field_id,
             ProjectUGroup::PROJECT_MEMBERS
         );
-        $tracker_builder->setReadPermission(
+        $tracker_builder->grantReadPermissionOnField(
             $task_description_field_id,
             ProjectUGroup::PROJECT_ADMIN
         );

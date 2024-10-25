@@ -87,15 +87,15 @@ final class AssignedToMetadataTest extends CrossTrackerFieldTestCase
         $tracker_builder->buildContributorAssigneeSemantic($this->sprint_tracker->getId(), $sprint_assignee_field_id);
         $tracker_builder->buildContributorAssigneeSemantic($this->task_tracker->getId(), $task_assignee_field_id);
 
-        $tracker_builder->setReadPermission(
+        $tracker_builder->grantReadPermissionOnField(
             $release_assignee_field_id,
             ProjectUGroup::PROJECT_MEMBERS
         );
-        $tracker_builder->setReadPermission(
+        $tracker_builder->grantReadPermissionOnField(
             $sprint_assignee_field_id,
             ProjectUGroup::PROJECT_MEMBERS
         );
-        $tracker_builder->setReadPermission(
+        $tracker_builder->grantReadPermissionOnField(
             $task_assignee_field_id,
             ProjectUGroup::PROJECT_ADMIN
         );

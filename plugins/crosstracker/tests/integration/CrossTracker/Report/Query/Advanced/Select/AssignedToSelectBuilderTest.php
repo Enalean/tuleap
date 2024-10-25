@@ -72,11 +72,11 @@ final class AssignedToSelectBuilderTest extends CrossTrackerFieldTestCase
         $tracker_builder->buildContributorAssigneeSemantic($release_tracker->getId(), $release_assignee_field_id);
         $tracker_builder->buildContributorAssigneeSemantic($sprint_tracker->getId(), $sprint_assignee_field_id);
 
-        $tracker_builder->setReadPermission(
+        $tracker_builder->grantReadPermissionOnField(
             $release_assignee_field_id,
             ProjectUGroup::PROJECT_MEMBERS
         );
-        $tracker_builder->setReadPermission(
+        $tracker_builder->grantReadPermissionOnField(
             $sprint_assignee_field_id,
             ProjectUGroup::PROJECT_MEMBERS
         );

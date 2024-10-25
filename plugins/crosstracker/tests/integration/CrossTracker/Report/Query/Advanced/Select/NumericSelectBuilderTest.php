@@ -68,11 +68,11 @@ final class NumericSelectBuilderTest extends CrossTrackerFieldTestCase
             'numeric_field',
         );
 
-        $tracker_builder->setReadPermission(
+        $tracker_builder->grantReadPermissionOnField(
             $release_int_field_id,
             ProjectUGroup::PROJECT_MEMBERS
         );
-        $tracker_builder->setReadPermission(
+        $tracker_builder->grantReadPermissionOnField(
             $sprint_float_field_id,
             ProjectUGroup::PROJECT_MEMBERS
         );

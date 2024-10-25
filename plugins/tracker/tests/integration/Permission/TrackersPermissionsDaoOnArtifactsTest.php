@@ -71,10 +71,10 @@ final class TrackersPermissionsDaoOnArtifactsTest extends TestIntegrationTestCas
         $this->artifact_open_2      = $tracker_builder->buildArtifact($task_tracker);
         $this->artifact_closed_2    = $tracker_builder->buildArtifact($task_tracker);
         $artifact_very_closed       = $tracker_builder->buildArtifact($task_tracker);
-        $tracker_builder->setViewPermissionOnArtifact($this->artifact_open_member, ProjectUGroup::PROJECT_MEMBERS);
-        $tracker_builder->setViewPermissionOnArtifact($this->artifact_closed, ProjectUGroup::PROJECT_ADMIN);
-        $tracker_builder->setViewPermissionOnArtifact($this->artifact_closed_2, ProjectUGroup::PROJECT_ADMIN);
-        $tracker_builder->setViewPermissionOnArtifact($artifact_very_closed, ProjectUGroup::WIKI_ADMIN);
+        $tracker_builder->grantViewPermissionOnArtifact($this->artifact_open_member, ProjectUGroup::PROJECT_MEMBERS);
+        $tracker_builder->grantViewPermissionOnArtifact($this->artifact_closed, ProjectUGroup::PROJECT_ADMIN);
+        $tracker_builder->grantViewPermissionOnArtifact($this->artifact_closed_2, ProjectUGroup::PROJECT_ADMIN);
+        $tracker_builder->grantViewPermissionOnArtifact($artifact_very_closed, ProjectUGroup::WIKI_ADMIN);
 
         $this->artifacts = [
             $this->artifact_open,
@@ -129,8 +129,8 @@ final class TrackersPermissionsDaoOnArtifactsTest extends TestIntegrationTestCas
         $artifact_1_id = $tracker_builder->buildArtifact($tracker_1->getId());
         $tracker_2     = $tracker_builder->buildTracker((int) $project_admin->getID(), 'Tracker 2');
         $artifact_2_id = $tracker_builder->buildArtifact($tracker_2->getId());
-        $tracker_builder->setViewPermissionOnArtifact($artifact_1_id, ProjectUGroup::PROJECT_ADMIN);
-        $tracker_builder->setViewPermissionOnArtifact($artifact_2_id, ProjectUGroup::PROJECT_MEMBERS);
+        $tracker_builder->grantViewPermissionOnArtifact($artifact_1_id, ProjectUGroup::PROJECT_ADMIN);
+        $tracker_builder->grantViewPermissionOnArtifact($artifact_2_id, ProjectUGroup::PROJECT_MEMBERS);
         $factory    = Tracker_ArtifactFactory::instance();
         $artifact_1 = $factory->getArtifactById($artifact_1_id);
         $artifact_2 = $factory->getArtifactById($artifact_2_id);

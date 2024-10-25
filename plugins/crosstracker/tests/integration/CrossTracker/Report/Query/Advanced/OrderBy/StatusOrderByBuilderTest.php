@@ -74,8 +74,8 @@ final class StatusOrderByBuilderTest extends CrossTrackerFieldTestCase
         $release_bind_ids = $tracker_builder->buildOpenAndClosedValuesForField($release_list_field_id, $release_tracker->getId(), ['Open1'], ['Closed1']);
         $sprint_bind_ids  = $tracker_builder->buildOpenAndClosedValuesForField($sprint_list_field_id, $sprint_tracker->getId(), ['Open2'], ['Closed2']);
 
-        $tracker_builder->setReadPermission($release_list_field_id, ProjectUGroup::PROJECT_MEMBERS);
-        $tracker_builder->setReadPermission($sprint_list_field_id, ProjectUGroup::PROJECT_MEMBERS);
+        $tracker_builder->grantReadPermissionOnField($release_list_field_id, ProjectUGroup::PROJECT_MEMBERS);
+        $tracker_builder->grantReadPermissionOnField($sprint_list_field_id, ProjectUGroup::PROJECT_MEMBERS);
 
         $release_artifact_1_id = $tracker_builder->buildArtifact($release_tracker->getId());
         $release_artifact_2_id = $tracker_builder->buildArtifact($release_tracker->getId());

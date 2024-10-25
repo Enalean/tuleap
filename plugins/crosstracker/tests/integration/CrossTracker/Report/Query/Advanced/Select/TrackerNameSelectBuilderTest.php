@@ -62,11 +62,11 @@ final class TrackerNameSelectBuilderTest extends CrossTrackerFieldTestCase
         $release_artifact_id_field_id = $tracker_builder->buildArtifactIdField($release_tracker->getId());
         $sprint_artifact_id_field_id  = $tracker_builder->buildArtifactIdField($sprint_tracker->getId());
 
-        $tracker_builder->setReadPermission(
+        $tracker_builder->grantReadPermissionOnField(
             $release_artifact_id_field_id,
             ProjectUGroup::PROJECT_MEMBERS
         );
-        $tracker_builder->setReadPermission(
+        $tracker_builder->grantReadPermissionOnField(
             $sprint_artifact_id_field_id,
             ProjectUGroup::PROJECT_MEMBERS
         );

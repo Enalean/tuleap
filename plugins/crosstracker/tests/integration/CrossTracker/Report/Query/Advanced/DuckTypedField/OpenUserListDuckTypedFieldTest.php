@@ -74,11 +74,11 @@ final class OpenUserListDuckTypedFieldTest extends CrossTrackerFieldTestCase
         $bob_mail              = 'bob@example.com';
         $sprint_bind_ids       = $tracker_builder->buildValuesForStaticOpenListField($sprint_user_field_id, [$bob_mail]);
 
-        $tracker_builder->setReadPermission(
+        $tracker_builder->grantReadPermissionOnField(
             $release_user_field_id,
             ProjectUGroup::PROJECT_MEMBERS
         );
-        $tracker_builder->setReadPermission(
+        $tracker_builder->grantReadPermissionOnField(
             $sprint_user_field_id,
             ProjectUGroup::PROJECT_MEMBERS
         );

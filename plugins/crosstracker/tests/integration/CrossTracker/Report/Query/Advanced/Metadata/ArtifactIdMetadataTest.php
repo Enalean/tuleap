@@ -66,7 +66,7 @@ final class ArtifactIdMetadataTest extends CrossTrackerFieldTestCase
         $this->sprint_tracker  = $tracker_builder->buildTracker($project_id, 'Sprint');
 
         $sprint_artifact_id_field_id = $tracker_builder->buildArtifactIdField($this->sprint_tracker->getId());
-        $tracker_builder->setReadPermission($sprint_artifact_id_field_id, ProjectUGroup::PROJECT_ADMIN);
+        $tracker_builder->grantReadPermissionOnField($sprint_artifact_id_field_id, ProjectUGroup::PROJECT_ADMIN);
 
         $this->sprint_artifact_1_id  = $tracker_builder->buildArtifact($this->sprint_tracker->getId());
         $this->release_artifact_1_id = $tracker_builder->buildArtifact($this->release_tracker->getId());
