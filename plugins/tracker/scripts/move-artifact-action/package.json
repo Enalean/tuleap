@@ -23,6 +23,7 @@
     "@tuleap/build-system-configurator": "workspace:*",
     "@tuleap/core-constants": "workspace:*",
     "@tuleap/po-gettext-plugin": "workspace:*",
+    "@types/jquery": "^3.5.5",
     "@vitejs/plugin-vue": "^4.2.3",
     "@vue/test-utils": "^2.2.10",
     "jquery": "3.6.0"

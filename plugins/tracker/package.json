@@ -6,32 +6,22 @@
   "private": true,
   "dependencies": {
     "@tuleap/burningparrot-theme": "workspace:^",
-    "@tuleap/fetch-result": "workspace:^",
     "@tuleap/flamingparrot-theme": "workspace:^",
     "@tuleap/mention": "workspace:*",
     "@tuleap/plugin-tracker-artifact-ckeditor-image-upload": "workspace:*",
-    "@tuleap/plugin-tracker-constants": "workspace:*",
-    "@tuleap/plugin-tracker-email-copy-paste": "workspace:*",
     "@tuleap/plugin-tracker-rich-text-editor": "workspace:*",
     "@tuleap/plugin-tracker-rte-creator": "workspace:*",
-    "@tuleap/plugin-tracker-tql-codemirror": "workspace:*",
     "@tuleap/project-background": "workspace:*",
     "@tuleap/tlp": "workspace:*",
     "@tuleap/tlp-badge": "workspace:*",
-    "@tuleap/tlp-fetch": "workspace:*",
     "@tuleap/tlp-swatch-colors": "workspace:^",
-    "@tuleap/tooltip": "workspace:*",
-    "dompurify": "^3.1.4"
+    "@tuleap/tooltip": "workspace:*"
   },
   "devDependencies": {
     "@tuleap/build-system-configurator": "workspace:*",
     "@tuleap/core-constants": "workspace:*",
     "@tuleap/cypress-configurator": "workspace:*",
-    "@tuleap/cypress-utilities-support": "workspace:*",
-    "@types/bootstrap": "^4.5.1",
-    "@types/dompurify": "^3.0.5",
-    "@types/jquery": "^3.5.5",
-    "jquery": "^3.6.0"
+    "@tuleap/cypress-utilities-support": "workspace:*"
   },
   "scripts": {
     "build": "rm -rf ./frontend-assets && webpack --config webpack.prod.js",

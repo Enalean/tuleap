@@ -8,9 +8,6 @@ dependencies:
   '@tuleap/burningparrot-theme':
     specifier: workspace:^
     version: link:../../src/themes/BurningParrot
-  '@tuleap/fetch-result':
-    specifier: workspace:^
-    version: link:../../lib/frontend/fetch-result
   '@tuleap/flamingparrot-theme':
     specifier: workspace:^
     version: link:../../src/themes/FlamingParrot
@@ -20,21 +17,12 @@ dependencies:
   '@tuleap/plugin-tracker-artifact-ckeditor-image-upload':
     specifier: workspace:*
     version: link:scripts/lib/artifact-ckeditor-image-upload
-  '@tuleap/plugin-tracker-constants':
-    specifier: workspace:*
-    version: link:scripts/lib/constants
-  '@tuleap/plugin-tracker-email-copy-paste':
-    specifier: workspace:*
-    version: link:scripts/lib/email-copy-paste
   '@tuleap/plugin-tracker-rich-text-editor':
     specifier: workspace:*
     version: link:scripts/lib/rich-text-editor
   '@tuleap/plugin-tracker-rte-creator':
     specifier: workspace:*
     version: link:scripts/lib/rte-creator
-  '@tuleap/plugin-tracker-tql-codemirror':
-    specifier: workspace:*
-    version: link:scripts/lib/TQL-CodeMirror
   '@tuleap/project-background':
     specifier: workspace:*
     version: link:../../lib/frontend/project-background
@@ -44,18 +32,12 @@ dependencies:
   '@tuleap/tlp-badge':
     specifier: workspace:*
     version: link:../../lib/frontend/tlp-badge
-  '@tuleap/tlp-fetch':
-    specifier: workspace:*
-    version: link:../../lib/frontend/tlp-fetch
   '@tuleap/tlp-swatch-colors':
     specifier: workspace:^
     version: link:../../lib/frontend/tlp-swatch-colors
   '@tuleap/tooltip':
     specifier: workspace:*
     version: link:../../lib/frontend/tooltip
-  dompurify:
-    specifier: ^3.1.4
-    version: 3.1.4
 
 devDependencies:
   '@tuleap/build-system-configurator':
@@ -70,57 +52,3 @@ devDependencies:
   '@tuleap/cypress-utilities-support':
     specifier: workspace:*
     version: link:../../lib/test-utils/cypress-utilities-support
-  '@types/bootstrap':
-    specifier: ^4.5.1
-    version: 4.5.1
-  '@types/dompurify':
-    specifier: ^3.0.5
-    version: 3.0.5
-  '@types/jquery':
-    specifier: ^3.5.5
-    version: 3.5.5
-  jquery:
-    specifier: ^3.6.0
-    version: 3.6.0
-
-packages:
-
-  /@types/bootstrap@4.5.1:
-    resolution: {integrity: sha512-5iAWnZnqHucloYQFlozKUTPw0+fLfKo8d4flGCiE1B1w91z/91UIqMDht/31RQJIwx0+u5SL4CJCbs79Z15M+A==}
-    dependencies:
-      '@types/jquery': 3.5.5
-      popper.js: 1.16.1
-    dev: true
-
-  /@types/dompurify@3.0.5:
-    resolution: {integrity: sha512-1Wg0g3BtQF7sSb27fJQAKck1HECM6zV1EB66j8JH9i3LCjYabJa0FSdiSgsD5K/RbrsR0SiraKacLB+T8ZVYAg==}
-    dependencies:
-      '@types/trusted-types': 2.0.4
-    dev: true
-
-  /@types/jquery@3.5.5:
-    resolution: {integrity: sha512-6RXU9Xzpc6vxNrS6FPPapN1SxSHgQ336WC6Jj/N8q30OiaBZ00l1GBgeP7usjVZPivSkGUfL1z/WW6TX989M+w==}
-    dependencies:
-      '@types/sizzle': 2.3.2
-    dev: true
-
-  /@types/sizzle@2.3.2:
-    resolution: {integrity: sha512-7EJYyKTL7tFR8+gDbB6Wwz/arpGa0Mywk1TJbNzKzHtzbwVmY4HR9WqS5VV7dsBUKQmPNr192jHr/VpBluj/hg==}
-    dev: true
-
-  /@types/trusted-types@2.0.4:
-    resolution: {integrity: sha512-IDaobHimLQhjwsQ/NMwRVfa/yL7L/wriQPMhw1ZJall0KX6E1oxk29XMDeilW5qTIg5aoiqf5Udy8U/51aNoQQ==}
-    dev: true
-
-  /dompurify@3.1.4:
-    resolution: {integrity: sha512-2gnshi6OshmuKil8rMZuQCGiUF3cUxHY3NGDzUAdUx/NPEe5DVnO8BDoAQouvgwnx0R/+a6jUn36Z0FSdq8vww==}
-    dev: false
-
-  /jquery@3.6.0:
-    resolution: {integrity: sha512-JVzAR/AjBvVt2BmYhxRCSYysDsPcssdmTFnzyLEts9qNwmjmu4JTAMYubEfwVOSwpQ1I1sKKFcxhZCI2buerfw==}
-    dev: true
-
-  /popper.js@1.16.1:
-    resolution: {integrity: sha512-Wb4p1J4zyFTbM+u6WuO4XstYx4Ky9Cewe4DWrel7B0w6VVICvPwdOpotjzcf6eD8TsckVnIMNONQyPIUFOUbCQ==}
-    deprecated: You can find the new Popper v2 at @popperjs/core, this package is dedicated to the legacy v1
-    dev: true

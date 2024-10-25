@@ -30,7 +30,6 @@ const output = webpack_configurator.configureOutput(
 const config_for_flaming_parrot = {
     entry: {
         "modal-v2": "./scripts/modal-v2/modal-in-place.js",
-        "tracker-report-expert-mode": "./scripts/report/index.js",
     },
     context,
     output,
@@ -41,9 +40,6 @@ const config_for_flaming_parrot = {
     },
     resolve: {
         extensions: [".js"],
-    },
-    module: {
-        rules: [webpack_configurator.rule_po_files],
     },
     plugins: [manifest_plugin],
 };
