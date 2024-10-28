@@ -34,9 +34,9 @@ function movePopoverToDocumentBody(host: PopoverHost, doc: Document): void {
     doc.body.appendChild(host.popover_element);
 }
 
-const movePopoverBackToHostElement = (host: PopoverHost): void => {
+const movePopoverBackToHostElement = (host: PopoverHost, popover_element: HTMLElement): void => {
     // Put back popover inside host element, so the component can continue working after being disconnected/reconnected.
-    host.render().appendChild(host.popover_element);
+    host.render().appendChild(popover_element);
 };
 
 export const connectPopover = (host: PopoverHost, doc: Document): DisconnectFunction => {
@@ -44,10 +44,14 @@ export const connectPopover = (host: PopoverHost, doc: Document): DisconnectFunc
         trigger: "click",
         placement: "bottom-start",
     });
+
+    // Keep track of the HTMLElement so we'll be able to put it back in the toolbar when it is disconnected
+    const popover_element = host.popover_element;
+
     movePopoverToDocumentBody(host, doc);
 
     return () => {
         host.popover_instance.destroy();
-        movePopoverBackToHostElement(host);
+        movePopoverBackToHostElement(host, popover_element);
     };
 };
