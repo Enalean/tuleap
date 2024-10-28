@@ -56,6 +56,13 @@ const { is_section_editable } = props.editor.editor_state;
     position: sticky;
     z-index: zindex.$footer;
     bottom: 0;
+
+    /*
+    Artificially augment the width of the footer so that it covers the box-shadow of
+    the editor when the latter has the focus and goes below the footer.
+    */
+    width: calc(100% + 2 * var(--tlp-shadow-focus-width));
+    margin: 0 0 0 calc(-1 * var(--tlp-shadow-focus-width));
     padding: var(--tlp-medium-spacing) 0;
 
     &-with-background {
