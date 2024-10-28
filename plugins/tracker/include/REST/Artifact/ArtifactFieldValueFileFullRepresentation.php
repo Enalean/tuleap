@@ -20,7 +20,7 @@
 
 namespace Tuleap\Tracker\REST\Artifact;
 
-use Tuleap\REST\JsonCast;
+use Tracker_FormElement_Field_File;
 
 class ArtifactFieldValueFileFullRepresentation extends ArtifactFieldValueRepresentationData
 {
@@ -30,15 +30,27 @@ class ArtifactFieldValueFileFullRepresentation extends ArtifactFieldValueReprese
     public $type;
 
     /**
-     * @var Tuleap\Tracker\REST\Artifact\FileInfoRepresentation[]
+     * @var \Tuleap\Tracker\REST\Artifact\FileInfoRepresentation[]
      */
     public $file_descriptions = [];
 
-    public function build($id, $type, $label, array $values)
+    /**
+     * @param FileInfoRepresentation[] $values
+     */
+    public static function fromValues(Tracker_FormElement_Field_File $file, array $values): self
     {
-        $this->field_id          = JsonCast::toInt($id);
-        $this->type              = $type;
-        $this->label             = $label;
-        $this->file_descriptions = $values;
+        $representation = new self();
+
+        $representation->field_id          = $file->getId();
+        $representation->type              = \Tracker_FormElementFactory::FIELD_FILE_TYPE;
+        $representation->label             = $file->getLabel();
+        $representation->file_descriptions = $values;
+
+        return $representation;
+    }
+
+    public static function fromEmptyValues(Tracker_FormElement_Field_File $file): self
+    {
+        return self::fromValues($file, []);
     }
 }

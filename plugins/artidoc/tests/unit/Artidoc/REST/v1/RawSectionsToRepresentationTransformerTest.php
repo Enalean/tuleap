@@ -46,6 +46,7 @@ use Tuleap\Tracker\Artifact\UploadDataAttributesForRichTextEditorBuilder;
 use Tuleap\Tracker\REST\Artifact\ArtifactFieldValueCommonmarkRepresentation;
 use Tuleap\Tracker\REST\Artifact\ArtifactFieldValueFileFullRepresentation;
 use Tuleap\Tracker\REST\Artifact\ArtifactFieldValueFullRepresentation;
+use Tuleap\Tracker\REST\Artifact\FileInfoRepresentation;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetValueTextTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
@@ -150,6 +151,7 @@ final class RawSectionsToRepresentationTransformerTest extends TestCase
 
         $file = $this->createMock(Tracker_FormElement_Field_File::class);
         $file->method('getId')->willReturn(600);
+        $file->method('getLabel')->willReturn('Attachments');
 
         $dao = $this->createMock(Tracker_ArtifactDao::class);
         $dao->method('searchByIds')
@@ -195,25 +197,11 @@ final class RawSectionsToRepresentationTransformerTest extends TestCase
 
         $file->method('getRESTValue')
             ->willReturnCallback(fn(PFUser $user, Tracker_Artifact_Changeset $changeset) => match ($changeset) {
-                $art1->getLastChangeset() => $this->getFileValue($art1),
-                $art2->getLastChangeset() => $this->getFileValue($art2),
-                $art3->getLastChangeset() => $this->getFileValue($art3),
-                $art4->getLastChangeset() => $this->getFileValue($art4),
+                $art1->getLastChangeset() => $this->getFileValue($file, $art1),
+                $art2->getLastChangeset() => $this->getFileValue($file, $art2),
+                $art3->getLastChangeset() => $this->getFileValue($file, $art3),
+                $art4->getLastChangeset() => $this->getFileValue($file, $art4),
             });
-
-        $editor_builder = $this->createMock(UploadDataAttributesForRichTextEditorBuilder::class);
-        $editor_builder->method('getDataAttributes')->willReturn([
-            [
-                'name' => 'upload-url',
-                'value' => 'https//upload_url',
-            ], [
-                'name' => 'upload-field-name',
-                'value' => 'field',
-            ], [
-                'name' => 'upload-max-size',
-                'value' => 1234567890,
-            ],
-        ]);
 
         $transformer = new RawSectionsToRepresentationTransformer(
             $dao,
@@ -247,7 +235,7 @@ final class RawSectionsToRepresentationTransformerTest extends TestCase
 
         array_walk(
             $expected,
-            static function (array $expected, int $index) use ($result, $expected_can_user_edit_section) {
+            static function (array $expected, int $index) use ($result) {
                 self::assertSame($expected['id'], $result->value->sections[$index]->artifact->id);
                 self::assertInstanceOf(ArtifactFieldValueFullRepresentation::class, $result->value->sections[$index]->title);
                 self::assertSame($expected['title'], $result->value->sections[$index]->title->value);
@@ -257,6 +245,69 @@ final class RawSectionsToRepresentationTransformerTest extends TestCase
                 self::assertInstanceOf(ArtifactFieldValueFileFullRepresentation::class, $result->value->sections[$index]->attachments);
             }
         );
+    }
+
+    public function testArtifactHasEmptyAttachmentFieldThatHasBeenCreatedAfterArtifactCreation(): void
+    {
+        $user = UserTestBuilder::buildWithDefaults();
+
+        $title = $this->createMock(Tracker_FormElement_Field_String::class);
+        $title->method('userCanRead')->willReturn(true);
+        $title->method('userCanUpdate')->willReturn(true);
+        $this->semantic_title->method('getField')->willReturn($title);
+
+        $description = $this->createMock(Tracker_FormElement_Field_Text::class);
+        $description->method('userCanRead')->willReturn(true);
+        $description->method('userCanUpdate')->willReturn(true);
+        $this->semantic_description->method('getField')->willReturn($description);
+
+        $file = $this->createMock(Tracker_FormElement_Field_File::class);
+        $file->method('getId')->willReturn(600);
+        $file->method('getLabel')->willReturn('Attachments');
+
+        $dao = $this->createMock(Tracker_ArtifactDao::class);
+        $dao->method('searchByIds')
+            ->with([1])
+            ->willReturn([
+                ['id' => 1],
+            ]);
+
+        $art1 = $this->getArtifact(1, $title, $user);
+
+        $title->method('getFullRESTValue')
+            ->willReturn($this->getTitleValue($art1));
+
+        $description->method('getFullRESTValue')
+            ->willReturn($this->getDescriptionValue($art1));
+
+        $factory = $this->createMock(Tracker_ArtifactFactory::class);
+        $factory->method('getInstanceFromRow')
+            ->willReturn($art1);
+
+        $file_upload_provider = GetFileUploadDataStub::withField($file);
+
+        $file->method('getRESTValue')->willReturn(null);
+
+        $transformer = new RawSectionsToRepresentationTransformer(
+            $dao,
+            $factory,
+            $file_upload_provider
+        );
+        $result      = $transformer->getRepresentation(
+            new PaginatedRawSections(
+                101,
+                [
+                    RawSection::fromRow(['artifact_id' => 1, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 0]),
+                ],
+                10,
+            ),
+            $user
+        );
+
+        self::assertTrue(Result::isOk($result));
+        self::assertSame(10, $result->value->total);
+        self::assertCount(1, $result->value->sections);
+        self::assertInstanceOf(ArtifactFieldValueFileFullRepresentation::class, $result->value->sections[0]->attachments);
     }
 
     public function testArtifactHasNoAttachmentField(): void
@@ -834,16 +885,19 @@ final class RawSectionsToRepresentationTransformerTest extends TestCase
         self::assertCount(0, $result->value->sections);
     }
 
-    private function getFileValue(Artifact $artifact): ArtifactFieldValueFileFullRepresentation
+    private function getFileValue(Tracker_FormElement_Field_File $field, Artifact $artifact): ArtifactFieldValueFileFullRepresentation
     {
-        $value = new ArtifactFieldValueFileFullRepresentation();
-        $value->build(
-            100 * $artifact->getId(),
-            'file',
-            'Attachements',
-            [100 + $artifact->getId()]
-        );
-
-        return $value;
+        return ArtifactFieldValueFileFullRepresentation::fromValues($field, [
+            new FileInfoRepresentation(
+                100 + $artifact->getId(),
+                101,
+                '',
+                'toto.gif',
+                123,
+                'image/webp',
+                '/path/to/image.png',
+                '/preview/image.png',
+            ),
+        ]);
     }
 }
