@@ -19,7 +19,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Docman_View_Redirect extends Docman_View_View /* implements Visitor */
+use Tuleap\Docman\Item\ItemVisitor;
+use Tuleap\Docman\Item\OtherDocument;
+
+/**
+ * @implements ItemVisitor<string>
+ */
+class Docman_View_Redirect extends Docman_View_View implements ItemVisitor
 {
     /* protected */ public function _content($params)
     {
@@ -40,19 +46,19 @@ class Docman_View_Redirect extends Docman_View_View /* implements Visitor */
         $GLOBALS['Response']->redirect($url);
     }
 
-    public function visitFolder(&$item, $params = [])
+    public function visitFolder(Docman_Folder $item, $params = [])
     {
-        trigger_error('Redirect view cannot be applied to Folders');
+        throw new Exception('Redirect view cannot be applied to Folders');
     }
 
-    public function visitWiki(&$item, $params = [])
+    public function visitWiki(Docman_Wiki $item, $params = [])
     {
         $project_id = urlencode($item->getGroupId());
         $pagename   = urlencode($item->getPagename());
         return '/wiki/?group_id=' . $project_id . '&pagename=' . $pagename;
     }
 
-    public function visitLink(&$item, $params = [])
+    public function visitLink(Docman_Link $item, $params = [])
     {
         $url = null;
         if (isset($params['version_number'])) {
@@ -82,18 +88,30 @@ class Docman_View_Redirect extends Docman_View_View /* implements Visitor */
         exit();
     }
 
-    public function visitFile(&$item, $params = [])
+    public function visitFile(Docman_File $item, $params = [])
     {
-        trigger_error('Redirect view cannot be applied to Files');
+        throw new Exception('Redirect view cannot be applied to Files');
     }
 
-    public function visitEmbeddedFile(&$item, $params = [])
+    public function visitEmbeddedFile(Docman_EmbeddedFile $item, $params = [])
     {
-        trigger_error('Redirect view cannot be applied to Embedded Files');
+        throw new Exception('Redirect view cannot be applied to Embedded Files');
     }
 
-    public function visitEmpty(&$item, $params = [])
+    public function visitEmpty(Docman_Empty $item, $params = [])
     {
-        trigger_error('Redirect view cannot be applied to Empty documents');
+        throw new Exception('Redirect view cannot be applied to Empty documents');
+    }
+
+    public function visitItem(Docman_Item $item, array $params = [])
+    {
+        throw new Exception('Redirect view cannot be applied to unknown item documents');
+    }
+
+    public function visitOtherDocument(OtherDocument $item, array $params = [])
+    {
+        return EventManager::instance()
+            ->dispatch(new \Tuleap\Docman\Item\OtherDocumentHrefEvent($item))
+            ->getHref();
     }
 }
