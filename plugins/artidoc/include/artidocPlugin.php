@@ -36,6 +36,7 @@ use Tuleap\Config\PluginWithConfigKeys;
 use Tuleap\DB\DatabaseUUIDV7Factory;
 use Tuleap\Docman\Item\CloneOtherItemPostAction;
 use Tuleap\Docman\Item\GetDocmanItemOtherTypeEvent;
+use Tuleap\Docman\Item\OtherDocumentHrefEvent;
 use Tuleap\Docman\ItemType\GetItemTypeAsText;
 use Tuleap\Docman\REST\v1\Folders\FilterItemOtherTypeProvider;
 use Tuleap\Docman\REST\v1\GetOtherDocumentItemRepresentationWrapper;
@@ -174,8 +175,24 @@ class ArtidocPlugin extends Plugin implements PluginWithConfigKeys
     public function getOtherDocumentItemRepresentationWrapper(GetOtherDocumentItemRepresentationWrapper $event): void
     {
         if ($event->item instanceof ArtidocDocument) {
-            $event->setItemRepresentationArguments(ArtidocDocument::TYPE, new OtherTypePropertiesRepresentation('/artidoc/' . urlencode((string) $event->item->getId())));
+            $event->setItemRepresentationArguments(
+                ArtidocDocument::TYPE,
+                new OtherTypePropertiesRepresentation($this->getArtidocHref($event->item)),
+            );
         }
+    }
+
+    #[ListeningToEventClass]
+    public function otherDocumentHrefEvent(OtherDocumentHrefEvent $event): void
+    {
+        if ($event->item instanceof ArtidocDocument) {
+            $event->setHref($this->getArtidocHref($event->item));
+        }
+    }
+
+    private function getArtidocHref(ArtidocDocument $document): string
+    {
+        return '/artidoc/' . urlencode((string) $document->getId());
     }
 
     #[ListeningToEventClass]

@@ -34,7 +34,7 @@ class Docman_View_GetShowViewVisitor implements ItemVisitor
 
     public function visitOtherDocument(OtherDocument $item, array $params = [])
     {
-        return $this->visitItem($item, $params);
+        return 'Redirect';
     }
 
     public function visitWiki(Docman_Wiki $item, $params = [])
