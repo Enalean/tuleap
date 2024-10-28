@@ -38,6 +38,7 @@ use EventManager;
 use TestHelper;
 use Tuleap\Docman\Notifications\UgroupsToNotifyDao;
 use Tuleap\Docman\Notifications\UsersToNotifyDao;
+use Tuleap\Document\Tests\Stubs\RecentlyVisited\DeleteVisitByItemIdStub;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use UserManager;
@@ -613,13 +614,15 @@ final class ItemFactoryTest extends TestCase
         self::assertFalse($itemFactory->restore($item));
     }
 
-    public function testItDeletesNotificationsWhenDeletingItem(): void
+    public function testItDeletesNotificationsAndVisitsWhenDeletingItem(): void
     {
         $lock_factory          = $this->createMock(Docman_LockFactory::class);
         $item_dao              = $this->createMock(Docman_ItemDao::class);
         $ugroups_to_notify_dao = $this->createMock(UgroupsToNotifyDao::class);
         $users_to_notify_dao   = $this->createMock(UsersToNotifyDao::class);
         $user_manager          = $this->createMock(UserManager::class);
+
+        $visit = DeleteVisitByItemIdStub::build();
 
         $item_id = 183;
         $item    = new Docman_File(['item_id' => $item_id]);
@@ -631,6 +634,7 @@ final class ItemFactoryTest extends TestCase
             '_getUserManager',
             'getLockFactory',
             '_getItemDao',
+            'getRecentlyVisitedDao',
         ]);
         $item_factory->method('getUgroupsToNotifyDao')->willReturn($ugroups_to_notify_dao);
         $ugroups_to_notify_dao->expects(self::once())->method('deleteByItemId')->with($item_id);
@@ -641,6 +645,7 @@ final class ItemFactoryTest extends TestCase
         $item_factory->method('_getUserManager')->willReturn($user_manager);
         $item_factory->method('getLockFactory')->willReturn($lock_factory);
         $item_factory->method('_getItemDao')->willReturn($item_dao);
+        $item_factory->method('getRecentlyVisitedDao')->willReturn($visit);
         $lock_factory->method('itemIsLocked');
         $item_dao->method('deleteCutPreferenceForAllUsers');
         $item_dao->method('deleteCopyPreferenceForAllUsers');
@@ -648,5 +653,7 @@ final class ItemFactoryTest extends TestCase
         $item_dao->method('storeDeletedItem');
 
         $item_factory->delete($item);
+
+        self::assertTrue($visit->isDeleted());
     }
 }

@@ -26,6 +26,8 @@ use Tuleap\Docman\DeleteFailedException;
 use Tuleap\Docman\DestinationCloneItem;
 use Tuleap\Docman\Notifications\UgroupsToNotifyDao;
 use Tuleap\Docman\Notifications\UsersToNotifyDao;
+use Tuleap\Document\RecentlyVisited\DeleteVisitByItemId;
+use Tuleap\Document\RecentlyVisited\RecentlyVisitedDocumentDao;
 use Tuleap\PHPWiki\WikiPage;
 
 class Docman_ItemFactory implements \Tuleap\Docman\Item\GetItemFromRow
@@ -849,6 +851,17 @@ class Docman_ItemFactory implements \Tuleap\Docman\Item\GetItemFromRow
         return $this->dao;
     }
 
+    private ?DeleteVisitByItemId $recently_visited_dao = null;
+
+    protected function getRecentlyVisitedDao(): DeleteVisitByItemId
+    {
+        if ($this->recently_visited_dao === null) {
+            $this->recently_visited_dao = new RecentlyVisitedDocumentDao();
+        }
+
+        return $this->recently_visited_dao;
+    }
+
     protected function _getVersionFactory()
     {
         return new Docman_VersionFactory();
@@ -1501,6 +1514,8 @@ class Docman_ItemFactory implements \Tuleap\Docman\Item\GetItemFromRow
         $dao = $this->_getItemDao();
         $dao->updateFromRow($item->toRow());
         $dao->storeDeletedItem($item->getId());
+
+        $this->getRecentlyVisitedDao()->deleteVisitByItemId((int) $item->getId());
     }
 
     public function getLockFactory()

@@ -33,6 +33,7 @@ use Tuleap\Artidoc\Document\Tracker\DocumentTrackerRepresentation;
 use Tuleap\Artidoc\Document\Tracker\SuitableTrackersForDocumentRetriever;
 use Tuleap\Config\ConfigKeyString;
 use Tuleap\Config\FeatureFlagConfigKey;
+use Tuleap\Document\RecentlyVisited\RecordVisit;
 use Tuleap\Export\Pdf\Template\GetPdfTemplatesEvent;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\HeaderConfigurationBuilder;
@@ -64,6 +65,7 @@ final readonly class ArtidocController implements DispatchableWithRequest, Dispa
         private LoggerInterface $logger,
         private FileUploadDataProvider $file_upload_provider,
         private EventDispatcherInterface $event_dispatcher,
+        private RecordVisit $recently_visited_dao,
     ) {
     }
 
@@ -92,6 +94,10 @@ final readonly class ArtidocController implements DispatchableWithRequest, Dispa
                 'src/index.ts'
             )
         );
+
+        if (! $user->isAnonymous()) {
+            $this->recently_visited_dao->save((int) $user->getId(), (int) $document_information->document->getId(), \Tuleap\Request\RequestTime::getTimestamp());
+        }
 
         $title   = $document_information->document->getTitle();
         $service = $document_information->service_docman;

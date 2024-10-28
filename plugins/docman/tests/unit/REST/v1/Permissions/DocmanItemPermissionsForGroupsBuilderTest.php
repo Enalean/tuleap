@@ -27,31 +27,32 @@ use Docman_PermissionsManager;
 use IPermissionsManagerNG;
 use PHPUnit\Framework\MockObject\MockObject;
 use Project;
-use ProjectManager;
 use ProjectUGroup;
+use Tuleap\Project\ProjectByIDFactory;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Test\Stubs\ProjectByIDFactoryStub;
 use UGroupManager;
 
 final class DocmanItemPermissionsForGroupsBuilderTest extends TestCase
 {
     private Docman_PermissionsManager&MockObject $docman_permissions_manager;
-    private ProjectManager&MockObject $project_manager;
     private IPermissionsManagerNG&MockObject $permissions_manager;
     private UGroupManager&MockObject $ugroup_manager;
-    private DocmanItemPermissionsForGroupsBuilder $builder;
 
     protected function setUp(): void
     {
         $this->docman_permissions_manager = $this->createMock(Docman_PermissionsManager::class);
-        $this->project_manager            = $this->createMock(ProjectManager::class);
         $this->permissions_manager        = $this->createMock(IPermissionsManagerNG::class);
         $this->ugroup_manager             = $this->createMock(UGroupManager::class);
+    }
 
-        $this->builder = new DocmanItemPermissionsForGroupsBuilder(
+    private function getBuilder(ProjectByIDFactory $project_manager): DocmanItemPermissionsForGroupsBuilder
+    {
+        return new DocmanItemPermissionsForGroupsBuilder(
             $this->docman_permissions_manager,
-            $this->project_manager,
+            $project_manager,
             $this->permissions_manager,
             $this->ugroup_manager
         );
@@ -61,7 +62,7 @@ final class DocmanItemPermissionsForGroupsBuilderTest extends TestCase
     {
         $this->docman_permissions_manager->method('userCanManage')->willReturn(false);
 
-        self::assertNull($this->builder->getRepresentation(
+        self::assertNull($this->getBuilder(ProjectByIDFactoryStub::buildWithoutProject())->getRepresentation(
             UserTestBuilder::buildWithDefaults(),
             new Docman_Item(['item_id' => 123])
         ));
@@ -73,7 +74,6 @@ final class DocmanItemPermissionsForGroupsBuilderTest extends TestCase
 
         $project_id = 789;
         $project    = ProjectTestBuilder::aProject()->withId($project_id)->build();
-        $this->project_manager->method('getProject')->willReturn($project);
 
         $ugroup_project_member = new ProjectUGroup([
             'ugroup_id' => ProjectUGroup::PROJECT_MEMBERS,
@@ -100,10 +100,12 @@ final class DocmanItemPermissionsForGroupsBuilderTest extends TestCase
                 $ugroup_static_id              => $ugroup_static,
             });
 
-        $representation = $this->builder->getRepresentation(
-            UserTestBuilder::buildWithDefaults(),
-            new Docman_Item(['item_id' => 123, 'group_id' => $project_id]),
-        );
+        $representation = $this
+            ->getBuilder(ProjectByIDFactoryStub::buildWith($project))
+            ->getRepresentation(
+                UserTestBuilder::buildWithDefaults(),
+                new Docman_Item(['item_id' => 123, 'group_id' => $project_id]),
+            );
         self::assertEmpty($representation->can_read);
         self::assertEmpty($representation->can_manage);
         self::assertCount(2, $representation->can_write);

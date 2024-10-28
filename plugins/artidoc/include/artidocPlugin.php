@@ -47,6 +47,8 @@ use Tuleap\Docman\REST\v1\MoveItem\MoveOtherItemUriRetriever;
 use Tuleap\Docman\REST\v1\Others\OtherTypePropertiesRepresentation;
 use Tuleap\Docman\REST\v1\Others\VerifyOtherTypeIsSupported;
 use Tuleap\Docman\REST\v1\Search\SearchRepresentationOtherType;
+use Tuleap\Document\RecentlyVisited\RecentlyVisitedDocumentDao;
+use Tuleap\Document\RecentlyVisited\VisitedOtherDocumentHref;
 use Tuleap\Document\Tree\OtherItemTypeDefinition;
 use Tuleap\Document\Tree\OtherItemTypes;
 use Tuleap\Document\Tree\SearchCriterionListOptionPresenter;
@@ -153,6 +155,7 @@ class ArtidocPlugin extends Plugin implements PluginWithConfigKeys
                 $form_element_factory
             ),
             EventManager::instance(),
+            new RecentlyVisitedDocumentDao(),
         );
     }
 
@@ -187,6 +190,14 @@ class ArtidocPlugin extends Plugin implements PluginWithConfigKeys
 
     #[ListeningToEventClass]
     public function otherDocumentHrefEvent(OtherDocumentHrefEvent $event): void
+    {
+        if ($event->item instanceof ArtidocDocument) {
+            $event->setHref($this->getArtidocHref($event->item));
+        }
+    }
+
+    #[ListeningToEventClass]
+    public function visitedOtherDocumentHref(VisitedOtherDocumentHref $event): void
     {
         if ($event->item instanceof ArtidocDocument) {
             $event->setHref($this->getArtidocHref($event->item));

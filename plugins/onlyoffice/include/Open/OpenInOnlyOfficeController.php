@@ -26,6 +26,7 @@ use HTTPRequest;
 use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
 use Tuleap\Document\LinkProvider\DocumentLinkProvider;
+use Tuleap\Document\RecentlyVisited\RecordVisit;
 use Tuleap\Instrument\Prometheus\Prometheus;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\FooterConfiguration;
@@ -47,6 +48,7 @@ final class OpenInOnlyOfficeController implements \Tuleap\Request\DispatchableWi
         private JavascriptAssetGeneric $js_asset,
         private Prometheus $prometheus,
         private string $base_url,
+        private RecordVisit $recently_visited_document_dao,
     ) {
     }
 
@@ -61,7 +63,13 @@ final class OpenInOnlyOfficeController implements \Tuleap\Request\DispatchableWi
 
         $this->only_office_document_provider->getDocument($user, (int) $variables['id'])
             ->match(
-                function (OnlyOfficeDocument $document) use ($layout, $request): void {
+                function (OnlyOfficeDocument $document) use ($layout, $user): void {
+                    $this->recently_visited_document_dao->save(
+                        (int) $user->getId(),
+                        (int) $document->item->getId(),
+                        \Tuleap\Request\RequestTime::getTimestamp(),
+                    );
+
                     $link_provider = new DocumentLinkProvider($this->base_url, $document->project);
 
                     $icon_and_name_of_project = EmojiCodepointConverter::convertStoredEmojiFormatToEmojiFormat(

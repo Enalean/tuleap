@@ -39,6 +39,7 @@ use Tuleap\Docman\PostUpdate\PostUpdateFileHandler;
 use Tuleap\Docman\Item\OpenItemHref;
 use Tuleap\Docman\Settings\SettingsDAO;
 use Tuleap\Docman\Version\CoAuthorDao;
+use Tuleap\Document\RecentlyVisited\RecentlyVisitedDocumentDao;
 use Tuleap\Document\Tree\Create\NewItemAlternative;
 use Tuleap\Document\Tree\Create\NewItemAlternativeCollector;
 use Tuleap\Document\Tree\Create\NewItemAlternativeSection;
@@ -331,6 +332,7 @@ final class onlyofficePlugin extends Plugin
             new \Tuleap\Layout\JavascriptViteAsset(self::getOpenAssets(), 'src/open-in-onlyoffice.ts'),
             Prometheus::instance(),
             \Tuleap\ServerHostname::HTTPSUrl(),
+            new RecentlyVisitedDocumentDao(),
         );
     }
 
