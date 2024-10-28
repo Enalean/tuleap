@@ -31,6 +31,18 @@ export function uploadFile(
     uploaders: Array<Upload>,
 ): Promise<Option<OngoingUpload>> {
     let uploader: Upload | null;
+
+    const removeUploaderFromList = (): void => {
+        if (!uploader) {
+            return;
+        }
+
+        const index = uploaders.findIndex((file_uploader) => file_uploader === uploader);
+        if (index !== -1) {
+            uploaders.splice(index, 1);
+        }
+    };
+
     return new Promise((resolve, reject): void => {
         uploader = new Upload(file, {
             uploadUrl: upload_href,
@@ -43,6 +55,7 @@ export function uploadFile(
                 onProgressCallback(file.name, progress);
             },
             onSuccess: (): void => {
+                removeUploaderFromList();
                 return resolve(Option.nothing<OngoingUpload>());
             },
             onError: (error: Error | DetailedError): void => {
@@ -58,6 +71,7 @@ export function uploadFile(
         return Option.fromValue({
             cancel: () => {
                 uploader?.abort();
+                removeUploaderFromList();
             },
         });
     });
