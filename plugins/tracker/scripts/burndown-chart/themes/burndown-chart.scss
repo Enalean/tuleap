@@ -18,7 +18,7 @@
  */
 
 @use "sass:color";
-@use "pkg:@tuleap/tlp-swatch-colors";
+@use "pkg:@tuleap/tlp-swatch-colors/tlp-swatch-colors";
 @use "pkg:@tuleap/plugin-tracker-chart-styles" as chart;
 
 $remaining-effort-color: tlp-swatch-colors.$neon-green-primary;

@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@use "pkg:@tuleap/tlp-swatch-colors";
+@use "pkg:@tuleap/tlp-swatch-colors/tlp-swatch-colors";
 
 .project-release-toggle-closed > .project-release-header {
     background: none;
