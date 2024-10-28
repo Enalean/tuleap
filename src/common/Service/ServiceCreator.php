@@ -22,7 +22,7 @@ namespace Tuleap\Service;
 
 use ProjectManager;
 use ReferenceManager;
-use ServiceDao;
+use Tuleap\Project\Service\ServiceDao;
 use Tuleap\ServerHostname;
 
 class ServiceCreator
@@ -54,7 +54,7 @@ class ServiceCreator
 
         $is_used   = isset($template['is_used'])   ? $template['is_used'] : $arr['is_used'];
         $is_active = isset($template['is_active']) ? $template['is_active'] : $arr['is_active'];
-        $is_used   = $force_enable ? 1 : $is_used;
+        $is_used   = $force_enable ? true : (bool) $is_used;
 
         $result = $this->dao->create(
             $group_id,
@@ -62,7 +62,7 @@ class ServiceCreator
             $arr['icon'],
             $arr['description'],
             $arr['short_name'],
-            $link,
+            (string) $link,
             $is_active,
             $is_used,
             $arr['scope'],

@@ -23,7 +23,6 @@ namespace Tuleap\Project\Service;
 use Feedback;
 use Project;
 use ProjectManager;
-use ServiceDao;
 use Tuleap\ServerHostname;
 
 class ServiceCreator

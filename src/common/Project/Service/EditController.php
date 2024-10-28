@@ -52,7 +52,7 @@ class EditController implements DispatchableWithRequest
         return new self(
             ProjectManager::instance(),
             new ProjectAdministratorChecker(),
-            new ServiceUpdator(new \ServiceDao(), ProjectManager::instance(), ServiceManager::instance()),
+            new ServiceUpdator(new ServiceDao(), ProjectManager::instance(), ServiceManager::instance()),
             new ServicePOSTDataBuilder(
                 new ServiceLinkDataBuilder()
             ),

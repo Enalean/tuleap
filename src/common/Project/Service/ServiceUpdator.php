@@ -23,7 +23,6 @@ namespace Tuleap\Project\Service;
 use PFUser;
 use Project;
 use ProjectManager;
-use ServiceDao;
 use ServiceManager;
 
 class ServiceUpdator
@@ -54,7 +53,7 @@ class ServiceUpdator
         if ($service_data->isSystemService()) {
             $this->service_manager->toggleServiceUsage($project, $service_data->getShortName(), $service_data->isUsed());
         } else {
-            $this->dao->updateServiceUsageByServiceID($project->getID(), $service_data->getId(), $service_data->isUsed());
+            $this->dao->updateServiceUsageByServiceID($project, $service_data->getId(), $service_data->isUsed());
         }
     }
 

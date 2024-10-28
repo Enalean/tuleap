@@ -23,6 +23,7 @@ use Tuleap\Project\Event\ProjectServiceBeforeDeactivation;
 use Tuleap\Project\Service\ListOfAllowedServicesForProjectRetriever;
 use Tuleap\Project\Service\ServiceCannotBeUpdatedException;
 use Tuleap\Project\Service\ServiceClassnameRetriever;
+use Tuleap\Project\Service\ServiceDao;
 use Tuleap\Project\Service\ServiceNotFoundException;
 use Tuleap\Project\ServiceCanBeUpdated;
 
@@ -98,8 +99,8 @@ class ServiceManager implements ListOfAllowedServicesForProjectRetriever, Servic
     {
         if (! isset($this->list_of_services_per_project[$project->getID()])) {
             $this->list_of_services_per_project[$project->getID()] = [];
-            $allowed_services_dar                                  = $this->dao->searchByProjectIdAndShortNames(
-                $project->getID(),
+            $allowed_services_dar                                  = $this->dao->searchByProjectAndShortNames(
+                $project,
                 array_merge(
                     $this->list_of_core_services,
                     $this->getListOfPluginBasedServices($project)
@@ -140,8 +141,7 @@ class ServiceManager implements ListOfAllowedServicesForProjectRetriever, Servic
 
     private function isServiceActiveInProject($project, $name)
     {
-        $project_id = $project->getId();
-        return $this->dao->isServiceActiveInProjectByShortName($project_id, $name);
+        return $this->dao->isServiceActiveInProjectByShortName($project, $name);
     }
 
     public function toggleServiceUsage(Project $project, $short_name, $is_used)
@@ -155,7 +155,7 @@ class ServiceManager implements ListOfAllowedServicesForProjectRetriever, Servic
 
     private function updateServiceUsage(Project $project, $short_name, $is_used)
     {
-        $this->dao->updateServiceUsageByShortName($project->getID(), $short_name, $is_used);
+        $this->dao->updateServiceUsageByShortName($project, $short_name, $is_used);
         ProjectManager::instance()->clearProjectFromCache($project->getID());
 
         $reference_manager = ReferenceManager::instance();
@@ -215,8 +215,9 @@ class ServiceManager implements ListOfAllowedServicesForProjectRetriever, Servic
      */
     public function getService(int $id): Service
     {
-        $row = $this->dao->searchById($id)->getRow();
-        if (! $row) {
+        $row = $this->dao->searchById($id);
+
+        if (empty($row)) {
             throw new ServiceNotFoundException();
         }
 

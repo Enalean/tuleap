@@ -24,37 +24,38 @@ namespace Tuleap\MediawikiStandalone\Instance\Migration;
 
 use Psr\Log\LoggerInterface;
 use Tuleap\MediawikiStandalone\Service\MediawikiStandaloneService;
+use Tuleap\Project\Service\ServiceDao;
 
 final class ServiceMediawikiSwitcher implements SwitchMediawikiService
 {
-    public function __construct(private readonly \ServiceDao $service_dao, private readonly LoggerInterface $logger)
+    public function __construct(private readonly ServiceDao $service_dao, private readonly LoggerInterface $logger)
     {
     }
 
     public function switchToStandalone(\Project $project): void
     {
-        $results = $this->service_dao->searchByProjectIdAndShortNames(
-            (int) $project->getID(),
+        $results = $this->service_dao->searchByProjectAndShortNames(
+            $project,
             [MigrateInstance::MEDIAWIKI_123_SERVICE_NAME],
         );
         $legacy  = null;
         if (count($results) > 0) {
-            $legacy = $results->current();
+            $legacy = $results[0];
 
             $this->logger->info('Deactivating legacy MediaWiki service');
             $this->service_dao->updateServiceUsageByShortName(
-                (int) $project->getID(),
+                $project,
                 MigrateInstance::MEDIAWIKI_123_SERVICE_NAME,
-                0,
+                false,
             );
         }
 
-        $results = $this->service_dao->searchByProjectIdAndShortNames(
-            (int) $project->getID(),
+        $results = $this->service_dao->searchByProjectAndShortNames(
+            $project,
             [MediawikiStandaloneService::SERVICE_SHORTNAME],
         );
         if (count($results) > 0) {
-            $standalone = $results->current();
+            $standalone = $results[0];
             if ($legacy) {
                 $this->logger->info('Adjusting rank of MediaWiki Standalone service to map the one of legacy MediaWiki service');
                 $this->service_dao->saveBasicInformation(
@@ -64,12 +65,12 @@ final class ServiceMediawikiSwitcher implements SwitchMediawikiService
                     $standalone['description'],
                     $standalone['link'],
                     $legacy['rank'],
-                    $standalone['is_in_iframe'],
-                    $standalone['is_in_new_tab'],
+                    (bool) $standalone['is_in_iframe'],
+                    (bool) $standalone['is_in_new_tab'],
                 );
             }
             $this->logger->info('Activating MediaWiki Standalone service');
-            $this->service_dao->updateServiceUsageByServiceID((int) $project->getID(), $standalone['service_id'], 1);
+            $this->service_dao->updateServiceUsageByServiceID($project, $standalone['service_id'], true);
         } else {
             $this->logger->info('Creating MediaWiki Standalone service');
             $this->service_dao->create(
@@ -79,8 +80,8 @@ final class ServiceMediawikiSwitcher implements SwitchMediawikiService
                 '',
                 'plugin_mediawiki_standalone',
                 null,
-                1,
-                1,
+                true,
+                true,
                 'system',
                 $legacy ? $legacy['rank'] : 161,
                 false,

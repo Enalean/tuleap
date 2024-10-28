@@ -324,7 +324,6 @@ project_admin_servicebar	del	DELETE
 project_admin_servicebar	s_id_not_given	FAILED: Service Id was not specified
 project_admin_servicebar	s_del	Service Deleted
 project_admin_servicebar	cant_delete_s_from_p	- Cannot delete service from all projects: service shortname is missing
-project_admin_servicebar	del_fail	An error occurred while deleting the service from all projects
 project_admin_servicebar	s_del_from_p	Service deleted from all projects
 project_admin_servicebar	label_missed	The label is missing
 project_admin_servicebar	link_missed	The link is missing
