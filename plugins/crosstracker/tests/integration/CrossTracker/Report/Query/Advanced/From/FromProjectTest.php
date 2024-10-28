@@ -49,6 +49,8 @@ final class FromProjectTest extends CrossTrackerFieldTestCase
         $project_1_id      = (int) $project_1->getId();
         $project_2         = $core_builder->buildProject('project_2');
         $project_2_id      = (int) $project_2->getId();
+        $project_3         = $core_builder->buildProject('project_3');
+        $project_3_id      = (int) $project_3->getId();
         $this->user_member = $core_builder->buildUser('bob', 'Bob', 'bob@example.com');
         $this->user_admin  = $core_builder->buildUser('admin', 'Admin', 'admin@example.com');
         $core_builder->addUserToProjectMembers((int) $this->user_member->getId(), $project_1_id);
@@ -72,6 +74,7 @@ final class FromProjectTest extends CrossTrackerFieldTestCase
         $tracker_1  = $tracker_builder->buildTracker($project_1_id, 'Tracker 1');
         $tracker_11 = $tracker_builder->buildTracker($project_1_id, 'Tracker 1.1');
         $tracker_2  = $tracker_builder->buildTracker($project_2_id, 'Tracker 2');
+        $tracker_3  = $tracker_builder->buildTracker($project_3_id, 'Tracker 3');
         $tracker_builder->setViewPermissionOnTracker($tracker_1->getId(), Tracker::PERMISSION_FULL, ProjectUGroup::PROJECT_MEMBERS);
         $tracker_builder->setViewPermissionOnTracker($tracker_11->getId(), Tracker::PERMISSION_FULL, ProjectUGroup::PROJECT_ADMIN);
         $tracker_builder->setViewPermissionOnTracker($tracker_2->getId(), Tracker::PERMISSION_FULL, ProjectUGroup::PROJECT_MEMBERS);
@@ -82,9 +85,12 @@ final class FromProjectTest extends CrossTrackerFieldTestCase
         $tracker_builder->buildLastChangeset($artifact_11);
         $artifact_2 = $tracker_builder->buildArtifact($tracker_2->getId());
         $tracker_builder->buildLastChangeset($artifact_2);
+        $artifact_3 = $tracker_builder->buildArtifact($tracker_3->getId());
+        $tracker_builder->buildLastChangeset($artifact_3);
 
         $this->addReportToProject(1, $project_1_id);
         $this->addReportToProject(2, $project_2_id);
+        $this->addReportToProject(3, $project_3_id);
     }
 
     private function getQueryResults(CrossTrackerExpertReport $report, PFUser $user): CrossTrackerReportContentRepresentation
@@ -126,6 +132,15 @@ final class FromProjectTest extends CrossTrackerFieldTestCase
             $this->user_member,
         );
         $this->assertItContainsTrackers(['Tracker 2'], $result);
+    }
+
+    public function testItGetTrackerFromMyProjects(): void
+    {
+        $result = $this->getQueryResults(
+            new CrossTrackerExpertReport(1, 'SELECT @tracker.name FROM @project = MY_PROJECTS() WHERE @id >= 1'),
+            $this->user_member,
+        );
+        $this->assertItContainsTrackers(['Tracker 1', 'Tracker 2'], $result);
     }
 
     public function testPermissionsProjectSelf(): void
