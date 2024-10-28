@@ -574,7 +574,7 @@ class Docman_View_ItemDetailsSectionApproval extends Docman_View_ItemDetailsSect
 
     public function &_getDocmanIcons()
     {
-        $icons = new Docman_Icons($this->themePath . '/images/ic/');
+        $icons = new Docman_Icons($this->themePath . '/images/ic/', EventManager::instance());
         return $icons;
     }
 

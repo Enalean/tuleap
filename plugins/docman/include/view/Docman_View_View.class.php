@@ -117,7 +117,7 @@
 
     public function &_getDocmanIcons($params)
     {
-        $icons = new Docman_Icons($params['theme_path'] . '/images/ic/');
+        $icons = new Docman_Icons($params['theme_path'] . '/images/ic/', EventManager::instance());
         return $icons;
     }
 

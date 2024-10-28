@@ -172,7 +172,7 @@ class Docman_View_ItemDetailsSectionPaste extends Docman_View_ItemDetailsSection
 
     public function &_getDocmanIcons()
     {
-        $icons = new Docman_Icons($this->_controller->getThemePath() . '/images/ic/');
+        $icons = new Docman_Icons($this->_controller->getThemePath() . '/images/ic/', EventManager::instance());
         return $icons;
     }
 }

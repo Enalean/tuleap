@@ -553,7 +553,7 @@ class DocmanPlugin extends Plugin implements PluginWithConfigKeys
             return;
         }
 
-        $icon_presenter_builder = new DocumentIconPresenterBuilder();
+        $icon_presenter_builder = new DocumentIconPresenterBuilder(EventManager::instance());
 
         $renderer     = TemplateRendererFactory::build()->getRenderer(__DIR__);
         $tooltip_json = TooltipJSON::fromHtmlTitleAndHtmlBody(
@@ -572,7 +572,7 @@ class DocmanPlugin extends Plugin implements PluginWithConfigKeys
         $tracker_organizer = new CrossReferenceDocmanOrganizer(
             ProjectManager::instance(),
             new DocumentFromReferenceValueFinder(),
-            new DocumentIconPresenterBuilder(),
+            new DocumentIconPresenterBuilder(EventManager::instance()),
         );
 
         $tracker_organizer->organizeDocumentReferences($by_nature_organizer);

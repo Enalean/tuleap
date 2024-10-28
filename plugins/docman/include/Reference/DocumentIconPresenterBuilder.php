@@ -23,45 +23,25 @@ declare(strict_types=1);
 namespace Tuleap\Docman\Reference;
 
 use Docman_Icons;
+use Psr\EventDispatcher\EventDispatcherInterface;
+use Tuleap\Docman\Item\Icon\DocumentIconPresenterEvent;
 
-final class DocumentIconPresenterBuilder
+final readonly class DocumentIconPresenterBuilder
 {
+    public function __construct(private EventDispatcherInterface $event_manager)
+    {
+    }
+
     public function buildForItem(\Docman_Item $item): DocumentIconPresenter
     {
-        switch ($this->getIconWithoutPngExtension($item)) {
-            case 'folder':
-                return new DocumentIconPresenter('fa fa-folder', 'inca-silver');
-            case 'link':
-                return new DocumentIconPresenter('fa fa-link', 'flamingo-pink');
-            case 'audio':
-                return new DocumentIconPresenter('far fa-file-audio', 'lake-placid-blue');
-            case 'video':
-                return new DocumentIconPresenter('far fa-file-video', 'ocean-turquoise');
-            case 'image':
-                return new DocumentIconPresenter('far fa-file-image', 'graffiti-yellow');
-            case 'text':
-                return new DocumentIconPresenter('far fa-file-alt', 'inca-silver');
-            case 'code':
-                return new DocumentIconPresenter('far fa-file-code', 'daphne-blue');
-            case 'archive':
-                return new DocumentIconPresenter('far fa-file-archive', 'plum-crazy');
-            case 'pdf':
-                return new DocumentIconPresenter('far fa-file-pdf', 'fiesta-red');
-            case 'document':
-                return new DocumentIconPresenter('far fa-file-word', 'deep-blue');
-            case 'presentation':
-                return new DocumentIconPresenter('far fa-file-powerpoint', 'clockwork-orange');
-            case 'spreadsheet':
-                return new DocumentIconPresenter('far fa-file-excel', 'sherwood-green');
-            case 'empty':
-            default:
-                return new DocumentIconPresenter('far fa-file', 'firemist-silver');
-        }
+        return $this->event_manager
+            ->dispatch(new DocumentIconPresenterEvent($this->getIconWithoutPngExtension($item)))
+            ->getPresenter();
     }
 
     private function getIconWithoutPngExtension(\Docman_Item $item): string
     {
-        $docman_icons = new Docman_Icons('');
+        $docman_icons = new Docman_Icons('', $this->event_manager);
 
         return substr($docman_icons->getIconForItem($item), 0, -4);
     }

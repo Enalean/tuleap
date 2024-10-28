@@ -30,6 +30,7 @@ use Tuleap\Reference\CrossReferencePresenter;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Test\Stubs\EventDispatcherStub;
 
 final class CrossReferenceDocmanOrganizerTest extends TestCase
 {
@@ -45,7 +46,7 @@ final class CrossReferenceDocmanOrganizerTest extends TestCase
         $this->organizer = new CrossReferenceDocmanOrganizer(
             $this->project_manager,
             $this->finder,
-            new DocumentIconPresenterBuilder()
+            new DocumentIconPresenterBuilder(EventDispatcherStub::withIdentityCallback())
         );
     }
 

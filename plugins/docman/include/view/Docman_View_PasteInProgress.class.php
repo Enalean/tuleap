@@ -62,7 +62,7 @@ class Docman_View_PasteInProgress extends Docman_View_ProjectHeader
 
     public function &_getDocmanIcons($params)
     {
-        $icons = new Docman_Icons($this->_controller->getThemePath() . '/images/ic/');
+        $icons = new Docman_Icons($this->_controller->getThemePath() . '/images/ic/', EventManager::instance());
         return $icons;
     }
 }
