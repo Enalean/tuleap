@@ -25,21 +25,19 @@ import SectionDescriptionSkeleton from "./SectionDescriptionSkeleton.vue";
 import { InjectedSectionsStoreStub } from "@/helpers/stubs/InjectSectionsStoreStub";
 import SectionDescriptionReadOnly from "./SectionDescriptionReadOnly.vue";
 import { SECTIONS_STORE } from "@/stores/sections-store-injection-key";
-import { EDITOR_CHOICE } from "@/helpers/editor-choice";
-import { ref } from "vue";
 import { UploadFileStub } from "@/helpers/stubs/UploadFileStub";
 import { CAN_USER_EDIT_DOCUMENT } from "@/can-user-edit-document-injection-key";
 
 describe("SectionDescription", () => {
-    let are_sections_loading: boolean, is_prose_mirror: boolean, can_user_edit_document: boolean;
+    let are_sections_loading: boolean, can_user_edit_document: boolean, is_print_mode: boolean;
 
     beforeEach(() => {
         are_sections_loading = false;
-        is_prose_mirror = true;
         can_user_edit_document = true;
+        is_print_mode = false;
     });
 
-    const getWrapper = (overriden_props = {}): VueWrapper => {
+    const getWrapper = (): VueWrapper => {
         const sections_store = are_sections_loading
             ? InjectedSectionsStoreStub.withLoadingSections([])
             : InjectedSectionsStoreStub.withLoadedSections([]);
@@ -48,7 +46,6 @@ describe("SectionDescription", () => {
             global: {
                 provide: {
                     [SECTIONS_STORE.valueOf()]: sections_store,
-                    [EDITOR_CHOICE.valueOf()]: { is_prose_mirror: ref(is_prose_mirror) },
                     [CAN_USER_EDIT_DOCUMENT.valueOf()]: can_user_edit_document,
                 },
                 stubs: {
@@ -61,6 +58,7 @@ describe("SectionDescription", () => {
                 editable_description: "Lorem ipsum",
                 readonly_description: "Lorem ipsum",
                 is_edit_mode: false,
+                is_print_mode,
                 upload_url: "/file/upload",
                 add_attachment_to_waiting_list: vi.fn(),
                 input_current_description: vi.fn(),
@@ -68,7 +66,6 @@ describe("SectionDescription", () => {
                 upload_file: UploadFileStub.uploadNotInProgress(),
                 project_id: 101,
                 references: [],
-                ...overriden_props,
             },
         });
     };
@@ -83,80 +80,31 @@ describe("SectionDescription", () => {
         expect(wrapper.find("[data-test=editor]").exists()).toBe(false);
     });
 
-    describe("In legacy mode (ckeditor)", () => {
-        beforeEach(() => {
-            is_prose_mirror = false;
-        });
+    it("When the section is in print mode, then it should display a readonly description", () => {
+        is_print_mode = true;
 
-        it("When the section is not in edit mode, then it should display a readonly description", () => {
-            const wrapper = getWrapper({ is_edit_mode: false });
+        const wrapper = getWrapper();
 
-            expect(wrapper.findComponent(SectionDescriptionReadOnly).exists()).toBe(true);
-            expect(wrapper.findComponent(SectionDescriptionSkeleton).exists()).toBe(false);
-            expect(wrapper.find("[data-test=editor]").exists()).toBe(false);
-        });
-
-        it("When the section is in print mode, then it should display a readonly description", () => {
-            const wrapper = getWrapper({ is_print_mode: false });
-
-            expect(wrapper.findComponent(SectionDescriptionReadOnly).exists()).toBe(true);
-            expect(wrapper.findComponent(SectionDescriptionSkeleton).exists()).toBe(false);
-            expect(wrapper.find("[data-test=editor]").exists()).toBe(false);
-        });
-
-        it("When the current user cannot edit the document, then it should display a readonly description", () => {
-            can_user_edit_document = false;
-
-            const wrapper = getWrapper();
-
-            expect(wrapper.findComponent(SectionDescriptionReadOnly).exists()).toBe(true);
-            expect(wrapper.findComponent(SectionDescriptionSkeleton).exists()).toBe(false);
-            expect(wrapper.find("[data-test=editor]").exists()).toBe(false);
-        });
-
-        it("When the section is in edit mode, then it should display the editor", () => {
-            const wrapper = getWrapper({ is_edit_mode: true });
-
-            expect(wrapper.findComponent(SectionDescriptionReadOnly).exists()).toBe(false);
-            expect(wrapper.findComponent(SectionDescriptionSkeleton).exists()).toBe(false);
-            expect(wrapper.find("[data-test=editor]").exists()).toBe(true);
-        });
+        expect(wrapper.findComponent(SectionDescriptionReadOnly).exists()).toBe(true);
+        expect(wrapper.findComponent(SectionDescriptionSkeleton).exists()).toBe(false);
+        expect(wrapper.find("[data-test=editor]").exists()).toBe(false);
     });
 
-    describe("In nextgen mode (prosemirror)", () => {
-        beforeEach(() => {
-            is_prose_mirror = true;
-        });
+    it("When the current user cannot edit the document, then it should display a readonly description", () => {
+        can_user_edit_document = false;
 
-        it.each([[false], [true]])(
-            "When the is_edit_mode === %s, Then the editor should be displayed",
-            (is_edit_mode) => {
-                const wrapper = getWrapper({ is_edit_mode });
+        const wrapper = getWrapper();
 
-                expect(wrapper.findComponent(SectionDescriptionReadOnly).exists()).toBe(false);
-                expect(wrapper.findComponent(SectionDescriptionSkeleton).exists()).toBe(false);
-                expect(wrapper.find("[data-test=editor]").exists()).toBe(true);
-            },
-        );
+        expect(wrapper.findComponent(SectionDescriptionReadOnly).exists()).toBe(true);
+        expect(wrapper.findComponent(SectionDescriptionSkeleton).exists()).toBe(false);
+        expect(wrapper.find("[data-test=editor]").exists()).toBe(false);
+    });
 
-        it("When the current user cannot edit the document, then it should display a readonly description", () => {
-            can_user_edit_document = false;
+    it("When the current user can edit the document, then the editor should be displayed", () => {
+        const wrapper = getWrapper();
 
-            const wrapper = getWrapper();
-
-            expect(wrapper.findComponent(SectionDescriptionReadOnly).exists()).toBe(true);
-            expect(wrapper.findComponent(SectionDescriptionSkeleton).exists()).toBe(false);
-            expect(wrapper.find("[data-test=editor]").exists()).toBe(false);
-        });
-
-        it("When the section is in print mode, then it should display a readonly description", () => {
-            can_user_edit_document = true;
-
-            const wrapper = getWrapper({ is_print_mode: true });
-
-            expect(wrapper.findComponent(SectionDescriptionReadOnly).exists()).toBe(true);
-            expect(wrapper.findComponent(SectionDescriptionSkeleton).exists()).toBe(false);
-            expect(wrapper.find("[data-test=editor]").exists()).toBe(false);
-        });
+        expect(wrapper.findComponent(SectionDescriptionReadOnly).exists()).toBe(false);
+        expect(wrapper.findComponent(SectionDescriptionSkeleton).exists()).toBe(false);
+        expect(wrapper.find("[data-test=editor]").exists()).toBe(true);
     });
 });

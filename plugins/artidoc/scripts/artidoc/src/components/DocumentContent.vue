@@ -19,15 +19,15 @@
   -->
 
 <template>
-    <editor-toolbar v-if="can_user_edit_document && is_prose_mirror" />
+    <editor-toolbar v-if="can_user_edit_document" />
     <notification-container />
-    <editor-choice />
     <ol ref="sections_container">
         <li
             v-for="section in sections"
             v-bind:key="section.internal_id"
             v-bind:id="getId(section)"
             v-bind:class="{ 'artidoc-section-with-add-button': has_add_button }"
+            data-test="artidoc-section"
         >
             <add-new-section-button
                 class="artidoc-button-add-section-container"
@@ -56,17 +56,14 @@ import SectionContainer from "@/components/section/SectionContainer.vue";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import { CAN_USER_EDIT_DOCUMENT } from "@/can-user-edit-document-injection-key";
 import { SECTIONS_STORE } from "@/stores/sections-store-injection-key";
-import EditorChoice from "@/components/EditorChoice.vue";
 import { onScrollStickSectionNumbers } from "@/helpers/on-scroll-stick-section-numbers";
 import AddExistingSectionModal from "@/components/AddExistingSectionModal.vue";
 import NotificationContainer from "@/components/NotificationContainer.vue";
 import EditorToolbar from "@/components/toolbar/EditorToolbar.vue";
-import { EDITOR_CHOICE } from "@/helpers/editor-choice";
 
 const { sections, insertSection } = strictInject(SECTIONS_STORE);
 
 const can_user_edit_document = strictInject(CAN_USER_EDIT_DOCUMENT);
-const { is_prose_mirror } = strictInject(EDITOR_CHOICE);
 
 const sections_container = ref<HTMLOListElement>();
 

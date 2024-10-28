@@ -39,7 +39,6 @@ final readonly class ArtidocPresenter
     public function __construct(
         public int $item_id,
         public bool $can_user_edit_document,
-        public bool $is_next_gen_editor_enabled,
         public string $title,
         ?DocumentTrackerRepresentation $selected_tracker,
         array $allowed_trackers,

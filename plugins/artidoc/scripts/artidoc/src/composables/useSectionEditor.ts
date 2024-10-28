@@ -33,7 +33,6 @@ import { useRefreshSection } from "@/composables/useRefreshSection";
 import type { AttachmentFile } from "@/composables/useAttachmentFile";
 import { SECTIONS_STORE } from "@/stores/sections-store-injection-key";
 import { EDITORS_COLLECTION } from "@/stores/useSectionEditorsStore";
-import { EDITOR_CHOICE } from "@/helpers/editor-choice";
 import { UPLOAD_FILE_STORE } from "@/stores/upload-file-store-injection-key";
 import type { Fault } from "@tuleap/fault";
 
@@ -72,7 +71,6 @@ export function useSectionEditor(
 ): SectionEditor {
     const editors_collection = strictInject(EDITORS_COLLECTION);
     const can_user_edit_document = strictInject(CAN_USER_EDIT_DOCUMENT);
-    const { is_prose_mirror } = strictInject(EDITOR_CHOICE);
 
     const current_section: Ref<ArtidocSection> = ref(section);
     const editor_errors_handler = useEditorErrors();
@@ -159,15 +157,9 @@ export function useSectionEditor(
     }
 
     const { cancelSectionUploads } = strictInject(UPLOAD_FILE_STORE);
-    function cancelEditor(tracker: Tracker | null): void {
+    function cancelEditor(): void {
         closeEditor();
-        if (is_prose_mirror) {
-            cancelSectionUploads(current_section.value.id);
-        }
-        if (!is_prose_mirror.value && isPendingArtifactSection(current_section.value)) {
-            editors_collection.removeEditor(current_section.value);
-            removeSection(current_section.value, tracker);
-        }
+        cancelSectionUploads(current_section.value.id);
     }
 
     function deleteSection(tracker: Tracker | null): void {

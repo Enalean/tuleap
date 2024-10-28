@@ -22,12 +22,8 @@
         <h1 class="section-title">
             <textarea
                 type="text"
-                class="tlp-textarea"
-                v-bind:class="{
-                    'disable-border': is_prose_mirror,
-                    'add-hover-effect': is_prose_mirror,
-                }"
                 v-if="can_header_be_edited"
+                class="tlp-textarea disable-border add-hover-effect"
                 v-model="title_to_edit"
                 v-on:input="onTitleChange"
                 v-bind:placeholder="placeholder"
@@ -44,11 +40,9 @@
 
 <script setup lang="ts">
 import { ref, toRefs, watch, computed } from "vue";
-import useScrollToAnchor from "@/composables/useScrollToAnchor";
 import { useGettext } from "vue3-gettext";
 import type { EditorSectionContent } from "@/composables/useEditorSectionContent";
 import { strictInject } from "@tuleap/vue-strict-inject";
-import { EDITOR_CHOICE } from "@/helpers/editor-choice";
 import { CAN_USER_EDIT_DOCUMENT } from "@/can-user-edit-document-injection-key";
 
 const props = withDefaults(
@@ -63,7 +57,6 @@ const props = withDefaults(
     },
 );
 
-const { scrollToAnchor } = useScrollToAnchor();
 const { $gettext } = useGettext();
 
 const placeholder = $gettext("Section without title");
@@ -73,32 +66,14 @@ const { title } = toRefs(props);
 
 const title_to_edit = ref(title.value);
 
-const { is_prose_mirror } = strictInject(EDITOR_CHOICE);
 const can_user_edit_document = strictInject(CAN_USER_EDIT_DOCUMENT);
 
-const can_header_be_edited = computed(() => {
-    if (props.is_print_mode === true || !can_user_edit_document) {
-        return false;
-    }
-
-    return props.is_edit_mode || is_prose_mirror.value;
-});
+const can_header_be_edited = computed(() => props.is_print_mode !== true && can_user_edit_document);
 
 watch(
     () => title.value,
     () => {
         title_to_edit.value = title.value;
-    },
-);
-
-watch(
-    () => textarea.value,
-    () => {
-        if (textarea.value && !is_prose_mirror.value) {
-            textarea.value.focus();
-            scrollToAnchor(textarea.value.closest("li") || textarea.value);
-            adjustHeightOfTextareaToContent(textarea.value);
-        }
     },
 );
 
@@ -142,7 +117,6 @@ textarea {
     resize: none;
 }
 
-// prose-mirror
 .disable-border {
     border: 0;
 }

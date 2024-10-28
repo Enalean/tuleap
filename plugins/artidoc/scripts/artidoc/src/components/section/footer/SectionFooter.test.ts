@@ -49,7 +49,7 @@ describe("SectionFooter", () => {
     });
 
     describe("when the section is editable", () => {
-        describe("when prose mirror is disable", () => {
+        describe("when the editor is disabled", () => {
             it("should add a background", () => {
                 expect(
                     getWrapper(SectionEditorStub.withEditableSection())

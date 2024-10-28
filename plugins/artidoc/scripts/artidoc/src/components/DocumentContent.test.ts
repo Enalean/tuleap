@@ -18,8 +18,7 @@
  */
 
 import { beforeEach, describe, expect, it } from "vitest";
-import { ref } from "vue";
-import { flushPromises, shallowMount } from "@vue/test-utils";
+import { shallowMount } from "@vue/test-utils";
 import DocumentContent from "@/components/DocumentContent.vue";
 import ArtifactSectionFactory from "@/helpers/artifact-section.factory";
 import SectionContainer from "@/components/section/SectionContainer.vue";
@@ -30,7 +29,6 @@ import AddNewSectionButton from "./AddNewSectionButton.vue";
 import PendingArtifactSectionFactory from "@/helpers/pending-artifact-section.factory";
 import { SECTIONS_STORE } from "@/stores/sections-store-injection-key";
 import type { ArtidocSection } from "@/helpers/artidoc-section.type";
-import { EDITOR_CHOICE } from "@/helpers/editor-choice";
 import EditorToolbar from "@/components/toolbar/EditorToolbar.vue";
 
 describe("DocumentContent", () => {
@@ -65,8 +63,6 @@ describe("DocumentContent", () => {
                 provide: {
                     [SECTIONS_STORE.valueOf()]: sections_store,
                     [CAN_USER_EDIT_DOCUMENT.valueOf()]: false,
-                    [CAN_USER_EDIT_DOCUMENT.valueOf()]: false,
-                    [EDITOR_CHOICE.valueOf()]: { is_prose_mirror: ref(false) },
                 },
             },
         }).find("ol");
@@ -79,7 +75,6 @@ describe("DocumentContent", () => {
                 provide: {
                     [SECTIONS_STORE.valueOf()]: sections_store,
                     [CAN_USER_EDIT_DOCUMENT.valueOf()]: false,
-                    [EDITOR_CHOICE.valueOf()]: { is_prose_mirror: ref(false) },
                 },
             },
         }).find("ol");
@@ -96,7 +91,6 @@ describe("DocumentContent", () => {
                     provide: {
                         [SECTIONS_STORE.valueOf()]: sections_store,
                         [CAN_USER_EDIT_DOCUMENT.valueOf()]: false,
-                        [EDITOR_CHOICE.valueOf()]: { is_prose_mirror: ref(false) },
                     },
                 },
             }).findAllComponents(AddNewSectionButton),
@@ -110,31 +104,35 @@ describe("DocumentContent", () => {
                     provide: {
                         [SECTIONS_STORE.valueOf()]: sections_store,
                         [CAN_USER_EDIT_DOCUMENT.valueOf()]: true,
-                        [EDITOR_CHOICE.valueOf()]: { is_prose_mirror: ref(false) },
                     },
                 },
             }).findAllComponents(AddNewSectionButton),
         ).toHaveLength(4);
     });
 
-    it("should display the mono-toolbar only when the current editor type used is prose-mirror and the user can edit the document", async () => {
-        const is_prose_mirror = ref(false);
-        const can_user_edit_document = true;
+    it("should display the mono-toolbar when the user can edit the document", () => {
         const wrapper = shallowMount(DocumentContent, {
             global: {
                 provide: {
                     [SECTIONS_STORE.valueOf()]: sections_store,
-                    [CAN_USER_EDIT_DOCUMENT.valueOf()]: can_user_edit_document,
-                    [EDITOR_CHOICE.valueOf()]: { is_prose_mirror },
+                    [CAN_USER_EDIT_DOCUMENT.valueOf()]: true,
+                },
+            },
+        });
+
+        expect(wrapper.findComponent(EditorToolbar).exists()).toBe(true);
+    });
+
+    it("should not display the mono-toolbar when the user cannot edit the document", () => {
+        const wrapper = shallowMount(DocumentContent, {
+            global: {
+                provide: {
+                    [SECTIONS_STORE.valueOf()]: sections_store,
+                    [CAN_USER_EDIT_DOCUMENT.valueOf()]: false,
                 },
             },
         });
 
         expect(wrapper.findComponent(EditorToolbar).exists()).toBe(false);
-
-        is_prose_mirror.value = true;
-        await flushPromises();
-
-        expect(wrapper.findComponent(EditorToolbar).exists()).toBe(true);
     });
 });

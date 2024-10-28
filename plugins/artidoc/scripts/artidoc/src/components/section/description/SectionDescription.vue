@@ -50,7 +50,6 @@ import type { EditorSectionContent } from "@/composables/useEditorSectionContent
 import type { AttachmentFile } from "@/composables/useAttachmentFile";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import { SECTIONS_STORE } from "@/stores/sections-store-injection-key";
-import { EDITOR_CHOICE } from "@/helpers/editor-choice";
 import type { UseUploadFileType } from "@/composables/useUploadFile";
 import type { CrossReference } from "@/stores/useSectionsStore";
 import { CAN_USER_EDIT_DOCUMENT } from "@/can-user-edit-document-injection-key";
@@ -75,28 +74,17 @@ const props = withDefaults(
 );
 
 const { is_sections_loading } = strictInject(SECTIONS_STORE);
-const { is_prose_mirror } = strictInject(EDITOR_CHOICE);
 const can_user_edit_document = strictInject(CAN_USER_EDIT_DOCUMENT);
 
-const can_section_be_edited = computed(() => {
-    if (props.is_print_mode === true || !can_user_edit_document) {
-        return false;
-    }
+const can_section_be_edited = computed(
+    () => props.is_print_mode !== true && can_user_edit_document,
+);
 
-    return props.is_edit_mode || is_prose_mirror.value;
+const async_editor = defineAsyncComponent({
+    loader: () => import("./SectionDescriptionEditorProseMirror.vue"),
+    loadingComponent: SectionDescriptionReadOnly,
+    delay: 0,
 });
-
-const async_editor = is_prose_mirror.value
-    ? defineAsyncComponent({
-          loader: () => import("./SectionDescriptionEditorProseMirror.vue"),
-          loadingComponent: SectionDescriptionReadOnly,
-          delay: 0,
-      })
-    : defineAsyncComponent({
-          loader: () => import("./SectionDescriptionEditor.vue"),
-          loadingComponent: SectionDescriptionReadOnly,
-          delay: 0,
-      });
 
 onMounted(() => {
     loadTooltips();
