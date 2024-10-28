@@ -132,7 +132,7 @@ class Docman_View_Admin_Obsolete extends \Tuleap\Docman\View\Admin\AdminView
                 $table .= '<tr>';
 
                 $table      .= '<td class="document-icon">';
-                $docmanIcons = new Docman_Icons('/plugins/docman/themes/default/images/ic/');
+                $docmanIcons = new Docman_Icons('/plugins/docman/themes/default/images/ic/', EventManager::instance());
                 $icon_src    = $docmanIcons->getIconForItem($item, $params);
                 $table      .= '<img src="' . $icon_src . '" width="16" />';
                 $table      .= '</td>';

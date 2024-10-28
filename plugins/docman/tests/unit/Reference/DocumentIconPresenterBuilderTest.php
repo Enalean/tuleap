@@ -24,13 +24,31 @@ namespace Tuleap\Docman\Reference;
 
 use Docman_Folder;
 use Docman_Link;
+use Tuleap\Docman\Item\Icon\DocumentIconPresenterEvent;
+use Tuleap\Docman\Item\Icon\GetIconForItemEvent;
+use Tuleap\Docman\Item\OtherDocument;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Test\Stubs\EventDispatcherStub;
 
 final class DocumentIconPresenterBuilderTest extends TestCase
 {
     public function testBuildForItem(): void
     {
-        $builder = new DocumentIconPresenterBuilder();
+        $builder = new DocumentIconPresenterBuilder(
+            EventDispatcherStub::withCallback(
+                static function (object $event): object {
+                    if ($event instanceof GetIconForItemEvent) {
+                        $event->setIcon('my-icon');
+                    }
+
+                    if ($event instanceof DocumentIconPresenterEvent && $event->icon === 'my-icon') {
+                        $event->setPresenter(new DocumentIconPresenter('fa-solid fa-rocket', 'fiesta-red'));
+                    }
+
+                    return $event;
+                }
+            )
+        );
 
         $folder_icon = $builder->buildForItem(new Docman_Folder());
         self::assertEquals('fa fa-folder', $folder_icon->icon);
@@ -39,5 +57,20 @@ final class DocumentIconPresenterBuilderTest extends TestCase
         $link_icon = $builder->buildForItem(new Docman_Link());
         self::assertEquals('fa fa-link', $link_icon->icon);
         self::assertEquals('flamingo-pink', $link_icon->color);
+
+        $other_document_icon = $builder->buildForItem(new class ([]) extends OtherDocument {
+        });
+        self::assertEquals('fa-solid fa-rocket', $other_document_icon->icon);
+        self::assertEquals('fiesta-red', $other_document_icon->color);
+    }
+
+    public function testBuildForItemDefaultsToBinaryFile(): void
+    {
+        $builder = new DocumentIconPresenterBuilder(EventDispatcherStub::withIdentityCallback());
+
+        $document_icon = $builder->buildForItem(new class ([]) extends OtherDocument {
+        });
+        self::assertEquals('far fa-file', $document_icon->icon);
+        self::assertEquals('firemist-silver', $document_icon->color);
     }
 }

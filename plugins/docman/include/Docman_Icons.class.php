@@ -21,16 +21,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-/**
- * Folder is a transport object (aka container) used to share data between
- * Model/Controler and View layer of the application
- */
-class Docman_Icons
+use Psr\EventDispatcher\EventDispatcherInterface;
+use Tuleap\Docman\Item\Icon\GetIconForItemEvent;
+
+readonly class Docman_Icons
 {
-    public $images_path;
-    public function __construct($images_path)
+    public function __construct(private string $images_path, private EventDispatcherInterface $event_manager)
     {
-        $this->images_path = $images_path;
     }
 
     public function getActionIcon($action)
@@ -80,7 +77,9 @@ class Docman_Icons
                 $icon .= 'empty';
                 break;
             default:
-                $icon .= 'binary';
+                $icon = $this->event_manager
+                    ->dispatch(new GetIconForItemEvent($item, $icon))
+                    ->getIcon();
                 break;
         }
         $icon .= '.png';
