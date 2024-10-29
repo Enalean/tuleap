@@ -38,34 +38,19 @@
             </a>
             <template v-if="is_section_editable">
                 <span class="tlp-dropdown-menu-separator" role="separator"></span>
-                <a
-                    v-bind:href="artifact_url"
-                    v-on:click="edit"
-                    type="button"
-                    class="tlp-dropdown-menu-item"
-                    role="menuitem"
-                    v-bind:class="{ 'tlp-dropdown-menu-item-disabled': is_edit_mode }"
-                    v-bind:title="edit_title"
-                    data-test="edit"
-                >
-                    <i
-                        class="fa-solid tlp-dropdown-menu-item-icon fa-pen-to-square fa-fw"
-                        aria-hidden="true"
-                    ></i>
-                    <span>{{ $gettext("Edit") }}</span>
-                </a>
                 <button
                     type="button"
                     v-on:click="onDelete"
                     class="tlp-dropdown-menu-item"
                     role="menuitem"
                     data-test="delete"
+                    v-bind:title="remove_title"
                 >
                     <i
                         class="fa-solid tlp-dropdown-menu-item-icon fa-trash fa-fw"
                         aria-hidden="true"
                     ></i>
-                    <span>{{ $gettext("Delete") }}</span>
+                    <span>{{ $gettext("Remove") }}</span>
                 </button>
             </template>
         </div>
@@ -91,8 +76,7 @@ const props = defineProps<{
     editor: SectionEditor;
     section: ArtidocSection;
 }>();
-const { enableEditor, deleteSection } = props.editor.editor_actions;
-const is_edit_mode = props.editor.editor_state.is_section_in_edit_mode;
+const { deleteSection } = props.editor.editor_actions;
 const is_section_editable = props.editor.editor_state.is_section_editable;
 const is_pending = computed(() => isPendingArtifactSection(props.section));
 const artifact_url = computed(() =>
@@ -101,10 +85,9 @@ const artifact_url = computed(() =>
 const trigger = ref<HTMLElement | null>(null);
 const menu = ref<HTMLElement | null>(null);
 
-const edit_title = computed(() =>
-    is_edit_mode.value ? $gettext("Section is currently being edited") : "",
+const remove_title = $gettext(
+    "Remove the section from this document. Corresponding artifact won't be deleted.",
 );
-
 const trigger_title = $gettext("Open contextual menu");
 
 let dropdown: Dropdown | null = null;
@@ -122,14 +105,6 @@ watch(trigger, () => {
         });
     }
 });
-
-function edit(event: Event): void {
-    event.preventDefault();
-    enableEditor();
-    if (dropdown) {
-        dropdown.hide();
-    }
-}
 
 function onDelete(): void {
     deleteSection(configuration.selected_tracker.value);
