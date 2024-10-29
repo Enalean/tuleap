@@ -22,14 +22,21 @@
 .editor {
     position: relative;
     z-index: 2;
+
+    /* Add a little bit of margin so that the focus of .ProseMirror is visible */
+    margin: 0 0 var(--tlp-shadow-focus-width);
     border-radius: var(--tlp-form-element-border-radius);
     background-color: var(--tlp-white-color);
+
+    &:focus-within {
+        transition: box-shadow 350ms;
+        box-shadow: var(--tlp-shadow-focus);
+    }
 }
 
 /* stylelint-disable selector-class-pattern */
 .ProseMirror {
     padding: var(--tlp-form-element-padding-horizontal);
-    border: 1px solid var(--tlp-form-element-border-color);
     border-radius: var(--tlp-form-element-border-radius);
     word-wrap: break-word;
     white-space: pre-wrap;
