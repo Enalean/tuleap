@@ -1324,9 +1324,9 @@ div.tracker-admin-field-controls {
 }
 
 .card-details,
-.tracker_artifact_field,
+.tracker_artifact_field-text,
 .tracker_report_table {
-    h1:not(.tlp-pane-title) {
+    h1 {
         font-size: 1.8em;
     }
 
