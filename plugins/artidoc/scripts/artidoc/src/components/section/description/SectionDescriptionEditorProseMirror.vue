@@ -35,8 +35,11 @@ import type { UseUploadFileType } from "@/composables/useUploadFile";
 import type { CrossReference } from "@/stores/useSectionsStore";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import { TOOLBAR_BUS } from "@/toolbar-bus-injection-key";
-import { artidoc_editor_schema } from "./artidoc-editor-schema";
+import { artidoc_editor_schema } from "../mono-editor/artidoc-editor-schema";
 import { renderArtidocSectionNode } from "@/components/section/description/render-artidoc-section-node";
+import { setupMonoEditorPlugins } from "../mono-editor/jump-to-section-node";
+
+const toolbar_bus = strictInject(TOOLBAR_BUS);
 
 const props = defineProps<{
     title: string;
@@ -90,10 +93,11 @@ onMounted(async () => {
             area_editor.value,
             setupUploadPlugin,
             setupInputPlugin,
+            () => setupMonoEditorPlugins(toolbar_bus),
             renderArtidocSectionNode(props.title, props.editable_description),
             props.project_id,
             props.references,
-            strictInject(TOOLBAR_BUS),
+            toolbar_bus,
             artidoc_editor_schema,
         );
         editorView.value = useEditorInstance.editor;
