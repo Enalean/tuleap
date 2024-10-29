@@ -29,7 +29,6 @@ use HTTPRequest;
 use PHPUnit\Framework\MockObject\MockObject;
 use Project;
 use Service;
-use ServiceDao;
 use ServiceManager;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\Layout\BaseLayout;
@@ -96,7 +95,7 @@ final class DeleteControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             new Service($this->project, ['service_id' => $this->service_id, 'scope' => Service::SCOPE_PROJECT])
         );
 
-        $this->service_dao->method('delete')->with($this->project_id, $this->service_id)->willReturn(true);
+        $this->service_dao->method('delete')->with($this->project_id, $this->service_id);
         $this->project_retriever->method('getProjectFromId')
             ->with((string) $this->project_id)
             ->willReturn($this->project);
@@ -115,8 +114,8 @@ final class DeleteControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             new Service($this->default_template_project, ['service_id' => $this->service_id, 'short_name' => 'homepage', 'scope' => Service::SCOPE_PROJECT])
         );
 
-        $this->service_dao->method('delete')->with((string) Project::DEFAULT_TEMPLATE_PROJECT_ID, $this->service_id)->willReturn(true);
-        $this->service_dao->expects(self::once())->method('deleteFromAllProjects')->with('homepage')->willReturn(true);
+        $this->service_dao->method('delete')->with((string) Project::DEFAULT_TEMPLATE_PROJECT_ID, $this->service_id);
+        $this->service_dao->expects(self::once())->method('deleteFromAllProjects')->with('homepage');
         $this->project_retriever->method('getProjectFromId')
             ->with((string) Project::DEFAULT_TEMPLATE_PROJECT_ID)
             ->willReturn($this->default_template_project);

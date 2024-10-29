@@ -26,7 +26,6 @@ use HTTPRequest;
 use Project;
 use RuntimeException;
 use Service;
-use ServiceDao;
 use ServiceManager;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Project\Admin\Routing\ProjectAdministratorChecker;
@@ -100,9 +99,7 @@ class DeleteController implements DispatchableWithRequest
                 throw new RuntimeException(_('This service is a system service, it cannot be deleted.'));
             }
 
-            if (! $this->dao->delete($project->getID(), $service->getId())) {
-                throw new RuntimeException($GLOBALS['Language']->getText('project_admin_editgroupinfo', 'upd_fail'));
-            }
+            $this->dao->delete($project->getID(), $service->getId());
             $layout->addFeedback(Feedback::INFO, $GLOBALS['Language']->getText('project_admin_servicebar', 's_del'));
 
             $this->deleteFromAllProjects($request, $layout, $project, $service);
@@ -125,9 +122,7 @@ class DeleteController implements DispatchableWithRequest
             throw new RuntimeException($GLOBALS['Language']->getText('project_admin_servicebar', 'cant_delete_s_from_p'));
         }
 
-        if (! $this->dao->deleteFromAllProjects($service->getShortName())) {
-            throw new RuntimeException($GLOBALS['Language']->getText('project_admin_servicebar', 'del_fail'));
-        }
+        $this->dao->deleteFromAllProjects($service->getShortName());
 
         $response->addFeedback(
             Feedback::INFO,

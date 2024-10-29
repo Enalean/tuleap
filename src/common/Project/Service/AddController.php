@@ -71,7 +71,7 @@ class AddController implements DispatchableWithRequest
         return new self(
             ProjectRetriever::buildSelf(),
             new ProjectAdministratorChecker(),
-            new ServiceCreator(new \ServiceDao(), ProjectManager::instance()),
+            new ServiceCreator(new ServiceDao(), ProjectManager::instance()),
             new ServicePOSTDataBuilder(
                 new ServiceLinkDataBuilder()
             ),

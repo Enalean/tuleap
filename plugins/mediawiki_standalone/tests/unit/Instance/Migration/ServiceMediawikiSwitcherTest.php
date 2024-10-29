@@ -24,6 +24,7 @@ namespace Tuleap\MediawikiStandalone\Instance\Migration;
 
 use Psr\Log\NullLogger;
 use Tuleap\MediawikiStandalone\Service\MediawikiStandaloneService;
+use Tuleap\Project\Service\ServiceDao;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
@@ -37,17 +38,18 @@ final class ServiceMediawikiSwitcherTest extends TestCase
 
     public function testSwitchToStandalone(): void
     {
-        $dao = $this->createMock(\ServiceDao::class);
-        $dao->method('searchByProjectIdAndShortNames')
+        $project = ProjectTestBuilder::aProject()->withId(self::PROJECT_ID)->build();
+        $dao     = $this->createMock(ServiceDao::class);
+        $dao->method('searchByProjectAndShortNames')
             ->willReturnCallback(
-                fn(int $project_id, array $allowed_shortnames) => match ($allowed_shortnames[0]) {
-                    \MediaWikiPlugin::SERVICE_SHORTNAME => new \Tuleap\FakeDataAccessResult([
+                fn(\Project $project, array $allowed_shortnames) => match ($allowed_shortnames[0]) {
+                    \MediaWikiPlugin::SERVICE_SHORTNAME => [
                         [
                             'service_id' => self::LEGACY_SERVICE_ID,
                             'rank' => self::LEGACY_SERVICE_RANK,
                         ],
-                    ]),
-                    MediawikiStandaloneService::SERVICE_SHORTNAME => new \Tuleap\FakeDataAccessResult([
+                    ],
+                    MediawikiStandaloneService::SERVICE_SHORTNAME => [
                         [
                             'service_id' => self::STANDALONE_SERVICE_ID,
                             'label' => 'label',
@@ -58,33 +60,35 @@ final class ServiceMediawikiSwitcherTest extends TestCase
                             'is_in_iframe' => 0,
                             'is_in_new_tab' => 0,
                         ],
-                    ]),
+                    ],
                 },
             );
 
+
         $dao->expects(self::exactly(1))
             ->method('updateServiceUsageByShortName')
-            ->with(self::PROJECT_ID, \MediaWikiPlugin::SERVICE_SHORTNAME, 0);
+            ->with($project, \MediaWikiPlugin::SERVICE_SHORTNAME, 0);
         $dao->expects(self::once())
             ->method('saveBasicInformation')
             ->with(self::STANDALONE_SERVICE_ID, 'label', '', '', null, self::LEGACY_SERVICE_RANK, 0, 0);
         $dao->expects(self::once())
             ->method('updateServiceUsageByServiceID')
-            ->with(self::PROJECT_ID, self::STANDALONE_SERVICE_ID, 1);
+            ->with($project, self::STANDALONE_SERVICE_ID, 1);
 
         $switcher = new ServiceMediawikiSwitcher($dao, new NullLogger());
 
-        $switcher->switchToStandalone(ProjectTestBuilder::aProject()->withId(self::PROJECT_ID)->build());
+        $switcher->switchToStandalone($project);
     }
 
     public function testItDoesNotChangeTheRankWhenLegacyDoesNotExist(): void
     {
-        $dao = $this->createMock(\ServiceDao::class);
-        $dao->method('searchByProjectIdAndShortNames')
+        $project = ProjectTestBuilder::aProject()->withId(self::PROJECT_ID)->build();
+        $dao     = $this->createMock(ServiceDao::class);
+        $dao->method('searchByProjectAndShortNames')
             ->willReturnCallback(
-                fn(int $project_id, array $allowed_shortnames) => match ($allowed_shortnames[0]) {
-                    \MediaWikiPlugin::SERVICE_SHORTNAME => new \Tuleap\FakeDataAccessResult([]),
-                    MediawikiStandaloneService::SERVICE_SHORTNAME => new \Tuleap\FakeDataAccessResult([
+                fn(\Project $project, array $allowed_shortnames) => match ($allowed_shortnames[0]) {
+                    \MediaWikiPlugin::SERVICE_SHORTNAME => [],
+                    MediawikiStandaloneService::SERVICE_SHORTNAME => [
                         [
                             'service_id' => self::STANDALONE_SERVICE_ID,
                             'label' => 'label',
@@ -95,27 +99,28 @@ final class ServiceMediawikiSwitcherTest extends TestCase
                             'is_in_iframe' => 0,
                             'is_in_new_tab' => 0,
                         ],
-                    ]),
+                    ],
                 },
             );
 
+
         $dao->expects(self::once())
             ->method('updateServiceUsageByServiceID')
-            ->with(self::PROJECT_ID, self::STANDALONE_SERVICE_ID, 1);
+            ->with($project, self::STANDALONE_SERVICE_ID, 1);
 
         $switcher = new ServiceMediawikiSwitcher($dao, new NullLogger());
 
-        $switcher->switchToStandalone(ProjectTestBuilder::aProject()->withId(self::PROJECT_ID)->build());
+        $switcher->switchToStandalone($project);
     }
 
     public function testItCreatesFromScratchTheStandaloneServiceWhenItDoesNotExistYet(): void
     {
-        $dao = $this->createMock(\ServiceDao::class);
-        $dao->method('searchByProjectIdAndShortNames')
+        $dao = $this->createMock(ServiceDao::class);
+        $dao->method('searchByProjectAndShortNames')
             ->willReturnCallback(
-                fn(int $project_id, array $allowed_shortnames) => match ($allowed_shortnames[0]) {
-                    \MediaWikiPlugin::SERVICE_SHORTNAME => new \Tuleap\FakeDataAccessResult([]),
-                    MediawikiStandaloneService::SERVICE_SHORTNAME => new \Tuleap\FakeDataAccessResult([]),
+                fn(\Project $project, array $allowed_shortnames) => match ($allowed_shortnames[0]) {
+                    \MediaWikiPlugin::SERVICE_SHORTNAME =>[],
+                    MediawikiStandaloneService::SERVICE_SHORTNAME => [],
                 },
             );
 
@@ -142,22 +147,23 @@ final class ServiceMediawikiSwitcherTest extends TestCase
 
     public function testItCreatesFromScratchTheStandaloneServiceWhenItDoesNotExistYetAndTakeTheRankOfTheLegacyOne(): void
     {
-        $dao = $this->createMock(\ServiceDao::class);
-        $dao->method('searchByProjectIdAndShortNames')
+        $project = ProjectTestBuilder::aProject()->withId(self::PROJECT_ID)->build();
+        $dao     = $this->createMock(ServiceDao::class);
+        $dao->method('searchByProjectAndShortNames')
             ->willReturnCallback(
-                fn(int $project_id, array $allowed_shortnames) => match ($allowed_shortnames[0]) {
-                    \MediaWikiPlugin::SERVICE_SHORTNAME => new \Tuleap\FakeDataAccessResult([[
+                fn(\Project $project, array $allowed_shortnames) => match ($allowed_shortnames[0]) {
+                    \MediaWikiPlugin::SERVICE_SHORTNAME => [[
                         'service_id' => self::LEGACY_SERVICE_ID,
                         'rank' => self::LEGACY_SERVICE_RANK,
                     ],
-                    ]),
-                    MediawikiStandaloneService::SERVICE_SHORTNAME => new \Tuleap\FakeDataAccessResult([]),
+                    ],
+                    MediawikiStandaloneService::SERVICE_SHORTNAME => [],
                 },
             );
 
         $dao->expects(self::exactly(1))
             ->method('updateServiceUsageByShortName')
-            ->with(self::PROJECT_ID, \MediaWikiPlugin::SERVICE_SHORTNAME, 0);
+            ->with($project, \MediaWikiPlugin::SERVICE_SHORTNAME, 0);
         $dao->expects(self::once())
             ->method('create')
             ->with(
@@ -176,6 +182,7 @@ final class ServiceMediawikiSwitcherTest extends TestCase
 
         $switcher = new ServiceMediawikiSwitcher($dao, new NullLogger());
 
-        $switcher->switchToStandalone(ProjectTestBuilder::aProject()->withId(self::PROJECT_ID)->build());
+
+        $switcher->switchToStandalone($project);
     }
 }

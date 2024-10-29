@@ -28,6 +28,7 @@ use Project;
 use ReferenceManager;
 use Tuleap\Project\Event\ProjectRegistrationActivateService;
 use Tuleap\Project\ProjectCreationData;
+use Tuleap\Project\Service\ServiceDao;
 use Tuleap\Project\Service\ServiceLinkDataBuilder;
 use Tuleap\Service\ServiceCreator;
 
@@ -42,7 +43,7 @@ class ProjectServiceActivator
      */
     private $event_manager;
     /**
-     * @var \ServiceDao
+     * @var ServiceDao
      */
     private $service_dao;
     /**
@@ -62,7 +63,7 @@ class ProjectServiceActivator
     public function __construct(
         ServiceCreator $service_creator,
         EventManager $event_manager,
-        \ServiceDao $service_dao,
+        ServiceDao $service_dao,
         \ServiceManager $service_manager,
         ServiceLinkDataBuilder $link_data_builder,
         ReferenceManager $reference_manager,
