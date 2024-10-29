@@ -19,18 +19,22 @@
   -->
 
 <template>
-    <div v-dompurify-html="readonly_value"></div>
+    <div v-dompurify-html="readonly_value" ref="root"></div>
 </template>
 
 <script setup lang="ts">
 import { loadTooltips } from "@tuleap/tooltip";
-import { onMounted } from "vue";
+import { onMounted, ref } from "vue";
 
 defineProps<{
     readonly_value: string;
 }>();
 
+const root = ref<HTMLElement | null>(null);
+
 onMounted(() => {
-    loadTooltips();
+    if (root.value) {
+        loadTooltips(root.value);
+    }
 });
 </script>
