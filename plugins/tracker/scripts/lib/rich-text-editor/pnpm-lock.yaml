@@ -43,12 +43,18 @@ devDependencies:
   '@types/dompurify':
     specifier: ^3.0.5
     version: 3.0.5
+  '@types/jquery':
+    specifier: 3.5.5
+    version: 3.5.5
   '@types/marked':
     specifier: ^3.0.2
     version: 3.0.2
   '@types/turndown':
     specifier: ^5.0.0
     version: 5.0.1
+  jquery:
+    specifier: 3.6.0
+    version: 3.6.0
 
 packages:
 
@@ -96,6 +102,10 @@ packages:
   /dompurify@3.1.4:
     resolution: {integrity: sha512-2gnshi6OshmuKil8rMZuQCGiUF3cUxHY3NGDzUAdUx/NPEe5DVnO8BDoAQouvgwnx0R/+a6jUn36Z0FSdq8vww==}
     dev: false
+
+  /jquery@3.6.0:
+    resolution: {integrity: sha512-JVzAR/AjBvVt2BmYhxRCSYysDsPcssdmTFnzyLEts9qNwmjmu4JTAMYubEfwVOSwpQ1I1sKKFcxhZCI2buerfw==}
+    dev: true
 
   /lit-html@2.8.0:
     resolution: {integrity: sha512-o9t+MQM3P4y7M7yNzqAyjp7z+mQGa4NS4CxiyLqFPyFWyc4O+nodLrkrxSaCTrla6M5YOLaT3RpbbqjszB5g3Q==}

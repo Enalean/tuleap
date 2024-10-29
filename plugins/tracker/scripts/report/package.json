@@ -1,20 +1,18 @@
 {
   "author": "Enalean Team",
-  "name": "@tuleap/plugin-tracker-header",
+  "name": "@tuleap/plugin-tracker-report",
   "homepage": "https://tuleap.org",
   "license": "GPL-2.0-or-later",
   "private": true,
   "type": "module",
   "dependencies": {
-    "@tuleap/plugin-tracker-email-copy-paste": "workspace:^"
+    "@tuleap/plugin-tracker-tql-codemirror": "workspace:*",
+    "@tuleap/tlp-fetch": "workspace:*"
   },
   "devDependencies": {
-    "@tuleap/build-system-configurator": "workspace:^",
-    "@types/bootstrap": "^4.5.1",
-    "@types/jquery": "^3.5.5"
+    "@tuleap/build-system-configurator": "workspace:*"
   },
   "scripts": {
-    "typecheck": "tsc --noEmit",
     "build": "vite build",
     "watch": "vite build --watch --mode development --minify false"
   }

@@ -20,7 +20,6 @@
  */
 
 use Tuleap\Date\RelativeDatesAssetsRetriever;
-use Tuleap\Layout\IncludeAssets;
 
 class Tracker_Report_HeaderRenderer
 {
@@ -57,6 +56,18 @@ class Tracker_Report_HeaderRenderer
         $report_can_be_modified,
     ) {
         $link_artifact_id = (int) $request->get('link-artifact-id');
+        $print_version    = $request->get('pv');
+        if (! $link_artifact_id && ! $print_version) {
+            $GLOBALS['HTML']->addJavascriptAsset(
+                new \Tuleap\Layout\JavascriptViteAsset(
+                    new \Tuleap\Layout\IncludeViteAssets(
+                        __DIR__ . '/../../../scripts/report/frontend-assets',
+                        '/assets/trackers/report'
+                    ),
+                    'src/main.js'
+                )
+            );
+        }
         if ($report_can_be_modified) {
             $title       = '';
             $breadcrumbs = [];
@@ -65,7 +76,7 @@ class Tracker_Report_HeaderRenderer
             $report->getTracker()->displayHeader($layout, $title, $breadcrumbs, $params);
         }
 
-        if ($request->get('pv')) {
+        if ($print_version) {
             return;
         }
 
@@ -95,8 +106,6 @@ class Tracker_Report_HeaderRenderer
         $is_admin = $report->getTracker()->userIsAdmin($current_user);
         $warnings = $this->getMissingPublicReportWarning($reports, $is_admin);
 
-        $assets = new IncludeAssets(__DIR__ . '/../../../frontend-assets', '/assets/trackers');
-        $GLOBALS['HTML']->includeFooterJavascriptFile($assets->getFileURL('tracker-report-expert-mode.js'));
         $this->renderer->renderToPage(
             'header_in_report',
             new Tracker_Report_HeaderInReportPresenter(

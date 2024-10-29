@@ -27,11 +27,9 @@ import {
     codeMirrorify,
 } from "@tuleap/plugin-tracker-tql-codemirror";
 
-export { init };
-
 let query_rich_editor = null;
 
-function init() {
+export function init() {
     initializeTrackerReportQuery();
     initializeTrackerReportAllowedFields();
     initializeCodeMirror();
