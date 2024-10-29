@@ -26,6 +26,7 @@ import type { Folder, RootState } from "../../../../type";
 import { getGlobalTestOptions } from "../../../../helpers/global-options-for-test";
 import type { ErrorState } from "../../../../store/error/module";
 import { TYPE_FILE } from "../../../../constants";
+import { buildFakeItem } from "../../../../helpers/item-builder";
 
 describe("FileCreationModal", () => {
     const add_event_listener = jest.fn();
@@ -107,6 +108,7 @@ describe("FileCreationModal", () => {
             expected_item,
             { id: 12, title: "Dacia" },
             { id: 13, title: "Limited Edition" },
+            buildFakeItem(),
         ]);
 
         expect(remove_backdrop).not.toHaveBeenCalled();
@@ -133,6 +135,7 @@ describe("FileCreationModal", () => {
             expected_item,
             { id: 12, title: "Dacia" },
             { id: 13, title: "Limited Edition" },
+            buildFakeItem(),
         ]);
         expect(wrapper.emitted("close-file-creation-modal")).toBeTruthy();
     });
