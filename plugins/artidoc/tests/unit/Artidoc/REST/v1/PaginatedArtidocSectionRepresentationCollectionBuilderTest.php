@@ -38,26 +38,29 @@ use Tuleap\Tracker\REST\Artifact\ArtifactFieldValueFileFullRepresentation;
 use Tuleap\Tracker\REST\Artifact\ArtifactFieldValueFullRepresentation;
 use Tuleap\Tracker\REST\Artifact\ArtifactReference;
 use Tuleap\Tracker\REST\Artifact\ArtifactTextFieldValueRepresentation;
+use Tuleap\Tracker\REST\Artifact\FileInfoRepresentation;
+use Tuleap\Tracker\Test\Builders\Fields\FileFieldBuilder;
 
 final class PaginatedArtidocSectionRepresentationCollectionBuilderTest extends TestCase
 {
     public function testHappyPath(): void
     {
-        $attachments_representation = new ArtifactFieldValueFileFullRepresentation();
-        $values                     = [
+        $attachments_representation = ArtifactFieldValueFileFullRepresentation::fromValues(
+            FileFieldBuilder::aFileField(1)->build(),
             [
-                'id' => 107,
-                'submitted_by' => 103,
-                'description' => '',
-                'name' => 'maraiste.jpg',
-                'size' => 5910,
-                'type' => 'image/jpeg',
-                'html_url' => '/plugins/tracker/attachments/107-maraiste.jpg',
-                'html_preview_url' => '/plugins/tracker/attachments/preview/107-maraiste.jpg',
-                'uri' => 'artifact_files/107',
+                new FileInfoRepresentation(
+                    107,
+                    103,
+                    '',
+                    'maraiste.jpg',
+                    5910,
+                    '/plugins/tracker/attachments/107-maraiste.jpg',
+                    '/plugins/tracker/attachments/preview/107-maraiste.jpg',
+                    'artifact_files/107',
+                ),
             ],
-        ];
-        $attachments_representation->build(1, 'file', 'Attachments', $values);
+        );
+
         $collection = new PaginatedArtidocSectionRepresentationCollection(
             [
                 new ArtidocSectionRepresentation(

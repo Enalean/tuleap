@@ -33116,20 +33116,6 @@
       <code><![CDATA[build]]></code>
     </MissingReturnType>
   </file>
-  <file src="plugins/tracker/include/REST/Artifact/ArtifactFieldValueFileFullRepresentation.class.php">
-    <MissingParamType>
-      <code><![CDATA[$id]]></code>
-      <code><![CDATA[$label]]></code>
-      <code><![CDATA[$type]]></code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code><![CDATA[build]]></code>
-    </MissingReturnType>
-    <UndefinedDocblockClass>
-      <code><![CDATA[Tuleap\Tracker\REST\Artifact\FileInfoRepresentation[]]]></code>
-      <code><![CDATA[public $file_descriptions = [];]]></code>
-    </UndefinedDocblockClass>
-  </file>
   <file src="plugins/tracker/include/REST/Artifact/ArtifactFieldValueFileRepresentation.class.php">
     <MissingParamType>
       <code><![CDATA[$id]]></code>

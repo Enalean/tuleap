@@ -164,18 +164,13 @@ class Tracker_Artifact_ChangesetValue_File extends Tracker_Artifact_ChangesetVal
 
     public function getFullRESTValue(PFUser $user)
     {
+        assert($this->field instanceof Tracker_FormElement_Field_File);
         $values = [];
         foreach ($this->getFiles() as $file_info) {
             $values[] = $file_info->getRESTValue();
         }
-        $field_value_file_representation = new ArtifactFieldValueFileFullRepresentation();
-        $field_value_file_representation->build(
-            $this->field->getId(),
-            Tracker_FormElementFactory::instance()->getType($this->field),
-            $this->field->getLabel(),
-            $values
-        );
-        return $field_value_file_representation;
+
+        return ArtifactFieldValueFileFullRepresentation::fromValues($this->field, $values);
     }
 
     /**

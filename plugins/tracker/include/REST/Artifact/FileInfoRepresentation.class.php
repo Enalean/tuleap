@@ -66,6 +66,7 @@ class FileInfoRepresentation
      * @var string
      */
     public $html_preview_url;
+    public string $uri;
 
     public function __construct($id, $submitted_by, $description, $name, $filesize, $filetype, $html_url, $html_preview_url)
     {
