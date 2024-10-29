@@ -52,6 +52,10 @@ final readonly class FromProjectBuilderVisitor implements FromProjectConditionVi
     {
         $from_project = $parameters->from_project;
 
+        if (is_array($project_equal->getValue())) {
+            return new ParametrizedFromWhere('', '', [], []);
+        }
+
         return match ($from_project->getTarget()) {
             AllowedFrom::PROJECT          => $this->buildFromProjectEqual($project_equal, $parameters),
             AllowedFrom::PROJECT_NAME     => $this->buildFromProjectName([$project_equal->getValue()]),

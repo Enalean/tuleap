@@ -24,11 +24,17 @@ namespace Tuleap\Tracker\Report\Query\Advanced\Grammar;
 
 final readonly class FromProjectEqual implements FromProjectCondition
 {
-    public function __construct(private string $value)
+    /**
+     * @param string|\Project[] $value
+     */
+    public function __construct(private string|array $value)
     {
     }
 
-    public function getValue(): string
+    /**
+     * @return string|\Project[]
+     */
+    public function getValue(): string|array
     {
         return $this->value;
     }

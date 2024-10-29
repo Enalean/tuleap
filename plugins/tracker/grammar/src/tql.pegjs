@@ -101,7 +101,7 @@ from_project_condition
     = from_project_equal / from_project_in
 
 from_project_equal
-    = "=" _ value:String {
+    = "=" _ value:FromProjectEqual {
         return new FromProjectEqual($value->getValue());
     }
 
@@ -109,6 +109,14 @@ from_project_in
     = "in"i _ "(" _ first:String _ list:(StringList *) _ ")" {
         array_unshift($list, $first->getValue());
         return new FromProjectIn($list);
+    }
+
+FromProjectEqual
+    = String / UserProjects
+
+UserProjects
+    = "my_projects"i _ "(" _ ")" {
+        return new UserProjectsValue(\ProjectManager::instance(),\UserManager::instance());
     }
 
 from_tracker

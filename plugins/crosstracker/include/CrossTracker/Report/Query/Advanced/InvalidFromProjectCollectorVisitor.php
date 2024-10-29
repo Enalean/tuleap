@@ -46,6 +46,10 @@ final readonly class InvalidFromProjectCollectorVisitor implements FromProjectCo
 
     public function visitEqual(FromProjectEqual $project_equal, $parameters): void
     {
+        if (is_array($project_equal->getValue())) {
+            return;
+        }
+
         $from_project = $parameters->from_project;
 
         match ($from_project->getTarget()) {
