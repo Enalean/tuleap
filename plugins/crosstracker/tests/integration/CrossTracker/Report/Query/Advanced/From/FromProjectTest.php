@@ -33,6 +33,7 @@ use Tuleap\CrossTracker\Tests\Report\ArtifactReportFactoryInstantiator;
 use Tuleap\DB\DBFactory;
 use Tuleap\Test\Builders\CoreDatabaseBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerDatabaseBuilder;
+use UserManager;
 
 final class FromProjectTest extends CrossTrackerFieldTestCase
 {
@@ -59,6 +60,7 @@ final class FromProjectTest extends CrossTrackerFieldTestCase
         $core_builder->addUserToProjectAdmins((int) $this->user_admin->getId(), $project_1_id);
         $core_builder->addUserToProjectMembers((int) $this->user_admin->getId(), $project_2_id);
         $core_builder->addUserToProjectAdmins((int) $this->user_admin->getId(), $project_2_id);
+        $core_builder->addUserToProjectMembers((int) $this->user_admin->getId(), $project_3_id);
 
         /**
          * type
@@ -136,6 +138,10 @@ final class FromProjectTest extends CrossTrackerFieldTestCase
 
     public function testItGetTrackerFromMyProjects(): void
     {
+        $user_manager = $this->createPartialMock(UserManager::class, ['getCurrentUser']);
+        $user_manager->method('getCurrentUser')->willReturn($this->user_member);
+        UserManager::setInstance($user_manager);
+
         $result = $this->getQueryResults(
             new CrossTrackerExpertReport(1, 'SELECT @tracker.name FROM @project = MY_PROJECTS() WHERE @id >= 1'),
             $this->user_member,
