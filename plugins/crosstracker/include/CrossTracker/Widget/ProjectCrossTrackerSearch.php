@@ -24,6 +24,7 @@ use Codendi_Request;
 use HTTPRequest;
 use Project;
 use TemplateRendererFactory;
+use Tuleap\CrossTracker\CrossTrackerReportCreator;
 use Tuleap\CrossTracker\CrossTrackerReportDao;
 use Tuleap\Layout\CssAssetCollection;
 use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
@@ -31,6 +32,7 @@ use Tuleap\Layout\IncludeCoreAssets;
 use Tuleap\Layout\IncludeViteAssets;
 use Tuleap\Layout\JavascriptAsset;
 use Tuleap\Layout\JavascriptViteAsset;
+use Tuleap\NeverThrow\Fault;
 use Tuleap\Project\MappingRegistry;
 use Widget;
 
@@ -38,7 +40,7 @@ class ProjectCrossTrackerSearch extends Widget
 {
     public const NAME = 'crosstrackersearch';
 
-    public function __construct()
+    public function __construct(private readonly CrossTrackerReportCreator $report_creator)
     {
         parent::__construct(self::NAME);
     }
@@ -97,9 +99,12 @@ class ProjectCrossTrackerSearch extends Widget
 
     public function create(Codendi_Request $request)
     {
-        $content_id = $this->getDao()->create();
+        $dashboard_type = $request->get('dashboard-type');
 
-        return $content_id;
+        return $this->report_creator->createReportAndReturnLastId($dashboard_type)->match(
+            static fn(int $content_id) => $content_id,
+            static fn(Fault $fault) => throw new \RuntimeException((string) $fault),
+        );
     }
 
     public function destroy($id)

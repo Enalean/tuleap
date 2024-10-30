@@ -22,7 +22,10 @@ declare(strict_types=1);
 
 namespace Tuleap\CrossTracker;
 
+use Tuleap\Dashboard\Project\ProjectDashboardController;
+use Tuleap\Dashboard\User\UserDashboardController;
 use Tuleap\DB\DBFactory;
+use Tuleap\NeverThrow\Result;
 use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
 use Tuleap\Tracker\Test\Builders\TrackerDatabaseBuilder;
 
@@ -31,11 +34,13 @@ final class CrossTrackerReportDaoTest extends TestIntegrationTestCase
     private const PROJECT_ID = 134;
     private CrossTrackerReportDao $report_dao;
     private TrackerDatabaseBuilder $tracker_builder;
+    private CrossTrackerReportCreator $creator;
 
     protected function setUp(): void
     {
         $this->report_dao      = new CrossTrackerReportDao();
         $this->tracker_builder = new TrackerDatabaseBuilder(DBFactory::getMainTuleapDBConnection()->getDB());
+        $this->creator         = new CrossTrackerReportCreator($this->report_dao);
     }
 
     public function testCRUD(): void
@@ -112,5 +117,31 @@ final class CrossTrackerReportDaoTest extends TestIntegrationTestCase
         self::assertNull($this->report_dao->searchReportById($report_id));
         self::assertEmpty($this->report_dao->searchReportTrackersById($report_id));
         self::assertEmpty($this->report_dao->searchTrackersIdUsedByCrossTrackerByProjectId(self::PROJECT_ID));
+    }
+
+    public function testItCreatesANewExpertReportFromUserDashboard(): void
+    {
+        $result = $this->creator->createReportAndReturnLastId(UserDashboardController::DASHBOARD_TYPE);
+        self::assertTrue(Result::isOk($result));
+        $last_report_id = $result->value;
+
+        $sql_result         = $this->report_dao->searchReportById($last_report_id);
+        $expected_tql_query = 'SELECT @pretty_title, @submitted_by, @last_update_date, @status FROM @project = MY_PROJECTS() WHERE @status = OPEN() AND @assigned_to = MYSELF() ORDER BY @last_update_date DESC';
+
+        self::assertSame(1, $sql_result['expert_mode']);
+        self::assertSame($expected_tql_query, $sql_result['expert_query']);
+    }
+
+    public function testItCreatesANewExpertReportFromProjectDashboard(): void
+    {
+        $result = $this->creator->createReportAndReturnLastId(ProjectDashboardController::DASHBOARD_TYPE);
+        self::assertTrue(Result::isOk($result));
+        $last_report_id = $result->value;
+
+        $sql_result         = $this->report_dao->searchReportById($last_report_id);
+        $expected_tql_query = "SELECT @pretty_title, @submitted_by, @last_update_date, @status, @assigned_to FROM @project = 'self' WHERE @status = OPEN() ORDER BY @last_update_date DESC";
+
+        self::assertSame(1, $sql_result['expert_mode']);
+        self::assertSame($expected_tql_query, $sql_result['expert_query']);
     }
 }
