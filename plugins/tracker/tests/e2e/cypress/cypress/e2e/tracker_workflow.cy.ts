@@ -19,7 +19,8 @@
  */
 
 import { PROJECT_ADMINISTRATORS_ID } from "@tuleap/core-constants";
-import { POST_ACTION_TYPE } from "../../../../../scripts/workflow-transitions/src/constants/workflow-constants";
+
+const FROZEN_FIELDS_POST_ACTION_TYPE = "frozen_fields";
 
 function getTrackerIdFromTrackerListPage(
     project_name: string,
@@ -120,7 +121,7 @@ describe(`Tracker Workflow`, () => {
                 cy.get("[data-test=not-empty-comment-checkbox]").check();
                 cy.get("[data-test=add-post-action]").click();
                 cy.get("[data-test=post-action-type-select]").select(
-                    POST_ACTION_TYPE.FROZEN_FIELDS,
+                    FROZEN_FIELDS_POST_ACTION_TYPE,
                 );
                 cy.get("[data-test=frozen-fields-form-element]").within(() => {
                     cy.get("[data-test=list-picker-search-field]").type(

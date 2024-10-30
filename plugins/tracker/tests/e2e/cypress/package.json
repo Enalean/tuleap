@@ -1,0 +1,12 @@
+{
+  "author": "Enalean Team",
+  "name": "@tuleap/plugin-tracker-e2e-tests",
+  "homepage": "https://tuleap.org",
+  "license": "GPL-2.0-or-later",
+  "private": true,
+  "devDependencies": {
+    "@tuleap/core-constants": "workspace:^",
+    "@tuleap/cypress-configurator": "workspace:*",
+    "@tuleap/cypress-utilities-support": "workspace:*"
+  }
+}
