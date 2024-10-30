@@ -24,8 +24,10 @@ namespace Tuleap\CrossTracker\Report\Query\Advanced\FromBuilder;
 
 use LogicException;
 use ParagonIE\EasyDB\EasyStatement;
+use Project;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Tuleap\CrossTracker\Report\Query\Advanced\AllowedFrom;
+use Tuleap\CrossTracker\Report\Query\Advanced\InvalidFromProjectCollectorVisitor;
 use Tuleap\CrossTracker\SearchCrossTrackerWidget;
 use Tuleap\Project\ProjectByIDFactory;
 use Tuleap\Project\Sidebar\CollectLinkedProjects;
@@ -50,11 +52,24 @@ final readonly class FromProjectBuilderVisitor implements FromProjectConditionVi
 
     public function visitEqual(FromProjectEqual $project_equal, $parameters): IProvideParametrizedFromAndWhereSQLFragments
     {
-        $from_project = $parameters->from_project;
-
         if (is_array($project_equal->getValue())) {
-            return new ParametrizedFromWhere('', '', [], []);
+            $projects_ids = array_map(static fn(Project $project) => $project->getId(), $project_equal->getValue());
+            if ($projects_ids === []) {
+                throw new LogicException(
+                    sprintf(
+                        'Should be already checked in %s',
+                        InvalidFromProjectCollectorVisitor::class
+                    )
+                );
+            }
+            return new ParametrizedFromWhere(
+                '',
+                EasyStatement::open()->in('project.group_id IN (?*)', $projects_ids),
+                [],
+                $projects_ids,
+            );
         }
+        $from_project = $parameters->from_project;
 
         return match ($from_project->getTarget()) {
             AllowedFrom::PROJECT          => $this->buildFromProjectEqual($project_equal, $parameters),
