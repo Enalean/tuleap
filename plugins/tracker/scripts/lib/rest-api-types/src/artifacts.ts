@@ -58,6 +58,7 @@ export interface StaticValueRepresentation {
     readonly label: string;
     readonly color: RedGreenBlueColor | null;
     readonly tlp_color: ColorName | null;
+    readonly is_hidden: false;
 }
 
 export interface UserGroupRepresentation {
@@ -169,6 +170,7 @@ export interface SimpleListChangesetValue extends BaseChangesetValue {
 export interface OpenListValueRepresentation {
     readonly id: string;
     readonly label: string;
+    readonly is_hidden: boolean;
 }
 
 export interface OpenListChangesetValue extends BaseChangesetValue {

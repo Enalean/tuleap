@@ -22,9 +22,9 @@ import type { StaticOpenListFieldType } from "../../../../../domain/fields/stati
 import { StaticOpenListFieldPresenterBuilder } from "./StaticOpenListFieldPresenter";
 
 const bind_values = [
-    { id: "1", label: "Foo" },
-    { id: "2", label: "Bar" },
-    { id: "3", label: "Baz" },
+    { id: "1", label: "Foo", is_hidden: false },
+    { id: "2", label: "Bar", is_hidden: false },
+    { id: "3", label: "Baz", is_hidden: false },
 ];
 
 describe("StaticOpenListFieldPresenter", () => {

@@ -86,6 +86,7 @@ export function formatDefaultValue(field: OpenListFieldStructure): OpenListValue
                 bind_value_objects: field.default_value.map((value) => ({
                     label: value.label,
                     id: String(value.id),
+                    is_hidden: value.is_hidden,
                 })),
             },
         };
@@ -129,9 +130,15 @@ const isStaticValue = (
     value: OpenListBindValueObject,
 ): value is OpenListValueRepresentation | StaticValueRepresentation => !isUserValue(value);
 
+const isVisibleValue = (value: OpenListValueRepresentation | StaticValueRepresentation): boolean =>
+    !value.is_hidden;
+
 const mapToStaticValueModel = (
     bind_value_objects: readonly OpenListBindValueObject[],
-): StaticValueModelItem[] => bind_value_objects.filter(isStaticValue);
+): StaticValueModelItem[] => {
+    const static_values = bind_value_objects.filter(isStaticValue);
+    return static_values.filter(isVisibleValue);
+};
 
 const isUserGroupValue = (value: OpenListBindValueObject): value is UserGroupRepresentation =>
     !isUserValue(value);
