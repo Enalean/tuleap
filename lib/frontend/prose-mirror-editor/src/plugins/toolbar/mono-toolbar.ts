@@ -26,7 +26,6 @@ import { ToolbarActivator } from "./helper/MonoToolbarActionActivator";
 import type { ActivateToolbar } from "./helper/MonoToolbarActionActivator";
 import { IsMarkActiveChecker } from "./helper/IsMarkActiveChecker";
 import { MarkToggle } from "./helper/MonoToolbarToggler";
-import { custom_schema } from "../../custom_schema";
 import { getQuoteCommand } from "./quote";
 import { LinkStateBuilder } from "./links/LinkStateBuilder";
 import { LinkPropertiesExtractor } from "../../helpers/LinkPropertiesExtractor";
@@ -56,9 +55,10 @@ import { ListsInSelectionDetector } from "./list/ListsInSelectionDetector";
 import { ListStateBuilder } from "./list/ListStateBuilder";
 
 const getToolbarActivator = (state: EditorState): ActivateToolbar => {
+    const schema = state.schema;
     const check_same_parent = SelectedNodesHaveSameParentChecker();
 
-    const multiple_lists_detector = ListsInSelectionDetector();
+    const multiple_lists_detector = ListsInSelectionDetector(schema);
     return ToolbarActivator(
         IsMarkActiveChecker(),
         LinkStateBuilder(
@@ -66,23 +66,23 @@ const getToolbarActivator = (state: EditorState): ActivateToolbar => {
             LinkPropertiesExtractor(EditorNodeAtPositionFinder(state), LinkNodeDetector(state)),
         ),
         ImageStateBuilder(
-            CanInsertImageChecker(),
+            CanInsertImageChecker(schema.nodes.image),
             ImageFromSelectionExtractor(EditorNodeAtPositionFinder(state)),
         ),
         ListStateBuilder(
             state,
-            SingleListInSelectionDetector(custom_schema.nodes.ordered_list),
+            SingleListInSelectionDetector(schema.nodes.ordered_list),
             multiple_lists_detector,
         ),
         ListStateBuilder(
             state,
-            SingleListInSelectionDetector(custom_schema.nodes.bullet_list),
+            SingleListInSelectionDetector(schema.nodes.bullet_list),
             multiple_lists_detector,
         ),
         MonoToolbarTextStyleItemsActivator(
-            HeadingInSelectionRetriever(check_same_parent),
+            HeadingInSelectionRetriever(check_same_parent, schema.nodes.heading),
             PreformattedTextInSelectionDetector(check_same_parent),
-            ParagraphsInSelectionDetector(),
+            ParagraphsInSelectionDetector(schema),
         ),
     );
 };
@@ -94,28 +94,29 @@ export function setupMonoToolbar(toolbar_bus: ToolbarBus): Plugin {
                 update: (view: EditorView): void => {
                     view.focus();
 
+                    const schema = view.state.schema;
                     const toolbar_activator = getToolbarActivator(view.state);
 
                     toolbar_activator.activateToolbarItem(toolbar_bus.view, view.state);
 
                     toolbar_bus.setCurrentHandler({
                         toggleBold(): void {
-                            MarkToggle().toggleMark(view, custom_schema.marks.strong);
+                            MarkToggle().toggleMark(view, schema.marks.strong);
                         },
                         toggleItalic(): void {
-                            MarkToggle().toggleMark(view, custom_schema.marks.em);
+                            MarkToggle().toggleMark(view, schema.marks.em);
                         },
                         toggleCode(): void {
-                            MarkToggle().toggleMark(view, custom_schema.marks.code);
+                            MarkToggle().toggleMark(view, schema.marks.code);
                         },
                         toggleQuote(): void {
                             getQuoteCommand()(view.state, view.dispatch);
                         },
                         toggleSubscript(): void {
-                            MarkToggle().toggleMark(view, custom_schema.marks.subscript);
+                            MarkToggle().toggleMark(view, schema.marks.subscript);
                         },
                         toggleSuperScript(): void {
-                            MarkToggle().toggleMark(view, custom_schema.marks.superscript);
+                            MarkToggle().toggleMark(view, schema.marks.superscript);
                         },
                         applyLink(link): void {
                             replaceLinkNode(view, link);
@@ -130,28 +131,31 @@ export function setupMonoToolbar(toolbar_bus: ToolbarBus): Plugin {
                             ListNodeInserter(
                                 view.state,
                                 view.dispatch,
-                                SingleListInSelectionDetector(custom_schema.nodes.ordered_list),
-                                liftListItem(custom_schema.nodes.list_item),
-                                wrapInList(custom_schema.nodes.ordered_list),
+                                SingleListInSelectionDetector(schema.nodes.ordered_list),
+                                liftListItem(schema.nodes.list_item),
+                                wrapInList(schema.nodes.ordered_list),
                             ).insertList();
                         },
                         toggleBulletList(): void {
                             ListNodeInserter(
                                 view.state,
                                 view.dispatch,
-                                SingleListInSelectionDetector(custom_schema.nodes.bullet_list),
-                                liftListItem(custom_schema.nodes.list_item),
-                                wrapInList(custom_schema.nodes.bullet_list),
+                                SingleListInSelectionDetector(schema.nodes.bullet_list),
+                                liftListItem(schema.nodes.list_item),
+                                wrapInList(schema.nodes.bullet_list),
                             ).insertList();
                         },
                         toggleHeading(heading): void {
                             getHeadingCommand(heading.level)(view.state, view.dispatch);
                         },
                         togglePlainText(): void {
-                            getPlainTextCommand()(view.state, view.dispatch);
+                            getPlainTextCommand(schema.nodes.paragraph)(view.state, view.dispatch);
                         },
                         togglePreformattedText(): void {
-                            getFormattedTextCommand()(view.state, view.dispatch);
+                            getFormattedTextCommand(schema.nodes.code_block)(
+                                view.state,
+                                view.dispatch,
+                            );
                         },
                     });
                 },

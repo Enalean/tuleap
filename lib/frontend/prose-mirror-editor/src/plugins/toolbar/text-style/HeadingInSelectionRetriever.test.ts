@@ -21,7 +21,7 @@ import { describe, it, expect, beforeEach } from "vitest";
 import type { Selection } from "prosemirror-state";
 import type { Attrs, NodeType } from "prosemirror-model";
 import type { EditorNode } from "../../../types/internal-types";
-import { custom_schema } from "../../../custom_schema";
+import { buildCustomSchema } from "../../../custom_schema";
 import type { RetrieveHeading } from "./HeadingInSelectionRetriever";
 import { HeadingInSelectionRetriever } from "./HeadingInSelectionRetriever";
 import { CheckSelectedNodesHaveSameParentStub } from "./stub/CheckSelectedNodesHaveSameParentStub";
@@ -37,18 +37,22 @@ const buildTreeWithNodes = (nodes: EditorNode[]): EditorNode => {
     } as unknown as EditorNode;
 };
 
+const custom_schema = buildCustomSchema();
+
 describe("HeadingInSelectionRetriever", () => {
     let retriever: RetrieveHeading;
 
     beforeEach(() => {
         retriever = HeadingInSelectionRetriever(
             CheckSelectedNodesHaveSameParentStub.withSameParent(),
+            custom_schema.nodes.heading,
         );
     });
 
     it("When the nodes in the selection do not have the same parent element, then it should return null", () => {
         const retriever = HeadingInSelectionRetriever(
             CheckSelectedNodesHaveSameParentStub.withoutSameParent(),
+            custom_schema.nodes.heading,
         );
         const heading = retriever.retrieveHeadingInSelection({} as EditorNode, {} as Selection);
 

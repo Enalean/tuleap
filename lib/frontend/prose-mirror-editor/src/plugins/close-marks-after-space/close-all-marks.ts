@@ -18,14 +18,18 @@
  */
 
 import type { EditorView } from "prosemirror-view";
-import type { Mark } from "prosemirror-model";
+import type { Mark, MarkType } from "prosemirror-model";
 import { closeMark } from "./close-mark";
 import { toggleMark } from "prosemirror-commands";
-import { MARKS_TO_CLOSE } from "./marks-to-close";
 
 export function closeAllCurrentMarks(view: EditorView): void {
     const { state } = view;
     const { $from } = state.selection;
+
+    const MARKS_TO_CLOSE: MarkType[] = [
+        state.schema.marks.subscript,
+        state.schema.marks.superscript,
+    ];
 
     $from.marks().forEach((mark: Mark) => {
         if (MARKS_TO_CLOSE.includes(mark.type)) {

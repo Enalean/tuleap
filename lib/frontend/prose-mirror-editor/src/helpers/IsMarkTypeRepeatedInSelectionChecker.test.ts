@@ -20,10 +20,12 @@
 import { describe, beforeEach, expect, it } from "vitest";
 import type { CheckIsMarkTypeRepeatedInSelection } from "./IsMarkTypeRepeatedInSelectionChecker";
 import { IsMarkTypeRepeatedInSelectionChecker } from "./IsMarkTypeRepeatedInSelectionChecker";
-import { custom_schema } from "../custom_schema";
+import { buildCustomSchema } from "../custom_schema";
 import type { EditorState } from "prosemirror-state";
 import { createLocalDocument } from "./helper-for-test";
 import { DOMParser } from "prosemirror-model";
+
+const custom_schema = buildCustomSchema();
 
 describe("IsMarkTypeRepeatedInSelectionChecker", () => {
     let checker: CheckIsMarkTypeRepeatedInSelection;

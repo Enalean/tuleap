@@ -19,7 +19,6 @@
 
 import type { Selection } from "prosemirror-state";
 import type { EditorNode } from "../../../types/internal-types";
-import { custom_schema } from "../../../custom_schema";
 import type { CheckSelectedNodesHaveSameParent } from "./SelectedNodesHaveSameParentChecker";
 
 export type DetectPreformattedTextInSelection = {
@@ -37,7 +36,7 @@ export const PreformattedTextInSelectionDetector = (
         let has_at_least_one_code_block = false;
 
         tree.nodesBetween(selection.from, selection.to, (node) => {
-            if (node.type === custom_schema.nodes.code_block) {
+            if (node.type === node.type.schema.nodes.code_block) {
                 has_at_least_one_code_block = true;
             }
         });

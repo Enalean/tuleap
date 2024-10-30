@@ -18,19 +18,16 @@
  */
 
 import type { Selection } from "prosemirror-state";
+import type { Schema } from "prosemirror-model";
 import type { EditorNode } from "../../../types/internal-types";
-import { custom_schema } from "../../../custom_schema";
 
 export type DetectParagraphsInSelection = {
     doesSelectionContainOnlyParagraphs(tree: EditorNode, selection: Selection): boolean;
 };
 
-export const ParagraphsInSelectionDetector = (): DetectParagraphsInSelection => ({
+export const ParagraphsInSelectionDetector = (schema: Schema): DetectParagraphsInSelection => ({
     doesSelectionContainOnlyParagraphs: (tree: EditorNode, selection: Selection): boolean => {
-        const not_paragraphs_nodes_types = [
-            custom_schema.nodes.heading,
-            custom_schema.nodes.code_block,
-        ];
+        const not_paragraphs_nodes_types = [schema.nodes.heading, schema.nodes.code_block];
 
         let has_only_paragraphs = true;
         tree.nodesBetween(selection.from, selection.to, (node) => {

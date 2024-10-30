@@ -22,7 +22,7 @@ import { DOMParser } from "prosemirror-model";
 import { expect, describe, it } from "vitest";
 import { EditorState } from "prosemirror-state";
 import { createLocalDocument } from "../../helpers";
-import { custom_schema } from "../../custom_schema";
+import { buildCustomSchema } from "../../custom_schema";
 import type { Decoration, DecorationSet } from "prosemirror-view";
 import { CROSS_REFERENCE_DECORATION_TYPE } from "../../helpers/create-cross-reference-decoration";
 import { ReferencePositionComputerStub } from "./helpers/stubs/ReferencePositionComputerStub";
@@ -34,6 +34,8 @@ describe("node decorator", () => {
     const local_document: Document = createLocalDocument();
     function initEditorWithText(text: string): void {
         const editor_content = local_document.createElement("div");
+        const custom_schema = buildCustomSchema();
+
         editor_content.innerHTML = text;
         state = EditorState.create({
             doc: DOMParser.fromSchema(custom_schema).parse(editor_content),

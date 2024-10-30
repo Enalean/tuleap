@@ -21,7 +21,9 @@ import { describe, expect, it, vi } from "vitest";
 import type { EditorState } from "prosemirror-state";
 import { isSelectionABlockQuote } from "./is-selection-a-block-quote";
 import * as hasPreviousNodeTypeModule from "./has-previous-node-type";
-import { custom_schema } from "../../../custom_schema";
+import { buildCustomSchema } from "../../../custom_schema";
+
+const custom_schema = buildCustomSchema();
 
 describe("isSelectionABlockQuote", () => {
     describe("When the selection is a block quote", () => {

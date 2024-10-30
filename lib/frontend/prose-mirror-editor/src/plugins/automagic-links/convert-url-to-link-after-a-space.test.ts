@@ -22,11 +22,11 @@ import type { EditorState } from "prosemirror-state";
 import { convertUrlToLinkAfterASpace } from "./convert-url-to-link-after-a-space";
 import * as getWordOrUrlJustBeforeCursorModule from "../../helpers/get-word-or-url-just-before-cursor";
 import * as getLinkUrlFromTextModule from "./get-link-url-from-text";
-import { custom_schema } from "../../custom_schema";
+import { buildCustomSchema } from "../../custom_schema";
 
 function getState(add_mark_mock: ReturnType<typeof vi.fn>): EditorState {
     return {
-        schema: custom_schema,
+        schema: buildCustomSchema(),
         selection: {
             $from: {
                 start: vi.fn().mockReturnValue(0),

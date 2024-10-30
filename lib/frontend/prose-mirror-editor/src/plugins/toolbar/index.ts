@@ -21,11 +21,11 @@ import { keymap } from "prosemirror-keymap";
 import { baseKeymap } from "prosemirror-commands";
 import type { Plugin } from "prosemirror-state";
 import { buildKeymap } from "./keymap";
-import { custom_schema } from "../../custom_schema";
 import { buildInputRules } from "./input-rules";
 import { setupMonoToolbar } from "./mono-toolbar";
 import type { ToolbarBus } from "./helper/toolbar-bus";
 import { SingleListInSelectionDetector } from "./list/SingleListInSelectionDetector";
+import type { Schema } from "prosemirror-model";
 
 export { buildKeymap };
 export type { LinkState } from "./links/LinkState";
@@ -35,17 +35,18 @@ export type { Heading } from "./text-style/Heading";
 
 export const NB_HEADING = 3;
 
-export function setupToolbar(toolbar_bus: ToolbarBus): Plugin[] {
+export function setupToolbar(schema: Schema, toolbar_bus: ToolbarBus): Plugin[] {
     return [
         keymap(
             buildKeymap(
-                SingleListInSelectionDetector(custom_schema.nodes.ordered_list),
-                SingleListInSelectionDetector(custom_schema.nodes.bullet_list),
+                schema,
+                SingleListInSelectionDetector(schema.nodes.ordered_list),
+                SingleListInSelectionDetector(schema.nodes.bullet_list),
                 NB_HEADING,
             ),
         ),
         keymap(baseKeymap),
-        buildInputRules(custom_schema),
+        buildInputRules(schema),
         setupMonoToolbar(toolbar_bus),
     ];
 }

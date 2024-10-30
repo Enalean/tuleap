@@ -19,7 +19,6 @@
 
 import type { EditorView } from "prosemirror-view";
 import { Plugin } from "prosemirror-state";
-import { custom_schema } from "../../custom_schema";
 import { fileUploadHandler } from "./upload-file";
 import type { FileUploadOptions } from "./types";
 import type { Option } from "@tuleap/option";
@@ -28,7 +27,7 @@ import type { Upload } from "tus-js-client";
 
 function insertFile(view: EditorView, url: string): void {
     const { state, dispatch } = view;
-    const node = custom_schema.nodes.image.create({
+    const node = state.schema.nodes.image.create({
         src: url,
     });
     const transaction = state.tr.replaceSelectionWith(node);

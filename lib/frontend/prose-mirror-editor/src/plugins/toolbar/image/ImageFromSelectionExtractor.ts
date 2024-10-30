@@ -19,7 +19,6 @@
 
 import type { Selection } from "prosemirror-state";
 import type { ImageProperties } from "../../../types/internal-types";
-import { custom_schema } from "../../../custom_schema";
 import type { FindEditorNodeAtPosition } from "../../../helpers/EditorNodeAtPositionFinder";
 
 export type ExtractImageFromSelection = {
@@ -36,7 +35,7 @@ export const ImageFromSelectionExtractor = (
         }
 
         const selected_node = find_node_at_position.findNodeAtPosition(selection.from);
-        if (!selected_node || selected_node.type !== custom_schema.nodes.image) {
+        if (!selected_node || selected_node.type !== selected_node.type.schema.nodes.image) {
             return null;
         }
 

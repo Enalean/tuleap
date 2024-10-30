@@ -20,6 +20,7 @@
 import { describe, it, expect, vi } from "vitest";
 import type { EditorState } from "prosemirror-state";
 import { ImageNodeInserter } from "./ImageNodeInserter";
+import { buildCustomSchema } from "../../../custom_schema";
 
 describe("ImageNodeInserter", () => {
     it("Given image properties, then it should dispatch a Transaction replacing the current selection with a new image node", () => {
@@ -28,6 +29,7 @@ describe("ImageNodeInserter", () => {
         };
         const state = {
             tr: transaction,
+            schema: buildCustomSchema(),
         } as unknown as EditorState;
 
         const dispatch = vi.fn();

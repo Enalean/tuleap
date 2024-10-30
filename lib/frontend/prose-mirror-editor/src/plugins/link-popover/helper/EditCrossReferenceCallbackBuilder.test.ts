@@ -23,7 +23,7 @@ import { createLocalDocument } from "../../../helpers";
 import { EditCrossReferenceCallbackBuilder } from "./EditCrossReferenceCallbackBuilder";
 import { DispatchCrossReferenceUpdatedTransactionStub } from "../../../helpers/stubs/DispatchCrossReferenceUpdatedTransactionStub";
 import { EditorTextNodeCreator } from "../../../helpers/EditorTextNodeCreator";
-import { custom_schema } from "../../../custom_schema";
+import { buildCustomSchema } from "../../../custom_schema";
 import { EditorState } from "prosemirror-state";
 
 const editor_id = "aaaa-bbbb-cccc-dddd";
@@ -38,7 +38,7 @@ describe("EditCrossReferenceCallbackBuilder", () => {
         const dispatcher = DispatchCrossReferenceUpdatedTransactionStub();
         const callback = EditCrossReferenceCallbackBuilder(
             dispatcher,
-            EditorTextNodeCreator(EditorState.create({ schema: custom_schema })),
+            EditorTextNodeCreator(EditorState.create({ schema: buildCustomSchema() })),
         ).build(doc, editor_id, cursor_position);
 
         callback(cross_reference_text);

@@ -19,11 +19,13 @@
 
 import { describe, expect, it, vi } from "vitest";
 import type { EditorState } from "prosemirror-state";
-import { custom_schema } from "../../../custom_schema";
+import { buildCustomSchema } from "../../../custom_schema";
 import * as removeBlockquoteModule from "./remove-blockquote";
 import { toggleBlockQuote } from "./quote-command";
 import * as hasPreviousNodeTypeModule from "./has-previous-node-type";
 import * as addBlockquoteModule from "./add-blockquote";
+
+const custom_schema = buildCustomSchema();
 
 describe("QuoteCommand", () => {
     describe("toggleBlockQuote", () => {

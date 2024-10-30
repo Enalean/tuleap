@@ -20,7 +20,7 @@
 import { describe, it, expect, beforeEach } from "vitest";
 import type { Selection } from "prosemirror-state";
 import type { EditorNode } from "../../../types/internal-types";
-import { custom_schema } from "../../../custom_schema";
+import { buildCustomSchema } from "../../../custom_schema";
 import type { DetectParagraphsInSelection } from "./ParagraphsInSelectionDetector";
 import { ParagraphsInSelectionDetector } from "./ParagraphsInSelectionDetector";
 
@@ -33,12 +33,13 @@ const buildTreeWithNodes = (nodes: EditorNode[]): EditorNode => {
 };
 
 const selection = {} as Selection;
+const custom_schema = buildCustomSchema();
 
 describe("ParagraphsInSelectionDetector", () => {
     let detector: DetectParagraphsInSelection;
 
     beforeEach(() => {
-        detector = ParagraphsInSelectionDetector();
+        detector = ParagraphsInSelectionDetector(custom_schema);
     });
 
     it("When the selection contains a heading, a code block, or both, then it should return false", () => {

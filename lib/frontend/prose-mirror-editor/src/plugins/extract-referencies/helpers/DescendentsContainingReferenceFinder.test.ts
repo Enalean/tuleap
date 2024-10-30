@@ -22,13 +22,13 @@ import { describe, expect, it } from "vitest";
 import type { EditorNode } from "../../../types/internal-types";
 import { PositionsInDescendentsFinder } from "./DescendentsContainingReferenceFinder";
 import { DOMParser } from "prosemirror-model";
-import { custom_schema } from "../../../custom_schema";
+import { buildCustomSchema } from "../../../custom_schema";
 import { createLocalDocument } from "../../../helpers";
 
 function buildEditorNode(local_document: Document, content: string): EditorNode {
     const editor_content = local_document.createElement("div");
     editor_content.innerHTML = content;
-    return DOMParser.fromSchema(custom_schema).parse(editor_content);
+    return DOMParser.fromSchema(buildCustomSchema()).parse(editor_content);
 }
 
 describe("reference position finder", () => {

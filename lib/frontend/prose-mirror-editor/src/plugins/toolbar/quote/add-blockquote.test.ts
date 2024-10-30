@@ -19,14 +19,14 @@
 
 import { describe, expect, it, vi } from "vitest";
 import type { EditorState, Transaction } from "prosemirror-state";
-import { custom_schema } from "../../../custom_schema";
+import { buildCustomSchema } from "../../../custom_schema";
 import { addBlockQuote } from "./add-blockquote";
 
 describe("addBlockquote", () => {
     it("should return true", () => {
         const wrapMock = vi.fn().mockReturnValue({} as Transaction);
         const state = {
-            schema: custom_schema,
+            schema: buildCustomSchema(),
             selection: {
                 $from: {},
                 $to: {},

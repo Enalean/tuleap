@@ -21,12 +21,13 @@ import { chainCommands, exitCode, lift, toggleMark, wrapIn } from "prosemirror-c
 import type { Command } from "prosemirror-state";
 import { TextSelection } from "prosemirror-state";
 import { liftListItem, sinkListItem, splitListItem, wrapInList } from "prosemirror-schema-list";
-import { custom_schema } from "../../custom_schema";
 import { getHeadingCommand } from "./text-style/transform-text";
 import type { DetectSingleListInSelection } from "./list/SingleListInSelectionDetector";
+import type { Schema } from "prosemirror-model";
 
 export type ProseMirrorKeyMap = { [key: string]: Command };
 export function buildKeymap(
+    schema: Schema,
     detect_ordered_list: DetectSingleListInSelection,
     detect_bullet_list: DetectSingleListInSelection,
     nb_heading: number,
@@ -48,19 +49,19 @@ export function buildKeymap(
         }
     }
 
-    bind("Mod-b", toggleMark(custom_schema.marks.strong));
-    bind("Mod-B", toggleMark(custom_schema.marks.strong));
+    bind("Mod-b", toggleMark(schema.marks.strong));
+    bind("Mod-B", toggleMark(schema.marks.strong));
 
-    bind("Mod-i", toggleMark(custom_schema.marks.em));
-    bind("Mod-I", toggleMark(custom_schema.marks.em));
+    bind("Mod-i", toggleMark(schema.marks.em));
+    bind("Mod-I", toggleMark(schema.marks.em));
 
-    bind("Mod-`", toggleMark(custom_schema.marks.code));
+    bind("Mod-`", toggleMark(schema.marks.code));
 
-    bind("Mod-,", toggleMark(custom_schema.marks.subscript));
-    bind("Mod-.", toggleMark(custom_schema.marks.superscript));
+    bind("Mod-,", toggleMark(schema.marks.subscript));
+    bind("Mod-.", toggleMark(schema.marks.superscript));
 
     const listCommand = chainCommands(exitCode, (state, dispatch) => {
-        const node_type = custom_schema.nodes.bullet_list;
+        const node_type = schema.nodes.bullet_list;
         if (detect_bullet_list.doesSelectionContainOnlyASingleList(state.doc, state.selection)) {
             return lift(state, dispatch);
         }
@@ -70,7 +71,7 @@ export function buildKeymap(
     });
 
     const olistCommand = chainCommands(exitCode, (state, dispatch) => {
-        const node_type = custom_schema.nodes.ordered_list;
+        const node_type = schema.nodes.ordered_list;
         if (detect_ordered_list.doesSelectionContainOnlyASingleList(state.doc, state.selection)) {
             return lift(state, dispatch);
         }
@@ -83,7 +84,7 @@ export function buildKeymap(
 
     bind("Shift-Ctrl-9", olistCommand);
 
-    const br = custom_schema.nodes.hard_break,
+    const br = schema.nodes.hard_break,
         cmd = chainCommands(exitCode, (state, dispatch) => {
             if (dispatch) {
                 const transaction = state.tr.replaceSelectionWith(br.create());
@@ -101,10 +102,10 @@ export function buildKeymap(
         bind(`Ctrl-Shift-${index + 1}`, getHeadingCommand(index + 1));
     });
 
-    bind("Enter", splitListItem(custom_schema.nodes.list_item));
-    bind("Shift-Tab", liftListItem(custom_schema.nodes.list_item));
-    bind("Tab", sinkListItem(custom_schema.nodes.list_item));
+    bind("Enter", splitListItem(schema.nodes.list_item));
+    bind("Shift-Tab", liftListItem(schema.nodes.list_item));
+    bind("Tab", sinkListItem(schema.nodes.list_item));
 
-    bind("Mod->", wrapIn(custom_schema.nodes.blockquote));
+    bind("Mod->", wrapIn(schema.nodes.blockquote));
     return keys;
 }

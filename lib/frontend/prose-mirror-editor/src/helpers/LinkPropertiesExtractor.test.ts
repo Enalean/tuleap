@@ -23,7 +23,7 @@ import { FindEditorNodeAtPositionStub } from "./stubs/FindEditorNodeAtPositionSt
 import { DetectLinkNodeStub } from "../plugins/link-popover/helper/stubs/DetectLinkNodeStub";
 import { createLocalDocument } from "./index";
 import type { EditorNode } from "../types/internal-types";
-import { custom_schema } from "../custom_schema";
+import { buildCustomSchema } from "../custom_schema";
 import { DOMParser } from "prosemirror-model";
 
 describe("LinkPropertiesExtractor", () => {
@@ -63,7 +63,7 @@ describe("LinkPropertiesExtractor", () => {
                         title: null,
                         href,
                     },
-                    type: DOMParser.fromSchema(custom_schema).schema.marks.link,
+                    type: DOMParser.fromSchema(buildCustomSchema()).schema.marks.link,
                 },
             ],
         } as unknown as EditorNode;

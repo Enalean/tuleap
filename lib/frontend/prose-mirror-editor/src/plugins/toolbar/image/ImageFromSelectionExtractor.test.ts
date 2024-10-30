@@ -20,7 +20,7 @@
 import { describe, it, expect } from "vitest";
 import type { Selection } from "prosemirror-state";
 import { FindEditorNodeAtPositionStub } from "../../../helpers/stubs/FindEditorNodeAtPositionStub";
-import { custom_schema } from "../../../custom_schema";
+import { buildCustomSchema } from "../../../custom_schema";
 import type { EditorNode } from "../../../types/internal-types";
 import { ImageFromSelectionExtractor } from "./ImageFromSelectionExtractor";
 
@@ -34,7 +34,7 @@ describe("ImageFromSelectionExtractor", () => {
 
         const extractor = ImageFromSelectionExtractor(
             FindEditorNodeAtPositionStub.withNode({
-                type: custom_schema.nodes.image,
+                type: buildCustomSchema().nodes.image,
             } as EditorNode),
         );
 
@@ -64,7 +64,7 @@ describe("ImageFromSelectionExtractor", () => {
 
         const extractor = ImageFromSelectionExtractor(
             FindEditorNodeAtPositionStub.withNode({
-                type: custom_schema.nodes.hard_break,
+                type: buildCustomSchema().nodes.hard_break,
             } as EditorNode),
         );
 
@@ -86,7 +86,7 @@ describe("ImageFromSelectionExtractor", () => {
 
         const extractor = ImageFromSelectionExtractor(
             FindEditorNodeAtPositionStub.withNode({
-                type: custom_schema.nodes.image,
+                type: buildCustomSchema().nodes.image,
                 attrs: image_node_attributes,
             } as unknown as EditorNode),
         );
