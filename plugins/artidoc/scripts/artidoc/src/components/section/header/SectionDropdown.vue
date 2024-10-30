@@ -79,7 +79,7 @@ import type { ArtidocSection } from "@/helpers/artidoc-section.type";
 import { isPendingArtifactSection, isArtifactSection } from "@/helpers/artidoc-section.type";
 import type { Dropdown } from "@tuleap/tlp-dropdown";
 import { createDropdown } from "@tuleap/tlp-dropdown";
-import { computed, onMounted, ref, watch } from "vue";
+import { computed, ref, watch } from "vue";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import { CONFIGURATION_STORE } from "@/stores/configuration-store";
 import { moveDropdownMenuInDocumentBody } from "@/helpers/move-dropdownmenu-in-document-body";
@@ -109,14 +109,9 @@ const trigger_title = $gettext("Open contextual menu");
 
 let dropdown: Dropdown | null = null;
 
-onMounted(() => {
-    if (menu.value) {
-        moveDropdownMenuInDocumentBody(document, menu.value);
-    }
-});
-
 watch(trigger, () => {
     if (dropdown === null && trigger.value && menu.value) {
+        moveDropdownMenuInDocumentBody(document, menu.value);
         dropdown = createDropdown(trigger.value, {
             dropdown_menu: menu.value,
         });
