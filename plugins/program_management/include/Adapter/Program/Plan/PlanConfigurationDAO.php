@@ -219,7 +219,10 @@ final class PlanConfigurationDAO extends DataAccessObject implements SaveNewPlan
         return count($rows) > 0;
     }
 
-    public function retrievePlan(ProgramIdentifier $program_identifier): PlanConfiguration
+    /**
+     * @return Option<PlanConfiguration>
+     */
+    public function retrievePlan(ProgramIdentifier $program_identifier): Option
     {
         $sql_config = <<<EOSQL
         SELECT program_increment_tracker_id,
@@ -233,6 +236,10 @@ final class PlanConfigurationDAO extends DataAccessObject implements SaveNewPlan
         EOSQL;
 
         $config = $this->getDB()->row($sql_config, $program_identifier->getId());
+
+        if (! $config || $config['program_increment_tracker_id'] === null) {
+            return Option::nothing(PlanConfiguration::class);
+        }
 
         $tracker_ids_can_be_planned = [];
         $tracker_rows               = $this->getDB()->run(
@@ -252,7 +259,7 @@ final class PlanConfigurationDAO extends DataAccessObject implements SaveNewPlan
             $user_group_ids_that_can_prioritize[] = $row['user_group_id'];
         }
 
-        return PlanConfiguration::fromRaw(
+        return Option::fromValue(PlanConfiguration::fromRaw(
             $program_identifier,
             $config['program_increment_tracker_id'],
             $config['program_increment_label'],
@@ -262,6 +269,6 @@ final class PlanConfigurationDAO extends DataAccessObject implements SaveNewPlan
             $config['iteration_sub_label'],
             $tracker_ids_can_be_planned,
             $user_group_ids_that_can_prioritize
-        );
+        ));
     }
 }

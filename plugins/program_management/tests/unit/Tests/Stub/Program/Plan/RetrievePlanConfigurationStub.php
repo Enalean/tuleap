@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Tests\Stub\Program\Plan;
 
+use Tuleap\Option\Option;
 use Tuleap\ProgramManagement\Domain\Program\Plan\PlanConfiguration;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 
@@ -41,13 +42,13 @@ final readonly class RetrievePlanConfigurationStub implements \Tuleap\ProgramMan
         return new self([$plan_configuration, ...$other_configurations]);
     }
 
-    public function retrievePlan(ProgramIdentifier $program_identifier): PlanConfiguration
+    public function retrievePlan(ProgramIdentifier $program_identifier): Option
     {
         foreach ($this->configurations as $configuration) {
             if ($configuration->program_identifier->getId() === $program_identifier->getId()) {
-                return $configuration;
+                return Option::fromValue($configuration);
             }
         }
-        throw new \LogicException('Could not find configuration for program #' . $program_identifier->getId());
+        return Option::nothing(PlanConfiguration::class);
     }
 }

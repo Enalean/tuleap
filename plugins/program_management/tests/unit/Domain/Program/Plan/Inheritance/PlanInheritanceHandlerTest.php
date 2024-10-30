@@ -72,7 +72,7 @@ final class PlanInheritanceHandlerTest extends TestCase
         $this->save_new_plan   = SaveNewPlanConfigurationStub::withCount();
     }
 
-    /** @return Ok<void> | Err<Fault> */
+    /** @return Ok<null> | Err<Fault> */
     private function handle(): Ok|Err
     {
         $project_members_user_group_id         = \ProjectUGroup::PROJECT_MEMBERS;
@@ -105,7 +105,7 @@ final class PlanInheritanceHandlerTest extends TestCase
                 )
             ),
             new PlanConfigurationMapper(),
-            $this->save_new_plan
+            $this->save_new_plan,
         );
         return $handler->handle(
             new ProgramInheritanceMapping(

@@ -1660,7 +1660,7 @@ final class program_managementPlugin extends Plugin implements PluginWithService
             new PlanInheritanceHandler(
                 $plan_configuration_dao,
                 new PlanConfigurationMapper(),
-                $plan_configuration_dao
+                $plan_configuration_dao,
             ),
             $this->getLogger()
         );

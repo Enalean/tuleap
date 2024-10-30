@@ -25,7 +25,9 @@ namespace Tuleap\ProgramManagement\Domain\Program\Plan\Inheritance;
 use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
+use Tuleap\NeverThrow\Result;
 use Tuleap\ProgramManagement\Domain\Program\Plan\NewPlanConfiguration;
+use Tuleap\ProgramManagement\Domain\Program\Plan\PlanConfiguration;
 use Tuleap\ProgramManagement\Domain\Program\Plan\RetrievePlanConfiguration;
 use Tuleap\ProgramManagement\Domain\Program\Plan\SaveNewPlanConfiguration;
 
@@ -39,14 +41,18 @@ final readonly class PlanInheritanceHandler
     }
 
     /**
-     * @return Ok<void> | Err<Fault>
+     * @return Ok<null> | Err<Fault>
      */
     public function handle(ProgramInheritanceMapping $mapping): Ok|Err
     {
-        $configuration = $this->retrieve_plan->retrievePlan($mapping->source_program);
-        return $this->mapper->mapFromTemplateProgramToNewProgram($mapping, $configuration)
-            ->map(function (NewPlanConfiguration $new_plan_configuration) {
-                $this->save_new_plan->save($new_plan_configuration);
-            });
+        return $this->retrieve_plan->retrievePlan($mapping->source_program)
+            ->mapOr(
+                fn(PlanConfiguration $configuration) => $this->mapper->mapFromTemplateProgramToNewProgram($mapping, $configuration)
+                    ->map(function (NewPlanConfiguration $new_plan_configuration) {
+                        $this->save_new_plan->save($new_plan_configuration);
+                        return null;
+                    }),
+                Result::ok(null)
+            );
     }
 }

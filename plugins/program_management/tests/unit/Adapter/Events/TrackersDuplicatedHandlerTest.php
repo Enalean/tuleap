@@ -94,7 +94,7 @@ final class TrackersDuplicatedHandlerTest extends TestCase
             new PlanInheritanceHandler(
                 $this->retrieve_plan,
                 new PlanConfigurationMapper(),
-                $this->save_new_plan
+                $this->save_new_plan,
             ),
             $this->logger
         );
