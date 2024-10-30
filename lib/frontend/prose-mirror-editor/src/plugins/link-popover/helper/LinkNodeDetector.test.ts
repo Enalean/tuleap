@@ -22,9 +22,11 @@ import { EditorState } from "prosemirror-state";
 
 import { DOMParser } from "prosemirror-model";
 import type { EditorNode } from "../../../types/internal-types";
-import { custom_schema } from "../../../custom_schema";
+import { buildCustomSchema } from "../../../custom_schema";
 import type { DetectLinkNode } from "./LinkNodeDetector";
 import { LinkNodeDetector } from "./LinkNodeDetector";
+
+const custom_schema = buildCustomSchema();
 
 describe("LinkNodeDetector", () => {
     let detector: DetectLinkNode;

@@ -22,7 +22,7 @@ import { EditorState } from "prosemirror-state";
 import { EditorView } from "prosemirror-view";
 import { DOMParser } from "prosemirror-model";
 import { dropCursor } from "prosemirror-dropcursor";
-import { custom_schema } from "./custom_schema";
+import { buildCustomSchema } from "./custom_schema";
 import type { PluginDropFile } from "./plugins";
 import {
     initLinkPopoverPlugin,
@@ -50,7 +50,7 @@ export type UseEditorType = {
 };
 
 export async function useEditor(
-    query_selector: HTMLElement,
+    editor_element: HTMLElement,
     setupUploadPlugin: (gettext_provider: GetText) => PluginDropFile,
     onChange: (new_text_content: string) => void,
     initial_content: HTMLElement,
@@ -66,20 +66,21 @@ export async function useEditor(
 
     const upload_plugin = setupUploadPlugin(gettext_provider);
 
+    const schema = buildCustomSchema();
     const editor_id = uuidv4();
     const plugins: Plugin[] = [
         initPluginInput(onChange),
         upload_plugin,
         dropCursor(),
         initLinkPopoverPlugin(document, gettext_provider, editor_id),
-        ...setupToolbar(toolbar_bus),
+        ...setupToolbar(schema, toolbar_bus),
         initPluginTransformInput(project_id, references),
         initPluginCloseMarksAfterSpace(),
         initPluginAutomagicLinks(),
     ];
 
     const state: EditorState = getState(initial_content);
-    const editor: EditorView = new EditorView(query_selector, {
+    const editor: EditorView = new EditorView(editor_element, {
         state,
         attributes: {
             class: "ProseMirror-focused",
@@ -94,8 +95,8 @@ export async function useEditor(
 
     function getState(initial_content: Node): EditorState {
         return EditorState.create({
-            doc: DOMParser.fromSchema(custom_schema).parse(initial_content),
-            schema: custom_schema,
+            doc: DOMParser.fromSchema(schema).parse(initial_content),
+            schema,
             plugins,
         });
     }

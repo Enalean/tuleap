@@ -20,12 +20,13 @@
 import { closeMark } from "./close-mark";
 import { describe, expect, it, vi } from "vitest";
 import type { MarkType } from "prosemirror-model";
-import { custom_schema } from "../../custom_schema";
 import type { EditorView } from "prosemirror-view";
+import { buildCustomSchema } from "../../custom_schema";
 
 describe("closeMark", () => {
     describe("When the cursor is in the end of the mark", () => {
         it("should close the mark", () => {
+            const custom_schema = buildCustomSchema();
             const mark: MarkType = custom_schema.marks.subscript;
             const toggleMarkMock = vi.fn().mockReturnValue(() => true);
             const view = {

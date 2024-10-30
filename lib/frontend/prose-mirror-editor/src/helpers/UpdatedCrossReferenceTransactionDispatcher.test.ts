@@ -24,14 +24,14 @@ import {
 } from "./UpdatedCrossReferenceTransactionDispatcher";
 import type { EditorView } from "prosemirror-view";
 import { EditorState } from "prosemirror-state";
-import { custom_schema } from "../custom_schema";
+import { buildCustomSchema } from "../custom_schema";
 import { EditorTextNodeCreator } from "./EditorTextNodeCreator";
 
 describe("UpdatedCrossReferenceTransactionDispatcher", () => {
     it('Given an UpdatedCrossReference, then it should dispatch an "updated-cross-reference" transaction', () => {
         const dispatch = vi.fn();
         const state = EditorState.create({
-            schema: custom_schema,
+            schema: buildCustomSchema(),
         });
 
         const dispatcher = UpdatedCrossReferenceTransactionDispatcher(

@@ -19,7 +19,7 @@
 
 import { describe, it, expect, vi } from "vitest";
 import { EditorState } from "prosemirror-state";
-import { custom_schema } from "../../../custom_schema";
+import { buildCustomSchema } from "../../../custom_schema";
 import { RemoveLinkCallbackBuilder } from "./RemoveLinkCallbackBuilder";
 import { createLocalDocument } from "../../../helpers";
 import * as popover_remover from "./create-link-popover";
@@ -34,7 +34,7 @@ describe("RemoveLinkCallbackBuilder", () => {
         const removePopover = vi.spyOn(popover_remover, "removePopover");
 
         const state = EditorState.create({
-            schema: custom_schema,
+            schema: buildCustomSchema(),
         });
 
         const dispatch = (): void => {

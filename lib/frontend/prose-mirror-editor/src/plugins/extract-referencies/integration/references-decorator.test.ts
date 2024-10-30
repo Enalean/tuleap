@@ -22,7 +22,7 @@ import { DOMParser } from "prosemirror-model";
 import { expect, describe, it } from "vitest";
 import { EditorState } from "prosemirror-state";
 import { createLocalDocument } from "../../../helpers";
-import { custom_schema } from "../../../custom_schema";
+import { buildCustomSchema } from "../../../custom_schema";
 import type { Decoration } from "prosemirror-view";
 import type { CrossReference } from "../reference-extractor";
 import { PositionsInDescendentsFinder } from "../helpers/DescendentsContainingReferenceFinder";
@@ -49,6 +49,8 @@ describe("references decorator for whole document", () => {
 
     function initEditorWithText(text: string): void {
         const editor_content = local_document.createElement("div");
+        const custom_schema = buildCustomSchema();
+
         editor_content.innerHTML = text;
         state = EditorState.create({
             doc: DOMParser.fromSchema(custom_schema).parse(editor_content),

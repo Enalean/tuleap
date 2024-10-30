@@ -20,7 +20,7 @@
 import { describe, it, expect, beforeEach } from "vitest";
 import type { Selection } from "prosemirror-state";
 import type { EditorNode } from "../../../types/internal-types";
-import { custom_schema } from "../../../custom_schema";
+import { buildCustomSchema } from "../../../custom_schema";
 import { CheckSelectedNodesHaveSameParentStub } from "./stub/CheckSelectedNodesHaveSameParentStub";
 import type { DetectPreformattedTextInSelection } from "./PreformattedTextInSelectionDetector";
 import { PreformattedTextInSelectionDetector } from "./PreformattedTextInSelectionDetector";
@@ -34,6 +34,7 @@ const buildTreeWithNodes = (nodes: EditorNode[]): EditorNode => {
 };
 
 const selection = {} as Selection;
+const custom_schema = buildCustomSchema();
 
 describe("PreformattedTextInSelectionDetector", () => {
     it("When the nodes inside the selection do not have the same parent, then it should return false", () => {

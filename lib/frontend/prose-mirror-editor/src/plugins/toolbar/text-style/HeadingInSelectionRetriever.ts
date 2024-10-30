@@ -18,7 +18,7 @@
  */
 
 import type { Selection } from "prosemirror-state";
-import { custom_schema } from "../../../custom_schema";
+import type { NodeType } from "prosemirror-model";
 import type { EditorNode } from "../../../types/internal-types";
 import type { Heading } from "./Heading";
 import type { CheckSelectedNodesHaveSameParent } from "./SelectedNodesHaveSameParentChecker";
@@ -29,11 +29,12 @@ export type RetrieveHeading = {
 
 export const HeadingInSelectionRetriever = (
     check_same_parent: CheckSelectedNodesHaveSameParent,
+    heading_node_type: NodeType,
 ): RetrieveHeading => {
     const retrieveHeadingAtCursorPosition = (selection: Selection): Heading | null => {
         const node_at_cursor_position = selection.$head.node();
 
-        return node_at_cursor_position.type === custom_schema.nodes.heading
+        return node_at_cursor_position.type === heading_node_type
             ? { level: node_at_cursor_position.attrs.level }
             : null;
     };
@@ -42,7 +43,7 @@ export const HeadingInSelectionRetriever = (
         let found_heading: EditorNode | undefined;
 
         tree.nodesBetween(selection.from, selection.to, (node) => {
-            if (node.type === custom_schema.nodes.heading) {
+            if (node.type === heading_node_type) {
                 found_heading = node;
             }
         });

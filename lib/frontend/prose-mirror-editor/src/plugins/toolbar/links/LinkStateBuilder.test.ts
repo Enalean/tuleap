@@ -23,14 +23,14 @@ import { LinkStateBuilder } from "./LinkStateBuilder";
 import { CheckIsMarkTypeRepeatedInSelectionStub } from "../../../helpers/stubs/CheckIsMarkTypeRepeatedInSelectionStub";
 import { ExtractLinkPropertiesStub } from "../../../helpers/stubs/ExtractLinkPropertiesStub";
 import { LinkState } from "./LinkState";
-import { custom_schema } from "../../../custom_schema";
+import { buildCustomSchema } from "../../../custom_schema";
 
 describe("LinkStateBuilder", () => {
     let state: EditorState;
 
     beforeEach(() => {
         state = EditorState.create({
-            schema: custom_schema,
+            schema: buildCustomSchema(),
         });
     });
 

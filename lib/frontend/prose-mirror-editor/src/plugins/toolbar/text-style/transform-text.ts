@@ -18,7 +18,6 @@
  */
 
 import type { Command, EditorState, Transaction } from "prosemirror-state";
-import { custom_schema } from "../../../custom_schema";
 import type { NodeType } from "prosemirror-model";
 
 const buildSetBlockTypeCommand =
@@ -36,10 +35,10 @@ const buildSetBlockTypeCommand =
         return true;
     };
 
-export const getPlainTextCommand = (): Command =>
-    buildSetBlockTypeCommand(custom_schema.nodes.paragraph);
-export const getFormattedTextCommand = (): Command =>
-    buildSetBlockTypeCommand(custom_schema.nodes.code_block);
+export const getPlainTextCommand = (node_type: NodeType): Command =>
+    buildSetBlockTypeCommand(node_type);
+export const getFormattedTextCommand = (node_type: NodeType): Command =>
+    buildSetBlockTypeCommand(node_type);
 
 export const getHeadingCommand =
     (level: number): Command =>
@@ -55,12 +54,12 @@ export const getHeadingCommand =
         const currentBlock = $from.parent;
 
         if (
-            currentBlock.type === custom_schema.nodes.heading &&
+            currentBlock.type === state.schema.nodes.heading &&
             currentBlock.attrs.level === level
         ) {
-            dispatch(tr.setBlockType($from.pos, $to.pos, custom_schema.nodes.paragraph));
+            dispatch(tr.setBlockType($from.pos, $to.pos, state.schema.nodes.paragraph));
         } else {
-            dispatch(tr.setBlockType($from.pos, $to.pos, custom_schema.nodes.heading, { level }));
+            dispatch(tr.setBlockType($from.pos, $to.pos, state.schema.nodes.heading, { level }));
         }
 
         return true;

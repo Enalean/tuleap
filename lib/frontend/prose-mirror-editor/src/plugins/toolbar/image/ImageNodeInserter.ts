@@ -19,7 +19,6 @@
 
 import type { EditorState, Transaction } from "prosemirror-state";
 import type { ImageProperties } from "../../../types/internal-types";
-import { custom_schema } from "../../../custom_schema";
 
 export type InsertImageNode = {
     insertImage(image: ImageProperties): void;
@@ -30,7 +29,7 @@ export const ImageNodeInserter = (
     dispatch: (tr: Transaction) => void,
 ): InsertImageNode => ({
     insertImage: (image: ImageProperties): void => {
-        const node = custom_schema.nodes.image.create({
+        const node = state.schema.nodes.image.create({
             src: image.src,
             title: image.title,
             alt: image.title,

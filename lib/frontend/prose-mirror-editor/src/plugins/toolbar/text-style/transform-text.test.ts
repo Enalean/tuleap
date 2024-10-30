@@ -18,11 +18,13 @@
  */
 
 import { describe, it, expect, beforeEach, vi } from "vitest";
-import type { EditorState, Transaction } from "prosemirror-state";
+import type { Command, EditorState, Transaction } from "prosemirror-state";
 import type { Attrs, NodeType } from "prosemirror-model";
 import type { EditorNode } from "../../../types/internal-types";
-import { custom_schema } from "../../../custom_schema";
+import { buildCustomSchema } from "../../../custom_schema";
 import { getFormattedTextCommand, getHeadingCommand, getPlainTextCommand } from "./transform-text";
+
+const custom_schema = buildCustomSchema();
 
 describe("transform-text", () => {
     let transaction_containing_new_block_type: Transaction,
@@ -43,6 +45,7 @@ describe("transform-text", () => {
 
     const buildState = (current_block: EditorNode): EditorState =>
         ({
+            schema: custom_schema,
             tr: {
                 setBlockType,
             } as unknown as Transaction,
@@ -121,9 +124,14 @@ describe("transform-text", () => {
     });
 
     describe("getPlainTextCommand()", () => {
+        let command: Command;
+
+        beforeEach(() => {
+            command = getPlainTextCommand(custom_schema.nodes.paragraph);
+        });
+
         it("Given that no dispatch function was provided to the Command, then it should return true", () => {
             const state = {} as EditorState;
-            const command = getPlainTextCommand();
 
             expect(command(state)).toBe(true);
         });
@@ -132,7 +140,7 @@ describe("transform-text", () => {
             const current_block = buildCurrentBlock(custom_schema.nodes.heading, { level: 1 });
             const state = buildState(current_block);
 
-            const command_result = getPlainTextCommand()(state, dispatch);
+            const command_result = command(state, dispatch);
 
             expect(setBlockType).toHaveBeenCalledWith(
                 state.selection.$from.pos,
@@ -145,9 +153,14 @@ describe("transform-text", () => {
     });
 
     describe("getFormattedTextCommand()", () => {
+        let command: Command;
+
+        beforeEach(() => {
+            command = getFormattedTextCommand(custom_schema.nodes.code_block);
+        });
+
         it("Given that no dispatch function was provided to the Command, then it should return true", () => {
             const state = {} as EditorState;
-            const command = getFormattedTextCommand();
 
             expect(command(state)).toBe(true);
         });
@@ -156,7 +169,7 @@ describe("transform-text", () => {
             const current_block = buildCurrentBlock(custom_schema.nodes.heading, { level: 1 });
             const state = buildState(current_block);
 
-            const command_result = getFormattedTextCommand()(state, dispatch);
+            const command_result = command(state, dispatch);
 
             expect(setBlockType).toHaveBeenCalledWith(
                 state.selection.$from.pos,

@@ -20,7 +20,7 @@
 import { describe, beforeEach, it, expect } from "vitest";
 import { EditorState } from "prosemirror-state";
 import type { EditorNode } from "../../../types/internal-types";
-import { custom_schema } from "../../../custom_schema";
+import { buildCustomSchema } from "../../../custom_schema";
 import { createCrossReferenceDecoration } from "../../../helpers/create-cross-reference-decoration";
 import { FindCrossReferenceDecorationStub } from "./stubs/FindCrossReferenceDecorationStub";
 import { ReplaceCrossReferenceDecorationStub } from "./stubs/ReplaceCrossReferenceDecorationStub";
@@ -30,7 +30,7 @@ describe("UpdateCrossReferenceHandler", () => {
     let state: EditorState;
 
     beforeEach(() => {
-        state = EditorState.create({ schema: custom_schema });
+        state = EditorState.create({ schema: buildCustomSchema() });
     });
 
     it("When no cross reference has been updated, then it should return null", () => {

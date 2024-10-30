@@ -19,7 +19,7 @@
 
 import { describe, expect, it, vi } from "vitest";
 import type { EditorState } from "prosemirror-state";
-import { custom_schema } from "../../../custom_schema";
+import { buildCustomSchema } from "../../../custom_schema";
 import { removeBlockQuote } from "./remove-blockquote";
 import type { NodeRange } from "prosemirror-model";
 
@@ -32,7 +32,7 @@ describe("removeBlockquote", () => {
             };
         });
         const state = {
-            schema: custom_schema,
+            schema: buildCustomSchema(),
             selection: {
                 $from: {
                     blockRange: vi.fn().mockReturnValue({} as NodeRange),

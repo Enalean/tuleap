@@ -21,7 +21,7 @@ import { describe, it, expect } from "vitest";
 import { DOMParser } from "prosemirror-model";
 import { EditorView } from "prosemirror-view";
 import { EditorState } from "prosemirror-state";
-import { custom_schema } from "../../../custom_schema";
+import { buildCustomSchema } from "../../../custom_schema";
 import { createCrossReferenceDecoration } from "../../../helpers/create-cross-reference-decoration";
 import { EditorTextNodeCreator } from "../../../helpers/EditorTextNodeCreator";
 import { createLocalDocument } from "../../../helpers";
@@ -32,6 +32,7 @@ describe("CrossReferenceDecorationReplacer", () => {
         const editor_content = createLocalDocument().createElement("div");
         editor_content.textContent = "Reference art #123 and art #456";
 
+        const custom_schema = buildCustomSchema();
         const state = EditorState.create({
             schema: custom_schema,
             doc: DOMParser.fromSchema(custom_schema).parse(editor_content),

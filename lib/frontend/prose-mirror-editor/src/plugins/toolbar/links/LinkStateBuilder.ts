@@ -18,7 +18,6 @@
  */
 
 import type { EditorState } from "prosemirror-state";
-import { custom_schema } from "../../../custom_schema";
 import type { CheckIsMarkTypeRepeatedInSelection } from "../../../helpers/IsMarkTypeRepeatedInSelectionChecker";
 import type { ExtractLinkProperties } from "../../../helpers/LinkPropertiesExtractor";
 import { getWrappingNodeInfo } from "../helper/NodeInfoRetriever";
@@ -33,10 +32,12 @@ export const LinkStateBuilder = (
     extract_link_properties: ExtractLinkProperties,
 ): BuildLinkState => ({
     build: (state: EditorState): LinkState => {
+        const link_mark_type = state.schema.marks.link;
+
         if (
             check_is_mark_type_repeated_in_selection.isMarkTypeRepeatedInSelection(
                 state,
-                custom_schema.marks.link,
+                link_mark_type,
             )
         ) {
             return LinkState.disabled();
@@ -49,7 +50,7 @@ export const LinkStateBuilder = (
 
         const { corresponding_node } = getWrappingNodeInfo(
             state.selection.$from,
-            custom_schema.marks.link,
+            link_mark_type,
             state,
         );
         return LinkState.forLinkCreation(corresponding_node.textContent ?? "");

@@ -20,9 +20,11 @@
 import { describe, expect, it, vi } from "vitest";
 import { getWordOrUrlJustBeforeCursor } from "./get-word-or-url-just-before-cursor";
 import type { EditorState } from "prosemirror-state";
-import { custom_schema } from "../custom_schema";
+import { buildCustomSchema } from "../custom_schema";
 import { createLocalDocument } from "./helper-for-test";
 import { DOMParser } from "prosemirror-model";
+
+const custom_schema = buildCustomSchema();
 
 describe("getWordOrUrlJustBeforeCursor", () => {
     describe("when text before cursor is not empty", () => {

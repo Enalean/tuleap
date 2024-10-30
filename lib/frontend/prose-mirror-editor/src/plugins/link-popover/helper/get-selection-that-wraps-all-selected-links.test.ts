@@ -22,7 +22,9 @@ import type { EditorState } from "prosemirror-state";
 import { DOMParser } from "prosemirror-model";
 import { getSelectionThatWrapsAllSelectedLinks } from "./get-selection-that-wraps-all-selected-links";
 import { createLocalDocument } from "../../../helpers";
-import { custom_schema } from "../../../custom_schema";
+import { buildCustomSchema } from "../../../custom_schema";
+
+const custom_schema = buildCustomSchema();
 
 describe("getSelectionThatWrapsAllSelectedLinks", () => {
     describe("When the user selects a part of a link", () => {

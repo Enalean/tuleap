@@ -20,9 +20,9 @@
 
 import { beforeEach, describe, expect, it } from "vitest";
 import { EditorState } from "prosemirror-state";
-import { createLocalDocument } from "../../../helpers/helper-for-test";
+import { createLocalDocument } from "../../../helpers";
 import { DOMParser } from "prosemirror-model";
-import { custom_schema } from "../../../custom_schema";
+import { buildCustomSchema } from "../../../custom_schema";
 import { getWrappingNodeInfo } from "./NodeInfoRetriever";
 
 describe("getWrappingNodeInfo", () => {
@@ -30,6 +30,8 @@ describe("getWrappingNodeInfo", () => {
     beforeEach(() => {
         const local_document: Document = createLocalDocument();
         const editor_content = local_document.createElement("div");
+        const custom_schema = buildCustomSchema();
+
         editor_content.innerHTML = "standard text with <a href='https://example.com'>link</a>";
         state = EditorState.create({
             doc: DOMParser.fromSchema(custom_schema).parse(editor_content),

@@ -21,7 +21,7 @@ import { describe, expect, it, vi } from "vitest";
 import type { EditorState } from "prosemirror-state";
 import { removeSelectedLinks } from "./remove-selected-links";
 import * as selectionModule from "./get-selection-that-wraps-all-selected-links";
-import { custom_schema } from "../../../custom_schema";
+import { buildCustomSchema } from "../../../custom_schema";
 
 describe("remove links", () => {
     describe("removeSelectedLinks", () => {
@@ -33,7 +33,7 @@ describe("remove links", () => {
             const dispatch_mock = vi.fn();
             const remove_mark_mock = vi.fn();
             const state = {
-                schema: custom_schema,
+                schema: buildCustomSchema(),
                 selection: {
                     from: 1,
                     to: 10,

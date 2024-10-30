@@ -22,7 +22,7 @@ import type { Selection } from "prosemirror-state";
 import type { EditorNode } from "../../../types/internal-types";
 import type { DetectSingleListInSelection } from "./SingleListInSelectionDetector";
 import { SingleListInSelectionDetector } from "./SingleListInSelectionDetector";
-import { custom_schema } from "../../../custom_schema";
+import { buildCustomSchema } from "../../../custom_schema";
 
 const buildTreeWithNodes = (nodes: EditorNode[]): EditorNode => {
     return {
@@ -33,6 +33,7 @@ const buildTreeWithNodes = (nodes: EditorNode[]): EditorNode => {
 };
 
 const selection = {} as Selection;
+const custom_schema = buildCustomSchema();
 
 describe("SingleListInSelectionDetector", () => {
     let bullet_list_detector: DetectSingleListInSelection,

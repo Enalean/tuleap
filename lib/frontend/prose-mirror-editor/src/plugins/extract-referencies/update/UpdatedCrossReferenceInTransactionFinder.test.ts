@@ -22,7 +22,7 @@ import { EditorState } from "prosemirror-state";
 import { UPDATED_CROSS_REFERENCE_TRANSACTION } from "../../../helpers/UpdatedCrossReferenceTransactionDispatcher";
 import type { UpdatedCrossReference } from "../../../helpers/UpdatedCrossReferenceTransactionDispatcher";
 import { EditorTextNodeCreator } from "../../../helpers/EditorTextNodeCreator";
-import { custom_schema } from "../../../custom_schema";
+import { buildCustomSchema } from "../../../custom_schema";
 import { UpdatedCrossReferenceInTransactionFinder } from "./UpdatedCrossReferenceInTransactionFinder";
 import type { FindUpdatedCrossReferenceInTransaction } from "./UpdatedCrossReferenceInTransactionFinder";
 
@@ -32,7 +32,7 @@ describe("UpdatedCrossReferenceInTransactionFinder", () => {
     beforeEach(() => {
         finder = UpdatedCrossReferenceInTransactionFinder();
         state = EditorState.create({
-            schema: custom_schema,
+            schema: buildCustomSchema(),
         });
     });
 

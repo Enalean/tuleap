@@ -18,11 +18,13 @@
  */
 
 import { describe, expect, it, vi } from "vitest";
-import { custom_schema } from "../../custom_schema";
+import { buildCustomSchema } from "../../custom_schema";
 import type { EditorView } from "prosemirror-view";
 import { closeAllCurrentMarks } from "./close-all-marks";
 import * as closeMarkModule from "./close-mark";
 import { toggleMark } from "prosemirror-commands";
+
+const custom_schema = buildCustomSchema();
 
 describe("closeAllCurrentMarks", () => {
     describe("When the current mark is in the list of marks to close", () => {
@@ -31,6 +33,7 @@ describe("closeAllCurrentMarks", () => {
             const subscript_mark = custom_schema.marks.subscript.create();
             const view = {
                 state: {
+                    schema: custom_schema,
                     selection: {
                         $from: {
                             marks: vi.fn().mockReturnValue([subscript_mark]),
@@ -48,6 +51,7 @@ describe("closeAllCurrentMarks", () => {
             const superscript_mark = custom_schema.marks.superscript.create();
             const view = {
                 state: {
+                    schema: custom_schema,
                     selection: {
                         $from: {
                             marks: vi.fn().mockReturnValue([superscript_mark]),
@@ -66,6 +70,7 @@ describe("closeAllCurrentMarks", () => {
             const closeMarkMock = vi.spyOn(closeMarkModule, "closeMark").mockReturnValue(false);
             const view = {
                 state: {
+                    schema: custom_schema,
                     selection: {
                         $from: {
                             marks: vi.fn().mockReturnValue([custom_schema.marks.link.create()]),

@@ -19,7 +19,7 @@
 
 import { describe, it, expect } from "vitest";
 import { EditorState } from "prosemirror-state";
-import { custom_schema } from "../custom_schema";
+import { buildCustomSchema } from "../custom_schema";
 import { EditorTextNodeCreator } from "./EditorTextNodeCreator";
 
 describe("EditorTextNodeCreator", () => {
@@ -27,7 +27,7 @@ describe("EditorTextNodeCreator", () => {
         const text_content = "some content";
         const node = EditorTextNodeCreator(
             EditorState.create({
-                schema: custom_schema,
+                schema: buildCustomSchema(),
             }),
         ).create(text_content);
 
