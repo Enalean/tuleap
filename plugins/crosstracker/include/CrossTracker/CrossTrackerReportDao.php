@@ -20,6 +20,7 @@
 
 namespace Tuleap\CrossTracker;
 
+use ParagonIE\EasyDB\EasyDB;
 use Tuleap\DB\DataAccessObject;
 
 class CrossTrackerReportDao extends DataAccessObject implements SearchCrossTrackerWidget
@@ -52,20 +53,13 @@ class CrossTrackerReportDao extends DataAccessObject implements SearchCrossTrack
 
     public function updateReport($report_id, array $trackers, $expert_query, bool $expert_mode)
     {
-        $this->getDB()->beginTransaction();
-
-        try {
-            $this->getDB()->run('DELETE FROM plugin_crosstracker_report_tracker WHERE report_id = ?', $report_id);
+        $this->getDB()->tryFlatTransaction(function (EasyDB $db) use ($expert_query, $trackers, $expert_mode, $report_id) {
+            $db->run('DELETE FROM plugin_crosstracker_report_tracker WHERE report_id = ?', $report_id);
             if (! $expert_mode) {
                 $this->addTrackersToReport($trackers, $report_id);
             }
             $this->updateExpertQuery($report_id, $expert_query, $expert_mode);
-        } catch (\PDOException $ex) {
-            $this->getDB()->rollBack();
-            return;
-        }
-
-        $this->getDB()->commit();
+        });
     }
 
     private function updateExpertQuery($report_id, $expert_query, bool $expert_mode)
