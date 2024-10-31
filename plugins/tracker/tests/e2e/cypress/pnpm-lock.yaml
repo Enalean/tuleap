@@ -1,0 +1,16 @@
+lockfileVersion: '6.0'
+
+settings:
+  autoInstallPeers: false
+  excludeLinksFromLockfile: false
+
+devDependencies:
+  '@tuleap/core-constants':
+    specifier: workspace:^
+    version: link:../../../../../lib/frontend/constants
+  '@tuleap/cypress-configurator':
+    specifier: workspace:*
+    version: link:../../../../../lib/test-utils/cypress-configurator
+  '@tuleap/cypress-utilities-support':
+    specifier: workspace:*
+    version: link:../../../../../lib/test-utils/cypress-utilities-support
