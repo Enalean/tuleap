@@ -49,21 +49,26 @@ final class CrossTrackerReportDaoTest extends TestIntegrationTestCase
         $second_tracker = $this->tracker_builder->buildTracker(self::PROJECT_ID, 'bugs');
         $this->tracker_builder->buildTracker(self::PROJECT_ID, 'tasks'); // To check that not all trackers are used
 
-        $report_id = $this->createAndRetrieveEmptyReport();
+        $report_id = $this->createAndRetrieveReport();
         $this->updateAndRetrieveDefaultModeReport($report_id, $first_tracker, $second_tracker);
+        $this->cloneAndRetrieveReport($report_id, $first_tracker, $second_tracker);
         $this->checkTrackersAreUsed($first_tracker, $second_tracker);
         $this->updateAndRetrieveExpertModeReport($report_id);
         $this->deleteAndRetrieve($report_id);
     }
 
-    private function createAndRetrieveEmptyReport(): int
+    private function createAndRetrieveReport(): int
     {
-        $report_id = (int) $this->report_dao->create();
+        $result = $this->creator->createReportAndReturnLastId(ProjectDashboardController::DASHBOARD_TYPE);
+        self::assertTrue(Result::isOk($result));
+        $report_id = $result->value;
 
-        $retrieved_report = $this->report_dao->searchReportById($report_id);
+        $retrieved_report   = $this->report_dao->searchReportById($report_id);
+        $expected_tql_query = "SELECT @pretty_title, @submitted_by, @last_update_date, @status, @assigned_to FROM @project = 'self' WHERE @status = OPEN() ORDER BY @last_update_date DESC";
+
         self::assertNotNull($retrieved_report);
-        self::assertSame('', $retrieved_report['expert_query']);
-        self::assertSame(0, $retrieved_report['expert_mode']);
+        self::assertSame(1, $retrieved_report['expert_mode']);
+        self::assertSame($expected_tql_query, $retrieved_report['expert_query']);
 
         return $report_id;
     }
@@ -85,6 +90,28 @@ final class CrossTrackerReportDaoTest extends TestIntegrationTestCase
         self::assertCount(2, $retrieved_trackers);
         self::assertContains($first_tracker->getId(), $retrieved_trackers);
         self::assertContains($second_tracker->getId(), $retrieved_trackers);
+    }
+
+    private function cloneAndRetrieveReport(int $report_id, \Tracker $first_tracker, \Tracker $second_tracker): void
+    {
+        $inheritor_project_id = 137;
+
+        $expert_query = '@title != ""';
+        $this->report_dao->updateReport($report_id, [$first_tracker, $second_tracker], $expert_query, false);
+
+        $cloned_report_id      = $this->report_dao->cloneReport($report_id);
+        $mapped_first_tracker  = $this->tracker_builder->buildTracker($inheritor_project_id, 'stories');
+        $mapped_second_tracker = $this->tracker_builder->buildTracker($inheritor_project_id, 'bugs');
+        $this->report_dao->addTrackersToReport($cloned_report_id, [$mapped_first_tracker->getId(), $mapped_second_tracker->getId()]);
+
+        $retrieved_clone = $this->report_dao->searchReportById($cloned_report_id);
+        self::assertNotNull($retrieved_clone);
+        self::assertSame($expert_query, $retrieved_clone['expert_query']);
+        self::assertSame(0, $retrieved_clone['expert_mode']);
+        $cloned_trackers = $this->report_dao->searchReportTrackersById($cloned_report_id);
+        self::assertCount(2, $cloned_trackers);
+        self::assertContains($mapped_first_tracker->getId(), $cloned_trackers);
+        self::assertContains($mapped_second_tracker->getId(), $cloned_trackers);
     }
 
     private function checkTrackersAreUsed(\Tracker $first_tracker, \Tracker $second_tracker): void
@@ -126,20 +153,6 @@ final class CrossTrackerReportDaoTest extends TestIntegrationTestCase
 
         $sql_result         = $this->report_dao->searchReportById($last_report_id);
         $expected_tql_query = 'SELECT @pretty_title, @submitted_by, @last_update_date, @status FROM @project = MY_PROJECTS() WHERE @status = OPEN() AND @assigned_to = MYSELF() ORDER BY @last_update_date DESC';
-
-        self::assertNotNull($sql_result);
-        self::assertSame(1, $sql_result['expert_mode']);
-        self::assertSame($expected_tql_query, $sql_result['expert_query']);
-    }
-
-    public function testItCreatesANewExpertReportFromProjectDashboard(): void
-    {
-        $result = $this->creator->createReportAndReturnLastId(ProjectDashboardController::DASHBOARD_TYPE);
-        self::assertTrue(Result::isOk($result));
-        $last_report_id = $result->value;
-
-        $sql_result         = $this->report_dao->searchReportById($last_report_id);
-        $expected_tql_query = "SELECT @pretty_title, @submitted_by, @last_update_date, @status, @assigned_to FROM @project = 'self' WHERE @status = OPEN() ORDER BY @last_update_date DESC";
 
         self::assertNotNull($sql_result);
         self::assertSame(1, $sql_result['expert_mode']);

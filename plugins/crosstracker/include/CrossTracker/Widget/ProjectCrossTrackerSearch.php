@@ -26,6 +26,7 @@ use Project;
 use TemplateRendererFactory;
 use Tuleap\CrossTracker\CrossTrackerReportCreator;
 use Tuleap\CrossTracker\CrossTrackerReportDao;
+use Tuleap\CrossTracker\Report\ReportInheritanceHandler;
 use Tuleap\Layout\CssAssetCollection;
 use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
 use Tuleap\Layout\IncludeCoreAssets;
@@ -40,8 +41,10 @@ class ProjectCrossTrackerSearch extends Widget
 {
     public const NAME = 'crosstrackersearch';
 
-    public function __construct(private readonly CrossTrackerReportCreator $report_creator)
-    {
+    public function __construct(
+        private readonly CrossTrackerReportCreator $report_creator,
+        private readonly ReportInheritanceHandler $inheritance_handler,
+    ) {
         parent::__construct(self::NAME);
     }
 
@@ -119,52 +122,8 @@ class ProjectCrossTrackerSearch extends Widget
         $owner_id,
         $owner_type,
         MappingRegistry $mapping_registry,
-    ) {
-        $content_id      = $this->getDao()->create();
-        $tracker_factory = $this->getTrackerFactory();
-
-        $trackers_existing_widget = $this->getTrackers($id);
-        $trackers_new_widget      = [];
-
-        foreach ($trackers_existing_widget as $tracker) {
-            if ($this->owner_id == $tracker->getGroupId()) {
-                $trackers_new_widget[] = $tracker_factory->getTrackerByShortnameAndProjectId(
-                    $tracker->getItemName(),
-                    $owner_id
-                );
-            } else {
-                $trackers_new_widget[] = $tracker;
-            }
-        }
-
-        $this->getDao()->addTrackersToReport($trackers_new_widget, $content_id);
-
-        return $content_id;
-    }
-
-    /**
-     * @return \Tracker[]
-     */
-    private function getTrackers($report_id)
-    {
-        $tracker_factory = $this->getTrackerFactory();
-        $tracker_ids     = $this->getDao()->searchReportTrackersById($report_id);
-        $trackers        = [];
-        foreach ($tracker_ids as $tracker_id) {
-            $tracker = $tracker_factory->getTrackerById($tracker_id);
-            if ($tracker !== null) {
-                $trackers[] = $tracker;
-            }
-        }
-        return $trackers;
-    }
-
-    /**
-     * @return \TrackerFactory
-     */
-    private function getTrackerFactory()
-    {
-        return \TrackerFactory::instance();
+    ): int {
+        return $this->inheritance_handler->handle($id, $mapping_registry->getCustomMapping(\TrackerFactory::TRACKER_MAPPING_KEY));
     }
 
     public function getJavascriptAssets(): array

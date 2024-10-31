@@ -43,9 +43,9 @@ final class CrossTrackerDataBuilder extends REST_TestDataBuilder
 
         echo "Generate Cross Tracker\n";
 
-        $cross_tracker_saver = new CrossTrackerReportDao();
-        $report_id           = $cross_tracker_saver->create();
-        $cross_tracker_saver->addTrackersToReport([$this->getKanbanTracker()], $report_id);
+        $report_dao = new CrossTrackerReportDao();
+        $report_id  = $report_dao->createReportFromExpertQuery('');
+        $report_dao->updateReport($report_id, [$this->getKanbanTracker()], '', false);
 
         $widget_dao = new DashboardWidgetDao(
             new WidgetFactory(
@@ -65,9 +65,11 @@ final class CrossTrackerDataBuilder extends REST_TestDataBuilder
 
         $test_user_1_id = $this->user_manager->getUserByUserName(self::TEST_USER_1_NAME)->getId();
 
-        $user_report_id = $cross_tracker_saver->create();
+        $user_report_id = $report_dao->createReportFromExpertQuery('');
+        $report_dao->updateReport($user_report_id, [], '', false);
         $widget_dao->create($test_user_1_id, 'u', 2, 'crosstrackersearch', $user_report_id);
-        $project_report_id = $cross_tracker_saver->create();
+        $project_report_id = $report_dao->createReportFromExpertQuery('');
+        $report_dao->updateReport($project_report_id, [], '', false);
         $widget_dao->create($dashboards[0]['project_id'], 'g', $dashboards[0]['id'], 'crosstrackersearch', $project_report_id);
     }
 
