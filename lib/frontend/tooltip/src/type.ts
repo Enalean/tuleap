@@ -1,5 +1,5 @@
-/**
- * Copyright (c) Enalean, 2021 - Present. All Rights Reserved.
+/*
+ * Copyright (c) Enalean, 2024 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -14,14 +14,17 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Tuleap. If not, see http://www.gnu.org/licenses/.
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-interface SemiStructuredContent {
+export interface SemiStructuredContent {
     readonly title_as_html: string;
     readonly accent_color: string;
     readonly body_as_html: string;
 }
 
-export function loadTooltips(element?: HTMLElement, at_cursor_position?: boolean): void;
-export function retrieveTooltipData(url: URL): Promise<string | SemiStructuredContent | undefined>;
+export function isSemiStructuredContent(
+    content: string | SemiStructuredContent,
+): content is SemiStructuredContent {
+    return typeof content !== "string";
+}
