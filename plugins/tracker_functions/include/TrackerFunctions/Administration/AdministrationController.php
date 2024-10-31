@@ -37,9 +37,9 @@ use Tuleap\Request\DispatchableWithProject;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\NotFoundException;
 use Tuleap\REST\ExplorerEndpointAvailableEvent;
-use Tuleap\Tracker\Artifact\RetrieveTracker;
-use Tuleap\TrackerFunctions\Logs\LogLinePresenterBuilder;
+use Tuleap\Tracker\RetrieveTracker;
 use Tuleap\TrackerFunctions\Logs\FunctionLogLineWithArtifact;
+use Tuleap\TrackerFunctions\Logs\LogLinePresenterBuilder;
 use Tuleap\TrackerFunctions\Logs\RetrieveLogsForTracker;
 use Tuleap\TrackerFunctions\WASM\WASMFunctionPathHelper;
 

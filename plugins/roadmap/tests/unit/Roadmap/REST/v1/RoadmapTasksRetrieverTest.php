@@ -37,7 +37,7 @@ use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\Stubs\ProjectByIDFactoryStub;
 use Tuleap\Test\Stubs\ProvideCurrentUserStub;
 use Tuleap\Tracker\Artifact\Artifact;
-use Tuleap\Tracker\Artifact\RetrieveTracker;
+use Tuleap\Tracker\RetrieveTracker;
 use Tuleap\Tracker\Semantic\Progress\MethodBasedOnEffort;
 use Tuleap\Tracker\Semantic\Progress\MethodNotConfigured;
 use Tuleap\Tracker\Semantic\Progress\SemanticProgress;

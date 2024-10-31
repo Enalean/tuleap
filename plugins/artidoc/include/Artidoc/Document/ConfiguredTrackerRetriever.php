@@ -23,7 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Artidoc\Document;
 
 use Psr\Log\LoggerInterface;
-use Tuleap\Tracker\Artifact\RetrieveTracker;
+use Tuleap\Tracker\RetrieveTracker;
 
 final readonly class ConfiguredTrackerRetriever
 {

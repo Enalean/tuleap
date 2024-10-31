@@ -26,9 +26,9 @@ use PFUser;
 use Tracker;
 use Tracker_Semantic_Status;
 use Tracker_Semantic_Title;
-use Tuleap\Tracker\Artifact\RetrieveTracker;
 use Tuleap\Tracker\FormElement\Field\RetrieveUsedFields;
 use Tuleap\Tracker\Permission\VerifySubmissionPermissions;
+use Tuleap\Tracker\RetrieveTracker;
 
 class KanbanActionsChecker
 {

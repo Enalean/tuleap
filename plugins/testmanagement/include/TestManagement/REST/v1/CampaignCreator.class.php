@@ -29,11 +29,11 @@ use Tracker_FormElement_InvalidFieldValueException;
 use Tracker_FormElementFactory;
 use Tuleap\Project\ProjectByIDFactory;
 use Tuleap\TestManagement\Config;
-use Tuleap\Tracker\Artifact\RetrieveTracker;
 use Tuleap\Tracker\REST\Artifact\ArtifactCreator;
 use Tuleap\Tracker\REST\Artifact\ArtifactReference;
 use Tuleap\Tracker\REST\TrackerReference;
 use Tuleap\Tracker\REST\v1\ArtifactValuesRepresentation;
+use Tuleap\Tracker\RetrieveTracker;
 
 class CampaignCreator
 {
