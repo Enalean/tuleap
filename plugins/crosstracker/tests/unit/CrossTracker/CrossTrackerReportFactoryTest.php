@@ -18,82 +18,73 @@
  *  along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\CrossTracker;
 
-use PHPUnit\Framework\MockObject\MockObject;
+use Tuleap\CrossTracker\Tests\Stub\Report\RetrieveReportStub;
+use Tuleap\CrossTracker\Tests\Stub\Report\SearchTrackersOfReportStub;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
+use Tuleap\Tracker\Test\Stub\RetrieveTrackerStub;
 
 final class CrossTrackerReportFactoryTest extends TestCase
 {
+    private const REPORT_ID = 1;
     private \Tracker $tracker;
-    private CrossTrackerReportFactory $cross_tracker_factory;
-    private \TrackerFactory&MockObject $tracker_factory;
-    private CrossTrackerReportDao&MockObject $report_dao;
+    private RetrieveTrackerStub $tracker_factory;
+    private SearchTrackersOfReportStub $trackers_searcher;
 
     public function setUp(): void
     {
-        parent::setUp();
-
-        $this->report_dao            = $this->createMock(\Tuleap\CrossTracker\CrossTrackerReportDao::class);
-        $this->tracker_factory       = $this->createMock(\TrackerFactory::class);
-        $this->cross_tracker_factory = new CrossTrackerReportFactory($this->report_dao, $this->tracker_factory);
-
-        $this->tracker = TrackerTestBuilder::aTracker()->withId(2)->build();
-
-        $this->report_dao->method('searchReportTrackersById')->willReturn(
-            [
-                ['tracker_id' => 1],
-                ['tracker_id' => 2],
-            ]
-        );
-
-        $this->tracker_factory->method('getTrackerById')->willReturnMap([
-            [1, null],
-            [2, $this->tracker],
+        $this->trackers_searcher = SearchTrackersOfReportStub::withTrackers([
+            'report_id' => self::REPORT_ID,
+            'trackers'  => [3, 4],
         ]);
+
+        $this->tracker         = TrackerTestBuilder::aTracker()->withId(4)->build();
+        $this->tracker_factory = RetrieveTrackerStub::withTrackers($this->tracker);
     }
 
-    private function getById(bool $is_expert_mode): CrossTrackerReport
+    /**
+     * @throws CrossTrackerReportNotFoundException
+     */
+    private function getById(int $report_id, bool $is_expert_mode): CrossTrackerReport
     {
-        $this->report_dao->method('searchReportById')->willReturn(
-            ['id' => 1, 'expert_query' => '', 'expert_mode' => $is_expert_mode]
+        $report_retriever = RetrieveReportStub::withReports(
+            ['id' => self::REPORT_ID, 'expert_query' => '', 'expert_mode' => (int) $is_expert_mode]
         );
-
-        return $this->cross_tracker_factory->getById(1);
+        $factory          = new CrossTrackerReportFactory(
+            $report_retriever,
+            $this->trackers_searcher,
+            $this->tracker_factory
+        );
+        return $factory->getById($report_id);
     }
 
     public function testItThrowsAnExceptionWhenReportIsNotFound(): void
     {
-        $this->report_dao->method('searchReportById')->willReturn(false);
-        $this->expectException(\Tuleap\CrossTracker\CrossTrackerReportNotFoundException::class);
-
-        $this->getById(false);
+        $this->expectException(CrossTrackerReportNotFoundException::class);
+        $this->getById(404, false);
     }
 
     public function testItReturnsADefaultCrossTrackerReport(): void
     {
-        $expected_result = new CrossTrackerDefaultReport(1, '', [$this->tracker]);
+        $expected_result = new CrossTrackerDefaultReport(self::REPORT_ID, '', [$this->tracker]);
 
-        $result = $this->getById(false);
+        $result = $this->getById(self::REPORT_ID, false);
 
         self::assertInstanceOf(CrossTrackerDefaultReport::class, $result);
-        self::assertEqualsCanonicalizing(
-            $expected_result,
-            $result,
-        );
+        self::assertEquals($expected_result, $result);
     }
 
     public function testItReturnsAnExpertCrossTrackerReport(): void
     {
-        $expected_result = new CrossTrackerExpertReport(1, '');
+        $expected_result = new CrossTrackerExpertReport(self::REPORT_ID, '');
 
-        $result = $this->getById(true);
+        $result = $this->getById(self::REPORT_ID, true);
 
         self::assertInstanceOf(CrossTrackerExpertReport::class, $result);
-        self::assertEqualsCanonicalizing(
-            $expected_result,
-            $result,
-        );
+        self::assertEquals($expected_result, $result);
     }
 }

@@ -460,6 +460,7 @@ class crosstrackerPlugin extends Plugin
         );
 
         $expert_query_dao               = new CrossTrackerExpertQueryReportDao();
+        $tracker_factory                = TrackerFactory::instance();
         $cross_tracker_artifact_factory = new CrossTrackerArtifactReportFactory(
             new CrossTrackerArtifactReportDao(),
             Tracker_ArtifactFactory::instance(),
@@ -480,7 +481,7 @@ class crosstrackerPlugin extends Plugin
                 $from_builder_visitor,
                 $trackers_permissions,
                 $expert_query_dao,
-                TrackerFactory::instance(),
+                $tracker_factory,
                 new WidgetInProjectChecker($report_dao),
                 $report_dao,
                 $project_manager,
@@ -502,7 +503,8 @@ class crosstrackerPlugin extends Plugin
         return new CSVExportController(
             new CrossTrackerReportFactory(
                 $report_dao,
-                TrackerFactory::instance()
+                $report_dao,
+                $tracker_factory
             ),
             $cross_tracker_artifact_factory,
             $representation_factory,

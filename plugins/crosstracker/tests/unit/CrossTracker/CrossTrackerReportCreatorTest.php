@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\CrossTracker;
 
+use Tuleap\CrossTracker\Tests\Stub\Report\CreateReportStub;
 use Tuleap\Dashboard\Project\ProjectDashboardController;
 use Tuleap\Dashboard\User\UserDashboardController;
 use Tuleap\NeverThrow\Fault;

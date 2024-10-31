@@ -18,14 +18,19 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\CrossTracker;
 
 use ParagonIE\EasyDB\EasyDB;
+use Tuleap\CrossTracker\Report\CreateReport;
+use Tuleap\CrossTracker\Report\RetrieveReport;
+use Tuleap\CrossTracker\Report\SearchTrackersOfReport;
 use Tuleap\DB\DataAccessObject;
 
-class CrossTrackerReportDao extends DataAccessObject implements SearchCrossTrackerWidget, CreateReport
+class CrossTrackerReportDao extends DataAccessObject implements SearchCrossTrackerWidget, CreateReport, RetrieveReport, SearchTrackersOfReport
 {
-    public function searchReportById($report_id)
+    public function searchReportById(int $report_id): ?array
     {
         $sql = 'SELECT *
                 FROM plugin_crosstracker_report
@@ -34,15 +39,15 @@ class CrossTrackerReportDao extends DataAccessObject implements SearchCrossTrack
         return $this->getDB()->row($sql, $report_id);
     }
 
-    public function searchReportTrackersById($report_id)
+    public function searchReportTrackersById(int $report_id): array
     {
-        $sql = 'SELECT report_tracker.*
+        $sql = 'SELECT report_tracker.tracker_id
                   FROM plugin_crosstracker_report AS report
                   INNER JOIN plugin_crosstracker_report_tracker AS report_tracker
                           ON report.id = report_tracker.report_id
                  WHERE report_id = ?';
 
-        return $this->getDB()->run($sql, $report_id);
+        return $this->getDB()->col($sql, 0, $report_id);
     }
 
     public function create()

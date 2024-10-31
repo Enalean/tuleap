@@ -18,15 +18,20 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\CrossTracker;
 
-use TrackerFactory;
+use Tuleap\CrossTracker\Report\RetrieveReport;
+use Tuleap\CrossTracker\Report\SearchTrackersOfReport;
+use Tuleap\Tracker\Artifact\RetrieveTracker;
 
-class CrossTrackerReportFactory
+final readonly class CrossTrackerReportFactory
 {
     public function __construct(
-        private readonly CrossTrackerReportDao $report_dao,
-        private readonly TrackerFactory $tracker_factory,
+        private RetrieveReport $report_retriever,
+        private SearchTrackersOfReport $trackers_searcher,
+        private RetrieveTracker $tracker_factory,
     ) {
     }
 
@@ -35,7 +40,7 @@ class CrossTrackerReportFactory
      */
     public function getById($id): CrossTrackerReport
     {
-        $report_row = $this->report_dao->searchReportById($id);
+        $report_row = $this->report_retriever->searchReportById($id);
         if (! $report_row) {
             throw new CrossTrackerReportNotFoundException();
         }
@@ -46,9 +51,9 @@ class CrossTrackerReportFactory
         }
 
         $report_trackers = [];
-        $tracker_rows    = $this->report_dao->searchReportTrackersById($id);
-        foreach ($tracker_rows as $row) {
-            $tracker = $this->tracker_factory->getTrackerById($row['tracker_id']);
+        $tracker_ids     = $this->trackers_searcher->searchReportTrackersById($id);
+        foreach ($tracker_ids as $tracker_id) {
+            $tracker = $this->tracker_factory->getTrackerById($tracker_id);
             if ($tracker !== null) {
                 $report_trackers[] = $tracker;
             }

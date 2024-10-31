@@ -19,7 +19,10 @@
  */
 
 declare(strict_types=1);
-namespace Tuleap\CrossTracker;
+
+namespace Tuleap\CrossTracker\Tests\Stub\Report;
+
+use Tuleap\CrossTracker\Report\CreateReport;
 
 final readonly class CreateReportStub implements CreateReport
 {

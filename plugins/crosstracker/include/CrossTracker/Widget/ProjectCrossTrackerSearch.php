@@ -148,10 +148,10 @@ class ProjectCrossTrackerSearch extends Widget
     private function getTrackers($report_id)
     {
         $tracker_factory = $this->getTrackerFactory();
-        $tracker_rows    = $this->getDao()->searchReportTrackersById($report_id);
+        $tracker_ids     = $this->getDao()->searchReportTrackersById($report_id);
         $trackers        = [];
-        foreach ($tracker_rows as $row) {
-            $tracker = $tracker_factory->getTrackerById($row['tracker_id']);
+        foreach ($tracker_ids as $tracker_id) {
+            $tracker = $tracker_factory->getTrackerById($tracker_id);
             if ($tracker !== null) {
                 $trackers[] = $tracker;
             }
