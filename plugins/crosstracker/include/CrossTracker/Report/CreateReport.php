@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\CrossTracker;
+namespace Tuleap\CrossTracker\Report;
 
 interface CreateReport
 {

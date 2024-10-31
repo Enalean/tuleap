@@ -83,9 +83,8 @@ final class CrossTrackerReportDaoTest extends TestIntegrationTestCase
 
         $retrieved_trackers = $this->report_dao->searchReportTrackersById($report_id);
         self::assertCount(2, $retrieved_trackers);
-        [$first_retrieved_tracker, $second_retrieved_tracker] = $retrieved_trackers;
-        self::assertSame($first_tracker->getId(), $first_retrieved_tracker['tracker_id']);
-        self::assertSame($second_tracker->getId(), $second_retrieved_tracker['tracker_id']);
+        self::assertContains($first_tracker->getId(), $retrieved_trackers);
+        self::assertContains($second_tracker->getId(), $retrieved_trackers);
     }
 
     private function checkTrackersAreUsed(\Tracker $first_tracker, \Tracker $second_tracker): void
@@ -128,6 +127,7 @@ final class CrossTrackerReportDaoTest extends TestIntegrationTestCase
         $sql_result         = $this->report_dao->searchReportById($last_report_id);
         $expected_tql_query = 'SELECT @pretty_title, @submitted_by, @last_update_date, @status FROM @project = MY_PROJECTS() WHERE @status = OPEN() AND @assigned_to = MYSELF() ORDER BY @last_update_date DESC';
 
+        self::assertNotNull($sql_result);
         self::assertSame(1, $sql_result['expert_mode']);
         self::assertSame($expected_tql_query, $sql_result['expert_query']);
     }
@@ -141,6 +141,7 @@ final class CrossTrackerReportDaoTest extends TestIntegrationTestCase
         $sql_result         = $this->report_dao->searchReportById($last_report_id);
         $expected_tql_query = "SELECT @pretty_title, @submitted_by, @last_update_date, @status, @assigned_to FROM @project = 'self' WHERE @status = OPEN() ORDER BY @last_update_date DESC";
 
+        self::assertNotNull($sql_result);
         self::assertSame(1, $sql_result['expert_mode']);
         self::assertSame($expected_tql_query, $sql_result['expert_query']);
     }

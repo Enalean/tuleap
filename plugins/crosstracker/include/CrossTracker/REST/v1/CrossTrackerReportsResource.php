@@ -545,8 +545,10 @@ final class CrossTrackerReportsResource extends AuthenticatedResource
      */
     private function getReport(int $id): CrossTrackerReport
     {
+        $report_dao     = new CrossTrackerReportDao();
         $report_factory = new CrossTrackerReportFactory(
-            new CrossTrackerReportDao(),
+            $report_dao,
+            $report_dao,
             TrackerFactory::instance()
         );
 
