@@ -1007,6 +1007,7 @@ class Tracker implements Tracker_Dispatchable_Interface
             new Tracker_Workflow_Trigger_RulesDao(),
             new ArtifactLinksUsageDao(),
             EventManager::instance(),
+            new ProjectHistoryDao()
         );
 
         return $controller;

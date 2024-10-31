@@ -1665,6 +1665,9 @@ msgstr "Groupes de champs cachés:"
 msgid "Hierarchy"
 msgstr "Hiérarchie"
 
+msgid "Hierarchy updated"
+msgstr "Hiérarchie mise à jour"
+
 msgid "Hint"
 msgstr "Indication"
 
@@ -4085,6 +4088,10 @@ msgid "Tracker"
 msgstr "Outil de suivi"
 
 #, php-format
+msgid "Tracker #%d new children: %s (previous children: %s)"
+msgstr "outil de suivi #%d nouveaux enfants: %s (enfant précédents: %s)"
+
+#, php-format
 msgid "Tracker %1$s not duplicated"
 msgstr "L'outil de suivi %1$s n'a pas été copié"
 
@@ -4981,6 +4988,12 @@ msgstr "jour(s)"
 
 msgid "decreased"
 msgstr "baissée"
+
+msgid "empty children list"
+msgstr "liste des enfants vidée"
+
+msgid "empty previous hierarchy"
+msgstr "hiérarchie précédente vide"
 
 msgid ""
 "error while playing with the database.  Help us improve your experience by "

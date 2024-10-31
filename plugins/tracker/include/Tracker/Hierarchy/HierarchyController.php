@@ -36,54 +36,21 @@ use Valid_UInt;
 
 class HierarchyController
 {
-    /**
-     * @var Codendi_Request
-     */
-    private $request;
+    private TemplateRenderer $renderer;
 
-    /**
-     * @var Tracker_Hierarchy_HierarchicalTracker
-     */
-    private $tracker;
-
-    /**
-     * @var Tracker_Hierarchy_HierarchicalTrackerFactory
-     */
-    private $factory;
-
-    /**
-     * @var HierarchyDAO
-     */
-    private $dao;
-    /**
-     * @var Tracker_Workflow_Trigger_RulesDao
-     */
-    private $tracker_workflow_trigger_rules_dao;
-    /**
-     * @var TemplateRenderer
-     */
-    private $renderer;
-    /**
-     * @var ArtifactLinksUsageDao
-     */
-    private $artifact_links_usage_dao;
+    public const TRACKER_HIERARCHY_UPDATE = 'tracker_hierarchy_update';
 
     public function __construct(
-        Codendi_Request $request,
-        Tracker_Hierarchy_HierarchicalTracker $tracker,
-        Tracker_Hierarchy_HierarchicalTrackerFactory $factory,
-        HierarchyDAO $dao,
-        Tracker_Workflow_Trigger_RulesDao $tracker_workflow_trigger_rules_dao,
-        ArtifactLinksUsageDao $artifact_links_usage_dao,
+        private Codendi_Request $request,
+        private Tracker_Hierarchy_HierarchicalTracker $tracker,
+        private Tracker_Hierarchy_HierarchicalTrackerFactory $factory,
+        private HierarchyDAO $dao,
+        private Tracker_Workflow_Trigger_RulesDao $tracker_workflow_trigger_rules_dao,
+        private ArtifactLinksUsageDao $artifact_links_usage_dao,
         private EventDispatcherInterface $event_dispatcher,
+        private \ProjectHistoryDao $project_history_dao,
     ) {
-        $this->request                            = $request;
-        $this->tracker                            = $tracker;
-        $this->factory                            = $factory;
-        $this->dao                                = $dao;
-        $this->tracker_workflow_trigger_rules_dao = $tracker_workflow_trigger_rules_dao;
-        $this->renderer                           = TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../../../templates');
-        $this->artifact_links_usage_dao           = $artifact_links_usage_dao;
+        $this->renderer = TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../../../templates');
     }
 
     public function edit(): void
@@ -163,10 +130,12 @@ class HierarchyController
 
         $children_used_in_trigger_rules = $this->getChildrenUsedInTriggerRules();
 
+        $user     = $this->request->getCurrentUser();
+        $children = array_merge($wanted_children, array_keys($children_used_in_trigger_rules));
         if ($this->artifact_links_usage_dao->isProjectUsingArtifactLinkTypes((int) $this->tracker->getProject()->getID())) {
             $this->dao->changeTrackerHierarchy(
                 $this->tracker->getId(),
-                array_merge($wanted_children, array_keys($children_used_in_trigger_rules))
+                $children
             );
         } else {
             //If project does not use the artifact link types yet, _is_child must continue
@@ -174,10 +143,39 @@ class HierarchyController
             //will be consistent
             $this->dao->updateChildren(
                 $this->tracker->getId(),
-                array_merge($wanted_children, array_keys($children_used_in_trigger_rules))
+                $children
             );
         }
 
+        $current_hierarchy = [];
+        foreach ($this->tracker->getChildren() as $child) {
+            $current_hierarchy[] = $child->getId();
+        }
+
+        $children = implode(',', array_values($children));
+        if ($children === '') {
+            $children = dgettext('tuleap-tracker', 'empty children list');
+        }
+
+        $current_hierarchy = implode(',', $current_hierarchy);
+        if ($current_hierarchy === '') {
+            $current_hierarchy = dgettext('tuleap-tracker', 'empty previous hierarchy');
+        }
+
+        $history_value = sprintf(
+            dgettext('tuleap-tracker', 'Tracker #%d new children: %s (previous children: %s)'),
+            $this->tracker->getId(),
+            $children,
+            $current_hierarchy
+        );
+
+        $this->project_history_dao->addHistory(
+            $this->tracker->getProject(),
+            $user,
+            new \DateTimeImmutable(),
+            self::TRACKER_HIERARCHY_UPDATE,
+            $history_value
+        );
         $this->redirectToAdminHierarchy();
     }
 
