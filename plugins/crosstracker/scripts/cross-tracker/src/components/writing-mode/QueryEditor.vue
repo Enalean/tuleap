@@ -144,8 +144,18 @@ function insertSelectedField(event: Event): void {
     insertAllowedFieldInCodeMirror(event, code_mirror_instance.value);
 }
 
+function clearEditor(): void {
+    if (!code_mirror_instance.value) {
+        throw new Error("Code mirror is not accessible for adding field");
+    }
+    code_mirror_instance.value.dispatch({
+        changes: { from: 0, to: code_mirror_instance.value.state.doc.length, insert: "" },
+    });
+}
+
 defineExpose({
     value,
     code_mirror_instance,
+    clearEditor,
 });
 </script>
