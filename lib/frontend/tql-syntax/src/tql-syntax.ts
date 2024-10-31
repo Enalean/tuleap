@@ -38,7 +38,7 @@ const SYNTAX = {
     },
     function: {
         pattern:
-            /(?:artifact|between|by|child|children|covered|covering|from|in|is|linked|myself|not|now|open|parent|to|tracker|type|with|without|linked\s*from|asc|ascending|desc|descending)\b/i,
+            /(?:artifact|between|by|child|children|covered|covering|from|in|is|linked|myself|not|now|open|parent|to|tracker|type|with|without|linked\s*from|asc|ascending|desc|descending|my_projects)\b/i,
     },
     operator: {
         pattern: /[=<>!+-]+/,
