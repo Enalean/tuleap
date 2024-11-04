@@ -31,6 +31,7 @@ export const TQL_cross_tracker_autocomplete_keywords = [
     "IN(",
     "NOT",
     "MYSELF()",
+    "MY_PROJECTS()",
     "WITH PARENT",
     "WITH PARENT ARTIFACT",
     "WITH PARENT TRACKER",

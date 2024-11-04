@@ -164,6 +164,6 @@ msgstr "Avatar do Usuário"
 
 msgid ""
 "You can use: AND, OR, WITH PARENT, WITHOUT PARENT, WITH CHILDREN, WITHOUT "
-"CHILDREN, BETWEEN(), NOW(), MYSELF(), OPEN(), IN(), NOT IN(), parenthesis. "
-"Autocomplete is activated with Ctrl + Space."
+"CHILDREN, BETWEEN(), NOW(), MYSELF(), OPEN(), IN(), NOT IN(), MY_PROJECTS(), "
+"parenthesis. Autocomplete is activated with Ctrl + Space."
 msgstr ""

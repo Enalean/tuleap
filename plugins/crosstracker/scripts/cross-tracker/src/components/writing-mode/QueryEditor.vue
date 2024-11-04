@@ -38,7 +38,7 @@
                 ></i
                 >{{
                     $gettext(
-                        "You can use: AND, OR, WITH PARENT, WITHOUT PARENT, WITH CHILDREN, WITHOUT CHILDREN, BETWEEN(), NOW(), MYSELF(), OPEN(), IN(), NOT IN(), parenthesis. Autocomplete is activated with Ctrl + Space.",
+                        "You can use: AND, OR, WITH PARENT, WITHOUT PARENT, WITH CHILDREN, WITHOUT CHILDREN, BETWEEN(), NOW(), MYSELF(), OPEN(), IN(), NOT IN(), MY_PROJECTS(), parenthesis. Autocomplete is activated with Ctrl + Space.",
                     )
                 }}
             </p>
