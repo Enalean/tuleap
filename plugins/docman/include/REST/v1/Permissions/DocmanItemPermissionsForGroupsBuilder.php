@@ -27,7 +27,7 @@ use Docman_PermissionsManager;
 use IPermissionsManagerNG;
 use PFUser;
 use Project;
-use ProjectManager;
+use Tuleap\Project\ProjectByIDFactory;
 use Tuleap\Project\REST\MinimalUserGroupRepresentation;
 use UGroupManager;
 
@@ -38,7 +38,7 @@ class DocmanItemPermissionsForGroupsBuilder
      */
     private $docman_permissions_manager;
     /**
-     * @var ProjectManager
+     * @var ProjectByIDFactory
      */
     private $project_manager;
     /**
@@ -52,7 +52,7 @@ class DocmanItemPermissionsForGroupsBuilder
 
     public function __construct(
         Docman_PermissionsManager $docman_permissions_manager,
-        ProjectManager $project_manager,
+        ProjectByIDFactory $project_manager,
         IPermissionsManagerNG $permissions_manager,
         UGroupManager $ugroup_manager,
     ) {
@@ -68,7 +68,7 @@ class DocmanItemPermissionsForGroupsBuilder
             return null;
         }
 
-        $project = $this->project_manager->getProject($item->getGroupId());
+        $project = $this->project_manager->getProjectById((int) $item->getGroupId());
 
         return DocmanItemPermissionsForGroupsRepresentation::build(
             $this->buildUGroupsRepresentationForPermission($project, $item, Docman_PermissionsManager::ITEM_PERMISSION_TYPE_READ),

@@ -477,6 +477,15 @@ CREATE TABLE plugin_document_search_columns
     INDEX project_idx(project_id)
 ) ENGINE = InnoDB;
 
+CREATE TABLE plugin_document_item_recently_visited
+(
+    user_id    INT(11)          NOT NULL,
+    item_id    INT(11) UNSIGNED NOT NULL,
+    created_on INT(11) UNSIGNED NOT NULL,
+    PRIMARY KEY (user_id, item_id),
+    INDEX idx_user_visit_time (user_id, created_on)
+) ENGINE = InnoDB;
+
 
 INSERT INTO forgeconfig VALUES ('plugin_docman_max_number_of_files', 50);
 -- 67108864 = 64MB

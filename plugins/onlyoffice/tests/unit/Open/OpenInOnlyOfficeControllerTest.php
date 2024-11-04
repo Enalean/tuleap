@@ -25,6 +25,8 @@ namespace Tuleap\OnlyOffice\Open;
 use Enalean\Prometheus\Registry\CollectorRegistry;
 use Enalean\Prometheus\Storage\NullStore;
 use Psr\Log\NullLogger;
+use Tuleap\Document\RecentlyVisited\RecordVisit;
+use Tuleap\Document\Tests\Stubs\RecentlyVisited\RecordVisitStub;
 use Tuleap\Instrument\Prometheus\Prometheus;
 use Tuleap\Request\NotFoundException;
 use Tuleap\Test\Builders\HTTPRequestBuilder;
@@ -39,6 +41,8 @@ final class OpenInOnlyOfficeControllerTest extends TestCase
 {
     public function testDisplaysPage(): void
     {
+        $visit = RecordVisitStub::build();
+
         $template_renderer = new TemplateRendererStub();
         $controller        = self::buildController(
             $template_renderer,
@@ -48,6 +52,7 @@ final class OpenInOnlyOfficeControllerTest extends TestCase
                     ->build(),
                 new \Docman_File(['item_id' => 147])
             ),
+            $visit,
         );
 
         $controller->process(
@@ -57,13 +62,17 @@ final class OpenInOnlyOfficeControllerTest extends TestCase
         );
 
         self::assertTrue($template_renderer->has_rendered_something);
+        self::assertTrue($visit->isSaved());
     }
 
     public function testRejectsRequestWhenDocumentCannotBeRetrieved(): void
     {
+        $visit = RecordVisitStub::build();
+
         $controller = self::buildController(
             new TemplateRendererStub(),
             ProvideOnlyOfficeDocumentStub::buildWithError(),
+            $visit,
         );
 
         $this->expectException(NotFoundException::class);
@@ -72,10 +81,15 @@ final class OpenInOnlyOfficeControllerTest extends TestCase
             LayoutBuilder::build(),
             ['id' => '404']
         );
+
+        self::assertFalse($visit->isSaved());
     }
 
-    private static function buildController(\TemplateRenderer $template_renderer, ProvideOnlyOfficeDocument $document_provider): OpenInOnlyOfficeController
-    {
+    private static function buildController(
+        \TemplateRenderer $template_renderer,
+        ProvideOnlyOfficeDocument $document_provider,
+        RecordVisit $visit,
+    ): OpenInOnlyOfficeController {
         return new OpenInOnlyOfficeController(
             ProvideCurrentUserStub::buildCurrentUserByDefault(),
             $document_provider,
@@ -84,6 +98,7 @@ final class OpenInOnlyOfficeControllerTest extends TestCase
             JavascriptAssetGenericBuilder::build(),
             new Prometheus(new CollectorRegistry(new NullStore())),
             '',
+            $visit,
         );
     }
 }

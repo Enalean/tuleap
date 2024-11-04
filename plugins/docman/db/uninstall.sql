@@ -23,6 +23,7 @@ DROP TABLE IF EXISTS plugin_docman_item_deleted;
 DROP TABLE IF EXISTS plugin_docman_tokens;
 DROP TABLE IF EXISTS plugin_document_search_criteria;
 DROP TABLE IF EXISTS plugin_document_search_columns;
+DROP TABLE IF EXISTS plugin_document_item_recently_visited;
 
 DELETE FROM service WHERE short_name='docman';
 
