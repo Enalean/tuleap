@@ -18,24 +18,30 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once __DIR__ . '/autoload.php';
+declare(strict_types=1);
+
+require_once __DIR__ . '/../vendor/autoload.php';
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
-class templatePlugin extends Plugin
+final class templatePlugin extends Plugin
 {
     public function __construct($id)
     {
         parent::__construct($id);
         $this->setScope(self::SCOPE_PROJECT);
+
+        bindtextdomain('tuleap-template', __DIR__ . '/../site-content');
     }
 
-    /**
-     * @return Tuleap\Template\Plugin\PluginInfo
-     */
-    public function getPluginInfo()
+    public function getPluginInfo(): PluginInfo
     {
         if (! $this->pluginInfo) {
-            $this->pluginInfo = new Tuleap\Template\Plugin\PluginInfo($this);
+            $plugin_info = new PluginInfo($this);
+            $plugin_info->setPluginDescriptor(new PluginDescriptor(
+                dgettext('tuleap-template', 'Template plugin'),
+                dgettext('tuleap-template', 'Description of template plugin'),
+            ));
+            $this->pluginInfo = $plugin_info;
         }
         return $this->pluginInfo;
     }
