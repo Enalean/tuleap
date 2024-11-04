@@ -86,15 +86,14 @@ reason = "@vue/component-compiler-utils will be removed when the Vue 2 migration
 id = "GHSA-g3ch-rx76-35fx" # CVE-2024-6783
 reason = "No direct exploitation path, template are not compiled at runtime. The migration to move away from Vue 2 is underway."
 
+# vue 2
+[[IgnoredVulns]]
+id = "GHSA-5j4c-8p2g-v4jx" # CVE-2024-9506
+reason = "Vue 2 is EOL. Nothing in the codebase can trigger this ReDoS issue."
+
 # node-gettext
 [[IgnoredVulns]]
 id = "GHSA-g974-hxvm-x689" # CVE-2024-21528
 reason = "No exploitation path in the Tuleap context for this prototype pollution issue."
 
 ### TO BE FIXED
-
-# vue 2
-[[IgnoredVulns]]
-id = "GHSA-5j4c-8p2g-v4jx" # CVE-2024-9506
-reason = "Vue 2 is EOL. Nothing in the codebase can trigger this ReDoS issue."
-ignoreUntil = 2024-11-05
