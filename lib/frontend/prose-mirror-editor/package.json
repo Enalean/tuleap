@@ -21,6 +21,7 @@
     "@tuleap/gettext": "workspace:^",
     "@tuleap/option": "workspace:^",
     "@tuleap/tlp-popovers": "workspace:^",
+    "@tuleap/tooltip": "workspace:^",
     "@tuleap/url-sanitizer": "workspace:*",
     "dompurify": "^3.1.4",
     "hybrids": "9.1.6",

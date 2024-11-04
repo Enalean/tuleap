@@ -17,23 +17,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export interface SemiStructuredContent {
-    readonly title_as_html: string;
-    readonly accent_color: string;
-    readonly body_as_html: string;
-}
+import type { ElementWithCrossrefHref } from "./type";
+import { Option } from "@tuleap/option";
 
-export function isSemiStructuredContent(
-    content: string | SemiStructuredContent,
-): content is SemiStructuredContent {
-    return typeof content !== "string";
-}
+export function elementWithCrossrefHref(element: HTMLElement): Option<ElementWithCrossrefHref> {
+    if (element instanceof HTMLAnchorElement) {
+        return Option.fromValue({ element, getHref: () => element.href });
+    }
 
-export interface ElementWithCrossrefHref {
-    element: HTMLElement;
-    getHref: () => string;
-}
+    if (element.dataset.href) {
+        return Option.fromValue({ element, getHref: () => String(element.dataset.href) });
+    }
 
-export interface Tooltip {
-    destroy: () => void;
+    return Option.nothing();
 }

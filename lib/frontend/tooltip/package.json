@@ -24,5 +24,8 @@
     "build": "vite build",
     "watch": "vite build --watch --mode development --minify false",
     "test": "vitest"
+  },
+  "dependencies": {
+    "@tuleap/option": "workspace:^"
   }
 }

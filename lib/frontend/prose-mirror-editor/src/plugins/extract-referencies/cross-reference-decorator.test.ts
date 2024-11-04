@@ -62,7 +62,7 @@ describe("node decorator", () => {
             to: position.to,
             type: {
                 attrs: {
-                    class: "cross-reference-link",
+                    class: "cross-reference",
                     "data-href": "https://example.com?goto=1",
                 },
                 spec: {

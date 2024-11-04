@@ -19,23 +19,32 @@
 
 import DOMPurify from "dompurify";
 import { retrieveTooltipData } from "./retrieve-tooltip-data";
-import type { SemiStructuredContent } from "./type";
+import type { ElementWithCrossrefHref, SemiStructuredContent, Tooltip } from "./type";
 import { isSemiStructuredContent } from "./type";
 
 export function createTooltip(
-    element: HTMLAnchorElement,
+    crossref: ElementWithCrossrefHref,
     options: { at_cursor_position?: boolean } = {},
-): void {
+): Tooltip {
     let fetching = false;
     let fetched = false;
     let show_tooltip = false;
     let timeout: number;
-    const old_title = element.title;
+    const old_title = crossref.element.title;
 
     let tooltip: HTMLElement | undefined = undefined;
 
-    element.addEventListener("mouseover", show);
-    element.addEventListener("mouseout", hide);
+    crossref.element.addEventListener("mouseover", show);
+    crossref.element.addEventListener("mouseout", hide);
+
+    return {
+        destroy: (): void => {
+            crossref.element.removeEventListener("mouseover", show);
+            crossref.element.removeEventListener("mouseout", hide);
+
+            tooltip?.remove();
+        },
+    };
 
     function appendTooltipToBody(content: string | SemiStructuredContent): void {
         const { sanitize } = DOMPurify;
@@ -88,11 +97,11 @@ export function createTooltip(
                 tooltip.style.top = posY + 10 + "px";
                 tooltip.style.left = posX + 10 + "px";
             } else {
-                const box = element.getBoundingClientRect();
+                const box = crossref.element.getBoundingClientRect();
                 const top = box.top + window.pageYOffset - document.documentElement.clientTop;
                 const left = box.left + window.pageXOffset - document.documentElement.clientLeft;
 
-                tooltip.style.top = Math.floor(top) + element.offsetHeight + "px";
+                tooltip.style.top = Math.floor(top) + crossref.element.offsetHeight + "px";
                 tooltip.style.left = Math.floor(left) + "px";
             }
             tooltip.style.display = "";
@@ -121,8 +130,10 @@ export function createTooltip(
         }
 
         fetching = true;
-        element.title = "";
-        const url = new URL(element.href);
+        if (old_title) {
+            crossref.element.title = "";
+        }
+        const url = new URL(crossref.getHref());
         const data = await retrieveTooltipData(url);
 
         fetching = false;
@@ -133,8 +144,8 @@ export function createTooltip(
             if (show_tooltip) {
                 show(mouse_event);
             }
-        } else {
-            element.title = old_title;
+        } else if (old_title) {
+            crossref.element.title = old_title;
         }
     }
 }
