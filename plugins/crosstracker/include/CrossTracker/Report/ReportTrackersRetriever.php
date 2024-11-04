@@ -35,7 +35,6 @@ use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\CrossTrackerExpertQue
 use Tuleap\CrossTracker\Report\Query\Advanced\WidgetInProjectChecker;
 use Tuleap\CrossTracker\SearchCrossTrackerWidget;
 use Tuleap\Project\ProjectByIDFactory;
-use Tuleap\Tracker\Artifact\RetrieveTracker;
 use Tuleap\Tracker\Permission\RetrieveUserPermissionOnTrackers;
 use Tuleap\Tracker\Permission\TrackerPermissionType;
 use Tuleap\Tracker\Report\Query\Advanced\ExpertQueryValidator;
@@ -43,6 +42,7 @@ use Tuleap\Tracker\Report\Query\Advanced\FromIsInvalidException;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\SyntaxError;
 use Tuleap\Tracker\Report\Query\Advanced\MissingFromException;
 use Tuleap\Tracker\Report\Query\Advanced\ParserCacheProxy;
+use Tuleap\Tracker\RetrieveTracker;
 
 final readonly class ReportTrackersRetriever implements RetrieveReportTrackers
 {

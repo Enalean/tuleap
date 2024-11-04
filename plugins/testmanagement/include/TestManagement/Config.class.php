@@ -21,7 +21,7 @@
 namespace Tuleap\TestManagement;
 
 use Project;
-use Tuleap\Tracker\Artifact\RetrieveTracker;
+use Tuleap\Tracker\RetrieveTracker;
 
 class Config implements IRetrieveTestExecutionTrackerIdFromConfig
 {

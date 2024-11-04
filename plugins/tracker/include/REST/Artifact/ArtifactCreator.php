@@ -27,13 +27,13 @@ use Tuleap\Tracker\Artifact\ArtifactDoesNotExistException;
 use Tuleap\Tracker\Artifact\ChangesetValue\AddDefaultValuesToFieldsData;
 use Tuleap\Tracker\Artifact\ChangesetValue\InitialChangesetValuesContainer;
 use Tuleap\Tracker\Artifact\Creation\TrackerArtifactCreator;
-use Tuleap\Tracker\Artifact\RetrieveTracker;
 use Tuleap\Tracker\FormElement\ArtifactLinkFieldDoesNotExistException;
 use Tuleap\Tracker\Permission\VerifySubmissionPermissions;
 use Tuleap\Tracker\REST\Artifact\ChangesetValue\FieldsDataBuilder;
 use Tuleap\Tracker\REST\Artifact\ChangesetValue\FieldsDataFromValuesByFieldBuilder;
 use Tuleap\Tracker\REST\TrackerReference;
 use Tuleap\Tracker\REST\v1\ArtifactValuesRepresentation;
+use Tuleap\Tracker\RetrieveTracker;
 use Tuleap\Tracker\Semantic\SemanticNotSupportedException;
 
 class ArtifactCreator

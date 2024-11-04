@@ -28,13 +28,13 @@ use Project_AccessProjectNotFoundException;
 use Psr\Log\LoggerInterface;
 use Tuleap\Tracker\Artifact\ActionButtons\MoveArtifactActionAllowedByPluginRetriever;
 use Tuleap\Tracker\Artifact\Artifact;
-use Tuleap\Tracker\Artifact\RetrieveTracker;
 use Tuleap\Tracker\Exception\MoveArtifactNotDoneException;
 use Tuleap\Tracker\Exception\MoveArtifactNoValuesToProcessException;
 use Tuleap\Tracker\Exception\MoveArtifactSemanticsException;
 use Tuleap\Tracker\Exception\MoveArtifactTargetProjectNotActiveException;
 use Tuleap\Tracker\REST\v1\ArtifactPatchRepresentation;
 use Tuleap\Tracker\REST\v1\ArtifactPatchResponseRepresentation;
+use Tuleap\Tracker\RetrieveTracker;
 
 final class MovePatchAction
 {

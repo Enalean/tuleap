@@ -29,7 +29,7 @@ use Psr\Http\Server\MiddlewareInterface;
 use Tuleap\Http\Response\BinaryFileResponseBuilder;
 use Tuleap\Request\DispatchablePSR15Compatible;
 use Tuleap\Request\NotFoundException;
-use Tuleap\Tracker\Artifact\RetrieveTracker;
+use Tuleap\Tracker\RetrieveTracker;
 use Tuleap\User\ProvideCurrentUser;
 use ZipStream\ZipStream;
 

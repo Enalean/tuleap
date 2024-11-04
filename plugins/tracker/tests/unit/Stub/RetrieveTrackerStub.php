@@ -23,7 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Test\Stub;
 
 use Tracker;
-use Tuleap\Tracker\Artifact\RetrieveTracker;
+use Tuleap\Tracker\RetrieveTracker;
 
 final class RetrieveTrackerStub implements RetrieveTracker
 {

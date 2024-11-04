@@ -28,7 +28,7 @@ use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\DispatchableWithBurningParrot;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\NotFoundException;
-use Tuleap\Tracker\Artifact\RetrieveTracker;
+use Tuleap\Tracker\RetrieveTracker;
 
 final readonly class ArtifactsDeletionInTrackerAdminController implements DispatchableWithRequest, DispatchableWithBurningParrot
 {

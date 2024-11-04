@@ -27,7 +27,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Tuleap\Request\NotFoundException;
-use Tuleap\Tracker\Artifact\RetrieveTracker;
+use Tuleap\Tracker\RetrieveTracker;
 
 final class ActiveTrackerRetrieverMiddleware implements MiddlewareInterface
 {

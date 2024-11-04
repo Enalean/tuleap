@@ -24,7 +24,7 @@ namespace Tuleap\CrossTracker;
 
 use Tuleap\CrossTracker\Report\RetrieveReport;
 use Tuleap\CrossTracker\Report\SearchTrackersOfReport;
-use Tuleap\Tracker\Artifact\RetrieveTracker;
+use Tuleap\Tracker\RetrieveTracker;
 
 final readonly class CrossTrackerReportFactory
 {
