@@ -19,6 +19,7 @@
 import type { Selection } from "prosemirror-state";
 import type { NodeType } from "prosemirror-model";
 import type { EditorNode } from "../../../types/internal-types";
+import { isNodeAStructureBlock } from "../../../helpers/isNodeAStructureBlock";
 
 export type DetectSingleListInSelection = {
     doesSelectionContainOnlyASingleList(tree: EditorNode, selection: Selection): boolean;
@@ -32,6 +33,10 @@ export const SingleListInSelectionDetector = (
         let has_other_nodes_than_list = false;
 
         tree.nodesBetween(selection.from, selection.to, (node) => {
+            if (isNodeAStructureBlock(node)) {
+                return true;
+            }
+
             if (node.type === list_type) {
                 nb_lists_found++;
             } else {

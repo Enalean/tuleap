@@ -48,8 +48,7 @@ export const SectionEditorStub = {
             deleteSection: noop,
         },
         editor_section_content: {
-            inputCurrentTitle: noop,
-            inputCurrentDescription: noop,
+            inputSectionContent: noop,
             editable_title: ref(""),
             editable_description: ref(""),
             getReadonlyDescription: () => "",

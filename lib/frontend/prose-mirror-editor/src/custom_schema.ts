@@ -18,7 +18,7 @@
  */
 
 import { Schema } from "prosemirror-model";
-import type { DOMOutputSpec, MarkSpec } from "prosemirror-model";
+import type { DOMOutputSpec, MarkSpec, NodeSpec } from "prosemirror-model";
 import { addListNodes } from "prosemirror-schema-list";
 import { schema } from "prosemirror-schema-basic";
 
@@ -36,16 +36,20 @@ const superscript_mark_spec: MarkSpec = {
     },
 };
 
-export const buildCustomSchema = (): Schema =>
-    new Schema({
-        nodes: addListNodes(
-            schema.spec.nodes,
-            "(paragraph | code_block | heading) block*",
-            "block",
-        ),
+export type EditorNodes = Record<string, NodeSpec>;
+export const prosemirror_nodes = addListNodes(
+    schema.spec.nodes,
+    "(paragraph | code_block | heading) block*",
+    "block",
+).toObject();
+
+export const buildCustomSchema = (editor_nodes: EditorNodes = {}): Schema => {
+    return new Schema({
+        nodes: Object.keys(editor_nodes).length > 0 ? editor_nodes : prosemirror_nodes,
         marks: {
             ...schema.spec.marks.toObject(),
             subscript: subscript_mark_spec,
             superscript: superscript_mark_spec,
         },
     });
+};

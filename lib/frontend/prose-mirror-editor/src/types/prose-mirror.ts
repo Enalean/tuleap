@@ -17,5 +17,5 @@
  *  along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { EditorView } from "prosemirror-view";
-export type { EditorView };
+export type { EditorView } from "prosemirror-view";
+export type { DOMOutputSpec, NodeSpec } from "prosemirror-model";

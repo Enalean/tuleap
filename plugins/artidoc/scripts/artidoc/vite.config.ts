@@ -33,7 +33,13 @@ export default vite.defineAppConfig(
             vue({
                 template: {
                     compilerOptions: {
-                        isCustomElement: (tag) => tag === "tuleap-prose-mirror-toolbar",
+                        isCustomElement: (tag) =>
+                            [
+                                "tuleap-prose-mirror-toolbar",
+                                "artidoc-section",
+                                "artidoc-section-title",
+                                "artidoc-section-description",
+                            ].includes(tag),
                     },
                 },
             }),

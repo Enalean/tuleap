@@ -19,16 +19,21 @@
 
 import type { EditorState } from "prosemirror-state";
 import type { EditorView } from "prosemirror-view";
-import { NodeRange } from "prosemirror-model";
+import { isNodeAStructureBlock } from "../../../helpers/isNodeAStructureBlock";
 
 export function addBlockQuote(
     state: EditorState,
     dispatch?: EditorView["dispatch"] | undefined,
 ): void {
-    const { $from, $to } = state.selection;
-    const range = new NodeRange($from, $to, 0);
-
-    if (dispatch && range) {
-        dispatch(state.tr.wrap(range, [{ type: state.schema.nodes.blockquote }]));
+    if (!dispatch) {
+        return;
     }
+
+    const { $from, $to } = state.selection;
+    const range = $from.blockRange($to, isNodeAStructureBlock);
+    if (!range) {
+        return;
+    }
+
+    dispatch(state.tr.wrap(range, [{ type: state.schema.nodes.blockquote }]));
 }

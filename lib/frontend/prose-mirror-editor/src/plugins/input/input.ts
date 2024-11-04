@@ -21,7 +21,9 @@ import { Plugin } from "prosemirror-state";
 import type { EditorView } from "prosemirror-view";
 import { loadTooltips } from "@tuleap/tooltip";
 
-export function initPluginInput(update_callback: (newTextContent: string) => void): Plugin {
+export type PluginInput = Plugin;
+
+export function initPluginInput(update_callback: (content: HTMLElement) => void): PluginInput {
     return new Plugin({
         view(view: EditorView): { update: (view: EditorView) => void } {
             loadTooltips(view.dom);
@@ -29,7 +31,7 @@ export function initPluginInput(update_callback: (newTextContent: string) => voi
             return {
                 update(view: EditorView): void {
                     loadTooltips(view.dom);
-                    update_callback(view.dom.innerHTML);
+                    update_callback(view.dom);
                 },
             };
         },

@@ -20,6 +20,7 @@
 import type { Selection } from "prosemirror-state";
 import type { Schema } from "prosemirror-model";
 import type { EditorNode } from "../../../types/internal-types";
+import { isNodeAStructureBlock } from "../../../helpers/isNodeAStructureBlock";
 
 export type DetectListsInSelection = {
     doesSelectionContainLists(tree: EditorNode, selection: Selection): boolean;
@@ -28,8 +29,13 @@ export type DetectListsInSelection = {
 export const ListsInSelectionDetector = (schema: Schema): DetectListsInSelection => ({
     doesSelectionContainLists: (tree, selection): boolean => {
         const list_types = [schema.nodes.ordered_list, schema.nodes.bullet_list];
+
         let has_lists = false;
         tree.nodesBetween(selection.from, selection.to, (node) => {
+            if (isNodeAStructureBlock(node)) {
+                return true;
+            }
+
             if (list_types.includes(node.type)) {
                 has_lists = true;
             }

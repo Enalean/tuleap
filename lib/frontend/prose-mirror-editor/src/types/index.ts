@@ -18,3 +18,5 @@
  */
 
 export * from "./prose-mirror";
+export type { EditorNodes } from "../custom_schema";
+export { prosemirror_nodes } from "../custom_schema";

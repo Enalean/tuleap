@@ -19,18 +19,20 @@
 
 import type { EditorView } from "prosemirror-view";
 import { Plugin } from "prosemirror-state";
+import { insertPoint } from "prosemirror-transform";
 import { fileUploadHandler } from "./upload-file";
 import type { FileUploadOptions } from "./types";
 import type { Option } from "@tuleap/option";
 import type { GetText } from "@tuleap/gettext";
 import type { Upload } from "tus-js-client";
 
-function insertFile(view: EditorView, url: string): void {
+function insertFile(view: EditorView, insert_point: number, url: string): void {
     const { state, dispatch } = view;
     const node = state.schema.nodes.image.create({
         src: url,
     });
-    const transaction = state.tr.replaceSelectionWith(node);
+
+    const transaction = state.tr.insert(insert_point, node);
     dispatch(transaction);
 }
 
@@ -44,13 +46,14 @@ function handleDrop(
     options: FileUploadOptions,
     gettext_provider: GetText,
     uploaders: Array<Upload>,
+    drop_point: number,
 ): Promise<Option<ReadonlyArray<OngoingUpload>>> {
     const success_callback_with_insert_file = (
         id: number,
         download_href: string,
         file_name: string,
     ): void => {
-        insertFile(view, download_href);
+        insertFile(view, drop_point, download_href);
         options.onSuccessCallback(id, download_href, file_name);
     };
     return fileUploadHandler(
@@ -67,8 +70,32 @@ export class PluginDropFile extends Plugin {
         super({
             props: {
                 handleDOMEvents: {
-                    drop: (view: EditorView, event: DragEvent): boolean => {
-                        handleDrop(view, event, options, gettext_provider, this.uploaders);
+                    drop: (view, event) => {
+                        if (!(event.target instanceof Node)) {
+                            event.preventDefault();
+                            return true;
+                        }
+
+                        const drop_point = insertPoint(
+                            view.state.doc,
+                            view.posAtDOM(event.target, 0),
+                            view.state.schema.nodes.image,
+                        );
+
+                        if (!drop_point) {
+                            event.preventDefault();
+                            return true;
+                        }
+
+                        handleDrop(
+                            view,
+                            event,
+                            options,
+                            gettext_provider,
+                            this.uploaders,
+                            drop_point,
+                        );
+
                         return true;
                     },
                 },

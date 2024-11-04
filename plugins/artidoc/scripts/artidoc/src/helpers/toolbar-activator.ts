@@ -31,7 +31,7 @@ export const onClickActivateOrDeactivateToolbar = (
                 return;
             }
 
-            const editors = Array.from(doc.querySelectorAll(".editor"));
+            const editors = Array.from(doc.querySelectorAll("artidoc-section-description"));
             const composed_path = event.composedPath();
             const is_click_on_editor = editors.some((editor) => composed_path.includes(editor));
 

@@ -27,12 +27,13 @@
             v-bind:add_attachment_to_waiting_list="add_attachment_to_waiting_list"
             v-bind:editable_description="editable_description"
             v-bind:is_edit_mode="is_edit_mode"
-            v-bind:input_current_description="input_current_description"
             v-bind:readonly_value="readonly_description"
             v-bind:is_image_upload_allowed="is_image_upload_allowed"
             v-bind:upload_file="upload_file"
             v-bind:project_id="project_id"
             v-bind:references="references"
+            v-bind:title="title"
+            v-bind:input_section_content="input_section_content"
             data-test="editor"
         />
     </template>
@@ -56,17 +57,18 @@ import { CAN_USER_EDIT_DOCUMENT } from "@/can-user-edit-document-injection-key";
 
 const props = withDefaults(
     defineProps<{
+        title: string;
         add_attachment_to_waiting_list: AttachmentFile["addAttachmentToWaitingList"];
         upload_url: string;
         editable_description: string;
         readonly_description: string;
         is_edit_mode: boolean;
         is_image_upload_allowed: boolean;
-        input_current_description: EditorSectionContent["inputCurrentDescription"];
         is_print_mode?: boolean;
         upload_file: UseUploadFileType;
         project_id: number;
         references: Array<CrossReference>;
+        input_section_content: EditorSectionContent["inputSectionContent"];
     }>(),
     {
         is_print_mode: false,
