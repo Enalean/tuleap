@@ -229,34 +229,35 @@ button[name="tracker_query_submit"] {
         height: 100px;
     }
 
-    > .CodeMirror {
+    > .cm-editor {
         height: 100px;
         transition:
             border linear 0.2s,
             box-shadow linear 0.2s;
         border: 1px solid #cccccc;
         border-radius: var(--tlp-medium-radius);
+        background: var(--tlp-white-color);
 
-        &.CodeMirror-focused {
+        &.cm-focused {
             border-color: rgb(82 168 236 / 80%);
             outline: 0;
             box-shadow: var(--tlp-shadow-focus);
         }
 
+        .cm-placeholder {
+            color: #999999;
+        }
+
         pre {
             padding: 0 6px;
-
-            &.CodeMirror-placeholder {
-                color: #999999;
-            }
         }
     }
 
-    &.tracker-report-expert-content-query-readonly > .CodeMirror {
+    &.tracker-report-expert-content-query-readonly > .cm-editor {
         background: #eeeeee;
         cursor: not-allowed;
 
-        .CodeMirror-lines {
+        .cm-content {
             cursor: not-allowed;
         }
     }

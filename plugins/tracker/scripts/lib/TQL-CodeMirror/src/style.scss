@@ -17,8 +17,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@use "codemirror/lib/codemirror";
-@use "codemirror/addon/hint/show-hint";
 @use "pkg:@tuleap/tlp-swatch-colors/tlp-swatch-colors";
 
 .cm-tql-atvariable {

@@ -22,11 +22,6 @@ import * as path from "path";
 
 export default vite.defineLibConfig({
     plugins: [viteDtsPlugin()],
-    optimizeDeps: {
-        // This is needed since CodeMirror and its addons are only shipped as CommonJS
-        // See https://github.com/codemirror/CodeMirror/issues/5403 https://github.com/codemirror/CodeMirror/issues/6355
-        include: ["codemirror"],
-    },
     build: {
         lib: {
             entry: path.resolve(__dirname, "src/index.ts"),

@@ -37,8 +37,7 @@ $expert-query-area-height: 75px;
 .cross-tracker-expert-content-query {
     flex: 1 1 auto;
 
-    /* stylelint-disable selector-class-pattern */
-    > .CodeMirror {
+    > .cm-editor {
         height: $expert-query-area-height;
         transition:
             border linear 0.2s,
@@ -46,22 +45,20 @@ $expert-query-area-height: 75px;
         border: 1px solid #cccccc;
         border-radius: var(--tlp-medium-radius);
 
-        &.CodeMirror-focused {
+        &.cm-focused {
             border-color: rgb(82 168 236 / 80%);
             outline: 0;
             box-shadow: var(--tlp-shadow-focus);
         }
 
+        .cm-placeholder {
+            color: #999999;
+        }
+
         pre {
             padding: 0 6px;
-
-            /* stylelint-disable-next-line selector-no-qualifying-type */
-            &.CodeMirror-placeholder {
-                color: #999999;
-            }
         }
     }
-    /* stylelint-enable */
 }
 
 .cross-tracker-expert-content-fields-label {

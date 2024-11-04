@@ -14,13 +14,16 @@
     }
   },
   "dependencies": {
-    "@tuleap/tql-syntax": "workspace:^",
+    "@codemirror/autocomplete": "^6.18.1",
+    "@codemirror/commands": "^6.7.0",
+    "@codemirror/language": "^6.10.3",
+    "@codemirror/view": "^6.34.1",
+    "@lezer/highlight": "^1.2.1",
     "@tuleap/tlp-swatch-colors": "workspace:^",
-    "codemirror": "^5.62.0"
+    "@tuleap/tql-syntax": "workspace:^"
   },
   "devDependencies": {
-    "@tuleap/build-system-configurator": "workspace:*",
-    "@types/codemirror": "^5.60.1"
+    "@tuleap/build-system-configurator": "workspace:*"
   },
   "scripts": {
     "typecheck": "tsc --noEmit",
