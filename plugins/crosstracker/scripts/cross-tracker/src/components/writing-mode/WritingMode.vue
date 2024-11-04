@@ -36,6 +36,7 @@
         <query-editor
             v-bind:writing_cross_tracker_report="writing_cross_tracker_report"
             v-on:trigger-search="search"
+            ref="editor"
         />
         <div class="actions">
             <button
@@ -87,6 +88,8 @@ const selected_trackers = ref<ReadonlyArray<TrackerToUpdate>>([]);
 
 const is_in_expert_mode = ref<boolean>(false);
 
+const editor = ref<InstanceType<typeof QueryEditor>>();
+
 function cancel(): void {
     emit("cancel-query-edition");
 }
@@ -127,6 +130,7 @@ function removeTrackerFromSelection(tracker: TrackerToUpdate): void {
 function handleSwitchModeEvent(event: SwitchModeEvent): void {
     props.writing_cross_tracker_report.toggleExpertMode();
     is_in_expert_mode.value = event.is_expert_mode;
+    editor.value?.clearEditor();
 }
 
 defineExpose({
