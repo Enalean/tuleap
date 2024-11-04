@@ -88,9 +88,7 @@ describe("Cross tracker search", function () {
         cy.intercept("/api/v1/cross_tracker_reports/*/content*").as("getReportContent");
 
         cy.log("Regular user should be able to run queries");
-        cy.log("Switch to Expert mode");
         editWidget();
-        toggleWidgetMode();
         updateSearchQuery(
             `SELECT @title FROM @project.name = "${project_name}" AND @tracker.name IN ("bug", "task") WHERE @last_update_date > "2018-01-01"`,
         );
