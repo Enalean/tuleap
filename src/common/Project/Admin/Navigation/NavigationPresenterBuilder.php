@@ -139,7 +139,8 @@ class NavigationPresenterBuilder
             [
                 new NavigationDropdownItemPresenter(
                     _('Project export'),
-                    '/project/' . urlencode((string) $project_id) . '/admin/export'
+                    '/project/' . urlencode((string) $project_id) . '/admin/export',
+                    'project-structure-export'
                 ),
                 new NavigationDropdownItemPresenter(
                     _('Project history'),

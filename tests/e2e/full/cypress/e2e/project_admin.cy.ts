@@ -219,7 +219,7 @@ describe("Project admin", function () {
                 .should("have.class", "fa-lock-open");
         });
 
-        it("should be able to export project access log and history", function () {
+        it("should be able to export project access log, history and xml structure", function () {
             cy.projectAdministratorSession();
             cy.log("Add a document");
             cy.getFromTuleapAPI<ProjectServiceResponse>(
@@ -284,6 +284,15 @@ describe("Project admin", function () {
                 .click({ force: true })
                 .then(() => {
                     cy.readFile(`${download_folder}/project_history.csv`).should("exist");
+                });
+
+            cy.log("Download project structure");
+            cy.visitProjectAdministration(project_acces_log);
+            cy.get("[data-test=project-structure-export]").click({ force: true });
+            cy.get("[data-test=export-project-structure]")
+                .click()
+                .then(() => {
+                    cy.readFile(`${download_folder}/${project_acces_log}.zip`).should("exist");
                 });
         });
     });
