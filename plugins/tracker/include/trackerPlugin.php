@@ -1217,7 +1217,8 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
             EventManager::instance(),
             new TypePresenterFactory(new TypeDao(), $artifact_link_usage_dao),
             $artifact_link_usage_dao,
-            $external_field_extractor
+            $external_field_extractor,
+            $this->getBackendLogger()
         );
     }
 
