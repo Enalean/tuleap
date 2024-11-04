@@ -40,6 +40,7 @@ final class CollectSystemDataCommand extends Command
 
     private const KEYS_THAT_SHOULD_NOT_BE_DISCLOSED = [
         'sys_dbpasswd',
+        'sys_dbauth_passwd',
     ];
 
     public function __construct(private EventDispatcherInterface $event_dispatcher)
