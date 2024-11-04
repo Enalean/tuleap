@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { vite } from "@tuleap/build-system-configurator";
+import { vite, viteDtsPlugin } from "@tuleap/build-system-configurator";
 import * as path from "path";
 
 export default vite.defineLibConfig({
@@ -27,4 +27,5 @@ export default vite.defineLibConfig({
             name: "codendi.Tooltip",
         },
     },
+    plugins: [viteDtsPlugin()],
 });

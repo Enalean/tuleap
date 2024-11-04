@@ -6,11 +6,10 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
-  "module": "dist/tooltip.js",
-  "main": "dist/tooltip.umd.cjs",
-  "types": "src/tooltip.d.ts",
+  "types": "./dist/tooltip.d.ts",
   "exports": {
     ".": {
+      "types": "./dist/tooltip.d.ts",
       "import": "./dist/tooltip.js",
       "require": "./dist/tooltip.umd.cjs"
     }
@@ -23,6 +22,7 @@
   "scripts": {
     "typecheck": "tsc --noEmit",
     "build": "vite build",
-    "watch": "vite build --watch --mode development --minify false"
+    "watch": "vite build --watch --mode development --minify false",
+    "test": "vitest"
   }
 }
