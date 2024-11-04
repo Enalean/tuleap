@@ -58,7 +58,11 @@ final readonly class VisitedDocumentHrefVisitor implements ItemVisitor
 
     public function visitLink(Docman_Link $item, array $params = [])
     {
-        return $this->visitItem($item, $params);
+        return '/plugins/docman/?' . http_build_query([
+            'group_id' => $item->getGroupId(),
+            'action'   => 'show',
+            'id'       => $item->getId(),
+        ]);
     }
 
     public function visitFile(Docman_File $item, array $params = [])
@@ -71,7 +75,7 @@ final readonly class VisitedDocumentHrefVisitor implements ItemVisitor
             }
         }
 
-        return $this->visitItem($item, $params);
+        return '/plugins/docman/download/' . urlencode((string) $item->getId());
     }
 
     public function visitEmbeddedFile(Docman_EmbeddedFile $item, array $params = [])

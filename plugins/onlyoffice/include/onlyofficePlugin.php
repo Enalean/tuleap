@@ -282,7 +282,8 @@ final class onlyofficePlugin extends Plugin
             new Docman_ItemFactory(),
             new DocmanFileDownloadResponseGenerator(
                 new Docman_VersionFactory(),
-                new BinaryFileResponseBuilder($response_factory, HTTPFactoryBuilder::streamFactory())
+                new BinaryFileResponseBuilder($response_factory, HTTPFactoryBuilder::streamFactory()),
+                new RecentlyVisitedDocumentDao(),
             ),
             $token_middleware,
             $logger,
