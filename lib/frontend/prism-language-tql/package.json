@@ -3,7 +3,7 @@
   "name": "@tuleap/prism-language-tql",
   "homepage": "https://tuleap.net/plugins/git/tuleap/tuleap/stable?a=tree&hb=refs%2Fheads%2Fmaster&f=lib%2Ffrontend%2Fprism-language-tql",
   "license": "MIT",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "type": "module",
   "types": "./dist/index.d.ts",
   "module": "./dist/prism-language-tql.js",
