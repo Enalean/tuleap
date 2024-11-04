@@ -102,6 +102,7 @@ use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Metadata\Special\Pre
 use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilder\Metadata\Special\ProjectName\ProjectNameSelectFromBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\SelectBuilderVisitor;
 use Tuleap\CrossTracker\Report\Query\Advanced\WidgetInProjectChecker;
+use Tuleap\CrossTracker\Report\ReportInheritanceHandler;
 use Tuleap\CrossTracker\Report\ReportTrackersRetriever;
 use Tuleap\CrossTracker\Report\SimilarField\BindNameVisitor;
 use Tuleap\CrossTracker\Report\SimilarField\SimilarFieldsFilter;
@@ -196,7 +197,18 @@ class crosstrackerPlugin extends Plugin
     public function widgetInstance(GetWidget $get_widget_event): void
     {
         if ($get_widget_event->getName() === ProjectCrossTrackerSearch::NAME) {
-            $get_widget_event->setWidget(new ProjectCrossTrackerSearch(new CrossTrackerReportCreator(new CrossTrackerReportDao())));
+            $report_dao = new CrossTrackerReportDao();
+            $get_widget_event->setWidget(
+                new ProjectCrossTrackerSearch(
+                    new CrossTrackerReportCreator($report_dao),
+                    new ReportInheritanceHandler(
+                        new CrossTrackerReportFactory($report_dao, $report_dao, \TrackerFactory::instance()),
+                        $report_dao,
+                        $report_dao,
+                        $this->getBackendLogger()
+                    )
+                )
+            );
         }
     }
 

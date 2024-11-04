@@ -23,12 +23,14 @@ declare(strict_types=1);
 namespace Tuleap\CrossTracker;
 
 use ParagonIE\EasyDB\EasyDB;
+use Tuleap\CrossTracker\Report\CloneReport;
 use Tuleap\CrossTracker\Report\CreateReport;
 use Tuleap\CrossTracker\Report\RetrieveReport;
+use Tuleap\CrossTracker\Report\SaveReportTrackers;
 use Tuleap\CrossTracker\Report\SearchTrackersOfReport;
 use Tuleap\DB\DataAccessObject;
 
-class CrossTrackerReportDao extends DataAccessObject implements SearchCrossTrackerWidget, CreateReport, RetrieveReport, SearchTrackersOfReport
+class CrossTrackerReportDao extends DataAccessObject implements SearchCrossTrackerWidget, CreateReport, RetrieveReport, SearchTrackersOfReport, SaveReportTrackers, CloneReport
 {
     public function searchReportById(int $report_id): ?array
     {
@@ -50,13 +52,6 @@ class CrossTrackerReportDao extends DataAccessObject implements SearchCrossTrack
         return $this->getDB()->col($sql, 0, $report_id);
     }
 
-    public function create()
-    {
-        return $this->getDB()->insertReturnId('plugin_crosstracker_report', [
-            'expert_mode' => 0,
-        ]);
-    }
-
     public function createReportFromExpertQuery(string $query): int
     {
         return (int) $this->getDB()->insertReturnId('plugin_crosstracker_report', [
@@ -64,12 +59,16 @@ class CrossTrackerReportDao extends DataAccessObject implements SearchCrossTrack
         ]);
     }
 
+    /**
+     * @param array<\Tracker> $trackers
+     */
     public function updateReport($report_id, array $trackers, $expert_query, bool $expert_mode)
     {
         $this->getDB()->tryFlatTransaction(function (EasyDB $db) use ($expert_query, $trackers, $expert_mode, $report_id) {
             $db->run('DELETE FROM plugin_crosstracker_report_tracker WHERE report_id = ?', $report_id);
             if (! $expert_mode) {
-                $this->addTrackersToReport($trackers, $report_id);
+                $tracker_ids = array_values(array_map(static fn(\Tracker $tracker) => $tracker->getId(), $trackers));
+                $this->addTrackersToReport($report_id, $tracker_ids);
             }
             $this->updateExpertQuery($report_id, $expert_query, $expert_mode);
         });
@@ -81,17 +80,14 @@ class CrossTrackerReportDao extends DataAccessObject implements SearchCrossTrack
         $this->getDB()->run($sql, $report_id, $expert_query, $expert_mode);
     }
 
-    /**
-     * @param       $report_id
-     */
-    public function addTrackersToReport(array $trackers, $report_id)
+    public function addTrackersToReport(int $report_id, array $tracker_ids): void
     {
         $data_to_insert = [];
-        foreach ($trackers as $tracker) {
-            $data_to_insert[] = ['report_id' => $report_id, 'tracker_id' => $tracker->getId()];
+        foreach ($tracker_ids as $tracker_id) {
+            $data_to_insert[] = ['report_id' => $report_id, 'tracker_id' => $tracker_id];
         }
 
-        if (! empty($data_to_insert)) {
+        if ($data_to_insert !== []) {
             $this->getDB()->insertMany('plugin_crosstracker_report_tracker', $data_to_insert);
         }
     }
@@ -138,5 +134,18 @@ class CrossTrackerReportDao extends DataAccessObject implements SearchCrossTrack
                   AND widget.name = 'crosstrackersearch';";
 
         return $this->getDB()->row($sql, $content_id);
+    }
+
+    public function cloneReport(int $template_report_id): int
+    {
+        $sql = <<<EOSQL
+        INSERT INTO plugin_crosstracker_report (id, expert_query, expert_mode)
+        SELECT NULL, report.expert_query, report.expert_mode
+        FROM plugin_crosstracker_report AS report
+        WHERE report.id = ?
+        EOSQL;
+
+        $this->getDB()->run($sql, $template_report_id);
+        return (int) $this->getDB()->lastInsertId('plugin_crosstracker_report');
     }
 }
