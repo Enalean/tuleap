@@ -29,6 +29,7 @@ use Docman_VersionFactory;
 use org\bovigo\vfs\vfsStream;
 use PFUser;
 use PHPUnit\Framework\MockObject\MockObject;
+use Tuleap\Document\Tests\Stubs\RecentlyVisited\RecordVisitStub;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Http\Response\BinaryFileResponseBuilder;
 use Tuleap\Http\Server\NullServerRequest;
@@ -65,18 +66,26 @@ final class DocmanFileDownloadResponseGeneratorTest extends TestCase
 
     public function testUserCanNotDownloadTheFileWithoutTheNeededPermissions(): void
     {
-        $response_generator = new DocmanFileDownloadResponseGenerator($this->version_factory, $this->binary_file_response_factory);
+        $visit = RecordVisitStub::build();
+
+        $response_generator = new DocmanFileDownloadResponseGenerator(
+            $this->version_factory,
+            $this->binary_file_response_factory,
+            $visit,
+        );
 
         $this->docman_file->setId(1);
         $this->permissions_manager->method('userCanAccess')->willReturn(false);
 
-        self::expectException(UserCannotAccessFileException::class);
+        $this->expectException(UserCannotAccessFileException::class);
         $response_generator->generateResponse(
             new NullServerRequest(),
             $this->current_user,
             $this->docman_file,
             null
         );
+
+        self::assertFalse($visit->isSaved());
     }
 
     /**
@@ -85,7 +94,13 @@ final class DocmanFileDownloadResponseGeneratorTest extends TestCase
      */
     public function testFileCanNotBeDownloadedIfTheVersionCannotBeFound(?int $version_id): void
     {
-        $response_generator = new DocmanFileDownloadResponseGenerator($this->version_factory, $this->binary_file_response_factory);
+        $visit = RecordVisitStub::build();
+
+        $response_generator = new DocmanFileDownloadResponseGenerator(
+            $this->version_factory,
+            $this->binary_file_response_factory,
+            $visit,
+        );
 
         $this->docman_file->setId(1);
         $this->permissions_manager->method('userCanAccess')->willReturn(true);
@@ -93,18 +108,26 @@ final class DocmanFileDownloadResponseGeneratorTest extends TestCase
         $this->docman_file->setCurrentVersion(null);
         $this->version_factory->method('getSpecificVersion')->willReturn(null);
 
-        self::expectException(VersionNotFoundException::class);
+        $this->expectException(VersionNotFoundException::class);
         $response_generator->generateResponse(
             new NullServerRequest(),
             $this->current_user,
             $this->docman_file,
             $version_id
         );
+
+        self::assertFalse($visit->isSaved());
     }
 
     public function testFileCanNotBeDownloadedIfItIsNotPresentOnTheFilesystem(): void
     {
-        $response_generator = new DocmanFileDownloadResponseGenerator($this->version_factory, $this->binary_file_response_factory);
+        $visit = RecordVisitStub::build();
+
+        $response_generator = new DocmanFileDownloadResponseGenerator(
+            $this->version_factory,
+            $this->binary_file_response_factory,
+            $visit,
+        );
 
         $this->docman_file->setId(1);
         $this->permissions_manager->method('userCanAccess')->willReturn(true);
@@ -113,18 +136,26 @@ final class DocmanFileDownloadResponseGeneratorTest extends TestCase
         $version   = new Docman_Version(['id' => 1, 'item_id' => 1, 'path' => $directory . '/mydoc']);
         $this->docman_file->setCurrentVersion($version);
 
-        self::expectException(FileDoesNotExistException::class);
+        $this->expectException(FileDoesNotExistException::class);
         $response_generator->generateResponse(
             new NullServerRequest(),
             $this->current_user,
             $this->docman_file,
             null
         );
+
+        self::assertFalse($visit->isSaved());
     }
 
     public function testFileResponseCanBeGenerated(): void
     {
-        $response_generator = new DocmanFileDownloadResponseGenerator($this->version_factory, $this->binary_file_response_factory);
+        $visit = RecordVisitStub::build();
+
+        $response_generator = new DocmanFileDownloadResponseGenerator(
+            $this->version_factory,
+            $this->binary_file_response_factory,
+            $visit,
+        );
 
         $this->docman_file->setId(1);
         $this->permissions_manager->method('userCanAccess')->willReturn(true);
@@ -148,5 +179,7 @@ final class DocmanFileDownloadResponseGeneratorTest extends TestCase
             $this->docman_file,
             null
         );
+
+        self::assertTrue($visit->isSaved());
     }
 }

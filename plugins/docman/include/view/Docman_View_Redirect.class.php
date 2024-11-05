@@ -80,6 +80,13 @@ class Docman_View_Redirect extends Docman_View_View implements ItemVisitor
             return '/';
         }
 
+        $recently_visited_document_dao = new \Tuleap\Document\RecentlyVisited\RecentlyVisitedDocumentDao();
+        $recently_visited_document_dao->save(
+            (int) $params['user']->getId(),
+            (int) $item->getId(),
+            \Tuleap\Request\RequestTime::getTimestamp(),
+        );
+
         /**
          * @psalm-taint-escape header
          */

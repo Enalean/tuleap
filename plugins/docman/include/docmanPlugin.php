@@ -1473,7 +1473,8 @@ class DocmanPlugin extends Plugin implements PluginWithConfigKeys
             new Docman_ItemFactory(),
             new DocmanFileDownloadResponseGenerator(
                 new Docman_VersionFactory(),
-                new BinaryFileResponseBuilder($response_factory, HTTPFactoryBuilder::streamFactory())
+                new BinaryFileResponseBuilder($response_factory, HTTPFactoryBuilder::streamFactory()),
+                new RecentlyVisitedDocumentDao(),
             ),
             $rest_current_user_middleware,
             BackendLogger::getDefaultLogger(),

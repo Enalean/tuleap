@@ -67,7 +67,7 @@ final class VisitedDocumentHrefVisitorTest extends TestCase
         );
     }
 
-    public function testLinkHrefIsThePreview(): void
+    public function testLinkHrefIsTheShowActionOfTheItem(): void
     {
         $project = ProjectTestBuilder::aProject()->build();
 
@@ -79,7 +79,7 @@ final class VisitedDocumentHrefVisitorTest extends TestCase
         );
 
         self::assertEquals(
-            '/plugins/document/TestProject/preview/123',
+            '/plugins/docman/?action=show&id=123',
             $item->accept($visitor, ['project' => $project]),
         );
     }
@@ -118,7 +118,7 @@ final class VisitedDocumentHrefVisitorTest extends TestCase
         );
     }
 
-    public function testFileHrefIsThePreviewWhenNoCurrentVersion(): void
+    public function testFileHrefIsTheDownloadHrefWhenNoCurrentVersion(): void
     {
         $project = ProjectTestBuilder::aProject()->build();
 
@@ -133,12 +133,12 @@ final class VisitedDocumentHrefVisitorTest extends TestCase
         );
 
         self::assertEquals(
-            '/plugins/document/TestProject/preview/123',
+            '/plugins/docman/download/123',
             $item->accept($visitor, ['project' => $project]),
         );
     }
 
-    public function testFileHrefIsThePreviewWhenCurrentVersionButHookIsNotListenedTo(): void
+    public function testFileHrefIsTheDownloadHrefWhenCurrentVersionButHookIsNotListenedTo(): void
     {
         $project = ProjectTestBuilder::aProject()->build();
 
@@ -153,7 +153,7 @@ final class VisitedDocumentHrefVisitorTest extends TestCase
         );
 
         self::assertEquals(
-            '/plugins/document/TestProject/preview/123',
+            '/plugins/docman/download/123',
             $item->accept($visitor, ['project' => $project]),
         );
     }
