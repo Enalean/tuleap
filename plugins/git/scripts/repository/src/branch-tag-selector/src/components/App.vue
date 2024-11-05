@@ -18,7 +18,7 @@
   -->
 
 <template>
-    <div class="tlp-dropdown-menu tlp-dropdown-with-tabs-on-top" role="menu">
+    <div class="tlp-dropdown-menu tlp-dropdown-with-tabs-on-top" role="menu" ref="dropdown_menu">
         <nav class="tlp-tabs git-repository-branch-tag-selector-tabs">
             <a
                 href=""
@@ -56,39 +56,32 @@
         />
     </div>
 </template>
-<script lang="ts">
+<script setup lang="ts">
 import { createDropdown } from "@tuleap/tlp-dropdown";
 import BranchesSection from "./BranchesSection.vue";
 import TagsSection from "./TagsSection.vue";
-import Vue from "vue";
-import { Component, Prop } from "vue-property-decorator";
+import { onMounted, ref } from "vue";
 import type { URLParameter } from "../type";
 
-@Component({ components: { BranchesSection, TagsSection } })
-export default class App extends Vue {
-    @Prop()
-    readonly button!: HTMLButtonElement;
-    @Prop()
-    readonly repository_id!: number;
-    @Prop()
-    readonly repository_url!: string;
-    @Prop({ required: true })
-    readonly repository_default_branch!: string;
-    @Prop()
-    readonly is_tag!: boolean;
-    @Prop()
-    readonly current_ref_name!: string;
-    @Prop()
-    readonly url_parameters!: URLParameter;
+const props = defineProps<{
+    button: HTMLButtonElement;
+    repository_id: number;
+    repository_url: string;
+    repository_default_branch: string;
+    is_tag: boolean;
+    current_ref_name: string;
+    url_parameters: URLParameter;
+}>();
 
-    is_displaying_branches = true;
+const is_displaying_branches = ref(true);
+const dropdown_menu = ref<HTMLDivElement>();
 
-    mounted(): void {
-        const dropdown = createDropdown(this.button, {
-            dropdown_menu: this.$el,
+onMounted(() => {
+    if (dropdown_menu.value instanceof HTMLDivElement) {
+        const dropdown = createDropdown(props.button, {
+            dropdown_menu: dropdown_menu.value,
         });
-
         dropdown.show();
     }
-}
+});
 </script>

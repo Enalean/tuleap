@@ -24,31 +24,26 @@
         v-bind:placeholder="placeholder"
         ref="filter"
         v-bind:value="value"
-        v-on:input="onInput($event)"
+        v-on:input="onInput"
     />
 </template>
 
-<script lang="ts">
-import Vue from "vue";
-import { Prop } from "vue-property-decorator";
+<script setup lang="ts">
+import { ref } from "vue";
 
-export default class RefsFilter extends Vue {
-    @Prop()
-    readonly value: string = "";
-    @Prop()
-    readonly placeholder: string = "";
+defineProps<{
+    value: string;
+    placeholder: string;
+}>();
 
-    mounted(): void {
-        if (this.$refs.filter instanceof HTMLInputElement) {
-            this.$refs.filter.focus();
-        }
+const emit = defineEmits<{ (e: "input", value: string): void }>();
+
+const filter = ref<HTMLInputElement>();
+
+function onInput(event: Event): void {
+    if (!(event.target instanceof HTMLInputElement)) {
+        return;
     }
-
-    onInput(event: Event): void {
-        if (!(event.target instanceof HTMLInputElement)) {
-            return;
-        }
-        this.$emit("input", event.target.value);
-    }
+    emit("input", event.target.value);
 }
 </script>
