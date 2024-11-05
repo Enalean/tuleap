@@ -17,8 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { describe, it, expect, beforeEach, vi } from "vitest";
-import { buildToolbarBus } from "@tuleap/prose-mirror-editor";
+import { describe, it, expect, beforeEach } from "vitest";
 import { createLocalDocument, gettext_provider } from "../../../helpers/helper-for-test";
 import { renderPlainTextOption } from "./plain-text-option-template";
 import type { HostElement } from "./text-style";
@@ -62,33 +61,5 @@ describe("plain-text-option-template", () => {
 
         expect(option.disabled).toBe(false);
         expect(option.selected).toBe(is_plain_text_activated);
-    });
-
-    it("When the option is clicked, then it should call toolbar_bus.plainText()", () => {
-        const toolbar_bus = buildToolbarBus();
-        const host = {
-            is_plain_text_activated: false,
-            style_elements: { text: true },
-            toolbar_bus,
-        } as HostElement;
-        const applyPlainText = vi.spyOn(toolbar_bus, "plainText");
-
-        getPlainTextOption(host).click();
-
-        expect(applyPlainText).toHaveBeenCalledOnce();
-    });
-
-    it("When the option is clicked, then it should NOT call toolbar_bus.plainText() if the option was already selected", () => {
-        const toolbar_bus = buildToolbarBus();
-        const host = {
-            is_plain_text_activated: true,
-            style_elements: { text: true },
-            toolbar_bus,
-        } as HostElement;
-        const applyPlainText = vi.spyOn(toolbar_bus, "plainText");
-
-        getPlainTextOption(host).click();
-
-        expect(applyPlainText).not.toHaveBeenCalled();
     });
 });

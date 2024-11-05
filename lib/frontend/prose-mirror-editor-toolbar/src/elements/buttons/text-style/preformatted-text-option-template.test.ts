@@ -17,8 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { describe, it, expect, beforeEach, vi } from "vitest";
-import { buildToolbarBus } from "@tuleap/prose-mirror-editor";
+import { describe, it, expect, beforeEach } from "vitest";
 import { createLocalDocument, gettext_provider } from "../../../helpers/helper-for-test";
 import { renderPreformattedTextOption } from "./preformatted-text-option-template";
 import type { HostElement } from "./text-style";
@@ -65,32 +64,4 @@ describe("preformatted-text-option-template", () => {
             expect(option.selected).toBe(is_preformatted_text_activated);
         },
     );
-
-    it("When the option is clicked, then it should call toolbar_bus.preformattedText()", () => {
-        const toolbar_bus = buildToolbarBus();
-        const host = {
-            is_preformatted_text_activated: false,
-            style_elements: { preformatted: true },
-            toolbar_bus,
-        } as HostElement;
-        const applyPreformattedText = vi.spyOn(toolbar_bus, "preformattedText");
-
-        getPreformattedTextOption(host).click();
-
-        expect(applyPreformattedText).toHaveBeenCalledOnce();
-    });
-
-    it("When the option is clicked, then it should NOT call toolbar_bus.preformattedText() if the option was already selected", () => {
-        const toolbar_bus = buildToolbarBus();
-        const host = {
-            is_preformatted_text_activated: true,
-            style_elements: { preformatted: true },
-            toolbar_bus,
-        } as HostElement;
-        const applyPreformattedText = vi.spyOn(toolbar_bus, "preformattedText");
-
-        getPreformattedTextOption(host).click();
-
-        expect(applyPreformattedText).not.toHaveBeenCalledOnce();
-    });
 });

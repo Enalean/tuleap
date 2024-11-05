@@ -19,20 +19,20 @@
 
 import { html } from "hybrids";
 import type { UpdateFunction } from "hybrids";
-import type { InternalHeadingsItem } from "./text-style";
+import type { InternalTextStyleItem } from "./text-style";
 import type { GetText } from "@tuleap/gettext";
 
 export const renderStylesOption = (
-    host: InternalHeadingsItem,
+    host: InternalTextStyleItem,
     gettext_provider: GetText,
-): UpdateFunction<InternalHeadingsItem> => {
+): UpdateFunction<InternalTextStyleItem> => {
     const is_selected =
         (!host.is_plain_text_activated &&
             !host.is_preformatted_text_activated &&
             host.current_heading === null) ||
         host.is_disabled;
 
-    return html`<option selected="${is_selected}" disabled>
+    return html`<option value="" selected="${is_selected}" disabled>
         ${gettext_provider.gettext("Styles")}
     </option>`;
 };
