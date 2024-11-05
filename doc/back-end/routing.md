@@ -39,13 +39,6 @@ following routes:
 -   `POST /plugins/stuff/admin`
 
 ``` php
-public function getHooksAndCallbacks() : Collection
-{
-    ...
-    $this->addHook(\Tuleap\Request\CollectRoutesEvent::NAME);
-    ...
-}
-
 public function routeGetAdmin(): Tuleap\Stuff\Admin\IndexController
 {
     return new Tuleap\Stuff\Admin\IndexController();
@@ -61,6 +54,7 @@ public function routeGetSlash(): Tuleap\Stuff\StuffIndexController
     return new Tuleap\Stuff\StuffIndexController();
 }
 
+#[Tuleap\Plugin\ListeningToEventClass]
 public function collectRoutesEvent(\Tuleap\Request\CollectRoutesEvent $event) : void
 {
     $event->getRouteCollector()->addGroup('/plugins/stuff', function (FastRoute\RouteCollector $r) {
