@@ -68,7 +68,11 @@ export async function useEditor(
     const plugins: Plugin[] = [
         setupInputPlugin(),
         upload_plugin,
-        dropCursor(),
+        dropCursor({
+            color: false,
+            width: 2,
+            class: "prose-mirror-editor-dropcursor",
+        }),
         initLinkPopoverPlugin(document, gettext_provider, editor_id),
         ...setupToolbar(schema, toolbar_bus),
         initPluginTransformInput(project_id, references),
