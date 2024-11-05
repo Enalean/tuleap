@@ -20,20 +20,15 @@
 import { html } from "hybrids";
 import type { UpdateFunction } from "hybrids";
 import { sprintf } from "sprintf-js";
-import { NB_HEADING } from "@tuleap/prose-mirror-editor";
-import type { InternalHeadingsItem } from "./text-style";
+import type { InternalTextStyleItem } from "./text-style";
 import type { GetText } from "@tuleap/gettext";
 
-const isCurrentHeading = (host: InternalHeadingsItem, level: number): boolean => {
+export const OPTION_HEADING_1 = "heading-1";
+export const OPTION_HEADING_2 = "heading-2";
+export const OPTION_HEADING_3 = "heading-3";
+
+export const isCurrentHeading = (host: InternalTextStyleItem, level: number): boolean => {
     return host.current_heading !== null && host.current_heading.level === level;
-};
-
-const onClickApplyHeading = (host: InternalHeadingsItem, level: number): void => {
-    if (isCurrentHeading(host, level)) {
-        return;
-    }
-
-    host.toolbar_bus.heading({ level });
 };
 
 const getHeadingOptionTitle = (level: number, gettext_provider: GetText): string =>
@@ -48,30 +43,39 @@ const getHeadingOptionTextContent = (level: number, gettext_provider: GetText): 
     sprintf(gettext_provider.gettext("Heading %(heading_level)s"), { heading_level: level });
 
 export const renderHeadingOption = (
-    host: InternalHeadingsItem,
+    host: InternalTextStyleItem,
     level: number,
+    value: string,
     gettext_provider: GetText,
-): UpdateFunction<InternalHeadingsItem> => html`
+): UpdateFunction<InternalTextStyleItem> => html`
     <option
-        onclick="${(): void => onClickApplyHeading(host, level)}"
         title="${getHeadingOptionTitle(level, gettext_provider)}"
         selected="${isCurrentHeading(host, level)}"
+        value="${value}"
     >
         ${getHeadingOptionTextContent(level, gettext_provider)}
     </option>
 `;
 
 export const renderHeadingsOptions = (
-    host: InternalHeadingsItem,
+    host: InternalTextStyleItem,
     gettext_provider: GetText,
-): UpdateFunction<InternalHeadingsItem> => {
+): UpdateFunction<InternalTextStyleItem> => {
     if (!host.style_elements.headings) {
         return html``;
     }
 
+    const header_values = [
+        { value: OPTION_HEADING_1, level: 1 },
+        { value: OPTION_HEADING_2, level: 2 },
+        { value: OPTION_HEADING_3, level: 3 },
+    ];
+
     const heading_options = [];
-    for (let level = 1; level < NB_HEADING + 1; level++) {
-        heading_options.push(renderHeadingOption(host, level, gettext_provider));
+    for (const option of header_values) {
+        heading_options.push(
+            renderHeadingOption(host, option.level, option.value, gettext_provider),
+        );
     }
     return html`${heading_options}`;
 };

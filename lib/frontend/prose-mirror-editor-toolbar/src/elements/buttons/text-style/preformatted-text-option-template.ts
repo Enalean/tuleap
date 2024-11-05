@@ -19,30 +19,24 @@
 
 import { html } from "hybrids";
 import type { UpdateFunction } from "hybrids";
-import type { InternalHeadingsItem } from "./text-style";
+import type { InternalTextStyleItem } from "./text-style";
 import type { GetText } from "@tuleap/gettext";
 
+export const OPTION_PREFORMATTED = "preformatted";
+
 export const renderPreformattedTextOption = (
-    host: InternalHeadingsItem,
+    host: InternalTextStyleItem,
     gettext_provider: GetText,
-): UpdateFunction<InternalHeadingsItem> => {
+): UpdateFunction<InternalTextStyleItem> => {
     if (!host.style_elements.preformatted) {
         return html``;
     }
-
-    const onClickApplyPreformattedText = (): void => {
-        if (host.is_preformatted_text_activated) {
-            return;
-        }
-
-        host.toolbar_bus.preformattedText();
-    };
 
     return html`
         <option
             selected="${host.is_preformatted_text_activated}"
             title="${gettext_provider.gettext("Change to preformatted text")}"
-            onclick="${onClickApplyPreformattedText}"
+            value="${OPTION_PREFORMATTED}"
         >
             ${gettext_provider.gettext("Preformatted")}
         </option>

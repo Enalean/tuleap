@@ -17,9 +17,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { describe, it, expect, beforeEach, vi } from "vitest";
+import { describe, it, expect, beforeEach } from "vitest";
 import type { ToolbarBus } from "@tuleap/prose-mirror-editor";
-import { buildToolbarBus, NB_HEADING } from "@tuleap/prose-mirror-editor";
+import { buildToolbarBus } from "@tuleap/prose-mirror-editor";
 import { createLocalDocument, gettext_provider } from "../../../helpers/helper-for-test";
 import type { HostElement } from "./text-style";
 import { renderHeadingOption, renderHeadingsOptions } from "./heading-option-template";
@@ -35,7 +35,7 @@ describe("heading-option-template", () => {
     });
 
     const getOptionElement = (host: HostElement, level: number): HTMLOptionElement => {
-        renderHeadingOption(host, level, gettext_provider)(host, target);
+        renderHeadingOption(host, level, `heading-${level}`, gettext_provider)(host, target);
         const option = target.querySelector("option");
         if (!option) {
             throw new Error("Expected an option");
@@ -70,33 +70,6 @@ describe("heading-option-template", () => {
         expect(option.selected).toBe(false);
     });
 
-    it("When clicked, toolbar_bus.heading() should be called with the option value", () => {
-        const heading_level = 3;
-        const host = {
-            toolbar_bus,
-            current_heading: { level: 2 },
-        } as HostElement;
-
-        const applyHeading = vi.spyOn(toolbar_bus, "heading");
-        getOptionElement(host, heading_level).click();
-
-        expect(applyHeading).toHaveBeenCalledOnce();
-        expect(applyHeading).toHaveBeenCalledWith({ level: heading_level });
-    });
-
-    it("When clicked, toolbar_bus.heading() should NOT be called with the option value if the heading level didn't change", () => {
-        const heading_level = 3;
-        const host = {
-            toolbar_bus,
-            current_heading: { level: 3 },
-        } as HostElement;
-
-        const applyHeading = vi.spyOn(toolbar_bus, "heading");
-        getOptionElement(host, heading_level).click();
-
-        expect(applyHeading).not.toHaveBeenCalled();
-    });
-
     describe("renderHeadingsOptions()", () => {
         it("should render nothing when headings are disabled", () => {
             const host = {
@@ -118,7 +91,7 @@ describe("heading-option-template", () => {
             renderHeadingsOptions(host, gettext_provider)(host, target);
             const options = target.querySelectorAll("option");
 
-            expect(options.length).toBe(NB_HEADING);
+            expect(options.length).toBe(3);
         });
     });
 });

@@ -26,25 +26,28 @@ import { renderPlainTextOption } from "./plain-text-option-template";
 import { renderStylesOption } from "./styles-option-template";
 import { renderPreformattedTextOption } from "./preformatted-text-option-template";
 import type { GetText } from "@tuleap/gettext";
+import { applyTextStyle } from "./apply-text-style";
 
 export const TAG = "text-style-item";
 
-export type HeadingsItem = {
+export type TextStyleItem = {
     toolbar_bus: ToolbarBus;
     style_elements: StyleElements;
     gettext_provider: GetText;
 };
 
-export type InternalHeadingsItem = Readonly<HeadingsItem> & {
+export type InternalTextStyleItem = Readonly<TextStyleItem> & {
     current_heading: Heading | null;
     is_plain_text_activated: boolean;
     is_preformatted_text_activated: boolean;
     is_disabled: boolean;
+    select_element: HTMLSelectElement;
+    render(): HTMLElement;
 };
 
-export type HostElement = InternalHeadingsItem & HTMLElement;
+export type HostElement = InternalTextStyleItem & HTMLElement;
 
-export const connect = (host: InternalHeadingsItem): void => {
+export const connect = (host: InternalTextStyleItem): void => {
     if (host.style_elements.headings) {
         host.toolbar_bus.setView({
             activateHeading: (heading: Heading | null) => {
@@ -70,7 +73,11 @@ export const connect = (host: InternalHeadingsItem): void => {
     }
 };
 
-define<InternalHeadingsItem>({
+const onChangeApplySelectedStyle = (host: InternalTextStyleItem): void => {
+    applyTextStyle(host, host.select_element.value);
+};
+
+define<InternalTextStyleItem>({
     tag: TAG,
     current_heading: null,
     is_plain_text_activated: false,
@@ -78,14 +85,22 @@ define<InternalHeadingsItem>({
     is_disabled: false,
     style_elements: (host, style_elements) => style_elements,
     toolbar_bus: {
-        value: (host: InternalHeadingsItem, toolbar_bus: ToolbarBus) => toolbar_bus,
+        value: (host: InternalTextStyleItem, toolbar_bus: ToolbarBus) => toolbar_bus,
         connect,
     },
     gettext_provider: (host, gettext_provider) => gettext_provider,
-    render: (host: InternalHeadingsItem): UpdateFunction<InternalHeadingsItem> => html`
+    select_element: (host: InternalTextStyleItem) => {
+        const select = host.render().querySelector("select");
+        if (!(select instanceof HTMLSelectElement)) {
+            throw new Error("Unable to find the text-style <select> element");
+        }
+        return select;
+    },
+    render: (host: InternalTextStyleItem): UpdateFunction<InternalTextStyleItem> => html`
         <select
             class="tlp-select tlp-select-small tlp-select-adjusted"
             disabled="${host.is_disabled}"
+            onchange="${onChangeApplySelectedStyle}"
         >
             ${renderStylesOption(host, host.gettext_provider)}
             ${renderPlainTextOption(host, host.gettext_provider)}
