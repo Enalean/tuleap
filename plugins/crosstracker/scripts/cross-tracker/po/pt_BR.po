@@ -63,6 +63,11 @@ msgstr ""
 msgid "Example: @title = 'value'"
 msgstr ""
 
+msgid ""
+"Example: SELECT @pretty_title FROM @project.name = 'my-project' WHERE @title "
+"= 'value'"
+msgstr ""
+
 msgid "Expert mode"
 msgstr ""
 

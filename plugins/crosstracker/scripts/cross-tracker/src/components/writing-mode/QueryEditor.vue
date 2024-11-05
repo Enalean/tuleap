@@ -27,7 +27,6 @@
                 class="cross-tracker-expert-content-query-textarea tlp-textarea"
                 name="expert_query"
                 id="expert-query-textarea"
-                v-bind:placeholder="$gettext(`Example: @title = 'value'`)"
                 v-model="value"
                 data-test="expert-query-textarea"
             ></textarea>
@@ -127,7 +126,11 @@ onMounted(() => {
             autocomplete: TQL_cross_tracker_autocomplete_keywords,
             parser_definition: buildParserDefinition(cross_tracker_allowed_keywords),
         },
-        query_textarea.value.placeholder,
+        props.writing_cross_tracker_report.expert_mode
+            ? $gettext(
+                  `Example: SELECT @pretty_title FROM @project.name = 'my-project' WHERE @title = 'value'`,
+              )
+            : $gettext(`Example: @title = 'value'`),
         update_callback,
     );
 
