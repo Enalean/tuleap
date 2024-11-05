@@ -668,6 +668,9 @@ msgstr "프로필 사진이 변경되었습니다."
 msgid "Back"
 msgstr "뒤로"
 
+msgid "Back to references"
+msgstr ""
+
 msgid "Back to the administration"
 msgstr "관리로 돌아가기"
 
@@ -744,6 +747,9 @@ msgid ""
 msgstr ""
 "이 소프트웨어를 다운로드하면 <a href=\"%s\"><b>정책을 읽었으며</b></a> 이용 "
 "약관에 암시적으로 동의하는 것을 의미합니다."
+
+msgid "Bypass filters"
+msgstr ""
 
 msgid "Bypass filters <em>(Site administrators only)</em>:"
 msgstr "필터 무시<em>(사이트 관리자만 해당)</em>:"
@@ -3029,6 +3035,9 @@ msgstr "검색"
 
 msgid "Security"
 msgstr "보안"
+
+msgid "See %sreference pattern configuration%s for usage"
+msgstr ""
 
 msgid "See permissions"
 msgstr "권한 보기"

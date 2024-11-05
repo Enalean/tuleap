@@ -67,13 +67,17 @@ class BurningParrotCompatiblePageDetector
         return strpos($_SERVER['REQUEST_URI'], '/project/admin/labels.php') === 0;
     }
 
-    private function isInProjectAdmin()
+    private function isInProjectAdmin(): bool
     {
-        parse_str($_SERVER['QUERY_STRING'], $query_string);
+        if (! isset($_SERVER['REQUEST_URI'])) {
+            return false;
+        }
 
         return strpos($_SERVER['REQUEST_URI'], '/project/admin/editgroupinfo.php') === 0
             || strpos($_SERVER['REQUEST_URI'], '/project/admin/ugroup.php') === 0
             || strpos($_SERVER['REQUEST_URI'], '/project/admin/editugroup.php') === 0
+            || strpos($_SERVER['REQUEST_URI'], '/project/admin/editugroup.php') === 0
+            || strpos($_SERVER['REQUEST_URI'], '/project/admin/reference.php?view=creation') === 0
             || strpos($_SERVER['REQUEST_URI'], '/project/admin/permission_per_group.php') === 0;
     }
 

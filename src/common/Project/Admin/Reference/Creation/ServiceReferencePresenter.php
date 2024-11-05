@@ -1,5 +1,6 @@
-/**
- * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
+<?php
+/*
+ * Copyright (c) Enalean, 2024 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -15,22 +16,19 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
-@import "project-admin/labels";
-@import "project-admin/details";
-@import "project-admin/ugroups";
-@import "project-admin/members";
-@import "project-admin/permissions";
-@import "project-admin/categories";
-@import "project-admin/services";
-@import "project-admin/references";
+declare(strict_types=1);
 
-.project-administration-title {
-    padding: var(--tlp-medium-spacing) var(--tlp-medium-spacing) 0;
-    word-break: break-all;
-}
+namespace Tuleap\Project\Admin\Reference\Creation;
 
-.project-administration-content {
-    padding: var(--tlp-medium-spacing) 0 0;
+/**
+ * @psalm-immutable
+ */
+final readonly class ServiceReferencePresenter
+{
+    public function __construct(public string $service_key, public string $service_label)
+    {
+    }
 }
