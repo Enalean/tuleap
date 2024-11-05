@@ -6,41 +6,40 @@ around:
 - Core (everything under `src/`)
 - Plugins (located under `plugins/pluginname`)
 
-Plugins can provide a new service (like AgileDashboard or Git) or
+Plugins can provide a new service (like Backlog or Git) or
 underlying plumbing with almost no dedicated UI (like LDAP). A plugin
 can depend on another (Cardwall depends on Tracker).
 
 Plugins rely on events to change behaviour of a given part of the code
 (either Core or another Plugin).
 
-Unless a very good reason, all new significant development **MUST** be
-done within a plugin. It's always true for new services.
+Unless there is a very good reason, all new significant work **MUST** be done within a plugin. It's always true for new services.
 
 ## Structure
 
-See corresponding ADR: [ADR-0030 - Plugins structure](../../adr/0030-plugins-structure.md).
+See the corresponding ADR: [ADR-0030 - PHP folder structure for plugins](../../adr/0030-php-folder-structure-for-plugins).
 
 A plugin folder is structured like
 
 ```tree
 /plugins/template/
-├── db/                           # Plugin tables and start data creation, uninstall & upgrade buckets
+├── db/                       # Plugin tables and start data creation, uninstall & upgrade buckets
 │   ├── mysql/
 │   │   └── updates/
 │   │       └── 2024/
 │   │           └── 202411041134_some_db_update.php
 │   ├── install.sql
 │   └── uninstal.sql
-├── etc/                          # Configuration
-├── include/                      # Plugin code
+├── etc/                      # Configuration
+├── include/                  # Plugin code
 │   └── templatePlugin.php
-├── scripts/                      # Front applications
+├── scripts/                  # Front-end applications
 │   └── my_script/
 │       └── package.json
-├── site-content/                 # Localisation strings
+├── site-content/             # Localization strings
 │   ├── fr_FR/LC_MESSAGES/tuleap-template.po
 │   └── pt_BR/LC_MESSAGES/tuleap-template.po
-├── tests/                        # Testing
+├── tests/                    # Testing
 │   ├── e2e/
 │   ├── integration/
 │   ├── rest/
@@ -52,11 +51,11 @@ A plugin folder is structured like
 As a good start, you can copy [`plugins/template`](../../plugins/template) and rename all
 `template` stuff to your plugin name.
 
-There are a handful of files already there, the most important are:
+There is a handful of files already there, the most important ones are:
 
 - `db/install.sql` definition of tables and initial data
-- `db/uninstall.sql` clean-up the base when the plugin is removed (purge)
-- `include/templatePlugin.class.php` the entry point that define the plugin behaviour
+- `db/uninstall.sql` clean-up the database when the plugin is removed (purge)
+- `include/templatePlugin.class.php` the entry point that defines the plugin behaviour
 
 Note: if you copy the default plugin for "mercurial" plugin for instance, you will end up with:
 
@@ -64,12 +63,12 @@ Note: if you copy the default plugin for "mercurial" plugin for instance, you wi
 
 ### `include`
 
-This directory contains all the PHP plugin code and also mustache templates. The main file is `pluginnamePlugin.php`, it
+This directory contains all the PHP plugin code and also Mustache template files. The main file is `pluginnamePlugin.php`, it
 declares the plugin, its events, its router, etc. This directory must be under namespace `Tuleap\PluginName`.
 
 `pluginnamePlugin.php` is the central place for plugin interaction with the rest of the application.
 
-Let's take a look at what our basic Mercurial plugin would look like
+Let's take a look at what our basic Mercurial plugin would look like:
 
 ```php
 <?php
@@ -125,22 +124,22 @@ For more, see this documentation:
 
 Plugins tests are all here (except typescript unit tests). There is mainly 4 test environments:
 
-- e2e -> cypress tests
-- integration -> testing the database and queries on it
-- rest -> testing rest API
-- unit -> good old unit testing
+- e2e ⟶ Cypress tests
+- integration ⟶ testing the database and queries on it
+- rest ⟶ testing rest API
+- unit ⟶ good old PHP unit testing
 
 For the last three environments, all those tests are written in PHP under the `Tuleap\PluginName` namespace. If some
-stubs are builders are needed, just add directories `Stubs` and `Builders` inside.
+stubs or builders are needed, add directories `Tests\Stubs` and `Tests\Builders` inside.
 
 ### `scripts`
 
-This directory is a collection of front applications. Each application must be under its own directory.
-See [documentation](../front-end.md).
+This directory is a collection of front-end applications. Each application must be under its own directory.
+See the [front-end](../front-end.md) documentation.
 
 ### `site-content`
 
-It contains all localisation strings for the plugin. See [internationalization](../internationalization.md).
+It contains all localization strings for the plugin. See [internationalization](../internationalization.md).
 
 ### `db`
 
