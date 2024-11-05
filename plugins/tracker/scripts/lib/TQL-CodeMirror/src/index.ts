@@ -19,6 +19,7 @@
 
 import "./style.scss";
 
-export * from "./allowed-field-inserter";
-export * from "./builder";
-export * from "./language";
+export { insertAllowedFieldInCodeMirror } from "./allowed-field-inserter";
+export type { TQLCodeMirrorEditor } from "./builder";
+export { buildTQLEditor } from "./builder";
+export { buildParserDefinition, TQL_autocomplete_keywords } from "./language";

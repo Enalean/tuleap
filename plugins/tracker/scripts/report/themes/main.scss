@@ -19,6 +19,28 @@
 
 @use "pkg:@tuleap/plugin-tracker-tql-codemirror";
 
+.tracker-report-expert-content {
+    display: flex;
+    margin: 10px 0 6px;
+    padding: 0;
+    clear: both;
+}
+
+/* stylelint-disable-next-line selector-no-qualifying-type */
+select.tracker-report-expert-allowed-fields {
+    height: 100px;
+    margin: 0;
+}
+
+.tracker-report-expert-content-query {
+    flex: 1 1 auto;
+    margin: 0 25px 0 0;
+}
+
+#tracker-report-expert-query-textarea {
+    display: none;
+}
+
 .cm-editor {
     height: 100px;
     transition:
@@ -34,15 +56,9 @@
         box-shadow: var(--tlp-shadow-focus);
     }
 
-    /* stylelint-disable selector-no-qualifying-type */
-    pre {
-        padding: 0 6px;
-
-        &.cm-placeholder {
-            color: #999999;
-        }
+    .cm-placeholder {
+        color: #999999;
     }
-    /* stylelint-enable */
 }
 
 .tracker-report-expert-content-query-readonly > .cm-editor {
