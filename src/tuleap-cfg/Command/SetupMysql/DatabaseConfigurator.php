@@ -184,24 +184,6 @@ final class DatabaseConfigurator
         }
     }
 
-    /**
-     * @see https://bugs.mysql.com/bug.php?id=80379
-     */
-    public function setUpNss(SymfonyStyle $io, DBWrapperInterface $db, string $target_dbname, string $nss_user, string $nss_password, string $grant_hostname): void
-    {
-        $io->writeln(sprintf('<info>Grant privileges to %s</info>', $nss_user));
-
-        $this->createUser($db, $nss_user, $nss_password, $grant_hostname);
-
-        $this->grantOn($db, ['SELECT'], $target_dbname, 'user', $nss_user, $grant_hostname);
-        $this->grantOn($db, ['SELECT'], $target_dbname, 'groups', $nss_user, $grant_hostname);
-        $this->grantOn($db, ['SELECT'], $target_dbname, 'user_group', $nss_user, $grant_hostname);
-
-        $this->grantOn($db, ['SELECT', 'UPDATE'], $target_dbname, 'svn_token', $nss_user, $grant_hostname);
-        $this->grantOn($db, ['SELECT'], $target_dbname, 'plugin_ldap_user', $nss_user, $grant_hostname);
-        $this->grantOn($db, ['SELECT'], $target_dbname, 'plugin_openidconnectclient_user_mapping', $nss_user, $grant_hostname);
-    }
-
     public function setUpMediawiki(SymfonyStyle $io, DBWrapperInterface $db, string $mediawiki, string $app_user, string $grant_hostname): void
     {
         if ($mediawiki !== self::OPT_MEDIAWIKI_VALUE_CENTRAL && $mediawiki !== self::OPT_MEDIAWIKI_VALUE_PER_PROJECT) {
@@ -281,33 +263,5 @@ final class DatabaseConfigurator
     private function quoteDbUser(string $user_identifier, string $grant_hostname): string
     {
         return sprintf("'%s'@'%s'", $user_identifier, $grant_hostname);
-    }
-
-    private function grantOn(DBWrapperInterface $db, array $grants, string $db_name, string $table_name, string $user, string $grant_hostname): void
-    {
-        array_walk(
-            $grants,
-            static function (string $grant) {
-                // List is not complete because no need for other type yet, feel free to add supported one if you feel
-                // the need
-                // @see https://dev.mysql.com/doc/refman/8.0/en/grant.html#grant-table-privileges
-                if (! in_array($grant, ['SELECT', 'UPDATE', 'DELETE', 'INSERT'])) {
-                    throw new \RuntimeException('Invalid grant type: ' . $grant);
-                }
-            },
-        );
-        $db->run(sprintf(
-            'GRANT CREATE,%s ON %s.%s TO %s',
-            implode(',', $grants),
-            $db->escapeIdentifier($db_name),
-            $db->escapeIdentifier($table_name),
-            $this->quoteDbUser($user, $grant_hostname),
-        ));
-        $db->run(sprintf(
-            'REVOKE CREATE ON %s.%s FROM %s',
-            $db->escapeIdentifier($db_name),
-            $db->escapeIdentifier($table_name),
-            $this->quoteDbUser($user, $grant_hostname),
-        ));
     }
 }
