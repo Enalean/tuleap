@@ -1480,6 +1480,9 @@ msgstr ""
 msgid "Hierarchy"
 msgstr ""
 
+msgid "Hierarchy updated"
+msgstr ""
+
 msgid "Hint"
 msgstr ""
 
@@ -3585,6 +3588,10 @@ msgid "Tracker"
 msgstr ""
 
 #, php-format
+msgid "Tracker #%d new children: %s (previous children: %s)"
+msgstr ""
+
+#, php-format
 msgid "Tracker %1$s not duplicated"
 msgstr ""
 
@@ -4334,6 +4341,12 @@ msgid "day(s)"
 msgstr ""
 
 msgid "decreased"
+msgstr ""
+
+msgid "empty children list"
+msgstr ""
+
+msgid "empty previous hierarchy"
 msgstr ""
 
 msgid ""

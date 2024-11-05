@@ -1159,6 +1159,7 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
             Tracker_FormElement::PROJECT_HISTORY_UPDATE,
             ArtifactDeletor::PROJECT_HISTORY_ARTIFACT_DELETED,
             MarkTrackerAsDeletedController::PROJECT_HISTORY_TRACKER_DELETION_KEY,
+            \Tuleap\Tracker\Hierarchy\HierarchyController::TRACKER_HIERARCHY_UPDATE
         );
     }
 
@@ -1170,6 +1171,15 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
                 dgettext(
                     'tuleap-tracker',
                     'Tracker deleted',
+                ),
+            );
+        }
+
+        if ($event->getKey() === \Tuleap\Tracker\Hierarchy\HierarchyController::TRACKER_HIERARCHY_UPDATE) {
+            $event->setLabel(
+                dgettext(
+                    'tuleap-tracker',
+                    'Hierarchy updated',
                 ),
             );
         }

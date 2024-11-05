@@ -63,6 +63,7 @@ final class Tracker_Hierarchy_ControllerTest extends \Tuleap\Test\PHPUnit\TestCa
      * @var EventManager&\PHPUnit\Framework\MockObject\MockObject
      */
     private $event_manager;
+    private ProjectHistoryDao&\PHPUnit\Framework\MockObject\MockObject $project_history_dao;
 
     protected function setUp(): void
     {
@@ -82,7 +83,9 @@ final class Tracker_Hierarchy_ControllerTest extends \Tuleap\Test\PHPUnit\TestCa
         $this->trigger_rules_dao        = Mockery::spy(Tracker_Workflow_Trigger_RulesDao::class);
         $this->artifact_links_usage_dao = Mockery::mock(ArtifactLinksUsageDao::class);
         $this->event_manager            = $this->createMock(EventManager::class);
+        $this->project_history_dao      = $this->createMock(ProjectHistoryDao::class);
 
+        $this->request->shouldReceive('getCurrentUser')->andReturn(\Tuleap\Test\Builders\UserTestBuilder::aUser()->build());
         $this->trigger_rules_dao->shouldReceive('searchTriggeringTrackersByTargetTrackerID')->andReturn([]);
     }
 
@@ -168,6 +171,7 @@ final class Tracker_Hierarchy_ControllerTest extends \Tuleap\Test\PHPUnit\TestCa
             $this->trigger_rules_dao,
             $this->artifact_links_usage_dao,
             $this->event_manager,
+            $this->project_history_dao
         );
         return $controller->buildPresenter();
     }
@@ -189,6 +193,8 @@ final class Tracker_Hierarchy_ControllerTest extends \Tuleap\Test\PHPUnit\TestCa
             )
         );
 
+        $this->project_history_dao->expects(self::once())->method('addHistory');
+
         $controller = new HierarchyController(
             $this->request,
             $this->hierarchical_tracker,
@@ -197,6 +203,7 @@ final class Tracker_Hierarchy_ControllerTest extends \Tuleap\Test\PHPUnit\TestCa
             $this->trigger_rules_dao,
             $this->artifact_links_usage_dao,
             $this->event_manager,
+            $this->project_history_dao
         );
         $controller->update();
     }
@@ -218,6 +225,8 @@ final class Tracker_Hierarchy_ControllerTest extends \Tuleap\Test\PHPUnit\TestCa
             )
         );
 
+        $this->project_history_dao->expects(self::once())->method('addHistory');
+
         $controller = new HierarchyController(
             $this->request,
             $this->hierarchical_tracker,
@@ -226,6 +235,7 @@ final class Tracker_Hierarchy_ControllerTest extends \Tuleap\Test\PHPUnit\TestCa
             $this->trigger_rules_dao,
             $this->artifact_links_usage_dao,
             $this->event_manager,
+            $this->project_history_dao
         );
         $controller->update();
     }
@@ -247,6 +257,8 @@ final class Tracker_Hierarchy_ControllerTest extends \Tuleap\Test\PHPUnit\TestCa
             )
         );
 
+        $this->project_history_dao->expects(self::once())->method('addHistory');
+
         $controller = new HierarchyController(
             $this->request,
             $this->hierarchical_tracker,
@@ -255,6 +267,7 @@ final class Tracker_Hierarchy_ControllerTest extends \Tuleap\Test\PHPUnit\TestCa
             $this->trigger_rules_dao,
             $this->artifact_links_usage_dao,
             $this->event_manager,
+            $this->project_history_dao
         );
 
         $controller->update();
@@ -277,6 +290,7 @@ final class Tracker_Hierarchy_ControllerTest extends \Tuleap\Test\PHPUnit\TestCa
             $this->trigger_rules_dao,
             $this->artifact_links_usage_dao,
             $this->event_manager,
+            $this->project_history_dao
         );
         $controller->update();
     }
@@ -292,6 +306,7 @@ final class Tracker_Hierarchy_ControllerTest extends \Tuleap\Test\PHPUnit\TestCa
             $this->trigger_rules_dao,
             $this->artifact_links_usage_dao,
             $this->event_manager,
+            $this->project_history_dao
         );
         $this->dao->shouldReceive('updateChildren')->once();
 

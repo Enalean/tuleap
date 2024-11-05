@@ -32,6 +32,7 @@ use Tracker_Hierarchy_HierarchicalTrackerFactory;
 use Tracker_Workflow_Trigger_RulesDao;
 use Tuleap\GlobalResponseMock;
 use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
@@ -48,6 +49,7 @@ final class HierarchyControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $trigger_rules_dao        = Mockery::mock(Tracker_Workflow_Trigger_RulesDao::class);
         $artifact_links_usage_dao = Mockery::mock(ArtifactLinksUsageDao::class);
         $event_manager            = $this->createMock(EventManager::class);
+        $history_dao              = $this->createMock(\ProjectHistoryDao::class);
         $controller               = new HierarchyController(
             $request,
             $hierarchical_tracker,
@@ -56,6 +58,7 @@ final class HierarchyControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             $trigger_rules_dao,
             $artifact_links_usage_dao,
             $event_manager,
+            $history_dao
         );
 
         $project = Mockery::mock(Project::class);
@@ -69,6 +72,7 @@ final class HierarchyControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $request->shouldReceive('validArray')->andReturn(true);
         $request->shouldReceive('get')->andReturn(['147']);
+        $request->shouldReceive('getCurrentUser')->andReturn(UserTestBuilder::aUser()->build());
 
         $hierarchical_tracker->shouldReceive('getId')->andReturn(789);
 
@@ -90,6 +94,8 @@ final class HierarchyControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             })
         );
 
+        $history_dao->expects(self::once())->method('addHistory');
+
         $event_manager->method('dispatch')->willReturn(
             new TrackerHierarchyUpdateEvent(
                 $hierarchical_tracker->getUnhierarchizedTracker(),
@@ -108,6 +114,7 @@ final class HierarchyControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $trigger_rules_dao        = Mockery::mock(Tracker_Workflow_Trigger_RulesDao::class);
         $artifact_links_usage_dao = Mockery::mock(ArtifactLinksUsageDao::class);
         $event_manager            = $this->createMock(EventManager::class);
+        $history_dao              = $this->createMock(\ProjectHistoryDao::class);
         $controller               = new HierarchyController(
             $request,
             $hierarchical_tracker,
@@ -116,6 +123,7 @@ final class HierarchyControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             $trigger_rules_dao,
             $artifact_links_usage_dao,
             $event_manager,
+            $history_dao
         );
 
         $project = Mockery::mock(Project::class);
@@ -129,8 +137,10 @@ final class HierarchyControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $request->shouldReceive('validArray')->andReturn(true);
         $request->shouldReceive('get')->andReturn(['147']);
+        $request->shouldReceive('getCurrentUser')->andReturn(UserTestBuilder::aUser()->build());
 
         $hierarchical_tracker->shouldReceive('getId')->andReturn(789);
+        $hierarchical_tracker->shouldReceive('getChildren')->andReturn([]);
 
         $trigger_rules_dao->shouldReceive('searchTriggeringTrackersByTargetTrackerID')
             ->andReturn([]);
@@ -141,6 +151,8 @@ final class HierarchyControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $hierarchy_dao->shouldReceive('changeTrackerHierarchy')->once();
         $hierarchy_dao->shouldNotReceive('updateChildren');
+
+        $history_dao->expects(self::once())->method('addHistory');
 
         $event_manager->method('dispatch')->willReturn(
             new TrackerHierarchyUpdateEvent(
@@ -165,7 +177,9 @@ final class HierarchyControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $trigger_rules_dao        = $this->createMock(Tracker_Workflow_Trigger_RulesDao::class);
         $artifact_links_usage_dao = $this->createMock(ArtifactLinksUsageDao::class);
         $event_manager            = $this->createMock(EventManager::class);
-        $controller               = new HierarchyController(
+        $history_dao              = $this->createMock(\ProjectHistoryDao::class);
+
+        $controller = new HierarchyController(
             $request,
             $hierarchical_tracker,
             $this->createMock(Tracker_Hierarchy_HierarchicalTrackerFactory::class),
@@ -173,6 +187,7 @@ final class HierarchyControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             $trigger_rules_dao,
             $artifact_links_usage_dao,
             $event_manager,
+            $history_dao
         );
 
         $request->method('validArray')->willReturn(true);
