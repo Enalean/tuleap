@@ -144,4 +144,4 @@ $values = \Tuleap\Option\Options::collect($some_optional_values); // ["a", "b"]
 
 * [ADR-0022: Option][0]
 
-[0]: ../../../adr/0022-option.md
+[0]: ../../../docs/decisions/0022-option.md

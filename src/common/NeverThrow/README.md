@@ -394,5 +394,5 @@ private function defaultValue(): void
 * [ADR-0012: Favor Faults over Exceptions][0]
 * [ADR-0013: NeverThrow][1]
 
-[0]: ../../../adr/0012-faults-over-exceptions.md
-[1]: ../../../adr/0013-neverthrow.md
+[0]: ../../../docs/decisions/0012-faults-over-exceptions.md
+[1]: ../../../docs/decisions/0013-neverthrow.md

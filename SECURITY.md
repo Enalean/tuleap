@@ -37,6 +37,6 @@ Our security team follows the following guidelines:
 manner as possible.
  * Advisories for the reported vulnerabilities are made public in the
    [Tuleap bug report tracker](https://tuleap.net/plugins/tracker/?tracker=140). You can find more information on how we
-   handle vulnerabilities in [our vulnerability response guide](./doc/vulnerability-management/vulnerability-response.md).
+   handle vulnerabilities in [our vulnerability response guide](./docs/vulnerability-management/vulnerability-response.md).
  * Security researchers and their findings are respected and will be publicly acknowledged if they wish.
  * No legal threats nor punitive actions against security researchers for reporting vulnerabilities will be made.
