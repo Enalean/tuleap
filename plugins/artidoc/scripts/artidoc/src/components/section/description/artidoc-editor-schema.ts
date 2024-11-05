@@ -28,6 +28,7 @@ export const artidoc_editor_schema: EditorNodes = {
         draggable: false,
         isolating: true,
         disableDropCursor: true,
+        marks: "",
         toDOM(): DOMOutputSpec {
             return ["artidoc-section-title", 0];
         },
