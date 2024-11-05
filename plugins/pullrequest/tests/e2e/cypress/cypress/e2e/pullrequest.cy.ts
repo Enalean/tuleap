@@ -17,24 +17,28 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+function createOrNavigateToPullRequest(): void {
+    cy.log("Create a pull request");
+    cy.visit("/plugins/git/pullrequests/Awesomness");
+    cy.get("[data-test=count-to-display]").then(($open_pullrequest) => {
+        cy.log("Create pull request if needed");
+        if (parseInt($open_pullrequest.html(), 10) === 0) {
+            cy.get("[data-test=create-pull-request]").click();
+            cy.get("[data-test=pull-request-source-branch]").select("main");
+            cy.get("[data-test=pull-request-destination-branch]").select("stable");
+            cy.get("[data-test=pull-request-create-button]").click();
+        } else if (parseInt($open_pullrequest.html(), 10) >= 1) {
+            cy.get("[data-test=tabs-pullrequest]").click();
+            cy.get("[data-test=pull-request-card]").click();
+        }
+    });
+}
+
 describe("Pull request", function () {
     context("Project members", function () {
         it("can manage labels on pull requests", function () {
             cy.projectMemberSession();
-            cy.log("Create a pull request");
-            cy.visit("/plugins/git/pullrequests/Awesomness");
-            cy.get("[data-test=count-to-display]").then(($open_pullrequest) => {
-                cy.log("Create pull request if needed");
-                if (parseInt($open_pullrequest.html(), 10) === 0) {
-                    cy.get("[data-test=create-pull-request]").click();
-                    cy.get("[data-test=pull-request-source-branch]").select("main");
-                    cy.get("[data-test=pull-request-destination-branch]").select("stable");
-                    cy.get("[data-test=pull-request-create-button]").click();
-                } else if (parseInt($open_pullrequest.html(), 10) >= 1) {
-                    cy.get("[data-test=tabs-pullrequest]").click();
-                    cy.get("[data-test=pull-request-card]").click();
-                }
-            });
+            createOrNavigateToPullRequest();
             cy.log("Create label Emergency");
 
             cy.get("[data-test=manage-labels-button]").click();
@@ -87,6 +91,34 @@ describe("Pull request", function () {
             cy.visit("/plugins/git/pullrequests/Awesomness");
             cy.get("[data-test=tabs-pullrequest]").click();
             cy.get("[data-test=pull-request-card-labels]").should("be.empty");
+        });
+
+        it("can manage pull requests", function () {
+            cy.projectMemberSession();
+            createOrNavigateToPullRequest();
+
+            cy.log("Edit title of a pullrequest");
+            cy.get("[data-test=pull-request-open-title-modal-button]").click();
+            cy.get("[data-test=pull-request-edit-title-input]").clear().type("My updated title");
+            cy.get("[data-test=pull-request-save-changes-button]").click();
+            cy.get("[data-test=pullrequest-title]").contains("My updated title");
+
+            cy.log("Edit description of a pullrequest");
+            cy.get("[data-test=button-edit-description-comment]").click();
+            cy.get("[data-test=writing-zone-textarea]").first().clear().type("My description");
+            cy.get("[data-test=button-save-edition]").click();
+            cy.get("[data-test=description-content]").contains("My description");
+
+            cy.log("Add reviewers pullrequest");
+            cy.get("[data-test=edit-reviewers-button]").click();
+            cy.get("[data-test=manage-reviewers-modal]").within(() => {
+                cy.searchItemInLazyboxDropdown(
+                    "ARegularUser",
+                    "ARegularUser (ARegularUser)",
+                ).click();
+            });
+            cy.get("[data-test=save-reviewers-button]").click({ force: true });
+            cy.get("[data-test=pull-request-reviewers-empty-state]").should("not.exist");
         });
     });
 });
