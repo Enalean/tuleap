@@ -28,6 +28,7 @@ use Tuleap\AgileDashboard\Planning\Admin\AdditionalPlanningConfigurationWarnings
 use Tuleap\AgileDashboard\Planning\Admin\PlanningEditionPresenterBuilder;
 use Tuleap\AgileDashboard\Planning\Admin\PlanningWarningPossibleMisconfigurationPresenter;
 use Tuleap\AgileDashboard\Planning\Admin\UpdateRequestValidator;
+use Tuleap\AgileDashboard\Planning\BacklogHistoryEntry;
 use Tuleap\AgileDashboard\Planning\BacklogTrackersUpdateChecker;
 use Tuleap\AgileDashboard\Planning\ImportTemplateFormPresenter;
 use Tuleap\AgileDashboard\Planning\PlanningAdministrationDelegation;
@@ -74,64 +75,34 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
 
     public const AGILE_DASHBOARD_TEMPLATE_NAME = 'agile_dashboard_template.xml';
 
-    private PlanningFactory $planning_factory;
-    private ProjectManager $project_manager;
-    private AgileDashboard_XMLFullStructureExporter $xml_exporter;
-    private PlanningPermissionsManager $planning_permissions_manager;
-    private ScrumPlanningFilter $scrum_planning_filter;
-    private Tracker_FormElementFactory $tracker_form_element_factory;
     private Project $project;
-    private AgileDashboardCrumbBuilder $service_crumb_builder;
-    private AdministrationCrumbBuilder $admin_crumb_builder;
-    private DBTransactionExecutor $transaction_executor;
-    private ArtifactsInExplicitBacklogDao $artifacts_in_explicit_backlog_dao;
-    private PlanningUpdater $planning_updater;
-    private EventManager $event_manager;
-    private Planning_RequestValidator $planning_request_validator;
-    private UpdateIsAllowedChecker $root_planning_update_checker;
-    private PlanningEditionPresenterBuilder $planning_edition_presenter_builder;
-    private UpdateRequestValidator $update_request_validator;
 
     public function __construct(
         Codendi_Request $request,
-        PlanningFactory $planning_factory,
-        ProjectManager $project_manager,
-        AgileDashboard_XMLFullStructureExporter $xml_exporter,
-        PlanningPermissionsManager $planning_permissions_manager,
-        ScrumPlanningFilter $scrum_planning_filter,
-        Tracker_FormElementFactory $tracker_form_element_factory,
-        AgileDashboardCrumbBuilder $service_crumb_builder,
-        AdministrationCrumbBuilder $admin_crumb_builder,
-        DBTransactionExecutor $transaction_executor,
-        ArtifactsInExplicitBacklogDao $artifacts_in_explicit_backlog_dao,
-        PlanningUpdater $planning_updater,
-        EventManager $event_manager,
-        Planning_RequestValidator $planning_request_validator,
-        UpdateIsAllowedChecker $root_planning_update_checker,
-        PlanningEditionPresenterBuilder $planning_edition_presenter_builder,
-        UpdateRequestValidator $update_request_validator,
-        private BacklogTrackersUpdateChecker $backlog_trackers_update_checker,
+        private readonly PlanningFactory $planning_factory,
+        private readonly ProjectManager $project_manager,
+        private readonly AgileDashboard_XMLFullStructureExporter $xml_exporter,
+        private readonly PlanningPermissionsManager $planning_permissions_manager,
+        private readonly ScrumPlanningFilter $scrum_planning_filter,
+        private readonly Tracker_FormElementFactory $tracker_form_element_factory,
+        private readonly AgileDashboardCrumbBuilder $service_crumb_builder,
+        private readonly AdministrationCrumbBuilder $admin_crumb_builder,
+        private readonly DBTransactionExecutor $transaction_executor,
+        private readonly ArtifactsInExplicitBacklogDao $artifacts_in_explicit_backlog_dao,
+        private readonly PlanningUpdater $planning_updater,
+        private readonly EventManager $event_manager,
+        private readonly Planning_RequestValidator $planning_request_validator,
+        private readonly UpdateIsAllowedChecker $root_planning_update_checker,
+        private readonly PlanningEditionPresenterBuilder $planning_edition_presenter_builder,
+        private readonly UpdateRequestValidator $update_request_validator,
+        private readonly BacklogTrackersUpdateChecker $backlog_trackers_update_checker,
+        private readonly ProjectHistoryDao $project_history_dao,
+        private readonly TrackerFactory $tracker_factory,
     ) {
         parent::__construct('agiledashboard', $request);
 
-        $this->project                            = $this->request->getProject();
-        $this->group_id                           = $this->project->getID();
-        $this->planning_factory                   = $planning_factory;
-        $this->project_manager                    = $project_manager;
-        $this->xml_exporter                       = $xml_exporter;
-        $this->planning_permissions_manager       = $planning_permissions_manager;
-        $this->scrum_planning_filter              = $scrum_planning_filter;
-        $this->tracker_form_element_factory       = $tracker_form_element_factory;
-        $this->service_crumb_builder              = $service_crumb_builder;
-        $this->admin_crumb_builder                = $admin_crumb_builder;
-        $this->transaction_executor               = $transaction_executor;
-        $this->artifacts_in_explicit_backlog_dao  = $artifacts_in_explicit_backlog_dao;
-        $this->planning_updater                   = $planning_updater;
-        $this->event_manager                      = $event_manager;
-        $this->planning_request_validator         = $planning_request_validator;
-        $this->root_planning_update_checker       = $root_planning_update_checker;
-        $this->planning_edition_presenter_builder = $planning_edition_presenter_builder;
-        $this->update_request_validator           = $update_request_validator;
+        $this->project  = $this->request->getProject();
+        $this->group_id = $this->project->getID();
     }
 
     /**
@@ -427,6 +398,40 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
                 $this->backlog_trackers_update_checker->checkProvidedBacklogTrackersAreValid($validated_parameters);
                 $this->root_planning_update_checker->checkUpdateIsAllowed($original_planning, $validated_parameters, $user);
                 $this->planning_updater->update($user, $this->project, $updated_planning_id, $validated_parameters);
+
+                $new_plan_tracker_list = array_filter(array_map(function ($backlog_tracker_id) {
+                    return $this->tracker_factory->getTrackerById($backlog_tracker_id);
+                }, $validated_parameters->backlog_tracker_ids));
+
+                $new_plan_tracker = $this->tracker_factory->getTrackerById((int) $validated_parameters->planning_tracker_id);
+                if (! $new_plan_tracker) {
+                    throw new TrackerNotFoundException();
+                }
+
+                $this->project_history_dao->addHistory(
+                    $this->project,
+                    $user,
+                    new \DateTimeImmutable(),
+                    BacklogHistoryEntry::BacklogUpdate->value,
+                    '',
+                    [
+                        // label
+                        $original_planning->getPlanTitle(),
+                        $updated_planning_id,
+                        // previous plan values
+                        implode(',', array_map(function (Tracker $tracker) {
+                            return $tracker->getName() . ' (#' . $tracker->getId() . ')';
+                        }, $original_planning->getBacklogTrackers())),
+                        $original_planning->getPlanningTracker()->getName(),
+                        $original_planning->getPlanningTrackerId(),
+                        // new plan values
+                        implode(',', array_map(function (Tracker $tracker) {
+                            return $tracker->getName() . ' (#' . $tracker->getId() . ')';
+                        }, $new_plan_tracker_list)),
+                        $new_plan_tracker->getName(),
+                        $new_plan_tracker->getId(),
+                    ]
+                );
 
                 $this->addFeedback(
                     Feedback::INFO,

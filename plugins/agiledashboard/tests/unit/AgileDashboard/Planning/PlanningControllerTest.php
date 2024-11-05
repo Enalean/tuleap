@@ -52,6 +52,7 @@ use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class PlanningControllerTest extends TestCase
 {
@@ -69,6 +70,8 @@ final class PlanningControllerTest extends TestCase
     private UpdateRequestValidator&MockObject $update_request_validator;
     private BacklogTrackersUpdateChecker&MockObject $backlog_trackers_update_checker;
     private Project $project;
+    private \ProjectHistoryDao&MockObject $project_history_dao;
+    private \TrackerFactory&MockObject $tracker_factory;
 
     protected function setUp(): void
     {
@@ -85,6 +88,8 @@ final class PlanningControllerTest extends TestCase
         $this->root_planning_update_checker    = $this->createMock(UpdateIsAllowedChecker::class);
         $this->update_request_validator        = $this->createMock(UpdateRequestValidator::class);
         $this->backlog_trackers_update_checker = $this->createMock(BacklogTrackersUpdateChecker::class);
+        $this->project_history_dao             = $this->createMock(\ProjectHistoryDao::class);
+        $this->tracker_factory                 = $this->createMock(\TrackerFactory::class);
     }
 
     private function getPlanningController(Codendi_Request $request): Planning_Controller
@@ -108,6 +113,8 @@ final class PlanningControllerTest extends TestCase
             $this->createMock(PlanningEditionPresenterBuilder::class),
             $this->update_request_validator,
             $this->backlog_trackers_update_checker,
+            $this->project_history_dao,
+            $this->tracker_factory
         );
     }
 
@@ -288,6 +295,9 @@ final class PlanningControllerTest extends TestCase
         $this->update_request_validator->method('getValidatedPlanning')->willReturn(PlanningParameters::fromArray([]));
         $this->root_planning_update_checker->expects(self::once())->method('checkUpdateIsAllowed');
         $this->backlog_trackers_update_checker->method('checkProvidedBacklogTrackersAreValid');
+        $this->project_history_dao->expects(self::once())->method('addHistory');
+
+        $this->tracker_factory->method('getTrackerById')->willReturn(TrackerTestBuilder::aTracker()->withName('lorem')->build());
 
         $this->planning_updater->expects(self::once())->method('update');
 

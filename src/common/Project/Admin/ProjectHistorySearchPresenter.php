@@ -114,7 +114,7 @@ class ProjectHistorySearchPresenter
 
             $translated_events = [];
             foreach ($events as $event) {
-                $history_label       = $this->event_dispatcher->dispatch(new \Tuleap\Project\Admin\History\GetHistoryKeyLabel($event));
+                $history_label       = $this->event_dispatcher->dispatch(new \Tuleap\Project\Admin\History\GetHistoryKeyLabel($event, []));
                 $translated_events[] = [
                     'key'        => $event,
                     'label'      => $history_label->getLabel() ?? $GLOBALS['Language']->getOverridableText('project_admin_utils', $event),

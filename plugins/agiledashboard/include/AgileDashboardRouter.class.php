@@ -60,151 +60,37 @@ class AgileDashboardRouter
     private const PANE_KANBAN = 'kanban';
     private const PANE_CHARTS = 'charts';
     /**
-     * @var Planning_RequestValidator
-     */
-    private $planning_request_validator;
-
-    /**
      * @var Service|null
      */
     private $service;
 
-    /**
-     * @var Planning_MilestoneFactory
-     */
-    private $milestone_factory;
-
-    /**
-     * @var PlanningFactory
-     */
-    private $planning_factory;
-
-    /**
-     * @var MilestoneControllerFactory
-     */
-    private $milestone_controller_factory;
-
-    /**
-     * @var ProjectManager
-     */
-    private $project_manager;
-
-    /**
-     * @var AgileDashboard_XMLFullStructureExporter
-     */
-    private $xml_exporter;
-
-    /** @var AgileDashboard_ConfigurationManager */
-    private $config_manager;
-
-    /** @var PlanningPermissionsManager */
-    private $planning_permissions_manager;
-
-    /**
-     * @var ScrumPlanningFilter
-     */
-    private $planning_filter;
-    /**
-     * @var AgileDashboardJSONPermissionsRetriever
-     */
-    private $permissions_retriever;
-    /**
-     * @var AgileDashboardCrumbBuilder
-     */
-    private $service_crumb_builder;
-    /**
-     * @var AdministrationCrumbBuilder
-     */
-    private $admin_crumb_builder;
-
-    /**
-     * @var CountElementsModeChecker
-     */
-    private $count_elements_mode_checker;
-    /**
-     * @var DBTransactionExecutor
-     */
-    private $transaction_executor;
-    /**
-     * @var ArtifactsInExplicitBacklogDao
-     */
-    private $explicit_backlog_dao;
-    /**
-     * @var ScrumPresenterBuilder
-     */
-    private $scrum_presenter_builder;
-    /**
-     * @var EventManager
-     */
-    private $event_manager;
-    /**
-     * @var PlanningUpdater
-     */
-    private $planning_updater;
-    /**
-     * @var AgileDashboard_XMLExporter
-     */
-    private $agile_dashboard_exporter;
-    /**
-     * @var UpdateIsAllowedChecker
-     */
-    private $root_planning_update_checker;
-    /**
-     * @var PlanningEditionPresenterBuilder
-     */
-    private $planning_edition_presenter_builder;
-    /**
-     * @var UpdateRequestValidator
-     */
-    private $update_request_validator;
-
     public function __construct(
-        Planning_MilestoneFactory $milestone_factory,
-        PlanningFactory $planning_factory,
-        MilestoneControllerFactory $milestone_controller_factory,
-        ProjectManager $project_manager,
-        AgileDashboard_XMLFullStructureExporter $xml_exporter,
-        AgileDashboard_ConfigurationManager $config_manager,
-        PlanningPermissionsManager $planning_permissions_manager,
-        ScrumPlanningFilter $planning_filter,
-        AgileDashboardJSONPermissionsRetriever $permissions_retriever,
-        AgileDashboardCrumbBuilder $service_crumb_builder,
-        AdministrationCrumbBuilder $admin_crumb_builder,
-        CountElementsModeChecker $count_elements_mode_checker,
-        DBTransactionExecutor $transaction_executor,
-        ArtifactsInExplicitBacklogDao $explicit_backlog_dao,
-        ScrumPresenterBuilder $scrum_presenter_builder,
-        EventManager $event_manager,
-        PlanningUpdater $planning_updater,
-        Planning_RequestValidator $planning_request_validator,
-        AgileDashboard_XMLExporter $agile_dashboard_exporter,
-        UpdateIsAllowedChecker $root_planning_update_checker,
-        PlanningEditionPresenterBuilder $planning_edition_presenter_builder,
-        UpdateRequestValidator $update_request_validator,
-        private BacklogTrackersUpdateChecker $backlog_trackers_update_checker,
+        private readonly Planning_MilestoneFactory $milestone_factory,
+        private readonly PlanningFactory $planning_factory,
+        private readonly MilestoneControllerFactory $milestone_controller_factory,
+        private readonly ProjectManager $project_manager,
+        private readonly AgileDashboard_XMLFullStructureExporter $xml_exporter,
+        private readonly AgileDashboard_ConfigurationManager $config_manager,
+        private readonly PlanningPermissionsManager $planning_permissions_manager,
+        private readonly ScrumPlanningFilter $planning_filter,
+        private readonly AgileDashboardJSONPermissionsRetriever $permissions_retriever,
+        private readonly AgileDashboardCrumbBuilder $service_crumb_builder,
+        private readonly AdministrationCrumbBuilder $admin_crumb_builder,
+        private readonly CountElementsModeChecker $count_elements_mode_checker,
+        private readonly DBTransactionExecutor $transaction_executor,
+        private readonly ArtifactsInExplicitBacklogDao $explicit_backlog_dao,
+        private readonly ScrumPresenterBuilder $scrum_presenter_builder,
+        private readonly EventManager $event_manager,
+        private readonly PlanningUpdater $planning_updater,
+        private readonly Planning_RequestValidator $planning_request_validator,
+        private readonly AgileDashboard_XMLExporter $agile_dashboard_exporter,
+        private readonly UpdateIsAllowedChecker $root_planning_update_checker,
+        private readonly PlanningEditionPresenterBuilder $planning_edition_presenter_builder,
+        private readonly UpdateRequestValidator $update_request_validator,
+        private readonly BacklogTrackersUpdateChecker $backlog_trackers_update_checker,
+        private readonly ProjectHistoryDao $project_history_dao,
+        private readonly TrackerFactory $tracker_factory,
     ) {
-        $this->milestone_factory                  = $milestone_factory;
-        $this->planning_factory                   = $planning_factory;
-        $this->milestone_controller_factory       = $milestone_controller_factory;
-        $this->project_manager                    = $project_manager;
-        $this->xml_exporter                       = $xml_exporter;
-        $this->config_manager                     = $config_manager;
-        $this->planning_permissions_manager       = $planning_permissions_manager;
-        $this->planning_filter                    = $planning_filter;
-        $this->permissions_retriever              = $permissions_retriever;
-        $this->service_crumb_builder              = $service_crumb_builder;
-        $this->admin_crumb_builder                = $admin_crumb_builder;
-        $this->count_elements_mode_checker        = $count_elements_mode_checker;
-        $this->transaction_executor               = $transaction_executor;
-        $this->explicit_backlog_dao               = $explicit_backlog_dao;
-        $this->scrum_presenter_builder            = $scrum_presenter_builder;
-        $this->event_manager                      = $event_manager;
-        $this->planning_updater                   = $planning_updater;
-        $this->planning_request_validator         = $planning_request_validator;
-        $this->agile_dashboard_exporter           = $agile_dashboard_exporter;
-        $this->root_planning_update_checker       = $root_planning_update_checker;
-        $this->planning_edition_presenter_builder = $planning_edition_presenter_builder;
-        $this->update_request_validator           = $update_request_validator;
     }
 
     /**
@@ -410,6 +296,8 @@ class AgileDashboardRouter
             $this->planning_edition_presenter_builder,
             $this->update_request_validator,
             $this->backlog_trackers_update_checker,
+            $this->project_history_dao,
+            $this->tracker_factory
         );
     }
 

@@ -25,48 +25,33 @@ use Tuleap\Event\Dispatchable;
 class GetProjectHistoryEntryValue implements Dispatchable
 {
     public const NAME = 'getProjectHistoryEntryValue';
-    /**
-     * @var array
-     */
-    private $row;
-    /**
-     * @var string
-     */
-    private $value;
 
-    /**
-     *
-     *
-     * @param array  $row
-     * @param string $value
-     */
-    public function __construct($row, $value)
+    public function __construct(private array $row, private string $value, private array $parameters, private string $key)
     {
-        $this->row   = $row;
-        $this->value = $value;
     }
 
-    /**
-     * @return array
-     */
-    public function getRow()
+    public function getRow(): array
     {
         return $this->row;
     }
 
-    /**
-     * @return string
-     */
-    public function getValue()
+    public function getValue(): string
     {
         return $this->value;
     }
 
-    /**
-     * @param string $value
-     */
-    public function setValue($value)
+    public function setValue(string $value): void
     {
         $this->value = $value;
+    }
+
+    public function getParameters(): array
+    {
+        return $this->parameters;
+    }
+
+    public function getKey(): string
+    {
+        return $this->key;
     }
 }

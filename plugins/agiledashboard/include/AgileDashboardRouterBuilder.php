@@ -209,6 +209,8 @@ class AgileDashboardRouterBuilder // phpcs:ignore PSR1.Classes.ClassDeclaration.
                 TrackerFactory::instance(),
                 BackendLogger::getDefaultLogger(),
             ),
+            new ProjectHistoryDao(),
+            $tracker_factory
         );
     }
 
