@@ -95,6 +95,9 @@ msgstr ""
 msgid "None"
 msgstr "Nenhum"
 
+msgid "Open the Quick look view of the document"
+msgstr ""
+
 msgid "Please contact your site administrator."
 msgstr ""
 

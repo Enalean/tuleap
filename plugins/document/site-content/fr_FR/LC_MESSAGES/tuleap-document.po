@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 2.3\n"
+"X-Generator: Poedit 3.0.1\n"
 
 msgid ""
 "Above this limit, the archive is considered big enough to display a warning "
@@ -105,6 +105,9 @@ msgstr "Mégaoctets"
 
 msgid "None"
 msgstr "Aucun"
+
+msgid "Open the Quick look view of the document"
+msgstr "Ouvrir la vue Aperçu du document"
 
 msgid "Please contact your site administrator."
 msgstr "Veuillez contacter votre administrateur de site."

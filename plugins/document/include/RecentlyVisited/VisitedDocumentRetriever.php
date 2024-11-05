@@ -27,6 +27,7 @@ use Docman_PermissionsManager;
 use Tuleap\Docman\Reference\DocumentIconPresenterBuilder;
 use Tuleap\Project\ProjectByIDFactory;
 use Tuleap\Project\Registration\Template\Upload\Tus\ProjectNotFoundException;
+use Tuleap\QuickLink\SwitchToQuickLink;
 use Tuleap\User\History\HistoryEntry;
 use Tuleap\User\History\HistoryEntryCollection;
 
@@ -98,7 +99,16 @@ final readonly class VisitedDocumentRetriever
                 null,
                 $icon_presenter->icon,
                 $project,
-                [],
+                [
+                    new SwitchToQuickLink(
+                        dgettext('tuleap-document', 'Open the Quick look view of the document'),
+                        '/plugins/document/'
+                            . urlencode($project->getUnixNameMixedCase())
+                            . '/preview/'
+                            . urlencode((string) $item->getId()),
+                        'fa-solid fa-eye',
+                    ),
+                ],
                 [],
             )
         );
