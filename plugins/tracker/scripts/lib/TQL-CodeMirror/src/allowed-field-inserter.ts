@@ -18,20 +18,20 @@
  */
 import type { EditorView } from "@codemirror/view";
 
-export function insertAllowedFieldInCodeMirror(event: Event, editor: EditorView | null): void {
-    if (event.target instanceof HTMLOptionElement && editor !== null) {
-        let value = event.target.value;
-        if (isTextNotSelected(editor)) {
-            value = value + " ";
-            if (shouldASpaceBePrefixed(editor)) {
-                value = " " + value;
-            }
-        }
-
-        editor.dispatch(editor.state.replaceSelection(value));
-        editor.focus();
-        event.target.selected = false;
+export function insertAllowedFieldInCodeMirror(event: Event, editor: EditorView): void {
+    if (!(event.target instanceof HTMLOptionElement)) {
+        return;
     }
+    let value = event.target.value;
+    if (isTextNotSelected(editor)) {
+        value = value + " ";
+        if (shouldASpaceBePrefixed(editor)) {
+            value = " " + value;
+        }
+    }
+    editor.dispatch(editor.state.replaceSelection(value));
+    editor.focus();
+    event.target.selected = false;
 }
 
 function isTextNotSelected(editor: EditorView): boolean {

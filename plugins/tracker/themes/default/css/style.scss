@@ -213,61 +213,6 @@ button[name="tracker_query_submit"] {
     }
 }
 
-.tracker-report-expert-content {
-    display: flex;
-    margin: 10px 0 6px;
-    padding: 0;
-    clear: both;
-}
-
-.tracker-report-expert-content-query {
-    flex: 1 1 auto;
-    margin: 0 25px 0 0;
-
-    > textarea {
-        width: 100%;
-        height: 100px;
-    }
-
-    > .cm-editor {
-        height: 100px;
-        transition:
-            border linear 0.2s,
-            box-shadow linear 0.2s;
-        border: 1px solid #cccccc;
-        border-radius: var(--tlp-medium-radius);
-        background: var(--tlp-white-color);
-
-        &.cm-focused {
-            border-color: rgb(82 168 236 / 80%);
-            outline: 0;
-            box-shadow: var(--tlp-shadow-focus);
-        }
-
-        .cm-placeholder {
-            color: #999999;
-        }
-
-        pre {
-            padding: 0 6px;
-        }
-    }
-
-    &.tracker-report-expert-content-query-readonly > .cm-editor {
-        background: #eeeeee;
-        cursor: not-allowed;
-
-        .cm-content {
-            cursor: not-allowed;
-        }
-    }
-}
-
-select.tracker-report-expert-allowed-fields {
-    height: 100px;
-    margin: 0;
-}
-
 .tracker-report-search {
     text-align: center;
 }

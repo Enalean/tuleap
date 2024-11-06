@@ -21,38 +21,38 @@ import type { KeyBinding, ViewUpdate } from "@codemirror/view";
 import { EditorView, keymap, placeholder } from "@codemirror/view";
 import { defaultKeymap, history, historyKeymap } from "@codemirror/commands";
 import type { TQLDefinition } from "./language";
-import { tql } from "./language";
+import { TQLLanguageSupport } from "./language";
 import { autocompletion, completeFromList } from "@codemirror/autocomplete";
 
 export type TQLCodeMirrorEditor = EditorView;
 
-export function codeMirrorify(
-    textarea_element: HTMLTextAreaElement,
-    submitFormCallback: () => void,
+export function buildTQLEditor(
     tql_definition: TQLDefinition,
     placeholder_text: string,
-    update_callback: (() => void) | null = null,
+    initial_content: string,
+    submitFormCallback: (editor: TQLCodeMirrorEditor) => void,
+    update_callback: ((editor: TQLCodeMirrorEditor) => void) | null,
 ): TQLCodeMirrorEditor {
     const submit_keybinding: KeyBinding = {
         key: "Ctrl-Enter",
-        run: function () {
-            submitFormCallback();
+        run: function (editor) {
+            submitFormCallback(editor);
             return true;
         },
     };
 
     const full_update_callback = (update: ViewUpdate): void => {
-        if (update_callback !== null && update.docChanged) {
-            update_callback();
+        if (update.docChanged) {
+            update_callback?.(update.view);
         }
     };
 
-    const editor = new EditorView({
-        doc: textarea_element.value,
+    return new EditorView({
+        doc: initial_content,
         extensions: [
             history(),
             keymap.of([submit_keybinding, ...defaultKeymap, ...historyKeymap]),
-            tql(tql_definition),
+            TQLLanguageSupport(tql_definition),
             autocompletion({
                 override: [completeFromList(tql_definition.autocomplete)],
                 icons: false,
@@ -62,17 +62,4 @@ export function codeMirrorify(
             placeholder(placeholder_text),
         ],
     });
-
-    if (textarea_element.parentNode) {
-        textarea_element.parentNode.insertBefore(editor.dom, textarea_element);
-    }
-    textarea_element.style.display = "none";
-    if (textarea_element.form !== null) {
-        textarea_element.form.addEventListener("submit", () => {
-            textarea_element.value = editor.state.doc.toString();
-            submitFormCallback();
-        });
-    }
-
-    return editor;
 }

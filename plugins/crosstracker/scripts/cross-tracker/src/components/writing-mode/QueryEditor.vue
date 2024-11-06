@@ -20,16 +20,7 @@
 <template>
     <div class="cross-tracker-expert-content">
         <div class="cross-tracker-expert-content-query tlp-form-element">
-            <label class="tlp-label" for="expert-query-textarea">{{ $gettext("Query") }}</label
-            ><textarea
-                ref="query_textarea"
-                type="text"
-                class="cross-tracker-expert-content-query-textarea tlp-textarea"
-                name="expert_query"
-                id="expert-query-textarea"
-                v-model="value"
-                data-test="expert-query-textarea"
-            ></textarea>
+            <label class="tlp-label" ref="query_label">{{ $gettext("Query") }}</label>
             <p class="tlp-text-info">
                 <i
                     aria-hidden="true"
@@ -69,7 +60,6 @@
 </template>
 
 <script setup lang="ts">
-import type { Ref } from "vue";
 import { onMounted, ref } from "vue";
 import { useGettext } from "vue3-gettext";
 import {
@@ -79,9 +69,10 @@ import {
 import type { TQLCodeMirrorEditor } from "@tuleap/plugin-tracker-tql-codemirror";
 import {
     buildParserDefinition,
-    codeMirrorify,
+    buildTQLEditor,
     insertAllowedFieldInCodeMirror,
 } from "@tuleap/plugin-tracker-tql-codemirror";
+import { Option } from "@tuleap/option";
 import type { WritingCrossTrackerReport } from "../../domain/WritingCrossTrackerReport";
 
 const { $gettext } = useGettext();
@@ -89,39 +80,21 @@ const { $gettext } = useGettext();
 const props = defineProps<{ writing_cross_tracker_report: WritingCrossTrackerReport }>();
 const emit = defineEmits<{ (e: "trigger-search"): void }>();
 
-const code_mirror_instance: Ref<TQLCodeMirrorEditor | null> = ref(null);
+let code_mirror_instance: Option<TQLCodeMirrorEditor> = Option.nothing();
 
-const value = ref<string>(props.writing_cross_tracker_report.expert_query);
-
-const query_textarea = ref<InstanceType<typeof HTMLTextAreaElement>>();
+const query_label = ref<HTMLElement>();
 
 onMounted(() => {
-    const submitFormCallback = (): void => {
-        if (!code_mirror_instance.value) {
-            throw new Error("Code mirror is not accessible");
-        }
-        props.writing_cross_tracker_report.setExpertQuery(
-            code_mirror_instance.value.state.doc.toString(),
-        );
+    const submit_form_callback = (editor: TQLCodeMirrorEditor): void => {
+        props.writing_cross_tracker_report.setExpertQuery(editor.state.doc.toString());
         emit("trigger-search");
     };
 
-    const update_callback = (): void => {
-        if (!code_mirror_instance.value) {
-            throw new Error("Code mirror is not accessible");
-        }
-        props.writing_cross_tracker_report.setExpertQuery(
-            code_mirror_instance.value.state.doc.toString(),
-        );
+    const update_callback = (editor: TQLCodeMirrorEditor): void => {
+        props.writing_cross_tracker_report.setExpertQuery(editor.state.doc.toString());
     };
 
-    if (!(query_textarea.value instanceof HTMLTextAreaElement)) {
-        throw new Error("Textarea not found in DOM");
-    }
-
-    code_mirror_instance.value = codeMirrorify(
-        query_textarea.value,
-        submitFormCallback,
+    const editor = buildTQLEditor(
         {
             autocomplete: TQL_cross_tracker_autocomplete_keywords,
             parser_definition: buildParserDefinition(cross_tracker_allowed_keywords),
@@ -131,34 +104,28 @@ onMounted(() => {
                   `Example: SELECT @pretty_title FROM @project.name = 'my-project' WHERE @title = 'value'`,
               )
             : $gettext(`Example: @title = 'value'`),
+        props.writing_cross_tracker_report.expert_query,
+        submit_form_callback,
         update_callback,
     );
-
-    if (!code_mirror_instance.value) {
-        throw new Error("Code mirror is not accessible");
-    }
-    code_mirror_instance.value.focus();
+    code_mirror_instance = Option.fromValue(editor);
+    query_label.value?.insertAdjacentElement("afterend", editor.dom);
+    editor.focus();
 });
 
 function insertSelectedField(event: Event): void {
-    if (!code_mirror_instance.value) {
-        throw new Error("Code mirror is not accessible for adding field");
-    }
-    insertAllowedFieldInCodeMirror(event, code_mirror_instance.value);
-}
-
-function clearEditor(): void {
-    if (!code_mirror_instance.value) {
-        throw new Error("Code mirror is not accessible for adding field");
-    }
-    code_mirror_instance.value.dispatch({
-        changes: { from: 0, to: code_mirror_instance.value.state.doc.length, insert: "" },
+    code_mirror_instance.apply((editor) => {
+        insertAllowedFieldInCodeMirror(event, editor);
     });
 }
 
-defineExpose({
-    value,
-    code_mirror_instance,
-    clearEditor,
-});
+function clearEditor(): void {
+    code_mirror_instance.apply((editor) => {
+        editor.dispatch({
+            changes: { from: 0, to: editor.state.doc.length, insert: "" },
+        });
+    });
+}
+
+defineExpose({ clearEditor });
 </script>

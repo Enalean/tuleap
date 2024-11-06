@@ -29,8 +29,8 @@ import syntax from "@tuleap/tql-syntax";
 import { Tag } from "@lezer/highlight";
 
 export interface TQLParserDefinitionItem {
-    pattern: RegExp;
-    token: string;
+    readonly pattern: RegExp;
+    readonly token: string;
 }
 
 export type TQLParserDefinition = ReadonlyArray<TQLParserDefinitionItem>;
@@ -123,7 +123,7 @@ function createTQLStreamParser(definition: TQLParserDefinition): StreamParser<ne
     };
 }
 
-export function tql(definition: TQLDefinition): LanguageSupport {
+export function TQLLanguageSupport(definition: TQLDefinition): LanguageSupport {
     const tql_parser = createTQLStreamParser(definition.parser_definition);
     const tql_language = StreamLanguage.define(tql_parser);
     const tql_highlight = HighlightStyle.define(

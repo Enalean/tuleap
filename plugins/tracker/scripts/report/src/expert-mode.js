@@ -20,10 +20,10 @@
 import codendi from "codendi";
 import { post } from "@tuleap/tlp-fetch";
 import {
-    TQL_autocomplete_keywords,
-    insertAllowedFieldInCodeMirror,
-    codeMirrorify,
+    buildTQLEditor,
     buildParserDefinition,
+    insertAllowedFieldInCodeMirror,
+    TQL_autocomplete_keywords,
 } from "@tuleap/plugin-tracker-tql-codemirror";
 
 let query_rich_editor = null;
@@ -104,22 +104,28 @@ function initializeCodeMirror() {
 }
 
 function codeMirrorifyQueryArea() {
+    if (query_rich_editor !== null) {
+        return;
+    }
+
     const tracker_query = document.getElementById("tracker-report-expert-query-textarea");
     const allowed_fields = JSON.parse(tracker_query.dataset.allowedFields);
+    const autocomplete_keywords = TQL_autocomplete_keywords.concat(allowed_fields);
 
-    if (query_rich_editor === null) {
-        const autocomplete_keywords = TQL_autocomplete_keywords.concat(allowed_fields);
-
-        query_rich_editor = codeMirrorify(
-            tracker_query,
-            submitFormCallback,
-            {
-                autocomplete: autocomplete_keywords,
-                parser_definition: buildParserDefinition(["@comments"]),
-            },
-            tracker_query.placeholder,
-        );
-    }
+    query_rich_editor = buildTQLEditor(
+        {
+            autocomplete: autocomplete_keywords,
+            parser_definition: buildParserDefinition(["@comments"]),
+        },
+        tracker_query.placeholder,
+        tracker_query.value,
+        submitFormCallback,
+        null,
+    );
+    tracker_query.insertAdjacentElement("afterend", query_rich_editor.dom);
+    tracker_query.form?.addEventListener("submit", function () {
+        tracker_query.value = query_rich_editor.state.doc.toString();
+    });
 }
 
 function submitFormCallback() {

@@ -20,6 +20,8 @@
 import { describe, expect, it, vi } from "vitest";
 import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
+import type { TQLCodeMirrorEditor } from "@tuleap/plugin-tracker-tql-codemirror";
+import * as TQLEditor from "@tuleap/plugin-tracker-tql-codemirror";
 import { getGlobalTestOptions } from "../../helpers/global-options-for-tests";
 import QueryEditor from "./QueryEditor.vue";
 import { WritingCrossTrackerReport } from "../../domain/WritingCrossTrackerReport";
@@ -40,35 +42,57 @@ describe("QueryEditor", () => {
         });
     }
 
-    it("Displays a code mirror integration", () => {
+    function buildFakeEditorImplementation(
+        test: "submit" | "update",
+    ): typeof TQLEditor.buildTQLEditor {
+        const doc = document.implementation.createHTMLDocument();
+        return (
+            _definition,
+            _placeholder,
+            _initial_value,
+            submitCallback,
+            updateCallback,
+        ): TQLCodeMirrorEditor => {
+            const dom = doc.createElement("div");
+            const state = { doc: "@title = 'bar'" };
+
+            const editor = {
+                dom,
+                state,
+                focus: noop,
+                dispatch: noop,
+            } as unknown as TQLCodeMirrorEditor;
+            if (test === "submit") {
+                submitCallback(editor);
+            } else {
+                updateCallback?.(editor);
+            }
+            return editor;
+        };
+    }
+
+    it("Updates the report when query is updated", () => {
+        vi.spyOn(TQLEditor, "buildTQLEditor").mockImplementation(
+            buildFakeEditorImplementation("update"),
+        );
+
         const writing_cross_tracker_report = new WritingCrossTrackerReport();
         writing_cross_tracker_report.expert_query = "@title = 'foo'";
+        instantiateComponent(writing_cross_tracker_report);
 
-        const wrapper = instantiateComponent(writing_cross_tracker_report);
-        expect(wrapper.vm.value).toBe(writing_cross_tracker_report.expert_query);
+        expect(writing_cross_tracker_report.expert_query).toBe("@title = 'bar'");
     });
 
-    it("Update the report when query is updated", () => {
-        vi.spyOn(document, "createRange").mockImplementation(() => {
-            return {
-                getBoundingClientRect: noop,
-                setEnd: noop,
-                setStart: noop,
-                getClientRects: () => [],
-            } as unknown as Range;
-        });
+    it(`Updates the report and emits an event when the form submit keybinding is run`, () => {
+        vi.spyOn(TQLEditor, "buildTQLEditor").mockImplementation(
+            buildFakeEditorImplementation("submit"),
+        );
 
         const writing_cross_tracker_report = new WritingCrossTrackerReport();
         writing_cross_tracker_report.expert_query = "@title = 'foo'";
         const wrapper = instantiateComponent(writing_cross_tracker_report);
 
-        wrapper.vm.code_mirror_instance?.dispatch({
-            changes: {
-                from: 0,
-                to: wrapper.vm.code_mirror_instance?.state.doc.length,
-                insert: "@title = 'bar'",
-            },
-        });
         expect(writing_cross_tracker_report.expert_query).toBe("@title = 'bar'");
+        expect(wrapper.emitted()).toHaveProperty("trigger-search");
     });
 });
