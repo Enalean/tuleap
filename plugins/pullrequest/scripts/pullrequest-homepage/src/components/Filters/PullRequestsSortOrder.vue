@@ -33,7 +33,7 @@
                 {{ $gettext("Newest") }}
             </option>
             <option v-bind:value="SORT_ASCENDANT">
-                {{ $gettext("Latest") }}
+                {{ $gettext("Oldest") }}
             </option>
         </select>
     </div>

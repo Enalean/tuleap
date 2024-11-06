@@ -57,9 +57,6 @@ msgstr "Nom du label"
 msgid "Labels"
 msgstr "Labels"
 
-msgid "Latest"
-msgstr "Plus anciennes"
-
 msgid "Matching branches"
 msgstr "Branches correspondantes"
 
@@ -92,6 +89,9 @@ msgstr "OK"
 
 msgid "Oh snap!"
 msgstr "Oh mince !"
+
+msgid "Oldest"
+msgstr "Plus anciennes"
 
 msgid "Related to me"
 msgstr "En lien avec moi"
