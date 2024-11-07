@@ -109,12 +109,14 @@ onUnmounted(() => {
 });
 
 function addExistingSection(): void {
+    dropdown?.hide();
     add_existing_section_bus.openModal(props.position, (section: ArtidocSection): void => {
         props.insert_section_callback(section, props.position);
     });
 }
 
 function addNewSection(): void {
+    dropdown?.hide();
     if (!is_tracker_with_submittable_section.value) {
         openConfigurationModalBeforeInsertingNewSection();
         return;
@@ -144,35 +146,39 @@ function insertNewSection(): void {
 }
 </script>
 
+<style lang="scss">
+.artidoc-add-new-section-container:not(:hover) {
+    transition: opacity ease-in-out 250ms 250ms;
+    opacity: 0;
+}
+
+ol:has(> .artidoc-section-with-add-button:last-child:hover) + .artidoc-add-new-section-container, // the last one
+.artidoc-section-with-add-button:hover + .artidoc-section-with-add-button > .artidoc-add-new-section-container, // the next one
+.artidoc-add-new-section-container:has(+ .artidoc-section-container:hover) // the previous one
+{
+    opacity: 1;
+}
+</style>
 <style scoped lang="scss">
 @use "@/themes/includes/whitespace";
 @use "@/themes/includes/size";
-
-$half: calc(#{size.$add-section-button-container-height} * 0.5);
-$half-minus-one-px: calc(#{$half} - 1px);
-$half-plus-one-px: calc(#{$half} + 1px);
+@use "@/themes/includes/viewport-breakpoint";
 
 .artidoc-add-new-section-container {
     --add-new-section-button-background-color: var(--tlp-neutral-light-color);
     --add-new-section-button-text-color: var(--tlp-typo-default-text-color);
 
-    display: flex;
-    justify-content: center;
-    margin: 0 whitespace.$section-right-padding 0 whitespace.$section-left-padding;
-    padding: whitespace.$add-section-button-container-vertical-padding 0;
-    transition: background-color ease-in-out 150ms;
-    background: linear-gradient(
-        0deg,
-        var(--tlp-white-color) 0,
-        var(--tlp-white-color) $half-minus-one-px,
-        var(--add-new-section-button-background-color) $half,
-        var(--tlp-white-color) $half-plus-one-px,
-        var(--tlp-white-color) 100%
-    );
+    margin: 0 0 0 calc(-1 * #{size.$add-section-button-container-width});
+    padding: whitespace.$add-section-button-container-vertical-padding
+        whitespace.$add-section-button-container-horizontal-padding;
 
     &:has(button:hover, button:focus-within) {
         --add-new-section-button-background-color: var(--tlp-main-color);
         --add-new-section-button-text-color: var(--tlp-white-color);
+    }
+
+    @media screen and (max-width: #{viewport-breakpoint.$medium-screen-size}) {
+        margin: 0;
     }
 
     @media print {

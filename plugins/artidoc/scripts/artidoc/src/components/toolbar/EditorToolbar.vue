@@ -78,12 +78,17 @@ onMounted(() => {
 
 .artidoc-toolbar {
     // Display block is mandatory to avoid flickering with the toolbar
-    display: block;
+    display: flex;
     position: sticky;
     z-index: zindex.$toolbar;
     top: global-variables.$navbar-height;
+    justify-content: center;
+    width: 100%;
+    border-bottom: 1px solid var(--tlp-neutral-normal-color);
+    background: var(--tlp-white-color);
 
     &.is-stuck {
+        border-bottom: 0;
         box-shadow: var(--tlp-sticky-header-shadow);
     }
 }

@@ -16,15 +16,12 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+@use "pkg:@tuleap/burningparrot-theme/css/includes/global-variables";
+@use "size";
 
-@use "@/themes/includes/whitespace";
-
-$add-section-button-size: 26px;
-$add-section-button-container-height: calc(
-    2 * #{whitespace.$add-section-button-container-vertical-padding} + #{$add-section-button-size}
+$small-screen-size: 1024px;
+$medium-screen-size: calc(
+    #{global-variables.$sidebar-expanded-width} + (
+            2 * #{size.$add-section-button-container-width} + #{size.$document-width}
+        ) / #{size.$document-container-width-ratio}
 );
-$add-section-button-container-width: calc(
-    2 * #{whitespace.$add-section-button-container-horizontal-padding} + #{$add-section-button-size}
-);
-$document-container-width-ratio: 0.8;
-$document-width: 960px;
