@@ -410,6 +410,7 @@ class Burnup extends Tracker_FormElement_Field implements Tracker_FormElement_Fi
                 $burnup_count_cache_dao,
                 new ChartCachedDaysComparator($this->getLogger()),
                 $this->getCountElementsModeChecker(),
+                $this->getLogger()
             ),
             $this->getConfigurationValueRetriever(),
             $burnup_effort_cache_dao,

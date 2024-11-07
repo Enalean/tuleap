@@ -26,8 +26,10 @@ use DateTime;
 use PFUser;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\NullLogger;
+use ColinODell\PsrTestLogger\TestLogger;
 use Tuleap\AgileDashboard\FormElement\Burnup\CountElementsCacheDao;
 use Tuleap\AgileDashboard\FormElement\Burnup\CountElementsModeChecker;
+use Tuleap\Date\DatePeriodWithOpenDays;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
@@ -51,6 +53,7 @@ final class BurnupCacheCheckerTest extends TestCase
     private BurnupCacheDao&MockObject $burnup_cache_dao;
     private CountElementsCacheDao&MockObject $count_elements_cache_dao;
     private CountElementsModeChecker&MockObject $count_elements_mode_checker;
+    private TestLogger $logger;
 
     protected function setUp(): void
     {
@@ -59,6 +62,7 @@ final class BurnupCacheCheckerTest extends TestCase
         $this->burnup_cache_dao            = $this->createMock(BurnupCacheDao::class);
         $this->count_elements_cache_dao    = $this->createMock(CountElementsCacheDao::class);
         $this->count_elements_mode_checker = $this->createMock(CountElementsModeChecker::class);
+        $this->logger                      = new TestLogger();
         $this->burnup_cache_Checker        = new BurnupCacheChecker(
             $this->cache_generator,
             $this->chart_value_checker,
@@ -66,6 +70,7 @@ final class BurnupCacheCheckerTest extends TestCase
             $this->count_elements_cache_dao,
             new ChartCachedDaysComparator(new NullLogger()),
             $this->count_elements_mode_checker,
+            $this->logger
         );
 
         $this->artifact = ArtifactTestBuilder::anArtifact(101)
@@ -91,8 +96,9 @@ final class BurnupCacheCheckerTest extends TestCase
     {
         $this->chart_value_checker->method('hasStartDate')->willReturn(false);
         $this->cache_generator->method('isCacheBurnupAlreadyAsked');
+        $date_period = DatePeriodWithOpenDays::buildFromDuration(strtotime('2024-01-12'), 5);
 
-        self::assertFalse($this->burnup_cache_Checker->isBurnupUnderCalculation($this->artifact, $this->expected_days, $this->user));
+        self::assertFalse($this->burnup_cache_Checker->isBurnupUnderCalculation($this->artifact, $this->expected_days, $this->user, $date_period));
     }
 
     public function testItReturnsTrueWhenBurnupIsAlreadyUnderCalculation(): void
@@ -103,8 +109,9 @@ final class BurnupCacheCheckerTest extends TestCase
         $this->cache_generator->method('isCacheBurnupAlreadyAsked')->with($this->artifact)->willReturn(true);
         $this->cache_generator->method('forceBurnupCacheGeneration');
         $this->burnup_cache_dao->method('getCachedDaysTimestamps')->willReturn([]);
+        $date_period = DatePeriodWithOpenDays::buildFromDuration(strtotime('2024-01-12'), 5);
 
-        self::assertTrue($this->burnup_cache_Checker->isBurnupUnderCalculation($this->artifact, $this->expected_days, $this->user));
+        self::assertTrue($this->burnup_cache_Checker->isBurnupUnderCalculation($this->artifact, $this->expected_days, $this->user, $date_period));
     }
 
     public function testItReturnsTrueAndSendAnEventWhenCacheIsIncompleteForBurnupInEffortMode(): void
@@ -116,8 +123,9 @@ final class BurnupCacheCheckerTest extends TestCase
         $this->burnup_cache_dao->method('getCachedDaysTimestamps')->willReturn([]);
 
         $this->cache_generator->expects(self::once())->method('forceBurnupCacheGeneration');
+        $date_period = DatePeriodWithOpenDays::buildFromDuration(strtotime('2024-01-12'), 5);
 
-        self::assertTrue($this->burnup_cache_Checker->isBurnupUnderCalculation($this->artifact, $this->expected_days, $this->user));
+        self::assertTrue($this->burnup_cache_Checker->isBurnupUnderCalculation($this->artifact, $this->expected_days, $this->user, $date_period));
     }
 
     public function testItReturnsFalseWhenBurnupInEffortModeHasNoNeedToBeComputed(): void
@@ -129,8 +137,9 @@ final class BurnupCacheCheckerTest extends TestCase
         $this->burnup_cache_dao->method('getCachedDaysTimestamps')->willReturn($this->expected_days);
 
         $this->cache_generator->expects(self::never())->method('forceBurnupCacheGeneration')->with($this->artifact->getId());
+        $date_period = DatePeriodWithOpenDays::buildFromDuration(strtotime('2024-01-12'), 5);
 
-        self::assertFalse($this->burnup_cache_Checker->isBurnupUnderCalculation($this->artifact, $this->expected_days, $this->user));
+        self::assertFalse($this->burnup_cache_Checker->isBurnupUnderCalculation($this->artifact, $this->expected_days, $this->user, $date_period));
     }
 
     public function testItReturnsFalseWhenBurnupInCountElementsModeHasNoNeedToBeComputed(): void
@@ -139,8 +148,9 @@ final class BurnupCacheCheckerTest extends TestCase
         $this->count_elements_mode_checker->method('burnupMustUseCountElementsMode')->willReturn(true);
         $this->count_elements_cache_dao->expects(self::once())->method('getCachedDaysTimestamps')->willReturn($this->expected_days);
         $this->cache_generator->method('isCacheBurnupAlreadyAsked')->willReturn(false);
+        $date_period = DatePeriodWithOpenDays::buildFromDuration(strtotime('2024-01-12'), 5);
 
-        self::assertFalse($this->burnup_cache_Checker->isBurnupUnderCalculation($this->artifact, $this->expected_days, $this->user));
+        self::assertFalse($this->burnup_cache_Checker->isBurnupUnderCalculation($this->artifact, $this->expected_days, $this->user, $date_period));
     }
 
     public function testItReturnsTrueAndSendAnEventWhenCacheIsIncompleteForBurnupInCountElementsMode(): void
@@ -152,7 +162,28 @@ final class BurnupCacheCheckerTest extends TestCase
         $this->count_elements_cache_dao->method('getCachedDaysTimestamps')->willReturn([]);
 
         $this->cache_generator->expects(self::once())->method('forceBurnupCacheGeneration');
+        $date_period = DatePeriodWithOpenDays::buildFromDuration(strtotime('2024-01-12'), 5);
 
-        self::assertTrue($this->burnup_cache_Checker->isBurnupUnderCalculation($this->artifact, $this->expected_days, $this->user));
+        self::assertTrue($this->burnup_cache_Checker->isBurnupUnderCalculation($this->artifact, $this->expected_days, $this->user, $date_period));
+    }
+
+    public function testItReturnsFalseWhenStartDateIsInTheFuture(): void
+    {
+        $this->count_elements_cache_dao->method('getCachedDaysTimestamps')->willReturn($this->expected_days);
+
+        $date_period = DatePeriodWithOpenDays::buildFromDuration(strtotime('tomorrow'), 5);
+
+        self::assertFalse($this->burnup_cache_Checker->isBurnupUnderCalculation($this->artifact, $this->expected_days, $this->user, $date_period));
+        self::assertTrue($this->logger->hasDebug('Cache is always valid when start date is in future'));
+    }
+
+    public function testItReturnsFalseWhenDurationIsZero(): void
+    {
+        $this->count_elements_cache_dao->method('getCachedDaysTimestamps')->willReturn($this->expected_days);
+
+        $date_period = DatePeriodWithOpenDays::buildFromDuration(strtotime('2024-11-01'), 0);
+
+        self::assertFalse($this->burnup_cache_Checker->isBurnupUnderCalculation($this->artifact, $this->expected_days, $this->user, $date_period));
+        self::assertTrue($this->logger->hasDebug('Cache is always valid when burnup has no duration'));
     }
 }
