@@ -86,14 +86,14 @@ describe("Artidoc", () => {
 
         cy.log("User should be able to add a section at the beginning");
         cy.get("[data-test=artidoc-add-new-section-trigger]").first().click();
-        cy.get("[data-test=add-new-section]").first().click();
+        cy.get("[data-test=add-new-section]").first().click({ force: true });
         cy.get("[data-test=artidoc-section]:first-child").within(() => {
             fillInSectionTitleAndDescription(requirements[1]);
         });
 
         cy.log("User should be able to add a section at the end");
         cy.get("[data-test=artidoc-add-new-section-trigger]").last().click();
-        cy.get("[data-test=add-new-section]").last().click();
+        cy.get("[data-test=add-new-section]").last().click({ force: true });
         cy.get("[data-test=artidoc-section]:last-child").within(() => {
             fillInSectionTitleAndDescription(requirements[2]);
         });
@@ -172,6 +172,7 @@ function fillInSectionTitleAndDescription({
 function pasteImageInSectionDescription(): void {
     cy.intercept("PATCH", "/uploads/tracker/file/*").as("UploadImage");
 
+    getSectionDescription().click();
     getSectionDescription().then((section_description) => {
         const first_child = section_description[0].firstChild;
         if (!first_child) {
@@ -191,17 +192,15 @@ function pasteImageInSectionDescription(): void {
                 const data_transfer = new DataTransfer();
                 data_transfer.items.add(file);
 
-                const drop_event = Object.assign(
-                    new Event("drop", {
+                const paste_event = Object.assign(
+                    new ClipboardEvent("paste", {
                         bubbles: true,
                         cancelable: true,
+                        clipboardData: data_transfer,
                     }),
-                    {
-                        dataTransfer: data_transfer,
-                    },
                 );
 
-                first_child.dispatchEvent(drop_event);
+                first_child.dispatchEvent(paste_event);
             });
     });
 

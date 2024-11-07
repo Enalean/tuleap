@@ -45,10 +45,8 @@ export function fileUploadHandler(
     gettext_provider: GetText,
     uploaders: Array<Upload>,
 ) {
-    return function handler(event: DragEvent): Promise<Option<ReadonlyArray<OngoingUpload>>> {
-        event.preventDefault();
-        const files = event.dataTransfer?.files;
-        if (!files) {
+    return function handler(files: FileList): Promise<Option<ReadonlyArray<OngoingUpload>>> {
+        if (files.length === 0) {
             options.onErrorCallback(new UploadError(gettext_provider), "");
             return Promise.resolve(Option.nothing<ReadonlyArray<OngoingUpload>>());
         }
