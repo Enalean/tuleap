@@ -20,4 +20,16 @@
 
 import "./elements/toolbar-element";
 
-export { ToolbarController } from "./elements/ToolbarController";
+export type { ToolbarBus, LinkProperties, ImageProperties } from "@tuleap/prose-mirror-editor";
+export { buildToolbarBus } from "@tuleap/prose-mirror-editor";
+
+export { buildToolbarController } from "./elements/ToolbarController";
+export { createProseMirrorEditorToolbar } from "./create-prose-mirror-editor-toolbar";
+
+export type {
+    LinkElements,
+    ListElements,
+    ScriptElements,
+    StyleElements,
+    TextElements,
+} from "./elements/toolbar-element";

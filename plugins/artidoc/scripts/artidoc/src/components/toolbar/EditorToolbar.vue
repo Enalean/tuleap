@@ -46,12 +46,12 @@
 <script setup lang="ts">
 import { TOOLBAR_BUS } from "@/toolbar-bus-injection-key";
 import { strictInject } from "@tuleap/vue-strict-inject";
-import { ToolbarController } from "@tuleap/prose-mirror-editor-toolbar";
+import { buildToolbarController } from "@tuleap/prose-mirror-editor-toolbar";
 import { onMounted, ref } from "vue";
 import { observeStickyToolbar } from "@/helpers/observe-sticky-toolbar";
 import { onClickActivateOrDeactivateToolbar } from "@/helpers/toolbar-activator";
 const toolbar_bus = strictInject(TOOLBAR_BUS);
-const controller = ToolbarController(toolbar_bus);
+const controller = buildToolbarController(toolbar_bus);
 
 const toolbar = ref<HTMLElement | undefined>();
 const is_stuck = ref(false);
