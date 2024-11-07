@@ -30,6 +30,9 @@ dependencies:
   '@tuleap/list-picker':
     specifier: workspace:^
     version: link:../../../lib/frontend/list-picker
+  '@tuleap/prose-mirror-editor-toolbar':
+    specifier: workspace:^
+    version: link:../../../lib/frontend/prose-mirror-editor-toolbar
   '@tuleap/tlp':
     specifier: workspace:*
     version: link:../tlp

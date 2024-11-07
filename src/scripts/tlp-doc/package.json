@@ -9,6 +9,7 @@
     "@tuleap/filter-inline-table": "workspace:^",
     "@tuleap/lazybox": "workspace:^",
     "@tuleap/list-picker": "workspace:^",
+    "@tuleap/prose-mirror-editor-toolbar": "workspace:^",
     "@tuleap/tlp": "workspace:*",
     "@tuleap/tlp-badge": "workspace:*",
     "@tuleap/tlp-button": "workspace:^",

@@ -1,0 +1,40 @@
+import { Canvas, Meta, Controls } from '@storybook/blocks';
+import * as ToolbarStories from "./prose-mirror-editor-toolbar.stories"
+
+<Meta of={ToolbarStories}/>
+
+# Prose Mirror toolbar
+
+<code>createProseMirrorEditorToolbar(document);</code><br/><br/>
+
+## Properties
+- <code>controller: ToolbarController</code>: A ToolbarController containing the ToolbarBus to interact with editors.
+- <code>text_elements: TextElements | null</code>: Allows to add buttons to format text:
+    - It takes four parameters:
+        - <code>bold: boolean</code> Add the "bold" button.
+        - <code>italic: boolean</code> Add the "italic" button.
+        - <code>code: boolean</code> Add the "code" button.
+        - <code>quote: boolean</code> Add the "quote" button.
+- <code>list_elements: ListElements | null</code>: Allows to add buttons to create lists:
+    - It takes two parameters:
+        - <code>ordered_list: boolean</code> Add the "ordered_list" button.
+        - <code>bullet_list: boolean</code> Add the "bullet_list" button.
+- <code>script_elements: ScriptElements | null</code>: Allows to add buttons to format text using special formats:
+    - It takes two parameters:
+        - <code>subscript: boolean</code> Add the "subscript" button.
+        - <code>superscript: boolean</code> Add the "superscript" button.
+- <code>link_elements: LinkElements | null</code>: Allows to add buttons to manage images and links:
+    - It takes three parameters:
+        - <code>link: boolean</code> Add the "link" button.
+        - <code>unlink: boolean</code> Add the "remove link" button.
+        - <code>image: boolean</code> Add the "image" button.
+- <code>style_elements: StyleElements | null</code>: Allows to add a select to style the text:
+    - It takes three parameter:
+        - <code>text: boolean</code> Add the text option to the select box.
+        - <code>headings: boolean</code> Add headings options to the select box.
+        - <code>preformatted: boolean</code> Add the preformatted text option to the select box.
+    - When all the options are disabled, then the select won't be added to the toolbar.
+
+<Canvas withToolbar={true} of={ToolbarStories.ProseMirrorEditorToolbar}></Canvas>
+
+<Controls></Controls>

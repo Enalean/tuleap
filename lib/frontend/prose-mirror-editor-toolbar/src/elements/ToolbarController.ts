@@ -20,10 +20,10 @@
 
 import type { ToolbarBus } from "@tuleap/prose-mirror-editor";
 
-export type ControlToolbar = {
+export type ToolbarController = {
     getToolbarBus(): ToolbarBus;
 };
 
-export const ToolbarController = (toolbar_bus: ToolbarBus): ControlToolbar => ({
+export const buildToolbarController = (toolbar_bus: ToolbarBus): ToolbarController => ({
     getToolbarBus: () => toolbar_bus,
 });

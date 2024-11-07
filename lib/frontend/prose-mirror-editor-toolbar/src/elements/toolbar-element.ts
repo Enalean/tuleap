@@ -19,7 +19,7 @@
  */
 import type { UpdateFunction } from "hybrids";
 import { define, html } from "hybrids";
-import type { ControlToolbar } from "./ToolbarController";
+import type { ToolbarController } from "./ToolbarController";
 import scss_styles from "./styles.scss?inline";
 
 import "./buttons/bold";
@@ -42,7 +42,12 @@ import {
 } from "@tuleap/gettext";
 
 export type ProseMirrorToolbarElement = {
-    controller: ControlToolbar;
+    controller: ToolbarController;
+    text_elements: TextElements | null;
+    list_elements: ListElements | null;
+    script_elements: ScriptElements | null;
+    link_elements: LinkElements | null;
+    style_elements: StyleElements | null;
 };
 
 export type TextElements = {
@@ -50,7 +55,6 @@ export type TextElements = {
     italic: boolean;
     code: boolean;
     quote: boolean;
-    headings: boolean;
 };
 
 export type ListElements = {
@@ -66,7 +70,7 @@ export type ScriptElements = {
 export type LinkElements = {
     link: boolean;
     unlink: boolean;
-    image: true;
+    image: boolean;
 };
 
 export type StyleElements = {
@@ -76,15 +80,10 @@ export type StyleElements = {
 };
 
 export type InternalProseMirrorToolbarElement = Readonly<ProseMirrorToolbarElement> & {
-    text_elements: TextElements | null;
-    list_elements: ListElements | null;
-    script_elements: ScriptElements | null;
-    link_elements: LinkElements | null;
-    style_elements: StyleElements | null;
     is_disabled: boolean;
 };
 
-const TOOLBAR_TAG_NAME = "tuleap-prose-mirror-toolbar";
+export const TOOLBAR_TAG_NAME = "tuleap-prose-mirror-toolbar";
 
 export const renderToolbar = (
     host: InternalProseMirrorToolbarElement,
