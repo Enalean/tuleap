@@ -19,15 +19,11 @@
   "devDependencies": {
     "@tuleap/build-system-configurator": "workspace:*",
     "@tuleap/po-gettext-plugin": "workspace:*",
-    "@types/javascript-time-ago": "^2.0.1",
-    "@vue/test-utils": "^1.3",
-    "vue-class-component": "^7.2.6",
-    "vue-property-decorator": "^9.1.2"
+    "@types/javascript-time-ago": "^2.0.1"
   },
   "scripts": {
     "typecheck": "vue-tsc --noEmit",
     "build": "vite build",
-    "watch": "vite build --watch --mode development --minify false",
-    "test": "jest"
+    "watch": "vite build --watch --mode development --minify false"
   }
 }

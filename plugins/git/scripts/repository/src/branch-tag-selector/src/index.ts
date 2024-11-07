@@ -45,6 +45,8 @@ export async function init(mount_point: HTMLDivElement, button: HTMLElement): Pr
 
     const url_parameters = JSON.parse(button.dataset.urlParameters);
 
+    //eslint-disable-next-line @typescript-eslint/ban-ts-comment -- Temporary while we migrate to Vue 3
+    //@ts-ignore
     const RootComponent = Vue.extend(App);
 
     new RootComponent({

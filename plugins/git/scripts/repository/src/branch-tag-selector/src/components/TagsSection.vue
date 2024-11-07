@@ -24,7 +24,7 @@
             class="git-repository-branch-tag-selector-filter"
             v-if="!is_loading_tags && tags.length"
         >
-            <refs-filter v-model="filter_text" v-bind:placeholder="placeholder" />
+            <refs-filter v-model="filter_text" v-bind:placeholder="$gettext('Tag name')" />
         </div>
         <a
             v-for="tag in filtered_tags"
@@ -60,71 +60,65 @@
         </div>
     </section>
 </template>
-<script lang="ts">
+<script setup lang="ts">
 import { recursiveGet } from "@tuleap/tlp-fetch";
 import encodeData from "../helpers/encode-data";
 import RefsFilter from "./RefsFilter.vue";
-import Vue from "vue";
-import { Component, Prop, Watch } from "vue-property-decorator";
+import type { Ref } from "vue";
+import { computed, ref, watch } from "vue";
 import type { Tag, URLParameter } from "../type";
 
-@Component({ components: { RefsFilter } })
-export default class TagsSection extends Vue {
-    @Prop()
-    readonly repository_id!: number;
-    @Prop()
-    readonly repository_url!: string;
-    @Prop()
-    readonly is_displaying_branches!: boolean;
-    @Prop()
-    readonly is_tag!: boolean;
-    @Prop()
-    readonly current_ref_name!: string;
-    @Prop()
-    readonly url_parameters!: URLParameter;
+const props = defineProps<{
+    repository_id: number;
+    repository_url: string;
+    is_displaying_branches: boolean;
+    is_tag: boolean;
+    current_ref_name: string;
+    url_parameters: URLParameter;
+}>();
 
-    is_loading_tags = true;
-    are_tags_loaded = false;
-    has_error_while_loading_tags = false;
-    tags: Tag[] = [];
-    filter_text = "";
+const is_loading_tags = ref(true);
+const are_tags_loaded = ref(false);
+const has_error_while_loading_tags = ref(false);
+const tags: Ref<Tag[]> = ref([]);
+const filter_text = ref("");
 
-    get filtered_tags(): Tag[] {
-        return this.tags.filter((tag) => tag.name.toLowerCase().indexOf(this.filter) !== -1);
-    }
+const filter = computed((): string => {
+    return filter_text.value.toLowerCase();
+});
 
-    get filter(): string {
-        return this.filter_text.toLowerCase();
-    }
+const filtered_tags = computed((): Tag[] => {
+    return tags.value.filter((tag) => tag.name.toLowerCase().indexOf(filter.value) !== -1);
+});
 
-    get placeholder(): string {
-        return this.$gettext("Tag name");
-    }
-
-    @Watch("is_displaying_branches")
-    async displaying_branches(is_displaying_branches: boolean): Promise<void> {
-        if (!is_displaying_branches && !this.are_tags_loaded) {
-            await this.loadTags();
+watch(
+    () => props.is_displaying_branches,
+    async (): Promise<void> => {
+        if (!props.is_displaying_branches && !are_tags_loaded.value) {
+            await loadTags();
         }
-    }
+    },
+);
 
-    async loadTags(): Promise<void> {
-        try {
-            this.tags = await recursiveGet(`/api/git/${this.repository_id}/tags`, {
+async function loadTags(): Promise<void> {
+    try {
+        tags.value = await recursiveGet(
+            `/api/git/${encodeURIComponent(props.repository_id)}/tags`,
+            {
                 params: {
                     limit: 50,
                 },
-            });
-        } catch (e) {
-            this.has_error_while_loading_tags = true;
-        } finally {
-            this.is_loading_tags = false;
-            this.are_tags_loaded = true;
-        }
+            },
+        );
+    } catch (e) {
+        has_error_while_loading_tags.value = true;
+    } finally {
+        is_loading_tags.value = false;
+        are_tags_loaded.value = true;
     }
+}
 
-    url(ref: string): string {
-        return this.repository_url + "?" + encodeData({ ...this.url_parameters, hb: ref });
-    }
+function url(ref: string): string {
+    return props.repository_url + "?" + encodeData({ ...props.url_parameters, hb: ref });
 }
 </script>

@@ -24,7 +24,7 @@
             class="git-repository-branch-tag-selector-filter"
             v-if="!is_loading_branches && branches.length"
         >
-            <refs-filter v-model="filter_text" v-bind:placeholder="placeholder" />
+            <refs-filter v-model="filter_text" v-bind:placeholder="$gettext('Branch name')" />
         </div>
         <a
             v-for="branch in filtered_branches"
@@ -64,71 +64,64 @@
         </div>
     </section>
 </template>
-<script lang="ts">
+<script setup lang="ts">
 import { recursiveGet } from "@tuleap/tlp-fetch";
 import encodeData from "../helpers/encode-data";
 import RefsFilter from "./RefsFilter.vue";
-import Vue from "vue";
-import { Component, Prop } from "vue-property-decorator";
+import type { Ref } from "vue";
+import { onMounted, computed, ref } from "vue";
 import type { Branch, URLParameter } from "../type";
 
-@Component({ components: { RefsFilter } })
-export default class BranchesSection extends Vue {
-    @Prop()
-    readonly repository_id!: number;
-    @Prop()
-    readonly repository_url!: string;
-    @Prop({ required: true })
-    readonly repository_default_branch!: string;
-    @Prop()
-    readonly is_displaying_branches!: boolean;
-    @Prop()
-    readonly is_tag!: boolean;
-    @Prop()
-    readonly current_ref_name!: string;
-    @Prop()
-    readonly url_parameters!: URLParameter;
+const props = defineProps<{
+    repository_id: number;
+    repository_url: string;
+    repository_default_branch: string;
+    is_displaying_branches: boolean;
+    is_tag: boolean;
+    current_ref_name: string;
+    url_parameters: URLParameter;
+}>();
 
-    is_loading_branches = true;
-    are_branches_loaded = false;
-    has_error_while_loading_branches = false;
-    branches: Branch[] = [];
-    filter_text = "";
+const is_loading_branches = ref(true);
+const are_branches_loaded = ref(false);
+const has_error_while_loading_branches = ref(false);
+const branches: Ref<Branch[]> = ref([]);
+const filter_text = ref("");
 
-    get filtered_branches(): Branch[] {
-        return this.branches.filter(
-            (branch) => branch.name.toLowerCase().indexOf(this.filter) !== -1,
-        );
-    }
-    get filter(): string {
-        return this.filter_text.toLowerCase();
-    }
-    get placeholder(): string {
-        return this.$gettext("Branch name");
-    }
+const filter = computed((): string => {
+    return filter_text.value.toLowerCase();
+});
 
-    mounted(): void {
-        this.loadBranches();
-    }
+const filtered_branches = computed((): Branch[] => {
+    return branches.value.filter(
+        (branch) => branch.name.toLowerCase().indexOf(filter.value) !== -1,
+    );
+});
 
-    async loadBranches(): Promise<void> {
-        try {
-            this.branches = await recursiveGet(`/api/git/${this.repository_id}/branches`, {
+onMounted(() => {
+    loadBranches();
+});
+
+async function loadBranches(): Promise<void> {
+    try {
+        branches.value = await recursiveGet(
+            `/api/git/${encodeURIComponent(props.repository_id)}/branches`,
+            {
                 params: {
                     limit: 50,
                 },
-            });
-            this.branches.sort((branch_a, branch_b) => branch_a.name.localeCompare(branch_b.name));
-        } catch (e) {
-            this.has_error_while_loading_branches = true;
-        } finally {
-            this.is_loading_branches = false;
-            this.are_branches_loaded = true;
-        }
+            },
+        );
+        branches.value.sort((branch_a, branch_b) => branch_a.name.localeCompare(branch_b.name));
+    } catch (e) {
+        has_error_while_loading_branches.value = true;
+    } finally {
+        is_loading_branches.value = false;
+        are_branches_loaded.value = true;
     }
+}
 
-    url(ref: string): string {
-        return this.repository_url + "?" + encodeData({ ...this.url_parameters, hb: ref });
-    }
+function url(ref: string): string {
+    return props.repository_url + "?" + encodeData({ ...props.url_parameters, hb: ref });
 }
 </script>
