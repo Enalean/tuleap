@@ -20,15 +20,15 @@
 
 <template>
     <div>
-        <div
-            v-if="shouldDisplayErrorBanner"
-            class="tlp-alert-danger"
-            v-translate="{ error_message }"
-        >
-            An error occurred: %{ error_message }
+        <div v-if="shouldDisplayErrorBanner" class="tlp-alert-danger" data-test="error-feedback">
+            {{ error_banner_text }}
         </div>
-        <div v-else-if="has_banner_been_modified" class="tlp-alert-success" v-translate>
-            The banner has been successfully modified
+        <div
+            v-else-if="has_banner_been_modified"
+            class="tlp-alert-success"
+            data-test="success-feedback"
+        >
+            {{ gettext_provider.$gettext("The banner has been successfully modified") }}
         </div>
         <expired-banner-info-message
             v-bind:message="message"
@@ -47,94 +47,73 @@
     </div>
 </template>
 
-<script lang="ts">
-import Vue from "vue";
-import { Component, Prop } from "vue-property-decorator";
+<script setup lang="ts">
+import { computed, onMounted, ref } from "vue";
+import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
 import BannerPresenter from "./BannerPresenter.vue";
 import { deleteBannerForPlatform, saveBannerForPlatform } from "../api/rest-querier";
 import type { BannerState, Importance } from "../type";
 import ExpiredBannerInfoMessage from "./ExpiredBannerInfoMessage.vue";
+import type { LocationHelper } from "../helpers/LocationHelper";
 
-const LOCATION_HASH_SUCCESS = "#banner-change-success";
+const gettext_provider = useGettext();
 
-@Component({
-    components: {
-        ExpiredBannerInfoMessage,
-        BannerPresenter,
-    },
-})
-export default class App extends Vue {
-    @Prop({ required: true, type: String })
-    readonly message!: string;
+const props = defineProps<{
+    readonly message: string;
+    readonly importance: Importance;
+    readonly expiration_date: string;
+    readonly location_helper: LocationHelper;
+}>();
 
-    @Prop({ required: true, type: String })
-    readonly importance!: Importance;
+const error_message = ref<string | null>(null);
+const has_banner_been_modified = ref(false);
+const banner_presenter_is_loading = ref(false);
 
-    @Prop({ required: true, type: String })
-    readonly expiration_date!: string;
+const shouldDisplayErrorBanner = computed((): boolean => error_message.value !== null);
+const error_banner_text = computed((): string =>
+    gettext_provider.interpolate(
+        gettext_provider.$gettext("An error occurred: %{ error_message }"),
+        { error_message: error_message.value },
+    ),
+);
 
-    @Prop({ required: true })
-    readonly location!: Location;
+onMounted(() => {
+    if (props.location_helper.hasSuccessHash()) {
+        props.location_helper.clearHash();
+        has_banner_been_modified.value = true;
+    }
+});
 
-    error_message: string | null = null;
-    has_banner_been_modified = false;
-    banner_presenter_is_loading = false;
+function saveBanner(bannerState: BannerState): void {
+    banner_presenter_is_loading.value = true;
 
-    public mounted(): void {
-        if (this.location.hash === LOCATION_HASH_SUCCESS) {
-            this.location.hash = "";
-            this.has_banner_been_modified = true;
-        }
+    if (!bannerState.activated) {
+        deleteBanner();
+        return;
     }
 
-    public saveBanner(bannerState: BannerState): void {
-        this.banner_presenter_is_loading = true;
+    saveBannerMessage(bannerState.message, bannerState.importance, bannerState.expiration_date);
+}
 
-        if (!bannerState.activated) {
-            this.deleteBanner();
-            return;
-        }
+function saveBannerMessage(message: string, importance: Importance, expiration_date: string): void {
+    saveBannerForPlatform(message, importance, expiration_date)
+        .then(() => {
+            props.location_helper.reloadWithSuccess();
+        })
+        .catch((error) => {
+            error_message.value = error.message;
+            banner_presenter_is_loading.value = false;
+        });
+}
 
-        this.saveBannerMessage(
-            bannerState.message,
-            bannerState.importance,
-            bannerState.expiration_date,
-        );
-    }
-
-    private saveBannerMessage(
-        message: string,
-        importance: Importance,
-        expiration_date: string,
-    ): void {
-        saveBannerForPlatform(message, importance, expiration_date)
-            .then(() => {
-                this.refreshOnSuccessChange();
-            })
-            .catch((error) => {
-                this.error_message = error.message;
-                this.banner_presenter_is_loading = false;
-            });
-    }
-
-    deleteBanner(): void {
-        deleteBannerForPlatform()
-            .then(() => {
-                this.refreshOnSuccessChange();
-            })
-            .catch((error) => {
-                this.error_message = error.message;
-                this.banner_presenter_is_loading = false;
-            });
-    }
-
-    get shouldDisplayErrorBanner(): boolean {
-        return this.error_message !== null;
-    }
-
-    private refreshOnSuccessChange(): void {
-        this.location.hash = LOCATION_HASH_SUCCESS;
-        this.location.reload();
-    }
+function deleteBanner(): void {
+    deleteBannerForPlatform()
+        .then(() => {
+            props.location_helper.reloadWithSuccess();
+        })
+        .catch((error) => {
+            error_message.value = error.message;
+            banner_presenter_is_loading.value = false;
+        });
 }
 </script>

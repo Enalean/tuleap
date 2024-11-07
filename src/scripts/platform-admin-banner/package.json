@@ -6,8 +6,9 @@
   "private": true,
   "type": "module",
   "dependencies": {
-    "@tuleap/tlp": "workspace:*",
+    "@tuleap/tlp-date-picker": "workspace:^",
     "@tuleap/tlp-fetch": "workspace:*",
+    "@tuleap/vue2-gettext-composition-helper": "workspace:^",
     "@tuleap/vue2-gettext-init": "workspace:*",
     "ckeditor4": "^4.18.0",
     "vue": "^2.7.8"
@@ -16,9 +17,7 @@
     "@tuleap/build-system-configurator": "workspace:*",
     "@tuleap/po-gettext-plugin": "workspace:*",
     "@types/ckeditor": "^4.9.10",
-    "@vue/test-utils": "^1.3.5",
-    "vue-class-component": "^7.2.6",
-    "vue-property-decorator": "^9.1.2"
+    "@vue/test-utils": "^1.3.5"
   },
   "scripts": {
     "typecheck": "vue-tsc --noEmit",

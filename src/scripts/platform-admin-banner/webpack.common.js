@@ -21,6 +21,8 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { webpack_configurator } from "@tuleap/build-system-configurator";
 import POGettextPlugin from "@tuleap/po-gettext-plugin";
+// eslint-disable-next-line import/no-extraneous-dependencies
+import ScriptSetupPlugin from "unplugin-vue2-script-setup";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -35,11 +37,13 @@ const config = {
         "/assets/core/platform-admin-banner/",
     ),
     externals: {
-        tlp: "tlp",
         ckeditor4: "CKEDITOR",
     },
     resolve: {
         extensions: [".js", ".ts", ".vue"],
+        alias: {
+            vue: path.resolve(__dirname, "node_modules", "vue"),
+        },
     },
     module: {
         rules: [
@@ -51,6 +55,7 @@ const config = {
         webpack_configurator.getCleanWebpackPlugin(),
         webpack_configurator.getManifestPlugin(),
         POGettextPlugin.webpack(),
+        ScriptSetupPlugin.webpack(),
         webpack_configurator.getVueLoaderPlugin(),
     ],
 };

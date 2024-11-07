@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2024-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,8 +17,23 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare module "*.vue" {
-    import type { DefineComponent } from "vue";
-    const component: DefineComponent;
-    export default component;
-}
+export type LocationHelper = {
+    hasSuccessHash(): boolean;
+    clearHash(): void;
+    reloadWithSuccess(): void;
+};
+
+const LOCATION_HASH_SUCCESS = "#banner-change-success";
+
+export type LocationWithHashReload = Pick<Location, "hash" | "reload">;
+
+export const LocationHelper = (location: LocationWithHashReload): LocationHelper => ({
+    hasSuccessHash: () => location.hash === LOCATION_HASH_SUCCESS,
+    clearHash(): void {
+        location.hash = "";
+    },
+    reloadWithSuccess(): void {
+        location.hash = LOCATION_HASH_SUCCESS;
+        location.reload();
+    },
+});

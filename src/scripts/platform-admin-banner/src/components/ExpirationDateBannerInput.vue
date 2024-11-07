@@ -19,8 +19,8 @@
 
 <template>
     <div class="tlp-form-element">
-        <label for="expiration-date-picker-banner" class="tlp-label" v-translate>
-            Expiration date
+        <label for="expiration-date-picker-banner" class="tlp-label">
+            {{ gettext_provider.$gettext("Expiration date") }}
         </label>
         <div class="tlp-form-element tlp-form-element-prepend">
             <span class="tlp-prepend"><i class="fas fa-calendar-alt" aria-hidden="true"></i></span>
@@ -37,64 +37,61 @@
     </div>
 </template>
 
-<script lang="ts">
-import Vue from "vue";
-import { Component, Prop, Watch } from "vue-property-decorator";
-import { datePicker } from "tlp";
-import type { DatePickerInstance } from "tlp";
+<script setup lang="ts">
+import { nextTick, onMounted, onUnmounted, ref, watch } from "vue";
+import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
+import type { DatePickerInstance } from "@tuleap/tlp-date-picker";
+import { datePicker } from "@tuleap/tlp-date-picker";
 
-@Component
-export default class ExpirationDateBannerInput extends Vue {
-    @Prop({ required: true, type: String })
-    readonly value!: string;
+const gettext_provider = useGettext();
 
-    private datepicker: DatePickerInstance | null = null;
+const props = defineProps<{
+    readonly value: string;
+}>();
 
-    public mounted(): void {
-        const input_field = this.$refs.input_field;
-        if (!(input_field instanceof HTMLInputElement)) {
-            throw new Error("The datepicker element is supposed to be an input field");
+const emit = defineEmits<{
+    (e: "input", value: string): void;
+}>();
+
+const input_field = ref<HTMLInputElement>();
+let datepicker_instance: DatePickerInstance | null = null;
+
+onMounted(() => {
+    if (!input_field.value) {
+        return;
+    }
+    const now = new Date();
+    const min_expiration_date = new Date(new Date(now).setHours(now.getHours() + 1));
+    datepicker_instance = datePicker(input_field.value, {
+        minDate: min_expiration_date,
+        onChange: onDatePickerChange,
+    });
+
+    watch(() => props.value, updateDatePickerCurrentDate, { immediate: true });
+});
+
+onUnmounted(() => {
+    datepicker_instance?.destroy();
+});
+
+function updateDatePickerCurrentDate(): void {
+    if (props.value !== "") {
+        datepicker_instance?.setDate(new Date(props.value), false);
+    }
+}
+
+function onDatePickerInput(event: Event): void {
+    const event_target = event.currentTarget;
+    if (event_target instanceof HTMLInputElement) {
+        emit("input", event_target.value);
+    }
+}
+
+function onDatePickerChange(): void {
+    nextTick(() => {
+        if (input_field.value instanceof HTMLInputElement) {
+            emit("input", input_field.value.value);
         }
-
-        const now = new Date();
-        const min_expiration_date = new Date(new Date(now).setHours(now.getHours() + 1));
-        this.datepicker = datePicker(input_field, {
-            minDate: min_expiration_date,
-            onChange: this.onDatePickerChange,
-        });
-        this.updateDatePickerCurrentDate();
-    }
-
-    public beforeDestroy(): void {
-        const datepicker = this.datepicker;
-        if (datepicker === null) {
-            return;
-        }
-        this.datepicker = null;
-        datepicker.destroy();
-    }
-
-    @Watch("value")
-    private updateDatePickerCurrentDate(): void {
-        if (this.datepicker === null) {
-            return;
-        }
-        this.datepicker.setDate(new Date(this.value), false);
-    }
-
-    onDatePickerInput(event: Event): void {
-        const event_target = event.currentTarget;
-        if (event_target instanceof HTMLInputElement) {
-            this.$emit("input", event_target.value);
-        }
-    }
-
-    onDatePickerChange(): void {
-        this.$nextTick(() => {
-            if (this.$refs.input_field instanceof HTMLInputElement) {
-                this.$emit("input", this.$refs.input_field.value);
-            }
-        });
-    }
+    });
 }
 </script>

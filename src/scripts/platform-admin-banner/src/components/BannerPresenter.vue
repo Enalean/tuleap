@@ -19,16 +19,20 @@
 
 <template>
     <div>
-        <div class="tlp-form-element" v-bind:class="{ 'tlp-form-element-disabled': loading }">
+        <div
+            class="tlp-form-element"
+            v-bind:class="{ 'tlp-form-element-disabled': loading }"
+            data-test="banner-active-form-element"
+        >
             <label class="tlp-label tlp-checkbox">
-                <input type="checkbox" v-model="banner_is_activated" />
-                <translate>Activate the banner on the whole platform</translate>
+                <input type="checkbox" v-model="banner_is_activated" data-test="banner-active" />
+                {{ gettext_provider.$gettext("Activate the banner on the whole platform") }}
             </label>
         </div>
         <div v-show="banner_is_activated">
             <div class="tlp-form-element siteadmin-platform-banner-importance">
                 <label class="tlp-label">
-                    <translate>Importance</translate>
+                    {{ gettext_provider.$gettext("Importance") }}
                     <i class="fas fa-asterisk" aria-hidden="true"></i>
                 </label>
                 <label class="tlp-label tlp-radio">
@@ -38,7 +42,7 @@
                         v-model="current_importance"
                         class="siteadmin-platform-banner-importance-standard"
                     />
-                    <translate class="tlp-text-info">Standard</translate>
+                    <span class="tlp-text-info">{{ gettext_provider.$gettext("Standard") }}</span>
                 </label>
                 <label class="tlp-label tlp-radio">
                     <input
@@ -47,7 +51,7 @@
                         v-model="current_importance"
                         class="siteadmin-platform-banner-importance-warning"
                     />
-                    <translate class="tlp-text-warning">Warning</translate>
+                    <span class="tlp-text-warning">{{ gettext_provider.$gettext("Warning") }}</span>
                 </label>
                 <label class="tlp-label tlp-radio">
                     <input
@@ -56,15 +60,19 @@
                         v-model="current_importance"
                         class="siteadmin-platform-banner-importance-critical"
                     />
-                    <translate class="tlp-text-danger">Critical</translate>
+                    <span class="tlp-text-danger">{{ gettext_provider.$gettext("Critical") }}</span>
                 </label>
             </div>
 
             <expiration-date-banner-input v-model="current_expiration_date" />
 
-            <div class="tlp-form-element" v-bind:class="{ 'tlp-form-element-disabled': loading }">
+            <div
+                class="tlp-form-element"
+                v-bind:class="{ 'tlp-form-element-disabled': loading }"
+                data-test="message-form-element"
+            >
                 <label class="tlp-label" for="description">
-                    <translate>Message</translate>
+                    {{ gettext_provider.$gettext("Message") }}
                     <i class="fas fa-asterisk" aria-hidden="true"></i>
                 </label>
                 <textarea
@@ -74,143 +82,138 @@
                     required
                     name="description"
                     v-model="current_message"
-                    v-bind:placeholder="$gettext('Choose a banner message')"
+                    v-bind:placeholder="gettext_provider.$gettext('Choose a banner message')"
+                    data-test="banner-message"
                 ></textarea>
-                <p class="tlp-text-muted" v-translate>Your message will be condensed to one line</p>
+                <p class="tlp-text-muted">
+                    {{ gettext_provider.$gettext("Your message will be condensed to one line") }}
+                </p>
             </div>
         </div>
         <div class="tlp-pane-section-submit">
             <button
                 type="button"
                 class="tlp-button-primary"
-                v-bind:data-tlp-tooltip="$gettext('Message is mandatory')"
+                v-bind:data-tlp-tooltip="gettext_provider.$gettext('Message is mandatory')"
                 v-bind:class="{ 'tlp-tooltip tlp-tooltip-top': should_tooltip_be_displayed }"
                 v-on:click="save"
                 v-bind:disabled="is_save_button_disabled"
+                data-test="save-button"
             >
                 <i v-if="loading" class="tlp-button-icon fas fa-fw fa-spin fa-circle-notch"></i>
-                <i class="tlp-button-icon fas fa-save" v-else></i>
-                <span v-translate>Save the configuration</span>
+                <i v-if="!loading" class="tlp-button-icon fas fa-save"></i>
+                {{ gettext_provider.$gettext("Save the configuration") }}
             </button>
         </div>
     </div>
 </template>
 
-<script lang="ts">
-import Vue from "vue";
-import { Component, Prop } from "vue-property-decorator";
+<script setup lang="ts">
+/* global CKEDITOR:readonly */
+
+import { computed, onMounted, onUnmounted, ref } from "vue";
+import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
 import type { BannerState, Importance } from "../type";
 import "ckeditor4";
 import ExpirationDateBannerInput from "./ExpirationDateBannerInput.vue";
-@Component({
-    components: { ExpirationDateBannerInput },
-})
-export default class BannerPresenter extends Vue {
-    @Prop({ required: true, type: String })
-    readonly message!: string;
 
-    @Prop({ required: true, type: String })
-    readonly importance!: Importance;
+const gettext_provider = useGettext();
 
-    @Prop({ required: true, type: String })
-    readonly expiration_date!: string;
+const props = defineProps<{
+    readonly message: string;
+    readonly importance: Importance;
+    readonly expiration_date: string;
+    readonly loading: boolean;
+}>();
 
-    @Prop({ required: true, type: Boolean })
-    readonly loading!: boolean;
+const emit = defineEmits<{
+    (e: "save-banner", state: BannerState): void;
+}>();
 
-    banner_is_activated: boolean = this.message !== "";
-    current_message: string = this.message;
-    current_importance: Importance = this.importance;
-    current_expiration_date: string = this.expiration_date;
-    // eslint-disable-next-line no-undef
-    editor: CKEDITOR.editor | null = null;
+const embedded_editor = ref<HTMLTextAreaElement>();
+const banner_is_activated = ref(props.message !== "");
+const current_message = ref(props.message);
+const current_importance = ref<Importance>(props.importance);
+const current_expiration_date = ref(props.expiration_date);
 
-    get should_tooltip_be_displayed(): boolean {
-        return this.current_message.length === 0 && this.banner_is_activated && !this.loading;
+let editor: CKEDITOR.editor | null = null;
+
+const should_tooltip_be_displayed = computed(
+    (): boolean =>
+        current_message.value.length === 0 && banner_is_activated.value && !props.loading,
+);
+
+const is_save_button_disabled = computed(
+    (): boolean =>
+        (current_message.value.length === 0 && banner_is_activated.value) || props.loading,
+);
+
+onMounted(() => {
+    createEditor();
+});
+
+onUnmounted(() => {
+    destroyEditor();
+});
+
+function createEditor(): void {
+    destroyEditor();
+
+    if (!(embedded_editor.value instanceof HTMLTextAreaElement)) {
+        throw new Error("The ref embedded_editor is not a HTMLTextAreaElement");
+    }
+    editor = CKEDITOR.replace(embedded_editor.value, {
+        toolbar: [
+            ["Cut", "Copy", "Paste", "Undo", "Redo", "Link", "Unlink"],
+            ["Bold", "Italic"],
+        ],
+        disableNativeSpellChecker: false,
+        linkShowTargetTab: false,
+    });
+
+    editor.on("instanceReady", onInstanceReady);
+}
+
+function onInstanceReady(): void {
+    if (editor === null) {
+        return;
     }
 
-    get is_save_button_disabled(): boolean {
-        return (this.current_message.length === 0 && this.banner_is_activated) || this.loading;
-    }
+    editor.on("change", onChange);
 
-    public mounted(): void {
-        this.createEditor();
-    }
-
-    public beforeDestroy(): void {
-        this.destroyEditor();
-    }
-
-    private createEditor(): void {
-        this.destroyEditor();
-
-        const text_area = this.$refs.embedded_editor;
-        if (!(text_area instanceof HTMLTextAreaElement)) {
-            throw new Error("The ref embedded_editor is not a HTMLTextAreaElement");
+    editor.on("mode", () => {
+        if (editor?.mode === "source") {
+            const editable = editor.editable();
+            editable.attachListener(editable, "input", () => {
+                onChange();
+            });
         }
+    });
+}
 
-        // eslint-disable-next-line no-undef
-        this.editor = CKEDITOR.replace(text_area, {
-            toolbar: [
-                ["Cut", "Copy", "Paste", "Undo", "Redo", "Link", "Unlink"],
-                ["Bold", "Italic"],
-            ],
-            disableNativeSpellChecker: false,
-            linkShowTargetTab: false,
-        });
+function onChange(): void {
+    if (editor === null) {
+        return;
+    }
+    current_message.value = editor.getData();
+}
 
-        this.editor.on("instanceReady", this.onInstanceReady);
+function destroyEditor(): void {
+    editor?.destroy();
+}
+
+function save(): void {
+    if (current_message.value.length === 0 && banner_is_activated.value) {
+        return;
     }
 
-    private onInstanceReady(): void {
-        if (this.editor === null) {
-            return;
-        }
+    const banner_save_payload: BannerState = {
+        message: current_message.value,
+        importance: current_importance.value,
+        expiration_date: current_expiration_date.value,
+        activated: banner_is_activated.value,
+    };
 
-        this.editor.on("change", this.onChange);
-
-        this.editor.on("mode", () => {
-            if (this.editor === null) {
-                return;
-            }
-
-            if (this.editor.mode === "source") {
-                const editable = this.editor.editable();
-                editable.attachListener(editable, "input", () => {
-                    this.onChange();
-                });
-            }
-        });
-    }
-
-    private onChange(): void {
-        if (this.editor === null) {
-            return;
-        }
-
-        this.current_message = this.editor.getData();
-    }
-
-    private destroyEditor(): void {
-        if (this.editor !== null) {
-            this.editor.destroy();
-            this.editor = null;
-        }
-    }
-
-    public save(): void {
-        if (this.current_message.length === 0 && this.banner_is_activated) {
-            return;
-        }
-
-        const banner_save_payload: BannerState = {
-            message: this.current_message,
-            importance: this.current_importance,
-            expiration_date: this.current_expiration_date,
-            activated: this.banner_is_activated,
-        };
-
-        this.$emit("save-banner", banner_save_payload);
-    }
+    emit("save-banner", banner_save_payload);
 }
 </script>
