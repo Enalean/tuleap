@@ -17,17 +17,18 @@
  *  along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Plugin } from "prosemirror-state";
-import type { EditorView } from "prosemirror-view";
-import { convertUrlToLinkAfterASpace } from "./convert-url-to-link-after-a-space";
+import { InputRule } from "prosemirror-inputrules";
 
-export function initPluginAutomagicLinks(): Plugin {
-    return new Plugin({
-        props: {
-            handleTextInput(view: EditorView, from: number, to, text: string): boolean {
-                const { state, dispatch } = view;
-                return convertUrlToLinkAfterASpace(state, dispatch, from, text);
-            },
+export const automagicLinksInputRule = (): InputRule =>
+    new InputRule(
+        /https:\/\/(?:\w+:?\w*@)?\S+(?::[0-9]+)?(?:\/|\/[\w#!:.?+=&%@\-/])?\s$/,
+        (state, match, start, end) => {
+            const url = match[0].trim();
+            const transaction = state.tr;
+
+            transaction.addMark(start, end, state.schema.marks.link.create({ href: url }));
+            transaction.insertText(" ", end);
+
+            return transaction;
         },
-    });
-}
+    );

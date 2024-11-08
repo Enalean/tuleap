@@ -18,9 +18,10 @@
  */
 
 import type { Plugin } from "prosemirror-state";
-import type { InputRule } from "prosemirror-inputrules";
 import { wrappingInputRule, inputRules, textblockTypeInputRule } from "prosemirror-inputrules";
+import type { InputRule } from "prosemirror-inputrules";
 import type { NodeType, Schema } from "prosemirror-model";
+import { automagicLinksInputRule } from "../automagic-links";
 
 function codeBlockRule(nodeType: NodeType): InputRule {
     return textblockTypeInputRule(/^```$/, nodeType);
@@ -45,6 +46,7 @@ export function buildInputRules(schema: Schema): Plugin {
             codeBlockRule(schema.nodes.code_block),
             orderedListRule(schema.nodes.ordered_list),
             bulletListRule(schema.nodes.bullet_list),
+            automagicLinksInputRule(),
         ],
     });
 }
