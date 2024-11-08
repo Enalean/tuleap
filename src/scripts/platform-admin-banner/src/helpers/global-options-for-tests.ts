@@ -17,15 +17,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { createLocalVue } from "@vue/test-utils";
-import { initVueGettext } from "@tuleap/vue2-gettext-init";
-import type { Vue } from "vue/types/vue";
+import type { MountingOptions } from "@vue/test-utils";
+import { createGettext } from "vue3-gettext";
 
-export async function createPlatformBannerAdminLocalVue(): Promise<typeof Vue> {
-    const local_vue = createLocalVue();
-    await initVueGettext(local_vue, () => {
-        throw new Error("Fallback to default");
-    });
-
-    return local_vue;
+export function getGlobalTestOptions(): MountingOptions<unknown>["global"] {
+    return {
+        plugins: [createGettext({ silent: true })],
+    };
 }

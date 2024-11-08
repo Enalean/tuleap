@@ -20,10 +20,8 @@
 <template>
     <div v-if="is_expired" class="tlp-alert-info">
         {{
-            gettext_provider.interpolate(
-                gettext_provider.$gettext(
-                    "This banner has expired since %{ expiration_date } and, as such, is not displayed on the platform",
-                ),
+            $gettext(
+                "This banner has expired since %{ expiration_date } and, as such, is not displayed on the platform",
                 { expiration_date: localized_expiration_date },
             )
         }}
@@ -31,10 +29,10 @@
 </template>
 
 <script setup lang="ts">
-import Vue, { computed } from "vue";
-import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
+import { computed } from "vue";
+import { useGettext } from "vue3-gettext";
 
-const gettext_provider = useGettext();
+const { current, $gettext } = useGettext();
 
 const props = defineProps<{
     readonly expiration_date: string;
@@ -50,7 +48,7 @@ const is_expired = computed((): boolean => {
 });
 
 const localized_expiration_date = computed((): string => {
-    const locale = Vue.config.language ?? "en_US";
+    const locale = current ?? "en_US";
     return new Date(props.expiration_date).toLocaleString(locale.replace("_", "-"));
 });
 </script>

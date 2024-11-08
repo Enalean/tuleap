@@ -18,14 +18,14 @@
  */
 
 import { shallowMount } from "@vue/test-utils";
-import { createPlatformBannerAdminLocalVue } from "../helpers/local-vue-for-tests";
+import { getGlobalTestOptions } from "../helpers/global-options-for-tests";
 import ExpiredBannerInfoMessage from "./ExpiredBannerInfoMessage.vue";
 
 describe("ExpiredBannerInfoMessage", () => {
-    it("displays an info message when the banner is expired", async () => {
+    it("displays an info message when the banner is expired", () => {
         const wrapper = shallowMount(ExpiredBannerInfoMessage, {
-            localVue: await createPlatformBannerAdminLocalVue(),
-            propsData: {
+            global: { ...getGlobalTestOptions() },
+            props: {
                 message: "Some banner message",
                 expiration_date: "1970-01-01T00:00:01+00:00",
             },
@@ -34,10 +34,10 @@ describe("ExpiredBannerInfoMessage", () => {
         expect(wrapper.element.children).toBeDefined();
     });
 
-    it("does not display the expired info message when no banner is set", async () => {
+    it("does not display the expired info message when no banner is set", () => {
         const wrapper = shallowMount(ExpiredBannerInfoMessage, {
-            localVue: await createPlatformBannerAdminLocalVue(),
-            propsData: {
+            global: { ...getGlobalTestOptions() },
+            props: {
                 message: "",
                 expiration_date: "",
             },
@@ -46,10 +46,10 @@ describe("ExpiredBannerInfoMessage", () => {
         expect(wrapper.element.children).toBeUndefined();
     });
 
-    it("does not display the expired info message when the banner never expires", async () => {
+    it("does not display the expired info message when the banner never expires", () => {
         const wrapper = shallowMount(ExpiredBannerInfoMessage, {
-            localVue: await createPlatformBannerAdminLocalVue(),
-            propsData: {
+            global: { ...getGlobalTestOptions() },
+            props: {
                 message: "Some message",
                 expiration_date: "",
             },
@@ -58,10 +58,10 @@ describe("ExpiredBannerInfoMessage", () => {
         expect(wrapper.element.children).toBeUndefined();
     });
 
-    it("does not display the expired info message when the banner is not yet expired", async () => {
+    it("does not display the expired info message when the banner is not yet expired", () => {
         const wrapper = shallowMount(ExpiredBannerInfoMessage, {
-            localVue: await createPlatformBannerAdminLocalVue(),
-            propsData: {
+            global: { ...getGlobalTestOptions() },
+            props: {
                 message: "Some message",
                 expiration_date: new Date(Date.now() + 3600 * 1000 * 24).toISOString(),
             },

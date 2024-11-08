@@ -20,7 +20,7 @@
 <template>
     <div class="tlp-form-element">
         <label for="expiration-date-picker-banner" class="tlp-label">
-            {{ gettext_provider.$gettext("Expiration date") }}
+            {{ $gettext("Expiration date") }}
         </label>
         <div class="tlp-form-element tlp-form-element-prepend">
             <span class="tlp-prepend"><i class="fas fa-calendar-alt" aria-hidden="true"></i></span>
@@ -39,11 +39,11 @@
 
 <script setup lang="ts">
 import { nextTick, onMounted, onUnmounted, ref, watch } from "vue";
-import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
+import { useGettext } from "vue3-gettext";
 import type { DatePickerInstance } from "@tuleap/tlp-date-picker";
 import { datePicker } from "@tuleap/tlp-date-picker";
 
-const gettext_provider = useGettext();
+const { $gettext } = useGettext();
 
 const props = defineProps<{
     readonly value: string;

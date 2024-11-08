@@ -21,8 +21,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { webpack_configurator } from "@tuleap/build-system-configurator";
 import POGettextPlugin from "@tuleap/po-gettext-plugin";
-// eslint-disable-next-line import/no-extraneous-dependencies
-import ScriptSetupPlugin from "unplugin-vue2-script-setup";
+import { VueLoaderPlugin } from "vue-loader";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -55,7 +54,7 @@ const config = {
         webpack_configurator.getCleanWebpackPlugin(),
         webpack_configurator.getManifestPlugin(),
         POGettextPlugin.webpack(),
-        ScriptSetupPlugin.webpack(),
+        new VueLoaderPlugin(),
         webpack_configurator.getVueLoaderPlugin(),
     ],
 };
