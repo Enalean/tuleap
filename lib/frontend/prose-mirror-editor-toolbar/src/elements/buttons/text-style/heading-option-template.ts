@@ -31,16 +31,36 @@ export const isCurrentHeading = (host: InternalTextStyleItem, level: number): bo
     return host.current_heading !== null && host.current_heading.level === level;
 };
 
-const getHeadingOptionTitle = (level: number, gettext_provider: GetText): string =>
-    sprintf(
-        gettext_provider.gettext(
-            "Change to heading %(heading_level)s `Ctrl+Shift+%(heading_level)s`",
-        ),
-        { heading_level: level },
-    );
+const getHeadingOptionTitle = (level: number, gettext_provider: GetText): string => {
+    switch (level) {
+        case 1:
+            return sprintf(
+                gettext_provider.gettext("Change to large heading `Ctrl+Shift+%(heading_level)s`"),
+                { heading_level: level },
+            );
+        case 2:
+            return sprintf(
+                gettext_provider.gettext("Change to medium heading `Ctrl+Shift+%(heading_level)s`"),
+                { heading_level: level },
+            );
+        default:
+            return sprintf(
+                gettext_provider.gettext("Change to small heading `Ctrl+Shift+%(heading_level)s`"),
+                { heading_level: level },
+            );
+    }
+};
 
-const getHeadingOptionTextContent = (level: number, gettext_provider: GetText): string =>
-    sprintf(gettext_provider.gettext("Heading %(heading_level)s"), { heading_level: level });
+const getHeadingOptionTextContent = (level: number, gettext_provider: GetText): string => {
+    switch (level) {
+        case 1:
+            return gettext_provider.gettext("Large heading");
+        case 2:
+            return gettext_provider.gettext("Medium heading");
+        default:
+            return gettext_provider.gettext("Small heading");
+    }
+};
 
 export const renderHeadingOption = (
     host: InternalTextStyleItem,
