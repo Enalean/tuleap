@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 3.3.1\n"
+"X-Generator: Poedit 3.0.1\n"
 
 msgid "Apply subscript style on the selected text `Ctrl+,`"
 msgstr "Transformer le texte sélectionné en indice `Ctrl+,`"
@@ -21,16 +21,20 @@ msgstr "Transformer le texte sélectionné en exposant `Ctrl+.`"
 msgid "Cancel"
 msgstr "Annuler"
 
-msgid "Change to heading %(heading_level)s `Ctrl+Shift+%(heading_level)s`"
-msgstr ""
-"Changer le texte en titre de niveau %(heading_level)s `Ctrl+Shift+"
-"%(heading_level)s`"
+msgid "Change to large heading `Ctrl+Shift+%(heading_level)s`"
+msgstr "Changer en grand titre `Ctrl+Shift+%(heading_level)s`"
 
-msgid "Change to plain text"
-msgstr "Changer en texte"
+msgid "Change to medium heading `Ctrl+Shift+%(heading_level)s`"
+msgstr "Changer en titre moyen `Ctrl+Shift+%(heading_level)s`"
+
+msgid "Change to normal text"
+msgstr "Changer en texte normal"
 
 msgid "Change to preformatted text"
 msgstr "Changer en texte préformaté"
+
+msgid "Change to small heading `Ctrl+Shift+%(heading_level)s`"
+msgstr "Changer en petit titre `Ctrl+Shift+%(heading_level)s`"
 
 msgid "Create link"
 msgstr "Créer un lien"
@@ -41,9 +45,6 @@ msgstr "Créer ou éditer un lien"
 msgid "Edit link"
 msgstr "Éditer un lien"
 
-msgid "Heading %(heading_level)s"
-msgstr "Titre %(heading_level)s"
-
 msgid "Image source"
 msgstr "Source de l'image"
 
@@ -53,8 +54,17 @@ msgstr "Insérer une nouvelle image"
 msgid "Insert or edit image"
 msgstr "Insérer ou éditer une image"
 
+msgid "Large heading"
+msgstr "Grand titre"
+
 msgid "Link"
 msgstr "Lien"
+
+msgid "Medium heading"
+msgstr "Titre moyen"
+
+msgid "Normal"
+msgstr "Normal"
 
 msgid "Preformatted"
 msgstr "Préformaté"
@@ -64,6 +74,9 @@ msgstr "Supprimer le lien"
 
 msgid "Save"
 msgstr "Sauvegarder"
+
+msgid "Small heading"
+msgstr "Petit titre"
 
 msgid "Styles"
 msgstr "Styles"
