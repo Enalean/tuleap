@@ -21,30 +21,32 @@
 <template>
     <editor-toolbar v-if="can_user_edit_document" />
     <notification-container />
-    <ol ref="sections_container">
-        <li
-            v-for="section in sections"
-            v-bind:key="section.internal_id"
-            v-bind:id="getId(section)"
-            v-bind:class="{ 'artidoc-section-with-add-button': has_add_button }"
-            data-test="artidoc-section"
-        >
-            <add-new-section-button
-                class="artidoc-button-add-section-container"
-                v-if="has_add_button"
-                v-bind:insert_section_callback="insertSection"
-                v-bind:position="{ before: section.id }"
-            />
-            <section-container v-bind:section="section" />
-        </li>
-    </ol>
-    <add-new-section-button
-        class="artidoc-button-add-section-container"
-        v-if="has_add_button"
-        v-bind:insert_section_callback="insertSection"
-        v-bind:position="AT_THE_END"
-    />
-    <add-existing-section-modal />
+    <div class="tlp-card">
+        <ol ref="sections_container">
+            <li
+                v-for="section in sections"
+                v-bind:key="section.internal_id"
+                v-bind:id="getId(section)"
+                v-bind:class="{ 'artidoc-section-with-add-button': has_add_button }"
+                data-test="artidoc-section"
+            >
+                <add-new-section-button
+                    class="artidoc-button-add-section-container"
+                    v-if="has_add_button"
+                    v-bind:insert_section_callback="insertSection"
+                    v-bind:position="{ before: section.id }"
+                />
+                <section-container v-bind:section="section" />
+            </li>
+        </ol>
+        <add-new-section-button
+            class="artidoc-button-add-section-container"
+            v-if="has_add_button"
+            v-bind:insert_section_callback="insertSection"
+            v-bind:position="AT_THE_END"
+        />
+        <add-existing-section-modal />
+    </div>
 </template>
 
 <script setup lang="ts">
@@ -85,6 +87,7 @@ onMounted(() => {
 <style lang="scss" scoped>
 @use "@/themes/includes/whitespace";
 @use "@/themes/includes/size";
+@use "@/themes/includes/viewport-breakpoint";
 
 $section-number-padding-left: var(--tlp-small-spacing);
 $section-number-padding-right: var(--tlp-medium-spacing);
@@ -109,6 +112,10 @@ li {
     position: relative;
     margin: 0 0 var(--tlp-medium-spacing);
     counter-increment: item-without-dot;
+
+    &::marker {
+        color: transparent; // hack to hide the li number to be displayed in the margin
+    }
 
     &:last-child {
         margin: 0;
@@ -161,5 +168,20 @@ li[data-is-sticking="true"]:first-child::before {
     display: inline-block;
     position: sticky;
     top: calc(#{$magic-number-to-align-li-number-with-title} + 45px);
+}
+
+.tlp-card {
+    width: size.$document-width;
+    margin: var(--tlp-medium-spacing) 0 var(--tlp-x-large-spacing);
+    padding: 0;
+    border: 0;
+    background-color: var(--tlp-white-color);
+    box-shadow: var(--tlp-flyover-shadow);
+
+    @media screen and (max-width: #{viewport-breakpoint.$medium-screen-size}) {
+        width: 100%;
+        margin: 0;
+        box-shadow: none;
+    }
 }
 </style>

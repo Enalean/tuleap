@@ -37,18 +37,26 @@ import DocumentContent from "./DocumentContent.vue";
 </script>
 
 <style lang="scss" scoped>
+@use "@/themes/includes/size";
+@use "@/themes/includes/viewport-breakpoint";
 @use "@/themes/includes/zindex";
 
 .document-layout {
+    $content-column: calc(100% * #{size.$document-container-width-ratio});
+    $toc-column: calc(100% * (1 - #{size.$document-container-width-ratio}));
+
     display: grid;
-    grid-template-columns: 80% 20%;
+    grid-template-columns: $content-column $toc-column;
     height: inherit;
     border-top: 1px solid var(--tlp-neutral-normal-color);
 }
 
 .document-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     border-right: 1px solid var(--tlp-neutral-normal-color);
-    background-color: var(--tlp-white-color);
+    background: var(--tlp-fade-background-color-darker-01);
 }
 
 aside {
@@ -63,7 +71,7 @@ aside {
     top: var(--header-height);
 }
 
-@media (max-width: 1024px) {
+@media screen and (max-width: #{viewport-breakpoint.$small-screen-size}) {
     .document-layout {
         grid-template-columns: 1fr;
         grid-template-rows: max-content auto;
