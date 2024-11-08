@@ -24,7 +24,10 @@
             class="git-repository-branch-tag-selector-filter"
             v-if="!is_loading_branches && branches.length"
         >
-            <refs-filter v-model="filter_text" v-bind:placeholder="$gettext('Branch name')" />
+            <refs-filter
+                v-bind:placeholder="$gettext('Branch name')"
+                v-on:update-filter="updateFilter"
+            />
         </div>
         <a
             v-for="branch in filtered_branches"
@@ -71,6 +74,9 @@ import RefsFilter from "./RefsFilter.vue";
 import type { Ref } from "vue";
 import { onMounted, computed, ref } from "vue";
 import type { Branch, URLParameter } from "../type";
+import { useGettext } from "vue3-gettext";
+
+const { $gettext } = useGettext();
 
 const props = defineProps<{
     repository_id: number;
@@ -123,5 +129,9 @@ async function loadBranches(): Promise<void> {
 
 function url(ref: string): string {
     return props.repository_url + "?" + encodeData({ ...props.url_parameters, hb: ref });
+}
+
+function updateFilter(value: string): void {
+    filter_text.value = value;
 }
 </script>

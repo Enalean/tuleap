@@ -22,28 +22,23 @@
         type="search"
         class="tlp-search tlp-search-small"
         v-bind:placeholder="placeholder"
-        ref="filter"
-        v-bind:value="value"
-        v-on:input="onInput"
+        v-on:input="updateFilter"
     />
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
-
 defineProps<{
-    value: string;
     placeholder: string;
 }>();
 
-const emit = defineEmits<{ (e: "input", value: string): void }>();
+const emit = defineEmits<{
+    (e: "update-filter", value: string): void;
+}>();
 
-const filter = ref<HTMLInputElement>();
-
-function onInput(event: Event): void {
-    if (!(event.target instanceof HTMLInputElement)) {
-        return;
+function updateFilter(event: Event): void {
+    const event_target = event.currentTarget;
+    if (event_target instanceof HTMLInputElement) {
+        emit("update-filter", event_target.value);
     }
-    emit("input", event.target.value);
 }
 </script>
