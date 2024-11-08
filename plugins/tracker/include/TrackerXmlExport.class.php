@@ -70,6 +70,7 @@ class TrackerXmlExport
         TypePresenterFactory $nature_presenter_factory,
         ArtifactLinksUsageDao $artifact_links_usage_dao,
         ExternalFieldsExtractor $external_field_extractor,
+        private readonly \Psr\Log\LoggerInterface $logger,
     ) {
         $this->tracker_factory          = $tracker_factory;
         $this->trigger_rules_manager    = $trigger_rules_manager;
@@ -204,7 +205,7 @@ class TrackerXmlExport
             return $xml_trackers;
         } catch (XML_ParseException $exception) {
             foreach ($exception->getErrors() as $parse_error) {
-                fwrite(STDERR, $parse_error . PHP_EOL);
+                $this->logger->error($parse_error . PHP_EOL);
             }
         }
     }

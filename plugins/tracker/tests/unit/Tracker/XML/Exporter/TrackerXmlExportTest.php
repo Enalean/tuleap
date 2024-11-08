@@ -36,7 +36,7 @@ use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenter;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
 
-class TrackerXmlExportTest extends \Tuleap\Test\PHPUnit\TestCase
+final class TrackerXmlExportTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use MockeryPHPUnitIntegration;
 
@@ -101,7 +101,8 @@ class TrackerXmlExportTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->event_manager,
             $this->type_presenter_factory,
             $this->artifact_link_dao,
-            $this->external_field_extractor
+            $this->external_field_extractor,
+            new \Psr\Log\NullLogger()
         );
     }
 

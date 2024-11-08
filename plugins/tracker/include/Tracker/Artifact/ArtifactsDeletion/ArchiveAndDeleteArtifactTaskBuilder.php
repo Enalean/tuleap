@@ -201,7 +201,8 @@ class ArchiveAndDeleteArtifactTaskBuilder
                     $event_manager,
                     new TypePresenterFactory(new TypeDao(), $artifact_links_usage_dao),
                     $artifact_links_usage_dao,
-                    $external_field_extractor
+                    $external_field_extractor,
+                    $logger
                 ),
                 new \Tuleap\XMLConvertor()
             ),
