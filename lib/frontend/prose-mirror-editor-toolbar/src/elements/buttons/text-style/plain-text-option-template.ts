@@ -35,10 +35,10 @@ export const renderPlainTextOption = (
     return html`
         <option
             selected="${host.is_plain_text_activated}"
-            title="${gettext_provider.gettext("Change to normal text")}"
+            title="${gettext_provider.gettext("Change to plain text")}"
             value="${OPTION_PLAIN_TEXT}"
         >
-            ${gettext_provider.gettext("Normal")}
+            ${gettext_provider.gettext("Text")}
         </option>
     `;
 };
