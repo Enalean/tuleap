@@ -161,6 +161,13 @@ class ServiceDao extends DataAccessObject
         return $this->getDB()->row($sql, $id);
     }
 
+    public function searchByProjectId(int $id): array
+    {
+        $sql = 'SELECT * FROM service WHERE group_id = ?';
+
+        return $this->getDB()->run($sql, $id);
+    }
+
     public function getServiceInfoQueryForNewProject(array $legacy, int $template_id): array
     {
         $forbidden_shortname = [];

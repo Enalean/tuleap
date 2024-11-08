@@ -48,12 +48,15 @@ final readonly class CreateReferencePresenterBuilder
 
 
         if ($is_super_user_in_default_template) {
-            $row   = $this->service_dao->searchById(100);
-            $label = $row['label'];
-            if ($label === 'service_' . $row['short_name'] . '_lbl_key') {
-                $label = $GLOBALS['Language']->getOverridableText('project_admin_editservice', $label);
+            $results = $this->service_dao->searchByProjectId(\Project::DEFAULT_TEMPLATE_PROJECT_ID);
+            foreach ($results as $row) {
+                $label = $row['label'];
+
+                if ($label === 'service_' . $row['short_name'] . '_lbl_key') {
+                    $label = $GLOBALS['Language']->getOverridableText('project_admin_editservice', $label);
+                }
+                $service_list[] = new ServiceReferencePresenter($row['short_name'], $label);
             }
-            $service_list[] = new ServiceReferencePresenter($row['short_name'], $label);
         }
 
         return new CreateReferencePresenter(
