@@ -61,7 +61,7 @@ type PredefinedTimePeriodOption = {
     readonly is_selected: boolean;
 };
 
-const getPeriodAccordingToSelectedPreset = (selected_value: string): PeriodOption => {
+export const getPeriodAccordingToSelectedPreset = (selected_value: string): PeriodOption => {
     switch (selected_value) {
         case TODAY:
             return Option.fromValue(getTodayPeriod());

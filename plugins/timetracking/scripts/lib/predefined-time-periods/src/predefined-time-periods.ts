@@ -109,3 +109,24 @@ export const getLastMonthPeriod = (): Period => {
         end: end_last_month,
     };
 };
+
+export const getPredefinedTimePeriodWithString = (
+    predefined_time_period: string,
+): PredefinedTimePeriod | "" => {
+    switch (predefined_time_period) {
+        case "today":
+            return TODAY;
+        case "yesterday":
+            return YESTERDAY;
+        case "last_7_days":
+            return LAST_7_DAYS;
+        case "current_week":
+            return CURRENT_WEEK;
+        case "last_week":
+            return LAST_WEEK;
+        case "last_month":
+            return LAST_MONTH;
+        default:
+            return "";
+    }
+};

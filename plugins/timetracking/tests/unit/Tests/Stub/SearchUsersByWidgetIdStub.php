@@ -1,3 +1,4 @@
+<?php
 /**
  * Copyright (c) Enalean, 2024 - Present. All Rights Reserved.
  *
@@ -17,11 +18,27 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { StrictInjectionKey } from "@tuleap/vue-strict-inject";
-import type { Query } from "./query/QueryRetriever";
+declare(strict_types=1);
 
-export const RETRIEVE_QUERY: StrictInjectionKey<Query> = Symbol("query");
+namespace Tuleap\Timetracking\Tests\Stub;
 
-export const USER_LOCALE_KEY: StrictInjectionKey<string> = Symbol("user_locale");
+use Tuleap\Timetracking\REST\v1\TimetrackingManagement\SearchUsersByWidgetId;
 
-export const WIDGET_ID: StrictInjectionKey<number> = Symbol("widget_id");
+final class SearchUsersByWidgetIdStub implements SearchUsersByWidgetId
+{
+    private function __construct(
+        private array $users,
+    ) {
+    }
+
+    public static function build(
+        array $users,
+    ): self {
+        return new self($users);
+    }
+
+    public function searchUsersByWidgetId(int $widget_id): array
+    {
+        return $this->users;
+    }
+}
