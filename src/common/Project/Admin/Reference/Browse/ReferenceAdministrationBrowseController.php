@@ -25,41 +25,22 @@ use ProjectManager;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Project\Admin\Navigation\HeaderNavigationDisplayer;
 use Tuleap\Project\Admin\Navigation\NavigationPresenterBuilder;
+use Tuleap\Project\Admin\Routing\ProjectAdministratorChecker;
 use Tuleap\Project\ProjectAccessChecker;
 use Tuleap\Request\DispatchableWithProject;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Request\NotFoundException;
 
-class ReferenceAdministrationBrowseController implements DispatchableWithRequest, DispatchableWithProject
+readonly class ReferenceAdministrationBrowseController implements DispatchableWithRequest, DispatchableWithProject
 {
-    /**
-     * @var ProjectManager
-     */
-    private $project_manager;
-    /**
-     * @var LegacyReferenceAdministrationBrowsingRenderer
-     */
-    private $legacy_renderer;
-    /**
-     * @var HeaderNavigationDisplayer
-     */
-    private $header_navigation_displayer;
-    /**
-     * @var ProjectAccessChecker
-     */
-    private $project_access_checker;
-
     public function __construct(
-        ProjectManager $project_manager,
-        LegacyReferenceAdministrationBrowsingRenderer $legacy_renderer,
-        HeaderNavigationDisplayer $header_navigation_displayer,
-        ProjectAccessChecker $project_access_checker,
+        private ProjectManager $project_manager,
+        private LegacyReferenceAdministrationBrowsingRenderer $legacy_renderer,
+        private HeaderNavigationDisplayer $header_navigation_displayer,
+        private ProjectAccessChecker $project_access_checker,
+        private ProjectAdministratorChecker $administrator_checker,
     ) {
-        $this->project_manager             = $project_manager;
-        $this->legacy_renderer             = $legacy_renderer;
-        $this->header_navigation_displayer = $header_navigation_displayer;
-        $this->project_access_checker      = $project_access_checker;
     }
 
     /**
@@ -69,12 +50,15 @@ class ReferenceAdministrationBrowseController implements DispatchableWithRequest
     public function process(\HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
         $project = $this->getProject($variables);
+        $user    = $request->getCurrentUser();
 
         try {
-            $this->project_access_checker->checkUserCanAccessProject($request->getCurrentUser(), $project);
+            $this->project_access_checker->checkUserCanAccessProject($user, $project);
         } catch (\Exception $e) {
             throw new ForbiddenException();
         }
+
+        $this->administrator_checker->checkUserIsProjectAdministrator($user, $project);
 
         $this->header_navigation_displayer->displayFlamingParrotNavigation(
             _('Editing reference patterns'),

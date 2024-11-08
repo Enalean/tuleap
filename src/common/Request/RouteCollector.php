@@ -1039,7 +1039,8 @@ class RouteCollector
             new ProjectAccessChecker(
                 new RestrictedUserCanAccessProjectVerifier(),
                 EventManager::instance()
-            )
+            ),
+            new ProjectAdministratorChecker()
         );
     }
 
