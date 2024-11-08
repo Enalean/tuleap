@@ -76,7 +76,7 @@ class ReferenceAdministrationActions extends Actions
             $request->get('scope'),
             $service_short_name,
             $request->get('nature'),
-            $request->get('is_used'),
+            (bool) $request->get('is_used'),
             $request->get('group_id')
         );
         if (($ref->getGroupId() == 100) && ($ref->isSystemReference())) {
