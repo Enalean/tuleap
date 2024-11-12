@@ -40,9 +40,8 @@ msgid "The banner has been successfully modified"
 msgstr ""
 
 msgid ""
-"This banner is expired since %{ expiration_date } and, as such, not "
-"displayed on the\n"
-"    platform"
+"This banner has expired since %{ expiration_date } and, as such, is not "
+"displayed on the platform"
 msgstr ""
 
 msgid "Warning"

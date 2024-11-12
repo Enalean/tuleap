@@ -30,6 +30,6 @@ describe("ExpirationDateBannerInput", () => {
             },
         });
 
-        expect(wrapper).toMatchSnapshot();
+        expect(wrapper.get("input").exists()).toBe(true);
     });
 });

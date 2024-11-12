@@ -18,38 +18,39 @@
   -->
 
 <template>
-    <div
-        v-if="is_expired"
-        class="tlp-alert-info"
-        v-translate="{ expiration_date: localized_expiration_date }"
-    >
-        This banner is expired since %{ expiration_date } and, as such, not displayed on the
-        platform
+    <div v-if="is_expired" class="tlp-alert-info">
+        {{
+            gettext_provider.interpolate(
+                gettext_provider.$gettext(
+                    "This banner has expired since %{ expiration_date } and, as such, is not displayed on the platform",
+                ),
+                { expiration_date: localized_expiration_date },
+            )
+        }}
     </div>
 </template>
 
-<script lang="ts">
-import Vue from "vue";
-import { Component, Prop } from "vue-property-decorator";
+<script setup lang="ts">
+import Vue, { computed } from "vue";
+import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
 
-@Component
-export default class ExpiredBannerInfoMessage extends Vue {
-    @Prop({ required: true, type: String })
-    readonly expiration_date!: string;
-    @Prop({ required: true, type: String })
-    readonly message!: string;
+const gettext_provider = useGettext();
 
-    get is_expired(): boolean {
-        if (this.message === "" || this.expiration_date === "") {
-            return false;
-        }
+const props = defineProps<{
+    readonly expiration_date: string;
+    readonly message: string;
+}>();
 
-        return new Date() >= new Date(this.expiration_date);
+const is_expired = computed((): boolean => {
+    if (props.message === "" || props.expiration_date === "") {
+        return false;
     }
 
-    get localized_expiration_date(): string {
-        const locale = Vue.config.language ?? "en_US";
-        return new Date(this.expiration_date).toLocaleString(locale.replace("_", "-"));
-    }
-}
+    return new Date() >= new Date(props.expiration_date);
+});
+
+const localized_expiration_date = computed((): string => {
+    const locale = Vue.config.language ?? "en_US";
+    return new Date(props.expiration_date).toLocaleString(locale.replace("_", "-"));
+});
 </script>

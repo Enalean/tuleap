@@ -17,79 +17,65 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import type { Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import App from "./App.vue";
 import { createPlatformBannerAdminLocalVue } from "../helpers/local-vue-for-tests";
 import BannerPresenter from "./BannerPresenter.vue";
 import * as rest_querier from "../api/rest-querier";
+import type { LocationWithHashReload } from "../helpers/LocationHelper";
+import { LocationHelper } from "../helpers/LocationHelper";
 
 jest.useFakeTimers();
 
-describe("App", () => {
-    it("displays something when no banner is set", async () => {
-        const wrapper = shallowMount(App, {
-            localVue: await createPlatformBannerAdminLocalVue(),
-            propsData: {
-                message: "",
-                importance: "critical",
-                expiration_date: "",
-                location: window.location,
-            },
-        });
+const noop = (): void => {
+    // Do nothing
+};
 
-        expect(wrapper.element).toMatchSnapshot();
+describe("App", () => {
+    let banner_message: string, fake_location: LocationWithHashReload;
+    beforeEach(() => {
+        banner_message = "some message";
+        fake_location = { hash: "", reload: noop };
     });
 
-    it("displays message and remove button when banner is not empty", async () => {
-        const banner_message = "<b>My banner content</b>";
-
-        const wrapper = shallowMount(App, {
+    //eslint-disable-next-line @typescript-eslint/ban-ts-comment -- Temporary while we migrate to Vue 3
+    //@ts-ignore
+    async function getWrapper(): Promise<Wrapper<InstanceType<typeof App>>> {
+        return shallowMount(App, {
             localVue: await createPlatformBannerAdminLocalVue(),
             propsData: {
                 message: banner_message,
                 importance: "critical",
                 expiration_date: "",
-                location: window.location,
+                location_helper: LocationHelper(fake_location),
             },
         });
+    }
 
-        expect(wrapper.element).toMatchSnapshot();
+    it("displays something when no banner is set", async () => {
+        banner_message = "";
+        const wrapper = await getWrapper();
+
+        expect(wrapper.findComponent(BannerPresenter).exists()).toBe(true);
     });
 
     it("displays success message when the banner has been successfully modified", async () => {
+        fake_location = { hash: "#banner-change-success", reload: noop };
         location.hash = "#banner-change-success";
-        const wrapper = shallowMount(App, {
-            localVue: await createPlatformBannerAdminLocalVue(),
-            propsData: {
-                message: "",
-                importance: "critical",
-                expiration_date: "",
-                location: window.location,
-            },
-        });
-        await wrapper.vm.$nextTick();
+        const wrapper = await getWrapper();
 
-        expect(wrapper.element).toMatchSnapshot();
-        location.hash = "";
+        expect(wrapper.get("[data-test=success-feedback]").exists()).toBe(true);
     });
 
     it("Should be able to send the deletion request", async () => {
-        const location = { ...window.location, reload: jest.fn() };
-        const wrapper = shallowMount(App, {
-            localVue: await createPlatformBannerAdminLocalVue(),
-            propsData: {
-                message: "some message",
-                importance: "critical",
-                expiration_date: "",
-                location,
-            },
-        });
+        fake_location = { hash: "", reload: noop };
+        const reload = jest.spyOn(fake_location, "reload");
+        const wrapper = await getWrapper();
 
         const delete_banner = jest
             .spyOn(rest_querier, "deleteBannerForPlatform")
-            .mockImplementation(() => {
-                return Promise.resolve();
-            });
+            .mockResolvedValue();
 
         wrapper.findComponent(BannerPresenter).vm.$emit("save-banner", {
             message: "some message",
@@ -99,24 +85,16 @@ describe("App", () => {
         await jest.runOnlyPendingTimersAsync();
 
         expect(delete_banner).toHaveBeenCalledTimes(1);
-        expect(location.reload).toHaveBeenCalledTimes(1);
-        expect(location.hash).toBe("#banner-change-success");
+        expect(reload).toHaveBeenCalledTimes(1);
+        expect(fake_location.hash).toBe("#banner-change-success");
     });
 
     it("Should display an error if banner deletion fails", async () => {
-        const wrapper = shallowMount(App, {
-            localVue: await createPlatformBannerAdminLocalVue(),
-            propsData: {
-                message: "some message",
-                importance: "critical",
-                expiration_date: "",
-                location: window.location,
-            },
-        });
+        const wrapper = await getWrapper();
 
-        jest.spyOn(rest_querier, "deleteBannerForPlatform").mockImplementation(() => {
-            return Promise.reject(new Error("an error message"));
-        });
+        jest.spyOn(rest_querier, "deleteBannerForPlatform").mockRejectedValue(
+            new Error("an error message"),
+        );
 
         wrapper
             .findComponent(BannerPresenter)
@@ -124,26 +102,15 @@ describe("App", () => {
         await jest.runOnlyPendingTimersAsync();
 
         expect(wrapper.findComponent(BannerPresenter).props().loading).toBe(false);
-        expect(wrapper.element).toMatchSnapshot();
+        expect(wrapper.get("[data-test=error-feedback]").exists()).toBe(true);
     });
 
     it("Should be able to send the update request and lock form while doing it", async () => {
-        const location: Location = { ...window.location, reload: jest.fn() };
-        const wrapper = shallowMount(App, {
-            localVue: await createPlatformBannerAdminLocalVue(),
-            propsData: {
-                message: "some message",
-                importance: "critical",
-                expiration_date: "",
-                location,
-            },
-        });
+        fake_location = { hash: "", reload: noop };
+        const reload = jest.spyOn(fake_location, "reload");
+        const wrapper = await getWrapper();
 
-        const save_banner = jest
-            .spyOn(rest_querier, "saveBannerForPlatform")
-            .mockImplementation(() => {
-                return Promise.resolve();
-            });
+        const save_banner = jest.spyOn(rest_querier, "saveBannerForPlatform").mockResolvedValue();
 
         wrapper.findComponent(BannerPresenter).vm.$emit("save-banner", {
             message: "a new message",
@@ -155,24 +122,16 @@ describe("App", () => {
 
         expect(wrapper.findComponent(BannerPresenter).props().loading).toBe(true);
         expect(save_banner).toHaveBeenCalledTimes(1);
-        expect(location.reload).toHaveBeenCalledTimes(1);
-        expect(location.hash).toBe("#banner-change-success");
+        expect(reload).toHaveBeenCalledTimes(1);
+        expect(fake_location.hash).toBe("#banner-change-success");
     });
 
     it("Should display an error if banner update fails", async () => {
-        const wrapper = shallowMount(App, {
-            localVue: await createPlatformBannerAdminLocalVue(),
-            propsData: {
-                message: "some message",
-                importance: "critical",
-                expiration_date: "",
-                location: window.location,
-            },
-        });
+        const wrapper = await getWrapper();
 
-        jest.spyOn(rest_querier, "saveBannerForPlatform").mockImplementation(() => {
-            return Promise.reject(new Error("Ooops something went wrong"));
-        });
+        jest.spyOn(rest_querier, "saveBannerForPlatform").mockRejectedValue(
+            new Error("Ooops something went wrong"),
+        );
 
         wrapper.findComponent(BannerPresenter).vm.$emit("save-banner", {
             message: "a new message",
@@ -183,6 +142,6 @@ describe("App", () => {
         await jest.runOnlyPendingTimersAsync();
 
         expect(wrapper.findComponent(BannerPresenter).props().loading).toBe(false);
-        expect(wrapper.element).toMatchSnapshot();
+        expect(wrapper.get("[data-test=error-feedback]").exists()).toBe(true);
     });
 });

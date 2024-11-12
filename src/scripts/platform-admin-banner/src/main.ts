@@ -20,6 +20,7 @@
 import Vue from "vue";
 import { getPOFileFromLocale, initVueGettext } from "@tuleap/vue2-gettext-init";
 import App from "./components/App.vue";
+import { LocationHelper } from "./helpers/LocationHelper";
 
 document.addEventListener("DOMContentLoaded", async () => {
     const vue_mount_point = document.getElementById("platform-banner-admin");
@@ -27,23 +28,19 @@ document.addEventListener("DOMContentLoaded", async () => {
         return;
     }
 
-    await initVueGettext(
-        Vue,
-        (locale: string) =>
-            import(
-                /* webpackChunkName: "platform-admin-banner-po-" */ `../po/${getPOFileFromLocale(
-                    locale,
-                )}`
-            ),
-    );
+    await initVueGettext(Vue, (locale: string) => import(`../po/${getPOFileFromLocale(locale)}`));
 
+    const location_helper = LocationHelper(window.location);
+
+    //eslint-disable-next-line @typescript-eslint/ban-ts-comment -- Temporary while we migrate to Vue 3
+    //@ts-ignore
     const AppComponent = Vue.extend(App);
     new AppComponent({
         propsData: {
-            message: vue_mount_point.dataset.bannerMessage || "",
-            importance: vue_mount_point.dataset.bannerImportance || "standard",
-            expiration_date: vue_mount_point.dataset.bannerExpirationDate || "",
-            location: window.location,
+            message: vue_mount_point.dataset.bannerMessage ?? "",
+            importance: vue_mount_point.dataset.bannerImportance ?? "standard",
+            expiration_date: vue_mount_point.dataset.bannerExpirationDate ?? "",
+            location_helper,
         },
     }).$mount(vue_mount_point);
 });
