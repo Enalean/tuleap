@@ -97,3 +97,10 @@ id = "GHSA-g974-hxvm-x689" # CVE-2024-21528
 reason = "No exploitation path in the Tuleap context for this prototype pollution issue."
 
 ### TO BE FIXED
+
+# wasmtime
+## instant
+[[IgnoredVulns]]
+id = "RUSTSEC-2024-0384"
+reason = "Not used in production, see https://github.com/bytecodealliance/wasmtime/issues/9591"
+ignoreUntil = 2025-01-12
