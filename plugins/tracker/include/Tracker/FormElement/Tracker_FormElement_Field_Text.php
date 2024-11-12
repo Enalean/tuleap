@@ -29,6 +29,7 @@ use Tuleap\Search\ItemToIndexQueueEventBased;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\CodeBlockFeaturesOnArtifact;
 use Tuleap\Tracker\Artifact\FileUploadDataProvider;
+use Tuleap\Tracker\Artifact\RichTextareaConfiguration;
 use Tuleap\Tracker\Artifact\RichTextareaProvider;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 use Tuleap\Tracker\FormElement\Field\Text\TextFieldDao;
@@ -284,7 +285,7 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum
             $html .= '<textarea readonly="readonly" title="' . dgettext('tuleap-tracker', 'This field is the title of the artifact. It is not allowed to masschange it.') . '">' . $value . '</textarea>';
         } else {
             $hp    = Codendi_HTMLPurifier::instance();
-            $html .= '<textarea id = field_' . $this->id . ' class="user-mention"
+            $html .= '<textarea id = field_' . $this->id . '
                                 maxlength="' . TextValueValidator::MAX_TEXT_SIZE . '"
                                 name="artifact[' . $this->id . '][content]"
                                 rows="' . $this->getProperty('rows') . '"
@@ -363,16 +364,14 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum
              value="' . $hp->purify($format) . '" />';
 
         $html .= $rich_textarea_provider->getTextarea(
-            $tracker,
-            $artifact,
-            $this->getCurrentUser(),
-            'field_' . $this->id,
-            'artifact[' . $this->id . '][content]',
-            $this->getProperty('rows'),
-            $this->getProperty('cols'),
-            $content,
-            $this->isRequired(),
-            $this->is_artifact_copy
+            RichTextareaConfiguration::fromTextField(
+                $tracker,
+                $artifact,
+                $this->getCurrentUser(),
+                $this,
+                $content
+            ),
+            $this->is_artifact_copy,
         );
 
         return $html;

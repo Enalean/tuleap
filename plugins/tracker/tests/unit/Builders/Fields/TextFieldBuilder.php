@@ -29,10 +29,13 @@ final class TextFieldBuilder
 {
     private string $name = 'text';
     private \Tracker $tracker;
-    /** @var list<\PFUser> */
+    /** @var list<\PFUser> $user_with_read_permissions */
     private array $user_with_read_permissions = [];
-    /** @var array<int, bool> */
+    /** @var array<int, bool> $read_permissions */
     private array $read_permissions = [];
+    private bool $is_required       = false;
+    private int $number_of_rows     = 0;
+    private int $number_of_columns  = 0;
 
     private function __construct(private readonly int $id)
     {
@@ -52,8 +55,8 @@ final class TextFieldBuilder
 
     public function withReadPermission(\PFUser $user, bool $user_can_read): self
     {
-        $this->user_with_read_permissions[]     = $user;
-        $this->read_permissions[$user->getId()] = $user_can_read;
+        $this->user_with_read_permissions[]           = $user;
+        $this->read_permissions[(int) $user->getId()] = $user_can_read;
 
         return $this;
     }
@@ -62,6 +65,38 @@ final class TextFieldBuilder
     {
         $this->tracker = $tracker;
         return $this;
+    }
+
+    public function thatIsRequired(): self
+    {
+        $this->is_required = true;
+        return $this;
+    }
+
+    public function withNumberOfRows(int $rows): self
+    {
+        $this->number_of_rows = $rows;
+        return $this;
+    }
+
+    public function withNumberOfColumns(int $columns): self
+    {
+        $this->number_of_columns = $columns;
+        return $this;
+    }
+
+    private function setProperties(Tracker_FormElement_Field_Text $field): void
+    {
+        $properties = [];
+        if ($this->number_of_rows > 0) {
+            $properties['rows'] = ['value' => $this->number_of_rows];
+        }
+        if ($this->number_of_columns > 0) {
+            $properties['cols'] = ['value' => $this->number_of_columns];
+        }
+        if ($properties !== []) {
+            $field->setCacheSpecificProperties($properties);
+        }
     }
 
     public function build(): Tracker_FormElement_Field_Text
@@ -75,14 +110,15 @@ final class TextFieldBuilder
             '',
             true,
             'P',
-            false,
+            $this->is_required,
             '',
             10,
             null
         );
         $field->setTracker($this->tracker);
+        $this->setProperties($field);
         foreach ($this->user_with_read_permissions as $user) {
-            $field->setUserCanRead($user, $this->read_permissions[$user->getId()]);
+            $field->setUserCanRead($user, $this->read_permissions[(int) $user->getId()]);
         }
         return $field;
     }
