@@ -40,7 +40,7 @@ final class CreateReferencePresenterBuilderTest extends \Tuleap\Test\PHPUnit\Tes
     public function testItShouldBuildAPresenterForPlatformAdministrator(): void
     {
         $service_dao = $this->createMock(ServiceDao::class);
-        $service_dao->method('searchById')->willReturn(['label' => 'Tracker from DB', 'short_name' => 'tracker']);
+        $service_dao->method('searchByProjectId')->willReturn([['label' => 'Tracker from DB', 'short_name' => 'tracker']]);
 
         $nature_list = new NatureCollection();
         $git_nature  = new Nature('git', '', 'Git', true);
