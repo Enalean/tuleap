@@ -18,13 +18,13 @@
  */
 
 import type { EditorView } from "prosemirror-view";
+import type { EditorState } from "prosemirror-state";
 import { Plugin } from "prosemirror-state";
-import { insertPoint } from "prosemirror-transform";
 import { fileUploadHandler } from "./upload-file";
 import type { FileUploadOptions } from "./types";
-import type { Option } from "@tuleap/option";
 import type { GetText } from "@tuleap/gettext";
 import type { Upload } from "tus-js-client";
+import { insertPoint } from "prosemirror-transform";
 
 function insertFile(view: EditorView, insert_point: number, url: string): void {
     const { state, dispatch } = view;
@@ -36,32 +36,70 @@ function insertFile(view: EditorView, insert_point: number, url: string): void {
     dispatch(transaction);
 }
 
+function replaceSelectionWithFile(view: EditorView, url: string): void {
+    const { state, dispatch } = view;
+    const node = state.schema.nodes.image.create({
+        src: url,
+    });
+
+    const transaction = state.tr.replaceSelectionWith(node);
+    dispatch(transaction);
+}
+
 export interface OngoingUpload {
     readonly cancel: () => void;
 }
 
-function handleDrop(
-    view: EditorView,
-    event: DragEvent,
+function handleEvent(
+    files: FileList,
     options: FileUploadOptions,
     gettext_provider: GetText,
     uploaders: Array<Upload>,
-    drop_point: number,
-): Promise<Option<ReadonlyArray<OngoingUpload>>> {
+    append_image_callback: (url: string) => void,
+): void {
     const success_callback_with_insert_file = (
         id: number,
         download_href: string,
         file_name: string,
     ): void => {
-        insertFile(view, drop_point, download_href);
+        append_image_callback(download_href);
         options.onSuccessCallback(id, download_href, file_name);
     };
-    return fileUploadHandler(
+    fileUploadHandler(
         { ...options, onSuccessCallback: success_callback_with_insert_file },
         gettext_provider,
         uploaders,
-    )(event);
+    )(files);
 }
+
+// instanceof does not work and makes the cypress test fail
+const isDragEventWithData = (event: Event): event is DragEvent =>
+    "dataTransfer" in event && event.dataTransfer !== null;
+
+// instanceof does not work and makes the cypress test fail
+const isClipboardEventWithData = (event: Event): event is ClipboardEvent =>
+    "clipboardData" in event && event.clipboardData !== null;
+
+const getFilesFromEvent = (event: DragEvent | ClipboardEvent): FileList | null => {
+    if (isDragEventWithData(event)) {
+        return event.dataTransfer?.files ?? null;
+    }
+
+    if (isClipboardEventWithData(event)) {
+        return event.clipboardData?.files ?? null;
+    }
+
+    return null;
+};
+
+/**
+ * Check that provided position points to a node accepting image nodes
+ */
+const isPositionValid = (state: EditorState, image_position: number): boolean => {
+    const insertion_point = insertPoint(state.doc, image_position, state.schema.nodes.image);
+
+    return insertion_point !== null;
+};
 
 export class PluginDropFile extends Plugin {
     uploaders: Array<Upload>;
@@ -71,30 +109,50 @@ export class PluginDropFile extends Plugin {
             props: {
                 handleDOMEvents: {
                     drop: (view, event) => {
-                        if (!(event.target instanceof Node)) {
+                        const files = getFilesFromEvent(event);
+                        const drop_position = view.posAtCoords({
+                            left: event.clientX,
+                            top: event.clientY,
+                        });
+
+                        if (
+                            !drop_position ||
+                            !files ||
+                            !isPositionValid(view.state, drop_position.pos)
+                        ) {
                             event.preventDefault();
                             return true;
                         }
 
-                        const drop_point = insertPoint(
-                            view.state.doc,
-                            view.posAtDOM(event.target, 0),
-                            view.state.schema.nodes.image,
-                        );
-
-                        if (!drop_point) {
-                            event.preventDefault();
-                            return true;
-                        }
-
-                        handleDrop(
-                            view,
-                            event,
+                        handleEvent(
+                            files,
                             options,
                             gettext_provider,
                             this.uploaders,
-                            drop_point,
+                            (url: string) => insertFile(view, drop_position.pos, url),
                         );
+                        event.preventDefault();
+
+                        return true;
+                    },
+                    paste: (view, event): boolean => {
+                        const files = getFilesFromEvent(event);
+                        if (
+                            !files ||
+                            files.length === 0 ||
+                            !isPositionValid(view.state, view.state.selection.$from.pos)
+                        ) {
+                            return true;
+                        }
+
+                        handleEvent(
+                            files,
+                            options,
+                            gettext_provider,
+                            this.uploaders,
+                            (url: string) => replaceSelectionWithFile(view, url),
+                        );
+                        event.preventDefault();
 
                         return true;
                     },
