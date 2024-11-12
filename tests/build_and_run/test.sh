@@ -46,6 +46,7 @@ docker run -t \
     --name "$UNIQUE_NAME-rpm-installer" \
     -v "$UNIQUE_NAME-rpm-volume":/rpms \
     -v /sys/fs/cgroup:/sys/fs/cgroup:rw \
+    --cgroupns=host \
     --mount type=tmpfs,destination=/run \
     --cap-add=sys_nice \
     $INSTALL_IMAGE
