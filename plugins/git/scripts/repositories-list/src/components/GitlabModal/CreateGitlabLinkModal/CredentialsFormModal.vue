@@ -108,98 +108,111 @@
     </form>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
 import { credentialsAreEmpty, serverUrlIsValid } from "../../../gitlab/gitlab-credentials-helper";
-import { Component, Prop } from "vue-property-decorator";
-import Vue from "vue";
-import type { GitLabCredentials, GitlabProject } from "../../../type";
-import { namespace } from "vuex-class";
+import { computed, ref } from "vue";
+import type { GitLabCredentialsWithProjects, GitlabProject } from "../../../type";
+import { useNamespacedActions } from "vuex-composition-helpers";
+import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
 
-const gitlab = namespace("gitlab");
+const gettext_provider = useGettext();
 
-@Component
-export default class CredentialsFormModal extends Vue {
-    @Prop({ required: true })
-    readonly gitlab_api_token!: string;
-    @Prop({ required: true })
-    readonly server_url!: string;
+const { getGitlabProjectList } = useNamespacedActions("gitlab", ["getGitlabProjectList"]);
 
-    @gitlab.Action
-    readonly getGitlabProjectList!: (credentials: GitLabCredentials) => Promise<GitlabProject[]>;
+const props = defineProps<{
+    gitlab_api_token: string;
+    server_url: string;
+}>();
 
-    gitlab_server = this.server_url;
-    gitlab_token = this.gitlab_api_token;
-    is_loading = false;
-    error_message = "";
-    empty_message = "";
-    private gitlab_projects: null | GitlabProject[] = null;
+const emit = defineEmits<{
+    (
+        e: "on-get-gitlab-repositories",
+        { projects, token, server_url }: GitLabCredentialsWithProjects,
+    ): void;
+    (e: "on-close-modal"): void;
+}>();
 
-    get disabled_button(): boolean {
-        return this.gitlab_server === "" || this.gitlab_token === "" || this.is_loading;
-    }
+const gitlab_server = ref(props.server_url);
+const gitlab_token = ref(props.gitlab_api_token);
+const is_loading = ref(false);
+const error_message = ref("");
+const empty_message = ref("");
+const gitlab_projects = ref<null | GitlabProject[]>(null);
 
-    reset(): void {
-        this.gitlab_server = "";
-        this.gitlab_token = "";
-        this.is_loading = false;
-        this.gitlab_projects = null;
-        this.resetMessages();
-    }
+const disabled_button = computed((): boolean => {
+    return gitlab_server.value === "" || gitlab_token.value === "" || is_loading.value;
+});
 
-    resetMessages(): void {
-        this.error_message = "";
-        this.empty_message = "";
-    }
+function reset(): void {
+    gitlab_server.value = "";
+    gitlab_token.value = "";
+    is_loading.value = false;
+    gitlab_projects.value = null;
+    resetMessages();
+}
 
-    handleError(): void {
-        this.resetMessages();
-        this.error_message = this.$gettext(
-            "Cannot connect to GitLab server, please check your credentials.",
+function resetMessages(): void {
+    error_message.value = "";
+    empty_message.value = "";
+}
+
+const handleError = (): void => {
+    resetMessages();
+    error_message.value = gettext_provider.$gettext(
+        "Cannot connect to GitLab server, please check your credentials.",
+    );
+};
+
+const fetchRepositories = async (event: Event): Promise<void> => {
+    event.preventDefault();
+    resetMessages();
+
+    const credentials = {
+        server_url: gitlab_server.value,
+        token: gitlab_token.value,
+    };
+
+    if (credentialsAreEmpty(credentials)) {
+        error_message.value = gettext_provider.$gettext(
+            "You must provide a valid GitLab server and user API token",
         );
+        return;
     }
 
-    async fetchRepositories(event: Event): Promise<void> {
-        event.preventDefault();
-        this.resetMessages();
+    if (!serverUrlIsValid(credentials.server_url)) {
+        error_message.value = gettext_provider.$gettext("Server url is invalid");
+        return;
+    }
 
-        const credentials = {
-            server_url: this.gitlab_server,
-            token: this.gitlab_token,
-        };
+    try {
+        is_loading.value = true;
+        gitlab_projects.value = await getGitlabProjectList(credentials);
 
-        if (credentialsAreEmpty(credentials)) {
-            this.error_message = this.$gettext(
-                "You must provide a valid GitLab server and user API token",
+        if (gitlab_projects.value === null) {
+            empty_message.value = gettext_provider.$gettext(
+                "No repository is available with your GitLab account",
             );
             return;
         }
 
-        if (!serverUrlIsValid(credentials.server_url)) {
-            this.error_message = this.$gettext("Server url is invalid");
-            return;
-        }
-
-        try {
-            this.is_loading = true;
-            this.gitlab_projects = await this.getGitlabProjectList(credentials);
-
-            if (this.gitlab_projects.length === 0) {
-                this.empty_message = this.$gettext(
-                    "No repository is available with your GitLab account",
-                );
-                return;
-            }
-
-            this.$emit("on-get-gitlab-repositories", {
-                projects: this.gitlab_projects,
-                token: this.gitlab_token,
-                server_url: this.gitlab_server,
-            });
-        } catch (e) {
-            this.handleError();
-        } finally {
-            this.is_loading = false;
-        }
+        emit("on-get-gitlab-repositories", {
+            projects: gitlab_projects.value,
+            token: gitlab_token.value,
+            server_url: gitlab_server.value,
+        });
+    } catch (e) {
+        handleError();
+    } finally {
+        is_loading.value = false;
     }
-}
+};
+
+defineExpose({
+    reset,
+    is_loading,
+    gitlab_server,
+    gitlab_token,
+    gitlab_projects,
+    empty_message,
+});
 </script>

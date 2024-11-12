@@ -30,6 +30,8 @@ import { createLocalVueForTests } from "../../../helpers/local-vue-for-tests";
 
 jest.useFakeTimers();
 
+type ListRepositoriesModalExposed = { selected_repository: GitlabProject | null };
+
 describe("ListRepositoriesModal", () => {
     let store_options: {
             getters: { getGitlabRepositoriesIntegrated: GitlabDataWithPath[] };
@@ -50,7 +52,7 @@ describe("ListRepositoriesModal", () => {
 
     async function instantiateComponent(
         repositories_props_data: GitlabProject[],
-    ): Promise<Wrapper<ListRepositoriesModal>> {
+    ): Promise<Wrapper<Vue & ListRepositoriesModalExposed>> {
         store = createStoreMock(store_options, { gitlab: {} });
         return shallowMount(ListRepositoriesModal, {
             propsData: {
@@ -60,7 +62,7 @@ describe("ListRepositoriesModal", () => {
             },
             mocks: { $store: store },
             localVue: await createLocalVueForTests(),
-        });
+        }) as Wrapper<Vue & ListRepositoriesModalExposed>;
     }
 
     it("When there are repositories, Then repositories are displayed", async () => {
@@ -316,10 +318,10 @@ describe("ListRepositoriesModal", () => {
 
         await wrapper.find("[data-test=gitlab-avatar-1]").trigger("click");
 
-        expect(wrapper.vm.$data.selected_repository.id).toBe(1);
+        expect(wrapper.vm.selected_repository?.id).toBe(1);
 
         await wrapper.find("[data-test=gitlab-label-path-2]").trigger("click");
 
-        expect(wrapper.vm.$data.selected_repository.id).toBe(2);
+        expect(wrapper.vm.selected_repository?.id).toBe(2);
     });
 });
