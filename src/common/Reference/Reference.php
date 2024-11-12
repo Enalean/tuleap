@@ -84,14 +84,14 @@ class Reference
      */
     public function __construct($myid, $mykeyword, $mydescription, $mylink, $myscope, $myservice_short_name, $nature, $myis_active, $mygroup_id)
     {
-        $this->id                 = $myid;
+        $this->id                 = (int) $myid;
         $this->keyword            = strtolower($mykeyword);
         $this->description        = $mydescription;
         $this->link               = $mylink;
         $this->scope              = $myscope;
         $this->service_short_name = $myservice_short_name;
         $this->nature             = $nature;
-        $this->is_active          = $myis_active;
+        $this->is_active          = (bool) $myis_active;
         $this->group_id           = $mygroup_id;
         $this->num_param          = self::computeNumParam($this->link);
     }

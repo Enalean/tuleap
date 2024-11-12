@@ -148,10 +148,11 @@ class ReferenceAdministrationActions extends Actions
             return;
         }
 
+        $is_used = (bool) $request->get('is_used');
         if (($ref->isSystemReference()) && ($ref->getGroupId() != 100) || $ref->getServiceShortName() !== '') {
             // Only update is_active field
-            if ($ref->isActive() != $request->get('is_used')) {
-                $reference_manager->updateIsActive($ref, $request->get('is_used'));
+            if ((bool) $ref->isActive() !== $is_used) {
+                $reference_manager->updateIsActive($ref, $is_used);
             }
         } else {
             if (! $su) {
@@ -175,7 +176,7 @@ class ReferenceAdministrationActions extends Actions
                 $ref->getScope(), // Can't edit a ref scope
                 $service_short_name,
                 $request->get('nature'),
-                $request->get('is_used'),
+                $is_used,
                 $request->get('group_id')
             );
             $result  = $reference_manager->updateReference($new_ref, $force);

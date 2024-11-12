@@ -656,9 +656,6 @@ msgstr "인증된 사용자 (등록됨 + 제한됨) 레이블"
 msgid "Author"
 msgstr "작성자"
 
-msgid "Automatically extract this keyword?"
-msgstr "이 키워드를 자동으로 추출하시겠습니까?"
-
 msgid "Available?"
 msgstr "사용 가능?"
 
@@ -750,9 +747,6 @@ msgstr ""
 
 msgid "Bypass filters"
 msgstr ""
-
-msgid "Bypass filters <em>(Site administrators only)</em>:"
-msgstr "필터 무시<em>(사이트 관리자만 해당)</em>:"
 
 msgid "CSV date format"
 msgstr "CSV 날짜 형식"
@@ -1620,9 +1614,6 @@ msgstr ""
 "활성화 시 프로젝트 공개 범위가 변경되면 모든 프로젝트 멤버에게 이메일이 전송"
 "됩니다."
 
-msgid "If the reference pattern is specific to one service, select it here"
-msgstr "참조 패턴이 한 서비스에만 적용되는 경우 선택하세요."
-
 msgid ""
 "If you requested this verification, visit the following URL to change your "
 "password:"
@@ -1805,9 +1796,6 @@ msgstr "키 & 토큰"
 
 msgid "Keyword"
 msgstr "키워드"
-
-msgid "Keyword that will trigger a reference creation"
-msgstr "참조 생성을 트리거하는 키워드"
 
 msgid "Label"
 msgstr "레이블"
@@ -2199,6 +2187,9 @@ msgstr "미리보기를 보낼 유효한 이메일이 없습니다."
 
 msgid "Nobody"
 msgstr "모두 제외"
+
+msgid "None"
+msgstr ""
 
 msgid "Not Found"
 msgstr "찾을 수 없습니다."
@@ -3021,9 +3012,6 @@ msgstr "장소 저장"
 msgid "Scope"
 msgstr "범위"
 
-msgid "Scope of the reference pattern: project only or system-wide"
-msgstr "참조 패턴 범위: 프로젝트만 또는 시스템 전체"
-
 msgid "Scopes"
 msgstr "범위"
 
@@ -3190,9 +3178,6 @@ msgstr ""
 
 msgid "Specific project"
 msgstr "특정 프로젝트"
-
-msgid "Specify the nature of the reference, or Other if any."
-msgstr "참조의 특성을 지정하거나 기타(있는 경우)로 지정합니다."
 
 msgid "Start New Thread"
 msgstr "새 스레드 시작"
@@ -3612,9 +3597,6 @@ msgstr "이 프로젝트들은 이미 연관되어 있습니다."
 msgid "This archive is ready to be imported in a Tuleap instance."
 msgstr "이 아카이브는 Tuleap 인스턴스로 불러올 준비가 되었습니다."
 
-msgid "This description will be displayed in a tooltip above reference."
-msgstr "이 설명은 참조 위의 툴팁에 표시됩니다."
-
 msgid ""
 "This feature aims to provide a way to structure projects organizations from\n"
 "            permissions, user groups and control point of view. As of today, "
@@ -3901,9 +3883,6 @@ msgstr ""
 "Tuleap은 팀이 애플리케이션을 더 우수하고, 더 빠르고, 더 쉽게 제공할 수 있도"
 "록 지원합니다.\n"
 "Tuleap에서 소프트웨어 프로젝트를 계획, 추적, 코딩 및 협업할 수 있습니다."
-
-msgid "URL pointed by the reference"
-msgstr "참조가 가리키는 URL"
 
 #, php-format
 msgid "Unable to add %s as project member"
@@ -4845,9 +4824,6 @@ msgstr "삭제됨"
 msgid "edit"
 msgstr "편집"
 
-msgid "fields required"
-msgstr "필수 입력란"
-
 #, php-format
 msgid "in %s"
 msgstr "%s에서"
@@ -4891,9 +4867,6 @@ msgstr "모니터링 중인 사람"
 msgid "permissions"
 msgstr "권한"
 
-msgid "project"
-msgstr "프로젝트"
-
 msgid "reply"
 msgstr "답글"
 
@@ -4905,9 +4878,6 @@ msgstr "지원되는 브라우저"
 
 msgid "suspended"
 msgstr "중지됨"
-
-msgid "system"
-msgstr "시스템"
 
 msgid "unsupported browsers"
 msgstr "지원되지 않는 브라우저"

@@ -1,0 +1,150 @@
+<div class="tlp-framed">
+    <p>
+         <a href="/project/{{ project_id }}/admin/references" class="back-to-references">
+            <i class="fa-solid fa-arrow-left-long" aria-hidden="true"></i>
+            {{# gettext }}Back to references{{/ gettext }}
+         </a>
+    </p>
+
+    <section class="tlp-pane">
+        <div class="tlp-pane-container">
+            <div class="tlp-pane-header">
+                <h1 class="tlp-pane-title">{{# gettext }}Edit reference pattern{{/ gettext }}</h1>
+            </div>
+
+            <section class="tlp-pane-section">
+                <form method="POST" action="{{ url }}">
+                    {{# csrf_token }}
+                        {{> csrf_token_input }}
+                    {{/ csrf_token }}
+                     <input type="hidden" name="action" VALUE="do_edit">
+                     <input type="hidden" name="view" VALUE="browse">
+                     <input type="hidden" name="group_id" VALUE="{{ project_id }}">
+                     <input type="hidden" name="reference_id" VALUE="{{ reference_id }}">
+
+                     {{# is_reference_read_only }}
+                         <div class="tlp-property">
+                            <label class="tlp-label" for="keyword">
+                                {{# gettext }}Keyword{{/ gettext }}
+                            </label>
+                            <p>{{ reference_key }}</p>
+                        </div>
+                        <div class="tlp-property">
+                            <label class="tlp-label" for="description">
+                                 {{# gettext }}Description{{/ gettext }}
+                            </label>
+                            {{^ is_empty_description }}
+                                <p>{{ reference_description }}</p>
+                            {{/ is_empty_description }}
+                            {{# is_empty_description }}
+                                <span class="tlp-property-empty">{{# gettext }}Empty{{/ gettext }}</span>
+                            {{/ is_empty_description }}
+                        </div>
+                        <div class="tlp-property">
+                            <label class="tlp-label" for="nature">
+                                 {{# gettext }}Nature{{/ gettext }}
+                            </label>
+                            <p>{{ reference_nature }}</p>
+                        </div>
+                        <div class="tlp-property">
+                            <label class="tlp-label" for="link">
+                                 {{# gettext }}Link{{/ gettext }}
+                            </label>
+                            <p>{{ reference_link }}</p>
+                        </div>
+                        {{# is_in_default_template }}
+                            <div class="tlp-property">
+                                <label class="tlp-label" for="services">
+                                     {{# gettext }}Bound to service{{/ gettext }}
+                                </label>
+                                <p>{{ service_shortname }}</p>
+                            </div>
+                        {{/ is_in_default_template }}
+                     {{/  is_reference_read_only}}
+
+                     {{^ is_reference_read_only }}
+                         <div class="tlp-form-element">
+                             <label class="tlp-label" for="keyword">
+                                  {{# gettext }}Keyword{{/ gettext }} <i class="fa-solid fa-asterisk" aria-hidden="true"></i>
+                             </label>
+                             <input type="text" required id="keyword" name="keyword" size="25" maxlength="25" class="tlp-input" value="{{ reference_key }}">
+                         </div>
+                         <div class="tlp-form-element">
+                              <label class="tlp-label" for="description">
+                                  {{# gettext }}Description{{/ gettext }}
+                             </label>
+                             <input type="text" id="description" name="description" size="70" maxlength="255" class="tlp-input" value = {{ reference_description }}>
+                         </div>
+                         <div class="tlp-form-element">
+                             <label class="tlp-label" for="nature">
+                                  {{# gettext }}Nature{{/ gettext }}
+                             </label>
+                             <select name="nature" id="nature" class="tlp-select tlp-select-adjusted">
+                                 {{# natures }}
+                                     <option value="{{ nature_key }}" {{# is_selected }} selected {{/ is_selected }}> {{ nature_label }}</option>
+                                 {{/ natures }}
+                             </select>
+                         </div>
+                         <div class="tlp-form-element">
+                             <label class="tlp-label" for="link">
+                                  {{# gettext }}Link{{/ gettext }}<i class="fa-solid fa-asterisk" aria-hidden="true"></i>
+                             </label>
+                                 <input required type="text" name="link" size="70" maxlength="255" class="tlp-input" value="{{ reference_link }}">
+                                 <p class="tlp-text-info">
+                                        <i class="fa-regular fa-life-ring" aria-hidden="true"></i>
+                                        {{# gettext }}
+                                           See %sreference pattern configuration%s for usage |
+                                           <a href="/doc/{{ short_locale }}/user-guide/project-admin.html#reference-pattern-configuration"> |
+                                           </a>
+                                        {{/ gettext }}
+                                 </p>
+                         </div>
+                         {{# is_in_default_template }}
+                             <div class="tlp-form-element">
+                                 <label class="tlp-label" for="services">
+                                      {{# gettext }}Bound to service{{/ gettext }}
+                                 </label>
+                                 {{ service_shortname }}
+                                 <select name="service_short_name" id="services" class="tlp-select tlp-select-adjusted">
+                                     <option value="100">{{# gettext }}None{{/ gettext }}</option>
+                                     {{# services_reference }}
+                                         <option value="{{ service_key }}"> {{ service_label }}</option>
+                                     {{/ services_reference }}
+                                 </select>
+                             </div>
+                         {{/ is_in_default_template }}
+                     {{/  is_reference_read_only}}
+
+                    {{# is_in_default_template }}
+                        <div class="tlp-form-element">
+                            <label class="tlp-label" for="scope">
+                                 {{# gettext }}Scope{{/ gettext }}
+                            </label>
+                            {{ reference_scope }}
+                        </div>
+                    {{/ is_in_default_template }}
+                    <div class="tlp-form-element">
+                         <label class="tlp-label">
+                             <input type="checkbox" name="is_used" {{# reference_is_used }} checked {{/ reference_is_used }}>
+                             {{# gettext }}Enabled{{/ gettext }}
+                         </label>
+                     </div>
+                    {{# is_super_user }}
+                        <div class="tlp-form-element">
+                            <label class="tlp-label" for="force" title="{{# gettext }}Force reference pattern creation{{/ gettext }}">
+                                <input type="checkbox" name="force" id="force">
+                                {{# gettext }}Bypass filters{{/ gettext }}
+                            </label>
+                        </div>
+                    {{/ is_super_user }}
+
+                    <div class="tlp-pane-section-submit">
+                        <button type="submit" class="tlp-button-primary" name="update">
+                             {{# gettext }}Update{{/ gettext }}
+                        </button>
+                    </div>
+                </form>
+            </section>
+        </div>
+    </section>
+</div>

@@ -691,9 +691,6 @@ msgstr "Label pour les utilisateurs authentifiés (enregistrés + retreints)"
 msgid "Author"
 msgstr "Auteur"
 
-msgid "Automatically extract this keyword?"
-msgstr "Extraire automatiquement ce mot-clé ?"
-
 msgid "Available?"
 msgstr "Disponible ?"
 
@@ -786,9 +783,6 @@ msgstr ""
 
 msgid "Bypass filters"
 msgstr "Contourner les filtres"
-
-msgid "Bypass filters <em>(Site administrators only)</em>:"
-msgstr "Ignore les filtres <em>(Administrateurs Site seulement)</em>&nbsp;:"
 
 msgid "CSV date format"
 msgstr "Format de date CSV"
@@ -1686,10 +1680,6 @@ msgstr ""
 "Si activé, un email sera envoyé à tous les membres du projet lorsque sa "
 "visibilité change."
 
-msgid "If the reference pattern is specific to one service, select it here"
-msgstr ""
-"Si le modèle de référence est spécifique à un service, le spécifier ici"
-
 msgid ""
 "If you requested this verification, visit the following URL to change your "
 "password:"
@@ -1880,9 +1870,6 @@ msgstr "Clefs et jetons"
 
 msgid "Keyword"
 msgstr "Mot clé"
-
-msgid "Keyword that will trigger a reference creation"
-msgstr "Mot clé qui déclenche la création d'une référence"
 
 msgid "Label"
 msgstr "Label"
@@ -2284,6 +2271,9 @@ msgstr ""
 
 msgid "Nobody"
 msgstr "Personne"
+
+msgid "None"
+msgstr "Aucun"
 
 msgid "Not Found"
 msgstr "Introuvable"
@@ -3137,9 +3127,6 @@ msgstr "Sauvegarder cette position"
 msgid "Scope"
 msgstr "Portée"
 
-msgid "Scope of the reference pattern: project only or system-wide"
-msgstr "Portée du modèle de référence&nbsp;: projet seulement ou système"
-
 msgid "Scopes"
 msgstr "Portées"
 
@@ -3310,9 +3297,6 @@ msgstr ""
 
 msgid "Specific project"
 msgstr "Projet spécifique"
-
-msgid "Specify the nature of the reference, or Other if any."
-msgstr "Spécifiez la nature de la référence, ou Autre sinon."
 
 msgid "Start New Thread"
 msgstr "Commencer une nouvelle discussion"
@@ -3755,11 +3739,6 @@ msgstr "Un lien de parenté existe déjà entre ces projets."
 msgid "This archive is ready to be imported in a Tuleap instance."
 msgstr "Cette archive est prête à être importé dans une instance de Tuleap."
 
-msgid "This description will be displayed in a tooltip above reference."
-msgstr ""
-"La description sera affichée dans une infobulle lorsque le pointeur est au "
-"dessus d'une référence extraite."
-
 msgid ""
 "This feature aims to provide a way to structure projects organizations from\n"
 "            permissions, user groups and control point of view. As of today, "
@@ -4057,9 +4036,6 @@ msgstr ""
 "Avec Tuleap, les équipes livrent les applications plus rapidement, plus "
 "efficacement et de meilleure qualité.\n"
 "Venez planifier, suivre, développer & collaborer sur vos projets logiciels."
-
-msgid "URL pointed by the reference"
-msgstr "URL pointée par la référence"
 
 #, php-format
 msgid "Unable to add %s as project member"
@@ -5102,9 +5078,6 @@ msgstr "supprimés"
 msgid "edit"
 msgstr "éditer"
 
-msgid "fields required"
-msgstr "champs obligatoires"
-
 #, php-format
 msgid "in %s"
 msgstr "dans %s"
@@ -5150,9 +5123,6 @@ msgstr "forum sous surveillance"
 msgid "permissions"
 msgstr "permissions"
 
-msgid "project"
-msgstr "projet"
-
 msgid "reply"
 msgstr "répondre"
 
@@ -5164,9 +5134,6 @@ msgstr "navigateurs supportés"
 
 msgid "suspended"
 msgstr "suspendu"
-
-msgid "system"
-msgstr "système"
 
 msgid "unsupported browsers"
 msgstr "navigateurs non supportés"

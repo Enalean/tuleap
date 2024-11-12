@@ -78,6 +78,7 @@ class BurningParrotCompatiblePageDetector
             || strpos($_SERVER['REQUEST_URI'], '/project/admin/editugroup.php') === 0
             || strpos($_SERVER['REQUEST_URI'], '/project/admin/editugroup.php') === 0
             || strpos($_SERVER['REQUEST_URI'], '/project/admin/reference.php?view=creation') === 0
+            || strpos($_SERVER['REQUEST_URI'], '/project/admin/reference.php?view=edit') === 0
             || strpos($_SERVER['REQUEST_URI'], '/project/admin/permission_per_group.php') === 0;
     }
 
