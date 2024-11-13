@@ -101,6 +101,10 @@ onMounted(async () => {
 });
 </script>
 <style lang="scss">
+artidoc-section {
+    display: block;
+}
+
 artidoc-section-title {
     display: block;
     margin: 0 0 var(--tlp-large-spacing);
@@ -110,5 +114,9 @@ artidoc-section-title {
     font-size: 36px;
     font-weight: 600;
     line-height: 40px;
+}
+
+artidoc-section-description {
+    display: block;
 }
 </style>
