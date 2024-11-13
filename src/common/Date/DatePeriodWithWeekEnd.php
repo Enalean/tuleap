@@ -77,4 +77,9 @@ class DatePeriodWithWeekEnd implements DatePeriod
             return range(0, $this->duration);
         }
     }
+
+    public function getDuration(): ?int
+    {
+        return $this->duration;
+    }
 }

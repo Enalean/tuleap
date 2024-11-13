@@ -28,51 +28,35 @@ use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\ChartConfigurationFieldRetriever;
 use Tuleap\Tracker\FormElement\ChartConfigurationValueRetriever;
 
-class BurndownCommonDataBuilder
+readonly final class BurndownCommonDataBuilder
 {
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
-
-    /**
-     * @var ChartConfigurationFieldRetriever
-     */
-    private $field_retriever;
-
-    /**
-     * @var ChartConfigurationValueRetriever
-     */
-    private $value_retriever;
-
-    /**
-     * @var BurndownCacheGenerationChecker
-     */
-    private $cache_checker;
-
     public function __construct(
-        LoggerInterface $logger,
-        ChartConfigurationFieldRetriever $field_retriever,
-        ChartConfigurationValueRetriever $value_retriever,
-        BurndownCacheGenerationChecker $cache_checker,
+        private LoggerInterface $logger,
+        private ChartConfigurationFieldRetriever $field_retriever,
+        private ChartConfigurationValueRetriever $value_retriever,
+        private BurndownCacheGenerationChecker $cache_checker,
     ) {
-        $this->logger          = $logger;
-        $this->field_retriever = $field_retriever;
-        $this->value_retriever = $value_retriever;
-        $this->cache_checker   = $cache_checker;
     }
 
-    /**
-     * @return bool
-     */
     public function getBurndownCalculationStatus(
         Artifact $artifact,
         PFUser $user,
         DatePeriodWithOpenDays $date_period,
         $capacity,
         $user_timezone,
-    ) {
+    ): bool {
         $this->logger->info('Start calculating burndown ' . $artifact->getId());
+
+        $today = new \DateTimeImmutable('today');
+        if ($date_period->getStartDate() > $today->getTimestamp()) {
+            $this->logger->debug('Cache is always valid when start date is in future');
+            return false;
+        }
+
+        if ($date_period->getDuration() === 0) {
+            $this->logger->debug('Cache is always valid when burndown has no duration');
+            return false;
+        }
 
         $server_timezone = TimezoneRetriever::getServerTimezone();
 
@@ -92,10 +76,7 @@ class BurndownCommonDataBuilder
         );
     }
 
-    /**
-     * @return int|null
-     */
-    public function getCapacity(Artifact $artifact, PFUser $user)
+    public function getCapacity(Artifact $artifact, PFUser $user): ?int
     {
         $capacity = null;
 

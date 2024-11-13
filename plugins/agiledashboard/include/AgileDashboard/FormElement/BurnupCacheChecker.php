@@ -23,8 +23,10 @@ declare(strict_types=1);
 namespace Tuleap\AgileDashboard\FormElement;
 
 use PFUser;
+use Psr\Log\LoggerInterface;
 use Tuleap\AgileDashboard\FormElement\Burnup\CountElementsCacheDao;
 use Tuleap\AgileDashboard\FormElement\Burnup\CountElementsModeChecker;
+use Tuleap\Date\DatePeriod;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\ChartCachedDaysComparator;
 use Tuleap\Tracker\FormElement\ChartConfigurationValueChecker;
@@ -38,20 +40,28 @@ class BurnupCacheChecker
         private readonly CountElementsCacheDao $burnup_count_cache_dao,
         private readonly ChartCachedDaysComparator $cache_days_comparator,
         private readonly CountElementsModeChecker $mode_checker,
+        private readonly LoggerInterface $logger,
     ) {
     }
 
     /**
      * @param int[] $expected_days
      */
-    public function isBurnupUnderCalculation(Artifact $artifact, array $expected_days, PFUser $user): bool
+    public function isBurnupUnderCalculation(Artifact $artifact, array $expected_days, PFUser $user, DatePeriod $date_period): bool
     {
         $is_burnup_under_calculation = false;
 
-        if (! $this->isCacheCompleteForBurnup($artifact, $expected_days, $user)) {
+        $today = new \DateTimeImmutable('today');
+        if ($date_period->getStartDate() > $today->getTimestamp()) {
+            $this->logger->debug('Cache is always valid when start date is in future');
+        } elseif ($date_period->getDuration() === 0) {
+            $this->logger->debug('Cache is always valid when burnup has no duration');
+        } elseif (! $this->isCacheCompleteForBurnup($artifact, $expected_days, $user)) {
+            $this->logger->debug('Cache is not complete for burnup, force cache regeneration is asked');
             $this->cache_generator->forceBurnupCacheGeneration($artifact);
             $is_burnup_under_calculation = true;
         } elseif ($this->cache_generator->isCacheBurnupAlreadyAsked($artifact)) {
+            $this->logger->debug('Cache is not complete for burnup, but event is already in queue');
             $is_burnup_under_calculation = true;
         }
 

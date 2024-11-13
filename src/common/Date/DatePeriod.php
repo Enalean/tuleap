@@ -28,4 +28,7 @@ namespace Tuleap\Date;
 
 interface DatePeriod
 {
+    public function getStartDate(): ?int;
+
+    public function getDuration(): ?int;
 }

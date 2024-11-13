@@ -81,6 +81,7 @@ class BurnupDataBuilder
             $artifact,
             $this->date_retriever->getWorkedDaysToCacheForPeriod($date_period, new DateTime('yesterday')),
             $user,
+            $date_period
         );
         $burnup_data          = new BurnupData($date_period, $is_under_calculation);
 
