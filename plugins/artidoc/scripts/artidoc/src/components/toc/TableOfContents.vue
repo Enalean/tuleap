@@ -19,26 +19,24 @@
   -->
 
 <template>
-    <div class="table-of-contents">
-        <h1 class="tlp-pane-title">
-            {{ $gettext("Table of contents") }}
-        </h1>
-        <ol>
-            <li v-for="section in sections" v-bind:key="section.id">
-                <span v-if="is_sections_loading" class="tlp-skeleton-text"></span>
-                <a
-                    v-else-if="isArtifactSection(section)"
-                    v-bind:href="`#section-${section.id}`"
-                    class="table-of-content-section-title"
-                >
-                    {{ section.display_title }}
-                </a>
-                <template v-else>
-                    {{ section.display_title }}
-                </template>
-            </li>
-        </ol>
-    </div>
+    <h1 class="tlp-pane-title">
+        {{ $gettext("Table of contents") }}
+    </h1>
+    <ol>
+        <li v-for="section in sections" v-bind:key="section.id">
+            <span v-if="is_sections_loading" class="tlp-skeleton-text"></span>
+            <a
+                v-else-if="isArtifactSection(section)"
+                v-bind:href="`#section-${section.id}`"
+                class="table-of-content-section-title"
+            >
+                {{ section.display_title }}
+            </a>
+            <template v-else>
+                {{ section.display_title }}
+            </template>
+        </li>
+    </ol>
 </template>
 
 <script setup lang="ts">
@@ -53,12 +51,11 @@ const { sections, is_sections_loading } = strictInject(SECTIONS_STORE);
 </script>
 
 <style scoped lang="scss">
-.table-of-contents {
-    padding-top: var(--tlp-small-spacing);
-}
-
 h1 {
-    margin: 0 0 var(--tlp-medium-spacing);
+    display: flex;
+    align-items: center;
+    height: var(--tlp-form-element-small-height);
+    margin: var(--tlp-small-spacing) var(--tlp-medium-spacing);
 }
 
 ol {
@@ -66,15 +63,20 @@ ol {
     padding: 0;
     overflow: hidden scroll;
     list-style-position: inside;
+    color: var(--tlp-dimmed-color);
 }
 
 li {
-    margin: 0 0 var(--tlp-small-spacing);
+    padding: calc(var(--tlp-small-spacing) / 2) var(--tlp-medium-spacing);
+
+    &:first-child {
+        padding-top: 0;
+    }
 }
 
 .section-title,
 .table-of-content-section-title {
-    color: var(--tlp-dark-color);
+    color: var(--tlp-dimmed-color);
     font-size: 0.875rem;
     font-weight: 600;
 }
