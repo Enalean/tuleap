@@ -19,6 +19,8 @@
 
 import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
+import { errAsync, okAsync } from "neverthrow";
+import { Fault } from "@tuleap/fault";
 import App from "./App.vue";
 import { getGlobalTestOptions } from "../helpers/global-options-for-tests";
 import BannerPresenter from "./BannerPresenter.vue";
@@ -73,7 +75,7 @@ describe("App", () => {
 
         const delete_banner = jest
             .spyOn(rest_querier, "deleteBannerForPlatform")
-            .mockResolvedValue();
+            .mockReturnValue(okAsync(null));
 
         wrapper.findComponent(BannerPresenter).vm.$emit("save-banner", {
             message: "some message",
@@ -82,6 +84,7 @@ describe("App", () => {
         });
         await jest.runOnlyPendingTimersAsync();
 
+        expect(wrapper.findComponent(BannerPresenter).props().loading).toBe(true);
         expect(delete_banner).toHaveBeenCalledTimes(1);
         expect(reload).toHaveBeenCalledTimes(1);
         expect(fake_location.hash).toBe("#banner-change-success");
@@ -90,8 +93,8 @@ describe("App", () => {
     it("Should display an error if banner deletion fails", async () => {
         const wrapper = getWrapper();
 
-        jest.spyOn(rest_querier, "deleteBannerForPlatform").mockRejectedValue(
-            new Error("an error message"),
+        jest.spyOn(rest_querier, "deleteBannerForPlatform").mockReturnValue(
+            errAsync(Fault.fromMessage("an error message")),
         );
 
         wrapper
@@ -108,7 +111,9 @@ describe("App", () => {
         const reload = jest.spyOn(fake_location, "reload");
         const wrapper = getWrapper();
 
-        const save_banner = jest.spyOn(rest_querier, "saveBannerForPlatform").mockResolvedValue();
+        const save_banner = jest
+            .spyOn(rest_querier, "saveBannerForPlatform")
+            .mockReturnValue(okAsync(null));
 
         wrapper.findComponent(BannerPresenter).vm.$emit("save-banner", {
             message: "a new message",
@@ -127,8 +132,8 @@ describe("App", () => {
     it("Should display an error if banner update fails", async () => {
         const wrapper = getWrapper();
 
-        jest.spyOn(rest_querier, "saveBannerForPlatform").mockRejectedValue(
-            new Error("Ooops something went wrong"),
+        jest.spyOn(rest_querier, "saveBannerForPlatform").mockReturnValue(
+            errAsync(Fault.fromMessage("Ooops something went wrong")),
         );
 
         wrapper.findComponent(BannerPresenter).vm.$emit("save-banner", {

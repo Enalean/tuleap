@@ -17,36 +17,29 @@
  *  along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { del, put } from "@tuleap/tlp-fetch";
+import { del, putResponse, uri } from "@tuleap/fetch-result";
+import type { ResultAsync } from "neverthrow";
+import type { Fault } from "@tuleap/fault";
 import type { Importance } from "../type";
 
-const headers = {
-    "content-type": "application/json",
-};
-
-export async function deleteBannerForPlatform(): Promise<void> {
-    await del(`/api/banner`);
+export function deleteBannerForPlatform(): ResultAsync<null, Fault> {
+    return del(uri`/api/banner`).map(() => null);
 }
 
-export async function saveBannerForPlatform(
+export function saveBannerForPlatform(
     new_message: string,
     new_importance: Importance,
     new_expiration_date: string,
-): Promise<void> {
+): ResultAsync<null, Fault> {
     let expiration_date = null;
 
     if (new_expiration_date !== "") {
         expiration_date = new Date(new_expiration_date).toISOString().split(".")[0] + "Z";
     }
 
-    const body = JSON.stringify({
-        message: new_message,
-        importance: new_importance,
-        expiration_date,
-    });
-
-    await put(`/api/banner`, {
-        headers,
-        body,
-    });
+    return putResponse(
+        uri`/api/banner`,
+        {},
+        { message: new_message, importance: new_importance, expiration_date },
+    ).map(() => null);
 }
