@@ -38,7 +38,6 @@
         v-bind:importance="importance"
         v-bind:expiration_date="expiration_date"
         v-bind:loading="banner_presenter_is_loading"
-        v-on:delete-banner="deleteBanner"
         v-on:save-banner="saveBanner"
     />
 </template>
@@ -89,24 +88,19 @@ function saveBanner(bannerState: BannerState): void {
 }
 
 function saveBannerMessage(message: string, importance: Importance, expiration_date: string): void {
-    saveBannerForPlatform(message, importance, expiration_date)
-        .then(() => {
-            props.location_helper.reloadWithSuccess();
-        })
-        .catch((error) => {
-            error_message.value = error.message;
+    saveBannerForPlatform(message, importance, expiration_date).match(
+        props.location_helper.reloadWithSuccess,
+        (fault) => {
+            error_message.value = String(fault);
             banner_presenter_is_loading.value = false;
-        });
+        },
+    );
 }
 
 function deleteBanner(): void {
-    deleteBannerForPlatform()
-        .then(() => {
-            props.location_helper.reloadWithSuccess();
-        })
-        .catch((error) => {
-            error_message.value = error.message;
-            banner_presenter_is_loading.value = false;
-        });
+    deleteBannerForPlatform().match(props.location_helper.reloadWithSuccess, (fault) => {
+        error_message.value = String(fault);
+        banner_presenter_is_loading.value = false;
+    });
 }
 </script>

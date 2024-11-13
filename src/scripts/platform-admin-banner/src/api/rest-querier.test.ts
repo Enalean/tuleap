@@ -17,36 +17,55 @@
  *  along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import * as tlp_fetch from "@tuleap/tlp-fetch";
-import { saveBannerForPlatform } from "./rest-querier";
-import { mockFetchSuccess } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper";
+import * as fetch_result from "@tuleap/fetch-result";
+import { okAsync } from "neverthrow";
+import { deleteBannerForPlatform, saveBannerForPlatform } from "./rest-querier";
 
 describe("rest-querier", () => {
     it("saves banner without an expiration date when none is provided", async () => {
-        const putSpy = jest.spyOn(tlp_fetch, "put");
-        mockFetchSuccess(putSpy);
+        const putResponse = jest
+            .spyOn(fetch_result, "putResponse")
+            .mockReturnValue(okAsync({} as Response));
 
-        await saveBannerForPlatform("Some message", "critical", "");
+        const result = await saveBannerForPlatform("Some message", "critical", "");
 
-        expect(putSpy).toHaveBeenCalledWith("/api/banner", {
-            headers: {
-                "content-type": "application/json",
-            },
-            body: '{"message":"Some message","importance":"critical","expiration_date":null}',
-        });
+        expect(result.unwrapOr(false)).toBeNull();
+        expect(putResponse).toHaveBeenCalledWith(
+            fetch_result.uri`/api/banner`,
+            {},
+            { message: "Some message", importance: "critical", expiration_date: null },
+        );
     });
 
     it("saves banner with an expiration date", async () => {
-        const putSpy = jest.spyOn(tlp_fetch, "put");
-        mockFetchSuccess(putSpy);
+        const putResponse = jest
+            .spyOn(fetch_result, "putResponse")
+            .mockReturnValue(okAsync({} as Response));
 
-        await saveBannerForPlatform("Some message", "critical", "2021-06-30T14:53:40.720Z");
+        const result = await saveBannerForPlatform(
+            "Some message",
+            "critical",
+            "2021-06-30T14:53:40.720Z",
+        );
 
-        expect(putSpy).toHaveBeenCalledWith("/api/banner", {
-            headers: {
-                "content-type": "application/json",
+        expect(result.unwrapOr(false)).toBeNull();
+        expect(putResponse).toHaveBeenCalledWith(
+            fetch_result.uri`/api/banner`,
+            {},
+            {
+                message: "Some message",
+                importance: "critical",
+                expiration_date: "2021-06-30T14:53:40Z",
             },
-            body: '{"message":"Some message","importance":"critical","expiration_date":"2021-06-30T14:53:40Z"}',
-        });
+        );
+    });
+
+    it(`deletes the banner`, async () => {
+        const del = jest.spyOn(fetch_result, "del").mockReturnValue(okAsync({} as Response));
+
+        const result = await deleteBannerForPlatform();
+
+        expect(result.unwrapOr(false)).toBeNull();
+        expect(del).toHaveBeenCalledWith(fetch_result.uri`/api/banner`);
     });
 });
