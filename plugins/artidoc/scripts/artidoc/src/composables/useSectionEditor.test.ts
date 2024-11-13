@@ -37,6 +37,7 @@ import { ref } from "vue";
 import { UPLOAD_FILE_STORE } from "@/stores/upload-file-store-injection-key";
 import { UploadFileStoreStub } from "@/helpers/stubs/UploadFileStoreStub";
 import type { UploadFileStoreType } from "@/stores/useUploadFileStore";
+import PendingArtifactSectionFactory from "@/helpers/pending-artifact-section.factory";
 
 const section = ArtifactSectionFactory.create();
 const merge_artifacts = vi.fn();
@@ -203,6 +204,18 @@ describe("useSectionEditor", () => {
                 editor_actions.cancelEditor(null);
 
                 expect(upload_file_store_stub.cancelSectionUploads).toHaveBeenCalledOnce();
+            });
+
+            it("should remove the section if it is a pending one", () => {
+                const { editor_actions } = useSectionEditor(
+                    PendingArtifactSectionFactory.create(),
+                    merge_artifacts,
+                    set_waiting_list,
+                    ref(false),
+                    () => {},
+                );
+                editor_actions.cancelEditor(null);
+                expect(store_stub.removeSection).toHaveBeenCalled();
             });
         });
     });

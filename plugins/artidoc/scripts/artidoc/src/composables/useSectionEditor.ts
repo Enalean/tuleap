@@ -157,9 +157,13 @@ export function useSectionEditor(
     }
 
     const { cancelSectionUploads } = strictInject(UPLOAD_FILE_STORE);
-    function cancelEditor(): void {
+    function cancelEditor(tracker: Tracker | null): void {
         closeEditor();
         cancelSectionUploads(current_section.value.id);
+        if (isPendingArtifactSection(current_section.value)) {
+            editors_collection.removeEditor(current_section.value);
+            removeSection(current_section.value, tracker);
+        }
     }
 
     function deleteSection(tracker: Tracker | null): void {
