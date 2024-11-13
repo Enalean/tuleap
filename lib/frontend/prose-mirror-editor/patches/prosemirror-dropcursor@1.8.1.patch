@@ -1,0 +1,29 @@
+diff --git a/dist/index.cjs b/dist/index.cjs
+index 9c76bd187c78c4aa16510cc798d9932828a801e0..d878818ada090d4a92ae7eaaf4976c977bd4ede9 100644
+--- a/dist/index.cjs
++++ b/dist/index.cjs
+@@ -169,7 +169,10 @@ var DropCursorView = function () {
+         left: event.clientX,
+         top: event.clientY
+       });
+-      var node = pos && pos.inside >= 0 && this.editorView.state.doc.nodeAt(pos.inside);
++      var node = pos && (
++        (pos.inside >= 0 && this.editorView.state.doc.nodeAt(pos.inside)) ||
++        (pos.inside === -1 && this.editorView.state.doc.nodeAt(pos.pos))
++      );
+       var disableDropCursor = node && node.type.spec.disableDropCursor;
+       var disabled = typeof disableDropCursor == "function" ? disableDropCursor(this.editorView, pos, event) : disableDropCursor;
+ 
+diff --git a/dist/index.js b/dist/index.js
+index 3fc1803920c1ee2565fbb53a10ca502408cb4e4c..e76041774031af2d753d752342549d24df19ded6 100644
+--- a/dist/index.js
++++ b/dist/index.js
+@@ -110,7 +110,7 @@ class DropCursorView {
+         if (!this.editorView.editable)
+             return;
+         let pos = this.editorView.posAtCoords({ left: event.clientX, top: event.clientY });
+-        let node = pos && pos.inside >= 0 && this.editorView.state.doc.nodeAt(pos.inside);
++        let node = pos && ((pos.inside >= 0 && this.editorView.state.doc.nodeAt(pos.inside)) || (pos.inside === -1 && this.editorView.state.doc.nodeAt(pos.pos)));
+         let disableDropCursor = node && node.type.spec.disableDropCursor;
+         let disabled = typeof disableDropCursor == "function" ? disableDropCursor(this.editorView, pos, event) : disableDropCursor;
+         if (pos && !disabled) {
