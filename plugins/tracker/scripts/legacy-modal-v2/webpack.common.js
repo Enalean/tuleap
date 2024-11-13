@@ -20,26 +20,24 @@
 const path = require("path");
 const { webpack_configurator } = require("@tuleap/build-system-configurator");
 
-const config_for_themes = {
+const config = {
     entry: {
-        "style-fp": "./themes/FlamingParrot/css/style.scss",
-        print: "./themes/default/css/print.scss",
-        "dependencies-matrix": "./themes/FlamingParrot/css/dependencies-matrix.scss",
-        "tracker-bp": "./themes/BurningParrot/css/tracker.scss",
+        "modal-v2": "./src/main.js",
     },
     context: __dirname,
     output: webpack_configurator.configureOutput(
         path.resolve(__dirname, "./frontend-assets/"),
-        "/assets/trackers/",
+        "/assets/trackers/legacy-modal-v2",
     ),
-    module: {
-        rules: [webpack_configurator.rule_scss_loader, webpack_configurator.rule_css_assets],
+    externals: {
+        ckeditor4: "CKEDITOR",
+        codendi: "codendi",
+        jquery: "jQuery",
     },
     plugins: [
         webpack_configurator.getCleanWebpackPlugin(),
         webpack_configurator.getManifestPlugin(),
-        ...webpack_configurator.getCSSExtractionPlugins(),
     ],
 };
 
-module.exports = [config_for_themes];
+module.exports = [config];
