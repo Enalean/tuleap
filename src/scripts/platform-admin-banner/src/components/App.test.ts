@@ -17,10 +17,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { Wrapper } from "@vue/test-utils";
+import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import App from "./App.vue";
-import { createPlatformBannerAdminLocalVue } from "../helpers/local-vue-for-tests";
+import { getGlobalTestOptions } from "../helpers/global-options-for-tests";
 import BannerPresenter from "./BannerPresenter.vue";
 import * as rest_querier from "../api/rest-querier";
 import type { LocationWithHashReload } from "../helpers/LocationHelper";
@@ -39,12 +39,10 @@ describe("App", () => {
         fake_location = { hash: "", reload: noop };
     });
 
-    //eslint-disable-next-line @typescript-eslint/ban-ts-comment -- Temporary while we migrate to Vue 3
-    //@ts-ignore
-    async function getWrapper(): Promise<Wrapper<InstanceType<typeof App>>> {
+    function getWrapper(): VueWrapper<InstanceType<typeof App>> {
         return shallowMount(App, {
-            localVue: await createPlatformBannerAdminLocalVue(),
-            propsData: {
+            global: { ...getGlobalTestOptions() },
+            props: {
                 message: banner_message,
                 importance: "critical",
                 expiration_date: "",
@@ -53,25 +51,25 @@ describe("App", () => {
         });
     }
 
-    it("displays something when no banner is set", async () => {
+    it("displays something when no banner is set", () => {
         banner_message = "";
-        const wrapper = await getWrapper();
+        const wrapper = getWrapper();
 
         expect(wrapper.findComponent(BannerPresenter).exists()).toBe(true);
     });
 
     it("displays success message when the banner has been successfully modified", async () => {
         fake_location = { hash: "#banner-change-success", reload: noop };
-        location.hash = "#banner-change-success";
-        const wrapper = await getWrapper();
+        const wrapper = getWrapper();
+        await wrapper.vm.$nextTick();
 
-        expect(wrapper.get("[data-test=success-feedback]").exists()).toBe(true);
+        expect(wrapper.find("[data-test=success-feedback]").exists()).toBe(true);
     });
 
     it("Should be able to send the deletion request", async () => {
         fake_location = { hash: "", reload: noop };
         const reload = jest.spyOn(fake_location, "reload");
-        const wrapper = await getWrapper();
+        const wrapper = getWrapper();
 
         const delete_banner = jest
             .spyOn(rest_querier, "deleteBannerForPlatform")
@@ -90,7 +88,7 @@ describe("App", () => {
     });
 
     it("Should display an error if banner deletion fails", async () => {
-        const wrapper = await getWrapper();
+        const wrapper = getWrapper();
 
         jest.spyOn(rest_querier, "deleteBannerForPlatform").mockRejectedValue(
             new Error("an error message"),
@@ -102,13 +100,13 @@ describe("App", () => {
         await jest.runOnlyPendingTimersAsync();
 
         expect(wrapper.findComponent(BannerPresenter).props().loading).toBe(false);
-        expect(wrapper.get("[data-test=error-feedback]").exists()).toBe(true);
+        expect(wrapper.find("[data-test=error-feedback]").exists()).toBe(true);
     });
 
     it("Should be able to send the update request and lock form while doing it", async () => {
         fake_location = { hash: "", reload: noop };
         const reload = jest.spyOn(fake_location, "reload");
-        const wrapper = await getWrapper();
+        const wrapper = getWrapper();
 
         const save_banner = jest.spyOn(rest_querier, "saveBannerForPlatform").mockResolvedValue();
 
@@ -127,7 +125,7 @@ describe("App", () => {
     });
 
     it("Should display an error if banner update fails", async () => {
-        const wrapper = await getWrapper();
+        const wrapper = getWrapper();
 
         jest.spyOn(rest_querier, "saveBannerForPlatform").mockRejectedValue(
             new Error("Ooops something went wrong"),
@@ -142,6 +140,6 @@ describe("App", () => {
         await jest.runOnlyPendingTimersAsync();
 
         expect(wrapper.findComponent(BannerPresenter).props().loading).toBe(false);
-        expect(wrapper.get("[data-test=error-feedback]").exists()).toBe(true);
+        expect(wrapper.find("[data-test=error-feedback]").exists()).toBe(true);
     });
 });

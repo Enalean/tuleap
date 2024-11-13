@@ -58,12 +58,10 @@
         "permissions-per-group-news": {
             "src": "src/scripts/news-permissions-per-group/src",
             "po": "src/scripts/news-permissions-per-group/po"
-        }
-    },
-    "gettext-vue": {
-        "project-admin-services": {
-            "src": "src/scripts/project-services/src",
-            "po": "src/scripts/project-services/po"
+        },
+        "platform-admin-banner": {
+            "src": "src/scripts/platform-admin-banner/src",
+            "po": "src/scripts/platform-admin-banner/po"
         },
         "project-admin-banner": {
             "src": "src/scripts/project-admin-banner/src",
@@ -72,14 +70,16 @@
         "project-registration": {
             "src": "src/scripts/project-registration/src",
             "po": "src/scripts/project-registration/po"
-        },
+        }
+    },
+    "gettext-vue": {
         "switch-to": {
             "src": "src/scripts/switch-to/src",
             "po": "src/scripts/switch-to/po"
         },
-        "platform-admin-banner": {
-            "src": "src/scripts/platform-admin-banner/src",
-            "po": "src/scripts/platform-admin-banner/po"
+        "project-admin-services": {
+            "src": "src/scripts/project-services/src",
+            "po": "src/scripts/project-services/po"
         }
     }
 }

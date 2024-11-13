@@ -18,18 +18,18 @@
  */
 
 import { shallowMount } from "@vue/test-utils";
-import { createPlatformBannerAdminLocalVue } from "../helpers/local-vue-for-tests";
+import { getGlobalTestOptions } from "../helpers/global-options-for-tests";
 import ExpirationDateBannerInput from "./ExpirationDateBannerInput.vue";
 
 describe("ExpirationDateBannerInput", () => {
-    it("can be mounted", async () => {
+    it("can be mounted", () => {
         const wrapper = shallowMount(ExpirationDateBannerInput, {
-            localVue: await createPlatformBannerAdminLocalVue(),
-            propsData: {
+            global: { ...getGlobalTestOptions() },
+            props: {
                 value: "2021-06-30 15:30",
             },
         });
 
-        expect(wrapper.get("input").exists()).toBe(true);
+        expect(wrapper.find("input").exists()).toBe(true);
     });
 });

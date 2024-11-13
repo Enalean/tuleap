@@ -18,93 +18,95 @@
   -->
 
 <template>
-    <div>
+    <div
+        class="tlp-form-element"
+        v-bind:class="{ 'tlp-form-element-disabled': loading }"
+        data-test="banner-active-form-element"
+    >
+        <label class="tlp-label tlp-checkbox">
+            <input type="checkbox" v-model="banner_is_activated" data-test="banner-active" />
+            {{ $gettext("Activate the banner on the whole platform") }}
+        </label>
+    </div>
+    <div v-show="banner_is_activated">
+        <div class="tlp-form-element siteadmin-platform-banner-importance">
+            <label class="tlp-label">
+                {{ $gettext("Importance") }}
+                <i class="fas fa-asterisk" aria-hidden="true"></i>
+            </label>
+            <label class="tlp-label tlp-radio">
+                <input
+                    type="radio"
+                    value="standard"
+                    v-model="current_importance"
+                    class="siteadmin-platform-banner-importance-standard"
+                    data-test="banner-standard-importance"
+                />
+                <span class="tlp-text-info">{{ $gettext("Standard") }}</span>
+            </label>
+            <label class="tlp-label tlp-radio">
+                <input
+                    type="radio"
+                    value="warning"
+                    v-model="current_importance"
+                    class="siteadmin-platform-banner-importance-warning"
+                />
+                <span class="tlp-text-warning">{{ $gettext("Warning") }}</span>
+            </label>
+            <label class="tlp-label tlp-radio">
+                <input
+                    type="radio"
+                    value="critical"
+                    v-model="current_importance"
+                    class="siteadmin-platform-banner-importance-critical"
+                />
+                <span class="tlp-text-danger">{{ $gettext("Critical") }}</span>
+            </label>
+        </div>
+
+        <expiration-date-banner-input
+            v-bind:value="current_expiration_date"
+            v-on:input="onExpirationDateChange"
+        />
+
         <div
             class="tlp-form-element"
             v-bind:class="{ 'tlp-form-element-disabled': loading }"
-            data-test="banner-active-form-element"
+            data-test="message-form-element"
         >
-            <label class="tlp-label tlp-checkbox">
-                <input type="checkbox" v-model="banner_is_activated" data-test="banner-active" />
-                {{ gettext_provider.$gettext("Activate the banner on the whole platform") }}
+            <label class="tlp-label" for="description">
+                {{ $gettext("Message") }}
+                <i class="fas fa-asterisk" aria-hidden="true"></i>
             </label>
+            <textarea
+                ref="embedded_editor"
+                class="tlp-textarea"
+                id="description"
+                required
+                name="description"
+                v-model="current_message"
+                v-bind:placeholder="$gettext('Choose a banner message')"
+                data-test="banner-message"
+            ></textarea>
+            <p class="tlp-text-muted">
+                {{ $gettext("Your message will be condensed to one line") }}
+            </p>
         </div>
-        <div v-show="banner_is_activated">
-            <div class="tlp-form-element siteadmin-platform-banner-importance">
-                <label class="tlp-label">
-                    {{ gettext_provider.$gettext("Importance") }}
-                    <i class="fas fa-asterisk" aria-hidden="true"></i>
-                </label>
-                <label class="tlp-label tlp-radio">
-                    <input
-                        type="radio"
-                        value="standard"
-                        v-model="current_importance"
-                        class="siteadmin-platform-banner-importance-standard"
-                    />
-                    <span class="tlp-text-info">{{ gettext_provider.$gettext("Standard") }}</span>
-                </label>
-                <label class="tlp-label tlp-radio">
-                    <input
-                        type="radio"
-                        value="warning"
-                        v-model="current_importance"
-                        class="siteadmin-platform-banner-importance-warning"
-                    />
-                    <span class="tlp-text-warning">{{ gettext_provider.$gettext("Warning") }}</span>
-                </label>
-                <label class="tlp-label tlp-radio">
-                    <input
-                        type="radio"
-                        value="critical"
-                        v-model="current_importance"
-                        class="siteadmin-platform-banner-importance-critical"
-                    />
-                    <span class="tlp-text-danger">{{ gettext_provider.$gettext("Critical") }}</span>
-                </label>
-            </div>
-
-            <expiration-date-banner-input v-model="current_expiration_date" />
-
-            <div
-                class="tlp-form-element"
-                v-bind:class="{ 'tlp-form-element-disabled': loading }"
-                data-test="message-form-element"
-            >
-                <label class="tlp-label" for="description">
-                    {{ gettext_provider.$gettext("Message") }}
-                    <i class="fas fa-asterisk" aria-hidden="true"></i>
-                </label>
-                <textarea
-                    ref="embedded_editor"
-                    class="tlp-textarea"
-                    id="description"
-                    required
-                    name="description"
-                    v-model="current_message"
-                    v-bind:placeholder="gettext_provider.$gettext('Choose a banner message')"
-                    data-test="banner-message"
-                ></textarea>
-                <p class="tlp-text-muted">
-                    {{ gettext_provider.$gettext("Your message will be condensed to one line") }}
-                </p>
-            </div>
-        </div>
-        <div class="tlp-pane-section-submit">
-            <button
-                type="button"
-                class="tlp-button-primary"
-                v-bind:data-tlp-tooltip="gettext_provider.$gettext('Message is mandatory')"
-                v-bind:class="{ 'tlp-tooltip tlp-tooltip-top': should_tooltip_be_displayed }"
-                v-on:click="save"
-                v-bind:disabled="is_save_button_disabled"
-                data-test="save-button"
-            >
-                <i v-if="loading" class="tlp-button-icon fas fa-fw fa-spin fa-circle-notch"></i>
-                <i v-if="!loading" class="tlp-button-icon fas fa-save"></i>
-                {{ gettext_provider.$gettext("Save the configuration") }}
-            </button>
-        </div>
+    </div>
+    <div class="tlp-pane-section-submit">
+        <button
+            type="button"
+            class="tlp-button-primary"
+            v-bind:data-tlp-tooltip="$gettext('Message is mandatory')"
+            v-bind:class="{ 'tlp-tooltip tlp-tooltip-top': should_tooltip_be_displayed }"
+            v-on:click="save"
+            v-bind:disabled="is_save_button_disabled"
+            data-test="save-button"
+        >
+            <i v-if="loading" class="tlp-button-icon fas fa-fw fa-spin fa-circle-notch"></i>
+            <i v-if="!loading" class="tlp-button-icon fas fa-save"></i>
+            {{ $gettext("Save the configuration") }}
+        </button>
     </div>
 </template>
 
@@ -112,12 +114,12 @@
 /* global CKEDITOR:readonly */
 
 import { computed, onMounted, onUnmounted, ref } from "vue";
-import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
+import { useGettext } from "vue3-gettext";
 import type { BannerState, Importance } from "../type";
 import "ckeditor4";
 import ExpirationDateBannerInput from "./ExpirationDateBannerInput.vue";
 
-const gettext_provider = useGettext();
+const { $gettext } = useGettext();
 
 const props = defineProps<{
     readonly message: string;
@@ -147,6 +149,10 @@ const is_save_button_disabled = computed(
     (): boolean =>
         (current_message.value.length === 0 && banner_is_activated.value) || props.loading,
 );
+
+function onExpirationDateChange(value: string): void {
+    current_expiration_date.value = value;
+}
 
 onMounted(() => {
     createEditor();

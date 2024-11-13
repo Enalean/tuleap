@@ -19,44 +19,40 @@
   -->
 
 <template>
-    <div>
-        <div v-if="shouldDisplayErrorBanner" class="tlp-alert-danger" data-test="error-feedback">
-            {{ error_banner_text }}
-        </div>
-        <div
-            v-else-if="has_banner_been_modified"
-            class="tlp-alert-success"
-            data-test="success-feedback"
-        >
-            {{ gettext_provider.$gettext("The banner has been successfully modified") }}
-        </div>
-        <expired-banner-info-message
-            v-bind:message="message"
-            v-bind:expiration_date="expiration_date"
-        />
-        <div>
-            <banner-presenter
-                v-bind:message="message"
-                v-bind:importance="importance"
-                v-bind:expiration_date="expiration_date"
-                v-bind:loading="banner_presenter_is_loading"
-                v-on:delete-banner="deleteBanner"
-                v-on:save-banner="saveBanner"
-            />
-        </div>
+    <div v-if="shouldDisplayErrorBanner" class="tlp-alert-danger" data-test="error-feedback">
+        {{ error_banner_text }}
     </div>
+    <div
+        v-else-if="has_banner_been_modified"
+        class="tlp-alert-success"
+        data-test="success-feedback"
+    >
+        {{ $gettext("The banner has been successfully modified") }}
+    </div>
+    <expired-banner-info-message
+        v-bind:message="message"
+        v-bind:expiration_date="expiration_date"
+    />
+    <banner-presenter
+        v-bind:message="message"
+        v-bind:importance="importance"
+        v-bind:expiration_date="expiration_date"
+        v-bind:loading="banner_presenter_is_loading"
+        v-on:delete-banner="deleteBanner"
+        v-on:save-banner="saveBanner"
+    />
 </template>
 
 <script setup lang="ts">
 import { computed, onMounted, ref } from "vue";
-import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
+import { useGettext } from "vue3-gettext";
 import BannerPresenter from "./BannerPresenter.vue";
 import { deleteBannerForPlatform, saveBannerForPlatform } from "../api/rest-querier";
 import type { BannerState, Importance } from "../type";
 import ExpiredBannerInfoMessage from "./ExpiredBannerInfoMessage.vue";
 import type { LocationHelper } from "../helpers/LocationHelper";
 
-const gettext_provider = useGettext();
+const { $gettext } = useGettext();
 
 const props = defineProps<{
     readonly message: string;
@@ -71,10 +67,7 @@ const banner_presenter_is_loading = ref(false);
 
 const shouldDisplayErrorBanner = computed((): boolean => error_message.value !== null);
 const error_banner_text = computed((): string =>
-    gettext_provider.interpolate(
-        gettext_provider.$gettext("An error occurred: %{ error_message }"),
-        { error_message: error_message.value },
-    ),
+    $gettext("An error occurred: %{ error_message }", { error_message: error_message.value ?? "" }),
 );
 
 onMounted(() => {
