@@ -21,8 +21,6 @@
 
 namespace Tuleap\Tracker\REST\v1\Workflow\PostAction\Update;
 
-require_once __DIR__ . '/../../../../../bootstrap.php';
-
 use Mockery;
 use Transition_PostAction_Field_Date;
 use Tuleap\REST\I18NRestException;
