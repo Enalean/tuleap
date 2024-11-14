@@ -37,6 +37,7 @@ import DocumentContent from "./DocumentContent.vue";
 </script>
 
 <style lang="scss" scoped>
+@use "@tuleap/burningparrot-theme/css/includes/global-variables";
 @use "@/themes/includes/size";
 @use "@/themes/includes/viewport-breakpoint";
 @use "@/themes/includes/zindex";
@@ -68,7 +69,8 @@ aside {
 
 .table-of-contents {
     position: sticky;
-    top: var(--header-height);
+    top: calc(#{global-variables.$navbar-height} + var(--tlp-small-spacing));
+    padding: 0;
 }
 
 @media screen and (max-width: #{viewport-breakpoint.$small-screen-size}) {
