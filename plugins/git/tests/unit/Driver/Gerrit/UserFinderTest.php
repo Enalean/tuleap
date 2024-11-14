@@ -18,76 +18,68 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Git\Driver\Gerrit;
 
 use Git;
 use Git_Driver_Gerrit_UserFinder;
 use GitRepository;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PermissionsManager;
+use PHPUnit\Framework\MockObject\MockObject;
 use ProjectUGroup;
-use UGroupManager;
+use Tuleap\Git\Tests\Builders\GitRepositoryTestBuilder;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
 
-//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
-class UserFinderTest extends \Tuleap\Test\PHPUnit\TestCase
+final class UserFinderTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /** @var Git_Driver_Gerrit_UserFinder */
-    protected $user_finder;
-
-    /** @var PermissionsManager */
-    protected $permissions_manager;
-
-    /** @var UGroupManager */
-    protected $ugroup_manager;
-
-    /** @var GitRepository * */
-    protected $repository;
+    private Git_Driver_Gerrit_UserFinder $user_finder;
+    private PermissionsManager&MockObject $permissions_manager;
+    private GitRepository $repository;
 
     protected function setUp(): void
     {
-        parent::setUp();
-        $this->permissions_manager = \Mockery::spy(\PermissionsManager::class);
-        $this->ugroup_manager      = \Mockery::spy(\UGroupManager::class);
+        $this->permissions_manager = $this->createMock(PermissionsManager::class);
         $this->user_finder         = new Git_Driver_Gerrit_UserFinder($this->permissions_manager);
-        $this->repository          = \Mockery::spy(\GitRepository::class);
-        $this->repository->shouldReceive('getId')->andReturns(5);
-        $this->repository->shouldReceive('getProjectId')->andReturns(666);
+        $this->repository          = GitRepositoryTestBuilder::aProjectRepository()
+            ->withId(5)
+            ->inProject(ProjectTestBuilder::aProject()->withId(666)->build())
+            ->build();
     }
 
     public function testItReturnsFalseForSpecialAdminPerms(): void
     {
         $allowed = $this->user_finder->areRegisteredUsersAllowedTo(Git::SPECIAL_PERM_ADMIN, $this->repository);
-        $this->assertFalse($allowed);
+        self::assertFalse($allowed);
     }
 
     public function testItReturnsFalseIfRegisteredUsersGroupIsNotContainedInTheAllowedOnes(): void
     {
-        $this->permissions_manager->shouldReceive('getAuthorizedUgroups')->andReturns([
+        $this->permissions_manager->method('getAuthorizedUgroups')->willReturn([
             ['ugroup_id' => ProjectUGroup::PROJECT_MEMBERS],
             ['ugroup_id' => ProjectUGroup::PROJECT_ADMIN],
         ]);
         $allowed = $this->user_finder->areRegisteredUsersAllowedTo(Git::PERM_READ, $this->repository);
-        $this->assertFalse($allowed);
+        self::assertFalse($allowed);
     }
 
     public function testItReturnsTrueIfRegisteredUsersGroupIsContainedInTheAllowedOnes(): void
     {
-        $this->permissions_manager->shouldReceive('getAuthorizedUgroups')->andReturns([
+        $this->permissions_manager->method('getAuthorizedUgroups')->willReturn([
             ['ugroup_id' => ProjectUGroup::PROJECT_MEMBERS],
             ['ugroup_id' => ProjectUGroup::REGISTERED],
         ]);
         $allowed = $this->user_finder->areRegisteredUsersAllowedTo(Git::PERM_READ, $this->repository);
-        $this->assertTrue($allowed);
+        self::assertTrue($allowed);
     }
 
     public function testItReturnsTrueIfAllUsersAreContainedInTheAllowedOnes(): void
     {
-        $this->permissions_manager->shouldReceive('getAuthorizedUgroups')->andReturns([
+        $this->permissions_manager->method('getAuthorizedUgroups')->willReturn([
             ['ugroup_id' => ProjectUGroup::ANONYMOUS],
         ]);
         $allowed = $this->user_finder->areRegisteredUsersAllowedTo(Git::PERM_READ, $this->repository);
-        $this->assertTrue($allowed);
+        self::assertTrue($allowed);
     }
 }

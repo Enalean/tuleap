@@ -18,27 +18,26 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Git\Driver\Gerrit;
 
 use Git;
 use Git_Driver_Gerrit_UserFinder;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PermissionsManager;
+use PHPUnit\Framework\MockObject\MockObject;
 use ProjectUGroup;
+use TestHelper;
+use Tuleap\Test\PHPUnit\TestCase;
 
-require_once __DIR__ . '/../../../bootstrap.php';
-
-//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
-class UserFinderGetUgroupsTest extends \Tuleap\Test\PHPUnit\TestCase
+final class UserFinderGetUgroupsTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    private $permissions_manager;
-    private $user_finder;
+    private PermissionsManager&MockObject $permissions_manager;
+    private Git_Driver_Gerrit_UserFinder $user_finder;
 
     protected function setUp(): void
     {
-        parent::setUp();
-        $this->permissions_manager = \Mockery::spy(\PermissionsManager::class);
+        $this->permissions_manager = $this->createMock(PermissionsManager::class);
         $this->user_finder         = new Git_Driver_Gerrit_UserFinder($this->permissions_manager);
     }
 
@@ -47,10 +46,9 @@ class UserFinderGetUgroupsTest extends \Tuleap\Test\PHPUnit\TestCase
         $repository_id   = 12;
         $permission_type = Git::PERM_READ;
 
-        $this->permissions_manager->shouldReceive('getAuthorizedUgroups')
+        $this->permissions_manager->expects(self::once())->method('getAuthorizedUgroups')
             ->with($repository_id, $permission_type, false)
-            ->once()
-            ->andReturns(\TestHelper::emptyDar());
+            ->willReturn(TestHelper::emptyDar());
 
         $this->user_finder->getUgroups($repository_id, $permission_type);
     }
@@ -59,17 +57,14 @@ class UserFinderGetUgroupsTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $ugroup_id_120 = 120;
         $ugroup_id_115 = 115;
-        $this->permissions_manager->shouldReceive('getAuthorizedUgroups')
-            ->andReturns(\TestHelper::arrayToDar(['ugroup_id' => $ugroup_id_115], ['ugroup_id' => $ugroup_id_120]));
+        $this->permissions_manager->method('getAuthorizedUgroups')
+            ->willReturn(TestHelper::arrayToDar(['ugroup_id' => $ugroup_id_115], ['ugroup_id' => $ugroup_id_120]));
 
         $ugroups = $this->user_finder->getUgroups('whatever', 'whatever');
-        $this->assertEquals(
-            [
-                $ugroup_id_115,
-                $ugroup_id_120,
-            ],
-            $ugroups
-        );
+        self::assertEquals([
+            $ugroup_id_115,
+            $ugroup_id_120,
+        ], $ugroups);
     }
 
     public function testItAlwaysReturnsTheProjectAdminGroupWhenGitAdministratorsAreRequested(): void
@@ -79,15 +74,14 @@ class UserFinderGetUgroupsTest extends \Tuleap\Test\PHPUnit\TestCase
         $expected_ugroups = [$project_admin_group_id];
         $ugroups          = $this->user_finder->getUgroups('whatever', Git::SPECIAL_PERM_ADMIN);
 
-        $this->assertEquals($expected_ugroups, $ugroups);
+        self::assertEquals($expected_ugroups, $ugroups);
     }
 
     public function testItDoesntJoinWithUGroupTableWhenItFetchesGroupPermissionsInOrderToReturnSomethingWhenWeAreDeletingTheGroup(): void
     {
-        $this->permissions_manager->shouldReceive('getAuthorizedUgroups')
-            ->with(\Mockery::any(), \Mockery::any(), false)
-            ->once()
-            ->andReturns(\TestHelper::emptyDar());
+        $this->permissions_manager->expects(self::once())->method('getAuthorizedUgroups')
+            ->with(self::anything(), self::anything(), false)
+            ->willReturn(TestHelper::emptyDar());
 
         $this->user_finder->getUgroups('whatever', 'whatever');
     }

@@ -18,37 +18,30 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Git\Driver\Gerrit\Template;
 
 use Git_Driver_Gerrit_Template_Template;
 use Git_Driver_Gerrit_Template_TemplateProcessor;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Project;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
 
-require_once __DIR__ . '/../../../../bootstrap.php';
-
-class TemplateProcessorTest extends \Tuleap\Test\PHPUnit\TestCase
+final class TemplateProcessorTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
+    private const PROJECT_NAME = 'some_project';
 
-    /** @var Git_Driver_Gerrit_Template_TemplateProcessor */
-    private $template_processor;
-
-    /** @var Git_Driver_Gerrit_Template_Template */
-    private $template;
-
-    /** @var Project */
-    private $project;
-
-    /** @var string */
-    private $project_name = 'someProject';
+    private Git_Driver_Gerrit_Template_TemplateProcessor $template_processor;
+    private Git_Driver_Gerrit_Template_Template $template;
+    private Project $project;
 
     protected function setUp(): void
     {
         parent::setUp();
         $this->template_processor = new Git_Driver_Gerrit_Template_TemplateProcessor();
         $this->template           = new Git_Driver_Gerrit_Template_Template(1, 2, 'wathevername', 'whateverecontent');
-        $this->project            = \Mockery::spy(\Project::class)->shouldReceive('getUnixName')->andReturns($this->project_name)->getMock();
+        $this->project            = ProjectTestBuilder::aProject()->withUnixName(self::PROJECT_NAME)->build();
     }
 
     public function testItDoesntChangeAnythingIfTemplateHasNoVariable(): void
@@ -59,7 +52,7 @@ class TemplateProcessorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $processed = $this->template_processor->processTemplate($this->template, $this->project);
 
-        $this->assertEquals($template_content, $processed);
+        self::assertEquals($template_content, $processed);
     }
 
     public function testItReplacesTheProjectNameByTheAppropriateVariable(): void
@@ -68,15 +61,15 @@ class TemplateProcessorTest extends \Tuleap\Test\PHPUnit\TestCase
 
             this one %projectname% too!';
 
-        $expected = "this $this->project_name should be replaced by the project name.
+        $expected = 'this some_project should be replaced by the project name.
 
-            this one $this->project_name too!";
+            this one some_project too!';
 
         $this->template->setContent($template_content);
 
         $processed = $this->template_processor->processTemplate($this->template, $this->project);
 
-        $this->assertEquals($expected, $processed);
+        self::assertEquals($expected, $processed);
     }
 
     public function testItDoesntReplaceIrrevelantVariables(): void
@@ -89,6 +82,6 @@ class TemplateProcessorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $processed = $this->template_processor->processTemplate($this->template, $this->project);
 
-        $this->assertEquals($template_content, $processed);
+        self::assertEquals($template_content, $processed);
     }
 }
