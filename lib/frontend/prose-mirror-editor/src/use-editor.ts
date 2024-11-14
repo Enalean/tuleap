@@ -48,6 +48,7 @@ export async function useEditor(
     editor_element: HTMLElement,
     setupUploadPlugin: (gettext_provider: GetText) => PluginDropFile,
     setupInputPlugin: () => PluginInput,
+    setupAdditionalPlugins: () => Plugin[],
     initial_content: HTMLElement,
     project_id: number,
     references: Array<CrossReference>,
@@ -76,6 +77,7 @@ export async function useEditor(
         ...setupToolbar(schema, toolbar_bus),
         initPluginTransformInput(project_id, references),
         initPluginCloseMarksAfterSpace(),
+        ...setupAdditionalPlugins(),
     ];
 
     const state: EditorState = getState(initial_content);

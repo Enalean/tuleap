@@ -22,4 +22,5 @@ export * from "./use-editor";
 export * from "./plugins";
 export * from "./types";
 export * from "./plugins/toolbar/helper/toolbar-bus";
+export * from "./custom_schema";
 export { STRUCTURE_BLOCK_GROUP } from "./helpers/isNodeAStructureBlock";
