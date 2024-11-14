@@ -77,11 +77,11 @@ onMounted(() => {
 @use "@tuleap/burningparrot-theme/css/includes/global-variables";
 
 .artidoc-toolbar {
-    // Display block is mandatory to avoid flickering with the toolbar
+    // Display block|flex is mandatory to avoid flickering with the toolbar
     display: flex;
     position: sticky;
     z-index: zindex.$toolbar;
-    top: global-variables.$navbar-height;
+    top: var(--sticky-top-position);
     justify-content: center;
     width: 100%;
     border-bottom: 1px solid var(--tlp-neutral-normal-color);
@@ -90,21 +90,6 @@ onMounted(() => {
     &.is-stuck {
         border-bottom: 0;
         box-shadow: var(--tlp-sticky-header-shadow);
-    }
-}
-
-.has-visible-platform-banner {
-    .artidoc-toolbar {
-        top: calc(
-            #{global-variables.$navbar-height} + #{global-variables.$platform-banner-base-height}
-        );
-    }
-
-    &.has-visible-project-banner .artidoc-toolbar {
-        top: calc(
-            #{global-variables.$navbar-height} + #{global-variables.$platform-banner-base-height} +
-                #{global-variables.$extra-platform-banner-white-space-height}
-        );
     }
 }
 </style>

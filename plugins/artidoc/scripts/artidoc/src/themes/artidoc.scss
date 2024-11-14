@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+@use "@tuleap/burningparrot-theme/css/includes/global-variables";
 @use "./includes/project-background";
 @use "./includes/section-content";
 
@@ -33,4 +34,22 @@
                 --help-dropdown-button-height
             )
     );
+    --sticky-top-position: #{global-variables.$navbar-height};
+}
+
+.has-visible-platform-banner {
+    .artidoc-container {
+        --sticky-top-position: calc(
+            #{global-variables.$navbar-height} + #{global-variables.$platform-banner-base-height}
+        );
+    }
+
+    &.has-visible-project-banner {
+        .artidoc-container {
+            --sticky-top-position: calc(
+                #{global-variables.$navbar-height} + #{global-variables.$platform-banner-base-height} +
+                    #{global-variables.$extra-platform-banner-white-space-height}
+            );
+        }
+    }
 }
