@@ -580,7 +580,15 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
             // DO NOT REPLACE this `includeJavascriptFile()` with `addJavascriptAsset()`
             // The tracker artifact view has script tags in the middle of the body expecting to have access to `tuleap.tracker`
             $layout->includeJavascriptFile($legacy_asset->getFileURL());
-            $layout->addJavascriptAsset(new \Tuleap\Layout\JavascriptAsset($this->getAssets(), 'modal-v2.js'));
+            $layout->addJavascriptAsset(
+                new \Tuleap\Layout\JavascriptAsset(
+                    new IncludeAssets(
+                        __DIR__ . '/../scripts/legacy-modal-v2/frontend-assets',
+                        '/assets/trackers/legacy-modal-v2'
+                    ),
+                    'modal-v2.js'
+                )
+            );
         }
     }
 

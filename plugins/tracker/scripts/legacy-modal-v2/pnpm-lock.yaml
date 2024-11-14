@@ -1,0 +1,27 @@
+lockfileVersion: '6.0'
+
+settings:
+  autoInstallPeers: false
+  excludeLinksFromLockfile: false
+
+dependencies:
+  '@tuleap/mention':
+    specifier: workspace:*
+    version: link:../../../../lib/frontend/mention
+  '@tuleap/plugin-tracker-artifact-ckeditor-image-upload':
+    specifier: workspace:*
+    version: link:../lib/artifact-ckeditor-image-upload
+  '@tuleap/plugin-tracker-rich-text-editor':
+    specifier: workspace:*
+    version: link:../lib/rich-text-editor
+  '@tuleap/plugin-tracker-rte-creator':
+    specifier: workspace:*
+    version: link:../lib/rte-creator
+  '@tuleap/tooltip':
+    specifier: workspace:*
+    version: link:../../../../lib/frontend/tooltip
+
+devDependencies:
+  '@tuleap/build-system-configurator':
+    specifier: workspace:*
+    version: link:../../../../lib/frontend/build-system-configurator
