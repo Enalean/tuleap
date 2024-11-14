@@ -57,6 +57,11 @@
 .ProseMirror p {
     margin-bottom: var(--tlp-small-spacing);
 }
+
+/* stylelint-disable-next-line selector-no-qualifying-type */
+.ProseMirror-focused img.ProseMirror-selectednode {
+    outline: 1px solid var(--tlp-main-color);
+}
 /* stylelint-enable selector-class-pattern */
 
 .cross-reference {
