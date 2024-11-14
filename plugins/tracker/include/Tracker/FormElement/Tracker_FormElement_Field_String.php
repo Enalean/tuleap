@@ -100,7 +100,7 @@ class Tracker_FormElement_Field_String extends Tracker_FormElement_Field_Text
         $html  = '';
         $value = $this->getValueFromSubmitOrDefault($submitted_values);
         $hp    = Codendi_HTMLPurifier::instance();
-        $html .= '<input type="text" class="user-mention"
+        $html .= '<input type="text"
                          data-test="' . $this->getName() . '"
                          name="artifact[' . $this->id . ']"
                          ' . ($this->isRequired() ? 'required' : '') . '
@@ -123,7 +123,7 @@ class Tracker_FormElement_Field_String extends Tracker_FormElement_Field_Text
             $html .= '<input type="text" readonly="readonly" value="' . $value . '" title="' . dgettext('tuleap-tracker', 'This field is the title of the artifact. It is not allowed to masschange it.') . '" />';
         } else {
             $hp    = Codendi_HTMLPurifier::instance();
-            $html .= '<input type="text" class="user-mention"
+            $html .= '<input type="text"
                              name="artifact[' . $this->id . ']"
                              size="' . $this->getProperty('size') . '"
                              ' . ($this->getProperty('maxchars') ? 'maxlength="' . $this->getProperty('maxchars') . '"' : '')  . '
@@ -174,7 +174,7 @@ class Tracker_FormElement_Field_String extends Tracker_FormElement_Field_Text
             }
         }
         $hp    = Codendi_HTMLPurifier::instance();
-        $html .= '<input type="text" class="user-mention"
+        $html .= '<input type="text"
                          data-test="' . $this->getName() . '"
                          name="artifact[' . $this->id . ']"
                          ' . ($this->isRequired() ? 'required' : '') . '

@@ -22,6 +22,7 @@ use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\FileUploadDataProvider;
 use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfig;
 use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfigDao;
+use Tuleap\Tracker\Artifact\RichTextareaConfiguration;
 use Tuleap\Tracker\Artifact\RichTextareaProvider;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldDetector;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsRetriever;
@@ -254,15 +255,12 @@ class Tracker_Artifact_View_Edit extends Tracker_Artifact_View_View
             );
 
             $html .= $rich_textarea_provider->getTextarea(
-                $tracker,
-                $this->artifact,
-                $this->user,
-                'tracker_followup_comment_new',
-                'artifact_followup_comment',
-                8,
-                80,
-                $submitted_comment,
-                false,
+                RichTextareaConfiguration::fromNewFollowUpComment(
+                    $tracker,
+                    $this->artifact,
+                    $this->user,
+                    $submitted_comment
+                ),
                 false
             );
             $html .= $this->fetchReplyByMailHelp();

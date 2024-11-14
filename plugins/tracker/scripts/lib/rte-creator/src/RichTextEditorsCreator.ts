@@ -120,7 +120,6 @@ export class RichTextEditorsCreator {
             onEditorInit: (ckeditor, textarea) => {
                 this.image_upload_factory.initiateImageUpload(ckeditor, textarea);
             },
-            onEditorDataReady: initMentionsOnEditorDataReady,
         };
         this.editor_factory.createRichTextEditor(text_field_textarea, options);
     }

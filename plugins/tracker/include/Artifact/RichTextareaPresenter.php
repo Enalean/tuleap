@@ -29,8 +29,12 @@ use Tuleap\Tracker\FormElement\Field\Text\TextValueValidator;
  */
 final readonly class RichTextareaPresenter
 {
+    public string $id;
+    public string $name;
     public int $rows;
     public int $cols;
+    public string $value;
+    public bool $is_required;
     /**
      * @var list<array{name: string, value: string}> $data_attributes
      */
@@ -38,23 +42,24 @@ final readonly class RichTextareaPresenter
     public bool $is_dragndrop_allowed;
     public string $help_id;
     public int $maxlength;
+    public bool $allows_mentions;
 
     /**
      * @param list<array{name: string, value: string}> $data_attributes
      */
     public function __construct(
-        public string $id,
-        public string $name,
-        int $number_of_rows,
-        int $number_of_cols,
-        public string $value,
-        public bool $is_required,
+        RichTextareaConfiguration $configuration,
         bool $is_image_upload_allowed,
         array $data_attributes,
     ) {
-        $this->help_id              = $id . '-help';
-        $this->rows                 = $number_of_rows;
-        $this->cols                 = $number_of_cols;
+        $this->id                   = $configuration->id;
+        $this->name                 = $configuration->name;
+        $this->rows                 = $configuration->number_of_rows;
+        $this->cols                 = $configuration->number_of_columns;
+        $this->value                = $configuration->content;
+        $this->is_required          = $configuration->is_required;
+        $this->allows_mentions      = $configuration->allows_mentions;
+        $this->help_id              = $configuration->id . '-help';
         $this->is_dragndrop_allowed = $is_image_upload_allowed;
 
         $final_data_attributes = $data_attributes;

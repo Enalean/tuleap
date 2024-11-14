@@ -22,9 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Artifact;
 
-use PFUser;
 use TemplateRendererFactory;
-use Tracker;
 
 final readonly class RichTextareaProvider
 {
@@ -34,40 +32,31 @@ final readonly class RichTextareaProvider
     ) {
     }
 
-    public function getTextarea(
-        Tracker $tracker,
-        ?Artifact $artifact,
-        PFUser $user,
-        string $id,
-        string $name,
-        int $rows,
-        int $cols,
-        string $value,
-        bool $is_required,
-        bool $is_artifact_copy,
-    ): string {
+    public function getTextarea(RichTextareaConfiguration $configuration, bool $is_artifact_copy): string
+    {
         $renderer = $this->template_renderer_factory->getRenderer(__DIR__);
 
         $data_attributes                  = [
-            ['name' => 'project-id', 'value' => (string) $tracker->getGroupId()],
+            ['name' => 'project-id', 'value' => (string) $configuration->tracker->getGroupId()],
         ];
         $data_attributes_for_image_upload = [];
 
         if (! $is_artifact_copy) {
-            $data_attributes_for_image_upload = $this->data_attributes_builder->getDataAttributes($tracker, $user, $artifact);
-            $data_attributes                  = array_values(array_merge($data_attributes, $data_attributes_for_image_upload));
+            $data_attributes_for_image_upload = $this->data_attributes_builder->getDataAttributes(
+                $configuration->tracker,
+                $configuration->user,
+                $configuration->artifact
+            );
+            $data_attributes                  = array_values(
+                array_merge($data_attributes, $data_attributes_for_image_upload)
+            );
         }
-        $is_image_upload_allowed =  $data_attributes_for_image_upload !== [] && ! $is_artifact_copy;
+        $is_image_upload_allowed = $data_attributes_for_image_upload !== [] && ! $is_artifact_copy;
 
         return $renderer->renderToString(
             'rich-textarea',
             new RichTextareaPresenter(
-                $id,
-                $name,
-                $rows,
-                $cols,
-                $value,
-                $is_required,
+                $configuration,
                 $is_image_upload_allowed,
                 $data_attributes
             )
