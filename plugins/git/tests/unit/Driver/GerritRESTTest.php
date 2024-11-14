@@ -22,49 +22,37 @@ declare(strict_types=1);
 
 namespace Tuleap\Git\Driver;
 
+use ColinODell\PsrTestLogger\TestLogger;
 use Git_Driver_Gerrit;
+use Git_Driver_Gerrit_Exception;
+use Git_Driver_Gerrit_User;
 use Git_Driver_GerritREST;
 use Git_RemoteServer_GerritServer;
+use GitRepository;
 use Http\Message\RequestMatcher\RequestMatcher;
 use Http\Mock\Client;
-use Logger;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use Project;
 use ProjectDeletionException;
 use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\ResponseFactoryInterface;
+use Psr\Http\Message\StreamFactoryInterface;
+use Tuleap\Git\Tests\Builders\GitRepositoryTestBuilder;
 use Tuleap\Http\HTTPFactoryBuilder;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
 
-final class GerritRESTTest extends \Tuleap\Test\PHPUnit\TestCase
+final class GerritRESTTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    /**
-     * @var Logger|\Mockery\LegacyMockInterface|\Mockery\MockInterface
-     */
-    private $logger;
-    /**
-     * @var Client
-     */
-    private $http_client;
-    /**
-     * @var \Psr\Http\Message\ResponseFactoryInterface
-     */
-    private $response_factory;
-    /**
-     * @var \Psr\Http\Message\StreamFactoryInterface
-     */
-    private $stream_factory;
-    /**
-     * @var Git_RemoteServer_GerritServer
-     */
-    private $gerrit_server;
-    /**
-     * @var Git_Driver_GerritREST
-     */
-    private $driver;
+    private TestLogger $logger;
+    private Client $http_client;
+    private ResponseFactoryInterface $response_factory;
+    private StreamFactoryInterface $stream_factory;
+    private Git_RemoteServer_GerritServer $gerrit_server;
+    private Git_Driver_GerritREST $driver;
 
     protected function setUp(): void
     {
-        $this->logger      = \Mockery::mock(\Psr\Log\LoggerInterface::class);
+        $this->logger      = new TestLogger();
         $this->http_client = new Client();
 
         $this->response_factory = HTTPFactoryBuilder::responseFactory();
@@ -94,11 +82,7 @@ final class GerritRESTTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testAddsAnIncludedGroup(): void
     {
-        $this->logger->shouldReceive('info');
-
-        $this->http_client->addResponse(
-            $this->response_factory->createResponse(201)
-        );
+        $this->http_client->addResponse($this->response_factory->createResponse(201));
 
         $group_name          = 'grp';
         $included_group_name = 'proj grp';
@@ -107,17 +91,15 @@ final class GerritRESTTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $request = $this->http_client->getLastRequest();
         assert($request instanceof RequestInterface);
-        $this->assertEquals('PUT', $request->getMethod());
+        self::assertEquals('PUT', $request->getMethod());
         $request_uri = $request->getUri();
-        $this->assertEquals('/a/groups/' . urlencode($group_name) . '/groups/' . urlencode($included_group_name), $request_uri->getPath());
-        $this->assertEquals($this->gerrit_server->getHost(), $request_uri->getHost());
+        self::assertEquals('/a/groups/' . urlencode($group_name) . '/groups/' . urlencode($included_group_name), $request_uri->getPath());
+        self::assertEquals($this->gerrit_server->getHost(), $request_uri->getHost());
+        self::assertTrue($this->logger->hasInfoRecords());
     }
 
     public function testItDetectsDeleteProjectPluginForGerritLesserThan214(): void
     {
-        $this->logger->shouldReceive('info');
-        $this->logger->shouldReceive('error')->never();
-
         $response = $this->response_factory->createResponse()->withBody(
             $this->stream_factory->createStream(
                 ")]}'\n" . json_encode(['deleteproject' => 1])
@@ -125,20 +107,19 @@ final class GerritRESTTest extends \Tuleap\Test\PHPUnit\TestCase
         );
         $this->http_client->addResponse($response);
 
-        $this->assertTrue($this->driver->isDeletePluginEnabled($this->gerrit_server));
+        self::assertTrue($this->driver->isDeletePluginEnabled($this->gerrit_server));
         $request = $this->http_client->getLastRequest();
         assert($request instanceof RequestInterface);
-        $this->assertEquals('GET', $request->getMethod());
+        self::assertEquals('GET', $request->getMethod());
         $request_uri = $request->getUri();
-        $this->assertEquals('/a/plugins/', $request_uri->getPath());
-        $this->assertEquals($this->gerrit_server->getHost(), $request_uri->getHost());
+        self::assertEquals('/a/plugins/', $request_uri->getPath());
+        self::assertEquals($this->gerrit_server->getHost(), $request_uri->getHost());
+        self::assertTrue($this->logger->hasInfoRecords());
+        self::assertFalse($this->logger->hasErrorRecords());
     }
 
     public function testItDetectsDeleteProjectPluginForGerritGreaterThan214(): void
     {
-        $this->logger->shouldReceive('info');
-        $this->logger->shouldReceive('error')->never();
-
         $response = $this->response_factory->createResponse()->withBody(
             $this->stream_factory->createStream(
                 ")]}'\n" . json_encode(['delete-project' => 1])
@@ -146,20 +127,19 @@ final class GerritRESTTest extends \Tuleap\Test\PHPUnit\TestCase
         );
         $this->http_client->addResponse($response);
 
-        $this->assertTrue($this->driver->isDeletePluginEnabled($this->gerrit_server));
+        self::assertTrue($this->driver->isDeletePluginEnabled($this->gerrit_server));
         $request = $this->http_client->getLastRequest();
         assert($request instanceof RequestInterface);
-        $this->assertEquals('GET', $request->getMethod());
+        self::assertEquals('GET', $request->getMethod());
         $request_uri = $request->getUri();
-        $this->assertEquals('/a/plugins/', $request_uri->getPath());
-        $this->assertEquals($this->gerrit_server->getHost(), $request_uri->getHost());
+        self::assertEquals('/a/plugins/', $request_uri->getPath());
+        self::assertEquals($this->gerrit_server->getHost(), $request_uri->getHost());
+        self::assertTrue($this->logger->hasInfoRecords());
+        self::assertFalse($this->logger->hasErrorRecords());
     }
 
     public function testItDetectsAbsenceOfDeleteProjectPlugin(): void
     {
-        $this->logger->shouldReceive('info');
-        $this->logger->shouldReceive('error')->never();
-
         $response = $this->response_factory->createResponse()->withBody(
             $this->stream_factory->createStream(
                 ")]}'\n" . json_encode(['replication' => 1])
@@ -167,26 +147,23 @@ final class GerritRESTTest extends \Tuleap\Test\PHPUnit\TestCase
         );
         $this->http_client->addResponse($response);
 
-        $this->assertFalse($this->driver->isDeletePluginEnabled($this->gerrit_server));
+        self::assertFalse($this->driver->isDeletePluginEnabled($this->gerrit_server));
+        self::assertTrue($this->logger->hasInfoRecords());
+        self::assertFalse($this->logger->hasErrorRecords());
     }
 
     public function testItThrowsAProjectDeletionExceptionIfThereAreOpenChanges(): void
     {
-        $this->logger->shouldReceive('info');
-        $this->logger->shouldReceive('error')->once();
+        $this->http_client->addResponse($this->response_factory->createResponse(400));
 
-        $this->http_client->addResponse(
-            $this->response_factory->createResponse(400)
-        );
-
-        $this->expectException(ProjectDeletionException::class);
+        self::expectException(ProjectDeletionException::class);
         $this->driver->deleteProject($this->gerrit_server, 'project');
+        self::assertTrue($this->logger->hasInfoRecords());
+        self::assertTrue($this->logger->hasErrorRecords());
     }
 
     public function testReturnsTrueIfGroupExists(): void
     {
-        $this->logger->shouldReceive('info');
-
         $group_name = 'Group Name';
 
         $this->http_client->addResponse(
@@ -195,36 +172,27 @@ final class GerritRESTTest extends \Tuleap\Test\PHPUnit\TestCase
             )
         );
 
-        $this->assertTrue($this->driver->doesTheGroupExist($this->gerrit_server, $group_name));
+        self::assertTrue($this->driver->doesTheGroupExist($this->gerrit_server, $group_name));
         $request = $this->http_client->getLastRequest();
         assert($request instanceof RequestInterface);
-        $this->assertEquals('GET', $request->getMethod());
+        self::assertEquals('GET', $request->getMethod());
         $request_uri = $request->getUri();
-        $this->assertEquals('/a/groups/' . urlencode($group_name), $request_uri->getPath());
-        $this->assertEquals($this->gerrit_server->getHost(), $request_uri->getHost());
+        self::assertEquals('/a/groups/' . urlencode($group_name), $request_uri->getPath());
+        self::assertEquals($this->gerrit_server->getHost(), $request_uri->getHost());
+        self::assertTrue($this->logger->hasInfoRecords());
     }
 
     public function testReturnsFalseIfGroupDoNotExists(): void
     {
-        $this->logger->shouldReceive('info');
+        $this->http_client->addResponse($this->response_factory->createResponse(404));
 
-        $this->http_client->addResponse(
-            $this->response_factory->createResponse(404)
-        );
-
-        $this->assertFalse($this->driver->doesTheGroupExist($this->gerrit_server, 'GroupName'));
+        self::assertFalse($this->driver->doesTheGroupExist($this->gerrit_server, 'GroupName'));
+        self::assertTrue($this->logger->hasInfoRecords());
     }
 
     public function testCreatesGroupsIfItNotExistsOnGerrit(): void
     {
         $group_name = 'firefox/project_members';
-
-        $this->logger->shouldReceive('info')
-            ->with('Gerrit REST driver: Create group ' . $group_name)
-            ->once();
-        $this->logger->shouldReceive('info')
-            ->with('Gerrit REST driver: Group ' . $group_name . ' successfully created')
-            ->once();
 
         $owner = 'firefox/project_admins';
 
@@ -245,23 +213,18 @@ final class GerritRESTTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->driver->createGroup($this->gerrit_server, $group_name, $owner);
         $request = $this->http_client->getLastRequest();
         assert($request instanceof RequestInterface);
-        $this->assertEquals('PUT', $request->getMethod());
-        $this->assertJsonStringEqualsJsonString('{"owner_id":"owner_uuid"}', $request->getBody()->getContents());
+        self::assertEquals('PUT', $request->getMethod());
+        self::assertJsonStringEqualsJsonString('{"owner_id":"owner_uuid"}', $request->getBody()->getContents());
         $request_uri = $request->getUri();
-        $this->assertEquals('/a/groups/' . urlencode($group_name), $request_uri->getPath());
-        $this->assertEquals($this->gerrit_server->getHost(), $request_uri->getHost());
+        self::assertEquals('/a/groups/' . urlencode($group_name), $request_uri->getPath());
+        self::assertEquals($this->gerrit_server->getHost(), $request_uri->getHost());
+        self::assertTrue($this->logger->hasInfoThatContains('Gerrit REST driver: Create group ' . $group_name));
+        self::assertTrue($this->logger->hasInfoThatContains('Gerrit REST driver: Group ' . $group_name . ' successfully created'));
     }
 
     public function testCreateGroupDealsWithGroupAlreadyExistingOnGerrit(): void
     {
         $group_name = 'firefox/project_members';
-
-        $this->logger->shouldReceive('info')
-            ->with('Gerrit REST driver: Create group ' . $group_name)
-            ->once();
-        $this->logger->shouldReceive('info')
-            ->with('Gerrit REST driver: Group ' . $group_name . ' already exists')
-            ->once();
 
         $owner = 'firefox/project_admins';
 
@@ -280,12 +243,12 @@ final class GerritRESTTest extends \Tuleap\Test\PHPUnit\TestCase
 
 
         $this->driver->createGroup($this->gerrit_server, $group_name, $owner);
+        self::assertTrue($this->logger->hasInfoThatContains('Gerrit REST driver: Create group ' . $group_name));
+        self::assertTrue($this->logger->hasInfoThatContains('Gerrit REST driver: Group ' . $group_name . ' already exists'));
     }
 
     public function testItCreatesGroupWithoutOwnerWhenSelfOwnedToAvoidChickenEggIssue(): void
     {
-        $this->logger->shouldReceive('info');
-
         $this->http_client->on(
             new RequestMatcher(Git_Driver_GerritREST::DEFAULT_GROUP_OWNER, null, ['GET']),
             $this->response_factory->createResponse()->withBody(
@@ -299,8 +262,8 @@ final class GerritRESTTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->response_factory->createResponse(409)
         );
 
-        $this->expectNotToPerformAssertions();
         $this->driver->createGroup($this->gerrit_server, 'firefox/project_admins', 'firefox/project_admins');
+        self::assertTrue($this->logger->hasInfoRecords());
     }
 
     public function testAsksGerritForTheGroupUUID(): void
@@ -325,7 +288,7 @@ final class GerritRESTTest extends \Tuleap\Test\PHPUnit\TestCase
             )
         );
 
-        $this->assertEquals(
+        self::assertEquals(
             'a1e6742f55dc890205b9db147826964d12c9a775',
             $this->driver->getGroupUUID($this->gerrit_server, 'enalean')
         );
@@ -353,7 +316,7 @@ final class GerritRESTTest extends \Tuleap\Test\PHPUnit\TestCase
             )
         );
 
-        $this->assertEquals(
+        self::assertEquals(
             8,
             $this->driver->getGroupId($this->gerrit_server, 'enalean')
         );
@@ -365,7 +328,7 @@ final class GerritRESTTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->response_factory->createResponse(404)
         );
 
-        $this->assertNull($this->driver->getGroupId($this->gerrit_server, 'enalean'));
+        self::assertNull($this->driver->getGroupId($this->gerrit_server, 'enalean'));
     }
 
     public function testReturnsNullUUIDIfNotFound(): void
@@ -374,7 +337,7 @@ final class GerritRESTTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->response_factory->createResponse(404)
         );
 
-        $this->assertNull($this->driver->getGroupUUID($this->gerrit_server, 'enalean'));
+        self::assertNull($this->driver->getGroupUUID($this->gerrit_server, 'enalean'));
     }
 
     public function testReturnsAllGroups(): void
@@ -409,24 +372,23 @@ final class GerritRESTTest extends \Tuleap\Test\PHPUnit\TestCase
             )
         );
 
-        $this->logger->shouldReceive('info');
         $expected_result = [
             'enalean' => '6ef56904c11e6d53c8f2f3657353faaac74bfc6d',
             'grp'     => 'b99e4455ca98f2ec23d9250f69617e34ceae6bd6',
         ];
 
-        $this->assertEquals($expected_result, $this->driver->getAllGroups($this->gerrit_server));
+        self::assertEquals($expected_result, $this->driver->getAllGroups($this->gerrit_server));
         $request = $this->http_client->getLastRequest();
         assert($request instanceof RequestInterface);
-        $this->assertEquals('GET', $request->getMethod());
+        self::assertEquals('GET', $request->getMethod());
         $request_uri = $request->getUri();
-        $this->assertEquals('/a/groups/', $request_uri->getPath());
-        $this->assertEquals($this->gerrit_server->getHost(), $request_uri->getHost());
+        self::assertEquals('/a/groups/', $request_uri->getPath());
+        self::assertEquals($this->gerrit_server->getHost(), $request_uri->getHost());
+        self::assertTrue($this->logger->hasInfoRecords());
     }
 
     public function testExecutesTheCreateCommandForProjectOnTheGerritServer(): void
     {
-        $this->logger->shouldReceive('info');
         $this->http_client->addResponse(
             $this->response_factory->createResponse(201)
         );
@@ -437,7 +399,7 @@ final class GerritRESTTest extends \Tuleap\Test\PHPUnit\TestCase
         $created_project_name = $this->driver->createProject($this->gerrit_server, $this->buildGitRepository($project_name, $repo_name), $project_name);
 
         $gerrit_project_name = "$project_name/$repo_name";
-        $this->assertEquals($gerrit_project_name, $created_project_name);
+        self::assertEquals($gerrit_project_name, $created_project_name);
 
         $expected_json_data = json_encode(
             [
@@ -447,17 +409,17 @@ final class GerritRESTTest extends \Tuleap\Test\PHPUnit\TestCase
         );
         $request            = $this->http_client->getLastRequest();
         assert($request instanceof RequestInterface);
-        $this->assertEquals('PUT', $request->getMethod());
-        $this->assertJsonStringEqualsJsonString($expected_json_data, $request->getBody()->getContents());
-        $this->assertEquals(Git_Driver_GerritREST::MIME_JSON, $request->getHeaderLine(Git_Driver_GerritREST::HEADER_CONTENT_TYPE));
+        self::assertEquals('PUT', $request->getMethod());
+        self::assertJsonStringEqualsJsonString($expected_json_data, $request->getBody()->getContents());
+        self::assertEquals(Git_Driver_GerritREST::MIME_JSON, $request->getHeaderLine(Git_Driver_GerritREST::HEADER_CONTENT_TYPE));
         $request_uri = $request->getUri();
-        $this->assertEquals('/a/projects/' . urlencode($gerrit_project_name), $request_uri->getPath());
-        $this->assertEquals($this->gerrit_server->getHost(), $request_uri->getHost());
+        self::assertEquals('/a/projects/' . urlencode($gerrit_project_name), $request_uri->getPath());
+        self::assertEquals($this->gerrit_server->getHost(), $request_uri->getHost());
+        self::assertTrue($this->logger->hasInfoRecords());
     }
 
     public function testExecutesTheCreateCommandForParentProjectOnTheGerritServer(): void
     {
-        $this->logger->shouldReceive('info');
         $this->http_client->addResponse(
             $this->response_factory->createResponse(201)
         );
@@ -478,12 +440,13 @@ final class GerritRESTTest extends \Tuleap\Test\PHPUnit\TestCase
         );
         $request            = $this->http_client->getLastRequest();
         assert($request instanceof RequestInterface);
-        $this->assertEquals('PUT', $request->getMethod());
-        $this->assertJsonStringEqualsJsonString($expected_json_data, $request->getBody()->getContents());
-        $this->assertEquals(Git_Driver_GerritREST::MIME_JSON, $request->getHeaderLine(Git_Driver_GerritREST::HEADER_CONTENT_TYPE));
+        self::assertEquals('PUT', $request->getMethod());
+        self::assertJsonStringEqualsJsonString($expected_json_data, $request->getBody()->getContents());
+        self::assertEquals(Git_Driver_GerritREST::MIME_JSON, $request->getHeaderLine(Git_Driver_GerritREST::HEADER_CONTENT_TYPE));
         $request_uri = $request->getUri();
-        $this->assertEquals('/a/projects/' . urlencode($project_name), $request_uri->getPath());
-        $this->assertEquals($this->gerrit_server->getHost(), $request_uri->getHost());
+        self::assertEquals('/a/projects/' . urlencode($project_name), $request_uri->getPath());
+        self::assertEquals($this->gerrit_server->getHost(), $request_uri->getHost());
+        self::assertTrue($this->logger->hasInfoRecords());
     }
 
     public function testRaisesAGerritDriverExceptionWhenAnIssueHappensOnProjectCreation(): void
@@ -492,139 +455,116 @@ final class GerritRESTTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->response_factory->createResponse(500)
         );
 
-        $this->logger->shouldReceive('info');
-        $this->logger->shouldReceive('error')->once();
-
-        $this->expectException(\Git_Driver_Gerrit_Exception::class);
+        self::expectException(Git_Driver_Gerrit_Exception::class);
         $this->driver->createProject(
             $this->gerrit_server,
             $this->buildGitRepository('project', 'repo'),
             'parent_project'
         );
+        self::assertTrue($this->logger->hasInfoRecords());
+        self::assertTrue($this->logger->hasErrorRecords());
     }
 
     public function testPutsProjectInReadOnly(): void
     {
         $project_name = 'project_name';
 
-        $this->logger->shouldReceive('info');
-
         $this->driver->makeGerritProjectReadOnly($this->gerrit_server, $project_name);
 
-        $expected_json_data = json_encode(
-            [
-                'state' => 'READ_ONLY',
-            ]
-        );
+        $expected_json_data = json_encode([
+            'state' => 'READ_ONLY',
+        ]);
         $request            = $this->http_client->getLastRequest();
         assert($request instanceof RequestInterface);
-        $this->assertEquals('PUT', $request->getMethod());
-        $this->assertJsonStringEqualsJsonString($expected_json_data, $request->getBody()->getContents());
-        $this->assertEquals(Git_Driver_GerritREST::MIME_JSON, $request->getHeaderLine(Git_Driver_GerritREST::HEADER_CONTENT_TYPE));
+        self::assertEquals('PUT', $request->getMethod());
+        self::assertJsonStringEqualsJsonString($expected_json_data, $request->getBody()->getContents());
+        self::assertEquals(Git_Driver_GerritREST::MIME_JSON, $request->getHeaderLine(Git_Driver_GerritREST::HEADER_CONTENT_TYPE));
         $request_uri = $request->getUri();
-        $this->assertEquals('/a/projects/' . urlencode($project_name) . '/config', $request_uri->getPath());
-        $this->assertEquals($this->gerrit_server->getHost(), $request_uri->getHost());
+        self::assertEquals('/a/projects/' . urlencode($project_name) . '/config', $request_uri->getPath());
+        self::assertEquals($this->gerrit_server->getHost(), $request_uri->getHost());
+        self::assertTrue($this->logger->hasInfoRecords());
     }
 
     public function testAddProjectInheritance(): void
     {
         $project_name = 'project_name';
 
-        $this->logger->shouldReceive('info');
-
         $this->driver->setProjectInheritance($this->gerrit_server, $project_name, 'prj');
 
-        $expected_json_data = json_encode(
-            [
-                'parent' => 'prj',
-            ]
-        );
+        $expected_json_data = json_encode([
+            'parent' => 'prj',
+        ]);
         $request            = $this->http_client->getLastRequest();
         assert($request instanceof RequestInterface);
-        $this->assertEquals('PUT', $request->getMethod());
-        $this->assertJsonStringEqualsJsonString($expected_json_data, $request->getBody()->getContents());
-        $this->assertEquals(Git_Driver_GerritREST::MIME_JSON, $request->getHeaderLine(Git_Driver_GerritREST::HEADER_CONTENT_TYPE));
+        self::assertEquals('PUT', $request->getMethod());
+        self::assertJsonStringEqualsJsonString($expected_json_data, $request->getBody()->getContents());
+        self::assertEquals(Git_Driver_GerritREST::MIME_JSON, $request->getHeaderLine(Git_Driver_GerritREST::HEADER_CONTENT_TYPE));
         $request_uri = $request->getUri();
-        $this->assertEquals('/a/projects/' . urlencode($project_name) . '/parent', $request_uri->getPath());
-        $this->assertEquals($this->gerrit_server->getHost(), $request_uri->getHost());
+        self::assertEquals('/a/projects/' . urlencode($project_name) . '/parent', $request_uri->getPath());
+        self::assertEquals($this->gerrit_server->getHost(), $request_uri->getHost());
+        self::assertTrue($this->logger->hasInfoRecords());
     }
 
     public function testResetsProjectInheritance(): void
     {
         $project_name = 'project_name';
 
-        $this->logger->shouldReceive('info');
-
         $this->driver->resetProjectInheritance($this->gerrit_server, $project_name);
 
-        $expected_json_data = json_encode(
-            [
-                'parent' => Git_Driver_Gerrit::DEFAULT_PARENT_PROJECT,
-            ]
-        );
+        $expected_json_data = json_encode([
+            'parent' => Git_Driver_Gerrit::DEFAULT_PARENT_PROJECT,
+        ]);
         $request            = $this->http_client->getLastRequest();
         assert($request instanceof RequestInterface);
-        $this->assertEquals('PUT', $request->getMethod());
-        $this->assertJsonStringEqualsJsonString($expected_json_data, $request->getBody()->getContents());
-        $this->assertEquals(Git_Driver_GerritREST::MIME_JSON, $request->getHeaderLine(Git_Driver_GerritREST::HEADER_CONTENT_TYPE));
+        self::assertEquals('PUT', $request->getMethod());
+        self::assertJsonStringEqualsJsonString($expected_json_data, $request->getBody()->getContents());
+        self::assertEquals(Git_Driver_GerritREST::MIME_JSON, $request->getHeaderLine(Git_Driver_GerritREST::HEADER_CONTENT_TYPE));
         $request_uri = $request->getUri();
-        $this->assertEquals('/a/projects/' . urlencode($project_name) . '/parent', $request_uri->getPath());
-        $this->assertEquals($this->gerrit_server->getHost(), $request_uri->getHost());
+        self::assertEquals('/a/projects/' . urlencode($project_name) . '/parent', $request_uri->getPath());
+        self::assertEquals($this->gerrit_server->getHost(), $request_uri->getHost());
+        self::assertTrue($this->logger->hasInfoRecords());
     }
 
     public function testDeletesProject(): void
     {
-        $this->logger->shouldReceive('info')->twice();
-
-        $this->http_client->addResponse(
-            $this->response_factory->createResponse(204)
-        );
+        $this->http_client->addResponse($this->response_factory->createResponse(204));
 
         $project_name = 'gerrit/project_name';
         $this->driver->deleteProject($this->gerrit_server, $project_name);
 
         $request = $this->http_client->getLastRequest();
         assert($request instanceof RequestInterface);
-        $this->assertEquals('POST', $request->getMethod());
+        self::assertEquals('POST', $request->getMethod());
         $request_uri = $request->getUri();
-        $this->assertEquals('/a/projects/' . urlencode($project_name) . '/delete-project~delete', $request_uri->getPath());
-        $this->assertEquals($this->gerrit_server->getHost(), $request_uri->getHost());
+        self::assertEquals('/a/projects/' . urlencode($project_name) . '/delete-project~delete', $request_uri->getPath());
+        self::assertEquals($this->gerrit_server->getHost(), $request_uri->getHost());
+        self::assertTrue($this->logger->hasInfoRecords());
     }
 
     public function testTriesToDeleteAnAlreadyDeletedProjectWithoutThrowingAnException(): void
     {
-        $this->logger->shouldReceive('info')->twice();
-
-        $this->http_client->addResponse(
-            $this->response_factory->createResponse(404)
-        );
+        $this->http_client->addResponse($this->response_factory->createResponse(404));
 
         $project_name = 'gerrit/already_deleted_project_name';
         $this->driver->deleteProject($this->gerrit_server, $project_name);
 
         $request = $this->http_client->getLastRequest();
         assert($request instanceof RequestInterface);
-        $this->assertEquals('POST', $request->getMethod());
+        self::assertEquals('POST', $request->getMethod());
         $request_uri = $request->getUri();
-        $this->assertEquals('/a/projects/' . urlencode($project_name) . '/delete-project~delete', $request_uri->getPath());
-        $this->assertEquals($this->gerrit_server->getHost(), $request_uri->getHost());
+        self::assertEquals('/a/projects/' . urlencode($project_name) . '/delete-project~delete', $request_uri->getPath());
+        self::assertEquals($this->gerrit_server->getHost(), $request_uri->getHost());
+        self::assertTrue($this->logger->hasInfoRecords());
     }
 
-    private function buildGitRepository(string $project_name, string $repo_name): \GitRepository
+    private function buildGitRepository(string $project_name, string $repo_name): GitRepository
     {
-        $repo = \Mockery::mock(\GitRepository::class);
-        $repo->shouldReceive('getProject')->andReturn($this->buildProject($project_name));
-        $repo->shouldReceive('getFullName')->andReturn($repo_name);
-
-        return $repo;
+        return GitRepositoryTestBuilder::aProjectRepository()->inProject($this->buildProject($project_name))->withName($repo_name)->build();
     }
 
-    private function buildProject(string $project_name): \Project
+    private function buildProject(string $project_name): Project
     {
-        $project = \Mockery::mock(\Project::class);
-        $project->shouldReceive('getUnixName')->andReturn($project_name);
-
-        return $project;
+        return ProjectTestBuilder::aProject()->withUnixName($project_name)->build();
     }
 
     public function testAddsUserToGroup(): void
@@ -632,19 +572,18 @@ final class GerritRESTTest extends \Tuleap\Test\PHPUnit\TestCase
         $group_name = 'group_name';
         $user       = $this->buildGerritUser();
 
-        $this->logger->shouldReceive('info');
-
         $this->http_client->addResponse($this->response_factory->createResponse(201));
 
         $this->driver->addUserToGroup($this->gerrit_server, $user, $group_name);
 
         $requests = $this->http_client->getRequests();
-        $this->assertCount(1, $requests);
+        self::assertCount(1, $requests);
         $request = $requests[0];
-        $this->assertEquals('PUT', $request->getMethod());
+        self::assertEquals('PUT', $request->getMethod());
         $request_uri = $request->getUri();
-        $this->assertEquals('/a/groups/' . urlencode($group_name) . '/members/' . urlencode($user->getSSHUserName()), $request_uri->getPath());
-        $this->assertEquals($this->gerrit_server->getHost(), $request_uri->getHost());
+        self::assertEquals('/a/groups/' . urlencode($group_name) . '/members/' . urlencode($user->getSSHUserName()), $request_uri->getPath());
+        self::assertEquals($this->gerrit_server->getHost(), $request_uri->getHost());
+        self::assertTrue($this->logger->hasInfoRecords());
     }
 
     public function testRemovesUserFromGroup(): void
@@ -652,25 +591,22 @@ final class GerritRESTTest extends \Tuleap\Test\PHPUnit\TestCase
         $group_name = 'group_name';
         $user       = $this->buildGerritUser();
 
-        $this->logger->shouldReceive('info');
-
         $this->http_client->addResponse($this->response_factory->createResponse(204));
 
         $this->driver->removeUserFromGroup($this->gerrit_server, $user, $group_name);
 
         $requests = $this->http_client->getRequests();
-        $this->assertCount(1, $requests);
+        self::assertCount(1, $requests);
         $request = $requests[0];
-        $this->assertEquals('DELETE', $request->getMethod());
+        self::assertEquals('DELETE', $request->getMethod());
         $request_uri = $request->getUri();
-        $this->assertEquals('/a/groups/' . urlencode($group_name) . '/members/' . urlencode($user->getSSHUserName()), $request_uri->getPath());
-        $this->assertEquals($this->gerrit_server->getHost(), $request_uri->getHost());
+        self::assertEquals('/a/groups/' . urlencode($group_name) . '/members/' . urlencode($user->getSSHUserName()), $request_uri->getPath());
+        self::assertEquals($this->gerrit_server->getHost(), $request_uri->getHost());
+        self::assertTrue($this->logger->hasInfoRecords());
     }
 
     public function testRemovesAllMembers(): void
     {
-        $this->logger->shouldReceive('info');
-
         $group_name = 'group_name';
 
         $this->http_client->on(
@@ -705,24 +641,21 @@ final class GerritRESTTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->driver->removeAllGroupMembers($this->gerrit_server, $group_name);
 
-        $expected_json_data = json_encode(
-            [
-                'members' => ['gerrit-adm', 'testUser'],
-            ]
-        );
-        $this->assertCount(2, $this->http_client->getRequests());
+        $expected_json_data = json_encode([
+            'members' => ['gerrit-adm', 'testUser'],
+        ]);
+        self::assertCount(2, $this->http_client->getRequests());
         $request = $this->http_client->getLastRequest();
         assert($request instanceof RequestInterface);
-        $this->assertEquals('POST', $request->getMethod());
-        $this->assertJsonStringEqualsJsonString($expected_json_data, $request->getBody()->getContents());
-        $this->assertEquals(Git_Driver_GerritREST::MIME_JSON, $request->getHeaderLine(Git_Driver_GerritREST::HEADER_CONTENT_TYPE));
+        self::assertEquals('POST', $request->getMethod());
+        self::assertJsonStringEqualsJsonString($expected_json_data, $request->getBody()->getContents());
+        self::assertEquals(Git_Driver_GerritREST::MIME_JSON, $request->getHeaderLine(Git_Driver_GerritREST::HEADER_CONTENT_TYPE));
+        self::assertTrue($this->logger->hasInfoRecords());
     }
 
     public function testAddsSSHKeyForUser(): void
     {
         $ssh_key = 'AAAAB3NzaC1yc2EAAAABIwAAAQEA0T...YImydZAw==';
-
-        $this->logger->shouldReceive('info');
 
         $user = $this->buildGerritUser();
 
@@ -730,18 +663,17 @@ final class GerritRESTTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $request = $this->http_client->getLastRequest();
         assert($request instanceof RequestInterface);
-        $this->assertEquals('POST', $request->getMethod());
-        $this->assertEquals($ssh_key, $request->getBody()->getContents());
-        $this->assertEquals(Git_Driver_GerritREST::MIME_TEXT, $request->getHeaderLine(Git_Driver_GerritREST::HEADER_CONTENT_TYPE));
+        self::assertEquals('POST', $request->getMethod());
+        self::assertEquals($ssh_key, $request->getBody()->getContents());
+        self::assertEquals(Git_Driver_GerritREST::MIME_TEXT, $request->getHeaderLine(Git_Driver_GerritREST::HEADER_CONTENT_TYPE));
         $request_uri = $request->getUri();
-        $this->assertEquals('/a/accounts/' . urlencode($user->getSSHUserName()) . '/sshkeys', $request_uri->getPath());
-        $this->assertEquals($this->gerrit_server->getHost(), $request_uri->getHost());
+        self::assertEquals('/a/accounts/' . urlencode($user->getSSHUserName()) . '/sshkeys', $request_uri->getPath());
+        self::assertEquals($this->gerrit_server->getHost(), $request_uri->getHost());
+        self::assertTrue($this->logger->hasInfoRecords());
     }
 
     public function testRemovesSSHKeyForUser(): void
     {
-        $this->logger->shouldReceive('info')->times(6);
-
         $this->http_client->on(
             new RequestMatcher(null, null, ['GET']),
             $this->response_factory->createResponse()->withBody(
@@ -782,16 +714,15 @@ final class GerritRESTTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $request = $this->http_client->getLastRequest();
         assert($request instanceof RequestInterface);
-        $this->assertEquals('DELETE', $request->getMethod());
+        self::assertEquals('DELETE', $request->getMethod());
         $request_uri = $request->getUri();
-        $this->assertEquals('/a/accounts/' . urlencode($user->getSSHUserName()) . '/sshkeys/2', $request_uri->getPath());
-        $this->assertEquals($this->gerrit_server->getHost(), $request_uri->getHost());
+        self::assertEquals('/a/accounts/' . urlencode($user->getSSHUserName()) . '/sshkeys/2', $request_uri->getPath());
+        self::assertEquals($this->gerrit_server->getHost(), $request_uri->getHost());
+        self::assertTrue($this->logger->hasInfoRecords());
     }
 
     public function testRemovesMultipleTimeTheSSHKeyForUserIfFoundMultipleTimes(): void
     {
-        $this->logger->shouldReceive('info')->times(8);
-
         $this->http_client->on(
             new RequestMatcher(null, null, ['GET']),
             $this->response_factory->createResponse()->withBody(
@@ -841,96 +772,63 @@ final class GerritRESTTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->driver->removeSSHKeyFromAccount($this->gerrit_server, $this->buildGerritUser(), $ssh_key);
 
-        $this->assertCount(3, $this->http_client->getRequests());
+        self::assertCount(3, $this->http_client->getRequests());
+        self::assertTrue($this->logger->hasInfoRecords());
     }
 
-    private function buildGerritUser(): \Git_Driver_Gerrit_User
+    private function buildGerritUser(): Git_Driver_Gerrit_User
     {
-        return new class extends \Git_Driver_Gerrit_User
-        {
-            public function __construct()
-            {
-            }
-
-            public function getEmail(): string
-            {
-                return 'email@example.com';
-            }
-
-            public function getSSHUserName(): string
-            {
-                return 'sshusername';
-            }
-
-            public function getRealName(): string
-            {
-                return 'Real Name';
-            }
-
-            public function getWebUserName(): string
-            {
-                return 'Web Username';
-            }
-        };
+        $user = $this->createMock(Git_Driver_Gerrit_User::class);
+        $user->method('getEmail')->willReturn('email@example.com');
+        $user->method('getSSHUserName')->willReturn('sshusername');
+        $user->method('getRealName')->willReturn('Real Name');
+        $user->method('getWebUserName')->willReturn('Web Username');
+        return $user;
     }
 
     public function testReturnsFalseIfParentProjectDoesNotExists(): void
     {
-        $this->logger->shouldReceive('info');
+        $this->http_client->addResponse($this->response_factory->createResponse(404));
 
-        $this->http_client->addResponse(
-            $this->response_factory->createResponse(404)
-        );
-
-        $this->assertFalse($this->driver->doesTheParentProjectExist($this->gerrit_server, 'project_name'));
+        self::assertFalse($this->driver->doesTheParentProjectExist($this->gerrit_server, 'project_name'));
+        self::assertTrue($this->logger->hasInfoRecords());
     }
 
     public function testReturnsTrueIfParentProjectExists(): void
     {
-        $this->logger->shouldReceive('info');
-
-        $this->http_client->addResponse(
-            $this->response_factory->createResponse(200)
-        );
+        $this->http_client->addResponse($this->response_factory->createResponse(200));
 
         $project_name = 'project/name';
 
-        $this->assertTrue($this->driver->doesTheParentProjectExist($this->gerrit_server, $project_name));
+        self::assertTrue($this->driver->doesTheParentProjectExist($this->gerrit_server, $project_name));
 
         $request = $this->http_client->getLastRequest();
         assert($request instanceof RequestInterface);
-        $this->assertEquals('GET', $request->getMethod());
+        self::assertEquals('GET', $request->getMethod());
         $request_uri = $request->getUri();
-        $this->assertEquals('/a/projects/' . urlencode($project_name), $request_uri->getPath());
-        $this->assertEquals($this->gerrit_server->getHost(), $request_uri->getHost());
+        self::assertEquals('/a/projects/' . urlencode($project_name), $request_uri->getPath());
+        self::assertEquals($this->gerrit_server->getHost(), $request_uri->getHost());
+        self::assertTrue($this->logger->hasInfoRecords());
     }
 
     public function testReturnsFalseIfProjectDoesNotExists(): void
     {
-        $this->logger->shouldReceive('info');
+        $this->http_client->addResponse($this->response_factory->createResponse(404));
 
-        $this->http_client->addResponse(
-            $this->response_factory->createResponse(404)
-        );
-
-        $this->assertFalse($this->driver->doesTheProjectExist($this->gerrit_server, 'project_name'));
+        self::assertFalse($this->driver->doesTheProjectExist($this->gerrit_server, 'project_name'));
+        self::assertTrue($this->logger->hasInfoRecords());
     }
 
     public function testReturnsTrueIfProjectExists(): void
     {
-        $this->logger->shouldReceive('info');
+        $this->http_client->addResponse($this->response_factory->createResponse(200));
 
-        $this->http_client->addResponse(
-            $this->response_factory->createResponse(200)
-        );
-
-        $this->assertTrue($this->driver->doesTheProjectExist($this->gerrit_server, 'project_name'));
+        self::assertTrue($this->driver->doesTheProjectExist($this->gerrit_server, 'project_name'));
+        self::assertTrue($this->logger->hasInfoRecords());
     }
 
     public function testRemovesAllIncludedGroups(): void
     {
-        $this->logger->shouldReceive('info');
-
         $group_name = 'parent group';
 
         $this->http_client->on(
@@ -975,11 +873,12 @@ final class GerritRESTTest extends \Tuleap\Test\PHPUnit\TestCase
         $expected_json_data = json_encode(['groups' => ['enalean', 'another group']]);
         $request            = $this->http_client->getLastRequest();
         assert($request instanceof RequestInterface);
-        $this->assertEquals('POST', $request->getMethod());
-        $this->assertJsonStringEqualsJsonString($expected_json_data, $request->getBody()->getContents());
-        $this->assertEquals(Git_Driver_GerritREST::MIME_JSON, $request->getHeaderLine(Git_Driver_GerritREST::HEADER_CONTENT_TYPE));
+        self::assertEquals('POST', $request->getMethod());
+        self::assertJsonStringEqualsJsonString($expected_json_data, $request->getBody()->getContents());
+        self::assertEquals(Git_Driver_GerritREST::MIME_JSON, $request->getHeaderLine(Git_Driver_GerritREST::HEADER_CONTENT_TYPE));
         $request_uri = $request->getUri();
-        $this->assertEquals('/a/groups/' . urlencode($group_name) . '/groups.delete', $request_uri->getPath());
-        $this->assertEquals($this->gerrit_server->getHost(), $request_uri->getHost());
+        self::assertEquals('/a/groups/' . urlencode($group_name) . '/groups.delete', $request_uri->getPath());
+        self::assertEquals($this->gerrit_server->getHost(), $request_uri->getHost());
+        self::assertTrue($this->logger->hasInfoRecords());
     }
 }
